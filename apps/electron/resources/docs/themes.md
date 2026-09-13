@@ -211,8 +211,8 @@ Scenic mode benefits from semi-transparent surface colors:
 
 The built-in Default uses the Default Refined design and ships with the app. It replaces the previous palette under the same `default` ID, so existing Default selections automatically receive the new design.
 
-- **Light:** cool off-white canvas (`#F6F7F8`), charcoal text (`#2A2B30`), restrained violet (`#6B568B`), and subtly lighter content surfaces.
-- **Dark:** near-black canvas (`#080A10`), softened cool text (`#DFE1E7`), violet (`#9C86BD`), and independently calibrated dark surface elevations.
+- **Light:** cool off-white canvas (`#F6F7F8`), charcoal text (`#2A2B30`), Violet Pulse (`#7C3AED`), and subtly lighter content surfaces.
+- **Dark:** near-black canvas (`#080A10`), softened cool text (`#DFE1E7`), violet (`#A78BFA`), and independently calibrated dark surface elevations.
 - **Style:** Inter with system fallbacks, 15px base type, 1.5 line height, 8px base radius, comfortable density, and subtle elevated shadows. Explicit font preferences still take precedence.
 - **Native sidebar:** no authored navigator color; platform transparency is preserved.
 

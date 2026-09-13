@@ -113,7 +113,7 @@ export function WorkspacePicker({ onSelectWorkspace }: WorkspacePickerProps) {
             disabled={!newName.trim()}
             loading={creating}
             loadingText={t("workspace.creating")}
-            className="bg-accent hover:bg-accent/90 text-white"
+            className="bg-accent hover:bg-accent/90 text-white dark:text-background"
           >
             <Plus className="mr-1.5 h-4 w-4" />
             {t("workspace.createWorkspace")}

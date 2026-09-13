@@ -36,7 +36,7 @@
   /* === 6 BASE COLORS === */
   --background: #F6F7F8;
   --foreground: #2A2B30;
-  --accent: #6B568B;           /* purple - brand, Auto mode */
+  --accent: #7C3AED;           /* purple - brand, Auto mode */
   --info: #8C5F20;              /* amber - warnings, Ask mode */
   --success: #2D7555;          /* green - connected, checkmarks */
   --destructive: #AD484A;       /* red - errors, failed */
@@ -104,7 +104,7 @@
   --popover-foreground: #2A2B30;
   --border: #DEDFE2;
   --input: #F9FAFB;
-  --ring: #6B568B;
+  --ring: #7C3AED;
   --ring-width: 1px;
   --ring-offset: 0px;
 
@@ -160,7 +160,7 @@
   /* === 6 BASE COLORS === */
   --background: #080A10;
   --foreground: #DFE1E7;
-  --accent: #9C86BD;            /* brighter purple in dark */
+  --accent: #A78BFA;            /* brighter purple in dark */
   --info: #CCA66C;               /* amber */
   --success: #81B899;           /* green */
   --destructive: #D68B8D;        /* brighter red in dark */
@@ -200,7 +200,7 @@
   --popover-foreground: #DFE1E7;
   --border: #272A35;
   --input: #11131B;
-  --ring: #9C86BD;
+  --ring: #A78BFA;
 
   /* === COMPONENT TOKENS === */
   --user-message-bubble: #171823;

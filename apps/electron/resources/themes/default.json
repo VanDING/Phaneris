@@ -1,6 +1,6 @@
 {
   "name": "Default",
-  "description": "Refined cool-neutral surfaces, native transparent sidebar, near-black dark mode and restrained violet.",
+  "description": "Refined cool-neutral surfaces, native transparent sidebar, near-black dark mode and vivid Violet Pulse accents.",
   "supportedModes": [
     "light",
     "dark"
@@ -12,7 +12,7 @@
   },
   "background": "#F6F7F8",
   "foreground": "#2A2B30",
-  "accent": "#6B568B",
+  "accent": "#7C3AED",
   "info": "#8C5F20",
   "success": "#2D7555",
   "destructive": "#AD484A",
@@ -26,7 +26,7 @@
   "cardForeground": "#2A2B30",
   "popoverForeground": "#2A2B30",
   "border": "#DEDFE2",
-  "ring": "#6B568B",
+  "ring": "#7C3AED",
   "userMessageBubble": "#ECEBF2",
   "paper": "#FAFBFC",
   "input": "#F9FAFB",
@@ -50,7 +50,7 @@
   "dark": {
     "background": "#080A10",
     "foreground": "#DFE1E7",
-    "accent": "#9C86BD",
+    "accent": "#A78BFA",
     "info": "#CCA66C",
     "success": "#81B899",
     "destructive": "#D68B8D",
@@ -64,7 +64,7 @@
     "cardForeground": "#DFE1E7",
     "popoverForeground": "#DFE1E7",
     "border": "#272A35",
-    "ring": "#9C86BD",
+    "ring": "#A78BFA",
     "userMessageBubble": "#171823",
     "paper": "#0D0F16",
     "input": "#11131B",
