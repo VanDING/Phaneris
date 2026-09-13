@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react"
 import { isToday, isYesterday, format, startOfDay } from "date-fns"
 
+import { buildSessionFamilies, sessionDescendants, type SessionFamilies } from '@/utils/session-families'
 import { searchLog } from "@/lib/logger"
 import { parseLabelEntry, matchesLabelFilter } from "@craft-agent/shared/labels"
 import type { LabelConfig } from "@craft-agent/shared/labels"
@@ -62,6 +63,8 @@ export interface UseSessionSearchOptions {
 }
 
 export interface UseSessionSearchResult {
+  families: SessionFamilies
+  searchResultCount: number
   // Search state
   isSearchMode: boolean
   highlightQuery: string | undefined
@@ -420,74 +423,44 @@ export function useSessionSearch({
       })
   }, [sortedItems, isSearchMode, searchQuery, contentSearchResults, currentFilter, evaluateViews, statusFilter, labelFilterMap, labelConfigs])
 
-  // Split search results: matching current filter vs others
-  const { matchingFilterItems, otherResultItems, exceededSearchLimit } = useMemo(() => {
-    const hasActiveFilters =
-      (currentFilter && currentFilter.kind !== 'allSessions') ||
-      (statusFilter && statusFilter.size > 0) ||
-      (labelFilterMap && labelFilterMap.size > 0)
+  const families = useMemo(() => buildSessionFamilies(
+    isSearchMode ? searchFilteredItems.slice(0, MAX_SEARCH_RESULTS) : searchFilteredItems,
+    visibleItems,
+    isSearchMode,
+  ), [searchFilteredItems, visibleItems, isSearchMode])
 
-    if (searchQuery.trim() && searchFilteredItems.length > 0) {
-      searchLog.info('search:grouping', {
-        searchQuery,
-        currentFilterKind: currentFilter?.kind,
-        currentFilterStateId: currentFilter?.kind === 'state' ? currentFilter.stateId : undefined,
-        hasActiveFilters,
-        statusFilterSize: statusFilter?.size ?? 0,
-        labelFilterSize: labelFilterMap?.size ?? 0,
-        itemCount: searchFilteredItems.length,
-      })
-    }
-
-    const totalCount = searchFilteredItems.length
-    const exceeded = totalCount > MAX_SEARCH_RESULTS
-
-    if (!isSearchMode || !hasActiveFilters) {
-      const limitedItems = searchFilteredItems.slice(0, MAX_SEARCH_RESULTS)
-      return { matchingFilterItems: limitedItems, otherResultItems: [] as SessionMeta[], exceededSearchLimit: exceeded }
-    }
-
+  // A family belongs to one search bucket even if hits span different statuses.
+  const { matchingFilterItems, otherResultItems } = useMemo(() => {
+    const matchIds = new Set(searchFilteredItems.map(item => item.id))
     const matching: SessionMeta[] = []
     const others: SessionMeta[] = []
-
-    for (const item of searchFilteredItems) {
-      if (matching.length + others.length >= MAX_SEARCH_RESULTS) break
-
-      const matches = sessionMatchesCurrentFilter(item, currentFilter, { evaluateViews, statusFilter, labelFilterMap, labelConfigs })
-      if (matches) {
-        matching.push(item)
-      } else {
-        others.push(item)
-      }
+    for (const root of families.roots) {
+      const actualRoot = families.itemsById.get(root.id)!
+      const hasMatchingHit = [actualRoot, ...sessionDescendants(root.id, families)].some(item =>
+        matchIds.has(item.id) && sessionMatchesCurrentFilter(item, currentFilter, { evaluateViews, statusFilter, labelFilterMap, labelConfigs }))
+      ;(hasMatchingHit ? matching : others).push(root)
     }
-
-    if (searchFilteredItems.length > 0) {
-      searchLog.info('search:grouping:result', {
-        matchingCount: matching.length,
-        othersCount: others.length,
-        exceeded,
-      })
-    }
-
-    return { matchingFilterItems: matching, otherResultItems: others, exceededSearchLimit: exceeded }
-  }, [searchFilteredItems, currentFilter, evaluateViews, isSearchMode, statusFilter, labelFilterMap, labelConfigs, searchQuery])
+    return { matchingFilterItems: matching, otherResultItems: others }
+  }, [families, searchFilteredItems, currentFilter, evaluateViews, statusFilter, labelFilterMap, labelConfigs])
+  const exceededSearchLimit = isSearchMode && searchFilteredItems.length > MAX_SEARCH_RESULTS
+  const searchResultCount = Math.min(searchFilteredItems.length, MAX_SEARCH_RESULTS)
 
   // --- Pagination ---
 
   useEffect(() => {
     setDisplayLimit(INITIAL_DISPLAY_LIMIT)
-  }, [searchQuery])
+  }, [searchQuery, workspaceId, currentFilter, statusFilter, labelFilterMap])
 
   // Collapse-aware pagination: collapsed items are excluded entirely from
   // paginatedItems (and therefore flatItems / keyboard nav). Their counts are
   // returned as collapsedGroupsMeta so the renderer can show header-only groups.
   const { paginatedItems, hasMore, collapsedGroupsMeta } = useMemo(() => {
-    return computeCollapsedPagination(searchFilteredItems, displayLimit, collapsedGroups, groupingMode)
-  }, [searchFilteredItems, displayLimit, collapsedGroups, groupingMode])
+    return computeCollapsedPagination(families.roots, displayLimit, collapsedGroups, groupingMode)
+  }, [families, displayLimit, collapsedGroups, groupingMode])
 
   const loadMore = useCallback(() => {
-    setDisplayLimit(prev => Math.min(prev + BATCH_SIZE, searchFilteredItems.length))
-  }, [searchFilteredItems.length])
+    setDisplayLimit(prev => Math.min(prev + BATCH_SIZE, families.roots.length))
+  }, [families.roots.length])
 
   // Scroll-based pagination: listen for scroll on the actual ScrollArea viewport
   // (IntersectionObserver with root=null doesn't detect scroll inside Radix ScrollArea)
@@ -526,6 +499,8 @@ export function useSessionSearch({
   }, [flatItems])
 
   return {
+    families,
+    searchResultCount,
     isSearchMode,
     highlightQuery,
     isSearchingContent,

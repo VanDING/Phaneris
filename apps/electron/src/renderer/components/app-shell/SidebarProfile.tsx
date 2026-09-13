@@ -9,6 +9,7 @@ import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from '@/compon
 import { Tooltip, TooltipContent, TooltipTrigger } from '@craft-agent/ui'
 
 interface SidebarProfileProps {
+  isCollapsed?: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
   onOpenProfile: () => void
@@ -17,7 +18,7 @@ interface SidebarProfileProps {
   settingsButtonProps: ComponentProps<'button'>
 }
 
-export function SidebarProfile({ open, onOpenChange, onOpenProfile, onOpenSettings, profileButtonProps, settingsButtonProps }: SidebarProfileProps) {
+export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpenProfile, onOpenSettings, profileButtonProps, settingsButtonProps }: SidebarProfileProps) {
   const { t } = useTranslation()
   const [profile, setProfile] = useAtom(personalProfileAtom)
 
@@ -46,7 +47,7 @@ export function SidebarProfile({ open, onOpenChange, onOpenProfile, onOpenSettin
     <CrossfadeAvatar
       src={profile.avatarDataUrl || undefined}
       alt={displayName}
-      fallback={name ? getInitials(name) : <UserRound className="h-1/2 w-1/2" strokeWidth={1.5} />}
+      fallback={name ? getInitials(name) : <UserRound className="size-3" strokeWidth={1.5} />}
       className={className}
       fallbackClassName="bg-accent/10 text-accent font-medium"
       imageClassName="object-cover"
@@ -58,26 +59,29 @@ export function SidebarProfile({ open, onOpenChange, onOpenProfile, onOpenSettin
       <PopoverAnchor asChild>
         <div
           data-state={open ? 'open' : 'closed'}
-          className="flex min-w-0 items-center gap-1 rounded-md pr-1 transition-colors hover:bg-sidebar-hover focus-within:bg-sidebar-hover data-[state=open]:bg-sidebar-hover"
+          data-collapsed={isCollapsed || undefined}
+          className="sidebar-profile relative min-w-0 rounded-md hover:bg-sidebar-hover focus-within:bg-sidebar-hover data-[state=open]:bg-sidebar-hover"
         >
           <PopoverTrigger asChild>
             <button
               {...profileButtonProps}
               type="button"
               title={displayName}
-              className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-[5px] text-left text-[13px] font-normal outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
+              aria-label={displayName}
+              className="sidebar-profile-trigger flex min-w-0 items-center gap-2 rounded-md text-left text-[13px] font-normal outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
             >
-              {avatar('h-3.5 w-3.5 shrink-0 rounded-full text-[7px]')}
-              <span className="truncate">{displayName}</span>
+              {avatar('size-[18px] shrink-0 rounded-full text-[9px]')}
+              <span className="sidebar-label truncate">{displayName}</span>
             </button>
           </PopoverTrigger>
           <PopoverContent
-            side="top"
-            align="start"
+            side={isCollapsed ? 'right' : 'top'}
+            align={isCollapsed ? 'end' : 'start'}
             sideOffset={12}
             collisionPadding={8}
             aria-label={t('settings.preferences.title')}
             onKeyDown={(event) => event.stopPropagation()}
+            style={isCollapsed ? { width: 220 } : undefined}
             className="isolate w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-16px)] max-h-[var(--radix-popover-content-available-height)] overflow-x-hidden overflow-y-auto rounded-2xl bg-popover p-0 ring-1 ring-foreground/5"
           >
             <div
@@ -121,9 +125,9 @@ export function SidebarProfile({ open, onOpenChange, onOpenProfile, onOpenSettin
                 type="button"
                 aria-label={t('sidebar.settings')}
                 onClick={() => { onOpenChange(false); onOpenSettings() }}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
+                className="sidebar-settings-trigger flex size-10 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
               >
-                <Settings aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.5} />
+                <Settings aria-hidden="true" className="size-[18px]" strokeWidth={1.5} />
               </button>
             </TooltipTrigger>
             <TooltipContent side="top">{t('sidebar.settings')}</TooltipContent>

@@ -23,6 +23,7 @@ export const KEYS = {
   expandedFolders: 'expanded-folders',
   collapsedSidebarItems: 'collapsed-sidebar-items',
   chatGroupingMode: 'chat-grouping-mode', // How to group chats: 'date' | 'status'
+  collapsedSessionFamilies: 'collapsed-session-families', // Parent session IDs, workspace-scoped
   collapsedSessionGroups: 'collapsed-session-groups', // Collapsed group keys in session list
 
   // Focus mode

@@ -1,6 +1,8 @@
 import { formatDistanceToNowStrict } from "date-fns"
 import type { Locale } from "date-fns"
-import { Flag, ShieldAlert } from "lucide-react"
+import { useTranslation } from 'react-i18next'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@craft-agent/ui'
+import { ChevronRight, Flag, ShieldAlert } from "lucide-react"
 import { useActionLabel } from "@/actions"
 import { cn } from "@/lib/utils"
 import { rendererPerf } from "@/lib/perf"
@@ -47,6 +49,12 @@ export interface SessionItemProps {
   onSelect: () => void
   onToggleSelect?: () => void
   onRangeSelect?: () => void
+  subtaskCount?: number
+  subtasksExpanded?: boolean
+  subtaskRunningCount?: number
+  subtaskNeedsAttention?: boolean
+  containsActiveSubtask?: boolean
+  onToggleSubtasks?: () => void
 }
 
 export function SessionItem({
@@ -58,7 +66,14 @@ export function SessionItem({
   onSelect,
   onToggleSelect,
   onRangeSelect,
+  subtaskCount = 0,
+  subtasksExpanded = false,
+  subtaskRunningCount = 0,
+  subtaskNeedsAttention = false,
+  containsActiveSubtask = false,
+  onToggleSubtasks,
 }: SessionItemProps) {
+  const { t } = useTranslation()
   const ctx = useSessionListContext()
   const { workspaces, isCompactMode } = useAppShellContext()
   const canSendToWorkspace = hasTransferTargets(workspaces)
@@ -139,6 +154,30 @@ export function SessionItem({
           ctx.onKeyDown(e, item)
         },
       }}
+      beforeMenu={subtaskCount > 0 ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              aria-expanded={subtasksExpanded}
+              aria-controls={subtasksExpanded ? `session-children-${item.id}` : undefined}
+              aria-label={t(subtasksExpanded ? 'trajectory.map.collapse' : 'trajectory.map.expand') + ` (${subtaskCount})`}
+              onClick={onToggleSubtasks}
+              className={cn('craft-icon-button flex h-7 w-full items-center justify-center gap-1 rounded-md text-[11px] tabular-nums hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-ring', containsActiveSubtask ? 'bg-accent/10 text-accent' : 'text-muted-foreground')}
+            >
+              {subtaskRunningCount > 0 ? <Spinner className="text-[9px]" /> : subtaskNeedsAttention ? <ShieldAlert className="size-3 text-info" /> : null}
+              <span>{subtaskCount}</span>
+              <ChevronRight className={cn('size-3 transition-transform duration-160 motion-reduce:transition-none', subtasksExpanded && 'rotate-90')} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {t(subtasksExpanded ? 'trajectory.map.collapse' : 'trajectory.map.expand')}
+            {subtaskRunningCount > 0 && ` · ${t('session.subtasksRunning', { count: subtaskRunningCount })}`}
+            {subtaskNeedsAttention && ` · ${t('session.subtasksAttention')}`}
+            {containsActiveSubtask && ` · ${t('session.activeSubtask')}`}
+          </TooltipContent>
+        </Tooltip>
+      ) : undefined}
       menuContent={
         <SessionMenu
           item={item}
@@ -246,7 +285,7 @@ export function SessionItem({
           </div>
         ) : undefined
       }
-      titleTrailing={hasMatch ? (
+      titleTrailing={subtaskCount > 0 ? <span /> : hasMatch ? (
         <span
           className={cn(
             "inline-flex items-center justify-center min-w-[24px] px-1 py-0.5 rounded-[6px] text-[10px] font-medium tabular-nums leading-tight whitespace-nowrap shadow-tinted",

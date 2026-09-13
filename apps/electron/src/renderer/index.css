@@ -1539,3 +1539,51 @@ html.dark[data-scenic] .fullscreen-overlay-background {
   min-height: 31px;
   padding: 6px 8px;
 }
+
+/* Keep one icon column throughout the desktop sidebar width transition. */
+.sidebar-navigation .sidebar-nav-button,
+.sidebar-navigation .sidebar-new-session { min-height: 40px; position: relative; padding-inline: 11px; overflow: hidden; }
+.sidebar-navigation .sidebar-nav-button > span:first-child,
+.sidebar-navigation .sidebar-new-session > svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-navigation .sidebar-nav-button > span:first-child svg,
+.sidebar-navigation .sidebar-nav-button > span:first-child > span { width: 18px; height: 18px; }
+.sidebar-navigation .sidebar-label { white-space: nowrap; transition: opacity 100ms ease; }
+.sidebar-navigation[data-collapsed] .sidebar-label { position: absolute; left: 40px; opacity: 0; pointer-events: none; }
+.sidebar-navigation[data-collapsed] .sidebar-nav-button,
+.sidebar-navigation[data-collapsed] .sidebar-new-session { gap: 0; }
+/* Animate numeric geometry instead of switching flex-direction: the avatar
+   rises by one row while Settings follows the sidebar's animated right edge. */
+.sidebar-profile {
+  height: 40px;
+  transition: height var(--motion-duration-spatial) var(--motion-ease-move), background-color 100ms ease;
+}
+.sidebar-profile[data-collapsed] { height: 84px; }
+.sidebar-profile-trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 44px;
+  height: 40px;
+  padding: 0 11px;
+  overflow: hidden;
+  transition: right var(--motion-duration-spatial) var(--motion-ease-move);
+}
+.sidebar-profile[data-collapsed] .sidebar-profile-trigger { right: 0; }
+.sidebar-settings-trigger {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  height: 40px;
+  transition: right var(--motion-duration-spatial) var(--motion-ease-move), background-color 100ms ease, color 100ms ease;
+}
+.sidebar-profile[data-collapsed] .sidebar-settings-trigger { right: calc(100% - 40px); }
+.sidebar-profile .sidebar-label { white-space: nowrap; transition: opacity 100ms ease; }
+.sidebar-profile[data-collapsed] .sidebar-label { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-navigation .sidebar-label,
+  .sidebar-profile,
+  .sidebar-profile-trigger,
+  .sidebar-settings-trigger,
+  .sidebar-profile .sidebar-label { transition: none; }
+}

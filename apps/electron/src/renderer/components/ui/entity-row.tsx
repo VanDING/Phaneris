@@ -68,6 +68,8 @@ export interface EntityRowProps {
   trailing?: React.ReactNode
   /** Content rendered below the main button (e.g. expanded child list) */
   children?: React.ReactNode
+  /** Independent action immediately before the more menu; outside the row button. */
+  beforeMenu?: React.ReactNode
   /** Absolutely-positioned overlay (e.g. match count badge) */
   overlay?: React.ReactNode
 
@@ -130,6 +132,7 @@ export function EntityRow({
   badges,
   trailing,
   children,
+  beforeMenu,
   overlay,
   isSelected = false,
   isInMultiSelect = false,
@@ -281,6 +284,7 @@ export function EntityRow({
         className={cn(
           "craft-focus craft-row-focus entity-row-btn flex w-full items-start gap-2 pl-2 pr-4 py-[var(--theme-row-padding-y)] text-left text-sm rounded-lg",
           "motion-interactive transition-[background-color]",
+          beforeMenu && "pr-[96px]",
           (isSelected || isInMultiSelect)
             ? "bg-foreground/3"
             : "hover:bg-foreground/2",
@@ -385,49 +389,58 @@ export function EntityRow({
       {/* Overlay (e.g. match count badge) */}
       {overlay}
 
-      {/* More menu button — visible on hover, keyboard focus, or while the menu is open */}
-      {(menuContent || useCompactMenu) && !hideMoreButton && (
-        <div
-          data-touch-reveal="true"
-          className={cn(
-            "craft-row-actions absolute right-2 top-2 z-10",
-            menuOpen || contextMenuOpen || compactMenuOpen
-              ? "opacity-100"
-              : useCompactMenu
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100",
-          )}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center rounded-lg border border-transparent hover:border-border/50">
-            {useCompactMenu ? (
-              <button
-                type="button"
-                onClick={() => setCompactMenuOpen(true)}
-                className="craft-icon-button inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer"
-                aria-label={t('common.moreActions')}
-                aria-haspopup="dialog"
-                aria-expanded={compactMenuOpen}
-              >
-                <MoreHorizontal className="h-4 w-4 text-foreground/40" />
-              </button>
-            ) : (
-              <DropdownMenu modal={true} open={menuOpen} onOpenChange={setMenuOpen}>
-                <DropdownMenuTrigger asChild>
-                  <button type="button" aria-label={t('common.moreActions')} className="craft-icon-button inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer">
-                    <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                  </button>
-                </DropdownMenuTrigger>
-                <StyledDropdownMenuContent align="end">
-                  <DropdownMenuProvider>
-                    {menuContent}
-                  </DropdownMenuProvider>
-                </StyledDropdownMenuContent>
-              </DropdownMenu>
-            )}
+      <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
+        {beforeMenu && (
+          <div className="w-14 shrink-0" onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
+            {beforeMenu}
           </div>
-        </div>
-      )}
+        )}
+
+        {/* More menu button — visible on hover, keyboard focus, or while the menu is open */}
+        {(menuContent || useCompactMenu) && !hideMoreButton && (
+          <div
+            data-touch-reveal="true"
+            className={cn(
+              "craft-row-actions shrink-0",
+              menuOpen || contextMenuOpen || compactMenuOpen
+                ? "opacity-100"
+                : useCompactMenu
+                  ? "opacity-100"
+                  : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100",
+            )}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center rounded-lg border border-transparent hover:border-border/50">
+              {useCompactMenu ? (
+                <button
+                  type="button"
+                  onClick={() => setCompactMenuOpen(true)}
+                  className="craft-icon-button inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer"
+                  aria-label={t('common.moreActions')}
+                  aria-haspopup="dialog"
+                  aria-expanded={compactMenuOpen}
+                >
+                  <MoreHorizontal className="h-4 w-4 text-foreground/40" />
+                </button>
+              ) : (
+                <DropdownMenu modal={true} open={menuOpen} onOpenChange={setMenuOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <button type="button" aria-label={t('common.moreActions')} className="craft-icon-button inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer">
+                      <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <StyledDropdownMenuContent align="end">
+                    <DropdownMenuProvider>
+                      {menuContent}
+                    </DropdownMenuProvider>
+                  </StyledDropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+          </div>
+        )}
+
+      </div>
 
       {/* Compact drawer mount — the render-prop is rendered here as a
        *  sibling of the row so the drawer's portal can mount above the

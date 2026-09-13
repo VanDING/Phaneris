@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react"
 import * as React from "react"
 import { AnimatePresence, motion, type Variants } from "motion/react"
 import { MOTION_DURATION, MOTION_EASE } from '@craft-agent/ui/motion'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@craft-agent/ui'
 import { ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -215,11 +216,12 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
             <SidebarButton
               link={link}
               itemProps={itemProps}
+              isCollapsed={isCollapsed}
             />
           )
 
           // Determine which expanded content to render (sortable vs regular)
-          const expandedContent = link.expandable && link.items && link.expanded
+          const expandedContent = !isCollapsed && link.expandable && link.items && link.expanded
             ? renderExpandedContent(link, getItemProps, focusedItemId, isNested)
             : null
 
@@ -263,7 +265,7 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
                 * clicked button gets data-state="open", not nested children */}
               {link.expandable && link.items && (
                 <AnimatePresence initial={false}>
-                  {link.expanded && (
+                  {!isCollapsed && link.expanded && (
                     <motion.div
                       initial={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0 }}
                       animate={{ height: 'auto', opacity: 1, marginTop: 2, marginBottom: isNested ? 4 : 8 }}
@@ -466,13 +468,14 @@ interface SidebarButtonProps {
   }
   /** True when rendering inside the DragOverlay (floating clone) */
   isOverlay?: boolean
+  isCollapsed?: boolean
 }
 
 // forwardRef is required so Radix's ContextMenuTrigger (asChild) can attach its ref
 // and pass props like data-state="open" directly onto this button element.
 const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  ({ link, itemProps, isOverlay, className: extraClassName, ...radixProps }, forwardedRef) => {
-    return (
+  ({ link, itemProps, isOverlay, isCollapsed = false, className: extraClassName, ...radixProps }, forwardedRef) => {
+    const button = (
       <button
         {...(isOverlay ? {} : (() => {
           // Separate ref from itemProps so we can merge it with forwardedRef
@@ -489,8 +492,10 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         }}
         onClick={isOverlay ? undefined : link.onClick}
         data-tutorial={link.dataTutorial}
+        aria-label={link.title}
+        title={undefined}
         className={cn(
-          "group flex w-full items-center gap-2 rounded-md text-[13px] select-none outline-none",
+          "sidebar-nav-button group flex w-full items-center gap-2 rounded-md text-[13px] select-none outline-none",
           "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring",
           // Compact mode: 4px less total height (py-[3px] vs py-[5px])
           link.compact ? "py-[3px]" : "py-[5px]",
@@ -504,7 +509,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
       >
         {/* Icon container with hover toggle for expandable items */}
         <span className="relative h-3.5 w-3.5 shrink-0 flex items-center justify-center">
-          {link.expandable && !isOverlay ? (
+          {link.expandable && !isOverlay && !isCollapsed ? (
             <>
               {/* Main icon - hidden on hover */}
               <span className="absolute inset-0 flex items-center justify-center group-hover:opacity-0 transition-opacity duration-150">
@@ -532,21 +537,24 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
             renderIcon(link)
           )}
         </span>
-        {link.title}
+        <span className="sidebar-label truncate">{link.title}</span>
         {/* After-title element: type indicator icon, right-aligned before count badge, revealed on hover */}
-        {link.afterTitle && (
+        {!isCollapsed && link.afterTitle && (
           <span data-touch-reveal="true" className="ml-auto opacity-0 group-hover/section:opacity-100 group-data-[state=open]:opacity-100 group-data-[edit-active=true]:opacity-100 transition-opacity">
             {link.afterTitle}
           </span>
         )}
         {/* Label Badge: Shows count or status on the right, revealed on section hover */}
-        {link.label && (
+        {!isCollapsed && link.label && (
           <span data-touch-reveal="true" className={cn(link.afterTitle ? 'ml-0' : 'ml-auto', 'text-xs text-foreground/30 opacity-0 group-hover/section:opacity-100 group-data-[state=open]:opacity-100 group-data-[edit-active=true]:opacity-100 transition-opacity')}>
             {link.label}
           </span>
         )}
       </button>
     )
+    return isCollapsed ? (
+      <Tooltip><TooltipTrigger asChild>{button}</TooltipTrigger><TooltipContent side="right">{link.title}</TooltipContent></Tooltip>
+    ) : button
   }
 )
 

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { NavigationRefinementPreview } from '../demos/NavigationRefinementPreview'
 import type { ComponentEntry } from './types'
 import type { SessionMeta } from '@/atoms/sessions'
 import type { SessionStatus } from '@/config/session-status-config'
@@ -276,6 +277,7 @@ function SessionItemPreview({
 // ============================================================================
 
 export const sessionListComponents: ComponentEntry[] = [
+  { id: 'navigation-refinement', name: 'Navigation Refinement', category: 'Session List', description: 'Production sidebar rail, grouped subtask sessions, status controls and yearly activity calendar.', component: NavigationRefinementPreview, props: [], layout: 'top' },
   {
     id: 'session-list-search',
     name: 'SessionList Search States',

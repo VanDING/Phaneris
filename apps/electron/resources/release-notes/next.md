@@ -21,6 +21,9 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- **Violet Pulse activity and navigation** — the Default theme uses brighter violet accents. The yearly activity calendar adds themed hover details, keyboard navigation and selectable dates. Collapsing the desktop sidebar now keeps a centered 56 px rail of primary icons with a smooth width transition.
+- **Grouped subtask sessions** — child sessions stay beneath their parent with an independent collapse control beside the more menu, preserving the leading status switch. Families paginate together, search retains parent context, and children remain independently selectable with running and attention indicators.
+
 - **Faster startup and smaller bundles** — locale messages, the Mermaid/elkjs renderer, terminal/xterm, and secondary navigator pages now load on demand; production main/preload/Pi bundles are minified, roughly halving their parse and install footprint. Crash reporting is now opt-in (`CRAFT_TELEMETRY_ENABLED=1` plus a DSN).
 
 - **Refined native Default theme** — Default Refined now replaces the previous built-in Default in packaged apps, with cool off-white light surfaces, near-black dark surfaces, restrained violet, Inter typography and subtle elevation. Native sidebar transparency and explicit font preferences are preserved; existing Default selections update automatically.

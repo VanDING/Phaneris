@@ -36,3 +36,6 @@ export const PANEL_SASH_FLEX_MARGIN = -(PANEL_GAP / 2)
 
 /** Half-width helper for centering sash containers on seam coordinates. */
 export const PANEL_SASH_HALF_HIT_WIDTH = PANEL_SASH_HIT_WIDTH / 2
+
+/** Desktop sidebar width when only primary navigation icons are visible. */
+export const SIDEBAR_RAIL_WIDTH = 56

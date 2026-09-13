@@ -12,7 +12,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { motion, useReducedMotion } from 'motion/react'
-import { motionSpring } from '@craft-agent/ui/motion'
+import { motionSpring, motionTween } from '@craft-agent/ui/motion'
 import { cn } from '@/lib/utils'
 import {
   collapseWorkbenchAtom,
@@ -213,11 +213,11 @@ export function SurfaceContainer({
             marginRight: hasSidebar ? 0 : -PANEL_GAP,
             opacity: hasSidebar ? 1 : 0,
           }}
-          transition={transition}
+          transition={isResizing ? { duration: 0 } : motionTween(reduceMotion, 'spatial', 'move')}
           className="relative h-full shrink-0"
           style={{ overflowX: 'clip', overflowY: 'visible' }}
         >
-          <div className="h-full" style={{ width: sidebarWidth }}>{sidebarSlot}</div>
+          <div className="h-full w-full">{sidebarSlot}</div>
         </motion.div>
 
         <motion.div

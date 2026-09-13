@@ -2,7 +2,7 @@ import * as React from "react"
 import { useTranslation, Trans } from "react-i18next"
 import { useRef, useState, useEffect, useCallback, useMemo } from "react"
 import { useAtomValue, useStore } from "jotai"
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence, useReducedMotion } from "motion/react"
 import { MOTION_SPRING } from '@craft-agent/ui/motion'
 import {
   Archive,
@@ -158,6 +158,7 @@ import { SidebarProfile } from './SidebarProfile'
 import SettingsNavigator from "@/pages/settings/SettingsNavigator"
 import {
   PANEL_GAP,
+  SIDEBAR_RAIL_WIDTH,
   PANEL_EDGE_INSET,
   PANEL_SASH_HALF_HIT_WIDTH,
   PANEL_SASH_HIT_WIDTH,
@@ -589,6 +590,9 @@ function AppShellContent({
   const isAutoCompact = shellWidth > 0 && shellWidth < MOBILE_THRESHOLD
 
   const effectiveSidebarAndNavigatorHidden = isSidebarAndNavigatorHidden || isAutoCompact
+  const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible ? sidebarWidth : SIDEBAR_RAIL_WIDTH)
+  const reduceSidebarMotion = useReducedMotion()
+  const sidebarSashTransition = reduceSidebarMotion ? undefined : 'left 280ms cubic-bezier(0.2, 0, 0, 1)'
 
   const [isResizing, setIsResizing] = React.useState<'sidebar' | 'session-list' | null>(null)
   const [sidebarHandleY, setSidebarHandleY] = React.useState<number | null>(null)
@@ -1398,7 +1402,7 @@ function AppShellContent({
           setSidebarHandleY(e.clientY - rect.top)
         }
       } else if (isResizing === 'session-list') {
-        const offset = isSidebarVisible ? sidebarWidth : 0
+        const offset = effectiveSidebarWidth + PANEL_GAP
         const newWidth = Math.min(Math.max(e.clientX - offset, 240), 480)
         setSessionListWidth(newWidth)
         if (sessionListHandleRef.current) {
@@ -1430,7 +1434,7 @@ function AppShellContent({
     isResizing,
     sidebarWidth,
     sessionListWidth,
-    isSidebarVisible,
+    effectiveSidebarWidth,
   ])
 
   // Spring transition config - shared between sidebar and header
@@ -2256,8 +2260,8 @@ function AppShellContent({
     result.push({ id: 'nav:profile', type: 'nav', action: () => setProfileCardOpen(open => !open) })
     result.push({ id: 'nav:settings', type: 'nav', action: () => handleSettingsClick() })
 
-    return result
-  }, [handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelConfigs, labelTree, viewConfigs, handleViewClick, handleSourcesClick, handleSkillsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
+    return isSidebarVisible ? result : result.filter(item => ['nav:allSessions', 'nav:labels', 'nav:sources', 'nav:skills', 'nav:projects', 'nav:pages', 'nav:automations', 'nav:profile', 'nav:settings'].includes(item.id))
+  }, [isSidebarVisible, handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelConfigs, labelTree, viewConfigs, handleViewClick, handleSourcesClick, handleSkillsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
 
   // Toggle folder expanded state
   const handleToggleFolder = React.useCallback((path: string) => {
@@ -2353,8 +2357,8 @@ function AppShellContent({
   React.useEffect(() => {
     if (sidebarFocused && unifiedSidebarItems.length > 0) {
       // Set focused item if not already set
-      const itemId = focusedSidebarItemId || unifiedSidebarItems[0].id
-      if (!focusedSidebarItemId) {
+      const itemId = unifiedSidebarItems.some(item => item.id === focusedSidebarItemId) ? focusedSidebarItemId! : unifiedSidebarItems[0].id
+      if (itemId !== focusedSidebarItemId) {
         setFocusedSidebarItemId(itemId)
       }
       // Actually focus the DOM element
@@ -2523,11 +2527,12 @@ function AppShellContent({
           sidebarSlot={
             <div
               ref={sidebarRef}
-              style={{ width: sidebarWidth }}
+              style={{ width: '100%' }}
               className={cn(
-                "h-full font-sans relative",
+                "h-full font-sans relative sidebar-navigation",
                 hasThemedNavigatorSurface && "bg-navigator",
               )}
+              data-collapsed={!isSidebarVisible || undefined}
               data-focus-zone="sidebar"
               tabIndex={sidebarFocused ? 0 : -1}
               onKeyDown={handleSidebarKeyDown}
@@ -2548,11 +2553,12 @@ function AppShellContent({
                             <Button
                               variant="ghost"
                               onClick={() => handleNewChat()}
-                              className="w-full justify-start gap-2 py-[7px] px-2 text-[13px] font-normal rounded-md shadow-minimal bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                              aria-label={t("session.newSession")}
+                              className="sidebar-new-session w-full justify-start gap-2 py-[7px] px-2 text-[13px] font-normal rounded-md shadow-minimal bg-secondary text-secondary-foreground hover:bg-secondary/80"
                               data-tutorial="new-chat-button"
                             >
                               <SquarePenRounded className="h-3.5 w-3.5 shrink-0" />
-                              {t("session.newSession")}
+                              <span className="sidebar-label">{t("session.newSession")}</span>
                             </Button>
                           </ContextMenuTrigger>
                           <StyledContextMenuContent>
@@ -2570,7 +2576,7 @@ function AppShellContent({
                 {/* pb-4 provides clearance so the last item scrolls above the mask-fade-bottom gradient */}
                 <div className="flex-1 overflow-y-auto min-h-0 mask-fade-bottom pb-4">
                 <LeftSidebar
-                  isCollapsed={false}
+                  isCollapsed={!isSidebarVisible}
                   getItemProps={getSidebarItemProps}
                   focusedItemId={focusedSidebarItemId}
                   links={[
@@ -2832,6 +2838,7 @@ function AppShellContent({
               {/* Personal identity and settings, pinned to the sidebar footer. */}
               <div className="shrink-0 px-2 pt-2">
                 <SidebarProfile
+                  isCollapsed={!isSidebarVisible}
                   open={profileCardOpen}
                   onOpenChange={setProfileCardOpen}
                   onOpenProfile={() => handleSettingsClick('preferences')}
@@ -2843,15 +2850,15 @@ function AppShellContent({
             </div>
           </div>
           }
-          sidebarWidth={effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible ? sidebarWidth : 0)}
+          sidebarWidth={effectiveSidebarWidth}
           navigatorSlot={
             <div
               style={{ width: isAutoCompact ? '100%' : sessionListWidth }}
               className="h-full flex flex-col min-w-0 relative z-panel"
             >
             <PanelHeader
-              title={isSidebarVisible ? listTitle : undefined}
-              compensateForStoplight={!isSidebarVisible}
+              title={listTitle}
+              compensateForStoplight={effectiveSidebarWidth === 0}
               badge={automationFilter?.automationType === 'scheduled' ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -3748,7 +3755,7 @@ function AppShellContent({
         />
 
         {/* Sidebar Resize Handle (absolute, hidden in focused mode) */}
-        {!effectiveSidebarAndNavigatorHidden && (
+        {!effectiveSidebarAndNavigatorHidden && isSidebarVisible && (
         <div
           ref={resizeHandleRef}
           onMouseDown={(e) => { e.preventDefault(); setIsResizing('sidebar') }}
@@ -3767,7 +3774,7 @@ function AppShellContent({
             left: isSidebarVisible
               ? sidebarWidth + (PANEL_GAP / 2) - PANEL_SASH_HALF_HIT_WIDTH
               : -PANEL_GAP,
-            transition: isResizing === 'sidebar' ? undefined : 'left 0.15s ease-out',
+            transition: isResizing ? undefined : sidebarSashTransition,
           }}
         >
           <div
@@ -3798,11 +3805,11 @@ function AppShellContent({
             top: PANEL_STACK_VERTICAL_OVERFLOW,
             bottom: PANEL_STACK_VERTICAL_OVERFLOW,
             left:
-              (isSidebarVisible ? sidebarWidth + PANEL_GAP : PANEL_EDGE_INSET) +
+              (effectiveSidebarWidth > 0 ? effectiveSidebarWidth + PANEL_GAP : PANEL_EDGE_INSET) +
               sessionListWidth +
               (PANEL_GAP / 2) -
               PANEL_SASH_HALF_HIT_WIDTH,
-            transition: isResizing === 'session-list' ? undefined : 'left 0.15s ease-out',
+            transition: isResizing ? undefined : sidebarSashTransition,
           }}
         >
           <div

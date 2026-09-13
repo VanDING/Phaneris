@@ -37,6 +37,8 @@ export function SessionStatusIcon({ item }: SessionStatusIconProps) {
           aria-haspopup="menu"
           aria-expanded={open}
           aria-label={t("status.change")}
+          onMouseDown={event => event.stopPropagation()}
+          onKeyDown={event => event.stopPropagation()}
           onContextMenu={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -50,6 +52,8 @@ export function SessionStatusIcon({ item }: SessionStatusIconProps) {
         align="start"
         side="bottom"
         sideOffset={4}
+        onMouseDown={event => event.stopPropagation()}
+        onKeyDown={event => event.stopPropagation()}
         onContextMenu={(e) => {
           e.preventDefault()
           e.stopPropagation()

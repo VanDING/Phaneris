@@ -1,4 +1,7 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react"
+import { AnimatePresence, motion, useReducedMotion, useIsPresent } from 'motion/react'
+import { motionTween } from '@craft-agent/ui/motion'
+import { sessionDescendants } from '@/utils/session-families'
 import { useTranslation } from "react-i18next"
 import { useSetAtom } from "jotai"
 import { isToday, isYesterday, format, startOfDay } from "date-fns"
@@ -31,6 +34,14 @@ import { sendToWorkspaceAtom, type SessionMeta } from "@/atoms/sessions"
 import type { ViewConfig } from "@craft-agent/shared/views"
 import type { SessionStatusId, SessionStatus } from "@/config/session-status-config"
 import { buildCollapsedGroupsScopeSuffix } from "@/utils/session-list-collapse"
+
+function SessionChildren({ id, children }: { id: string; children: React.ReactNode }) {
+  const present = useIsPresent()
+  const reduceMotion = useReducedMotion()
+  return <motion.div id={id} inert={!present} aria-hidden={!present || undefined}
+    initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+    transition={motionTween(reduceMotion, 'emphasis', 'move')} className="overflow-hidden">{children}</motion.div>
+}
 
 export interface SessionListRow {
   item: SessionMeta
@@ -241,6 +252,8 @@ export function SessionList({
   const scrollViewportRef = useRef<HTMLDivElement>(null)
 
   const {
+    families,
+    searchResultCount,
     isSearchMode,
     highlightQuery,
     isSearchingContent,
@@ -503,31 +516,68 @@ export function SessionList({
       rows,
       groups: orderedGroups,
     }
-  }, [isSearchMode, matchingFilterItems, otherResultItems, flatItems, groupingMode, sessionStatuses, projects, collapsedGroupsMeta, t])
+  }, [isSearchMode, matchingFilterItems, otherResultItems, flatItems, groupingMode, sessionStatuses, projects, collapsedGroupsMeta, t, i18n.resolvedLanguage])
 
-  const flatRows = rowData.rows
+  const familyScope = `${workspaceId ?? ''}:${isSearchMode ? searchQuery : ''}`
+  const savedFamilies = useMemo(() => new Set(isSearchMode ? [] : storage.get<string[]>(KEYS.collapsedSessionFamilies, [], workspaceId)), [isSearchMode, workspaceId])
+  const [familyCollapse, setFamilyCollapse] = useState({ scope: familyScope, ids: savedFamilies })
+  const collapsedFamilies = familyCollapse.scope === familyScope ? familyCollapse.ids : savedFamilies
+  const selectedSessionId = focusedSessionId ?? selectionStore.state.selected
+  const updateFamilyCollapse = useCallback((ids: Set<string>) => {
+    setFamilyCollapse({ scope: familyScope, ids })
+    if (!isSearchMode) storage.set(KEYS.collapsedSessionFamilies, [...ids], workspaceId)
+  }, [familyScope, isSearchMode, workspaceId])
+  const toggleFamily = (id: string) => {
+    const next = new Set(collapsedFamilies)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
+    updateFamilyCollapse(next)
+  }
+  // Reveal an externally selected child once; a deliberate collapse must remain collapsed.
+  const lastRevealedSelection = useRef('')
+  useEffect(() => {
+    if (!selectedSessionId || !families.itemsById.has(selectedSessionId)) return
+    const key = `${familyScope}:${selectedSessionId}`
+    if (lastRevealedSelection.current === key) return
+    lastRevealedSelection.current = key
+    const next = new Set(collapsedFamilies)
+    let parent = families.parentById.get(selectedSessionId)
+    while (parent) {
+      next.delete(parent)
+      parent = families.parentById.get(parent)
+    }
+    if (next.size !== collapsedFamilies.size) updateFamilyCollapse(next)
+  }, [selectedSessionId, familyScope, families, collapsedFamilies, updateFamilyCollapse])
+
+  const flatRows = useMemo(() => {
+    const visit = (row: SessionListRow): SessionListRow[] => [
+      { item: families.itemsById.get(row.item.id) ?? row.item },
+      ...(collapsedFamilies.has(row.item.id) ? [] : (families.childrenById.get(row.item.id) ?? []).flatMap(item => visit({ item }))),
+    ]
+    return rowData.groups.flatMap(group => group.items.flatMap(visit))
+  }, [rowData, families, collapsedFamilies])
 
   const collapseAllGroups = useCallback(() => {
     if (groupingMode === 'status') {
-      const allKeys = new Set(items.map(item => `status-${getSessionStatus(item)}`))
+      const allKeys = new Set(families.roots.map(item => `status-${getSessionStatus(item)}`))
       setCollapsedGroups(allKeys)
     } else if (groupingMode === 'unread') {
-      const allKeys = new Set(items.map(item => item.hasUnread ? 'unread-yes' : 'unread-no'))
+      const allKeys = new Set(families.roots.map(item => item.hasUnread ? 'unread-yes' : 'unread-no'))
       setCollapsedGroups(allKeys)
     } else if (groupingMode === 'project') {
       const knownProjectIds = new Set((projects ?? []).map(p => p.id))
-      const allKeys = new Set(items.map(item => {
+      const allKeys = new Set(families.roots.map(item => {
         const pid = (item as { projectId?: string }).projectId
         return pid && knownProjectIds.has(pid) ? `project-${pid}` : 'project-__none__'
       }))
       setCollapsedGroups(allKeys)
     } else {
-      const allKeys = new Set(items.map(item =>
+      const allKeys = new Set(families.roots.map(item =>
         startOfDay(new Date(item.lastMessageAt || 0)).toISOString()
       ))
       setCollapsedGroups(allKeys)
     }
-  }, [items, groupingMode, projects])
+  }, [families, groupingMode, projects])
   const expandAllGroups = useCallback(() => {
     setCollapsedGroups(new Set())
   }, [])
@@ -768,6 +818,46 @@ export function SessionList({
     )
   }
 
+  const renderSessionRow = (row: SessionListRow, isFirstInGroup: boolean, depth = 0): React.ReactNode => {
+    const item = families.itemsById.get(row.item.id) ?? row.item
+    const actualRow = { item }
+    const flatIndex = rowIndexMap.get(item.id) ?? 0
+    const rowProps = interactions.getRowProps(actualRow, flatIndex)
+    const children = families.childrenById.get(item.id) ?? []
+    const descendants = sessionDescendants(item.id, families)
+    const expanded = !collapsedFamilies.has(item.id)
+    return (
+      <div key={item.id} data-session-depth={depth}>
+        <SessionItem
+          item={item}
+          index={flatIndex}
+          itemProps={{ ...rowProps.buttonProps, 'aria-selected': rowProps.isSelected || rowProps.isInMultiSelect }}
+          isSelected={rowProps.isSelected}
+          isFirstInGroup={isFirstInGroup || depth > 0}
+          isInMultiSelect={rowProps.isInMultiSelect ?? false}
+          onSelect={() => handleSelectSession(actualRow, flatIndex)}
+          onToggleSelect={() => handleToggleSelect(actualRow, flatIndex)}
+          onRangeSelect={() => handleRangeSelect(flatIndex)}
+          subtaskCount={descendants.length}
+          subtasksExpanded={expanded}
+          subtaskRunningCount={descendants.filter(child => child.isProcessing).length}
+          subtaskNeedsAttention={descendants.some(child => hasPendingPrompt?.(child.id) || child.hasUnread)}
+          containsActiveSubtask={descendants.some(child => child.id === selectedSessionId)}
+          onToggleSubtasks={() => toggleFamily(item.id)}
+        />
+        <AnimatePresence initial={false}>
+          {expanded && children.length > 0 && (
+            <SessionChildren key="children" id={`session-children-${item.id}`}>
+              <div className={depth < 3 ? 'ml-5 border-l border-foreground/10' : 'border-l border-foreground/10'}>
+                {children.map(child => renderSessionRow({ item: child }, true, depth + 1))}
+              </div>
+            </SessionChildren>
+          )}
+        </AnimatePresence>
+      </div>
+    )
+  }
+
   // --- Render ---
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -775,23 +865,7 @@ export function SessionList({
       <EntityList<SessionListRow>
         groups={rowData.groups}
         getKey={(row) => row.item.id}
-        renderItem={(row, _indexInGroup, isFirstInGroup) => {
-          const flatIndex = rowIndexMap.get(row.item.id) ?? 0
-          const rowProps = interactions.getRowProps(row, flatIndex)
-          return (
-            <SessionItem
-              item={row.item}
-              index={flatIndex}
-              itemProps={rowProps.buttonProps as Record<string, unknown>}
-              isSelected={rowProps.isSelected}
-              isFirstInGroup={isFirstInGroup}
-              isInMultiSelect={rowProps.isInMultiSelect ?? false}
-              onSelect={() => handleSelectSession(row, flatIndex)}
-              onToggleSelect={() => handleToggleSelect(row, flatIndex)}
-              onRangeSelect={() => handleRangeSelect(flatIndex)}
-            />
-          )
-        }}
+        renderItem={(row, _indexInGroup, isFirstInGroup) => renderSessionRow(row, isFirstInGroup)}
         header={
           <>
             {searchActive && (
@@ -804,7 +878,7 @@ export function SessionList({
                 onBlur={() => setIsSearchInputFocused(false)}
                 isSearching={isSearchingContent}
                 isUnavailable={isSearchUnavailable}
-                resultCount={matchingFilterItems.length + otherResultItems.length}
+                resultCount={searchResultCount}
                 exceededLimit={exceededSearchLimit}
                 inputRef={searchInputRef}
               />
