@@ -13,9 +13,9 @@ export interface SkillMetadata {
   name: string;
   /** Brief description shown in skill list */
   description: string;
-  /** Optional file patterns that trigger this skill */
+  /** Compatibility metadata only; does not auto-activate skills in the current runtime. */
   globs?: string[];
-  /** Optional tools to always allow when skill is active */
+  /** Compatibility metadata only; does not grant permissions in the current runtime. */
   alwaysAllow?: string[];
   /**
    * Optional icon - emoji or URL only.

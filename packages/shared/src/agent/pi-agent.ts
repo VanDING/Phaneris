@@ -52,7 +52,6 @@ import { EventQueue } from './backend/event-queue.ts';
 
 // System prompt for Craft Agent context
 import { getSystemPrompt } from '../prompts/system.ts';
-import { getCoAuthorPreference } from '../config/preferences.ts';
 import { loadProjectById, getProjectAssetsPath, listProjectAssets, getProjectMemoryPath, loadProjectMemory } from '../projects/storage.ts';
 import type { ProjectPromptContext } from '../projects/types.ts';
 
@@ -2323,7 +2322,6 @@ export class PiAgent extends BaseAgent {
         this.config.session?.workingDirectory,
         this.config.systemPromptPreset,
         'Craft Agents Backend', // backendName
-        getCoAuthorPreference(), // respect user's includeCoAuthoredBy preference (#576)
         projectContext ?? undefined,
       );
 

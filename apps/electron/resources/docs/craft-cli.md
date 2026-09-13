@@ -1,6 +1,6 @@
 # Craft Agent CLI Guide
 
-`craft-agent` is the preferred interface for managing workspace config domains such as labels, sources, skills, and automations.
+`craft-agent` manages workspace config domains such as labels, sources, skills, and automations. When the Craft CLI feature is enabled, guarded agent file operations are blocked: use the corresponding CLI command. This includes reads under `labels/` and writes to labels, source config, skill instructions, and automations. When disabled, use available configuration tools within the current permission mode.
 
 ## Usage
 
@@ -153,8 +153,8 @@ Manage workspace skills stored under `skills/{slug}/SKILL.md`.
 | `--slug "<slug>"` | Custom slug (auto-generated from name if omitted) |
 | `--body "..."` | Skill content/instructions (markdown body) |
 | `--icon "<url>"` | Icon URL (auto-downloaded to `icon.*`) |
-| `--globs "*.ts,*.tsx"` | Comma-separated glob patterns for auto-suggestion |
-| `--always-allow "Bash,Write"` | Comma-separated tool names to always allow |
+| `--globs "*.ts,*.tsx"` | Compatibility metadata only; does not auto-activate skills |
+| `--always-allow "Bash,Write"` | Compatibility metadata only; does not grant permissions |
 | `--required-sources "linear,github"` | Comma-separated source slugs to auto-enable |
 
 ### Examples

@@ -1,21 +1,47 @@
-import { describe, it, expect, mock, beforeEach } from 'bun:test'
+import { describe, it, expect, mock } from 'bun:test'
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 
-// Stub the preferences module so we can toggle `getCoAuthorPreference` per test
-// without touching disk. `formatPreferencesForPrompt` is stubbed to '' because
-// it's unrelated to the behavior under test here.
-let mockIncludeCoAuthoredBy = true
+// Keep user preferences isolated from disk.
 mock.module('../../config/preferences.ts', () => ({
-  getCoAuthorPreference: () => mockIncludeCoAuthoredBy,
   formatPreferencesForPrompt: () => '',
 }))
 
 import { getSystemPrompt, formatProjectContextForPrompt } from '../system'
 import type { ProjectPromptContext } from '../../projects/types.ts'
 
-const GIT_CONVENTIONS_HEADING = '## Git Conventions'
-const CO_AUTHOR_TRAILER = 'Co-Authored-By: Craft Agent <agents-noreply@craft.do>'
-
 describe('system prompt guidance', () => {
+  it('keeps quick configuration agents within the same documentation and mode boundaries', () => {
+    const mini = getSystemPrompt('', undefined, '/tmp/workspace', undefined, 'mini')
+    expect(mini).toContain('Read the relevant configuration guide before editing')
+    expect(mini).toContain('current user scope and runtime permission mode')
+    expect(mini).toContain('Do not invent a SubmitPlan gate for already-authorized Ask/Execute edits')
+    expect(mini).not.toContain('Use Read, Edit, Write tools for file operations.')
+  })
+
+  it('keeps execution rules before capability details and routes deliverables to a real guide', () => {
+    const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Craft Agents Backend')
+    expect(prompt.indexOf('## Execution Contract')).toBeLessThan(prompt.indexOf('## Documentation and Capability Discovery'))
+    expect(prompt).toContain('In Ask/Execute, do not require an additional `SubmitPlan` for work already authorized')
+    expect(prompt).toContain('An analysis-only request needs no plan submission.')
+    expect(prompt).toContain('Only the user accepts/discards it.')
+    expect(prompt).not.toContain('Never try to execute a plan without submitting it first')
+    expect(prompt).not.toContain('guaranteed JSON output')
+    const guides = [...prompt.matchAll(/~\/\.craft-agent\/docs\/([a-z-]+\.md)/g)]
+    expect(guides.some(match => match[1] === 'artifacts.md')).toBe(true)
+    for (const match of guides) {
+      expect(existsSync(resolve(import.meta.dir, '../../../../../apps/electron/resources/docs', match[1]!))).toBe(true)
+    }
+  })
+
+  it('does not mutate the stable prompt across repeated builds or merge volatile session state into it', () => {
+    const build = () => getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Craft Agents Backend')
+    const first = build()
+    expect(build()).toBe(first)
+    expect(first).not.toMatch(/<session_state>\s*\n/)
+    expect(first).not.toContain('<current_datetime>')
+  })
+
   it('uses backend-neutral debug log querying guidance (rg/grep via Bash)', () => {
     const prompt = getSystemPrompt(
       undefined,
@@ -38,74 +64,14 @@ describe('system prompt guidance', () => {
   })
 })
 
-describe('includeCoAuthoredBy handling', () => {
-  beforeEach(() => {
-    mockIncludeCoAuthoredBy = true
-  })
-
-  it('includes the Git Conventions block when the arg is explicitly true', () => {
-    const prompt = getSystemPrompt(
-      undefined,
-      undefined,
-      '/tmp/workspace',
-      '/tmp/workspace',
-      undefined,
-      undefined,
-      true
-    )
-
-    expect(prompt).toContain(GIT_CONVENTIONS_HEADING)
-    expect(prompt).toContain(CO_AUTHOR_TRAILER)
-  })
-
-  it('omits the Git Conventions block when the arg is explicitly false', () => {
-    const prompt = getSystemPrompt(
-      undefined,
-      undefined,
-      '/tmp/workspace',
-      '/tmp/workspace',
-      undefined,
-      undefined,
-      false
-    )
-
-    expect(prompt).not.toContain(GIT_CONVENTIONS_HEADING)
-    expect(prompt).not.toContain(CO_AUTHOR_TRAILER)
-  })
-
-  // Regression test for #576: Pi-backed sessions called getSystemPrompt without
-  // the 7th arg, and the function silently defaulted to `true`, ignoring the
-  // user's preference. The defensive fallback in getSystemPrompt should now
-  // resolve to getCoAuthorPreference() when the arg is omitted.
-  it('falls back to getCoAuthorPreference() when the arg is omitted (#576)', () => {
-    mockIncludeCoAuthoredBy = false
-
-    const prompt = getSystemPrompt(
-      undefined,
-      undefined,
-      '/tmp/workspace',
-      '/tmp/workspace',
-      undefined,
-      'Craft Agents Backend'
-      // 7th arg omitted — must not regress to `true` default
-    )
-
-    expect(prompt).not.toContain(GIT_CONVENTIONS_HEADING)
-    expect(prompt).not.toContain(CO_AUTHOR_TRAILER)
-  })
-
-  it('falls back to getCoAuthorPreference() === true when the arg is omitted and the user has not opted out', () => {
-    mockIncludeCoAuthoredBy = true
-
-    const prompt = getSystemPrompt(
-      undefined,
-      undefined,
-      '/tmp/workspace',
-      '/tmp/workspace'
-    )
-
-    expect(prompt).toContain(GIT_CONVENTIONS_HEADING)
-    expect(prompt).toContain(CO_AUTHOR_TRAILER)
+describe('prompt attribution removal', () => {
+  it('omits built-in attribution and preserves the project context argument', () => {
+    const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Craft Agents Backend', {
+      name: 'Example Project', assetsPath: '/tmp/assets', memoryPath: '/tmp/MEMORY.md', assets: [],
+    })
+    expect(prompt).not.toContain('Co-Authored-By:')
+    expect(prompt).not.toContain('## Git Conventions')
+    expect(prompt).toContain('<project_context project="Example Project">')
   })
 })
 

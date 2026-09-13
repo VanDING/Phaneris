@@ -103,7 +103,7 @@ If `dark` is omitted, it's auto-derived from `light` (brightened ~30%).
 |----------|------|-------------|
 | `id` | string | Unique slug (lowercase, hyphens) |
 | `label` | string | Display name |
-| `color` | string? | Optional color (hex or Tailwind class). Uses design system default if omitted. |
+| `color` | EntityColor? | System color string (e.g. `"accent"`, `"info/80"`) or custom `{ "light": "#hex", "dark": "#hex" }` object. Tailwind classes are not valid authoring values. |
 | `icon` | string? | Optional emoji (e.g., `"🔥"`) or URL. Omit to use auto-discovered file. |
 | `category` | `"open"` \| `"closed"` | Inbox vs archive |
 | `isFixed` | boolean | Cannot delete/rename if true |

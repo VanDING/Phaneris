@@ -7,7 +7,7 @@
  * Key features:
  * - Attachment-based file loading (agent passes paths, tool loads content)
  * - Line range support for large files
- * - Predefined output formats + custom JSON Schema (native structured output)
+ * - Predefined output formats + custom JSON Schema (backend-dependent guidance)
  * - Parallel execution support (multiple calls run simultaneously)
  * - Comprehensive validation with actionable error messages
  *
@@ -551,7 +551,7 @@ export interface LLMToolOptions {
   /**
    * Lazy resolver for the agent-native query callback.
    * Called at execution time to get the current callback from the session registry.
-   * Each backend implements queryLlm() with native structured output support.
+   * Structured-output enforcement depends on the backend; Pi currently uses prompt guidance.
    */
   getQueryFn: () => ((request: LLMQueryRequest) => Promise<LLMQueryResult>) | undefined;
 }
@@ -569,7 +569,7 @@ export function createLLMTool(options: LLMToolOptions) {
 - Context isolation: process content without polluting main context
 
 Put text/content directly in the 'prompt' parameter. Do NOT pass inline text via attachments.
-Only use 'attachments' for existing file paths on disk - the tool loads file content automatically.
+Only use 'attachments' for existing text-file paths on disk - the tool loads file content automatically. Image attachments are currently rejected even when the main session supports vision.
 For large files (>2000 lines), use {path, startLine, endLine} to select a portion.`,
     {
       prompt: z.string().min(1, 'Prompt cannot be empty')
@@ -579,22 +579,22 @@ For large files (>2000 lines), use {path, startLine, endLine} to select a portio
         .describe(`File paths on disk (max ${MAX_ATTACHMENTS}). NOT for inline text — put text in prompt instead. Use {path, startLine, endLine} for large files.`),
 
       model: z.string().optional()
-        .describe('Model ID or short name (e.g., "haiku", "sonnet"). Defaults to a fast model.'),
+        .describe('Requested model ID or short name. The backend selects a configured mini/summarization model when omitted and may use a provider-compatible fallback.'),
 
       systemPrompt: z.string().optional()
         .describe('Optional system prompt'),
 
       maxTokens: z.number().int().min(1).max(64000).optional()
-        .describe('Max output tokens (1-64000). Defaults to 4096'),
+        .describe('Requested max output tokens (1-64000); enforcement depends on the backend.'),
 
       temperature: z.number().min(0).max(1).optional()
-        .describe('Sampling temperature 0-1'),
+        .describe('Requested sampling temperature 0-1; enforcement depends on the backend.'),
 
       outputFormat: z.enum(['summary', 'classification', 'extraction', 'analysis', 'comparison', 'validation']).optional()
         .describe('Predefined output format'),
 
       outputSchema: OutputSchemaParam.optional()
-        .describe('Custom JSON Schema for structured output'),
+        .describe('Requested JSON Schema; validate the response because enforcement depends on the backend.'),
     },
     async (args: Record<string, unknown>) => {
       // ========================================

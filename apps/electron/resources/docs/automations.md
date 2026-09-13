@@ -2,9 +2,10 @@
 
 This guide explains how to configure automations in Craft Agent to automate workflows based on events.
 
-> **CLI-first workflow (recommended):** Use `craft-agent automation ...` commands instead of editing JSON directly.
+> **Configuration workflow:** Use `craft-agent automation ...` commands instead of editing JSON directly.
 > - `craft-agent automation --help`
 > - Canonical command reference: [craft-cli.md](./craft-cli.md)
+> When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## What Are Automations?
 
@@ -128,6 +129,30 @@ Send a prompt to Craft Agent (creates a new session for scheduled prompts).
 ```
 
 The `llmConnection` value is the slug of an LLM connection configured in AI Settings. The `model` value is a model ID supported by the provider. If either is invalid or not found, it gracefully falls back to the workspace default. Both can be used independently or together.
+
+### Script Actions
+
+Run a deterministic workspace-local script without creating an agent session. Use a script for repeatable computation; use a prompt action when model reasoning is needed. The supported action types are `prompt`, `webhook`, and `script`; unknown types or unknown action fields fail validation.
+
+```json
+{
+  "type": "script",
+  "script": "scripts/refresh-report.ts",
+  "runtime": "bun",
+  "args": ["--summary"],
+  "timeoutMs": 60000
+}
+```
+
+| Field | Meaning |
+|-------|---------|
+| `script` | Required workspace-relative existing file; no `..` segments or symlink escape |
+| `runtime` | `bun` (default), `node`, or `python3` |
+| `args` | Optional literal argument array; no shell expansion |
+| `timeoutMs` | Optional positive integer; execution clamps it to 1 second–15 minutes, default 60 seconds |
+| `page` | Optional page slug for recording a Page refresh completion; omit for ordinary scripts |
+
+Create and verify the script before enabling its automation. The executor uses argv spawn, with the workspace as its working directory and a `CRAFT_*`-only environment. It does not inherit ordinary PATH or provider credentials. This is not the network/filesystem sandbox used by `transform_data`; script actions can have external side effects and must stay within the approved automation scope. Repeated triggers while the same matcher's script run is active are skipped and recorded rather than queued indefinitely. Inspect automation history for failures, skips, and exit status; a configuration save does not prove the script ran successfully.
 
 ### Webhook Actions
 

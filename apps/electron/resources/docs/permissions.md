@@ -21,7 +21,11 @@ Permission files are located at:
 
 When you write:
 ```json
-{ "pattern": "list", "comment": "Allow list operations" }
+{
+  "allowedMcpPatterns": [
+    { "pattern": "list", "comment": "Allow list operations" }
+  ]
+}
 ```
 
 The system converts it to `mcp__<sourceSlug>__.*list` internally. This means:
@@ -45,12 +49,9 @@ The system converts it to `mcp__<sourceSlug>__.*list` internally. This means:
   "allowedBashPatterns": [
     { "pattern": "^ls\\s", "comment": "Allow ls commands" }
   ],
-  "blockedTools": [
-    "dangerous_tool"
-  ],
   "allowedWritePaths": [
     "/tmp/**",
-    "~/.craft-agent/**"
+    "/path/to/project/output/**"
   ],
   "blockedCommandHints": [
     {
@@ -126,15 +127,9 @@ Regex patterns for bash commands to allow.
 }
 ```
 
-### blockedTools
+### Legacy blockedTools field
 
-Additional tools to block (rarely needed).
-
-```json
-{
-  "blockedTools": ["risky_tool_name"]
-}
-```
+`blockedTools` is accepted by the configuration schema for compatibility but is not applied by the current custom-permission parser/merger. Do not use it to enforce a custom deny rule. Core blocked tools come from the built-in mode policy; custom permission files extend allow rules. A custom deny policy requires runtime support, not just a JSON entry.
 
 ### allowedWritePaths
 
@@ -144,7 +139,6 @@ Glob patterns for directories where writes are allowed.
 {
   "allowedWritePaths": [
     "/tmp/**",
-    "~/.craft-agent/**",
     "/path/to/project/output/**"
   ]
 }
@@ -199,7 +193,10 @@ Fields:
 - TodoWrite
 - Browser tools (`browser_*` and `mcp__session__browser_*`)
 - MCP tools with read semantics (list, get, search)
-- Plans folder writes (session plans only)
+- Writes within the exact session `plansFolderPath` and `dataFolderPath` from `<session_state>`
+- File writes matching configured `allowedWritePaths` (subject to other runtime checks)
+
+Browser tool availability does not authorize changing external data. In Explore, use the browser for inspection; do not use clicks, typing, uploads, or evaluation to bypass the requested read-only scope. See [browser-tools.md](./browser-tools.md#authorization-and-permission-modes).
 
 ### Read-Only Bash Commands
 
@@ -237,7 +234,7 @@ Each command is validated independently. If any command is not in the allowlist,
 
 ### Blocked Shell Constructs
 
-These constructs are always blocked, even if the base command is allowed:
+These constructs are blocked by the ordinary Explore Bash check, even if the base command is allowed. The dedicated plans/data write validator can allow supported write commands targeting those exact directories; this is not a general redirect or shell-execution exemption.
 
 | Construct | Examples | Why Blocked |
 |-----------|----------|-------------|
@@ -250,10 +247,12 @@ Example: `git status > file.txt` is blocked because `>` could overwrite files.
 
 ## Cascading Rules
 
-Rules cascade from workspace → source → agent:
-1. Workspace rules apply globally
-2. Source rules extend workspace rules for that source
-3. Agent rules extend both for that agent's session
+Rules combine built-in policy and app-level defaults → workspace → active sources:
+1. App defaults supply the baseline allow patterns
+2. Workspace rules extend that baseline
+3. Active-source rules extend it for the session; MCP patterns are scoped as described above
+
+There is no separate agent-level permission file in the current merge context.
 
 Rules are additive - they can only allow more operations, not restrict further.
 
@@ -296,7 +295,7 @@ Rules are additive - they can only allow more operations, not restrict further.
 
 ## Planning in Explore Mode
 
-In Explore mode, you can create implementation plans that the user can accept to transition to execution.
+In Explore mode, you can create implementation plans that the user can accept to transition to execution. Submit a plan when implementation is wanted; a request for analysis alone does not require a plan or a mode change. In Ask/Execute, do not invent an additional SubmitPlan gate for work the user already authorized unless the user explicitly requested plan review.
 
 ### When to Create Plans
 
@@ -333,6 +332,6 @@ The recommended workflow:
 2. **Plan** - Write a structured plan to the plans folder
 3. **Submit** - Call `SubmitPlan` to present to user
 4. **Accept** - User clicks "Accept Plan" to exit Explore mode
-5. **Execute** - Implement the plan with full permissions
+5. **Execute** - Re-read the latest `<session_state>` and implement the accepted scope under the resulting mode. Acceptance does not bypass other tool policies or user-only review actions.
 
 This provides a smooth transition from exploration to implementation with user oversight.

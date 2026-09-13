@@ -21,6 +21,10 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- **Commit attribution follows the task** — removed the built-in co-author prompt and its preference-tool switch; commit attribution follows user instructions and repository conventions.
+
+- **Consistent agent guidance** — built-in instructions now separate permissions, execution, and delivery workflows from on-demand format documentation. Tool/skill/permission guides reflect current runtime behavior, and a new Artifact guide explains managed drafts, validation, and user acceptance.
+
 - **Violet Pulse activity and navigation** — the Default theme uses brighter violet accents. The yearly activity calendar adds themed hover details, keyboard navigation and selectable dates. Collapsing the desktop sidebar now keeps a centered 56 px rail of primary icons with a smooth width transition.
 - **Grouped subtask sessions** — child sessions stay beneath their parent with an independent collapse control beside the more menu, preserving the leading status switch. Families paginate together, search retains parent context, and children remain independently selectable with running and attention indicators.
 

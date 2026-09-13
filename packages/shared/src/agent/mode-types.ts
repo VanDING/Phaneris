@@ -128,8 +128,9 @@ export type BlockedCommandHintRule = z.infer<typeof BlockedCommandHintSchema>;
  * Permissions JSON configuration schema
  *
  * Note: Core write tools (Write, Edit, MultiEdit, NotebookEdit) are hardcoded in
- * SAFE_MODE_CONFIG and always blocked in Explore mode. The blockedTools field
- * allows users to block additional tools beyond these defaults.
+ * SAFE_MODE_CONFIG, subject to explicit path exceptions in the mode checker.
+ * blockedTools is accepted for compatibility but is not applied by the custom
+ * permission parser/merger; it must not be advertised as an effective deny rule.
  */
 export const PermissionsConfigSchema = z.object({
   /** Version date for migration (ISO format: "2026-02-07") */
@@ -142,7 +143,7 @@ export const PermissionsConfigSchema = z.object({
   allowedApiEndpoints: z.array(ApiEndpointRuleSchema).optional(),
   /** File paths to allow writes in Explore mode (glob patterns) */
   allowedWritePaths: z.array(PatternSchema).optional(),
-  /** Additional tools to block (extends the hardcoded defaults) */
+  /** Legacy compatibility field; the custom permission merger does not apply it. */
   blockedTools: z.array(PatternSchema).optional(),
   /** Command-specific hint messages for blocked Bash commands */
   blockedCommandHints: z.array(BlockedCommandHintSchema).optional(),

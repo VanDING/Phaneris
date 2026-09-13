@@ -1,5 +1,7 @@
 # PDF Preview Guide
 
+> **Delivery boundary:** These examples cover displaying existing files or temporary analysis results. When creating or changing a user deliverable, first follow [artifacts.md](./artifacts.md): generate into the managed draft (or import a temporary file), inspect, and submit for user review. Do not write over the final destination or repeat a submitted Artifact with a Preview block.
+
 This guide covers how to display PDF documents inline using `pdf-preview` code blocks.
 
 ## Overview
@@ -122,7 +124,7 @@ pdf.cell(text='Hello World')
 pdf.output(sys.argv[-1])
 ```
 
-Call via `transform_data`, then reference the output:
+For a temporary preview, call via `transform_data`, then reference the output. For a user deliverable, generate into the Artifact `editablePath`, or import this temporary output as `initialPath`, then inspect and submit as described in [artifacts.md](./artifacts.md).
 
 ````
 ```pdf-preview

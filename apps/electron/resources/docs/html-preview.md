@@ -1,5 +1,7 @@
 # HTML Preview Guide
 
+> **Delivery boundary:** These examples cover displaying existing files or temporary analysis results. When creating or changing a user deliverable, first follow [artifacts.md](./artifacts.md): generate into the managed draft (or import a temporary file), inspect, and submit for user review. Do not write over the final destination or repeat a submitted Artifact with a Preview block.
+
 This guide covers how to render rich HTML content inline using `html-preview` code blocks, and how to use `transform_data` to prepare HTML files from various sources.
 
 ## Overview
@@ -322,9 +324,13 @@ Gmail uses **URL-safe base64** (RFC 4648 §5):
 ### Large Emails
 
 Some newsletter HTML bodies are 100KB+. This is fine:
-- `transform_data` writes to disk (no token cost)
+- `transform_data` stores output on disk, avoiding large inline output in model context; the script, arguments, and tool response still consume tokens
 - The iframe loads the file directly
 - The 400px inline preview shows just the top portion
+
+## Source Templates
+
+When a source guide lists an HTML template, use `render_template` with the source slug, template ID, and data matching that template. Read the source's `guide.md` for supported IDs and shapes. The result provides a local HTML path for preview; fix reported missing-field warnings before presenting it. For a final user deliverable, import the result into an Artifact and follow [artifacts.md](./artifacts.md).
 
 ## Security
 
@@ -334,14 +340,14 @@ HTML renders in a **sandboxed iframe** with these restrictions:
 |---------|--------|---------|
 | JavaScript execution | **Blocked** | `sandbox` attr without `allow-scripts` |
 | Form submission | **Blocked** | No `allow-forms` |
-| Link navigation | **Blocked** | Sandbox prevents all navigation |
+| Link navigation | **User-initiated** | The renderer targets the top frame; the desktop host intercepts user navigation and routes allowed URLs externally |
 | Popups / new windows | **Blocked** | No `allow-popups` |
 | CSS styling | **Allowed** | Inline, embedded, and `<style>` tags work |
 | Images (`https://`) | **Allowed** | External images load normally |
 | Images (`data:`) | **Allowed** | Base64-encoded images work |
 | Embedded fonts | **Allowed** | Google Fonts and other CDN fonts load |
 
-**No HTML sanitization is needed** — the `sandbox` attribute provides complete process-level isolation. Malicious scripts, forms, and navigation are all blocked at the browser engine level.
+The iframe sandbox blocks script execution and form submission; it is not a claim of complete process isolation or network isolation. User-activated navigation is allowed through host URL handling, and external images/fonts can make network requests. Treat HTML and remote resources as untrusted content; do not embed credentials. For interactive mini apps, use Pages and its separate bridge/grant rules.
 
 ## Best Practices
 

@@ -1,5 +1,7 @@
 # Data Tables Guide
 
+> **Delivery boundary:** These examples cover displaying existing files or temporary analysis results. When creating or changing a user deliverable, first follow [artifacts.md](./artifacts.md): generate into the managed draft (or import a temporary file), inspect, and submit for user review. Do not write over the final destination or repeat a submitted Artifact with a Preview block.
+
 This guide covers how to present structured data using datatable and spreadsheet blocks, and how to use the `transform_data` tool for large datasets.
 
 ## Overview
@@ -96,11 +98,11 @@ Use the `transform_data` tool + `"src"` field when:
 |-----------|------|-------------|
 | `language` | `"python3"` \| `"node"` \| `"bun"` | Script runtime |
 | `script` | string | Transform script source code |
-| `inputFiles` | string[] | Input file paths relative to session dir |
+| `inputFiles` | string[] | Session-relative or absolute paths within the session or configured skills directory |
 | `outputFile` | string | Output file name (written to session `data/` dir) |
 
 **Path conventions:**
-- **Input files** are relative to the session directory. Common locations:
+- **Input files** may be session-relative or absolute, but must stay within the session or configured skills directory (symlink-aware checks). Arbitrary workspace files are not accepted as `inputFiles`. Common session locations:
   - `long_responses/tool_result_abc.txt` — saved tool results
   - `data/previous_output.json` — output from a prior transform
   - `attachments/data.csv` — user-attached files
@@ -331,11 +333,17 @@ fs.writeFileSync(process.argv.at(-1), JSON.stringify({ rows }));
 
 ## Security & Constraints
 
-- **Isolated subprocess:** Scripts run in a child process with no access to API keys, credentials, or sensitive environment variables
+- **Subprocess environment:** Known credential variables are removed and runtime cache/temp paths are redirected into session data. This is a denylist, not a guarantee that every possible secret name or file is inaccessible. Never pass credentials to a transform.
 - **30-second timeout:** Scripts that exceed 30 seconds are killed
-- **Path sandboxing:** Input files must be within the session directory. Output files must be within the session `data/` directory. Path traversal attempts (e.g., `../`) are blocked.
-- **No network access:** Scripts inherit the process environment (minus secrets) but should not make network calls — use MCP tools for data fetching, then transform locally
-- **Blocked env vars:** `ANTHROPIC_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`, `AWS_*`, `GITHUB_TOKEN`, `OPENAI_API_KEY`, `GOOGLE_API_KEY`, `STRIPE_SECRET_KEY`, `NPM_TOKEN`
+- **Path validation:** Inputs must be within the session or configured skills directory; output must remain in the session `data/` directory. Do not construct paths that escape those roots.
+- **OS isolation:** macOS/Linux require usable network and filesystem isolation backends, deny network access, and limit writes to session data; execution fails closed if a backend is unavailable. The Windows branch does not apply those OS sandbox wrappers. In every mode/platform, fetch data through sources first and transform locally; do not use scripts to bypass permissions.
+- **Blocked env vars:** `ANTHROPIC_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`, `GITHUB_TOKEN`, `GH_TOKEN`, `OPENAI_API_KEY`, `GOOGLE_API_KEY`, `STRIPE_SECRET_KEY`, `NPM_TOKEN`
+
+### Recovery
+
+- If isolation is unavailable, report the environment limitation. Repeating the same call or changing the script does not repair the backend; do not rerun unsandboxed to bypass it. Continue permitted analysis or use a supported environment.
+- If an input path is outside the allowed roots, use an authorized copy into session data when the mode permits it, or read/process through a tool that is authorized for that path. Do not disguise the path.
+- On timeout, reduce or split the transformation. Confirm the successful tool response and inspect the output before referencing it; a partial file left by a failed run is not a completed result.
 
 ## Best Practices
 

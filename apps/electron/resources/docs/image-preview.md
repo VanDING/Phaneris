@@ -1,5 +1,7 @@
 # Image Preview Guide
 
+> **Delivery boundary:** These examples cover displaying existing files or temporary analysis results. When creating or changing a user deliverable, first follow [artifacts.md](./artifacts.md): generate into the managed draft (or import a temporary file), inspect, and submit for user review. Do not write over the final destination or repeat a submitted Artifact with a Preview block.
+
 This guide covers how to display image files inline using `image-preview` code blocks.
 
 ## Overview

@@ -2,9 +2,10 @@
 
 This guide explains how to create and configure skills in Craft Agent.
 
-> **CLI-first workflow (recommended):** Use `craft-agent skill ...` commands instead of editing `SKILL.md` files directly.
+> **Configuration workflow:** Use `craft-agent skill ...` commands instead of editing `SKILL.md` files directly.
 > - `craft-agent skill --help`
 > - Canonical command reference: [craft-cli.md](./craft-cli.md)
+> When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## What Are Skills?
 
@@ -12,8 +13,8 @@ Skills are specialized instructions that extend the active agent for specific ta
 
 **Key points:**
 - Skills are invoked via slash commands (e.g., `/commit`, `/review-pr`)
-- Skills can be automatically triggered by file patterns (globs)
-- Skills can pre-approve specific tools to run without prompting
+- `globs` is retained as compatibility metadata; the current Craft activation path does not implement automatic file-pattern activation
+- `alwaysAllow` is retained as compatibility metadata; it does not change the current Craft permission checks
 - Existing Claude Code-style skills can usually be imported; always validate Craft-specific metadata after import
 
 ## Claude Code-compatible format
@@ -33,13 +34,16 @@ Craft Agent deliberately preserves the familiar frontmatter-plus-Markdown shape:
 
 When a skill is invoked (e.g., `/commit`):
 
-1. **Workspace skill checked first** - If `~/.craft-agent/workspaces/{id}/skills/commit/SKILL.md` exists, it's used
-2. **Built-in skill as fallback** - If no workspace skill exists, an available bundled skill may be used
+1. **Project**: `{projectRoot}/.agents/skills/{slug}/SKILL.md`
+2. **Workspace**: `~/.craft-agent/workspaces/{id}/skills/{slug}/SKILL.md`
+3. **Global**: `~/.agents/skills/{slug}/SKILL.md`
+
+The highest-priority matching slug wins: project > workspace > global. Use `craft-agent skill where <slug> --project-root <path>` when CLI is available to inspect the resolved path. Do not assume a separate SDK-bundled fallback.
 
 This allows you to:
-- **Override built-in skills** - Create a workspace skill with the same slug to replace bundled behavior
-- **Extend built-in skills** - Reuse a bundled pattern and add workspace-specific instructions
-- **Create new skills** - Add entirely new skills not in the SDK
+- Override a global skill in a workspace or project without modifying the global file
+- Reuse a skill pattern with project-specific instructions
+- Create new skills at the appropriate scope
 
 ## Skill Storage
 
@@ -60,16 +64,16 @@ The supported structure is:
 ---
 name: "Skill Display Name"
 description: "Brief description shown in skill list"
-globs: ["*.ts", "*.tsx"]     # Optional: file patterns that trigger skill
-alwaysAllow: ["Bash"]        # Optional: tools to always allow
+globs: ["*.ts", "*.tsx"]     # Optional compatibility metadata; does not auto-activate
+alwaysAllow: ["Bash"]        # Optional compatibility metadata; does not grant permissions
 requiredSources:             # Optional: sources to auto-enable on invocation
   - linear
 ---
 
 # Skill Instructions
 
-Your skill content goes here. This is injected into the active agent's context
-when the skill is active.
+Your skill content goes here. Craft resolves an invoked skill and instructs the
+agent to read its SKILL.md before acting; metadata alone is not the instruction body.
 
 ## Guidelines
 
@@ -91,8 +95,7 @@ Display name for the skill. Shown in the UI and skill list.
 Brief description (1-2 sentences) explaining what the skill does.
 
 ### globs (optional)
-Array of glob patterns. When a file matching these patterns is being worked on,
-the skill may be automatically suggested or activated.
+Compatibility metadata containing file patterns. Craft currently parses and stores this field but does not use it to automatically activate a skill. Invoke the skill explicitly when it is needed.
 
 ```yaml
 globs:
@@ -102,13 +105,12 @@ globs:
 ```
 
 ### alwaysAllow (optional)
-Array of tool names that are automatically allowed when this skill is active.
-Useful for skills that require specific tools without prompting.
+Compatibility metadata containing tool names. Craft currently parses and stores this field but does not use it to grant tool permissions. A skill cannot override Explore mode, approval requirements, or other runtime policy.
 
 ```yaml
 alwaysAllow:
-  - "Bash"                # Allow bash commands
-  - "Write"               # Allow file writes
+  - "Bash"                # Metadata only; does not grant Bash access
+  - "Write"               # Metadata only; does not grant write access
 ```
 
 ### requiredSources (optional)
@@ -128,11 +130,9 @@ requiredSources:
 
 ## Creating a Skill
 
-### 1. Create the skill directory
+### 1. Create through the available configuration route
 
-```bash
-mkdir -p ~/.craft-agent/workspaces/{ws}/skills/my-skill
-```
+With CLI enabled, use `craft-agent skill create --name "Code Review" --description "Review changes" --slug code-review --body "..."`, then `craft-agent skill update code-review --json '{"body":"..."}'`. The body below is example content for those arguments. When CLI is disabled and file editing is allowed, create the folder and SKILL.md at the intended scope.
 
 ### 2. Write SKILL.md
 
@@ -292,16 +292,9 @@ When triaging issues:
 When this skill is invoked, the `linear` source is automatically enabled for the
 session — no manual toggle needed.
 
-## Overriding SDK Skills
+## Overriding a Skill by Scope
 
-To customize a built-in SDK skill like `/commit`:
-
-1. Create `~/.craft-agent/workspaces/{ws}/skills/commit/SKILL.md`
-2. Write your custom instructions
-3. Add an icon
-4. Run `skill_validate({ skillSlug: "commit" })`
-
-Your skill will be used instead of the SDK's built-in version.
+To customize a global skill such as `commit`, create a workspace skill with the same slug through the available configuration route, supply its instruction body and optional icon, then validate it. A project skill with that slug takes precedence over both. Inspect the resolved path before editing; do not assume an SDK-bundled skill exists.
 
 This is useful for:
 - Adding team-specific commit message formats
@@ -324,9 +317,10 @@ This is useful for:
 - Verify SKILL.md exists and is readable
 - Run `skill_validate` for detailed errors
 
-**Skill not triggering:**
-- Check glob patterns match your files
-- Verify skill is in correct workspace
+**Skill not activating:**
+- Invoke it explicitly; `globs` does not automatically activate it in the current runtime
+- Check project/workspace/global resolution and whether a higher-priority skill has the same slug
+- Verify the resolved SKILL.md was successfully read
 
 **Icon not showing:**
 - Use supported formats: svg, png, jpg, jpeg

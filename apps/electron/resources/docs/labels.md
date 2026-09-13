@@ -2,9 +2,10 @@
 
 Labels are additive tags that can be applied to sessions. Unlike statuses (which are exclusive — one per session), labels are multi-select (many per session). They support hierarchical organization via nested JSON trees.
 
-> **CLI-first workflow (recommended):** Use `craft-agent label ...` commands instead of editing JSON directly.
+> **Configuration workflow:** Use `craft-agent label ...` commands instead of editing JSON directly.
 > - `craft-agent label --help`
 > - Canonical command reference: [craft-cli.md](./craft-cli.md)
+> When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. Direct agent file reads under `labels/` are also blocked; inspect labels with the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## Storage Locations
 
