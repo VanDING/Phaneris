@@ -28,10 +28,12 @@ import { kanbanComponents } from './kanban'
 import { scheduleViewComponents } from './schedule-views'
 import { taskEditorComponents } from './task-editor'
 import { controlSystemComponents } from './control-system'
+import { executionMapComponents } from './execution-map'
 
 export * from './types'
 
 export const componentRegistry: ComponentEntry[] = [
+  ...executionMapComponents,
   ...controlSystemComponents,
   ...mobileWebUIComponents,
   ...apiKeyInputComponents,

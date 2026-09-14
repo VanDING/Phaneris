@@ -403,9 +403,35 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
         {visitedViews.has('map') && sessionMap && (
           <section id={`${viewId}-panel-map`} role="tabpanel" aria-labelledby={`${viewId}-tab-map`} hidden={runView !== 'map'} className="h-full min-h-0 motion-view-enter">
             <TrajectoryMapView
+              key={sessionMap.currentSessionId}
+              snapshot={snapshot}
+              isProcessing={isProcessing}
+              isActive={runView === 'map'}
               turns={turns}
               sessionMap={sessionMap}
               onSelectRecord={(index) => {
+                setSearchQuery('')
+                setEventFilter('all')
+                setTimelineRange(null)
+                const record = flatRecords.find(record => record.cell.index === index)
+                if (record?.turn !== null && record?.turn !== undefined) {
+                  setCollapsedTurns(current => {
+                    const next = new Set(current)
+                    next.delete(record.turn!)
+                    return next
+                  })
+                }
+                // Reveal only the owning ledger group; preserve unrelated folds.
+                if (record?.cell.kind === 'tool' || record?.cell.kind === 'subtool') {
+                  let position = flatRecords.indexOf(record) - 1
+                  while (position >= 0 && (flatRecords[position]?.cell.kind === 'tool' || flatRecords[position]?.cell.kind === 'subtool')) position -= 1
+                  const owner = flatRecords[position]?.cell
+                  if (owner?.kind === 'message') setCollapsedAssistants(current => {
+                    const next = new Set(current)
+                    next.delete(assistantRecordId(owner))
+                    return next
+                  })
+                }
                 onSelectIndex(index)
                 selectRunView('trajectory')
               }}

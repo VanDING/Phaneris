@@ -1,78 +1,27 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, ChevronRight, GitBranch, LocateFixed, Maximize2, Minus, Plus, PanelRight, X } from 'lucide-react'
-import type { TrajectoryTurnModel } from './trajectory-layout'
-import { buildTrajectorySessionMapLayout, type TrajectoryMapEdge, type TrajectoryMapNode, type TrajectorySessionMap } from './trajectory-session-map'
-import styles from './TrajectoryMapView.module.css'
+import { ChevronDown, ChevronRight, LocateFixed, Maximize2, Minus, Plus, PanelRight, X } from 'lucide-react'
+import type { TrajectorySnapshot } from './trajectory-contract'
+import { trajectoryRecordId, type TrajectoryTurnModel } from './trajectory-layout'
+import type { TrajectorySessionMap } from './trajectory-session-map'
+import { buildExecutionGraph, groupExecutionByBehavior, defaultBehaviorCollapsed, layoutBehaviorGraph, type ExecutionNode, type ExecutionMapNode } from './trajectory-execution-map'
 import { resizeMapViewport, type MapViewportTransform } from './trajectory-map-viewport'
+import styles from './TrajectoryMapView.module.css'
 
 export interface TrajectoryMapViewProps {
+  snapshot: TrajectorySnapshot
   turns: readonly TrajectoryTurnModel[]
   sessionMap: TrajectorySessionMap
+  isProcessing?: boolean
+  isActive?: boolean
   onSelectRecord?: (index: number) => void
   onOpenSession?: (sessionId: string) => void
 }
 
-interface TurnSummary {
-  turn: number
-  question: string
-  answer: string
-  toolCount: number
-  recordIndex?: number
-}
+const clampScale = (scale: number) => Math.min(1.6, Math.max(0.05, scale))
+const duration = (ms: number | null) => ms === null ? '—' : ms < 1000 ? `${Math.round(ms)} ms` : ms < 60000 ? `${(ms / 1000).toFixed(1)} s` : `${(ms / 60000).toFixed(1)} min`
 
-const MIN_SCALE = 0.05
-const MAX_SCALE = 1.6
-
-function clampScale(scale: number): number {
-  return Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale))
-}
-
-function edgePath(edge: TrajectoryMapEdge, nodes: ReadonlyMap<string, TrajectoryMapNode>): string {
-  const source = nodes.get(edge.from)
-  const target = nodes.get(edge.to)
-  if (!source || !target) return ''
-  const x1 = source.x + source.width
-  const y1 = source.y + source.height / 2
-  const x2 = target.x
-  const y2 = target.y + target.height / 2
-  const bend = Math.max(44, (x2 - x1) / 2)
-  return `M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`
-}
-
-function edgeLabelPoint(edge: TrajectoryMapEdge, nodes: ReadonlyMap<string, TrajectoryMapNode>): { x: number, y: number } | null {
-  const source = nodes.get(edge.from)
-  const target = nodes.get(edge.to)
-  if (!source || !target) return null
-  return {
-    x: (source.x + source.width + target.x) / 2,
-    y: (source.y + source.height / 2 + target.y + target.height / 2) / 2 - 7,
-  }
-}
-
-function compactText(value: string | undefined, fallback: string): string {
-  const text = value?.replace(/\s+/g, ' ').trim() || fallback
-  return text.length > 120 ? `${text.slice(0, 119)}…` : text
-}
-
-function summarizeTurns(turns: readonly TrajectoryTurnModel[]): readonly TurnSummary[] {
-  return turns.flatMap((turn, index) => {
-    if (turn.turn === null) return []
-    const cells = turn.groups.flatMap(group => group.cells)
-    const user = cells.find(cell => cell.kind === 'user')
-    const assistant = [...cells].reverse().find(cell => cell.kind === 'message')
-    const tools = cells.filter(cell => cell.kind === 'tool' || cell.kind === 'subtool')
-    return [{
-      turn: turn.turn ?? index + 1,
-      question: compactText(user?.text, 'Continuation'),
-      answer: compactText(assistant?.text, tools.length > 0 ? 'Tool work' : 'No assistant response'),
-      toolCount: tools.length,
-      recordIndex: user?.index ?? assistant?.index,
-    }]
-  })
-}
-
-export function TrajectoryMapView({ turns, sessionMap, onSelectRecord, onOpenSession }: TrajectoryMapViewProps) {
+export function TrajectoryMapView({ snapshot, turns, sessionMap, isProcessing = false, isActive = true, onSelectRecord, onOpenSession }: TrajectoryMapViewProps) {
   const { t } = useTranslation()
   const rootRef = useRef<HTMLDivElement>(null)
   const viewportRef = useRef<HTMLDivElement>(null)
@@ -81,38 +30,79 @@ export function TrajectoryMapView({ turns, sessionMap, onSelectRecord, onOpenSes
   const [inspectorOpen, setInspectorOpen] = useState(false)
   const [isCompact, setIsCompact] = useState(true)
   const [animateViewport, setAnimateViewport] = useState(false)
-  const fittedRef = useRef(false)
-  const lastViewportSizeRef = useRef({ width: 0, height: 0 })
-  const previousCurrentPositionRef = useRef<{ x: number, y: number } | null>(null)
-  const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set())
-  const [selectedId, setSelectedId] = useState(`session:${sessionMap.currentSessionId}`)
+  const [overrides, setOverrides] = useState<ReadonlyMap<string, boolean>>(new Map())
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [weight, setWeight] = useState<'duration' | 'tokens'>('duration')
+  const [turnFilter, setTurnFilter] = useState('all')
   const [transform, setTransform] = useState<MapViewportTransform>({ x: 28, y: 28, scale: 0.9 })
-  const dragRef = useRef<{ pointerId: number, x: number, y: number, originX: number, originY: number } | null>(null)
-
-  const layout = useMemo(
-    () => buildTrajectorySessionMapLayout(turns, sessionMap, collapsed),
-    [collapsed, sessionMap, turns],
-  )
-  const nodes = useMemo(() => new Map(layout.nodes.map(node => [node.id, node])), [layout.nodes])
-  const turnSummaries = useMemo(() => summarizeTurns(turns), [turns])
-  const selectedNode = nodes.get(selectedId) ?? nodes.get(`session:${sessionMap.currentSessionId}`)
+  const fittedRef = useRef(false)
+  const pendingFocusRef = useRef<string | null>(null)
+  const lastViewportSizeRef = useRef({ width: 0, height: 0 })
+  const dragRef = useRef<{ pointerId: number; x: number; y: number; originX: number; originY: number } | null>(null)
+  const sourceGraph = useMemo(() => buildExecutionGraph(snapshot, sessionMap, isProcessing), [snapshot, sessionMap, isProcessing])
+  const graph = useMemo(() => groupExecutionByBehavior(sourceGraph, turnFilter === 'all' ? null : Number(turnFilter)), [sourceGraph, turnFilter])
+  const collapsed = useMemo(() => {
+    const next = defaultBehaviorCollapsed(graph)
+    for (const [id, value] of overrides) { if (value) next.add(id); else next.delete(id) }
+    return next
+  }, [graph, overrides])
+  const layout = useMemo(() => layoutBehaviorGraph(graph, collapsed, selectedId), [graph, collapsed, selectedId])
+  const allNodes = useMemo(() => new Map(graph.nodes.map(node => [node.id, node])), [graph])
+  const nodes = useMemo(() => new Map(layout.nodes.map(node => [node.id, node])), [layout])
+  const visibleNode = (id: string): ExecutionMapNode | undefined => {
+    let node = allNodes.get(id)
+    while (node && !nodes.has(node.id)) node = node.parentId ? allNodes.get(node.parentId) : undefined
+    return node ? nodes.get(node.id) : undefined
+  }
+  const selectedNode = visibleNode(selectedId ?? graph.currentId) ?? nodes.get(graph.rootId)
   const selectedNodeRef = useRef(selectedNode)
   selectedNodeRef.current = selectedNode
-
-  const openInspector = (trigger: HTMLElement, nodeId = selectedId) => {
+  const weightOf = (node: ExecutionNode) => weight === 'tokens' ? node.summary.tokens : node.summary.measuredMs
+  const maxWeight = Math.max(1, ...layout.nodes.map(node => weightOf(node) ?? 0))
+  const recordIndexes = useMemo(() => {
+    const result = new Map<string, number>()
+    for (const turn of turns) for (const group of turn.groups) for (const cell of group.cells) {
+      result.set(trajectoryRecordId(cell), cell.index)
+      if (cell.sourceMessage?.id) result.set(cell.sourceMessage.id, cell.index)
+    }
+    return result
+  }, [turns])
+  const recordIndex = (node: ExecutionNode) => recordIndexes.get(node.messageId ?? '') ?? recordIndexes.get(node.callId ?? '')
+  const title = (node: ExecutionNode) => node.behavior ? t(`trajectory.execution.behavior.${node.behavior}`) : node.title || (node.kind === 'turn'
+    ? node.turn === null ? t('trajectory.execution.between') : t('trajectory.map.turn', { turn: node.turn })
+    : node.kind === 'request' && node.requestSeq !== undefined ? t('trajectory.execution.requestNumber', { count: node.requestSeq })
+    : t(`trajectory.execution.kind.${node.kind}`))
+  const summary = (node: ExecutionNode) => [
+    node.summary.requests > 0 ? t('trajectory.execution.requests', { count: node.summary.requests }) : '',
+    node.summary.tools > 0 ? t('trajectory.execution.toolCount', { count: node.summary.tools }) : '',
+    node.summary.active > 0 ? t('trajectory.execution.active', { count: node.summary.active }) : '',
+    node.summary.errors > 0 ? t('trajectory.execution.errorCount', { count: node.summary.errors }) : '',
+    node.summary.background > 0 ? t('trajectory.execution.backgroundCount', { count: node.summary.background }) : '',
+    node.summary.compactions > 0 ? t('trajectory.execution.compactions', { count: node.summary.compactions }) : '',
+  ].filter(Boolean).join(' · ')
+  const openInspector = (trigger: HTMLElement, nodeId = selectedNode?.id) => {
     inspectorTriggerRef.current = trigger
-    setSelectedId(nodeId)
+    if (nodeId) setSelectedId(nodeId)
     setInspectorOpen(true)
   }
   const closeInspector = () => {
     setInspectorOpen(false)
     requestAnimationFrame(() => inspectorTriggerRef.current?.focus({ preventScroll: true }))
   }
-
-  useEffect(() => {
-    if (inspectorOpen) inspectorCloseRef.current?.focus({ preventScroll: true })
-  }, [inspectorOpen])
-
+  const focusNode = (id: string) => {
+    setOverrides(current => {
+      const next = new Map(current)
+      let node = allNodes.get(id)
+      while (node?.parentId) {
+        next.set(node.parentId, false)
+        node = allNodes.get(node.parentId)
+      }
+      return next
+    })
+    setSelectedId(id)
+    pendingFocusRef.current = id
+  }
+  useEffect(() => { if (inspectorOpen && isActive) inspectorCloseRef.current?.focus() }, [inspectorOpen, isActive])
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
@@ -120,304 +110,215 @@ export function TrajectoryMapView({ turns, sessionMap, onSelectRecord, onOpenSes
     observer.observe(root)
     return () => observer.disconnect()
   }, [])
-
-  useEffect(() => {
-    setSelectedId(`session:${sessionMap.currentSessionId}`)
-  }, [sessionMap.currentSessionId])
-
-  const fit = useCallback((minimumScale = MIN_SCALE) => {
+  const fit = useCallback(() => {
     const viewport = viewportRef.current
-    if (!viewport || viewport.clientWidth <= 0 || viewport.clientHeight <= 0) return false
-    const padding = 32
-    const scale = clampScale(Math.min(
-      (viewport.clientWidth - padding * 2) / layout.width,
-      (viewport.clientHeight - padding * 2) / layout.height,
-      1,
-    ))
-    if (scale < minimumScale) return false
-    setTransform({
-      scale,
-      x: (viewport.clientWidth - layout.width * scale) / 2,
-      y: (viewport.clientHeight - layout.height * scale) / 2,
-    })
+    if (!viewport?.clientWidth || !viewport.clientHeight) return false
+    const scale = clampScale(Math.min((viewport.clientWidth - 48) / layout.width, (viewport.clientHeight - 48) / layout.height, 1))
+    setTransform({ scale, x: (viewport.clientWidth - layout.width * scale) / 2, y: (viewport.clientHeight - layout.height * scale) / 2 })
     return true
-  }, [layout.height, layout.width])
-  const fitRef = useRef(fit)
-  fitRef.current = fit
-
-  const locateCurrent = useCallback(() => {
+  }, [layout.width, layout.height])
+  const locate = () => {
     const viewport = viewportRef.current
-    const current = nodes.get(`session:${sessionMap.currentSessionId}`)
-    if (!viewport || !current) return
+    const current = visibleNode(graph.currentId)
+    if (!viewport?.clientWidth || !viewport.clientHeight || !current) return false
     setSelectedId(current.id)
-    // Start with a readable current node. Fitting the entire family is an
-    // explicit action, especially when the workspace is a narrow split pane.
     const scale = clampScale(Math.min(1, (viewport.clientWidth - 48) / current.width))
-    setTransform({
-      scale,
-      x: viewport.clientWidth / 2 - (current.x + current.width / 2) * scale,
-      y: viewport.clientHeight / 2 - (current.y + current.height / 2) * scale,
-    })
-  }, [nodes, sessionMap.currentSessionId])
-
+    setTransform({ scale, x: viewport.clientWidth / 2 - (current.x + current.width / 2) * scale, y: viewport.clientHeight / 2 - (current.y + current.height / 2) * scale })
+    return true
+  }
+  const locateRef = useRef(locate)
+  locateRef.current = locate
   useLayoutEffect(() => {
     if (fittedRef.current) return
-    if (!viewportRef.current?.clientWidth) return
-    if (!fit(0.82)) locateCurrent()
-    fittedRef.current = true
-  }, [fit, locateCurrent])
-
+    const viewport = viewportRef.current
+    if (!viewport?.clientWidth || !viewport.clientHeight) return
+    const scale = Math.min((viewport.clientWidth - 48) / layout.width, (viewport.clientHeight - 48) / layout.height)
+    fittedRef.current = scale >= 0.65 ? fit() : locateRef.current()
+  }, [layout, fit])
   useLayoutEffect(() => {
-    const current = nodes.get(`session:${sessionMap.currentSessionId}`)
-    if (!current) return
-    const previous = previousCurrentPositionRef.current
-    previousCurrentPositionRef.current = { x: current.x, y: current.y }
-    if (!previous || !fittedRef.current) return
-    if (previous.x === current.x && previous.y === current.y) return
-    setTransform(value => ({
-      ...value,
-      x: value.x + (previous.x - current.x) * value.scale,
-      y: value.y + (previous.y - current.y) * value.scale,
-    }))
-  }, [nodes, sessionMap.currentSessionId])
-
+    const id = pendingFocusRef.current
+    const node = id ? nodes.get(id) : undefined
+    const viewport = viewportRef.current
+    if (!node || !viewport?.clientWidth) return
+    pendingFocusRef.current = null
+    setTransform(value => ({ ...value, x: viewport.clientWidth / 2 - (node.x + node.width / 2) * value.scale, y: viewport.clientHeight / 2 - (node.y + node.height / 2) * value.scale }))
+  }, [nodes])
+  // Preserve the selected anchor on collapse or streaming updates, without resetting user zoom.
+  const anchorRef = useRef<{ id: string; x: number; y: number } | null>(null)
+  useLayoutEffect(() => {
+    if (!selectedNode) return
+    const previous = anchorRef.current
+    anchorRef.current = { id: selectedNode.id, x: selectedNode.x, y: selectedNode.y }
+    if (previous?.id !== selectedNode.id || !fittedRef.current) return
+    if (previous.x !== selectedNode.x || previous.y !== selectedNode.y) {
+      setTransform(value => ({ ...value, x: value.x + (previous.x - selectedNode.x) * value.scale, y: value.y + (previous.y - selectedNode.y) * value.scale }))
+    }
+  }, [selectedNode])
   useEffect(() => {
     const viewport = viewportRef.current
-    if (!viewport || typeof ResizeObserver !== 'function') return
+    if (!viewport) return
     const observer = new ResizeObserver(entries => {
       const entry = entries[0]
       if (!entry) return
-      const width = entry.contentRect.width
-      const height = entry.contentRect.height
-      // Hidden Run tabs retain their viewport, rather than fitting a zero box.
-      if (width <= 0 || height <= 0) return
+      const next = { width: entry.contentRect.width, height: entry.contentRect.height }
+      if (next.width <= 0 || next.height <= 0) return
       const previous = lastViewportSizeRef.current
-      lastViewportSizeRef.current = { width, height }
-      if (!fittedRef.current) {
-        fittedRef.current = fitRef.current()
-        return
-      }
-      if (previous.width === 0 || previous.height === 0) return
+      lastViewportSizeRef.current = next
+      if (!fittedRef.current) { fittedRef.current = locateRef.current(); return }
+      if (!previous.width || !previous.height) return
       setAnimateViewport(false)
-      setTransform(value => resizeMapViewport(value, previous, { width, height }, selectedNodeRef.current))
+      setTransform(value => resizeMapViewport(value, previous, next, selectedNodeRef.current))
     })
     observer.observe(viewport)
     return () => observer.disconnect()
   }, [])
-
-  const zoom = (factor: number) => {
+  const zoom = (factor: number, cx?: number, cy?: number) => {
     const viewport = viewportRef.current
     if (!viewport) return
-    setAnimateViewport(true)
+    const x = cx ?? viewport.clientWidth / 2, y = cy ?? viewport.clientHeight / 2
     setTransform(previous => {
-      const nextScale = clampScale(previous.scale * factor)
-      const cx = viewport.clientWidth / 2
-      const cy = viewport.clientHeight / 2
-      const ratio = nextScale / previous.scale
-      return {
-        scale: nextScale,
-        x: cx - (cx - previous.x) * ratio,
-        y: cy - (cy - previous.y) * ratio,
-      }
+      const scale = clampScale(previous.scale * factor), ratio = scale / previous.scale
+      return { scale, x: x - (x - previous.x) * ratio, y: y - (y - previous.y) * ratio }
     })
   }
-
   const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
     if (dragRef.current?.pointerId !== event.pointerId) return
     dragRef.current = null
     delete event.currentTarget.dataset.dragging
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
   }
-
   return (
     <div ref={rootRef} className={styles.root} onKeyDown={event => {
-      if (event.key === 'Escape' && inspectorOpen) {
-        event.preventDefault()
-        event.stopPropagation()
-        closeInspector()
-      }
+      if (event.key === 'Escape' && inspectorOpen) { event.preventDefault(); event.stopPropagation(); closeInspector() }
     }}>
       <div className={styles.toolbar}>
-        <div className={styles.legend} aria-label={t('trajectory.map.legend')}>
-          <span><i className={styles.currentDot} />{t('trajectory.map.current')}</span>
-          <span><i className={styles.branchDot} />{t('trajectory.map.branch')}</span>
-          <span><i className={styles.subtaskDot} />{t('trajectory.map.subtask')}</span>
-        </div>
+        <select className={styles.turnFilter} aria-label={t('trajectory.execution.turnFilter')} value={turnFilter} onChange={event => { setTurnFilter(event.target.value); setSelectedId(null); fittedRef.current = false }}>
+          <option value="all">{t('trajectory.execution.allTurns')}</option>
+          {sourceGraph.nodes.filter(node => node.kind === 'turn' && node.turn !== null).map(node => <option key={node.id} value={node.turn!}>{t('trajectory.map.turn', { turn: node.turn })}</option>)}
+        </select>
+        <label className={styles.weightControl}>
+          <span>{t('trajectory.execution.weight')}</span>
+          <select value={weight} onChange={event => setWeight(event.target.value as 'duration' | 'tokens')}>
+            <option value="duration">{t('trajectory.execution.measuredTime')}</option>
+            <option value="tokens">{t('trajectory.execution.tokens')}</option>
+          </select>
+        </label>
         <div className={styles.actions}>
-          <button type="button" onClick={() => zoom(0.84)} aria-label={t('trajectory.map.zoomOut')}><Minus /></button>
+          <button type="button" onClick={() => { setAnimateViewport(true); zoom(0.84) }} aria-label={t('trajectory.map.zoomOut')}><Minus /></button>
           <span className={styles.scale}>{Math.round(transform.scale * 100)}%</span>
-          <button type="button" onClick={() => zoom(1.19)} aria-label={t('trajectory.map.zoomIn')}><Plus /></button>
-          <span className={styles.separator} />
-          <button type="button" onClick={() => { setAnimateViewport(true); locateCurrent() }} aria-label={t('trajectory.map.locate')}><LocateFixed /></button>
+          <button type="button" onClick={() => { setAnimateViewport(true); zoom(1.19) }} aria-label={t('trajectory.map.zoomIn')}><Plus /></button>
+          <button type="button" onClick={() => { setAnimateViewport(true); locate() }} aria-label={t('trajectory.execution.locate')}><LocateFixed /></button>
           <button type="button" onClick={() => { setAnimateViewport(true); fit() }} aria-label={t('trajectory.map.fit')}><Maximize2 /></button>
-          <button type="button" aria-expanded={inspectorOpen} onClick={event => inspectorOpen ? closeInspector() : openInspector(event.currentTarget)} aria-label={t('trajectory.map.details')}><PanelRight /></button>
+          <button type="button" aria-expanded={inspectorOpen} onClick={event => inspectorOpen ? closeInspector() : openInspector(event.currentTarget)} aria-label={t('trajectory.execution.details')}><PanelRight /></button>
         </div>
       </div>
-
+      <div className={styles.executionLegend} aria-label={t('trajectory.execution.legend')}>
+        <span><i data-edge="call" />{t('trajectory.execution.call')}</span>
+        <span><i data-edge="contains" />{t('trajectory.execution.contains')}</span>
+        <span><i data-edge="branch" />{t('trajectory.execution.sessionLink')}</span>
+      </div>
       <div className={styles.body}>
-        <div
-          ref={viewportRef}
-          className={styles.viewport}
-          inert={isCompact && inspectorOpen}
-          onWheel={(event) => {
-            event.preventDefault()
-            setAnimateViewport(false)
+        <div ref={viewportRef} className={styles.viewport} inert={isCompact && inspectorOpen}
+          onWheel={event => {
+            event.preventDefault(); setAnimateViewport(false)
             const rect = event.currentTarget.getBoundingClientRect()
-            const cx = event.clientX - rect.left
-            const cy = event.clientY - rect.top
-            setTransform(previous => {
-              const nextScale = clampScale(previous.scale * (event.deltaY > 0 ? 0.9 : 1.1))
-              const ratio = nextScale / previous.scale
-              return { scale: nextScale, x: cx - (cx - previous.x) * ratio, y: cy - (cy - previous.y) * ratio }
-            })
+            zoom(event.deltaY > 0 ? 0.9 : 1.1, event.clientX - rect.left, event.clientY - rect.top)
           }}
-          onPointerDown={(event) => {
+          onPointerDown={event => {
             if (event.button !== 0 || (event.target as HTMLElement).closest('button')) return
             setAnimateViewport(false)
             event.currentTarget.setPointerCapture(event.pointerId)
             dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, originX: transform.x, originY: transform.y }
             event.currentTarget.dataset.dragging = 'true'
           }}
-          onPointerMove={(event) => {
+          onPointerMove={event => {
             const drag = dragRef.current
-            if (!drag || drag.pointerId !== event.pointerId) return
-            setTransform(previous => ({ ...previous, x: drag.originX + event.clientX - drag.x, y: drag.originY + event.clientY - drag.y }))
-          }}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-        >
-          <div
-            className={styles.canvas}
-            data-animated={animateViewport}
-            data-compact={transform.scale < 0.62 ? 'true' : 'false'}
-            style={{ width: layout.width, height: layout.height, transform: `translate(${Math.round(transform.x)}px, ${Math.round(transform.y)}px) scale(${transform.scale})` }}
-          >
+            if (drag?.pointerId === event.pointerId) setTransform(previous => ({ ...previous, x: drag.originX + event.clientX - drag.x, y: drag.originY + event.clientY - drag.y }))
+          }} onPointerUp={endDrag} onPointerCancel={endDrag}>
+          <div className={styles.canvas} data-animated={animateViewport} data-compact={transform.scale < 0.62}
+            style={{ width: layout.width, height: layout.height, transform: `translate(${Math.round(transform.x)}px, ${Math.round(transform.y)}px) scale(${transform.scale})` }}>
             <svg className={styles.edges} width={layout.width} height={layout.height} aria-hidden="true">
               {layout.edges.map(edge => {
-                const labelPoint = edge.sourceTurn !== undefined ? edgeLabelPoint(edge, nodes) : null
-                return (
-                  <g key={edge.id}>
-                    <path d={edgePath(edge, nodes)} className={styles[`${edge.kind}Edge`]} />
-                    {labelPoint && (
-                      <text x={labelPoint.x} y={labelPoint.y} className={styles.edgeLabel} textAnchor="middle">
-                        {t('trajectory.map.turn', { turn: edge.sourceTurn })}
-                      </text>
-                    )}
-                  </g>
-                )
+                const from = nodes.get(edge.from), to = nodes.get(edge.to)
+                if (!from || !to) return null
+                const side = to.x > from.x ? 1 : -1
+                const x1 = side > 0 ? from.x + from.width : from.x, y1 = from.y + from.height / 2
+                const x2 = side > 0 ? to.x : to.x + to.width, y2 = to.y + to.height / 2
+                const path = `M ${x1} ${y1} C ${x1 + 36 * side} ${y1}, ${x2 - 36 * side} ${y2}, ${x2} ${y2}`
+                return <path key={edge.id} d={path} className={styles[`${edge.kind}Edge`]} />
               })}
             </svg>
-
-            {layout.nodes.map(node => (
-              <div
-                key={node.id}
-                className={`${styles.sessionCard} ${node.session.id === sessionMap.currentSessionId ? styles.activeSession : ''} ${selectedId === node.id ? styles.selectedSession : ''}`}
-                data-relation={node.relation}
-                style={{ left: node.x, top: node.y, width: node.width, height: node.height }}
-              >
-                <button
-                  type="button"
-                  className={styles.sessionOpen}
-                  aria-pressed={selectedId === node.id}
-                  onClick={(event) => openInspector(event.currentTarget, node.id)}
-                  onDoubleClick={() => node.session.id !== sessionMap.currentSessionId && onOpenSession?.(node.session.id)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' && node.session.id !== sessionMap.currentSessionId) onOpenSession?.(node.session.id)
-                  }}
-                >
-                  <span className={styles.cardEyebrow}>
-                    <GitBranch />{t(`trajectory.map.relation.${node.relation}`)}
-                    {node.branchFromTurn !== undefined && ` · ${t('trajectory.map.turn', { turn: node.branchFromTurn })}`}
-                  </span>
-                  <strong>{node.session.title}</strong>
-                  <span className={styles.sessionPreview}>{node.session.preview || t('trajectory.map.noPreview')}</span>
-                  <span className={styles.cardMeta}>
-                    {node.session.isProcessing ? t('trajectory.map.processing') : node.session.status || t('trajectory.map.ready')}
-                    {node.turnCount !== undefined
-                      ? ` · ${t('trajectory.map.turn', { turn: node.turnCount })}`
-                      : node.session.messageCount !== undefined && ` · ${t('trajectory.map.messages', { count: node.session.messageCount })}`}
-                  </span>
-                </button>
-                {node.childCount > 0 && (
-                  <button
-                    type="button"
-                    className={styles.collapse}
-                    aria-label={collapsed.has(node.session.id) ? t('trajectory.map.expand') : t('trajectory.map.collapse')}
-                    onClick={() => setCollapsed(current => {
-                      const next = new Set(current)
-                      if (next.has(node.session.id)) next.delete(node.session.id)
-                      else next.add(node.session.id)
-                      return next
-                    })}
-                  >
-                    {collapsed.has(node.session.id) ? <ChevronRight /> : <ChevronDown />}
-                    {node.childCount}
-                  </button>
-                )}
-              </div>
-            ))}
+            {layout.nodes.map(node => <div key={node.id}
+              className={`${styles.sessionCard} ${selectedNode?.id === node.id ? styles.selectedSession : ''}`}
+              data-status={node.status} data-kind={node.kind}
+              data-errors={node.summary.errors > 0}
+              style={{ left: node.x, top: node.y, width: node.width, height: node.height }}>
+              <button type="button" className={styles.sessionOpen} aria-pressed={selectedNode?.id === node.id}
+                onClick={event => openInspector(event.currentTarget, node.id)}>
+                <span className={styles.cardEyebrow}>
+                  <i className={styles.statusDot} data-status={node.kind === 'behavior' && node.summary.active > 0 ? 'running' : node.status} />
+                  {t(`trajectory.execution.kind.${node.kind}`)}
+                  {node.kind !== 'turn' && node.kind !== 'behavior' && ` · ${t(`trajectory.execution.status.${node.status}`)}`}
+                  {node.turn !== null && ` · T${node.turn}`}
+                </span>
+                <strong>{title(node)}</strong>
+                <span className={styles.sessionPreview}>{node.kind === 'behavior'
+                  ? [...new Set(node.children.map(id => title(allNodes.get(id)!)))].slice(0, 3).join(' · ')
+                  : node.preview || (node.children.length > 0 ? t('trajectory.execution.directChildren', { count: node.children.length }) : '')}</span>
+                <span className={styles.cardMeta} title={summary(node)}>{summary(node) || t(`trajectory.execution.status.${node.status}`)}</span>
+                <span className={styles.weightLabel}>{weight === 'tokens' ? node.summary.tokens?.toLocaleString() ?? '—' : duration(node.summary.measuredMs)}{weight === 'duration' && node.summary.unmeasured > 0 ? ' *' : ''}</span>
+              </button>
+              <div className={styles.weightBar} aria-hidden="true" style={{ width: `${100 * Math.sqrt((weightOf(node) ?? 0) / maxWeight)}%` }} />
+              {node.summary.errors > 0 && <span className={styles.errorBadge}>{t('trajectory.execution.errorCount', { count: node.summary.errors })}</span>}
+              {node.children.length > 0 && <button type="button" className={styles.collapse} aria-expanded={!collapsed.has(node.id)}
+                aria-label={t(collapsed.has(node.id) ? 'trajectory.execution.expand' : 'trajectory.execution.collapse')}
+                onClick={() => setOverrides(current => new Map(current).set(node.id, !collapsed.has(node.id)))}>
+                {collapsed.has(node.id) ? <ChevronRight /> : <ChevronDown />}{node.children.length}
+              </button>}
+            </div>)}
           </div>
         </div>
-
-        {selectedNode && inspectorOpen && (
-          <aside className={styles.inspector} aria-label={selectedNode.session.title}>
-            <div className={styles.inspectorHeader}>
-              <div className={styles.inspectorTop}>
-                <span className={styles.cardEyebrow}>
-                  <GitBranch />{t(`trajectory.map.relation.${selectedNode.relation}`)}
-                </span>
-                <div className={styles.actions}>
-                  <button ref={inspectorCloseRef} type="button" onClick={closeInspector} aria-label={t('common.close')}><X /></button>
-                </div>
-              </div>
-              <h3>{selectedNode.session.title}</h3>
-              <p>{selectedNode.session.preview || t('trajectory.map.noPreview')}</p>
-              <div className={styles.inspectorMeta}>
-                <span>{selectedNode.session.isProcessing ? t('trajectory.map.processing') : selectedNode.session.status || t('trajectory.map.ready')}</span>
-                {selectedNode.turnCount !== undefined && <span>{t('trajectory.map.turn', { turn: selectedNode.turnCount })}</span>}
-                {selectedNode.turnCount === undefined && selectedNode.session.messageCount !== undefined && (
-                  <span>{t('trajectory.map.messages', { count: selectedNode.session.messageCount })}</span>
-                )}
-              </div>
+        {selectedNode && inspectorOpen && <aside className={styles.inspector} aria-label={title(selectedNode)}>
+          <div className={styles.inspectorHeader}>
+            <div className={styles.inspectorTop}>
+              <span className={styles.cardEyebrow}>{t(`trajectory.execution.kind.${selectedNode.kind}`)}</span>
+              <div className={styles.actions}><button ref={inspectorCloseRef} type="button" onClick={closeInspector} aria-label={t('common.close')}><X /></button></div>
             </div>
-
-            {selectedNode.session.id === sessionMap.currentSessionId ? (
-              <>
-                <div className={styles.inspectorSectionTitle}>
-                  <strong>{t('trajectory.views.trajectory')}</strong>
-                  <span>{turnSummaries.length}</span>
-                </div>
-                <div className={styles.turnList}>
-                  {turnSummaries.map(summary => (
-                    <button
-                      key={`${summary.turn}:${summary.recordIndex ?? 'empty'}`}
-                      type="button"
-                      className={styles.turnRow}
-                      disabled={summary.recordIndex === undefined || !onSelectRecord}
-                      onClick={() => summary.recordIndex !== undefined && onSelectRecord?.(summary.recordIndex)}
-                      aria-label={t('trajectory.map.turn', { turn: summary.turn })}
-                    >
-                      <span className={styles.turnNumber}>{summary.turn}</span>
-                      <span className={styles.turnCopy}>
-                        <strong>{summary.question}</strong>
-                        <small>{summary.answer}</small>
-                      </span>
-                      {summary.toolCount > 0 && (
-                        <span className={styles.turnTools}>{t('trajectory.map.tools', { count: summary.toolCount })}</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className={styles.inspectorActions}>
-                <button type="button" onClick={() => onOpenSession?.(selectedNode.session.id)}>
-                  {t('common.open')}
-                </button>
-              </div>
-            )}
-          </aside>
-        )}
+            <h3>{title(selectedNode)}</h3>
+            <p>{selectedNode.preview}</p>
+            {selectedNode.kind === 'behavior' && <p>{t('trajectory.execution.behaviorHint')}</p>}
+            <p>{summary(selectedNode)}</p>
+            {selectedNode.kind !== 'behavior' && <div className={styles.inspectorMeta}><span>{t(`trajectory.execution.status.${selectedNode.status}`)}</span></div>}
+          </div>
+          <div className={styles.executionDetails}>
+            <dl>
+              <dt>{t('trajectory.execution.measuredTime')}</dt><dd>{duration(selectedNode.summary.measuredMs)}</dd>
+              <dt>{t('trajectory.execution.tokens')}</dt><dd>{selectedNode.summary.tokens?.toLocaleString() ?? '—'}</dd>
+            </dl>
+            <p>{t('trajectory.execution.measureHint')}</p>
+            {selectedNode.summary.unmeasured > 0 && <p>{t('trajectory.execution.unmeasured', { count: selectedNode.summary.unmeasured })}</p>}
+            {selectedNode.unresolvedParent && <p>{t('trajectory.execution.missingParent')}</p>}
+            {selectedNode.kind === 'session' && selectedNode.id !== graph.rootId && <p>{t('trajectory.execution.sessionHint')}</p>}
+          </div>
+          <div className={styles.inspectorActions}>
+            {recordIndex(selectedNode) !== undefined && <button type="button" onClick={() => onSelectRecord?.(recordIndex(selectedNode)!)} disabled={!onSelectRecord}>{t('trajectory.execution.viewRecord')}</button>}
+            {selectedNode.kind === 'session' && selectedNode.sessionId !== sessionMap.currentSessionId && <button type="button" onClick={() => onOpenSession?.(selectedNode.sessionId)} disabled={!onOpenSession}>{t('common.open')}</button>}
+          </div>
+          <div className={styles.turnList}>
+            {selectedNode.children.map(id => allNodes.get(id)!).map(child => <button type="button" key={child.id} className={styles.turnRow}
+              onClick={() => focusNode(child.id)}>
+              <span className={styles.statusDot} data-status={child.status} />
+              <span className={styles.turnCopy}><strong>{title(child)}</strong><small>{summary(child) || child.preview}</small></span>
+            </button>)}
+            {graph.edges.filter(edge => edge.kind !== 'contains' && (edge.to === selectedNode.id || edge.from === selectedNode.id && !selectedNode.children.includes(edge.to))).map(edge => {
+              const other = allNodes.get(edge.from === selectedNode.id ? edge.to : edge.from)!
+              return <button type="button" key={edge.id} className={styles.turnRow}
+                onClick={() => focusNode(other.id)}>
+                <span className={styles.turnCopy}><strong>{title(other)}</strong><small>{t(edge.kind === 'call' ? 'trajectory.execution.call' : 'trajectory.execution.sessionLink')}{other.turn !== null ? ` · T${other.turn}` : ''}</small></span>
+              </button>
+            })}
+          </div>
+        </aside>}
       </div>
     </div>
   )
