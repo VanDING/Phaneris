@@ -4,13 +4,14 @@
  * page-thumbnailer.ts and consumes these.
  *
  * The capture renders the page exactly as PageFrame does: the page HTML is the
- * srcDoc of an opaque sandboxed iframe (never `allow-same-origin`), and the
+ * independent document of an opaque sandboxed iframe (never `allow-same-origin`), and the
  * trusted host posts the `craft-pages/v1` init message so data-driven pages
  * paint with their snapshot. No action bridge — a poster never executes source
  * actions.
  */
 
 import type { PageDataSnapshot, PageKind } from '@craft-agent/shared/pages/types'
+import { sandboxForPageKind } from '../shared/page-document'
 
 /** Logical render viewport (16:10) the offscreen window uses. */
 export const THUMB_LOGICAL_WIDTH = 1000
@@ -23,10 +24,10 @@ export const THUMB_JPEG_QUALITY = 82
 
 /** Same sandbox rule as PageFrame: static = inert, interactive/live = scripts+forms, never same-origin. */
 export function sandboxForKind(kind: PageKind): string {
-  return kind === 'static' ? '' : 'allow-scripts allow-forms'
+  return sandboxForPageKind(kind)
 }
 
-/** Escape a string for safe embedding inside a double-quoted HTML attribute (srcdoc). */
+/** Escape a string for safe embedding inside a double-quoted HTML attribute. */
 export function escapeSrcdocAttribute(html: string): string {
   return html
     .replace(/&/g, '&amp;')
@@ -43,16 +44,16 @@ export function escapeSrcdocAttribute(html: string): string {
  * loads it with `loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html))`.
  */
 export function buildThumbnailHostHtml(input: {
-  content: string
+  documentUrl: string
   slug: string
   kind: PageKind
   snapshot: PageDataSnapshot | null
 }): string {
   const sandbox = sandboxForKind(input.kind)
-  const srcdoc = escapeSrcdocAttribute(input.content)
-  // JSON embedded in a script; </script> in data is the only real hazard.
-  const snapshotJson = JSON.stringify(input.snapshot).replace(/<\/script>/gi, '<\\/script>')
-  const page = JSON.stringify({ slug: input.slug, kind: input.kind })
+  const documentUrl = escapeSrcdocAttribute(input.documentUrl)
+  // Prevent data (including the slug) from terminating the host's script element.
+  const snapshotJson = JSON.stringify(input.snapshot).replace(/</g, '\\u003c')
+  const page = JSON.stringify({ slug: input.slug, kind: input.kind }).replace(/</g, '\\u003c')
 
   return `<!doctype html>
 <html>
@@ -64,7 +65,7 @@ export function buildThumbnailHostHtml(input: {
 </style>
 </head>
 <body>
-<iframe id="frame" sandbox="${sandbox}" referrerpolicy="no-referrer" srcdoc="${srcdoc}"></iframe>
+<iframe id="frame" sandbox="${sandbox}" referrerpolicy="no-referrer" src="${documentUrl}"></iframe>
 <script>
   var PAGE = ${page};
   var SNAPSHOT = ${snapshotJson};
@@ -79,6 +80,7 @@ export function buildThumbnailHostHtml(input: {
   }
   frame.addEventListener('load', deliver);
   window.addEventListener('message', function (event) {
+    if (event.source !== frame.contentWindow || event.origin !== 'null') return;
     var m = event.data;
     if (m && m.protocol === 'craft-pages/v1' && m.type === 'ready') deliver();
   });

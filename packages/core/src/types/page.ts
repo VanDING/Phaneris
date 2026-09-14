@@ -12,7 +12,7 @@
  *   ├── page.json       - PageConfig (metadata, refresh spec, grants, content digest).
  *   │                     Also the completion marker: refresh runs touch it last, and
  *   │                     the config watcher turns that into a `pages:changed` push.
- *   ├── index.html      - Page content (self-contained; rendered via srcDoc)
+ *   ├── index.html      - Page content (self-contained; rendered in an opaque iframe)
  *   └── data/
  *       ├── store.sqlite  - Script-private working store (bun:sqlite; never read cross-process)
  *       └── snapshot.json - PageDataSnapshot: the ONLY cross-process data contract,

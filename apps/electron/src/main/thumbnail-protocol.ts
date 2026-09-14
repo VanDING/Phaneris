@@ -125,6 +125,7 @@ async function generateThumbnail(filePath: string, ext: string): Promise<Buffer 
  */
 export function registerThumbnailScheme(): void {
   protocol.registerSchemesAsPrivileged([
+    { scheme: 'craft-page', privileges: { standard: true, secure: true } },
     {
       scheme: 'thumbnail',
       privileges: {

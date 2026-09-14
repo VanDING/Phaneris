@@ -8,7 +8,6 @@ import type {
   PageActionRequest,
   PageActionResult,
   PageDataSnapshot,
-  PageKind,
   PageRenderLease,
 } from '@craft-agent/shared/pages/types'
 import { isPageGrantUsable } from '@craft-agent/shared/pages/types'
@@ -30,6 +29,7 @@ import {
   type PageGrantSummary,
 } from '../../../shared/page-bridge'
 import { PageGrantRequestDialog } from './PageGrantRequestDialog'
+import { sandboxForPageKind } from '../../../shared/page-document'
 
 /**
  * The dedicated sandboxed Page renderer + trusted bridge host.
@@ -39,7 +39,7 @@ import { PageGrantRequestDialog } from './PageGrantRequestDialog'
  *   interactive/live get exactly `allow-scripts allow-forms`.
  *   NEVER `allow-same-origin` — scripts + same-origin would let page JS reach
  *   this document and the electronAPI adapter. The frame's origin is opaque.
- * - The srcDoc content is rendered EXACTLY as returned by `pages:createLease`
+ * - The document content is rendered EXACTLY as returned by `pages:createLease`
  *   (the lease is bound to that content's digest); nothing is injected.
  *   The lease nonce travels via postMessage `init` after load, and the page
  *   echoes it on every privileged request.
@@ -63,16 +63,14 @@ interface PageFrameProps {
   lease: PageRenderLease
   /** Exact content string returned with the lease (digest-bound) */
   content: string
+  /** Desktop transport uses an immutable document with its own response CSP. */
+  documentUrl?: string
   /**
    * Data snapshot handed to the page in `init`. Live pages also receive
    * replacement snapshots via `data` messages when this prop changes.
    */
   snapshot: PageDataSnapshot | null
   className?: string
-}
-
-function sandboxForKind(kind: PageKind): string {
-  return kind === 'static' ? '' : 'allow-scripts allow-forms'
 }
 
 /** Transient user activation, propagated from clicks inside the frame. */
@@ -88,7 +86,7 @@ function descriptorSignature(d: PageActionDescriptor): string {
   return `api:${d.sourceSlug}:${d.method}:${d.pathPattern}`
 }
 
-export function PageFrame({ workspaceId, page, lease, content, snapshot, className }: PageFrameProps) {
+export function PageFrame({ workspaceId, page, lease, content, documentUrl, snapshot, className }: PageFrameProps) {
   const { t } = useTranslation()
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const snapshotRef = useRef(snapshot)
@@ -319,9 +317,10 @@ export function PageFrame({ workspaceId, page, lease, content, snapshot, classNa
       <iframe
         ref={iframeRef}
         title={page.config.name}
-        sandbox={sandboxForKind(kind)}
+        sandbox={sandboxForPageKind(kind)}
         referrerPolicy="no-referrer"
-        srcDoc={content}
+        src={documentUrl}
+        srcDoc={documentUrl ? undefined : content}
         onLoad={postInit}
         className={className ?? 'h-full w-full border-0 bg-white'}
       />

@@ -6,6 +6,13 @@ artifactName: Craft-Agents-${arch}.${ext}
 
 electronVersion: "44.2.0"
 
+# Native addons ship as prebuilt N-API binaries via extraResources — node-pty's
+# prebuilds/<platform>-<arch>/*.node below, whose node-gyp build/** output is
+# excluded on purpose. @electron/rebuild only recompiles that never-shipped
+# output, and dies with MSB8040 (missing VS "Spectre-mitigated libs") when the
+# component is absent, so packaging must not rebuild native modules.
+npmRebuild: false
+
 # Fetch the pinned Bun and document-tool runtimes for the target before copying resources.
 beforePack: scripts/beforePack.cjs
 

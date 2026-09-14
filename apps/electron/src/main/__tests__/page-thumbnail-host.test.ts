@@ -24,23 +24,23 @@ describe('page-thumbnail-host', () => {
     expect(escaped).toContain('&amp;')
   })
 
-  it('embeds the page content as an escaped srcdoc iframe with the kind sandbox', () => {
+  it('embeds the independent document address with the kind sandbox', () => {
     const html = buildThumbnailHostHtml({
-      content: '<h1>Hello "world"</h1>',
+      documentUrl: 'craft-page://test/index.html',
       slug: 'demo',
       kind: 'interactive',
       snapshot: null,
     })
     expect(html).toContain(`width: ${THUMB_LOGICAL_WIDTH}px`)
     expect(html).toContain('sandbox="allow-scripts allow-forms"')
-    // Raw content must not appear unescaped in the host doc.
+    // The host contains only an address, not a second copy of the page.
     expect(html).not.toContain('<h1>Hello')
-    expect(html).toContain('&lt;h1&gt;Hello &quot;world&quot;')
+    expect(html).toContain('src="craft-page://test/index.html"')
   })
 
   it('delivers the data snapshot via the craft-pages/v1 init message', () => {
     const snapshot = { version: 1 as const, generatedAt: 5, kv: { total: 42 }, series: {} }
-    const html = buildThumbnailHostHtml({ content: '<p>x</p>', slug: 's', kind: 'live', snapshot })
+    const html = buildThumbnailHostHtml({ documentUrl: 'craft-page://test/index.html', slug: 's', kind: 'live', snapshot })
     expect(html).toContain('craft-pages/v1')
     expect(html).toContain("type: 'init'")
     expect(html).toContain('"total":42')
@@ -48,14 +48,14 @@ describe('page-thumbnail-host', () => {
 
   it('neutralizes a </script> sequence inside snapshot data', () => {
     const snapshot = { version: 1 as const, generatedAt: 1, kv: { x: '</script><script>alert(1)' }, series: {} }
-    const html = buildThumbnailHostHtml({ content: '<p>x</p>', slug: 's', kind: 'live', snapshot })
+    const html = buildThumbnailHostHtml({ documentUrl: 'craft-page://test/index.html', slug: 's', kind: 'live', snapshot })
     expect(html).not.toContain('</script><script>alert(1)')
-    expect(html).toContain('<\\/script>')
+    expect(html).toContain('\\u003c/script>')
   })
 
   it('static pages still embed content (no scripts, snapshot irrelevant)', () => {
-    const html = buildThumbnailHostHtml({ content: '<p>static</p>', slug: 's', kind: 'static', snapshot: null })
+    const html = buildThumbnailHostHtml({ documentUrl: 'craft-page://test/index.html', slug: 's', kind: 'static', snapshot: null })
     expect(html).toContain('sandbox=""')
-    expect(html).toContain('&lt;p&gt;static&lt;/p&gt;')
+    expect(html).not.toContain('srcdoc=')
   })
 })

@@ -112,6 +112,8 @@ import { BrowserPaneManager } from './browser-pane-manager'
 import { TerminalManager } from './terminal-manager'
 import { OAuthFlowStore } from '@craft-agent/shared/auth'
 import { registerThumbnailScheme, registerThumbnailHandler } from './thumbnail-protocol'
+import { registerPageDocumentHandler, observePageDocumentOwner, pageDocuments } from './page-document-protocol'
+import type { PageDocumentInput } from '../shared/page-document'
 import log, { isDebugMode, mainLog, getLogFilePath, getMessagingGatewayLogFilePath, messagingGatewayLog, autoUpdateLog } from './logger'
 import { installElectronCredentialKeyProvider } from './credential-key-provider'
 import { setPerfEnabled, enableDebug } from '@craft-agent/shared/utils'
@@ -461,6 +463,7 @@ app.whenReady().then(async () => {
 
   // Register thumbnail:// protocol handler (scheme was registered earlier, before app.whenReady)
   registerThumbnailHandler()
+  registerPageDocumentHandler()
 
   // Re-apply proxy settings now that Electron sessions are available
   // (first call before app.whenReady only configured Node-level proxy)
@@ -593,6 +596,16 @@ app.whenReady().then(async () => {
       const workspaceId = windowManager?.getWorkspaceForWindow(event.sender.id) ?? null
       const { validateFilePath, getWorkspaceAllowedDirs } = await import('@craft-agent/server-core/handlers')
       return validateFilePath(path, getWorkspaceAllowedDirs(workspaceId))
+    })
+
+    ipcMain.handle('__pages:registerDocument', (event, input: PageDocumentInput) => {
+      if (!isTrustedWindowSender(event)) throw new Error('Page documents require a trusted main frame')
+      observePageDocumentOwner(event.sender)
+      return pageDocuments.register(event.sender.id, input)
+    })
+    ipcMain.handle('__pages:releaseDocument', (event, url: string) => {
+      if (!isTrustedWindowSender(event)) throw new Error('Page documents require a trusted main frame')
+      pageDocuments.release(event.sender.id, url)
     })
 
     // Dialog bridge — preload capability handlers use ipcRenderer.invoke to

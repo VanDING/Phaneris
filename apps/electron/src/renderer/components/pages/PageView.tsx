@@ -35,6 +35,7 @@ interface PageViewProps {
 interface LeaseState {
   lease: PageRenderLease
   content: string
+  documentUrl?: string
 }
 
 /**
@@ -79,6 +80,7 @@ export function PageView({ pageSlug }: PageViewProps) {
   const contentDigest = page?.config.contentDigest
   const hasContent = Boolean(contentDigest)
   const pageLoaded = Boolean(page)
+  const pageKind = page?.config.kind
   const [leaseState, setLeaseState] = React.useState<LeaseState | null>(null)
   const [leaseError, setLeaseError] = React.useState<string | null>(null)
   const [leaseRetry, setLeaseRetry] = React.useState(0)
@@ -87,18 +89,29 @@ export function PageView({ pageSlug }: PageViewProps) {
     if (!activeWorkspaceId || !pageLoaded || !hasContent) return
     let stale = false
     let heldLeaseId: string | null = null
+    let heldDocumentUrl: string | null = null
     setLeaseState(null)
     setLeaseError(null)
 
     window.electronAPI
       .createPageLease(activeWorkspaceId, pageSlug)
-      .then(result => {
+      .then(async result => {
         if (stale) {
           void window.electronAPI.releasePageLease(activeWorkspaceId, result.lease.leaseId)
           return
         }
         heldLeaseId = result.lease.leaseId
-        setLeaseState(result)
+        if (window.electronAPI.registerPageDocument && pageKind) {
+          const documentUrl = await window.electronAPI.registerPageDocument({ ...result, kind: pageKind })
+          if (stale) {
+            void window.electronAPI.releasePageDocument?.(documentUrl)
+            return
+          }
+          heldDocumentUrl = documentUrl
+          setLeaseState({ ...result, documentUrl })
+        } else {
+          setLeaseState(result)
+        }
       })
       .catch(err => {
         if (!stale) setLeaseError(err instanceof Error ? err.message : String(err))
@@ -106,9 +119,10 @@ export function PageView({ pageSlug }: PageViewProps) {
 
     return () => {
       stale = true
+      if (heldDocumentUrl) void window.electronAPI.releasePageDocument?.(heldDocumentUrl)
       if (heldLeaseId) void window.electronAPI.releasePageLease(activeWorkspaceId, heldLeaseId)
     }
-  }, [activeWorkspaceId, pageSlug, contentDigest, hasContent, pageLoaded, leaseRetry])
+  }, [activeWorkspaceId, pageSlug, contentDigest, hasContent, pageLoaded, pageKind, leaseRetry])
 
   // ------------------------------------------------------------------
   // Data snapshot (re-read when a refresh stamps page.json)
@@ -433,6 +447,7 @@ export function PageView({ pageSlug }: PageViewProps) {
               page={page}
               lease={leaseState.lease}
               content={leaseState.content}
+              documentUrl={leaseState.documentUrl}
               snapshot={snapshotState.data}
             />
           </div>

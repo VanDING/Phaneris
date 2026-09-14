@@ -15,6 +15,7 @@
 
 import { BrowserWindow } from 'electron'
 import { renameSync, writeFileSync } from 'node:fs'
+import { observePageDocumentOwner, pageDocuments } from './page-document-protocol'
 import {
   computePageContentDigest,
   getPageThumbnailPath,
@@ -107,7 +108,6 @@ export class PageThumbnailer {
     if (config.thumbnail?.digest === digest) return
 
     const snapshot = readPageDataSnapshot(workspaceRootPath, slug)
-    const html = buildThumbnailHostHtml({ content, slug, kind: config.kind, snapshot })
 
     const win = new BrowserWindow({
       show: false,
@@ -124,6 +124,17 @@ export class PageThumbnailer {
     })
 
     try {
+      observePageDocumentOwner(win.webContents, false)
+      const documentUrl = pageDocuments.register(win.webContents.id, {
+        content,
+        kind: config.kind,
+        lease: {
+          leaseId: 'thumbnail', nonce: 'preview', pageSlug: slug,
+          contentDigest: computePageContentDigest(content),
+          issuedAt: Date.now(), expiresAt: Date.now() + CAPTURE_TIMEOUT_MS,
+        },
+      })
+      const html = buildThumbnailHostHtml({ documentUrl, slug, kind: config.kind, snapshot })
       const buffer = await this.withTimeout(this.renderAndCapture(win, html), CAPTURE_TIMEOUT_MS)
       if (!buffer) {
         this.options.log?.(`[page-thumbnailer] empty capture for ${slug}; leaving posterless`)

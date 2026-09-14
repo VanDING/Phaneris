@@ -761,6 +761,9 @@ export interface ElectronAPI {
   issuePageGrant(workspaceId: string, pageSlug: string, input: { action: import('@craft-agent/shared/pages/types').PageActionDescriptor; description?: string; ttlMs?: number }): Promise<import('@craft-agent/shared/pages/types').PageActionGrant>
   revokePageGrant(workspaceId: string, pageSlug: string, grantId: string): Promise<boolean>
   createPageLease(workspaceId: string, pageSlug: string): Promise<{ lease: import('@craft-agent/shared/pages/types').PageRenderLease; content: string }>
+  /** Desktop-only document transport; the RPC lease still belongs to its source server. */
+  registerPageDocument?(input: import('./page-document').PageDocumentInput): Promise<string>
+  releasePageDocument?(url: string): Promise<void>
   releasePageLease(workspaceId: string, leaseId: string): Promise<void>
   executePageAction(workspaceId: string, request: import('@craft-agent/shared/pages/types').PageActionRequest): Promise<import('@craft-agent/shared/pages/types').PageActionResult>
   cancelPageAction(workspaceId: string, requestId: string): Promise<boolean>

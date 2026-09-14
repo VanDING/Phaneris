@@ -17,6 +17,8 @@ type ApiToChannelMapKeys = Exclude<
   | 'performOAuth'
   | 'getTransportConnectionState'
   | 'getRuntimeEnvironment'
+  | 'registerPageDocument' // local document protocol, including remote workspaces
+  | 'releasePageDocument'
   | 'onTransportConnectionStateChanged'
   | 'reconnectTransport'
   | 'isChannelAvailable'

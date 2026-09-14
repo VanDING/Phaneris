@@ -1,6 +1,6 @@
 /**
  * Page bridge protocol — the postMessage contract between a rendered Page
- * (opaque sandboxed iframe, srcDoc) and the trusted host (PageFrame).
+ * (opaque sandboxed iframe) and the trusted host (PageFrame).
  *
  * Trust model: the iframe runs with `sandbox="allow-scripts allow-forms"` and
  * NO `allow-same-origin`, so its origin is opaque (`event.origin === 'null'`)

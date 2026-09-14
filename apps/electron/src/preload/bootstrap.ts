@@ -209,6 +209,9 @@ client.handleCapability(CLIENT_BROWSER_INVOKE, async (req: BrowserCapabilityRequ
 
 const api = buildClientApi(client, CHANNEL_MAP, (ch) => client.isChannelAvailable(ch))
 
+api.registerPageDocument = (input) => ipcRenderer.invoke('__pages:registerDocument', input)
+api.releasePageDocument = (url) => ipcRenderer.invoke('__pages:releaseDocument', url)
+
 ;(api as any).getRuntimeEnvironment = (): 'electron' | 'web' => 'electron'
 
 // ---------------------------------------------------------------------------
