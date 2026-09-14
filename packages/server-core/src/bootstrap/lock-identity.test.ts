@@ -28,14 +28,14 @@ describe('lockHolderMatchesLock (#978)', () => {
   })
 
   it('matches execName case-insensitively', () => {
-    expect(lockHolderMatchesLock(lockWith('craft agents.exe'), 'Phaneris.EXE', null)).toBe(true)
+    expect(lockHolderMatchesLock(lockWith('phaneris.exe'), 'Phaneris.EXE', null)).toBe(true)
   })
 
   it('matches dev shapes the legacy heuristic missed (bun holding the lock)', () => {
     expect(lockHolderMatchesLock(lockWith('bun'), 'bun', null)).toBe(true)
   })
 
-  it('rejects a different executable even when its name contains "craft"', () => {
+  it('rejects a different executable even when its name contains the product name', () => {
     // PID recycled onto e.g. a game process — must NOT keep the brick (#978)
     expect(lockHolderMatchesLock(lockWith('Phaneris.exe'), 'minecraft-launcher', null)).toBe(false)
   })
@@ -45,12 +45,12 @@ describe('lockHolderMatchesLock (#978)', () => {
   })
 
   it('ignores the command line when execName is recorded', () => {
-    // cmdline mentions craft, but the executable is something else → recycled PID
+    // cmdline mentions the product, but the executable is something else → recycled PID
     expect(lockHolderMatchesLock(lockWith('Phaneris.exe'), 'java', '/usr/bin/java -jar minecraft.jar')).toBe(false)
   })
 
   describe('legacy locks without execName', () => {
-    it('falls back to the craft-substring heuristic on the command line', () => {
+    it('falls back to the product-substring heuristic on the command line', () => {
       expect(lockHolderMatchesLock(lockWith(undefined), null, '/Applications/Phaneris.app/Contents/MacOS/Phaneris')).toBe(true)
       expect(lockHolderMatchesLock(lockWith(undefined), null, '/usr/libexec/swcd')).toBe(false)
     })

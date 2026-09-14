@@ -9,6 +9,8 @@
  * useful error message instead of a generic "Invalid URL".
  */
 
+import { DEEPLINK_PROTOCOL } from '../identity.ts'
+
 export type UrlClassification =
   | { kind: 'dangerous'; scheme?: string; reason: string }
   | { kind: 'internal-deeplink' }
@@ -30,7 +32,12 @@ const DANGEROUS_SCHEMES: ReadonlyMap<string, string> = new Map([
   ],
 ])
 
-const INTERNAL_DEEPLINK_SCHEME = 'craftagents:'
+/**
+ * The product's own deep-link scheme, from the identity resolver. A literal
+ * here is what makes the classifier stop recognising the app's own links — they
+ * then fall through to `shell.openExternal` and get handed to the OS.
+ */
+const INTERNAL_DEEPLINK_SCHEME = DEEPLINK_PROTOCOL
 
 export function classifyExternalUrl(rawUrl: string): UrlClassification {
   if (typeof rawUrl !== 'string' || rawUrl.trim() === '') {

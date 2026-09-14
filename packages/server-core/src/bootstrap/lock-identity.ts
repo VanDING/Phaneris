@@ -4,6 +4,23 @@
  * the decision logic is unit-testable without real process inspection (#978).
  */
 
+import { PRODUCT_NAME, PRODUCT_SLUG } from '@phaneris/shared'
+
+/**
+ * Matches a command line that belongs to this product, for pre-0.11.3 locks
+ * that recorded no executable name.
+ *
+ * Built from the identity rather than written out: a hardcoded brand substring
+ * stops matching the moment the product is renamed, and the failure is silent
+ * and app-bricking — a lock that looks like someone else's makes the app refuse
+ * to start. The upstream names stay in the alternation so a lock left behind by
+ * the old build is still recognised as ours.
+ */
+const LEGACY_LOCK_HOLDER_PATTERN = new RegExp(
+  [PRODUCT_NAME, PRODUCT_SLUG, 'craft'].map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
+  'i',
+)
+
 export interface LockIdentity {
   pid: number
   startedAt: number
@@ -34,7 +51,7 @@ export function parseTasklistImageName(output: string): string | null {
  *   lines), and it works for dev shapes (`bun`, `electron`) the old substring
  *   heuristic missed.
  * - Legacy locks without `execName` fall back to that heuristic: treat the holder
- *   as ours only when its command line references craft.
+ *   as ours only when its command line references the product.
  * - An uninspectable process (both live inputs null) fails OPEN (not a match):
  *   PID reuse is the common case here, and a false "already running" silently
  *   and permanently bricks the app (#978). Single-instancing has independent
@@ -50,5 +67,5 @@ export function lockHolderMatchesLock(
     return liveExecName.toLowerCase() === lock.execName.toLowerCase()
   }
   if (!liveCommandLine) return false
-  return /craft/i.test(liveCommandLine)
+  return LEGACY_LOCK_HOLDER_PATTERN.test(liveCommandLine)
 }

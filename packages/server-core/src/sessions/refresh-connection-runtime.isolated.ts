@@ -1,11 +1,53 @@
-import { afterEach, beforeEach, describe, expect, it, jest } from 'bun:test'
-import { mkdtempSync, rmSync } from 'fs'
+import { afterAll, afterEach, beforeEach, describe, expect, it, jest } from 'bun:test'
+import { mkdtempSync, rmSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
-import { resolveBackendContext } from '@phaneris/shared/agent/backend'
-import { loadWorkspaceConfig } from '@phaneris/shared/workspaces'
-import { SessionManager, createManagedSession } from './SessionManager.ts'
-import { buildRestartRequiredSignature } from './runtime-config.ts'
+import type { SessionManager } from './SessionManager.ts'
+
+// Resolving a connection goes through the real config store, whose root is
+// captured at module load time from PHANERIS_CONFIG_DIR. Running as an isolated
+// process lets this file own that root: without the override these assertions
+// would read the developer's own ~/.phaneris profile and pass or fail depending
+// on whether that machine happens to have an LLM connection called `slug-A`.
+const configDir = mkdtempSync(join(tmpdir(), 'phaneris-refresh-runtime-'))
+process.env.PHANERIS_CONFIG_DIR = configDir
+
+// The fixture the payload assertion is about: a pi_compat connection with an
+// explicit per-model `supportsImages`.
+writeFileSync(
+  join(configDir, 'config.json'),
+  JSON.stringify(
+    {
+      workspaces: [],
+      activeWorkspaceId: null,
+      activeSessionId: null,
+      llmConnections: [
+        {
+          slug: 'slug-A',
+          name: 'Fixture Endpoint',
+          providerType: 'pi_compat',
+          authType: 'api_key',
+          baseUrl: 'https://fixture.invalid/v1',
+          defaultModel: 'fixture-vision',
+          models: [{ id: 'fixture-vision', name: 'Fixture Vision', supportsImages: true, contextWindow: 128000 }],
+          createdAt: Date.now(),
+        },
+      ],
+    },
+    null,
+    2,
+  ),
+  'utf-8',
+)
+
+const { resolveBackendContext } = await import('@phaneris/shared/agent/backend')
+const { loadWorkspaceConfig } = await import('@phaneris/shared/workspaces')
+const { SessionManager: SessionManagerCtor, createManagedSession } = await import('./SessionManager.ts')
+const { buildRestartRequiredSignature } = await import('./runtime-config.ts')
+
+afterAll(() => {
+  rmSync(configDir, { recursive: true, force: true })
+})
 
 // Regression coverage for the stale-Pi-subprocess bug where toggling
 // `supportsImages` on a custom-endpoint model wrote to disk but never reached
@@ -98,7 +140,7 @@ describe('refreshConnectionRuntime', () => {
 
   beforeEach(() => {
     tmpRoot = mkdtempSync(join(tmpdir(), 'sm-refresh-'))
-    sm = new SessionManager()
+    sm = new SessionManagerCtor()
   })
 
   afterEach(() => {
