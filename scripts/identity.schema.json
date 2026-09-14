@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/VanDING/craft-agents-rebuild/scripts/identity.schema.json",
+  "title": "Phaneris product identity",
+  "description": "Specification for phaneris.identity.json — the single source of truth for every Phaneris product identifier (display name, app ID, deep-link scheme, data directories, environment prefix, package scope and service endpoints). Packaging config, build scripts and runtime code MUST read or generate from this file; they must not restate these constants. Changing a frozen identifier (appId, scheme, runtime.dataDirName) after the first public release is a migration project, not a string edit — see docs/architecture/phaneris-phase-a-identity-freeze.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "product",
+    "packaging",
+    "packages",
+    "cli",
+    "runtime",
+    "repository",
+    "services",
+    "legacy"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "fullName", "slug", "description", "appId", "scheme"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Formal product name. Used for the packaged app name, window titles and the OS application identity."
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Long form used in prose such as the about page, installer copy and README. Not used for file or bundle names."
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Lowercase machine slug used for directories, cache keys and lock names."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One-line product description used in manifests and installer metadata."
+        },
+        "appId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(\\.[a-z0-9][a-z0-9-]*)+$",
+          "description": "FROZEN. OS-level application identity (macOS bundle id, Windows AUMID and uninstall key). Must not change after the first public release."
+        },
+        "scheme": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9+.-]*$",
+          "description": "FROZEN. Custom URL scheme for deep links. Must never register or claim the upstream scheme."
+        }
+      }
+    },
+    "packaging": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publisher", "copyright", "artifactName"],
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Signing/publisher identity shown by installers. Must not claim a company or certificate the maintainer does not control."
+        },
+        "copyright": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Copyright line for installers and the about page. States the fork maintainer AND the upstream copyright; upstream attribution is never dropped."
+        },
+        "artifactName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "electron-builder artifactName template. Consumed verbatim by the packaging config and by the build scripts that locate built installers."
+        }
+      }
+    },
+    "packages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "scope"],
+      "properties": {
+        "root": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Root workspace package name."
+        },
+        "scope": {
+          "type": "string",
+          "pattern": "^@[a-z][a-z0-9-]*$",
+          "description": "Internal npm scope for workspace packages. A private workspace does not imply ownership of the public npm scope."
+        }
+      }
+    },
+    "cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "docShorthand"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Installed CLI binary name."
+        },
+        "docShorthand": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Documentation-only shorthand. Never installed as a second binary and never presented as the product name."
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataDirName", "userDataDirName", "envPrefix", "previewSuffix"],
+      "properties": {
+        "dataDirName": {
+          "type": "string",
+          "pattern": "^\\.[a-z][a-z0-9-]*$",
+          "description": "FROZEN. Directory name under the user home that holds all application-owned data. Independent of the Electron userData directory."
+        },
+        "userDataDirName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FROZEN. Explicit Electron userData directory name, so caches, locks and session data never collide with the upstream app installed side by side."
+        },
+        "envPrefix": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*_$",
+          "description": "Prefix for every environment variable the product reads. Ordinary variables may temporarily read the legacy alias with a deprecation notice; credentials, data directories and update feeds never do."
+        },
+        "previewSuffix": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Suffix that must be applied to app id, scheme, data directory and update cache if a preview channel is ever offered."
+        }
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "plannedUrl", "renamePerformed"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Repository URL that is true today. Generated links must resolve, so this tracks the actual location until the rename is executed."
+        },
+        "plannedUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Intended repository URL after the rename. Documentation may state it as planned; it must not be presented as the current location while renamePerformed is false."
+        },
+        "renamePerformed": {
+          "type": "boolean",
+          "description": "Set to true only after the remote repository rename has actually been executed and verified."
+        }
+      }
+    },
+    "services": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "docsUrl",
+        "viewerUrl",
+        "updateFeedUrl",
+        "oauthRelayUrl",
+        "pagesShareApiUrl",
+        "supportUrl",
+        "telemetry"
+      ],
+      "properties": {
+        "docsUrl": { "$ref": "#/$defs/nullableUrl" },
+        "viewerUrl": { "$ref": "#/$defs/nullableUrl" },
+        "updateFeedUrl": { "$ref": "#/$defs/nullableUrl" },
+        "oauthRelayUrl": { "$ref": "#/$defs/nullableUrl" },
+        "pagesShareApiUrl": { "$ref": "#/$defs/nullableUrl" },
+        "supportUrl": { "$ref": "#/$defs/nullableUrl" },
+        "telemetry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "dsn"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Telemetry is off unless a maintainer-owned destination is explicitly configured."
+            },
+            "dsn": { "$ref": "#/$defs/nullableUrl" }
+          }
+        }
+      },
+      "description": "Maintainer-owned service endpoints. null means the service is not ready: the corresponding product surface must show an explicit unavailable state and must NEVER fall back to the upstream endpoint. Populate only with URLs the maintainer controls."
+    },
+    "legacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "note",
+        "dataDirName",
+        "userDataDirName",
+        "scheme",
+        "envPrefix",
+        "appId",
+        "packageScope"
+      ],
+      "properties": {
+        "note": { "type": "string", "minLength": 1 },
+        "dataDirName": { "type": "string", "minLength": 1 },
+        "userDataDirName": { "type": "string", "minLength": 1 },
+        "scheme": { "type": "string", "minLength": 1 },
+        "envPrefix": { "type": "string", "minLength": 1 },
+        "appId": { "type": "string", "minLength": 1 },
+        "packageScope": { "type": "string", "minLength": 1 }
+      },
+      "description": "Upstream identifiers retained as compatibility inputs. These are read-only inputs to the migration path — the product never becomes them and never writes to them."
+    }
+  },
+  "$defs": {
+    "nullableUrl": {
+      "type": ["string", "null"],
+      "format": "uri"
+    }
+  }
+}

@@ -1,8 +1,9 @@
-appId: com.lukilabs.craft-agent
-productName: Craft Agents
-copyright: Copyright © 2026 Craft Docs Ltd.
-
-artifactName: Craft-Agents-${arch}.${ext}
+# Product identity (appId, productName, copyright, artifactName) is NOT declared
+# here on purpose. It lives only in phaneris.identity.json at the repository root
+# and is rendered into ./identity.generated.yml by `bun run identity:generate`,
+# so the packaging config, the runtime and the build scripts cannot drift apart.
+# `bun run identity:check` fails whenever these keys reappear in this file.
+extends: ./identity.generated.yml
 
 electronVersion: "44.2.0"
 

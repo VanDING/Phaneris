@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "description": "Residual-brand allowlist for the Phaneris fork. Every entry is a deliberate, reasoned exception to 'no upstream identifier remains'. The scanner in scripts/check-identity.ts fails a --strict run on any hit that no rule covers, and reports rules that no longer match anything so stale entries get deleted instead of accumulating. Add a rule only when the legacy string must genuinely stay: upstream attribution, historical records, the migration input path, or the identity/scan machinery itself.",
+  "rules": [
+    {
+      "glob": "phaneris.identity.json",
+      "tokens": ["*"],
+      "reason": "Declares the legacy identifiers on purpose: the migration path and the residual scanner both read them from here."
+    },
+    {
+      "glob": "scripts/identity.schema.json",
+      "tokens": ["*"],
+      "reason": "JSON Schema for the identity file; describes the legacy block and is hosted under the current repository URL."
+    },
+    {
+      "glob": "scripts/check-identity.ts",
+      "tokens": ["*"],
+      "reason": "The residual scanner itself; necessarily names every legacy token it searches for."
+    },
+    {
+      "glob": "scripts/identity-allowlist.json",
+      "tokens": ["*"],
+      "reason": "This allowlist; its reasons quote the tokens they exempt."
+    },
+    {
+      "glob": "docs/architecture/phaneris-fork-plan.md",
+      "tokens": ["*"],
+      "reason": "The fork plan quotes upstream identifiers and the rejected working names as source material."
+    },
+    {
+      "glob": "docs/architecture/phaneris-phase-a-identity-freeze.md",
+      "tokens": ["*"],
+      "reason": "Phase A report: the reference inventory and namespace verification record are about the upstream identifiers."
+    },
+    {
+      "glob": "NOTICE",
+      "tokens": ["*"],
+      "reason": "Upstream attribution. Apache-2.0 requires it to survive the rebrand verbatim."
+    },
+    {
+      "glob": "LICENSE",
+      "tokens": ["*"],
+      "reason": "License text and any copyright line; not a rebrand target."
+    },
+    {
+      "glob": "apps/electron/resources/release-notes/*.md",
+      "tokens": ["*"],
+      "reason": "Historical release notes describe what actually shipped under the upstream name; rewriting them would falsify the record."
+    },
+    {
+      "glob": "apps/electron/build-win.log",
+      "tokens": ["*"],
+      "reason": "Checked-in historical build log; evidence of the pre-fork packaging output, not a live configuration input."
+    },
+    {
+      "glob": "AGENTS.md",
+      "tokens": ["*"],
+      "reason": "Documents the working remote name (VanDING/craft-agents-rebuild), which stays accurate until the repository rename in Phase F."
+    },
+    {
+      "glob": "packages/shared/src/identity.generated.ts",
+      "tokens": ["*"],
+      "reason": "Generated from phaneris.identity.json — contains the LEGACY_IDENTITY block by construction."
+    },
+    {
+      "glob": "apps/electron/identity.generated.yml",
+      "tokens": ["*"],
+      "reason": "Generated — the copyright line credits the upstream copyright holder, which is intentional."
+    }
+  ]
+}

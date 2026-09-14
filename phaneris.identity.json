@@ -1,0 +1,56 @@
+{
+  "$schema": "./scripts/identity.schema.json",
+  "product": {
+    "name": "Phaneris",
+    "fullName": "Phaneris Agent",
+    "slug": "phaneris",
+    "description": "Local AI workspace with durable, inspectable execution",
+    "appId": "io.github.vanding.phaneris",
+    "scheme": "phaneris"
+  },
+  "packaging": {
+    "publisher": "VanDING",
+    "copyright": "Copyright © 2026 VanDING. Based on Craft Agents, Copyright © 2026 Craft Docs Ltd.",
+    "artifactName": "Phaneris-${version}-${os}-${arch}.${ext}"
+  },
+  "packages": {
+    "root": "phaneris",
+    "scope": "@phaneris"
+  },
+  "cli": {
+    "name": "phaneris",
+    "docShorthand": "phan"
+  },
+  "runtime": {
+    "dataDirName": ".phaneris",
+    "userDataDirName": "Phaneris",
+    "envPrefix": "PHANERIS_",
+    "previewSuffix": "preview"
+  },
+  "repository": {
+    "url": "https://github.com/VanDING/craft-agents-rebuild",
+    "plannedUrl": "https://github.com/VanDING/phaneris",
+    "renamePerformed": false
+  },
+  "services": {
+    "docsUrl": null,
+    "viewerUrl": null,
+    "updateFeedUrl": null,
+    "oauthRelayUrl": null,
+    "pagesShareApiUrl": null,
+    "supportUrl": null,
+    "telemetry": {
+      "enabled": false,
+      "dsn": null
+    }
+  },
+  "legacy": {
+    "note": "Compatibility-only identifiers from the upstream Craft Agents lineage. Read solely by the data-import path and by deprecation diagnostics; never inherited automatically for credentials, data directories or update feeds.",
+    "dataDirName": ".craft-agent",
+    "userDataDirName": "Craft Agents",
+    "scheme": "craftagents",
+    "envPrefix": "CRAFT_",
+    "appId": "com.lukilabs.craft-agent",
+    "packageScope": "@craft-agent"
+  }
+}

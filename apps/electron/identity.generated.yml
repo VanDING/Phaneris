@@ -1,0 +1,14 @@
+# GENERATED FILE — DO NOT EDIT BY HAND.
+#
+# Source of truth: phaneris.identity.json (repository root)
+# Regenerate:      bun run identity:generate
+# Verify:          bun run identity:check
+#
+# Pulled in by apps/electron/electron-builder.yml via `extends`. The identity
+# keys live ONLY here, so electron-builder's merge order can never change the
+# packaged application identity.
+
+appId: 'io.github.vanding.phaneris'
+productName: 'Phaneris'
+copyright: 'Copyright © 2026 VanDING. Based on Craft Agents, Copyright © 2026 Craft Docs Ltd.'
+artifactName: 'Phaneris-${version}-${os}-${arch}.${ext}'

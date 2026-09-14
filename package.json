@@ -24,7 +24,10 @@
   "scripts": {
     "test": "bun run scripts/run-workspace-tests.ts",
     "typecheck": "bun run typecheck:shared",
-    "typecheck:shared": "cd packages/shared && bun run tsc --noEmit",
+    "typecheck:shared": "cd packages/shared && bun run tsc --noEmit",
+    "identity:generate": "bun run scripts/generate-identity.ts",
+    "identity:check": "bun run scripts/check-identity.ts",
+    "identity:check:strict": "bun run scripts/check-identity.ts --strict",
     "typecheck:all": "cd packages/core && bun run tsc --noEmit && cd ../shared && bun run tsc --noEmit && cd ../server-core && bun run tsc --noEmit && cd ../server && bun run tsc --noEmit && cd ../session-tools-core && bun run tsc --noEmit && cd ../pi-agent-server && bun run typecheck && cd ../../apps/electron && bun run typecheck && cd ../../packages/ui && bun run tsc --noEmit && cd ../messaging-gateway && bun run tsc --noEmit && cd ../messaging-whatsapp-worker && bun run tsc --noEmit && cd ../../apps/cli && bun run typecheck && cd ../.. && bun run webui:typecheck && bun run viewer:typecheck && bun run typecheck:build && bun run typecheck:scripts",
     "server:start": "bun run packages/server/src/index.ts",
     "server:dev": "bun run server:build:subprocess && CRAFT_DEBUG=true CRAFT_BUNDLED_ASSETS_ROOT=$PWD/apps/electron bun run packages/server/src/index.ts",
@@ -40,11 +43,11 @@
     "test:shared:all": "bun run test:shared:llm-connections && bun run test:shared:models-pi && bun run test:shared:config",
     "test:doc-tools": "python3 -m unittest apps.electron.resources.scripts.tests.test_pdf_tool_smoke apps.electron.resources.scripts.tests.test_xlsx_tool_smoke apps.electron.resources.scripts.tests.test_docx_tool_smoke apps.electron.resources.scripts.tests.test_pptx_tool_smoke apps.electron.resources.scripts.tests.test_img_tool_smoke apps.electron.resources.scripts.tests.test_ical_tool_smoke apps.electron.resources.scripts.tests.test_doc_diff_smoke apps.electron.resources.scripts.tests.test_markitdown_smoke",
     "validate:dev": "bun run typecheck:all && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table",
-    "validate:ci": "bun run typecheck:all && bun run lint && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table && bun run lint:i18n:parity && bun run lint:i18n:sorted && bun run lint:i18n:coverage",
+    "validate:ci": "bun run typecheck:all && bun run lint && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table && bun run lint:i18n:parity && bun run lint:i18n:sorted && bun run lint:i18n:coverage && bun run identity:check",
     "validate:full": "bun run validate:ci && bun run test",
     "lint:electron": "cd apps/electron && bun run lint",
     "lint:shared": "cd packages/shared && bun run eslint .",
-    "lint:ui": "cd packages/ui && bun run eslint .",
+    "lint:ui": "cd packages/ui && bun run eslint .",
     "lint:i18n:parity": "bun run scripts/check-i18n-parity.ts",
     "lint:i18n:coverage": "bun run scripts/check-i18n-coverage.ts",
     "audit:dependencies": "bun run scripts/audit-dependencies.ts",
@@ -88,7 +91,7 @@
     "workspace:backup": "bun run scripts/workspace-backup.ts",
     "workspace:verify": "bun run scripts/workspace-backup.ts",
     "workspace:restore": "bun run scripts/workspace-backup.ts",
-    "server:dev:webui": "bun run server:build:subprocess && bun run webui:build && CRAFT_WEBUI_DIR=apps/webui/dist CRAFT_WEBUI_PORT=3100 bun run server:dev",
+    "server:dev:webui": "bun run server:build:subprocess && bun run webui:build && CRAFT_WEBUI_DIR=apps/webui/dist CRAFT_WEBUI_PORT=3100 bun run server:dev",
     "prepare": "bun run husky",
     "postinstall": "",
     "typecheck:build": "bun run tsc --noEmit -p tsconfig.build.json",
