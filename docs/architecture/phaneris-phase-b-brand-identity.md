@@ -97,11 +97,24 @@
 |---|---|---|
 | A 阶段结束（清点基线） | 5686 | 874 |
 | 环境变量改名后 | 1729 | 358 |
-| 本阶段结束（应用身份与本地品牌表面） | 920 | 212 |
+| 应用身份与数据路径落地后 | 920 | 212 |
+| 品牌表面收尾后（当前） | 379 | 142 |
 
-剩余命中集中在：`.craft-agent` 路径字面量（主要在测试夹具与 `permissions/default.json` 之类的**上游默认配置样本**）、上游域名（D 阶段）、`CraftAgent` 代码标识符、以及 `Craft Docs Ltd.` 版权/归属（有意保留）。允许列表里每条规则都带理由，且不再命中的规则会被报告要求删除。
+剩余 379 条的构成：上游域名 125（D 阶段）、`CraftAgent` 代码标识符 78（内部 API，延后）、`Craft Docs Ltd.` 版权与上游归属 34（有意保留）、其余为测试夹具中的合成路径与 `.craft-agent` 字面量。允许列表中每条规则都带理由，且 `unusedRules` 必须为空——不再命中的规则会被报告要求删除。
 
-## 6. B 阶段放行判定
+## 6. 改名暴露出的三处"只在改名时才失败"的缺陷
+
+这三处都不是文案问题，而是硬编码字符串与身份解耦后**静默失效**的逻辑。已修复，记录在此以便复核同类模式：
+
+1. **interceptor 预载钉死了配置根目录**。`interceptor-common.ts` 改为引用 `CONFIG_DIR` 后，`bunfig.toml` 的 `--preload` 会在任何脚本运行前求值 `config/paths.ts`，于是 `PHANERIS_CONFIG_DIR` 再怎么设置都无效——`*.isolated.ts` 这一"让测试远离开发者真实 profile"的既有模式被静默破坏。现改为按需解析，日志目录创建与轮转也移到首次写日志时。
+2. **`url-safety.ts` 用字面量识别自家深链接**。分类器写死 `craftagents:`，于是 `phaneris://` 链接会被判为外部 URL 并交给 `shell.openExternal`。现从身份解析器取值。
+3. **`lock-identity.ts` 用 "craft" 子串判断锁持有者**。0.11.3 之前的锁没有记录可执行文件名，只能扫命令行；写死的品牌子串在改名后不再匹配，会把自己的旧锁当成别人的，从而拒绝启动。现从产品名构造（并保留上游名，使旧锁仍被认出）。
+
+同时发现一个**既有**问题：`refresh-connection-runtime` 测试从开发者本机真实配置里解析连接，因此只有在恰好存在 `slug-A` 连接的机器上才通过。已改为 `*.isolated.ts` 并自备符合 schema 的配置夹具（8/8 通过），不再依赖机器状态。
+
+已知的既有失败（与本阶段无关，未修）：`packages/session-tools-core/src/runtime/filesystem-isolation.test.ts` 的 `includes session subpath write allow` 在 Windows 上失败——它把 POSIX 路径 `/tmp/craft-session` 交给 `path.resolve`，在 Windows 上得到 `E:\tmp\craft-session`。该断言在任何 Windows 检出上都会失败。
+
+## 7. B 阶段放行判定
 
 已满足：技术身份贯穿桌面、Web UI、CLI、服务端与打包配置；图标为真实平台资产而非网页图片；内部包、环境变量、路径与协议各自单一来源；`typecheck:all` 与三项 i18n 校验通过；安装脚本不会再装出上游产物。
 
