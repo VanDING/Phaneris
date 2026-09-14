@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import type { ActivityItem } from '@craft-agent/ui'
+import type { ActivityItem } from '@phaneris/ui'
 import { collectFileActivity, resolveFileActivityPath } from '../file-activity'
 
 function activity(input: Partial<ActivityItem>): ActivityItem {

@@ -13,7 +13,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Activity } from 'lucide-react'
-import { TrajectoryView, buildTrajectorySnapshot, Spinner, type TrajectorySessionMap } from '@craft-agent/ui'
+import { TrajectoryView, buildTrajectorySnapshot, Spinner, type TrajectorySessionMap } from '@phaneris/ui'
 import { PanelEmptyState } from './PanelEmptyState'
 import { activeSessionIdAtom } from '@/atoms/active-session'
 import { sessionAtomFamily, sessionMetaMapAtom, ensureSessionMessagesLoadedAtom } from '@/atoms/sessions'
@@ -22,7 +22,7 @@ import { collapseWorkbenchAtom, openWorkbenchItemAtom, setWorkbenchItemBindingAt
 import { useAppShellContext } from '@/context/AppShellContext'
 import { useNavigation } from '@/contexts/NavigationContext'
 import { useLabels } from '@/hooks/useLabels'
-import { findLabelById } from '@craft-agent/shared/labels'
+import { findLabelById } from '@phaneris/shared/labels'
 
 export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
   const { t } = useTranslation()

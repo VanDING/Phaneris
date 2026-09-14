@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { WorkItemEvent } from '@craft-agent/shared/work-items/browser'
+import type { WorkItemEvent } from '@phaneris/shared/work-items/browser'
 
 export function useWorkItemEvents(workspaceId: string | null, workItemId: string | null) {
   const [events, setEvents] = React.useState<WorkItemEvent[]>([])

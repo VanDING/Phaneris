@@ -16,7 +16,7 @@ import type {
   ApiSetupMethod,
 } from '@/components/onboarding'
 import type { ProviderChoice } from '@/components/onboarding/ProviderSelectStep'
-import type { LlmProviderType } from '@craft-agent/shared/config/llm-connections'
+import type { LlmProviderType } from '@phaneris/shared/config/llm-connections'
 import type { LocalModelSubmitData } from '@/components/onboarding/LocalModelStep'
 import type { ApiKeySubmitData } from '@/components/apisetup'
 import type { CustomEndpointConfig } from '@config/llm-connections'

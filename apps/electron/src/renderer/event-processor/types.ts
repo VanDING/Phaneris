@@ -6,7 +6,7 @@
  */
 
 import type { Session, SessionEvent, Message, PermissionRequest, CredentialRequest, TypedError, PermissionMode, SessionStatus, AuthRequest, ToolDisplayMeta } from '../../shared/types'
-import type { PiUsage, AssistantMetrics, TrajectorySourceBlock } from '@craft-agent/core/types'
+import type { PiUsage, AssistantMetrics, TrajectorySourceBlock } from '@phaneris/core/types'
 
 /** Explicit SDK retry boundaries; keep their transport shape authoritative. */
 export type TextDiscardEvent = Extract<SessionEvent, { type: 'text_discard' }>
@@ -65,7 +65,7 @@ export interface TextCompleteEvent {
   /** Effective system prompt at this request (trajectory prompt diff). */
   promptSnapshot?: string
   /** Compact request-time manifest of actual model context composition. */
-  contextSnapshot?: import('@craft-agent/core/types').RequestContextSnapshot
+  contextSnapshot?: import('@phaneris/core/types').RequestContextSnapshot
   /** Wall-clock step metrics (TTFT / decoding) for trajectory timing. */
   assistantMetrics?: AssistantMetrics
   /** Structured content blocks in model order (trajectory details panel). */

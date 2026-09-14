@@ -8,7 +8,7 @@
 
 import { join, parse as parsePath } from 'path'
 import { existsSync, mkdirSync } from 'fs'
-import { validateFilePath, getWorkspaceAllowedDirs } from '@craft-agent/server-core/handlers'
+import { validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import { BrowserView, BrowserWindow, app, ipcMain, nativeTheme, session, shell, type Session as ElectronSession } from 'electron'
 import { mainLog } from './logger'
 import type { WindowManager } from './window-manager'
@@ -26,18 +26,18 @@ import {
   loadPresetTheme,
   resolveTheme,
   resolveThemeMode,
-} from '@craft-agent/shared/config'
-import { getWorkspaceColorTheme } from '@craft-agent/shared/workspaces'
-import { CodedError } from '@craft-agent/shared/protocol'
+} from '@phaneris/shared/config'
+import { getWorkspaceColorTheme } from '@phaneris/shared/workspaces'
+import { CodedError } from '@phaneris/shared/protocol'
 import { getBrowserLiveFxCornerRadii } from '../shared/browser-live-fx'
 import type {
   IBrowserPaneManager,
   BrowserInstanceSnapshot,
-} from '@craft-agent/server-core/handlers'
+} from '@phaneris/server-core/handlers'
 import type {
   BrowserCapabilityRequest,
   ScreenshotResultWire,
-} from '@craft-agent/server-core/transport'
+} from '@phaneris/server-core/transport'
 
 export type { BrowserInstanceInfo }
 
@@ -1629,7 +1629,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     return instance.downloads.slice(-limit)
   }
 
-  // validateUploadFilePath removed — uses shared validateFilePath from @craft-agent/server-core/handlers
+  // validateUploadFilePath removed — uses shared validateFilePath from @phaneris/server-core/handlers
 
   async uploadFile(id: string, ref: string, filePaths: string[]): Promise<ElementGeometry> {
     const instance = this.requireAliveInstance(id)

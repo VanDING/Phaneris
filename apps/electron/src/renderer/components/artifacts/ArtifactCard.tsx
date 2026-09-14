@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { AlertTriangle, Archive, Check, ChevronDown, ChevronRight, FileArchive, FileAudio, FileImage, FileText, FileVideo, Maximize2, RotateCcw, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { ArtifactEventSnapshot, ResolvedArtifact } from '@craft-agent/shared/artifacts/browser'
-import { MarkdownDocBlock, MarkdownHtmlBlock, MarkdownImageBlock, MarkdownPdfBlock } from '@craft-agent/ui'
+import type { ArtifactEventSnapshot, ResolvedArtifact } from '@phaneris/shared/artifacts/browser'
+import { MarkdownDocBlock, MarkdownHtmlBlock, MarkdownImageBlock, MarkdownPdfBlock } from '@phaneris/ui'
 import { cn } from '@/lib/utils'
 import { FilePreviewContent } from '@/components/content-panels/FilePreviewContent'
 

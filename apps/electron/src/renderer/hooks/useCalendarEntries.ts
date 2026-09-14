@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import type { CalendarEntry, CalendarEntryInput } from '@craft-agent/shared/protocol'
+import type { CalendarEntry, CalendarEntryInput } from '@phaneris/shared/protocol'
 
 export interface UseCalendarEntriesResult {
   entries: CalendarEntry[]

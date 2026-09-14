@@ -1,4 +1,4 @@
-import type { RuntimeEvent } from '@craft-agent/shared/durable-runtime'
+import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
 import { DurableRuntimeStore, type MaterializedProjection } from './store.js'
 
 export interface ProjectionDefinition<TSnapshot> {

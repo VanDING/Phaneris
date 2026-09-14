@@ -1,4 +1,4 @@
-import type { Message } from '@craft-agent/core/types'
+import type { Message } from '@phaneris/core/types'
 import type { TrajectorySnapshot } from './trajectory-contract'
 import { selectTrajectorySessionFamily, type TrajectorySessionMap } from './trajectory-session-map'
 

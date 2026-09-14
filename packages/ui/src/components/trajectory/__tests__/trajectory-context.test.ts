@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import type { Message } from '@craft-agent/core/types'
+import type { Message } from '@phaneris/core/types'
 import { buildTrajectorySnapshot } from '../trajectory-snapshot'
 import {
   bucketRequestContexts,

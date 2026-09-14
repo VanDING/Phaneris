@@ -9,7 +9,7 @@
 
 import type { ReactNode } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { motionTween } from '@craft-agent/ui/motion'
+import { motionTween } from '@phaneris/ui/motion'
 
 interface PanelEmptyStateProps {
   /** Primary message (usually an i18n key result) */

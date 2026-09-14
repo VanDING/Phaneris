@@ -22,8 +22,8 @@ import { protocol, nativeImage } from 'electron'
 import { stat } from 'fs/promises'
 import { isAbsolute, resolve, relative } from 'path'
 import { mainLog } from './logger'
-import { getWorkspaceAllowedDirs } from '@craft-agent/server-core/handlers'
-import { getWorkspaces } from '@craft-agent/shared/config'
+import { getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
+import { getWorkspaces } from '@phaneris/shared/config'
 
 /**
  * Audit L-7: the thumbnail protocol must only serve files inside a

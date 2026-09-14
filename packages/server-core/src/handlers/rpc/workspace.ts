@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs'
 import { join } from 'path'
 import { homedir } from 'os'
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
-import { getWorkspaceByNameOrId, addWorkspace, setActiveWorkspace, updateWorkspaceRemoteServer, setRemoteServerToken, getRemoteServerTokenSync } from '@craft-agent/shared/config'
-import { perf } from '@craft-agent/shared/utils'
-import { pushTyped, type RpcServer } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import { getWorkspaceByNameOrId, addWorkspace, setActiveWorkspace, updateWorkspaceRemoteServer, setRemoteServerToken, getRemoteServerTokenSync } from '@phaneris/shared/config'
+import { perf } from '@phaneris/shared/utils'
+import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { isValidWorkspaceRootPath } from '../../utils/path-validation'
 
@@ -306,28 +306,28 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
   // ============================================================
 
   server.handle(RPC_CHANNELS.theme.GET_APP, async () => {
-    const { loadAppTheme } = await import('@craft-agent/shared/config/storage')
+    const { loadAppTheme } = await import('@phaneris/shared/config/storage')
     return loadAppTheme()
   })
 
   // User themes (app-level; Default is returned directly by LOAD_PRESET)
   server.handle(RPC_CHANNELS.theme.GET_PRESETS, async () => {
-    const { loadPresetThemes } = await import('@craft-agent/shared/config/storage')
+    const { loadPresetThemes } = await import('@phaneris/shared/config/storage')
     return loadPresetThemes()
   })
 
   server.handle(RPC_CHANNELS.theme.LOAD_PRESET, async (_ctx, themeId: string) => {
-    const { loadPresetTheme } = await import('@craft-agent/shared/config/storage')
+    const { loadPresetTheme } = await import('@phaneris/shared/config/storage')
     return loadPresetTheme(themeId)
   })
 
   server.handle(RPC_CHANNELS.theme.GET_PREFERENCES, async () => {
-    const { getThemePreferences } = await import('@craft-agent/shared/config/storage')
+    const { getThemePreferences } = await import('@phaneris/shared/config/storage')
     return getThemePreferences()
   })
 
-  server.handle(RPC_CHANNELS.theme.SET_PREFERENCES, async (_ctx, preferences: import('@craft-agent/shared/config').ThemePreferences) => {
-    const { setThemePreferences } = await import('@craft-agent/shared/config/storage')
+  server.handle(RPC_CHANNELS.theme.SET_PREFERENCES, async (_ctx, preferences: import('@phaneris/shared/config').ThemePreferences) => {
+    const { setThemePreferences } = await import('@phaneris/shared/config/storage')
     const persisted = setThemePreferences(preferences)
     deps.browserPaneManager?.refreshThemeVisuals?.()
     pushTyped(server, RPC_CHANNELS.theme.PREFERENCES_CHANGED, { to: 'all' }, persisted)
@@ -335,12 +335,12 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
   })
 
   server.handle(RPC_CHANNELS.theme.GET_COLOR_THEME, async () => {
-    const { getColorTheme } = await import('@craft-agent/shared/config/storage')
+    const { getColorTheme } = await import('@phaneris/shared/config/storage')
     return getColorTheme()
   })
 
   server.handle(RPC_CHANNELS.theme.SET_COLOR_THEME, async (_ctx, themeId: string) => {
-    const { getThemePreferences, setColorTheme } = await import('@craft-agent/shared/config/storage')
+    const { getThemePreferences, setColorTheme } = await import('@phaneris/shared/config/storage')
     setColorTheme(themeId)
     deps.browserPaneManager?.refreshThemeVisuals?.()
     pushTyped(server, RPC_CHANNELS.theme.PREFERENCES_CHANGED, { to: 'all' }, getThemePreferences())
@@ -348,8 +348,8 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
 
   // Backward-compatible alias for older clients; persistence and broadcast now
   // happen together so config.json remains authoritative.
-  server.handle(RPC_CHANNELS.theme.BROADCAST_PREFERENCES, async (_ctx, preferences: import('@craft-agent/shared/config').ThemePreferences) => {
-    const { setThemePreferences } = await import('@craft-agent/shared/config/storage')
+  server.handle(RPC_CHANNELS.theme.BROADCAST_PREFERENCES, async (_ctx, preferences: import('@phaneris/shared/config').ThemePreferences) => {
+    const { setThemePreferences } = await import('@phaneris/shared/config/storage')
     const persisted = setThemePreferences(preferences)
     deps.browserPaneManager?.refreshThemeVisuals?.()
     pushTyped(server, RPC_CHANNELS.theme.PREFERENCES_CHANGED, { to: 'all' }, persisted)
@@ -357,8 +357,8 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
 
   // Workspace-level theme overrides
   server.handle(RPC_CHANNELS.theme.GET_WORKSPACE_COLOR_THEME, async (_ctx, workspaceId: string) => {
-    const { getWorkspaces } = await import('@craft-agent/shared/config/storage')
-    const { getWorkspaceColorTheme } = await import('@craft-agent/shared/workspaces/storage')
+    const { getWorkspaces } = await import('@phaneris/shared/config/storage')
+    const { getWorkspaceColorTheme } = await import('@phaneris/shared/workspaces/storage')
     const workspaces = getWorkspaces()
     const workspace = workspaces.find(w => w.id === workspaceId)
     if (!workspace) return null
@@ -366,8 +366,8 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
   })
 
   server.handle(RPC_CHANNELS.theme.SET_WORKSPACE_COLOR_THEME, async (_ctx, workspaceId: string, themeId: string | null) => {
-    const { getWorkspaces } = await import('@craft-agent/shared/config/storage')
-    const { getWorkspaceColorTheme, setWorkspaceColorTheme } = await import('@craft-agent/shared/workspaces/storage')
+    const { getWorkspaces } = await import('@phaneris/shared/config/storage')
+    const { getWorkspaceColorTheme, setWorkspaceColorTheme } = await import('@phaneris/shared/workspaces/storage')
     const workspaces = getWorkspaces()
     const workspace = workspaces.find(w => w.id === workspaceId)
     if (!workspace) return
@@ -378,8 +378,8 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
   })
 
   server.handle(RPC_CHANNELS.theme.GET_ALL_WORKSPACE_THEMES, async () => {
-    const { getWorkspaces } = await import('@craft-agent/shared/config/storage')
-    const { getWorkspaceColorTheme } = await import('@craft-agent/shared/workspaces/storage')
+    const { getWorkspaces } = await import('@phaneris/shared/config/storage')
+    const { getWorkspaceColorTheme } = await import('@phaneris/shared/workspaces/storage')
     const workspaces = getWorkspaces()
     const themes: Record<string, string | undefined> = {}
     for (const ws of workspaces) {
@@ -403,16 +403,16 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error('Workspace not found')
 
-    const { listViews } = await import('@craft-agent/shared/views/storage')
+    const { listViews } = await import('@phaneris/shared/views/storage')
     return listViews(workspace.rootPath)
   })
 
   // Save views (replaces full array)
-  server.handle(RPC_CHANNELS.views.SAVE, async (_ctx, workspaceId: string, views: import('@craft-agent/shared/views').ViewConfig[]) => {
+  server.handle(RPC_CHANNELS.views.SAVE, async (_ctx, workspaceId: string, views: import('@phaneris/shared/views').ViewConfig[]) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error('Workspace not found')
 
-    const { saveViews } = await import('@craft-agent/shared/views/storage')
+    const { saveViews } = await import('@phaneris/shared/views/storage')
     saveViews(workspace.rootPath, views)
     // Broadcast labels changed since views are used alongside labels in sidebar
     pushTyped(server, RPC_CHANNELS.labels.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
@@ -425,9 +425,9 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
   // Tool icon mappings — loads tool-icons.json and resolves each entry's icon to a data URL
   // for display in the Appearance settings page
   server.handle(RPC_CHANNELS.toolIcons.GET_MAPPINGS, async () => {
-    const { getToolIconsDir } = await import('@craft-agent/shared/config/storage')
-    const { loadToolIconConfig } = await import('@craft-agent/shared/utils/cli-icon-resolver')
-    const { encodeIconToDataUrl } = await import('@craft-agent/shared/utils/icon-encoder')
+    const { getToolIconsDir } = await import('@phaneris/shared/config/storage')
+    const { loadToolIconConfig } = await import('@phaneris/shared/utils/cli-icon-resolver')
+    const { encodeIconToDataUrl } = await import('@phaneris/shared/utils/icon-encoder')
     const { join } = await import('path')
 
     const toolIconsDir = getToolIconsDir()
@@ -451,7 +451,7 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
 
   // Logo URL resolution (uses Node.js filesystem cache for provider domains)
   server.handle(RPC_CHANNELS.logo.GET_URL, async (_ctx, serviceUrl: string, provider?: string) => {
-    const { getCachedLogo } = await import('@craft-agent/shared/utils/logo-cache')
+    const { getCachedLogo } = await import('@phaneris/shared/utils/logo-cache')
     const result = await getCachedLogo(serviceUrl, provider)
     return result
   })

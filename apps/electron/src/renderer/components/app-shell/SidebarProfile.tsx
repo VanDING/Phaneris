@@ -6,7 +6,7 @@ import { personalProfileAtom } from '@/atoms/personal-profile'
 import { getInitials, parsePreferences } from '@/lib/personal-profile'
 import { CrossfadeAvatar } from '@/components/ui/avatar'
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@craft-agent/ui'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@phaneris/ui'
 
 interface SidebarProfileProps {
   isCollapsed?: boolean

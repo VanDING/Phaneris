@@ -7,7 +7,7 @@ import {
   MOTION_DURATION,
   MOTION_EASE,
   MOTION_SCALE,
-} from '@craft-agent/ui/motion'
+} from '@phaneris/ui/motion'
 
 // Easing curves for fullscreen overlay animations
 // Entry: exponential out - fast start, smooth deceleration (responsive feel)

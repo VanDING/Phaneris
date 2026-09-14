@@ -4,8 +4,8 @@ import type { KeyboardEvent } from 'react'
 import { LayoutGroup, motion, useReducedMotion } from 'motion/react'
 import { ChevronRight, Link2, Maximize2, Minimize2, PackageOpen, Pin, PinOff, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@craft-agent/ui'
-import { motionSpring } from '@craft-agent/ui/motion'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@phaneris/ui'
+import { motionSpring } from '@phaneris/ui/motion'
 import {
   activateWorkbenchItemAtom,
   closeWorkbenchItemAtom,

@@ -1,5 +1,5 @@
 {
-  "name": "@craft-agent/webui",
+  "name": "@phaneris/webui",
   "version": "0.13.3",
   "license": "Apache-2.0",
   "private": true,
@@ -11,8 +11,8 @@
     "preview": "bun run vite preview"
   },
   "dependencies": {
-    "@craft-agent/shared": "workspace:*",
-    "@craft-agent/ui": "workspace:*",
+    "@phaneris/shared": "workspace:*",
+    "@phaneris/ui": "workspace:*",
     "i18next": "^26.4.2",
     "i18next-browser-languagedetector": "^8.2.1",
     "jotai": "^2.20.3",

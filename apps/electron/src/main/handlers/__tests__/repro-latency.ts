@@ -6,7 +6,7 @@ import { tmpdir } from 'os'
 // then register session+working scopes, write a file, and time the push arrival.
 const { watch, rmSync: rm } = await import('fs')
 
-const sessions = await import('@craft-agent/server-core/handlers/rpc')
+const sessions = await import('@phaneris/server-core/handlers/rpc')
 const { RPC_CHANNELS } = await import('../../../shared/types')
 
 type HandlerFn = (ctx: { clientId: string }, ...args: any[]) => unknown

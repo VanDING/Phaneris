@@ -7,8 +7,8 @@ import { toast } from 'sonner'
 import type {
   DurableRecoveryEvidenceSnapshot,
   ToolReconciliationDecision,
-} from '@craft-agent/shared/durable-runtime'
-import type { ActivityItem } from '@craft-agent/ui'
+} from '@phaneris/shared/durable-runtime'
+import type { ActivityItem } from '@phaneris/ui'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

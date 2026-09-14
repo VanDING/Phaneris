@@ -8,7 +8,7 @@
  * requestSeq / parentToolUseId by the Pi event pipeline).
  */
 
-import type { Message, PiUsage } from '@craft-agent/core/types'
+import type { Message, PiUsage } from '@phaneris/core/types'
 
 /** One independently assembled contribution to the trajectory ledger. */
 export type TrajectoryContribution =

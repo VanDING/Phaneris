@@ -16,14 +16,14 @@ import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { FileText, Eye, MessageSquare, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Markdown } from '@craft-agent/ui'
+import { Markdown } from '@phaneris/ui'
 import { PanelEmptyState } from './PanelEmptyState'
 import { FilePreviewContent } from './FilePreviewContent'
 import { activeSessionIdAtom } from '@/atoms/active-session'
 import { previewEntriesForSessionAtom, removePreviewEntryAtom, type PreviewEntry } from '@/atoms/preview'
 import { previewPanelSelectedKeyBySessionAtom } from '@/atoms/content-panel-ui'
 import { useAppShellContext } from '@/context/AppShellContext'
-import { motionSpring, motionTween } from '@craft-agent/ui/motion'
+import { motionSpring, motionTween } from '@phaneris/ui/motion'
 
 const entryKey = (entry: PreviewEntry): string =>
   entry.type === 'file' ? `file:${entry.path}` : `md:${entry.id}`

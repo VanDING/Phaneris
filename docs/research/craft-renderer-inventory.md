@@ -30,11 +30,11 @@ The React UI is split across **two** source trees that ship as one bundle:
 | Tree | Import specifier | Files (`.ts`/`.tsx`) | Total lines | Non-blank |
 |---|---|---|---|---|
 | `apps/electron/src/renderer` | `@/…` (vite alias) | 619 (252 `.ts` + 367 `.tsx`) | **120,523** | 110,430 |
-| `packages/ui/src` | `@craft-agent/ui` (+ `./motion`, `./chat`, `./markdown`, …) | 204 | **35,391** | 31,753 |
+| `packages/ui/src` | `@phaneris/ui` (+ `./motion`, `./chat`, `./markdown`, …) | 204 | **35,391** | 31,753 |
 | **Combined UI surface** | | **823** | **155,914** | 142,183 |
 
 `packages/ui` is **not optional**: the renderer imports it **143 times across 127 files**
-(`from '@craft-agent/ui'` ×103, `from '@craft-agent/ui/motion'` ×24, plus subpaths). Any rewrite
+(`from '@phaneris/ui'` ×103, `from '@phaneris/ui/motion'` ×24, plus subpaths). Any rewrite
 sizing that ignores `packages/ui` under-counts by ~29%.
 
 *Correction to the task brief:* the renderer directory contains **649 files of any extension**
@@ -114,7 +114,7 @@ tiptap/`packages/ui` stack to zero.
 
 **Headline finding:** the marketing-relevant "editor stack" (tiptap, prosemirror, react-markdown,
 remark/rehype, katex, beautiful-mermaid, @pierre/diffs, vaul) has **0 direct import sites in the
-renderer** — it all lives in `packages/ui` and is re-exported as `@craft-agent/ui` (103 import sites).
+renderer** — it all lives in `packages/ui` and is re-exported as `@phaneris/ui` (103 import sites).
 A rewrite must replace `packages/ui` too.
 
 ### 1.2 (a) UI primitives
@@ -131,7 +131,7 @@ A rewrite must replace `packages/ui` too.
 | `@dnd-kit/sortable` | 2 / 1 (`components/ui/sortable-list.tsx:35,261`) | 0 | `sortable-list.tsx` | — |
 | `@dnd-kit/utilities` | 1 / 1 (`sortable-list.tsx:36`) | 0 | — | — |
 | `@dnd-kit/dom` + `@dnd-kit/helpers` | 2 / 1 (playground only, `playground/registry/planner.tsx:3`) `<br>` + `helpers`: **0** | 0 | playground only — **dead for production** | none |
-| `vaul` | **0** | 1 / 1 (`packages/ui/src/components/ui/drawer.tsx`) | re-exported via `@craft-agent/ui/ui/drawer` → renderer `components/ui/drawer.tsx` | Medium — drag-to-dismiss drawer |
+| `vaul` | **0** | 1 / 1 (`packages/ui/src/components/ui/drawer.tsx`) | re-exported via `@phaneris/ui/ui/drawer` → renderer `components/ui/drawer.tsx` | Medium — drag-to-dismiss drawer |
 | `class-variance-authority` | 5 / 5 | 0 | `components/ui/button.tsx`, `badge.tsx`, … | Low — variant→class maps |
 | `clsx` | 1 / 1 | 1 / 1 (`lib/utils.ts`) | `cn()` helper | Low |
 | `tailwind-merge` | 1 / 1 | 1 / 1 (`lib/utils.ts`) | `cn()` helper | Low |
@@ -149,7 +149,7 @@ All in `packages/ui`, entry point `packages/ui/src/components/markdown/TiptapMar
 **⚠️ Important scope correction:** `@tiptap/*` has **0 imports in `apps/electron/src/renderer`**. The
 message composer is a hand-written `contentEditable` (§3 row 6). The tiptap editor's **only renderer
 consumer is the dev playground** (`playground/registry/planner.tsx:30,978`). It is however exported
-from `@craft-agent/ui` (`packages/ui/src/index.ts:148`) and its node views/CSS are part of the
+from `@phaneris/ui` (`packages/ui/src/index.ts:148`) and its node views/CSS are part of the
 shipped bundle. **INFERRED:** tiptap appears to be the intended future base for rich-block editing
 (artifact revisions, page/plan editing) rather than a currently user-facing surface.
 
@@ -240,9 +240,9 @@ shipped bundle. **INFERRED:** tiptap appears to be the intended future base for 
 | `@sentry/react` 10.73.0 | 2 / 1 | 0 | `apps/electron/src/renderer/main.tsx:4-5` |
 | `@sentry/electron` | 3 / 3 | 0 | `main.tsx:3` (`@sentry/electron/renderer`), `event-processor/useEventProcessor.ts:9`, `components/app-shell/input/InputErrorBoundary.tsx:2` |
 | `react` / `react-dom` | 412 / 370 + 6 / 6 | 108 / 94 + 6 / 6 | everywhere; `react-dom/client` + `react-dom/server` (tests) |
-| `@craft-agent/ui` | 143 / 127 | 2 / 2 (self) | — |
-| `@craft-agent/shared` | 169 / 118 | 4 / 4 | labels, protocol, config, i18n, icons, colors, mentions |
-| `@craft-agent/core` | 11 / 10 | 35 / 28 | types + utils |
+| `@phaneris/ui` | 143 / 127 | 2 / 2 (self) | — |
+| `@phaneris/shared` | 169 / 118 | 4 / 4 | labels, protocol, config, i18n, icons, colors, mentions |
+| `@phaneris/core` | 11 / 10 | 35 / 28 | types + utils |
 | `ws` 8.21.3 | 0 | 0 | **server/transport only** (`packages/server-core`, `apps/webui/src/shims/ws.ts`) — the renderer never opens a socket itself |
 | `undici` 8.10.2 | 0 | 0 | main/server HTTP |
 | `electron-log` | 2 / 2 (**renderer**) | 0 | renderer log bridge |

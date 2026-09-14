@@ -15,7 +15,7 @@ import type {
 import type {
   WorkItem,
   WorkItemEvent,
-} from '@craft-agent/shared/work-items/browser'
+} from '@phaneris/shared/work-items/browser'
 
 // ============================================================================
 // Messaging mock state + control handle

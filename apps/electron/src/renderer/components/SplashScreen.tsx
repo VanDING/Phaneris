@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { MOTION_DURATION, MOTION_EASE } from '@craft-agent/ui/motion'
+import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
 import { CraftAgentsSymbol } from './icons/CraftAgentsSymbol'
 
 interface SplashScreenProps {

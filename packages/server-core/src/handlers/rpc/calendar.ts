@@ -1,12 +1,12 @@
-import { RPC_CHANNELS, type CalendarEntryInput } from '@craft-agent/shared/protocol'
+import { RPC_CHANNELS, type CalendarEntryInput } from '@phaneris/shared/protocol'
 import {
   listCalendarEntries,
   createCalendarEntry,
   updateCalendarEntry,
   deleteCalendarEntry,
-} from '@craft-agent/shared/calendar'
-import { getWorkspaceByNameOrId } from '@craft-agent/shared/config'
-import { pushTyped, type RpcServer } from '@craft-agent/server-core/transport'
+} from '@phaneris/shared/calendar'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 
 export const HANDLED_CHANNELS = [

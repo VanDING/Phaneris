@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
-import type { HandlerFn, RpcServer } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import type { HandlerFn, RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 
 let deferred = false
 
-mock.module('@craft-agent/shared/auth', () => ({
+mock.module('@phaneris/shared/auth', () => ({
   getAuthState: async () => ({
     billing: {
       type: null,
@@ -29,18 +29,18 @@ mock.module('@craft-agent/shared/auth', () => ({
   prepareMcpOAuth() { throw new Error('not used') },
 }))
 
-mock.module('@craft-agent/shared/config', () => ({
+mock.module('@phaneris/shared/config', () => ({
   isSetupDeferred: () => deferred,
   setSetupDeferred: (value: boolean) => { deferred = value },
 
   migrateRemoteServerTokens: async () => 0,
 }))
 
-mock.module('@craft-agent/shared/credentials', () => ({
+mock.module('@phaneris/shared/credentials', () => ({
   getCredentialManager: () => ({ setLlmOAuth: async () => {}, setClaudeOAuthCredentials: async () => {} }),
 }))
 
-mock.module('@craft-agent/shared/mcp', () => ({
+mock.module('@phaneris/shared/mcp', () => ({
   validateMcpConnection: async () => ({ success: true }),
 }))
 

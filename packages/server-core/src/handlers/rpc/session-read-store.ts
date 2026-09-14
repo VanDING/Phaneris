@@ -2,8 +2,8 @@ import { createHash, randomUUID } from 'node:crypto'
 import { open, unlink, type FileHandle } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { SnapshotEncoder } from '@craft-agent/core/utils'
-import { CodedError, SESSION_READ_CHUNK_BYTES, SESSION_READ_MAX_BYTES, type Session, type SessionReadChunk } from '@craft-agent/shared/protocol'
+import { SnapshotEncoder } from '@phaneris/core/utils'
+import { CodedError, SESSION_READ_CHUNK_BYTES, SESSION_READ_MAX_BYTES, type Session, type SessionReadChunk } from '@phaneris/shared/protocol'
 import type { RequestContext } from '../../transport/types'
 
 interface ReadState {

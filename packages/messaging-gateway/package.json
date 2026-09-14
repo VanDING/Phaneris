@@ -1,5 +1,5 @@
 {
-  "name": "@craft-agent/messaging-gateway",
+  "name": "@phaneris/messaging-gateway",
   "version": "0.13.3",
   "license": "Apache-2.0",
   "description": "Messaging gateway for Craft Agent",
@@ -13,10 +13,10 @@
     "typecheck": "bun run tsc --noEmit"
   },
   "dependencies": {
-    "@craft-agent/core": "workspace:*",
-    "@craft-agent/messaging-whatsapp-worker": "workspace:*",
-    "@craft-agent/server-core": "workspace:*",
-    "@craft-agent/shared": "workspace:*",
+    "@phaneris/core": "workspace:*",
+    "@phaneris/messaging-whatsapp-worker": "workspace:*",
+    "@phaneris/server-core": "workspace:*",
+    "@phaneris/shared": "workspace:*",
     "@larksuiteoapi/node-sdk": "^1.73.3",
     "@wecom/aibot-node-sdk": "^1.0.7",
     "grammy": "1.46.0"

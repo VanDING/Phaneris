@@ -3,7 +3,7 @@ import type {
   ImageGenerateParamsNonStreaming,
   ImagesResponse,
 } from 'openai/resources/images';
-import type { LlmConnection } from '@craft-agent/shared/config';
+import type { LlmConnection } from '@phaneris/shared/config';
 
 export const DEFAULT_IMAGE_GENERATION_MODEL = 'gpt-image-2';
 export const MAX_GENERATED_IMAGE_BYTES = 50 * 1024 * 1024;

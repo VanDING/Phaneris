@@ -1,15 +1,15 @@
-import { estimateTranscriptBytes } from '@craft-agent/core/utils'
-import type { EventSink, RpcServer } from '@craft-agent/server-core/transport'
-import { CLIENT_BROWSER_INVOKE } from '@craft-agent/server-core/transport'
-import type { ISessionManager, IBrowserPaneManager, ExecutePromptAutomationInput } from '@craft-agent/server-core/handlers'
+import { estimateTranscriptBytes } from '@phaneris/core/utils'
+import type { EventSink, RpcServer } from '@phaneris/server-core/transport'
+import { CLIENT_BROWSER_INVOKE } from '@phaneris/server-core/transport'
+import type { ISessionManager, IBrowserPaneManager, ExecutePromptAutomationInput } from '@phaneris/server-core/handlers'
 import { RemoteBrowserPaneManager } from './RemoteBrowserPaneManager'
-import { validateFilePath, getWorkspaceAllowedDirs } from '@craft-agent/server-core/handlers'
-import { createScopedLogger, CONSOLE_LOGGER, type PlatformServices, type Logger } from '@craft-agent/server-core/runtime'
+import { validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
+import { createScopedLogger, CONSOLE_LOGGER, type PlatformServices, type Logger } from '@phaneris/server-core/runtime'
 import { basename, dirname, extname, join } from 'path'
 import { existsSync } from 'fs'
 import { readFile, writeFile, mkdir } from 'fs/promises'
 import { randomUUID } from 'node:crypto'
-import { setPermissionMode, hydratePreviousPermissionMode, getPermissionModeDiagnostics, type PermissionMode, unregisterSessionScopedToolCallbacks, mergeSessionScopedToolCallbacks, AbortReason, type AuthRequest, type AuthResult, type CredentialAuthRequest, type BrowserPaneFns, generateConversationSummary, resolveKeepBackgroundTasksAlive } from '@craft-agent/shared/agent'
+import { setPermissionMode, hydratePreviousPermissionMode, getPermissionModeDiagnostics, type PermissionMode, unregisterSessionScopedToolCallbacks, mergeSessionScopedToolCallbacks, AbortReason, type AuthRequest, type AuthResult, type CredentialAuthRequest, type BrowserPaneFns, generateConversationSummary, resolveKeepBackgroundTasksAlive } from '@phaneris/shared/agent'
 import {
   resolveSessionConnection,
   createBackendFromConnection,
@@ -20,17 +20,17 @@ import {
   type AgentBackend,
   type BackendHostRuntimeContext,
   type PostInitResult,
-} from '@craft-agent/shared/agent/backend'
-import { getLlmConnection, getLlmConnections, getDefaultLlmConnection, getDefaultThinkingLevel, resolveMidStreamBehavior, getPersistedUiLanguage, resolveTitleLanguageName } from '@craft-agent/shared/config'
-import type { MidStreamBehavior } from '@craft-agent/shared/config'
-import { PrivilegedExecutionBroker } from '@craft-agent/server-core/services'
+} from '@phaneris/shared/agent/backend'
+import { getLlmConnection, getLlmConnections, getDefaultLlmConnection, getDefaultThinkingLevel, resolveMidStreamBehavior, getPersistedUiLanguage, resolveTitleLanguageName } from '@phaneris/shared/config'
+import type { MidStreamBehavior } from '@phaneris/shared/config'
+import { PrivilegedExecutionBroker } from '@phaneris/server-core/services'
 import { isValidWorkingDirectory } from '../utils/path-validation'
-import { InitGate } from '@craft-agent/server-core/domain'
+import { InitGate } from '@phaneris/server-core/domain'
 import { DurableRuntimeCoordinator } from '../durable-runtime/coordinator'
 import { createTaskNodeReconciliationAdapter } from '../durable-runtime/task-node-reconciliation'
 import { reportLegacyProjectionParity } from '../durable-runtime/audit'
 import { projectCanonicalSessionMessages, projectDurableUsage } from '../durable-runtime/projection'
-import { i18n } from '@craft-agent/shared/i18n'
+import { i18n } from '@phaneris/shared/i18n'
 import {
   getWorkspaces,
   getWorkspaceByNameOrId,
@@ -44,9 +44,9 @@ import {
   MODEL_REGISTRY,
   type Workspace,
   type WorkspaceInfo,
-} from '@craft-agent/shared/config'
-import type { ActiveSessionInfo, SessionProcessingStatus } from '@craft-agent/core/types'
-import { loadWorkspaceConfig } from '@craft-agent/shared/workspaces'
+} from '@phaneris/shared/config'
+import type { ActiveSessionInfo, SessionProcessingStatus } from '@phaneris/core/types'
+import { loadWorkspaceConfig } from '@phaneris/shared/workspaces'
 import {
   // Session persistence functions
   listSessions as listStoredSessions,
@@ -79,15 +79,15 @@ import {
   type SessionStatus,
   type SessionHeader,
   pickSessionFields,
-} from '@craft-agent/shared/sessions'
-import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager } from '@craft-agent/shared/sources'
-import { listTaskSlugs, parseTaskSpec, uniqueTaskSlug } from '@craft-agent/shared/tasks'
+} from '@phaneris/shared/sessions'
+import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager } from '@phaneris/shared/sources'
+import { listTaskSlugs, parseTaskSpec, uniqueTaskSlug } from '@phaneris/shared/tasks'
 import {
   detachSessionFromWorkItems,
   ensureWorkItemForSession,
   updatePrimaryWorkItemForSession,
   type UpdateWorkItemInput,
-} from '@craft-agent/shared/work-items'
+} from '@phaneris/shared/work-items'
 import { isSessionWorkItemEligible } from './work-item-eligibility'
 import {
   acquireArtifactLease,
@@ -100,31 +100,31 @@ import {
   submitArtifact,
   type ArtifactStorageScope,
   type ResolvedArtifact,
-} from '@craft-agent/shared/artifacts'
+} from '@phaneris/shared/artifacts'
 import { createTaskFromSpec, resolveCreateTaskProjectId } from '../tasks'
-import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@craft-agent/shared/config'
+import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config'
 import { buildPagesToolCallbacks } from '../pages/tool-callbacks'
 import { buildServersFromSources as buildServersFromSourcesShared } from '../sources/build-servers'
-import { toolMetadataStore, getLastApiError } from '@craft-agent/shared/interceptor'
-import { isParentTaskTool } from '@craft-agent/shared/utils/toolNames'
-import { restoreFiles } from '@craft-agent/shared/utils/bundle-files'
-import { getCredentialManager } from '@craft-agent/shared/credentials'
-import { CraftMcpClient, McpClientPool, McpPoolServer } from '@craft-agent/shared/mcp'
-import { type Session, type SessionEvent, type FileAttachment, type SendMessageOptions, type UnreadSummary, type RemoteSessionTransferPayload, type ImportRemoteSessionTransferResult, RPC_CHANNELS, generateMessageId } from '@craft-agent/shared/protocol'
-import { messageToStored, storedToMessage, type AgentEvent, type Message, type StoredAttachment, type ToolDisplayMeta, type TokenUsage, type PiUsage } from '@craft-agent/core/types'
-import { formatPathsToRelative, formatToolInputPaths, perf, encodeIconToDataUrlAsync, getEmojiIcon, resolveToolIcon, readFileAttachment, selectSpreadMessages, normalizePath } from '@craft-agent/shared/utils'
-import { loadAllSkills, loadSkillBySlug, invalidateSkillsCache, type LoadedSkill } from '@craft-agent/shared/skills'
-import { invalidateContextFileCache } from '@craft-agent/shared/prompts/system'
-import { getToolIconsDir, getMiniModel } from '@craft-agent/shared/config'
-import { getDefaultSummarizationModel } from '@craft-agent/shared/config/models'
-import type { SummarizeCallback } from '@craft-agent/shared/sources'
-import { type ThinkingLevel, DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from '@craft-agent/shared/agent/thinking-levels'
-import { evaluateAutoLabels } from '@craft-agent/shared/labels/auto'
-import { listLabels, loadLabelConfig } from '@craft-agent/shared/labels/storage'
-import { extractLabelId, resolveSessionLabels, findTaskItemLabelId } from '@craft-agent/shared/labels'
-import { ensureLabelsExist, ensureTaskItemLabel } from '@craft-agent/shared/labels/crud'
-import { loadStatusConfig } from '@craft-agent/shared/statuses/storage'
-import { AutomationSystem, createPromptHistoryEntry, appendAutomationHistoryEntry, type AutomationSystemMetadataSnapshot } from '@craft-agent/shared/automations'
+import { toolMetadataStore, getLastApiError } from '@phaneris/shared/interceptor'
+import { isParentTaskTool } from '@phaneris/shared/utils/toolNames'
+import { restoreFiles } from '@phaneris/shared/utils/bundle-files'
+import { getCredentialManager } from '@phaneris/shared/credentials'
+import { CraftMcpClient, McpClientPool, McpPoolServer } from '@phaneris/shared/mcp'
+import { type Session, type SessionEvent, type FileAttachment, type SendMessageOptions, type UnreadSummary, type RemoteSessionTransferPayload, type ImportRemoteSessionTransferResult, RPC_CHANNELS, generateMessageId } from '@phaneris/shared/protocol'
+import { messageToStored, storedToMessage, type AgentEvent, type Message, type StoredAttachment, type ToolDisplayMeta, type TokenUsage, type PiUsage } from '@phaneris/core/types'
+import { formatPathsToRelative, formatToolInputPaths, perf, encodeIconToDataUrlAsync, getEmojiIcon, resolveToolIcon, readFileAttachment, selectSpreadMessages, normalizePath } from '@phaneris/shared/utils'
+import { loadAllSkills, loadSkillBySlug, invalidateSkillsCache, type LoadedSkill } from '@phaneris/shared/skills'
+import { invalidateContextFileCache } from '@phaneris/shared/prompts/system'
+import { getToolIconsDir, getMiniModel } from '@phaneris/shared/config'
+import { getDefaultSummarizationModel } from '@phaneris/shared/config/models'
+import type { SummarizeCallback } from '@phaneris/shared/sources'
+import { type ThinkingLevel, DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
+import { evaluateAutoLabels } from '@phaneris/shared/labels/auto'
+import { listLabels, loadLabelConfig } from '@phaneris/shared/labels/storage'
+import { extractLabelId, resolveSessionLabels, findTaskItemLabelId } from '@phaneris/shared/labels'
+import { ensureLabelsExist, ensureTaskItemLabel } from '@phaneris/shared/labels/crud'
+import { loadStatusConfig } from '@phaneris/shared/statuses/storage'
+import { AutomationSystem, createPromptHistoryEntry, appendAutomationHistoryEntry, type AutomationSystemMetadataSnapshot } from '@phaneris/shared/automations'
 import { buildBackendRuntimeSignature, buildRestartRequiredSignature, filterAttachmentsForModelInput } from './runtime-config'
 import { validateArchiveTarget } from './archive-guards'
 import { renderOfficeArtifactPreview } from '../services/artifact-preview'
@@ -135,8 +135,8 @@ import {
 } from '../services/image-generation'
 
 // Import from server-core domain utilities
-import { sanitizeForTitle, shouldActivateBrowserOverlay, normalizeBrowserToolName, rollbackFailedBranchCreation, releaseBrowserOwnershipOnForcedStop } from '@craft-agent/server-core/domain'
-import { resizeImageForAPI, resizeIconBuffer } from '@craft-agent/server-core/services'
+import { sanitizeForTitle, shouldActivateBrowserOverlay, normalizeBrowserToolName, rollbackFailedBranchCreation, releaseBrowserOwnershipOnForcedStop } from '@phaneris/server-core/domain'
+import { resizeImageForAPI, resizeIconBuffer } from '@phaneris/server-core/services'
 export { sanitizeForTitle }
 
 // Module-level platform ref — set once during init via setSessionPlatform()
@@ -220,7 +220,7 @@ const METADATA_WRITE_GUARD_MS = 5000
  */
 const PLAN_APPROVAL_MESSAGE = 'Plan approved, please execute.'
 
-// validateSpawnAttachmentPath removed — use shared validateFilePath from @craft-agent/server-core/handlers
+// validateSpawnAttachmentPath removed — use shared validateFilePath from @phaneris/server-core/handlers
 
 const PI_TURN_ANCHORS_VERSION = 1
 const PI_TURN_ANCHORS_FILE = 'pi-turn-anchors.json'
@@ -390,7 +390,7 @@ async function applyBridgeUpdates(
   agent: AgentInstance,
   sessionPath: string,
   enabledSources: LoadedSource[],
-  mcpServers: Record<string, import('@craft-agent/shared/agent/backend').AgentMcpServerConfig>,
+  mcpServers: Record<string, import('@phaneris/shared/agent/backend').AgentMcpServerConfig>,
   sessionId: string,
   workspaceRootPath: string,
   context: string,
@@ -1112,7 +1112,7 @@ export class SessionManager implements ISessionManager {
   // Automation systems for workspace event automations - one per workspace (includes scheduler, diffing, and handlers)
   private automationSystems: Map<string, AutomationSystem> = new Map()
   // Pending credential request resolvers (keyed by requestId)
-  private pendingCredentialResolvers: Map<string, (response: import('@craft-agent/shared/protocol').CredentialResponse) => void> = new Map()
+  private pendingCredentialResolvers: Map<string, (response: import('@phaneris/shared/protocol').CredentialResponse) => void> = new Map()
   // Permission request metadata tracking (keyed by requestId)
   private pendingPermissionRequests: Map<string, {
     sessionId: string
@@ -1208,7 +1208,7 @@ export class SessionManager implements ISessionManager {
   }
 
   private browserPaneManager: IBrowserPaneManager | null = null
-  private terminalReader: ((workspaceId: string, maxChars?: number) => import('@craft-agent/shared/protocol').TerminalReadResult | null) | null = null
+  private terminalReader: ((workspaceId: string, maxChars?: number) => import('@phaneris/shared/protocol').TerminalReadResult | null) | null = null
   private enqueuePageThumbnailFn?: (req: { workspaceId: string; workspaceRootPath: string; slug: string }) => void
   private rpcServer: RpcServer | null = null
   private remoteBpms = new Map<string, RemoteBrowserPaneManager>()
@@ -1225,7 +1225,7 @@ export class SessionManager implements ISessionManager {
     bpm.setSessionPathResolver((sessionId) => this.getSessionPath(sessionId))
   }
 
-  setTerminalReader(reader: (workspaceId: string, maxChars?: number) => import('@craft-agent/shared/protocol').TerminalReadResult | null): void {
+  setTerminalReader(reader: (workspaceId: string, maxChars?: number) => import('@phaneris/shared/protocol').TerminalReadResult | null): void {
     this.terminalReader = reader
   }
 
@@ -1573,7 +1573,7 @@ export class SessionManager implements ISessionManager {
       onSkillChange: async (slug, skill) => {
         sessionLog.info(`Skill '${slug}' changed:`, skill ? 'updated' : 'deleted')
         // Broadcast updated list to UI
-        const { loadAllSkills } = await import('@craft-agent/shared/skills')
+        const { loadAllSkills } = await import('@phaneris/shared/skills')
         const skills = loadAllSkills(workspaceRootPath)
         this.broadcastSkillsChanged(workspaceId, skills)
       },
@@ -1823,13 +1823,13 @@ export class SessionManager implements ISessionManager {
     this.eventSink(RPC_CHANNELS.llmConnections.CHANGED, { to: 'all' })
   }
 
-  private broadcastSkillsChanged(workspaceId: string, skills: import('@craft-agent/shared/skills').LoadedSkill[]): void {
+  private broadcastSkillsChanged(workspaceId: string, skills: import('@phaneris/shared/skills').LoadedSkill[]): void {
     if (!this.eventSink) return
     sessionLog.info(`Broadcasting skills changed (${skills.length} skills)`)
     this.eventSink(RPC_CHANNELS.skills.CHANGED, { to: 'workspace', workspaceId }, workspaceId, skills)
   }
 
-  private broadcastPagesChanged(workspaceId: string, pages: import('@craft-agent/shared/pages').LoadedPage[]): void {
+  private broadcastPagesChanged(workspaceId: string, pages: import('@phaneris/shared/pages').LoadedPage[]): void {
     if (!this.eventSink) return
     sessionLog.info(`Broadcasting pages changed (${pages.length} pages)`)
     this.eventSink(RPC_CHANNELS.pages.CHANGED, { to: 'workspace', workspaceId }, workspaceId, pages)
@@ -2278,7 +2278,7 @@ export class SessionManager implements ISessionManager {
   async handleCredentialInput(
     sessionId: string,
     requestId: string,
-    response: import('@craft-agent/shared/protocol').CredentialResponse
+    response: import('@phaneris/shared/protocol').CredentialResponse
   ): Promise<void> {
     const managed = this.sessions.get(sessionId)
     if (!managed?.pendingAuthRequest) {
@@ -2334,7 +2334,7 @@ export class SessionManager implements ISessionManager {
       }
 
       // Update source config to mark as authenticated
-      const { markSourceAuthenticated } = await import('@craft-agent/shared/sources')
+      const { markSourceAuthenticated } = await import('@phaneris/shared/sources')
       markSourceAuthenticated(managed.workspace.rootPath, request.sourceSlug)
 
       // Mark source as unseen so fresh guide is injected on next message
@@ -2745,7 +2745,7 @@ export class SessionManager implements ISessionManager {
   getRecoveryEvidence(
     sessionId: string,
     toolOperationId: string,
-  ): import('@craft-agent/shared/durable-runtime').DurableRecoveryEvidenceSnapshot | null {
+  ): import('@phaneris/shared/durable-runtime').DurableRecoveryEvidenceSnapshot | null {
     const managed = this.sessions.get(sessionId)
     if (!managed) return null
     const snapshot = this.durableRuntime.getRecoveryEvidence(managed.workspace.rootPath, toolOperationId)
@@ -2754,8 +2754,8 @@ export class SessionManager implements ISessionManager {
   }
 
   reconcileTool(
-    request: import('@craft-agent/shared/durable-runtime').ToolReconciliationRequest,
-  ): import('@craft-agent/shared/durable-runtime').ToolReconciliationResult {
+    request: import('@phaneris/shared/durable-runtime').ToolReconciliationRequest,
+  ): import('@phaneris/shared/durable-runtime').ToolReconciliationResult {
     const managed = this.sessions.get(request.sessionId)
     if (!managed) throw new Error(`Session ${request.sessionId} not found`)
     const result = this.durableRuntime.reconcileTool(managed.workspace.rootPath, request)
@@ -2766,8 +2766,8 @@ export class SessionManager implements ISessionManager {
   async queryAndReconcileTool(
     sessionId: string,
     toolOperationId: string,
-    actor: import('@craft-agent/shared/durable-runtime').ToolReconciliationRequest['actor'],
-  ): Promise<import('@craft-agent/shared/durable-runtime').ToolReconciliationResult> {
+    actor: import('@phaneris/shared/durable-runtime').ToolReconciliationRequest['actor'],
+  ): Promise<import('@phaneris/shared/durable-runtime').ToolReconciliationResult> {
     const managed = this.sessions.get(sessionId)
     if (!managed) throw new Error(`Session ${sessionId} not found`)
     const result = await this.durableRuntime.queryAndReconcileTool(managed.workspace.rootPath, {
@@ -2780,8 +2780,8 @@ export class SessionManager implements ISessionManager {
   }
 
   reconcileModel(
-    request: import('@craft-agent/shared/durable-runtime').ModelReconciliationRequest,
-  ): import('@craft-agent/shared/durable-runtime').ModelReconciliationResult {
+    request: import('@phaneris/shared/durable-runtime').ModelReconciliationRequest,
+  ): import('@phaneris/shared/durable-runtime').ModelReconciliationResult {
     const managed = this.sessions.get(request.sessionId)
     if (!managed) throw new Error(`Session ${request.sessionId} not found`)
     const result = this.durableRuntime.reconcileModel(managed.workspace.rootPath, request)
@@ -2797,7 +2797,7 @@ export class SessionManager implements ISessionManager {
 
   private applyToolReconciliation(
     managed: ManagedSession,
-    result: import('@craft-agent/shared/durable-runtime').ToolReconciliationResult,
+    result: import('@phaneris/shared/durable-runtime').ToolReconciliationResult,
   ): void {
     const outcome = result.snapshot.evidence.outcome
     const dispatch = result.snapshot.evidence.dispatch
@@ -2886,7 +2886,7 @@ export class SessionManager implements ISessionManager {
     taskSlug: string
     runId: string
     ordinal: number
-    entry: import('@craft-agent/shared/tasks').RunLogEntry
+    entry: import('@phaneris/shared/tasks').RunLogEntry
   }): void {
     this.durableRuntime.commitTaskRunFact({
       workspaceRootPath: input.workspaceRoot,
@@ -2902,7 +2902,7 @@ export class SessionManager implements ISessionManager {
     workspaceRoot: string,
     taskSlug: string,
     runId: string,
-  ): import('@craft-agent/shared/tasks').RunLogEntry[] {
+  ): import('@phaneris/shared/tasks').RunLogEntry[] {
     return this.durableRuntime.listTaskRunFacts(workspaceRoot, taskSlug, runId)
   }
 
@@ -2941,7 +2941,7 @@ export class SessionManager implements ISessionManager {
 
   async createSession(
     workspaceId: string,
-    options?: import('@craft-agent/shared/protocol').CreateSessionOptions,
+    options?: import('@phaneris/shared/protocol').CreateSessionOptions,
     // Transport concern, deliberately NOT on the wire DTO: by default every created session is
     // announced to the renderer (see notifySessionCreated). Callers that register the session
     // themselves — the `sessions:create` RPC adds it from the return value — pass
@@ -3031,7 +3031,7 @@ export class SessionManager implements ISessionManager {
     const requestedProjectId = options?.projectId ?? inheritedProjectId
     let resolvedProjectId: string | undefined
     if (requestedProjectId) {
-      const { loadProjectById } = await import('@craft-agent/shared/projects')
+      const { loadProjectById } = await import('@phaneris/shared/projects')
       const project = loadProjectById(workspaceRootPath, requestedProjectId)
       if (!project) {
         // An EXPLICIT binding to a missing project is a caller bug; an inherited one
@@ -4968,7 +4968,7 @@ export class SessionManager implements ISessionManager {
         },
         // create_task — create a Task (board card + task.yaml + orchestrator session)
         // WITHOUT running it. Spec building happens here (not in session-tools-core,
-        // which must stay dependency-free of @craft-agent/shared); the creation flow
+        // which must stay dependency-free of @phaneris/shared); the creation flow
         // itself is createTaskFromSpec, shared verbatim with the tasks:create RPC.
         createTaskFn: async (input) => {
           const ws = managed.workspace
@@ -5029,7 +5029,7 @@ export class SessionManager implements ISessionManager {
           log: (message: string) => sessionLog.info(message),
           onPagesMutated: async (pageSlug: string) => {
             this.notifyConfigFileChange(managed.workspace.rootPath, `pages/${pageSlug}/page.json`)
-            const { loadWorkspacePages } = await import('@craft-agent/shared/pages')
+            const { loadWorkspacePages } = await import('@phaneris/shared/pages')
             this.broadcastPagesChanged(managed.workspace.id, loadWorkspacePages(managed.workspace.rootPath))
           },
           onContentChanged: (pageSlug: string) => {
@@ -5429,7 +5429,7 @@ export class SessionManager implements ISessionManager {
     }
 
     // Validate connection exists
-    const { getLlmConnection } = await import('@craft-agent/shared/config/storage')
+    const { getLlmConnection } = await import('@phaneris/shared/config/storage')
     const connection = getLlmConnection(connectionSlug)
     if (!connection) {
       sessionLog.warn(`setSessionConnection: connection "${connectionSlug}" not found`)
@@ -5539,7 +5539,7 @@ export class SessionManager implements ISessionManager {
    * Share session to the web viewer
    * Uploads session data and returns shareable URL
    */
-  async shareToViewer(sessionId: string): Promise<import('@craft-agent/shared/protocol').ShareResult> {
+  async shareToViewer(sessionId: string): Promise<import('@phaneris/shared/protocol').ShareResult> {
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       return { success: false, error: 'Session not found' }
@@ -5556,7 +5556,7 @@ export class SessionManager implements ISessionManager {
         return { success: false, error: 'Session file not found' }
       }
 
-      const { VIEWER_URL } = await import('@craft-agent/shared/branding')
+      const { VIEWER_URL } = await import('@phaneris/shared/branding')
       const response = await fetch(`${VIEWER_URL}/s/api`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -5600,7 +5600,7 @@ export class SessionManager implements ISessionManager {
    * Update an existing shared session
    * Re-uploads session data to the same URL
    */
-  async updateShare(sessionId: string): Promise<import('@craft-agent/shared/protocol').ShareResult> {
+  async updateShare(sessionId: string): Promise<import('@phaneris/shared/protocol').ShareResult> {
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       return { success: false, error: 'Session not found' }
@@ -5620,7 +5620,7 @@ export class SessionManager implements ISessionManager {
         return { success: false, error: 'Session file not found' }
       }
 
-      const { VIEWER_URL } = await import('@craft-agent/shared/branding')
+      const { VIEWER_URL } = await import('@phaneris/shared/branding')
       const response = await fetch(`${VIEWER_URL}/s/api/${managed.sharedId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -5651,7 +5651,7 @@ export class SessionManager implements ISessionManager {
    * Revoke a shared session
    * Deletes from viewer and clears local shared state
    */
-  async revokeShare(sessionId: string): Promise<import('@craft-agent/shared/protocol').ShareResult> {
+  async revokeShare(sessionId: string): Promise<import('@phaneris/shared/protocol').ShareResult> {
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       return { success: false, error: 'Session not found' }
@@ -5665,7 +5665,7 @@ export class SessionManager implements ISessionManager {
     this.sendEvent({ type: 'async_operation', sessionId, isOngoing: true }, managed.workspace.id)
 
     try {
-      const { VIEWER_URL } = await import('@craft-agent/shared/branding')
+      const { VIEWER_URL } = await import('@phaneris/shared/branding')
       const response = await fetch(
         `${VIEWER_URL}/s/api/${managed.sharedId}`,
         { method: 'DELETE' }
@@ -6138,7 +6138,7 @@ export class SessionManager implements ISessionManager {
       }
 
       if (connectionChanged) {
-        const { getLlmConnection } = await import('@craft-agent/shared/config/storage')
+        const { getLlmConnection } = await import('@phaneris/shared/config/storage')
         const targetConnection = getLlmConnection(connection)
         if (!targetConnection) {
           throw new Error(`LLM connection "${connection}" not found`)
@@ -6398,7 +6398,7 @@ export class SessionManager implements ISessionManager {
     // Revoke share if session was shared (prevent orphaned viewer copies)
     if (managed.sharedId) {
       try {
-        const { VIEWER_URL } = await import('@craft-agent/shared/branding')
+        const { VIEWER_URL } = await import('@phaneris/shared/branding')
         const response = await fetch(
           `${VIEWER_URL}/s/api/${managed.sharedId}`,
           { method: 'DELETE', signal: AbortSignal.timeout(5000) }
@@ -7772,7 +7772,7 @@ export class SessionManager implements ISessionManager {
     requestId: string,
     allowed: boolean,
     alwaysAllow: boolean,
-    options?: import('@craft-agent/shared/protocol').PermissionResponseOptions,
+    options?: import('@phaneris/shared/protocol').PermissionResponseOptions,
   ): boolean {
     const managed = this.sessions.get(sessionId)
     if (managed?.agent) {
@@ -7812,7 +7812,7 @@ export class SessionManager implements ISessionManager {
    * - New unified auth flow (via handleCredentialInput)
    * - Legacy callback flow (via pendingCredentialResolvers)
    */
-  async respondToCredential(sessionId: string, requestId: string, response: import('@craft-agent/shared/protocol').CredentialResponse): Promise<boolean> {
+  async respondToCredential(sessionId: string, requestId: string, response: import('@phaneris/shared/protocol').CredentialResponse): Promise<boolean> {
     // First, check if this is a new unified auth flow request
     const managed = this.sessions.get(sessionId)
     if (managed?.pendingAuthRequest && managed.pendingAuthRequest.requestId === requestId) {

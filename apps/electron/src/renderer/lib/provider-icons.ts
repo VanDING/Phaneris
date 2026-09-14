@@ -21,7 +21,7 @@ import piIcon from '@/assets/provider-icons/pi.svg'
 import vercelIcon from '@/assets/provider-icons/vercel.svg'
 import xaiIcon from '@/assets/provider-icons/xai.svg'
 
-import type { LlmProviderType } from '@craft-agent/shared/config/llm-connections'
+import type { LlmProviderType } from '@phaneris/shared/config/llm-connections'
 
 /**
  * Icon URLs for each provider

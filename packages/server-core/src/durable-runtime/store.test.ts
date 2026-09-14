@@ -8,7 +8,7 @@ import {
   type RuntimeEvent,
   type ToolDispatchIntent,
   type ToolOutcome,
-} from '@craft-agent/shared/durable-runtime'
+} from '@phaneris/shared/durable-runtime'
 import { classifyRuntimeDatabaseFailure, DurableRuntimeStore } from './store.js'
 import { openSqliteDatabase } from './sqlite-driver.js'
 

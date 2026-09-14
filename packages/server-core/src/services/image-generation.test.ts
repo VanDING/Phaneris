@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import type { LlmConnection } from '@craft-agent/shared/config';
+import type { LlmConnection } from '@phaneris/shared/config';
 import {
   DEFAULT_IMAGE_GENERATION_MODEL,
   generateImageWithOpenAI,

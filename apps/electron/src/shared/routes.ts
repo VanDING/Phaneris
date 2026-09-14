@@ -16,7 +16,7 @@
  */
 
 import type { SettingsSubpage } from './settings-registry'
-import type { PermissionMode } from '@craft-agent/shared/agent/mode-types'
+import type { PermissionMode } from '@phaneris/shared/agent/mode-types'
 import type { ProjectManagementView } from './types'
 
 // Helper to build query strings from params

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import type { Message, PiUsage } from '@craft-agent/core/types'
+import type { Message, PiUsage } from '@phaneris/core/types'
 import { buildTrajectorySnapshot } from '../trajectory-snapshot'
 import { buildExecutionGraph, groupExecutionByBehavior, defaultBehaviorCollapsed, layoutBehaviorGraph } from '../trajectory-execution-map'
 

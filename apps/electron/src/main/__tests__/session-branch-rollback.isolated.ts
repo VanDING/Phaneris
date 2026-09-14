@@ -56,7 +56,7 @@ mock.module('../logger', () => {
   }
 })
 
-mock.module('@craft-agent/shared/config', () => ({
+mock.module('@phaneris/shared/config', () => ({
   getWorkspaceByNameOrId: (id: string) => (id === workspace.id ? workspace : null),
   getWorkspaces: () => [workspace],
   loadConfigDefaults: () => ({
@@ -123,7 +123,7 @@ mock.module('@craft-agent/shared/config', () => ({
   migrateRemoteServerTokens: async () => 0,
 }))
 
-mock.module('@craft-agent/shared/workspaces', () => ({
+mock.module('@phaneris/shared/workspaces', () => ({
   loadWorkspaceConfig: () => ({
     defaults: {
       permissionMode: 'ask',
@@ -133,7 +133,7 @@ mock.module('@craft-agent/shared/workspaces', () => ({
   }),
 }))
 
-mock.module('@craft-agent/shared/agent', () => ({
+mock.module('@phaneris/shared/agent', () => ({
   ...actualSharedAgentModule,
   setPermissionMode: () => {},
   getPermissionModeDiagnostics: () => ({ mode: 'ask', source: 'test' }),
@@ -147,7 +147,7 @@ mock.module('@craft-agent/shared/agent', () => ({
   normalizeCanonicalBrowserToolName: (name: string) => name,
 }))
 
-mock.module('@craft-agent/shared/agent/backend', () => ({
+mock.module('@phaneris/shared/agent/backend', () => ({
   ...actualSharedAgentBackendModule,
   resolveSessionConnection: () => null,
   createBackendFromConnection: () => {
@@ -175,7 +175,7 @@ mock.module('@craft-agent/shared/agent/backend', () => ({
   validateStoredBackendConnection: async () => ({ success: false, error: 'stub' }),
 }))
 
-mock.module('@craft-agent/shared/sources', () => ({
+mock.module('@phaneris/shared/sources', () => ({
   loadWorkspaceSources: () => [],
   loadAllSources: () => [],
   getSourcesBySlugs: () => [],
@@ -196,7 +196,7 @@ mock.module('@craft-agent/shared/sources', () => ({
   API_OAUTH_PROVIDERS: [],
 }))
 
-mock.module('@craft-agent/shared/automations', () => ({
+mock.module('@phaneris/shared/automations', () => ({
   AutomationSystem: class AutomationSystem {
     constructor(..._args: unknown[]) {}
     setInitialSessionMetadata() {}
@@ -210,7 +210,7 @@ mock.module('@craft-agent/shared/automations', () => ({
   AUTOMATIONS_HISTORY_FILE: 'automations.history.jsonl',
 }))
 
-mock.module('@craft-agent/shared/sessions', () => ({
+mock.module('@phaneris/shared/sessions', () => ({
   listSessions: () => [],
   loadSession: (_root: string, id: string) => storedById.get(id) ?? null,
   saveSession: async (session: any) => {
@@ -270,7 +270,7 @@ mock.module('@craft-agent/shared/sessions', () => ({
   validateSessionId: () => true,
 }))
 
-const { SessionManager } = await import('@craft-agent/server-core/sessions')
+const { SessionManager } = await import('@phaneris/server-core/sessions')
 
 describe('session branch rollback on preflight failure', () => {
   beforeEach(() => {

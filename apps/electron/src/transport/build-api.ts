@@ -5,9 +5,9 @@
  * enforces types at compile time — this proxy provides runtime dispatch.
  */
 
-import type { RpcClient } from '@craft-agent/server-core/transport'
-import { readSessionSnapshot } from '@craft-agent/server-core/transport'
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
+import type { RpcClient } from '@phaneris/server-core/transport'
+import { readSessionSnapshot } from '@phaneris/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import type { ElectronAPI } from '../shared/types'
 
 // ---------------------------------------------------------------------------

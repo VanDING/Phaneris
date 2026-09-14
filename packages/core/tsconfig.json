@@ -23,8 +23,8 @@
     "noPropertyAccessFromIndexSignature": false,
     "paths": {
       "*": ["./*"],
-      "@craft-agent/core": ["./src/index.ts"],
-      "@craft-agent/core/*": ["./src/*"]
+      "@phaneris/core": ["./src/index.ts"],
+      "@phaneris/core/*": ["./src/*"]
     },
     "rootDir": "src",
     "outDir": "dist",

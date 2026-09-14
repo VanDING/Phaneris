@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test'
-import type { ActivityItem } from '@craft-agent/ui'
-import { ARTIFACT_EVENT_PREFIX, type ArtifactEventSnapshot } from '@craft-agent/shared/artifacts/browser'
+import type { ActivityItem } from '@phaneris/ui'
+import { ARTIFACT_EVENT_PREFIX, type ArtifactEventSnapshot } from '@phaneris/shared/artifacts/browser'
 import { artifactEventsForTurn } from './artifact-events'
 
 function event(overrides: Partial<ArtifactEventSnapshot> = {}): ArtifactEventSnapshot {

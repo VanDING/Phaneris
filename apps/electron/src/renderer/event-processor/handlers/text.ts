@@ -6,7 +6,7 @@
  */
 
 import type { SessionState, StreamingState, TextDeltaEvent, TextCompleteEvent, TextDiscardEvent } from '../types'
-import { recordMessageTextUpdate } from '@craft-agent/core/utils'
+import { recordMessageTextUpdate } from '@phaneris/core/utils'
 import type { Message } from '../../../shared/types'
 import {
   findStreamingMessage,

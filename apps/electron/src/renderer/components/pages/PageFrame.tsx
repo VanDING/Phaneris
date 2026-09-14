@@ -9,8 +9,8 @@ import type {
   PageActionResult,
   PageDataSnapshot,
   PageRenderLease,
-} from '@craft-agent/shared/pages/types'
-import { isPageGrantUsable } from '@craft-agent/shared/pages/types'
+} from '@phaneris/shared/pages/types'
+import { isPageGrantUsable } from '@phaneris/shared/pages/types'
 import {
   PageActionRateLimiter,
   buildPageActionResultMessage,

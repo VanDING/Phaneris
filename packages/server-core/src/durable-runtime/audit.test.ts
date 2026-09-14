@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
-import type { Message } from '@craft-agent/core/types'
-import type { RuntimeEvent } from '@craft-agent/shared/durable-runtime'
+import type { Message } from '@phaneris/core/types'
+import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
 import { auditLegacyProjection, reportLegacyProjectionParity } from './audit.js'
 
 const event: RuntimeEvent = {

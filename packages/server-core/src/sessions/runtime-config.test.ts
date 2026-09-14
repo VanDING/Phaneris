@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test'
-import type { LlmConnection } from '@craft-agent/shared/config'
-import type { FileAttachment } from '@craft-agent/shared/protocol'
+import type { LlmConnection } from '@phaneris/shared/config'
+import type { FileAttachment } from '@phaneris/shared/protocol'
 import { buildBackendRuntimeSignature, buildRestartRequiredSignature, filterAttachmentsForModelInput } from './runtime-config'
 
 const baseCompat: LlmConnection = {

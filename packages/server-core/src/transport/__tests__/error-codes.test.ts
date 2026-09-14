@@ -13,7 +13,7 @@ import { describe, it, expect, afterEach } from 'bun:test'
 import { WsRpcServer } from '../server'
 import { WsRpcClient } from '../client'
 import { CLIENT_BROWSER_INVOKE } from '../capabilities'
-import { CodedError, RPC_CHANNELS, type Session } from '@craft-agent/shared/protocol'
+import { CodedError, RPC_CHANNELS, type Session } from '@phaneris/shared/protocol'
 import { SessionReadStore } from '../../handlers/rpc/session-read-store'
 import { readSessionSnapshot } from '../session-read-client'
 

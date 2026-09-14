@@ -1,5 +1,5 @@
 {
-  "name": "@craft-agent/shared",
+  "name": "@phaneris/shared",
   "version": "0.13.3",
   "license": "Apache-2.0",
   "description": "Shared business logic for Craft Agents - agent, auth, config, credentials, MCP integration",
@@ -79,8 +79,8 @@
     "./resources": "./src/resources/index.ts"
   },
   "dependencies": {
-    "@craft-agent/core": "workspace:*",
-    "@craft-agent/session-tools-core": "workspace:*",
+    "@phaneris/core": "workspace:*",
+    "@phaneris/session-tools-core": "workspace:*",
     "@earendil-works/pi-agent-core": "0.85.1",
     "@earendil-works/pi-ai": "0.85.1",
     "@earendil-works/pi-coding-agent": "0.85.1",

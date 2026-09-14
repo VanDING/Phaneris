@@ -1,4 +1,4 @@
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import {
   createWorkItem,
   deleteWorkItem,
@@ -10,9 +10,9 @@ import {
   type CreateWorkItemInput,
   type UpdateWorkItemInput,
   type WorkItemMutationContext,
-} from '@craft-agent/shared/work-items'
-import { getWorkspaceByNameOrId } from '@craft-agent/shared/config'
-import { pushTyped, type RpcServer } from '@craft-agent/server-core/transport'
+} from '@phaneris/shared/work-items'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { isSessionWorkItemEligible } from '../../sessions/work-item-eligibility'
 

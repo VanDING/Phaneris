@@ -8,7 +8,7 @@ import type {
   WorkItem,
   WorkItemEvent,
   WorkItemEventChange,
-} from '@craft-agent/shared/work-items/browser'
+} from '@phaneris/shared/work-items/browser'
 import type { ProjectManagementView } from '../../../shared/types'
 import { projectsAtom } from '@/atoms/projects'
 import { kanbanEditorTargetAtom, kanbanProjectFilterAtom } from '@/atoms/kanban'

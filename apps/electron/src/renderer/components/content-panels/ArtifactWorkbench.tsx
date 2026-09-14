@@ -7,7 +7,7 @@ import { useArtifacts } from '@/hooks/useArtifacts'
 import { Button } from '@/components/ui/button'
 import { PanelHeader } from '../app-shell/PanelHeader'
 import { PanelEmptyState } from './PanelEmptyState'
-import { resolveFileFormat } from '@craft-agent/shared/artifacts/browser'
+import { resolveFileFormat } from '@phaneris/shared/artifacts/browser'
 import { FilePreviewContent } from './FilePreviewContent'
 
 export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {

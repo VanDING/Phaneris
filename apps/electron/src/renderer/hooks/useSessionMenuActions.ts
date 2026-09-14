@@ -20,14 +20,14 @@
  * request-tracking layer. State is hard-reset when `item.id` changes so
  * pending optimistic state from a previous session can't leak into a new one.
  *
- * Pure label-mutation logic lives in `@craft-agent/shared/labels`
+ * Pure label-mutation logic lives in `@phaneris/shared/labels`
  * (`toggleLabelInList`) and is unit-tested there.
  */
 
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { extractLabelId, toggleLabelInList } from '@craft-agent/shared/labels'
+import { extractLabelId, toggleLabelInList } from '@phaneris/shared/labels'
 import type { SessionMeta } from '@/atoms/sessions'
 
 export interface UseSessionMenuActionsOptions {

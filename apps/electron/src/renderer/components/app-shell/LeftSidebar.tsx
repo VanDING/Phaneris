@@ -1,8 +1,8 @@
 import type { LucideIcon } from "lucide-react"
 import * as React from "react"
 import { AnimatePresence, motion, type Variants } from "motion/react"
-import { MOTION_DURATION, MOTION_EASE } from '@craft-agent/ui/motion'
-import { Tooltip, TooltipTrigger, TooltipContent } from '@craft-agent/ui'
+import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@phaneris/ui'
 import { ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"

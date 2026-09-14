@@ -7,7 +7,7 @@ import {
   getArtifact,
   registerCurrentArtifact,
   type ArtifactStorageScope,
-} from '@craft-agent/shared/artifacts'
+} from '@phaneris/shared/artifacts'
 import { renderOfficeArtifactPreview } from './artifact-preview'
 
 const roots: string[] = []

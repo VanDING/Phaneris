@@ -7,8 +7,8 @@
  * No React, no side effects — fully unit-testable.
  */
 
-import { sumTokenUsage } from '@craft-agent/core/utils'
-import type { Message, PiUsage } from '@craft-agent/core/types'
+import { sumTokenUsage } from '@phaneris/core/utils'
+import type { Message, PiUsage } from '@phaneris/core/types'
 import {
   EMPTY_TRAJECTORY_SNAPSHOT,
   type TrajectoryContribution,

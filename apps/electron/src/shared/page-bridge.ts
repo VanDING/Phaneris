@@ -47,8 +47,8 @@ import type {
   PageActionResult,
   PageDataSnapshot,
   PageKind,
-} from '@craft-agent/shared/pages/types'
-import { hasPathTraversal } from '@craft-agent/shared/pages/types'
+} from '@phaneris/shared/pages/types'
+import { hasPathTraversal } from '@phaneris/shared/pages/types'
 
 export const PAGE_BRIDGE_PROTOCOL = 'craft-pages/v1'
 

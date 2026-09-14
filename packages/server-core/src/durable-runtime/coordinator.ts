@@ -21,7 +21,7 @@ import {
   type ToolDispatchIntent,
   type ToolOutcome,
   type ToolRecoveryMode,
-} from '@craft-agent/shared/durable-runtime'
+} from '@phaneris/shared/durable-runtime'
 import { canonicalToolArgsHash, durableToolOperationId } from './tool-identity.js'
 import { redactDurablePayload } from './sensitive-payload.js'
 import { createHash } from 'node:crypto'
@@ -217,7 +217,7 @@ export class DurableRuntimeCoordinator {
     workspaceRootPath: string,
     sessionId: string,
     excludeOperationId?: string,
-  ): import('@craft-agent/shared/durable-runtime').DurableCanonicalModelContext {
+  ): import('@phaneris/shared/durable-runtime').DurableCanonicalModelContext {
     const projection = this.getCanonicalSessionProjection(workspaceRootPath, sessionId)
     return {
       cursor: projection?.cursor ?? 0,
@@ -236,7 +236,7 @@ export class DurableRuntimeCoordinator {
     taskSlug: string
     runId: string
     ordinal: number
-    entry: import('@craft-agent/shared/tasks').RunLogEntry
+    entry: import('@phaneris/shared/tasks').RunLogEntry
   }): number {
     const operationId = `taskrun:${input.taskSlug}:${input.runId}`
     const store = this.storeFor(input.workspaceRootPath)
@@ -289,9 +289,9 @@ export class DurableRuntimeCoordinator {
     workspaceRootPath: string,
     taskSlug: string,
     runId: string,
-  ): import('@craft-agent/shared/tasks').RunLogEntry[] {
+  ): import('@phaneris/shared/tasks').RunLogEntry[] {
     const store = this.storeFor(workspaceRootPath)
-    const facts: Array<{ ordinal: number; entry: import('@craft-agent/shared/tasks').RunLogEntry }> = []
+    const facts: Array<{ ordinal: number; entry: import('@phaneris/shared/tasks').RunLogEntry }> = []
     let afterSeq = 0
     while (true) {
       const batch = store.listEvents({ afterSeq, limit: 10_000 })
@@ -302,7 +302,7 @@ export class DurableRuntimeCoordinator {
           taskSlug?: string
           runId?: string
           ordinal?: number
-          entry?: import('@craft-agent/shared/tasks').RunLogEntry
+          entry?: import('@phaneris/shared/tasks').RunLogEntry
         }
         if (payload.taskSlug === taskSlug && payload.runId === runId && payload.entry && typeof payload.ordinal === 'number') {
           facts.push({ ordinal: payload.ordinal, entry: payload.entry })
@@ -322,7 +322,7 @@ export class DurableRuntimeCoordinator {
   importLegacyContext(
     workspaceRootPath: string,
     sessionId: string,
-    messages: import('@craft-agent/core/types').Message[],
+    messages: import('@phaneris/core/types').Message[],
     importedAt = Date.now(),
   ): number[] {
     const operationId = `legacy-import:${sessionId}`

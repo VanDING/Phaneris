@@ -24,7 +24,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SquarePenRounded } from '../icons/SquarePenRounded'
-import { Tooltip, TooltipTrigger, TooltipContent } from '@craft-agent/ui'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@phaneris/ui'
 import { TopBarButton } from '@/components/ui/TopBarButton'
 import { primarySurfaceAtom, workbenchStateAtom } from '@/atoms/workbench'
 import { browserInstancesAtom, filterInstancesForWorkspace } from '@/atoms/browser-pane'

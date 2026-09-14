@@ -12,8 +12,8 @@ import {
   AlertCircle,
   Image as ImageIcon,
 } from 'lucide-react'
-import { Icon_Home, Spinner } from '@craft-agent/ui'
-import { MOTION_DURATION, MOTION_EASE } from '@craft-agent/ui/motion'
+import { Icon_Home, Spinner } from '@phaneris/ui'
+import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
 
 import * as storage from '@/lib/local-storage'
 import { Button } from '@/components/ui/button'
@@ -32,10 +32,10 @@ import {
   InlineLabelMenu,
   useInlineLabelMenu,
 } from '@/components/ui/label-menu'
-import type { LabelConfig } from '@craft-agent/shared/labels'
+import type { LabelConfig } from '@phaneris/shared/labels'
 import { parseMentions } from '@/lib/mentions'
 import { RichTextInput, type RichTextInputHandle } from '@/components/ui/rich-text-input'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@craft-agent/ui'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@phaneris/ui'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -71,8 +71,8 @@ import { ConnectionIcon } from '@/components/icons/ConnectionIcon'
 import { FreeFormInputContextBadge } from './FreeFormInputContextBadge'
 import { derivePickerMode } from './picker-mode'
 import type { FileAttachment, LoadedSource, LoadedSkill } from '../../../../shared/types'
-import type { PermissionMode } from '@craft-agent/shared/agent/modes'
-import { type ThinkingLevel, getThinkingLevelNameKey, getThinkingLevelsForModel } from '@craft-agent/shared/agent/thinking-levels'
+import type { PermissionMode } from '@phaneris/shared/agent/modes'
+import { type ThinkingLevel, getThinkingLevelNameKey, getThinkingLevelsForModel } from '@phaneris/shared/agent/thinking-levels'
 import { useEscapeInterrupt } from '@/context/EscapeInterruptContext'
 import { hasOpenOverlay } from '@/lib/overlay-detection'
 import { ToolbarStatusSlot } from './ToolbarStatusSlot'

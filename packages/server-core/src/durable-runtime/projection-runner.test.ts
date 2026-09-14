@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import type { RuntimeEvent } from '@craft-agent/shared/durable-runtime'
+import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
 import { DurableProjectionRunner, ProjectionSchemaMismatchError } from './projection-runner.js'
 import { DurableRuntimeStore } from './store.js'
 

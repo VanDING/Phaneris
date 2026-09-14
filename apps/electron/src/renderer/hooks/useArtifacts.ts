@@ -4,7 +4,7 @@ import type {
   ApplyArtifactDraftInput,
   ArtifactListFilter,
   ResolvedArtifact,
-} from '@craft-agent/shared/artifacts/browser'
+} from '@phaneris/shared/artifacts/browser'
 
 function upsertArtifact(previous: ResolvedArtifact[], next: ResolvedArtifact): ResolvedArtifact[] {
   const found = previous.some(({ artifact }) => artifact.id === next.artifact.id)

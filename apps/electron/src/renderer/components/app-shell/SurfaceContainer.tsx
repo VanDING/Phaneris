@@ -12,7 +12,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { motion, useReducedMotion } from 'motion/react'
-import { motionSpring, motionTween } from '@craft-agent/ui/motion'
+import { motionSpring, motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import {
   collapseWorkbenchAtom,

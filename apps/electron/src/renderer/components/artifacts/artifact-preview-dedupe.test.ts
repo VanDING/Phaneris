@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import type { ArtifactEventSnapshot, ResolvedArtifact } from '@craft-agent/shared/artifacts/browser'
+import type { ArtifactEventSnapshot, ResolvedArtifact } from '@phaneris/shared/artifacts/browser'
 import { dedupeArtifactPreviews } from './artifact-preview-dedupe'
 
 const event: ArtifactEventSnapshot = {

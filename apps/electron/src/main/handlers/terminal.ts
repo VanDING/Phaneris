@@ -1,7 +1,7 @@
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
-import type { TerminalCreateOptions } from '@craft-agent/shared/protocol'
-import type { RpcServer } from '@craft-agent/server-core/transport'
-import { pushTyped } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import type { TerminalCreateOptions } from '@phaneris/shared/protocol'
+import type { RpcServer } from '@phaneris/server-core/transport'
+import { pushTyped } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from './handler-deps'
 
 export function registerTerminalHandlers(server: RpcServer, deps: HandlerDeps): void {

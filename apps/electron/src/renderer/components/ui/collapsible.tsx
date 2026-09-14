@@ -1,7 +1,7 @@
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
 import { motion, AnimatePresence } from "motion/react"
 import * as React from "react"
-import { MOTION_SPRING } from '@craft-agent/ui/motion'
+import { MOTION_SPRING } from '@phaneris/ui/motion'
 
 // Radix primitives (unchanged)
 const Collapsible = CollapsiblePrimitive.Root

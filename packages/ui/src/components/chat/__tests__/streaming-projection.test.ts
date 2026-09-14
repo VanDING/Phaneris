@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
-import type { Message } from '@craft-agent/core'
-import { recordMessageTextUpdate } from '@craft-agent/core/utils'
+import type { Message } from '@phaneris/core'
+import { recordMessageTextUpdate } from '@phaneris/core/utils'
 import { groupImmutableMessagesByTurn, groupMessagesByTurn } from '../turn-utils'
 
 test('streaming projection preserves completed cards and matches the full reducer', () => {
@@ -45,7 +45,7 @@ test('out-of-order, hidden and interleaved histories keep full grouping semantic
 })
 
 test('structural selectors retain one version across deltas but invalidate annotated content', async () => {
-  const { getMessageStructureSource } = await import('@craft-agent/core/utils')
+  const { getMessageStructureSource } = await import('@phaneris/core/utils')
   const base: Message[] = [{ id: 'a', role: 'assistant', isPending: true, isStreaming: true, content: 'first', timestamp: 1 }]
   let current = base
   for (let i = 0; i < 20; i++) {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { motion, AnimatePresence, useMotionValue, useMotionValueEvent, animate, useReducedMotion } from 'motion/react'
-import { MOTION_DURATION, MOTION_EASE, motionTween } from '@craft-agent/ui/motion'
+import { MOTION_DURATION, MOTION_EASE, motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import { FreeFormInput, type FreeFormInputProps } from './FreeFormInput'
 import { StructuredInput } from './StructuredInput'

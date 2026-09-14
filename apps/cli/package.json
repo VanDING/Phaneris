@@ -1,5 +1,5 @@
 {
-  "name": "@craft-agent/cli",
+  "name": "@phaneris/cli",
   "version": "0.13.3",
   "license": "Apache-2.0",
   "description": "Terminal client for Craft Agent server",
@@ -14,8 +14,8 @@
     "test": "bun test src/"
   },
   "dependencies": {
-    "@craft-agent/shared": "workspace:*",
-    "@craft-agent/server-core": "workspace:*"
+    "@phaneris/shared": "workspace:*",
+    "@phaneris/server-core": "workspace:*"
   },
   "devDependencies": {
     "@types/bun": "1.4.1",

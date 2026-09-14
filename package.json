@@ -1,5 +1,5 @@
 {
-  "name": "craft-agent",
+  "name": "phaneris",
   "version": "0.13.3",
   "license": "Apache-2.0",
   "description": "Open-source desktop and server agent workspace powered by the Pi SDK",
@@ -91,7 +91,7 @@
     "workspace:backup": "bun run scripts/workspace-backup.ts",
     "workspace:verify": "bun run scripts/workspace-backup.ts",
     "workspace:restore": "bun run scripts/workspace-backup.ts",
-    "server:dev:webui": "bun run server:build:subprocess && bun run webui:build && CRAFT_WEBUI_DIR=apps/webui/dist CRAFT_WEBUI_PORT=3100 bun run server:dev",
+    "server:dev:webui": "bun run server:build:subprocess && bun run webui:build && CRAFT_WEBUI_DIR=apps/webui/dist CRAFT_WEBUI_PORT=3100 bun run server:dev",
     "prepare": "bun run husky",
     "postinstall": "",
     "typecheck:build": "bun run tsc --noEmit -p tsconfig.build.json",

@@ -1,5 +1,5 @@
 {
-  "name": "@craft-agent/server",
+  "name": "@phaneris/server",
   "version": "0.13.3",
   "description": "Standalone headless Craft Agent server (Bun runtime)",
   "type": "module",
@@ -25,10 +25,10 @@
     "typecheck": "bun run tsc --noEmit"
   },
   "dependencies": {
-    "@craft-agent/core": "workspace:*",
-    "@craft-agent/messaging-gateway": "workspace:*",
-    "@craft-agent/server-core": "workspace:*",
-    "@craft-agent/shared": "workspace:*"
+    "@phaneris/core": "workspace:*",
+    "@phaneris/messaging-gateway": "workspace:*",
+    "@phaneris/server-core": "workspace:*",
+    "@phaneris/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "26.5.0",

@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { chmodSync, existsSync, statSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import type { IPty } from 'node-pty'
-import type { TerminalCreateOptions, TerminalDataEvent, TerminalExitEvent, TerminalInfo, TerminalReadResult } from '@craft-agent/shared/protocol'
+import type { TerminalCreateOptions, TerminalDataEvent, TerminalExitEvent, TerminalInfo, TerminalReadResult } from '@phaneris/shared/protocol'
 
 const MAX_BUFFER_CHARS = 1_000_000
 const DEFAULT_READ_CHARS = 20_000

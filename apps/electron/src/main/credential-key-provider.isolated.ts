@@ -14,7 +14,7 @@ test('never replaces an existing protected key when the keychain is unavailable'
     encryptString: () => { throw new Error('must not create replacement'); },
   } }));
   mock.module('./logger', () => ({ mainLog: { warn() {}, info() {} } }));
-  mock.module('@craft-agent/shared/credentials', () => ({ setCredentialKeyProvider() {} }));
+  mock.module('@phaneris/shared/credentials', () => ({ setCredentialKeyProvider() {} }));
   try {
     mkdirSync(join(dir, '.craft-agent'));
     writeFileSync(file, 'original-key');

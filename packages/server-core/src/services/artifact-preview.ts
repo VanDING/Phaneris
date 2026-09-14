@@ -3,7 +3,7 @@ import {
   resolveFileFormat,
   type ArtifactStorageScope,
   type ResolvedArtifact,
-} from '@craft-agent/shared/artifacts'
+} from '@phaneris/shared/artifacts'
 
 /**
  * Create a distributable, dependency-local human preview for standard Office

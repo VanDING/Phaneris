@@ -18,7 +18,7 @@ import { logoUrlCache } from '@/lib/icon-cache'
 import { CrossfadeAvatar } from '@/components/ui/avatar'
 import { connectionFallbackInitial } from './connection-icon-utils'
 import { getModelDisplayName } from '@config/models'
-import { Tooltip, TooltipTrigger, TooltipContent } from '@craft-agent/ui'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@phaneris/ui'
 import type { LlmConnectionWithStatus } from '../../../shared/types'
 
 interface ConnectionIconProps {

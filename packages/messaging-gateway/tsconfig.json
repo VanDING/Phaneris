@@ -8,10 +8,10 @@
     "noUncheckedIndexedAccess": false,
     "paths": {
       "*": ["./*"],
-      "@craft-agent/shared": ["../shared/src/index.ts"],
-      "@craft-agent/shared/*": ["../shared/src/*"],
-      "@craft-agent/server-core": ["../server-core/src/index.ts"],
-      "@craft-agent/server-core/*": ["../server-core/src/*"]
+      "@phaneris/shared": ["../shared/src/index.ts"],
+      "@phaneris/shared/*": ["../shared/src/*"],
+      "@phaneris/server-core": ["../server-core/src/index.ts"],
+      "@phaneris/server-core/*": ["../server-core/src/*"]
     }
   },
   "include": ["src"]

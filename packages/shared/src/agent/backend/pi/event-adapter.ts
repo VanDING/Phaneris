@@ -9,13 +9,13 @@
  * Claude / Codex / Copilot backends.
  */
 
-import { sumTokenUsage } from '@craft-agent/core/utils';
+import { sumTokenUsage } from '@phaneris/core/utils';
 import type {
   AgentEvent as CraftAgentEvent,
   PiUsage,
   RequestContextSnapshot,
   TrajectorySourceBlock,
-} from '@craft-agent/core/types';
+} from '@phaneris/core/types';
 import type {
   AgentEvent as PiAgentEvent,
 } from '@earendil-works/pi-agent-core';

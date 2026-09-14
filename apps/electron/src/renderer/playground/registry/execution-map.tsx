@@ -1,6 +1,6 @@
 import * as React from 'react'
-import type { Message, PiUsage } from '@craft-agent/core/types'
-import { TrajectoryView, buildTrajectorySnapshot } from '@craft-agent/ui'
+import type { Message, PiUsage } from '@phaneris/core/types'
+import { TrajectoryView, buildTrajectorySnapshot } from '@phaneris/ui'
 import type { ComponentEntry } from './types'
 
 const usage: PiUsage = { input: 1200, output: 250, cacheRead: 300, cacheWrite: 0, totalTokens: 1750, cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } }

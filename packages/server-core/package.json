@@ -1,5 +1,5 @@
 {
-  "name": "@craft-agent/server-core",
+  "name": "@phaneris/server-core",
   "version": "0.13.3",
   "license": "Apache-2.0",
   "description": "Reusable headless server infrastructure for Craft Agent",
@@ -26,8 +26,8 @@
     "typecheck": "bun run tsc --noEmit"
   },
   "dependencies": {
-    "@craft-agent/core": "workspace:*",
-    "@craft-agent/shared": "workspace:*",
+    "@phaneris/core": "workspace:*",
+    "@phaneris/shared": "workspace:*",
     "@earendil-works/pi-ai": "0.85.1",
     "jose": "^6.2.12",
     "markitdown-js": "^0.0.14",

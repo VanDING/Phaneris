@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { PiUsage } from '@craft-agent/core/types'
-import { readSessionJsonl, writeSessionJsonl } from '@craft-agent/shared/sessions/jsonl'
+import type { PiUsage } from '@phaneris/core/types'
+import { readSessionJsonl, writeSessionJsonl } from '@phaneris/shared/sessions/jsonl'
 import { SessionManager, createManagedSession } from './SessionManager.ts'
 
 describe('session usage ledger authority', () => {

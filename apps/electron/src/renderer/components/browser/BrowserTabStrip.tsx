@@ -8,7 +8,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { Globe, Monitor, PanelRightOpen, XCircle } from 'lucide-react'
-import { Spinner } from '@craft-agent/ui'
+import { Spinner } from '@phaneris/ui'
 import {
   DropdownMenu,
   DropdownMenuTrigger,

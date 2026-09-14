@@ -8,7 +8,7 @@
  */
 
 import { useMemo } from 'react'
-import { groupMessagesByTurn, type ActivityItem, type AssistantTurn } from '@craft-agent/ui'
+import { groupMessagesByTurn, type ActivityItem, type AssistantTurn } from '@phaneris/ui'
 import type { Session } from '../../shared/types'
 
 function isAssistantTurn(turn: { type: string }): turn is AssistantTurn {

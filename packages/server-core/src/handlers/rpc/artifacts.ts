@@ -1,4 +1,4 @@
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import {
   acceptArtifact,
   acquireArtifactLease,
@@ -17,10 +17,10 @@ import {
   type ArtifactStorageScope,
   type CreateArtifactDraftInput,
   type RegisterCurrentArtifactInput,
-} from '@craft-agent/shared/artifacts'
-import { getWorkspaceByNameOrId } from '@craft-agent/shared/config'
-import { getWorkspaceAllowedDirs } from '@craft-agent/server-core/handlers'
-import { pushTyped, type RpcServer } from '@craft-agent/server-core/transport'
+} from '@phaneris/shared/artifacts'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
+import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { renderOfficeArtifactPreview } from '../../services/artifact-preview'
 

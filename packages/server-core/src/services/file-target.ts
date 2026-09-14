@@ -2,8 +2,8 @@ import { stat } from 'node:fs/promises'
 import { dirname, isAbsolute, resolve } from 'node:path'
 import { homedir } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { resolveFileFormat } from '@craft-agent/shared/artifacts'
-import type { ResolvedFileTarget } from '@craft-agent/shared/protocol'
+import { resolveFileFormat } from '@phaneris/shared/artifacts'
+import type { ResolvedFileTarget } from '@phaneris/shared/protocol'
 import { validateFilePath } from '../handlers/utils'
 
 /** Resolve the requested file exactly. Never substitute a nearby same-name file. */

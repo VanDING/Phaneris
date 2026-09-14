@@ -9,9 +9,9 @@
  * applies its own pre-binding access gate.)
  */
 
-import type { ISessionManager } from '@craft-agent/server-core/handlers'
-import { readFileAttachment } from '@craft-agent/shared/utils'
-import type { FileAttachment } from '@craft-agent/shared/protocol'
+import type { ISessionManager } from '@phaneris/server-core/handlers'
+import { readFileAttachment } from '@phaneris/shared/utils'
+import type { FileAttachment } from '@phaneris/shared/protocol'
 import {
   evaluateBindingAccess,
   executeRejection,

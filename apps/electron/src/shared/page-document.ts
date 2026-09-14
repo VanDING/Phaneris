@@ -1,4 +1,4 @@
-import type { PageKind, PageRenderLease } from '@craft-agent/shared/pages/types'
+import type { PageKind, PageRenderLease } from '@phaneris/shared/pages/types'
 
 export const PAGE_DOCUMENT_SCHEME = 'craft-page'
 

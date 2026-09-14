@@ -14,11 +14,11 @@
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { MOTION_DURATION, MOTION_EASE } from '@craft-agent/ui/motion'
+import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
 import { Globe } from 'lucide-react'
 import { useAtomValue } from 'jotai'
 import { useTranslation, Trans } from 'react-i18next'
-import { Spinner } from '@craft-agent/ui'
+import { Spinner } from '@phaneris/ui'
 import { cn } from '@/lib/utils'
 import { Kbd } from '@/components/ui/kbd'
 import { getHostname, getThemeLuminance } from '@/components/browser/utils'

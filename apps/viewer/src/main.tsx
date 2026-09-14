@@ -2,7 +2,7 @@ import * as React from 'react'
 import { createRoot } from 'react-dom/client'
 import { MotionConfig } from 'motion/react'
 import { App } from './App'
-import { setupI18n } from '@craft-agent/shared/i18n'
+import { setupI18n } from '@phaneris/shared/i18n'
 import { initReactI18next } from 'react-i18next'
 import './index.css'
 

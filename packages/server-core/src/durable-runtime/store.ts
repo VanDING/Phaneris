@@ -8,7 +8,7 @@ import {
   type ToolOutcome,
   type ToolRecoveryEvidence,
   type ToolRecoveryVerdict,
-} from '@craft-agent/shared/durable-runtime'
+} from '@phaneris/shared/durable-runtime'
 import { canonicalJson } from './canonical-json.js'
 import { openSqliteDatabase, type SqliteDatabase } from './sqlite-driver.js'
 

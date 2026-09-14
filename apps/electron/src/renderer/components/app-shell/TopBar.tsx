@@ -9,7 +9,7 @@
 
 import { useTranslation } from "react-i18next"
 import { CheckCircle2, ChevronLeft, ChevronRight, DatabaseZap, ExternalLink, HelpCircle, List, MessageSquare, Settings, Webhook, Zap } from 'lucide-react'
-import { Tooltip, TooltipTrigger, TooltipContent } from "@craft-agent/ui"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@phaneris/ui"
 import { PanelLeftRounded } from "../icons/PanelLeftRounded"
 import { TopBarButton } from "../ui/TopBarButton"
 import { cn } from "@/lib/utils"
@@ -31,7 +31,7 @@ import type { SurfaceLauncherKind } from "@/lib/surface-launchers"
 import type { Workspace } from "../../../shared/types"
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher"
 import { CompactWorkspaceSwitcher } from "./CompactWorkspaceSwitcher"
-import { getDocUrl } from "@craft-agent/shared/docs/doc-links"
+import { getDocUrl } from "@phaneris/shared/docs/doc-links"
 import { AppMenu } from "../AppMenu"
 
 const RIGHT_SLOT_FULL_BADGES_THRESHOLD = 420

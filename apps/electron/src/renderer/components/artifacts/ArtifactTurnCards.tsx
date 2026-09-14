@@ -1,6 +1,6 @@
-import type { ActivityItem } from '@craft-agent/ui'
-import type { ResolvedArtifact } from '@craft-agent/shared/artifacts/browser'
-import type { ArtifactEventSnapshot } from '@craft-agent/shared/artifacts/browser'
+import type { ActivityItem } from '@phaneris/ui'
+import type { ResolvedArtifact } from '@phaneris/shared/artifacts/browser'
+import type { ArtifactEventSnapshot } from '@phaneris/shared/artifacts/browser'
 import { ArtifactCard } from './ArtifactCard'
 import { artifactEventsForTurn } from './artifact-events'
 

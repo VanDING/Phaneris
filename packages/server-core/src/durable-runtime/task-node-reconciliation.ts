@@ -1,4 +1,4 @@
-import type { ToolReconciliationAdapter } from '@craft-agent/shared/durable-runtime'
+import type { ToolReconciliationAdapter } from '@phaneris/shared/durable-runtime'
 
 export interface ReconciliationTaskChild {
   id: string

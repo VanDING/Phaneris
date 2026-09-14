@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { SettingsSecretInput } from '@/components/settings'
-import { Spinner } from '@craft-agent/ui'
+import { Spinner } from '@phaneris/ui'
 
 interface WeComConnectDialogProps {
   open: boolean

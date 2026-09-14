@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useAtom } from 'jotai'
-import { reconcileWorkItemSelection, type WorkItem } from '@craft-agent/shared/work-items/browser'
+import { reconcileWorkItemSelection, type WorkItem } from '@phaneris/shared/work-items/browser'
 import {
   kanbanProjectFilterAtom,
   workItemSearchAtom,

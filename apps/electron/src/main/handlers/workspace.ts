@@ -1,7 +1,7 @@
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
-import type { RpcServer } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from './handler-deps'
-import { getRemoteServerTokenSync } from '@craft-agent/shared/config'
+import { getRemoteServerTokenSync } from '@phaneris/shared/config'
 
 export const GUI_HANDLED_CHANNELS = [
   RPC_CHANNELS.remote.TEST_CONNECTION,

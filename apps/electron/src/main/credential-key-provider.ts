@@ -12,8 +12,8 @@ import { randomBytes } from 'node:crypto';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { safeStorage } from 'electron';
-import { setCredentialKeyProvider } from '@craft-agent/shared/credentials';
-import { atomicWriteFileSync } from '@craft-agent/shared/utils/files';
+import { setCredentialKeyProvider } from '@phaneris/shared/credentials';
+import { atomicWriteFileSync } from '@phaneris/shared/utils/files';
 import { mainLog } from './logger';
 
 const KEY_FILE = join(homedir(), '.craft-agent', 'credentials.key');

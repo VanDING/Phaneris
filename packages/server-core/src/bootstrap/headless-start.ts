@@ -4,9 +4,9 @@ import { execFileSync } from 'node:child_process'
 import { uptime as osUptime } from 'node:os'
 import { join, basename } from 'node:path'
 import { lockHolderMatchesLock, parseTasklistImageName, type LockIdentity } from './lock-identity.ts'
-import { OAuthFlowStore } from '@craft-agent/shared/auth'
-import { ensureConfigDir, loadStoredConfig, saveConfig } from '@craft-agent/shared/config'
-import { CONFIG_DIR } from '@craft-agent/shared/config/paths'
+import { OAuthFlowStore } from '@phaneris/shared/auth'
+import { ensureConfigDir, loadStoredConfig, saveConfig } from '@phaneris/shared/config'
+import { CONFIG_DIR } from '@phaneris/shared/config/paths'
 
 /** Constant-time string comparison for bearer-token validation (audit L-15). */
 function timingSafeEqualStrings(a: string, b: string): boolean {
@@ -15,7 +15,7 @@ function timingSafeEqualStrings(a: string, b: string): boolean {
   if (aBuf.length !== bBuf.length) return false;
   return timingSafeEqual(aBuf, bBuf);
 }
-import { setBundledAssetsRoot } from '@craft-agent/shared/utils'
+import { setBundledAssetsRoot } from '@phaneris/shared/utils'
 import { WsRpcServer, type WsRpcTlsOptions } from '../transport/server'
 import type { EventSink, RpcServer } from '../transport/types'
 import { createHeadlessPlatform } from '../runtime/platform-headless'

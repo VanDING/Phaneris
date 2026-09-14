@@ -9,7 +9,7 @@
  */
 
 import { atom } from 'jotai'
-import { estimateTranscriptBytes } from '@craft-agent/core/utils'
+import { estimateTranscriptBytes } from '@phaneris/core/utils'
 import type { Getter, Setter } from 'jotai/vanilla'
 import { atomFamily } from 'jotai-family'
 import { activeSessionIdAtom as workbenchActiveSessionIdAtom } from './active-session'

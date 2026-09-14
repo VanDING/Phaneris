@@ -24,7 +24,7 @@
 - overlay 弹层三处：
   - ChatDisplay 本地 `useState<OverlayState>`（:976），触发点 :1015-1039、:1839-1888（MultiDiff / Markdown pop-out / activity）
   - App.tsx `linkInterceptor.previewState` → `FilePreviewRenderer`（:2160-2215，image/pdf/code/json/markdown），`lib/link-interceptor.ts` 管理
-  - `@craft-agent/ui` 的 preview overlays 均有 `embedded` 模式（playground 已验证）
+  - `@phaneris/ui` 的 preview overlays 均有 `embedded` 模式（playground 已验证）
 - 面板调宽：`PanelResizeSash` + `resizePanelsAtom`，`PANEL_MIN_WIDTH=440`（`panel-constants.ts:16`）；面板比例（proportion 规范化，和=1）随 URL 持久化
 - 快捷键：`actions/definitions.ts` + `useAction` 注册体系；`KeyboardShortcutsDialog` 自动展示
 - 文件树：`right-sidebar/SessionFilesSection.tsx`（递归树+watcher+context menu，当前仅用于 `SessionInfoPopover`）
@@ -206,7 +206,7 @@ TopBar Back/Forward 走 history pushState 穿越面板历史；后台集存 loca
 
 - [x] **Step 3: 会话活动数据 hook**
 
-activities 由会话消息派生（renderer `Session` 含 `messages`，`groupMessagesByTurn`/activity 提取逻辑在 ChatDisplay 内，`@craft-agent/ui` 导出）；从 ChatDisplay 抽出为共享 hook（候选：`lib/file-changes.ts` 同目录的 `useSessionActivities(session)` 或直接复用现有提取函数，执行时以 ChatDisplay 实际数据流为准）
+activities 由会话消息派生（renderer `Session` 含 `messages`，`groupMessagesByTurn`/activity 提取逻辑在 ChatDisplay 内，`@phaneris/ui` 导出）；从 ChatDisplay 抽出为共享 hook（候选：`lib/file-changes.ts` 同目录的 `useSessionActivities(session)` 或直接复用现有提取函数，执行时以 ChatDisplay 实际数据流为准）
 
 - [x] **Step 4: PanelSlot 渲染分支**
 

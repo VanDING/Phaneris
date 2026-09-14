@@ -1,21 +1,21 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react"
 import { AnimatePresence, motion, useReducedMotion, useIsPresent } from 'motion/react'
-import { motionTween } from '@craft-agent/ui/motion'
+import { motionTween } from '@phaneris/ui/motion'
 import { sessionDescendants } from '@/utils/session-families'
 import { useTranslation } from "react-i18next"
 import { useSetAtom } from "jotai"
 import { isToday, isYesterday, format, startOfDay } from "date-fns"
-import { getDateLocale } from "@craft-agent/shared/i18n"
+import { getDateLocale } from "@phaneris/shared/i18n"
 import { useAction } from "@/actions"
 import { Inbox, Archive } from "lucide-react"
 
 import { getSessionStatus } from "@/utils/session"
 import * as storage from "@/lib/local-storage"
 import { KEYS } from "@/lib/local-storage"
-import type { LabelConfig } from "@craft-agent/shared/labels"
-import { flattenLabels } from "@craft-agent/shared/labels"
+import type { LabelConfig } from "@phaneris/shared/labels"
+import { flattenLabels } from "@phaneris/shared/labels"
 import * as MultiSelect from "@/hooks/useMultiSelect"
-import { Spinner } from "@craft-agent/ui"
+import { Spinner } from "@phaneris/ui"
 import { EntityListEmptyScreen } from "@/components/ui/entity-list-empty"
 import { EntityList, type EntityListGroup } from "@/components/ui/entity-list"
 import { RenameDialog } from "@/components/ui/rename-dialog"
@@ -31,7 +31,7 @@ import { useEscapeInterrupt } from "@/context/EscapeInterruptContext"
 import { useNavigation, useNavigationState, routes, isSessionsNavigation } from "@/contexts/NavigationContext"
 import { useFocusContext } from "@/context/FocusContext"
 import { sendToWorkspaceAtom, type SessionMeta } from "@/atoms/sessions"
-import type { ViewConfig } from "@craft-agent/shared/views"
+import type { ViewConfig } from "@phaneris/shared/views"
 import type { SessionStatusId, SessionStatus } from "@/config/session-status-config"
 import { buildCollapsedGroupsScopeSuffix } from "@/utils/session-list-collapse"
 

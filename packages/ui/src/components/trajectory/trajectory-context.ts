@@ -1,4 +1,4 @@
-import type { Message } from '@craft-agent/core/types'
+import type { Message } from '@phaneris/core/types'
 import type { TrajectorySnapshot } from './trajectory-contract'
 
 export type TrajectoryContextCategory = 'system' | 'user' | 'assistant' | 'tools' | 'attachments' | 'injected'

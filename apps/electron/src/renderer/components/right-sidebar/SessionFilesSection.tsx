@@ -26,7 +26,7 @@ import {
   StyledContextMenuItem,
 } from '@/components/ui/styled-context-menu'
 import type { SessionFile, SessionFileScope } from '../../../shared/types'
-import { MOTION_DURATION, MOTION_EASE, motionTween } from '@craft-agent/ui/motion'
+import { MOTION_DURATION, MOTION_EASE, motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import * as storage from '@/lib/local-storage'
 import { toast } from 'sonner'

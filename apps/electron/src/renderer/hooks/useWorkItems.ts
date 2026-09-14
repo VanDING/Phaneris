@@ -3,7 +3,7 @@ import type {
   CreateWorkItemInput,
   UpdateWorkItemInput,
   WorkItem,
-} from '@craft-agent/shared/work-items/browser'
+} from '@phaneris/shared/work-items/browser'
 
 export interface UseWorkItemsResult {
   items: WorkItem[]

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
-import type { RpcServer } from '@craft-agent/server-core/transport'
+import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 
 const registeredChannels: string[] = []
@@ -111,28 +111,28 @@ async function getExpectedCoreChannels(): Promise<Set<string>> {
     transfer,
     workItems,
   ] = await Promise.all([
-    import('@craft-agent/server-core/handlers/rpc/auth'),
-    import('@craft-agent/server-core/handlers/rpc/artifacts'),
-    import('@craft-agent/server-core/handlers/rpc/automations'),
-    import('@craft-agent/server-core/handlers/rpc/calendar'),
-    import('@craft-agent/server-core/handlers/rpc/files'),
-    import('@craft-agent/server-core/handlers/rpc/labels'),
-    import('@craft-agent/server-core/handlers/rpc/llm-connections'),
-    import('@craft-agent/server-core/handlers/rpc/oauth'),
-    import('@craft-agent/server-core/handlers/rpc/pages'),
-    import('@craft-agent/server-core/handlers/rpc/projects'),
-    import('@craft-agent/server-core/handlers/rpc/sessions'),
-    import('@craft-agent/server-core/handlers/rpc/settings'),
-    import('@craft-agent/server-core/handlers/rpc/skills'),
-    import('@craft-agent/server-core/handlers/rpc/sources'),
-    import('@craft-agent/server-core/handlers/rpc/statuses'),
-    import('@craft-agent/server-core/handlers/rpc/system'),
-    import('@craft-agent/server-core/handlers/rpc/tasks'),
-    import('@craft-agent/server-core/handlers/rpc/workspace'),
-    import('@craft-agent/server-core/handlers/rpc/onboarding'),
-    import('@craft-agent/server-core/handlers/rpc/resources'),
-    import('@craft-agent/server-core/handlers/rpc/transfer'),
-    import('@craft-agent/server-core/handlers/rpc/work-items'),
+    import('@phaneris/server-core/handlers/rpc/auth'),
+    import('@phaneris/server-core/handlers/rpc/artifacts'),
+    import('@phaneris/server-core/handlers/rpc/automations'),
+    import('@phaneris/server-core/handlers/rpc/calendar'),
+    import('@phaneris/server-core/handlers/rpc/files'),
+    import('@phaneris/server-core/handlers/rpc/labels'),
+    import('@phaneris/server-core/handlers/rpc/llm-connections'),
+    import('@phaneris/server-core/handlers/rpc/oauth'),
+    import('@phaneris/server-core/handlers/rpc/pages'),
+    import('@phaneris/server-core/handlers/rpc/projects'),
+    import('@phaneris/server-core/handlers/rpc/sessions'),
+    import('@phaneris/server-core/handlers/rpc/settings'),
+    import('@phaneris/server-core/handlers/rpc/skills'),
+    import('@phaneris/server-core/handlers/rpc/sources'),
+    import('@phaneris/server-core/handlers/rpc/statuses'),
+    import('@phaneris/server-core/handlers/rpc/system'),
+    import('@phaneris/server-core/handlers/rpc/tasks'),
+    import('@phaneris/server-core/handlers/rpc/workspace'),
+    import('@phaneris/server-core/handlers/rpc/onboarding'),
+    import('@phaneris/server-core/handlers/rpc/resources'),
+    import('@phaneris/server-core/handlers/rpc/transfer'),
+    import('@phaneris/server-core/handlers/rpc/work-items'),
   ])
 
   return new Set([

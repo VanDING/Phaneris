@@ -24,7 +24,7 @@ export type {
   GoogleService,
   SlackService,
   MicrosoftService,
-} from '@craft-agent/session-tools-core';
+} from '@phaneris/session-tools-core';
 
 // Re-export browser pane types for session manager wiring
 export type { BrowserPaneFns } from './browser-tools.ts';

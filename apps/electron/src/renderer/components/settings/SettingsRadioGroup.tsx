@@ -8,7 +8,7 @@
 import * as React from 'react'
 import { useRadioGroupNavigation } from '@/components/ui/radio-group-navigation'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
-import { motionTween } from '@craft-agent/ui/motion'
+import { motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import { settingsUI } from './SettingsUIConstants'
 

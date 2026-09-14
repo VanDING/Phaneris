@@ -17,15 +17,15 @@ import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { ChevronRight, ChevronDown, FilePlus, Files, PencilLine, GitCompareArrows, ChevronsUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { usePlatform, UnifiedDiffViewer, type FileChange } from '@craft-agent/ui'
+import { usePlatform, UnifiedDiffViewer, type FileChange } from '@phaneris/ui'
 import { ShikiDiffViewer } from '@/components/shiki/ShikiDiffViewer'
 import { useTheme } from '@/hooks/useTheme'
 import { PanelEmptyState } from './PanelEmptyState'
-import { computeChangeStats, createFileSections } from '@craft-agent/ui'
+import { computeChangeStats, createFileSections } from '@phaneris/ui'
 import { diffKindForSection, type DiffKind } from '@/lib/diff-kinds'
 import { useDiffViewerSettings } from '@/lib/use-diff-viewer-settings'
 import { changedFilesSelectedKeyBySessionAtom, filesPanelFocusRequestAtom, updateWorkbenchFocusAtom } from '@/atoms/content-panel-ui'
-import { motionSpring, motionTween } from '@craft-agent/ui/motion'
+import { motionSpring, motionTween } from '@phaneris/ui/motion'
 
 const KIND_DOTS: Record<DiffKind, string> = {
   add: 'bg-emerald-500',
@@ -40,7 +40,7 @@ function diffKindLabel(kind: DiffKind, t: (key: string) => string): string {
   return t(key)
 }
 
-function SectionStats({ changes }: { changes: import('@craft-agent/ui').FileChange[] }) {
+function SectionStats({ changes }: { changes: import('@phaneris/ui').FileChange[] }) {
   let additions = 0
   let deletions = 0
   for (const change of changes) {

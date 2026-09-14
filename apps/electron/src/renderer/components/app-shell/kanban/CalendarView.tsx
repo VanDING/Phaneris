@@ -38,10 +38,10 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import type { CalendarEntry } from '@craft-agent/shared/protocol'
-import { queryWorkItems, workItemDateKey, type WorkItem } from '@craft-agent/shared/work-items/browser'
+import type { CalendarEntry } from '@phaneris/shared/protocol'
+import { queryWorkItems, workItemDateKey, type WorkItem } from '@phaneris/shared/work-items/browser'
 import { KanbanProjectFilter, type KanbanProjectFilterOption } from './KanbanProjectFilter'
-import { motionSpring, motionTween } from '@craft-agent/ui/motion'
+import { motionSpring, motionTween } from '@phaneris/ui/motion'
 
 type ViewMode = 'day' | 'week' | 'month'
 

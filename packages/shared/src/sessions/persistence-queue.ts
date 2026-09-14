@@ -1,6 +1,6 @@
 import { open, rename } from 'fs/promises'
 import { createHash } from 'node:crypto'
-import { SnapshotEncoder } from '@craft-agent/core/utils'
+import { SnapshotEncoder } from '@phaneris/core/utils'
 import { dirname } from 'path'
 import type { StoredSession, SessionHeader } from './types.js'
 import { getSessionFilePath, ensureSessionsDir, ensureSessionDir } from './storage.js'

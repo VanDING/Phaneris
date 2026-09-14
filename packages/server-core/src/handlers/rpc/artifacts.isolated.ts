@@ -3,8 +3,8 @@ import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileS
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import * as XLSX from 'xlsx'
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
-import type { HandlerFn, RequestContext, RpcServer } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import type { HandlerFn, RequestContext, RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { registerArtifactHandlers } from './artifacts'
 
@@ -12,7 +12,7 @@ let workspaceRoot = ''
 let contentRoot = ''
 const workspaceFixture = { id: 'ws-artifacts', name: 'ws-artifacts', rootPath: '' }
 
-mock.module('@craft-agent/shared/config', () => ({
+mock.module('@phaneris/shared/config', () => ({
   getWorkspaceByNameOrId: (id: string) => (id === workspaceFixture.id ? workspaceFixture : null),
 
   migrateRemoteServerTokens: async () => 0,

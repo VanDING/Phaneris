@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { motionTween } from '@craft-agent/ui/motion'
+import { motionTween } from '@phaneris/ui/motion'
 import { Database, Folder, MessagesSquare, PanelLeft, Tags } from 'lucide-react'
 import { LeftSidebar } from '@/components/app-shell/LeftSidebar'
 import { SidebarProfile } from '@/components/app-shell/SidebarProfile'

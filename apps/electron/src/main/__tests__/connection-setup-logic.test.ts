@@ -5,8 +5,8 @@ import {
   validateModelList,
   validateSetupTestInput,
   BUILT_IN_CONNECTION_TEMPLATES,
-} from '@craft-agent/server-core/domain'
-import type { ModelDefinition } from '@craft-agent/shared/config/models'
+} from '@phaneris/server-core/domain'
+import type { ModelDefinition } from '@phaneris/shared/config/models'
 
 // ============================================================
 // validateModelList

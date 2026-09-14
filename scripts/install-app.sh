@@ -345,8 +345,8 @@ else
 # Craft Agent launcher - handles Linux-specific AppImage issues
 
 APPIMAGE_PATH="$HOME/.craft-agent/app/Craft-Agents-x64.AppImage"
-ELECTRON_CACHE="$HOME/.config/@craft-agent"
-ELECTRON_CACHE_ALT="$HOME/.cache/@craft-agent"
+ELECTRON_CACHE="$HOME/.config/@phaneris"
+ELECTRON_CACHE_ALT="$HOME/.cache/@phaneris"
 
 # Verify AppImage exists
 if [ ! -f "$APPIMAGE_PATH" ]; then

@@ -2,8 +2,8 @@ import { describe, expect, it, beforeEach, afterEach, mock } from 'bun:test'
 import { mkdtempSync, rmSync, readFileSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
-import type { RpcServer, HandlerFn } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import type { RpcServer, HandlerFn } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { registerWorkspaceCoreHandlers } from './workspace'
 
@@ -11,7 +11,7 @@ import { registerWorkspaceCoreHandlers } from './workspace'
 let wsRoot = ''
 const workspaceFixture = { id: 'ws-test', name: 'ws-test', rootPath: '' }
 
-mock.module('@craft-agent/shared/config', () => ({
+mock.module('@phaneris/shared/config', () => ({
   getWorkspaceByNameOrId: (id: string) => (id === 'ws-test' ? workspaceFixture : null),
   addWorkspace: () => undefined,
   setActiveWorkspace: () => undefined,

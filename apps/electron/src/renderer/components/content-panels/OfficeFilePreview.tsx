@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createViewer, officePlugin, type FileViewer } from '@open-file-viewer/core'
 import viewerStyles from '@open-file-viewer/core/style.css?inline'
-import { resolveFileFormat } from '@craft-agent/shared/artifacts/browser'
+import { resolveFileFormat } from '@phaneris/shared/artifacts/browser'
 
 const FRAME_DOCUMENT = `<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; font-src data: blob:; base-uri 'none'; form-action 'none'"><body style="margin:0;height:100vh"><div id="viewer" style="height:100%"></div></body>`
 

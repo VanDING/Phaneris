@@ -8,7 +8,7 @@
 import { describe, test, expect, afterEach } from 'bun:test'
 import { randomUUID } from 'node:crypto'
 import { WebSocket } from 'ws'
-import { EVENT_BUFFER_MAX_SIZE, MAX_MESSAGE_PAYLOAD_BYTES, type MessageEnvelope } from '@craft-agent/shared/protocol'
+import { EVENT_BUFFER_MAX_SIZE, MAX_MESSAGE_PAYLOAD_BYTES, type MessageEnvelope } from '@phaneris/shared/protocol'
 import { WsRpcServer } from '../transport/server'
 import { WsRpcClient } from '../transport/client'
 import { serializeEnvelope } from '../transport/codec'

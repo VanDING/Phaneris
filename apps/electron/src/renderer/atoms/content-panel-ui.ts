@@ -7,7 +7,7 @@
  */
 
 import { atom } from 'jotai'
-import type { WorkbenchFocus } from '@craft-agent/ui'
+import type { WorkbenchFocus } from '@phaneris/ui'
 
 export type FilesPanelView = 'explorer' | 'changed' | 'opened' | 'activity' | 'attachments'
 

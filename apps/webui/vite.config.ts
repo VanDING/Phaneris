@@ -85,7 +85,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'jotai'],
-    exclude: ['@craft-agent/ui'],
+    exclude: ['@phaneris/ui'],
   },
   server: {
     port: 5175,

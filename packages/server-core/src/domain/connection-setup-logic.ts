@@ -5,7 +5,7 @@
  * No dependency on ipcMain, sessionManager, credential manager, or file I/O.
  */
 
-import type { ModelDefinition } from '@craft-agent/shared/config/models'
+import type { ModelDefinition } from '@phaneris/shared/config/models'
 import {
   type LlmConnection,
   type LlmProviderType,
@@ -13,7 +13,7 @@ import {
   getDefaultModelsForConnection,
   getDefaultModelForConnection,
   defaultMidStreamBehavior,
-} from '@craft-agent/shared/config'
+} from '@phaneris/shared/config'
 
 // ============================================================
 // Error Parsing

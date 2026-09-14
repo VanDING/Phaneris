@@ -13,7 +13,7 @@
  * - Turn lifecycle (reset on new turn)
  */
 
-import type { AgentEvent } from '@craft-agent/core/types';
+import type { AgentEvent } from '@phaneris/core/types';
 import { parseReadCommand, type ReadCommandInfo } from './read-patterns.ts';
 import { createLogger } from '../../utils/debug.ts';
 /** MCP server name used by the pool server */

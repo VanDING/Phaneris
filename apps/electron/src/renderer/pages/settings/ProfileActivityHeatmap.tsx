@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@craft-agent/ui'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@phaneris/ui'
 import type { ProfileActivityDay } from './profile-activity'
 
 const LEVELS = ['bg-foreground/5', 'bg-accent/20', 'bg-accent/40', 'bg-accent/70', 'bg-accent'] as const

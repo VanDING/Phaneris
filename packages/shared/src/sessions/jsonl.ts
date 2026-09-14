@@ -7,7 +7,7 @@
 
 import { openSync, readSync, closeSync, readFileSync } from 'fs';
 import { createHash } from 'node:crypto';
-import { SnapshotEncoder, SnapshotDecoder, SnapshotReferenceError } from '@craft-agent/core/utils';
+import { SnapshotEncoder, SnapshotDecoder, SnapshotReferenceError } from '@phaneris/core/utils';
 import { atomicWriteFileSync } from '../utils/files.ts';
 import { open, readFile } from 'fs/promises';
 import { dirname } from 'path';

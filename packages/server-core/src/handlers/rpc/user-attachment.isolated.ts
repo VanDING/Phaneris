@@ -2,8 +2,8 @@ import { describe, expect, it, beforeEach, afterEach, mock } from 'bun:test'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
-import type { RpcServer, HandlerFn } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import type { RpcServer, HandlerFn } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { registerFilesHandlers } from './files'
 
@@ -12,7 +12,7 @@ import { registerFilesHandlers } from './files'
 let drafts: Record<string, { text: string; attachments?: Array<{ path: string; name: string }> }> = {}
 let workspaceSessionIds: string[] = []
 
-mock.module('@craft-agent/shared/config', () => ({
+mock.module('@phaneris/shared/config', () => ({
   getWorkspaceByNameOrId: () => null,
   getAllSessionDrafts: () => drafts,
 

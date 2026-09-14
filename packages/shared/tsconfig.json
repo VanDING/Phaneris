@@ -23,10 +23,10 @@
     "noPropertyAccessFromIndexSignature": false,
     "paths": {
       "*": ["./*"],
-      "@craft-agent/core": ["../core/src/index.ts"],
-      "@craft-agent/core/*": ["../core/src/*"],
-      "@craft-agent/shared": ["./src/index.ts"],
-      "@craft-agent/shared/*": ["./src/*"]
+      "@phaneris/core": ["../core/src/index.ts"],
+      "@phaneris/core/*": ["../core/src/*"],
+      "@phaneris/shared": ["./src/index.ts"],
+      "@phaneris/shared/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

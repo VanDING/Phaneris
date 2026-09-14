@@ -10,7 +10,7 @@ import {
   PAGE_DATA_PATCH_MAX_BYTES,
 } from './data-write.ts';
 import { PageDataStore, PAGE_DATA_MAX_KV_KEYS, PAGE_DATA_MAX_SERIES } from './data-store.ts';
-import type { PageDataSnapshot } from '@craft-agent/core';
+import type { PageDataSnapshot } from '@phaneris/core';
 
 // Pin dev-mode runtime resolution: this suite spawns the real Bun runtime via
 // resolveScriptRuntime and must assert dev behavior (PATH fallback allowed)

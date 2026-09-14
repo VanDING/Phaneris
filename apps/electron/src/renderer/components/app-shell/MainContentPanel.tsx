@@ -39,7 +39,7 @@ import {
 } from '@/contexts/NavigationContext'
 import { useSessionSelection, useIsMultiSelectActive, useSelectedIds, useSelectionCount } from '@/hooks/useSession'
 import { sourceSelection, skillSelection, automationSelection } from '@/hooks/useEntitySelection'
-import { extractLabelId } from '@craft-agent/shared/labels'
+import { extractLabelId } from '@phaneris/shared/labels'
 import type { SessionStatusId } from '@/config/session-status-config'
 const SourceInfoPage = React.lazy(() => import('@/pages/SourceInfoPage'))
 import ChatPage from '@/pages/ChatPage'

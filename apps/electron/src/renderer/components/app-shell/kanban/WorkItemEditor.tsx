@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ArrowLeft, ExternalLink, MessageSquarePlus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { UpdateWorkItemInput, WorkItem } from '@craft-agent/shared/work-items/browser'
+import type { UpdateWorkItemInput, WorkItem } from '@phaneris/shared/work-items/browser'
 import type { SessionStatus } from '@/config/session-status-config'
 import { cn } from '@/lib/utils'
 import { ProjectSelectMenu } from '@/components/projects/ProjectSelectMenu'

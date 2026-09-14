@@ -1,4 +1,4 @@
-import type { ActivityItem } from '@craft-agent/ui'
+import type { ActivityItem } from '@phaneris/ui'
 
 export type FileActivityOperation = 'read' | 'search' | 'edit' | 'write'
 

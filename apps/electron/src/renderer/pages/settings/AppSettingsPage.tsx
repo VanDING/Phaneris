@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button'
 import { HeaderMenu } from '@/components/ui/HeaderMenu'
 import { routes } from '@/lib/navigate'
 import * as storage from '@/lib/local-storage'
-import { DocumentFormattedMarkdownOverlay, Spinner } from '@craft-agent/ui'
+import { DocumentFormattedMarkdownOverlay, Spinner } from '@phaneris/ui'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
 import type { NetworkProxySettings } from '../../../shared/types'
 

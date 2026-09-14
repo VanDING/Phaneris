@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import type { DiffViewerSettings } from '@craft-agent/ui'
+import type { DiffViewerSettings } from '@phaneris/ui'
 
 export interface ResolvedDiffViewerSettings {
   diffStyle: 'unified' | 'split'

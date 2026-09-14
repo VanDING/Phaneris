@@ -4,11 +4,11 @@
  * Pure-logic translation of opencode's review-diff-kinds.ts classification,
  * adapted to our FileChange model: a change is `add` when it only inserts
  * lines, `del` when it only removes them, and `mix` when it does both.
- * The diff math itself reuses @craft-agent/ui's computeChangeStats (same
+ * The diff math itself reuses @phaneris/ui's computeChangeStats (same
  * numbers as MultiDiffPreviewOverlay) — no duplicated diff computation.
  */
 
-import { computeChangeStats, type FileChange, type FileSection } from '@craft-agent/ui'
+import { computeChangeStats, type FileChange, type FileSection } from '@phaneris/ui'
 
 export type DiffKind = 'add' | 'del' | 'mix'
 

@@ -99,7 +99,7 @@ GPUIX 的公开 API 100% 是 TypeScript/JSX。它通过 napi-rs 把 React 的 re
 | 树 | 导入方式 | 文件数（`.ts`/`.tsx`） | 总行数 | 非空行数 |
 |---|---|---:|---:|---:|
 | `apps/electron/src/renderer` | `@/…`（vite alias） | 619 | 120,523 | **110,430** |
-| `packages/ui/src` | `@craft-agent/ui`（+ `./motion`、`./chat`、`./markdown`…） | 204 | 35,391 | **31,753** |
+| `packages/ui/src` | `@phaneris/ui`（+ `./motion`、`./chat`、`./markdown`…） | 204 | 35,391 | **31,753** |
 | **合计 UI 面** | | **823** | **155,914** | **142,183** |
 | ─ 其中**生产代码**（剔除 `playground/` 与全部 `__tests__`） | | 656 | **122,423** | — |
 
@@ -107,7 +107,7 @@ GPUIX 的公开 API 100% 是 TypeScript/JSX。它通过 napi-rs 把 React 的 re
 
 **迁移主语应取哪个数**：**生产代码 656 文件 / 122,423 行（总行数）**，或等价的非空约 108,000 行。`playground/`（61 文件 / 21,172 行）是仅开发用的组件实验场，构建产物虽声明为入口但重写可直接丢弃；`__tests__`（106 文件 / 12,319 行）随重写一同作废。
 
-`packages/ui` **不是可选项**：renderer 在 **127 个文件**中导入它 **143 次**（`from '@craft-agent/ui'` ×103、`from '@craft-agent/ui/motion'` ×24，加子路径）。
+`packages/ui` **不是可选项**：renderer 在 **127 个文件**中导入它 **143 次**（`from '@phaneris/ui'` ×103、`from '@phaneris/ui/motion'` ×24，加子路径）。
 
 其它层：
 
@@ -173,7 +173,7 @@ GPUIX 的公开 API 100% 是 TypeScript/JSX。它通过 napi-rs 把 React 的 re
 
 1. `packages/ui/src/components/markdown/TiptapMarkdownEditor.tsx`（**405 行**）是真正的 ProseMirror/Tiptap 编辑器（导入 12 个 `@tiptap/*` 包 + KaTeX）。
 2. 它在 `markdown/index.ts` 与 `packages/ui/src/index.ts` 中**被导出**。
-3. 生产代码导入的是 barrel `@craft-agent/ui/markdown`，且只取 `Markdown` / `CodeBlock` 等具名导出——`ChatDisplay.tsx:25`、`TurnCard.tsx:30`、`SystemMessage.tsx:14`、`UserMessageBubble.tsx:19`、`InlineExecution.tsx:14`、`RecordInspector.tsx:16`、`AnnotatableMarkdownDocument.tsx:2`、`Info_Markdown.tsx:13` 等。
+3. 生产代码导入的是 barrel `@phaneris/ui/markdown`，且只取 `Markdown` / `CodeBlock` 等具名导出——`ChatDisplay.tsx:25`、`TurnCard.tsx:30`、`SystemMessage.tsx:14`、`UserMessageBubble.tsx:19`、`InlineExecution.tsx:14`、`RecordInspector.tsx:16`、`AnnotatableMarkdownDocument.tsx:2`、`Info_Markdown.tsx:13` 等。
 4. **`TiptapMarkdownEditor` 在生产代码中只有一个导入者：`playground/registry/planner.tsx:30`——仅开发用的组件实验场。**
 5. `extensions/TiptapImageBlock.tsx`（160 行）是**真正的死代码**：除自身定义外零导入者。
 6. 逐文件反向查找结果：该目录**47 个非测试文件中只有 1 个（`TiptapImageBlock.tsx`）生产零引用**；其余都能从 barrel 到达——但"到达"不等于"被使用"。
@@ -257,7 +257,7 @@ GPUIX 的公开 API 100% 是 TypeScript/JSX。它通过 napi-rs 把 React 的 re
 **建议修复（独立于任何迁移决策）**：
 
 1. 在 `packages/ui/package.json` 增加 `"sideEffects": ["**/*.css"]`（或精确列出），让打包器能安全摇树。
-2. 把 `TiptapMarkdownEditor` 从 `packages/ui/src/index.ts` 主 barrel 中移出，改为独立深路径导出（`@craft-agent/ui/tiptap-editor`），仅 playground 使用。
+2. 把 `TiptapMarkdownEditor` 从 `packages/ui/src/index.ts` 主 barrel 中移出，改为独立深路径导出（`@phaneris/ui/tiptap-editor`），仅 playground 使用。
 3. 生产构建去掉 `playground` 入口（或在 vite config 中按 `mode` 条件包含）。
 4. 复验：`bun run electron:build:renderer` 后确认主 chunk 中 `prosemirror`/`tiptap` 归零、`playground*` 不再出现在 dist。
 
@@ -753,7 +753,7 @@ shiki（经 TiptapCodeBlockView）
 | 事实 | 证据 |
 |---|---|
 | `TiptapMarkdownEditor`（405 行）在生产代码中唯一导入者 | `playground/registry/planner.tsx:30` —— **仅开发用的组件实验场** |
-| 生产代码导入的是 barrel 且只取具名导出 | `@craft-agent/ui/markdown` → `Markdown` / `CodeBlock` 等；`ChatDisplay.tsx:25`、`TurnCard.tsx:30`、`SystemMessage.tsx:14`、`UserMessageBubble.tsx:19`、`RecordInspector.tsx:16`、`Info_Markdown.tsx:13`、`AnnotatableMarkdownDocument.tsx:2` |
+| 生产代码导入的是 barrel 且只取具名导出 | `@phaneris/ui/markdown` → `Markdown` / `CodeBlock` 等；`ChatDisplay.tsx:25`、`TurnCard.tsx:30`、`SystemMessage.tsx:14`、`UserMessageBubble.tsx:19`、`RecordInspector.tsx:16`、`Info_Markdown.tsx:13`、`AnnotatableMarkdownDocument.tsx:2` |
 | 该目录**真正的死代码**只有 1 个文件 | `extensions/TiptapImageBlock.tsx`（160 行）除自身定义外零导入者 |
 
 **迁移含义**：

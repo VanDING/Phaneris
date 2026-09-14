@@ -1,5 +1,5 @@
-import type { Message } from '@craft-agent/core/types'
-import type { RuntimeEvent, ToolOutcome } from '@craft-agent/shared/durable-runtime'
+import type { Message } from '@phaneris/core/types'
+import type { RuntimeEvent, ToolOutcome } from '@phaneris/shared/durable-runtime'
 
 export interface ProjectionAuditIssue {
   kind: 'missing_legacy_message' | 'legacy_fact_missing' | 'legacy_cursor_ahead' | 'outcome_not_reflected'

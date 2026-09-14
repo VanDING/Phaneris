@@ -19,10 +19,10 @@
     "noUnusedParameters": false,
     "paths": {
       "*": ["./*"],
-      "@craft-agent/shared": ["../../packages/shared/src/index.ts"],
-      "@craft-agent/shared/*": ["../../packages/shared/src/*"],
-      "@craft-agent/server-core": ["../../packages/server-core/src/index.ts"],
-      "@craft-agent/server-core/*": ["../../packages/server-core/src/*"]
+      "@phaneris/shared": ["../../packages/shared/src/index.ts"],
+      "@phaneris/shared/*": ["../../packages/shared/src/*"],
+      "@phaneris/server-core": ["../../packages/server-core/src/index.ts"],
+      "@phaneris/server-core/*": ["../../packages/server-core/src/*"]
     }
   },
   "include": ["src/**/*", "../../packages/shared/src/**/*.d.ts"],

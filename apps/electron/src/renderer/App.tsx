@@ -1,14 +1,14 @@
-import { resolveFileFormat } from '@craft-agent/shared/artifacts/browser'
+import { resolveFileFormat } from '@phaneris/shared/artifacts/browser'
 import { FileText } from 'lucide-react'
 import { FilePreviewContent } from '@/components/content-panels/FilePreviewContent'
-import { PreviewOverlay } from '@craft-agent/ui'
+import { PreviewOverlay } from '@phaneris/ui'
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/context/ThemeContext'
 import { useSetAtom, useStore, useAtomValue, useAtom } from 'jotai'
 import type { Session, Workspace, SessionEvent, Message, FileAttachment, StoredAttachment, PermissionRequest, CredentialRequest, CredentialResponse, SetupNeeds, SessionStatus, NewChatActionParams, ContentBadge, LlmConnectionWithStatus, PermissionModeState } from '../shared/types'
 import { generateMessageId, MAX_MESSAGE_PAYLOAD_BYTES, MAX_MESSAGE_PAYLOAD_MARGIN_BYTES } from '../shared/types'
-import type { SessionDraft, DraftAttachmentRef } from '@craft-agent/shared/config'
+import type { SessionDraft, DraftAttachmentRef } from '@phaneris/shared/config'
 import type { SessionOptions, SessionOptionUpdates } from './hooks/useSessionOptions'
 import { defaultSessionOptions, mergeSessionOptions } from './hooks/useSessionOptions'
 import { useEventProcessor } from './event-processor'
@@ -19,7 +19,7 @@ import { OnboardingWizard, ReauthScreen } from '@/components/onboarding'
 import { WorkspacePicker } from '@/components/workspace'
 import { ResetConfirmationDialog } from '@/components/ResetConfirmationDialog'
 import { SplashScreen } from '@/components/SplashScreen'
-import { TooltipProvider } from '@craft-agent/ui'
+import { TooltipProvider } from '@phaneris/ui'
 import { FocusProvider } from '@/context/FocusContext'
 import { ModalProvider } from '@/context/ModalContext'
 import { DismissibleLayerProvider } from '@/context/DismissibleLayerContext'
@@ -35,8 +35,8 @@ import { stripMarkdown } from './utils/text'
 import { coerceInputText } from './lib/input-text'
 import { getSessionsToRefreshAfterStaleReconnect } from './lib/reconnect-recovery'
 import { formatSessionLoadFailure, shouldTreatSessionLoadFailureAsTransportFallback } from './lib/session-load'
-import { extractWorkspaceSlugFromPath } from '@craft-agent/shared/utils/workspace-slug'
-import { DEFAULT_THINKING_LEVEL } from '@craft-agent/shared/agent/thinking-levels'
+import { extractWorkspaceSlugFromPath } from '@phaneris/shared/utils/workspace-slug'
+import { DEFAULT_THINKING_LEVEL } from '@phaneris/shared/agent/thinking-levels'
 import { initRendererPerf, rendererPerf } from './lib/perf'
 import {
   initializeSessionsAtom,
@@ -71,7 +71,7 @@ import { getDefaultStore } from 'jotai'
 import {
   ShikiThemeProvider,
   PlatformProvider,
-} from '@craft-agent/ui'
+} from '@phaneris/ui'
 import { useLinkInterceptor, type FilePreviewState } from '@/hooks/useLinkInterceptor'
 import { useTransportConnectionState } from '@/hooks/useTransportConnectionState'
 import { useStaleSessionRecovery } from '@/hooks/useStaleSessionRecovery'
@@ -2008,7 +2008,7 @@ export default function App() {
     openNewChat,
   ])
 
-  // Platform actions for @craft-agent/ui components (overlays, etc.)
+  // Platform actions for @phaneris/ui components (overlays, etc.)
   // Memoized to prevent re-renders when these callbacks don't change
   // NOTE: Must be defined before early returns to maintain consistent hook order
   const platformActions = useMemo(() => ({

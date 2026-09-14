@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { saveSession, type StoredSession } from '@craft-agent/shared/sessions'
+import { saveSession, type StoredSession } from '@phaneris/shared/sessions'
 
 export const workspaceId = 'performance-workspace'
 export const profiles = {

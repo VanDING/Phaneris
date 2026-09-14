@@ -9,7 +9,7 @@
  */
 import { describe, it, expect, beforeEach } from 'bun:test';
 import { BaseEventAdapter } from '../backend/base-event-adapter.ts';
-import type { AgentEvent } from '@craft-agent/core/types';
+import type { AgentEvent } from '@phaneris/core/types';
 
 /**
  * Concrete test implementation of BaseEventAdapter.

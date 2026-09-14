@@ -40,7 +40,7 @@ import type { BrowserWindow } from 'electron'
 import { mainLog } from './logger'
 import type { WindowManager } from './window-manager'
 import { RPC_CHANNELS, type DeepLinkNavigation } from '../shared/types'
-import type { EventSink } from '@craft-agent/server-core/transport'
+import type { EventSink } from '@phaneris/server-core/transport'
 
 export interface DeepLinkTarget {
   /** Workspace ID - undefined means use active window */

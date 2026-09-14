@@ -1,5 +1,5 @@
 /**
- * @craft-agent/core
+ * @phaneris/core
  *
  * Core types and utilities for Craft Agent.
  *

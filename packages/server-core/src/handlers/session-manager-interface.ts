@@ -6,11 +6,11 @@
  * satisfy it at runtime.
  */
 
-import type { Workspace, WorkspaceInfo, ActiveSessionInfo } from '@craft-agent/core/types'
-import type { StoredAttachment, AnnotationV1 } from '@craft-agent/core/types'
-import type { PermissionMode } from '@craft-agent/shared/agent/mode-types'
-import type { ThinkingLevel } from '@craft-agent/shared/agent/thinking-levels'
-import type { AuthResult } from '@craft-agent/shared/agent'
+import type { Workspace, WorkspaceInfo, ActiveSessionInfo } from '@phaneris/core/types'
+import type { StoredAttachment, AnnotationV1 } from '@phaneris/core/types'
+import type { PermissionMode } from '@phaneris/shared/agent/mode-types'
+import type { ThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
+import type { AuthResult } from '@phaneris/shared/agent'
 import type {
   Session,
   SessionStatus,
@@ -22,8 +22,8 @@ import type {
   PermissionModeState,
   UnreadSummary,
   ShareResult,
-} from '@craft-agent/shared/protocol'
-import type { SessionBundle, DispatchMode } from '@craft-agent/shared/sessions'
+} from '@phaneris/shared/protocol'
+import type { SessionBundle, DispatchMode } from '@phaneris/shared/sessions'
 import type { EventSink } from '../transport'
 
 export interface ISessionManager {
@@ -46,27 +46,27 @@ export interface ISessionManager {
   getRecoveryEvidence(
     sessionId: string,
     toolOperationId: string,
-  ): import('@craft-agent/shared/durable-runtime').DurableRecoveryEvidenceSnapshot | null
+  ): import('@phaneris/shared/durable-runtime').DurableRecoveryEvidenceSnapshot | null
   reconcileTool(
-    request: import('@craft-agent/shared/durable-runtime').ToolReconciliationRequest,
-  ): import('@craft-agent/shared/durable-runtime').ToolReconciliationResult
+    request: import('@phaneris/shared/durable-runtime').ToolReconciliationRequest,
+  ): import('@phaneris/shared/durable-runtime').ToolReconciliationResult
   queryAndReconcileTool(
     sessionId: string,
     toolOperationId: string,
-    actor: import('@craft-agent/shared/durable-runtime').ToolReconciliationRequest['actor'],
-  ): Promise<import('@craft-agent/shared/durable-runtime').ToolReconciliationResult>
+    actor: import('@phaneris/shared/durable-runtime').ToolReconciliationRequest['actor'],
+  ): Promise<import('@phaneris/shared/durable-runtime').ToolReconciliationResult>
   reconcileModel(
-    request: import('@craft-agent/shared/durable-runtime').ModelReconciliationRequest,
-  ): import('@craft-agent/shared/durable-runtime').ModelReconciliationResult
+    request: import('@phaneris/shared/durable-runtime').ModelReconciliationRequest,
+  ): import('@phaneris/shared/durable-runtime').ModelReconciliationResult
   commitTaskRunFact(input: {
     workspaceRoot: string
     sessionId: string
     taskSlug: string
     runId: string
     ordinal: number
-    entry: import('@craft-agent/shared/tasks').RunLogEntry
+    entry: import('@phaneris/shared/tasks').RunLogEntry
   }): void
-  listTaskRunFacts(workspaceRoot: string, taskSlug: string, runId: string): import('@craft-agent/shared/tasks').RunLogEntry[]
+  listTaskRunFacts(workspaceRoot: string, taskSlug: string, runId: string): import('@phaneris/shared/tasks').RunLogEntry[]
   /** Creates a session and (unless `internal.emitCreatedEvent === false`) announces it to the
    *  renderer so it hydrates full metadata instead of fabricating a "New Chat" placeholder. */
   createSession(
@@ -228,7 +228,7 @@ export interface ISessionManager {
   exportRemoteSessionTransfer(
     sessionId: string,
     workspaceId: string,
-  ): Promise<import('@craft-agent/shared/protocol').RemoteSessionTransferPayload | null>
+  ): Promise<import('@phaneris/shared/protocol').RemoteSessionTransferPayload | null>
 
   /**
    * Import a session bundle into a target workspace.
@@ -246,8 +246,8 @@ export interface ISessionManager {
    */
   importRemoteSessionTransfer(
     workspaceId: string,
-    payload: import('@craft-agent/shared/protocol').RemoteSessionTransferPayload,
-  ): Promise<import('@craft-agent/shared/protocol').ImportRemoteSessionTransferResult>
+    payload: import('@phaneris/shared/protocol').RemoteSessionTransferPayload,
+  ): Promise<import('@phaneris/shared/protocol').ImportRemoteSessionTransferResult>
 
   // ---------------------------------------------------------------------------
   // Utilities

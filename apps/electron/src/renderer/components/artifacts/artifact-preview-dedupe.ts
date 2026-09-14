@@ -1,4 +1,4 @@
-import type { ArtifactEventSnapshot, ResolvedArtifact } from '@craft-agent/shared/artifacts/browser'
+import type { ArtifactEventSnapshot, ResolvedArtifact } from '@phaneris/shared/artifacts/browser'
 
 const PREVIEW_FENCE = /```(image-preview|pdf-preview|html-preview|markdown-preview)[^\S\r\n]*\r?\n([\s\S]*?)```/g
 

@@ -26,7 +26,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'motion/react'
-import { MOTION_DURATION, MOTION_EASE } from '@craft-agent/ui/motion'
+import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
 import {
   Archive,
   ArchiveRestore,
@@ -65,7 +65,7 @@ import {
   createLabelMenuItems,
   type LabelMenuItem,
 } from '@/components/ui/label-menu-utils'
-import type { LabelConfig } from '@craft-agent/shared/labels'
+import type { LabelConfig } from '@phaneris/shared/labels'
 import {
   getStateColor,
   getStateIcon,

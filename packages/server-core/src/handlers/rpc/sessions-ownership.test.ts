@@ -8,7 +8,7 @@
  */
 
 import { describe, expect, it } from 'bun:test'
-import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
+import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import type { HandlerFn, RequestContext, RpcServer } from '../../transport/types'
 import type { ISessionManager } from '../session-manager-interface'
 import type { PlatformServices } from '../../runtime/platform'

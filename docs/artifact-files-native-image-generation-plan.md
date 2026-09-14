@@ -74,7 +74,7 @@ Agent tool request
 - validation family；
 - 是否可作为安全 UTF-8 文本读取。
 
-注册表必须可被主进程、renderer 和 `@craft-agent/ui` 共同使用，不能依赖 Node API。
+注册表必须可被主进程、renderer 和 `@phaneris/ui` 共同使用，不能依赖 Node API。
 未知扩展统一得到：
 
 - `kind=file`；

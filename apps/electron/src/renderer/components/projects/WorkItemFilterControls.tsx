@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Filter } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { WorkItemScheduledFilter } from '@craft-agent/shared/work-items/browser'
+import type { WorkItemScheduledFilter } from '@phaneris/shared/work-items/browser'
 import type { SessionStatus } from '@/config/session-status-config'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'

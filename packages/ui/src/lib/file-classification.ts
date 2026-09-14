@@ -9,7 +9,7 @@
 import {
   registeredFileExtensions,
   resolveFileFormat,
-} from '@craft-agent/shared/artifacts/browser'
+} from '@phaneris/shared/artifacts/browser'
 
 /** Preview types that map to specific overlay components */
 export type FilePreviewType = 'image' | 'code' | 'markdown' | 'json' | 'text' | 'pdf'

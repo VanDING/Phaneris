@@ -1,5 +1,5 @@
-import { parseArtifactEvent, type ArtifactEventSnapshot } from '@craft-agent/shared/artifacts/browser'
-import type { ActivityItem } from '@craft-agent/ui'
+import { parseArtifactEvent, type ArtifactEventSnapshot } from '@phaneris/shared/artifacts/browser'
+import type { ActivityItem } from '@phaneris/ui'
 
 /** Extract structured Artifact events from canonical tool results, never Bash prose. */
 export function artifactEventsForTurn(activities: readonly ActivityItem[]): ArtifactEventSnapshot[] {

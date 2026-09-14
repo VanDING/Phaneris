@@ -2,8 +2,8 @@
  * Server DTO types — data shapes used by RPC handlers and SessionManager.
  *
  * These were previously in apps/electron/src/shared/types.ts.
- * Extracted here so handler code in @craft-agent/server-core can import
- * from @craft-agent/shared/protocol without reaching into the app.
+ * Extracted here so handler code in @phaneris/server-core can import
+ * from @phaneris/shared/protocol without reaching into the app.
  */
 
 import type {
@@ -16,7 +16,7 @@ import type {
   PiUsage,
   AssistantMetrics,
   TrajectorySourceBlock,
-} from '@craft-agent/core/types'
+} from '@phaneris/core/types'
 import type { PermissionMode } from '../agent/mode-types'
 import type { ThinkingLevel } from '../agent/thinking-levels'
 import type { CustomEndpointConfig, LlmProviderType } from '../config/llm-connections'
@@ -27,7 +27,7 @@ import type {
 } from '../agent/index'
 
 // Re-export generateMessageId for handler convenience
-export { generateMessageId } from '@craft-agent/core/types'
+export { generateMessageId } from '@phaneris/core/types'
 
 // ---------------------------------------------------------------------------
 // Session types
@@ -287,7 +287,7 @@ export interface TaskGenerateResult {
   orchestratorSessionId: string
   /** Slug of the authored spec; empty when generation produced an invalid spec. */
   slug: string
-  /** Parsed TaskSpec when valid (consumers cast to TaskSpec from @craft-agent/shared/tasks). */
+  /** Parsed TaskSpec when valid (consumers cast to TaskSpec from @phaneris/shared/tasks). */
   spec?: unknown
   /** The raw task.yaml the orchestrator produced — shown and editable in the editor. */
   yaml: string
@@ -326,7 +326,7 @@ export interface TaskRunSnapshotDto {
 export interface TaskGetResult {
   slug: string
   validation: TaskValidationResultDto
-  /** The parsed TaskSpec (from @craft-agent/shared/tasks) when valid; consumers cast. */
+  /** The parsed TaskSpec (from @phaneris/shared/tasks) when valid; consumers cast. */
   spec?: unknown
   /** Active run snapshot when a runId was supplied and known; otherwise null. */
   run?: TaskRunSnapshotDto | null
@@ -387,7 +387,7 @@ export type SessionEvent =
   | { type: 'retry'; sessionId: string; phase: 'backoff'; message: string }
   | { type: 'retry'; sessionId: string; phase: 'active' | 'end' }
   | { type: 'text_delta'; sessionId: string; delta: string; turnId?: string }
-  | { type: 'text_complete'; sessionId: string; text: string; isIntermediate?: boolean; turnId?: string; parentToolUseId?: string; timestamp?: number; messageId?: string; usage?: PiUsage; requestSeq?: number; promptSnapshot?: string; contextSnapshot?: import('@craft-agent/core/types').RequestContextSnapshot; assistantMetrics?: AssistantMetrics; outputBlocks?: TrajectorySourceBlock[]; durableOperationId?: string; durableSeq?: number }
+  | { type: 'text_complete'; sessionId: string; text: string; isIntermediate?: boolean; turnId?: string; parentToolUseId?: string; timestamp?: number; messageId?: string; usage?: PiUsage; requestSeq?: number; promptSnapshot?: string; contextSnapshot?: import('@phaneris/core/types').RequestContextSnapshot; assistantMetrics?: AssistantMetrics; outputBlocks?: TrajectorySourceBlock[]; durableOperationId?: string; durableSeq?: number }
   | { type: 'tool_start'; sessionId: string; toolName: string; toolUseId: string; toolInput: Record<string, unknown>; toolIntent?: string; toolDisplayName?: string; toolDisplayMeta?: ToolDisplayMeta; turnId?: string; parentToolUseId?: string; timestamp?: number; durableOperationId?: string; durableSeq?: number }
   | { type: 'tool_result'; sessionId: string; toolUseId: string; toolName: string; result: string; turnId?: string; parentToolUseId?: string; isError?: boolean; timestamp?: number; durationMs?: number; durableOperationId?: string; durableSeq?: number }
   | { type: 'error'; sessionId: string; error: string; timestamp?: number }

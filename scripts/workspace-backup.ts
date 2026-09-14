@@ -13,7 +13,7 @@ import {
   createWorkspaceBackup,
   verifyWorkspaceBackup,
   restoreWorkspaceBackup,
-} from '@craft-agent/server-core/services';
+} from '@phaneris/server-core/services';
 
 function arg(name: string): string | undefined {
   const prefix = `--${name}=`;

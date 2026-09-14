@@ -1,6 +1,6 @@
-import type { Message } from '@craft-agent/core/types'
-import { SnapshotDecoder } from '@craft-agent/core/utils'
-import { CodedError, RPC_CHANNELS, SESSION_READ_CHUNK_BYTES, SESSION_READ_MAX_BYTES, type Session, type SessionReadChunk } from '@craft-agent/shared/protocol'
+import type { Message } from '@phaneris/core/types'
+import { SnapshotDecoder } from '@phaneris/core/utils'
+import { CodedError, RPC_CHANNELS, SESSION_READ_CHUNK_BYTES, SESSION_READ_MAX_BYTES, type Session, type SessionReadChunk } from '@phaneris/shared/protocol'
 import type { RpcClient } from './types'
 
 /** Pull bounded chunks, then publish one complete session to existing Chat/Run consumers. */

@@ -42,7 +42,7 @@ const OVERLAY_SELECTORS = [
   // Content-area expansion owns Escape before the background chat interrupt.
   '[data-workbench-full-width="true"]',
 
-  // Dialog-mode islands (from @craft-agent/ui Island primitive)
+  // Dialog-mode islands (from @phaneris/ui Island primitive)
   '[data-ca-island-dialog="true"][data-state="open"]',
 ]
 

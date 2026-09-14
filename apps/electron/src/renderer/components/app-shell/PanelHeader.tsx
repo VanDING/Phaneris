@@ -30,7 +30,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { motionSpring, motionTween } from '@craft-agent/ui/motion'
+import { motionSpring, motionTween } from '@phaneris/ui/motion'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useCompensateForStoplight } from '@/context/StoplightContext'

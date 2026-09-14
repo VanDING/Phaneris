@@ -19,7 +19,7 @@
 
 import * as React from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { motionSpring } from '@craft-agent/ui/motion'
+import { motionSpring } from '@phaneris/ui/motion'
 
 
 export type CompactPanelRole = 'navigator' | 'detail'

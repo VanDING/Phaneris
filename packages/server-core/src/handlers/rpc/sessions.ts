@@ -1,19 +1,19 @@
 import { readFile, writeFile, stat } from 'fs/promises'
 import { join } from 'path'
-import { RPC_CHANNELS, type FileAttachment, type SendMessageOptions, type SessionEvent, type SessionFileScope } from '@craft-agent/shared/protocol'
-import { validateSessionId } from '@craft-agent/shared/sessions'
-import type { StoredAttachment } from '@craft-agent/core/types'
-import { getWorkspaceByNameOrId } from '@craft-agent/shared/config'
-import { perf } from '@craft-agent/shared/utils'
-import { isValidThinkingLevel, THINKING_LEVEL_IDS } from '@craft-agent/shared/agent/thinking-levels'
+import { RPC_CHANNELS, type FileAttachment, type SendMessageOptions, type SessionEvent, type SessionFileScope } from '@phaneris/shared/protocol'
+import { validateSessionId } from '@phaneris/shared/sessions'
+import type { StoredAttachment } from '@phaneris/core/types'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { perf } from '@phaneris/shared/utils'
+import { isValidThinkingLevel, THINKING_LEVEL_IDS } from '@phaneris/shared/agent/thinking-levels'
 
 const VALID_THINKING_LEVELS_LIST = THINKING_LEVEL_IDS.map(id => `'${id}'`).join(', ')
-import { pushTyped, type RequestContext, type RpcServer } from '@craft-agent/server-core/transport'
+import { pushTyped, type RequestContext, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import type { ISessionManager } from '../session-manager-interface'
 import { setTransferableHandler } from './transfer'
 import { SessionReadStore } from './session-read-store'
-import type { SessionReadCursor } from '@craft-agent/shared/protocol'
+import type { SessionReadCursor } from '@phaneris/shared/protocol'
 
 const sessionReads = new SessionReadStore()
 
@@ -82,10 +82,10 @@ const WORKING_DIRECTORY_SKIP_NAMES = new Set([
 async function scanSessionDirectory(
   dirPath: string,
   scope: SessionFileScope = 'session',
-): Promise<import('@craft-agent/shared/protocol').SessionFile[]> {
+): Promise<import('@phaneris/shared/protocol').SessionFile[]> {
   const { readdir, stat } = await import('fs/promises')
   const entries = await readdir(dirPath, { withFileTypes: true })
-  const files: import('@craft-agent/shared/protocol').SessionFile[] = []
+  const files: import('@phaneris/shared/protocol').SessionFile[] = []
 
   for (const entry of entries) {
     // Skip internal and hidden files
@@ -280,7 +280,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   server.handle(RPC_CHANNELS.sessions.RECONCILE_TOOL, async (
     ctx,
     sessionId: string,
-    request: Omit<import('@craft-agent/shared/durable-runtime').ToolReconciliationRequest, 'sessionId' | 'actor'>,
+    request: Omit<import('@phaneris/shared/durable-runtime').ToolReconciliationRequest, 'sessionId' | 'actor'>,
   ) => {
     assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
     return sessionManager.reconcileTool({
@@ -308,7 +308,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   server.handle(RPC_CHANNELS.sessions.RECONCILE_MODEL, async (
     ctx,
     sessionId: string,
-    request: Omit<import('@craft-agent/shared/durable-runtime').ModelReconciliationRequest, 'sessionId' | 'actor'>,
+    request: Omit<import('@phaneris/shared/durable-runtime').ModelReconciliationRequest, 'sessionId' | 'actor'>,
   ) => {
     assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
     return sessionManager.reconcileModel({
@@ -319,7 +319,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   })
 
   // Create a new session
-  server.handle(RPC_CHANNELS.sessions.CREATE, async (_ctx, workspaceId: string, options?: import('@craft-agent/shared/protocol').CreateSessionOptions) => {
+  server.handle(RPC_CHANNELS.sessions.CREATE, async (_ctx, workspaceId: string, options?: import('@phaneris/shared/protocol').CreateSessionOptions) => {
     const end = perf.start('rpc.createSession', { workspaceId })
     // The renderer adds the session synchronously from this return value (App.tsx handleCreateSession),
     // so suppress the broadcast to avoid a redundant hydrate round-trip.
@@ -426,7 +426,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
 
   // Respond to a credential request (secure auth input)
   // Returns true if the response was delivered, false if agent/session is gone
-  server.handle(RPC_CHANNELS.sessions.RESPOND_TO_CREDENTIAL, async (ctx, sessionId: string, requestId: string, response: import('@craft-agent/shared/protocol').CredentialResponse) => {
+  server.handle(RPC_CHANNELS.sessions.RESPOND_TO_CREDENTIAL, async (ctx, sessionId: string, requestId: string, response: import('@phaneris/shared/protocol').CredentialResponse) => {
     assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
     return sessionManager.respondToCredential(sessionId, requestId, response)
   })
@@ -439,7 +439,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   server.handle(RPC_CHANNELS.sessions.COMMAND, async (
     ctx,
     sessionId: string,
-    command: import('@craft-agent/shared/protocol').SessionCommand
+    command: import('@phaneris/shared/protocol').SessionCommand
   ) => {
     assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
     switch (command.type) {
@@ -560,8 +560,8 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
       return []
     }
 
-    const { searchSessions } = await import('@craft-agent/server-core/services')
-    const { getWorkspaceSessionsPath } = await import('@craft-agent/shared/workspaces')
+    const { searchSessions } = await import('@phaneris/server-core/services')
+    const { getWorkspaceSessionsPath } = await import('@phaneris/shared/workspaces')
 
     const sessionsDir = getWorkspaceSessionsPath(workspace.rootPath)
     log.debug(`SEARCH_SESSIONS: Searching "${query}" in ${sessionsDir}`)
@@ -742,7 +742,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
     if (!targetWorkspaceId || typeof targetWorkspaceId !== 'string') throw new Error('targetWorkspaceId is required')
     if (mode !== 'move' && mode !== 'fork') throw new Error(`Invalid dispatch mode: ${mode}`)
 
-    return sessionManager.importSession(targetWorkspaceId, bundle as import('@craft-agent/shared/sessions').SessionBundle, mode)
+    return sessionManager.importSession(targetWorkspaceId, bundle as import('@phaneris/shared/sessions').SessionBundle, mode)
   }
   server.handle(RPC_CHANNELS.sessions.IMPORT, importHandler)
   // Also register as transferable so chunked transfer can invoke it on commit
@@ -761,7 +761,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   })
 
   // Import a summarized remote-transfer payload into a target workspace.
-  server.handle(RPC_CHANNELS.sessions.IMPORT_REMOTE_TRANSFER, async (_ctx, targetWorkspaceId: string, payload: import('@craft-agent/shared/protocol').RemoteSessionTransferPayload) => {
+  server.handle(RPC_CHANNELS.sessions.IMPORT_REMOTE_TRANSFER, async (_ctx, targetWorkspaceId: string, payload: import('@phaneris/shared/protocol').RemoteSessionTransferPayload) => {
     await sessionManager.waitForInit()
     if (!targetWorkspaceId || typeof targetWorkspaceId !== 'string') throw new Error('targetWorkspaceId is required')
     return sessionManager.importRemoteSessionTransfer(targetWorkspaceId, payload)

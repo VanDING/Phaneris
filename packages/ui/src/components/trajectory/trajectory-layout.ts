@@ -4,7 +4,7 @@
  * over the Craft contribution model.
  */
 
-import type { AssistantMetrics, Message, PiUsage, TrajectorySourceBlock } from '@craft-agent/core/types'
+import type { AssistantMetrics, Message, PiUsage, TrajectorySourceBlock } from '@phaneris/core/types'
 import type { TrajectoryContribution, TrajectorySnapshot } from './trajectory-contract'
 
 /** Closed set of trajectory record kinds (DSH-aligned). */

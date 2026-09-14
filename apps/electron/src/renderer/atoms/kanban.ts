@@ -14,7 +14,7 @@
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import type { KanbanColumnId, TaskEditorTarget } from '@/components/app-shell/kanban/types'
-import type { WorkItemQuery } from '@craft-agent/shared/work-items/browser'
+import type { WorkItemQuery } from '@phaneris/shared/work-items/browser'
 
 /** Selected project ids to filter the board by. Empty array = all projects. */
 export const kanbanProjectFilterAtom = atom<string[]>([])
