@@ -104,6 +104,8 @@ Craft Agents (RE) 已经不是功能型原型，而是一个具有明确差异�
 
 **优先级：P0，公开发布阻断项**
 
+> 2026-09-14 更新：本项的名称决策已完成——独立产品名定为 **Phaneris**，实施路径见[Phaneris 独立分叉实施方案](architecture/phaneris-fork-plan.md)。本节其余判断（发布信任链未独立、不得在归属明确前公开分发）仍然有效。
+
 仓库自带的商标政策要求 fork：使用不同名称、替换 Craft 品牌、更改 bundle identifier，并移除不必要的 `craft.do` 引用。当前打包配置仍然使用：
 
 - `Craft Agents` 产品名；

@@ -28,6 +28,7 @@ This index separates current product and architecture documentation from histori
 
 | Document | Status | Purpose |
 | --- | --- | --- |
+| [Phaneris fork independence plan](architecture/phaneris-fork-plan.md) | Proposed; implementation not started | Naming decision and rationale, frozen identity list, and the phased work required to make the fork independent in brand, OS application identity, data, and release chain. |
 | [Release readiness checklist](release-readiness.md) | Proposed release gate | Identity, recovery, signing, checksum, SBOM, and privacy items required before public binaries. |
 | [Project assessment and development roadmap](project-assessment-and-roadmap-2026-08-31.md) | Proposed; implementation not started | Point-in-time assessment of product, architecture, quality, release, security, and governance, followed by a phased convergence and development roadmap. |
 | [Impact-first performance optimization plan](performance-optimization-plan-2026-09-01.md) | Implemented baseline; follow-up items tracked in the 2026-09-10 implementation note | Lean plan that fixes the highest-impact renderer startup and long-session streaming costs first, then stops or continues according to measured user impact. |
