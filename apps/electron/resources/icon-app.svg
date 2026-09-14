@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+<rect x="0" y="0" width="1000" height="1000" rx="225" ry="225" fill="#FFFFFF"/>
+<g transform="translate(140,140) scale(0.72)">
 <defs>
   <linearGradient id="gTopL" x1="0" y1="1" x2="1" y2="0">
     <stop offset="0%" stop-color="#2A0E92"/>
@@ -27,4 +29,5 @@
 <polygon points="500,90 760,235 610,320 500,270" fill="url(#gTopR)"/>
 <polygon points="610,320 760,235 760,510 610,595" fill="url(#gRight)"/>
 <polygon points="380,555 610,425 610,595 380,725" fill="url(#gInner)"/>
+</g>
 </svg>

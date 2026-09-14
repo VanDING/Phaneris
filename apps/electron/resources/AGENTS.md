@@ -32,15 +32,25 @@ These files are used by electron-builder or the app directly, not synced to user
 
 | File | Purpose |
 |------|---------|
-| `icon.*` | App icons (icns, ico, png, svg) |
-| `Assets.car` | macOS compiled asset catalog |
+| `icon.svg` | **Artwork source of truth** — the transparent Phaneris mark (1000x1000). Edit this, then regenerate. |
+| `icon-app.svg` | Generated: square full-bleed app icon (white rounded square + mark). |
+| `icon.png` / `icon.ico` / `icon.icns` | Generated platform icons (Linux/Windows/macOS). |
+| `icon.icon/` | Generated macOS 26+ Liquid Glass asset catalog input. |
+| `Assets.car` | macOS compiled asset catalog (compiled with `actool` on macOS, committed). |
 | `dmg-background.*` | DMG installer background |
-| `craft-logos/` | Branding assets |
+| `phaneris-logos/` | Generated brand raster assets (app icon light/dark, mark black/white). |
 | `source.png` | Default source icon |
-| `generate-icons.sh` | Icon generation script |
+| `generate-icons.sh` | Legacy macOS-only icon script (`sips`/`iconutil`). Superseded — see below. |
 | `bridge-mcp-server/` | Bundled MCP server for Codex/Copilot API source bridge |
 | `pi-agent-server/` | Bundled Pi agent server for Pi SDK sessions (#5b in build-win.ps1) |
 | `themes/default.json` | Immutable built-in Default theme; never copied into the user-owned themes directory |
+
+## Icon generation
+
+`bun run scripts/generate-icons.ts` (repo root) regenerates every icon artifact
+above from `icon.svg`. It is cross-platform, needs no network and no dependency
+beyond the already-installed `sharp`. Never hand-edit a generated icon file, and
+never substitute a web-only image for a platform icon asset.
 
 ## Single Source of Truth
 

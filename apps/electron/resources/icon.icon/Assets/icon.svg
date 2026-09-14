@@ -1,12 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>favicon</title>
-    <defs>
-        <path d="M0,0 L24,0 L24,24 L0,24 L0,0 Z" id="path-1"></path>
-    </defs>
-    <g id="favicon" stroke="none" fill="none" xlink:href="#path-1" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(3.4502, 3)" fill="#9570BE">
-            <path d="M3.17890888,3.6 L3.17890888,0 L16,0 L16,3.6 L3.17890888,3.6 Z M9.642,7.2 L9.64218223,10.8 L0,10.8 L0,3.6 L16,3.6 L16,7.2 L9.642,7.2 Z M3.17890888,18 L3.178,14.4 L0,14.4 L0,10.8 L16,10.8 L16,18 L3.17890888,18 Z" id="Combined-Shape" fill-rule="nonzero"></path>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+<defs>
+  <linearGradient id="gTopL" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0%" stop-color="#2A0E92"/>
+    <stop offset="55%" stop-color="#5420F3"/>
+    <stop offset="100%" stop-color="#8F63FF"/>
+  </linearGradient>
+  <linearGradient id="gStem" x1="0" y1="0" x2="0.8" y2="1">
+    <stop offset="0%" stop-color="#1E0B68"/>
+    <stop offset="100%" stop-color="#6C2DFF"/>
+  </linearGradient>
+  <linearGradient id="gTopR" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#8E57FF"/>
+    <stop offset="100%" stop-color="#D4BCFF"/>
+  </linearGradient>
+  <linearGradient id="gRight" x1="0" y1="0" x2="0.4" y2="1">
+    <stop offset="0%" stop-color="#5A22EE"/>
+    <stop offset="100%" stop-color="#9D6BFF"/>
+  </linearGradient>
+  <linearGradient id="gInner" x1="0" y1="0.2" x2="1" y2="0.8">
+    <stop offset="0%" stop-color="#4B16E8"/>
+    <stop offset="100%" stop-color="#B58BFF"/>
+  </linearGradient>
+</defs>
+<polygon points="180,270 500,90 500,270 330,365" fill="url(#gTopL)"/>
+<polygon points="180,270 330,365 330,790 180,875" fill="url(#gStem)"/>
+<polygon points="500,90 760,235 610,320 500,270" fill="url(#gTopR)"/>
+<polygon points="610,320 760,235 760,510 610,595" fill="url(#gRight)"/>
+<polygon points="380,555 610,425 610,595 380,725" fill="url(#gInner)"/>
 </svg>
