@@ -57,7 +57,7 @@ describe('wechat workspace state isolation (M-6)', () => {
   })
 
   it('creates the missing parent state root 0700 first (fresh-machine ENOENT regression)', () => {
-    // Simulate a machine where ~/.craft-agent/wechat has never been created:
+    // Simulate a machine where ~/.phaneris/wechat has never been created:
     // the parent of the workspace dir is absent entirely.
     const missingRoot = join(tmpdir(), `wechat-missing-${Math.random().toString(36).slice(2)}`)
     setStateDir(missingRoot)

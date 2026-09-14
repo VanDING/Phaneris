@@ -2,8 +2,8 @@
 // See ../LICENSE and ../README.md (paths relative to ilink/) for license text and local adaptations.
 
 import { existsSync, mkdirSync } from 'node:fs';
-import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
+import { CONFIG_DIR } from '@phaneris/shared/config/paths';
 
 let _stateDirOverride: string | undefined;
 
@@ -21,13 +21,13 @@ export function setStateDir(dir: string | undefined): void {
  * Priority:
  * 1. Override set via {@link setStateDir}
  * 2. `$PHANERIS_WECHAT_STATE_DIR` environment variable
- * 3. `$HOME/.craft-agent/wechat`
+ * 3. `<config-dir>/wechat` (see `@phaneris/shared/config/paths`)
  */
 export function resolveStateDir(): string {
   return (
     _stateDirOverride
     ?? process.env.PHANERIS_WECHAT_STATE_DIR
-    ?? join(homedir(), '.craft-agent', 'wechat')
+    ?? join(CONFIG_DIR, 'wechat')
   );
 }
 

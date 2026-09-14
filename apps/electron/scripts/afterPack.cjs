@@ -19,10 +19,19 @@ const path = require('path');
 const fs = require('fs');
 
 module.exports = async function afterPack(context) {
+  // The packaged .app bundle is named after the product name, which comes from
+  // phaneris.identity.json via identity.generated.yml. Ask electron-builder for
+  // it rather than hardcoding it: a literal here silently stops matching the
+  // moment the packaged name changes, and the Liquid Glass icon is then skipped
+  // without failing the build.
+  const productFilename = context.packager?.appInfo?.productFilename;
+
   if (context.electronPlatformName !== 'win32') {
     const prebuilds = path.join(
       context.appOutDir,
-      ...(context.electronPlatformName === 'darwin' ? ['Craft Agents.app', 'Contents', 'Resources'] : ['resources']),
+      ...(context.electronPlatformName === 'darwin'
+        ? [`${productFilename}.app`, 'Contents', 'Resources']
+        : ['resources']),
       'app', 'node_modules', 'node-pty', 'prebuilds',
     );
     if (fs.existsSync(prebuilds)) {
@@ -39,11 +48,17 @@ module.exports = async function afterPack(context) {
     return;
   }
 
+  if (!productFilename) {
+    console.log('Warning: could not determine the packaged app bundle name; skipping Liquid Glass icon');
+    return;
+  }
+
   const appPath = context.appOutDir;
-  const resourcesDir = path.join(appPath, 'Craft Agents.app', 'Contents', 'Resources');
+  const resourcesDir = path.join(appPath, `${productFilename}.app`, 'Contents', 'Resources');
   const precompiledAssets = path.join(context.packager.projectDir, 'resources', 'Assets.car');
 
   console.log(`afterPack: projectDir=${context.packager.projectDir}`);
+  console.log(`afterPack: app bundle=${productFilename}.app`);
   console.log(`afterPack: looking for Assets.car at ${precompiledAssets}`);
 
   // Check if pre-compiled Assets.car exists

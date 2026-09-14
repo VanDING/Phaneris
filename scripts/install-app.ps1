@@ -1,12 +1,21 @@
-# Craft Agents Windows Installer
-# Usage: irm https://thecraftagents.com/install-app.ps1 | iex
+# Phaneris Windows Installer
+# Usage: set PHANERIS_RELEASE_BASE_URL to your own release feed base URL, then run this script.
+# There is no hosted install endpoint yet (fork plan phase D); the script refuses to
+# run without an explicit base URL so it can never install the upstream build.
 
 & {
 $ErrorActionPreference = "Stop"
 
-$VERSIONS_URL = "https://thecraftagents.com/electron"
-$DOWNLOAD_DIR = "$env:TEMP\craft-agent-install"
-$APP_NAME = "Craft Agents"
+# Fail closed: there is no Phaneris-hosted release feed yet, and silently falling
+# back to the upstream service would install a different product under this
+# installer's name. The base URL must point at a feed this project controls and
+# use the electron-updater generic layout (<base>/<channel>/latest.yml).
+$VERSIONS_URL = $env:PHANERIS_RELEASE_BASE_URL
+if (-not $VERSIONS_URL) {
+    Write-Err "No Phaneris release channel is configured. Set PHANERIS_RELEASE_BASE_URL to the base URL of a release feed this project controls (electron-updater generic layout: <base>/latest/latest.yml), then re-run. This installer will not download from the upstream Phaneris service."
+}
+$DOWNLOAD_DIR = "$env:TEMP\phaneris-install"
+$APP_NAME = "Phaneris"
 
 # Colors for output
 function Write-Info { Write-Host "> $args" -ForegroundColor Blue }
@@ -58,7 +67,7 @@ Write-Info "Latest version: $version"
 # Parse YAML to extract sha512, url (filename), and size for our architecture
 # YAML format:
 #   files:
-#     - url: Craft-Agents-x64.exe
+#     - url: Phaneris-x64.exe
 #       sha512: <base64>
 #       size: 123456789
 #       arch: x64
@@ -108,7 +117,7 @@ if (-not $checksum -or $checksum.Length -lt 80) {
 
 # Use default filename if not found
 if (-not $filename) {
-    $filename = "Craft-Agents-$arch.exe"
+    $filename = "Phaneris-$arch.exe"
 }
 
 $installerUrl = "$VERSIONS_URL/latest/$filename"
@@ -192,9 +201,9 @@ if ($actualHash -ne $checksum) {
 Write-Success "Checksum verified!"
 
 # Close the app if it's running
-$process = Get-Process -Name "Craft Agents" -ErrorAction SilentlyContinue
+$process = Get-Process -Name "Phaneris" -ErrorAction SilentlyContinue
 if ($process) {
-    Write-Info "Closing Craft Agents..."
+    Write-Info "Closing Phaneris..."
     $process | Stop-Process -Force
     Start-Sleep -Seconds 2
 }
@@ -227,11 +236,11 @@ Write-Info "Cleaning up..."
 Remove-Item -Path $installerPath -Force -ErrorAction SilentlyContinue
 
 # Add command line shortcut
-Write-Info "Adding 'craft-agents' command to PATH..."
+Write-Info "Adding 'phaneris' command to PATH..."
 
-$binDir = "$env:LOCALAPPDATA\Craft Agents\bin"
-$cmdFile = "$binDir\craft-agents.cmd"
-$exePath = "$env:LOCALAPPDATA\Programs\Craft Agents\Craft Agents.exe"
+$binDir = "$env:LOCALAPPDATA\Phaneris\bin"
+$cmdFile = "$binDir\phaneris.cmd"
+$exePath = "$env:LOCALAPPDATA\Programs\Phaneris\Phaneris.exe"
 
 # Create bin directory
 New-Item -ItemType Directory -Force -Path $binDir | Out-Null
@@ -245,9 +254,9 @@ $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($userPath -notlike "*$binDir*") {
     $newPath = "$userPath;$binDir"
     [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-    Write-Success "Added to PATH (restart terminal to use 'craft-agents' command)"
+    Write-Success "Added to PATH (restart terminal to use 'phaneris' command)"
 } else {
-    Write-Success "Command 'craft-agents' is ready"
+    Write-Success "Command 'phaneris' is ready"
 }
 
 Write-Host ""
@@ -255,10 +264,10 @@ Write-Host "--------------------------------------------------------------------
 Write-Host ""
 Write-Success "Installation complete!"
 Write-Host ""
-Write-Host "  Craft Agents has been installed."
+Write-Host "  Phaneris has been installed."
 Write-Host ""
 Write-Host "  Launch from:"
 Write-Host "    - Start Menu or desktop shortcut"
-Write-Host "    - Command line: craft-agents (restart terminal first)"
+Write-Host "    - Command line: phaneris (restart terminal first)"
 Write-Host ""
 }

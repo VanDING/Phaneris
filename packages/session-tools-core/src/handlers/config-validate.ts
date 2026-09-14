@@ -1,7 +1,7 @@
 /**
  * Config Validate Handler
  *
- * Validates Craft Agent configuration files.
+ * Validates Phaneris configuration files.
  * Uses full validators if available (Claude), otherwise basic validation (Codex).
  */
 
@@ -36,7 +36,9 @@ export async function handleConfigValidate(
   args: ConfigValidateArgs
 ): Promise<ToolResult> {
   const { target, sourceSlug } = args;
-  const craftAgentRoot = join(homedir(), '.craft-agent');
+  // App-level config root, injected by the host (see SessionToolContext.appConfigDir).
+  // The fallback keeps hosts that do not inject it on the legacy default root.
+  const appConfigDir = ctx.appConfigDir ?? join(homedir(), '.craft-agent');
 
   // Audit H-13: sourceSlug is used in join() below — reject traversal.
   if (sourceSlug) {
@@ -94,7 +96,7 @@ export async function handleConfigValidate(
   switch (target) {
     case 'config': {
       const result = validateJsonFileHasFields(
-        join(craftAgentRoot, 'config.json'),
+        join(appConfigDir, 'config.json'),
         ['workspaces']
       );
       return successResponse(formatValidationResult(result));
@@ -147,7 +149,7 @@ export async function handleConfigValidate(
 
     case 'preferences': {
       const result = validateJsonFileHasFields(
-        join(craftAgentRoot, 'preferences.json'),
+        join(appConfigDir, 'preferences.json'),
         []
       );
       return successResponse(formatValidationResult(result));
@@ -174,7 +176,7 @@ export async function handleConfigValidate(
 
     case 'tool-icons': {
       const result = validateJsonFileHasFields(
-        join(craftAgentRoot, 'tool-icons', 'tool-icons.json'),
+        join(appConfigDir, 'tool-icons', 'tool-icons.json'),
         ['version', 'tools']
       );
       return successResponse(formatValidationResult(result));
@@ -182,11 +184,11 @@ export async function handleConfigValidate(
 
     case 'all': {
       const configResult = validateJsonFileHasFields(
-        join(craftAgentRoot, 'config.json'),
+        join(appConfigDir, 'config.json'),
         ['workspaces']
       );
       const prefsResult = validateJsonFileHasFields(
-        join(craftAgentRoot, 'preferences.json'),
+        join(appConfigDir, 'preferences.json'),
         []
       );
       const merged = mergeResults(configResult, prefsResult);

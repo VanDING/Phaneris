@@ -220,6 +220,9 @@ export function createSessionContext(options: SessionContextOptions): SessionToo
     plansFolderPath: getSessionPlansPath(workspacePath, sessionId),
     sessionPath: getSessionPath(workspacePath, sessionId),
     dataPath: getSessionDataPath(workspacePath, sessionId),
+    // Application config root, resolved centrally (config/paths.ts) — injected
+    // here because session-tools-core cannot import @phaneris/shared.
+    appConfigDir: CONFIG_DIR,
     callbacks,
     fs,
     validators,

@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * @phaneris/server — standalone headless Craft Agent server.
+ * @phaneris/server — standalone headless Phaneris server.
  *
  * Usage:
  *   PHANERIS_SERVER_TOKEN=<secret> bun run packages/server/src/index.ts
@@ -26,10 +26,10 @@
  */
 
 import { join } from 'node:path'
-import { homedir } from 'node:os'
 import { readFileSync, existsSync } from 'node:fs'
 import { version as packageVersion } from '../package.json'
 import { enableDebug } from '@phaneris/shared/utils/debug'
+import { workspaceDir } from '@phaneris/shared/config/paths'
 import { bootstrapServer, startHealthHttpServer, generateServerToken } from '@phaneris/server-core/bootstrap'
 import { validateSession, createWebuiHandler, nodeHttpAdapter } from '@phaneris/server-core/webui'
 import type { WebuiHandler } from '@phaneris/server-core/webui'
@@ -222,7 +222,7 @@ const instance = await (async () => {
           sessionManager,
           credentialManager: getCredentialManager(),
           getMessagingDir: (wsId: string) =>
-            join(homedir(), '.craft-agent', 'workspaces', wsId, 'messaging'),
+            join(workspaceDir(wsId), 'messaging'),
           // Headless has no legacy messaging dir — workspaces start clean.
           whatsapp: {
             workerEntry: waWorkerEntry,

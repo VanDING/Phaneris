@@ -1,7 +1,7 @@
 /**
  * @phaneris/shared
  *
- * Shared business logic for Craft Agent.
+ * Shared business logic for Phaneris.
  * Used by the Electron app.
  *
  * Import specific modules via subpath exports:
@@ -30,3 +30,9 @@
 
 // Export branding (standalone, no dependencies)
 export * from './branding.ts';
+
+// Export the product identity (generated from phaneris.identity.json). Every
+// module that needs a product name, app id, deep-link scheme, directory name or
+// environment prefix reads it from here — never from a literal.
+export * from './identity.generated.ts';
+export * from './identity.ts';

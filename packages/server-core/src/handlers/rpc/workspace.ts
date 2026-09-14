@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import { join } from 'path'
-import { homedir } from 'os'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import { WORKSPACES_DIR } from '@phaneris/shared/config/paths'
 import { getWorkspaceByNameOrId, addWorkspace, setActiveWorkspace, updateWorkspaceRemoteServer, setRemoteServerToken, getRemoteServerTokenSync } from '@phaneris/shared/config'
 import { perf } from '@phaneris/shared/utils'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
@@ -65,7 +65,7 @@ export function registerWorkspaceCoreHandlers(server: RpcServer, deps: HandlerDe
 
   // Check if a workspace slug already exists (for validation before creation)
   server.handle(RPC_CHANNELS.workspaces.CHECK_SLUG, async (_ctx, slug: string) => {
-    const defaultWorkspacesDir = join(homedir(), '.craft-agent', 'workspaces')
+    const defaultWorkspacesDir = WORKSPACES_DIR
     const workspacePath = join(defaultWorkspacesDir, slug)
     const exists = existsSync(workspacePath)
     return { exists, path: workspacePath }

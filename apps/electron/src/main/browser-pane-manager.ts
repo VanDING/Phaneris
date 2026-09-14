@@ -28,6 +28,7 @@ import {
   resolveThemeMode,
 } from '@phaneris/shared/config'
 import { getWorkspaceColorTheme } from '@phaneris/shared/workspaces'
+import { DEEPLINK_SCHEME_PREFIX } from '@phaneris/shared'
 import { CodedError } from '@phaneris/shared/protocol'
 import { getBrowserLiveFxCornerRadii } from '../shared/browser-live-fx'
 import type {
@@ -60,7 +61,7 @@ const THEME_COLOR_NULL_SENTINEL = '__NULL__'
 const THEME_OBSERVER_MIN_INTERVAL_MS = 120
 const EARLY_THEME_EXTRACTION_DELAY_MS = 100
 const BROWSER_EMPTY_STATE_PAGE = 'browser-empty-state.html'
-const PHANERIS_DEEPLINK_SCHEME_PREFIX = `${process.env.PHANERIS_DEEPLINK_SCHEME || 'craftagents'}://`
+const PHANERIS_DEEPLINK_SCHEME_PREFIX = DEEPLINK_SCHEME_PREFIX
 
 const THEME_COLOR_EXTRACTOR_FN = String.raw`
 () => {

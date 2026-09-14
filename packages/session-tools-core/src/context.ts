@@ -171,6 +171,14 @@ export interface SessionToolContext {
   /** Working directory (project root) for the session, if set */
   workingDirectory?: string;
 
+  /**
+   * Absolute application config/state root — where app-level files such as
+   * `config.json`, `preferences.json` and `tool-icons/` live. Optional because
+   * it is injected by the host: this package stays dependency-free of
+   * `@phaneris/shared`, which owns the single path resolver.
+   */
+  appConfigDir?: string;
+
   // ============================================================
   // Callbacks (transport-agnostic)
   // ============================================================
@@ -335,7 +343,7 @@ export interface SessionToolContext {
   resolveStatus?(status: string): ResolvedStatusResult;
 
   /**
-   * Create a Craft Agents Task (board card + task.yaml + orchestrator session)
+   * Create a Phaneris Task (board card + task.yaml + orchestrator session)
    * WITHOUT running it. Slug derivation, node synthesis, and spec validation
    * happen behind this callback where the task primitives live. Injected by
    * backend (SessionManager); undefined in backends that don't run alongside

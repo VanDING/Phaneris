@@ -10,8 +10,10 @@
  */
 
 import { existsSync, readFileSync, writeFileSync, renameSync, unlinkSync, appendFileSync, mkdirSync, statSync } from 'node:fs';
-import { homedir } from 'node:os';
 import { join } from 'node:path';
+// Shared path resolver — kept dependency-light on purpose: this module is
+// preloaded into SDK subprocesses, so it must not pull in heavy imports.
+import { CONFIG_DIR, CONFIG_FILE, LOGS_DIR } from './config/paths.ts';
 
 // ============================================================================
 // CONSTANTS
@@ -26,8 +28,8 @@ export const INTERCEPTOR_LOGGING_ENABLED = !IS_PACKAGED;
 export const DEBUG = INTERCEPTOR_LOGGING_ENABLED &&
   (process.argv.includes('--debug') || process.env.PHANERIS_DEBUG === '1');
 
-/** Config file path for reading settings in the SDK subprocess */
-export const CONFIG_FILE = join(homedir(), '.craft-agent', 'config.json');
+/** Config file path for reading settings in the SDK subprocess (see config/paths.ts) */
+export { CONFIG_FILE };
 
 /** Session directory — set by env var (subprocess) or setSessionDir() (main process) */
 let _sessionDir: string | null = process.env.PHANERIS_SESSION_DIR || null;
@@ -36,7 +38,7 @@ let _sessionDir: string | null = process.env.PHANERIS_SESSION_DIR || null;
 // LOGGING
 // ============================================================================
 
-export const LOG_DIR = join(homedir(), '.craft-agent', 'logs');
+export const LOG_DIR = LOGS_DIR;
 export const LOG_FILE = join(LOG_DIR, 'interceptor.log');
 
 // Ensure log directory exists at module load
@@ -159,7 +161,7 @@ function getErrorFilePath(): string {
   // Prefer session-scoped file to avoid cross-session error consumption.
   if (_sessionDir) return join(_sessionDir, 'api-error.json');
   // Fallback for legacy/non-session contexts.
-  return join(homedir(), '.craft-agent', 'api-error.json');
+  return join(CONFIG_DIR, 'api-error.json');
 }
 
 function getStoredError(sessionDir?: string): LastApiError | null {

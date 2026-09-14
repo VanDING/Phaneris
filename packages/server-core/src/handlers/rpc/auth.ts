@@ -1,7 +1,6 @@
 import { unlink } from 'fs/promises'
-import { join } from 'path'
-import { homedir } from 'os'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import { CONFIG_FILE } from '@phaneris/shared/config/paths'
 import { getCredentialManager } from '@phaneris/shared/credentials'
 import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -68,7 +67,7 @@ export function registerAuthHandlers(server: RpcServer, deps: HandlerDeps): void
       }
 
       // Delete the config file
-      const configPath = join(homedir(), '.craft-agent', 'config.json')
+      const configPath = CONFIG_FILE
       await unlink(configPath).catch(() => {
         // Ignore if file doesn't exist
       })

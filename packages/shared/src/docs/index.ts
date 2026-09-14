@@ -4,18 +4,16 @@
  * Provides access to built-in documentation that Claude can reference
  * when performing configuration tasks (sources, agents, permissions, etc.).
  *
- * Docs are stored at ~/.craft-agent/docs/ and synced from bundled assets.
+ * Docs are stored at `<config-dir>/docs/` (see config/paths.ts) and synced from
+ * bundled assets.
  * Source content lives in apps/electron/resources/docs/*.md for easier editing.
  */
 
 import { join } from 'path';
-import { homedir } from 'os';
 import { existsSync, mkdirSync, writeFileSync, readdirSync, readFileSync } from 'fs';
+import { DOCS_DIR } from '../config/paths.ts';
 import { getBundledAssetsDir } from '../utils/paths.ts';
 import { debug } from '../utils/debug.ts';
-
-const CONFIG_DIR = join(homedir(), '.craft-agent');
-const DOCS_DIR = join(CONFIG_DIR, 'docs');
 
 // Track if docs have been initialized this session (prevents re-init on hot reload)
 let docsInitialized = false;
@@ -94,7 +92,7 @@ export function getDocPath(filename: string): string {
 // IMPORTANT: This is intentionally a human-readable, non-instance-aware path.
 // Do NOT use APP_ROOT for real filesystem reads/writes.
 // For runtime filesystem paths, use CONFIG_DIR from config/paths.ts.
-export const APP_ROOT = '~/.craft-agent';
+export const APP_ROOT = '~/.phaneris';
 
 /**
  * Documentation file references for use in error messages and tool descriptions.
@@ -122,7 +120,7 @@ export const DOC_REFS = {
   markdownPreview: `${APP_ROOT}/docs/markdown-preview.md`,
   llmTool: `${APP_ROOT}/docs/llm-tool.md`,
   browserTools: `${APP_ROOT}/docs/browser-tools.md`,
-  craftCli: `${APP_ROOT}/docs/craft-cli.md`,
+  craftCli: `${APP_ROOT}/docs/phaneris-cli.md`,
   docsDir: `${APP_ROOT}/docs/`,
 } as const;
 

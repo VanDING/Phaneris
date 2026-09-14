@@ -5,22 +5,22 @@
  * Users can create permissions.json files to extend the default rules.
  *
  * File locations:
- * - Workspace: ~/.craft-agent/workspaces/{slug}/permissions.json
- * - Per-source: ~/.craft-agent/workspaces/{slug}/sources/{sourceSlug}/permissions.json
+ * - Workspace: ~/.phaneris/workspaces/{slug}/permissions.json
+ * - Per-source: ~/.phaneris/workspaces/{slug}/sources/{sourceSlug}/permissions.json
  *
  * Rules are additive - custom configs extend the defaults (more permissive).
  */
 
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'fs';
-import { homedir } from 'os';
 import { join } from 'path';
 import { debug } from '../utils/debug.ts';
 import { readJsonFileSync, safeJsonParse } from '../utils/files.ts';
-import { CONFIG_DIR } from '../config/paths.ts';
+import { CONFIG_DIR, resolveConfigDir } from '../config/paths.ts';
 import { getBundledAssetsDir } from '../utils/paths.ts';
 import { getSourcePath } from '../sources/storage.ts';
 import { isValidPermissionsFile } from '../config/validators.ts';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
+import { CLI_NAME } from '../identity.generated.ts';
 import {
   SAFE_MODE_CONFIG,
   PermissionsConfigSchema,
@@ -42,12 +42,11 @@ let permissionsInitialized = false;
 
 /**
  * Get the app-level permissions directory.
- * Default permissions are stored at ~/.craft-agent/permissions/
- * Reads env var dynamically so tests can override via PHANERIS_CONFIG_DIR.
+ * Default permissions are stored at `<config-dir>/permissions/` (see config/paths.ts).
+ * Resolves the config dir on every call so tests can override via PHANERIS_CONFIG_DIR.
  */
 export function getAppPermissionsDir(): string {
-  const configDir = process.env.PHANERIS_CONFIG_DIR || join(homedir(), '.craft-agent');
-  return join(configDir, 'permissions');
+  return join(resolveConfigDir(), 'permissions');
 }
 
 /**
@@ -182,7 +181,7 @@ function migratePermissions(
 }
 
 /**
- * Load default permissions from ~/.craft-agent/permissions/default.json
+ * Load default permissions from ~/.phaneris/permissions/default.json
  * Returns null if file doesn't exist or is invalid.
  */
 export function loadDefaultPermissions(): PermissionsCustomConfig | null {
@@ -375,8 +374,18 @@ function compileBlockedCommandHint(hint: BlockedCommandHintRule): CompiledBlocke
   };
 }
 
+/**
+ * Prefix that identifies a bash allowlist entry for the product CLI.
+ *
+ * Built from the CLI name rather than written out, because this filter and the
+ * bundled `permissions/default.json` patterns must agree: if the literal here
+ * drifts from the command name, the feature-flag gate silently stops filtering
+ * and the CLI's read-only subcommands stay allowed even when the feature is off.
+ */
+const CLI_BASH_PATTERN_PREFIX = `^${CLI_NAME}\\s`;
+
 function shouldCompileBashPattern(pattern: string): boolean {
-  if (!FEATURE_FLAGS.craftAgentsCli && pattern.startsWith('^craft-agent\\s')) {
+  if (!FEATURE_FLAGS.craftAgentsCli && pattern.startsWith(CLI_BASH_PATTERN_PREFIX)) {
     return false;
   }
   return true;
@@ -576,12 +585,12 @@ class PermissionsConfigCache {
   private sourceConfigs: Map<string, PermissionsCustomConfig | null> = new Map();
   private mergedConfigs: Map<string, MergedPermissionsConfig> = new Map();
 
-  // App-level default permissions (loaded from ~/.craft-agent/permissions/default.json)
+  // App-level default permissions (loaded from ~/.phaneris/permissions/default.json)
   private defaultConfig: PermissionsCustomConfig | null | undefined = undefined; // undefined = not loaded yet
 
   /**
    * Get or load app-level default permissions
-   * These come from ~/.craft-agent/permissions/default.json
+   * These come from ~/.phaneris/permissions/default.json
    */
   private getDefaultConfig(): PermissionsCustomConfig | null {
     if (this.defaultConfig === undefined) {
@@ -735,7 +744,7 @@ class PermissionsConfigCache {
     // Add allowed bash patterns (as CompiledBashPattern with metadata for error messages)
     for (const patternEntry of config.allowedBashPatterns) {
       if (!shouldCompileBashPattern(patternEntry.pattern)) {
-        debug(`[Permissions] Skipping craft-agent bash pattern (feature disabled): ${patternEntry.pattern}`);
+        debug(`[Permissions] Skipping CLI bash pattern (feature disabled): ${patternEntry.pattern}`);
         continue;
       }
 
@@ -790,7 +799,7 @@ class PermissionsConfigCache {
     // Add allowed bash patterns (making config more permissive)
     for (const patternEntry of custom.allowedBashPatterns) {
       if (!shouldCompileBashPattern(patternEntry.pattern)) {
-        debug(`[Permissions] Skipping craft-agent bash pattern (feature disabled): ${patternEntry.pattern}`);
+        debug(`[Permissions] Skipping CLI bash pattern (feature disabled): ${patternEntry.pattern}`);
         continue;
       }
 
@@ -876,7 +885,7 @@ class PermissionsConfigCache {
     // Bash patterns - apply normally (not source-specific)
     for (const patternEntry of custom.allowedBashPatterns) {
       if (!shouldCompileBashPattern(patternEntry.pattern)) {
-        debug(`[Permissions] Skipping craft-agent bash pattern (feature disabled): ${patternEntry.pattern}`);
+        debug(`[Permissions] Skipping CLI bash pattern (feature disabled): ${patternEntry.pattern}`);
         continue;
       }
 

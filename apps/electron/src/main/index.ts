@@ -8,6 +8,13 @@ import type { IpcMainInvokeEvent } from 'electron'
 import { createHash, randomUUID } from 'crypto'
 import { spawnSync } from 'child_process'
 import { hostname, homedir } from 'os'
+import { join } from 'path'
+
+// Product identity — single source of truth is phaneris.identity.json at the
+// repository root; these constants are generated from it. Never inline the app
+// name or userData directory name here.
+import { PRODUCT_NAME, RESOLVED_DEEPLINK_SCHEME, USER_DATA_DIR_NAME } from '@phaneris/shared'
+import { workspaceDir } from '@phaneris/shared/config/paths'
 
 function isTelemetryEnabled(): boolean {
   const value = process.env.PHANERIS_TELEMETRY_ENABLED?.trim().toLowerCase()
@@ -78,7 +85,7 @@ if (persistedUiLanguage) {
 const machineId = createHash('sha256').update(hostname() + homedir()).digest('hex').slice(0, 16)
 Sentry.setUser({ id: machineId })
 
-import { join, delimiter } from 'path'
+import { delimiter } from 'path'
 import { existsSync, readFileSync } from 'fs'
 import { RPC_CHANNELS, REMOTE_ELIGIBLE_CHANNELS } from '@phaneris/shared/protocol'
 import { SessionManager, setSessionPlatform, setSessionRuntimeHooks } from '@phaneris/server-core/sessions'
@@ -181,7 +188,7 @@ if (isDebugMode) {
   }
 
   process.env.PHANERIS_SCRIPTS = scriptsDir
-  // NOTE: phantom packages/craft-agents-commands + packages/craft-cli entries
+  // NOTE: phantom craft-agents-commands + craft-cli package entries
   // were removed in the Pi migration — their ENTRY/DOC_PATH env vars were
   // write-only dead code pointing at nonexistent paths (audit C-1/Dockerfile).
   process.env.PHANERIS_AGENT_VERSION = app.getVersion()
@@ -208,9 +215,11 @@ registerPiModelResolver((piAuthProvider) =>
   piAuthProvider ? getPiModelsForAuthProvider(piAuthProvider) : getAllPiModels()
 )
 
-// Custom URL scheme for deeplinks (e.g., craftagents://auth-complete)
-// Supports multi-instance dev: PHANERIS_DEEPLINK_SCHEME env var (craftagents1, craftagents2, etc.)
-const DEEPLINK_SCHEME = process.env.PHANERIS_DEEPLINK_SCHEME || 'craftagents'
+// Custom URL scheme for deeplinks (e.g., phaneris://auth-complete).
+// The registrar, the parser and the forwarders must
+// all agree, so the scheme (including the multi-instance dev override) is
+// resolved in exactly one place.
+const DEEPLINK_SCHEME = RESOLVED_DEEPLINK_SCHEME
 
 let windowManager: WindowManager | null = null
 let sessionManager: SessionManager | null = null
@@ -231,10 +240,23 @@ let messagingHandle: MessagingBootstrapHandle | null = null
 let pendingDeepLink: string | null = null
 
 // Set app name early (before app.whenReady) to ensure correct macOS menu bar title
-// Supports multi-instance dev: PHANERIS_APP_NAME env var (e.g., "Craft Agents [1]")
-app.setName(process.env.PHANERIS_APP_NAME || 'Craft Agents')
+// Supports multi-instance dev: PHANERIS_APP_NAME env var (e.g., "Phaneris [1]")
+app.setName(process.env.PHANERIS_APP_NAME || PRODUCT_NAME)
 
-// Register as default protocol client for craftagents:// URLs
+// Pin the Electron userData directory to a stable name that does NOT follow the
+// display name. Two reasons this must be explicit:
+//   1. The PHANERIS_APP_NAME dev override above would otherwise relocate every
+//      cache, lock and session file, so two windows "instances" would stop
+//      sharing state (and a rename of the label would orphan real data).
+//   2. The upstream app is expected to be installed side by side. Sharing a
+//      userData directory means fighting over the Chromium profile lock, the
+//      updater cache and the single-instance lock.
+// Must run before anything reads app.getPath('userData').
+app.setPath('userData', join(app.getPath('appData'), USER_DATA_DIR_NAME))
+
+// Register as default protocol client for the Phaneris deep-link scheme.
+// The upstream scheme is never claimed, so both apps can be installed at once
+// and each scheme keeps waking its own app.
 // This must be done before app.whenReady() on some platforms
 if (process.defaultApp) {
   // Development mode: need to pass the app path
@@ -589,7 +611,7 @@ app.whenReady().then(async () => {
     // handlers use — instead of duplicating filesystem checks in the preload.
     ipcMain.handle('__client:validatePath', async (event, path: string) => {
       if (!isTrustedWindowSender(event)) {
-        throw new Error('Blocked: __client:validatePath must be called from the main frame of a Craft Agents window')
+        throw new Error('Blocked: __client:validatePath must be called from the main frame of a Phaneris window')
       }
       // The workspace is resolved from the sending window (current binding),
       // never trusted from the renderer payload.
@@ -753,14 +775,13 @@ app.whenReady().then(async () => {
           messagingHandle = createMessagingBootstrap({
             sessionManager: sm,
             credentialManager: getCredentialManager(),
-            getMessagingDir: (wsId: string) =>
-              join(homedir(), '.craft-agent', 'workspaces', wsId, 'messaging'),
+            getMessagingDir: (wsId: string) => join(workspaceDir(wsId), 'messaging'),
             getLegacyMessagingDir: (wsId: string) => {
               const ws = getWorkspaces().find((w) => w.id === wsId)
               return ws ? join(ws.rootPath, 'messaging') : undefined
             },
             // Route messaging diagnostics through the dedicated messaging log
-            // at ~/.craft-agent/logs/messaging-gateway.log.
+            // in the app log directory (see main/logger.ts).
             logger: messagingGatewayLog,
             // WhatsApp worker runs under Electron's embedded Node via
             // ELECTRON_RUN_AS_NODE (WhatsAppAdapter defaults nodeBin to
@@ -883,7 +904,7 @@ app.whenReady().then(async () => {
       // sender must be the main frame of a window-manager-managed window.
       ipcMain.handle('server:invokeOnServer', async (event, url: string, token: string, channel: string, args: unknown[] = [], options?: { allowInsecureTls?: boolean }) => {
         if (!isTrustedWindowSender(event)) {
-          throw new Error('Blocked: server:invokeOnServer must be called from the main frame of a Craft Agents window')
+          throw new Error('Blocked: server:invokeOnServer must be called from the main frame of a Phaneris window')
         }
         if (typeof channel !== 'string' || !REMOTE_ELIGIBLE_CHANNELS.has(channel)) {
           throw new Error(`Blocked: channel "${String(channel)}" is not allowed for cross-server invocation`)
@@ -907,7 +928,7 @@ app.whenReady().then(async () => {
       // SendResourceToWorkspaceDialog via `workspace.remoteServer.token`).
       ipcMain.handle('server:sendResourcesToRemote', async (event, workspaceId: string, channel: string, ...args: unknown[]) => {
         if (!isTrustedWindowSender(event)) {
-          throw new Error('Blocked: server:sendResourcesToRemote must be called from the main frame of a Craft Agents window')
+          throw new Error('Blocked: server:sendResourcesToRemote must be called from the main frame of a Phaneris window')
         }
         if (typeof channel !== 'string' || !REMOTE_ELIGIBLE_CHANNELS.has(channel)) {
           throw new Error(`Blocked: channel "${String(channel)}" is not allowed for cross-server invocation`)
@@ -1295,7 +1316,7 @@ app.whenReady().then(async () => {
         type: 'error',
         title: 'Update failed',
         message: 'The update could not be installed.',
-        detail: 'Craft Agents will restart now. The update will be retried on the next launch.',
+        detail: `${PRODUCT_NAME} will restart now. The update will be retried on the next launch.`,
       })
       app.relaunch()
       app.exit(0)

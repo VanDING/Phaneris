@@ -1,22 +1,22 @@
 /**
  * Deep Link Handler
  *
- * Parses craftagents:// URLs and routes to appropriate actions.
+ * Parses phaneris:// URLs and routes to appropriate actions.
  *
  * URL Formats (workspace is optional - uses active window if omitted):
  *
  * Compound format (hierarchical navigation):
- *   craftagents://allSessions[/session/{sessionId}]            - Session list (all sessions)
- *   craftagents://flagged[/session/{sessionId}]             - Session list (flagged filter)
- *   craftagents://state/{stateId}[/session/{sessionId}]     - Session list (state filter)
- *   craftagents://sources[/source/{sourceSlug}]          - Sources list
- *   craftagents://projects[/board|calendar]              - Project Management
- *   craftagents://automations[...]                       - Automations
- *   craftagents://settings[/{subpage}]                   - Settings (general, shortcuts, preferences)
+ *   phaneris://allSessions[/session/{sessionId}]            - Session list (all sessions)
+ *   phaneris://flagged[/session/{sessionId}]             - Session list (flagged filter)
+ *   phaneris://state/{stateId}[/session/{sessionId}]     - Session list (state filter)
+ *   phaneris://sources[/source/{sourceSlug}]          - Sources list
+ *   phaneris://projects[/board|calendar]              - Project Management
+ *   phaneris://automations[...]                       - Automations
+ *   phaneris://settings[/{subpage}]                   - Settings (general, shortcuts, preferences)
  *
  * Action format:
- *   craftagents://action/{actionName}[/{id}][?params]
- *   craftagents://workspace/{workspaceId}/action/{actionName}[?params]
+ *   phaneris://action/{actionName}[/{id}][?params]
+ *   phaneris://workspace/{workspaceId}/action/{actionName}[?params]
  *
  * Actions:
  *   new-chat                  - Create new chat, optional ?input=text&name=name&send=true
@@ -27,13 +27,13 @@
  *   unflag-session/{id}       - Unflag session
  *
  * Examples:
- *   craftagents://allSessions                               (all sessions view)
- *   craftagents://allSessions/session/abc123                (specific session)
- *   craftagents://settings/shortcuts                     (shortcuts page)
- *   craftagents://sources/source/github                  (github source info)
- *   craftagents://action/new-chat                        (uses active window)
- *   craftagents://action/resume-sdk-session/{sdkId}      (resume Claude Code session)
- *   craftagents://workspace/ws123/allSessions/session/abc123   (targets specific workspace)
+ *   phaneris://allSessions                               (all sessions view)
+ *   phaneris://allSessions/session/abc123                (specific session)
+ *   phaneris://settings/shortcuts                     (shortcuts page)
+ *   phaneris://sources/source/github                  (github source info)
+ *   phaneris://action/new-chat                        (uses active window)
+ *   phaneris://action/resume-sdk-session/{sdkId}      (resume Claude Code session)
+ *   phaneris://workspace/ws123/allSessions/session/abc123   (targets specific workspace)
  */
 
 import type { BrowserWindow } from 'electron'
@@ -41,6 +41,7 @@ import { mainLog } from './logger'
 import type { WindowManager } from './window-manager'
 import { RPC_CHANNELS, type DeepLinkNavigation } from '../shared/types'
 import type { EventSink } from '@phaneris/server-core/transport'
+import { DEEPLINK_PROTOCOL } from '@phaneris/shared'
 
 export interface DeepLinkTarget {
   /** Workspace ID - undefined means use active window */
@@ -87,19 +88,19 @@ export function parseDeepLink(url: string): DeepLinkTarget | null {
   try {
     const parsed = new URL(url)
 
-    if (parsed.protocol !== 'craftagents:') {
+    if (parsed.protocol !== DEEPLINK_PROTOCOL) {
       return null
     }
 
     // For custom protocols, the hostname contains the first path segment
-    // e.g., craftagents://workspace/ws123 → hostname='workspace', pathname='/ws123'
-    // e.g., craftagents://allSessions/chat/abc → hostname='allSessions', pathname='/chat/abc'
+    // e.g., phaneris://workspace/ws123 → hostname='workspace', pathname='/ws123'
+    // e.g., phaneris://allSessions/chat/abc → hostname='allSessions', pathname='/chat/abc'
     const host = parsed.hostname
     const pathParts = parsed.pathname.split('/').filter(Boolean)
     const windowMode = parseWindowMode(parsed)
     const rightSidebar = parseRightSidebar(parsed)
 
-    // craftagents://auth-callback?... (OAuth callbacks - return null to let existing handler process)
+    // phaneris://auth-callback?... (OAuth callbacks - return null to let existing handler process)
     if (host === 'auth-callback') {
       return null
     }
@@ -124,7 +125,7 @@ const DEEP_LINK_ALLOWED_PARAMS: ReadonlySet<string> = new Set(['send'])
       'calendar',
     ]
 
-    // craftagents://allSessions/..., craftagents://settings/..., etc. (compound routes)
+    // phaneris://allSessions/..., phaneris://settings/..., etc. (compound routes)
     if (COMPOUND_ROUTE_PREFIXES.includes(host)) {
       // Reconstruct the full compound route from host + pathname
       const viewRoute = pathParts.length > 0 ? `${host}/${pathParts.join('/')}` : host
@@ -136,7 +137,7 @@ const DEEP_LINK_ALLOWED_PARAMS: ReadonlySet<string> = new Set(['send'])
       }
     }
 
-    // craftagents://workspace/{workspaceId}/... (with workspace targeting)
+    // phaneris://workspace/{workspaceId}/... (with workspace targeting)
     if (host === 'workspace') {
       const workspaceId = pathParts[0]
       if (!workspaceId) return null
@@ -174,7 +175,7 @@ const DEEP_LINK_ALLOWED_PARAMS: ReadonlySet<string> = new Set(['send'])
       return result
     }
 
-    // craftagents://action/... (no workspace - uses active window)
+    // phaneris://action/... (no workspace - uses active window)
     if (host === 'action') {
       const result: DeepLinkTarget = {
         workspaceId: undefined,

@@ -83,7 +83,7 @@ BUN_VERSION="bun-v$(bun -p "require('$ROOT_DIR/package.json').packageManager.spl
 # unreachable, e.g. BUN_DOWNLOAD_BASE=https://registry.npmmirror.com/-/binary/bun
 BUN_DOWNLOAD_BASE="${BUN_DOWNLOAD_BASE:-https://github.com/oven-sh/bun/releases/download}"
 
-echo "=== Building Craft Agents DMG (${ARCH}) using electron-builder ==="
+echo "=== Building Phaneris DMG (${ARCH}) using electron-builder ==="
 if [ "$UPLOAD" = true ]; then
     echo "Will upload to S3 after build"
 fi
@@ -225,8 +225,22 @@ fi
 bun run electron-builder $BUILDER_ARGS
 
 # 8. Verify the DMG was built
-# electron-builder.yml uses artifactName to output: Craft-Agents-${arch}.dmg
-DMG_NAME="Craft-Agents-${ARCH}.dmg"
+# The artifact name comes from phaneris.identity.json via identity.generated.yml
+# (which electron-builder.yml pulls in with `extends`). Read the template from
+# there instead of restating it here: a hardcoded name silently stops matching
+# the moment the template changes, and this check exists to catch exactly that.
+ARTIFACT_TEMPLATE=$(sed -n "s/^artifactName: '\(.*\)'\$/\1/p" "$ELECTRON_DIR/identity.generated.yml")
+if [ -z "$ARTIFACT_TEMPLATE" ]; then
+    echo "ERROR: could not read artifactName from identity.generated.yml"
+    echo "Run 'bun run identity:generate' from the repository root."
+    exit 1
+fi
+APP_VERSION=$(sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' "$ELECTRON_DIR/package.json" | head -n 1)
+DMG_NAME="$ARTIFACT_TEMPLATE"
+DMG_NAME="${DMG_NAME//'${version}'/$APP_VERSION}"
+DMG_NAME="${DMG_NAME//'${os}'/mac}"
+DMG_NAME="${DMG_NAME//'${arch}'/$ARCH}"
+DMG_NAME="${DMG_NAME//'${ext}'/dmg}"
 DMG_PATH="$ELECTRON_DIR/release/$DMG_NAME"
 
 if [ ! -f "$DMG_PATH" ]; then

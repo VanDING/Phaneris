@@ -65,7 +65,7 @@ done
 # Configuration
 BUN_VERSION="bun-v$(bun -p "require('$ROOT_DIR/package.json').packageManager.split('@')[1]")"
 
-echo "=== Building Craft Agents AppImage (${ARCH}) using electron-builder ==="
+echo "=== Building Phaneris AppImage (${ARCH}) using electron-builder ==="
 if [ "$UPLOAD" = true ]; then
     echo "Will upload to S3 after build"
 fi
@@ -157,8 +157,22 @@ else
     LINUX_ARCH="aarch64"
 fi
 
-# electron-builder outputs: Craft-Agents-x86_64.AppImage or Craft-Agents-aarch64.AppImage
-BUILT_APPIMAGE_NAME="Craft-Agents-${LINUX_ARCH}.AppImage"
+# electron-builder's artifact name comes from phaneris.identity.json via
+# identity.generated.yml (pulled in by electron-builder.yml with `extends`).
+# Read the template from there instead of restating it — a hardcoded name stops
+# matching the moment the template changes, and this check exists to catch that.
+ARTIFACT_TEMPLATE=$(sed -n "s/^artifactName: '\(.*\)'\$/\1/p" "$ELECTRON_DIR/identity.generated.yml")
+if [ -z "$ARTIFACT_TEMPLATE" ]; then
+    echo "ERROR: could not read artifactName from identity.generated.yml"
+    echo "Run 'bun run identity:generate' from the repository root."
+    exit 1
+fi
+APP_VERSION=$(sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' "$ELECTRON_DIR/package.json" | head -n 1)
+BUILT_APPIMAGE_NAME="$ARTIFACT_TEMPLATE"
+BUILT_APPIMAGE_NAME="${BUILT_APPIMAGE_NAME//'${version}'/$APP_VERSION}"
+BUILT_APPIMAGE_NAME="${BUILT_APPIMAGE_NAME//'${os}'/linux}"
+BUILT_APPIMAGE_NAME="${BUILT_APPIMAGE_NAME//'${arch}'/$LINUX_ARCH}"
+BUILT_APPIMAGE_NAME="${BUILT_APPIMAGE_NAME//'${ext}'/AppImage}"
 BUILT_APPIMAGE_PATH="$ELECTRON_DIR/release/$BUILT_APPIMAGE_NAME"
 
 if [ ! -f "$BUILT_APPIMAGE_PATH" ]; then
@@ -168,8 +182,9 @@ if [ ! -f "$BUILT_APPIMAGE_PATH" ]; then
     exit 1
 fi
 
-# Rename to our standard naming convention: Craft-Agents-x64.AppImage, Craft-Agents-arm64.AppImage
-APPIMAGE_NAME="Craft-Agents-${ARCH}.AppImage"
+# Rename to the arch names used by the installer wrapper (Phaneris-x64.AppImage
+# / Phaneris-arm64.AppImage).
+APPIMAGE_NAME="${BUILT_APPIMAGE_NAME//$LINUX_ARCH/$ARCH}"
 APPIMAGE_PATH="$ELECTRON_DIR/release/$APPIMAGE_NAME"
 mv "$BUILT_APPIMAGE_PATH" "$APPIMAGE_PATH"
 echo "Renamed $BUILT_APPIMAGE_NAME -> $APPIMAGE_NAME"

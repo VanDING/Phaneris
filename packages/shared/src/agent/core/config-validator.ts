@@ -12,6 +12,9 @@
  */
 
 import type { ConfigValidationResult, ConfigFileType, ConfigValidatorConfig } from './types.ts';
+import { basename } from 'node:path';
+import { CONFIG_DIR } from '../../config/paths.ts';
+import { LEGACY_IDENTITY } from '../../identity.generated.ts';
 
 /**
  * Patterns for detecting known config file types.
@@ -27,26 +30,40 @@ const CONFIG_FILE_PATTERNS: { pattern: RegExp; type: ConfigFileType }[] = [
 ];
 
 /**
- * Craft Agent specific config files that have known schemas.
+ * Path segments that identify an application config tree.
+ *
+ * Derived from the resolver, never hardcoded: a pattern list that still says
+ * `.craft-agent` silently stops matching every guarded path the moment the data
+ * root moves, so the guard would look present and validate nothing.
+ *
+ * The legacy segment is deliberately included — a write aimed at the old
+ * application's config is still a configuration file, not ordinary JSON.
+ */
+const CONFIG_DIR_SEGMENT = [...new Set([basename(CONFIG_DIR), LEGACY_IDENTITY.dataDirName])]
+  .map((segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  .join('|');
+
+/**
+ * Phaneris specific config files that have known schemas.
  */
 const PHANERIS_AGENT_CONFIG_PATTERNS = [
   // Main config
-  /\.craft-agent\/config\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/config\\.json$`),
   // Preferences
-  /\.craft-agent\/preferences\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/preferences\\.json$`),
   // Source configs
-  /\.craft-agent\/workspaces\/[^/]+\/sources\/[^/]+\/config\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/workspaces/[^/]+/sources/[^/]+/config\\.json$`),
   // Permissions
-  /\.craft-agent\/workspaces\/[^/]+\/permissions\.json$/,
-  /\.craft-agent\/permissions\/[^/]+\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/workspaces/[^/]+/permissions\\.json$`),
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/permissions/[^/]+\\.json$`),
   // Theme
-  /\.craft-agent\/workspaces\/[^/]+\/theme\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/workspaces/[^/]+/theme\\.json$`),
   // Statuses
-  /\.craft-agent\/workspaces\/[^/]+\/statuses\/config\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/workspaces/[^/]+/statuses/config\\.json$`),
   // Labels
-  /\.craft-agent\/workspaces\/[^/]+\/labels\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/workspaces/[^/]+/labels\\.json$`),
   // Tool icons
-  /\.craft-agent\/tool-icons\/tool-icons\.json$/,
+  new RegExp(`(?:^|/)(?:${CONFIG_DIR_SEGMENT})/tool-icons/tool-icons\\.json$`),
 ];
 
 /**
@@ -98,10 +115,10 @@ export class ConfigValidator {
   }
 
   /**
-   * Check if a file path is a Craft Agent config file.
+   * Check if a file path is a Phaneris config file.
    *
    * @param filePath - Path to check
-   * @returns true if this is a Craft Agent config
+   * @returns true if this is a Phaneris config
    */
   isCraftAgentConfig(filePath: string): boolean {
     const normalizedPath = process.platform === 'win32'

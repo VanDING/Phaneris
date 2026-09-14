@@ -18,6 +18,7 @@ import {
 import { join, dirname } from 'path';
 import { createHash } from 'crypto';
 import rootPackage from '../../package.json';
+import { ARTIFACT_NAME_TEMPLATE } from '../../packages/shared/src/identity.generated.ts';
 
 export type Platform = 'darwin' | 'win32' | 'linux';
 export type Arch = 'x64' | 'arm64';
@@ -625,15 +626,19 @@ export async function loadEnvFile(config: BuildConfig): Promise<void> {
 }
 
 /**
- * Get output artifact name for a platform/arch
+ * Get output artifact name for a platform/arch.
+ *
+ * Derived from the same electron-builder `artifactName` template the packaging
+ * config uses (`phaneris.identity.json` -> `identity.generated.ts`) instead of
+ * restating a product name here. A build script that guesses the installer name
+ * independently of the packager is how "the artifact we look for" and "the
+ * artifact we shipped" drift apart.
  */
 export function getArtifactName(platform: Platform, arch: Arch): string {
-  switch (platform) {
-    case 'darwin':
-      return `Craft-Agents-${arch}.dmg`;
-    case 'win32':
-      return `Craft-Agents-${arch}.exe`;
-    case 'linux':
-      return `Craft-Agents-${arch}.AppImage`;
-  }
+  const os = platform === 'darwin' ? 'mac' : platform === 'win32' ? 'win' : 'linux';
+  const ext = platform === 'darwin' ? 'dmg' : platform === 'win32' ? 'exe' : 'AppImage';
+  return ARTIFACT_NAME_TEMPLATE.replace('${version}', rootPackage.version)
+    .replace('${os}', os)
+    .replace('${arch}', arch)
+    .replace('${ext}', ext);
 }

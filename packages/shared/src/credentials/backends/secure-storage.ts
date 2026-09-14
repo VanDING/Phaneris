@@ -1,7 +1,8 @@
 /**
  * Secure Storage Backend
  *
- * Stores credentials in an encrypted file at ~/.craft-agent/credentials.enc
+ * Stores credentials in an encrypted file at `<config-dir>/credentials.enc`
+ * (resolved centrally — see config/paths.ts).
  * Uses AES-256-GCM for authenticated encryption.
  *
  * Encryption key is derived from OS-native hardware UUID using PBKDF2:
@@ -35,14 +36,15 @@ import { execSync } from 'child_process';
 import { existsSync, readFileSync, mkdirSync, renameSync } from 'fs';
 import { atomicWriteFileSync } from '../../utils/files.ts';
 import { hostname, userInfo, homedir } from 'os';
-import { join, dirname } from 'path';
+import { dirname } from 'path';
 
 import type { CredentialId, StoredCredential } from '../types.ts';
 import { credentialIdToAccount, accountToCredentialId } from '../types.ts';
 import { createLogger } from '../../utils/debug.ts';
-
-// File location
-const CREDENTIALS_FILE = join(homedir(), '.craft-agent', 'credentials.enc');
+// The credential file location comes from the central resolver. The on-disk
+// format constants below (`CRAFT01` magic, `craft-agent-v2` PBKDF2 label) are
+// format parameters, not identifiers, and deliberately stay unchanged.
+import { CREDENTIALS_FILE } from '../../config/paths.ts';
 
 // File format constants
 const MAGIC_BYTES = Buffer.from('CRAFT01\0');
@@ -140,7 +142,7 @@ export class SecureStorageBackend {
   private cachedStore: CredentialStore | null = null;
   private encryptionKey: Buffer | null = null;
   private salt: Buffer | null = null;
-  // Injectable for tests; production callers use the default ~/.craft-agent path.
+  // Injectable for tests; production callers use the resolved default path.
   private readonly credentialsFile: string;
 
   constructor(credentialsFile: string = CREDENTIALS_FILE) {

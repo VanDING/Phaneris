@@ -1,20 +1,17 @@
 /**
  * Release Notes Utilities
  *
- * Loads release notes from bundled assets and syncs them to ~/.craft-agent/release-notes/.
- * Follows the same pattern as docs/index.ts.
+ * Loads release notes from bundled assets and syncs them to `<config-dir>/release-notes/`
+ * (see config/paths.ts). Follows the same pattern as docs/index.ts.
  *
  * Source content lives in apps/electron/resources/release-notes/*.md.
  */
 
 import { join } from 'path';
-import { homedir } from 'os';
 import { existsSync, mkdirSync, writeFileSync, readdirSync, readFileSync } from 'fs';
+import { RELEASE_NOTES_DIR } from '../config/paths.ts';
 import { getBundledAssetsDir } from '../utils/paths.ts';
 import { debug } from '../utils/debug.ts';
-
-const CONFIG_DIR = join(homedir(), '.craft-agent');
-const RELEASE_NOTES_DIR = join(CONFIG_DIR, 'release-notes');
 
 let releaseNotesInitialized = false;
 
@@ -22,7 +19,7 @@ let releaseNotesInitialized = false;
  * Only versioned files (`X.Y.Z.md`) are release notes. The resources folder also
  * ships `next.md`, the pending-notes template that accumulates bullets between
  * releases; without this filter it loaded as version "next", was synced to
- * ~/.craft-agent/release-notes/, and hit the semver sort as NaN.
+ * `<config-dir>/release-notes/`, and hit the semver sort as NaN.
  */
 const RELEASE_NOTE_FILENAME = /^\d+\.\d+\.\d+\.md$/;
 
@@ -43,7 +40,7 @@ function loadBundledReleaseNotes(): Record<string, string> {
   const assetsDir = getAssetsDir();
   const notes: Record<string, string> = {};
 
-  // Try bundled assets first, fall back to ~/.craft-agent/release-notes/
+  // Try bundled assets first, fall back to the synced `<config-dir>/release-notes/`
   // (Docker/remote server may not have PHANERIS_BUNDLED_ASSETS_ROOT set,
   // but initializeReleaseNotes() copies files to the config dir at startup)
   let dir = assetsDir;

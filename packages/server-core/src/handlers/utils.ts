@@ -3,7 +3,19 @@ import { homedir, tmpdir } from 'os'
 import { realpath } from 'fs/promises'
 import { getWorkspaceByNameOrId, type Workspace } from '@phaneris/shared/config'
 import { loadWorkspaceConfig } from '@phaneris/shared/workspaces'
+import { CONFIG_DIR } from '@phaneris/shared/config/paths'
+import { LEGACY_IDENTITY } from '@phaneris/shared'
 import type { PlatformServices } from '../runtime/platform'
+
+/**
+ * Matches the app-level `config.json` under any known config root — the
+ * resolved one and the upstream one. See the sensitive-pattern list below.
+ */
+const CONFIG_ROOT_CONFIG_PATTERN = new RegExp(
+  `[\\\\/](?:${[basename(CONFIG_DIR), LEGACY_IDENTITY.dataDirName]
+    .map((segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('|')})[\\\\/]config\\.json$`,
+)
 
 /**
  * Get workspace by ID or name, throwing if not found.
@@ -149,16 +161,22 @@ export async function validateFilePath(
     /secrets?\./i,
     /\.pem$/,
     /\.key$/,
-    // H-8: encrypted credential vault (~/.craft-agent/credentials.enc, AES-256-GCM
+    // H-8: encrypted credential vault (<config root>/credentials.enc, AES-256-GCM
     // keyed from the machine UUID) and any other *.enc payload.
     /credentials\.enc$/,
     /\.enc$/,
     // Cached OAuth/bearer tokens: <workspace>/sources/<slug>/.credential-cache.json
     /[\\/]\.credential-cache\.json$/,
-    // App-level config root (~/.craft-agent/config.json) holds serverConfig.token.
+    // App-level config root (<config root>/config.json) holds serverConfig.token.
     // Anchored to the exact config root so workspace trees
-    // (~/.craft-agent/workspaces/<id>/...) stay readable.
-    /[\\/]\.craft-agent[\\/]config\.json$/,
+    // (<config root>/workspaces/<id>/...) stay readable.
+    //
+    // Built from the resolver, not written out: the previous literal still said
+    // `.craft-agent`, so once the data root moved this guard would have kept
+    // matching the OLD directory and quietly stopped protecting the live config
+    // file that carries the server token. The legacy segment stays matched too —
+    // a read aimed at the old application's config is still a token read.
+    CONFIG_ROOT_CONFIG_PATTERN,
   ]
 
   if (sensitivePatterns.some(pattern => pattern.test(realFilePath))) {

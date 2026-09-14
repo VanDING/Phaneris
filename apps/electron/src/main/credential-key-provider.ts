@@ -9,14 +9,14 @@
  */
 import { existsSync, readFileSync, mkdirSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
-import { homedir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 import { safeStorage } from 'electron';
 import { setCredentialKeyProvider } from '@phaneris/shared/credentials';
+import { CREDENTIALS_KEY_FILE } from '@phaneris/shared/config/paths';
 import { atomicWriteFileSync } from '@phaneris/shared/utils/files';
 import { mainLog } from './logger';
 
-const KEY_FILE = join(homedir(), '.craft-agent', 'credentials.key');
+const KEY_FILE = CREDENTIALS_KEY_FILE;
 
 function loadOrCreateKey(): Buffer {
   if (existsSync(KEY_FILE)) {

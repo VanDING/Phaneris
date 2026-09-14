@@ -11,7 +11,7 @@ $RootDir = Split-Path -Parent (Split-Path -Parent $ElectronDir)
 $PackageManager = (Get-Content (Join-Path $RootDir "package.json") -Raw | ConvertFrom-Json).packageManager
 $BunVersion = "bun-v" + $PackageManager.Split("@")[1]
 
-Write-Host "=== Building Craft Agents Windows Installer using electron-builder ===" -ForegroundColor Cyan
+Write-Host "=== Building Phaneris Windows Installer using electron-builder ===" -ForegroundColor Cyan
 
 # Debug: System information
 Write-Host ""
