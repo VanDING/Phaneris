@@ -188,10 +188,10 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
       // Skip when custom endpoint protocol is driving routing.
       if (setup.piAuthProvider && !isCustomEndpointCompat) {
         updates.piAuthProvider = setup.piAuthProvider
-        // Update connection name to show the actual provider (e.g. "Craft Agents Backend (Google AI Studio)")
+        // Update connection name to show the actual provider (e.g. "Phaneris Backend (Google AI Studio)")
         const providerName = piAuthProviderDisplayName(setup.piAuthProvider)
         if (providerName) {
-          updates.name = `Craft Agents Backend (${providerName})`
+          updates.name = `Phaneris Backend (${providerName})`
         }
         // Only set default models when using standard Pi provider AND user didn't pick explicit models
         if (!hasConfiguredBaseUrl && !setup.models?.length) {
@@ -1121,7 +1121,7 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
 
         // ── Radius (requires gateway config) ────────────────────
         case 'radius':
-          return { success: false, error: 'Radius OAuth requires gateway configuration. Set up via Craft Agents settings.' }
+          return { success: false, error: 'Radius OAuth requires gateway configuration. Set up via Phaneris settings.' }
 
         // ── Legacy providers ────────────────────────────────────
         case 'chatgpt-plus':

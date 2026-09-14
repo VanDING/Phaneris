@@ -1,10 +1,10 @@
 # Sources Configuration Guide
 
-This guide explains how to configure sources (MCP servers, APIs, local filesystems) in Craft Agent.
+This guide explains how to configure sources (MCP servers, APIs, local filesystems) in Phaneris.
 
 > **Configuration workflow:** Use `craft-agent source ...` commands instead of editing source config files directly.
 > - `craft-agent source --help`
-> - Canonical command reference: [craft-cli.md](./craft-cli.md)
+> - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
 > When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## Source Setup Process
@@ -238,7 +238,7 @@ Would you like me to show you what issues are currently open?
 ## Overview
 
 Sources are stored as folders under:
-- `~/.craft-agent/workspaces/{workspaceId}/sources/{sourceSlug}/`
+- `~/.phaneris/workspaces/{workspaceId}/sources/{sourceSlug}/`
 
 Each source folder contains:
 - `config.json` - Source configuration (required)
@@ -801,7 +801,7 @@ The `config.icon` field controls the source icon. Resolution follows this priori
 ## Provider Domain Cache
 
 For favicon resolution, a cache maps provider names to their canonical domains at:
-`~/.craft-agent/provider-domains.json`
+`~/.phaneris/provider-domains.json`
 
 **Format:**
 ```json
@@ -870,7 +870,7 @@ Technical steps:
 
 1. Create the source folder:
    ```bash
-   mkdir -p ~/.craft-agent/workspaces/{ws}/sources/my-source
+   mkdir -p ~/.phaneris/workspaces/{ws}/sources/my-source
    ```
 
 2. Write `config.json` with appropriate settings (see schemas above)

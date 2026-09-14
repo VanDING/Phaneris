@@ -232,9 +232,9 @@ Pi SDK 的"功能"恰恰要求每轮注入：`_systemPromptOverride` 每轮 run 
 
 ---
 
-## 7. 附：Craft Agent system prompt 原文策略评估（2026-08-16）
+## 7. 附：Phaneris system prompt 原文策略评估（2026-08-16）
 
-输入：当前 Craft Agent 实际发送的 system prompt 全文（约 16-18K 字符，估 5-7K token）。结论：**发送策略无需修改，内容结构需要修改**——按缓存前缀视角逐块审计，存在三个问题：
+输入：当前 Phaneris 实际发送的 system prompt 全文（约 16-18K 字符，估 5-7K token）。结论：**发送策略无需修改，内容结构需要修改**——按缓存前缀视角逐块审计，存在三个问题：
 
 ### 7.1 易变字段位置违反 "static first, dynamic last"
 

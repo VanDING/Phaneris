@@ -290,13 +290,13 @@ export interface SystemPromptOptions {
   workspaceRootPath?: string;
   /** Working directory for context file discovery (monorepo support) */
   workingDirectory?: string;
-  /** Backend name for "powered by X" text (default: 'Craft Agents Backend') */
+  /** Backend name for "powered by X" text (default: 'Phaneris Backend') */
   backendName?: string;
 }
 
 /**
  * System prompt preset types for different agent contexts.
- * - 'default': Full Craft Agent system prompt
+ * - 'default': Full Phaneris system prompt
  * - 'mini': Focused prompt for quick configuration edits
  */
 export type SystemPromptPreset = 'default' | 'mini';
@@ -312,7 +312,7 @@ export function getMiniAgentSystemPrompt(workspaceRootPath?: string): string {
     ? `\n## Workspace\nConfig files are in: \`${workspaceRootPath}\`\n- Statuses: \`statuses/config.json\`\n- Labels: \`labels/config.json\`\n- Permissions: \`permissions.json\`\n`
     : '';
 
-  return `You are a focused assistant for quick configuration edits in Craft Agent.
+  return `You are a focused assistant for quick configuration edits in Phaneris.
 
 ## Your Role
 You help users make targeted changes to configuration files. Be concise and efficient.
@@ -327,7 +327,7 @@ ${workspaceContext}
 - For math, use $$...$$ delimiters; avoid single $...$ in prose so currency remains plain text
 
 ## Available Tools
-Use only tools exposed in this session. ${FEATURE_FLAGS.craftAgentsCli ? "The Craft CLI feature is enabled: use craft-agent for managed labels/sources/skills/automations; direct guarded file operations are blocked." : "Use available file/configuration tools within the current mode."}
+Use only tools exposed in this session. ${FEATURE_FLAGS.craftAgentsCli ? "The Phaneris CLI feature is enabled: use phaneris for managed labels/sources/skills/automations; direct guarded file operations are blocked." : "Use available file/configuration tools within the current mode."}
 Use config_validate to verify changes match the expected schema. Do not invent a SubmitPlan gate for already-authorized Ask/Execute edits; in Explore, submit a plan before implementation outside the allowed exceptions.
 `;
 }
@@ -343,7 +343,7 @@ Use config_validate to verify changes match the expected schema. Do not invent a
  * @param workspaceRootPath - Root path of the workspace
  * @param workingDirectory - Working directory for context file discovery
  * @param preset - System prompt preset ('default' | 'mini' | custom string)
- * @param backendName - Backend name for "powered by X" text (default: 'Craft Agents Backend')
+ * @param backendName - Backend name for "powered by X" text (default: 'Phaneris Backend')
  */
 export function getSystemPrompt(
   pinnedPreferencesPrompt?: string,
@@ -530,9 +530,9 @@ rg -n "session|OAuth|\"level\":\"error\"" "${logFilePath}" | tail -n 50
 }
 
 /**
- * Get the Craft Agent environment marker for SDK JSONL detection.
+ * Get the Phaneris environment marker for SDK JSONL detection.
  * This marker is embedded in the system prompt and allows us to identify
- * Craft Agent sessions when importing from Claude Code.
+ * Phaneris sessions when importing from Claude Code.
  */
 function getCraftAgentEnvironmentMarker(): string {
   const platform = process.platform; // 'darwin', 'win32', 'linux'
@@ -549,9 +549,9 @@ function getCraftAgentEnvironmentMarker(): string {
  * ${APP_ROOT}/docs/ and is read on-demand when topics come up.
  *
  * @param workspaceRootPath - Root path of the workspace
- * @param backendName - Backend name for "powered by X" text (default: 'Craft Agents Backend')
+ * @param backendName - Backend name for "powered by X" text (default: 'Phaneris Backend')
  */
-function getCraftAssistantPrompt(workspaceRootPath?: string, backendName: string = 'Craft Agents Backend'): string {
+function getCraftAssistantPrompt(workspaceRootPath?: string, backendName: string = 'Phaneris Backend'): string {
   const workspacePath = workspaceRootPath || `${APP_ROOT}/workspaces/{id}`;
   const environmentMarker = getCraftAgentEnvironmentMarker();
   const browserToolsSection = getBrowserToolEnabled() ? `
@@ -566,7 +566,7 @@ At the end, use \`release\` when the user may want to keep browsing, \`hide\` fo
   const configurationSection = FEATURE_FLAGS.craftAgentsCli ? `
 ## Managed Configuration
 
-The Craft CLI feature is enabled. Use \`craft-agent\` for labels, sources, skills, and automations; direct agent writes to guarded configuration paths are blocked, and direct reads under \`labels/\` are also blocked. Read \`${DOC_REFS.craftCli}\` and the relevant domain guide first. Use \`--help\` for exact commands and validate changes. JSON/YAML examples describe content, not permission to bypass the CLI.
+The Phaneris CLI feature is enabled. Use \`phaneris\` for labels, sources, skills, and automations; direct agent writes to guarded configuration paths are blocked, and direct reads under \`labels/\` are also blocked. Read \`${DOC_REFS.craftCli}\` and the relevant domain guide first. Use \`--help\` for exact commands and validate changes. JSON/YAML examples describe content, not permission to bypass the CLI.
 ` : '';
   const feedbackSection = FEATURE_FLAGS.developerFeedback ? `
 ## Developer Feedback
@@ -574,11 +574,11 @@ The Craft CLI feature is enabled. Use \`craft-agent\` for labels, sources, skill
 \`send_developer_feedback\` sends a message to the development team. When the user authorizes sending feedback, include the concrete issue, expected behavior, observed result, and relevant non-sensitive context. Tool availability alone does not authorize external messaging.
 ` : '';
   const browserDocRow = getBrowserToolEnabled() ? `| Browser | ${DOC_REFS.browserTools} | Before browser automation |` : '';
-  const cliDocRow = FEATURE_FLAGS.craftAgentsCli ? `| Craft CLI | ${DOC_REFS.craftCli} | Before managed configuration operations |` : '';
+  const cliDocRow = FEATURE_FLAGS.craftAgentsCli ? `| Phaneris CLI | ${DOC_REFS.craftCli} | Before managed configuration operations |` : '';
 
   return `${environmentMarker}
 
-You are Craft Agent, an assistant for coding, research, documents, and work across connected data sources in the Craft desktop interface. You are powered by ${backendName}. Refer to yourself as Craft Agent when asked.
+You are Phaneris, an assistant for coding, research, documents, and work across connected data sources in the Craft desktop interface. You are powered by ${backendName}. Refer to yourself as Phaneris when asked.
 
 ## Execution Contract
 
@@ -722,7 +722,7 @@ If you get a "Labels rejected" error, the reason is per-entry — common causes 
 - Do NOT call \`list_sessions\` with a high limit just to scan all sessions — filter first.
 
 **Creating tasks:**
-\`create_task\` — creates a Craft Agents Task on the board: title, description (becomes the goal and the initial node prompt), optional acceptance criteria, sources, skills, llmConnection + model, working directory, and project. An explicit project overrides the invoking session's project; when omitted, the current project is inherited. The task is created in "todo" and is NOT run — starting it is the user's (or an automation's) decision. Use it when the user asks to capture or queue work as a task ("add a task for…", "put this on the board"); to execute work right now, stay in this session or use \`spawn_session\`. Returns the task slug + orchestrator session id, plus warnings for unknown source/skill slugs.
+\`create_task\` — creates a Phaneris Task on the board: title, description (becomes the goal and the initial node prompt), optional acceptance criteria, sources, skills, llmConnection + model, working directory, and project. An explicit project overrides the invoking session's project; when omitted, the current project is inherited. The task is created in "todo" and is NOT run — starting it is the user's (or an automation's) decision. Use it when the user asks to capture or queue work as a task ("add a task for…", "put this on the board"); to execute work right now, stay in this session or use \`spawn_session\`. Returns the task slug + orchestrator session id, plus warnings for unknown source/skill slugs.
 
 **Background task status:**
 \`list_background_tasks\` — enumerate the background agents/tasks tracked for a session (running, finished, or orphaned). This is the ONLY reliable way to answer "what is running / what's the status?" — it reads the main-process registry, which tracks tasks across turns. The SDK's in-subprocess task tools cannot see tasks from a prior turn's subprocess. If asked for status, call this and report exactly what it returns — never guess, and never claim "the app restarted." A \`status: 'orphaned'\` task was terminated when the turn that launched it ended.

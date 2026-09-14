@@ -1,6 +1,6 @@
 # @phaneris/core
 
-Shared TypeScript types and utilities for Craft Agent applications.
+Shared TypeScript types and utilities for Phaneris applications.
 
 ## Installation
 

@@ -440,6 +440,40 @@ async function main(): Promise<void> {
     console.log(`  removed  ${path.relative(REPO_ROOT, legacyLogosDir).split(path.sep).join('/')}/ (superseded by phaneris-logos/)`)
   }
 
+  // 8. Browser-facing assets (Web UI PWA + favicons). These are shipped to the
+  // browser rather than packaged by electron-builder, so they are easy to
+  // forget — generating them here keeps them tied to the same artwork.
+  const browserAssets: ReadonlyArray<{ file: string; svg: string; size: number }> = [
+    { file: path.join(REPO_ROOT, 'apps', 'webui', 'src', 'public', 'icon-192.png'), svg: appIconSvg, size: 192 },
+    { file: path.join(REPO_ROOT, 'apps', 'webui', 'src', 'public', 'icon-512.png'), svg: appIconSvg, size: 512 },
+    { file: path.join(REPO_ROOT, 'apps', 'webui', 'src', 'public', 'apple-touch-icon.png'), svg: appIconSvg, size: 180 },
+    { file: path.join(REPO_ROOT, 'apps', 'viewer', 'public', 'icon-192.png'), svg: appIconSvg, size: 192 },
+    { file: path.join(REPO_ROOT, 'apps', 'viewer', 'public', 'icon-512.png'), svg: appIconSvg, size: 512 },
+    { file: path.join(REPO_ROOT, 'apps', 'viewer', 'public', 'apple-touch-icon.png'), svg: appIconSvg, size: 180 },
+  ];
+  for (const asset of browserAssets) {
+    if (!existsSync(path.dirname(asset.file))) continue;
+    const png = await renderPng(asset.svg, asset.size)
+    report(asset.file, await writeFileIfChanged(asset.file, png), `${asset.size}x${asset.size}`)
+  }
+
+  // favicon.ico is a browser icon, not the Windows app icon: 16/32/48 only.
+  const faviconIco = buildIco(
+    await Promise.all([16, 32, 48].map(async (size) => ({ size, png: await renderPng(appIconSvg, size) }))),
+  )
+  for (const dir of [path.join(REPO_ROOT, 'apps', 'webui', 'src', 'public'), path.join(REPO_ROOT, 'apps', 'viewer', 'public')]) {
+    if (!existsSync(dir)) continue;
+    const file = path.join(dir, 'favicon.ico')
+    report(file, await writeFileIfChanged(file, faviconIco), '16/32/48')
+  }
+
+  // favicon.svg keeps the app-icon treatment so the tab mark matches the app.
+  for (const dir of [path.join(REPO_ROOT, 'apps', 'webui', 'src', 'public'), path.join(REPO_ROOT, 'apps', 'viewer', 'public')]) {
+    if (!existsSync(dir)) continue;
+    const file = path.join(dir, 'favicon.svg')
+    report(file, await writeFileIfChanged(file, appIconSvg), `${CANVAS}x${CANVAS}`)
+  }
+
   // Self-check: every PNG we own, straight from sharp metadata.
   console.log('Verifying generated PNGs:')
   const verified = [

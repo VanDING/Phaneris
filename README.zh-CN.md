@@ -1,6 +1,6 @@
 <div align="center">
 
-# Craft Agents (RE)
+# Phaneris
 
 ### 本地优先、执行持久、运行过程可审计的 Agent 工作空间。
 
@@ -14,11 +14,11 @@
 
 </div>
 
-![Craft Agents 运行上下文审计](docs/assets/readme/run-context.png)
+![Phaneris 运行上下文审计](docs/assets/readme/run-context.png)
 
-Craft Agents (RE) 是一个面向严肃 Agent 工作的开源桌面与服务端工作空间。它把持久会话、多面板工作台、工具连接、自动化、文件 Artifact 和统一的 Pi Agent Runtime 组合在同一个产品里。
+Phaneris 是一个面向严肃 Agent 工作的开源桌面与服务端工作空间。它把持久会话、多面板工作台、工具连接、自动化、文件 Artifact 和统一的 Pi Agent Runtime 组合在同一个产品里。
 
-它最重要的差异是可信度：一次运行不只是一段逐字出现的回答。Craft 会记录执行边界、工具结果、上下文增长、Token、成本和恢复状态，让你知道发生了什么，也能决定接下来应该发生什么。
+它最重要的差异是可信度：一次运行不只是一段逐字出现的回答。Phaneris 会记录执行边界、工具结果、上下文增长、Token、成本和恢复状态，让你知道发生了什么，也能决定接下来应该发生什么。
 
 ## 工作过程始终可检查
 
@@ -44,11 +44,11 @@ Agent 的工作不应该消失在一个加载动画后面。Run 工作区为每�
 | **Sources 与 Skills** | 连接 MCP、REST API、本地目录和可复用的 `SKILL.md`，无需把每个服务硬编码进内核。 |
 | **权限与恢复** | Explore、Ask to Edit、Auto 与持久执行证据、显式恢复决策共同控制副作用。 |
 | **自动化与消息入口** | 定时执行、事件触发，并通过支持的消息网关触达 Agent。 |
-| **Headless 与 CLI** | 长任务可以运行在远程服务端，桌面端、Web UI 和 `craft-cli` 都可以作为客户端。 |
+| **Headless 与 CLI** | 长任务可以运行在远程服务端，桌面端、Web UI 和 `phaneris` 都可以作为客户端。 |
 
 ## 文件会成为可审阅的 Artifact
 
-Craft 把生成或修改的文件看作有生命周期的交付物，而不是不透明的附件。Artifact revision 带有校验结果和来源信息；支持的格式可以安全预览，并在你接受或丢弃之前保持待审阅状态。
+Phaneris 把生成或修改的文件看作有生命周期的交付物，而不是不透明的附件。Artifact revision 带有校验结果和来源信息；支持的格式可以安全预览，并在你接受或丢弃之前保持待审阅状态。
 
 统一格式注册表覆盖文本与源码、Markdown、结构化数据、图片、PDF、Office 与 OpenDocument、媒体、压缩包和未知二进制文件。现有文档工具仍负责真实编辑与转换，Artifact 只提供一条一致、可靠的审阅边界。
 
@@ -74,7 +74,7 @@ Profile 与外观都是本地产品能力，不依赖账户体系。Profile 根�
 所有 provider 共用同一个 Pi Agent 后台、事件协议、工具注册表、权限系统和会话生命周期。Pi Runtime 运行在隔离子进程中，provider 或 agent 故障不会演变成桌面端的第二套执行路径。
 
 ```text
-Electron Desktop  ·  Web UI  ·  craft-cli
+Electron Desktop  ·  Web UI  ·  phaneris CLI
                     │
           server-core / Runtime Host
       sessions · permissions · sources · artifacts
@@ -135,7 +135,7 @@ bun run validate:ci        # CI 验证与 i18n 一致性、覆盖检查
 
 ## 感谢 Craft 的开源基础
 
-Craft Agents (RE) 是 [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss) 的独立 fork。原项目由 [Craft](https://www.craft.do/) 团队和社区贡献者创建；没有他们的开源工作，就不会有这个项目，我们对此深表感谢。
+Phaneris 是 [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss) 的独立 fork。原项目由 [Craft](https://www.craft.do/) 团队和社区贡献者创建；没有他们的开源工作，就不会有这个项目，我们对此深表感谢。
 
 本 fork 保留原始署名，同时发展自己的 Runtime、审计、工作空间、Artifact、Profile 与主题方向。本项目未获得 Craft Docs Limited 的认可，也与其不存在从属关系。署名和名称使用说明见 [NOTICE](NOTICE) 与 [TRADEMARK.md](TRADEMARK.md)。
 

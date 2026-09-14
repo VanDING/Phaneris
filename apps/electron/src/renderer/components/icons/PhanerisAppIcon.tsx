@@ -1,18 +1,22 @@
-import craftLogo from "@/assets/craft_logo_c.svg"
+import phanerisLogo from "@/assets/phaneris_logo.svg"
 
-interface CraftAppIconProps {
+interface PhanerisAppIconProps {
   className?: string
   size?: number
 }
 
 /**
- * CraftAppIcon - Displays the Craft logo (colorful "C" icon)
+ * PhanerisAppIcon — displays the Phaneris app mark.
+ *
+ * The artwork comes from `apps/electron/resources/icon.svg`, the single source
+ * of truth for the brand mark; every platform icon and brand raster is
+ * generated from it by `bun run scripts/generate-icons.ts`.
  */
-export function CraftAppIcon({ className, size = 64 }: CraftAppIconProps) {
+export function PhanerisAppIcon({ className, size = 64 }: PhanerisAppIconProps) {
   return (
     <img
-      src={craftLogo}
-      alt="Craft"
+      src={phanerisLogo}
+      alt="Phaneris"
       width={size}
       height={size}
       className={className}

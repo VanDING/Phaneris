@@ -9,7 +9,7 @@ import { SessionPersistenceQueue, getHeaderMetadataSignature, mergeHeaderWithExt
 function makeHeader(overrides: Partial<SessionHeader> = {}): SessionHeader {
   return {
     id: 's1',
-    workspaceRootPath: '~/.craft-agent/workspaces/ws',
+    workspaceRootPath: '~/.phaneris/workspaces/ws',
     createdAt: 1,
     lastUsedAt: 2,
     messageCount: 0,

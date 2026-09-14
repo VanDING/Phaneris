@@ -1,17 +1,17 @@
-# Craft Agent CLI Guide
+# Phaneris CLI Guide
 
-`craft-agent` manages workspace config domains such as labels, sources, skills, and automations. When the Craft CLI feature is enabled, guarded agent file operations are blocked: use the corresponding CLI command. This includes reads under `labels/` and writes to labels, source config, skill instructions, and automations. When disabled, use available configuration tools within the current permission mode.
+`phaneris` manages workspace config domains such as labels, sources, skills, and automations. When the Phaneris CLI feature is enabled, guarded agent file operations are blocked: use the corresponding CLI command. This includes reads under `labels/` and writes to labels, source config, skill instructions, and automations. When disabled, use available configuration tools within the current permission mode.
 
 ## Usage
 
 ```bash
-craft-agent <entity> <action> [args] [--flags] [--json '<json>'] [--stdin]
+phaneris <entity> <action> [args] [--flags] [--json '<json>'] [--stdin]
 ```
 
 ### Global flags
-- `craft-agent --help`
-- `craft-agent --version`
-- `craft-agent --discover`
+- `phaneris --help`
+- `phaneris --version`
+- `phaneris --discover`
 
 ### Input modes
 - Flat flags for simple values
@@ -26,33 +26,33 @@ craft-agent <entity> <action> [args] [--flags] [--json '<json>'] [--stdin]
 Manage workspace labels stored under `labels/`.
 
 ### Commands
-- `craft-agent label list`
-- `craft-agent label get <id>`
-- `craft-agent label create --name "<name>" [--color "<color>"] [--parent-id <id|root>] [--value-type string|number|date]`
-- `craft-agent label update <id> [--name "<name>"] [--color "<color>"] [--value-type string|number|date|none] [--clear-value-type]`
-- `craft-agent label delete <id>`
-- `craft-agent label move <id> --parent <id|root>`
-- `craft-agent label reorder [--parent <id|root>] <ordered-id-1> <ordered-id-2> ...`
-- `craft-agent label auto-rule-list <id>`
-- `craft-agent label auto-rule-add <id> --pattern "<regex>" [--flags "gi"] [--value-template "$1"] [--description "..."]`
-- `craft-agent label auto-rule-remove <id> --index <n>`
-- `craft-agent label auto-rule-clear <id>`
-- `craft-agent label auto-rule-validate <id>`
+- `phaneris label list`
+- `phaneris label get <id>`
+- `phaneris label create --name "<name>" [--color "<color>"] [--parent-id <id|root>] [--value-type string|number|date]`
+- `phaneris label update <id> [--name "<name>"] [--color "<color>"] [--value-type string|number|date|none] [--clear-value-type]`
+- `phaneris label delete <id>`
+- `phaneris label move <id> --parent <id|root>`
+- `phaneris label reorder [--parent <id|root>] <ordered-id-1> <ordered-id-2> ...`
+- `phaneris label auto-rule-list <id>`
+- `phaneris label auto-rule-add <id> --pattern "<regex>" [--flags "gi"] [--value-template "$1"] [--description "..."]`
+- `phaneris label auto-rule-remove <id> --index <n>`
+- `phaneris label auto-rule-clear <id>`
+- `phaneris label auto-rule-validate <id>`
 
 ### Examples
 
 ```bash
-craft-agent label list
-craft-agent label get bug
-craft-agent label create --name "Bug" --color "accent"
-craft-agent label create --name "Priority" --value-type number
-craft-agent label update bug --json '{"name":"Bug Report","color":"destructive"}'
-craft-agent label update priority --value-type none
-craft-agent label move bug --parent root
-craft-agent label reorder --parent root development content bug
-craft-agent label auto-rule-add linear-issue --pattern "\\b([A-Z]{2,5}-\\d+)\\b" --value-template "$1"
-craft-agent label auto-rule-list linear-issue
-craft-agent label auto-rule-validate linear-issue
+phaneris label list
+phaneris label get bug
+phaneris label create --name "Bug" --color "accent"
+phaneris label create --name "Priority" --value-type number
+phaneris label update bug --json '{"name":"Bug Report","color":"destructive"}'
+phaneris label update priority --value-type none
+phaneris label move bug --parent root
+phaneris label reorder --parent root development content bug
+phaneris label auto-rule-add linear-issue --pattern "\\b([A-Z]{2,5}-\\d+)\\b" --value-template "$1"
+phaneris label auto-rule-list linear-issue
+phaneris label auto-rule-validate linear-issue
 ```
 
 ### Notes
@@ -69,16 +69,16 @@ craft-agent label auto-rule-validate linear-issue
 Manage workspace sources stored under `sources/{slug}/`.
 
 ### Commands
-- `craft-agent source list`
-- `craft-agent source get <slug>`
-- `craft-agent source create` (see flags below)
-- `craft-agent source update <slug> --json '{...}'`
-- `craft-agent source delete <slug>`
-- `craft-agent source validate <slug>`
-- `craft-agent source test <slug>`
-- `craft-agent source init-guide <slug> [--template generic|mcp|api|local]`
-- `craft-agent source init-permissions <slug> [--mode read-only]`
-- `craft-agent source auth-help <slug>`
+- `phaneris source list`
+- `phaneris source get <slug>`
+- `phaneris source create` (see flags below)
+- `phaneris source update <slug> --json '{...}'`
+- `phaneris source delete <slug>`
+- `phaneris source validate <slug>`
+- `phaneris source test <slug>`
+- `phaneris source init-guide <slug> [--template generic|mcp|api|local]`
+- `phaneris source init-permissions <slug> [--mode read-only]`
+- `phaneris source auth-help <slug>`
 
 ### Flags for `source create`
 
@@ -102,22 +102,22 @@ Manage workspace sources stored under `sources/{slug}/`.
 ### Examples
 
 ```bash
-craft-agent source list
-craft-agent source get linear
+phaneris source list
+phaneris source get linear
 # MCP source with flat flags
-craft-agent source create --name "Linear" --provider "linear" --type mcp --url "https://mcp.linear.app/sse" --auth-type oauth
+phaneris source create --name "Linear" --provider "linear" --type mcp --url "https://mcp.linear.app/sse" --auth-type oauth
 # MCP source with --json for nested config
-craft-agent source create --name "Linear" --provider "linear" --type mcp --json '{"mcp":{"transport":"http","url":"https://mcp.linear.app/sse","authType":"oauth"}}'
+phaneris source create --name "Linear" --provider "linear" --type mcp --json '{"mcp":{"transport":"http","url":"https://mcp.linear.app/sse","authType":"oauth"}}'
 # API source
-craft-agent source create --name "Exa" --provider "exa" --type api --base-url "https://api.exa.ai/" --auth-type header
+phaneris source create --name "Exa" --provider "exa" --type api --base-url "https://api.exa.ai/" --auth-type header
 # Local source
-craft-agent source create --name "Docs Folder" --provider "filesystem" --type local --path "~/Documents"
-craft-agent source update linear --json '{"enabled":false}'
-craft-agent source validate linear
-craft-agent source test linear
-craft-agent source init-guide linear --template mcp
-craft-agent source init-permissions linear --mode read-only
-craft-agent source auth-help linear
+phaneris source create --name "Docs Folder" --provider "filesystem" --type local --path "~/Documents"
+phaneris source update linear --json '{"enabled":false}'
+phaneris source validate linear
+phaneris source test linear
+phaneris source init-guide linear --template mcp
+phaneris source init-permissions linear --mode read-only
+phaneris source auth-help linear
 ```
 
 ### Notes
@@ -136,13 +136,13 @@ craft-agent source auth-help linear
 Manage workspace skills stored under `skills/{slug}/SKILL.md`.
 
 ### Commands
-- `craft-agent skill list [--workspace-only] [--project-root <path>]`
-- `craft-agent skill get <slug> [--project-root <path>]`
-- `craft-agent skill where <slug> [--project-root <path>]`
-- `craft-agent skill create` (see flags below)
-- `craft-agent skill update <slug> --json '{...}' [--project-root <path>]`
-- `craft-agent skill delete <slug>`
-- `craft-agent skill validate <slug> [--source workspace|project|global] [--project-root <path>]`
+- `phaneris skill list [--workspace-only] [--project-root <path>]`
+- `phaneris skill get <slug> [--project-root <path>]`
+- `phaneris skill where <slug> [--project-root <path>]`
+- `phaneris skill create` (see flags below)
+- `phaneris skill update <slug> --json '{...}' [--project-root <path>]`
+- `phaneris skill delete <slug>`
+- `phaneris skill validate <slug> [--source workspace|project|global] [--project-root <path>]`
 
 ### Flags for `skill create`
 
@@ -160,15 +160,15 @@ Manage workspace skills stored under `skills/{slug}/SKILL.md`.
 ### Examples
 
 ```bash
-craft-agent skill list
-craft-agent skill list --workspace-only
-craft-agent skill where commit-helper
-craft-agent skill create --name "Commit Helper" --description "Generate conventional commits" --slug commit-helper
-craft-agent skill create --name "Code Review" --description "Review PRs" --globs "*.ts,*.tsx" --always-allow "Bash" --required-sources "github"
-craft-agent skill update commit-helper --json '{"requiredSources":["github"],"body":"Use concise, imperative commit messages."}'
-craft-agent skill validate commit-helper
-craft-agent skill validate commit-helper --source global
-craft-agent skill delete commit-helper
+phaneris skill list
+phaneris skill list --workspace-only
+phaneris skill where commit-helper
+phaneris skill create --name "Commit Helper" --description "Generate conventional commits" --slug commit-helper
+phaneris skill create --name "Code Review" --description "Review PRs" --globs "*.ts,*.tsx" --always-allow "Bash" --required-sources "github"
+phaneris skill update commit-helper --json '{"requiredSources":["github"],"body":"Use concise, imperative commit messages."}'
+phaneris skill validate commit-helper
+phaneris skill validate commit-helper --source global
+phaneris skill delete commit-helper
 ```
 
 ### Notes
@@ -185,19 +185,19 @@ craft-agent skill delete commit-helper
 Manage workspace automations stored in `automations.json`.
 
 ### Commands
-- `craft-agent automation list`
-- `craft-agent automation get <id>`
-- `craft-agent automation create` (see flags below)
-- `craft-agent automation update <id>` (same flags as create, all optional)
-- `craft-agent automation delete <id>`
-- `craft-agent automation enable <id>`
-- `craft-agent automation disable <id>`
-- `craft-agent automation duplicate <id>`
-- `craft-agent automation history [<id>] [--limit <n>]`
-- `craft-agent automation last-executed <id>`
-- `craft-agent automation test <id> [--match "..."]`
-- `craft-agent automation lint`
-- `craft-agent automation validate`
+- `phaneris automation list`
+- `phaneris automation get <id>`
+- `phaneris automation create` (see flags below)
+- `phaneris automation update <id>` (same flags as create, all optional)
+- `phaneris automation delete <id>`
+- `phaneris automation enable <id>`
+- `phaneris automation disable <id>`
+- `phaneris automation duplicate <id>`
+- `phaneris automation history [<id>] [--limit <n>]`
+- `phaneris automation last-executed <id>`
+- `phaneris automation test <id> [--match "..."]`
+- `phaneris automation lint`
+- `phaneris automation validate`
 
 ### Flags for `automation create` / `update`
 
@@ -218,23 +218,23 @@ Manage workspace automations stored in `automations.json`.
 ### Examples
 
 ```bash
-craft-agent automation list
-craft-agent automation validate
+phaneris automation list
+phaneris automation validate
 # Simple prompt automation with flat flags
-craft-agent automation create --event UserPromptSubmit --prompt "Summarize this prompt"
+phaneris automation create --event UserPromptSubmit --prompt "Summarize this prompt"
 # Scheduled automation with flat flags
-craft-agent automation create --event SchedulerTick --cron "0 9 * * 1-5" --timezone "Europe/Budapest" --prompt "Give me a morning briefing" --labels "Scheduled" --permission-mode safe
+phaneris automation create --event SchedulerTick --cron "0 9 * * 1-5" --timezone "Europe/Budapest" --prompt "Give me a morning briefing" --labels "Scheduled" --permission-mode safe
 # Complex automation with --json
-craft-agent automation create --event SchedulerTick --json '{"cron":"0 9 * * 1-5","actions":[{"type":"prompt","prompt":"Daily summary"}]}'
-craft-agent automation update abc123 --name "Morning Report" --prompt "Updated prompt"
-craft-agent automation update abc123 --enabled false
-craft-agent automation enable abc123
-craft-agent automation duplicate abc123
-craft-agent automation history abc123 --limit 10
-craft-agent automation last-executed abc123
-craft-agent automation test abc123 --match "UserPromptSubmit"
-craft-agent automation lint
-craft-agent automation delete abc123
+phaneris automation create --event SchedulerTick --json '{"cron":"0 9 * * 1-5","actions":[{"type":"prompt","prompt":"Daily summary"}]}'
+phaneris automation update abc123 --name "Morning Report" --prompt "Updated prompt"
+phaneris automation update abc123 --enabled false
+phaneris automation enable abc123
+phaneris automation duplicate abc123
+phaneris automation history abc123 --limit 10
+phaneris automation last-executed abc123
+phaneris automation test abc123 --match "UserPromptSubmit"
+phaneris automation lint
+phaneris automation delete abc123
 ```
 
 ### Notes
@@ -253,16 +253,16 @@ craft-agent automation delete abc123
 Manage Explore mode permissions stored in `permissions.json` (workspace-level and per-source).
 
 ### Commands
-- `craft-agent permission list`
-- `craft-agent permission get [--source <slug>]`
-- `craft-agent permission set [--source <slug>] --json '{...}'`
-- `craft-agent permission add-mcp-pattern "<pattern>" [--comment "..."] [--source <slug>]`
-- `craft-agent permission add-api-endpoint --method GET|POST|... --path "<regex>" [--comment "..."] [--source <slug>]`
-- `craft-agent permission add-bash-pattern "<pattern>" [--comment "..."] [--source <slug>]`
-- `craft-agent permission add-write-path "<glob>" [--source <slug>]`
-- `craft-agent permission remove <index> --type mcp|api|bash|write-path|blocked [--source <slug>]`
-- `craft-agent permission validate [--source <slug>]`
-- `craft-agent permission reset [--source <slug>]`
+- `phaneris permission list`
+- `phaneris permission get [--source <slug>]`
+- `phaneris permission set [--source <slug>] --json '{...}'`
+- `phaneris permission add-mcp-pattern "<pattern>" [--comment "..."] [--source <slug>]`
+- `phaneris permission add-api-endpoint --method GET|POST|... --path "<regex>" [--comment "..."] [--source <slug>]`
+- `phaneris permission add-bash-pattern "<pattern>" [--comment "..."] [--source <slug>]`
+- `phaneris permission add-write-path "<glob>" [--source <slug>]`
+- `phaneris permission remove <index> --type mcp|api|bash|write-path|blocked [--source <slug>]`
+- `phaneris permission validate [--source <slug>]`
+- `phaneris permission reset [--source <slug>]`
 
 ### Scope
 
@@ -273,31 +273,31 @@ With `--source <slug>`: operates on that source's `permissions.json` (auto-scope
 
 ```bash
 # List all permissions files (workspace + sources)
-craft-agent permission list
+phaneris permission list
 # Get workspace permissions
-craft-agent permission get
+phaneris permission get
 # Get source-specific permissions
-craft-agent permission get --source linear
+phaneris permission get --source linear
 # Add read-only MCP patterns for a source
-craft-agent permission add-mcp-pattern "list" --comment "List operations" --source linear
-craft-agent permission add-mcp-pattern "get" --comment "Get operations" --source linear
-craft-agent permission add-mcp-pattern "search" --comment "Search operations" --source linear
+phaneris permission add-mcp-pattern "list" --comment "List operations" --source linear
+phaneris permission add-mcp-pattern "get" --comment "Get operations" --source linear
+phaneris permission add-mcp-pattern "search" --comment "Search operations" --source linear
 # Add API endpoint rules
-craft-agent permission add-api-endpoint --method GET --path ".*" --comment "All GET requests" --source stripe
+phaneris permission add-api-endpoint --method GET --path ".*" --comment "All GET requests" --source stripe
 # Add bash patterns
-craft-agent permission add-bash-pattern "^ls\\s" --comment "Allow ls"
+phaneris permission add-bash-pattern "^ls\\s" --comment "Allow ls"
 # Add write path globs
-craft-agent permission add-write-path "/tmp/**"
+phaneris permission add-write-path "/tmp/**"
 # Remove a rule by index and type
-craft-agent permission remove 1 --type mcp --source linear
+phaneris permission remove 1 --type mcp --source linear
 # Replace entire config
-craft-agent permission set --source github --json '{"allowedMcpPatterns":[{"pattern":"list","comment":"List ops"}]}'
+phaneris permission set --source github --json '{"allowedMcpPatterns":[{"pattern":"list","comment":"List ops"}]}'
 # Validate all permissions
-craft-agent permission validate
+phaneris permission validate
 # Validate source-specific
-craft-agent permission validate --source linear
+phaneris permission validate --source linear
 # Delete permissions file (revert to defaults)
-craft-agent permission reset --source linear
+phaneris permission reset --source linear
 ```
 
 ### Notes
@@ -315,47 +315,47 @@ craft-agent permission reset --source linear
 Manage app-level and workspace-level theme settings.
 
 ### Commands
-- `craft-agent theme get`
-- `craft-agent theme validate [--preset <id>]`
-- `craft-agent theme list-presets`
-- `craft-agent theme get-preset <id>`
-- `craft-agent theme set-color-theme <id>`
-- `craft-agent theme set-workspace-color-theme <id|default>`
+- `phaneris theme get`
+- `phaneris theme validate [--preset <id>]`
+- `phaneris theme list-presets`
+- `phaneris theme get-preset <id>`
+- `phaneris theme set-color-theme <id>`
+- `phaneris theme set-workspace-color-theme <id|default>`
 
 ### Examples
 
 ```bash
 # Inspect current theme state
-craft-agent theme get
+phaneris theme get
 
 # Validate all user theme files
-craft-agent theme validate
+phaneris theme validate
 
 # Validate one preset file
-craft-agent theme validate --preset nord
+phaneris theme validate --preset nord
 
 # List available presets
-craft-agent theme list-presets
+phaneris theme list-presets
 
 # Inspect a specific preset
-craft-agent theme get-preset dracula
+phaneris theme get-preset dracula
 
 # Set app default preset
-craft-agent theme set-color-theme nord
+phaneris theme set-color-theme nord
 
 # Set workspace override
-craft-agent theme set-workspace-color-theme dracula
+phaneris theme set-workspace-color-theme dracula
 
 # Clear workspace override (inherit app default)
-craft-agent theme set-workspace-color-theme default
+phaneris theme set-workspace-color-theme default
 ```
 
 ### Notes
 - `default` is the only built-in theme and its ID is reserved.
-- All other themes are user-owned JSON files in `~/.craft-agent/themes/`.
+- All other themes are user-owned JSON files in `~/.phaneris/themes/`.
 - `set-color-theme` and `set-workspace-color-theme` require an existing user theme ID (`default` is always valid).
 - Workspace override is stored in `workspace/config.json` under `defaults.colorTheme`.
-- The deprecated `~/.craft-agent/theme.json` override is migrated once and is not part of runtime resolution.
+- The deprecated `~/.phaneris/theme.json` override is migrated once and is not part of runtime resolution.
 <!-- cli:theme:end -->
 
 ---

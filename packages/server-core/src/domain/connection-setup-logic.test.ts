@@ -167,7 +167,7 @@ describe('createBuiltInConnection seeds midStreamBehavior', () => {
     expect(conn.midStreamBehavior).toBe('steer')
   })
 
-  it("Pi API key (Craft Agents Backend) → 'steer'", () => {
+  it("Pi API key (Phaneris Backend) → 'steer'", () => {
     const conn = createBuiltInConnection('pi-api-key')
     expect(conn.providerType).toBe('pi')
     expect(conn.midStreamBehavior).toBe('steer')

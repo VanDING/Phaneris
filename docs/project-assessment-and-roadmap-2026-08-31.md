@@ -7,7 +7,7 @@
 
 ## 一、总体结论
 
-Craft Agents (RE) 已经不是功能型原型，而是一个具有明确差异化、真实工程深度和独立产品潜力的高潜力 Beta。
+Phaneris (RE) 已经不是功能型原型，而是一个具有明确差异化、真实工程深度和独立产品潜力的高潜力 Beta。
 
 项目最有价值的产品主张是：
 
@@ -108,7 +108,7 @@ Craft Agents (RE) 已经不是功能型原型，而是一个具有明确差异�
 
 仓库自带的商标政策要求 fork：使用不同名称、替换 Craft 品牌、更改 bundle identifier，并移除不必要的 `craft.do` 引用。当前打包配置仍然使用：
 
-- `Craft Agents` 产品名；
+- `Phaneris` 产品名；
 - `com.lukilabs.craft-agent` 应用标识；
 - Craft Docs 版权和域名；
 - 面向上游项目的更新、支持和元数据引用。

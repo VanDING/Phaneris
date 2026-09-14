@@ -5,7 +5,7 @@ const ORIGINAL_ENV = {
   NODE_ENV: process.env.NODE_ENV,
   PHANERIS_DEBUG: process.env.PHANERIS_DEBUG,
   PHANERIS_FEATURE_DEVELOPER_FEEDBACK: process.env.PHANERIS_FEATURE_DEVELOPER_FEEDBACK,
-  PHANERIS_FEATURE_PHANERIS_AGENTS_CLI: process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI,
+  PHANERIS_FEATURE_AGENTS_CLI: process.env.PHANERIS_FEATURE_AGENTS_CLI,
   PHANERIS_FEATURE_EMBEDDED_SERVER: process.env.PHANERIS_FEATURE_EMBEDDED_SERVER,
 };
 
@@ -19,8 +19,8 @@ afterEach(() => {
   if (ORIGINAL_ENV.PHANERIS_FEATURE_DEVELOPER_FEEDBACK === undefined) delete process.env.PHANERIS_FEATURE_DEVELOPER_FEEDBACK;
   else process.env.PHANERIS_FEATURE_DEVELOPER_FEEDBACK = ORIGINAL_ENV.PHANERIS_FEATURE_DEVELOPER_FEEDBACK;
 
-  if (ORIGINAL_ENV.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI === undefined) delete process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI;
-  else process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI = ORIGINAL_ENV.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI;
+  if (ORIGINAL_ENV.PHANERIS_FEATURE_AGENTS_CLI === undefined) delete process.env.PHANERIS_FEATURE_AGENTS_CLI;
+  else process.env.PHANERIS_FEATURE_AGENTS_CLI = ORIGINAL_ENV.PHANERIS_FEATURE_AGENTS_CLI;
 
   if (ORIGINAL_ENV.PHANERIS_FEATURE_EMBEDDED_SERVER === undefined) delete process.env.PHANERIS_FEATURE_EMBEDDED_SERVER;
   else process.env.PHANERIS_FEATURE_EMBEDDED_SERVER = ORIGINAL_ENV.PHANERIS_FEATURE_EMBEDDED_SERVER;
@@ -65,19 +65,19 @@ describe('feature-flags runtime helpers', () => {
   });
 
   it('isCraftAgentsCliEnabled defaults to false when no override is set', () => {
-    delete process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI;
+    delete process.env.PHANERIS_FEATURE_AGENTS_CLI;
 
     expect(isCraftAgentsCliEnabled()).toBe(false);
   });
 
   it('isCraftAgentsCliEnabled honors explicit override true', () => {
-    process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI = '1';
+    process.env.PHANERIS_FEATURE_AGENTS_CLI = '1';
 
     expect(isCraftAgentsCliEnabled()).toBe(true);
   });
 
   it('isCraftAgentsCliEnabled honors explicit override false', () => {
-    process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI = '0';
+    process.env.PHANERIS_FEATURE_AGENTS_CLI = '0';
 
     expect(isCraftAgentsCliEnabled()).toBe(false);
   });

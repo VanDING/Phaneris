@@ -102,44 +102,44 @@
       "comment": "CLI tools: bare invocation (prints help)"
     },
     {
-      "pattern": "^craft-agent\\s+label\\s+(list|get|auto-rule-list|auto-rule-validate)\\b",
-      "comment": "craft-agent label read-only operations"
+      "pattern": "^phaneris\\s+label\\s+(list|get|auto-rule-list|auto-rule-validate)\\b",
+      "comment": "phaneris label read-only operations"
     },
     {
-      "pattern": "^craft-agent\\s+source\\s+(list|get|validate|test|auth-help)\\b",
-      "comment": "craft-agent source read-only operations"
+      "pattern": "^phaneris\\s+source\\s+(list|get|validate|test|auth-help)\\b",
+      "comment": "phaneris source read-only operations"
     },
     {
-      "pattern": "^craft-agent\\s+skill\\s+(list|get|validate|where)\\b",
-      "comment": "craft-agent skill read-only operations"
+      "pattern": "^phaneris\\s+skill\\s+(list|get|validate|where)\\b",
+      "comment": "phaneris skill read-only operations"
     },
     {
-      "pattern": "^craft-agent\\s+automation\\s+(list|get|validate|history|last-executed|test|lint)\\b",
-      "comment": "craft-agent automation read-only operations"
+      "pattern": "^phaneris\\s+automation\\s+(list|get|validate|history|last-executed|test|lint)\\b",
+      "comment": "phaneris automation read-only operations"
     },
     {
-      "pattern": "^craft-agent\\s+permission\\s+(list|get|validate)\\b",
-      "comment": "craft-agent permission read-only operations"
+      "pattern": "^phaneris\\s+permission\\s+(list|get|validate)\\b",
+      "comment": "phaneris permission read-only operations"
     },
     {
-      "pattern": "^craft-agent\\s+theme\\s+(get|validate|list-presets|get-preset)\\b",
-      "comment": "craft-agent theme read-only operations"
+      "pattern": "^phaneris\\s+theme\\s+(get|validate|list-presets|get-preset)\\b",
+      "comment": "phaneris theme read-only operations"
     },
     {
-      "pattern": "^craft-agent\\s*$",
-      "comment": "craft-agent bare invocation (prints help)"
+      "pattern": "^phaneris\\s*$",
+      "comment": "phaneris bare invocation (prints help)"
     },
     {
-      "pattern": "^craft-agent\\s+(label|source|skill|automation|permission|theme)\\s*$",
-      "comment": "craft-agent entity help"
+      "pattern": "^phaneris\\s+(label|source|skill|automation|permission|theme)\\s*$",
+      "comment": "phaneris entity help"
     },
     {
-      "pattern": "^craft-agent\\s+(label|source|skill|automation|permission|theme)\\s+--help\\b",
-      "comment": "craft-agent entity help flags"
+      "pattern": "^phaneris\\s+(label|source|skill|automation|permission|theme)\\s+--help\\b",
+      "comment": "phaneris entity help flags"
     },
     {
-      "pattern": "^craft-agent\\s+--(help|version|discover)\\b",
-      "comment": "craft-agent global flags"
+      "pattern": "^phaneris\\s+--(help|version|discover)\\b",
+      "comment": "phaneris global flags"
     },
     {
       "pattern": "^find\\b",

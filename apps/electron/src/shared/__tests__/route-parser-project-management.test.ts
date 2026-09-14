@@ -40,14 +40,14 @@ describe('Project Management routes', () => {
   })
 
   it('keeps project details inside the overview projection', () => {
-    const state = parseRouteToNavigationState('projects/project/craft-agent')
+    const state = parseRouteToNavigationState('projects/project/phaneris')
 
     expect(state).toEqual({
       navigator: 'projects',
       view: 'overview',
-      details: { type: 'project', projectSlug: 'craft-agent' },
+      details: { type: 'project', projectSlug: 'phaneris' },
     })
-    expect(state && buildRouteFromNavigationState(state)).toBe('projects/project/craft-agent')
+    expect(state && buildRouteFromNavigationState(state)).toBe('projects/project/phaneris')
   })
 
   it('round-trips a full-page WorkItem editor inside its originating projection', () => {

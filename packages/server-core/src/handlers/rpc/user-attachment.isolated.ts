@@ -8,7 +8,7 @@ import type { HandlerDeps } from '../handler-deps'
 import { registerFilesHandlers } from './files'
 
 // Drafts fixture: getWorkspaceByNameOrId resolves a temp dir; getAllSessionDrafts
-// returns a controllable record (never touches the real ~/.craft-agent/drafts.json).
+// returns a controllable record (never touches the real ~/.phaneris/drafts.json).
 let drafts: Record<string, { text: string; attachments?: Array<{ path: string; name: string }> }> = {}
 let workspaceSessionIds: string[] = []
 
@@ -56,7 +56,7 @@ describe('file READ_USER_ATTACHMENT provenance (H-7)', () => {
   let dir: string
   let attachedFile: string
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), 'craft-agent-draft-'))
+    dir = mkdtempSync(join(tmpdir(), 'phaneris-draft-'))
     attachedFile = join(dir, 'report.pdf')
     writeFileSync(attachedFile, 'dummy bytes')
     workspaceSessionIds = ['ws-test-session-1']

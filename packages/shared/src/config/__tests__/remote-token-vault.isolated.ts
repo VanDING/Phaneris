@@ -3,7 +3,7 @@
  *
  * Runs as an isolated Bun process because `CONFIG_DIR` is captured at module
  * load time from PHANERIS_CONFIG_DIR. Setting it here before the dynamic import
- * keeps the test away from the developer's real ~/.craft-agent profile.
+ * keeps the test away from the developer's real ~/.phaneris profile.
  */
 import { afterAll, describe, expect, it } from 'bun:test'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -17,7 +17,7 @@ const storage = await import('../storage.ts')
 const { getCredentialManager } = await import('../../credentials/manager.ts')
 const { SecureStorageBackend, setCredentialKeyProvider } = await import('../../credentials/backends/secure-storage.ts')
 
-// The credential store normally lives in ~/.craft-agent regardless of
+// The credential store normally lives in ~/.phaneris regardless of
 // PHANERIS_CONFIG_DIR, so point the process-global manager at a temp file. The
 // injected key provider keeps the test independent from the machine id.
 setCredentialKeyProvider({ id: 'test:remote-token-vault', getKey: () => new Uint8Array(32).fill(7) })

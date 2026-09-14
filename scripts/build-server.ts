@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Build script for standalone Craft Agent server.
+ * Build script for standalone Phaneris server.
  *
  * Assembles a self-contained distribution directory with all runtime
  * dependencies, resources, and platform-specific binaries.
@@ -81,7 +81,7 @@ interface ServerBuildConfig {
 
 function showHelp(): void {
   console.log(`
-Standalone server build script for Craft Agent
+Standalone server build script for Phaneris
 
 Usage:
   bun run scripts/build-server.ts [options]
@@ -586,7 +586,7 @@ exec "$ROOT/vendor/bun/bun" run "$ROOT/packages/server/src/index.ts" "$@"
 
   // start.sh — convenience entry
   const startSh = `#!/bin/sh
-# Craft Agent Server — convenience entry point
+# Phaneris Server — convenience entry point
 DIR="$(cd "$(dirname "$0")" && pwd)"
 exec "$DIR/bin/craft-server" "$@"
 `;
@@ -598,7 +598,7 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
-echo "=== Craft Agent Server Setup ==="
+echo "=== Phaneris Server Setup ==="
 echo ""
 
 # Make binaries executable
@@ -644,7 +644,7 @@ if [ "\${1:-}" = "--systemd" ]; then
 
   cat > "$SERVICE_FILE" <<UNIT
 [Unit]
-Description=Craft Agent Server
+Description=Phaneris Server
 After=network.target
 
 [Service]
@@ -813,7 +813,7 @@ async function main(): Promise<void> {
     version,
   };
 
-  console.log(`=== Building Craft Agent Server ${version} for ${platform}-${arch} ===`);
+  console.log(`=== Building Phaneris Server ${version} for ${platform}-${arch} ===`);
   console.log(`  Output: ${outputDir}`);
 
   // Step 1: Clean

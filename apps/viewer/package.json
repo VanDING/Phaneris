@@ -2,7 +2,7 @@
   "name": "@phaneris/viewer",
   "version": "0.13.3",
   "license": "Apache-2.0",
-  "description": "Web viewer for Craft Agents sessions - upload and share session transcripts",
+  "description": "Web viewer for Phaneris sessions - upload and share session transcripts",
   "private": true,
   "type": "module",
   "scripts": {

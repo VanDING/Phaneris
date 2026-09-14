@@ -56,7 +56,7 @@ const CLEAN_SVG = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" heig
 
 describe('workspace WRITE_IMAGE SVG gate (H-9)', () => {
   beforeEach(() => {
-    wsRoot = mkdtempSync(join(tmpdir(), 'craft-agent-ws-icon-'))
+    wsRoot = mkdtempSync(join(tmpdir(), 'phaneris-ws-icon-'))
     workspaceFixture.rootPath = wsRoot
   })
   afterEach(() => {

@@ -1,7 +1,7 @@
 {
   "name": "@phaneris/electron",
   "version": "0.13.3",
-  "description": "Electron desktop app for Craft Agents",
+  "description": "Electron desktop app for Phaneris",
   "main": "dist/main.cjs",
   "private": true,
   "author": {

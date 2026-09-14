@@ -1,36 +1,15 @@
 import type { ComponentEntry } from './types'
-import { CraftAgentsLogo } from '@/components/icons/CraftAgentsLogo'
-import { CraftAgentsSymbol } from '@/components/icons/CraftAgentsSymbol'
+import { PhanerisSymbol } from '@/components/icons/PhanerisSymbol'
 import { PanelLeftRounded } from '@/components/icons/PanelLeftRounded'
 import { SquarePenRounded } from '@/components/icons/SquarePenRounded'
 
 export const iconComponents: ComponentEntry[] = [
   {
-    id: 'craft-agents-logo',
-    name: 'CraftAgentsLogo',
+    id: 'phaneris-symbol',
+    name: 'PhanerisSymbol',
     category: 'Icons',
-    description: 'Full Craft Agents branding logo with text',
-    component: CraftAgentsLogo,
-    props: [
-      {
-        name: 'className',
-        description: 'Tailwind classes for sizing and styling',
-        control: { type: 'string' },
-        defaultValue: 'h-8',
-      },
-    ],
-    variants: [
-      { name: 'Small', props: { className: 'h-6' } },
-      { name: 'Medium', props: { className: 'h-8' } },
-      { name: 'Large', props: { className: 'h-12' } },
-    ],
-  },
-  {
-    id: 'craft-agents-symbol',
-    name: 'CraftAgentsSymbol',
-    category: 'Icons',
-    description: 'Craft Agents "E" pixel art symbol icon (brand color: #9570BE)',
-    component: CraftAgentsSymbol,
+    description: 'Phaneris isometric brand mark (inherits the accent colour via currentColor)',
+    component: PhanerisSymbol,
     props: [
       {
         name: 'className',

@@ -111,6 +111,13 @@ interface AllowRule {
   reason: string;
 }
 
+/**
+ * Upstream provenance: repository/issue citations. These name the upstream
+ * project on purpose — a fork that rewrites its own lineage is lying about
+ * where the code came from — so they are never rebrand work.
+ */
+const PROVENANCE = /\bcraft-agents-oss(?:#\d+)?\b|\bcraft-ai-agents\/[\w.-]+/;
+
 interface Hit {
   file: string;
   line: number;
@@ -233,6 +240,10 @@ for (const path of walk(ROOT)) {
   const lines = text.split(/\r?\n/);
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index]!;
+    // Provenance, not a product surface: links and citations of the upstream
+    // repository and its issues must stay truthful, so they are excluded before
+    // token matching rather than buried in a per-file allowlist rule.
+    if (PROVENANCE.test(line)) continue;
     for (const token of TOKENS) {
       token.pattern.lastIndex = 0;
       if (!token.pattern.test(line)) continue;

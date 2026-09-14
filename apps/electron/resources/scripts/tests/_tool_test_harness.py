@@ -78,7 +78,7 @@ _UV_WRAPPER_RE = re.compile(
 
 def resolve_uv_invocation(tool_name: str) -> tuple[str, Path] | None:
     """Return (python_version, script) the wrapper would run, or None if the
-    wrapper is not a uv-based one (e.g. craft-agent.cmd)."""
+    wrapper is not a uv-based one (e.g. phaneris.cmd)."""
     wrapper = resolve_wrapper(tool_name)
     for line in wrapper.read_text(encoding="utf-8", errors="ignore").splitlines():
         match = _UV_WRAPPER_RE.search(line)

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Craft Agents (RE)
+# Phaneris
 
 ### A local-first agent workspace with durable execution and inspectable runs.
 
@@ -14,11 +14,11 @@ Run capable AI agents across your files, tools, services, and documents — with
 
 </div>
 
-![Craft Agents run context inspection](docs/assets/readme/run-context.png)
+![Phaneris run context inspection](docs/assets/readme/run-context.png)
 
-Craft Agents (RE) is an open-source desktop and server workspace for serious agent work. It combines persistent sessions, a multi-panel workbench, connected tools, automation, file artifacts, and a single Pi-powered agent runtime.
+Phaneris is an open-source desktop and server workspace for serious agent work. It combines persistent sessions, a multi-panel workbench, connected tools, automation, file artifacts, and a single Pi-powered agent runtime.
 
-The defining difference is trust: a run is not just a stream of prose. Craft records execution boundaries, tool outcomes, context growth, token usage, cost, and recovery state so you can understand what happened and decide what should happen next.
+The defining difference is trust: a run is not just a stream of prose. Phaneris records execution boundaries, tool outcomes, context growth, token usage, cost, and recovery state so you can understand what happened and decide what should happen next.
 
 ## Work that stays inspectable
 
@@ -44,11 +44,11 @@ The desktop app is organized around durable work rather than disposable conversa
 | **Sources and skills** | Connect MCP servers, REST APIs, local folders, and reusable `SKILL.md` instructions without hard-coding services into the agent. |
 | **Permissions and recovery** | Explore, Ask to Edit, and Auto modes combine with durable execution evidence and explicit recovery decisions. |
 | **Automations and messaging** | Schedule work, react to events, and reach agents through supported messaging gateways. |
-| **Headless and CLI operation** | Keep long-running sessions on a remote server while using the desktop app, Web UI, or `craft-cli` as clients. |
+| **Headless and CLI operation** | Keep long-running sessions on a remote server while using the desktop app, Web UI, or `phaneris` as clients. |
 
 ## Files become reviewable artifacts
 
-Craft treats generated and modified files as deliverables with a lifecycle, not opaque attachments. Artifact revisions carry validation results and provenance, can be previewed safely when supported, and remain pending until you accept or discard them.
+Phaneris treats generated and modified files as deliverables with a lifecycle, not opaque attachments. Artifact revisions carry validation results and provenance, can be previewed safely when supported, and remain pending until you accept or discard them.
 
 The shared format registry covers text and source files, Markdown, structured data, images, PDF, Office and OpenDocument formats, media, archives, and unknown binaries. Existing document tools continue to do the actual editing and conversion, while Artifact provides one consistent review boundary.
 
@@ -74,7 +74,7 @@ Profile and appearance are local product surfaces, not account requirements. The
 Every provider uses the same Pi agent backend, event contract, tool registry, permissions, and session lifecycle. The Pi runtime runs in an isolated subprocess so provider or agent failures do not become a second desktop execution path.
 
 ```text
-Electron Desktop  ·  Web UI  ·  craft-cli
+Electron Desktop  ·  Web UI  ·  phaneris CLI
                     │
           server-core / Runtime Host
       sessions · permissions · sources · artifacts
@@ -141,7 +141,7 @@ Start with the [documentation index](docs/README.md), [contribution guide](CONTR
 
 ## Built on Craft, with gratitude
 
-Craft Agents (RE) is an independent fork of [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss), originally created by the [Craft](https://www.craft.do/) team and its contributors. Their open-source work made this project possible, and we are deeply grateful for that foundation.
+Phaneris is an independent fork of [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss), originally created by the [Craft](https://www.craft.do/) team and its contributors. Their open-source work made this project possible, and we are deeply grateful for that foundation.
 
 This fork keeps the original attribution while pursuing its own runtime, auditability, workspace, Artifact, Profile, and theme direction. It is not endorsed by or affiliated with Craft Docs Limited. See [NOTICE](NOTICE) and [TRADEMARK.md](TRADEMARK.md) for attribution and naming details.
 

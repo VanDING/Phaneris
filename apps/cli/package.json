@@ -2,11 +2,11 @@
   "name": "@phaneris/cli",
   "version": "0.13.3",
   "license": "Apache-2.0",
-  "description": "Terminal client for Craft Agent server",
+  "description": "Terminal client for Phaneris server",
   "type": "module",
   "main": "src/index.ts",
   "bin": {
-    "craft-cli": "src/index.ts"
+    "phaneris": "src/index.ts"
   },
   "scripts": {
     "start": "bun run src/index.ts",

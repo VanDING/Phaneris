@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Key, Monitor, Network } from "lucide-react"
-import { CraftAgentsSymbol } from "@/components/icons/CraftAgentsSymbol"
+import { PhanerisSymbol } from "@/components/icons/PhanerisSymbol"
 import { StepFormLayout } from "./primitives"
 
 import claudeIcon from "@/assets/provider-icons/claude.svg"
@@ -113,7 +113,7 @@ export function ProviderSelectStep({ onSelect, onSkip }: ProviderSelectStepProps
     <StepFormLayout
       iconElement={
         <div className="flex size-16 items-center justify-center">
-          <CraftAgentsSymbol className="size-10 text-accent" />
+          <PhanerisSymbol className="size-10 text-accent" />
         </div>
       }
       title={t("onboarding.providerSelect.title")}

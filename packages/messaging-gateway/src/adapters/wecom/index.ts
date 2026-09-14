@@ -313,8 +313,8 @@ export class WeComAdapter implements PlatformAdapter {
     const original = this.sentCards.get(messageId)
     await this.requireClient().updateTemplateCard(frame, {
       card_type: 'text_notice',
-      main_title: { title: truncateUtf8(original?.text ?? 'Craft Agent', 100) },
-      sub_title_text: 'Handled by Craft Agent',
+      main_title: { title: truncateUtf8(original?.text ?? 'Phaneris', 100) },
+      sub_title_text: 'Handled by Phaneris',
       task_id: messageId,
     })
     this.pressedCardFrames.delete(messageId)

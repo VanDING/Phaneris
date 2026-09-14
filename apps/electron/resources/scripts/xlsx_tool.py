@@ -114,7 +114,7 @@ def _write_cell(cell, spec: object) -> None:
         _apply_style(cell, spec["style"])
     if "comment" in spec:
         from openpyxl.comments import Comment
-        cell.comment = Comment(str(spec["comment"]), str(spec.get("commentAuthor", "Craft Agent")))
+        cell.comment = Comment(str(spec["comment"]), str(spec.get("commentAuthor", "Phaneris")))
     if "hyperlink" in spec:
         cell.hyperlink = str(spec["hyperlink"])
 

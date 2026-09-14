@@ -15,7 +15,7 @@ describe('release notes loader', () => {
 
   it('never surfaces a non-semver version in the What\'s New list', () => {
     // Resolves against whichever notes directory exists on this machine (bundled
-    // resources or ~/.craft-agent/release-notes); an empty list is fine.
+    // resources or ~/.phaneris/release-notes); an empty list is fine.
     for (const note of getReleaseNotesList()) {
       expect(note.version).toMatch(/^\d+\.\d+\.\d+$/);
     }

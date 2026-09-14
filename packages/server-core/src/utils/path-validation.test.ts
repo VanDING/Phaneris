@@ -47,7 +47,7 @@ describe('validatePathFormat', () => {
 
 describe('isValidWorkingDirectory', () => {
   it('accepts an existing Unix directory', () => {
-    const dir = '/tmp/craft-agent-path-validation-'
+    const dir = '/tmp/phaneris-path-validation-'
     const statFn = (path: string) => {
       expect(path).toBe(dir)
       return directoryStats()
@@ -57,7 +57,7 @@ describe('isValidWorkingDirectory', () => {
   })
 
   it('rejects a file path', () => {
-    const file = '/tmp/craft-agent-path-validation-/file.txt'
+    const file = '/tmp/phaneris-path-validation-/file.txt'
     const statFn = (path: string) => {
       expect(path).toBe(file)
       return fileStats()

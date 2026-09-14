@@ -68,14 +68,14 @@ class DocxToolSmokeTests(unittest.TestCase):
             "--find",
             "Balint",
             "--replace-with",
-            "Craft Agent",
+            "Phaneris",
             "-o",
             str(replaced_doc),
         )
         self.assertEqual(repl.returncode, 0, msg=repl.stderr)
 
         extracted_replaced = self.run_tool("extract", str(replaced_doc))
-        self.assertIn("Craft Agent", extracted_replaced.stdout)
+        self.assertIn("Phaneris", extracted_replaced.stdout)
 
     def test_template_invalid_json_fails(self) -> None:
         template_doc = self.tmpdir / "bad-template.docx"
@@ -94,7 +94,7 @@ class DocxToolSmokeTests(unittest.TestCase):
         ))
         spec = self.tmpdir / "document-spec.json"
         spec.write_text(json.dumps({
-            "properties": {"title": "Structured Report", "author": "Craft Agent"},
+            "properties": {"title": "Structured Report", "author": "Phaneris"},
             "styles": {
                 "Normal": {"fontName": "Arial", "fontSize": 10},
                 "Heading 1": {"color": "1F4E79", "bold": True},

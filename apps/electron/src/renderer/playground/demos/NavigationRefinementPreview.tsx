@@ -15,7 +15,7 @@ import { MOBILE_WORKSPACE_ID, MOCK_SESSION_STATUSES } from './mobile-webui/mock-
 
 const now = Date.now()
 const demoSessions: SessionMeta[] = [
-  { id: 'nav-parent', workspaceId: MOBILE_WORKSPACE_ID, name: '优化 Craft Agent 界面', sessionStatus: 'todo', createdAt: now - 100000, lastMessageAt: now - 10000 },
+  { id: 'nav-parent', workspaceId: MOBILE_WORKSPACE_ID, name: '优化 Phaneris 界面', sessionStatus: 'todo', createdAt: now - 100000, lastMessageAt: now - 10000 },
   { id: 'nav-activity', workspaceId: MOBILE_WORKSPACE_ID, parentSessionId: 'nav-parent', name: '评估 Activity 热力图', sessionStatus: 'done', createdAt: now - 90000, lastMessageAt: now - 9000 },
   { id: 'nav-sidebar', workspaceId: MOBILE_WORKSPACE_ID, parentSessionId: 'nav-parent', name: '设计侧栏收起过渡', sessionStatus: 'in-progress', isProcessing: true, createdAt: now - 80000, lastMessageAt: now },
   { id: 'nav-sessions', workspaceId: MOBILE_WORKSPACE_ID, parentSessionId: 'nav-parent', name: '实现 Session 分组', sessionStatus: 'todo', hasUnread: true, createdAt: now - 70000, lastMessageAt: now - 7000 },

@@ -16,7 +16,7 @@ const STORAGE_MODULE = pathToFileURL(join(import.meta.dir, '..', 'storage.ts')).
 const temporaryDirectories: string[] = [];
 
 function makeConfigDir(): string {
-  const directory = mkdtempSync(join(tmpdir(), 'craft-agent-theme-'));
+  const directory = mkdtempSync(join(tmpdir(), 'phaneris-theme-'));
   temporaryDirectories.push(directory);
   mkdirSync(join(directory, 'themes'), { recursive: true });
   return directory;

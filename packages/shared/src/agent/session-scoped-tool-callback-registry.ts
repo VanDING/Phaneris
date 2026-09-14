@@ -84,7 +84,7 @@ export interface SessionScopedToolCallbacks {
   getMessagingBindingsFn?: (sessionId: string) => Array<{ platform: string; channelId: string; threadId?: number; channelName?: string; enabled: boolean }>;
   /** Unbind messaging channels from a session. Returns count of removed bindings. */
   unbindMessagingChannelFn?: (sessionId: string, platform?: string) => number;
-  /** Create a Craft Agents Task (board card + task.yaml + orchestrator session) without running it. */
+  /** Create a Phaneris Task (board card + task.yaml + orchestrator session) without running it. */
   createTaskFn?: (
     input: import('@phaneris/session-tools-core').CreateTaskInput
   ) => Promise<import('@phaneris/session-tools-core').CreateTaskResult>;

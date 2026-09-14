@@ -168,7 +168,7 @@
 - L-9 [ACCEPTED 用户决策] 主窗口 + toolbar BrowserView 仍 `sandbox: false` (`window-manager.ts:257-261`、`browser-pane-manager.ts:402-408`)。
 - L-10 [ACCEPTED 用户决策] preload 仍 6 个 `sendSync` (`bootstrap.ts:56,81,99-101,113`);`(api as any)` 7 处。
 - L-11 [FIXED bdc8147c] `install-server.sh:52-81` 明文打印 server token;`main/index.ts:1051` headless 打印 `PHANERIS_SERVER_TOKEN`;CLI `--api-key` 进 ps。
-- L-12 [FIXED 05afe4b9] deep-link 查询参数仍原样透传 (`deep-link.ts:181-188`) + 100ms 时序假设;`craftagents://` 协议注册使任意网页可触发 `delete-session` action。
+- L-12 [FIXED 05afe4b9] deep-link 查询参数仍原样透传 (`deep-link.ts:181-188`) + 100ms 时序假设;`phaneris://` 协议注册使任意网页可触发 `delete-session` action。
 - L-13 [FIXED bdc8147c] husky 零钩子;`test-workflow-local.sh:5` 硬编码个人路径。
 - L-14 [PARTIAL bdc8147c + 05afe4b9] renderer: MemoizedMarkdown 比较器 + 菜单闭包已修;render 期 clientHeight 读取 + Mermaid ref 写入仍 OPEN(性能类)。
 - L-15 [FIXED bdc8147c + 05afe4b9] `PHANERIS_HEALTH_PORT` NaN 绕过端口守卫 (`server/src/index.ts:293`);server token `===` 非恒时比较。

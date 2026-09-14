@@ -13,7 +13,7 @@ const STORAGE_MODULE_PATH = pathToFileURL(join(import.meta.dir, '..', 'storage.t
 const PI_RESOLVER_SETUP_PATH = pathToFileURL(join(import.meta.dir, '..', '..', '..', 'tests', 'setup', 'register-pi-model-resolver.ts')).href
 
 function setupWorkspaceConfigDir() {
-  const configDir = mkdtempSync(join(tmpdir(), 'craft-agent-config-'))
+  const configDir = mkdtempSync(join(tmpdir(), 'phaneris-config-'))
   const workspaceRoot = join(configDir, 'workspaces', 'my-workspace')
   mkdirSync(workspaceRoot, { recursive: true })
 
@@ -99,7 +99,7 @@ describe('startup migration (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (OpenAI)',
+        name: 'Phaneris Backend (OpenAI)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'openai-codex',
@@ -126,7 +126,7 @@ describe('startup migration (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Anthropic)',
+        name: 'Phaneris Backend (Anthropic)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'anthropic',
@@ -152,7 +152,7 @@ describe('startup migration (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Anthropic)',
+        name: 'Phaneris Backend (Anthropic)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'anthropic',
@@ -180,7 +180,7 @@ describe('startup migration (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Anthropic)',
+        name: 'Phaneris Backend (Anthropic)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'anthropic',
@@ -206,7 +206,7 @@ describe('startup migration (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Anthropic)',
+        name: 'Phaneris Backend (Anthropic)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'anthropic',
@@ -246,7 +246,7 @@ describe('startup migration (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (OpenRouter)',
+        name: 'Phaneris Backend (OpenRouter)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'openrouter',
@@ -395,7 +395,7 @@ describe('legacy Opus migration to default Opus (integration)', () => {
       },
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Anthropic)',
+        name: 'Phaneris Backend (Anthropic)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'anthropic',
@@ -478,7 +478,7 @@ describe('legacy Opus migration to default Opus (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Anthropic)',
+        name: 'Phaneris Backend (Anthropic)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'anthropic',
@@ -506,7 +506,7 @@ describe('legacy Opus migration to default Opus (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Bedrock)',
+        name: 'Phaneris Backend (Bedrock)',
         providerType: 'pi',
         authType: 'iam_credentials',
         piAuthProvider: 'amazon-bedrock',
@@ -534,7 +534,7 @@ describe('legacy Opus migration to default Opus (integration)', () => {
     writeRootConfig(configPath, workspaceRoot, [
       {
         slug: 'pi-api-key',
-        name: 'Craft Agents Backend (Anthropic)',
+        name: 'Phaneris Backend (Anthropic)',
         providerType: 'pi',
         authType: 'api_key',
         piAuthProvider: 'anthropic',

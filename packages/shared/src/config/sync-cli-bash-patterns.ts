@@ -2,7 +2,11 @@
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { getCraftAgentReadOnlyBashPatterns } from './cli-domains.ts'
+import { getPhanerisReadOnlyBashPatterns } from './cli-domains.ts'
+import { CLI_NAME } from '../identity.generated.ts'
+
+/** Prefix identifying a bash allowlist entry for the product CLI. */
+const CLI_BASH_PATTERN_PREFIX = `^${CLI_NAME}\\s`;
 
 interface AllowedBashEntry {
   pattern: string
@@ -16,7 +20,7 @@ interface PermissionsConfig {
 }
 
 function isCraftAgentPattern(entry: AllowedBashEntry): boolean {
-  return typeof entry.pattern === 'string' && entry.pattern.startsWith('^craft-agent\\s')
+  return typeof entry.pattern === 'string' && entry.pattern.startsWith(CLI_BASH_PATTERN_PREFIX)
 }
 
 function syncCraftAgentPatterns(config: PermissionsConfig): PermissionsConfig {
@@ -24,7 +28,7 @@ function syncCraftAgentPatterns(config: PermissionsConfig): PermissionsConfig {
   const firstCraftIndex = patterns.findIndex(isCraftAgentPattern)
 
   const withoutCraft = patterns.filter(entry => !isCraftAgentPattern(entry))
-  const generated = getCraftAgentReadOnlyBashPatterns()
+  const generated = getPhanerisReadOnlyBashPatterns()
 
   const insertAt = firstCraftIndex >= 0 ? firstCraftIndex : withoutCraft.length
   const nextAllowedBashPatterns = [
@@ -48,7 +52,7 @@ function main() {
   const nextConfig = syncCraftAgentPatterns(config)
 
   writeFileSync(targetPath, `${JSON.stringify(nextConfig, null, 2)}\n`, 'utf-8')
-  process.stdout.write(`Synced craft-agent bash patterns in ${targetPath}\n`)
+  process.stdout.write(`Synced CLI bash patterns in ${targetPath}\n`)
 }
 
 if (import.meta.main) {

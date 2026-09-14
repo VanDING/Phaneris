@@ -1,10 +1,10 @@
 # Skills Configuration Guide
 
-This guide explains how to create and configure skills in Craft Agent.
+This guide explains how to create and configure skills in Phaneris.
 
 > **Configuration workflow:** Use `craft-agent skill ...` commands instead of editing `SKILL.md` files directly.
 > - `craft-agent skill --help`
-> - Canonical command reference: [craft-cli.md](./craft-cli.md)
+> - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
 > When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## What Are Skills?
@@ -19,13 +19,13 @@ Skills are specialized instructions that extend the active agent for specific ta
 
 ## Claude Code-compatible format
 
-Craft Agent deliberately preserves the familiar frontmatter-plus-Markdown shape:
+Phaneris deliberately preserves the familiar frontmatter-plus-Markdown shape:
 
 1. **Portable structure**: a Markdown instruction body with YAML frontmatter
 2. **Shared core fields**: `name` and `description`, plus supported optional Craft fields such as `globs`, `alwaysAllow`, and `requiredSources`
 3. **Agent-neutral instructions**: write for the active agent unless a skill intentionally targets one model or provider
 
-**What Craft Agent adds:**
+**What Phaneris adds:**
 - **Visual icons**: Display custom icons in the UI for each skill
 - **Workspace organization**: Skills are scoped to workspaces
 - **UI management**: Browse, edit, and validate skills through the interface
@@ -35,7 +35,7 @@ Craft Agent deliberately preserves the familiar frontmatter-plus-Markdown shape:
 When a skill is invoked (e.g., `/commit`):
 
 1. **Project**: `{projectRoot}/.agents/skills/{slug}/SKILL.md`
-2. **Workspace**: `~/.craft-agent/workspaces/{id}/skills/{slug}/SKILL.md`
+2. **Workspace**: `~/.phaneris/workspaces/{id}/skills/{slug}/SKILL.md`
 3. **Global**: `~/.agents/skills/{slug}/SKILL.md`
 
 The highest-priority matching slug wins: project > workspace > global. Use `craft-agent skill where <slug> --project-root <path>` when CLI is available to inspect the resolved path. Do not assume a separate SDK-bundled fallback.
@@ -49,7 +49,7 @@ This allows you to:
 
 Skills are stored as folders:
 ```
-~/.craft-agent/workspaces/{workspaceId}/skills/{slug}/
+~/.phaneris/workspaces/{workspaceId}/skills/{slug}/
 ├── SKILL.md          # Required: YAML frontmatter + Markdown instructions
 ├── icon.svg          # Recommended: Skill icon for UI display
 ├── icon.png          # Alternative: PNG icon

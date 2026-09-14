@@ -86,7 +86,7 @@ class XlsxToolSmokeTests(unittest.TestCase):
         ))
         spec = self.tmpdir / "workbook-spec.json"
         spec.write_text(json.dumps({
-            "properties": {"title": "Quarterly Scores", "creator": "Craft Agent"},
+            "properties": {"title": "Quarterly Scores", "creator": "Phaneris"},
             "sheets": [{
                 "name": "Scores",
                 "rows": [["Name", "Math", "English"], ["Ada", 91, 88], ["Lin", 84, 95]],

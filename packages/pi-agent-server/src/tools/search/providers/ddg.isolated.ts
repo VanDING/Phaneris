@@ -16,7 +16,7 @@ describe('DDGSearchProvider public fallback', () => {
         return new Response(`
           <html><body><ul>
             <li class="res-list">
-              <h3><a href="https://www.so.com/link?m=abc">Craft Agents</a></h3>
+              <h3><a href="https://www.so.com/link?m=abc">Phaneris</a></h3>
               <p class="res-desc">Open-source agent workspace</p>
             </li>
           </ul></body></html>
@@ -29,7 +29,7 @@ describe('DDGSearchProvider public fallback', () => {
 
     expect(response.engines).toEqual(['so360']);
     expect(response.results).toEqual([{
-      title: 'Craft Agents',
+      title: 'Phaneris',
       url: 'https://www.so.com/link?m=abc',
       description: 'Open-source agent workspace',
       engine: 'so360',

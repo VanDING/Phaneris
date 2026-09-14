@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { permissionsConfigCache } from '../permissions-config.ts'
 
 const originalConfigDir = process.env.PHANERIS_CONFIG_DIR
-const originalCliFlag = process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI
+const originalCliFlag = process.env.PHANERIS_FEATURE_AGENTS_CLI
 
 function writeDefaultPermissions(configDir: string) {
   const permissionsDir = join(configDir, 'permissions')
@@ -16,7 +16,7 @@ function writeDefaultPermissions(configDir: string) {
       {
         version: '2026-03-07',
         allowedBashPatterns: [
-          { pattern: '^craft-agent\\s+label\\s+list\\b', comment: 'craft-agent label read-only operations' },
+          { pattern: '^phaneris\\s+label\\s+list\\b', comment: 'phaneris label read-only operations' },
           { pattern: '^rg\\b', comment: 'Ripgrep search' },
         ],
         allowedMcpPatterns: [],
@@ -40,16 +40,16 @@ afterEach(() => {
   if (originalConfigDir === undefined) delete process.env.PHANERIS_CONFIG_DIR
   else process.env.PHANERIS_CONFIG_DIR = originalConfigDir
 
-  if (originalCliFlag === undefined) delete process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI
-  else process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI = originalCliFlag
+  if (originalCliFlag === undefined) delete process.env.PHANERIS_FEATURE_AGENTS_CLI
+  else process.env.PHANERIS_FEATURE_AGENTS_CLI = originalCliFlag
 })
 
-describe('permissions config craft-agents-cli feature flag', () => {
-  it('skips compiling craft-agent bash allowlist patterns when feature is disabled', () => {
+describe('permissions config phaneris-cli feature flag', () => {
+  it('skips compiling phaneris bash allowlist patterns when feature is disabled', () => {
     const tempConfigDir = mkdtempSync(join(tmpdir(), 'craft-permissions-'))
     try {
       process.env.PHANERIS_CONFIG_DIR = tempConfigDir
-      process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI = '0'
+      process.env.PHANERIS_FEATURE_AGENTS_CLI = '0'
       writeDefaultPermissions(tempConfigDir)
 
       const merged = permissionsConfigCache.getMergedConfig({
@@ -58,18 +58,18 @@ describe('permissions config craft-agents-cli feature flag', () => {
       })
 
       const sources = merged.readOnlyBashPatterns.map(p => p.source)
-      expect(sources.some(source => source.startsWith('^craft-agent\\s'))).toBe(false)
+      expect(sources.some(source => source.startsWith('^phaneris\\s'))).toBe(false)
       expect(sources).toContain('^rg\\b')
     } finally {
       rmSync(tempConfigDir, { recursive: true, force: true })
     }
   })
 
-  it('compiles craft-agent bash allowlist patterns when feature is enabled', () => {
+  it('compiles phaneris bash allowlist patterns when feature is enabled', () => {
     const tempConfigDir = mkdtempSync(join(tmpdir(), 'craft-permissions-'))
     try {
       process.env.PHANERIS_CONFIG_DIR = tempConfigDir
-      process.env.PHANERIS_FEATURE_PHANERIS_AGENTS_CLI = '1'
+      process.env.PHANERIS_FEATURE_AGENTS_CLI = '1'
       writeDefaultPermissions(tempConfigDir)
 
       const merged = permissionsConfigCache.getMergedConfig({
@@ -78,7 +78,7 @@ describe('permissions config craft-agents-cli feature flag', () => {
       })
 
       const sources = merged.readOnlyBashPatterns.map(p => p.source)
-      expect(sources).toContain('^craft-agent\\s+label\\s+list\\b')
+      expect(sources).toContain('^phaneris\\s+label\\s+list\\b')
       expect(sources).toContain('^rg\\b')
     } finally {
       rmSync(tempConfigDir, { recursive: true, force: true })

@@ -1,5 +1,5 @@
 /** Bundled authoring helper; synced with docs so it also works in packaged installs.
- * Run: bun ~/.craft-agent/docs/pages-scaffold.mjs <new-project-directory>
+ * Run: bun ~/.phaneris/docs/pages-scaffold.mjs <new-project-directory>
  * Only creates source files. Dependency installation and builds are explicit commands.
  */
 import { mkdir, writeFile } from 'node:fs/promises'

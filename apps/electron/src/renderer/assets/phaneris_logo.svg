@@ -1,12 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="299px" height="300px" viewBox="0 0 299 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>craft_logo_c</title>
-    <g id="craft_logo_c" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group">
-            <path d="M137.879,300.001 L137.875,300.001 C62.3239,300.001 0.966154,239.232 0.0117188,163.908 L2.56478e-10,162.126 L137.879,162.126 L137.879,300.001 Z" id="Path" fill="#06367A"></path>
-            <path d="M137.879,0 L137.875,0 C61.729,0 0,61.729 0,137.875 L0,137.878 L137.879,137.878 L137.879,0 Z" id="Path" fill="#FF51FF"></path>
-            <path d="M160.558,137.883 L160.561,137.883 C236.707,137.883 298.436,76.1537 298.436,0.00758561 L298.436,0.00562043 L160.558,0.00562043 L160.558,137.883 Z" id="Path" fill="#007CFF"></path>
-            <path d="M160.558,162.123 L160.561,162.123 C236.112,162.123 297.471,222.891 298.426,298.216 L298.436,299.998 L160.558,299.998 L160.558,162.123 Z" id="Path" fill="#0A377B"></path>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+<defs>
+  <linearGradient id="gTopL" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0%" stop-color="#2A0E92"/>
+    <stop offset="55%" stop-color="#5420F3"/>
+    <stop offset="100%" stop-color="#8F63FF"/>
+  </linearGradient>
+  <linearGradient id="gStem" x1="0" y1="0" x2="0.8" y2="1">
+    <stop offset="0%" stop-color="#1E0B68"/>
+    <stop offset="100%" stop-color="#6C2DFF"/>
+  </linearGradient>
+  <linearGradient id="gTopR" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#8E57FF"/>
+    <stop offset="100%" stop-color="#D4BCFF"/>
+  </linearGradient>
+  <linearGradient id="gRight" x1="0" y1="0" x2="0.4" y2="1">
+    <stop offset="0%" stop-color="#5A22EE"/>
+    <stop offset="100%" stop-color="#9D6BFF"/>
+  </linearGradient>
+  <linearGradient id="gInner" x1="0" y1="0.2" x2="1" y2="0.8">
+    <stop offset="0%" stop-color="#4B16E8"/>
+    <stop offset="100%" stop-color="#B58BFF"/>
+  </linearGradient>
+</defs>
+<polygon points="180,270 500,90 500,270 330,365" fill="url(#gTopL)"/>
+<polygon points="180,270 330,365 330,790 180,875" fill="url(#gStem)"/>
+<polygon points="500,90 760,235 610,320 500,270" fill="url(#gTopR)"/>
+<polygon points="610,320 760,235 760,510 610,595" fill="url(#gRight)"/>
+<polygon points="380,555 610,425 610,595 380,725" fill="url(#gInner)"/>
 </svg>

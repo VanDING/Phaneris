@@ -6,7 +6,7 @@ import { getMenuIcon } from './menu-icons'
 import { motion, AnimatePresence } from 'motion/react'
 import { MOTION_DURATION, MOTION_SPRING } from '@phaneris/ui/motion'
 import { useRegisterDismissibleLayer } from '@/context/DismissibleLayerContext'
-import { CraftAgentsSymbol } from '../icons/CraftAgentsSymbol'
+import { PhanerisSymbol } from '../icons/PhanerisSymbol'
 import { SquarePenRounded } from '../icons/SquarePenRounded'
 import { SETTINGS_ICONS } from '../icons/SettingsIcons'
 import { TopBarButton } from '../ui/TopBarButton'
@@ -181,7 +181,7 @@ export function MobileAppMenu(props: AppMenuProps) {
         data-state={state.isOpen ? 'open' : 'closed'}
         className="rounded-[8px]"
       >
-        <CraftAgentsSymbol className="!h-5 !w-auto text-accent" />
+        <PhanerisSymbol className="!h-5 !w-auto text-accent" />
       </TopBarButton>
       <MobileMenuSheet
         state={state}

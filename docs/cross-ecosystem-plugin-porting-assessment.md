@@ -1,6 +1,6 @@
 # 跨生态插件移植评估：DSH / Pi / Codex → Craft 原生能力
 
-- 作者：Craft Agent（与用户协作）
+- 作者：Phaneris（与用户协作）
 - 日期：2026-08-20
 - 性质：探索性评估（实施未定）
 - 状态补充（2026-08-30）：仍是探索性评估。Univer 路线已经退役，当前文件产物基线改为 [`artifact-files-native-image-generation-plan.md`](artifact-files-native-image-generation-plan.md)。

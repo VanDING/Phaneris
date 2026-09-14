@@ -419,7 +419,7 @@ function buildCliDomainBlockMessage(namespace: CliDomainNamespace, context: stri
 
   return [
     `${context}`,
-    `Use \`craft-agent ${namespace} ...\` instead.`,
+    `Use \`phaneris ${namespace} ...\` instead.`,
     `Run \`${policy.helpCommand}\` for the full ${noun} command reference.`,
     '',
     quickExamplesHeading,
@@ -517,7 +517,7 @@ export function getConfigCliRedirect(
 }
 
 /**
- * Block bash commands that operate on guarded config paths unless they use craft-agent commands.
+ * Block bash commands that operate on guarded config paths unless they use phaneris commands.
  * Current guarded domains in Bash are declared in shared CLI domain policy.
  */
 export function getConfigDomainBashRedirect(
@@ -528,7 +528,7 @@ export function getConfigDomainBashRedirect(
   const command = typeof input.command === 'string' ? input.command.trim() : '';
   if (!command) return null;
 
-  if (/^craft-agent\s+(label|automation|source|skill)\b/.test(command)) {
+  if (/^phaneris\s+(label|automation|source|skill)\b/.test(command)) {
     return null;
   }
 
@@ -805,7 +805,7 @@ export function runPreToolUseChecks(ctx: PreToolUseInput): PreToolUseCheckResult
     wasModified = true;
   }
 
-  // 5b. Config-domain Bash guard (block direct labels/automations path operations unless using craft-agent)
+  // 5b. Config-domain Bash guard (block direct labels/automations path operations unless using phaneris)
   if (FEATURE_FLAGS.craftAgentsCli && toolName === 'Bash') {
     const configDomainBashRedirect = getConfigDomainBashRedirect(currentInput, workspaceRootPath, workingDirectory);
     if (configDomainBashRedirect) {

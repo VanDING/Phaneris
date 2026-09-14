@@ -1,4 +1,4 @@
-# Craft Agents — Renderer (Web/React) Capability & Dependency Inventory
+# Phaneris — Renderer (Web/React) Capability & Dependency Inventory
 
 **Purpose:** itemized inventory of the RENDERER's UI capability surface and its dependencies on
 browser/Electron-specific APIs, to judge the cost of re-implementing the UI in a native Rust GUI

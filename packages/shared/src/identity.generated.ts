@@ -20,8 +20,10 @@ export const PRODUCT_DESCRIPTION = 'Local AI workspace with durable, inspectable
 export const APP_ID = 'io.github.vanding.phaneris';
 /** FROZEN. Deep-link URL scheme. The upstream scheme is never claimed. */
 export const DEEPLINK_SCHEME = 'phaneris';
-/** Ready-made prefix for building deep links: `${DEEPLINK_SCHEME_PREFIX}settings`. */
-export const DEEPLINK_SCHEME_PREFIX = `${DEEPLINK_SCHEME}://`;
+// Derived deep-link forms (`phaneris:` for URL.protocol comparisons, `phaneris://`
+// for prefix checks) live in ./identity.ts, which applies the development-only
+// PHANERIS_DEEPLINK_SCHEME override. Do not derive them here: a second,
+// override-blind copy is how the registrar and the parser drift apart.
 
 /** electron-builder artifactName template, shared with the scripts that locate built installers. */
 export const ARTIFACT_NAME_TEMPLATE = 'Phaneris-${version}-${os}-${arch}.${ext}';

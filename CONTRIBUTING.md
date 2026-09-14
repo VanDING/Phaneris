@@ -1,6 +1,6 @@
-# Contributing to Craft Agents (RE)
+# Contributing to Phaneris (RE)
 
-Thank you for helping improve Craft Agents (RE). Contributions should preserve the project's central properties: one Pi agent backend, durable and auditable execution, explicit permission boundaries, local-first data, and a coherent desktop workspace.
+Thank you for helping improve Phaneris (RE). Contributions should preserve the project's central properties: one Pi agent backend, durable and auditable execution, explicit permission boundaries, local-first data, and a coherent desktop workspace.
 
 ## Set up the repository
 

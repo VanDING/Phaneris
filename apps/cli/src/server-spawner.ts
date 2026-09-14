@@ -1,5 +1,5 @@
 /**
- * Server spawner — start a headless Craft Agent server as a child process.
+ * Server spawner — start a headless Phaneris server as a child process.
  *
  * Spawns `bun run <serverEntry>`, reads stdout for the `PHANERIS_SERVER_URL=`
  * and `PHANERIS_SERVER_TOKEN=` lines, and returns a handle to stop the server.

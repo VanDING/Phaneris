@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Debug script to print the full Craft Agent system prompt with annotations.
+ * Debug script to print the full Phaneris system prompt with annotations.
  * Shows both the static system prompt and dynamic user message context components.
  *
  * Run with: bun run print:system-prompt
@@ -203,11 +203,11 @@ ${colors.bgMagenta}${colors.bold}                                               
 
 ${colors.bold}SDK Configuration:${colors.reset}
   systemPrompt.preset: 'claude_code'     ${colors.dim}// Claude Code's base system prompt${colors.reset}
-  systemPrompt.append: getSystemPrompt() ${colors.dim}// Craft Agent additions (static, cacheable)${colors.reset}
+  systemPrompt.append: getSystemPrompt() ${colors.dim}// Phaneris additions (static, cacheable)${colors.reset}
 
 ${colors.bold}Static System Prompt Components:${colors.reset}
   1. User Preferences (if set)           ${colors.dim}// formatPreferencesForPrompt()${colors.reset}
-  2. Craft Agent Environment Marker      ${colors.dim}// Version, platform, arch${colors.reset}
+  2. Phaneris Environment Marker      ${colors.dim}// Version, platform, arch${colors.reset}
   3. Core Instructions                   ${colors.dim}// Capabilities, sources, guidelines${colors.reset}
   4. Configuration Documentation Refs    ${colors.dim}// Permissions, skills, themes, statuses${colors.reset}
   5. Permission Modes Documentation      ${colors.dim}// Inlined in system prompt${colors.reset}

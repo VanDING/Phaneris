@@ -1,4 +1,4 @@
-# Craft Agents (RE) documentation
+# Phaneris (RE) documentation
 
 This index separates current product and architecture documentation from historical audits, implementation handoffs, and deferred design work. A historical document remains useful evidence, but it is not a current product contract unless its status says otherwise.
 

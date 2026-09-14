@@ -21,6 +21,8 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- **Phaneris identity** — the product is now Phaneris: new name, app id (`io.github.vanding.phaneris`), `phaneris://` deep links, its own application icon set, and a `phaneris` CLI. Internal packages moved to the `@phaneris/*` scope and environment variables to the `PHANERIS_` prefix. The application data directory defaults to `~/.phaneris` and the Electron userData directory is pinned to `Phaneris`, so Phaneris and the upstream app can be installed side by side without sharing caches, locks or protocol registrations. Every one of these values comes from a single identity file, guarded by a CI drift check.
+
 - **Commit attribution follows the task** — removed the built-in co-author prompt and its preference-tool switch; commit attribution follows user instructions and repository conventions.
 
 - **Consistent agent guidance** — built-in instructions now separate permissions, execution, and delivery workflows from on-demand format documentation. Tool/skill/permission guides reflect current runtime behavior, and a new Artifact guide explains managed drafts, validation, and user acceptance.
@@ -47,7 +49,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 - **Faster warm sessions and chat rendering** — unchanged source runtimes and tool definitions are reused instead of rebuilding the Pi session every turn. Ordered transcripts skip redundant sorting and chat turns are grouped once per render. New cold/warm, first-response, tool round-trip, event-processing, and stream-to-paint timing samples expose p50/p95 regressions.
 - **Single-backend cleanup** — removed the unused legacy session tool factory, Claude-hook bridge shapes, dormant `session-mcp-server` workspace, stale Copilot SDK dependency, and obsolete migration plans. The new Pi kernel document is the source of truth for runtime maintenance.
 - **Upgrade to Bun 1.4** — the bundled pi-agent-server runtime, local tooling, Docker images, build scripts, and CI now use Bun 1.4.0 consistently.
-- **Theme files can now control complete visual styles** — user-owned themes in `~/.craft-agent/themes/` can define semantic surfaces, depth, shadows, radii, borders, typography, Lucide stroke style, and component density. The immutable Default theme remains the only built-in theme; no in-app theme editor was added.
+- **Theme files can now control complete visual styles** — user-owned themes in `~/.phaneris/themes/` can define semantic surfaces, depth, shadows, radii, borders, typography, Lucide stroke style, and component density. The immutable Default theme remains the only built-in theme; no in-app theme editor was added.
 - **Core surfaces now consume theme semantics** — the app shell, navigator, content panels, cards, controls, and composer now use theme-defined surfaces, radii, depth, and typography so high-character themes no longer stop at color substitution.
 - **Theme-aware Windows title bar** — Windows now keeps its native minimize, maximize, and close controls inside the app's existing draggable top bar. The controls overlay is fully transparent so the renderer-owned theme, borders, and Mica/Acrylic remain continuous underneath it, while glyph colors follow the effective app, workspace, or preview theme.
 - **Deterministic live theme updates** — theme preference writes are now authoritative in `config.json`, workspace switches ignore stale async responses, and add/edit/delete events from the user theme directory are observed once per app. Missing or invalid active themes fall back atomically to Default instead of retaining stale CSS.
@@ -76,9 +78,15 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Breaking Changes
 
+- **Application data moved to `~/.phaneris`** — Phaneris reads and writes `~/.phaneris`, not `~/.craft-agent`. Nothing is copied automatically: the previous application keeps its data, and this build starts from an empty new directory. `CRAFT_CONFIG_DIR` is deliberately ignored (pointing the new product at the old app's live data is how two applications end up writing one state database). Until the import flow ships, `PHANERIS_CONFIG_DIR` pointed at the old directory works as a transitional bridge and logs a warning.
+
+- **`CRAFT_*` environment variables renamed to `PHANERIS_*`** — every variable this product reads uses the new prefix. Credentials, the data directory and the update feed inherit nothing. The one exception is automation webhook secrets: a shell profile's `CRAFT_WH_*` variables are still honoured for one transition with a one-time deprecation notice.
+
+- **Script and page variables renamed** — variables injected into automation scripts and page refresh scripts (`PHANERIS_WORKSPACE_PATH`, `PHANERIS_PAGE_SLUG`, `PHANERIS_PAGE_DIR`, `PHANERIS_PAGE_DATA_DIR`, `PHANERIS_EVENT`, …) use the new prefix only. The old names are not injected alongside the new ones, so scripts that reference `$CRAFT_WORKSPACE_PATH` or similar must be updated.
+
 - **Remote servers with self-signed certificates** — certificate validation now defaults on. Existing remote workspaces must enable "Allow invalid TLS certificate" explicitly (or install a trusted certificate) before reconnecting. Crash reporting is also opt-in rather than DSN-only.
 
-- **Default is now the only built-in theme** — bundled named presets are no longer copied into `~/.craft-agent/themes/`. Existing files in that directory remain untouched and work as user themes. The deprecated `~/.craft-agent/theme.json` override is migrated non-destructively to a user theme file and then removed from runtime resolution.
+- **Default is now the only built-in theme** — bundled named presets are no longer copied into `~/.phaneris/themes/`. Existing files in that directory remain untouched and work as user themes. The deprecated `~/.phaneris/theme.json` override is migrated non-destructively to a user theme file and then removed from runtime resolution.
 
 ## Recovery corrections
 

@@ -3,7 +3,7 @@
 - 日期：2026-08-22（2026-08-24 更新）
 - 状态：历史实施记录；Artifact/Workbench 基础继续有效，Univer 相关路线已于 2026-08-30 退役
 - 当前工作分支：`codex/right-panel-audit-replan`
-- 本文取代：2026-08-20 版“Craft Agent 原生能力工作台 —— 最终实施方案”
+- 本文取代：2026-08-20 版“Phaneris 原生能力工作台 —— 最终实施方案”
 - 核心原则：**产品界面与呈现模型优先，文档引擎可替换；Univer 是候选实现，不是产品架构本身。**
 
 > 后续基线：`docs/artifact-files-native-image-generation-plan.md`。该基线保留通用 Artifact/Workbench，

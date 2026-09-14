@@ -593,7 +593,7 @@ export interface ThemeSummary {
 export const DEFAULT_THEME_FILE: ThemeFile = {
   name: 'Default',
   description: 'Refined cool-neutral surfaces, native transparent sidebar, near-black dark mode and vivid Violet Pulse accents.',
-  author: 'Craft Agent',
+  author: 'Phaneris',
   license: 'MIT',
   supportedModes: ['light', 'dark'],
   shikiTheme: {

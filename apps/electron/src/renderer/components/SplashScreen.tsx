@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
-import { CraftAgentsSymbol } from './icons/CraftAgentsSymbol'
+import { PhanerisSymbol } from './icons/PhanerisSymbol'
 
 interface SplashScreenProps {
   isExiting: boolean
@@ -37,7 +37,7 @@ export function SplashScreen({ isExiting, onExitComplete }: SplashScreenProps) {
           ease: MOTION_EASE.enter,
         }}
       >
-        <CraftAgentsSymbol className="h-8 text-accent" />
+        <PhanerisSymbol className="h-8 text-accent" />
       </motion.div>
     </motion.div>
   )

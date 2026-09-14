@@ -42,4 +42,4 @@ Third-party services and dependencies should also be reported to their own maint
 - Stop once you have enough evidence to demonstrate the issue.
 - Allow maintainers a reasonable opportunity to investigate before public disclosure.
 
-Craft Agents (RE) is an independent fork. Please do not send fork-specific reports to the upstream Craft security address unless you have separately verified that the same issue affects the upstream project.
+Phaneris (RE) is an independent fork. Please do not send fork-specific reports to the upstream Craft security address unless you have separately verified that the same issue affects the upstream project.

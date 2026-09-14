@@ -72,7 +72,7 @@ Keep authoring projects **outside the managed `pages/` directory but inside the 
 From the workspace root:
 
 ```sh
-bun ~/.craft-agent/docs/pages-scaffold.mjs page-projects/build-health
+bun ~/.phaneris/docs/pages-scaffold.mjs page-projects/build-health
 cd page-projects/build-health
 bun install
 bun run typecheck

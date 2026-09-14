@@ -20,7 +20,7 @@ describe('auth barrel exports', () => {
       sessionId: 'test-123',
       deeplinkScheme: 'craftagents',
     });
-    expect(result).toBe('craftagents://allSessions/session/test-123');
+    expect(result).toBe('phaneris://allSessions/session/test-123');
   });
 
   it('buildOAuthDeeplinkUrl returns undefined for incomplete context from barrel', async () => {

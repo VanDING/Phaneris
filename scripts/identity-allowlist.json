@@ -73,6 +73,36 @@
       "reason": "Documents the CRAFT_WH_* migration path for user-authored shell profiles and automation scripts."
     },
     {
+      "glob": "packages/shared/src/config/paths.ts",
+      "tokens": ["env-prefix"],
+      "reason": "Its header documents why the upstream CRAFT_CONFIG_DIR is deliberately NOT read; naming it is the point of the comment."
+    },
+    {
+      "glob": "TRADEMARK.md",
+      "tokens": ["*"],
+      "reason": "The upstream trademark policy still governs the Craft and Craft Agents marks, which this fork must keep honouring. It needs a Phaneris section before release (tracked in the B-phase record) but must not be rewritten to erase the upstream marks."
+    },
+    {
+      "glob": "AUDIT_REPORT.md",
+      "tokens": ["*"],
+      "reason": "Historical audit of the upstream codebase under its own name; a record of what was reviewed, not a product surface."
+    },
+    {
+      "glob": "packages/shared/CLAUDE.md",
+      "tokens": ["*"],
+      "reason": "Package guidance that must keep naming the legacy identifiers and the upstream Craft service when explaining what not to rename."
+    },
+    {
+      "glob": "docs/**",
+      "tokens": ["*"],
+      "reason": "Maintainer documentation: architecture notes, fork records, plans and assessments that describe the fork lineage and quote upstream identifiers as source material. The user-facing documentation set — apps/electron/resources/docs/**, which is synced into the user's data directory and read by the agent — is deliberately NOT covered here."
+    },
+    {
+      "glob": "apps/electron/resources/bridge-mcp-server/index.js",
+      "tokens": ["*"],
+      "reason": "Vendored 664 KB bundle with no buildable source in this repository, so its strings cannot be regenerated here. One user-visible message still says 'Craft Agent settings'; removing it requires rebuilding the bundle from its own upstream package. Recorded as remaining work in the B-phase record rather than patched by hand, which would only hide that the bundle needs regenerating."
+    },
+    {
       "glob": "packages/shared/src/identity.generated.ts",
       "tokens": ["*"],
       "reason": "Generated from phaneris.identity.json — contains the LEGACY_IDENTITY block by construction."

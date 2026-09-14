@@ -134,7 +134,7 @@ function getProviderLabelFromType(providerType?: LlmProviderType, baseUrl?: stri
   if (providerType) {
     switch (providerType) {
       case 'pi':
-      case 'pi_compat': return 'Craft Agents Backend';
+      case 'pi_compat': return 'Phaneris Backend';
     }
   }
   // Fallback: derive from base URL or default

@@ -7,9 +7,9 @@ import { markdownUrlTransform } from '../url-transform'
 
 describe('resolveMarkdownLinkTarget', () => {
   it('resolves absolute unix file paths as file targets', () => {
-    expect(resolveMarkdownLinkTarget('/Users/balintorosz/.craft-agent/sessions/abc/image.jpg')).toEqual({
+    expect(resolveMarkdownLinkTarget('/Users/balintorosz/.phaneris/sessions/abc/image.jpg')).toEqual({
       kind: 'file',
-      path: '/Users/balintorosz/.craft-agent/sessions/abc/image.jpg',
+      path: '/Users/balintorosz/.phaneris/sessions/abc/image.jpg',
     })
   })
 
@@ -63,16 +63,16 @@ describe('resolveMarkdownLinkTarget', () => {
   })
 
   it('resolves Windows drive paths with backslashes', () => {
-    expect(resolveMarkdownLinkTarget('E:\\craft-agents\\apps\\main.tsx')).toEqual({
+    expect(resolveMarkdownLinkTarget('E:\\phaneris\\apps\\main.tsx')).toEqual({
       kind: 'file',
-      path: 'E:\\craft-agents\\apps\\main.tsx',
+      path: 'E:\\phaneris\\apps\\main.tsx',
     })
   })
 
   it('strips line and column suffixes from clickable source paths', () => {
-    expect(resolveMarkdownLinkTarget('E:/craft-agents/apps/main.tsx:120:7')).toEqual({
+    expect(resolveMarkdownLinkTarget('E:/phaneris/apps/main.tsx:120:7')).toEqual({
       kind: 'file',
-      path: 'E:/craft-agents/apps/main.tsx',
+      path: 'E:/phaneris/apps/main.tsx',
     })
     expect(resolveMarkdownLinkTarget('/repo/src/main.ts#L42C3')).toEqual({
       kind: 'file',
@@ -154,7 +154,7 @@ describe('ReactMarkdown anchor rendering with markdownUrlTransform', () => {
 
 describe('classifyMarkdownLinkTarget', () => {
   it('classifies absolute unix file paths as file', () => {
-    expect(classifyMarkdownLinkTarget('/Users/balintorosz/.craft-agent/sessions/abc/image.jpg')).toBe('file')
+    expect(classifyMarkdownLinkTarget('/Users/balintorosz/.phaneris/sessions/abc/image.jpg')).toBe('file')
   })
 
   it('classifies file URLs as file', () => {

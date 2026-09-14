@@ -7,7 +7,7 @@ describe('buildOAuthDeeplinkUrl', () => {
       sessionId: '260209-swift-river',
       deeplinkScheme: 'craftagents',
     };
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('craftagents://allSessions/session/260209-swift-river');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe('phaneris://allSessions/session/260209-swift-river');
   });
 
   it('returns undefined when sessionId is missing', () => {
@@ -46,7 +46,7 @@ describe('buildOAuthDeeplinkUrl', () => {
       sessionId: '260209-swift-river-42',
       deeplinkScheme: 'craftagents',
     };
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('craftagents://allSessions/session/260209-swift-river-42');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe('phaneris://allSessions/session/260209-swift-river-42');
   });
 
   it('handles session ID with URL-unsafe characters', () => {
@@ -55,7 +55,7 @@ describe('buildOAuthDeeplinkUrl', () => {
       deeplinkScheme: 'craftagents',
     };
     // The function does not encode - it passes through as-is
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('craftagents://allSessions/session/session/with spaces&special=chars');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe('phaneris://allSessions/session/session/with spaces&special=chars');
   });
 
   it('returns undefined when sessionId is empty string', () => {

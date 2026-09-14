@@ -15,7 +15,7 @@ import {
   StyledDropdownMenuSubTrigger,
   StyledDropdownMenuSubContent,
 } from "@/components/ui/styled-dropdown"
-import { CraftAgentsSymbol } from "../icons/CraftAgentsSymbol"
+import { PhanerisSymbol } from "../icons/PhanerisSymbol"
 import { SquarePenRounded } from "../icons/SquarePenRounded"
 import { SETTINGS_ICONS } from "../icons/SettingsIcons"
 import { TopBarButton } from "../ui/TopBarButton"
@@ -166,7 +166,7 @@ export function DesktopAppMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <TopBarButton aria-label={t("menu.craftMenu")}>
-          <CraftAgentsSymbol className="h-4 text-accent" />
+          <PhanerisSymbol className="h-4 text-accent" />
         </TopBarButton>
       </DropdownMenuTrigger>
       <StyledDropdownMenuContent align="start" minWidth="min-w-48">

@@ -126,16 +126,16 @@ describe('groupConnectionsByProvider', () => {
     expect(result).toEqual([['Local', [local]]])
   })
 
-  test('"pi_compat" with remote baseUrl goes to "Craft Agents Backend"', () => {
+  test('"pi_compat" with remote baseUrl goes to "Phaneris Backend"', () => {
     const remote = conn('openrouter', 'pi_compat', { baseUrl: 'https://openrouter.ai/api/v1' })
     const result = groupConnectionsByProvider([remote])
-    expect(result).toEqual([['Craft Agents Backend', [remote]]])
+    expect(result).toEqual([['Phaneris Backend', [remote]]])
   })
 
   test('drops empty groups from the output', () => {
     const a = conn('a', 'pi')
     const result = groupConnectionsByProvider([a])
-    // Only "Pi" appears; "Local" and "Craft Agents Backend" are dropped.
+    // Only "Pi" appears; "Local" and "Phaneris Backend" are dropped.
     expect(result.length).toBe(1)
     expect(result[0][0]).toBe('Pi')
   })
@@ -149,7 +149,7 @@ describe('groupConnectionsByProvider', () => {
     expect(result.map(([k, conns]) => [k, conns.map(c => c.slug)])).toEqual([
       ['Pi', ['a', 'p']],
       ['Local', ['ollama']],
-      ['Craft Agents Backend', ['or']],
+      ['Phaneris Backend', ['or']],
     ])
   })
 })

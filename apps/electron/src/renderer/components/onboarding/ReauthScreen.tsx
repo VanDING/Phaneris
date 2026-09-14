@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { AlertCircle, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@phaneris/ui"
-import { CraftAgentsSymbol } from "@/components/icons/CraftAgentsSymbol"
+import { PhanerisSymbol } from "@/components/icons/PhanerisSymbol"
 import { StepFormLayout } from "./primitives"
 
 interface ReauthScreenProps {

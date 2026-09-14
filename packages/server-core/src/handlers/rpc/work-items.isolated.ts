@@ -107,7 +107,7 @@ function createHarness(options?: {
 
 describe('work item RPC handlers', () => {
   beforeEach(() => {
-    workspaceRoot = mkdtempSync(join(tmpdir(), 'craft-agent-work-items-rpc-'))
+    workspaceRoot = mkdtempSync(join(tmpdir(), 'phaneris-work-items-rpc-'))
     workspaceFixture.rootPath = workspaceRoot
   })
 

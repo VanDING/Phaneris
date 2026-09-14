@@ -14,7 +14,7 @@ package, the official iLink ClawBot transport for personal WeChat (微信).
 The upstream package is published as an [OpenClaw](https://www.npmjs.com/package/openclaw)
 channel plugin. It depends on `openclaw` as a peer dependency, expects the
 OpenClaw runtime to own message routing (`channelRuntime` / `processOneMessage`),
-and persists state under an OpenClaw-managed directory. Craft Agent is not an
+and persists state under an OpenClaw-managed directory. Phaneris is not an
 OpenClaw host, so the transport layer is vendored here, decoupled from the
 plugin host, and wired into the standard `PlatformAdapter` contract by
 [`../index.ts`](../index.ts).

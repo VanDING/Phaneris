@@ -1,15 +1,15 @@
 # Automations Configuration Guide
 
-This guide explains how to configure automations in Craft Agent to automate workflows based on events.
+This guide explains how to configure automations in Phaneris to automate workflows based on events.
 
-> **Configuration workflow:** Use `craft-agent automation ...` commands instead of editing JSON directly.
-> - `craft-agent automation --help`
-> - Canonical command reference: [craft-cli.md](./craft-cli.md)
-> When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
+> **Configuration workflow:** Use `phaneris automation ...` commands instead of editing JSON directly.
+> - `phaneris automation --help`
+> - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
+> When the Phaneris CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## What Are Automations?
 
-Automations allow you to trigger actions automatically when specific events occur in Craft Agent. You can:
+Automations allow you to trigger actions automatically when specific events occur in Phaneris. You can:
 - Send prompts to create agent sessions based on events
 - Send webhook HTTP requests to external services (Slack, Discord, custom APIs, etc.)
 - Execute actions on a schedule using cron expressions
@@ -20,24 +20,24 @@ Automations allow you to trigger actions automatically when specific events occu
 Automations are configured in `automations.json` at the root of your workspace:
 
 ```
-~/.craft-agent/workspaces/{workspaceId}/automations.json
+~/.phaneris/workspaces/{workspaceId}/automations.json
 ```
 
 ## Recommended CLI Commands
 
 ```bash
-craft-agent automation list
-craft-agent automation get <id>
-craft-agent automation create --event UserPromptSubmit --prompt "..."
-craft-agent automation update <id> --json '{...}'
-craft-agent automation enable <id>
-craft-agent automation disable <id>
-craft-agent automation duplicate <id>
-craft-agent automation history [<id>] --limit 20
-craft-agent automation last-executed <id>
-craft-agent automation test <id> --match "..."
-craft-agent automation lint
-craft-agent automation validate
+phaneris automation list
+phaneris automation get <id>
+phaneris automation create --event UserPromptSubmit --prompt "..."
+phaneris automation update <id> --json '{...}'
+phaneris automation enable <id>
+phaneris automation disable <id>
+phaneris automation duplicate <id>
+phaneris automation history [<id>] --limit 20
+phaneris automation last-executed <id>
+phaneris automation test <id> --match "..."
+phaneris automation lint
+phaneris automation validate
 ```
 
 ## Basic Structure
@@ -61,7 +61,7 @@ craft-agent automation validate
 
 ## Supported Events
 
-### App Events (triggered by Craft Agent)
+### App Events (triggered by Phaneris)
 
 | Event | Trigger | Match Value |
 |-------|---------|-------------|
@@ -97,7 +97,7 @@ craft-agent automation validate
 
 ### Prompt Actions
 
-Send a prompt to Craft Agent (creates a new session for scheduled prompts).
+Send a prompt to Phaneris (creates a new session for scheduled prompts).
 
 ```json
 {
@@ -280,7 +280,7 @@ Then reference them in `automations.json`:
   "type": "webhook",
   "url": "${PHANERIS_WH_SLACK_URL}",
   "method": "POST",
-  "body": { "text": "Hello from Craft Agent!" }
+  "body": { "text": "Hello from Phaneris!" }
 }
 ```
 
@@ -542,9 +542,9 @@ If you haven't paired a supergroup yet:
 1. **Create / convert a supergroup with Topics enabled.** In Telegram, open the group → tap the group name → Edit (pencil icon) → toggle **Topics** on → Save. The group must be a forum supergroup; regular groups can't host topics.
 2. **Add the bot to the supergroup.** Group name → Add members → search for your bot's username → add.
 3. **Promote the bot to admin with "Manage Topics".** Group name → Edit → Administrators → Add Administrator → pick the bot → toggle on **Manage Topics** → Save. This is the step most people miss; without it, topic creation fails with `400: not enough rights to create a topic`.
-4. **Pair the supergroup.** In Craft Agent: Settings → Messaging → Telegram → **Pair Supergroup**. Copy the 6-digit code, then in any topic of the supergroup type `/pair <code>`. The bot confirms and the Settings row updates with the group's title.
+4. **Pair the supergroup.** In Phaneris: Settings → Messaging → Telegram → **Pair Supergroup**. Copy the 6-digit code, then in any topic of the supergroup type `/pair <code>`. The bot confirms and the Settings row updates with the group's title.
 
-Verify by checking the supergroup row in Settings shows the group title. If automation runs fail later, `~/.craft-agent/logs/messaging-gateway.log` will show `automation_topic_bind_failed` with the underlying Telegram error.
+Verify by checking the supergroup row in Settings shows the group title. If automation runs fail later, `~/.phaneris/logs/messaging-gateway.log` will show `automation_topic_bind_failed` with the underlying Telegram error.
 
 ## Complete Examples
 
@@ -794,7 +794,7 @@ A single automation can have both prompt and webhook actions. They execute in or
             "method": "POST",
             "headers": {
               "Authorization": "Bearer ${PHANERIS_WH_API_TOKEN}",
-              "X-Source": "craft-agent"
+              "X-Source": "phaneris"
             },
             "body": {
               "event": "${PHANERIS_EVENT}",
@@ -819,7 +819,7 @@ Automations are validated when:
 
 **Using config_validate:**
 
-Ask Craft Agent to validate your automations configuration:
+Ask Phaneris to validate your automations configuration:
 
 ```
 Validate my automations configuration
@@ -897,7 +897,7 @@ When a limit is hit, further events of that type are **silently dropped** for th
 ### Webhook not working
 
 1. **Check URL** — Must be a valid `http://` or `https://` URL. Other protocols (ftp, ws, etc.) are rejected at runtime with a clear error.
-2. **Check env vars** — Ensure `PHANERIS_WH_*` variables are set in your shell profile and Craft Agent was restarted after adding them. URLs using `$VAR` templates are validated after variable expansion — if the variable is empty or unset, the URL will be invalid.
+2. **Check env vars** — Ensure `PHANERIS_WH_*` variables are set in your shell profile and Phaneris was restarted after adding them. URLs using `$VAR` templates are validated after variable expansion — if the variable is empty or unset, the URL will be invalid.
 3. **Use the Test button** — Tests connectivity to the URL (note: env vars are not expanded during test)
 4. **Check method** — Some endpoints require specific HTTP methods (POST, PUT, etc.)
 5. **Check response** — The automation history shows HTTP status codes for webhook executions

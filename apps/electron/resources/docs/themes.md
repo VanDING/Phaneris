@@ -1,10 +1,10 @@
 # Theme Configuration Guide
 
-This guide explains how to customize the visual theme of Craft Agent.
+This guide explains how to customize the visual theme of Phaneris.
 
 ## Overview
 
-Craft Agent uses a semantic-token theme engine with app-level preferences and per-workspace theme selection. The application contains one immutable built-in theme, `default`. Every other theme is a user-owned JSON file.
+Phaneris uses a semantic-token theme engine with app-level preferences and per-workspace theme selection. The application contains one immutable built-in theme, `default`. Every other theme is a user-owned JSON file.
 
 ### Built-in Theme
 
@@ -17,13 +17,13 @@ Craft Agent uses a semantic-token theme engine with app-level preferences and pe
 1. **App selection**: Selected in Settings → Appearance → Default Theme
 2. **Workspace selection**: Optional per-workspace theme ID in Settings → Appearance → Workspace Themes
 3. **Built-in source**: The reserved `default` theme
-4. **User source**: `~/.craft-agent/themes/{id}.json`
+4. **User source**: `~/.phaneris/themes/{id}.json`
 
 Workspaces without a selection override inherit the app selection. User theme files may be partial; omitted visual tokens inherit from `default`.
 
-The themes directory is never seeded, overwritten, reset, or cleaned by the application. Files copied there by older versions remain ordinary user themes. The deprecated `~/.craft-agent/theme.json` file is migrated once to `themes/migrated-custom.json` (or a non-conflicting suffixed name), while the original file is retained and no longer participates in rendering.
+The themes directory is never seeded, overwritten, reset, or cleaned by the application. Files copied there by older versions remain ordinary user themes. The deprecated `~/.phaneris/theme.json` file is migrated once to `themes/migrated-custom.json` (or a non-conflicting suffixed name), while the original file is retained and no longer participates in rendering.
 
-App-level selection preferences are stored together in `~/.craft-agent/config.json` as `themeMode`, `colorTheme`, and `themeFont`. A versioned renderer cache is used only to avoid a startup flash; `config.json` remains authoritative.
+App-level selection preferences are stored together in `~/.phaneris/config.json` as `themeMode`, `colorTheme`, and `themeFont`. A versioned renderer cache is used only to avoid a startup flash; `config.json` remains authoritative.
 
 ## Workspace Themes
 
@@ -37,7 +37,7 @@ Each workspace can have its own color theme that overrides the app default. Conf
 Workspace theme preferences are stored in the workspace config:
 
 ```
-~/.craft-agent/workspaces/{id}/config.json
+~/.phaneris/workspaces/{id}/config.json
 ```
 
 ```json
@@ -84,9 +84,9 @@ This allows partial dark mode customization - only override what needs to differ
 
 ## Preset Themes
 
-Preset themes are complete theme packages stored at `~/.craft-agent/themes/`. Each preset is a JSON file with theme colors and metadata.
+Preset themes are complete theme packages stored at `~/.phaneris/themes/`. Each preset is a JSON file with theme colors and metadata.
 
-Craft Agent does not include a visual theme editor. Create or edit these JSON files directly, then select the theme in Settings → Appearance.
+Phaneris does not include a visual theme editor. Create or edit these JSON files directly, then select the theme in Settings → Appearance.
 
 ### Preset Theme Schema
 
@@ -162,7 +162,7 @@ The Appearance font control has explicit precedence: **Theme** uses `fontSans` f
 ### Installing Preset Themes
 
 1. Download or create a theme JSON file
-2. Save it to `~/.craft-agent/themes/{id}.json` using an ASCII letter/number ID with dots, underscores, or hyphens
+2. Save it to `~/.phaneris/themes/{id}.json` using an ASCII letter/number ID with dots, underscores, or hyphens
 3. Select the theme in Settings → Appearance
 
 The ID `default` is reserved. A user file named `default.json` is ignored so the built-in fallback cannot be shadowed.
@@ -256,11 +256,11 @@ The canonical runtime snapshot, bundled JSON, static CSS and Electron startup ba
 
 ## Live Updates
 
-Theme changes are applied immediately without restarting. Adding, editing, renaming, or deleting a valid JSON file under `~/.craft-agent/themes/` updates the list. If the active file becomes missing or invalid, the UI atomically falls back to `default`; it does not retain stale colors.
+Theme changes are applied immediately without restarting. Adding, editing, renaming, or deleting a valid JSON file under `~/.phaneris/themes/` updates the list. If the active file becomes missing or invalid, the UI atomically falls back to `default`; it does not retain stale colors.
 
 ## Creating a Theme
 
-1. Create `~/.craft-agent/themes/{id}.json`
+1. Create `~/.phaneris/themes/{id}.json`
 2. Add a non-empty `name` and the colors or visual tokens you want to customize
 3. Optionally add `dark` overrides for dark mode
 
@@ -275,7 +275,7 @@ Theme changes are applied immediately without restarting. Adding, editing, renam
 
 **Theme not applying:**
 - Verify JSON syntax is valid
-- Check that the file is directly under `~/.craft-agent/themes/` and its filename is a valid theme ID
+- Check that the file is directly under `~/.phaneris/themes/` and its filename is a valid theme ID
 - Ensure color values are valid CSS colors
 
 **Colors look wrong in dark mode:**
@@ -286,7 +286,7 @@ Theme changes are applied immediately without restarting. Adding, editing, renam
 **Background image not showing:**
 - Ensure `mode` is set to `"scenic"`
 - Check image path is relative to the theme file or a valid HTTP(S) URL
-- Verify a local image stays inside `~/.craft-agent/themes/`, is PNG/JPEG/GIF/WebP, is readable, and is at most 20 MiB
+- Verify a local image stays inside `~/.phaneris/themes/`, is PNG/JPEG/GIF/WebP, is readable, and is at most 20 MiB
 
 ## OKLCH Color Reference
 

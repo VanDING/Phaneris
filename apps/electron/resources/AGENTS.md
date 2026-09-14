@@ -1,7 +1,7 @@
 # Bundled Resources
 
 This folder contains assets bundled with the Electron app. Most configurable
-assets are synced to `~/.craft-agent/`; exceptions are documented below.
+assets are synced to `~/.phaneris/`; exceptions are documented below.
 
 ## How It Works
 
@@ -14,11 +14,11 @@ assets are synced to `~/.craft-agent/`; exceptions are documented below.
 
 | Folder/File | Synced To | Sync Behavior |
 |-------------|-----------|---------------|
-| `docs/` | `~/.craft-agent/docs/` | Always overwrite on launch |
-| `permissions/` | `~/.craft-agent/permissions/` | Always overwrite on launch |
-| `tool-icons/` | `~/.craft-agent/tool-icons/` | Always overwrite on launch |
-| `release-notes/` | `~/.craft-agent/release-notes/` | Always overwrite on launch |
-| `config-defaults.json` | `~/.craft-agent/config-defaults.json` | Always overwrite on launch |
+| `docs/` | `~/.phaneris/docs/` | Always overwrite on launch |
+| `permissions/` | `~/.phaneris/permissions/` | Always overwrite on launch |
+| `tool-icons/` | `~/.phaneris/tool-icons/` | Always overwrite on launch |
+| `release-notes/` | `~/.phaneris/release-notes/` | Always overwrite on launch |
+| `config-defaults.json` | `~/.phaneris/config-defaults.json` | Always overwrite on launch |
 
 ## Why Sync-Enabled Assets on Every Launch?
 
@@ -60,7 +60,7 @@ The files in this folder are the **source of truth** for bundled defaults:
 - Edit `themes/default.json` together with the canonical `DEFAULT_THEME_FILE`
   snapshot to update the one built-in theme; a test prevents them from drifting
 
-`~/.craft-agent/themes/*.json` is user-owned. Never seed, overwrite, reset, or
+`~/.phaneris/themes/*.json` is user-owned. Never seed, overwrite, reset, or
 delete files in that directory. The application only ensures the directory exists.
 
 The Default theme has a canonical TypeScript snapshot used at runtime and a

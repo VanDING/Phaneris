@@ -20,14 +20,14 @@ describe('system prompt guidance', () => {
   })
 
   it('keeps execution rules before capability details and routes deliverables to a real guide', () => {
-    const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Craft Agents Backend')
+    const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Phaneris Backend')
     expect(prompt.indexOf('## Execution Contract')).toBeLessThan(prompt.indexOf('## Documentation and Capability Discovery'))
     expect(prompt).toContain('In Ask/Execute, do not require an additional `SubmitPlan` for work already authorized')
     expect(prompt).toContain('An analysis-only request needs no plan submission.')
     expect(prompt).toContain('Only the user accepts/discards it.')
     expect(prompt).not.toContain('Never try to execute a plan without submitting it first')
     expect(prompt).not.toContain('guaranteed JSON output')
-    const guides = [...prompt.matchAll(/~\/\.craft-agent\/docs\/([a-z-]+\.md)/g)]
+    const guides = [...prompt.matchAll(/~\/\.phaneris\/docs\/([a-z-]+\.md)/g)]
     expect(guides.some(match => match[1] === 'artifacts.md')).toBe(true)
     for (const match of guides) {
       expect(existsSync(resolve(import.meta.dir, '../../../../../apps/electron/resources/docs', match[1]!))).toBe(true)
@@ -35,7 +35,7 @@ describe('system prompt guidance', () => {
   })
 
   it('does not mutate the stable prompt across repeated builds or merge volatile session state into it', () => {
-    const build = () => getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Craft Agents Backend')
+    const build = () => getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Phaneris Backend')
     const first = build()
     expect(build()).toBe(first)
     expect(first).not.toMatch(/<session_state>\s*\n/)
@@ -66,7 +66,7 @@ describe('system prompt guidance', () => {
 
 describe('prompt attribution removal', () => {
   it('omits built-in attribution and preserves the project context argument', () => {
-    const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Craft Agents Backend', {
+    const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Phaneris Backend', {
       name: 'Example Project', assetsPath: '/tmp/assets', memoryPath: '/tmp/MEMORY.md', assets: [],
     })
     expect(prompt).not.toContain('Co-Authored-By:')

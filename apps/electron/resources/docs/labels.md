@@ -2,14 +2,14 @@
 
 Labels are additive tags that can be applied to sessions. Unlike statuses (which are exclusive — one per session), labels are multi-select (many per session). They support hierarchical organization via nested JSON trees.
 
-> **Configuration workflow:** Use `craft-agent label ...` commands instead of editing JSON directly.
-> - `craft-agent label --help`
-> - Canonical command reference: [craft-cli.md](./craft-cli.md)
-> When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. Direct agent file reads under `labels/` are also blocked; inspect labels with the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
+> **Configuration workflow:** Use `phaneris label ...` commands instead of editing JSON directly.
+> - `phaneris label --help`
+> - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
+> When the Phaneris CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. Direct agent file reads under `labels/` are also blocked; inspect labels with the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## Storage Locations
 
-- Config: `~/.craft-agent/workspaces/{id}/labels/config.json`
+- Config: `~/.phaneris/workspaces/{id}/labels/config.json`
 
 ## No Defaults (Regular Labels)
 
@@ -141,16 +141,16 @@ The optional `valueType` in config is a hint only — the parser always infers f
 
 ## Adding Labels
 
-Prefer `craft-agent` commands:
+Prefer `phaneris` commands:
 
 ```bash
-craft-agent label create --name "Bug" --color "destructive"
-craft-agent label create --name "Priority" --color "accent" --value-type number
-craft-agent label create --name "Due Date" --color "info" --value-type date
-craft-agent label create --name "Docs" --color "info" --value-type link
-craft-agent label create --name "Project" --color "foreground/60"
-craft-agent label create --name "Alpha" --color "info" --parent-id project
-craft-agent label create --name "Beta" --color "success" --parent-id project
+phaneris label create --name "Bug" --color "destructive"
+phaneris label create --name "Priority" --color "accent" --value-type number
+phaneris label create --name "Due Date" --color "info" --value-type date
+phaneris label create --name "Docs" --color "info" --value-type link
+phaneris label create --name "Project" --color "foreground/60"
+phaneris label create --name "Alpha" --color "info" --parent-id project
+phaneris label create --name "Beta" --color "success" --parent-id project
 ```
 
 Use direct JSON edits only for bulk/manual operations where CLI is not sufficient.

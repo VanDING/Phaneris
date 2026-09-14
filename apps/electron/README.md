@@ -1,6 +1,6 @@
-# Craft Agents Electron App
+# Phaneris Electron App
 
-The primary desktop client for Craft Agents. It provides the multi-session workspace, Content Workbench, browser integration, local capability dispatch, and renderer for the single Pi agent backend.
+The primary desktop client for Phaneris. It provides the multi-session workspace, Content Workbench, browser integration, local capability dispatch, and renderer for the single Pi agent backend.
 
 ## Quick start
 
