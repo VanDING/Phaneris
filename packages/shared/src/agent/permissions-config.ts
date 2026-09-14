@@ -43,10 +43,10 @@ let permissionsInitialized = false;
 /**
  * Get the app-level permissions directory.
  * Default permissions are stored at ~/.craft-agent/permissions/
- * Reads env var dynamically so tests can override via CRAFT_CONFIG_DIR.
+ * Reads env var dynamically so tests can override via PHANERIS_CONFIG_DIR.
  */
 export function getAppPermissionsDir(): string {
-  const configDir = process.env.CRAFT_CONFIG_DIR || join(homedir(), '.craft-agent');
+  const configDir = process.env.PHANERIS_CONFIG_DIR || join(homedir(), '.craft-agent');
   return join(configDir, 'permissions');
 }
 

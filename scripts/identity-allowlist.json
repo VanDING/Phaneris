@@ -58,6 +58,21 @@
       "reason": "Documents the working remote name (VanDING/craft-agents-rebuild), which stays accurate until the repository rename in Phase F."
     },
     {
+      "glob": "packages/shared/src/automations/utils.ts",
+      "tokens": ["env-prefix"],
+      "reason": "The one place a legacy environment prefix is still read: a shell profile's CRAFT_WH_* webhook secrets keep working for one transition, with a deprecation notice. The literal only appears in a comment and in the LEGACY_IDENTITY-derived constant."
+    },
+    {
+      "glob": ".github/workflows/validate-server.yml",
+      "tokens": ["env-prefix"],
+      "reason": "Reads the legacy GitHub Actions secret as a fallback so CI keeps working until the repository secret itself is renamed — an external operation this change cannot perform."
+    },
+    {
+      "glob": "apps/electron/resources/docs/automations.md",
+      "tokens": ["env-prefix"],
+      "reason": "Documents the CRAFT_WH_* migration path for user-authored shell profiles and automation scripts."
+    },
+    {
       "glob": "packages/shared/src/identity.generated.ts",
       "tokens": ["*"],
       "reason": "Generated from phaneris.identity.json — contains the LEGACY_IDENTITY block by construction."

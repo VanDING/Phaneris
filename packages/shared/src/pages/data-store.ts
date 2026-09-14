@@ -14,7 +14,7 @@
  *   only the snapshot, and page.json is the completion marker they watch.
  *
  * Typical refresh script:
- *   const store = openPageDataStore(process.env.CRAFT_WORKSPACE_PATH!, process.env.CRAFT_PAGE_SLUG!);
+ *   const store = openPageDataStore(process.env.PHANERIS_WORKSPACE_PATH!, process.env.PHANERIS_PAGE_SLUG!);
  *   store.kvSet('summary', { total: 42 });
  *   store.seriesAppend('revenue', { v: 1234.5 });
  *   store.exportSnapshot();   // writes snapshot.json atomically

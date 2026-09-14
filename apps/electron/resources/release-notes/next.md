@@ -28,7 +28,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 - **Violet Pulse activity and navigation** — the Default theme uses brighter violet accents. The yearly activity calendar adds themed hover details, keyboard navigation and selectable dates. Collapsing the desktop sidebar now keeps a centered 56 px rail of primary icons with a smooth width transition.
 - **Grouped subtask sessions** — child sessions stay beneath their parent with an independent collapse control beside the more menu, preserving the leading status switch. Families paginate together, search retains parent context, and children remain independently selectable with running and attention indicators.
 
-- **Faster startup and smaller bundles** — locale messages, the Mermaid/elkjs renderer, terminal/xterm, and secondary navigator pages now load on demand; production main/preload/Pi bundles are minified, roughly halving their parse and install footprint. Crash reporting is now opt-in (`CRAFT_TELEMETRY_ENABLED=1` plus a DSN).
+- **Faster startup and smaller bundles** — locale messages, the Mermaid/elkjs renderer, terminal/xterm, and secondary navigator pages now load on demand; production main/preload/Pi bundles are minified, roughly halving their parse and install footprint. Crash reporting is now opt-in (`PHANERIS_TELEMETRY_ENABLED=1` plus a DSN).
 
 - **Refined native Default theme** — Default Refined now replaces the previous built-in Default in packaged apps, with cool off-white light surfaces, near-black dark surfaces, restrained violet, Inter typography and subtle elevation. Native sidebar transparency and explicit font preferences are preserved; existing Default selections update automatically.
 
@@ -57,7 +57,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 - **Remote server tokens move into the encrypted credential vault** — tokens are migrated out of plaintext `config.json` on startup and resolved through a process-local cache for preload/transfer paths. Reconnecting with a blank token reuses the stored credential.
 
-- **Unsafe data-conversion and remote-connection defaults** — `transform_data` now enforces network/filesystem isolation on macOS/Linux (fails closed when unavailable), remote WebSocket connections verify TLS by default with a per-workspace self-signed opt-in, and credential keys can be protected by Electron safeStorage or an operator-supplied `CRAFT_CREDENTIAL_KEY`.
+- **Unsafe data-conversion and remote-connection defaults** — `transform_data` now enforces network/filesystem isolation on macOS/Linux (fails closed when unavailable), remote WebSocket connections verify TLS by default with a per-workspace self-signed opt-in, and credential keys can be protected by Electron safeStorage or an operator-supplied `PHANERIS_CREDENTIAL_KEY`.
 
 - **WeChat iLink request metadata** — gateway requests now send the CraftAgent bot-agent identifier in `base_info` instead of the account's WeChat `userId`, so the account identity is no longer exposed as a user agent.
 

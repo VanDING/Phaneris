@@ -29,7 +29,7 @@ const bundles = ['apps/webui/dist/index.html', 'packages/pi-agent-server/dist/in
 mkdirSync(dirname(output), { recursive: true })
 const scratch = mkdtempSync(join(tmpdir(), 'craft-performance-'))
 const token = crypto.randomUUID() + crypto.randomUUID()
-const environment: NodeJS.ProcessEnv = { CRAFT_CONFIG_DIR: scratch, CRAFT_PERF_TOKEN: token, CRAFT_PERF_PROFILE: profile }
+const environment: NodeJS.ProcessEnv = { PHANERIS_CONFIG_DIR: scratch, PHANERIS_PERF_TOKEN: token, PHANERIS_PERF_PROFILE: profile }
 for (const key of ['PATH', 'SystemRoot', 'WINDIR', 'COMSPEC', 'PATHEXT']) {
   if (process.env[key]) environment[key] = process.env[key]
 }

@@ -67,14 +67,14 @@ describe('credential key provider from env', () => {
   it('accepts a hex key and rejects short material', () => {
     expect(
       installCredentialKeyProviderFromEnv({
-        CRAFT_CREDENTIAL_KEY: 'ab'.repeat(32),
+        PHANERIS_CREDENTIAL_KEY: 'ab'.repeat(32),
       } as NodeJS.ProcessEnv),
-    ).toBe('env:CRAFT_CREDENTIAL_KEY');
-    expect(getCredentialKeyProviderId()).toBe('env:CRAFT_CREDENTIAL_KEY');
+    ).toBe('env:PHANERIS_CREDENTIAL_KEY');
+    expect(getCredentialKeyProviderId()).toBe('env:PHANERIS_CREDENTIAL_KEY');
 
     expect(() =>
-      installCredentialKeyProviderFromEnv({ CRAFT_CREDENTIAL_KEY: 'abc' } as NodeJS.ProcessEnv),
-    ).toThrow('CRAFT_CREDENTIAL_KEY');
+      installCredentialKeyProviderFromEnv({ PHANERIS_CREDENTIAL_KEY: 'abc' } as NodeJS.ProcessEnv),
+    ).toThrow('PHANERIS_CREDENTIAL_KEY');
   });
 });
 

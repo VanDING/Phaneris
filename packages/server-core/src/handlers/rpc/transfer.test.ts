@@ -62,7 +62,7 @@ function encodeParts(value: unknown, splitAt?: number) {
 }
 
 afterEach(() => {
-  delete process.env.CRAFT_TRANSFER_TTL_MS
+  delete process.env.PHANERIS_TRANSFER_TTL_MS
   __resetTransferStateForTests()
 })
 
@@ -240,7 +240,7 @@ describe('chunked transfer handlers', () => {
   })
 
   it('refreshes TTL as chunks arrive so slow healthy uploads survive', async () => {
-    process.env.CRAFT_TRANSFER_TTL_MS = '40'
+    process.env.PHANERIS_TRANSFER_TTL_MS = '40'
 
     const { start, chunk, commit } = createHarness()
     const payload = encodeParts({ hello: 'world', slow: true }, 8)

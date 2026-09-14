@@ -124,7 +124,7 @@ export interface OAuthCallbackDeps {
 export interface WebuiHandlerOptions {
   /** Path to built web UI dist/ directory. */
   webuiDir: string
-  /** Secret used to sign JWTs — typically CRAFT_SERVER_TOKEN. */
+  /** Secret used to sign JWTs — typically PHANERIS_SERVER_TOKEN. */
   secret: string
   /** Optional separate web UI password. Falls back to `secret` for verification. */
   password?: string

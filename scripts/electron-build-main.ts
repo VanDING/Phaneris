@@ -51,7 +51,7 @@ function getBuildDefines(): Record<string, string> {
     "MICROSOFT_OAUTH_CLIENT_ID",
     "MICROSOFT_OAUTH_CLIENT_SECRET",
     "SENTRY_ELECTRON_INGEST_URL",
-    "CRAFT_DEV_RUNTIME",
+    "PHANERIS_DEV_RUNTIME",
   ];
 
   const defines: Record<string, string> = {};

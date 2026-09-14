@@ -223,7 +223,7 @@ describe('attachSessionSelfManagementBindings', () => {
 
     mergeSessionScopedToolCallbacks(sessionId, {
       artifactCreateFn: async () => ({
-        text: 'CRAFT_ARTIFACT_EVENT:{"artifactId":"a"}',
+        text: 'PHANERIS_ARTIFACT_EVENT:{"artifactId":"a"}',
         structuredContent: { artifact: { id: 'a' } },
       }),
     });

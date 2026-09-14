@@ -116,7 +116,7 @@ bun run electron:start
 ### Headless Server 与 CLI
 
 ```bash
-CRAFT_SERVER_TOKEN=$(openssl rand -hex 32) bun run server:start
+PHANERIS_SERVER_TOKEN=$(openssl rand -hex 32) bun run server:start
 bun run apps/cli/src/index.ts run "Summarize this repository"
 ```
 

@@ -15,7 +15,7 @@ import { join } from 'node:path';
 
 const ROOT = join(import.meta.dir, '..');
 const BASELINE = join(import.meta.dir, 'dependency-audit-baseline.json');
-const REGISTRY = process.env.CRAFT_AUDIT_REGISTRY ?? 'https://registry.npmjs.org';
+const REGISTRY = process.env.PHANERIS_AUDIT_REGISTRY ?? 'https://registry.npmjs.org';
 const SEVERITY_RANK = { low: 1, moderate: 2, high: 3, critical: 4 } as const;
 type Severity = keyof typeof SEVERITY_RANK;
 

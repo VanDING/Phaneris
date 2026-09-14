@@ -115,7 +115,7 @@ setDefaultStreamFn(withDurableAccounting(streamSimple));
 import { resolvePiModel, isDeniedMiniModelId, isModelNotFoundError } from './model-resolution.ts';
 import { pickProviderAppropriateMiniModel } from './pick-mini-model.ts';
 import {
-  CRAFT_PI_EPHEMERAL_QUERY_DEADLINE_MS,
+  PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
   createCraftSettingsManager,
 } from './session-settings.ts';
 import { applySystemPromptOverride } from './system-prompt-override.ts';
@@ -685,18 +685,18 @@ function shouldPreferCustomEndpoint(): boolean {
  */
 function setInterceptorApiHints(model: { api?: string; provider?: string; baseUrl?: string } | undefined): void {
   if (!model) {
-    delete process.env.CRAFT_PI_MODEL_API;
-    delete process.env.CRAFT_PI_MODEL_PROVIDER;
-    delete process.env.CRAFT_PI_MODEL_BASE_URL;
+    delete process.env.PHANERIS_PI_MODEL_API;
+    delete process.env.PHANERIS_PI_MODEL_PROVIDER;
+    delete process.env.PHANERIS_PI_MODEL_BASE_URL;
     return;
   }
 
-  process.env.CRAFT_PI_MODEL_API = model.api || '';
-  process.env.CRAFT_PI_MODEL_PROVIDER = model.provider || '';
-  process.env.CRAFT_PI_MODEL_BASE_URL = model.baseUrl || '';
+  process.env.PHANERIS_PI_MODEL_API = model.api || '';
+  process.env.PHANERIS_PI_MODEL_PROVIDER = model.provider || '';
+  process.env.PHANERIS_PI_MODEL_BASE_URL = model.baseUrl || '';
 
   debugLog(
-    `[interceptor-hint] api=${process.env.CRAFT_PI_MODEL_API || '-'} provider=${process.env.CRAFT_PI_MODEL_PROVIDER || '-'} baseUrl=${process.env.CRAFT_PI_MODEL_BASE_URL || '-'}`,
+    `[interceptor-hint] api=${process.env.PHANERIS_PI_MODEL_API || '-'} provider=${process.env.PHANERIS_PI_MODEL_PROVIDER || '-'} baseUrl=${process.env.PHANERIS_PI_MODEL_BASE_URL || '-'}`,
   );
 }
 
@@ -1697,7 +1697,7 @@ function runEphemeralLlmQuery(
 ): Promise<LLMQueryResult> {
   return ephemeralQueries.run(
     id,
-    CRAFT_PI_EPHEMERAL_QUERY_DEADLINE_MS,
+    PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
     lifecycle => queryLlm(request, lifecycle),
   );
 }

@@ -21,7 +21,7 @@ try {
   if (!existsSync(entry)) throw new Error(`Missing assembled server entry: ${entry}`)
   const child = Bun.spawn([process.execPath, 'run', entry, '--generate-token'], {
     cwd: output, stdout: 'pipe', stderr: 'pipe',
-    env: { PATH: process.env.PATH, CRAFT_CONFIG_DIR: join(output, 'config') },
+    env: { PATH: process.env.PATH, PHANERIS_CONFIG_DIR: join(output, 'config') },
   })
   const [code, stdout, stderr] = await Promise.all([
     child.exited, new Response(child.stdout).text(), new Response(child.stderr).text(),

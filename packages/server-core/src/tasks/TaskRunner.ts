@@ -139,11 +139,11 @@ export interface RunSnapshot {
 const DEFAULT_MAX_PARALLEL = 4;
 // A run must reach a terminal state within this wall-clock budget or it is failed and its in-flight
 // children are cancelled. Guards against hangs (e.g. an orchestrator that never returns a verdict).
-// Overridable per-process via CRAFT_TASK_RUN_TIMEOUT_MS (milliseconds).
+// Overridable per-process via PHANERIS_TASK_RUN_TIMEOUT_MS (milliseconds).
 const DEFAULT_RUN_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 
 function resolveRunTimeoutMs(): number {
-  const raw = process.env.CRAFT_TASK_RUN_TIMEOUT_MS;
+  const raw = process.env.PHANERIS_TASK_RUN_TIMEOUT_MS;
   if (raw) {
     const n = Number(raw);
     if (Number.isFinite(n) && n > 0) return n;

@@ -271,7 +271,7 @@ function acquireServerLock(logger: PlatformServices['logger']): void {
             throw new Error(
               `Another server instance is already running (PID ${lock.pid}). ` +
               `If this is stale, delete ${LOCK_FILE} and retry. ` +
-              `To run a parallel instance (e.g. for dev), set CRAFT_CONFIG_DIR to a different path.`
+              `To run a parallel instance (e.g. for dev), set PHANERIS_CONFIG_DIR to a different path.`
             )
           }
         } else {
@@ -340,9 +340,9 @@ function ensureGlobalConfigExists(platform: PlatformServices): void {
 export async function bootstrapServer<TSessionManager, THandlerDeps>(
   options: ServerBootstrapOptions<TSessionManager, THandlerDeps>,
 ): Promise<ServerInstance<TSessionManager>> {
-  const serverToken = options.serverToken ?? process.env.CRAFT_SERVER_TOKEN
+  const serverToken = options.serverToken ?? process.env.PHANERIS_SERVER_TOKEN
   if (!serverToken) {
-    throw new Error('Server token is required. Pass options.serverToken or set CRAFT_SERVER_TOKEN.')
+    throw new Error('Server token is required. Pass options.serverToken or set PHANERIS_SERVER_TOKEN.')
   }
 
   const entropy = validateTokenEntropy(serverToken)
@@ -353,7 +353,7 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
   const platform = options.platformFactory?.() ?? createHeadlessPlatform({ appVersion: options.serverVersion })
 
   const bundledAssetsRoot = options.bundledAssetsRoot
-    ?? process.env.CRAFT_BUNDLED_ASSETS_ROOT
+    ?? process.env.PHANERIS_BUNDLED_ASSETS_ROOT
     ?? process.cwd()
   setBundledAssetsRoot(bundledAssetsRoot)
 
@@ -370,8 +370,8 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
   const modelRefreshService = options.initModelRefreshService()
   const sessionManager = options.createSessionManager()
 
-  const rpcHost = options.rpcHost ?? process.env.CRAFT_RPC_HOST ?? '127.0.0.1'
-  const rpcPortRaw = options.rpcPort ?? parseInt(process.env.CRAFT_RPC_PORT ?? '9100', 10)
+  const rpcHost = options.rpcHost ?? process.env.PHANERIS_RPC_HOST ?? '127.0.0.1'
+  const rpcPortRaw = options.rpcPort ?? parseInt(process.env.PHANERIS_RPC_PORT ?? '9100', 10)
   if (!Number.isFinite(rpcPortRaw) || rpcPortRaw < 0 || rpcPortRaw > 65535) {
     throw new Error(`Invalid RPC port: ${rpcPortRaw}`)
   }

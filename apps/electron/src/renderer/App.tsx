@@ -732,7 +732,7 @@ export default function App() {
         setSetupNeeds(needs)
 
         if (needs.isFullyConfigured) {
-          // If no workspace is selected (thin client without CRAFT_WORKSPACE_ID),
+          // If no workspace is selected (thin client without PHANERIS_WORKSPACE_ID),
           // show workspace picker before entering the main app
           if (!wsId) {
             setAppState('workspace-picker')

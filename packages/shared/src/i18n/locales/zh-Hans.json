@@ -2228,7 +2228,7 @@
   "trajectory.views.prompt": "提示词",
   "trajectory.views.timeline": "时间线",
   "trajectory.views.trajectory": "轨迹",
-  "transport.authFailed": "身份验证失败，请检查 CRAFT_SERVER_TOKEN。",
+  "transport.authFailed": "身份验证失败，请检查 PHANERIS_SERVER_TOKEN。",
   "transport.connecting": "正在连接远程服务器",
   "transport.connectingDesc": "正在连接 {{url}}...",
   "transport.defaultStatus": "远程服务器连接状态",

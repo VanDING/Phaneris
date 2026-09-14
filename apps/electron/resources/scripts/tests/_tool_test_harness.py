@@ -59,8 +59,8 @@ def resolve_wrapper(tool_name: str) -> Path:
 def build_env() -> dict[str, str]:
     uv = resolve_uv_binary()
     env = dict(os.environ)
-    env["CRAFT_UV"] = str(uv)
-    env["CRAFT_SCRIPTS"] = str(SCRIPTS_DIR)
+    env["PHANERIS_UV"] = str(uv)
+    env["PHANERIS_SCRIPTS"] = str(SCRIPTS_DIR)
     env["PATH"] = os.pathsep.join([
         str(BIN_DIR),
         str(uv.parent),
@@ -72,7 +72,7 @@ def build_env() -> dict[str, str]:
 # Matches the uv invocation line inside a .cmd wrapper, capturing the python
 # version and script name so the harness stays in lockstep with the wrappers.
 _UV_WRAPPER_RE = re.compile(
-    r'"%CRAFT_UV%"\s+run\s+--python\s+(\S+)\s+"%CRAFT_SCRIPTS%\\([A-Za-z0-9_]+\.py)"'
+    r'"%PHANERIS_UV%"\s+run\s+--python\s+(\S+)\s+"%PHANERIS_SCRIPTS%\\([A-Za-z0-9_]+\.py)"'
 )
 
 
@@ -102,7 +102,7 @@ def run_tool(tool_name: str, *args: str, env: dict[str, str] | None = None) -> s
         if invocation is not None:
             python_version, script = invocation
             return subprocess.run(
-                [str(env["CRAFT_UV"]), "run", "--python", python_version, str(script), *args],
+                [str(env["PHANERIS_UV"]), "run", "--python", python_version, str(script), *args],
                 cwd=REPO_ROOT,
                 env=env,
                 capture_output=True,

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "$CRAFT_UV" run --python 3.12 "$CRAFT_SCRIPTS/xlsx_tool.py" "$@"
+exec "$PHANERIS_UV" run --python 3.12 "$PHANERIS_SCRIPTS/xlsx_tool.py" "$@"

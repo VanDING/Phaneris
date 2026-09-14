@@ -442,7 +442,7 @@ function copyWorkspacePackages(config: ServerBuildConfig): void {
 
   // messaging-whatsapp-worker is included so dist/worker.cjs (built in step 4) ships.
   // The worker is spawned as a Node subprocess against that file at runtime; see
-  // CRAFT_MESSAGING_WA_WORKER env resolution in packages/server/src/index.ts.
+  // PHANERIS_MESSAGING_WA_WORKER env resolution in packages/server/src/index.ts.
   const packages = [
     'server',
     'server-core',
@@ -567,14 +567,14 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Set environment for resource resolution
-export CRAFT_BUNDLED_ASSETS_ROOT="$ROOT"
-export CRAFT_IS_PACKAGED=true
-export CRAFT_APP_ROOT="$ROOT"
-export CRAFT_RESOURCES_PATH="$ROOT/resources"
+PHANERIS_BUNDLED_ASSETS_ROOT="$ROOT"
+PHANERIS_IS_PACKAGED=true
+PHANERIS_APP_ROOT="$ROOT"
+PHANERIS_RESOURCES_PATH="$ROOT/resources"
 
 # CLI tools (doc tools use uv + Python scripts)
-export CRAFT_UV="$ROOT/resources/bin/uv"
-export CRAFT_SCRIPTS="$ROOT/resources/scripts"
+PHANERIS_UV="$ROOT/resources/bin/uv"
+PHANERIS_SCRIPTS="$ROOT/resources/scripts"
 
 # Prepend resource bin to PATH (makes doc tool wrappers available)
 export PATH="$ROOT/resources/bin:$ROOT/vendor/bun:$PATH"
@@ -614,22 +614,22 @@ done
 echo "Binaries configured."
 
 # Generate token if not set
-if [ -z "\${CRAFT_SERVER_TOKEN:-}" ]; then
+if [ -z "\${PHANERIS_SERVER_TOKEN:-}" ]; then
   TOKEN=\$(openssl rand -hex 32)
   cat > "$DIR/.env" <<ENVFILE
-CRAFT_SERVER_TOKEN=$TOKEN
+PHANERIS_SERVER_TOKEN=$TOKEN
 
 # TLS — uncomment and set paths to enable wss://
-# CRAFT_RPC_TLS_CERT=/path/to/cert.pem
-# CRAFT_RPC_TLS_KEY=/path/to/key.pem
-# CRAFT_RPC_TLS_CA=/path/to/ca.pem
+# PHANERIS_RPC_TLS_CERT=/path/to/cert.pem
+# PHANERIS_RPC_TLS_KEY=/path/to/key.pem
+# PHANERIS_RPC_TLS_CA=/path/to/ca.pem
 ENVFILE
   echo ""
   echo "Generated server token (saved to $DIR/.env)"
 else
-  TOKEN="\$CRAFT_SERVER_TOKEN"
+  TOKEN="\$PHANERIS_SERVER_TOKEN"
   echo ""
-  echo "Using CRAFT_SERVER_TOKEN from environment."
+  echo "Using PHANERIS_SERVER_TOKEN from environment."
 fi
 
 # Systemd installation
@@ -639,7 +639,7 @@ if [ "\${1:-}" = "--systemd" ]; then
     exit 1
   fi
 
-  SERVICE_USER="\${CRAFT_USER:-\$(logname 2>/dev/null || echo craft)}"
+  SERVICE_USER="\${PHANERIS_USER:-\$(logname 2>/dev/null || echo craft)}"
   SERVICE_FILE="/etc/systemd/system/craft-server.service"
 
   cat > "$SERVICE_FILE" <<UNIT
@@ -652,8 +652,8 @@ Type=simple
 User=$SERVICE_USER
 WorkingDirectory=$DIR
 EnvironmentFile=$DIR/.env
-Environment=CRAFT_RPC_HOST=127.0.0.1
-Environment=CRAFT_RPC_PORT=9100
+Environment=PHANERIS_RPC_HOST=127.0.0.1
+Environment=PHANERIS_RPC_PORT=9100
 ExecStart=$DIR/bin/craft-server
 Restart=on-failure
 RestartSec=5
@@ -676,7 +676,7 @@ fi
 
 echo ""
 echo "Quick start:"
-echo "  CRAFT_SERVER_TOKEN=$TOKEN $DIR/start.sh"
+echo "  PHANERIS_SERVER_TOKEN=$TOKEN $DIR/start.sh"
 echo ""
 echo "Or with systemd:"
 echo "  sudo $DIR/install.sh --systemd"
@@ -712,14 +712,14 @@ COPY . .
 RUN chmod +x bin/craft-server vendor/bun/bun resources/bin/uv && \\
     for f in resources/bin/*; do [ -f "$f" ] && chmod +x "$f"; done
 
-ENV CRAFT_IS_PACKAGED=true
-ENV CRAFT_BUNDLED_ASSETS_ROOT=/app
-ENV CRAFT_APP_ROOT=/app
-ENV CRAFT_RESOURCES_PATH=/app/resources
-ENV CRAFT_UV=/app/resources/bin/uv
-ENV CRAFT_SCRIPTS=/app/resources/scripts
-ENV CRAFT_RPC_HOST=0.0.0.0
-ENV CRAFT_RPC_PORT=9100
+ENV PHANERIS_IS_PACKAGED=true
+ENV PHANERIS_BUNDLED_ASSETS_ROOT=/app
+ENV PHANERIS_APP_ROOT=/app
+ENV PHANERIS_RESOURCES_PATH=/app/resources
+ENV PHANERIS_UV=/app/resources/bin/uv
+ENV PHANERIS_SCRIPTS=/app/resources/scripts
+ENV PHANERIS_RPC_HOST=0.0.0.0
+ENV PHANERIS_RPC_PORT=9100
 ENV PATH="/app/resources/bin:/app/vendor/bun:\${PATH}"
 
 EXPOSE 9100
@@ -735,11 +735,11 @@ services:
     ports:
       - "9100:9100"
     environment:
-      - CRAFT_SERVER_TOKEN=\${CRAFT_SERVER_TOKEN:?Set CRAFT_SERVER_TOKEN}
-      - CRAFT_RPC_PORT=9100
+      - PHANERIS_SERVER_TOKEN=\${PHANERIS_SERVER_TOKEN:?Set PHANERIS_SERVER_TOKEN}
+      - PHANERIS_RPC_PORT=9100
       # TLS — uncomment to enable wss://
-      # - CRAFT_RPC_TLS_CERT=/certs/cert.pem
-      # - CRAFT_RPC_TLS_KEY=/certs/key.pem
+      # - PHANERIS_RPC_TLS_CERT=/certs/cert.pem
+      # - PHANERIS_RPC_TLS_KEY=/certs/key.pem
     volumes:
       - craft-data:/root/.craft-agent
       # TLS — mount cert directory
@@ -885,7 +885,7 @@ async function main(): Promise<void> {
 
   console.log('\n  Build completed successfully!');
   console.log(`\nQuick start:`);
-  console.log(`  CRAFT_SERVER_TOKEN=<secret> ${outputDir}/start.sh`);
+  console.log(`  PHANERIS_SERVER_TOKEN=<secret> ${outputDir}/start.sh`);
 }
 
 main();

@@ -15,14 +15,14 @@ import type { PageDataSnapshot } from '@phaneris/core';
 // Pin dev-mode runtime resolution: this suite spawns the real Bun runtime via
 // resolveScriptRuntime and must assert dev behavior (PATH fallback allowed)
 // even when the suite runs under a packaged Craft Agents host (agent Bash
-// sessions inherit CRAFT_IS_PACKAGED=true).
-const SAVED_IS_PACKAGED = process.env.CRAFT_IS_PACKAGED;
+// sessions inherit PHANERIS_IS_PACKAGED=true).
+const SAVED_IS_PACKAGED = process.env.PHANERIS_IS_PACKAGED;
 beforeAll(() => {
-  process.env.CRAFT_IS_PACKAGED = '0';
+  process.env.PHANERIS_IS_PACKAGED = '0';
 });
 afterAll(() => {
-  if (SAVED_IS_PACKAGED === undefined) delete process.env.CRAFT_IS_PACKAGED;
-  else process.env.CRAFT_IS_PACKAGED = SAVED_IS_PACKAGED;
+  if (SAVED_IS_PACKAGED === undefined) delete process.env.PHANERIS_IS_PACKAGED;
+  else process.env.PHANERIS_IS_PACKAGED = SAVED_IS_PACKAGED;
 });
 
 describe('page data write (spawned Bun one-shot)', () => {

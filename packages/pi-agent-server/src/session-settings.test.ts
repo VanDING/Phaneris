@@ -4,10 +4,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { SettingsManager } from '@earendil-works/pi-coding-agent';
 import {
-  CRAFT_PI_EPHEMERAL_MAX_BACKOFF_MS,
-  CRAFT_PI_EPHEMERAL_QUERY_DEADLINE_MS,
-  CRAFT_PI_EPHEMERAL_RETRY_SETTINGS,
-  CRAFT_PI_RETRY_SETTINGS,
+  PHANERIS_PI_EPHEMERAL_MAX_BACKOFF_MS,
+  PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
+  PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS,
+  PHANERIS_PI_RETRY_SETTINGS,
   createCraftSettingsManager,
 } from './session-settings.ts';
 
@@ -17,16 +17,16 @@ describe('createCraftSettingsManager', () => {
     expect(settings.getRetryEnabled()).toBe(true);
     expect(settings.getRetrySettings()).toEqual({
       enabled: true,
-      maxRetries: CRAFT_PI_RETRY_SETTINGS.maxRetries,
-      baseDelayMs: CRAFT_PI_RETRY_SETTINGS.baseDelayMs,
+      maxRetries: PHANERIS_PI_RETRY_SETTINGS.maxRetries,
+      baseDelayMs: PHANERIS_PI_RETRY_SETTINGS.baseDelayMs,
     });
   });
 
   it('enables provider-level (pre-stream) retries that the SDK leaves off by default', () => {
     const settings = createCraftSettingsManager();
     expect(settings.getProviderRetrySettings()).toMatchObject({
-      maxRetries: CRAFT_PI_RETRY_SETTINGS.provider.maxRetries,
-      maxRetryDelayMs: CRAFT_PI_RETRY_SETTINGS.provider.maxRetryDelayMs,
+      maxRetries: PHANERIS_PI_RETRY_SETTINGS.provider.maxRetries,
+      maxRetryDelayMs: PHANERIS_PI_RETRY_SETTINGS.provider.maxRetryDelayMs,
     });
     // Documents the SDK default this policy overrides. If a future SDK turns
     // provider retries on by itself, this assertion is the cue to revisit.
@@ -37,17 +37,17 @@ describe('createCraftSettingsManager', () => {
     const settings = createCraftSettingsManager('ephemeral');
     expect(settings.getRetrySettings()).toEqual({
       enabled: true,
-      maxRetries: CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries,
-      baseDelayMs: CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.baseDelayMs,
+      maxRetries: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries,
+      baseDelayMs: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.baseDelayMs,
     });
     expect(settings.getProviderRetrySettings()).toMatchObject({
-      maxRetries: CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetries,
-      maxRetryDelayMs: CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetryDelayMs,
+      maxRetries: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetries,
+      maxRetryDelayMs: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetryDelayMs,
     });
-    expect(CRAFT_PI_EPHEMERAL_MAX_BACKOFF_MS).toBe(66_000);
-    expect(CRAFT_PI_EPHEMERAL_QUERY_DEADLINE_MS).toBe(115_000);
-    expect(CRAFT_PI_EPHEMERAL_MAX_BACKOFF_MS).toBeLessThan(
-      CRAFT_PI_EPHEMERAL_QUERY_DEADLINE_MS,
+    expect(PHANERIS_PI_EPHEMERAL_MAX_BACKOFF_MS).toBe(66_000);
+    expect(PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS).toBe(115_000);
+    expect(PHANERIS_PI_EPHEMERAL_MAX_BACKOFF_MS).toBeLessThan(
+      PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
     );
   });
 

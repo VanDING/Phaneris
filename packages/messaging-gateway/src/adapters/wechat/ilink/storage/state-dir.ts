@@ -20,13 +20,13 @@ export function setStateDir(dir: string | undefined): void {
  *
  * Priority:
  * 1. Override set via {@link setStateDir}
- * 2. `$CRAFT_WECHAT_STATE_DIR` environment variable
+ * 2. `$PHANERIS_WECHAT_STATE_DIR` environment variable
  * 3. `$HOME/.craft-agent/wechat`
  */
 export function resolveStateDir(): string {
   return (
     _stateDirOverride
-    ?? process.env.CRAFT_WECHAT_STATE_DIR
+    ?? process.env.PHANERIS_WECHAT_STATE_DIR
     ?? join(homedir(), '.craft-agent', 'wechat')
   );
 }

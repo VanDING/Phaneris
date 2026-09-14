@@ -305,7 +305,7 @@ export class PiAgent extends BaseAgent {
     this.subprocessErrorRepeatCount = 0;
   }
 
-  // Ring buffer of recent subprocess stderr. Always on (independent of CRAFT_DEBUG)
+  // Ring buffer of recent subprocess stderr. Always on (independent of PHANERIS_DEBUG)
   // so that connection-test and other failures can surface what the subprocess
   // actually said, instead of a bare "timed out" with no context.
   private stderrBuffer: string[] = [];
@@ -559,9 +559,9 @@ export class PiAgent extends BaseAgent {
         ...this.config.envOverrides,
         ...awsEnv,
         // Pass session dir for cross-process toolMetadataStore
-        ...(sessionDir ? { CRAFT_SESSION_DIR: sessionDir } : {}),
+        ...(sessionDir ? { PHANERIS_SESSION_DIR: sessionDir } : {}),
         // Propagate debug mode
-        CRAFT_DEBUG: (process.argv.includes('--debug') || process.env.CRAFT_DEBUG === '1') ? '1' : '0',
+        PHANERIS_DEBUG: (process.argv.includes('--debug') || process.env.PHANERIS_DEBUG === '1') ? '1' : '0',
       },
     });
 
@@ -580,7 +580,7 @@ export class PiAgent extends BaseAgent {
 
     // Always capture stderr into a bounded ring buffer so callers (e.g. the
     // connection-test timeout path in factory.ts) can surface it on failure.
-    // Keep the CRAFT_DEBUG-gated log for interactive dev work.
+    // Keep the PHANERIS_DEBUG-gated log for interactive dev work.
     child.stderr?.on('data', (data: Buffer) => {
       const text = data.toString();
       this.recordStderr(text);

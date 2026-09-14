@@ -2228,7 +2228,7 @@
   "trajectory.views.prompt": "Prompt",
   "trajectory.views.timeline": "Cronología",
   "trajectory.views.trajectory": "Trajectory",
-  "transport.authFailed": "Autenticación fallida. Verifica CRAFT_SERVER_TOKEN.",
+  "transport.authFailed": "Autenticación fallida. Verifica PHANERIS_SERVER_TOKEN.",
   "transport.connecting": "Conectando al servidor remoto",
   "transport.connectingDesc": "Conectando a {{url}}...",
   "transport.defaultStatus": "Estado de conexión del servidor remoto",

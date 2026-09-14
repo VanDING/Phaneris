@@ -10,7 +10,7 @@
  * action uses). This keeps the locked design intact — the store stays
  * script-private (`bun:sqlite`), hosts only ever read snapshot.json — and it
  * works identically whether the host is Electron main (Node) or the headless
- * server (Bun), in dev and packaged builds (CRAFT_BUN).
+ * server (Bun), in dev and packaged builds (PHANERIS_BUN).
  *
  * ⚠️ The generated script duplicates the data-store schema/SQL on purpose
  * (it must not depend on module resolution from a temp directory). Parity

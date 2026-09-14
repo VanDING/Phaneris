@@ -322,7 +322,7 @@ Direct Electron modules used in the preload: `shell.openExternal` (`:176`, `:314
 `bootstrap.ts` does **not** proxy to `ipcRenderer` for the 370 methods. It builds a
 **WebSocket JSON-RPC client** and exposes its methods:
 
-- Thin-client mode (`CRAFT_SERVER_URL` set): one `WsRpcClient` to the remote server (`:84-93`).
+- Thin-client mode (`PHANERIS_SERVER_URL` set): one `WsRpcClient` to the remote server (`:84-93`).
 - Normal mode: a `RoutedClient` that sends `LOCAL_ONLY` channels to the local Bun server on
   `ws://127.0.0.1:<port>` (`__get-ws-port`) and `REMOTE_ELIGIBLE` channels to whichever server owns
   the active workspace — local or remote (`:104-156`).
@@ -899,7 +899,7 @@ server (`72 server.handle` registrations inside `main/handlers/`).
 | 24 | `__browser:invoke` | `handle` | `main/browser-pane-manager.ts:2446` |
 
 Gating: registrations 1–6 are unconditional; 7–15 are inside `if (!isClientOnly)` (`index.ts:615`),
-so in `CRAFT_SERVER_URL` thin-client mode only **9** `ipcMain` handlers exist. Browser-toolbar IPC is
+so in `PHANERIS_SERVER_URL` thin-client mode only **9** `ipcMain` handlers exist. Browser-toolbar IPC is
 always registered (`index.ts:522-523`).
 
 ### 6.2 Native / OS capability table

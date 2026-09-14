@@ -2228,7 +2228,7 @@
   "trajectory.views.prompt": "Prompt",
   "trajectory.views.timeline": "Oś czasu",
   "trajectory.views.trajectory": "Trajectory",
-  "transport.authFailed": "Uwierzytelnienie nie powiodło się. Sprawdź CRAFT_SERVER_TOKEN.",
+  "transport.authFailed": "Uwierzytelnienie nie powiodło się. Sprawdź PHANERIS_SERVER_TOKEN.",
   "transport.connecting": "Łączenie z serwerem zdalnym",
   "transport.connectingDesc": "Łączenie z {{url}}...",
   "transport.defaultStatus": "Status połączenia z serwerem zdalnym",

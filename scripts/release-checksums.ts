@@ -14,7 +14,7 @@ import { execFileSync } from 'node:child_process';
 
 const ROOT = join(import.meta.dir, '..');
 const RELEASE_DIR = join(ROOT, 'apps', 'electron', 'release');
-const OUTPUT_DIR = process.env.CRAFT_RELEASE_OUTPUT ?? RELEASE_DIR;
+const OUTPUT_DIR = process.env.PHANERIS_RELEASE_OUTPUT ?? RELEASE_DIR;
 
 if (!existsSync(RELEASE_DIR)) {
   console.error(`Release directory not found: ${RELEASE_DIR}`);

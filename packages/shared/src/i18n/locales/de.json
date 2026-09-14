@@ -2228,7 +2228,7 @@
   "trajectory.views.prompt": "Prompt",
   "trajectory.views.timeline": "Zeitleiste",
   "trajectory.views.trajectory": "Trajectory",
-  "transport.authFailed": "Authentifizierung fehlgeschlagen. CRAFT_SERVER_TOKEN überprüfen.",
+  "transport.authFailed": "Authentifizierung fehlgeschlagen. PHANERIS_SERVER_TOKEN überprüfen.",
   "transport.connecting": "Verbindung zum Remote-Server wird hergestellt",
   "transport.connectingDesc": "Verbindung zu {{url}} wird hergestellt...",
   "transport.defaultStatus": "Verbindungsstatus des Remote-Servers",

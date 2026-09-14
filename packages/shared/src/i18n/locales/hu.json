@@ -2228,7 +2228,7 @@
   "trajectory.views.prompt": "Prompt",
   "trajectory.views.timeline": "Idővonal",
   "trajectory.views.trajectory": "Trajectory",
-  "transport.authFailed": "Hitelesítés sikertelen. Ellenőrizd a CRAFT_SERVER_TOKEN értékét.",
+  "transport.authFailed": "Hitelesítés sikertelen. Ellenőrizd a PHANERIS_SERVER_TOKEN értékét.",
   "transport.connecting": "Csatlakozás a távoli szerverhez",
   "transport.connectingDesc": "Csatlakozás ide: {{url}}...",
   "transport.defaultStatus": "Távoli szerver kapcsolat állapota",

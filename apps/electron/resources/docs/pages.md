@@ -219,7 +219,7 @@ What you must know about grants:
 
 ### Running a host script (script grants)
 
-A `script` grant lets a **local** page run a workspace-relative script on the host machine — the highest-privilege action a page can take. It reuses the same runner as scheduled refreshes: **argv spawn (never a shell)**, path confined to the workspace (symlink-aware), a `CRAFT_*`-only environment (no `PATH`, no credentials), and a 60s default timeout (15min max).
+A `script` grant lets a **local** page run a workspace-relative script on the host machine — the highest-privilege action a page can take. It reuses the same runner as scheduled refreshes: **argv spawn (never a shell)**, path confined to the workspace (symlink-aware), a `PHANERIS_*`-only environment (no `PATH`, no credentials), and a 60s default timeout (15min max).
 
 ```js
 // Descriptor requested via grant-request:
@@ -241,7 +241,7 @@ Rules specific to script grants:
 - **Match by descriptor** the same way as other kinds, but on `script` + `runtime` (defaulting to `bun`) + ordered `args` — there is no `sourceSlug`/`toolName`.
 - **Always mutating** — only fire from a real click handler; it will be rejected without fresh user activation.
 - **Not shareable.** A page that holds a script grant **cannot be published** at all (publish fails with `PAGE_SHARE_SCRIPT_GRANT`) — even the inert view-only path is refused, and stale/expired script grants count too. The user can remove the approval (⋯ → Approved actions, or inline in the Share dialog) and then publish; you cannot revoke grants with a tool. Mention this trade-off when adding a script action to a page the user may want to share.
-- The script's working directory is the workspace root; `CRAFT_PAGE_DIR` / `CRAFT_PAGE_DATA_DIR` / `CRAFT_WORKSPACE_PATH` point it at the page's own data. Running a script does **not** touch the page's scheduled-refresh status.
+- The script's working directory is the workspace root; `PHANERIS_PAGE_DIR` / `PHANERIS_PAGE_DATA_DIR` / `PHANERIS_WORKSPACE_PATH` point it at the page's own data. Running a script does **not** touch the page's scheduled-refresh status.
 
 ## Scheduled refresh
 
@@ -253,13 +253,13 @@ refresh: { cron: "*/15 * * * *", script: "scripts/refresh-build-health.ts" }
 
 The cron expression is validated on write: it must parse, must actually fire, and must not run more often than **every 5 minutes** (`*/5 * * * *` is the fastest accepted schedule) — an invalid spec makes `create_page`/`update_page` fail with the reason.
 
-The script must live **inside the workspace** and runs under **Bun** with a minimal environment: `CRAFT_WORKSPACE_PATH`, `CRAFT_PAGE_SLUG`, `CRAFT_PAGE_DIR`, `CRAFT_PAGE_DATA_DIR` (plus other `CRAFT_*` vars). Flow: update the store → export the snapshot → exit 0. The executor stamps `page.json` afterwards, which pushes the new snapshot to open renders.
+The script must live **inside the workspace** and runs under **Bun** with a minimal environment: `PHANERIS_WORKSPACE_PATH`, `PHANERIS_PAGE_SLUG`, `PHANERIS_PAGE_DIR`, `PHANERIS_PAGE_DATA_DIR` (plus other `PHANERIS_*` vars). Flow: update the store → export the snapshot → exit 0. The executor stamps `page.json` afterwards, which pushes the new snapshot to open renders.
 
 ```ts
 // scripts/refresh-build-health.ts  (Bun)
 import { openPageDataStore } from '@phaneris/shared/pages/data-store';
 
-const store = openPageDataStore(process.env.CRAFT_WORKSPACE_PATH!, process.env.CRAFT_PAGE_SLUG!);
+const store = openPageDataStore(process.env.PHANERIS_WORKSPACE_PATH!, process.env.PHANERIS_PAGE_SLUG!);
 const res = await fetch('https://ci.example.com/api/summary');   // scripts CAN use the network
 const summary = await res.json();
 store.kvSet('summary', summary);
@@ -268,7 +268,7 @@ store.exportSnapshot();
 store.close();
 ```
 
-If `@phaneris/shared` is not resolvable from the workspace (e.g. packaged installs), write a self-contained script with `bun:sqlite` against `$CRAFT_PAGE_DATA_DIR/store.sqlite` using this exact schema, and write the snapshot atomically (temp file + rename) to `$CRAFT_PAGE_DATA_DIR/snapshot.json`:
+If `@phaneris/shared` is not resolvable from the workspace (e.g. packaged installs), write a self-contained script with `bun:sqlite` against `$PHANERIS_PAGE_DATA_DIR/store.sqlite` using this exact schema, and write the snapshot atomically (temp file + rename) to `$PHANERIS_PAGE_DATA_DIR/snapshot.json`:
 
 ```sql
 CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at INTEGER NOT NULL);

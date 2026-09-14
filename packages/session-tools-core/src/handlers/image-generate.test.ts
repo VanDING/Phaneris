@@ -9,7 +9,7 @@ describe('image_generate canonical handler', () => {
       imageGenerate: async (input: ImageGenerateInput) => {
         received = input;
         return {
-          text: 'CRAFT_ARTIFACT_EVENT:{"artifactId":"image-1"}',
+          text: 'PHANERIS_ARTIFACT_EVENT:{"artifactId":"image-1"}',
           structuredContent: { artifact: { id: 'image-1', status: 'ready' } },
         };
       },
@@ -19,7 +19,7 @@ describe('image_generate canonical handler', () => {
     });
     expect(received).toEqual({ prompt: 'A quiet harbor at dawn', outputFormat: 'webp' });
     expect(result.isError).toBe(false);
-    expect(result.content[0]?.text).toStartWith('CRAFT_ARTIFACT_EVENT:');
+    expect(result.content[0]?.text).toStartWith('PHANERIS_ARTIFACT_EVENT:');
   });
 
   it('fails closed without a host callback', async () => {

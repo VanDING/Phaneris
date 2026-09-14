@@ -26,7 +26,7 @@ export type CraftPiSessionPurpose = 'main' | 'ephemeral';
  * targeted result and the host can clear its pending request before its own
  * deadline fires.
  */
-export const CRAFT_PI_EPHEMERAL_QUERY_DEADLINE_MS = LLM_QUERY_TIMEOUT_MS - 5_000;
+export const PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS = LLM_QUERY_TIMEOUT_MS - 5_000;
 
 /**
  * Main-chat retry policy for transient provider/transport errors.
@@ -39,7 +39,7 @@ export const CRAFT_PI_EPHEMERAL_QUERY_DEADLINE_MS = LLM_QUERY_TIMEOUT_MS - 5_000
  * 408/409/429/5xx honoring `retry-after` up to `maxRetryDelayMs`, mirroring the
  * OpenAI/Anthropic SDK default of 2. (Pi SDK default: 0.)
  */
-export const CRAFT_PI_RETRY_SETTINGS = {
+export const PHANERIS_PI_RETRY_SETTINGS = {
   enabled: true,
   maxRetries: 4,
   baseDelayMs: 2_000,
@@ -58,7 +58,7 @@ export const CRAFT_PI_RETRY_SETTINGS = {
  * agent backoff consumes another 6 seconds, leaving headroom for request and
  * cleanup latency.
  */
-export const CRAFT_PI_EPHEMERAL_RETRY_SETTINGS = {
+export const PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS = {
   enabled: true,
   maxRetries: 2,
   baseDelayMs: 2_000,
@@ -68,18 +68,18 @@ export const CRAFT_PI_EPHEMERAL_RETRY_SETTINGS = {
   },
 } as const;
 
-export const CRAFT_PI_EPHEMERAL_MAX_BACKOFF_MS =
-  CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetries *
-    CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetryDelayMs *
-    (CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries + 1) +
-  CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.baseDelayMs *
-    (2 ** CRAFT_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries - 1);
+export const PHANERIS_PI_EPHEMERAL_MAX_BACKOFF_MS =
+  PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetries *
+    PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetryDelayMs *
+    (PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries + 1) +
+  PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.baseDelayMs *
+    (2 ** PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries - 1);
 
 /** Settings applied to one Pi session, isolated from project/global Pi files. */
 export function buildCraftPiSettings(purpose: CraftPiSessionPurpose = 'main'): PiSettings {
   const retry = purpose === 'ephemeral'
-    ? CRAFT_PI_EPHEMERAL_RETRY_SETTINGS
-    : CRAFT_PI_RETRY_SETTINGS;
+    ? PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS
+    : PHANERIS_PI_RETRY_SETTINGS;
 
   return {
     retry: {

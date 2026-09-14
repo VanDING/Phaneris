@@ -5,9 +5,9 @@ import { tmpdir } from 'node:os';
 import { resolveScriptRuntime } from './resolve-script-runtime.ts';
 
 describe('resolveScriptRuntime', () => {
-  it('prefers CRAFT_UV for python3', () => {
-    const prev = process.env.CRAFT_UV;
-    process.env.CRAFT_UV = '/tmp/custom-uv';
+  it('prefers PHANERIS_UV for python3', () => {
+    const prev = process.env.PHANERIS_UV;
+    process.env.PHANERIS_UV = '/tmp/custom-uv';
 
     try {
       const resolved = resolveScriptRuntime('python3', { isPackaged: false });
@@ -15,14 +15,14 @@ describe('resolveScriptRuntime', () => {
       expect(resolved.argsPrefix).toEqual(['run', '--python', '3.12']);
       expect(resolved.source).toBe('env');
     } finally {
-      if (prev === undefined) delete process.env.CRAFT_UV;
-      else process.env.CRAFT_UV = prev;
+      if (prev === undefined) delete process.env.PHANERIS_UV;
+      else process.env.PHANERIS_UV = prev;
     }
   });
 
   it('prefers bundled uv when env is missing', () => {
-    const prevUv = process.env.CRAFT_UV;
-    delete process.env.CRAFT_UV;
+    const prevUv = process.env.PHANERIS_UV;
+    delete process.env.PHANERIS_UV;
 
     const base = mkdtempSync(join(tmpdir(), 'runtime-resolver-'));
     const uvPath = join(base, 'resources', 'bin', `${process.platform}-${process.arch}`, process.platform === 'win32' ? 'uv.exe' : 'uv');
@@ -34,74 +34,74 @@ describe('resolveScriptRuntime', () => {
       expect(resolved.command).toBe(uvPath);
       expect(resolved.source).toBe('bundled');
     } finally {
-      if (prevUv === undefined) delete process.env.CRAFT_UV;
-      else process.env.CRAFT_UV = prevUv;
+      if (prevUv === undefined) delete process.env.PHANERIS_UV;
+      else process.env.PHANERIS_UV = prevUv;
     }
   });
 
   it('blocks PATH fallback in packaged mode', () => {
-    const prevUv = process.env.CRAFT_UV;
-    const prevBase = process.env.CRAFT_RESOURCES_BASE;
-    const prevRoot = process.env.CRAFT_APP_ROOT;
-    delete process.env.CRAFT_UV;
-    delete process.env.CRAFT_RESOURCES_BASE;
-    delete process.env.CRAFT_APP_ROOT;
+    const prevUv = process.env.PHANERIS_UV;
+    const prevBase = process.env.PHANERIS_RESOURCES_BASE;
+    const prevRoot = process.env.PHANERIS_APP_ROOT;
+    delete process.env.PHANERIS_UV;
+    delete process.env.PHANERIS_RESOURCES_BASE;
+    delete process.env.PHANERIS_APP_ROOT;
 
     try {
       expect(() => resolveScriptRuntime('python3', { isPackaged: true })).toThrow(
         'packaged app'
       );
     } finally {
-      if (prevUv === undefined) delete process.env.CRAFT_UV;
-      else process.env.CRAFT_UV = prevUv;
-      if (prevBase === undefined) delete process.env.CRAFT_RESOURCES_BASE;
-      else process.env.CRAFT_RESOURCES_BASE = prevBase;
-      if (prevRoot === undefined) delete process.env.CRAFT_APP_ROOT;
-      else process.env.CRAFT_APP_ROOT = prevRoot;
+      if (prevUv === undefined) delete process.env.PHANERIS_UV;
+      else process.env.PHANERIS_UV = prevUv;
+      if (prevBase === undefined) delete process.env.PHANERIS_RESOURCES_BASE;
+      else process.env.PHANERIS_RESOURCES_BASE = prevBase;
+      if (prevRoot === undefined) delete process.env.PHANERIS_APP_ROOT;
+      else process.env.PHANERIS_APP_ROOT = prevRoot;
     }
   });
 
-  it('treats CRAFT_IS_PACKAGED=true as packaged mode', () => {
-    const prevPackaged = process.env.CRAFT_IS_PACKAGED;
-    const prevUv = process.env.CRAFT_UV;
-    const prevBase = process.env.CRAFT_RESOURCES_BASE;
-    const prevRoot = process.env.CRAFT_APP_ROOT;
-    process.env.CRAFT_IS_PACKAGED = 'true';
-    delete process.env.CRAFT_UV;
-    delete process.env.CRAFT_RESOURCES_BASE;
-    delete process.env.CRAFT_APP_ROOT;
+  it('treats PHANERIS_IS_PACKAGED=true as packaged mode', () => {
+    const prevPackaged = process.env.PHANERIS_IS_PACKAGED;
+    const prevUv = process.env.PHANERIS_UV;
+    const prevBase = process.env.PHANERIS_RESOURCES_BASE;
+    const prevRoot = process.env.PHANERIS_APP_ROOT;
+    process.env.PHANERIS_IS_PACKAGED = 'true';
+    delete process.env.PHANERIS_UV;
+    delete process.env.PHANERIS_RESOURCES_BASE;
+    delete process.env.PHANERIS_APP_ROOT;
 
     try {
       expect(() => resolveScriptRuntime('python3')).toThrow('packaged app');
     } finally {
-      if (prevPackaged === undefined) delete process.env.CRAFT_IS_PACKAGED;
-      else process.env.CRAFT_IS_PACKAGED = prevPackaged;
-      if (prevUv === undefined) delete process.env.CRAFT_UV;
-      else process.env.CRAFT_UV = prevUv;
-      if (prevBase === undefined) delete process.env.CRAFT_RESOURCES_BASE;
-      else process.env.CRAFT_RESOURCES_BASE = prevBase;
-      if (prevRoot === undefined) delete process.env.CRAFT_APP_ROOT;
-      else process.env.CRAFT_APP_ROOT = prevRoot;
+      if (prevPackaged === undefined) delete process.env.PHANERIS_IS_PACKAGED;
+      else process.env.PHANERIS_IS_PACKAGED = prevPackaged;
+      if (prevUv === undefined) delete process.env.PHANERIS_UV;
+      else process.env.PHANERIS_UV = prevUv;
+      if (prevBase === undefined) delete process.env.PHANERIS_RESOURCES_BASE;
+      else process.env.PHANERIS_RESOURCES_BASE = prevBase;
+      if (prevRoot === undefined) delete process.env.PHANERIS_APP_ROOT;
+      else process.env.PHANERIS_APP_ROOT = prevRoot;
     }
   });
 
-  it('rejects bare CRAFT_NODE command in packaged mode', () => {
-    const prev = process.env.CRAFT_NODE;
-    process.env.CRAFT_NODE = 'node';
+  it('rejects bare PHANERIS_NODE command in packaged mode', () => {
+    const prev = process.env.PHANERIS_NODE;
+    process.env.PHANERIS_NODE = 'node';
 
     try {
       expect(() => resolveScriptRuntime('node', { isPackaged: true })).toThrow(
         'do not allow PATH-based runtime resolution'
       );
     } finally {
-      if (prev === undefined) delete process.env.CRAFT_NODE;
-      else process.env.CRAFT_NODE = prev;
+      if (prev === undefined) delete process.env.PHANERIS_NODE;
+      else process.env.PHANERIS_NODE = prev;
     }
   });
 
-  it('prefers CRAFT_BUN for bun in dev', () => {
-    const prev = process.env.CRAFT_BUN;
-    process.env.CRAFT_BUN = '/tmp/custom-bun';
+  it('prefers PHANERIS_BUN for bun in dev', () => {
+    const prev = process.env.PHANERIS_BUN;
+    process.env.PHANERIS_BUN = '/tmp/custom-bun';
 
     try {
       const resolved = resolveScriptRuntime('bun', { isPackaged: false });
@@ -109,8 +109,8 @@ describe('resolveScriptRuntime', () => {
       expect(resolved.argsPrefix).toEqual([]);
       expect(resolved.source).toBe('env');
     } finally {
-      if (prev === undefined) delete process.env.CRAFT_BUN;
-      else process.env.CRAFT_BUN = prev;
+      if (prev === undefined) delete process.env.PHANERIS_BUN;
+      else process.env.PHANERIS_BUN = prev;
     }
   });
 });

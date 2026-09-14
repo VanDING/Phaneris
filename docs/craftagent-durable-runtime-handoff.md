@@ -601,7 +601,7 @@ bun test \
 3. **Utility model 全覆盖**：mini completion、title/summarization、`call_llm` 与 manual/automatic compaction 均拥有独立 durable run identity，并通过 AsyncLocalStorage 隔离并发请求的 model T1/T2。
 4. **模型 unknown 闭环**：增加 durable provider-attempt reconciliation API 和桌面人工核验入口，支持“provider 未计费”“已计费但响应不可取回”“人工放弃”；actor 由 transport 派生，不伪造 usage、不自动重发。
 5. **生产 reconciliation 样板**：注册 `task_node_dispatch` adapter，通过 task/run/node identity 查询权威 session registry；只有 child session 与已提交 user input 同时存在才判定 completed，部分创建、多匹配均要求人工核验。
-6. **Canonical UI read authority**：rich JSONL metadata 作为 overlay 保留，但消息语义、顺序、tool input/outcome 与 durable cursor 来自 runtime.db；默认只切换 parity=100% 的 session。`CRAFT_DURABLE_SESSION_READ=shadow|legacy` 可只改路由回滚，`CRAFT_DURABLE_SESSION_CANARY` 支持 session/workspace 灰度。
+6. **Canonical UI read authority**：rich JSONL metadata 作为 overlay 保留，但消息语义、顺序、tool input/outcome 与 durable cursor 来自 runtime.db；默认只切换 parity=100% 的 session。`PHANERIS_DURABLE_SESSION_READ=shadow|legacy` 可只改路由回滚，`PHANERIS_DURABLE_SESSION_CANARY` 支持 session/workspace 灰度。
 7. **持久化 rollout 证据**：schema v3 增加 projection parity observations，按 projection/session/cursor 保存差异分类、ratio 与时间，可用于 dashboard/error budget；projection schema 变更自动从 immutable facts 重建，不永久卡在 legacy fallback。
 8. **TaskRunner 权威切换**：run/node 状态、node output、verdict、repair counter、budget breach 与 terminal fact 先提交 runtime.db；run-log 与 node JSON 仅在 canonical commit 后更新。重启优先读 canonical facts，即使兼容文件缺失也能恢复已完成 output。
 9. **数据库生命周期**：schema v1 可无损迁移到最新 v3；启动 integrity check；每日 `VACUUM INTO` 一致性备份；六小时维护检查；30 天陈旧可重建投影 retention；每周 VACUUM；校验后的原子 restore，失败自动回滚并保留 restore 前数据库。

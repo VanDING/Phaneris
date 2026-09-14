@@ -1140,7 +1140,7 @@ export class SessionManager implements ISessionManager {
   // O(1) index: taskId → sessionId for background task output lookup (avoids O(n) session scan)
   private taskOutputIndex: Map<string, string> = new Map()
   /**
-   * WS2 keep-alive flag (default ON, opt-out via `CRAFT_KEEP_BG_AGENTS_ALIVE=0`).
+   * WS2 keep-alive flag (default ON, opt-out via `PHANERIS_KEEP_BG_AGENTS_ALIVE=0`).
    * When true, a persistent streaming query keeps the subprocess alive across
    * turns so background sub-agents survive, and orphaning is suppressed. When
    * false (kill-switch), sub-agents are bound to a single turn's subprocess and
@@ -2709,9 +2709,9 @@ export class SessionManager implements ISessionManager {
    * An optional comma-separated canary list accepts session/workspace ids or roots.
    */
   private shouldUseCanonicalSessionRead(managed: ManagedSession): boolean {
-    const mode = (process.env.CRAFT_DURABLE_SESSION_READ ?? 'canonical').toLowerCase()
+    const mode = (process.env.PHANERIS_DURABLE_SESSION_READ ?? 'canonical').toLowerCase()
     if (mode !== 'canonical') return false
-    const canaries = (process.env.CRAFT_DURABLE_SESSION_CANARY ?? '')
+    const canaries = (process.env.PHANERIS_DURABLE_SESSION_CANARY ?? '')
       .split(',')
       .map(value => value.trim())
       .filter(Boolean)
@@ -3774,10 +3774,10 @@ export class SessionManager implements ISessionManager {
       }
 
       // Set session directory for tool metadata cross-process sharing.
-      // The SDK subprocess reads CRAFT_SESSION_DIR to write tool-metadata.json;
+      // The SDK subprocess reads PHANERIS_SESSION_DIR to write tool-metadata.json;
       // the main process reads it via toolMetadataStore.setSessionDir().
       const sessionDirForMetadata = getSessionStoragePath(managed.workspace.rootPath, managed.id)
-      process.env.CRAFT_SESSION_DIR = sessionDirForMetadata
+      process.env.PHANERIS_SESSION_DIR = sessionDirForMetadata
       toolMetadataStore.setSessionDir(sessionDirForMetadata)
 
       // Set up agentReady promise so title generation can await agent creation
@@ -3818,7 +3818,7 @@ export class SessionManager implements ISessionManager {
       // Per-session env overrides
       const miniModel = connection ? (getMiniModel(connection) ?? connection.defaultModel) : undefined
       const envOverrides: Record<string, string> = {
-        CRAFT_WORKSPACE_PATH: managed.workspace.rootPath,
+        PHANERIS_WORKSPACE_PATH: managed.workspace.rootPath,
         // Pass mini model to SDK subprocess so built-in tools like WebFetch
         // use the correct model for summarization (instead of hardcoded Haiku)
         ...(miniModel ? { ANTHROPIC_DEFAULT_HAIKU_MODEL: miniModel } : {}),
@@ -9505,7 +9505,7 @@ export class SessionManager implements ISessionManager {
       : getDefaultSummarizationModel()
 
     const envOverrides: Record<string, string> = {
-      CRAFT_WORKSPACE_PATH: workspaceRootPath,
+      PHANERIS_WORKSPACE_PATH: workspaceRootPath,
       ...(miniModel ? { ANTHROPIC_DEFAULT_HAIKU_MODEL: miniModel } : {}),
     }
 

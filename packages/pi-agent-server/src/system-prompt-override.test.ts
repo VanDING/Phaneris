@@ -33,23 +33,23 @@ function makeFakeSession(): StampedSession {
 describe('applySystemPromptOverride', () => {
   it('stamps state.systemPrompt', () => {
     const session = makeFakeSession();
-    applySystemPromptOverride(session as unknown as AgentSession, 'CRAFT_PROMPT');
-    expect(session.agent.state.systemPrompt).toBe('CRAFT_PROMPT');
+    applySystemPromptOverride(session as unknown as AgentSession, 'PHANERIS_PROMPT');
+    expect(session.agent.state.systemPrompt).toBe('PHANERIS_PROMPT');
   });
 
   it('stamps the private _baseSystemPrompt field so session.prompt() reset survives', () => {
     const session = makeFakeSession();
-    applySystemPromptOverride(session as unknown as AgentSession, 'CRAFT_PROMPT');
-    expect(session._baseSystemPrompt).toBe('CRAFT_PROMPT');
+    applySystemPromptOverride(session as unknown as AgentSession, 'PHANERIS_PROMPT');
+    expect(session._baseSystemPrompt).toBe('PHANERIS_PROMPT');
   });
 
   it('replaces _rebuildSystemPrompt with a constant function so tool-change rebuilds survive', () => {
     const session = makeFakeSession();
-    applySystemPromptOverride(session as unknown as AgentSession, 'CRAFT_PROMPT');
+    applySystemPromptOverride(session as unknown as AgentSession, 'PHANERIS_PROMPT');
     expect(typeof session._rebuildSystemPrompt).toBe('function');
     // Must return our prompt regardless of which tool names the SDK passes in.
-    expect(session._rebuildSystemPrompt!(['read', 'bash'])).toBe('CRAFT_PROMPT');
-    expect(session._rebuildSystemPrompt!([])).toBe('CRAFT_PROMPT');
+    expect(session._rebuildSystemPrompt!(['read', 'bash'])).toBe('PHANERIS_PROMPT');
+    expect(session._rebuildSystemPrompt!([])).toBe('PHANERIS_PROMPT');
   });
 
   it('overwrites previously stamped values on a re-application', () => {

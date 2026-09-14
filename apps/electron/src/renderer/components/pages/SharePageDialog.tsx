@@ -23,7 +23,7 @@ import { describeGrantAction, useGrantRemoval } from './grant-visuals'
  * Share dialog: publish / republish / password management / unpublish.
  *
  * Server-side gating is authoritative (the publish RPCs re-check the
- * CRAFT_FEATURE_PAGES_SHARING flag); `sharingEnabled` only controls what the
+ * PHANERIS_FEATURE_PAGES_SHARING flag); `sharingEnabled` only controls what the
  * dialog offers. Unpublish is always offered for a published page so a
  * disabled flag can never strand a public copy (design §12).
  */

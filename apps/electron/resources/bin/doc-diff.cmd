@@ -6,4 +6,4 @@ set "ARGS=%ARGS% "%~1""
 shift
 goto :argloop
 :run
-"%CRAFT_UV%" run --python 3.12 "%CRAFT_SCRIPTS%\doc_diff.py"%ARGS%
+"%PHANERIS_UV%" run --python 3.12 "%PHANERIS_SCRIPTS%\doc_diff.py"%ARGS%

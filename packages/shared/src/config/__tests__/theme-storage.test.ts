@@ -24,7 +24,7 @@ function makeConfigDir(): string {
 
 function runStorageScript(configDir: string, script: string): unknown {
   const result = Bun.spawnSync([process.execPath, '--eval', script], {
-    env: { ...process.env, CRAFT_CONFIG_DIR: configDir },
+    env: { ...process.env, PHANERIS_CONFIG_DIR: configDir },
     stdout: 'pipe',
     stderr: 'pipe',
   });

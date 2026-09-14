@@ -8,7 +8,7 @@ test('bundle budgets reject absent, unrecognized and missing assets and invalid 
   const script = join(dir, 'scripts/bundle-report.ts');
   const dist = join(dir, 'apps/electron/dist');
   const invoke = (budget = '4800000') => Bun.spawnSync([process.execPath, script, '--check'], {
-    env: { ...process.env, CRAFT_MAX_RENDERER_INITIAL_BYTES: budget }, stdout: 'pipe', stderr: 'pipe',
+    env: { ...process.env, PHANERIS_MAX_RENDERER_INITIAL_BYTES: budget }, stdout: 'pipe', stderr: 'pipe',
   }).exitCode;
   try {
     mkdirSync(join(dir, 'scripts'), { recursive: true });

@@ -992,7 +992,7 @@ describe('TaskRunner (Conductor)', () => {
     // never verifies) hangs forever. The timeout must fail the run and cancel in-flight children.
     // The test drives the real platform clock at a short budget and awaits the settlement signal the
     // run exposes — the exact promise that used to hang.
-    process.env.CRAFT_TASK_RUN_TIMEOUT_MS = '40';
+    process.env.PHANERIS_TASK_RUN_TIMEOUT_MS = '40';
     try {
       saveTaskSpec(
         root,
@@ -1019,12 +1019,12 @@ describe('TaskRunner (Conductor)', () => {
       expect(host.cancelled).toContain('sess-a');
       expect(readRunLog(root, 'to', 'r1').some((e) => e.kind === 'run-failed')).toBe(true);
     } finally {
-      delete process.env.CRAFT_TASK_RUN_TIMEOUT_MS;
+      delete process.env.PHANERIS_TASK_RUN_TIMEOUT_MS;
     }
   });
 
   it('fails a run stuck in verifying (orchestrator never returns a verdict)', async () => {
-    process.env.CRAFT_TASK_RUN_TIMEOUT_MS = '40';
+    process.env.PHANERIS_TASK_RUN_TIMEOUT_MS = '40';
     try {
       saveTaskSpec(root, specOf({ id: 'vto', title: 'Vto', goal: 'g', nodes: [{ id: 'a', prompt: 'a' }] }));
       const runner = makeRunner();
@@ -1044,7 +1044,7 @@ describe('TaskRunner (Conductor)', () => {
       await tick();
       expect(runner.getRunState('vto', 'r1')!.status).toBe('failed');
     } finally {
-      delete process.env.CRAFT_TASK_RUN_TIMEOUT_MS;
+      delete process.env.PHANERIS_TASK_RUN_TIMEOUT_MS;
     }
   });
 });

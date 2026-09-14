@@ -1,6 +1,6 @@
 import type { ArtifactDescriptor, ArtifactEventSnapshot, ResolvedArtifact } from './types.ts';
 
-export const ARTIFACT_EVENT_PREFIX = 'CRAFT_ARTIFACT_EVENT:';
+export const ARTIFACT_EVENT_PREFIX = 'PHANERIS_ARTIFACT_EVENT:';
 
 export function createArtifactEventSnapshot(resolved: ResolvedArtifact): ArtifactEventSnapshot {
   const artifact = resolved.artifact;

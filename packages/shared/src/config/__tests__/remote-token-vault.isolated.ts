@@ -2,7 +2,7 @@
  * End-to-end regression coverage for the remote-server token vault.
  *
  * Runs as an isolated Bun process because `CONFIG_DIR` is captured at module
- * load time from CRAFT_CONFIG_DIR. Setting it here before the dynamic import
+ * load time from PHANERIS_CONFIG_DIR. Setting it here before the dynamic import
  * keeps the test away from the developer's real ~/.craft-agent profile.
  */
 import { afterAll, describe, expect, it } from 'bun:test'
@@ -11,14 +11,14 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const configDir = mkdtempSync(join(tmpdir(), 'craft-remote-token-vault-'))
-process.env.CRAFT_CONFIG_DIR = configDir
+process.env.PHANERIS_CONFIG_DIR = configDir
 
 const storage = await import('../storage.ts')
 const { getCredentialManager } = await import('../../credentials/manager.ts')
 const { SecureStorageBackend, setCredentialKeyProvider } = await import('../../credentials/backends/secure-storage.ts')
 
 // The credential store normally lives in ~/.craft-agent regardless of
-// CRAFT_CONFIG_DIR, so point the process-global manager at a temp file. The
+// PHANERIS_CONFIG_DIR, so point the process-global manager at a temp file. The
 // injected key provider keeps the test independent from the machine id.
 setCredentialKeyProvider({ id: 'test:remote-token-vault', getKey: () => new Uint8Array(32).fill(7) })
 const credentialManager = getCredentialManager()
@@ -109,5 +109,5 @@ describe('remote-server token vault', () => {
 
 afterAll(() => {
   rmSync(configDir, { recursive: true, force: true })
-  delete process.env.CRAFT_CONFIG_DIR
+  delete process.env.PHANERIS_CONFIG_DIR
 })

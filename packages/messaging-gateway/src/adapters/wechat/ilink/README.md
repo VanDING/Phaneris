@@ -38,7 +38,7 @@ are limited to:
 - **`api/api.ts` / `api/types.ts`** — `base_info` (`channel_version` +
   `bot_agent`) restored on every endpoint, matching upstream 2.4.4.
 - **`storage/state-dir.ts`** — state directory resolution falls back to
-  `$CRAFT_AGENT_HOME` / `~/.craft-agent`; the adapter sets it explicitly via
+  `$PHANERIS_AGENT_HOME` / `~/.craft-agent`; the adapter sets it explicitly via
   `setStateDir()` during `initialize()`.
 - **`util/logger.ts`** — daily JSON-lines log file under the OS temp dir,
   level read from `OPENCLAW_LOG_LEVEL`. This logger is preserved from upstream

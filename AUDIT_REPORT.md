@@ -150,7 +150,7 @@
 - M-24 [FIXED b4fd6ecc, 混合] 打包产物 EOL Electron 39.2.7,dev 用 43.1.1 (`electron-builder.yml:7` 改 43.1.1;pin 本身 inherited,不一致是 fork 升级 dev 未同步)。
 - M-25 [OPEN, fork-caused] OAuth define 双构建路径不一致,`build:main` 会把 `GOOGLE_OAUTH_CLIENT_SECRET` 烘焙进 bundle (`apps/electron/package.json:18` vs `electron-build-main.ts:30-47` 注释声称不烘焙)。
 - M-26 [PARTIAL 05afe4b9: permissions + bun 版本已对齐;SHA pin 未做] GitHub Actions 未 pin SHA、无 `permissions:`;bun 版本三处不一致。
-- M-27 [OPEN] `.env.example` 过期 (记录已删除的 ANTHROPIC_API_KEY,`CRAFT_SERVER_TOKEN` 等 ~30 个未记录)。
+- M-27 [OPEN] `.env.example` 过期 (记录已删除的 ANTHROPIC_API_KEY,`PHANERIS_SERVER_TOKEN` 等 ~30 个未记录)。
 - M-28 [ACCEPTED 用户决策, inherited] bunfig preload 全局 fetch 拦截器注入所有 bun 进程 (`unified-network-interceptor.ts:2266-2270`),无 host 过滤。
 
 ---
@@ -167,11 +167,11 @@
 - L-8 [FIXED bdc8147c] 应用级 IPC 无 sender 校验: `workspace:remove`/`app:relaunch`/`__get-ws-token` (`main/index.ts:494-498,769-772,909-911,943`)。
 - L-9 [ACCEPTED 用户决策] 主窗口 + toolbar BrowserView 仍 `sandbox: false` (`window-manager.ts:257-261`、`browser-pane-manager.ts:402-408`)。
 - L-10 [ACCEPTED 用户决策] preload 仍 6 个 `sendSync` (`bootstrap.ts:56,81,99-101,113`);`(api as any)` 7 处。
-- L-11 [FIXED bdc8147c] `install-server.sh:52-81` 明文打印 server token;`main/index.ts:1051` headless 打印 `CRAFT_SERVER_TOKEN`;CLI `--api-key` 进 ps。
+- L-11 [FIXED bdc8147c] `install-server.sh:52-81` 明文打印 server token;`main/index.ts:1051` headless 打印 `PHANERIS_SERVER_TOKEN`;CLI `--api-key` 进 ps。
 - L-12 [FIXED 05afe4b9] deep-link 查询参数仍原样透传 (`deep-link.ts:181-188`) + 100ms 时序假设;`craftagents://` 协议注册使任意网页可触发 `delete-session` action。
 - L-13 [FIXED bdc8147c] husky 零钩子;`test-workflow-local.sh:5` 硬编码个人路径。
 - L-14 [PARTIAL bdc8147c + 05afe4b9] renderer: MemoizedMarkdown 比较器 + 菜单闭包已修;render 期 clientHeight 读取 + Mermaid ref 写入仍 OPEN(性能类)。
-- L-15 [FIXED bdc8147c + 05afe4b9] `CRAFT_HEALTH_PORT` NaN 绕过端口守卫 (`server/src/index.ts:293`);server token `===` 非恒时比较。
+- L-15 [FIXED bdc8147c + 05afe4b9] `PHANERIS_HEALTH_PORT` NaN 绕过端口守卫 (`server/src/index.ts:293`);server token `===` 非恒时比较。
 
 ---
 
@@ -186,7 +186,7 @@
 ## 7. 上游归属总表 (实测逐文件对比 `craft-ai-agents/craft-agents-oss` main)
 
 ### Inherited — fork 与上游同款 (不是复刻退步,但 fork 有义务修)
-rehypeRaw+CSP · browser-pane file:// 正则 (上游 :736 同) · preload TLS 跳过 ×2 · SessionManager 单文件 (**上游 9005 行, fork 8884 行**) · electron-builder `electronVersion: 39.2.7` · Dockerfile 幽灵 COPY (`craft-agents-commands`/`craft-cli`/`apps/marketing` **上游也 404**) · `CRAFT_COMMANDS_ENTRY/CRAFT_CLI_ENTRY` 幽灵引用 · `check-i18n-coverage.ts` 缺失 (**上游同样引用、同样缺失**) · H-11 刷新路由骨架 · readUserAttachment/files.ts 系
+rehypeRaw+CSP · browser-pane file:// 正则 (上游 :736 同) · preload TLS 跳过 ×2 · SessionManager 单文件 (**上游 9005 行, fork 8884 行**) · electron-builder `electronVersion: 39.2.7` · Dockerfile 幽灵 COPY (`craft-agents-commands`/`craft-cli`/`apps/marketing` **上游也 404**) · `PHANERIS_COMMANDS_ENTRY/PHANERIS_CLI_ENTRY` 幽灵引用 · `check-i18n-coverage.ts` 缺失 (**上游同样引用、同样缺失**) · H-11 刷新路由骨架 · readUserAttachment/files.ts 系
 
 ### Fork-caused — fork 自己的决策/代码
 TS7 升级 (201 错) · anthropic→pi 迁移未同步测试 (CI 红) · `typecheck:all` 塞入 `powershell dedupe.ps1` (**上游链无此步**)+ 硬编码 `E:\craft-agents` · undici/marked/js-yaml 激进升级 · dev Electron 43 vs 打包 39 不一致 · 全部 iLink WeChat 传输 (上游无 wechat adapter) · 统一 Pi OAuth handler (xAI/OpenRouter/Kimi/Radius) 及其 H-11 激活/H-12 · remote-server token 进 renderer (H-15)

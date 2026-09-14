@@ -14,11 +14,11 @@ import { saveSession, loadSession, getSessionFilePath } from '@phaneris/shared/s
 import { root } from '../check-environment'
 import { fixtureSession, profiles, seedFixtures, workspaceId, type ProfileName } from './fixtures'
 
-const configDir = process.env.CRAFT_CONFIG_DIR!
-if (!configDir || !process.env.CRAFT_PERF_TOKEN) throw new Error('Run through perf:baseline or perf:smoke')
-const token = process.env.CRAFT_PERF_TOKEN
-const profile = process.env.CRAFT_PERF_PROFILE as ProfileName
-// CredentialManager predates CRAFT_CONFIG_DIR. Redirect its lazy backend before
+const configDir = process.env.PHANERIS_CONFIG_DIR!
+if (!configDir || !process.env.PHANERIS_PERF_TOKEN) throw new Error('Run through perf:baseline or perf:smoke')
+const token = process.env.PHANERIS_PERF_TOKEN
+const profile = process.env.PHANERIS_PERF_PROFILE as ProfileName
+// CredentialManager predates PHANERIS_CONFIG_DIR. Redirect its lazy backend before
 // bootstrap can read credentials; never change HOME or use the developer's store.
 Object.defineProperty(getCredentialManager(), 'backend', { value: new SecureStorageBackend(join(configDir, 'credentials.enc')) })
 const fixture = await seedFixtures(configDir, profile)

@@ -10,7 +10,7 @@ import {
 } from './artifact.ts';
 
 const success: ArtifactToolResult = {
-  text: 'CRAFT_ARTIFACT_EVENT:{"artifactId":"a"}',
+  text: 'PHANERIS_ARTIFACT_EVENT:{"artifactId":"a"}',
   structuredContent: { artifact: { id: 'a' } },
 };
 
@@ -39,7 +39,7 @@ describe('Artifact canonical handlers', () => {
     ]);
 
     expect(results.every((result) => result.isError === false)).toBe(true);
-    expect(results[0]?.content[0]?.text).toStartWith('CRAFT_ARTIFACT_EVENT:');
+    expect(results[0]?.content[0]?.text).toStartWith('PHANERIS_ARTIFACT_EVENT:');
     expect(results[0]?.structuredContent).toEqual(success.structuredContent);
     expect(calls).toHaveLength(6);
     expect(calls[2]).toEqual(['apply', 'a', {

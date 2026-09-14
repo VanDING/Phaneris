@@ -1,6 +1,6 @@
 /**
  * Pages script executor: builds a ScriptAction from the grant invocation,
- * injects CRAFT_* env, never sets `page` (so it can't clobber the refresh
+ * injects PHANERIS_* env, never sets `page` (so it can't clobber the refresh
  * marker), returns process outcome on run, and throws on a blocked run.
  * The runner itself is injected — spawn behavior is covered by the automations
  * script-executor tests.
@@ -54,14 +54,14 @@ describe('createPagesScriptExecutor', () => {
     expect(seen[0].action.page).toBeUndefined()
   })
 
-  test('injects CRAFT_ workspace + page env for the triggering page', async () => {
+  test('injects PHANERIS_ workspace + page env for the triggering page', async () => {
     const { executor, seen } = makeExecutor({ exitCode: 0 })
     await executor({ pageSlug: 'dash', script: 'pages/dash/run.sh' }, { signal })
     const env = seen[0].ctx.env
-    expect(env.CRAFT_WORKSPACE_PATH).toBe('/tmp/ws')
-    expect(env.CRAFT_PAGE_SLUG).toBe('dash')
-    expect(env.CRAFT_PAGE_DIR).toBe(join('/tmp/ws', 'pages', 'dash'))
-    expect(env.CRAFT_PAGE_DATA_DIR).toBe(join('/tmp/ws', 'pages', 'dash', 'data'))
+    expect(env.PHANERIS_WORKSPACE_PATH).toBe('/tmp/ws')
+    expect(env.PHANERIS_PAGE_SLUG).toBe('dash')
+    expect(env.PHANERIS_PAGE_DIR).toBe(join('/tmp/ws', 'pages', 'dash'))
+    expect(env.PHANERIS_PAGE_DATA_DIR).toBe(join('/tmp/ws', 'pages', 'dash', 'data'))
     // never leaks non-CRAFT secrets
     expect(env.ANTHROPIC_API_KEY).toBeUndefined()
   })

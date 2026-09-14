@@ -109,8 +109,8 @@ export type ScriptActionRuntime = 'bun' | 'node' | 'python3';
  * - The script path is workspace-relative and must stay within the workspace
  *   (symlink-aware check at execution time).
  * - argv spawn through resolveScriptRuntime — no shell interpretation.
- * - The child env contains ONLY CRAFT_* variables (event context + workspace
- *   paths + pass-through of the user's CRAFT_* exports), never full process.env.
+ * - The child env contains ONLY PHANERIS_* variables (event context + workspace
+ *   paths + pass-through of the user's PHANERIS_* exports), never full process.env.
  * - Runs of the same matcher never overlap (per-matcher concurrency lock).
  */
 export interface ScriptAction {
@@ -125,7 +125,7 @@ export interface ScriptAction {
   timeoutMs?: number;
   /**
    * Page slug this script refreshes. When set, the executor injects
-   * CRAFT_PAGE_* env vars and records the outcome on the page's page.json
+   * PHANERIS_PAGE_* env vars and records the outcome on the page's page.json
    * (the completion marker the config watcher turns into `pages:changed`).
    */
   page?: string;

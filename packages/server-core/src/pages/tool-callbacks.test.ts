@@ -6,15 +6,15 @@ import { buildPagesToolCallbacks } from './tool-callbacks'
 
 // Pin dev-mode runtime resolution: write_page_data spawns the real Bun runtime
 // via resolveScriptRuntime; under a packaged Craft Agents host (agent Bash
-// sessions inherit CRAFT_IS_PACKAGED=true) it would flip into packaged-mode
+// sessions inherit PHANERIS_IS_PACKAGED=true) it would flip into packaged-mode
 // hardening and block the PATH fallback this suite relies on.
-const SAVED_IS_PACKAGED = process.env.CRAFT_IS_PACKAGED
+const SAVED_IS_PACKAGED = process.env.PHANERIS_IS_PACKAGED
 beforeAll(() => {
-  process.env.CRAFT_IS_PACKAGED = '0'
+  process.env.PHANERIS_IS_PACKAGED = '0'
 })
 afterAll(() => {
-  if (SAVED_IS_PACKAGED === undefined) delete process.env.CRAFT_IS_PACKAGED
-  else process.env.CRAFT_IS_PACKAGED = SAVED_IS_PACKAGED
+  if (SAVED_IS_PACKAGED === undefined) delete process.env.PHANERIS_IS_PACKAGED
+  else process.env.PHANERIS_IS_PACKAGED = SAVED_IS_PACKAGED
 })
 
 describe('pages tool callbacks (end-to-end against a temp workspace)', () => {
