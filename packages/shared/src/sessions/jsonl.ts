@@ -6,6 +6,8 @@
  */
 
 import { openSync, readSync, closeSync, readFileSync } from 'fs';
+import { createHash } from 'node:crypto';
+import { SnapshotEncoder, SnapshotDecoder, SnapshotReferenceError } from '@craft-agent/core/utils';
 import { atomicWriteFileSync } from '../utils/files.ts';
 import { open, readFile } from 'fs/promises';
 import { dirname } from 'path';
@@ -134,6 +136,7 @@ export function readSessionJsonl(sessionFile: string): StoredSession | null {
       tokenUsage: header.tokenUsage,
     } as StoredSession;
   } catch (error) {
+    if (error instanceof SnapshotReferenceError) throw error;
     debug('[jsonl] Failed to read session:', sessionFile, error);
     return null;
   }
@@ -150,10 +153,11 @@ export function readSessionJsonl(sessionFile: string): StoredSession | null {
 export function writeSessionJsonl(sessionFile: string, session: StoredSession): void {
   const header = createSessionHeader(session);
   const sessionDir = dirname(sessionFile);
+  const encoder = new SnapshotEncoder(value => createHash('sha256').update(value).digest('hex'));
 
   const lines = [
     makeSessionPathPortable(JSON.stringify(header), sessionDir),
-    ...session.messages.map(m => makeSessionPathPortable(JSON.stringify(m), sessionDir)),
+    ...session.messages.map(m => makeSessionPathPortable(JSON.stringify(encoder.encode(m)), sessionDir)),
   ];
 
   // M-23: session transcripts are private — owner read/write only. The shared
@@ -272,6 +276,7 @@ export function readSessionMessages(sessionFile: string): StoredMessage[] {
     lines.next(); // Header
     return parseMessagesResilient(lines, dirname(sessionFile));
   } catch (error) {
+    if (error instanceof SnapshotReferenceError) throw error;
     debug('[jsonl] Failed to read session messages:', sessionFile, error);
     return [];
   }
@@ -293,10 +298,13 @@ function* nonEmptyLines(content: string): Generator<string> {
 
 function parseMessagesResilient(lines: Iterable<string>, sessionDir: string): StoredMessage[] {
   const messages: StoredMessage[] = [];
+  const decoder = new SnapshotDecoder();
   for (const line of lines) {
     try {
-      messages.push(JSON.parse(expandSessionPath(line, sessionDir)) as StoredMessage);
-    } catch {
+      messages.push(decoder.decode<StoredMessage>(JSON.parse(expandSessionPath(line, sessionDir))));
+    } catch (error) {
+      // Never turn a broken shared reference into silent evidence loss or an empty-session rewrite.
+      if (error instanceof SnapshotReferenceError) throw error;
       // Corrupted/truncated line (likely from a crash during write).
       // Skip it and continue — losing one message is better than losing all.
       debug('[jsonl] Skipping corrupted message line (truncated?):', line.substring(0, 100));

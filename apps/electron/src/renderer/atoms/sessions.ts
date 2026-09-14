@@ -667,6 +667,7 @@ async function loadSessionMessages(
 
   // Create the loading promise with all the fetch and update logic
   const loadPromise = (async (): Promise<Session | null> => {
+    const messagesBeforeRead = get(sessionAtomFamily(sessionId))?.messages
     // Fetch messages from main process
     const loadedSession = await window.electronAPI.getSessionMessages(sessionId)
     if (!loadedSession) {
@@ -682,24 +683,22 @@ async function loadSessionMessages(
     const preservedStaleMessages = !!existingSession
       && existingSession.messages.length > 0
       && (!loadedSession.messages || loadedSession.messages.length === 0)
+    const preserveLiveUpdates = existingSession && (existingSession.isProcessing || existingSession.messages !== messagesBeforeRead)
+    const liveMessages = new Map(preserveLiveUpdates ? existingSession.messages.map(message => [message.id, message] as const) : [])
+    const snapshotIds = new Set(loadedSession.messages.map(message => message.id))
+    const completeMessages = preserveLiveUpdates
+      ? [...loadedSession.messages.map(message => liveMessages.get(message.id) ?? message), ...existingSession.messages.filter(message => !snapshotIds.has(message.id))]
+      : loadedSession.messages
 
     const mergedSession = existingSession
       ? {
           ...existingSession,
-          // CRITICAL: Don't clobber messages if session is actively streaming
-          // AND already has messages in the atom. Streaming events update the atom
-          // directly and may contain messages the IPC response doesn't know about
-          // (race window between IPC request and response).
-          // The `messages.length > 0` guard ensures Cmd+R reload works: after reload,
-          // the atom starts with messages=[] from getSessions(), so IPC response
-          // (which has full history from main process memory) must be used.
-          // Also guard against sleep/wake edge case: the server may return
-          // empty messages if the session subprocess hasn't finished lazy-loading.
+          // Keep complete history while preserving live updates received during
+          // the read, including a turn that finished before its last chunk arrived.
+          // Empty lazy-load recovery responses must not erase cached messages.
           messages: preservedStaleMessages
             ? existingSession.messages
-            : existingSession.isProcessing && existingSession.messages.length > 0
-              ? existingSession.messages
-              : loadedSession.messages,
+            : completeMessages,
           tokenUsage: loadedSession.tokenUsage ?? existingSession.tokenUsage,
           sessionFolderPath: loadedSession.sessionFolderPath ?? existingSession.sessionFolderPath,
         }
@@ -709,7 +708,7 @@ async function loadSessionMessages(
     // Update only lastFinalMessageId in metadata (now computable from loaded messages).
     // Don't replace the full meta entry — other fields are maintained through
     // optimistic updates and IPC events, and may be ahead of disk state.
-    const lastFinalMessageId = findLastFinalMessageId(loadedSession.messages)
+    const lastFinalMessageId = findLastFinalMessageId(mergedSession.messages)
     if (lastFinalMessageId) {
       const metaMap = get(sessionMetaMapAtom)
       const existingMeta = metaMap.get(sessionId)

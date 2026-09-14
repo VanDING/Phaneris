@@ -707,7 +707,14 @@ export class WsRpcServer implements RpcServer {
         channel,
         result,
       }
-      this.safeSend(client.ws, serializeEnvelope(response))
+      const data = serializeEnvelope(response)
+      const bytes = Buffer.byteLength(data)
+      if (bytes > MAX_MESSAGE_PAYLOAD_BYTES) {
+        this.sendResponseError(client.ws, id, channel, 'PAYLOAD_TOO_LARGE',
+          `Response payload too large (${bytes} bytes; limit ${MAX_MESSAGE_PAYLOAD_BYTES} bytes). Use bounded reads for this resource.`)
+      } else {
+        this.safeSend(client.ws, data)
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       const rawCode = (err as { code?: unknown } | null)?.code
@@ -878,7 +885,7 @@ export class WsRpcServer implements RpcServer {
       id,
       type: 'response',
       channel,
-      error: { code, message },
+      error: { code, message: message.slice(0, 4096) },
     }
     this.safeSend(ws, serializeEnvelope(envelope))
   }

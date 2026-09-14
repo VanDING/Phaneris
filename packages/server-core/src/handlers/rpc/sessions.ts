@@ -12,6 +12,10 @@ import { pushTyped, type RequestContext, type RpcServer } from '@craft-agent/ser
 import type { HandlerDeps } from '../handler-deps'
 import type { ISessionManager } from '../session-manager-interface'
 import { setTransferableHandler } from './transfer'
+import { SessionReadStore } from './session-read-store'
+import type { SessionReadCursor } from '@craft-agent/shared/protocol'
+
+const sessionReads = new SessionReadStore()
 
 interface ClientSessionWatchState {
   watcher: import('fs').FSWatcher
@@ -54,6 +58,7 @@ function sessionWorkspaceDistribution(sessions: Array<{ workspaceId?: string }>)
  * Called from main process disconnect hooks to prevent watcher leaks.
  */
 export function cleanupSessionFileWatchForClient(clientId: string): void {
+  void sessionReads.closeForClient(clientId)
   for (const [key, state] of clientSessionWatches) {
     if (!key.startsWith(`${clientId}:`)) continue
     if (state.debounceTimer) {
@@ -127,6 +132,8 @@ export const HANDLED_CHANNELS = [
   RPC_CHANNELS.sessions.CREATE,
   RPC_CHANNELS.sessions.DELETE,
   RPC_CHANNELS.sessions.GET_MESSAGES,
+  RPC_CHANNELS.sessions.READ_MESSAGES,
+  RPC_CHANNELS.sessions.CLOSE_MESSAGES_READ,
   RPC_CHANNELS.sessions.GET_RECOVERY_EVIDENCE,
   RPC_CHANNELS.sessions.RECONCILE_TOOL,
   RPC_CHANNELS.sessions.QUERY_RECONCILE_TOOL,
@@ -247,6 +254,16 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
     const session = await sessionManager.getSession(sessionId)
     end()
     return session
+  })
+
+  server.handle(RPC_CHANNELS.sessions.READ_MESSAGES, async (ctx, sessionId: string, cursor?: SessionReadCursor) => {
+    assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
+    if (cursor) return sessionReads.read(ctx, sessionId, cursor.readId, cursor.offset)
+    const session = await sessionManager.getSession(sessionId)
+    return session ? sessionReads.start(ctx, session) : null
+  })
+  server.handle(RPC_CHANNELS.sessions.CLOSE_MESSAGES_READ, async (ctx, sessionId: string, readId: string) => {
+    await sessionReads.close(ctx, sessionId, readId)
   })
 
   // Read-only canonical evidence for a parked/settled tool operation. Session

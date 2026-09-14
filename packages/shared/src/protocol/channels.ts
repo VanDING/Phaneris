@@ -25,6 +25,8 @@ export const RPC_CHANNELS = {
     CREATE: 'sessions:create',
     DELETE: 'sessions:delete',
     GET_MESSAGES: 'sessions:getMessages',
+    READ_MESSAGES: 'sessions:readMessages',
+    CLOSE_MESSAGES_READ: 'sessions:closeMessagesRead',
     GET_RECOVERY_EVIDENCE: 'sessions:getRecoveryEvidence',
     RECONCILE_TOOL: 'sessions:reconcileTool',
     QUERY_RECONCILE_TOOL: 'sessions:queryReconcileTool',

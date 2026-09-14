@@ -1,4 +1,6 @@
 import { open, rename } from 'fs/promises'
+import { createHash } from 'node:crypto'
+import { SnapshotEncoder } from '@craft-agent/core/utils'
 import { dirname } from 'path'
 import type { StoredSession, SessionHeader } from './types.js'
 import { getSessionFilePath, ensureSessionsDir, ensureSessionDir } from './storage.js'
@@ -170,9 +172,10 @@ class SessionPersistenceQueue {
       // second transcript-sized joined string. The original file remains valid
       // until every batch and fsync completes.
       async function* chunks(): AsyncGenerator<string> {
+        const encoder = new SnapshotEncoder(value => createHash('sha256').update(value).digest('hex'))
         let chunk = makeSessionPathPortable(JSON.stringify(header), sessionDir) + '\n'
         for (const message of persistableMessages) {
-          const line = makeSessionPathPortable(JSON.stringify(message), sessionDir) + '\n'
+          const line = makeSessionPathPortable(JSON.stringify(encoder.encode(message)), sessionDir) + '\n'
           if (chunk.length + line.length > 256 * 1024) {
             if (chunk) yield chunk
             chunk = ''

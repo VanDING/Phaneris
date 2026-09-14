@@ -13,7 +13,9 @@ import { describe, it, expect, afterEach } from 'bun:test'
 import { WsRpcServer } from '../server'
 import { WsRpcClient } from '../client'
 import { CLIENT_BROWSER_INVOKE } from '../capabilities'
-import { CodedError } from '@craft-agent/shared/protocol'
+import { CodedError, RPC_CHANNELS, type Session } from '@craft-agent/shared/protocol'
+import { SessionReadStore } from '../../handlers/rpc/session-read-store'
+import { readSessionSnapshot } from '../session-read-client'
 
 const TEST_TOKEN = 'test-token-with-enough-entropy-to-pass'
 
@@ -61,6 +63,21 @@ async function startPair(opts?: { clientCapabilities?: string[]; workspaceId?: s
 }
 
 describe('Transport — error code preservation', () => {
+  it('reads a single 20 MiB message over bounded binary RPC chunks', async () => {
+    const { server, client } = await startPair()
+    const reads = new SessionReadStore()
+    const session = { id: 'large-session', workspaceId: 'ws-a', messages: [{ id: 'm', role: 'assistant', content: '中'.repeat(7 * 1024 * 1024), timestamp: 1 }] } as Session
+    server.handle(RPC_CHANNELS.sessions.READ_MESSAGES, (ctx, id, cursor) => cursor ? reads.read(ctx, id, cursor.readId, cursor.offset) : reads.start(ctx, session))
+    server.handle(RPC_CHANNELS.sessions.CLOSE_MESSAGES_READ, (ctx, id, readId) => reads.close(ctx, id, readId))
+    expect(await readSessionSnapshot(client, session.id)).toEqual(session)
+  }, 20_000)
+  it('rejects oversized replies without disconnecting the client', async () => {
+    const { server, client } = await startPair()
+    server.handle('large', () => 'x'.repeat(20 * 1024 * 1024))
+    server.handle('small', () => 'ok')
+    await expect(client.invoke('large')).rejects.toMatchObject({ code: 'PAYLOAD_TOO_LARGE' })
+    expect(await client.invoke('small')).toBe('ok')
+  })
   it('preserves `err.code` from server handler → client invoke', async () => {
     const { server, client } = await startPair()
     server.handle('explode', async () => {

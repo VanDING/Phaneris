@@ -39,6 +39,19 @@ function makeSession(overrides: Partial<Session> = {}): Session {
 describe('session message loading atoms', () => {
   const originalWindow = globalThis.window
 
+  it('merges full history with live updates even when streaming finishes during the read', async () => {
+    const store = createStore()
+    let finish!: (session: Session) => void
+    globalThis.window = { electronAPI: { getSessionMessages: () => new Promise<Session>(resolve => { finish = resolve }) } } as unknown as typeof window
+    store.set(sessionAtomFamily('race'), makeSession({ id: 'race', isProcessing: true }))
+    const pending = store.set(ensureSessionMessagesLoadedAtom, 'race')
+    store.set(sessionAtomFamily('race'), makeSession({ id: 'race', isProcessing: false, messages: [{ ...msg('answer', 'assistant'), content: 'complete' }, msg('new')] }))
+    finish(makeSession({ id: 'race', messages: [msg('history'), { ...msg('answer', 'assistant'), content: 'partial' }] }))
+    const result = await pending
+    expect(result?.messages.map(m => m.id)).toEqual(['history', 'answer', 'new'])
+    expect(result?.messages[1]?.content).toBe('complete')
+  })
+
   afterEach(() => {
     if (originalWindow) {
       globalThis.window = originalWindow

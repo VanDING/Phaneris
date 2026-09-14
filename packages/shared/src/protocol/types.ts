@@ -74,6 +74,7 @@ export interface WireError {
 
 export type ErrorCode =
   | 'HANDLER_ERROR'
+  | 'PAYLOAD_TOO_LARGE'
   | 'CHANNEL_NOT_FOUND'
   | 'AUTH_FAILED'
   | 'PROTOCOL_VERSION_UNSUPPORTED'
@@ -94,6 +95,7 @@ export type ErrorCode =
 
 const KNOWN_ERROR_CODES: ReadonlySet<string> = new Set<ErrorCode>([
   'HANDLER_ERROR',
+  'PAYLOAD_TOO_LARGE',
   'CHANNEL_NOT_FOUND',
   'AUTH_FAILED',
   'PROTOCOL_VERSION_UNSUPPORTED',

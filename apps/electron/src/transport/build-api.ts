@@ -6,6 +6,8 @@
  */
 
 import type { RpcClient } from '@craft-agent/server-core/transport'
+import { readSessionSnapshot } from '@craft-agent/server-core/transport'
+import { RPC_CHANNELS } from '@craft-agent/shared/protocol'
 import type { ElectronAPI } from '../shared/types'
 
 // ---------------------------------------------------------------------------
@@ -34,6 +36,8 @@ export function buildClientApi(
     let fn: (...a: any[]) => any
     if (entry.type === 'listener') {
       fn = (cb: (...args: any[]) => void) => client.on(entry.channel, cb)
+    } else if (entry.channel === RPC_CHANNELS.sessions.GET_MESSAGES) {
+      fn = (sessionId: string) => readSessionSnapshot(client, sessionId, isChannelAvailable)
     } else if (entry.transform) {
       const t = entry.transform
       fn = async (...args: any[]) => t(await client.invoke(entry.channel, ...args))
