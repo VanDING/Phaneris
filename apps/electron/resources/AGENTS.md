@@ -52,6 +52,20 @@ above from `icon.svg`. It is cross-platform, needs no network and no dependency
 beyond the already-installed `sharp`. Never hand-edit a generated icon file, and
 never substitute a web-only image for a platform icon asset.
 
+The app icon composites the mark onto a rounded square, fitted to
+`APP_ICON_MARK_FILL` (80% of the tile's longest side) using the mark's own
+bounding box — not a fixed multiplier on the artwork's 1000×1000 canvas, whose
+generous margins once left the glyph at barely half the tile. Change that one
+constant to resize the glyph everywhere.
+
+**macOS 26 Liquid Glass needs verification on macOS.** `icon.icon/icon.json`
+declares the layer `scale` the `actool` compositor uses. It is set to 80 to
+match the platform icons, and the layer asset is the mark cropped to its own
+bounds so the scale means the fraction it says it means — but `Assets.car` is
+compiled with the macOS 26 SDK and is not in this repository, so `afterPack`
+currently falls back to `icon.icns`. Confirm the value with one macOS 26 build
+before release.
+
 ## Single Source of Truth
 
 The files in this folder are the **source of truth** for bundled defaults:

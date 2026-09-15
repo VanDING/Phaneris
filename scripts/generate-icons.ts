@@ -75,10 +75,17 @@ const DEFAULT_RESOURCES_DIR = path.join(REPO_ROOT, 'apps', 'electron', 'resource
 const CANVAS = 1000
 /** Corner radius of the app icon's rounded square. */
 const APP_ICON_CORNER_RADIUS = 225
-/** Scale applied to the mark inside the app icon. */
-const APP_ICON_MARK_SCALE = 0.72
-/** Centring offset for the scaled mark: (1000 - 1000 * 0.72) / 2 === 140. */
-const APP_ICON_MARK_OFFSET = (CANVAS - CANVAS * APP_ICON_MARK_SCALE) / 2
+/**
+ * Fraction of the app-icon canvas the mark's longest side fills.
+ *
+ * The artwork's own canvas has generous margins, so a fixed multiplier on the
+ * whole viewBox makes the glyph look undersized inside the tile — the mark only
+ * spanned x 180–760 / y 90–875 of its 1000-unit box, so scaling the box by 0.72
+ * left it at ~56% of the tile height. Fitting the mark's tight bounding box to
+ * this fraction instead measures the drawing, not the canvas it happens to sit
+ * on, and re-centres it at the same time.
+ */
+const APP_ICON_MARK_FILL = 0.8
 /** Light / dark backgrounds of the app icon's rounded square. */
 const APP_ICON_BACKGROUND = '#FFFFFF'
 const APP_ICON_BACKGROUND_DARK = '#0F0B1E'
@@ -149,13 +156,64 @@ function recolorMark(svg: string, color: string): string {
 }
 
 /**
+ * Tight bounding box of the mark, measured from the artwork's own geometry.
+ *
+ * Read from the polygons rather than hardcoded so a redrawn mark re-fits itself
+ * — a stale constant here is exactly what made the glyph shrink in the first
+ * place, and the failure is invisible until someone looks at a 16 px icon.
+ */
+function markBoundingBox(mark: string): { x: number; y: number; width: number; height: number } {
+  const points = [...mark.matchAll(/<polygon\b[^>]*\bpoints="([^"]+)"/g)].flatMap((match) =>
+    match[1]!
+      .trim()
+      .split(/\s+/)
+      .map((pair) => {
+        const [x, y] = pair.split(',').map(Number)
+        if (!Number.isFinite(x) || !Number.isFinite(y)) {
+          throw new Error(`Could not parse polygon point "${pair}" in the mark SVG`)
+        }
+        return { x: x!, y: y! }
+      }),
+  )
+  if (points.length === 0) throw new Error('No <polygon> geometry found in the mark SVG')
+
+  const xs = points.map((point) => point.x)
+  const ys = points.map((point) => point.y)
+  const minX = Math.min(...xs)
+  const minY = Math.min(...ys)
+  return { x: minX, y: minY, width: Math.max(...xs) - minX, height: Math.max(...ys) - minY }
+}
+
+const round = (value: number, decimals = 3): number => Number(value.toFixed(decimals))
+
+/**
+ * The mark with its canvas cropped to the drawing's bounding box.
+ *
+ * Used for the macOS 26 `.icon` layer, where the compositor positions the asset
+ * inside the tile: leaving the artwork's own margins in place would make the
+ * layer's declared scale mean something different from what it says, which is
+ * how the current `icon.json` scale ended up describing a glyph about a third
+ * of the size it appears to.
+ */
+function tightenMark(mark: string): string {
+  const box = markBoundingBox(mark)
+  const viewBox = `${round(box.x)} ${round(box.y)} ${round(box.width)} ${round(box.height)}`
+  return mark.replace(/viewBox="[^"]*"/, `viewBox="${viewBox}"`)
+}
+
+/**
  * The square, full-bleed app-icon variant: a rounded square covering the whole
- * canvas with the mark scaled to 72% and centred on top of it.
+ * canvas with the mark fitted to {@link APP_ICON_MARK_FILL} and centred on it.
  */
 function buildAppIconSvg(mark: string, background: string): string {
+  const box = markBoundingBox(mark)
+  const scale = (CANVAS * APP_ICON_MARK_FILL) / Math.max(box.width, box.height)
+  const offsetX = (CANVAS - box.width * scale) / 2 - box.x * scale
+  const offsetY = (CANVAS - box.height * scale) / 2 - box.y * scale
+
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS} ${CANVAS}">
 <rect x="0" y="0" width="${CANVAS}" height="${CANVAS}" rx="${APP_ICON_CORNER_RADIUS}" ry="${APP_ICON_CORNER_RADIUS}" fill="${background}"/>
-<g transform="translate(${APP_ICON_MARK_OFFSET},${APP_ICON_MARK_OFFSET}) scale(${APP_ICON_MARK_SCALE})">
+<g transform="translate(${round(offsetX)},${round(offsetY)}) scale(${round(scale, 4)})">
 ${svgInner(mark)}
 </g>
 </svg>
@@ -414,9 +472,12 @@ async function main(): Promise<void> {
     ICNS_ELEMENTS.map((element) => `${element.type}=${element.size}`).join(' '),
   )
 
-  // 6. macOS .icon bundle: same mark, manifest untouched.
+  // 6. macOS .icon bundle: the mark cropped to its own bounds, so the layer's
+  //    declared scale in icon.json is the fraction of the tile it actually
+  //    occupies. The manifest itself is owned by hand (actool reads it) and is
+  //    only validated here.
   const bundleAsset = path.join(resourcesDir, 'icon.icon', 'Assets', 'icon.svg')
-  report(bundleAsset, await writeFileIfChanged(bundleAsset, mark), `${CANVAS}x${CANVAS}`)
+  report(bundleAsset, await writeFileIfChanged(bundleAsset, tightenMark(mark)), 'cropped to mark bounds')
   await assertIconBundleManifest(path.join(resourcesDir, 'icon.icon', 'icon.json'))
 
   // 7. Brand rasters.
