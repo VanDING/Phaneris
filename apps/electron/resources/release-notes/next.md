@@ -2,94 +2,10 @@
 
 This file accumulates release notes for the next unreleased version. PRs that add user-visible behavior should append a bullet to the relevant section here. Versioned files (`X.Y.Z.md`) are owned by the release skill — never create them in feature commits. The in-app loader only reads `X.Y.Z.md` files, so this file is never shown to users.
 
-## Upstream sync (v0.13.1–0.13.3)
-
-- **Automatic recovery with visible progress** — Pi conversations stay open while the SDK retries temporary rate limits, provider outages, and connection drops; backoff and attempt progress show instead of an instant error. Recovered answers reach the conversation, failed partials are discarded rather than merged into the retry, and exhausted retries surface one actionable Connection/Service error.
-- **Isolated Pi settings** — retry and compaction settings are managed in memory; a working directory's `.pi/settings.json` can no longer silently override them.
-- **Bounded utility queries** — `call_llm`, title generation and summaries enforce a real deadline with subprocess cancellation; late results cannot affect another request, and timed-out runs report correctly.
-- **GPT-6 Astra on OpenAI connections** — Pi SDK 0.85.1 catalog now defaults new OpenAI connections to Astra.
-
 ## Features
-
-- **Offline workspace backup and restore** — `bun run workspace:backup|verify|restore` creates a SHA-256 manifest, verifies every file, and restores into an empty directory (or a pre-restore safety copy with `--force`). Runtime SQLite is copied through its consistent backup path.
-
-- **Switch providers within an existing conversation** — idle sessions can now change connection and model without losing their transcript. Cross-provider changes safely recreate the Pi runtime, while the selector is disabled during an active turn.
-- **Inspectable Run workspace** — every session now has Overview, Trajectory, Context, and Map views for timing, TTFT, token and cost accounting, tool outcomes, failures, context growth, request composition, compaction, and related-session structure. Evidence links open the corresponding chat, review, or file instead of leaving the audit surface disconnected.
-- **Local Profile and activity summary** — Settings now combines identity and personalization with deterministic local activity metrics, a 12-month heatmap, active-day and streak summaries, and token insights. Activity aggregation uses session metadata and never includes message content.
-- **Reviewable file Artifacts and native image generation** — a shared format registry now classifies text, data, images, PDF, Office/OpenDocument, media, archives, and unknown files without treating arbitrary binary data as text. Generated images enter the same validated, provenance-aware accept/discard lifecycle as other Artifacts.
-- **WeCom intelligent bot gateway** — workspaces can receive and continue agent sessions through the official WeCom intelligent-bot protocol alongside the existing messaging adapters.
 
 ## Improvements
 
-- **Phaneris identity** — the product is now Phaneris: new name, app id (`io.github.vanding.phaneris`), `phaneris://` deep links, its own application icon set, and a `phaneris` CLI. Internal packages moved to the `@phaneris/*` scope and environment variables to the `PHANERIS_` prefix. The application data directory defaults to `~/.phaneris` and the Electron userData directory is pinned to `Phaneris`, so Phaneris and the upstream app can be installed side by side without sharing caches, locks or protocol registrations. Every one of these values comes from a single identity file, guarded by a CI drift check.
-
-- **Commit attribution follows the task** — removed the built-in co-author prompt and its preference-tool switch; commit attribution follows user instructions and repository conventions.
-
-- **Consistent agent guidance** — built-in instructions now separate permissions, execution, and delivery workflows from on-demand format documentation. Tool/skill/permission guides reflect current runtime behavior, and a new Artifact guide explains managed drafts, validation, and user acceptance.
-
-- **Violet Pulse activity and navigation** — the Default theme uses brighter violet accents. The yearly activity calendar adds themed hover details, keyboard navigation and selectable dates. Collapsing the desktop sidebar now keeps a centered 56 px rail of primary icons with a smooth width transition.
-- **Grouped subtask sessions** — child sessions stay beneath their parent with an independent collapse control beside the more menu, preserving the leading status switch. Families paginate together, search retains parent context, and children remain independently selectable with running and attention indicators.
-
-- **Faster startup and smaller bundles** — locale messages, the Mermaid/elkjs renderer, terminal/xterm, and secondary navigator pages now load on demand; production main/preload/Pi bundles are minified, roughly halving their parse and install footprint. Crash reporting is now opt-in (`PHANERIS_TELEMETRY_ENABLED=1` plus a DSN).
-
-- **Refined native Default theme** — Default Refined now replaces the previous built-in Default in packaged apps, with cool off-white light surfaces, near-black dark surfaces, restrained violet, Inter typography and subtle elevation. Native sidebar transparency and explicit font preferences are preserved; existing Default selections update automatically.
-
-- **React component projects for Pages** — agents can scaffold React, shadcn-compatible components and Tailwind CSS 4, build a self-contained HTML page, and import the artifact by file path. A snapshot hook connects React to live page data; content imports preserve digest checks, grant invalidation and thumbnail updates.
-
-- **Durable execution authority** — workspace-local SQLite/WAL facts now place model, tool, task, usage, recovery, and projection state behind explicit T1/T2 boundaries. Unknown effects fail closed and require evidence-backed reconciliation instead of being automatically replayed or displayed as completed.
-- **Workbench surfaces organized around evidence** — Review, Files, Preview, Artifact, Context, Run, browser, and explicit multi-session panels now share consistent headers, navigation, fullscreen behavior, and cross-surface evidence links.
-- **Provider-owned model catalogs** — API-key setup now keeps the complete discovered model catalog synchronized and asks for one clear default model instead of the misleading Best, Balanced, and Fast tiers. Legacy three-tier connections migrate on their next catalog refresh.
-- **Accurate custom-endpoint branding** — connection icons now keep visual brand identity separate from OpenAI/Anthropic transport compatibility, with URL and model-family inference plus a neutral fallback for unknown endpoints.
-- **Unified full-page task and schedule editing** — New Task and WorkItem details now share one full-page editor, standalone schedules use the same navigation pattern instead of a modal, and Calendar supports empty-slot creation, drag-to-reschedule, duration resizing, and overlap layout. Project views also remove the redundant “All Tasks” and List create rows, replace native dropdowns, center titles against the full panel, and retire the premature Saved View feature.
-- **Session list control moved beside the sidebar toggle** — the session list button now sits with the other navigation controls on the left side of the top bar and behaves as a simple action without a persistent selected state.
-- **Automatic custom-endpoint models and model-aware thinking levels** — compatible endpoints now discover models from OpenAI, Anthropic, and Ollama list APIs, while keeping manual IDs as a fallback. Pi capability metadata drives each model's exact reasoning choices (including Minimal and model-specific Extra High/Max), and Pi's effective clamped level is synchronized back to the session UI.
-- **Pi kernel 0.85.0** — Anthropic transports now preserve the chosen thinking effort across turns and recover cleanly from signed-thinking mismatches; abort cancels an in-flight compaction and waits for a true idle state instead of letting it run to completion; session forks keep their compaction boundary and in-memory forks no longer race an unsettled turn; ChatGPT OAuth sessions benefit from fixed OpenAI Codex SSE terminal-event parsing and Copilot Claude Fable 5 requests now send the selected reasoning level. Proxy users get correct NO_PROXY root/subdomain matching and plain-HTTP provider requests no longer hang after a tool call; branch summaries can use up to the model's output cap instead of a 2048-token ceiling; the model catalog drops the unavailable Grok Build 0.1 and corrects Baseten GLM-5.2's image-input flag.
-
-- **Pi kernel 0.84.4 and smoother long-running work** — the single agent backend now waits for Pi's fully settled lifecycle boundary, so automatic retry, compaction, and queued continuation are no longer cut off by a prose update. Large tool results are compacted before the next provider request, context-only messages preserve tool-call ordering, resumed JSONL sessions tolerate missing trailing newlines, context usage comes directly from Pi after settlement, and live browser-tool settings refresh safely on the next turn.
-- **Faster warm sessions and chat rendering** — unchanged source runtimes and tool definitions are reused instead of rebuilding the Pi session every turn. Ordered transcripts skip redundant sorting and chat turns are grouped once per render. New cold/warm, first-response, tool round-trip, event-processing, and stream-to-paint timing samples expose p50/p95 regressions.
-- **Single-backend cleanup** — removed the unused legacy session tool factory, Claude-hook bridge shapes, dormant `session-mcp-server` workspace, stale Copilot SDK dependency, and obsolete migration plans. The new Pi kernel document is the source of truth for runtime maintenance.
-- **Upgrade to Bun 1.4** — the bundled pi-agent-server runtime, local tooling, Docker images, build scripts, and CI now use Bun 1.4.0 consistently.
-- **Theme files can now control complete visual styles** — user-owned themes in `~/.phaneris/themes/` can define semantic surfaces, depth, shadows, radii, borders, typography, Lucide stroke style, and component density. The immutable Default theme remains the only built-in theme; no in-app theme editor was added.
-- **Core surfaces now consume theme semantics** — the app shell, navigator, content panels, cards, controls, and composer now use theme-defined surfaces, radii, depth, and typography so high-character themes no longer stop at color substitution.
-- **Theme-aware Windows title bar** — Windows now keeps its native minimize, maximize, and close controls inside the app's existing draggable top bar. The controls overlay is fully transparent so the renderer-owned theme, borders, and Mica/Acrylic remain continuous underneath it, while glyph colors follow the effective app, workspace, or preview theme.
-- **Deterministic live theme updates** — theme preference writes are now authoritative in `config.json`, workspace switches ignore stale async responses, and add/edit/delete events from the user theme directory are observed once per app. Missing or invalid active themes fall back atomically to Default instead of retaining stale CSS.
-- **Explicit font precedence** — Appearance now offers Theme, Inter, and System choices. Theme-authored typography is used only for the Theme choice; explicit user font choices always win.
-
 ## Bug Fixes
 
-- **Remote server tokens move into the encrypted credential vault** — tokens are migrated out of plaintext `config.json` on startup and resolved through a process-local cache for preload/transfer paths. Reconnecting with a blank token reuses the stored credential.
-
-- **Unsafe data-conversion and remote-connection defaults** — `transform_data` now enforces network/filesystem isolation on macOS/Linux (fails closed when unavailable), remote WebSocket connections verify TLS by default with a per-workspace self-signed opt-in, and credential keys can be protected by Electron safeStorage or an operator-supplied `PHANERIS_CREDENTIAL_KEY`.
-
-- **WeChat iLink request metadata** — gateway requests now send the CraftAgent bot-agent identifier in `base_info` instead of the account's WeChat `userId`, so the account identity is no longer exposed as a user agent.
-
-- **Popover dismissal no longer flashes** — closing the sidebar profile card and other shared animated popovers/dialogs now retains the transparent final animation frame until unmount, preventing a brief reappearance after fading out.
-
-- **Task and persistence reliability** — task runs now reject unsupported control settings before starting or resuming, while existing YAML remains readable. Webhook retries preserve requests enqueued during an in-flight retry, and failed session saves remain observable without blocking later saves.
-
-- **Artifact review and workspace terminal reliability** — Artifact actions report the current failure and retain the editor when saving, submitting, or discarding fails. Artifact inspection now supplies the Office preview without a separate render call. Switching sessions preserves the workspace terminal; switching workspaces isolates pending connections and recovers from connection errors, while replaced exited terminals release their retained records.
-
-- **Workbench navigation and Run selection** — Context and Preview shortcuts now describe their consolidated Run and Files destinations, while existing links and restored tabs continue to work. Selected trajectory rows now retain their highlight on hover.
-
-- **Retired custom Responses setup** — new custom endpoints can use OpenAI Compatible or Anthropic Compatible protocols; the incomplete custom Responses option is rejected while official and internal Responses providers remain supported. Existing custom Responses connections remain readable and migrate when edited.
-- **Default composer surface restored** — the default theme again uses the original canvas-colored composer instead of the darker generic form-input token; named themes can still provide a dedicated composer surface.
-- **New Session panel spacing restored** — the session panel once again keeps a fixed inset below the 48 px title bar, preventing its upper edge from touching the window chrome.
-- **Fix ChatGPT Plus (OAuth) chat failing with "No API key found for openai-codex"** — the ChatGPT OAuth bearer token was passed to the Pi SDK as an `api_key` credential, but the SDK's `openai-codex` provider is OAuth-only and rejected it. It now arrives as a full `oauth` credential (access + refresh + expiry), matching what the SDK's provider-aware auth resolution expects.
-
 ## Breaking Changes
-
-- **Application data moved to `~/.phaneris`** — Phaneris reads and writes `~/.phaneris`, not `~/.craft-agent`. Nothing is copied automatically: the previous application keeps its data, and this build starts from an empty new directory. `CRAFT_CONFIG_DIR` is deliberately ignored (pointing the new product at the old app's live data is how two applications end up writing one state database). Until the import flow ships, `PHANERIS_CONFIG_DIR` pointed at the old directory works as a transitional bridge and logs a warning.
-
-- **`CRAFT_*` environment variables renamed to `PHANERIS_*`** — every variable this product reads uses the new prefix. Credentials, the data directory and the update feed inherit nothing. The one exception is automation webhook secrets: a shell profile's `CRAFT_WH_*` variables are still honoured for one transition with a one-time deprecation notice.
-
-- **Script and page variables renamed** — variables injected into automation scripts and page refresh scripts (`PHANERIS_WORKSPACE_PATH`, `PHANERIS_PAGE_SLUG`, `PHANERIS_PAGE_DIR`, `PHANERIS_PAGE_DATA_DIR`, `PHANERIS_EVENT`, …) use the new prefix only. The old names are not injected alongside the new ones, so scripts that reference `$CRAFT_WORKSPACE_PATH` or similar must be updated.
-
-- **Remote servers with self-signed certificates** — certificate validation now defaults on. Existing remote workspaces must enable "Allow invalid TLS certificate" explicitly (or install a trusted certificate) before reconnecting. Crash reporting is also opt-in rather than DSN-only.
-
-- **Default is now the only built-in theme** — bundled named presets are no longer copied into `~/.phaneris/themes/`. Existing files in that directory remain untouched and work as user themes. The deprecated `~/.phaneris/theme.json` override is migrated non-destructively to a user theme file and then removed from runtime resolution.
-
-## Recovery corrections
-
-- **Verified workspace recovery** — reject unsafe and duplicate backup paths, snapshot the runtime database once without live WAL/SHM files, and restore through a staged directory replacement while retaining the previous workspace. Stop the workspace before restoring.
-- **Preserve locked credentials** — unavailable or incorrect encryption keys no longer move valid credential files aside or replace an existing OS-protected key. Unlock the keychain or restore the original server key before retrying.
-- **Restore the selected startup language** — load the detected locale before synchronizing Desktop language preferences, preventing an English fallback from replacing a saved non-English selection.
