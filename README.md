@@ -4,8 +4,6 @@
 
 <br />
 
-<img src="docs/assets/readme/phaneris-logo.svg" alt="Phaneris logo" width="64" height="64" />
-
 # Phaneris
 
 ### A local-first agent workspace with durable execution and inspectable runs.
