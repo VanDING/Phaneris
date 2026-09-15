@@ -14,7 +14,7 @@
     "allowRemoteEvaluate": true
   },
   "workspaceDefaults": {
-    "thinkingLevel": "think",
+    "thinkingLevel": "medium",
     "permissionMode": "safe",
     "cyclablePermissionModes": ["safe", "allow-all"],
     "localMcpServers": {

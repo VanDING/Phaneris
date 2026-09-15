@@ -1,5 +1,12 @@
 import { describe, it, expect, afterEach } from 'bun:test';
-import { isDevRuntime, isDeveloperFeedbackEnabled, isCraftAgentsCliEnabled, isEmbeddedServerEnabled } from '../feature-flags.ts';
+import {
+  isDevRuntime,
+  isDeveloperFeedbackEnabled,
+  isCraftAgentsCliEnabled,
+  isEmbeddedServerEnabled,
+  isPagesSharingEnabled,
+  isSessionSharingEnabled,
+} from '../feature-flags.ts';
 
 const ORIGINAL_ENV = {
   NODE_ENV: process.env.NODE_ENV,
@@ -7,6 +14,8 @@ const ORIGINAL_ENV = {
   PHANERIS_FEATURE_DEVELOPER_FEEDBACK: process.env.PHANERIS_FEATURE_DEVELOPER_FEEDBACK,
   PHANERIS_FEATURE_AGENTS_CLI: process.env.PHANERIS_FEATURE_AGENTS_CLI,
   PHANERIS_FEATURE_EMBEDDED_SERVER: process.env.PHANERIS_FEATURE_EMBEDDED_SERVER,
+  PHANERIS_FEATURE_PAGES_SHARING: process.env.PHANERIS_FEATURE_PAGES_SHARING,
+  PHANERIS_FEATURE_SESSION_SHARING: process.env.PHANERIS_FEATURE_SESSION_SHARING,
 };
 
 afterEach(() => {
@@ -24,6 +33,12 @@ afterEach(() => {
 
   if (ORIGINAL_ENV.PHANERIS_FEATURE_EMBEDDED_SERVER === undefined) delete process.env.PHANERIS_FEATURE_EMBEDDED_SERVER;
   else process.env.PHANERIS_FEATURE_EMBEDDED_SERVER = ORIGINAL_ENV.PHANERIS_FEATURE_EMBEDDED_SERVER;
+
+  if (ORIGINAL_ENV.PHANERIS_FEATURE_PAGES_SHARING === undefined) delete process.env.PHANERIS_FEATURE_PAGES_SHARING;
+  else process.env.PHANERIS_FEATURE_PAGES_SHARING = ORIGINAL_ENV.PHANERIS_FEATURE_PAGES_SHARING;
+
+  if (ORIGINAL_ENV.PHANERIS_FEATURE_SESSION_SHARING === undefined) delete process.env.PHANERIS_FEATURE_SESSION_SHARING;
+  else process.env.PHANERIS_FEATURE_SESSION_SHARING = ORIGINAL_ENV.PHANERIS_FEATURE_SESSION_SHARING;
 });
 
 describe('feature-flags runtime helpers', () => {
@@ -98,5 +113,43 @@ describe('feature-flags runtime helpers', () => {
     process.env.PHANERIS_FEATURE_EMBEDDED_SERVER = '0';
 
     expect(isEmbeddedServerEnabled()).toBe(false);
+  });
+
+  // Sharing sends user content to services we do not own, so "off unless asked
+  // for" is the contract these two guard — not merely the current setting.
+  it('isPagesSharingEnabled defaults to disabled', () => {
+    delete process.env.PHANERIS_FEATURE_PAGES_SHARING;
+
+    expect(isPagesSharingEnabled()).toBe(false);
+  });
+
+  it('isPagesSharingEnabled honors an explicit opt-in', () => {
+    process.env.PHANERIS_FEATURE_PAGES_SHARING = '1';
+
+    expect(isPagesSharingEnabled()).toBe(true);
+  });
+
+  it('isPagesSharingEnabled honors an explicit opt-out', () => {
+    process.env.PHANERIS_FEATURE_PAGES_SHARING = '0';
+
+    expect(isPagesSharingEnabled()).toBe(false);
+  });
+
+  it('isSessionSharingEnabled defaults to disabled', () => {
+    delete process.env.PHANERIS_FEATURE_SESSION_SHARING;
+
+    expect(isSessionSharingEnabled()).toBe(false);
+  });
+
+  it('isSessionSharingEnabled honors an explicit opt-in', () => {
+    process.env.PHANERIS_FEATURE_SESSION_SHARING = '1';
+
+    expect(isSessionSharingEnabled()).toBe(true);
+  });
+
+  it('isSessionSharingEnabled honors an explicit opt-out', () => {
+    process.env.PHANERIS_FEATURE_SESSION_SHARING = '0';
+
+    expect(isSessionSharingEnabled()).toBe(false);
   });
 });

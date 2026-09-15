@@ -111,8 +111,18 @@ let configDefaultsSynced = false;
  *
  * Source of truth: apps/electron/resources/config-defaults.json
  */
-/** Minimal config-defaults used when bundled assets aren't available (CI, standalone server). */
-const FALLBACK_CONFIG_DEFAULTS: ConfigDefaults = {
+/**
+ * Minimal config-defaults used when bundled assets aren't available (CI,
+ * standalone server).
+ *
+ * MUST stay identical to `apps/electron/resources/config-defaults.json`, which
+ * is the declared source of truth. The two had drifted: this copy asked before
+ * editing (`permissionMode: 'ask'`, all three modes cyclable) while the shipped
+ * file defaulted to Explore and skipped `ask` when cycling, so a headless run
+ * started sessions with a different posture than the desktop app.
+ * `config-defaults-parity.test.ts` now pins the two together.
+ */
+export const FALLBACK_CONFIG_DEFAULTS: ConfigDefaults = {
   version: '1.0',
   description: 'Default configuration values for Phaneris',
   defaults: {
@@ -129,8 +139,8 @@ const FALLBACK_CONFIG_DEFAULTS: ConfigDefaults = {
   },
   workspaceDefaults: {
     thinkingLevel: 'medium',
-    permissionMode: 'ask',
-    cyclablePermissionModes: ['safe', 'ask', 'allow-all'],
+    permissionMode: 'safe',
+    cyclablePermissionModes: ['safe', 'allow-all'],
     localMcpServers: { enabled: true },
   },
 };
