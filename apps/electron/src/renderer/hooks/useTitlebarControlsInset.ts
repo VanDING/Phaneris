@@ -24,6 +24,9 @@ export function useTitlebarControlsInset(): void {
     probe.setAttribute('aria-hidden', 'true')
     // `visibility: hidden` (not `display: none`) so layout still runs and the
     // rect is measurable.
+    // No z-index: the probe is zero-height, invisible and non-interactive, so it
+    // takes part in no stacking decision. A negative value here would be a
+    // hardcoded z-index that means nothing (craft-styles/no-hardcoded-z-index).
     Object.assign(probe.style, {
       position: 'fixed',
       top: '0',
@@ -32,7 +35,6 @@ export function useTitlebarControlsInset(): void {
       height: '0',
       visibility: 'hidden',
       pointerEvents: 'none',
-      zIndex: '-1',
     })
     document.body.appendChild(probe)
 
