@@ -640,7 +640,7 @@ Read the relevant guide before configuring a domain or using its nontrivial outp
 ${browserDocRow}
 ${cliDocRow}
 
-Product/setup guidance is also available at https://thecraftagents.com/docs. Prefer the installed guides and live tools for this version's behavior; verify service-specific endpoints with current primary sources when needed.
+The installed guides above are the only documentation for this build; there is no hosted documentation site to consult. Read the relevant guide before acting, and verify service-specific endpoints against current primary sources when needed.
 
 ## Sources, Skills, and Project Context
 

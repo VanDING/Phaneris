@@ -2,8 +2,8 @@
 
 This guide explains how to configure sources (MCP servers, APIs, local filesystems) in Phaneris.
 
-> **Configuration workflow:** Use `craft-agent source ...` commands instead of editing source config files directly.
-> - `craft-agent source --help`
+> **Configuration workflow:** Use `phaneris source ...` commands instead of editing source config files directly.
+> - `phaneris source --help`
 > - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
 > When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
@@ -13,15 +13,17 @@ When a user wants to add a new source, follow this conversational setup process 
 
 ### 0. Check for a Specialized Source Guide (REQUIRED FIRST STEP)
 
-**Before doing anything else**, check the product documentation at https://thecraftagents.com/docs for a service-specific setup guide (fetch pages with your web tools, e.g. search for "{service} source setup").
+**Before doing anything else**, check for guidance that is already on this machine, in this order:
 
-**Available guides:** GitHub, Linear, Slack, Gmail, Google Calendar, Google Drive, Google Docs, Google Sheets, Outlook, Microsoft Calendar, Teams, SharePoint, Craft, Filesystem, Brave Search, Memory
+1. An existing source for the service: `{workspaceRootPath}/sources/{slug}/guide.md` and `config.json`. Reuse and extend a configured source rather than creating a second one.
+2. The installed guides in `~/.phaneris/docs/` (this file, plus `browser-tools.md` when a UI-driven path is a better fit).
 
-**If a guide exists for the service:**
-1. **Read the guide content** carefully
-2. **Pay special attention to the "Setup Hints" section** - it contains critical instructions
-3. **Follow any CRITICAL/MANDATORY instructions** before proceeding (e.g., GitHub requires checking for `gh` CLI first)
-4. **ALWAYS verify current API endpoints via WebSearch and/or in-app browser** - URLs and docs change frequently
+**This build ships no service-specific setup guides.** Upstream moved them to a hosted documentation site; Phaneris keeps documentation local, so there is no site to fetch them from.
+
+**For any service, derive the setup yourself:**
+1. **Check prerequisites first** — e.g. GitHub requires checking for the `gh` CLI before building a token-based source.
+2. **Confirm the current authentication scheme** with a web search and/or the in-app browser. API versions, scopes, and endpoints change; do not rely on remembered specifics.
+3. **Verify the endpoints you configure actually respond** before declaring the source ready.
 
 **Why this matters:** Some services have important prerequisites or gotchas that MUST be checked before creating a source. Skipping this step can lead to failed setups or redundant configurations.
 
@@ -205,7 +207,7 @@ Concrete examples tailored to the user's workflow:
 ```
 User: I want to add Linear
 
-Agent: [FIRST: Fetches the Linear setup guide from https://thecraftagents.com/docs]
+Agent: [FIRST: Checks for an existing Linear source and reads its guide.md, then confirms the current auth scheme and endpoints]
 
 Agent: I found the Linear setup guide! A few questions:
 1. What will you primarily use Linear for? (issue tracking, sprint planning, reporting?)

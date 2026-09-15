@@ -2,8 +2,8 @@
 
 This guide explains how to create and configure skills in Phaneris.
 
-> **Configuration workflow:** Use `craft-agent skill ...` commands instead of editing `SKILL.md` files directly.
-> - `craft-agent skill --help`
+> **Configuration workflow:** Use `phaneris skill ...` commands instead of editing `SKILL.md` files directly.
+> - `phaneris skill --help`
 > - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
 > When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
@@ -12,10 +12,10 @@ This guide explains how to create and configure skills in Phaneris.
 Skills are specialized instructions that extend the active agent for specific tasks. Craft uses a Claude Code-compatible `SKILL.md` structure while adding workspace scope, source requirements, permission hints, icons, and UI management.
 
 **Key points:**
-- Skills are invoked via slash commands (e.g., `/commit`, `/review-pr`)
-- `globs` is retained as compatibility metadata; the current Craft activation path does not implement automatic file-pattern activation
-- `alwaysAllow` is retained as compatibility metadata; it does not change the current Craft permission checks
-- Existing Claude Code-style skills can usually be imported; always validate Craft-specific metadata after import
+- Users invoke a skill by mentioning it in a message: `@<slug>`. `/slash` commands are a different mechanism (permission modes, features, folders) and do not invoke skills.
+- `globs` is retained as compatibility metadata; the current activation path does not implement automatic file-pattern activation
+- `alwaysAllow` is retained as compatibility metadata; it does not change the current permission checks
+- Existing Claude Code-style skills can usually be imported; always validate the additional metadata after import
 
 ## Claude Code-compatible format
 
@@ -38,7 +38,7 @@ When a skill is invoked (e.g., `/commit`):
 2. **Workspace**: `~/.phaneris/workspaces/{id}/skills/{slug}/SKILL.md`
 3. **Global**: `~/.agents/skills/{slug}/SKILL.md`
 
-The highest-priority matching slug wins: project > workspace > global. Use `craft-agent skill where <slug> --project-root <path>` when CLI is available to inspect the resolved path. Do not assume a separate SDK-bundled fallback.
+The highest-priority matching slug wins: project > workspace > global. Use `phaneris skill where <slug> --project-root <path>` when CLI is available to inspect the resolved path. Do not assume a separate SDK-bundled fallback.
 
 This allows you to:
 - Override a global skill in a workspace or project without modifying the global file
@@ -132,7 +132,7 @@ requiredSources:
 
 ### 1. Create through the available configuration route
 
-With CLI enabled, use `craft-agent skill create --name "Code Review" --description "Review changes" --slug code-review --body "..."`, then `craft-agent skill update code-review --json '{"body":"..."}'`. The body below is example content for those arguments. When CLI is disabled and file editing is allowed, create the folder and SKILL.md at the intended scope.
+With CLI enabled, use `phaneris skill create --name "Code Review" --description "Review changes" --slug code-review --body "..."`, then `phaneris skill update code-review --json '{"body":"..."}'`. The body below is example content for those arguments. When CLI is disabled and file editing is allowed, create the folder and SKILL.md at the intended scope.
 
 ### 2. Write SKILL.md
 

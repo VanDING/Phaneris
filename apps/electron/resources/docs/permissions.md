@@ -2,8 +2,8 @@
 
 This guide explains how to configure custom permission rules for Explore mode.
 
-> **CLI-first workflow (recommended):** Use `craft-agent permission ...` commands instead of editing JSON directly.
-> - `craft-agent permission --help`
+> **CLI-first workflow (recommended):** Use `phaneris permission ...` commands instead of editing JSON directly.
+> - `phaneris permission --help`
 > - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
 
 ## Overview
