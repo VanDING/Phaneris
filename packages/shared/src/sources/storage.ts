@@ -560,7 +560,8 @@ export async function createSource(
   }
 
   // Create guide.md with skeleton template
-  // (bundled guides removed - service-specific guidance lives in the product docs at https://thecraftagents.com/docs)
+  // Bundled guides were removed upstream and never shipped here, so there is no
+  // service-specific guidance to attach; the agent derives setup from primary sources.
   const guideContent = `# ${input.name}
 
 ## Guidelines
