@@ -8,11 +8,18 @@ interface PhanerisSymbolProps {
  *
  * Rendered in `currentColor` so it adopts the theme accent (apply
  * `text-accent`), which is how the app chrome used the previous mark.
+ *
+ * The viewBox is the glyph's **tight bounding box**, not the artwork's
+ * 1000×1000 canvas. This matters: the drawing only occupies x 180–760 /
+ * y 90–875 of that canvas, so using the full canvas would render the mark at
+ * roughly 58% of whatever size the caller asked for — an `h-4` logo would paint
+ * a ~9px glyph. Any component that draws this mark copies these five polygons,
+ * so if the artwork is ever redrawn, update the viewBox with it.
  */
 export function PhanerisSymbol({ className }: PhanerisSymbolProps) {
   return (
     <svg
-      viewBox="0 0 1000 1000"
+      viewBox="180 90 580 785"
       className={className}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
