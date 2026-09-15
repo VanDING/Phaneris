@@ -7,9 +7,12 @@
 
 import awsIcon from '@/assets/provider-icons/aws.svg'
 import azureIcon from '@/assets/provider-icons/azure.svg'
+import cerebrasIcon from '@/assets/provider-icons/cerebras.svg'
 import claudeIcon from '@/assets/provider-icons/claude.svg'
 import copilotIcon from '@/assets/provider-icons/copilot.svg'
+import deepseekIcon from '@/assets/provider-icons/deepseek.svg'
 import googleIcon from '@/assets/provider-icons/google.svg'
+import groqIcon from '@/assets/provider-icons/groq.svg'
 import huggingfaceIcon from '@/assets/provider-icons/huggingface.svg'
 import kimiIcon from '@/assets/provider-icons/kimi.svg'
 import minimaxIcon from '@/assets/provider-icons/minimax.svg'
@@ -20,18 +23,27 @@ import openrouterIcon from '@/assets/provider-icons/openrouter.svg'
 import piIcon from '@/assets/provider-icons/pi.svg'
 import vercelIcon from '@/assets/provider-icons/vercel.svg'
 import xaiIcon from '@/assets/provider-icons/xai.svg'
+import zaiIcon from '@/assets/provider-icons/zai.svg'
 
 import type { LlmProviderType } from '@phaneris/shared/config/llm-connections'
 
 /**
- * Icon URLs for each provider
+ * Icon URLs for each provider.
+ *
+ * Every entry is a bundled asset. Provider marks are never fetched at render
+ * time — a provider with no bundled mark resolves to `null` and the caller
+ * renders the neutral fallback, which is deliberate: an unresolved brand must
+ * not turn into a network request the user did not ask for.
  */
 export const providerIcons = {
   anthropic: claudeIcon,
   aws: awsIcon,
   azure: azureIcon,
+  cerebras: cerebrasIcon,
   copilot: copilotIcon,
+  deepseek: deepseekIcon,
   google: googleIcon,
+  groq: groqIcon,
   huggingface: huggingfaceIcon,
   kimi: kimiIcon,
   minimax: minimaxIcon,
@@ -42,7 +54,7 @@ export const providerIcons = {
   pi: piIcon,
   vercel: vercelIcon,
   xai: xaiIcon,
-  deepseek: 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=128&url=https://deepseek.com',
+  zai: zaiIcon,
 } as const
 
 export type ProviderIconKey = keyof typeof providerIcons
@@ -53,7 +65,9 @@ const providerDisplayNames: Record<string, string> = {
   openai: 'OpenAI',
   openai_compat: 'OpenAI',
   copilot: 'GitHub Copilot',
+  cerebras: 'Cerebras',
   deepseek: 'DeepSeek',
+  groq: 'Groq',
   kimi: 'Kimi',
   minimax: 'Minimax',
   ollama: 'Ollama',
@@ -62,6 +76,7 @@ const providerDisplayNames: Record<string, string> = {
   pi_compat: 'Phaneris Backend',
   vercel: 'Vercel',
   xai: 'xAI',
+  zai: 'Z.ai',
 }
 
 /** Get a human-readable provider name from provider type and optional base URL */
@@ -78,6 +93,9 @@ export function getProviderDisplayName(providerType: string, baseUrl?: string | 
     if (url.includes('manifest.build')) return 'Manifest'
     if (url.includes('deepseek.com')) return 'DeepSeek'
     if (url.includes('x.ai')) return 'xAI'
+    if (url.includes('groq.com')) return 'Groq'
+    if (url.includes('cerebras.ai')) return 'Cerebras'
+    if (url.includes('//z.ai') || url.includes('.z.ai')) return 'Z.ai'
   }
   return providerDisplayNames[providerType] || providerType
 }
@@ -102,6 +120,11 @@ function detectProviderFromUrl(baseUrl: string): ProviderIconKey | null {
   if (url.includes('mistral.ai')) return 'mistral'
   if (url.includes('bedrock')) return 'aws'
   if (url.includes('huggingface.co')) return 'huggingface'
+  if (url.includes('groq.com')) return 'groq'
+  if (url.includes('cerebras.ai')) return 'cerebras'
+  // `.z.ai` / `//z.ai` rather than a bare `z.ai`, which would also match hosts
+  // like `fizz.ai`.
+  if (url.includes('//z.ai') || url.includes('.z.ai')) return 'zai'
 
   return null
 }
@@ -159,20 +182,17 @@ function piAuthProviderToIcon(piAuthProvider: string): ProviderIconKey | null {
       return 'vercel'
     case 'xai':
       return 'xai'
+    case 'cerebras':
+      return 'cerebras'
+    case 'deepseek':
+      return 'deepseek'
+    case 'groq':
+      return 'groq'
+    case 'zai':
+      return 'zai'
     default:
       return null
   }
-}
-
-/**
- * Domain map for providers without static SVG icons.
- * Used to generate Google Favicon V2 URLs as fallback.
- */
-const PI_AUTH_PROVIDER_DOMAINS: Record<string, string> = {
-  groq: 'groq.com',
-  cerebras: 'cerebras.ai',
-  deepseek: 'deepseek.com',
-  zai: 'z.ai',
 }
 
 /**
@@ -196,10 +216,6 @@ export function getProviderIcon(
     if (brandId in providerIcons) return providerIcons[brandId as ProviderIconKey]
     const brandKey = piAuthProviderToIcon(brandId)
     if (brandKey) return providerIcons[brandKey]
-    const brandDomain = PI_AUTH_PROVIDER_DOMAINS[brandId]
-    if (brandDomain) {
-      return `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=128&url=https://${brandDomain}`
-    }
   }
   // For compatible providers, try to detect from URL first
   if (baseUrl && (providerType === 'openai_compat' || providerType === 'pi_compat')) {
@@ -209,7 +225,9 @@ export function getProviderIcon(
     }
     const modelProvider = detectProviderFromModel(modelId)
     if (modelProvider) return providerIcons[modelProvider]
-    // Manifest has no bundled SVG — fall back to Google Favicon V2 (same trick used for groq/xai elsewhere).
+    // Manifest still has no bundled mark, so this is the one endpoint that
+    // reaches the network for its icon. Swap it for `null` to drop the last
+    // runtime icon fetch at the cost of showing the neutral fallback.
     if (baseUrl.toLowerCase().includes('manifest.build')) {
       return 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=128&url=https://app.manifest.build'
     }
@@ -233,11 +251,6 @@ export function getProviderIcon(
       if (piAuthProvider) {
         const iconKey = piAuthProviderToIcon(piAuthProvider)
         if (iconKey) return providerIcons[iconKey]
-        // Favicon fallback for providers without static SVGs
-        const domain = PI_AUTH_PROVIDER_DOMAINS[piAuthProvider]
-        if (domain) {
-          return `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=128&url=https://${domain}`
-        }
       }
       return null  // Unknown/custom Pi provider — caller shows brain icon
     }
