@@ -15,6 +15,7 @@ import googleIcon from '@/assets/provider-icons/google.svg'
 import groqIcon from '@/assets/provider-icons/groq.svg'
 import huggingfaceIcon from '@/assets/provider-icons/huggingface.svg'
 import kimiIcon from '@/assets/provider-icons/kimi.svg'
+import manifestIcon from '@/assets/provider-icons/manifest.svg'
 import minimaxIcon from '@/assets/provider-icons/minimax.svg'
 import mistralIcon from '@/assets/provider-icons/mistral.svg'
 import ollamaIcon from '@/assets/provider-icons/ollama.svg'
@@ -46,6 +47,16 @@ export const providerIcons = {
   groq: groqIcon,
   huggingface: huggingfaceIcon,
   kimi: kimiIcon,
+  /**
+   * Manifest's published logomark, taken unmodified from their brand kit
+   * (`manifest.build/brand-assets`), which designates exactly this asset for
+   * "avatars, favicons, and tight spaces" and asks that it not be recoloured.
+   * It is the one mark in this set that keeps its own colours rather than
+   * resolving to `currentColor`, and that is deliberate: the peacock is the
+   * identity, and flattening it would be a brand violation for no benefit at
+   * the sizes this renders at.
+   */
+  manifest: manifestIcon,
   minimax: minimaxIcon,
   mistral: mistralIcon,
   ollama: ollamaIcon,
@@ -122,6 +133,7 @@ function detectProviderFromUrl(baseUrl: string): ProviderIconKey | null {
   if (url.includes('huggingface.co')) return 'huggingface'
   if (url.includes('groq.com')) return 'groq'
   if (url.includes('cerebras.ai')) return 'cerebras'
+  if (url.includes('manifest.build')) return 'manifest'
   // `.z.ai` / `//z.ai` rather than a bare `z.ai`, which would also match hosts
   // like `fizz.ai`.
   if (url.includes('//z.ai') || url.includes('.z.ai')) return 'zai'
@@ -225,12 +237,6 @@ export function getProviderIcon(
     }
     const modelProvider = detectProviderFromModel(modelId)
     if (modelProvider) return providerIcons[modelProvider]
-    // Manifest still has no bundled mark, so this is the one endpoint that
-    // reaches the network for its icon. Swap it for `null` to drop the last
-    // runtime icon fetch at the cost of showing the neutral fallback.
-    if (baseUrl.toLowerCase().includes('manifest.build')) {
-      return 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=128&url=https://app.manifest.build'
-    }
   }
 
   // Map provider type to icon
