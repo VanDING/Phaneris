@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+import { DEEPLINK_SCHEME_PREFIX } from '@phaneris/shared'
 import {
   DEFAULT_DOCS_LOCALE,
   DOCS_HOME_SLUG,
@@ -39,6 +40,17 @@ function contentFilesOnDisk(): string[] {
 const manifestKeys = DOCS_LOCALES.flatMap((locale) =>
   DOCS_PAGES.map((page) => `${locale}/${page.slug}`),
 ).sort()
+
+/** Markdown link destinations, excluding the optional title. */
+function linksIn(markdown: string): string[] {
+  const targets: string[] = []
+  const pattern = /\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g
+  let match: RegExpExecArray | null
+  while ((match = pattern.exec(markdown)) !== null) {
+    if (match[1]) targets.push(match[1])
+  }
+  return targets
+}
 
 describe('docs manifest', () => {
   it('has unique slugs', () => {
@@ -89,5 +101,37 @@ describe('docs manifest', () => {
       }
     }
     expect(mismatched).toEqual([])
+  })
+
+  /**
+   * Cross-references are written as `phaneris://docs/<slug>` and intercepted by
+   * the docs overlay. A relative path would classify as a *file* link, and the
+   * overlay passes no `onFileClick` — so it would render as a normal-looking link
+   * that does nothing when clicked, with no error anywhere. A slug that names a
+   * page the manifest does not declare fails the same silent way.
+   */
+  it('links only to real pages, external https URLs, or in-page anchors', () => {
+    const prefix = `${DEEPLINK_SCHEME_PREFIX}docs/`
+    const problems: string[] = []
+
+    for (const page of DOCS_PAGES) {
+      const file = join(guideDir, DEFAULT_DOCS_LOCALE, `${page.slug}.md`)
+      if (!existsSync(file)) continue
+
+      for (const target of linksIn(readFileSync(file, 'utf8'))) {
+        if (target.startsWith('#') || /^https?:\/\//i.test(target)) continue
+
+        if (!target.startsWith(prefix)) {
+          problems.push(`${page.slug}: not an internal docs link or https URL: ${target}`)
+          continue
+        }
+        const slug = target.slice(prefix.length)
+        if (!findDocsPage(slug)) {
+          problems.push(`${page.slug}: links to undeclared page: ${slug}`)
+        }
+      }
+    }
+
+    expect(problems).toEqual([])
   })
 })

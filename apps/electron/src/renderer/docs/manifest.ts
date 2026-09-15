@@ -50,13 +50,18 @@ export const DOCS_SECTIONS: DocsSection[] = [
     title: 'Getting Started',
     pages: [
       { slug: 'getting-started/introduction', title: 'Introduction' },
+      { slug: 'getting-started/installation', title: 'Installation' },
     ],
   },
   {
     id: 'core-concepts',
     title: 'Core Concepts',
     pages: [
+      { slug: 'core-concepts/conversations', title: 'Conversations' },
+      { slug: 'core-concepts/projects', title: 'Projects' },
+      { slug: 'core-concepts/working-directory', title: 'Working Directory' },
       { slug: 'core-concepts/permissions', title: 'Permissions' },
+      { slug: 'core-concepts/interactions', title: 'Interactions' },
     ],
   },
   {
@@ -125,6 +130,12 @@ export const DOCS_SECTIONS: DocsSection[] = [
     pages: [
       { slug: 'reference/config-file', title: 'App Settings' },
       { slug: 'reference/preferences', title: 'Preferences' },
+      { slug: 'reference/llm-connections', title: 'LLM Connections' },
+      { slug: 'reference/custom-endpoint', title: 'Custom Endpoints' },
+      { slug: 'reference/credentials', title: 'Credentials' },
+      { slug: 'reference/network-proxy', title: 'Network Proxy' },
+      { slug: 'reference/environment-variables', title: 'Environment Variables' },
+      { slug: 'reference/cli-reference', title: 'CLI Reference' },
     ],
   },
 ]
