@@ -448,7 +448,19 @@ app.whenReady().then(async () => {
 
   // Wrap the credential encryption key with the OS keychain before any
   // credential read or server bootstrap happens.
-  installElectronCredentialKeyProvider()
+  //
+  // Best-effort by contract: the provider is optional and the store falls back
+  // to machine-id derivation without it. Letting it throw here would abandon the
+  // rest of startup — including every window — and leave a running process with
+  // no UI at all, which is the worst possible way to report "your OS keychain
+  // cannot unwrap the stored key".
+  try {
+    installElectronCredentialKeyProvider()
+  } catch (error) {
+    mainLog.warn('[credentials] OS credential key unavailable; continuing with machine-id derivation', {
+      message: error instanceof Error ? error.message : String(error),
+    })
+  }
 
   // Register bundled assets root so all seeding functions can find their files
   // (docs, permissions, themes, tool-icons resolve via getBundledAssetsDir)
@@ -1363,6 +1375,17 @@ app.whenReady().then(async () => {
       }
     }
   })
+}).catch((error) => {
+  // Startup is one long async chain. Without this, a throw anywhere inside it
+  // abandons every later step — window creation included — and leaves a running
+  // process with no UI and no explanation. Surface it instead of hanging.
+  const detail = error instanceof Error ? (error.stack ?? error.message) : String(error)
+  mainLog.error('Startup failed:', detail)
+  Sentry.captureException(error instanceof Error ? error : new Error(String(error)))
+  dialog.showErrorBox(
+    `${PRODUCT_NAME} could not start`,
+    `Startup failed before any window could open.\n\n${detail}`,
+  )
 })
 
 app.on('window-all-closed', () => {
@@ -1509,6 +1532,12 @@ process.on('uncaughtException', (error) => {
 })
 
 process.on('unhandledRejection', (reason, promise) => {
-  mainLog.error('Unhandled rejection at:', promise, 'reason:', reason)
+  // Log the stack explicitly. electron-log's structured formatter serialises an
+  // Error to `{}`, so the obvious `mainLog.error(..., reason)` produced a log
+  // line reading "Unhandled rejection at: {} reason: {}" — an error report with
+  // no error in it, and a startup failure that took far longer to find than it
+  // should have.
+  const detail = reason instanceof Error ? (reason.stack ?? reason.message) : String(reason)
+  mainLog.error('Unhandled rejection at:', promise, 'reason:', detail)
   Sentry.captureException(reason instanceof Error ? reason : new Error(String(reason)))
 })

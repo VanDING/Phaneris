@@ -73,7 +73,24 @@
 
 方案第 6 节的导入引擎是为**迁移其他人的机器**设计的：目标侧 staging、可重试状态机、冲突报告、暂停自动化、跨机器凭据重加密。本机只需要迁一次、迁完旧应用即退役，那些机制都成了围绕两个动作的仪式：复制，然后修正指向旧根目录的路径。因此以一次性脚本 `scripts/migrate-legacy-profile.ts` 完成，并明确记录它不做哪些事。
 
-**最大简化点是凭据**：fork 刻意没有改凭据格式（`CRAFT01` 魔数、`craft-agent-v2` PBKDF2 标签）与机器派生密钥，所以 `credentials.enc` / `credentials.key` 直接复制即可用，无需重加密。脚本明确声明它**不适用于换机器**。
+**我在这里判断错了一次，代价是应用起不来。** 初版脚本把 `credentials.key` / `credentials.enc` 一起复制，理由写的是"fork 没改凭据格式与派生参数，所以直接复制即可用"。**这个理由是错的**：vault 的文件格式（`CRAFT01` 魔数、`craft-agent-v2` PBKDF2 标签）确实没变，但 `credentials.key` 不是 vault 格式的一部分——它是被操作系统保护的 blob，保护本身**绑定到写出它的可执行文件**。本机该文件以 `v10` 开头（Chromium app-bound encryption），因此改名为 `Phaneris.exe` 后无法解开。
+
+后果不是"凭据读不出来"这么简单，而是一条完整的故障链：
+
+1. `safeStorage.decryptString` 失败 → `installElectronCredentialKeyProvider()` 抛错；
+2. 该调用位于 `app.whenReady().then(async …)` 链的**最前面**，而这条链**没有 `.catch()`**；
+3. 抛出把整条启动链中断——包括创建窗口——但 Electron 事件循环继续运行；
+4. 结果是**进程活着、后台服务照常（自动化在跑、配置监听在跑）、但永远没有窗口**，且日志里只有一行 `Unhandled rejection at: {} reason: {}`（Error 被序列化成了空对象）。
+
+修正：迁移**排除** `credentials.key` 与 `credentials.enc`。复制它们不但保不住访问权，还保证新应用既解不开旧密钥、也无法生成新密钥。连接与 source 本身照常迁移，只是密钥需要重新授权一次。验证：新应用自建密钥（日志 `using OS-protected credential key`），窗口正常出现，凭据读取错误 0 次。
+
+顺带修掉的三处"让故障更难查"的缺陷（都不是掩盖症状，而是让失败可见）：
+- `unhandledRejection` / 启动失败改为打印**堆栈**。原先 electron-log 把 Error 序列化成 `{}`，等于报了个没有内容的错。
+- `whenReady` 链加上 `.catch()`：启动失败时写日志并弹错误框，而不是留下一个没有窗口的进程。
+- `installElectronCredentialKeyProvider()` 的失败在调用点被捕获并降级到机器 id 派生——该函数的文档契约本就是"返回 null 表示应使用回落"，调用点却既不接返回值也不接异常。
+- `window-manager.ts` 增加 8 行纯观测（`did-finish-load` / `render-process-gone`），不改变窗口显示时机。
+
+**一次被我自己否掉的"修复"**：排查中我给 `ready-to-show` 加过 15 秒兜底定时器，窗口确实出来了。但那是**掩盖症状**——它掩盖的是 dev 模式下 Vite 首次优化依赖导致的首次绘制变慢，而不是真实缺陷。回退该兜底后实测：窗口创建 → `Renderer finished loading` 仅隔 1.3 秒 → 窗口正常显示。上游的 `ready-to-show` 机制没有问题，兜底已删除。
 
 执行结果（31,545 文件 / 9.28 GB）：
 
@@ -81,7 +98,7 @@
 |---|---|
 | 源目录 | 只读，未修改一个字节；迁移可逆（删目标即可） |
 | 复制完整性 | 源侧 31,539 个应迁文件**全部**存在于目标（无缺失） |
-| 凭据 | `credentials.enc` / `credentials.key` 与源 SHA-256 完全一致 |
+| 凭据 | **有意不迁移**（OS 绑定到旧可执行文件）；新应用自建密钥，需重新授权一次 |
 | 结构化路径改写 | 413 处（`config.json` 2、artifact 索引 88、MCP source `server.py` 1、session/pi-session 首行 322） |
 | 会话首行校验 | 803 个 JSONL 全部解析成功，**0** 个仍指向旧根 |
 | `runtime.db` | `PRAGMA integrity_check` = ok，字节数与源一致 |

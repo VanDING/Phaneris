@@ -283,6 +283,14 @@ export class WindowManager {
       window.show()
     })
 
+    // Diagnostics for "the process is running but nothing appeared": without
+    // these, a renderer that dies or never finishes loading leaves no trace in
+    // the log at all. They observe only; they do not change when the window shows.
+    window.webContents.once('did-finish-load', () => windowLog.info('Renderer finished loading'))
+    window.webContents.once('render-process-gone', (_event, details) => {
+      windowLog.error('Renderer process gone:', details.reason, 'exitCode:', details.exitCode)
+    })
+
     // Open external links in default browser, but never hand known-dangerous
     // schemes directly to shell.openExternal. Markdown normal-clicks go through
     // OPEN_URL; middle-clicks/window.open/top-navigation land here.

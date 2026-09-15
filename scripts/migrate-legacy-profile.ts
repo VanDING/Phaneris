@@ -15,10 +15,16 @@
  *   - It does not touch the source directory at all. It is read-only on the
  *     source; the old profile stays exactly as it was, so the move is reversible
  *     by deleting the target and pointing PHANERIS_CONFIG_DIR back.
- *   - It does not re-encrypt credentials. The vault's on-disk format
- *     (`CRAFT01` magic, `craft-agent-v2` PBKDF2 label) and the machine-derived
- *     key are unchanged by the fork, so the file keeps working on this machine.
- *     It would NOT work on a different machine, and this script does not try.
+ *   - It does NOT migrate the credential vault (`credentials.key` and
+ *     `credentials.enc` are excluded). The vault's own file format is unchanged
+ *     by the fork, but `credentials.key` is not a vault-format artifact: it is
+ *     an OS-protected blob whose protection is bound to the application that
+ *     wrote it. On Windows the blob begins with `v10` (Chromium app-bound
+ *     encryption), so a renamed executable cannot unwrap it. Copying it does not
+ *     preserve access — it guarantees the new app can never unwrap the key AND
+ *     can never create a fresh one, so the vault fails on every read. Credentials
+ *     are re-authorized once instead; the connections and sources themselves
+ *     still migrate, only their secrets do not.
  *   - It does not need the source application stopped in order to read, but the
  *     SQLite runtime database must not be mid-write when it is copied. Stop the
  *     app first; the script refuses to run while it can see a live server lock.
@@ -35,6 +41,7 @@
  * Usage:
  *   bun run scripts/migrate-legacy-profile.ts                 # dry run (default)
  *   bun run scripts/migrate-legacy-profile.ts --apply
+ *   bun run scripts/migrate-legacy-profile.ts --repair        # rewrite paths only
  *   bun run scripts/migrate-legacy-profile.ts --apply --source <dir> --target <dir>
  */
 
@@ -164,6 +171,16 @@ function rewriteJsonValue(value: unknown, key: string | null): { value: unknown;
 const EXCLUDED_TOP_LEVEL = new Set(['cache', 'logs']);
 const EXCLUDED_FILE = /^(\.server\.lock|api-error\.json|config\.json\.bak-)/;
 
+/**
+ * The credential vault, excluded by name.
+ *
+ * `credentials.key` is protected by the OS in a way that is bound to the
+ * application that wrote it (see the header), so carrying it over does not
+ * preserve access — it only prevents the new app from creating a usable key.
+ * `credentials.enc` is encrypted with that key, so it is equally unusable.
+ */
+const EXCLUDED_CREDENTIALS = new Set(['credentials.key', 'credentials.enc']);
+
 interface Report {
   filesCopied: number;
   bytesCopied: number;
@@ -175,7 +192,7 @@ interface Report {
 
 function copyTree(from: string, to: string, report: Report): void {
   for (const entry of readdirSync(from, { withFileTypes: true })) {
-    if (EXCLUDED_TOP_LEVEL.has(entry.name) || EXCLUDED_FILE.test(entry.name)) continue;
+    if (EXCLUDED_TOP_LEVEL.has(entry.name) || EXCLUDED_FILE.test(entry.name) || EXCLUDED_CREDENTIALS.has(entry.name)) continue;
     const source = join(from, entry.name);
     const target = join(to, entry.name);
     if (entry.isDirectory()) {
@@ -349,7 +366,7 @@ if (REPAIR) {
 console.log(`mode    : ${REPAIR ? 'REPAIR (rewrite paths only)' : APPLY ? 'APPLY' : 'dry run (pass --apply to write)'}`);
 console.log(`source  : ${SOURCE}`);
 console.log(`target  : ${TARGET}`);
-console.log(`excluded: ${[...EXCLUDED_TOP_LEVEL].join(', ')}, ${EXCLUDED_FILE.source}\n`);
+console.log(`excluded: ${[...EXCLUDED_TOP_LEVEL].join(', ')}, ${[...EXCLUDED_CREDENTIALS].join(', ')}, ${EXCLUDED_FILE.source}\n`);
 
 // ---------------------------------------------------------------------------
 // Copy
@@ -373,7 +390,7 @@ if (REPAIR) {
   // Dry run: measure without writing.
   const measure = (dir: string): void => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      if (EXCLUDED_TOP_LEVEL.has(entry.name) || EXCLUDED_FILE.test(entry.name)) continue;
+      if (EXCLUDED_TOP_LEVEL.has(entry.name) || EXCLUDED_FILE.test(entry.name) || EXCLUDED_CREDENTIALS.has(entry.name)) continue;
       const full = join(dir, entry.name);
       if (entry.isDirectory()) measure(full);
       else if (entry.isFile()) {
