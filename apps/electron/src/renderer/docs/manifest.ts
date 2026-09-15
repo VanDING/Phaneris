@@ -86,6 +86,7 @@ export const DOCS_SECTIONS: DocsSection[] = [
     title: 'Statuses',
     pages: [
       { slug: 'statuses/overview', title: 'Statuses' },
+      { slug: 'statuses/customizing', title: 'Customizing Statuses' },
     ],
   },
   {
@@ -93,6 +94,7 @@ export const DOCS_SECTIONS: DocsSection[] = [
     title: 'Labels',
     pages: [
       { slug: 'labels/overview', title: 'Labels' },
+      { slug: 'labels/auto-rules', title: 'Auto-Apply Rules' },
     ],
   },
   {
@@ -107,6 +109,19 @@ export const DOCS_SECTIONS: DocsSection[] = [
     title: 'Messaging',
     pages: [
       { slug: 'messaging/overview', title: 'Messaging' },
+      { slug: 'messaging/telegram', title: 'Telegram' },
+      { slug: 'messaging/whatsapp', title: 'WhatsApp' },
+      { slug: 'messaging/lark', title: 'Lark / Feishu' },
+      { slug: 'messaging/wechat-wecom', title: 'WeChat and WeCom' },
+    ],
+  },
+  {
+    id: 'browser',
+    title: 'Browser',
+    pages: [
+      { slug: 'browser/overview', title: 'Browser' },
+      { slug: 'browser/examples', title: 'Examples and Recipes' },
+      { slug: 'browser/api-discovery', title: 'API Discovery' },
     ],
   },
   {
@@ -114,6 +129,8 @@ export const DOCS_SECTIONS: DocsSection[] = [
     title: 'Customisation',
     pages: [
       { slug: 'customisation/themes', title: 'Themes' },
+      { slug: 'customisation/colors', title: 'Colors' },
+      { slug: 'customisation/icons', title: 'Icons' },
     ],
   },
   {
@@ -122,6 +139,20 @@ export const DOCS_SECTIONS: DocsSection[] = [
     pages: [
       { slug: 'go-further/workspaces', title: 'Workspaces' },
       { slug: 'go-further/pages', title: 'Pages' },
+      { slug: 'go-further/kanban', title: 'Kanban Board' },
+      { slug: 'go-further/tasks', title: 'Tasks' },
+      { slug: 'go-further/rich-output', title: 'Rich Output' },
+      { slug: 'go-further/document-tools', title: 'Document Tools' },
+      { slug: 'go-further/connect-to-anything', title: 'Connect to Anything' },
+      { slug: 'go-further/deep-links', title: 'Deep Links' },
+      { slug: 'go-further/performance', title: 'Performance' },
+    ],
+  },
+  {
+    id: 'server',
+    title: 'Server',
+    pages: [
+      { slug: 'server/remote-server', title: 'Remote Server' },
     ],
   },
   {

@@ -42,16 +42,22 @@ Once bound, the available commands are:
 ## Who may talk to your agent
 
 A messaging bot is reachable by anyone who finds it, so access is controlled
-explicitly:
+explicitly — **but only on Telegram and WeCom.** On those two platforms a
+workspace has:
 
 - **Access mode** — `owner-only` (only listed owners) or `open`.
 - **Owners** — the accounts allowed to use the bot.
 - **Pending senders** — someone who messages the bot without being an owner is
   recorded as pending rather than silently ignored. You approve or reject them
-  from the app; approve adds them as an owner.
+  from the app; approving adds them as an owner.
 
-Keep `owner-only` unless you have a reason not to. With `open`, anyone who can
-find the bot can start a session on your machine.
+WhatsApp, WeChat, and Lark/Feishu do not expose an owner list in this build. That
+makes *who else can reach the bot* a question you answer in the platform's own
+console, not here. If that matters — and in a shared workspace it usually does —
+prefer Telegram or WeCom.
+
+Keep the setting at `owner-only` unless you have a reason not to. With `open`,
+anyone who can find the bot can start a session on your machine.
 
 ## Telegram supergroups and topics
 

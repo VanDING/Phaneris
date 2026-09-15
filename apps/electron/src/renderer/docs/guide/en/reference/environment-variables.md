@@ -14,6 +14,7 @@ Every variable uses the `PHANERIS_` prefix.
 | `PHANERIS_APP_NAME` | Override the application name |
 | `PHANERIS_DEBUG=1` | Enable the development/debug runtime |
 | `PHANERIS_LOCAL_MCP_ENABLED` | Whether local (stdio) MCP servers may be started |
+| `PHANERIS_RELEASE_BASE_URL` | Release feed for `install-app.sh` / `install-app.ps1`. Without it those scripts refuse to run. |
 
 The upstream `CRAFT_CONFIG_DIR` is deliberately **not** read. Honouring it would
 inherit a data directory belonging to a different application, which is exactly

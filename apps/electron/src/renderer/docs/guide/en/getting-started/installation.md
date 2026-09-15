@@ -25,11 +25,22 @@ loop.
 
 ## Packaged installers
 
-**The prebuilt installers are not usable for Phaneris yet.** `scripts/install-app.sh`
-and `scripts/install-app.ps1` download their payload from the upstream release
-feed, so running them installs upstream Craft Agents rather than this build.
-Rebuilding that pipeline is deliberately deferred work; until it lands, build
-from source or package locally.
+`scripts/install-app.sh` and `scripts/install-app.ps1` install a packaged build
+from a release feed. **They refuse to run until you point them at one you
+control:**
+
+```bash
+PHANERIS_RELEASE_BASE_URL=https://releases.example.com/phaneris \
+  bash scripts/install-app.sh
+```
+
+The feed must use the electron-updater generic layout
+(`<base>/<channel>/latest.yml`). There is no Phaneris-hosted feed yet — that is
+deferred release-pipeline work — and the scripts deliberately fail closed rather
+than falling back to the upstream service, because a fallback would install a
+different product under this installer's name.
+
+If you do not have a feed, build from source or package locally.
 
 ## First launch
 
@@ -61,8 +72,8 @@ bun install --frozen-lockfile
 ```
 
 The in-app updater is part of the same deferred release-pipeline work as the
-installers, so it will report that no update is available rather than fetching
-one from upstream.
+installers. It has no feed configured and reports that no update is available
+rather than fetching one from upstream.
 
 ## Headless use
 

@@ -22,6 +22,13 @@ permission error that both you and the agent can see. Two exceptions are
 deliberate: writing a plan document, and writing to data a Page owns — both are
 the intended output of "investigate and propose".
 
+One boundary is softer than the rest, and it is worth knowing about: **the
+in-app browser is not blocked in Explore.** Its commands are not classified as
+read-only or mutating, so Explore bounds browser work through an instruction to
+the agent rather than an enforced refusal. See
+[Browser](phaneris://docs/browser/overview) for what that does and does not
+guarantee.
+
 **Ask to Edit** prompts on a per-action basis and remembers nothing by default;
 approving one edit does not pre-approve the next. If a prompt is for something
 you will approve repeatedly, that is the signal to move the session to Execute
