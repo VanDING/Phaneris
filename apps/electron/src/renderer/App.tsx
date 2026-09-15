@@ -58,6 +58,7 @@ import {
   type BackgroundTask,
 } from '@/atoms/sessions'
 import { sourcesAtom } from '@/atoms/sources'
+import { useTitlebarControlsInset } from '@/hooks/useTitlebarControlsInset'
 import { activeSessionIdAtom } from '@/atoms/active-session'
 import { skillsAtom } from '@/atoms/skills'
 import {
@@ -293,6 +294,10 @@ function SessionLoadErrorScreen({
 
 export default function App() {
   const { t } = useTranslation()
+
+  // Publishes --titlebar-controls-inset so surfaces that put controls in the
+  // window's top-right corner can clear the Windows caption buttons.
+  useTitlebarControlsInset()
 
   // Initialize renderer perf tracking early (debug mode = running from source)
   // Uses useEffect with empty deps to run once on mount before any session switches

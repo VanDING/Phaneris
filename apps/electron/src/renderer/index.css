@@ -1519,6 +1519,12 @@ html.dark[data-scenic] .fullscreen-overlay-background {
    ========================================================================== */
 :root {
   --topbar-height: 48px;
+
+  /* Width of the Windows caption-button strip reserved by titleBarOverlay.
+     Written at runtime by useTitlebarControlsInset(); stays 0 on macOS, in the
+     Web UI and in any window without the overlay, so surfaces that read it do
+     not move there. */
+  --titlebar-controls-inset: 0px;
 }
 @media (max-width: 768px) {
   :root {

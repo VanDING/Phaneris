@@ -190,7 +190,16 @@ export function FullscreenOverlayBase({
           {/* Floating header — rendered after scroll area so it's visually on top (DOM order).
               Positioned absolutely at the top of the viewport, above the scroll content. */}
           {hasHeader && (
-            <div className="absolute top-0 left-0 right-0 z-10">
+            <div
+              className="absolute top-0 left-0 right-0 z-10"
+              // Reserve the Windows caption-button strip. The overlay covers the
+              // whole window, so without this the header's close/action buttons
+              // land underneath the system minimise/maximise/close buttons — the
+              // Windows counterpart of the macOS traffic-light handling above,
+              // which can simply hide them. The token is 0 everywhere else
+              // (macOS, Web UI, non-overlay windows), so nothing moves there.
+              style={{ paddingRight: 'var(--titlebar-controls-inset, 0px)' }}
+            >
               <FullscreenOverlayBaseHeader
                 onClose={onClose}
                 typeBadge={typeBadge}
