@@ -98,6 +98,7 @@ import {
   type WorkbenchState,
 } from '@/atoms/workbench'
 import { lastActiveSessionIdAtom } from '@/atoms/active-session'
+import { openDocs } from '@/atoms/docs'
 
 // Re-export routes for convenience
 export { routes }
@@ -1109,6 +1110,16 @@ export function NavigationProvider({
     if (!workspaceId) return
 
     const cleanup = window.electronAPI.onDeepLinkNavigate((nav: DeepLinkNavigation) => {
+      // Documentation is an overlay, not a route. Intercept it before the route
+      // parser sees it: `docs` is intentionally absent from the parser's known
+      // prefixes, so a fall-through would answer the app's own help links with
+      // an "invalid link" toast.
+      if (nav.view === 'docs' || nav.view?.startsWith('docs/')) {
+        const slug = nav.view.slice('docs'.length).replace(/^\//, '')
+        openDocs(slug || undefined)
+        return
+      }
+
       let route: string | null = null
 
       if (nav.view) {

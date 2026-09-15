@@ -19,7 +19,8 @@ import {
   StyledDropdownMenuItem,
   StyledDropdownMenuSeparator,
 } from './styled-dropdown'
-import { type DocFeature, getDocUrl } from '@phaneris/shared/docs/doc-links'
+import { type DocFeature, getDocSlug } from '@phaneris/shared/docs/doc-links'
+import { openDocs } from '@/atoms/docs'
 
 interface HeaderMenuProps {
   /** Route string for Open in New Window action */
@@ -43,7 +44,7 @@ export function HeaderMenu({ route, children, helpFeature }: HeaderMenuProps) {
   }
 
   const handleLearnMore = helpFeature ? () => {
-    window.electronAPI?.openUrl(getDocUrl(helpFeature))
+    openDocs(getDocSlug(helpFeature))
   } : undefined
 
   return (

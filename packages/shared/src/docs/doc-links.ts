@@ -1,9 +1,21 @@
 /**
  * Documentation links and summaries for contextual help throughout the UI.
- * Summaries provide quick context; "Learn more" opens the full docs.
+ * Summaries provide quick context; "Learn more" opens the full guide.
+ *
+ * `slug` addresses a page in the app's own bundled documentation, which lives at
+ * `apps/electron/src/renderer/docs/guide/<locale>/<slug>.md`. It is deliberately
+ * NOT a URL: the renderer opens the docs overlay with this slug, and the Web UI
+ * cannot follow `phaneris://` links at all, so anything URL-shaped here would
+ * either reach the network or silently do nothing in browser mode.
+ *
+ * The slugs mirror the path shape the upstream docs site used for the same
+ * topic, which keeps the mapping obvious and means the pages an external deep
+ * link names are the pages the in-app help menu opens.
+ *
+ * `doc-links.test.ts` (renderer) asserts every slug here resolves to a real
+ * manifest page — a typo would otherwise surface as an empty "not written yet"
+ * pane rather than as a failure.
  */
-
-const DOC_BASE_URL = 'https://thecraftagents.com/docs'
 
 export type DocFeature =
   | 'sources'
@@ -22,8 +34,8 @@ export type DocFeature =
   | 'messaging'
 
 export interface DocInfo {
-  /** Path relative to DOC_BASE_URL */
-  path: string
+  /** Page slug within the bundled documentation. */
+  slug: string
   /** Display title for the help popover */
   title: string
   /** 1-2 sentence summary for quick context */
@@ -32,100 +44,102 @@ export interface DocInfo {
 
 export const DOCS: Record<DocFeature, DocInfo> = {
   sources: {
-    path: '/sources/overview',
+    slug: 'sources/overview',
     title: 'Sources',
     summary:
       'Connect external data like MCP servers, REST APIs, and local filesystems. Sources give your agent tools to access services like GitHub, Linear, or your Obsidian vault.',
   },
   'sources-api': {
-    path: '/sources/apis/overview',
+    slug: 'sources/apis',
     title: 'APIs',
     summary:
       'Connect to any REST API with flexible authentication. Make HTTP requests to external services directly from your conversations.',
   },
   'sources-mcp': {
-    path: '/sources/mcp-servers/overview',
+    slug: 'sources/mcp-servers',
     title: 'MCP Servers',
     summary:
       'Connect to Model Context Protocol servers for rich tool integrations. MCP servers provide structured access to services like GitHub, Linear, and Notion.',
   },
   'sources-local': {
-    path: '/sources/local-filesystems',
+    slug: 'sources/local-filesystems',
     title: 'Local Folders',
     summary:
       'Give your agent access to local directories like Obsidian vaults, code repositories, or data folders on your machine.',
   },
   skills: {
-    path: '/skills/overview',
+    slug: 'skills/overview',
     title: 'Skills',
     summary:
       'Reusable instruction sets that teach your agent specialized behaviors. Create a SKILL.md file and invoke it with @mention in your messages.',
   },
   statuses: {
-    path: '/statuses/overview',
+    slug: 'statuses/overview',
     title: 'Statuses',
     summary:
       'Organize conversations into workflow states like Todo, In Progress, and Done. Open statuses appear in your inbox; closed ones move to the archive.',
   },
   permissions: {
-    path: '/core-concepts/permissions',
+    slug: 'core-concepts/permissions',
     title: 'Permissions',
     summary:
       'Control how much autonomy your agent has. Explore mode is read-only, Ask to Edit prompts before changes, and Execute mode runs without prompts.',
   },
   labels: {
-    path: '/labels/overview',
+    slug: 'labels/overview',
     title: 'Labels',
     summary:
       'Tag sessions with colored labels for organization and filtering. Labels support hierarchical nesting, typed values, and auto-apply rules that extract data from messages using regex patterns.',
   },
   workspaces: {
-    path: '/go-further/workspaces',
+    slug: 'go-further/workspaces',
     title: 'Workspaces',
     summary:
       'Separate configurations for different contexts like personal projects or work. Each workspace has its own sources, skills, statuses, and session history.',
   },
   themes: {
-    path: '/go-further/themes',
+    slug: 'customisation/themes',
     title: 'Themes',
     summary:
       'Customize the complete visual style with semantic colors, depth, shape, typography, icons, and density tokens defined in theme JSON files.',
   },
   'app-settings': {
-    path: '/reference/config/config-file',
+    slug: 'reference/config-file',
     title: 'App Settings',
     summary:
-      'Configure global app settings like your default model, authentication method, and workspace list. Settings are stored in ~/.craft-agent/config.json.',
+      'Configure global app settings like your default model, authentication method, and workspace list. Settings are stored in ~/.phaneris/config.json.',
   },
   preferences: {
-    path: '/reference/config/preferences',
+    slug: 'reference/preferences',
     title: 'Preferences',
     summary:
-      'Personal preferences like your name, timezone, and language that help the agent personalize responses. Stored in ~/.craft-agent/preferences.json.',
+      'Personal preferences like your name, timezone, and language that help the agent personalize responses. Stored in ~/.phaneris/preferences.json.',
   },
   automations: {
-    path: '/automations/overview',
+    slug: 'automations/overview',
     title: 'Automations',
     summary:
       'Automate actions when events occur — run commands on schedules, react to label changes, or trigger prompts. Configured in automations.json.',
   },
   messaging: {
-    path: '/messaging/overview',
+    slug: 'messaging/overview',
     title: 'Messaging',
     summary:
-      'Connect a session to a chat platform — Telegram, WhatsApp, or Lark / Feishu — and reach your agent from anywhere. Pair workspace supergroups, route automations to forum topics, and send rich replies natively.',
+      'Connect a session to a chat platform — Telegram, WhatsApp, Lark / Feishu, WeChat, or WeCom — and reach your agent from anywhere. Pair workspace supergroups, route automations to forum topics, and send rich replies natively.',
   },
 }
 
 /**
- * Get the full documentation URL for a feature
+ * Get the documentation page slug for a feature.
+ *
+ * Callers open the docs overlay with this value; they must not treat it as a URL.
  */
-export function getDocUrl(feature: DocFeature): string {
-  return `${DOC_BASE_URL}${DOCS[feature].path}`
+export function getDocSlug(feature: DocFeature): string {
+  return DOCS[feature].slug
 }
 
 /**
- * Get the doc info (title, summary, path) for a feature
+ * Get the doc info (title, summary, slug) for a feature
  */
 export function getDocInfo(feature: DocFeature): DocInfo {
   return DOCS[feature]

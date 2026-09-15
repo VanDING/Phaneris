@@ -120,3 +120,17 @@ describe('parseDeepLink Project Management routes', () => {
     expect(parseDeepLink('phaneris://calendar')).toMatchObject({ view: 'calendar' })
   })
 })
+
+describe('parseDeepLink documentation routes', () => {
+  // The Help menu builds `phaneris://docs`, and guide pages build
+  // `phaneris://docs/<slug>`. Both must survive parsing or the app answers its
+  // own links with "Invalid deep link URL".
+  it('accepts the bare docs link the Help menu opens', () => {
+    expect(parseDeepLink('phaneris://docs')).toMatchObject({ view: 'docs' })
+  })
+
+  it('accepts a docs link naming a specific page', () => {
+    expect(parseDeepLink('phaneris://docs/sources/overview'))
+      .toMatchObject({ view: 'docs/sources/overview' })
+  })
+})

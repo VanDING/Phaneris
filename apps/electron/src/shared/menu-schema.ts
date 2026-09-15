@@ -14,6 +14,7 @@
 
 import { RPC_CHANNELS } from './types'
 import { FEATURE_FLAGS } from '@phaneris/shared/feature-flags'
+import { DEEPLINK_SCHEME_PREFIX } from '@phaneris/shared'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -293,13 +294,17 @@ export const ROOT_MENU = {
  * External-link items rendered inside the Help submenu (desktop) and the Help
  * sub-page (mobile). Excludes `keyboardShortcuts`, which is a `MenuItemAction`
  * and lives in `ROOT_MENU` so mobile can hoist it to the root list.
+ *
+ * The docs entry is an internal deep link, not a URL: the renderer resolves it
+ * to the bundled documentation overlay. Anything http(s) here would leave the
+ * app, which is exactly what this menu must no longer do.
  */
 export const HELP_LINKS: MenuItemUrl[] = [
   {
     type: 'url',
     id: 'helpAndDocs',
     labelKey: 'menu.helpAndDocs',
-    url: 'https://thecraftagents.com/docs',
+    url: `${DEEPLINK_SCHEME_PREFIX}docs`,
     icon: 'HelpCircle',
   },
 ]

@@ -8,7 +8,8 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from './empty'
-import { getDocUrl, type DocFeature } from '@phaneris/shared/docs/doc-links'
+import { getDocSlug, type DocFeature } from '@phaneris/shared/docs/doc-links'
+import { openDocs } from '@/atoms/docs'
 
 export interface EntityListEmptyScreenProps {
   icon: React.ReactNode
@@ -45,7 +46,7 @@ export function EntityListEmptyScreen({
         <EmptyContent>
           {docKey && (
             <button
-              onClick={() => window.electronAPI.openUrl(getDocUrl(docKey))}
+              onClick={() => openDocs(getDocSlug(docKey))}
               type="button"
               className="craft-control inline-flex items-center h-7 px-3 text-xs font-medium rounded-[8px] bg-foreground/[0.02] shadow-minimal hover:bg-foreground/[0.05] transition-colors"
             >

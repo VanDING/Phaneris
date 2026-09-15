@@ -120,6 +120,11 @@ const DEEP_LINK_ALLOWED_PARAMS: ReadonlySet<string> = new Set(['send'])
       'skills',
       'automations',
       'projects',
+      // Documentation. Not a navigation route — it is listed only so
+      // `phaneris://docs/<slug>` survives parsing and reaches the renderer,
+      // which opens the docs overlay. Without it, the Help menu's own deep link
+      // comes back as "Invalid deep link URL".
+      'docs',
       // Legacy aliases accepted for the same migration window as renderer URLs.
       'board',
       'calendar',

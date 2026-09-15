@@ -31,7 +31,8 @@ import type { SurfaceLauncherKind } from "@/lib/surface-launchers"
 import type { Workspace } from "../../../shared/types"
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher"
 import { CompactWorkspaceSwitcher } from "./CompactWorkspaceSwitcher"
-import { getDocUrl } from "@phaneris/shared/docs/doc-links"
+import { getDocSlug } from "@phaneris/shared/docs/doc-links"
+import { openDocs } from "@/atoms/docs"
 import { AppMenu } from "../AppMenu"
 
 const RIGHT_SLOT_FULL_BADGES_THRESHOLD = 420
@@ -280,38 +281,38 @@ export function TopBar({
             </TopBarButton>
           </DropdownMenuTrigger>
           <StyledDropdownMenuContent align="end" minWidth="min-w-48">
-            <StyledDropdownMenuItem onClick={() => window.electronAPI.openUrl(getDocUrl('sources'))}>
+            <StyledDropdownMenuItem onClick={() => openDocs(getDocSlug('sources'))}>
               <DatabaseZap className="h-3.5 w-3.5" />
               <span className="flex-1">{t("sidebar.sources")}</span>
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </StyledDropdownMenuItem>
-            <StyledDropdownMenuItem onClick={() => window.electronAPI.openUrl(getDocUrl('skills'))}>
+            <StyledDropdownMenuItem onClick={() => openDocs(getDocSlug('skills'))}>
               <Zap className="h-3.5 w-3.5" />
               <span className="flex-1">{t("sidebar.skills")}</span>
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </StyledDropdownMenuItem>
-            <StyledDropdownMenuItem onClick={() => window.electronAPI.openUrl(getDocUrl('statuses'))}>
+            <StyledDropdownMenuItem onClick={() => openDocs(getDocSlug('statuses'))}>
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span className="flex-1">{t("sidebar.statuses")}</span>
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </StyledDropdownMenuItem>
-            <StyledDropdownMenuItem onClick={() => window.electronAPI.openUrl(getDocUrl('permissions'))}>
+            <StyledDropdownMenuItem onClick={() => openDocs(getDocSlug('permissions'))}>
               <Settings className="h-3.5 w-3.5" />
               <span className="flex-1">{t("settings.permissions.title")}</span>
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </StyledDropdownMenuItem>
-            <StyledDropdownMenuItem onClick={() => window.electronAPI.openUrl(getDocUrl('automations'))}>
+            <StyledDropdownMenuItem onClick={() => openDocs(getDocSlug('automations'))}>
               <Webhook className="h-3.5 w-3.5" />
               <span className="flex-1">{t("sidebar.automations")}</span>
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </StyledDropdownMenuItem>
-            <StyledDropdownMenuItem onClick={() => window.electronAPI.openUrl(getDocUrl('messaging'))}>
+            <StyledDropdownMenuItem onClick={() => openDocs(getDocSlug('messaging'))}>
               <MessageSquare className="h-3.5 w-3.5" />
               <span className="flex-1">{t("settings.messaging.title")}</span>
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </StyledDropdownMenuItem>
             <StyledDropdownMenuSeparator />
-            <StyledDropdownMenuItem onClick={() => window.electronAPI.openUrl('https://thecraftagents.com/docs')}>
+            <StyledDropdownMenuItem onClick={() => openDocs()}>
               <ExternalLink className="h-3.5 w-3.5" />
               <span className="flex-1">{t("menu.allDocumentation")}</span>
             </StyledDropdownMenuItem>

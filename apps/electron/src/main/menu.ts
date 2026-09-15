@@ -1,4 +1,4 @@
-import { Menu, app, shell, BrowserWindow } from 'electron'
+import { Menu, app, BrowserWindow } from 'electron'
 import { i18n } from '@phaneris/shared/i18n'
 import { RPC_CHANNELS, type BroadcastEventMap } from '../shared/types'
 import { EDIT_MENU, VIEW_MENU, WINDOW_MENU } from '../shared/menu-schema'
@@ -6,6 +6,8 @@ import type { MenuItem } from '../shared/menu-schema'
 import type { WindowManager } from './window-manager'
 import type { EventSink } from '@phaneris/server-core/transport'
 import { mainLog, isDebugMode } from './logger'
+import { handleDeepLink } from './deep-link'
+import { DEEPLINK_SCHEME_PREFIX } from '@phaneris/shared'
 
 type ClientResolver = (webContentsId: number) => string | undefined
 
@@ -234,7 +236,14 @@ export async function rebuildMenu(): Promise<void> {
       submenu: [
         {
           label: i18n.t("menu.helpAndDocs"),
-          click: () => shell.openExternal('https://thecraftagents.com/docs')
+          // Routed through the app's own deep-link handler rather than
+          // `shell.openExternal`, which would hand the URL to the OS browser.
+          // The docs ship inside the app; leaving the app to read them is both
+          // slower and a way to end up back on the upstream site.
+          click: () => {
+            void handleDeepLink(`${DEEPLINK_SCHEME_PREFIX}docs`, windowManager, cachedEventSink ?? undefined, cachedClientResolver ?? undefined)
+              .catch((error: unknown) => mainLog.error('[Menu] Failed to open docs:', error))
+          }
         },
         {
           label: i18n.t("menu.keyboardShortcuts"),

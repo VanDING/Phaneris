@@ -27,7 +27,8 @@ import {
   SettingsCard,
 } from '@/components/settings'
 import { EditPopover, EditButton, getEditConfig } from '@/components/ui/EditPopover'
-import { getDocUrl } from '@phaneris/shared/docs/doc-links'
+import { getDocSlug } from '@phaneris/shared/docs/doc-links'
+import { openDocs } from '@/atoms/docs'
 import { routes } from '@/lib/navigate'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
 
@@ -228,7 +229,7 @@ export default function PermissionsSettingsPage() {
                         <p>
                           <button
                             type="button"
-                            onClick={() => window.electronAPI?.openUrl(getDocUrl('permissions'))}
+                            onClick={() => openDocs(getDocSlug('permissions'))}
                             className="text-foreground/70 hover:text-foreground underline underline-offset-2"
                           >
                             {t("common.learnMore")}

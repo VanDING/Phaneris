@@ -58,6 +58,7 @@ import {
   type BackgroundTask,
 } from '@/atoms/sessions'
 import { sourcesAtom } from '@/atoms/sources'
+import { DocsOverlay } from '@/components/docs/DocsOverlay'
 import { useTitlebarControlsInset } from '@/hooks/useTitlebarControlsInset'
 import { activeSessionIdAtom } from '@/atoms/active-session'
 import { skillsAtom } from '@/atoms/skills'
@@ -2196,6 +2197,9 @@ export default function App() {
               onOpenUrl={handleOpenUrl}
             />
           )}
+
+          {/* Documentation overlay — the target of every in-app help link */}
+          <DocsOverlay />
         </NavigationProvider>
         </TooltipProvider>
         </ModalProvider>

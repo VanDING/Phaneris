@@ -26,7 +26,8 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { useMenuComponents } from '@/components/ui/menu-context'
-import { getDocUrl, type DocFeature } from '@phaneris/shared/docs/doc-links'
+import { getDocSlug, type DocFeature } from '@phaneris/shared/docs/doc-links'
+import { openDocs } from '@/atoms/docs'
 
 export type SidebarMenuType = 'allSessions' | 'flagged' | 'status' | 'sources' | 'skills' | 'automations' | 'projects' | 'labels' | 'views' | 'newSession'
 
@@ -202,7 +203,7 @@ export function SidebarMenu({
           </MenuItem>
         )}
         <Separator />
-        <MenuItem onClick={() => window.electronAPI.openUrl(getDocUrl(docFeature))}>
+        <MenuItem onClick={() => openDocs(getDocSlug(docFeature))}>
           <ExternalLink className="h-3.5 w-3.5" />
           <span className="flex-1">{learnMoreLabel}</span>
         </MenuItem>
@@ -245,7 +246,7 @@ export function SidebarMenu({
           </MenuItem>
         )}
         <Separator />
-        <MenuItem onClick={() => window.electronAPI.openUrl(getDocUrl('automations'))}>
+        <MenuItem onClick={() => openDocs(getDocSlug('automations'))}>
           <ExternalLink className="h-3.5 w-3.5" />
           <span className="flex-1">{t("sidebarMenu.learnMoreAutomations")}</span>
         </MenuItem>

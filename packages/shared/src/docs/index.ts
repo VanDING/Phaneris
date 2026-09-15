@@ -185,7 +185,7 @@ export {
 
 // Re-export doc links (for UI help popovers)
 export {
-  getDocUrl,
+  getDocSlug,
   getDocInfo,
   DOCS,
   type DocFeature,

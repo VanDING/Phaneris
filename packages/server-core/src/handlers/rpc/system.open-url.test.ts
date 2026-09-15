@@ -92,6 +92,37 @@ describe('registerSystemCoreHandlers OPEN_URL', () => {
     })
   })
 
+  // Help links in the app are `phaneris://docs[/<slug>]`. If `docs` were not a
+  // known compound prefix, `openUrl` would treat the app's own documentation
+  // links as external and hand them to the OS browser.
+  it('routes documentation links internally instead of opening them externally', async () => {
+    const { openUrl, ctx, invokeClientCalls, pushCalls } = createTestHarness()
+
+    await openUrl(ctx, 'phaneris://docs/sources/overview')
+
+    expect(invokeClientCalls).toHaveLength(0)
+    expect(pushCalls).toHaveLength(1)
+    expect(pushCalls[0]).toEqual({
+      channel: RPC_CHANNELS.deeplink.NAVIGATE,
+      target: { to: 'client', clientId: 'client-1' },
+      args: [{ view: 'docs/sources/overview' }],
+    })
+  })
+
+  it('routes the bare documentation link the Help menu uses', async () => {
+    const { openUrl, ctx, invokeClientCalls, pushCalls } = createTestHarness()
+
+    await openUrl(ctx, 'phaneris://docs')
+
+    expect(invokeClientCalls).toHaveLength(0)
+    expect(pushCalls).toHaveLength(1)
+    expect(pushCalls[0]).toEqual({
+      channel: RPC_CHANNELS.deeplink.NAVIGATE,
+      target: { to: 'client', clientId: 'client-1' },
+      args: [{ view: 'docs' }],
+    })
+  })
+
   it('falls back to client openExternal for craftagents window-mode links', async () => {
     const { openUrl, ctx, invokeClientCalls, pushCalls } = createTestHarness()
 

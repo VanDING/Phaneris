@@ -54,6 +54,11 @@ const COMPOUND_ROUTE_PREFIXES = new Set([
   'sources',
   'settings',
   'skills',
+  // Documentation links are routed to the renderer like any other internal
+  // deep link, but the renderer opens an overlay for them instead of
+  // navigating. Excluding `docs` here would make `openUrl` treat the app's own
+  // help links as external and hand them to the OS.
+  'docs',
 ])
 
 function collectDeepLinkParams(parsed: URL, pathId?: string): Record<string, string> | undefined {
