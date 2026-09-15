@@ -4,8 +4,6 @@
 
 <br />
 
-<img src="docs/assets/readme/phaneris-logo.svg" alt="Phaneris 标志" width="64" height="64" />
-
 # Phaneris
 
 ### 本地优先、执行持久、运行过程可审计的 Agent 工作空间。
