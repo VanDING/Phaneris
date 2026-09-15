@@ -81,12 +81,24 @@ function runEval(configDir: string, code: string): string {
   return run.stdout.toString().trim()
 }
 
+/**
+ * Every test here spawns a fresh Bun process, which cold-loads the whole storage
+ * module graph (~0.5-0.9s standalone). Bun runs test *files* in parallel, so a
+ * single spawn can exceed bun's 5-second default under contention — the heavy
+ * test below already carried an explicit 15s for exactly that reason, and the
+ * rest did not, which made each of them a latent timeout. One of them
+ * (`falls back to bundled default`) failed twice at ~5.03s, and because the same
+ * gate runs as the pre-push hook it blocked a push rather than merely annoying
+ * CI. Same budget for all of them, declared once.
+ */
+const SUBPROCESS_TEST_TIMEOUT_MS = 15_000
+
 describe('default thinking level storage', () => {
   it('falls back to bundled default when no app-level default is set', () => {
     const { configDir } = setupWorkspaceConfigDir()
     const output = runEval(configDir, "console.log(String(getDefaultThinkingLevel()))")
     expect(output).toBe('off')
-  })
+  }, SUBPROCESS_TEST_TIMEOUT_MS)
 
   it('persists defaultThinkingLevel to config.json', () => {
     const { configDir, configPath } = setupWorkspaceConfigDir()
@@ -95,14 +107,14 @@ describe('default thinking level storage', () => {
 
     const config = JSON.parse(readFileSync(configPath, 'utf-8'))
     expect(config.defaultThinkingLevel).toBe('max')
-  })
+  }, SUBPROCESS_TEST_TIMEOUT_MS)
 
   it('round-trips persisted value across processes', () => {
     const { configDir } = setupWorkspaceConfigDir()
     runEval(configDir, "setDefaultThinkingLevel('medium')")
     const output = runEval(configDir, "console.log(String(getDefaultThinkingLevel()))")
     expect(output).toBe('medium')
-  })
+  }, SUBPROCESS_TEST_TIMEOUT_MS)
 
   it('supports every thinking level', () => {
     const { configDir } = setupWorkspaceConfigDir()
@@ -119,7 +131,7 @@ describe('default thinking level storage', () => {
     // And the LAST write survives to a fresh process (disk, not module state).
     const last = THINKING_LEVEL_IDS[THINKING_LEVEL_IDS.length - 1]!
     expect(runEval(configDir, "console.log(String(getDefaultThinkingLevel()))")).toBe(last)
-  }, 15_000)
+  }, SUBPROCESS_TEST_TIMEOUT_MS)
 
   it('migrates legacy "think" value to "medium"', () => {
     const { configDir, configPath } = setupWorkspaceConfigDir()
@@ -130,5 +142,5 @@ describe('default thinking level storage', () => {
 
     const output = runEval(configDir, "console.log(String(getDefaultThinkingLevel()))")
     expect(output).toBe('medium')
-  })
+  }, SUBPROCESS_TEST_TIMEOUT_MS)
 })
