@@ -1,8 +1,8 @@
 /**
  * useSessionMenuActions
  *
- * Single source of truth for session-menu side effects (share / refresh title /
- * copy path / show in finder / share-submenu actions / label
+ * Single source of truth for session-menu side effects (refresh title /
+ * copy path / show in finder / published-share management / label
  * toggle). Consumed by both `SessionMenu` (desktop dropdown / context menu) and
  * `CompactSessionMenu` (compact-mode drawer) so a new session action only has
  * to be wired through one place.
@@ -40,7 +40,6 @@ export interface SessionMenuActions {
   appliedLabelIds: Set<string>
   /** Toggle a label (add if absent, remove all entries with this base ID if present). */
   toggleLabel: (labelId: string) => void
-  share: () => Promise<void>
   showInFinder: () => void
   copyPath: () => Promise<void>
   refreshTitle: () => Promise<void>
@@ -125,22 +124,6 @@ export function useSessionMenuActions({
     onLabelsChange(next)
   }, [onLabelsChange])
 
-  const share = React.useCallback(async () => {
-    const result = await window.electronAPI.sessionCommand(sessionId, { type: 'shareToViewer' }) as { success: boolean; url?: string; error?: string } | undefined
-    if (result?.success && result.url) {
-      await navigator.clipboard.writeText(result.url)
-      toast.success(t('toast.linkCopied'), {
-        description: result.url,
-        action: {
-          label: t('common.open'),
-          onClick: () => window.electronAPI.openUrl(result.url!),
-        },
-      })
-    } else {
-      toast.error(t('toast.failedToShare'), { description: result?.error || t('toast.unknownError') })
-    }
-  }, [sessionId, t])
-
   const showInFinder = React.useCallback(() => {
     window.electronAPI.sessionCommand(sessionId, { type: 'showInFinder' })
   }, [sessionId])
@@ -196,7 +179,6 @@ export function useSessionMenuActions({
   return {
     appliedLabelIds,
     toggleLabel,
-    share,
     showInFinder,
     copyPath,
     refreshTitle,

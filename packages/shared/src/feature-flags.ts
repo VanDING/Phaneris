@@ -66,14 +66,32 @@ export function isEmbeddedServerEnabled(): boolean {
  * never from its own process.env. Gates publish/update only — unpublish stays
  * available regardless, so disabling the flag never strands a published page.
  *
- * Defaults to ENABLED as of 2026-08-27 (the Cloudflare publication Worker is
- * deployed and verified live). Publishing sends the page bundle to Cloudflare,
- * so this is opt-out: set PHANERIS_FEATURE_PAGES_SHARING=0 to hide the Share UI.
+ * Defaults to DISABLED: publishing sends a page bundle to a third-party worker
+ * that Phaneris does not own. Set PHANERIS_FEATURE_PAGES_SHARING=1 to opt back
+ * into the upstream behavior.
  */
 export function isPagesSharingEnabled(): boolean {
   const override = parseBooleanEnv(getEnv('PHANERIS_FEATURE_PAGES_SHARING'));
   if (override !== undefined) return override;
-  return true;
+  return false;
+}
+
+/**
+ * Runtime-evaluated check for sharing a conversation to the hosted viewer.
+ *
+ * Sharing uploads the session's entire JSONL — every message, tool call, and
+ * workspace path in it — to a service Phaneris does not own. The default is
+ * therefore DISABLED, and this function is the authoritative gate: the UI has
+ * no create-share affordance, and the server refuses `shareToViewer` /
+ * `updateShare` no matter which client asks (renderer, WebUI, or CLI).
+ *
+ * `revokeShare` deliberately stays functional so an existing publication can
+ * still be withdrawn. Set PHANERIS_FEATURE_SESSION_SHARING=1 to opt back in.
+ */
+export function isSessionSharingEnabled(): boolean {
+  const override = parseBooleanEnv(getEnv('PHANERIS_FEATURE_SESSION_SHARING'));
+  if (override !== undefined) return override;
+  return false;
 }
 
 export const FEATURE_FLAGS = {
@@ -107,10 +125,19 @@ export const FEATURE_FLAGS = {
   /**
    * Enable Pages sharing (publish to Cloudflare).
    *
-   * Defaults to ENABLED (Worker deployed 2026-08-27). Opt out with
-   * PHANERIS_FEATURE_PAGES_SHARING=0.
+   * Defaults to DISABLED — Phaneris publishes to no third-party worker.
+   * Opt in with PHANERIS_FEATURE_PAGES_SHARING=1.
    */
   get pagesSharing(): boolean {
     return isPagesSharingEnabled();
+  },
+  /**
+   * Enable uploading conversations to the hosted viewer.
+   *
+   * Defaults to DISABLED — the only feature that would send conversation
+   * content to a third party. Opt in with PHANERIS_FEATURE_SESSION_SHARING=1.
+   */
+  get sessionSharing(): boolean {
+    return isSessionSharingEnabled();
   },
 } as const;

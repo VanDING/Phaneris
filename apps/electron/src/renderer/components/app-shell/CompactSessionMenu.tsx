@@ -302,7 +302,6 @@ export function CompactSessionMenu({
               hasMessages={_hasMessages}
               hasUnread={_hasUnread}
               hasTransferTargets={hasTransferTargets}
-              onShare={closeAfter(actions.share)}
               onOpenShareSub={() => setView('share')}
               onSendToWorkspace={closeAfter(onSendToWorkspace)}
               onOpenMessagingSub={() => setView('messaging')}
@@ -375,7 +374,6 @@ interface RootPaneProps {
   hasMessages: boolean
   hasUnread: boolean
   hasTransferTargets?: boolean
-  onShare?: () => void
   onOpenShareSub: () => void
   onSendToWorkspace?: () => void
   onOpenMessagingSub: () => void
@@ -406,7 +404,6 @@ function RootPane({
   hasMessages,
   hasUnread,
   hasTransferTargets,
-  onShare,
   onOpenShareSub,
   onSendToWorkspace,
   onOpenMessagingSub,
@@ -437,10 +434,10 @@ function RootPane({
 
   return (
     <div className="flex flex-col">
-      {/* Share / Shared */}
-      {!sharedUrl ? (
-        <Row icon={<CloudUpload className="h-4 w-4" />} label={t('sessionMenu.share')} onTap={onShare} />
-      ) : (
+      {/* Sharing to the hosted viewer is closed in this build — no create-share
+          row. A session that still carries a publication keeps the manage/
+          revoke sub-pane, which is why `sharedUrl` alone decides this row. */}
+      {sharedUrl && (
         <Row
           icon={<CloudUpload className="h-4 w-4" />}
           label={t('sessionMenu.shared')}

@@ -1086,6 +1086,20 @@ export function resolveMidStreamDeliveryOutcome(
   }
 }
 
+/**
+ * Why a share *creation* request was refused, or `null` when sharing is on.
+ *
+ * Read lazily from the flag module so the value reflects the running process's
+ * environment rather than a value captured at import time, and phrased for the
+ * user because `ShareResult.error` reaches a toast verbatim.
+ */
+async function sessionSharingDisabledReason(): Promise<string | null> {
+  const { isSessionSharingEnabled } = await import('@phaneris/shared/feature-flags')
+  return isSessionSharingEnabled()
+    ? null
+    : 'Sharing conversations is turned off in this build.'
+}
+
 export class SessionManager implements ISessionManager {
   private sessions: Map<string, ManagedSession> = new Map()
   private readonly durableRuntime = this.createDurableRuntime()
@@ -5538,8 +5552,19 @@ export class SessionManager implements ISessionManager {
   /**
    * Share session to the web viewer
    * Uploads session data and returns shareable URL
+   *
+   * Gated by `isSessionSharingEnabled()` (default off) because this is the one
+   * path that uploads conversation content to a service Phaneris does not own.
+   * The check lives here, not only in the UI, so a stale renderer, the WebUI,
+   * and the CLI all hit the same refusal. `revokeShare` stays ungated on
+   * purpose — an existing publication must always be withdrawable.
    */
   async shareToViewer(sessionId: string): Promise<import('@phaneris/shared/protocol').ShareResult> {
+    const disabledReason = await sessionSharingDisabledReason()
+    if (disabledReason) {
+      return { success: false, error: disabledReason }
+    }
+
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       return { success: false, error: 'Session not found' }
@@ -5599,8 +5624,15 @@ export class SessionManager implements ISessionManager {
   /**
    * Update an existing shared session
    * Re-uploads session data to the same URL
+   *
+   * Gated like `shareToViewer`: re-uploading is still an upload.
    */
   async updateShare(sessionId: string): Promise<import('@phaneris/shared/protocol').ShareResult> {
+    const disabledReason = await sessionSharingDisabledReason()
+    if (disabledReason) {
+      return { success: false, error: disabledReason }
+    }
+
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       return { success: false, error: 'Session not found' }

@@ -121,13 +121,11 @@ export function SessionMenu({
 
   return (
     <>
-      {/* Share/Shared based on shared state */}
-      {!sharedUrl ? (
-        <MenuItem onClick={actions.share}>
-          <CloudUpload className="h-3.5 w-3.5" />
-          <span className="flex-1">{t("sessionMenu.share")}</span>
-        </MenuItem>
-      ) : (
+      {/* Sharing to the hosted viewer is closed in this build, so there is no
+          create-share affordance here at all. A session that still carries a
+          publication keeps its manage/revoke submenu: withdrawing a share must
+          never depend on the feature that created it. */}
+      {sharedUrl && (
         <Sub>
           <SubTrigger className="pr-2">
             <CloudUpload className="h-3.5 w-3.5" />
