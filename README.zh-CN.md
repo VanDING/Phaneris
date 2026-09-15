@@ -1,5 +1,11 @@
 <div align="center">
 
+<img src="docs/assets/readme/banner.png" alt="Phaneris — 本地优先、执行持久、运行过程可审计的 Agent 工作空间" width="100%" />
+
+<br />
+
+<img src="docs/assets/readme/phaneris-logo.svg" alt="Phaneris 标志" width="64" height="64" />
+
 # Phaneris
 
 ### 本地优先、执行持久、运行过程可审计的 Agent 工作空间。
@@ -14,28 +20,15 @@
 
 </div>
 
-![Phaneris 运行上下文审计](docs/assets/readme/run-context.png)
-
 Phaneris 是一个面向严肃 Agent 工作的开源桌面与服务端工作空间。它把持久会话、多面板工作台、工具连接、自动化、文件 Artifact 和统一的 Pi Agent Runtime 组合在同一个产品里。
 
 它最重要的差异是可信度：一次运行不只是一段逐字出现的回答。Phaneris 会记录执行边界、工具结果、上下文增长、Token、成本和恢复状态，让你知道发生了什么，也能决定接下来应该发生什么。
 
-## 工作过程始终可检查
-
-Agent 的工作不应该消失在一个加载动画后面。Run 工作区为每个会话提供四个互相补充的视图：
-
-- **概览（Overview）**：汇总总耗时、首 Token 延迟、Token、成本、工具结果、上下文增长和需要关注的问题。
-- **轨迹（Trajectory）**：把轮次、模型响应、工具调用、失败、压缩和时间关系还原成可检查的执行账本。
-- **上下文（Context）**：展示每次模型请求如何组装，包括系统提示、对话历史和工具结果分别占用了多少上下文。
-- **关系图（Map）**：呈现相关会话与分支，同时保留各自的运行证据。
-
-在界面之下，每个工作空间都有本地 SQLite/WAL 运行时，以明确的 T1/T2 边界记录模型和工具副作用。无法确定的副作用会停留在 `unknown`，不会被静默重试，也不会被伪装成已经完成。
-
-![包含耗时、用量、失败和上下文增长的 Run 概览](docs/assets/readme/run-overview.png)
-
 ## 它是工作空间，不是聊天窗口
 
-桌面应用围绕持久工作组织，而不是围绕一次性对话组织。
+桌面应用围绕持久工作组织，而不是围绕一次性对话组织。会话、项目、文件、Source 与自动化共用同一个工作台，右侧面板可以在终端、文件、审阅和预览之间切换，而不会打断正在进行的对话。
+
+<img src="docs/assets/readme/workspace-overview.png" alt="Phaneris 桌面工作台：导航栏、会话列表、对话区域与终端面板" width="100%" />
 
 | 能力 | 带来的体验 |
 | --- | --- |
@@ -46,9 +39,38 @@ Agent 的工作不应该消失在一个加载动画后面。Run 工作区为每�
 | **自动化与消息入口** | 定时执行、事件触发，并通过支持的消息网关触达 Agent。 |
 | **Headless 与 CLI** | 长任务可以运行在远程服务端，桌面端、Web UI 和 `phaneris` 都可以作为客户端。 |
 
+## 工作过程始终可检查
+
+Agent 的工作不应该消失在一个加载动画后面。每个会话都有一个 Run 工作区，用四个互相补充的视图还原真实发生过的过程。点击任意视图可以查看原图。
+
+<table>
+  <tr>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-overview.png"><img src="docs/assets/readme/run-overview.png" width="100%" alt="Run 概览：耗时、Token、工具结果、运行形态与上下文增长" /></a></td>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-trajectory.png"><img src="docs/assets/readme/run-trajectory.png" width="100%" alt="Run 轨迹：轮次泳道、请求、工具调用与错误" /></a></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>概览（Overview）</strong><br />总耗时、首 Token 延迟、Token、成本、工具结果、上下文增长，以及所有需要关注的问题，包括失败和过慢的工具调用。</td>
+    <td valign="top"><strong>轨迹（Trajectory）</strong><br />把轮次、模型响应、工具调用、失败、压缩和时间关系还原成可检查的执行账本。</td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-context.png"><img src="docs/assets/readme/run-context.png" width="100%" alt="Run 上下文：单次模型请求是如何组装的" /></a></td>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-map.png"><img src="docs/assets/readme/run-map.png" width="100%" alt="Run 关系图：相关会话、工具分支与子任务" /></a></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>上下文（Context）</strong><br />展示每次模型请求如何组装：系统提示、用户消息、历史回复、工具结果和注入上下文各占多少，并给出逐次请求的增量。</td>
+    <td valign="top"><strong>关系图（Map）</strong><br />把相关会话、工具分支和子任务呈现为可探索的图谱，每个节点都保留自己的运行记录。</td>
+  </tr>
+</table>
+
+在界面之下，每个工作空间都有本地 SQLite/WAL 运行时，以明确的 T1/T2 边界记录模型和工具副作用。无法确定的副作用会停留在 `unknown`，不会被静默重试，也不会被伪装成已经完成。
+
 ## 文件会成为可审阅的 Artifact
 
-Phaneris 把生成或修改的文件看作有生命周期的交付物，而不是不透明的附件。Artifact revision 带有校验结果和来源信息；支持的格式可以安全预览，并在你接受或丢弃之前保持待审阅状态。
+Phaneris 把生成或修改的文件看作有生命周期的交付物，而不是不透明的附件。会话触碰过的每个文件都会出现在工作台的 Changed 视图里，并带上自己的改动量，让“接受改动”成为一次明确的决定，而不是读完回答后的副作用。
+
+<img src="docs/assets/readme/workbench-changed-files.png" alt="Changed 视图：列出本次会话改动的全部文件与增删行数" width="100%" />
+
+Artifact revision 带有校验结果和来源信息；支持的格式可以安全预览，并在你接受或丢弃之前保持待审阅状态。
 
 统一格式注册表覆盖文本与源码、Markdown、结构化数据、图片、PDF、Office 与 OpenDocument、媒体、压缩包和未知二进制文件。现有文档工具仍负责真实编辑与转换，Artifact 只提供一条一致、可靠的审阅边界。
 
@@ -58,16 +80,7 @@ Phaneris 把生成或修改的文件看作有生命周期的交付物，而不�
 
 Profile 与外观都是本地产品能力，不依赖账户体系。Profile 根据本地会话形成活动概览，但不读取消息内容；用户明确填写的偏好与系统观察到的使用统计相互独立。语义主题引擎则控制颜色、表面、深度、边框、排版、图标线宽和密度，并支持应用默认值与工作空间覆盖。
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/assets/readme/local-profile.png" alt="包含私密活动概览与偏好的本地 Profile" /></td>
-    <td width="50%"><img src="docs/assets/readme/theme-engine.png" alt="支持工作空间覆盖的语义主题引擎" /></td>
-  </tr>
-  <tr>
-    <td><strong>本地 Profile</strong><br />私密活动概览、身份、地区相关偏好与明确的个性化设置。</td>
-    <td><strong>语义主题</strong><br />由用户拥有的完整视觉系统，而不只是更换强调色。</td>
-  </tr>
-</table>
+<img src="docs/assets/readme/local-profile.png" alt="本地 Profile：私密活动概览、活跃度洞察与基础信息" width="100%" />
 
 ## 一个运行时，连接不同模型
 

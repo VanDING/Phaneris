@@ -1,5 +1,11 @@
 <div align="center">
 
+<img src="docs/assets/readme/banner.png" alt="Phaneris — a local-first agent workspace with durable execution and inspectable runs" width="100%" />
+
+<br />
+
+<img src="docs/assets/readme/phaneris-logo.svg" alt="Phaneris logo" width="64" height="64" />
+
 # Phaneris
 
 ### A local-first agent workspace with durable execution and inspectable runs.
@@ -14,28 +20,15 @@ Run capable AI agents across your files, tools, services, and documents — with
 
 </div>
 
-![Phaneris run context inspection](docs/assets/readme/run-context.png)
-
 Phaneris is an open-source desktop and server workspace for serious agent work. It combines persistent sessions, a multi-panel workbench, connected tools, automation, file artifacts, and a single Pi-powered agent runtime.
 
 The defining difference is trust: a run is not just a stream of prose. Phaneris records execution boundaries, tool outcomes, context growth, token usage, cost, and recovery state so you can understand what happened and decide what should happen next.
 
-## Work that stays inspectable
-
-Agent work should not disappear behind a spinner. The Run workspace gives each session four complementary views:
-
-- **Overview** summarizes duration, time to first token, tokens, cost, tool outcomes, context growth, and items that need attention.
-- **Trajectory** reconstructs turns, model responses, tool calls, failures, compaction, and timing as an inspectable execution ledger.
-- **Context** shows how each model request was assembled, including prompt, conversation, and tool-result contributions.
-- **Map** reveals related sessions and branches without losing their execution history.
-
-Underneath the UI, a workspace-local SQLite/WAL runtime records model and tool effects across explicit T1/T2 boundaries. Ambiguous effects are parked as unknown instead of being silently replayed or presented as completed.
-
-![Run overview with timing, usage, failures, and context growth](docs/assets/readme/run-overview.png)
-
 ## A workspace, not a chat window
 
-The desktop app is organized around durable work rather than disposable conversations.
+The desktop app is organized around durable work rather than disposable conversations. Sessions, projects, files, sources, and automations share one workbench, and the side panels switch between terminal, files, review, and previews without losing the conversation.
+
+<img src="docs/assets/readme/workspace-overview.png" alt="Phaneris desktop workbench with navigation, session list, conversation, and a terminal panel" width="100%" />
 
 | Capability | What it gives you |
 | --- | --- |
@@ -46,9 +39,38 @@ The desktop app is organized around durable work rather than disposable conversa
 | **Automations and messaging** | Schedule work, react to events, and reach agents through supported messaging gateways. |
 | **Headless and CLI operation** | Keep long-running sessions on a remote server while using the desktop app, Web UI, or `phaneris` as clients. |
 
+## Work that stays inspectable
+
+Agent work should not disappear behind a spinner. Every session carries a Run workspace with four complementary views that reconstruct what actually happened. Select any view to open it full size.
+
+<table>
+  <tr>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-overview.png"><img src="docs/assets/readme/run-overview.png" width="100%" alt="Run Overview with duration, tokens, tool outcomes, run shape, and context growth" /></a></td>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-trajectory.png"><img src="docs/assets/readme/run-trajectory.png" width="100%" alt="Run Trajectory with turn lanes, requests, tool calls, and errors" /></a></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Overview</strong><br />Duration, time to first token, tokens, cost, tool outcomes, context growth, and everything needing attention — including failed and slow tool calls.</td>
+    <td valign="top"><strong>Trajectory</strong><br />Turns, model responses, tool calls, failures, compaction, and timing reconstructed as an inspectable execution ledger.</td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-context.png"><img src="docs/assets/readme/run-context.png" width="100%" alt="Run Context showing how a single model request was assembled" /></a></td>
+    <td width="50%" valign="top"><a href="docs/assets/readme/run-map.png"><img src="docs/assets/readme/run-map.png" width="100%" alt="Run Map with related sessions, tool branches, and sub-tasks" /></a></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Context</strong><br />How each model request was assembled — system prompt, user messages, assistant history, tool results, and injected context, with per-request deltas.</td>
+    <td valign="top"><strong>Map</strong><br />Related sessions, tool branches, and sub-tasks as an explorable graph, each node carrying its own recorded history.</td>
+  </tr>
+</table>
+
+Underneath the UI, a workspace-local SQLite/WAL runtime records model and tool effects across explicit T1/T2 boundaries. Ambiguous effects are parked as unknown instead of being silently replayed or presented as completed.
+
 ## Files become reviewable artifacts
 
-Phaneris treats generated and modified files as deliverables with a lifecycle, not opaque attachments. Artifact revisions carry validation results and provenance, can be previewed safely when supported, and remain pending until you accept or discard them.
+Phaneris treats generated and modified files as deliverables with a lifecycle, not opaque attachments. Every file a session touches lands in the workbench's Changed view with its own diff footprint, so accepting a change is a deliberate decision rather than a side effect of reading an answer.
+
+<img src="docs/assets/readme/workbench-changed-files.png" alt="Changed view listing every file touched by the session with diff line counts" width="100%" />
+
+Artifact revisions carry validation results and provenance, can be previewed safely when supported, and remain pending until you accept or discard them.
 
 The shared format registry covers text and source files, Markdown, structured data, images, PDF, Office and OpenDocument formats, media, archives, and unknown binaries. Existing document tools continue to do the actual editing and conversion, while Artifact provides one consistent review boundary.
 
@@ -56,18 +78,9 @@ Native image generation follows the same path: one tool call produces a validate
 
 ## Personal by design
 
-Profile and appearance are local product surfaces, not account requirements. The profile summarizes local activity without including message content and keeps user-authored preferences separate from observed usage. The semantic theme engine controls color, surfaces, depth, borders, typography, icon weight, and density, with app-level defaults and per-workspace overrides.
+Profile and appearance are local product surfaces, not account requirements. The profile summarizes local activity without including message content, and keeps user-authored preferences separate from observed usage. The semantic theme engine controls color, surfaces, depth, borders, typography, icon weight, and density, with app-level defaults and per-workspace overrides.
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/assets/readme/local-profile.png" alt="Local profile with private activity summary and preferences" /></td>
-    <td width="50%"><img src="docs/assets/readme/theme-engine.png" alt="Semantic theme engine with workspace overrides" /></td>
-  </tr>
-  <tr>
-    <td><strong>Local profile</strong><br />Private activity summaries, identity, location-aware preferences, and explicit personalization.</td>
-    <td><strong>Semantic themes</strong><br />User-owned visual systems that can change far more than an accent color.</td>
-  </tr>
-</table>
+<img src="docs/assets/readme/local-profile.png" alt="Local profile with a private activity summary, activity insights, and basic info" width="100%" />
 
 ## One runtime, many providers
 

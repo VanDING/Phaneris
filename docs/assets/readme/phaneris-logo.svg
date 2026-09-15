@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+<defs>
+  <linearGradient id="gTopL" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0%" stop-color="#2A0E92"/>
+    <stop offset="55%" stop-color="#5420F3"/>
+    <stop offset="100%" stop-color="#8F63FF"/>
+  </linearGradient>
+  <linearGradient id="gStem" x1="0" y1="0" x2="0.8" y2="1">
+    <stop offset="0%" stop-color="#1E0B68"/>
+    <stop offset="100%" stop-color="#6C2DFF"/>
+  </linearGradient>
+  <linearGradient id="gTopR" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#8E57FF"/>
+    <stop offset="100%" stop-color="#D4BCFF"/>
+  </linearGradient>
+  <linearGradient id="gRight" x1="0" y1="0" x2="0.4" y2="1">
+    <stop offset="0%" stop-color="#5A22EE"/>
+    <stop offset="100%" stop-color="#9D6BFF"/>
+  </linearGradient>
+  <linearGradient id="gInner" x1="0" y1="0.2" x2="1" y2="0.8">
+    <stop offset="0%" stop-color="#4B16E8"/>
+    <stop offset="100%" stop-color="#B58BFF"/>
+  </linearGradient>
+</defs>
+<polygon points="180,270 500,90 500,270 330,365" fill="url(#gTopL)"/>
+<polygon points="180,270 330,365 330,790 180,875" fill="url(#gStem)"/>
+<polygon points="500,90 760,235 610,320 500,270" fill="url(#gTopR)"/>
+<polygon points="610,320 760,235 760,510 610,595" fill="url(#gRight)"/>
+<polygon points="380,555 610,425 610,595 380,725" fill="url(#gInner)"/>
+</svg>
