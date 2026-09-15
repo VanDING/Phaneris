@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { init as sentryInit, type ErrorEvent } from '@sentry/electron/renderer'
 import * as Sentry from '@sentry/react'
 import { captureConsoleIntegration } from '@sentry/react'
-import { Provider as JotaiProvider, useAtomValue } from 'jotai'
+import { Provider as JotaiProvider, useAtomValue, getDefaultStore } from 'jotai'
 import { MotionConfig } from 'motion/react'
 import App from './App'
 import { ThemeProvider } from './context/ThemeContext'
@@ -114,7 +114,15 @@ function Root() {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Sentry.ErrorBoundary fallback={<CrashFallback />}>
-      <JotaiProvider>
+      {/*
+        `store={getDefaultStore()}` is load-bearing, not decoration. A Jotai
+        `<Provider>` with no `store` prop creates a store of its own; the default
+        store is only what you get when there is NO provider. Code outside the
+        React tree that needs to drive shared state — the docs overlay opener,
+        the deep-link listener — can only reach the default store, so leaving
+        this implicit meant those writes landed somewhere nothing was reading.
+      */}
+      <JotaiProvider store={getDefaultStore()}>
         <MotionConfig reducedMotion="user">
           <Root />
         </MotionConfig>

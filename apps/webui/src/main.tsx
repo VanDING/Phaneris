@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { Provider as JotaiProvider, useAtomValue } from 'jotai'
+import { Provider as JotaiProvider, useAtomValue, getDefaultStore } from 'jotai'
 import { MotionConfig } from 'motion/react'
 import App from './App'
 import { ThemeProvider } from '@/context/ThemeContext'
@@ -53,7 +53,11 @@ function Root() {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <JotaiProvider>
+      {/* Shared with the Electron renderer, which needs an explicit store for
+          the same reason: a Jotai `<Provider>` without one makes its own store,
+          and module-level code can only reach the default store. See
+          apps/electron/src/renderer/main.tsx. */}
+      <JotaiProvider store={getDefaultStore()}>
         <MotionConfig reducedMotion="user">
           <Root />
         </MotionConfig>
