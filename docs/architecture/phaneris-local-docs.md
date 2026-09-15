@@ -12,7 +12,7 @@
 | 历史分享指针清理 | ⏳ 脚本就绪，**需先关闭应用**（检测到 `.server.lock` 会拒绝写入） |
 | T2 管道（manifest / 浮层 / 搜索 / 入口改向 / 深链） | ✅ `77eb695e` |
 | agent 侧上游指引清理 | ✅ `170c1a34`、`c26c781c` |
-| T3 内容 | 🔄 16 / 约 45 页 |
+| T3 内容 | ✅ 46 / 46 页（暂定范围） |
 
 **已验证**：渲染进程构建通过（`?raw` glob 命中全部 16 个文件，正文确实进了 bundle）；
 `docs.*` 在 7 个语言里 parity / sorted / coverage 全过；manifest 与 doc-links 两套不变量测试通过；
@@ -119,45 +119,62 @@ const modules = import.meta.glob('./guide/*/**/*.md', {
 按上游的 14 个分区、49 页做对齐，但**只写我们真实有的东西**。slug 尽量沿用上游路径形状，
 这样 `doc-links.ts` 里既有的 `path` 值（`/sources/overview`、`/go-further/workspaces` …）可以原样映射。
 
-**已交付（16 页，覆盖帮助菜单指向的每一个主题）**：
+**已交付（46 页，13 个分区）**：
 
-| 分区 | 页 |
+| 分区 | 页数 |
 |---|---|
-| Getting Started | introduction |
-| Core Concepts | permissions |
-| Sources | overview、mcp-servers、apis、local-filesystems |
-| Skills / Statuses / Labels / Automations / Messaging | overview ×5 |
-| Customisation | themes |
-| Go Further | workspaces、pages |
-| Reference | config-file、preferences |
+| Getting Started | 2 |
+| Core Concepts | 5 |
+| Sources | 4 |
+| Skills / Automations | 2 |
+| Statuses | 2 |
+| Labels | 2 |
+| Messaging | 5 |
+| Browser | 3 |
+| Customisation | 3 |
+| Go Further | 9 |
+| Server | 1 |
+| Reference | 8 |
 
-**待写（约 30 页）**：installation；conversations、projects、working-directory、interactions；
-statuses/customizing、labels/auto-rules；messaging 分平台四页（telegram、whatsapp、lark、wechat-wecom）；
-browser（overview、examples、api-discovery）；customisation 的 colors、icons；go-further 的
-kanban、tasks、rich-output、document-tools、deep-links、performance、connect-to-anything；
-server（remote-server、cli）；reference 的 llm-connections、credentials、custom-endpoint、
-network-proxy、environment-variables、cli-reference。
+**与上游 49 页的差异，都是刻意的**：
+- 不写 "Sharing Conversations"（分享已关闭）。
+- 上游的 "Server → CLI Client" 与本地的 `reference/cli-reference` 会重复，合并为一页。
+- 上游 Messaging 只有 4 页（Telegram / WhatsApp / Lark）；我们是 5 页——**多了 WeChat 与 WeCom**，
+  这是本仓库真实支持而上游没有的平台（`PlatformType` 五个值）。
+- 上游 Customisation 有 Colors / Icons；我们还有 Themes，且 Icons 覆盖 tool-icons。
 
-**不写**：上游的 "Sharing Conversations"（分享已关闭）。
-
-已有的素材：`apps/electron/resources/docs/` 里 20 个 markdown、约 260 KB，已经是 Phaneris 品牌
-（路径写作 `~/.phaneris/...`），覆盖 16 个主题，是写作用的主要事实来源。但它们是**写给 agent 的**
-（"Read this before..."、大量 schema 表格），改写成用户向读物需要一遍编辑。
-
-**写作纪律**（首批实践下来的三条）：
+**写作纪律**（实践下来值得延续的四条）：
 1. H1 必须与 manifest 的 title 逐字一致——测试会强制。
 2. 页内互链一律写成 `phaneris://docs/<slug>`，浮层的 `onUrlClick` 拦截；外链才走系统浏览器。
-3. 每页先对着代码核实事实再落笔。首批已经因此纠正了三处上游遗留错误：
-   `skills.md` 说技能用斜杠命令调用（实为 `@mention`）、CLI 名仍是 `craft-agent`、
-   以及 `config-defaults.json` 里 `thinkingLevel: "think"` 这个非法值。
+   测试会拒绝相对路径与未声明的 slug（已验证该测试确实会失败）。
+3. 每页先对着代码核实事实再落笔。已因此纠正的上游遗留错误见下。
+4. 拿不准的机制宁可写得保守，也不要把"应该是这样"写成断言。
+
+**写作过程中发现并修正的事实性错误**（这是写文档最实际的收益）：
+
+| 位置 | 原来的说法 | 实际 |
+|---|---|---|
+| `resources/docs/skills.md` | 技能用斜杠命令调用（`/commit`） | 是 `@mention`；斜杠命令管模式、功能、目录 |
+| 三份 agent 指南 | CLI 叫 `craft-agent`（9 处） | 二进制定名 `phaneris`，那些命令不存在 |
+| `resources/docs/sources.md` | 去上游站抓 16 个服务的设置指南 | 那份内容从来不在仓库里（上游 `docs/` 只有 `cli.md`） |
+| `config-defaults.json` | `thinkingLevel: "think"` | 非法值；靠一个标注待删的兼容分支才生效 |
+| `config/storage.ts` 兜底常量 | `permissionMode: 'ask'`、三种模式可循环 | 与随包发布的 `'safe'` / 两种模式不一致 |
+| `scripts/install-app.*` | （我误以为会下载上游产物） | 早已改为 fail-closed，必须给 `PHANERIS_RELEASE_BASE_URL` |
+| **Explore 模式与浏览器** | （我误写成"只读，不能交互"） | 浏览器工具在 Explore 下**可用**，且其命令不区分只读/写入；约束只是给 agent 的指令 |
+| **Messaging 访问控制** | （我误写成所有平台都有 owner 列表） | **只有 Telegram 与 WeCom** 支持 access mode 与 owner 列表 |
+
+最后两条尤其值得记下来：它们不是文字疏漏，而是把"我以为的安全边界"当成了"实际的安全边界"。
+两处都已在正文里写明真实情况。
 
 ## 7. 待办与已知问题
 
 - [ ] 会话分享历史指针：`~/.phaneris/workspaces/Work/sessions/260814-lucid-tiger/session.jsonl`
       仍带 `sharedUrl`/`sharedId`（`agents.craft.do`）。`scripts/clear-session-shares.ts` 已就绪、
       干跑验证通过，但**需要先关闭应用**（脚本检测到 `.server.lock` 会拒绝写入）。已备份到 `%TEMP%`。
-- [ ] T3 内容：约 30 页（见 §6）。
 - [ ] 浮层的视觉与交互未经实机验证。要看到它需要跑 dev 或重新打包——现有已打包的客户端不含这次改动。
+- [ ] 内容为英文。`DOCS_LOCALES` 目前只有 `en`；加中文只需新建 `guide/zh-Hans/` 目录并把
+      locale 加进数组，manifest 测试会要求每个 locale 都有全部页面。**注意**：测试要求全有或全无，
+      如果要分批翻译，得先把该 locale 从 `DOCS_LOCALES` 里拿掉。
 - [ ] D 阶段（明确延后）：`VIEWER_URL`、`DEFAULT_PAGES_SHARE_API_BASE_URL`、`VERSIONS_URL`、
       OAuth relay、Slack 回调、`auto-update.ts`、两个包的 `homepage` 字段仍指向上游。
       分享已关闭，所以前两个常量现在是死代码，但保留它们是为了让"撤销已发布内容"这条路继续可用。
