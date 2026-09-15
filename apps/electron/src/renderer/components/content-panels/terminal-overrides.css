@@ -1,0 +1,25 @@
+/*
+ * Overrides for the bundled `@xterm/xterm/css/xterm.css`.
+ *
+ * Import this AFTER that stylesheet so equal-specificity rules win by order.
+ *
+ * xterm ships `.xterm .xterm-viewport { background-color: #000 }` with a comment
+ * explaining it exists so the scrollbar renders fully opaque on macOS. The
+ * terminal's theme background is transparent so the surrounding panel's own
+ * background shows through, which makes that hardcoded black the visible
+ * backdrop in every theme — a light theme included. Making it transparent lets
+ * the panel colour through, which is what the transparent theme background
+ * already asked for.
+ */
+.xterm .xterm-viewport {
+	background-color: transparent;
+}
+
+/*
+ * The composition (IME) popup is likewise hardcoded to black-on-white, which is
+ * unreadable against a light theme and inconsistent against a dark one.
+ */
+.xterm .composition-view {
+	background-color: var(--popover, #1f1f24);
+	color: var(--popover-foreground, #e5e7eb);
+}

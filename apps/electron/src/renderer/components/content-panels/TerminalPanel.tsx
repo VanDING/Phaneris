@@ -2,22 +2,63 @@ import { useEffect, useRef, useState } from 'react'
 import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import '@xterm/xterm/css/xterm.css'
+// Must follow xterm.css: it hardcodes a black `.xterm-viewport`, which is the
+// backdrop you see when the terminal theme background is transparent.
+import './terminal-overrides.css'
 import { useAppShellContext } from '@/context/AppShellContext'
 
+/**
+ * Resolve a CSS custom property to a concrete colour.
+ *
+ * The theme engine emits complete colour values (`--foreground: #2A2B30`), so the
+ * value is returned as-is. The previous version wrapped anything without a `(`
+ * in `hsl(...)`, which turned every hex token into `hsl(#2A2B30)` — invalid CSS
+ * that xterm silently discards, leaving the terminal on xterm's own defaults in
+ * every theme. Bare HSL triplets (`240 10% 3.9%`) are still supported because
+ * that spelling is common in CSS-variable palettes.
+ */
 function cssColor(name: string, fallback: string): string {
   const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
   if (!value) return fallback
-  return value.includes('(') ? value : `hsl(${value})`
+  return /^[\d.]+(?:\s+[\d.]+%?){2}$/.test(value) ? `hsl(${value})` : value
+}
+
+/**
+ * ANSI palettes.
+ *
+ * These cannot be a single set: on a light backdrop the dark-tuned `white` and
+ * `brightWhite` are near-invisible, and on a dark backdrop the light-tuned ones
+ * wash out. The app renders both modes, so the palette follows the same
+ * `dark` class the rest of the theme switches on.
+ */
+const ANSI_DARK = {
+  black: '#4b5563', red: '#ef4444', green: '#22c55e', yellow: '#eab308',
+  blue: '#3b82f6', magenta: '#a855f7', cyan: '#06b6d4', white: '#e5e7eb',
+  brightBlack: '#6b7280', brightRed: '#f87171', brightGreen: '#4ade80', brightYellow: '#facc15',
+  brightBlue: '#60a5fa', brightMagenta: '#c084fc', brightCyan: '#22d3ee', brightWhite: '#f9fafb',
+} as const
+
+const ANSI_LIGHT = {
+  black: '#383a42', red: '#e45649', green: '#50a14f', yellow: '#c18401',
+  blue: '#4078f2', magenta: '#a626a4', cyan: '#0184bc', white: '#a0a1a7',
+  brightBlack: '#696c77', brightRed: '#e45649', brightGreen: '#50a14f', brightYellow: '#c18401',
+  brightBlue: '#4078f2', brightMagenta: '#a626a4', brightCyan: '#0184bc', brightWhite: '#383a42',
+} as const
+
+function isDarkTheme(): boolean {
+  return document.documentElement.classList.contains('dark')
 }
 
 function terminalTheme() {
   return {
+    // Transparent so the panel's own background shows through; the black
+    // backdrop that used to defeat this came from xterm's stylesheet and is
+    // neutralised in ./terminal-overrides.css.
     background: '#00000000',
-    foreground: cssColor('--foreground', '#d4d4d4'),
-    cursor: cssColor('--foreground', '#d4d4d4'),
+    foreground: cssColor('--foreground', isDarkTheme() ? '#dfe1e7' : '#2a2b30'),
+    cursor: cssColor('--foreground', isDarkTheme() ? '#dfe1e7' : '#2a2b30'),
     selectionBackground: cssColor('--accent', '#355b85'),
-    black: '#4b5563', red: '#ef4444', green: '#22c55e', yellow: '#eab308', blue: '#3b82f6', magenta: '#a855f7', cyan: '#06b6d4', white: '#e5e7eb',
-    brightBlack: '#6b7280', brightRed: '#f87171', brightGreen: '#4ade80', brightYellow: '#facc15', brightBlue: '#60a5fa', brightMagenta: '#c084fc', brightCyan: '#22d3ee', brightWhite: '#f9fafb',
+    ...(isDarkTheme() ? ANSI_DARK : ANSI_LIGHT),
   }
 }
 
