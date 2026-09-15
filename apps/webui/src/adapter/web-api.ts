@@ -155,7 +155,7 @@ export function createWebApi(options: WebApiOptions): {
 
     // Auto-update — not applicable to web (but expose server version for About page)
     checkForUpdates: () => Promise.resolve({ available: false, currentVersion: client.getServerVersion() ?? '' } as any),
-    getUpdateInfo: () => Promise.resolve({ available: false, currentVersion: client.getServerVersion() ?? '' } as any),
+    getUpdateInfo: () => Promise.resolve({ available: false, currentVersion: client.getServerVersion() ?? '', selfUpdateEnabled: false } as any),
     installUpdate: () => Promise.resolve(),
     dismissUpdate: () => Promise.resolve(),
     getDismissedUpdateVersion: () => Promise.resolve(null),

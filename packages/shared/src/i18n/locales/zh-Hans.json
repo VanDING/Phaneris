@@ -1217,6 +1217,7 @@
   "settings.about.restartToUpdate": "重启以更新到 v{{version}}",
   "settings.about.title": "关于",
   "settings.about.updateReady": "更新就绪",
+  "settings.about.updatesUnavailable": "未配置自动更新",
   "settings.about.version": "版本",
   "settings.about.whatsNew": "最新动态",
   "settings.ai.addConnection": "+ 添加连接",

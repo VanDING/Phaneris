@@ -1217,6 +1217,7 @@
   "settings.about.restartToUpdate": "Neu starten, um auf v{{version}} zu aktualisieren",
   "settings.about.title": "Über",
   "settings.about.updateReady": "Update bereit",
+  "settings.about.updatesUnavailable": "Automatische Updates sind nicht eingerichtet",
   "settings.about.version": "Version",
   "settings.about.whatsNew": "Neuigkeiten",
   "settings.ai.addConnection": "+ Verbindung hinzufügen",

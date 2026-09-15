@@ -748,6 +748,16 @@ export interface UpdateInfo {
   downloadState: 'idle' | 'downloading' | 'ready' | 'installing' | 'error'
   downloadProgress: number
   error?: string
+  /**
+   * Whether this build can receive updates at all.
+   *
+   * False when no update feed is configured — electron-updater reads its feed
+   * from `app-update.yml`, which only exists when the packaging config declares
+   * a `publish` target. Without this flag the renderer cannot distinguish "I
+   * checked and you are current" from "I have nowhere to check", and reported
+   * the second as the first.
+   */
+  selfUpdateEnabled: boolean
 }
 
 // ---------------------------------------------------------------------------

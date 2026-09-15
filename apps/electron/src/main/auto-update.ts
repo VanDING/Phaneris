@@ -2,11 +2,28 @@
  * Auto-update module using electron-updater
  *
  * Handles checking for updates, downloading, and installing via the standard
- * electron-updater library. Updates are served from https://thecraftagents.com/electron/latest
- * using the generic provider (YAML manifests + binaries on R2/S3).
+ * electron-updater library.
  *
- * Platform behavior:
- * - macOS: Downloads zip, extracts and swaps app bundle atomically
+ * **This build has no update feed.** electron-updater reads its configuration
+ * from `app-update.yml` in the packaged resources, and electron-builder only
+ * emits that file when the packaging config declares a `publish` target — this
+ * one declares none, deliberately, because the release pipeline is deferred.
+ *
+ * The previous version of this comment claimed updates were served from
+ * `https://thecraftagents.com/electron/latest` over the generic provider. No
+ * code configured that, and the updater has never been able to reach it: each
+ * launch check threw, the catch recorded a failure, and the renderer read the
+ * resulting "not available" as "you are up to date". `isSelfUpdateEnabled()`
+ * below now short-circuits all of it, and the UI says the feature is not set up
+ * instead of reporting a check it never performed.
+ *
+ * Wiring a real feed (a `publish` block plus releases carrying the generated
+ * `latest*.yml`) is a small change when wanted; until then this module is
+ * intentionally inert.
+ *
+ * Platform behavior, for when a feed exists:
+ * - macOS: Downloads zip, extracts and swaps app bundle atomically; requires a
+ *   valid code signature — Squirrel.Mac refuses to update an unsigned bundle
  * - Windows: Downloads NSIS installer, runs silently on quit
  * - Linux: Downloads AppImage, replaces current file
  *
@@ -60,6 +77,34 @@ let updateInfo: UpdateInfo = {
   latestVersion: null,
   downloadState: 'idle',
   downloadProgress: 0,
+  selfUpdateEnabled: isSelfUpdateEnabled(),
+}
+
+/**
+ * Whether this build has an update feed to talk to.
+ *
+ * electron-updater reads its configuration from `app-update.yml` inside the
+ * packaged resources, and electron-builder only emits that file when the
+ * packaging config declares a `publish` target. This build declares none — the
+ * release pipeline is deliberately deferred — so there is no feed, and every
+ * check was failing into a catch that reported the failure as "no update
+ * available". The renderer then told the user they were up to date.
+ *
+ * Memoized: the answer cannot change while the process runs, and this is read
+ * on the update paths and by the menu.
+ */
+function isSelfUpdateEnabled(): boolean {
+  if (!app.isPackaged) return false
+  try {
+    return fs.existsSync(path.join(process.resourcesPath, 'app-update.yml'))
+  } catch {
+    return false
+  }
+}
+
+/** Exposed so the menu can hide update items that cannot do anything. */
+export function isUpdateFeedConfigured(): boolean {
+  return isSelfUpdateEnabled()
 }
 
 let eventSink: EventSink | null = null
@@ -359,6 +404,13 @@ function checkForExistingDownload(): { exists: boolean; version?: string } {
 export async function checkForUpdates(options: CheckOptions = {}): Promise<UpdateInfo> {
   const { autoDownload = true } = options
 
+  // No feed means nothing to ask. Returning the idle state (rather than falling
+  // through to electron-updater and catching its error) is what lets the
+  // renderer tell "nowhere to check" apart from "checked, you are current".
+  if (!isSelfUpdateEnabled()) {
+    return getUpdateInfo()
+  }
+
   // Temporarily override autoDownload for this check if needed
   // (e.g., manual check from settings shouldn't auto-download on metered connections)
   const previousAutoDownload = autoUpdater.autoDownload
@@ -491,6 +543,11 @@ export interface UpdateOnLaunchResult {
  * - Auto-downloads if update available
  */
 export async function checkForUpdatesOnLaunch(): Promise<UpdateOnLaunchResult> {
+  if (!isSelfUpdateEnabled()) {
+    mainLog.info('[auto-update] No update feed configured for this build — skipping launch check')
+    return { action: 'skipped', reason: 'no-update-feed' }
+  }
+
   autoUpdateLog.info('Checking for updates on launch...')
 
   const info = await checkForUpdates({ autoDownload: true })

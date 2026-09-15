@@ -23,6 +23,11 @@ interface UseUpdateCheckerResult {
   isDownloading: boolean
   /** Whether update is ready to install */
   isReadyToInstall: boolean
+  /**
+   * Whether this build has an update feed at all. False means the check control
+   * should not be offered — there is nowhere to check.
+   */
+  selfUpdateEnabled: boolean
   /** Download progress (0-100) */
   downloadProgress: number
   /** Check for updates manually */
@@ -126,6 +131,13 @@ export function useUpdateChecker(): UseUpdateCheckerResult {
       const info = await window.electronAPI.checkForUpdates()
       setUpdateInfo(info)
 
+      // No feed configured: the main process returns the idle state without
+      // asking anyone. Reporting that as "you are up to date" was false, so
+      // stay quiet — the settings row and the menu item are hidden in this case.
+      if (!info.selfUpdateEnabled) {
+        return
+      }
+
       if (!info.available) {
         toast.success(t('toast.upToDate'), {
           description: t('toast.versionIsLatest', { version: info.currentVersion }),
@@ -149,6 +161,7 @@ export function useUpdateChecker(): UseUpdateCheckerResult {
     updateAvailable: updateInfo?.available ?? false,
     isDownloading: updateInfo?.downloadState === 'downloading',
     isReadyToInstall: updateInfo?.downloadState === 'ready',
+    selfUpdateEnabled: updateInfo?.selfUpdateEnabled ?? false,
     downloadProgress: updateInfo?.downloadProgress ?? 0,
     checkForUpdates,
     installUpdate,

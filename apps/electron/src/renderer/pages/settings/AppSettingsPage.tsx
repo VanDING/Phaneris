@@ -364,7 +364,7 @@ export default function AppSettingsPage() {
                       {t("common.open")}
                     </Button>
                   </SettingsRow>
-                  {isElectron && (
+                  {isElectron && updateChecker.selfUpdateEnabled && (
                     <SettingsRow label={t("settings.about.checkForUpdates")}>
                       <Button
                         variant="outline"
@@ -381,6 +381,15 @@ export default function AppSettingsPage() {
                           t("settings.about.checkNow")
                         )}
                       </Button>
+                    </SettingsRow>
+                  )}
+                  {/* No feed configured: say so instead of offering a button that
+                      cannot do anything, and instead of reporting success. */}
+                  {isElectron && !updateChecker.selfUpdateEnabled && (
+                    <SettingsRow label={t("settings.about.checkForUpdates")}>
+                      <span className="text-xs text-foreground/50">
+                        {t("settings.about.updatesUnavailable")}
+                      </span>
                     </SettingsRow>
                   )}
                   {isElectron && updateChecker.isReadyToInstall && updateChecker.updateInfo?.latestVersion && (

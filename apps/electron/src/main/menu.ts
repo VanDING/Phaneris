@@ -59,24 +59,28 @@ export async function rebuildMenu(): Promise<void> {
   }
 
   // Get current update state
-  const { getUpdateInfo, installUpdate, checkForUpdates } = await import('./auto-update')
+  const { getUpdateInfo, installUpdate, checkForUpdates, isUpdateFeedConfigured } = await import('./auto-update')
   const updateInfo = getUpdateInfo()
   const updateReady = updateInfo.available && updateInfo.downloadState === 'ready'
 
-  // Build the update menu item based on state
-  const updateMenuItem: Electron.MenuItemConstructorOptions = updateReady
-    ? {
-        label: i18n.t("menu.installUpdateVersion", { version: updateInfo.latestVersion }),
-        click: async () => {
-          await installUpdate()
+  // Build the update menu item based on state.
+  // Omitted entirely when there is no feed: an item that can only ever fail is
+  // worse than no item, and this build declares no publish target.
+  const updateMenuItem: Electron.MenuItemConstructorOptions | null = !isUpdateFeedConfigured()
+    ? null
+    : updateReady
+      ? {
+          label: i18n.t("menu.installUpdateVersion", { version: updateInfo.latestVersion }),
+          click: async () => {
+            await installUpdate()
+          }
         }
-      }
-    : {
-        label: i18n.t("menu.checkForUpdatesEllipsis"),
-        click: async () => {
-          await checkForUpdates({ autoDownload: true })
+      : {
+          label: i18n.t("menu.checkForUpdatesEllipsis"),
+          click: async () => {
+            await checkForUpdates({ autoDownload: true })
+          }
         }
-      }
 
   const template: Electron.MenuItemConstructorOptions[] = [
     // App menu (macOS only)
@@ -84,7 +88,7 @@ export async function rebuildMenu(): Promise<void> {
       label: 'Phaneris',
       submenu: [
         { role: 'about' as const, label: i18n.t('menu.aboutCraftAgents') },
-        updateMenuItem,
+        ...(updateMenuItem ? [updateMenuItem] : []),
         { type: 'separator' as const },
         {
           label: i18n.t("menu.settings"),
