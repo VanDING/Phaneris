@@ -39,10 +39,13 @@
  */
 
 import {
+  closeSync,
   copyFileSync,
   existsSync,
   mkdirSync,
+  openSync,
   readFileSync,
+  readSync,
   readdirSync,
   statSync,
   writeFileSync,
@@ -51,9 +54,18 @@ import { homedir } from 'node:os';
 import { basename, dirname, join, relative } from 'node:path';
 
 import { DATA_DIR_NAME, LEGACY_IDENTITY } from '../packages/shared/src/identity.generated.ts';
-
 const APPLY = process.argv.includes('--apply');
 const LIST = process.argv.includes('--list');
+/**
+ * Run only the path-rewrite phase against an existing target.
+ *
+ * Safe by construction and idempotent: replacing the old root with the new one
+ * does nothing to a value that already points at the new root, and this phase
+ * never copies or deletes data. It exists so a correction to the rewrite rules
+ * does not force a fresh multi-gigabyte copy — which is exactly the situation
+ * that produced it (the first version missed backslash-escaped JSON paths).
+ */
+const REPAIR = process.argv.includes('--repair');
 const argValue = (flag: string): string | undefined => {
   const index = process.argv.indexOf(flag);
   return index >= 0 ? process.argv[index + 1] : undefined;
@@ -157,6 +169,8 @@ interface Report {
   bytesCopied: number;
   filesRewritten: number;
   fieldsRewritten: number;
+  /** Headers that mention the old root but are not parseable as JSON. */
+  unparsedHeaders: string[];
 }
 
 function copyTree(from: string, to: string, report: Report): void {
@@ -176,17 +190,66 @@ function copyTree(from: string, to: string, report: Report): void {
   }
 }
 
-/** Rewrite only the structured first line of a JSONL file, leaving content intact. */
+/** Read at most this much to obtain a JSONL file's first line. */
+const HEADER_READ_LIMIT = 4 * 1024 * 1024;
+
+/**
+ * Read a file's first line without loading the whole thing.
+ *
+ * Session JSONL files reach tens of megabytes of conversation, and the header
+ * is the only structured part. Reading the entire file to find its first
+ * newline both wasted time and forced a size ceiling that silently skipped the
+ * largest sessions — leaving exactly those sessions pointing at the old root.
+ */
+function readFirstLine(file: string): { head: string; complete: boolean } {
+  const handle = openSync(file, 'r');
+  try {
+    const buffer = Buffer.alloc(HEADER_READ_LIMIT);
+    const read = readSync(handle, buffer, 0, HEADER_READ_LIMIT, 0);
+    const text = buffer.subarray(0, read).toString('utf-8');
+    const newline = text.indexOf('\n');
+    if (newline !== -1) return { head: text.slice(0, newline), complete: true };
+    // No newline within the window: either a single-line file or a header far
+    // larger than any real one. `complete` distinguishes them for later reads.
+    return { head: text, complete: read < HEADER_READ_LIMIT };
+  } finally {
+    closeSync(handle);
+  }
+}
+
+/**
+ * Rewrite only the structured first line of a JSONL file, leaving content intact.
+ *
+ * Parsed rather than textually substituted, and that distinction is the whole
+ * point: a Windows path inside JSON is escaped (`~\\\\.craft-agent\\\\workspaces`),
+ * so a search for the literal single-backslash path never matches the raw line.
+ * A textual pass therefore fixed only the forward-slash values (`~/.craft-agent`)
+ * and silently left every `workspaceRootPath` and `cwd` pointing at the old
+ * root — which is exactly the field session resume depends on. Parsing the line
+ * also guarantees the conversation on line 2..n can never be touched.
+ */
 function rewriteJsonlHeader(file: string, report: Report): void {
-  const text = readFileSync(file, 'utf-8');
-  const newline = text.indexOf('\n');
-  const head = newline === -1 ? text : text.slice(0, newline);
+  const { head } = readFirstLine(file);
   if (!head.includes(LEGACY_IDENTITY.dataDirName)) return;
-  const fixed = fixPaths(head);
-  if (fixed === head) return;
-  writeFileSync(file, fixed + (newline === -1 ? '' : text.slice(newline)), 'utf-8');
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(head);
+  } catch {
+    report.unparsedHeaders.push(file);
+    return;
+  }
+  const { value, changed } = rewriteJsonValue(parsed, null);
+  if (changed === 0) return;
+
+  // Splice the rewritten header back over the original bytes, so the rest of
+  // the file is copied through untouched rather than re-serialised.
+  const original = readFileSync(file);
+  const headerBytes = Buffer.byteLength(head, 'utf-8');
+  const rewritten = Buffer.from(JSON.stringify(value), 'utf-8');
+  writeFileSync(file, Buffer.concat([rewritten, original.subarray(headerBytes)]));
   report.filesRewritten += 1;
-  report.fieldsRewritten += 1;
+  report.fieldsRewritten += changed;
 }
 
 function rewriteJsonFile(file: string, report: Report): void {
@@ -266,18 +329,24 @@ function leftoverInTarget(dir: string): string | null {
   return null;
 }
 
-if (existsSync(TARGET)) {
+if (REPAIR) {
+  if (!existsSync(TARGET)) {
+    console.error(`refusing to run: --repair needs an existing target at ${TARGET}`);
+    process.exit(1);
+  }
+} else if (existsSync(TARGET)) {
   const leftover = leftoverInTarget(TARGET);
   if (leftover !== null) {
     console.error(
       `refusing to run: ${TARGET} already contains ${leftover}\n` +
-        `  The migration never merges into an existing profile — move that directory aside first.`,
+        `  The migration never merges into an existing profile — move that directory aside first.\n` +
+        `  (To re-run only the path rewrite on this target, use --repair.)`,
     );
     process.exit(1);
   }
 }
 
-console.log(`mode    : ${APPLY ? 'APPLY' : 'dry run (pass --apply to write)'}`);
+console.log(`mode    : ${REPAIR ? 'REPAIR (rewrite paths only)' : APPLY ? 'APPLY' : 'dry run (pass --apply to write)'}`);
 console.log(`source  : ${SOURCE}`);
 console.log(`target  : ${TARGET}`);
 console.log(`excluded: ${[...EXCLUDED_TOP_LEVEL].join(', ')}, ${EXCLUDED_FILE.source}\n`);
@@ -286,9 +355,17 @@ console.log(`excluded: ${[...EXCLUDED_TOP_LEVEL].join(', ')}, ${EXCLUDED_FILE.so
 // Copy
 // ---------------------------------------------------------------------------
 
-const report: Report = { filesCopied: 0, bytesCopied: 0, filesRewritten: 0, fieldsRewritten: 0 };
+const report: Report = {
+  filesCopied: 0,
+  bytesCopied: 0,
+  filesRewritten: 0,
+  fieldsRewritten: 0,
+  unparsedHeaders: [],
+};
 
-if (APPLY) {
+if (REPAIR) {
+  console.log('repair: leaving the existing copy in place, rewriting paths only\n');
+} else if (APPLY) {
   mkdirSync(TARGET, { recursive: true });
   copyTree(SOURCE, TARGET, report);
   console.log(`copied ${report.filesCopied} files (${(report.bytesCopied / 1024 ** 3).toFixed(2)} GB)`);
@@ -313,7 +390,9 @@ if (APPLY) {
 // Rewrite the live path fields
 // ---------------------------------------------------------------------------
 
-const scanRoot = APPLY ? TARGET : SOURCE;
+/** Writes happen only with --apply; --repair just skips the copy phase. */
+const writing = APPLY;
+const scanRoot = APPLY || REPAIR ? TARGET : SOURCE;
 const targets: Array<{ file: string; kind: 'jsonl' | 'json' }> = [];
 for (const file of walkFiles(scanRoot)) {
   const rel = relative(scanRoot, file);
@@ -333,21 +412,32 @@ const REWRITE_FILES = targets.filter(({ file, kind }) => {
 });
 
 for (const { file, kind } of REWRITE_FILES) {
-  const size = statSync(file).size;
-  if (size > 32 * 1024 * 1024) continue;
   if (kind === 'jsonl') {
-    if (!APPLY) {
-      const head = readFileSync(file, 'utf-8').split(/\r?\n/, 1)[0] ?? '';
-      if (head.includes(LEGACY_IDENTITY.dataDirName) && fixPaths(head) !== head) {
+    // Bounded head read: a session file's conversation can be tens of megabytes
+    // and the header is the only structured part. A whole-file read here is what
+    // previously forced a size ceiling that skipped the largest sessions.
+    const { head } = readFirstLine(file);
+    if (!head.includes(LEGACY_IDENTITY.dataDirName)) continue;
+    if (!writing) {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(head);
+      } catch {
+        report.unparsedHeaders.push(file);
+        continue;
+      }
+      const { changed } = rewriteJsonValue(parsed, null);
+      if (changed > 0) {
         report.filesRewritten += 1;
-        report.fieldsRewritten += 1;
-        if (LIST) console.log(`  jsonl header  ${relative(scanRoot, file)}`);
+        report.fieldsRewritten += changed;
+        if (LIST) console.log(`  ${String(changed).padStart(3)} field(s)  ${relative(scanRoot, file)}`);
       }
       continue;
     }
     rewriteJsonlHeader(file, report);
   } else {
-    if (!APPLY) {
+    if (statSync(file).size > 32 * 1024 * 1024) continue;
+    if (!writing) {
       let parsed: unknown;
       try {
         parsed = JSON.parse(readFileSync(file, 'utf-8'));
@@ -367,10 +457,18 @@ for (const { file, kind } of REWRITE_FILES) {
 }
 
 console.log(
-  `${APPLY ? 'rewrote' : 'would rewrite'} ${report.fieldsRewritten} path field(s) in ${report.filesRewritten} file(s)`,
+  `${writing ? 'rewrote' : 'would rewrite'} ${report.fieldsRewritten} path field(s) in ${report.filesRewritten} file(s)`,
 );
 
-if (!APPLY) {
+if (report.unparsedHeaders.length > 0) {
+  console.warn(
+    `\nwarning: ${report.unparsedHeaders.length} session header(s) mention the old root but are not JSON; ` +
+      `they were left alone, so those sessions would resume in the old directory:`,
+  );
+  for (const file of report.unparsedHeaders.slice(0, 10)) console.warn(`  ${file}`);
+}
+
+if (!writing) {
   console.log('\ndry run complete — nothing was written. Re-run with --apply to perform the move.');
   console.log('Stop the application first, and expect the first launch to re-create cache/ and logs/.');
 }
