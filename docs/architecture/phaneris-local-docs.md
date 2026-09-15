@@ -1,7 +1,23 @@
 # Phaneris 本地文档（T2 管道 + T3 内容）
 
-> 状态：进行中。T1（关闭入口）已被否决，改为 T2+T3。
+> 状态：T2 管道已完成（`77eb695e`），T3 内容首批 16 页已落地。
 > 本文只记录**决策与实现骨架**；内容本身写在 `apps/electron/src/renderer/docs/guide/`。
+
+## 0. 进度速览
+
+| 项 | 状态 |
+|---|---|
+| 会话分享关闭 | ✅ `69386a31` |
+| Pages 分享关闭 | ✅ `69386a31` |
+| 历史分享指针清理 | ⏳ 脚本就绪，**需先关闭应用**（检测到 `.server.lock` 会拒绝写入） |
+| T2 管道（manifest / 浮层 / 搜索 / 入口改向 / 深链） | ✅ `77eb695e` |
+| agent 侧上游指引清理 | ✅ `170c1a34`、`c26c781c` |
+| T3 内容 | 🔄 16 / 约 45 页 |
+
+**已验证**：渲染进程构建通过（`?raw` glob 命中全部 16 个文件，正文确实进了 bundle）；
+`docs.*` 在 7 个语言里 parity / sorted / coverage 全过；manifest 与 doc-links 两套不变量测试通过；
+deep-link 与 open-url 两侧的 `docs` 路由各有测试。
+**未验证**：浮层的实际视觉效果与交互（需要跑起来看）。
 
 ## 1. 为什么做
 
@@ -103,21 +119,24 @@ const modules = import.meta.glob('./guide/*/**/*.md', {
 按上游的 14 个分区、49 页做对齐，但**只写我们真实有的东西**。slug 尽量沿用上游路径形状，
 这样 `doc-links.ts` 里既有的 `path` 值（`/sources/overview`、`/go-further/workspaces` …）可以原样映射。
 
-| 分区 | 页数 | 备注 |
-|---|---|---|
-| Getting Started | 2 | introduction、installation |
-| Core Concepts | 5 | conversations、projects、working-directory、permissions、interactions |
-| Sources | 7 | overview、MCP×3、APIs×2、local-folders |
-| Skills | 1 | |
-| Statuses | 2 | overview、customizing |
-| Labels | 2 | overview、auto-rules |
-| Automations | 1 | |
-| Messaging | 4 | overview、telegram、whatsapp、lark |
-| Browser | 3 | overview、examples、api-discovery |
-| Customisation | 3 | themes、colors、icons |
-| Go Further | 8 | workspaces、pages、kanban、tasks、rich-output、document-tools、deep-links、performance |
-| Server | 2 | remote-server、cli |
-| Reference | 8 | config-file、llm-connections、preferences、credentials、custom-endpoint、network-proxy、environment-variables、cli-reference |
+**已交付（16 页，覆盖帮助菜单指向的每一个主题）**：
+
+| 分区 | 页 |
+|---|---|
+| Getting Started | introduction |
+| Core Concepts | permissions |
+| Sources | overview、mcp-servers、apis、local-filesystems |
+| Skills / Statuses / Labels / Automations / Messaging | overview ×5 |
+| Customisation | themes |
+| Go Further | workspaces、pages |
+| Reference | config-file、preferences |
+
+**待写（约 30 页）**：installation；conversations、projects、working-directory、interactions；
+statuses/customizing、labels/auto-rules；messaging 分平台四页（telegram、whatsapp、lark、wechat-wecom）；
+browser（overview、examples、api-discovery）；customisation 的 colors、icons；go-further 的
+kanban、tasks、rich-output、document-tools、deep-links、performance、connect-to-anything；
+server（remote-server、cli）；reference 的 llm-connections、credentials、custom-endpoint、
+network-proxy、environment-variables、cli-reference。
 
 **不写**：上游的 "Sharing Conversations"（分享已关闭）。
 
@@ -125,11 +144,23 @@ const modules = import.meta.glob('./guide/*/**/*.md', {
 （路径写作 `~/.phaneris/...`），覆盖 16 个主题，是写作用的主要事实来源。但它们是**写给 agent 的**
 （"Read this before..."、大量 schema 表格），改写成用户向读物需要一遍编辑。
 
+**写作纪律**（首批实践下来的三条）：
+1. H1 必须与 manifest 的 title 逐字一致——测试会强制。
+2. 页内互链一律写成 `phaneris://docs/<slug>`，浮层的 `onUrlClick` 拦截；外链才走系统浏览器。
+3. 每页先对着代码核实事实再落笔。首批已经因此纠正了三处上游遗留错误：
+   `skills.md` 说技能用斜杠命令调用（实为 `@mention`）、CLI 名仍是 `craft-agent`、
+   以及 `config-defaults.json` 里 `thinkingLevel: "think"` 这个非法值。
+
 ## 7. 待办与已知问题
 
 - [ ] 会话分享历史指针：`~/.phaneris/workspaces/Work/sessions/260814-lucid-tiger/session.jsonl`
       仍带 `sharedUrl`/`sharedId`（`agents.craft.do`）。`scripts/clear-session-shares.ts` 已就绪、
-      干跑验证通过，但**需要先关闭应用**（脚本检测到 `.server.lock` 会拒绝写入）。
-- [ ] T2 管道：manifest、浮层、搜索、24 处入口改向。
-- [ ] T3 内容：45 页。
-- [ ] `VIEWER_URL` 与 `apps/viewer` 在关闭分享后成为未使用代码，尚未清理。
+      干跑验证通过，但**需要先关闭应用**（脚本检测到 `.server.lock` 会拒绝写入）。已备份到 `%TEMP%`。
+- [ ] T3 内容：约 30 页（见 §6）。
+- [ ] 浮层的视觉与交互未经实机验证。要看到它需要跑 dev 或重新打包——现有已打包的客户端不含这次改动。
+- [ ] D 阶段（明确延后）：`VIEWER_URL`、`DEFAULT_PAGES_SHARE_API_BASE_URL`、`VERSIONS_URL`、
+      OAuth relay、Slack 回调、`auto-update.ts`、两个包的 `homepage` 字段仍指向上游。
+      分享已关闭，所以前两个常量现在是死代码，但保留它们是为了让"撤销已发布内容"这条路继续可用。
+      `apps/viewer` 同理。
+- [ ] `apps/electron/resources/docs/*.md` 里仍有若干 "Craft" 字样的措辞残留（非 URL、非 CLI 名），
+      未逐一改写。
