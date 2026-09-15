@@ -11,8 +11,8 @@ Thank you for helping improve Phaneris (RE). Contributions should preserve the p
 - Credentials for any provider or external service involved in the change
 
 ```bash
-git clone https://github.com/VanDING/craft-agents-rebuild.git
-cd craft-agents-rebuild
+git clone git@github.com:VanDING/Phaneris.git
+cd phaneris
 bun install
 cp .env.example .env
 bun run electron:dev

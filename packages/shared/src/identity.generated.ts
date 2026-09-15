@@ -52,11 +52,11 @@ export const ENV_PREFIX = 'PHANERIS_';
 export const PREVIEW_SUFFIX = 'preview';
 
 /** Repository URL that is true today. */
-export const REPOSITORY_URL = 'https://github.com/VanDING/craft-agents-rebuild';
+export const REPOSITORY_URL = 'https://github.com/VanDING/Phaneris';
 /** Intended repository URL — only claim it once `REPOSITORY_RENAME_PERFORMED` is true. */
-export const REPOSITORY_PLANNED_URL = 'https://github.com/VanDING/phaneris';
+export const REPOSITORY_PLANNED_URL = 'https://github.com/VanDING/Phaneris';
 /** Whether the remote repository rename has actually been executed. */
-export const REPOSITORY_RENAME_PERFORMED = false;
+export const REPOSITORY_RENAME_PERFORMED = true;
 
 /**
  * Maintainer-owned service endpoints. `null` means the service is not ready:

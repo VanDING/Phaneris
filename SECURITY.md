@@ -6,7 +6,7 @@ Please do not disclose security vulnerabilities in a public issue, discussion, p
 
 Use GitHub's private vulnerability reporting for this repository:
 
-- [Report a vulnerability privately](https://github.com/VanDING/craft-agents-rebuild/security/advisories/new)
+- [Report a vulnerability privately](https://github.com/VanDING/Phaneris/security/advisories/new)
 
 Include the affected version or commit, impact, reproduction steps, and any suggested mitigation. Remove API keys, OAuth tokens, personal workspace data, and other secrets from logs or attachments.
 
@@ -42,4 +42,4 @@ Third-party services and dependencies should also be reported to their own maint
 - Stop once you have enough evidence to demonstrate the issue.
 - Allow maintainers a reasonable opportunity to investigate before public disclosure.
 
-Phaneris (RE) is an independent fork. Please do not send fork-specific reports to the upstream Craft security address unless you have separately verified that the same issue affects the upstream project.
+Phaneris (RE) is an independent project built on the Craft Agents open-source codebase. Please do not send project-specific reports to the upstream Craft security address unless you have separately verified that the same issue affects the upstream project.

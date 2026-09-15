@@ -11,8 +11,8 @@
 ## Running from source
 
 ```bash
-git clone git@github.com:VanDING/craft-agents-rebuild.git
-cd craft-agents-rebuild
+git clone git@github.com:VanDING/Phaneris.git
+cd phaneris
 bun install --frozen-lockfile
 bun run electron:start
 ```

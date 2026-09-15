@@ -28,9 +28,9 @@
     "previewSuffix": "preview"
   },
   "repository": {
-    "url": "https://github.com/VanDING/craft-agents-rebuild",
-    "plannedUrl": "https://github.com/VanDING/phaneris",
-    "renamePerformed": false
+    "url": "https://github.com/VanDING/Phaneris",
+    "plannedUrl": "https://github.com/VanDING/Phaneris",
+    "renamePerformed": true
   },
   "services": {
     "docsUrl": null,

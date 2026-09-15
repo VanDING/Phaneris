@@ -6,9 +6,9 @@
 
 让 AI Agent 在文件、工具、服务和文档之间完成真正的工作，并让每个关键动作都可以检查、理解和确认。
 
-[![版本](https://img.shields.io/badge/版本-0.12.1-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.12.1.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-0.84.4-5b7cfa?style=flat-square)](docs/pi-kernel.md)
-[![Bun](https://img.shields.io/badge/Bun-1.4.0-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
+[![版本](https://img.shields.io/badge/版本-0.1.0-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.1.0.md)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-0.85.1-5b7cfa?style=flat-square)](docs/pi-kernel.md)
+[![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-2f855a?style=flat-square)](README.md)
 
@@ -84,30 +84,30 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
           Pi SDK · provider APIs · tools
 ```
 
-连接层支持主流托管 provider、OAuth 产品、云平台，以及兼容 OpenAI/Anthropic 协议的自定义端点。模型与思考等级来自 provider 能力，而不是另一套 fork 专用后台。
+连接层支持主流托管 provider、OAuth 产品、云平台，以及兼容 OpenAI/Anthropic 协议的自定义端点。模型与思考等级来自 provider 能力，而不是另一套项目专用后台。
 
 ### 当前技术基线
 
 | 层级 | 基线 |
 | --- | --- |
-| Agent 内核 | Pi SDK `0.84.4` |
-| 桌面端 | Electron `43.1`、React `19.2` |
-| 运行时与工具链 | Bun `1.4.0`、TypeScript `7`、Vite `8.1` |
-| 集成协议 | MCP SDK `1.29+`、原生 REST/本地文件/浏览器工具 |
+| Agent 内核 | Pi SDK `0.85.1` |
+| 桌面端 | Electron `44.2`、React `19.2` |
+| 运行时与工具链 | Bun `1.4.2`、TypeScript `7`、Vite `8.2` |
+| 集成协议 | MCP SDK `1.30`、原生 REST/本地文件/浏览器工具 |
 | 存储 | 本地会话数据 + 工作空间级 SQLite/WAL Durable Runtime |
 
 ## 快速开始
 
 ### 环境要求
 
-- [Bun 1.4](https://bun.sh/) 或 `package.json` 固定的兼容版本
+- [Bun](https://bun.sh/)：与 `package.json` 固定的版本一致（`1.4.2`）
 - 至少一个受支持模型 provider 的凭据
 - macOS、Windows 或 Linux
 
 ```bash
-git clone https://github.com/VanDING/craft-agents-rebuild.git
-cd craft-agents-rebuild
-bun install
+git clone git@github.com:VanDING/Phaneris.git
+cd phaneris
+bun install --frozen-lockfile
 bun run electron:start
 ```
 
@@ -131,13 +131,15 @@ bun run validate:dev       # 类型检查与运行时/文档聚焦测试
 bun run validate:ci        # CI 验证与 i18n 一致性、覆盖检查
 ```
 
+本仓库的依赖安装与本地工具统一使用 Bun（`bun run eslint`、`bun run vite`、`bun run electron-builder`）。依赖变更请一并提交 `bun.lock`，不要用 npm、Yarn 或 pnpm 生成第二个 lockfile；包来源仍为 npm registry。Electron 工具链与 WhatsApp worker 仍使用 Node.js。迁移细节与例外见 [2026 年 9 月依赖升级说明](docs/dependency-upgrade-2026-09.md)。
+
 建议从[文档索引](docs/README.md)、[贡献指南](CONTRIBUTING.md)和 [Pi 内核维护基线](docs/pi-kernel.md)开始。
 
-## 感谢 Craft 的开源基础
+## 建立在 Craft 的开源基础之上
 
-Phaneris 是 [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss) 的独立 fork。原项目由 [Craft](https://www.craft.do/) 团队和社区贡献者创建；没有他们的开源工作，就不会有这个项目，我们对此深表感谢。
+Phaneris 是一个独立项目，建立在 [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss) 的开源代码库之上。原项目由 [Craft](https://www.craft.do/) 团队和社区贡献者创建；没有他们的开源工作，就不会有这个项目，我们对此深表感谢。
 
-本 fork 保留原始署名，同时发展自己的 Runtime、审计、工作空间、Artifact、Profile 与主题方向。本项目未获得 Craft Docs Limited 的认可，也与其不存在从属关系。署名和名称使用说明见 [NOTICE](NOTICE) 与 [TRADEMARK.md](TRADEMARK.md)。
+项目保留原始署名、许可证与 NOTICE，同时发展自己的 Runtime、审计、工作空间、Artifact、Profile 与主题方向。项目在 [`VanDING/Phaneris`](https://github.com/VanDING/Phaneris) 独立维护与发布，不是上游仓库的 GitHub fork。本项目未获得 Craft Docs Limited 的认可，也与其不存在从属关系。署名和名称使用说明见 [NOTICE](NOTICE) 与 [TRADEMARK.md](TRADEMARK.md)。
 
 ## License
 

@@ -84,7 +84,7 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
           Pi SDK · provider APIs · tools
 ```
 
-The connection layer supports major hosted providers, OAuth-backed products, cloud platforms, and OpenAI-/Anthropic-compatible custom endpoints. Models and thinking levels are resolved from provider capabilities instead of a fork-specific second backend.
+The connection layer supports major hosted providers, OAuth-backed products, cloud platforms, and OpenAI-/Anthropic-compatible custom endpoints. Models and thinking levels are resolved from provider capabilities instead of a project-specific second backend.
 
 ### Current foundation
 
@@ -93,7 +93,7 @@ The connection layer supports major hosted providers, OAuth-backed products, clo
 | Agent kernel | Pi SDK `0.85.1` |
 | Desktop | Electron `44.2`, React `19.2` |
 | Runtime and tooling | Bun `1.4.2`, TypeScript `7`, Vite `8.2` |
-| Integrations | MCP SDK `1.29+`, native REST/local/browser tools |
+| Integrations | MCP SDK `1.30`, native REST/local/browser tools |
 | Storage | Local session data plus workspace-local SQLite/WAL durable runtime |
 
 ## Quick start
@@ -105,8 +105,8 @@ The connection layer supports major hosted providers, OAuth-backed products, clo
 - macOS, Windows, or Linux
 
 ```bash
-git clone git@github.com:VanDING/craft-agents-rebuild.git
-cd craft-agents-rebuild
+git clone git@github.com:VanDING/Phaneris.git
+cd phaneris
 bun install --frozen-lockfile
 bun run electron:start
 ```
@@ -141,9 +141,9 @@ Start with the [documentation index](docs/README.md), [contribution guide](CONTR
 
 ## Built on Craft, with gratitude
 
-Phaneris is an independent fork of [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss), originally created by the [Craft](https://www.craft.do/) team and its contributors. Their open-source work made this project possible, and we are deeply grateful for that foundation.
+Phaneris is an independent project built on the open-source codebase of [`craft-ai-agents/craft-agents-oss`](https://github.com/craft-ai-agents/craft-agents-oss), originally created by the [Craft](https://www.craft.do/) team and its contributors. Their open-source work made this project possible, and we are deeply grateful for that foundation.
 
-This fork keeps the original attribution while pursuing its own runtime, auditability, workspace, Artifact, Profile, and theme direction. It is not endorsed by or affiliated with Craft Docs Limited. See [NOTICE](NOTICE) and [TRADEMARK.md](TRADEMARK.md) for attribution and naming details.
+The project keeps the original attribution, license, and NOTICE while pursuing its own runtime, auditability, workspace, Artifact, Profile, and theme direction. It is developed and released from [`VanDING/Phaneris`](https://github.com/VanDING/Phaneris) as a standalone repository, not a GitHub fork of the upstream project. It is not endorsed by or affiliated with Craft Docs Limited. See [NOTICE](NOTICE) and [TRADEMARK.md](TRADEMARK.md) for attribution and naming details.
 
 ## License
 

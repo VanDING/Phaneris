@@ -8,11 +8,6 @@
       "reason": "Declares the legacy identifiers on purpose: the migration path and the residual scanner both read them from here."
     },
     {
-      "glob": "scripts/identity.schema.json",
-      "tokens": ["*"],
-      "reason": "JSON Schema for the identity file; describes the legacy block and is hosted under the current repository URL."
-    },
-    {
       "glob": "scripts/check-identity.ts",
       "tokens": ["*"],
       "reason": "The residual scanner itself; necessarily names every legacy token it searches for."
@@ -55,7 +50,7 @@
     {
       "glob": "AGENTS.md",
       "tokens": ["*"],
-      "reason": "Documents the working remote name (VanDING/craft-agents-rebuild), which stays accurate until the repository rename in Phase F."
+      "reason": "Documents the working remote name (VanDING/Phaneris) and the retired fork (VanDING/craft-agents-rebuild), which is kept for historical reference after the project moved to a standalone repository."
     },
     {
       "glob": "packages/shared/src/automations/utils.ts",

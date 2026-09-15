@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/VanDING/craft-agents-rebuild/scripts/identity.schema.json",
+  "$id": "https://github.com/VanDING/Phaneris/scripts/identity.schema.json",
   "title": "Phaneris product identity",
   "description": "Specification for phaneris.identity.json — the single source of truth for every Phaneris product identifier (display name, app ID, deep-link scheme, data directories, environment prefix, package scope and service endpoints). Packaging config, build scripts and runtime code MUST read or generate from this file; they must not restate these constants. Changing a frozen identifier (appId, scheme, runtime.dataDirName) after the first public release is a migration project, not a string edit — see docs/architecture/phaneris-phase-a-identity-freeze.md.",
   "type": "object",

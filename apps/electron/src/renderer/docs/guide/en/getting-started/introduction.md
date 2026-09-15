@@ -6,8 +6,9 @@ keeps a reviewable record of everything it did. You describe an outcome in a
 conversation; the agent reads, runs, and writes on your machine under the
 permission mode you chose.
 
-It is a fork of [Craft Agents](https://github.com/craft-ai-agents/craft-agents-oss),
-independently built and renamed. This documentation ships inside the app rather
+It is an independent project built on the open-source codebase of
+[Craft Agents](https://github.com/craft-ai-agents/craft-agents-oss), independently
+built and renamed. This documentation ships inside the app rather
 than on a website, so it always describes the version you are running.
 
 ## What makes this build different

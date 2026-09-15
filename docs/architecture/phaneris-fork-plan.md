@@ -31,7 +31,7 @@
 | 简称 / 短形 | `phan`（CLI 与文档简写） | 建议；不作为正式名 |
 | 词源（非产品名） | 希腊语 φανερός（显现、可见） | 参考；不用于软件包名或商标主张 |
 | 产品描述 | 本地 AI 工作空间；中断后仍可恢复的持久执行 | 建议 |
-| 仓库 | `VanDING/phaneris`，由现有工作仓库 `VanDING/craft-agents-rebuild` 改名 | 建议，远端尚未操作；改名需在结果可审阅时确认 |
+| 仓库 | `VanDING/Phaneris` 独立仓库（非 fork）；旧工作仓库 `VanDING/craft-agents-rebuild` 是 fork，保留作历史参考 | 已执行 2026-09-15：GitHub 的 fork 关联无法通过改名解除，因此改为新建非 fork 仓库并推送既有历史，本地 `rebuild` remote 与文档引用同步更新 |
 | 根包 / 桌面包 | `phaneris` / `@phaneris/electron` | 建议；私有 workspace 不代表占有公开 npm scope |
 | 内部包命名空间 | `@phaneris/*` | 建议；替换现有 `@craft-agent/*`（13 个 workspace 包） |
 | CLI | `phaneris` | 建议 |
@@ -46,6 +46,8 @@
 | 官方域名 / 发布者署名 | 未定；域名未就绪时文档与下载链接指向自己的仓库 | 不编造域名、公司或证书身份 |
 
 不把改名直接等同于 1.0 稳定性承诺。Git remote 暂保留既有语义：`rebuild` 是工作仓库，`origin` 是上游；仓库改名时只更新工作 remote 的 SSH URL，避免同时改变协作习惯。本机工作目录 `E:\craft-agents` 是否随仓库改名一并调整，另行决定；`AGENTS.md` 中关于 `rebuild` 与 `main` 的约定需要在远端改名时同步更新。
+
+2026-09-15 执行记录：按上述做法完成迁移。工作 remote `rebuild` 从 `VanDING/craft-agents-rebuild` 切换到新建的独立仓库 `VanDING/Phaneris`（未使用平台改名，因为改名不会解除 fork 关联），`AGENTS.md`、README、`CONTRIBUTING.md`、`docs/cli.md`、`SECURITY.md`、`Dockerfile.server`、应用内安装指南与 `phaneris.identity.json` 的仓库引用一并更新。旧 fork 未删除，待用户决定归档或删除。
 
 ### 2.1 命名理由
 
