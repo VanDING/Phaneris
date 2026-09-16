@@ -22,6 +22,7 @@ This index separates current product and architecture documentation from histori
 | [Durable Runtime target architecture](architecture/durable-agent-runtime-target-architecture.md) | Deferred | Larger distributed end state; activate only when its stated criteria are met. |
 | [Artifact files and native image generation](artifact-files-native-image-generation-plan.md) | Implemented baseline | File-format registry, Artifact lifecycle, native image generation, and the clean removal of Univer. |
 | [Theme engine design](theme-engine-design.md) | Implemented | Semantic token layers, user-owned themes, app defaults, and workspace overrides. |
+| [Theme authoring prompt](theme-authoring-prompt.md) | Current | Copy-paste generation prompt that encodes the full 39-token field set, schema limits, light/dark inheritance rules, and the Shiki theme whitelist for producing valid theme files. |
 | [Profile and preferences](profile-preferences-plan.md) | Implemented baseline | Local profile, activity summary, identity, location, and preferences; optional sharing remains deferred. |
 
 ## Project planning
