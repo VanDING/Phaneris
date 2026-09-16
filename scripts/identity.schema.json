@@ -57,12 +57,17 @@
     "packaging": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["publisher", "copyright", "artifactName"],
+      "required": ["publisher", "companyName", "copyright", "artifactName"],
       "properties": {
         "publisher": {
           "type": "string",
           "minLength": 1,
           "description": "Signing/publisher identity shown by installers. Must not claim a company or certificate the maintainer does not control."
+        },
+        "companyName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Company name written into the packaged binaries' OS version metadata (Windows VERSIONINFO CompanyName, macOS CFBundleName). Declared explicitly because electron-builder would otherwise derive it from the nearest package.json `author.name`, which still credits the upstream company."
         },
         "copyright": {
           "type": "string",

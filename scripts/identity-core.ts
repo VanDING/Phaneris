@@ -32,6 +32,7 @@ export interface Identity {
   };
   packaging: {
     publisher: string;
+    companyName: string;
     copyright: string;
     artifactName: string;
   };
@@ -128,7 +129,7 @@ export function parseIdentity(raw: unknown): Identity {
   assertExactKeys(product, 'product', ['name', 'fullName', 'slug', 'description', 'appId', 'scheme']);
 
   const packaging = assertObject(root.packaging, 'packaging');
-  assertExactKeys(packaging, 'packaging', ['publisher', 'copyright', 'artifactName']);
+  assertExactKeys(packaging, 'packaging', ['publisher', 'companyName', 'copyright', 'artifactName']);
 
   const packages = assertObject(root.packages, 'packages');
   assertExactKeys(packages, 'packages', ['root', 'scope']);
@@ -178,6 +179,7 @@ export function parseIdentity(raw: unknown): Identity {
     },
     packaging: {
       publisher: assertString(packaging.publisher, 'packaging.publisher'),
+      companyName: assertString(packaging.companyName, 'packaging.companyName'),
       copyright: assertString(packaging.copyright, 'packaging.copyright'),
       artifactName: assertString(packaging.artifactName, 'packaging.artifactName', /\$\{version\}/),
     },
@@ -378,6 +380,14 @@ export function renderBuilderIdentity(identity: Identity): string {
 # Pulled in by apps/electron/electron-builder.yml via \`extends\`. The identity
 # keys live ONLY here, so electron-builder's merge order can never change the
 # packaged application identity.
+#
+# \`packaging.companyName\` is deliberately ABSENT: electron-builder has no
+# companyName option. Its AppInfo.companyName — the value written as the
+# Windows VERSIONINFO CompanyName, the NSIS COMPANY_NAME and the MSI
+# manufacturer — is read straight from the nearest package.json \`author.name\`.
+# The packaged CompanyName is therefore controlled in apps/electron/package.json;
+# \`scripts/check-identity.ts\` fails if that author drifts from
+# packaging.companyName.
 
 appId: ${yamlString(product.appId)}
 productName: ${yamlString(product.name)}

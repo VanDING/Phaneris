@@ -7,6 +7,14 @@
 # Pulled in by apps/electron/electron-builder.yml via `extends`. The identity
 # keys live ONLY here, so electron-builder's merge order can never change the
 # packaged application identity.
+#
+# `packaging.companyName` is deliberately ABSENT: electron-builder has no
+# companyName option. Its AppInfo.companyName — the value written as the
+# Windows VERSIONINFO CompanyName, the NSIS COMPANY_NAME and the MSI
+# manufacturer — is read straight from the nearest package.json `author.name`.
+# The packaged CompanyName is therefore controlled in apps/electron/package.json;
+# `scripts/check-identity.ts` fails if that author drifts from
+# packaging.companyName.
 
 appId: 'io.github.vanding.phaneris'
 productName: 'Phaneris'

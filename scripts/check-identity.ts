@@ -208,13 +208,48 @@ if (!existsSync(BUILDER_CONFIG)) {
       `apps/electron/electron-builder.yml extends ${extendsMatch[1]!.trim()} instead of ./identity.generated.yml`,
     );
   }
-  const restated = ['appId', 'productName', 'copyright', 'artifactName'].filter((key) =>
+  const restated = ['appId', 'productName', 'companyName', 'copyright', 'artifactName'].filter((key) =>
     new RegExp(`^${key}:`, 'm').test(builder),
   );
   if (restated.length) {
     driftProblems.push(
       `apps/electron/electron-builder.yml restates identity keys (${restated.join(', ')}) — ` +
         `they belong in phaneris.identity.json`,
+    );
+  }
+}
+
+// The packaged binary's CompanyName comes from the packaged package.json
+// `author.name` and from nowhere else: electron-builder has no companyName
+// option — AppInfo.companyName is literally `metadata.author.name`, and that
+// value becomes the Windows VERSIONINFO CompanyName, the NSIS COMPANY_NAME and
+// the MSI manufacturer. Every build shipped before this check carried
+// CompanyName "Craft Docs Ltd." for exactly that reason, while ProductName and
+// copyright (both of which ARE config-driven) were already correct.
+//
+// apps/electron is the project directory electron-builder reads, so its
+// package.json is the authoritative source. The others are checked too so the
+// manifests cannot disagree about who publishes this product.
+for (const relManifest of ['apps/electron/package.json', 'packages/server/package.json']) {
+  const manifestPath = join(ROOT, ...relManifest.split('/'));
+  if (!existsSync(manifestPath)) continue;
+  let author: unknown;
+  try {
+    author = (JSON.parse(readFileSync(manifestPath, 'utf-8')) as { author?: unknown }).author;
+  } catch {
+    driftProblems.push(`${relManifest} is not valid JSON`);
+    continue;
+  }
+  const authorName = typeof author === 'string'
+    ? author
+    : author !== null && typeof author === 'object' && typeof (author as { name?: unknown }).name === 'string'
+      ? (author as { name: string }).name
+      : undefined;
+  if (authorName !== identity.packaging.companyName) {
+    driftProblems.push(
+      `${relManifest} author.name is ${JSON.stringify(authorName ?? null)} but packaging.companyName is ` +
+        `${JSON.stringify(identity.packaging.companyName)} — electron-builder derives the packaged CompanyName from ` +
+        `this author, so the two must be equal (upstream credit belongs in packaging.copyright, not in author)`,
     );
   }
 }

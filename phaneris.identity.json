@@ -10,6 +10,7 @@
   },
   "packaging": {
     "publisher": "VanDING",
+    "companyName": "VanDING",
     "copyright": "Copyright © 2026 VanDING. Based on Craft Agents, Copyright © 2026 Craft Docs Ltd.",
     "artifactName": "Phaneris-${version}-${os}-${arch}.${ext}"
   },
