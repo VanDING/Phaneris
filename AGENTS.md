@@ -2,8 +2,9 @@
 
 ## Git remotes
 
-- `rebuild` (`VanDING/Phaneris`) is this project's working repository. The project is standalone and is no longer a GitHub fork.
-- `VanDING/craft-agents-rebuild` is the former working repository: a fork of the upstream project, kept for historical reference only and never a push target.
+- `rebuild` is this project's working repository: **https://github.com/VanDING/Phaneris**. The project is standalone and is no longer a GitHub fork.
+- The remote is configured over SSH as `ssh://git@ssh.github.com:443/VanDING/Phaneris.git` (see the port-443 note below). The HTTPS URL above is the canonical location for links, clone instructions and documentation.
+- `VanDING/craft-agents-rebuild` is the retired fork the project started from: a fork of the upstream project, kept for historical reference only and never a push target.
 - When a request mentions the remote `main` branch without naming a remote, interpret it as `rebuild/main`.
 - `origin` (`craft-ai-agents/craft-agents-oss`) is the upstream repository. Only use `origin/main` when the request explicitly says upstream or names `origin`.
 - Use SSH for all GitHub Git operations. Do not default to HTTPS.
