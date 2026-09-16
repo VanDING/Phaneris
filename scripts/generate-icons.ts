@@ -27,14 +27,19 @@
  * with the optional `--resources-dir <path>` flag):
  *
  *     icon-app.svg                  square, full-bleed app icon: white rounded
- *                                   square (radius 225) + mark at 72%, centred
- *     icon.png                      1024x1024 raster of icon-app.svg
+ *                                   square (radius 225) + mark at 80%, centred
+ *     icon.png                      1024x1024 raster of icon-app.svg, for Linux
+ *                                   packaging and the running app
+ *     icon-macos.png                1024x1024 raster of the same mark inset to
+ *                                   the macOS icon grid (824 of 1024 points) —
+ *                                   the Dock icon set from the main process
  *     icon.ico                      Windows ICO; PNG payloads at 16, 24, 32,
  *                                   48, 64, 128 and 256 px (width/height byte 0
  *                                   for 256)
- *     icon.icns                     macOS ICNS; PNG elements ic07=128, ic11=32,
- *                                   ic12=64, ic13=256, ic14=512, ic08=256,
- *                                   ic09=512, ic10=1024
+ *     icon.icns                     macOS ICNS, on the same grid as
+ *                                   icon-macos.png; PNG elements ic07=128,
+ *                                   ic11=32, ic12=64, ic13=256, ic14=512,
+ *                                   ic08=256, ic09=512, ic10=1024
  *     icon.icon/Assets/icon.svg     same mark, for the macOS `.icon` bundle
  *                                   (its `icon.json` is validated, never edited)
  *     phaneris-logos/*.png          brand rasters, all 512x512:
@@ -86,6 +91,20 @@ const APP_ICON_CORNER_RADIUS = 225
  * on, and re-centres it at the same time.
  */
 const APP_ICON_MARK_FILL = 0.8
+/**
+ * Fraction of the canvas the rounded square plate itself fills, per platform
+ * icon grid — not something to pick per asset.
+ *
+ * macOS reserves a margin around every Dock icon: the stock apps' own `.icns`
+ * files carry 824 of 1024 points of artwork, a 9.77% margin per side (the same
+ * 80.08% for QuickTime Player, Reminders, Shortcuts, Siri, Stickies, Stocks,
+ * System Settings and TV on this machine). Windows and Linux instead draw app
+ * icons edge to edge. A full-bleed plate is therefore ~23% wider than its Dock
+ * neighbours: with `tilesize` 68 at 2x the tile is 136px, the neighbour's
+ * artwork 110.6px, and ours filled all 136px.
+ */
+const APP_ICON_PLATE_FILL_MACOS = 824 / 1024
+const APP_ICON_PLATE_FILL_FULL_BLEED = 1
 /** Light / dark backgrounds of the app icon's rounded square. */
 const APP_ICON_BACKGROUND = '#FFFFFF'
 const APP_ICON_BACKGROUND_DARK = '#0F0B1E'
@@ -202,17 +221,26 @@ function tightenMark(mark: string): string {
 }
 
 /**
- * The square, full-bleed app-icon variant: a rounded square covering the whole
- * canvas with the mark fitted to {@link APP_ICON_MARK_FILL} and centred on it.
+ * The square app-icon variant: a rounded square inset to `plateFill` of the
+ * canvas, with the mark fitted to {@link APP_ICON_MARK_FILL} of the plate and
+ * centred on it.
+ *
+ * Everything outside the plate stays transparent — that margin is what the
+ * platform's icon grid asks for — and the mark keeps its size relative to the
+ * plate, so tightening the plate changes how the icon is framed and nothing
+ * else. Passing 1 is today's full-bleed artwork, byte for byte.
  */
-function buildAppIconSvg(mark: string, background: string): string {
+function buildAppIconSvg(mark: string, background: string, plateFill: number): string {
   const box = markBoundingBox(mark)
-  const scale = (CANVAS * APP_ICON_MARK_FILL) / Math.max(box.width, box.height)
+  const plate = CANVAS * plateFill
+  const inset = (CANVAS - plate) / 2
+  const radius = APP_ICON_CORNER_RADIUS * plateFill
+  const scale = (plate * APP_ICON_MARK_FILL) / Math.max(box.width, box.height)
   const offsetX = (CANVAS - box.width * scale) / 2 - box.x * scale
   const offsetY = (CANVAS - box.height * scale) / 2 - box.y * scale
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS} ${CANVAS}">
-<rect x="0" y="0" width="${CANVAS}" height="${CANVAS}" rx="${APP_ICON_CORNER_RADIUS}" ry="${APP_ICON_CORNER_RADIUS}" fill="${background}"/>
+<rect x="${round(inset)}" y="${round(inset)}" width="${round(plate)}" height="${round(plate)}" rx="${round(radius)}" ry="${round(radius)}" fill="${background}"/>
 <g transform="translate(${round(offsetX)},${round(offsetY)}) scale(${round(scale, 4)})">
 ${svgInner(mark)}
 </g>
@@ -399,6 +427,59 @@ async function verifyPng(file: string, expectedSize: number): Promise<string> {
   return `${label} ${metadata.width}x${metadata.height} channels=${metadata.channels}`
 }
 
+/**
+ * Size of the artwork's opaque area as a fraction of the canvas, measured from
+ * the rendered alpha channel along the middle row and column.
+ *
+ * The plate is a straight-edged rounded square, so those two scans cross its
+ * left/right and top/bottom edges well away from the corners: the result is the
+ * plate's own size, and the platform grid it is supposed to sit on is the one
+ * thing about this pipeline that cannot be seen by looking at the PNG's
+ * dimensions.
+ */
+async function alphaContentFraction(png: Buffer): Promise<{ canvas: number; width: number; height: number; fraction: number }> {
+  const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const { width: canvas, height, channels } = info
+  const alpha = (x: number, y: number): number => data[(y * canvas + x) * channels + 3]!
+
+  const edge = (read: (index: number) => number, from: number, step: number): number => {
+    let previous = read(from)
+    for (let index = from + step; index >= 0 && index < canvas; index += step) {
+      const current = read(index)
+      if (previous !== current && (previous - 128) * (current - 128) <= 0) {
+        return index - step + (step * (128 - previous)) / (current - previous)
+      }
+      previous = current
+    }
+    throw new Error('No artwork edge found in the rendered icon')
+  }
+
+  const middleRow = height >> 1
+  const middleColumn = canvas >> 1
+  const left = edge((index) => alpha(index, middleRow), 0, 1)
+  const right = edge((index) => alpha(index, middleRow), canvas - 1, -1)
+  const top = edge((index) => alpha(middleColumn, index), 0, 1)
+  const bottom = edge((index) => alpha(middleColumn, index), height - 1, -1)
+
+  return { canvas, width: right - left, height: bottom - top, fraction: (right - left) / canvas }
+}
+
+/** Fail unless the rendered artwork fills `expected` of its canvas, within `tolerance`. */
+async function verifyPlateFill(
+  label: string,
+  png: Buffer,
+  expected: number,
+  tolerance: number,
+): Promise<string> {
+  const measured = await alphaContentFraction(png)
+  if (Math.abs(measured.fraction - expected) > tolerance) {
+    throw new Error(
+      `${label}: artwork fills ${(measured.fraction * 100).toFixed(2)}% of the canvas, expected ${(expected * 100).toFixed(2)}% — the platform icon-grid margin is wrong`,
+    )
+  }
+  return `${label} artwork ${measured.width.toFixed(1)}x${measured.height.toFixed(1)} of ${measured.canvas} = ${(measured.fraction * 100).toFixed(2)}% of canvas`
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
@@ -442,8 +523,10 @@ async function main(): Promise<void> {
 
   console.log(`Phaneris icons — source: ${path.relative(REPO_ROOT, markFile).split(path.sep).join('/')}`)
 
-  const appIconSvg = buildAppIconSvg(mark, APP_ICON_BACKGROUND)
-  const appIconSvgDark = buildAppIconSvg(mark, APP_ICON_BACKGROUND_DARK)
+  const appIconSvg = buildAppIconSvg(mark, APP_ICON_BACKGROUND, APP_ICON_PLATE_FILL_FULL_BLEED)
+  const appIconSvgDark = buildAppIconSvg(mark, APP_ICON_BACKGROUND_DARK, APP_ICON_PLATE_FILL_FULL_BLEED)
+  // macOS is the one platform whose icon grid is not full bleed.
+  const appIconSvgMacos = buildAppIconSvg(mark, APP_ICON_BACKGROUND, APP_ICON_PLATE_FILL_MACOS)
 
   // 2. Square, full-bleed app-icon SVG.
   const appIconSvgFile = path.join(resourcesDir, 'icon-app.svg')
@@ -454,16 +537,27 @@ async function main(): Promise<void> {
   const iconPng = await renderPng(appIconSvg, APP_ICON_PNG_SIZE)
   report(iconPngFile, await writeFileIfChanged(iconPngFile, iconPng), `${APP_ICON_PNG_SIZE}x${APP_ICON_PNG_SIZE}`)
 
-  // 4. icon.ico — Windows.
+  // 4. icon-macos.png — the Dock icon the app sets from the main process in
+  //    development, where there is no bundle for the system to read
+  //    CFBundleIconFile from. Same artwork as icon.icns, same grid.
+  const macosIconPngFile = path.join(resourcesDir, 'icon-macos.png')
+  const macosIconPng = await renderPng(appIconSvgMacos, APP_ICON_PNG_SIZE)
+  report(
+    macosIconPngFile,
+    await writeFileIfChanged(macosIconPngFile, macosIconPng),
+    `${APP_ICON_PNG_SIZE}x${APP_ICON_PNG_SIZE} on the macOS grid`,
+  )
+
+  // 5. icon.ico — Windows.
   const icoEntries = await Promise.all(
     ICO_SIZES.map(async (size) => ({ size, png: await renderPng(appIconSvg, size) })),
   )
   const icoFile = path.join(resourcesDir, 'icon.ico')
   report(icoFile, await writeFileIfChanged(icoFile, buildIco(icoEntries)), ICO_SIZES.join('/'))
 
-  // 5. icon.icns — macOS.
+  // 6. icon.icns — macOS.
   const icnsEntries = await Promise.all(
-    ICNS_ELEMENTS.map(async ({ type, size }) => ({ type, png: await renderPng(appIconSvg, size) })),
+    ICNS_ELEMENTS.map(async ({ type, size }) => ({ type, size, png: await renderPng(appIconSvgMacos, size) })),
   )
   const icnsFile = path.join(resourcesDir, 'icon.icns')
   report(
@@ -472,7 +566,7 @@ async function main(): Promise<void> {
     ICNS_ELEMENTS.map((element) => `${element.type}=${element.size}`).join(' '),
   )
 
-  // 6. macOS .icon bundle: the mark cropped to its own bounds, so the layer's
+  // 7. macOS .icon bundle: the mark cropped to its own bounds, so the layer's
   //    declared scale in icon.json is the fraction of the tile it actually
   //    occupies. The manifest itself is owned by hand (actool reads it) and is
   //    only validated here.
@@ -480,7 +574,7 @@ async function main(): Promise<void> {
   report(bundleAsset, await writeFileIfChanged(bundleAsset, tightenMark(mark)), 'cropped to mark bounds')
   await assertIconBundleManifest(path.join(resourcesDir, 'icon.icon', 'icon.json'))
 
-  // 7. Brand rasters.
+  // 8. Brand rasters.
   const logosDir = path.join(resourcesDir, 'phaneris-logos')
   const brandAssets: ReadonlyArray<{ name: string; svg: string }> = [
     { name: 'phaneris_app_icon.png', svg: appIconSvg },
@@ -501,7 +595,7 @@ async function main(): Promise<void> {
     console.log(`  removed  ${path.relative(REPO_ROOT, legacyLogosDir).split(path.sep).join('/')}/ (superseded by phaneris-logos/)`)
   }
 
-  // 8. Browser-facing assets (Web UI PWA + favicons). These are shipped to the
+  // 9. Browser-facing assets (Web UI PWA + favicons). These are shipped to the
   // browser rather than packaged by electron-builder, so they are easy to
   // forget — generating them here keeps them tied to the same artwork.
   const browserAssets: ReadonlyArray<{ file: string; svg: string; size: number }> = [
@@ -535,17 +629,41 @@ async function main(): Promise<void> {
     report(file, await writeFileIfChanged(file, appIconSvg), `${CANVAS}x${CANVAS}`)
   }
 
-  // Self-check: every PNG we own, straight from sharp metadata.
+  // Self-check: every PNG we own, straight from sharp metadata, and the
+  // platform grid the Dock-shaped assets have to sit on.
   console.log('Verifying generated PNGs:')
   const verified = [
     await verifyPng(iconPngFile, APP_ICON_PNG_SIZE),
+    await verifyPng(macosIconPngFile, APP_ICON_PNG_SIZE),
     ...(await Promise.all(
       brandAssets.map((asset) => verifyPng(path.join(logosDir, asset.name), BRAND_LOGO_SIZE)),
     )),
   ]
   for (const line of verified) console.log(`  ok  ${line}`)
 
-  console.log(`Done — ${verified.length} PNGs verified, ico=${ICO_SIZES.length} entries, icns=${ICNS_ELEMENTS.length} elements.`)
+  console.log('Verifying icon-grid margins:')
+  // 2px of slack at 1024 for the macOS PNG; the ICNS elements get the same
+  // absolute slack, which is why the 32/64px ones are not worth checking.
+  const grids = [
+    await verifyPlateFill('icon-macos.png ', macosIconPng, APP_ICON_PLATE_FILL_MACOS, 2 / APP_ICON_PNG_SIZE),
+    ...(await Promise.all(
+      icnsEntries
+        .filter((entry) => entry.size >= 256)
+        .map(async (entry) =>
+          verifyPlateFill(
+            `icon.icns ${entry.type}=${String(entry.size).padStart(4)}`,
+            entry.png,
+            APP_ICON_PLATE_FILL_MACOS,
+            2 / entry.size,
+          ),
+        ),
+    )),
+  ]
+  for (const line of grids) console.log(`  ok  ${line}`)
+
+  console.log(
+    `Done — ${verified.length} PNGs verified, ${grids.length} grid margins checked, ico=${ICO_SIZES.length} entries, icns=${ICNS_ELEMENTS.length} elements.`,
+  )
 }
 
 await main()

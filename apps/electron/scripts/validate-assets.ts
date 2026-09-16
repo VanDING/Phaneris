@@ -16,6 +16,9 @@ const required = [
   'browser-toolbar-preload.cjs',
   'interceptor.cjs',
   'renderer/index.html',
+  // The main process sets this as the macOS Dock icon; without it the app runs
+  // with no Dock icon at all rather than a wrong-sized one.
+  'resources/icon-macos.png',
   'resources/pi-agent-server/index.js',
   'resources/pi-agent-server/bundle.js',
   'resources/themes/default.json',

@@ -507,18 +507,23 @@ app.whenReady().then(async () => {
 
   // Application menu is created after windowManager initialization (see below)
 
-  // Set dock icon on macOS (required for dev mode, bundled apps use Info.plist)
+  // Dock icon on macOS. A packaged bundle declares its icon in Info.plist, but
+  // that icon is on the macOS grid (see scripts/generate-icons.ts), so setting
+  // it at runtime — as this used to do with the full-bleed icon.png — drew the
+  // tile edge to edge and made us ~23% larger than every neighbouring app.
   if (process.platform === 'darwin' && app.dock) {
     // In packaged app, resources are at dist/resources/ (same level as __dirname)
     // In dev, resources are at ../resources/ (sibling of dist/)
     const dockIconPath = [
-      join(__dirname, 'resources/icon.png'),
-      join(__dirname, '../resources/icon.png'),
+      join(__dirname, 'resources/icon-macos.png'),
+      join(__dirname, '../resources/icon-macos.png'),
     ].find(p => existsSync(p))
 
     if (dockIconPath) {
-      app.dock.setIcon(dockIconPath)
-      // Initialize badge icon for canvas-based badge overlay
+      if (!app.isPackaged) app.dock.setIcon(dockIconPath)
+      // Initialize badge icon for canvas-based badge overlay. Both the badge
+      // overlay and the badge-cleared restore draw this PNG, so it has to be
+      // the same artwork (and grid) the bundle ships.
       initBadgeIcon(dockIconPath)
     }
 

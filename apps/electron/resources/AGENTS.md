@@ -34,7 +34,8 @@ These files are used by electron-builder or the app directly, not synced to user
 |------|---------|
 | `icon.svg` | **Artwork source of truth** — the transparent Phaneris mark (1000x1000). Edit this, then regenerate. |
 | `icon-app.svg` | Generated: square full-bleed app icon (white rounded square + mark). |
-| `icon.png` / `icon.ico` / `icon.icns` | Generated platform icons (Linux/Windows/macOS). |
+| `icon.png` / `icon.ico` | Generated full-bleed platform icons (Linux/Windows). |
+| `icon-macos.png` / `icon.icns` | Generated macOS icons, inset to the platform icon grid; `icon-macos.png` is what the main process sets as the Dock icon in dev. |
 | `icon.icon/` | Generated macOS 26+ Liquid Glass asset catalog input. |
 | `Assets.car` | macOS compiled asset catalog (compiled with `actool` on macOS, committed). |
 | `dmg-background.*` | DMG installer background |
@@ -58,13 +59,24 @@ bounding box — not a fixed multiplier on the artwork's 1000×1000 canvas, whos
 generous margins once left the glyph at barely half the tile. Change that one
 constant to resize the glyph everywhere.
 
-**macOS 26 Liquid Glass needs verification on macOS.** `icon.icon/icon.json`
-declares the layer `scale` the `actool` compositor uses. It is set to 80 to
-match the platform icons, and the layer asset is the mark cropped to its own
-bounds so the scale means the fraction it says it means — but `Assets.car` is
-compiled with the macOS 26 SDK and is not in this repository, so `afterPack`
-currently falls back to `icon.icns`. Confirm the value with one macOS 26 build
-before release.
+The rounded square itself is not full bleed on macOS: `APP_ICON_PLATE_FILL_MACOS`
+(824/1024) leaves the platform margin around the tile, while Windows and Linux
+keep `APP_ICON_PLATE_FILL_FULL_BLEED`. macOS reserves that margin for every Dock
+icon — the stock apps' own `.icns` files carry 824 of 1024 points of artwork —
+so a full-bleed plate made us ~24% wider than our neighbours at the same
+`tilesize`. The generator re-measures each asset's alpha extents and fails the
+run if the margin is wrong, so never bypass it when adding an icon output.
+
+**macOS 26 Liquid Glass is not in use yet.** `icon.icon/icon.json` declares the
+layer `scale` the `actool` compositor uses. It is set to 80 to match the
+platform icons, and the layer asset is the mark cropped to its own bounds so the
+scale means the fraction it says it means. But the packaged `Info.plist`
+declares only `CFBundleIconFile = icon.icns` and no `CFBundleIconName`, so the
+system never reads the `Assets.car` that `afterPack` copies into the bundle:
+macOS draws `icon.icns` on every version. That is why the icon-grid margin above
+has to live in `icon.icns` (and `icon-macos.png`) rather than in the `.icon`
+bundle, and why switching to the asset catalog is a separate change — it needs
+`CFBundleIconName` and a recompile of `Assets.car` with the macOS 26 SDK.
 
 ## Single Source of Truth
 
