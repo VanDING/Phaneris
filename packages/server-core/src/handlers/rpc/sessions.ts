@@ -144,6 +144,7 @@ export const HANDLED_CHANNELS = [
   RPC_CHANNELS.tasks.GET_OUTPUT,
   RPC_CHANNELS.sessions.RESPOND_TO_PERMISSION,
   RPC_CHANNELS.sessions.RESPOND_TO_CREDENTIAL,
+  RPC_CHANNELS.sessions.RESPOND_TO_ASK_USER,
   RPC_CHANNELS.sessions.COMMAND,
   RPC_CHANNELS.sessions.GET_PENDING_PLAN_EXECUTION,
   RPC_CHANNELS.sessions.GET_PERMISSION_MODE_STATE,
@@ -429,6 +430,13 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   server.handle(RPC_CHANNELS.sessions.RESPOND_TO_CREDENTIAL, async (ctx, sessionId: string, requestId: string, response: import('@phaneris/shared/protocol').CredentialResponse) => {
     assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
     return sessionManager.respondToCredential(sessionId, requestId, response)
+  })
+
+  // Respond to a pending ask_user question.
+  // Returns true if the answer was delivered, false if the request is no longer pending.
+  server.handle(RPC_CHANNELS.sessions.RESPOND_TO_ASK_USER, async (ctx, sessionId: string, requestId: string, response: import('@phaneris/shared/protocol').AskUserResponse) => {
+    assertSessionWorkspaceOwnership(sessionManager, ctx, sessionId)
+    return sessionManager.respondToAskUser(sessionId, requestId, response)
   })
 
   // ==========================================================================

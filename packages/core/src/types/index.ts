@@ -50,6 +50,13 @@ export type {
   ErrorCode,
   TypedError,
   PermissionRequest,
+  // Ask-user questions (interactive agent → human question, answered in place)
+  AskUserQuestionOption,
+  AskUserQuestionIntent,
+  AskUserQuestion,
+  AskUserRequest,
+  AskUserAnswerItem,
+  AskUserResponse,
   AgentEvent,
   // Auth-related types
   CredentialInputMode,

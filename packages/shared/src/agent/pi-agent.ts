@@ -101,6 +101,8 @@ import {
   SESSION_BACKEND_TOOL_NAMES,
   SESSION_TOOL_REGISTRY,
   type ToolResult as SessionToolResult,
+  type AskUserQuestion,
+  type AskUserResponse,
 } from '@phaneris/session-tools-core';
 import { createSessionContext, type SessionToolContext } from './session-context.ts';
 import { getPermissionModeDiagnostics, cleanupModeState } from './mode-manager.ts';
@@ -344,6 +346,24 @@ export class PiAgent extends BaseAgent {
   private pendingToolExecutions: Map<string, {
     resolve: (result: { content: string; isError: boolean }) => void;
     reject: (error: Error) => void;
+  }> = new Map();
+
+  /**
+   * Pending ask_user questions awaiting a human answer.
+   *
+   * Unlike pendingPermissions (which resolves a boolean gate inside the tool
+   * pipeline), this resolves the tool handler itself: the registry-mode handler
+   * awaits `onAskUser` and returns the answer as the tool's result, so the turn
+   * continues rather than ending.
+   *
+   * Every terminal path resolves rather than rejects — including abort and
+   * subprocess death — because a question that ends unanswered is still a
+   * normal outcome the model must be told about, not a transport failure. A
+   * leaked entry here would hang a turn forever, so the entry is always removed
+   * before its promise settles.
+   */
+  private pendingAskUser: Map<string, {
+    resolve: (response: AskUserResponse) => void;
   }> = new Map();
 
   // Pending utility requests own their timeout handles so every terminal path
@@ -1699,6 +1719,7 @@ export class PiAgent extends BaseAgent {
       onAuthRequest: (request: unknown) => {
         this.onAuthRequest?.(request as any);
       },
+      onAskUser: (requestId: string, questions: AskUserQuestion[]) => this.awaitUserAnswer(requestId, questions),
     });
 
     // Attach session self-management bindings (lazy getters from callback registry)
@@ -2048,6 +2069,10 @@ export class PiAgent extends BaseAgent {
       pending.resolve(false);
     }
     this.pendingPermissions.clear();
+
+    // Same for an open ask_user question: the session tool handler runs in the
+    // main process and would otherwise await an answer that can never arrive.
+    this.settlePendingAskUser();
 
     // Drop any cached pre-tool metadata for the dead subprocess.
     this.preToolMetadataByCallId.clear();
@@ -2488,6 +2513,53 @@ export class PiAgent extends BaseAgent {
     }
   }
 
+  /**
+   * Ask the user a question and wait for the answer.
+   *
+   * The UI request is published BEFORE awaiting, so the question is on screen
+   * while this promise is pending. Resolution comes from
+   * {@link respondToAskUser}; aborts come from {@link settlePendingAskUser}.
+   */
+  private awaitUserAnswer(requestId: string, questions: AskUserQuestion[]): Promise<AskUserResponse> {
+    const promise = new Promise<AskUserResponse>((resolve) => {
+      this.pendingAskUser.set(requestId, { resolve });
+    });
+
+    this.onAskUserRequest?.(requestId, questions);
+
+    return promise;
+  }
+
+  /**
+   * Resolve a pending ask_user question with the human's answer.
+   *
+   * Returns true when a pending question accepted it. A false result means the
+   * question is no longer live (already answered, aborted, or the session was
+   * torn down) — the caller should treat the answer as dropped rather than
+   * re-delivering it.
+   */
+  respondToAskUser(requestId: string, response: AskUserResponse): boolean {
+    const pending = this.pendingAskUser.get(requestId);
+    if (!pending) return false;
+    this.pendingAskUser.delete(requestId);
+    pending.resolve(response);
+    return true;
+  }
+
+  /**
+   * Settle every outstanding question so no tool handler is left awaiting a
+   * promise that can never resolve. Cancellation is reported as a `cancelled`
+   * answer (not a rejection) so the handler returns a normal tool result the
+   * model can act on, rather than a transport-level crash.
+   */
+  private settlePendingAskUser(): void {
+    if (this.pendingAskUser.size === 0) return;
+    for (const [, pending] of this.pendingAskUser) {
+      pending.resolve({ answers: [], cancelled: true });
+    }
+    this.pendingAskUser.clear();
+  }
+
   // ============================================================
   // Model Forwarding
   // ============================================================
@@ -2610,6 +2682,10 @@ export class PiAgent extends BaseAgent {
     }
     this.pendingPermissions.clear();
 
+    // Settle outstanding ask_user questions — a turn that is being aborted must
+    // never leave a question handler awaiting an answer that will not arrive.
+    this.settlePendingAskUser();
+
     // Reject all pending tool executions
     for (const [, pending] of this.pendingToolExecutions) {
       pending.reject(new Error(`Force aborted: ${reason}`));
@@ -2702,6 +2778,7 @@ export class PiAgent extends BaseAgent {
   canHibernate(): boolean {
     return !this._isProcessing
       && this.pendingPermissions.size === 0
+      && this.pendingAskUser.size === 0
       && this.pendingToolExecutions.size === 0
       && this.pendingMiniCompletions.size === 0
       && this.pendingLlmQueries.size === 0

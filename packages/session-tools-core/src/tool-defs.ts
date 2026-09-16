@@ -18,6 +18,7 @@ import type { SessionToolContext } from './context.ts';
 
 // Handlers
 import { handleSubmitPlan } from './handlers/submit-plan.ts';
+import { handleAskUser } from './handlers/ask-user.ts';
 import { handleConfigValidate } from './handlers/config-validate.ts';
 import { handleSkillValidate } from './handlers/skill-validate.ts';
 import { handleMermaidValidate } from './handlers/mermaid-validate.ts';
@@ -66,6 +67,39 @@ import { handleImageGenerate } from './handlers/image-generate.ts';
 
 export const SubmitPlanSchema = z.object({
   planPath: z.string().describe('Absolute path to the plan markdown file you wrote'),
+});
+
+const AskUserOptionSchema = z.object({
+  label: z.string().describe('Short user-facing option label. This exact string is echoed back as the answer value.'),
+  description: z.string().optional().describe('One sentence explaining the tradeoff or impact of this option.'),
+});
+
+const AskUserQuestionSchema = z.object({
+  id: z.string().describe('Stable id for this question; echoed in the answer so batched answers stay routable.'),
+  question: z.string().describe('The specific question to ask the user.'),
+  detail: z
+    .string()
+    .optional()
+    .describe('Optional supporting content (Markdown) rendered with the question but kept out of the option labels.'),
+  header: z.string().optional().describe('Optional short heading/group label, such as "Confirm" or "Choose approach".'),
+  options: z
+    .array(AskUserOptionSchema)
+    .optional()
+    .describe('Choices to show the user. If you recommend one, put it first and append " (Recommended)" to its label. Omit to ask for a free-text answer.'),
+  multiSelect: z.boolean().optional().describe('Whether the user may select more than one option. Defaults to false.'),
+});
+
+/**
+ * `intent` is deliberately NOT part of this schema.
+ *
+ * It is an internal presentation channel (the `plan-review` card), set by
+ * host-side callers — the plan workflow owns that decision. Exposing it to the
+ * model would let it raise a plan-approval card outside `SubmitPlan`, which is
+ * exactly the bypass the system prompt tells it not to attempt. The type stays
+ * in the request vocabulary so a host producer can still set it.
+ */
+export const AskUserSchema = z.object({
+  questions: z.array(AskUserQuestionSchema).describe('Questions to ask the user before continuing.'),
 });
 
 export const ConfigValidateSchema = z.object({
@@ -402,6 +436,24 @@ The plan will be displayed to the user in a special formatted view.
 - No further tool calls or text output will be processed after this tool returns
 - The conversation will resume when the user responds (accept, modify, or reject the plan)
 - Do NOT include any text or tool calls after SubmitPlan - they will not be executed`,
+
+  ask_user: `Ask the user a concise question when you need a decision, a choice, or information only they have,
+and you cannot proceed correctly without it.
+
+Call this only when the answer is not discoverable by reading files, running commands, or searching the
+workspace. Do not use it to confirm work that is already authorized, and do not use it for plan approval
+(use SubmitPlan for that).
+
+**How it behaves:**
+- Execution pauses and the question appears in the chat input area; you resume automatically with the answer
+- The answer returns as this tool's result, so continue working in the same turn - do not repeat the question in prose
+- Offer \`options\` whenever the choice set is known. Put your recommended option first and append " (Recommended)" to its label
+- Omit \`options\` to ask an open question that needs a typed answer
+- Set \`multiSelect: true\` when more than one option may apply
+- If the user dismisses the question unanswered, do not ask it again: proceed with what is not blocked and state your assumption
+
+**When to use it:** an irreversible or outward-facing action whose target or scope is genuinely ambiguous; a
+choice between approaches with materially different tradeoffs; a fact only the user holds.`,
 
   config_validate: `Validate Phaneris configuration files.
 
@@ -781,6 +833,10 @@ export type SessionToolDef = RegistrySessionToolDef | BackendSessionToolDef;
 
 export const SESSION_TOOL_DEFS: SessionToolDef[] = [
   { name: 'SubmitPlan', description: TOOL_DESCRIPTIONS.SubmitPlan, inputSchema: SubmitPlanSchema, executionMode: 'registry', safeMode: 'allow', handler: handleSubmitPlan },
+  // ask_user is read-only with respect to the workspace and must stay callable in
+  // Explore: clarifying intent is exactly what that mode needs most. Its answer
+  // is advice, not authorization — the permission pipeline still gates actions.
+  { name: 'ask_user', description: TOOL_DESCRIPTIONS.ask_user, inputSchema: AskUserSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleAskUser },
   { name: 'config_validate', description: TOOL_DESCRIPTIONS.config_validate, inputSchema: ConfigValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleConfigValidate },
   { name: 'skill_validate', description: TOOL_DESCRIPTIONS.skill_validate, inputSchema: SkillValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleSkillValidate },
   { name: 'mermaid_validate', description: TOOL_DESCRIPTIONS.mermaid_validate, inputSchema: MermaidValidateSchema, executionMode: 'registry', safeMode: 'allow', readOnly: true, handler: handleMermaidValidate },

@@ -594,6 +594,108 @@ export interface PermissionRequest {
   approvalTtlSeconds?: number;
 }
 
+// ---------------------------------------------------------------------------
+// Ask-user questions (interactive agent → human question, answered in place)
+// ---------------------------------------------------------------------------
+
+/** One selectable answer offered to the user. */
+export interface AskUserQuestionOption {
+  /** User-facing label; also the value echoed back in `selected`. */
+  label: string;
+  /** Optional extra context rendered next to the label. */
+  description?: string;
+}
+
+/**
+ * A caller-declared presentation intent: the question IS this kind of
+ * decision, so a UI that recognises the tag presents it as such instead of as
+ * a generic option list. An intent changes presentation only — the answer
+ * encoding is identical either way, so a UI that does not know the tag still
+ * renders a correct (generic) flow.
+ *
+ * DORMANT EXTENSION POINT — no producer ships today.
+ *
+ * The `plan-review` card is fully built (validator, renderer, tests) and
+ * deliberately unreachable: `ask_user` does NOT expose `intent` in its
+ * model-facing schema, so the model cannot raise a plan-approval card, and the
+ * plan workflow still owns that decision through `SubmitPlan`. The vocabulary
+ * lives here so that a host-side producer can adopt it later without a wire
+ * change — the natural candidate is a future convergence of the plan-approval
+ * presentation, which is explicitly not planned.
+ *
+ * `SubmitPlan` is intentionally NOT being replaced by this. It persists the plan
+ * as a session message, carries a first-class "modify" outcome, and ends the
+ * turn at an approval boundary — a workflow transition, where a question is a
+ * value exchange. Read docs before assuming the two are interchangeable.
+ */
+export type AskUserQuestionIntent = {
+  /** A plan submitted for review: `detail` carries the plan markdown. */
+  kind: 'plan-review';
+  /**
+   * The option label that approves the plan; every other option declines it.
+   * Named rather than positional so no UI infers the verdict from option order.
+   */
+  approve: string;
+};
+
+/** One question in an ask-user request. */
+export interface AskUserQuestion {
+  /** Stable caller-provided id, echoed in the answer. */
+  id: string;
+  /** The question to display. */
+  question: string;
+  /** Optional supporting detail (Markdown) rendered with the question but kept out of option labels. */
+  detail?: string;
+  /** Optional short heading/group label. */
+  header?: string;
+  /** Optional choices the UI can render as a menu. Omitted = free-text answer only. */
+  options?: AskUserQuestionOption[];
+  /** Whether more than one option may be selected. Defaults to single-select. */
+  multiSelect?: boolean;
+  /** Optional presentation intent for capable UIs. */
+  intent?: AskUserQuestionIntent;
+}
+
+/**
+ * A question request from the agent to the human. The model-facing `ask_user`
+ * tool blocks on this until the user answers, skips, or dismisses it, and the
+ * answer returns to the model as that tool's result.
+ */
+export interface AskUserRequest {
+  /** Unique id correlating the request with its answer. */
+  requestId: string;
+  /** Session that asked. */
+  sessionId: string;
+  /** Tool that raised the request (always 'ask_user' today). */
+  toolName: string;
+  /** Questions to display. */
+  questions: AskUserQuestion[];
+}
+
+/** Answer to one question. */
+export interface AskUserAnswerItem {
+  /** The answered question id. */
+  id: string;
+  /** Selected option labels. Empty for a skipped question. */
+  selected: string[];
+  /** Optional free-text "Other" answer. */
+  custom?: string;
+}
+
+/**
+ * The human's answer to an {@link AskUserRequest}.
+ *
+ * `cancelled` marks a dismissal: the user closed the question without
+ * answering. The tool still returns a result (so the turn continues), but the
+ * model is told the question was not answered and must not block on it.
+ */
+export interface AskUserResponse {
+  /** Structured answers keyed by question id. */
+  answers: AskUserAnswerItem[];
+  /** True when the user dismissed the question instead of answering it. */
+  cancelled?: boolean;
+}
+
 /**
  * One source content block preserved in model order for the trajectory
  * details panel (mirrors the VanDSH TrajectorySourceBlock shape).
@@ -696,6 +798,7 @@ export type AgentEvent =
       commandHash?: string;
       approvalTtlSeconds?: number;
     }
+  | { type: 'ask_user_request'; requestId: string; questions: AskUserQuestion[] }
   | { type: 'error'; message: string }
   | { type: 'typed_error'; error: TypedError }
   | { type: 'complete'; usage?: AgentEventUsage; fullUsage?: PiUsage }

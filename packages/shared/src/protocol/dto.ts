@@ -13,6 +13,7 @@ import type {
   ToolDisplayMeta,
   AnnotationV1,
   PermissionRequest as BasePermissionRequest,
+  AskUserRequest,
   PiUsage,
   AssistantMetrics,
   TrajectorySourceBlock,
@@ -404,6 +405,7 @@ export type SessionEvent =
   | { type: 'working_directory_changed'; sessionId: string; workingDirectory: string }
   | { type: 'permission_request'; sessionId: string; request: PermissionRequest }
   | { type: 'credential_request'; sessionId: string; request: CredentialRequest }
+  | { type: 'ask_user_request'; sessionId: string; request: AskUserRequest }
   | { type: 'permission_mode_changed'; sessionId: string; permissionMode: PermissionMode; previousPermissionMode?: PermissionMode; transitionDisplay?: string; modeVersion?: number; changedAt?: string; changedBy?: PermissionModeState['changedBy'] }
   | { type: 'plan_submitted'; sessionId: string; message: Message }
   | { type: 'sources_changed'; sessionId: string; enabledSourceSlugs: string[] }
@@ -506,6 +508,16 @@ export interface PermissionRequest extends BasePermissionRequest {
 export interface PermissionResponseOptions {
   rememberForMinutes?: number
 }
+
+/**
+ * Ask-user question request with session context.
+ *
+ * Re-exported from `@phaneris/core/types` (the runtime shape both the agent and
+ * the renderer already share); the renderer receives it on the
+ * `ask_user_request` session event and answers over
+ * `sessions:respondToAskUser`.
+ */
+export type { AskUserRequest, AskUserResponse, AskUserQuestion, AskUserAnswerItem } from '@phaneris/core/types'
 
 // Re-export for handler convenience
 export type { SharedCredentialInputMode as CredentialInputMode }

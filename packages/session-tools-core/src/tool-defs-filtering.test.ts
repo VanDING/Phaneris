@@ -60,6 +60,11 @@ describe('session tool filtering helpers', () => {
     expect(allowed.has('artifact_inspect')).toBe(true);
     expect(allowed.has('artifact_render')).toBe(true);
 
+    // Asking the user is read-only and must stay available in Explore — clarifying
+    // intent is exactly what that mode needs. The answer is advice, not a grant.
+    expect(allowed.has('ask_user')).toBe(true);
+    expect(blocked.has('ask_user')).toBe(false);
+
     // Arbitrary code execution tools are blocked in Safe/Explore mode (audit C-2).
     expect(blocked.has('script_sandbox')).toBe(true);
     expect(blocked.has('transform_data')).toBe(true);

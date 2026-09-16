@@ -19,6 +19,7 @@ import type {
   SendMessageOptions,
   PermissionResponseOptions,
   CredentialResponse,
+  AskUserResponse,
   PermissionModeState,
   UnreadSummary,
   ShareResult,
@@ -179,6 +180,7 @@ export interface ISessionManager {
     options?: PermissionResponseOptions,
   ): boolean
   respondToCredential(sessionId: string, requestId: string, response: CredentialResponse): Promise<boolean>
+  respondToAskUser(sessionId: string, requestId: string, response: AskUserResponse): boolean
   getSessionPermissionModeState(sessionId: string): PermissionModeState | null
 
   // ---------------------------------------------------------------------------

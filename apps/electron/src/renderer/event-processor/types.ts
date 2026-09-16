@@ -5,7 +5,7 @@
  * All agent events flow through a single pure function for consistent state transitions.
  */
 
-import type { Session, SessionEvent, Message, PermissionRequest, CredentialRequest, TypedError, PermissionMode, SessionStatus, AuthRequest, ToolDisplayMeta } from '../../shared/types'
+import type { Session, SessionEvent, Message, PermissionRequest, CredentialRequest, AskUserRequest, TypedError, PermissionMode, SessionStatus, AuthRequest, ToolDisplayMeta } from '../../shared/types'
 import type { PiUsage, AssistantMetrics, TrajectorySourceBlock } from '@phaneris/core/types'
 
 /** Explicit SDK retry boundaries; keep their transport shape authoritative. */
@@ -390,6 +390,19 @@ export interface CredentialRequestEvent {
 }
 
 /**
+ * Ask-user request event - the agent asked the user a question and is waiting.
+ *
+ * Unlike permission/credential requests, the agent's tool call stays open: the
+ * answer is delivered back through `sessions:respondToAskUser` and reaches the
+ * model as the tool's result, so the turn continues.
+ */
+export interface AskUserRequestEvent {
+  type: 'ask_user_request'
+  sessionId: string
+  request: AskUserRequest
+}
+
+/**
  * Task backgrounded event - background agent started
  */
 export interface TaskBackgroundedEvent {
@@ -581,6 +594,7 @@ export type AgentEvent =
   | TypedErrorEvent
   | PermissionRequestEvent
   | CredentialRequestEvent
+  | AskUserRequestEvent
   | SourcesChangedEvent
   | LabelsChangedEvent
   | ProjectIdChangedEvent
@@ -625,6 +639,7 @@ export type AgentEvent =
 export type Effect =
   | { type: 'permission_request'; request: PermissionRequest }
   | { type: 'credential_request'; request: CredentialRequest }
+  | { type: 'ask_user_request'; request: AskUserRequest }
   | { type: 'generate_title'; sessionId: string; userMessage: string }
   | { type: 'permission_mode_changed'; sessionId: string; permissionMode: PermissionMode; previousPermissionMode?: PermissionMode; transitionDisplay?: string; modeVersion?: number; changedAt?: string; changedBy?: 'user' | 'system' | 'restore' | 'automation' | 'unknown' }
   | { type: 'restore_input'; text: string }

@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/context/ThemeContext'
 import { useSetAtom, useStore, useAtomValue, useAtom } from 'jotai'
-import type { Session, Workspace, SessionEvent, Message, FileAttachment, StoredAttachment, PermissionRequest, CredentialRequest, CredentialResponse, SetupNeeds, SessionStatus, NewChatActionParams, ContentBadge, LlmConnectionWithStatus, PermissionModeState } from '../shared/types'
+import type { Session, Workspace, SessionEvent, Message, FileAttachment, StoredAttachment, PermissionRequest, CredentialRequest, CredentialResponse, AskUserRequest, AskUserResponse, SetupNeeds, SessionStatus, NewChatActionParams, ContentBadge, LlmConnectionWithStatus, PermissionModeState } from '../shared/types'
 import { generateMessageId, MAX_MESSAGE_PAYLOAD_BYTES, MAX_MESSAGE_PAYLOAD_MARGIN_BYTES } from '../shared/types'
 import type { SessionDraft, DraftAttachmentRef } from '@phaneris/shared/config'
 import type { SessionOptions, SessionOptionUpdates } from './hooks/useSessionOptions'
@@ -385,6 +385,8 @@ export default function App() {
   const [pendingPermissions, setPendingPermissions] = useState<Map<string, PermissionRequest[]>>(new Map())
   // Credential requests per session (queue to handle multiple concurrent requests)
   const [pendingCredentials, setPendingCredentials] = useState<Map<string, CredentialRequest[]>>(new Map())
+  // ask_user questions per session (queue; the agent's tool call stays open until answered)
+  const [pendingQuestions, setPendingQuestions] = useState<Map<string, AskUserRequest[]>>(new Map())
   // Draft composer state per session (text + attachment refs), preserved across mode
   // switches, conversation changes, and app restarts. Using a ref avoids re-renders
   // during typing; attachments are stored as lightweight refs (path + name) and
@@ -896,6 +898,23 @@ export default function App() {
             })
             break
           }
+          case 'ask_user_request': {
+            setPendingQuestions(prevQuestions => {
+              const next = new Map(prevQuestions)
+              const existingQueue = next.get(sessionId) || []
+              next.set(sessionId, [...existingQueue, effect.request])
+              return next
+            })
+
+            // The agent's turn is still running and blocked on this answer — a
+            // missing notification would leave it waiting silently.
+            const questionSession = store.get(sessionAtomFamily(sessionId))
+            if (questionSession && !questionSession.hidden) {
+              const first = effect.request.questions[0]?.question ?? ''
+              showSessionNotification(questionSession, `Question: ${first}`)
+            }
+            break
+          }
           case 'restore_input': {
             // Queued messages were removed from chat on abort — restore their text to the input field.
             // Append to existing draft (user may have started typing) rather than overwrite.
@@ -937,6 +956,16 @@ export default function App() {
             return next
           }
           return prevCreds
+        })
+        // A pending question cannot survive its turn: the tool call it belonged
+        // to was settled (answered or aborted) when the turn ended.
+        setPendingQuestions(prevQuestions => {
+          if (prevQuestions.has(sessionId)) {
+            const next = new Map(prevQuestions)
+            next.delete(sessionId)
+            return next
+          }
+          return prevQuestions
         })
       }
     }
@@ -1715,6 +1744,33 @@ export default function App() {
     }
   }, [])
 
+  /**
+   * Answer (or dismiss) an ask_user question.
+   *
+   * Either way the question is removed from the queue: a dismissed question is
+   * still settled on the agent side (as `cancelled`), so keeping it mounted
+   * would show a panel whose answer can no longer be delivered.
+   */
+  const handleRespondToAskUser = useCallback(async (
+    sessionId: string,
+    requestId: string,
+    response: AskUserResponse,
+  ) => {
+    await window.electronAPI.respondToAskUser(sessionId, requestId, response)
+
+    setPendingQuestions(prev => {
+      const next = new Map(prev)
+      const queue = next.get(sessionId) || []
+      const remainingQueue = queue.slice(1) // Remove only the question just answered
+      if (remainingQueue.length === 0) {
+        next.delete(sessionId)
+      } else {
+        next.set(sessionId, remainingQueue)
+      }
+      return next
+    })
+  }, [])
+
   // Shared fallback panel state and explicit external-open actions.
   const linkInterceptor = useLinkInterceptor({
     openFileExternal: async (path) => {
@@ -1936,6 +1992,7 @@ export default function App() {
     refreshLlmConnections,
     pendingPermissions,
     pendingCredentials,
+    pendingQuestions,
     getDraft,
     getDraftAttachmentRefs,
     hydrateDraftAttachments,
@@ -1955,6 +2012,7 @@ export default function App() {
     onDeleteSession: handleDeleteSession,
     onRespondToPermission: handleRespondToPermission,
     onRespondToCredential: handleRespondToCredential,
+    onRespondToAskUser: handleRespondToAskUser,
     // File/URL handlers
     onOpenFile: handleOpenFile,
     onOpenUrl: handleOpenUrl,
@@ -1982,6 +2040,7 @@ export default function App() {
     refreshLlmConnections,
     pendingPermissions,
     pendingCredentials,
+    pendingQuestions,
     getDraft,
     getDraftAttachmentRefs,
     hydrateDraftAttachments,
@@ -2000,6 +2059,7 @@ export default function App() {
     handleDeleteSession,
     handleRespondToPermission,
     handleRespondToCredential,
+    handleRespondToAskUser,
     handleOpenFile,
     handleOpenUrl,
     handleSelectWorkspace,

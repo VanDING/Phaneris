@@ -19,7 +19,7 @@ import { Button } from './button'
 import { cn } from '@/lib/utils'
 import { usePlatform } from '@phaneris/ui'
 import type { ContentBadge, Session, CreateSessionOptions } from '../../../shared/types'
-import { useActiveWorkspace, useAppShellContext, useSession, usePendingPermission, usePendingCredential } from '@/context/AppShellContext'
+import { useActiveWorkspace, useAppShellContext, useSession, usePendingPermission, usePendingCredential, usePendingQuestion } from '@/context/AppShellContext'
 import { useEscapeInterrupt } from '@/context/EscapeInterruptContext'
 import { ChatDisplay } from '../app-shell/ChatDisplay'
 
@@ -762,7 +762,7 @@ export function EditPopover({
   }
 
   // Use App context for session management (same code path as main chat)
-  const { onCreateSession, onSendMessage, onRespondToPermission, onRespondToCredential } = useAppShellContext()
+  const { onCreateSession, onSendMessage, onRespondToPermission, onRespondToCredential, onRespondToAskUser } = useAppShellContext()
 
   // Session ID for inline execution (created on first message)
   const [inlineSessionId, setInlineSessionId] = useState<string | null>(null)
@@ -771,9 +771,10 @@ export function EditPopover({
   // Pass empty string when no session yet - atom returns null for unknown IDs
   const inlineSession = useSession(inlineSessionId || '')
 
-  // Pending permission/credential requests for inline session (same flow as main chat)
+  // Pending permission/credential/question requests for inline session (same flow as main chat)
   const pendingPermission = usePendingPermission(inlineSessionId || '')
   const pendingCredential = usePendingCredential(inlineSessionId || '')
+  const pendingQuestion = usePendingQuestion(inlineSessionId || '')
 
   // Model state for ChatDisplay (starts with prop value, can be changed by user)
   const [currentModel, setCurrentModel] = useState(model || 'haiku')
@@ -1064,6 +1065,8 @@ export function EditPopover({
                   onRespondToPermission={onRespondToPermission}
                   pendingCredential={pendingCredential}
                   onRespondToCredential={onRespondToCredential}
+                  pendingQuestion={pendingQuestion}
+                  onRespondToAskUser={onRespondToAskUser}
                   compactMode={true}
                   placeholder={placeholder}
                   emptyStateLabel={displayLabel || context.label}

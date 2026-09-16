@@ -17,6 +17,8 @@ import type {
   PermissionRequest,
   CredentialRequest,
   CredentialResponse,
+  AskUserRequest,
+  AskUserResponse,
   PermissionMode,
   SessionStatus,
   LoadedSource,
@@ -47,6 +49,8 @@ export interface AppShellContextType {
   refreshLlmConnections: () => Promise<void>
   pendingPermissions: Map<string, PermissionRequest[]>
   pendingCredentials: Map<string, CredentialRequest[]>
+  /** Pending ask_user questions per session (the agent's tool call stays open until answered) */
+  pendingQuestions: Map<string, AskUserRequest[]>
   /** Get draft input text for a session - reads from ref without triggering re-renders */
   getDraft: (sessionId: string) => string
   /** Get persisted attachment refs (path + name) for a session's draft - no file IO */
@@ -108,6 +112,13 @@ export interface AppShellContextType {
     requestId: string,
     response: CredentialResponse
   ) => void
+
+  // Ask-user handling (answer or dismiss a pending question)
+  onRespondToAskUser?: (
+    sessionId: string,
+    requestId: string,
+    response: AskUserResponse
+  ) => void | Promise<void>
 
   // File/URL handlers - these can open in tabs or external apps
   onOpenFile: (path: string, sessionId?: string) => void
@@ -241,6 +252,17 @@ export function usePendingPermission(sessionId: string): PermissionRequest | und
 export function usePendingCredential(sessionId: string): CredentialRequest | undefined {
   const { pendingCredentials } = useAppShellContext()
   return pendingCredentials.get(sessionId)?.[0]
+}
+
+/**
+ * Get the pending ask_user question for a session (first in queue).
+ *
+ * The agent is blocked on this answer, so the panel that renders it stays
+ * mounted until it is answered or dismissed.
+ */
+export function usePendingQuestion(sessionId: string): AskUserRequest | undefined {
+  const { pendingQuestions } = useAppShellContext()
+  return pendingQuestions.get(sessionId)?.[0]
 }
 
 /**

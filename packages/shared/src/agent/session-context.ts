@@ -25,6 +25,8 @@ import type {
   ApiTestResult,
   SourceConfig,
   DeveloperFeedback,
+  AskUserQuestion,
+  AskUserResponse,
 } from '@phaneris/session-tools-core';
 import {
   validateConfig,
@@ -76,6 +78,12 @@ export interface SessionContextOptions {
   workspaceId: string;
   onPlanSubmitted: (planPath: string) => void;
   onAuthRequest: (request: unknown) => void;
+  /**
+   * Ask the user a question and resolve with the answer. Omitted when the
+   * session has no interactive client — `ask_user` then reports the question as
+   * unanswerable instead of blocking forever.
+   */
+  onAskUser?: (requestId: string, questions: AskUserQuestion[]) => Promise<AskUserResponse>;
 }
 
 /**
@@ -89,7 +97,7 @@ export interface SessionContextOptions {
  * - Icon management
  */
 export function createSessionContext(options: SessionContextOptions): SessionToolContext {
-  const { sessionId, workspacePath, workspaceId, onPlanSubmitted, onAuthRequest } = options;
+  const { sessionId, workspacePath, workspaceId, onPlanSubmitted, onAuthRequest, onAskUser } = options;
 
   // File system implementation
   const fs: FileSystemInterface = {
@@ -112,6 +120,7 @@ export function createSessionContext(options: SessionContextOptions): SessionToo
   const callbacks: SessionToolCallbacks = {
     onPlanSubmitted,
     onAuthRequest: (request) => onAuthRequest(request),
+    ...(onAskUser === undefined ? {} : { onAskUser }),
   };
 
   // Validators implementation

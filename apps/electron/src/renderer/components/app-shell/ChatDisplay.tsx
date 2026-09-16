@@ -34,7 +34,7 @@ import {
 } from "@phaneris/ui"
 import { useFocusZone } from "@/hooks/keyboard"
 import { useTheme } from "@/hooks/useTheme"
-import type { Session, Message, FileAttachment, StoredAttachment, PermissionRequest, CredentialRequest, CredentialResponse, LoadedSource, LoadedSkill } from "../../../shared/types"
+import type { Session, Message, FileAttachment, StoredAttachment, PermissionRequest, CredentialRequest, CredentialResponse, AskUserRequest, AskUserResponse, LoadedSource, LoadedSkill } from "../../../shared/types"
 import type { PermissionMode } from "@phaneris/shared/agent/modes"
 import type { ThinkingLevel } from "@phaneris/shared/agent/thinking-levels"
 import {
@@ -56,7 +56,7 @@ import {
   type AuthRequestTurn,
 } from "@phaneris/ui"
 import { MemoizedAuthRequestCard } from "@/components/chat/AuthRequestCard"
-import { ChatInputZone, type StructuredInputState, type StructuredResponse, type PermissionResponse, type AdminApprovalResponse } from "./input"
+import { ChatInputZone, type StructuredInputState, type StructuredResponse, type PermissionResponse, type AdminApprovalResponse, type QuestionResponse } from "./input"
 import type { RichTextInputHandle } from "@/components/ui/rich-text-input"
 import { useBackgroundTasks } from "@/hooks/useBackgroundTasks"
 import { useTurnCardExpansion } from "@/hooks/useTurnCardExpansion"
@@ -129,6 +129,10 @@ interface ChatDisplayProps {
   pendingCredential?: CredentialRequest
   /** Callback to respond to credential request */
   onRespondToCredential?: (sessionId: string, requestId: string, response: CredentialResponse) => void
+  /** Pending ask_user question for this session (the agent is blocked on the answer) */
+  pendingQuestion?: AskUserRequest
+  /** Callback to answer or dismiss a pending question */
+  onRespondToAskUser?: (sessionId: string, requestId: string, response: AskUserResponse) => void
   // Thinking level (session-level setting)
   /** Current thinking level ('off', 'think', 'max') */
   thinkingLevel?: ThinkingLevel
@@ -420,6 +424,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   onRespondToPermission,
   pendingCredential,
   onRespondToCredential,
+  pendingQuestion,
+  onRespondToAskUser,
   // Thinking level
   thinkingLevel = 'medium',
   onThinkingLevelChange,
@@ -1335,10 +1341,21 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
         pendingCredential.requestId,
         credResponse
       )
+    } else if (response.type === 'question' && pendingQuestion && onRespondToAskUser) {
+      const questionResponse = response as QuestionResponse
+      onRespondToAskUser(
+        pendingQuestion.sessionId,
+        pendingQuestion.requestId,
+        { answers: questionResponse.answers, cancelled: questionResponse.cancelled }
+      )
     }
   }
 
-  // Build structured input state from pending requests (permissions take priority)
+  // Build structured input state from pending requests.
+  // Priority: permission > question > credential. A permission gate blocks the
+  // tool that is about to run, so answering it first unblocks real work; a
+  // question is the agent waiting on a decision; a credential request belongs
+  // to auth setup and can wait behind both.
   const structuredInput: StructuredInputState | undefined = React.useMemo(() => {
     if (pendingPermission) {
       if (pendingPermission.type === 'admin_approval') {
@@ -1356,11 +1373,14 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
       }
       return { type: 'permission', data: pendingPermission }
     }
+    if (pendingQuestion) {
+      return { type: 'question', data: pendingQuestion }
+    }
     if (pendingCredential) {
       return { type: 'credential', data: pendingCredential }
     }
     return undefined
-  }, [pendingPermission, pendingCredential])
+  }, [pendingPermission, pendingQuestion, pendingCredential])
 
   // Keep ref in sync for scroll handler
   totalTurnCountRef.current = allTurns.length

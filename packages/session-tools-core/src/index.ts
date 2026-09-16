@@ -28,6 +28,13 @@ export type {
   AuthRequest,
   AuthResult,
 
+  // Ask-user types
+  AskUserOption,
+  AskUserIntent,
+  AskUserQuestion,
+  AskUserAnswerItem,
+  AskUserResponse,
+
   // IPC types
   CallbackMessage,
 

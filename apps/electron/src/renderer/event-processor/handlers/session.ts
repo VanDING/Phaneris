@@ -23,6 +23,7 @@ import type {
   NameChangedEvent,
   PermissionRequestEvent,
   CredentialRequestEvent,
+  AskUserRequestEvent,
   PlanSubmittedEvent,
   StatusEvent,
   RetryEvent,
@@ -863,6 +864,26 @@ export function handleCredentialRequest(
     state,
     effects: [{
       type: 'credential_request',
+      request: event.request,
+    }]
+  }
+}
+
+/**
+ * Handle ask_user_request - return effect for parent to handle.
+ *
+ * The agent's tool call remains open while the question is pending, so this is
+ * only a presentation effect: no session state changes, and the turn does not
+ * end until the answer is delivered.
+ */
+export function handleAskUserRequest(
+  state: SessionState,
+  event: AskUserRequestEvent
+): ProcessResult {
+  return {
+    state,
+    effects: [{
+      type: 'ask_user_request',
       request: event.request,
     }]
   }

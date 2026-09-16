@@ -136,6 +136,77 @@ export interface AuthResult {
 }
 
 // ============================================================
+// Ask User (interactive question answered in place)
+// ============================================================
+
+/**
+ * Mirrors `@phaneris/core`'s ask-user vocabulary, duplicated here on purpose so
+ * this package stays dependency-free (same rule as `CreateTaskInput`). The
+ * backend maps the real core types onto these at the boundary.
+ */
+
+/** One selectable answer offered to the user. */
+export interface AskUserOption {
+  /** User-facing label; also the value echoed back in `selected`. */
+  label: string;
+  /** Optional extra context rendered next to the label. */
+  description?: string;
+}
+
+/**
+ * Presentation intent for capable UIs; changes layout only, never the answer
+ * encoding.
+ *
+ * DORMANT EXTENSION POINT — no producer ships today, and it is deliberately
+ * absent from `AskUserSchema` so the model cannot raise a plan-approval card
+ * outside `SubmitPlan`. See the matching note on
+ * `AskUserQuestionIntent` in `@phaneris/core` for why `SubmitPlan` is not
+ * being replaced by this card.
+ */
+export interface AskUserIntent {
+  /** A plan submitted for review: `detail` carries the plan markdown. */
+  kind: 'plan-review';
+  /** The option label that approves the plan; every other option declines it. */
+  approve: string;
+}
+
+/** One question in an ask_user request. */
+export interface AskUserQuestion {
+  /** Stable caller-provided id, echoed in the answer. */
+  id: string;
+  /** The question to display. */
+  question: string;
+  /** Optional supporting detail (Markdown) rendered with the question. */
+  detail?: string;
+  /** Optional short heading/group label. */
+  header?: string;
+  /** Optional choices. Omitted = free-text answer only. */
+  options?: AskUserOption[];
+  /** Whether more than one option may be selected. Defaults to single-select. */
+  multiSelect?: boolean;
+  /** Optional presentation intent for capable UIs. */
+  intent?: AskUserIntent;
+}
+
+/** Answer to one question. */
+export interface AskUserAnswerItem {
+  /** The answered question id. */
+  id: string;
+  /** Selected option labels. Empty for a skipped question. */
+  selected: string[];
+  /** Optional free-text "Other" answer. */
+  custom?: string;
+}
+
+/** The human's answer to an ask_user request. */
+export interface AskUserResponse {
+  /** Structured answers keyed by question id. */
+  answers: AskUserAnswerItem[];
+  /** True when the user dismissed the question instead of answering it. */
+  cancelled?: boolean;
+}
+
+// ============================================================
 // Developer Feedback
 // ============================================================
 

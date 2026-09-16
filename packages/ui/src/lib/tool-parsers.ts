@@ -239,6 +239,9 @@ export interface OverlayCard {
 // Main Extraction Function
 // ============================================================================
 
+/** Shown in the ask_user transcript when the user left a question unanswered. */
+const ASK_USER_UNANSWERED = '(unanswered)'
+
 /**
  * Extract overlay data from an activity item.
  * Returns typed data for rendering the appropriate overlay component.
@@ -252,6 +255,65 @@ export function extractOverlayData(activity: ActivityItem): OverlayData | null {
 
   // Get file path from various input formats
   const filePath = (input?.file_path as string) || (input?.path as string) || 'file'
+
+  // ask_user → Document overlay with a readable question/answer transcript.
+  // The tool input carries the questions and the result carries the answers as
+  // `{ answers: [{ id, selected, custom? }] }`; pair them by id. Anything that
+  // does not match the expected shape falls through to the generic viewers.
+  if (normalizeToolCommandName(activity.toolName).toLowerCase() === 'ask_user') {
+    const questions = (input?.questions as Array<Record<string, unknown>> | undefined) ?? []
+    const parsedAnswers = (() => {
+      const trimmed = rawContent.trim()
+      if (!trimmed.startsWith('{')) return undefined
+      try {
+        const parsed = JSON.parse(trimmed) as { answers?: Array<{ id?: unknown; selected?: unknown; custom?: unknown }> }
+        return Array.isArray(parsed.answers) ? parsed.answers : undefined
+      } catch {
+        return undefined
+      }
+    })()
+
+    // Claim the result only when the questions can actually be paired with the
+    // answer batch. A tool error or a cancelled wait produces text that is not
+    // `{ answers: [...] }`, and that text must stay visible rather than being
+    // replaced by a transcript of unanswered questions.
+    const isAnswerBatch = parsedAnswers !== undefined || rawContent.trim().length === 0
+
+    if (questions.length > 0 && isAnswerBatch) {
+      const answerById = new Map(
+        (parsedAnswers ?? [])
+          .filter((answer): answer is { id: string; selected?: unknown; custom?: unknown } => typeof answer.id === 'string')
+          .map(answer => [answer.id, answer]),
+      )
+
+      const sections: string[] = []
+      for (const question of questions) {
+        const id = typeof question.id === 'string' ? question.id : ''
+        const header = typeof question.header === 'string' ? question.header : ''
+        const text = typeof question.question === 'string' ? question.question : ''
+        sections.push(header ? `**${header}**\n\n${text}` : text)
+        if (typeof question.detail === 'string' && question.detail.trim().length > 0) {
+          sections.push(question.detail)
+        }
+
+        const answer = answerById.get(id)
+        const selected = Array.isArray(answer?.selected)
+          ? (answer.selected as unknown[]).filter((entry): entry is string => typeof entry === 'string')
+          : []
+        const custom = typeof answer?.custom === 'string' ? answer.custom : ''
+        const parts = [...selected, ...(custom ? [custom] : [])]
+        sections.push(parts.length > 0 ? `> ${parts.join(', ')}` : `> ${ASK_USER_UNANSWERED}`)
+      }
+
+      return {
+        type: 'document',
+        filePath: 'ask_user',
+        content: sections.join('\n\n'),
+        toolName: 'ask_user',
+        error: activity.error,
+      }
+    }
+  }
 
   // Read tool → Code overlay (read mode)
   if (toolName === 'read') {

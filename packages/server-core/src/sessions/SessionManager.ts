@@ -1133,6 +1133,14 @@ export class SessionManager implements ISessionManager {
     type?: 'bash' | 'file_write' | 'mcp_mutation' | 'api_mutation' | 'admin_approval'
     commandHash?: string
   }> = new Map()
+  /**
+   * Live ask_user questions (keyed by requestId).
+   *
+   * The agent owns the resolver; this map only records which session a request
+   * belongs to, so an answer arriving for a stale or foreign session is dropped
+   * instead of being delivered to the wrong agent.
+   */
+  private pendingAskUserRequests: Map<string, { sessionId: string }> = new Map()
   // Privileged approval binding + audit logger
   private privilegedExecutionBroker = new PrivilegedExecutionBroker(sessionLog)
   // Session-local admin remember windows (exact command hash binding)
@@ -1422,6 +1430,14 @@ export class SessionManager implements ISessionManager {
     for (const [requestId, metadata] of this.pendingPermissionRequests.entries()) {
       if (metadata.sessionId === sessionId) {
         this.pendingPermissionRequests.delete(requestId)
+      }
+    }
+  }
+
+  private clearPendingAskUserRequestsForSession(sessionId: string): void {
+    for (const [requestId, metadata] of this.pendingAskUserRequests.entries()) {
+      if (metadata.sessionId === sessionId) {
+        this.pendingAskUserRequests.delete(requestId)
       }
     }
   }
@@ -4533,6 +4549,24 @@ export class SessionManager implements ISessionManager {
       // Auth refresh for mid-session token expiry is handled by the error handler in sendMessage
       // which destroys/recreates the agent to get fresh credentials
 
+      // Publish ask_user questions to the renderer. The agent's tool handler is
+      // blocked on the matching promise; the renderer answers over
+      // sessions:respondToAskUser, which routes back through respondToAskUser().
+      managed.agent.onAskUserRequest = (requestId: string, questions: import('@phaneris/session-tools-core').AskUserQuestion[]) => {
+        sessionLog.info(`Ask-user request for session ${managed.id}: ${requestId} (${questions.length} question(s))`)
+        this.pendingAskUserRequests.set(requestId, { sessionId: managed.id })
+        this.sendEvent({
+          type: 'ask_user_request',
+          sessionId: managed.id,
+          request: {
+            requestId,
+            sessionId: managed.id,
+            toolName: 'ask_user',
+            questions,
+          },
+        }, managed.workspace.id)
+      }
+
       // Set up mode change handlers
       managed.agent.onPermissionModeChange = (mode) => {
         if (managed.permissionMode === mode) {
@@ -6454,6 +6488,7 @@ export class SessionManager implements ISessionManager {
     this.pendingDeltas.delete(sessionId)
     this.clearAdminRememberApprovalsForSession(sessionId)
     this.clearPendingPermissionRequestsForSession(sessionId)
+    this.clearPendingAskUserRequestsForSession(sessionId)
 
     // Cancel any pending persistence write (session is being deleted, no need to save)
     sessionPersistenceQueue.cancel(sessionId)
@@ -7834,6 +7869,43 @@ export class SessionManager implements ISessionManager {
       sessionLog.warn(`Cannot respond to permission - no agent for session ${sessionId}`)
       return false
     }
+  }
+
+  /**
+   * Respond to a pending ask_user question.
+   *
+   * Returns true when the answer was delivered to a live question. A false
+   * result means the question is gone (answered, aborted, session torn down) —
+   * the renderer should clear it from its queue rather than retrying.
+   */
+  respondToAskUser(
+    sessionId: string,
+    requestId: string,
+    response: import('@phaneris/shared/protocol').AskUserResponse,
+  ): boolean {
+    const pending = this.pendingAskUserRequests.get(requestId)
+    if (!pending) {
+      sessionLog.warn(`Cannot respond to ask_user - no pending request for ${requestId}`)
+      return false
+    }
+    if (pending.sessionId !== sessionId) {
+      sessionLog.warn(`Cannot respond to ask_user - request ${requestId} belongs to session ${pending.sessionId}, not ${sessionId}`)
+      return false
+    }
+    this.pendingAskUserRequests.delete(requestId)
+
+    const managed = this.sessions.get(sessionId)
+    if (!managed?.agent) {
+      sessionLog.warn(`Cannot respond to ask_user - no agent for session ${sessionId}`)
+      return false
+    }
+
+    const cancelled = response.cancelled === true
+    sessionLog.info(`Ask-user response for ${requestId}: cancelled=${cancelled}, answers=${response.answers?.length ?? 0}`)
+    return managed.agent.respondToAskUser(requestId, {
+      answers: response.answers ?? [],
+      ...(cancelled ? { cancelled: true } : {}),
+    })
   }
 
   /**
@@ -9928,6 +10000,7 @@ export class SessionManager implements ISessionManager {
     // Clear pending credential resolvers (they won't be resolved, but prevents memory leak)
     this.pendingCredentialResolvers.clear()
     this.pendingPermissionRequests.clear()
+    this.pendingAskUserRequests.clear()
     this.adminRememberApprovals.clear()
 
     // Clean up session-scoped tool callbacks for all sessions

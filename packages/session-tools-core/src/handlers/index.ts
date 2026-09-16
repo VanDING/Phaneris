@@ -9,6 +9,10 @@
 export { handleSubmitPlan } from './submit-plan.ts';
 export type { SubmitPlanArgs } from './submit-plan.ts';
 
+// Ask User (interactive question answered in place)
+export { handleAskUser } from './ask-user.ts';
+export type { AskUserArgs } from './ask-user.ts';
+
 // Config Validate
 export { handleConfigValidate } from './config-validate.ts';
 export type { ConfigValidateArgs } from './config-validate.ts';

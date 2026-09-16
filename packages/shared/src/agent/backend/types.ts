@@ -18,6 +18,7 @@ import type { ThinkingLevel } from '../thinking-levels.ts';
 import type { PermissionMode } from '../mode-manager.ts';
 import type { LoadedSource } from '../../sources/types.ts';
 import type { AuthRequest } from '../session-scoped-tools.ts';
+import type { AskUserQuestion, AskUserResponse } from '@phaneris/session-tools-core';
 import type { McpClientPool } from '../../mcp/mcp-pool.ts';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Workspace } from '../../config/storage.ts';
@@ -102,6 +103,16 @@ export type PlanCallback = (planPath: string) => void;
  * Called when a source requires authentication.
  */
 export type AuthCallback = (request: AuthRequest) => void;
+
+/**
+ * Ask-user request callback signature.
+ *
+ * Called when the agent asks the user a question, with the request id the
+ * eventual answer must carry. Purely informational for the host (publish the
+ * request so the UI can render it); the answer travels back through the
+ * agent's `respondToAskUser`.
+ */
+export type AskUserRequestCallback = (requestId: string, questions: AskUserQuestion[]) => void;
 
 /**
  * Source change callback signature.
@@ -636,6 +647,15 @@ export interface AgentBackend {
    */
   respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void;
 
+  /**
+   * Resolve a pending ask_user question with the human's answer.
+   *
+   * @param requestId - Ask-user request ID
+   * @param response - Structured answers (or `cancelled` when dismissed)
+   * @returns true when a pending question accepted the answer
+   */
+  respondToAskUser(requestId: string, response: AskUserResponse): boolean;
+
   // ============================================================
   // Callbacks (set by facade after construction)
   // ============================================================
@@ -648,6 +668,9 @@ export interface AgentBackend {
 
   /** Called when a source requires authentication */
   onAuthRequest: AuthCallback | null;
+
+  /** Called when the agent asks the user a question (publish it for the UI) */
+  onAskUserRequest: AskUserRequestCallback | null;
 
   /** Called when a source config changes */
   onSourceChange: SourceChangeCallback | null;

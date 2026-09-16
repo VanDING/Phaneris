@@ -22,6 +22,9 @@ const TOOL_DISPLAY_NAMES: Record<string, string> = {
   'WebSearch': 'Searching Web',
   'TodoWrite': 'Updating Tasks',
   'NotebookEdit': 'Editing Notebook',
+  // Session tools (before the generic snake_case → Title Case fallback)
+  'ask_user': 'Asking User',
+  'SubmitPlan': 'Submitting Plan',
 };
 
 /**

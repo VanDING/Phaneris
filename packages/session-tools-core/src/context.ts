@@ -15,6 +15,8 @@ import type {
   SlackService,
   MicrosoftService,
   McpSourceConfig,
+  AskUserQuestion,
+  AskUserResponse,
 } from './types.ts';
 
 // ============================================================
@@ -56,6 +58,17 @@ export interface SessionToolCallbacks {
    * Codex: sends __CALLBACK__ message to stderr
    */
   onAuthRequest(request: AuthRequest): void;
+
+  /**
+   * Called when the agent asks the user a question.
+   *
+   * The returned promise resolves with the human's answer, which the handler
+   * returns as the tool's result — unlike `onPlanSubmitted` / `onAuthRequest`,
+   * this does NOT end the turn. Undefined when no interactive client is
+   * attached; the handler then reports the question as unanswerable instead of
+   * blocking forever.
+   */
+  onAskUser?(requestId: string, questions: AskUserQuestion[]): Promise<AskUserResponse>;
 }
 
 // ============================================================

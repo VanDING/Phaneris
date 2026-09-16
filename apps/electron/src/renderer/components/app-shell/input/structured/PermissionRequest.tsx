@@ -79,7 +79,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
           data-tutorial="permission-allow-button"
         >
           <Check className="h-3.5 w-3.5" />
-          Allow
+          {t('chat.permissionAllow')}
         </Button>
         <Button
           size="sm"
@@ -88,7 +88,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
           onClick={handleAlwaysAllow}
         >
           <RefreshCw className="h-3.5 w-3.5" />
-          Always Allow
+          {t('chat.permissionAlwaysAllow')}
         </Button>
         <Button
           size="sm"
@@ -97,12 +97,12 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
           onClick={handleDeny}
         >
           <X className="h-3.5 w-3.5" />
-          Deny
+          {t('chat.permissionDeny')}
         </Button>
 
         {/* Tip text */}
         <span className="min-w-0 flex-1 basis-full text-[10px] text-muted-foreground sm:basis-auto sm:text-right">
-          "Always Allow" remembers this command for the session
+          {t('chat.permissionAlwaysAllowHint')}
         </span>
       </div>
     </div>

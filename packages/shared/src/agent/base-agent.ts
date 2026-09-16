@@ -35,6 +35,7 @@ import type {
   PermissionCallback,
   PlanCallback,
   AuthCallback,
+  AskUserRequestCallback,
   SourceChangeCallback,
   SourceActivationCallback,
   AgentMcpServerConfig,
@@ -45,6 +46,7 @@ import type {
 } from './backend/types.ts';
 import { AbortReason } from './backend/types.ts';
 import type { AuthRequest } from './session-scoped-tools.ts';
+import type { AskUserResponse } from '@phaneris/session-tools-core';
 import type { Workspace } from '../config/storage.ts';
 
 // Core modules
@@ -253,6 +255,8 @@ export abstract class BaseAgent implements AgentBackend {
   onPermissionRequest: PermissionCallback | null = null;
   onPlanSubmitted: PlanCallback | null = null;
   onAuthRequest: AuthCallback | null = null;
+  /** Publishes an ask_user question so the host can render it while the tool waits. */
+  onAskUserRequest: AskUserRequestCallback | null = null;
   onSourceChange: SourceChangeCallback | null = null;
   onSourcesListChange: ((sources: LoadedSource[]) => void) | null = null;
   onConfigValidationError: ((file: string, errors: string[]) => void) | null = null;
@@ -1097,6 +1101,12 @@ ${formattedMessages}
    * Respond to a pending permission request.
    */
   abstract respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void;
+
+  /**
+   * Resolve a pending ask_user question with the human's answer.
+   * Returns true when a pending question accepted it.
+   */
+  abstract respondToAskUser(requestId: string, response: AskUserResponse): boolean;
 
   /**
    * Run a simple text completion using the agent's auth infrastructure.

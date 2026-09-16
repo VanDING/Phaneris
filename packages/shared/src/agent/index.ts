@@ -133,6 +133,7 @@ export {
   type PermissionCallback,
   type PlanCallback,
   type AuthCallback,
+  type AskUserRequestCallback,
   type SourceChangeCallback,
   type SourceActivationCallback,
   type ChatOptions,

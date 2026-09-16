@@ -35,6 +35,7 @@ export type {
   PermissionCallback,
   PlanCallback,
   AuthCallback,
+  AskUserRequestCallback,
   SourceChangeCallback,
   SourceActivationCallback,
   ChatOptions,

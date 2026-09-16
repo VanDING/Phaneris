@@ -11,6 +11,7 @@ import type { Workspace } from '../../config/storage.ts';
 import type { SessionConfig as Session } from '../../sessions/storage.ts';
 import type { LoadedSource } from '../../sources/types.ts';
 import { BaseAgent } from '../base-agent.ts';
+import type { AskUserResponse } from '@phaneris/session-tools-core';
 
 // ============================================================
 // Mock Workspace Factory
@@ -108,6 +109,7 @@ export class TestAgent extends BaseAgent {
   public abortCalls: Array<{ reason?: string }> = [];
   public forceAbortCalls: Array<{ reason: AbortReason }> = [];
   public respondToPermissionCalls: Array<{ requestId: string; allowed: boolean; alwaysAllow?: boolean }> = [];
+  public respondToAskUserCalls: Array<{ requestId: string; response: AskUserResponse }> = [];
 
   private _isProcessing: boolean = false;
 
@@ -145,6 +147,11 @@ export class TestAgent extends BaseAgent {
 
   respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void {
     this.respondToPermissionCalls.push({ requestId, allowed, alwaysAllow });
+  }
+
+  respondToAskUser(requestId: string, response: AskUserResponse): boolean {
+    this.respondToAskUserCalls.push({ requestId, response });
+    return true;
   }
 
   async runMiniCompletion(_prompt: string): Promise<string | null> {
