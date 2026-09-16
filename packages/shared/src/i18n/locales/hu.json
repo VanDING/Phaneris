@@ -825,6 +825,7 @@
   "multiSelect.selected.source_other": "{{count}} forrás kijelölve",
   "multiSelect.selectionHint": "Használd a <cmdClick></cmdClick> kombinációt a váltáshoz, a <shiftClick></shiftClick> kombinációt a tartomány kijelöléséhez",
   "multiSelect.setLabels": "Címkék beállítása",
+  "newSession.slogan": "Let it exist, let it go.",
   "onboarding.apiSetup.anthropicApiKey": "Anthropic API-kulcs",
   "onboarding.apiSetup.anthropicApiKeyDesc": "Használatalapú fizetés Anthropic, OpenRouter vagy kompatibilis API-kon keresztül.",
   "onboarding.apiSetup.apiKey": "API-kulcs",

@@ -56,6 +56,7 @@ import {
   type AuthRequestTurn,
 } from "@phaneris/ui"
 import { MemoizedAuthRequestCard } from "@/components/chat/AuthRequestCard"
+import { NewSessionLanding } from "@/components/chat/NewSessionLanding"
 import { ChatInputZone, type StructuredInputState, type StructuredResponse, type PermissionResponse, type AdminApprovalResponse, type QuestionResponse } from "./input"
 import type { RichTextInputHandle } from "@/components/ui/rich-text-input"
 import { useBackgroundTasks } from "@/hooks/useBackgroundTasks"
@@ -1511,14 +1512,34 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     && turns.length === 0
     && ((session?.messages?.length ?? 0) > 0 || (session?.messageCount ?? 0) > 0)
 
+  // Brand surface for a session with no messages yet.
+  // All three guards matter: a session switch renders this component with the
+  // previous session's messages still loaded (`messagesLoading` true) and with
+  // lazy-loaded history not yet arrived, so a bare `messages.length === 0` test
+  // would flash the hero over an existing conversation.
+  // compactMode is excluded on purpose — EditPopover's mini sessions reach
+  // `turns.length === 0` too, and a hero does not belong in a 400px popover.
+  const showNewSessionLanding = !!session
+    && !compactMode
+    && !messagesLoading
+    && !messagesLoadError
+    && session.messages.length === 0
+
   return (
     <div ref={zoneRef} className="flex h-full flex-col min-w-0" data-focus-zone="chat">
       {session ? (
         <div className="flex flex-1 flex-col min-h-0 min-w-0 relative">
           {/* Content layer */}
           <div className="flex flex-1 flex-col min-h-0 min-w-0 relative z-10">
+          {/* Both the transcript and the landing occupy this same grid cell, so the
+              landing is exactly the space above the composer and centres the mark
+              against the room that is actually free — not against the full panel,
+              which would push it below optical centre once the composer is counted. */}
+          <div className="grid min-h-0 flex-1 grid-cols-1">
           {/* === MESSAGES AREA: Scrollable list of message bubbles === */}
-          <div className="relative flex-1 min-h-0">
+          {/* Left in flow (and left empty) when the landing shows: this cell is what
+              reserves the height, and the landing overlays it. */}
+          <div className="relative col-start-1 row-start-1 min-h-0">
             {/* Mask wrapper - fades content at top and bottom over transparent/image backgrounds */}
             <div
               className="h-full"
@@ -1965,6 +1986,13 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
               </div>
               </ScrollArea>
             </div>
+          </div>
+
+          {/* === NEW SESSION LANDING: brand surface for a session with no messages ===
+              Same grid cell as the transcript, not a child of it: the ScrollArea's
+              content layer is `display: table` (so `h-full` cannot fill it) and the
+              mask wrapper above would fade the outer 32px of the mark. */}
+          {showNewSessionLanding && <NewSessionLanding />}
           </div>
 
           {/* === INPUT CONTAINER: FreeForm or Structured Input === */}

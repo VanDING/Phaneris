@@ -1084,6 +1084,101 @@ html.dark[data-scenic] .fullscreen-overlay-background {
 }
 
 /* =============================================================================
+   LOGO MARK ENTRANCE
+
+   The Phaneris mark draws itself: the outline traces first, the fill inks in
+   behind it. Used by the empty-session landing (components/chat/NewSessionLanding.tsx)
+   and by the app splash screen (components/SplashScreen.tsx), which differ only
+   in timing and in whether the mark keeps breathing afterwards.
+
+   Timings are per-caller through custom properties, because the two contexts want
+   opposite things: the landing answers a session switch and must feel prompt,
+   while the splash is the app's first impression and is allowed to take its time.
+
+     --logo-draw-duration   outline trace          (default 900ms)
+     --logo-ink-delay       when the fill starts   (default 420ms)
+     --logo-ink-duration    fill fade              (default 700ms)
+
+   The shape itself lives in PhanerisSymbol; nothing here draws it, and sizing
+   stays the caller's business, so these classes are layout-free.
+
+   Reduced motion needs no rules here: motion.css forces every animation to 1ms
+   and a single iteration, which lands on the settled state — a solid mark.
+============================================================================= */
+
+.logo-mark {
+  fill-opacity: 0;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  overflow: visible;
+  animation:
+    logo-mark-draw var(--logo-draw-duration, 900ms) cubic-bezier(0.65, 0, 0.35, 1) both,
+    logo-mark-ink var(--logo-ink-duration, 700ms) cubic-bezier(0.65, 0, 0.35, 1) var(--logo-ink-delay, 420ms) both;
+}
+
+/* Five polygons, outline length ≈ 2260 user units; 2600 leaves headroom so the
+   trace is never visibly short of closed. */
+@keyframes logo-mark-draw {
+  from { stroke-dasharray: 2600; stroke-dashoffset: 2600; }
+  to   { stroke-dasharray: 2600; stroke-dashoffset: 0; }
+}
+
+@keyframes logo-mark-ink {
+  from { fill-opacity: 0; }
+  to   { fill-opacity: 1; }
+}
+
+/* The hero mark is a solid isometric block, so it wants a whisper of a cast
+   shadow to sit on the surface — enough to lift it, not enough to compete with
+   the shape itself. --theme-shadow-color keeps it in the theme's own hue, and
+   stays dark in both modes (currentColor would turn it into a glow in dark). */
+.logo-relief {
+  filter: drop-shadow(
+    0 2px 4px color-mix(in srgb, var(--theme-shadow-color, #000) 14%, transparent)
+  );
+}
+
+/* =============================================================================
+   NEW SESSION HERO
+
+   The empty-session landing: the logo entrance above, plus the copy rise and a
+   slow shared breath. These durations are deliberately longer than the
+   --motion-duration-* scale — this runs once on entering an empty session, where
+   the draw *is* the moment rather than a state change that must feel instant.
+============================================================================= */
+
+.craft-hero-mark {
+  animation:
+    logo-mark-draw var(--logo-draw-duration, 900ms) cubic-bezier(0.65, 0, 0.35, 1) both,
+    logo-mark-ink var(--logo-ink-duration, 700ms) cubic-bezier(0.65, 0, 0.35, 1) var(--logo-ink-delay, 420ms) both,
+    craft-hero-breathe 14s ease-in-out 1.6s infinite;
+}
+
+.craft-hero-copy {
+  animation:
+    craft-hero-rise 700ms cubic-bezier(0.22, 0.61, 0.36, 1) 620ms both,
+    craft-hero-pulse 14s ease-in-out 1.6s infinite;
+}
+
+/* Barely-there: 1.2% scale and a 20% opacity dip, both sides in phase, so the
+   pair reads as one slow breath rather than two effects. */
+@keyframes craft-hero-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.012); }
+}
+
+@keyframes craft-hero-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.8; }
+}
+
+@keyframes craft-hero-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* =============================================================================
    SHIMMER ANIMATION FOR OPTIMISTIC UI
 
    Subtle shimmer effect for messages awaiting backend confirmation.

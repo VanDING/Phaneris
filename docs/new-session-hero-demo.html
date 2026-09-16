@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phaneris · 新对话 hero 设计方案（未实施）</title>
+<style>
+/* ============================================================================
+   Phaneris — 新对话页 hero 设计演示
+   目的：只做设计演示，不改动 apps/ 下任何源码。
+   约定：颜色 token 与 apps/electron/src/renderer/index.css 保持一致。
+   顶部工具条：主题 / 会话状态 / 语言 / 面板宽度，四个开关都可实时切换。
+   ========================================================================= */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ---------- token：与桌面端 index.css 同名，方便实施时 1:1 映射 ---------- */
+body[data-theme="light"] {
+  --background:          #F6F7F8;
+  --background-elevated: #FAFBFC;
+  --foreground:          #2A2B30;
+  --foreground-dimmed:   #51535A;
+  --muted-foreground:    #65676D;
+  --border:              #DEDFE2;
+  --input:               #F9FAFB;
+  --popover:             #FCFCFD;
+  --accent:              #7C3AED;
+  --info:                #8C5F20;
+  --success:             #2D7555;
+  --theme-radius:        8px;
+  --hairline:            rgba(42,43,48,.14);
+  --hairline-soft:       rgba(42,43,48,.075);
+  --sidebar-active:      rgba(42,43,48,.055);
+  --chrome:              #F1F2F4;
+  --shadow-minimal: 0 0 0 1px var(--border), 0 1px 2px rgba(38,35,45,.02), 0 3px 6px rgba(38,35,45,.02);
+  --shadow-composer: 0 0 0 1px rgba(42,43,48,.09), 0 6px 16px rgba(38,35,45,.045), 0 18px 40px rgba(38,35,45,.035);
+}
+body[data-theme="dark"] {
+  --background:          #080A10;
+  --background-elevated: #11131B;
+  --foreground:          #DFE1E7;
+  --foreground-dimmed:   #AFB3BF;
+  --muted-foreground:    #9298A7;
+  --border:              #272A35;
+  --input:               #11131B;
+  --popover:             #181A23;
+  --accent:              #A78BFA;
+  --info:                #CCA66C;
+  --success:             #81B899;
+  --theme-radius:        8px;
+  --hairline:            rgba(223,225,231,.16);
+  --hairline-soft:       rgba(223,225,231,.085);
+  --sidebar-active:      rgba(223,225,231,.06);
+  --chrome:              #0C0E15;
+  --shadow-minimal: 0 0 0 1px var(--border), 0 1px 2px rgba(3,4,9,.10), 0 3px 6px rgba(3,4,9,.10);
+  --shadow-composer: 0 0 0 1px rgba(223,225,231,.10), 0 6px 18px rgba(3,4,9,.34), 0 20px 44px rgba(3,4,9,.30);
+}
+
+:root {
+  --app-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+              "PingFang SC", "Microsoft YaHei", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --ease-enter: cubic-bezier(.22,.61,.36,1);
+}
+
+html, body { height: 100%; }
+body {
+  font-family: var(--app-font);
+  background: #101116;
+  color: var(--foreground);
+  letter-spacing: -.006em;
+  -webkit-font-smoothing: antialiased;
+  padding: 22px 22px 40px;
+  transition: background .25s ease;
+}
+body[data-theme="light"] { background: #E9EAEE; }
+
+/* ============================== 顶部工具条 ============================== */
+.toolbar {
+  max-width: 1720px; margin: 0 auto 18px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+  font-size: 12px; color: #9AA0AE;
+}
+.toolbar h1 { font-size: 13.5px; font-weight: 650; color: #E7E9EE; letter-spacing: -.01em; }
+.toolbar h1 span { font-weight: 400; color: #7C8290; margin-left: 8px; }
+body[data-theme="light"] .toolbar h1 { color: #23252B; }
+body[data-theme="light"] .toolbar { color: #6B6E76; }
+body[data-theme="light"] .toolbar h1 span { color: #8A8D95; }
+
+.ctlgroup { display: flex; align-items: center; gap: 4px; }
+.ctlgroup > b { font-weight: 600; letter-spacing: .02em; opacity: .75; margin-right: 4px; }
+.ctl {
+  appearance: none; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05);
+  color: inherit; font: inherit; font-size: 12px; padding: 5px 11px; border-radius: 7px;
+  cursor: pointer; transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+.ctl:hover { background: rgba(255,255,255,.1); }
+.ctl[aria-pressed="true"] { background: #E7E9EE; border-color: #E7E9EE; color: #16181D; font-weight: 600; }
+body[data-theme="light"] .ctl { border-color: rgba(0,0,0,.14); background: rgba(255,255,255,.6); }
+body[data-theme="light"] .ctl:hover { background: #fff; }
+body[data-theme="light"] .ctl[aria-pressed="true"] { background: #23252B; border-color: #23252B; color: #fff; }
+
+/* ============================== 设备框 ============================== */
+.frames { max-width: 1720px; margin: 0 auto; display: grid; gap: 18px; }
+.frames[data-width="wide"]  { grid-template-columns: 1fr; }
+.frames[data-width="split"] { grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); }
+
+.frame { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.frame-cap {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  font-size: 11.5px; color: #868C9A;
+}
+body[data-theme="light"] .frame-cap { color: #6B6E76; }
+.frame-cap b { color: #E7E9EE; font-weight: 620; letter-spacing: -.005em; font-size: 12px; }
+body[data-theme="light"] .frame-cap b { color: #23252B; }
+.frame-cap code { font-family: var(--mono); font-size: 10.5px; opacity: .8; }
+
+/* 窗口：sidebar + 主面板，1:1 复刻桌面端结构 */
+.window {
+  display: flex; min-height: 520px; height: min(78vh, 760px);
+  background: var(--background); color: var(--foreground);
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 24px 60px rgba(0,0,0,.45);
+  transition: background .25s ease, color .25s ease;
+}
+body[data-theme="light"] .window { box-shadow: 0 1px 0 #fff inset, 0 20px 50px rgba(20,22,30,.18); }
+.frames[data-width="split"] .window { height: min(64vh, 620px); }
+
+/* ------------------------------ 侧栏 ------------------------------ */
+.sidebar {
+  width: 176px; flex: none; background: var(--chrome); border-right: 1px solid var(--border);
+  padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; font-size: 12.5px;
+}
+.side-brand {
+  display: flex; align-items: center; gap: 7px; padding: 2px 6px 12px;
+  font-weight: 650; font-size: 13px; letter-spacing: -.01em;
+}
+.side-brand .glyph {
+  width: 15px; height: 20px; flex: none; color: var(--foreground);
+  display: grid; place-items: center;
+}
+.side-brand .glyph svg { width: 100%; height: 100%; }
+.side-new {
+  display: flex; align-items: center; gap: 7px; padding: 7px 8px; border-radius: 7px;
+  background: var(--background); box-shadow: var(--shadow-minimal); font-weight: 550; margin-bottom: 10px;
+}
+.side-label {
+  font-size: 10.5px; color: var(--muted-foreground); padding: 4px 8px 3px;
+  letter-spacing: .02em;
+}
+.side-item {
+  padding: 6px 8px; border-radius: 6px; color: var(--foreground-dimmed);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.side-item[data-active] { background: var(--sidebar-active); color: var(--foreground); font-weight: 550; }
+.side-item .dot { color: var(--muted-foreground); }
+.side-foot { margin-top: auto; }
+
+/* ------------------------------ 主面板 ------------------------------ */
+.panel { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--background); }
+.panel-head {
+  height: 38px; flex: none; display: flex; align-items: center; gap: 8px;
+  padding: 0 14px; font-size: 12.5px; font-weight: 550; color: var(--foreground-dimmed);
+}
+.panel-head .ph-menu { color: var(--muted-foreground); font-size: 10px; }
+
+.stage { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; }
+.hero-slot {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px 24px 0;
+}
+
+/* hero：品牌符号 + 一句 slogan。没有字标——产品名已经出现在侧栏、启动屏和窗口标题里，
+   这里再写一遍是重复；一个符号加一句话反而更干净。 */
+.hero-core {
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* ---- 符号：先「画」出来，再进入呼吸 ----
+   viewBox 400×785：宽 118px 时渲染高约 160px。
+   五块多边形的轮廓总周长约 2260 用户单位，这里用 2600 作 dasharray 留足余量。
+   动画只在 body.replay 下挂载（重播 = 摘掉 class 一帧再挂回），所以静态与开场
+   共用同一套规则，不存在两份拷贝。 */
+.mark-glyph {
+  width: 118px; height: auto; overflow: visible;
+  fill: var(--foreground);
+  stroke: var(--foreground);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.slogan {
+  margin-top: 22px; text-align: center;
+  font-size: clamp(14px, 1.7vh, 17px); font-weight: 420;
+  color: var(--muted-foreground); letter-spacing: .01em; line-height: 1.5;
+}
+.slogan-zh { letter-spacing: .16em; }
+body[data-lang="zh"] .slogan-en, body[data-lang="en"] .slogan-zh { display: none; }
+
+@keyframes drawMark {                                   /* 落笔：轮廓画满 */
+  from { stroke-dasharray: 2600; stroke-dashoffset: 2600; }
+  to   { stroke-dasharray: 2600; stroke-dashoffset: 0; }
+}
+@keyframes inkMark { from { fill-opacity: 0; } to { fill-opacity: 1; } }  /* 上墨 */
+@keyframes breathe {                                    /* 呼吸：±1.2% 缩放 */
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.012); }
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+@keyframes breatheInk {                                 /* 与符号同频的透明度呼吸 */
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .8; }
+}
+
+/* 动效开启（页面载入即 body.replay）：三段式 —— 画 → 上墨 → 呼吸 */
+body.replay .mark-glyph {
+  animation:
+    drawMark 2.1s cubic-bezier(.65,0,.35,1) both,
+    inkMark  1.4s cubic-bezier(.65,0,.35,1) 1.15s both,
+    breathe 12s ease-in-out 3.2s infinite;
+}
+body.replay .slogan {
+  animation:
+    fadeUp 1.1s cubic-bezier(.22,.61,.36,1) 1.7s both,   /* 等符号画完再出现 */
+    breatheInk 12s ease-in-out 3.2s infinite;
+}
+
+/* 手动重播（点工具栏「动效 · 开」）用同一套动作的紧凑版：
+   载入时值得等 2.6s 看它画出来，但按下按钮的人不该对着空屏等 1.7s。 */
+body.replay-fast .mark-glyph {
+  animation:
+    drawMark 1.15s cubic-bezier(.65,0,.35,1) both,
+    inkMark  0.8s cubic-bezier(.65,0,.35,1) 0.62s both,
+    breathe 12s ease-in-out 1.9s infinite;
+}
+body.replay-fast .slogan {
+  animation:
+    fadeUp 0.7s cubic-bezier(.22,.61,.36,1) 0.95s both,
+    breatheInk 12s ease-in-out 1.9s infinite;
+}
+
+/* 关掉动效：规则排在 .replay / .replay-fast 之后，直接停在最终状态 */
+body[data-motion="off"] .mark-glyph { animation: none; fill-opacity: 1; stroke: none; }
+body[data-motion="off"] .slogan { animation: none; opacity: 1; transform: none; }
+
+/* 「已有消息」状态下 hero 整块消失，动画随之不存在 */
+.window[data-state="active"] .hero-slot { display: none; }
+
+/* ============================== 输入区 ============================== */
+.composer-zone {
+  flex: none; padding: 22px 20px 18px;
+  display: flex; justify-content: center;
+}
+.composer {
+  width: 100%; max-width: 840px;
+  display: flex; flex-direction: column;
+  border-radius: 10px; background: var(--popover);
+  box-shadow: var(--shadow-composer);
+  transition: box-shadow .18s ease;
+}
+.composer:focus-within { box-shadow: var(--shadow-composer), 0 0 0 2px var(--accent); }
+.comp-modes { display: flex; gap: 6px; padding: 12px 12px 0; }
+.mode-chip {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 550;
+  padding: 3px 9px; border-radius: 6px; border: 1px solid var(--hairline-soft);
+  color: var(--muted-foreground);
+}
+.mode-chip[data-on] { color: var(--info); border-color: rgba(140,95,32,.28); background: rgba(140,95,32,.055); }
+body[data-theme="dark"] .mode-chip[data-on] {
+  color: var(--info); border-color: rgba(204,166,108,.3); background: rgba(204,166,108,.07);
+}
+.comp-input {
+  padding: 14px 16px 6px; font-size: 14px; line-height: 1.5;
+  color: var(--muted-foreground); min-height: 44px;
+}
+.comp-tools {
+  display: flex; align-items: center; gap: 2px;
+  padding: 6px 8px 8px 10px; border-top: 1px solid var(--hairline-soft); margin-top: 6px;
+}
+.tool {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 7px;
+  border-radius: 6px; font-size: 12.5px; color: var(--foreground); white-space: nowrap;
+  border: 0; background: transparent; font-family: inherit; cursor: default;
+}
+.tool.has-value { color: var(--foreground); }
+.tool .lbl { overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.tool.dim .lbl { color: var(--muted-foreground); }
+.tool svg { flex: none; opacity: .82; }
+.comp-gap { flex: 1; min-width: 8px; }
+.send {
+  width: 28px; height: 28px; border-radius: 999px; flex: none; margin-left: 8px;
+  display: grid; place-items: center; background: var(--foreground); color: var(--background);
+}
+body[data-lang="zh"] .en-only, body[data-lang="en"] .zh-only { display: none; }
+
+/* 状态切换：有消息后 hero 完全消失（用户选定的边界） */
+.window[data-state="active"] .stage { justify-content: flex-end; }
+
+/* ============================== 说明区 ============================== */
+.notes { max-width: 1720px; margin: 26px auto 0; display: grid; gap: 14px;
+         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.note {
+  border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 14px 16px;
+  background: rgba(255,255,255,.035); font-size: 12.5px; line-height: 1.65; color: #A9AEBB;
+}
+body[data-theme="light"] .note { border-color: rgba(0,0,0,.1); background: #fff; color: #4A4D55; }
+.note h3 { font-size: 12px; font-weight: 650; color: #E7E9EE; margin-bottom: 7px; letter-spacing: .01em; }
+body[data-theme="light"] .note h3 { color: #23252B; }
+.note ul { padding-left: 16px; display: grid; gap: 4px; }
+.note code { font-family: var(--mono); font-size: 11px; opacity: .85;
+             background: rgba(255,255,255,.07); padding: 1px 5px; border-radius: 4px; }
+body[data-theme="light"] .note code { background: rgba(0,0,0,.05); }
+
+/* 窄面板降级：<= 560px 时移除侧栏、收紧 logo 尺寸 */
+@media (max-width: 560px) {
+  body { padding: 12px 10px 28px; }
+  .sidebar { display: none; }
+  /* 并排对比在窄屏会强行撑出 520px 的列宽，这里退回单列：
+     演示页此时只展示主方案，真实降级由上面的 .sidebar 规则呈现。 */
+  .frames[data-width="split"] { grid-template-columns: 1fr; }
+  #frame-narrow { display: none !important; }
+  .mark-glyph { width: 84px; }
+  .slogan { font-size: 13px; margin-top: 16px; }
+  .composer-zone { padding: 16px 10px 12px; }
+  .tool .lbl { max-width: 84px; }
+}
+
+/* 输入区工具行的真实降级：桌面端全宽工具行在窄容器里会溢出，
+   这里按容器宽度收起文案（对应实现里的 compactMode 分支）。 */
+@media (max-width: 760px) {
+  .comp-tools .tool .lbl { display: none; }
+  .comp-tools .tool { padding: 0 6px; }
+}
+
+/* 动效尊重系统偏好：入场与呼吸全部关闭，直接停在最终状态 */
+@media (prefers-reduced-motion: reduce) {
+  body.replay .mark-glyph, body.replay-fast .mark-glyph,
+  body.replay .slogan, body.replay-fast .slogan { animation: none; }
+  .mark-glyph { fill-opacity: 1; stroke: none; }
+  .slogan { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body data-theme="dark" data-lang="zh" data-motion="on">
+
+<!-- ============================ 顶部工具条 ============================ -->
+<div class="toolbar">
+  <h1>Phaneris · 新对话 hero 设计演示 <span>未实施 · 仅用于设计确认</span></h1>
+  <div class="ctlgroup">
+    <b>主题</b>
+    <button class="ctl" data-set="theme" data-value="light" aria-pressed="false">浅色</button>
+    <button class="ctl" data-set="theme" data-value="dark"  aria-pressed="true">深色</button>
+  </div>
+  <div class="ctlgroup">
+    <b>动效</b>
+    <button class="ctl" data-set="motion" data-value="on"  aria-pressed="true">开（重播）</button>
+    <button class="ctl" data-set="motion" data-value="off" aria-pressed="false">关</button>
+  </div>
+  <div class="ctlgroup">
+    <b>会话状态</b>
+    <button class="ctl" data-set="state" data-value="new"    aria-pressed="true">新对话（0 条消息）</button>
+    <button class="ctl" data-set="state" data-value="active" aria-pressed="false">已有消息后</button>
+  </div>
+  <div class="ctlgroup">
+    <b>文案语言</b>
+    <button class="ctl" data-set="lang" data-value="zh" aria-pressed="true">中文</button>
+    <button class="ctl" data-set="lang" data-value="en" aria-pressed="false">English</button>
+  </div>
+  <div class="ctlgroup">
+    <b>面板宽度</b>
+    <button class="ctl" data-set="width" data-value="wide"  aria-pressed="true">宽（1440）</button>
+    <button class="ctl" data-set="width" data-value="split" aria-pressed="false">窄（560 并排）</button>
+  </div>
+</div>
+
+<div class="frames" data-width="wide">
+
+  <!-- ============================ 帧 1：推荐方案 ============================ -->
+  <div class="frame">
+    <div class="frame-cap">
+      <b>A · 定稿（每次空会话都出现）</b>
+      <span>只有品牌符号 + 一句 slogan，没有字标</span>
+      <code>hero-core · mark 118px / slogan 17px</code>
+    </div>
+    <div class="window" data-state="new">
+      <!-- 侧栏 -->
+      <aside class="sidebar">
+        <div class="side-brand"><span class="glyph"><svg viewBox="180 90 580 785" fill="none" aria-hidden="true"><polygon points="180,270 500,90 500,270 330,365" fill="currentColor"/><polygon points="180,270 330,365 330,790 180,875" fill="currentColor"/><polygon points="500,90 760,235 610,320 500,270" fill="currentColor"/><polygon points="610,320 760,235 760,510 610,595" fill="currentColor"/><polygon points="380,555 610,425 610,595 380,725" fill="currentColor"/></svg></span>Phaneris</div>
+        <div class="side-new">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="en-only">New Session</span><span class="zh-only">新建会话</span>
+        </div>
+        <div class="side-label"><span class="en-only">Workspaces</span><span class="zh-only">工作区</span></div>
+        <div class="side-item" data-active><span class="en-only">Phaneris</span><span class="zh-only">Phaneris</span></div>
+        <div class="side-item"><span class="en-only">New Session</span><span class="zh-only">新建会话</span></div>
+        <div class="side-item">Electric Purple <span class="dot">·</span> 3h</div>
+        <div class="side-label"><span class="en-only">Sessions</span><span class="zh-only">历史会话</span></div>
+        <div class="side-item">设计系统灰色主题</div>
+        <div class="side-item">更新 README 截图与 Logo</div>
+        <div class="side-item">新建 Phaneris 分支实施方案</div>
+        <div class="side-foot">
+          <div class="side-item"><span class="en-only">Settings</span><span class="zh-only">设置</span></div>
+        </div>
+      </aside>
+
+      <!-- 主面板 -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="en-only">New chat</span><span class="zh-only">新对话</span>
+          <span class="ph-menu">▾</span>
+        </div>
+        <div class="stage">
+
+          <!-- hero：品牌符号 + 一句 slogan。每次空会话都出现，有消息后整块消失。 -->
+          <div class="hero-slot">
+            <div class="hero-core">
+              <svg class="mark-glyph" viewBox="180 90 580 785" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <polygon points="180,270 500,90 500,270 330,365" fill="currentColor" />
+                <polygon points="180,270 330,365 330,790 180,875" fill="currentColor" />
+                <polygon points="500,90 760,235 610,320 500,270" fill="currentColor" />
+                <polygon points="610,320 760,235 760,510 610,595" fill="currentColor" />
+                <polygon points="380,555 610,425 610,595 380,725" fill="currentColor" />
+              </svg>
+              <p class="slogan slogan-en">Let it exist, let it go.</p>
+              <p class="slogan slogan-zh">山间何事，松花酿酒，春水煎茶。</p>
+            </div>
+          </div>
+
+          <!-- 输入区（位置不变，仍在底部） -->
+          <div class="composer-zone">
+            <div class="composer">
+              <div class="comp-modes">
+                <span class="mode-chip" data-on>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2.2" stroke-linecap="round"><path d="M12 3v18M3 12h18"/></svg>
+                  <span class="en-only">Ask</span><span class="zh-only">询问</span> ▾
+                </span>
+              </div>
+              <div class="comp-input">
+                <span class="en-only">What would you like to work on?</span>
+                <span class="zh-only">想让它做什么？</span>
+              </div>
+              <div class="comp-tools">
+                <button class="tool"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21.4 11.05 12.3 20.2a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg><span class="lbl en-only">Attach Files</span><span class="lbl zh-only">附件</span></button>
+                <button class="tool"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span class="lbl dim en-only">Choose Sources</span><span class="lbl dim zh-only">选择数据源</span></button>
+                <button class="tool"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18"/></svg><span class="lbl dim en-only">Work in Folder</span><span class="lbl dim zh-only">工作目录</span></button>
+                <span class="comp-gap"></span>
+                <button class="tool"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6.5v5.7c0 4.4 3.3 7.6 8 8.8 4.7-1.2 8-4.4 8-8.8V6.5z"/></svg><span class="lbl">DeepSeek-V4-Flash</span></button>
+                <span class="send"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ 帧 2：同一方案 · 窄面板 ============================ -->
+  <div class="frame" id="frame-narrow" style="display:none">
+    <div class="frame-cap">
+      <b>A · 定稿（窄面板降级）</b>
+      <span>符号收到 84px、slogan 13px；输入区工具行只留图标</span>
+      <code>hero-core · 单一 flex 纵向堆叠</code>
+    </div>
+    <div class="window" data-state="new" style="max-width:560px">
+      <div class="panel">
+        <div class="panel-head"><span class="en-only">New chat</span><span class="zh-only">新对话</span><span class="ph-menu">▾</span></div>
+        <div class="stage">
+          <div class="hero-slot" style="padding-left:12px;padding-right:12px">
+            <div class="hero-core">
+              <svg class="mark-glyph" style="width:84px" viewBox="180 90 580 785" fill="none" aria-hidden="true">
+                <polygon points="180,270 500,90 500,270 330,365" fill="currentColor" />
+                <polygon points="180,270 330,365 330,790 180,875" fill="currentColor" />
+                <polygon points="500,90 760,235 610,320 500,270" fill="currentColor" />
+                <polygon points="610,320 760,235 760,510 610,595" fill="currentColor" />
+                <polygon points="380,555 610,425 610,595 380,725" fill="currentColor" />
+              </svg>
+              <p class="slogan slogan-en" style="font-size:13px;margin-top:16px">Let it exist, let it go.</p>
+              <p class="slogan slogan-zh" style="font-size:13px;margin-top:16px">山间何事，松花酿酒，春水煎茶。</p>
+            </div>
+          </div>
+          <div class="composer-zone" style="padding:14px 10px 12px">
+            <div class="composer">
+              <div class="comp-modes"><span class="mode-chip" data-on><span class="en-only">Ask</span><span class="zh-only">询问</span> ▾</span></div>
+              <div class="comp-input" style="font-size:13px"><span class="zh-only">想让它做什么？</span><span class="en-only">What would you like to work on?</span></div>
+              <div class="comp-tools">
+                <button class="tool"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M21.4 11.05 12.3 20.2a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg></button>
+                <button class="tool"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></button>
+                <button class="tool"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18"/></svg></button>
+                <span class="comp-gap"></span>
+                <button class="tool"><span class="lbl" style="max-width:96px">V4-Flash</span></button>
+                <span class="send"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================ 说明 ============================ -->
+<div class="notes">
+  <div class="note">
+    <h3>这个页面在说什么</h3>
+    <ul>
+      <li>只有两样东西：<b>品牌符号</b>（仓库里已有的 <code>components/icons/PhanerisSymbol.tsx</code>，不是新画的）和 <b>一句 slogan</b>。</li>
+      <li><b>为什么去掉字标</b>：产品名已经出现在侧栏、启动屏、窗口标题和「关于」里，空会话页再写一遍是重复。去掉之后整块读作「一个符号 + 一句题词」，比三行更干净。</li>
+      <li>去掉字标后 slogan 是唯一的文字，所以字号从 15px 提到 17px，与符号的距离收到 22px，整块重心不会散。</li>
+      <li>只用 <code>--foreground</code> 与 <code>--muted-foreground</code> 两个颜色，无描边、无背景、无图形。</li>
+    </ul>
+  </div>
+  <div class="note">
+    <h3>动效：一次落笔，之后只剩呼吸</h3>
+    <ul>
+      <li><b>画</b>（0 → 2.1s）：符号的五块多边形用 <code>stroke-dashoffset</code> 从左到右画出来，视口高 DPI 下是 1.6px 描边。</li>
+      <li><b>上墨</b>（1.15 → 2.55s）：描边快画满时填色淡入，所以是「先勾线、后落墨」，不是缩放或淡入。</li>
+      <li><b>题词</b>（1.7 → 2.8s）：slogan 等符号画完后上浮 7px 淡入——先有形，后有话。</li>
+      <li><b>呼吸</b>（3.2s 起，12s 一轮，无限）：符号缩放 ±1.2%、slogan 透明度 1 → 0.8 → 1。两者同频同相，整块像在缓慢换气。</li>
+      <li>用工具栏的「动效 · 关」可以看到静止状态，其实也就是 <code>prefers-reduced-motion</code> 下所有人看到的样子；「开（重播）」会从头再跑一遍。</li>
+      <li>三点克制：没有 hover 动效（hero 不可点）、没有循环的线性位移动画、不用 JS 驱动（纯 CSS，不占用主线程，流式输出时也不会跟着重渲）。</li>
+    </ul>
+  </div>
+  <div class="note">
+    <h3>刻意没有做的事</h3>
+    <ul>
+      <li>没有字标、没有刻度环、没有配置读数、没有路径胶囊——按定稿意见全部砍掉。空会话的页面不需要汇报状态，输入框里的「工作目录 / 数据源」按钮已经在说这件事了。</li>
+      <li>没有卡片墙：4 个圆角示例卡片 + 标签 + → 是这一版 AI 界面的通货膨胀品，对专家用户是噪音。</li>
+      <li>没有渐变球 / 光晕 / 玻璃：一个符号加一句话，深浅两套主题各自成立。</li>
+      <li>没有逐字/逐词弹出、没有视差、没有跟随鼠标的光标特效：那类动效会把注意力从输入框拉走。</li>
+      <li>输入框不动：仍留在底部、仍是唯一主操作，因此发送首条消息时没有布局跳动。</li>
+    </ul>
+  </div>
+  <div class="note">
+    <h3>定稿记录与一处需要你知道的风险</h3>
+    <ul>
+      <li><b>结构</b>：只保留品牌符号 + slogan（用户定稿，已去掉字标）。</li>
+      <li><b>英文</b>：<code>Let it exist, let it go.</code>　<b>中文</b>：<code>山间何事，松花酿酒，春水煎茶。</code></li>
+      <li><b>出现范围</b>：每次空会话都出现（用户定稿）。</li>
+      <li><b>需要留意</b>：中英两句现在不是同一个意思——中文是闲居山中的自况，产品其实是本地执行的 Agent 工作台，两者没有语义对应。作为「品牌气质的题词」成立，作为「同一句话的翻译」不成立。如果介意，可以把中文界面的 slogan 也固定成英文原句。</li>
+    </ul>
+  </div>
+  <div class="note">
+    <h3>已确认的实施位置（勘察完成，尚未动手）</h3>
+    <ul>
+      <li>落点：<code>ChatDisplay.tsx</code> 里消息区（1521）与输入区（1971）之间，作为兄弟节点插入；用 <code>absolute inset-0</code> 铺满空白区，输入框一行都不用改。</li>
+      <li>门槛必须三个条件都满足：<code>!compactMode &amp;&amp; !messagesLoading &amp;&amp; !messagesLoadError &amp;&amp; messages.length === 0</code>，否则切换会话时会闪一下 hero。</li>
+      <li>坑：不能放进 ScrollArea 内部（它的内容层是 <code>display:table</code>，<code>h-full</code> 撑不开），也不能放进消息区的遮罩层（上下 32px 会把边缘淡掉）。</li>
+      <li>品牌符号直接复用 <code>PhanerisSymbol.tsx</code>，不再需要 wordmark 组件。</li>
+      <li>文案成本：slogan 要同时补进 7 个语言文件（parity + sorted + coverage 三个门禁）。</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   顶部四个开关：主题 / 会话状态 / 文案语言 / 面板宽度。
+   hero 本身没有脚本——它就是 logo + 字标 + slogan 三行静态结构。
+--------------------------------------------------------------------------- */
+(function () {
+  var body = document.body, frames = document.querySelector('.frames');
+
+  /* 重播：把动画整体摘掉一帧再挂回去，CSS 会从头再跑一遍。
+     fast=true 时用紧凑版时序（手动重播不该让人等 1.7s）。 */
+  function replay(fast) {
+    body.classList.remove('replay', 'replay-fast');
+    void body.offsetWidth;
+    body.classList.add(fast ? 'replay-fast' : 'replay');
+  }
+
+  document.querySelectorAll('.ctl').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var set = btn.dataset.set, value = btn.dataset.value;
+      if (set === 'width') {
+        frames.dataset.width = value;
+        document.getElementById('frame-narrow').style.display = (value === 'split') ? '' : 'none';
+      } else {
+        body.dataset[set] = value;
+        if (set === 'motion' && value === 'on') replay(true);
+      }
+      document.querySelectorAll('.ctl[data-set="' + set + '"]').forEach(function (sib) {
+        sib.setAttribute('aria-pressed', String(sib === btn));
+      });
+    });
+  });
+
+  replay(false);   /* 打开页面时先完整播一次 */
+})();
+</script>
+</body>
+</html>

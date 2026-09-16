@@ -825,6 +825,7 @@
   "multiSelect.selected.source_other": "{{count}}件のソースを選択中",
   "multiSelect.selectionHint": "<cmdClick></cmdClick> で切り替え、<shiftClick></shiftClick> で範囲選択",
   "multiSelect.setLabels": "ラベルを設定",
+  "newSession.slogan": "Let it exist, let it go.",
   "onboarding.apiSetup.anthropicApiKey": "Anthropic APIキー",
   "onboarding.apiSetup.anthropicApiKeyDesc": "Anthropic、OpenRouter、または互換APIによる従量課金制。",
   "onboarding.apiSetup.apiKey": "APIキー",

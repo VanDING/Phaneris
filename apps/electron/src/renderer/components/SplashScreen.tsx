@@ -8,10 +8,14 @@ interface SplashScreenProps {
 }
 
 /**
- * SplashScreen - Shows Craft symbol during app initialization
+ * SplashScreen - Shows the Phaneris mark during app initialization
  *
- * Displays centered symbol on app background, fades out when app is fully ready.
- * On exit, the symbol lifts subtly while the background fades away.
+ * The mark traces itself in (outline, then fill) via the shared `.logo-mark`
+ * entrance in index.css. The splash is the app's first impression, so it runs
+ * that entrance slower than the empty-session landing does — see the
+ * --logo-draw-duration / --logo-ink-delay overrides below.
+ *
+ * On exit, the mark lifts subtly while the background fades away.
  */
 export function SplashScreen({ isExiting, onExitComplete }: SplashScreenProps) {
   return (
@@ -37,7 +41,22 @@ export function SplashScreen({ isExiting, onExitComplete }: SplashScreenProps) {
           ease: MOTION_EASE.enter,
         }}
       >
-        <PhanerisSymbol className="h-8 text-accent" />
+        {/*
+          h-20 = 80px wide (≈119px tall) at the default rem. Sized in rem so it
+          scales with the theme, and deliberately well clear of the 32px the splash
+          used before — at that size the tracing entrance was barely legible.
+          Themed, not brand-fixed: a splash that stays purple under a graphite or
+          amber theme is the first thing the user sees and the most jarring.
+        */}
+        <PhanerisSymbol
+          tone="accent"
+          className="logo-mark logo-relief h-20 text-accent"
+          style={{
+            '--logo-draw-duration': '1200ms',
+            '--logo-ink-delay': '700ms',
+            '--logo-ink-duration': '900ms',
+          } as React.CSSProperties}
+        />
       </motion.div>
     </motion.div>
   )

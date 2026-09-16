@@ -101,6 +101,15 @@ type SessionListRefreshOptions = {
 const SESSION_REFRESH_LOG_ID_LIMIT = 25
 
 /**
+ * Minimum time the splash stays up before its exit animation starts.
+ *
+ * Sized to the mark's entrance in SplashScreen: 1600ms trace + 900ms delay +
+ * 1100ms ink ≈ 2.0s, rounded up so the finished logo is held for a beat rather
+ * than fading the instant the last fill lands.
+ */
+const SPLASH_MIN_VISIBLE_MS = 2200
+
+/**
  * UTF-8 byte size of the serialized RPC args (the wire payload minus the
  * fixed envelope overhead). Used to pre-flight attachment sends: oversized
  * envelopes make the server close the connection (1009), which otherwise
@@ -417,11 +426,24 @@ export default function App() {
   // Compute if app is fully ready (all data loaded)
   const isFullyReady = appState === 'ready' && sessionsLoaded
 
-  // Trigger splash exit animation when fully ready
+  // Trigger splash exit animation when fully ready.
+  //
+  // Held for a floor of SPLASH_MIN_VISIBLE_MS so the mark's entrance (1600ms
+  // trace + 900ms ink delay, see SplashScreen) is never cut off mid-draw. On a
+  // cold start the app is almost always slower than this floor, so it rarely
+  // adds any wait; it only matters on warm restarts, where the alternative is a
+  // half-drawn logo flashing past.
+  const splashShownAtRef = useRef(Date.now())
   useEffect(() => {
-    if (isFullyReady && !splashExiting) {
+    if (!isFullyReady || splashExiting) return
+    const elapsed = Date.now() - splashShownAtRef.current
+    const remaining = SPLASH_MIN_VISIBLE_MS - elapsed
+    if (remaining <= 0) {
       setSplashExiting(true)
+      return
     }
+    const timer = setTimeout(() => setSplashExiting(true), remaining)
+    return () => clearTimeout(timer)
   }, [isFullyReady, splashExiting])
 
   // Handler for when splash exit animation completes

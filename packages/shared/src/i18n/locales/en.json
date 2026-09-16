@@ -825,6 +825,7 @@
   "multiSelect.selected.source_other": "{{count}} sources selected",
   "multiSelect.selectionHint": "Use <cmdClick></cmdClick> to toggle, <shiftClick></shiftClick> for range",
   "multiSelect.setLabels": "Set Labels",
+  "newSession.slogan": "Let it exist, let it go.",
   "onboarding.apiSetup.anthropicApiKey": "Anthropic API Key",
   "onboarding.apiSetup.anthropicApiKeyDesc": "Pay-as-you-go via Anthropic, OpenRouter, or compatible APIs.",
   "onboarding.apiSetup.apiKey": "API Key",

@@ -825,6 +825,7 @@
   "multiSelect.selected.source_other": "{{count}} Quellen ausgewählt",
   "multiSelect.selectionHint": "Verwenden Sie <cmdClick></cmdClick> zum Umschalten, <shiftClick></shiftClick> für die Bereichsauswahl",
   "multiSelect.setLabels": "Labels setzen",
+  "newSession.slogan": "Let it exist, let it go.",
   "onboarding.apiSetup.anthropicApiKey": "Anthropic API Key",
   "onboarding.apiSetup.anthropicApiKeyDesc": "Nutzungsbasierte Abrechnung über Anthropic, OpenRouter oder kompatible APIs.",
   "onboarding.apiSetup.apiKey": "API Key",
