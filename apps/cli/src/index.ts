@@ -1959,7 +1959,7 @@ Examples:
   phaneris run --provider openai --model gpt-4o "Summarize this repo"
   OPENAI_API_KEY=sk-... phaneris run --provider openai "Hello"
   GOOGLE_API_KEY=... phaneris run --provider google --model gemini-2.0-flash "Hello"
-  DEEPSEEK_API_KEY=sk-... phaneris run --provider deepseek --model deepseek-v4-flash "Hello"
+  DEEPSEEK_API_KEY=sk-... phaneris run --provider deepseek --model deepseek-flash "Hello"
   echo "Analyze this code" | phaneris run
   phaneris ping
   phaneris sessions

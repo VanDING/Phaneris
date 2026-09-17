@@ -28,15 +28,34 @@ describe('models-pi filtering', () => {
     expect(providers.some(provider => provider.key === 'deepseek' && provider.label === 'DeepSeek')).toBe(true);
   });
 
-  it('returns current DeepSeek models from the Pi SDK catalog', () => {
+  it('returns current DeepSeek models, including the patched deepseek-flash entry', () => {
+    // The pinned Pi SDK (0.85.1) still ships only the retired
+    // `deepseek-v4-flash` / `-vision-exp` aliases. PI_CATALOG_PATCHES adds the
+    // canonical multimodal `deepseek-flash` (upstream commit 12f59336) and
+    // PI_EXCLUDED_MODELS hides the aliases it replaced. Delete this test's
+    // patch expectations together with PI_CATALOG_PATCHES once the SDK ships
+    // the fix — then only the catalog assertions below should remain.
     const models = getPiModelsForAuthProvider('deepseek');
     const ids = models.map(m => m.id);
-    expect(ids).toContain('pi/deepseek-v4-flash');
+    expect(ids).toContain('pi/deepseek-flash');
     expect(ids).toContain('pi/deepseek-v4-pro');
 
-    const visionModel = models.find(m => m.id === 'pi/deepseek-v4-flash-vision-exp');
-    expect(visionModel).toBeDefined();
-    expect(visionModel?.supportsImages).toBe(true);
+    // Retired aliases are hidden rather than duplicated next to deepseek-flash.
+    expect(ids).not.toContain('pi/deepseek-v4-flash');
+    expect(ids).not.toContain('pi/deepseek-v4-flash-vision-exp');
+
+    const flash = models.find(m => m.id === 'pi/deepseek-flash');
+    expect(flash).toBeDefined();
+    expect(flash?.name).toBe('DeepSeek V4.1 Flash');
+    expect(flash?.contextWindow).toBe(1_000_000);
+    expect(flash?.maxTokens).toBe(384_000);
+    expect(flash?.supportsThinking).toBe(true);
+    expect(flash?.supportsImages).toBe(true);
+    // `supportedThinkingLevels` must be derived from the PATCHED model, not
+    // inherited from the (nonexistent) catalog entry: low is reachable, while
+    // unmapped minimal/medium and unsupported xhigh are not.
+    expect(flash?.supportedThinkingLevels).toEqual(['off', 'low', 'high', 'max']);
+    expect(flash?.thinkingLevelMap).toMatchObject({ low: 'low', high: 'high', max: 'max' });
   });
 
   it('includes Moonshot AI in the Pi API key provider list with human-readable labels', () => {
@@ -52,11 +71,6 @@ describe('models-pi filtering', () => {
     // Bedrock exposes Opus 5 only as regional inference profiles (us./eu./global.).
     const bedrockIds = getPiModelsForAuthProvider('amazon-bedrock').map(m => m.id);
     expect(bedrockIds).toContain('pi/us.anthropic.claude-opus-5');
-  });
-
-  it('returns the DeepSeek V4 Flash vision model from the Pi SDK catalog', () => {
-    const ids = getPiModelsForAuthProvider('deepseek').map(m => m.id);
-    expect(ids).toContain('pi/deepseek-v4-flash-vision-exp');
   });
 
   it('returns GPT-6 Astra from the Pi SDK catalog for OpenAI API keys and ChatGPT accounts', () => {

@@ -15,13 +15,70 @@
 
 import { getProviders, getModels } from '@earendil-works/pi-ai/compat';
 import { getSupportedThinkingLevels } from '@earendil-works/pi-ai';
-import type { KnownProvider, Model, Api } from '@earendil-works/pi-ai';
+import type { KnownProvider, Model, Api, ModelThinkingLevel } from '@earendil-works/pi-ai';
 import type { ThinkingLevel } from '../agent/thinking-levels.ts';
 import type { ModelDefinition } from './models.ts';
 
 // ============================================
 // PI MODEL DISCOVERY
 // ============================================
+
+/**
+ * TEMPORARY — delete this block once the pinned Pi SDK ships the upstream
+ * catalog fix, then drop `resolveRawPiModels` in favor of calling
+ * `getModels()` directly at its two call sites.
+ *
+ * Upstream `earendil-works/pi` fixed the DeepSeek catalog in `12f59336`
+ * ("fix(ai): update DeepSeek Flash catalog", closes #9423): it deleted the
+ * retired `deepseek-v4-flash` / `deepseek-v4-flash-vision-exp` aliases and
+ * added the canonical multimodal `deepseek-flash` (DeepSeek V4.1 Flash).
+ * That commit is 47 commits ahead of the released `v0.85.1` tag this repo
+ * pins, so without this patch the built-in `deepseek` provider keeps
+ * advertising only the retired aliases.
+ *
+ * A patch is merged over the catalog model BEFORE conversion, so it can both
+ * add a missing model and correct fields on an existing one. Derived fields
+ * (`supportsThinking`, `supportedThinkingLevels`) are recomputed from the
+ * patched model — never copied — so a patch that changes `thinkingLevelMap`
+ * also changes the level list the picker offers.
+ */
+type PiCatalogPatch = {
+  name?: string;
+  reasoning?: boolean;
+  /**
+   * Model-level `thinkingLevelMap`: a `null` entry means "level unsupported",
+   * a string maps the level to the value sent upstream, and an absent key
+   * leaves the level at its default (always supported except `xhigh`/`max`,
+   * which require an explicit entry).
+   */
+  thinkingLevelMap?: Partial<Record<ModelThinkingLevel, string | null>>;
+  contextWindow?: number;
+  maxTokens?: number;
+  input?: readonly ('text' | 'image')[];
+};
+
+/**
+ * Keyed by `${provider}/${modelId}` — the same provider/id pair the Pi SDK uses.
+ */
+const PI_CATALOG_PATCHES: Record<string, PiCatalogPatch> = {
+  'deepseek/deepseek-flash': {
+    name: 'DeepSeek V4.1 Flash',
+    reasoning: true,
+    // Mirrors upstream `DEEPSEEK_V4_FLASH_THINKING_LEVEL_MAP`: DeepSeek's
+    // thinking-effort control accepts low/high/max, so `low` is reachable
+    // while `minimal`/`medium` stay unmapped and `xhigh` is unsupported.
+    thinkingLevelMap: {
+      minimal: null,
+      low: 'low',
+      medium: null,
+      high: 'high',
+      max: 'max',
+    },
+    contextWindow: 1_000_000,
+    maxTokens: 384_000,
+    input: ['text', 'image'],
+  },
+};
 
 /**
  * Convert a Pi SDK Model to our ModelDefinition format.
@@ -48,6 +105,52 @@ function piModelToDefinition(m: Model<Api>): ModelDefinition {
 }
 
 /**
+ * Apply a catalog patch to one raw SDK model.
+ *
+ * Merging at the RAW level (before conversion) rather than over the produced
+ * {@link ModelDefinition} is what keeps `supportedThinkingLevels` honest:
+ * merging afterwards would leave the catalog's stricter level list in place
+ * even though the patched `thinkingLevelMap` says otherwise.
+ */
+function withCatalogPatch(provider: string, m: Model<Api>): Model<Api> {
+  const patch = PI_CATALOG_PATCHES[`${provider}/${m.id}`];
+  return patch ? ({ ...m, ...patch } as Model<Api>) : m;
+}
+
+/**
+ * Resolve one provider's raw SDK models with {@link PI_CATALOG_PATCHES} applied.
+ *
+ * Patches both correct existing entries and INJECT entries the pinned SDK does
+ * not ship yet: a patch whose id is missing from the catalog is appended, so it
+ * flows through the same exclude/patch/convert pipeline as every catalog model.
+ * Injection is scoped to the patch's own `provider`, so a model added for
+ * `deepseek` never leaks into OpenRouter or Bedrock, which legitimately carry a
+ * different, gateway-specific version of the same model.
+ *
+ * The synthesized entry carries only the fields the patch declares — `name` is
+ * always present because a patch without a display name would render an empty
+ * picker row.
+ */
+function resolveRawPiModels(provider: string): Model<Api>[] {
+  const catalog = getModels(provider as Parameters<typeof getModels>[0]);
+  const patched: Model<Api>[] = catalog.map(m => withCatalogPatch(provider, m));
+
+  for (const [key, patch] of Object.entries(PI_CATALOG_PATCHES)) {
+    const [patchProvider, modelId] = key.split('/');
+    if (patchProvider !== provider || !modelId) continue;
+    if (catalog.some(m => m.id === modelId)) continue;
+    patched.push({
+      id: modelId,
+      provider,
+      name: patch.name ?? modelId,
+      ...patch,
+    } as unknown as Model<Api>);
+  }
+
+  return patched;
+}
+
+/**
  * Models to EXCLUDE from the Pi model list.
  * Temporary workaround for models that are broken in the current Pi SDK version.
  * e.g., gemini-1.5-flash fails with "not found for API version v1beta"
@@ -64,6 +167,12 @@ const PI_EXCLUDED_MODELS: Set<string> = new Set([
 
   // Stale alias exposed by some SDK catalogs; fails at runtime in OpenAI API-key flow
   'codex-mini-latest',
+
+  // Retired DeepSeek Flash aliases. The upstream catalog replaced both with the
+  // single multimodal `deepseek-flash` (see PI_CATALOG_PATCHES); until the SDK
+  // upgrade lands we hide them ourselves so the picker shows one Flash entry.
+  'deepseek-v4-flash',
+  'deepseek-v4-flash-vision-exp',
 ]);
 
 /**
@@ -96,7 +205,7 @@ function isBareBedrockClaudeModel(modelId: string): boolean {
  */
 export function getPiModelsForAuthProvider(piAuthProvider: string): ModelDefinition[] {
   try {
-    const models = getModels(piAuthProvider as Parameters<typeof getModels>[0]);
+    const models = resolveRawPiModels(piAuthProvider);
     if (models.length > 0) {
       return models
         .filter(m => !isExcludedPiModel(m.id))
@@ -119,8 +228,7 @@ export function getAllPiModels(): ModelDefinition[] {
   const allModels: ModelDefinition[] = [];
   for (const provider of getProviders()) {
     try {
-      const models = getModels(provider);
-      allModels.push(...models
+      allModels.push(...resolveRawPiModels(provider)
         .filter(m => !isExcludedPiModel(m.id))
         .map(piModelToDefinition)
       );

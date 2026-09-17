@@ -607,7 +607,10 @@ export const PI_PREFERRED_DEFAULTS: Record<string, string[]> = {
   // unresponsive on generateContent — verified against the live API in
   // April 2026 — and are deliberately excluded from defaults.
   google: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-3-flash-preview', 'gemini-3.1-flash-lite-preview'],
-  deepseek: ['deepseek-v4-pro', 'deepseek-v4-flash'],
+  // `deepseek-flash` is the canonical V4.1 Flash id; the older
+  // `deepseek-v4-flash` alias it replaces is retired upstream and hidden by
+  // PI_EXCLUDED_MODELS. Keep Pro first so it stays the connection default.
+  deepseek: ['deepseek-v4-pro', 'deepseek-flash'],
   // Kimi has no mini/flash-named model, so findSmallModel falls back to the
   // last entry of the connection's model list; keep the cheaper K2.6 second
   // so 3-tier setups get a sensible summarizer default.
