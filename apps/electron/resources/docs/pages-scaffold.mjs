@@ -10,7 +10,7 @@ const json = (value) => JSON.stringify(value, null, 2) + '\n'
 
 export const templateFiles = {
   'package.json': json({
-    name: 'craft-page', private: true, version: '1.0.0', type: 'module',
+    name: 'phaneris-page', private: true, version: '1.0.0', type: 'module',
     scripts: { build: 'node build.mjs', typecheck: 'tsc --noEmit' },
     dependencies: {
       react: '19.2.7', 'react-dom': '19.2.7',
@@ -63,7 +63,7 @@ const result = await build({
   define: { 'process.env.NODE_ENV': JSON.stringify('production') },
   build: {
     write: false, sourcemap: false, cssCodeSplit: false,
-    lib: { entry: resolve(root, 'src/main.tsx'), name: 'CraftPage', formats: ['iife'] },
+    lib: { entry: resolve(root, 'src/main.tsx'), name: 'PhanerisPage', formats: ['iife'] },
     rolldownOptions: { output: { codeSplitting: false } },
   },
 })
@@ -90,7 +90,7 @@ const js = chunks[0].code.replace(/<\/script/gi, '<\\/script').replace(/<!--/g, 
 const styles = css.replace(/<\/style/gi, '\\3c /style')
 const html = '<!doctype html>\n<html lang="' + escapeHtml(metadata.lang ?? 'en') + '"><head>'
   + '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-  + '<title>' + escapeHtml(metadata.title ?? 'Craft Page') + '</title><style>' + styles + '</style>'
+  + '<title>' + escapeHtml(metadata.title ?? 'Phaneris Page') + '</title><style>' + styles + '</style>'
   + '</head><body><div id="root"></div><script>' + js + '</script></body></html>\n'
 if (Buffer.byteLength(html) > 5 * 1024 * 1024) throw new Error('Built page exceeds the 5 MiB HTML limit')
 await mkdir(dirname(output), { recursive: true })
@@ -155,7 +155,8 @@ const listeners = new Set<() => void>()
 window.addEventListener('message', event => {
   if (event.source !== window.parent) return
   const msg = event.data
-  if (!msg || msg.protocol !== 'craft-pages/v1') return
+  // Older hosts still speak the legacy envelope name; accept both.
+  if (!msg || (msg.protocol !== 'phaneris-pages/v1' && msg.protocol !== 'craft-pages/v1')) return
   if (msg.type === 'init' && typeof msg.payload?.nonce === 'string') {
     nonce = msg.payload.nonce
     snapshot = msg.payload.snapshot ?? null
@@ -164,7 +165,7 @@ window.addEventListener('message', event => {
   } else return
   listeners.forEach(listener => listener())
 })
-window.parent.postMessage({ protocol: 'craft-pages/v1', type: 'ready' }, '*')
+window.parent.postMessage({ protocol: 'phaneris-pages/v1', type: 'ready' }, '*')
 
 function subscribe(listener: () => void) {
   listeners.add(listener)
@@ -177,7 +178,7 @@ export function usePageSnapshot() {
 // keeping this send synchronous preserves the host's user-activation check.
 export function postPageMessage(message: Record<string, unknown>) {
   if (!nonce) throw new Error('Page bridge is not ready')
-  window.parent.postMessage({ ...message, protocol: 'craft-pages/v1', nonce }, '*')
+  window.parent.postMessage({ ...message, protocol: 'phaneris-pages/v1', nonce }, '*')
 }
 `,
   'src/App.tsx': String.raw`import { useState } from 'react'
@@ -190,7 +191,7 @@ export function App() {
   const snapshot = usePageSnapshot()
   return <main className="mx-auto max-w-2xl space-y-6 p-8">
     <header className="space-y-2">
-      <p className="text-sm text-muted-foreground">Craft Pages</p>
+      <p className="text-sm text-muted-foreground">Phaneris Pages</p>
       <h1 className="text-3xl font-semibold tracking-tight">My Page</h1>
       <p className="text-muted-foreground">Build something useful with React and reusable components.</p>
     </header>

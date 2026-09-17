@@ -2,18 +2,18 @@ import { mkdirSync } from 'node:fs';
 import { DefaultResourceLoader } from '@earendil-works/pi-coding-agent';
 
 /**
- * Current Craft system prompt for the active session.
+ * Current Phaneris system prompt for the active session.
  * Updated per prompt message; read by the loader override and the
  * before_agent_start extension hook on every turn and rebuild.
  */
-let currentCraftPrompt = '';
+let currentPhanerisPrompt = '';
 
-export function setCraftSystemPrompt(prompt: string): void {
-  currentCraftPrompt = prompt;
+export function setPhanerisSystemPrompt(prompt: string): void {
+  currentPhanerisPrompt = prompt;
 }
 
 /**
- * Create the SDK resource loader for a Craft session.
+ * Create the SDK resource loader for a Phaneris session.
  *
  * Replaces the private-field stamping in the deleted override module:
  * - `systemPromptOverride` survives `_rebuildSystemPrompt` (tool changes) —
@@ -23,21 +23,21 @@ export function setCraftSystemPrompt(prompt: string): void {
  *   _systemPromptOverride ?? _baseSystemPrompt` each turn and clears
  *   `_systemPromptOverride` after each run, so the hook must re-supply it.
  *
- * Craft manages context files/skills/prompts/themes itself — disable SDK
+ * Phaneris manages context files/skills/prompts/themes itself — disable SDK
  * discovery so nothing foreign leaks into the prompt.
  *
  * `getPrompt` scopes the prompt source to this loader (ephemeral sessions pass
  * a closure over their captured prompt so they can never overwrite or read the
  * main session's module-level prompt); default reads the module-level prompt.
  */
-export async function createCraftResourceLoader(options: {
+export async function createPhanerisResourceLoader(options: {
   cwd: string;
   agentDir: string;
-  /** Prompt source for this loader; defaults to the module-level current Craft prompt. */
+  /** Prompt source for this loader; defaults to the module-level current Phaneris prompt. */
   getPrompt?: () => string;
 }): Promise<DefaultResourceLoader> {
   mkdirSync(options.agentDir, { recursive: true });
-  const getPrompt = options.getPrompt ?? (() => currentCraftPrompt);
+  const getPrompt = options.getPrompt ?? (() => currentPhanerisPrompt);
   const loader = new DefaultResourceLoader({
     cwd: options.cwd,
     agentDir: options.agentDir,
@@ -49,7 +49,7 @@ export async function createCraftResourceLoader(options: {
     appendSystemPromptOverride: () => [],
     extensionFactories: [
       {
-        name: 'craft-system-prompt',
+        name: 'phaneris-system-prompt',
         factory: (pi) => {
           pi.on('before_agent_start', () => {
             const prompt = getPrompt();

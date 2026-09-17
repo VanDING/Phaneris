@@ -6,6 +6,7 @@
 
 import { describe, test, expect } from 'bun:test'
 import {
+  LEGACY_PAGE_BRIDGE_PROTOCOL,
   PAGE_BRIDGE_PROTOCOL,
   PageActionRateLimiter,
   buildPageActionResultMessage,
@@ -18,6 +19,7 @@ import {
   isSafeExternalUrl,
   parsePageBridgeMessage,
   reconcileGrantSummaries,
+  withLegacyProtocolAlias,
   type PageGrantSummary,
 } from '../page-bridge'
 
@@ -89,6 +91,23 @@ describe('parsePageBridgeMessage', () => {
     expect(parsePageBridgeMessage({ type: 'ready' })).toBeNull()
     expect(parsePageBridgeMessage({ protocol: 'craft-pages/v0', type: 'ready' })).toBeNull()
     expect(parsePageBridgeMessage({ protocol: PAGE_BRIDGE_PROTOCOL, type: 'eval' })).toBeNull()
+  })
+
+  test('still accepts the legacy envelope from pages built before the rename', () => {
+    expect(parsePageBridgeMessage({ protocol: LEGACY_PAGE_BRIDGE_PROTOCOL, type: 'ready' })).toEqual({ type: 'ready' })
+    expect(
+      parsePageBridgeMessage({ protocol: LEGACY_PAGE_BRIDGE_PROTOCOL, type: 'open-url', nonce: 'n', url: 'https://example.com' }),
+    ).toEqual({ type: 'open-url', nonce: 'n', url: 'https://example.com' })
+  })
+
+  test('emits host messages under both envelopes so legacy pages keep working', () => {
+    const message = buildPageInitMessage({ slug: 's', kind: 'live' }, 'nonce', null)
+    const variants = withLegacyProtocolAlias(message)
+    expect(variants).toHaveLength(2)
+    expect(variants[0]!.protocol).toBe(PAGE_BRIDGE_PROTOCOL)
+    expect(variants[1]!.protocol).toBe(LEGACY_PAGE_BRIDGE_PROTOCOL)
+    expect(variants[1]!.type).toBe('init')
+    expect(variants[1]!.payload).toEqual(message.payload)
   })
 
   test('rejects malformed actions', () => {

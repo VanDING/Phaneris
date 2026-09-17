@@ -6,9 +6,9 @@ import { Sun, Moon, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 /**
- * CraftAgentLogo - The Phaneris "C" logo
+ * PhanerisLogo - the Phaneris mark used in the viewer header
  */
-function CraftAgentLogo({ className }: { className?: string }) {
+function PhanerisLogo({ className }: { className?: string }) {
   return (
     <svg
       className={className}
@@ -44,7 +44,7 @@ export function Header({ hasSession, sessionTitle, isDark, onToggleTheme, onClea
         className="hover:opacity-80 transition-opacity"
         title="Phaneris"
       >
-        <CraftAgentLogo className="w-6 h-6 text-[#9570BE]" />
+        <PhanerisLogo className="w-6 h-6 text-[#9570BE]" />
       </a>
 
       {/* Session title - centered */}

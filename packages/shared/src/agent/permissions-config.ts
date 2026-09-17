@@ -385,7 +385,7 @@ function compileBlockedCommandHint(hint: BlockedCommandHintRule): CompiledBlocke
 const CLI_BASH_PATTERN_PREFIX = `^${CLI_NAME}\\s`;
 
 function shouldCompileBashPattern(pattern: string): boolean {
-  if (!FEATURE_FLAGS.craftAgentsCli && pattern.startsWith(CLI_BASH_PATTERN_PREFIX)) {
+  if (!FEATURE_FLAGS.phanerisCli && pattern.startsWith(CLI_BASH_PATTERN_PREFIX)) {
     return false;
   }
   return true;

@@ -36,6 +36,8 @@ describe('Pages React single-file build', () => {
     const html = await readFile(join(project, 'dist/index.html'), 'utf8')
     expect(html).toContain('data:image/svg+xml')
     expect(html).toContain('.text-3xl')
+    expect(html).toContain('phaneris-pages/v1')
+    // The scaffold still accepts the pre-rename envelope from older hosts.
     expect(html).toContain('craft-pages/v1')
     expect(html.match(/<\/script\s*>/gi)).toHaveLength(1)
     expect(html).not.toMatch(/<script[^>]+src=/i)

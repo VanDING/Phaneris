@@ -4,7 +4,7 @@
 browser/Electron-specific APIs, to judge the cost of re-implementing the UI in a native Rust GUI
 toolkit (GPUI).
 
-**Repository:** `E:\craft-agents` @ `package.json` version `0.13.3` (Bun + Electron 44 + React 19).
+**Repository:** `E:\Phaneris` @ `package.json` version `0.1.0` (Bun + Electron 44 + React 19). Measured while the tree was still `E:\craft-agents` @ `0.13.3`; the project was renamed and its version line restarted at `0.1.0` on 2026-09-15, and the counts below were not re-measured.
 **Method:** read-only analysis. All counts produced with `rg` (ripgrep 15.1) and PowerShell
 `Get-Content`/`Measure-Object` over the working tree, excluding `node_modules`.
 **Date of measurement:** working tree as found; no files were modified.

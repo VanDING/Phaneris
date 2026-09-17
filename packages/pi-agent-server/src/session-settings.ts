@@ -1,11 +1,11 @@
 /**
- * Pi SDK settings for Craft-embedded sessions.
+ * Pi SDK settings for Phaneris-embedded sessions.
  *
  * `createAgentSession` defaults to `SettingsManager.create(cwd, agentDir)`, which
  * merges the *working directory's* `.pi/settings.json` (project scope, trusted by
  * default) on top of `agentDir/settings.json`, and persists every SDK-side
  * settings write (e.g. `setModel` → defaultProvider/defaultModel) into the
- * session's `.pi-agent/` folder. Neither is wanted here: Craft owns model,
+ * session's `.pi-agent/` folder. Neither is wanted here: Phaneris owns model,
  * thinking level and compaction for its sessions, a repo checked out as the
  * working directory must not be able to flip retry/compaction/tool defaults,
  * and nothing should be written next to the session transcript.
@@ -19,7 +19,7 @@ import { LLM_QUERY_TIMEOUT_MS } from '../../shared/src/agent/llm-tool.ts';
 
 type PiSettings = NonNullable<Parameters<typeof SettingsManager.inMemory>[0]>;
 
-export type CraftPiSessionPurpose = 'main' | 'ephemeral';
+export type PhanerisPiSessionPurpose = 'main' | 'ephemeral';
 
 /**
  * Finish inside the host RPC timeout so the subprocess has time to serialize a
@@ -76,7 +76,7 @@ export const PHANERIS_PI_EPHEMERAL_MAX_BACKOFF_MS =
     (2 ** PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries - 1);
 
 /** Settings applied to one Pi session, isolated from project/global Pi files. */
-export function buildCraftPiSettings(purpose: CraftPiSessionPurpose = 'main'): PiSettings {
+export function buildPhanerisPiSettings(purpose: PhanerisPiSessionPurpose = 'main'): PiSettings {
   const retry = purpose === 'ephemeral'
     ? PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS
     : PHANERIS_PI_RETRY_SETTINGS;
@@ -100,8 +100,8 @@ export function buildCraftPiSettings(purpose: CraftPiSessionPurpose = 'main'): P
  * shared between the main session and `queryLlm` ephemeral sessions so a
  * `setModel` on one can never leak a "default model" into the other.
  */
-export function createCraftSettingsManager(
-  purpose: CraftPiSessionPurpose = 'main',
+export function createPhanerisSettingsManager(
+  purpose: PhanerisPiSessionPurpose = 'main',
 ): SettingsManager {
-  return SettingsManager.inMemory(buildCraftPiSettings(purpose));
+  return SettingsManager.inMemory(buildPhanerisPiSettings(purpose));
 }

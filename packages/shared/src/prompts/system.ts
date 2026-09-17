@@ -327,7 +327,7 @@ ${workspaceContext}
 - For math, use $$...$$ delimiters; avoid single $...$ in prose so currency remains plain text
 
 ## Available Tools
-Use only tools exposed in this session. ${FEATURE_FLAGS.craftAgentsCli ? "The Phaneris CLI feature is enabled: use phaneris for managed labels/sources/skills/automations; direct guarded file operations are blocked." : "Use available file/configuration tools within the current mode."}
+Use only tools exposed in this session. ${FEATURE_FLAGS.phanerisCli ? "The Phaneris CLI feature is enabled: use phaneris for managed labels/sources/skills/automations; direct guarded file operations are blocked." : "Use available file/configuration tools within the current mode."}
 Use config_validate to verify changes match the expected schema. Do not invent a SubmitPlan gate for already-authorized Ask/Execute edits; in Explore, submit a plan before implementation outside the allowed exceptions.
 `;
 }
@@ -373,8 +373,11 @@ export function getSystemPrompt(
   // Note: Date/time context is now added to user messages instead of system prompt
   // to enable prompt caching. The system prompt stays static and cacheable.
   // Safe Mode context is also in user messages for the same reason.
-  const basePrompt = getCraftAssistantPrompt(workspaceRootPath, backendName);
-  const fullPrompt = `${basePrompt}${preferences}${projectBlock}${debugContext}${projectContextFiles}`;
+  const basePrompt = getPhanerisAssistantPrompt(workspaceRootPath, backendName);
+  // The environment marker closes the assembled prompt: it carries the app
+  // version, so anywhere earlier would invalidate the whole prefix cache on
+  // every release (see docs/system-prompt-per-turn-analysis.md §S).
+  const fullPrompt = `${basePrompt}${preferences}${projectBlock}${debugContext}${projectContextFiles}\n${getPhanerisEnvironmentMarker()}`;
 
   debug('[getSystemPrompt] full prompt length:', fullPrompt.length);
 
@@ -530,20 +533,22 @@ rg -n "session|OAuth|\"level\":\"error\"" "${logFilePath}" | tail -n 50
 }
 
 /**
- * Get the Phaneris environment marker for SDK JSONL detection.
- * This marker is embedded in the system prompt and allows us to identify
- * Phaneris sessions when importing from Claude Code.
+ * Runtime environment marker emitted at the end of the system prompt.
+ *
+ * It names the runtime the model is executing in: app version, platform,
+ * architecture and OS kernel. Nothing parses it today; keep the shape stable
+ * if a session importer ever needs to recognise transcripts written here.
  */
-function getCraftAgentEnvironmentMarker(): string {
+function getPhanerisEnvironmentMarker(): string {
   const platform = process.platform; // 'darwin', 'win32', 'linux'
   const arch = process.arch; // 'arm64', 'x64'
   const osVersion = os.release(); // OS kernel version
 
-  return `<craft_agent_environment version="${APP_VERSION}" platform="${platform}" arch="${arch}" os_version="${osVersion}" />`;
+  return `<phaneris_environment version="${APP_VERSION}" platform="${platform}" arch="${arch}" os_version="${osVersion}" />`;
 }
 
 /**
- * Get the Craft Assistant system prompt with workspace-specific paths.
+ * Get the Phaneris assistant system prompt with workspace-specific paths.
  *
  * This prompt is intentionally concise - detailed documentation lives in
  * ${APP_ROOT}/docs/ and is read on-demand when topics come up.
@@ -551,9 +556,8 @@ function getCraftAgentEnvironmentMarker(): string {
  * @param workspaceRootPath - Root path of the workspace
  * @param backendName - Backend name for "powered by X" text (default: 'Phaneris Backend')
  */
-function getCraftAssistantPrompt(workspaceRootPath?: string, backendName: string = 'Phaneris Backend'): string {
+function getPhanerisAssistantPrompt(workspaceRootPath?: string, backendName: string = 'Phaneris Backend'): string {
   const workspacePath = workspaceRootPath || `${APP_ROOT}/workspaces/{id}`;
-  const environmentMarker = getCraftAgentEnvironmentMarker();
   const browserToolsSection = getBrowserToolEnabled() ? `
 ## Browser Tools
 
@@ -563,10 +567,10 @@ Use the live tool schema (\`command\`) and \`--help\` for syntax. Start with ope
 
 At the end, use \`release\` when the user may want to keep browsing, \`hide\` for temporary reuse, or \`close\` when the window is no longer needed.
 ` : '';
-  const configurationSection = FEATURE_FLAGS.craftAgentsCli ? `
+  const configurationSection = FEATURE_FLAGS.phanerisCli ? `
 ## Managed Configuration
 
-The Phaneris CLI feature is enabled. Use \`phaneris\` for labels, sources, skills, and automations; direct agent writes to guarded configuration paths are blocked, and direct reads under \`labels/\` are also blocked. Read \`${DOC_REFS.craftCli}\` and the relevant domain guide first. Use \`--help\` for exact commands and validate changes. JSON/YAML examples describe content, not permission to bypass the CLI.
+The Phaneris CLI feature is enabled. Use \`phaneris\` for labels, sources, skills, and automations; direct agent writes to guarded configuration paths are blocked, and direct reads under \`labels/\` are also blocked. Read \`${DOC_REFS.phanerisCli}\` and the relevant domain guide first. Use \`--help\` for exact commands and validate changes. JSON/YAML examples describe content, not permission to bypass the CLI.
 ` : '';
   const feedbackSection = FEATURE_FLAGS.developerFeedback ? `
 ## Developer Feedback
@@ -574,11 +578,9 @@ The Phaneris CLI feature is enabled. Use \`phaneris\` for labels, sources, skill
 \`send_developer_feedback\` sends a message to the development team. When the user authorizes sending feedback, include the concrete issue, expected behavior, observed result, and relevant non-sensitive context. Tool availability alone does not authorize external messaging.
 ` : '';
   const browserDocRow = getBrowserToolEnabled() ? `| Browser | ${DOC_REFS.browserTools} | Before browser automation |` : '';
-  const cliDocRow = FEATURE_FLAGS.craftAgentsCli ? `| Phaneris CLI | ${DOC_REFS.craftCli} | Before managed configuration operations |` : '';
+  const cliDocRow = FEATURE_FLAGS.phanerisCli ? `| Phaneris CLI | ${DOC_REFS.phanerisCli} | Before managed configuration operations |` : '';
 
-  return `${environmentMarker}
-
-You are Phaneris, an assistant for coding, research, documents, and work across connected data sources in the Craft desktop interface. You are powered by ${backendName}. Refer to yourself as Phaneris when asked.
+  return `You are Phaneris, an assistant for coding, research, documents, and work across connected data sources in the Phaneris desktop app. You are powered by ${backendName}. Refer to yourself as Phaneris when asked.
 
 ## Execution Contract
 

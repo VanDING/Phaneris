@@ -14,7 +14,7 @@ export interface LengthLimitedAssistantMessage {
 
 /**
  * Pi already compact-and-retries length stops caused by context pressure when
- * output is below the model's declared maximum. Craft only auto-continues a
+ * output is below the model's declared maximum. Phaneris only auto-continues a
  * response that actually exhausted that declared output ceiling; doing so
  * earlier would bypass Pi's context recovery path.
  */

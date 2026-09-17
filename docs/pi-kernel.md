@@ -18,7 +18,7 @@ packages/server-core (SessionManager)
           │ AgentBackend + JSONL
 packages/shared (PiAgent + event adapter + permissions)
           │ stdio
-packages/pi-agent-server (Pi 0.85.0)
+packages/pi-agent-server (Pi 0.85.1)
           │ provider API / local tools / proxied session tools
 ```
 
@@ -26,7 +26,7 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 
 ## 生命周期约束
 
-`agent_end` 只表示一次 agent loop 结束，之后仍可能发生自动重试、上下文压缩或排队续跑，因此不是 Craft 会话的终点。只有 Pi 0.85.0 的 `agent_settled` 会关闭本轮事件队列。
+`agent_end` 只表示一次 agent loop 结束，之后仍可能发生自动重试、上下文压缩或排队续跑，因此不是 Craft 会话的终点。只有 Pi 0.85.1 的 `agent_settled` 会关闭本轮事件队列。
 
 长任务需要向用户报告中间进度时调用本地 `report_progress` 工具。它把进度映射为 `isIntermediate` 文本，同时保持 Pi 原生 agent loop 继续运行。纯文本回复因此保留清晰语义：工作已经完成，或确实需要用户输入/批准。
 

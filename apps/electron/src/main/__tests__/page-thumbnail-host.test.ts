@@ -38,9 +38,10 @@ describe('page-thumbnail-host', () => {
     expect(html).toContain('src="craft-page://test/index.html"')
   })
 
-  it('delivers the data snapshot via the craft-pages/v1 init message', () => {
+  it('delivers the data snapshot via the phaneris-pages/v1 init message, keeping the legacy alias', () => {
     const snapshot = { version: 1 as const, generatedAt: 5, kv: { total: 42 }, series: {} }
     const html = buildThumbnailHostHtml({ documentUrl: 'craft-page://test/index.html', slug: 's', kind: 'live', snapshot })
+    expect(html).toContain('phaneris-pages/v1')
     expect(html).toContain('craft-pages/v1')
     expect(html).toContain("type: 'init'")
     expect(html).toContain('"total":42')

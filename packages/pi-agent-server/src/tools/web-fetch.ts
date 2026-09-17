@@ -367,7 +367,7 @@ export function createWebFetchTool(
           await validateUrl(currentUrl);
           response_ = await fetch(currentUrl, {
             headers: {
-              'User-Agent': 'Mozilla/5.0 (compatible; CraftAgent/1.0)',
+              'User-Agent': 'Mozilla/5.0 (compatible; Phaneris/1.0)',
               Accept:
                 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             },

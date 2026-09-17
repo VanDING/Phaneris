@@ -188,9 +188,9 @@ if (isDebugMode) {
   }
 
   process.env.PHANERIS_SCRIPTS = scriptsDir
-  // NOTE: phantom craft-agents-commands + craft-cli package entries
-  // were removed in the Pi migration — their ENTRY/DOC_PATH env vars were
-  // write-only dead code pointing at nonexistent paths (audit C-1/Dockerfile).
+  // NOTE: the old agent-commands and CLI package entries were removed in the
+  // Pi migration — their ENTRY/DOC_PATH env vars were write-only dead code
+  // pointing at nonexistent paths (audit C-1/Dockerfile).
   process.env.PHANERIS_AGENT_VERSION = app.getVersion()
   // Prepend both generic wrappers dir and platform uv dir:
   // - binDir exposes wrapper commands (pdf-tool, docx-tool, ...)
@@ -200,7 +200,7 @@ if (isDebugMode) {
   if (!bundledUvExists) {
     mainLog.warn('Bundled uv binary missing, CLI document tools may fail unless uv is available on PATH.', {
       expectedUvPath: uvBinary,
-      usingCraftUv: process.env.PHANERIS_UV ?? null,
+      usingBundledUv: process.env.PHANERIS_UV ?? null,
     })
   }
 
@@ -488,7 +488,7 @@ app.whenReady().then(async () => {
   // Ensure default permissions file exists (copies bundled default.json on first run)
   ensureDefaultPermissions()
 
-  // Seed tool icons to ~/.craft-agent/tool-icons/ (copies bundled SVGs on first run)
+  // Seed tool icons to ~/.phaneris/tool-icons/ (copies bundled SVGs on first run)
   ensureToolIcons()
 
   // Initialize the user-owned theme directory and migrate the deprecated

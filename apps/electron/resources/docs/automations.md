@@ -790,7 +790,7 @@ A single automation can have both prompt and webhook actions. They execute in or
         "actions": [
           {
             "type": "webhook",
-            "url": "https://api.example.com/craft-events",
+            "url": "https://api.example.com/phaneris-events",
             "method": "POST",
             "headers": {
               "Authorization": "Bearer ${PHANERIS_WH_API_TOKEN}",

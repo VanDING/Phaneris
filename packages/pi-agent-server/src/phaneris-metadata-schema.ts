@@ -3,12 +3,12 @@ const PHANERIS_INTENT_KEY = '_intent';
 
 const PHANERIS_DISPLAY_NAME_SCHEMA = {
   type: 'string',
-  description: 'Craft UI metadata: human-friendly action name for display only.',
+  description: 'Phaneris UI metadata: human-friendly action name for display only.',
 };
 
 const PHANERIS_INTENT_SCHEMA = {
   type: 'string',
-  description: 'Craft UI metadata: concise tool-call intent for display only.',
+  description: 'Phaneris UI metadata: concise tool-call intent for display only.',
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -22,15 +22,15 @@ function cloneWithDescriptors<T extends object>(value: T): T {
 }
 
 /**
- * Return a Pi tool schema that accepts Craft's root-level metadata fields.
+ * Return a Pi tool schema that accepts Phaneris's root-level metadata fields.
  *
- * Pi validates tool arguments before Craft's pre-tool-use hook can strip
+ * Pi validates tool arguments before Phaneris's pre-tool-use hook can strip
  * `_displayName` / `_intent`. Built-in Pi tools often use strict schemas with
  * `additionalProperties: false`, so we add those fields as optional root
  * properties at the adapter boundary. Unknown schema shapes are returned
  * unchanged, and upstream-defined metadata properties win if Pi adds them later.
  */
-export function allowCraftMetadataProperties<T>(schema: T): T {
+export function allowPhanerisMetadataProperties<T>(schema: T): T {
   if (!isRecord(schema)) return schema;
 
   const properties = schema.properties;
@@ -55,8 +55,8 @@ export function allowCraftMetadataProperties<T>(schema: T): T {
   return nextSchema as T;
 }
 
-/** Strip Craft-only metadata before invoking the upstream Pi tool implementation. */
-export function stripCraftMetadata<T>(input: T): T {
+/** Strip Phaneris-only metadata before invoking the upstream Pi tool implementation. */
+export function stripPhanerisMetadata<T>(input: T): T {
   if (!isRecord(input)) return input;
   if (!(PHANERIS_DISPLAY_NAME_KEY in input) && !(PHANERIS_INTENT_KEY in input)) return input;
 

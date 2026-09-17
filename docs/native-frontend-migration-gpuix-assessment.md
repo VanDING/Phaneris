@@ -9,6 +9,7 @@
   - 上游 GPUI：Zed monorepo `crates/gpui`、crates.io `gpui 0.2.2`、`gpui-pre 0.3.1`
   - craft-agents 本仓库当前工作树
 - 详细调研附件：`docs/research/gpui-profile.md`、`docs/research/gpui-kit-profile.md`、`docs/research/gpui-ecosystem-and-gaps.md`、`docs/research/craft-renderer-inventory.md`
+- 说明（2026-09-17）：本文写于仓库更名为 Phaneris 之前，文中 `craft-agents` 一律指当前工作树 `E:\Phaneris`；两个本地 scratch 检出（`docs/research/.scratch/gpui-kit`、`docs/research/gpuix-scratch/gpuix`）已清理，需要复现时按各自 profile 文档中记录的仓库与修订号重新克隆。
 
 ---
 
@@ -706,7 +707,7 @@ egui、Iced、Slint、Blitz、GPUI **全部**有开放的 CJK IME 缺陷。**只
 |---|---|
 | GPUI 是 Apache-2.0 且已发布 | `zed/crates/gpui/Cargo.toml`：`license = "Apache-2.0"`、`publish = true`、`version = "0.2.2"` |
 | Zed 的 editor/markdown/ui/terminal 是 GPL | Zed README 双许可声明；逐文件核验；`[workspace.package] publish = false` |
-| gpui-kit webview 总是画在最上层、仅 macOS+Windows | **本报告作者已在本地检出中直接核验** `docs/research/.scratch/gpui-kit/crates/webview/README.md` 原文："The WebView will render on top of the GPUI window, any GPUI elements behind the WebView bounds will be covered. / Only supports macOS and Windows currently. / So, we recommend using the webview in a separate window or in a Popup layer." |
+| gpui-kit webview 总是画在最上层、仅 macOS+Windows | **本报告作者已在本地检出中直接核验**（该检出已于 2026-09-17 清理，引文取自 `gpui-kit/crates/webview/README.md`）原文："The WebView will render on top of the GPUI window, any GPUI elements behind the WebView bounds will be covered. / Only supports macOS and Windows currently. / So, we recommend using the webview in a separate window or in a Popup layer." |
 | Tauri v2 为当前版本且无 v3 | crates.io / npm 实测：`2.11.5`（2026-07-01）为 max_version |
 | GPUI 与 Zed 的许可分界 | Zed README 双许可声明；逐文件核验 `crates/{editor,markdown,ui,ui_input,terminal,language,project,workspace,rope,multi_buffer,auto_update}` |
 | GPUI 无软件渲染 | `gpui_wgpu::new_rejecting_software()` 跳过 `DeviceType::Cpu`；issue #26692（Windows 远程桌面） |

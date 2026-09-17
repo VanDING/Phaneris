@@ -82,7 +82,7 @@
 `scripts/identity-allowlist.json` 中的每条规则都带 `reason`，只允许四类例外：
 
 1. **上游归属**：`NOTICE`、`LICENSE`。
-2. **历史记录**：`apps/electron/resources/release-notes/*.md`、`apps/electron/build-win.log`——记录的是上游名下实际发布过的东西，改写即伪造历史。
+2. **历史记录**：`apps/electron/resources/release-notes/*.md`——记录的是上游名下实际发布过的东西，改写即伪造历史。
 3. **迁移输入**：`phaneris.identity.json` 的 `legacy` 块（导入流程与弃用诊断读取）。
 4. **身份与扫描机制自身**：`identity.generated.*`、`identity.schema.json`、`check-identity.ts`、允许列表本身，以及本文件与方案文档。
 

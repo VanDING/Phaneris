@@ -72,17 +72,19 @@ export function buildThumbnailHostHtml(input: {
   var frame = document.getElementById('frame');
   function deliver() {
     try {
-      frame.contentWindow.postMessage(
-        { protocol: 'craft-pages/v1', type: 'init', payload: { page: PAGE, nonce: 'preview', snapshot: SNAPSHOT } },
-        '*'
-      );
+      var payload = { type: 'init', payload: { page: PAGE, nonce: 'preview', snapshot: SNAPSHOT } };
+      var target = frame.contentWindow;
+      // Both envelopes: a page built before the rename only accepts the legacy name.
+      target.postMessage(Object.assign({ protocol: 'phaneris-pages/v1' }, payload), '*');
+      target.postMessage(Object.assign({ protocol: 'craft-pages/v1' }, payload), '*');
     } catch (e) { /* opaque-origin race — the ready handler retries */ }
   }
   frame.addEventListener('load', deliver);
   window.addEventListener('message', function (event) {
     if (event.source !== frame.contentWindow || event.origin !== 'null') return;
     var m = event.data;
-    if (m && m.protocol === 'craft-pages/v1' && m.type === 'ready') deliver();
+    var isInitProtocol = m && (m.protocol === 'phaneris-pages/v1' || m.protocol === 'craft-pages/v1');
+    if (isInitProtocol && m.type === 'ready') deliver();
   });
 </script>
 </body>

@@ -38,11 +38,11 @@ export function isDeveloperFeedbackEnabled(): boolean {
 }
 
 /**
- * Runtime-evaluated check for craft-agents-cli integration.
+ * Runtime-evaluated check for the Phaneris CLI integration.
  *
  * Defaults to disabled. Override with PHANERIS_FEATURE_AGENTS_CLI=1|0.
  */
-export function isCraftAgentsCliEnabled(): boolean {
+export function isPhanerisCliEnabled(): boolean {
   const override = parseBooleanEnv(getEnv('PHANERIS_FEATURE_AGENTS_CLI'));
   if (override !== undefined) return override;
   return false;
@@ -107,12 +107,12 @@ export const FEATURE_FLAGS = {
     return isDeveloperFeedbackEnabled();
   },
   /**
-   * Enable craft-agent CLI guidance and guardrails.
+   * Enable Phaneris CLI guidance and guardrails.
    *
    * Defaults to disabled. Override with PHANERIS_FEATURE_AGENTS_CLI=1|0.
    */
-  get craftAgentsCli(): boolean {
-    return isCraftAgentsCliEnabled();
+  get phanerisCli(): boolean {
+    return isPhanerisCliEnabled();
   },
   /**
    * Enable embedded server settings page.

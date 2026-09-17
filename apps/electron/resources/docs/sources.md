@@ -5,7 +5,7 @@ This guide explains how to configure sources (MCP servers, APIs, local filesyste
 > **Configuration workflow:** Use `phaneris source ...` commands instead of editing source config files directly.
 > - `phaneris source --help`
 > - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
-> When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
+> When the Phaneris CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## Source Setup Process
 

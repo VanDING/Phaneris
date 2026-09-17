@@ -5,11 +5,11 @@ This guide explains how to create and configure skills in Phaneris.
 > **Configuration workflow:** Use `phaneris skill ...` commands instead of editing `SKILL.md` files directly.
 > - `phaneris skill --help`
 > - Canonical command reference: [phaneris-cli.md](./phaneris-cli.md)
-> When the Craft CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
+> When the Phaneris CLI feature is enabled, direct agent writes to this managed configuration are blocked; use the CLI. The JSON/YAML examples below describe stored content, not permission to bypass that routing. If CLI is disabled, follow the available tools and current permission mode.
 
 ## What Are Skills?
 
-Skills are specialized instructions that extend the active agent for specific tasks. Craft uses a Claude Code-compatible `SKILL.md` structure while adding workspace scope, source requirements, permission hints, icons, and UI management.
+Skills are specialized instructions that extend the active agent for specific tasks. Phaneris uses a Claude Code-compatible `SKILL.md` structure while adding workspace scope, source requirements, permission hints, icons, and UI management.
 
 **Key points:**
 - Users invoke a skill by mentioning it in a message: `@<slug>`. `/slash` commands are a different mechanism (permission modes, features, folders) and do not invoke skills.
@@ -22,7 +22,7 @@ Skills are specialized instructions that extend the active agent for specific ta
 Phaneris deliberately preserves the familiar frontmatter-plus-Markdown shape:
 
 1. **Portable structure**: a Markdown instruction body with YAML frontmatter
-2. **Shared core fields**: `name` and `description`, plus supported optional Craft fields such as `globs`, `alwaysAllow`, and `requiredSources`
+2. **Shared core fields**: `name` and `description`, plus supported optional Phaneris fields such as `globs`, `alwaysAllow`, and `requiredSources`
 3. **Agent-neutral instructions**: write for the active agent unless a skill intentionally targets one model or provider
 
 **What Phaneris adds:**
@@ -72,7 +72,7 @@ requiredSources:             # Optional: sources to auto-enable on invocation
 
 # Skill Instructions
 
-Your skill content goes here. Craft resolves an invoked skill and instructs the
+Your skill content goes here. Phaneris resolves an invoked skill and instructs the
 agent to read its SKILL.md before acting; metadata alone is not the instruction body.
 
 ## Guidelines
@@ -95,7 +95,7 @@ Display name for the skill. Shown in the UI and skill list.
 Brief description (1-2 sentences) explaining what the skill does.
 
 ### globs (optional)
-Compatibility metadata containing file patterns. Craft currently parses and stores this field but does not use it to automatically activate a skill. Invoke the skill explicitly when it is needed.
+Compatibility metadata containing file patterns. Phaneris currently parses and stores this field but does not use it to automatically activate a skill. Invoke the skill explicitly when it is needed.
 
 ```yaml
 globs:
@@ -105,7 +105,7 @@ globs:
 ```
 
 ### alwaysAllow (optional)
-Compatibility metadata containing tool names. Craft currently parses and stores this field but does not use it to grant tool permissions. A skill cannot override Explore mode, approval requirements, or other runtime policy.
+Compatibility metadata containing tool names. Phaneris currently parses and stores this field but does not use it to grant tool permissions. A skill cannot override Explore mode, approval requirements, or other runtime policy.
 
 ```yaml
 alwaysAllow:

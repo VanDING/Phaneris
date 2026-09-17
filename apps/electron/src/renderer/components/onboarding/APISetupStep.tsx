@@ -206,7 +206,7 @@ export function APISetupStep({
 
   const SEGMENT_LABELS: Record<ProviderSegment, string> = {
     anthropic: t("onboarding.apiSetup.claude"),
-    pi: t("onboarding.apiSetup.craftAgentsBackend"),
+    pi: t("onboarding.apiSetup.phanerisBackend"),
   }
 
   const SEGMENT_DESCRIPTIONS: Record<ProviderSegment, React.ReactNode> = {

@@ -3,7 +3,7 @@
 **Research date:** 2026-09-12 (all figures are as of this date)
 **Method:** live GitHub REST API, crates.io API, `gpui-kit.com` docs, plus a shallow clone of the repository inspected on disk.
 **Pinned revision inspected:** `84f57fdfcb4910623fb0bb7f795b077e249f9271` (`main`, committed 2026-09-12 00:32:39 +0800, subject `kit: Add support mobile applications in GPUI Kit (#3045)`).
-**Local checkout used for source reading:** `E:\craft-agents\docs\research\.scratch\gpui-kit` (scratch only; safe to delete).
+**Local checkout used for source reading:** `docs/research/.scratch/gpui-kit` (removed on 2026-09-17; recreate with `git clone --filter=blob:none https://github.com/longbridge/gpui-kit` and check out `84f57fdfcb4910623fb0bb7f795b077e249f9271`).
 
 > Honesty note: everything below is sourced from the URLs/paths quoted. Where I could not verify something, it is explicitly marked **[UNVERIFIED]** or **[NOT FOUND]**. I did not compile the project, so build-weight numbers are estimates derived from crate sizes and `Cargo.lock`, not from a measured build.
 

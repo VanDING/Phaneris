@@ -1,7 +1,7 @@
 # 分析报告：Agent 每轮重复发送 System Prompt 是否必要
 
 日期：2026-08-16
-范围：CraftAgent（pi-agent-server + Pi SDK）↔ DeepSeek Harness（dsh）对比；结合 LLM API 无状态性、前缀缓存经济学、标杆 agent 设计
+范围：Phaneris（pi-agent-server + Pi SDK）↔ DeepSeek Harness（dsh）对比；结合 LLM API 无状态性、前缀缓存经济学、标杆 agent 设计
 
 ---
 
@@ -9,7 +9,7 @@
 
 **"每轮重复发送 system prompt"不是一个冗余设计，而是三个不同层面的事，必须拆开看：**
 
-| 层面 | CraftAgent 行为 | 是否必要 | dsh 对比 |
+| 层面 | Phaneris 行为 | 是否必要 | dsh 对比 |
 |---|---|---|---|
 | L1 发给模型 API | 每个请求都携带完整 system prompt | **必要**——chat API 无状态，模型注意力需要前缀；dsh 也每轮携带，只是**日志不记录** | 同（`agent.ts:486-493` 每请求带 `system`） |
 | L2 进程内 IPC | 主进程每轮重新组装并完整重发 systemPrompt | 非必须但成本可忽略；价值是支持运行时动态更新 | 无 IPC（单进程内 assemble） |
@@ -18,11 +18,11 @@
 **核心判断**：
 1. 你的观察"dsh 只在第一轮发送 system prompt"是对**日志策略**的误读——dsh 每个 API 请求都带 system（其 `request/header` 事件只在 `initial`/`change` 时落一条，`usage.cacheReadTokens` 逐轮递增 1152→23296 证明前缀每轮重发且被服务端缓存命中）。
 2. 重复发送本身**几乎不花钱**：DeepSeek 缓存命中 ¥0.02/M vs 未命中 ¥1/M（50 倍价差）。真正烧钱的是**前缀不稳定**（system/tools 里混入每轮变化的内容 → 全量缓存失效 + 1.25–2× 写缓存惩罚）。
-3. CraftAgent 的设计**方向正确**：issue #862 已实现"稳定前缀 + volatile 内容放 user 消息尾部"，与 Claude Code 官方工程原则（static first, dynamic last）一致。真正该做的是**前缀稳定性审计**和**轨迹快照的变更式存储**，而不是"不重复发送"。
+3. Phaneris 的设计**方向正确**：issue #862 已实现"稳定前缀 + volatile 内容放 user 消息尾部"，与 Claude Code 官方工程原则（static first, dynamic last）一致。真正该做的是**前缀稳定性审计**和**轨迹快照的变更式存储**，而不是"不重复发送"。
 
 ---
 
-## 1. 本地证据：CraftAgent 每轮发送的完整链路
+## 1. 本地证据：Phaneris 每轮发送的完整链路
 
 ### 1.1 主进程：每轮重新组装 + IPC 完整重发
 
@@ -47,10 +47,10 @@ this.send({ type: 'prompt', ..., systemPrompt: fullSystemPrompt, ... });
 `packages/pi-agent-server/src/index.ts:1462-1467`：
 
 ```ts
-if (msg.systemPrompt) { setCraftSystemPrompt(msg.systemPrompt); }  // 每轮更新
+if (msg.systemPrompt) { setPhanerisSystemPrompt(msg.systemPrompt); }  // 每轮更新
 ```
 
-`craft-resource-loader.ts` 的 `before_agent_start` 扩展钩子在**每一轮**把 prompt 注入 SDK。为什么必须每轮？注释写得很清楚——这是 **Pi SDK 的契约**：
+`phaneris-resource-loader.ts` 的 `before_agent_start` 扩展钩子在**每一轮**把 prompt 注入 SDK。为什么必须每轮？注释写得很清楚——这是 **Pi SDK 的契约**：
 
 > "agent-session.js assigns `state.systemPrompt = _systemPromptOverride ?? _baseSystemPrompt` each turn and clears `_systemPromptOverride` after each run, so the hook must re-supply it."
 
@@ -120,7 +120,7 @@ const request = deepFreeze({
 
 所有主流 chat/completions API（OpenAI、Anthropic、DeepSeek、Google、Pi SDK 背后的 provider 网关）都是**无状态 HTTP 接口**：服务端不保存你的会话，每个请求必须自带完整上下文（system + 全部历史）。模型推理时 system prompt 与历史消息一样参与注意力计算——**它必须出现在请求里，不存在"只发一次"的协议**。唯一的例外形态（OpenAI Assistants/Responses 的 server-side thread）也仅是服务端替你存消息，每次 run 时指令文本仍会被重新注入该次请求的上下文。
 
-结论：**"每轮重复发送 system prompt"在 L1 层面不存在优化空间，dsh 与 CraftAgent 在这层完全一致。**
+结论：**"每轮重复发送 system prompt"在 L1 层面不存在优化空间，dsh 与 Phaneris 在这层完全一致。**
 
 ### 2.2 前缀缓存经济学：重复发送 ≈ 免费，前缀不稳定才贵
 
@@ -161,7 +161,7 @@ Dan's Notebook 的 7-agent 调查管道：把 system prompt 中动态内容（�
 cache_hit_rate = cache_read / (cache_read + cache_write + input_tokens)
 ```
 
-**与 CraftAgent issue #862 的设计完全同构**（稳定 system 前缀 + volatile 走 user 消息尾部）。
+**与 Phaneris issue #862 的设计完全同构**（稳定 system 前缀 + volatile 走 user 消息尾部）。
 
 ### 3.3 OpenAI / Gemini / dsh
 
@@ -171,7 +171,7 @@ cache_hit_rate = cache_read / (cache_read + cache_write + input_tokens)
 
 ---
 
-## 4. 结论：CraftAgent 的设计判断
+## 4. 结论：Phaneris 的设计判断
 
 ### 4.1 对"每轮重复发送"的三层裁决
 
@@ -191,7 +191,7 @@ Pi SDK 的"功能"恰恰要求每轮注入：`_systemPromptOverride` 每轮 run 
 |---|---|---|
 | 工具定义/排序变化 | Pi SDK `_rebuildSystemPrompt`（工具变更时重建 base） | tools 在前缀最顶层，一变全失效（Claude Code Bug 3 同款） |
 | system 内混入易变字段 | `pi-agent.ts:2144` 的 `fullSystemPrompt` 拼接面 | cacheRead 归零（issue #862 已防住主路径，需回归保护） |
-| `appendSystemPromptOverride` 误用 | craft-resource-loader.ts（当前恒为 `[]`） | 追加在 system 尾部，同样属于缓存前缀 |
+| `appendSystemPromptOverride` 误用 | phaneris-resource-loader.ts（当前恒为 `[]`） | 追加在 system 尾部，同样属于缓存前缀 |
 | 快照环逐出 | `PROMPT_SNAPSHOT_LIMIT=50` | 长会话轨迹回看丢 system 内容（只留占位行） |
 
 ---
@@ -207,7 +207,7 @@ Pi SDK 的"功能"恰恰要求每轮注入：`_systemPromptOverride` 每轮 run 
 - 与 dsh 的 `request/header`（`headerEquals`）策略对齐，但保留 Craft/VanDSH 的 diff 展示——两者不冲突。
 
 **C. IPC 去重（B 级，收益小）**
-- 主进程对 `fullSystemPrompt` 做内容哈希，未变化则不重发，让 pi-agent-server 复用上次值（`setCraftSystemPrompt` 仅在变化时调用）。注意保留"变更必须立即生效"的语义。
+- 主进程对 `fullSystemPrompt` 做内容哈希，未变化则不重发，让 pi-agent-server 复用上次值（`setPhanerisSystemPrompt` 仅在变化时调用）。注意保留"变更必须立即生效"的语义。
 
 **不建议**：把 system 改成"每轮不发给模型"或"塞进消息列表中部"——前者在无状态 API 上不成立，后者违反位置偏差最优性并必然击穿缓存。
 
@@ -218,7 +218,7 @@ Pi SDK 的"功能"恰恰要求每轮注入：`_systemPromptOverride` 每轮 run 
 | 事实 | 证据 |
 |---|---|
 | Craft 每轮 IPC 重发完整 systemPrompt | `packages/shared/src/agent/pi-agent.ts:2082-2166`（含 issue #862 注释） |
-| pi-agent-server 每轮注入 SDK | `packages/pi-agent-server/src/index.ts:1462-1467`、`craft-resource-loader.ts` |
+| pi-agent-server 每轮注入 SDK | `packages/pi-agent-server/src/index.ts:1462-1467`、`phaneris-resource-loader.ts` |
 | Pi SDK 每轮清空 override、system 为每轮状态 | `node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js:753-754, 901-908` |
 | 轨迹每 request 一条 system 快照记录 | `pi-agent-server/src/index.ts:1257-1290`（`PROMPT_SNAPSHOT_LIMIT=50`）；`packages/ui/.../trajectory-snapshot.ts:106-120`；`trajectory-layout.ts:366-378` |
 | dsh 每请求携带 system、日志按变更记录 | `deepseek-harness/packages/core/agent-loop/src/agent.ts:458-493`；`/Users/van/Downloads/session.jsonl`（12813 事件仅 1 条 `request/header`，`cacheReadTokens` 逐轮递增） |

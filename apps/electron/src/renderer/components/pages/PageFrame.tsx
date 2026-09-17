@@ -24,6 +24,7 @@ import {
   parsePageBridgeMessage,
   reconcileGrantSummaries,
   toGrantSummary,
+  withLegacyProtocolAlias,
   type PageBridgeIncoming,
   type PageGrantRequestEntry,
   type PageGrantSummary,
@@ -121,8 +122,13 @@ export function PageFrame({ workspaceId, page, lease, content, documentUrl, snap
   const postToFrame = useCallback((message: Record<string, unknown>) => {
     // '*' is required: an opaque-origin frame cannot be addressed by origin.
     // The payload never contains credentials, and only THIS frame's window
-    // object receives it.
-    iframeRef.current?.contentWindow?.postMessage(message, '*')
+    // object receives it. Pages built before the envelope rename only accept
+    // the legacy protocol, so every message goes out under both names.
+    const frameWindow = iframeRef.current?.contentWindow
+    if (!frameWindow) return
+    for (const variant of withLegacyProtocolAlias(message)) {
+      frameWindow.postMessage(variant, '*')
+    }
   }, [])
 
   const postInit = useCallback(() => {

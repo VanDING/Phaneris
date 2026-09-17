@@ -43,11 +43,6 @@
       "reason": "Historical release notes describe what actually shipped under the upstream name; rewriting them would falsify the record."
     },
     {
-      "glob": "apps/electron/build-win.log",
-      "tokens": ["*"],
-      "reason": "Checked-in historical build log; evidence of the pre-fork packaging output, not a live configuration input."
-    },
-    {
       "glob": "AGENTS.md",
       "tokens": ["*"],
       "reason": "Documents the working remote name (VanDING/Phaneris) and the retired fork (VanDING/craft-agents-rebuild), which is kept for historical reference after the project moved to a standalone repository."

@@ -128,9 +128,9 @@
 | 更新链路 | `electron-builder.yml` 仍无 `publish` 块，打包产物不含 `app-update.yml`；`auto-update.ts` 的注释仍指向上游域名 | D 阶段：自有 Release 与更新元数据 |
 | 分享 Viewer | 指向上游托管 | D 阶段 |
 | TRADEMARK.md | 仍是上游商标政策 | 发布前需要补 Phaneris 自有名称/商标段落，同时保留上游 mark 的说明 |
-| i18n key 名 | `menu.aboutCraftAgents`、`menu.hideCraftAgents`、`menu.quitCraftAgents`、`onboarding.apiSetup.craftAgentsBackend` 等键名仍含旧品牌 | 可延后：仅内部标识，用户不可见；改动需同步 6 个 locale 与排序校验 |
+| i18n key 名 | 已完成：`menu.aboutPhaneris` / `menu.hidePhaneris` / `menu.quitPhaneris` / `menu.appMenu` / `onboarding.apiSetup.phanerisBackend` / `onboarding.reauth.loginWithPhaneris` 全部改名，7 个 locale 同步 | — |
 | 代码标识符 | `CraftAgent` 类名与其兼容别名、若干 `craftAgent` 局部名 | 可延后：属于内部 API；方案未要求公开 API 改名 |
-| 版本号 | 根包仍为 `0.13.3` | F 阶段：首个独立版本（暂拟 `0.14.0`），禁止版本倒退 |
+| 版本号 | 已完成：根包为 `0.1.0`，独立版本行自 `0.1.0` 起（`0988ff03`） | — |
 | 上游归属核对 | `NOTICE` 未改动；`LICENSE` 为 Apache-2.0 原文 | 发布前核对 NOTICE 与 TRADEMARK 的适用范围 |
 
 ## 5. 残留标识的可度量状态

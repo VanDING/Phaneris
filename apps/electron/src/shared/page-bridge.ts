@@ -14,7 +14,7 @@
  *      and the server-side PageActionBroker re-validates the lease, nonce,
  *      replay cache, and grant independently.
  *
- * Message flow (all envelopes carry `protocol: 'craft-pages/v1'`):
+ * Message flow (all envelopes carry `protocol: PAGE_BRIDGE_PROTOCOL`):
  *
  *   host → page
  *     init          { page: {slug, kind}, nonce, snapshot, grants }  on load / 'ready'
@@ -50,7 +50,28 @@ import type {
 } from '@phaneris/shared/pages/types'
 import { hasPathTraversal } from '@phaneris/shared/pages/types'
 
-export const PAGE_BRIDGE_PROTOCOL = 'craft-pages/v1'
+export const PAGE_BRIDGE_PROTOCOL = 'phaneris-pages/v1'
+
+/**
+ * Envelope name used by pages built before the Phaneris rename. A page ships
+ * as built HTML inside the workspace, so the host cannot rewrite it: it accepts
+ * either envelope on the way in and emits both on the way out
+ * (`withLegacyProtocolAlias`). New pages only need `PAGE_BRIDGE_PROTOCOL`.
+ */
+export const LEGACY_PAGE_BRIDGE_PROTOCOL = 'craft-pages/v1'
+
+const ACCEPTED_PAGE_BRIDGE_PROTOCOLS: readonly string[] = [
+  PAGE_BRIDGE_PROTOCOL,
+  LEGACY_PAGE_BRIDGE_PROTOCOL,
+]
+
+/**
+ * Every wire form of one host → page message: the current envelope first, then
+ * the legacy alias, so pages built against either scaffold keep receiving it.
+ */
+export function withLegacyProtocolAlias(message: Record<string, unknown>): Record<string, unknown>[] {
+  return [message, { ...message, protocol: LEGACY_PAGE_BRIDGE_PROTOCOL }]
+}
 
 // Bounded inputs: anything larger is dropped before further processing.
 const MAX_MESSAGE_JSON_CHARS = 256 * 1024
@@ -306,7 +327,8 @@ function parseGrantRequestEntries(value: unknown): PageGrantRequestEntry[] | nul
  * the caller must drop such events silently (pages can post arbitrary junk).
  */
 export function parsePageBridgeMessage(data: unknown): PageBridgeIncoming | null {
-  if (!isPlainObject(data) || data.protocol !== PAGE_BRIDGE_PROTOCOL) return null
+  if (!isPlainObject(data) || typeof data.protocol !== 'string') return null
+  if (!ACCEPTED_PAGE_BRIDGE_PROTOCOLS.includes(data.protocol)) return null
 
   try {
     if (JSON.stringify(data).length > MAX_MESSAGE_JSON_CHARS) return null

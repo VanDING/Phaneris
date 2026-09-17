@@ -8,12 +8,12 @@ import {
   PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
   PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS,
   PHANERIS_PI_RETRY_SETTINGS,
-  createCraftSettingsManager,
+  createPhanerisSettingsManager,
 } from './session-settings.ts';
 
-describe('createCraftSettingsManager', () => {
+describe('createPhanerisSettingsManager', () => {
   it('pins the agent-level auto-retry policy', () => {
-    const settings = createCraftSettingsManager();
+    const settings = createPhanerisSettingsManager();
     expect(settings.getRetryEnabled()).toBe(true);
     expect(settings.getRetrySettings()).toEqual({
       enabled: true,
@@ -23,7 +23,7 @@ describe('createCraftSettingsManager', () => {
   });
 
   it('enables provider-level (pre-stream) retries that the SDK leaves off by default', () => {
-    const settings = createCraftSettingsManager();
+    const settings = createPhanerisSettingsManager();
     expect(settings.getProviderRetrySettings()).toMatchObject({
       maxRetries: PHANERIS_PI_RETRY_SETTINGS.provider.maxRetries,
       maxRetryDelayMs: PHANERIS_PI_RETRY_SETTINGS.provider.maxRetryDelayMs,
@@ -34,7 +34,7 @@ describe('createCraftSettingsManager', () => {
   });
 
   it('uses a smaller retry policy for bounded ephemeral queries', () => {
-    const settings = createCraftSettingsManager('ephemeral');
+    const settings = createPhanerisSettingsManager('ephemeral');
     expect(settings.getRetrySettings()).toEqual({
       enabled: true,
       maxRetries: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries,
@@ -52,14 +52,14 @@ describe('createCraftSettingsManager', () => {
   });
 
   it('keeps auto-compaction enabled', () => {
-    expect(createCraftSettingsManager().getCompactionEnabled()).toBe(true);
+    expect(createPhanerisSettingsManager().getCompactionEnabled()).toBe(true);
   });
 
   it('ignores a .pi/settings.json in the working directory', () => {
     // A repo used as the session's working directory may ship Pi project
     // settings. The SDK's default SettingsManager.create(cwd, agentDir) merges
     // them (project scope is trusted by default) — a repo could silently turn
-    // off retries or compaction for Craft sessions. The in-memory manager must
+    // off retries or compaction for Phaneris sessions. The in-memory manager must
     // not see them.
     const cwd = mkdtempSync(join(tmpdir(), 'craft-pi-settings-'));
     try {
@@ -74,8 +74,8 @@ describe('createCraftSettingsManager', () => {
       expect(fromDisk.getRetryEnabled()).toBe(false);
       expect(fromDisk.getCompactionEnabled()).toBe(false);
 
-      // …and that Craft's manager does not.
-      const settings = createCraftSettingsManager();
+      // …and that Phaneris's manager does not.
+      const settings = createPhanerisSettingsManager();
       expect(settings.getRetryEnabled()).toBe(true);
       expect(settings.getCompactionEnabled()).toBe(true);
     } finally {
@@ -84,8 +84,8 @@ describe('createCraftSettingsManager', () => {
   });
 
   it('returns a fresh manager per call so sessions cannot leak settings into each other', () => {
-    const a = createCraftSettingsManager('ephemeral');
-    const b = createCraftSettingsManager('ephemeral');
+    const a = createPhanerisSettingsManager('ephemeral');
+    const b = createPhanerisSettingsManager('ephemeral');
     expect(a).not.toBe(b);
     a.setRetryEnabled(false);
     expect(a.getRetryEnabled()).toBe(false);

@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from 'bun:test';
 import {
   isDevRuntime,
   isDeveloperFeedbackEnabled,
-  isCraftAgentsCliEnabled,
+  isPhanerisCliEnabled,
   isEmbeddedServerEnabled,
   isPagesSharingEnabled,
   isSessionSharingEnabled,
@@ -79,22 +79,22 @@ describe('feature-flags runtime helpers', () => {
     expect(isDeveloperFeedbackEnabled()).toBe(true);
   });
 
-  it('isCraftAgentsCliEnabled defaults to false when no override is set', () => {
+  it('isPhanerisCliEnabled defaults to false when no override is set', () => {
     delete process.env.PHANERIS_FEATURE_AGENTS_CLI;
 
-    expect(isCraftAgentsCliEnabled()).toBe(false);
+    expect(isPhanerisCliEnabled()).toBe(false);
   });
 
-  it('isCraftAgentsCliEnabled honors explicit override true', () => {
+  it('isPhanerisCliEnabled honors explicit override true', () => {
     process.env.PHANERIS_FEATURE_AGENTS_CLI = '1';
 
-    expect(isCraftAgentsCliEnabled()).toBe(true);
+    expect(isPhanerisCliEnabled()).toBe(true);
   });
 
-  it('isCraftAgentsCliEnabled honors explicit override false', () => {
+  it('isPhanerisCliEnabled honors explicit override false', () => {
     process.env.PHANERIS_FEATURE_AGENTS_CLI = '0';
 
-    expect(isCraftAgentsCliEnabled()).toBe(false);
+    expect(isPhanerisCliEnabled()).toBe(false);
   });
 
   it('isEmbeddedServerEnabled defaults to false when no override is set', () => {

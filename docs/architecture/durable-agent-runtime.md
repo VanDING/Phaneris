@@ -23,7 +23,7 @@ The deliberately deferred end-state is described in
 
 ## Decision
 
-Craft Agent's Runtime Host is the single authority for durable execution. Provider sessions,
+The Phaneris Runtime Host is the single authority for durable execution. Provider sessions,
 renderer state, search indexes, task snapshots, and compatibility transcripts are projections or
 caches; none may independently decide whether an external effect happened.
 

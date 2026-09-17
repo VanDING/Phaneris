@@ -44,7 +44,7 @@ function printAnnotation(text: string) {
 
 console.log(`
 ${colors.bgMagenta}${colors.bold}                                                                                ${colors.reset}
-${colors.bgMagenta}${colors.bold}                    CRAFT AGENT SYSTEM PROMPT BREAKDOWN                         ${colors.reset}
+${colors.bgMagenta}${colors.bold}                    PHANERIS SYSTEM PROMPT BREAKDOWN                            ${colors.reset}
 ${colors.bgMagenta}${colors.bold}                                                                                ${colors.reset}
 `);
 
@@ -54,7 +54,7 @@ ${colors.bgMagenta}${colors.bold}                                               
 
 printHeader('PART 1: SYSTEM PROMPT TEMPLATE');
 printAnnotation('Rebuilt for each user turn; stable content stays in the system prefix.');
-printAnnotation('Pi uses Craft instructions through its resource-loader override, not a Claude Code preset.');
+printAnnotation('Pi uses Phaneris instructions through its resource-loader override, not a Claude Code preset.');
 printAnnotation('This example is not a captured model request: paths, flags and project state may differ.');
 printAnnotation('Composed of:');
 printAnnotation('  1. Environment marker and execution/permission/recovery contracts');
@@ -66,7 +66,7 @@ printAnnotation('  5. Debug context and project instruction file index, when sup
 const systemPrompt = getSystemPrompt(
   undefined, // No pinned preferences (use current from disk)
   { enabled: false }, // Debug mode disabled for cleaner output
-  '/Users/example/.craft-agent/workspaces/abc123' // Example workspace path
+  '/Users/example/.phaneris/workspaces/abc123' // Example workspace path
 );
 
 printSection('FULL STATIC SYSTEM PROMPT', systemPrompt, colors.green);
@@ -77,7 +77,7 @@ console.log(`\n${colors.bold}Static System Prompt Length: ${systemPrompt.length.
 const systemPromptWithDebug = getSystemPrompt(
   undefined,
   { enabled: true, logFilePath: '~/Library/Logs/@phaneris/electron/main.log' },
-  '/Users/example/.craft-agent/workspaces/abc123'
+  '/Users/example/.phaneris/workspaces/abc123'
 );
 console.log(`${colors.dim}With debug mode: ${systemPromptWithDebug.length.toLocaleString()} characters (+${(systemPromptWithDebug.length - systemPrompt.length).toLocaleString()})${colors.reset}`);
 
@@ -101,9 +101,9 @@ printAnnotation('Added first to user message for prompt caching optimization');
 // 2. Session State
 const sessionState = formatSessionState('260121-example-session', {
   plansFolderPath:
-    '/Users/example/.craft-agent/workspaces/abc123/sessions/260121-example-session/plans',
+    '/Users/example/.phaneris/workspaces/abc123/sessions/260121-example-session/plans',
   dataFolderPath:
-    '/Users/example/.craft-agent/workspaces/abc123/sessions/260121-example-session/data',
+    '/Users/example/.phaneris/workspaces/abc123/sessions/260121-example-session/data',
 });
 printSection('2. SESSION STATE - formatSessionState()', sessionState, colors.magenta);
 printAnnotation('Contains: sessionId, permissionMode, modeTransition/modeChangedBy/modeChangedAt/modeVersion (when available), plansFolderPath, dataFolderPath');
@@ -229,7 +229,7 @@ ${colors.bold}Dynamic User Message Components (per message):${colors.reset}
 
 ${colors.bold}Key Files:${colors.reset}
   packages/shared/src/prompts/system.ts          ${colors.dim}// Main prompt assembly${colors.reset}
-  packages/shared/src/agent/craft-agent.ts       ${colors.dim}// User message building${colors.reset}
+  packages/shared/src/agent/core/prompt-builder.ts ${colors.dim}// User message building${colors.reset}
   packages/shared/src/agent/mode-manager.ts      ${colors.dim}// Permission modes${colors.reset}
   packages/shared/src/config/preferences.ts      ${colors.dim}// User preferences${colors.reset}
 `);

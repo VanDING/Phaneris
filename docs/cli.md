@@ -167,7 +167,7 @@ phaneris --validate-server
 
 When no `--url` is provided, `--validate-server` automatically spawns a local headless server (same as the `run` command), runs the validation, and shuts it down.
 
-Runs a 21-step integration test covering the full server lifecycle including source and skill creation:
+Runs an end-to-end integration test covering the full server lifecycle including source and skill creation:
 
 1. Connect + handshake
 2. `credentials:healthCheck`

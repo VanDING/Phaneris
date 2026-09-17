@@ -1,6 +1,6 @@
 import { registerCustomTheme, resolveTheme } from '@pierre/diffs'
 
-const GLOBAL_THEME_KEY = '__craftShikiThemesRegistered__'
+const GLOBAL_THEME_KEY = '__phanerisShikiThemesRegistered__'
 
 /**
  * Register craft-dark / craft-light Shiki themes once per runtime.

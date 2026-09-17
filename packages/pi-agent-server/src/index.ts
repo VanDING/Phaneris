@@ -116,7 +116,7 @@ import { resolvePiModel, isDeniedMiniModelId, isModelNotFoundError } from './mod
 import { pickProviderAppropriateMiniModel } from './pick-mini-model.ts';
 import {
   PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
-  createCraftSettingsManager,
+  createPhanerisSettingsManager,
 } from './session-settings.ts';
 import { applySystemPromptOverride } from './system-prompt-override.ts';
 import {
@@ -149,8 +149,8 @@ import { getDefaultSummarizationModel } from '../../shared/src/config/models.ts'
 import { createWebFetchTool } from './tools/web-fetch.ts';
 import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
-import { allowCraftMetadataProperties, stripCraftMetadata } from './craft-metadata-schema.ts';
-import { createCraftResourceLoader, setCraftSystemPrompt } from './craft-resource-loader.ts';
+import { allowPhanerisMetadataProperties, stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
+import { createPhanerisResourceLoader, setPhanerisSystemPrompt } from './phaneris-resource-loader.ts';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '../../shared/src/durable-runtime/types.ts';
@@ -923,8 +923,8 @@ async function ensureSession(): Promise<AgentSession> {
     customTools: wrappedAll,
     tools: toolAllowlist,
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
-    resourceLoader: await createCraftResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir() }),
-    settingsManager: createCraftSettingsManager('main'),
+    resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir() }),
+    settingsManager: createPhanerisSettingsManager('main'),
   };
 
   // Extension isolation: set agentDir to a temp directory under session path
@@ -932,7 +932,7 @@ async function ensureSession(): Promise<AgentSession> {
   if (initConfig.sessionPath) {
     sessionOptions.agentDir = resolveIsolatedAgentDir();
 
-    // Session resume: use a per-Craft-session directory so the Pi SDK can
+    // Session resume: use a per-Phaneris-session directory so the Pi SDK can
     // persist and resume its own session across subprocess restarts.
     // continueRecent() loads the existing session if one exists, otherwise
     // creates a new one — so this handles both first-run and resume.
@@ -1245,7 +1245,7 @@ function wrapToolsWithHooks(tools: ToolDefinition<any, any>[]): ToolDefinition<a
 
 function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any> {
   const originalExecute = tool.execute;
-  const parameters = allowCraftMetadataProperties(tool.parameters);
+  const parameters = allowPhanerisMetadataProperties(tool.parameters);
 
   const wrappedExecute: ToolDefinition<any, any>['execute'] = async (
     toolCallId,
@@ -1269,10 +1269,10 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     // Send to main process for permission checking + transforms
     inputObj = await requestPreToolUseApproval(sdkToolName, inputObj, toolCallId);
 
-    // Metadata is for Craft UI only. Keep a final defensive strip here so the
+    // Metadata is for the Phaneris UI only. Keep a final defensive strip here so the
     // upstream Pi tool implementation always receives clean executable args,
     // even if a future pre-tool-use path returns `allow` without modification.
-    inputObj = stripCraftMetadata(inputObj);
+    inputObj = stripPhanerisMetadata(inputObj);
 
     // T1 must commit after preflight and before the implementation is allowed to run.
     const durable = await requestDurableToolPrepare(sdkToolName, inputObj, toolCallId);
@@ -1552,9 +1552,9 @@ async function queryLlm(
       modelRuntime,
       tools: [],
       sessionManager: PiSessionManager.inMemory(),
-      settingsManager: createCraftSettingsManager('ephemeral'),
+      settingsManager: createPhanerisSettingsManager('ephemeral'),
       model: piModel,
-      resourceLoader: await createCraftResourceLoader({
+      resourceLoader: await createPhanerisResourceLoader({
         cwd: resolvedCwd(),
         agentDir: resolveIsolatedAgentDir(),
         getPrompt: () => promptForSession,
@@ -2054,11 +2054,11 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
       }
     }
 
-    // Supply the Craft-built system prompt via the loader's before_agent_start
+    // Supply the Phaneris-built system prompt via the loader's before_agent_start
     // hook — re-applied every turn, surviving the SDK's per-turn reset and
-    // tool-change rebuilds (see craft-resource-loader.ts).
+    // tool-change rebuilds (see phaneris-resource-loader.ts).
     if (msg.systemPrompt) {
-      setCraftSystemPrompt(msg.systemPrompt);
+      setPhanerisSystemPrompt(msg.systemPrompt);
     }
 
     // Wire up event handler
@@ -2092,7 +2092,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     // calls agent.continue() to retry once. Running our own session.compact()
     // in parallel raced against the SDK and is the documented cause of the
     // AbortController crash in `_runAutoCompaction` (see
-    // plans/fix-pi-gpt-compaction.md). PiEventAdapter holds the Craft event
+    // plans/fix-pi-gpt-compaction.md). PiEventAdapter holds the Phaneris event
     // queue open across the SDK's recovery flow so the recovered turn
     // reaches the UI.
 

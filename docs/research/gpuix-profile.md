@@ -3,7 +3,8 @@
 **Research date:** 2026-09-11/12 (all API responses and fetches captured on that date)
 **Subject:** `remorses/gpuix` — https://github.com/remorses/gpuix — docs at https://gpuix.dev/
 **Method:** GitHub REST API, raw.githubusercontent.com, gpuix.dev, registry.npmjs.org, crates.io API, plus a
-shallow clone of `main` into `docs/research/gpuix-scratch/gpuix` for source-level grep.
+shallow clone of `main` into `docs/research/gpuix-scratch/gpuix` for source-level grep (that clone was removed on
+2026-09-17; recreate with `git clone --depth 1 https://github.com/remorses/gpuix` at `18e695e`).
 **Pinned revision inspected:** `18e695ed0ee8121a7793413ca795e08eda2a13df` (2026-09-10T14:48:47Z, "Size input and
 textarea rows from style.fontSize and style.lineHeight.")
 
