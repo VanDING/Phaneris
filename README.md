@@ -10,7 +10,7 @@
 
 Run capable AI agents across your files, tools, services, and documents — with a desktop workspace that makes every important action reviewable.
 
-[![Version](https://img.shields.io/badge/version-0.1.0-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.1.0.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.0.md)
 [![Pi SDK](https://img.shields.io/badge/Pi%20SDK-0.85.1-5b7cfa?style=flat-square)](docs/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
