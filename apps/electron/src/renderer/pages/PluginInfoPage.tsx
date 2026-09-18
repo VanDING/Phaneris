@@ -20,7 +20,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { Puzzle } from 'lucide-react'
+import { Shapes } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { PluginMenu } from '@/components/app-shell/PluginMenu'
@@ -117,7 +117,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                 // Same tile treatment the sidebar rows use: bg-foreground/5 with a
                 // muted glyph, so the hero and the list row read as one thing.
                 <div className="h-full w-full grid place-items-center bg-foreground/5 text-muted-foreground">
-                  <Puzzle className="h-4 w-4" strokeWidth={1.75} />
+                  <Shapes className="h-4 w-4" strokeWidth={1.75} />
                 </div>
               }
               title={plugin.name}

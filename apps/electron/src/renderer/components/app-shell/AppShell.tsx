@@ -33,7 +33,7 @@ import {
   MailOpen,
   FolderKanban,
   PanelsTopLeft,
-  Puzzle,
+  Shapes,
 } from "lucide-react"
 // SessionStatusIcons no longer used - icons come from dynamic sessionStatuses
 import { SourceAvatar } from "@/components/ui/source-avatar"
@@ -2827,7 +2827,7 @@ function AppShellContent({
                       id: "nav:plugins",
                       title: t("sidebar.plugins"),
                       label: String(plugins.length + pluginLoadErrors.length),
-                      icon: Puzzle,
+                      icon: Shapes,
                       variant: isPluginsNavigation(navState) ? "default" : "ghost",
                       onClick: handlePluginsClick,
                       // No context menu: installing a bundle is docs-driven, and the

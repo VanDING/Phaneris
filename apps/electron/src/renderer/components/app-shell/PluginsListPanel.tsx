@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Puzzle, TriangleAlert } from 'lucide-react'
+import { Shapes, TriangleAlert } from 'lucide-react'
 import { toast } from 'sonner'
 import { EntityPanel } from '@/components/ui/entity-panel'
 import { EntityListEmptyScreen } from '@/components/ui/entity-list-empty'
@@ -154,7 +154,7 @@ export function PluginsListPanel({
       containerProps={{ 'data-list-role': 'plugins' }}
       emptyState={
         <EntityListEmptyScreen
-          icon={<Puzzle />}
+          icon={<Shapes />}
           title={t('pluginsList.noPluginsConfigured')}
           description={t('pluginsList.emptyDescription')}
           docKey="plugins"
@@ -176,7 +176,7 @@ export function PluginsListPanel({
 
         const { plugin } = row
         return {
-          icon: <Puzzle />,
+          icon: <Shapes />,
           title: plugin.name,
           subtitle: (plugin.skills.length > 0 || plugin.sources.length > 0) ? (
             <span className="flex flex-col">
