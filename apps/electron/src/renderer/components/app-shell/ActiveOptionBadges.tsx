@@ -278,6 +278,12 @@ export function ActiveOptionBadges({
  * `/other-name`, so the badge's only job is to make the current context visible
  * and offer a way out. Listing plugins here would duplicate the `/` menu and
  * imply a picker that the single-slot model does not have.
+ *
+ * The chip metrics are copied from `MetadataBadge`, which is what the mode and
+ * state neighbours render through. Matching it is not cosmetic: this row is
+ * `items-start`, so a chip of a different height or corner radius does not sit
+ * level with the ones beside it, and a badge that looks almost-but-not-quite
+ * like its neighbours reads as broken rather than as deliberately different.
  */
 function PluginBadge({
   pluginName,
@@ -289,16 +295,17 @@ function PluginBadge({
   const { t } = useTranslation()
   return (
     <div
-      className="h-7 pl-2 pr-2.5 text-xs font-medium rounded-[6px] flex items-center gap-1.5 shadow-tinted outline-none select-none shrink-0 bg-background"
+      className="h-[30px] pl-3 pr-2 text-xs font-medium rounded-[8px] flex items-center shadow-minimal outline-none select-none shrink-0 bg-[color-mix(in_srgb,var(--background)_97%,var(--foreground))]"
       title={t('chat.activePlugin', { name: pluginName })}
     >
       <Puzzle className="shrink-0 h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
-      <span className="max-w-[16rem] truncate">{pluginName}</span>
+      {/* `ml-2` after the icon matches MetadataBadge 's icon/label gap. */}
+      <span className="ml-2 max-w-[14rem] truncate">{pluginName}</span>
       {onClear && (
         <button
           type="button"
           onClick={onClear}
-          className="shrink-0 -mr-0.5 rounded-full p-0.5 text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-colors"
+          className="shrink-0 ml-1.5 -mr-0.5 grid place-items-center h-4 w-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-colors"
           aria-label={t('chat.clearPlugin')}
         >
           <X className="h-3 w-3" strokeWidth={2.5} />
