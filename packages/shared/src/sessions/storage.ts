@@ -548,6 +548,7 @@ export async function updateSessionMetadata(
     | 'lastReadMessageId'
     | 'hasUnread'
     | 'enabledSourceSlugs'
+    | 'activePlugin'
     | 'workingDirectory'
     | 'sdkCwd'
     | 'permissionMode'
@@ -558,7 +559,10 @@ export async function updateSessionMetadata(
     | 'isArchived'
     | 'archivedAt'
     | 'projectId'
-  >>
+  >> & {
+    /** `null` clears the active plugin slot; `undefined` leaves it untouched. */
+    activePlugin?: string | null;
+  }
 ): Promise<void> {
   const session = loadSession(workspaceRootPath, sessionId);
   if (!session) return;
@@ -568,6 +572,11 @@ export async function updateSessionMetadata(
   if (updates.sessionStatus !== undefined) session.sessionStatus = updates.sessionStatus;
   if (updates.labels !== undefined) session.labels = updates.labels;
   if (updates.enabledSourceSlugs !== undefined) session.enabledSourceSlugs = updates.enabledSourceSlugs;
+  // `null` clears the slot, `undefined` leaves it untouched — the distinction is
+  // what lets a caller deactivate a plugin without a separate code path.
+  if (updates.activePlugin !== undefined) {
+    session.activePlugin = updates.activePlugin === null ? undefined : updates.activePlugin;
+  }
   if (updates.workingDirectory !== undefined) session.workingDirectory = updates.workingDirectory;
   if (updates.sdkCwd !== undefined) session.sdkCwd = updates.sdkCwd;
   if (updates.permissionMode !== undefined) session.permissionMode = updates.permissionMode;

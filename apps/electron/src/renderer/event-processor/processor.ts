@@ -20,6 +20,7 @@ import {
   handleError,
   handleTypedError,
   handleSourcesChanged,
+  handleActivePluginChanged,
   handleLabelsChanged,
   handleProjectIdChanged,
   handleSessionStatusChanged,
@@ -169,6 +170,9 @@ export function processEvent(
 
     case 'sources_changed':
       return handleSourcesChanged(state, event)
+
+    case 'active_plugin_changed':
+      return handleActivePluginChanged(state, event)
 
     case 'labels_changed':
       return handleLabelsChanged(state, event)

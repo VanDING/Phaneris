@@ -482,6 +482,8 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
         return sessionManager.updateWorkingDirectory(sessionId, command.dir)
       case 'setSources':
         return sessionManager.setSessionSources(sessionId, command.sourceSlugs)
+      case 'setActivePlugin':
+        return sessionManager.setSessionActivePlugin(sessionId, command.pluginName)
       case 'setLabels':
         return sessionManager.setSessionLabels(sessionId, command.labels)
       case 'setProjectId':

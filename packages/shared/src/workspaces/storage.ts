@@ -88,6 +88,22 @@ export function getWorkspaceSkillsPath(rootPath: string): string {
   return join(rootPath, 'skills');
 }
 
+/**
+ * Get path to the workspace plugins directory.
+ *
+ * Plugin bundles live at `plugins/<name>/` and are workspace-owned (D1):
+ * source credentials are keyed by workspace, so a shared global plugin
+ * directory could not own them.
+ *
+ * A plugin root is a *package*, not a resource tier — skill and source loaders
+ * must never scan inside it. See `packages/shared/src/plugins/storage.ts`.
+ *
+ * @param rootPath - Absolute path to workspace root folder
+ */
+export function getWorkspacePluginsPath(rootPath: string): string {
+  return join(rootPath, 'plugins');
+}
+
 // ============================================================
 // Config Operations
 // ============================================================

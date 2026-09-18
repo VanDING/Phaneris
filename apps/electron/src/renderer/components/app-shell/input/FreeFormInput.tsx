@@ -21,6 +21,7 @@ import {
   InlineSlashCommand,
   useInlineSlashCommand,
   type SlashCommandId,
+  type SlashPluginItem,
 } from '@/components/ui/slash-command-menu'
 import {
   InlineMentionMenu,
@@ -70,7 +71,7 @@ import { CompactWorkingDirectorySelector } from '@/components/ui/CompactWorkingD
 import { ConnectionIcon } from '@/components/icons/ConnectionIcon'
 import { FreeFormInputContextBadge } from './FreeFormInputContextBadge'
 import { derivePickerMode } from './picker-mode'
-import type { FileAttachment, LoadedSource, LoadedSkill } from '../../../../shared/types'
+import type { FileAttachment, LoadedSource, LoadedSkill, PluginSummary } from '../../../../shared/types'
 import type { PermissionMode } from '@phaneris/shared/agent/modes'
 import { type ThinkingLevel, getThinkingLevelNameKey, getThinkingLevelsForModel } from '@phaneris/shared/agent/thinking-levels'
 import { useEscapeInterrupt } from '@/context/EscapeInterruptContext'
@@ -193,6 +194,15 @@ export interface FreeFormInputProps {
   workingDirectory?: string
   /** Callback when working directory changes */
   onWorkingDirectoryChange?: (path: string) => void
+  /**
+   * Installed plugin bundles for this workspace, for the `/` menu roster (D12).
+   * Absent or empty simply omits the Plugins section.
+   */
+  plugins?: PluginSummary[]
+  /** Plugin bundle currently active for this session, marked in the `/` menu. */
+  activePlugin?: string | null
+  /** Activate a plugin bundle by name; null clears the slot (silent replace, D12). */
+  onActivePluginChange?: (pluginName: string | null) => void
   /** Session folder path (for "Reset to Session Root" option) */
   sessionFolderPath?: string
   /** Session ID for scoping events like approve-plan */
@@ -290,6 +300,9 @@ export function FreeFormInput({
   workspaceId,
   workingDirectory,
   onWorkingDirectoryChange,
+  plugins = [],
+  activePlugin,
+  onActivePluginChange,
   sessionFolderPath,
   sessionId,
   currentSessionStatus,
@@ -959,6 +972,12 @@ export function FreeFormInput({
     }
   }, [onWorkingDirectoryChange, workspaceId])
 
+  // Handle plugin activation from slash command menu (D12 — writes the session's
+  // single active-plugin slot; the plugin's sources are pre-enabled server-side).
+  const handleSlashPluginSelect = React.useCallback((pluginName: string | null) => {
+    onActivePluginChange?.(pluginName)
+  }, [onActivePluginChange])
+
   // Get recent folders and home directory for slash menu and mention menu
   const [recentFolders, setRecentFolders] = React.useState<string[]>([])
   const [homeDir, setHomeDir] = React.useState<string>('')
@@ -970,13 +989,30 @@ export function FreeFormInput({
     })
   }, [workspaceId])
 
-  // Inline slash command hook (modes, features, and folders)
+  // Inline slash command hook (modes, features, plugins, and folders)
+  //
+  // The plugin roster is projected from the shell's PluginSummary list into the
+  // menu's own item shape. Kept here rather than pushed down from the shell so
+  // the menu stays ignorant of the plugin RPC's payload.
+  const slashPluginItems = React.useMemo((): SlashPluginItem[] =>
+    (plugins ?? []).map(plugin => ({
+      id: plugin.name,
+      type: 'plugin' as const,
+      label: plugin.name,
+      description: plugin.skills.length > 0
+        ? t('chat.pluginSkillCount', { count: plugin.skills.length })
+        : (plugin.description ?? ''),
+      pluginName: plugin.name,
+    })), [plugins, t])
+
   const inlineSlash = useInlineSlashCommand({
     inputRef: richInputRef,
     onSelectCommand: handleSlashCommand,
     onSelectFolder: handleSlashFolderSelect,
+    onSelectPlugin: handleSlashPluginSelect,
     activeCommands,
     recentFolders,
+    plugins: slashPluginItems,
     homeDir,
   })
 
@@ -1514,6 +1550,14 @@ export function FreeFormInput({
     richInputRef.current?.focus()
   }, [inlineSlash, syncToParent])
 
+  // Handle inline slash plugin selection (consumes the /name text, activates the plugin)
+  const handleInlineSlashPluginSelect = React.useCallback((pluginName: string) => {
+    const newValue = inlineSlash.handleSelectPlugin(pluginName)
+    setInput(newValue)
+    syncToParent(newValue)
+    richInputRef.current?.focus()
+  }, [inlineSlash, syncToParent])
+
   // Handle inline mention selection (inserts appropriate mention text)
   const handleInlineMentionSelect = React.useCallback((item: MentionItem) => {
     const { value: newValue, cursorPosition } = inlineMention.handleSelect(item)
@@ -1609,6 +1653,8 @@ export function FreeFormInput({
           activeCommands={activeCommands}
           onSelectCommand={handleInlineSlashCommandSelect}
           onSelectFolder={handleInlineSlashFolderSelect}
+          onSelectPlugin={handleInlineSlashPluginSelect}
+          activePlugin={activePlugin}
           filter={inlineSlash.filter}
           position={inlineSlash.position}
         />

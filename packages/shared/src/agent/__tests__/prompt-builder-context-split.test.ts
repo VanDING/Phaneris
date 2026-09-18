@@ -78,4 +78,35 @@ describe('PromptBuilder volatile/stable context split (issue #862)', () => {
     expect(first).toContain('modeChangeUserSignal:')
     expect(second).not.toContain('modeChangeUserSignal:')
   })
+
+  it('routes the active plugin context to volatile and never to stable (P9-2)', () => {
+    cleanupModeState(SESSION_ID)
+    const builder = makeBuilder()
+    const PLUGIN_BLOCK = '<plugin_context name="demo">\nAlways cite sources.\n</plugin_context>'
+
+    const volatileText = builder.buildVolatileContextParts(OPTS, SOURCE_BLOCK, PLUGIN_BLOCK).join('\n')
+    const stableText = builder.buildStableContextParts().join('\n')
+
+    // The block rides the user tail, so a plugin change cannot re-stamp the
+    // cached system prefix (issue #862).
+    expect(volatileText).toContain(PLUGIN_BLOCK)
+    expect(stableText).not.toContain('plugin_context')
+
+    // ...and the composed output keeps volatile-then-stable ordering, so the
+    // Claude path is unaffected by the new block.
+    const composed = [
+      ...builder.buildVolatileContextParts(OPTS, SOURCE_BLOCK, PLUGIN_BLOCK),
+      ...builder.buildStableContextParts(),
+    ]
+    expect(builder.buildContextParts(OPTS, SOURCE_BLOCK, PLUGIN_BLOCK)).toEqual(composed)
+  })
+
+  it('omits the plugin block entirely when no plugin is active', () => {
+    cleanupModeState(SESSION_ID)
+    const builder = makeBuilder()
+
+    expect(builder.buildVolatileContextParts(OPTS, SOURCE_BLOCK).join('\n')).not.toContain(
+      'plugin_context',
+    )
+  })
 })

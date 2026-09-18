@@ -25,6 +25,10 @@ interface ChatInputZoneProps {
   sessionStatuses?: SessionStatus[]
   currentSessionStatus?: string
   onSessionStatusChange?: (stateId: string) => void
+  /** Plugin bundle active for this session (D12 single slot) */
+  activePlugin?: string
+  /** Activate a plugin bundle by name; null clears the slot */
+  onActivePluginChange?: (pluginName: string | null) => void
   className?: string
   inputProps: React.ComponentProps<typeof InputContainer>
 }
@@ -45,6 +49,8 @@ export function ChatInputZone({
   sessionStatuses = [],
   currentSessionStatus = 'todo',
   onSessionStatusChange,
+  activePlugin,
+  onActivePluginChange,
   className,
   inputProps,
 }: ChatInputZoneProps) {
@@ -97,6 +103,8 @@ export function ChatInputZone({
           sessionStatuses={sessionStatuses}
           currentSessionStatus={currentSessionStatus}
           onSessionStatusChange={onSessionStatusChange}
+          activePlugin={activePlugin}
+          onActivePluginChange={onActivePluginChange}
         />
       )}
 

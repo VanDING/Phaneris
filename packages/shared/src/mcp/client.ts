@@ -28,6 +28,13 @@ export interface StdioMcpClientConfig {
   command: string;
   args?: string[];
   env?: Record<string, string>;
+  /**
+   * Working directory for the spawned process.
+   *
+   * Plugin-provided servers always run from their plugin root so their
+   * relative-path view stays inside the package (design §5.4.1).
+   */
+  cwd?: string;
 }
 
 /**
@@ -110,6 +117,8 @@ export class CraftMcpClient {
         command: config.command,
         args: config.args,
         env: { ...processEnv, ...config.env },
+        // Omitted when undefined, which leaves the SDK's default (process cwd).
+        cwd: config.cwd,
       });
     } else {
       // HTTP transport for remote MCP servers

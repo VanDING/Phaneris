@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SlashCommandMenu, DEFAULT_SLASH_COMMAND_GROUPS, type SlashCommandId } from '@/components/ui/slash-command-menu'
-import { ChevronDown, Info } from 'lucide-react'
+import { ChevronDown, Info, Plug, X } from 'lucide-react'
 import { PERMISSION_MODE_CONFIG, type PermissionMode } from '@phaneris/shared/agent/modes'
 import { ActiveTasksBar, type BackgroundTask } from './ActiveTasksBar'
 import type { TerminalOverlayData } from './TaskActionMenu'
@@ -78,6 +78,11 @@ export interface ActiveOptionBadgesProps {
   currentSessionStatus?: string
   /** Callback when state changes */
   onSessionStatusChange?: (stateId: string) => void
+  // ── Active plugin badge (D12: at most one per session) ──
+  /** Name of the plugin bundle active for this session, if any. */
+  activePlugin?: string | null
+  /** Callback to clear the active-plugin slot (null) */
+  onActivePluginChange?: (pluginName: string | null) => void
   /** Additional CSS classes */
   className?: string
 }
@@ -107,6 +112,8 @@ export function ActiveOptionBadges({
   sessionStatuses = [],
   currentSessionStatus,
   onSessionStatusChange,
+  activePlugin,
+  onActivePluginChange,
   className,
 }: ActiveOptionBadgesProps) {
   // Resolve session label entries to their config objects + parsed values.
@@ -144,7 +151,7 @@ export function ActiveOptionBadges({
   const stackRef = useDynamicStack({ gap: 8, minVisible: 20, reservedStart: 0 })
 
   // Only render if badges or tasks are active
-  if (!permissionMode && tasks.length === 0 && !hasState && !hasStackContent) {
+  if (!permissionMode && tasks.length === 0 && !hasState && !hasStackContent && !activePlugin) {
     return null
   }
 
@@ -175,6 +182,18 @@ export function ActiveOptionBadges({
               permissionMode={permissionMode}
               onPermissionModeChange={onPermissionModeChange}
               sessionId={sessionId}
+            />
+          </div>
+        )}
+
+        {/* Active Plugin Badge — the session's resident capability bundle (D12).
+         * Sits next to the mode because it is the same kind of state: one slot,
+         * session-scoped, silently replaceable. */}
+        {activePlugin && (
+          <div className="shrink-0">
+            <PluginBadge
+              pluginName={activePlugin}
+              onClear={onActivePluginChange ? () => onActivePluginChange(null) : undefined}
             />
           </div>
         )}
@@ -245,6 +264,47 @@ export function ActiveOptionBadges({
       </div>
     </div>
     </>
+  )
+}
+
+// ============================================================================
+// Plugin Badge Component
+// ============================================================================
+
+/**
+ * Resident badge for the session's active plugin bundle (D12).
+ *
+ * Deliberately not a dropdown: a plugin is invoked with `/name` and replaced by
+ * `/other-name`, so the badge's only job is to make the current context visible
+ * and offer a way out. Listing plugins here would duplicate the `/` menu and
+ * imply a picker that the single-slot model does not have.
+ */
+function PluginBadge({
+  pluginName,
+  onClear,
+}: {
+  pluginName: string
+  onClear?: () => void
+}) {
+  const { t } = useTranslation()
+  return (
+    <div
+      className="h-7 pl-2 pr-2.5 text-xs font-medium rounded-[6px] flex items-center gap-1.5 shadow-tinted outline-none select-none shrink-0 bg-background"
+      title={t('chat.activePlugin', { name: pluginName })}
+    >
+      <Plug className="shrink-0 h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
+      <span className="max-w-[16rem] truncate">{pluginName}</span>
+      {onClear && (
+        <button
+          type="button"
+          onClick={onClear}
+          className="shrink-0 -mr-0.5 rounded-full p-0.5 text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-colors"
+          aria-label={t('chat.clearPlugin')}
+        >
+          <X className="h-3 w-3" strokeWidth={2.5} />
+        </button>
+      )}
+    </div>
   )
 }
 

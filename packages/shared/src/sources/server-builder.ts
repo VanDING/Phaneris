@@ -17,6 +17,8 @@ import { isSourceUsable } from './storage.ts';
 import { createApiServer, type SummarizeCallback } from './api-tools.ts';
 import { createInProcessMcpServer } from '../mcp/sdk-mcp-server-factory.ts';
 import { debug } from '../utils/debug.ts';
+import { join } from 'node:path';
+import { resolvePluginStdioFields } from '../plugins/resolve.ts';
 
 /**
  * Standard error messages for server build failures.
@@ -34,7 +36,36 @@ export const SERVER_BUILD_ERRORS = {
  */
 export type McpServerConfig =
   | { type: 'http' | 'sse'; url: string; headers?: Record<string, string> }
-  | { type: 'stdio'; command: string; args?: string[]; env?: Record<string, string> };
+  | {
+      type: 'stdio';
+      command: string;
+      args?: string[];
+      env?: Record<string, string>;
+      /**
+       * Working directory for the spawned process.
+       *
+       * Set for plugin-provided servers so they run from their plugin root, which
+       * keeps their relative-path view inside the package (design §5.4.1).
+       */
+      cwd?: string;
+    };
+
+/**
+ * Resolve the absolute plugin root for a plugin-provided source, if any.
+ *
+ * `FolderSourceConfig.pluginRoot` is workspace-relative so the workspace can be
+ * moved; without a workspace root to anchor it the value is unusable, and the
+ * caller falls back to the non-plugin path.
+ */
+function resolvePluginRoot(source: LoadedSource): string | null {
+  const relativeRoot = source.config.pluginRoot;
+  if (!relativeRoot) return null;
+
+  const workspaceRoot = source.workspaceRootPath;
+  if (!workspaceRoot) return null;
+
+  return join(workspaceRoot, relativeRoot);
+}
 
 /**
  * Source with its credential pre-loaded
@@ -96,11 +127,43 @@ export class SourceServerBuilder {
         debug(`[SourceServerBuilder] Stdio source ${source.config.slug} missing command`);
         return null;
       }
+
+      // Plugin-provided sources keep ${PLUGIN_ROOT} / ${PLUGIN_DATA} placeholders
+      // in their stored config so the workspace stays movable; this is the single
+      // place they are expanded (design section 5.4.5).
+      const pluginRoot = resolvePluginRoot(source);
+      if (pluginRoot) {
+        const context = { pluginRoot };
+        try {
+          const resolved = resolvePluginStdioFields(
+            { command: mcp.command, args: mcp.args, env: mcp.env, cwd: mcp.cwd },
+            context,
+          );
+          for (const warning of resolved.warnings) {
+            debug(`[SourceServerBuilder] ${source.config.slug}: ${warning}`);
+          }
+          return {
+            type: 'stdio',
+            command: resolved.command,
+            args: resolved.args.length > 0 ? resolved.args : undefined,
+            env: Object.keys(resolved.env).length > 0 ? resolved.env : undefined,
+            cwd: pluginRoot,
+          };
+        } catch (error) {
+          // A single unusable server entry must not take down the others
+          // (Agent Plugins section 7.2.2): report it and skip just this server.
+          const message = error instanceof Error ? error.message : String(error);
+          debug(`[SourceServerBuilder] Stdio source ${source.config.slug} rejected: ${message}`);
+          throw new Error(`Invalid plugin stdio server "${source.config.slug}": ${message}`);
+        }
+      }
+
       return {
         type: 'stdio',
         command: mcp.command,
         args: mcp.args,
         env: mcp.env,
+        cwd: mcp.cwd,
       };
     }
 

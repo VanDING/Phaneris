@@ -21,7 +21,7 @@ import {
 import { getSourceConfigPath } from '../source-helpers.ts';
 
 export interface ConfigValidateArgs {
-  target: 'config' | 'sources' | 'statuses' | 'preferences' | 'permissions' | 'automations' | 'tool-icons' | 'all';
+  target: 'config' | 'sources' | 'statuses' | 'preferences' | 'permissions' | 'automations' | 'tool-icons' | 'plugins' | 'all';
   sourceSlug?: string;
 }
 
@@ -78,6 +78,9 @@ export async function handleConfigValidate(
           break;
         case 'tool-icons':
           result = ctx.validators.validateToolIcons();
+          break;
+        case 'plugins':
+          result = ctx.validators.validatePlugins(ctx.workspacePath);
           break;
         case 'all':
           result = ctx.validators.validateAll(ctx.workspacePath);
@@ -182,6 +185,38 @@ export async function handleConfigValidate(
       return successResponse(formatValidationResult(result));
     }
 
+    case 'plugins': {
+      // Basic path: the manifest shape the spec requires. Full validation
+      // (skills/mcp.json/extension entries) needs the shared loader, which the
+      // `ctx.validators` branch above is the only host able to reach.
+      const pluginsDir = join(ctx.workspacePath, 'plugins');
+      if (!ctx.fs.exists(pluginsDir)) {
+        return successResponse('✓ No plugins directory (no plugins installed)');
+      }
+
+      const results = [];
+      for (const entry of ctx.fs.readdir(pluginsDir)) {
+        const entryPath = join(pluginsDir, entry);
+        if (!ctx.fs.isDirectory(entryPath)) continue;
+        const pluginResult = validateJsonFileHasFields(
+          join(entryPath, 'plugin.json'),
+          ['$schema', 'name']
+        );
+        if (!pluginResult.valid) {
+          pluginResult.errors = pluginResult.errors.map(e => ({
+            ...e,
+            path: `${entry}/${e.path}`,
+          }));
+        }
+        results.push(pluginResult);
+      }
+
+      if (results.length === 0) {
+        return successResponse('✓ No plugin bundles found');
+      }
+      return successResponse(formatValidationResult(mergeResults(...results)));
+    }
+
     case 'all': {
       const configResult = validateJsonFileHasFields(
         join(appConfigDir, 'config.json'),
@@ -197,7 +232,7 @@ export async function handleConfigValidate(
 
     default:
       return errorResponse(
-        `Unknown validation target: ${target}. Valid targets: config, sources, statuses, preferences, permissions, automations, tool-icons, all`
+        `Unknown validation target: ${target}. Valid targets: config, sources, statuses, preferences, permissions, automations, tool-icons, plugins, all`
       );
   }
 }

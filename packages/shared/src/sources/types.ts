@@ -287,6 +287,19 @@ export interface McpSourceConfig {
    */
   env?: Record<string, string>;
 
+  /**
+   * Working directory for the spawned process.
+   *
+   * Only meaningful for plugin-provided sources, and only when rooted at
+   * `${PLUGIN_ROOT}`: a server always runs from its plugin root so its
+   * relative-path view stays inside the plugin (docs/plugin-bundles-design.md
+   * §5.4.1). A non-plugin source may set an absolute path here.
+   *
+   * Before plugins existed this field was absent from the config schema, so a
+   * hand-written `cwd` was silently dropped rather than honored.
+   */
+  cwd?: string;
+
   // === HTTP/SSE custom headers ===
   /**
    * Custom headers to include in every MCP request.
@@ -472,6 +485,16 @@ export interface FolderSourceConfig {
   connectionStatus?: SourceConnectionStatus;
   connectionError?: string; // Error message if status is 'failed'
   lastTestedAt?: number;
+
+  /**
+   * Workspace-relative plugin root this source was materialized from, e.g.
+   * `plugins/my-plugin`. Absent for hand-configured sources.
+   *
+   * Stored as a relative path so the whole workspace stays movable; combined
+   * with the `${PLUGIN_ROOT}` / `${PLUGIN_DATA}` placeholders in `mcp`, it lets
+   * stdio servers resolve their package paths at runtime (design §5.4.4).
+   */
+  pluginRoot?: string;
 
   // Metadata (optional - manually created configs may not have them)
   createdAt?: number;

@@ -23,7 +23,7 @@ import { Panel } from './Panel'
 import { PanelHeader } from './PanelHeader'
 import { PanelEmptyState } from '../content-panels/PanelEmptyState'
 import { MultiSelectPanel } from './MultiSelectPanel'
-import { MessagesSquare } from 'lucide-react'
+import { MessagesSquare, Plug } from 'lucide-react'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { sessionMetaMapAtom, type SessionMeta } from '@/atoms/sessions'
 import { StoplightProvider } from '@/context/StoplightContext'
@@ -33,6 +33,7 @@ import {
   isSourcesNavigation,
   isSettingsNavigation,
   isSkillsNavigation,
+  isPluginsNavigation,
   isAutomationsNavigation,
   isProjectsNavigation,
   isPagesNavigation,
@@ -332,6 +333,21 @@ export function MainContentPanel({
         <div className="flex items-center justify-center h-full text-muted-foreground">
           <p className="text-sm">{t("skillsList.noSkillsConfigured")}</p>
         </div>
+      </Panel>
+    )
+  }
+
+  // Plugins navigator - the bundle list is the whole section (no details page,
+  // design P7-2), so the content panel explains where a bundle's resources live
+  // instead of falling through to the sessions fallback.
+  if (isPluginsNavigation(navState)) {
+    return wrapWithStoplight(
+      <Panel variant="grow" className={className}>
+        <PanelEmptyState
+          icon={<Plug className="h-6 w-6" />}
+          title={t("pluginsList.sectionHint")}
+          hint={t("pluginsList.sectionHintDetail")}
+        />
       </Panel>
     )
   }

@@ -61,6 +61,13 @@ export interface AppShellContextType {
   enabledSources?: LoadedSource[]
   /** All skills for this workspace - provided by AppShell component (for @mentions) */
   skills?: LoadedSkill[]
+  /** Installed plugin bundles - provided by AppShell, feeds the `/` menu roster */
+  plugins?: import('../../shared/types').PluginSummary[]
+  /**
+   * Activate a plugin bundle by name (null clears the slot). Provided by the
+   * shell so any input surface can invoke a plugin without owning the RPC.
+   */
+  onActivePluginChange?: (sessionId: string, pluginName: string | null) => void
   /** Working directory of the active session — needed for project-level skill resolution */
   activeSessionWorkingDirectory?: string
   /** All label configs (tree) for label menu and badge display */

@@ -29,7 +29,7 @@ import { useMenuComponents } from '@/components/ui/menu-context'
 import { getDocSlug, type DocFeature } from '@phaneris/shared/docs/doc-links'
 import { openDocs } from '@/atoms/docs'
 
-export type SidebarMenuType = 'allSessions' | 'flagged' | 'status' | 'sources' | 'skills' | 'automations' | 'projects' | 'labels' | 'views' | 'newSession'
+export type SidebarMenuType = 'allSessions' | 'flagged' | 'status' | 'sources' | 'skills' | 'plugins' | 'automations' | 'projects' | 'labels' | 'views' | 'newSession'
 
 export interface SidebarMenuProps {
   /** Type of sidebar item (determines available menu items) */

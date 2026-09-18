@@ -104,6 +104,15 @@ export interface ISessionManager {
   setSessionThinkingLevel(sessionId: string, level: ThinkingLevel): void
   updateWorkingDirectory(sessionId: string, path: string): void
   setSessionSources(sessionId: string, sourceSlugs: string[]): Promise<void>
+  /**
+   * Set (or clear, with null) the session's single active-plugin slot (D12) and
+   * pre-enable the sources that plugin contributes. Throws when the named plugin
+   * is not installed — activation is an explicit user act, not a best-effort one.
+   */
+  setSessionActivePlugin(
+    sessionId: string,
+    pluginName: string | null,
+  ): Promise<{ pluginName: string | null; enabledSources: string[]; unusableSources: string[] }>
   setSessionLabels(sessionId: string, labels: string[]): void
   /** Apply the reserved Task labeling (mint / inherit the per-task item label under the Task
    *  root). Returns the resolved ITEM label id, or undefined if the session is unknown.

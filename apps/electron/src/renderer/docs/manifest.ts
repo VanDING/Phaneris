@@ -82,6 +82,13 @@ export const DOCS_SECTIONS: DocsSection[] = [
     ],
   },
   {
+    id: 'plugins',
+    title: 'Plugins',
+    pages: [
+      { slug: 'plugins/overview', title: 'Plugins' },
+    ],
+  },
+  {
     id: 'statuses',
     title: 'Statuses',
     pages: [

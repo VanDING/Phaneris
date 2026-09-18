@@ -74,10 +74,11 @@ export class PromptBuilder {
    */
   buildContextParts(
     options: ContextBlockOptions,
-    sourceStateBlock?: string
+    sourceStateBlock?: string,
+    pluginContextBlock?: string
   ): string[] {
     return [
-      ...this.buildVolatileContextParts(options, sourceStateBlock),
+      ...this.buildVolatileContextParts(options, sourceStateBlock, pluginContextBlock),
       ...this.buildStableContextParts(),
     ];
   }
@@ -94,6 +95,7 @@ export class PromptBuilder {
    *     modeChangedAt/modeVersion and **consumes** the one-shot mode-change user
    *     signal — see {@link formatSessionState})
    *  3. source state (auth/connection status), when provided
+   *  4. active plugin context (prompt fragment + skill roster), when provided
    *
    * MUST be called exactly once per turn, because it consumes one-shot mode
    * state. Never call it a second time to compute a cache-debug hash — hash the
@@ -101,10 +103,14 @@ export class PromptBuilder {
    *
    * @param options - Context building options
    * @param sourceStateBlock - Pre-formatted source state (from SourceManager)
+   * @param pluginContextBlock - Pre-formatted active-plugin block. Volatile
+   *   because the active plugin is session state, and the fragment is untrusted
+   *   input that must not enter the cached prefix (design section 4.2).
    */
   buildVolatileContextParts(
     options: ContextBlockOptions,
-    sourceStateBlock?: string
+    sourceStateBlock?: string,
+    pluginContextBlock?: string
   ): string[] {
     const parts: string[] = [];
 
@@ -127,6 +133,11 @@ export class PromptBuilder {
     // Source state if provided
     if (sourceStateBlock) {
       parts.push(sourceStateBlock);
+    }
+
+    // Active plugin context if provided
+    if (pluginContextBlock) {
+      parts.push(pluginContextBlock);
     }
 
     return parts;

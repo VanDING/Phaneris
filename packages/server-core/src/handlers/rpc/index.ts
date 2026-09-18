@@ -21,6 +21,7 @@ import { registerSettingsHandlers } from './settings'
 import { registerProjectsHandlers } from './projects'
 import { registerPagesHandlers } from './pages'
 import { registerSkillsHandlers } from './skills'
+import { registerPluginsHandlers } from './plugins'
 import { registerSourcesHandlers } from './sources'
 import { registerStatusesHandlers } from './statuses'
 import { registerSystemCoreHandlers } from './system'
@@ -51,6 +52,7 @@ export function registerCoreRpcHandlers(
   registerProjectsHandlers(server, deps)
   registerPagesHandlers(server, deps)
   registerSkillsHandlers(server, deps)
+  registerPluginsHandlers(server, deps)
   registerSourcesHandlers(server, deps)
   registerStatusesHandlers(server, deps)
   registerSystemCoreHandlers(server, deps)

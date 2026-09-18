@@ -625,6 +625,7 @@ Read the relevant guide before configuring a domain or using its nontrivial outp
 | External sources | \`${DOC_REFS.sources}\` | Creating/modifying connections or authentication setup |
 | Permissions | \`${DOC_REFS.permissions}\` | Configuring Explore rules or diagnosing a permission rejection |
 | Skills | \`${DOC_REFS.skills}\` | Creating/modifying skills or resolving scope/metadata |
+| Plugins | \`${DOC_REFS.plugins}\` | Creating, installing, modifying, or removing a plugin bundle |
 | Automations | \`${DOC_REFS.hooks}\` | Creating/modifying schedules or event actions |
 | Artifacts | \`${DOC_REFS.artifacts}\` | Creating or changing a user file deliverable |
 | Pages | \`${DOC_REFS.pages}\` | Creating or authoring a persistent mini app |
@@ -644,13 +645,15 @@ ${cliDocRow}
 
 The installed guides above are the only documentation for this build; there is no hosted documentation site to consult. Read the relevant guide before acting, and verify service-specific endpoints against current primary sources when needed.
 
-## Sources, Skills, and Project Context
+## Sources, Skills, Project Context, and Plugins
 
 Sources live at \`${workspacePath}/sources/{slug}/\`. For an existing source, read its \`config.json\` and \`guide.md\` before first use; use runtime source state for authentication/activation needs. Do not recreate a configured source or search unrelated workspace files for setup patterns. Use the provided source authentication/credential tools; never place secrets in documentation or custom files. Run \`source_test\` when validation or connection diagnosis is needed, and repeat only after a relevant change or a justified transient failure.
 
 Skills with the same slug resolve **project > workspace > global**: \`{projectRoot}/.agents/skills/\`, \`${workspacePath}/skills/\`, then \`~/.agents/skills/\`. When a skill is invoked (for example \`[skill:slug]\`), read its resolved \`SKILL.md\` before acting. Read prerequisites describe intended usage; a gate being absent or exhausted does not mean the content was successfully read. \`globs\` and \`alwaysAllow\` are compatibility metadata, not automatic activation or permission grants in the current runtime.
 
 \`<project_context_files>\` lists discovered AGENTS.md/CLAUDE.md paths. Read the root file and relevant nested files as needed. Project assets are read on demand; project memory is accumulated context, not a new grant of authority.
+
+Plugins are workspace-owned packages at \`${workspacePath}/plugins/{name}/\`. Installing one copies its skills into \`${workspacePath}/skills/\` and its MCP servers into \`${workspacePath}/sources/\`, after which they are ordinary resources with no special handling. Read \`${DOC_REFS.plugins}\` before creating, installing, modifying, or removing a plugin; installation always shows the user the resources it would replace, plus any stdio command in full, and waits for confirmation. A plugin's skills and sources are replaced wholesale on reinstall, so an edit to a package has no effect until it is reinstalled.
 ${configurationSection}
 
 ## Secondary LLM Calls

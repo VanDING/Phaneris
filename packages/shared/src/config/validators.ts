@@ -357,6 +357,7 @@ export function validateAll(workspaceId?: string, workspaceRoot?: string): Valid
   // Include skill, status, label, automations, and permissions validation if workspaceRoot is provided
   if (workspaceRoot) {
     results.push(validateAllSkills(workspaceRoot));
+    results.push(validatePlugins(workspaceRoot));
     results.push(validateStatuses(workspaceRoot));
     results.push(validateLabels(workspaceRoot));
     results.push(validateAutomations(workspaceRoot));
@@ -396,6 +397,9 @@ const McpSourceConfigSchema = z.object({
   command: z.string().optional(),
   args: z.array(z.string()).optional(),
   env: z.record(z.string(), z.string()).optional(),
+  // Working directory for a spawned stdio server. Only plugin-provided sources
+  // set this, and only rooted at ${PLUGIN_ROOT} (design section 5.4.1).
+  cwd: z.string().optional(),
   // Custom headers for HTTP/SSE transport (e.g., API keys, custom auth)
   headers: z.record(z.string(), z.string()).optional(),
   // Header names for credential-store auth (values stored in credential store as JSON)
@@ -475,6 +479,9 @@ export const FolderSourceConfigSchema = z.object({
   brand: SourceBrandSchema.optional(),
   isAuthenticated: z.boolean().optional(),
   lastTestedAt: z.number().int().min(0).optional(),
+  // Workspace-relative plugin root this source was materialized from (design
+  // section 5.4.4). Absent for hand-configured sources.
+  pluginRoot: z.string().optional(),
   // Timestamps are optional - manually created configs may not have them
   // Storage functions add these automatically when saving
   createdAt: z.number().int().min(0).optional(),
@@ -658,7 +665,8 @@ export function validateAllSources(workspaceId: string): ValidationResult {
 // ============================================================
 
 import matter from 'gray-matter';
-import { getWorkspaceSkillsPath } from '../workspaces/storage.ts';
+import { getWorkspaceSkillsPath, getWorkspacePluginsPath } from '../workspaces/storage.ts';
+import { loadAllPlugins } from '../plugins/storage.ts';
 import { basename, extname } from 'path';
 
 /**
@@ -900,6 +908,83 @@ export function validateAllSkills(workspaceRoot: string): ValidationResult {
     const result = validateSkill(workspaceRoot, folder);
     errors.push(...result.errors);
     warnings.push(...result.warnings);
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    warnings,
+  };
+}
+
+// ============================================================
+// Plugin Bundle Validators
+// ============================================================
+
+/**
+ * Validate every plugin bundle in a workspace.
+ *
+ * Reuses `loadAllPlugins` rather than re-deriving the manifest rules: the loader
+ * already implements the spec's asymmetric failure boundaries (an unknown
+ * top-level field is reported and ignored; a bad `$schema`/`name` is fatal), and
+ * a second implementation here would drift from what activation actually reads.
+ *
+ * The failures are split the way the loader splits them:
+ * - a bundle that will not load at all → **error** (it is unusable)
+ * - a per-entry problem inside a loadable bundle → **warning** (that entry is
+ *   skipped, the rest of the plugin still works)
+ *
+ * @param workspaceRoot - Absolute path to the workspace root folder.
+ */
+export function validatePlugins(workspaceRoot: string): ValidationResult {
+  const pluginsDir = getWorkspacePluginsPath(workspaceRoot);
+  const file = 'plugins/';
+
+  if (!existsSync(pluginsDir)) {
+    return {
+      valid: true,
+      errors: [],
+      warnings: [{
+        file,
+        path: '',
+        message: 'Plugins directory does not exist (no plugins installed)',
+        severity: 'warning',
+      }],
+    };
+  }
+
+  const errors: ValidationIssue[] = [];
+  const warnings: ValidationIssue[] = [];
+
+  const { plugins, errors: loadErrors } = loadAllPlugins(workspaceRoot);
+
+  for (const loadError of loadErrors) {
+    errors.push({
+      file,
+      path: loadError.path,
+      message: loadError.message,
+      severity: 'error',
+    });
+  }
+
+  for (const plugin of plugins) {
+    for (const warning of plugin.warnings) {
+      warnings.push({
+        file: `${file}${plugin.name}/${warning.path}`,
+        path: warning.path,
+        message: warning.message,
+        severity: 'warning',
+      });
+    }
+  }
+
+  if (plugins.length === 0 && loadErrors.length === 0) {
+    warnings.push({
+      file,
+      path: '',
+      message: 'No plugins installed',
+      severity: 'warning',
+    });
   }
 
   return {

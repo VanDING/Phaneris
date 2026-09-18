@@ -39,10 +39,12 @@ import {
   downloadSourceIcon,
 } from '../sources/storage.ts';
 import { permissionsConfigCache, getAppPermissionsDir } from '../agent/permissions-config.ts';
-import { getWorkspacePath, getWorkspaceSourcesPath, getWorkspaceSkillsPath } from '../workspaces/storage.ts';
+import { getWorkspacePath, getWorkspaceSourcesPath, getWorkspaceSkillsPath, getWorkspacePluginsPath } from '../workspaces/storage.ts';
 import type { LoadedSkill } from '../skills/types.ts';
 import { loadWorkspacePages } from '../pages/storage.ts';
 import { loadSkill, loadAllSkills, invalidateSkillsCache, skillNeedsIconDownload, downloadSkillIcon } from '../skills/storage.ts';
+import { listPluginNames, loadAllPlugins, PLUGIN_MANIFEST_FILE, PLUGIN_PROMPT_FILE } from '../plugins/index.ts';
+import type { LoadedPlugin, PluginLoadError } from '../plugins/types.ts';
 import {
   loadStatusConfig,
   statusNeedsIconDownload,
@@ -129,6 +131,16 @@ export interface ConfigWatcherCallbacks {
   /** Called when the skills list changes (add/remove folders) */
   onSkillsListChange?: (skills: LoadedSkill[]) => void;
 
+  // Plugin callbacks
+  /**
+   * Called when the installed plugin set changes (add/remove/replace).
+   *
+   * Materialization writes into `skills/` and `sources/` too, so those watchers
+   * fire independently; this callback is about the plugin *package* layer
+   * (the `/plugin` roster and the Plugins sidebar section).
+   */
+  onPluginsChange?: (result: { plugins: LoadedPlugin[]; errors: PluginLoadError[] }) => void;
+
   // Permissions callbacks
   /** Called when app-level default permissions change (~/.craft-agent/permissions/default.json) */
   onDefaultPermissionsChange?: () => void;
@@ -208,7 +220,12 @@ export class ConfigWatcher {
   // Track known items for detecting adds/removes
   private knownSources: Set<string> = new Set();
   private knownSkills: Set<string> = new Set();
-
+  private knownPlugins: Set<string> = new Set();
+  /**
+   * Per-plugin load health, so editing a bundle into a broken state (or back)
+   * notifies even though the plugin directory set did not move.
+   */
+  private knownPluginHealth: Map<string, boolean> = new Map();
   // Track LLM connections for change detection (JSON string for deep comparison)
   private lastLlmConnectionsHash: string = '';
 
@@ -286,6 +303,10 @@ export class ConfigWatcher {
 
     this.scanSkills();
     span.mark('scanSkills');
+
+    // Initial scan to populate known plugins (no callback: nothing has changed yet)
+    this.knownPlugins = new Set(listPluginNames(this.workspaceDir));
+    span.mark('scanPlugins');
 
     // Initialize LLM connections hash for change detection
     this.initLlmConnectionsHash();
@@ -455,6 +476,21 @@ export class ConfigWatcher {
       } else if (file && /^icon\.(svg|png|jpg|jpeg)$/i.test(file)) {
         // Icon file changes also trigger a skill change (to update iconPath)
         this.debounce(`skill-icon:${slug}`, () => this.handleSkillChange(slug));
+      }
+      return;
+    }
+
+    // Plugin changes: plugins/{name}/...
+    //
+    // Only the package layer matters here. Materialization also writes into
+    // skills/ and sources/, which the branches above already handle — so this
+    // branch deliberately watches the plugin root's own files and directory
+    // add/remove, never recursing into plugins/*/skills/ to synthesize skill
+    // events (that would double-fire every install).
+    if (parts[0] === 'plugins' && parts.length >= 2) {
+      const file = parts[2];
+      if (parts.length === 2 || file === PLUGIN_MANIFEST_FILE || file === PLUGIN_PROMPT_FILE) {
+        this.debounce('plugins-dir', () => this.handlePluginsChange());
       }
       return;
     }
@@ -782,6 +818,85 @@ export class ConfigWatcher {
     } catch (error) {
       debug('[ConfigWatcher] Error handling skills dir change:', error);
       this.callbacks.onError?.('skills/', error as Error);
+    }
+  }
+
+  /**
+   * Handle a change to the installed plugin set (add / remove / replace).
+   *
+   * Also invalidates the skill cache: installation materializes skills into
+   * `<ws>/skills/`, and without this the Skills panel would keep serving its
+   * 5-minute cached list after the plugin reported itself installed (P2-5).
+   */
+  private handlePluginsChange(): void {
+    debug('[ConfigWatcher] Plugins directory changed');
+
+    const pluginsDir = getWorkspacePluginsPath(this.workspaceDir);
+    if (!existsSync(pluginsDir)) {
+      this.knownPlugins.clear();
+      invalidateSkillsCache();
+      this.callbacks.onPluginsChange?.({ plugins: [], errors: [] });
+      return;
+    }
+
+    try {
+      const currentFolders = new Set(listPluginNames(this.workspaceDir));
+
+      let changed = currentFolders.size !== this.knownPlugins.size;
+      if (!changed) {
+        for (const name of currentFolders) {
+          if (!this.knownPlugins.has(name)) {
+            changed = true;
+            break;
+          }
+        }
+      }
+
+      this.knownPlugins = currentFolders;
+
+      // There are two distinct reasons to notify, and they are not the same
+      // condition:
+      //  - the plugin *set* changed (a directory appeared or disappeared)
+      //  - a plugin's load *result* changed (an edit broke or fixed one)
+      // A bundle can go from loading to failing — or the reverse — without the
+      // folder set moving at all, so a pure set comparison would swallow exactly
+      // the case the sidebar needs to show ("this plugin is broken now").
+      const { plugins, errors } = loadAllPlugins(this.workspaceDir);
+
+      const healthByPlugin = new Map<string, boolean>();
+      for (const plugin of plugins) healthByPlugin.set(plugin.name, true);
+      for (const error of errors) {
+        // `PluginLoadError.path` is the plugin directory, so its basename is the
+        // plugin name (P2-2: directory name === manifest name).
+        const name = basename(error.path);
+        if (name) healthByPlugin.set(name, false);
+      }
+
+      let healthChanged = healthByPlugin.size !== this.knownPluginHealth.size;
+      if (!healthChanged) {
+        for (const [name, healthy] of healthByPlugin) {
+          if (this.knownPluginHealth.get(name) !== healthy) {
+            healthChanged = true;
+            break;
+          }
+        }
+      }
+      this.knownPluginHealth = healthByPlugin;
+
+      if (!changed && !healthChanged) return;
+
+      // Reinstalling or editing a plugin rewrites its skills/, so the skill
+      // cache is stale either way (P2-5).
+      invalidateSkillsCache();
+      debug(
+        '[ConfigWatcher] Plugin set changed:',
+        [...currentFolders].join(', ') || 'none',
+        `(${errors.length} load error(s))`,
+      );
+      this.callbacks.onPluginsChange?.({ plugins, errors });
+    } catch (error) {
+      debug('[ConfigWatcher] Error handling plugins directory change:', error);
+      this.callbacks.onError?.('plugins/', error as Error);
     }
   }
 

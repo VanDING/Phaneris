@@ -162,6 +162,13 @@ interface ChatDisplayProps {
   // Skill selection (for @mentions)
   /** Available skills for @mention autocomplete */
   skills?: LoadedSkill[]
+  // Plugin bundles (for the `/` menu roster)
+  /** Installed plugin bundles for this workspace */
+  plugins?: import('../../../shared/types').PluginSummary[]
+  /** Plugin bundle active for this session (D12 single slot) */
+  activePlugin?: string
+  /** Activate a plugin bundle by name; null clears the slot */
+  onActivePluginChange?: (pluginName: string | null) => void
   // Label selection (for #labels)
   /** Available label configs (tree) for label menu and badge display */
   labels?: import('@phaneris/shared/labels').LabelConfig[]
@@ -444,6 +451,10 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   onSourcesChange,
   // Skills (for @mentions)
   skills,
+  // Plugins (for the `/` menu roster)
+  plugins,
+  activePlugin,
+  onActivePluginChange,
   // Labels (for #labels)
   labels,
   onLabelsChange,
@@ -2011,6 +2022,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
             sessionStatuses={sessionStatuses}
             currentSessionStatus={session.sessionStatus || 'todo'}
             onSessionStatusChange={onSessionStatusChange}
+            activePlugin={activePlugin}
+            onActivePluginChange={onActivePluginChange}
             inputProps={{
               placeholder,
               disabled: isInputDisabled,
@@ -2035,6 +2048,9 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
               enabledSourceSlugs: session.enabledSourceSlugs,
               onSourcesChange,
               skills,
+              plugins,
+              activePlugin,
+              onActivePluginChange,
               workspaceId,
               workingDirectory,
               onWorkingDirectoryChange,

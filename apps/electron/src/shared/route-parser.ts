@@ -38,7 +38,7 @@ export interface ParsedRoute {
 // Compound Route Types (new format)
 // =============================================================================
 
-export type NavigatorType = 'sessions' | 'sources' | 'skills' | 'automations' | 'projects' | 'pages' | 'settings' | 'other'
+export type NavigatorType = 'sessions' | 'sources' | 'skills' | 'plugins' | 'automations' | 'projects' | 'pages' | 'settings' | 'other'
 
 export interface ParsedCompoundRoute {
   /** The navigator type */
@@ -68,7 +68,7 @@ export interface ParsedCompoundRoute {
  * Known prefixes that indicate a compound route
  */
 const COMPOUND_ROUTE_PREFIXES = [
-  'allSessions', 'flagged', 'archived', 'state', 'label', 'view', 'kanban', 'board', 'calendar', 'sources', 'skills', 'automations', 'projects', 'pages', 'settings', 'diff', 'files', 'context', 'preview', 'trajectory', 'terminal', 'artifact'
+  'allSessions', 'flagged', 'archived', 'state', 'label', 'view', 'kanban', 'board', 'calendar', 'sources', 'skills', 'plugins', 'automations', 'projects', 'pages', 'settings', 'diff', 'files', 'context', 'preview', 'trajectory', 'terminal', 'artifact'
 ]
 
 /**
@@ -237,6 +237,16 @@ export function parseCompoundRoute(route: string): ParsedCompoundRoute | null {
         navigator: 'skills',
         details: { type: 'skill', id: segments[2] },
       }
+    }
+
+    return null
+  }
+
+  // Plugins navigator — deliberately two-level (design P7-2): the bundle list is
+  // the whole section, and its skills/sources are entries in the native sections.
+  if (first === 'plugins') {
+    if (segments.length === 1) {
+      return { navigator: 'plugins', details: null }
     }
 
     return null
@@ -428,6 +438,10 @@ export function buildCompoundRoute(parsed: ParsedCompoundRoute): string {
     return `skills/skill/${parsed.details.id}`
   }
 
+  if (parsed.navigator === 'plugins') {
+    return 'plugins'
+  }
+
   if (parsed.navigator === 'automations') {
     // Build base from filter (automations, automations/scheduled, automations/event, automations/agentic)
     let base = 'automations'
@@ -589,6 +603,11 @@ function convertCompoundToViewRoute(compound: ParsedCompoundRoute): ParsedRoute 
     return { type: 'view', name: 'skill-info', id: compound.details.id, params: {} }
   }
 
+  // Plugins
+  if (compound.navigator === 'plugins') {
+    return { type: 'view', name: 'plugins', params: {} }
+  }
+
   // Automations
   if (compound.navigator === 'automations') {
     if (!compound.details) {
@@ -724,6 +743,11 @@ function convertCompoundToNavigationState(compound: ParsedCompoundRoute): Naviga
     }
   }
 
+  // Plugins — two-level section: no details page, so the route is the section.
+  if (compound.navigator === 'plugins') {
+    return { navigator: 'plugins', details: null }
+  }
+
   // Automations - include filter if present
   if (compound.navigator === 'automations') {
     if (!compound.details) {
@@ -840,6 +864,8 @@ function convertParsedRouteToNavigationState(parsed: ParsedRoute): NavigationSta
         }
       }
       return { navigator: 'skills', details: null }
+    case 'plugins':
+      return { navigator: 'plugins', details: null }
     case 'automations':
       return { navigator: 'automations', details: null }
     case 'automation-info':
@@ -986,6 +1012,10 @@ function navigationStateToCompoundRoute(state: NavigationState): ParsedCompoundR
       navigator: 'skills',
       details: state.details?.type === 'skill' ? { type: 'skill', id: state.details.skillSlug } : null,
     }
+  }
+
+  if (state.navigator === 'plugins') {
+    return { navigator: 'plugins', details: null }
   }
 
   if (state.navigator === 'automations') {

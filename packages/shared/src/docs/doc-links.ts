@@ -23,6 +23,7 @@ export type DocFeature =
   | 'sources-mcp'
   | 'sources-local'
   | 'skills'
+  | 'plugins'
   | 'statuses'
   | 'permissions'
   | 'labels'
@@ -72,6 +73,12 @@ export const DOCS: Record<DocFeature, DocInfo> = {
     title: 'Skills',
     summary:
       'Reusable instruction sets that teach your agent specialized behaviors. Create a SKILL.md file and invoke it with @mention in your messages.',
+  },
+  plugins: {
+    slug: 'plugins/overview',
+    title: 'Plugins',
+    summary:
+      'Capability bundles that package skills, sources, and standing instructions together. Invoke one with /name and it stays active for the session.',
   },
   statuses: {
     slug: 'statuses/overview',

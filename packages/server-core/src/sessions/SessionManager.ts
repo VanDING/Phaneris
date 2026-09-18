@@ -114,6 +114,7 @@ import { type Session, type SessionEvent, type FileAttachment, type SendMessageO
 import { messageToStored, storedToMessage, type AgentEvent, type Message, type StoredAttachment, type ToolDisplayMeta, type TokenUsage, type PiUsage } from '@phaneris/core/types'
 import { formatPathsToRelative, formatToolInputPaths, perf, encodeIconToDataUrlAsync, getEmojiIcon, resolveToolIcon, readFileAttachment, selectSpreadMessages, normalizePath } from '@phaneris/shared/utils'
 import { loadAllSkills, loadSkillBySlug, invalidateSkillsCache, type LoadedSkill } from '@phaneris/shared/skills'
+import { loadPluginByName, summarizePluginsForRenderer } from '@phaneris/shared/plugins'
 import { invalidateContextFileCache } from '@phaneris/shared/prompts/system'
 import { getToolIconsDir, getMiniModel } from '@phaneris/shared/config'
 import { getDefaultSummarizationModel } from '@phaneris/shared/config/models'
@@ -736,6 +737,8 @@ interface ManagedSession {
   hasUnread?: boolean
   // Per-session source selection (slugs of enabled sources)
   enabledSourceSlugs?: string[]
+  // Active plugin bundle name (D12: at most one per session; undefined = none)
+  activePlugin?: string
   // Labels applied to this session (additive tags, many-per-session)
   labels?: string[]
   // Workspace-scoped project binding (undefined = unbound)
@@ -1600,6 +1603,12 @@ export class SessionManager implements ISessionManager {
         sessionLog.info(`Skills list changed in ${workspaceRootPath} (${skills.length} skills)`)
         this.broadcastSkillsChanged(workspaceId, skills)
       },
+      // Installed plugin bundles changed on disk: installed, uninstalled,
+      // edited, or broken by an edit. Carries both halves of the load result so
+      // a bundle that stops loading stays visible in the sidebar (P4-6).
+      onPluginsChange: (result) => {
+        this.broadcastPluginsChanged(workspaceId, result)
+      },
       onSkillChange: async (slug, skill) => {
         sessionLog.info(`Skill '${slug}' changed:`, skill ? 'updated' : 'deleted')
         // Broadcast updated list to UI
@@ -1863,6 +1872,32 @@ export class SessionManager implements ISessionManager {
     if (!this.eventSink) return
     sessionLog.info(`Broadcasting pages changed (${pages.length} pages)`)
     this.eventSink(RPC_CHANNELS.pages.CHANGED, { to: 'workspace', workspaceId }, workspaceId, pages)
+  }
+
+  /**
+   * Push the installed-plugin list to the workspace's renderers.
+   *
+   * Carries both halves of the load result so a bundle that stops loading is
+   * reported rather than silently absent — a plugin vanishing from the sidebar
+   * with no explanation reads as "the install was lost".
+   */
+  private broadcastPluginsChanged(
+    workspaceId: string,
+    result: { plugins: import('@phaneris/shared/plugins').LoadedPlugin[]; errors: import('@phaneris/shared/plugins').PluginLoadError[] },
+  ): void {
+    if (!this.eventSink) return
+    sessionLog.info(
+      `Broadcasting plugins changed (${result.plugins.length} plugins, ${result.errors.length} load errors)`,
+    )
+    this.eventSink(
+      RPC_CHANNELS.plugins.CHANGED,
+      { to: 'workspace', workspaceId },
+      workspaceId,
+      {
+        plugins: summarizePluginsForRenderer(result.plugins),
+        errors: result.errors,
+      },
+    )
   }
 
   private broadcastDefaultPermissionsChanged(): void {
@@ -3877,6 +3912,9 @@ export class SessionManager implements ISessionManager {
         permissionMode: managed.permissionMode,
         previousPermissionMode: managed.previousPermissionMode,
         projectId: managed.projectId,
+        // D12: the single active-plugin slot. Read per turn by the agent, so
+        // activating a plugin takes effect on the next message.
+        activePlugin: managed.activePlugin,
       }
 
       const onSdkSessionIdUpdate = (sdkSessionId: string) => {
@@ -6815,59 +6853,13 @@ export class SessionManager implements ISessionManager {
     // This eliminates the two-turn penalty where the agent discovers missing sources at runtime.
     // Uses targeted loadSkillBySlug() instead of loadAllSkills() to avoid O(N) filesystem scans.
     if (options?.skillSlugs?.length) {
-      try {
-        const workspaceRoot = managed.workspace.rootPath
-
-        const requiredSources = new Set<string>()
-        for (const slug of options.skillSlugs) {
-          const skill = loadSkillBySlug(workspaceRoot, slug, managed.workingDirectory)
-          if (skill?.metadata.requiredSources) {
-            for (const src of skill.metadata.requiredSources) {
-              requiredSources.add(src)
-            }
-          }
-        }
-
-        if (requiredSources.size > 0) {
-          const currentSlugs = new Set(managed.enabledSourceSlugs || [])
-          const toEnable: string[] = []
-          const skipped: string[] = []
-          const candidateSlugs = Array.from(requiredSources)
-          const loadedSources = getSourcesBySlugs(workspaceRoot, candidateSlugs)
-          const usableSources = new Set(
-            loadedSources
-              .filter(isSourceUsable)
-              .map(source => source.config.slug)
-          )
-
-          for (const srcSlug of candidateSlugs) {
-            if (currentSlugs.has(srcSlug)) continue
-            if (usableSources.has(srcSlug)) {
-              toEnable.push(srcSlug)
-            } else {
-              skipped.push(srcSlug)
-            }
-          }
-
-          if (skipped.length > 0) {
-            sessionLog.warn(`Skill requires sources that are not usable (missing or unauthenticated): ${skipped.join(', ')}`)
-          }
-
-          if (toEnable.length > 0) {
-            managed.enabledSourceSlugs = [...(managed.enabledSourceSlugs || []), ...toEnable]
-            sessionLog.info(`Pre-enabled sources for skill invocation: ${toEnable.join(', ')}`)
-            this.persistSession(managed)
-            this.sendEvent({
-              type: 'sources_changed',
-              sessionId,
-              enabledSourceSlugs: managed.enabledSourceSlugs,
-            }, managed.workspace.id)
-          }
-        }
-      } catch (e) {
-        sessionLog.warn(`Failed to pre-enable skill sources for session ${sessionId}:`, e)
-      }
+      this.preEnableSkillSources(sessionId, managed, options.skillSlugs)
     }
+
+    // Pre-enable the active plugin's sources (D12). Also before agent build, so
+    // a plugin activated before its resources existed still gets its tools on
+    // this turn without a SourceActivated restart (P9-3).
+    this.preEnableActivePluginSources(sessionId, managed)
 
     // Start perf span for entire sendMessage flow
     const sendSpan = perf.span('session.sendMessage', { sessionId })
@@ -8400,6 +8392,263 @@ export class SessionManager implements ISessionManager {
       // Persist to disk
       this.persistSession(managed)
     }
+  }
+
+  /**
+   * Set the session's single active-plugin slot (D12) and pre-enable the
+   * sources that plugin contributes.
+   *
+   * Two properties matter here and both are deliberate:
+   *
+   * 1. **No agent restart.** Sources are enabled by writing
+   *    `managed.enabledSourceSlugs`, the same path `sendMessage`'s skill-source
+   *    pre-enable uses (see the `Pre-enable sources required by invoked skills`
+   *    block). That happens *before* the agent is built / before the turn, so
+   *    the plugin's tools are present on the next message without a
+   *    `SourceActivated` abort — unlike `source_test`'s runtime activation
+   *    (`pi-agent.ts`, `AbortReason.SourceActivated`), which force-aborts the
+   *    in-flight turn so the subprocess can re-read its proxy tools. P9-3.
+   *
+   * 2. **Silent replacement.** Activating `/B` while `/A` is active replaces the
+   *    slot without ceremony (D12). Sources `/A` brought in are left enabled —
+   *    they are ordinary workspace sources now and may be in use; the user can
+   *    turn them off from the sources UI.
+   *
+   * A plugin that is not installed (or fails to load) throws: activation is an
+   * explicit user act, so a silent no-op would leave the user believing a
+   * context is in force when it is not.
+   *
+   * @param pluginName - Plugin directory name, or null to clear the slot.
+   * @returns the enabled-source outcome, for the UI to report.
+   */
+  async setSessionActivePlugin(
+    sessionId: string,
+    pluginName: string | null,
+  ): Promise<{ pluginName: string | null; enabledSources: string[]; unusableSources: string[] }> {
+    const managed = this.sessions.get(sessionId)
+    if (!managed) {
+      throw new Error(`Session not found: ${sessionId}`)
+    }
+
+    const workspaceRootPath = managed.workspace.rootPath
+
+    if (pluginName === null) {
+      managed.activePlugin = undefined
+      if (managed.agent) this.applyActivePluginToAgent(managed, undefined)
+
+      this.persistSession(managed)
+      const cleared = { pluginName: null, enabledSources: [], unusableSources: [] }
+      this.sendEvent(
+        { type: 'active_plugin_changed', sessionId, ...cleared },
+        managed.workspace.id,
+      )
+      sessionLog.info(`Session ${sessionId}: active plugin cleared`)
+      return cleared
+    }
+
+    const plugin = loadPluginByName(workspaceRootPath, pluginName)
+    if (!plugin) {
+      throw new Error(
+        `Plugin "${pluginName}" is not installed in this workspace. Install it under plugins/${pluginName}/ first.`,
+      )
+    }
+
+    managed.activePlugin = plugin.name
+    // The agent reads `config.session.activePlugin` on every turn, so a live
+    // agent must see the new slot without being rebuilt.
+    if (managed.agent) this.applyActivePluginToAgent(managed, plugin.name)
+
+    // Contributed sources are ordinary workspace sources by now (they were
+    // materialized into <ws>/sources on install), so this is just the existing
+    // enabled-source set — not a plugin-specific runtime path.
+    const contributed = [
+      ...plugin.resources.mcpServers.map((server) => server.slug),
+      ...plugin.resources.extensionSources.map((source) => source.slug),
+    ]
+
+    let enabledSources: string[] = []
+    let unusableSources: string[] = []
+
+    if (contributed.length > 0) {
+      const currentSlugs = new Set(managed.enabledSourceSlugs || [])
+      const loadedSources = getSourcesBySlugs(workspaceRootPath, contributed)
+      const usable = new Set(
+        loadedSources.filter(isSourceUsable).map((source) => source.config.slug),
+      )
+
+      // Usability is computed here so the two buckets can be reported to the UI;
+      // the actual enablement (and its `sources_changed` event + persist) goes
+      // through the shared helper so this path and the per-turn backstop cannot
+      // drift on what "enable these sources" means.
+      enabledSources = contributed.filter(
+        (slug) => usable.has(slug) && !currentSlugs.has(slug),
+      )
+      // An unusable source already in the enabled set is not a *new* failure and
+      // is not reported — the user did not just cause it by activating a plugin.
+      unusableSources = contributed.filter(
+        (slug) => !usable.has(slug) && !currentSlugs.has(slug),
+      )
+
+      // The enablement itself (and its `sources_changed` event + persist) goes
+      // through the shared helper so this path and the per-turn backstop cannot
+      // drift on what "enable these sources" means. The helper also logs the
+      // unusable ones, so this path does not repeat that warning.
+      if (enabledSources.length > 0) {
+        this.enableContributedSources(sessionId, managed, `plugin "${plugin.name}"`, contributed)
+      }
+    }
+
+    this.persistSession(managed)
+
+    this.sendEvent(
+      { type: 'active_plugin_changed', sessionId, pluginName: plugin.name, unusableSources },
+      managed.workspace.id,
+    )
+
+    sessionLog.info(
+      `Session ${sessionId}: active plugin set to "${plugin.name}" ` +
+        `(${plugin.resources.skills.length} skills, ${enabledSources.length} sources enabled, ` +
+        `${unusableSources.length} unusable)`,
+    )
+
+    return { pluginName: plugin.name, enabledSources, unusableSources }
+  }
+
+  /**
+   * Point a live agent at the session's current active-plugin slot.
+   *
+   * The slot is read from `agent.config.session.activePlugin` once per turn
+   * (`PiAgent.resolveActivePluginContext`), so mutating that field is the whole
+   * hand-off — no rebuild, no restart, and the change lands on the next message.
+   */
+  private applyActivePluginToAgent(managed: ManagedSession, pluginName: string | undefined): void {
+    const agent = managed.agent as { config?: { session?: { activePlugin?: string } } } | null
+    if (!agent?.config?.session) return
+    agent.config.session.activePlugin = pluginName
+  }
+
+  /**
+   * Pre-enable sources contributed by the session's active plugin (D12).
+   *
+   * Runs on every `sendMessage` *before* the agent is built, so the plugin's
+   * tools are present for the turn without the `SourceActivated` abort that
+   * runtime activation costs (P9-3). `setSessionActivePlugin` already enables
+   * them at activation time; this is the backstop that catches a plugin
+   * installed, reinstalled, or edited *after* activation — the slot can outlive
+   * the resources it names, and a reinstall rewrites its `mcp.json`.
+   */
+  private preEnableActivePluginSources(sessionId: string, managed: ManagedSession): void {
+    const activePluginName = managed.activePlugin
+    if (!activePluginName) return
+
+    try {
+      const workspaceRootPath = managed.workspace.rootPath
+      const plugin = loadPluginByName(workspaceRootPath, activePluginName)
+
+      // P4-6: a plugin uninstalled mid-session drops out silently. The slot is
+      // kept so a reinstall restores the context, but nothing breaks meanwhile.
+      if (!plugin) {
+        sessionLog.info(
+          `Active plugin "${activePluginName}" is not installed; skipping source pre-enable`,
+        )
+        return
+      }
+
+      const contributed = [
+        ...plugin.resources.mcpServers.map((server) => server.slug),
+        ...plugin.resources.extensionSources.map((source) => source.slug),
+      ]
+      if (contributed.length === 0) return
+
+      this.enableContributedSources(sessionId, managed, plugin.name, contributed)
+    } catch (e) {
+      sessionLog.warn(`Failed to pre-enable plugin sources for session ${sessionId}:`, e)
+    }
+  }
+
+  /**
+   * Pre-enable sources required by invoked skills (Issue #249).
+   *
+   * Eliminates the two-turn penalty where the agent discovers missing sources at
+   * runtime. Uses targeted `loadSkillBySlug()` instead of `loadAllSkills()` to
+   * avoid O(N) filesystem scans.
+   */
+  private preEnableSkillSources(
+    sessionId: string,
+    managed: ManagedSession,
+    skillSlugs: string[],
+  ): void {
+    try {
+      const workspaceRoot = managed.workspace.rootPath
+
+      const requiredSources = new Set<string>()
+      for (const slug of skillSlugs) {
+        const skill = loadSkillBySlug(workspaceRoot, slug, managed.workingDirectory)
+        if (skill?.metadata.requiredSources) {
+          for (const src of skill.metadata.requiredSources) {
+            requiredSources.add(src)
+          }
+        }
+      }
+
+      if (requiredSources.size === 0) return
+
+      this.enableContributedSources(
+        sessionId,
+        managed,
+        `skill invocation`,
+        Array.from(requiredSources),
+      )
+    } catch (e) {
+      sessionLog.warn(`Failed to pre-enable skill sources for session ${sessionId}:`, e)
+    }
+  }
+
+  /**
+   * Add `candidateSlugs` to the session's enabled sources, skipping ones already
+   * enabled and reporting ones that are not usable (missing or unauthenticated).
+   *
+   * Shared by the skill-source and plugin-source pre-enable paths so the two
+   * cannot drift on what "usable" means or on which event they emit.
+   */
+  private enableContributedSources(
+    sessionId: string,
+    managed: ManagedSession,
+    reason: string,
+    candidateSlugs: string[],
+  ): void {
+    const currentSlugs = new Set(managed.enabledSourceSlugs || [])
+    const loadedSources = getSourcesBySlugs(managed.workspace.rootPath, candidateSlugs)
+    const usableSources = new Set(
+      loadedSources.filter(isSourceUsable).map((source) => source.config.slug),
+    )
+
+    const toEnable = candidateSlugs.filter(
+      (slug) => usableSources.has(slug) && !currentSlugs.has(slug),
+    )
+    const skipped = candidateSlugs.filter(
+      (slug) => !usableSources.has(slug) && !currentSlugs.has(slug),
+    )
+
+    if (skipped.length > 0) {
+      sessionLog.warn(
+        `Sources required by ${reason} are not usable (missing or unauthenticated): ${skipped.join(', ')}`,
+      )
+    }
+
+    if (toEnable.length === 0) return
+
+    managed.enabledSourceSlugs = [...(managed.enabledSourceSlugs || []), ...toEnable]
+    sessionLog.info(`Pre-enabled sources for ${reason}: ${toEnable.join(', ')}`)
+    this.persistSession(managed)
+    this.sendEvent(
+      {
+        type: 'sources_changed',
+        sessionId,
+        enabledSourceSlugs: managed.enabledSourceSlugs,
+      },
+      managed.workspace.id,
+    )
   }
 
   /**

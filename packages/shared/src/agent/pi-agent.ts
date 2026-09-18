@@ -119,6 +119,8 @@ import { homedir } from 'os';
 
 // Session storage (plans folder path)
 import { getSessionDataPath, getSessionPath, getSessionPlansPath } from '../sessions/storage.ts';
+import { loadPluginByName } from '../plugins/storage.ts';
+import { formatActivePluginContext } from '../plugins/plugin-context.ts';
 
 // Error typing
 import { parseError, type AgentError } from './errors.ts';
@@ -684,6 +686,37 @@ export class PiAgent extends BaseAgent {
 
     this.sessionProxyToolDefs = sessionToolDefs;
     this.syncProxyToolsWithSubprocess();
+  }
+
+  /**
+   * Build the `<plugin_context>` block for the session's active plugin (D12).
+   *
+   * Read from the workspace per turn rather than cached on the agent, so a plugin
+   * edited or reinstalled mid-session takes effect on the next message. At most
+   * one plugin is active, so this returns at most one block; a plugin that has
+   * since been uninstalled simply contributes nothing (P4-6: silent, not an error).
+   *
+   * @returns the block, or undefined when no plugin is active or it renders empty.
+   */
+  private resolveActivePluginContext(): string | undefined {
+    const activePluginName = this.config.session?.activePlugin;
+    const workspaceRootPath = this.config.workspace?.rootPath;
+    if (!activePluginName || !workspaceRootPath) return undefined;
+
+    try {
+      const plugin = loadPluginByName(workspaceRootPath, activePluginName);
+      if (!plugin) {
+        this.debug(
+          `[PluginContext] Active plugin "${activePluginName}" is not installed; skipping its context`,
+        );
+        return undefined;
+      }
+      return formatActivePluginContext(plugin);
+    } catch (error) {
+      // A broken bundle must not fail the turn.
+      this.debug(`[PluginContext] Failed to build context for "${activePluginName}": ${String(error)}`);
+      return undefined;
+    }
   }
 
   /**
@@ -2367,9 +2400,16 @@ export class PiAgent extends BaseAgent {
       // consumes the one-shot mode-change signal, so it is called exactly once.
       const plansFolderPath = getSessionPlansPath(this.config.workspace.rootPath, this._sessionId);
       const stableParts = this.promptBuilder.buildStableContextParts();
+
+      // Active plugin bundle (D12): at most one per session. Loaded from the
+      // workspace on each turn so that editing or reinstalling a plugin takes
+      // effect on the next message without restarting the agent.
+      const activePluginContext = this.resolveActivePluginContext();
+
       const volatileParts = this.promptBuilder.buildVolatileContextParts(
         { plansFolderPath },
-        sourceContext
+        sourceContext,
+        activePluginContext
       );
 
       // Process attachments

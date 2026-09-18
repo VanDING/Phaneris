@@ -40,6 +40,7 @@ import {
   validateSourcePermissions,
   validateAllPermissions,
   validateToolIcons,
+  validatePlugins,
 } from '../config/validators.ts';
 import { validateAutomations } from '../automations/index.ts';
 import {
@@ -140,6 +141,7 @@ export function createSessionContext(options: SessionContextOptions): SessionToo
     validateToolIcons: () => validateToolIcons(),
     validateAll: (wsPath: string) => validateAll(wsPath),
     validateSkill: (wsPath: string, slug: string) => validateSkill(wsPath, slug),
+    validatePlugins: (wsPath: string) => validatePlugins(wsPath),
   };
 
   // Credential manager adapter

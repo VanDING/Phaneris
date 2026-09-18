@@ -303,6 +303,18 @@ export const RPC_CHANNELS = {
     OPEN_FINDER: 'skills:openFinder',
     CHANGED: 'skills:changed',
   },
+  plugins: {
+    /** Installed plugin bundles for a workspace, with per-plugin load state. */
+    LIST: 'plugins:list',
+    /** D9 two-phase install: analyze (returns the overwrite list) then install. */
+    ANALYZE_INSTALL: 'plugins:analyzeInstall',
+    INSTALL: 'plugins:install',
+    /** D10 two-phase uninstall: analyze (retains vs removes) then uninstall. */
+    ANALYZE_UNINSTALL: 'plugins:analyzeUninstall',
+    UNINSTALL: 'plugins:uninstall',
+    /** Push: the installed-plugin list changed (install / uninstall / edit). */
+    CHANGED: 'plugins:changed',
+  },
   statuses: {
     LIST: 'statuses:list',
     REORDER: 'statuses:reorder',

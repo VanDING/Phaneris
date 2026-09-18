@@ -6,8 +6,8 @@
  */
 
 import { homedir } from 'os';
-import { resolve, join, normalize, isAbsolute } from 'path';
-import { existsSync } from 'fs';
+import { resolve, join, normalize, isAbsolute, dirname, relative } from 'path';
+import { existsSync, lstatSync, realpathSync } from 'fs';
 
 /**
  * Expand path variables (~, ${HOME}, $HOME) to absolute paths.
@@ -179,6 +179,88 @@ export function stripPathPrefix(filePath: string, prefix: string): string {
     return normalizedFile.slice(normalizedPrefix.length + 1);
   }
   return filePath;
+}
+
+/**
+ * Containment check for paths that may not exist yet, resistant to symlink escapes.
+ *
+ * Resolves the nearest existing ancestor and compares real paths, so a symlink
+ * anywhere along the chain cannot smuggle a write outside `dirPath`. Used by the
+ * plugin installer, which must reject package paths escaping the plugin root
+ * (Agent Plugins §4.1) both at read and at materialization time.
+ *
+ * Uses `relative` rather than the exported `pathStartsWith`, because a caller may
+ * hand in a path with mixed separators — plugin placeholders expand as
+ * `<root>/bin/server`, whose forward slash survives on Windows. `pathStartsWith`
+ * compares normalized strings and would wrongly report such a path as outside.
+ *
+ * @example
+ * isPathWithin(pluginRoot, join(pluginRoot, 'bin/server'))  // true
+ * isPathWithin(pluginRoot, '../outside')                    // false
+ */
+export function isPathWithin(dirPath: string, candidatePath: string): boolean {
+  const resolvedDir = resolve(dirPath);
+  const resolvedCandidate = resolve(candidatePath);
+
+  // Lexical check first — cheap, and catches the common `..` escape.
+  if (!isWithinResolved(resolvedDir, resolvedCandidate)) return false;
+
+  // Then confirm real paths. Neither side may resolve through a symlink out of
+  // the base, so both are compared via their nearest *existing* ancestor.
+  const realDir = existingRealPath(resolvedDir);
+  const realCandidate = existingRealPath(resolvedCandidate);
+
+  // An existing ancestor that cannot be resolved (drive root, permission error)
+  // means containment cannot be established; refuse rather than assume.
+  if (realDir === null || realCandidate === null) return false;
+
+  return isWithinResolved(realDir, realCandidate);
+}
+
+/**
+ * Real path of `targetPath`, or of its nearest existing ancestor.
+ *
+ * Used because an install writes paths that do not exist yet; resolving the
+ * nearest existing ancestor is what makes the check symlink-aware for those.
+ *
+ * @returns the resolved path, or null when no ancestor could be resolved.
+ */
+function existingRealPath(targetPath: string): string | null {
+  let current = targetPath;
+
+  for (;;) {
+    if (existsSync(current)) {
+      try {
+        return realpathSync.native(current);
+      } catch {
+        return null;
+      }
+    }
+    const parent = dirname(current);
+    if (parent === current) return null;
+    current = parent;
+  }
+}
+
+/** Separator- and case-tolerant containment test between two resolved paths. */
+function isWithinResolved(resolvedBase: string, resolvedTarget: string): boolean {
+  const rel = relative(resolvedBase, resolvedTarget);
+  return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel));
+}
+
+/**
+ * True when `targetPath` is a symbolic link.
+ *
+ * The plugin installer rejects symlinked package entries: `createWorkspaceBackup`
+ * walks the whole workspace and throws on non-file entries, so one symlink inside
+ * a plugin would make the entire workspace backup fail.
+ */
+export function isSymbolicLink(targetPath: string): boolean {
+  try {
+    return lstatSync(targetPath).isSymbolicLink();
+  } catch {
+    return false;
+  }
 }
 
 // ============================================================

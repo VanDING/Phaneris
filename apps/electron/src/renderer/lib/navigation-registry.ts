@@ -73,8 +73,12 @@ export interface NavigatorConfig<TDetailsPages extends Record<string, ComponentT
 
 /**
  * All navigator types in the app
+ *
+ * Kept in sync with `NavigatorType` in `../../shared/route-parser` — this is an
+ * independent enum (it only covers the navigators that declare details pages),
+ * so a new sidebar section has to be added in both places.
  */
-export type NavigatorType = 'sessions' | 'sources' | 'settings'
+export type NavigatorType = 'sessions' | 'sources' | 'settings' | 'plugins'
 
 /**
  * Session filter kinds that map to sidebar routes
@@ -154,6 +158,16 @@ export const NavigationRegistry = {
     getFirstItem: (ctx: NavigationData) => ctx.sources[0]?.slug ?? null,
   },
 
+  // Plugins is a two-level section by design (plugin-bundles design P7-2): the
+  // bundle list is the section and its skills/sources belong to the native
+  // sections, so there is deliberately no details page here.
+  plugins: {
+    displayName: 'Plugins',
+    detailsPages: {},
+    defaultDetails: null,
+    getFirstItem: () => null,
+  },
+
   settings: {
     displayName: 'Settings',
     detailsPages: {
@@ -184,7 +198,7 @@ export type DetailsType<N extends NavigatorType> = keyof (typeof NavigationRegis
 /**
  * All possible details types across all navigators
  */
-export type AnyDetailsType = DetailsType<'sessions'> | DetailsType<'sources'> | DetailsType<'settings'>
+export type AnyDetailsType = DetailsType<'sessions'> | DetailsType<'sources'> | DetailsType<'settings'> | DetailsType<'plugins'>
 
 // =============================================================================
 // Navigation State Types

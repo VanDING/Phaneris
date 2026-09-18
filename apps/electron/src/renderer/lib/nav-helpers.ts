@@ -21,6 +21,7 @@ import type { NavigationState } from '../../shared/types'
  * - sessions: a session is selected
  * - settings: a subpage is selected (bare `settings` route → false)
  * - sources / skills / automations: a detail item is selected
+ * - plugins: never — the bundle list is the whole section (P7-2)
  * - pages: always — both the library grid and a page render in the content
  *   panel (pages has no navigator list to fall back to)
  */
@@ -35,6 +36,8 @@ export function isDetailNavState(navState: NavigationState | null): boolean {
     case 'skills':
     case 'automations':
       return navState.details !== null
+    case 'plugins':
+      return false
     case 'projects':
       return navState.details !== null || navState.view !== 'overview'
     case 'pages':
@@ -55,6 +58,7 @@ export function buildNavigatorRootRoute(navState: NavigationState): ViewRoute | 
     case 'sessions':
     case 'sources':
     case 'skills':
+    case 'plugins':
     case 'automations':
       return buildRouteFromNavigationState({ ...navState, details: null }) as ViewRoute
     case 'settings':

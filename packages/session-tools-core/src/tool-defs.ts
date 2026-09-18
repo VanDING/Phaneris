@@ -103,7 +103,7 @@ export const AskUserSchema = z.object({
 });
 
 export const ConfigValidateSchema = z.object({
-  target: z.enum(['config', 'sources', 'statuses', 'preferences', 'permissions', 'automations', 'tool-icons', 'all'])
+  target: z.enum(['config', 'sources', 'statuses', 'preferences', 'permissions', 'automations', 'tool-icons', 'plugins', 'all'])
     .describe('Which config file(s) to validate'),
   sourceSlug: z.string().optional().describe('Validate a specific source by slug'),
 });

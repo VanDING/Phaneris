@@ -148,6 +148,8 @@ export interface ValidatorInterface {
   validateToolIcons(): import('./types.js').ValidationResult;
   validateAll(workspaceRootPath: string): import('./types.js').ValidationResult;
   validateSkill(workspaceRootPath: string, skillSlug: string): import('./types.js').ValidationResult;
+  /** Validate every installed plugin bundle in the workspace. */
+  validatePlugins(workspaceRootPath: string): import('./types.js').ValidationResult;
 }
 
 // ============================================================

@@ -171,6 +171,22 @@ export interface SourcesChangedEvent {
 }
 
 /**
+ * Active plugin changed event (D12 single slot)
+ */
+export interface ActivePluginChangedEvent {
+  type: 'active_plugin_changed'
+  sessionId: string
+  /** null when the slot was cleared. */
+  pluginName: string | null
+  /**
+   * Contributed sources that could not be enabled because they are missing or
+   * unauthenticated. Reported rather than swallowed: the plugin is active but
+   * part of it is inert, and the user is the only one who can fix that.
+   */
+  unusableSources: string[]
+}
+
+/**
  * Labels changed event
  */
 export interface LabelsChangedEvent {
@@ -596,6 +612,7 @@ export type AgentEvent =
   | CredentialRequestEvent
   | AskUserRequestEvent
   | SourcesChangedEvent
+  | ActivePluginChangedEvent
   | LabelsChangedEvent
   | ProjectIdChangedEvent
   | SessionStatusChangedEvent

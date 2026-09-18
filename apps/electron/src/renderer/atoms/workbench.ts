@@ -32,6 +32,7 @@ export type SurfacePanelType =
   | 'source'
   | 'settings'
   | 'skills'
+  | 'plugins'
   | 'automation'
   | BoundPanelType
 
@@ -109,6 +110,7 @@ export function classifySurfaceRoute(route: ViewRoute): SurfaceRouteClassificati
     case 'sources':
     case 'settings':
     case 'skills':
+    case 'plugins':
     case 'automations':
     case 'pages':
       return { role: 'primary', kind: 'management' }
@@ -136,6 +138,7 @@ export function getSurfacePanelTypeFromRoute(route: ViewRoute): SurfacePanelType
   if (root === 'sources') return 'source'
   if (root === 'settings') return 'settings'
   if (root === 'skills') return 'skills'
+  if (root === 'plugins') return 'plugins'
   if (root === 'automations') return 'automation'
   return null
 }

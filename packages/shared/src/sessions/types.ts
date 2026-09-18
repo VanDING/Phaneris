@@ -34,6 +34,8 @@ export const SESSION_PERSISTENT_FIELDS = [
   'lastReadMessageId', 'hasUnread',
   // Config
   'enabledSourceSlugs', 'permissionMode', 'previousPermissionMode', 'workingDirectory',
+  // Active plugin bundle (D12: at most one per session)
+  'activePlugin',
   // Model/Connection
   'model', 'llmConnection', 'connectionLocked', 'thinkingLevel',
   // Sharing
@@ -145,6 +147,16 @@ export interface SessionConfig {
   hasUnread?: boolean;
   /** Per-session source selection (source slugs) */
   enabledSourceSlugs?: string[];
+  /**
+   * Name of the plugin bundle active for this session, if any.
+   *
+   * A single slot, not a list (D12): a plugin is already a bundle, so bundling
+   * bundles is unnecessary, and one slot keeps the prompt cost constant — the
+   * `<plugin_context>` block is at most one per turn regardless of history.
+   *
+   * Activating another plugin replaces this value silently.
+   */
+  activePlugin?: string;
   /** Working directory for this session (used by agent for bash commands and context) */
   workingDirectory?: string;
   /** SDK cwd for session storage - set once at creation, never changes. Ensures SDK can find session transcripts regardless of workingDirectory changes. */
@@ -378,6 +390,8 @@ export interface SessionMetadata {
   labels?: string[];
   /** Explicit per-session source selection (absent = follow workspace defaults) */
   enabledSourceSlugs?: string[];
+  /** Name of the plugin bundle active for this session, if any (single slot, D12) */
+  activePlugin?: string;
   /** Permission mode for this session */
   permissionMode?: PermissionMode;
   /** Previous permission mode (used to preserve modeTransition context across restarts) */

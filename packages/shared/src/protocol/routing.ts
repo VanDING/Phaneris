@@ -402,6 +402,16 @@ export const REMOTE_ELIGIBLE_CHANNELS = new Set<string>([
   RPC_CHANNELS.skills.DELETE,
   RPC_CHANNELS.skills.CHANGED,
 
+  // plugins — plugin bundles are workspace-owned files on the server, and the
+  // handlers resolve the workspace through `getWorkspaceByNameOrId`, so a remote
+  // client addresses them the same way it addresses skills.
+  RPC_CHANNELS.plugins.LIST,
+  RPC_CHANNELS.plugins.ANALYZE_INSTALL,
+  RPC_CHANNELS.plugins.INSTALL,
+  RPC_CHANNELS.plugins.ANALYZE_UNINSTALL,
+  RPC_CHANNELS.plugins.UNINSTALL,
+  RPC_CHANNELS.plugins.CHANGED,
+
   // statuses — workspace metadata
   RPC_CHANNELS.statuses.LIST,
   RPC_CHANNELS.statuses.REORDER,

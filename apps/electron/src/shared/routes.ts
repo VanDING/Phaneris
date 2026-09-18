@@ -159,6 +159,9 @@ export const routes = {
       return `skills/skill/${skillSlug}` as const
     },
 
+    /** Plugins view (plugins navigator) — the bundle list is the whole section. */
+    plugins: () => 'plugins' as const,
+
     /** Automations view (automations navigator) - supports type filtering */
     automations: (params?: { automationId?: string; type?: 'scheduled' | 'event' | 'agentic' }) => {
       const { automationId, type } = params ?? {}

@@ -81,6 +81,7 @@ export type EditContextKey =
   | 'add-source-mcp'   // Filter-specific: user is viewing MCPs
   | 'add-source-local' // Filter-specific: user is viewing Local Folders
   | 'add-skill'
+  | 'add-plugin'
   | 'edit-statuses'
   | 'edit-labels'
   | 'edit-auto-rules'
@@ -398,6 +399,28 @@ const EDIT_CONFIGS: Record<EditContextKey, (location: string) => EditConfig> = {
     displayLabelKey: 'editPopover.label.addSkill',
     exampleKey: 'editPopover.example.addSkill',
     overridePlaceholderKey: 'editPopover.placeholder.addSkill',
+  }),
+
+  'add-plugin': (location) => ({
+    context: {
+      label: 'Add Plugin',
+      filePath: `${location}/plugins/`, // location is the workspace root path
+      context:
+        'The user wants to create or install a plugin bundle. ' +
+        'A plugin is a workspace-owned package following the Agent Plugins 1.0.0 format: ' +
+        'a plugin.json manifest, optional skills/<slug>/SKILL.md, optional mcp.json, optional PROMPT.md, ' +
+        'and an optional phaneris/sources.json for api/local sources. It must contribute at least one skill or MCP server. ' +
+        'The package directory name must equal the manifest name, and each skill name must equal its directory name. ' +
+        'Before writing anything, read ~/.phaneris/docs/plugins.md — it is the only specification for the package format, ' +
+        'the install flow, and the constraints (no symlinks, no bare command names, cwd unsupported, names must match). ' +
+        'Installation must show the user the resources it would replace and any stdio command in full, then wait for confirmation. ' +
+        'Validate with config_validate({ target: "plugins" }) afterwards.',
+    },
+    example: 'Package my finance skills and MCP server together',
+    overridePlaceholder: 'What should this plugin bundle?',
+    displayLabelKey: 'editPopover.label.addPlugin',
+    exampleKey: 'editPopover.example.addPlugin',
+    overridePlaceholderKey: 'editPopover.placeholder.addPlugin',
   }),
 
   // Status configuration context

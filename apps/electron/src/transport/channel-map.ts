@@ -263,6 +263,14 @@ export const CHANNEL_MAP = {
   openSkillInFinder: invoke(RPC_CHANNELS.skills.OPEN_FINDER),
   onSkillsChanged: listener(RPC_CHANNELS.skills.CHANGED),
 
+  // Plugins (workspace-owned capability bundles)
+  getPlugins: invoke(RPC_CHANNELS.plugins.LIST),
+  analyzePluginInstall: invoke(RPC_CHANNELS.plugins.ANALYZE_INSTALL),
+  installPlugin: invoke(RPC_CHANNELS.plugins.INSTALL),
+  analyzePluginUninstall: invoke(RPC_CHANNELS.plugins.ANALYZE_UNINSTALL),
+  uninstallPlugin: invoke(RPC_CHANNELS.plugins.UNINSTALL),
+  onPluginsChanged: listener(RPC_CHANNELS.plugins.CHANGED),
+
   // Statuses
   listStatuses: invoke(RPC_CHANNELS.statuses.LIST),
   reorderStatuses: invoke(RPC_CHANNELS.statuses.REORDER),

@@ -4,6 +4,7 @@
 - 日期：2026-08-20
 - 性质：探索性评估（实施未定）
 - 状态补充（2026-08-30）：仍是探索性评估。Univer 路线已经退役，当前文件产物基线改为 [`artifact-files-native-image-generation-plan.md`](artifact-files-native-image-generation-plan.md)。
+- 状态补充（2026-09-17）：本文 §6「批 B（能力模型升级）」的具体设计已在 [`plugin-bundles-design.md`](plugin-bundles-design.md) 中给出（状态：proposed）。本文其余部分仍为探索性研究。
 
 ---
 

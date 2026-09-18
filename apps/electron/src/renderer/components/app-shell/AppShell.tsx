@@ -33,6 +33,7 @@ import {
   MailOpen,
   FolderKanban,
   PanelsTopLeft,
+  Plug,
 } from "lucide-react"
 // SessionStatusIcons no longer used - icons come from dynamic sessionStatuses
 import { SourceAvatar } from "@/components/ui/source-avatar"
@@ -88,10 +89,11 @@ import { useFocusZone } from "@/hooks/keyboard"
 import { useFocusContext } from "@/context/FocusContext"
 import { getSessionTitle } from "@/utils/session"
 import { useSetAtom } from "jotai"
-import type { Session, Workspace, FileAttachment, PermissionRequest, LoadedSource, LoadedSkill, PermissionMode, SourceFilter, AutomationFilter } from "../../../shared/types"
+import type { Session, Workspace, FileAttachment, PermissionRequest, LoadedSource, LoadedSkill, PermissionMode, SourceFilter, AutomationFilter, PluginSummary, PluginLoadError, PluginsListResult } from "../../../shared/types"
 import { sessionMetaMapAtom, sendToWorkspaceAtom, type SessionMeta } from "@/atoms/sessions"
 import { sourcesAtom } from "@/atoms/sources"
 import { skillsAtom } from "@/atoms/skills"
+import { pluginsAtom, pluginLoadErrorsAtom } from "@/atoms/plugins"
 import { activeSessionIdAtom } from "@/atoms/active-session"
 import { filesPanelViewAtom } from "@/atoms/content-panel-ui"
 import {
@@ -133,6 +135,7 @@ import {
   isSourcesNavigation,
   isSettingsNavigation,
   isSkillsNavigation,
+  isPluginsNavigation,
   isAutomationsNavigation,
   isProjectsNavigation,
   isPagesNavigation,
@@ -141,6 +144,7 @@ import {
 import type { SettingsSubpage } from "../../../shared/types"
 import { SourcesListPanel } from "./SourcesListPanel"
 import { SkillsListPanel } from "./SkillsListPanel"
+import { PluginsListPanel } from "./PluginsListPanel"
 import { AutomationsListPanel } from "../automations/AutomationsListPanel"
 import { ProjectsListPanel } from "./ProjectsListPanel"
 import { APP_EVENTS, AGENT_EVENTS, type AutomationFilterKind, AUTOMATION_TYPE_TO_FILTER_KIND } from "../automations/types"
@@ -956,6 +960,52 @@ function AppShellContent({
   React.useEffect(() => {
     setSkillsAtom(skills)
   }, [skills, setSkillsAtom])
+
+  // Plugins state (workspace-scoped) — installed bundles for the `/` roster and
+  // the Plugins section. Load errors are tracked separately: a bundle that will
+  // not load must be visible, not missing.
+  const [plugins, setPlugins] = React.useState<PluginSummary[]>([])
+  const [pluginLoadErrors, setPluginLoadErrors] = React.useState<PluginLoadError[]>([])
+  const setPluginsAtom = useSetAtom(pluginsAtom)
+  const setPluginLoadErrorsAtom = useSetAtom(pluginLoadErrorsAtom)
+  React.useEffect(() => {
+    setPluginsAtom(plugins)
+  }, [plugins, setPluginsAtom])
+  React.useEffect(() => {
+    setPluginLoadErrorsAtom(pluginLoadErrors)
+  }, [pluginLoadErrors, setPluginLoadErrorsAtom])
+
+  const reloadPlugins = React.useCallback(async (workspaceId: string) => {
+    try {
+      const result = await window.electronAPI.getPlugins(workspaceId)
+      setPlugins(result?.plugins ?? [])
+      setPluginLoadErrors(result?.errors ?? [])
+    } catch (err) {
+      console.error('[Plugins] Failed to load plugins:', err)
+      setPlugins([])
+      setPluginLoadErrors([])
+    }
+  }, [])
+
+  React.useEffect(() => {
+    if (!activeWorkspaceId) {
+      setPlugins([])
+      setPluginLoadErrors([])
+      return
+    }
+    void reloadPlugins(activeWorkspaceId)
+  }, [activeWorkspaceId, reloadPlugins])
+
+  // A bundle can change without the plugin list being replaced wholesale: edits
+  // and reinstalls happen on disk. `plugins:changed` also carries the payload.
+  React.useEffect(() => {
+    const cleanup = window.electronAPI.onPluginsChanged((workspaceId: string, payload: PluginsListResult) => {
+      if (workspaceId !== activeWorkspaceId) return
+      setPlugins(payload?.plugins ?? [])
+      setPluginLoadErrors(payload?.errors ?? [])
+    })
+    return cleanup
+  }, [activeWorkspaceId, reloadPlugins])
   // Automations — state, handlers, loading, subscriptions
   const activeWorkspace = workspaces.find(w => w.id === activeWorkspaceId)
 
@@ -1084,6 +1134,18 @@ function AppShellContent({
       // Session will emit a 'sources_changed' event that updates the session state
     } catch (err) {
       console.error('[Chat] Failed to set session sources:', err)
+    }
+  }, [])
+
+  // Handle plugin activation from the `/` menu (D12 — single slot, silent replace).
+  // The backend pre-enables the plugin's sources and emits `active_plugin_changed`
+  // + `sources_changed`; this call is fire-and-forget like the source selector.
+  const handleSessionActivePluginChange = React.useCallback(async (sessionId: string, pluginName: string | null) => {
+    try {
+      await window.electronAPI.sessionCommand(sessionId, { type: 'setActivePlugin', pluginName })
+    } catch (err) {
+      console.error('[Chat] Failed to set active plugin:', err)
+      toast.error(err instanceof Error ? err.message : String(err))
     }
   }, [])
 
@@ -1752,6 +1814,8 @@ function AppShellContent({
     onDeleteSession: handleDeleteSession,
     enabledSources: sources,
     skills,
+    plugins,
+    onActivePluginChange: handleSessionActivePluginChange,
     activeSessionWorkingDirectory,
     labels: displayLabelConfigs,
     onSessionLabelsChange: handleSessionLabelsChange,
@@ -1879,6 +1943,11 @@ function AppShellContent({
   // Handler for skills view
   const handleSkillsClick = useCallback(() => {
     navigate(routes.view.skills())
+  }, [])
+
+  // Handler for plugins view (bundle list — the section is two-level by design)
+  const handlePluginsClick = useCallback(() => {
+    navigate(routes.view.plugins())
   }, [])
 
   // Handlers for automations view
@@ -2251,17 +2320,18 @@ function AppShellContent({
     }
     flattenTree(labelTree)
 
-    // 3. Sources, Skills, Projects, Pages, Automations, Settings (visual order)
+    // 3. Sources, Skills, Plugins, Projects, Pages, Automations, Settings (visual order)
     result.push({ id: 'nav:sources', type: 'nav', action: handleSourcesClick })
     result.push({ id: 'nav:skills', type: 'nav', action: handleSkillsClick })
+    result.push({ id: 'nav:plugins', type: 'nav', action: handlePluginsClick })
     result.push({ id: 'nav:projects', type: 'nav', action: handleProjectsClick })
     result.push({ id: 'nav:pages', type: 'nav', action: handlePagesClick })
     result.push({ id: 'nav:automations', type: 'nav', action: handleAutomationsClick })
     result.push({ id: 'nav:profile', type: 'nav', action: () => setProfileCardOpen(open => !open) })
     result.push({ id: 'nav:settings', type: 'nav', action: () => handleSettingsClick() })
 
-    return isSidebarVisible ? result : result.filter(item => ['nav:allSessions', 'nav:labels', 'nav:sources', 'nav:skills', 'nav:projects', 'nav:pages', 'nav:automations', 'nav:profile', 'nav:settings'].includes(item.id))
-  }, [isSidebarVisible, handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelConfigs, labelTree, viewConfigs, handleViewClick, handleSourcesClick, handleSkillsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
+    return isSidebarVisible ? result : result.filter(item => ['nav:allSessions', 'nav:labels', 'nav:sources', 'nav:skills', 'nav:plugins', 'nav:projects', 'nav:pages', 'nav:automations', 'nav:profile', 'nav:settings'].includes(item.id))
+  }, [isSidebarVisible, plugins, pluginLoadErrors, handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelConfigs, labelTree, viewConfigs, handleViewClick, handleSourcesClick, handleSkillsClick, handlePluginsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
 
   // Toggle folder expanded state
   const handleToggleFolder = React.useCallback((path: string) => {
@@ -2378,6 +2448,11 @@ function AppShellContent({
     // Skills navigator
     if (isSkillsNavigation(navState)) {
       return t("sidebar.allSkills")
+    }
+
+    // Plugins navigator
+    if (isPluginsNavigation(navState)) {
+      return t("sidebar.allPlugins")
     }
 
     // Projects navigator
@@ -2741,6 +2816,16 @@ function AppShellContent({
                         type: 'skills',
                         onAddSkill: openAddSkill,
                       },
+                    },
+                    {
+                      id: "nav:plugins",
+                      title: t("sidebar.plugins"),
+                      label: String(plugins.length + pluginLoadErrors.length),
+                      icon: Plug,
+                      variant: isPluginsNavigation(navState) ? "default" : "ghost",
+                      onClick: handlePluginsClick,
+                      // No context menu: installing a bundle is docs-driven, and the
+                      // section has no "add"/"configure" surface of its own.
                     },
                     {
                       id: "nav:projects",
@@ -3635,6 +3720,15 @@ function AppShellContent({
                 onSkillClick={handleSkillSelect}
                 onDeleteSkill={handleDeleteSkill}
                 selectedSkillSlug={isSkillsNavigation(navState) && navState.details?.type === 'skill' ? navState.details.skillSlug : null}
+              />
+            )}
+            {isPluginsNavigation(navState) && activeWorkspaceId && (
+              /* Plugins List — installed bundles, including ones that failed to load */
+              <PluginsListPanel
+                workspaceId={activeWorkspaceId}
+                plugins={plugins}
+                loadErrors={pluginLoadErrors}
+                onReload={() => reloadPlugins(activeWorkspaceId)}
               />
             )}
             {isProjectsNavigation(navState) && activeWorkspaceId && (

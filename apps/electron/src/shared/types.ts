@@ -63,6 +63,27 @@ export type { LoadedSource, FolderSourceConfig, SourceConnectionStatus };
 import type { LoadedSkill, SkillMetadata } from '@phaneris/shared/skills/types';
 export type { LoadedSkill, SkillMetadata };
 
+// Plugin bundle types (workspace-owned capability bundles)
+import type { PluginLoadError, PluginLoadWarning } from '@phaneris/shared/plugins/types';
+import type {
+  PluginInstallPlan,
+  PluginInstallResult,
+  PluginOverwriteEntry,
+  PluginStdioCommand,
+  PluginUninstallPlan,
+  PluginUninstallResult,
+} from '@phaneris/shared/plugins';
+export type {
+  PluginInstallPlan,
+  PluginInstallResult,
+  PluginLoadError,
+  PluginLoadWarning,
+  PluginOverwriteEntry,
+  PluginStdioCommand,
+  PluginUninstallPlan,
+  PluginUninstallResult,
+};
+
 // Resource bundle types (cross-workspace export/import)
 import type { ExportResourcesOptions, ExportResult, ResourceImportMode, ResourceBundle, ResourceImportResult } from '@phaneris/shared/resources';
 export type { ExportResourcesOptions, ExportResult, ResourceImportMode, ResourceBundle, ResourceImportResult };
@@ -231,6 +252,41 @@ import type {
   TerminalDataEvent,
   TerminalExitEvent,
 } from '@phaneris/shared/protocol'
+
+/**
+ * A plugin bundle as projected by the `plugins:list` RPC.
+ *
+ * A subset of `LoadedPlugin` (`@phaneris/shared/plugins`): the renderer only ever
+ * needs identity, display metadata and the contributed resource slugs, so the
+ * manifest internals and `promptFragment` stay on the server side.
+ */
+export interface PluginSummary {
+  /** Directory name; equals the manifest `name` (design P2-2). */
+  name: string
+  description?: string
+  version?: string
+  author?: string
+  license?: string
+  homepage?: string
+  /** Absolute path to the plugin root. */
+  path: string
+  /** Workspace-relative plugin root, e.g. `plugins/my-plugin`. */
+  workspaceRelativePath: string
+  skills: Array<{ slug: string; name: string; description: string }>
+  sources: Array<{ slug: string; type: 'mcp' | 'api' | 'local' }>
+  hasPromptFragment: boolean
+  warnings: PluginLoadWarning[]
+}
+
+/**
+ * Both sides of a partial load: `plugins` for bundles that loaded, `errors` for
+ * directories that did not. A broken bundle must stay visible in the UI rather
+ * than silently disappearing from the list.
+ */
+export interface PluginsListResult {
+  plugins: PluginSummary[]
+  errors: PluginLoadError[]
+}
 
 export interface ElectronAPI {
   createTerminal(options: TerminalCreateOptions): Promise<TerminalInfo>
@@ -556,6 +612,24 @@ export interface ElectronAPI {
 
   // Skills change listener (live updates when skills are added/removed/modified)
   onSkillsChanged(callback: (workspaceId: string, skills: LoadedSkill[]) => void): () => void
+
+  // Plugins (workspace-owned capability bundles, Agent Plugins 1.0.0 format)
+  getPlugins(workspaceId: string): Promise<PluginsListResult>
+  /**
+   * D9 phase 1 — what an install would create and replace. Returns the overwrite
+   * list and the stdio commands verbatim, so the confirmation prompt can show
+   * the user exactly what a package will run before anything is written.
+   */
+  analyzePluginInstall(workspaceId: string, packageRoot: string): Promise<PluginInstallPlan>
+  /** D9 phase 2 — perform the install the user approved. */
+  installPlugin(workspaceId: string, packageRoot: string): Promise<PluginInstallResult>
+  /** D10 phase 1 — what an uninstall removes and what it must retain. */
+  analyzePluginUninstall(workspaceId: string, pluginName: string): Promise<PluginUninstallPlan>
+  /** D10 phase 2 — remove the plugin and the resources nobody else claims. */
+  uninstallPlugin(workspaceId: string, pluginName: string): Promise<PluginUninstallResult>
+
+  // Plugins change listener (live updates when bundles are installed/removed/edited)
+  onPluginsChanged(callback: (workspaceId: string, payload: PluginsListResult) => void): () => void
 
   // Statuses (workspace-scoped)
   listStatuses(workspaceId: string): Promise<import('@phaneris/shared/statuses').StatusConfig[]>
@@ -1001,6 +1075,19 @@ export interface SkillsNavigationState {
 }
 
 /**
+ * Plugins navigation state
+ *
+ * The Plugins section is two-level by design (plugin-bundles design P7-2): the
+ * bundle list *is* the section, and a bundle's contributed skills/sources are
+ * entries in the Skills / Sources sections rather than copies here. `details` is
+ * therefore permanently null and exists only to keep the navigator shape uniform.
+ */
+export interface PluginsNavigationState {
+  navigator: 'plugins'
+  details: null
+}
+
+/**
  * Automations navigation state
  */
 export interface AutomationsNavigationState {
@@ -1083,6 +1170,7 @@ export type NavigationState =
   | SourcesNavigationState
   | SettingsNavigationState
   | SkillsNavigationState
+  | PluginsNavigationState
   | AutomationsNavigationState
   | ProjectsNavigationState
   | OtherNavigationState
@@ -1103,6 +1191,10 @@ export const isSettingsNavigation = (
 export const isSkillsNavigation = (
   state: NavigationState
 ): state is SkillsNavigationState => state.navigator === 'skills'
+
+export const isPluginsNavigation = (
+  state: NavigationState
+): state is PluginsNavigationState => state.navigator === 'plugins'
 
 export const isAutomationsNavigation = (
   state: NavigationState
@@ -1138,6 +1230,9 @@ export const getNavigationStateKey = (state: NavigationState): string => {
       return `skills/skill/${state.details.skillSlug}`
     }
     return 'skills'
+  }
+  if (state.navigator === 'plugins') {
+    return 'plugins'
   }
   if (state.navigator === 'automations') {
     if (state.details?.type === 'automation') {
@@ -1212,6 +1307,9 @@ export const parseNavigationStateKey = (key: string): NavigationState | null => 
     }
     return { navigator: 'skills', details: null }
   }
+
+  // Handle plugins
+  if (key === 'plugins') return { navigator: 'plugins', details: null }
 
   // Handle automations
   if (key === 'automations') return { navigator: 'automations', details: null }

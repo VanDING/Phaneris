@@ -12,6 +12,7 @@ import type {
   ErrorEvent,
   TypedErrorEvent,
   SourcesChangedEvent,
+  ActivePluginChangedEvent,
   LabelsChangedEvent,
   ProjectIdChangedEvent,
   SessionStatusChangedEvent,
@@ -646,6 +647,31 @@ export function handleMessageAnnotationsUpdated(
             ? { ...m, annotations: event.annotations }
             : m
         ),
+      },
+      streaming,
+    },
+    effects: [],
+  }
+}
+
+/**
+ * Handle active_plugin_changed — update the session's active-plugin slot (D12).
+ *
+ * The event is authoritative: activation goes through the backend, so the
+ * renderer never guesses and never needs an optimistic value. `pluginName: null`
+ * means the slot was cleared.
+ */
+export function handleActivePluginChanged(
+  state: SessionState,
+  event: ActivePluginChangedEvent
+): ProcessResult {
+  const { session, streaming } = state
+
+  return {
+    state: {
+      session: {
+        ...session,
+        activePlugin: event.pluginName ?? undefined,
       },
       streaming,
     },

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useTranslation } from "react-i18next"
 import { Command as CommandPrimitive } from 'cmdk'
-import { Check, Minimize2 } from 'lucide-react'
+import { Check, Minimize2, Plug } from 'lucide-react'
 import { Icon_Folder } from '@phaneris/ui'
 import { cn } from '@/lib/utils'
 import { PERMISSION_MODE_CONFIG, PERMISSION_MODE_ORDER, type PermissionMode } from '@phaneris/shared/agent/modes'
@@ -13,7 +13,7 @@ import { PERMISSION_MODE_CONFIG, PERMISSION_MODE_ORDER, type PermissionMode } fr
 export type SlashCommandId = PermissionMode | 'compact'
 
 /** Union type for all item types in the slash menu */
-export type SlashItemType = 'command' | 'folder'
+export type SlashItemType = 'command' | 'folder' | 'plugin'
 
 export interface SlashCommand {
   id: SlashCommandId
@@ -34,11 +34,29 @@ export interface SlashFolderItem {
   path: string
 }
 
+/**
+ * Plugin bundle item for the slash menu (`/name`).
+ *
+ * Slash-invoked like a command, resident like a working directory: selecting it
+ * writes the session's active-plugin slot rather than inserting text (D7, D12).
+ */
+export interface SlashPluginItem {
+  id: string
+  type: 'plugin'
+  label: string
+  description: string
+  /** Plugin directory name — what gets written to the session's slot. */
+  pluginName: string
+}
+
+/** Any selectable item in the slash menu. */
+export type SlashMenuItem = SlashCommand | SlashFolderItem | SlashPluginItem
+
 /** Section with header for the inline slash menu */
 export interface SlashSection {
   id: string
   label: string
-  items: (SlashCommand | SlashFolderItem)[]
+  items: SlashMenuItem[]
 }
 
 export interface CommandGroup {
@@ -131,8 +149,13 @@ function filterCommands(commands: SlashCommand[], filter: string): SlashCommand[
 }
 
 /** Check if an item is a folder */
-function isFolder(item: SlashCommand | SlashFolderItem): item is SlashFolderItem {
+function isFolder(item: SlashMenuItem): item is SlashFolderItem {
   return 'type' in item && item.type === 'folder'
+}
+
+/** Check if an item is a plugin bundle */
+function isPlugin(item: SlashMenuItem): item is SlashPluginItem {
+  return 'type' in item && item.type === 'plugin'
 }
 
 /** Filter sections by label/id, keeping sections grouped */
@@ -154,7 +177,7 @@ function filterSections(sections: SlashSection[], filter: string): SlashSection[
 }
 
 /** Flatten sections into a single array of items */
-function flattenSections(sections: SlashSection[]): (SlashCommand | SlashFolderItem)[] {
+function flattenSections(sections: SlashSection[]): SlashMenuItem[] {
   return sections.flatMap(section => section.items)
 }
 
@@ -319,6 +342,9 @@ export interface InlineSlashCommandProps {
   activeCommands?: SlashCommandId[]
   onSelectCommand: (commandId: SlashCommandId) => void
   onSelectFolder: (path: string) => void
+  onSelectPlugin: (pluginName: string) => void
+  /** Plugin name currently active for the session, marked in the list (D12). */
+  activePlugin?: string | null
   filter?: string
   position: { x: number; y: number }
   className?: string
@@ -331,6 +357,8 @@ export function InlineSlashCommand({
   activeCommands = [],
   onSelectCommand,
   onSelectFolder,
+  onSelectPlugin,
+  activePlugin,
   filter = '',
   position,
   className,
@@ -356,14 +384,16 @@ export function InlineSlashCommand({
   }, [selectedIndex])
 
   // Handle item selection
-  const handleSelect = React.useCallback((item: SlashCommand | SlashFolderItem) => {
+  const handleSelect = React.useCallback((item: SlashMenuItem) => {
     if (isFolder(item)) {
       onSelectFolder(item.path)
+    } else if (isPlugin(item)) {
+      onSelectPlugin(item.pluginName)
     } else {
       onSelectCommand(item.id)
     }
     onOpenChange(false)
-  }, [onSelectCommand, onSelectFolder, onOpenChange])
+  }, [onSelectCommand, onSelectFolder, onSelectPlugin, onOpenChange])
 
   // Keyboard navigation
   // Don't attach listener when no items - allows Enter to propagate to input handler
@@ -443,7 +473,38 @@ export function InlineSlashCommand({
               const itemIndex = currentItemIndex++
               const isSelected = itemIndex === selectedIndex
 
-              if (isFolder(item)) {
+              if (isPlugin(item)) {
+                // Plugin item — resident activation, so the active one carries a
+                // check mark exactly like an active permission mode.
+                const isActive = activePlugin === item.pluginName
+                return (
+                  <div
+                    key={`${section.id}-${item.id}`}
+                    data-selected={isSelected}
+                    onClick={() => handleSelect(item)}
+                    onMouseEnter={() => setSelectedIndex(itemIndex)}
+                    className={cn(
+                      MENU_ITEM_STYLE,
+                      isSelected && MENU_ITEM_SELECTED
+                    )}
+                  >
+                    <div className="shrink-0 text-muted-foreground">
+                      <Plug className={MENU_ICON_SIZE} strokeWidth={1.75} />
+                    </div>
+                    <div className="flex-1 min-w-0 truncate">
+                      <span>{item.label}</span>
+                      {item.description && (
+                        <span className="text-muted-foreground ml-1.5">{item.description}</span>
+                      )}
+                    </div>
+                    {isActive && (
+                      <div className="shrink-0 h-4 w-4 rounded-full bg-current flex items-center justify-center">
+                        <Check className="h-2.5 w-2.5 text-white dark:text-black" strokeWidth={3} />
+                      </div>
+                    )}
+                  </div>
+                )
+              } else if (isFolder(item)) {
                 // Folder item - single line with path
                 return (
                   <div
@@ -531,8 +592,16 @@ export interface UseInlineSlashCommandOptions {
   inputRef: React.RefObject<SlashCommandInputElement | null>
   onSelectCommand: (commandId: SlashCommandId) => void
   onSelectFolder: (path: string) => void
+  /** Activate a plugin bundle by directory name (D12); null clears the slot. */
+  onSelectPlugin: (pluginName: string | null) => void
   activeCommands?: SlashCommandId[]
   recentFolders?: string[]
+  /**
+   * Installed plugin bundles for the current workspace. Empty for workspaces
+   * with none, in which case the Plugins section is omitted entirely rather
+   * than rendering an empty header.
+   */
+  plugins?: SlashPluginItem[]
   homeDir?: string
 }
 
@@ -546,14 +615,17 @@ export interface UseInlineSlashCommandReturn {
   activeCommands: SlashCommandId[]
   handleSelectCommand: (commandId: SlashCommandId) => string
   handleSelectFolder: (path: string) => string
+  handleSelectPlugin: (pluginName: string) => string
 }
 
 export function useInlineSlashCommand({
   inputRef,
   onSelectCommand,
   onSelectFolder,
+  onSelectPlugin,
   activeCommands = [],
   recentFolders = [],
+  plugins = [],
   homeDir,
 }: UseInlineSlashCommandOptions): UseInlineSlashCommandReturn {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -603,8 +675,21 @@ export function useInlineSlashCommand({
       })
     }
 
+    // Plugins section — the `/name` activation roster. Sorted by name so the
+    // menu order does not depend on directory-listing order.
+    if (plugins.length > 0) {
+      const sortedPlugins = [...plugins].sort((a, b) =>
+        a.pluginName.toLowerCase().localeCompare(b.pluginName.toLowerCase())
+      )
+      result.push({
+        id: 'plugins',
+        label: 'Plugins',
+        items: sortedPlugins,
+      })
+    }
+
     return result
-  }, [recentFolders, homeDir])
+  }, [recentFolders, homeDir, plugins])
 
   const handleInputChange = React.useCallback((value: string, cursorPosition: number) => {
     // Store current state for handleSelect
@@ -701,6 +786,24 @@ export function useInlineSlashCommand({
     return result
   }, [onSelectFolder, slashStart])
 
+  const handleSelectPlugin = React.useCallback((pluginName: string): string => {
+    // Same shape as folder selection: the `/name` text is consumed and nothing is
+    // inserted — activation is session state, not message content (D7). The
+    // agent learns about the plugin from the per-turn `<plugin_context>` block.
+    let result = ''
+    if (slashStart >= 0) {
+      const { value: currentValue, cursorPosition } = currentInputRef.current
+      const before = currentValue.slice(0, slashStart)
+      const after = currentValue.slice(cursorPosition)
+      result = (before + after).trim()
+    }
+
+    onSelectPlugin(pluginName)
+    setIsOpen(false)
+
+    return result
+  }, [onSelectPlugin, slashStart])
+
   const close = React.useCallback(() => {
     setIsOpen(false)
     setFilter('')
@@ -717,5 +820,6 @@ export function useInlineSlashCommand({
     activeCommands,
     handleSelectCommand,
     handleSelectFolder,
+    handleSelectPlugin,
   }
 }
