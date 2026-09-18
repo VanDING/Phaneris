@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SlashCommandMenu, DEFAULT_SLASH_COMMAND_GROUPS, type SlashCommandId } from '@/components/ui/slash-command-menu'
-import { ChevronDown, Info, Plug, X } from 'lucide-react'
+import { ChevronDown, Info, Puzzle, X } from 'lucide-react'
 import { PERMISSION_MODE_CONFIG, type PermissionMode } from '@phaneris/shared/agent/modes'
 import { ActiveTasksBar, type BackgroundTask } from './ActiveTasksBar'
 import type { TerminalOverlayData } from './TaskActionMenu'
@@ -292,7 +292,7 @@ function PluginBadge({
       className="h-7 pl-2 pr-2.5 text-xs font-medium rounded-[6px] flex items-center gap-1.5 shadow-tinted outline-none select-none shrink-0 bg-background"
       title={t('chat.activePlugin', { name: pluginName })}
     >
-      <Plug className="shrink-0 h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
+      <Puzzle className="shrink-0 h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
       <span className="max-w-[16rem] truncate">{pluginName}</span>
       {onClear && (
         <button

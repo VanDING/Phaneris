@@ -23,7 +23,7 @@ import { Panel } from './Panel'
 import { PanelHeader } from './PanelHeader'
 import { PanelEmptyState } from '../content-panels/PanelEmptyState'
 import { MultiSelectPanel } from './MultiSelectPanel'
-import { MessagesSquare, Plug } from 'lucide-react'
+import { MessagesSquare, Puzzle } from 'lucide-react'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { sessionMetaMapAtom, type SessionMeta } from '@/atoms/sessions'
 import { StoplightProvider } from '@/context/StoplightContext'
@@ -344,7 +344,7 @@ export function MainContentPanel({
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
         <PanelEmptyState
-          icon={<Plug className="h-6 w-6" />}
+          icon={<Puzzle className="h-6 w-6" />}
           title={t("pluginsList.sectionHint")}
           hint={t("pluginsList.sectionHintDetail")}
         />
