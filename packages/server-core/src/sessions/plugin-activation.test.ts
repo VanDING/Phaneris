@@ -300,4 +300,53 @@ describe('setSessionActivePlugin (D12 single slot, P9-3 no restart)', () => {
   it('throws for an unknown session rather than silently doing nothing', async () => {
     await expect(sm.setSessionActivePlugin('missing', PLUGIN_NAME)).rejects.toThrow(/Session not found/)
   })
+
+  /**
+   * Enabling a source must invalidate the runtime snapshot.
+   *
+   * `sourceRuntime` caches the built servers *and the slugs they were built for*,
+   * and the next turn takes the cache-hit path straight to
+   * `agent.setSourceServers(...)`. Leaving the snapshot in place hands the agent
+   * the previous source set, which removes the tools that were just enabled —
+   * the session then reports `Tool not found` for a source it had just switched
+   * on. That is the regression these two tests pin.
+   */
+  it('drops the cached source runtime so the next turn rebuilds for the new set', async () => {
+    writePlugin({ mcp: mcpServers({ alpha: stdioServer() }) })
+    writeSource('alpha')
+    const { managed } = buildSession('s9')
+
+    // A warm session that already served a turn with no sources enabled: the
+    // cache exists and describes an empty set, which is exactly the state that
+    // used to survive activation.
+    managed.sourceRuntime = { mcpServers: {}, apiServers: {}, intendedSlugs: [] }
+    managed.sourceRuntimeAppliedTo = managed.agent ?? undefined
+
+    await sm.setSessionActivePlugin('s9', PLUGIN_NAME)
+
+    expect(managed.sourceRuntime).toBeUndefined()
+    expect(managed.sourceRuntimeAppliedTo).toBeUndefined()
+    expect(managed.enabledSourceSlugs).toEqual(['alpha'])
+  })
+
+  it('leaves an up-to-date runtime alone when activation enables nothing new', async () => {
+    writePlugin({ mcp: mcpServers({ alpha: stdioServer() }) })
+    writeSource('alpha')
+    const { managed } = buildSession('s10')
+
+    await sm.setSessionActivePlugin('s10', PLUGIN_NAME)
+    // The turn that follows rebuilt the snapshot for the current set.
+    const rebuilt = { mcpServers: {}, apiServers: {}, intendedSlugs: ['alpha'] }
+    managed.sourceRuntime = rebuilt
+    managed.sourceRuntimeAppliedTo = managed.agent ?? undefined
+
+    // Re-activating the same plugin is a no-op, so the snapshot must survive —
+    // otherwise every redundant activation would force a needless rebuild and
+    // re-apply.
+    const second = await sm.setSessionActivePlugin('s10', PLUGIN_NAME)
+
+    expect(second.enabledSources).toEqual([])
+    expect(managed.sourceRuntime).toBe(rebuilt)
+    expect(managed.sourceRuntimeAppliedTo).toBe(managed.agent ?? undefined)
+  })
 })

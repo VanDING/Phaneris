@@ -8639,6 +8639,23 @@ export class SessionManager implements ISessionManager {
     if (toEnable.length === 0) return
 
     managed.enabledSourceSlugs = [...(managed.enabledSourceSlugs || []), ...toEnable]
+
+    // Invalidate the runtime snapshot. `sourceRuntime` is a cache of the built
+    // server configs plus the slugs they were built *for*, and the next turn
+    // takes the cache-hit path (`if (!runtime)`) straight to
+    // `agent.setSourceServers(...)`. Adding slugs without dropping the snapshot
+    // therefore hands the agent the previous source set and removes the tools
+    // that were just enabled — the session reports `Tool not found` for a source
+    // it had just switched on.
+    //
+    // `setSessionSources` already does this for the UI path; doing it here covers
+    // the paths that change the set without going through it: skill
+    // `requiredSources` pre-enable, and plugin activation. Rebuilding is left to
+    // the consumer, so this stays valid whether we are called mid-`sendMessage`
+    // (which rebuilds below) or from an activation between turns.
+    managed.sourceRuntime = undefined
+    managed.sourceRuntimeAppliedTo = undefined
+
     sessionLog.info(`Pre-enabled sources for ${reason}: ${toEnable.join(', ')}`)
     this.persistSession(managed)
     this.sendEvent(
