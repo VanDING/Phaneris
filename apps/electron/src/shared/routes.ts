@@ -159,8 +159,14 @@ export const routes = {
       return `skills/skill/${skillSlug}` as const
     },
 
-    /** Plugins view (plugins navigator) — the bundle list is the whole section. */
-    plugins: () => 'plugins' as const,
+    /**
+     * Plugins view (plugins navigator). Pass a name for a bundle's own page,
+     * mirroring `skills(slug)` and `sources/source/slug`.
+     */
+    plugins: (pluginName?: string) => {
+      if (!pluginName) return 'plugins' as const
+      return `plugins/plugin/${pluginName}` as const
+    },
 
     /** Automations view (automations navigator) - supports type filtering */
     automations: (params?: { automationId?: string; type?: 'scheduled' | 'event' | 'agentic' }) => {

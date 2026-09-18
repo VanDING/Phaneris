@@ -1077,14 +1077,14 @@ export interface SkillsNavigationState {
 /**
  * Plugins navigation state
  *
- * The Plugins section is two-level by design (plugin-bundles design P7-2): the
- * bundle list *is* the section, and a bundle's contributed skills/sources are
- * entries in the Skills / Sources sections rather than copies here. `details` is
- * therefore permanently null and exists only to keep the navigator shape uniform.
+ * Two levels, like Sources and Skills: the list at `plugins`, and a bundle's
+ * own page at `plugins/plugin/<name>`. A bundle's contributed skills and
+ * sources keep their own entries in the Skills / Sources sections — this page
+ * summarizes and links, it does not re-own them (plugin-bundles design P7-2).
  */
 export interface PluginsNavigationState {
   navigator: 'plugins'
-  details: null
+  details: { type: 'plugin'; pluginName: string } | null
 }
 
 /**

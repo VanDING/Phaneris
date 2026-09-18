@@ -831,6 +831,18 @@ export interface StdioMcpConfig {
   command: string;
   args?: string[];
   env?: Record<string, string>;
+  /**
+   * Absolute path to the owning plugin's root, when this server came from a
+   * plugin bundle.
+   *
+   * The stored command keeps `${PLUGIN_ROOT}` / `${PLUGIN_DATA}` unexpanded so
+   * the workspace stays movable, and expansion belongs to the host — this
+   * package deliberately has no workspace dependencies. Forwarding the root lets
+   * the host resolve the same way the runtime does before spawning anything,
+   * so a plugin server is not reported as `Command not found:
+   * "${PLUGIN_ROOT}/..."` by the test path while actually working at runtime.
+   */
+  pluginRoot?: string;
 }
 
 /**

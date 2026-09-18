@@ -1260,6 +1260,12 @@ function AppShellContent({
     navigate(routes.view.skills(skill.slug))
   }, [activeWorkspaceId, navigate])
 
+  // Handle selecting a plugin bundle — opens its own page, like a skill or source.
+  const handlePluginSelect = React.useCallback((plugin: PluginSummary) => {
+    if (!activeWorkspaceId) return
+    navigate(routes.view.plugins(plugin.name))
+  }, [activeWorkspaceId, navigate])
+
   // Handle selecting an automation from the list
   const handleAutomationSelect = React.useCallback((automationId: string) => {
     // Preserve current automation filter when selecting an automation
@@ -2331,7 +2337,7 @@ function AppShellContent({
     result.push({ id: 'nav:settings', type: 'nav', action: () => handleSettingsClick() })
 
     return isSidebarVisible ? result : result.filter(item => ['nav:allSessions', 'nav:labels', 'nav:sources', 'nav:skills', 'nav:plugins', 'nav:projects', 'nav:pages', 'nav:automations', 'nav:profile', 'nav:settings'].includes(item.id))
-  }, [isSidebarVisible, plugins, pluginLoadErrors, handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelConfigs, labelTree, viewConfigs, handleViewClick, handleSourcesClick, handleSkillsClick, handlePluginsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
+  }, [isSidebarVisible, handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelConfigs, labelTree, viewConfigs, handleViewClick, handleSourcesClick, handleSkillsClick, handlePluginsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
 
   // Toggle folder expanded state
   const handleToggleFolder = React.useCallback((path: string) => {
@@ -3729,6 +3735,8 @@ function AppShellContent({
                 plugins={plugins}
                 loadErrors={pluginLoadErrors}
                 onReload={() => reloadPlugins(activeWorkspaceId)}
+                onPluginClick={handlePluginSelect}
+                selectedPluginName={isPluginsNavigation(navState) && navState.details?.type === 'plugin' ? navState.details.pluginName : null}
               />
             )}
             {isProjectsNavigation(navState) && activeWorkspaceId && (

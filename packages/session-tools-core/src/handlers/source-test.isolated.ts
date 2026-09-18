@@ -12,7 +12,7 @@ import {
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { handleSourceTest } from './source-test.ts';
-import type { SessionToolContext } from '../context.ts';
+import type { SessionToolContext, StdioMcpConfig } from '../context.ts';
 import type { SourceConfig } from '../types.ts';
 
 type ActivateResult = Awaited<
@@ -779,5 +779,70 @@ describe('source_test basic-auth header (regression for #824)', () => {
     await handleSourceTest(ctx, { sourceSlug: 'garbage-basic', autoEnable: false });
 
     expect(authHeader()).toBe('Basic not-json');
+  });
+});
+
+/**
+ * A plugin-provided stdio source stores its command with `${PLUGIN_ROOT}`
+ * unexpanded, and expansion belongs to the host. This handler must therefore
+ * forward the source's `pluginRoot` to the validator — dropping it makes the
+ * test spawn the placeholder literally and report a working server as
+ * `Command not found: "${PLUGIN_ROOT}/..."`.
+ */
+describe('source_test forwards the plugin root to the stdio validator', () => {
+  let tempDir: string;
+
+  beforeEach(() => {
+    tempDir = mkdtempSync(join(tmpdir(), 'source-test-plugin-root-'));
+  });
+
+  afterEach(() => {
+    rmSync(tempDir, { recursive: true, force: true });
+  });
+
+  /** Capture what the handler hands the validator. */
+  function captureConfig(): { seen: StdioMcpConfig | null } {
+    const captured: { seen: StdioMcpConfig | null } = { seen: null };
+    return captured;
+  }
+
+  it('passes pluginRoot through, unexpanded command and all', async () => {
+    writeSource(tempDir, 'plugin-mcp', {
+      pluginRoot: 'plugins/demo',
+      mcp: { transport: 'stdio', command: '${PLUGIN_ROOT}/server.py', args: [] },
+    });
+
+    const captured = captureConfig();
+    const ctx = createCtx(tempDir, {
+      validateStdioMcpConnection: async (config) => {
+        captured.seen = config;
+        return { success: true, toolCount: 1 };
+      },
+    });
+
+    await handleSourceTest(ctx, { sourceSlug: 'plugin-mcp', autoEnable: false });
+
+    expect(captured.seen).not.toBeNull();
+    // Both halves matter: the root so the host can expand, and the unexpanded
+    // command so the host — not this package — owns the expansion rules.
+    expect(captured.seen!.pluginRoot).toBe('plugins/demo');
+    expect(captured.seen!.command).toBe('${PLUGIN_ROOT}/server.py');
+  });
+
+  it('leaves pluginRoot undefined for a hand-configured source', async () => {
+    writeSource(tempDir, 'plain-mcp');
+
+    const captured = captureConfig();
+    const ctx = createCtx(tempDir, {
+      validateStdioMcpConnection: async (config) => {
+        captured.seen = config;
+        return { success: true, toolCount: 1 };
+      },
+    });
+
+    await handleSourceTest(ctx, { sourceSlug: 'plain-mcp', autoEnable: false });
+
+    expect(captured.seen).not.toBeNull();
+    expect(captured.seen!.pluginRoot).toBeUndefined();
   });
 });

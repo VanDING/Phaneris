@@ -395,4 +395,10 @@ export interface SourceConfig {
   // Connection tracking
   connectionStatus?: ConnectionStatus;
   connectionError?: string;
+  /**
+   * Workspace-relative plugin root this source was materialized from, e.g.
+   * `plugins/my-plugin`. Absent for hand-configured sources. Carried so the
+   * host can expand `${PLUGIN_ROOT}` in a stdio command before testing it.
+   */
+  pluginRoot?: string;
 }

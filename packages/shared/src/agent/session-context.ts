@@ -43,6 +43,7 @@ import {
   validatePlugins,
 } from '../config/validators.ts';
 import { validateAutomations } from '../automations/index.ts';
+import { resolvePluginStdioFields } from '../plugins/resolve.ts';
 import {
   validateMcpConnection as validateMcpConnectionImpl,
   validateStdioMcpConnection as validateStdioMcpConnectionImpl,
@@ -186,7 +187,22 @@ export function createSessionContext(options: SessionContextOptions): SessionToo
   // MCP validation
   const validateStdioMcpConnection = async (config: StdioMcpConfig): Promise<StdioValidationResult> => {
     try {
-      const result = await validateStdioMcpConnectionImpl(config);
+      // A plugin-provided stdio server keeps `${PLUGIN_ROOT}` / `${PLUGIN_DATA}`
+      // in its stored config so the workspace stays movable, and this is where
+      // the test path expands them — through the same resolver the runtime uses
+      // (`buildMcpServer`), so testing a server and running it cannot disagree.
+      // Skipping this made `source_test` execute the placeholder literally and
+      // report `Command not found: "${PLUGIN_ROOT}/..."` for a server that works.
+      let resolved = config;
+      if (config.pluginRoot) {
+        const fields = resolvePluginStdioFields(
+          { command: config.command, args: config.args, env: config.env },
+          { pluginRoot: config.pluginRoot },
+        );
+        resolved = { command: fields.command, args: fields.args, env: fields.env };
+      }
+
+      const result = await validateStdioMcpConnectionImpl(resolved);
       return {
         success: result.success,
         error: result.error,

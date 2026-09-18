@@ -541,3 +541,75 @@ describe('P9-4: uninstall and reference counting (D10)', () => {
     expect(() => analyzePluginUninstall(workspaceRoot, 'ghost')).toThrow(/not installed/);
   });
 });
+
+/**
+ * The test path and the runtime path must expand a plugin stdio command the same
+ * way.
+ *
+ * `source_test` validates a source by spawning its command. A plugin-provided
+ * source stores that command with `${PLUGIN_ROOT}` unexpanded, so an
+ * un-expanded test path tries to execute the placeholder literally and reports
+ * `Command not found: "${PLUGIN_ROOT}/..."` for a server that works in real
+ * turns — a false negative that reads as a broken source. The host resolves
+ * through `resolvePluginStdioFields` (the same function `buildMcpServer` uses)
+ * before handing the config to the validator; these tests pin the shared
+ * resolution the host relies on, including the plugin root a source records.
+ */
+describe('plugin stdio resolution for the source_test path', () => {
+  // Resolved inside the hook: the module-level `workspaceRoot` is assigned by
+  // the outer `beforeEach`, which has not run while this body is evaluated.
+  let pluginRoot: string;
+
+  beforeEach(() => {
+    pluginRoot = join(workspaceRoot, 'plugins', 'demo');
+    mkdirSync(pluginRoot, { recursive: true });
+    mkdirSync(join(pluginRoot, 'data'), { recursive: true });
+  });
+
+  it('expands ${PLUGIN_ROOT} in the command before it is spawned', () => {
+    // The command a package would ship: a script inside its own directory.
+    writeFileSync(join(pluginRoot, 'server.py'), '# noop', 'utf-8');
+
+    const fields = resolvePluginStdioFields(
+      { command: '${PLUGIN_ROOT}/server.py', args: [] },
+      { pluginRoot },
+    );
+
+    expect(fields.command).toBe(join(pluginRoot, 'server.py'));
+    expect(fields.command).not.toContain('${PLUGIN_ROOT}');
+    // The expanded path is what the spawn will actually see, so it must exist.
+    expect(existsSync(fields.command)).toBe(true);
+  });
+
+  it('expands placeholders in args and env too', () => {
+    // The command must be plugin-rooted: the spec forbids relying on PATH, so a
+    // bare executable name is rejected outright (asserted elsewhere).
+    const fields = resolvePluginStdioFields(
+      {
+        command: '${PLUGIN_ROOT}/bin/node',
+        args: ['${PLUGIN_ROOT}/server.js', '--data', '${PLUGIN_DATA}'],
+        env: { PLUGIN_DIR: '${PLUGIN_ROOT}' },
+      },
+      { pluginRoot },
+    );
+
+    expect(fields.command).toBe(join(pluginRoot, 'bin', 'node'));
+    expect(fields.args).toEqual([
+      join(pluginRoot, 'server.js'),
+      '--data',
+      join(pluginRoot, PLUGIN_DATA_DIR_NAME),
+    ]);
+    expect(fields.env.PLUGIN_DIR).toBe(pluginRoot);
+  });
+
+  it('gives the same expansion the runtime builder uses', () => {
+    // Both callers go through this one function, so a divergence would have to
+    // be introduced deliberately rather than by drift.
+    const entry = { command: '${PLUGIN_ROOT}/bin/serve', args: ['--root', '${PLUGIN_ROOT}'] };
+    const viaTest = resolvePluginStdioFields(entry, { pluginRoot });
+    const viaRuntime = resolvePluginStdioFields(entry, { pluginRoot });
+
+    expect(viaTest.command).toBe(viaRuntime.command);
+    expect(viaTest.args).toEqual(viaRuntime.args);
+  });
+});

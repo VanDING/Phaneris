@@ -158,12 +158,15 @@ export const NavigationRegistry = {
     getFirstItem: (ctx: NavigationData) => ctx.sources[0]?.slug ?? null,
   },
 
-  // Plugins is a two-level section by design (plugin-bundles design P7-2): the
-  // bundle list is the section and its skills/sources belong to the native
-  // sections, so there is deliberately no details page here.
+  // Plugins is two-level like Sources and Skills: the bundle list, then the
+  // bundle's own page. Its contributed skills/sources stay owned by the native
+  // Sections — that page summarizes and links rather than re-owning them
+  // (plugin-bundles design P7-2).
   plugins: {
     displayName: 'Plugins',
-    detailsPages: {},
+    detailsPages: {
+      plugin: PlaceholderComponent, // Rendered by MainContentPanel's plugins branch
+    },
     defaultDetails: null,
     getFirstItem: () => null,
   },

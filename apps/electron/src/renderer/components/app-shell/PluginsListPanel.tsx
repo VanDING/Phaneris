@@ -46,6 +46,10 @@ export interface PluginsListPanelProps {
   loadErrors?: PluginLoadError[]
   /** Force a refetch — used after an uninstall so the row disappears promptly. */
   onReload?: () => void | Promise<void>
+  /** Open a bundle's own page in the content panel (mirrors Skills/Sources). */
+  onPluginClick?: (plugin: PluginSummary) => void
+  /** Name of the bundle whose page is open, so its row shows selected. */
+  selectedPluginName?: string | null
   className?: string
 }
 
@@ -56,23 +60,25 @@ function errorMessage(error: unknown): string {
 /**
  * PluginsListPanel - the Plugins sidebar section.
  *
- * Two-level by design (design P7-2): this list is the whole section, and a
- * bundle's contributed skills/sources are listed here as text but remain owned
- * by the Skills / Sources sections. Installing is docs-driven, so there is no
- * install affordance — only reveal and uninstall.
+ * Two-level like Sources and Skills: this list selects a bundle, and the bundle
+ * gets its own page in the content panel. Its contributed skills/sources are
+ * summarized there and linked into the native sections, which stay their owners
+ * (design P7-2). Installing is docs-driven, so there is no install affordance —
+ * only reveal and uninstall.
  */
 export function PluginsListPanel({
   workspaceId,
   plugins = [],
   loadErrors = [],
   onReload,
+  onPluginClick,
+  selectedPluginName,
   className,
 }: PluginsListPanelProps) {
   const { t } = useTranslation()
   const activeWorkspace = useActiveWorkspace()
   const canRevealLocally = !activeWorkspace?.remoteServer
 
-  const [selectedRowId, setSelectedRowId] = React.useState<string | null>(null)
   const [uninstallPlan, setUninstallPlan] = React.useState<PluginUninstallPlan | null>(null)
   const [uninstallBusy, setUninstallBusy] = React.useState(false)
 
@@ -122,7 +128,6 @@ export function PluginsListPanel({
       await window.electronAPI.uninstallPlugin(workspaceId, pluginName)
       toast.success(t('pluginsList.uninstalled', { name: pluginName }))
       setUninstallPlan(null)
-      setSelectedRowId(null)
       // The backend also pushes `plugins:changed`; this just makes the row go
       // away immediately instead of after a round trip.
       await onReload?.()
@@ -139,8 +144,12 @@ export function PluginsListPanel({
       items={rows}
       getId={(row) => row.id}
       selection={pluginSelection}
-      selectedId={selectedRowId}
-      onItemClick={(row) => setSelectedRowId(row.id)}
+      selectedId={selectedPluginName ? `plugin:${selectedPluginName}` : null}
+      onItemClick={(row) => {
+        // Only a loaded bundle has a page; an unloadable one has nothing to show
+        // beyond the error already rendered in its row.
+        if (row.kind === 'plugin') onPluginClick?.(row.plugin)
+      }}
       className={className}
       containerProps={{ 'data-list-role': 'plugins' }}
       emptyState={

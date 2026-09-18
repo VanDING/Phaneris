@@ -242,11 +242,21 @@ export function parseCompoundRoute(route: string): ParsedCompoundRoute | null {
     return null
   }
 
-  // Plugins navigator — deliberately two-level (design P7-2): the bundle list is
-  // the whole section, and its skills/sources are entries in the native sections.
+  // Plugins navigator — two levels, mirroring skills: the bundle list, and a
+  // bundle's own page at `plugins/plugin/<name>`.
   if (first === 'plugins') {
     if (segments.length === 1) {
       return { navigator: 'plugins', details: null }
+    }
+
+    if (segments.length === 3 && segments[1] === 'plugin') {
+      // The route layer names details `{ type, id }`; the navigation state names
+      // the plugin explicitly, so the mapping happens here and in
+      // `routeToNavigationState` rather than leaking `id` into the UI.
+      return {
+        navigator: 'plugins',
+        details: { type: 'plugin', id: segments[2] },
+      }
     }
 
     return null
@@ -439,7 +449,8 @@ export function buildCompoundRoute(parsed: ParsedCompoundRoute): string {
   }
 
   if (parsed.navigator === 'plugins') {
-    return 'plugins'
+    if (!parsed.details) return 'plugins'
+    return `plugins/plugin/${parsed.details.id}`
   }
 
   if (parsed.navigator === 'automations') {
@@ -605,7 +616,10 @@ function convertCompoundToViewRoute(compound: ParsedCompoundRoute): ParsedRoute 
 
   // Plugins
   if (compound.navigator === 'plugins') {
-    return { type: 'view', name: 'plugins', params: {} }
+    if (!compound.details) {
+      return { type: 'view', name: 'plugins', params: {} }
+    }
+    return { type: 'view', name: 'plugin-info', id: compound.details.id, params: {} }
   }
 
   // Automations
@@ -743,9 +757,15 @@ function convertCompoundToNavigationState(compound: ParsedCompoundRoute): Naviga
     }
   }
 
-  // Plugins — two-level section: no details page, so the route is the section.
+  // Plugins
   if (compound.navigator === 'plugins') {
-    return { navigator: 'plugins', details: null }
+    if (!compound.details) {
+      return { navigator: 'plugins', details: null }
+    }
+    return {
+      navigator: 'plugins',
+      details: { type: 'plugin', pluginName: compound.details.id },
+    }
   }
 
   // Automations - include filter if present
@@ -865,6 +885,17 @@ function convertParsedRouteToNavigationState(parsed: ParsedRoute): NavigationSta
       }
       return { navigator: 'skills', details: null }
     case 'plugins':
+      return { navigator: 'plugins', details: null }
+    case 'plugin-info':
+      if (parsed.id) {
+        return {
+          navigator: 'plugins',
+          details: {
+            type: 'plugin',
+            pluginName: parsed.id,
+          },
+        }
+      }
       return { navigator: 'plugins', details: null }
     case 'automations':
       return { navigator: 'automations', details: null }
@@ -1015,7 +1046,10 @@ function navigationStateToCompoundRoute(state: NavigationState): ParsedCompoundR
   }
 
   if (state.navigator === 'plugins') {
-    return { navigator: 'plugins', details: null }
+    return {
+      navigator: 'plugins',
+      details: state.details?.type === 'plugin' ? { type: 'plugin', id: state.details.pluginName } : null,
+    }
   }
 
   if (state.navigator === 'automations') {

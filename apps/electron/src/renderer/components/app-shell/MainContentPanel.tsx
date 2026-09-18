@@ -45,6 +45,7 @@ import type { SessionStatusId } from '@/config/session-status-config'
 const SourceInfoPage = React.lazy(() => import('@/pages/SourceInfoPage'))
 import ChatPage from '@/pages/ChatPage'
 const SkillInfoPage = React.lazy(() => import('@/pages/SkillInfoPage'))
+const PluginInfoPage = React.lazy(() => import('@/pages/PluginInfoPage'))
 import { getSettingsPageComponent } from '@/pages/settings/settings-pages'
 const AutomationInfoPage = React.lazy(() =>
   import('../automations/AutomationInfoPage').then((module) => ({ default: module.AutomationInfoPage })),
@@ -337,10 +338,21 @@ export function MainContentPanel({
     )
   }
 
-  // Plugins navigator - the bundle list is the whole section (no details page,
-  // design P7-2), so the content panel explains where a bundle's resources live
-  // instead of falling through to the sessions fallback.
+  // Plugins navigator - a bundle's own page, or the section-level explanation.
+  // Two levels like Sources and Skills: the list picks a bundle, this shows it.
   if (isPluginsNavigation(navState)) {
+    if (navState.details?.type === 'plugin') {
+      return wrapWithStoplight(
+        <Panel variant="grow" className={className}>
+          <PluginInfoPage
+            pluginName={navState.details.pluginName}
+            workspaceId={activeWorkspaceId || ''}
+          />
+        </Panel>
+      )
+    }
+    // Nothing selected yet — say what the section is for rather than showing a
+    // bare panel.
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
         <PanelEmptyState

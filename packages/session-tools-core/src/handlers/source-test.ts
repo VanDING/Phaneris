@@ -745,9 +745,14 @@ async function testMcpConnection(
       lines.push(`ℹ Testing stdio MCP: ${source.mcp.command}`);
       try {
         const result = await ctx.validateStdioMcpConnection({
+          // A plugin-provided source stores its command with `${PLUGIN_ROOT}`
+          // unexpanded; the host expands it before spawning (see StdioMcpConfig).
+          // Without the root forwarded here, the test would try to execute the
+          // placeholder literally and report a working server as broken.
           command: source.mcp.command,
           args: source.mcp.args || [],
           env: source.mcp.env,
+          pluginRoot: source.pluginRoot,
         });
         if (result.success) {
           success = true;
