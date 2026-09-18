@@ -11,6 +11,7 @@
  */
 import { describe, it, expect, mock, beforeEach } from 'bun:test'
 import { createBuiltInConnection } from '@phaneris/server-core/domain'
+import type { LlmProviderType } from '@phaneris/shared/config'
 import type { LlmConnectionSetup } from '@phaneris/shared/protocol'
 
 // ============================================================
@@ -21,7 +22,7 @@ import type { LlmConnectionSetup } from '@phaneris/shared/protocol'
 interface MockDeps {
   getLlmConnection: (slug: string) => unknown | null
   deleteLlmCredentials: (slug: string) => Promise<void>
-  createBuiltInConnection: (slug: string, baseUrl?: string) => unknown
+  createBuiltInConnection: (slug: string, providerType?: LlmProviderType) => unknown
   addLlmConnection: (conn: unknown) => boolean
 }
 

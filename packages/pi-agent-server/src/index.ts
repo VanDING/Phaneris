@@ -674,9 +674,21 @@ function resolvedCwd(): string {
   return wd;
 }
 
-// Helper: derive preferCustomEndpoint flag from init config
-function shouldPreferCustomEndpoint(): boolean {
-  return Boolean(initConfig?.customEndpoint && initConfig?.baseUrl?.trim());
+/**
+ * True when this session routes through a user-supplied endpoint protocol.
+ *
+ * `providerType === 'pi_compat'` is the routing decision (see
+ * `resolveConnectionTransport` in server-core) — customEndpoint + baseUrl are
+ * its *configuration*, not a second source of truth. A native Pi provider whose
+ * endpoint is its own (`pi` + the provider's base URL) must route through that
+ * provider, otherwise the SDK registers the provider's own URL as a custom
+ * endpoint and the session runs on a text-only synthetic model while the UI
+ * applies native capability rules. Undefined stays permissive for callers that
+ * predate the field.
+ */
+function shouldPreferCustomEndpoint(config = initConfig): boolean {
+  if (config?.providerType === 'pi') return false;
+  return Boolean(config?.customEndpoint && config?.baseUrl?.trim());
 }
 
 /**
@@ -809,7 +821,9 @@ async function createAuthenticatedRuntime(): Promise<{
   const modelRegistry = new PiModelRegistry(modelRuntime);
 
   // Register custom endpoint models dynamically via Pi SDK's registerProvider API.
-  const hasCustomEndpoint = !!initConfig?.baseUrl?.trim();
+  // Gated on the same routing decision as model resolution, so a native provider
+  // whose own endpoint is stored as baseUrl never becomes a custom endpoint.
+  const hasCustomEndpoint = shouldPreferCustomEndpoint();
   if (hasCustomEndpoint && initConfig?.customEndpoint) {
     const { api } = initConfig.customEndpoint;
     const modelEntries: CustomEndpointModelEntry[] = (initConfig.customModels?.length
@@ -819,7 +833,7 @@ async function createAuthenticatedRuntime(): Promise<{
     customEndpointModelIds = new Set();  // Reset on fresh registry creation
     customModelOverrides.clear();
     registerCustomEndpointModels(modelRegistry, api, initConfig.baseUrl!.trim(), modelEntries);
-  } else if (hasCustomEndpoint && !initConfig?.customEndpoint) {
+  } else if (initConfig?.baseUrl?.trim() && !initConfig?.customEndpoint) {
     debugLog('Custom endpoint without protocol config — models may not resolve. Set customEndpoint.api for proper routing.');
   }
 
@@ -2356,7 +2370,7 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
       customModels: msg.customModels,
     };
 
-    if (piModelRegistry && initConfig.baseUrl?.trim() && initConfig.customEndpoint) {
+    if (piModelRegistry && shouldPreferCustomEndpoint()) {
       const modelEntries: CustomEndpointModelEntry[] = (initConfig.customModels?.length
         ? initConfig.customModels
         : [initConfig.model || 'default']
@@ -2364,14 +2378,14 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
 
       customEndpointModelIds = new Set();
       customModelOverrides.clear();
-      registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint.api, initConfig.baseUrl.trim(), modelEntries);
+      registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), modelEntries);
     }
 
     if (piSession && piModelRegistry) {
       let piModel = resolvePiModel(piModelRegistry, msg.model, initConfig.piAuth?.provider, shouldPreferCustomEndpoint());
-      if (!piModel && initConfig.baseUrl?.trim() && initConfig.customEndpoint) {
+      if (!piModel && shouldPreferCustomEndpoint()) {
         const bareId = stripPiPrefix(msg.model);
-        registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint.api, initConfig.baseUrl.trim(), [{ id: bareId }]);
+        registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), [{ id: bareId }]);
         piModel = piModelRegistry.find('custom-endpoint', bareId) ?? undefined;
         debugLog(`[runtime_config] Dynamically registered custom endpoint model: ${bareId}`);
       }
@@ -2409,9 +2423,9 @@ async function handleSetModel(msg: Extract<InboundMessage, { type: 'set_model' }
   // For custom endpoints, dynamically register unknown models so mid-session switching works.
   // Uses registerCustomEndpointModels which accumulates into the existing model set
   // (registerProvider replaces, so we track all IDs and re-register the full set).
-  if (!piModel && initConfig?.baseUrl?.trim() && initConfig?.customEndpoint) {
+  if (!piModel && initConfig && shouldPreferCustomEndpoint(initConfig)) {
     const bareId = stripPiPrefix(msg.model);
-    registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint.api, initConfig.baseUrl!.trim(), [{ id: bareId }]);
+    registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), [{ id: bareId }]);
     piModel = piModelRegistry.find('custom-endpoint', bareId) ?? undefined;
     debugLog(`[set_model] Dynamically registered custom endpoint model: ${bareId}`);
   }

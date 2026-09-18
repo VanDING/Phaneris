@@ -43,6 +43,7 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 
 ## 模型发现与思考等级
 
+- 连接分类只看协议，不看有没有 URL：`pi_compat` 的判据是 `customEndpoint.api` 存在，即 Pi SDK 会在 `baseUrl` 注册这个协议。原生 provider（DeepSeek、Minimax、Groq 等）自带端点，预设会把它预填进 `baseUrl` —— 这不足以构成自定义端点。把它误判为 `pi_compat` 会让 Pi 既无法按 provider 路由，也无法注册端点，同时 renderer 会按端点规则判定能力（丢弃图像、禁用思考等级），模型刷新也会因缺少协议而失败。启动迁移会把 `customEndpoint` 与 `pi_compat` 的对应关系收敛回一致状态。
 - 标准 Pi provider 的模型与能力来自 Pi SDK catalog；`ModelDefinition` 保留 `reasoning`、`thinkingLevelMap`、图像输入和 `getSupportedThinkingLevels()` 的结果。
 - 自定义 endpoint 保存前会依次尝试标准模型列表地址：`/models`、`/v1/models`，并兼容 Ollama 的 `/api/tags`。发现的 ID 会用 Pi catalog 补全上下文窗口和能力；端点返回的显式元数据优先。
 - 模型列表不是所有兼容协议的强制接口。发现失败时 UI 允许用户填写逗号分隔的模型 ID，持久化的手动模型不会因后台刷新失败而丢失。

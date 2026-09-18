@@ -89,7 +89,6 @@ import { CompactPermissionModeSelector } from './CompactPermissionModeSelector'
 import { CompactModelSelector } from './CompactModelSelector'
 import {
   formatTokenCount,
-  groupConnectionsByProvider,
   stripPiPrefixForDisplay,
 } from './model-picker-helpers'
 import { useModelVisionToggle } from './useModelVisionToggle'
@@ -419,13 +418,6 @@ export function FreeFormInput({
     // never goes blank.
     return model.name ?? stripPiPrefixForDisplay(model.id)
   }, [availableModels, currentModel, connectionDefaultModel])
-
-  // Group connections by provider type for hierarchical dropdown.
-  // Each provider (Anthropic, Pi) can have multiple connections (API Key, OAuth, etc.)
-  const connectionsByProvider = React.useMemo(
-    () => groupConnectionsByProvider(llmConnections),
-    [llmConnections],
-  )
 
   // Find current connection details for display
   const currentConnectionDetails = React.useMemo(() => {
@@ -2217,113 +2209,104 @@ export function FreeFormInput({
                   )
                 })()
               ) : pickerMode === 'switcher' ? (
-                /* Hierarchical view: Provider → Connection → Models */
-                connectionsByProvider.map(([providerName, connections], index) => (
-                  <React.Fragment key={providerName}>
-                    {/* Provider group label */}
-                    <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wide select-none">
-                      {providerName}
-                    </div>
-                    {connections.map((conn) => {
-                      const isCurrentConnection = effectiveConnection === conn.slug
-                      const isAuthenticated = conn.isAuthenticated
-                      return (
-                        <DropdownMenuSub key={conn.slug} open={modelConnectionSubmenu === conn.slug} onOpenChange={(open) => setModelConnectionSubmenu(open ? conn.slug : null)}>
-                          <StyledDropdownMenuSubTrigger
-                            disabled={!isAuthenticated}
-                            className={cn(
-                              "flex items-center justify-between px-2 py-2 rounded-lg",
-                              isCurrentConnection && "bg-foreground/5"
-                            )}
-                          >
-                            <div className="text-left flex-1">
-                              <div className="font-medium text-sm flex items-center gap-1.5">
-                                <ConnectionIcon connection={conn} size={14} />
-                                {conn.name}
-                                {isCurrentConnection && <Check className="h-3 w-3 text-foreground" />}
-                              </div>
-                              {!isAuthenticated && (
-                                <div className="text-xs text-muted-foreground">{t('settings.ai.notAuthenticated')}</div>
-                              )}
-                            </div>
-                          </StyledDropdownMenuSubTrigger>
-                          {isAuthenticated && (
-                            <StyledDropdownMenuSubContent className="min-w-[220px] max-w-[min(360px,calc(100vw-24px))] overflow-y-auto overscroll-contain" style={{ maxHeight: "min(420px, calc(100vh - 32px), var(--radix-dropdown-menu-content-available-height))" }}>
-                              {/* Show models for this connection - use provider-specific models as fallback */}
-                              {(conn.models || MODEL_REGISTRY).map((model) => {
-                                const modelId = typeof model === 'string' ? model : model.id
-                                const modelName = typeof model === 'string'
-                                  ? stripPiPrefixForDisplay(getModelShortName(model))
-                                  : (model.name ?? stripPiPrefixForDisplay(model.id))
-                                const isSelectedModel = isCurrentConnection && currentModel === modelId
-                                const showVisionToggle = isCompatProvider(conn.providerType)
-                                const visionOn = showVisionToggle && modelSupportsImages(conn, modelId)
-                                return (
-                                  <StyledDropdownMenuItem
-                                    key={modelId}
-                                    onSelect={(event) => {
-                                      event.preventDefault()
-                                      setModelConnectionSubmenu(null)
-                                      // Model + connection are persisted atomically by the backend.
-                                      onModelChange(modelId, conn.slug)
-                                    }}
-                                    className="flex items-center justify-between px-2 py-2 rounded-lg cursor-pointer"
-                                  >
-                                    <div className="font-medium text-sm truncate min-w-0">{modelName}</div>
-                                    <div className="flex items-center gap-1 ml-3 shrink-0">
-                                      {showVisionToggle && (
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <span
-                                              role="button"
-                                              tabIndex={0}
-                                              aria-label={visionOn
-                                                ? t('chat.modelPicker.supportsImagesOn')
-                                                : t('chat.modelPicker.supportsImagesOff')}
-                                              className="inline-flex items-center justify-center p-1 rounded hover:bg-foreground/5 cursor-pointer"
-                                              onClick={(e) => {
-                                                e.preventDefault()
-                                                e.stopPropagation()
-                                                handleToggleModelVision(conn.slug, modelId, !visionOn)
-                                              }}
-                                              onKeyDown={(e) => {
-                                                if (e.key === 'Enter' || e.key === ' ') {
-                                                  e.preventDefault()
-                                                  e.stopPropagation()
-                                                  handleToggleModelVision(conn.slug, modelId, !visionOn)
-                                                }
-                                              }}
-                                            >
-                                              <ImageIcon className={cn(
-                                                "h-3.5 w-3.5",
-                                                visionOn ? "text-foreground/70" : "text-foreground/30"
-                                              )} />
-                                            </span>
-                                          </TooltipTrigger>
-                                          <TooltipContent>
-                                            {visionOn
-                                              ? t('chat.modelPicker.supportsImagesOn')
-                                              : t('chat.modelPicker.supportsImagesOff')}
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      )}
-                                      {isSelectedModel && (
-                                        <Check className="h-3 w-3 text-foreground" />
-                                      )}
-                                    </div>
-                                  </StyledDropdownMenuItem>
-                                )
-                              })}
-                            </StyledDropdownMenuSubContent>
+                /* Flat list: every connection is a peer. providerType is
+                   transport metadata (native Pi catalog vs user-supplied
+                   endpoint) and never a user-facing category. */
+                llmConnections.map((conn) => {
+                  const isCurrentConnection = effectiveConnection === conn.slug
+                  const isAuthenticated = conn.isAuthenticated
+                  return (
+                    <DropdownMenuSub key={conn.slug} open={modelConnectionSubmenu === conn.slug} onOpenChange={(open) => setModelConnectionSubmenu(open ? conn.slug : null)}>
+                      <StyledDropdownMenuSubTrigger
+                        disabled={!isAuthenticated}
+                        className={cn(
+                          "flex items-center justify-between px-2 py-2 rounded-lg",
+                          isCurrentConnection && "bg-foreground/5"
+                        )}
+                      >
+                        <div className="text-left flex-1">
+                          <div className="font-medium text-sm flex items-center gap-1.5">
+                            <ConnectionIcon connection={conn} size={14} />
+                            {conn.name}
+                            {isCurrentConnection && <Check className="h-3 w-3 text-foreground" />}
+                          </div>
+                          {!isAuthenticated && (
+                            <div className="text-xs text-muted-foreground">{t('settings.ai.notAuthenticated')}</div>
                           )}
-                        </DropdownMenuSub>
-                      )
-                    })}
-                    {index < connectionsByProvider.length - 1 && (
-                      <StyledDropdownMenuSeparator className="my-1" />
-                    )}
-                  </React.Fragment>
-                ))
+                        </div>
+                      </StyledDropdownMenuSubTrigger>
+                      {isAuthenticated && (
+                        <StyledDropdownMenuSubContent className="min-w-[220px] max-w-[min(360px,calc(100vw-24px))] overflow-y-auto overscroll-contain" style={{ maxHeight: "min(420px, calc(100vh - 32px), var(--radix-dropdown-menu-content-available-height))" }}>
+                          {/* Show models for this connection - use provider-specific models as fallback */}
+                          {(conn.models || MODEL_REGISTRY).map((model) => {
+                            const modelId = typeof model === 'string' ? model : model.id
+                            const modelName = typeof model === 'string'
+                              ? stripPiPrefixForDisplay(getModelShortName(model))
+                              : (model.name ?? stripPiPrefixForDisplay(model.id))
+                            const isSelectedModel = isCurrentConnection && currentModel === modelId
+                            const showVisionToggle = isCompatProvider(conn.providerType)
+                            const visionOn = showVisionToggle && modelSupportsImages(conn, modelId)
+                            return (
+                              <StyledDropdownMenuItem
+                                key={modelId}
+                                onSelect={(event) => {
+                                  event.preventDefault()
+                                  setModelConnectionSubmenu(null)
+                                  // Model + connection are persisted atomically by the backend.
+                                  onModelChange(modelId, conn.slug)
+                                }}
+                                className="flex items-center justify-between px-2 py-2 rounded-lg cursor-pointer"
+                              >
+                                <div className="font-medium text-sm truncate min-w-0">{modelName}</div>
+                                <div className="flex items-center gap-1 ml-3 shrink-0">
+                                  {showVisionToggle && (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <span
+                                          role="button"
+                                          tabIndex={0}
+                                          aria-label={visionOn
+                                            ? t('chat.modelPicker.supportsImagesOn')
+                                            : t('chat.modelPicker.supportsImagesOff')}
+                                          className="inline-flex items-center justify-center p-1 rounded hover:bg-foreground/5 cursor-pointer"
+                                          onClick={(e) => {
+                                            e.preventDefault()
+                                            e.stopPropagation()
+                                            handleToggleModelVision(conn.slug, modelId, !visionOn)
+                                          }}
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                              e.preventDefault()
+                                              e.stopPropagation()
+                                              handleToggleModelVision(conn.slug, modelId, !visionOn)
+                                            }
+                                          }}
+                                        >
+                                          <ImageIcon className={cn(
+                                            "h-3.5 w-3.5",
+                                            visionOn ? "text-foreground/70" : "text-foreground/30"
+                                          )} />
+                                        </span>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {visionOn
+                                          ? t('chat.modelPicker.supportsImagesOn')
+                                          : t('chat.modelPicker.supportsImagesOff')}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
+                                  {isSelectedModel && (
+                                    <Check className="h-3 w-3 text-foreground" />
+                                  )}
+                                </div>
+                              </StyledDropdownMenuItem>
+                            )
+                          })}
+                        </StyledDropdownMenuSubContent>
+                      )}
+                    </DropdownMenuSub>
+                  )
+                })
               ) : (
                 /* Flat model list (single connection or session started) */
                 <>

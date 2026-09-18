@@ -6,10 +6,8 @@
  */
 
 import { describe, test, expect } from 'bun:test'
-import type { LlmConnection } from '@phaneris/shared/config/llm-connections'
 import {
   formatTokenCount,
-  groupConnectionsByProvider,
   stripPiPrefixForDisplay,
 } from '../model-picker-helpers'
 
@@ -71,85 +69,5 @@ describe('formatTokenCount', () => {
     expect(formatTokenCount(1_000_000)).toBe('1.0M')
     expect(formatTokenCount(1_500_000)).toBe('1.5M')
     expect(formatTokenCount(12_345_678)).toBe('12.3M')
-  })
-})
-
-// -----------------------------------------------------------------------------
-// groupConnectionsByProvider
-// -----------------------------------------------------------------------------
-
-function conn(
-  slug: string,
-  providerType: LlmConnection['providerType'],
-  extras: Partial<LlmConnection> = {},
-): LlmConnection {
-  return {
-    slug,
-    name: slug,
-    providerType,
-    authType: 'api_key',
-    createdAt: 0,
-    ...extras,
-  }
-}
-
-describe('groupConnectionsByProvider', () => {
-  test('returns empty array for empty input', () => {
-    expect(groupConnectionsByProvider([])).toEqual([])
-  })
-
-  test('groups anthropic providers into "Pi"', () => {
-    const a = conn('a', 'pi')
-    const b = conn('b', 'pi')
-    const result = groupConnectionsByProvider([a, b])
-    expect(result).toEqual([['Pi', [a, b]]])
-  })
-
-  test('preserves intra-group order', () => {
-    const a = conn('first', 'pi')
-    const b = conn('second', 'pi')
-    const c = conn('third', 'pi')
-    const result = groupConnectionsByProvider([a, b, c])
-    expect(result[0][1].map(c => c.slug)).toEqual(['first', 'second', 'third'])
-  })
-
-  test('places "Pi" group before pi groups (display order)', () => {
-    const piConn = conn('pi-1', 'pi')
-    const anth = conn('anthropic-1', 'pi')
-    const result = groupConnectionsByProvider([piConn, anth])
-    expect(result.map(([k]) => k)).toEqual(['Pi'])
-  })
-
-  test('"pi_compat" with localhost baseUrl goes to "Local"', () => {
-    const local = conn('ollama', 'pi_compat', { baseUrl: 'http://localhost:11434' })
-    const result = groupConnectionsByProvider([local])
-    expect(result).toEqual([['Local', [local]]])
-  })
-
-  test('"pi_compat" with remote baseUrl goes to "Phaneris Backend"', () => {
-    const remote = conn('openrouter', 'pi_compat', { baseUrl: 'https://openrouter.ai/api/v1' })
-    const result = groupConnectionsByProvider([remote])
-    expect(result).toEqual([['Phaneris Backend', [remote]]])
-  })
-
-  test('drops empty groups from the output', () => {
-    const a = conn('a', 'pi')
-    const result = groupConnectionsByProvider([a])
-    // Only "Pi" appears; "Local" and "Phaneris Backend" are dropped.
-    expect(result.length).toBe(1)
-    expect(result[0][0]).toBe('Pi')
-  })
-
-  test('full mixed input — anthropic + local + remote pi_compat + pi', () => {
-    const anth = conn('a', 'pi')
-    const local = conn('ollama', 'pi_compat', { baseUrl: 'http://127.0.0.1:1234' })
-    const remote = conn('or', 'pi_compat', { baseUrl: 'https://openrouter.ai' })
-    const pi = conn('p', 'pi')
-    const result = groupConnectionsByProvider([anth, local, remote, pi])
-    expect(result.map(([k, conns]) => [k, conns.map(c => c.slug)])).toEqual([
-      ['Pi', ['a', 'p']],
-      ['Local', ['ollama']],
-      ['Phaneris Backend', ['or']],
-    ])
   })
 })

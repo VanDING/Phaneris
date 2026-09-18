@@ -72,19 +72,21 @@ describe('validateModelList', () => {
 // ============================================================
 
 describe('createBuiltInConnection', () => {
-  it('creates anthropic-api with correct defaults', () => {
+  it('creates anthropic-api with the native Pi transport', () => {
     const conn = createBuiltInConnection('anthropic-api')
-    expect(conn.slug).toBe('anthropic-api')
     expect(conn.providerType).toBe('pi')
     expect(conn.authType).toBe('api_key')
     expect(conn.name).toBe('Claude (via Pi) (API Key)')
   })
 
-  it('creates anthropic-api with baseUrl as compat provider', () => {
-    const conn = createBuiltInConnection('anthropic-api', 'https://custom.endpoint.com')
+  it('honours a resolved custom-endpoint transport override', () => {
+    const conn = createBuiltInConnection('anthropic-api', 'pi_compat')
     expect(conn.providerType).toBe('pi_compat')
     expect(conn.authType).toBe('api_key_with_endpoint')
-    expect(conn.name).toBe('Custom Claude-Compatible')
+    // Compat connections discover their own models; they must not inherit the
+    // Pi catalog of the slug's template.
+    expect(conn.models).toEqual([])
+    expect(conn.defaultModel).toBe('')
   })
 
   it('creates claude-max with oauth', () => {

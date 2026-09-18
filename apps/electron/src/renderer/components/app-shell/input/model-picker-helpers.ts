@@ -1,8 +1,3 @@
-import {
-  isLocalConnection,
-  type LlmConnection,
-} from '@config/llm-connections'
-
 /**
  * Format token count for display (e.g., 1500 -> "1.5k", 200000 -> "200k").
  * Shared by the desktop model dropdown and the compact (drawer) model picker.
@@ -23,33 +18,4 @@ export function formatTokenCount(tokens: number): string {
  */
 export function stripPiPrefixForDisplay(value: string): string {
   return value.startsWith('pi/') ? value.slice(3) : value
-}
-
-export type ConnectionGroup = [groupName: string, connections: LlmConnection[]]
-
-/**
- * Group connections by provider type for hierarchical picker rendering.
- * Each provider section can contain multiple connections (API Key, OAuth, …).
- * Order is significant for UI: Pi, Local, Phaneris Backend.
- * Empty groups are dropped.
- */
-export function groupConnectionsByProvider<T extends LlmConnection>(
-  connections: readonly T[],
-): Array<[string, T[]]> {
-  const groups: Record<string, T[]> = {
-    'Pi': [],
-    'Local': [],
-    'Phaneris Backend': [],
-  }
-  for (const conn of connections) {
-    const provider = conn.providerType || 'pi'
-    if (provider === 'pi') {
-      groups['Pi'].push(conn)
-    } else if (provider === 'pi_compat' && isLocalConnection(conn)) {
-      groups['Local'].push(conn)
-    } else if (provider === 'pi_compat') {
-      groups['Phaneris Backend'].push(conn)
-    }
-  }
-  return Object.entries(groups).filter(([, conns]) => conns.length > 0)
 }

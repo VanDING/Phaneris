@@ -8,4 +8,14 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
+- **Provider connections are classified by endpoint protocol, not by the presence
+  of a URL.** Every built-in provider (DeepSeek, Minimax, Groq, …) has its own
+  endpoint, and the setup presets prefilled it, so those connections were stored
+  as custom endpoints. Pi then neither routed them to the provider nor registered
+  them as endpoints, image input was treated as unsupported, the thinking-level
+  selector was disabled, and model refresh always failed. Existing connections in
+  that state are repaired on startup. The model picker lists every connection in
+  one flat list — it no longer splits the single Pi backend into "Pi" and
+  "Phaneris Backend" sections.
+
 ## Breaking Changes

@@ -577,3 +577,94 @@ describe('legacy Opus migration to default Opus (integration)', () => {
     expect(modelIdsOf(connection)).toEqual(['pi/us.anthropic.claude-opus-4-6-v1', 'pi/us.anthropic.claude-sonnet-4-6'])
   })
 })
+
+describe('endpoint transport repair (integration)', () => {
+  it('collapses a compat connection stored without an endpoint protocol back to native Pi', () => {
+    // Shape written by older setup: any base URL made the connection compat,
+    // even a native provider's own endpoint with no customEndpoint protocol.
+    const { configDir, workspaceRoot, configPath } = setupWorkspaceConfigDir()
+
+    writeRootConfig(configPath, workspaceRoot, [
+      {
+        slug: 'pi-api-key',
+        name: 'Minimax',
+        providerType: 'pi_compat',
+        authType: 'api_key_with_endpoint',
+        baseUrl: 'https://api.minimaxi.com/anthropic',
+        brandId: 'minimax-cn',
+        piAuthProvider: 'minimax-cn',
+        modelSelectionMode: 'automaticallySyncedFromProvider',
+        createdAt: Date.now(),
+        models: ['pi/MiniMax-M2.7', 'pi/MiniMax-M3'],
+        defaultModel: 'pi/MiniMax-M3',
+      },
+    ])
+
+    runMigration(configDir)
+
+    const connection = readPiApiKeyConnection(configPath)
+    expect(connection.providerType).toBe('pi')
+    expect(connection.authType).toBe('api_key')
+    // The endpoint itself is the provider's own — the native catalog resolves it.
+    expect(connection.piAuthProvider).toBe('minimax-cn')
+    expect(connection.baseUrl).toBe('https://api.minimaxi.com/anthropic')
+    expect(modelIdsOf(connection)).toEqual(['pi/MiniMax-M2.7', 'pi/MiniMax-M3'])
+  })
+
+  it('leaves genuine custom endpoints compat', () => {
+    const { configDir, workspaceRoot, configPath } = setupWorkspaceConfigDir()
+
+    writeRootConfig(configPath, workspaceRoot, [
+      {
+        slug: 'pi-api-key',
+        name: 'My Gateway',
+        providerType: 'pi_compat',
+        authType: 'api_key_with_endpoint',
+        baseUrl: 'https://my-gateway.example.com/v1',
+        piAuthProvider: 'openai',
+        customEndpoint: { api: 'openai-completions' },
+        modelSelectionMode: 'automaticallySyncedFromProvider',
+        createdAt: Date.now(),
+        models: ['my-model'],
+        defaultModel: 'my-model',
+      },
+    ])
+
+    runMigration(configDir)
+
+    const connection = readPiApiKeyConnection(configPath)
+    expect(connection.providerType).toBe('pi_compat')
+    expect(connection.authType).toBe('api_key_with_endpoint')
+    expect(connection.customEndpoint).toEqual({ api: 'openai-completions' })
+  })
+
+  it('drops a leftover protocol from a native connection', () => {
+    // Mirror image of the same bug: a save that once went compat left the
+    // protocol on a connection that is stored as native.
+    const { configDir, workspaceRoot, configPath } = setupWorkspaceConfigDir()
+
+    writeRootConfig(configPath, workspaceRoot, [
+      {
+        slug: 'pi-api-key',
+        name: 'deepseek',
+        providerType: 'pi',
+        authType: 'api_key',
+        baseUrl: 'https://api.deepseek.com',
+        piAuthProvider: 'deepseek',
+        customEndpoint: { api: 'openai-completions' },
+        modelSelectionMode: 'automaticallySyncedFromProvider',
+        createdAt: Date.now(),
+        models: ['pi/deepseek-flash'],
+        defaultModel: 'pi/deepseek-flash',
+      },
+    ])
+
+    runMigration(configDir)
+
+    const connection = readPiApiKeyConnection(configPath)
+    expect(connection.providerType).toBe('pi')
+    expect(connection.authType).toBe('api_key')
+    expect(connection.customEndpoint).toBeUndefined()
+    expect(connection.piAuthProvider).toBe('deepseek')
+  })
+})

@@ -10,7 +10,7 @@ import {
   type AgentProvider,
 } from '@phaneris/shared/agent/backend'
 import { getModelRefreshService } from '@phaneris/server-core/model-fetchers'
-import { parseTestConnectionError, createBuiltInConnection, validateModelList, piAuthProviderDisplayName, validateSetupTestInput, setupTestRequiresApiKey, resolveCustomEndpointSetup } from '@phaneris/server-core/domain'
+import { parseTestConnectionError, createBuiltInConnection, validateModelList, piAuthProviderDisplayName, validateSetupTestInput, setupTestRequiresApiKey, resolveConnectionTransport } from '@phaneris/server-core/domain'
 import { getWorkspaceOrThrow, buildBackendHostRuntimeContext } from '@phaneris/server-core/handlers'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -94,8 +94,18 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
       }
       const manager = getCredentialManager()
 
+      // Resolve the transport before the connection exists: a brand new
+      // connection seeds its model list from the provider it will be stored as.
+      const existing = getLlmConnection(setup.slug)
+      const transport = resolveConnectionTransport({
+        baseUrl: setup.baseUrl,
+        customEndpoint: setup.customEndpoint,
+        credential: setup.credential,
+        current: existing ?? undefined,
+      })
+
       // Ensure connection exists in config
-      let connection = getLlmConnection(setup.slug)
+      let connection = existing
       let isNewConnection = false
       if (!connection) {
         // Reauth guard: if updateOnly is set, the connection must already exist.
@@ -106,32 +116,40 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
           return { success: false, error: 'Connection not found. Cannot re-authenticate a non-existent connection.' }
         }
         // Create connection with appropriate defaults based on slug
-        connection = createBuiltInConnection(setup.slug, setup.baseUrl)
+        connection = createBuiltInConnection(setup.slug, transport?.providerType)
         isNewConnection = true
       }
 
       const updates: Partial<LlmConnection> = {}
-      const hasConfiguredBaseUrl = !!setup.baseUrl?.trim()
       if (setup.baseUrl !== undefined) {
+        // Persisted for the edit form and for custom endpoints. It is *not*
+        // what decides the provider type — see resolveConnectionTransport().
         updates.baseUrl = setup.baseUrl?.trim() || undefined
+      }
 
-        // Only mutate providerType for API key connections (not OAuth connections)
-        // Base URL for Pi connections: configure as pi_compat when a custom endpoint is set
-        if (connection.authType !== 'oauth') {
-          if (hasConfiguredBaseUrl) {
-            updates.providerType = 'pi_compat'
-            updates.authType = 'api_key_with_endpoint'
-            updates.customEndpoint = { api: 'anthropic-messages' as const }
-          } else {
-            updates.providerType = 'pi'
-            updates.authType = 'api_key'
+      if (transport) {
+        updates.providerType = transport.providerType
+        updates.authType = transport.authType
+        // Explicitly clears the protocol for connections that stop being custom
+        // endpoints (undefined means "clear" in updateLlmConnection for this
+        // field, same as utilityModel).
+        updates.customEndpoint = transport.customEndpoint
+        if (transport.piAuthProvider !== undefined) updates.piAuthProvider = transport.piAuthProvider
+        if (transport.name !== undefined) updates.name = transport.name
+
+        // Brand-name override on first setup only (user-renamed connections aren't clobbered on re-save).
+        if (isNewConnection && transport.providerType === 'pi_compat' && updates.name === undefined) {
+          if (setup.baseUrl?.toLowerCase().includes('manifest.build')) {
+            updates.name = 'Manifest'
+          } else if (setup.defaultModel) {
+            // Custom endpoint: name the connection after the chosen model
+            // instead of the generic template default, so the list is
+            // recognizable without manual renaming.
+            updates.name = setup.defaultModel
           }
         }
-
-        // Pi API key flow: store baseUrl on the connection (Pi SDK doesn't use it yet,
-        // but it's persisted for future backend support)
-
       }
+      const isCustomEndpointCompat = transport?.providerType === 'pi_compat'
 
       if (setup.defaultModel !== undefined) {
         updates.defaultModel = setup.defaultModel ?? undefined
@@ -146,44 +164,6 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
         updates.modelSelectionMode = setup.modelSelectionMode
       }
 
-      const customEndpoint = hasConfiguredBaseUrl ? setup.customEndpoint : undefined
-      const isCustomEndpointCompat = !!customEndpoint
-      if (customEndpoint) {
-        updates.customEndpoint = customEndpoint
-        updates.providerType = 'pi_compat'
-        const branch = resolveCustomEndpointSetup({
-          baseUrl: setup.baseUrl ?? undefined,
-          credential: setup.credential ?? undefined,
-          customEndpointApi: customEndpoint.api,
-        })
-        updates.authType = branch.authType
-        if (branch.name !== undefined) updates.name = branch.name
-        if (branch.piAuthProvider !== undefined) updates.piAuthProvider = branch.piAuthProvider
-
-        // Brand-name override on first setup only (user-renamed connections aren't clobbered on re-save).
-        if (isNewConnection && !updates.name) {
-          if (setup.baseUrl?.toLowerCase().includes('manifest.build')) {
-            updates.name = 'Manifest'
-          } else if (setup.defaultModel) {
-            // Custom endpoint: name the connection after the chosen model
-            // instead of the generic template default (e.g. "Custom
-            // Claude-Compatible"), so the list is recognizable without
-            // manual renaming.
-            updates.name = setup.defaultModel
-          }
-        }
-      } else if (setup.baseUrl !== undefined) {
-        // Base URL was explicitly updated without custom protocol config.
-        // Treat this as non-custom mode and clear stale custom endpoint metadata.
-        // Only downgrade existing connections — new ones already have the correct
-        // providerType from createBuiltInConnection().
-        updates.customEndpoint = undefined
-        if (connection.providerType === 'pi_compat' && connection.authType !== 'oauth' && !isNewConnection) {
-          updates.providerType = 'pi'
-          updates.authType = 'api_key'
-        }
-      }
-
       // Pi API key flow: set piAuthProvider from setup data (e.g. 'anthropic', 'google', 'openai').
       // Skip when custom endpoint protocol is driving routing.
       if (setup.piAuthProvider && !isCustomEndpointCompat) {
@@ -193,8 +173,10 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
         if (providerName) {
           updates.name = `Phaneris Backend (${providerName})`
         }
-        // Only set default models when using standard Pi provider AND user didn't pick explicit models
-        if (!hasConfiguredBaseUrl && !setup.models?.length) {
+        // Seed the provider's own catalog when the user didn't pick models.
+        // A base URL is no longer a signal of anything here: native providers
+        // have one, and the presets prefill it.
+        if (!setup.models?.length) {
           updates.models = getDefaultModelsForConnection('pi', setup.piAuthProvider)
           updates.defaultModel = getDefaultModelForConnection('pi', setup.piAuthProvider)
           updates.modelSelectionMode ??= 'automaticallySyncedFromProvider'
@@ -418,7 +400,7 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
       return { success: false, error: setupValidation.error }
     }
 
-    const hint = resolveSetupTestConnectionHint({ provider, baseUrl, piAuthProvider, customEndpoint })
+    const hint = resolveSetupTestConnectionHint({ baseUrl, piAuthProvider, customEndpoint })
     deps.platform.logger?.info(`[testLlmConnectionSetup] Testing: provider=${provider}${piAuthProvider ? ` piAuth=${piAuthProvider}` : ''}${baseUrl ? ` baseUrl=${baseUrl}` : ''} hasCustomEndpoint=${!!customEndpoint} hintProvider=${hint.providerType}`)
 
     const startedAt = Date.now()

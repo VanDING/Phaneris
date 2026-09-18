@@ -10,6 +10,7 @@ import {
   type LlmConnection,
   type LlmProviderType,
   type CustomEndpointApi,
+  type CustomEndpointConfig,
   getDefaultModelsForConnection,
   getDefaultModelForConnection,
   defaultMidStreamBehavior,
@@ -129,19 +130,88 @@ export function resolveCustomEndpointSetup(input: {
 // ============================================================
 
 /**
+ * Transport a setup writes onto a connection: which backend route it takes and
+ * which endpoint protocol (if any) the Pi SDK registers.
+ */
+export interface ConnectionTransport {
+  providerType: LlmProviderType
+  authType: LlmConnection['authType']
+  customEndpoint: CustomEndpointConfig | undefined
+  /** Auth-header hint. Only custom endpoints pin it ('openai' / 'anthropic'). */
+  piAuthProvider?: 'openai' | 'anthropic'
+  /** 'Local Model' for a keyless loopback endpoint. */
+  name?: 'Local Model'
+}
+
+/**
+ * Resolve the transport for a setup that touched the connection's endpoint.
+ *
+ * `pi_compat` means "the Pi SDK registers `customEndpoint.api` at `baseUrl`" —
+ * nothing else. A base URL on its own never qualifies: every built-in Pi
+ * provider (DeepSeek, Minimax, Groq, …) owns an endpoint, and the setup presets
+ * prefill exactly that URL. Classifying on the URL instead of the protocol
+ * stored connections Pi can neither route to the provider nor register as
+ * endpoints (there is no protocol to register), and split one backend across
+ * two provider sections in the model picker.
+ *
+ * Returns `null` when the setup did not touch the endpoint (`baseUrl ===
+ * undefined`) or when the connection authenticates with OAuth — those keep the
+ * transport they are stored with. `null` or a blank string are a touched,
+ * cleared endpoint.
+ */
+export function resolveConnectionTransport(input: {
+  baseUrl: string | null | undefined
+  customEndpoint: CustomEndpointConfig | undefined
+  credential: string | undefined
+  /** Transport the connection is stored with today; absent for a new connection. */
+  current?: Pick<LlmConnection, 'providerType' | 'authType'>
+}): ConnectionTransport | null {
+  if (input.baseUrl === undefined) return null
+  // OAuth connections are never reclassified by endpoint fields.
+  if (input.current?.authType === 'oauth') return null
+
+  const baseUrl = input.baseUrl?.trim() ?? ''
+  if (baseUrl && input.customEndpoint) {
+    const branch = resolveCustomEndpointSetup({
+      baseUrl,
+      credential: input.credential,
+      customEndpointApi: input.customEndpoint.api,
+    })
+    return {
+      providerType: 'pi_compat',
+      authType: branch.authType,
+      customEndpoint: input.customEndpoint,
+      ...(branch.piAuthProvider !== undefined ? { piAuthProvider: branch.piAuthProvider } : {}),
+      ...(branch.name !== undefined ? { name: branch.name } : {}),
+    }
+  }
+
+  // No protocol → not a custom endpoint. A connection previously stored as
+  // compat drops the protocol it never had and falls back to the native Pi
+  // provider named by its piAuthProvider.
+  return {
+    providerType: 'pi',
+    authType: input.current?.authType && input.current.authType !== 'api_key_with_endpoint'
+      ? input.current.authType
+      : 'api_key',
+    customEndpoint: undefined,
+  }
+}
+
+/**
  * Built-in connection templates for the onboarding flow.
  * Each template defines the default configuration for a known connection slug.
  */
 export const BUILT_IN_CONNECTION_TEMPLATES: Record<string, {
-  name: string | ((hasCustomEndpoint: boolean) => string)
-  providerType: LlmConnection['providerType'] | ((hasCustomEndpoint: boolean) => LlmConnection['providerType'])
-  authType: LlmConnection['authType'] | ((hasCustomEndpoint: boolean) => LlmConnection['authType'])
+  name: string
+  providerType: LlmConnection['providerType']
+  authType: LlmConnection['authType']
   piAuthProvider?: string
 }> = {
   'anthropic-api': {
-    name: (h) => h ? 'Custom Claude-Compatible' : 'Claude (via Pi) (API Key)',
-    providerType: (h) => h ? 'pi_compat' : 'pi' as LlmProviderType,
-    authType: (h) => h ? 'api_key_with_endpoint' : 'api_key',
+    name: 'Claude (via Pi) (API Key)',
+    providerType: 'pi',
+    authType: 'api_key',
   },
   'claude-max': {
     name: 'Claude Max',
@@ -230,8 +300,13 @@ export function piAuthProviderDisplayName(piAuthProvider: string): string | null
  * Create an LLM connection configuration from a connection slug.
  * Uses built-in templates for known slugs, throws for unknown slugs
  * (custom connections are created through the settings UI).
+ *
+ * `providerType` overrides the template default when the setup resolved a
+ * different transport (see {@link resolveConnectionTransport}). The seeded
+ * model list follows it, so a custom-endpoint connection starts empty and
+ * discovers its own models instead of inheriting the Pi catalog.
  */
-export function createBuiltInConnection(slug: string, baseUrl?: string | null): LlmConnection {
+export function createBuiltInConnection(slug: string, providerType?: LlmProviderType): LlmConnection {
   // Try exact match first, then strip numeric suffix for derived slugs (e.g. 'anthropic-api-2' → 'anthropic-api')
   const baseSlug = slug.replace(/-\d+$/, '')
   const template = BUILT_IN_CONNECTION_TEMPLATES[slug] ?? BUILT_IN_CONNECTION_TEMPLATES[baseSlug]
@@ -239,16 +314,15 @@ export function createBuiltInConnection(slug: string, baseUrl?: string | null): 
     throw new Error(`Unknown built-in connection slug: ${slug}. Custom connections should be created through settings.`)
   }
 
-  const hasCustomEndpoint = !!baseUrl
-  const providerType = typeof template.providerType === 'function'
-    ? template.providerType(hasCustomEndpoint)
-    : template.providerType
-  const authType = typeof template.authType === 'function'
-    ? template.authType(hasCustomEndpoint)
-    : template.authType
-  let name = typeof template.name === 'function'
-    ? template.name(hasCustomEndpoint)
-    : template.name
+  const resolvedProviderType = providerType ?? template.providerType
+  // Overrides only ever come from non-OAuth setups, so the derived auth type
+  // stays an API-key one.
+  const authType = resolvedProviderType === template.providerType
+    ? template.authType
+    : resolvedProviderType === 'pi_compat'
+      ? 'api_key_with_endpoint' as const
+      : 'api_key' as const
+  let name = template.name
 
   // Append suffix number to name for derived connections (e.g. 'anthropic-api-2' → 'Claude (via Pi) (API Key) 2')
   const suffixMatch = slug.match(/-(\d+)$/)
@@ -259,13 +333,13 @@ export function createBuiltInConnection(slug: string, baseUrl?: string | null): 
   return {
     slug,
     name,
-    providerType,
+    providerType: resolvedProviderType,
     authType,
-    models: getDefaultModelsForConnection(providerType, template.piAuthProvider),
-    defaultModel: getDefaultModelForConnection(providerType, template.piAuthProvider),
-    modelSelectionMode: providerType === 'pi' ? 'automaticallySyncedFromProvider' : undefined,
+    models: getDefaultModelsForConnection(resolvedProviderType, template.piAuthProvider),
+    defaultModel: getDefaultModelForConnection(resolvedProviderType, template.piAuthProvider),
+    modelSelectionMode: resolvedProviderType === 'pi' ? 'automaticallySyncedFromProvider' : undefined,
     piAuthProvider: template.piAuthProvider,
-    midStreamBehavior: defaultMidStreamBehavior(providerType),
+    midStreamBehavior: defaultMidStreamBehavior(resolvedProviderType),
     createdAt: Date.now(),
   }
 }

@@ -70,47 +70,6 @@ export const providerIcons = {
 
 export type ProviderIconKey = keyof typeof providerIcons
 
-/** Human-readable provider names */
-const providerDisplayNames: Record<string, string> = {
-  anthropic: 'Claude (via Pi)',
-  openai: 'OpenAI',
-  openai_compat: 'OpenAI',
-  copilot: 'GitHub Copilot',
-  cerebras: 'Cerebras',
-  deepseek: 'DeepSeek',
-  groq: 'Groq',
-  kimi: 'Kimi',
-  minimax: 'Minimax',
-  ollama: 'Ollama',
-  openrouter: 'OpenRouter',
-  pi: 'Phaneris Backend',
-  pi_compat: 'Phaneris Backend',
-  vercel: 'Vercel',
-  xai: 'xAI',
-  zai: 'Z.ai',
-}
-
-/** Get a human-readable provider name from provider type and optional base URL */
-export function getProviderDisplayName(providerType: string, baseUrl?: string | null): string {
-  // Try URL detection first for compat providers
-  if (baseUrl) {
-    const url = baseUrl.toLowerCase()
-    if (url.includes('openrouter.ai')) return 'OpenRouter'
-    if (url.includes('ollama')) return 'Ollama'
-    if (url.includes('kimi.com')) return 'Kimi'
-    if (url.includes('moonshot.ai') || url.includes('moonshot.cn')) return 'Moonshot AI'
-    if (url.includes('minimax.io') || url.includes('minimaxi.com')) return 'Minimax'
-    if (url.includes('v0.dev') || url.includes('vercel')) return 'Vercel'
-    if (url.includes('manifest.build')) return 'Manifest'
-    if (url.includes('deepseek.com')) return 'DeepSeek'
-    if (url.includes('x.ai')) return 'xAI'
-    if (url.includes('groq.com')) return 'Groq'
-    if (url.includes('cerebras.ai')) return 'Cerebras'
-    if (url.includes('//z.ai') || url.includes('.z.ai')) return 'Z.ai'
-  }
-  return providerDisplayNames[providerType] || providerType
-}
-
 /**
  * Detect provider from base URL
  */

@@ -1158,7 +1158,7 @@ export function getValidateSteps(): ValidateStep[] {
           return `0 connections (${error instanceof Error ? error.message : 'missing API key'})`
         }
         const slug = `${provider}-cli`
-        const providerType = provider === 'anthropic' ? 'anthropic' : 'pi'
+        const providerType = 'pi'
         const authType = 'api_key'
         await client.invoke('LLM_Connection:save', {
           slug,

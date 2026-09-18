@@ -288,32 +288,30 @@ export function resolveBackendContext(args: {
 }
 
 /**
- * Resolve provider hint for setup-time connection tests.
- * Keeps provider-specific hint mapping out of Electron main IPC handlers.
+ * Resolve the connection shape a setup-time test runs with.
+ *
+ * Same rule as the persisted transport (server-core's
+ * `resolveConnectionTransport`): `pi_compat` requires an endpoint *protocol*,
+ * not merely a base URL. Testing a URL-only connection as `pi_compat` fails
+ * with "Custom endpoint requires both a base URL and protocol"; it is a native
+ * Pi provider whose own endpoint the SDK already knows.
  */
 export function resolveSetupTestConnectionHint(args: {
-  provider: LlmProviderType;
   baseUrl?: string;
   piAuthProvider?: string;
   customEndpoint?: CustomEndpointConfig;
 }): Pick<LlmConnection, 'providerType' | 'piAuthProvider' | 'customEndpoint'> {
-  if (args.provider === 'pi') {
-    if (args.customEndpoint && args.baseUrl?.trim()) {
-      return {
-        providerType: 'pi_compat',
-        piAuthProvider: args.customEndpoint.api === 'anthropic-messages' ? 'anthropic' : 'openai',
-        customEndpoint: args.customEndpoint,
-      };
-    }
-
+  if (args.customEndpoint && args.baseUrl?.trim()) {
     return {
-      providerType: 'pi',
-      piAuthProvider: args.piAuthProvider,
+      providerType: 'pi_compat',
+      piAuthProvider: args.customEndpoint.api === 'anthropic-messages' ? 'anthropic' : 'openai',
+      customEndpoint: args.customEndpoint,
     };
   }
 
   return {
-    providerType: args.baseUrl ? 'pi_compat' : 'pi',
+    providerType: 'pi',
+    piAuthProvider: args.piAuthProvider,
   };
 }
 

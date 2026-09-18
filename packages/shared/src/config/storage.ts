@@ -2368,6 +2368,43 @@ function normalizePiBedrockId(id: string): string {
 }
 
 /**
+ * Enforce the endpoint invariant: `customEndpoint` exists iff the connection is
+ * `pi_compat`.
+ *
+ * Older setup classified on the presence of a base URL, so two contradictory
+ * shapes exist: compat connections with no protocol at all, and native
+ * connections still carrying a protocol from a save that once went compat. The
+ * first cannot be routed (Pi has no protocol to register) nor reach the
+ * provider's own catalog; the second makes the next save disagree with the
+ * stored routing. Both collapse to the native Pi provider their
+ * `piAuthProvider` names.
+ */
+function repairConnectionTransports(config: StoredConfig): boolean {
+  if (!config.llmConnections) return false;
+
+  let changed = false;
+  for (const connection of config.llmConnections) {
+    if (connection.providerType === 'pi_compat') {
+      if (connection.customEndpoint?.api) continue;
+      connection.providerType = 'pi';
+      if (connection.authType === 'api_key_with_endpoint') {
+        connection.authType = 'api_key';
+      }
+      changed = true;
+      continue;
+    }
+
+    // Native transports never register an endpoint protocol; a leftover one is
+    // stale metadata from the URL-based classification.
+    if (connection.customEndpoint !== undefined) {
+      delete connection.customEndpoint;
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+/**
  * Migrate modelDefaults onto connection.defaultModel, then delete modelDefaults.
  * If user had set modelDefaults.anthropic, apply it to the default anthropic connection.
  * Same for openai. Then remove modelDefaults from config.
@@ -2541,6 +2578,10 @@ export function migrateLegacyLlmConnectionsConfig(): void {
     migrateWorkspaceSonnet45ToSonnet46(config);
     // Phase 1j: Migrate legacy provider types (bedrock/vertex/anthropic_compat → pi/pi_compat)
     if (migrateLegacyProviderTypes(config)) {
+      needsSave = true;
+    }
+    // Phase 1j-bis: Enforce the endpoint invariant (customEndpoint ⇔ pi_compat)
+    if (repairConnectionTransports(config)) {
       needsSave = true;
     }
     // Phase 1k: Normalize legacy Opus IDs introduced by provider-type migration.
@@ -2894,8 +2935,11 @@ export function updateLlmConnection(slug: string, updates: Partial<Omit<LlmConne
     type: updates.type ?? existing.type, // Legacy field
     authType: updates.authType ?? existing.authType,
     createdAt: updates.createdAt ?? existing.createdAt,
-    // Optional fields from updates or existing
-    baseUrl: updates.baseUrl !== undefined ? updates.baseUrl : existing.baseUrl,
+    // Optional fields from updates or existing.
+    // baseUrl and customEndpoint use presence, not definedness, so a setup that
+    // clears an endpoint or drops a custom-endpoint protocol actually clears it
+    // (an explicit `undefined` means "remove", like utilityModel below).
+    baseUrl: Object.prototype.hasOwnProperty.call(updates, 'baseUrl') ? updates.baseUrl : existing.baseUrl,
     brandId: updates.brandId !== undefined ? updates.brandId : existing.brandId,
     models: updates.models !== undefined ? updates.models : existing.models,
     defaultModel: updates.defaultModel !== undefined ? updates.defaultModel : existing.defaultModel,
@@ -2906,7 +2950,7 @@ export function updateLlmConnection(slug: string, updates: Partial<Omit<LlmConne
     // Pi auth provider
     piAuthProvider: updates.piAuthProvider !== undefined ? updates.piAuthProvider : existing.piAuthProvider,
     // Custom endpoint protocol (Anthropic/OpenAI compatible)
-    customEndpoint: updates.customEndpoint !== undefined ? updates.customEndpoint : existing.customEndpoint,
+    customEndpoint: Object.prototype.hasOwnProperty.call(updates, 'customEndpoint') ? updates.customEndpoint : existing.customEndpoint,
     // Mid-stream send behavior (steer vs queue) — read via resolveMidStreamBehavior()
     midStreamBehavior: updates.midStreamBehavior !== undefined ? updates.midStreamBehavior : existing.midStreamBehavior,
     // Resolved Anthropic OAuth identity (issue #838) — preserved across unrelated saves

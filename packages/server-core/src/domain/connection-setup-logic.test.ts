@@ -4,6 +4,7 @@ import {
   isLoopbackBaseUrl,
   setupTestRequiresApiKey,
   resolveCustomEndpointSetup,
+  resolveConnectionTransport,
   createBuiltInConnection,
 } from './connection-setup-logic'
 
@@ -111,6 +112,102 @@ describe('resolveCustomEndpointSetup', () => {
   })
 })
 
+// `pi_compat` means "the Pi SDK registers customEndpoint.api at baseUrl". A
+// base URL alone is not a custom endpoint: every native Pi provider owns one,
+// and the setup presets prefill it. Classifying on the URL stored connections
+// that Pi could neither route to the provider nor register as an endpoint.
+describe('resolveConnectionTransport', () => {
+  it('keeps a native Pi provider native when the setup only carries its endpoint', () => {
+    const transport = resolveConnectionTransport({
+      baseUrl: 'https://api.minimaxi.com/anthropic',
+      customEndpoint: undefined,
+      credential: 'sk-test',
+      current: { providerType: 'pi', authType: 'api_key' },
+    })
+    expect(transport).toEqual({ providerType: 'pi', authType: 'api_key', customEndpoint: undefined })
+    expect(transport?.piAuthProvider).toBeUndefined()
+  })
+
+  it('classifies a prefilled provider endpoint on a brand new connection as native', () => {
+    // Regression: new-connection setup sent the preset URL, the handler wrote
+    // pi_compat, and the model picker split one backend into two sections.
+    const transport = resolveConnectionTransport({
+      baseUrl: 'https://api.deepseek.com',
+      customEndpoint: undefined,
+      credential: 'sk-test',
+      current: undefined,
+    })
+    expect(transport?.providerType).toBe('pi')
+    expect(transport?.customEndpoint).toBeUndefined()
+  })
+
+  it('keeps a real custom endpoint compat and pins its protocol', () => {
+    const transport = resolveConnectionTransport({
+      baseUrl: 'https://my-gateway.example.com/v1',
+      customEndpoint: { api: 'openai-completions' },
+      credential: 'sk-test',
+      current: undefined,
+    })
+    expect(transport).toMatchObject({
+      providerType: 'pi_compat',
+      authType: 'api_key_with_endpoint',
+      customEndpoint: { api: 'openai-completions' },
+      piAuthProvider: 'openai',
+    })
+  })
+
+  it('treats a keyless loopback endpoint as a local model', () => {
+    const transport = resolveConnectionTransport({
+      baseUrl: 'http://localhost:11434/v1',
+      customEndpoint: { api: 'openai-completions' },
+      credential: undefined,
+      current: undefined,
+    })
+    expect(transport).toMatchObject({ providerType: 'pi_compat', authType: 'none', name: 'Local Model' })
+    // Keyless loopback endpoints carry no auth-header hint.
+    expect(transport?.piAuthProvider).toBeUndefined()
+  })
+
+  it('drops the compat transport when a connection loses its protocol', () => {
+    const transport = resolveConnectionTransport({
+      baseUrl: 'https://api.minimaxi.com/anthropic',
+      customEndpoint: undefined,
+      credential: 'sk-test',
+      current: { providerType: 'pi_compat', authType: 'api_key_with_endpoint' },
+    })
+    expect(transport).toEqual({ providerType: 'pi', authType: 'api_key', customEndpoint: undefined })
+  })
+
+  it('leaves OAuth connections untouched by endpoint fields', () => {
+    expect(resolveConnectionTransport({
+      baseUrl: 'https://example.com',
+      customEndpoint: undefined,
+      credential: undefined,
+      current: { providerType: 'pi', authType: 'oauth' },
+    })).toBeNull()
+  })
+
+  it('returns null when the setup did not touch the endpoint', () => {
+    expect(resolveConnectionTransport({
+      baseUrl: undefined,
+      customEndpoint: undefined,
+      credential: undefined,
+      current: { providerType: 'pi', authType: 'api_key' },
+    })).toBeNull()
+  })
+
+  it('preserves a non-api-key auth type on a native connection', () => {
+    const transport = resolveConnectionTransport({
+      baseUrl: 'https://bedrock-runtime.us-east-1.amazonaws.com',
+      customEndpoint: undefined,
+      credential: undefined,
+      current: { providerType: 'pi', authType: 'iam_credentials' },
+    })
+    expect(transport?.authType).toBe('iam_credentials')
+    expect(transport?.providerType).toBe('pi')
+  })
+})
+
 // New connections must persist a per-provider midStreamBehavior default so the
 // per-connection submenu in Settings → AI shows a checkmark on the right item
 // out of the box (no read-time fallback needed for fresh connections).
@@ -173,8 +270,8 @@ describe('createBuiltInConnection seeds midStreamBehavior', () => {
     expect(conn.midStreamBehavior).toBe('steer')
   })
 
-  it("anthropic-api with custom endpoint becomes pi_compat → 'steer'", () => {
-    const conn = createBuiltInConnection('anthropic-api', 'http://localhost:11434/v1')
+  it("anthropic-api with a resolved custom-endpoint transport → 'steer'", () => {
+    const conn = createBuiltInConnection('anthropic-api', 'pi_compat')
     expect(conn.providerType).toBe('pi_compat')
     expect(conn.midStreamBehavior).toBe('steer')
   })
