@@ -81,7 +81,7 @@ export interface StoredConfig {
   browserToolEnabled?: boolean;  // Enable built-in browser tool (default: true). Disable for Playwright/Puppeteer.
   allowRemoteEvaluate?: boolean;  // Allow remote agents to call `browser_tool evaluate` on local browser (default: true).
   // Prompt caching & context
-  extendedPromptCache?: boolean;  // Use 1h prompt cache TTL instead of 5m (default: false)
+  extendedPromptCache?: boolean;  // Use long-lived prompt cache retention where supported (default: false)
   // Token optimization
   rtkEnabled?: boolean;  // Route Bash commands through rtk to compress tool output (default: false). https://github.com/rtk-ai/rtk
   // Network proxy
@@ -487,8 +487,9 @@ export function setRichToolDescriptions(enabled: boolean): void {
 }
 
 /**
- * Get whether extended prompt cache (1h TTL) is enabled.
- * When enabled, the interceptor upgrades cache_control TTL from 5m to 1h.
+ * Get whether long-lived prompt cache retention is enabled.
+ * When enabled, Pi SDK requests use cacheRetention 'long' (provider-dependent:
+ * Anthropic 1h, OpenAI-compatible extended retention).
  * Defaults to false if not set.
  */
 export function getExtendedPromptCache(): boolean {
@@ -497,7 +498,7 @@ export function getExtendedPromptCache(): boolean {
 }
 
 /**
- * Set whether extended prompt cache (1h TTL) is enabled.
+ * Set whether long-lived prompt cache retention is enabled.
  */
 export function setExtendedPromptCache(enabled: boolean): void {
   const config = loadStoredConfig();

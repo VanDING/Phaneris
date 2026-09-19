@@ -137,6 +137,8 @@ export interface ISessionManager {
   setSessionConnection(sessionId: string, connectionSlug: string): Promise<void>
   updateSessionModel(sessionId: string, workspaceId: string, model: string | null, connection?: string): Promise<void>
   refreshBrowserToolAvailability(enabled: boolean): void
+  /** Push the extended-prompt-cache setting to live sessions when supported. */
+  refreshExtendedPromptCache?(enabled: boolean): void
 
   // ---------------------------------------------------------------------------
   // Messaging

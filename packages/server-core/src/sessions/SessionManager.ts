@@ -3779,6 +3779,17 @@ export class SessionManager implements ISessionManager {
   }
 
   /**
+   * Push the extended-prompt-cache setting into every live Pi subprocess.
+   * The subprocess applies it as the default cacheRetention for subsequent
+   * requests; explicit per-call values (e.g. compaction's 'none') win.
+   */
+  refreshExtendedPromptCache(enabled: boolean): void {
+    for (const managed of this.sessions.values()) {
+      managed.agent?.updateExtendedPromptCache?.(enabled)
+    }
+  }
+
+  /**
    * Get or create agent for a session (lazy loading)
    * Creates the appropriate backend agent based on LLM connection.
    *

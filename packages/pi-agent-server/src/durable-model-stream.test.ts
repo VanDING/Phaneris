@@ -67,3 +67,34 @@ describe('durable model stream', () => {
     expect(result.errorMessage).toBe('commit failed');
   });
 });
+
+describe('durable model stream cache retention', () => {
+  it('applies the configured default when callers omit cacheRetention', async () => {
+    let seenOptions: { cacheRetention?: string; apiKey?: string } | undefined;
+    const stream = wrapDurableModelStream(async (_actualModel, _actualContext, actualOptions) => {
+      seenOptions = actualOptions as { cacheRetention?: string; apiKey?: string } | undefined;
+      const source = createAssistantMessageEventStream();
+      source.push({ type: 'done', reason: 'toolUse', message: response });
+      return source;
+    }, async () => async () => {}, () => 'long');
+
+    await (await stream(model, { messages: [] }, { apiKey: 'test-only' })).result();
+    expect(seenOptions?.cacheRetention).toBe('long');
+    expect(seenOptions?.apiKey).toBe('test-only');
+  });
+
+  it('preserves an explicit cacheRetention and skips the default resolver', async () => {
+    let resolverCalls = 0;
+    let seenOptions: { cacheRetention?: string } | undefined;
+    const stream = wrapDurableModelStream(async (_actualModel, _actualContext, actualOptions) => {
+      seenOptions = actualOptions as { cacheRetention?: string } | undefined;
+      const source = createAssistantMessageEventStream();
+      source.push({ type: 'done', reason: 'toolUse', message: response });
+      return source;
+    }, async () => async () => {}, () => { resolverCalls++; return 'long'; });
+
+    await (await stream(model, { messages: [] }, { cacheRetention: 'none' })).result();
+    expect(seenOptions?.cacheRetention).toBe('none');
+    expect(resolverCalls).toBe(0);
+  });
+});

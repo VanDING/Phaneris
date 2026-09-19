@@ -128,7 +128,7 @@ import { parseError, type AgentError } from './errors.ts';
 // Centralized PreToolUse pipeline
 import { runPreToolUseChecks, type PreToolUseCheckResult } from './core/pre-tool-use.ts';
 import { getRtkPath } from './core/rtk-detector.ts';
-import { getRtkEnabled, getBrowserToolEnabled } from '../config/storage.ts';
+import { getRtkEnabled, getBrowserToolEnabled, getExtendedPromptCache } from '../config/storage.ts';
 import type { RtkContext } from './core/rtk-rewrite.ts';
 
 // Workspace slug extraction for skill qualification
@@ -571,6 +571,12 @@ export class PiAgent extends BaseAgent {
     // Derive AWS env vars from the piAuth credential (single fetch, no race).
     const awsEnv = this.buildAwsEnv(piAuth, runtime);
 
+    // Pi SDK native long-lived prompt cache; propagated to the subprocess both as
+    // PI_CACHE_RETENTION (fallback for any unwrapped request) and explicitly on
+    // init/live updates (see updateExtendedPromptCache). Read after every await
+    // so a setting change during spawn is reflected in this session.
+    const extendedPromptCache = getExtendedPromptCache();
+
     // Spawn the subprocess
     const child = spawn(nodePath, args, {
       cwd,
@@ -584,6 +590,8 @@ export class PiAgent extends BaseAgent {
         ...(sessionDir ? { PHANERIS_SESSION_DIR: sessionDir } : {}),
         // Propagate debug mode
         PHANERIS_DEBUG: (process.argv.includes('--debug') || process.env.PHANERIS_DEBUG === '1') ? '1' : '0',
+        // Pi SDK native prompt-cache retention (long = provider long-lived cache)
+        PI_CACHE_RETENTION: extendedPromptCache ? 'long' : 'short',
       },
     });
 
@@ -655,6 +663,7 @@ export class PiAgent extends BaseAgent {
       branchFromSessionPath: this.config.session?.branchFromSessionPath,
       branchFromSdkTurnId: this.config.session?.branchFromSdkTurnId,
       browserToolEnabled: getBrowserToolEnabled(),
+      cacheRetention: extendedPromptCache ? 'long' : 'short',
     });
 
     // Wait for subprocess to report ready
@@ -2662,6 +2671,16 @@ export class PiAgent extends BaseAgent {
   updateBrowserToolEnabled(enabled: boolean): void {
     if (!this.subprocess) return;
     this.send({ type: 'set_browser_tool_enabled', enabled });
+  }
+
+  /**
+   * Push the global extended-prompt-cache setting into the Pi subprocess.
+   * The subprocess applies it as the default cacheRetention on subsequent
+   * requests without interrupting an active turn.
+   */
+  updateExtendedPromptCache(enabled: boolean): void {
+    if (!this.subprocess) return;
+    this.send({ type: 'set_cache_retention', cacheRetention: enabled ? 'long' : 'short' });
   }
 
   // ============================================================

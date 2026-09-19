@@ -1,5 +1,5 @@
 import type { StreamFn } from '@earendil-works/pi-agent-core';
-import type { AssistantMessage } from '@earendil-works/pi-ai';
+import type { AssistantMessage, CacheRetention } from '@earendil-works/pi-ai';
 import { createAssistantMessageEventStream } from '@earendil-works/pi-ai';
 
 /** Wrap the session's actual stream, preserving SDK authentication and retry options. */
@@ -9,13 +9,21 @@ export function wrapDurableModelStream(
     model: Parameters<StreamFn>[0],
     context: Parameters<StreamFn>[1],
   ) => Promise<(message: AssistantMessage) => Promise<void>>,
+  /**
+   * Optional default retention for requests that do not set one explicitly.
+   * Explicit values (notably compaction's 'none') are preserved.
+   */
+  resolveDefaultCacheRetention?: () => CacheRetention,
 ): StreamFn {
   return (model, context, options) => {
+    const effectiveOptions = resolveDefaultCacheRetention && options?.cacheRetention === undefined
+      ? { ...options, cacheRetention: resolveDefaultCacheRetention() }
+      : options;
     const target = createAssistantMessageEventStream();
     void (async () => {
       try {
         const commit = await prepare(model, context);
-        const source = await stream(model, context, options);
+        const source = await stream(model, context, effectiveOptions);
         for await (const event of source) {
           if (event.type === 'done' || event.type === 'error') {
             // Commit metered partial/error responses as well as successful ones.

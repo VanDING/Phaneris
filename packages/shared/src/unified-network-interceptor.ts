@@ -366,6 +366,7 @@ function stripPromptCacheTtl(body: Record<string, unknown>): number {
  * SDK or user) ahead of a 1h block on system produces a 400 with message
  * "a ttl='1h' cache_control block must not come after a ttl='5m' cache_control block."
  *
+ * @deprecated Legacy interceptor TTL rewrite. Pi native cacheRetention is authoritative; this is retained for API/unit-test compatibility and is no longer invoked by modifyRequest.
  * Exported for focused unit tests.
  */
 export function upgradePromptCacheTtl(body: Record<string, unknown>): number {
@@ -787,7 +788,6 @@ const anthropicAdapter: ApiAdapter = {
 
   modifyRequest(_url: string, init: RequestInit, body: Record<string, unknown>): { init: RequestInit; body: Record<string, unknown> } {
     sanitizeEmptyTextCacheControl(body);
-    upgradePromptCacheTtl(body);
 
     // Strip SDK-injected 1M context beta. The 1M opt-in setting was removed
     // with the single-Pi-backend migration; default to 200K to conserve limits.

@@ -513,6 +513,12 @@ export interface AgentBackend {
   updateBrowserToolEnabled?(enabled: boolean): void;
 
   /**
+   * Apply the global extended-prompt-cache setting to the live backend.
+   * Implementations that own a subprocess must not interrupt an active turn.
+   */
+  updateExtendedPromptCache?(enabled: boolean): void;
+
+  /**
    * Dispose resources before an idle backend restart. Backends with subprocesses
    * can wait for child process exit here to avoid transient process leaks.
    */

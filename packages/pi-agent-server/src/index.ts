@@ -47,7 +47,7 @@ import type {
   CreateAgentSessionOptions,
   ToolDefinition,
 } from '@earendil-works/pi-coding-agent';
-import type { AssistantMessage, Context, Credential, Model } from '@earendil-works/pi-ai';
+import type { AssistantMessage, CacheRetention, Context, Credential, Model } from '@earendil-works/pi-ai';
 import { InMemoryCredentialStore } from '@earendil-works/pi-ai';
 
 // Pi AI types
@@ -81,6 +81,13 @@ import { setDefaultStreamFn, type StreamFn } from '@earendil-works/pi-agent-core
 import { wrapDurableModelStream } from './durable-model-stream.ts';
 import { streamSimple } from '@earendil-works/pi-ai/compat';
 
+/**
+ * Default prompt-cache retention for Pi SDK requests in this subprocess.
+ * Driven by the global extendedPromptCache setting and updated live via the
+ * `set_cache_retention` message; explicit per-call values always win.
+ */
+let piCacheRetention: CacheRetention = 'short';
+
 function withDurableAccounting(stream: StreamFn): StreamFn {
   return wrapDurableModelStream(stream, async (model, context) => {
     const requestSeq = ++promptSnapshotSeq;
@@ -106,7 +113,7 @@ function withDurableAccounting(stream: StreamFn): StreamFn {
       });
       rememberDurableToolBatch(message, prepared.operationId);
     };
-  });
+  }, () => piCacheRetention);
 }
 
 setDefaultStreamFn(withDurableAccounting(streamSimple));
@@ -201,6 +208,8 @@ interface InitMessage {
   piAuth?: { provider: string; credential: PiCredential };
   /** Whether the browser session tool is enabled (false = exclude via SDK denylist) */
   browserToolEnabled?: boolean;
+  /** Pi SDK native prompt-cache retention ('long' = extended TTL where supported) */
+  cacheRetention?: CacheRetention;
 }
 
 interface RuntimeConfigUpdateMessage {
@@ -235,6 +244,7 @@ type InboundMessage =
   | { type: 'compact'; id: string; customInstructions?: string; durableRunOperationId?: string; durableTurnId?: string }
   | { type: 'set_auto_compaction'; id: string; enabled: boolean }
   | { type: 'set_browser_tool_enabled'; enabled: boolean }
+  | { type: 'set_cache_retention'; cacheRetention: CacheRetention }
   | RuntimeConfigUpdateMessage
   | { type: 'steer'; message: string }
   | { type: 'token_update'; piAuth: { provider: string; credential: PiCredential } }
@@ -1976,6 +1986,8 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
   }
 
   initConfig = msg;
+  piCacheRetention = msg.cacheRetention === 'long' ? 'long' : 'short';
+  process.env.PI_CACHE_RETENTION = piCacheRetention;
   clearPromptSnapshots();
   lastCanonicalContextCursor = 0;
 
@@ -2146,6 +2158,14 @@ function handleSetBrowserToolEnabled(
   // rebuild to the next prompt so an in-flight turn is never interrupted.
   if (piSession) toolsChanged = true;
   debugLog(`Browser tool ${msg.enabled ? 'enabled' : 'disabled'}; session refresh queued`);
+}
+
+function handleSetCacheRetention(
+  msg: Extract<InboundMessage, { type: 'set_cache_retention' }>,
+): void {
+  piCacheRetention = msg.cacheRetention === 'long' ? 'long' : 'short';
+  process.env.PI_CACHE_RETENTION = piCacheRetention;
+  debugLog(`Prompt cache retention set to '${piCacheRetention}'`);
 }
 
 function handleToolExecuteResponse(msg: Extract<InboundMessage, { type: 'tool_execute_response' }>): void {
@@ -2589,6 +2609,10 @@ async function processMessage(msg: InboundMessage): Promise<void> {
 
     case 'set_browser_tool_enabled':
       handleSetBrowserToolEnabled(msg);
+      break;
+
+    case 'set_cache_retention':
+      handleSetCacheRetention(msg);
       break;
 
     case 'update_runtime_config':

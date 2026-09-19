@@ -291,16 +291,17 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
   // Prompt Caching Settings
   // ============================================================
 
-  // Get extended prompt cache (1h TTL) setting
+  // Get long-lived prompt cache retention setting
   server.handle(RPC_CHANNELS.caching.GET_EXTENDED_PROMPT_CACHE, async () => {
     const { getExtendedPromptCache } = await import('@phaneris/shared/config/storage')
     return getExtendedPromptCache()
   })
 
-  // Set extended prompt cache (1h TTL) setting
+  // Set long-lived prompt cache retention (Pi SDK native cacheRetention)
   server.handle(RPC_CHANNELS.caching.SET_EXTENDED_PROMPT_CACHE, async (_ctx, enabled: boolean) => {
     const { setExtendedPromptCache } = await import('@phaneris/shared/config/storage')
     setExtendedPromptCache(enabled)
+    deps.sessionManager.refreshExtendedPromptCache?.(enabled)
   })
 
   // ============================================================

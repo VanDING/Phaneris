@@ -6,7 +6,7 @@
  * - toolMetadataStore (file-based cross-process sharing)
  * - LastApiError (error capture for error handler)
  * - Logging utilities
- * - Config reading (richToolDescriptions, extendedPromptCache settings)
+ * - Config reading (richToolDescriptions and legacy extendedPromptCache settings)
  */
 
 import { existsSync, readFileSync, writeFileSync, renameSync, unlinkSync, appendFileSync, mkdirSync, statSync } from 'node:fs';
@@ -170,6 +170,7 @@ export function isRichToolDescriptionsEnabled(): boolean {
 
 /**
  * Check if extended prompt cache (1h TTL) is enabled.
+ * @deprecated Legacy interceptor path; Pi native cacheRetention is authoritative in the Pi-only runtime.
  * When enabled, the interceptor upgrades all cache_control blocks from 5m to 1h TTL.
  * Defaults to false if config is unreadable or field is not set.
  */
