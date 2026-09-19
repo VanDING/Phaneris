@@ -67,6 +67,8 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 
 下列内容不应重新引入：Claude Agent SDK 依赖或 hook 形状、第二套 session tool factory、`session-mcp-server` 后台、只服务旧后台的缓存/构建脚本、将 `agent_end` 当作终态的逻辑。
 
+> **注意**：这条禁令针对的是 **Claude 的 hook 形状与依赖**，不是"钩子"本身。基于 **Pi 原生 extension 钩子**（`tool_call` / `session_before_compact` / `input` 等，见 [`agentic-interception-design.md`](agentic-interception-design.md)）的介入能力是允许方向；判定标准是事件名与类型来自 `@earendil-works/pi-coding-agent` 还是 Claude SDK。同理，`automations` 里那套 `PreToolUse`/`SubagentStop` 词表属于**遗留**，新设计不得复用（见该设计 §3.2 与开放决策 D1）。
+
 ## 维护检查
 
 升级 Pi 时至少执行：

@@ -69,6 +69,10 @@ Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 
 判断：这些 hook 适合以内联 extension 的形式逐步接管 interceptor 和工具包装逻辑。第三方 extension/package 的加载需要单独的安全与信任设计，不应直接打开。
 
+> **更新（2026-09-20）**：本节的**内联 extension**路线已定案为 [`agentic-interception-design.md`](agentic-interception-design.md)（定位：治理与介入；首个切片：`tool_call` 阻断）。该设计**只做内联 extension + 工作区用户规则**，明确不打开第三方 extension/package 加载，因此与本节的判断一致。
+>
+> 为什么不是"事件 → 动作"：现有 `automations` 的动作面（`prompt | webhook | script`）只能启动新会话/发请求/跑脚本，无法改变当前回合，而 `PreToolUse` 这类词表表达的是闸门——两者错位，这正是它今天空转的原因（见该设计 §1.2 与 §5）。
+
 ### 2.2 请求与模型层高级能力
 
 StreamOptions / SimpleStreamOptions（node_modules/@earendil-works/pi-ai/dist/types.d.ts）已经定义但未使用的能力：
