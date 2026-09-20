@@ -19,6 +19,7 @@ describe('createPhanerisSettingsManager', () => {
       enabled: true,
       maxRetries: PHANERIS_PI_RETRY_SETTINGS.maxRetries,
       baseDelayMs: PHANERIS_PI_RETRY_SETTINGS.baseDelayMs,
+      maxAgentDelayMs: 60_000,
     });
   });
 
@@ -39,6 +40,7 @@ describe('createPhanerisSettingsManager', () => {
       enabled: true,
       maxRetries: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.maxRetries,
       baseDelayMs: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.baseDelayMs,
+      maxAgentDelayMs: 60_000,
     });
     expect(settings.getProviderRetrySettings()).toMatchObject({
       maxRetries: PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS.provider.maxRetries,
@@ -53,6 +55,16 @@ describe('createPhanerisSettingsManager', () => {
 
   it('keeps auto-compaction enabled', () => {
     expect(createPhanerisSettingsManager().getCompactionEnabled()).toBe(true);
+  });
+
+  it('keeps prompt cache warming off', () => {
+    // Warming refreshes go through the SDK's model runtime, not the agent's
+    // stream function, so they would bill outside the durable ledger.
+    expect(createPhanerisSettingsManager().getCacheWarmingMode()).toBe('off');
+    expect(createPhanerisSettingsManager('ephemeral').getCacheWarmingMode()).toBe('off');
+    // Documents the SDK default this policy overrides (Pi 0.86.0). If a future
+    // SDK stops warming by default, this assertion is the cue to revisit.
+    expect(SettingsManager.inMemory().getCacheWarmingMode()).toBe('streaming');
   });
 
   it('ignores a .pi/settings.json in the working directory', () => {

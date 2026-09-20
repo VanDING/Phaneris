@@ -1,4 +1,4 @@
-import type { DurableCanonicalContextItem, RuntimeEvent, ToolOutcome } from '@phaneris/shared/durable-runtime'
+import type { DurableCanonicalContextItem, DurableJsonObject, RuntimeEvent, ToolOutcome } from '@phaneris/shared/durable-runtime'
 import { sumTokenUsage } from '@phaneris/core/utils'
 import type { PiUsage, Message } from '@phaneris/core/types'
 import type { RuntimeUsageRow } from './store.js'
@@ -40,7 +40,7 @@ export function projectDurableSession(events: RuntimeEvent[]): DurableSessionPro
           kind: 'tool_call', eventId: `${event.eventId}:call`, seq, operationId: event.operationId,
           toolOperationId: `legacy:${payload.toolCallId}`, toolCallId: payload.toolCallId,
           toolName: payload.toolName,
-          args: payload.args && typeof payload.args === 'object' && !Array.isArray(payload.args) ? payload.args as Record<string, unknown> : {},
+          args: payload.args && typeof payload.args === 'object' && !Array.isArray(payload.args) ? payload.args as DurableJsonObject : {},
         })
         if (payload.hasOutcome === true) items.push({
           kind: 'tool_outcome', eventId: `${event.eventId}:outcome`, seq, operationId: event.operationId,
@@ -85,7 +85,7 @@ export function projectDurableSession(events: RuntimeEvent[]): DurableSessionPro
         toolOperationId: payload.toolOperationId,
         toolCallId: payload.providerToolCallId,
         toolName: payload.toolName,
-        args: payload.args as Record<string, unknown>,
+        args: payload.args as DurableJsonObject,
       })
       continue
     }

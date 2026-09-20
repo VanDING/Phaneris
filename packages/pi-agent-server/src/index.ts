@@ -91,8 +91,8 @@ let piCacheRetention: CacheRetention = 'short';
 function withDurableAccounting(stream: StreamFn): StreamFn {
   return wrapDurableModelStream(stream, async (model, context, requestObservation) => {
     const requestSeq = ++promptSnapshotSeq;
-    const { canonicalRequestHash, contextSnapshot } = prepareRequestDiagnostics(model, context);
-    rememberPromptSnapshot(requestSeq, context.systemPrompt ?? '', contextSnapshot);
+    const { canonicalRequestHash, contextSnapshot, systemPrompt } = prepareRequestDiagnostics(model, context);
+    rememberPromptSnapshot(requestSeq, systemPrompt, contextSnapshot);
     const providerRequestId = String(requestSeq);
     const durableRun = currentDurableModelRun();
     if (!initConfig || !durableRun) {
@@ -125,7 +125,6 @@ import {
   PHANERIS_PI_EPHEMERAL_QUERY_DEADLINE_MS,
   createPhanerisSettingsManager,
 } from './session-settings.ts';
-import { applySystemPromptOverride } from './system-prompt-override.ts';
 import {
   EphemeralQueryCancelledError,
   EphemeralQueryCoordinator,
@@ -157,7 +156,7 @@ import { createWebFetchTool } from './tools/web-fetch.ts';
 import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
 import { allowPhanerisMetadataProperties, stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
-import { createPhanerisResourceLoader, setPhanerisSystemPrompt } from './phaneris-resource-loader.ts';
+import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSystemPrompt } from './phaneris-resource-loader.ts';
 import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
@@ -574,9 +573,17 @@ function rememberPromptSnapshot(seq: number, prompt: string, contextSnapshot?: P
   }
 }
 
-function capturePromptSnapshot(session: AgentSession): number {
+/**
+ * Capture the request-time system prompt under the next request ordinal.
+ * Returns the seq so the caller can attach it to the forwarded message_end event.
+ *
+ * Reads the Phaneris prompt rather than `session.systemPrompt`: Pi 0.86.0 renders
+ * that getter from the SDK's structured base prompt (which appends its own
+ * `<cwd>` section), while the request carries the forced Phaneris prompt.
+ */
+function capturePromptSnapshot(): number {
   const seq = ++promptSnapshotSeq;
-  rememberPromptSnapshot(seq, session.systemPrompt ?? '');
+  rememberPromptSnapshot(seq, getPhanerisSystemPrompt());
   return seq;
 }
 
@@ -1629,11 +1636,12 @@ async function queryLlm(
 
       debugLog(`[queryLlm] Created ephemeral session: ${ephemeralSession.sessionId}`);
 
-      // Force the system prompt — see system-prompt-override.ts for why direct
-      // assignment to `state.systemPrompt` doesn't survive `session.prompt()`.
+      // The session prompt comes from the loader's `getPrompt` and the inline
+      // `before_agent_start` hook (see phaneris-resource-loader.ts): Pi 0.86.0
+      // keeps the prompt in the transcript's system messages and projects a
+      // handler-returned prompt as the leading system message.
       const promptForSession =
         request.systemPrompt ?? 'Reply with ONLY the requested text. No explanation.';
-      applySystemPromptOverride(ephemeralSession, promptForSession);
 
       // Collect response text and errors from events. `prompt()` resolves only
       // after SDK retries/continuations settle, so the request-level coordinator
@@ -1856,8 +1864,8 @@ function handleSessionEvent(event: AgentSessionEvent): void {
       // of the anchor correlation and must survive providers that omit ids.
       const requestSeq = typeof msg.durableRequestSeq === 'number'
         ? msg.durableRequestSeq
-        : capturePromptSnapshot(piSession);
-      if (!promptSnapshots.has(requestSeq)) rememberPromptSnapshot(requestSeq, piSession.systemPrompt ?? '');
+        : capturePromptSnapshot();
+      if (!promptSnapshots.has(requestSeq)) rememberPromptSnapshot(requestSeq, getPhanerisSystemPrompt());
       const snapshot = promptSnapshots.get(requestSeq);
       forwardedEvent = {
         ...(event as Record<string, unknown>),

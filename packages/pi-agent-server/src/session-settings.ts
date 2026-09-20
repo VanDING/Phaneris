@@ -43,6 +43,10 @@ export const PHANERIS_PI_RETRY_SETTINGS = {
   enabled: true,
   maxRetries: 4,
   baseDelayMs: 2_000,
+  // Pi 0.86.0 caps agent-level backoff here by default. Pinned explicitly so
+  // the policy stays declared rather than inherited; it never binds the
+  // schedule above (worst case 2s + 4s = 6s of agent backoff).
+  maxAgentDelayMs: 60_000,
   provider: {
     maxRetries: 2,
     maxRetryDelayMs: 60_000,
@@ -62,6 +66,7 @@ export const PHANERIS_PI_EPHEMERAL_RETRY_SETTINGS = {
   enabled: true,
   maxRetries: 2,
   baseDelayMs: 2_000,
+  maxAgentDelayMs: 60_000,
   provider: {
     maxRetries: 2,
     maxRetryDelayMs: 10_000,
@@ -92,6 +97,13 @@ export function buildPhanerisPiSettings(purpose: PhanerisPiSessionPurpose = 'mai
     // (requestSetAutoCompaction(true)); keep the SDK default explicit here so
     // the intent is visible next to the retry policy.
     compaction: { enabled: true },
+    // Pi 0.86.0 defaults this to "streaming", which re-sends the last request
+    // with a one-token output budget during long tool runs and bills it as a
+    // full-context cache read. The refresh goes through the SDK's own model
+    // runtime, not `agent.streamFunction`, so it would spend money outside the
+    // durable T1/T2 ledger and the SDK observation audit. Keep warming off until
+    // those calls can be committed and attributed like every other request.
+    cacheWarming: 'off',
   };
 }
 

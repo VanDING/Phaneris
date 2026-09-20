@@ -1,8 +1,8 @@
 # Pi SDK 原生能力接入缺口分析
 
 状态：时点分析（point-in-time），不是当前接口契约。实施前请按仓库中的 Pi SDK 版本与最新代码重新核对。
-日期：2026-09-19
-Pi SDK：`@earendil-works/pi-ai` / `pi-agent-core` / `pi-coding-agent` **0.85.1**
+日期：2026-09-20
+Pi SDK：`@earendil-works/pi-ai` / `pi-agent-core` / `pi-coding-agent` **0.86.0**
 范围：Phaneris 单 Pi 后端（`packages/pi-agent-server` + `packages/shared/src/agent`）
 
 ---
@@ -34,6 +34,14 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 
 限制：provider 回调证据不是网络尝试计数或原始网络报文；未返回原生结果的请求仍可能未决。生命周期采集属于可报告失败的观测，不是新增的强制授权/事务闸门；执行外切换不记到无关回合。完整基线见 [pi-kernel.md](pi-kernel.md)。
 
+### 2026-09-20 Pi 0.86.0 升级核对
+
+0.86.0 的两项变化直接影响本仓库，处理结论如下：
+
+- **provider 请求上下文改为归一化 transcript**（`Context` → `TranscriptContext`，提示与工具声明进入 system 消息，`agent.state.systemPrompt` 变为只读）。适配：请求诊断改为经 `getCurrentSystemPrompt()` / `getCurrentTools()` 回放得出当前提示与工具声明；prompt/tool 变更由 SDK 的 section 增量下发，Phaneris 的提示继续通过 loader override 与 `before_agent_start` 的 forced prompt 投影送达；删除改写 SDK 私有字段的 `applySystemPromptOverride`。请求期 prompt 快照改读 Phaneris prompt，避免 SDK 结构化 base prompt 的 `<cwd>` section 污染诊断。
+- **提示缓存预热默认开启**（`cacheWarming: "streaming"`）。预热刷新走 SDK 自己的 `ModelRuntime.streamSimple`，不经过 `agent.streamFunction`，因此不进入 durable T1/T2，也不产生 T2 原子提交的用量或 `sdk_observation`，只写 SDK session 的 `cache_warm` 条目。结论：**默认关闭**（Phaneris 会话显式 `cacheWarming: 'off'`）。重新启用的前提是先让预热的刷新可提交、可归因（例如经 durable 边界或独立的可审计 usage 通道），否则就是 ledger 之外的 provider 花费。
+- 其他需留意的默认值：内置 `read`/`bash`/`powershell`/`edit`/`write` 工具启用 strict-prefer JSON-schema 约束采样（Phaneris 包装这些内置定义，故同样生效；不支持的 provider 由 SDK 回退）；agent 级退避新增 `maxAgentDelayMs` 上限，已在本仓库的重试策略中显式声明。
+
 ---
 
 ## 1. 当前已接入基线
@@ -51,6 +59,9 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 | OAuth | Anthropic、OpenAI Codex、GitHub Copilot、xAI、OpenRouter、Kimi、Radius | `packages/pi-agent-server/src/index.ts:64-72`；`apps/electron/src/renderer/hooks/useOnboarding.ts` |
 | 自定义端点 / 动态 provider | `ModelRegistry.registerProvider`、`ModelRuntime.create({ allowModelNetwork: false })` | `packages/pi-agent-server/src/index.ts` |
 | 提示缓存 | `cacheRetention` / `PI_CACHE_RETENTION` 原生映射，显式值优先 | `packages/shared/src/agent/pi-agent.ts`；`packages/pi-agent-server/src/durable-model-stream.ts` |
+| provider 请求上下文 | 归一化 transcript（`TranscriptContext`）；提示/工具声明在 system 消息内，请求诊断经 `getCurrentSystemPrompt()` / `getCurrentTools()` 回放 | `packages/pi-agent-server/src/request-diagnostics.ts` |
+| 系统提示送达 | loader `systemPromptOverride` + 内联 extension `before_agent_start` 返回 forced prompt，投影为请求头部 system 消息 | `packages/pi-agent-server/src/phaneris-resource-loader.ts`；`packages/pi-agent-server/src/system-prompt-delivery.test.ts` |
+| 提示缓存预热 | 显式关闭（`cacheWarming: 'off'`）；刷新不经 durable 边界，暂不允许 ledger 外花费 | `packages/pi-agent-server/src/session-settings.ts` |
 | Fallback / handoff / 消息转换 | Pi SDK 在 `pi-ai` 内部自动完成跨 provider 的 thinking/tool 消息转换 | SDK 默认行为，无需显式接入 |
 
 ---
@@ -63,7 +74,7 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 
 证据：`packages/pi-agent-server/src/phaneris-resource-loader.ts:54`。
 
-Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/types.d.ts:907-941`）：
+Pi 0.86.0 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/types.d.ts`）：
 
 | 事件 | 可替代或增强的现有逻辑 |
 | --- | --- |
@@ -71,6 +82,7 @@ Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 | `before_provider_request` | 直接修改请求 payload，替代 fetch interceptor 的请求改写 |
 | `before_provider_headers` | 请求头改写，替代 interceptor / 环境变量拼装 |
 | `after_provider_response` | 响应状态与 headers 采集，用于诊断/遥测 |
+| `cache_warming_decision` | 逐次覆盖预热决策（warm/stop）；Phaneris 已关闭预热，故未注册 |
 | `tool_call` / `tool_result` | 工具权限、阻断、审计、结果改写 |
 | `message_end` | SDK 消息落库前可改写，但可能晚于 Phaneris T2，暂不启用内容改写 |
 | `session_before_compact` / `session_compact` / `session_compact_failed` | 自定义压缩与失败处理 |
@@ -92,7 +104,7 @@ Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 
 | 能力 | 现状 | 价值 |
 | --- | --- | --- |
-| constrainedSampling（JSON Schema / grammar） | 定义在 Tool 上；未使用；call_llm 的 outputSchema 仍是 prompt 约束 | 约束工具参数，不能直接当成文本结构化输出开关；需区分 prefer/require 并保留本地校验 |
+| constrainedSampling（JSON Schema / grammar） | 内置 read/bash/powershell/edit/write 自 0.86.0 起默认 `strict: "prefer"`（Phaneris 包装的定义同样生效）；Phaneris 自定义工具未启用；call_llm 的 outputSchema 仍是 prompt 约束 | 约束工具参数，不能直接当成文本结构化输出开关；需区分 prefer/require 并保留本地校验 |
 | toolChoice | 未暴露；Agent 默认 auto | 强制调用指定工具，配合结构化输出/API 工具 |
 | onPayload / onResponse | 已在 durable 流包装中组合原生回调，保留 SDK extension runner | 只读请求/响应观测，随模型结果原子提交 |
 | samplingParams | 未暴露 | top_p / top_k / min_p 等自定义采样参数 |
@@ -100,6 +112,8 @@ Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 | transport / websocketConnectTimeoutMs | 默认 auto 已生效；不可配置、不可观测 | Codex/ChatGPT WebSocket 连接复用与故障回退 |
 | thinkingBudgets | 默认值生效；不可配置 | 控制 token 型 thinking 的推理预算 |
 | maxRetries / maxRetryDelayMs | 已由 Phaneris 固定策略；不可按会话调整 | 目前够用 |
+| promptCache 寿命 / 预热 | `promptCache` 已被 warm 读取；`cacheWarming` 被 Phaneris 显式关闭 | 重新启用需先让刷新可提交、可归因（见 §0 升级核对） |
+| TranscriptContext | 请求输入已归一化；自定义 provider 需用 `getCurrentSystemPrompt()` / `getCurrentTools()` 读取提示与工具 | 影响任何自实现 `streamSimple` 的扩展，Phaneris 目前无自实现 provider |
 
 Provider-specific options 需要按 API 分派，因为 coding agent 默认走 streamSimple()，而这些选项通常只在 models.stream() 的完整类型上暴露：
 
@@ -170,7 +184,7 @@ Phaneris 用自己的 skills、plugins、memory、source 和 system prompt 体�
 
 这些能力已经通过 SDK 默认值生效，不是缺失，只是不可配、不可观测：
 
-| 设置 | SDK 默认值（0.85.1） | 说明 |
+| 设置 | SDK 默认值（0.86.0） | 说明 |
 | --- | --- | --- |
 | transport | auto | Codex/ChatGPT 自动 WebSocket + SSE fallback |
 | thinkingBudgets | 1024 / 2048 / 8192 / 16384 | minimal / low / medium / high |
@@ -179,6 +193,8 @@ Phaneris 用自己的 skills、plugins、memory、source 和 system prompt 体�
 | branchSummary reserveTokens / skipPrompt | 16384 / false | 分支摘要当前不可调 |
 | httpIdleTimeoutMs | 300000 | 不可配置 |
 | provider WebSocket connect timeout | 15000（Codex responses） | 不可配置 |
+| cacheWarming | streaming（0.86.0 新增） | Phaneris 显式覆盖为 off：预热刷新不经 durable 边界，属 ledger 外花费 |
+| retry.maxAgentDelayMs | 60000（0.86.0 新增） | 已在 Phaneris 重试策略中显式声明，与 SDK 默认一致 |
 
 ---
 

@@ -7,6 +7,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 ## Improvements
 
 - Pi-native request fingerprints and selected response headers now accompany durable model outcomes. Active-run lifecycle observations and SDK usage snapshots support auditing, with model outcome/ledger parity checks that distinguish unresolved requests from zero-cost completion.
+- The Pi SDK is upgraded to 0.86.0. Provider requests now carry the SDK's normalized transcript, so instruction and tool changes are delivered as in-place prompt deltas that keep the cached prefix, and the Phaneris system prompt is projected as the leading system message. Built-in file/shell tools use strict-preferred JSON-schema arguments where the provider supports it, and agent-level retry backoff is capped at 60 seconds. Pi 0.86.0 also enables prompt-cache warming by default — background re-sends that bill as a full-context cache read during long tool runs — and Phaneris keeps it off, because those refreshes bypass the durable ledger and would spend outside accounting. Background spend therefore stays exactly where it was.
 
 ## Bug Fixes
 

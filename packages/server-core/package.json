@@ -28,7 +28,7 @@
   "dependencies": {
     "@phaneris/core": "workspace:*",
     "@phaneris/shared": "workspace:*",
-    "@earendil-works/pi-ai": "0.85.1",
+    "@earendil-works/pi-ai": "0.86.0",
     "jose": "^6.2.12",
     "markitdown-js": "^0.0.14",
     "openai": "^7.10.0",

@@ -329,10 +329,18 @@ export interface ModelReconciliationResult {
   operationState: DurableOperationState
 }
 
+/** JSON-compatible values, matching what the ledger persists and providers accept. */
+export type DurableJsonValue =
+  | null | boolean | number | string
+  | DurableJsonValue[]
+  | { [key: string]: DurableJsonValue }
+
+export type DurableJsonObject = { [key: string]: DurableJsonValue }
+
 export type DurableCanonicalContextItem =
   | { kind: 'user'; eventId: string; seq: number; operationId: string; content: string }
   | { kind: 'assistant'; eventId: string; seq: number; operationId: string; content: string }
-  | { kind: 'tool_call'; eventId: string; seq: number; operationId: string; toolOperationId: string; toolCallId: string; toolName: string; args: Record<string, unknown> }
+  | { kind: 'tool_call'; eventId: string; seq: number; operationId: string; toolOperationId: string; toolCallId: string; toolName: string; args: DurableJsonObject }
   | { kind: 'tool_outcome'; eventId: string; seq: number; operationId: string; toolOperationId: string; toolCallId: string; toolName: string; result: unknown; isError: boolean }
 
 export interface DurableCanonicalModelContext {

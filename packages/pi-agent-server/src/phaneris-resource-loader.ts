@@ -14,6 +14,16 @@ export function setPhanerisSystemPrompt(prompt: string): void {
 }
 
 /**
+ * The prompt Pi delivers to the provider for this session: the loader's
+ * `systemPromptOverride` and the inline `before_agent_start` hook both read it,
+ * and the hook returns it as the forced prompt, so it is the whole system
+ * prompt of every request.
+ */
+export function getPhanerisSystemPrompt(): string {
+  return currentPhanerisPrompt;
+}
+
+/**
  * Create the SDK resource loader for a Phaneris session.
  *
  * Replaces the private-field stamping in the deleted override module:
