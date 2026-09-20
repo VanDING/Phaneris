@@ -59,7 +59,7 @@ These documents preserve decisions and evidence. Their paths, line numbers, bran
 | [Cross-ecosystem plugin assessment](cross-ecosystem-plugin-porting-assessment.md) | Exploratory research; implementation requires a separate current plan. |
 | [Memory system design](memory-system-design.md) | Research placeholder; no memory architecture is approved by this document. |
 | [System-prompt per-turn analysis](system-prompt-per-turn-analysis.md) | Point-in-time analysis and evidence record. |
-| [Pi SDK native capabilities gap analysis](pi-sdk-native-capabilities-gap-analysis.md) | Point-in-time capability gap analysis for Pi SDK 0.85.1; revalidate before integration. |
+| [Pi SDK native capabilities gap analysis](pi-sdk-native-capabilities-gap-analysis.md) | Point-in-time capability gap analysis (2026-09-20) for Pi SDK 0.86.0, including the implemented observation boundary; revalidate against current code. |
 | [Original code audit](../AUDIT_REPORT.md) | Historical security and quality snapshot; findings must be revalidated against current code. |
 | [GPUIX / gpui-kit migration assessment](native-frontend-migration-gpuix-assessment.md) | Exploratory assessment (2026-09-12); no product code was changed and no route was adopted. |
 | [GPUIX profile](research/gpuix-profile.md) · [gpui-kit profile](research/gpui-kit-profile.md) · [GPUI ecosystem and gaps](research/gpui-ecosystem-and-gaps.md) · [Renderer capability inventory](research/craft-renderer-inventory.md) | Research annexes behind the migration assessment; the inventory holds the raw measurements, the profiles the source-level evidence. |

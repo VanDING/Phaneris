@@ -10,8 +10,8 @@
 
 Run capable AI agents across your files, tools, services, and documents — with a desktop workspace that makes every important action reviewable.
 
-[![Version](https://img.shields.io/badge/version-0.2.0-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.0.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-0.85.1-5b7cfa?style=flat-square)](docs/pi-kernel.md)
+[![Version](https://img.shields.io/badge/version-0.2.1-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.1.md)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-0.86.0-5b7cfa?style=flat-square)](docs/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![中文](https://img.shields.io/badge/README-中文-2f855a?style=flat-square)](README.zh-CN.md)
@@ -101,9 +101,9 @@ The connection layer supports major hosted providers, OAuth-backed products, clo
 
 | Layer | Baseline |
 | --- | --- |
-| Agent kernel | Pi SDK `0.85.1` |
-| Desktop | Electron `44.2`, React `19.2` |
-| Runtime and tooling | Bun `1.4.2`, TypeScript `7`, Vite `8.2` |
+| Agent kernel | Pi SDK `0.86.0` |
+| Desktop | Electron `44.4.3`, React `19.3` |
+| Runtime and tooling | Bun `1.4.2`, TypeScript `7`, Vite `8.3` |
 | Integrations | MCP SDK `1.30`, native REST/local/browser tools |
 | Storage | Local session data plus workspace-local SQLite/WAL durable runtime |
 
