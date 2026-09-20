@@ -94,6 +94,29 @@ function getCSSHighlights(): Map<string, Highlight> | undefined {
 // (Overlay types removed — overlays converged into workbench panels, Task 10)
 // ============================================================================
 
+// ============================================================================
+// History-turn paint containment
+// ============================================================================
+
+/**
+ * Class extent for turns that carry `content-visibility: auto` (`historyStyle`).
+ *
+ * `content-visibility: auto` implies paint containment, which clips descendant
+ * paint to the wrapper's padding box. Every card frame in the chat is drawn by
+ * `--shadow-minimal` — a 1px OUTER ring (`0 0 0 1px var(--border)`) painted
+ * outside the border box — so a wrapper with no horizontal/bottom padding
+ * shaves that ring off its left, right and bottom edges. The top edge only
+ * survives because the wrapper pads it (`pt-2`/`pt-4`).
+ *
+ * One pixel of padding plus a matching negative horizontal margin puts the ring
+ * back inside the clip without moving the card box (same shadow-room trick as
+ * ActiveOptionBadges). No negative vertical margins on purpose: they would
+ * fight the turn list's `space-y-2.5` margins.
+ */
+const HISTORY_SHADOW_ROOM = 'px-px -mx-px pb-px'
+/** Same, for wrappers that carry no vertical padding of their own (system / auth). */
+const HISTORY_SHADOW_ROOM_BOXED = 'px-px -mx-px py-px'
+
 function getTurnKey(turn: Turn): string {
   if (turn.type === 'user') return `user-${turn.message.id}`
   if (turn.type === 'system') return `system-${turn.message.id}`
@@ -1683,6 +1706,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                           ref={el => { if (el) turnRefs.current.set(turnKey, el); else turnRefs.current.delete(turnKey) }}
                           className={cn(
                             compactMode ? "pt-2 pb-1" : CHAT_LAYOUT.userMessagePadding,
+                            historyStyle && HISTORY_SHADOW_ROOM,
                             "motion-content rounded-lg transition-[box-shadow,background-color]",
                             isCurrentMatch && "ring-2 ring-info ring-offset-2 ring-offset-background",
                             isAnyMatch && !isCurrentMatch && "ring-1 ring-info/30",
@@ -1708,6 +1732,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                           style={historyStyle}
                           ref={el => { if (el) turnRefs.current.set(turnKey, el); else turnRefs.current.delete(turnKey) }}
                           className={cn(
+                            historyStyle && HISTORY_SHADOW_ROOM_BOXED,
                             "motion-content rounded-lg transition-[box-shadow,background-color]",
                             isCurrentMatch && "ring-2 ring-info ring-offset-2 ring-offset-background",
                             isAnyMatch && !isCurrentMatch && "ring-1 ring-info/30",
@@ -1749,6 +1774,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                           style={historyStyle}
                           ref={el => { if (el) turnRefs.current.set(turnKey, el); else turnRefs.current.delete(turnKey) }}
                           className={cn(
+                            historyStyle && HISTORY_SHADOW_ROOM_BOXED,
                             "motion-content mt-2 rounded-lg transition-[box-shadow,background-color]",
                             isCurrentMatch && "ring-2 ring-info ring-offset-2 ring-offset-background",
                             isAnyMatch && !isCurrentMatch && "ring-1 ring-info/30",
@@ -1788,6 +1814,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                         ref={el => { if (el) turnRefs.current.set(turnKey, el); else turnRefs.current.delete(turnKey) }}
                         className={cn(
                           "pt-2",
+                          historyStyle && HISTORY_SHADOW_ROOM,
                           "motion-content rounded-lg transition-[box-shadow,background-color]",
                           isCurrentMatch && "ring-2 ring-info ring-offset-2 ring-offset-background",
                           isAnyMatch && !isCurrentMatch && "ring-1 ring-info/30",
