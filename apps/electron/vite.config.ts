@@ -18,8 +18,9 @@ export default defineConfig({
         // Jotai HMR support: caches atom instances in globalThis.jotaiAtomCache
         // so that HMR module re-execution returns stable atom references
         // instead of creating new (empty) atoms that orphan existing data.
-        'jotai/babel/plugin-debug-label',
-        ['jotai/babel/plugin-react-refresh', { customAtomNames: ['atomFamily'] }],
+        // Jotai 3 moved these plugins out of the core package into `jotai-babel`.
+        'jotai-babel/plugin-debug-label',
+        ['jotai-babel/plugin-react-refresh', { customAtomNames: ['atomFamily'] }],
       ],
     }),
     tailwindcss(),

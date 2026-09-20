@@ -143,6 +143,9 @@ export function PDFPreviewOverlay({
         {fileObj && (
           <Document
             file={fileObj}
+            // react-pdf 11 defaults to Suspense; the overlay drives its own loading
+            // and error UI through these props.
+            suspense={false}
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
             loading={<div className="text-muted-foreground text-sm">{t('common.rendering')}</div>}

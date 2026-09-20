@@ -24,7 +24,8 @@ export default function PdfPreview({ bytes, onError }: { bytes: Uint8Array; onEr
       <span>{page} / {pages || '…'}</span>
       <button type="button" disabled={page >= pages} onClick={() => setPage(value => value + 1)}>{t('filePreview.next')}</button>
     </div>
-    <div className="min-h-0 flex-1 overflow-auto p-4"><Document file={file} onLoadSuccess={value => setPages(value.numPages)} onLoadError={cause => onError(cause.message)}>
+    <div className="min-h-0 flex-1 overflow-auto p-4">{/* react-pdf 11 defaults to Suspense; this panel owns its loading/error state. */}
+      <Document suspense={false} file={file} onLoadSuccess={value => setPages(value.numPages)} onLoadError={cause => onError(cause.message)}>
       <Page pageNumber={page} width={width} />
     </Document></div>
   </div>

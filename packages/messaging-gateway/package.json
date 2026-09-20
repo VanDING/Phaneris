@@ -17,12 +17,12 @@
     "@phaneris/messaging-whatsapp-worker": "workspace:*",
     "@phaneris/server-core": "workspace:*",
     "@phaneris/shared": "workspace:*",
-    "@larksuiteoapi/node-sdk": "^1.73.3",
+    "@larksuiteoapi/node-sdk": "^1.74.0",
     "@wecom/aibot-node-sdk": "^1.0.7",
     "grammy": "1.46.0"
   },
   "devDependencies": {
-    "@types/node": "26.5.0",
+    "@types/node": "26.6.2",
     "typescript": "7.0.2"
   }
 }

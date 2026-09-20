@@ -14,26 +14,26 @@
   "dependencies": {
     "@phaneris/core": "workspace:*",
     "@phaneris/ui": "workspace:*",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-i18next": "17.0.13"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-i18next": "17.0.14"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.5.0",
+    "@types/node": "^26.6.2",
     "@vitejs/plugin-react": "^6.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "1.42.0",
-    "motion": "^13.2.0",
+    "lucide-react": "1.47.0",
+    "motion": "^13.4.0",
     "react-markdown": "10.1.0",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "shiki": "4.4.3",
-    "tailwind-merge": "3.6.0",
+    "tailwind-merge": "3.7.0",
     "tailwindcss": "^4.3.3",
     "typescript": "7.0.2",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   }
 }

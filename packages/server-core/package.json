@@ -31,12 +31,12 @@
     "@earendil-works/pi-ai": "0.86.0",
     "jose": "^6.2.12",
     "markitdown-js": "^0.0.14",
-    "openai": "^7.10.0",
+    "openai": "^7.20.0",
     "sharp": "0.35.4",
     "ws": "^8.21.3"
   },
   "devDependencies": {
-    "@types/node": "26.5.0",
+    "@types/node": "26.6.2",
     "typescript": "7.0.2",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }

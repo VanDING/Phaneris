@@ -17,6 +17,18 @@ export const fsyncSync = () => { throw new Error('fsyncSync not available in bro
 export const closeSync = () => { throw new Error('closeSync not available in browser') }
 export const existsSync = () => false
 export const statSync = () => { throw new Error('statSync not available in browser') }
+export const lstatSync = () => { throw new Error('lstatSync not available in browser') }
+export const realpathSync = Object.assign(
+  () => { throw new Error('realpathSync not available in browser') },
+  { native: () => { throw new Error('realpathSync.native not available in browser') } },
+)
+export const readSync = () => { throw new Error('readSync not available in browser') }
+export const createWriteStream = () => { throw new Error('createWriteStream not available in browser') }
+export const watch = () => { throw new Error('watch not available in browser') }
+export const appendFileSync = () => {}
+export const cpSync = () => {}
+export const rmSync = () => {}
+export const symlinkSync = () => {}
 export const unlinkSync = () => {}
 export const mkdtempSync = () => ''
 export const renameSync = () => {}

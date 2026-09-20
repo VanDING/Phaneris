@@ -16,7 +16,7 @@
     "@whiskeysockets/baileys": "^6.17.16"
   },
   "devDependencies": {
-    "@types/node": "26.5.0",
+    "@types/node": "26.6.2",
     "typescript": "7.0.2"
   }
 }

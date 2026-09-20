@@ -10,8 +10,9 @@ export default defineConfig({
     react(),
     babel({
       plugins: [
-        'jotai/babel/plugin-debug-label',
-        ['jotai/babel/plugin-react-refresh', { customAtomNames: ['atomFamily'] }],
+        // Jotai 3 moved these plugins out of the core package into `jotai-babel`.
+        'jotai-babel/plugin-debug-label',
+        ['jotai-babel/plugin-react-refresh', { customAtomNames: ['atomFamily'] }],
       ],
     }),
     tailwindcss(),

@@ -97,11 +97,11 @@
     "i18next": "^26.4.2",
     "incr-regex-package": "^1.0.4",
     "shell-quote": "^1.10.0",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "peerDependencies": {
-    "@modelcontextprotocol/sdk": ">=1.30.0",
-    "zod": ">=4.5.4"
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/shell-quote": "^1.7.5"

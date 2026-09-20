@@ -5,7 +5,7 @@
 # `bun run identity:check` fails whenever these keys reappear in this file.
 extends: ./identity.generated.yml
 
-electronVersion: "44.2.0"
+electronVersion: "44.4.3"
 
 # Native addons ship as prebuilt N-API binaries via extraResources — node-pty's
 # prebuilds/<platform>-<arch>/*.node below, whose node-gyp build/** output is

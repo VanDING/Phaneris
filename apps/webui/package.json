@@ -15,11 +15,14 @@
     "@phaneris/ui": "workspace:*",
     "i18next": "^26.4.2",
     "i18next-browser-languagedetector": "^8.2.1",
-    "jotai": "^2.20.3",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-i18next": "^17.0.13",
+    "jotai": "^3.0.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-i18next": "^17.0.14",
     "sonner": "^2.0.8",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
+  },
+  "devDependencies": {
+    "jotai-babel": "^0.3.0"
   }
 }

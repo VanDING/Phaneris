@@ -201,6 +201,9 @@ export function MarkdownPdfBlock({ code, className, onCreateRegionAnnotation: _o
             <div className="flex items-start justify-center bg-white p-4">
               <Document
                 file={activeFileObj}
+                // react-pdf 11 defaults to Suspense; this embed uses the
+                // loading/error props instead, so opt out explicitly.
+                suspense={false}
                 loading={<div className="py-8 text-center text-muted-foreground text-[13px]">{t('common.rendering')}</div>}
                 error={<div className="py-6 text-center text-destructive/70 text-[13px]">{t('preview.failedToRenderPdf')}</div>}
               >

@@ -1,0 +1,16 @@
+diff --git a/dist/markitdown.js b/dist/markitdown.js
+index fbca446d87c488b75928d4d99053717d2cd7fbc2..5c03213c7b472cccafa4ff550381e5f13ae6da5a 100644
+--- a/dist/markitdown.js
++++ b/dist/markitdown.js
+@@ -1060,7 +1060,10 @@ var XlsxConverter = class extends DocumentConverter {
+     if (![".xlsx", ".xls"].includes(extension.toLowerCase())) {
+       return null;
+     }
+-    const workbook = XLSX.readFile(localPath, { bookVBA: true });
++    // Phaneris patch: the SheetJS CDN build's ESM entry reads files through its own
++    // `File` shim, which collides with the global `File` constructor on Node 20+ and
++    // Bun ("Cannot access file"). Read the bytes here and hand XLSX a buffer.
++    const workbook = XLSX.read(fs16.readFileSync(localPath), { type: "buffer", bookVBA: true });
+     let mdContent = "";
+     workbook.SheetNames.forEach((sheetName) => {
+       const worksheet = workbook.Sheets[sheetName];

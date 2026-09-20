@@ -1,0 +1,44 @@
+diff --git a/src/index.js b/src/index.js
+index ff8fd67e6b16c135a7ab33873ec7e1e59b18ec76..1c3e0b9d7e155e13c4a149b3810e8b33a52b42f2 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -1,27 +1,33 @@
+-const exec = require("child_process").exec
++const { execFile } = require("child_process")
+ const log = console.debug
+ 
+ /**
+  * @param input - URL, local image path or Buffer
+  * @param config - any OCR options and control parameters
+  * @returns default output format is text
++ *
++ * Phaneris patch (GHSA-8j44-735h-w4w2): the published implementation built a
++ * shell command string and ran it through `child_process.exec`, so a path that
++ * contained `$(...)`, backticks or quotes was interpreted by the shell. The
++ * argv is passed to `execFile` instead, which never invokes a shell.
+  */
+ function recognize(input, config = {}) {
+   const options = getOptions(config)
+   const binary = config.binary || "tesseract"
+   const isSingleLocalFile = typeof input === "string" && !input.match(/^https?:\/\//)
+-  const inputOption = isSingleLocalFile ? `"${input}"` : "stdin"
+-  const command = [binary, inputOption, "stdout", ...options].join(" ")
++  const args = isSingleLocalFile
++    ? [input, "stdout", ...options]
++    : ["stdin", "stdout", ...options]
+ 
+-  if (config.debug) log("command", command)
++  if (config.debug) log("command", binary, args)
+ 
+   return new Promise((resolve, reject) => {
+-    const child = exec(command, (error, stdout, stderr) => {
++    const child = execFile(binary, args, (error, stdout, stderr) => {
+       if (config.debug) log(stderr)
+       if (error) reject(error)
+       resolve(stdout)
+     })
+-    if (inputOption === "stdin") pipeInput(input, child)
++    if (!isSingleLocalFile) pipeInput(input, child)
+   })
+ }
+ 
