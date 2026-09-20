@@ -1307,6 +1307,8 @@
   "settings.ai.notAuthenticated": "Nieuwierzytelniony",
   "settings.ai.performance": "Wydajność",
   "settings.ai.performanceDesc": "Opcje kosztów i buforowania.",
+  "settings.ai.promptCacheWarming": "Utrzymuj pamięć podręczną podczas długich zadań",
+  "settings.ai.promptCacheWarmingDesc": "Odświeża pamięć podręczną promptów podczas długich wywołań narzędzi tylko przy przewidywanej oszczędności. Odświeżanie kosztuje dodatkowo i kończy się wraz z zadaniem. Modele bez znanego czasu ważności pamięci lub z niezgodnymi ustawieniami rozumowania są pomijane. Działa od następnego żądania do modelu.",
   "settings.ai.reAuthenticate": "Uwierzytelnij ponownie",
   "settings.ai.renameConnection": "Zmień nazwę połączenia",
   "settings.ai.rtk.description": "Zmniejsz zużycie tokenów o 60–90% w typowych poleceniach deweloperskich, kierując je przez rtk.",

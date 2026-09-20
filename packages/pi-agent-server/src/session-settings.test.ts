@@ -57,9 +57,7 @@ describe('createPhanerisSettingsManager', () => {
     expect(createPhanerisSettingsManager().getCompactionEnabled()).toBe(true);
   });
 
-  it('keeps prompt cache warming off', () => {
-    // Warming refreshes go through the SDK's model runtime, not the agent's
-    // stream function, so they would bill outside the durable ledger.
+  it('starts with prompt cache warming off until main-session accounting is installed', () => {
     expect(createPhanerisSettingsManager().getCacheWarmingMode()).toBe('off');
     expect(createPhanerisSettingsManager('ephemeral').getCacheWarmingMode()).toBe('off');
     // Documents the SDK default this policy overrides (Pi 0.86.0). If a future

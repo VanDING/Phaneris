@@ -1307,6 +1307,8 @@
   "settings.ai.notAuthenticated": "Not authenticated",
   "settings.ai.performance": "Performance",
   "settings.ai.performanceDesc": "Cost and caching options.",
+  "settings.ai.promptCacheWarming": "Keep cache warm during long tasks",
+  "settings.ai.promptCacheWarmingDesc": "Refresh prompt caches during long tool runs only when expected to save money. Refreshes incur additional charges and stop when the task ends. Models without a known cache lifetime or with incompatible thinking settings are skipped. Enabling takes effect on the next model request.",
   "settings.ai.reAuthenticate": "Re-authenticate",
   "settings.ai.renameConnection": "Rename Connection",
   "settings.ai.rtk.description": "Reduce token consumption by 60–90% on common dev commands by routing them through rtk.",

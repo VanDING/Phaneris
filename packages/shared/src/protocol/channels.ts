@@ -394,7 +394,9 @@ export const RPC_CHANNELS = {
   },
   caching: {
     GET_EXTENDED_PROMPT_CACHE: 'caching:getExtendedPromptCache',
+    GET_PROMPT_CACHE_WARMING: 'caching:getPromptCacheWarming',
     SET_EXTENDED_PROMPT_CACHE: 'caching:setExtendedPromptCache',
+    SET_PROMPT_CACHE_WARMING: 'caching:setPromptCacheWarming',
   },
   rtk: {
     GET_ENABLED: 'rtk:getEnabled',

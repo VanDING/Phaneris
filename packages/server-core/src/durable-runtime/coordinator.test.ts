@@ -3,6 +3,7 @@ import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { DurableRuntimeCoordinator } from './coordinator.js'
+import { auditModelUsage } from './model-usage-audit.js'
 
 const roots: string[] = []
 afterEach(() => {
@@ -523,5 +524,81 @@ describe('DurableRuntimeCoordinator', () => {
     expect(coordinator.storeFor(root).listUnsettledToolOperations()).toHaveLength(0)
     expect(coordinator.storeFor(root).listOperations().some(item => item.sessionId === 'branch-1')).toBe(false)
     coordinator.closeAll()
+  })
+})
+
+describe('background cache warming ledger', () => {
+  const request = {
+    sessionId: 'session-1', turnId: 'turn-1', runOperationId: 'run-1',
+    providerRequestId: 'warm-1', provider: 'test', model: 'test', canonicalRequestHash: 'warm-hash',
+    purpose: 'cache_warm' as const,
+  }
+  for (const overlapping of ['tool', 'model'] as const) test(`meters warming without disturbing pending ${overlapping} or adding context`, async () => {
+    const { root, coordinator } = setup()
+    const store = coordinator.storeFor(root)
+    if (overlapping === 'tool') {
+      await coordinator.prepareTool(root, {
+        sessionId: 'session-1', turnId: 'turn-1', runOperationId: 'run-1',
+        providerToolCallId: 'call-1', toolName: 'bash', args: { command: 'long task' },
+      })
+    } else {
+      await coordinator.prepareModel(root, { ...request, purpose: undefined, providerRequestId: 'normal-1' })
+    }
+    const state = store.getOperation('run-1')
+    const context = coordinator.getCanonicalModelContext(root, 'session-1')
+    const prepared = await coordinator.prepareModel(root, request)
+    expect(prepared.created).toBe(true)
+    expect((await coordinator.prepareModel(root, request)).created).toBe(false)
+    expect(store.getOperation('run-1')).toEqual(state)
+    const outcome = {
+      ...request, operationId: prepared.operationId, stopReason: 'stop',
+      content: [{ type: 'text', text: 'must never enter chat' }], text: 'must never enter chat',
+      usage: { inputTokens: 0, outputTokens: 1, costUsd: 0.100001,
+        payload: { kind: 'cache_warm', usage: { input: 0, output: 1, cacheRead: 100000, cacheWrite: 0,
+          totalTokens: 100001, cost: { input: 0, output: 0.000001, cacheRead: 0.1, cacheWrite: 0, total: 0.100001 } } } },
+    }
+    await coordinator.commitModelOutcome(root, outcome)
+    await coordinator.commitModelOutcome(root, outcome)
+    expect(store.getOperation('run-1')).toEqual(state)
+    expect(store.listUsage({ sessionId: 'session-1' })).toHaveLength(1)
+    expect(coordinator.getCanonicalModelContext(root, 'session-1').items).toEqual(context.items)
+    expect(store.listEvents({ operationId: 'run-1' }).filter(event => event.type === 'assistant_message_committed')).toHaveLength(0)
+    await expect(coordinator.commitModelOutcome(root, {
+      ...outcome, operationId: 'missing', providerRequestId: 'missing',
+    })).rejects.toThrow('matching dispatch')
+    coordinator.closeAll()
+  })
+
+  test('accepts metered cancellation after the owning task settles, without reopening it', async () => {
+    const { root, coordinator } = setup()
+    const prepared = await coordinator.prepareModel(root, request)
+    coordinator.completeRun(root, 'run-1', 'complete')
+    const store = coordinator.storeFor(root)
+    const state = store.getOperation('run-1')
+    await coordinator.commitModelOutcome(root, {
+      ...request, operationId: prepared.operationId, stopReason: 'aborted', content: [],
+      usage: { inputTokens: 0, outputTokens: 0, costUsd: 0.05, payload: { kind: 'cache_warm' } },
+    })
+    expect(store.getOperation('run-1')).toEqual(state)
+    expect(store.listUsage({ sessionId: 'session-1' })[0]?.costUsd).toBe(0.05)
+    await expect(coordinator.prepareModel(root, { ...request, providerRequestId: 'warm-2' })).rejects.toThrow('not open')
+    coordinator.closeAll()
+  })
+
+  test('retains an unknown refresh as pending audit evidence across restart without replay', async () => {
+    const { root, coordinator } = setup()
+    const prepared = await coordinator.prepareModel(root, request)
+    coordinator.closeAll()
+    const restarted = new DurableRuntimeCoordinator()
+    restarted.recoverWorkspace(root)
+    const store = restarted.storeFor(root)
+    const events = store.listEvents({ operationId: 'run-1' })
+    expect(store.getEvent(`${prepared.operationId}:dispatch`)).toBeDefined()
+    expect(store.listUsage({ sessionId: 'session-1' })).toHaveLength(0)
+    expect(auditModelUsage(events, []).issues).toContainEqual({
+      identity: 'model:run-1:warm-1', kind: 'pending_outcome',
+    })
+    await expect(restarted.prepareModel(root, request)).rejects.toThrow('not open')
+    restarted.closeAll()
   })
 })

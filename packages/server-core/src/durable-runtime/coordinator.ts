@@ -816,6 +816,29 @@ export class DurableRuntimeCoordinator {
     const runState = store.getOperation(request.runOperationId)
     if (!runState) throw new Error(`Durable run ${request.runOperationId} is not open`)
     if (runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
+    if (request.purpose === 'cache_warm') {
+      if (runState.phase === 'terminal' || runState.phase === 'recovery_parked') {
+        throw new Error('Cache warming requires an active run')
+      }
+      const operationId = durableModelOperationId(request.runOperationId, request.providerRequestId)
+      const outcome = store.getEvent(`${operationId}:outcome`)
+      const dispatch = store.getEvent(`${operationId}:dispatch`)
+      if (outcome || dispatch) return {
+        operationId, idempotencyKey: operationId, created: false,
+        status: outcome ? 'outcome_committed' : 'effect_pending',
+        committedSeq: (outcome ?? dispatch)!.seq ?? 0,
+      }
+      // A refresh can overlap tools and normal model requests. Its dispatch is
+      // durable evidence, but must not replace the run's execution checkpoint.
+      const committedSeq = store.appendEvents([{
+        eventId: `${operationId}:dispatch`, sessionId: request.sessionId,
+        turnId: request.turnId, operationId: request.runOperationId,
+        type: 'model_dispatch_committed', schemaVersion: 1,
+        modelVisible: false, partial: false,
+        payload: { ...request, operationId, idempotencyKey: operationId }, createdAt: Date.now(),
+      }])[0]!
+      return { operationId, idempotencyKey: operationId, created: true, status: 'effect_pending', committedSeq }
+    }
     const unsettledTools = store.listUnsettledToolOperations(request.runOperationId)
     if (unsettledTools.length > 0) {
       throw new Error(`Durable run ${request.runOperationId} still has ${unsettledTools.length} unsettled tool operation(s)`)
@@ -890,15 +913,26 @@ export class DurableRuntimeCoordinator {
     const store = this.storeFor(workspaceRootPath)
     const existing = store.getEvent(`${request.operationId}:outcome`)
     if (existing) return { committedSeq: existing.seq ?? 0 }
+    const warming = request.purpose === 'cache_warm'
     const runState = store.getOperation(request.runOperationId)
-    if (!runState) throw new Error(`Durable run ${request.runOperationId} is not open`)
-    const currentModel = (runState.data as { currentModel?: {
+    if (!runState && !warming) throw new Error(`Durable run ${request.runOperationId} is not open`)
+    if (runState && runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
+    const dispatch = warming ? store.getEvent(`${request.operationId}:dispatch`) : undefined
+    const currentModel = (warming ? dispatch?.payload : (runState!.data as { currentModel?: unknown }).currentModel) as {
       operationId?: string
       providerRequestId?: string
       provider?: string
       model?: string
       canonicalRequestHash?: string
-    } }).currentModel
+      purpose?: string
+      runOperationId?: string
+      sessionId?: string
+    } | undefined
+    if (warming && (currentModel?.purpose !== 'cache_warm'
+      || currentModel.runOperationId !== request.runOperationId
+      || currentModel.sessionId !== request.sessionId)) {
+      throw new Error('Cache warming outcome requires its matching dispatch')
+    }
     if (currentModel?.operationId !== request.operationId
       || currentModel.providerRequestId !== request.providerRequestId
       || currentModel.provider !== request.provider
@@ -907,11 +941,11 @@ export class DurableRuntimeCoordinator {
       throw new Error(`Durable run ${request.runOperationId} is not awaiting model attempt ${request.operationId}`)
     }
     const now = Date.now()
-    const checkpoint = nextState(runState, 'checkpoint', {
-      ...(typeof runState.data === 'object' && runState.data !== null ? runState.data : {}),
+    const checkpoint = warming ? undefined : nextState(runState!, 'checkpoint', {
+      ...(typeof runState!.data === 'object' && runState!.data !== null ? runState!.data : {}),
       currentModel: null,
     }, now)
-    const modelVisible = (runState.data as { modelVisible?: boolean }).modelVisible !== false
+    const modelVisible = !warming && (runState!.data as { modelVisible?: boolean }).modelVisible !== false
     const usage: RuntimeUsageRow[] = request.usage ? [{
       usageId: `model:${request.runOperationId}:${request.providerRequestId}`,
       operationId: request.runOperationId,
@@ -935,7 +969,7 @@ export class DurableRuntimeCoordinator {
       partial: false,
       payload: request,
       createdAt: now,
-    }, ...(request.text ? [{
+    }, ...(!warming && request.text ? [{
       eventId: `${request.operationId}:assistant`,
       sessionId: request.sessionId,
       turnId: request.turnId,
@@ -963,11 +997,11 @@ export class DurableRuntimeCoordinator {
       payload: item,
       createdAt: now,
     }))]
-    const committed = store.commitOperationTransition({
+    const committed = warming ? store.commitFactsAndUsage({ events, usage }) : store.commitOperationTransition({
       events,
       usage,
-      operationState: checkpoint,
-      expectedStateVersion: runState.stateVersion,
+      operationState: checkpoint!,
+      expectedStateVersion: runState!.stateVersion,
     })
     return { committedSeq: committed.eventSeqs.at(-1) ?? 0 }
   }

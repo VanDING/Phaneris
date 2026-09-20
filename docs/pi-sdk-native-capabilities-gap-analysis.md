@@ -34,6 +34,10 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 
 限制：provider 回调证据不是网络尝试计数或原始网络报文；未返回原生结果的请求仍可能未决。生命周期采集属于可报告失败的观测，不是新增的强制授权/事务闸门；执行外切换不记到无关回合。完整基线见 [pi-kernel.md](pi-kernel.md)。
 
+### 2026-09-21 Pi 0.86.1 缓存预热接入
+
+现已提供默认关闭的 `promptCacheWarming` 全局开关，仅主会话可选 `streaming`。刷新有独立 durable dispatch/outcome 与费用记录，不改写主任务检查点，不进入对话；ephemeral 和 idle 保持关闭。以下 0.86.0 升级核对保留当时的决策背景，当前实现见 [提示缓存与预热](pi-kernel.md#提示缓存与预热)。
+
 ### 2026-09-20 Pi 0.86.0 升级核对
 
 0.86.0 的两项变化直接影响本仓库，处理结论如下：
@@ -193,7 +197,7 @@ Phaneris 用自己的 skills、plugins、memory、source 和 system prompt 体�
 | branchSummary reserveTokens / skipPrompt | 16384 / false | 分支摘要当前不可调 |
 | httpIdleTimeoutMs | 300000 | 不可配置 |
 | provider WebSocket connect timeout | 15000（Codex responses） | 不可配置 |
-| cacheWarming | streaming（0.86.0 新增） | Phaneris 显式覆盖为 off：预热刷新不经 durable 边界，属 ledger 外花费 |
+| cacheWarming | streaming（0.86.0 新增） | Phaneris 默认 off；0.86.1 接入后可通过 promptCacheWarming 选择主会话 streaming，刷新独立入账 |
 | retry.maxAgentDelayMs | 60000（0.86.0 新增） | 已在 Phaneris 重试策略中显式声明，与 SDK 默认一致 |
 
 ---

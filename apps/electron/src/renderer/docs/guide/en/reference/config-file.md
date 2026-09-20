@@ -22,6 +22,7 @@ of the app's behaviour.
 | `spellCheck` | Underline misspellings in the composer |
 | `keepAwakeWhileRunning` | Prevent the display from sleeping while the agent works |
 | `richToolDescriptions` | Give the agent fuller tool documentation (more context, better choices) |
+| `promptCacheWarming` | Opt-in cost-aware prompt cache refreshes during long tool runs; default `false`. Refreshes cost extra, stop when the task settles, and require a known model cache lifetime. |
 | `extendedPromptCache` | Long-lived prompt caching where supported (Anthropic 1h, OpenAI-compatible extended retention) — cheaper repeated turns, slower first one |
 | `browserToolEnabled` | Whether the agent may drive the in-app browser |
 | `allowRemoteEvaluate` | Whether a *remote* agent may run `browser_tool evaluate`. Off means the local dispatcher refuses it outright |

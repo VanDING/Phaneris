@@ -1307,6 +1307,8 @@
   "settings.ai.notAuthenticated": "No autenticado",
   "settings.ai.performance": "Rendimiento",
   "settings.ai.performanceDesc": "Opciones de coste y caché.",
+  "settings.ai.promptCacheWarming": "Mantener la caché en tareas largas",
+  "settings.ai.promptCacheWarmingDesc": "Actualiza la caché durante ejecuciones largas de herramientas solo si se espera ahorrar dinero. Las actualizaciones generan cargos adicionales y cesan al terminar la tarea. Se omiten modelos sin duración de caché conocida o con ajustes de razonamiento incompatibles. Se aplica desde la siguiente solicitud al modelo.",
   "settings.ai.reAuthenticate": "Volver a autenticar",
   "settings.ai.renameConnection": "Renombrar conexión",
   "settings.ai.rtk.description": "Reduce el consumo de tokens entre un 60–90% en comandos comunes de desarrollo enrutándolos a través de rtk.",

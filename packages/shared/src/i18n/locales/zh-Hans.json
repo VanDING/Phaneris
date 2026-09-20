@@ -1307,6 +1307,8 @@
   "settings.ai.notAuthenticated": "未认证",
   "settings.ai.performance": "性能",
   "settings.ai.performanceDesc": "成本和缓存选项。",
+  "settings.ai.promptCacheWarming": "长任务缓存保活",
+  "settings.ai.promptCacheWarmingDesc": "长时间执行工具时，仅在预计能节省费用时刷新提示缓存。刷新会产生额外费用，任务结束即停止。未提供缓存寿命或推理设置不兼容的模型会跳过；开启后从下一次模型请求生效。",
   "settings.ai.reAuthenticate": "重新认证",
   "settings.ai.renameConnection": "重命名连接",
   "settings.ai.rtk.description": "通过 rtk 路由,在常见开发命令上减少 60–90% 的 token 消耗。",

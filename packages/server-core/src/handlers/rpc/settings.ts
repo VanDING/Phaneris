@@ -30,7 +30,9 @@ export const HANDLED_CHANNELS = [
   RPC_CHANNELS.appearance.GET_RICH_TOOL_DESCRIPTIONS,
   RPC_CHANNELS.appearance.SET_RICH_TOOL_DESCRIPTIONS,
   RPC_CHANNELS.caching.GET_EXTENDED_PROMPT_CACHE,
+  RPC_CHANNELS.caching.GET_PROMPT_CACHE_WARMING,
   RPC_CHANNELS.caching.SET_EXTENDED_PROMPT_CACHE,
+  RPC_CHANNELS.caching.SET_PROMPT_CACHE_WARMING,
   RPC_CHANNELS.sessions.GET_MODEL,
   RPC_CHANNELS.sessions.SET_MODEL,
   RPC_CHANNELS.settings.GET_DEFAULT_THINKING_LEVEL,
@@ -302,6 +304,18 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
     const { setExtendedPromptCache } = await import('@phaneris/shared/config/storage')
     setExtendedPromptCache(enabled)
     deps.sessionManager.refreshExtendedPromptCache?.(enabled)
+  })
+
+  server.handle(RPC_CHANNELS.caching.GET_PROMPT_CACHE_WARMING, async () => {
+    const { getPromptCacheWarming } = await import('@phaneris/shared/config/storage')
+    return getPromptCacheWarming()
+  })
+
+  server.handle(RPC_CHANNELS.caching.SET_PROMPT_CACHE_WARMING, async (_ctx, enabled: boolean) => {
+    if (typeof enabled !== 'boolean') throw new Error('Prompt cache warming must be a boolean')
+    const { setPromptCacheWarming } = await import('@phaneris/shared/config/storage')
+    setPromptCacheWarming(enabled)
+    deps.sessionManager.refreshPromptCacheWarming?.(enabled)
   })
 
   // ============================================================

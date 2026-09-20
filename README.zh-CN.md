@@ -11,7 +11,7 @@
 让 AI Agent 在文件、工具、服务和文档之间完成真正的工作，并让每个关键动作都可以检查、理解和确认。
 
 [![版本](https://img.shields.io/badge/版本-0.2.1-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.1.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-0.86.0-5b7cfa?style=flat-square)](docs/pi-kernel.md)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-0.86.1-5b7cfa?style=flat-square)](docs/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-2f855a?style=flat-square)](README.md)
@@ -101,7 +101,7 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
 
 | 层级 | 基线 |
 | --- | --- |
-| Agent 内核 | Pi SDK `0.86.0` |
+| Agent 内核 | Pi SDK `0.86.1` |
 | 桌面端 | Electron `44.4.3`、React `19.3` |
 | 运行时与工具链 | Bun `1.4.2`、TypeScript `7`、Vite `8.3` |
 | 集成协议 | MCP SDK `1.30`、原生 REST/本地文件/浏览器工具 |

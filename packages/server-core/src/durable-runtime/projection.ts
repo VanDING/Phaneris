@@ -283,7 +283,10 @@ export function projectDurableUsage(rows: RuntimeUsageRow[]): DurableUsageProjec
     }])
   })
   const full = sumTokenUsage(usages)
-  const lastFullUsage = usages.at(-1)
+  // Background refresh usage contributes to cost, never to conversational context.
+  const lastConversationIndex = ordered.findLastIndex(row =>
+    (row.payload as { kind?: string } | undefined)?.kind !== 'cache_warm')
+  const lastFullUsage = lastConversationIndex >= 0 ? usages[lastConversationIndex] : undefined
   return {
     attempts: ordered.length,
     inputTokens: full.input + full.cacheRead + full.cacheWrite,

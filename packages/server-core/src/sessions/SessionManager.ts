@@ -3789,6 +3789,14 @@ export class SessionManager implements ISessionManager {
     }
   }
 
+  /** Reconcile warming immediately in live main sessions; cold agents read storage on init. */
+  refreshPromptCacheWarming(enabled: boolean): void {
+    for (const managed of this.sessions.values()) {
+      managed.agent?.updatePromptCacheWarming?.(enabled)
+    }
+  }
+
+
   /**
    * Get or create agent for a session (lazy loading)
    * Creates the appropriate backend agent based on LLM connection.
@@ -4064,7 +4072,22 @@ export class SessionManager implements ISessionManager {
         mcpPool: managed.mcpPool,
         poolServerUrl,
         durableToolBoundary: this.durableRuntime.boundaryFor(managed.workspace.rootPath),
-        durableModelBoundary: this.durableRuntime.modelBoundaryFor(managed.workspace.rootPath),
+        durableModelBoundary: {
+          ...this.durableRuntime.modelBoundaryFor(managed.workspace.rootPath),
+          commitOutcome: async request => {
+            const result = await this.durableRuntime.commitModelOutcome(managed.workspace.rootPath, request)
+            if (request.purpose === 'cache_warm') {
+              // A cancelled refresh can finish after agent_settled. Refresh from
+              // the ledger even then, rather than relying on a later chat event.
+              this.applyDurableUsageProjection(managed)
+              if (managed.tokenUsage) {
+                this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
+              }
+              this.persistSession(managed)
+            }
+            return result
+          },
+        },
         getCanonicalModelContext: (excludeOperationId) => {
           const events = this.durableRuntime.storeFor(managed.workspace.rootPath)
             .listAllEvents({ sessionId: managed.id })

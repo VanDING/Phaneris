@@ -128,7 +128,7 @@ import { parseError, type AgentError } from './errors.ts';
 // Centralized PreToolUse pipeline
 import { runPreToolUseChecks, type PreToolUseCheckResult } from './core/pre-tool-use.ts';
 import { getRtkPath } from './core/rtk-detector.ts';
-import { getRtkEnabled, getBrowserToolEnabled, getExtendedPromptCache } from '../config/storage.ts';
+import { getRtkEnabled, getBrowserToolEnabled, getExtendedPromptCache, getPromptCacheWarming } from '../config/storage.ts';
 import type { RtkContext } from './core/rtk-rewrite.ts';
 
 // Workspace slug extraction for skill qualification
@@ -664,6 +664,7 @@ export class PiAgent extends BaseAgent {
       branchFromSdkTurnId: this.config.session?.branchFromSdkTurnId,
       browserToolEnabled: getBrowserToolEnabled(),
       cacheRetention: extendedPromptCache ? 'long' : 'short',
+      promptCacheWarming: getPromptCacheWarming(),
     });
 
     // Wait for subprocess to report ready
@@ -2694,6 +2695,12 @@ export class PiAgent extends BaseAgent {
     if (!this.subprocess) return;
     this.send({ type: 'set_cache_retention', cacheRetention: enabled ? 'long' : 'short' });
   }
+
+  updatePromptCacheWarming(enabled: boolean): void {
+    if (!this.subprocess) return;
+    this.send({ type: 'set_cache_warming', enabled });
+  }
+
 
   // ============================================================
   // Source / MCP Integration

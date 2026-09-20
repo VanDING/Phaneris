@@ -120,3 +120,20 @@ describe('durable model stream cache retention', () => {
     expect(resolverCalls).toBe(0);
   });
 });
+
+it('cancellation while awaiting T1 commits known zero usage without dispatching', async () => {
+  const controller = new AbortController();
+  let requests = 0;
+  let outcome: AssistantMessage | undefined;
+  const stream = wrapDurableModelStream(() => {
+    requests++;
+    return createAssistantMessageEventStream();
+  }, async () => {
+    controller.abort();
+    return async message => { outcome = message; };
+  });
+  const result = await (await stream(model, { messages: [] }, { signal: controller.signal })).result();
+  expect(requests).toBe(0);
+  expect(result.stopReason).toBe('aborted');
+  expect(outcome?.usage.cost.total).toBe(0);
+});

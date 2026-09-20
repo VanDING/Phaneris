@@ -122,3 +122,18 @@ describe('usage regression cases', () => {
     expect(projectModelContext(events).map(item => item.kind)).toEqual(['user', 'assistant']);
   });
 });
+
+test('warming increases cumulative cost and tokens without replacing current context usage', () => {
+  const normal = { usageId: 'model:run:1', operationId: 'run', sessionId: 's-1',
+    inputTokens: 100, outputTokens: 10, costUsd: 0.01, createdAt: 1,
+    payload: { usage: { cacheRead: 20, cacheWrite: 5 } } }
+  const warm = { usageId: 'model:run:2', operationId: 'run', sessionId: 's-1',
+    inputTokens: 0, outputTokens: 1, costUsd: 0.1, createdAt: 2,
+    payload: { kind: 'cache_warm', usage: { cacheRead: 100000, cacheWrite: 0 } } }
+  const result = projectDurableUsage([normal, warm, warm])
+  expect(result.costUsd).toBeCloseTo(0.11)
+  expect(result.totalTokens).toBe(100136)
+  expect(result.contextTokens).toBe(135)
+  expect(result.lastFullUsage?.output).toBe(10)
+  expect(projectDurableUsage([warm]).contextTokens).toBe(0)
+})

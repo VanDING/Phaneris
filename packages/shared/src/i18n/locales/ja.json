@@ -1307,6 +1307,8 @@
   "settings.ai.notAuthenticated": "未認証",
   "settings.ai.performance": "パフォーマンス",
   "settings.ai.performanceDesc": "コストとキャッシュのオプションです。",
+  "settings.ai.promptCacheWarming": "長いタスク中のキャッシュを維持",
+  "settings.ai.promptCacheWarmingDesc": "ツールの長時間実行中、費用の節約が見込める場合のみプロンプトキャッシュを更新します。更新には追加料金がかかり、タスク終了時に停止します。キャッシュ有効期間が不明、または推論設定に互換性がないモデルは対象外です。有効化は次のモデルリクエストから反映されます。",
   "settings.ai.reAuthenticate": "再認証",
   "settings.ai.renameConnection": "接続の名前を変更",
   "settings.ai.rtk.description": "rtk を介して一般的な開発コマンドをルーティングし、トークン消費を 60〜90% 削減します。",

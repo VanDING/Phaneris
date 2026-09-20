@@ -650,6 +650,8 @@ export default function AiSettingsPage() {
   // Default settings state (app-level)
   const [defaultThinking, setDefaultThinking] = useState<ThinkingLevel>(DEFAULT_THINKING_LEVEL)
   const [extendedPromptCache, setExtendedPromptCache] = useState(false)
+  const [promptCacheWarming, setPromptCacheWarming] = useState(false)
+  const [savingCacheWarming, setSavingCacheWarming] = useState(false)
   const [rtkEnabled, setRtkEnabled] = useState(false)
   const [rtkStatus, setRtkStatus] = useState<{ installed: boolean; path: string | null; version: string | null } | null>(null)
   const [rtkRechecking, setRtkRechecking] = useState(false)
@@ -682,6 +684,7 @@ export default function AiSettingsPage() {
 
         const extendedCache = await window.electronAPI.getExtendedPromptCache()
         setExtendedPromptCache(extendedCache)
+        setPromptCacheWarming(await window.electronAPI.getPromptCacheWarming())
 
 
         const rtkOn = await window.electronAPI.getRtkEnabled()
@@ -1004,6 +1007,18 @@ export default function AiSettingsPage() {
   }, [])
 
 
+  const handlePromptCacheWarmingChange = useCallback(async (enabled: boolean) => {
+    setSavingCacheWarming(true)
+    try {
+      await window.electronAPI.setPromptCacheWarming(enabled)
+      setPromptCacheWarming(enabled)
+    } catch {
+      toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.promptCacheWarming") }))
+    } finally {
+      setSavingCacheWarming(false)
+    }
+  }, [t])
+
   const handleRtkToggle = useCallback(async (enabled: boolean) => {
     setRtkEnabled(enabled)
     await window.electronAPI?.setRtkEnabled(enabled)
@@ -1164,6 +1179,13 @@ export default function AiSettingsPage() {
                     description={t("settings.ai.extendedPromptCacheDesc")}
                     checked={extendedPromptCache}
                     onCheckedChange={handleExtendedPromptCacheChange}
+                  />
+                  <SettingsToggle
+                    label={t("settings.ai.promptCacheWarming")}
+                    description={t("settings.ai.promptCacheWarmingDesc")}
+                    checked={promptCacheWarming}
+                    disabled={savingCacheWarming}
+                    onCheckedChange={handlePromptCacheWarmingChange}
                   />
                   {rtkStatus?.installed ? (
                     <>

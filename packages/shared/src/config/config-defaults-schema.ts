@@ -20,6 +20,7 @@ export interface ConfigDefaults {
     keepAwakeWhileRunning: boolean;
     richToolDescriptions: boolean;
     extendedPromptCache: boolean;
+    promptCacheWarming: boolean;
     browserToolEnabled: boolean;
     /**
      * Allow remote agents to call `browser_tool evaluate <expression>`.

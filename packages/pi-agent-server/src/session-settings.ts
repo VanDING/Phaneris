@@ -97,12 +97,8 @@ export function buildPhanerisPiSettings(purpose: PhanerisPiSessionPurpose = 'mai
     // (requestSetAutoCompaction(true)); keep the SDK default explicit here so
     // the intent is visible next to the retry policy.
     compaction: { enabled: true },
-    // Pi 0.86.0 defaults this to "streaming", which re-sends the last request
-    // with a one-token output budget during long tool runs and bills it as a
-    // full-context cache read. The refresh goes through the SDK's own model
-    // runtime, not `agent.streamFunction`, so it would spend money outside the
-    // durable T1/T2 ledger and the SDK observation audit. Keep warming off until
-    // those calls can be committed and attributed like every other request.
+    // Start off, including ephemeral sessions. The main session may opt into
+    // streaming only AFTER installing its independent warming accounting.
     cacheWarming: 'off',
   };
 }

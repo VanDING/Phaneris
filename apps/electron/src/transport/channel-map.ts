@@ -372,7 +372,9 @@ export const CHANNEL_MAP = {
 
   // Prompt caching & context
   getExtendedPromptCache: invoke(RPC_CHANNELS.caching.GET_EXTENDED_PROMPT_CACHE),
+  getPromptCacheWarming: invoke(RPC_CHANNELS.caching.GET_PROMPT_CACHE_WARMING),
   setExtendedPromptCache: invoke(RPC_CHANNELS.caching.SET_EXTENDED_PROMPT_CACHE),
+  setPromptCacheWarming: invoke(RPC_CHANNELS.caching.SET_PROMPT_CACHE_WARMING),
 
   // RTK token optimization
   getRtkEnabled: invoke(RPC_CHANNELS.rtk.GET_ENABLED),

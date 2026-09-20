@@ -1307,6 +1307,8 @@
   "settings.ai.notAuthenticated": "Nincs hitelesítve",
   "settings.ai.performance": "Teljesítmény",
   "settings.ai.performanceDesc": "Költség- és gyorsítótárazási lehetőségek.",
+  "settings.ai.promptCacheWarming": "Gyorsítótár fenntartása hosszú feladatoknál",
+  "settings.ai.promptCacheWarmingDesc": "Hosszú eszközfuttatás közben csak várható megtakarítás esetén frissíti a prompt gyorsítótárát. A frissítés díjköteles, és a feladat végén leáll. Az ismeretlen gyorsítótár-élettartamú vagy inkompatibilis gondolkodási beállítású modelleket kihagyja. A következő modellkéréstől érvényes.",
   "settings.ai.reAuthenticate": "Újrahitelesítés",
   "settings.ai.renameConnection": "Kapcsolat átnevezése",
   "settings.ai.rtk.description": "Csökkentsd a tokenfelhasználást 60–90%-kal a gyakori fejlesztői parancsoknál az rtk használatával.",

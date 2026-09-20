@@ -27,6 +27,19 @@ export function wrapDurableModelStream(
       try {
         const observed = observeNativeRequest(effectiveOptions);
         const commit = await prepare(model, context, observed.observation);
+        if (effectiveOptions?.signal?.aborted) {
+          // T1 may wait for the host while warming is disabled or the run ends.
+          // No provider call has occurred, so a zero-usage cancellation is known.
+          const aborted: AssistantMessage = {
+            role: 'assistant', content: [], api: model.api, provider: model.provider, model: model.id,
+            usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, totalTokens: 0,
+              cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } },
+            stopReason: 'aborted', timestamp: Date.now(),
+          };
+          await commit(aborted);
+          target.push({ type: 'error', reason: 'aborted', error: aborted });
+          return;
+        }
         const source = await stream(model, context, observed.options);
         for await (const event of source) {
           if (event.type === 'done' || event.type === 'error') {

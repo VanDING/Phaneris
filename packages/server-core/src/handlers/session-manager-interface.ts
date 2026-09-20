@@ -139,6 +139,7 @@ export interface ISessionManager {
   refreshBrowserToolAvailability(enabled: boolean): void
   /** Push the extended-prompt-cache setting to live sessions when supported. */
   refreshExtendedPromptCache?(enabled: boolean): void
+  refreshPromptCacheWarming?(enabled: boolean): void
 
   // ---------------------------------------------------------------------------
   // Messaging

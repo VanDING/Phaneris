@@ -4,7 +4,7 @@
 
 ## 当前基线
 
-- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` **0.86.0**。
+- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` **0.86.1**。
 - 包管理器与打包运行时：Bun **1.4.2**；版本由 `package.json`、CI 和打包脚本共同固定。
 - 后台：只有 `PiAgent`。仓库不直接依赖 Claude Agent SDK，也不打包 Claude 原生二进制。
 - Anthropic/Claude 模型、OAuth 连接名以及 `CLAUDE.md` 项目上下文属于提供商或文件格式兼容，不代表存在第二套 agent 后台。
@@ -18,7 +18,7 @@ packages/server-core (SessionManager)
           │ AgentBackend + JSONL
 packages/shared (PiAgent + event adapter + permissions)
           │ stdio
-packages/pi-agent-server (Pi 0.86.0)
+packages/pi-agent-server (Pi 0.86.1)
           │ provider API / local tools / proxied session tools
 ```
 
@@ -70,8 +70,33 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 ## 提示缓存与预热
 
 - Pi 0.86.0 默认开启提示缓存预热（`cacheWarming: "streaming"`）：长时间工具执行期间重发上一次请求，输出上限 1 token，按整段上下文的 cache read 计费；需要模型有该保留档位的缓存寿命（内置 catalog 仅直接 Anthropic 提供，并可经 `models.json` 的 `promptCache` 声明）。
-- 预热刷新走 SDK 自己的 model runtime（`ModelRuntime.streamSimple`），不经过 `agent.streamFunction`，因此既不产生 T1/T2 durable 记录，也不进入 SDK 观测审计；其 usage 只写入 SDK session 的 `cache_warm` 条目。
-- Phaneris 会话显式设置 `cacheWarming: 'off'`，在预热刷新能被提交与归因之前不允许 ledger 之外的 provider 花费。`extendedPromptCache` 只控制缓存保留档位（short/long），与预热无关。
+- SDK 的预热通过 `ModelRuntime.streamSimple` 发起，绕过 `agent.streamFunction`。Phaneris 在 runtime 边界为这些请求建立独立的 `purpose: 'cache_warm'` T1/T2 记录；普通请求保留原边界，不重复计费。主会话先安装记账再按设置启用，ephemeral 会话始终关闭。
+- 全局 `promptCacheWarming` 默认 `false`，在 AI 设置的性能区显示为「长任务缓存保活」。开启仅映射到 `streaming`，从下一次真实模型请求开始；关闭立即取消候选和在途刷新，不提供 `idle`。冷启动、会话重建读取持久设置，热更新推送所有活跃子进程。
+- `extendedPromptCache` 独立控制 short/long 保留档位；切换档位会取消旧候选，下一请求按新 TTL 安排预热。缺少对应档位寿命或推理设置不兼容的模型会被 SDK 跳过，设置说明明确展示这些条件。
+
+### 0.86.1 评估与接入（2026-09-21）
+
+2026-09-20 的评估建议先关闭预热，原因是费用未接入账本。现已补齐显式开关与独立记账，因此允许用户选择开启，但保持默认关闭，尚未依据真实负载证明应当默认开启。
+
+- 刷新可与工具及正常模型请求并行，独立 dispatch/outcome 事件不替换主任务的执行检查点。结果与 usage 原子提交、按请求身份去重；刷新响应不进入助手消息或工具批次。
+- 预热计入累计 token 和费用，但不替换当前上下文用量。任务结束后晚到的 usage 仍可入账并刷新 UI，不重开任务。T1 等待期间取消且尚未调用 provider，记录确定的零费用取消；请求抛出异常且费用未知时保留 pending 证据，不伪造零费用、不自动重放。
+- SDK 的 `cache_warming_decision` 记录预计成本与决策供审计；SDK session 的 `cache_warm` usage 仅作参考，不再次加到费用账本。
+- SDK 路由适配依赖 0.86.1 的调用契约：普通 agent stream 同步调用 runtime，而刷新在独立 timer 中以 `maxTokens: 1 / maxRetries: 0` 调用。真实 SDK 测试覆盖普通请求不重复计费、开关与结束停止、无 TTL 跳过；后续升级需继续验证此契约。
+
+预热是在缓存过期前保活，不能让首次请求命中缓存。SDK 根据模型价格与上一请求的实际 prompt token 数计算：`预期净节省 = 续跑概率 × max(冷缓存成本 − 缓存读取成本, 0) − 预热成本`，达到 0.05 美元才刷新；预热成本按整段 prompt 的缓存读取加 1 个输出 token 估算，实际费用仍以 provider usage 为准。
+
+| 场景 | 评估 |
+| --- | --- |
+| 大上下文、工具执行接近或超过短缓存寿命 | 最有价值的候选；`streaming` 按 100% 续跑概率评估，5 分钟 TTL 约在 4 分 30 秒刷新，agent settled 即停止 |
+| 短工具调用、小上下文 | 通常无需预热，正常请求已刷新缓存，或预计节省达不到阈值 |
+| 已选用 1 小时缓存保留 | 首次候选约在 54 分钟；普通工具执行收益有限，active 预热最多持续到最后真实请求后 60 分钟 |
+| 等待用户续聊 | `idle` 使用上游固定的 15% 续聊概率，非 Phaneris 实测；最多持续 30 分钟，因此 1 小时 TTL 不会触发空闲预热 |
+| 没有对应档位 `promptCache` 元数据的模型/代理 | 不会预热；不应为了触发功能而猜测缓存寿命 |
+| Anthropic 非 adaptive thinking 模型开启推理 | SDK 跳过，1 token 重放不能保留原 thinking budget 对应的缓存键 |
+
+建议：先按需启用 main 会话的 `streaming`，比较长工具执行后的 cache miss、累计费用和首响应延迟。没有 Phaneris 续聊数据前继续不开放 `idle`。本次使用真实 SDK 与模拟 provider 做本地验证，未发起付费请求，也未声称测得实际节省。
+
+参考：[Pi 0.86.1 发布说明](https://github.com/earendil-works/pi/releases/tag/v0.86.1)、[Cache Warming 设置](https://github.com/earendil-works/pi/blob/v0.86.1/packages/coding-agent/docs/settings.md#cache-warming)、[预热实现](https://github.com/earendil-works/pi/blob/v0.86.1/packages/coding-agent/src/core/cache-warmer.ts)。
 
 ## 性能基线
 

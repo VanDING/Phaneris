@@ -5,6 +5,12 @@ export type ObserveLifecycle = (event: string, data: Record<string, unknown>, sd
 
 /** Only observes; never returns block/transform or changes a message after T2. */
 export function registerNativeLifecycle(pi: ExtensionAPI, observe: ObserveLifecycle): void {
+  pi.on('cache_warming_decision', (event, ctx) => {
+    observe(event.type, {
+      action: event.action, warmCost: event.warmCost, missCost: event.missCost,
+      continuationProbability: event.continuationProbability,
+    }, ctx.sessionManager.getSessionId());
+  });
   pi.on('tool_call', (event, ctx) => {
     observe(event.type, {
       toolCallId: event.toolCallId, toolName: event.toolName,

@@ -732,7 +732,9 @@ export interface ElectronAPI {
 
   // Prompt caching & context
   getExtendedPromptCache(): Promise<boolean>
+  getPromptCacheWarming(): Promise<boolean>
   setExtendedPromptCache(enabled: boolean): Promise<void>
+  setPromptCacheWarming(enabled: boolean): Promise<void>
 
   // RTK token optimization
   getRtkEnabled(): Promise<boolean>

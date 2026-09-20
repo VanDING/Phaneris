@@ -517,6 +517,7 @@ export interface AgentBackend {
    * Implementations that own a subprocess must not interrupt an active turn.
    */
   updateExtendedPromptCache?(enabled: boolean): void;
+  updatePromptCacheWarming?(enabled: boolean): void;
 
   /**
    * Dispose resources before an idle backend restart. Backends with subprocesses

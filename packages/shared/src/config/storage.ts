@@ -81,6 +81,7 @@ export interface StoredConfig {
   browserToolEnabled?: boolean;  // Enable built-in browser tool (default: true). Disable for Playwright/Puppeteer.
   allowRemoteEvaluate?: boolean;  // Allow remote agents to call `browser_tool evaluate` on local browser (default: true).
   // Prompt caching & context
+  promptCacheWarming?: boolean; // Cost-aware warming during active tool runs (default: false)
   extendedPromptCache?: boolean;  // Use long-lived prompt cache retention where supported (default: false)
   // Token optimization
   rtkEnabled?: boolean;  // Route Bash commands through rtk to compress tool output (default: false). https://github.com/rtk-ai/rtk
@@ -134,6 +135,7 @@ export const FALLBACK_CONFIG_DEFAULTS: ConfigDefaults = {
     keepAwakeWhileRunning: false,
     richToolDescriptions: true,
     extendedPromptCache: false,
+    promptCacheWarming: false,
     browserToolEnabled: true,
     allowRemoteEvaluate: true,
   },
@@ -504,6 +506,18 @@ export function setExtendedPromptCache(enabled: boolean): void {
   const config = loadStoredConfig();
   if (!config) return;
   config.extendedPromptCache = enabled;
+  saveConfig(config);
+}
+
+/** Cost-aware cache warming during active runs only. Never enables idle warming. */
+export function getPromptCacheWarming(): boolean {
+  return loadStoredConfig()?.promptCacheWarming === true;
+}
+
+export function setPromptCacheWarming(enabled: boolean): void {
+  const config = loadStoredConfig();
+  if (!config) throw new Error('Configuration is unavailable');
+  config.promptCacheWarming = enabled;
   saveConfig(config);
 }
 

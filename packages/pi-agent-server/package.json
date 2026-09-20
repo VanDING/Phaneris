@@ -14,10 +14,10 @@
     "validate": "bun run typecheck && bun run build"
   },
   "dependencies": {
-    "@earendil-works/pi-agent-core": "0.86.0",
-    "@earendil-works/pi-ai": "0.86.0",
-    "@earendil-works/pi-coding-agent": "0.86.0",
-    "@earendil-works/pi-server": "0.86.0",
+    "@earendil-works/pi-agent-core": "0.86.1",
+    "@earendil-works/pi-ai": "0.86.1",
+    "@earendil-works/pi-coding-agent": "0.86.1",
+    "@earendil-works/pi-server": "0.86.1",
     "@sinclair/typebox": "^0.34.52",
     "duck-duck-scrape": "^2.2.7",
     "node-html-parser": "9.0.4",

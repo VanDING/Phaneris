@@ -79,6 +79,7 @@ registerBunOAuthFlows();
 // the call is idempotent.
 import { setDefaultStreamFn, type StreamFn } from '@earendil-works/pi-agent-core';
 import { wrapDurableModelStream } from './durable-model-stream.ts';
+import { installCacheWarmingAccounting } from './cache-warming-accounting.ts';
 import { streamSimple } from '@earendil-works/pi-ai/compat';
 
 /**
@@ -88,30 +89,31 @@ import { streamSimple } from '@earendil-works/pi-ai/compat';
  */
 let piCacheRetention: CacheRetention = 'short';
 
-function withDurableAccounting(stream: StreamFn): StreamFn {
+function withDurableAccounting(stream: StreamFn, purpose?: 'cache_warm'): StreamFn {
   return wrapDurableModelStream(stream, async (model, context, requestObservation) => {
     const requestSeq = ++promptSnapshotSeq;
     const { canonicalRequestHash, contextSnapshot, systemPrompt } = prepareRequestDiagnostics(model, context);
-    rememberPromptSnapshot(requestSeq, systemPrompt, contextSnapshot);
+    if (!purpose) rememberPromptSnapshot(requestSeq, systemPrompt, contextSnapshot);
     const providerRequestId = String(requestSeq);
     const durableRun = currentDurableModelRun();
     if (!initConfig || !durableRun) {
+      if (purpose) throw new Error('Cache warming requires durable accounting');
       return async message => { Object.assign(message, { durableRequestSeq: requestSeq }); };
     }
     const prepared = await requestDurableModelPrepare(
-      providerRequestId, model.provider, model.id, canonicalRequestHash,
+      providerRequestId, model.provider, model.id, canonicalRequestHash, purpose, durableRun,
     );
     return async message => {
       const committedSeq = await requestDurableModelOutcome({
         prepared, providerRequestId, provider: model.provider, model: model.id,
-        canonicalRequestHash, message, requestObservation,
+        canonicalRequestHash, message, requestObservation, purpose, durableRun,
       });
       Object.assign(message, {
         durableOperationId: prepared.operationId,
         durableSeq: committedSeq,
         durableRequestSeq: requestSeq,
       });
-      rememberDurableToolBatch(message, prepared.operationId);
+      if (!purpose) rememberDurableToolBatch(message, prepared.operationId);
     };
   }, () => piCacheRetention);
 }
@@ -210,6 +212,7 @@ interface InitMessage {
   browserToolEnabled?: boolean;
   /** Pi SDK native prompt-cache retention ('long' = extended TTL where supported) */
   cacheRetention?: CacheRetention;
+  promptCacheWarming?: boolean;
 }
 
 interface RuntimeConfigUpdateMessage {
@@ -245,6 +248,7 @@ type InboundMessage =
   | { type: 'set_auto_compaction'; id: string; enabled: boolean }
   | { type: 'set_browser_tool_enabled'; enabled: boolean }
   | { type: 'set_cache_retention'; cacheRetention: CacheRetention }
+  | { type: 'set_cache_warming'; enabled: boolean }
   | RuntimeConfigUpdateMessage
   | { type: 'steer'; message: string }
   | { type: 'token_update'; piAuth: { provider: string; credential: PiCredential } }
@@ -336,6 +340,7 @@ interface OutboundDurableToolOutcomeReq {
   isError: boolean;
 }
 interface OutboundDurableModelPrepareReq {
+  purpose?: 'cache_warm';
   type: 'durable_model_prepare_request';
   requestId: string;
   sessionId: string;
@@ -347,6 +352,7 @@ interface OutboundDurableModelPrepareReq {
   canonicalRequestHash: string;
 }
 interface OutboundDurableModelOutcomeReq {
+  purpose?: 'cache_warm';
   type: 'durable_model_outcome_request';
   requestId: string;
   sessionId: string;
@@ -1055,9 +1061,14 @@ async function ensureSession(): Promise<AgentSession> {
 
   // Create the session — tools flow through customTools + allowlist (see comment above).
   const { session } = await createAgentSession(sessionOptions);
-  // SDK 0.85 supplies its own ModelRuntime stream, bypassing the global default.
-  // Wrap that stream so main requests and compaction both cross the ledger boundary.
-  session.agent.streamFunction = withDurableAccounting(session.agent.streamFunction);
+  // Ordinary requests keep their existing boundary. SDK background refreshes
+  // use a distinct boundary and never publish assistant/tool output.
+  const sessionStream = installCacheWarmingAccounting(
+    modelRuntime, session.agent.streamFunction,
+    stream => withDurableAccounting(stream, 'cache_warm'),
+  );
+  session.agent.streamFunction = withDurableAccounting(sessionStream);
+  session.setCacheWarmingMode(initConfig?.promptCacheWarming === true ? 'streaming' : 'off');
   piSession = session;
 
   toolsChanged = false;
@@ -1210,8 +1221,9 @@ async function requestDurableModelPrepare(
   provider: string,
   model: string,
   canonicalRequestHash: string,
+  purpose?: 'cache_warm',
+  durableRun = currentDurableModelRun(),
 ): Promise<PreparedDurableModel> {
-  const durableRun = currentDurableModelRun();
   if (!initConfig || !durableRun) {
     throw new Error('Durable model boundary is unavailable');
   }
@@ -1221,6 +1233,7 @@ async function requestDurableModelPrepare(
   });
   send({
     type: 'durable_model_prepare_request',
+    purpose,
     requestId,
     sessionId: initConfig.sessionId,
     turnId: durableRun.turnId,
@@ -1240,6 +1253,8 @@ async function requestDurableModelPrepare(
 
 async function requestDurableModelOutcome(input: {
   prepared: PreparedDurableModel;
+  purpose?: 'cache_warm';
+  durableRun?: { runOperationId: string; turnId: string };
   providerRequestId: string;
   provider: string;
   model: string;
@@ -1247,7 +1262,7 @@ async function requestDurableModelOutcome(input: {
   message: AssistantMessage;
   requestObservation?: import('../../shared/src/durable-runtime/types.ts').NativeRequestObservation;
 }): Promise<number> {
-  const durableRun = currentDurableModelRun();
+  const durableRun = input.durableRun ?? currentDurableModelRun();
   if (!initConfig || !durableRun) {
     throw new Error('Durable model outcome boundary is unavailable');
   }
@@ -1257,6 +1272,7 @@ async function requestDurableModelOutcome(input: {
   });
   send({
     type: 'durable_model_outcome_request',
+    purpose: input.purpose,
     requestId,
     sessionId: initConfig.sessionId,
     turnId: durableRun.turnId,
@@ -1269,8 +1285,8 @@ async function requestDurableModelOutcome(input: {
     stopReason: input.message.stopReason,
     responseId: input.message.responseId,
     requestObservation: input.requestObservation,
-    content: input.message.content,
-    text: input.message.content
+    content: input.purpose ? [] : input.message.content,
+    text: input.purpose ? '' : input.message.content
       .filter(part => part.type === 'text')
       .map(part => part.text)
       .join(''),
@@ -1279,7 +1295,7 @@ async function requestDurableModelOutcome(input: {
       outputTokens: input.message.usage.output,
       costUsd: input.message.usage.cost.total,
       payload: {
-        kind: 'model_attempt', requestSeq: Number(input.providerRequestId), usage: input.message.usage,
+        kind: input.purpose ?? 'model_attempt', requestSeq: Number(input.providerRequestId), usage: input.message.usage,
         costSource: 'pi_sdk_estimate', responseModel: input.message.responseModel,
         providerThinkingLevel: input.message.providerThinkingLevel,
       },
@@ -2199,6 +2215,12 @@ function handleSetCacheRetention(
   piCacheRetention = msg.cacheRetention === 'long' ? 'long' : 'short';
   process.env.PI_CACHE_RETENTION = piCacheRetention;
   debugLog(`Prompt cache retention set to '${piCacheRetention}'`);
+  // The saved candidate belongs to the previous retention tier. Cancel it;
+  // the next real request schedules a candidate with the new tier's TTL.
+  if (piSession) {
+    piSession.setCacheWarmingMode('off');
+    piSession.setCacheWarmingMode(initConfig?.promptCacheWarming === true ? 'streaming' : 'off');
+  }
 }
 
 function handleToolExecuteResponse(msg: Extract<InboundMessage, { type: 'tool_execute_response' }>): void {
@@ -2642,6 +2664,11 @@ async function processMessage(msg: InboundMessage): Promise<void> {
 
     case 'set_browser_tool_enabled':
       handleSetBrowserToolEnabled(msg);
+      break;
+
+    case 'set_cache_warming':
+      if (initConfig) initConfig.promptCacheWarming = msg.enabled === true;
+      piSession?.setCacheWarmingMode(msg.enabled === true ? 'streaming' : 'off');
       break;
 
     case 'set_cache_retention':
