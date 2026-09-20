@@ -12,6 +12,28 @@ const response: AssistantMessage = {
 };
 
 describe('durable model stream', () => {
+  it('commits native request evidence with the outcome before publishing completion', async () => {
+    const stream = wrapDurableModelStream(async (actualModel, _context, options) => {
+      await options?.onPayload?.({ input: 'confidential' }, actualModel);
+      await options?.onResponse?.({ status: 200, headers: { 'x-request-id': 'request-123' } }, actualModel);
+      const source = createAssistantMessageEventStream();
+      source.push({ type: 'done', reason: 'toolUse', message: response });
+      return source;
+    }, async (_model, _context, evidence) => async () => {
+      expect(evidence?.payloads).toHaveLength(1);
+      expect(evidence?.responses[0]?.headers['x-request-id']).toBe('request-123');
+      expect(JSON.stringify(evidence)).not.toContain('confidential');
+    });
+    expect((await (await stream(model, { messages: [] })).result()).stopReason).toBe('toolUse');
+  });
+
+  it('leaves an indeterminate thrown stream pending instead of committing fabricated zero usage', async () => {
+    let commits = 0;
+    const stream = wrapDurableModelStream(() => { throw new Error('connection lost after dispatch'); },
+      async () => async () => { commits++; });
+    expect((await (await stream(model, { messages: [] })).result()).stopReason).toBe('error');
+    expect(commits).toBe(0);
+  });
   for (const failed of [false, true]) {
     it(`commits ${failed ? 'failed partial' : 'tool-only'} usage before forwarding the response`, async () => {
       const order: string[] = [];
@@ -22,7 +44,7 @@ describe('durable model stream', () => {
         order.push('request');
         expect(actualModel).toBe(model);
         expect(actualContext).toBe(context);
-        expect(actualOptions).toBe(options);
+        expect(actualOptions).toMatchObject(options);
         const source = createAssistantMessageEventStream();
         source.push(failed
           ? { type: 'error', reason: 'error', error: message }

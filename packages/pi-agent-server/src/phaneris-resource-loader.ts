@@ -1,5 +1,6 @@
 import { mkdirSync } from 'node:fs';
 import { DefaultResourceLoader } from '@earendil-works/pi-coding-agent';
+import { registerNativeLifecycle, type ObserveLifecycle } from './native-lifecycle-observation.ts';
 
 /**
  * Current Phaneris system prompt for the active session.
@@ -35,6 +36,7 @@ export async function createPhanerisResourceLoader(options: {
   agentDir: string;
   /** Prompt source for this loader; defaults to the module-level current Phaneris prompt. */
   getPrompt?: () => string;
+  observeLifecycle?: ObserveLifecycle;
 }): Promise<DefaultResourceLoader> {
   mkdirSync(options.agentDir, { recursive: true });
   const getPrompt = options.getPrompt ?? (() => currentPhanerisPrompt);
@@ -51,6 +53,7 @@ export async function createPhanerisResourceLoader(options: {
       {
         name: 'phaneris-system-prompt',
         factory: (pi) => {
+          if (options.observeLifecycle) registerNativeLifecycle(pi, options.observeLifecycle);
           pi.on('before_agent_start', () => {
             const prompt = getPrompt();
             return prompt ? { systemPrompt: prompt } : {};

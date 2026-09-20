@@ -50,6 +50,15 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 - 思考等级不是全局固定能力。界面按当前模型展示 Pi 报告的 `off / minimal / low / medium / high / xhigh / max` 子集。
 - Pi 在初始化、切换模型和修改等级后会回报实际生效等级。若请求等级不被模型支持，Pi 的 clamp 结果会回写会话和 UI，避免显示值与真实请求参数不一致。
 
+## 原生观测与审计
+
+- 模型流通过 Pi 原生 `onPayload` / `onResponse` 组合回调观测。保留 SDK 原有回调行为，在 payload 回调完成后计算 JSON SHA-256 与字节数；只保存允许的响应头，不保存请求正文、凭证或任意 metadata。
+- `canonicalRequestHash` 表示标准化上下文；`requestObservation` 表示 SDK provider 回调证据。两者不是同一种哈希，也不宣称等同最终网络字节。回调次数不是网络尝试次数；未触发回调不表示未发送请求。requestedOptions 仅表示边界处显式选项，不代表 SDK/provider 后续补全的最终配置。
+- 请求观测随 `model_outcome_committed` 和 usage 在同一 T2 提交。每次最多保留 32 个 payload、32 个响应观测，并记录截断及观测错误数。流直接抛异常或 T2 失败仍保留既有未决操作，不能伪造零用量完成。
+- 内联 extension 只读观察工具提议/结果、压缩前/成功/失败、模型/思考等级切换；session 订阅补充重试和 `agent_settled`。活动执行内的记录经主进程同步写入 `sdk_observation`，关联 run/turn/Pi session；执行外事件不强行归属到上一回合。保存失败会报告审计记录可能不完整。
+- 工具提议摘要发生在 Phaneris preflight 前，不是执行参数凭证。权限与参数变换仍在主进程，T1/T2 与 canonical context 仍由 Phaneris 持有。没有启用 `tool_result` / `message_end` 内容改写。
+- settled 记录包含 `getSessionStats()` 的全部 SDK entries 快照，可能包含继承历史、压缩及工具 usage；它不新增计费行。另由主进程核对当前 run 的模型结果与 usage ledger，区分遗漏、不一致、重复、孤立行和未决结果；这不是提供商账单对账，也不拿 SDK 全量快照直接比较产品任务总账。SDK cost 标记为估算。
+
 ## 性能基线
 
 当前可观测指标包括：冷/热 agent 状态、首事件、首响应、首工具、工具往返耗时、主进程事件处理、renderer 事件处理和 stream-to-paint。renderer 保存有界采样并提供 p50/p95。

@@ -89,7 +89,7 @@ import { streamSimple } from '@earendil-works/pi-ai/compat';
 let piCacheRetention: CacheRetention = 'short';
 
 function withDurableAccounting(stream: StreamFn): StreamFn {
-  return wrapDurableModelStream(stream, async (model, context) => {
+  return wrapDurableModelStream(stream, async (model, context, requestObservation) => {
     const requestSeq = ++promptSnapshotSeq;
     const { canonicalRequestHash, contextSnapshot } = prepareRequestDiagnostics(model, context);
     rememberPromptSnapshot(requestSeq, context.systemPrompt ?? '', contextSnapshot);
@@ -104,7 +104,7 @@ function withDurableAccounting(stream: StreamFn): StreamFn {
     return async message => {
       const committedSeq = await requestDurableModelOutcome({
         prepared, providerRequestId, provider: model.provider, model: model.id,
-        canonicalRequestHash, message,
+        canonicalRequestHash, message, requestObservation,
       });
       Object.assign(message, {
         durableOperationId: prepared.operationId,
@@ -158,6 +158,7 @@ import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
 import { allowPhanerisMetadataProperties, stripPhanerisMetadata } from './phaneris-metadata-schema.ts';
 import { createPhanerisResourceLoader, setPhanerisSystemPrompt } from './phaneris-resource-loader.ts';
+import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '../../shared/src/durable-runtime/types.ts';
@@ -359,6 +360,7 @@ interface OutboundDurableModelOutcomeReq {
   canonicalRequestHash: string;
   stopReason: string;
   responseId?: string;
+  requestObservation?: import('../../shared/src/durable-runtime/types.ts').NativeRequestObservation;
   content: unknown;
   text?: string;
   usage?: { inputTokens?: number; outputTokens?: number; costUsd?: number; payload?: unknown };
@@ -421,6 +423,7 @@ type OutboundMessage =
   | OutboundDurableToolOutcomeReq
   | OutboundDurableModelPrepareReq
   | OutboundDurableModelOutcomeReq
+  | { type: 'sdk_observation'; observation: import('../../shared/src/durable-runtime/types.ts').DurableSdkObservation }
   | OutboundSessionToolCompleted
   | OutboundMiniResult
   | OutboundLlmQueryResult
@@ -467,6 +470,19 @@ function currentDurableModelRun(): { runOperationId: string; turnId: string } | 
     ?? (currentDurableRunOperationId && currentDurableTurnId
       ? { runOperationId: currentDurableRunOperationId, turnId: currentDurableTurnId }
       : undefined);
+}
+
+const sdkObservationEpoch = randomBytes(12).toString('hex');
+let sdkObservationSeq = 0;
+function observeSdkLifecycle(event: string, data: Record<string, unknown>, sdkSessionId?: string): void {
+  const run = currentDurableModelRun();
+  // Changes outside an active run are not attributed to an unrelated turn.
+  if (!run || !initConfig) return;
+  send({ type: 'sdk_observation', observation: {
+    observationId: `${sdkObservationEpoch}:${++sdkObservationSeq}`,
+    sessionId: initConfig.sessionId, runOperationId: run.runOperationId, turnId: run.turnId,
+    sdkSessionId, event, capturedAt: Date.now(), data,
+  } });
 }
 
 function sendThinkingLevelState(): void {
@@ -947,7 +963,7 @@ async function ensureSession(): Promise<AgentSession> {
     customTools: wrappedAll,
     tools: toolAllowlist,
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
-    resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir() }),
+    resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), observeLifecycle: observeSdkLifecycle }),
     settingsManager: createPhanerisSettingsManager('main'),
   };
 
@@ -1222,6 +1238,7 @@ async function requestDurableModelOutcome(input: {
   model: string;
   canonicalRequestHash: string;
   message: AssistantMessage;
+  requestObservation?: import('../../shared/src/durable-runtime/types.ts').NativeRequestObservation;
 }): Promise<number> {
   const durableRun = currentDurableModelRun();
   if (!initConfig || !durableRun) {
@@ -1244,6 +1261,7 @@ async function requestDurableModelOutcome(input: {
     canonicalRequestHash: input.canonicalRequestHash,
     stopReason: input.message.stopReason,
     responseId: input.message.responseId,
+    requestObservation: input.requestObservation,
     content: input.message.content,
     text: input.message.content
       .filter(part => part.type === 'text')
@@ -1253,7 +1271,11 @@ async function requestDurableModelOutcome(input: {
       inputTokens: input.message.usage.input,
       outputTokens: input.message.usage.output,
       costUsd: input.message.usage.cost.total,
-      payload: { kind: 'model_attempt', requestSeq: Number(input.providerRequestId), usage: input.message.usage },
+      payload: {
+        kind: 'model_attempt', requestSeq: Number(input.providerRequestId), usage: input.message.usage,
+        costSource: 'pi_sdk_estimate', responseModel: input.message.responseModel,
+        providerThinkingLevel: input.message.providerThinkingLevel,
+      },
     },
   });
   const response = await responsePromise;
@@ -1582,6 +1604,7 @@ async function queryLlm(
         cwd: resolvedCwd(),
         agentDir: resolveIsolatedAgentDir(),
         getPrompt: () => promptForSession,
+        observeLifecycle: observeSdkLifecycle,
       }),
     };
 
@@ -1619,6 +1642,7 @@ async function queryLlm(
       let lastError = '';
 
       unsub = ephemeralSession.subscribe((event: AgentSessionEvent) => {
+        observeNativeSessionEvent(event, ephemeralSession, observeSdkLifecycle);
         if (event.type !== 'message_end') return;
 
         // Only capture assistant messages — Pi SDK emits message_end for user messages too.
@@ -1769,6 +1793,7 @@ function extractToolExecutionMetadata(args: Record<string, unknown> | undefined)
 }
 
 function handleSessionEvent(event: AgentSessionEvent): void {
+  if (piSession) observeNativeSessionEvent(event, piSession, observeSdkLifecycle);
   // SDK partials contain the accumulated response (and sometimes image data).
   // Re-sending them on every token creates quadratic serialization and pipe
   // traffic. The host uses only delta + timestamp until message_end.

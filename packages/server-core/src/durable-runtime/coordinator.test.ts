@@ -26,6 +26,30 @@ function setup() {
 }
 
 describe('DurableRuntimeCoordinator', () => {
+  test('persists native observations without changing execution state, context or usage', () => {
+    const { root, coordinator } = setup()
+    const store = coordinator.storeFor(root)
+    const before = store.getOperation('run-1')
+    const observation = {
+      observationId: 'epoch:1', sessionId: 'session-1', runOperationId: 'run-1', turnId: 'turn-1',
+      sdkSessionId: 'pi-session', event: 'agent_settled', capturedAt: 2,
+      data: { scope: 'all_sdk_session_entries', tokens: { total: 100 }, authorization: 'secret' },
+    }
+    const boundary = coordinator.modelBoundaryFor(root)
+    const seq = boundary.recordObservation!(observation)
+    expect(boundary.recordObservation!(observation)).toBe(seq)
+    expect(store.getOperation('run-1')).toEqual(before)
+    expect(store.listUsage()).toHaveLength(0)
+    const record = store.listEvents({ operationId: 'run-1' }).at(-1)!
+    expect(record.modelVisible).toBe(false)
+    expect(record.payload).toMatchObject({
+      sdkSessionId: 'pi-session', data: { authorization: '[REDACTED]' },
+      modelUsageAudit: { scope: 'model_outcomes_vs_usage_ledger', issueCount: 0 },
+    })
+    expect(() => boundary.recordObservation!({ ...observation, sessionId: 'other' })).toThrow('owning active run')
+    expect(store.listEvents({ operationId: 'unrelated' })).toHaveLength(0)
+    coordinator.closeAll()
+  })
   test('owns a complete cross-process T1/T2 boundary', async () => {
     const { root, coordinator } = setup()
     const boundary = coordinator.boundaryFor(root)
@@ -274,11 +298,19 @@ describe('DurableRuntimeCoordinator', () => {
       canonicalRequestHash: 'request-hash',
       stopReason: 'stop',
       responseId: 'response-1',
+      requestObservation: {
+        version: 1, source: 'pi_native_callbacks', payloadCallbackCount: 1, responseCallbackCount: 1,
+        droppedObservations: 0, observationErrors: 0,
+        payloads: [{ ordinal: 1, capturedAt: 2, hash: 'payload-hash', bytes: 100 }],
+        responses: [{ ordinal: 1, capturedAt: 3, status: 200, headers: { 'x-request-id': 'remote-id' } }],
+      },
       content: 'answer',
       text: 'answer',
       usage: { inputTokens: 10, outputTokens: 2, costUsd: 0.1, payload: { usage: { input: 10, output: 2 } } },
     })
     expect(coordinator.storeFor(root).getOperation('run-1')?.phase).toBe('checkpoint')
+    expect(coordinator.storeFor(root).getEvent(`${prepared.operationId}:outcome`)?.payload)
+      .toMatchObject({ requestObservation: { responses: [{ headers: { 'x-request-id': 'remote-id' } }] } })
     expect(coordinator.storeFor(root).listUsage({ operationId: 'run-1' })).toHaveLength(1)
     expect(coordinator.getCanonicalSessionProjection(root, 'session-1')?.items.at(-1))
       .toEqual(expect.objectContaining({ kind: 'assistant', content: 'answer' }))

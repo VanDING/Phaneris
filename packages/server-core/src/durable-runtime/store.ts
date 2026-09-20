@@ -434,7 +434,7 @@ export class DurableRuntimeStore {
     })())
   }
 
-  listEvents(options: { sessionId?: string; afterSeq?: number; limit?: number } = {}): RuntimeEvent[] {
+  listEvents(options: { sessionId?: string; operationId?: string; afterSeq?: number; limit?: number } = {}): RuntimeEvent[] {
     const where: string[] = []
     const params: Array<string | number> = []
     if (options.sessionId) {
@@ -444,6 +444,10 @@ export class DurableRuntimeStore {
     if (options.afterSeq !== undefined) {
       where.push('seq > ?')
       params.push(options.afterSeq)
+    }
+    if (options.operationId) {
+      where.push('operation_id = ?')
+      params.push(options.operationId)
     }
     const limit = Math.max(1, Math.min(options.limit ?? 1000, 10_000))
     params.push(limit)

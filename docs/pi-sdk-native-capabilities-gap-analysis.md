@@ -13,13 +13,26 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 
 当前缺口集中在五类：
 
-1. **Extension 事件钩子**：只用了 `before_agent_start`，其余 provider/context/tool/session 事件均未注册。
-2. **请求与模型高级能力**：constrained sampling、provider-specific options、`onPayload`/`onResponse`、transport、thinking budgets 等未接入或未暴露。
-3. **Session Runtime / Tree / 导出 / 统计**：只用了基础 SessionManager 能力，未使用原生 runtime 替换、树导航、标签、导出和统计。
+1. **Extension 事件钩子**：已补充只读工具、压缩、模型/思考等级事件观测；治理阻断与结果改写尚未接入。
+2. **请求与模型高级能力**：已接入原生 `onPayload`/`onResponse` 观测；constrained sampling、必要的 provider-specific options 仍待按具体需求接入。
+3. **Session Runtime / Tree / 导出 / 统计**：已使用原生统计作为核对参考；runtime 替换、树导航、标签、导出仍按产品收益评估。
 4. **Pi 原生扩展生态**：skills、prompt templates、themes、context files、Pi packages 被主动关闭，由 Phaneris 自研体系替代。
 5. **图像生成与平台协议**：Pi 原生 image generation、`pi-server`/`pi-protocol`、`pi-telemetry`、stream proxy 等未接入；其中部分为实验性或已被自研方案覆盖。
 
 此外，`extendedPromptCache` 已按本仓库的决定迁移为 Pi 原生 `cacheRetention`，不再属于缺口。
+
+### 2026-09-20 实施边界与进展
+
+采用三个原则：原生能力应增强功能与治理；应提升溯源、统计和审计准确性；Phaneris 更适合负责的职责不因原生化而退化。不新增用户设置。
+
+本次已实施请求观测、生命周期审计和用量核对基础：
+
+- 原生回调记录扩展处理后的 provider payload 摘要、允许的响应头及请求关联；随模型结果与 usage 在同一 T2 落库。原有 interceptor 尚未删除或迁移请求改写职责。
+- 内联 extension 只读采集工具提议/结果、压缩三态、模型/思考切换；主会话和辅助会话补充重试、settled 统计快照。活动 run 内保存为非模型可见 `sdk_observation`。
+- 主进程核对当前 run 的模型 outcome 与 usage ledger，保留缓存和 reasoning 用量细分，区分未决结果与已完成结果。原生 session 全量统计仅作为独立参考，SDK cost 标记为估算，不重复计费。
+- 不变更权限审批、T1/T2、canonical context，不启用提交后的结果改写，不开放另一套资源自动发现。
+
+限制：provider 回调证据不是网络尝试计数或原始网络报文；未返回原生结果的请求仍可能未决。生命周期采集属于可报告失败的观测，不是新增的强制授权/事务闸门；执行外切换不记到无关回合。完整基线见 [pi-kernel.md](pi-kernel.md)。
 
 ---
 
@@ -46,7 +59,7 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 
 ### 2.1 Extension 事件钩子
 
-当前只注册了一个 hook：`pi.on('before_agent_start', ...)`。
+最初仅注册 `before_agent_start`；现已通过 `native-lifecycle-observation.ts` 注册只读工具、压缩、模型/思考等级钩子。下表列出 SDK 可用原语，不表示均已接入或均应迁移。
 
 证据：`packages/pi-agent-server/src/phaneris-resource-loader.ts:54`。
 
@@ -54,12 +67,12 @@ Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 
 | 事件 | 可替代或增强的现有逻辑 |
 | --- | --- |
-| `context` | 每轮 LLM 前裁剪/注入上下文，替代部分 durable context 逻辑 |
+| `context` | 可追踪的模型输入变换；不能替代 durable context 与 canonical 持久化 |
 | `before_provider_request` | 直接修改请求 payload，替代 fetch interceptor 的请求改写 |
 | `before_provider_headers` | 请求头改写，替代 interceptor / 环境变量拼装 |
 | `after_provider_response` | 响应状态与 headers 采集，用于诊断/遥测 |
 | `tool_call` / `tool_result` | 工具权限、阻断、审计、结果改写 |
-| `message_end` | 消息落库前的语义改写 |
+| `message_end` | SDK 消息落库前可改写，但可能晚于 Phaneris T2，暂不启用内容改写 |
 | `session_before_compact` / `session_compact` / `session_compact_failed` | 自定义压缩与失败处理 |
 | `input` | slash command、prompt template、输入预处理 |
 | `model_select` / `thinking_level_select` | 切换审计与联动 |
@@ -67,7 +80,7 @@ Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 | `resources_discover` | 动态提供 skills / prompts / themes 路径 |
 | `project_trust` | 项目信任决策 |
 
-判断：这些 hook 适合以内联 extension 的形式逐步接管 interceptor 和工具包装逻辑。第三方 extension/package 的加载需要单独的安全与信任设计，不应直接打开。
+判断：内联 extension 可接管适配与观测职责，但不能直接替换包含权限或 T1/T2 的包装层。provider 请求钩子异常可能被 SDK 捕获后继续执行，不能据此提供强制阻断保证；tool_result/message_end 改写必须先解决提交顺序。第三方 extension/package 不直接打开。
 
 > **更新（2026-09-20）**：本节的**内联 extension**路线已定案为 [`agentic-interception-design.md`](agentic-interception-design.md)（定位：治理与介入；首个切片：`tool_call` 阻断）。该设计**只做内联 extension + 工作区用户规则**，明确不打开第三方 extension/package 加载，因此与本节的判断一致。
 >
@@ -75,13 +88,13 @@ Pi 0.85.1 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 
 ### 2.2 请求与模型层高级能力
 
-StreamOptions / SimpleStreamOptions（node_modules/@earendil-works/pi-ai/dist/types.d.ts）已经定义但未使用的能力：
+请求与工具层能力（node_modules/@earendil-works/pi-ai/dist/types.d.ts）：
 
 | 能力 | 现状 | 价值 |
 | --- | --- | --- |
-| constrainedSampling（JSON Schema / grammar） | 未使用；call_llm 的 outputSchema 仍是 prompt 约束 | 结构化输出从尽力而为变成 provider 强制校验 |
+| constrainedSampling（JSON Schema / grammar） | 定义在 Tool 上；未使用；call_llm 的 outputSchema 仍是 prompt 约束 | 约束工具参数，不能直接当成文本结构化输出开关；需区分 prefer/require 并保留本地校验 |
 | toolChoice | 未暴露；Agent 默认 auto | 强制调用指定工具，配合结构化输出/API 工具 |
-| onPayload / onResponse | SDK coding agent 已接入 extension runner，但没有 handler，因此实际 no-op | 原生请求/响应观测与改写 |
+| onPayload / onResponse | 已在 durable 流包装中组合原生回调，保留 SDK extension runner | 只读请求/响应观测，随模型结果原子提交 |
 | samplingParams | 未暴露 | top_p / top_k / min_p 等自定义采样参数 |
 | metadata | 未暴露 | Anthropic user_id 等请求元数据 |
 | transport / websocketConnectTimeoutMs | 默认 auto 已生效；不可配置、不可观测 | Codex/ChatGPT WebSocket 连接复用与故障回退 |
@@ -111,7 +124,7 @@ Provider-specific options 需要按 API 分派，因为 coding agent 默认走 s
 - labels / custom entries / custom messages：书签、扩展状态、注入上下文
 - getUserMessagesForForking：fork 候选
 - getTree / getEntries / getSessionName / setSessionName
-- getSessionStats：会话级 token / cost / message 统计
+- getSessionStats：已作为 settled 时的只读快照接入；非 Phaneris 总账
 - exportToHtml / exportToJsonl
 - clearQueue、cycleModel、cycleThinkingLevel、setScopedModels、setActiveToolsByName
 
@@ -173,13 +186,12 @@ Phaneris 用自己的 skills、plugins、memory、source 和 system prompt 体�
 
 | 优先级 | 能力 | 理由 |
 | --- | --- | --- |
-| P0 | constrained sampling / structured output | 直接提升 call_llm、API 工具、分类器的输出可靠性 |
-| P1 | 内联 extension 的 provider/context hooks + provider-specific options | 替代全局 fetch interceptor，补齐原生请求控制 |
-| P2 | Session Runtime / Tree / export / stats | 用户可见的 branch、导出、统计和精确上下文能力 |
-| P3 | 设置暴露：transport、thinkingBudgets、steering mode、compaction/branch 参数 | 成本低、可观测性提升明显 |
-| P4 | Pi 原生图像生成 | 补 OpenRouter/Gemini 图像模型能力 |
-| P5 | Pi Packages / Extensions / skills 生态 | 安全与信任设计成本高，需单独评估 |
-| P6 | pi-server / pi-protocol / telemetry / streamProxy | 已有自研替代或仍属实验性 |
+| P0 | provider 原生观测与请求关联 | 本次已接入有界回调证据；网络路径覆盖与 interceptor 职责迁移仍需逐项验证 |
+| P1 | 生命周期审计与原生用量核对 | 本次已接入活动 run 的只读观测、SDK 全量快照与模型 outcome/ledger 一致性核对 |
+| P2 | durable 边界内的治理介入 | 现有治理设计的 tool_call 阻断另行推进；不直接启用 T2 后改写 |
+| P3 | 结构化约束、compat、必要 provider 选项 | 以具体功能可靠性需求驱动，不追求参数覆盖率 |
+| 按需 | 分支辅助、导出、图像适配、增量编码 | 有明确产品收益才接入 |
+| 不替换 | durable、授权、canonical context、资源体系、通信与产品总账 | 保持 Phaneris 的统一执行权威；不开放设置或第二套生态 |
 
 ---
 

@@ -6,6 +6,8 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- Pi-native request fingerprints and selected response headers now accompany durable model outcomes. Active-run lifecycle observations and SDK usage snapshots support auditing, with model outcome/ledger parity checks that distinguish unresolved requests from zero-cost completion.
+
 ## Bug Fixes
 
 - **Provider connections are classified by endpoint protocol, not by the presence

@@ -1,6 +1,8 @@
 import type { StreamFn } from '@earendil-works/pi-agent-core';
 import type { AssistantMessage, CacheRetention } from '@earendil-works/pi-ai';
 import { createAssistantMessageEventStream } from '@earendil-works/pi-ai';
+import { observeNativeRequest } from './native-request-observation.ts';
+import type { NativeRequestObservation } from '../../shared/src/durable-runtime/types.ts';
 
 /** Wrap the session's actual stream, preserving SDK authentication and retry options. */
 export function wrapDurableModelStream(
@@ -8,6 +10,7 @@ export function wrapDurableModelStream(
   prepare: (
     model: Parameters<StreamFn>[0],
     context: Parameters<StreamFn>[1],
+    observation?: NativeRequestObservation,
   ) => Promise<(message: AssistantMessage) => Promise<void>>,
   /**
    * Optional default retention for requests that do not set one explicitly.
@@ -22,8 +25,9 @@ export function wrapDurableModelStream(
     const target = createAssistantMessageEventStream();
     void (async () => {
       try {
-        const commit = await prepare(model, context);
-        const source = await stream(model, context, effectiveOptions);
+        const observed = observeNativeRequest(effectiveOptions);
+        const commit = await prepare(model, context, observed.observation);
+        const source = await stream(model, context, observed.options);
         for await (const event of source) {
           if (event.type === 'done' || event.type === 'error') {
             // Commit metered partial/error responses as well as successful ones.
@@ -39,6 +43,8 @@ export function wrapDurableModelStream(
           stopReason: 'error', errorMessage: error instanceof Error ? error.message : String(error),
           timestamp: Date.now(),
         };
+        // A thrown stream/commit does not prove the provider had no effect.
+        // Keep an existing T1 pending for recovery; the UI error is not a ledger outcome.
         target.push({ type: 'error', reason: 'error', error: failed });
       }
     })();

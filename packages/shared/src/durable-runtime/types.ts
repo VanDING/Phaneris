@@ -12,6 +12,7 @@ export type RuntimeEventType =
   | 'operation_accepted'
   | 'model_dispatch_committed'
   | 'model_outcome_committed'
+  | 'sdk_observation'
   | 'model_recovery_decided'
   | 'user_message_committed'
   | 'assistant_message_committed'
@@ -251,6 +252,20 @@ export interface DurableModelPrepareResponse {
   committedSeq: number
 }
 
+/** Bounded, content-free observations of Pi callbacks; never network attempt counts. */
+export interface NativeRequestObservation {
+  version: 1
+  source: 'pi_native_callbacks'
+  sdkSessionId?: string
+  requestedOptions?: Record<string, string | number | boolean>
+  payloadCallbackCount: number
+  responseCallbackCount: number
+  droppedObservations: number
+  observationErrors: number
+  payloads: Array<{ ordinal: number; capturedAt: number; hash: string; bytes: number }>
+  responses: Array<{ ordinal: number; capturedAt: number; status: number; headers: Record<string, string> }>
+}
+
 export interface DurableModelOutcomeRequest {
   sessionId: string
   turnId?: string
@@ -262,6 +277,7 @@ export interface DurableModelOutcomeRequest {
   canonicalRequestHash: string
   stopReason: string
   responseId?: string
+  requestObservation?: NativeRequestObservation
   content: unknown
   text?: string
   usage?: {
@@ -279,6 +295,19 @@ export interface DurableModelOutcomeResponse {
 export interface DurableModelBoundary {
   prepare(request: DurableModelPrepareRequest): Promise<DurableModelPrepareResponse>
   commitOutcome(request: DurableModelOutcomeRequest): Promise<DurableModelOutcomeResponse>
+  /** Synchronous append: observations preceding a terminal event are persisted first. */
+  recordObservation?(request: DurableSdkObservation): number
+}
+
+export interface DurableSdkObservation {
+  observationId: string
+  sessionId: string
+  turnId?: string
+  runOperationId: string
+  sdkSessionId?: string
+  event: string
+  capturedAt: number
+  data: Record<string, unknown>
 }
 
 export type ModelReconciliationDecision =

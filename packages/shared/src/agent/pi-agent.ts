@@ -1092,6 +1092,18 @@ export class PiAgent extends BaseAgent {
         void this.handleDurableModelOutcomeRequest(msg as unknown as DurableModelOutcomeRequest & { requestId: string });
         break;
 
+      case 'sdk_observation': {
+        try {
+          const record = this.config.durableModelBoundary?.recordObservation;
+          if (!record) throw new Error('Runtime Host has no SDK observation boundary');
+          record(msg.observation as import('../durable-runtime/types.ts').DurableSdkObservation);
+        } catch (error) {
+          this.debug(`SDK observation could not be persisted: ${error instanceof Error ? error.message : String(error)}`);
+          this.eventQueue.enqueue({ type: 'info', message: 'An SDK audit observation could not be saved; the audit trail may be incomplete.' });
+        }
+        break;
+      }
+
       case 'session_tool_completed':
         // Session MCP tool completed -- fire callbacks (SubmitPlan, auth, etc.)
         this.handleSessionToolCompleted(msg);

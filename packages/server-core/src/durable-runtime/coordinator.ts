@@ -2,6 +2,7 @@ import {
   DURABLE_TOOL_BOUNDARY_PROTOCOL,
   type DurableOperationState,
   type DurableModelBoundary,
+  type DurableSdkObservation,
   type DurableModelOutcomeRequest,
   type DurableModelOutcomeResponse,
   type DurableModelPrepareRequest,
@@ -24,6 +25,7 @@ import {
 } from '@phaneris/shared/durable-runtime'
 import { canonicalToolArgsHash, durableToolOperationId } from './tool-identity.js'
 import { redactDurablePayload } from './sensitive-payload.js'
+import { auditModelUsage } from './model-usage-audit.js'
 import { createHash } from 'node:crypto'
 import { copyFileSync, existsSync, renameSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -775,7 +777,35 @@ export class DurableRuntimeCoordinator {
     return {
       prepare: request => this.prepareModel(workspaceRootPath, request),
       commitOutcome: request => this.commitModelOutcome(workspaceRootPath, request),
+      recordObservation: request => this.recordSdkObservation(workspaceRootPath, request),
     }
+  }
+
+  recordSdkObservation(workspaceRootPath: string, request: DurableSdkObservation): number {
+    const store = this.storeFor(workspaceRootPath)
+    const run = store.getOperation(request.runOperationId)
+    if (!run || run.sessionId !== request.sessionId) throw new Error('SDK observation requires its owning active run')
+    let modelUsageAudit: ReturnType<typeof auditModelUsage> | undefined
+    if (request.event === 'agent_settled') {
+      const events: RuntimeEvent[] = []
+      let afterSeq = 0
+      for (;;) {
+        const batch = store.listEvents({ operationId: request.runOperationId, afterSeq, limit: 10_000 })
+        events.push(...batch.filter(event => event.type === 'model_outcome_committed'
+          || event.type === 'model_dispatch_committed' || event.type === 'model_recovery_decided'))
+        if (batch.length < 10_000) break
+        afterSeq = batch.at(-1)!.seq!
+      }
+      modelUsageAudit = auditModelUsage(events, store.listUsage({ operationId: request.runOperationId }))
+    }
+    return store.appendEvents([{
+      eventId: `${request.runOperationId}:sdk:${request.observationId}`,
+      sessionId: request.sessionId,
+      turnId: request.turnId,
+      operationId: request.runOperationId,
+      type: 'sdk_observation', schemaVersion: 1, modelVisible: false, partial: false,
+      payload: redactDurablePayload({ ...request, modelUsageAudit }), createdAt: request.capturedAt,
+    }])[0]!
   }
 
   async prepareModel(
