@@ -831,7 +831,7 @@ export function CalendarView() {
             type="button"
             onClick={goPrev}
             aria-label={t('schedule.prevMonth')}
-            className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/80 text-foreground/55 transition-colors hover:text-foreground"
+            className="craft-control inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/15 text-foreground/55 transition-colors hover:text-foreground"
           >
             ‹
           </button>
@@ -840,21 +840,21 @@ export function CalendarView() {
             type="button"
             onClick={goNext}
             aria-label={t('schedule.nextMonth')}
-            className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/80 text-foreground/55 transition-colors hover:text-foreground"
+            className="craft-control inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/15 text-foreground/55 transition-colors hover:text-foreground"
           >
             ›
           </button>
           <button
             type="button"
             onClick={goToday}
-            className="rounded-md border border-border/80 px-2.5 py-1 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground @max-[560px]/panel:hidden"
+            className="craft-control h-8 rounded-md border border-foreground/15 px-3 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground @max-[560px]/panel:hidden"
           >
             {t('common.today')}
           </button>
         </div>
         <div className="flex min-w-0 items-center justify-end gap-2 @max-[760px]/panel:col-start-2">
           <LayoutGroup id="calendar-view-mode">
-          <div className="inline-flex items-center gap-0.5 rounded-xl border border-border/65 bg-foreground/[0.025] p-0.5 shadow-minimal">
+          <div className="inline-flex h-8 items-center gap-0.5 rounded-md bg-foreground/5 p-0.5">
             {(['day', 'week', 'month'] as const).map((mode) => (
               <button
                 key={mode}
@@ -862,14 +862,14 @@ export function CalendarView() {
                 onClick={() => switchView(mode)}
                 aria-pressed={view === mode}
                 className={cn(
-                  'relative isolate rounded-lg px-2.5 py-1 text-xs font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+                  'craft-control relative isolate h-7 rounded-md px-3 text-xs font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
                   view === mode ? 'text-foreground' : 'text-foreground/50 hover:text-foreground/80',
                 )}
               >
                 {view === mode && (
                   <motion.span
                     layoutId="calendar-active-mode"
-                    className="absolute inset-0 -z-10 rounded-lg border border-border/55 bg-card shadow-minimal"
+                    className="absolute inset-0 -z-10 rounded-md bg-background shadow-minimal"
                     transition={motionSpring(reduceMotion, 'responsive')}
                   />
                 )}
@@ -880,7 +880,8 @@ export function CalendarView() {
           </LayoutGroup>
           <Button
             variant="outline"
-            className="h-8 gap-1.5 border-border/80 bg-card px-2.5 text-[12.5px] font-semibold"
+            size="sm"
+            className="gap-1.5"
             onClick={() => openCreate(cursor)}
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />

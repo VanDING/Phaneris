@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ChevronDown, FolderKanban } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
   DropdownMenu,
@@ -67,17 +68,17 @@ export function ProjectMultiSelectFilter({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
+        <Button variant="outline" size="sm"
           type="button"
           className={cn(
-            'inline-flex min-w-0 max-w-[200px] items-center gap-1.5 rounded-lg border border-border/60 bg-foreground/[0.02] px-2 py-1 text-xs font-medium text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground data-[state=open]:bg-foreground/5',
+            'min-w-0 max-w-[200px] gap-1.5 data-[state=open]:bg-foreground/5',
             className
           )}
         >
           <FolderKanban className="h-3.5 w-3.5 shrink-0 text-foreground/50" strokeWidth={2} />
           <span className="truncate">{label}</span>
           <ChevronDown className="h-3 w-3 shrink-0 text-foreground/40" strokeWidth={2} />
-        </button>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="max-w-[260px]">
         <DropdownMenuItem className="text-xs" disabled={value.length === 0} onSelect={() => onChange([])}>
