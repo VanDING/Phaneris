@@ -314,3 +314,19 @@ describe('timeline', () => {
     expect(focused.size).toBeGreaterThan(0)
   })
 })
+
+
+describe('assistant content previews', () => {
+  it('shows reasoning and preserves tool-only and historical empty step anchors', () => {
+    const layout = layoutFor([
+      msg({ role: 'assistant', content: '', outputBlocks: [{ type: 'thinking', content: 'Consider the constraints' }], requestSeq: 1 }),
+      msg({ role: 'assistant', content: '', outputBlocks: [{ type: 'tool-call', toolName: 'read' }], requestSeq: 2 }),
+      msg({ role: 'assistant', content: '   ', requestSeq: 3 }),
+    ])
+    const records = flattenTurnRecords(layout)
+    const cells = records.map(record => record.cell).filter(cell => cell.kind === 'message')
+    expect(cells.map(cell => cell.text)).toEqual(['Consider the constraints', 'Tool call only', 'No text output'])
+    expect(cells[0]?.thinkingDetail).toBe('Consider the constraints')
+    expect(searchTrajectory(records, 'constraints').size).toBe(1)
+  })
+})

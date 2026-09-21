@@ -105,10 +105,13 @@ describe('PiEventAdapter', () => {
     it('counts tool-only requests and emits their trajectory metadata', () => {
       const events = collect(adapter.adaptEvent({ type: 'message_end', requestSeq: 8,
         message: { role: 'assistant', stopReason: 'toolUse', usage,
-          content: [{ type: 'toolCall', id: 'call', name: 'read', arguments: {} }] },
+          content: [{ type: 'thinking', thinking: 'Inspect the workspace' }, { type: 'toolCall', id: 'call', name: 'read', arguments: {} }] },
       } as any));
       expect(events).toMatchObject([
-        { type: 'text_complete', text: '', isIntermediate: true, requestSeq: 8, usage },
+        { type: 'text_complete', text: '', isIntermediate: true, requestSeq: 8, usage, outputBlocks: [
+          { type: 'thinking', content: 'Inspect the workspace' },
+          { type: 'tool-call', callId: 'call', toolName: 'read', content: '{}' },
+        ] },
         { type: 'usage_update', usage: { inputTokens: 135 } },
       ]);
       collect(adapter.adaptEvent({ type: 'message_end', message: {

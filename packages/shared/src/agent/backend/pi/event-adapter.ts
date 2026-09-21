@@ -1106,11 +1106,15 @@ export class PiEventAdapter extends BaseEventAdapter {
             : typeof source?.url === 'string' ? source.url : undefined,
           imageAlt: typeof block.alt === 'string' ? block.alt : undefined,
         });
-      } else if (type === 'tool_use') {
+      } else if (type === 'thinking' || type === 'reasoning') {
+        const content = block.thinking ?? block.text;
+        if (typeof content === 'string' && content.trim()) blocks.push({ type: 'thinking', content });
+      } else if (type === 'tool_use' || type === 'toolCall') {
         blocks.push({
           type: 'tool-call',
           callId: typeof block.id === 'string' ? block.id : undefined,
           toolName: typeof block.name === 'string' ? block.name : undefined,
+          content: JSON.stringify(block.arguments ?? block.input ?? {}),
         });
       } else if (type === 'tool_result') {
         const content = block.content;

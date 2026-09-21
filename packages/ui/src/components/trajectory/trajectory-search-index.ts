@@ -65,6 +65,7 @@ function recordSources(cell: TrajectoryCellProps): readonly string[] {
     if (parts.name !== '') sources.push(parts.name)
     if (parts.args !== '') sources.push(parts.args)
   }
+  if (cell.thinkingDetail) sources.push(cell.thinkingDetail)
   if (cell.outputDetail) sources.push(cell.outputDetail)
   if (cell.inputDetail) sources.push(cell.inputDetail)
   if (cell.schemaDetail) sources.push(searchableJson(cell.schemaDetail))

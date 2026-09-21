@@ -410,11 +410,23 @@ export function deriveTrajectoryLayout(input: TrajectoryLayoutInput): readonly T
           })
         } else if (message.role === 'assistant') {
           const group = ensureGroup(turn, 'Assistant')
+          const output = message.content?.trim() || (message.outputBlocks ?? [])
+            .filter(block => block.type === 'text').map(block => block.content ?? '').join('\n\n').trim()
+          const thinking = (message.outputBlocks ?? [])
+            .filter(block => block.type === 'thinking' || block.type === 'reasoning')
+            .map(block => block.content ?? '').join('\n\n').trim()
+          const hasTools = message.outputBlocks?.some(block => block.type === 'tool-call')
+          // Keep the step as the tool-fold/metrics anchor, with DSH's reasoning
+          // preview and explicit tool-only fallback instead of an empty row.
+          const preview = output || thinking
+
           const base: TrajectoryCellProps = {
             index,
             kind: 'message',
-            text: messageText(message),
-            previewMarkdown: message.content,
+            text: preview ? preview.replace(/\s+/g, ' ').slice(0, 200) : hasTools ? 'Tool call only' : 'No text output',
+            previewMarkdown: preview || undefined,
+            outputDetail: output || undefined,
+            thinkingDetail: thinking || undefined,
             sourceSeq: message.id,
             inputDetail: message.content,
             timeSeconds: null,
