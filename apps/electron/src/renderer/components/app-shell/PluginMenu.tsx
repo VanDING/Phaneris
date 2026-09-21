@@ -19,6 +19,7 @@ import * as React from 'react'
 import { useTranslation } from "react-i18next"
 import {
   Trash2,
+  Send,
   FolderOpen,
 } from 'lucide-react'
 import { useMenuComponents } from '@/components/ui/menu-context'
@@ -31,6 +32,7 @@ export interface PluginMenuProps {
   onUninstall: () => void
   canShowInFinder?: boolean
   canUninstall?: boolean
+  onSendToWorkspace?: () => void
 }
 
 /**
@@ -40,6 +42,7 @@ export interface PluginMenuProps {
 export function PluginMenu({
   onShowInFinder,
   onUninstall,
+  onSendToWorkspace,
   canShowInFinder = true,
   canUninstall = true,
 }: PluginMenuProps) {
@@ -56,6 +59,10 @@ export function PluginMenu({
         <span className="flex-1">{t("pluginsList.showInFinder", { fileManager: getFileManagerName() })}</span>
       </MenuItem>
 
+      {onSendToWorkspace && <MenuItem onClick={onSendToWorkspace}>
+        <Send className="h-3.5 w-3.5" />
+        <span className="flex-1">{t('sessionMenu.sendToWorkspace')}</span>
+      </MenuItem>}
       <Separator />
 
       {/* Uninstall */}

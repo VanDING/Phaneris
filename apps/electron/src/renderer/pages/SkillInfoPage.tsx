@@ -15,7 +15,8 @@ import { toast } from 'sonner'
 import { SkillMenu } from '@/components/app-shell/SkillMenu'
 import { SkillAvatar } from '@/components/ui/skill-avatar'
 import { routes, navigate } from '@/lib/navigate'
-import { useActiveWorkspace } from '@/context/AppShellContext'
+import { SendResourceToWorkspaceDialog } from '@/components/app-shell/SendResourceToWorkspaceDialog'
+import { useActiveWorkspace, useAppShellContext } from '@/context/AppShellContext'
 import { getFileManagerName } from '@/lib/platform'
 import {
   Info_Page,
@@ -37,6 +38,8 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const activeWorkspace = useActiveWorkspace()
+  const { workspaces } = useAppShellContext()
+  const [sendOpen, setSendOpen] = useState(false)
   const canRevealLocally = !activeWorkspace?.remoteServer
 
   // Load skill data
@@ -153,6 +156,7 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
         title={skillName}
         titleMenu={
           <SkillMenu
+            onSendToWorkspace={workspaces.length > 1 && skill ? () => setSendOpen(true) : undefined}
             skillSlug={skillSlug}
             skillName={skillName}
             onOpenInNewWindow={handleOpenInNewWindow}
@@ -276,6 +280,9 @@ export default function SkillInfoPage({ skillSlug, workspaceId, workingDirectory
 
         </Info_Page.Content>
       )}
+      <SendResourceToWorkspaceDialog open={sendOpen} onOpenChange={setSendOpen}
+        resourceType="skill" skillProjectRoot={workingDirectory} resourceIds={[skillSlug]} resourceLabel={skillName}
+        workspaces={workspaces} activeWorkspaceId={workspaceId} />
     </Info_Page>
   )
 }

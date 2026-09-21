@@ -13,7 +13,12 @@
  * - Relies on existing ConfigWatcher for change notifications (no manual events)
  */
 
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, renameSync, rmSync } from 'fs'
+import { existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync, renameSync, rmSync } from 'fs'
+import { tmpdir } from 'os'
+import { loadSkillBySlug } from '../skills/storage.ts'
+import { isPluginResourceSlug } from '../plugins/paths.ts'
+import { loadPluginByName, PLUGIN_EXTENSION_SOURCES_FILE } from '../plugins/index.ts'
+import { analyzePluginInstall, installPlugin } from '../plugins/install.ts'
 import { join, basename } from 'path'
 import { randomUUID } from 'crypto'
 import {
@@ -38,6 +43,7 @@ import type {
   ResourceBundle,
   SourceBundleEntry,
   SkillBundleEntry,
+  PluginBundleEntry,
   AutomationBundleEntry,
   ExportResourcesOptions,
   ExportResult,
@@ -146,7 +152,42 @@ export function exportResources(
 
   // --- Export skills ---
   if (options.skills) {
-    bundle.resources.skills = exportSkills(workspaceRootPath, options.skills, warnings)
+    bundle.resources.skills = exportSkills(workspaceRootPath, options.skills, warnings, options.skillProjectRoot)
+  }
+
+  if (options.plugins) {
+    const dir = join(workspaceRootPath, 'plugins')
+    const names = options.plugins === 'all'
+      ? (existsSync(dir) ? readdirSync(dir).filter(isPluginResourceSlug) : [])
+      : options.plugins
+    bundle.resources.plugins = []
+    for (const name of names) {
+      const plugin = loadPluginByName(workspaceRootPath, name)
+      if (!plugin) throw new Error(`Plugin '${name}' could not be loaded`)
+      const files = collectDirectoryFiles(plugin.path).map(file => {
+        let value: unknown
+        if (file.relativePath === 'mcp.json') {
+          const config = JSON.parse(Buffer.from(file.contentBase64, 'base64').toString('utf8'))
+          for (const server of Object.values(config.mcpServers ?? {}) as Record<string, unknown>[]) {
+            delete server.env
+            delete server.headers
+          }
+          value = config
+          warnings.push(`Plugin '${name}': MCP environment and headers omitted; configure authentication in the target workspace`)
+        } else if (file.relativePath === PLUGIN_EXTENSION_SOURCES_FILE) {
+          value = (JSON.parse(Buffer.from(file.contentBase64, 'base64').toString('utf8')) as FolderSourceConfig[])
+            .map(config => {
+              const sanitized = sanitizeSourceConfig(config)
+              warnings.push(...sanitized.warnings)
+              return sanitized.config
+            })
+        }
+        if (value === undefined) return file
+        const bytes = Buffer.from(JSON.stringify(value, null, 2))
+        return { ...file, contentBase64: bytes.toString('base64'), size: bytes.length }
+      })
+      bundle.resources.plugins.push({ slug: name, files })
+    }
   }
 
   // --- Export automations ---
@@ -221,11 +262,12 @@ function exportSkills(
   workspaceRootPath: string,
   selection: string[] | 'all',
   warnings: string[],
+  projectRoot?: string,
 ): SkillBundleEntry[] {
   const entries: SkillBundleEntry[] = []
   const skillsDir = getWorkspaceSkillsPath(workspaceRootPath)
 
-  if (!existsSync(skillsDir)) return entries
+  if (selection === 'all' && !existsSync(skillsDir)) return entries
 
   // Determine which slugs to export
   let slugs: string[]
@@ -238,7 +280,8 @@ function exportSkills(
   }
 
   for (const slug of slugs) {
-    const skillDir = join(skillsDir, slug)
+    if (!isPluginResourceSlug(slug)) throw new Error(`Invalid skill slug: ${slug}`)
+    const skillDir = loadSkillBySlug(workspaceRootPath, slug, selection === 'all' ? undefined : projectRoot)?.path ?? join(skillsDir, slug)
     if (!existsSync(skillDir)) {
       warnings.push(`Skill '${slug}' not found, skipping`)
       continue
@@ -522,6 +565,26 @@ export function validateResourceBundle(bundle: unknown): { valid: boolean; error
     }
   }
 
+  if (res.plugins !== undefined) {
+    if (!Array.isArray(res.plugins)) errors.push('resources.plugins must be an array')
+    else {
+      const names = new Set<string>()
+      for (const entry of res.plugins) {
+        if (!entry || typeof entry.slug !== 'string' || !isPluginResourceSlug(entry.slug)) {
+          errors.push('Invalid plugin name')
+          continue
+        }
+        if (names.has(entry.slug)) errors.push(`Duplicate plugin '${entry.slug}'`)
+        names.add(entry.slug)
+        if (!Array.isArray(entry.files)) errors.push('Plugin files must be an array')
+        else {
+          validateFileEntries(entry.files, `plugins[${entry.slug}]`, errors)
+          if (!entry.files.some((file: BundleFile) => file?.relativePath === 'plugin.json')) errors.push('Plugin manifest missing')
+        }
+      }
+    }
+  }
+
   // Validate automations
   if (res.automations !== undefined) {
     if (!Array.isArray(res.automations)) {
@@ -632,6 +695,7 @@ export async function importResources(
     return {
       sources: { ...failedBucket },
       skills: { ...failedBucket },
+      plugins: { ...failedBucket },
       automations: { ...failedBucket },
     }
   }
@@ -654,6 +718,7 @@ export async function importResources(
   return {
     sources: sourcesResult,
     skills: skillsResult,
+    plugins: bundle.resources.plugins ? importPlugins(workspaceRootPath, bundle.resources.plugins) : emptyBucketResult(),
     automations: automationsResult,
   }
 }
@@ -989,5 +1054,38 @@ function importAutomations(
     result.warnings.push(`Cleared history/retry entries for ${overwrittenIds.size} overwritten automation(s)`)
   }
 
+  return result
+}
+
+/** Install through the plugin installer so materialization and ownership stay consistent.
+ * Transfers never replace an existing package or contributed resource.
+ */
+function importPlugins(workspaceRootPath: string, entries: PluginBundleEntry[]): ImportBucketResult {
+  const result = emptyBucketResult()
+  for (const entry of entries) {
+    const staging = mkdtempSync(join(tmpdir(), 'phaneris-plugin-transfer-'))
+    try {
+      if (existsSync(join(workspaceRootPath, 'plugins', entry.slug))) {
+        result.skipped.push(entry.slug)
+        continue
+      }
+      const packageRoot = join(staging, entry.slug)
+      restoreFiles(packageRoot, entry.files)
+      const plan = analyzePluginInstall(workspaceRootPath, packageRoot)
+      if (plan.plugin.name !== entry.slug) throw new Error('Plugin name does not match transfer entry')
+      if (plan.overwrites.length > 0) {
+        result.skipped.push(entry.slug)
+        result.warnings.push(`Plugin '${entry.slug}' conflicts with existing resources: ${plan.overwrites.map(item => item.slug).join(', ')}`)
+        continue
+      }
+      const installed = installPlugin(workspaceRootPath, plan)
+      result.imported.push(installed.name)
+      result.warnings.push(...installed.warnings.map(warning => warning.message))
+    } catch (error) {
+      result.failed.push({ id: entry.slug, error: error instanceof Error ? error.message : String(error) })
+    } finally {
+      rmSync(staging, { recursive: true, force: true })
+    }
+  }
   return result
 }

@@ -245,6 +245,7 @@ export function MainContentPanel({
         open={sendDialogOpen}
         onOpenChange={setSendDialogOpen}
         resourceType={sendResourceType}
+        skillProjectRoot={activeSessionWorkingDirectory}
         resourceIds={sendResourceIds}
         resourceLabel={sendResourceLabel}
         workspaces={workspaces}

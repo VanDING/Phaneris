@@ -35,7 +35,7 @@ export function SkillsListPanel({
   const { t } = useTranslation()
   const activeWorkspace = useActiveWorkspace()
   const canRevealLocally = !activeWorkspace?.remoteServer
-  const { workspaces, activeWorkspaceId } = useAppShellContext()
+  const { workspaces, activeWorkspaceId, activeSessionWorkingDirectory } = useAppShellContext()
   const hasOtherWorkspaces = workspaces.length > 1
 
   // Send to Workspace dialog state
@@ -106,7 +106,7 @@ export function SkillsListPanel({
             onDelete={skill.source === 'workspace' ? () => onDeleteSkill(skill.slug) : undefined}
             canDelete={skill.source === 'workspace'}
             deleteLabel={skill.source === 'workspace' ? t('skillsList.deleteSkill') : t('skillsList.managedByProject')}
-            onSendToWorkspace={hasOtherWorkspaces && skill.source === 'workspace' ? () => {
+            onSendToWorkspace={hasOtherWorkspaces ? () => {
               setSendResourceSlug(skill.slug)
               setSendResourceLabel(skill.metadata.name)
               setSendDialogOpen(true)
@@ -122,6 +122,7 @@ export function SkillsListPanel({
         open={sendDialogOpen}
         onOpenChange={setSendDialogOpen}
         resourceType="skill"
+        skillProjectRoot={activeSessionWorkingDirectory}
         resourceIds={[sendResourceSlug]}
         resourceLabel={sendResourceLabel}
         workspaces={workspaces}

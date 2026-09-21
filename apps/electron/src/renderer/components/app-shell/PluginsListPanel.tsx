@@ -14,7 +14,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { pluginSelection } from '@/hooks/useEntitySelection'
-import { useActiveWorkspace } from '@/context/AppShellContext'
+import { SendResourceToWorkspaceDialog } from './SendResourceToWorkspaceDialog'
+import { useActiveWorkspace, useAppShellContext } from '@/context/AppShellContext'
 import { getFileManagerName } from '@/lib/platform'
 import { PluginMenu } from './PluginMenu'
 import { PluginAvatar } from '@/components/ui/plugin-avatar'
@@ -78,6 +79,8 @@ export function PluginsListPanel({
 }: PluginsListPanelProps) {
   const { t } = useTranslation()
   const activeWorkspace = useActiveWorkspace()
+  const { workspaces } = useAppShellContext()
+  const [sendPlugin, setSendPlugin] = React.useState<PluginSummary | null>(null)
   const canRevealLocally = !activeWorkspace?.remoteServer
 
   const [uninstallPlan, setUninstallPlan] = React.useState<PluginUninstallPlan | null>(null)
@@ -206,6 +209,7 @@ export function PluginsListPanel({
           ) : undefined,
           menu: (
             <PluginMenu
+              onSendToWorkspace={workspaces.length > 1 ? () => setSendPlugin(plugin) : undefined}
               onShowInFinder={() => revealPlugin(plugin.path)}
               canShowInFinder={canRevealLocally}
               onUninstall={() => { void requestUninstall(plugin.name) }}
@@ -215,6 +219,9 @@ export function PluginsListPanel({
       }}
     />
 
+    {sendPlugin && <SendResourceToWorkspaceDialog open onOpenChange={(open) => { if (!open) setSendPlugin(null) }}
+      resourceType="plugin" resourceIds={[sendPlugin.name]} resourceLabel={sendPlugin.name}
+      workspaces={workspaces} activeWorkspaceId={workspaceId ?? null} />}
     {/* Uninstall confirmation (D10) — shows both halves of the plan: what this
         bundle owns alone, and what another installed plugin still references. */}
     <Dialog

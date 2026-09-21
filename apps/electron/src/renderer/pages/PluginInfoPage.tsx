@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { SendResourceToWorkspaceDialog } from '@/components/app-shell/SendResourceToWorkspaceDialog'
 import { PluginMenu } from '@/components/app-shell/PluginMenu'
 import { Info_Alert, Info_Page, Info_Section, Info_Table, Info_Markdown } from '@/components/info'
 import { useActiveWorkspace, useAppShellContext } from '@/context/AppShellContext'
@@ -42,7 +43,8 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
   const canRevealLocally = !activeWorkspace?.remoteServer
 
   // The shell's list is the single source; this page is a view over it.
-  const { plugins } = useAppShellContext()
+  const { plugins, workspaces } = useAppShellContext()
+  const [sendOpen, setSendOpen] = React.useState(false)
   const plugin: PluginSummary | undefined = React.useMemo(
     () => (plugins ?? []).find((p) => p.name === pluginName),
     [plugins, pluginName],
@@ -97,6 +99,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
 
   const titleMenu = plugin ? (
     <PluginMenu
+      onSendToWorkspace={workspaces.length > 1 ? () => setSendOpen(true) : undefined}
       onShowInFinder={handleReveal}
       onUninstall={requestUninstall}
       canShowInFinder={canRevealLocally}
@@ -147,20 +150,21 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
               </Info_Table>
             </Info_Section>
 
-            {/* A load warning means part of the bundle was skipped, not that the
-                bundle failed — the distinction matters, so it is stated rather
-                than folded into a generic error. */}
-            {plugin.warnings.length > 0 && (
-              <Info_Section title={t('pluginsList.warnings')}>
-                <div className="space-y-2">
-                  {plugin.warnings.map((warning, index) => (
-                    <Info_Alert key={`${warning.path}-${index}`} variant="warning">
-                      <span className="font-medium">{warning.path}</span> — {warning.message}
-                    </Info_Alert>
-                  ))}
-                </div>
-              </Info_Section>
-            )}
+            <Info_Section
+              title={t('pluginsList.promptFragment')}
+              description={t('pluginsList.promptDescription')}
+              actions={
+                <EditPopover
+                  trigger={<EditButton />}
+                  {...getEditConfig('plugin-prompt', plugin.path)}
+                  secondaryAction={{ label: t('common.editFile'), filePath: `${plugin.path}/PROMPT.md` }}
+                />
+              }
+            >
+              <Info_Markdown maxHeight={540} fullscreen>
+                {plugin.promptFragment || t('pluginsList.promptAbsent')}
+              </Info_Markdown>
+            </Info_Section>
 
             <Info_Section
               title={t('pluginsList.skillsTitle')}
@@ -206,25 +210,29 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
               )}
             </Info_Section>
 
-            <Info_Section
-              title={t('pluginsList.promptFragment')}
-              description={t('pluginsList.promptDescription')}
-              actions={
-                <EditPopover
-                  trigger={<EditButton />}
-                  {...getEditConfig('plugin-prompt', plugin.path)}
-                  secondaryAction={{ label: t('common.editFile'), filePath: `${plugin.path}/PROMPT.md` }}
-                />
-              }
-            >
-              <Info_Markdown maxHeight={540} fullscreen>
-                {plugin.promptFragment || t('pluginsList.promptAbsent')}
-              </Info_Markdown>
-            </Info_Section>
+
+            {/* A load warning means part of the bundle was skipped, not that the
+                bundle failed — the distinction matters, so it is stated rather
+                than folded into a generic error. */}
+            {plugin.warnings.length > 0 && (
+              <Info_Section title={t('pluginsList.warnings')}>
+                <div className="space-y-2">
+                  {plugin.warnings.map((warning, index) => (
+                    <Info_Alert key={`${warning.path}-${index}`} variant="warning">
+                      <span className="font-medium">{warning.path}</span> — {warning.message}
+                    </Info_Alert>
+                  ))}
+                </div>
+              </Info_Section>
+            )}
+
           </Info_Page.Content>
         )}
       </Info_Page>
 
+      {plugin && <SendResourceToWorkspaceDialog open={sendOpen} onOpenChange={setSendOpen}
+        resourceType="plugin" resourceIds={[plugin.name]} resourceLabel={plugin.name}
+        workspaces={workspaces} activeWorkspaceId={workspaceId} />}
       <Dialog open={!!uninstallPlan} onOpenChange={(open) => !open && setUninstallPlan(null)}>
         <DialogContent>
           <DialogHeader>

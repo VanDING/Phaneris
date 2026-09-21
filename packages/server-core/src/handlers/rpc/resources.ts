@@ -89,6 +89,17 @@ export function registerResourcesHandlers(server: RpcServer, deps: HandlerDeps):
         deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `skills/${slug}/SKILL.md`)
       }
 
+      for (const name of result.plugins?.imported ?? []) {
+        deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `plugins/${name}/plugin.json`)
+        const { loadPluginByName } = await import('@phaneris/shared/plugins')
+        const plugin = loadPluginByName(workspace.rootPath, name)
+        for (const skill of plugin?.resources.skills ?? []) {
+          deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `skills/${skill.slug}/SKILL.md`)
+        }
+        for (const source of [...(plugin?.resources.mcpServers ?? []), ...(plugin?.resources.extensionSources ?? [])]) {
+          deps.sessionManager.notifyConfigFileChange(workspace.rootPath, `sources/${source.slug}/config.json`)
+        }
+      }
       return result
     },
   )

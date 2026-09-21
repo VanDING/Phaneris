@@ -27,6 +27,8 @@ export interface BundleFile {
   contentBase64: string
   /** Original file size in bytes (for validation) */
   size: number
+  /** Preserve executable scripts without transporting arbitrary permission bits. */
+  executable?: boolean
 }
 
 // ============================================================
@@ -147,6 +149,7 @@ export function collectDirectoryFiles(dir: string, options?: CollectOptions): Bu
             relativePath: toPortableRelPath(relPath),
             contentBase64: content.toString('base64'),
             size: stat.size,
+            ...((stat.mode & 0o111) ? { executable: true } : {}),
           })
         } catch (err) {
           debug(`[bundle-files] Failed to read file ${fullPath}:`, err)
@@ -197,6 +200,6 @@ export function restoreFiles(targetDir: string, files: BundleFile[]): void {
 
     // Decode and write
     const content = Buffer.from(file.contentBase64, 'base64')
-    writeFileSync(fullPath, content)
+    writeFileSync(fullPath, content, { mode: file.executable ? 0o755 : 0o644 })
   }
 }

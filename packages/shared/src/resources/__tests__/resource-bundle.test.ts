@@ -1,10 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test'
-import { mkdirSync, writeFileSync, rmSync, existsSync, readFileSync, readdirSync } from 'fs'
+import { mkdirSync, writeFileSync, chmodSync, statSync, rmSync, existsSync, readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { tmpdir } from 'os'
 import { exportResources, importResources, validateResourceBundle } from '../resource-bundle'
 import type { ResourceBundle, SourceBundleEntry, SkillBundleEntry, AutomationBundleEntry } from '../types'
 import type { FolderSourceConfig } from '../../sources/types'
+import { PLUGIN_MANIFEST_SCHEMA } from '../../plugins/types'
+import { analyzePluginUninstall } from '../../plugins/install'
 import type { AutomationMatcher } from '../../automations/types'
 
 // ============================================================
@@ -120,7 +122,60 @@ describe('resource-bundle', () => {
   // Export
   // ============================================================
 
+  describe('plugin transfer', () => {
+    function makePlugin() {
+      const source = createTestWorkspace(tmpDir)
+      const plugin = join(source, 'plugins', 'demo')
+      mkdirSync(plugin, { recursive: true })
+      writeFileSync(join(plugin, 'plugin.json'), JSON.stringify({ $schema: PLUGIN_MANIFEST_SCHEMA, name: 'demo' }))
+      writeFileSync(join(plugin, 'PROMPT.md'), 'Standing instructions')
+      createTestSkill(plugin, 'demo-skill', { 'run.sh': '#!/bin/sh\necho demo' })
+      chmodSync(join(plugin, 'skills/demo-skill/run.sh'), 0o755)
+      writeFileSync(join(plugin, 'mcp.json'), JSON.stringify({ mcpServers: {
+        'demo-api': { type: 'streamable-http', url: 'https://example.com/mcp', headers: { Authorization: 'secret' } },
+      } }))
+      return exportResources(source, { plugins: ['demo'] })
+    }
+
+    it('round trips prompts, skills and sources with ownership but no credentials', async () => {
+      const { bundle } = makePlugin()
+      expect(JSON.stringify(bundle).includes('secret')).toBe(false)
+      const mcp = bundle.resources.plugins![0]!.files.find(file => file.relativePath === 'mcp.json')!
+      expect(Buffer.from(mcp.contentBase64, 'base64').toString()).not.toContain('secret')
+      const target = join(tmpDir, 'target')
+      const result = await importResources(target, bundle, 'skip', noopDeps)
+      expect(result.plugins?.failed).toEqual([])
+      expect(result.plugins?.imported).toEqual(['demo'])
+      expect(readFileSync(join(target, 'plugins/demo/PROMPT.md'), 'utf8')).toBe('Standing instructions')
+      expect(existsSync(join(target, 'skills/demo-skill/SKILL.md'))).toBe(true)
+      if (process.platform !== 'win32') expect(statSync(join(target, 'skills/demo-skill/run.sh')).mode & 0o111).not.toBe(0)
+      expect(existsSync(join(target, 'sources/demo-api/config.json'))).toBe(true)
+      expect(analyzePluginUninstall(target, 'demo').removes.map(item => item.slug)).toContain('demo-skill')
+      expect((await importResources(target, bundle, 'skip', noopDeps)).plugins?.skipped).toEqual(['demo'])
+    })
+
+    it('preserves conflicting skills and rejects traversal before installation', async () => {
+      const { bundle } = makePlugin()
+      const target = join(tmpDir, 'target')
+      createTestSkill(target, 'demo-skill')
+      const result = await importResources(target, bundle, 'skip', noopDeps)
+      expect(result.plugins?.skipped).toEqual(['demo'])
+      expect(existsSync(join(target, 'plugins/demo'))).toBe(false)
+      bundle.resources.plugins![0]!.slug = '../escape'
+      expect(validateResourceBundle(bundle).valid).toBe(false)
+    })
+  })
+
   describe('exportResources', () => {
+    it('exports the selected project skill instead of a shadowed workspace skill', () => {
+      const workspace = createTestWorkspace(tmpDir)
+      createTestSkill(workspace, 'shared-name')
+      const project = join(tmpDir, 'project')
+      createTestSkill(join(project, '.agents'), 'shared-name', { 'project.txt': 'project version' })
+      const { bundle } = exportResources(workspace, { skills: ['shared-name'], skillProjectRoot: project })
+      expect(bundle.resources.skills?.[0]?.files.some(file => file.relativePath === 'project.txt')).toBe(true)
+    })
+
     it('exports sources with sanitized config', () => {
       const wsDir = createTestWorkspace(tmpDir)
       createTestSource(wsDir, 'github', {

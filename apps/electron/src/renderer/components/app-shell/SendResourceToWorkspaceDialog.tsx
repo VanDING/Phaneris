@@ -28,13 +28,14 @@ import { useWorkspaceIcons } from '@/hooks/useWorkspaceIcon'
 import { cn } from '@/lib/utils'
 import type { Workspace, ExportResourcesOptions, ResourceImportMode } from '../../../shared/types'
 
-export type SendResourceType = 'source' | 'skill' | 'automation'
+export type SendResourceType = 'source' | 'skill' | 'automation' | 'plugin'
 
 export interface SendResourceToWorkspaceDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   /** What kind of resource to send */
   resourceType: SendResourceType
+  skillProjectRoot?: string
   /** Slug(s) or ID(s) of resources to send */
   resourceIds: string[]
   /** Display label for the dialog description (e.g., "Slack source") */
@@ -48,6 +49,7 @@ export interface SendResourceToWorkspaceDialogProps {
 }
 
 const RESOURCE_TYPE_LABELS: Record<SendResourceType, { singular: string; plural: string }> = {
+  plugin: { singular: 'plugin', plural: 'plugins' },
   source: { singular: 'source', plural: 'sources' },
   skill: { singular: 'skill', plural: 'skills' },
   automation: { singular: 'automation', plural: 'automations' },
@@ -57,6 +59,7 @@ export function SendResourceToWorkspaceDialog({
   open,
   onOpenChange,
   resourceType,
+  skillProjectRoot,
   resourceIds,
   resourceLabel,
   workspaces,
@@ -135,7 +138,11 @@ export function SendResourceToWorkspaceDialog({
       // 1. Export the selected resource(s) from current workspace
       const exportOptions: ExportResourcesOptions = {}
       if (resourceType === 'source') exportOptions.sources = resourceIds
-      else if (resourceType === 'skill') exportOptions.skills = resourceIds
+      else if (resourceType === 'plugin') exportOptions.plugins = resourceIds
+      else if (resourceType === 'skill') {
+        exportOptions.skills = resourceIds
+        exportOptions.skillProjectRoot = skillProjectRoot
+      }
       else if (resourceType === 'automation') exportOptions.automations = resourceIds
 
       const { bundle, warnings: exportWarnings } = await window.electronAPI.exportResources(
@@ -165,6 +172,8 @@ export function SendResourceToWorkspaceDialog({
 
       // 3. Report result
       const bucket = importResult[`${resourceType}s`] ?? importResult[resourceType + 's']
+      if (!bucket) throw new Error('The target does not support this resource type. Update it and try again.')
+      if (bucket.failed.length > 0) throw new Error(bucket.failed.map((failure: { error: string }) => failure.error).join('; '))
       const imported = bucket?.imported?.length ?? 0
       const skipped = bucket?.skipped?.length ?? 0
 
@@ -178,6 +187,8 @@ export function SendResourceToWorkspaceDialog({
         toast.warning(`Nothing was sent to ${targetName}`, { id: toastId })
       }
 
+      const transferWarnings = [...exportWarnings, ...bucket.warnings]
+      if (transferWarnings.length > 0) toast.warning(transferWarnings.join('\n'))
       if (exportWarnings.length > 0) {
         console.warn('[SendResource] Export warnings:', exportWarnings)
       }
@@ -195,7 +206,7 @@ export function SendResourceToWorkspaceDialog({
     } finally {
       setIsSending(false)
     }
-  }, [selectedWorkspaceId, activeWorkspaceId, resourceIds, resourceType, resourceLabel, workspaces, onOpenChange, onTransferComplete])
+  }, [selectedWorkspaceId, activeWorkspaceId, resourceIds, resourceType, skillProjectRoot, resourceLabel, workspaces, onOpenChange, onTransferComplete])
 
   const { singular, plural } = RESOURCE_TYPE_LABELS[resourceType]
 

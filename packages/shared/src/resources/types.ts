@@ -30,6 +30,8 @@ export interface ResourceBundle {
   resources: {
     sources?: SourceBundleEntry[]
     skills?: SkillBundleEntry[]
+    /** Complete plugin packages, including plugin.json and contributed resources. */
+    plugins?: PluginBundleEntry[]
     /** Per-automation entries (sanitized — webhook auth stripped) */
     automations?: AutomationBundleEntry[]
   }
@@ -58,6 +60,12 @@ export interface SkillBundleEntry {
   /** Skill slug (folder name) */
   slug: string
   /** All non-hidden regular files in the skill directory */
+  files: BundleFile[]
+}
+
+/** Portable plugin package. Its slug must match the manifest name. */
+export interface PluginBundleEntry {
+  slug: string
   files: BundleFile[]
 }
 
@@ -95,6 +103,10 @@ export interface ExportResourcesOptions {
   sources?: string[] | 'all'
   /** Skill slugs to export, or 'all' for every skill */
   skills?: string[] | 'all'
+  /** Plugin names to export, or all installed packages. */
+  plugins?: string[] | 'all'
+  /** Project context used to resolve explicitly selected skills (same precedence as the skills list). */
+  skillProjectRoot?: string
   /** Automation IDs/names to export, 'all' for every automation, or true (= 'all') */
   automations?: boolean | string[] | 'all'
 }
@@ -128,6 +140,8 @@ export interface ImportBucketResult {
 export interface ResourceImportResult {
   sources: ImportBucketResult
   skills: ImportBucketResult
+  /** Absent on older servers; plugin transfers always preserve existing resources. */
+  plugins?: ImportBucketResult
   automations: ImportBucketResult
 }
 

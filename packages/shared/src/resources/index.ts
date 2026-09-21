@@ -6,6 +6,7 @@ export type {
   ResourceBundle,
   SourceBundleEntry,
   SkillBundleEntry,
+  PluginBundleEntry,
   AutomationBundleEntry,
   ResourceImportMode,
   ExportResourcesOptions,
