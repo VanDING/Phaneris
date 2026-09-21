@@ -28,6 +28,7 @@ import {
   parseISO,
 } from 'date-fns'
 import { useAppShellContext } from '@/context/AppShellContext'
+import { formatCalendarTitle, formatWeekdayLong } from '@/lib/calendar-date'
 import { useCompensateForStoplight } from '@/context/StoplightContext'
 import { routes, useNavigation } from '@/contexts/NavigationContext'
 import { useCalendarEntries } from '@/hooks/useCalendarEntries'
@@ -111,7 +112,9 @@ interface CalendarProjection {
 export function CalendarView() {
   const { activeWorkspaceId, onCreateSession, trailingAction, expandButton } = useAppShellContext()
   const compensateForStoplight = useCompensateForStoplight()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  // Date labels follow the UI language, not the host locale (see lib/calendar-date.ts).
+  const locale = i18n.resolvedLanguage ?? i18n.language
   const reduceMotion = useReducedMotionConfig()
   const { navigate, navigateToSession } = useNavigation()
   const { entries, update, remove } = useCalendarEntries(activeWorkspaceId ?? null)
@@ -359,11 +362,10 @@ export function CalendarView() {
     if (next !== 'month') setCursor(new Date())
   }, [])
 
-  const title = React.useMemo(() => {
-    if (view === 'day') return format(cursor, 'yyyy年M月d日')
-    if (view === 'week') return format(cursor, 'yyyy年M月')
-    return format(cursor, 'yyyy年M月')
-  }, [view, cursor])
+  const title = React.useMemo(
+    () => formatCalendarTitle(cursor, view, locale),
+    [view, cursor, locale],
+  )
 
   // -------------------------------------------------------------------------
   // Shared card chrome
@@ -423,7 +425,7 @@ export function CalendarView() {
     return (
       <div className="flex h-full flex-col overflow-hidden">
         <div className="px-4 pb-2">
-          <div className="text-[15px] font-semibold">{format(day, 'EEEE')}</div>
+          <div className="text-[15px] font-semibold">{formatWeekdayLong(day, locale)}</div>
         </div>
 
         {/* All-day strip */}
