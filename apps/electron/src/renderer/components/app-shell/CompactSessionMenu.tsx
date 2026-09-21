@@ -50,6 +50,8 @@ import {
   Send,
   Tag,
   Trash2,
+  Layers,
+  CornerDownRight,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -74,12 +76,13 @@ import {
   type SessionStatusId,
 } from '@/config/session-status-config'
 import type { SessionMeta } from '@/atoms/sessions'
+import type { ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import { getSessionStatus, hasUnreadMeta, hasMessagesMeta } from '@/utils/session'
 import { getFileManagerName } from '@/lib/platform'
 import { useMessagingConnect, type MessagingPlatform } from '@/components/messaging/MessagingSessionMenuItem'
 import { useSessionMenuActions } from '@/hooks/useSessionMenuActions'
 
-type View = 'root' | 'status' | 'labels' | 'share' | 'messaging'
+type View = 'root' | 'status' | 'labels' | 'share' | 'messaging' | 'context'
 
 export interface CompactSessionMenuProps {
   /** Title text shown in the trigger button + drawer header. */
@@ -221,6 +224,7 @@ export function CompactSessionMenu({
       case 'labels':    return t('sessionMenu.labels')
       case 'share':     return t('sessionMenu.shared')
       case 'messaging': return t('sessionMenu.connectMessaging')
+      case 'context':   return t('sessionMenu.contextStrategy')
       default:          return title ?? ''
     }
   })()
@@ -319,6 +323,11 @@ export function CompactSessionMenu({
               onShowInFinder={closeAfter(actions.showInFinder)}
               onCopyPath={closeAfter(actions.copyPath)}
               onDelete={closeAfter(onDelete)}
+              onOpenContextSub={() => setView('context')}
+              hasHandoffSuccessor={!!item.contextHandoff?.childSessionId}
+              onOpenHandoffSuccessor={closeAfter(actions.openHandoffSuccessor)!}
+              canRetryHandoff={item.contextHandoff?.phase === 'failed' || item.contextHandoff?.phase === 'cancelled'}
+              onRetryHandoff={closeAfter(actions.retryHandoff)!}
             />
           )}
 
@@ -328,6 +337,16 @@ export function CompactSessionMenu({
               activeStateId={currentSessionStatus}
               onSelect={(id) => {
                 onSessionStatusChange(id)
+                setOpen(false)
+              }}
+            />
+          )}
+
+          {view === 'context' && (
+            <ContextPane
+              contextPolicy={item.contextPolicy}
+              onSelect={(policy) => {
+                void actions.setContextPolicy(policy)
                 setOpen(false)
               }}
             />
@@ -391,6 +410,11 @@ interface RootPaneProps {
   onShowInFinder?: () => void
   onCopyPath?: () => void
   onDelete?: () => void
+  onOpenContextSub: () => void
+  hasHandoffSuccessor: boolean
+  onOpenHandoffSuccessor: () => void
+  canRetryHandoff: boolean
+  onRetryHandoff: () => void
 }
 
 function RootPane({
@@ -421,6 +445,11 @@ function RootPane({
   onShowInFinder,
   onCopyPath,
   onDelete,
+  onOpenContextSub,
+  hasHandoffSuccessor,
+  onOpenHandoffSuccessor,
+  canRetryHandoff,
+  onRetryHandoff,
 }: RootPaneProps) {
   const { t } = useTranslation()
 
@@ -494,6 +523,21 @@ function RootPane({
 
       <Separator />
 
+      <Row icon={<Layers className="h-4 w-4" />} label={t('sessionMenu.contextStrategy')} chevron onTap={onOpenContextSub} />
+
+      {hasHandoffSuccessor && (
+        <Row
+          icon={<CornerDownRight className="h-4 w-4" />}
+          label={t('sessionMenu.openHandoffSuccessor')}
+          onTap={onOpenHandoffSuccessor}
+        />
+      )}
+      {canRetryHandoff && (
+        <Row icon={<RefreshCw className="h-4 w-4" />} label={t('sessionMenu.handoffRetry')} onTap={onRetryHandoff} />
+      )}
+
+      <Separator />
+
       <Row icon={<Pencil className="h-4 w-4" />} label={t('common.rename')} onTap={onRename} />
       <Row icon={<RefreshCw className="h-4 w-4" />} label={t('sessionMenu.regenerateTitle')} onTap={onRefreshTitle} />
 
@@ -549,6 +593,38 @@ function StatusPane({
           />
         )
       })}
+    </div>
+  )
+}
+
+function ContextPane({
+  contextPolicy,
+  onSelect,
+}: {
+  contextPolicy?: ContextPolicy
+  onSelect: (policy: ContextPolicy | null) => void
+}) {
+  const { t } = useTranslation()
+  // One exclusive strategy: selecting any row replaces the current one, and the
+  // first row clears the override so the session tracks the app default again.
+  const options: Array<[ContextPolicy | null, string]> = [
+    [null, t('sessionMenu.contextInherit')],
+    ['compact', t('sessionMenu.contextCompact')],
+    ['handoff', t('sessionMenu.contextHandoff')],
+    ['manual', t('sessionMenu.contextManual')],
+  ]
+  const selected = contextPolicy ?? null
+  return (
+    <div className="flex flex-col">
+      {options.map(([policy, label]) => (
+        <Row
+          key={label}
+          icon={<Layers className="h-4 w-4" />}
+          label={label}
+          radioSelected={selected === policy}
+          onTap={() => onSelect(policy)}
+        />
+      ))}
     </div>
   )
 }

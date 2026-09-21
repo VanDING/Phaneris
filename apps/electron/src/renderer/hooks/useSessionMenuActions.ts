@@ -29,6 +29,8 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { extractLabelId, toggleLabelInList } from '@phaneris/shared/labels'
 import type { SessionMeta } from '@/atoms/sessions'
+import type { ContextPolicy } from '@phaneris/shared/agent/context-policy'
+import { useNavigation } from '@/contexts/NavigationContext'
 
 export interface UseSessionMenuActionsOptions {
   item: SessionMeta
@@ -43,6 +45,16 @@ export interface SessionMenuActions {
   showInFinder: () => void
   copyPath: () => Promise<void>
   refreshTitle: () => Promise<void>
+  /**
+   * Override this session's context strategy. `null` restores the app default.
+   * The server applies it to the live backend before persisting, so a rejected
+   * change never leaves the menu showing a strategy that is not in effect.
+   */
+  setContextPolicy: (policy: ContextPolicy | null) => Promise<void>
+  /** Re-run a failed or cancelled handoff without resuming ordinary execution. */
+  retryHandoff: () => Promise<void>
+  /** Open the session that continued this one after an automatic handoff. */
+  openHandoffSuccessor: () => void
   /** Open the session's published share URL in the system browser (no-op if not shared). */
   openSharedInBrowser: () => void
   /** Copy the session's published share URL to the clipboard (no-op if not shared). */
@@ -66,6 +78,7 @@ export function useSessionMenuActions({
   onLabelsChange,
 }: UseSessionMenuActionsOptions): SessionMenuActions {
   const { t } = useTranslation()
+  const { navigateToSession } = useNavigation()
   const sessionId = item.id
   const sharedUrl = item.sharedUrl
   const propLabels = item.labels
@@ -176,12 +189,38 @@ export function useSessionMenuActions({
     }
   }, [sessionId, t])
 
+  const setContextPolicy = React.useCallback(async (policy: ContextPolicy | null) => {
+    try {
+      await window.electronAPI.sessionCommand(sessionId, { type: 'setContextPolicy', policy })
+    } catch (error) {
+      toast.error(t('settings.ai.context.title'), {
+        description: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }, [sessionId, t])
+
+  const retryHandoff = React.useCallback(async () => {
+    try {
+      await window.electronAPI.sessionCommand(sessionId, { type: 'retryContextHandoff' })
+    } catch {
+      toast.error(t('session.handoff.retryFailed'))
+    }
+  }, [sessionId, t])
+
+  const openHandoffSuccessor = React.useCallback(() => {
+    const successorId = item.contextHandoff?.childSessionId
+    if (successorId) navigateToSession(successorId)
+  }, [item.contextHandoff?.childSessionId, navigateToSession])
+
   return {
     appliedLabelIds,
     toggleLabel,
     showInFinder,
     copyPath,
     refreshTitle,
+    setContextPolicy,
+    retryHandoff,
+    openHandoffSuccessor,
     openSharedInBrowser,
     copySharedLink,
     updateShare,

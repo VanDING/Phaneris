@@ -13,7 +13,7 @@ import { useProjectColorTreatment } from '@/hooks/useProjectColorTreatment'
 import { useLabels } from '@/hooks/useLabels'
 import { useWorkItems } from '@/hooks/useWorkItems'
 import { useWorkItemViewState } from '@/hooks/useWorkItemViewState'
-import { getSessionTitle } from '@/utils/session'
+import { getSessionTitle, isHandoffContinuation } from '@/utils/session'
 import { resolveTaskScopeLabelId } from '@phaneris/shared/labels'
 import { queryWorkItems, type WorkItem } from '@phaneris/shared/work-items/browser'
 import { DEFAULT_MODEL } from '@config/models'
@@ -214,6 +214,9 @@ export function KanbanBoardContainer() {
     const childrenByParent = new Map<string, SessionMeta[]>()
     for (const meta of metaMap.values()) {
       if (!meta.parentSessionId) continue
+      // Handoff continuations share the parent link for the session list, but they
+      // are the same task rather than a board row of their own.
+      if (isHandoffContinuation(meta)) continue
       const siblings = childrenByParent.get(meta.parentSessionId)
       if (siblings) siblings.push(meta)
       else childrenByParent.set(meta.parentSessionId, [meta])
@@ -361,6 +364,9 @@ export function KanbanBoardContainer() {
         // Skip Conductor-owned children: the TaskRunner drives their lifecycle (prompts,
         // status, retries). Dispatching them manually would double-run and race the runner.
         if (child.taskRunId) continue
+        // Skip handoff continuations: they continue this very task, so dispatching
+        // them would run the same work twice from two sessions.
+        if (isHandoffContinuation(child)) continue
         if (deriveRunState(child, statusesById) !== 'pending') continue
         const prompt = child.name?.trim()
         if (!prompt) continue

@@ -472,6 +472,10 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
         return sessionManager.setActiveViewingSession(sessionId, command.workspaceId)
       case 'setPermissionMode':
         return sessionManager.setSessionPermissionMode(sessionId, command.mode)
+      case 'setContextPolicy':
+        return sessionManager.setSessionContextPolicy(sessionId, command.policy)
+      case 'retryContextHandoff':
+        return sessionManager.retryContextHandoff(sessionId)
       case 'setThinkingLevel':
         // Validate thinking level before passing to session manager
         if (!isValidThinkingLevel(command.level)) {

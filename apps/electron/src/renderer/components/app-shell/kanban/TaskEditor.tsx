@@ -10,7 +10,7 @@ import { useProjects } from '@/hooks/useProjects'
 import { sourcesAtom } from '@/atoms/sources'
 import { skillsAtom } from '@/atoms/skills'
 import { sessionMetaMapAtom } from '@/atoms/sessions'
-import { getSessionTitle } from '@/utils/session'
+import { getSessionTitle, isHandoffContinuation } from '@/utils/session'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -576,6 +576,9 @@ export function TaskEditor({
             !child.taskNodeId &&
             !child.hidden &&
             !child.isArchived &&
+            // Handoff continuations continue this task instead of being a unit of
+            // its work; they must not be adopted as quick-add subtask rows.
+            !isHandoffContinuation(child) &&
             !adoptedNodeIds.has(quickAddNodeId(child.id)),
         )
         .sort((a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0))

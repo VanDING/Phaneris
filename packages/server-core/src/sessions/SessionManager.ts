@@ -1,3 +1,5 @@
+import { getContextPolicy } from '@phaneris/shared/config/storage'
+import { isContextPolicy, validateHandoffDocument, buildHandoffSeed, HANDOFF_INSTRUCTION, CONTEXT_HANDOFF_ACTIVE_PHASES, type ContextPolicy, type ContextHandoffState } from '@phaneris/shared/agent/context-policy'
 import { estimateTranscriptBytes } from '@phaneris/core/utils'
 import type { EventSink, RpcServer } from '@phaneris/server-core/transport'
 import { CLIENT_BROWSER_INVOKE } from '@phaneris/server-core/transport'
@@ -7,7 +9,7 @@ import { validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core
 import { createScopedLogger, CONSOLE_LOGGER, type PlatformServices, type Logger } from '@phaneris/server-core/runtime'
 import { basename, dirname, extname, join } from 'path'
 import { existsSync } from 'fs'
-import { readFile, writeFile, mkdir } from 'fs/promises'
+import { readFile, writeFile, mkdir, rename } from 'fs/promises'
 import { randomUUID } from 'node:crypto'
 import { setPermissionMode, hydratePreviousPermissionMode, getPermissionModeDiagnostics, type PermissionMode, unregisterSessionScopedToolCallbacks, mergeSessionScopedToolCallbacks, AbortReason, type AuthRequest, type AuthResult, type CredentialAuthRequest, type BrowserPaneFns, generateConversationSummary, resolveKeepBackgroundTasksAlive } from '@phaneris/shared/agent'
 import {
@@ -662,6 +664,12 @@ interface RunningBackgroundTask {
 }
 
 interface ManagedSession {
+  contextPolicy?: ContextPolicy
+  contextHandoff?: ContextHandoffState
+  handoffRootSessionId?: string
+  handoffFromSessionId?: string
+  handoffSequence?: number
+
   id: string
   workspace: Workspace
   agent: AgentInstance | null  // Lazy-loaded - null until first message
@@ -2040,6 +2048,7 @@ export class SessionManager implements ISessionManager {
 
       // Signal that initialization is complete — IPC handlers waiting on initGate will proceed
       this.initGate.markReady()
+      void this.recoverContextHandoffs()
     } catch (error) {
       this.initGate.markFailed(error)
       throw error
@@ -3286,6 +3295,10 @@ export class SessionManager implements ISessionManager {
       isFlagged: options?.isFlagged,
       projectId: resolvedProjectId,
       parentSessionId: options?.parentSessionId,
+      contextPolicy: options?.contextPolicy,
+      handoffRootSessionId: options?.handoffRootSessionId,
+      handoffFromSessionId: options?.handoffFromSessionId,
+      handoffSequence: options?.handoffSequence,
       branchFromSessionId: validatedBranch?.sourceSessionId,
       taskSlug: options?.taskSlug,
       taskRunId: options?.taskRunId,
@@ -3791,7 +3804,233 @@ export class SessionManager implements ISessionManager {
     }
   }
 
-  /** Reconcile warming immediately in live main sessions; cold agents read storage on init. */
+  /**
+   * Reconcile warming immediately in live main sessions; cold agents read storage on init.
+   *
+   * A session that refuses the toggle keeps its previous policy and is retried on
+   * the next send — one uncooperative session must not roll back the app default
+   * the user just saved.
+   */
+  async refreshContextPolicy(): Promise<void> {
+    // In-flight requests keep their current policy. The next send applies the latest default.
+    for (const managed of this.sessions.values()) {
+      if (managed.contextPolicy || managed.isProcessing) continue
+      try {
+        await managed.agent?.updateContextPolicy?.(getContextPolicy())
+      } catch (error) {
+        sessionLog.warn(`Session ${managed.id} kept its previous context policy: ${error instanceof Error ? error.message : String(error)}`)
+      }
+    }
+  }
+
+  async setSessionContextPolicy(sessionId: string, policy: ContextPolicy | null): Promise<void> {
+    if (policy !== null && !isContextPolicy(policy)) throw new Error('Invalid context policy')
+    const managed = this.sessions.get(sessionId)
+    if (!managed) throw new Error('Session not found')
+    if (managed.isProcessing) throw new Error('Stop the current response before changing its context policy')
+    // Apply to the backend first. A rejected toggle must leave both the stored
+    // policy and the session metadata untouched — reporting handoff as enabled
+    // while compaction stayed on would silently discard the user's whole history.
+    await managed.agent?.updateContextPolicy?.(policy ?? getContextPolicy())
+    managed.contextPolicy = policy ?? undefined
+    this.persistSession(managed)
+    await this.flushSession(managed.id)
+    this.sendEvent({ type: 'session_metadata_changed', sessionId, changes: { contextPolicy: managed.contextPolicy } }, managed.workspace.id)
+  }
+
+  /** Sessions whose successor dispatch is in flight; guards a same-process double start. */
+  private readonly handoffStarts = new Set<string>()
+
+  private async updateContextHandoff(managed: ManagedSession, state: ContextHandoffState): Promise<void> {
+    managed.contextHandoff = state
+    this.persistSession(managed)
+    await this.flushSession(managed.id)
+    this.sendEvent({ type: 'session_metadata_changed', sessionId: managed.id, changes: { contextHandoff: state } }, managed.workspace.id)
+  }
+
+  private async recordContextHandoff(managed: ManagedSession, event: Extract<AgentEvent, { type: 'context_handoff' }>): Promise<void> {
+    // A stop or an earlier cancellation wins over a document still in flight.
+    if (managed.stopRequested || managed.contextHandoff?.phase === 'cancelled') return
+    let state = managed.contextHandoff
+    if (!state || event.phase === 'generating') {
+      // Snapshot the transcript position at the moment generation starts: the
+      // document describes only what was already committed, so anything later is
+      // input the successor has not seen and is forwarded verbatim.
+      state = { id: generateMessageId(), phase: 'generating', cutoffMessageId: managed.messages.at(-1)?.id }
+    }
+    if (event.phase === 'ready') {
+      // The subprocess already validated; re-check because a document that fails
+      // here would otherwise be dispatched as an empty continuation.
+      if (!event.document || !validateHandoffDocument(event.document)) {
+        await this.updateContextHandoff(managed, { ...state, phase: 'failed', error: 'The generated handoff document was incomplete. Retry to continue.' })
+        return
+      }
+      const directory = join(getSessionStoragePath(managed.workspace.rootPath, managed.id), 'handoffs')
+      await mkdir(directory, { recursive: true })
+      const documentPath = join(directory, `${state.id}.md`)
+      // Write-then-rename: a crash mid-write must never leave a truncated
+      // document that recovery would treat as ready.
+      await writeFile(`${documentPath}.tmp`, event.document, 'utf8')
+      await rename(`${documentPath}.tmp`, documentPath)
+      await this.updateContextHandoff(managed, { ...state, phase: 'ready', documentPath })
+    } else {
+      await this.updateContextHandoff(managed, { ...state, phase: event.phase, error: event.error })
+    }
+  }
+
+  private async finishContextHandoffTurn(managed: ManagedSession): Promise<void> {
+    if (managed.activeDurableRunOperationId) {
+      this.durableRuntime.completeRun(managed.workspace.rootPath, managed.activeDurableRunOperationId, 'interrupted')
+      managed.activeDurableRunOperationId = undefined
+    }
+    this.applyDurableUsageProjection(managed)
+    this.setProcessing(managed, false)
+    this.sendEvent({ type: 'complete', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
+    // The handing-off session will never run another turn, so it must not keep
+    // holding the browser window or an overlay the successor could not replace.
+    const handoffBpm = this.getBrowserPaneManagerForSession(managed.id)
+    if (handoffBpm) {
+      try {
+        await handoffBpm.clearVisualsForSession(managed.id)
+        handoffBpm.unbindAllForSession(managed.id)
+      } catch (error) {
+        sessionLog.warn(`Browser-pane teardown for handing-off session ${managed.id} failed (continuing):`, error)
+      }
+    }
+    if (managed.contextHandoff?.phase === 'ready' && !managed.stopRequested) {
+      await this.startContextSuccessor(managed)
+    } else if (managed.contextHandoff?.phase === 'generating') {
+      await this.updateContextHandoff(managed, { ...managed.contextHandoff, phase: 'failed', error: 'Handoff generation did not finish. Retry to continue.' })
+    }
+    managed.stopRequested = false
+    this.persistSession(managed)
+  }
+
+  private async startContextSuccessor(managed: ManagedSession): Promise<void> {
+    if (this.handoffStarts.has(managed.id)) return
+    this.handoffStarts.add(managed.id)
+    try {
+      const state = managed.contextHandoff
+      if (!state?.documentPath || state.phase === 'complete' || state.phase === 'cancelled' || managed.stopRequested) return
+      const document = await readFile(state.documentPath, 'utf8')
+      if (!validateHandoffDocument(document)) throw new Error('Saved handoff document is incomplete')
+      await this.ensureMessagesLoaded(managed)
+      const rootId = managed.handoffRootSessionId ?? managed.id
+      // Look for an existing successor before creating one. Lineage is persisted
+      // with the child, so a crash between child creation and the parent's own
+      // write cannot produce a second successor on recovery.
+      let child = [...this.sessions.values()].find(session => session.handoffFromSessionId === managed.id)
+      if (!child) {
+        const created = await this.createSession(managed.workspace.id, {
+          name: `${this.sessions.get(rootId)?.name ?? managed.name ?? 'Task'} · ${(managed.handoffSequence ?? 0) + 1}`,
+          parentSessionId: rootId, handoffRootSessionId: rootId, handoffFromSessionId: managed.id,
+          handoffSequence: (managed.handoffSequence ?? 0) + 1,
+          // The chain stays flat under the original session in the UI, while the
+          // direct predecessor is recorded separately for a true handoff chain.
+          contextPolicy: managed.contextPolicy,
+          llmConnection: managed.llmConnection, model: managed.model, thinkingLevel: managed.thinkingLevel,
+          workingDirectory: managed.workingDirectory, permissionMode: managed.permissionMode,
+          enabledSourceSlugs: managed.enabledSourceSlugs, projectId: managed.projectId, labels: managed.labels,
+          taskSlug: managed.taskSlug, taskRunId: managed.taskRunId, taskNodeId: managed.taskNodeId,
+        })
+        child = this.sessions.get(created.id)!
+        if (managed.activePlugin) child.activePlugin = managed.activePlugin
+        this.persistSession(child)
+        await this.flushSession(child.id)
+      }
+      if (managed.contextHandoff?.phase === 'cancelled' || managed.stopRequested) return
+      await this.ensureMessagesLoaded(child)
+      await this.updateContextHandoff(managed, { ...state, phase: 'starting', childSessionId: child.id })
+      // The seed is flushed to disk before the parent records 'complete', so a
+      // persisted user message on the successor is proof the dispatch happened.
+      // Re-sending it blindly after a crash would duplicate work with side effects.
+      if (child.messages.some(message => message.role === 'user')) {
+        await this.updateContextHandoff(managed, { ...managed.contextHandoff!, phase: 'complete' })
+        return
+      }
+      // Everything committed after the cutoff was never part of the document.
+      // Queued messages are identified by their own marker rather than a snapshot,
+      // so recovery after a restart still forwards them exactly once. A missing
+      // cutoff must not be read as "everything is new": that would replay the whole
+      // user history into the successor.
+      const cutoff = managed.messages.findIndex(message => message.id === state.cutoffMessageId)
+      const late = managed.messages.filter((message, index) => message.role === 'user'
+        && (message.isQueued === true || (cutoff >= 0 && index > cutoff)))
+      const seed = buildHandoffSeed({
+        document,
+        rootSessionId: rootId,
+        previousSessionId: managed.id,
+        sessionPath: join(getSessionStoragePath(managed.workspace.rootPath, managed.id), 'session.jsonl'),
+        documentPath: state.documentPath,
+        handoffsPath: dirname(state.documentPath),
+        workingDirectory: managed.workingDirectory,
+        activePlugin: managed.activePlugin,
+        lateMessages: late.map(message => `${message.content}\n${JSON.stringify(message.attachments ?? [])}`),
+      })
+      // The queue hands over with the task: the successor receives the messages
+      // verbatim, so replaying them in the original session would duplicate them.
+      void this.sendMessage(child.id, seed, undefined, undefined, undefined, undefined, false, () => {
+        managed.messageQueue = []
+        void this.updateContextHandoff(managed, { ...managed.contextHandoff!, phase: 'complete' })
+      }).catch(async error => {
+        // Post-ack failures (agent init, provider errors) belong to the successor's
+        // own turn and are reported there. Re-marking the handoff as failed here
+        // would strand a continuation that is already running.
+        if (managed.contextHandoff?.phase === 'complete') return
+        await this.updateContextHandoff(managed, { ...managed.contextHandoff!, phase: 'failed', error: error instanceof Error ? error.message : String(error) })
+      })
+    } catch (error) {
+      if (managed.contextHandoff && managed.contextHandoff.phase !== 'cancelled') {
+        await this.updateContextHandoff(managed, { ...managed.contextHandoff, phase: 'failed', error: error instanceof Error ? error.message : String(error) })
+      }
+      sessionLog.error('Context handoff successor failed', error)
+    } finally { this.handoffStarts.delete(managed.id) }
+  }
+
+  /**
+   * Retry a failed or cancelled handoff. A saved document is reused as-is; when
+   * generation itself failed, the policy is switched to handoff and the next
+   * request is forced to produce the document. Ordinary execution never resumes
+   * in place, and the original session is always kept.
+   */
+  async retryContextHandoff(sessionId: string): Promise<void> {
+    const managed = this.sessions.get(sessionId)
+    if (!managed || managed.isProcessing) throw new Error('Session is unavailable or still running')
+    const state = managed.contextHandoff
+    if (!state || !['failed', 'cancelled', 'ready'].includes(state.phase)) throw new Error('No failed handoff to retry')
+    managed.stopRequested = false
+    if (state.documentPath && state.phase !== 'ready') {
+      await this.updateContextHandoff(managed, { ...state, phase: 'ready', error: undefined })
+    }
+    if (managed.contextHandoff?.documentPath) {
+      await this.startContextSuccessor(managed)
+      return
+    }
+    await this.setSessionContextPolicy(sessionId, 'handoff')
+    managed.contextHandoff = undefined
+    // Arm the live subprocess, not a future one: the wrapper reads the flag on the
+    // request it intercepts, so it must be set after the agent exists.
+    const agent = await this.getOrCreateAgent(managed)
+    await agent.forceContextHandoff?.()
+    // A handoff needs a request to intercept; the wrapper replaces it with
+    // document generation, so this prompt is never answered by the model.
+    await this.sendMessage(sessionId, HANDOFF_INSTRUCTION, undefined, undefined, { hidden: true })
+  }
+
+  private async recoverContextHandoffs(): Promise<void> {
+    for (const managed of this.sessions.values()) {
+      try {
+        const state = managed.contextHandoff
+        if (!state) continue
+        if (state.phase === 'ready' || state.phase === 'starting') await this.startContextSuccessor(managed)
+        else if (state.phase === 'generating') {
+          // A partial document is never usable; generation is retried explicitly.
+          await this.updateContextHandoff(managed, { ...state, phase: 'failed', error: 'The application stopped during handoff generation. Retry to continue.' })
+        }
+      } catch (error) { sessionLog.error('Context handoff recovery failed', error) }
+    }
+  }
+
   refreshPromptCacheWarming(enabled: boolean): void {
     for (const managed of this.sessions.values()) {
       managed.agent?.updatePromptCacheWarming?.(enabled)
@@ -4057,6 +4296,7 @@ export class SessionManager implements ISessionManager {
         context: backendContext,
         hostRuntime: buildBackendHostRuntimeContext(),
         coreConfig: {
+        contextPolicy: managed.contextPolicy ?? getContextPolicy(),
         workspace: managed.workspace,
         miniModel,
         thinkingLevel: managed.thinkingLevel,
@@ -6655,6 +6895,36 @@ export class SessionManager implements ISessionManager {
     if (!managed) {
       throw new Error(`Session ${sessionId} not found`)
     }
+    const successorId = managed.contextHandoff?.phase === 'complete' ? managed.contextHandoff.childSessionId : undefined
+    if (successorId) {
+      // The task continues in the successor, and the message travels verbatim.
+      // The parent's composer still gets a confirmation: the user typed into the
+      // thread they can see, so the optimistic bubble must not stay pending. This
+      // echo is renderer-only — the parent's transcript stays frozen at the
+      // handoff point, because the message now belongs to the successor.
+      return this.sendMessage(
+        successorId,
+        message, attachments, storedAttachments, options, undefined, _isAuthRetry,
+        (messageId) => {
+          this.sendEvent({
+            type: 'user_message',
+            sessionId,
+            message: {
+              id: options?.optimisticMessageId ?? messageId,
+              role: 'user',
+              content: message,
+              timestamp: this.monotonic(),
+              attachments: storedAttachments,
+              badges: options?.badges,
+            },
+            status: 'accepted',
+            optimisticMessageId: options?.optimisticMessageId,
+          }, managed.workspace.id)
+          onAck?.(messageId)
+        },
+        rpcContext,
+      )
+    }
     this.setLastMessageClientId(sessionId, rpcContext?.callerClientId)
 
     // Source-activation auto-retry dedup (craft-agents-oss#804). When the server
@@ -6689,7 +6959,10 @@ export class SessionManager implements ISessionManager {
       const connection = resolveSessionConnection(managed.llmConnection, undefined)
       // Fallback to 'steer' when no connection is resolvable — preserves
       // today's exact behavior (call redirect, take whatever it returns).
-      const behavior = connection ? resolveMidStreamBehavior(connection) : 'steer'
+      // During a handoff the turn is the handoff's, not the user's: queue so the
+      // message is forwarded to the successor instead of interrupting generation.
+      const behavior = managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase]
+        ? 'queue' : connection ? resolveMidStreamBehavior(connection) : 'steer'
 
       const agent = managed.agent
       let steered = false
@@ -6943,6 +7216,7 @@ export class SessionManager implements ISessionManager {
     // ~L2956 now sees fresh tokens (or correctly-needs_auth failed sources, since
     // ensureFreshToken mirrors the disk write to source.config in-memory).
     const agent = await this.getOrCreateAgent(managed)
+    await agent.updateContextPolicy?.(managed.contextPolicy ?? getContextPolicy())
     sendSpan.mark('agent.ready')
 
     // Always set all sources for context (even if none are enabled), including built-ins
@@ -7083,6 +7357,10 @@ export class SessionManager implements ISessionManager {
           }
         }
 
+        if (event.type === 'context_handoff') {
+          await this.recordContextHandoff(managed, event)
+          continue
+        }
         // Process the event first
         await this.processEvent(managed, event)
 
@@ -7125,6 +7403,11 @@ export class SessionManager implements ISessionManager {
             return
           }
 
+          if (managed.contextHandoff && ['generating', 'ready', 'failed', 'cancelled'].includes(managed.contextHandoff.phase)) {
+            await this.finishContextHandoffTurn(managed)
+            sendSpan.end()
+            return
+          }
           sessionLog.info('Chat completed via complete event')
 
           // Check if we got an assistant response in this turn
@@ -7260,6 +7543,12 @@ export class SessionManager implements ISessionManager {
 
   async cancelProcessing(sessionId: string, silent = false): Promise<void> {
     const managed = this.sessions.get(sessionId)
+    if (managed?.contextHandoff?.phase === 'complete' && managed.contextHandoff.childSessionId) {
+      return this.cancelProcessing(managed.contextHandoff.childSessionId, silent)
+    }
+    if (managed?.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase]) {
+      await this.updateContextHandoff(managed, { ...managed.contextHandoff, phase: 'cancelled' })
+    }
     if (!managed?.isProcessing) {
       return // Not processing, nothing to cancel
     }
@@ -7592,7 +7881,7 @@ export class SessionManager implements ISessionManager {
       // reason + this turn's final assistant message, so the Conductor can advance
       // the corresponding node. In-process only; never sent to the renderer/agents.
       this.emitSessionComplete({
-        sessionId,
+        sessionId: managed.handoffRootSessionId ?? sessionId,
         workspaceId: managed.workspace.id,
         reason,
         finalMessageId: currentFinalMessageId,

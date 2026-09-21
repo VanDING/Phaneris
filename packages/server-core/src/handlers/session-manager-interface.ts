@@ -139,6 +139,9 @@ export interface ISessionManager {
   refreshBrowserToolAvailability(enabled: boolean): void
   /** Push the extended-prompt-cache setting to live sessions when supported. */
   refreshExtendedPromptCache?(enabled: boolean): void
+  refreshContextPolicy?(): Promise<void>
+  setSessionContextPolicy(sessionId: string, policy: import('@phaneris/shared/agent/context-policy').ContextPolicy | null): Promise<void>
+  retryContextHandoff(sessionId: string): Promise<void>
   refreshPromptCacheWarming?(enabled: boolean): void
 
   // ---------------------------------------------------------------------------

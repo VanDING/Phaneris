@@ -32,6 +32,8 @@ import {
   Send,
   FolderKanban,
   Check,
+  Layers,
+  CornerDownRight,
 } from 'lucide-react'
 import { useMenuComponents } from '@/components/ui/menu-context'
 import { getStateColor, getStateIcon, type SessionStatusId } from '@/config/session-status-config'
@@ -228,6 +230,50 @@ export function SessionMenu({
             })}
           </SubContent>
         </Sub>
+      )}
+
+      {/* Context strategy submenu - one exclusive strategy; the app default is inherited. */}
+      <Sub>
+        <SubTrigger className="pr-2">
+          <Layers className="h-3.5 w-3.5" />
+          <span className="flex-1">{t("sessionMenu.contextStrategy")}</span>
+        </SubTrigger>
+        <SubContent>
+          {([
+            [null, t("sessionMenu.contextInherit")],
+            ['compact', t("sessionMenu.contextCompact")],
+            ['handoff', t("sessionMenu.contextHandoff")],
+            ['manual', t("sessionMenu.contextManual")],
+          ] as const).map(([policy, label]) => (
+            <MenuItem key={label} onClick={() => actions.setContextPolicy(policy)}>
+              {item.contextPolicy === policy || (!item.contextPolicy && policy === null)
+                ? <Check className="h-3.5 w-3.5" />
+                : null}
+              <span className={
+                item.contextPolicy === policy || (!item.contextPolicy && policy === null)
+                  ? 'flex-1' : 'flex-1 ml-[18px]'
+              }>{label}</span>
+            </MenuItem>
+          ))}
+        </SubContent>
+      </Sub>
+
+      {/* Handoff recovery and the link into the continuation session */}
+      {item.contextHandoff && (
+        <>
+          {item.contextHandoff.childSessionId && (
+            <MenuItem onClick={actions.openHandoffSuccessor}>
+              <CornerDownRight className="h-3.5 w-3.5" />
+              <span className="flex-1">{t("sessionMenu.openHandoffSuccessor")}</span>
+            </MenuItem>
+          )}
+          {(item.contextHandoff.phase === 'failed' || item.contextHandoff.phase === 'cancelled') && (
+            <MenuItem onClick={actions.retryHandoff}>
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span className="flex-1">{t("sessionMenu.handoffRetry")}</span>
+            </MenuItem>
+          )}
+        </>
       )}
 
       {/* Flag/Unflag */}

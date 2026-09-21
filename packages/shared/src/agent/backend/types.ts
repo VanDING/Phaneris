@@ -188,6 +188,7 @@ export interface BackendHostRuntimeContext {
  * Provider-specific runtime details are resolved by backend drivers internally.
  */
 export interface CoreBackendConfig {
+  contextPolicy?: import('../context-policy').ContextPolicy;
   /** Workspace configuration */
   workspace: Workspace;
 
@@ -517,6 +518,9 @@ export interface AgentBackend {
    * Implementations that own a subprocess must not interrupt an active turn.
    */
   updateExtendedPromptCache?(enabled: boolean): void;
+  updateContextPolicy?(policy: import('../context-policy').ContextPolicy): Promise<void>;
+  /** Make the next model request produce a handoff document instead of an answer. */
+  forceContextHandoff?(): Promise<void>;
   updatePromptCacheWarming?(enabled: boolean): void;
 
   /**

@@ -739,6 +739,8 @@ export interface ElectronAPI {
 
   // Prompt caching & context
   getExtendedPromptCache(): Promise<boolean>
+  getContextPolicy(): Promise<import('@phaneris/shared/agent/context-policy').ContextPolicy>
+  setContextPolicy(policy: import('@phaneris/shared/agent/context-policy').ContextPolicy): Promise<void>
   getPromptCacheWarming(): Promise<boolean>
   setExtendedPromptCache(enabled: boolean): Promise<void>
   setPromptCacheWarming(enabled: boolean): Promise<void>

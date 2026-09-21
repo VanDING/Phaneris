@@ -37,6 +37,7 @@ import { getModelById } from '../config/models.ts';
 
 // BaseAgent provides common functionality
 import { BaseAgent } from './base-agent.ts';
+import type { ContextPolicy } from './context-policy.ts';
 import type { Workspace } from '../config/storage.ts';
 import type {
   DurableModelOutcomeRequest,
@@ -392,6 +393,8 @@ export class PiAgent extends BaseAgent {
     reject: (error: Error) => void;
   }> = new Map();
 
+  private handoffGenerating = false;
+
   // Pending auto-compaction toggle requests
   private pendingAutoCompactionToggles: Map<string, {
     resolve: (enabled: boolean) => void;
@@ -669,19 +672,22 @@ export class PiAgent extends BaseAgent {
       browserToolEnabled: getBrowserToolEnabled(),
       cacheRetention: extendedPromptCache ? 'long' : 'short',
       promptCacheWarming: getPromptCacheWarming(),
+      contextPolicy: this.config.contextPolicy ?? 'compact',
     });
 
     // Wait for subprocess to report ready
     await this.subprocessReady;
     this.debug('Pi subprocess is ready');
 
-    // Ensure auto-compaction is explicitly enabled for embedded sessions.
+    // Apply the policy before the first model request, including resumed sessions.
     // PI defaults this to enabled, but we set it proactively for clarity and resilience.
+    // A confirmed policy is recorded here so later sends can skip the round trip.
+    this.config.contextPolicy ??= 'compact';
     try {
-      const enabled = await this.requestSetAutoCompaction(true);
+      const enabled = await this.requestSetAutoCompaction(this.config.contextPolicy === 'compact');
       this.debug(`PI auto-compaction enabled: ${enabled}`);
     } catch (error) {
-      this.debug(`Failed to configure PI auto-compaction (continuing): ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(`Failed to apply context policy: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     // Register session-scoped tools as proxy tools in the subprocess.
@@ -1146,6 +1152,12 @@ export class PiAgent extends BaseAgent {
         this.handleCompactResult(msg);
         break;
 
+      case 'context_handoff': {
+        const signal = msg.signal as { phase: 'generating' | 'ready' | 'failed'; document?: string; error?: string };
+        this.handoffGenerating = true;
+        this.eventQueue.enqueue({ type: 'context_handoff', ...signal });
+        break;
+      }
       case 'set_auto_compaction_result':
         // Response to an auto-compaction toggle request
         this.handleSetAutoCompactionResult(msg);
@@ -1353,6 +1365,7 @@ export class PiAgent extends BaseAgent {
         });
       }
 
+      if (this.handoffGenerating && (agentEvent.type === 'text_delta' || agentEvent.type === 'text_complete')) continue;
       this.eventQueue.enqueue(agentEvent);
     }
 
@@ -2259,7 +2272,7 @@ export class PiAgent extends BaseAgent {
         },
       });
 
-      this.send({ type: 'set_auto_compaction', id, enabled });
+      this.send({ type: 'set_auto_compaction', id, enabled, policy: this.config.contextPolicy ?? 'compact' });
     });
   }
 
@@ -2345,6 +2358,7 @@ export class PiAgent extends BaseAgent {
     this.abortReason = undefined;
     this.eventQueue.reset();
     this.currentUserMessage = message;
+    this.handoffGenerating = false;
     this.adapter.startTurn();
 
     // Fire UserPromptSubmit hook event (fire-and-forget)
@@ -2713,6 +2727,40 @@ export class PiAgent extends BaseAgent {
   updateExtendedPromptCache(enabled: boolean): void {
     if (!this.subprocess) return;
     this.send({ type: 'set_cache_retention', cacheRetention: enabled ? 'long' : 'short' });
+  }
+
+  /**
+   * Apply a context policy to the live subprocess. The stored config is only
+   * updated after the subprocess confirmed the toggle, so a rejected switch
+   * cannot leave the two sides disagreeing about whether compaction is on.
+   *
+   * Creation commits the policy to the subprocess before any request, and only a
+   * confirmed switch mutates the stored config — so an equal value is already in
+   * effect and costs no round trip. This keeps the per-send reconciliation in the
+   * first turn's path free while still healing drift from a global toggle that
+   * arrived mid-turn.
+   */
+  async updateContextPolicy(policy: ContextPolicy): Promise<void> {
+    if (!this.subprocess) {
+      this.config.contextPolicy = policy;
+      return;
+    }
+    if (this.config.contextPolicy === policy) return;
+    const previous = this.config.contextPolicy;
+    this.config.contextPolicy = policy;
+    try {
+      await this.requestSetAutoCompaction(policy === 'compact');
+    } catch (error) {
+      this.config.contextPolicy = previous;
+      throw error;
+    }
+  }
+
+  /** Arms the next request to generate a handoff document regardless of budget. */
+  async forceContextHandoff(): Promise<void> {
+    if (!this.subprocess) return;
+    await this.ensureSubprocess();
+    this.send({ type: 'force_context_handoff' });
   }
 
   updatePromptCacheWarming(enabled: boolean): void {

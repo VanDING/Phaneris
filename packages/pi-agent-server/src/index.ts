@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { createContextPolicyStream, type HandoffSignal } from './context-policy-stream'
+import { isContextPolicy, type ContextPolicy } from '../../shared/src/agent/context-policy.ts'
 import { compactTextUpdate } from './transport-delta.ts';
 import { prepareRequestDiagnostics } from './request-diagnostics.ts';
 /**
@@ -215,6 +217,7 @@ interface InitMessage {
   /** Pi SDK native prompt-cache retention ('long' = extended TTL where supported) */
   cacheRetention?: CacheRetention;
   promptCacheWarming?: boolean;
+  contextPolicy?: ContextPolicy;
 }
 
 interface RuntimeConfigUpdateMessage {
@@ -247,7 +250,8 @@ type InboundMessage =
   | { type: 'set_model'; model: string }
   | { type: 'set_thinking_level'; level: string }
   | { type: 'compact'; id: string; customInstructions?: string; durableRunOperationId?: string; durableTurnId?: string }
-  | { type: 'set_auto_compaction'; id: string; enabled: boolean }
+  | { type: 'set_auto_compaction'; id: string; enabled: boolean; policy?: ContextPolicy }
+  | { type: 'force_context_handoff' }
   | { type: 'set_browser_tool_enabled'; enabled: boolean }
   | { type: 'set_cache_retention'; cacheRetention: CacheRetention }
   | { type: 'set_cache_warming'; enabled: boolean }
@@ -410,6 +414,7 @@ interface OutboundSessionIdUpdate { type: 'session_id_update'; sessionId: string
 interface OutboundError { type: 'error'; message: string; code?: string; id?: string }
 
 type OutboundMessage =
+  | { type: 'context_handoff'; signal: HandoffSignal }
   | OutboundReady
   | OutboundEvent
   | OutboundPreToolUseReq
@@ -436,6 +441,10 @@ type OutboundMessage =
 // ============================================================
 
 let piSession: AgentSession | null = null;
+let contextPolicy: ContextPolicy = 'compact';
+// Set by the host when a user retries a failed handoff: the next request
+// generates the document regardless of the measured budget.
+let forcedContextHandoff = false;
 // A stop must also cancel a manual compact still waiting for auto-compaction.
 let compactionEpoch = 0;
 let piModelRuntime: ModelRuntime | null = null;
@@ -1059,7 +1068,14 @@ async function ensureSession(): Promise<AgentSession> {
     modelRuntime, session.agent.streamFunction,
     stream => withDurableAccounting(stream, 'cache_warm'),
   );
-  session.agent.streamFunction = withDurableAccounting(sessionStream);
+  contextPolicy = initConfig?.contextPolicy ?? 'compact';
+  session.setAutoCompactionEnabled(contextPolicy === 'compact');
+  session.agent.streamFunction = createContextPolicyStream(
+    withDurableAccounting(sessionStream),
+    () => contextPolicy,
+    signal => send({ type: 'context_handoff', signal }),
+    () => { const forced = forcedContextHandoff; forcedContextHandoff = false; return forced },
+  );
   session.setCacheWarmingMode(initConfig?.promptCacheWarming === true ? 'streaming' : 'off');
   piSession = session;
 
@@ -2416,7 +2432,11 @@ async function handleCompact(msg: Extract<InboundMessage, { type: 'compact' }>):
 async function handleSetAutoCompaction(msg: Extract<InboundMessage, { type: 'set_auto_compaction' }>): Promise<void> {
   try {
     const session = await ensureSession();
+    const policy = msg.policy ?? (msg.enabled ? 'compact' : 'manual');
+    if (!isContextPolicy(policy) || msg.enabled !== (policy === 'compact')) throw new Error('Invalid context policy');
     session.setAutoCompactionEnabled(msg.enabled);
+    contextPolicy = policy;
+    if (initConfig) initConfig.contextPolicy = policy;
     send({
       type: 'set_auto_compaction_result',
       id: msg.id,
@@ -2671,6 +2691,10 @@ async function processMessage(msg: InboundMessage): Promise<void> {
 
     case 'set_browser_tool_enabled':
       handleSetBrowserToolEnabled(msg);
+      break;
+
+    case 'force_context_handoff':
+      forcedContextHandoff = true;
       break;
 
     case 'set_cache_warming':

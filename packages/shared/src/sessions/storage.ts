@@ -191,6 +191,12 @@ export async function createSession(
     isFlagged?: boolean;
     projectId?: string;
     parentSessionId?: string;
+  contextPolicy?: import('../agent/context-policy').ContextPolicy;
+  handoffRootSessionId?: string;
+  handoffFromSessionId?: string;
+  handoffSequence?: number;
+  contextHandoff?: import('../agent/context-policy').ContextHandoffState;
+
     branchFromSessionId?: string;
     taskSlug?: string;
     taskRunId?: string;
@@ -229,6 +235,10 @@ export async function createSession(
     isFlagged: options?.isFlagged,
     projectId: options?.projectId,
     parentSessionId: options?.parentSessionId,
+    contextPolicy: options?.contextPolicy,
+    handoffRootSessionId: options?.handoffRootSessionId,
+    handoffFromSessionId: options?.handoffFromSessionId,
+    handoffSequence: options?.handoffSequence,
     branchFromSessionId: options?.branchFromSessionId,
     taskSlug: options?.taskSlug,
     taskRunId: options?.taskRunId,

@@ -187,6 +187,19 @@ export function hasMessagesMeta(session: SessionMeta): boolean {
   return session.lastFinalMessageId !== undefined
 }
 
+/**
+ * A session created by an automatic context handoff to continue its predecessor.
+ *
+ * Handoff successors hang under the original session (`parentSessionId`) so the
+ * list shows one task family, but they are NOT subtasks: they carry the same
+ * work forward rather than being a unit of work of their own. Board rows and
+ * task dispatch must ignore them, or a retry would re-run the task from a stale
+ * node and the chain would show up as duplicate work.
+ */
+export function isHandoffContinuation(session: SessionMeta): boolean {
+  return session.handoffFromSessionId !== undefined
+}
+
 // ---------------------------------------------------------------------------
 // Display helpers
 // ---------------------------------------------------------------------------

@@ -30,6 +30,8 @@ export const HANDLED_CHANNELS = [
   RPC_CHANNELS.appearance.GET_RICH_TOOL_DESCRIPTIONS,
   RPC_CHANNELS.appearance.SET_RICH_TOOL_DESCRIPTIONS,
   RPC_CHANNELS.caching.GET_EXTENDED_PROMPT_CACHE,
+  RPC_CHANNELS.caching.GET_CONTEXT_POLICY,
+  RPC_CHANNELS.caching.SET_CONTEXT_POLICY,
   RPC_CHANNELS.caching.GET_PROMPT_CACHE_WARMING,
   RPC_CHANNELS.caching.SET_EXTENDED_PROMPT_CACHE,
   RPC_CHANNELS.caching.SET_PROMPT_CACHE_WARMING,
@@ -306,6 +308,18 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
     deps.sessionManager.refreshExtendedPromptCache?.(enabled)
   })
 
+  server.handle(RPC_CHANNELS.caching.GET_CONTEXT_POLICY, async () => {
+    const { getContextPolicy } = await import('@phaneris/shared/config/storage')
+    return getContextPolicy()
+  })
+  server.handle(RPC_CHANNELS.caching.SET_CONTEXT_POLICY, async (_ctx, policy: unknown) => {
+    const { isContextPolicy } = await import('@phaneris/shared/agent/context-policy')
+    if (!isContextPolicy(policy)) throw new Error('Invalid context policy')
+    const { setContextPolicy } = await import('@phaneris/shared/config/storage')
+    setContextPolicy(policy)
+    // Applies to the next request; session-specific overrides remain authoritative.
+    await deps.sessionManager.refreshContextPolicy?.()
+  })
   server.handle(RPC_CHANNELS.caching.GET_PROMPT_CACHE_WARMING, async () => {
     const { getPromptCacheWarming } = await import('@phaneris/shared/config/storage')
     return getPromptCacheWarming()

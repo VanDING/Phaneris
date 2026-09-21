@@ -81,6 +81,7 @@ export interface StoredConfig {
   browserToolEnabled?: boolean;  // Enable built-in browser tool (default: true). Disable for Playwright/Puppeteer.
   allowRemoteEvaluate?: boolean;  // Allow remote agents to call `browser_tool evaluate` on local browser (default: true).
   // Prompt caching & context
+  contextPolicy?: import('../agent/context-policy').ContextPolicy;
   promptCacheWarming?: boolean; // Cost-aware warming during active tool runs (default: false)
   extendedPromptCache?: boolean;  // Use long-lived prompt cache retention where supported (default: false)
   // Token optimization
@@ -3309,4 +3310,18 @@ export function setServerConfig(serverConfig: ServerConfig): void {
 
   config.serverConfig = serverConfig;
   saveConfig(config);
+}
+
+
+/** New sessions inherit the app default; existing explicit overrides are retained. */
+export function getContextPolicy(): import('../agent/context-policy').ContextPolicy {
+  const policy = loadStoredConfig()?.contextPolicy
+  return policy === 'handoff' || policy === 'manual' ? policy : 'compact'
+}
+export function setContextPolicy(policy: import('../agent/context-policy').ContextPolicy): void {
+  if (!['compact', 'handoff', 'manual'].includes(policy)) throw new Error('Invalid context policy')
+  const config = loadStoredConfig()
+  if (!config) throw new Error('Configuration unavailable')
+  config.contextPolicy = policy
+  saveConfig(config)
 }

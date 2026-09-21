@@ -2,7 +2,7 @@ import { formatDistanceToNowStrict } from "date-fns"
 import type { Locale } from "date-fns"
 import { useTranslation } from 'react-i18next'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@phaneris/ui'
-import { ChevronRight, Flag, ShieldAlert } from "lucide-react"
+import { ChevronRight, Flag, ShieldAlert, CornerDownRight } from "lucide-react"
 import { useActionLabel } from "@/actions"
 import { cn } from "@/lib/utils"
 import { rendererPerf } from "@/lib/perf"
@@ -24,6 +24,7 @@ import type { SessionMeta } from "@/atoms/sessions"
 import { messagingBindingsBySessionAtom } from "@/atoms/messaging"
 import { useAtomValue } from "jotai"
 import { extractLabelId } from "@phaneris/shared/labels"
+import { CONTEXT_HANDOFF_ACTIVE_PHASES } from '@phaneris/shared/agent/context-policy'
 
 const PLATFORM_PILL: Record<string, { label: string; colorClass: string }> = {
   telegram: {
@@ -95,6 +96,21 @@ export function SessionItem({
   const messagingBindingsBySession = useAtomValue(messagingBindingsBySessionAtom)
   const sessionBindings = messagingBindingsBySession.get(item.id) ?? []
   const hasMessagingBinding = sessionBindings.length > 0
+
+  // Context handoff state. An unfinished or failed handoff pauses ordinary
+  // execution, so it takes the trailing slot — the user needs to see why the
+  // chat stopped. A finished handoff must NOT: the parent keeps its timestamp,
+  // and the continuation chip rides beside the title instead.
+  const handoff = item.contextHandoff
+  const handoffActive = !!handoff && CONTEXT_HANDOFF_ACTIVE_PHASES[handoff.phase] === true
+  const handoffFailed = handoff?.phase === 'failed' || handoff?.phase === 'cancelled'
+  const handoffContinues = handoff?.phase === 'complete'
+  const handoffLabel = !handoff ? undefined
+    : handoff.phase === 'complete' ? t('session.handoff.complete')
+    : handoff.phase === 'failed' ? t('session.handoff.failed')
+    : handoff.phase === 'cancelled' ? t('session.handoff.cancelled')
+    : handoff.phase === 'starting' ? t('session.handoff.starting')
+    : t('session.handoff.generating')
 
   // Resolve the bound project so the row can show a project-themed stripe /
   // tint and reveal the project name on hover. Treatment is a user preference
@@ -257,8 +273,18 @@ export function SessionItem({
       titleClassName={cn("text-[13px]", item.isAsyncOperationOngoing && "animate-shimmer-text")}
       subtitle={previewText}
       titleSuffix={
-        (projectName || hasMessagingBinding) ? (
+        (projectName || hasMessagingBinding || handoffContinues) ? (
           <div className="flex items-center gap-1">
+            {handoffContinues && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="flex items-center text-muted-foreground/70">
+                    <CornerDownRight className="size-3" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>{handoffLabel}</TooltipContent>
+              </Tooltip>
+            )}
             {projectName && (
               <span
                 className="text-[11px] text-foreground/40 whitespace-nowrap truncate max-w-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
@@ -300,6 +326,17 @@ export function SessionItem({
         >
           {chatMatchCount}
         </span>
+      ) : (handoffActive || handoffFailed) ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="p-1 flex items-center justify-center">
+              {handoffActive
+                ? <Spinner className="text-[10px]" />
+                : <ShieldAlert className="h-3.5 w-3.5 text-warning" />}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>{handoffLabel}</TooltipContent>
+        </Tooltip>
       ) : item.isFlagged ? (
         <div className="p-1 flex items-center justify-center">
           <Flag className="h-3.5 w-3.5 text-info" />

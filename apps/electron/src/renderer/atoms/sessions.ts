@@ -14,6 +14,7 @@ import type { Getter, Setter } from 'jotai/vanilla'
 import { atomFamily } from 'jotai-family'
 import { activeSessionIdAtom as workbenchActiveSessionIdAtom } from './active-session'
 import type { Session, Message, ContextUsageSnapshot } from '../../shared/types'
+import type { ContextPolicy, ContextHandoffState } from '@phaneris/shared/agent/context-policy'
 
 /**
  * Session metadata for list display (lightweight, no messages)
@@ -101,6 +102,14 @@ export interface SessionMeta {
   taskNodeCount?: number
   /** Tasks Conductor: a generate-time draft orchestrator, hidden from the board until adopted by createTask. */
   taskDraft?: boolean
+  /** Explicit context continuation override; undefined = inherit the app default. */
+  contextPolicy?: ContextPolicy
+  /** In-flight or finished handoff for this session. */
+  contextHandoff?: ContextHandoffState
+  /** Root of the handoff chain this session belongs to (successors only). */
+  handoffRootSessionId?: string
+  /** Direct predecessor in the handoff chain (successors only). */
+  handoffFromSessionId?: string
 }
 
 /**

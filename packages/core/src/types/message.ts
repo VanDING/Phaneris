@@ -772,6 +772,7 @@ export interface AgentEventUsage {
  * turnId: Correlation ID from the API's message.id, groups all events in an assistant turn
  */
 export type AgentEvent =
+  | { type: 'context_handoff'; phase: 'generating' | 'ready' | 'failed'; document?: string; error?: string }
   // Failed assistant output is discarded before a retry can produce more text.
   | { type: 'text_discard'; turnId: string }
   | { type: 'retry'; phase: 'backoff'; message: string }

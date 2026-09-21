@@ -770,12 +770,18 @@ export function handleSessionMetadataChanged(
   event: SessionMetadataChangedEvent
 ): ProcessResult {
   const { session, streaming } = state
+  // A failed handoff leaves the session paused with no assistant reply, so the
+  // failure must be surfaced: the user has to retry it from the session menu.
+  const handoff = event.changes.contextHandoff
+  const effects: Effect[] = handoff && (handoff.phase === 'failed' || handoff.phase === 'cancelled')
+    ? [{ type: 'toast_error', message: handoff.error ?? 'Context handoff failed' }]
+    : []
   return {
     state: {
       session: { ...session, ...event.changes },
       streaming,
     },
-    effects: [],
+    effects,
   }
 }
 

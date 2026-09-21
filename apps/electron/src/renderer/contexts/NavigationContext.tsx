@@ -1252,6 +1252,32 @@ export function NavigationProvider({
     navigateToSession,
   ])
 
+  /**
+   * Follow an automatic handoff into its continuation session.
+   *
+   * Only the session the user is actively watching follows: a handoff that
+   * happens in a background session must never steal focus. A ref carries the
+   * latest `navigateToSession` so this subscription is installed once instead of
+   * re-registering on every navigation.
+   */
+  const navigateToSessionRef = useRef(navigateToSession)
+  useEffect(() => {
+    navigateToSessionRef.current = navigateToSession
+  }, [navigateToSession])
+  const followedHandoffs = useRef(new Set<string>())
+  useEffect(() => {
+    return window.electronAPI.onSessionEvent((event) => {
+      if (event.type !== 'session_metadata_changed') return
+      const handoff = event.changes.contextHandoff
+      if (handoff?.phase !== 'starting' || !handoff.childSessionId) return
+      // `starting` is persisted once per handoff; completion re-emits the state.
+      if (followedHandoffs.current.has(handoff.id)) return
+      followedHandoffs.current.add(handoff.id)
+      if (event.sessionId !== store.get(primarySessionIdAtom)) return
+      navigateToSessionRef.current(handoff.childSessionId)
+    })
+  }, [store])
+
   // =========================================================================
   // CONTEXT VALUE
   // =========================================================================

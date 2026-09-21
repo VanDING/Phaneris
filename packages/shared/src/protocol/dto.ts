@@ -126,6 +126,12 @@ export interface Session {
   projectId?: string
   /** Parent session id — when set, this session is a subtask of the parent (undefined = top-level task) */
   parentSessionId?: string
+  contextPolicy?: import('../agent/context-policy').ContextPolicy
+  handoffRootSessionId?: string
+  handoffFromSessionId?: string
+  handoffSequence?: number
+  contextHandoff?: import('../agent/context-policy').ContextHandoffState
+
   /** Kanban board column id ('todo' | 'in-progress' | 'done'); independent of sessionStatus */
   kanbanColumn?: string
   /** Tasks Conductor: slug of the task spec this session belongs to. */
@@ -176,6 +182,12 @@ export interface CreateSessionOptions {
   projectId?: string
   /** Mark the new session as a subtask of this parent session (undefined = top-level task). */
   parentSessionId?: string
+  contextPolicy?: import('../agent/context-policy').ContextPolicy
+  handoffRootSessionId?: string
+  handoffFromSessionId?: string
+  handoffSequence?: number
+  contextHandoff?: import('../agent/context-policy').ContextHandoffState
+
   /** Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes). */
   taskSlug?: string
   /** Tasks Conductor: id of the run that spawned this child session (child nodes only). */
@@ -441,7 +453,7 @@ export type SessionEvent =
   | { type: 'name_changed'; sessionId: string; name?: string }
   | { type: 'session_model_changed'; sessionId: string; model: string | null }
   | { type: 'session_status_changed'; sessionId: string; sessionStatus: SessionStatus }
-  | { type: 'session_metadata_changed'; sessionId: string; changes: Partial<Pick<Session, 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'activePlugin'>> }
+  | { type: 'session_metadata_changed'; sessionId: string; changes: Partial<Pick<Session, 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'activePlugin' | 'contextPolicy' | 'contextHandoff' | 'handoffRootSessionId' | 'handoffFromSessionId' | 'handoffSequence'>> }
   | { type: 'session_deleted'; sessionId: string }
   | { type: 'session_created'; sessionId: string }
   | { type: 'session_shared'; sessionId: string; sharedUrl: string }
@@ -483,6 +495,8 @@ export type SessionCommand =
   | { type: 'markUnread' }
   | { type: 'setActiveViewing'; workspaceId: string }
   | { type: 'setPermissionMode'; mode: PermissionMode }
+  | { type: 'setContextPolicy'; policy: import('../agent/context-policy').ContextPolicy | null }
+  | { type: 'retryContextHandoff' }
   | { type: 'setThinkingLevel'; level: ThinkingLevel }
   | { type: 'updateWorkingDirectory'; dir: string }
   | { type: 'setSources'; sourceSlugs: string[] }

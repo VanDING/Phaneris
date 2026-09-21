@@ -60,6 +60,7 @@ export const SESSION_PERSISTENT_FIELDS = [
   'projectId',
   // Kanban: task/subtask hierarchy + board column
   'parentSessionId',
+  'contextPolicy', 'handoffRootSessionId', 'handoffFromSessionId', 'handoffSequence', 'contextHandoff',
   'kanbanColumn',
   // Tasks Conductor: link a session back to the task spec / run / DAG node that owns it
   'taskSlug',
@@ -231,6 +232,12 @@ export interface SessionConfig {
   projectId?: string;
   /** Parent session id — when set, this session is a subtask of the parent (undefined = top-level task). */
   parentSessionId?: string;
+  contextPolicy?: import('../agent/context-policy').ContextPolicy;
+  handoffRootSessionId?: string;
+  handoffFromSessionId?: string;
+  handoffSequence?: number;
+  contextHandoff?: import('../agent/context-policy').ContextHandoffState;
+
   /** Kanban board column id ('todo' | 'in-progress' | 'done'). Drag-to-move target; independent of sessionStatus. */
   kanbanColumn?: string;
   /** Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes). */
@@ -342,6 +349,12 @@ export interface SessionHeader {
   projectId?: string;
   /** Parent session id — when set, this session is a subtask of the parent (undefined = top-level task). */
   parentSessionId?: string;
+  contextPolicy?: import('../agent/context-policy').ContextPolicy;
+  handoffRootSessionId?: string;
+  handoffFromSessionId?: string;
+  handoffSequence?: number;
+  contextHandoff?: import('../agent/context-policy').ContextHandoffState;
+
   /** Kanban board column id ('todo' | 'in-progress' | 'done'). Drag-to-move target; independent of sessionStatus. */
   kanbanColumn?: string;
   /** Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes). */
@@ -442,6 +455,12 @@ export interface SessionMetadata {
   projectId?: string;
   /** Parent session id — when set, this session is a subtask of the parent (undefined = top-level task). */
   parentSessionId?: string;
+  contextPolicy?: import('../agent/context-policy').ContextPolicy;
+  handoffRootSessionId?: string;
+  handoffFromSessionId?: string;
+  handoffSequence?: number;
+  contextHandoff?: import('../agent/context-policy').ContextHandoffState;
+
   /** Kanban board column id ('todo' | 'in-progress' | 'done'). Drag-to-move target; independent of sessionStatus. */
   kanbanColumn?: string;
   /** Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes). */

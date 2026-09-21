@@ -23,6 +23,7 @@ import { useSetAtom } from 'jotai'
 import { fullscreenOverlayOpenAtom } from '@/atoms/overlay'
 import type { LlmConnectionWithStatus, ThinkingLevel, WorkspaceSettings, Workspace } from '../../../shared/types'
 import { DEFAULT_THINKING_LEVEL, THINKING_LEVELS } from '@phaneris/shared/agent/thinking-levels'
+import { policyAfterToggle, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
 import {
   DropdownMenu,
@@ -641,6 +642,8 @@ export default function AiSettingsPage() {
   const [extendedPromptCache, setExtendedPromptCache] = useState(false)
   const [promptCacheWarming, setPromptCacheWarming] = useState(false)
   const [savingCacheWarming, setSavingCacheWarming] = useState(false)
+  const [contextPolicy, setContextPolicy] = useState<ContextPolicy>('compact')
+  const [savingContextPolicy, setSavingContextPolicy] = useState(false)
   const [rtkEnabled, setRtkEnabled] = useState(false)
   const [rtkStatus, setRtkStatus] = useState<{ installed: boolean; path: string | null; version: string | null } | null>(null)
   const [rtkRechecking, setRtkRechecking] = useState(false)
@@ -674,6 +677,7 @@ export default function AiSettingsPage() {
         const extendedCache = await window.electronAPI.getExtendedPromptCache()
         setExtendedPromptCache(extendedCache)
         setPromptCacheWarming(await window.electronAPI.getPromptCacheWarming())
+        setContextPolicy(await window.electronAPI.getContextPolicy())
 
 
         const rtkOn = await window.electronAPI.getRtkEnabled()
@@ -1008,6 +1012,23 @@ export default function AiSettingsPage() {
     }
   }, [t])
 
+  const handleContextPolicyChange = useCallback(async (next: ContextPolicy) => {
+    const previous = contextPolicy
+    if (next === previous) return
+    setSavingContextPolicy(true)
+    // Optimistic switch: the two strategies are mutually exclusive by
+    // construction, so the UI must never show both as on.
+    setContextPolicy(next)
+    try {
+      await window.electronAPI.setContextPolicy(next)
+    } catch {
+      setContextPolicy(previous)
+      toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.context.title") }))
+    } finally {
+      setSavingContextPolicy(false)
+    }
+  }, [contextPolicy, t])
+
   const handleRtkToggle = useCallback(async (enabled: boolean) => {
     setRtkEnabled(enabled)
     await window.electronAPI?.setRtkEnabled(enabled)
@@ -1234,6 +1255,26 @@ export default function AiSettingsPage() {
                       </Button>
                     </SettingsRow>
                   )}
+                </SettingsCard>
+              </SettingsSection>
+
+              {/* Context Management */}
+              <SettingsSection title={t("settings.ai.context.title")} description={t("settings.ai.context.description")}>
+                <SettingsCard>
+                  <SettingsToggle
+                    label={t("settings.ai.context.autoCompact")}
+                    description={t("settings.ai.context.autoCompactDesc")}
+                    checked={contextPolicy === 'compact'}
+                    disabled={savingContextPolicy}
+                    onCheckedChange={(checked) => handleContextPolicyChange(policyAfterToggle(contextPolicy, 'compact', checked))}
+                  />
+                  <SettingsToggle
+                    label={t("settings.ai.context.autoHandoff")}
+                    description={t("settings.ai.context.autoHandoffDesc")}
+                    checked={contextPolicy === 'handoff'}
+                    disabled={savingContextPolicy}
+                    onCheckedChange={(checked) => handleContextPolicyChange(policyAfterToggle(contextPolicy, 'handoff', checked))}
+                  />
                 </SettingsCard>
               </SettingsSection>
 
