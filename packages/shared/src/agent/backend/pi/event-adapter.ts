@@ -12,10 +12,13 @@
 import { sumTokenUsage } from '@phaneris/core/utils';
 import type {
   AgentEvent as CraftAgentEvent,
+  ContextUsageSnapshot,
   PiUsage,
   RequestContextSnapshot,
   TrajectorySourceBlock,
 } from '@phaneris/core/types';
+import { contextAfterCompaction, contextFromPi } from '../../context-usage.ts';
+import type { PiContextUsagePayload } from './protocol.ts';
 import type {
   AgentEvent as PiAgentEvent,
 } from '@earendil-works/pi-agent-core';
@@ -67,8 +70,10 @@ const RETRYABLE_PROVIDER_SIDE_PATTERN =
 /**
  * Combined event type the adapter can handle.
  * AgentSessionEvent is a superset of PiAgentEvent (adds compaction_*, auto_retry_*, queue_update).
+ * pi-agent-server attaches SDK context metadata to boundaries, and emits the
+ * synthetic `context_usage` event; both ride the same payload shape.
  */
-type PiEvent = PiAgentEvent | AgentSessionEvent;
+type PiEvent = (PiAgentEvent | AgentSessionEvent | { type: 'context_usage' }) & PiContextUsagePayload;
 
 /**
  * Maps Pi SDK events to PhanerisEvents for UI compatibility.
@@ -84,6 +89,7 @@ type PiEvent = PiAgentEvent | AgentSessionEvent;
  * - failed message_end → text_discard (only its unfinished text)
  * - auto_retry_start / retried agent_start → retry (backoff / active)
  * - auto_retry_end → retry (end) + info on success; releases errors on cancellation
+ * - context metadata on any boundary (incl. the subprocess-synthesized context_usage) → context_usage
  * - queue_update / agent_settled / entry_appended / summarization_retry_* → ignored
  */
 export class PiEventAdapter extends BaseEventAdapter {
@@ -108,6 +114,19 @@ export class PiEventAdapter extends BaseEventAdapter {
   // on the tool_start event so the UI shows the effective default instead of
   // leaving the badge blank.
   private miniModel: string | undefined;
+
+  // Occupancy is independent of API billing; never fall back to lastUsage.
+  private contextUsage: ContextUsageSnapshot | undefined;
+
+  /** Normalize raw subprocess metadata at the host boundary (also used by manual RPC). */
+  *adaptContextUsage(payload: PiContextUsagePayload, afterCompaction = false, estimatedTokensAfter?: number): Generator<CraftAgentEvent> {
+    const snapshot = contextFromPi(payload.contextUsage, payload.compactionSettings, estimatedTokensAfter)
+      ?? (afterCompaction ? contextAfterCompaction(estimatedTokensAfter, this.contextUsage) : undefined);
+    if (snapshot) {
+      this.contextUsage = snapshot;
+      yield { type: 'context_usage', contextUsage: snapshot };
+    }
+  }
 
   private lastUsage: PiUsage | undefined;
 
@@ -396,6 +415,13 @@ export class PiEventAdapter extends BaseEventAdapter {
       }
       return;
     }
+
+    // Occupancy metadata must arrive before completion can close the queue. A
+    // compaction success uses its fresh result estimate below, not old API usage.
+    if (event.type !== 'compaction_end') {
+      yield* this.adaptContextUsage(event);
+    }
+    if (event.type === 'context_usage') return;
 
     switch (event.type) {
       // ============================================================
@@ -891,6 +917,7 @@ export class PiEventAdapter extends BaseEventAdapter {
             this.overflowState = 'recovering';
             this.heldOverflowError = null;
           }
+          yield* this.adaptContextUsage(event, true, compactionEvent.result.estimatedTokensAfter);
           // Use "Compacted" keyword so session handler detects statusType: 'compaction_complete'
           yield { type: 'info', message: 'Compacted context to fit within limits' };
         } else if (compactionEvent.errorMessage) {

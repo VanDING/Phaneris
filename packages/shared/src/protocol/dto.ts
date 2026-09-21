@@ -10,6 +10,7 @@ import type {
   Message,
   TypedError,
   ContentBadge,
+  ContextUsageSnapshot,
   ToolDisplayMeta,
   AnnotationV1,
   PermissionRequest as BasePermissionRequest,
@@ -111,6 +112,8 @@ export interface Session {
     full?: PiUsage
     /** Model's context window size in tokens (from SDK modelUsage) */
     contextWindow?: number
+    /** Authoritative occupancy snapshot from the backend (compaction-aware). */
+    contextUsage?: ContextUsageSnapshot
   }
   /** Full provider usage breakdown (Pi SDK) from the last turn — trajectory view. */
   lastFullUsage?: PiUsage
@@ -447,6 +450,8 @@ export type SessionEvent =
   | { type: 'auth_completed'; sessionId: string; requestId: string; success: boolean; cancelled?: boolean; error?: string }
   | { type: 'source_activated'; sessionId: string; sourceSlug: string; originalMessage: string }
   | { type: 'usage_update'; sessionId: string; tokenUsage: NonNullable<Session['tokenUsage']>; full?: PiUsage }
+  /** Authoritative occupancy, sent before the terminal `complete` of a turn. */
+  | { type: 'context_usage'; sessionId: string; contextUsage: ContextUsageSnapshot }
   | { type: 'message_annotations_updated'; sessionId: string; messageId: string; annotations: AnnotationV1[] }
   | { type: 'working_directory_error'; sessionId: string; error: string }
 

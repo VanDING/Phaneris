@@ -48,6 +48,7 @@ import type {
 
 // Event adapter
 import { PiEventAdapter } from './backend/pi/event-adapter.ts';
+import type { PiCompactResult } from './backend/pi/protocol.ts';
 import { EventQueue } from './backend/event-queue.ts';
 
 // System prompt for Phaneris context
@@ -382,9 +383,12 @@ export class PiAgent extends BaseAgent {
     reject: (error: Error) => void;
   }> = new Map();
 
+  // Invalidates a manual compact continuation if stop/dispose wins its await.
+  private compactionEpoch = 0;
+
   // Pending compact requests (manual compaction RPC)
   private pendingCompactions: Map<string, {
-    resolve: (result: { summary: string; firstKeptEntryId: string; tokensBefore: number } | null) => void;
+    resolve: (result: PiCompactResult) => void;
     reject: (error: Error) => void;
   }> = new Map();
 
@@ -1283,6 +1287,10 @@ export class PiAgent extends BaseAgent {
 
     // Detect session MCP tool completions (same pattern as in-process version)
     const eventType = event.type as string;
+    // Manual /compact uses an RPC-owned generator rather than the event queue.
+    // Its SDK end arrives before compact_result; only the correlated response
+    // may report success (including after a timeout/stop discarded the request).
+    if (eventType === 'compaction_end' && event.reason === 'manual') return;
     let adaptedEvent = event;
 
     if (eventType === 'tool_execution_start') {
@@ -1986,7 +1994,7 @@ export class PiAgent extends BaseAgent {
 
     const raw = msg.result as Record<string, unknown> | undefined;
     if (!raw) {
-      pending.resolve(null);
+      pending.reject(new Error('Compaction returned no result'));
       return;
     }
 
@@ -1994,6 +2002,9 @@ export class PiAgent extends BaseAgent {
       summary: String(raw.summary || ''),
       firstKeptEntryId: String(raw.firstKeptEntryId || ''),
       tokensBefore: Number(raw.tokensBefore || 0),
+      estimatedTokensAfter: raw.estimatedTokensAfter as PiCompactResult['estimatedTokensAfter'],
+      contextUsage: raw.contextUsage as PiCompactResult['contextUsage'],
+      compactionSettings: raw.compactionSettings as PiCompactResult['compactionSettings'],
     });
   }
 
@@ -2168,8 +2179,10 @@ export class PiAgent extends BaseAgent {
   /**
    * Ask subprocess to compact the active session context.
    */
-  private async requestCompact(customInstructions?: string): Promise<{ summary: string; firstKeptEntryId: string; tokensBefore: number } | null> {
+  private async requestCompact(customInstructions?: string): Promise<PiCompactResult> {
+    const epoch = this.compactionEpoch;
     await this.ensureSubprocess();
+    if (epoch !== this.compactionEpoch) throw new Error('Compaction aborted');
 
     const id = `compact-${++this.rpcIdCounter}`;
     const durableRun = this.config.beginDurableUtilityRun?.({
@@ -2182,7 +2195,7 @@ export class PiAgent extends BaseAgent {
     // cases; truly hung subprocesses are caught by the stdio death watchdog.
     const timeoutMs = 300_000;
 
-    const pending = new Promise<{ summary: string; firstKeptEntryId: string; tokensBefore: number } | null>((resolve, reject) => {
+    const pending = new Promise<PiCompactResult>((resolve, reject) => {
       const timer = setTimeout(() => {
         this.pendingCompactions.delete(id);
         reject(new Error(`compact timed out after ${Math.floor(timeoutMs / 1000)}s`));
@@ -2325,6 +2338,8 @@ export class PiAgent extends BaseAgent {
     options?: ChatOptions
   ): AsyncGenerator<AgentEvent> {
     let message = messageParam;
+    const compactMatch = message.trim().match(/^\/compact(?:\s+([\s\S]+))?$/i);
+    const compactEpoch = this.compactionEpoch;
     // Reset state for new turn
     this._isProcessing = true;
     this.abortReason = undefined;
@@ -2376,19 +2391,21 @@ export class PiAgent extends BaseAgent {
         }
       }
 
-      const trimmedMessage = message.trim();
-      const compactMatch = trimmedMessage.match(/^\/compact(?:\s+([\s\S]+))?$/i);
       if (compactMatch) {
+        if (compactEpoch !== this.compactionEpoch) throw new Error('Compaction aborted');
         const customInstructions = compactMatch[1]?.trim() || undefined;
         const compactResult = await this.requestCompact(customInstructions);
-        if (compactResult) {
-          yield {
-            type: 'info',
-            message: `Compacted context to fit within limits (from ~${compactResult.tokensBefore.toLocaleString()} tokens)`,
-          };
-        } else {
-          yield { type: 'info', message: 'Compacted context to fit within limits' };
-        }
+        if (compactEpoch !== this.compactionEpoch) throw new Error('Compaction aborted');
+        // The queue never saw this compaction (it is RPC-driven), so the
+        // prerequisite reset the queue path would have triggered happens here.
+        this.resetPrerequisiteState();
+        yield* this.adapter.adaptContextUsage(compactResult, true, compactResult.estimatedTokensAfter);
+        // A consumer can stop between yielded occupancy and success.
+        if (compactEpoch !== this.compactionEpoch) throw new Error('Compaction aborted');
+        yield {
+          type: 'info',
+          message: `Compacted context to fit within limits (from ~${compactResult.tokensBefore.toLocaleString()} tokens)`,
+        };
         yield { type: 'complete' };
         return;
       }
@@ -2535,6 +2552,8 @@ export class PiAgent extends BaseAgent {
       }
     } catch (error) {
       if (error instanceof Error && error.message.includes('abort')) {
+        // A stop that cancels a manual compact must still terminate the turn.
+        if (compactMatch) yield { type: 'complete' };
         if (this.abortReason === AbortReason.PlanSubmitted) {
           return;
         }
@@ -2729,6 +2748,7 @@ export class PiAgent extends BaseAgent {
   }
 
   async abort(reason?: string): Promise<void> {
+    this.cancelPendingCompactions();
     // Fire Stop hook event (fire-and-forget)
     this.emitAutomationEvent('Stop', { hook_event_name: 'Stop' });
 
@@ -2748,6 +2768,7 @@ export class PiAgent extends BaseAgent {
   }
 
   forceAbort(reason: AbortReason): void {
+    this.cancelPendingCompactions();
     // Fire Stop hook event (fire-and-forget)
     this.emitAutomationEvent('Stop', { hook_event_name: 'Stop' });
 
@@ -2892,6 +2913,7 @@ export class PiAgent extends BaseAgent {
    * Used before an idle runtime restart so we don't leave transient children behind.
    */
   private async killSubprocessGracefully(timeoutMs = 2_000): Promise<void> {
+    this.cancelPendingCompactions();
     this.rejectAllPendingEphemeral(new Error('Pi subprocess stopped'));
 
     const child = this.subprocess;
@@ -2952,10 +2974,20 @@ export class PiAgent extends BaseAgent {
     }
   }
 
+  /** Abort in-flight manual compactions; their awaiting callers get a settled rejection. */
+  private cancelPendingCompactions(): void {
+    this.compactionEpoch++;
+    for (const pending of this.pendingCompactions.values()) {
+      pending.reject(new Error('Compaction aborted'));
+    }
+    this.pendingCompactions.clear();
+  }
+
   /**
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.cancelPendingCompactions();
     this.rejectAllPendingEphemeral(new Error('Pi subprocess stopped'));
 
     if (this.readline) {

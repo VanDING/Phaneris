@@ -88,9 +88,9 @@ console.log(`${colors.dim}With debug mode: ${systemPromptWithDebug.length.toLoca
 printHeader('PART 2: CONTEXT PLACEMENT (volatile user tail / stable system prefix)');
 printAnnotation('Blocks 1-3 are prepended to the user message; blocks 4-5 append to the system prompt.');
 printAnnotation('');
-printAnnotation('Volatile vs stable (issue #862): blocks 1-3 (date/time, session_state, sources)');
-printAnnotation('change per turn and are VOLATILE; blocks 4-5 (workspace capabilities, working');
-printAnnotation('directory) are STABLE for the session.');
+printAnnotation('Volatile vs stable (issue #862): date/time, session_state, sources, and volatile');
+printAnnotation('git status change per turn. Workspace capabilities, working directory, and stable');
+printAnnotation('git repository metadata are STABLE for the session.');
 printAnnotation('  - Pi: STABLE blocks fold into the system prefix, VOLATILE blocks ride the');
 printAnnotation('    user tail — so the cached prefix is not re-stamped every turn.');
 
@@ -146,8 +146,9 @@ printSection(
   workingDirContext || '(empty - no working directory)',
   colors.magenta
 );
-printAnnotation('Contains: working_directory path, working_directory_context explanation');
-printAnnotation('If project context file exists, includes <project_context_file> tag (agent reads via Read tool)');
+printAnnotation('Contains: working_directory path and explanation. Context-file manifests are');
+printAnnotation('listed separately in <project_context_files>, relative to context_root (the git');
+printAnnotation('repository root when the selected directory is inside one).');
 
 // 6. Recovery Context (example)
 const exampleRecoveryContext = `<recovery_context>
@@ -186,7 +187,32 @@ local-mcp: enabled (stdio subprocess servers supported)
 
 <working_directory_context>The user explicitly selected this as the working directory for this session.</working_directory_context>
 
-<project_context_file>CLAUDE.md</project_context_file>
+<developer_context kind="git_repository" scope="stable">
+repoRoot: /Users/example/projects/my-app
+repoParent: /Users/example/projects
+selectedWorkingDirectory: /Users/example/projects/my-app
+selectedPathWithinRepo: .
+origin: https://github.com/example/my-app.git
+defaultBranch: main
+
+Guidance:
+- Treat uncommitted changes as user work; inspect before overwriting.
+- Prefer minimal, reviewable diffs.
+</developer_context>
+
+<developer_context kind="git_repository" scope="volatile">
+branch: main
+worktreeState: dirty
+stagedFiles: 0
+unstagedFiles: 1
+untrackedFiles: 2
+changedFilesSample:
+- src/index.ts
+</developer_context>
+
+<project_context_files working_directory="/Users/example/projects/my-app" context_root="/Users/example/projects/my-app">
+- AGENTS.md (root)
+</project_context_files>
 
 What files are in the src directory?`;
 
@@ -219,12 +245,14 @@ ${colors.bold}Dynamic User Message Components (per message):${colors.reset}
   2. Session State                       ${colors.dim}// formatSessionState()         [VOLATILE]${colors.reset}
   3. Source State                        ${colors.dim}// formatSourceState()          [VOLATILE]${colors.reset}
   4. Workspace Capabilities              ${colors.dim}// formatWorkspaceCapabilities()  [STABLE]${colors.reset}
-  5. Working Directory + project_context_file  ${colors.dim}// getWorkingDirectoryContext()  [STABLE]${colors.reset}
-  6. Recovery Context (on resume only)   ${colors.dim}// buildRecoveryContext()${colors.reset}
-  7. File Attachments                    ${colors.dim}// Inline paths or base64${colors.reset}
-  8. User Message Text                   ${colors.dim}// The actual user input${colors.reset}
+  5. Working Directory                   ${colors.dim}// getWorkingDirectoryContext()  [STABLE]${colors.reset}
+  6. Git Repository Identity             ${colors.dim}// formatStableGitDeveloperContext()  [STABLE]${colors.reset}
+  7. Recovery Context (on resume only)   ${colors.dim}// buildRecoveryContext()${colors.reset}
+  8. File Attachments                    ${colors.dim}// Inline paths or base64${colors.reset}
+  9. User Message Text                   ${colors.dim}// The actual user input${colors.reset}
 
-  ${colors.dim}Claude: 1-5 ride the user tail. Pi (#862): STABLE 4-5 -> system prefix, VOLATILE 1-3 -> user tail.${colors.reset}
+  ${colors.dim}Claude: 1-6 ride the user tail. Pi (#862): STABLE 4-6 -> system prefix, VOLATILE 1-3 -> user tail.${colors.reset}
+  ${colors.dim}Volatile git status (formatVolatileGitDeveloperContext()) rides the tail with the other per-turn blocks.${colors.reset}
   ${colors.dim}Builders: PromptBuilder.buildVolatileContextParts() / buildStableContextParts() (composed by buildContextParts())${colors.reset}
 
 ${colors.bold}Key Files:${colors.reset}

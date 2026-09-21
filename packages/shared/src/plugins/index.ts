@@ -105,7 +105,6 @@ export type { ExtractedPluginPackage } from './import.ts';
 export {
   PLUGIN_CONTEXT_TAG,
   defangPluginContextTag,
-  stripDangerousControlChars,
   sanitizePluginPromptText,
   buildPluginRoster,
   formatPluginContextBlock,

@@ -25,6 +25,7 @@ export type {
   TaskBackgroundedEvent,
   ShellBackgroundedEvent,
   TaskProgressEvent,
+  ContextUsageEvent,
 } from './types'
 export {
   generateMessageId,

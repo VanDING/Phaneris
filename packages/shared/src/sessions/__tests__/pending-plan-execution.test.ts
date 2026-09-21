@@ -58,8 +58,14 @@ describe('pending plan execution persistence', () => {
       executionDispatched: false,
     })
 
+    // Awaiting compaction: the plan is not runnable, so it cannot be claimed.
+    expect(await markPendingPlanExecutionDispatched(workspaceRoot, 'session-1')).toBe(false)
+
     await markCompactionComplete(workspaceRoot, 'session-1')
-    await markPendingPlanExecutionDispatched(workspaceRoot, 'session-1')
+
+    // First claim wins; a repeat (second window, reload, duplicate listener) does not.
+    expect(await markPendingPlanExecutionDispatched(workspaceRoot, 'session-1')).toBe(true)
+    expect(await markPendingPlanExecutionDispatched(workspaceRoot, 'session-1')).toBe(false)
 
     expect(getPendingPlanExecution(workspaceRoot, 'session-1')).toEqual({
       planPath: '/tmp/plan.md',

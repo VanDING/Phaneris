@@ -45,7 +45,7 @@ import {
   type Workspace,
   type WorkspaceInfo,
 } from '@phaneris/shared/config'
-import type { ActiveSessionInfo, SessionProcessingStatus } from '@phaneris/core/types'
+import type { ActiveSessionInfo, ContextUsageSnapshot, SessionProcessingStatus } from '@phaneris/core/types'
 import { loadWorkspaceConfig } from '@phaneris/shared/workspaces'
 import {
   // Session persistence functions
@@ -720,6 +720,8 @@ interface ManagedSession {
     full?: PiUsage
     /** Model's context window size in tokens (from SDK modelUsage) */
     contextWindow?: number
+    /** Current occupancy, separate from cumulative/billable counters. */
+    contextUsage?: ContextUsageSnapshot
   }
   /** Full provider usage breakdown (Pi SDK) from the last turn, for the
    *  trajectory view's per-session usage aggregation. */
@@ -5595,16 +5597,25 @@ export class SessionManager implements ISessionManager {
   }
 
   /**
-   * Mark pending plan execution as already dispatched from the UI.
+   * Claim pending plan execution as dispatched from the UI.
+   *
    * This prevents reload recovery from double-submitting the same plan if
-   * sending succeeded but cleanup failed due a reconnect/disconnect.
+   * sending succeeded but cleanup failed due a reconnect/disconnect. The claim is
+   * atomic on the persisted record and is refused while the session is busy, so a
+   * second window, a duplicate listener and a remount after reload cannot each
+   * send their own approval.
+   *
+   * @returns true when this caller owns the dispatch and must send the approval.
    */
-  async markPendingPlanExecutionDispatched(sessionId: string): Promise<void> {
+  async markPendingPlanExecutionDispatched(sessionId: string): Promise<boolean> {
     const managed = this.sessions.get(sessionId)
-    if (managed) {
-      await markStoredPendingPlanExecutionDispatched(managed.workspace.rootPath, sessionId)
-      sessionLog.info(`Session ${sessionId}: marked pending plan execution as dispatched`)
+    if (!managed || managed.isProcessing) {
+      sessionLog.info(`Session ${sessionId}: pending plan dispatch claim rejected (missing or busy)`)
+      return false
     }
+    const claimed = await markStoredPendingPlanExecutionDispatched(managed.workspace.rootPath, sessionId)
+    sessionLog.info(`Session ${sessionId}: pending plan execution dispatch claim ${claimed ? 'accepted' : 'rejected'}`)
+    return claimed
   }
 
   /**
@@ -9262,15 +9273,9 @@ export class SessionManager implements ISessionManager {
           void markStoredCompactionComplete(managed.workspace.rootPath, sessionId)
           sessionLog.info(`Session ${sessionId}: compaction complete, marked pending plan ready`)
 
-          // Emit usage_update so the context count badge refreshes immediately
-          // after compaction, without waiting for the next message
-          if (managed.tokenUsage) {
-            this.sendEvent({
-              type: 'usage_update',
-              sessionId,
-              tokenUsage: managed.tokenUsage,
-            }, workspaceId)
-          }
+          // No usage_update here: the fresh context_usage snapshot that
+          // accompanied the compaction boundary is what must reach the badge.
+          // Re-emitting tokenUsage would re-publish the pre-compaction count.
         }
 
         this.sendEvent({
@@ -9638,6 +9643,27 @@ export class SessionManager implements ISessionManager {
           }
         }
         break
+
+      case 'context_usage': {
+        // Authoritative occupancy from the backend, independent of billable
+        // usage. The standalone event is what refreshes a badge whose count a
+        // compaction boundary froze; the ledger snapshot rides along for the
+        // consumers that only read `usage_update`.
+        managed.tokenUsage ??= { ...DEFAULT_TOKEN_USAGE }
+        managed.tokenUsage.contextUsage = event.contextUsage
+        this.sendEvent({
+          type: 'context_usage',
+          sessionId: managed.id,
+          contextUsage: event.contextUsage,
+        }, workspaceId)
+        this.sendEvent({
+          type: 'usage_update',
+          sessionId: managed.id,
+          tokenUsage: managed.tokenUsage,
+        }, workspaceId)
+        this.persistSession(managed)
+        break
+      }
 
       case 'usage_update':
         this.applyDurableUsageProjection(managed)

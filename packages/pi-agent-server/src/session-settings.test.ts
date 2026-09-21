@@ -57,6 +57,14 @@ describe('createPhanerisSettingsManager', () => {
     expect(createPhanerisSettingsManager().getCompactionEnabled()).toBe(true);
   });
 
+  it('batches steers without changing the follow-up default', () => {
+    // #1040: one-at-a-time drains a single steer per model boundary.
+    expect(createPhanerisSettingsManager().getSteeringMode()).toBe('all');
+    expect(createPhanerisSettingsManager('ephemeral').getSteeringMode()).toBe('all');
+    expect(createPhanerisSettingsManager().getFollowUpMode())
+      .toBe(SettingsManager.inMemory().getFollowUpMode());
+  });
+
   it('starts with prompt cache warming off until main-session accounting is installed', () => {
     expect(createPhanerisSettingsManager().getCacheWarmingMode()).toBe('off');
     expect(createPhanerisSettingsManager('ephemeral').getCacheWarmingMode()).toBe('off');

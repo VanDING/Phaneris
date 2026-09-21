@@ -13,7 +13,7 @@ import { estimateTranscriptBytes } from '@phaneris/core/utils'
 import type { Getter, Setter } from 'jotai/vanilla'
 import { atomFamily } from 'jotai-family'
 import { activeSessionIdAtom as workbenchActiveSessionIdAtom } from './active-session'
-import type { Session, Message } from '../../shared/types'
+import type { Session, Message, ContextUsageSnapshot } from '../../shared/types'
 
 /**
  * Session metadata for list display (lightweight, no messages)
@@ -66,6 +66,10 @@ export interface SessionMeta {
     totalTokens: number
     costUsd: number
     contextTokens: number
+    /** Model's context window size in tokens (from SDK modelUsage) */
+    contextWindow?: number
+    /** Authoritative context occupancy; `usedTokens: null` = no fresh count yet. */
+    contextUsage?: ContextUsageSnapshot
   }
   /** When the session was created (ms timestamp) */
   createdAt?: number

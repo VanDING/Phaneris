@@ -16,6 +16,10 @@ import { isLocalMcpEnabled } from '../../workspaces/storage.ts';
 import { formatPreferencesForPrompt } from '../../config/preferences.ts';
 import { formatSessionState } from '../mode-manager.ts';
 import { getDateTimeContext, getWorkingDirectoryContext } from '../../prompts/system.ts';
+import {
+  formatStableGitDeveloperContext,
+  formatVolatileGitDeveloperContext,
+} from '../../prompts/developer-context.ts';
 import { getSessionPlansPath, getSessionDataPath, getSessionPath } from '../../sessions/storage.ts';
 import type {
   PromptBuilderConfig,
@@ -45,6 +49,7 @@ export class PromptBuilder {
   private config: PromptBuilderConfig;
   private workspaceRootPath: string;
   private pinnedPreferencesPrompt: string | null = null;
+  private stableDeveloperContextCache: { workingDirectory: string | undefined; value: string | null } | null = null;
 
   constructor(config: PromptBuilderConfig) {
     this.config = config;
@@ -135,6 +140,12 @@ export class PromptBuilder {
       parts.push(sourceStateBlock);
     }
 
+    // Volatile git developer context (branch, worktree state, changed-file sample).
+    const volatileDeveloperContext = this.getVolatileDeveloperContext();
+    if (volatileDeveloperContext) {
+      parts.push(volatileDeveloperContext);
+    }
+
     // Active plugin context if provided
     if (pluginContextBlock) {
       parts.push(pluginContextBlock);
@@ -166,7 +177,48 @@ export class PromptBuilder {
       parts.push(workingDirContext);
     }
 
+    // Stable git developer context (repository identity + standing guidance).
+    const stableDeveloperContext = this.getStableDeveloperContext();
+    if (stableDeveloperContext) {
+      parts.push(stableDeveloperContext);
+    }
+
     return parts;
+  }
+
+  /**
+   * Repository identity for the selected working directory, cached per directory.
+   *
+   * The value is invariant while the working directory stays put, so it is read
+   * once per session (or per directory switch) instead of spawning git on every
+   * turn — this block sits in the cached system prefix, where churn would also
+   * cost prompt-cache reuse.
+   */
+  private getStableDeveloperContext(): string | null {
+    const workingDirectory = this.getSelectedWorkingDirectory();
+    const cached = this.stableDeveloperContextCache;
+    if (cached && cached.workingDirectory === workingDirectory) {
+      return cached.value;
+    }
+
+    const value = formatStableGitDeveloperContext(workingDirectory);
+    this.stableDeveloperContextCache = { workingDirectory, value };
+    return value;
+  }
+
+  /** Branch/status snapshot for this turn; recomputed because it changes per turn. */
+  private getVolatileDeveloperContext(): string | null {
+    return formatVolatileGitDeveloperContext(this.getSelectedWorkingDirectory());
+  }
+
+  /**
+   * The directory the session actually works in: an explicit session working
+   * directory, otherwise the session's own folder.
+   */
+  getSelectedWorkingDirectory(): string | undefined {
+    const sessionId = this.config.session?.id;
+    return this.config.session?.workingDirectory ??
+      (sessionId ? getSessionPath(this.workspaceRootPath, sessionId) : undefined);
   }
 
   /**
@@ -192,12 +244,10 @@ export class PromptBuilder {
    */
   getWorkingDirectoryContext(): string | null {
     const sessionId = this.config.session?.id;
-    const effectiveWorkingDir = this.config.session?.workingDirectory ??
-      (sessionId ? getSessionPath(this.workspaceRootPath, sessionId) : undefined);
     const isSessionRoot = !this.config.session?.workingDirectory && !!sessionId;
 
     return getWorkingDirectoryContext(
-      effectiveWorkingDir,
+      this.getSelectedWorkingDirectory(),
       isSessionRoot,
       this.config.session?.sdkCwd
     );

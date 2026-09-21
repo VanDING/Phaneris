@@ -20,6 +20,7 @@ import type {
   ContentBadge,
   ToolDisplayMeta,
   AnnotationV1,
+  ContextUsageSnapshot,
 } from '@phaneris/core/types';
 
 // Mode types from dedicated subpath export (avoids pulling in SDK)
@@ -44,6 +45,7 @@ export type {
   ContentBadge,
   ToolDisplayMeta,
   AnnotationV1,
+  ContextUsageSnapshot,
 };
 
 // Auth types for onboarding
@@ -339,8 +341,11 @@ export interface ElectronAPI {
   respondToCredential(sessionId: string, requestId: string, response: CredentialResponse): Promise<boolean>
   respondToAskUser(sessionId: string, requestId: string, response: AskUserResponse): Promise<boolean>
 
-  // Consolidated session command handler
-  sessionCommand(sessionId: string, command: SessionCommand): Promise<void | ShareResult | RefreshTitleResult | { count: number }>
+  // Consolidated session command handler. The plan-dispatch claim is the one
+  // command whose result the caller must read (it decides who sends the approval),
+  // so it is typed separately from the fire-and-forget commands.
+  sessionCommand(sessionId: string, command: Extract<SessionCommand, { type: 'markPendingPlanExecutionDispatched' }>): Promise<boolean>
+  sessionCommand(sessionId: string, command: Exclude<SessionCommand, { type: 'markPendingPlanExecutionDispatched' }>): Promise<void | ShareResult | RefreshTitleResult | { count: number }>
 
   // Server info (REMOTE_ELIGIBLE — returns data from whichever server owns the workspace)
   getServerHomeDir(): Promise<string>

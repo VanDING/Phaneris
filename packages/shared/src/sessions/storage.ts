@@ -729,19 +729,30 @@ export async function markCompactionComplete(
 }
 
 /**
- * Mark pending plan execution as already dispatched from the UI.
- * This prevents reload recovery from sending the same approval message twice
- * if cleanup fails after the send has already been kicked off.
+ * Claim pending plan execution as dispatched from the UI.
+ *
+ * This prevents reload recovery from sending the same approval message twice if
+ * cleanup fails after the send has already been kicked off. The write is a claim,
+ * not a stamp: it rejects when the record is missing, still awaiting compaction
+ * (the plan is not runnable yet), or already dispatched, and reports which
+ * happened so the caller can decide whether it owns the dispatch.
+ *
+ * @returns true when this call claimed the dispatch, false when another path
+ *   already owns it or the record is not ready.
  */
 export async function markPendingPlanExecutionDispatched(
   workspaceRootPath: string,
   sessionId: string
-): Promise<void> {
+): Promise<boolean> {
   const session = loadSession(workspaceRootPath, sessionId);
-  if (!session?.pendingPlanExecution) return;
+  const pending = session?.pendingPlanExecution;
+  if (!session || !pending || pending.awaitingCompaction || pending.executionDispatched) {
+    return false;
+  }
 
-  session.pendingPlanExecution.executionDispatched = true;
+  pending.executionDispatched = true;
   await saveSession(session);
+  return true;
 }
 
 /**

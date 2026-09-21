@@ -2,7 +2,7 @@ import { formatPreferencesForPrompt } from '../config/preferences.ts';
 import { getBrowserToolEnabled } from '../config/storage.ts';
 import { debug } from '../utils/debug.ts';
 import { existsSync, readFileSync, readdirSync } from 'fs';
-import { join, relative } from 'path';
+import { dirname, join, relative, resolve } from 'path';
 import { DOC_REFS, APP_ROOT } from '../docs/index.ts';
 import { PERMISSION_MODE_CONFIG } from '../agent/mode-types.ts';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
@@ -11,6 +11,12 @@ import { formatBytes } from '../utils/binary-detection.ts';
 import { globSync } from 'glob';
 import os from 'os';
 import type { ProjectPromptContext } from '../projects/types.ts';
+import {
+  escapePromptXmlAttr,
+  sanitizePromptBody,
+  sanitizePromptLine,
+} from './prompt-sanitize.ts';
+import { findGitRepositoryRoot } from './developer-context.ts';
 
 /** Maximum size of CLAUDE.md file to include (10KB) */
 const MAX_CONTEXT_FILE_SIZE = 10 * 1024;
@@ -202,7 +208,9 @@ export function getWorkingDirectoryContext(
   }
 
   const parts: string[] = [];
-  parts.push(`<working_directory>${workingDirectory}</working_directory>`);
+  // A path can contain `"`, `<` or `>`, and a cloned repository can name a directory
+  // `</working_directory_context>…`; escape before it reaches the prompt block.
+  parts.push(`<working_directory>${sanitizePromptLine(workingDirectory, WORKING_DIRECTORY_TAGS)}</working_directory>`);
 
   if (isSessionRoot) {
     // Add context explaining this is the session folder, not a code project
@@ -219,7 +227,7 @@ You can access any files the user attaches here. If the user wants to work with 
       // Working directory was changed mid-session - bash still runs from original location
       parts.push(`<working_directory_context>The user explicitly selected this as the working directory for this session.
 
-Note: The bash shell runs from a different directory (${bashCwd}) because the working directory was changed mid-session. Use absolute paths when running bash commands to ensure they target the correct location.</working_directory_context>`);
+Note: The bash shell runs from a different directory (${sanitizePromptLine(bashCwd, WORKING_DIRECTORY_TAGS)}) because the working directory was changed mid-session. Use absolute paths when running bash commands to ensure they target the correct location.</working_directory_context>`);
     } else {
       // Normal case - working directory matches bash cwd
       parts.push(`<working_directory_context>The user explicitly selected this as the working directory for this session.</working_directory_context>`);
@@ -255,32 +263,84 @@ export interface DebugModeConfig {
 
 /**
  * Get the project context files prompt section for the system prompt.
- * Lists all discovered context files (AGENTS.md, CLAUDE.md) in the working directory.
- * For monorepos, this includes nested package context files.
- * Returns empty string if no working directory or no context files found.
+ * Lists all discovered context files (AGENTS.md, CLAUDE.md) that are relevant to
+ * the working directory. Returns empty string if no working directory or no files.
+ *
+ * Discovery converges on the enclosing git repository when there is one, and keeps
+ * only the files that can govern the selected directory: the repository root's own
+ * file, files on the path to the selected directory, and files below it. A monorepo
+ * session in `packages/api` therefore sees the root file plus its own subtree, not
+ * every sibling package's instructions.
  */
 export function getProjectContextFilesPrompt(workingDirectory?: string): string {
   if (!workingDirectory) {
     return '';
   }
 
-  const contextFiles = findAllProjectContextFiles(workingDirectory);
+  const { contextRoot, contextFiles } = findRelevantProjectContextFiles(workingDirectory);
   if (contextFiles.length === 0) {
     return '';
   }
 
-  // Format file list with (root) annotation for top-level files
+  // Format file list with (root) annotation for top-level files. Paths are normalized to
+  // forward slashes first: discovery returns platform separators, and on Windows every
+  // nested file would otherwise read as a root-level one. Discovered paths come from the
+  // filesystem, so a crafted directory or file name can carry a closing tag; defang the
+  // list items and escape the attributes before the block is assembled.
   const fileList = contextFiles
     .map((file) => {
-      const isRoot = !file.includes('/');
-      return `- ${file}${isRoot ? ' (root)' : ''}`;
+      const safe = sanitizePromptLine(normalizePromptPath(file), PROJECT_CONTEXT_FILES_TAGS);
+      const isRoot = !safe.includes('/');
+      return `- ${safe}${isRoot ? ' (root)' : ''}`;
     })
     .join('\n');
 
   return `
-<project_context_files working_directory="${workingDirectory}">
+<project_context_files working_directory="${escapePromptXmlAttr(workingDirectory)}" context_root="${escapePromptXmlAttr(contextRoot)}">
 ${fileList}
 </project_context_files>`;
+}
+
+/**
+ * Resolve the directory context files are discovered from, and filter the result to
+ * the files that can govern the selected directory.
+ */
+function findRelevantProjectContextFiles(workingDirectory: string): { contextRoot: string; contextFiles: string[] } {
+  const resolvedWorkingDirectory = resolve(workingDirectory);
+  const gitRoot = findGitRepositoryRoot(resolvedWorkingDirectory);
+  if (!gitRoot) {
+    return {
+      contextRoot: resolvedWorkingDirectory,
+      contextFiles: findAllProjectContextFiles(resolvedWorkingDirectory),
+    };
+  }
+
+  const contextRoot = resolve(gitRoot);
+  const allFiles = findAllProjectContextFiles(contextRoot);
+  const selectedRel = normalizePromptPath(relative(contextRoot, resolvedWorkingDirectory));
+  if (!selectedRel || selectedRel === '.') {
+    return { contextRoot, contextFiles: allFiles };
+  }
+
+  const relevant = allFiles.filter((file) => {
+    const normalizedFile = normalizePromptPath(file);
+    const dir = normalizePromptPath(dirname(normalizedFile));
+    const normalizedDir = dir === '.' ? '' : dir;
+
+    // Always include root instructions, include ancestors of the selected CWD,
+    // and include context files below the selected subtree. This keeps nested
+    // package sessions useful without dumping every unrelated monorepo package.
+    return normalizedDir === '' ||
+      selectedRel === normalizedDir ||
+      selectedRel.startsWith(`${normalizedDir}/`) ||
+      normalizedDir.startsWith(`${selectedRel}/`);
+  });
+
+  return { contextRoot, contextFiles: relevant.length > 0 ? relevant : allFiles.slice(0, 1) };
+}
+
+function normalizePromptPath(value: string): string {
+  return value.replace(/\\/g, '/');
 }
 
 /** Options for getSystemPrompt */
@@ -394,78 +454,42 @@ export function getSystemPrompt(
 /** Block tags whose closing form must not appear inside injected body content. */
 const PROJECT_BLOCK_TAGS = ['project_context', 'project_memory', 'project_assets'] as const;
 
-/**
- * Neutralize a literal closing tag inside injected body content so user- or
- * asset-authored text can't terminate the surrounding prompt block early.
- * Surgical: only the specific `</tagName>` sequence is escaped (case- and
- * whitespace-insensitive), leaving markdown and code in the body intact.
- */
-function defangBlockTag(content: string, tagName: string): string {
-  const re = new RegExp(`<\\s*/\\s*${tagName}\\s*>`, 'gi');
-  return content.replace(re, `&lt;/${tagName}&gt;`);
-}
+/** Tags the working-directory block can be terminated by, incl. the bash-cwd note. */
+const WORKING_DIRECTORY_TAGS = ['working_directory', 'working_directory_context'] as const;
 
-/** Defang every project block's closing tag within a body field. */
-function defangProjectBlockTags(content: string): string {
-  return PROJECT_BLOCK_TAGS.reduce((acc, tag) => defangBlockTag(acc, tag), content);
-}
-
-/**
- * Strip control characters that could truncate or corrupt injected prompt text (NUL, etc.).
- * Preserves tab/newline/CR so multi-line markdown body fields keep their formatting.
- */
-function stripDangerousControlChars(content: string): string {
-  // eslint-disable-next-line no-control-regex
-  return content.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '');
-}
-
-/** Sanitize a multi-line body field (description/details/memory) before prompt injection. */
-function sanitizeProjectBodyText(content: string): string {
-  return defangProjectBlockTags(stripDangerousControlChars(content));
-}
-
-/**
- * Sanitize a single-line label (an asset filename) before prompt injection: strip ALL control
- * chars — including newlines/tabs, which have no place in a filename and could forge extra
- * `<project_assets>` list items — and defang block-closing tags so a crafted name can't break
- * out of the surrounding block. `listProjectAssets` reads real dirents, so a bad name can reach
- * the prompt regardless of upload-time sanitizing; this is the robust, last-line defense.
- */
-function sanitizeProjectFilename(name: string): string {
-  // eslint-disable-next-line no-control-regex
-  return defangProjectBlockTags(name.replace(/[\x00-\x1f\x7f]/g, ''));
-}
+/** Tag the discovered-context-file list lives in. */
+const PROJECT_CONTEXT_FILES_TAGS = ['project_context_files'] as const;
 
 export function formatProjectContextForPrompt(ctx: ProjectPromptContext): string {
-  // Attribute-safe escape for the project name (it sits inside a quoted attribute).
-  const escapeAttr = (s: string) =>
-    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
   const lines: string[] = [];
   lines.push('');
-  lines.push(`<project_context project="${escapeAttr(ctx.name)}">`);
+  lines.push(`<project_context project="${escapePromptXmlAttr(ctx.name)}">`);
   if (ctx.description?.trim()) {
-    lines.push(sanitizeProjectBodyText(ctx.description.trim()));
+    lines.push(sanitizePromptBody(ctx.description.trim(), PROJECT_BLOCK_TAGS));
     lines.push('');
   }
   if (ctx.details?.trim()) {
-    lines.push(sanitizeProjectBodyText(ctx.details.trim()));
+    lines.push(sanitizePromptBody(ctx.details.trim(), PROJECT_BLOCK_TAGS));
     lines.push('');
   }
 
-  lines.push(`<project_assets_path>${sanitizeProjectBodyText(ctx.assetsPath)}</project_assets_path>`);
+  lines.push(`<project_assets_path>${sanitizePromptBody(ctx.assetsPath, PROJECT_BLOCK_TAGS)}</project_assets_path>`);
   if (ctx.assets.length > 0) {
     lines.push('<project_assets>');
     for (const asset of ctx.assets) {
-      lines.push(`- ${sanitizeProjectFilename(asset.filename)} (${sanitizeProjectBodyText(asset.mimeType)}, ${formatBytes(asset.sizeBytes)})`);
+      // Single-line: strip ALL control chars — including newlines/tabs, which have no place in a
+      // filename and could forge extra list items. `listProjectAssets` reads real dirents, so a
+      // bad name can reach the prompt regardless of upload-time sanitizing; this is the
+      // last-line defense.
+      lines.push(`- ${sanitizePromptLine(asset.filename, PROJECT_BLOCK_TAGS)} (${sanitizePromptBody(asset.mimeType, PROJECT_BLOCK_TAGS)}, ${formatBytes(asset.sizeBytes)})`);
     }
     lines.push('</project_assets>');
   }
 
-  lines.push(`<project_memory_path>${sanitizeProjectBodyText(ctx.memoryPath)}</project_memory_path>`);
+  lines.push(`<project_memory_path>${sanitizePromptBody(ctx.memoryPath, PROJECT_BLOCK_TAGS)}</project_memory_path>`);
   if (ctx.memoryContent?.trim()) {
     lines.push('<project_memory>');
-    lines.push(sanitizeProjectBodyText(ctx.memoryContent.trim()));
+    lines.push(sanitizePromptBody(ctx.memoryContent.trim(), PROJECT_BLOCK_TAGS));
     lines.push('</project_memory>');
   }
   lines.push('');
@@ -692,6 +716,16 @@ Preview blocks are for existing/temporary files and require real absolute paths.
 Use \`datatable\` for sortable/filterable data and \`spreadsheet\` for exportable grids; read the table guide before either, including small datasets. For 20+ rows, prefer \`transform_data\` plus \`src\` to avoid large inline JSON. A rendered spreadsheet block is not proof that a final .xlsx file exists at a destination.
 
 Bundled document CLIs include \`markitdown\`, \`pdf-tool\`, \`xlsx-tool\`, \`docx-tool\`, \`pptx-tool\`, \`img-tool\`, \`doc-diff\`, and \`ical-tool\`. Use their \`--help\` for exact options and report missing runtime dependencies rather than asserting availability. Text extraction is not visual verification. For Office deliverables, write to the managed Artifact checkout, inspect, and perform format-appropriate layout/data checks. Source-provided HTML templates can be rendered with \`render_template\`; read the source guide for template IDs and required data.
+
+## Automations
+
+Automations run prompts, webhooks, or workspace-local scripts from configured triggers and schedules.
+
+- Read \`${DOC_REFS.hooks}\` before creating or modifying an automation.
+- Validate with \`config_validate\` (or the \`phaneris\` CLI when it is enabled) instead of guessing schemas.
+- Automation-created sessions and tasks stay reviewable: do not close tasks yourself.
+- Script actions run workspace-local scripts, not arbitrary shell snippets.
+- Set labels and statuses deliberately — label and status changes can trigger \`LabelAdd\`/\`LabelRemove\` and \`SessionStatusChange\` automations.
 
 ## Pages
 

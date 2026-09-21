@@ -26,13 +26,17 @@
  */
 
 import { join } from 'node:path';
+import { defangPromptClosingTags, sanitizePromptBody } from '../prompts/prompt-sanitize.ts';
 import type { LoadedPlugin, PluginSkillEntry } from './types.ts';
 
 /** Opening tag of the block, with the plugin name as an attribute (P3-5). */
 export const PLUGIN_CONTEXT_TAG = 'plugin_context';
 
+/** Tags a plugin fragment must not be able to terminate. */
+const PLUGIN_CONTEXT_TAGS = [PLUGIN_CONTEXT_TAG] as const;
+
 /**
- * Closing-tag scrubber, mirroring `defangBlockTag` in `prompts/system.ts`.
+ * Closing-tag scrubber for plugin fragments.
  *
  * Deliberately surgical: only the literal `</plugin_context>` sequence is
  * escaped, so markdown, code fences, and examples in a fragment survive intact.
@@ -40,24 +44,12 @@ export const PLUGIN_CONTEXT_TAG = 'plugin_context';
  * instructions usually consist of.
  */
 export function defangPluginContextTag(content: string): string {
-  const re = new RegExp(`<\\s*/\\s*${PLUGIN_CONTEXT_TAG}\\s*>`, 'gi');
-  return content.replace(re, `&lt;/${PLUGIN_CONTEXT_TAG}&gt;`);
-}
-
-/**
- * Drop characters that could truncate or corrupt injected prompt text.
- *
- * Same set as `stripDangerousControlChars` in `prompts/system.ts`: NUL and other
- * control characters, while keeping tab/newline/CR so multi-line markdown keeps
- * its formatting.
- */
-export function stripDangerousControlChars(content: string): string {
-  return content.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '');
+  return defangPromptClosingTags(content, PLUGIN_CONTEXT_TAGS);
 }
 
 /** Sanitize untrusted fragment/roster text before prompt injection. */
 export function sanitizePluginPromptText(content: string): string {
-  return defangPluginContextTag(stripDangerousControlChars(content));
+  return sanitizePromptBody(content, PLUGIN_CONTEXT_TAGS);
 }
 
 /** One roster line: display name, description, and where to read the body. */

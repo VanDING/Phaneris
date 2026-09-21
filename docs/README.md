@@ -42,6 +42,8 @@ Design proposals, implementation plans, handoffs, and dated assessments are kept
 | [Plugin bundles design](plugin-bundles-design.md) | Implemented | Aggregate skills, sources, and a prompt fragment into an Agent Plugins 1.0.0 package; `/name` invocation, session-resident, no lifecycle. Paired with [its decision register](plugin-bundles-decisions.md). |
 | [Plugin bundles decision register](plugin-bundles-decisions.md) | Implemented; 61 decisions closed, 0 open | The decisions the implementation rests on (D1–D12) with the alternative each rejected, plus the four P9 acceptance tests and where they landed. |
 | [Agentic interception design](process/agentic-interception-design.md) | Process record | Proposed governance and intervention design. |
+| [Upstream v0.13.4 absorption assessment](process/upstream-0.13.4-absorption.md) | Dated assessment (2026-09-21) | Per-change verdicts, our equivalent code, and port plans for the upstream release after `v0.13.3`. |
+| [Plugin system review and roadmap](plugin-system-review-and-roadmap.md) | Dated assessment (2026-09-21) | Plugin install/uninstall integrity findings and the phased P0–P2 plan. |
 | [Release readiness checklist](release-readiness.md) | Proposed release gate | Identity, recovery, signing, checksum, SBOM, and privacy items required before public binaries. |
 | [Project assessment and development roadmap](process/project-assessment-and-roadmap-2026-08-31.md) | Dated assessment | Results recorded for 2026-08-31; compare current behavior with the live code. |
 | [Product development directions](process/product-development-directions-2026-09-19.md) | Discussion draft | Dated capability directions and open priorities. |

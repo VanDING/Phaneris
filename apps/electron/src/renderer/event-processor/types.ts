@@ -6,7 +6,7 @@
  */
 
 import type { Session, SessionEvent, Message, PermissionRequest, CredentialRequest, AskUserRequest, TypedError, PermissionMode, SessionStatus, AuthRequest, ToolDisplayMeta } from '../../shared/types'
-import type { PiUsage, AssistantMetrics, TrajectorySourceBlock } from '@phaneris/core/types'
+import type { PiUsage, AssistantMetrics, TrajectorySourceBlock, ContextUsageSnapshot } from '@phaneris/core/types'
 
 /** Explicit SDK retry boundaries; keep their transport shape authoritative. */
 export type TextDiscardEvent = Extract<SessionEvent, { type: 'text_discard' }>
@@ -572,6 +572,21 @@ export interface UsageUpdateEvent {
 }
 
 /**
+ * Context usage event - authoritative context occupancy from the backend.
+ *
+ * Occupancy is a separate axis from `usage_update`'s cumulative ledger counters:
+ * the SDK reports how full the context is right now, and a compaction replaces
+ * that number instead of growing it. `usedTokens: null` means the context changed
+ * and no fresh count is available yet — the UI must show its unknown state rather
+ * than the pre-compaction number.
+ */
+export interface ContextUsageEvent {
+  type: 'context_usage'
+  sessionId: string
+  contextUsage: ContextUsageSnapshot
+}
+
+/**
  * Compaction start event - SDK began context compaction.
  * Kept as a first-class event so the trajectory view can render it as a
  * standalone "Between turns" section with its trigger reason.
@@ -647,6 +662,7 @@ export type AgentEvent =
   | AuthCompletedEvent
   | SourceActivatedEvent
   | UsageUpdateEvent
+  | ContextUsageEvent
   | CompactionStartEvent
   | CompactionEndEvent
 

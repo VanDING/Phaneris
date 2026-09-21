@@ -24,6 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { coerceInputText, appendRestoredInput } from "@/lib/input-text"
 import { observeChatScrollAnchor } from '@/lib/chat-scroll-anchor'
+import { contextBadgeUsage } from '@/lib/context-usage'
 import { Markdown, CollapsibleMarkdownProvider, StreamingMarkdown, type RenderMode } from "@/components/markdown"
 import { ContentSwap } from "@/components/ui/content-swap"
 import {
@@ -2053,8 +2054,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
               onConnectionChange,
               contextStatus: {
                 isCompacting: session.currentStatus?.statusType === 'compacting',
-                inputTokens: session.tokenUsage?.contextTokens,
-                contextWindow: session.tokenUsage?.contextWindow,
+                ...contextBadgeUsage(session.tokenUsage),
               },
               followUpItems: followUpInputItems,
               onFollowUpClick: handleFollowUpChipClick,

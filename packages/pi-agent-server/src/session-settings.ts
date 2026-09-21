@@ -97,6 +97,12 @@ export function buildPhanerisPiSettings(purpose: PhanerisPiSessionPurpose = 'mai
     // (requestSetAutoCompaction(true)); keep the SDK default explicit here so
     // the intent is visible next to the retry policy.
     compaction: { enabled: true },
+    // Deliver every steer pending at a turn boundary in one model call. The SDK
+    // default (`one-at-a-time`) drains a single message per boundary, so three
+    // mid-turn steers became three extra model round-trips and anything still
+    // queued when the turn ended could be dropped by `clearQueue()`. See
+    // craft-agents-oss#1040.
+    steeringMode: 'all',
     // Start off, including ephemeral sessions. The main session may opt into
     // streaming only AFTER installing its independent warming accounting.
     cacheWarming: 'off',

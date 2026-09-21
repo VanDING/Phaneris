@@ -2,6 +2,8 @@
  * Message types for conversations
  */
 
+import type { ContextUsageSnapshot } from './context-usage.ts';
+
 /**
  * Message roles for display (runtime)
  */
@@ -812,6 +814,8 @@ export type AgentEvent =
   | { type: 'source_activated'; sourceSlug: string; originalMessage: string }
   // Backend context update: inputTokens is the legacy name for current occupancy, not cumulative input.
   | { type: 'usage_update'; usage: { inputTokens: number; contextWindow?: number }; full?: PiUsage }
+  // Authoritative occupancy snapshot; the backend's own count, never derived from billing usage.
+  | { type: 'context_usage'; contextUsage: ContextUsageSnapshot }
   | { type: 'steer_undelivered'; message: string };
 
 /**

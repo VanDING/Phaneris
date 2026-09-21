@@ -57,6 +57,11 @@ interface CompactModelSelectorProps {
     isCompacting?: boolean
     inputTokens?: number
     contextWindow?: number
+    /**
+     * The context changed (compaction) and no fresh occupancy count exists yet.
+     * The badge shows its unknown state instead of any previous number.
+     */
+    isUsageUnknown?: boolean
   }
 }
 
@@ -171,6 +176,21 @@ export function CompactModelSelector({
     },
     [onModelChange],
   )
+
+  // Context section occupancy. `null` from the SDK (context changed, no fresh count
+  // yet) renders as unknown rather than a stale pre-compaction number, so the
+  // drawer never shows a value the context no longer holds.
+  const contextUsageLabel = contextStatus?.isUsageUnknown
+    ? t('chat.contextUsage.unknown')
+    : contextStatus?.inputTokens != null && contextStatus.inputTokens > 0
+      ? t('chat.tokensUsed', { displayCount: formatTokenCount(contextStatus.inputTokens) })
+      : null
+  const contextUsageWindow =
+    !contextStatus?.isUsageUnknown &&
+    contextStatus?.contextWindow != null &&
+    contextStatus.contextWindow > 0
+      ? contextStatus.contextWindow
+      : null
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -437,7 +457,7 @@ export function CompactModelSelector({
           )}
 
           {/* === Context section === */}
-          {contextStatus?.inputTokens != null && contextStatus.inputTokens > 0 && (
+          {contextUsageLabel && (
             <>
               <div className="px-3 pt-4 pb-1 text-xs font-medium text-foreground/60 uppercase tracking-wide select-none">
                 {t('chat.modelPicker.contextSection')}
@@ -445,13 +465,11 @@ export function CompactModelSelector({
               <div className="flex items-center justify-between px-3 py-2 text-xs text-foreground/60 select-none">
                 <span>{t('chat.context')}</span>
                 <span className="flex items-center gap-1.5">
-                  {contextStatus.isCompacting && <Spinner className="h-3 w-3" />}
-                  {t('chat.tokensUsed', {
-                    displayCount: formatTokenCount(contextStatus.inputTokens),
-                  })}
-                        {contextStatus.contextWindow != null && contextStatus.contextWindow > 0 && (
-                          <span className="opacity-60"> / {formatTokenCount(contextStatus.contextWindow)}</span>
-                        )}
+                  {contextStatus?.isCompacting && <Spinner className="h-3 w-3" />}
+                  {contextUsageLabel}
+                  {contextUsageWindow != null && (
+                    <span className="opacity-60"> / {formatTokenCount(contextUsageWindow)}</span>
+                  )}
                 </span>
               </div>
             </>

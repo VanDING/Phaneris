@@ -52,12 +52,18 @@ describe('PiEventAdapter', () => {
       expect(collect(adapter.adaptEvent({ type: 'agent_settled' } as any))).toEqual([]);
     });
 
-    it('ignores agent_settled context usage (queue closes at agent_end)', () => {
+    it('forwards agent_settled context usage without completing the queue itself', () => {
       const events = collect(adapter.adaptEvent({
         type: 'agent_settled',
         contextUsage: { tokens: 42_000, contextWindow: 200_000, percent: 21 },
       } as any));
-      expect(events).toEqual([]);
+      // Occupancy is forwarded even though the terminal agent_end already closed
+      // the queue — a late authoritative count beats a frozen one.
+      expect(events).toMatchObject([{ type: 'context_usage', contextUsage: {
+        usedTokens: 42_000, limitTokens: 200_000, limitKind: 'context', isStale: false,
+      } }]);
+      expect(events.some(e => e.type === 'complete')).toBe(false);
+      expect(adapter.shouldCompleteQueue(false)).toBe(false);
     });
 
     it('emits the last message usage in the terminal complete event', () => {
@@ -1263,13 +1269,18 @@ describe('PiEventAdapter', () => {
         aborted: false,
       } as any));
 
-      // Structured outcome for the trajectory view + user-facing info.
-      expect(events).toHaveLength(2);
+      // Structured outcome for the trajectory view + invalidated occupancy + info.
+      expect(events).toHaveLength(3);
       expect(events[0]).toMatchObject({
         type: 'compaction_end',
         aborted: false,
       });
+      // A boundary with no fresh SDK count must not leave the old one in place.
       expect(events[1]).toMatchObject({
+        type: 'context_usage',
+        contextUsage: { usedTokens: null, isStale: true },
+      });
+      expect(events[2]).toMatchObject({
         type: 'info',
         message: 'Compacted context to fit within limits',
       });
@@ -1747,7 +1758,7 @@ describe('PiEventAdapter', () => {
         { type: 'status', message: 'Compacting context...' },
       ]);
 
-      // 4. compaction_end success — structured outcome + info surfaces, still no complete.
+      // 4. compaction_end success — structured outcome, invalidated occupancy, info.
       const endEvents = collect(adapter.adaptEvent({
         type: 'compaction_end',
         result: { /* compaction result */ },
@@ -1755,6 +1766,7 @@ describe('PiEventAdapter', () => {
       } as any));
       expect(endEvents).toMatchObject([
         { type: 'compaction_end', aborted: false },
+        { type: 'context_usage', contextUsage: { usedTokens: null, isStale: true } },
         { type: 'info', message: 'Compacted context to fit within limits' },
       ]);
       expect(adapter.shouldCompleteQueue(false)).toBe(false);

@@ -44,6 +44,7 @@ import type {
   AuthRequestEvent,
   AuthCompletedEvent,
   UsageUpdateEvent,
+  ContextUsageEvent,
   CompactionStartEvent,
   CompactionEndEvent,
   Effect,
@@ -1124,6 +1125,46 @@ export function handleCompactionEnd(
 }
 
 /**
+ * Handle context_usage - authoritative context occupancy from the SDK.
+ *
+ * Occupancy is a separate axis from the ledger: compaction *replaces* how full
+ * the context is instead of adding to it, so this only writes
+ * `tokenUsage.contextUsage` and never disturbs the accumulated counters
+ * (`inputTokens` / `contextTokens` / `costUsd`). A `usedTokens: null` snapshot is
+ * stored verbatim — it is the signal that the context changed and the count on
+ * screen would be stale, not a reason to keep showing the old number.
+ */
+export function handleContextUsage(
+  state: SessionState,
+  event: ContextUsageEvent
+): ProcessResult {
+  const { session, streaming } = state
+
+  // Without a ledger there is nothing to attach occupancy to yet; the next
+  // `usage_update` carries its own snapshot.
+  if (!session.tokenUsage) {
+    return {
+      state: { ...state, session: { ...session } },
+      effects: [],
+    }
+  }
+
+  return {
+    state: {
+      session: {
+        ...session,
+        tokenUsage: {
+          ...session.tokenUsage,
+          contextUsage: event.contextUsage,
+        },
+      },
+      streaming,
+    },
+    effects: [],
+  }
+}
+
+/**
  * Handle usage_update - real-time context usage during processing
  * Replaces cumulative totals from the ledger and updates independent context occupancy.
  */
@@ -1134,9 +1175,13 @@ export function handleUsageUpdate(
   const { session, streaming } = state
 
   // The server sends a complete ledger snapshot plus independent context usage.
+  // Occupancy is merged separately so a ledger snapshot that omits it cannot
+  // wipe the last authoritative count.
+  const contextUsage = event.tokenUsage.contextUsage ?? session.tokenUsage?.contextUsage
   const updatedTokenUsage = {
     ...session.tokenUsage,
     ...event.tokenUsage,
+    ...(contextUsage ? { contextUsage } : {}),
   }
 
   return {

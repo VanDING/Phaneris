@@ -78,6 +78,7 @@ import { useEscapeInterrupt } from '@/context/EscapeInterruptContext'
 import { hasOpenOverlay } from '@/lib/overlay-detection'
 import { ToolbarStatusSlot } from './ToolbarStatusSlot'
 import { buildPlanApprovalMessage } from '../plan-approval-message'
+import { createPendingPlanDispatcher } from './pending-plan-dispatch'
 import { shouldHandleScopedInputEvent, shouldRecallPromptOnArrowUp } from './input-event-guards'
 import { clearPendingFocusForSession, consumePendingFocusForSession } from './focus-input-events'
 import {
@@ -220,6 +221,11 @@ export interface FreeFormInputProps {
     inputTokens?: number
     /** Model's context window size in tokens */
     contextWindow?: number
+    /**
+     * The context changed (compaction) and no fresh occupancy count exists yet.
+     * The badge shows its unknown state instead of any previous number.
+     */
+    isUsageUnknown?: boolean
   }
   /** Follow-up annotations shown as context chips above the input */
   followUpItems?: FollowUpInputItem[]
@@ -742,107 +748,68 @@ export function FreeFormInput({
         })
       }
 
-      // Send /compact to trigger compaction
+      // Send /compact to trigger compaction. Completion is not handled here:
+      // the dispatcher below owns delivery, so a reload mid-compaction and the
+      // live case take exactly the same path.
       onSubmit('/compact', undefined)
-
-      // Set up a one-time listener for compaction complete.
-      // This handles the normal case (no reload during compaction).
-      const handleCompactionComplete = async (compactEvent: CustomEvent<{ sessionId?: string }>) => {
-        // Only handle if this is for our session
-        if (compactEvent.detail?.sessionId !== sessionId) {
-          return
-        }
-
-        // Remove the listener (one-time use)
-        window.removeEventListener('craft:compaction-complete', handleCompactionComplete as unknown as EventListener)
-
-        const executionMessage = buildPlanApprovalMessage({
-          planPath,
-          draftInput: draftInputSnapshot,
-        })
-        onSubmit(executionMessage, undefined)
-
-        // Clear the pending state since we just sent the execution message
-        if (sessionId) {
-          await window.electronAPI.sessionCommand(sessionId, {
-            type: 'clearPendingPlanExecution',
-          })
-        }
-      }
-
-      window.addEventListener('craft:compaction-complete', handleCompactionComplete as unknown as EventListener)
     }
 
     window.addEventListener('craft:approve-plan-with-compact', handleApprovePlanWithCompact as unknown as EventListener)
     return () => window.removeEventListener('craft:approve-plan-with-compact', handleApprovePlanWithCompact as unknown as EventListener)
   }, [sessionId, permissionMode, onPermissionModeChange, onSubmit, consumeInputDraftSnapshot])
 
-  // Reload recovery: Check for pending plan execution on mount.
-  // If the page reloaded after compaction completed (awaitingCompaction = false),
-  // we need to send the plan execution message that was interrupted by the reload.
-  // Also listen for compaction-complete in case CMD+R happened during compaction.
+  // Live completion and reload recovery share one dispatcher over the persisted
+  // record: a "compaction complete" notification is only a wakeup, and execution is
+  // authorized by the host's atomic claim, so a second window, a duplicate listener,
+  // and a remount after reload cannot each send their own approval. Registered before
+  // the Accept & Compact handler can persist anything, and it re-checks on the idle
+  // transition because completion may be published while the turn is still finishing.
+  const processingRef = React.useRef(isProcessing)
+  processingRef.current = isProcessing
+  const requestPendingPlanRef = React.useRef<(() => void) | null>(null)
+
   React.useEffect(() => {
     if (!sessionId) return
 
-    let hasExecuted = false
+    const dispatcher = createPendingPlanDispatcher({
+      isBusy: () => processingRef.current,
+      load: () => window.electronAPI.getPendingPlanExecution(sessionId),
+      claim: () => window.electronAPI.sessionCommand(sessionId, { type: 'markPendingPlanExecutionDispatched' }),
+      submit: pending => onSubmit(buildPlanApprovalMessage({
+        planPath: pending.planPath,
+        draftInput: pending.draftInputSnapshot,
+      }), undefined),
+      clear: () => window.electronAPI.sessionCommand(sessionId, { type: 'clearPendingPlanExecution' }),
+    })
 
-    const isExpectedReconnectError = (error: unknown): boolean => {
-      const message = error instanceof Error ? error.message : String(error)
-      return message.includes('Connection closed')
-        || message.includes('Client disconnected')
-        || message.includes('transport')
-        || message.includes('socket')
-    }
-
-    const executePendingPlan = async () => {
-      if (hasExecuted) return
-
-      try {
-        const pending = await window.electronAPI.getPendingPlanExecution(sessionId)
-        if (!pending || pending.awaitingCompaction || pending.executionDispatched) return
-
-        // Mark dispatched before sending so reload recovery does not double-submit
-        // the same plan if onSubmit succeeds but cleanup fails during a reconnect.
-        await window.electronAPI.sessionCommand(sessionId, {
-          type: 'markPendingPlanExecutionDispatched',
-        })
-
-        // Compaction completed but we never sent the execution message (page reloaded).
-        // Send it now and clear the pending state.
-        hasExecuted = true
-        const executionMessage = buildPlanApprovalMessage({
-          planPath: pending.planPath,
-          draftInput: pending.draftInputSnapshot,
-        })
-        onSubmit(executionMessage, undefined)
-
-        await window.electronAPI.sessionCommand(sessionId, {
-          type: 'clearPendingPlanExecution',
-        })
-      } catch (error) {
-        if (!isExpectedReconnectError(error)) {
+    const request = () => {
+      void dispatcher.request().catch(error => {
+        const message = error instanceof Error ? error.message : String(error)
+        if (!/Connection closed|Client disconnected|transport|socket/.test(message)) {
           console.error('[FreeFormInput] Failed to resume pending plan execution:', error)
         }
-      }
+      })
     }
 
-    // Check immediately on mount (handles case where compaction already completed)
-    executePendingPlan()
-
-    // Also listen for compaction-complete in case CMD+R happened during compaction.
-    // When compaction finishes after reload, this listener will trigger execution.
-    const handleCompactionComplete = async (e: CustomEvent<{ sessionId: string }>) => {
-      if (e.detail?.sessionId !== sessionId) return
-      // Small delay to ensure markCompactionComplete has been called
-      await new Promise(resolve => setTimeout(resolve, 100))
-      executePendingPlan()
+    const handleCompactionComplete = (event: Event) => {
+      if ((event as CustomEvent<{ sessionId?: string }>).detail?.sessionId === sessionId) request()
     }
 
-    window.addEventListener('craft:compaction-complete', handleCompactionComplete as unknown as EventListener)
+    requestPendingPlanRef.current = request
+    window.addEventListener('craft:compaction-complete', handleCompactionComplete)
+    // Reload recovery: the record survives, the wakeup does not.
+    request()
+
     return () => {
-      window.removeEventListener('craft:compaction-complete', handleCompactionComplete as unknown as EventListener)
+      window.removeEventListener('craft:compaction-complete', handleCompactionComplete)
+      if (requestPendingPlanRef.current === request) requestPendingPlanRef.current = null
+      dispatcher.dispose()
     }
   }, [sessionId, onSubmit])
+
+  React.useEffect(() => {
+    if (!isProcessing) requestPendingPlanRef.current?.()
+  }, [isProcessing, sessionId])
 
   // Listen for craft:focus-input events (restore focus after popover/dropdown closes)
   React.useEffect(() => {
@@ -1620,6 +1587,19 @@ export function FreeFormInput({
     && !!effectiveConnectionDetails
     && isCompatProvider(effectiveConnectionDetails.providerType)
     && !modelSupportsImages(effectiveConnectionDetails, currentModel)
+
+  // Context footer occupancy. `null` from the SDK (context changed, no fresh count
+  // yet) renders as unknown rather than a stale pre-compaction number, so the
+  // badge never shows a value the context no longer holds.
+  const contextUsageLabel = contextStatus?.isUsageUnknown
+    ? t('chat.contextUsage.unknown')
+    : contextStatus?.inputTokens != null && contextStatus.inputTokens > 0
+      ? t('chat.tokensUsed', { displayCount: formatTokenCount(contextStatus.inputTokens) })
+      : null
+  const contextUsageWindow = !contextStatus?.isUsageUnknown
+    && contextStatus?.contextWindow != null && contextStatus.contextWindow > 0
+      ? contextStatus.contextWindow
+      : null
 
   return (
     <form className="craft-composer" onSubmit={handleSubmit}>
@@ -2428,20 +2408,21 @@ export function FreeFormInput({
                 </>
               )}
 
-              {/* Context usage footer - only show when we have token data */}
-              {contextStatus?.inputTokens != null && contextStatus.inputTokens > 0 && (
+              {/* Context usage footer - authoritative occupancy; the unknown state
+                  when a compaction left the context without a fresh count */}
+              {contextUsageLabel && (
                 <>
                   <StyledDropdownMenuSeparator className="my-1" />
                   <div className="px-2 py-1.5 select-none">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{t('chat.context')}</span>
                       <span className="flex items-center gap-1.5">
-                        {contextStatus.isCompacting && (
+                        {contextStatus?.isCompacting && (
                           <Spinner className="h-3 w-3" />
                         )}
-                        {t('chat.tokensUsed', { displayCount: formatTokenCount(contextStatus.inputTokens) })}
-                        {contextStatus.contextWindow != null && contextStatus.contextWindow > 0 && (
-                          <span className="opacity-60"> / {formatTokenCount(contextStatus.contextWindow)}</span>
+                        {contextUsageLabel}
+                        {contextUsageWindow != null && (
+                          <span className="opacity-60"> / {formatTokenCount(contextUsageWindow)}</span>
                         )}
                       </span>
                     </div>

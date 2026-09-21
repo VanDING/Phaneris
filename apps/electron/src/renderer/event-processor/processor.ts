@@ -52,6 +52,7 @@ import {
   handleAuthRequest,
   handleAuthCompleted,
   handleUsageUpdate,
+  handleContextUsage,
   handleCompactionStart,
   handleCompactionEnd,
 } from './handlers/session'
@@ -238,6 +239,9 @@ export function processEvent(
 
     case 'usage_update':
       return handleUsageUpdate(state, event)
+
+    case 'context_usage':
+      return handleContextUsage(state, event)
 
     case 'compaction_start':
       return handleCompactionStart(state, event)

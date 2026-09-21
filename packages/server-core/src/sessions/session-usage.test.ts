@@ -82,6 +82,30 @@ describe('session usage ledger authority', () => {
     expect(sent.at(-1).tokenUsage).toMatchObject({ contextTokens: 0, totalTokens: 317 })
   })
 
+  it('publishes authoritative occupancy and never re-publishes a pre-compaction count', async () => {
+    managed.tokenUsage = { inputTokens: 292, outputTokens: 25, totalTokens: 317, contextTokens: 182, costUsd: 0.03 }
+    await internals.processEvent(managed, { type: 'context_usage', contextUsage: {
+      usedTokens: 419_000, limitTokens: 469_000, limitKind: 'compaction',
+      isEstimate: true, isStale: false, canCompact: true,
+    } })
+    expect(managed.tokenUsage.contextUsage).toMatchObject({ usedTokens: 419_000, limitTokens: 469_000 })
+    // The renderer consumes both: the standalone event refreshes the badge, the
+    // ledger snapshot keeps usage_update consumers whole.
+    expect(sent.at(-2)).toMatchObject({ type: 'context_usage', sessionId: 's', contextUsage: { usedTokens: 419_000 } })
+    expect(sent.at(-1)).toMatchObject({ type: 'usage_update', tokenUsage: { contextUsage: { usedTokens: 419_000 } } })
+    // context_usage is the occupancy channel: cumulative counters are untouched.
+    expect(managed.tokenUsage).toMatchObject({ inputTokens: 292, totalTokens: 317, contextTokens: 182 })
+
+    // A compaction boundary with no fresh SDK count invalidates, never freezes.
+    await internals.processEvent(managed, { type: 'context_usage', contextUsage: {
+      usedTokens: null, limitTokens: 469_000, limitKind: 'compaction',
+      isEstimate: true, isStale: true, canCompact: true,
+    } })
+    expect(managed.tokenUsage.contextUsage).toMatchObject({ usedTokens: null, isStale: true })
+    expect(sent.at(-2)).toMatchObject({ type: 'context_usage', contextUsage: { usedTokens: null, isStale: true } })
+    expect(sent.at(-1)).toMatchObject({ type: 'usage_update', tokenUsage: { contextUsage: { usedTokens: null, isStale: true } } })
+  })
+
   it('leaves sessions without a ledger unchanged', async () => {
     managed.tokenUsage = { inputTokens: 5, outputTokens: 2, totalTokens: 7, contextTokens: 5, costUsd: 0 }
     internals.applyDurableUsageProjection(managed)

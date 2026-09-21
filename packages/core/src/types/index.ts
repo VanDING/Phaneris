@@ -21,6 +21,9 @@ export type {
   SessionStatus,
 } from './session.ts';
 
+// Context occupancy (agent → host → renderer)
+export type { ContextUsageSnapshot } from './context-usage.ts';
+
 // Message types
 export type {
   MessageRole,

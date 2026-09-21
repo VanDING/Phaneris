@@ -23,6 +23,7 @@ import { useAppShellContext } from '@/context/AppShellContext'
 import { useNavigation } from '@/contexts/NavigationContext'
 import { useLabels } from '@/hooks/useLabels'
 import { findLabelById } from '@phaneris/shared/labels'
+import { contextBadgeUsage } from '@/lib/context-usage'
 
 export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
   const { t } = useTranslation()
@@ -180,7 +181,7 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
               inputTokens: meta?.tokenUsage?.inputTokens,
               outputTokens: meta?.tokenUsage?.outputTokens,
               totalTokens: meta?.tokenUsage?.totalTokens,
-              contextTokens: meta?.tokenUsage?.contextTokens,
+              contextTokens: contextBadgeUsage(meta?.tokenUsage).inputTokens,
               costUsd: meta?.tokenUsage?.costUsd,
             }}
             sessionMap={sessionMap}
