@@ -2,7 +2,7 @@
 
 状态：时点分析（point-in-time），不是当前接口契约。实施前请按仓库中的 Pi SDK 版本与最新代码重新核对。
 日期：2026-09-20
-Pi SDK：`@earendil-works/pi-ai` / `pi-agent-core` / `pi-coding-agent` **0.86.0**
+Pi SDK：`@earendil-works/pi-ai` / `pi-agent-core` / `pi-coding-agent` **0.87.0**
 范围：Phaneris 单 Pi 后端（`packages/pi-agent-server` + `packages/shared/src/agent`）
 
 ---
@@ -38,6 +38,44 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 
 现已提供默认关闭的 `promptCacheWarming` 全局开关，仅主会话可选 `streaming`。刷新有独立 durable dispatch/outcome 与费用记录，不改写主任务检查点，不进入对话；ephemeral 和 idle 保持关闭。以下 0.86.0 升级核对保留当时的决策背景，当前实现见 [提示缓存与预热](pi-kernel.md#提示缓存与预热)。
 
+### 2026-09-21 Pi 0.87.0 升级核对
+
+0.87.0（2026-09-21 发布，四个包同步）不含导出删除：`pi-ai` / `pi-agent-core` / `pi-server` 导出面不变，`pi-coding-agent` 净增 18 个导出。四项破坏性变更中三项不命中本仓库，一项命中且**类型检查无法发现**。
+
+- **`shouldStopAfterTurn` → `finishTurn`／`prepareRequest`**：不命中。全仓库无引用；回合终止由 `PiEventAdapter` 事件驱动。
+- **`SessionEntry` 新增 `ContextEditEntry`**：不命中。本仓库既不穷尽该联合，也不构造它。
+- **`ExtensionRunner.emit()` 不再接受 `turn_end`，改 `emitBoundary`**：不命中。只在 `native-lifecycle-observation.ts` 用 `pi.on(...)` 注册只读处理器，从不调用 `emit()`；`ExtensionEvent` 新成员不构成类型破坏，因为这些处理器不做穷尽分支。
+- **`SessionManager` 成为 provider context 唯一权威**：**命中**，见下。
+
+#### canonical context 恢复改为 append-only 上下文编辑
+
+`packages/pi-agent-server/src/index.ts` 原先用 `session.agent.state.messages = …` 灌入 durable 已提交事实，并照常推进 `lastCanonicalContextCursor`。0.87.0 起 `AgentSession` 在**构造期**安装 `agent.prepareRequest`，每个请求强制 `messages: sessionManager.buildSessionProjection().messages`，该赋值被静默覆盖：**游标推进，而模型看到的转录未变**。类型检查完全放行（普通属性赋值），只有 `system-prompt-delivery.test.ts` 的既有断言能发现。
+
+迁移采用 append-only 路线：`convergeCanonicalContext()`（`packages/pi-agent-server/src/canonical-model-context.ts`）用 `appendContextEdit(targetId, replacement)` 收敛，分三种情形、稳态零写入：
+
+| 情形 | 判定 | 动作 |
+| --- | --- | --- |
+| `aligned` | 投影以 canonical 消息序列开头 | 不写。转录 = canonical 事实 + 提交之后用户新增的输入，既是 canonical 前缀也是超集 |
+| `appended` | 投影是 canonical 的严格前缀（早前回合被省略，或从快照恢复） | 追加余下事实 |
+| `replaced` | 投影已发散（被放弃的 provider attempt、或既有收敛留下的行） | 对每个仍在贡献的条目写 `replacement: null` 遮蔽，再追加全部事实 |
+
+`aligned` 分支就是「队列与在飞输入存活」的保证：把投影整体换成纯 canonical 会丢掉用户最后一条消息。
+
+**为何不用 `SessionManager.newSession()`**（评估期候选）：它用 `generateId()` 重铸全部条目 id，而 `{sessionPath}/meta/pi-turn-anchors.json` 把 **Phaneris 消息 id → Pi 条目 id** 存为持久外键（`packages/server-core/src/sessions/SessionManager.ts:230-264`），分支时经 `getEntry(anchorId)` 解析，查不到即 `Pi branch preflight failed`。`newSession()` 会让整张索引悬空。附带代价：`persist: true` 下铸新 JSONL，而 SDK 不清理旧文件（每回合一个孤儿）；分支父会话按 mtime 取最新文件，会 fork 自只含恢复条目的新文件。本方案从不调用 `newSession`，文件身份与条目 id 全部存活。
+
+`context_with_system` 扩展钩子经探针实测**不足以**承担该职责（输出未生效），未采用。
+
+#### 其他默认值与行为变化
+
+- **`compat.supportsStrictMode` 默认 `true` → `false`**：未声明支持的端点不再收到 strict 工具 schema（修复未知 OpenAI 兼容端点的 400）。本仓库 `buildCustomEndpointModelDef` 不声明该位，自定义端点转为不发送 strict；内置定义的 strict-prefer 由 SDK 按能力回退。本仓库从不设置工具 schema 的 `strict`，全部继承 SDK 默认。
+- **`Model.inputLimits.images.resize`（新增，需显式配置）**：本仓库自定义端点模型未设 `inputLimits`，沿用 SDK 保守内置默认。它作用于**进入历史之前**的新图像；`image_too_large`（`SessionManager.ts:7432`，提示「本会话无法恢复」）针对**已嵌入历史**的超限图像，0.87.0 **未修复**该路径——新能力是修复它的前提，不是修复本身。
+- **记账修正**：不再沿用编辑/压缩之前的旧 usage；被放弃的模型尝试不再留在后续 provider 上下文。影响与 durable ledger 的读数一致性，由 `context-usage` / `durable-model-stream` / `length-continuation` 测试覆盖。
+- **缓存预热**：修了定时器或扩展决策延迟时重建过期缓存。
+
+#### 验证
+
+`typecheck:all` 通过；lint 与升级前基线逐项一致（115/0、1/0）。测试与 0.86.1 基线逐项对齐，无新增失败：`pi-agent-server` 185/0（基线 183/0，差额为本次新增 2 个用例）、`apps/electron` 957/1、`session-tools-core` 92/2、`packages/shared` 5、三个 isolated 文件——后四项均为升级前既存失败，已在 0.86.1 上单独复现确认。新增用例覆盖三种收敛情形，并断言 provider 实际收到的消息（含「再次收敛保留用户输入」与「遮蔽被放弃行」）。
+
 ### 2026-09-20 Pi 0.86.0 升级核对
 
 0.86.0 的两项变化直接影响本仓库，处理结论如下：
@@ -65,6 +103,7 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 | 提示缓存 | `cacheRetention` / `PI_CACHE_RETENTION` 原生映射，显式值优先 | `packages/shared/src/agent/pi-agent.ts`；`packages/pi-agent-server/src/durable-model-stream.ts` |
 | provider 请求上下文 | 归一化 transcript（`TranscriptContext`）；提示/工具声明在 system 消息内，请求诊断经 `getCurrentSystemPrompt()` / `getCurrentTools()` 回放 | `packages/pi-agent-server/src/request-diagnostics.ts` |
 | 系统提示送达 | loader `systemPromptOverride` + 内联 extension `before_agent_start` 返回 forced prompt，投影为请求头部 system 消息 | `packages/pi-agent-server/src/phaneris-resource-loader.ts`；`packages/pi-agent-server/src/system-prompt-delivery.test.ts` |
+| canonical context 收敛 | durable 已提交事实经 `appendContextEdit` 只追加地收敛进 Pi 投影（`aligned`/`appended`/`replaced`），不改写原始消息内容，不轮换会话文件 | `packages/pi-agent-server/src/canonical-model-context.ts`；`packages/pi-agent-server/src/index.ts:2137` |
 | 提示缓存预热 | 显式关闭（`cacheWarming: 'off'`）；刷新不经 durable 边界，暂不允许 ledger 外花费 | `packages/pi-agent-server/src/session-settings.ts` |
 | Fallback / handoff / 消息转换 | Pi SDK 在 `pi-ai` 内部自动完成跨 provider 的 thinking/tool 消息转换 | SDK 默认行为，无需显式接入 |
 

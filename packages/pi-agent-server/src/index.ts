@@ -168,7 +168,7 @@ import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '../../shared/src/durable-runtime/types.ts';
 import { attachDurableToolContext, durableToolFromContext } from './durable-tool-context.ts';
-import { canonicalContextToPiMessages } from './canonical-model-context.ts';
+import { convergeCanonicalContext } from './canonical-model-context.ts';
 import {
   hasSupportedBaseUrlScheme,
   isLocalhostUrl,
@@ -2140,9 +2140,14 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
       } else if (msg.canonicalContext.cursor < lastCanonicalContextCursor) {
         debugLog(`[canonical-context] stale cursor ${msg.canonicalContext.cursor} < ${lastCanonicalContextCursor}; retaining Pi transcript`);
       } else {
-        session.agent.state.messages = canonicalContextToPiMessages(msg.canonicalContext, session.agent.state.model);
+        // Pi 0.87.0 made SessionManager authoritative for provider context, so the
+        // durable facts are installed as append-only context edits rather than by
+        // replacing agent state — see convergeCanonicalContext for why the three
+        // cases matter and when nothing is written.
+        const outcome = convergeCanonicalContext(session.sessionManager, msg.canonicalContext, session.agent.state.model);
+        if (outcome !== 'aligned') session.refreshContext();
         lastCanonicalContextCursor = msg.canonicalContext.cursor;
-        debugLog(`[canonical-context] applied ${msg.canonicalContext.items.length} committed facts at cursor ${msg.canonicalContext.cursor}`);
+        debugLog(`[canonical-context] ${outcome} ${msg.canonicalContext.items.length} committed facts at cursor ${msg.canonicalContext.cursor}`);
       }
     }
 

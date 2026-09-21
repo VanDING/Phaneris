@@ -12,7 +12,7 @@ import {
 } from '@earendil-works/pi-ai';
 import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSystemPrompt } from './phaneris-resource-loader.ts';
 import { createPhanerisSettingsManager } from './session-settings.ts';
-import { canonicalContextToPiMessages } from './canonical-model-context.ts';
+import { convergeCanonicalContext } from './canonical-model-context.ts';
 
 /**
  * Pi SDK 0.86.0 keeps the system prompt in the transcript's system messages and
@@ -33,6 +33,15 @@ function userText(message: { content?: unknown } | undefined): string {
   if (!Array.isArray(content)) return '';
   return content.filter(part => part?.type === 'text').map(part => part.text).join('');
 }
+
+/** Two committed durable facts, as the ledger would report them. */
+const CANONICAL_CONTEXT = {
+  cursor: 2,
+  items: [
+    { kind: 'user' as const, eventId: 'e1', seq: 1, operationId: 'run-1', content: 'committed question' },
+    { kind: 'assistant' as const, eventId: 'e2', seq: 2, operationId: 'run-1', content: 'committed answer' },
+  ],
+};
 
 function createHarness() {
   const dir = mkdtempSync(join(tmpdir(), 'phaneris-prompt-delivery-'));
@@ -92,17 +101,74 @@ test('restores a canonical transcript without losing the prompt', async () => {
     tools: [],
   });
   try {
-    session.agent.state.messages = canonicalContextToPiMessages({
-      cursor: 2,
-      items: [
-        { kind: 'user', eventId: 'e1', seq: 1, operationId: 'run-1', content: 'committed question' },
-        { kind: 'assistant', eventId: 'e2', seq: 2, operationId: 'run-1', content: 'committed answer' },
-      ],
-    }, model);
+    // Pi 0.87.0 made SessionManager authoritative, so the durable facts are
+    // installed as append-only context edits; assigning agent state no longer
+    // reaches the provider.
+    const outcome = convergeCanonicalContext(session.sessionManager, CANONICAL_CONTEXT, model);
+    expect(outcome).not.toBe('aligned');
+    session.refreshContext();
 
     await session.prompt('hello');
     expect(requests).toHaveLength(1);
     expect(getCurrentSystemPrompt(requests[0]!.messages)).toBe('PHANERIS_PROMPT');
+    expect(requests[0]!.messages.filter(message => message.role === 'user').map(userText))
+      .toEqual(['committed question', 'hello']);
+  } finally {
+    session.dispose();
+  }
+});
+
+test('keeps input the user added after the last commit when converging again', async () => {
+  const { dir, requests, runtime } = createHarness();
+  setPhanerisSystemPrompt('PHANERIS_PROMPT');
+  const { session } = await createAgentSession({
+    cwd: dir, model, modelRuntime: runtime,
+    sessionManager: SessionManager.inMemory(dir),
+    settingsManager: createPhanerisSettingsManager(),
+    resourceLoader: await createPhanerisResourceLoader({ cwd: dir, agentDir: join(dir, '.pi') }),
+    tools: [],
+  });
+  try {
+    convergeCanonicalContext(session.sessionManager, CANONICAL_CONTEXT, model);
+    session.refreshContext();
+    await session.prompt('hello');
+
+    // Same canonical facts again: the transcript now carries canonical plus the
+    // user's own turn, so convergence must be a no-op rather than a rewrite.
+    const outcome = convergeCanonicalContext(session.sessionManager, CANONICAL_CONTEXT, model);
+    expect(outcome).toBe('aligned');
+
+    await session.prompt('second');
+    expect(requests).toHaveLength(2);
+    expect(requests[1]!.messages.filter(message => message.role === 'user').map(userText))
+      .toEqual(['committed question', 'hello', 'second']);
+  } finally {
+    session.dispose();
+  }
+});
+
+test('masks abandoned rows instead of letting them reach the provider', async () => {
+  const { dir, requests, runtime } = createHarness();
+  setPhanerisSystemPrompt('PHANERIS_PROMPT');
+  const { session } = await createAgentSession({
+    cwd: dir, model, modelRuntime: runtime,
+    sessionManager: SessionManager.inMemory(dir),
+    settingsManager: createPhanerisSettingsManager(),
+    resourceLoader: await createPhanerisResourceLoader({ cwd: dir, agentDir: join(dir, '.pi') }),
+    tools: [],
+  });
+  try {
+    // A row the canonical facts do not own, as an abandoned provider attempt
+    // would leave behind.
+    session.sessionManager.appendMessage({
+      role: 'user', content: 'abandoned attempt', timestamp: 1,
+    } as never);
+
+    const outcome = convergeCanonicalContext(session.sessionManager, CANONICAL_CONTEXT, model);
+    expect(outcome).toBe('replaced');
+    session.refreshContext();
+
+    await session.prompt('hello');
     expect(requests[0]!.messages.filter(message => message.role === 'user').map(userText))
       .toEqual(['committed question', 'hello']);
   } finally {
