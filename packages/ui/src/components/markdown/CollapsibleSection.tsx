@@ -1,29 +1,9 @@
 import * as React from 'react'
 import { ChevronRight } from 'lucide-react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion } from 'motion/react'
 import { cn } from '../../lib/utils'
-import { MOTION_DURATION, MOTION_EASE, MOTION_SPRING } from '../../lib/motion'
-
-/**
- * Simple animated collapsible content wrapper.
- */
-function AnimatedCollapsibleContent({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) {
-  return (
-    <AnimatePresence initial={false}>
-      {isOpen && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: MOTION_DURATION.emphasis, ease: MOTION_EASE.move }}
-          className="overflow-hidden"
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
+import { MOTION_SPRING } from '../../lib/motion'
+import { InlineExpand } from '../ui/inline-expand'
 
 interface CollapsibleSectionProps {
   sectionId: string
@@ -93,11 +73,11 @@ export function CollapsibleSection({
 
       {/* Collapsible content */}
       {hasContent && (
-        <AnimatedCollapsibleContent isOpen={isExpanded}>
+        <InlineExpand isOpen={isExpanded}>
           <div className="collapsible-section-content">
             {content}
           </div>
-        </AnimatedCollapsibleContent>
+        </InlineExpand>
       )}
     </div>
   )

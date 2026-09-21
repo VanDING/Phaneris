@@ -8,7 +8,7 @@
  */
 
 import type { ReactNode } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '@phaneris/ui/motion'
 
 interface PanelEmptyStateProps {
@@ -21,7 +21,7 @@ interface PanelEmptyStateProps {
 }
 
 export function PanelEmptyState({ title, hint, icon }: PanelEmptyStateProps) {
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
 
   return (
     <motion.div

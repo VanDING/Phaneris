@@ -8,6 +8,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
+import { selectAtom } from 'jotai/utils'
 import { AlertCircle, Globe, Copy, RefreshCw, Link2Off, Info, Pencil } from 'lucide-react'
 import { ChatDisplay, type ChatDisplayHandle } from '@/components/app-shell/ChatDisplay'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
@@ -19,12 +20,13 @@ import { toast } from 'sonner'
 import { PanelHeaderCenterButton } from '@/components/ui/PanelHeaderCenterButton'
 import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { StyledDropdownMenuContent, StyledDropdownMenuItem, StyledDropdownMenuSeparator } from '@/components/ui/styled-dropdown'
-import { useAppShellContext, usePendingPermission, usePendingCredential, usePendingQuestion, useSessionOptionsFor, useSession as useSessionData } from '@/context/AppShellContext'
+import { useAppShellContext, usePendingPermission, usePendingCredential, usePendingQuestion, useSessionOptionsFor } from '@/context/AppShellContext'
 import { rendererPerf } from '@/lib/perf'
 import { navigate, routes } from '@/lib/navigate'
 import { coerceInputText } from '@/lib/input-text'
 import { deriveSessionMessagesLoadState, formatSessionLoadFailure } from '@/lib/session-load'
-import { ensureSessionMessagesLoadedAtom, forceSessionMessagesReloadAtom, loadedSessionsAtom, sessionMetaMapAtom } from '@/atoms/sessions'
+import { ensureSessionMessagesLoadedAtom, forceSessionMessagesReloadAtom, loadedSessionsAtom, sessionMetaMapAtom, sessionAtomFamily } from '@/atoms/sessions'
+import { selectChatSession, equalChatSessions } from '@/lib/chat-session-view'
 import { kanbanEditorTargetAtom } from '@/atoms/kanban'
 import { getSessionTitle } from '@/utils/session'
 // Model resolution: connection.defaultModel (no hardcoded defaults)
@@ -92,8 +94,13 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     setPermissionMode,
   } = useSessionOptionsFor(sessionId)
 
-  // Use per-session atom for isolated updates
-  const session = useSessionData(sessionId)
+  // Search reads the live transcript; the normal buffered view need not render
+  // invisible text deltas. The underlying session remains complete for all readers.
+  const displaySessionAtom = React.useMemo(() => {
+    const source = sessionAtomFamily(sessionId)
+    return isSearchModeActive ? source : selectAtom(source, selectChatSession, equalChatSessions)
+  }, [sessionId, isSearchModeActive])
+  const session = useAtomValue(displaySessionAtom)
 
   // Track if messages are loaded for this session (for lazy loading)
   const loadedSessions = useAtomValue(loadedSessionsAtom)

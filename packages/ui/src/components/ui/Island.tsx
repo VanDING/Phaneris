@@ -317,6 +317,24 @@ export function Island({
     [cfg.duration]
   )
 
+  // Hosts may only unmount once the hide has settled, so the signal comes from
+  // the exit animation itself rather than from a second clock guessing how long
+  // the spring takes. The fallback timer below shares this guard, so a host
+  // never sees a duplicate completion, and a re-show arms the guard again.
+  const hasNotifiedExitRef = React.useRef(false)
+  const onExitCompleteRef = React.useRef(onExitComplete)
+  onExitCompleteRef.current = onExitComplete
+
+  const notifyExitComplete = React.useCallback(() => {
+    if (hasNotifiedExitRef.current) return
+    hasNotifiedExitRef.current = true
+    onExitCompleteRef.current?.()
+  }, [])
+
+  React.useEffect(() => {
+    if (isVisible) hasNotifiedExitRef.current = false
+  }, [isVisible])
+
   type ResolvedView = {
     id: string
     anchorX?: AnchorX
@@ -609,18 +627,24 @@ export function Island({
     if (isVisible || !onExitComplete) return
 
     if (typeof window === 'undefined') {
-      onExitComplete()
+      // No timers in this environment: report immediately rather than never.
+      notifyExitComplete()
       return
     }
 
-    const timeout = window.setTimeout(() => {
-      onExitComplete()
-    }, Math.max(120, cfg.duration * 1000 + 40))
+    // Fallback only. The exit animation reports completion first; this covers
+    // the cases where no animation runs at all (mounted hidden, zero-duration
+    // transitions) and is deliberately later than the spring so a slow frame
+    // cannot cut an exit short.
+    const timeout = window.setTimeout(
+      notifyExitComplete,
+      Math.max(120, cfg.duration * 1000 + MOTION_DURATION.emphasis * 1000),
+    )
 
     return () => {
       window.clearTimeout(timeout)
     }
-  }, [isVisible, onExitComplete, cfg.duration])
+  }, [isVisible, onExitComplete, cfg.duration, notifyExitComplete])
 
   React.useEffect(() => {
     if (!activeView || !onActiveViewSizeChange) return
@@ -749,6 +773,15 @@ export function Island({
     [isPreShowWarmup, layoutTransition]
   )
 
+  const handleShellAnimationComplete = React.useCallback((definition: unknown) => {
+    // Variant labels are passed through, so the layout animation (which reports
+    // through onLayoutAnimationComplete) cannot be mistaken for the exit.
+    if (definition !== 'hidden') return
+    notifyExitComplete()
+  }, [notifyExitComplete])
+
+  const shellVariants = { visible: visiblePose, hidden: exitHiddenPose }
+
   return (
     <IslandAnimationContext.Provider value={cfg}>
       {shouldBlockOutside && typeof document !== 'undefined' && ReactDOM.createPortal(
@@ -776,15 +809,21 @@ export function Island({
         key={replayEntryKey != null ? `replay:${String(replayEntryKey)}` : 'replay:default'}
         ref={shellRef}
         layout
-        initial={shouldAnimateFromHiddenOnMount ? hiddenPose : false}
-        animate={effectiveVisible ? visiblePose : exitHiddenPose}
+        variants={shellVariants}
+        initial={shouldAnimateFromHiddenOnMount ? 'hidden' : false}
+        animate={effectiveVisible ? 'visible' : 'hidden'}
         transition={shellTransition}
+        onAnimationComplete={handleShellAnimationComplete}
         style={{ borderRadius: radius, transformOrigin: '50% 50%' }}
         role={isDialogMode ? 'dialog' : undefined}
         aria-modal={isDialogMode ? true : undefined}
         tabIndex={isDialogMode ? -1 : undefined}
         data-ca-island-dialog={isDialogMode ? 'true' : undefined}
         data-state={effectiveVisible ? 'open' : 'closed'}
+        // A hidden island is still mounted and still paints through the exit, so
+        // it has to leave the click, keyboard and screen-reader order right away.
+        inert={!effectiveVisible}
+        aria-hidden={!effectiveVisible || undefined}
         className={cn('mx-auto w-fit overflow-hidden border border-border/50 bg-background shadow-strong', className)}
       >
         <div className="relative">

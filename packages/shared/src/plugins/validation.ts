@@ -36,6 +36,7 @@ const ALLOWED_MANIFEST_FIELDS = new Set([
   'name',
   'version',
   'description',
+  'icon',
   'author',
   'homepage',
   'repository',
@@ -109,7 +110,7 @@ export function validatePluginManifest(raw: unknown): ManifestValidationResult {
   }
 
   // --- optional metadata: JSON types only, never URL/SemVer/SPDX checks (§5.4) ---
-  for (const field of ['version', 'description', 'homepage', 'repository', 'license'] as const) {
+  for (const field of ['version', 'description', 'icon', 'homepage', 'repository', 'license'] as const) {
     const value = record[field];
     if (value !== undefined && typeof value !== 'string') {
       errors.push(`field "${field}" must be a string`);
@@ -148,6 +149,7 @@ export function validatePluginManifest(raw: unknown): ManifestValidationResult {
       name: name as string,
       version: record.version as string | undefined,
       description: record.description as string | undefined,
+      icon: record.icon as string | undefined,
       author: author === 'invalid' || author === undefined ? undefined : author,
       homepage: record.homepage as string | undefined,
       repository: record.repository as string | undefined,

@@ -2,7 +2,7 @@
 
 日期：2026-09-08，2026-09-14 修订（命名决策改为 Phaneris、补充命名理由、更新核查基线）。核查基线：`b544af79`，根包版本 `0.13.3`。首次成稿基线为 `d6355f11`；两次核查之间上游未进入本地历史，工作分支领先 `origin/main` 298 个提交、落后 0。
 
-状态：实施中。A 阶段（身份冻结）已完成，记录见[Phaneris 分叉 A 阶段记录](phaneris-phase-a-identity-freeze.md)：技术身份已冻结进仓库根的 `phaneris.identity.json` 单一来源，并配有生成器、漂移校验与带理由的残留允许列表。B 阶段（品牌与代码身份）的代码身份、应用身份、数据路径与本地品牌表面已完成并记录于[Phaneris 分叉 B 阶段记录](phaneris-phase-b-brand-identity.md)；服务端点与更新链路仍指向上游，属 D 阶段，因此现在**不可对外发布**。npm 组织名、域名与商标的可用性仍未验证——见 A 阶段记录第 3 节；在有结论前不得对外声明命名空间已归属本项目。未变更远程仓库、应用配置或用户数据。
+状态：实施中。A 阶段（身份冻结）已完成，记录见[Phaneris 分叉 A 阶段记录](../architecture/phaneris-phase-a-identity-freeze.md)：技术身份已冻结进仓库根的 `phaneris.identity.json` 单一来源，并配有生成器、漂移校验与带理由的残留允许列表。B 阶段（品牌与代码身份）的代码身份、应用身份、数据路径与本地品牌表面已完成并记录于[Phaneris 分叉 B 阶段记录](../architecture/phaneris-phase-b-brand-identity.md)；服务端点与更新链路仍指向上游，属 D 阶段，因此现在**不可对外发布**。npm 组织名、域名与商标的可用性仍未验证——见 A 阶段记录第 3 节；在有结论前不得对外声明命名空间已归属本项目。未变更远程仓库、应用配置或用户数据。
 
 修订说明：本文件原路径为 `docs/architecture/cizifo-fork-plan.md`，正文曾使用工作名 Sisyphus Agent。经核查（见第 2 节命名理由），两个名称均已放弃，改用 Phaneris。文件同时重命名，全仓无其他文件引用旧路径。
 
@@ -234,7 +234,7 @@ README 保留英文与中文两份；更新贡献指南、问题模板、安全�
 
 ## 9. 实施前待确定与外部操作边界
 
-相关文档：本方案的上游风险与优先级判断见[项目综合评估与发展路线图](../project-assessment-and-roadmap-2026-08-31.md)第 4.1 节（独立品牌与发布信任链，P0）；公开发布前的签名、校验和、SBOM 与隐私门槛见[发布就绪清单](../release-readiness.md)的"Branding and update chain"一节。
+相关文档：本方案的上游风险与优先级判断见[项目综合评估与发展路线图](project-assessment-and-roadmap-2026-08-31.md)第 4.1 节（独立品牌与发布信任链，P0）；公开发布前的签名、校验和、SBOM 与隐私门槛见[发布就绪清单](../release-readiness.md)的"Branding and update chain"一节。
 
 不阻塞规划的建议默认值：Windows 首先验收，其他平台以实际设备/CI条件为准；GitHub Releases 为第一发布渠道；域名未就绪时关闭依赖云端的入口；内部命名在首次独立版本中统一。
 

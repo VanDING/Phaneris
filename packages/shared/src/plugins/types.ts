@@ -82,6 +82,8 @@ export interface PluginManifest {
   name: string;
   version?: string;
   description?: string;
+  /** Emoji or URL icon, matching source and skill icon conventions. */
+  icon?: string;
   author?: PluginAuthor;
   homepage?: string;
   repository?: string;
@@ -150,6 +152,7 @@ export interface LoadedPlugin {
 
 /** Why a plugin directory could not be loaded. Fatal — the plugin is unusable. */
 export interface PluginLoadError {
+  pluginName?: string;
   /** Plugin-relative path or the manifest path. */
   path: string;
   message: string;

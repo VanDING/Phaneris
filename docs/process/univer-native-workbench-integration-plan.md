@@ -73,7 +73,7 @@
 - M4 已完成 Univer OSS Sheet adapter、Headless/renderer snapshot 操作、懒加载编辑器、typed mutation、只读接受态和真实窗口“编辑→保存→提交→接受”闭环；
 - 当前尚未完成的是跨平台 packaged smoke、M5 的其他内容引擎决策，以及 M6 的高保真 Office 商业决策门。
 
-### 0.2 里程碑状态（不得把“本轮完成”误读为“全计划完成”）
+### 0.2 里程碑状态（当前阶段）
 
 | 里程碑 | 当前状态 | 剩余工作 |
 |---|---|---|

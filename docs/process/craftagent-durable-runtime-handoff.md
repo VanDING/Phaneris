@@ -6,7 +6,7 @@
 >
 > 当前性质：历史实施交接记录；Phase 0–5 已进入 `main`。现行架构合同以配套 ADR 和当前代码为准，本文中的“当前分支”“尚未提交”与中间缺口均按记录日期理解。
 >
-> 配套 ADR：[architecture/durable-agent-runtime.md](./architecture/durable-agent-runtime.md)
+> 配套 ADR：[architecture/durable-agent-runtime.md](../architecture/durable-agent-runtime.md)
 
 ## 1. 文档目的
 

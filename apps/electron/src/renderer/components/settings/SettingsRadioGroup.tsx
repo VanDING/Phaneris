@@ -7,8 +7,7 @@
 
 import * as React from 'react'
 import { useRadioGroupNavigation } from '@/components/ui/radio-group-navigation'
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
-import { motionTween } from '@phaneris/ui/motion'
+import { InlineExpand } from '@phaneris/ui'
 import { cn } from '@/lib/utils'
 import { settingsUI } from './SettingsUIConstants'
 
@@ -146,7 +145,6 @@ export function SettingsRadioCard({
   inCard,
 }: SettingsRadioCardProps) {
   const context = useRadioGroupContext()
-  const reduceMotion = useReducedMotion()
   // Support both context-based and standalone usage
   const isSelected = context ? context.value === value : (selected ?? false)
   const handleClick = context ? () => context.onValueChange(value) : onClick
@@ -211,21 +209,11 @@ export function SettingsRadioCard({
       </button>
 
       {/* Expanded content */}
-      <AnimatePresence initial={false}>
-        {isSelected && expandedContent && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionTween(reduceMotion, 'standard', 'move')}
-            className="overflow-hidden"
-          >
-            <div className="px-4 pb-4 pt-0">
-              <div className="pl-[30px]">{expandedContent}</div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <InlineExpand isOpen={isSelected && !!expandedContent}>
+        <div className="px-4 pb-4 pt-0">
+          <div className="pl-[30px]">{expandedContent}</div>
+        </div>
+      </InlineExpand>
     </div>
   )
 }
@@ -260,7 +248,6 @@ export function SettingsRadioOption({
   className,
 }: SettingsRadioOptionProps) {
   const context = useRadioGroupContext()
-  const reduceMotion = useReducedMotion()
   if (!context) {
     throw new Error('SettingsRadioOption must be used within SettingsRadioGroup')
   }

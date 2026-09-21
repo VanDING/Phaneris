@@ -1059,6 +1059,7 @@
   "pluginsList.pluginBadge": "plugin",
   "pluginsList.pluginNotFound": "A(z) \"{{name}}\" bővítmény nincs telepítve ebben a munkaterületben.",
   "pluginsList.promptAbsent": "Nem",
+  "pluginsList.promptDescription": "Az aktív plugin mellett minden körben alkalmazott utasítások.",
   "pluginsList.promptFragment": "Állandó utasítás",
   "pluginsList.promptPresent": "Igen — minden körben hozzáadva",
   "pluginsList.removesNone": "Semmi – ehhez a csomaghoz nem tartozik saját erőforrás",

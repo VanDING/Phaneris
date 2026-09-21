@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-21",
+  "commit": "--help",
+  "scope": "rg-visible TSX/CSS/HTML under apps, packages, docs and hero-demo; resources excluded as bundled third-party/user artifacts. Supplemental TS scan includes motion mechanisms outside visual components. Hits are discovery candidates, not findings or proof of manual review.",
+  "counts": {},
+  "totalVisualFiles": 0,
+  "supplementalScanned": 0,
+  "files": [],
+  "supplemental": []
+}

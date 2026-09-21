@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '@phaneris/ui/motion'
 import { Database, Folder, MessagesSquare, PanelLeft, Tags } from 'lucide-react'
 import { LeftSidebar } from '@/components/app-shell/LeftSidebar'
@@ -30,7 +30,7 @@ function PreviewContent() {
   const [selected, setSelected] = useState('nav-parent')
   const [items, setItems] = useState(demoSessions)
   const [grouping, setGrouping] = useState<ChatGroupingMode>('date')
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const activity = useMemo(() => computeProfileActivity(Array.from({ length: 160 }, (_, i) => ({ createdAt: now - ((i * 17) % 365) * 86400000 }))), [])
   return (
     <AppShellProvider value={desktop}>

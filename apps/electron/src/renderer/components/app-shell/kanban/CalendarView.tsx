@@ -12,7 +12,7 @@
  */
 
 import * as React from 'react'
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react'
+import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { Plus, Search } from 'lucide-react'
 import { useAtomValue } from 'jotai'
 import { toast } from 'sonner'
@@ -41,7 +41,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import type { CalendarEntry } from '@phaneris/shared/protocol'
 import { queryWorkItems, workItemDateKey, type WorkItem } from '@phaneris/shared/work-items/browser'
 import { KanbanProjectFilter, type KanbanProjectFilterOption } from './KanbanProjectFilter'
-import { motionSpring, motionTween } from '@phaneris/ui/motion'
+import { motionSpring } from '@phaneris/ui/motion'
+import { ContentSwap } from '@/components/ui/content-swap'
 
 type ViewMode = 'day' | 'week' | 'month'
 
@@ -111,7 +112,7 @@ export function CalendarView() {
   const { activeWorkspaceId, onCreateSession, trailingAction, expandButton } = useAppShellContext()
   const compensateForStoplight = useCompensateForStoplight()
   const { t } = useTranslation()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const { navigate, navigateToSession } = useNavigation()
   const { entries, update, remove } = useCalendarEntries(activeWorkspaceId ?? null)
   const { items: workItems, update: updateWorkItem } = useWorkItems(activeWorkspaceId ?? null)
@@ -889,21 +890,12 @@ export function CalendarView() {
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 bg-foreground/[0.012] p-2 @min-[800px]/panel:p-4">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={view}
-            className="h-full min-h-0"
-            initial={reduceMotion ? false : { opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -3 }}
-            transition={motionTween(reduceMotion, 'standard', 'enter')}
-          >
-            {view === 'day' && renderDay()}
-            {view === 'week' && renderWeek()}
-            {view === 'month' && renderMonth()}
-          </motion.div>
-        </AnimatePresence>
+      <div className="relative min-h-0 flex-1 bg-foreground/[0.012] p-2 @min-[800px]/panel:p-4">
+        <ContentSwap swapKey={view} className="h-full min-h-0">
+          {view === 'day' && renderDay()}
+          {view === 'week' && renderWeek()}
+          {view === 'month' && renderMonth()}
+        </ContentSwap>
       </div>
     </div>
   )

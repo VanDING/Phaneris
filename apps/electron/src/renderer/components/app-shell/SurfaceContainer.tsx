@@ -9,9 +9,9 @@
  * deleting the tab.
  */
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionSpring, motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import {
@@ -31,6 +31,7 @@ import { SurfaceSlot } from './SurfaceSlot'
 import { WorkbenchResizeSash } from './WorkbenchResizeSash'
 import { ContextWorkbenchTabs } from './ContextWorkbenchTabs'
 import { CompactPanelTransition } from './CompactPanelTransition'
+import { CompactWorkbenchTransition } from './CompactWorkbenchTransition'
 import {
   PANEL_GAP,
   PANEL_EDGE_INSET,
@@ -69,7 +70,11 @@ export function SurfaceContainer({
   const restoreWorkbench = useSetAtom(setExpandedWorkbenchItemAtom)
   const containerRef = useRef<HTMLDivElement>(null)
   const lastFocusedElement = useRef<HTMLElement | null>(null)
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
+  // Dragging the workbench divider writes the width on every frame, so the
+  // layout transition has to be off for as long as the pointer owns it.
+  const [isSashDragging, setIsSashDragging] = useState(false)
+  const panelsResizing = isResizing || isSashDragging
 
   useEffect(() => {
     if (!fullWidth) return
@@ -97,7 +102,7 @@ export function SurfaceContainer({
   const hasSidebar = sidebarWidth > 0
   const hasNavigator = navigatorWidth > 0 && (!fullWidth || isCompact)
   const isLeftEdge = !hasSidebar && !hasNavigator
-  const transition = (isResizing || isCompact) ? { duration: 0 } : motionSpring(reduceMotion, 'responsive')
+  const transition = (panelsResizing || isCompact) ? { duration: 0 } : motionSpring(reduceMotion, 'responsive')
 
   const handleCompactPrimaryBack = useCallback(() => {
     if (!primaryNavState) return
@@ -121,7 +126,6 @@ export function SurfaceContainer({
   }, [fullWidth, hasSidebar, hasNavigator, workbenchEntryId])
 
   if (isCompact) {
-    const visibleEntry = compactWorkbenchActive ? workbenchEntry : primaryEntry
     return (
       <div
         ref={containerRef}
@@ -154,22 +158,39 @@ export function SurfaceContainer({
           </CompactPanelTransition>
         )}
 
-        {visibleEntry && (
+        {primaryEntry && (
           <CompactPanelTransition role="detail" isDetailActive={hasSelectedContent}>
-            <div className="flex h-full w-full">
-              <SurfaceSlot
-                key={visibleEntry.id}
-                entry={visibleEntry}
-                isOnly
-                isFocusedPanel
-                isSidebarAndNavigatorHidden={isSidebarAndNavigatorHidden}
-                isAtLeftEdge={isLeftEdge}
-                isAtRightEdge
-                isCompact
-                onCompactBack={compactWorkbenchActive ? () => collapseWorkbench() : handleCompactPrimaryBack}
-                topSlot={compactWorkbenchActive ? <ContextWorkbenchTabs state={workbench} /> : undefined}
-              />
-            </div>
+            <CompactWorkbenchTransition
+              isWorkbenchActive={compactWorkbenchActive}
+              workbenchKey={workbenchEntry?.id}
+              primary={(
+                <SurfaceSlot
+                  key={primaryEntry.id}
+                  entry={primaryEntry}
+                  isOnly
+                  isFocusedPanel={!compactWorkbenchActive}
+                  isSidebarAndNavigatorHidden={isSidebarAndNavigatorHidden}
+                  isAtLeftEdge={isLeftEdge}
+                  isAtRightEdge
+                  isCompact
+                  onCompactBack={handleCompactPrimaryBack}
+                />
+              )}
+              workbench={compactWorkbenchActive && workbenchEntry ? (
+                <SurfaceSlot
+                  key={workbenchEntry.id}
+                  entry={workbenchEntry}
+                  isOnly
+                  isFocusedPanel
+                  isSidebarAndNavigatorHidden={isSidebarAndNavigatorHidden}
+                  isAtLeftEdge={isLeftEdge}
+                  isAtRightEdge
+                  isCompact
+                  onCompactBack={() => collapseWorkbench()}
+                  topSlot={<ContextWorkbenchTabs state={workbench} />}
+                />
+              ) : null}
+            />
           </CompactPanelTransition>
         )}
       </div>
@@ -256,6 +277,7 @@ export function SurfaceContainer({
               isSidebarAndNavigatorHidden={isSidebarAndNavigatorHidden}
               isAtLeftEdge={index === 0 && isLeftEdge}
               isAtRightEdge={index === primaryEntries.length - 1 && !workbenchEntry}
+              isResizing={panelsResizing}
             />
           ))
         ) : (
@@ -271,7 +293,13 @@ export function SurfaceContainer({
             isSidebarAndNavigatorHidden={isSidebarAndNavigatorHidden}
             isAtLeftEdge={isLeftEdge}
             isAtRightEdge
-            sash={fullWidth ? undefined : <WorkbenchResizeSash primaryWidth={workbench.primaryWidth} />}
+            isResizing={panelsResizing}
+            sash={fullWidth ? undefined : (
+              <WorkbenchResizeSash
+                primaryWidth={workbench.primaryWidth}
+                onDraggingChange={setIsSashDragging}
+              />
+            )}
             topSlot={<ContextWorkbenchTabs state={workbench} />}
           />
         )}

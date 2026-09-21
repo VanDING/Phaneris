@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getMenuIcon } from './menu-icons'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence, useIsPresent } from 'motion/react'
 import { MOTION_DURATION, MOTION_SPRING } from '@phaneris/ui/motion'
 import { useRegisterDismissibleLayer } from '@/context/DismissibleLayerContext'
 import { PhanerisSymbol } from '../icons/PhanerisSymbol'
@@ -113,6 +113,30 @@ export function MobileAppMenu(props: AppMenuProps) {
   const close = React.useCallback(() => dispatch({ type: 'close' }), [])
   const pop = React.useCallback(() => dispatch({ type: 'pop' }), [])
 
+  // Rows that opened a sub-page, keyed by the page they opened. A popped page
+  // takes its back button (and therefore keyboard focus) with it, so returning
+  // focus to the row that opened it keeps the stack operable from the keyboard.
+  // Keying by page id keeps this in step with the reducer, which ignores a
+  // duplicate push rather than growing the stack.
+  const focusReturnRef = React.useRef<Partial<Record<MobileMenuPageId, HTMLElement>>>({})
+  const previousStackRef = React.useRef(state.stack)
+
+  React.useEffect(() => {
+    const previousStack = previousStackRef.current
+    previousStackRef.current = state.stack
+    // Closing the sheet resets the stack as well; the sheet is going away and
+    // focus belongs to whoever owns it next, not to a row inside an exit.
+    if (!state.isOpen || state.stack.length >= previousStack.length) return
+
+    const trigger = focusReturnRef.current[previousStack[previousStack.length - 1]!]
+    if (!trigger?.isConnected) return
+
+    const active = document.activeElement
+    const stranded = !(active instanceof HTMLElement) || active === document.body
+      || active.closest('[data-page-present="false"]') !== null
+    if (stranded) trigger.focus({ preventScroll: true })
+  }, [state.stack, state.isOpen])
+
   // NOTE: We deliberately do NOT bridge to `window.history` here. NavigationContext
   // owns `history.pushState` for the app's routing, and any `history.back()` call
   // on close races with route changes fired from menu actions (e.g. Settings → AI),
@@ -144,9 +168,18 @@ export function MobileAppMenu(props: AppMenuProps) {
 
   const dispatchAction = (row: MobileMenuRow) => {
     switch (row.action.kind) {
-      case 'navigate':
+      case 'navigate': {
+        // Remember where the sub-page was opened from, before the row's own
+        // focus is lost with it. `body` means nothing was focused (a synthetic
+        // activation, or a click on non-focusable chrome) and focusing it back
+        // would be a no-op, so it is not recorded. See the pop effect above.
+        const active = document.activeElement
+        if (active instanceof HTMLElement && active !== document.body) {
+          focusReturnRef.current[row.action.to] = active
+        }
         dispatch({ type: 'push', page: row.action.to })
         return
+      }
       case 'callback':
         switch (row.action.key) {
           case 'newChat': props.onNewChat(); break
@@ -176,7 +209,16 @@ export function MobileAppMenu(props: AppMenuProps) {
   return (
     <>
       <TopBarButton
-        onClick={() => state.isOpen ? close() : dispatch({ type: 'open' })}
+        onClick={() => {
+          if (state.isOpen) {
+            close()
+            return
+          }
+          // A fresh stack: no rows from a previous session can be valid targets.
+          focusReturnRef.current = {}
+          previousStackRef.current = ['root']
+          dispatch({ type: 'open' })
+        }}
         aria-label={t('menu.appMenu')}
         data-state={state.isOpen ? 'open' : 'closed'}
         className="rounded-[8px]"
@@ -258,47 +300,101 @@ interface PageStackProps {
   t: (key: string) => string
 }
 
+interface StackPageProps {
+  page: PageDefinition
+  depth: number
+  /** Deepest page in the stack: the only one that may take input. */
+  isTop: boolean
+  onPop: () => void
+  onClose: () => void
+  onActivateRow: (row: MobileMenuRow) => void
+  t: (key: string) => string
+}
+
+/**
+ * One page of the menu stack.
+ *
+ * Deeper pages are opaque and cover the ones below, which is why the lower
+ * pages stay mounted — the stack keeps each page's scroll position and state.
+ * Being covered is not the same as being gone, though: every page except the
+ * top one is `inert` and out of the accessibility tree so Tab, Escape and
+ * screen-reader order follow what is actually visible.
+ *
+ * `useIsPresent` carries the same guarantee through the exit animation. It is
+ * the only signal that stays live after a page leaves the stack, because
+ * AnimatePresence re-renders the exiting element with its previous props.
+ */
+function StackPage({ page, depth, isTop, onPop, onClose, onActivateRow, t }: StackPageProps) {
+  const isPresent = useIsPresent()
+  const isInteractive = isPresent && isTop
+
+  return (
+    <motion.div
+      className="absolute inset-0"
+      // Deeper pages sit on top so a page keeps covering the stack underneath
+      // while it animates out.
+      style={{ zIndex: depth }}
+      initial={{ x: '100%' }}
+      animate={{ x: 0 }}
+      exit={{ x: '100%' }}
+      transition={SNAPPY_SPRING}
+      inert={!isInteractive}
+      aria-hidden={!isInteractive || undefined}
+      data-page-present={isPresent ? 'true' : 'false'}
+    >
+      <MobileMenuPage
+        title={t(page.titleKey)}
+        showBack={depth > 0}
+        onBack={onPop}
+        onClose={onClose}
+      >
+        <ul className="py-2">
+          {page.rows.map((row) => (
+            <li key={row.id}>
+              <MobileMenuItem
+                icon={renderRowIcon(row.iconName, row.id)}
+                label={t(row.labelKey)}
+                affordance={affordanceFor(row.action)}
+                onClick={() => onActivateRow(row)}
+              />
+            </li>
+          ))}
+        </ul>
+      </MobileMenuPage>
+    </motion.div>
+  )
+}
+
 /**
  * Renders the page stack with a slide-in / slide-out animation per sub-page.
  * Lower pages stay rendered underneath but are visually covered.
  */
 function PageStack({ pages, stack, onPop, onClose, onActivateRow, t }: PageStackProps) {
+  const topDepth = stack.length - 1
+
   return (
     <div className="absolute inset-0">
-      {stack.map((pageId, depth) => {
-        const page = pages.find((p) => p.id === pageId)
-        if (!page) return null
-        return (
-          <motion.div
-            key={pageId}
-            className="absolute inset-0"
-            initial={depth === 0 ? false : { x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={SNAPPY_SPRING}
-          >
-            <MobileMenuPage
-              title={t(page.titleKey)}
-              showBack={depth > 0}
-              onBack={onPop}
+      {/* One presence boundary per page: without it a popped page leaves the
+          tree immediately and its `exit` is never played. `initial={false}`
+          keeps the root page from sliding in behind the sheet's own entry. */}
+      <AnimatePresence initial={false}>
+        {stack.map((pageId, depth) => {
+          const page = pages.find((p) => p.id === pageId)
+          if (!page) return null
+          return (
+            <StackPage
+              key={pageId}
+              page={page}
+              depth={depth}
+              isTop={depth === topDepth}
+              onPop={onPop}
               onClose={onClose}
-            >
-              <ul className="py-2">
-                {page.rows.map((row) => (
-                  <li key={row.id}>
-                    <MobileMenuItem
-                      icon={renderRowIcon(row.iconName, row.id)}
-                      label={t(row.labelKey)}
-                      affordance={affordanceFor(row.action)}
-                      onClick={() => onActivateRow(row)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </MobileMenuPage>
-          </motion.div>
-        )
-      })}
+              onActivateRow={onActivateRow}
+              t={t}
+            />
+          )
+        })}
+      </AnimatePresence>
     </div>
   )
 }

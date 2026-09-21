@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { motion, AnimatePresence, useMotionValue, useMotionValueEvent, animate, useReducedMotion } from 'motion/react'
+import { motion, AnimatePresence, useMotionValue, useMotionValueEvent, animate, useReducedMotionConfig } from 'motion/react'
 import { MOTION_DURATION, MOTION_EASE, motionTween } from '@phaneris/ui/motion'
+import { useExitIsolation } from '@phaneris/ui/presence'
 import { cn } from '@/lib/utils'
 import { FreeFormInput, type FreeFormInputProps } from './FreeFormInput'
 import { StructuredInput } from './StructuredInput'
@@ -35,6 +36,37 @@ const FALLBACK_HEIGHTS: Record<InputMode | string, number> = {
 }
 
 /**
+ * One crossfading input layer.
+ *
+ * Split out of `InputContainer` because the isolation attributes have to come
+ * from `useIsPresent`, which only a component inside the presence boundary can
+ * read.
+ */
+function InputLayer({
+  className,
+  reduceMotion,
+  children,
+}: {
+  className: string
+  reduceMotion: boolean | null
+  children: React.ReactNode
+}) {
+  const exitIsolation = useExitIsolation()
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={motionTween(reduceMotion, 'standard', 'enter')}
+      {...exitIsolation}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+/**
  * InputContainer - Main orchestrator for FreeFormInput and StructuredInput
  *
  * Animation approach:
@@ -53,7 +85,7 @@ export function InputContainer({
   ...freeFormProps
 }: InputContainerProps) {
   const appShellContext = useOptionalAppShellContext()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const isFocusedPanel = appShellContext?.isFocusedPanel ?? true
   const mode: InputMode = structuredInput ? 'structured' : 'freeform'
   const measureRef = React.useRef<HTMLDivElement>(null)
@@ -273,19 +305,19 @@ export function InputContainer({
           ...(mode !== 'freeform' ? { maxHeight: structuredMaxHeight } : {}),
         }}
       >
-        {/* Crossfading content - freeform anchored to bottom (for auto-grow), others fill */}
-        <AnimatePresence mode="sync" initial={false}>
-          <motion.div
-            key={contentKey}
-            className={mode === 'freeform' ? "absolute bottom-0 left-0 right-0" : "absolute inset-0"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={motionTween(reduceMotion, 'standard', 'enter')}
-          >
-            {renderContent(false)}
-          </motion.div>
-        </AnimatePresence>
+      {/* Crossfading content - freeform anchored to bottom (for auto-grow), others fill.
+          The outgoing form stays painted through the crossfade but is already inert:
+          the request it was rendered for is gone, so it must not accept a click,
+          a submit or a Tab stop. */}
+      <AnimatePresence mode="sync" initial={false}>
+        <InputLayer
+          key={contentKey}
+          className={mode === 'freeform' ? "absolute bottom-0 left-0 right-0" : "absolute inset-0"}
+          reduceMotion={reduceMotion}
+        >
+          {renderContent(false)}
+        </InputLayer>
+      </AnimatePresence>
       </motion.div>
 
       {/* Background-completion chip — floats in the input box's top-right corner.

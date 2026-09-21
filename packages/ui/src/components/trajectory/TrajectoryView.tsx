@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
-import { LayoutGroup, motion, useReducedMotion } from 'motion/react'
+import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '../../lib/motion'
 import { useTranslation } from 'react-i18next'
 import type { PiUsage } from '@phaneris/core/types'
@@ -94,7 +94,7 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
   const [runView, setRunView] = useState<TrajectoryRunView>(readViewPreference)
   const [visitedViews, setVisitedViews] = useState(() => new Set<TrajectoryRunView>([runView]))
   const viewId = useId()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const [searchQuery, setSearchQuery] = useState('')
   const [eventFilter, setEventFilter] = useState<'all' | 'conversation' | 'tools' | 'errors'>('all')
   const [collapsedTurns, setCollapsedTurns] = useState<ReadonlySet<number>>(new Set())

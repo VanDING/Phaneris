@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '../../lib/motion'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, FileText, MessagesSquare, Paperclip, Sparkles, TerminalSquare, UserRound } from 'lucide-react'
@@ -38,7 +38,7 @@ function formatNumber(value: number): string {
 
 export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFocus, onOpenChat, onOpenFile }: TrajectoryContextViewProps) {
   const { t } = useTranslation()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const contexts = useMemo(() => deriveRequestContexts(snapshot), [snapshot])
   const [selectedSeq, setSelectedSeq] = useState<number | null>(() => focusedRequestSeq ?? contexts.at(-1)?.requestSeq ?? null)
   const [expanded, setExpanded] = useState<ReadonlySet<TrajectoryContextCategory>>(() => new Set(['system', 'user', 'tools']))

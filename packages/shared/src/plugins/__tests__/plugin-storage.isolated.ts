@@ -108,6 +108,15 @@ describe('plugin manifest validation', () => {
     expect(result.errors).toEqual([]);
   });
 
+  it('accepts an optional emoji icon in the manifest', () => {
+    const result = validatePluginManifest({
+      $schema: PLUGIN_MANIFEST_SCHEMA,
+      name: 'iconic',
+      icon: '📊',
+    });
+    expect(result.manifest?.icon).toBe('📊');
+  });
+
   it('rejects a missing $schema or name', () => {
     expect(validatePluginManifest({ name: 'x' }).manifest).toBeNull();
     expect(validatePluginManifest({ $schema: PLUGIN_MANIFEST_SCHEMA }).manifest).toBeNull();

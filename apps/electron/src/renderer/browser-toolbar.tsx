@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
+import { MotionConfig } from 'motion/react'
 import { useTranslation, initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { setupI18n } from '@phaneris/shared/i18n'
@@ -238,6 +239,10 @@ function BrowserToolbarApp() {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserToolbarApp />
+    {/* Same reduced-motion contract as the main window: this is a separate
+        renderer entry, so it does not inherit the app's MotionConfig. */}
+    <MotionConfig reducedMotion="user">
+      <BrowserToolbarApp />
+    </MotionConfig>
   </React.StrictMode>,
 )

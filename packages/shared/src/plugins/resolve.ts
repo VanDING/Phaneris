@@ -61,20 +61,21 @@ export class PluginPathError extends Error {
 export function expandPluginPlaceholders(value: string, context: PluginPathContext): string {
   const dataRoot = join(context.pluginRoot, PLUGIN_DATA_DIR_NAME);
 
-  // Normalize the *template* before substituting: rewriting separators afterwards
-  // would also rewrite the plugin root, turning a Windows `C:\...` into an
-  // unusable `C:/...`.
-  return normalizeTemplateSeparators(value)
-    .split('${PLUGIN_ROOT}').join(context.pluginRoot)
-    .split('${PLUGIN_DATA}').join(dataRoot);
+  // Only path fragments introduced by placeholders are normalized. The rest of
+  // the value is opaque plugin data and may be a URL, JSON, or another argument.
+  return replacePathPlaceholder(
+    replacePathPlaceholder(value, '${PLUGIN_ROOT}', context.pluginRoot),
+    '${PLUGIN_DATA}',
+    dataRoot,
+  );
 }
 
-/**
- * Rewrite separators in the template portion to the platform's native form, so a
- * literal `/` cannot end up mixed with the platform separator in one path.
- */
-function normalizeTemplateSeparators(value: string): string {
-  return process.platform === 'win32' ? value.replace(/\//g, '\\') : value;
+function replacePathPlaceholder(value: string, token: string, replacement: string): string {
+  const parts = value.split(token);
+  if (parts.length === 1) return value;
+  return parts
+    .map((part, index) => index === 0 || process.platform !== 'win32' ? part : part.replace(/\//g, '\\'))
+    .join(replacement);
 }
 
 /** Expand placeholders across a list of opaque arguments. */
@@ -122,7 +123,6 @@ export function normalizePluginCommand(rawCommand: string, context: PluginPathCo
   }
 
   const looksLikePath = trimmed.includes('/') || trimmed.includes('\\');
-  const wasPluginRelative = trimmed.startsWith('./') || trimmed.startsWith('.\\');
   const wasPlaceholder = rawCommand.includes('${PLUGIN_ROOT}') || rawCommand.includes('${PLUGIN_DATA}');
 
   if (!looksLikePath && !wasPlaceholder) {

@@ -29,6 +29,7 @@ export {
   StyledDropdownMenuSubContent,
 } from './StyledDropdown'
 export { BrowserShader, type BrowserShaderProps } from './BrowserShader'
+export { InlineExpand, type InlineExpandProps } from './inline-expand'
 export { BrowserControls, type BrowserControlsProps } from './BrowserControls'
 export {
   BrowserEmptyStateCard,

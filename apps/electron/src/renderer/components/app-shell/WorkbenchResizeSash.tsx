@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSetAtom } from 'jotai'
 import {
@@ -17,10 +17,16 @@ import {
 
 interface WorkbenchResizeSashProps {
   primaryWidth: number
+  /**
+   * Reports an in-progress pointer drag. The panel follows the cursor directly,
+   * so the layout transition has to be off for the duration: easing a value that
+   * changes every frame reads as the panel lagging behind the pointer.
+   */
+  onDraggingChange?: (isDragging: boolean) => void
 }
 
 /** Divider between the reading-width Primary Surface and flexible Workbench. */
-export function WorkbenchResizeSash({ primaryWidth }: WorkbenchResizeSashProps) {
+export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: WorkbenchResizeSashProps) {
   const { t } = useTranslation()
   const setWidth = useSetAtom(setCompanionPrimaryWidthAtom)
   const { ref, handlers, gradientStyle } = useResizeGradient()
@@ -28,12 +34,18 @@ export function WorkbenchResizeSash({ primaryWidth }: WorkbenchResizeSashProps) 
   const startWidthRef = useRef(0)
   const resizeRafRef = useRef(0)
   const pendingWidthRef = useRef<number | null>(null)
+  // Torn down by mouseup or by unmount, whichever happens first: closing the
+  // panel mid-drag must not leave document listeners and a locked cursor behind.
+  const endDragRef = useRef<(() => void) | null>(null)
+
+  useEffect(() => () => endDragRef.current?.(), [])
 
   const handleMouseDown = useCallback((event: React.MouseEvent) => {
     event.preventDefault()
     handlers.onMouseDown()
     startXRef.current = event.clientX
     startWidthRef.current = primaryWidth
+    onDraggingChange?.(true)
 
     const flush = () => {
       resizeRafRef.current = 0
@@ -47,20 +59,23 @@ export function WorkbenchResizeSash({ primaryWidth }: WorkbenchResizeSashProps) 
       if (!resizeRafRef.current) resizeRafRef.current = requestAnimationFrame(flush)
     }
 
-    const handleMouseUp = () => {
-      if (resizeRafRef.current) cancelAnimationFrame(resizeRafRef.current)
+    const endDrag = () => {
+      endDragRef.current = null
+      cancelAnimationFrame(resizeRafRef.current)
       flush()
       document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('mouseup', endDrag)
       document.body.style.userSelect = ''
       document.body.style.cursor = ''
+      onDraggingChange?.(false)
     }
+    endDragRef.current = endDrag
 
     document.body.style.userSelect = 'none'
     document.body.style.cursor = 'col-resize'
     document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-  }, [handlers, primaryWidth, setWidth])
+    document.addEventListener('mouseup', endDrag)
+  }, [handlers, primaryWidth, setWidth, onDraggingChange])
 
   return (
     <div

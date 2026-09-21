@@ -5,6 +5,7 @@ import {
   mix,
   motion,
   useMotionValue,
+  useReducedMotionConfig,
   useTransform,
   wrap,
 } from 'motion/react'
@@ -135,6 +136,7 @@ function StackImage({
   const x = useMotionValue(0)
   const rotate = useTransform(x, [0, 400], [baseRotation, baseRotation + 10], { clamp: false })
   const lastDragAtRef = React.useRef(0)
+  const reduceMotion = useReducedMotionConfig()
 
   const stackPosition = ((index - currentIndex + totalImages) % totalImages)
   const zIndex = totalImages - stackPosition
@@ -143,6 +145,15 @@ function StackImage({
     if (!isTopCard) return
     const distance = Math.abs(x.get())
     const speed = Math.abs(x.getVelocity())
+
+    // Imperative MotionValue animations run outside the visual element tree, so
+    // MotionConfig cannot reduce them: the rebound is collapsed explicitly.
+    // Dragging itself stays direct — only the release settle changes.
+    if (reduceMotion) {
+      x.set(0)
+      if (distance > minDistance || speed > minSpeed) setNextImage()
+      return
+    }
 
     if (distance > minDistance || speed > minSpeed) {
       setNextImage()

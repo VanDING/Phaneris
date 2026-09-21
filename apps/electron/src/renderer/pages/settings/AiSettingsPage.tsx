@@ -18,10 +18,9 @@ import { HeaderMenu } from '@/components/ui/HeaderMenu'
 import { routes } from '@/lib/navigate'
 import { X, MoreHorizontal, Pencil, Trash2, Star, ChevronDown, ChevronRight, CheckCircle2, AlertTriangle, RefreshCcw, Settings2, MessageSquareMore, Zap, Clock, Check } from 'lucide-react'
 import type { CredentialHealthStatus, CredentialHealthIssue } from '../../../shared/types'
-import { Spinner, FullscreenOverlayBase, Tooltip, TooltipTrigger, TooltipContent } from '@phaneris/ui'
+import { InlineExpand, Spinner, FullscreenOverlayBase, Tooltip, TooltipTrigger, TooltipContent } from '@phaneris/ui'
 import { useSetAtom } from 'jotai'
 import { fullscreenOverlayOpenAtom } from '@/atoms/overlay'
-import { motion, AnimatePresence } from 'motion/react'
 import type { LlmConnectionWithStatus, ThinkingLevel, WorkspaceSettings, Workspace } from '../../../shared/types'
 import { DEFAULT_THINKING_LEVEL, THINKING_LEVELS } from '@phaneris/shared/agent/thinking-levels'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
@@ -551,61 +550,51 @@ function WorkspaceOverrideCard({ workspace, llmConnections, onSettingsChange }: 
         )}
       </button>
 
-      <AnimatePresence initial={false}>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="overflow-hidden"
-          >
-            <div className="border-t border-border/50 px-4 py-2">
-              <SettingsMenuSelectRow
-                label={t("settings.ai.connection")}
-                description={t("settings.ai.connectionDesc")}
-                value={currentConnection}
-                onValueChange={handleConnectionChange}
-                options={[
-                  { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
-                  ...llmConnections.map((conn) => ({
-                    value: conn.slug,
-                    label: conn.name,
-                    description: conn.providerType === 'pi' ? 'Phaneris Backend' :
-                                 conn.providerType || 'Unknown',
-                  })),
-                ]}
-              />
-              <SettingsMenuSelectRow
-                label={t("settings.ai.model")}
-                description={t("settings.ai.modelDesc")}
-                value={currentModel}
-                onValueChange={handleModelChange}
-                options={[
-                  { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
-                  ...getModelOptionsForConnection(workspaceEffectiveConnection).map(o => ({
-                    ...o, description: o.descriptionKey ? t(o.descriptionKey) : o.description,
-                  })),
-                ]}
-              />
-              <SettingsMenuSelectRow
-                label={t("settings.ai.thinking")}
-                description={t("settings.ai.thinkingDesc")}
-                value={currentThinking}
-                onValueChange={handleThinkingChange}
-                options={[
-                  { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
-                  ...THINKING_LEVELS.map(({ id, nameKey, descriptionKey }) => ({
-                    value: id,
-                    label: t(nameKey),
-                    description: t(descriptionKey),
-                  })),
-                ]}
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <InlineExpand isOpen={isExpanded}>
+        <div className="border-t border-border/50 px-4 py-2">
+          <SettingsMenuSelectRow
+            label={t("settings.ai.connection")}
+            description={t("settings.ai.connectionDesc")}
+            value={currentConnection}
+            onValueChange={handleConnectionChange}
+            options={[
+              { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
+              ...llmConnections.map((conn) => ({
+                value: conn.slug,
+                label: conn.name,
+                description: conn.providerType === 'pi' ? 'Phaneris Backend' :
+                             conn.providerType || 'Unknown',
+              })),
+            ]}
+          />
+          <SettingsMenuSelectRow
+            label={t("settings.ai.model")}
+            description={t("settings.ai.modelDesc")}
+            value={currentModel}
+            onValueChange={handleModelChange}
+            options={[
+              { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
+              ...getModelOptionsForConnection(workspaceEffectiveConnection).map(o => ({
+                ...o, description: o.descriptionKey ? t(o.descriptionKey) : o.description,
+              })),
+            ]}
+          />
+          <SettingsMenuSelectRow
+            label={t("settings.ai.thinking")}
+            description={t("settings.ai.thinkingDesc")}
+            value={currentThinking}
+            onValueChange={handleThinkingChange}
+            options={[
+              { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
+              ...THINKING_LEVELS.map(({ id, nameKey, descriptionKey }) => ({
+                value: id,
+                label: t(nameKey),
+                description: t(descriptionKey),
+              })),
+            ]}
+          />
+        </div>
+      </InlineExpand>
     </SettingsCard>
   )
 }

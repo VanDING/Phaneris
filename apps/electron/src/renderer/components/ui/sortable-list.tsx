@@ -13,6 +13,7 @@
  */
 
 import * as React from 'react'
+import { useReducedMotionConfig } from 'motion/react'
 import {
   DndContext,
   closestCenter,
@@ -68,26 +69,35 @@ export class SmartPointerSensor extends PointerSensor {
 // Drop Animation Config
 // Crossfade: overlay fades out at final position while ghost fades in.
 // Creates a smooth "settle into place" feel.
+//
+// dnd-kit drives this with its own Web Animations API calls, which the shared
+// MotionConfig cannot reach, so the reduced-motion decision has to be passed in
+// explicitly. Reduced motion collapses the settle to a single frame: the drop
+// result is stated immediately instead of being flown into place.
 // ============================================================
 
 const DROP_DURATION = 250
 
-const dropAnimationConfig: DropAnimation = {
-  keyframes({ transform }) {
-    return [
-      { opacity: 1, transform: CSS.Transform.toString(transform.initial) },
-      { opacity: 0, transform: CSS.Transform.toString(transform.final) },
-    ]
-  },
-  duration: DROP_DURATION,
-  easing: 'ease',
-  sideEffects({ active }) {
-    // Ghost fades in at new position simultaneously
-    active.node.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: DROP_DURATION,
-      easing: 'ease',
-    })
-  },
+function createDropAnimation(reduceMotion: boolean | null): DropAnimation {
+  const duration = reduceMotion ? 0 : DROP_DURATION
+
+  return {
+    keyframes({ transform }) {
+      return [
+        { opacity: 1, transform: CSS.Transform.toString(transform.initial) },
+        { opacity: 0, transform: CSS.Transform.toString(transform.final) },
+      ]
+    },
+    duration,
+    easing: 'ease',
+    sideEffects({ active }) {
+      // Ghost fades in at new position simultaneously
+      active.node.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration,
+        easing: 'ease',
+      })
+    },
+  }
 }
 
 // Measuring config: always re-measure to support animated layouts
@@ -134,6 +144,11 @@ export function SortableList<T extends SortableItemData>({
   className,
 }: SortableListProps<T>) {
   const [activeId, setActiveId] = React.useState<string | null>(null)
+  const reduceMotion = useReducedMotionConfig()
+  const dropAnimationConfig = React.useMemo(
+    () => createDropAnimation(reduceMotion),
+    [reduceMotion],
+  )
 
   // Sensors: SmartPointerSensor skips data-no-dnd elements, 5px distance threshold
   const sensors = useSensors(

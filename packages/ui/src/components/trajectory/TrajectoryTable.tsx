@@ -6,6 +6,7 @@
 
 import { memo, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { MessageSquare, RefreshCw, Settings, User, Wrench, FileText } from 'lucide-react'
+import { useScrollBehavior } from '../../lib/scroll-intent'
 import type { TrajectoryCellKind, TrajectoryRenderRecord } from './trajectory-layout'
 import { collapseAssistantRecords, collapseTurnRecords, formatElapsedSeconds, trajectoryRecordId } from './trajectory-layout'
 import { filterRecords, recordDisplayText } from './trajectory-search-index'
@@ -91,6 +92,10 @@ export const TrajectoryTable = memo(function TrajectoryTable({
   const paneRef = useRef<HTMLDivElement | null>(null)
   const [scrollTop, setScrollTop] = useState(0)
   const [viewportHeight, setViewportHeight] = useState(0)
+  // Selecting a record (click or Enter) is an explicit jump to a named target:
+  // animated normally so the reader keeps the spatial relationship, instant
+  // under reduced motion.
+  const scrollBehavior = useScrollBehavior()
 
   useLayoutEffect(() => {
     const pane = paneRef.current
@@ -114,9 +119,9 @@ export const TrajectoryTable = memo(function TrajectoryTable({
     if (!pane || rowIndex < 0) return
     const top = rows.slice(0, rowIndex).reduce((sum, row) => sum + row.height, 0)
     const bottom = top + (rows[rowIndex]?.height ?? 0)
-    if (top < pane.scrollTop) pane.scrollTo({ top, behavior: 'smooth' })
-    else if (bottom > pane.scrollTop + pane.clientHeight) pane.scrollTo({ top: Math.max(0, bottom - pane.clientHeight), behavior: 'smooth' })
-  }, [rows, selectedIndex])
+    if (top < pane.scrollTop) pane.scrollTo({ top, behavior: scrollBehavior('reveal') })
+    else if (bottom > pane.scrollTop + pane.clientHeight) pane.scrollTo({ top: Math.max(0, bottom - pane.clientHeight), behavior: scrollBehavior('reveal') })
+  }, [rows, selectedIndex, scrollBehavior])
 
   return (
     <div

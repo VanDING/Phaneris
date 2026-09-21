@@ -20,6 +20,7 @@ A plugin is a **workspace-owned package** that groups capabilities a user can in
 ```
 <workspace>/plugins/<name>/
 ├── plugin.json              # Required. Identity. Agent Plugins 1.0.0 manifest.
+├── icon.svg/png             # Optional. Bundle icon, auto-discovered like a source icon.
 ├── skills/<slug>/SKILL.md   # Optional. Materialized into <workspace>/skills/<slug>/
 ├── mcp.json                 # Optional. Materialized into <workspace>/sources/<slug>/
 ├── PROMPT.md                # Optional. Resident instructions while the plugin is active.
@@ -64,6 +65,7 @@ only when you need its details.
   "name": "investment-analyst",
   "version": "1.0.0",
   "description": "Earnings analysis, valuation, and comparable-company work",
+  "icon": "📊",
   "author": { "name": "VanDING" },
   "license": "MIT",
   "keywords": ["finance", "research"]
@@ -80,7 +82,7 @@ it delete the wrong things.
 `name` rules: 1–64 characters, lowercase `a-z`, `0-9`, `-`, `.` only, must start and end
 alphanumeric, and must not contain `--` or `..`.
 
-Optional: `version`, `description`, `author` (`{name,email,url}` only), `homepage`, `repository`,
+Optional: `version`, `description`, `icon` (emoji or URL), `author` (`{name,email,url}` only), `homepage`, `repository`,
 `license`, `keywords`, `extensions`. Unknown top-level fields are reported and ignored, not fatal.
 
 ### 2. `skills/<slug>/SKILL.md` — a skill

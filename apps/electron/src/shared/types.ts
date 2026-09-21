@@ -264,6 +264,7 @@ export interface PluginSummary {
   /** Directory name; equals the manifest `name` (design P2-2). */
   name: string
   description?: string
+  icon?: string
   version?: string
   author?: string
   license?: string
@@ -275,6 +276,7 @@ export interface PluginSummary {
   skills: Array<{ slug: string; name: string; description: string }>
   sources: Array<{ slug: string; type: 'mcp' | 'api' | 'local' }>
   hasPromptFragment: boolean
+  promptFragment?: string
   warnings: PluginLoadWarning[]
 }
 

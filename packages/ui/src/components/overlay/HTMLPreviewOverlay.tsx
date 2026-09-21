@@ -13,6 +13,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Globe } from 'lucide-react'
+import { cn } from '../../lib/utils'
 import { PreviewOverlay } from './PreviewOverlay'
 import { CopyButton } from './CopyButton'
 import { ItemNavigator } from './ItemNavigator'
@@ -191,12 +192,17 @@ export function HTMLPreviewOverlay({
         )}
         {processedHtml && (
           <div
-            className="bg-white rounded-[12px] overflow-hidden shadow-minimal mx-auto"
+            // Revealed once the iframe has been measured, so the sizing frame is
+            // never shown at a guessed height. `motion-reveal` names the property
+            // (opacity) and the shared enter rhythm, and collapses under reduced
+            // motion like every other shared rule.
+            className={cn(
+              "motion-reveal bg-white rounded-[12px] overflow-hidden shadow-minimal mx-auto",
+              measured ? "opacity-100" : "opacity-0",
+            )}
             style={{
               maxWidth: contentSize?.width ? `${contentSize.width + 128}px` : undefined,
               padding: '24px 64px 36px',
-              opacity: measured ? 1 : 0,
-              transition: 'opacity 200ms ease-in',
             }}
           >
             <iframe

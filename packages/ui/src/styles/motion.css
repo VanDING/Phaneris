@@ -44,6 +44,16 @@
     animation: craft-content-enter var(--motion-duration-standard) var(--motion-ease-enter);
   }
 
+  /* Opacity-only reveal at the shared enter rhythm.
+   * For content that is already laid out and only has to appear: the property is
+   * named, so a later layout change cannot sneak into the transition. Inherits
+   * the reduced-motion collapse above. */
+  .motion-reveal {
+    transition-property: opacity;
+    transition-duration: var(--motion-duration-standard);
+    transition-timing-function: var(--motion-ease-enter);
+  }
+
   /* CSS responds immediately when the OS preference changes during loading. */
   .motion-browser-progress {
     background-position: 50% 50%;
@@ -96,4 +106,35 @@
     transition-delay: 0ms !important;
     transition-duration: 1ms !important;
   }
+}
+
+/*
+ * Forced counterpart of the block above, for hosts that must reproduce the
+ * reduced experience on a machine whose OS preference is not set (the
+ * Playground switch, review machines, CI fixtures). The media query above stays
+ * the product contract; this is the explicit override, so it is written out
+ * rather than derived — a media query cannot be selected by an attribute.
+ */
+:root[data-reduce-motion='true'] {
+  --motion-duration-instant: 1ms;
+  --motion-duration-fast: 1ms;
+  --motion-duration-standard: 1ms;
+  --motion-duration-emphasis: 1ms;
+  --motion-duration-spatial: 1ms;
+}
+
+:root[data-reduce-motion='true'] .motion-browser-progress {
+  animation: none !important;
+}
+
+:root[data-reduce-motion='true'],
+:root[data-reduce-motion='true'] *,
+:root[data-reduce-motion='true'] *::before,
+:root[data-reduce-motion='true'] *::after {
+  animation-delay: 0ms !important;
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-delay: 0ms !important;
+  transition-duration: 1ms !important;
 }

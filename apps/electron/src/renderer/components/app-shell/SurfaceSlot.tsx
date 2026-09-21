@@ -11,7 +11,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSetAtom } from 'jotai'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '@phaneris/ui/motion'
 import { cn } from '@/lib/utils'
 import { X, ChevronLeft } from 'lucide-react'
@@ -51,8 +51,47 @@ interface SurfaceSlotProps {
   /** Compact (mobile) mode — shows back button in panel header */
   isCompact?: boolean
   hidden?: boolean
+  /** A pointer drag owns the panel width right now — never ease it. */
+  isResizing?: boolean
   /** Compact replacement-mode back behavior. */
   onCompactBack?: () => void
+}
+
+/**
+ * How a panel takes its share of the layout row.
+ *
+ * Every state declares the same properties so the row can interpolate between
+ * them: opening or closing the workbench moves the Primary's share of the free
+ * space, and that share is the only geometry that changes. The Workbench keeps
+ * `flex-grow: 1`, so it takes whatever the Primary leaves and the two panels
+ * never animate against each other. `min-width` moves with `flex-basis` so the
+ * minimum can never freeze the panel mid-transition.
+ */
+function panelShareStyle({
+  isCompact,
+  isOnly,
+  isWorkbench,
+  isWorkbenchCompanion,
+  companionPrimaryWidth,
+}: Pick<SurfaceSlotProps, 'isCompact' | 'isOnly' | 'isWorkbenchCompanion'> & {
+  isWorkbench: boolean
+  companionPrimaryWidth: number
+}): React.CSSProperties {
+  if (isCompact || isOnly) {
+    return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: '0px' }
+  }
+  if (isWorkbench) {
+    return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: `${MIN_WORKBENCH_WIDTH}px` }
+  }
+  if (isWorkbenchCompanion) {
+    return {
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: `${companionPrimaryWidth}px`,
+      minWidth: `${companionPrimaryWidth}px`,
+    }
+  }
+  return { flexGrow: 1, flexShrink: 1, flexBasis: '0px', minWidth: `${PANEL_MIN_WIDTH}px` }
 }
 
 export function SurfaceSlot({
@@ -69,6 +108,7 @@ export function SurfaceSlot({
   sash,
   isCompact,
   hidden = false,
+  isResizing = false,
   onCompactBack,
 }: SurfaceSlotProps) {
   const { t } = useTranslation()
@@ -76,7 +116,7 @@ export function SurfaceSlot({
   const removeForegroundSession = useSetAtom(removeForegroundSessionAtom)
   const setFocusedSurface = useSetAtom(focusedSurfaceEntryIdAtom)
   const parentContext = useAppShellContext()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const navState = parseRouteToNavigationState(entry.route)
   const isWorkbench = entry.surfaceRole === 'workbench'
 
@@ -160,27 +200,22 @@ export function SurfaceSlot({
           borderBottomLeftRadius: isCompact ? 0 : (isAtLeftEdge ? RADIUS_EDGE : RADIUS_INNER),
           borderTopRightRadius: RADIUS_INNER,
           borderBottomRightRadius: isCompact ? 0 : (isAtRightEdge ? RADIUS_EDGE : RADIUS_INNER),
-          ...(isCompact || isOnly
-            ? { flexGrow: 1, minWidth: 0 }
-            : isWorkbench
-              ? {
-                  flexGrow: 1,
-                  flexShrink: 1,
-                  flexBasis: 0,
-                  minWidth: MIN_WORKBENCH_WIDTH,
-                }
-              : isWorkbenchCompanion
-                ? {
-                    width: companionPrimaryWidth,
-                    flexGrow: 0,
-                    flexShrink: 0,
-                    flexBasis: companionPrimaryWidth,
-                    minWidth: companionPrimaryWidth,
-                  }
-              : isOnly
-                ? { flexGrow: 1, minWidth: 0 }
-                : { flexGrow: 1, flexShrink: 1, flexBasis: 0, minWidth: PANEL_MIN_WIDTH }
-          ),
+          ...panelShareStyle({
+            isCompact,
+            isOnly,
+            isWorkbench,
+            isWorkbenchCompanion,
+            companionPrimaryWidth: companionPrimaryWidth ?? PANEL_MIN_WIDTH,
+          }),
+          // Layout process for the panel set: opening or closing the Workbench
+          // changes this panel's share of the row, and the share is the only
+          // geometry that moves. Content above it animates through the shared
+          // tokens, so a panel never fades out and back in to hide a reflow.
+          // A pointer drag owns the width directly and must not be eased; the
+          // global reduced-motion rule collapses these durations to 1ms.
+          transitionProperty: 'flex-grow, flex-basis, min-width',
+          transitionDuration: isResizing ? '0s' : 'var(--motion-duration-spatial)',
+          transitionTimingFunction: 'var(--motion-ease-move)',
         }}
       >
         {isConversationGroup && !isFocusedPanel && (

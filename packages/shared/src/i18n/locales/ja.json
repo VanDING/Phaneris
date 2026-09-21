@@ -1059,6 +1059,7 @@
   "pluginsList.pluginBadge": "プラグイン",
   "pluginsList.pluginNotFound": "プラグイン「{{name}}」はこのワークスペースにインストールされていません。",
   "pluginsList.promptAbsent": "なし",
+  "pluginsList.promptDescription": "このプラグインが有効な間、毎ターン適用される指示です。",
   "pluginsList.promptFragment": "常設の指示",
   "pluginsList.promptPresent": "あり — 毎ターン追加されます",
   "pluginsList.removesNone": "なし — このバンドル固有のリソースはありません",

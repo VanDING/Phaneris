@@ -29,10 +29,12 @@ import { scheduleViewComponents } from './schedule-views'
 import { taskEditorComponents } from './task-editor'
 import { controlSystemComponents } from './control-system'
 import { executionMapComponents } from './execution-map'
+import { motionComponents } from './motion'
 
 export * from './types'
 
 export const componentRegistry: ComponentEntry[] = [
+  ...motionComponents,
   ...executionMapComponents,
   ...controlSystemComponents,
   ...mobileWebUIComponents,

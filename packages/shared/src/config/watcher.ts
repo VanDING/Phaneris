@@ -43,7 +43,14 @@ import { getWorkspacePath, getWorkspaceSourcesPath, getWorkspaceSkillsPath, getW
 import type { LoadedSkill } from '../skills/types.ts';
 import { loadWorkspacePages } from '../pages/storage.ts';
 import { loadSkill, loadAllSkills, invalidateSkillsCache, skillNeedsIconDownload, downloadSkillIcon } from '../skills/storage.ts';
-import { listPluginNames, loadAllPlugins, PLUGIN_MANIFEST_FILE, PLUGIN_PROMPT_FILE } from '../plugins/index.ts';
+import {
+  listPluginNames,
+  loadAllPlugins,
+  PLUGIN_MANIFEST_FILE,
+  PLUGIN_PROMPT_FILE,
+  PLUGIN_MCP_FILE,
+  PLUGIN_EXTENSION_SOURCES_FILE,
+} from '../plugins/index.ts';
 import type { LoadedPlugin, PluginLoadError } from '../plugins/types.ts';
 import {
   loadStatusConfig,
@@ -489,7 +496,15 @@ export class ConfigWatcher {
     // events (that would double-fire every install).
     if (parts[0] === 'plugins' && parts.length >= 2) {
       const file = parts[2];
-      if (parts.length === 2 || file === PLUGIN_MANIFEST_FILE || file === PLUGIN_PROMPT_FILE) {
+      const pluginRelativePath = parts.slice(2).join('/');
+      if (
+        parts.length === 2 ||
+        file === PLUGIN_MANIFEST_FILE ||
+        file === PLUGIN_PROMPT_FILE ||
+        file === PLUGIN_MCP_FILE ||
+        file?.startsWith('icon.') ||
+        pluginRelativePath === PLUGIN_EXTENSION_SOURCES_FILE
+      ) {
         this.debounce('plugins-dir', () => this.handlePluginsChange());
       }
       return;
@@ -868,7 +883,7 @@ export class ConfigWatcher {
       for (const error of errors) {
         // `PluginLoadError.path` is the plugin directory, so its basename is the
         // plugin name (P2-2: directory name === manifest name).
-        const name = basename(error.path);
+        const name = error.pluginName ?? basename(error.path);
         if (name) healthByPlugin.set(name, false);
       }
 

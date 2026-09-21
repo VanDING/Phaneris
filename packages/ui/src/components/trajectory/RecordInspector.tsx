@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { LayoutGroup, motion, useReducedMotion } from 'motion/react'
+import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { FolderOpen, GitCompareArrows, MessageSquare, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '../../lib/utils'
@@ -223,7 +223,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
   const [detailsWidth, setDetailsWidth] = useState<number | null>(null)
   const resizeDrag = useRef<{ pointerId: number; startX: number; startWidth: number } | null>(null)
   const tabs = useMemo(() => detailTabs(cell), [cell])
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const markdownSource = cell.kind === 'message' ? cell.outputDetail ?? cell.thinkingDetail : undefined
   const sourceMessageId = cell.sourceMessage?.id ?? cell.sourceSeq
   const filePath = recordFilePath(cell)

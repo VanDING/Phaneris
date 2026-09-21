@@ -16,7 +16,7 @@
  */
 
 import * as React from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { InlineExpand } from '@phaneris/ui'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -737,56 +737,46 @@ function PairedSupergroupSection({
         )}
       </button>
 
-      <AnimatePresence initial={false}>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="overflow-hidden"
-          >
-            <div className="border-t border-border/50">
-              {topicBindings.length === 0 ? (
-                <div className="flex items-start gap-3 px-4 py-3 text-xs text-foreground/50">
-                  <IconSpacer />
-                  <span>
-                    {t('settings.messaging.telegram.supergroup.noTopicsHint', {
-                      defaultValue:
-                        'No topics bound yet — automations with `telegramTopic` will create them.',
-                    })}
-                  </span>
-                </div>
-              ) : (
-                <div className="divide-y divide-border/50">
-                  {topicBindings.map((binding) => (
-                    <TopicBindingRow
-                      key={binding.id}
-                      binding={binding}
-                      sessionMetaMap={sessionMetaMap}
-                      workspaceOwners={workspaceOwners}
-                      onOpen={() => onOpenSession(binding)}
-                      onUnbind={() => onUnbindTopic(binding)}
-                      onAccessChange={(next) => onAccessChange(binding.id, next)}
-                    />
-                  ))}
-                </div>
-              )}
-              <div className="flex items-center gap-3 px-4 py-2">
-                <IconSpacer />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-destructive hover:text-destructive"
-                  onClick={onUnpair}
-                >
-                  {t('common.disconnect')}
-                </Button>
-              </div>
+      <InlineExpand isOpen={isExpanded}>
+        <div className="border-t border-border/50">
+          {topicBindings.length === 0 ? (
+            <div className="flex items-start gap-3 px-4 py-3 text-xs text-foreground/50">
+              <IconSpacer />
+              <span>
+                {t('settings.messaging.telegram.supergroup.noTopicsHint', {
+                  defaultValue:
+                    'No topics bound yet — automations with `telegramTopic` will create them.',
+                })}
+              </span>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          ) : (
+            <div className="divide-y divide-border/50">
+              {topicBindings.map((binding) => (
+                <TopicBindingRow
+                  key={binding.id}
+                  binding={binding}
+                  sessionMetaMap={sessionMetaMap}
+                  workspaceOwners={workspaceOwners}
+                  onOpen={() => onOpenSession(binding)}
+                  onUnbind={() => onUnbindTopic(binding)}
+                  onAccessChange={(next) => onAccessChange(binding.id, next)}
+                />
+              ))}
+            </div>
+          )}
+          <div className="flex items-center gap-3 px-4 py-2">
+            <IconSpacer />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-destructive hover:text-destructive"
+              onClick={onUnpair}
+            >
+              {t('common.disconnect')}
+            </Button>
+          </div>
+        </div>
+      </InlineExpand>
     </div>
   )
 }

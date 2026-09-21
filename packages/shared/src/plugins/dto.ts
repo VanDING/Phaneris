@@ -7,9 +7,8 @@
  * plugin — the kind of drift that shows up as a field that is present on load
  * and missing after an install.
  *
- * The manifest internals and the resident `promptFragment` are deliberately not
- * projected: the renderer needs identity and display metadata, and the fragment
- * is prompt material that belongs to the agent, not the UI.
+ * Manifest internals stay out of the list DTO, while the resident `promptFragment`
+ * is projected so the plugin detail view can show and edit its current content.
  */
 
 import type { LoadedPlugin } from './types.ts';
@@ -19,6 +18,7 @@ export interface PluginSummaryDto {
   /** Directory name; equals the manifest `name` (P2-2). */
   name: string;
   description?: string;
+  icon?: string;
   version?: string;
   author?: string;
   license?: string;
@@ -30,6 +30,7 @@ export interface PluginSummaryDto {
   skills: Array<{ slug: string; name: string; description: string }>;
   sources: Array<{ slug: string; type: 'mcp' | 'api' | 'local' }>;
   hasPromptFragment: boolean;
+  promptFragment?: string;
   warnings: Array<{ path: string; message: string }>;
 }
 
@@ -38,6 +39,7 @@ export function summarizePluginForRenderer(plugin: LoadedPlugin): PluginSummaryD
   return {
     name: plugin.name,
     description: plugin.manifest.description,
+    icon: plugin.manifest.icon,
     version: plugin.manifest.version,
     author: plugin.manifest.author?.name,
     license: plugin.manifest.license,
@@ -60,6 +62,7 @@ export function summarizePluginForRenderer(plugin: LoadedPlugin): PluginSummaryD
       })),
     ],
     hasPromptFragment: Boolean(plugin.promptFragment),
+    promptFragment: plugin.promptFragment ?? undefined,
     warnings: plugin.warnings,
   };
 }

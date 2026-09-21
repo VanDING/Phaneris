@@ -17,6 +17,7 @@ import { pluginSelection } from '@/hooks/useEntitySelection'
 import { useActiveWorkspace } from '@/context/AppShellContext'
 import { getFileManagerName } from '@/lib/platform'
 import { PluginMenu } from './PluginMenu'
+import { PluginAvatar } from '@/components/ui/plugin-avatar'
 import type { PluginLoadError, PluginSummary, PluginUninstallPlan, PluginsListResult } from '../../../shared/types'
 
 /**
@@ -168,7 +169,7 @@ export function PluginsListPanel({
             subtitle: row.error.message,
             badges: (
               <span className="truncate font-mono text-[11px] text-muted-foreground">
-                {row.error.path}
+                {row.error.pluginName ?? row.error.path}
               </span>
             ),
           }
@@ -176,7 +177,7 @@ export function PluginsListPanel({
 
         const { plugin } = row
         return {
-          icon: <Shapes />,
+          icon: <PluginAvatar plugin={plugin} workspaceId={activeWorkspace?.id ?? ''} />,
           title: plugin.name,
           subtitle: (plugin.skills.length > 0 || plugin.sources.length > 0) ? (
             <span className="flex flex-col">

@@ -104,7 +104,7 @@ Phaneris (RE) 已经不是功能型原型，而是一个具有明确差异化、
 
 **优先级：P0，公开发布阻断项**
 
-> 2026-09-14 更新：本项的名称决策已完成——独立产品名定为 **Phaneris**，实施路径见[Phaneris 独立分叉实施方案](architecture/phaneris-fork-plan.md)。本节其余判断（发布信任链未独立、不得在归属明确前公开分发）仍然有效。
+> 2026-09-14 更新：本项的名称决策已完成——独立产品名定为 **Phaneris**，实施路径见[Phaneris 独立分叉实施方案](phaneris-fork-plan.md)。本节其余判断（发布信任链未独立、不得在归属明确前公开分发）仍然有效。
 
 仓库自带的商标政策要求 fork：使用不同名称、替换 Craft 品牌、更改 bundle identifier，并移除不必要的 `craft.do` 引用。当前打包配置仍然使用：
 
@@ -470,9 +470,9 @@ UI 应显示任务拥有的副作用权限，权限提升也应生成可审计�
 
 ## 十、关键证据入口
 
-- 文档状态与维护规则：[`docs/README.md`](README.md)
-- Durable Runtime 当前基线：[`docs/architecture/durable-agent-runtime.md`](architecture/durable-agent-runtime.md)
-- 延迟实施的 Runtime 目标架构：[`docs/architecture/durable-agent-runtime-target-architecture.md`](architecture/durable-agent-runtime-target-architecture.md)
+- 文档状态与维护规则：[`docs/README.md`](../../README.md)
+- Durable Runtime 当前基线：[`docs/architecture/durable-agent-runtime.md`](../architecture/durable-agent-runtime.md)
+- 延迟实施的 Runtime 目标架构：[`docs/architecture/durable-agent-runtime-target-architecture.md`](../architecture/durable-agent-runtime-target-architecture.md)
 - 商标要求：[`TRADEMARK.md`](../TRADEMARK.md)
 - 根验证脚本：[`package.json`](../package.json)
 - Desktop 打包身份：[`apps/electron/electron-builder.yml`](../apps/electron/electron-builder.yml)

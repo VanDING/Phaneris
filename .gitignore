@@ -37,6 +37,7 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # Vendored upstream clones used only for local research notes (see docs/research/*-profile.md)
 docs/research/.scratch/
 docs/research/gpuix-scratch/
+analysis/ai-elements/
 
 # OSS sync temp directory
 .oss-sync-temp/

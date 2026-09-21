@@ -11,6 +11,7 @@ import { reactPdfAlias } from '../../scripts/build/react-pdf-alias'
 // import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 export default defineConfig({
+  worker: { format: 'es' },
   plugins: [
     react(),
     babel({

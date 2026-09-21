@@ -11,7 +11,7 @@
  */
 
 import { useMemo } from 'react'
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react'
+import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { FileText, Eye, MessageSquare, X } from 'lucide-react'
@@ -23,7 +23,8 @@ import { activeSessionIdAtom } from '@/atoms/active-session'
 import { previewEntriesForSessionAtom, removePreviewEntryAtom, type PreviewEntry } from '@/atoms/preview'
 import { previewPanelSelectedKeyBySessionAtom } from '@/atoms/content-panel-ui'
 import { useAppShellContext } from '@/context/AppShellContext'
-import { motionSpring, motionTween } from '@phaneris/ui/motion'
+import { motionSpring } from '@phaneris/ui/motion'
+import { ContentSwap } from '@/components/ui/content-swap'
 
 const entryKey = (entry: PreviewEntry): string =>
   entry.type === 'file' ? `file:${entry.path}` : `md:${entry.id}`
@@ -42,7 +43,7 @@ export function PreviewPanel({ sessionId }: { sessionId?: string }) {
   }
   const removeEntry = useSetAtom(removePreviewEntryAtom)
   const { onOpenFile, onOpenUrl } = useAppShellContext()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
 
   // Keep the selection valid: default to the most recent entry.
   const effectiveKey = useMemo(() => {
@@ -131,37 +132,31 @@ export function PreviewPanel({ sessionId }: { sessionId?: string }) {
 
           {/* Content area */}
           <div className="min-h-0 flex-1 bg-foreground/[0.012] p-2.5">
-            <div className="h-full min-h-0 overflow-hidden rounded-xl border border-border/60 bg-background/65 shadow-minimal">
-            <AnimatePresence mode="wait" initial={false}>
-            {selected ? (
-              <motion.div
-                key={entryKey(selected)}
-                className="h-full min-h-0"
-                initial={reduceMotion ? false : { opacity: 0, y: 3 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -2 }}
-                transition={motionTween(reduceMotion, 'standard', 'enter')}
-              >
-              {selected.type === 'file' ? (
-                <FilePreviewContent
-                  filePath={selected.path}
-                  onOpenUrl={onOpenUrl}
-                  onFileClick={(path) => onOpenFile(path, activeSessionId)}
-                />
-              ) : (
-                <div className="h-full overflow-auto px-4 py-3">
-                  <Markdown
-                    children={selected.content}
-                    onUrlClick={onOpenUrl}
+            <div className="relative h-full min-h-0 overflow-hidden rounded-xl border border-border/60 bg-background/65 shadow-minimal">
+            <ContentSwap
+              swapKey={selected ? entryKey(selected) : 'empty'}
+              className="h-full min-h-0"
+            >
+              {selected ? (
+                selected.type === 'file' ? (
+                  <FilePreviewContent
+                    filePath={selected.path}
+                    onOpenUrl={onOpenUrl}
                     onFileClick={(path) => onOpenFile(path, activeSessionId)}
                   />
-                </div>
+                ) : (
+                  <div className="h-full overflow-auto px-4 py-3">
+                    <Markdown
+                      children={selected.content}
+                      onUrlClick={onOpenUrl}
+                      onFileClick={(path) => onOpenFile(path, activeSessionId)}
+                    />
+                  </div>
+                )
+              ) : (
+                <PanelEmptyState title={t('contentPanel.preview.empty')} />
               )}
-              </motion.div>
-            ) : (
-              <PanelEmptyState title={t('contentPanel.preview.empty')} />
-            )}
-            </AnimatePresence>
+            </ContentSwap>
             </div>
           </div>
         </>

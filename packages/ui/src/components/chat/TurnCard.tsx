@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import type { ToolDisplayMeta, AnnotationV1 } from '@phaneris/core'
 import { normalizePath, pathStartsWith, stripPathPrefix } from '@phaneris/core/utils'
 import { isParentTaskTool } from '@phaneris/shared/utils/toolNames'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence, useIsPresent, useReducedMotionConfig } from 'motion/react'
 import {
   ChevronRight,
   CheckCircle2,
@@ -26,7 +26,9 @@ import {
   CircleAlert,
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
-import { MOTION_DURATION, MOTION_EASE } from '../../lib/motion'
+import { MOTION_DURATION, MOTION_EASE, motionRowEnter, motionStaggerDelay, motionTween } from '../../lib/motion'
+import { useScrollBehavior } from '../../lib/scroll-intent'
+import { useExitIsolation } from '../../lib/presence'
 import { Markdown } from '../markdown'
 import { Spinner } from '../ui/LoadingIndicator'
 import { type IslandTransitionConfig } from '../ui'
@@ -211,8 +213,6 @@ export const SIZE_CONFIG = {
   activityRowHeight: 24,
   /** Max visible activities before scrolling (show ~15 items) */
   maxVisibleActivities: 15,
-  /** Number of items before which we apply staggered animation */
-  staggeredAnimationLimit: 10,
 } as const
 
 // ============================================================================
@@ -812,6 +812,8 @@ export function ActivityStatusIcon({
   /** Custom icon from tool metadata - emoji or data URL (base64) */
   customIcon?: string
 }) {
+  const reduceMotion = useReducedMotionConfig()
+
   // Render the appropriate icon based on status
   const renderIcon = () => {
     // For completed status with custom icon, use it instead of checkmark
@@ -868,20 +870,45 @@ export function ActivityStatusIcon({
     }
   }
 
-  // Wrap in AnimatePresence for crossfade between states
+  // The newest status is authoritative: it is painted at full strength on the
+  // frame the status changes, and only the previous icon fades underneath it.
+  // Fading the incoming icon in (and worse, `mode="wait"`) meant the slot spent
+  // the transition showing a faded or empty icon exactly when the state — the
+  // thing this row is reporting — had just changed.
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={status}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: MOTION_DURATION.emphasis, ease: MOTION_EASE.enter }}
-        className="shrink-0"
-      >
-        {renderIcon()}
-      </motion.div>
-    </AnimatePresence>
+    <span className={cn(SIZE_CONFIG.iconSize, "relative inline-flex shrink-0")}>
+      <AnimatePresence initial={false}>
+        <StatusIconLayer key={status} reduceMotion={reduceMotion}>
+          {renderIcon()}
+        </StatusIconLayer>
+      </AnimatePresence>
+    </span>
+  )
+}
+
+/**
+ * One layer of the status slot. The layer that still exists paints above the one
+ * that is leaving, so the newest icon is never drawn under a stale one.
+ */
+function StatusIconLayer({
+  reduceMotion,
+  children,
+}: {
+  reduceMotion: boolean | null
+  children: React.ReactNode
+}) {
+  const isPresent = useIsPresent()
+  return (
+    <motion.span
+      initial={false}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={motionTween(reduceMotion, 'fast', 'exit')}
+      style={{ zIndex: isPresent ? 1 : 0 }}
+      className="absolute inset-0 flex items-center justify-center"
+    >
+      {children}
+    </motion.span>
   )
 }
 
@@ -1249,8 +1276,8 @@ interface ActivityGroupRowProps {
   onExpandedGroupsChange?: (groups: Set<string>) => void
   /** Callback to open activity details in Monaco */
   onOpenActivityDetails?: (activity: ActivityItem) => void
-  /** Animation index for staggered animation */
-  animationIndex?: number
+  /** Stagger delay for this row; 0 for rows appended after the reveal. */
+  revealDelay?: number
   /** Session folder path for stripping from file paths in tool display */
   sessionFolderPath?: string
   /** Display mode: 'detailed' shows all info, 'informative' hides MCP/API names and params */
@@ -1261,7 +1288,8 @@ interface ActivityGroupRowProps {
  * Renders a Task subagent with its child activities grouped together.
  * Provides visual containment and collapsible children.
  */
-function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExpandedGroupsChange, onOpenActivityDetails, animationIndex = 0, sessionFolderPath, displayMode = 'detailed' }: ActivityGroupRowProps) {
+function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExpandedGroupsChange, onOpenActivityDetails, revealDelay = 0, sessionFolderPath, displayMode = 'detailed' }: ActivityGroupRowProps) {
+  const reduceMotion = useReducedMotionConfig()
   // Use local state if no controlled state provided
   const [localExpandedGroups, setLocalExpandedGroups] = useState<Set<string>>(new Set())
   const expandedGroups = externalExpandedGroups ?? localExpandedGroups
@@ -1289,7 +1317,7 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
     <motion.div
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: animationIndex < SIZE_CONFIG.staggeredAnimationLimit ? animationIndex * 0.03 : 0.3 }}
+      transition={motionRowEnter(reduceMotion, revealDelay)}
       className="space-y-0.5"
     >
       {/* Task header row - no left padding, chevron aligned with activity row icons */}
@@ -1376,23 +1404,14 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
       {/* Children with indentation */}
       <AnimatePresence initial={false}>
         {isExpanded && group.children.length > 0 && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{
-              height: { duration: MOTION_DURATION.emphasis, ease: MOTION_EASE.move },
-              opacity: { duration: MOTION_DURATION.standard, ease: MOTION_EASE.enter }
-            }}
-            className="overflow-hidden"
-          >
+          <CollapsingRegion className="overflow-hidden">
             <div className="pl-0 space-y-0.5 border-l-2 border-muted ml-[5px]">
               {group.children.map((child, idx) => (
                 <motion.div
                   key={child.id}
                   initial={{ opacity: 0, x: -4 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.02 }}
+                  transition={motionRowEnter(reduceMotion, motionStaggerDelay(idx))}
                   className="ml-[-4px]"
                 >
                   <ActivityRow
@@ -1405,7 +1424,7 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+          </CollapsingRegion>
         )}
       </AnimatePresence>
     </motion.div>
@@ -2765,6 +2784,7 @@ interface TodoListProps {
  * Styled to blend with TurnCard activities
  */
 function TodoList({ todos }: TodoListProps) {
+  const reduceMotion = useReducedMotionConfig()
   if (todos.length === 0) return null
 
   return (
@@ -2779,7 +2799,7 @@ function TodoList({ todos }: TodoListProps) {
           key={`${todo.content}-${index}`}
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.03 }}
+          transition={motionRowEnter(reduceMotion, motionStaggerDelay(index))}
         >
           <TodoRow todo={todo} />
         </motion.div>
@@ -2788,9 +2808,73 @@ function TodoList({ todos }: TodoListProps) {
   )
 }
 
+/**
+ * Renders the body of an inline disclosure (a Task group's children, the
+ * expanded activity list).
+ *
+ * One definition for one rule: `emphasis` for the height, `standard` for the
+ * opacity, and the layer that is closing drops out of the click, keyboard and
+ * screen-reader order immediately — the row the user just dismissed must not
+ * stay clickable while it animates away.
+ */
+function CollapsingRegion({
+  className,
+  onAnimationComplete,
+  children,
+}: {
+  className?: string
+  onAnimationComplete?: () => void
+  children: React.ReactNode
+}) {
+  const exitIsolation = useExitIsolation()
+  return (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: 'auto', opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{
+        height: { duration: MOTION_DURATION.emphasis, ease: MOTION_EASE.move },
+        opacity: { duration: MOTION_DURATION.standard, ease: MOTION_EASE.enter },
+      }}
+      onAnimationComplete={onAnimationComplete}
+      className={className}
+      data-collapsing-region=""
+      {...exitIsolation}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 // ============================================================================
 // Main Component
 // ============================================================================
+
+/**
+ * Stagger for rows that mount as part of an expansion.
+ *
+ * The sequence is only meaningful while the reveal is happening. Rows that
+ * arrive later (streamed tool activity) are new information and must not queue
+ * behind a stagger meant for the initial paint — and `hasUserToggled` cannot
+ * make that distinction, because it stays true for the rest of the turn once
+ * the user has expanded anything.
+ */
+function useRevealStagger(isRevealed: boolean) {
+  const revealedAtRef = React.useRef<number | null>(null)
+
+  React.useEffect(() => {
+    if (isRevealed) revealedAtRef.current = performance.now()
+  }, [isRevealed])
+
+  return useCallback((index: number) => {
+    const revealedAt = revealedAtRef.current
+    if (!isRevealed || revealedAt === null) return 0
+    // The window covers the expansion itself (emphasis) and the layout settle
+    // that follows it (spatial); past that the list is simply open.
+    if (performance.now() - revealedAt > MOTION_DURATION.spatial * 1000) return 0
+    return motionStaggerDelay(index)
+  }, [isRevealed])
+}
 
 /**
  * TurnCard - Email-like display for one assistant turn
@@ -2865,6 +2949,12 @@ export const TurnCard = React.memo(function TurnCard({
   // Ref for scrollable activities container (to scroll to bottom on expand)
   const activitiesContainerRef = useRef<HTMLDivElement>(null)
 
+  // Set while the user's expansion is still settling; see the handler below.
+  const awaitingExpandSettleRef = useRef(false)
+  const scrollBehavior = useScrollBehavior()
+  const reduceMotion = useReducedMotionConfig()
+  const revealDelay = useRevealStagger(isExpanded)
+
   // Track if component has mounted (enable fade-in for new activities after mount)
   const hasMounted = useRef(false)
   useEffect(() => {
@@ -2874,6 +2964,9 @@ export const TurnCard = React.memo(function TurnCard({
   const toggleExpanded = useCallback(() => {
     hasUserToggled.current = true
     const newExpanded = !isExpanded
+    // Only an expansion needs the "show the newest step" scroll; a collapse
+    // must clear a settle that is still in flight.
+    awaitingExpandSettleRef.current = newExpanded
     if (onExpandedChange) {
       onExpandedChange(newExpanded)
     } else {
@@ -2889,20 +2982,21 @@ export const TurnCard = React.memo(function TurnCard({
     }
   }, [turnId, isExpanded, onExpandedChange])
 
-  // Scroll to bottom of activities list when user manually expands
-  // This shows the most recent step instead of the oldest
-  useEffect(() => {
-    if (isExpanded && hasUserToggled.current && activitiesContainerRef.current) {
-      // Wait for expansion animation to complete (250ms) before scrolling
-      const timer = setTimeout(() => {
-        activitiesContainerRef.current?.scrollTo({
-          top: activitiesContainerRef.current.scrollHeight,
-          behavior: 'smooth'
-        })
-      }, 260)
-      return () => clearTimeout(timer)
-    }
-  }, [isExpanded])
+  // Show the newest step instead of the oldest after the user expands.
+  //
+  // The expansion's own completion is the signal — a fixed delay (previously
+  // 260ms) either fired before the scrollable layout existed or dragged on long
+  // after it, and it had no relationship to the reduced-motion path, where the
+  // height is already final. The scroll is a single reveal of the target the
+  // user asked for, so it uses the shared reveal behavior instead of a hardcoded
+  // `smooth`.
+  const handleActivityListAnimationComplete = useCallback(() => {
+    if (!awaitingExpandSettleRef.current) return
+    awaitingExpandSettleRef.current = false
+    const container = activitiesContainerRef.current
+    if (!container) return
+    container.scrollTo({ top: container.scrollHeight, behavior: scrollBehavior('reveal') })
+  }, [scrollBehavior])
 
   // Use local state for activity groups if no controlled state provided
   const [localExpandedActivityGroups, setLocalExpandedActivityGroups] = useState<Set<string>>(new Set())
@@ -2953,15 +3047,15 @@ export const TurnCard = React.memo(function TurnCard({
   // Group activities by parent Task for better visualization
   // Only group if there are Task subagents, otherwise keep flat for simpler view
   const groupedActivities = useMemo(
-    () => hasTaskSubagents ? groupActivitiesByParent(sortedActivities) : null,
-    [sortedActivities, hasTaskSubagents]
+    () => isExpanded && hasTaskSubagents ? groupActivitiesByParent(sortedActivities) : null,
+    [isExpanded, sortedActivities, hasTaskSubagents]
   )
 
   // Pre-compute which activities are last children - O(n) instead of O(n²) per-render check
   // Only used for flat view (non-grouped)
   const lastChildSet = useMemo(
-    () => !hasTaskSubagents ? computeLastChildSet(sortedActivities) : new Set<string>(),
-    [sortedActivities, hasTaskSubagents]
+    () => isExpanded && !hasTaskSubagents ? computeLastChildSet(sortedActivities) : new Set<string>(),
+    [isExpanded, sortedActivities, hasTaskSubagents]
   )
 
   // Don't render if nothing to show and turn is complete
@@ -3092,14 +3186,8 @@ export const TurnCard = React.memo(function TurnCard({
           {/* Expanded Activity List */}
           <AnimatePresence initial={false}>
             {isExpanded && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{
-                  height: { duration: MOTION_DURATION.emphasis, ease: MOTION_EASE.move },
-                  opacity: { duration: MOTION_DURATION.standard, ease: MOTION_EASE.enter }
-                }}
+              <CollapsingRegion
+                onAnimationComplete={handleActivityListAnimationComplete}
                 className="overflow-hidden"
               >
                 {/* Scrollable container when many activities - subtle background for scroll context */}
@@ -3127,7 +3215,7 @@ export const TurnCard = React.memo(function TurnCard({
                           expandedGroups={expandedActivityGroups}
                           onExpandedGroupsChange={handleExpandedActivityGroupsChange}
                           onOpenActivityDetails={onOpenActivityDetails}
-                          animationIndex={index}
+                          revealDelay={revealDelay(index)}
                           sessionFolderPath={sessionFolderPath}
                           displayMode={displayMode}
                         />
@@ -3140,7 +3228,7 @@ export const TurnCard = React.memo(function TurnCard({
                               : false
                           }
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: hasUserToggled.current ? (index < SIZE_CONFIG.staggeredAnimationLimit ? index * 0.03 : SIZE_CONFIG.staggeredAnimationLimit * 0.03) : 0 }}
+                          transition={motionRowEnter(reduceMotion, revealDelay(index))}
                         >
                           <ActivityRow
                             activity={item}
@@ -3162,8 +3250,7 @@ export const TurnCard = React.memo(function TurnCard({
                             : false
                         }
                         animate={{ opacity: 1, x: 0 }}
-                        // Only animate on user toggle, not initial mount
-                        transition={{ delay: hasUserToggled.current ? (index < SIZE_CONFIG.staggeredAnimationLimit ? index * 0.03 : SIZE_CONFIG.staggeredAnimationLimit * 0.03) : 0 }}
+                        transition={motionRowEnter(reduceMotion, revealDelay(index))}
                       >
                         <ActivityRow
                           activity={activity}
@@ -3175,17 +3262,15 @@ export const TurnCard = React.memo(function TurnCard({
                       </motion.div>
                     ))
                   )}
-                  {/* Thinking/Buffering indicator - shown while waiting for response */}
+                  {/* Thinking/Buffering indicator - shown while waiting for response.
+                      This is a status change, not part of the reveal: it appears as
+                      soon as the state is true, with no stagger in front of it. */}
                   {isThinking && !animateResponse && (
                     <motion.div
                       key="thinking"
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{
-                        delay: Math.min(sortedActivities.length, SIZE_CONFIG.staggeredAnimationLimit) * 0.03,
-                        duration: MOTION_DURATION.spatial,
-                        ease: "easeOut"
-                      }}
+                      transition={motionRowEnter(reduceMotion)}
                       className={cn("flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-muted-foreground/70", SIZE_CONFIG.fontSize)}
                     >
                       <Spinner className={SIZE_CONFIG.spinnerSize} />
@@ -3198,7 +3283,7 @@ export const TurnCard = React.memo(function TurnCard({
                 {todos && todos.length > 0 && (
                   <TodoList todos={todos} />
                 )}
-              </motion.div>
+              </CollapsingRegion>
             )}
           </AnimatePresence>
         </div>

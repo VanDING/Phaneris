@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { codeToHtml, bundledLanguages, type BundledLanguage } from 'shiki'
+import { codeHighlightKey, requestCodeHighlight } from './code-highlight'
 import { cn } from '../../lib/utils'
 import { useShikiTheme } from '../../context/ShikiThemeContext'
 
@@ -21,15 +21,8 @@ export interface CodeBlockProps {
   forcedTheme?: 'light' | 'dark'
 }
 
-// Languages to pre-load (most common in chat contexts)
-const PRELOADED_LANGUAGES = [
-  'javascript', 'typescript', 'python', 'json', 'bash', 'shell',
-  'markdown', 'html', 'css', 'sql', 'yaml', 'go', 'rust', 'java',
-  'c', 'cpp', 'tsx', 'jsx', 'swift', 'kotlin', 'ruby', 'php'
-] as const
-
 // Map common aliases to Shiki language names
-const LANGUAGE_ALIASES: Record<string, BundledLanguage> = {
+const LANGUAGE_ALIASES: Record<string, string> = {
   'js': 'javascript',
   'ts': 'typescript',
   'py': 'python',
@@ -43,19 +36,6 @@ const LANGUAGE_ALIASES: Record<string, BundledLanguage> = {
   'objc': 'objc',
 }
 
-// Simple LRU cache for highlighted code
-const highlightCache = new Map<string, string>()
-const CACHE_MAX_SIZE = 200
-
-function getCacheKey(code: string, lang: string, theme: string): string {
-  return `${theme}:${lang}:${code}`
-}
-
-function isValidLanguage(lang: string): lang is BundledLanguage {
-  const normalized = LANGUAGE_ALIASES[lang] || lang
-  return normalized in bundledLanguages
-}
-
 /**
  * CodeBlock - Syntax highlighted code block using Shiki
  *
@@ -64,8 +44,9 @@ function isValidLanguage(lang: string): lang is BundledLanguage {
  */
 export function CodeBlock({ code, language = 'text', className, mode = 'full', forcedTheme }: CodeBlockProps) {
   const { t } = useTranslation()
-  const [highlighted, setHighlighted] = React.useState<string | null>(null)
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [highlight, setHighlight] = React.useState<{ key: string; html: string | null } | null>(null)
+  const elementRef = React.useRef<HTMLElement | null>(null)
+  const bindElement = React.useCallback((element: HTMLElement | null) => { elementRef.current = element }, [])
   const [copied, setCopied] = React.useState(false)
 
   // Get shiki theme from context (set by ShikiThemeProvider in the app).
@@ -75,71 +56,33 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
   // Resolve language alias - keep as string to allow 'text' fallback
   const langLower = language.toLowerCase()
   const resolvedLang: string = LANGUAGE_ALIASES[langLower] || langLower
+  const theme = contextShikiTheme ?? (forcedTheme
+    ? forcedTheme === 'dark' ? 'github-dark' : 'github-light'
+    : typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? 'github-dark' : 'github-light')
+  const key = codeHighlightKey(code, resolvedLang, theme)
+  // Never display a previous code revision while its replacement is queued.
+  const highlighted = highlight?.key === key ? highlight.html : null
+  const isLoading = !highlighted
 
   React.useEffect(() => {
-    let cancelled = false
-
-    async function highlight() {
-      // Theme priority:
-      // 1. Context theme (from ShikiThemeProvider) - handles supportedModes correctly
-      // 2. forcedTheme prop - explicit override for specific use cases
-      // 3. DOM detection fallback - backwards compatible default
-      let theme: string
-      if (contextShikiTheme) {
-        theme = contextShikiTheme
-      } else if (forcedTheme) {
-        theme = forcedTheme === 'dark' ? 'github-dark' : 'github-light'
-      } else {
-        const isDark = document.documentElement.classList.contains('dark')
-        theme = isDark ? 'github-dark' : 'github-light'
-      }
-      const cacheKey = getCacheKey(code, resolvedLang, theme)
-
-      const cached = highlightCache.get(cacheKey)
-      if (cached) {
-        if (!cancelled) {
-          setHighlighted(cached)
-          setIsLoading(false)
-        }
-        return
-      }
-
-      try {
-        // Use valid language or fallback to plaintext
-        const lang = isValidLanguage(resolvedLang) ? resolvedLang : 'text'
-
-        const html = await codeToHtml(code, {
-          lang,
-          theme,
-        })
-
-        // Cache the result
-        if (highlightCache.size >= CACHE_MAX_SIZE) {
-          const firstKey = highlightCache.keys().next().value
-          if (firstKey) highlightCache.delete(firstKey)
-        }
-        highlightCache.set(cacheKey, html)
-
-        if (!cancelled) {
-          setHighlighted(html)
-          setIsLoading(false)
-        }
-      } catch (error) {
-        // Fallback to plain text on error
-        console.warn(`Shiki highlighting failed for language "${resolvedLang}":`, error)
-        if (!cancelled) {
-          setHighlighted(null)
-          setIsLoading(false)
-        }
-      }
+    if (mode === 'terminal') return
+    let cancel: (() => void) | undefined
+    const start = () => { cancel = requestCodeHighlight(code, resolvedLang, theme, html => setHighlight({ key, html })) }
+    // Text is readable immediately. Expensive work begins only near the viewport,
+    // including nested response panes and panels temporarily hidden with CSS.
+    if (typeof IntersectionObserver === 'undefined' || !elementRef.current) {
+      start()
+      return () => cancel?.()
     }
-
-    highlight()
-
-    return () => {
-      cancelled = true
-    }
-  }, [code, resolvedLang, forcedTheme, contextShikiTheme])
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        observer.disconnect()
+        start()
+      }
+    }, { rootMargin: '200px' })
+    observer.observe(elementRef.current)
+    return () => { observer.disconnect(); cancel?.() }
+  }, [code, resolvedLang, theme, key, mode])
 
   const handleCopy = React.useCallback(async () => {
     try {
@@ -164,7 +107,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
   if (mode === 'minimal') {
     if (isLoading || !highlighted) {
       return (
-        <pre className={cn('font-mono text-sm whitespace-pre-wrap', className)}>
+        <pre ref={bindElement} className={cn('font-mono text-sm whitespace-pre-wrap', className)}>
           <code>{code}</code>
         </pre>
       )
@@ -172,6 +115,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
 
     return (
       <div
+        ref={bindElement}
         className={cn('font-mono text-sm [&_pre]:!bg-transparent [&_pre]:!p-0 [&_pre]:whitespace-pre-wrap [&_pre]:break-all [&_code]:!bg-transparent', className)}
         dangerouslySetInnerHTML={{ __html: highlighted }}
       />
@@ -180,7 +124,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
 
   // Full mode: rich styling with header and copy button
   return (
-    <div className={cn('relative group rounded-[8px] overflow-hidden border bg-muted/30', className)}>
+    <div ref={bindElement} className={cn('relative group rounded-[8px] overflow-hidden border bg-muted/30', className)}>
       {/* Language label + copy button */}
       <div className="flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b text-xs">
         <span className="text-muted-foreground font-medium uppercase tracking-wide">

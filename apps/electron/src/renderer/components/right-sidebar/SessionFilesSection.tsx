@@ -17,7 +17,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotionConfig, type Variants } from 'motion/react'
 import { File, Folder, FolderOpen, FileText, Image, FileCode, ChevronRight, ExternalLink, Copy } from 'lucide-react'
 import {
   ContextMenu,
@@ -204,7 +204,7 @@ function FileTreeItem({
   isNested,
 }: FileTreeItemProps) {
   const { t } = useTranslation()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const isDirectory = file.type === 'directory'
   const isExpanded = expandedPaths.has(file.path)
   const hasChildren = isDirectory && file.children && file.children.length > 0

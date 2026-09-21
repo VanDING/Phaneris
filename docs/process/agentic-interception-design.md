@@ -4,7 +4,7 @@
 - 日期：2026-09-20
 - 性质：设计（定位已定，实施未开始）
 - 定位决定：采用**方向 B｜治理与介入**。本文是该决定的落地设计。
-- 关联：[`product-development-directions-2026-09-19.md`](product-development-directions-2026-09-19.md) 方向 F（生命周期钩子与受管扩展）、[`pi-sdk-native-capabilities-gap-analysis.md`](pi-sdk-native-capabilities-gap-analysis.md) §2.1、[`pi-kernel.md`](pi-kernel.md) 残留判定规则、[`automations` 用户指南](../apps/electron/src/renderer/docs/guide/en/automations/overview.md)
+- 关联：[`product-development-directions-2026-09-19.md`](product-development-directions-2026-09-19.md) 方向 F（生命周期钩子与受管扩展）、[`pi-sdk-native-capabilities-gap-analysis.md`](../pi-sdk-native-capabilities-gap-analysis.md) §2.1、[`pi-kernel.md`](../pi-kernel.md) 残留判定规则、[`automations` 用户指南](../../apps/electron/src/renderer/docs/guide/en/automations/overview.md)
 
 ---
 

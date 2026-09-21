@@ -1059,6 +1059,7 @@
   "pluginsList.pluginBadge": "plugin",
   "pluginsList.pluginNotFound": "Plugin \"{{name}}\" is not installed in this Workspace.",
   "pluginsList.promptAbsent": "No",
+  "pluginsList.promptDescription": "Instructions applied on every turn while this plugin is active.",
   "pluginsList.promptFragment": "Standing prompt",
   "pluginsList.promptPresent": "Yes — added to every turn",
   "pluginsList.removesNone": "Nothing — this bundle owns no resources of its own",

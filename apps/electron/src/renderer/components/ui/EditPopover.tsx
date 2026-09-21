@@ -82,6 +82,8 @@ export type EditContextKey =
   | 'add-source-local' // Filter-specific: user is viewing Local Folders
   | 'add-skill'
   | 'add-plugin'
+  | 'plugin-manifest'
+  | 'plugin-prompt'
   | 'edit-statuses'
   | 'edit-labels'
   | 'edit-auto-rules'
@@ -421,6 +423,34 @@ const EDIT_CONFIGS: Record<EditContextKey, (location: string) => EditConfig> = {
     displayLabelKey: 'editPopover.label.addPlugin',
     exampleKey: 'editPopover.example.addPlugin',
     overridePlaceholderKey: 'editPopover.placeholder.addPlugin',
+  }),
+
+  'plugin-manifest': (location) => ({
+    context: {
+      label: 'Plugin Manifest',
+      filePath: `${location}/plugin.json`,
+      context:
+        'The user is editing a plugin bundle manifest (plugin.json). Preserve the required $schema and name fields, and keep the name equal to the plugin directory name. ' +
+        'The manifest may include version, description, icon (emoji or URL), author, homepage, repository, license, keywords, and extensions. ' +
+        'Do not change the plugin name unless explicitly requested because it is the bundle identity. After editing, validate with config_validate({ target: "plugins" }) and confirm clearly when done.',
+    },
+    example: 'Update the plugin description and icon',
+    model: 'fast',
+    systemPromptPreset: 'mini',
+    inlineExecution: true,
+  }),
+
+  'plugin-prompt': (location) => ({
+    context: {
+      label: 'Plugin Prompt',
+      filePath: `${location}/PROMPT.md`,
+      context:
+        'The user is editing the plugin bundle resident prompt in PROMPT.md. Keep this file focused on concise instructions that should apply on every turn while the plugin is active; move reference material into a skill. Preserve markdown structure and do not add credentials. After editing, confirm clearly when done.',
+    },
+    example: 'Make the plugin cite primary sources',
+    model: 'fast',
+    systemPromptPreset: 'mini',
+    inlineExecution: true,
   }),
 
   // Status configuration context

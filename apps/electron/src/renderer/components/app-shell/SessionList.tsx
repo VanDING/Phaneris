@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react"
-import { AnimatePresence, motion, useReducedMotion, useIsPresent } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotionConfig, useIsPresent } from 'motion/react'
 import { motionTween } from '@phaneris/ui/motion'
 import { sessionDescendants } from '@/utils/session-families'
 import { useTranslation } from "react-i18next"
@@ -37,7 +37,7 @@ import { buildCollapsedGroupsScopeSuffix } from "@/utils/session-list-collapse"
 
 function SessionChildren({ id, children }: { id: string; children: React.ReactNode }) {
   const present = useIsPresent()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   return <motion.div id={id} inert={!present} aria-hidden={!present || undefined}
     initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
     transition={motionTween(reduceMotion, 'emphasis', 'move')} className="overflow-hidden">{children}</motion.div>

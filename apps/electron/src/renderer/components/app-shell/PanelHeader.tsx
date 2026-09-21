@@ -29,7 +29,7 @@
 
 import * as React from 'react'
 import { useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionSpring, motionTween } from '@phaneris/ui/motion'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -119,7 +119,7 @@ export function PanelHeader({
   isRegeneratingTitle,
   centerTitleInPanel = false,
 }: PanelHeaderProps) {
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   // Fall back to AppShellContext.leadingAction so per-panel back buttons (set by
   // SurfaceSlot in compact mode) propagate to every page's PanelHeader without each
   // page having to forward the prop manually. ChatPage explicitly passes its own

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import type { KeyboardEvent } from 'react'
-import { LayoutGroup, motion, useReducedMotion } from 'motion/react'
+import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { ChevronRight, Link2, Maximize2, Minimize2, PackageOpen, Pin, PinOff, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@phaneris/ui'
@@ -41,7 +41,7 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
   const setExpandedItemId = useSetAtom(expandedWorkbenchItemIdAtom)
   const activeSessionId = useAtomValue(activeSessionIdAtom)
   const sessionMetaMap = useAtomValue(sessionMetaMapAtom)
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const { activeWorkspaceId } = useAppShellContext()
   const activeItem = state.items.find((item) => item.id === state.activeItemId) ?? null
   const boundSessionId = activeItem?.binding.type === 'session'

@@ -2,7 +2,7 @@ import * as React from "react"
 import { useTranslation, Trans } from "react-i18next"
 import { useRef, useState, useEffect, useCallback, useMemo } from "react"
 import { useAtomValue, useStore } from "jotai"
-import { motion, AnimatePresence, useReducedMotion } from "motion/react"
+import { motion, AnimatePresence, useReducedMotionConfig } from "motion/react"
 import { MOTION_SPRING } from '@phaneris/ui/motion'
 import {
   Archive,
@@ -66,12 +66,6 @@ import { ContextMenuProvider } from "@/components/ui/menu-context"
 import { SidebarMenu } from "./SidebarMenu"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { FadingText } from "@/components/ui/fading-text"
-import {
-  Collapsible,
-  CollapsibleTrigger,
-  AnimatedCollapsibleContent,
-  springTransition as collapsibleSpring,
-} from "@/components/ui/collapsible"
 import { SessionList, type ChatGroupingMode } from "./SessionList"
 import { MainContentPanel } from "./MainContentPanel"
 import { SurfaceContainer } from "./SurfaceContainer"
@@ -595,7 +589,7 @@ function AppShellContent({
 
   const effectiveSidebarAndNavigatorHidden = isSidebarAndNavigatorHidden || isAutoCompact
   const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible ? sidebarWidth : SIDEBAR_RAIL_WIDTH)
-  const reduceSidebarMotion = useReducedMotion()
+  const reduceSidebarMotion = useReducedMotionConfig()
   const sidebarSashTransition = reduceSidebarMotion ? undefined : 'left 280ms cubic-bezier(0.2, 0, 0, 1)'
 
   const [isResizing, setIsResizing] = React.useState<'sidebar' | 'session-list' | null>(null)

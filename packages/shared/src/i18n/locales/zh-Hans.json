@@ -1059,6 +1059,7 @@
   "pluginsList.pluginBadge": "插件",
   "pluginsList.pluginNotFound": "此工作区未安装插件「{{name}}」。",
   "pluginsList.promptAbsent": "无",
+  "pluginsList.promptDescription": "插件激活期间每轮都会应用的指令。",
   "pluginsList.promptFragment": "常驻指令",
   "pluginsList.promptPresent": "有 —— 每轮注入",
   "pluginsList.removesNone": "无 —— 该插件包没有独占资源",

@@ -19,8 +19,15 @@ import { DEEPLINK_SCHEME } from './identity.generated.ts';
  * several development instances can register different schemes
  * (`phaneris1://`, `phaneris2://`) without fighting over one protocol
  * registration. Never used to claim the upstream scheme.
+ *
+ * `process` is absent in a browser context (the Electron renderer runs with
+ * `nodeIntegration: false`, and the Playground is served to a plain browser),
+ * and this module is re-exported from the shared index, so the override has to
+ * be read defensively — the same guard `feature-flags.ts` documents for
+ * `process.env`. Without it, importing anything that reaches the shared index
+ * fails at module init with `process is not defined`.
  */
-export const RESOLVED_DEEPLINK_SCHEME = process.env.PHANERIS_DEEPLINK_SCHEME || DEEPLINK_SCHEME;
+export const RESOLVED_DEEPLINK_SCHEME = (typeof process === 'undefined' ? undefined : process.env.PHANERIS_DEEPLINK_SCHEME) || DEEPLINK_SCHEME;
 
 /** Value to compare against `URL.protocol`, e.g. `phaneris:`. */
 export const DEEPLINK_PROTOCOL = `${RESOLVED_DEEPLINK_SCHEME}:`;

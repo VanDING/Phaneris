@@ -229,6 +229,17 @@ describe('analyzePluginInstall', () => {
     expect(plan.warnings.some((w) => w.path.includes('bad'))).toBe(true);
   });
 
+  it('rejects a source key that would escape the workspace sources directory', () => {
+    writeManifest();
+    writeSkill('s');
+    writePackageFile(
+      'mcp.json',
+      JSON.stringify({ mcpServers: { '../outside': { type: 'streamable-http', url: 'https://example.test/mcp' } } }),
+    );
+
+    expect(() => analyzePluginInstall(workspaceRoot, packageRoot)).toThrow(/Invalid plugin resource name/);
+  });
+
   it('rejects a package that contributes nothing (D3)', () => {
     writeManifest();
     expect(() => analyzePluginInstall(workspaceRoot, packageRoot)).toThrow(/contributes nothing/);
@@ -240,6 +251,27 @@ describe('analyzePluginInstall', () => {
 // ============================================================================
 
 describe('installPlugin', () => {
+  it('restores existing resources and removes staged additions when a later source write fails', () => {
+    writeManifest();
+    writeSkill('one');
+    writePackageFile(
+      'mcp.json',
+      JSON.stringify({ mcpServers: { good: { type: 'stdio', command: './bin/server', args: ['ok'] } } }),
+    );
+    installPlugin(workspaceRoot, analyzePluginInstall(workspaceRoot, packageRoot));
+    const oldSource = readFileSync(join(workspaceRoot, 'sources', 'good', 'config.json'), 'utf-8');
+
+    writeSkill('new');
+    writePackageFile(
+      'mcp.json',
+      JSON.stringify({ mcpServers: { good: { type: 'stdio', command: './bin/server', args: [123] } } }),
+    );
+    const plan = analyzePluginInstall(workspaceRoot, packageRoot);
+    expect(() => installPlugin(workspaceRoot, plan)).toThrow(/Invalid source config/);
+    expect(readFileSync(join(workspaceRoot, 'sources', 'good', 'config.json'), 'utf-8')).toBe(oldSource);
+    expect(existsSync(join(workspaceRoot, 'skills', 'new'))).toBe(false);
+  });
+
   it('materializes skills into <ws>/skills and MCP servers into <ws>/sources', () => {
     writeManifest({ version: '1.0.0' });
     writeSkill('financial-modeling', 'Three-statement models');

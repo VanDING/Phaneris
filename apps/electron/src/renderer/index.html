@@ -21,6 +21,13 @@
       @keyframes _spin { to { transform:rotate(360deg) } }
       @media (prefers-color-scheme:dark) { #_loader svg { color:rgba(255,255,255,0.4) } }
       @media (prefers-color-scheme:light) { #_loader svg { color:rgba(0,0,0,0.3) } }
+      /* Preference handling has to live in this inline block: the loader paints
+         before any bundle (and its media queries) has loaded, so the app
+         stylesheet cannot reach it. Static mark instead of an endless spin. */
+      @media (prefers-reduced-motion: reduce) {
+        #_loader { opacity:1; animation:none }
+        #_loader svg { animation:none }
+      }
     </style>
     <div id="_loader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"/></svg></div>
   </div>

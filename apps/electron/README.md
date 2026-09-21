@@ -23,14 +23,14 @@ renderer (React)
 Electron main process
     │ packages/server-core SessionManager
     │ packages/shared PiAgent
-    └─ JSONL stdio → bundled pi-agent-server → Pi SDK 0.85.1
+    └─ JSONL stdio → bundled pi-agent-server → Pi SDK 0.86.1
 ```
 
 Agent execution stays in the separately built `packages/pi-agent-server` subprocess staged under `resources/pi-agent-server`. The main bundle only carries model-catalog and credential plumbing for UI/runtime coordination; provider request paths execute in the subprocess.
 
 Credentials are resolved by the shared credential manager and sent to the subprocess as provider-aware `piAuth` data. OAuth refreshes are delivered with `token_update`. Provider secrets are not read from ambient `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` variables.
 
-Session lifecycle and source management live in `packages/server-core`; tool permissions and event adaptation live in `packages/shared`; React components shared with web surfaces live in `packages/ui`.
+Session lifecycle, source management, and the headless bootstrap live in `packages/server-core`; tool permissions and event adaptation live in `packages/shared`; React components shared with web surfaces live in `packages/ui`.
 
 ## Directory map
 

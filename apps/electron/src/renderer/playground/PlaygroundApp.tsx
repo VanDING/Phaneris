@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { PanelRight } from 'lucide-react'
+import { MotionConfig } from 'motion/react'
 import { PhanerisSymbol } from '@/components/icons/PhanerisSymbol'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/context/ThemeContext'
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/select'
 import type { ThemeSummary } from '@config/theme'
 import { ThemeToggle } from './ThemeToggle'
+import { MotionToggle, usePlaygroundMotionPreference, MOTION_CONFIG_BY_PREFERENCE } from './MotionToggle'
 import { Sidebar } from './Sidebar'
 import { ComponentPreview } from './ComponentPreview'
 import { VariantsSidebar } from './VariantsSidebar'
@@ -181,76 +183,85 @@ export function PlaygroundApp() {
     setColorTheme(nextTheme)
   }
 
+  const [motionPreference, setMotionPreference] = usePlaygroundMotionPreference()
+
   return (
-    <div className="h-screen flex flex-col bg-background text-foreground">
-      {/* Header */}
-      <header className="h-12 shrink-0 flex items-center justify-between px-4 border-b border-border bg-background">
-        <div className="flex items-center gap-3">
-          <PhanerisSymbol className="h-5 w-5" />
-          <h1 className="font-semibold text-foreground font-sans">
-            Design System Playground
-          </h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <Select value={effectiveColorTheme ?? 'default'} onValueChange={handleThemeChange}>
-            <SelectTrigger className="h-8 w-[170px] bg-foreground/5 border-border/50 text-xs">
-              <SelectValue placeholder="Theme" />
-            </SelectTrigger>
-            <SelectContent>
-              {themeOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <button
-            onClick={() => setVariantsSidebarOpen(!variantsSidebarOpen)}
-            className={cn(
-              'p-2 rounded-md transition-colors',
-              variantsSidebarOpen
-                ? 'bg-foreground/10 text-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
-            )}
-            title={variantsSidebarOpen ? 'Hide variants' : 'Show variants'}
-          >
-            <PanelRight className="w-4 h-4" />
-          </button>
-        </div>
-      </header>
-
-      {/* Main content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Component list */}
-        <Sidebar
-          categories={categories}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-        />
-
-        {/* Content area - full height preview */}
-        {selectedComponent ? (
-          <ComponentPreview
-            component={selectedComponent}
-            props={props}
-          />
-        ) : (
-          <div className="flex-1 flex items-center justify-center text-muted-foreground">
-            Select a component from the sidebar
+    // Parity with every production host (apps/electron, apps/webui, viewer):
+    // the harness must exercise the same reduced-motion contract as the app,
+    // including the ability to force either branch on a machine whose OS
+    // preference is unset.
+    <MotionConfig reducedMotion={MOTION_CONFIG_BY_PREFERENCE[motionPreference]}>
+      <div className="h-screen flex flex-col bg-background text-foreground">
+        {/* Header */}
+        <header className="h-12 shrink-0 flex items-center justify-between px-4 border-b border-border bg-background">
+          <div className="flex items-center gap-3">
+            <PhanerisSymbol className="h-5 w-5" />
+            <h1 className="font-semibold text-foreground font-sans">
+              Design System Playground
+            </h1>
           </div>
-        )}
+          <div className="flex items-center gap-2">
+            <MotionToggle preference={motionPreference} onPreferenceChange={setMotionPreference} />
+            <ThemeToggle />
+            <Select value={effectiveColorTheme ?? 'default'} onValueChange={handleThemeChange}>
+              <SelectTrigger className="h-8 w-[170px] bg-foreground/5 border-border/50 text-xs">
+                <SelectValue placeholder="Theme" />
+              </SelectTrigger>
+              <SelectContent>
+                {themeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <button
+              onClick={() => setVariantsSidebarOpen(!variantsSidebarOpen)}
+              className={cn(
+                'p-2 rounded-md transition-colors',
+                variantsSidebarOpen
+                  ? 'bg-foreground/10 text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
+              )}
+              title={variantsSidebarOpen ? 'Hide variants' : 'Show variants'}
+            >
+              <PanelRight className="w-4 h-4" />
+            </button>
+          </div>
+        </header>
 
-        {/* Right Sidebar - Variants & Props */}
-        <VariantsSidebar
-          component={selectedComponent}
-          selectedVariant={selectedVariant}
-          onVariantSelect={handleVariantSelect}
-          props={props}
-          onPropsChange={handlePropsChange}
-          isOpen={variantsSidebarOpen}
-        />
+        {/* Main content */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Left Sidebar - Component list */}
+          <Sidebar
+            categories={categories}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
+
+          {/* Content area - full height preview */}
+          {selectedComponent ? (
+            <ComponentPreview
+              component={selectedComponent}
+              props={props}
+            />
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-muted-foreground">
+              Select a component from the sidebar
+            </div>
+          )}
+
+          {/* Right Sidebar - Variants & Props */}
+          <VariantsSidebar
+            component={selectedComponent}
+            selectedVariant={selectedVariant}
+            onVariantSelect={handleVariantSelect}
+            props={props}
+            onPropsChange={handlePropsChange}
+            isOpen={variantsSidebarOpen}
+          />
+        </div>
       </div>
-    </div>
+    </MotionConfig>
   )
 }

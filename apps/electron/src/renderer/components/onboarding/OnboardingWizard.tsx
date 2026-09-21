@@ -1,3 +1,4 @@
+import { ContentSwap } from "@/components/ui/content-swap"
 import { cn } from "@/lib/utils"
 import { WelcomeStep } from "./WelcomeStep"
 import type { ApiSetupMethod } from "./APISetupStep"
@@ -215,8 +216,13 @@ export function OnboardingWizard({
 
       {/* Main content — min-h-full + flex center means: center when content fits,
           natural flow + scroll when content is taller than the viewport (mobile). */}
-      <main className="flex min-h-full items-center justify-center p-4 sm:p-8">
-        {renderStep()}
+      <main className="relative flex min-h-full items-center justify-center p-4 sm:p-8">
+        {/* Step identity, so a forward or back step is one visible change of
+            content rather than an unrelated snap. The step keeps its own
+            width/max-width; the wrapper only centres it inside `main`. */}
+        <ContentSwap swapKey={state.step} className="flex w-full justify-center">
+          {renderStep()}
+        </ContentSwap>
       </main>
     </div>
   )

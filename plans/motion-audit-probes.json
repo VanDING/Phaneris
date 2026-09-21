@@ -1,0 +1,75 @@
+{
+  "date": "2026-09-21",
+  "browser": "153.0.4234.48",
+  "scope": "Isolated Chromium fixtures using current repository HTML/CSS; not full application E2E.",
+  "results": [
+    {
+      "probe": "pre-react-loader-reduced-motion",
+      "path": "apps/electron/src/renderer/index.html",
+      "observed": {
+        "matchesReduce": true,
+        "animationName": "_spin",
+        "animationDuration": "1s",
+        "iterationCount": "infinite"
+      }
+    },
+    {
+      "probe": "pre-react-loader-reduced-motion",
+      "path": "apps/webui/src/index.html",
+      "observed": {
+        "matchesReduce": true,
+        "animationName": "_spin",
+        "animationDuration": "1s",
+        "iterationCount": "infinite"
+      }
+    },
+    {
+      "probe": "explicit-smooth-scroll-under-global-reduced-css",
+      "observed": {
+        "matchesReduce": true,
+        "scrollBehavior": "auto",
+        "immediate": 0,
+        "intermediate": [
+          2,
+          10,
+          24,
+          48,
+          83,
+          138,
+          220,
+          341,
+          499,
+          660,
+          794,
+          899,
+          985,
+          1056,
+          1116,
+          1166,
+          1210,
+          1248,
+          1281,
+          1310,
+          1336,
+          1359,
+          1380,
+          1398,
+          1414,
+          1428,
+          1441,
+          1452,
+          1461,
+          1470,
+          1477,
+          1483,
+          1488,
+          1492,
+          1495,
+          1497,
+          1499
+        ],
+        "final": 1500
+      }
+    }
+  ]
+}

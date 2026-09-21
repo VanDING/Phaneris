@@ -20,15 +20,16 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { Shapes } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { PluginMenu } from '@/components/app-shell/PluginMenu'
-import { Info_Alert, Info_Page, Info_Section, Info_Table } from '@/components/info'
+import { Info_Alert, Info_Page, Info_Section, Info_Table, Info_Markdown } from '@/components/info'
 import { useActiveWorkspace, useAppShellContext } from '@/context/AppShellContext'
 import { navigate, routes } from '@/lib/navigate'
 import { getFileManagerName } from '@/lib/platform'
 import type { PluginUninstallPlan, PluginSummary } from '../../shared/types'
+import { EditPopover, EditButton, getEditConfig } from '@/components/ui/EditPopover'
+import { PluginAvatar } from '@/components/ui/plugin-avatar'
 
 interface PluginInfoPageProps {
   pluginName: string
@@ -116,15 +117,22 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
               avatar={
                 // Same tile treatment the sidebar rows use: bg-foreground/5 with a
                 // muted glyph, so the hero and the list row read as one thing.
-                <div className="h-full w-full grid place-items-center bg-foreground/5 text-muted-foreground">
-                  <Shapes className="h-4 w-4" strokeWidth={1.75} />
-                </div>
+                <PluginAvatar plugin={plugin} workspaceId={workspaceId} fluid />
               }
               title={plugin.name}
               tagline={plugin.description}
             />
 
-            <Info_Section title={t('pluginsList.manifest')}>
+            <Info_Section
+              title={t('pluginsList.manifest')}
+              actions={
+                <EditPopover
+                  trigger={<EditButton />}
+                  {...getEditConfig('plugin-manifest', plugin.path)}
+                  secondaryAction={{ label: t('common.editFile'), filePath: `${plugin.path}/plugin.json` }}
+                />
+              }
+            >
               <Info_Table>
                 <Info_Table.Row label={t('common.name')} value={plugin.name} />
                 {plugin.version && <Info_Table.Row label={t('pluginsList.version')} value={plugin.version} />}
@@ -136,10 +144,6 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                     {plugin.workspaceRelativePath}
                   </button>
                 </Info_Table.Row>
-                <Info_Table.Row
-                  label={t('pluginsList.promptFragment')}
-                  value={plugin.hasPromptFragment ? t('pluginsList.promptPresent') : t('pluginsList.promptAbsent')}
-                />
               </Info_Table>
             </Info_Section>
 
@@ -200,6 +204,22 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                   ))}
                 </div>
               )}
+            </Info_Section>
+
+            <Info_Section
+              title={t('pluginsList.promptFragment')}
+              description={t('pluginsList.promptDescription')}
+              actions={
+                <EditPopover
+                  trigger={<EditButton />}
+                  {...getEditConfig('plugin-prompt', plugin.path)}
+                  secondaryAction={{ label: t('common.editFile'), filePath: `${plugin.path}/PROMPT.md` }}
+                />
+              }
+            >
+              <Info_Markdown maxHeight={540} fullscreen>
+                {plugin.promptFragment || t('pluginsList.promptAbsent')}
+              </Info_Markdown>
             </Info_Section>
           </Info_Page.Content>
         )}

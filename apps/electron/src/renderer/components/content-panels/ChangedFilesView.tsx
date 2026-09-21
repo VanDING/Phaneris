@@ -12,12 +12,12 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react'
+import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { ChevronRight, ChevronDown, FilePlus, Files, PencilLine, GitCompareArrows, ChevronsUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { usePlatform, UnifiedDiffViewer, type FileChange } from '@phaneris/ui'
+import { InlineExpand, usePlatform, UnifiedDiffViewer, type FileChange } from '@phaneris/ui'
 import { ShikiDiffViewer } from '@/components/shiki/ShikiDiffViewer'
 import { useTheme } from '@/hooks/useTheme'
 import { PanelEmptyState } from './PanelEmptyState'
@@ -25,7 +25,8 @@ import { computeChangeStats, createFileSections } from '@phaneris/ui'
 import { diffKindForSection, type DiffKind } from '@/lib/diff-kinds'
 import { useDiffViewerSettings } from '@/lib/use-diff-viewer-settings'
 import { changedFilesSelectedKeyBySessionAtom, filesPanelFocusRequestAtom, updateWorkbenchFocusAtom } from '@/atoms/content-panel-ui'
-import { motionSpring, motionTween } from '@phaneris/ui/motion'
+import { motionSpring } from '@phaneris/ui/motion'
+import { useScrollBehavior } from '@phaneris/ui/scroll-intent'
 
 const KIND_DOTS: Record<DiffKind, string> = {
   add: 'bg-emerald-500',
@@ -69,7 +70,10 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
   const { onOpenFileExternal } = usePlatform()
   const { isDark } = useTheme()
   const [viewerSettings, setViewerSettings] = useDiffViewerSettings()
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
+  // Focus requests arrive from ChatDisplay and other panels: an explicit jump
+  // to a named change, softened by the shared reveal policy.
+  const scrollBehavior = useScrollBehavior()
 
   const selectedKeyBySession = useAtomValue(changedFilesSelectedKeyBySessionAtom)
   const setSelectedKeyBySession = useSetAtom(changedFilesSelectedKeyBySessionAtom)
@@ -118,11 +122,11 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
     }
     updateWorkbenchFocus({ sessionId, source: 'files', changeId: resolvedChangeId, filePath: containing?.filePath })
     const timer = setTimeout(() => {
-      changeRefs.current.get(resolvedChangeId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      changeRefs.current.get(resolvedChangeId)?.scrollIntoView({ behavior: scrollBehavior('reveal'), block: 'start' })
     }, 120)
     setFocusRequest(null)
     return () => clearTimeout(timer)
-  }, [sessionId, focusRequest, sections, selectedKey, setSelectedKey, setFocusRequest, updateWorkbenchFocus])
+  }, [sessionId, focusRequest, sections, selectedKey, setSelectedKey, setFocusRequest, updateWorkbenchFocus, scrollBehavior])
 
   // Review-specific controls live below the shared panel header so its centered
   // title and bound-session subtitle keep the same geometry as every other panel.
@@ -234,15 +238,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
                     <SectionStats changes={section.changes} />
                   </button>
 
-                  <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={reduceMotion ? false : { height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={reduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                      transition={motionTween(reduceMotion, 'standard', 'move')}
-                      className="overflow-hidden border-t border-border/50"
-                    >
+                  <InlineExpand isOpen={isOpen} className="border-t border-border/50">
                     <div className="flex flex-col gap-3 p-2">
                       {section.changes.map((change) => (
                         <div
@@ -287,9 +283,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
                         </div>
                       ))}
                     </div>
-                    </motion.div>
-                  )}
-                  </AnimatePresence>
+                  </InlineExpand>
                 </li>
               )
             })}

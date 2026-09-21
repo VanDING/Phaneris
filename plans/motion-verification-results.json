@@ -1,0 +1,115 @@
+{
+  "date": "2026-09-21",
+  "base": "http://localhost:5173",
+  "browser": "153.0.4234.48",
+  "checks": [
+    {
+      "name": "boot loader honours reduced motion — electron",
+      "observation": "animation-name=none",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "boot loader honours reduced motion — electron (no preference)",
+      "observation": "animation-name=_spin",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "playground reduce switch reaches CSS and Motion",
+      "observation": "html[data-reduce-motion] + 1ms transitions",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "inline expand animates height and isolates the closing layer",
+      "observation": "intermediate heights + inert on exit",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "inline expand survives a rapid reversal burst",
+      "observation": "one layer, consistent end state",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "same-level swap shows the new state without waiting for the old",
+      "observation": "<50ms to visible new content",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "tool status handoff keeps the newest state fully visible",
+      "observation": "opacity never drops below 0.9",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "scroll reveal is animated under normal motion",
+      "observation": "intermediate scroll positions",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "scroll immediate never animates",
+      "observation": "single-frame jump",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "scroll reveal jumps under reduced motion",
+      "observation": "instant under reduce",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "primitives raise no page errors",
+      "observation": "no uncaught errors",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "calendar view swap never blanks the panel and overlaps the handoff",
+      "observation": "no empty frame, new view <=150ms",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "menu sub-page pushes and marks the covered page inert",
+      "observation": "lower page inert, top page interactive",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "menu pop plays an exit and isolates the leaving page",
+      "observation": "exiting page inert with presence=false",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "menu pop restores focus to the opening row",
+      "observation": "focus back on the row",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "turn card disclosure expands with every row visible inside the budget",
+      "observation": "all rows opaque <400ms after the click",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "turn card disclosure isolates the closing list",
+      "observation": "inert while collapsing",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "panel share animation cost (fixture)",
+      "observation": "median 16.7ms, p95 17.1ms, worst 17.1ms, 0 frames >32ms over 28 frames",
+      "status": "pass",
+      "detail": null
+    }
+  ]
+}

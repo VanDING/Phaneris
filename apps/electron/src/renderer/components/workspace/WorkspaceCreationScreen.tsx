@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { X } from "lucide-react"
-import { motion } from "motion/react"
+import { motion, useReducedMotionConfig } from "motion/react"
 import { Dithering } from "@paper-design/shaders-react"
 import { FullscreenOverlayBase } from "@phaneris/ui"
+import { ContentSwap } from "@/components/ui/content-swap"
 import { cn } from "@/lib/utils"
 import { overlayTransitionIn } from "@/lib/animations"
 import { AddWorkspaceStep_Choice } from "./AddWorkspaceStep_Choice"
@@ -43,6 +44,10 @@ export function WorkspaceCreationScreen({
   onReconnectWorkspace,
 }: WorkspaceCreationScreenProps) {
   const { t } = useTranslation()
+  // Canvas motion is outside MotionConfig's reach: the shader owns its own rAF
+  // loop, so the preference has to be passed in explicitly. speed=0 stops the
+  // loop entirely (static shader, no recurring cost) instead of just slowing it.
+  const reduceMotion = useReducedMotionConfig()
   // Start at 'remote' step directly when reconnecting
   const [step, setStep] = useState<CreationStep>(reconnectWorkspace ? 'remote' : 'choice')
   const [isCreating, setIsCreating] = useState(false)
@@ -183,7 +188,7 @@ export function WorkspaceCreationScreen({
             shape="swirl"
             type="8x8"
             size={2}
-            speed={1}
+            speed={reduceMotion ? 0 : 1}
             scale={1}
             width={dimensions.width}
             height={dimensions.height}
@@ -223,7 +228,12 @@ export function WorkspaceCreationScreen({
           transition={overlayTransitionIn}
           className="relative flex flex-1 items-center justify-center p-8"
         >
-          {renderStep()}
+          {/* Step identity: forward and back are the same visible change of
+              content instead of an unrelated snap, and the form values live in
+              the parent so going back still restores them. */}
+          <ContentSwap swapKey={step} className="flex w-full justify-center">
+            {renderStep()}
+          </ContentSwap>
         </motion.main>
       </motion.div>
     </FullscreenOverlayBase>

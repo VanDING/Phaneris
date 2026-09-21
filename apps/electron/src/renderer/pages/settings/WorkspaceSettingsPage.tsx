@@ -14,14 +14,13 @@
 import * as React from 'react'
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { HeaderMenu } from '@/components/ui/HeaderMenu'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { cn } from '@/lib/utils'
 import { routes } from '@/lib/navigate'
-import { Spinner } from '@phaneris/ui'
+import { InlineExpand, Spinner } from '@phaneris/ui'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import type { PermissionMode, WorkspaceSettings, LoadedSource } from '../../../shared/types'
 import { useDirectoryPicker } from '@/hooks/useDirectoryPicker'
@@ -470,19 +469,9 @@ export default function WorkspaceSettingsPage() {
                   )
                 })}
               </SettingsCard>
-              <AnimatePresence>
-                {modeCyclingError && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                    className="text-xs text-destructive mt-1 overflow-hidden"
-                  >
-                    {modeCyclingError}
-                  </motion.p>
-                )}
-              </AnimatePresence>
+              <InlineExpand isOpen={!!modeCyclingError} className="text-xs text-destructive mt-1">
+                {modeCyclingError}
+              </InlineExpand>
             </SettingsSection>
 
             {/* Default Sources */}

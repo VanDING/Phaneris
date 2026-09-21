@@ -1059,6 +1059,7 @@
   "pluginsList.pluginBadge": "Plugin",
   "pluginsList.pluginNotFound": "Plugin \"{{name}}\" ist in diesem Workspace nicht installiert.",
   "pluginsList.promptAbsent": "Nein",
+  "pluginsList.promptDescription": "Anweisungen, die bei aktiviertem Plugin in jeder Runde angewendet werden.",
   "pluginsList.promptFragment": "Dauerhafte Anweisung",
   "pluginsList.promptPresent": "Ja — wird jedem Turn hinzugefügt",
   "pluginsList.removesNone": "Nichts – dieses Paket besitzt keine eigenen Ressourcen",

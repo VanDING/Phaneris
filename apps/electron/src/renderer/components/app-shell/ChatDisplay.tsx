@@ -16,15 +16,18 @@ import {
 } from "lucide-react"
 import { motion, AnimatePresence } from "motion/react"
 import { MOTION_DURATION, MOTION_EASE } from '@phaneris/ui/motion'
+import { useScrollBehavior } from '@phaneris/ui/scroll-intent'
 import { toast } from "sonner"
 import { useAtom, useSetAtom } from "jotai"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { coerceInputText, appendRestoredInput } from "@/lib/input-text"
+import { observeChatScrollAnchor } from '@/lib/chat-scroll-anchor'
 import { Markdown, CollapsibleMarkdownProvider, StreamingMarkdown, type RenderMode } from "@/components/markdown"
-import { AnimatedCollapsibleContent } from "@/components/ui/collapsible"
+import { ContentSwap } from "@/components/ui/content-swap"
 import {
+  InlineExpand,
   Spinner,
   parseReadResult,
   parseBashResult,
@@ -389,17 +392,9 @@ function ProcessingIndicator({ startTime, statusMessage }: ProcessingIndicatorPr
       </div>
       {/* Label with crossfade animation on content change only */}
       <span className="relative h-5 flex items-center">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.span
-            key={displayMessage}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: MOTION_DURATION.standard, ease: MOTION_EASE.enter }}
-          >
-            {displayMessage}
-          </motion.span>
-        </AnimatePresence>
+        <ContentSwap swapKey={displayMessage}>
+          <span className="whitespace-nowrap">{displayMessage}</span>
+        </ContentSwap>
         {elapsed >= 1 && (
           <span className="text-muted-foreground/60 ml-1 tabular-nums">
             {formatElapsed(elapsed)}
@@ -527,6 +522,9 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   const isInputDisabled = disabled
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
   const scrollViewportRef = React.useRef<HTMLDivElement>(null)
+  // Programmatic scrolls resolve their behavior through the shared policy so an
+  // explicit `behavior` argument can never outrun `prefers-reduced-motion`.
+  const scrollBehavior = useScrollBehavior()
   const prevSessionIdRef = React.useRef<string | null>(null)
   // Reverse pagination: show last N turns initially, load more on scroll up
   const TURNS_PER_PAGE = 20
@@ -1113,10 +1111,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   const handleScroll = React.useCallback(() => {
     const viewport = scrollViewportRef.current
     if (!viewport) return
-    const { scrollTop, scrollHeight, clientHeight } = viewport
-    const distanceFromBottom = scrollHeight - scrollTop - clientHeight
-    // 20px threshold for "at bottom" detection
-    isStickToBottomRef.current = distanceFromBottom < 20
+    const { scrollTop } = viewport
 
     // Load more turns when scrolling near top (within 100px)
     if (scrollTop < 100) {
@@ -1147,7 +1142,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     return () => viewport.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
-  // Auto-scroll using ResizeObserver for streaming content
+  // Follow layout changes without overriding the user's reading position.
   // Initial scroll is handled by ScrollOnMount (useLayoutEffect, before paint)
   React.useEffect(() => {
     if (messagesLoading) return
@@ -1169,38 +1164,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
       setVisibleTurnCount(TURNS_PER_PAGE)
     }
 
-    // Debounced scroll for streaming - waits for layout to settle
-    let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
-    const resizeObserver = new ResizeObserver(() => {
-      // Unfocused panels: always scroll to bottom instantly (user isn't reading them)
-      if (!isFocusedPanelRef.current) {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'instant' })
-        return
-      }
-
-      // Focused panel: respect sticky-bottom preference
-      if (!isStickToBottomRef.current) return
-
-      // Clear pending scroll and wait for layout to settle
-      if (debounceTimer) clearTimeout(debounceTimer)
-      debounceTimer = setTimeout(() => {
-        // Skip smooth scroll if we just did an instant scroll (session switch/lazy load)
-        if (Date.now() < skipSmoothScrollUntilRef.current) return
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }, 200)
-    })
-
-    // Observe the scroll content container (first child of viewport)
     const content = viewport.firstElementChild
-    if (content) {
-      resizeObserver.observe(content)
-    }
-
-    return () => {
-      resizeObserver.disconnect()
-      if (debounceTimer) clearTimeout(debounceTimer)
-    }
+    if (content) return observeChatScrollAnchor(viewport, content, isStickToBottomRef)
   }, [session?.id])
 
   // Commit-time auto-scroll for new user messages.
@@ -1234,10 +1199,10 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
     requestAnimationFrame(() => {
       messagesEndRef.current?.scrollIntoView({
-        behavior: isFocusedPanelRef.current ? 'smooth' : 'instant',
+        behavior: isFocusedPanelRef.current ? scrollBehavior('follow') : 'instant',
       })
     })
-  }, [session?.id, messageCount, lastMessageId, lastMessageRole])
+  }, [session?.id, messageCount, lastMessageId, lastMessageRole, scrollBehavior])
 
   // Handle message submission from InputContainer
   // Backend handles interruption and queueing if currently processing
@@ -1288,7 +1253,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     // Immediately scroll to bottom after sending - use requestAnimationFrame
     // to ensure the DOM has updated with the new message
     requestAnimationFrame(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+      messagesEndRef.current?.scrollIntoView({ behavior: scrollBehavior('follow') })
     })
   }
 
@@ -1452,7 +1417,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     const reveal = () => {
       const element = turnRefs.current.get(turnKey)
       if (!element) return false
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      element.scrollIntoView({ behavior: scrollBehavior('reveal'), block: 'center' })
       setFocusedTrajectoryTurnKey(turnKey)
       window.setTimeout(() => setFocusedTrajectoryTurnKey(current => current === turnKey ? null : current), 1800)
       return true
@@ -1464,7 +1429,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
       if (!reveal()) window.setTimeout(() => { void reveal() }, 80)
     }))
     setChatFocusRequest(null)
-  }, [allTurns, chatFocusRequest, session?.id, setChatFocusRequest, visibleTurnCount])
+  }, [allTurns, chatFocusRequest, session?.id, setChatFocusRequest, visibleTurnCount, scrollBehavior])
 
   const scrollToFollowUpTurn = useCallback((item: {
     messageId: string
@@ -1483,7 +1448,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
       const turnContainer = turnRefs.current.get(turnKey)
       if (!turnContainer) return false
 
-      turnContainer.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      turnContainer.scrollIntoView({ behavior: scrollBehavior('reveal'), block: 'center' })
       return true
     }
 
@@ -1506,7 +1471,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
         void scrollToTurn()
       })
     }
-  }, [assistantTurnIndexByMessageId, allTurns, visibleTurnCount])
+  }, [assistantTurnIndexByMessageId, allTurns, visibleTurnCount, scrollBehavior])
 
   const handleFollowUpChipClick = useCallback((item: {
     messageId: string
@@ -1588,13 +1553,13 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                 "mx-auto min-w-0",
                 compactMode ? "px-3 py-4 space-y-2" : [CHAT_LAYOUT.containerPadding, CHAT_LAYOUT.messageSpacing]
               )}>
-                {/* Session-level AnimatePresence: Prevents layout jump when switching sessions */}
-                <AnimatePresence mode={compactMode ? "sync" : "wait"} initial={false}>
+                {/* Ready sessions replace immediately; never queue behind the old exit. */}
+                <AnimatePresence mode="sync" initial={false}>
                   <motion.div
                     key={compactMode ? 'compact-session' : session?.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    exit={{ opacity: 0, transition: { duration: 0 } }}
                     transition={compactMode ? { duration: 0 } : { duration: MOTION_DURATION.fast, ease: MOTION_EASE.enter }}
                   >
                     {/* Loading/Content AnimatePresence: sync mode avoids stale loading exits masking ready content */}
@@ -2213,7 +2178,7 @@ function ErrorMessage({ message, onOpenUrl, sessionId, onRetry }: { message: Mes
               <span>{detailsOpen ? t('chat.hideTechnicalDetails') : t('chat.showTechnicalDetails')}</span>
             </button>
 
-            <AnimatedCollapsibleContent isOpen={detailsOpen} className="overflow-hidden">
+            <InlineExpand isOpen={detailsOpen} clip="clip">
               <div className="mt-2 pt-2 border-t border-destructive/20 text-xs text-destructive/60 font-mono space-y-0.5">
                 {message.errorDetails?.map((detail, i) => (
                   <div key={i}>{detail}</div>
@@ -2222,7 +2187,7 @@ function ErrorMessage({ message, onOpenUrl, sessionId, onRetry }: { message: Mes
                   <div className="mt-1">Raw: {message.errorOriginal.slice(0, 200)}{message.errorOriginal.length > 200 ? '...' : ''}</div>
                 )}
               </div>
-            </AnimatedCollapsibleContent>
+            </InlineExpand>
           </div>
         )}
       </div>

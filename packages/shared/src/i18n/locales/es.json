@@ -1059,6 +1059,7 @@
   "pluginsList.pluginBadge": "plugin",
   "pluginsList.pluginNotFound": "El plugin \"{{name}}\" no está instalado en este Workspace.",
   "pluginsList.promptAbsent": "No",
+  "pluginsList.promptDescription": "Instrucciones que se aplican en cada turno mientras este plugin está activo.",
   "pluginsList.promptFragment": "Instrucción permanente",
   "pluginsList.promptPresent": "Sí — se añade a cada turno",
   "pluginsList.removesNone": "Nada: este paquete no tiene recursos propios",

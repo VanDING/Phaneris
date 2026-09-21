@@ -16,6 +16,7 @@
 import { existsSync, readFileSync, readdirSync, lstatSync } from 'node:fs';
 import { basename, join, relative, resolve } from 'node:path';
 import matter from 'gray-matter';
+import { isPluginResourceSlug, pluginResourcePath } from './paths.ts';
 import { getWorkspacePluginsPath } from '../workspaces/storage.ts';
 import { isPathWithin } from '../utils/paths.ts';
 import { debug } from '../utils/debug.ts';
@@ -158,6 +159,10 @@ export function readPluginSkills(
       continue;
     }
 
+    if (!isPluginResourceSlug(entry.name)) {
+      warnings.push({ path: relPath, message: 'invalid skill directory name; skipped' });
+      continue;
+    }
     const frontmatter = parseSkillFrontmatter(entryPath);
     if (!frontmatter) {
       // Invalid skill: skip it, keep loading the rest (spec §7.1).
@@ -228,7 +233,6 @@ export function readPluginMcpServers(
 
   for (const [slug, config] of Object.entries(mcpServers as Record<string, unknown>)) {
     const relPath = `${PLUGIN_MCP_FILE}#${slug}`;
-
     if (config === null || typeof config !== 'object' || Array.isArray(config)) {
       // An invalid entry is skipped; other servers and component types continue (§7.2.2 rule 3).
       warnings.push({ path: relPath, message: 'server entry must be an object; skipped' });
@@ -299,7 +303,7 @@ export function readPluginExtensionSources(
     const record = entry as Record<string, unknown>;
     const slug = record.slug;
     const type = record.type;
-    if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) {
+    if (typeof slug !== 'string' || !isPluginResourceSlug(slug)) {
       warnings.push({ path: relPath, message: 'entry requires a lowercase hyphenated "slug"; skipped' });
       continue;
     }
@@ -445,7 +449,13 @@ export function loadPluginAt(
  * @param name - Plugin directory name.
  */
 export function loadPlugin(workspaceRootPath: string, name: string): PluginLoadResult {
-  return loadPluginAt(join(getWorkspacePluginsPath(workspaceRootPath), name), name, workspaceRootPath);
+  try {
+    const result = loadPluginAt(pluginResourcePath(getWorkspacePluginsPath(workspaceRootPath), name), name, workspaceRootPath);
+    if (!result.ok) result.error.pluginName = name;
+    return result;
+  } catch (error) {
+    return { ok: false, error: { pluginName: name, path: name, message: String(error) } };
+  }
 }
 
 /**

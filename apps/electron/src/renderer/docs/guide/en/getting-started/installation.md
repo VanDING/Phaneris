@@ -58,9 +58,10 @@ Three things, in order:
 
 ## Where your data goes
 
-Everything Phaneris owns lives under `~/.phaneris/` (`%USERPROFILE%\.phaneris\`
-on Windows). It is created on first launch and is the only thing you need to back
-up. Nothing is written into the repository you cloned.
+Phaneris stores configuration, credentials, workspaces, logs, bundled guides, and
+release notes under `~/.phaneris/` (`%USERPROFILE%\.phaneris\` on Windows). The
+directory is created on first launch. Back up the parts your deployment needs;
+the path constants are defined in `packages/shared/src/config/paths.ts`.
 
 ## Updating
 

@@ -4,7 +4,7 @@
 - 日期：2026-08-20
 - 状态：实现完成（核心语义表面、自动化验证与应用内视觉复验均已完成）
 - 配套演示：`docs/theme-engine-demo-5-themes.html`（五套主题全维度对比）
-- 主题制作提示词：[`docs/theme-authoring-prompt.md`](theme-authoring-prompt.md) —— 面向"让 AI 产出主题文件"的完整 token 契约（39 个 token、schema 硬约束、light/dark 继承模型、Shiki 白名单）
+- 主题制作提示词：[`docs/theme-authoring-prompt.md`](../theme-authoring-prompt.md) —— 面向"让 AI 产出主题文件"的完整 token 契约（39 个 token、schema 硬约束、light/dark 继承模型、Shiki 白名单）
 - 面向最终用户的说明：`apps/electron/resources/docs/themes.md`（随应用打包并同步到 `~/.phaneris/docs/`）
 
 ---

@@ -41,6 +41,28 @@ export const MOTION_SPRING = {
 export type MotionPace = keyof typeof MOTION_DURATION
 export type MotionEase = keyof typeof MOTION_EASE
 
+/**
+ * Stagger for rows that are revealed together.
+ *
+ * The step conveys order; the cap keeps the wait independent of list length, so
+ * a long list never makes its last row late. Rows that mount *after* the reveal
+ * must pass no delay at all — they are new information and belong on screen
+ * immediately, not queued behind a sequence meant for the initial paint.
+ */
+export const MOTION_STAGGER_STEP = 0.03
+export const MOTION_STAGGER_MAX = MOTION_DURATION.fast
+
+export function motionStaggerDelay(index: number): number {
+  return Math.min(index * MOTION_STAGGER_STEP, MOTION_STAGGER_MAX)
+}
+
+/** Entrance for one row of a revealing list, stagger included. */
+export function motionRowEnter(reduceMotion: boolean | null, delay = 0): Transition {
+  // A delayed instant change is still a delay: reduced motion drops the stagger
+  // along with the tween.
+  return { ...motionTween(reduceMotion, 'standard', 'enter'), delay: reduceMotion ? 0 : delay }
+}
+
 /** Resolve a tokenized tween and collapse it to an instant transition when requested. */
 export function motionTween(
   reduceMotion: boolean | null,

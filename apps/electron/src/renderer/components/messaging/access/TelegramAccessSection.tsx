@@ -15,7 +15,7 @@
 import * as React from 'react'
 import { useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { InlineExpand } from '@phaneris/ui'
 import { toast } from 'sonner'
 import { ChevronDown, ChevronRight, MessageSquare, Users } from 'lucide-react'
 import { messagingBindingsAtom } from '@/atoms/messaging'
@@ -252,25 +252,15 @@ function AllowedUsersCollapsible({
         )}
       </button>
 
-      <AnimatePresence initial={false}>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="overflow-hidden"
-          >
-            <div className="border-t border-border/50">
-              <OwnersListEditor
-                owners={owners}
-                enforced={accessMode === 'owner-only'}
-                onRemove={onRemove}
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <InlineExpand isOpen={isExpanded}>
+        <div className="border-t border-border/50">
+          <OwnersListEditor
+            owners={owners}
+            enforced={accessMode === 'owner-only'}
+            onRemove={onRemove}
+          />
+        </div>
+      </InlineExpand>
     </div>
   )
 }

@@ -18,7 +18,7 @@
  */
 
 import * as React from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionSpring } from '@phaneris/ui/motion'
 
 
@@ -43,7 +43,7 @@ export function CompactPanelTransition({
   isDetailActive,
   children,
 }: CompactPanelTransitionProps) {
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotionConfig()
   const transition = motionSpring(reduceMotion, 'spatial')
 
   const isOffscreen = role === 'navigator' ? isDetailActive : !isDetailActive

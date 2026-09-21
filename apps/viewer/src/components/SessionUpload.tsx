@@ -109,7 +109,6 @@ export function SessionUpload({ onSessionLoad }: SessionUploadProps) {
         className={`
           drop-zone cursor-pointer rounded-lg border-2 border-dashed p-12
           flex flex-col items-center justify-center gap-4
-          transition-all duration-200
           ${isDragging
             ? 'active border-accent bg-accent/5'
             : 'border-foreground/10 hover:border-foreground/20 hover:bg-foreground/3'

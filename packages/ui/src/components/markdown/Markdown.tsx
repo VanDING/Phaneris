@@ -649,8 +649,9 @@ export function Markdown({
     [collapsible]
   )
 
-  return (
-    <div className={cn('markdown-content', className)}>
+  // Parent layout/expansion updates should not reparse an unchanged document.
+  // All renderer callbacks and block options are captured by `components`.
+  const renderedContent = React.useMemo(() => (
       <ReactMarkdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={[rehypeKatex, rehypeRaw, [rehypeSanitize, { schema: markdownSanitizeSchema }]]}
@@ -659,6 +660,11 @@ export function Markdown({
       >
         {processedContent}
       </ReactMarkdown>
+  ), [processedContent, remarkPlugins, components])
+
+  return (
+    <div className={cn('markdown-content', className)}>
+      {renderedContent}
     </div>
   )
 }

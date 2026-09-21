@@ -28,9 +28,13 @@ html, body, #root {
   overflow: hidden;
 }
 
-/* Drop zone styling */
+/* Drop zone styling.
+ * Property-scoped: the drop state only repaints border and background, and a
+ * broad `all` transition would silently pick up any property added later. */
 .drop-zone {
-  transition: all 0.2s ease;
+  transition-property: border-color, background-color;
+  transition-duration: var(--motion-duration-emphasis);
+  transition-timing-function: var(--motion-ease-enter);
 }
 
 .drop-zone.active {

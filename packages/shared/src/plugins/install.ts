@@ -28,13 +28,15 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs';
-import { basename, join, relative } from 'node:path';
+import { basename, join, relative, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { getWorkspacePluginsPath, getWorkspaceSkillsPath, getWorkspaceSourcesPath } from '../workspaces/storage.ts';
-import { getSourcePath, loadSourceConfig, saveSourceConfig } from '../sources/storage.ts';
+import { loadSourceConfig, saveSourceConfig } from '../sources/storage.ts';
 import type { FolderSourceConfig, McpSourceConfig } from '../sources/types.ts';
 import { debug } from '../utils/debug.ts';
 import { appendPluginAuditEntry } from './audit.ts';
+import { pluginResourcePath } from './paths.ts';
+import { normalizePluginCommand } from './resolve.ts';
 import { loadPlugin, loadPluginAt, readPluginExtensionSources, readPluginMcpServers, readPluginSkills } from './storage.ts';
 import {
   PLUGIN_DATA_DIR_NAME,
@@ -143,6 +145,7 @@ function buildMcpSourceConfig(
   slug: string,
   entry: Record<string, unknown>,
   pluginName: string,
+  pluginRoot: string,
   warn: (message: string) => void,
 ): { config: McpSourceConfig } | { skip: string } {
   const type = entry.type;
@@ -151,6 +154,12 @@ function buildMcpSourceConfig(
     const command = entry.command;
     if (typeof command !== 'string' || !command) {
       return { skip: 'stdio server requires a string "command"' };
+    }
+
+    try {
+      normalizePluginCommand(command, { pluginRoot });
+    } catch (error) {
+      return { skip: String(error) };
     }
 
     // `cwd` is only supported rooted at the plugin (design §5.4.1); anything else
@@ -263,7 +272,7 @@ export function analyzePluginInstall(
 
   // --- skills ---
   for (const skill of plugin.resources.skills) {
-    const target = join(getWorkspaceSkillsPath(workspaceRootPath), skill.slug);
+    const target = pluginResourcePath(getWorkspaceSkillsPath(workspaceRootPath), skill.slug);
     const entry: PluginOverwriteEntry = {
       kind: 'skill',
       slug: skill.slug,
@@ -281,7 +290,7 @@ export function analyzePluginInstall(
     const entry = rawMcp.entries[server.slug];
     if (!entry) continue;
 
-    const built = buildMcpSourceConfig(server.slug, entry, pluginName, (message) =>
+    const built = buildMcpSourceConfig(server.slug, entry, pluginName, plugin.path, (message) =>
       warnings.push({ path: `${PLUGIN_MCP_FILE}#${server.slug}`, message }),
     );
     if ('skip' in built) {
@@ -298,7 +307,7 @@ export function analyzePluginInstall(
       });
     }
 
-    const target = getSourcePath(workspaceRootPath, server.slug);
+    const target = pluginResourcePath(getWorkspaceSourcesPath(workspaceRootPath), server.slug);
     const overwriteEntry: PluginOverwriteEntry = {
       kind: 'source',
       slug: server.slug,
@@ -310,7 +319,7 @@ export function analyzePluginInstall(
 
   // --- extension sources (api / local) ---
   for (const source of plugin.resources.extensionSources) {
-    const target = getSourcePath(workspaceRootPath, source.slug);
+    const target = pluginResourcePath(getWorkspaceSourcesPath(workspaceRootPath), source.slug);
     const entry: PluginOverwriteEntry = {
       kind: 'source',
       slug: source.slug,
@@ -327,7 +336,7 @@ export function analyzePluginInstall(
     stdioCommands,
     warnings,
     packageRoot,
-    targetRoot: join(getWorkspacePluginsPath(workspaceRootPath), pluginName),
+    targetRoot: pluginResourcePath(getWorkspacePluginsPath(workspaceRootPath), pluginName),
   };
 }
 
@@ -341,6 +350,12 @@ interface StagedSkill {
   tmpDir: string;
   targetDir: string;
   /** Set when an existing directory was moved aside for rollback. */
+  backupDir?: string;
+  committed?: boolean;
+}
+
+interface SourceBackup {
+  targetDir: string;
   backupDir?: string;
 }
 
@@ -363,6 +378,10 @@ export function installPlugin(
   const staged: StagedSkill[] = [];
   const createdSourceSlugs: string[] = [];
   const installedSkillSlugs: string[] = [];
+  const sourceBackups: SourceBackup[] = [];
+  const packageTarget = pluginResourcePath(getWorkspacePluginsPath(workspaceRootPath), plugin.name);
+  const packageBackup = `${packageTarget}.replaced-${randomUUID().slice(0, 8)}`;
+  const packageExisted = existsSync(packageTarget) && plan.packageRoot !== packageTarget;
 
   mkdirSync(skillsDir, { recursive: true });
   mkdirSync(getWorkspacePluginsPath(workspaceRootPath), { recursive: true });
@@ -370,7 +389,7 @@ export function installPlugin(
   try {
     // --- stage every skill first, so a failure aborts before any swap ---
     for (const skill of plugin.resources.skills) {
-      const targetDir = join(skillsDir, skill.slug);
+      const targetDir = pluginResourcePath(skillsDir, skill.slug);
       const tmpDir = join(skillsDir, `.tmp-plugin-${skill.slug}-${randomUUID().slice(0, 8)}`);
 
       const record: StagedSkill = { slug: skill.slug, tmpDir, targetDir };
@@ -394,6 +413,7 @@ export function installPlugin(
         record.backupDir = backupDir;
       }
       renameSync(record.tmpDir, record.targetDir);
+      record.committed = true;
       installedSkillSlugs.push(record.slug);
     }
 
@@ -403,12 +423,13 @@ export function installPlugin(
       const rawEntry = rawMcp.entries[server.slug];
       if (!rawEntry) continue;
 
-      const built = buildMcpSourceConfig(server.slug, rawEntry, plugin.name, () => {});
+      const built = buildMcpSourceConfig(server.slug, rawEntry, plugin.name, plugin.path, () => {});
       if ('skip' in built) {
         // Already reported during analyze; the entry stays out of the install.
         continue;
       }
 
+      backupSource(server.slug);
       writeSourceConfig(workspaceRootPath, plan.targetRoot, server.slug, server.slug, plugin.name, {
         type: 'mcp',
         mcp: built.config,
@@ -419,6 +440,7 @@ export function installPlugin(
     // --- materialize extension sources (api / local) ---
     const extension = readPluginExtensionSources(plugin.path);
     for (const source of extension.sources) {
+      backupSource(source.slug);
       writeSourceConfig(workspaceRootPath, plan.targetRoot, source.slug, source.slug, plugin.name, {
         type: source.type,
       });
@@ -426,6 +448,7 @@ export function installPlugin(
     }
 
     // --- place the package itself ---
+    if (packageExisted) cpSync(packageTarget, packageBackup, { recursive: true });
     placePackage(plan.packageRoot, plan.targetRoot);
 
     // --- derived reverse index + audit ---
@@ -455,6 +478,10 @@ export function installPlugin(
     for (const record of staged) {
       if (record.backupDir) rmSync(record.backupDir, { recursive: true, force: true });
     }
+    for (const backup of sourceBackups) {
+      if (backup.backupDir) rmSync(backup.backupDir, { recursive: true, force: true });
+    }
+    if (packageExisted && existsSync(packageBackup)) rmSync(packageBackup, { recursive: true, force: true });
 
     return {
       name: plugin.name,
@@ -470,16 +497,33 @@ export function installPlugin(
       if (record.backupDir && record.backupDir.length > 0) {
         if (existsSync(record.targetDir)) rmSync(record.targetDir, { recursive: true, force: true });
         if (existsSync(record.backupDir)) renameSync(record.backupDir, record.targetDir);
+      } else if (record.committed && existsSync(record.targetDir)) {
+        rmSync(record.targetDir, { recursive: true, force: true });
       }
     }
-    for (const slug of createdSourceSlugs) {
-      const dir = getSourcePath(workspaceRootPath, slug);
-      if (existsSync(dir)) rmSync(dir, { recursive: true, force: true });
+    for (const backup of sourceBackups.reverse()) {
+      if (existsSync(backup.targetDir)) rmSync(backup.targetDir, { recursive: true, force: true });
+      if (backup.backupDir && existsSync(backup.backupDir)) renameSync(backup.backupDir, backup.targetDir);
+    }
+    if (packageExisted) {
+      if (existsSync(packageTarget)) rmSync(packageTarget, { recursive: true, force: true });
+      if (existsSync(packageBackup)) renameSync(packageBackup, packageTarget);
+    } else if (packageTarget !== plan.packageRoot && existsSync(packageTarget)) {
+      rmSync(packageTarget, { recursive: true, force: true });
     }
 
     if (error instanceof PluginInstallError) throw error;
     const message = error instanceof Error ? error.message : String(error);
     throw new PluginInstallError(`Failed to install plugin "${plugin.name}": ${message}`);
+  }
+
+  function backupSource(slug: string): void {
+    const targetDir = pluginResourcePath(getWorkspaceSourcesPath(workspaceRootPath), slug);
+    const backupDir = existsSync(targetDir)
+      ? `${targetDir}.replaced-${randomUUID().slice(0, 8)}`
+      : undefined;
+    if (backupDir) cpSync(targetDir, backupDir, { recursive: true });
+    sourceBackups.push({ targetDir, backupDir });
   }
 }
 
@@ -718,7 +762,7 @@ export function analyzePluginUninstall(
     const entry: PluginOverwriteEntry = {
       kind: 'skill',
       slug: skill.slug,
-      existing: join(getWorkspaceSkillsPath(workspaceRootPath), skill.slug),
+      existing: pluginResourcePath(getWorkspaceSkillsPath(workspaceRootPath), skill.slug),
     };
     (claims.skills.has(skill.slug) ? retains : removes).push(entry);
   }
@@ -731,8 +775,18 @@ export function analyzePluginUninstall(
     const entry: PluginOverwriteEntry = {
       kind: 'source',
       slug,
-      existing: getSourcePath(workspaceRootPath, slug),
+      existing: pluginResourcePath(getWorkspaceSourcesPath(workspaceRootPath), slug),
     };
+    const current = loadSourceConfig(workspaceRootPath, slug);
+    if (
+      claims.sources.has(slug) &&
+      current?.pluginRoot &&
+      resolve(workspaceRootPath, current.pluginRoot) === resolve(pluginResourcePath(getWorkspacePluginsPath(workspaceRootPath), name))
+    ) {
+      throw new PluginInstallError(
+        `Cannot uninstall "${name}": shared source "${slug}" still executes from this plugin. Migrate its provider first.`,
+      );
+    }
     (claims.sources.has(slug) ? retains : removes).push(entry);
   }
 
@@ -756,7 +810,7 @@ export function uninstallPlugin(
   name: string,
 ): PluginUninstallResult {
   const plan = analyzePluginUninstall(workspaceRootPath, name);
-  const targetRoot = join(getWorkspacePluginsPath(workspaceRootPath), name);
+  const targetRoot = pluginResourcePath(getWorkspacePluginsPath(workspaceRootPath), name);
 
   // 1. Remove the package first (see ordering note above).
   if (existsSync(targetRoot)) {
@@ -769,8 +823,8 @@ export function uninstallPlugin(
   // 2. Drop the resources nobody else claims.
   for (const entry of plan.removes) {
     const dir = entry.kind === 'skill'
-      ? join(getWorkspaceSkillsPath(workspaceRootPath), entry.slug)
-      : getSourcePath(workspaceRootPath, entry.slug);
+      ? pluginResourcePath(getWorkspaceSkillsPath(workspaceRootPath), entry.slug)
+      : pluginResourcePath(getWorkspaceSourcesPath(workspaceRootPath), entry.slug);
 
     if (!existsSync(dir)) continue;
 
@@ -821,7 +875,11 @@ function collectClaimsExcluding(
     if (other === exclude) continue;
 
     const loaded = loadPlugin(workspaceRootPath, other);
-    if (!loaded.ok) continue;
+    if (!loaded.ok) {
+      throw new PluginInstallError(
+        `Cannot determine resource ownership: plugin "${other}" is invalid. Repair it before uninstalling.`,
+      );
+    }
 
     for (const skill of loaded.plugin.resources.skills) skills.add(skill.slug);
     for (const server of loaded.plugin.resources.mcpServers) sources.add(server.slug);
