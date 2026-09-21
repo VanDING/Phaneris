@@ -100,7 +100,7 @@
 ## 8. 不适用清单
 
 - 上游 Claude 后端的全部代码与测试（`backend/claude/*`、`pending-steers.ts`、`claude-agent.ts`、`contextFromClaude` 及 4 个 claude 测试）：本仓 `packages/shared/src/agent/backend/` 只有 `pi`，语义已由 Pi 路径承担。
-- 版本号 0.13.3→0.13.4、`bun.lock`、各 `package.json` 版本位：本仓使用 0.2.1 自有版本线（`version:check` 门禁），不跟随。
+- 版本号 0.13.3→0.13.4、`bun.lock`、各 `package.json` 版本位：本仓使用 0.2.x 自有版本线（`version:check` 门禁），不跟随。
 - `packages/session-mcp-server/*`：本仓不存在该 workspace。
 - `packages/*/CLAUDE.md` 文档指针：本仓文档体系不同（`docs/` + `apps/electron/resources/docs/`）。
 

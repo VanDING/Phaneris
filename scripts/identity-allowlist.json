@@ -18,7 +18,7 @@
       "reason": "This allowlist; its reasons quote the tokens they exempt."
     },
     {
-      "glob": "docs/architecture/phaneris-fork-plan.md",
+      "glob": "docs/process/phaneris-fork-plan.md",
       "tokens": ["*"],
       "reason": "The fork plan quotes upstream identifiers and the rejected working names as source material."
     },
