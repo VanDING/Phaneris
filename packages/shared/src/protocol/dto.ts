@@ -21,6 +21,7 @@ import type {
 } from '@phaneris/core/types'
 import type { PermissionMode } from '../agent/mode-types'
 import type { ThinkingLevel } from '../agent/thinking-levels'
+import type { SessionPlanningFields } from '../sessions/types'
 import type { CustomEndpointConfig, LlmProviderType } from '../config/llm-connections'
 import type {
   AuthRequest as SharedAuthRequest,
@@ -42,13 +43,13 @@ export { generateMessageId } from '@phaneris/core/types'
  */
 export type SessionStatus = string
 
-export type BuiltInStatusId = 'todo' | 'in-progress' | 'needs-review' | 'done' | 'cancelled'
+export type BuiltInStatusId = 'backlog' | 'todo' | 'in-progress' | 'needs-review' | 'done' | 'cancelled'
 
 /**
  * Electron-specific Session type (includes runtime state).
  * Extends core Session with messages array and processing state.
  */
-export interface Session {
+export interface Session extends SessionPlanningFields {
   id: string
   workspaceId: string
   workspaceName: string
@@ -146,7 +147,7 @@ export interface Session {
   taskDraft?: boolean
 }
 
-export interface CreateSessionOptions {
+export interface CreateSessionOptions extends SessionPlanningFields {
   name?: string
   permissionMode?: PermissionMode
   /**
@@ -453,7 +454,7 @@ export type SessionEvent =
   | { type: 'name_changed'; sessionId: string; name?: string }
   | { type: 'session_model_changed'; sessionId: string; model: string | null }
   | { type: 'session_status_changed'; sessionId: string; sessionStatus: SessionStatus }
-  | { type: 'session_metadata_changed'; sessionId: string; changes: Partial<Pick<Session, 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'activePlugin' | 'contextPolicy' | 'contextHandoff' | 'handoffRootSessionId' | 'handoffFromSessionId' | 'handoffSequence'>> }
+  | { type: 'session_metadata_changed'; sessionId: string; changes: Partial<Pick<Session, 'taskNodeCount' | 'kanbanColumn' | 'taskDraft' | 'taskSlug' | 'projectId' | 'thinkingLevel' | 'activePlugin' | 'contextPolicy' | 'contextHandoff' | 'handoffRootSessionId' | 'handoffFromSessionId' | 'handoffSequence' | 'description' | 'acceptanceCriteria' | 'startAt' | 'dueAt' | 'progress' | 'dependencySessionIds' | 'isMilestone' | 'parentSessionId'>> }
   | { type: 'session_deleted'; sessionId: string }
   | { type: 'session_created'; sessionId: string }
   | { type: 'session_shared'; sessionId: string; sharedUrl: string }
@@ -504,6 +505,16 @@ export type SessionCommand =
   | { type: 'setLabels'; labels: string[] }
   | { type: 'setProjectId'; projectId: string | null }
   | { type: 'setKanbanColumn'; column: string | null }
+  | { type: 'updatePlanning'; patch: {
+      description?: string | null
+      acceptanceCriteria?: string | null
+      startAt?: string | null
+      dueAt?: string | null
+      progress?: number | null
+      dependencySessionIds?: string[]
+      parentSessionId?: string | null
+      isMilestone?: boolean
+    } }
   | { type: 'showInFinder' }
   | { type: 'copyPath' }
   | { type: 'shareToViewer' }
@@ -935,6 +946,8 @@ export interface CalendarEntry {
   title: string
   /** Local calendar day (YYYY-MM-DD). */
   date: string
+  /** Inclusive local end day for multi-day plans. */
+  endDate?: string
   /** Optional start time (HH:MM). Absent = all-day entry. */
   time?: string
   /** Optional end time (HH:MM). Timed entries default to one hour when absent. */
@@ -954,6 +967,7 @@ export interface CalendarEntryInput {
   title: string
   /** Local calendar day (YYYY-MM-DD). */
   date: string
+  endDate?: string
   time?: string
   endTime?: string
   allDay?: boolean

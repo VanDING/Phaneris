@@ -661,7 +661,6 @@ export interface ElectronAPI {
   createWorkItem(workspaceId: string, input: import('@phaneris/shared/work-items').CreateWorkItemInput): Promise<import('@phaneris/shared/work-items').WorkItem>
   updateWorkItem(workspaceId: string, itemId: string, patch: import('@phaneris/shared/work-items').UpdateWorkItemInput): Promise<import('@phaneris/shared/work-items').WorkItem>
   deleteWorkItem(workspaceId: string, itemId: string): Promise<void>
-  listWorkItemEvents(workspaceId: string, itemId: string, limit?: number): Promise<import('@phaneris/shared/work-items').WorkItemEvent[]>
   onWorkItemsChanged(callback: (workspaceId: string) => void): () => void
 
   // Artifacts (workspace-scoped revisioned deliverables)
@@ -1114,7 +1113,7 @@ export interface AutomationsNavigationState {
  * renderer and WorkItem backing model. Adding a future view happens here and
  * in the project-view registry instead of creating another top-level surface.
  */
-export const PROJECT_MANAGEMENT_VIEWS = ['overview', 'list', 'board', 'calendar'] as const
+export const PROJECT_MANAGEMENT_VIEWS = ['overview', 'list', 'board', 'calendar', 'gantt'] as const
 export type ProjectManagementView = (typeof PROJECT_MANAGEMENT_VIEWS)[number]
 
 export function isProjectManagementView(value: string): value is ProjectManagementView {
@@ -1268,6 +1267,7 @@ export const getNavigationStateKey = (state: NavigationState): string => {
     }
     if (state.view === 'board') return 'kanban'
     if (state.view === 'calendar') return 'calendar'
+    if (state.view === 'gantt') return 'gantt'
     return state.view === 'overview' ? 'projects' : 'projects/list'
   }
   if (state.navigator === 'pages') {
@@ -1346,6 +1346,9 @@ export const parseNavigationStateKey = (key: string): NavigationState | null => 
   }
   if (key === 'calendar') {
     return { navigator: 'projects', view: 'calendar', details: null }
+  }
+  if (key === 'gantt') {
+    return { navigator: 'projects', view: 'gantt', details: null }
   }
   if (key.startsWith('calendar/schedule/')) {
     return {

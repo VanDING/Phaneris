@@ -17,6 +17,7 @@ export type SurfaceLauncherKind =
   | 'sessions'
   | 'kanban'
   | 'calendar'
+  | 'gantt'
   | 'files'
   | 'trajectory'
   | 'terminal'
@@ -25,12 +26,13 @@ export const SURFACE_LAUNCHER_KINDS: readonly SurfaceLauncherKind[] = [
   'sessions',
   'kanban',
   'calendar',
+  'gantt',
   'files',
   'trajectory',
   'terminal',
 ] as const
 
-export const PRIMARY_SURFACE_LAUNCHER_KINDS = ['sessions', 'kanban', 'calendar'] as const
+export const PRIMARY_SURFACE_LAUNCHER_KINDS = ['sessions', 'kanban', 'calendar', 'gantt'] as const
 export type PrimarySurfaceLauncherKind = (typeof PRIMARY_SURFACE_LAUNCHER_KINDS)[number]
 
 /** Only consolidated Workbench homes appear as direct top-bar launchers. */
@@ -44,13 +46,27 @@ export type ContextWorkbenchLauncherKind = (typeof CONTEXT_WORKBENCH_LAUNCHER_KI
 export function isContextWorkbenchKind(
   kind: SurfaceLauncherKind,
 ): kind is Exclude<SurfaceLauncherKind, PrimarySurfaceLauncherKind> {
-  return kind !== 'sessions' && kind !== 'kanban' && kind !== 'calendar'
+  return !(PRIMARY_SURFACE_LAUNCHER_KINDS as readonly SurfaceLauncherKind[]).includes(kind)
+}
+
+/**
+ * Whether a launcher kind owns application navigation (a Primary Surface) rather
+ * than opening a Context Workbench tab.
+ *
+ * Always derive this from the registry: the dispatch site used to hardcode the
+ * primary kinds, so adding a kind to `PRIMARY_SURFACE_LAUNCHER_KINDS` left it
+ * routed to the workbench path, where `createWorkbenchItem` correctly rejected
+ * it as a primary route — the button then did nothing at all, silently.
+ */
+export function isPrimarySurfaceKind(kind: SurfaceLauncherKind): kind is PrimarySurfaceLauncherKind {
+  return (PRIMARY_SURFACE_LAUNCHER_KINDS as readonly SurfaceLauncherKind[]).includes(kind)
 }
 
 export const SURFACE_LAUNCHER_ROUTES: Record<SurfaceLauncherKind, ViewRoute> = {
   sessions: 'allSessions',
   kanban: 'kanban',
   calendar: 'calendar',
+  gantt: 'gantt',
   files: 'files',
   trajectory: 'trajectory',
   terminal: 'terminal',
@@ -75,6 +91,7 @@ export function surfaceLauncherKindForRoute(route: ViewRoute): SurfaceLauncherKi
     case 'projects':
       if (navState.view === 'board') return 'kanban'
       if (navState.view === 'calendar') return 'calendar'
+      if (navState.view === 'gantt') return 'gantt'
       return null
     case 'other':
       // Artifact tabs are contextual documents, not persistent top-bar

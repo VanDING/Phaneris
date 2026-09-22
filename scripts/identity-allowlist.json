@@ -43,11 +43,6 @@
       "reason": "Historical release notes describe what actually shipped under the upstream name; rewriting them would falsify the record."
     },
     {
-      "glob": "AGENTS.md",
-      "tokens": ["*"],
-      "reason": "Documents the working remote name (VanDING/Phaneris) and the retired fork (VanDING/craft-agents-rebuild), which is kept for historical reference after the project moved to a standalone repository."
-    },
-    {
       "glob": "packages/shared/src/automations/utils.ts",
       "tokens": ["env-prefix"],
       "reason": "The one place a legacy environment prefix is still read: a shell profile's CRAFT_WH_* webhook secrets keep working for one transition, with a deprecation notice. The literal only appears in a comment and in the LEGACY_IDENTITY-derived constant."

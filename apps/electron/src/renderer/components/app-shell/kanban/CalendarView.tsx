@@ -1,9 +1,9 @@
 /**
- * CalendarView — aggregate schedule projection over WorkItems and standalone entries.
+ * CalendarView — the time projection of Session planning metadata.
  *
- * Three view modes (Day / Week / Month) over one aggregate projection:
- * durable WorkItems with start/due dates plus lightweight standalone calendar
- * entries. Either kind can open or lazily create an execution conversation.
+ * Three view modes (Day / Week / Month) over Session-backed calendar entries.
+ * Every visible item can open its conversation because schedule and task are
+ * projections of the same Session.
  *
  * Day/Week render entries inline (full info, no preview popup); Month uses
  * compact chips with an anchored day-list popover. Create/edit flows use the
@@ -15,7 +15,6 @@ import * as React from 'react'
 import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { Plus, Search } from 'lucide-react'
 import { useAtomValue } from 'jotai'
-import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import {
   addDays,
@@ -40,7 +39,6 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { CalendarEntry } from '@phaneris/shared/protocol'
-import { queryWorkItems, workItemDateKey, type WorkItem } from '@phaneris/shared/work-items/browser'
 import { KanbanProjectFilter, type KanbanProjectFilterOption } from './KanbanProjectFilter'
 import { motionSpring } from '@phaneris/ui/motion'
 import { ContentSwap } from '@/components/ui/content-swap'
@@ -106,11 +104,10 @@ interface CalendarProjection {
   note?: string
   projectId?: string
   entry?: CalendarEntry
-  workItem?: WorkItem
 }
 
 export function CalendarView() {
-  const { activeWorkspaceId, onCreateSession, trailingAction, expandButton } = useAppShellContext()
+  const { activeWorkspaceId, trailingAction, expandButton } = useAppShellContext()
   const compensateForStoplight = useCompensateForStoplight()
   const { t, i18n } = useTranslation()
   // Date labels follow the UI language, not the host locale (see lib/calendar-date.ts).
@@ -118,7 +115,7 @@ export function CalendarView() {
   const reduceMotion = useReducedMotionConfig()
   const { navigate, navigateToSession } = useNavigation()
   const { entries, update, remove } = useCalendarEntries(activeWorkspaceId ?? null)
-  const { items: workItems, update: updateWorkItem } = useWorkItems(activeWorkspaceId ?? null)
+  const { items: workItems } = useWorkItems(activeWorkspaceId ?? null)
   const projects = useAtomValue(projectsAtom)
   const projectOptions = React.useMemo<KanbanProjectFilterOption[]>(
     () => projects.map((project) => ({ id: project.config.id, name: project.config.name, color: project.config.color })),
@@ -132,8 +129,6 @@ export function CalendarView() {
     setSearch,
     setStatusIds,
     setScheduled,
-    query,
-    setSelectedIds,
   } = useWorkItemViewState(activeWorkspaceId ?? null, workItems, liveProjectIds)
 
   // Calendar always shows scheduled work. Clear legacy hidden filter values so
@@ -154,35 +149,14 @@ export function CalendarView() {
 
   const calendarItems = React.useMemo<CalendarProjection[]>(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase()
-    const scheduledWorkItems = queryWorkItems(workItems, {
-      ...query,
-      statusIds: [],
-      scheduled: 'scheduled',
-    }).flatMap((item): CalendarProjection[] => {
-      const start = workItemDateKey(item.startAt) ?? workItemDateKey(item.dueAt)
-      const end = workItemDateKey(item.dueAt) ?? workItemDateKey(item.startAt)
-      if (!start || !end) return []
-      const time = item.startAt?.includes('T') ? item.startAt.slice(11, 16) : undefined
-      return [{
-        id: `work-item:${item.id}`,
-        title: item.title,
-        date: start,
-        endDate: end,
-        time,
-        allDay: !time,
-        note: item.description,
-        projectId: item.projectId,
-        workItem: item,
-      }]
-    })
-    const standalone = entries
+    return entries
       .filter((entry) => !projectIds.length || Boolean(entry.projectId && projectIds.includes(entry.projectId)))
       .filter((entry) => !normalizedSearch || `${entry.title}\n${entry.note ?? ''}`.toLocaleLowerCase().includes(normalizedSearch))
       .map((entry): CalendarProjection => ({
         id: `entry:${entry.id}`,
         title: entry.title,
         date: entry.date,
-        endDate: entry.date,
+        endDate: entry.endDate ?? entry.date,
         time: entry.time,
         endTime: entry.endTime,
         allDay: entry.allDay ?? !entry.time,
@@ -190,10 +164,10 @@ export function CalendarView() {
         projectId: entry.projectId,
         entry,
       }))
-    return [...scheduledWorkItems, ...standalone].sort((left, right) =>
+      .sort((left, right) =>
       left.date.localeCompare(right.date) || (left.time ?? '').localeCompare(right.time ?? '') || left.title.localeCompare(right.title),
     )
-  }, [entries, projectIds, query, search, workItems])
+  }, [entries, projectIds, search])
 
   const entriesFor = React.useCallback(
     (day: Date): CalendarProjection[] => {
@@ -227,23 +201,15 @@ export function CalendarView() {
       await update(entry.id, {
         title: entry.title,
         date: nextDate,
+        endDate: dayKey(addDays(parseISO(nextDate), differenceInCalendarDays(parseISO(entry.endDate ?? entry.date), parseISO(entry.date)))),
         allDay: time === undefined ? (entry.allDay ?? !entry.time) : false,
         time: time ?? entry.time,
         endTime: entry.endTime,
         note: entry.note,
         projectId: entry.projectId,
       })
-      return
     }
-    if (!projection.workItem) return
-    const item = projection.workItem
-    const oldStart = workItemDateKey(item.startAt) ?? workItemDateKey(item.dueAt) ?? nextDate
-    const oldEnd = workItemDateKey(item.dueAt) ?? oldStart
-    const span = differenceInCalendarDays(parseISO(oldEnd), parseISO(oldStart))
-    const startAt = time ? `${nextDate}T${time}` : nextDate
-    const dueAt = dayKey(addDays(parseISO(nextDate), span))
-    await updateWorkItem(item.id, { startAt, dueAt })
-  }, [calendarItems, update, updateWorkItem])
+  }, [calendarItems, update])
 
   const dropAt = React.useCallback((date: Date, event: React.DragEvent<HTMLElement>, timed: boolean) => {
     event.preventDefault()
@@ -285,15 +251,10 @@ export function CalendarView() {
   }, [update])
 
   const openEdit = React.useCallback((projection: CalendarProjection) => {
-    if (projection.workItem) {
-      setSelectedIds([projection.workItem.id])
-      navigate(routes.view.projectWorkItem('calendar', projection.workItem.id))
-      return
-    }
     const entry = projection.entry
     if (!entry) return
     navigate(routes.view.projectSchedule(entry.id))
-  }, [navigate, setSelectedIds])
+  }, [navigate])
 
   const handleDelete = React.useCallback(
     (projection: CalendarProjection) => {
@@ -303,33 +264,10 @@ export function CalendarView() {
   )
 
   const createConversation = React.useCallback(
-    async (projection: CalendarProjection) => {
-      if (!activeWorkspaceId) return
-      try {
-        if (projection.workItem?.primarySessionId) {
-          navigateToSession(projection.workItem.primarySessionId)
-          return
-        }
-        const session = await onCreateSession(activeWorkspaceId, {
-          name: projection.title,
-          ...(projection.projectId ? { projectId: projection.projectId } : {}),
-        })
-        if (projection.workItem) {
-          const linked = await updateWorkItem(projection.workItem.id, {
-            sessionIds: [...projection.workItem.sessionIds, session.id],
-            primarySessionId: session.id,
-          })
-          if (!linked) {
-            toast.error(t('kanban.workItemLinkFailed'))
-            return
-          }
-        }
-        if (session?.id) navigateToSession(session.id)
-      } catch (err) {
-        console.error('[CalendarView] Failed to create conversation:', err)
-      }
+    (projection: CalendarProjection) => {
+      if (projection.entry) navigateToSession(projection.entry.id)
     },
-    [activeWorkspaceId, onCreateSession, navigateToSession, t, updateWorkItem],
+    [navigateToSession],
   )
 
   // -------------------------------------------------------------------------
@@ -382,7 +320,7 @@ export function CalendarView() {
           void createConversation(entry)
         }}
       >
-        {entry.workItem?.primarySessionId ? t('kanban.workItemOpenSession') : t('schedule.createChat')}
+        {t('kanban.workItemOpenSession')}
       </Button>
       {entry.entry && (
         <Button
@@ -394,7 +332,7 @@ export function CalendarView() {
             handleDelete(entry)
           }}
         >
-          {t('schedule.delete')}
+          {t('schedule.remove')}
         </Button>
       )}
     </div>

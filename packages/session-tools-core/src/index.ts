@@ -143,6 +143,7 @@ export type {
   ResolvedStatusResult,
   CreateTaskInput,
   CreateTaskResult,
+  UpdateSessionPlanningInput,
   ArtifactToolKind,
   ArtifactCreateInput,
   ArtifactApplyOperation,

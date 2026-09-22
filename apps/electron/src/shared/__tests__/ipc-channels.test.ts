@@ -414,7 +414,6 @@ const EXPECTED_CHANNELS: string[] = [
   "workItems:create",
   "workItems:delete",
   "workItems:list",
-  "workItems:list-events",
   "workItems:update",
   "workspace:getPermissions",
   "workspace:readImage",

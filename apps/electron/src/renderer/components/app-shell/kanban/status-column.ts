@@ -10,6 +10,7 @@ export const KANBAN_COLUMNS: readonly (KanbanColumnMeta & {
   id: BuiltInKanbanColumnId
   labelKey: string
 })[] = [
+  { id: 'backlog', labelKey: 'kanban.column.backlog' },
   { id: 'todo', labelKey: 'kanban.column.todo' },
   { id: 'in-progress', labelKey: 'kanban.column.inProgress' },
   { id: 'done', labelKey: 'kanban.column.done' },
@@ -25,6 +26,8 @@ export const KANBAN_COLUMNS: readonly (KanbanColumnMeta & {
  */
 export function statusToColumn(statusId: string): KanbanColumnId {
   switch (statusId) {
+    case 'backlog':
+      return 'backlog'
     case 'in-progress':
     case 'needs-review':
       return 'in-progress'

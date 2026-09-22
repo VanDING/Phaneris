@@ -8,6 +8,8 @@ import { KanbanBoardContainer } from '@/components/app-shell/kanban/KanbanBoardC
 import { WorkItemListView } from '@/components/app-shell/kanban/WorkItemListView'
 import { TaskPage } from './TaskPage'
 import { SchedulePage } from './SchedulePage'
+import { GanttView } from '@/components/app-shell/kanban/GanttView'
+import { SurfaceErrorBoundary } from '@/components/app-shell/SurfaceErrorBoundary'
 
 export interface ProjectManagementSurfaceProps {
   state: ProjectsNavigationState
@@ -41,6 +43,9 @@ export function ProjectManagementSurface({ state }: ProjectManagementSurfaceProp
     case 'calendar':
       content = <CalendarView />
       break
+    case 'gantt':
+      content = <GanttView />
+      break
     case 'overview':
       if (state.details?.type === 'project') {
         content = <ProjectInfoPage projectSlug={state.details.projectSlug} />
@@ -64,7 +69,11 @@ export function ProjectManagementSurface({ state }: ProjectManagementSurfaceProp
 
   return (
     <div className="@container/panel relative h-full min-h-0 overflow-hidden">
-      <div key={state.view} className="motion-view-enter h-full min-h-0">{content}</div>
+      <div key={state.view} className="motion-view-enter h-full min-h-0">
+        <SurfaceErrorBoundary surface={`projects/${state.view}`} resetKey={state.view}>
+          {content}
+        </SurfaceErrorBoundary>
+      </div>
     </div>
   )
 }

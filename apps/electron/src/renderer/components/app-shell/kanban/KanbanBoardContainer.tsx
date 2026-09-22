@@ -224,6 +224,7 @@ export function KanbanBoardContainer() {
 
     const result: KanbanTask[] = []
     for (const workItem of workItems) {
+      if (workItem.parentId) continue
       const meta = metaMap.get(workItem.primarySessionId ?? '')
       const statusId = workItem.statusId
       // Placement is the persisted free-string column, else the status' default column.
@@ -387,7 +388,7 @@ export function KanbanBoardContainer() {
       const boundProjectId = projectFilter[0]
       await createWorkItem({
         title,
-        statusId: 'todo',
+        statusId: 'backlog',
         ...(boundProjectId ? { projectId: boundProjectId } : {}),
       })
     },

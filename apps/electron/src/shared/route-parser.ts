@@ -68,7 +68,7 @@ export interface ParsedCompoundRoute {
  * Known prefixes that indicate a compound route
  */
 const COMPOUND_ROUTE_PREFIXES = [
-  'allSessions', 'flagged', 'archived', 'state', 'label', 'view', 'kanban', 'board', 'calendar', 'sources', 'skills', 'plugins', 'automations', 'projects', 'pages', 'settings', 'diff', 'files', 'context', 'preview', 'trajectory', 'terminal', 'artifact'
+  'allSessions', 'flagged', 'archived', 'state', 'label', 'view', 'kanban', 'board', 'calendar', 'gantt', 'sources', 'skills', 'plugins', 'automations', 'projects', 'pages', 'settings', 'diff', 'files', 'context', 'preview', 'trajectory', 'terminal', 'artifact'
 ]
 
 /**
@@ -141,6 +141,23 @@ export function parseCompoundRoute(route: string): ParsedCompoundRoute | null {
     return {
       navigator: 'projects',
       projectView: 'calendar',
+      details: null,
+    }
+  }
+
+  // Timeline projection — a direct application-level route like kanban/calendar.
+  if (first === 'gantt') {
+    if (segments.length === 3 && segments[1] === 'work-item' && segments[2]) {
+      return {
+        navigator: 'projects',
+        projectView: 'gantt',
+        details: { type: 'workItem', id: decodeURIComponent(segments[2]) },
+      }
+    }
+    if (segments.length !== 1) return null
+    return {
+      navigator: 'projects',
+      projectView: 'gantt',
       details: null,
     }
   }
@@ -467,6 +484,7 @@ export function buildCompoundRoute(parsed: ParsedCompoundRoute): string {
     if (!parsed.details) {
       if (parsed.projectView === 'board') return 'kanban'
       if (parsed.projectView === 'calendar') return 'calendar'
+      if (parsed.projectView === 'gantt') return 'gantt'
       if (parsed.projectView === 'list') return 'projects/list'
       return 'projects'
     }
@@ -478,7 +496,9 @@ export function buildCompoundRoute(parsed: ParsedCompoundRoute): string {
         ? 'kanban'
         : parsed.projectView === 'calendar'
           ? 'calendar'
-          : 'projects/list'
+          : parsed.projectView === 'gantt'
+            ? 'gantt'
+            : 'projects/list'
       return `${base}/work-item/${encodeURIComponent(parsed.details.id)}`
     }
     return `projects/project/${parsed.details.id}`

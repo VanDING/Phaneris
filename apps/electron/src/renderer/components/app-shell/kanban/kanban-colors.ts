@@ -9,6 +9,7 @@ import type { BuiltInKanbanColumnId } from './types'
  * (planning) → amber (active) → emerald (done).
  */
 export const DEFAULT_KANBAN_COLUMN_COLORS: Record<BuiltInKanbanColumnId, string> = {
+  backlog: '#64748b', // slate
   todo: '#6366f1', // indigo
   'in-progress': '#f59e0b', // amber
   done: '#10b981', // emerald

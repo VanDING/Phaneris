@@ -294,7 +294,6 @@ export const CHANNEL_MAP = {
   createWorkItem: invoke(RPC_CHANNELS.workItems.CREATE),
   updateWorkItem: invoke(RPC_CHANNELS.workItems.UPDATE),
   deleteWorkItem: invoke(RPC_CHANNELS.workItems.DELETE),
-  listWorkItemEvents: invoke(RPC_CHANNELS.workItems.LIST_EVENTS),
   onWorkItemsChanged: listener(RPC_CHANNELS.workItems.CHANGED),
 
   // Artifacts (revisioned agent/user deliverables)

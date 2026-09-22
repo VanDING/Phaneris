@@ -37,8 +37,17 @@ describe('Primary Surface classification', () => {
     expect(classifySurfaceRoute('trajectory')).toEqual({ role: 'workbench', kind: 'trajectory' })
   })
 
-  it('does not recognize the reserved Gantt route', () => {
-    expect(classifySurfaceRoute('projects/gantt' as never)).toBeNull()
+  it('recognizes the timeline projection as a Primary Surface', () => {
+    // `gantt` used to be a reserved, unrouted view: the route parsed to null, so
+    // the launcher navigated nowhere. It is a first-class projection now.
+    expect(classifySurfaceRoute('projects/gantt' as never)).toEqual({
+      role: 'primary',
+      kind: 'project-management',
+    })
+    expect(classifySurfaceRoute('gantt' as never)).toEqual({
+      role: 'primary',
+      kind: 'project-management',
+    })
   })
 })
 

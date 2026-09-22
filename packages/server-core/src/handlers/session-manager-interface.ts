@@ -25,6 +25,7 @@ import type {
   ShareResult,
 } from '@phaneris/shared/protocol'
 import type { SessionBundle, DispatchMode } from '@phaneris/shared/sessions'
+import type { SessionPlanningFields } from '@phaneris/shared/sessions'
 import type { EventSink } from '../transport'
 
 export interface ISessionManager {
@@ -123,6 +124,10 @@ export interface ISessionManager {
   ): Promise<{ labelId: string } | undefined>
   setSessionProjectId(sessionId: string, projectId: string | null): Promise<void>
   setKanbanColumn(sessionId: string, column: string | null): Promise<void>
+  updateSessionPlanning(
+    sessionId: string,
+    patch: { [K in keyof SessionPlanningFields]?: SessionPlanningFields[K] | null } & { parentSessionId?: string | null },
+  ): Promise<void>
   setTaskNodeCount(sessionId: string, count: number): Promise<void>
   adoptGeneratedTaskOrchestrator(
     sessionId: string,

@@ -494,6 +494,8 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
         return sessionManager.setSessionProjectId(sessionId, command.projectId)
       case 'setKanbanColumn':
         return sessionManager.setKanbanColumn(sessionId, command.column)
+      case 'updatePlanning':
+        return sessionManager.updateSessionPlanning(sessionId, command.patch)
       case 'showInFinder': {
         const sessionPath = sessionManager.getSessionPath(sessionId)
         if (sessionPath) {

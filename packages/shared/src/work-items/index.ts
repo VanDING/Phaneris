@@ -1,18 +1,15 @@
+/**
+ * WorkItem contract and pure projection helpers.
+ *
+ * A WorkItem is a *projection* of a Session's planning fields — Sessions are the
+ * single source of truth. There is no separate WorkItem store: the previous
+ * on-disk store, its event log and its one-shot Session migration have all been
+ * removed, so nothing here touches the filesystem.
+ */
 export type {
   CreateWorkItemInput,
-  DetachSessionWorkItemsResult,
-  EnsureSessionWorkItemResult,
-  LegacySessionWorkItemSource,
-  LegacySessionWorkItemMigrationResult,
-  PrimaryWorkItemSyncResult,
   UpdateWorkItemInput,
   WorkItem,
-  WorkItemEvent,
-  WorkItemEventAction,
-  WorkItemEventActor,
-  WorkItemEventChange,
-  WorkItemEventContext,
-  WorkItemMutationContext,
   WorkItemQuery,
   WorkItemScheduledFilter,
   WorkItemSortDirection,
@@ -24,16 +21,3 @@ export {
   reconcileWorkItemSelection,
   workItemDateKey,
 } from './query.ts';
-
-export {
-  createWorkItem,
-  deleteWorkItem,
-  detachSessionFromWorkItems,
-  ensureWorkItemForSession,
-  findPrimaryWorkItemBySessionId,
-  listWorkItems,
-  listWorkItemEvents,
-  migrateLegacySessionWorkItems,
-  updatePrimaryWorkItemForSession,
-  updateWorkItem,
-} from './storage.ts';

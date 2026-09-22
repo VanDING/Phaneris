@@ -85,13 +85,6 @@ import {
 import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager } from '@phaneris/shared/sources'
 import { listTaskSlugs, parseTaskSpec, uniqueTaskSlug } from '@phaneris/shared/tasks'
 import {
-  detachSessionFromWorkItems,
-  ensureWorkItemForSession,
-  updatePrimaryWorkItemForSession,
-  type UpdateWorkItemInput,
-} from '@phaneris/shared/work-items'
-import { isSessionWorkItemEligible } from './work-item-eligibility'
-import {
   acquireArtifactLease,
   applyArtifactDraft,
   createArtifactDraft,
@@ -755,6 +748,13 @@ interface ManagedSession {
   projectId?: string
   // Parent session id — when set, this session is a subtask of the parent (undefined = top-level task)
   parentSessionId?: string
+  description?: string
+  acceptanceCriteria?: string
+  startAt?: string
+  dueAt?: string
+  progress?: number
+  dependencySessionIds?: string[]
+  isMilestone?: boolean
   // Kanban board column id ('todo' | 'in-progress' | 'done'); independent of sessionStatus
   kanbanColumn?: string
   // Tasks Conductor: slug of the task spec this session belongs to (orchestrator + child nodes)
@@ -1054,6 +1054,13 @@ function managedToSession(m: ManagedSession, overrides?: Partial<Session>): Sess
 // Performance: Batch IPC delta events to reduce renderer load
 const DELTA_BATCH_INTERVAL_MS = 50  // Flush batched deltas every 50ms
 
+/**
+ * Coalescing window for the planning-changed signal. Long enough to collapse the
+ * metadata writes of a single user action (rename + status + dates) and the
+ * title refresh of a finished turn, short enough that the board still feels live.
+ */
+const PLANNING_CHANGED_COALESCE_MS = 250
+
 interface PendingDelta {
   delta: string
   turnId?: string
@@ -1250,6 +1257,8 @@ export class SessionManager implements ISessionManager {
   /** Pinned desktop client per session for `client:browser:invoke` routing. */
   private browserHostByCanvas = new Map<string, string>()
   private eventSink: EventSink | null = null
+  /** Workspaces with a planning-changed broadcast waiting on the coalescing timer. */
+  private pendingPlanningChanged: Set<string> | null = null
 
   setEventSink(sink: EventSink): void {
     this.eventSink = sink
@@ -1792,65 +1801,44 @@ export class SessionManager implements ISessionManager {
   }
 
   /**
-   * Session is a compatibility projection of its primary WorkItem. All
-   * Session/TaskRunner-originated changes cross this one storage boundary;
-   * renderer listeners never write back and therefore cannot form a loop.
+   * Notify the planning projections (board, calendar, timeline) that a Session
+   * changed, at most once per interval per workspace.
+   *
+   * Every consumer of this signal refetches the whole projection, so emitting it
+   * per metadata write made routine activity quadratic: a title refresh, a status
+   * change or a new message each caused a full refetch of every visible session.
+   * The signal carries no payload — it only means "the projection is stale" — so
+   * collapsing a burst into one emit is lossless and cannot drop an update.
    */
-  private syncPrimaryWorkItem(
-    managed: ManagedSession,
-    patch: Pick<UpdateWorkItemInput, 'title' | 'projectId' | 'statusId' | 'columnId'>,
-  ): void {
-    try {
-      const result = updatePrimaryWorkItemForSession(managed.workspace.rootPath, managed.id, patch, {
-        actor: { type: 'agent' },
-        context: { sessionId: managed.id },
-      })
-      if (result?.changed) this.broadcastWorkItemsChanged(managed.workspace.id)
-    } catch (error) {
-      sessionLog.error('[work-items] Failed to sync primary task projection:', {
-        sessionId: managed.id,
-        error: error instanceof Error ? error.message : String(error),
-      })
-    }
+  private broadcastPlanningChanged(workspaceId: string): void {
+    if (!this.eventSink) return
+    const pending = this.pendingPlanningChanged
+    if (pending?.has(workspaceId)) return
+    const workspaces = pending ?? new Set<string>()
+    if (!pending) this.pendingPlanningChanged = workspaces
+    workspaces.add(workspaceId)
+    setTimeout(() => {
+      const flush = this.pendingPlanningChanged
+      if (!flush) return
+      this.pendingPlanningChanged = null
+      for (const id of flush) {
+        this.eventSink?.(RPC_CHANNELS.workItems.CHANGED, { to: 'workspace', workspaceId: id }, id)
+        this.eventSink?.(RPC_CHANNELS.calendar.CHANGED, { to: 'workspace', workspaceId: id }, id)
+      }
+    }, PLANNING_CHANGED_COALESCE_MS)
+  }
+
+  /** Notify compatibility projections after Session metadata changes. */
+  private syncPrimaryWorkItem(managed: ManagedSession, _patch: unknown): void {
+    this.broadcastPlanningChanged(managed.workspace.id)
   }
 
   private ensurePrimaryWorkItem(managed: ManagedSession): void {
-    if (!isSessionWorkItemEligible(managed)) return
-    try {
-      const result = ensureWorkItemForSession(managed.workspace.rootPath, {
-        id: managed.id,
-        title: managed.name?.trim() || 'Untitled task',
-        projectId: managed.projectId,
-        statusId: managed.sessionStatus,
-        columnId: managed.kanbanColumn,
-        createdAt: managed.createdAt,
-        updatedAt: managed.lastMessageAt,
-      }, {
-        actor: { type: 'agent' },
-        context: { sessionId: managed.id },
-      })
-      if (result.created) this.broadcastWorkItemsChanged(managed.workspace.id)
-    } catch (error) {
-      sessionLog.error('[work-items] Failed to register task session:', {
-        sessionId: managed.id,
-        error: error instanceof Error ? error.message : String(error),
-      })
-    }
+    this.syncPrimaryWorkItem(managed, {})
   }
 
   private detachSessionWorkItems(managed: ManagedSession): void {
-    try {
-      const result = detachSessionFromWorkItems(managed.workspace.rootPath, managed.id, {
-        actor: { type: 'system' },
-        context: { sessionId: managed.id },
-      })
-      if (result.changed) this.broadcastWorkItemsChanged(managed.workspace.id)
-    } catch (error) {
-      sessionLog.error('[work-items] Failed to detach deleted session:', {
-        sessionId: managed.id,
-        error: error instanceof Error ? error.message : String(error),
-      })
-    }
+    this.syncPrimaryWorkItem(managed, {})
   }
 
   private broadcastAutomationsChanged(workspaceId: string): void {
@@ -3295,6 +3283,13 @@ export class SessionManager implements ISessionManager {
       isFlagged: options?.isFlagged,
       projectId: resolvedProjectId,
       parentSessionId: options?.parentSessionId,
+      description: options?.description,
+      acceptanceCriteria: options?.acceptanceCriteria,
+      startAt: options?.startAt,
+      dueAt: options?.dueAt,
+      progress: options?.progress,
+      dependencySessionIds: options?.dependencySessionIds,
+      isMilestone: options?.isMilestone,
       contextPolicy: options?.contextPolicy,
       handoffRootSessionId: options?.handoffRootSessionId,
       handoffFromSessionId: options?.handoffFromSessionId,
@@ -5309,6 +5304,21 @@ export class SessionManager implements ISessionManager {
         setSessionStatusFn: async (sessionId: string | undefined, status: string) => {
           await this.setSessionStatus(sessionId ?? managed.id, status as SessionStatus)
         },
+        updateSessionPlanningFn: async (input) => {
+          const targetId = input.sessionId ?? managed.id
+          const target = this.sessions.get(targetId)
+          if (!target || target.workspace.id !== managed.workspace.id) {
+            throw new Error(`Session ${targetId} not found in this workspace`)
+          }
+          if (input.title !== undefined) {
+            const title = input.title.trim()
+            if (!title) throw new Error('Session title cannot be empty')
+            await this.renameSession(targetId, title)
+          }
+          if ('projectId' in input) await this.setSessionProjectId(targetId, input.projectId ?? null)
+          const { sessionId: _sessionId, title: _title, projectId: _projectId, ...planning } = input
+          if (Object.keys(planning).length) await this.updateSessionPlanning(targetId, planning)
+        },
         // archive_session — archive/unarchive ANOTHER session by ID. Scoped to the
         // invoking session's workspace and blocked mid-turn (guard logic lives in
         // archive-guards.ts so it is unit-testable); delegates to the existing
@@ -5377,6 +5387,16 @@ export class SessionManager implements ISessionManager {
           }
 
           const created = await createTaskFromSpec(this, ws.id, ws.rootPath, parsed.data)
+          await this.updateSessionPlanning(created.orchestratorSessionId, {
+            description: input.description,
+            acceptanceCriteria: input.acceptanceCriteria,
+            startAt: input.startAt,
+            dueAt: input.dueAt,
+            progress: input.progress,
+            dependencySessionIds: input.dependencySessionIds,
+            parentSessionId: input.parentSessionId,
+            isMilestone: input.isMilestone,
+          })
           return { ...created, warnings: [...warnings, ...created.warnings] }
         },
         // Pages tools (list_pages/get_page/create_page/update_page/
@@ -5413,6 +5433,14 @@ export class SessionManager implements ISessionManager {
             projectId: session.projectId,
             llmConnection: session.llmConnection,
             model: session.model,
+            description: session.description,
+            acceptanceCriteria: session.acceptanceCriteria,
+            startAt: session.startAt,
+            dueAt: session.dueAt,
+            progress: session.progress,
+            dependencySessionIds: session.dependencySessionIds,
+            parentSessionId: session.parentSessionId,
+            isMilestone: session.isMilestone,
             isActive: session.agent != null,
           }
         },
@@ -5461,6 +5489,9 @@ export class SessionManager implements ISessionManager {
               status: s.sessionStatus ?? 'todo',
               createdAt: s.createdAt ?? 0,
               projectId: s.projectId,
+              startAt: s.startAt,
+              dueAt: s.dueAt,
+              parentSessionId: s.parentSessionId,
             })),
           }
         },
@@ -8504,6 +8535,86 @@ export class SessionManager implements ISessionManager {
       const watcher = this.configWatchers.get(managed.workspace.rootPath)
       watcher?.notifyFileChange(`sessions/${sessionId}/session.jsonl`)
     }
+  }
+
+  /** Update planning metadata used by every project-management projection. */
+  async updateSessionPlanning(
+    sessionId: string,
+    patch: { [K in keyof import('@phaneris/shared/sessions').SessionPlanningFields]?: import('@phaneris/shared/sessions').SessionPlanningFields[K] | null } & { parentSessionId?: string | null },
+  ): Promise<void> {
+    const managed = this.sessions.get(sessionId)
+    if (!managed) throw new Error(`Session ${sessionId} not found`)
+
+    const normalized: Partial<import('@phaneris/shared/sessions').SessionPlanningFields> & { parentSessionId?: string } = {}
+    if ('description' in patch) normalized.description = patch.description?.trim() || undefined
+    if ('acceptanceCriteria' in patch) normalized.acceptanceCriteria = patch.acceptanceCriteria?.trim() || undefined
+    if ('startAt' in patch) normalized.startAt = patch.startAt?.trim() || undefined
+    if ('dueAt' in patch) normalized.dueAt = patch.dueAt?.trim() || undefined
+    if ('progress' in patch) normalized.progress = patch.progress ?? undefined
+    if ('isMilestone' in patch) normalized.isMilestone = patch.isMilestone ?? undefined
+    if ('dependencySessionIds' in patch) {
+      normalized.dependencySessionIds = [...new Set((patch.dependencySessionIds ?? []).filter((id) => id && id !== sessionId))]
+    }
+    if ('parentSessionId' in patch) normalized.parentSessionId = patch.parentSessionId?.trim() || undefined
+
+    // A deadline-only task occupies the interval from its creation day through
+    // the deadline. Fix the start date now so the calendar/Gantt projection is
+    // stable instead of moving forward each time it is read.
+    const plannedStart = 'startAt' in normalized ? normalized.startAt : managed.startAt
+    const plannedDue = 'dueAt' in normalized ? normalized.dueAt : managed.dueAt
+    if (plannedDue && !plannedStart) {
+      const created = new Date(managed.createdAt || Date.now())
+      const year = created.getFullYear()
+      const month = String(created.getMonth() + 1).padStart(2, '0')
+      const day = String(created.getDate()).padStart(2, '0')
+      normalized.startAt = `${year}-${month}-${day}`
+    }
+
+    if (normalized.parentSessionId) {
+      const visited = new Set<string>()
+      let ancestorId: string | undefined = normalized.parentSessionId
+      while (ancestorId) {
+        if (ancestorId === sessionId) throw new Error('A session hierarchy cannot contain a cycle')
+        if (visited.has(ancestorId)) throw new Error('The selected parent already belongs to a cyclic hierarchy')
+        visited.add(ancestorId)
+        const ancestor = this.sessions.get(ancestorId)
+        if (!ancestor || ancestor.workspace.id !== managed.workspace.id) {
+          throw new Error(`Parent session ${ancestorId} not found in this workspace`)
+        }
+        ancestorId = ancestor.parentSessionId
+      }
+    }
+    for (const dependencyId of normalized.dependencySessionIds ?? []) {
+      const dependency = this.sessions.get(dependencyId)
+      if (!dependency || dependency.workspace.id !== managed.workspace.id) {
+        throw new Error(`Dependency session ${dependencyId} not found in this workspace`)
+      }
+    }
+    if (normalized.progress !== undefined && (!Number.isInteger(normalized.progress) || normalized.progress < 0 || normalized.progress > 100)) {
+      throw new Error('Session progress must be an integer from 0 to 100')
+    }
+    const nextStart = 'startAt' in normalized ? normalized.startAt : managed.startAt
+    const nextDue = 'dueAt' in normalized ? normalized.dueAt : managed.dueAt
+    const timestamp = (value: string, endOfDay: boolean): number => {
+      const normalizedValue = /^\d{4}-\d{2}-\d{2}$/.test(value)
+        ? `${value}T${endOfDay ? '23:59:59.999' : '00:00:00'}`
+        : value
+      const result = new Date(normalizedValue).getTime()
+      if (Number.isNaN(result)) throw new Error(`Invalid planning date: ${value}`)
+      return result
+    }
+    if (nextStart && nextDue && timestamp(nextStart, false) > timestamp(nextDue, true)) {
+      throw new Error('Session start must not be after its end')
+    }
+
+    Object.assign(managed, normalized)
+    this.setMetadataWriteGuard(managed)
+    this.persistSession(managed)
+    await this.flushSession(managed.id)
+    this.sendEvent({ type: 'session_metadata_changed', sessionId, changes: normalized }, managed.workspace.id)
+    this.syncPrimaryWorkItem(managed, {})
+    const watcher = this.configWatchers.get(managed.workspace.rootPath)
+    watcher?.notifyFileChange(`sessions/${sessionId}/session.jsonl`)
   }
 
   /**

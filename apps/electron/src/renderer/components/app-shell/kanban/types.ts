@@ -2,7 +2,7 @@
  * View-models for the Kanban board.
  *
  * `column` (where a tile physically sits) is intentionally separate from
- * `statusId` (what the badge shows). The board has 3 columns but a workspace
+ * `statusId` (what the badge shows). The default board has 4 columns but a workspace
  * can have more statuses, so a tile may sit in "In Progress" while showing a
  * "Needs Review" badge. `statusToColumn` (see ./status-column) provides only the
  * default placement; tiles may override it.
@@ -14,12 +14,12 @@
 /**
  * Board column id. Widened from the original 3-literal union to `string` so a
  * project can define its own columns (see `KanbanColumnDef` in shared). The
- * built-in set still uses these three ids; `BuiltInKanbanColumnId` names them
+ * built-in set still uses these four ids; `BuiltInKanbanColumnId` names them
  * where the default placement / color maps need exhaustiveness.
  */
 export type KanbanColumnId = string
 
-export type BuiltInKanbanColumnId = 'todo' | 'in-progress' | 'done'
+export type BuiltInKanbanColumnId = 'backlog' | 'todo' | 'in-progress' | 'done'
 
 export type SubtaskRunState = 'done' | 'running' | 'pending' | 'failed'
 

@@ -338,7 +338,6 @@ export const RPC_CHANNELS = {
     CREATE: 'workItems:create',
     UPDATE: 'workItems:update',
     DELETE: 'workItems:delete',
-    LIST_EVENTS: 'workItems:list-events',
     CHANGED: 'workItems:changed',
   },
   artifacts: {

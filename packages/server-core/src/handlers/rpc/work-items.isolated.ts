@@ -1,9 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { beforeEach, describe, expect, it, mock } from 'bun:test'
+import { mkdtempSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { listWorkItemEvents, listWorkItems } from '@phaneris/shared/work-items'
 import type { HandlerFn, RequestContext, RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { registerWorkItemHandlers } from './work-items'
@@ -42,6 +41,7 @@ interface SessionFixture {
 function createHarness(options?: {
   sessions?: SessionFixture[]
   failRename?: boolean
+  createdSession?: SessionFixture
 }) {
   const sessions = options?.sessions ?? []
   const handlers = new Map<string, HandlerFn>()
@@ -62,6 +62,12 @@ function createHarness(options?: {
   const sessionManager = {
     async waitForInit() {},
     getSessions: () => sessions,
+    async createSession(_workspaceId: string, input: { name?: string }) {
+      const created = options?.createdSession ?? { id: 'created-session', name: input.name }
+      sessions.push(created)
+      calls.push(`create:${input.name ?? ''}`)
+      return created
+    },
     async renameSession(sessionId: string, title: string) {
       calls.push(`title:${sessionId}:${title}`)
       if (options?.failRename) throw new Error('session mirror failed')
@@ -74,6 +80,14 @@ function createHarness(options?: {
     },
     async setKanbanColumn(sessionId: string, columnId: string | null) {
       calls.push(`column:${sessionId}:${columnId ?? ''}`)
+    },
+    async updateSessionPlanning(sessionId: string, patch: Record<string, unknown>) {
+      calls.push(`planning:${sessionId}:${Object.keys(patch).sort().join(',')}`)
+    },
+    async deleteSession(sessionId: string) {
+      calls.push(`delete:${sessionId}`)
+      const index = sessions.findIndex(({ id }) => id === sessionId)
+      if (index >= 0) sessions.splice(index, 1)
     },
   } as unknown as HandlerDeps['sessionManager']
   const deps: HandlerDeps = {
@@ -111,117 +125,104 @@ describe('work item RPC handlers', () => {
     workspaceFixture.rootPath = workspaceRoot
   })
 
-  afterEach(() => {
-    rmSync(workspaceRoot, { recursive: true, force: true })
-  })
-
-  it('continuously reconciles eligible top-level sessions after migration', async () => {
+  it('projects every visible Session and nothing else', async () => {
     const harness = createHarness({
       sessions: [
         { id: 'legacy', name: 'Legacy task', projectId: 'project-a', sessionStatus: 'todo', createdAt: 10, lastMessageAt: 20 },
         { id: 'child', name: 'Child', parentSessionId: 'legacy' },
         { id: 'archived', name: 'Archived', isArchived: true },
+        { id: 'hidden', name: 'Hidden', hidden: true },
         { id: 'draft', name: 'Draft', taskDraft: { title: 'Draft' } },
       ],
     })
     const list = harness.handler(RPC_CHANNELS.workItems.LIST)
 
-    const first = await list(context, workspaceFixture.id)
-    expect(first).toHaveLength(1)
-    expect(first[0]).toMatchObject({
+    const items = await list(context, workspaceFixture.id)
+    expect(items.map((item: { id: string }) => item.id).sort()).toEqual(['child', 'legacy'])
+    expect(items.find((item: { id: string }) => item.id === 'legacy')).toMatchObject({
       title: 'Legacy task',
       projectId: 'project-a',
+      statusId: 'todo',
       primarySessionId: 'legacy',
       sessionIds: ['legacy'],
     })
-
-    harness.sessions.push({ id: 'later', name: 'Later plain conversation' })
-    const second = await list(context, workspaceFixture.id)
-    expect(second).toHaveLength(2)
-    expect(second.some((item: { primarySessionId?: string }) => item.primarySessionId === 'later')).toBe(true)
-    expect(harness.pushes.filter(({ channel }) => channel === RPC_CHANNELS.workItems.CHANGED)).toHaveLength(2)
   })
 
-  it('never persists abandoned empty chats, including after migration', async () => {
-    const harness = createHarness({ sessions: [{ id: 'empty', messageCount: 0 }] })
+  it('projects continuously without writing anything to disk', async () => {
+    const harness = createHarness({ sessions: [{ id: 'first', name: 'First' }] })
     const list = harness.handler(RPC_CHANNELS.workItems.LIST)
-    expect(await list(context, workspaceFixture.id)).toEqual([])
-    harness.sessions.splice(0)
-    expect(await list(context, workspaceFixture.id)).toEqual([])
-    harness.sessions.push({ id: 'next-empty' })
-    expect(await list(context, workspaceFixture.id)).toEqual([])
-    harness.sessions.splice(0)
-    expect(listWorkItems(workspaceRoot)).toEqual([])
-  })
 
-  it('registers a conversation once it gains content and preserves standalone tasks', async () => {
-    const harness = createHarness({ sessions: [{ id: 'chat' }] })
-    const list = harness.handler(RPC_CHANNELS.workItems.LIST)
-    const create = harness.handler(RPC_CHANNELS.workItems.CREATE)
-    const standalone = await create(context, workspaceFixture.id, { title: 'Untitled task' })
-    expect(await list(context, workspaceFixture.id)).toEqual([standalone])
-    harness.sessions[0]!.messageCount = 1
-    harness.sessions[0]!.preview = 'First message'
-    const items = await list(context, workspaceFixture.id)
-    expect(items).toHaveLength(2)
-    expect(items.some((item: { primarySessionId?: string }) => item.primarySessionId === 'chat')).toBe(true)
+    expect(await list(context, workspaceFixture.id)).toHaveLength(1)
+    harness.sessions.push({ id: 'second', name: 'Second' })
     expect(await list(context, workspaceFixture.id)).toHaveLength(2)
+
+    // The projection is derived from Sessions only: no store, no event log.
+    expect(readdirSync(workspaceRoot)).toEqual([])
   })
 
-  it('keeps the WorkItem durable when the compatibility Session mirror fails', async () => {
-    const harness = createHarness({ sessions: [{ id: 'session-1', name: 'Old' }], failRename: true })
+  it('keeps a Session with no messages of its own (planning without chat)', async () => {
+    const harness = createHarness({ sessions: [{ id: 'planned', name: 'Planned task', messageCount: 0 }] })
+    const list = harness.handler(RPC_CHANNELS.workItems.LIST)
+    const items = await list(context, workspaceFixture.id)
+    expect(items).toHaveLength(1)
+    expect(items[0]).toMatchObject({ id: 'planned', title: 'Planned task' })
+  })
+
+  it('falls back to a trimmed preview for an unnamed Session', async () => {
+    const longPreview = 'x'.repeat(400)
+    const harness = createHarness({ sessions: [{ id: 'unnamed', preview: longPreview, messageCount: 3 }] })
+    const list = harness.handler(RPC_CHANNELS.workItems.LIST)
+    const items = await list(context, workspaceFixture.id)
+    expect(items[0].title).toHaveLength(240)
+  })
+
+  it('creates a Session instead of a standalone record', async () => {
+    const harness = createHarness()
     const create = harness.handler(RPC_CHANNELS.workItems.CREATE)
 
-    const item = await create(context, workspaceFixture.id, {
-      title: 'Durable task',
-      projectId: 'project-a',
-      statusId: 'doing',
-      columnId: 'active',
-      sessionIds: ['session-1'],
-      primarySessionId: 'session-1',
-    })
+    const item = await create(context, workspaceFixture.id, { title: 'New task' })
 
-    expect(listWorkItems(workspaceRoot)).toEqual([item])
-    expect(harness.calls).toEqual(['title:session-1:Durable task'])
-    expect(harness.warnings).toHaveLength(1)
-    expect(harness.pushes.some(({ channel }) => channel === RPC_CHANNELS.workItems.CHANGED)).toBe(true)
+    expect(harness.calls).toContain('create:New task')
+    expect(item).toMatchObject({ title: 'New task', primarySessionId: 'created-session' })
   })
 
-  it('mirrors only explicitly updated compatibility fields in deterministic order', async () => {
+  it('mirrors only explicitly updated fields in deterministic order', async () => {
     const harness = createHarness({ sessions: [{ id: 'session-1', name: 'Old' }] })
-    const create = harness.handler(RPC_CHANNELS.workItems.CREATE)
     const update = harness.handler(RPC_CHANNELS.workItems.UPDATE)
-    const standalone = await create(context, workspaceFixture.id, { title: 'Standalone' })
-    harness.calls.length = 0
 
-    const linked = await update(context, workspaceFixture.id, standalone.id, {
+    await update(context, workspaceFixture.id, 'session-1', {
       title: 'Linked task',
       projectId: 'project-b',
       statusId: 'done',
       columnId: 'complete',
-      sessionIds: ['session-1'],
-      primarySessionId: 'session-1',
+      startAt: '2026-08-18',
+      dueAt: '2026-08-20',
     })
 
-    expect(linked.primarySessionId).toBe('session-1')
     expect(harness.calls).toEqual([
       'title:session-1:Linked task',
       'project:session-1:project-b',
       'status:session-1:done',
       'column:session-1:complete',
+      'planning:session-1:dueAt,startAt',
     ])
   })
 
-  it('exposes actor-aware item history', async () => {
+  it('rejects an update for a Session that does not exist', async () => {
     const harness = createHarness()
-    const createItem = harness.handler(RPC_CHANNELS.workItems.CREATE)
-    const updateItem = harness.handler(RPC_CHANNELS.workItems.UPDATE)
-    const listEvents = harness.handler(RPC_CHANNELS.workItems.LIST_EVENTS)
+    const update = harness.handler(RPC_CHANNELS.workItems.UPDATE)
+    await expect(update(context, workspaceFixture.id, 'missing', { title: 'Nope' })).rejects.toThrow(
+      'Session not found: missing',
+    )
+  })
 
-    const item = await createItem(context, workspaceFixture.id, { title: 'History task' })
-    await updateItem(context, workspaceFixture.id, item.id, { statusId: 'done' })
-    const events = await listEvents(context, workspaceFixture.id, item.id)
-    expect(events.map((event: { action: string }) => event.action)).toEqual(['transitioned', 'created'])
-    expect(listWorkItemEvents(workspaceRoot, item.id).every(({ actor }) => actor.type === 'user')).toBe(true)
+  it('deletes the backing Session and broadcasts a change', async () => {
+    const harness = createHarness({ sessions: [{ id: 'session-1', name: 'Doomed' }] })
+    const remove = harness.handler(RPC_CHANNELS.workItems.DELETE)
+
+    await remove(context, workspaceFixture.id, 'session-1')
+
+    expect(harness.calls).toContain('delete:session-1')
+    expect(harness.pushes.some(({ channel }) => channel === RPC_CHANNELS.workItems.CHANGED)).toBe(true)
   })
 })

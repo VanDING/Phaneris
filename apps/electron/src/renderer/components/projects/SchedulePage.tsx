@@ -9,6 +9,7 @@ import { routes, useNavigation } from '@/contexts/NavigationContext'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { useCalendarEntries } from '@/hooks/useCalendarEntries'
 import { ProjectSelectMenu } from './ProjectSelectMenu'
+import { DateField } from '@/components/ui/date-field'
 
 const fieldClass = 'h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground outline-none transition-colors focus:border-ring/60 focus:ring-2 focus:ring-ring/15'
 
@@ -42,6 +43,7 @@ export function SchedulePage({ calendarEntryId }: { calendarEntryId: string }) {
   const entry = isCreate ? undefined : entries.find(({ id }) => id === calendarEntryId)
   const [title, setTitle] = React.useState(entry?.title ?? '')
   const [date, setDate] = React.useState(entry?.date ?? initialDate(calendarEntryId))
+  const [endDate, setEndDate] = React.useState(entry?.endDate ?? entry?.date ?? initialDate(calendarEntryId))
   const seededTime = entry?.time ?? initialTime(calendarEntryId)
   const [allDay, setAllDay] = React.useState(entry?.allDay ?? !seededTime)
   const [time, setTime] = React.useState(seededTime)
@@ -62,6 +64,7 @@ export function SchedulePage({ calendarEntryId }: { calendarEntryId: string }) {
     if (!entry) return
     setTitle(entry.title)
     setDate(entry.date)
+    setEndDate(entry.endDate ?? entry.date)
     setAllDay(entry.allDay ?? !entry.time)
     setTime(entry.time ?? '')
     setEndTime(entry.endTime ?? oneHourAfter(entry.time ?? ''))
@@ -75,6 +78,7 @@ export function SchedulePage({ calendarEntryId }: { calendarEntryId: string }) {
     const input: CalendarEntryInput = {
       title: title.trim(),
       date,
+      endDate: endDate || date,
       allDay,
       time: allDay ? undefined : time || undefined,
       endTime: allDay ? undefined : endTime || undefined,
@@ -84,7 +88,7 @@ export function SchedulePage({ calendarEntryId }: { calendarEntryId: string }) {
     const saved = isCreate ? await create(input) : await update(calendarEntryId, input)
     setSaving(false)
     if (saved) close()
-  }, [allDay, calendarEntryId, close, create, date, endTime, isCreate, note, projectId, saving, time, title, update])
+  }, [allDay, calendarEntryId, close, create, date, endDate, endTime, isCreate, note, projectId, saving, time, title, update])
 
   const projectOptions = React.useMemo(() => [
     { value: '', label: t('kanban.workItemNoProject') },
@@ -134,10 +138,17 @@ export function SchedulePage({ calendarEntryId }: { calendarEntryId: string }) {
                 {t('schedule.allDay')}
               </label>
 
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
                   {t('schedule.entryDate')}
-                  <input type="date" className={fieldClass} value={date} onChange={(event) => setDate(event.target.value)} />
+                  <DateField value={date} onChange={(next) => {
+                    setDate(next)
+                    if (!endDate || endDate < next) setEndDate(next)
+                  }} ariaLabel={t('schedule.entryDate')} />
+                </label>
+                <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
+                  {t('schedule.entryEndDate')}
+                  <DateField value={endDate} onChange={setEndDate} min={date} ariaLabel={t('schedule.entryEndDate')} />
                 </label>
                 <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
                   {t('schedule.entryTime')}
@@ -168,10 +179,10 @@ export function SchedulePage({ calendarEntryId }: { calendarEntryId: string }) {
       <div className="flex flex-none items-center justify-between border-t border-border/60 px-4 py-3">
         {!isCreate ? (
           <button type="button" onClick={() => {
-            if (!window.confirm(t('schedule.delete'))) return
+            if (!window.confirm(t('schedule.remove'))) return
             void remove(calendarEntryId).then(close)
           }} className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-destructive hover:bg-destructive/10">
-            <Trash2 className="h-3.5 w-3.5" /> {t('common.delete')}
+            <Trash2 className="h-3.5 w-3.5" /> {t('schedule.remove')}
           </button>
         ) : <div />}
         <div className="flex gap-2">

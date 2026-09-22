@@ -14,7 +14,6 @@ import type {
 } from '../components/messaging/access/types'
 import type {
   WorkItem,
-  WorkItemEvent,
 } from '@phaneris/shared/work-items/browser'
 
 // ============================================================================
@@ -69,24 +68,6 @@ const playgroundWorkItems: WorkItem[] = [
     sessionIds: [],
     createdAt: Date.UTC(2026, 7, 21, 8),
     updatedAt: Date.UTC(2026, 7, 23, 9),
-  },
-]
-const playgroundWorkItemEvents: WorkItemEvent[] = [
-  {
-    id: 'event-launch-updated',
-    workItemId: 'work-item-launch',
-    action: 'updated',
-    actor: { type: 'agent', label: 'Codex' },
-    changes: [{ field: 'progress', before: 40, after: 65 }],
-    occurredAt: Date.UTC(2026, 7, 24, 9),
-  },
-  {
-    id: 'event-launch-transitioned',
-    workItemId: 'work-item-launch',
-    action: 'transitioned',
-    actor: { type: 'user' },
-    changes: [{ field: 'statusId', before: 'todo', after: 'in-progress' }],
-    occurredAt: Date.UTC(2026, 7, 23, 9),
   },
 ]
 
@@ -445,9 +426,6 @@ export const mockElectronAPI = {
     const index = playgroundWorkItems.findIndex(({ id }) => id === itemId)
     if (index >= 0) playgroundWorkItems.splice(index, 1)
     emitWorkItemsChanged(workspaceId)
-  },
-  listWorkItemEvents: async (_workspaceId: string, itemId: string) => {
-    return playgroundWorkItemEvents.filter(({ workItemId }) => workItemId === itemId)
   },
   onWorkItemsChanged: (callback: (workspaceId: string) => void) => {
     console.log('[Playground] onWorkItemsChanged subscribed')

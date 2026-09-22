@@ -1,0 +1,339 @@
+/**
+ * Third-party Gantt (SVAR `@svar-ui/react-gantt`) host overrides.
+ *
+ * Two jobs:
+ *   1. make the chart actually usable (height chain / virtualisation);
+ *   2. re-skin it in the app's design language.
+ *
+ * Both are plain CSS scoped to `.phaneris-gantt` so they cannot leak into other
+ * panels, and deliberately not expressed as utility variants: they are
+ * load-bearing for the view being usable and for it not looking like a foreign
+ * widget.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Height chain
+ *
+ * `Material` renders an extra wrapper (`.wx-theme.wx-material-theme`) between the
+ * host and the `.wx-gantt` root. That wrapper defines the theme's CSS variables
+ * but has no height rule of its own, while `.wx-gantt` sizes itself with
+ * `height: 100%`.
+ *
+ * A percentage height needs a definite basis, so without this rule the chain is
+ * broken: `.wx-gantt` resolves to `auto`, grows to the full content height, its
+ * own `overflow: auto` scroll container never engages, and the library's
+ * viewport-driven row virtualisation never kicks in — every row ends up in the
+ * DOM. Measured on a 400-row model: 15 272px of chart inside an 876px panel,
+ * ~3.7k DOM nodes; with the wrapper constrained the same model renders 876px of
+ * chart, scrolls internally and keeps 29 rows in the DOM (~340 nodes).
+ * ------------------------------------------------------------------------ */
+.phaneris-gantt .wx-material-theme {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Theme
+ *
+ * Left unthemed the chart paints stock Material: teal summaries (#1de9b6),
+ * magenta milestones (#d33daf), 50px pill bars, Roboto. Every value below is
+ * derived from the host's own tokens via `color-mix`, which is what makes one
+ * block cover light and dark — the app flips `--background`/`--foreground`/
+ * `--border`/`--primary` under `.dark`, and these mixes follow automatically.
+ * ------------------------------------------------------------------------ */
+.phaneris-gantt .wx-material-theme {
+  /* -- chrome: inherit the host surface instead of Material's own greys ------- */
+  --wx-gantt-border-color: var(--border);
+  --wx-gantt-border: 1px solid var(--border);
+  --wx-gantt-icon-color: var(--muted-foreground);
+  --wx-gantt-select-color: color-mix(in oklab, var(--accent) 12%, transparent);
+  --wx-gantt-holiday-background: color-mix(in oklab, var(--foreground) 4%, transparent);
+  --wx-gantt-holiday-color: color-mix(in oklab, var(--foreground) 45%, transparent);
+  --wx-gantt-link-color: color-mix(in oklab, var(--foreground) 35%, transparent);
+  --wx-gantt-link-color-hovered: color-mix(in oklab, var(--foreground) 60%, transparent);
+  --wx-gantt-link-marker-background: var(--card);
+  --wx-gantt-link-marker-color: color-mix(in oklab, var(--foreground) 45%, transparent);
+
+  /* -- typography: match the app, drop Roboto -------------------------------- */
+  --wx-gantt-bar-font: 500 12px var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --wx-gantt-marker-font: 500 12px var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+
+  /* -- shape: 50px pills read as a toy; the app's radius is ~8px ------------- */
+  --wx-gantt-bar-border-radius: 6px;
+  --wx-gantt-baseline-border-radius: 4px;
+  --wx-gantt-bar-shadow: none;
+
+  /* -- task bars: the app's brand accent, flat, no candy border -------------- */
+  --wx-gantt-task-color: var(--accent);
+  --wx-gantt-task-fill-color: color-mix(in oklab, var(--accent) 78%, black);
+  --wx-gantt-task-border-color: var(--accent);
+  --wx-gantt-task-border: none;
+  --wx-gantt-task-font-color: #fff;
+
+  /* -- summaries: a container is structure, not content — keep it quiet ------ */
+  --wx-gantt-summary-color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  --wx-gantt-summary-fill-color: color-mix(in oklab, var(--foreground) 30%, transparent);
+  --wx-gantt-summary-border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
+  --wx-gantt-summary-border: none;
+  --wx-gantt-summary-font-color: var(--foreground);
+
+  /* -- milestones: accent, not neon magenta ---------------------------------- */
+  --wx-gantt-milestone-color: var(--accent);
+  --wx-gantt-milestone-border-radius: 3px;
+
+  /* -- progress: quieter than the stock marker ------------------------------- */
+  --wx-gantt-progress-border-color: color-mix(in oklab, var(--foreground) 22%, transparent);
+  --wx-gantt-progress-marker-height: 22px;
+}
+
+/* Vertical day/week rules are kept deliberately: against a sparse plan they are
+ * what conveys the time scale across an otherwise empty stretch, and removing
+ * them made the chart harder to read rather than calmer. */
+
+/* ---------------------------------------------------------------------------
+ * 3. Bar vocabulary (`TimelineBar` in GanttView.tsx)
+ *
+ * The library renders `.wx-bar > .wx-content` with its own background, radius,
+ * height and `line-height`. This section neutralises that chrome and lets the
+ * template own the visual, so three different meanings never look alike:
+ * a filled progress bar (leaf task), a striped rail (computed container span),
+ * and a diamond (milestone).
+ *
+ * CONTRAST RULES (this is what makes the list readable):
+ *   - every bar surface is a *pale* tint derived from the app's own `--card` and
+ *     `--foreground`, never a saturated fill, so one label colour works across
+ *     the whole bar instead of only over part of it;
+ *   - every label is `--foreground` on that pale tint, which clears 4.5:1 in both
+ *     light and dark;
+ *   - state is carried by the *border*, the *stripe* and the *progress rail*,
+ *     never by the label's own colour.
+ * ------------------------------------------------------------------------ */
+.phaneris-gantt .wx-bar {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+/* Neutralise the library's own bar chrome and content centring. */
+.phaneris-gantt .wx-bar > .wx-content {
+  display: block;
+  height: 100%;
+  padding: 0;
+  line-height: normal;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3a. Grid and header text must never wrap
+ *
+ * A grid cell that wraps grows the whole row: measured, a `YYYY-MM-DD` column at
+ * ~72px of usable width wrapped and pushed data rows from 34px to 72px, and the
+ * three-tier header in month view reached 108px. Cells clip instead, and the full
+ * value stays available as a tooltip.
+ * ------------------------------------------------------------------------ */
+.phaneris-gantt .wx-table .wx-grid .wx-cell,
+.phaneris-gantt .wx-grid .wx-cell,
+.phaneris-gantt .wx-stuck .wx-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*
+ * The library draws its own progress chrome *inside* `.wx-bar` — a
+ * `.wx-progress-wrapper`, a `.wx-progress-percent` fill and a clip-path
+ * `.wx-progress-marker` — and it paints the bar's own fill colour. Our template
+ * draws its own progress, so all of it is switched off. Left on, its tinted fill
+ * sat underneath our label on one half of every bar, which is what made the text
+ * unreadable. `background-image` is cleared as well as the colour because the
+ * library also tints the bar via a gradient.
+ */
+.phaneris-gantt .wx-bar .wx-progress-wrapper,
+.phaneris-gantt .wx-bar .wx-progress-percent,
+.phaneris-gantt .wx-progress-marker {
+  display: none;
+}
+
+.phaneris-gantt .wx-bar,
+.phaneris-gantt .wx-bar .wx-content {
+  background: none;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* ---- leaf task ---------------------------------------------------------- */
+.pg-bar {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  /* A pale tint of the state colour, so the bar is unmistakably *that* state while
+   * a single label colour still clears AA across its whole width. */
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 22%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pg-color, var(--accent)) 65%, transparent);
+}
+
+/*
+ * State marker: a solid block on the left edge.
+ *
+ * A 1px border in the status colour is unusable for this palette — the light
+ * statuses (#f59e0b, #10b981) measure only 1.8–2.2:1 against a pale track, and no
+ * border weight fixes a luminance gap. A 4x27px block of the same colour is a
+ * graphic mark, carries far more area, and stays identifiable regardless.
+ */
+.pg-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--pg-color, var(--accent));
+}
+
+/*
+ * Progress as an inset rail, not a full-height fill. Inset from the left so it
+ * never collides with the state marker.
+ */
+.pg-fill {
+  position: absolute;
+  left: 4px;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 70%, var(--foreground));
+}
+
+/* Completed work reads as settled: same hue, quieter. State stays identifiable
+ * through the left marker and the bar's hue. */
+.pg-bar--done {
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 12%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pg-color, var(--accent)) 40%, transparent);
+}
+
+.pg-bar-label {
+  position: absolute;
+  left: 10px;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font: 500 11.5px/1.2 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+/* ---- container: striped rail, because its span is computed -------------- */
+.pg-bar--summary {
+  /* A container is structure, so its surface stays the quietest of the three;
+   * the relief is carried by the stripe and the state marker. */
+  background: color-mix(in oklab, var(--foreground) 7%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 20%, transparent);
+}
+
+/*
+ * The stripes are painted at full strength on a light tint of the SAME hue.
+ * A translucent stripe over the track measured 1.1:1 — indistinguishable, which
+ * is why the hatching read as noise. Swept the pattern: 2px/4px aliased into a
+ * grey wash; at a 33px bar height a tall rail crowds the label, so the rail is a
+ * slim 5px inset along the bottom, clear of the text baseline.
+ */
+.pg-rail {
+  position: absolute;
+  left: 4px;
+  right: 2px;
+  bottom: 3px;
+  height: 5px;
+  border-radius: 2px;
+  background-color: color-mix(in oklab, var(--pg-color, var(--accent)) 16%, var(--card));
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--pg-color, var(--accent)) 0 4px,
+    transparent 4px 7px
+  );
+}
+
+/* The state marker has to sit above the rail inside a container row. */
+.pg-bar--summary .pg-accent {
+  width: 3px;
+}
+
+.pg-bar--summary .pg-bar-label {
+  left: 10px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* ---- child-count badge: a quiet chip, never competing with the label ---- */
+.pg-bar-count {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--background) 88%, transparent);
+  font: 500 10.5px/1.35 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  color: color-mix(in oklab, var(--foreground) 70%, transparent);
+  pointer-events: none;
+}
+
+/* ---- milestone: a point in time, so a diamond, not a bar ---------------- */
+.pg-bar--milestone {
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.pg-bar--milestone::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--pg-color, var(--accent));
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px var(--background);
+}
+
+.pg-bar-label--outside {
+  left: calc(50% + 12px);
+  right: auto;
+  max-width: 240px;
+  color: var(--foreground);
+}
+
+/*
+ * On a narrow bar the label and the child-count badge collide. The bar is its own
+ * inline-size container, so the label reserves the badge's width first and the
+ * badge then steps aside entirely — the label is the information that matters.
+ */
+.pg-bar {
+  container-type: inline-size;
+}
+
+/* Reserve the badge's width so the label ellipsises instead of running under it. */
+.pg-bar--summary .pg-bar-label {
+  right: 40px;
+}
+
+@container (max-width: 150px) {
+  .pg-bar-count {
+    display: none;
+  }
+  .pg-bar--summary .pg-bar-label {
+    right: 8px;
+  }
+}
+
+/* Below this a summary label is pure noise on top of the rail. */
+@container (max-width: 74px) {
+  .pg-bar--summary .pg-bar-label {
+    display: none;
+  }
+}

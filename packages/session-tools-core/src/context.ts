@@ -334,6 +334,9 @@ export interface SessionToolContext {
   /** Set status on a session. Defaults to current session if no ID given. Injected by backend. */
   setSessionStatus?(sessionId: string | undefined, status: string): void | Promise<void>;
 
+  /** Update task/schedule metadata on a session. Defaults to current session. */
+  updateSessionPlanning?(input: UpdateSessionPlanningInput): void | Promise<void>;
+
   /** Archive (archived=true) or unarchive (archived=false) another session by ID. Injected by backend. */
   archiveSession?(sessionId: string, archived: boolean): void | Promise<void>;
 
@@ -525,6 +528,31 @@ export interface CreateTaskInput {
   workingDirectory?: string;
   /** Project to bind the task to. Defaults to the invoking session's project. */
   projectId?: string;
+  /** Inclusive local/ISO start. If omitted with dueAt, creation day is used. */
+  startAt?: string;
+  /** Inclusive local/ISO end or deadline. */
+  dueAt?: string;
+  /** Parent task session for one-level decomposition. */
+  parentSessionId?: string;
+  /** Sessions that must finish before this task can start. */
+  dependencySessionIds?: string[];
+  progress?: number;
+  isMilestone?: boolean;
+}
+
+/** Conversation-facing patch for the Session planning projection. */
+export interface UpdateSessionPlanningInput {
+  sessionId?: string;
+  title?: string;
+  description?: string | null;
+  acceptanceCriteria?: string | null;
+  startAt?: string | null;
+  dueAt?: string | null;
+  progress?: number | null;
+  dependencySessionIds?: string[];
+  parentSessionId?: string | null;
+  isMilestone?: boolean;
+  projectId?: string | null;
 }
 
 /** Result of create_task. */
@@ -754,8 +782,17 @@ export interface SessionInfo {
   createdAt: number;
   updatedAt?: number;
   workingDirectory?: string;
+  projectId?: string;
   llmConnection?: string;
   model?: string;
+  description?: string;
+  acceptanceCriteria?: string;
+  startAt?: string;
+  dueAt?: string;
+  progress?: number;
+  dependencySessionIds?: string[];
+  parentSessionId?: string;
+  isMilestone?: boolean;
   isActive: boolean;
 }
 
@@ -766,6 +803,10 @@ export interface SessionListItem {
   labels: string[];
   status: string;
   createdAt: number;
+  projectId?: string;
+  startAt?: string;
+  dueAt?: string;
+  parentSessionId?: string;
 }
 
 /** Options for list_sessions filtering and pagination. */

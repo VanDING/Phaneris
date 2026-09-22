@@ -9,7 +9,7 @@ import { getNavigationStateKey, parseNavigationStateKey } from '../types'
 
 describe('Project Management routes', () => {
   it('round-trips every enabled projection through its canonical route', () => {
-    for (const view of ['overview', 'list', 'board', 'calendar'] as const) {
+    for (const view of ['overview', 'list', 'board', 'calendar', 'gantt'] as const) {
       const route = routes.view.projectManagement(view)
       const state = parseRouteToNavigationState(route)
 
@@ -87,8 +87,25 @@ describe('Project Management routes', () => {
     expect(parseNavigationStateKey('calendar')).toEqual(state)
   })
 
-  it('does not expose the reserved gantt view before it is implemented', () => {
-    expect(parseCompoundRoute('projects/gantt')).toBeNull()
+  it('exposes the timeline projection as a first-class route', () => {
+    // The view used to be reserved-but-unrouted: `gantt` was absent from the
+    // compound-route prefixes, so this returned null and the top-bar launcher
+    // navigated nowhere at all.
+    expect(parseCompoundRoute('projects/gantt')).toEqual({
+      navigator: 'projects',
+      projectView: 'gantt',
+      details: null,
+    })
+    expect(parseRouteToNavigationState('gantt')).toEqual({
+      navigator: 'projects',
+      view: 'gantt',
+      details: null,
+    })
+    expect(parseRouteToNavigationState('projects/gantt')).toEqual({
+      navigator: 'projects',
+      view: 'gantt',
+      details: null,
+    })
   })
 })
 

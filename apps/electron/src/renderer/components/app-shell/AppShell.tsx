@@ -106,7 +106,11 @@ import {
   setExpandedWorkbenchItemAtom,
 } from "@/atoms/workbench"
 import { browserInstancesAtom, activeBrowserInstanceIdAtom, filterInstancesForWorkspace } from "@/atoms/browser-pane"
-import { SURFACE_LAUNCHER_ROUTES, type SurfaceLauncherKind } from "@/lib/surface-launchers"
+import {
+  SURFACE_LAUNCHER_ROUTES,
+  isPrimarySurfaceKind,
+  type SurfaceLauncherKind,
+} from "@/lib/surface-launchers"
 import { type SessionStatusId, type SessionStatus, statusConfigsToSessionStatuses } from "@/config/session-status-config"
 import { useStatuses } from "@/hooks/useStatuses"
 import { useLabels } from "@/hooks/useLabels"
@@ -635,7 +639,7 @@ function AppShellContent({
 
   // Kanban/Calendar are full-width projections inside Project Management, so
   // its project-list navigator collapses while either projection is active.
-  const isFullWidthView = isProjectsNavigation(navState) && (navState.view === 'board' || navState.view === 'calendar')
+  const isFullWidthView = isProjectsNavigation(navState) && (navState.view === 'board' || navState.view === 'calendar' || navState.view === 'gantt')
 
   // Pages behaves the same way: both the library grid and an open page render
   // full-width in the content area — there is no pages navigator list.
@@ -2210,7 +2214,7 @@ function AppShellContent({
   /** Primary launchers navigate; bound launchers activate a Workbench tab. */
   const lastWorkbenchKindRef = useRef<SurfaceLauncherKind>('files')
   const openSurfaceLauncher = useCallback((kind: SurfaceLauncherKind) => {
-    if (kind === 'sessions' || kind === 'kanban' || kind === 'calendar') {
+    if (isPrimarySurfaceKind(kind)) {
       navigate(SURFACE_LAUNCHER_ROUTES[kind])
       return
     }

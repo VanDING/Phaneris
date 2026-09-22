@@ -17,7 +17,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue } from 'jotai'
 import {
-  MessageSquare, Columns3, CalendarDays,
+  MessageSquare, Columns3, CalendarDays, GanttChartSquare,
   FolderTree, Globe, Activity,
   SquareTerminal,
   type LucideIcon,
@@ -67,6 +67,7 @@ export const SURFACE_LAUNCHER_ICONS: Record<SurfaceLauncherKind, LucideIcon> = {
   sessions: MessageSquare,
   kanban: Columns3,
   calendar: CalendarDays,
+  gantt: GanttChartSquare,
   files: FolderTree,
   trajectory: Activity,
   terminal: SquareTerminal,

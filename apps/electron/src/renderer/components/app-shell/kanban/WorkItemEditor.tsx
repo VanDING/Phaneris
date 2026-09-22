@@ -5,6 +5,7 @@ import type { UpdateWorkItemInput, WorkItem } from '@phaneris/shared/work-items/
 import type { SessionStatus } from '@/config/session-status-config'
 import { cn } from '@/lib/utils'
 import { ProjectSelectMenu } from '@/components/projects/ProjectSelectMenu'
+import { DateField } from '@/components/ui/date-field'
 
 interface WorkItemEditorProps {
   item: WorkItem
@@ -12,7 +13,6 @@ interface WorkItemEditorProps {
   projects: readonly { id: string; name: string }[]
   statuses: readonly SessionStatus[]
   workItems?: readonly WorkItem[]
-  history?: React.ReactNode
   closeAfterSave?: boolean
   onClose: () => void
   onSave: (patch: UpdateWorkItemInput) => Promise<boolean>
@@ -32,7 +32,6 @@ export function WorkItemEditor({
   projects,
   statuses,
   workItems = [],
-  history,
   closeAfterSave = true,
   onClose,
   onSave,
@@ -44,6 +43,7 @@ export function WorkItemEditor({
   const { t } = useTranslation()
   const [title, setTitle] = React.useState(item.title)
   const [description, setDescription] = React.useState(item.description ?? '')
+  const [acceptanceCriteria, setAcceptanceCriteria] = React.useState(item.acceptanceCriteria ?? '')
   const [projectId, setProjectId] = React.useState(item.projectId ?? '')
   const [statusId, setStatusId] = React.useState(item.statusId)
   const [startAt, setStartAt] = React.useState(item.startAt?.slice(0, 10) ?? '')
@@ -61,6 +61,7 @@ export function WorkItemEditor({
     const ok = await onSave({
       title: title.trim(),
       description: description.trim() || null,
+      acceptanceCriteria: acceptanceCriteria.trim() || null,
       projectId: projectId || null,
       statusId,
       startAt: startAt || null,
@@ -72,7 +73,7 @@ export function WorkItemEditor({
     })
     setSaving(false)
     if (ok && closeAfterSave) onClose()
-  }, [closeAfterSave, dependencyIds, description, dueAt, isMilestone, onClose, onSave, parentId, progress, projectId, saving, startAt, statusId, title])
+  }, [acceptanceCriteria, closeAfterSave, dependencyIds, description, dueAt, isMilestone, onClose, onSave, parentId, progress, projectId, saving, startAt, statusId, title])
 
   const createSession = React.useCallback(async () => {
     if (!onCreateSession || creatingSession) return
@@ -118,6 +119,15 @@ export function WorkItemEditor({
               />
             </label>
 
+            <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
+              {t('tasks.acceptanceCriteria')}
+              <textarea
+                className="min-h-20 w-full resize-y rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-ring/60 focus:ring-2 focus:ring-ring/15"
+                value={acceptanceCriteria}
+                onChange={(event) => setAcceptanceCriteria(event.target.value)}
+              />
+            </label>
+
             <div className="grid gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
               {t('kanban.workItemProject')}
@@ -129,11 +139,11 @@ export function WorkItemEditor({
             </label>
             <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
               {t('kanban.workItemStart')}
-              <input type="date" className={fieldClass} value={startAt} onChange={(event) => setStartAt(event.target.value)} />
+              <DateField value={startAt} onChange={setStartAt} ariaLabel={t('kanban.workItemStart')} />
             </label>
             <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
               {t('kanban.workItemDue')}
-              <input type="date" className={fieldClass} value={dueAt} onChange={(event) => setDueAt(event.target.value)} />
+              <DateField value={dueAt} onChange={setDueAt} min={startAt || undefined} ariaLabel={t('kanban.workItemDue')} />
             </label>
             <label className="flex flex-col gap-1.5 text-xs font-semibold text-foreground/65">
               {t('kanban.workItemProgress')}
@@ -198,8 +208,6 @@ export function WorkItemEditor({
               </div>
             </div>
           )}
-
-          {history}
         </div>
       </div>
 

@@ -11,6 +11,7 @@ export interface WorkItem {
   projectId?: string;
   title: string;
   description?: string;
+  acceptanceCriteria?: string;
   /** Workspace status id (for example `todo` or `needs-review`). */
   statusId: string;
   /** Physical board placement. Deliberately independent from `statusId`. */
@@ -42,6 +43,7 @@ export interface CreateWorkItemInput {
   projectId?: string;
   title: string;
   description?: string;
+  acceptanceCriteria?: string;
   statusId?: string;
   columnId?: string;
   startAt?: string;
@@ -59,6 +61,7 @@ export interface UpdateWorkItemInput {
   projectId?: string | null;
   title?: string;
   description?: string | null;
+  acceptanceCriteria?: string | null;
   statusId?: string;
   columnId?: string | null;
   startAt?: string | null;
@@ -91,85 +94,4 @@ export interface WorkItemQuery {
     field: WorkItemSortField;
     direction?: WorkItemSortDirection;
   };
-}
-
-export type WorkItemActorType = 'user' | 'agent' | 'automation' | 'system';
-
-export interface WorkItemEventActor {
-  type: WorkItemActorType;
-  id?: string;
-  label?: string;
-}
-
-export interface WorkItemEventContext {
-  sessionId?: string;
-  agentRunId?: string;
-  automationId?: string;
-  artifactId?: string;
-}
-
-export type WorkItemEventAction =
-  | 'created'
-  | 'updated'
-  | 'transitioned'
-  | 'linked'
-  | 'unlinked'
-  | 'deleted';
-
-export interface WorkItemEventChange {
-  field: keyof Omit<WorkItem, 'createdAt' | 'updatedAt'>;
-  before?: unknown;
-  after?: unknown;
-}
-
-/** Append-only audit event. No event is synthesized for pre-event-store history. */
-export interface WorkItemEvent {
-  id: string;
-  workItemId: string;
-  action: WorkItemEventAction;
-  actor: WorkItemEventActor;
-  context?: WorkItemEventContext;
-  changes: WorkItemEventChange[];
-  /** Snapshot is retained for created/deleted events and future history rendering. */
-  snapshot?: WorkItem;
-  occurredAt: number;
-}
-
-export interface WorkItemMutationContext {
-  actor: WorkItemEventActor;
-  context?: WorkItemEventContext;
-}
-
-/** Minimal session metadata needed by the temporary M1.5 compatibility adapter. */
-export interface LegacySessionWorkItemSource {
-  id: string;
-  title: string;
-  projectId?: string;
-  statusId?: string;
-  columnId?: string;
-  createdAt?: number;
-  updatedAt?: number;
-}
-
-/** Result of the one-time pre-WorkItem Board migration for a workspace. */
-export interface LegacySessionWorkItemMigrationResult {
-  items: WorkItem[];
-  createdCount: number;
-  alreadyCompleted: boolean;
-  completedAt: number;
-}
-
-export interface PrimaryWorkItemSyncResult {
-  item: WorkItem;
-  changed: boolean;
-}
-
-export interface DetachSessionWorkItemsResult {
-  items: WorkItem[];
-  changed: boolean;
-}
-
-export interface EnsureSessionWorkItemResult {
-  item: WorkItem;
-  created: boolean;
 }

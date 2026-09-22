@@ -1,147 +1,143 @@
-import { RPC_CHANNELS } from '@phaneris/shared/protocol'
+import { RPC_CHANNELS, type Session } from '@phaneris/shared/protocol'
 import {
-  createWorkItem,
-  deleteWorkItem,
-  ensureWorkItemForSession,
-  listWorkItemEvents,
-  listWorkItems,
-  migrateLegacySessionWorkItems,
-  updateWorkItem,
   type CreateWorkItemInput,
   type UpdateWorkItemInput,
-  type WorkItemMutationContext,
+  type WorkItem,
 } from '@phaneris/shared/work-items'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
-import { isSessionWorkItemEligible } from '../../sessions/work-item-eligibility'
 
 export const HANDLED_CHANNELS = [
   RPC_CHANNELS.workItems.LIST,
   RPC_CHANNELS.workItems.CREATE,
   RPC_CHANNELS.workItems.UPDATE,
   RPC_CHANNELS.workItems.DELETE,
-  RPC_CHANNELS.workItems.LIST_EVENTS,
 ] as const
 
-function workspaceRoot(workspaceId: string): string {
-  const workspace = getWorkspaceByNameOrId(workspaceId)
-  if (!workspace) throw new Error(`Workspace not found: ${workspaceId}`)
-  return workspace.rootPath
+/**
+ * Preview text is a projection convenience only: it backs the fallback title
+ * when a Session has no name. The header stores the first user message in full,
+ * which is unbounded, so it is trimmed before crossing IPC.
+ */
+const PREVIEW_LIMIT = 240
+
+function projectPreview(session: Session): string | undefined {
+  const preview = session.preview?.trim()
+  if (!preview) return undefined
+  return preview.length > PREVIEW_LIMIT ? preview.slice(0, PREVIEW_LIMIT) : preview
 }
 
 function broadcastChanged(server: RpcServer, workspaceId: string): void {
   pushTyped(server, RPC_CHANNELS.workItems.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
+  pushTyped(server, RPC_CHANNELS.calendar.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
 }
 
-function userMutation(clientId: string): WorkItemMutationContext {
-  return { actor: { type: 'user', id: clientId } }
-}
-
-async function mirrorToPrimarySession(
-  deps: HandlerDeps,
-  workspaceId: string,
-  item: ReturnType<typeof createWorkItem>,
-  fields: {
-    title?: boolean
-    projectId?: boolean
-    statusId?: boolean
-    columnId?: boolean
-  },
-): Promise<void> {
-  const sessionId = item.primarySessionId
-  if (!sessionId) return
-  const exists = deps.sessionManager.getSessions(workspaceId)
-    .some((session) => session.id === sessionId)
-  if (!exists) return
-
-  try {
-    // Deliberately sequential: each Session mutation persists the same JSONL
-    // header, so parallel writes would make the final projection nondeterministic.
-    if (fields.title) await deps.sessionManager.renameSession(sessionId, item.title)
-    if (fields.projectId) await deps.sessionManager.setSessionProjectId(sessionId, item.projectId ?? null)
-    if (fields.statusId) await deps.sessionManager.setSessionStatus(sessionId, item.statusId)
-    if (fields.columnId) await deps.sessionManager.setKanbanColumn(sessionId, item.columnId ?? null)
-  } catch (error) {
-    // WorkItem is durable-first and remains authoritative. A later Session write
-    // or explicit WorkItem edit will reconcile the compatibility projection.
-    deps.platform.logger.warn('[work-items] Failed to mirror WorkItem to primary session:', {
-      workItemId: item.id,
-      sessionId,
-      error: error instanceof Error ? error.message : String(error),
-    })
+function sessionToWorkItem(session: Session): WorkItem {
+  return {
+    id: session.id,
+    title: session.name?.trim() || projectPreview(session) || 'Untitled task',
+    description: session.description,
+    acceptanceCriteria: session.acceptanceCriteria,
+    projectId: session.projectId,
+    statusId: session.sessionStatus ?? 'backlog',
+    columnId: session.kanbanColumn,
+    startAt: session.startAt,
+    dueAt: session.dueAt,
+    progress: session.progress,
+    dependencyIds: session.dependencySessionIds ?? [],
+    parentId: session.parentSessionId,
+    sessionIds: [session.id],
+    primarySessionId: session.id,
+    isMilestone: session.isMilestone,
+    createdAt: session.createdAt ?? session.lastMessageAt,
+    updatedAt: session.lastMessageAt,
+    archivedAt: session.archivedAt,
   }
 }
 
+/**
+ * Visible planning projection of Sessions.
+ *
+ * Archived sessions are excluded here rather than in each view: a long-lived
+ * workspace accumulates far more finished sessions than live work, and every
+ * projection (board, calendar, timeline) is a view of current work.
+ */
+function visiblePlanningSessions(deps: HandlerDeps, workspaceId: string): Session[] {
+  return deps.sessionManager.getSessions(workspaceId).filter((session) =>
+    !session.hidden && !session.isArchived && !session.taskDraft,
+  )
+}
+
+async function updateSessionFromWorkItem(
+  deps: HandlerDeps,
+  workspaceId: string,
+  sessionId: string,
+  patch: UpdateWorkItemInput,
+): Promise<WorkItem> {
+  const session = deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === sessionId)
+  if (!session) throw new Error(`Session not found: ${sessionId}`)
+
+  if (patch.title !== undefined) await deps.sessionManager.renameSession(sessionId, patch.title.trim())
+  if ('projectId' in patch) await deps.sessionManager.setSessionProjectId(sessionId, patch.projectId ?? null)
+  if (patch.statusId !== undefined) await deps.sessionManager.setSessionStatus(sessionId, patch.statusId)
+  if ('columnId' in patch) await deps.sessionManager.setKanbanColumn(sessionId, patch.columnId ?? null)
+  await deps.sessionManager.updateSessionPlanning(sessionId, {
+    ...('description' in patch ? { description: patch.description } : {}),
+    ...('acceptanceCriteria' in patch ? { acceptanceCriteria: patch.acceptanceCriteria } : {}),
+    ...('startAt' in patch ? { startAt: patch.startAt } : {}),
+    ...('dueAt' in patch ? { dueAt: patch.dueAt } : {}),
+    ...('progress' in patch ? { progress: patch.progress } : {}),
+    ...(patch.dependencyIds ? { dependencySessionIds: patch.dependencyIds } : {}),
+    ...('parentId' in patch ? { parentSessionId: patch.parentId } : {}),
+    ...(patch.isMilestone !== undefined ? { isMilestone: patch.isMilestone } : {}),
+  })
+  const updated = deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === sessionId)
+  if (!updated) throw new Error(`Session not found after update: ${sessionId}`)
+  return sessionToWorkItem(updated)
+}
+
+/**
+ * Task/board projection. Sessions are the single source of truth: there is no
+ * separate WorkItem store and no legacy migration. The previous migration ran
+ * on every LIST, wrote its completion marker last, and created sessions through
+ * a path that re-broadcast a change — an interrupted pass therefore looped,
+ * minting a duplicate session per legacy item on each retry.
+ */
 export function registerWorkItemHandlers(server: RpcServer, deps: HandlerDeps): void {
   server.handle(RPC_CHANNELS.workItems.LIST, async (_ctx, workspaceId: string) => {
     await deps.sessionManager.waitForInit()
-    const rootPath = workspaceRoot(workspaceId)
-    const legacySources = deps.sessionManager
-      .getSessions(workspaceId)
-      .filter(isSessionWorkItemEligible)
-      .map((session) => ({
-        id: session.id,
-        title: session.name?.trim() || session.preview?.trim() || 'Untitled task',
-        projectId: session.projectId,
-        statusId: session.sessionStatus,
-        columnId: session.kanbanColumn,
-        createdAt: session.createdAt,
-        updatedAt: session.lastMessageAt,
-      }))
-    const migration = migrateLegacySessionWorkItems(rootPath, legacySources)
-    let createdAfterMigration = false
-    // Reconcile on every list, not just during the one-time v1 migration.
-    // This keeps Kanban a live projection of eligible top-level conversations
-    // while still allowing standalone WorkItems with no execution session.
-    for (const source of legacySources) {
-      const result = ensureWorkItemForSession(rootPath, source, {
-        actor: { type: 'system' },
-        context: { sessionId: source.id },
-      })
-      createdAfterMigration ||= result.created
-    }
-    if (!migration.alreadyCompleted || createdAfterMigration) broadcastChanged(server, workspaceId)
-    return listWorkItems(rootPath)
+    return visiblePlanningSessions(deps, workspaceId).map(sessionToWorkItem)
   })
 
-  server.handle(
-    RPC_CHANNELS.workItems.CREATE,
-    async (ctx, workspaceId: string, input: CreateWorkItemInput) => {
-      const item = createWorkItem(workspaceRoot(workspaceId), input, userMutation(ctx.clientId))
-      broadcastChanged(server, workspaceId)
-      await mirrorToPrimarySession(deps, workspaceId, item, {
-        title: true,
-        projectId: true,
-        statusId: true,
-        columnId: true,
-      })
-      return item
-    },
-  )
+  server.handle(RPC_CHANNELS.workItems.CREATE, async (_ctx, workspaceId: string, input: CreateWorkItemInput) => {
+    const session = await deps.sessionManager.createSession(workspaceId, {
+      name: input.title.trim(),
+      projectId: input.projectId,
+      sessionStatus: input.statusId ?? 'backlog',
+      description: input.description,
+      acceptanceCriteria: input.acceptanceCriteria,
+      startAt: input.startAt,
+      dueAt: input.dueAt,
+      progress: input.progress,
+      dependencySessionIds: input.dependencyIds,
+      parentSessionId: input.parentId,
+      isMilestone: input.isMilestone,
+    })
+    if (input.columnId) await deps.sessionManager.setKanbanColumn(session.id, input.columnId)
+    broadcastChanged(server, workspaceId)
+    const created = deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === session.id) ?? session
+    return sessionToWorkItem(created)
+  })
 
-  server.handle(
-    RPC_CHANNELS.workItems.UPDATE,
-    async (ctx, workspaceId: string, itemId: string, patch: UpdateWorkItemInput) => {
-      const item = updateWorkItem(workspaceRoot(workspaceId), itemId, patch, userMutation(ctx.clientId))
-      broadcastChanged(server, workspaceId)
-      await mirrorToPrimarySession(deps, workspaceId, item, {
-        title: patch.title !== undefined,
-        projectId: 'projectId' in patch,
-        statusId: patch.statusId !== undefined,
-        columnId: 'columnId' in patch,
-      })
-      return item
-    },
-  )
+  server.handle(RPC_CHANNELS.workItems.UPDATE, async (_ctx, workspaceId: string, itemId: string, patch: UpdateWorkItemInput) => {
+    const item = await updateSessionFromWorkItem(deps, workspaceId, itemId, patch)
+    broadcastChanged(server, workspaceId)
+    return item
+  })
 
-  server.handle(RPC_CHANNELS.workItems.DELETE, async (ctx, workspaceId: string, itemId: string) => {
-    deleteWorkItem(workspaceRoot(workspaceId), itemId, userMutation(ctx.clientId))
+  server.handle(RPC_CHANNELS.workItems.DELETE, async (_ctx, workspaceId: string, itemId: string) => {
+    const exists = deps.sessionManager.getSessions(workspaceId).some(({ id }) => id === itemId)
+    if (exists) await deps.sessionManager.deleteSession(itemId)
     broadcastChanged(server, workspaceId)
   })
-
-  server.handle(RPC_CHANNELS.workItems.LIST_EVENTS, (_ctx, workspaceId: string, itemId: string, limit?: number) =>
-    listWorkItemEvents(workspaceRoot(workspaceId), itemId, limit),
-  )
-
 }

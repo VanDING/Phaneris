@@ -58,6 +58,9 @@ export const SESSION_PERSISTENT_FIELDS = [
   'triggeredBy',
   // Project binding (workspace-scoped grouping)
   'projectId',
+  // Planning — one Session is the source of truth for board, calendar and timeline views.
+  'description', 'acceptanceCriteria', 'startAt', 'dueAt', 'progress',
+  'dependencySessionIds', 'isMilestone',
   // Kanban: task/subtask hierarchy + board column
   'parentSessionId',
   'contextPolicy', 'handoffRootSessionId', 'handoffFromSessionId', 'handoffSequence', 'contextHandoff',
@@ -85,7 +88,21 @@ export type SessionStatus = string;
  * Built-in status IDs (for TypeScript consumers)
  * These are the default statuses but users can add/remove custom ones
  */
-export type BuiltInStatusId = 'todo' | 'in-progress' | 'needs-review' | 'done' | 'cancelled';
+export type BuiltInStatusId = 'backlog' | 'todo' | 'in-progress' | 'needs-review' | 'done' | 'cancelled';
+
+/** Session planning fields shared by task, calendar and timeline projections. */
+export interface SessionPlanningFields {
+  description?: string;
+  acceptanceCriteria?: string;
+  /** Local date (YYYY-MM-DD) or local/offset ISO date-time. */
+  startAt?: string;
+  /** Local date (YYYY-MM-DD) or local/offset ISO date-time. */
+  dueAt?: string;
+  progress?: number;
+  /** Sessions that must finish before this session is ready to execute. */
+  dependencySessionIds?: string[];
+  isMilestone?: boolean;
+}
 
 /**
  * Session token usage tracking
@@ -115,7 +132,7 @@ export type { StoredMessage } from '@phaneris/core/types';
 /**
  * Session configuration (persisted metadata)
  */
-export interface SessionConfig {
+export interface SessionConfig extends SessionPlanningFields {
   id: string;
   /** SDK session ID (captured after first message) */
   sdkSessionId?: string;
@@ -266,7 +283,7 @@ export interface StoredSession extends SessionConfig {
  * Contains all metadata needed for list views (pre-computed at save time).
  * This enables fast session listing without parsing message content.
  */
-export interface SessionHeader {
+export interface SessionHeader extends SessionPlanningFields {
   id: string;
   /** SDK session ID (captured after first message) */
   sdkSessionId?: string;
@@ -383,7 +400,7 @@ export interface SessionHeader {
 /**
  * Session metadata (lightweight, for lists)
  */
-export interface SessionMetadata {
+export interface SessionMetadata extends SessionPlanningFields {
   id: string;
   workspaceRootPath: string;
   name?: string;

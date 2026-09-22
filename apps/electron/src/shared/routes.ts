@@ -208,6 +208,8 @@ export const routes = {
           ? 'kanban' as const
           : view === 'calendar'
             ? 'calendar' as const
+            : view === 'gantt'
+              ? 'gantt' as const
             : 'projects/list' as const,
 
     /** Full-page WorkItem create/edit route inside a Project Management projection. */
