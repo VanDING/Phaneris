@@ -25,6 +25,7 @@ export const KEYS = {
   chatGroupingMode: 'chat-grouping-mode', // How to group chats: 'date' | 'status'
   collapsedSessionFamilies: 'collapsed-session-families', // Parent session IDs, workspace-scoped
   collapsedSessionGroups: 'collapsed-session-groups', // Collapsed group keys in session list
+  collapsedGanttItems: 'collapsed-gantt-items', // Collapsed work-item IDs, workspace/project-scoped
 
   // Focus mode
   focusModeEnabled: 'focus-mode-enabled',

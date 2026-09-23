@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { Gantt, Material, type ILink, type ITask, type IZoomConfig } from '@svar-ui/react-gantt'
+import type { ICellProps, IHeaderCellProps } from '@svar-ui/react-grid'
 import '@svar-ui/react-gantt/style.css'
 import './gantt-overrides.css'
+import { ChevronRight, Diamond, MoreHorizontal } from 'lucide-react'
 import { useAtom, useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { projectsAtom } from '@/atoms/projects'
@@ -9,14 +11,23 @@ import { kanbanProjectFilterAtom } from '@/atoms/kanban'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { useNavigation } from '@/contexts/NavigationContext'
 import { useWorkItems } from '@/hooks/useWorkItems'
+import * as storage from '@/lib/local-storage'
+import { KEYS } from '@/lib/local-storage'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { KanbanProjectFilter } from './KanbanProjectFilter'
 import type { WorkItem } from '@phaneris/shared/work-items/browser'
 
 /**
  * The bar accent for one planning row.
  *
- * Status colour is used for the border, the stripe and the progress rail — never
- * as a text background — so a bar stays readable in both themes regardless of how
+ * Status colour is used for a narrow leading edge and progress cue — never as a
+ * large text background — so a bar stays readable in both themes regardless of how
  * light or dark a workspace's status palette is. The status set is workspace
  * configurable, so an unknown id simply falls back to the app accent rather than
  * to a hardcoded grey.
@@ -54,36 +65,42 @@ const ThemeProvider = Material as unknown as React.FC<{
 const SCALE_PRESETS = ['year', 'quarter', 'month'] as const
 type ScalePreset = (typeof SCALE_PRESETS)[number]
 
-const ZOOM_LEVELS: NonNullable<IZoomConfig['levels']> = [
-  {
-    // year: months across, one cell per month. Coarsest tier first.
-    minCellWidth: 14,
-    maxCellWidth: 22,
-    scales: [
-      { unit: 'year', step: 1, format: (date: Date) => `${date.getFullYear()}年` },
-      { unit: 'month', step: 1, format: (date: Date) => `${date.getMonth() + 1}月` },
-    ],
-  },
-  {
-    // quarter: weeks across, one cell per week.
-    minCellWidth: 26,
-    maxCellWidth: 40,
-    scales: [
-      { unit: 'month', step: 1, format: (date: Date) => `${date.getFullYear()}年${date.getMonth() + 1}月` },
-      { unit: 'week', step: 1, format: (date: Date) => `W${isoWeek(date)}` },
-    ],
-  },
-  {
-    // month: days across, one cell per day.
-    minCellWidth: 34,
-    maxCellWidth: 56,
-    scales: [
-      { unit: 'month', step: 1, format: (date: Date) => `${date.getFullYear()}年${date.getMonth() + 1}月` },
-      { unit: 'week', step: 1, format: (date: Date) => `W${isoWeek(date)}` },
-      { unit: 'day', step: 1, format: (date: Date) => `${date.getDate()}` },
-    ],
-  },
-]
+function createZoomLevels(locale: string): NonNullable<IZoomConfig['levels']> {
+  const year = new Intl.DateTimeFormat(locale, { year: 'numeric' })
+  const month = new Intl.DateTimeFormat(locale, { month: 'short' })
+  const monthYear = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' })
+
+  return [
+    {
+      // year: months across, one cell per month. Coarsest tier first.
+      minCellWidth: 14,
+      maxCellWidth: 22,
+      scales: [
+        { unit: 'year', step: 1, format: (date: Date) => year.format(date) },
+        { unit: 'month', step: 1, format: (date: Date) => month.format(date) },
+      ],
+    },
+    {
+      // quarter: weeks across, one cell per week.
+      minCellWidth: 26,
+      maxCellWidth: 40,
+      scales: [
+        { unit: 'month', step: 1, format: (date: Date) => monthYear.format(date) },
+        { unit: 'week', step: 1, format: (date: Date) => `W${isoWeek(date)}` },
+      ],
+    },
+    {
+      // month: days across, one cell per day.
+      minCellWidth: 34,
+      maxCellWidth: 56,
+      scales: [
+        { unit: 'month', step: 1, format: (date: Date) => monthYear.format(date) },
+        { unit: 'week', step: 1, format: (date: Date) => `W${isoWeek(date)}` },
+        { unit: 'day', step: 1, format: (date: Date) => String(date.getDate()) },
+      ],
+    },
+  ]
+}
 
 const ZOOM_LEVEL_FOR: Record<ScalePreset, number> = { year: 0, quarter: 1, month: 2 }
 
@@ -92,21 +109,13 @@ function isoWeek(date: Date): number {
   return Math.ceil(((date.getTime() - start.getTime()) / 86_400_000 + start.getDay() + 1) / 7)
 }
 
+/** Two-line task rows need room for a title and quiet date/status metadata. */
+const CELL_HEIGHT = 48
 /**
- * Row height; the library draws bars `cellHeight - 7` tall, so this yields a 33px
- * bar. Swept 34/40/48: at 34 the bar is 27px and the label, the 7px striped rail
- * and the state marker compete for the same few pixels, which is what read as
- * cramped. 33px is also the density mature timelines use.
+ * The full grid width belongs to one task-list column; dates are secondary row
+ * metadata, so long task titles have substantially more room than in the old grid.
  */
-const CELL_HEIGHT = 40
-/**
- * Title column width. The title column is `gridWidth` minus the two date columns
- * and their padding, so the dates get real room (at ~72px a `YYYY-MM-DD` wraps
- * onto three lines and the whole list reads as cramped) and the title still gets
- * ~215px.
- */
-const GRID_WIDTH = 420
-const DATE_COLUMN_WIDTH = 96
+const GRID_WIDTH = 370
 /** Minimum fitted span, so a single-day plan does not render as one column. */
 const MIN_FIT_DAYS = 21
 /** Breathing room around the fitted range. */
@@ -136,6 +145,146 @@ function addDays(date: Date, days: number): Date {
   return next
 }
 
+function formatTaskDateRange(startValue: unknown, endValue: unknown, locale: string): string {
+  const start = startValue instanceof Date ? startValue : undefined
+  const end = endValue instanceof Date ? endValue : undefined
+  const first = start ?? end
+  const last = end ?? start
+  if (!first || !last) return ''
+
+  const crossesYear = first.getFullYear() !== last.getFullYear()
+  const formatter = new Intl.DateTimeFormat(locale, {
+    month: 'numeric',
+    day: 'numeric',
+    ...(crossesYear ? { year: '2-digit' as const } : {}),
+  })
+  const firstLabel = formatter.format(first)
+  const lastLabel = formatter.format(last)
+  return firstLabel === lastLabel ? firstLabel : `${firstLabel}–${lastLabel}`
+}
+
+interface GanttTaskCellContextValue {
+  collapsed: ReadonlySet<string>
+  hoveredId: string | null
+  parentIds: ReadonlySet<string>
+  allCollapsed: boolean
+  allExpanded: boolean
+  toggleCollapsed: (id: string) => void
+  collapseAll: () => void
+  expandAll: () => void
+  setHoveredId: (id: string | null) => void
+}
+
+const GanttTaskCellContext = React.createContext<GanttTaskCellContextValue>({
+  collapsed: new Set(),
+  hoveredId: null,
+  parentIds: new Set(),
+  allCollapsed: false,
+  allExpanded: true,
+  toggleCollapsed: () => undefined,
+  collapseAll: () => undefined,
+  expandAll: () => undefined,
+  setHoveredId: () => undefined,
+})
+
+function GanttTaskTitleCell({ row }: ICellProps) {
+  const { t, i18n } = useTranslation()
+  const { collapsed, hoveredId, toggleCollapsed, setHoveredId } = React.useContext(GanttTaskCellContext)
+  const id = String(row.id ?? '')
+  const title = typeof row.title === 'string' ? row.title : String(row.text ?? '')
+  const color = typeof row.barColor === 'string' ? row.barColor : 'var(--accent)'
+  const childCount = Number(row.childCount) || 0
+  const isParent = row.type === 'summary' && childCount > 0
+  const isCollapsed = collapsed.has(id)
+  const depth = Math.min(8, Math.max(0, Number(row.depth) || 0))
+  const dateRange = formatTaskDateRange(
+    row.displayStart,
+    row.displayEnd,
+    i18n.resolvedLanguage ?? i18n.language,
+  )
+  const statusLabel = typeof row.statusLabel === 'string' ? row.statusLabel : ''
+  const isHovered = hoveredId === id
+
+  return (
+    <div
+      className={`pg-task-cell${isHovered ? ' pg-task-cell--hovered' : ''}`}
+      style={{ paddingLeft: `${depth * 14 + 8}px` }}
+      onMouseEnter={() => setHoveredId(id)}
+      onMouseLeave={() => setHoveredId(null)}
+    >
+      {isParent ? (
+        <button
+          type="button"
+          aria-label={t(isCollapsed ? 'gantt.expandTask' : 'gantt.collapseTask', { title })}
+          aria-expanded={!isCollapsed}
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            toggleCollapsed(id)
+          }}
+          className="pg-task-toggle craft-focus"
+        >
+          <ChevronRight className={`h-3.5 w-3.5 transition-transform duration-150${isCollapsed ? '' : ' rotate-90'}`} />
+        </button>
+      ) : (
+        <span className="pg-task-toggle-spacer" aria-hidden="true" />
+      )}
+      {row.type === 'milestone' ? (
+        <Diamond className="pg-task-status pg-task-status--milestone" style={{ color }} aria-hidden="true" />
+      ) : (
+        <span
+          className="pg-task-status"
+          style={{ backgroundColor: color }}
+          aria-hidden="true"
+        />
+      )}
+      <span className="pg-task-copy" title={title}>
+        <span className={`pg-task-title${row.type === 'summary' ? ' pg-task-title--summary' : ''}`}>
+          <span className="pg-task-title-text">{title}</span>
+          {childCount > 0 && <span className="pg-task-count">{childCount}</span>}
+        </span>
+        <span className="pg-task-meta" style={{ '--pg-color': color } as React.CSSProperties}>
+          {dateRange && <span className="pg-task-meta__date">{dateRange}</span>}
+          {statusLabel && <span className="pg-task-meta__status">{statusLabel}</span>}
+        </span>
+      </span>
+    </div>
+  )
+}
+
+function GanttTaskHeaderCell({ cell }: IHeaderCellProps) {
+  const { t } = useTranslation()
+  const { parentIds, allCollapsed, allExpanded, collapseAll, expandAll } = React.useContext(GanttTaskCellContext)
+
+  return (
+    <div className="pg-task-header">
+      <span>{cell.text ?? t('kanban.workItemTitle')}</span>
+      {parentIds.size > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              aria-label={t('gantt.taskListOptions')}
+              className="pg-task-header-menu craft-focus"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" side="bottom">
+            <DropdownMenuItem disabled={allExpanded} onSelect={expandAll}>
+              {t('gantt.expandAll')}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem disabled={allCollapsed} onSelect={collapseAll}>
+              {t('gantt.collapseAll')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </div>
+  )
+}
+
 /** Parent id -> its direct children, for hierarchy and summary roll-up. */
 function directChildren(items: readonly WorkItem[]): Map<string, WorkItem[]> {
   const map = new Map<string, WorkItem[]>()
@@ -152,42 +301,46 @@ function directChildren(items: readonly WorkItem[]): Map<string, WorkItem[]> {
  * The bar for one planning row.
  *
  * A three-part vocabulary, so the three different meanings never look alike:
- *   - a *leaf task* is a filled progress bar in its status colour;
- *   - a *container* is a thin striped rail, because its span is computed from its
- *     children and must not read as an entered date (the convention Jira, Plane
- *     and OpenProject all converge on);
+ *   - a *leaf task* is a compact status-tinted bar with a progress cue;
+ *   - a *container* is a full task bar whose fill shows its own saved progress;
  *   - a *milestone* is a diamond, because it marks a point, not a duration.
  */
 function TimelineBar({ data }: { data: ITask }) {
+  const { hoveredId, setHoveredId } = React.useContext(GanttTaskCellContext)
+  const id = String(data.id ?? '')
+  const isHovered = hoveredId === id
   const color = typeof data.barColor === 'string' ? data.barColor : 'var(--accent)'
   const title = typeof data.title === 'string' ? data.title : (data.text ?? '')
   const style = { '--pg-color': color } as React.CSSProperties
+  const hoverClass = isHovered ? ' pg-bar--hovered' : ''
+  const hoverHandlers = {
+    onMouseEnter: () => setHoveredId(id),
+    onMouseLeave: () => setHoveredId(null),
+  }
 
   if (data.type === 'milestone') {
     return (
-      <div className="pg-bar pg-bar--milestone" style={style}>
+      <div className={`pg-bar pg-bar--milestone${hoverClass}`} style={style} {...hoverHandlers}>
         <span className="pg-bar-label pg-bar-label--outside" title={title}>{title}</span>
       </div>
     )
   }
 
   const isSummary = data.type === 'summary'
-  const progress = typeof data.progress === 'number' ? data.progress : 0
-  const childCount = typeof data.childCount === 'number' ? data.childCount : 0
+  const progress = Math.max(0, Math.min(100, typeof data.progress === 'number' ? data.progress : 0))
 
   if (isSummary) {
     return (
-      <div className="pg-bar pg-bar--summary" style={style} title={title}>
-        <div className="pg-accent" />
-        <div className="pg-rail" />
+      <div className={`pg-bar pg-bar--summary${hoverClass}`} style={style} title={`${title} · ${progress}%`} {...hoverHandlers}>
+        <div className="pg-summary-fill" style={{ width: `${progress}%` }} aria-hidden="true" />
         <span className="pg-bar-label">{title}</span>
-        {childCount > 0 && <span className="pg-bar-count">{childCount}</span>}
+        <span className="pg-summary-progress">{progress}%</span>
       </div>
     )
   }
 
   return (
-    <div className={`pg-bar${progress >= 100 ? ' pg-bar--done' : ''}`} style={style} title={title}>
+    <div className={`pg-bar${progress >= 100 ? ' pg-bar--done' : ''}${hoverClass}`} style={style} title={title} {...hoverHandlers}>
       <div className="pg-accent" />
       <div className="pg-fill" style={{ width: `${progress}%` }} />
       <span className="pg-bar-label">{title}</span>
@@ -196,7 +349,7 @@ function TimelineBar({ data }: { data: ITask }) {
 }
 
 /**
- * Read-only timeline projection of Session planning fields.
+ * Read-only timeline projection of work item planning fields.
  *
  * The projection is bounded on three axes, because SVAR renders every task it is
  * handed and builds its scale for the whole requested range: archived items are
@@ -204,20 +357,53 @@ function TimelineBar({ data }: { data: ITask }) {
  * view is always fitted to the work rather than to a fixed calendar window.
  */
 export function GanttView() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { activeWorkspaceId, sessionStatuses, trailingAction, expandButton } = useAppShellContext()
   const { navigateToSession } = useNavigation()
   const { items, isLoading } = useWorkItems(activeWorkspaceId ?? null)
   const projects = useAtomValue(projectsAtom)
   const [projectIds, setProjectIds] = useAtom(kanbanProjectFilterAtom)
   const [scale, setScale] = React.useState<ScalePreset>('quarter')
-  const [collapsed, setCollapsed] = React.useState<ReadonlySet<string>>(() => new Set())
+  const collapseScopeSuffix = React.useMemo(() => {
+    const projectsScope = projectIds.length
+      ? [...projectIds].sort().map((id) => encodeURIComponent(id)).join(',')
+      : 'all'
+    return `ws=${encodeURIComponent(activeWorkspaceId ?? 'global')}|projects=${projectsScope}`
+  }, [activeWorkspaceId, projectIds])
+  const readCollapsedForScope = React.useCallback((scope: string) => {
+    const stored = storage.get<unknown>(KEYS.collapsedGanttItems, [], scope)
+    return new Set(Array.isArray(stored) ? stored.filter((id): id is string => typeof id === 'string') : [])
+  }, [])
+  const [collapseState, setCollapseState] = React.useState(() => ({
+    scope: collapseScopeSuffix,
+    collapsed: readCollapsedForScope(collapseScopeSuffix),
+  }))
+  const collapsed = collapseState.scope === collapseScopeSuffix
+    ? collapseState.collapsed
+    : readCollapsedForScope(collapseScopeSuffix)
+  const [hoveredId, setHoveredId] = React.useState<string | null>(null)
+  const locale = i18n.resolvedLanguage ?? i18n.language
+  const zoomLevels = React.useMemo(() => createZoomLevels(locale), [locale])
   /** Chart API + host element, used only by the "today" scroll. */
   const ganttRef = React.useRef<unknown>(null)
   const ganttHostRef = React.useRef<HTMLDivElement>(null)
 
+  React.useEffect(() => {
+    if (collapseState.scope === collapseScopeSuffix) return
+    setCollapseState({ scope: collapseScopeSuffix, collapsed: readCollapsedForScope(collapseScopeSuffix) })
+  }, [collapseScopeSuffix, collapseState.scope, readCollapsedForScope])
+
+  React.useEffect(() => {
+    if (collapseState.scope !== collapseScopeSuffix) return
+    storage.set(KEYS.collapsedGanttItems, Array.from(collapseState.collapsed), collapseScopeSuffix)
+  }, [collapseScopeSuffix, collapseState])
+
   const statusColorById = React.useMemo(
     () => new Map((sessionStatuses ?? []).map((status) => [status.id, status.resolvedColor])),
+    [sessionStatuses],
+  )
+  const statusLabelById = React.useMemo(
+    () => new Map((sessionStatuses ?? []).map((status) => [status.id, status.label])),
     [sessionStatuses],
   )
 
@@ -227,8 +413,18 @@ export function GanttView() {
   )
 
   const filtered = React.useMemo(
-    () => items.filter((item) => !projectIds.length || Boolean(item.projectId && projectIds.includes(item.projectId))),
-    [items, projectIds],
+    () => items
+      .filter((item) => !projectIds.length || Boolean(item.projectId && projectIds.includes(item.projectId)))
+      // The session API returns most-recently-used items first. A planning tree
+      // should retain creation order so opening a phase never reverses its rows
+      // when child sessions are updated independently.
+      .sort((left, right) => {
+        const createdOrder = left.createdAt - right.createdAt
+        if (createdOrder !== 0) return createdOrder
+        return left.title.localeCompare(right.title, locale, { numeric: true, sensitivity: 'base' })
+          || left.id.localeCompare(right.id)
+      }),
+    [items, locale, projectIds],
   )
 
   // The span actually covered by scheduled work; the scale is always fitted to it.
@@ -258,7 +454,7 @@ export function GanttView() {
     }
   }, [dataRange])
 
-  const { tasks, links, scheduledCount, unscheduledParents } = React.useMemo(() => {
+  const { tasks, links, scheduledCount, unscheduledParents, parentIds } = React.useMemo(() => {
     const byId = new Map(filtered.map((item) => [item.id, item]))
     const children = directChildren(filtered)
     const scheduled = new Set(filtered.filter((item) => item.startAt || item.dueAt).map((item) => item.id))
@@ -285,6 +481,30 @@ export function GanttView() {
       if (cached) return cached
       const computed = bounds(item, new Set())
       rangeCache.set(item.id, computed)
+      return computed
+    }
+
+    const displayRangeCache = new Map<string, { start?: Date; end?: Date }>()
+    const displayRangeOf = (item: WorkItem, seen = new Set<string>()): { start?: Date; end?: Date } => {
+      const cached = displayRangeCache.get(item.id)
+      if (cached) return cached
+      const start = parsePlanDate(item.startAt) ?? parsePlanDate(item.dueAt)
+      const end = parsePlanDate(item.dueAt) ?? start
+      if (start && end) {
+        const ownRange = { start, end }
+        displayRangeCache.set(item.id, ownRange)
+        return ownRange
+      }
+      if (seen.has(item.id)) return {}
+      seen.add(item.id)
+      const childRanges = (children.get(item.id) ?? []).map((child) => displayRangeOf(child, seen))
+      const starts = childRanges.flatMap((value) => (value.start ? [value.start] : []))
+      const ends = childRanges.flatMap((value) => (value.end ? [value.end] : []))
+      const computed = {
+        start: starts.length ? new Date(Math.min(...starts.map(Number))) : undefined,
+        end: ends.length ? new Date(Math.max(...ends.map(Number))) : undefined,
+      }
+      displayRangeCache.set(item.id, computed)
       return computed
     }
 
@@ -347,16 +567,13 @@ export function GanttView() {
 
     let unscheduledParents = 0
     const tasks: ITask[] = []
-    // NOTE: never set `open` on these tasks. The library's `DataTree.toArray`
-    // recurses with `n.open === true && Bt(n.data, out)` and a leaf's `data` is
-    // `null`, so `open: true` on anything without children throws
-    // `Cannot read properties of null (reading 'forEach')` during the chart's own
-    // init. Collapse/expand is expressed by omitting rows instead (see
-    // `isHiddenByCollapse`), which also keeps the header count honest.
+    // `open` belongs only on parents: the library recursively reads `data` when
+    // it is true, while leaf rows have `data: null`. The projection also removes
+    // collapsed descendants so the grid and timeline always share the same rows.
     for (const item of filtered) {
-      if (!included.has(item.id)) continue
-      const isParent = parents.has(item.id)
-      if (!isParent && isHiddenByCollapse(item)) continue
+        if (!included.has(item.id)) continue
+        const isParent = parents.has(item.id)
+        if (isHiddenByCollapse(item)) continue
       const range = rangeOf(item)
       // A container is always a summary: rendering it as a milestone collapses the
       // whole branch into one diamond and hides the real span — measured on real
@@ -373,40 +590,83 @@ export function GanttView() {
         : 0
       const title = item.title?.trim() || t('chat.titlePlaceholder')
       const depth = depthOf(item)
+      const displayRange = displayRangeOf(item)
       tasks.push({
         id: item.id,
-        // Depth is expressed in the label because the grid's own tree renderer
-        // does not indent: it gates on `$level`, which is only populated when the
-        // grid is built in tree mode. This is what makes hierarchy legible.
-        text: depth > 0 ? `${'\u2007\u2007'.repeat(depth)}· ${title}` : title,
+        text: title,
         title,
         barColor: barAccent(item.statusId, statusColorById),
+        statusLabel: statusLabelById.get(item.statusId) ?? item.statusId,
         details: item.description,
         start: range.start,
         end: range.end,
+        displayStart: displayRange.start,
+        displayEnd: displayRange.end,
+        depth,
         progress: item.progress ?? 0,
         type,
         parent: item.parentId && included.has(item.parentId) ? item.parentId : 0,
+        ...(isParent ? { open: !collapsed.has(item.id) } : {}),
         ...(childCount ? { childCount } : {}),
       })
     }
 
     const rendered = new Set(tasks.map((task) => task.id))
+    const parentIds = new Set(
+      [...parents].filter((id) => {
+        const item = byId.get(id)
+        if (!item) return false
+        const range = rangeOf(item)
+        return Boolean(range.start && range.end)
+      }),
+    )
     const links: ILink[] = filtered.flatMap((item) => item.dependencyIds
       .filter((dependencyId) => rendered.has(dependencyId) && rendered.has(item.id))
       .map((dependencyId) => ({ source: dependencyId, target: item.id, type: 'e2s' as const })))
 
-    return { tasks, links, scheduledCount: included.size, unscheduledParents }
-  }, [collapsed, filtered, statusColorById, t, windowStart, windowEnd])
+    const scheduledCount = filtered.filter((item) => scheduled.has(item.id) && included.has(item.id)).length
+    return { tasks, links, scheduledCount, unscheduledParents, parentIds }
+  }, [collapsed, filtered, statusColorById, statusLabelById, t, windowStart, windowEnd])
 
-  const parentIds = React.useMemo(() => {
-    const ids = new Set(items.map((item) => item.id))
-    const parents = new Set<string>()
-    for (const item of items) if (item.parentId && ids.has(item.parentId)) parents.add(item.parentId)
-    return parents
-  }, [items])
-
-  const allCollapsed = parentIds.size > 0 && collapsed.size >= parentIds.size
+  const toggleCollapsed = React.useCallback((id: string) => {
+    setCollapseState((previous) => {
+      const current = previous.scope === collapseScopeSuffix
+        ? previous.collapsed
+        : readCollapsedForScope(collapseScopeSuffix)
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return { scope: collapseScopeSuffix, collapsed: next }
+    })
+  }, [collapseScopeSuffix, readCollapsedForScope])
+  const collapseAll = React.useCallback(() => {
+    setCollapseState({ scope: collapseScopeSuffix, collapsed: new Set(parentIds) })
+  }, [collapseScopeSuffix, parentIds])
+  const expandAll = React.useCallback(() => {
+    setCollapseState({ scope: collapseScopeSuffix, collapsed: new Set() })
+  }, [collapseScopeSuffix])
+  const allCollapsed = parentIds.size > 0 && [...parentIds].every((id) => collapsed.has(id))
+  const allExpanded = [...parentIds].every((id) => !collapsed.has(id))
+  const taskCellContext = React.useMemo<GanttTaskCellContextValue>(() => ({
+    collapsed,
+    hoveredId,
+    parentIds,
+    allCollapsed,
+    allExpanded,
+    toggleCollapsed,
+    collapseAll,
+    expandAll,
+    setHoveredId,
+  }), [
+    allCollapsed,
+    allExpanded,
+    collapseAll,
+    collapsed,
+    expandAll,
+    hoveredId,
+    parentIds,
+    toggleCollapsed,
+  ])
 
   /**
    * Bring today into view. The scale is always fitted to the work, so this is a
@@ -439,39 +699,18 @@ export function GanttView() {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
-      {/* Same header idiom as Calendar and Kanban: filters on the LEFT, view
-          controls on the RIGHT. A projection that puts its filter elsewhere reads
-          as a different application. */}
-      <div className="grid h-12 flex-none grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-b border-border/50 bg-background/80 px-4 backdrop-blur-sm @max-[820px]/panel:grid-cols-[auto_minmax(0,1fr)]">
-        <div className="flex min-w-0 items-center gap-2 overflow-hidden @max-[820px]/panel:hidden">
+      <div className="flex h-12 flex-none items-center justify-between gap-3 border-b border-border/50 bg-background/80 px-4 backdrop-blur-sm">
+        <div className="flex min-w-0 items-center gap-3">
           {projectOptions.length > 0 && (
-            <KanbanProjectFilter projects={projectOptions} value={projectIds} onChange={setProjectIds} />
-          )}
-        </div>
-        <div className="flex shrink-0 items-center justify-center gap-2 text-xs text-foreground/55">
-          <span className="font-medium">{t('gantt.sessionCount', { count: scheduledCount })}</span>
-        </div>
-        <div className="ml-auto flex min-w-0 shrink-0 items-center justify-end gap-2">
-          {parentIds.size > 0 && (
-            <div className="inline-flex h-8 items-center gap-0.5 rounded-md bg-foreground/5 p-0.5">
-              <button
-                type="button"
-                onClick={() => setCollapsed(new Set(parentIds))}
-                disabled={allCollapsed}
-                className="craft-control h-7 rounded-md px-2.5 text-xs font-medium text-foreground/60 outline-none transition-colors hover:text-foreground disabled:opacity-40"
-              >
-                {t('gantt.collapseAll')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setCollapsed(new Set())}
-                disabled={collapsed.size === 0}
-                className="craft-control h-7 rounded-md px-2.5 text-xs font-medium text-foreground/60 outline-none transition-colors hover:text-foreground disabled:opacity-40"
-              >
-                {t('gantt.expandAll')}
-              </button>
+            <div className="@max-[820px]/panel:hidden">
+              <KanbanProjectFilter projects={projectOptions} value={projectIds} onChange={setProjectIds} />
             </div>
           )}
+          <span className="truncate text-xs font-medium text-foreground/55">
+            {t('gantt.itemCount', { count: scheduledCount })}
+          </span>
+        </div>
+        <div className="ml-auto flex shrink-0 items-center justify-end gap-2">
           {/* View period: picks the scale tiers (year→months, quarter→weeks, month→days). */}
           <div className="inline-flex h-8 items-center gap-0.5 rounded-md bg-foreground/5 p-0.5">
             {SCALE_PRESETS.map((option) => (
@@ -511,29 +750,34 @@ export function GanttView() {
           <div ref={ganttHostRef} className="phaneris-gantt h-full rounded-xl border border-border bg-background">
             <ThemeProvider fonts={false}>
               {() => (
-                <div className="h-full min-h-0 overflow-hidden">
-                  <Gantt
-                    ref={ganttRef as never}
-                    tasks={tasks}
-                    links={links}
-                    readonly
-                    cellBorders="column"
-                    cellHeight={CELL_HEIGHT}
-                    lengthUnit="day"
-                    durationUnit="day"
-                    gridWidth={GRID_WIDTH}
-                    start={windowStart}
-                    end={windowEnd}
-                    zoom={{ level: ZOOM_LEVEL_FOR[scale], levels: ZOOM_LEVELS }}
-                    taskTemplate={TimelineBar}
-                    columns={[
-                      { id: 'text', header: t('kanban.workItemTitle'), flexgrow: 1, tree: true },
-                      { id: 'start', header: t('kanban.workItemStart'), width: DATE_COLUMN_WIDTH },
-                      { id: 'end', header: t('kanban.workItemDue'), width: DATE_COLUMN_WIDTH },
-                    ]}
-                    onselecttask={(event) => event?.id && navigateToSession(String(event.id))}
-                  />
-                </div>
+                <GanttTaskCellContext.Provider value={taskCellContext}>
+                  <div className="h-full min-h-0 overflow-hidden">
+                    <Gantt
+                      ref={ganttRef as never}
+                      tasks={tasks}
+                      links={links}
+                      readonly
+                      cellBorders="column"
+                      cellHeight={CELL_HEIGHT}
+                      lengthUnit="day"
+                      durationUnit="day"
+                      gridWidth={GRID_WIDTH}
+                      start={windowStart}
+                      end={windowEnd}
+                      zoom={{ level: ZOOM_LEVEL_FOR[scale], levels: zoomLevels }}
+                      taskTemplate={TimelineBar}
+                      columns={[
+                        {
+                          id: 'text',
+                          header: { text: t('kanban.workItemTitle'), cell: GanttTaskHeaderCell },
+                          flexgrow: 1,
+                          cell: GanttTaskTitleCell,
+                        },
+                      ]}
+                      onselecttask={(event) => event?.id && navigateToSession(String(event.id))}
+                    />
+                  </div>
+                </GanttTaskCellContext.Provider>
               )}
             </ThemeProvider>
           </div>

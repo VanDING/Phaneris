@@ -47,7 +47,7 @@
   --wx-gantt-border-color: var(--border);
   --wx-gantt-border: 1px solid var(--border);
   --wx-gantt-icon-color: var(--muted-foreground);
-  --wx-gantt-select-color: color-mix(in oklab, var(--accent) 12%, transparent);
+  --wx-gantt-select-color: color-mix(in oklab, var(--foreground) 4%, transparent);
   --wx-gantt-holiday-background: color-mix(in oklab, var(--foreground) 4%, transparent);
   --wx-gantt-holiday-color: color-mix(in oklab, var(--foreground) 45%, transparent);
   --wx-gantt-link-color: color-mix(in oklab, var(--foreground) 35%, transparent);
@@ -96,18 +96,13 @@
  *
  * The library renders `.wx-bar > .wx-content` with its own background, radius,
  * height and `line-height`. This section neutralises that chrome and lets the
- * template own the visual, so three different meanings never look alike:
- * a filled progress bar (leaf task), a striped rail (computed container span),
- * and a diamond (milestone).
+ * template own the visual: a progress-cued task bar, a filled parent progress bar,
+ * and a diamond for milestones.
  *
- * CONTRAST RULES (this is what makes the list readable):
- *   - every bar surface is a *pale* tint derived from the app's own `--card` and
- *     `--foreground`, never a saturated fill, so one label colour works across
- *     the whole bar instead of only over part of it;
- *   - every label is `--foreground` on that pale tint, which clears 4.5:1 in both
- *     light and dark;
- *   - state is carried by the *border*, the *stripe* and the *progress rail*,
- *     never by the label's own colour.
+ * CONTRAST RULES:
+ *   - task and parent bars use pale status tints instead of saturated blocks;
+ *   - bar labels use the app foreground colour, including over parent progress;
+ *   - state is carried by the leading marker, subtle chips and progress fill.
  * ------------------------------------------------------------------------ */
 .phaneris-gantt .wx-bar {
   border-radius: 6px;
@@ -123,13 +118,23 @@
   line-height: normal;
 }
 
+/* Match the prototype's compact timeline bars inside each 48px two-line row. */
+.phaneris-gantt .pg-bar {
+  width: calc(100% - 6px);
+  height: 25px;
+  margin: 11px 3px;
+}
+
+.phaneris-gantt .pg-bar.pg-bar--summary {
+  height: 29px;
+  margin-block: 9px;
+}
+
 /* ---------------------------------------------------------------------------
  * 3a. Grid and header text must never wrap
  *
- * A grid cell that wraps grows the whole row: measured, a `YYYY-MM-DD` column at
- * ~72px of usable width wrapped and pushed data rows from 34px to 72px, and the
- * three-tier header in month view reached 108px. Cells clip instead, and the full
- * value stays available as a tooltip.
+ * Grid labels stay on one line so the two-line task rows keep their intended
+ * height at every zoom level. The full task title remains available as a tooltip.
  * ------------------------------------------------------------------------ */
 .phaneris-gantt .wx-table .wx-grid .wx-cell,
 .phaneris-gantt .wx-grid .wx-cell,
@@ -137,6 +142,189 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* SVAR wraps the custom title cell with its own tree affordance and indentation.
+ * The navigator draws its own accessible chevron, so remove that duplicate chrome. */
+.phaneris-gantt .wx-table .wx-content {
+  padding-left: 0 !important;
+}
+
+.phaneris-gantt .wx-table .wx-toggle-icon,
+.phaneris-gantt .wx-table .wx-toggle-placeholder {
+  display: none;
+}
+
+/* ---- SessionList-inspired task navigator ------------------------------- */
+.phaneris-gantt .pg-task-header {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 0 12px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.phaneris-gantt .pg-task-header-menu {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--muted-foreground);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.phaneris-gantt .pg-task-header-menu:hover {
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+}
+
+.phaneris-gantt .pg-task-cell {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  padding-right: 12px;
+  border-radius: 5px;
+  transition: background-color 120ms ease;
+}
+
+.phaneris-gantt .pg-task-cell--hovered {
+  background: color-mix(in oklab, var(--foreground) 4%, transparent);
+}
+
+.phaneris-gantt .pg-task-toggle,
+.phaneris-gantt .pg-task-toggle-spacer {
+  display: inline-flex;
+  width: 19px;
+  height: 22px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  color: color-mix(in oklab, var(--foreground) 58%, transparent);
+}
+
+.phaneris-gantt .pg-task-toggle:hover {
+  background: color-mix(in oklab, var(--foreground) 7%, transparent);
+  color: var(--foreground);
+}
+
+.phaneris-gantt .pg-task-status {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--background);
+}
+
+.phaneris-gantt .pg-task-status--milestone {
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.phaneris-gantt .pg-task-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.phaneris-gantt .pg-task-title {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phaneris-gantt .pg-task-title--summary {
+  font-weight: 650;
+}
+
+.phaneris-gantt .pg-task-title-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phaneris-gantt .pg-task-count {
+  display: inline-flex;
+  min-width: 18px;
+  height: 16px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--foreground) 7%, transparent);
+  color: var(--muted-foreground);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.phaneris-gantt .pg-task-meta {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 10.5px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.phaneris-gantt .pg-task-meta__date,
+.phaneris-gantt .pg-task-meta__status {
+  display: inline-flex;
+  min-height: 17px;
+  flex: none;
+  align-items: center;
+  padding: 0 5px;
+  border: 1px solid color-mix(in oklab, var(--border) 82%, transparent);
+  border-radius: 4px;
+}
+
+.phaneris-gantt .pg-task-meta__date {
+  background: color-mix(in oklab, var(--foreground) 3%, var(--background));
+  color: var(--muted-foreground);
+}
+
+.phaneris-gantt .pg-task-meta__status {
+  max-width: 128px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-color: color-mix(in oklab, var(--pg-color, var(--accent)) 24%, var(--border));
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 9%, var(--background));
+  color: var(--foreground);
+  font-weight: 550;
 }
 
 /*
@@ -162,33 +350,45 @@
   box-shadow: none;
 }
 
+/* SVAR paints the task/summary color on the outer bar, whose selector is more
+ * specific than `.wx-bar`. Clear that wrapper too, or its accent leaks around
+ * the custom 25px bar as a thick purple frame. */
+.phaneris-gantt .wx-bar.wx-task:not(.wx-split),
+.phaneris-gantt .wx-bar.wx-summary,
+.phaneris-gantt .wx-bar.wx-task.wx-selected:not(.wx-split),
+.phaneris-gantt .wx-bar.wx-summary.wx-selected,
+.phaneris-gantt .wx-bar.wx-task:not(.wx-split):hover,
+.phaneris-gantt .wx-bar.wx-summary:hover {
+  color: inherit;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 /* ---- leaf task ---------------------------------------------------------- */
 .pg-bar {
   position: relative;
   height: 100%;
   width: 100%;
   overflow: hidden;
-  border-radius: 6px;
-  /* A pale tint of the state colour, so the bar is unmistakably *that* state while
-   * a single label colour still clears AA across its whole width. */
-  background: color-mix(in oklab, var(--pg-color, var(--accent)) 22%, var(--card));
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pg-color, var(--accent)) 65%, transparent);
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 7%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--border) 88%, transparent);
+  transition: background-color 120ms ease, box-shadow 120ms ease;
 }
 
 /*
  * State marker: a solid block on the left edge.
  *
- * A 1px border in the status colour is unusable for this palette — the light
- * statuses (#f59e0b, #10b981) measure only 1.8–2.2:1 against a pale track, and no
- * border weight fixes a luminance gap. A 4x27px block of the same colour is a
- * graphic mark, carries far more area, and stays identifiable regardless.
+ * Use a narrow status marker and keep the rest of the bar light, so the palette
+ * remains visible without letting one status colour dominate the timeline.
  */
 .pg-accent {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 3px;
   background: var(--pg-color, var(--accent));
 }
 
@@ -198,18 +398,17 @@
  */
 .pg-fill {
   position: absolute;
-  left: 4px;
+  left: 3px;
   right: 0;
   bottom: 0;
-  height: 3px;
-  background: color-mix(in oklab, var(--pg-color, var(--accent)) 70%, var(--foreground));
+  height: 2px;
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 76%, var(--foreground));
 }
 
 /* Completed work reads as settled: same hue, quieter. State stays identifiable
  * through the left marker and the bar's hue. */
 .pg-bar--done {
-  background: color-mix(in oklab, var(--pg-color, var(--accent)) 12%, var(--card));
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pg-color, var(--accent)) 40%, transparent);
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 4%, var(--card));
 }
 
 .pg-bar-label {
@@ -223,61 +422,50 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left;
   pointer-events: none;
 }
 
-/* ---- container: striped rail, because its span is computed -------------- */
+/* ---- parent range: same task-bar shape, filled by the parent's progress ---- */
 .pg-bar--summary {
-  /* A container is structure, so its surface stays the quietest of the three;
-   * the relief is carried by the stripe and the state marker. */
-  background: color-mix(in oklab, var(--foreground) 7%, var(--card));
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 20%, transparent);
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 8%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pg-color, var(--accent)) 26%, var(--border));
 }
 
-/*
- * The stripes are painted at full strength on a light tint of the SAME hue.
- * A translucent stripe over the track measured 1.1:1 — indistinguishable, which
- * is why the hatching read as noise. Swept the pattern: 2px/4px aliased into a
- * grey wash; at a 33px bar height a tall rail crowds the label, so the rail is a
- * slim 5px inset along the bottom, clear of the text baseline.
- */
-.pg-rail {
+.pg-summary-fill {
   position: absolute;
-  left: 4px;
-  right: 2px;
-  bottom: 3px;
-  height: 5px;
-  border-radius: 2px;
-  background-color: color-mix(in oklab, var(--pg-color, var(--accent)) 16%, var(--card));
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--pg-color, var(--accent)) 0 4px,
-    transparent 4px 7px
-  );
+  inset: 0 auto 0 0;
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 38%, var(--card));
+  pointer-events: none;
 }
 
-/* The state marker has to sit above the rail inside a container row. */
-.pg-bar--summary .pg-accent {
-  width: 3px;
-}
-
+/* Keep the title and percentage readable over the filled portion of the bar. */
 .pg-bar--summary .pg-bar-label {
-  left: 10px;
+  left: 9px;
+  right: 48px;
+  z-index: 1;
+  padding: 0;
+  background: transparent;
   font-weight: 600;
   color: var(--foreground);
 }
 
-/* ---- child-count badge: a quiet chip, never competing with the label ---- */
-.pg-bar-count {
+.pg-summary-progress {
   position: absolute;
-  right: 8px;
   top: 50%;
+  right: 7px;
+  z-index: 1;
+  min-height: 17px;
+  display: inline-flex;
+  align-items: center;
   transform: translateY(-50%);
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--background) 88%, transparent);
-  font: 500 10.5px/1.35 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-  color: color-mix(in oklab, var(--foreground) 70%, transparent);
+  padding: 0 4px;
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  color: var(--foreground);
+  font: 600 10.5px/1 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
 
@@ -286,6 +474,25 @@
   background: none;
   box-shadow: none;
   overflow: visible;
+}
+
+.pg-bar--hovered:not(.pg-bar--summary):not(.pg-bar--milestone) {
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 11%, var(--card));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--foreground) 20%, var(--border)),
+    0 1px 3px color-mix(in oklab, var(--foreground) 10%, transparent);
+}
+
+.pg-bar--summary.pg-bar--hovered {
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 24%, var(--pg-color, var(--accent)));
+}
+
+.pg-bar--summary.pg-bar--hovered .pg-summary-fill {
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 48%, var(--card));
+}
+
+.pg-bar--milestone.pg-bar--hovered::before {
+  filter: brightness(1.08);
 }
 
 .pg-bar--milestone::before {
@@ -308,30 +515,24 @@
   color: var(--foreground);
 }
 
-/*
- * On a narrow bar the label and the child-count badge collide. The bar is its own
- * inline-size container, so the label reserves the badge's width first and the
- * badge then steps aside entirely — the label is the information that matters.
- */
+/* The bar is its own inline-size container so the title can yield space to the
+ * percentage on narrow parent ranges. */
 .pg-bar {
   container-type: inline-size;
 }
 
-/* Reserve the badge's width so the label ellipsises instead of running under it. */
+/* Reserve the percentage's width so the title ellipsises before it can overlap. */
 .pg-bar--summary .pg-bar-label {
-  right: 40px;
+  right: 48px;
 }
 
 @container (max-width: 150px) {
-  .pg-bar-count {
-    display: none;
-  }
   .pg-bar--summary .pg-bar-label {
-    right: 8px;
+    right: 43px;
   }
 }
 
-/* Below this a summary label is pure noise on top of the rail. */
+/* On very short parent ranges, keep the progress visible and suppress the title. */
 @container (max-width: 74px) {
   .pg-bar--summary .pg-bar-label {
     display: none;
