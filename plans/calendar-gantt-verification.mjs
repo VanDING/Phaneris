@@ -52,11 +52,11 @@ async function check(name, observation, run) {
 }
 
 /** A Playground page pinned to one component, with console/page errors captured. */
-async function openView(componentId, { width = 1400, height = 900, emptyWorkItems = false, previewWidth = 1400, query = '' } = {}) {
+async function openView(componentId, { width = 1400, height = 900, emptyWorkItems = false, previewWidth = 1400, query = '', duplicateWorkItems = 0 } = {}) {
   const page = await browser.newPage({ viewport: { width, height } })
   const pageErrors = []
   page.on('pageerror', (error) => pageErrors.push(String(error?.message ?? error)))
-  await page.addInitScript(({ id, empty, preview }) => {
+  await page.addInitScript(({ id, empty, preview, copies }) => {
     if (empty) {
       // Patch the mock the moment it is installed, so the view reads an empty
       // projection on its first render. Reassigning `listWorkItems` after load
@@ -71,12 +71,37 @@ async function openView(componentId, { width = 1400, height = 900, emptyWorkItem
         },
       })
     }
+    if (copies > 0) {
+      // Enough rows for the chart body to overflow, so a pinned header can be
+      // observed hiding what scrolls under it. The fixture itself is untouched.
+      let real
+      Object.defineProperty(window, 'electronAPI', {
+        configurable: true,
+        get: () => real,
+        set: (value) => {
+          real = value
+          if (value && typeof value.listWorkItems === 'function') {
+            const base = value.listWorkItems
+            value.listWorkItems = async (workspaceId) => {
+              const items = await base(workspaceId)
+              const out = []
+              for (let copy = 0; copy < copies; copy += 1) {
+                for (const item of items) {
+                  out.push({ ...item, id: `${item.id}-copy${copy}`, title: `${item.title} #${copy}`, parentId: undefined, sessionIds: [], primarySessionId: item.id })
+                }
+              }
+              return out
+            }
+          }
+        },
+      })
+    }
     localStorage.setItem('playground-selected-component', id)
     localStorage.setItem('playground-preview-size', JSON.stringify({ width: preview, height: 860 }))
     localStorage.setItem('playground-variants-sidebar-open', 'false')
     localStorage.setItem('playground-motion-preference', 'system')
     localStorage.setItem('i18nextLng', 'en')
-  }, { id: componentId, empty: emptyWorkItems, preview: previewWidth })
+  }, { id: componentId, empty: emptyWorkItems, preview: previewWidth, copies: duplicateWorkItems })
   await page.goto(`${base}/playground.html${query}`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
   await page.waitForTimeout(3500)
   return { page, pageErrors }
@@ -327,6 +352,50 @@ await check(
       assert.ok(
         after.cell > before.cell + 100,
         `the row barely moved while the column grew: ${before.cell} -> ${after.cell}`,
+      )
+    } finally {
+      await page.close()
+    }
+  },
+)
+
+await check(
+  'The Gantt timescale stays opaque: rows scrolling under it stay hidden',
+  'the scale band renders identically at scrollTop 0 and 300, and its background is opaque',
+  async () => {
+    /*
+     * The library pins the date header with `.wx-scale { position: sticky; top: 0;
+     * z-index: 5; background-color: var(--wx-background) }` — but `--wx-background` is
+     * referenced by the shipped stylesheet and defined NOWHERE in it, so with no token
+     * the band was sticky and transparent: measured with the token removed, a task bar
+     * ("Quarterly rollout #5") rendered across the month labels, 20,352 differing
+     * pixels inside the 74px band. It needs a plan taller than the viewport to show,
+     * which is why the six-row fixture never caught it.
+     */
+    const { page } = await openView('gantt-view', { duplicateWorkItems: 6 })
+    try {
+      const scale = page.locator('.phaneris-gantt .wx-scale')
+      const background = await scale.evaluate((node) => getComputedStyle(node).backgroundColor)
+      const alpha = background.startsWith('rgba') ? Number(background.split(',')[3]?.replace(')', '') ?? 1) : 1
+      assert.equal(alpha, 1, `the timescale background is not opaque: ${background}`)
+
+      const atTop = await scale.screenshot()
+      const scrolled = await page.evaluate(() => {
+        const root = document.querySelector('.phaneris-gantt')
+        const scroller = [...root.querySelectorAll('*')].find((node) => {
+          const style = getComputedStyle(node)
+          return /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 4
+        })
+        if (!scroller) return null
+        scroller.scrollTop = Math.min(300, scroller.scrollHeight - scroller.clientHeight)
+        return Math.round(scroller.scrollTop)
+      })
+      assert.ok(scrolled && scrolled > 30, `the chart body did not scroll (${scrolled}); the comparison would be vacuous`)
+      await page.waitForTimeout(600)
+      const afterScroll = await scale.screenshot()
+      assert.ok(
+        atTop.equals(afterScroll),
+        'the timescale band changed while the body scrolled, so content is showing through it',
       )
     } finally {
       await page.close()

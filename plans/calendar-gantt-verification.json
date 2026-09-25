@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-25T04:52:06.961Z",
+  "date": "2026-09-25T06:41:42.249Z",
   "base": "http://localhost:5199",
   "browser": "153.0.8010.12",
   "checks": [
@@ -24,6 +24,12 @@
     {
       "name": "The Gantt task cell fills its column, and keeps filling it after a drag",
       "observation": "cell width tracks .wx-content (354 at a 370px column, 544 at 560)",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "The Gantt timescale stays opaque: rows scrolling under it stay hidden",
+      "observation": "the scale band renders identically at scrollTop 0 and 300, and its background is opaque",
       "status": "pass",
       "detail": null
     },

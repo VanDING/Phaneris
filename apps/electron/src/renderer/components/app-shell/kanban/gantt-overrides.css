@@ -42,7 +42,30 @@
  * block cover light and dark — the app flips `--background`/`--foreground`/
  * `--border`/`--primary` under `.dark`, and these mixes follow automatically.
  * ------------------------------------------------------------------------ */
+/*
+ * The chart surface token the library never defines.
+ *
+ * `--wx-background` is REFERENCED by the shipped stylesheet (`var(--wx-background)`,
+ * `var(--wx-background-alt)`) and defined nowhere in it, and no theme layer we load
+ * supplies it: measured on a live chart, `.wx-theme`, the root and the scale all
+ * report an empty value, so every rule that paints with it resolves to nothing.
+ *
+ * The one that shows is the timescale — `.wx-scale` is `position: sticky; top: 0;
+ * z-index: 5; background-color: var(--wx-background)`, i.e. the library intends the
+ * date header to be a pinned, OPAQUE band. With the token empty it is pinned and
+ * transparent instead, so rows scrolling under it stay visible and the date labels
+ * share their band with task bars. It only shows once a plan has enough rows to
+ * scroll, which is why a six-row fixture never caught it.
+ *
+ * Defining the token (rather than patching `.wx-scale`) also restores the other
+ * surfaces painted with it: `.wx-layout`, the weekend override, the rollup border and
+ * the table's derived `--wx-table-header-background`. Both map onto colours the host
+ * already paints, so nothing changes where the library was not already broken.
+ */
 .phaneris-gantt .wx-material-theme {
+  --wx-background: var(--background);
+  --wx-background-alt: var(--card);
+
   /* -- chrome: inherit the host surface instead of Material's own greys ------- */
   --wx-gantt-border-color: var(--border);
   --wx-gantt-border: 1px solid var(--border);
