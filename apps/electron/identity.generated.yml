@@ -20,3 +20,19 @@ appId: 'io.github.vanding.phaneris'
 productName: 'Phaneris'
 copyright: 'Copyright © 2026 VanDING. Based on Craft Agents, Copyright © 2026 Craft Docs Ltd.'
 artifactName: 'Phaneris-${version}-${os}-${arch}.${ext}'
+
+# Deep-link scheme, declared IN THE BUNDLE so the OS can route it here.
+#
+# This is REQUIRED on macOS: LaunchServices only lets an app become the default
+# handler for a scheme it declares via CFBundleURLTypes, so without this block
+# `app.setAsDefaultProtocolClient(DEEPLINK_SCHEME)` cannot take effect and every
+# `phaneris://` link is dropped — including the OAuth return deeplink
+# back into a session. The scheme is rendered from the identity here rather than
+# written into electron-builder.yml, which is forbidden from restating identity.
+#
+# On Windows electron-builder writes the matching registry entries at install
+# time, so this one declaration covers both platforms.
+protocols:
+  - name: 'Phaneris'
+    schemes:
+      - 'phaneris'

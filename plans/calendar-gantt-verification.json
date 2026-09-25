@@ -1,0 +1,187 @@
+{
+  "date": "2026-09-25T04:52:06.961Z",
+  "base": "http://localhost:5199",
+  "browser": "153.0.8010.12",
+  "checks": [
+    {
+      "name": "Playground boots the Projects surface without page errors",
+      "observation": "no pageerror, DOM populated",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Gantt task-list width is a share of the host, not a constant",
+      "observation": "host 1256 -> 376px, host 976 -> 292px (0.30 clamped to 280-560)",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "A dragged task-list width is remembered across a remount",
+      "observation": "drag +150px -> stored -> reload keeps it -> clearing it returns to adaptive",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "The Gantt task cell fills its column, and keeps filling it after a drag",
+      "observation": "cell width tracks .wx-content (354 at a 370px column, 544 at 560)",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Gantt renders bars, rows and an ISO week scale",
+      "observation": "bars > 0 and week labels present",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Bar width equals the inclusive day count (due day included)",
+      "observation": "launch=5d, docs=6d, long=161d ± 0.5px",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Row metadata shows the inclusive due date, not the exclusive boundary",
+      "observation": "launch ends on due date, not due+1",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Week headers are ISO-8601 week numbers",
+      "observation": "each label matches getISOWeek",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Undated items stay visible: header count, drawer and bar count agree",
+      "observation": "2 unscheduled items listed, 4 bars drawn",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Week/day time axis: 24-hour labels, ~10 hours visible, opens at 08:00",
+      "observation": "labels HH:00, 72px/hour, viewport starts at 08:00",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Hour rules are drawn in the time grids and NOT in the month grid",
+      "observation": "month date cells flat, week body columns lined",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Gantt keeps its frame when nothing is scheduled, with no overlay",
+      "observation": "task column + scale render, nothing drawn on top",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Gantt header carries the shared controls",
+      "observation": "project filter + search left, Today centred, segments + New Task right, 42px",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Calendar and Gantt remember their view across a remount",
+      "observation": "mode/scale persist per workspace",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Calendar (FullCalendar) renders with our header and no library toolbar",
+      "observation": "entries > 0, .fc toolbar buttons = 0",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "A single click on an empty slot opens the editor on exactly that one slot",
+      "observation": "click 13:00 -> the shared editor is seeded 13:00-13:30, not a default hour",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "The Playground registers a working preview for every Project Management view",
+      "observation": "overview / list / board / calendar / gantt all mount something",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "The live-navigation surface the create/edit checks drive is registered",
+      "observation": "projects-surface-live opens the Projects surface from a real route",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Day and week headers carry two lines, the month header one, all the same height",
+      "observation": "52px in 日/周/月; 日/周 show weekday+date and mark today, 月 shows the weekday only",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "The all-day row is gone from 日/周 and the rail holds every untimed entry instead",
+      "observation": "no all-day lane; rail is 300px; month keeps its chips and has no rail",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Dragging a rail entry to the grid edge scrolls the grid while the pointer holds still",
+      "observation": "scrollTop advances to the end of the range with the preview still following",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "A narrow panel collapses the rail into a header chip that opens the same list",
+      "observation": "wide panel -> rail; narrow panel -> chip, and the chip still lists every untimed entry",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Dropping a rail entry on the grid writes that date and time",
+      "observation": "rail -> grid: {date, time, allDay:false}, and the entry leaves the rail",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Dropping a timed entry on the rail clears its time and keeps its date",
+      "observation": "grid -> rail: {date unchanged, allDay:true}, and the entry returns to the rail",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "The rail's + creates an entry from a title and a date alone",
+      "observation": "create: {title, date, allDay:true} with no time invented",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Month overflow is reachable: a 5-entry day exposes the rest through \"+N more\"",
+      "observation": "overflow control opens and lists every hidden entry",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Out-of-window timed entries render inside the time grid (07:00 and 22:00)",
+      "observation": "both entries present and contained by [role=grid]",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Calendar entries are keyboard-reachable (the old chips were unfocusable divs)",
+      "observation": "every entry has tabindex >= 0 and a pointer cursor",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "A range drawn on the calendar opens the shared editor already planned",
+      "observation": "drag 5 slots from 09:00 -> editor seeded 09:00-11:30 -> createRequest.planning matches",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "A rejected create keeps the shared editor open and says why",
+      "observation": "error toast shown, editor still mounted",
+      "status": "pass",
+      "detail": null
+    }
+  ]
+}

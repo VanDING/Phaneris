@@ -1129,11 +1129,13 @@ export function isProjectManagementView(value: string): value is ProjectManageme
 export interface ProjectsNavigationState {
   navigator: 'projects'
   view: ProjectManagementView
-  details:
-    | { type: 'project'; projectSlug: string }
-    | { type: 'workItem'; workItemId: string }
-    | { type: 'calendarEntry'; calendarEntryId: string }
-    | null
+  /*
+   * Only a project page is addressable inside the surface now. The board, the
+   * calendar and the timeline each open their rows in the shared Task Definition
+   * overlay, which is not a route — so `workItem` and `calendarEntry` details were
+   * vocabulary for pages that no longer exist.
+   */
+  details: { type: 'project'; projectSlug: string } | null
 }
 
 /**
@@ -1254,17 +1256,6 @@ export const getNavigationStateKey = (state: NavigationState): string => {
     if (state.details?.type === 'project') {
       return `projects/project/${state.details.projectSlug}`
     }
-    if (state.details?.type === 'workItem' && state.view !== 'overview') {
-      const base = state.view === 'board'
-        ? 'kanban'
-        : state.view === 'calendar'
-          ? 'calendar'
-          : 'projects/list'
-      return `${base}/work-item/${encodeURIComponent(state.details.workItemId)}`
-    }
-    if (state.details?.type === 'calendarEntry' && state.view === 'calendar') {
-      return `calendar/schedule/${encodeURIComponent(state.details.calendarEntryId)}`
-    }
     if (state.view === 'board') return 'kanban'
     if (state.view === 'calendar') return 'calendar'
     if (state.view === 'gantt') return 'gantt'
@@ -1337,32 +1328,11 @@ export const parseNavigationStateKey = (key: string): NavigationState | null => 
   if (key === 'kanban' || key === 'board') {
     return { navigator: 'projects', view: 'board', details: null }
   }
-  if (key.startsWith('kanban/work-item/')) {
-    return {
-      navigator: 'projects',
-      view: 'board',
-      details: { type: 'workItem', workItemId: decodeURIComponent(key.slice('kanban/work-item/'.length)) },
-    }
-  }
   if (key === 'calendar') {
     return { navigator: 'projects', view: 'calendar', details: null }
   }
   if (key === 'gantt') {
     return { navigator: 'projects', view: 'gantt', details: null }
-  }
-  if (key.startsWith('calendar/schedule/')) {
-    return {
-      navigator: 'projects',
-      view: 'calendar',
-      details: { type: 'calendarEntry', calendarEntryId: decodeURIComponent(key.slice('calendar/schedule/'.length)) },
-    }
-  }
-  if (key.startsWith('calendar/work-item/')) {
-    return {
-      navigator: 'projects',
-      view: 'calendar',
-      details: { type: 'workItem', workItemId: decodeURIComponent(key.slice('calendar/work-item/'.length)) },
-    }
   }
 
   // Handle projects
@@ -1375,22 +1345,6 @@ export const parseNavigationStateKey = (key: string): NavigationState | null => 
     return { navigator: 'projects', view: 'overview', details: null }
   }
   if (key.startsWith('projects/')) {
-    const calendarEntryMatch = /^projects\/calendar\/schedule\/(.+)$/.exec(key)
-    if (calendarEntryMatch) {
-      return {
-        navigator: 'projects',
-        view: 'calendar',
-        details: { type: 'calendarEntry', calendarEntryId: decodeURIComponent(calendarEntryMatch[1]!) },
-      }
-    }
-    const workItemMatch = /^projects\/(list|board|calendar)\/work-item\/(.+)$/.exec(key)
-    if (workItemMatch) {
-      return {
-        navigator: 'projects',
-        view: workItemMatch[1] as Exclude<ProjectManagementView, 'overview'>,
-        details: { type: 'workItem', workItemId: decodeURIComponent(workItemMatch[2]!) },
-      }
-    }
     const view = key.slice(9)
     if (isProjectManagementView(view)) {
       return { navigator: 'projects', view, details: null }

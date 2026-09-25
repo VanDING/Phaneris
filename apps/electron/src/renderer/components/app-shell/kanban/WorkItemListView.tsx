@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { projectsAtom } from '@/atoms/projects'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { useCompensateForStoplight } from '@/context/StoplightContext'
-import { routes, useNavigation } from '@/contexts/NavigationContext'
+import { useSetAtom } from 'jotai'
+import { kanbanEditorTargetAtom } from '@/atoms/kanban'
 import { useWorkItems } from '@/hooks/useWorkItems'
 import { useWorkItemViewState } from '@/hooks/useWorkItemViewState'
 import { queryWorkItems, type WorkItemSortField } from '@phaneris/shared/work-items/browser'
@@ -18,7 +19,7 @@ export function WorkItemListView() {
   const compensateForStoplight = useCompensateForStoplight()
   const { t } = useTranslation()
   const projects = useAtomValue(projectsAtom)
-  const { navigate } = useNavigation()
+  const setEditorTarget = useSetAtom(kanbanEditorTargetAtom)
   const { items, remove } = useWorkItems(activeWorkspaceId ?? null)
   const projectOptions = React.useMemo<KanbanProjectFilterOption[]>(
     () => projects.map((project) => ({
@@ -63,8 +64,9 @@ export function WorkItemListView() {
     { value: 'dueAt:asc', label: t('kanban.workItemSortDue') },
   ], [t])
   const openDetail = React.useCallback((itemId: string) => {
-    navigate(routes.view.projectWorkItem('list', itemId))
-  }, [navigate])
+    // The shared Task Definition editor is the only detail surface now.
+    setEditorTarget({ mode: 'edit', sessionId: itemId })
+  }, [setEditorTarget])
 
   const allVisibleSelected = visibleItems.length > 0 && visibleItems.every((item) => selectedIds.includes(item.id))
 

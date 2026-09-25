@@ -51,7 +51,7 @@
     "test:shared:all": "bun run test:shared:llm-connections && bun run test:shared:models-pi && bun run test:shared:config",
     "test:doc-tools": "python3 -m unittest apps.electron.resources.scripts.tests.test_pdf_tool_smoke apps.electron.resources.scripts.tests.test_xlsx_tool_smoke apps.electron.resources.scripts.tests.test_docx_tool_smoke apps.electron.resources.scripts.tests.test_pptx_tool_smoke apps.electron.resources.scripts.tests.test_img_tool_smoke apps.electron.resources.scripts.tests.test_ical_tool_smoke apps.electron.resources.scripts.tests.test_doc_diff_smoke apps.electron.resources.scripts.tests.test_markitdown_smoke",
     "validate:dev": "bun run typecheck:all && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table",
-    "validate:ci": "bun run typecheck:all && bun run lint && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table && bun run lint:i18n:parity && bun run lint:i18n:sorted && bun run lint:i18n:coverage && bun run identity:check && bun run version:check",
+    "validate:ci": "bun run typecheck:all && bun run lint && bun run test:shared:all && bun run test:doc-tools && bun run test:ui:table && bun run lint:i18n:parity && bun run lint:i18n:sorted && bun run lint:i18n:coverage && bun run lint:i18n:dead-keys && bun run identity:check && bun run version:check",
     "validate:full": "bun run validate:ci && bun run test",
     "lint:electron": "cd apps/electron && bun run lint",
     "lint:shared": "cd packages/shared && bun run eslint .",
@@ -110,7 +110,8 @@
     "test:critical": "bun run scripts/test-critical.ts",
     "build:smoke": "bun run scripts/build-smoke.ts",
     "perf:smoke": "bun run scripts/performance/run.ts --smoke",
-    "perf:baseline": "bun run scripts/performance/run.ts"
+    "perf:baseline": "bun run scripts/performance/run.ts",
+    "lint:i18n:dead-keys": "bun run scripts/check-i18n-dead-keys.ts"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.1136.0",

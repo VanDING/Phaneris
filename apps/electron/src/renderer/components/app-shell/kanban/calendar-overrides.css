@@ -1,0 +1,611 @@
+/**
+ * FullCalendar theme bridge — the app's design tokens AND its structural
+ * language, expressed on the library's stable surface.
+ *
+ * The first version of this file only mapped `--fc-classic-*` colours and left
+ * the library's default chrome in place, which is why the calendar read as a
+ * foreign widget: saturated event blocks, 16px text, unpadded 0-radius cells, an
+ * unstyled "+N more", and colliding week numbers.
+ *
+ * v7 ships **only hashed class names** (`fc-0Bj`, `fc-classic-1sP`), so there is
+ * no `.fc-event` / `.fc-daygrid-day` / `.fc-scrollgrid` to target — but the
+ * library does expose three genuinely stable hooks, and everything below uses
+ * only those:
+ *
+ *   1. the `--fc-classic-*` palette variables;
+ *   2. ARIA roles (`grid`, `row`, `columnheader`, `gridcell`) and the
+ *      `aria-current="date"` today marker — part of its accessibility contract,
+ *      not an implementation detail;
+ *   3. `data-date` plus attributes this app sets from the documented render
+ *      hooks (`data-calendar-entry`, `data-other-month`, `data-past`).
+ *
+ * No selector here depends on a hashed name, so a library patch release cannot
+ * silently un-style the calendar.
+ *
+ * Note: `dayCellContent`, `eventClassNames` and `dayCellClassNames` do NOT exist
+ * in v7 (they were removed with the CSS-modules rewrite), which is why day cells
+ * are marked from `dayCellDidMount` instead of being rendered by us.
+ */
+.phaneris-calendar {
+  /* --- palette: same values the app uses for its own translucent blocks --- */
+  --fc-classic-background: var(--background);
+  --fc-classic-foreground: var(--foreground);
+  /* The library draws its day-cell borders with this, so it carries the
+     softened major rule rather than the raw token. */
+  --fc-classic-border: var(--pg-rule);
+  --fc-classic-strong: color-mix(in oklab, var(--foreground) 22%, transparent);
+  --fc-classic-strong-border: var(--border);
+  --fc-classic-muted: color-mix(in oklab, var(--foreground) 8%, transparent);
+  --fc-classic-muted-foreground: color-mix(in oklab, var(--foreground) 55%, transparent);
+  --fc-classic-faint: color-mix(in oklab, var(--foreground) 3%, transparent);
+  --fc-classic-faint-foreground: color-mix(in oklab, var(--foreground) 45%, transparent);
+  --fc-classic-highlight: color-mix(in oklab, var(--accent) 14%, transparent);
+  /*
+   * Today is marked by the accent day-number badge only. The library paints this
+   * colour across the whole today COLUMN, and in the day view that column is the
+   * entire grid — measured 1.41M px² tinted against 0.69M px² of card, i.e. one
+   * solid lavender block with no visible structure. A badge marks today without
+   * covering the grid it is supposed to help you read.
+   */
+  --fc-classic-today: transparent;
+  --fc-classic-now: var(--destructive);
+
+  /*
+   * Events paint `var(--fc-event-color)` as a solid fill. The app's language is a
+   * TRANSLUCENT accent block with normal foreground text, so the fill is made
+   * translucent at the source (no specificity fight, no !important).
+   */
+  --fc-classic-event: color-mix(in srgb, var(--accent) 16%, transparent);
+  --fc-classic-event-contrast: var(--foreground);
+  --fc-classic-background-event: var(--accent);
+  --fc-classic-background-event-opacity: 16%;
+  --fc-classic-background-event-foreground-opacity: 100%;
+
+  /* Buttons only appear inside popovers now that our header drives navigation. */
+  --fc-classic-button: var(--accent);
+  --fc-classic-button-border: var(--accent);
+  --fc-classic-button-strong: var(--accent);
+  --fc-classic-button-strong-border: var(--accent);
+  --fc-classic-button-outline: color-mix(in oklab, var(--foreground) 25%, transparent);
+  --fc-classic-button-foreground: var(--accent-foreground);
+  --fc-classic-primary: var(--accent);
+  --fc-classic-primary-foreground: var(--accent-foreground);
+
+  /*
+   * Divider scale. The grid should read as structure, not as a stack of hard
+   * rules: at full strength (`--border` = #DEDFE2) the hour lines, cell borders
+   * and the header rule together make the calendar look busy. Both levels are
+   * translucent so the pattern sits behind the content instead of competing with
+   * it, and both follow the theme automatically in dark mode.
+   *
+   *   --pg-rule        major — hour lines, day-cell borders, header rule
+   *   --pg-rule-faint  minor — half-hour lines, the week-number gutter
+   */
+  --pg-rule: color-mix(in oklab, var(--border) 55%, transparent);
+  --pg-rule-faint: color-mix(in oklab, var(--border) 28%, transparent);
+
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+}
+
+/* ---------------------------------------------------------------- the grid --- */
+
+/* One hairline-bordered card, matching the board and list surfaces. */
+.phaneris-calendar [role='grid'] {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--card);
+}
+
+/* --------------------------------------------------------- column headers --- */
+
+/*
+ * NOTE ON PADDING / CELL HEIGHT — the one thing this file cannot restyle.
+ *
+ * `skeleton.css` enforces layout with `padding: 10px !important` (and
+ * `padding: 0 !important`) on its hashed classes, so cell and header padding are
+ * NOT overridable without an `!important` of our own. Measured: declarations here
+ * are dropped while `font-size` from the same rule applies. The visible inset
+ * comes from an inner element carrying that padding, so density already matches
+ * the library's spacing — overriding it would mean fighting `!important` on a
+ * hashed name, which is precisely the patchwork this migration set out to remove.
+ */
+.phaneris-calendar [role='grid'] [role='columnheader'] {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--foreground) 45%, transparent);
+  background: var(--card);
+  border-bottom: 1px solid var(--pg-rule);
+}
+
+/* --------------------------------------------------------------- day cells --- */
+
+.phaneris-calendar [role='grid'] [role='gridcell'] {
+  vertical-align: top;
+  background: var(--card);
+  border-color: var(--pg-rule);
+}
+
+/* Adjacent-month days recede, exactly as the previous grid rendered them. */
+.phaneris-calendar [role='grid'] [role='gridcell'][data-other-month] {
+  background: color-mix(in oklab, var(--card) 60%, var(--background));
+}
+
+.phaneris-calendar [role='grid'] [role='gridcell']:hover {
+  background: color-mix(in oklab, var(--foreground) 2%, var(--card));
+}
+
+/* The day number: the first aria-hidden node inside the cell's header block. */
+.phaneris-calendar [role='grid'] [role='gridcell'] [aria-hidden='true']:not([data-calendar-entry] *) {
+  font-size: 12px;
+  font-weight: 600;
+  color: color-mix(in oklab, var(--foreground) 85%, transparent);
+}
+
+.phaneris-calendar [role='grid'] [role='gridcell'][data-other-month] [aria-hidden='true'] {
+  color: color-mix(in oklab, var(--foreground) 30%, transparent);
+}
+
+/* Today's number becomes the app's filled accent badge. */
+.phaneris-calendar [role='grid'] [role='gridcell'][aria-current='date'] > div:first-child > [aria-hidden='true'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* ------------------------------------------------------------ event chips --- */
+
+.phaneris-calendar [data-calendar-entry] {
+  margin: 0 0.25rem 0.125rem;
+  padding: 0 0.375rem;
+  border-radius: 0.375rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--foreground);
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.phaneris-calendar [data-calendar-entry]:hover {
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+/* Multi-day bars read as one continuous span rather than stacked chips. */
+.phaneris-calendar [data-calendar-entry][data-spanning] {
+  border-radius: 0.25rem;
+}
+
+/* The chip's inner layout is our own JSX (`eventContent`). */
+.phaneris-calendar .pg-calendar-event {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* --------------------------------------------------------------- "+N more" --- */
+
+/* Rendered by us via `moreLinkContent`, so this class is entirely ours. */
+.phaneris-calendar .pg-calendar-more {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.375rem;
+  border-radius: 0.375rem;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+}
+
+.phaneris-calendar .pg-calendar-more:hover {
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+}
+
+/* ------------------------------------------------------------- week numbers --- */
+
+/*
+ * These were colliding with the cell above because the library gives the
+ * week-number cell no width. Give it a real gutter so it reads as a label for
+ * its row instead of overlapping the grid.
+ */
+.phaneris-calendar [role='row'] > [aria-hidden='true']:first-child {
+  flex: 0 0 2.25rem;
+  width: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: color-mix(in oklab, var(--foreground) 35%, transparent);
+  background: color-mix(in oklab, var(--foreground) 3%, transparent);
+  border-right: 1px solid var(--pg-rule-faint);
+}
+
+/* ------------------------------------------------------------- time grid --- */
+
+/*
+ * Hour rules across the time body.
+ *
+ * The library draws the hour + half-hour rules ONLY in the left gutter: measured
+ * on a 1728px-tall week body there were exactly three horizontal rules — two
+ * full-width header/all-day borders and the red now line — and nothing per hour.
+ * That is what made the week and day views read as one flat slab rather than a
+ * grid, and it is not something our overrides caused (emptying this file changes
+ * nothing).
+ *
+ * The lines are therefore drawn as a repeating background on each day column,
+ * which needs no `!important` and no hashed class. The body always starts at
+ * 00:00 because the full 24 hours are rendered, so a 72px period lands exactly on
+ * each hour and a 36px period on each half hour — matching the gutter.
+ */
+/*
+ * Scoped to the time grids. Every day cell carries `data-date` in the month grid
+ * too, so keying on that attribute alone drew hour rules inside the 126px month
+ * cells — three stray lines per cell, measured. The month grid keeps flat cells.
+ */
+.phaneris-calendar[data-calendar-view='week'] [role='grid'] [role='gridcell'][data-date],
+.phaneris-calendar[data-calendar-view='day'] [role='grid'] [role='gridcell'][data-date] {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      var(--pg-rule) 0 1px,
+      transparent 1px 72px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--pg-rule-faint) 0 1px,
+      transparent 1px 36px
+    );
+  background-repeat: repeat-y;
+  background-position: top left;
+}
+
+/* The all-day row and the month grid keep their flat cells. */
+.phaneris-calendar [role='grid'] [role='gridcell'][data-date] > * {
+  position: relative;
+}
+
+/* Day/week views: the hour gutter and the now-line. */
+.phaneris-calendar [role='rowheader'] {
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--foreground) 45%, transparent);
+}
+
+.phaneris-calendar [data-calendar-entry] .pg-calendar-event {
+  font-size: 11.5px;
+}
+
+/* --------------------------------------------------- two-line day headers --- */
+
+/*
+ * One band height for all three views.
+ *
+ * Measured before this change: every header cell was a 24px single line reading
+ * `MON 21`, and today was not marked anywhere in the header — in the month view
+ * the same 24px row carried the weekday alone. The day and week headers now carry
+ * two lines (weekday over date) and the month header keeps one, but all three
+ * share `--pg-head-h` so switching views never moves the grid.
+ */
+.phaneris-calendar {
+  --pg-head-h: 52px;
+}
+
+.phaneris-calendar [role='grid'] [role='columnheader'] {
+  height: var(--pg-head-h);
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--foreground);
+  vertical-align: middle;
+}
+
+/* The two lines are our own JSX, rendered by `dayHeaderContent`. */
+.pg-cal-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.2;
+}
+
+.pg-cal-head__weekday {
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.pg-cal-head__date {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-cal-head--today .pg-cal-head__weekday {
+  color: var(--accent);
+}
+
+.pg-cal-head--today .pg-cal-head__date {
+  color: color-mix(in oklab, var(--accent) 75%, var(--foreground) 40%);
+}
+
+/* The month grid has no date line of its own, so its single line stays quiet. */
+.pg-cal-head--month .pg-cal-head__weekday {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+}
+
+.pg-cal-head--month.pg-cal-head--today .pg-cal-head__weekday {
+  color: var(--accent);
+}
+
+/* ------------------------------------------------- drop preview (rail drag) --- */
+
+/*
+ * The library has no drop API for a draggable that is not one of its own events,
+ * so the target slot is painted by us, positioned from the column and lane
+ * rectangles that `CalendarView.locateDrop` reads.
+ */
+.pg-calendar-droptarget {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* ------------------------------------------------------------ untimed rail --- */
+
+/*
+ * Holds the entries that have a date but no time. It replaced the library's
+ * all-day row: measured on this workspace, 26 of 28 planning values are date-only,
+ * so that one horizontal band carried nearly every entry while the 24-hour grid
+ * below it stayed empty.
+ *
+ * It is deliberately our own DOM. The alternative — rendering those entries as
+ * `display: 'background'` bands inside the grid — was measured to receive no
+ * pointer events at all (a click landed on the slot lane above it), so it could
+ * not be clicked, opened or dragged.
+ */
+.pg-rail {
+  --pg-rail-w: 300px;
+  width: var(--pg-rail-w);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.pg-rail--drop {
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
+  background: color-mix(in oklab, var(--accent) 6%, var(--card));
+}
+
+.pg-rail__head {
+  flex: none;
+  padding: 8px 12px;
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 55%, transparent);
+}
+
+.pg-rail__title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.pg-rail__count {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: color-mix(in oklab, var(--foreground) 45%, transparent);
+  text-align: right;
+}
+
+.pg-rail__hint {
+  margin: 2px 0 0;
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: color-mix(in oklab, var(--foreground) 35%, transparent);
+}
+
+.pg-rail__composer {
+  flex: none;
+  padding: 8px;
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 45%, transparent);
+}
+
+.pg-rail__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 30px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: transparent;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  cursor: pointer;
+}
+
+.pg-rail__add:hover {
+  color: var(--foreground);
+  border-color: color-mix(in oklab, var(--foreground) 30%, transparent);
+}
+
+.pg-rail__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pg-rail__row {
+  display: flex;
+  gap: 6px;
+}
+
+.pg-rail__input {
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--background);
+  font-size: 12px;
+  color: var(--foreground);
+  outline: none;
+}
+
+.pg-rail__input:focus {
+  border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+}
+
+.pg-rail__button {
+  flex: none;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--background);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  cursor: pointer;
+}
+
+.pg-rail__button--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.pg-rail__button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pg-rail__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px;
+}
+
+.pg-rail__empty {
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+  color: color-mix(in oklab, var(--foreground) 35%, transparent);
+}
+
+.pg-rail__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Sticky, so a long backlog stays readable while it scrolls. */
+.pg-rail__group-head {
+  position: sticky;
+  top: -8px;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 2px;
+  background: var(--card);
+  font-size: 10.5px;
+  font-weight: 650;
+  color: color-mix(in oklab, var(--foreground) 55%, transparent);
+}
+
+/* Past dates are marked, never hidden: the rail is the whole backlog. */
+.pg-rail__group-head--overdue {
+  color: var(--destructive-text);
+}
+
+.pg-rail__chip {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 3px 7px;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-left: 3px solid color-mix(in oklab, var(--foreground) 25%, transparent);
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--foreground) 4%, transparent);
+  cursor: grab;
+  user-select: none;
+}
+
+.pg-rail__chip:hover {
+  background: color-mix(in oklab, var(--foreground) 7%, transparent);
+}
+
+.pg-rail__chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.pg-rail__chip--dragging {
+  opacity: 0.4;
+}
+
+.pg-rail__chip-title {
+  font-size: 12px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pg-rail__chip-meta {
+  font-size: 10px;
+  color: color-mix(in oklab, var(--foreground) 45%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-rail__foot {
+  flex: none;
+  padding: 8px 12px;
+  border-top: 1px solid color-mix(in oklab, var(--border) 45%, transparent);
+  text-align: center;
+  font-size: 10.5px;
+  color: color-mix(in oklab, var(--foreground) 35%, transparent);
+}
+
+/* Follows the pointer during a rail → grid drag. */
+.pg-rail-ghost {
+  position: fixed;
+  z-index: 60;
+  max-width: 190px;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--card);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.16);
+  font-size: 11.5px;
+  pointer-events: none;
+}

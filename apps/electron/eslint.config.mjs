@@ -9,6 +9,7 @@
 import babelParser from '@babel/eslint-parser'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
 import noDirectNavigationState from './eslint-rules/no-direct-navigation-state.cjs'
 import noLocalStorage from './eslint-rules/no-localstorage.cjs'
 import noDirectPlatformCheck from './eslint-rules/no-direct-platform-check.cjs'
@@ -149,6 +150,24 @@ export default [
         ],
       }],
     },
+  },
+
+  /*
+   * Accessibility, scoped to the surfaces this migration rebuilt.
+   *
+   * The calendar, the timeline and the board are now keyboard reachable by
+   * construction (the old chips were unfocusable divs), but "reachable" is not
+   * "correct": a clickable div needs a role, a control needs a name. `recommended`
+   * is enabled where the new markup lives rather than repo-wide, so the rule set
+   * stays actionable instead of drowning in pre-existing findings elsewhere.
+   */
+  {
+    files: [
+      'src/renderer/components/app-shell/kanban/**/*.{ts,tsx}',
+      'src/renderer/components/projects/{ProjectManagementSurface,TaskEditorOverlay}.tsx',
+    ],
+    plugins: { 'jsx-a11y': jsxA11yPlugin },
+    rules: { ...jsxA11yPlugin.flatConfigs.recommended.rules },
   },
 
   // Temporary exceptions for unresolved shadow migrations.

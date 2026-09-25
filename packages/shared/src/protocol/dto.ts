@@ -238,6 +238,33 @@ export interface TaskValidationResultDto {
   estimate?: { nodeCount: number; sessionNodeCount: number }
 }
 
+/**
+ * Planning fields a task create carries onto its orchestrator session.
+ *
+ * A session IS the work item and IS the calendar entry — both projections read the
+ * same rows — so the editor that creates one has to be able to say when the work is
+ * planned for, not only what the work is. Without this the Task Definition editor
+ * could create the task but not place it, and the calendar's "create here" gesture
+ * would have nowhere to put the slot the user drew.
+ *
+ * Plan values use the store's existing grammar: `YYYY-MM-DD`, or
+ * `YYYY-MM-DDTHH:mm` for a timed entry. Every field is optional; an explicit
+ * `null` clears, and an absent field is left untouched.
+ */
+export interface TaskPlanningInput {
+  startAt?: string | null
+  dueAt?: string | null
+  /** Workspace status id for the orchestrator session. */
+  statusId?: string
+  /** 0–100. */
+  progress?: number | null
+  isMilestone?: boolean
+  /** Parent session id, for a task nested under another. */
+  parentId?: string | null
+  /** Sessions this one depends on; the timeline draws them as links. */
+  dependencyIds?: string[]
+}
+
 export interface TaskCreateRequest {
   /** task.yaml source text (authoritative). */
   yaml: string
@@ -255,6 +282,8 @@ export interface TaskCreateRequest {
    * leave a duplicate tile). Distinct from `orchestratorSessionId`, which adopts a hidden draft.
    */
   attachToExistingSession?: string
+  /** When the work is planned for. Applied to the orchestrator session on every create path. */
+  planning?: TaskPlanningInput
 }
 
 export interface TaskCreateResult {
@@ -932,13 +961,19 @@ export interface DeepLinkNavigation {
 }
 
 // ---------------------------------------------------------------------------
-// Calendar entries (standalone schedule items, not linked to sessions)
+// Calendar entries (a projection of Session planning fields)
 // ---------------------------------------------------------------------------
 
 /**
- * A standalone calendar entry (schedule / note). Lives in the workspace's
- * `calendar/entries.json` and is independent of any session — clicking
- * "create conversation" spawns a session from it on demand.
+ * A calendar entry — the time projection of one Session's planning fields.
+ *
+ * This is NOT a standalone store: there is no `calendar/entries.json` and no
+ * separate persistence. `calendar:list` maps every visible Session carrying a
+ * date, `calendar:create` creates a Session, and `calendar:delete` clears that
+ * Session's dates. Entries are therefore a strict subset of `WorkItem` (they
+ * lack `statusId`, `progress`, `isMilestone`, `parentId` and `columnId`), which
+ * is why the calendar cannot render status or progress without reading the
+ * work-item projection instead.
  */
 export interface CalendarEntry {
   id: string

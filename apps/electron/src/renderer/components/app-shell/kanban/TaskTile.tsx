@@ -458,6 +458,12 @@ function AddSubtask({
   }
 
   return (
+    /*
+     * An event shield, not an interaction: the tile underneath opens the editor on
+     * click, and typing in this composer must not do that. It gets no role because
+     * it is not a control — the controls are the textarea and buttons inside it.
+     */
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       className="mt-1.5 space-y-1.5"
       data-no-dnd="true"

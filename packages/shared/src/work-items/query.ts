@@ -3,12 +3,19 @@ import type {
   WorkItemQuery,
   WorkItemSortField,
 } from './types.ts';
+import { planDateKey } from './plan-date.ts';
 
-/** The calendar day represented by a date-only or ISO date-time value. */
+/**
+ * The calendar day represented by a date-only or ISO date-time value.
+ *
+ * Delegates to the single plan-date implementation rather than re-deriving the
+ * day, so range filtering, sorting and the calendar projection cannot disagree
+ * about what day a value denotes. The previous bare `slice(0, 10)` read the UTC
+ * day (wrong for offset-bearing values) and accepted unpadded values, which then
+ * broke lexicographic comparison in `intersectsDateRange`.
+ */
 export function workItemDateKey(value: string | undefined): string | undefined {
-  if (!value) return undefined;
-  const key = value.slice(0, 10);
-  return /^\d{4}-\d{2}-\d{2}$/.test(key) ? key : undefined;
+  return planDateKey(value);
 }
 
 function comparisonValue(item: WorkItem, field: WorkItemSortField): string | number {

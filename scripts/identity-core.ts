@@ -393,6 +393,22 @@ appId: ${yamlString(product.appId)}
 productName: ${yamlString(product.name)}
 copyright: ${yamlString(packaging.copyright)}
 artifactName: ${yamlString(packaging.artifactName)}
+
+# Deep-link scheme, declared IN THE BUNDLE so the OS can route it here.
+#
+# This is REQUIRED on macOS: LaunchServices only lets an app become the default
+# handler for a scheme it declares via CFBundleURLTypes, so without this block
+# \`app.setAsDefaultProtocolClient(DEEPLINK_SCHEME)\` cannot take effect and every
+# \`${product.scheme}://\` link is dropped — including the OAuth return deeplink
+# back into a session. The scheme is rendered from the identity here rather than
+# written into electron-builder.yml, which is forbidden from restating identity.
+#
+# On Windows electron-builder writes the matching registry entries at install
+# time, so this one declaration covers both platforms.
+protocols:
+  - name: ${yamlString(product.name)}
+    schemes:
+      - ${yamlString(product.scheme)}
 `;
 }
 

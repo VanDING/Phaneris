@@ -26,6 +26,7 @@ import {
 import { getLlmConnection, getLlmConnections, getDefaultLlmConnection, getDefaultThinkingLevel, resolveMidStreamBehavior, getPersistedUiLanguage, resolveTitleLanguageName } from '@phaneris/shared/config'
 import type { MidStreamBehavior } from '@phaneris/shared/config'
 import { PrivilegedExecutionBroker } from '@phaneris/server-core/services'
+import { planRangeError } from '@phaneris/shared/work-items'
 import { isValidWorkingDirectory } from '../utils/path-validation'
 import { InitGate } from '@phaneris/server-core/domain'
 import { DurableRuntimeCoordinator } from '../durable-runtime/coordinator'
@@ -8562,6 +8563,17 @@ export class SessionManager implements ISessionManager {
     // stable instead of moving forward each time it is read.
     const plannedStart = 'startAt' in normalized ? normalized.startAt : managed.startAt
     const plannedDue = 'dueAt' in normalized ? normalized.dueAt : managed.dueAt
+    /*
+     * The one range guard. It used to live in `calendar:update` and in the two
+     * editor pages that were retired, which meant a reversed range was refused when
+     * it arrived by one door and stored when it arrived by another — `workItems:update`
+     * never checked. Validating here covers every writer, and the malformed-value half
+     * matters for the same reason: the projections compare these strings
+     * lexicographically, so an uninterpretable value does not fail loudly, it sorts
+     * wrongly.
+     */
+    const rangeError = planRangeError(plannedStart, plannedDue)
+    if (rangeError) throw new Error(rangeError)
     if (plannedDue && !plannedStart) {
       const created = new Date(managed.createdAt || Date.now())
       const year = created.getFullYear()

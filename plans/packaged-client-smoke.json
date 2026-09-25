@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-25T04:58:24.188Z",
+  "app": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
+  "graceMs": 25000,
+  "checks": [
+    {
+      "name": "app launched and stayed alive without crashing",
+      "observation": "alive for 25000ms",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Chromium spawned renderer and helper processes",
+      "observation": "4 process(es) in the bundle",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "no fatal errors on stdout/stderr",
+      "observation": "none",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "main process booted and rewrote its config",
+      "observation": "/Users/van/.phaneris/config.json",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "process was terminated cleanly after the test",
+      "observation": "no stray processes",
+      "status": "pass",
+      "detail": null
+    }
+  ],
+  "exitCode": 0,
+  "signalCode": null,
+  "processCount": 4,
+  "outputBytes": 0
+}

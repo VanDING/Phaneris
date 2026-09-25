@@ -53,7 +53,7 @@
 - TopBar 的 Board、Calendar peer 按钮收敛为单一 Projects 入口；Surface 内使用 Overview/List/Board/Calendar 同级切换；
 - 全局侧栏只保留 Projects 单一入口及真实项目子项，不再重复显示 List、Board、Calendar；“跳到该项目会话”保留在项目列表上下文菜单；
 - Overview/List/Board/Calendar 的同级切换器统一固定在各自页头右上角；左侧只放当前视图的范围、筛选、日期和创建动作；
-- `projects/gantt` 当前明确无效，不注册路由、不显示入口、不创建占位页面；
+- ~~`projects/gantt` 当前明确无效，不注册路由、不显示入口、不创建占位页面~~ —— **已过期（2026-09-24 更正）**：`gantt` 现为 `PROJECT_MANAGEMENT_VIEWS` 的正式成员，已注册路由并在 `ProjectManagementSurface` 中挂载 `GanttView`（`packages/shared/src/work-items/timeline.ts` 提供区间语义）；
 - 新增权威 `PrimarySurfaceState + WorkbenchState`；旧 `panelStackAtom`、hidden-panel/LRU 状态和等宽 peer panel 布局已删除；
 - desktop 使用“弹性 Primary + 固定宽 Workbench”，Workbench 支持 typed tabs、激活/关闭、折叠、360–960px 调宽和全屏；只有 active item 挂载；
 - compact 模式中 Workbench 替换 Primary，并通过返回动作折叠；Board/Calendar 被正确识别为 Project Management detail；

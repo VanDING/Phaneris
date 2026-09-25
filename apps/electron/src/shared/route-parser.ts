@@ -107,13 +107,6 @@ export function parseCompoundRoute(route: string): ParsedCompoundRoute | null {
   // Direct application-level projections. `board` remains a compatibility
   // alias, while builders emit the canonical `kanban` route.
   if (first === 'kanban' || first === 'board') {
-    if (segments.length === 3 && segments[1] === 'work-item' && segments[2]) {
-      return {
-        navigator: 'projects',
-        projectView: 'board',
-        details: { type: 'workItem', id: decodeURIComponent(segments[2]) },
-      }
-    }
     if (segments.length !== 1) return null
     return {
       navigator: 'projects',
@@ -123,20 +116,6 @@ export function parseCompoundRoute(route: string): ParsedCompoundRoute | null {
   }
 
   if (first === 'calendar') {
-    if (segments.length === 3 && segments[1] === 'schedule' && segments[2]) {
-      return {
-        navigator: 'projects',
-        projectView: 'calendar',
-        details: { type: 'calendarEntry', id: decodeURIComponent(segments[2]) },
-      }
-    }
-    if (segments.length === 3 && segments[1] === 'work-item' && segments[2]) {
-      return {
-        navigator: 'projects',
-        projectView: 'calendar',
-        details: { type: 'workItem', id: decodeURIComponent(segments[2]) },
-      }
-    }
     if (segments.length !== 1) return null
     return {
       navigator: 'projects',
@@ -147,13 +126,6 @@ export function parseCompoundRoute(route: string): ParsedCompoundRoute | null {
 
   // Timeline projection — a direct application-level route like kanban/calendar.
   if (first === 'gantt') {
-    if (segments.length === 3 && segments[1] === 'work-item' && segments[2]) {
-      return {
-        navigator: 'projects',
-        projectView: 'gantt',
-        details: { type: 'workItem', id: decodeURIComponent(segments[2]) },
-      }
-    }
     if (segments.length !== 1) return null
     return {
       navigator: 'projects',
@@ -283,31 +255,6 @@ export function parseCompoundRoute(route: string): ParsedCompoundRoute | null {
   if (first === 'projects') {
     if (segments.length === 1) {
       return { navigator: 'projects', projectView: 'overview', details: null }
-    }
-    if (
-      segments.length === 4
-      && segments[1] === 'calendar'
-      && segments[2] === 'schedule'
-      && segments[3]
-    ) {
-      return {
-        navigator: 'projects',
-        projectView: 'calendar',
-        details: { type: 'calendarEntry', id: decodeURIComponent(segments[3]) },
-      }
-    }
-    if (
-      segments.length === 4
-      && isProjectManagementView(segments[1])
-      && segments[1] !== 'overview'
-      && segments[2] === 'work-item'
-      && segments[3]
-    ) {
-      return {
-        navigator: 'projects',
-        projectView: segments[1],
-        details: { type: 'workItem', id: decodeURIComponent(segments[3]) },
-      }
     }
     if (segments.length === 2 && isProjectManagementView(segments[1])) {
       return {
@@ -487,19 +434,6 @@ export function buildCompoundRoute(parsed: ParsedCompoundRoute): string {
       if (parsed.projectView === 'gantt') return 'gantt'
       if (parsed.projectView === 'list') return 'projects/list'
       return 'projects'
-    }
-    if (parsed.details.type === 'calendarEntry') {
-      return `calendar/schedule/${encodeURIComponent(parsed.details.id)}`
-    }
-    if (parsed.details.type === 'workItem' && parsed.projectView && parsed.projectView !== 'overview') {
-      const base = parsed.projectView === 'board'
-        ? 'kanban'
-        : parsed.projectView === 'calendar'
-          ? 'calendar'
-          : parsed.projectView === 'gantt'
-            ? 'gantt'
-            : 'projects/list'
-      return `${base}/work-item/${encodeURIComponent(parsed.details.id)}`
     }
     return `projects/project/${parsed.details.id}`
   }
@@ -809,24 +743,12 @@ function convertCompoundToNavigationState(compound: ParsedCompoundRoute): Naviga
     if (!compound.details) {
       return { navigator: 'projects', view: compound.projectView ?? 'overview', details: null }
     }
-    if (compound.details.type === 'calendarEntry') {
-      return {
-        navigator: 'projects',
-        view: 'calendar',
-        details: { type: 'calendarEntry', calendarEntryId: compound.details.id },
-      }
+    // Only a project page remains addressable inside the surface.
+    return {
+      navigator: 'projects',
+      view: 'overview',
+      details: { type: 'project', projectSlug: compound.details.id },
     }
-    return compound.details.type === 'workItem'
-      ? {
-          navigator: 'projects',
-          view: compound.projectView && compound.projectView !== 'overview' ? compound.projectView : 'list',
-          details: { type: 'workItem', workItemId: compound.details.id },
-        }
-      : {
-          navigator: 'projects',
-          view: 'overview',
-          details: { type: 'project', projectSlug: compound.details.id },
-        }
   }
 
   // Pages
@@ -1084,13 +1006,7 @@ function navigationStateToCompoundRoute(state: NavigationState): ParsedCompoundR
     return {
       navigator: 'projects',
       projectView: state.view,
-      details: state.details
-        ? state.details.type === 'project'
-          ? { type: 'project', id: state.details.projectSlug }
-          : state.details.type === 'workItem'
-            ? { type: 'workItem', id: state.details.workItemId }
-            : { type: 'calendarEntry', id: state.details.calendarEntryId }
-        : null,
+      details: state.details ? { type: 'project', id: state.details.projectSlug } : null,
     }
   }
 

@@ -8,7 +8,7 @@ import { useCompensateForStoplight } from '@/context/StoplightContext'
 import { sessionMetaMapAtom, updateSessionMetaAtom, type SessionMeta } from '@/atoms/sessions'
 import { projectsAtom } from '@/atoms/projects'
 import { kanbanColumnStatusAtom, kanbanEditorTargetAtom } from '@/atoms/kanban'
-import { routes, useNavigation } from '@/contexts/NavigationContext'
+import { useNavigation } from '@/contexts/NavigationContext'
 import { useProjectColorTreatment } from '@/hooks/useProjectColorTreatment'
 import { useLabels } from '@/hooks/useLabels'
 import { useWorkItems } from '@/hooks/useWorkItems'
@@ -520,57 +520,30 @@ export function KanbanBoardContainer() {
     [metaMap, labelConfigs, onJumpToTaskSessions, navigateToSession]
   )
 
-  const handleEditTask = React.useCallback(
-    (taskId: string) => {
-      setSelectedIds([taskId])
-      navigate(routes.view.projectWorkItem('board', taskId))
-    },
-    [navigate, setSelectedIds]
-  )
-
-  const handleOpenTask = React.useCallback(
+  /** Open the shared editor on a row — the only edit surface there is now. */
+  const openEditorOn = React.useCallback(
     (taskId: string) => {
       const item = workItemsById.get(taskId)
       if (!item) return
       setSelectedIds([taskId])
-      navigate(routes.view.projectWorkItem('board', taskId))
+      setEditorTarget({
+        mode: 'edit',
+        sessionId: taskId,
+        taskSlug: item.sessionIds.length ? metaMap.get(taskId)?.taskSlug : undefined,
+        initialTitle: item.title,
+      })
     },
-    [navigate, setSelectedIds, workItemsById],
+    [metaMap, setEditorTarget, setSelectedIds, workItemsById],
   )
 
-  if (editorTarget && activeWorkspaceId) {
-    return (
-      <TaskEditor
-        workspaceId={activeWorkspaceId}
-        target={editorTarget}
-        onClose={() => setEditorTarget(null)}
-        onOpenSession={
-          editorTarget.mode === 'edit'
-            ? () => {
-                const sessionId = editorTarget.sessionId
-                setEditorTarget(null)
-                navigateToSession(sessionId)
-              }
-            : undefined
-        }
-        onOpenChildSession={(sessionId) => {
-          setEditorTarget(null)
-          navigateToSession(sessionId)
-        }}
-        onCreated={({ sessionId, taskLabelId, projectId: createdProjectId }) => {
-          // Same human-clearable scope as a tile click; no label (fail-soft) → plain open.
-          if (taskLabelId && onJumpToTaskSessions) {
-            onJumpToTaskSessions(sessionId, { labelId: taskLabelId, projectId: createdProjectId })
-          } else {
-            navigateToSession(sessionId)
-          }
-        }}
-        modelGroups={subtaskModelGroups}
-        modelToConnection={modelToConnection}
-        defaultModel={defaultSubtaskModel ?? DEFAULT_MODEL}
-      />
-    )
-  }
+  const handleEditTask = openEditorOn
+  const handleOpenTask = openEditorOn
+
+  /*
+   * The editor itself now lives at the surface level (`TaskEditorOverlay`), so it
+   * can be opened from any projection; this view only decides WHICH row it points
+   * at, by setting `kanbanEditorTargetAtom`.
+   */
 
   return (
     <div className="flex h-full flex-col bg-background">
@@ -607,7 +580,12 @@ export function KanbanBoardContainer() {
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <button
             type="button"
-            onClick={() => navigate(routes.view.projectWorkItem('board', 'new'))}
+            onClick={() => setEditorTarget({
+              mode: 'create',
+              // Seed the project from the active filter, so a card created under a
+              // filter stays visible instead of vanishing on save.
+              initialProjectId: projectFilter.length === 1 ? projectFilter[0] : undefined,
+            })}
             disabled={!activeWorkspaceId}
             className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12.5px] font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
           >

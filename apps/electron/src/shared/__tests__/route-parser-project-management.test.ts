@@ -50,33 +50,39 @@ describe('Project Management routes', () => {
     expect(state && buildRouteFromNavigationState(state)).toBe('projects/project/phaneris')
   })
 
-  it('round-trips a full-page WorkItem editor inside its originating projection', () => {
-    const route = routes.view.projectWorkItem('board', 'task / 42')
-    const state = parseRouteToNavigationState(route)
-
-    expect(route).toBe('kanban/work-item/task%20%2F%2042')
-    expect(state).toEqual({
-      navigator: 'projects',
-      view: 'board',
-      details: { type: 'workItem', workItemId: 'task / 42' },
-    })
-    expect(state && buildRouteFromNavigationState(state)).toBe(route)
-    expect(getNavigationStateKey(state!)).toBe(route)
-    expect(parseNavigationStateKey(route)).toEqual(state)
+  it('no longer parses the retired work-item and schedule detail routes', () => {
+    /*
+     * Those routes addressed two full-page editors that no longer exist — creating and
+     * editing project work happens in the shared Task Definition overlay, which is
+     * component state rather than a route. Parsing them again would reintroduce a
+     * vocabulary nothing can navigate to, so the assertion is that they are gone.
+     */
+    for (const route of [
+      'kanban/work-item/task%20%2F%2042',
+      'calendar/work-item/abc',
+      'gantt/work-item/abc',
+      'calendar/schedule/new%3A2026-08-25%4014%3A30',
+      'projects/calendar/schedule/abc',
+      'projects/board/work-item/abc',
+    ]) {
+      expect(parseRouteToNavigationState(route)).toBeNull()
+      expect(parseNavigationStateKey(route)).toBeNull()
+    }
   })
 
-  it('round-trips full-page schedule create and edit routes', () => {
-    const route = routes.view.projectSchedule('new:2026-08-25@14:30')
-    const state = parseRouteToNavigationState(route)
-
-    expect(state).toEqual({
-      navigator: 'projects',
-      view: 'calendar',
-      details: { type: 'calendarEntry', calendarEntryId: 'new:2026-08-25@14:30' },
-    })
-    expect(state && buildRouteFromNavigationState(state)).toBe(route)
-    expect(getNavigationStateKey(state!)).toBe(route)
-    expect(parseNavigationStateKey(route)).toEqual(state)
+  it('still round-trips the projection routes themselves', () => {
+    for (const [route, view] of [
+      ['kanban', 'board'],
+      ['calendar', 'calendar'],
+      ['gantt', 'gantt'],
+      ['projects/list', 'list'],
+    ] as const) {
+      const state = parseRouteToNavigationState(route)
+      expect(state).toEqual({ navigator: 'projects', view, details: null })
+      expect(state && buildRouteFromNavigationState(state)).toBe(route)
+      expect(getNavigationStateKey(state!)).toBe(route)
+      expect(parseNavigationStateKey(route)).toEqual(state)
+    }
   })
 
   it('persists project projection navigation keys without conflating sessions', () => {

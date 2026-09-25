@@ -144,6 +144,23 @@
   text-overflow: ellipsis;
 }
 
+/*
+ * The task cell must fill the column, not hug its content.
+ *
+ * The library wraps a body cell's renderer in `.wx-text`, which is a flex item with
+ * `flex: 0 1 auto` and `min-width: auto` — so it sizes to its CONTENT and stops.
+ * Measured on a 370px column: `.wx-cell` 370, `.wx-content` 354, `.wx-text` 197.72,
+ * and our `.pg-task-cell { width: 100% }` inherited that 197.72 because 100% of the
+ * wrapper is 100% of a content-sized box. The visible symptom is a task list whose
+ * rows refuse to follow the column: dragging the splitter widens the frame while the
+ * rows stay put, and the empty strip to their right is not padding, it is the rest of
+ * the cell. The header cell has no such wrapper, which is why only the rows drifted.
+ */
+.phaneris-gantt .wx-grid .wx-content > .wx-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 /* SVAR wraps the custom title cell with its own tree affordance and indentation.
  * The navigator draws its own accessible chevron, so remove that duplicate chrome. */
 .phaneris-gantt .wx-table .wx-content {

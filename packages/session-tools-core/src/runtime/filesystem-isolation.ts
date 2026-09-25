@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
-import { resolve } from 'node:path';
+import { realpathSync } from 'node:fs';
+import { basename, dirname, join, resolve } from 'node:path';
 
 export interface FilesystemIsolationPlan {
   status: 'enforced' | 'unavailable';
@@ -38,11 +39,50 @@ function escapeSandboxPath(path: string): string {
   return path.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
+/**
+ * Canonical absolute path for embedding in a sandbox policy.
+ *
+ * `path.resolve` is purely lexical: it does not follow symlinks. The sandbox
+ * compares its rules against the path the kernel resolved, so a lexical entry
+ * silently fails to match whenever a symlink sits between the caller's path and
+ * the real file, and the write is denied with EPERM.
+ *
+ * That is the normal case on macOS, where `/var` and `/tmp` are symlinks into
+ * `/private` and `os.tmpdir()` returns the `/var/...` spelling — so every
+ * transform_data run in a temp-based session failed to write its own output.
+ *
+ * A path that does not exist yet cannot be canonicalized directly, so the
+ * deepest existing ancestor is resolved and the missing remainder re-appended.
+ * Falling back to the lexical form keeps this total: a caller always gets a
+ * usable path, never a throw.
+ */
+function canonicalSandboxPath(path: string): string {
+  const lexical = resolve(path);
+  try {
+    return realpathSync.native(lexical);
+  } catch {
+    // Walk up until an ancestor exists, canonicalize that, re-append the rest.
+    let current = lexical;
+    const missing: string[] = [];
+    for (;;) {
+      const parent = dirname(current);
+      if (parent === current) return lexical;
+      missing.unshift(basename(current));
+      current = parent;
+      try {
+        return join(realpathSync.native(current), ...missing);
+      } catch {
+        // Keep climbing.
+      }
+    }
+  }
+}
+
 export function buildDarwinSandboxProfile(
   sessionDir: string,
   options?: FilesystemIsolationOptions,
 ): string {
-  const escapedRoot = escapeSandboxPath(resolve(sessionDir));
+  const escapedRoot = escapeSandboxPath(canonicalSandboxPath(sessionDir));
   const profileParts = [
     '(version 1)',
     '(deny default)',
@@ -55,7 +95,7 @@ export function buildDarwinSandboxProfile(
     '(deny file-read* (regex "^.*/\\.credential-cache\\.json$"))',
     '(deny file-write*)',
     `(allow file-write* (subpath "${escapedRoot}"))`,
-    ...(options?.writablePaths ?? []).map((writablePath) => `(allow file-write* (subpath "${escapeSandboxPath(resolve(writablePath))}"))`),
+    ...(options?.writablePaths ?? []).map((writablePath) => `(allow file-write* (subpath "${escapeSandboxPath(canonicalSandboxPath(writablePath))}"))`),
   ];
 
   if (options?.includeNetworkDeny) {

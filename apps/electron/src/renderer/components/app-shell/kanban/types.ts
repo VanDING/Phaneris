@@ -11,6 +11,8 @@
  * `SessionConfig` / `ProjectConfig` / status data onto these shapes.
  */
 
+import type { TaskPlanValue } from './TaskPlanPanel'
+
 /**
  * Board column id. Widened from the original 3-literal union to `string` so a
  * project can define its own columns (see `KanbanColumnDef` in shared). The
@@ -31,7 +33,17 @@ export type SubtaskRunState = 'done' | 'running' | 'pending' | 'failed'
  * without importing a component module.
  */
 export type TaskEditorTarget =
-  | { mode: 'create'; initialProjectId?: string }
+  | {
+      mode: 'create'
+      initialProjectId?: string
+      /**
+       * The plan the opening gesture already expressed — a slot or a range drawn on
+       * the calendar, or a day clicked in the month grid. Without it, creating from a
+       * calendar selection would open the editor with an empty plan and the gesture
+       * would be decorative.
+       */
+      initialPlan?: Partial<TaskPlanValue>
+    }
   | { mode: 'edit'; sessionId: string; taskSlug?: string; initialTitle?: string }
 
 export interface KanbanSubtask {

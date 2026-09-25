@@ -326,7 +326,7 @@ try {
     }
   }
 
-  // --------------------------------------------------------- calendar swap ---
+  // ------------------------------------------------------ calendar views ---
   {
     const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } })
     try {
@@ -334,46 +334,46 @@ try {
       await page.goto(`${base}/playground.html`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
       await page.getByText('Calendar View').first().waitFor({ timeout: 120_000 })
 
-      await check('calendar view swap never blanks the panel and overlaps the handoff', 'no empty frame, new view <=150ms', async () => {
+      await check('calendar view switch never blanks the panel and updates the active segment', 'no empty frame, exactly one segment checked', async () => {
         const observed = await page.evaluate(async () => {
-          const tab = [...document.querySelectorAll('button[aria-pressed]')]
-            .find((button) => button.textContent?.trim() === 'Week')
-          if (!tab) throw new Error('Week tab missing')
-          const scope = tab.closest('[role="tablist"]')?.parentElement?.parentElement ?? document.body
+          // Scoped to the calendar itself. The previous version looked for a
+          // `[role="tablist"]` that the hand-rolled control never had, so its
+          // scope silently degraded to document.body — the assertion still
+          // "passed" while observing the whole playground.
+          const calendar = document.querySelector('.phaneris-calendar')
+          if (!calendar) throw new Error('the calendar did not mount')
 
-          const started = performance.now()
-          tab.click()
+          const segment = [...document.querySelectorAll('[role="radio"]')]
+            .find((node) => node.textContent?.trim() === 'Week')
+          if (!segment) throw new Error('Week segment missing')
 
-          const counts = []
-          let framesToTwoLayers = null
-          let handoff = null
-          for (let frame = 0; frame < 16; frame += 1) {
+          const blanks = []
+          segment.click()
+          for (let frame = 0; frame < 20; frame += 1) {
             await new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
-            const layers = [...scope.querySelectorAll('[data-content-swap]')]
-            counts.push(layers.length)
-            if (layers.length >= 2 && framesToTwoLayers === null) {
-              framesToTwoLayers = performance.now() - started
-              handoff = { inert: layers.filter((layer) => layer.hasAttribute('inert')).length }
-            }
+            // A grid must be painted on every frame: the panel never empties.
+            if (!calendar.querySelector('[role="grid"]')) blanks.push(frame)
           }
 
-          await new Promise((resolve) => setTimeout(resolve, 600))
-          const settled = scope.querySelectorAll('[data-content-swap]').length
-          const pressed = [...document.querySelectorAll('button[aria-pressed="true"]')]
-            .map((button) => button.textContent?.trim())
-          return { framesToTwoLayers, handoff, settled, pressed, counts }
+          await new Promise((resolve) => setTimeout(resolve, 500))
+          // Only the calendar's own segments: the playground adds its own
+          // radiogroup (motion preference) to the same page.
+          const checked = [...document.querySelectorAll('[role="radio"]')]
+            .filter((node) => node.getAttribute('aria-checked') === 'true')
+            .map((node) => node.textContent?.trim())
+            .filter((label) => ['Day', 'Week', 'Month'].includes(label ?? ''))
+          return {
+            blanks,
+            checked,
+            gridPresent: Boolean(calendar.querySelector('[role="grid"]')),
+            groupLabelled: [...document.querySelectorAll('[role="radiogroup"]')]
+              .some((node) => (node.getAttribute('aria-label') ?? '').length > 0),
+          }
         })
-        // A serial swap has a window with no content at all; the overlapping one
-        // always keeps a layer painted.
-        assert(!observed.counts.includes(0), `panel went blank during the swap: ${observed.counts.join(',')}`)
-        assert(observed.framesToTwoLayers !== null, 'the incoming view never overlapped the outgoing one')
-        assert(
-          observed.framesToTwoLayers < 150,
-          `the handoff took ${Math.round(observed.framesToTwoLayers)}ms`,
-        )
-        assert(observed.handoff.inert >= 1, 'the outgoing view must be inert during the handoff')
-        assert.equal(observed.settled, 1, `calendar swap did not settle to one layer (${observed.settled})`)
-        assert(observed.pressed.includes('Week'), `active tab was ${observed.pressed.join('/')}`)
+        assert.deepEqual(observed.blanks, [], `panel went blank on frames: ${observed.blanks.join(',')}`)
+        assert.equal(observed.gridPresent, true, 'no grid rendered after switching to the week view')
+        assert.deepEqual(observed.checked, ['Week'], `active calendar segment was ${observed.checked.join('/')}`)
+        assert.equal(observed.groupLabelled, true, 'the segmented control lost its group label')
       })
     } finally {
       await page.close()

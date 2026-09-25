@@ -1,4 +1,5 @@
 import { RPC_CHANNELS, type CalendarEntry, type CalendarEntryInput, type Session } from '@phaneris/shared/protocol'
+import { isValidPlanValue, planDateKey, planTimeOfDay } from '@phaneris/shared/work-items'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 
@@ -9,24 +10,30 @@ export const HANDLED_CHANNELS = [
   RPC_CHANNELS.calendar.DELETE,
 ] as const
 
-function day(value: string | undefined): string | undefined {
-  return value?.slice(0, 10)
-}
-
-function time(value: string | undefined): string | undefined {
-  return value?.includes('T') ? value.slice(11, 16) : undefined
+/**
+ * Reject a planning value the read path would not be able to interpret.
+ *
+ * Writing first and validating never is how `2026-9-2` reached the store: it
+ * passed every check, then produced `NaN-NaN-NaN` on drag and corrupted
+ * lexicographic range comparison. Failing at the boundary keeps the store
+ * interpretable and gives the editor a message it can show.
+ */
+function assertWritable(value: string, field: string): void {
+  if (!isValidPlanValue(value)) {
+    throw new Error(`Invalid ${field}: expected YYYY-MM-DD or YYYY-MM-DDTHH:mm, received "${value}"`)
+  }
 }
 
 function sessionToEntry(session: Session): CalendarEntry | null {
-  const date = day(session.startAt) ?? day(session.dueAt)
+  const date = planDateKey(session.startAt) ?? planDateKey(session.dueAt)
   if (!date) return null
-  const startTime = time(session.startAt)
-  const endTime = time(session.dueAt)
+  const startTime = planTimeOfDay(session.startAt)
+  const endTime = planTimeOfDay(session.dueAt)
   return {
     id: session.id,
     title: session.name?.trim() || session.preview?.trim() || 'Untitled schedule',
     date,
-    endDate: day(session.dueAt) ?? date,
+    endDate: planDateKey(session.dueAt) ?? date,
     time: startTime,
     endTime,
     allDay: !startTime,
@@ -67,6 +74,9 @@ export function registerCalendarHandlers(server: RpcServer, deps: HandlerDeps): 
 
   server.handle(RPC_CHANNELS.calendar.CREATE, async (_ctx, workspaceId: string, input: CalendarEntryInput) => {
     const endDate = input.endDate ?? input.date
+    assertWritable(input.date, 'date')
+    assertWritable(endDate, 'endDate')
+    if (endDate < input.date) throw new Error('End date must not be before the start date')
     const session = await deps.sessionManager.createSession(workspaceId, {
       name: input.title.trim(),
       projectId: input.projectId,
@@ -83,6 +93,9 @@ export function registerCalendarHandlers(server: RpcServer, deps: HandlerDeps): 
     const session = deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === entryId)
     if (!session) throw new Error(`Session not found: ${entryId}`)
     const endDate = input.endDate ?? input.date
+    assertWritable(input.date, 'date')
+    assertWritable(endDate, 'endDate')
+    if (endDate < input.date) throw new Error('End date must not be before the start date')
     await deps.sessionManager.renameSession(entryId, input.title.trim())
     await deps.sessionManager.setSessionProjectId(entryId, input.projectId ?? null)
     await deps.sessionManager.updateSessionPlanning(entryId, {

@@ -269,6 +269,10 @@ function ColumnHeader({
             <input
               type="text"
               defaultValue={label}
+              // The rule guards against stealing focus on load; this field only exists
+              // after the user chooses to rename the column, so focusing it is the
+              // expected continuation of that action rather than a surprise.
+              // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
               onBlur={e => {
                 const next = e.target.value.trim()

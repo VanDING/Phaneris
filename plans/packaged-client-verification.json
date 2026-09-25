@@ -1,0 +1,98 @@
+{
+  "date": "2026-09-25T04:58:24.050Z",
+  "arch": "x64",
+  "expected": {
+    "version": "0.2.2",
+    "appId": "io.github.vanding.phaneris",
+    "productName": "Phaneris",
+    "scheme": "phaneris",
+    "arch": "x64"
+  },
+  "checks": [
+    {
+      "name": "DMG exists with the expected versioned name",
+      "observation": "Phaneris-0.2.2-mac-x64.dmg",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "unpacked .app exists",
+      "observation": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "bundle identity matches phaneris.identity.json",
+      "observation": "CFBundleIdentifier / name / version",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "registers the product deep-link scheme",
+      "observation": "phaneris://",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "main binary is the expected architecture",
+      "observation": "x64",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "code signature state",
+      "observation": "unsigned (no certs available)",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "runtime resources are outside asar and present",
+      "observation": "bun, ripgrep, doc tools, subprocess workers",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "ripgrep ships for the packaged architecture",
+      "observation": "@vscode/ripgrep-darwin-x64",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "renderer bundle shipped",
+      "observation": "index.html present under dist/renderer",
+      "status": "pass",
+      "detail": null
+    }
+  ],
+  "dmg": {
+    "path": "/Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.2.2-mac-x64.dmg",
+    "bytes": 207483979
+  },
+  "app": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
+  "identity": {
+    "bundleId": "io.github.vanding.phaneris",
+    "version": "0.2.2",
+    "name": "Phaneris"
+  },
+  "schemes": [
+    "phaneris"
+  ],
+  "binary": "Mach-O 64-bit executable x86_64",
+  "signature": "unsigned",
+  "resources": [
+    "bundled bun runtime",
+    "pi agent server",
+    "whatsapp worker",
+    "cli document tools (bin)",
+    "cli document tools (scripts)",
+    "node-pty native module"
+  ],
+  "ripgrep": [
+    "ripgrep",
+    "ripgrep-darwin-x64"
+  ],
+  "renderer": {
+    "index": true,
+    "sourceMaps": 0
+  }
+}

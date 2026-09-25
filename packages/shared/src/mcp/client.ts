@@ -3,6 +3,7 @@
  * Supports both HTTP and stdio transports for remote and local MCP servers
  */
 
+import { PRODUCT_SLUG } from '../identity.generated.ts';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
@@ -99,7 +100,9 @@ export class CraftMcpClient {
 
   constructor(config: McpClientConfig) {
     this.client = new Client({
-      name: 'craft-agent',
+      // The client name is sent to remote MCP servers on initialize, so it
+      // identifies THIS product; the upstream brand is never claimed.
+      name: PRODUCT_SLUG,
       version: '1.0.0',
     });
 

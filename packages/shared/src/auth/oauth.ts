@@ -2,6 +2,16 @@ import { createServer, type Server } from 'http';
 import { URL } from 'url';
 import { randomBytes, createHash } from 'crypto';
 import { openUrl } from '../utils/open-url.ts';
+import { PRODUCT_SLUG } from '../identity.generated.ts';
+
+/**
+ * Client ID used when a provider has no dynamic registration endpoint, or gates
+ * registration behind approval (a 403). It identifies this product, so it comes
+ * from the generated identity contract rather than a hardcoded brand string —
+ * the previous value named the upstream app, contradicting the rule that the
+ * product never claims upstream identifiers.
+ */
+const DEFAULT_PUBLIC_CLIENT_ID = PRODUCT_SLUG;
 import { generateCallbackPage } from './callback-page.ts';
 import { type OAuthSessionContext, buildOAuthDeeplinkUrl } from './types.ts';
 import type { PreparedOAuthFlow, OAuthExchangeParams, OAuthExchangeResult } from './oauth-flow-types.ts';
@@ -263,8 +273,10 @@ export class CraftOAuth {
         throw error;
       }
     } else {
-      // Use a default client ID for public clients
-      clientId = 'craft-agent';
+      // Use a default client ID for public clients. The value identifies THIS
+      // product to the provider; the upstream brand is never claimed
+      // (see identity.generated.ts).
+      clientId = DEFAULT_PUBLIC_CLIENT_ID;
       this.callbacks.onStatus(`Using default client ID: ${clientId}`);
     }
 
@@ -574,10 +586,10 @@ export async function prepareMcpOAuth(
       // Dynamic client registration can be intentionally gated by providers
       // (for example returning 403 for unapproved clients). In that case,
       // fall back to a default client ID and proceed with the flow.
-      clientId = 'craft-agent';
+      clientId = DEFAULT_PUBLIC_CLIENT_ID;
     }
   } else {
-    clientId = 'craft-agent';
+    clientId = DEFAULT_PUBLIC_CLIENT_ID;
   }
 
   const authUrl = new URL(metadata.authorization_endpoint);

@@ -1,53 +1,91 @@
 /**
  * E2E tests for OAuth metadata discovery against real MCP servers.
  *
- * These tests verify that OAuth metadata can be discovered from popular MCP servers.
- * They only check that metadata is discoverable - they don't perform full OAuth flows.
+ * The pure origin-extraction assertions run everywhere; the live discovery calls
+ * are OPT-IN behind `PHANERIS_NETWORK_E2E=1`.
  *
- * Tests are skipped if servers are unreachable (network tolerance for CI).
+ * Why they are gated rather than merely "skipped when unreachable":
+ *
+ *   - The latency is vendor-owned and unbounded. Measured from this repository:
+ *     `api.githubcopilot.com` takes ~37s to walk its four `.well-known`
+ *     documents and then reports no metadata (it requires auth), while
+ *     `mcp.linear.app` and `api.ahrefs.com` answer in ~2.4s and ~3.0s. No
+ *     single per-test budget covers that spread without either failing GitHub
+ *     or hanging the suite on a slow network.
+ *   - A reachability probe cannot make it deterministic. A probe budget tight
+ *     enough to be quick (2.5s) sits right on Linear's and Ahrefs' normal
+ *     response time, so the same commit alternately ran and skipped the same
+ *     block. That is a flaky test wearing a skip as a disguise.
+ *   - The previous guard did not skip at all: it set a `reachable` flag inside
+ *     an `it()` and then registered the block unconditionally, so an unreachable
+ *     server FAILED the suite — the "network tolerance for CI" this file
+ *     documents did not exist. Its probe also used a 5000 ms timeout, exactly
+ *     equal to the runner's own per-test limit, so the abort could never win the
+ *     race and the probe reported as a timeout instead of as "unreachable".
+ *
+ * Run the live checks with:
+ *   PHANERIS_NETWORK_E2E=1 bun test src/auth/__tests__/oauth.e2e.test.ts
  */
 import { describe, it, expect } from 'bun:test';
 import { discoverOAuthMetadata, getMcpBaseUrl } from '../oauth';
 
-// Helper to check if a URL is reachable
-async function isReachable(url: string, timeoutMs = 5000): Promise<boolean> {
+const LIVE = process.env.PHANERIS_NETWORK_E2E === '1';
+
+/** Probe budget: comfortably under the runner's per-test limit. */
+const PROBE_TIMEOUT_MS = 8000;
+/**
+ * Discovery budget. GitHub's four sequential `.well-known` fetches measured
+ * ~37s, so anything lower fails a working network.
+ */
+const DISCOVERY_TIMEOUT_MS = 60_000;
+
+async function isReachable(url: string, timeoutMs = PROBE_TIMEOUT_MS): Promise<boolean> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-    const response = await fetch(url, {
-      method: 'HEAD',
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
+    const response = await fetch(url, { method: 'HEAD', signal: controller.signal });
+    // A 4xx still proves the host answered; only 5xx and transport errors count
+    // as unreachable, because discovery tolerates an unauthenticated root.
     return response.status < 500;
   } catch {
     return false;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
-// Helper to conditionally skip tests based on server reachability
-function describeIfReachable(name: string, mcpUrl: string, fn: () => void) {
-  describe(name, () => {
-    // Check reachability once - if unreachable, all tests in this describe will run but assertions will be skipped
-    let reachable = true;
-    it('should be reachable', async () => {
-      const origin = getMcpBaseUrl(mcpUrl);
-      reachable = await isReachable(origin);
-      if (!reachable) {
-        console.log(`Skipping ${name}: server unreachable`);
-      }
-    });
-    fn();
-  });
+const GITHUB_MCP_URL = 'https://api.githubcopilot.com/mcp/';
+const LINEAR_MCP_URL = 'https://mcp.linear.app/sse';
+const AHREFS_MCP_URL = 'https://api.ahrefs.com/mcp/mcp';
+
+// Probed only when the live checks are requested, so the default suite performs
+// no network I/O at all.
+const [githubReachable, linearReachable, ahrefsReachable] = LIVE
+  ? await Promise.all([
+      isReachable(getMcpBaseUrl(GITHUB_MCP_URL)),
+      isReachable(getMcpBaseUrl(LINEAR_MCP_URL)),
+      isReachable(getMcpBaseUrl(AHREFS_MCP_URL)),
+    ])
+  : [false, false, false];
+
+if (LIVE) {
+  const unreachable = [
+    !githubReachable && 'api.githubcopilot.com',
+    !linearReachable && 'mcp.linear.app',
+    !ahrefsReachable && 'api.ahrefs.com',
+  ].filter(Boolean);
+  console.log(
+    unreachable.length
+      ? `[oauth.e2e] skipping unreachable servers: ${unreachable.join(', ')}`
+      : '[oauth.e2e] all MCP servers reachable',
+  );
 }
 
-describe('E2E: OAuth Metadata Discovery', () => {
-  const GITHUB_MCP_URL = 'https://api.githubcopilot.com/mcp/';
-  describeIfReachable('GitHub MCP (api.githubcopilot.com)', GITHUB_MCP_URL, () => {
-    it('extracts correct origin', () => {
-      expect(getMcpBaseUrl(GITHUB_MCP_URL)).toBe('https://api.githubcopilot.com');
-    });
+/** Live, reachable blocks run; everything else is skipped rather than failed. */
+const describeLive = (reachable: boolean) => (LIVE && reachable ? describe : describe.skip);
 
+describe('E2E: OAuth Metadata Discovery', () => {
+  describeLive(githubReachable)('GitHub MCP (api.githubcopilot.com)', () => {
     // GitHub discovery needs 4 sequential fetches; allow extra time on throttled networks.
     it('discovers OAuth metadata', async () => {
       const logs: string[] = [];
@@ -63,15 +101,10 @@ describe('E2E: OAuth Metadata Discovery', () => {
       expect(metadata.authorization_endpoint).toBeTruthy();
       expect(metadata.token_endpoint).toBeTruthy();
       console.log('GitHub MCP OAuth metadata:', metadata);
-    }, 30000);
+    }, DISCOVERY_TIMEOUT_MS);
   });
 
-  const LINEAR_MCP_URL = 'https://mcp.linear.app/sse';
-  describeIfReachable('Linear MCP (mcp.linear.app)', LINEAR_MCP_URL, () => {
-    it('extracts correct origin', () => {
-      expect(getMcpBaseUrl(LINEAR_MCP_URL)).toBe('https://mcp.linear.app');
-    });
-
+  describeLive(linearReachable)('Linear MCP (mcp.linear.app)', () => {
     it('discovers OAuth metadata', async () => {
       const logs: string[] = [];
       const metadata = await discoverOAuthMetadata(LINEAR_MCP_URL, (msg) => logs.push(msg));
@@ -85,16 +118,10 @@ describe('E2E: OAuth Metadata Discovery', () => {
       expect(metadata.authorization_endpoint).toBeTruthy();
       expect(metadata.token_endpoint).toBeTruthy();
       console.log('Linear MCP OAuth metadata:', metadata);
-    });
+    }, DISCOVERY_TIMEOUT_MS);
   });
 
-  const AHREFS_MCP_URL = 'https://api.ahrefs.com/mcp/mcp';
-  describeIfReachable('Ahrefs MCP (api.ahrefs.com/mcp/mcp)', AHREFS_MCP_URL, () => {
-    it('extracts correct origin (the bug we are fixing)', () => {
-      // This was the original bug - the old regex would return https://api.ahrefs.com/mcp
-      expect(getMcpBaseUrl(AHREFS_MCP_URL)).toBe('https://api.ahrefs.com');
-    });
-
+  describeLive(ahrefsReachable)('Ahrefs MCP (api.ahrefs.com/mcp/mcp)', () => {
     it('discovers OAuth metadata', async () => {
       const logs: string[] = [];
       const metadata = await discoverOAuthMetadata(AHREFS_MCP_URL, (msg) => logs.push(msg));
@@ -108,10 +135,22 @@ describe('E2E: OAuth Metadata Discovery', () => {
       expect(metadata.authorization_endpoint).toBeTruthy();
       expect(metadata.token_endpoint).toBeTruthy();
       console.log('Ahrefs MCP OAuth metadata:', metadata);
-    });
+    }, DISCOVERY_TIMEOUT_MS);
   });
 
-  describe('Multiple path segments', () => {
+  /*
+   * Origin extraction is a pure function, so these assertions are deterministic
+   * and run in the default suite. They are also what the file was originally
+   * written to protect: the old regex returned `https://api.ahrefs.com/mcp` for
+   * the Ahrefs URL instead of the origin.
+   */
+  describe('extracts the origin from MCP URLs', () => {
+    it('handles the real server URLs', () => {
+      expect(getMcpBaseUrl(GITHUB_MCP_URL)).toBe('https://api.githubcopilot.com');
+      expect(getMcpBaseUrl(LINEAR_MCP_URL)).toBe('https://mcp.linear.app');
+      expect(getMcpBaseUrl(AHREFS_MCP_URL)).toBe('https://api.ahrefs.com');
+    });
+
     it('handles various MCP URL patterns correctly', () => {
       // These are hypothetical URLs to test the origin extraction
       expect(getMcpBaseUrl('https://api.example.com/v1/mcp')).toBe('https://api.example.com');

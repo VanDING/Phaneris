@@ -212,13 +212,12 @@ export const routes = {
               ? 'gantt' as const
             : 'projects/list' as const,
 
-    /** Full-page WorkItem create/edit route inside a Project Management projection. */
-    projectWorkItem: (view: Exclude<ProjectManagementView, 'overview'>, workItemId: string) =>
-      `${view === 'board' ? 'kanban' : view === 'calendar' ? 'calendar' : 'projects/list'}/work-item/${encodeURIComponent(workItemId)}` as const,
-
-    /** Full-page standalone schedule create/edit route. */
-    projectSchedule: (calendarEntryId: string) =>
-      `calendar/schedule/${encodeURIComponent(calendarEntryId)}` as const,
+    /*
+     * The `kanban|calendar|gantt/work-item/:id` and `calendar/schedule/:id` routes are
+     * gone with the pages they addressed: creating and editing project work happens in
+     * the shared Task Definition overlay, which is component state and not a route.
+     * Row selection therefore travels through `kanbanEditorTargetAtom`, not the URL.
+     */
 
     /** Direct Kanban application surface. */
     kanban: () => 'kanban' as const,

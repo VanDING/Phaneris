@@ -7,6 +7,15 @@ import { Spinner, LoadingIndicator, Markdown } from '@phaneris/ui'
 import { MODEL_REGISTRY, DEFAULT_MODEL, getModelShortName } from '@config/models'
 import { useAtomValue, useStore } from 'jotai'
 import { useProjects } from '@/hooks/useProjects'
+import { useStatuses } from '@/hooks/useStatuses'
+import { useWorkItems } from '@/hooks/useWorkItems'
+import {
+  EMPTY_TASK_PLAN,
+  TaskPlanPanel,
+  taskPlanFromItem,
+  taskPlanningInput,
+  type TaskPlanValue,
+} from './TaskPlanPanel'
 import { sourcesAtom } from '@/atoms/sources'
 import { skillsAtom } from '@/atoms/skills'
 import { sessionMetaMapAtom } from '@/atoms/sessions'
@@ -539,6 +548,22 @@ export function TaskEditor({
   const [sourceSlugs, setSourceSlugs] = React.useState<string[]>([])
   const [skillSlugs, setSkillSlugs] = React.useState<string[]>([])
   const [busy, setBusy] = React.useState(false)
+  /*
+   * When the work happens. This editor is the only create/edit surface for project
+   * work now, so the plan the board, the calendar and the timeline all read has to
+   * be editable here — and a create from the calendar arrives with it prefilled.
+   */
+  const [plan, setPlan] = React.useState<TaskPlanValue>(() => ({
+    ...EMPTY_TASK_PLAN,
+    ...(target.mode === 'create' ? target.initialPlan ?? {} : {}),
+  }))
+  const [planLoaded, setPlanLoaded] = React.useState(false)
+  const { statuses } = useStatuses(workspaceId)
+  const { items: planCandidates } = useWorkItems(workspaceId)
+  const updatePlan = React.useCallback(
+    (patch: Partial<TaskPlanValue>) => setPlan((previous) => ({ ...previous, ...patch })),
+    [],
+  )
 
   // Pickable catalogs from the active workspace (AppShell keeps these atoms populated).
   const workspaceSources = useAtomValue(sourcesAtom)
@@ -651,6 +676,31 @@ export function TaskEditor({
     // Prefill runs once per target identity; fallbackModel is stable enough for this load.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target.mode, editSessionId, editSlug, workspaceId])
+
+  /*
+   * Plan prefill. The plan lives on the session, which this editor reaches through
+   * the same projection the board and the calendar read — so the values shown here
+   * are exactly the ones a drag on the timeline or the calendar would have changed.
+   */
+  React.useEffect(() => {
+    if (target.mode !== 'edit') {
+      setPlanLoaded(true)
+      return
+    }
+    let cancelled = false
+    void window.electronAPI
+      .listWorkItems(workspaceId)
+      .then((items) => {
+        if (cancelled) return
+        // Edit mode replaces the whole plan: the row is the source of truth and the
+        // state started empty. (Create mode never reaches here — its plan is seeded
+        // from the gesture that opened the editor.)
+        setPlan(taskPlanFromItem(items.find((item) => item.id === editSessionId)))
+        setPlanLoaded(true)
+      })
+      .catch(() => { if (!cancelled) setPlanLoaded(true) })
+    return () => { cancelled = true }
+  }, [target.mode, editSessionId, workspaceId])
 
   const loadResults = React.useCallback(() => {
     if (!editSlug) return
@@ -860,6 +910,9 @@ export function TaskEditor({
       // a generate draft if present, else mints a fresh orchestrator.
       const created = await window.electronAPI.createTask(workspaceId, {
         yaml,
+        // The plan travels with the spec on every path, so a create from the calendar
+        // lands on the day the user drew rather than nowhere.
+        planning: taskPlanningInput(plan),
         ...(isEdit && editSessionId
           ? { attachToExistingSession: editSessionId }
           : { orchestratorSessionId: draftId ?? undefined }),
@@ -1029,6 +1082,21 @@ export function TaskEditor({
               className="w-full resize-none rounded-lg border border-border bg-background px-3 py-2 text-[12.5px] leading-relaxed outline-none focus:border-foreground/25 field-sizing-content max-h-48"
             />
           </div>
+
+          {/*
+            When the work happens. The two pages this editor replaced owned these
+            fields — status, progress, milestone, parent, dependencies and the plan
+            dates — and a session is the same row for all three projections, so they
+            belong here rather than disappearing with the pages.
+          */}
+          <TaskPlanPanel
+            value={plan}
+            onChange={updatePlan}
+            statuses={statuses}
+            workItems={planCandidates}
+            selfId={editSessionId}
+            disabled={busy || !planLoaded}
+          />
 
           <div className="flex flex-col gap-3">
             <FieldRow label={t('tasks.project')}>

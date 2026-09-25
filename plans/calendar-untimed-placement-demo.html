@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日历 · 侧边栏方案（原型 v3）</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #fbfbfc;
+    --fg: #1c1c1e;
+    --fg-soft: rgba(28, 28, 30, 0.55);
+    --fg-faint: rgba(28, 28, 30, 0.32);
+    --border: #dedfe2;
+    --rule: color-mix(in oklab, var(--border) 55%, transparent);
+    --rule-faint: color-mix(in oklab, var(--border) 28%, transparent);
+    --accent: #2f6feb;
+    --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+    --danger: #c0392b;
+    --rail-w: 300px;
+    /* One header height for all three views: switching views must not move the grid. */
+    --head-h: 52px;
+    --slot-px: 22px;
+  }
+  * { box-sizing: border-box; }
+  /*
+   * One hiding utility for every toggled region (.rail / .allday / .month /
+   * .cal-body / composer fields). Without it `class="month hidden"` stayed
+   * `display: grid`, so the month grid and the time grid rendered at the same
+   * time and split the height — which silently broke every drop target.
+   */
+  .hidden { display: none !important; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    color: var(--fg); background: var(--bg);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ------------------------------------------------------- demo top bar */
+  .topbar {
+    flex: none; display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar .title { font-weight: 650; font-size: 13.5px; }
+  .topbar .title small { font-weight: 400; color: var(--fg-faint); margin-left: 8px; }
+  .seg { display: inline-flex; gap: 2px; background: rgba(28,28,30,.05); border-radius: 9px; padding: 2px; }
+  .seg button {
+    border: 0; background: transparent; border-radius: 7px; padding: 5px 11px;
+    font: inherit; font-weight: 600; font-size: 12px; color: var(--fg-soft); cursor: pointer;
+  }
+  .seg button.active { background: var(--bg); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .topbar .spacer { flex: 1; }
+  .topbar .nav { display: inline-flex; align-items: center; gap: 6px; }
+  .topbar .nav button {
+    border: 1px solid var(--border); background: var(--bg); border-radius: 8px; height: 30px;
+    min-width: 30px; font: inherit; font-size: 12px; font-weight: 600; color: var(--fg-soft); cursor: pointer;
+  }
+  .topbar .nav .label { font-size: 12.5px; font-weight: 650; min-width: 132px; text-align: center; }
+
+  /* -------------------------------------------------------------- layout */
+  main { flex: 1; min-height: 0; display: flex; }
+  .cal-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 12px; }
+  .cal {
+    flex: 1; min-height: 0; display: flex; flex-direction: column;
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg);
+  }
+
+  /*
+   * Header band. Two lines in day/week (weekday over date), one centred line in
+   * month — but always exactly var(--head-h) tall, so 日/周/月 do not jump.
+   */
+  .head {
+    flex: none; height: var(--head-h); display: grid; border-bottom: 1px solid var(--rule);
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .head.day { grid-template-columns: 1fr; }
+  .head .corner { border-right: 1px solid var(--rule-faint); }
+  .head .hd {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    border-right: 1px solid var(--rule-faint); min-width: 0;
+  }
+  .head .hd:last-child { border-right: 0; }
+  .head .hd .wd { font-size: 12.5px; font-weight: 650; color: var(--fg); letter-spacing: .2px; }
+  .head .hd .dt { font-size: 11.5px; color: var(--fg-soft); font-variant-numeric: tabular-nums; }
+  .head .hd.today .wd { color: var(--accent); }
+  .head .hd.today .dt { color: color-mix(in srgb, var(--accent) 70%, var(--fg-soft)); }
+  /* month: weekday only, centred in the same band */
+  .head .hd.month-only .wd { font-size: 11.5px; font-weight: 600; color: var(--fg-soft); }
+
+  .allday { flex: none; display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--rule); }
+  .allday .cell { min-height: 30px; padding: 4px; display: flex; flex-direction: column; gap: 3px; border-right: 1px solid var(--rule-faint); }
+  .allday .cell:last-child { border-right: 0; }
+
+  .cal-body { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+  .gutter { flex: none; width: 56px; border-right: 1px solid var(--rule-faint); }
+  .gutter .h {
+    height: calc(var(--slot-px) * 2); font-size: 10.5px; color: var(--fg-faint);
+    text-align: right; padding-right: 8px; position: relative; top: -7px;
+  }
+  .gutter .h:first-child { top: 0; }
+
+  .cols { flex: 1; min-width: 0; position: relative; display: grid; grid-template-columns: repeat(7, 1fr); overflow: hidden; }
+  .cols.day { grid-template-columns: 1fr; }
+  .col { position: relative; border-right: 1px solid var(--rule-faint); }
+  .col:last-child { border-right: 0; }
+  .col.today { background: color-mix(in srgb, var(--accent) 3%, transparent); }
+  .col .slot { height: var(--slot-px); border-bottom: 1px solid var(--rule-faint); }
+  .col .slot.hour { border-bottom-color: var(--rule); }
+  .col .slot.sel { background: var(--accent-soft); }
+
+  /* --------------------------------------------------------- month grid */
+  .month { flex: 1; min-height: 0; display: grid; grid-auto-rows: 1fr; }
+  .month .mrow { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--rule-faint); min-height: 0; }
+  .month .mrow:last-child { border-bottom: 0; }
+  .month .mcell {
+    border-right: 1px solid var(--rule-faint); padding: 4px 5px; min-width: 0; min-height: 0;
+    display: flex; flex-direction: column; gap: 3px; overflow: hidden; cursor: pointer;
+  }
+  .month .mcell:last-child { border-right: 0; }
+  .month .mcell .dn { font-size: 11px; color: var(--fg-soft); font-variant-numeric: tabular-nums; flex: none; }
+  .month .mcell.other .dn { color: var(--fg-faint); }
+  .month .mcell.today .dn {
+    color: #fff; background: var(--accent); border-radius: 999px;
+    align-self: flex-start; padding: 1px 6px; font-weight: 650;
+  }
+  .month .mcell.drop { background: var(--accent-soft); }
+  .month .more { font-size: 10px; color: var(--fg-soft); font-weight: 600; padding-left: 2px; }
+
+  /* --------------------------------------------------------------- chips */
+  /*
+   * Chips live in the grid columns, the all-day row, the rail and the month
+   * cells. Only the time-grid ones are absolutely placed, so that positioning is
+   * scoped to `.col` — an unscoped `position: absolute` once sent every rail and
+   * all-day chip to the page's top-left.
+   */
+  .chip {
+    position: relative; border-radius: 6px; padding: 2px 6px;
+    font-size: 11px; line-height: 1.35; overflow: hidden; cursor: grab; white-space: nowrap;
+    background: var(--accent-soft); border-left: 3px solid var(--accent); color: var(--fg);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+    text-overflow: ellipsis;
+  }
+  .col .chip { position: absolute; left: 3px; right: 3px; white-space: normal; }
+  .month .chip { font-size: 10.5px; padding: 1px 5px; }
+  .chip:active { cursor: grabbing; }
+  .chip .t { font-weight: 600; }
+  .chip .m { display: block; font-size: 10px; color: var(--fg-soft); font-variant-numeric: tabular-nums; }
+  .col .chip .m { display: block; }
+  .chip.untimed { background: color-mix(in srgb, var(--fg) 6%, transparent); border-left-color: var(--fg-faint); box-shadow: inset 0 0 0 1px var(--rule); }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chip.dragging { opacity: .35; }
+  .chip.fresh { animation: pop .6s ease-out; }
+  @keyframes pop { from { background: var(--accent-soft); box-shadow: 0 0 0 3px var(--accent-soft); } }
+  .ghost-drag {
+    position: fixed; z-index: 50; pointer-events: none; border-radius: 6px; padding: 2px 6px;
+    font-size: 11px; background: var(--bg); border: 1px solid var(--accent);
+    box-shadow: 0 6px 18px rgba(0,0,0,.16); max-width: 180px; overflow: hidden; white-space: nowrap;
+  }
+
+  /* ---------------------------------------------------------------- rail */
+  .rail {
+    flex: none; width: var(--rail-w); margin: 12px 12px 12px 0; display: flex; flex-direction: column;
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--panel);
+  }
+  .rail > .rhead {
+    flex: none; padding: 9px 12px; border-bottom: 1px solid var(--rule); background: var(--bg);
+  }
+  .rail > .rhead .h { font-weight: 650; font-size: 12.5px; display: flex; justify-content: space-between; gap: 8px; }
+  .rail > .rhead .h span { color: var(--fg-faint); font-weight: 500; }
+  .rail > .rhead .s { font-size: 10.5px; color: var(--fg-faint); margin-top: 1px; }
+
+  .composer { flex: none; border-bottom: 1px solid var(--rule); background: var(--bg); padding: 8px; }
+  .composer > button.add {
+    width: 100%; border: 1px dashed var(--border); background: transparent; border-radius: 8px;
+    padding: 6px; font: inherit; font-size: 11.5px; font-weight: 600; color: var(--fg-soft); cursor: pointer;
+  }
+  .composer > button.add:hover { color: var(--fg); border-color: var(--fg-faint); }
+  .composer .fields { display: flex; flex-direction: column; gap: 6px; }
+  .composer input {
+    width: 100%; height: 30px; border: 1px solid var(--border); border-radius: 7px; padding: 0 8px;
+    font: inherit; font-size: 12px; color: var(--fg); background: var(--bg); outline: none;
+  }
+  .composer input:focus { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+  .composer .row { display: flex; gap: 6px; align-items: center; }
+  .composer .row input[type="date"] { flex: 1; }
+  .composer .row button {
+    height: 30px; border-radius: 7px; border: 1px solid var(--border); background: var(--bg);
+    font: inherit; font-size: 11.5px; font-weight: 600; color: var(--fg-soft); cursor: pointer; padding: 0 9px;
+  }
+  .composer .row button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .composer .row button:disabled { opacity: .45; cursor: default; }
+
+  .rail .scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 10px; }
+  .rail .rail-day { display: flex; flex-direction: column; gap: 4px; }
+  .rail .rail-day > .d {
+    font-size: 10.5px; font-weight: 650; color: var(--fg-soft); padding: 2px;
+    display: flex; justify-content: space-between; position: sticky; top: -8px;
+    background: var(--panel); z-index: 1;
+  }
+  .rail .rail-day > .d span { color: var(--fg-faint); font-weight: 500; }
+  .rail .rail-day.overdue > .d { color: var(--danger); }
+  .rail .rail-day.thisweek > .d { color: var(--accent); }
+  .rail .drop-hint {
+    margin: 8px; border: 1px dashed var(--rule); border-radius: 8px; padding: 10px;
+    text-align: center; font-size: 11px; color: var(--fg-faint);
+  }
+  .rail.droptarget { background: color-mix(in srgb, var(--accent) 6%, var(--panel)); border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+
+  /* ----------------------------------------------------------------- log */
+  .log { flex: none; height: 152px; border-top: 1px solid var(--rule); background: var(--panel); display: flex; flex-direction: column; }
+  .log .lhead { flex: none; display: flex; align-items: center; gap: 10px; padding: 6px 16px; font-size: 11px; color: var(--fg-soft); }
+  .log .lhead b { color: var(--fg); font-size: 11.5px; }
+  .log .lhead .hint { color: var(--fg-faint); }
+  .log .rows { flex: 1; min-height: 0; overflow-y: auto; padding: 0 16px 8px; font: 11px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .log .row { display: flex; gap: 10px; border-top: 1px solid var(--rule-faint); padding: 3px 0; }
+  .log .row .g { flex: none; width: 240px; color: var(--fg-soft); }
+  .log .row .p { color: var(--fg); }
+  .log .empty { color: var(--fg-faint); padding: 4px 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="title">日历 · 侧边栏方案<small>原型 v3 · 只用于确认方案，未接入真实数据</small></div>
+  <div class="seg" id="views">
+    <button data-view="day">日</button>
+    <button data-view="week" class="active">周</button>
+    <button data-view="month">月</button>
+  </div>
+  <div class="nav">
+    <button id="prev" aria-label="上一页">‹</button>
+    <button id="today">今天</button>
+    <button id="next" aria-label="下一页">›</button>
+    <span class="label" id="rangeLabel"></span>
+  </div>
+  <div class="spacer"></div>
+  <button class="nav" id="reset" style="border:1px solid var(--border);background:var(--bg);border-radius:8px;height:30px;padding:0 10px;font:inherit;font-size:12px;font-weight:600;color:var(--fg-soft);cursor:pointer">重置数据</button>
+</div>
+
+<main>
+  <div class="cal-wrap">
+    <div class="cal">
+      <div class="head" id="head"></div>
+      <div class="allday hidden" id="allday"></div>
+      <div class="cal-body" id="calBody">
+        <div class="gutter" id="gutter"></div>
+        <div class="cols" id="cols"></div>
+      </div>
+      <div class="month hidden" id="month"></div>
+    </div>
+  </div>
+
+  <aside class="rail" id="rail">
+    <div class="rhead">
+      <div class="h">未设时间<span id="railCount"></span></div>
+      <div class="s">日视图、周视图都有；月视图没有。拖到网格上即可填时间。</div>
+    </div>
+    <div class="composer">
+      <button class="add" id="addOpen">+ 新建（只填标题 + 日期）</button>
+      <div class="fields hidden" id="addFields">
+        <input id="addTitle" placeholder="标题" autocomplete="off">
+        <div class="row">
+          <input type="date" id="addDate">
+          <button class="primary" id="addCommit" disabled>添加</button>
+          <button id="addCancel">取消</button>
+        </div>
+      </div>
+    </div>
+    <div class="scroll" id="railScroll"></div>
+    <div class="drop-hint">把带时间的条目拖到这里 → 清掉时间</div>
+  </aside>
+</main>
+
+<div class="log">
+  <div class="lhead"><b>会写入的载荷</b><span class="hint" id="hint"></span></div>
+  <div class="rows" id="logRows"></div>
+</div>
+
+<script>
+(() => {
+  'use strict'
+
+  // ---------------------------------------------------------------- config
+  const DAY_START = 7
+  const DAY_END = 20
+  const SLOT_MIN = 30
+  const SLOTS = ((DAY_END - DAY_START) * 60) / SLOT_MIN
+  const SLOT_PX = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--slot-px'))
+  const WD = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+
+  const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x }
+  const fromIso = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d) }
+  const pad = (n) => String(n).padStart(2, '0')
+  const minutesOf = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m }
+  const timeOf = (min) => `${pad(Math.floor(min / 60))}:${pad(min % 60)}`
+  const md = (s) => { const d = fromIso(s); return `${d.getMonth() + 1}/${d.getDate()}` }
+  const weekdayOf = (date) => WD[(fromIso(date).getDay() + 6) % 7]
+  const mondayOf = (d) => addDays(d, -((d.getDay() + 6) % 7))
+
+  const today = new Date()
+  const todayKey = iso(today)
+
+  const SEED = [
+    { id: 1, title: '需求评审', date: iso(addDays(mondayOf(today), 1)), time: '10:00', endTime: '11:00' },
+    { id: 2, title: '部署窗口', date: iso(addDays(mondayOf(today), 2)), time: null },
+    { id: 3, title: '设计走查', date: iso(addDays(mondayOf(today), 2)), time: '14:30', endTime: '15:30' },
+    { id: 4, title: '把接口文档补齐', date: iso(addDays(mondayOf(today), 3)), time: null },
+    { id: 5, title: '站会', date: iso(addDays(mondayOf(today), 4)), time: '09:00', endTime: '09:30' },
+    { id: 6, title: '整理发布说明', date: iso(addDays(mondayOf(today), 4)), time: null },
+    { id: 7, title: '客户回访', date: iso(mondayOf(today)), time: null },
+    // 跨周：上周（已过期）与后两周 —— 侧栏要能列出来
+    { id: 8, title: '补上周的验收记录', date: iso(addDays(today, -9)), time: null },
+    { id: 9, title: '下下周的合规检查', date: iso(addDays(today, 12)), time: null },
+    { id: 10, title: '下下周的季度复盘', date: iso(addDays(today, 14)), time: null },
+  ]
+
+  let view = 'week'          // day | week | month
+  let cursor = new Date(today)
+  let entries = []
+  let seq = 100
+  let freshId = null
+
+  const untimed = () => entries.filter((e) => !e.time).sort((a, b) => a.date.localeCompare(b.date))
+  const timed = () => entries.filter((e) => e.time)
+
+  // ------------------------------------------------------------------ dom
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n }
+  const head = document.getElementById('head')
+  const allday = document.getElementById('allday')
+  const calBody = document.getElementById('calBody')
+  const gutter = document.getElementById('gutter')
+  const cols = document.getElementById('cols')
+  const monthEl = document.getElementById('month')
+  const rail = document.getElementById('rail')
+  const railScroll = document.getElementById('railScroll')
+  const railCount = document.getElementById('railCount')
+  const rangeLabel = document.getElementById('rangeLabel')
+  const logRows = document.getElementById('logRows')
+  const hint = document.getElementById('hint')
+
+  const EMPTY_LOG = '还没有操作。试试：点空格新建 / 竖拖选一段 / 拖条目改时间 / 从侧栏拖到网格 / 侧栏顶部 + 新建 / 月视图里拖动条目换天。'
+  const HINTS = {
+    day: '日视图：侧栏列出全部未设时间条目（含跨周），拖到网格上自动填日期和时间。',
+    week: '周视图：同上。侧栏与「当前看的是哪一周」无关，它始终是完整清单。',
+    month: '月视图：不显示侧栏；未设时间的条目在日格里就是普通条目。表头高度与日/周一致。',
+  }
+
+  const logWrite = (gesture, payload) => {
+    if (logRows.querySelector('.empty')) logRows.innerHTML = ''
+    const row = el('div', 'row')
+    row.appendChild(el('span', 'g', gesture))
+    row.appendChild(el('span', 'p', JSON.stringify(payload)))
+    logRows.prepend(row)
+    while (logRows.children.length > 8) logRows.lastChild.remove()
+  }
+
+  const reset = () => {
+    entries = SEED.map((e) => ({ ...e }))
+    cursor = new Date(today)
+    freshId = null
+    logRows.innerHTML = `<div class="empty">${EMPTY_LOG}</div>`
+    render()
+  }
+
+  // ------------------------------------------------------------- what's on
+  /** The dates the current view shows, in order. */
+  function visibleDates() {
+    if (view === 'day') return [iso(cursor)]
+    const monday = mondayOf(cursor)
+    return Array.from({ length: 7 }, (_, i) => iso(addDays(monday, i)))
+  }
+  function monthMatrix() {
+    const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1)
+    const start = mondayOf(first)
+    const weeks = []
+    let day = start
+    do {
+      weeks.push(Array.from({ length: 7 }, () => { const d = iso(day); day = addDays(day, 1); return d }))
+    } while (day.getMonth() === cursor.getMonth() || weeks.length < 4)
+    return weeks
+  }
+
+  // ---------------------------------------------------------------- render
+  function render() {
+    const dates = visibleDates()
+    rail.classList.toggle('hidden', view === 'month')
+    document.querySelectorAll('#views button').forEach((b) => b.classList.toggle('active', b.dataset.view === view))
+    hint.textContent = HINTS[view]
+
+    // header — always var(--head-h) tall, whatever the view
+    head.className = `head${view === 'day' ? ' day' : ''}`
+    head.innerHTML = ''
+    if (view === 'month') {
+      for (let i = 0; i < 7; i += 1) {
+        const cell = el('div', 'hd month-only')
+        cell.appendChild(el('div', 'wd', WD[i]))
+        head.appendChild(cell)
+      }
+    } else {
+      dates.forEach((date) => {
+        const cell = el('div', `hd${date === todayKey ? ' today' : ''}`)
+        cell.appendChild(el('div', 'wd', weekdayOf(date)))
+        cell.appendChild(el('div', 'dt', md(date)))
+        head.appendChild(cell)
+      })
+    }
+
+    // range label
+    if (view === 'month') {
+      rangeLabel.textContent = `${cursor.getFullYear()} 年 ${cursor.getMonth() + 1} 月`
+    } else if (view === 'day') {
+      rangeLabel.textContent = `${md(dates[0])} ${weekdayOf(dates[0])}`
+    } else {
+      rangeLabel.textContent = `${md(dates[0])} – ${md(dates[6])}`
+    }
+
+    // time grid (day / week)
+    const timeViews = view !== 'month'
+    calBody.classList.toggle('hidden', !timeViews)
+    monthEl.classList.toggle('hidden', timeViews)
+    if (timeViews) {
+      allday.classList.add('hidden')   // the all-day row is gone: the rail replaced it
+      cols.className = `cols${view === 'day' ? ' day' : ''}`
+      gutter.innerHTML = ''
+      for (let h = DAY_START; h <= DAY_END; h += 1) gutter.appendChild(el('div', 'h', `${pad(h)}:00`))
+      cols.innerHTML = ''
+      dates.forEach((date) => {
+        /*
+         * The today tint exists to locate today AMONG columns. The day view has a
+         * single column, so it has nothing to locate and merely washed the whole
+         * grid — the blue weekday in the header already marks today.
+         */
+        const col = el('div', `col${date === todayKey && view !== 'day' ? ' today' : ''}`)
+        col.dataset.date = date
+        for (let s = 0; s < SLOTS; s += 1) {
+          const slot = el('div', `slot${(SLOT_MIN * s) % 60 === 0 ? ' hour' : ''}`)
+          slot.dataset.date = date
+          slot.dataset.slot = s
+          col.appendChild(slot)
+        }
+        timed().filter((e) => e.date === date).forEach((e) => col.appendChild(chipFor(e)))
+        cols.appendChild(col)
+      })
+    } else {
+      monthEl.innerHTML = ''
+      monthMatrix().forEach((week) => {
+        const row = el('div', 'mrow')
+        week.forEach((date) => {
+          const cell = el('div', `mcell${date === todayKey ? ' today' : ''}${fromIso(date).getMonth() !== cursor.getMonth() ? ' other' : ''}`)
+          cell.dataset.date = date
+          cell.appendChild(el('div', 'dn', String(fromIso(date).getDate())))
+          const dayEntries = entries.filter((e) => e.date === date)
+          dayEntries.slice(0, 3).forEach((e) => cell.appendChild(chipFor(e, true)))
+          if (dayEntries.length > 3) cell.appendChild(el('div', 'more', `+${dayEntries.length - 3} 更多`))
+          row.appendChild(cell)
+        })
+        monthEl.appendChild(row)
+      })
+    }
+
+    renderRail()
+  }
+
+  function chipFor(entry, compact = false) {
+    const chip = el('div', `chip${entry.time ? '' : ' untimed'}${entry.id === freshId ? ' fresh' : ''}`)
+    chip.tabIndex = 0
+    chip.dataset.id = entry.id
+    const title = el('span', 't', entry.title)
+    chip.appendChild(title)
+    if (!compact || entry.time) chip.appendChild(el('span', 'm', entry.time ? `${entry.time} – ${entry.endTime}` : `未设时间 · ${md(entry.date)}`))
+    if (entry.time && !compact) {
+      const start = minutesOf(entry.time) - DAY_START * 60
+      chip.style.top = `${(start / SLOT_MIN) * SLOT_PX + 1}px`
+      chip.style.height = `${((minutesOf(entry.endTime) - minutesOf(entry.time)) / SLOT_MIN) * SLOT_PX - 2}px`
+    }
+    chip.addEventListener('pointerdown', (ev) => startDrag(ev, entry, chip))
+    return chip
+  }
+
+  function renderRail() {
+    if (view === 'month') return
+    const list = untimed()
+    const overdue = list.filter((e) => e.date < todayKey).length
+    railCount.textContent = list.length ? `${list.length} 项${overdue ? ` · ${overdue} 项已过期` : ''}` : '已全部有时间'
+    railScroll.innerHTML = ''
+    if (!list.length) {
+      railScroll.appendChild(el('div', 'drop-hint', '没有未设时间的条目'))
+      return
+    }
+    const byDate = new Map()
+    for (const entry of list) {
+      if (!byDate.has(entry.date)) byDate.set(entry.date, [])
+      byDate.get(entry.date).push(entry)
+    }
+    const lastVisible = visibleDates()[visibleDates().length - 1]
+    for (const [date, rows] of [...byDate.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+      const group = el('div', `rail-day${date < todayKey ? ' overdue' : date <= lastVisible ? ' thisweek' : ''}`)
+      const gh = el('div', 'd')
+      gh.appendChild(el('span', null, `${weekdayOf(date)} · ${md(date)}${date < todayKey ? ' · 已过期' : ''}`))
+      gh.appendChild(el('span', null, `${rows.length}`))
+      group.appendChild(gh)
+      rows.forEach((e) => group.appendChild(chipFor(e)))
+      railScroll.appendChild(group)
+    }
+  }
+
+  // ------------------------------------------------------------- selection
+  let selecting = null
+  cols.addEventListener('pointerdown', (ev) => {
+    const slot = ev.target.closest('.slot')
+    if (!slot || ev.target.closest('.chip')) return
+    selecting = { date: slot.dataset.date, from: Number(slot.dataset.slot), to: Number(slot.dataset.slot), moved: false }
+    paintSelection()
+    const onMove = (e) => {
+      const under = document.elementFromPoint(e.clientX, e.clientY)?.closest?.('.slot')
+      if (!under || under.dataset.date !== selecting.date) return
+      selecting.to = Number(under.dataset.slot)
+      selecting.moved = true
+      paintSelection()
+    }
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      const from = Math.min(selecting.from, selecting.to)
+      const to = Math.max(selecting.from, selecting.to)
+      const time = timeOf(DAY_START * 60 + from * SLOT_MIN)
+      const moved = selecting.moved
+      const date = selecting.date
+      clearSelection()
+      create(`${moved ? '竖拖选区间' : '单击一格'} → 新建`, {
+        title: `新任务 ${seq + 1}`, date, time,
+        endTime: moved ? timeOf(DAY_START * 60 + (to + 1) * SLOT_MIN) : timeOf(Math.min(DAY_END * 60, minutesOf(time) + 60)),
+      })
+      selecting = null
+    }
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+  })
+
+  function paintSelection() {
+    clearSelection()
+    const from = Math.min(selecting.from, selecting.to)
+    const to = Math.max(selecting.from, selecting.to)
+    cols.querySelectorAll(`.slot[data-date="${selecting.date}"]`).forEach((s) => {
+      const i = Number(s.dataset.slot)
+      if (i >= from && i <= to) s.classList.add('sel')
+    })
+  }
+  const clearSelection = () => cols.querySelectorAll('.slot.sel').forEach((s) => s.classList.remove('sel'))
+
+  function create(gesture, values) {
+    const entry = { id: ++seq, ...values }
+    entries.push(entry)
+    freshId = entry.id
+    logWrite(gesture, { date: entry.date, time: entry.time, endTime: entry.endTime, allDay: false })
+    render()
+  }
+
+  // ------------------------------------------------------------------ drag
+  function startDrag(ev, entry, chip) {
+    ev.preventDefault()
+    ev.stopPropagation()
+    const ghost = el('div', 'ghost-drag', entry.title)
+    ghost.style.left = `${ev.clientX + 12}px`
+    ghost.style.top = `${ev.clientY + 12}px`
+    document.body.appendChild(ghost)
+    chip.classList.add('dragging')
+    let target = null       // { date, slot } in the time grid
+    let monthDate = null    // date in the month grid
+    let overRail = false
+
+    const onMove = (e) => {
+      ghost.style.left = `${e.clientX + 12}px`
+      ghost.style.top = `${e.clientY + 12}px`
+      const under = document.elementFromPoint(e.clientX, e.clientY)
+      overRail = Boolean(under?.closest?.('#rail'))
+      rail.classList.toggle('droptarget', overRail && view !== 'month')
+      const slot = under?.closest?.('.slot')
+      const mcell = under?.closest?.('.mcell')
+      target = slot ? { date: slot.dataset.date, slot: Number(slot.dataset.slot) } : null
+      monthDate = mcell ? mcell.dataset.date : null
+      monthEl.querySelectorAll('.mcell.drop').forEach((n) => n.classList.remove('drop'))
+      if (monthDate && monthDate !== entry.date) mcell.classList.add('drop')
+      clearSelection()
+      if (target) {
+        const span = entry.time ? (minutesOf(entry.endTime) - minutesOf(entry.time)) / SLOT_MIN : 2
+        cols.querySelectorAll(`.slot[data-date="${target.date}"]`).forEach((s) => {
+          const i = Number(s.dataset.slot)
+          if (i >= target.slot && i < target.slot + span) s.classList.add('sel')
+        })
+      }
+    }
+
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      ghost.remove()
+      chip.classList.remove('dragging')
+      rail.classList.remove('droptarget')
+      monthEl.querySelectorAll('.mcell.drop').forEach((n) => n.classList.remove('drop'))
+      clearSelection()
+
+      // grid → rail: drop the time, keep the date
+      if (overRail && view !== 'month' && entry.time) {
+        entry.time = null
+        entry.endTime = null
+        logWrite('网格 → 侧栏（清掉时间）', { date: entry.date, time: undefined, endTime: undefined, allDay: true })
+        render()
+        return
+      }
+      // month → month: move the day, keep whatever time it had
+      if (monthDate && monthDate !== entry.date) {
+        const from = entry.date
+        entry.date = monthDate
+        logWrite(`月视图拖动（${md(from)} → ${md(monthDate)}）`, {
+          date: entry.date, time: entry.time ?? undefined, endTime: entry.endTime ?? undefined, allDay: !entry.time,
+        })
+        render()
+        return
+      }
+      if (!target) { render(); return }
+
+      if (entry.time) {
+        const duration = minutesOf(entry.endTime) - minutesOf(entry.time)
+        const start = DAY_START * 60 + target.slot * SLOT_MIN
+        entry.date = target.date
+        entry.time = timeOf(start)
+        entry.endTime = timeOf(Math.min(DAY_END * 60, start + duration))
+        logWrite('拖带时间的条目（改天 / 改时间）', { date: entry.date, time: entry.time, endTime: entry.endTime, allDay: false })
+      } else {
+        const start = DAY_START * 60 + target.slot * SLOT_MIN
+        entry.date = target.date
+        entry.time = timeOf(start)
+        entry.endTime = timeOf(Math.min(DAY_END * 60, start + 60))
+        logWrite('侧栏 → 网格（自动填日期 + 时间）', { date: entry.date, time: entry.time, endTime: entry.endTime, allDay: false })
+      }
+      render()
+    }
+
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+  }
+
+  // -------------------------------------------------- month: click to add
+  monthEl.addEventListener('click', (ev) => {
+    if (ev.target.closest('.chip')) return
+    const cell = ev.target.closest('.mcell')
+    if (!cell) return
+    const entry = { id: ++seq, title: `新任务 ${seq}`, date: cell.dataset.date, time: null, endTime: null }
+    entries.push(entry)
+    freshId = entry.id
+    logWrite('月视图点日格 → 新建（纯日期）', { date: entry.date, time: undefined, endTime: undefined, allDay: true })
+    render()
+  })
+
+  // ------------------------------------------------------- rail quick-add
+  const addOpen = document.getElementById('addOpen')
+  const addFields = document.getElementById('addFields')
+  const addTitle = document.getElementById('addTitle')
+  const addDate = document.getElementById('addDate')
+  const addCommit = document.getElementById('addCommit')
+  const addCancel = document.getElementById('addCancel')
+
+  addOpen.addEventListener('click', () => {
+    addOpen.classList.add('hidden')
+    addFields.classList.remove('hidden')
+    addTitle.value = ''
+    addDate.value = todayKey
+    addCommit.disabled = true
+    addTitle.focus()
+  })
+  addCancel.addEventListener('click', () => { addFields.classList.add('hidden'); addOpen.classList.remove('hidden') })
+  addTitle.addEventListener('input', () => { addCommit.disabled = !addTitle.value.trim() })
+  addTitle.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && !addCommit.disabled) commitAdd() })
+  addDate.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && !addCommit.disabled) commitAdd() })
+  addCommit.addEventListener('click', commitAdd)
+
+  function commitAdd() {
+    const title = addTitle.value.trim()
+    const date = addDate.value || todayKey
+    if (!title) return
+    const entry = { id: ++seq, title, date, time: null, endTime: null }
+    entries.push(entry)
+    freshId = entry.id
+    // The calendar counterpart of the board's inline composer: date-only write,
+    // exactly what calendar:create already does when no time is given.
+    logWrite('侧栏 + 新建（只有标题 + 日期）', { title, date, time: undefined, allDay: true })
+    addTitle.value = ''
+    addCommit.disabled = true
+    addTitle.focus()
+    render()
+    railScroll.querySelector(`.chip[data-id="${entry.id}"]`)?.scrollIntoView({ block: 'nearest' })
+  }
+
+  // --------------------------------------------------------------- controls
+  document.getElementById('views').addEventListener('click', (ev) => {
+    const btn = ev.target.closest('button[data-view]')
+    if (!btn) return
+    view = btn.dataset.view
+    render()
+  })
+  document.getElementById('prev').addEventListener('click', () => {
+    cursor = view === 'month' ? new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1) : addDays(cursor, view === 'day' ? -1 : -7)
+    render()
+  })
+  document.getElementById('next').addEventListener('click', () => {
+    cursor = view === 'month' ? new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1) : addDays(cursor, view === 'day' ? 1 : 7)
+    render()
+  })
+  document.getElementById('today').addEventListener('click', () => { cursor = new Date(today); render() })
+  document.getElementById('reset').addEventListener('click', reset)
+
+  reset()
+})()
+</script>
+</body>
+</html>

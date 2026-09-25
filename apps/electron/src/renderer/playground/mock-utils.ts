@@ -15,6 +15,8 @@ import type {
 import type {
   WorkItem,
 } from '@phaneris/shared/work-items/browser'
+import type { StatusConfig } from '@phaneris/shared/statuses'
+import type { LoadedProject } from '@phaneris/shared/projects'
 
 // ============================================================================
 // Messaging mock state + control handle
@@ -38,6 +40,24 @@ type WhatsAppEventListener = (payload: { workspaceId: string; event: WhatsAppUiE
 const PLAYGROUND_WORKSPACE_ID = 'playground-workspace'
 
 const playgroundWorkItemListeners = new Set<(workspaceId: string) => void>()
+/**
+ * Dates are relative to today so the fitted Gantt window is never stale, and the
+ * fixture deliberately covers the cases the planning views get wrong:
+ *
+ *   - `launch-review`  spans 5 inclusive days (start −12 → due −8): a correct
+ *     timeline draws 5 cells, the old exclusive-end adapter drew 4.
+ *   - `integration-guide` is a child of it, so the parent renders as a summary
+ *     rolled up from a real descendant range.
+ *   - `api-contract` is a milestone (zero length → exactly 1 day).
+ *   - `handover-notes` and `vendor-review` carry NO dates, so "unscheduled" has
+ *     to be visible rather than silently dropped.
+ */
+function dayOffset(days: number): string {
+  const date = new Date()
+  date.setDate(date.getDate() + days)
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}
+
 const playgroundWorkItems: WorkItem[] = [
   {
     id: 'work-item-launch',
@@ -46,8 +66,8 @@ const playgroundWorkItems: WorkItem[] = [
     description: 'Consolidate validation results and remaining risks.',
     statusId: 'in-progress',
     columnId: 'in-progress',
-    startAt: '2026-08-23',
-    dueAt: '2026-08-26',
+    startAt: dayOffset(-12),
+    dueAt: dayOffset(-8),
     progress: 65,
     dependencyIds: [],
     sessionIds: [],
@@ -61,7 +81,8 @@ const playgroundWorkItems: WorkItem[] = [
     description: 'Document the unified project-management surface.',
     statusId: 'todo',
     columnId: 'todo',
-    dueAt: '2026-08-29',
+    startAt: dayOffset(-7),
+    dueAt: dayOffset(-2),
     progress: 20,
     dependencyIds: ['work-item-launch'],
     parentId: 'work-item-launch',
@@ -69,7 +90,92 @@ const playgroundWorkItems: WorkItem[] = [
     createdAt: Date.UTC(2026, 7, 21, 8),
     updatedAt: Date.UTC(2026, 7, 23, 9),
   },
+  {
+    id: 'work-item-milestone',
+    projectId: 'project-1',
+    title: 'API contract frozen',
+    statusId: 'needs-review',
+    columnId: 'needs-review',
+    startAt: dayOffset(1),
+    dueAt: dayOffset(1),
+    isMilestone: true,
+    progress: 0,
+    dependencyIds: ['work-item-docs'],
+    sessionIds: [],
+    createdAt: Date.UTC(2026, 7, 22, 8),
+    updatedAt: Date.UTC(2026, 7, 22, 9),
+  },
+  {
+    id: 'work-item-long',
+    projectId: 'project-2',
+    title: 'Quarterly rollout',
+    description: 'Long-running work that exercises the fitted window.',
+    statusId: 'todo',
+    columnId: 'todo',
+    startAt: dayOffset(-40),
+    dueAt: dayOffset(120),
+    progress: 35,
+    dependencyIds: [],
+    sessionIds: [],
+    createdAt: Date.UTC(2026, 6, 1, 8),
+    updatedAt: Date.UTC(2026, 7, 1, 9),
+  },
+  {
+    id: 'work-item-unscheduled-a',
+    projectId: 'project-1',
+    title: 'Handover notes',
+    description: 'No dates yet — must still be visible somewhere.',
+    statusId: 'todo',
+    columnId: 'todo',
+    progress: 0,
+    dependencyIds: [],
+    sessionIds: [],
+    createdAt: Date.UTC(2026, 7, 25, 8),
+    updatedAt: Date.UTC(2026, 7, 25, 9),
+  },
+  {
+    id: 'work-item-unscheduled-b',
+    title: 'Vendor review',
+    description: 'Backlog item with no planning dates at all.',
+    statusId: 'backlog',
+    columnId: 'todo',
+    progress: 0,
+    dependencyIds: [],
+    sessionIds: [],
+    createdAt: Date.UTC(2026, 7, 26, 8),
+    updatedAt: Date.UTC(2026, 7, 26, 9),
+  },
+
 ]
+
+const playgroundSessionEventListeners = new Set<(event: unknown) => void>()
+
+/** Workspace statuses, matching the ids the work-item fixture uses. */
+const playgroundStatuses: StatusConfig[] = [
+  { id: 'backlog', label: 'Backlog', color: { light: '#94a3b8' }, category: 'open', isFixed: false, isDefault: true, order: 0 },
+  { id: 'todo', label: 'To Do', color: 'info', category: 'open', isFixed: true, isDefault: true, order: 1 },
+  { id: 'in-progress', label: 'In Progress', color: { light: '#f59e0b' }, category: 'open', isFixed: false, isDefault: true, order: 2 },
+  { id: 'needs-review', label: 'Needs Review', color: { light: '#a855f7' }, category: 'open', isFixed: false, isDefault: true, order: 3 },
+  { id: 'done', label: 'Done', color: 'success', category: 'closed', isFixed: true, isDefault: true, order: 4 },
+]
+
+/** Two projects so the project filter has something to filter. */
+const playgroundProjects = [
+  {
+    config: { id: 'project-1', name: 'Atlas', color: 'info', slug: 'atlas', createdAt: 1, updatedAt: 1 },
+    folderPath: '/playground/atlas',
+    assetsPath: '/playground/atlas/assets',
+    workspaceRootPath: '/playground',
+    workspaceId: PLAYGROUND_WORKSPACE_ID,
+  },
+  {
+    config: { id: 'project-2', name: 'Beacon', color: { light: '#a855f7' }, slug: 'beacon', createdAt: 1, updatedAt: 1 },
+    folderPath: '/playground/beacon',
+    assetsPath: '/playground/beacon/assets',
+    workspaceRootPath: '/playground',
+    workspaceId: PLAYGROUND_WORKSPACE_ID,
+  },
+] as LoadedProject[]
 
 function emitWorkItemsChanged(workspaceId = PLAYGROUND_WORKSPACE_ID) {
   for (const listener of playgroundWorkItemListeners) listener(workspaceId)
@@ -348,14 +454,74 @@ export const mockElectronAPI = {
     console.log('[Playground] sessionCommand called:', sessionId, command)
   },
 
-  // Calendar entries (standalone schedule items)
+  /**
+   * Session event stream.
+   *
+   * This member was missing entirely, and `App.tsx` calls it unconditionally at
+   * mount — so the Playground threw `window.electronAPI.onSessionEvent is not a
+   * function` and rendered 31 DOM nodes of nothing. Every component in the
+   * Projects surface was therefore unverifiable in a browser.
+   */
+  onSessionEvent: (callback: (event: unknown) => void) => {
+    console.log('[Playground] onSessionEvent subscribed')
+    playgroundSessionEventListeners.add(callback)
+    return () => playgroundSessionEventListeners.delete(callback)
+  },
+
+  /**
+   * Statuses and projects. Both drive the Projects surface's own colour and
+   * filter chrome (the Gantt bar accent, the project filter), so an empty mock
+   * would leave the surface rendering but colourless and unfilterable.
+   */
+  listStatuses: async (workspaceId: string) => {
+    console.log('[Playground] listStatuses called:', workspaceId)
+    return playgroundStatuses.map((status) => ({ ...status }))
+  },
+  onStatusesChanged: (callback: (workspaceId: string) => void) => {
+    console.log('[Playground] onStatusesChanged subscribed')
+    void callback
+    return () => {}
+  },
+  getProjects: async (workspaceId: string) => {
+    console.log('[Playground] getProjects called:', workspaceId)
+    return playgroundProjects.map((project) => ({ ...project, config: { ...project.config } }))
+  },
+  onProjectsChanged: (callback: (workspaceId: string, projects: unknown) => void) => {
+    console.log('[Playground] onProjectsChanged subscribed')
+    void callback
+    return () => {}
+  },
+  listViews: async (workspaceId: string) => {
+    console.log('[Playground] listViews called:', workspaceId)
+    return []
+  },
+
+  /**
+   * Calendar entries, dated relative to today.
+   *
+   * The fixture used to be pinned to fixed August 2026 dates, so the month view
+   * (which opens on the current month) always rendered empty and could not be
+   * used to verify anything. These entries land inside the current month and
+   * deliberately include the shapes the view gets wrong: an all-day item, a timed
+   * item, a multi-day span, and one entry outside the 08:00–20:00 window.
+   */
   listCalendarEntries: async (workspaceId: string) => {
     console.log('[Playground] listCalendarEntries called:', workspaceId)
     return [
-      { id: 'n1', title: '团队周会', date: '2026-08-06', time: '10:00', note: '同步本周进展与阻塞项。', createdAt: 1, updatedAt: 1 },
-      { id: 'n2', title: '发布前检查清单', date: '2026-08-14', time: '', note: '冒烟测试 / 更新版本号 / 写 release notes', createdAt: 1, updatedAt: 1 },
-      { id: 'n3', title: '与设计团队过稿', date: '2026-08-05', time: '14:30', note: '新看板视觉稿评审。', createdAt: 1, updatedAt: 1 },
-      { id: 'n0', title: '发布日部署窗口', date: '2026-08-05', time: '', note: '17:00 前完成发布；保留回滚通道。', createdAt: 1, updatedAt: 1 },
+      { id: 'n1', title: 'Team sync', date: dayOffset(1), time: '10:00', endTime: '10:30', note: 'Weekly progress and blockers.', createdAt: 1, updatedAt: 1 },
+      { id: 'n2', title: 'Release checklist', date: dayOffset(3), endDate: dayOffset(5), time: undefined, note: 'Smoke test / bump version / write release notes.', createdAt: 1, updatedAt: 1 },
+      { id: 'n3', title: 'Design review', date: dayOffset(-2), time: '14:30', endTime: '15:30', note: 'New board visuals.', createdAt: 1, updatedAt: 1 },
+      { id: 'n4', title: 'Deploy window', date: dayOffset(-2), time: undefined, note: 'Ship before 17:00; keep a rollback path.', createdAt: 1, updatedAt: 1 },
+      { id: 'n5', title: 'Early standup', date: dayOffset(2), time: '07:00', endTime: '07:30', note: 'Starts before the 08:00 grid — must stay on the grid.', createdAt: 1, updatedAt: 1 },
+      { id: 'n6', title: 'Late handover', date: dayOffset(4), time: '22:00', endTime: '23:00', note: 'Ends after the 20:00 grid — must stay on the grid.', createdAt: 1, updatedAt: 1 },
+      // A deliberately overloaded day. The old month cell hardcoded a capacity of
+      // 3, squeezed the visible chips into 6px unreadable lines, and left
+      // "+N more" as an unfocusable <span> with no way to reach the rest.
+      { id: 'b1', title: 'Busy 1', date: dayOffset(6), time: undefined, createdAt: 1, updatedAt: 1 },
+      { id: 'b2', title: 'Busy 2', date: dayOffset(6), time: undefined, createdAt: 1, updatedAt: 1 },
+      { id: 'b3', title: 'Busy 3', date: dayOffset(6), time: undefined, createdAt: 1, updatedAt: 1 },
+      { id: 'b4', title: 'Busy 4', date: dayOffset(6), time: undefined, createdAt: 1, updatedAt: 1 },
+      { id: 'b5', title: 'Busy 5', date: dayOffset(6), time: undefined, createdAt: 1, updatedAt: 1 },
     ]
   },
   createCalendarEntry: async (workspaceId: string, input: unknown) => {
@@ -373,6 +539,48 @@ export const mockElectronAPI = {
     console.log('[Playground] onCalendarEntriesChanged subscribed')
     void callback
     return () => {}
+  },
+
+  /*
+   * Task Definition editor: create + run.
+   *
+   * The editor is now the only create/edit surface for project work (the board, the
+   * calendar and the timeline all open it), so its submit path has to be reachable
+   * from the Playground — otherwise the one flow the user actually performs could
+   * not be verified at all. The payload is logged verbatim, because what the editor
+   * SENDS is the thing under test: a plan the calendar drew has to arrive as
+   * `planning.startAt`/`dueAt`, not as a decorative highlight.
+   */
+  createTask: async (workspaceId: string, req: unknown) => {
+    console.log('[Playground] createTask called:', workspaceId, JSON.stringify(req))
+    const slug = 'mock-task'
+    return {
+      slug,
+      orchestratorSessionId: `mock-orchestrator-${Date.now()}`,
+      taskLabelId: 'mock-task-label',
+      validation: { valid: true, errors: [], warnings: [] },
+    }
+  },
+  runTask: async (workspaceId: string, req: unknown) => {
+    console.log('[Playground] runTask called:', workspaceId, JSON.stringify(req))
+    return { runId: 'mock-run', nodes: [] }
+  },
+  getTask: async (workspaceId: string, slug: string) => {
+    console.log('[Playground] getTask called:', workspaceId, slug)
+    return { slug, spec: undefined }
+  },
+  getTaskResults: async () => null,
+  generateTask: async (workspaceId: string, req: unknown) => {
+    console.log('[Playground] generateTask called:', workspaceId, JSON.stringify(req))
+    return { orchestratorSessionId: `mock-draft-${Date.now()}` }
+  },
+  onTaskGenerated: (callback: (payload: unknown) => void) => {
+    console.log('[Playground] onTaskGenerated subscribed')
+    void callback
+    return () => {}
+  },
+  deleteSession: async (sessionId: string) => {
+    console.log('[Playground] deleteSession called:', sessionId)
   },
 
   // Work items (canonical project-management tasks)

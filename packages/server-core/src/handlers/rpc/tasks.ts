@@ -24,6 +24,7 @@ import type {
   TaskGetResult,
   TaskResultsDto,
   TaskResultNodeDto,
+  TaskPlanningInput,
 } from '@phaneris/shared/protocol'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
 import {
@@ -41,6 +42,7 @@ import {
   DEFAULT_REPAIR_ATTEMPTS,
   MAX_REPAIR_ATTEMPTS_CAP,
 } from '@phaneris/shared/tasks'
+import { isValidPlanValue } from '@phaneris/shared/work-items'
 import { createLogger } from '@phaneris/shared/utils'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -115,7 +117,44 @@ export function registerTasksHandlers(server: RpcServer, deps: HandlerDeps): voi
     return toValidationDto(parseTaskYaml(yaml))
   })
 
+/**
+ * Reject a planning value the read path could not interpret.
+ *
+ * The session store's plan values are the calendar's and the timeline's only input,
+ * so a malformed one is not a cosmetic problem: `2026-9-2` passed every check once
+ * and then produced `NaN-NaN-NaN` on drag and corrupted range comparison. Failing
+ * at the boundary keeps the store interpretable and gives the editor a message.
+ */
+function assertPlanValue(value: string | null | undefined, field: string): void {
+  if (value === null || value === undefined) return
+  if (!isValidPlanValue(value)) {
+    throw new Error(`Invalid ${field}: expected YYYY-MM-DD or YYYY-MM-DDTHH:mm, received "${value}"`)
+  }
+}
+
   // tasks:create — write task.yaml + create the orchestrator parent session.
+  /**
+   * Put the work on the calendar.
+   *
+   * Runs after the orchestrator session exists, on ALL THREE create paths (fresh,
+   * adopt-a-draft, bind-an-existing-tile) — a plan the user filled in must not be
+   * silently dropped because they happened to arrive through a different one.
+   */
+  const applyPlanning = async (sessionId: string, planning: TaskPlanningInput | undefined): Promise<void> => {
+    if (!planning) return
+    assertPlanValue(planning.startAt, 'startAt')
+    assertPlanValue(planning.dueAt, 'dueAt')
+    if (planning.statusId) await deps.sessionManager.setSessionStatus(sessionId, planning.statusId)
+    await deps.sessionManager.updateSessionPlanning(sessionId, {
+      ...(planning.startAt !== undefined ? { startAt: planning.startAt } : {}),
+      ...(planning.dueAt !== undefined ? { dueAt: planning.dueAt } : {}),
+      ...(planning.progress !== undefined ? { progress: planning.progress } : {}),
+      ...(planning.isMilestone !== undefined ? { isMilestone: planning.isMilestone } : {}),
+      ...(planning.parentId !== undefined ? { parentSessionId: planning.parentId } : {}),
+      ...(planning.dependencyIds !== undefined ? { dependencySessionIds: planning.dependencyIds } : {}),
+    })
+  }
+
   server.handle(RPC_CHANNELS.tasks.CREATE, async (_ctx, workspaceId: string, req: TaskCreateRequest): Promise<TaskCreateResult> => {
     const ws = workspaceOrThrow(workspaceId)
     const parsed = parseTaskYaml(req.yaml)
@@ -133,6 +172,7 @@ export function registerTasksHandlers(server: RpcServer, deps: HandlerDeps): voi
     // (../../tasks/create-task) so the create_task session tool shares it verbatim.
     const finish = async (orchestratorSessionId: string): Promise<TaskCreateResult> => {
       const setup = await finishTaskOrchestrator(deps.sessionManager, orchestratorSessionId, spec)
+      await applyPlanning(orchestratorSessionId, req.planning)
       return { slug: spec.id, orchestratorSessionId, validation, taskLabelId: setup.taskLabelId }
     }
 
@@ -180,6 +220,7 @@ export function registerTasksHandlers(server: RpcServer, deps: HandlerDeps): voi
     // above (all three paths persist first), so skip the core's save. createSession announces the
     // orchestrator to the renderer by default, so its tile appears on the board immediately.
     const created = await createTaskFromSpec(deps.sessionManager, workspaceId, ws.rootPath, spec, { save: false })
+    await applyPlanning(created.orchestratorSessionId, req.planning)
     return { slug: created.slug, orchestratorSessionId: created.orchestratorSessionId, validation, taskLabelId: created.taskLabelId }
   })
 

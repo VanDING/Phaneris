@@ -26,6 +26,9 @@ export const KEYS = {
   collapsedSessionFamilies: 'collapsed-session-families', // Parent session IDs, workspace-scoped
   collapsedSessionGroups: 'collapsed-session-groups', // Collapsed group keys in session list
   collapsedGanttItems: 'collapsed-gantt-items', // Collapsed work-item IDs, workspace/project-scoped
+  calendarViewState: 'calendar-view-state', // Calendar mode + cursor date, workspace-scoped
+  ganttScale: 'gantt-scale', // Gantt zoom preset, workspace-scoped
+  ganttTaskColumnWidth: 'gantt-task-column-width', // Gantt task-list width the user dragged to, workspace-scoped
 
   // Focus mode
   focusModeEnabled: 'focus-mode-enabled',

@@ -1,18 +1,29 @@
 import { describe, it, expect } from 'bun:test';
 import { buildOAuthDeeplinkUrl, type OAuthSessionContext } from '../types';
+import { DEEPLINK_SCHEME } from '../../identity.generated.ts';
+
+/**
+ * The default-scheme fixtures used to pass the UPSTREAM brand (`craftagents`)
+ * while asserting the product's scheme, so four cases failed after the rename.
+ * They now take the scheme from the generated identity contract: this suite
+ * tests what the helper does with a scheme, and `identity:check` owns whether
+ * the product's scheme is correct — restating the brand here would be a second
+ * place to update on every rename, which is what the identity module forbids.
+ */
+const PRODUCT_SCHEME = DEEPLINK_SCHEME;
 
 describe('buildOAuthDeeplinkUrl', () => {
   it('returns deeplink URL when sessionId and deeplinkScheme are provided', () => {
     const ctx: OAuthSessionContext = {
       sessionId: '260209-swift-river',
-      deeplinkScheme: 'craftagents',
+      deeplinkScheme: PRODUCT_SCHEME,
     };
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('phaneris://allSessions/session/260209-swift-river');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe(`${PRODUCT_SCHEME}://allSessions/session/260209-swift-river`);
   });
 
   it('returns undefined when sessionId is missing', () => {
     const ctx: OAuthSessionContext = {
-      deeplinkScheme: 'craftagents',
+      deeplinkScheme: PRODUCT_SCHEME,
     };
     expect(buildOAuthDeeplinkUrl(ctx)).toBeUndefined();
   });
@@ -44,24 +55,24 @@ describe('buildOAuthDeeplinkUrl', () => {
   it('handles session ID with special characters (hyphens and numbers)', () => {
     const ctx: OAuthSessionContext = {
       sessionId: '260209-swift-river-42',
-      deeplinkScheme: 'craftagents',
+      deeplinkScheme: PRODUCT_SCHEME,
     };
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('phaneris://allSessions/session/260209-swift-river-42');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe(`${PRODUCT_SCHEME}://allSessions/session/260209-swift-river-42`);
   });
 
   it('handles session ID with URL-unsafe characters', () => {
     const ctx: OAuthSessionContext = {
       sessionId: 'session/with spaces&special=chars',
-      deeplinkScheme: 'craftagents',
+      deeplinkScheme: PRODUCT_SCHEME,
     };
     // The function does not encode - it passes through as-is
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('phaneris://allSessions/session/session/with spaces&special=chars');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe(`${PRODUCT_SCHEME}://allSessions/session/session/with spaces&special=chars`);
   });
 
   it('returns undefined when sessionId is empty string', () => {
     const ctx: OAuthSessionContext = {
       sessionId: '',
-      deeplinkScheme: 'craftagents',
+      deeplinkScheme: PRODUCT_SCHEME,
     };
     expect(buildOAuthDeeplinkUrl(ctx)).toBeUndefined();
   });

@@ -3,13 +3,20 @@
  *
  * Validates the building blocks of the regression fix:
  * - `getPersistedUiLanguage()` reads back what `setPersistedUiLanguage()` wrote.
- * - Calling `i18n.changeLanguage(persisted)` after `setupI18n()` makes
- *   `i18n.resolvedLanguage` match the persisted value.
+ * - `changeAppLanguage(persisted)` — the exact call the bootstrap makes — loads
+ *   the locale bundle and leaves `i18n.resolvedLanguage` matching the persisted
+ *   value.
  *
  * Together these mean: if `preferences.json` has `uiLanguage: 'hu'` on disk,
  * main-process `i18n.resolvedLanguage` will be `'hu'` after the bootstrap
  * block in `apps/electron/src/main/index.ts` runs — which is the actual
  * thing that broke title generation across restarts.
+ *
+ * The scenario must go through `changeAppLanguage`, not the raw
+ * `i18n.changeLanguage`: only English is bundled at init and every other locale
+ * loads lazily, so a bare `changeLanguage('hu')` resolves to `'en'` because no
+ * `hu` resource bundle exists yet. That is precisely why the helper exists, and
+ * why this test asserts the bundle was loaded rather than only the language tag.
  *
  * `CONFIG_DIR` is captured at module-load, so each scenario runs in a
  * subprocess with `PHANERIS_CONFIG_DIR` set in its env (same pattern as
@@ -46,17 +53,23 @@ describe('main-process i18n bootstrap', () => {
       const r = runScript(
         configDir,
         `
-          import { setupI18n, i18n } from '@phaneris/shared/i18n';
+          import { setupI18n, i18n, changeAppLanguage } from '@phaneris/shared/i18n';
           import { setPersistedUiLanguage, getPersistedUiLanguage } from '@phaneris/shared/config';
           setupI18n();
           setPersistedUiLanguage('hu');
           const persisted = getPersistedUiLanguage();
-          await i18n.changeLanguage(persisted);
-          console.log(JSON.stringify({ persisted, resolved: i18n.resolvedLanguage }));
+          // Mirrors apps/electron/src/main/index.ts:79.
+          await changeAppLanguage(persisted);
+          console.log(JSON.stringify({
+            persisted,
+            resolved: i18n.resolvedLanguage,
+            bundleLoaded: i18n.hasResourceBundle('hu', 'translation'),
+          }));
         `,
       )
       expect(r.exitCode).toBe(0)
-      expect(JSON.parse(r.stdout)).toEqual({ persisted: 'hu', resolved: 'hu' })
+      const parsed = JSON.parse(r.stdout)
+      expect(parsed).toEqual({ persisted: 'hu', resolved: 'hu', bundleLoaded: true })
       expect(existsSync(join(configDir, 'preferences.json'))).toBe(true)
     } finally {
       rmSync(configDir, { recursive: true, force: true })
