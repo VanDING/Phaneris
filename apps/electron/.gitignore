@@ -4,6 +4,16 @@ packages/
 release/
 node_modules/@anthropic-ai/
 
+# Compiled NSIS skin plugin, produced by scripts/prepare-windows-installer.cjs in
+# electron-builder's beforeBuild. The brand images it draws with are committed
+# under installer/assets/.
+installer-ui/
+
+# Output of `bun run probe:installer-nsh` — apps/electron/installer/probe.nsi,
+# compiled twice (installer and uninstaller pass).
+installer/probe-installer-nsh.exe
+installer/probe-uninstaller.exe
+
 # Platform-specific uv binaries (downloaded during build)
 resources/bin/darwin-arm64/
 resources/bin/darwin-x64/

@@ -111,7 +111,10 @@
     "build:smoke": "bun run scripts/build-smoke.ts",
     "perf:smoke": "bun run scripts/performance/run.ts --smoke",
     "perf:baseline": "bun run scripts/performance/run.ts",
-    "lint:i18n:dead-keys": "bun run scripts/check-i18n-dead-keys.ts"
+    "lint:i18n:dead-keys": "bun run scripts/check-i18n-dead-keys.ts",
+    "probe:installer-nsh": "bun run scripts/probe-installer-nsh.ts",
+    "installer:brand": "bun run scripts/generate-installer-brand.ts",
+    "installer:plugin": "node apps/electron/scripts/build-installer-plugin.cjs"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.1136.0",

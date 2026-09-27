@@ -17,6 +17,11 @@ npmRebuild: false
 # Fetch the pinned Bun and document-tool runtimes for the target before copying resources.
 beforePack: scripts/beforePack.cjs
 
+# Compile installer/window-frame.cpp into the NSIS skin plugin. Must run before
+# makensis, and nothing else produces that DLL — see the hook for why a missing
+# toolchain fails the build instead of silently shipping an unbranded installer.
+beforeBuild: scripts/prepare-windows-installer.cjs
+
 # Hook to compile macOS 26+ Liquid Glass icon after packaging
 afterPack: scripts/afterPack.cjs
 
@@ -60,6 +65,49 @@ files:
 # second line of defense.
 asar: false
 
+
+# Windows installer: a fully owner-drawn 600x600 surface, not NSIS's stock
+# dialog. `oneClick: false` is required to have pages at all, but the product
+# decision is still one click to the default per-user location — the install
+# mode page is suppressed in scripts/installer.nsh (`customInstallMode` forces
+# current-user, which makes its PRE function Abort), `allowToChangeInstallationDirectory`
+# stays false so there is no directory page, and `customFinishPage` is defined
+# empty so there is no finish page. What the user gets is the branded welcome
+# (Install now / Change location / License) -> branded progress -> the app
+# launching. The licence and the target folder exist but are opt-in.
+#
+# `allowElevation: false` + `perMachine: false` keep this a per-user install
+# that never raises a UAC prompt — which is also why the reference installer can
+# draw its own window: there is no elevation hand-off mid-flow.
+#
+# `installerLanguages` is pinned to two on purpose. The stock build compiles 25
+# MUI languages in; trimming to the two we actually ship strings for cuts the
+# installer's string table and makes a missing LangString a loud compile error
+# instead of a silent `$(TOKEN)` in the UI. scripts/installer.nsh's strings.nsh
+# must cover exactly this set.
+#
+# NOTE: no `artifactName` here on purpose — identity keys live only in
+# identity.generated.yml, and `identity:check` fails if they reappear.
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: false
+  installerLanguages:
+    - en_US
+    - zh_CN
+  installerIcon: icon.ico
+  uninstallerIcon: icon.ico
+  installerHeader: installer/assets/installerHeader.bmp
+  installerSidebar: installer/assets/uninstaller-sidebar.bmp
+  uninstallerSidebar: installer/assets/uninstaller-sidebar.bmp
+  include: scripts/installer.nsh
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Phaneris
+  # electron-updater's differential download needs the blockmap; dropping this
+  # silently turns every update into a full 170 MB re-download.
+  differentialPackage: true
 
 extraResources:
   # Native PTY runtime for the local integrated terminal. Hoisted to the
