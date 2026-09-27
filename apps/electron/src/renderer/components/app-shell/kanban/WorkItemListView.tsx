@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { projectsAtom } from '@/atoms/projects'
 import { useAppShellContext } from '@/context/AppShellContext'
+import { confirmDialog } from '@/components/ConfirmDialogHost'
 import { useCompensateForStoplight } from '@/context/StoplightContext'
 import { useSetAtom } from 'jotai'
 import { kanbanEditorTargetAtom } from '@/atoms/kanban'
@@ -122,8 +123,15 @@ export function WorkItemListView() {
           <button
             type="button"
             onClick={() => {
-              if (!window.confirm(t('kanban.workItemDeleteSelectedConfirm', { count: selectedIds.length }))) return
-              void Promise.all(selectedIds.map((id) => remove(id))).then(() => setSelectedIds([]))
+              void (async () => {
+                const confirmed = await confirmDialog({
+                  title: t('kanban.workItemDeleteSelectedConfirm', { count: selectedIds.length }),
+                  confirmLabel: t('kanban.workItemDeleteSelected'),
+                })
+                if (!confirmed) return
+                await Promise.all(selectedIds.map((id) => remove(id)))
+                setSelectedIds([])
+              })()
             }}
             className="craft-focus inline-flex items-center gap-1.5 font-semibold text-destructive"
           >

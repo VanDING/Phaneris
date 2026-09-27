@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Diagnostic: what does FullCalendar v7 hand to `select` / `dateClick`?
  *
@@ -5,7 +11,7 @@
  * three gestures: a plain click on an empty 30-minute slot, a drag across two
  * slots, and a drag across days in the month grid.
  *
- * Usage: node plans/calendar-select-probe.mjs [base]
+ * Usage: node scripts/verification/calendar-select-probe.mjs [base]
  */
 import { chromium } from 'playwright'
 

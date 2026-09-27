@@ -324,11 +324,9 @@ export async function handleDeepLink(
       return { success: false, error: 'No active window to navigate' }
     }
 
-    // Focus the window
-    if (window.isMinimized()) {
-      window.restore()
-    }
-    window.focus()
+    // Bring the window in front of the user (same helper as the second-instance
+    // hand-off, so a deeplink never navigates a window the user cannot see).
+    windowManager.focusWindow(window)
   }
 
   // 2. Wait for window to be ready (renderer loaded)

@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 import { readFileSync, writeFileSync } from 'node:fs'
 
 // Read-only source inventory. The only output is this audit's JSON manifest.
@@ -32,9 +38,9 @@ const counts = Object.fromEntries([...new Set(files.map(f => f.area))].map(area 
 const report = {
   date: '2026-09-21',
   commit: process.argv[2] ?? 'unknown',
-  scope: 'rg-visible TSX/CSS/HTML under apps, packages, docs and hero-demo; resources excluded as bundled third-party/user artifacts. Supplemental TS scan includes motion mechanisms outside visual components. Hits are discovery candidates, not findings or proof of manual review.',
+  scope: 'rg-visible TSX/CSS/HTML under apps, packages, docs and docs/assets/hero-demo; resources excluded as bundled third-party/user artifacts. Supplemental TS scan includes motion mechanisms outside visual components. Hits are discovery candidates, not findings or proof of manual review.',
   counts, totalVisualFiles: files.length, supplementalScanned: supplementalPaths.length,
   files, supplemental,
 }
-writeFileSync('plans/motion-audit-inventory.json', JSON.stringify(report, null, 2) + '\n')
+writeFileSync('docs/verification/results/motion-audit-inventory.json', JSON.stringify(report, null, 2) + '\n')
 console.log(JSON.stringify({ commit: report.commit, counts, totalVisualFiles: files.length, supplementalScanned: supplementalPaths.length, supplementalCandidates: supplemental.length }))

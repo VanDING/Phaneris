@@ -100,6 +100,26 @@ export interface ConfirmDialogSpec {
   buttons: string[]
   defaultId?: number
   cancelId?: number
+  /**
+   * Optional localization descriptor.
+   *
+   * The strings above are plain English fallbacks that every client can render
+   * — that is the contract this spec has always had, and clients that ignore
+   * this field keep working. A client that *can* localize should prefer these
+   * keys, so a server never has to ship translated copy over the wire.
+   *
+   * Key names are resolved by the client against its own bundle (for the
+   * Electron client: `@phaneris/shared/i18n`). `values` are interpolated into
+   * every key.
+   */
+  i18n?: {
+    titleKey: string
+    messageKey: string
+    detailKey?: string
+    confirmKey: string
+    cancelKey?: string
+    values?: Record<string, string | number>
+  }
 }
 
 /**

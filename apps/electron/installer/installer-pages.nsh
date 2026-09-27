@@ -103,33 +103,25 @@
 ; the 600x600 window itself and for the brand box.
 
 !define INSTALLER_WINDOW_SIZE 600
-!define INSTALLER_BRAND_Y 174
-!define INSTALLER_BRAND_HEIGHT 196
+!define INSTALLER_BRAND_Y 148
+!define INSTALLER_BRAND_HEIGHT 176
 !define INSTALLER_FONT "Microsoft YaHei UI"
+!define INSTALLER_LATIN_FONT "Segoe UI"
 !define INSTALLER_BUTTON_FONT_SIZE 16
-!define INSTALLER_STATUS_FONT_SIZE 14
+!define INSTALLER_STATUS_FONT_SIZE 15
 !define INSTALLER_BUTTON_DIAMETER 20
-!define INSTALLER_STATUS_Y 512
+!define INSTALLER_STATUS_Y 524
 !define INSTALLER_STATUS_HEIGHT 22
+!define INSTALLER_LOCATION_Y 398
+!define INSTALLER_LOCATION_HEIGHT 40
 
 ; The primary button is the brand accent, in both themes: it is the one element
 ; on the page that is always the same object, and the accent reads as an action
-; against either background. The values are GDI+ ARGB, matching progress.h's
-; kAccent family.
-;
-; Every fill the custom draw can reach is a named literal here rather than an
-; expression at the call site, because the four interaction states have to be
-; legible against each other: the primary's hover is lighter than its rest and
-; its press is darker than both, the secondary pair steps up from the page in
-; two visible increments, and the disabled pair is a neutral that no state can
-; be mistaken for (see InstallerPaintButton). Contrast, measured on the rendered
-; frames rather than asserted: white on #733DF4 is 5.7:1, on #8F63FF 3.9:1, on
-; #5C2CD8 7.4:1 -- the press and hover are both clearly legible at the button's
-; 16 px weight, and the disabled caption is deliberately low-contrast because it
-; is the one state that must not look actionable.
+; against either background. Hover and press deepen the violet so white text
+; keeps at least 4.5:1 contrast in every enabled state.
 !define INSTALLER_ACCENT 0xFF733DF4
-!define INSTALLER_ACCENT_HOVER 0xFF8F63FF
-!define INSTALLER_ACCENT_PRESSED 0xFF5C2CD8
+!define INSTALLER_ACCENT_HOVER 0xFF6932E6
+!define INSTALLER_ACCENT_PRESSED 0xFF5926C7
 
 ; Var declarations belong to the top level of the script; this file is included
 ; from inside a macro, whose body is emitted at the top level, so they land
@@ -141,8 +133,11 @@ Var InstallerSize
 Var InstallerImage
 Var InstallerButton
 Var InstallerStatus
+Var InstallerTitle
 Var InstallerFont
 Var InstallerSmallFont
+Var InstallerTitleFont
+Var InstallerFontFace
 Var InstallerChoose
 Var InstallerEdit
 Var InstallerEditFrame
@@ -169,6 +164,7 @@ Var InstallerTextHex
 Var InstallerBgArgb
 Var InstallerBgColorref
 Var InstallerTextColorref
+Var InstallerMutedColorref
 Var InstallerPrimary
 Var InstallerPrimaryHover
 Var InstallerPrimaryPressed
@@ -205,6 +201,14 @@ Var InstallerBorder
     ${EndIf}
 !macroend
 
+!macro InstallerMutedColors HANDLE
+    ${If} $InstallerTheme == "dark"
+        SetCtlColors ${HANDLE} A5A5B0 151517
+    ${Else}
+        SetCtlColors ${HANDLE} 646570 FFFFFF
+    ${EndIf}
+!macroend
+
 Function InstallerResolveTheme
     ${If} $InstallerTheme == "auto"
         ClearErrors
@@ -224,12 +228,13 @@ Function InstallerResolveTheme
         StrCpy $InstallerBgArgb 0xFF151517
         StrCpy $InstallerBgColorref 0x171515
         StrCpy $InstallerTextColorref 0xFFFFFF
+        StrCpy $InstallerMutedColorref 0xB0A5A5
         StrCpy $InstallerPrimary ${INSTALLER_ACCENT}
         StrCpy $InstallerPrimaryHover ${INSTALLER_ACCENT_HOVER}
         StrCpy $InstallerPrimaryPressed ${INSTALLER_ACCENT_PRESSED}
-        StrCpy $InstallerControlHover 0xFF303034
-        StrCpy $InstallerControlPressed 0xFF3C3C41
-        StrCpy $InstallerTrack 0xFF61666B
+        StrCpy $InstallerControlHover 0xFF252529
+        StrCpy $InstallerControlPressed 0xFF303036
+        StrCpy $InstallerTrack 0xFF33333B
         StrCpy $InstallerButtonText 0xFFFFFF
         ; Disabled is a neutral, never a dimmed accent: a grey control reads as
         ; inert at a glance, where a washed-out violet reads as a loading state.
@@ -239,25 +244,26 @@ Function InstallerResolveTheme
         ; fill above -- muted enough to read as inert without disappearing into
         ; the fill it sits on.
         StrCpy $InstallerButtonTextDisabled 0x80726B
-        StrCpy $InstallerBorder 0xFF61666B
+        StrCpy $InstallerBorder 0xFF45454D
     ${Else}
         StrCpy $InstallerBgHex "FFFFFF"
         StrCpy $InstallerTextHex "0F1115"
         StrCpy $InstallerBgArgb 0xFFFFFFFF
         StrCpy $InstallerBgColorref 0xFFFFFF
         StrCpy $InstallerTextColorref 0x15110F
+        StrCpy $InstallerMutedColorref 0x706564
         StrCpy $InstallerPrimary ${INSTALLER_ACCENT}
         StrCpy $InstallerPrimaryHover ${INSTALLER_ACCENT_HOVER}
         StrCpy $InstallerPrimaryPressed ${INSTALLER_ACCENT_PRESSED}
-        StrCpy $InstallerControlHover 0xFFE9ECF2
-        StrCpy $InstallerControlPressed 0xFFDCE0E6
+        StrCpy $InstallerControlHover 0xFFF3F3F6
+        StrCpy $InstallerControlPressed 0xFFE9E9EF
         StrCpy $InstallerTrack 0xFFE9ECF2
         StrCpy $InstallerButtonText 0xFFFFFF
         StrCpy $InstallerDisabledFill 0xFFE5E7EB
         StrCpy $InstallerDisabledBorder 0xFFD1D5DB
         ; COLORREF for #9CA3AF, the light theme's disabled caption.
         StrCpy $InstallerButtonTextDisabled 0xAFA39C
-        StrCpy $InstallerBorder 0xFFBBC0C8
+        StrCpy $InstallerBorder 0xFFC5C7D0
     ${EndIf}
 FunctionEnd
 
@@ -279,11 +285,12 @@ FunctionEnd
 !macroend
 
 ; A GDI font sized in logical pixels, so the copy scales with the display the
-; same way the layout does. Cleartype quality (5) and the default charset.
+; same way the layout does. Grayscale antialiasing (4) avoids colored fringes
+; on small Chinese glyphs, including text over the violet action.
 !macro InstallerPixelFont HANDLE SIZE WEIGHT
     System::Call 'kernel32::MulDiv(i -${SIZE}, i $InstallerDpi, i 96) i.s'
     Pop $0
-    System::Call 'gdi32::CreateFontW(i r0, i 0, i 0, i 0, i ${WEIGHT}, i 0, i 0, i 0, i 1, i 0, i 0, i 5, i 0, w "${INSTALLER_FONT}") p.s'
+    System::Call 'gdi32::CreateFontW(i r0, i 0, i 0, i 0, i ${WEIGHT}, i 0, i 0, i 0, i 1, i 0, i 0, i 4, i 0, w "$InstallerFontFace") p.s'
     Pop ${HANDLE}
 !macroend
 
@@ -309,9 +316,9 @@ FunctionEnd
 Function InstallerDrawEditFrame
     System::Call 'kernel32::MulDiv(i 384, i $InstallerDpi, i 96) i.s'
     Pop $R7
-    System::Call 'kernel32::MulDiv(i 34, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_LOCATION_HEIGHT}, i $InstallerDpi, i 96) i.s'
     Pop $R8
-    System::Call 'kernel32::MulDiv(i 12, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i 16, i $InstallerDpi, i 96) i.s'
     Pop $R3
     System::Call 'gdiplus::GdipCreateBitmapFromScan0(i R7, i R8, i 0, i 0x26200A, p 0, *p .s)'
     Pop $R5
@@ -322,7 +329,7 @@ Function InstallerDrawEditFrame
     IntOp $R7 $R7 - 1
     IntOp $R8 $R8 - 1
     !insertmacro InstallerRoundPath $R6 $R7 $R8 $R3
-    System::Call 'gdiplus::GdipCreatePen1(i $InstallerBorder, i 0x40000000, i 2, *p .s)'
+    System::Call 'gdiplus::GdipCreatePen1(i $InstallerBorder, i 0x3F800000, i 2, *p .s)'
     Pop $R1
     System::Call 'gdiplus::GdipDrawPath(p R4, p R1, p R6)'
     System::Call 'gdiplus::GdipCreateHBITMAPFromBitmap(p R5, *p .s, i $InstallerBgArgb)'
@@ -347,8 +354,13 @@ Function InstallerCreate
     !insertmacro InstallerPlace $InstallerDialog 0 0 ${INSTALLER_WINDOW_SIZE} ${INSTALLER_WINDOW_SIZE}
     !insertmacro InstallerControlColors $HWNDPARENT
     !insertmacro InstallerControlColors $InstallerDialog
+    StrCpy $InstallerFontFace "${INSTALLER_LATIN_FONT}"
+    ${If} $LANGUAGE == ${LANG_SIMPCHINESE}
+        StrCpy $InstallerFontFace "${INSTALLER_FONT}"
+    ${EndIf}
     !insertmacro InstallerPixelFont $InstallerFont ${INSTALLER_BUTTON_FONT_SIZE} 500
     !insertmacro InstallerPixelFont $InstallerSmallFont ${INSTALLER_STATUS_FONT_SIZE} 400
+    !insertmacro InstallerPixelFont $InstallerTitleFont 20 500
 
     ; GdiplusStartupInput is {GdiplusVersion=1, DebugEventCallback=NULL,
     ; SuppressBackgroundThread=FALSE, SuppressExternalCodecs=FALSE}, allocated on
@@ -378,14 +390,14 @@ Function InstallerCreate
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_MINIMIZE)"
     Pop $4
     !insertmacro InstallerPlace $4 504 8 40 32
-    SendMessage $4 ${WM_SETFONT} $InstallerFont 1
+    SendMessage $4 ${WM_SETFONT} $InstallerSmallFont 1
     ${NSD_OnClick} $4 InstallerMinimize
     ${NSD_OnNotify} $4 InstallerPaintButton
 
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_CLOSE_GLYPH)"
     Pop $4
     !insertmacro InstallerPlace $4 548 8 40 32
-    SendMessage $4 ${WM_SETFONT} $InstallerFont 1
+    SendMessage $4 ${WM_SETFONT} $InstallerSmallFont 1
     ${NSD_OnClick} $4 InstallerClose
     ${NSD_OnNotify} $4 InstallerPaintButton
 
@@ -402,24 +414,27 @@ Function InstallerCreate
         ${NSD_SetStretchedImage} $4 "$PLUGINSDIR\$5-2x.bmp" $InstallerImage
     ${EndIf}
 
-    ; Doubles as the path validation message: empty until something is wrong.
+    ; Completion title and supporting copy have independent type hierarchy.
+    ${NSD_CreateLabel} 0 0 0 0 "$(INSTALLER_FINISH_TITLE)"
+    Pop $InstallerTitle
+    !insertmacro InstallerPlace $InstallerTitle 48 336 504 28
+    ${NSD_AddStyle} $InstallerTitle ${SS_CENTER}
+    SendMessage $InstallerTitle ${WM_SETFONT} $InstallerTitleFont 1
+    !insertmacro InstallerControlColors $InstallerTitle
+
+    ; Supporting copy also serves as the inline path error on welcome.
     ${NSD_CreateLabel} 0 0 0 0 ""
     Pop $InstallerStatus
     !insertmacro InstallerPlace $InstallerStatus 48 ${INSTALLER_STATUS_Y} 504 ${INSTALLER_STATUS_HEIGHT}
-    ; Two calls rather than one OR-ed mask: NSD_AddStyle feeds its argument to
-    ; System::Int64Op, which parses a single number and would stop at the pipe.
     ${NSD_AddStyle} $InstallerStatus ${SS_CENTER}
-    ; NOT SS_CENTERIMAGE. On a static that style makes Windows render a single
-    ; line, so the "$\r$\n" in the finish page's two-line message was swallowed
-    ; and the page read as one run-on line with no separator. The label is sized
-    ; per use instead -- 22 for one line, 42 for the wrapped ones.
+    ; Keep wrapping for longer path validation messages.
     SendMessage $InstallerStatus ${WM_SETFONT} $InstallerSmallFont 1
     !insertmacro InstallerControlColors $InstallerStatus
 
     ; Collapsed state: one secondary button that reveals the path row.
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_CHOOSE_PATH)"
     Pop $InstallerChoose
-    !insertmacro InstallerPlace $InstallerChoose 232 438 136 28
+    !insertmacro InstallerPlace $InstallerChoose 212 400 176 36
     ; The font the CONTROL carries and the font InstallerPaintButton selects have
     ; to be the same one, or the caption the paint draws is not the caption the
     ; control would have drawn -- a mismatch that only shows up as text sitting
@@ -431,12 +446,11 @@ Function InstallerCreate
     ; Expanded state: the frame, the edit, and Browse.
     ${NSD_CreateBitmap} 0 0 0 0 ""
     Pop $InstallerEditFrame
-    !insertmacro InstallerPlace $InstallerEditFrame 64 434 384 34
+    !insertmacro InstallerPlace $InstallerEditFrame 64 ${INSTALLER_LOCATION_Y} 384 ${INSTALLER_LOCATION_HEIGHT}
     Call InstallerDrawEditFrame
     ${NSD_CreateText} 0 0 0 0 "$InstallerPath"
     Pop $InstallerEdit
-    ; WS_BORDER and ES_AUTOHSCROLL off: the frame bitmap draws the border, and
-    ; the value is a single line that fits or elides.
+    ; Remove WS_BORDER; keep native ES_AUTOHSCROLL so long paths stay editable.
     System::Call 'user32::GetWindowLongW(p $InstallerEdit, i -16) i.s'
     Pop $0
     IntOp $0 $0 & 0xFF7FFFFF
@@ -446,7 +460,7 @@ Function InstallerCreate
     IntOp $0 $0 & 0xFFFFFDFF
     System::Call 'user32::SetWindowLongW(p $InstallerEdit, i -20, i r0)'
     SendMessage $InstallerEdit ${WM_SETFONT} $InstallerSmallFont 1
-    ; Centre the single line vertically inside the 34-unit frame by measuring
+    ; Centre the single line vertically inside the 40-unit frame by measuring
     ; the font's height once and splitting the remainder.
     System::Call 'user32::GetDC(p $InstallerEdit) p.s'
     Pop $4
@@ -462,11 +476,11 @@ Function InstallerCreate
     System::Call 'user32::ReleaseDC(p $InstallerEdit, p r4)'
     System::Call 'kernel32::MulDiv(i 76, i $InstallerDpi, i 96) i.s'
     Pop $0
-    System::Call 'kernel32::MulDiv(i 434, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_LOCATION_Y}, i $InstallerDpi, i 96) i.s'
     Pop $1
     System::Call 'kernel32::MulDiv(i 360, i $InstallerDpi, i 96) i.s'
     Pop $2
-    System::Call 'kernel32::MulDiv(i 34, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_LOCATION_HEIGHT}, i $InstallerDpi, i 96) i.s'
     Pop $3
     IntOp $3 $3 - $7
     IntOp $3 $3 / 2
@@ -479,7 +493,7 @@ Function InstallerCreate
 
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_BROWSE)"
     Pop $InstallerBrowse
-    !insertmacro InstallerPlace $InstallerBrowse 456 434 80 34
+    !insertmacro InstallerPlace $InstallerBrowse 456 ${INSTALLER_LOCATION_Y} 80 ${INSTALLER_LOCATION_HEIGHT}
     SendMessage $InstallerBrowse ${WM_SETFONT} $InstallerSmallFont 1
     ${NSD_OnClick} $InstallerBrowse InstallerBrowsePath
     ${NSD_OnNotify} $InstallerBrowse InstallerPaintButton
@@ -508,7 +522,7 @@ Function InstallerCreate
     IntOp $2 $2 + $7
     IntOp $0 $InstallerSize - $2
     IntOp $0 $0 / 2
-    System::Call 'kernel32::MulDiv(i 438, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i 400, i $InstallerDpi, i 96) i.s'
     Pop $1
     System::Call 'kernel32::MulDiv(i 32, i $InstallerDpi, i 96) i.s'
     Pop $3
@@ -517,22 +531,12 @@ Function InstallerCreate
     ${NSD_OnNotify} $InstallerLaunch InstallerPaintCheckbox
     ${NSD_Check} $InstallerLaunch
 
-    ; There used to be a "license agreement" link in the bottom-left corner.
-    ; It is gone, on the product owner's call, and the page is the better for it:
-    ; the MIT text it opened says nothing a user of a one-click installer needs
-    ; at that moment, and a lone muted link in the corner was the only thing
-    ; competing with the one action this page has. The licence still ships in
-    ; $PLUGINSDIR (scripts/installer.nsh stages it) and is still what the app
-    ; itself and the repository are under -- it is simply not a page control.
-    ;
-    ; What is left is a single centred column -- brand (174-370), the location
-    ; row (438-472 when open), the action (490-534) -- with the bottom band
-    ; reserved for the one transient message the page can show, the path
-    ; validation error below.
+    ; The action stays anchored on both pages. The bottom band is reserved for
+    ; path validation, keeping transient errors clear of the controls.
 
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_INSTALL)"
     Pop $InstallerButton
-    !insertmacro InstallerPlace $InstallerButton 240 490 120 44
+    !insertmacro InstallerPlace $InstallerButton 188 456 224 48
     SendMessage $InstallerButton ${WM_SETFONT} $InstallerFont 1
     ${NSD_OnClick} $InstallerButton InstallerStart
     ${NSD_OnNotify} $InstallerButton InstallerPaintButton
@@ -551,6 +555,7 @@ Function InstallerCreate
     System::Call 'gdiplus::GdiplusShutdown(p $InstallerGdiToken)'
     System::Call 'gdi32::DeleteObject(p $InstallerFont)'
     System::Call 'gdi32::DeleteObject(p $InstallerSmallFont)'
+    System::Call 'gdi32::DeleteObject(p $InstallerTitleFont)'
 FunctionEnd
 
 ; Everything phase-dependent happens here, so a control can never be left in the
@@ -562,21 +567,13 @@ Function InstallerRender
     ShowWindow $InstallerBrowse 0
     ShowWindow $InstallerLaunch 0
     ShowWindow $InstallerStatus 0
+    ShowWindow $InstallerTitle 0
     ${If} $InstallerPhase == "success"
         ${NSD_SetText} $InstallerButton "$(INSTALLER_FINISH)"
-        ; The confirmation the old finish page carried. It goes in the status
-        ; label -- a static, placed below the button -- so the only thing a user
-        ; can click on this page is still the one button, and the page is not a
-        ; bare checkbox next to "Finish".
-        ;
-        ; It sits ABOVE the checkbox, not under the button, and that is a layout
-        ; fix rather than a preference: at y=542 the two lines ended 16 px from
-        ; the bottom edge, crowding the window while the 12 px band between the
-        ; brand and the checkbox sat empty. The page now reads as one centred
-        ; column -- brand (174-370), copy (382-426), launch decision (438-470),
-        ; action (490-534) -- with the same 300 px axis and comparable gaps.
-        ${NSD_SetText} $InstallerStatus "$(INSTALLER_FINISH_TITLE)$\r$\n$(INSTALLER_FINISH_BODY)"
-        !insertmacro InstallerPlace $InstallerStatus 48 382 504 44
+        ${NSD_SetText} $InstallerStatus "$(INSTALLER_FINISH_BODY)"
+        !insertmacro InstallerPlace $InstallerStatus 48 372 504 22
+        !insertmacro InstallerMutedColors $InstallerStatus
+        ShowWindow $InstallerTitle 5
         ShowWindow $InstallerStatus 5
         ShowWindow $InstallerLaunch 5
     ${Else}
@@ -641,7 +638,12 @@ Function InstallerValidateEditedPath
     ; the only thing this page ever shows down there now, so it gets the whole
     ; width and two lines rather than being tucked beside a link.
     ${NSD_SetText} $InstallerStatus "$InstallerError"
-    !insertmacro InstallerPlace $InstallerStatus 48 542 504 42
+    !insertmacro InstallerPlace $InstallerStatus 64 ${INSTALLER_STATUS_Y} 472 44
+    ${If} $InstallerTheme == "dark"
+        SetCtlColors $InstallerStatus F6A6AE 151517
+    ${Else}
+        SetCtlColors $InstallerStatus A72D40 FFFFFF
+    ${EndIf}
     ShowWindow $InstallerStatus 5
 FunctionEnd
 
@@ -784,7 +786,7 @@ Function InstallerPaintButton
     ; BM_GETSTATE from outside the process: WM_LBUTTONDOWN gives 0x006C
     ; (pushed + focus) and the caption's fill follows it to #5C2CD8; a focus
     ; change gives 0x0008; and a REAL pointer move onto the control gives 0x0200
-    ; (hot), which paints #8F63FF. A synthetic WM_MOUSEMOVE leaves the state at
+    ; (hot), which paints the hover accent. A synthetic WM_MOUSEMOVE leaves the state at
     ; 0x0000 -- comctl32's button tracks the pointer, not the message -- which is
     ; why the hover evidence is photographed with a real cursor move.
     System::Call 'user32::SendMessageW(p R0, i 0xF2, p 0, p 0) i.s'
@@ -853,22 +855,18 @@ Function InstallerPaintButton
     System::Call 'gdiplus::GdipSetPixelOffsetMode(p R5, i 4)'
     System::Call 'kernel32::MulDiv(i ${INSTALLER_BUTTON_DIAMETER}, i $InstallerDpi, i 96) i.s'
     Pop $R3
-    ; The secondary controls sit on the page rather than on the accent, so they
-    ; get the reference's 1 px border and its smaller corner. InstallerChoose
-    ; used to fall through to a page-coloured fill with no border at all, which on
-    ; a white page is invisible: the choose control's caption read as a stray
-    ; line of text rather than as something to click.
+    ; The location disclosure is quiet at rest, with hover and focus feedback.
+    ; The browse action shares the input's smaller corner and fine border.
     ${If} $R0 == $InstallerBrowse
     ${OrIf} $R0 == $InstallerChoose
-        System::Call 'kernel32::MulDiv(i 12, i $InstallerDpi, i 96) i.s'
+        System::Call 'kernel32::MulDiv(i 16, i $InstallerDpi, i 96) i.s'
         Pop $R3
     ${EndIf}
     !insertmacro InstallerRoundPath $R6 $R7 $R8 $R3
     System::Call 'gdiplus::GdipFillPath(p R5, p R1, p R6)'
     System::Call 'gdiplus::GdipDeleteBrush(p R1)'
     ${If} $R0 == $InstallerBrowse
-    ${OrIf} $R0 == $InstallerChoose
-        System::Call 'gdiplus::GdipCreatePen1(i R9, i 0x40000000, i 2, *p .s)'
+        System::Call 'gdiplus::GdipCreatePen1(i R9, i 0x3F800000, i 2, *p .s)'
         Pop $2
         System::Call 'gdiplus::GdipDrawPath(p R5, p r2, p R6)'
         System::Call 'gdiplus::GdipDeletePen(p r2)'
@@ -913,7 +911,7 @@ Function InstallerPaintButton
         Pop $6
         ${If} $R0 == $InstallerBrowse
         ${OrIf} $R0 == $InstallerChoose
-            System::Call 'kernel32::MulDiv(i 12, i $InstallerDpi, i 96) i.s'
+            System::Call 'kernel32::MulDiv(i 16, i $InstallerDpi, i 96) i.s'
             Pop $6
         ${EndIf}
         IntOp $6 $6 - $5
@@ -940,7 +938,7 @@ Function InstallerPaintButton
         ; GdipCreatePen1's width argument actually is: a REAL. Passing an integer
         ; 2 there instead reads as a denormal float and draws nothing, which is
         ; the same trap the border pen above avoids by writing the pattern out.
-        ; The ring is therefore a fixed 2 device pixels, exactly like the border,
+        ; The ring is therefore a fixed 2 device pixels, stronger than the border,
         ; while the geometry around it still scales with $InstallerDpi.
         System::Call 'gdiplus::GdipCreatePen1(i r9, i 0x40000000, i 2, *p .s)'
         Pop $R1
@@ -953,6 +951,8 @@ Function InstallerPaintButton
     System::Call 'gdi32::SetBkMode(p R4, i 1)'
     ${If} $R0 == $InstallerButton
         System::Call 'gdi32::SetTextColor(p R4, i $InstallerButtonText)'
+    ${ElseIf} $R0 == $InstallerChoose
+        System::Call 'gdi32::SetTextColor(p R4, i $InstallerMutedColorref)'
     ${Else}
         System::Call 'gdi32::SetTextColor(p R4, i $InstallerTextColorref)'
     ${EndIf}
@@ -963,10 +963,9 @@ Function InstallerPaintButton
     ${If} $R1 != 0
         System::Call 'gdi32::SetTextColor(p R4, i $InstallerButtonTextDisabled)'
     ${EndIf}
-    System::Call 'gdi32::SelectObject(p R4, p $InstallerFont)'
-    ${If} $R0 == $InstallerChoose
-    ${OrIf} $R0 == $InstallerBrowse
-        System::Call 'gdi32::SelectObject(p R4, p $InstallerSmallFont)'
+    System::Call 'gdi32::SelectObject(p R4, p $InstallerSmallFont)'
+    ${If} $R0 == $InstallerButton
+        System::Call 'gdi32::SelectObject(p R4, p $InstallerFont)'
     ${EndIf}
     ${NSD_GetText} $R0 $R3
     ; DT_CENTER|DT_VCENTER|DT_SINGLELINE|DT_NOPREFIX -- centred in the SAME rect

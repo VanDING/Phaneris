@@ -1,19 +1,25 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Diagnostic probe: does the Playground actually render the calendar and gantt
  * projections, and if not, which `electronAPI` member is missing?
  *
  * Read-only: it observes console output and DOM state, and injects nothing that
- * changes product code. Results are written to plans/calendar-gantt-probe.json.
+ * changes product code. Results are written to docs/verification/results/calendar-gantt-probe.json.
  *
  * Usage (start the renderer dev server first):
  *   cd apps/electron && bun run dev
- *   node plans/calendar-gantt-probe.mjs http://localhost:5199
+ *   node scripts/verification/calendar-gantt-probe.mjs http://localhost:5199
  */
 import { mkdir, writeFile } from 'node:fs/promises'
 import { chromium } from 'playwright'
 
 const base = process.argv[2] ?? 'http://localhost:5199'
-const outputPath = 'plans/calendar-gantt-probe.json'
+const outputPath = 'docs/verification/results/calendar-gantt-probe.json'
 
 const browser = await chromium.launch({ headless: true })
 const report = { base, browser: browser.version(), date: new Date().toISOString(), views: {} }
@@ -92,7 +98,7 @@ for (const id of ['calendar-view', 'gantt-view', 'work-item-board-view']) {
   if (view.bodyTextHead) console.log(`   text: ${JSON.stringify(view.bodyTextHead.slice(0, 160))}`)
 }
 
-await mkdir('plans', { recursive: true })
+await mkdir('docs/verification/results', { recursive: true })
 await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`)
 console.log(`\nwrote ${outputPath}`)
 await browser.close()

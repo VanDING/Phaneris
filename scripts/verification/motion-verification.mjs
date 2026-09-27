@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Motion implementation verification — real components in a real browser.
  *
@@ -8,17 +14,17 @@
  *
  * Usage (start the renderer dev server first):
  *   cd apps/electron && bun run dev
- *   node plans/motion-verification.mjs http://127.0.0.1:5173
+ *   node scripts/verification/motion-verification.mjs http://127.0.0.1:5173
  *
  * Uses the installed Edge through Playwright (no browser download) and isolated
- * storage. Results are written to plans/motion-verification-results.json.
+ * storage. Results are written to docs/verification/results/motion-verification-results.json.
  */
 import assert from 'node:assert/strict'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { chromium } from 'playwright'
 
 const base = process.argv[2] ?? 'http://127.0.0.1:5173'
-const outputDir = 'plans'
+const outputDir = 'docs/verification/results'
 const results = {
   date: new Date().toISOString().slice(0, 10),
   base,

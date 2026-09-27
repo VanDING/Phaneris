@@ -70,8 +70,8 @@ DST 用例经独立验证确实"咬得住"：在 `America/New_York` 下，`+86_4
 
 ```bash
 bun run vite dev --config apps/electron/vite.config.ts --port 5199 --strictPort
-node plans/calendar-gantt-verification.mjs http://localhost:5199
-# 结果：10/10 通过；产物 plans/calendar-gantt-verification.json
+node scripts/verification/calendar-gantt-verification.mjs http://localhost:5199
+# 结果：10/10 通过；产物 docs/verification/results/calendar-gantt-verification.json
 ```
 
 10 项断言：Playground 可启动；甘特渲染 bar/行/ISO 周刻度；**条宽 = 含末日天数**；行元数据显示**含末日**；ISO 周号连续且合法；未排期计数/抽屉/bar 数三者一致；日历月视图有条目；窗外定时条目不越出网格；编辑器阻止"结束早于开始"；**保存被拒时给出提示且页面不关闭**。
@@ -145,8 +145,8 @@ FullCalendar v7 **只有哈希 class 名**（`fc-0Bj`、`fc-classic-1sP`），`f
 
 ```bash
 bun run vite dev --config apps/electron/vite.config.ts --port 5199 --strictPort
-node plans/calendar-gantt-verification.mjs http://localhost:5199
-# 12/12；产物 plans/calendar-gantt-verification.json
+node scripts/verification/calendar-gantt-verification.mjs http://localhost:5199
+# 12/12；产物 docs/verification/results/calendar-gantt-verification.json
 ```
 
 新增的日历断言：
@@ -184,7 +184,7 @@ node plans/calendar-gantt-verification.mjs http://localhost:5199
 
 ### 2.6 门禁同步
 
-`plans/motion-verification.mjs` 的日历检查已重写：原实现查找 `[role="tablist"]`（自绘控件从未有过该 role），作用域静默退化为 `document.body`，**断言通过但观察的是整个 Playground**。新实现作用域锁定 `.phaneris-calendar`，逐帧确认网格不消失，并断言恰好一个日历分段处于 `aria-checked`。**18/18 通过**。
+`scripts/verification/motion-verification.mjs` 的日历检查已重写：原实现查找 `[role="tablist"]`（自绘控件从未有过该 role），作用域静默退化为 `document.body`，**断言通过但观察的是整个 Playground**。新实现作用域锁定 `.phaneris-calendar`，逐帧确认网格不消失，并断言恰好一个日历分段处于 `aria-checked`。**18/18 通过**。
 
 ## 3. 既有测试失败：已全部修复（`bun run test` exit 0）
 
@@ -222,7 +222,7 @@ node plans/calendar-gantt-verification.mjs http://localhost:5199
   | `changeAppLanguage` 不再加载 bundle | 1 |
   | 沙箱路径退回词法 `resolve()` | **7**（含 2 项 transform_data） |
   | 网络用例默认开启 | ——（改为 opt-in 后无需变异） |
-- E2E 复跑：`plans/calendar-gantt-verification.mjs` **12/12**、`plans/motion-verification.mjs` **18/18**
+- E2E 复跑：`scripts/verification/calendar-gantt-verification.mjs` **12/12**、`scripts/verification/motion-verification.mjs` **18/18**
 - 门禁：`typecheck:all` 0 错误；lint 0 error；`i18n` × 3 OK；`identity:check` / `version:check` OK
 
 ### 3.3 网络用例改为 opt-in（设计决定）
@@ -262,8 +262,8 @@ node plans/calendar-gantt-verification.mjs http://localhost:5199
 | `apps/electron/src/renderer/lib/calendar-events.ts` | 规划日期 ↔ FullCalendar 事件换算 |
 | `apps/electron/src/renderer/lib/__tests__/calendar-events.test.ts` | 17 项换算失败用例（已变异验证） |
 | `apps/electron/src/renderer/components/app-shell/kanban/calendar-overrides.css` | FullCalendar token 映射（~70 行） |
-| `plans/calendar-gantt-verification.mjs` + `.json` | **E2E 验收产物**（12 项断言） |
-| `plans/calendar-gantt-probe.mjs` + `.json` | Playground 诊断探针（定位缺失 API） |
+| `scripts/verification/calendar-gantt-verification.mjs` + `.json` | **E2E 验收产物**（12 项断言） |
+| `scripts/verification/calendar-gantt-probe.mjs` + `.json` | Playground 诊断探针（定位缺失 API） |
 
 **修改**
 
@@ -279,7 +279,7 @@ node plans/calendar-gantt-verification.mjs http://localhost:5199
 | `packages/shared/src/work-items/{query,browser,index}.ts` | 委托单一实现；导出新助手 |
 | `packages/shared/src/protocol/dto.ts` | `CalendarEntry` 文档纠偏（不是独立存储） |
 | `packages/shared/src/i18n/locales/*.json`（7 个） | +17 key、-9 死 key（2416 key/语言） |
-| `plans/motion-verification.mjs` | 日历检查重写（原 `[role="tablist"]` 假设失效） |
+| `scripts/verification/motion-verification.mjs` | 日历检查重写（原 `[role="tablist"]` 假设失效） |
 | `docs/process/univer-native-workbench-integration-plan.md` | 更正"gantt 不注册路由"的过期描述 |
 | `apps/electron/package.json` | 声明 `@fullcalendar/react` + `temporal-polyfill` |
 
@@ -356,10 +356,27 @@ bash apps/electron/scripts/build-dmg.sh x64              # 本机为 x86_64（AM
 
 | 脚本 | 结果 |
 | --- | --- |
-| `plans/packaged-client-verification.mjs --arch=x64` | **9/9** —— 版本/身份、深链 scheme（且不含上游 scheme）、x86_64、未签名、asar 关闭、bun/ripgrep/文档工具/WhatsApp worker/node-pty 等资源就位、renderer 已打包 |
-| `plans/packaged-client-smoke.mjs --arch=x64` | **5/5** —— 真实启动 25s 不崩、Chromium 拉起 helper、无致命输出、主进程改写了自己的 config、测试后无残留进程 |
+| `scripts/verification/packaged-client-verification.mjs --arch=x64` | **9/9** —— 版本/身份、深链 scheme（且不含上游 scheme）、x86_64、未签名、asar 关闭、bun/ripgrep/文档工具/WhatsApp worker/node-pty 等资源就位、renderer 已打包 |
+| `scripts/verification/packaged-client-smoke.mjs --arch=x64` | **5/5** —— 真实启动 25s 不崩、Chromium 拉起 helper、无致命输出、主进程改写了自己的 config、测试后无残留进程 |
 
 **烟雾测试自身的修正**：第一版是**空跑**的 —— 把 `dist/main.cjs` 删掉后它仍然 5/5 通过（Electron 会停在错误窗口里，进程照样存活、照样拉起 renderer、userData 照样存在）。现改为断言 **`~/.phaneris/config.json` 的 mtime 在启动期间前进**（主进程读取→迁移→写回的证据）。已双向验证：健康启动会前进，删除入口后不前进；变异后脚本从 5/5 变为 **3/5**，两条断言如实失败。
+
+---
+
+## 7.1 Windows 打包（v0.2.3）与校验脚本跨平台化
+
+**产物**：`apps/electron/release/Phaneris-0.2.3-win-x64.exe`（NSIS oneClick，165.2 MiB）、`release/win-unpacked/`、同名 `.exe.blockmap`。未签名。**未执行安装**（安装会写入 `%LOCALAPPDATA%\Programs` 与注册表，属于改动本机状态的动作，留待明确要求时再做）。
+
+**Windows 特有的校验缺口**：两个 `scripts/verification/packaged-client-*.mjs` 原本写死 macOS（`Contents/MacOS`、Info.plist、`plutil`、`pgrep`、`codesign`、`release/mac`），在 Windows 上无法运行。现按平台分支：Windows 侧改读 exe 的 VERSIONINFO（`ProductName` / `CompanyName` / 版本取自包内 `package.json`）、直接解析 PE 头判定架构与**证书表是否为空**（`Get-AuthenticodeSignature` 依赖的 `Microsoft.PowerShell.Security` 在部分环境无法加载）、用 CIM 按可执行文件路径枚举 bundle 进程、以 `taskkill /T /F` 收尾。深链 scheme 只在 macOS 断言：Windows 的注册表项由安装器写入，属于安装后检查。结果文件按平台分开（`-win.json`），互不覆盖。
+
+**验收产物**（本机 x64）：
+
+| 脚本 | 结果 |
+| --- | --- |
+| `scripts/verification/packaged-client-verification.mjs --arch=x64` | **8/8** —— 安装器版本化命名、win-unpacked 就位、VERSIONINFO 身份与 `phaneris.identity.json` 一致、PE 机器类型 x64、未签名、asar 关闭且 bun/ripgrep/文档工具/WhatsApp worker/node-pty 等资源在包外、`ripgrep-win32-x64/bin/rg.exe` 实体存在、renderer 已打包且无 sourcemap |
+| `scripts/verification/packaged-client-smoke.mjs` | **5/5** —— 真实启动 25s 不崩、Chromium 拉起 helper（4 进程）、无致命输出、首次运行初始化写出 config、测试后无残留进程；连跑两次均 5/5 |
+
+**判据修正（Windows 实测推翻原判据的普适性）**：原判据「主进程在每次启动都改写 `~/.phaneris/config.json`」在本机不成立 —— 打包产物启动后该文件 mtime 不动。查证结论：本仓库**所有** `config.json` 写入都以「配置缺失或数据变化」为条件（`packages/shared/src/config/storage.ts` 的 `saveConfig` 调用点、`apps/electron/src/main/index.ts:402`、`packaged/server-core` 的 `ensureGlobalConfigExists`），遇到健康配置就不写；macOS 那次前进只反映那台机器的数据状态，判据本身随机器数据时灵时不灵，也无法重复运行。现改为：用一次性空数据根目录（`PHANERIS_CONFIG_DIR`，`packages/shared/src/config/paths.ts` 文档化的多实例开关）启动，**首次运行初始化必然写出 config.json**，跑完删除该目录（真实 `~/.phaneris` 与 `%APPDATA%\Phaneris` 的 config 不受影响，已核对 mtime 未变）。**变异验证**：把打包内 `resources/app/dist/main.cjs` 移走后，进程照样存活、照样拉起 helper、无致命输出，但该断言如实失败 —— 4/5；恢复后回到 5/5。
 
 ---
 

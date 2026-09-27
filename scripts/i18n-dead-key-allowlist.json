@@ -1,1 +1,7 @@
-[]
+[
+  "dialog.deleteSession.title",
+  "dialog.deleteSession.detail",
+  "dialog.logout.title",
+  "dialog.logout.detail",
+  "dialog.logout.confirm"
+]

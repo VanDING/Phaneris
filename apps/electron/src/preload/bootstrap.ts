@@ -18,6 +18,7 @@
 
 import '@sentry/electron/preload'
 import { contextBridge, ipcRenderer, shell, webUtils } from 'electron'
+import type { IpcRendererEvent } from 'electron'
 import { WsRpcClient, type TransportConnectionState } from '../transport/client'
 import { RoutedClient } from '../transport/routed-client'
 import { buildClientApi } from '../transport/build-api'
@@ -38,6 +39,7 @@ import type { ConfirmDialogSpec, FileDialogSpec, BrowserCapabilityRequest } from
 import type { RpcClient } from '@phaneris/server-core/transport'
 import type { RemoteServerConfig } from '@phaneris/core/types'
 import type { ElectronAPI } from '../shared/types'
+import type { ConfirmDialogRequestPayload } from '../shared/confirm-dialog'
 
 // ---------------------------------------------------------------------------
 // Client interface — common surface for both RoutedClient and WsRpcClient
@@ -211,6 +213,23 @@ const api = buildClientApi(client, CHANNEL_MAP, (ch) => client.isChannelAvailabl
 
 api.registerPageDocument = (input) => ipcRenderer.invoke('__pages:registerDocument', input)
 api.releasePageDocument = (url) => ipcRenderer.invoke('__pages:releaseDocument', url)
+
+// Server-requested confirmations (`client:confirmDialog`).
+//
+// This used to open a native Windows message box. The request now goes to the
+// main process, which relays it to the renderer's `ConfirmDialogHost` and waits
+// for the button index — so a remote server asking this client to confirm a
+// deletion gets the app's own dialog. Main keeps the native box as a fallback
+// for when there is no live window or the renderer never answers.
+api.onConfirmDialogRequest = (callback) => {
+  const handler = (_event: IpcRendererEvent, payload: ConfirmDialogRequestPayload) => callback(payload)
+  ipcRenderer.on('__dialog:confirmRequest', handler)
+  return () => {
+    ipcRenderer.off('__dialog:confirmRequest', handler)
+  }
+}
+api.respondConfirmDialog = (id, response) =>
+  ipcRenderer.invoke('__dialog:respondConfirm', { id, response }) as Promise<{ ok: boolean }>
 
 ;(api as any).getRuntimeEnvironment = (): 'electron' | 'web' => 'electron'
 

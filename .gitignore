@@ -18,7 +18,7 @@ coverage
 # logs
 logs
 _.log
-plans/*.log
+.cache/verification/*.log
 report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # dotenv environment variable files

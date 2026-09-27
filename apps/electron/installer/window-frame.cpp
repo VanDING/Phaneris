@@ -138,7 +138,7 @@ constexpr wchar_t kPropPageHidden[] = L"Phaneris.Internal.PageHidden";
 constexpr wchar_t kPropFrameError[] = L"Phaneris.Internal.FrameError";
 
 // The product's UI faces. Segoe UI for Latin copy; Microsoft YaHei UI as soon as
-// a string contains anything past Latin-1, because the installer ships English
+// a string contains CJK characters, because the installer ships English
 // and Simplified Chinese and a CJK caption must not depend on GDI+ font linking
 // to render at all. The chosen family is verified before use, with the other as
 // the fallback.
@@ -222,11 +222,13 @@ RectF BoxRect(const Box& box) {
     return RectF(box.left, box.top, box.width, box.height);
 }
 
-// True once the string needs a face with CJK coverage. Latin-1 is the whole
-// range Segoe UI can be trusted to cover for this installer's copy.
+// Punctuation such as an ellipsis must not switch English captions to CJK.
 bool NeedsCjkFace(const wchar_t* text) {
     for (const wchar_t* cursor = text; cursor && *cursor; ++cursor) {
-        if (static_cast<unsigned>(*cursor) > 0x00FFu) return true;
+        const unsigned code = static_cast<unsigned>(*cursor);
+        if ((code >= 0x2E80u && code <= 0x9FFFu) ||
+            (code >= 0xF900u && code <= 0xFAFFu) ||
+            (code >= 0xFF00u && code <= 0xFFEFu)) return true;
     }
     return false;
 }
@@ -273,8 +275,8 @@ void MakeCentered(StringFormat& format) {
     format.SetTrimming(StringTrimmingEllipsisCharacter);
 }
 
-// The progress bar, built from the visual specification's four arcs verbatim
-// (4x4 arc boxes around a 6-unit-tall bar) rather than through a generic rounded
+// The progress bar, built from four arcs
+// (4x4 arc boxes around a 4-unit-tall bar) rather than through a generic rounded
 // rectangle, because this geometry is part of the design and not a corner
 // radius. The numbers come from kTrackBox/kTrackCorner, so they live in exactly
 // one place.
@@ -502,12 +504,31 @@ void PaintProgress(HWND window, ProgressPage* page, HDC dc) {
 
     SolidBrush track{Color(palette.track)};
     SolidBrush ink{Color(palette.ink)};
+    SolidBrush muted{Color(palette.muted)};
+    SolidBrush accent{Color(palette.accent)};
     FillProgress(graphics, track, kTrackBox.width);
-    FillProgress(graphics, ink, kTrackBox.width * static_cast<REAL>(page->progress.Value()) / 100.0f);
+    FillProgress(graphics, accent, kTrackBox.width * static_cast<REAL>(page->progress.Value()) / 100.0f);
+
+    // Keep the full caption as the accessible window name. Visually separate
+    // its trailing percentage so changing digits do not move the stage label.
+    WCHAR stage[192];
+    lstrcpynW(stage, page->caption, _countof(stage));
+    WCHAR* tail = wcsrchr(stage, L' ');
+    if (tail && tail[1] >= L'0' && tail[1] <= L'9' && wcschr(tail, L'%')) *tail = L'\0';
+    WCHAR percent[8];
+    wsprintfW(percent, L"%d%%", page->paintedPercent);
+    StringFormat leading;
+    MakeCentered(leading);
+    leading.SetAlignment(StringAlignmentNear);
+    StringFormat trailing;
+    MakeCentered(trailing);
+    trailing.SetAlignment(StringAlignmentFar);
+    graphics.SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
+    DrawRun(graphics, stage, kStatusPixels, FontStyleRegular, BoxRect(kStatusBox), leading, muted);
+    DrawRun(graphics, percent, kStatusPixels, FontStyleRegular, BoxRect(kPercentBox), trailing, ink);
 
     StringFormat centered;
     MakeCentered(centered);
-    DrawRun(graphics, page->caption, kStatusPixels, FontStyleRegular, BoxRect(kStatusBox), centered, ink);
     DrawRun(graphics, L"\x2212", kGlyphPixels, FontStyleRegular, BoxRect(kMinimizeBox), centered, ink);
     DrawRun(graphics, L"\x00d7", kGlyphPixels, FontStyleRegular, BoxRect(kCloseBox), centered, ink);
 

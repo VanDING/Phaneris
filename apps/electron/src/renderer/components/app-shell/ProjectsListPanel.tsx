@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { FolderKanban, MessageSquare, Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { confirmDialog } from '@/components/ConfirmDialogHost'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { EntityRow } from '@/components/ui/entity-row'
 import { EntityListEmptyScreen } from '@/components/ui/entity-list-empty'
@@ -47,7 +48,11 @@ export function ProjectsListPanel({
   const handleDelete = React.useCallback(async (project: LoadedProject) => {
     // Deleting a project rm -rf's its folder + all assets, so confirm first — mirrors the
     // ProjectInfoPage delete (shares the same wording key) instead of deleting on a single click.
-    if (!window.confirm(t('projectInfo.deleteConfirm', { name: project.config.name }))) return
+    const confirmed = await confirmDialog({
+      title: t('projectInfo.deleteConfirm', { name: project.config.name }),
+      confirmLabel: t('common.delete'),
+    })
+    if (!confirmed) return
     try {
       await window.electronAPI.deleteProject(workspaceId, project.config.slug)
       toast.success(t('projectsList.deleted', { name: project.config.name }))

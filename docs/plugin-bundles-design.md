@@ -2,7 +2,7 @@
 
 - 性质：**proposed**（设计提案，未实施。实施前需按本文末尾的决策清单拍板）
 - 日期：2026-09-17
-- 关联：[`cross-ecosystem-plugin-porting-assessment.md`](cross-ecosystem-plugin-porting-assessment.md)（探索性研究）、
+- 关联：[`cross-ecosystem-plugin-porting-assessment.md`](process/cross-ecosystem-plugin-porting-assessment.md)（探索性研究）、
   [`system-prompt-per-turn-analysis.md`](system-prompt-per-turn-analysis.md)（缓存前缀约束的唯一依据）
 
 ---

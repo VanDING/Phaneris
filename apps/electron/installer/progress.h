@@ -102,14 +102,15 @@ struct Box {
     float height;
 };
 
-// The brand lockup. The committed asset is 600x196 (and a 1200x392 @2x variant);
+// The brand lockup. The committed asset is 600x176 (and a 1200x352 @2x variant);
 // DrawImage scales either into this box.
-constexpr Box kBrandBox = {0.0f, 174.0f, 600.0f, 196.0f};
+constexpr Box kBrandBox = {0.0f, 148.0f, 600.0f, 176.0f};
 
-constexpr Box kTrackBox = {64.0f, 482.0f, 472.0f, 6.0f};
+constexpr Box kTrackBox = {144.0f, 452.0f, 312.0f, 4.0f};
 constexpr float kTrackCorner = 4.0f;               // px of rounded end on the track
-constexpr Box kStatusBox = {48.0f, 512.0f, 504.0f, 22.0f};
-constexpr float kStatusPixels = 14.0f;
+constexpr Box kStatusBox = {144.0f, 420.0f, 252.0f, 22.0f};
+constexpr Box kPercentBox = {404.0f, 420.0f, 52.0f, 22.0f};
+constexpr float kStatusPixels = 15.0f;
 
 // Caption buttons: glyphs, not bitmaps, centred in their boxes.
 constexpr Box kMinimizeBox = {504.0f, 8.0f, 40.0f, 32.0f};
@@ -144,13 +145,19 @@ constexpr unsigned kBackgroundDark = Argb(255, 0x15, 0x15, 0x17);   // #151517
 constexpr unsigned kInkLight = Argb(255, 0x0F, 0x11, 0x15);         // #0F1115
 constexpr unsigned kInkDark = Argb(255, 0xFF, 0xFF, 0xFF);          // #FFFFFF
 constexpr unsigned kTrackLight = Argb(255, 0xE9, 0xEC, 0xF2);       // #E9ECF2
-constexpr unsigned kTrackDark = Argb(255, 0x61, 0x66, 0x6B);        // #61666B
+constexpr unsigned kTrackDark = Argb(255, 0x33, 0x33, 0x3B);       // #33333B
+constexpr unsigned kMutedLight = Argb(255, 0x64, 0x65, 0x70);      // #646570
+constexpr unsigned kMutedDark = Argb(255, 0xA5, 0xA5, 0xB0);       // #A5A5B0
+constexpr unsigned kAccentLight = Argb(255, 0x73, 0x3D, 0xF4);     // #733DF4
+constexpr unsigned kAccentDark = Argb(255, 0x98, 0x73, 0xFF);       // #9873FF
 
 // Everything the drawing code needs, resolved once per surface from `dark`.
 struct Palette {
     unsigned background;
     unsigned ink;
     unsigned track;
+    unsigned muted;
+    unsigned accent;
 };
 
 inline Palette PaletteFor(bool dark) {
@@ -158,6 +165,8 @@ inline Palette PaletteFor(bool dark) {
     palette.background = dark ? kBackgroundDark : kBackgroundLight;
     palette.ink = dark ? kInkDark : kInkLight;
     palette.track = dark ? kTrackDark : kTrackLight;
+    palette.muted = dark ? kMutedDark : kMutedLight;
+    palette.accent = dark ? kAccentDark : kAccentLight;
     return palette;
 }
 

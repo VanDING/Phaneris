@@ -1,14 +1,20 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Calendar / Gantt P0 verification — real views in a real browser.
  *
  * Every assertion observes the rendered DOM of the production components loaded
  * through the Playground (with its mock `electronAPI`), so nothing here asserts
  * source text. This is the repeatable artifact for the correctness work: run it
- * before and after a change and compare `plans/calendar-gantt-verification.json`.
+ * before and after a change and compare `docs/verification/results/calendar-gantt-verification.json`.
  *
  * Usage (start the renderer dev server first — it binds IPv6, so use `localhost`):
  *   bun run vite dev --config apps/electron/vite.config.ts --port 5199 --strictPort
- *   node plans/calendar-gantt-verification.mjs http://localhost:5199
+ *   node scripts/verification/calendar-gantt-verification.mjs http://localhost:5199
  *
  * What it pins, and why each check exists:
  *   1. Playground boots the Projects surface — `onSessionEvent` was missing from
@@ -31,10 +37,10 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { chromium } from 'playwright'
 
 const base = process.argv[2] ?? 'http://localhost:5199'
-const outputPath = 'plans/calendar-gantt-verification.json'
+const outputPath = 'docs/verification/results/calendar-gantt-verification.json'
 
 const results = { date: new Date().toISOString(), base, browser: null, checks: [] }
-await mkdir('plans', { recursive: true })
+await mkdir('docs/verification/results', { recursive: true })
 
 const browser = await chromium.launch({ headless: true })
 results.browser = browser.version()

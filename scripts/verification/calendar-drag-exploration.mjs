@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Exploration: how much of "drag a calendar entry to another day" already works?
  *
@@ -11,7 +17,7 @@
  *   3. an all-day chip in the month grid
  *   4. a resize of a multi-day chip
  *
- * Usage: node plans/calendar-drag-exploration.mjs [base]
+ * Usage: node scripts/verification/calendar-drag-exploration.mjs [base]
  */
 import { chromium } from 'playwright'
 

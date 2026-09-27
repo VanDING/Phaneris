@@ -22,6 +22,7 @@ import { SplashScreen } from '@/components/SplashScreen'
 import { TooltipProvider } from '@phaneris/ui'
 import { FocusProvider } from '@/context/FocusContext'
 import { ModalProvider } from '@/context/ModalContext'
+import { ConfirmDialogHost } from '@/components/ConfirmDialogHost'
 import { DismissibleLayerProvider } from '@/context/DismissibleLayerContext'
 import { useWindowCloseHandler } from '@/hooks/useWindowCloseHandler'
 import { useOnboarding } from '@/hooks/useOnboarding'
@@ -2227,6 +2228,15 @@ export default function App() {
         >
           {/* Handle window close requests (X button, Cmd+W) - close modal first if open */}
           <WindowCloseHandler />
+
+          {/*
+            The app's single in-app confirmation surface: renderer-local
+            `confirmDialog()` prompts, plus the server-requested ones the main
+            process relays down from the `client:confirmDialog` capability.
+            Mounted here (not in main.tsx) so it sits inside `ModalProvider` and
+            Cmd+W closes the dialog before the window.
+          */}
+          <ConfirmDialogHost />
 
           {/* Splash screen overlay - fades out when fully ready */}
           {showSplash && (

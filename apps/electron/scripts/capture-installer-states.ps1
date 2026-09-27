@@ -51,6 +51,10 @@ Where the PNGs land. Defaults to apps/electron/release/verify-shots.
 Stop after the welcome-page states. Used for the long-path experiment, which
 must not be allowed to install anywhere.
 
+.PARAMETER PreviewLanguage
+Force English (1033) or Simplified Chinese (2052) in the --preview syntax probe.
+The release installer continues to select the system language.
+
 .EXAMPLE
 pwsh -File apps/electron/scripts/capture-installer-states.ps1 -Theme light
 #>
@@ -59,6 +63,7 @@ param(
     [string]$InstallerPath,
     [ValidateSet('light', 'dark')] [string]$Theme = 'light',
     [string]$OutDir,
+    [ValidateSet('', '1033', '2052')] [string]$PreviewLanguage = '',
     [switch]$WelcomeOnly,
     [int]$TimeoutSeconds = 240
 )
@@ -140,6 +145,7 @@ public static class PhanerisStateProbe {
     [DllImport("gdi32.dll")] private static extern bool DeleteDC(IntPtr dc);
     [DllImport("gdi32.dll")] private static extern IntPtr CreateCompatibleBitmap(IntPtr dc, int w, int h);
     [DllImport("gdi32.dll")] private static extern IntPtr SelectObject(IntPtr dc, IntPtr obj);
+    [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr hwnd, int command);
     [DllImport("gdi32.dll")] private static extern bool DeleteObject(IntPtr obj);
     [DllImport("gdi32.dll")] private static extern bool BitBlt(IntPtr dst, int x, int y, int w, int h, IntPtr src, int sx, int sy, uint rop);
     [DllImport("gdi32.dll")] private static extern int GetDIBits(IntPtr dc, IntPtr bitmap, uint start, uint lines, byte[] bits, ref BITMAPINFO info, uint usage);
@@ -215,10 +221,12 @@ public static class PhanerisStateProbe {
     }
 
     public static bool Alive(IntPtr hwnd) { return hwnd != IntPtr.Zero && IsWindow(hwnd); }
+    public static bool Enabled(IntPtr hwnd) { return IsWindowEnabled(hwnd); }
 
     /// Fully on screen and raised without activation: a screen capture needs the
     /// pixels visible, and the user's foreground window must not change.
     public static bool Present(IntPtr hwnd) {
+        ShowWindow(hwnd, 4); // SW_SHOWNOACTIVATE, including a hidden launch.
         return SetWindowPos(hwnd, HWND_TOPMOST, 8, 8, 0, 0, 0x0001 | 0x0002 | 0x0010);
     }
 
@@ -458,6 +466,7 @@ function Save-State {
     }
     $bytes = if ($ok -and (Test-Path $png)) { (Get-Item $png).Length } else { 0 }
     Note ("shot {0,-26} {1} ({2} bytes) {3}" -f $Name, $(if ($ok) { $png } else { '(capture failed)' }), $bytes, $Detail)
+    if (-not $ok -or $bytes -lt 6000) { throw "No usable screenshot for $Name" }
 }
 
 function Get-Control {
@@ -469,7 +478,7 @@ function Get-Control {
 
 function Get-Overlay([IntPtr]$Dialog) {
     return [PhanerisStateProbe]::Descendants($Dialog) |
-        Where-Object { $_.Text -match '%' } | Select-Object -First 1
+        Where-Object { $_.Visible -and $_.Class -eq 'PhanerisInstallerProgress' } | Select-Object -First 1
 }
 
 # ---------------------------------------------------------------------------
@@ -478,7 +487,9 @@ function Get-Overlay([IntPtr]$Dialog) {
 Note "installer: $InstallerPath"
 Note "theme:     $Theme"
 $cursorBefore = [PhanerisStateProbe]::Cursor()
-$proc = Start-Process -FilePath $InstallerPath -ArgumentList "/THEME=$Theme" -PassThru
+$launchArgs = "/THEME=$Theme"
+if ($PreviewLanguage) { $launchArgs += " /LANGUAGE=$PreviewLanguage" }
+$proc = Start-Process -FilePath $InstallerPath -ArgumentList $launchArgs -WindowStyle Hidden -PassThru
 Note "launched pid=$($proc.Id) /THEME=$Theme (cursor was $($cursorBefore[0]),$($cursorBefore[1]))"
 
 $dialog = [IntPtr]::Zero
@@ -553,7 +564,11 @@ try {
     Note ([PhanerisStateProbe]::Enable($primary.Handle, $false))
     Start-Sleep -Milliseconds 400
     $disabledPixel = [PhanerisStateProbe]::Fill($primary.Handle)
-    Save-State $dialog 'welcome-disabled-primary' "fill $disabledPixel  enabled=$($primary.Enabled)"
+    Save-State $dialog 'welcome-disabled-primary' "fill $disabledPixel  enabled=$([PhanerisStateProbe]::Enabled($primary.Handle))"
+    if ([PhanerisStateProbe]::Enabled($primary.Handle)) { throw 'The disabled action is still enabled' }
+    if (@($idlePixel, $hoverPixel, $pressedPixel, $disabledPixel | Select-Object -Unique).Count -ne 4) {
+        throw 'Primary button states do not have distinct fills'
+    }
     Note ([PhanerisStateProbe]::Enable($primary.Handle, $true))
     Start-Sleep -Milliseconds 350
 
@@ -574,8 +589,12 @@ try {
             Note ([PhanerisStateProbe]::SetText($edit.Handle, $long))
             Start-Sleep -Milliseconds 900
             Save-State $dialog 'welcome-expanded-longpath' "$($long.Length) chars: $long"
+            Note ([PhanerisStateProbe]::SetText($edit.Handle, 'C:\invalid?path'))
+            Start-Sleep -Milliseconds 900
+            Save-State $dialog 'welcome-invalid-path' 'inline validation; no install attempted'
             Note ([PhanerisStateProbe]::SetText($edit.Handle, $edit.Text))
             Start-Sleep -Milliseconds 900
+            Save-State $dialog 'welcome-path-restored' 'validation clears after restoring the path'
         } else {
             Note 'the editor never appeared after clicking the secondary control'
         }
@@ -604,6 +623,7 @@ try {
         $earlyText = $overlay.Text
         Save-State $dialog 'progress-early' "caption `"$earlyText`""
         $earlyPercent = [int]([regex]::Match($earlyText, '(\d+)\s*%').Groups[1].Value)
+        $previousPercent = $earlyPercent
         $started = Get-Date
 
         $samples = New-Object System.Collections.Generic.List[string]
@@ -617,6 +637,8 @@ try {
             $match = [regex]::Match($current.Text, '(\d+)\s*%')
             if (-not $match.Success) { continue }
             $percent = [int]$match.Groups[1].Value
+            if ($percent -lt $previousPercent) { throw "Progress went backwards: $previousPercent -> $percent" }
+            $previousPercent = $percent
             $elapsed = ((Get-Date) - $started).TotalSeconds
             # The stock bar alongside the caption, because the model's honesty
             # claim is about WHICH source is driving the number at each moment:
@@ -647,6 +669,8 @@ try {
                 Where-Object { $_.Visible -and $_.IsCheckBox } | Select-Object -First 1
         }
         if ($checkbox) {
+            if (-not $lateText) { throw 'Progress never advanced enough for a second distinct frame' }
+            if (Get-Overlay $dialog) { throw 'Progress overlay is still visible over the finish page' }
             Start-Sleep -Milliseconds 500
             Save-State $dialog 'finish' "launch checkbox `"$($checkbox.Text)`" checked=$([PhanerisStateProbe]::CheckState($checkbox.Handle))"
             # The checkbox is the second control Tab reaches on this page, and it
@@ -663,7 +687,7 @@ try {
             if ($finish) { Note ([PhanerisStateProbe]::Click($finish.Handle)) }
             Start-Sleep -Seconds 3
         } else {
-            Note 'the finish page never appeared'
+            throw 'The finish page never appeared'
         }
     }
 } finally {
@@ -675,10 +699,6 @@ try {
         Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
     } else {
         Note "installer exited with $($proc.ExitCode)"
-    }
-    foreach ($app in @(Get-Process -Name 'Phaneris' -ErrorAction SilentlyContinue)) {
-        Note "stopping app pid $($app.Id)"
-        Stop-Process -Id $app.Id -Force -ErrorAction SilentlyContinue
     }
     if ($idlePixel) {
         Note "primary fill: idle $idlePixel   hover $hoverPixel   pressed $pressedPixel   disabled $disabledPixel"

@@ -73,6 +73,6 @@
 
 ## 4. 当前验证记录
 
-已运行（实施后）：motion.test.ts、island-motion.test.ts 共 8 通过；`plans/motion-verification.mjs` 在本机 Edge 中对 Playground 内真实组件执行 18 项行为检查，全部通过，结果见 `motion-verification-results.json`；`bun run typecheck:all`、`bun run lint`（含新增 transition-all 门禁）、`identity:check`、`version:check` 全部通过；面板份额动画帧间隔采样（见实施状态第 3 节 V01）。
+已运行（实施后）：motion.test.ts、island-motion.test.ts 共 8 通过；`scripts/verification/motion-verification.mjs` 在本机 Edge 中对 Playground 内真实组件执行 18 项行为检查，全部通过，结果见 `motion-verification-results.json`；`bun run typecheck:all`、`bun run lint`（含新增 transition-all 门禁）、`identity:check`、`version:check` 全部通过；面板份额动画帧间隔采样（见实施状态第 3 节 V01）。
 
 未运行：上表 P 项的完整应用走查、完整产品视觉录屏、带长会话与流式的性能 trace、真实触屏设备验收。这些项目仍在实施状态第 9 节中列出，不能视为已关闭。

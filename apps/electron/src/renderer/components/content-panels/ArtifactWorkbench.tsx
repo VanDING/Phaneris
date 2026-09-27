@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { useArtifacts } from '@/hooks/useArtifacts'
 import { Button } from '@/components/ui/button'
+import { confirmDialog } from '@/components/ConfirmDialogHost'
 import { PanelHeader } from '../app-shell/PanelHeader'
 import { PanelEmptyState } from './PanelEmptyState'
 import { resolveFileFormat } from '@phaneris/shared/artifacts/browser'
@@ -131,7 +132,11 @@ export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {
   }
 
   const discard = async () => {
-    if (!window.confirm(t('artifact.discardConfirm'))) return
+    const confirmed = await confirmDialog({
+      title: t('artifact.discardConfirm'),
+      confirmLabel: t('artifact.discard'),
+    })
+    if (!confirmed) return
     setBusy(true)
     try {
       await artifactStore.discard(artifactId)

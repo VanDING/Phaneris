@@ -503,6 +503,19 @@ export interface ElectronAPI {
   showDeleteSessionConfirmation(name: string): Promise<boolean>
   logout(options?: { confirm?: boolean }): Promise<void>
 
+  /**
+   * Desktop-only bridge for server-requested confirmations
+   * (`client:confirmDialog`). The main process relays the request here so it
+   * renders as the app's own dialog instead of a native OS message box, and
+   * awaits {@link respondConfirmDialog} for the answer.
+   *
+   * Optional because the web viewer and any older preload simply do not have
+   * it — the main process then keeps its native fallback.
+   */
+  onConfirmDialogRequest?(callback: (payload: import('./confirm-dialog').ConfirmDialogRequestPayload) => void): () => void
+  /** Answer a relayed confirmation with the index of the chosen button. */
+  respondConfirmDialog?(id: string, response: number): Promise<{ ok: boolean }>
+
   // Credential health check (startup validation)
   getCredentialHealth(): Promise<CredentialHealthStatus>
 

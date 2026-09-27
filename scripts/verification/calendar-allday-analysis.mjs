@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Diagnostic: what happens to each calendar entry when the all-day row is hidden,
  * and what does a drag across slots select?
@@ -6,7 +12,7 @@
  * and the entry's own shape, so the effect of `allDaySlot={false}` is attributable
  * to specific fixtures rather than to a total count.
  *
- * Usage: node plans/calendar-allday-analysis.mjs [base] [label]
+ * Usage: node scripts/verification/calendar-allday-analysis.mjs [base] [label]
  */
 import { chromium } from 'playwright'
 

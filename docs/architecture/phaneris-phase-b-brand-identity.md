@@ -1,6 +1,6 @@
 # Phaneris 分叉 B 阶段记录：品牌与代码身份
 
-日期：2026-09-14。分支 `phaneris/fork-plan`。对应[实施方案](phaneris-fork-plan.md)第 8 节的 B 阶段（品牌与代码身份）。A 阶段的身份冻结记录见 [Phaneris 分叉 A 阶段记录](phaneris-phase-a-identity-freeze.md)。
+日期：2026-09-14。分支 `phaneris/fork-plan`。对应[实施方案](../process/phaneris-fork-plan.md)第 8 节的 B 阶段（品牌与代码身份）。A 阶段的身份冻结记录见 [Phaneris 分叉 A 阶段记录](phaneris-phase-a-identity-freeze.md)。
 
 状态：B 阶段的代码身份、应用身份、数据路径与本地品牌表面已完成并验证可构建。**服务与发布渠道仍指向上游**（方案 D 阶段），因此本阶段不构成"可以对外发布"的结论。
 

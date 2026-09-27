@@ -496,7 +496,7 @@ thin renderer of it. Practical implications:
 - Real internal design/roadmap documents live in `docs/` and `plans/`, not on the site:
   `docs/custom-elements-plan.md`, `docs/native-test-renderer-plan.md`,
   `docs/native-text-components-plan.md`, `docs/serialization-benchmark.md`, `docs/visual-screenshot-plan.md`,
-  `plans/ios.md` (43 KB), plus `AGENTS.md` (68 KB — the single most useful engineering document in the repo).
+  `docs/verification/ios.md` (43 KB), plus `AGENTS.md` (68 KB — the single most useful engineering document in the repo).
 - `README.md` is the best "getting started" content: `## Quickstart` (line 17), `### Build from scratch` (33),
   JSX setup (42), entry file (63), run (100), ship a binary (109), wrap in `.app` with cargo-packager (122),
   auto-update (195), examples table (310).
@@ -527,7 +527,7 @@ to be identical):
 `@gpuix/react@0.6.0` changelog item 6 states this explicitly: **"Intel macOS, arm64 Linux, and arm64 Windows
 have no prebuilt packages."** Browser adds `wasm32-unknown-unknown` (WebGPU, WebGL2 fallback).
 
-**No mobile target.** iOS is a design document only (`plans/ios.md`), whose own "Risks" section says
+**No mobile target.** iOS is a design document only (`docs/verification/ios.md`), whose own "Risks" section says
 `gpui_ios` is not merged, *"IME completeness is unproven"*, and file picker and momentum scroll are missing.
 Android is not mentioned anywhere.
 
@@ -934,7 +934,7 @@ native-window handles) are exactly the unshipped ones.
 
 **Local clone** (`docs/research/gpuix-scratch/gpuix`, `main` @ `18e695e`, shallow):
 `.gitmodules`, `rust-toolchain.toml`, `package.json`, `CHANGELOG.md`, `AGENTS.md`, `THIRD_PARTY_NOTICES.md`,
-`.github/workflows/ci.yml`, `.changeset/*`, `plans/ios.md`, `docs/*.md`, `website/docs.json`,
+`.github/workflows/ci.yml`, `.changeset/*`, `docs/verification/ios.md`, `docs/*.md`, `website/docs.json`,
 `website/src/{index.mdx,server.tsx,guides/hermes.mdx,changelog/intro.mdx}`,
 `packages/native/{Cargo.toml,package.json,index.d.ts,src/**}`, `packages/react/{package.json,src/**}`,
 `cli/package.json`, `examples/**`, `example-app/**`, `hermes/README.md`, `scripts/web.ts`.

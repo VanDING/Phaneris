@@ -269,6 +269,79 @@ export function getAutoUpdateLogFilePath(): string {
 }
 
 /**
+ * Dedicated app-lifecycle log: launch, single-instance hand-off, deliberate
+ * early exits.
+ *
+ * Same reason as the auto-update log above, and the same shape. In packaged
+ * builds the Electron file/console transports are disabled (see the
+ * `isDebugMode` branch at the top of this file), so the one report that has no
+ * other witness — "I started the app and nothing appeared" — would leave no
+ * trace anywhere: no window, no console, nothing in main.log. Every line here
+ * is written synchronously with appendFileSync, so a line logged immediately
+ * before app.exit() is on disk before the process goes away; an async
+ * transport would race that exit.
+ */
+export const lifecycleLogPath = join(LOGS_DIR, 'lifecycle.log')
+const lifecycleBackupPath = `${lifecycleLogPath}.1`
+const LIFECYCLE_LOG_MAX_BYTES = 1024 * 1024 // 1MB
+
+function rotateLifecycleLogIfNeeded(nextLineBytes: number): void {
+  if (!existsSync(lifecycleLogPath)) return
+  try {
+    const currentSize = statSync(lifecycleLogPath).size
+    if (currentSize + nextLineBytes <= LIFECYCLE_LOG_MAX_BYTES) return
+    if (existsSync(lifecycleBackupPath)) {
+      rmSync(lifecycleBackupPath, { force: true })
+    }
+    renameSync(lifecycleLogPath, lifecycleBackupPath)
+  } catch (error) {
+    mainLog.warn('[lifecycle] failed to rotate dedicated log file', normalizeLogValue(error))
+  }
+}
+
+function writeLifecycleLog(level: 'info' | 'warn' | 'error', message: string, meta?: unknown): void {
+  const entry = {
+    timestamp: new Date().toISOString(),
+    level,
+    scope: 'lifecycle',
+    pid: process.pid,
+    ...(meta !== undefined ? { meta: normalizeLogValue(meta) } : {}),
+    message,
+  }
+
+  const line = JSON.stringify(entry) + '\n'
+  try {
+    mkdirSync(dirname(lifecycleLogPath), { recursive: true })
+    rotateLifecycleLogIfNeeded(Buffer.byteLength(line))
+    appendFileSync(lifecycleLogPath, line, 'utf8')
+  } catch (error) {
+    // Last resort only: this is the logger of record for "nothing appeared".
+    mainLog.warn('[lifecycle] failed to write dedicated log entry', normalizeLogValue(error))
+  }
+
+  // Mirror to the Electron logger too (a no-op in production where transports
+  // are disabled, but keeps --debug console/file output intact).
+  if (level === 'error') {
+    mainLog.error('[lifecycle]', message, entry)
+  } else if (level === 'warn') {
+    mainLog.warn('[lifecycle]', message, entry)
+  } else {
+    mainLog.info('[lifecycle]', message, entry)
+  }
+}
+
+/** Always-on structured logger for launch / hand-off / exit events. */
+export const lifecycleLog = {
+  info: (message: string, meta?: unknown) => writeLifecycleLog('info', message, meta),
+  warn: (message: string, meta?: unknown) => writeLifecycleLog('warn', message, meta),
+  error: (message: string, meta?: unknown) => writeLifecycleLog('error', message, meta),
+}
+
+export function getLifecycleLogFilePath(): string {
+  return lifecycleLogPath
+}
+
+/**
  * Get the path to the current Electron main log file.
  * Returns undefined if file logging is disabled.
  */

@@ -71,10 +71,9 @@ asar: false
 # decision is still one click to the default per-user location — the install
 # mode page is suppressed in scripts/installer.nsh (`customInstallMode` forces
 # current-user, which makes its PRE function Abort), `allowToChangeInstallationDirectory`
-# stays false so there is no directory page, and `customFinishPage` is defined
-# empty so there is no finish page. What the user gets is the branded welcome
-# (Install now / Change location / License) -> branded progress -> the app
-# launching. The licence and the target folder exist but are opt-in.
+# stays false so there is no directory page. The branded welcome page offers
+# Install now and Choose location, followed by progress and a branded finish
+# page with an optional app-launch checkbox.
 #
 # `allowElevation: false` + `perMachine: false` keep this a per-user install
 # that never raises a UAC prompt — which is also why the reference installer can

@@ -121,7 +121,7 @@ import { OAuthFlowStore } from '@phaneris/shared/auth'
 import { registerThumbnailScheme, registerThumbnailHandler } from './thumbnail-protocol'
 import { registerPageDocumentHandler, observePageDocumentOwner, pageDocuments } from './page-document-protocol'
 import type { PageDocumentInput } from '../shared/page-document'
-import log, { isDebugMode, mainLog, getLogFilePath, getMessagingGatewayLogFilePath, messagingGatewayLog, autoUpdateLog } from './logger'
+import log, { isDebugMode, mainLog, getLogFilePath, getMessagingGatewayLogFilePath, messagingGatewayLog, autoUpdateLog, lifecycleLog } from './logger'
 import { installElectronCredentialKeyProvider } from './credential-key-provider'
 import { setPerfEnabled, enableDebug } from '@phaneris/shared/utils'
 import { registerPiModelResolver } from '@phaneris/shared/config'
@@ -129,6 +129,7 @@ import { getPiModelsForAuthProvider, getAllPiModels } from '@phaneris/shared/con
 import { initNotificationService, initBadgeIcon, initInstanceBadge, updateBadgeCount } from './notifications'
 import { checkForUpdatesOnLaunch, setAutoUpdateEventSink, isUpdating, setBeforeUpdateQuitHook, setBeforeUpdateInstallHook, setInstallQuitFailedHook } from './auto-update'
 import type { EventSink } from '@phaneris/server-core/transport'
+import type { ConfirmDialogSpec } from '@phaneris/server-core/transport'
 import { validateGitBashPath, checkVCRedistInstalled } from '@phaneris/server-core/services'
 
 // Initialize electron-log for renderer process support
@@ -320,6 +321,14 @@ function isTrustedWindowSender(event: IpcMainInvokeEvent): boolean {
   return true
 }
 
+/**
+ * How long a server-requested confirmation waits for the renderer's in-app
+ * dialog before the native fallback takes over. Generous on purpose: a dialog
+ * can legitimately sit on screen while the user reads it, and the renderer is
+ * only expected to be *unresponsive* here, not slow.
+ */
+const CONFIRM_RELAY_TIMEOUT_MS = 120_000
+
 if (process.env.PHANERIS_SERVER_URL) {
   let serverOrigin: string | undefined
   try {
@@ -365,24 +374,61 @@ app.on('open-url', (event, url) => {
 // Handle deeplink on Windows/Linux (single instance check)
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
-  app.quit()
+  // Another instance owns the lock. It has just been asked to bring its window
+  // to the front (see the `second-instance` handler below), so this process has
+  // nothing left to do — but it must not vanish without a trace. This is the
+  // one exit that happens before any window, any UI and any user-visible
+  // effect, and from outside "clicked the exe and nothing happened" is exactly
+  // what a silent bail looks like: the installer's finish page runs
+  // `Exec '"$INSTDIR\Phaneris.exe"'`, and when the app is already running that
+  // Exec is this line.
+  //
+  // Logged through `lifecycleLog` rather than `mainLog` on purpose: `mainLog`
+  // IS initialised by this point (logger.ts is imported above and
+  // `log.initialize()` has run), but in packaged builds logger.ts disables the
+  // Electron file and console transports, so a `mainLog` line would be dropped
+  // in precisely the build where this needs to be readable. `lifecycleLog`
+  // writes synchronously to LOGS_DIR/lifecycle.log in every build.
+  lifecycleLog.info('Second instance handed off to the running instance; exiting', {
+    pid: process.pid,
+    argv: process.argv.slice(1),
+  })
+  // exit(), not quit(): quit() is a *request* serviced by the app lifecycle,
+  // and this process never reached `ready`, so there is nothing to unwind — no
+  // windows to close, no before-quit work to run, no lock held. Exiting here is
+  // the deliberate end of a successful hand-off, not a crash and not a silent
+  // bail.
+  app.exit(0)
 } else {
   app.on('second-instance', (_event, commandLine, _workingDirectory) => {
-    // Someone tried to run a second instance, we should focus our window.
-    // On Windows/Linux, the deeplink is in commandLine
+    // Someone tried to run a second instance, i.e. the user asked for this app.
+    // Whatever else happens, the window they already have must come to the
+    // front: restored if minimised, shown, focused. On Windows/Linux a deeplink
+    // arrives in commandLine.
     const url = commandLine.find(arg => arg.startsWith(`${DEEPLINK_SCHEME}://`))
     if (url && windowManager) {
       mainLog.info('Received deeplink from second instance:', url)
       handleDeepLink(url, windowManager, moduleSink ?? undefined, moduleClientResolver ?? undefined).catch(err => {
         mainLog.error('Failed to handle deep link:', err)
       })
-    } else if (windowManager) {
-      // No deep link - just focus the first window
-      const windows = windowManager.getAllWindows()
-      if (windows.length > 0) {
-        const win = windows[0].window
-        if (win.isMinimized()) win.restore()
-        win.focus()
+    }
+    // Raised in both cases, the deeplink one included: a hand-off that only
+    // navigates leaves the user looking at whatever window they were already
+    // looking at, and the app they just asked for stays behind it.
+    if (windowManager) {
+      const target = windowManager.getLastActiveWindow()
+      if (target) {
+        windowManager.focusWindow(target)
+        lifecycleLog.info('Second instance detected; existing window brought to the front', {
+          pid: process.pid,
+          windowId: target.webContents.id,
+          deeplink: url ?? null,
+        })
+      } else {
+        lifecycleLog.warn('Second instance detected but there was no window to raise', {
+          pid: process.pid,
+          deeplink: url ?? null,
+        })
       }
     }
   })
@@ -649,14 +695,96 @@ app.whenReady().then(async () => {
 
     // Dialog bridge — preload capability handlers use ipcRenderer.invoke to
     // call main-process-only dialog APIs (dialog, BrowserWindow).
-    ipcMain.handle('__dialog:showMessageBox', async (event, spec) => {
+    //
+    // `__dialog:showMessageBox` is the `client:confirmDialog` capability, i.e. a
+    // server asking *this client* to confirm something (deleting a conversation,
+    // logging out). It used to open a native Windows message box, which reads as
+    // an OS error prompt rather than part of the product. The request is now
+    // relayed to the renderer's `ConfirmDialogHost` so the confirmation is drawn
+    // with the app's own dialog.
+    //
+    // The native box survives ONLY as a fallback, for the three cases where
+    // in-app rendering is impossible: there is no live window to draw in; the
+    // spec asks for more buttons than the host renders (>3); or the renderer
+    // never answers (crashed, hung, unmounted). A destructive confirmation must
+    // never silently disappear.
+    interface PendingConfirm {
+      resolve: (index: number) => void
+      cleanup: () => void
+    }
+    const pendingConfirms = new Map<string, PendingConfirm>()
+
+    const settleConfirm = (id: string, index: number): boolean => {
+      const pending = pendingConfirms.get(id)
+      if (!pending) return false
+      pendingConfirms.delete(id)
+      pending.cleanup()
+      pending.resolve(index)
+      return true
+    }
+
+    ipcMain.handle('__dialog:respondConfirm', (event, payload: { id?: unknown; response?: unknown }) => {
+      if (!isTrustedWindowSender(event)) {
+        throw new Error('Blocked: __dialog:respondConfirm must be called from the main frame of a Phaneris window')
+      }
+      const id = typeof payload?.id === 'string' ? payload.id : null
+      const response = typeof payload?.response === 'number' ? payload.response : null
+      if (id === null || response === null) return { ok: false }
+      return { ok: settleConfirm(id, response) }
+    })
+
+    ipcMain.handle('__dialog:showMessageBox', async (event, spec: ConfirmDialogSpec) => {
+      if (!isTrustedWindowSender(event)) {
+        throw new Error('Blocked: __dialog:showMessageBox must be called from the main frame of a Phaneris window')
+      }
+      // Trusted senders only: these two registrations used to be the only ones
+      // in the surrounding block without the guard, so any renderer frame could
+      // raise prompts on the user's behalf.
       const win = BrowserWindow.fromWebContents(event.sender)
-        || BrowserWindow.getFocusedWindow()
-        || BrowserWindow.getAllWindows()[0]
-      const result = await dialog.showMessageBox(win, spec)
-      return { response: result.response }
+      const nativeFallback = async () => {
+        const target = win && !win.isDestroyed()
+          ? win
+          : BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0]
+        const result = await dialog.showMessageBox(target, spec)
+        return { response: result.response }
+      }
+
+      const buttons = Array.isArray(spec?.buttons) ? spec.buttons : []
+      const renderableInApp = win !== null
+        && !win.isDestroyed()
+        && !event.sender.isDestroyed()
+        && buttons.length >= 1
+        && buttons.length <= 3
+      if (!renderableInApp) return nativeFallback()
+
+      const id = randomUUID()
+      const answered = new Promise<number>((resolve) => {
+        const onDestroyed = () => {
+          void settleConfirm(id, spec.cancelId ?? 0)
+        }
+        const timer = setTimeout(() => {
+          void settleConfirm(id, -1)
+        }, CONFIRM_RELAY_TIMEOUT_MS)
+        pendingConfirms.set(id, {
+          resolve,
+          cleanup: () => {
+            clearTimeout(timer)
+            event.sender.removeListener('destroyed', onDestroyed)
+          },
+        })
+        event.sender.once('destroyed', onDestroyed)
+      })
+
+      event.sender.send('__dialog:confirmRequest', { id, spec })
+      const response = await answered
+      if (response >= 0) return { response }
+      // Renderer never answered — keep the prompt rather than dropping it.
+      return nativeFallback()
     })
     ipcMain.handle('__dialog:showOpenDialog', async (event, spec) => {
+      if (!isTrustedWindowSender(event)) {
+        throw new Error('Blocked: __dialog:showOpenDialog must be called from the main frame of a Phaneris window')
+      }
       const win = BrowserWindow.fromWebContents(event.sender)
         || BrowserWindow.getFocusedWindow()
         || BrowserWindow.getAllWindows()[0]

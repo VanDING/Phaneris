@@ -79,7 +79,7 @@
 
 | 证据层 | 内容 | 结果 |
 | --- | --- | --- |
-| 真实浏览器·真实组件 | `plans/motion-verification.mjs`（Playwright + 本机 Edge，隔离存储，`i18nextLng=en`）驱动 Playground 中**真实**的 `MobileAppMenu`、`CalendarView`、`TurnCard`/`ActivityStatusIcon`、`InlineExpand`、`ContentSwap`、`useScrollBehavior`，以及应用入口 HTML | **18/18 通过**，结果存 `plans/motion-verification-results.json` |
+| 真实浏览器·真实组件 | `scripts/verification/motion-verification.mjs`（Playwright + 本机 Edge，隔离存储，`i18nextLng=en`）驱动 Playground 中**真实**的 `MobileAppMenu`、`CalendarView`、`TurnCard`/`ActivityStatusIcon`、`InlineExpand`、`ContentSwap`、`useScrollBehavior`，以及应用入口 HTML | **18/18 通过**，结果存 `docs/verification/results/motion-verification-results.json` |
 | 单元 | `packages/ui/src/lib/__tests__/motion.test.ts`（新增错峰上限与行入场契约）、`island-motion.test.ts` | 8 pass / 0 fail |
 | 门禁 | `bun run typecheck:all`、`bun run lint`（electron/shared/ui/transition-all）、`identity:check`、`version:check` | 全部通过 |
 | 技术层性能 | 面板份额动画帧间隔采样（1440×900，240 段落） | median 16.7ms、p95 17.1ms、0 长帧 |
@@ -88,7 +88,7 @@
 
 ```powershell
 cd apps/electron; bun run dev          # 渲染层开发服务器（含 playground.html）
-node plans/motion-verification.mjs http://localhost:5173
+node scripts/verification/motion-verification.mjs http://localhost:5173
 bun test ./packages/ui/src/lib/__tests__/motion.test.ts ./packages/ui/src/components/annotations/__tests__/island-motion.test.ts
 bun run lint
 ```
@@ -114,7 +114,7 @@ bun run lint
 
 ## 9. 仍待处理（附原因）
 
-1. **Electron 真实窗口内的验证**：设置页内联展开、工作台开合与最大化、紧凑模式层级、引导向导与工作区创建（含 Dithering 的 reduce 行为）需要在完整应用里逐屏操作；本机实施了渲染层开发服务器 + 浏览器驱动，未启动完整 Electron 窗口。补齐方式：`bun run electron:dev`（可用 `PHANERIS_CONFIG_DIR` 指向隔离配置目录）后按 `plans/motion-validation.md` 的 P 项逐条走查。
+1. **Electron 真实窗口内的验证**：设置页内联展开、工作台开合与最大化、紧凑模式层级、引导向导与工作区创建（含 Dithering 的 reduce 行为）需要在完整应用里逐屏操作；本机实施了渲染层开发服务器 + 浏览器驱动，未启动完整 Electron 窗口。补齐方式：`bun run electron:dev`（可用 `PHANERIS_CONFIG_DIR` 指向隔离配置目录）后按 `docs/verification/motion-validation.md` 的 P 项逐条走查。
 2. **真实会话链路**：流式跟随与上翻（V02/A15）、工具状态的实时更新（A16）、完成提示（A18）、Island 退出完成信号（M11 的 Island 半）、HTML/PDF/Mermaid 预览（M16/A23）需要真实会话与文档。
 3. **性能录制**：工作台开合 + 长会话 + 流式代码块的真实 trace（V01 的应用级那一半）；本报告只有技术层采样。
 4. **真实触屏设备**：手势延迟、滑动冲突、`active:scale` 与 reduce（V08/A08 的触屏部分）无法用桌面鼠标代替。

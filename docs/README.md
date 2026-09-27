@@ -13,6 +13,7 @@ This index separates current product and architecture documentation from histori
 | [Bundled user and agent guides](../apps/electron/resources/docs/) | Current | Sources, skills, permissions, automation, themes, previews, and built-in tools. These files ship with the app. |
 | [Contributing](../CONTRIBUTING.md) | Current | Local setup, validation, and contribution workflow. |
 | [Security](../SECURITY.md) | Current | Supported versions and private vulnerability reporting. |
+| [Verification guide](verification/README.md) | Maintained procedures | Browser checks, packaged-client checks, and their recorded results. |
 
 ## Current architecture and implementation baselines
 
@@ -64,11 +65,16 @@ These documents preserve decisions and evidence. Their paths, line numbers, bran
 | [Memory system design](process/memory-system-design.md) | Research placeholder; no memory architecture is approved by this document. |
 | [System-prompt per-turn analysis](system-prompt-per-turn-analysis.md) | Point-in-time analysis and evidence record. |
 | [Pi SDK native capabilities gap analysis](pi-sdk-native-capabilities-gap-analysis.md) | Point-in-time capability gap analysis (2026-09-20) for Pi SDK 0.86.0, including the implemented observation boundary; revalidate against current code. |
-| [Original code audit](../AUDIT_REPORT.md) | Historical security and quality snapshot; findings must be revalidated against current code. |
+| [Original code audit](archive/code-audit-2026-08-01.md) | Historical security and quality snapshot; findings must be revalidated against current code. |
 | [GPUIX / gpui-kit migration assessment](native-frontend-migration-gpuix-assessment.md) | Exploratory assessment (2026-09-12); no product code was changed and no route was adopted. |
 | [GPUIX profile](research/gpuix-profile.md) · [gpui-kit profile](research/gpui-kit-profile.md) · [GPUI ecosystem and gaps](research/gpui-ecosystem-and-gaps.md) · [Renderer capability inventory](research/craft-renderer-inventory.md) | Research annexes behind the migration assessment; the inventory holds the raw measurements, the profiles the source-level evidence. |
 | [Bundled in-app docs build record](process/phaneris-local-docs.md) | Shipped build record for the in-app guide set; current links are checked by the renderer documentation tests. |
-| [Theme engine demo](theme-engine-demo-5-themes.html) · [New-session hero demo](new-session-hero-demo.html) | Self-contained HTML design prototypes; kept as design evidence, not shipped with the app. |
+| [Theme engine demo](prototypes/theme-engine-demo-5-themes.html) · [New-session hero demo](prototypes/new-session-hero-demo.html) | Self-contained HTML design prototypes; kept as design evidence, not shipped with the app. |
+
+## Verification and prototypes
+
+- Reproducible browser and packaged-client checks live in [`scripts/verification/`](../scripts/verification/); their recorded JSON results live in [`docs/verification/results/`](verification/results/). The verification index contains commands and platform notes.
+- Self-contained HTML prototypes live in [`docs/prototypes/`](prototypes/); historical screenshots remain in [`docs/assets/hero-demo/`](assets/hero-demo/).
 
 ## Release history
 

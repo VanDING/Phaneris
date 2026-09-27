@@ -137,7 +137,7 @@ Pi 0.86.0 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 
 判断：内联 extension 可接管适配与观测职责，但不能直接替换包含权限或 T1/T2 的包装层。provider 请求钩子异常可能被 SDK 捕获后继续执行，不能据此提供强制阻断保证；tool_result/message_end 改写必须先解决提交顺序。第三方 extension/package 不直接打开。
 
-> **更新（2026-09-20）**：本节的**内联 extension**路线已定案为 [`agentic-interception-design.md`](agentic-interception-design.md)（定位：治理与介入；首个切片：`tool_call` 阻断）。该设计**只做内联 extension + 工作区用户规则**，明确不打开第三方 extension/package 加载，因此与本节的判断一致。
+> **更新（2026-09-20）**：本节的**内联 extension**路线已定案为 [`agentic-interception-design.md`](process/agentic-interception-design.md)（定位：治理与介入；首个切片：`tool_call` 阻断）。该设计**只做内联 extension + 工作区用户规则**，明确不打开第三方 extension/package 加载，因此与本节的判断一致。
 >
 > 为什么不是"事件 → 动作"：现有 `automations` 的动作面（`prompt | webhook | script`）只能启动新会话/发请求/跑脚本，无法改变当前回合，而 `PreToolUse` 这类词表表达的是闸门——两者错位，这正是它今天空转的原因（见该设计 §1.2 与 §5）。
 

@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 import { chromium } from 'playwright'
 import { readFileSync, writeFileSync } from 'node:fs'
 
@@ -26,7 +32,7 @@ try {
     return { ...before, immediate, intermediate: [...new Set(samples)].filter(y => y > 0 && y < 1500), final: el.scrollTop }
   })
   results.push({ probe: 'explicit-smooth-scroll-under-global-reduced-css', observed })
-  writeFileSync('plans/motion-audit-probes.json', JSON.stringify({ date: '2026-09-21', browser: await browser.version(), scope: 'Isolated Chromium fixtures using current repository HTML/CSS; not full application E2E.', results }, null, 2) + '\n')
+  writeFileSync('docs/verification/results/motion-audit-probes.json', JSON.stringify({ date: '2026-09-21', browser: await browser.version(), scope: 'Isolated Chromium fixtures using current repository HTML/CSS; not full application E2E.', results }, null, 2) + '\n')
   console.log(JSON.stringify(results))
 } finally {
   await browser.close()

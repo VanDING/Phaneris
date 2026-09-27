@@ -365,7 +365,7 @@ SVAR 的 locale 包实际覆盖面（已列出 `node_modules/@svar-ui/*` 内容�
 | i18n | 7 语言（en / zh-Hans / ja / de / es / hu / pl）。FullCalendar `locales-all` 覆盖。**甘特侧见 §2.4**：SVAR 的 locale 包缺 `hu`/`pl`，但当前配置不渲染库内文案，因此**不是当前缺口**，而是"阶段 1 启用内建编辑器"的前置成本。另注意 `ja/de/es/hu/pl` 的 `schedule.*` 目前**值为英文**（计划 V5），换库不会自动修好。 |
 | 主题 | Tailwind v4 token + `.dark` 类切换。FullCalendar 的 CSS 变量模型可直接映射；DHTMLX 需重写覆盖层。 |
 | 动效 | 须走 `--motion-*` token 与 reduce-motion（计划 V2）。库自带动效不受我们 token 控制 → 需要显式覆盖或在 spike 中验证。 |
-| 测试门禁 | `plans/motion-verification.mjs:343` 现有的 `[role="tablist"]` 假设**已经失效**；换库后日历分段控件与工具栏结构会变，**该脚本必须同步修正**，否则继续静默退化为 `document.body` 作用域。 |
+| 测试门禁 | `scripts/verification/motion-verification.mjs:343` 现有的 `[role="tablist"]` 假设**已经失效**；换库后日历分段控件与工具栏结构会变，**该脚本必须同步修正**，否则继续静默退化为 `document.body` 作用域。 |
 | 日期语义 | 无论用哪个库，都要先有 §4.3-1 的共享 `plan-date.ts`。**这是换库的前置条件，不是替代品** —— 否则 `2026-9-2` 这类值在新库上同样出问题。 |
 
 ---
@@ -390,7 +390,7 @@ SVAR 的 locale 包实际覆盖面（已列出 `node_modules/@svar-ui/*` 内容�
 2. §6.2 的双横向滚动条在真实用户路径上仍被判定为**不可接受**（需实测反馈，而非代码推断）；
 3. 团队接受**用 HTML 字符串模板重写任务导航列**（放弃 React 自定义单元格）；
 4. 明确**不需要**导出（或接受导出走在线服务）、不需要关键路径/基线/资源视图（均为 PRO）；
-5. 结论写入本文档的后续修订，并同步 `docs/process/gantt-view-design-proposals.html`。
+5. 结论写入本文档的后续修订，并同步 `docs/prototypes/gantt-view-design-proposals.html`。
 
 ### 6.3 与现有计划文档的差异
 

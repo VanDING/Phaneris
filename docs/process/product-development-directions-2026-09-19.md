@@ -60,7 +60,7 @@ graph LR
 | **无人值守权限靠 `allow-all` fallback** | 8-31 路线图 §4.7（TaskRunner 显式列为 P1 风险） | 最小权限被可用性静默替代；与"可信"叙事直接冲突 |
 | **命令级权限规则缺位** | 权限 = 三模式（safe/ask/allow-all）+ 静态命令 allowlist（`isReadOnlyBashCommandWithConfig`）+ cli-domains；无用户可编辑的持久规则 | 用户每次都要重复批准同类命令；批准无法沉淀为资产（对比 Codex execpolicy） |
 | **上下文与工具面预算无治理** | 会话工具 43 个（`session-tools-core/tool-defs.ts` 枚举）+ 动态注入的 source 工具；Pi 压缩参数未暴露（gap 文档 P3）；工具 schema 全部常驻 | 系统提示 token 与缓存前缀成本失控风险；压缩对用户是黑盒 |
-| **任务 schema 只执行了 1/13 种节点** | [`shared/src/tasks/schema.ts`](../packages/shared/src/tasks/schema.ts)：13 种 `kind` 中 v1 仅执行 `session`，其余"parsed but deferred"（含 `verify`/`judge`/`approval`/`loop`） | 编排能力被自己的 schema 承认、但未兑现；多智能体只是"多会话并行" |
+| **任务 schema 只执行了 1/13 种节点** | [`shared/src/tasks/schema.ts`](../../packages/shared/src/tasks/schema.ts)：13 种 `kind` 中 v1 仅执行 `session`，其余"parsed but deferred"（含 `verify`/`judge`/`approval`/`loop`） | 编排能力被自己的 schema 承认、但未兑现；多智能体只是"多会话并行" |
 | **无评测/基准工具** | `eval`/`benchmark(Agent)` 无实现；只有 `scripts/performance/*`（性能） | 北极星指标（可验证完成率）没有度量机器；prompt/模型变更无回归防线 |
 | **Pi 扩展钩子基本未用** | gap 文档：13 个事件仅注册 `before_agent_start`；interceptor 仍是全局替换式 | 上下文/工具/压缩的原生控制点空置；钩子化演进是后续 F 方向的地基 |
 | **生命周期钩子缺失于插件体系** | plugin bundles（已实施）为 skills + MCP 物化；无 tool/permission/session 事件扩展点 | 扩展生态只能加"静态能力"，无法加"行为" |
@@ -99,7 +99,7 @@ graph LR
 
 **目标**：长时间、无人值守的运行"不失控"——循环被识别、预算被计量、空转被中断、状态始终可解释。
 
-**对标证据**：MiniMax runaway-guard（6 类信号、HMAC 指纹、trusted provenance、每回合至多一次 steer、fail-open）；MiniMax 熔断双计数；`budget_limited` 状态机；我们的任务 schema 已有 repair-loop 上限先例（`DEFAULT_REPAIR_ATTEMPTS=3`／`CAP=10`，[`shared/src/tasks/schema.ts`](../packages/shared/src/tasks/schema.ts)）。
+**对标证据**：MiniMax runaway-guard（6 类信号、HMAC 指纹、trusted provenance、每回合至多一次 steer、fail-open）；MiniMax 熔断双计数；`budget_limited` 状态机；我们的任务 schema 已有 repair-loop 上限先例（`DEFAULT_REPAIR_ATTEMPTS=3`／`CAP=10`，[`shared/src/tasks/schema.ts`](../../packages/shared/src/tasks/schema.ts)）。
 
 **现状与缺口**：无循环检测（关键词 0 命中）；预算无实现；TaskRunner 只有 repair 上限；Run Trajectory 已经记录轮次/工具/错误——**检测器所需的输入数据已经存在**。
 
@@ -125,7 +125,7 @@ graph LR
 
 **对标证据**：Codex execpolicy（规则文件、最严优先、示例自检、批准落盘、防呆清单）；shell-escalation（批准后升级重跑）；PI-Desktop 审批候选作用域（窄默认 + 可放宽）。
 
-**现状与缺口**：三模式 + 六步 pre-tool-use 管线（[`packages/shared/src/agent/core/pre-tool-use.ts`](../packages/shared/src/agent/core/pre-tool-use.ts)）+ 静态 allowlist；8-31 路线图 §4.7 明确 `allow-all` fallback 为 P1 风险；无持久规则文件、无作用域选项、无提权审计事件。
+**现状与缺口**：三模式 + 六步 pre-tool-use 管线（[`packages/shared/src/agent/core/pre-tool-use.ts`](../../packages/shared/src/agent/core/pre-tool-use.ts)）+ 静态 allowlist；8-31 路线图 §4.7 明确 `allow-all` fallback 为 P1 风险；无持久规则文件、无作用域选项、无提权审计事件。
 
 **设计要点**：
 1. **workspace 级规则文件**（人类可读，随 workspace 备份）：起步仅两类——`命令前缀` 与 `域名`；决策取最严（deny 优先）。

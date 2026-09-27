@@ -68,7 +68,7 @@
       "reason": "The upstream trademark policy still governs the Craft and Craft Agents marks, which this fork must keep honouring. It needs a Phaneris section before release (tracked in the B-phase record) but must not be rewritten to erase the upstream marks."
     },
     {
-      "glob": "AUDIT_REPORT.md",
+      "glob": "docs/archive/code-audit-2026-08-01.md",
       "tokens": ["*"],
       "reason": "Historical audit of the upstream codebase under its own name; a record of what was reviewed, not a product surface."
     },

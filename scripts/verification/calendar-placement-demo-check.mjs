@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Repeatable check for the calendar side-rail prototype.
  *
@@ -5,11 +11,11 @@
  * production UI: every claim about it is an assertion here rather than a
  * sentence in a message. Run it after editing the HTML.
  *
- *   node plans/calendar-placement-demo-check.mjs
+ *   node scripts/verification/calendar-placement-demo-check.mjs
  */
 import { chromium } from 'playwright'
 
-const url = 'file://' + process.cwd() + '/plans/calendar-untimed-placement-demo.html'
+const url = new URL('../../docs/prototypes/calendar-untimed-placement-demo.html', import.meta.url).href
 const browser = await chromium.launch({ headless: true })
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
 const errors = []

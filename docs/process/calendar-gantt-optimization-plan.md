@@ -71,7 +71,7 @@ Session（packages/shared/src/protocol/dto.ts:52 + sessions/types.ts:93-105）
 ### 1.3 测试与门禁现状
 
 - 日历/甘特**没有任何渲染级或行为级测试**。相关单测只有：`lib/__tests__/calendar-date.test.ts`（53 行，只测标题/星期格式化）、`shared/__tests__/route-parser-project-management.test.ts`、几个把 calendar/gantt 当路由 fixture 的 atom/launcher 测试。
-- 仓库**没有 E2E 框架**（无 `playwright.config`、无 `e2e/`、CI 无 playwright）；`plans/motion-verification.mjs:329-379` 是唯一一个真实浏览器检查（日历 day→week 切换），但它假设 `[role="tablist"]`（`:343`），而日历分段控件**没有任何 role**，导致作用域静默退化为 `document.body`。
+- 仓库**没有 E2E 框架**（无 `playwright.config`、无 `e2e/`、CI 无 playwright）；`scripts/verification/motion-verification.mjs:329-379` 是唯一一个真实浏览器检查（日历 day→week 切换），但它假设 `[role="tablist"]`（`:343`），而日历分段控件**没有任何 role**，导致作用域静默退化为 `document.body`。
 - **Playground 在本机实测白屏**：`window.electronAPI.onSessionEvent is not a function`（`App.tsx:995`、`NavigationContext.tsx:1269` 会调用；`playground/mock-utils.ts` 中该 API **0 次出现**），DOM 只有 31 个节点。Playground 也没有注册甘特图条目（`playground/registry/schedule-views.tsx:73-110`）。→ 两个视图目前**无法被设计系统 Playground 验证**。
 - 无 a11y 门禁：`eslint-plugin-jsx-a11y` 未安装、未启用。
 - i18n 门禁只能查"引用的 key 是否存在"（`scripts/check-i18n-coverage.ts:5-11`）与"locale 键集合是否一致"，**查不出**"值没翻译"和"key 已死"。
@@ -155,7 +155,7 @@ Session（packages/shared/src/protocol/dto.ts:52 + sessions/types.ts:93-105）
 | I7 | 无键盘路径：周视图条目不渲染任何按钮（日视图靠 `entryActions` 兜底）；月网格无 grid 语义；`+N more` 不可点；拖拽仅 HTML5 DnD | `CalendarView.tsx:521-603, 623-628, 724-728, 342-349` | 实测 `+7 more` 是 `span`、`tabIndex=-1` ✅ |
 | I8 | 分段控件无 `role=radiogroup`、无 roving tabindex（三个按钮 tabIndex 都是 0）、无组标签 | `CalendarView.tsx:794-818`、`GanttView.tsx:715-731` | 实测：group role=null，按钮 `aria-pressed` ✅ |
 | I9 | 周导航用 `7*86_400_000` 毫秒运算（DST 边界可能偏一天）；周标题只显示"月 年"（跨月周显示错月份）；prev/next 的 `aria-label` 固定为 "Previous/Next month" | `CalendarView.tsx:280, 288, 303-306, 771, 780`；`calendar-date.ts:15-20` | — |
-| I10 | 甘特图只读：不能拖拽改期、不能改依赖/进度；设计提案里的"依赖聚焦高亮"未实现 | `GanttView.tsx:759`；`docs/process/gantt-view-design-proposals.html:541-543` | — |
+| I10 | 甘特图只读：不能拖拽改期、不能改依赖/进度；设计提案里的"依赖聚焦高亮"未实现 | `GanttView.tsx:759`；`docs/prototypes/gantt-view-design-proposals.html:541-543` | — |
 | I11 | 甘特"Today"依赖私有内部状态（`getState()._start/_scales`）与 DOM 选择器，版本升级即静默失效 | `GanttView.tsx:680-698` | 横向滚动本身可用（实测 `.wx-chart` overflow-x:auto） |
 | I12 | 过滤能力不对等：甘特图无搜索/状态/排序（搜索只作用于看板/列表/日历） | `GanttView.tsx:415-428` | — |
 
@@ -164,7 +164,7 @@ Session（packages/shared/src/protocol/dto.ts:52 + sessions/types.ts:93-105）
 | # | 问题 | 证据 | 备注 |
 | --- | --- | --- | --- |
 | V1 | 依赖箭头对比度不足：`--wx-gantt-link-color` = fg 35% → 浅色 **2.03:1**、深色 **2.67:1**（WCAG 1.4.11 要求 ≥3:1）；日历 muted 文本 `text-foreground/45` = 浅色 **2.61:1**，`/55` = **3.39:1**，`/30`（非本月日期）= **1.82:1** | `gantt-overrides.css:53-54`；`CalendarView.tsx:371,625,726,662` | 数值由 token 实测计算得出 |
-| V2 | 动效未走 token：Tailwind 默认 150ms / `cubic-bezier(.4,0,.2,1)`；甘特 CSS 硬编码 `120ms ease`；`active:scale-[0.998]`（≈不可感知）而非 `--motion-scale-pressed`(0.98) | `CalendarView.tsx:380,442,714`；`gantt-overrides.css:182,199,377`；`GanttView.tsx:227` | 与 `plans/motion-specification.md:15` 冲突；reduce 模式下 120ms 不随之收敛 |
+| V2 | 动效未走 token：Tailwind 默认 150ms / `cubic-bezier(.4,0,.2,1)`；甘特 CSS 硬编码 `120ms ease`；`active:scale-[0.998]`（≈不可感知）而非 `--motion-scale-pressed`(0.98) | `CalendarView.tsx:380,442,714`；`gantt-overrides.css:182,199,377`；`GanttView.tsx:227` | 与 `docs/verification/motion-specification.md:15` 冲突；reduce 模式下 120ms 不随之收敛 |
 | V3 | 原语重复实现：分段控件 ×2、`title=` 代替 Tooltip、raw `<input>` 代替 `Input`、raw `<button>` 代替 `Button`/`HeaderIconButton` | `CalendarView.tsx:756-791`；`GanttView.tsx:732-738` | 已有 `SettingsSegmentedControl`、`radio-group-navigation.ts`、`HeaderIconButton`、`Input` |
 | V4 | 甘特图主题块里 29 个 `--wx-gantt-*` 赋值中，与**任务条/汇总条/里程碑上色**相关的那部分对最终外观没有影响——它们确实被 vendor CSS 消费（库把变量声明在 `.wx-material-theme` / `.wx-willow-theme` 自身，我们的覆盖块也落在同一个元素上，声明层没问题），但随后被 `.wx-bar`/`.wx-content` 的清空规则与自定义 `.pg-bar` 覆盖（属"赋值被中和"，不是"变量不存在"）。清理前需逐个在 DevTools 里核对生效元素；另外 `highlightTime` 未配置 → `--wx-gantt-holiday-*` 实际不生效、**没有周末底纹、没有今日线** | `gantt-overrides.css:45-88, 339-366`；`gantt-store/dist/types/types.d.ts:297` 默认 `highlightTime: null` | 周末底纹与只读/拖拽同属 **MIT 免费能力**（见 §7.2）；"Vertical markers"（今日线）确为 PRO，但用 `highlightTime`+CSS 自绘约 30 行即可 |
 | V5 | i18n：`schedule.*` 在 ja/de/es/hu/pl **全是英文值**（仅 zh-Hans 翻译完整）；7 个 key（`gantt.range.*`、`gantt.zoomFit/In/Out`）为死键（7 语言 × 7 = 49 条）；服务端硬编码 `'Untitled schedule'` / `'Untitled task'`；`ui/calendar.tsx` 未传 `locale`（用宿主 locale 而非 UI 语言） | `packages/shared/src/i18n/locales/*.json`；`calendar.ts:27`；`work-items.ts:38`；`ui/calendar.tsx:26-34` | 现有 3 个 i18n 门禁都查不出这些 |
@@ -228,7 +228,7 @@ Session（packages/shared/src/protocol/dto.ts:52 + sessions/types.ts:93-105）
 
 ## 4. 验收与门禁
 
-### 4.1 E2E 清单（建议新增 `plans/calendar-gantt-verification.mjs`，沿用现有 Playwright 模式）
+### 4.1 E2E 清单（建议新增 `scripts/verification/calendar-gantt-verification.mjs`，沿用现有 Playwright 模式）
 
 真源脚本已在本轮实测中跑通（Playground + Playwright + 对抗性 fixture），建议固化为仓库脚本，断言：
 
@@ -244,7 +244,7 @@ Session（packages/shared/src/protocol/dto.ts:52 + sessions/types.ts:93-105）
 ### 4.2 需要同步更新的既有门禁
 
 - `apps/electron/src/shared/__tests__/ipc-channels.test.ts:82`（若采纳阶段 2.1 方案 B）
-- `plans/motion-verification.mjs:343`（tablist 假设）
+- `scripts/verification/motion-verification.mjs:343`（tablist 假设）
 - `scripts/check-i18n-coverage.ts`（增加死键检查）
 - `playground/mock-utils.ts`（补 `onSessionEvent`，否则整个 Playground 白屏）
 
@@ -278,7 +278,7 @@ bun run vite dev --config apps/electron/vite.config.ts --port 5199 --strictPort
 | 日期解析三套实现 | `calendar.ts:12-18`；`GanttView.tsx:124-128`；`work-items/query.ts:8-12` |
 | 共享 atom 与筛选冲突 | `atoms/kanban.ts:19-34`；`useWorkItemViewState.ts:15-76`；`CalendarView.tsx:136-139`；`KanbanBoardContainer.tsx:93-96` |
 | remount 与状态丢失 | `ProjectManagementSurface.tsx:66-78`；`CalendarView.tsx:140-142,297-301`；`GanttView.tsx:366,384` |
-| 动效 token / 违规 | `packages/ui/src/styles/motion.css:7-19,80-124`；`plans/motion-specification.md:15,38-57`；`gantt-overrides.css:182,199,377` |
+| 动效 token / 违规 | `packages/ui/src/styles/motion.css:7-19,80-124`；`docs/verification/motion-specification.md:15,38-57`；`gantt-overrides.css:182,199,377` |
 | a11y 缺口 | `CalendarView.tsx:342-349,521-603,623-628,724-728,794-818`；`GanttView.tsx:323-347,715-731` |
 | 对比度 | `gantt-overrides.css:45-88`；`apps/electron/src/renderer/index.css:88-162,260-308` |
 | i18n | `packages/shared/src/i18n/locales/{en,zh-Hans,ja,de,es,hu,pl}.json`；`scripts/check-i18n-coverage.ts:5-11` |

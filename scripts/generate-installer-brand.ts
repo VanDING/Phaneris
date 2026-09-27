@@ -15,7 +15,7 @@
  *
  *   brand.png / brand@2x.png            light lockup, transparent background
  *   brand-dark.png / brand-dark@2x.png  dark lockup, transparent background
- *   brand.bmp / brand-2x.bmp            600x196 and 1200x392, opaque white
+ *   brand.bmp / brand-2x.bmp            600x176 and 1200x352, opaque white
  *   brand-dark.bmp / brand-dark-2x.bmp  the same two sizes on the dark page
  *   uninstaller-sidebar.bmp             164x314, NSIS MUI welcome/finish bitmap
  *   installerHeader.bmp                 150x57,  NSIS MUI header bitmap
@@ -50,11 +50,11 @@ const RES = join(ROOT, 'apps/electron/resources')
 const OUT = join(ROOT, 'apps/electron/installer/assets')
 
 const STRIP_W = 600
-const STRIP_H = 196
+const STRIP_H = 176
 const MARK_TOP = 16
-const MARK_H = 100
-const WORDMARK_PX = 30
-const WORDMARK_BASELINE = 166
+const MARK_H = 88
+const WORDMARK_PX = 28
+const WORDMARK_BASELINE = 144
 
 // Palette. Must match progress.h's constants; that file is authoritative for
 // what the plugin paints behind these images.
@@ -82,7 +82,7 @@ function stripSvg(ink: string): string {
   const markX = ((STRIP_W - MARK_H * MARK_ASPECT) / 2).toFixed(2)
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${STRIP_W}" height="${STRIP_H}" viewBox="0 0 ${STRIP_W} ${STRIP_H}">
 <svg x="${markX}" y="${MARK_TOP}" width="${markW}" height="${MARK_H}" viewBox="${MARK_VIEWBOX}">${markInner}</svg>
-<text x="${STRIP_W / 2}" y="${WORDMARK_BASELINE}" font-family="Segoe UI" font-size="${WORDMARK_PX}" font-weight="600" text-anchor="middle" fill="${ink}" letter-spacing="0.2">Phaneris</text>
+<text x="${STRIP_W / 2}" y="${WORDMARK_BASELINE}" font-family="Segoe UI" font-size="${WORDMARK_PX}" font-weight="600" text-anchor="middle" fill="${ink}">Phaneris</text>
 </svg>`
 }
 

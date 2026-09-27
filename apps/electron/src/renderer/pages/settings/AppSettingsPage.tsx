@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 import { HeaderMenu } from '@/components/ui/HeaderMenu'
 import { routes } from '@/lib/navigate'
 import * as storage from '@/lib/local-storage'
@@ -179,7 +180,13 @@ export default function AppSettingsPage() {
   const handleNotificationsEnabledChange = useCallback(async (enabled: boolean) => {
     setNotificationsEnabled(enabled)
     await window.electronAPI.setNotificationsEnabled(enabled)
-  }, [])
+    // In-app confirmation, replacing the OS toast the main process used to fire.
+    if (enabled) {
+      toast.success(t('toast.notificationsEnabled'), {
+        description: t('toast.notificationsEnabledDesc'),
+      })
+    }
+  }, [t])
 
   const handleKeepAwakeEnabledChange = useCallback(async (enabled: boolean) => {
     setKeepAwakeEnabled(enabled)

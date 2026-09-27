@@ -4,7 +4,7 @@
 - 日期：2026-09-20
 - 性质：设计（定位已定，实施未开始）
 - 定位决定：采用**方向 B｜治理与介入**。本文是该决定的落地设计。
-- 关联：[`product-development-directions-2026-09-19.md`](product-development-directions-2026-09-19.md) 方向 F（生命周期钩子与受管扩展）、[`pi-sdk-native-capabilities-gap-analysis.md`](../pi-sdk-native-capabilities-gap-analysis.md) §2.1、[`pi-kernel.md`](../pi-kernel.md) 残留判定规则、[`automations` 用户指南](../../apps/electron/src/renderer/docs/guide/en/automations/overview.md)
+- 关联：[`product-development-directions-2026-09-19.md`](product-development-directions-2026-09-19.md) 方向 F（生命周期钩子与受管扩展）、[`pi-sdk-native-capabilities-gap-analysis.md`](../pi-sdk-native-capabilities-gap-analysis.md) §2.1、[`pi-kernel.md`](../pi-kernel.md) 残留判定规则、[`automations` 用户指南](../../apps/electron/resources/docs/automations.md)
 
 ---
 
@@ -173,8 +173,8 @@ log.debug(`[AutomationSystem] Matched ${event} automation (prompt-based executio
 
 两份文档都把 13 个 agent 事件列为可用触发器：
 
-- [`automations/overview.md`](../apps/electron/src/renderer/docs/guide/en/automations/overview.md)：表格列出全部 13 个 `Agent events`
-- [`apps/electron/resources/docs/automations.md`](../apps/electron/resources/docs/automations.md):78-92：逐条给出描述（`| PreToolUse | Before a tool executes | Tool name |`、`| SessionStart | Session starts | - |`）
+- [`automations/overview.md`](../../apps/electron/resources/docs/automations.md)：表格列出全部 13 个 `Agent events`
+- [`apps/electron/resources/docs/automations.md`](../../apps/electron/resources/docs/automations.md):78-92：逐条给出描述（`| PreToolUse | Before a tool executes | Tool name |`、`| SessionStart | Session starts | - |`）
 
 **都没有说明这些事件不会执行任何动作。** 用户照文档配置会得到一条永久静默的规则。
 

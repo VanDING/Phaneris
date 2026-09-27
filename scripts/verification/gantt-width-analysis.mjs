@@ -1,3 +1,9 @@
+import { dirname as scriptDirname, resolve as resolvePath } from 'node:path'
+import { fileURLToPath as scriptFileURLToPath } from 'node:url'
+
+const ROOT = resolvePath(scriptDirname(scriptFileURLToPath(import.meta.url)), '../..')
+process.chdir(ROOT)
+
 /**
  * Diagnostic: how wide is the Gantt task column, and can the user change it?
  *
@@ -6,7 +12,7 @@
  *   2. whether the library's splitter (`wx-resizer`) is present and hit-testable;
  *   3. what a real mouse drag on that splitter does to the width.
  *
- * Usage: node plans/gantt-width-analysis.mjs [base]
+ * Usage: node scripts/verification/gantt-width-analysis.mjs [base]
  */
 import { chromium } from 'playwright'
 

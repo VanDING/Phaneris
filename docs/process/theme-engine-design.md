@@ -3,7 +3,7 @@
 - 作者：Phaneris（与 Captain 协作）
 - 日期：2026-08-20
 - 状态：实现完成（核心语义表面、自动化验证与应用内视觉复验均已完成）
-- 配套演示：`docs/theme-engine-demo-5-themes.html`（五套主题全维度对比）
+- 配套演示：`docs/prototypes/theme-engine-demo-5-themes.html`（五套主题全维度对比）
 - 主题制作提示词：[`docs/theme-authoring-prompt.md`](../theme-authoring-prompt.md) —— 面向"让 AI 产出主题文件"的完整 token 契约（39 个 token、schema 硬约束、light/dark 继承模型、Shiki 白名单）
 - 面向最终用户的说明：`apps/electron/resources/docs/themes.md`（随应用打包并同步到 `~/.phaneris/docs/`）
 
@@ -205,7 +205,7 @@ config.json 偏好 + workspace 可选主题 ID
 
 ## 附：配套演示说明
 
-`docs/theme-engine-demo-5-themes.html`（自包含，纯 CSS 变量，无 JS）：
+`docs/prototypes/theme-engine-demo-5-themes.html`（自包含，纯 CSS 变量，无 JS）：
 - 同一套工作台组件骨架，仅切换 token → 五套风格：① 默认简约 `flat` / ② 水墨禅意 `elevated` / ③ 赛博朋克 `neon` / ④ 玻璃拟态 `glass` / ⑤ 粗野主义 `raised`。
 - 每列含【深度演示条】直观展示 `--depth` 差异 + 维度徽标（L1–L6）+ Token 面板。
 - **五套主题使用完全相同的系统 UI 文案**（按钮/导航/输入/状态徽标），纯 token 制造风格差异，验证主题引擎只管视觉、不管文案。

@@ -115,6 +115,8 @@ async function generateCustomMessages(): Promise<string> {
 }
 
 const messagesDir = await generateCustomMessages()
+// A native UI fixture: real pages and plugin, no application installation.
+const preview = process.argv.includes('--preview')
 
 const result = spawnSync(
   makensis,
@@ -126,6 +128,7 @@ const result = spawnSync(
     '-WX',
     // electron-builder also passes /NOCD and this charset.
     '/NOCD',
+    ...(preview ? ['-DPHANERIS_UI_PREVIEW'] : []),
     `-DPHANERIS_NSIS_PLUGIN_DIR=${pluginDir}`,
     `-DPHANERIS_NSIS_MESSAGES_DIR=${messagesDir}`,
     'probe.nsi',

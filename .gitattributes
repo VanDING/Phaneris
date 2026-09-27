@@ -1,0 +1,47 @@
+# Line endings.
+#
+# Text is stored as LF and checked out as LF. This belongs in the repository
+# rather than in anyone's git config: this machine's *system* gitconfig sets
+# core.autocrlf=true (the repo-local override says false), so a checkout made
+# under that setting wrote ~1.8k files into the working tree as CRLF. Git hides
+# those while their cached stat matches the index — and the moment any tool
+# touches one, the entire file reappears as a few hundred lines of pure
+# line-ending diff. Pinning the conversion here makes the index, the working
+# tree and a fresh clone agree no matter what a local git config says.
+* text=auto eol=lf
+
+# Deliberate CRLF: Windows batch files. cmd.exe seeks inside a batch file by
+# byte offset, so `goto :label` — which the bin/*.cmd CLI wrappers use — is only
+# reliable with CRLF. Only the checkout is affected; `text` still normalises the
+# blob to LF, so the index does not change.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Committed binaries: never converted, never diffed as text. Every extension
+# below exists in this tree; the artwork is the app's icons and the installer's
+# branded bitmaps, which a text conversion would silently corrupt.
+*.png   binary
+*.ico   binary
+*.icns  binary
+*.bmp   binary
+*.tif   binary
+*.tiff  binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+# Assets.car is the macOS asset catalog.
+*.car   binary
+*.pdf   binary
+*.exe   binary
+*.dll   binary
+*.node  binary
+*.so    binary
+*.dylib binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.zip   binary
+*.asar  binary
+*.wasm  binary

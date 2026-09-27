@@ -45,7 +45,7 @@
 
 补充：把 `~/.phaneris/themes` 交给应用真实的 `loadPresetThemes()` 调用，返回值里包含 `graphite`（与 cyberpunk-2077 / geek / ink 并列），说明它会被主题选择器列出且不会因校验被静默丢弃。
 
-视觉核对：`hero-demo/theme-sheet.html` 是用**真实的 `themeToCSS()` 输出**生成的色板页（浅色 / 深色两栏，含色块、文字层级、语义色、表面、以及实际应用示例），截图见 `hero-demo/theme-sheet.png`。它是自包含的静态文件，直接打开即可，不需要任何工具链。
+视觉核对：`docs/assets/hero-demo/theme-sheet.html` 是用**真实的 `themeToCSS()` 输出**生成的色板页（浅色 / 深色两栏，含色块、文字层级、语义色、表面、以及实际应用示例），截图见 `docs/assets/hero-demo/theme-sheet.png`。它是自包含的静态文件，直接打开即可，不需要任何工具链。
 
 若要重跑校验：改这份 JSON 后重启应用，在设置 → 外观里切换一次主题——主题目录有 watcher，文件改动即时生效；对比度和台阶这类数值可自行用任意对比度工具核对上表。
 

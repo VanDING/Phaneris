@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils"
 import { coerceInputText, appendRestoredInput } from "@/lib/input-text"
 import { observeChatScrollAnchor } from '@/lib/chat-scroll-anchor'
 import { contextBadgeUsage } from '@/lib/context-usage'
+import { confirmDialog } from '@/components/ConfirmDialogHost'
 import { Markdown, CollapsibleMarkdownProvider, StreamingMarkdown, type RenderMode } from "@/components/markdown"
 import { ContentSwap } from "@/components/ui/content-swap"
 import {
@@ -1020,7 +1021,11 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   }, [artifactStore, t])
 
   const discardArtifact = useCallback(async (artifactId: string) => {
-    if (!window.confirm(t('artifact.discardConfirm'))) return
+    const confirmed = await confirmDialog({
+      title: t('artifact.discardConfirm'),
+      confirmLabel: t('artifact.discard'),
+    })
+    if (!confirmed) return
     try {
       await artifactStore.discard(artifactId)
     } catch (cause) {

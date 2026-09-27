@@ -20,6 +20,7 @@ import {
   Info_Table,
 } from '@/components/info'
 import { Button } from '@/components/ui/button'
+import { confirmDialog } from '@/components/ConfirmDialogHost'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@phaneris/ui'
@@ -166,7 +167,11 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
 
   const handleDeleteProject = useCallback(async () => {
     if (!workspaceId || !project) return
-    if (!window.confirm(t('projectInfo.deleteConfirm', { name: project.config.name }))) return
+    const confirmed = await confirmDialog({
+      title: t('projectInfo.deleteConfirm', { name: project.config.name }),
+      confirmLabel: t('common.delete'),
+    })
+    if (!confirmed) return
     try {
       await window.electronAPI.deleteProject(workspaceId, project.config.slug)
       navigate(routes.view.projects())
@@ -195,7 +200,11 @@ export default function ProjectInfoPage({ projectSlug }: ProjectInfoPageProps) {
 
   const handleDeleteAsset = useCallback(async (asset: ProjectAsset) => {
     if (!workspaceId || !project) return
-    if (!window.confirm(t('projectInfo.deleteAssetConfirm', { name: asset.filename }))) return
+    const confirmed = await confirmDialog({
+      title: t('projectInfo.deleteAssetConfirm', { name: asset.filename }),
+      confirmLabel: t('common.delete'),
+    })
+    if (!confirmed) return
     try {
       await window.electronAPI.deleteProjectAsset(workspaceId, project.config.slug, asset.filename)
       await refreshAssets()

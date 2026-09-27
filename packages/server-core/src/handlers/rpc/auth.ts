@@ -15,6 +15,11 @@ export const HANDLED_CHANNELS = [
 
 export function registerAuthHandlers(server: RpcServer, deps: HandlerDeps): void {
   // Show logout confirmation dialog (routed to client)
+  //
+  // The `i18n` descriptor is what a client *should* render; the English
+  // `title`/`message`/`detail`/`buttons` above it stay as the fallback a client
+  // without i18n renders. Servers must not ship translated copy over the wire —
+  // see `ConfirmDialogSpec.i18n`.
   server.handle(RPC_CHANNELS.auth.SHOW_LOGOUT_CONFIRMATION, async (ctx) => {
     const result = await requestClientConfirmDialog(server, ctx.clientId, {
       type: 'warning',
@@ -24,6 +29,13 @@ export function registerAuthHandlers(server: RpcServer, deps: HandlerDeps): void
       title: 'Log Out',
       message: 'Are you sure you want to log out?',
       detail: 'All conversations will be deleted. This action cannot be undone.',
+      i18n: {
+        titleKey: 'dialog.logout.title',
+        messageKey: 'dialog.logoutConfirmation',
+        detailKey: 'dialog.logout.detail',
+        confirmKey: 'dialog.logout.confirm',
+        cancelKey: 'common.cancel',
+      },
     })
     // result.response is the index of the clicked button
     // 0 = Cancel, 1 = Log Out
@@ -40,6 +52,15 @@ export function registerAuthHandlers(server: RpcServer, deps: HandlerDeps): void
       title: 'Delete Conversation',
       message: `Are you sure you want to delete: "${name}"?`,
       detail: 'This action cannot be undone.',
+      i18n: {
+        titleKey: 'dialog.deleteSession.title',
+        messageKey: 'dialog.deleteSessionConfirmation',
+        detailKey: 'dialog.deleteSession.detail',
+        confirmKey: 'common.delete',
+        cancelKey: 'common.cancel',
+        // `dialog.deleteSessionConfirmation` interpolates the conversation name.
+        values: { name },
+      },
     })
     // result.response is the index of the clicked button
     // 0 = Cancel, 1 = Delete

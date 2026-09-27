@@ -215,9 +215,23 @@ Unicode true
   ; installer.nsi (LogSet, check64BitAndSetRegView, the single-instance guard)
   ; touch nothing the skin is written against.
   Function .onInit
+    !ifndef PHANERIS_UI_PREVIEW
     SetOutPath $INSTDIR
+    !endif
     !insertmacro initMultiUser
     !insertmacro customInit
+    !ifdef PHANERIS_UI_PREVIEW
+      ; Keep preflight on a fresh temporary path; never install to it.
+      System::Call 'kernel32::GetCurrentProcessId() i.s'
+      Pop $0
+      StrCpy $INSTDIR "$TEMP\phaneris-ui-preview-$0"
+      StrCpy $InstallerPath $INSTDIR
+      ${GetParameters} $0
+      ${GetOptions} $0 "/LANGUAGE=" $1
+      ${IfNot} ${Errors}
+        StrCpy $LANGUAGE $1
+      ${EndIf}
+    !endif
   FunctionEnd
 
   ; electron-builder's own install section is installSection.nsh, which extracts
@@ -225,8 +239,18 @@ Unicode true
   ; matter here, and both of them are expanded below exactly where the real
   ; section expands them.
   Section "install"
-    WriteUninstaller "$TEMP\phaneris-probe-uninstaller.exe"
+    !ifdef PHANERIS_UI_PREVIEW
+      ; A synthetic section has no extraction fraction. An empty stock range
+      ; exercises the bounded estimate without NSIS's instruction counter
+      ; jumping to 99% before the first screenshot.
+      SendMessage $mui.InstFilesPage.ProgressBar 0x406 0 0
+      Sleep 26000
+      !insertmacro InstallerPublishStage 4
+      WriteUninstaller "$PLUGINSDIR\phaneris-probe-uninstaller.exe"
+    !else
+    WriteUninstaller "$PLUGINSDIR\phaneris-probe-uninstaller.exe"
     !insertmacro customInstall
+    !endif
   SectionEnd
 
   Section "Uninstall"

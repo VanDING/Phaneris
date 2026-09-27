@@ -691,16 +691,34 @@ export class WindowManager {
   }
 
   /**
+   * Put a window in front of the user: restore it if it is minimised, show it
+   * if it is hidden, then focus it.
+   *
+   * This is the single answer to "the user asked for this app, so its window
+   * must be visible", shared by the deeplink path, the second-instance hand-off
+   * and focusOrCreateWindow. `restore()` is called only when the window *is*
+   * minimised: on a maximised window it would undo the maximise. `show()` is
+   * called even when the window reports visible, because a window can be on
+   * another virtual desktop or behind everything with no way to tell from
+   * `isVisible()` alone, and show() is what asks the OS to raise it.
+   */
+  focusWindow(window: BrowserWindow): BrowserWindow {
+    if (window.isDestroyed()) return window
+    if (window.isMinimized()) {
+      window.restore()
+    }
+    window.show()
+    window.focus()
+    return window
+  }
+
+  /**
    * Focus existing window for workspace or create new one
    */
   focusOrCreateWindow(workspaceId: string): BrowserWindow {
     const existing = this.getWindowByWorkspace(workspaceId)
     if (existing) {
-      if (existing.isMinimized()) {
-        existing.restore()
-      }
-      existing.focus()
-      return existing
+      return this.focusWindow(existing)
     }
     return this.createWindow({ workspaceId })
   }

@@ -31,6 +31,8 @@ type ApiToChannelMapKeys = Exclude<
   | 'onTransferProgress' // direct IPC listener — chunk upload progress
   | 'changeLanguage' // direct IPC to main process — syncs i18n language
   | 'getFilePath' // renderer-local — webUtils.getPathForFile, no IPC round-trip
+  | 'onConfirmDialogRequest' // direct IPC from main — relayed server confirm, no RPC channel
+  | 'respondConfirmDialog' // direct IPC to main — answers the relayed confirm
 > | BrowserPaneKeys
 type ChannelMapKeys = keyof typeof CHANNEL_MAP & string
 

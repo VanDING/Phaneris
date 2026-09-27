@@ -406,10 +406,11 @@ export function registerSystemGuiHandlers(server: RpcServer, deps: HandlerDeps):
     const { setNotificationsEnabled } = await import('@phaneris/shared/config/storage')
     setNotificationsEnabled(enabled)
 
-    if (enabled) {
-      const { showNotification } = await import('../notifications')
-      showNotification('Notifications enabled', 'You will be notified when tasks complete.', '', '')
-    }
+    // No confirmation is raised here on purpose. This used to fire an OS toast
+    // ("Notifications enabled") from the main process — hardcoded English, and a
+    // system-level notification to confirm that system-level notifications were
+    // turned on. The renderer raises an in-app toast instead, where the toggle
+    // actually lives and where the copy can be translated.
   })
 
   // Badge and window focus
