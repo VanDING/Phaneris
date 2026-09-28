@@ -1,6 +1,6 @@
 {
   "name": "@phaneris/shared",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "license": "Apache-2.0",
   "description": "Shared business logic for Phaneris - agent, auth, config, credentials, MCP integration",
   "type": "module",
@@ -27,6 +27,9 @@
     "./docs/doc-links": "./src/docs/doc-links.ts",
     "./config/types": "./src/config/types.ts",
     "./credentials": "./src/credentials/index.ts",
+    "./decisions": "./src/decisions/index.ts",
+    "./decisions/types": "./src/decisions/types.ts",
+    "./decisions/settings": "./src/decisions/settings.ts",
     "./mcp": "./src/mcp/index.ts",
     "./prompts": "./src/prompts/index.ts",
     "./sessions": "./src/sessions/index.ts",

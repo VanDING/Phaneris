@@ -10,7 +10,7 @@ import {
   type AgentProvider,
 } from '@phaneris/shared/agent/backend'
 import { getModelRefreshService } from '@phaneris/server-core/model-fetchers'
-import { parseTestConnectionError, createBuiltInConnection, validateModelList, piAuthProviderDisplayName, validateSetupTestInput, setupTestRequiresApiKey, resolveConnectionTransport } from '@phaneris/server-core/domain'
+import { parseTestConnectionError, createBuiltInConnection, validateModelList, piAuthProviderDisplayName, validateSetupTestInput, setupTestRequiresApiKey, resolveConnectionTransport, resolveSetupTestApiKey, maskApiKey, isMaskedApiKey } from '@phaneris/server-core/domain'
 import { getWorkspaceOrThrow, buildBackendHostRuntimeContext } from '@phaneris/server-core/handlers'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -241,7 +241,7 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
       // unusable model-less state. Manual model IDs remain the fallback for
       // endpoints that intentionally do not implement listing.
       if (isCompatProvider(pendingConnection.providerType) && !pendingConnection.defaultModel) {
-        const isMaskedCredential = setup.credential?.includes('••')
+        const isMaskedCredential = isMaskedApiKey(setup.credential)
         const apiKey = setup.credential && !isMaskedCredential
           ? setup.credential
           : await manager.getLlmApiKey(setup.slug) ?? undefined
@@ -325,7 +325,7 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
       }
 
       // Store credential if provided (skip masked placeholders from GET_API_KEY)
-      const isMasked = setup.credential?.includes('••')
+      const isMasked = isMaskedApiKey(setup.credential)
       if (setup.credential && !isMasked) {
         const authType = pendingConnection.authType
         if (authType === 'oauth') {
@@ -387,13 +387,24 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
   // Unified connection test — uses the agent factory to spawn a real agent subprocess
   // and validate credentials via runMiniCompletion(). Same code path as actual chat.
   server.handle(RPC_CHANNELS.settings.TEST_LLM_CONNECTION_SETUP, async (_ctx, params: import('@phaneris/shared/protocol').TestLlmConnectionParams): Promise<import('@phaneris/shared/protocol').TestLlmConnectionResult> => {
-    const { provider, apiKey, baseUrl, model, piAuthProvider, customEndpoint } = params
-    const trimmedKey = apiKey?.trim() ?? ''
+    const { provider, apiKey, baseUrl, model, piAuthProvider, customEndpoint, connectionSlug } = params
     const allowEmptyApiKey = !setupTestRequiresApiKey(baseUrl)
 
-    if (!trimmedKey && !allowEmptyApiKey) {
-      return { success: false, error: 'API key is required' }
+    // The edit form echoes the stored key back as the GET_API_KEY placeholder;
+    // resolve it to the real credential instead of testing the bullets
+    // (craft-agents-oss#1048). A missing key surfaces here as a "re-enter the
+    // key" error rather than the old early return.
+    const keyResolution = await resolveSetupTestApiKey(
+      { apiKey, connectionSlug, allowEmptyApiKey },
+      (slug) => getCredentialManager().getLlmApiKey(slug),
+    )
+    if (!keyResolution.ok) {
+      return { success: false, error: keyResolution.error }
     }
+    if (keyResolution.source === 'stored') {
+      deps.platform.logger?.info(`[testLlmConnectionSetup] Using the stored API key of ${connectionSlug}`)
+    }
+    const trimmedKey = keyResolution.apiKey
 
     const setupValidation = validateSetupTestInput({ provider, baseUrl, piAuthProvider })
     if (!setupValidation.valid) {
@@ -505,11 +516,8 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
     const manager = getCredentialManager()
     const key = await manager.getLlmApiKey(slug)
     if (!key) return null
-    // Show provider prefix (first 7 chars) + last 4 chars, mask the middle
-    if (key.length > 15) {
-      return key.slice(0, 7) + '••••••••' + key.slice(-4)
-    }
-    return '••••••••'
+    // Provider prefix + mask + last four; the test handler resolves this back by slug
+    return maskApiKey(key)
   })
 
   // Save (create or update) an LLM connection

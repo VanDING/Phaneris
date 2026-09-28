@@ -248,6 +248,38 @@ describe('attachSessionSelfManagementBindings', () => {
     expect(result.text).toBe('generated:A paper kite');
     expect(result.structuredContent).toEqual({ artifact: { id: 'image-1', status: 'ready' } });
   });
+
+  it('binds the decision-layer callback and reaches handleDecide through it', async () => {
+    const ctx = createBaseContext(sessionId);
+    attachSessionSelfManagementBindings(ctx, sessionId);
+    // No decision layer wired (default state) — the tool must degrade, not throw.
+    expect(ctx.decide).toBeUndefined();
+
+    mergeSessionScopedToolCallbacks(sessionId, {
+      decide: {
+        decide: async () => ({
+          ok: true,
+          model: 'jev-test',
+          answers: { topic: { type: 'choice', choice: 'billing', confidence: 0.9999, probabilities: { billing: 0.9, other: 0.1 } } },
+          usage: { inputTokens: 3, outputTokens: 1 },
+          latencyMs: 7,
+          truncated: false,
+        }),
+      },
+    });
+
+    const handler = SESSION_TOOL_REGISTRY.get('decide')!.handler!;
+    const result = await handler(ctx, {
+      state: 'Why was my card charged twice?',
+      questions: { topic: { type: 'choice', instructions: 'Which topic?', criteria: { billing: 'money', other: null } } },
+    });
+
+    expect(result.isError).toBe(false);
+    const parsed = JSON.parse(result.content[0]!.text);
+    expect(parsed.model).toBe('jev-test');
+    // 3-decimal compaction still applies through the bound callback.
+    expect(parsed.answers.topic.confidence).toBe(1);
+  });
 });
 
 // ============================================================

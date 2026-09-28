@@ -33,6 +33,14 @@ const RUN_TIMEOUT_MS = 30_000;
 
 let scratchDir: string;
 
+/*
+ * This hook builds the whole minified server bundle before any case runs, so it
+ * needs the same budget the spawn below already declares (120 s) rather than
+ * bun's 5 s default. Measured at ~1.4 s warm and ~3 s cold on a quiet Windows
+ * box, but a cold `bun run` while the rest of the monorepo is building or
+ * testing pushes it past 5 s — the hook is then killed mid-build and reports
+ * "bundle build failed" for a build that never actually failed.
+ */
 beforeAll(() => {
   const build = spawnSync('bun', ['run', 'build'], { cwd: packageDir, stdio: 'pipe', timeout: 120_000 });
   if (build.status !== 0) {
@@ -40,7 +48,7 @@ beforeAll(() => {
   }
   scratchDir = mkdtempSync(join(tmpdir(), 'pi-bundle-smoke-'));
   mkdirSync(join(scratchDir, 'plans'), { recursive: true });
-});
+}, 120_000);
 
 afterAll(() => {
   if (scratchDir) rmSync(scratchDir, { recursive: true, force: true });

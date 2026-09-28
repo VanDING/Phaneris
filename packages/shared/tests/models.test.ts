@@ -107,15 +107,43 @@ describe('getModelShortName', () => {
 });
 
 describe('Opus registry', () => {
-  it('includes Opus 4.8 and keeps Opus 4.7 and Opus 4.6', () => {
-    const ids = ANTHROPIC_MODELS.map(m => m.id);
-    expect(ids).toContain('claude-opus-4-8');
-    expect(ids).toContain('claude-opus-4-7');
-    expect(ids).toContain('claude-opus-4-6');
+  it('keeps 4.8 first and lists Opus 5.5 / Opus 5 right behind it', () => {
+    const opusIds = ANTHROPIC_MODELS.map(m => m.id).filter(id => id.startsWith('claude-opus-'));
+    // 4.8 stays first on purpose: Opus 5.5 is registered as a selectable model,
+    // not as the new-connection default.
+    expect(opusIds).toEqual([
+      'claude-opus-4-8',
+      'claude-opus-5-5',
+      'claude-opus-5',
+      'claude-opus-4-7',
+      'claude-opus-4-6',
+    ]);
   });
 
-  it('resolves "Opus" shortName to 4.8', () => {
+  it('resolves "Opus" shortName to 4.8, not to the newly registered 5.5', () => {
     expect(getModelIdByShortName('Opus')).toBe('claude-opus-4-8');
+  });
+
+  it('exposes Opus 5.5 and Opus 5 metadata with the real 1M context window', () => {
+    // Unregistered ids fall back to a 200K window, so registration is what makes
+    // the picker report 1M for these two.
+    expect(getModelDisplayName('claude-opus-5-5')).toBe('Opus 5.5');
+    expect(getModelShortName('claude-opus-5-5')).toBe('Opus');
+    expect(getModelContextWindow('claude-opus-5-5')).toBe(1_000_000);
+    expect(getModelDisplayName('claude-opus-5')).toBe('Opus 5');
+    expect(getModelContextWindow('claude-opus-5')).toBe(1_000_000);
+  });
+
+  it('maps Bedrock Opus 5.5 / Opus 5 IDs back to the bare IDs without cross-mapping', () => {
+    expect(getModelById('us.anthropic.claude-opus-5-5')?.id).toBe('claude-opus-5-5');
+    expect(getModelById('eu.anthropic.claude-opus-5-5')?.id).toBe('claude-opus-5-5');
+    expect(getModelById('global.anthropic.claude-opus-5-5')?.id).toBe('claude-opus-5-5');
+    expect(getModelById('anthropic.claude-opus-5-5')?.id).toBe('claude-opus-5-5');
+    expect(getModelById('us.anthropic.claude-opus-5')?.id).toBe('claude-opus-5');
+    expect(getModelById('anthropic.claude-opus-5')?.id).toBe('claude-opus-5');
+    // Opus 5.5 must not be confused with Opus 5 or 4.8.
+    expect(getModelById('us.anthropic.claude-opus-5-5')?.id).not.toBe('claude-opus-5');
+    expect(getModelById('us.anthropic.claude-opus-4-8')?.id).toBe('claude-opus-4-8');
   });
 
   it('normalizes deprecated Opus IDs to Opus 4.8 without migrating Opus 4.7 or 4.6', () => {
@@ -124,6 +152,19 @@ describe('Opus registry', () => {
     expect(normalizeDeprecatedModelId('claude-opus-4-6')).toBe('claude-opus-4-6');
     expect(normalizeDeprecatedModelId('pi/claude-opus-4-6')).toBe('pi/claude-opus-4-6');
     expect(normalizeDeprecatedModelId('us.anthropic.claude-opus-4-6-v1')).toBe('us.anthropic.claude-opus-4-6-v1');
+    // Opus 5.5 / 5 are current, never migration targets.
+    expect(normalizeDeprecatedModelId('claude-opus-5-5')).toBe('claude-opus-5-5');
+    expect(normalizeDeprecatedModelId('claude-opus-5')).toBe('claude-opus-5');
+  });
+
+  it('migrates the retired DeepSeek v4 Flash aliases to deepseek-flash (pi 0.86+ catalog)', () => {
+    expect(normalizeDeprecatedModelId('deepseek-v4-flash')).toBe('deepseek-flash');
+    expect(normalizeDeprecatedModelId('pi/deepseek-v4-flash')).toBe('pi/deepseek-flash');
+    expect(normalizeDeprecatedModelId('deepseek-v4-flash-vision-exp')).toBe('deepseek-flash');
+    expect(normalizeDeprecatedModelId('pi/deepseek-v4-flash-vision-exp')).toBe('pi/deepseek-flash');
+    // A current id passes through untouched.
+    expect(normalizeDeprecatedModelId('deepseek-v4-pro')).toBe('deepseek-v4-pro');
+    expect(normalizeDeprecatedModelId('deepseek-flash')).toBe('deepseek-flash');
   });
 });
 

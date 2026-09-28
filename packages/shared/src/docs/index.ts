@@ -121,6 +121,7 @@ export const DOC_REFS = {
   markdownPreview: `${APP_ROOT}/docs/markdown-preview.md`,
   llmTool: `${APP_ROOT}/docs/llm-tool.md`,
   browserTools: `${APP_ROOT}/docs/browser-tools.md`,
+  decisions: `${APP_ROOT}/docs/decisions.md`,
   phanerisCli: `${APP_ROOT}/docs/phaneris-cli.md`,
   docsDir: `${APP_ROOT}/docs/`,
 } as const;

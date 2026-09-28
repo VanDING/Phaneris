@@ -907,7 +907,7 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
     if (platform === 'wechat') {
       try {
         // Remove the plaintext artifacts that live in this workspace's
-        // scoped WeChat state dir (~/.craft-agent/wechat/{workspaceId}):
+        // scoped WeChat state dir (~/.phaneris/wechat/{workspaceId}):
         // per-account credential JSON, context tokens, sync-buf offset files,
         // and the accounts.json index entry (H-4). Everything is scoped via
         // the workspace state root so a sibling workspace binding the same

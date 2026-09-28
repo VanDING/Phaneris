@@ -73,6 +73,18 @@ describe('models-pi filtering', () => {
     expect(bedrockIds).toContain('pi/us.anthropic.claude-opus-5');
   });
 
+  it('returns Claude Opus 5.5 from the Pi SDK catalog for Anthropic and Bedrock', () => {
+    // Entered the Pi catalog in SDK 0.87.1 (1M context). Registered as a
+    // selectable model, NOT as the new-connection default — 4.8 stays first in
+    // PI_PREFERRED_DEFAULTS so `findModelIdByShortName('Opus')` keeps resolving
+    // to it.
+    expect(getPiModelsForAuthProvider('anthropic').map(m => m.id)).toContain('pi/claude-opus-5-5');
+    const bedrockIds = getPiModelsForAuthProvider('amazon-bedrock').map(m => m.id);
+    expect(bedrockIds).toContain('pi/us.anthropic.claude-opus-5-5');
+    expect(bedrockIds).toContain('pi/eu.anthropic.claude-opus-5-5');
+    expect(bedrockIds).toContain('pi/global.anthropic.claude-opus-5-5');
+  });
+
   it('returns GPT-6 Astra from the Pi SDK catalog for OpenAI API keys and ChatGPT accounts', () => {
     // Added in Pi SDK 0.85.1 for `openai` and `openai-codex` only.
     expect(getPiModelsForAuthProvider('openai').map(m => m.id)).toContain('pi/gpt-6-astra');

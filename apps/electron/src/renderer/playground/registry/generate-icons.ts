@@ -10,11 +10,24 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const TOOL_ICONS_DIR = path.join(process.env.HOME!, '.craft-agent/tool-icons')
-const SOURCES_DIR = path.join(
-  process.env.HOME!,
-  '.craft-agent/workspaces/046a02d0-6521-98eb-8756-95ec4bb8c41f/sources'
-)
+const CONFIG_DIR =
+  process.env.PHANERIS_CONFIG_DIR?.trim() ??
+  path.join(process.env.HOME ?? process.env.USERPROFILE ?? '', '.phaneris')
+
+const TOOL_ICONS_DIR = path.join(CONFIG_DIR, 'tool-icons')
+
+// The workspace to sample source icons from. This used to be a workspace id
+// baked into the script — pointing at a directory that only ever existed on the
+// machine that generated it. Read it from the environment instead so the script
+// works against whatever workspace the caller names.
+const WORKSPACE_ID = process.env.PHANERIS_SAMPLE_WORKSPACE_ID?.trim()
+if (!WORKSPACE_ID) {
+  console.error(
+    'PHANERIS_SAMPLE_WORKSPACE_ID is required: set it to the id of the workspace whose source icons should be sampled.'
+  )
+  process.exit(1)
+}
+const SOURCES_DIR = path.join(CONFIG_DIR, 'workspaces', WORKSPACE_ID, 'sources')
 const OUTPUT_FILE = path.join(__dirname, 'sample-icons.ts')
 
 // Native tools we want to include (mapped to their file names in tool-icons/)
@@ -113,7 +126,7 @@ function generateIconsFile() {
  * DO NOT EDIT MANUALLY
  */
 
-// Native tool icons (from ~/.craft-agent/tool-icons/)
+// Native tool icons (from <config dir>/tool-icons/)
 export const nativeToolIcons = {
 ${Object.entries(nativeIcons)
   .map(([name, data]) => `  ${name}: '${data}',`)

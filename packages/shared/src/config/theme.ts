@@ -6,7 +6,7 @@
  *
  * Theme sources:
  * - Built in:       `default` only
- * - User themes:    ~/.craft-agent/themes/*.json
+ * - User themes:    ~/.phaneris/themes/*.json
  */
 
 /**

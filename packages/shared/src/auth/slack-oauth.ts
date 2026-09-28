@@ -33,6 +33,54 @@ const SLACK_AUTH_URL = 'https://slack.com/oauth/v2/authorize';
 const SLACK_TOKEN_URL = 'https://slack.com/api/oauth.v2.access';
 
 /**
+ * Port of a desktop callback target the owned relay can serve, or undefined.
+ *
+ * The Slack app registers the relay's Slack route
+ * (`<relay>/auth/slack/callback?port=N`), which forwards to
+ * `http://localhost:<port>/callback`, so the target must be a loopback URL with
+ * an explicit port and exactly that path. Anything else — WebUI HTTPS
+ * callbacks, other callback paths — is not served by that route and must keep
+ * using the generic relay callback (or the direct URL when no relay exists).
+ */
+export function loopbackCallbackPort(returnTo: string | undefined): number | undefined {
+  if (!returnTo) return undefined;
+  let url: URL;
+  try {
+    url = new URL(returnTo);
+  } catch {
+    return undefined;
+  }
+  const loopback = url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === '[::1]';
+  if (url.protocol !== 'http:' || !loopback || url.pathname !== '/callback' || !url.port) return undefined;
+  const port = Number(url.port);
+  return Number.isInteger(port) && port >= 1024 && port <= 65535 ? port : undefined;
+}
+
+/**
+ * Fail-closed error for a desktop Slack flow on an install with no owned relay.
+ *
+ * Slack only accepts HTTPS redirect URIs, and the desktop callback server is
+ * plain HTTP on a scanned loopback port, so handing that URL to Slack fails
+ * before the consent screen with nothing actionable in the logs. This fork
+ * never falls back to an upstream hosted relay, so the two real remedies are
+ * spelled out instead.
+ */
+function slackRelayRequiredError(port: number, cause?: unknown): Error {
+  const desktopCallback = `http://localhost:${port}/callback`;
+  return new Error(
+    `Slack sign-in requires an HTTPS redirect URL, but this install has no OAuth relay configured, so the desktop ` +
+      `callback (${desktopCallback}) cannot reach Slack. Fix it either way:\n` +
+      `  (a) Owned relay (supported path): set "services.oauthRelayUrl" in phaneris.identity.json, run ` +
+      '`bun run identity:generate`, then add `<relay>/auth/slack/callback` to the Slack app\'s Redirect URLs. ' +
+      `Phaneris then sends Slack that HTTPS route, which forwards to ${desktopCallback}.\n` +
+      `  (b) Direct callback: add the exact URL ${desktopCallback} to the Slack app's Redirect URLs and pin the ` +
+      `callback port so the URL stops changing. Whether Slack accepts a plain-http localhost redirect URL is ` +
+      `unverified for this fork, so (a) is the supported path.`,
+    { cause },
+  );
+}
+
+/**
  * Predefined USER scope sets for common Slack services
  * These are user scopes (user_scope), not bot scopes (scope)
  * User scopes allow acting as the authenticated user
@@ -253,7 +301,10 @@ export interface PrepareSlackOAuthOptions {
  * Prepare a Slack OAuth flow without starting a callback server or opening a browser.
  * Returns everything needed to construct the auth URL and later exchange the code.
  *
- * Slack uses a Cloudflare relay for HTTPS redirects since Slack requires HTTPS redirect URIs.
+ * Slack requires HTTPS redirect URIs, so a desktop flow's loopback HTTP callback
+ * travels through the owned relay's registered Slack route
+ * (`<relay>/auth/slack/callback?port=N`) instead of being handed to Slack, which
+ * rejects a redirect_uri its app has not registered.
  */
 export function prepareSlackOAuth(options: PrepareSlackOAuthOptions): PreparedOAuthFlow {
   if (!isSlackOAuthConfigured()) {
@@ -265,9 +316,27 @@ export function prepareSlackOAuth(options: PrepareSlackOAuthOptions): PreparedOA
   const userScopes = getSlackScopes(options);
   const state = generateState();
 
-  // Slack requires HTTPS → use Cloudflare relay when using callbackPort
-  const redirectUri = options.callbackUrl
-    ?? getSlackRelayCallbackUrl(options.callbackPort!);
+  // A callback URL wins over a bare port, matching the previous precedence, but a
+  // loopback HTTP target is the desktop callback server: Slack can only reach it
+  // through the relay's Slack route — never through the generic relay callback,
+  // which the Slack app does not have registered (upstream #1068). With no owned
+  // relay the flow fails closed with the two supported remedies.
+  const desktopPort = options.callbackUrl
+    ? loopbackCallbackPort(options.callbackUrl)
+    : options.callbackPort;
+
+  let redirectUri: string;
+  if (desktopPort !== undefined) {
+    try {
+      redirectUri = getSlackRelayCallbackUrl(desktopPort);
+    } catch (error) {
+      // The only way that call fails is a missing owned relay.
+      throw slackRelayRequiredError(desktopPort, error);
+    }
+  } else {
+    redirectUri = options.callbackUrl
+      ?? getSlackRelayCallbackUrl(options.callbackPort!);
+  }
 
   const authUrl = new URL(SLACK_AUTH_URL);
   authUrl.searchParams.set('client_id', SLACK_CLIENT_ID);

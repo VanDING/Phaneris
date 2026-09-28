@@ -112,6 +112,7 @@ async function getExpectedChannels(): Promise<Set<string>> {
     workItems,
     pages,
     plugins,
+    decisions,
   ] = await Promise.all([
     import('@phaneris/server-core/handlers/rpc/auth'),
     import('@phaneris/server-core/handlers/rpc/artifacts'),
@@ -136,6 +137,7 @@ async function getExpectedChannels(): Promise<Set<string>> {
     import('@phaneris/server-core/handlers/rpc/work-items'),
     import('@phaneris/server-core/handlers/rpc/pages'),
     import('@phaneris/server-core/handlers/rpc/plugins'),
+    import('@phaneris/server-core/handlers/rpc/decisions'),
   ])
 
   // GUI handler channels (remain in electron)
@@ -170,6 +172,7 @@ async function getExpectedChannels(): Promise<Set<string>> {
     ...workItems.HANDLED_CHANNELS,
     ...pages.HANDLED_CHANNELS,
     ...plugins.HANDLED_CHANNELS,
+    ...decisions.HANDLED_CHANNELS,
     ...browser.HANDLED_CHANNELS,
     ...guiSystem.GUI_HANDLED_CHANNELS,
     ...guiWorkspace.GUI_HANDLED_CHANNELS,

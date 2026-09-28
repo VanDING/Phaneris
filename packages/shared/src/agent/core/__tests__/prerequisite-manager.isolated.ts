@@ -27,7 +27,11 @@ function guidePath(slug: string): string {
 }
 
 function browserDocPath(): string {
-  return resolve(join(homedir(), '.phaneris', 'docs', 'browser-tools.md'));
+  // Mirror the resolver in config/paths.ts: an explicit PHANERIS_CONFIG_DIR wins,
+  // otherwise ~/.phaneris. Hardcoding the home-relative root would silently test
+  // the wrong path in any environment that overrides the root.
+  const configDir = process.env.PHANERIS_CONFIG_DIR?.trim() || join(homedir(), '.phaneris');
+  return resolve(join(configDir, 'docs', 'browser-tools.md'));
 }
 
 describe('PrerequisiteManager', () => {

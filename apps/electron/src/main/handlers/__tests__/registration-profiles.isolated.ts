@@ -111,6 +111,7 @@ async function getExpectedCoreChannels(): Promise<Set<string>> {
     transfer,
     workItems,
     plugins,
+    decisions,
   ] = await Promise.all([
     import('@phaneris/server-core/handlers/rpc/auth'),
     import('@phaneris/server-core/handlers/rpc/artifacts'),
@@ -135,6 +136,7 @@ async function getExpectedCoreChannels(): Promise<Set<string>> {
     import('@phaneris/server-core/handlers/rpc/transfer'),
     import('@phaneris/server-core/handlers/rpc/work-items'),
     import('@phaneris/server-core/handlers/rpc/plugins'),
+    import('@phaneris/server-core/handlers/rpc/decisions'),
   ])
 
   return new Set([
@@ -148,6 +150,7 @@ async function getExpectedCoreChannels(): Promise<Set<string>> {
     ...oauth.HANDLED_CHANNELS,
     ...projects.HANDLED_CHANNELS,
     ...pages.HANDLED_CHANNELS,
+    ...decisions.HANDLED_CHANNELS,
     ...sessions.HANDLED_CHANNELS,
     ...settings.HANDLED_CHANNELS,
     ...skills.HANDLED_CHANNELS,

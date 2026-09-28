@@ -5,9 +5,9 @@
  * Uses recursive directory watching for simplicity and reliability.
  *
  * Watched paths:
- * - ~/.craft-agent/config.json - Main app configuration
- * - ~/.craft-agent/preferences.json - User preferences
- * - ~/.craft-agent/workspaces/{slug}/ - Workspace directory (recursive)
+ * - ~/.phaneris/config.json - Main app configuration
+ * - ~/.phaneris/preferences.json - User preferences
+ * - ~/.phaneris/workspaces/{slug}/ - Workspace directory (recursive)
  *   - sources/{slug}/config.json, guide.md, permissions.json
  *   - skills/{slug}/SKILL.md, icon.*
  *   - sessions/{id}/session.jsonl (header metadata only)
@@ -149,7 +149,7 @@ export interface ConfigWatcherCallbacks {
   onPluginsChange?: (result: { plugins: LoadedPlugin[]; errors: PluginLoadError[] }) => void;
 
   // Permissions callbacks
-  /** Called when app-level default permissions change (~/.craft-agent/permissions/default.json) */
+  /** Called when app-level default permissions change (~/.phaneris/permissions/default.json) */
   onDefaultPermissionsChange?: () => void;
   /** Called when workspace permissions.json changes */
   onWorkspacePermissionsChange?: (workspaceId: string) => void;
@@ -1118,7 +1118,7 @@ export class ConfigWatcher {
   }
 
   /**
-   * Watch app-level permissions directory (~/.craft-agent/permissions/)
+   * Watch app-level permissions directory (~/.phaneris/permissions/)
    * Watches for changes to default.json which contains the default read-only patterns
    */
   private watchAppPermissionsDir(): void {
@@ -1167,7 +1167,7 @@ export interface UserThemeWatcherCallbacks {
 }
 
 /**
- * App-scoped watcher for ~/.craft-agent/themes. It is intentionally separate
+ * App-scoped watcher for ~/.phaneris/themes. It is intentionally separate
  * from ConfigWatcher so opening more workspaces never duplicates global fs
  * watchers or broadcasts.
  */

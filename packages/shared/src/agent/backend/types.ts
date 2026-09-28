@@ -447,6 +447,16 @@ export interface AgentBackend {
   redirect(message: string): boolean;
 
   /**
+   * Whether a manual context compaction owns the current turn.
+   *
+   * While true there is no agent loop consuming steers, so a mid-stream text
+   * message must be queued for replay after `complete` instead of handed to
+   * redirect() (craft-agents-oss#1058). Optional: backends without the concept
+   * report false.
+   */
+  isCompactionInFlight?(): boolean;
+
+  /**
    * Run a simple text completion using the backend's auth infrastructure.
    * Used for connection testing, title generation, and summarization.
    */

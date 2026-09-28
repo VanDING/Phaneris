@@ -1689,7 +1689,7 @@ const SupportedThemeModesSchema = z.array(z.enum(['light', 'dark']))
   });
 
 /**
- * Zod schema for app-level theme override files (~/.craft-agent/theme.json).
+ * Zod schema for app-level theme override files (~/.phaneris/theme.json).
  * Allows partial overrides but rejects unknown keys.
  */
 export const ThemeOverrideSchema = z.object({
@@ -2154,11 +2154,11 @@ export function detectConfigFileType(filePath: string, workspaceRootPath: string
 
 /**
  * Detect if a file path corresponds to an app-level config file (outside workspace scope).
- * Checks paths relative to CONFIG_DIR (~/.craft-agent/).
+ * Checks paths relative to CONFIG_DIR (~/.phaneris/).
  * Returns null if the path is not a recognized app-level config file.
  *
  * Matches patterns:
- * - ~/.craft-agent/tool-icons/tool-icons.json → tool icon mappings
+ * - ~/.phaneris/tool-icons/tool-icons.json → tool icon mappings
  */
 export function detectAppConfigFileType(filePath: string): ConfigFileDetection | null {
   const normalizedPath = filePath.replace(/\\/g, '/');

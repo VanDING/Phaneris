@@ -4,11 +4,23 @@
  * These tests verify that dangerous shell commands are blocked in Safe (Explore) mode
  * while legitimate read-only commands are allowed.
  */
-import { describe, it, expect, beforeAll, afterAll } from 'bun:test';
+import { describe, it, expect, beforeAll, afterAll, setDefaultTimeout } from 'bun:test';
 import { join } from 'path';
 import { mkdirSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { setPowerShellValidatorRoot } from '../src/agent/powershell-validator.ts';
+
+/*
+ * Every PowerShell-dependent case below calls `extractPowerShellWriteTarget` /
+ * `validatePowerShellCommand`, and each of those spawns a real `powershell.exe`
+ * synchronously. Measured on a Windows dev box: ~4.3 s cold, ~2.6 s warm, so a
+ * case that parses three commands sits at ~4.7 s against bun's 5 s default and
+ * fails under load (the full 185-file package run was enough to tip it). The
+ * budget is raised for the file rather than per case because the cost is a
+ * property of the external process, not of any one assertion — no assertion is
+ * relaxed, and a genuine hang still fails (just later).
+ */
+setDefaultTimeout(30_000);
 
 // Register PowerShell validator root BEFORE any tests run or isPowerShellAvailable()
 // is called, so the validator can find the parser script when PowerShell is detected.

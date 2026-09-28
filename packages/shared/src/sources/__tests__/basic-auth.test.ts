@@ -8,24 +8,22 @@
  * 1. sessions.ts stores: { value: JSON.stringify({ username, password }) }
  * 2. credential-manager.ts retrieves and parses: JSON.parse(value) → { username, password }
  * 3. api-tools.ts encodes at request time: Buffer.from(`${username}:${password}`).toString('base64')
+ *
+ * This file used to run an independent copy of steps 2 and 3. It now exercises
+ * the real implementation — `parseStoredApiCredential` / `buildApiAuthHeaders`
+ * in @phaneris/session-tools-core/api-auth, which credential-manager and
+ * api-tools both delegate to (OSS #1067) — so it can no longer drift from what
+ * ships. Step 1 (the store side) is still simulated: the only writer is
+ * SessionManager's credential-prompt branch, which is not importable here.
  */
 
 import { describe, test, expect } from 'bun:test';
-
-// Type definitions matching the actual code
-interface BasicAuthCredential {
-  username: string;
-  password: string;
-}
-
-type ApiCredential = string | BasicAuthCredential;
-
-/**
- * Type guard from api-tools.ts
- */
-function isBasicAuthCredential(cred: ApiCredential): cred is BasicAuthCredential {
-  return typeof cred === 'object' && cred !== null && 'username' in cred && 'password' in cred;
-}
+import {
+  buildApiAuthHeaders,
+  isBasicAuthCredential,
+  parseStoredApiCredential,
+  type ApiCredential,
+} from '@phaneris/session-tools-core/api-auth';
 
 /**
  * Simulates how sessions.ts stores basic auth credentials (FIXED version)
@@ -36,36 +34,21 @@ function storeBasicAuthCredential(username: string, password: string): { value: 
 }
 
 /**
- * Simulates how credential-manager.ts retrieves basic auth credentials
- * (from getApiCredential method, lines 190-207)
+ * Retrieval under test: the shared parser, driven exactly as
+ * credential-manager.ts:getApiCredential drives it. `isBasicAuth` stands in for
+ * the source config's `authType`, the only input the parser needs.
  */
-function getApiCredential(storedValue: string, isBasicAuth: boolean): ApiCredential | null {
-  if (!storedValue) return null;
-
-  if (isBasicAuth) {
-    try {
-      const parsed = JSON.parse(storedValue);
-      if (parsed.username && parsed.password) {
-        return parsed as BasicAuthCredential;
-      }
-    } catch {
-      // Not JSON, treat as regular credential
-    }
-  }
-
-  return storedValue;
+function getApiCredential(storedValue: string, isBasicAuth: boolean): ApiCredential {
+  return parseStoredApiCredential(storedValue, isBasicAuth ? { authType: 'basic' } : { authType: 'bearer' });
 }
 
 /**
- * Simulates how api-tools.ts builds headers with basic auth
- * (from buildHeaders function, lines 59-65)
+ * Header assembly under test: the shared builder, which api-tools.ts
+ * `buildHeaders` is a thin wrapper over. Returns the Authorization value the
+ * request would carry, or null when basic auth adds no header.
  */
 function buildBasicAuthHeader(credential: ApiCredential): string | null {
-  if (isBasicAuthCredential(credential)) {
-    const encoded = Buffer.from(`${credential.username}:${credential.password}`).toString('base64');
-    return `Basic ${encoded}`;
-  }
-  return null;
+  return buildApiAuthHeaders({ type: 'basic' }, credential)['Authorization'] ?? null;
 }
 
 describe('Basic Auth Credential Storage', () => {
@@ -162,9 +145,15 @@ describe('Basic Auth Header Building', () => {
     expect(decoded).toBe('support@company.com/token:zendesk-api-key');
   });
 
-  test('returns null for non-basic-auth credentials', () => {
-    const header = buildBasicAuthHeader('bearer-token-string');
-    expect(header).toBeNull();
+  test('adds no Basic header for an empty credential; a string is the pre-encoded payload', () => {
+    // Contract change from OSS #1067, reported rather than silently kept: the
+    // shared builder treats a non-empty string basic credential as an ALREADY
+    // encoded payload ("Basic <payload>", see the legacy / hand-edited vault
+    // entry case) and only an empty credential adds no header at all. The old
+    // expectation — dropping the string entirely — pinned buildHeaders' local
+    // behavior, not the shared contract, and would now contradict the runtime.
+    expect(buildBasicAuthHeader('bearer-token-string')).toBe('Basic bearer-token-string');
+    expect(buildBasicAuthHeader('')).toBeNull();
   });
 });
 

@@ -648,6 +648,28 @@ export class PiEventAdapter extends BaseEventAdapter {
         const isIntermediate = msg.stopReason === 'toolUse' || isLengthLimited || !textContent;
         // Preserve usage/request metadata even for tool-only or thinking-only responses.
         if ((textContent || msg.usage) && (isIntermediate || !this.hasEmittedFinalText)) {
+          // Zero text with output tokens on a final turn means the output budget
+          // was consumed by something other than text. DeepSeek counts reasoning
+          // tokens against the shared budget, so at high/max thinking levels and
+          // large contexts the turn completes with nothing visible to the user
+          // and no error (craft-agents-oss#1072). Silence on the length-limited
+          // path (`pendingLengthError` already explains it), on tool-call turns,
+          // and on errored attempts, which `break` before this point.
+          if (
+            !textContent
+            && !isLengthLimited
+            && msg.stopReason !== 'toolUse'
+            && !msg.errorMessage
+            && !this.hasEmittedFinalText
+            && (msg.usage?.output ?? 0) > 0
+          ) {
+            console.warn(
+              `[PiEventAdapter] Turn produced ${msg.usage?.output} output token(s) but zero text. ` +
+                `Reasoning likely consumed the full output budget (seen with DeepSeek + thinkingLevel>=medium at large contexts). ` +
+                `Lower the thinking level or start a fresh session to recover.`
+            );
+          }
+
           if (!isIntermediate) this.hasEmittedFinalText = true;
 
           const mTurnId = this.messageSubTurnId || this.nextSubTurnId('m');

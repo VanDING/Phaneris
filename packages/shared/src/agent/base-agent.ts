@@ -611,7 +611,11 @@ export abstract class BaseAgent implements AgentBackend {
     // Both MCP sources and API sources are routed through the pool.
     if (this.config.mcpPool) {
       try {
-        await this.config.mcpPool.sync(mcpServers, apiServers);
+        const failures = await this.config.mcpPool.sync(mcpServers, apiServers);
+        if (failures.length > 0) {
+          console.warn(`[${this.backendName}] ${failures.length} source(s) failed to connect and will be unavailable this session: ${failures.join(', ')}`);
+          this.debug(`MCP sync failures: ${failures.join(', ')}`);
+        }
       } catch (err) {
         this.debug(`Failed to sync MCP pool: ${err instanceof Error ? err.message : String(err)}`);
       }
@@ -1096,6 +1100,16 @@ ${formattedMessages}
    * Check if currently processing a query.
    */
   abstract isProcessing(): boolean;
+
+  /**
+   * Whether a manual compaction owns the current turn. Default: never.
+   * Backends that run /compact as an RPC (Pi) override this so the session
+   * layer queues mid-stream messages instead of steering into a turn that has
+   * no agent loop to consume them (craft-agents-oss#1058).
+   */
+  isCompactionInFlight(): boolean {
+    return false;
+  }
 
   /**
    * Respond to a pending permission request.

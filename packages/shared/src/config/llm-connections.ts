@@ -596,7 +596,11 @@ export const PI_PREFERRED_DEFAULTS: Record<string, string[]> = {
   // when Opus 4.6 is deprecated.
   // Opus 5 entered the Pi catalog in SDK 0.82.1; rank it right below the
   // Opus 4.8 default so it surfaces near the top without changing the default.
-  anthropic: ['claude-opus-4-8', 'claude-opus-5', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-fable-5-1', 'claude-fable-5', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
+  // Opus 5.5 entered the catalog in SDK 0.87.1 (craft-agents-oss#1032 follow-up).
+  // It is deliberately NOT the new-connection default: existing and new
+  // connections keep resolving to Opus 4.8 unless the user picks 5.5, matching
+  // the storage migrations that target 4.8 on purpose.
+  anthropic: ['claude-opus-4-8', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-fable-5-1', 'claude-fable-5', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
   // GPT-6 Astra entered the Pi catalog in SDK 0.85.1 for both the API-key and
   // the ChatGPT-account (openai-codex) flows; new connections default to it.
   openai: ['gpt-6-astra', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5', 'gpt-5.2', 'gpt-5.1', 'gpt-5', 'o4-mini', 'o3', 'gpt-4o'],
@@ -617,9 +621,9 @@ export const PI_PREFERRED_DEFAULTS: Record<string, string[]> = {
   moonshotai: ['kimi-k3', 'kimi-k2.6'],
   'moonshotai-cn': ['kimi-k3', 'kimi-k2.6'],
   'github-copilot': ['claude-sonnet-4-6', 'gpt-5', 'o4-mini', 'claude-haiku-4-5'],
-  'opencode': ['claude-opus-4-6', 'claude-haiku-4-5', 'deepseek-v4-flash', 'deepseek-v4-pro'],
-  'opencode-go': ['deepseek-v4-flash', 'deepseek-v4-pro', 'kimi-k2.7-code', 'glm-5.2'],
-  'amazon-bedrock': ['claude-opus-4-8', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
+  'opencode': ['claude-opus-4-6', 'claude-haiku-4-5', 'deepseek-flash', 'deepseek-v4-pro'],
+  'opencode-go': ['deepseek-flash', 'deepseek-v4-pro', 'kimi-k2.7-code', 'glm-5.2'],
+  'amazon-bedrock': ['claude-opus-4-8', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
 };
 
 export function getDefaultModelsForConnection(providerType: LlmProviderType, piAuthProvider?: string): Array<ModelDefinition | string> {
@@ -756,6 +760,12 @@ export function isValidProviderAuthCombination(
  */
 const BEDROCK_MODEL_MAP: Record<string, string> = {
   'claude-opus-4-8': 'us.anthropic.claude-opus-4-8',
+  // Opus 5.5 and Opus 5 are inference-profile models on Bedrock; both the bare
+  // and the base-ID forms are mapped so a connection pinned to either resolves
+  // to a usable profile id. `toBedrockNativeId` swaps the region prefix, so the
+  // us./eu./global. variants all derive from these two US entries.
+  'claude-opus-5-5': 'us.anthropic.claude-opus-5-5',
+  'claude-opus-5': 'us.anthropic.claude-opus-5',
   'claude-opus-4-7': 'us.anthropic.claude-opus-4-7',
   'claude-fable-5-1': 'us.anthropic.claude-fable-5-1',
   'claude-fable-5': 'us.anthropic.claude-fable-5',
@@ -768,6 +778,8 @@ const BEDROCK_MODEL_MAP: Record<string, string> = {
   'claude-sonnet-4-5-20250929': 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
   // Also map base IDs (without region prefix) to US inference profiles
   'anthropic.claude-opus-4-8': 'us.anthropic.claude-opus-4-8',
+  'anthropic.claude-opus-5-5': 'us.anthropic.claude-opus-5-5',
+  'anthropic.claude-opus-5': 'us.anthropic.claude-opus-5',
   'anthropic.claude-opus-4-7': 'us.anthropic.claude-opus-4-7',
   'anthropic.claude-opus-4-6-v1': 'us.anthropic.claude-opus-4-6-v1',
   'anthropic.claude-fable-5-1': 'us.anthropic.claude-fable-5-1',

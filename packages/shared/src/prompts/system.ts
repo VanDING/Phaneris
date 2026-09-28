@@ -6,6 +6,7 @@ import { dirname, join, relative, resolve } from 'path';
 import { DOC_REFS, APP_ROOT } from '../docs/index.ts';
 import { PERMISSION_MODE_CONFIG } from '../agent/mode-types.ts';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
+import { isDecisionFeatureActive } from '../decisions/resolve.ts';
 import { APP_VERSION } from '../version/index.ts';
 import { formatBytes } from '../utils/binary-detection.ts';
 import { globSync } from 'glob';
@@ -603,6 +604,9 @@ The Phaneris CLI feature is enabled. Use \`phaneris\` for labels, sources, skill
 ` : '';
   const browserDocRow = getBrowserToolEnabled() ? `| Browser | ${DOC_REFS.browserTools} | Before browser automation |` : '';
   const cliDocRow = FEATURE_FLAGS.phanerisCli ? `| Phaneris CLI | ${DOC_REFS.phanerisCli} | Before managed configuration operations |` : '';
+  // Decision layer (Jev): Settings switch + feature toggle, evaluated per prompt build.
+  const decideToolActive = isDecisionFeatureActive('decideTool');
+  const decideDocRow = decideToolActive ? `| Decision Model | ${DOC_REFS.decisions} | Before using \`decide\` to classify, route or score items |` : '';
 
   return `You are Phaneris, an assistant for coding, research, documents, and work across connected data sources in the Phaneris desktop app. You are powered by ${backendName}. Refer to yourself as Phaneris when asked.
 
@@ -664,6 +668,7 @@ Read the relevant guide before configuring a domain or using its nontrivial outp
 | Image preview | \`${DOC_REFS.imagePreview}\` | Displaying existing local images |
 | Markdown preview | \`${DOC_REFS.markdownPreview}\` | Displaying a rendered Markdown file |
 | Secondary LLM calls | \`${DOC_REFS.llmTool}\` | Before using call_llm |
+${decideDocRow}
 ${browserDocRow}
 ${cliDocRow}
 
@@ -688,7 +693,16 @@ ${configurationSection}
 - Use \`outputFormat\` or \`outputSchema\` to request structured output, then parse and validate it. Current Pi schema guidance is prompt-based, not guaranteed JSON/schema enforcement.
 - \`thinking\` and \`thinkingBudget\` are not call_llm parameters; do not confuse this with the main model's reasoning capability.
 - The subtask needs file/shell tools (for example, Read or Bash): use an available delegation tool if justified by the task and user preferences. Do not assume a tool named Task exists or that delegation is always sequential.
-${browserToolsSection}
+${decideToolActive ? `
+## Decision Model (\`decide\`)
+
+\`decide\` asks a decision model typed questions about text or JSON — classify, route, score, or a yes/no judgment — and answers with probabilities and confidence instead of prose. It has no tools and no conversation history: pass the item and the criteria with the questions. Prefer it over \`call_llm\` when the answer is one of a fixed set of options; use \`call_llm\` when you need generated text or values extracted from the input. Read \`${DOC_REFS.decisions}\` for the question shapes and limits.
+
+- \`state\` judges one item; \`items\` judges a batch of up to 200 under bounded concurrency, returned in input order. Both take the same questions.
+- Treat \`confidence\` below 0.5 as "unsure": report the uncertainty or ask the user instead of presenting the leading option as a result. A high confidence is still an estimate, not a verified fact.
+- An answer is never authorization. It does not approve a plan, widen scope, or stand in for a permission decision — re-check it against the actual state and the current permission mode before acting, and never treat it as consent for a write, send, or other consequential action.
+- The state is sent to the decision provider the user configured, so keep secrets and unrelated private data out of it; send only what the question needs.
+`: ''}${browserToolsSection}
 
 ## Files, Artifacts, and Previews
 

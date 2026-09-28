@@ -35,7 +35,19 @@ function canUseSandboxExec(): boolean {
   return sandboxExecUsableCache;
 }
 
-function escapeSandboxPath(path: string): string {
+/**
+ * Escape a path for embedding in an sbpl string literal.
+ *
+ * Both characters are load-bearing: a quote tears the s-expression, and a
+ * backslash is the escape character itself, so a Windows-resolved path (or any
+ * path whose components contain one) must have every `\` doubled or the profile
+ * silently matches a different string.
+ *
+ * Exported so the profile-format contract test can build its expectations with
+ * the same function instead of re-deriving the escaping — a test that escapes
+ * only quotes passes on macOS and fails everywhere backslashes appear in paths.
+ */
+export function escapeSandboxPath(path: string): string {
   return path.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
@@ -135,7 +147,7 @@ export function applyFilesystemIsolation(
   if (process.platform === 'linux') {
     if (existsOnPath('bwrap')) {
       // Whitelist mounts instead of `--ro-bind / /` (which made the whole
-      // root readable, exposing ~/.ssh, ~/.aws, and ~/.craft-agent to
+      // root readable, exposing ~/.ssh, ~/.aws, and ~/.phaneris to
       // sandboxed scripts — audit C-2). Only the session tree and essential
       // system dirs are bound; everything else is absent from the sandbox.
       return {

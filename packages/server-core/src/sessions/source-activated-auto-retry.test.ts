@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import { mkdtempSync, rmSync } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
-import { SessionManager, createManagedSession, claimAutoRetryPending } from './SessionManager.ts'
+import { SessionManager, createManagedSession, claimAutoRetryPending, lastUserMessageContent } from './SessionManager.ts'
 
 // Regression test for craft-agents-oss#804.
 //
@@ -144,7 +144,9 @@ describe('source_activated auto-retry', () => {
     ])
   })
 
-  it('empty originalMessage — forwards event but does not schedule a bogus retry', async () => {
+  it('empty originalMessage and no prior user message — skips (nothing to resend)', async () => {
+    // With no user message in history there is genuinely nothing to fall back to,
+    // so the auto-retry is skipped rather than re-sending a bogus empty message.
     const sessionId = 'empty-original'
     const managed = buildSession(sessionId)
     const calls = spyOnSendMessage(sessionId)
@@ -155,6 +157,46 @@ describe('source_activated auto-retry', () => {
     expect(calls).toEqual([])
     expect(managed.autoRetryPending).toBeUndefined()
     expect(managed.autoRetryTimer).toBeUndefined()
+  })
+
+  it('empty originalMessage with a prior user message — falls back to the last user message', async () => {
+    // When the per-turn capture comes back empty (empty/attachment-only turn, or a
+    // capture that raced turn teardown) but the user's message is already in history,
+    // the activation must still continue by resending the last user message — not
+    // silently strand the session after the activation force-aborted the turn.
+    const sessionId = 'empty-with-history'
+    const managed = buildSession(sessionId)
+    const calls = spyOnSendMessage(sessionId)
+
+    // The current turn's user message is pushed to history at turn start.
+    managed.messages.push({
+      id: 'u1',
+      role: 'user',
+      content: 'summarize my latest doc',
+      timestamp: Date.now(),
+    } as never)
+
+    await fireSourceActivated(sessionId, 'my-space', '')
+    await new Promise(r => setTimeout(r, 150))
+
+    expect(calls).toEqual(['summarize my latest doc\n\n[my-space activated]'])
+  })
+
+  it('lastUserMessageContent skips non-user, empty and non-string entries', () => {
+    expect(
+      lastUserMessageContent([
+        { id: 'a', role: 'user', content: 'first', timestamp: 1 },
+        { id: 'b', role: 'assistant', content: 'answer', timestamp: 2 },
+        { id: 'c', role: 'user', content: '   ', timestamp: 3 },
+        { id: 'd', role: 'user', content: '', timestamp: 4 },
+      ] as never),
+    ).toBe('first')
+    expect(lastUserMessageContent([])).toBe('')
+    expect(
+      lastUserMessageContent([
+        { id: 'a', role: 'user', content: [{ type: 'text', text: 'blocks' }], timestamp: 1 },
+      ] as never),
+    ).toBe('')
   })
 
   it('legitimate user message preempts retry — skipped when follow-up arrived', async () => {

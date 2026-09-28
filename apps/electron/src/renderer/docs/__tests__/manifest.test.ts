@@ -93,8 +93,11 @@ describe('docs manifest', () => {
     for (const page of DOCS_PAGES) {
       const file = join(guideDir, DEFAULT_DOCS_LOCALE, `${page.slug}.md`)
       if (!existsSync(file)) continue
+      // Split on either EOL: `.gitattributes` stores these as LF, but a working
+      // copy from before that policy is CRLF, and a heading compared with a
+      // trailing `\r` would fail for a file that is perfectly correct.
       const firstHeading = readFileSync(file, 'utf8')
-        .split('\n')
+        .split(/\r?\n/)
         .find((line) => line.startsWith('# '))
       if (firstHeading !== `# ${page.title}`) {
         mismatched.push(`${page.slug}: ${firstHeading ?? '(no heading)'}`)

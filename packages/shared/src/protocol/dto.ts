@@ -709,6 +709,12 @@ export interface LlmConnectionSetup {
 export interface TestLlmConnectionParams {
   provider: LlmProviderType
   apiKey: string
+  /**
+   * Slug of the connection being edited. Lets the server resolve the masked
+   * GET_API_KEY placeholder back to the stored credential for the test
+   * (craft-agents-oss#1048).
+   */
+  connectionSlug?: string
   baseUrl?: string
   model?: string
   piAuthProvider?: string

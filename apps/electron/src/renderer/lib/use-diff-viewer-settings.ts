@@ -1,7 +1,7 @@
 /**
  * useDiffViewerSettings - Diff viewer display preferences.
  *
- * Loaded from ~/.craft-agent/preferences.json (diffViewer scope) and persisted
+ * Loaded from ~/.phaneris/preferences.json (diffViewer scope) and persisted
  * on change. Extracted from ChatDisplay's inline logic so the Review panel
  * shares the exact same settings source (the plan reuses the same stats/UI).
  */

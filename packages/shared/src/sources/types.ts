@@ -5,7 +5,7 @@
  * They replace the old "connections" concept with a more flexible, folder-based architecture.
  *
  * File structure:
- * ~/.craft-agent/workspaces/{workspaceId}/sources/{sourceSlug}/
+ * ~/.phaneris/workspaces/{workspaceId}/sources/{sourceSlug}/
  *   ├── config.json   - Source settings
  *   └── guide.md      - Usage guidelines + cached data (in YAML frontmatter)
  */
@@ -343,6 +343,12 @@ export interface ApiOAuthConfig {
   scopes?: string[];
   /** Auth0-style audience parameter */
   audience?: string;
+  /**
+   * RFC 8707 resource indicator: set for resource-bound servers that require the
+   * issued token to be audience-scoped to a specific resource URI. Sent on the
+   * authorization, token and refresh requests.
+   */
+  resource?: string;
   /** Additional parameters to include in the authorization URL */
   extraParams?: Record<string, string>;
 }
@@ -528,7 +534,7 @@ export interface LoadedSource {
   /** Absolute path to source folder (for resolving relative icon paths) */
   folderPath: string;
 
-  /** Absolute path to workspace folder (e.g., ~/.craft-agent/workspaces/xxx) */
+  /** Absolute path to workspace folder (e.g., ~/.phaneris/workspaces/xxx) */
   workspaceRootPath: string;
 
   /**

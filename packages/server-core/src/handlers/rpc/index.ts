@@ -5,6 +5,7 @@ import { registerAuthHandlers } from './auth'
 import { registerAutomationsHandlers } from './automations'
 import { registerArtifactHandlers } from './artifacts'
 import { registerCalendarHandlers } from './calendar'
+import { registerDecisionsHandlers } from './decisions'
 import { registerFilesHandlers } from './files'
 import { registerLabelsHandlers } from './labels'
 import { registerLlmConnectionsHandlers } from './llm-connections'
@@ -40,6 +41,7 @@ export function registerCoreRpcHandlers(
   registerAutomationsHandlers(server, deps)
   registerArtifactHandlers(server, deps)
   registerCalendarHandlers(server, deps)
+  registerDecisionsHandlers(server, deps)
   registerFilesHandlers(server, deps)
   registerLabelsHandlers(server, deps)
   registerLlmConnectionsHandlers(server, deps)

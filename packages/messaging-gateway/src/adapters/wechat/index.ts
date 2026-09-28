@@ -62,7 +62,7 @@ import { TypingStatus, type WeixinMessage } from './ilink/api/types'
 // ---------------------------------------------------------------------------
 
 /**
- * Compute the workspace-scoped iLink state root (`~/.craft-agent/wechat/{workspaceId}`).
+ * Compute the workspace-scoped iLink state root (`~/.phaneris/wechat/{workspaceId}`).
  * Exported for the registry so forgetPlatform wipes the same files the
  * adapter writes.
  */
@@ -264,7 +264,7 @@ export class WeChatAdapter implements PlatformAdapter {
 
   /** Workspace ID scoping persistent state (undefined = shared state dir). */
   private readonly workspaceId?: string
-  /** Workspace-scoped state root (`~/.craft-agent/wechat/{workspaceId}`). */
+  /** Workspace-scoped state root (`~/.phaneris/wechat/{workspaceId}`). */
   private readonly stateRoot?: string
 
   constructor(opts: WeChatAdapterOptions = {}) {

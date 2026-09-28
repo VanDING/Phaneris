@@ -42,6 +42,15 @@ afterEach(() => {
 })
 
 describe('wechat workspace state isolation (M-6)', () => {
+  /*
+   * The `0700` mode is a POSIX guarantee: `mkdirSync({ mode })` is accepted on
+   * Windows but the permission bits are not what `statSync().mode` reports
+   * (Windows uses ACLs), so asserting the mode there can never pass. The
+   * creation/isolation assertions below still run everywhere; only the mode
+   * check is gated, which keeps its coverage on macOS and Linux CI.
+   */
+  const modeIsEnforced = process.platform !== 'win32'
+
   it('resolveStateDirForWorkspace nests each workspace under the state dir', () => {
     const rootA = resolveStateDirForWorkspace(WS_A)
     const rootB = resolveStateDirForWorkspace(WS_B)
@@ -53,7 +62,7 @@ describe('wechat workspace state isolation (M-6)', () => {
   it('ensureStateDirForWorkspace creates the workspace dir 0700', () => {
     const dir = ensureStateDirForWorkspace(WS_A)
     expect(existsSync(dir)).toBe(true)
-    expect(statSync(dir).mode & 0o777).toBe(0o700)
+    if (modeIsEnforced) expect(statSync(dir).mode & 0o777).toBe(0o700)
   })
 
   it('creates the missing parent state root 0700 first (fresh-machine ENOENT regression)', () => {
@@ -64,8 +73,10 @@ describe('wechat workspace state isolation (M-6)', () => {
     try {
       const dir = ensureStateDirForWorkspace(WS_A)
       expect(existsSync(dir)).toBe(true)
-      expect(statSync(dir).mode & 0o777).toBe(0o700)
-      expect(statSync(missingRoot).mode & 0o777).toBe(0o700)
+      if (modeIsEnforced) {
+        expect(statSync(dir).mode & 0o777).toBe(0o700)
+        expect(statSync(missingRoot).mode & 0o777).toBe(0o700)
+      }
     } finally {
       setStateDir(stateDir)
       rmSync(missingRoot, { recursive: true, force: true })
@@ -116,8 +127,9 @@ describe('wechat workspace state isolation (M-6)', () => {
     const accountFileB = join(rootB, 'openclaw-weixin', 'accounts', `${ACCOUNT}.json`)
     expect(existsSync(accountFileA)).toBe(true)
     expect(existsSync(accountFileB)).toBe(false)
-    // The workspace root is 0700 even when created by the persistence helper.
-    expect(statSync(rootA).mode & 0o777).toBe(0o700)
+    // The workspace root is 0700 even when created by the persistence helper
+    // (POSIX only — see `modeIsEnforced` above).
+    if (modeIsEnforced) expect(statSync(rootA).mode & 0o777).toBe(0o700)
 
     clearWeixinAccount(ACCOUNT, rootA)
     unregisterWeixinAccountId(ACCOUNT, rootA)

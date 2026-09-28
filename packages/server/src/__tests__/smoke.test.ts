@@ -169,6 +169,16 @@ describe('headless server smoke test', () => {
   }, TEST_TIMEOUT)
 
   it('shuts down cleanly on SIGTERM', async () => {
+    /*
+     * POSIX only. Windows has no way to deliver a signal to another process:
+     * libuv maps `proc.kill('SIGTERM')` onto TerminateProcess, so the child's
+     * `process.on('SIGTERM')` handler never runs and it exits with the
+     * termination status (143) rather than the 0 a graceful shutdown returns.
+     * Asserting the clean-shutdown contract on Windows can only ever fail, so
+     * the rest of the smoke test still runs there and this case is skipped.
+     */
+    if (process.platform === 'win32') return
+
     server = await spawnTestServer()
     const ws = await connectWs(server.url, server.token)
 

@@ -24,6 +24,8 @@ import {
   type MicrosoftService,
 } from './types.ts';
 import { buildAuthorizationHeader } from './api-tools.ts';
+import type { ApiCredential } from '@phaneris/session-tools-core/api-auth';
+import { isMultiHeaderCredential, parseStoredApiCredential } from '@phaneris/session-tools-core/api-auth';
 import type { CredentialId, StoredCredential } from '../credentials/types.ts';
 import { getCredentialManager } from '../credentials/index.ts';
 import { CraftOAuth, getMcpBaseUrl, prepareMcpOAuth, exchangeMcpOAuth, type OAuthCallbacks, type OAuthTokens } from '../auth/oauth.ts';
@@ -41,6 +43,7 @@ import {
 import {
   startSlackOAuth,
   prepareSlackOAuth,
+  loopbackCallbackPort,
   exchangeSlackOAuth,
   refreshSlackToken,
   type SlackOAuthResult,
@@ -73,32 +76,21 @@ export interface AuthResult {
 }
 
 /**
- * API credential types (string for simple auth, object for basic auth or multi-header)
+ * API credential types (string for simple auth, object for basic auth or multi-header).
+ *
+ * Defined in @phaneris/session-tools-core/api-auth so the source_test
+ * validator and this runtime share one parser and one header builder (OSS #1067).
  */
-export interface BasicAuthCredential {
-  username: string;
-  password: string;
-}
-
-/**
- * Multi-header credentials stored as Record<string, string>
- * Used for APIs like Datadog that require multiple auth headers (DD-API-KEY + DD-APPLICATION-KEY)
- */
-export type MultiHeaderCredential = Record<string, string>;
-
-export type ApiCredential = string | BasicAuthCredential | MultiHeaderCredential;
-
-/**
- * Type guard to check if credential is a MultiHeaderCredential.
- * Returns true for Record<string, string> objects that are NOT BasicAuthCredential.
- */
-export function isMultiHeaderCredential(cred: ApiCredential): cred is MultiHeaderCredential {
-  return (
-    typeof cred === 'object' &&
-    cred !== null &&
-    !('username' in cred && 'password' in cred)
-  );
-}
+export type {
+  ApiCredential,
+  BasicAuthCredential,
+  MultiHeaderCredential,
+} from '@phaneris/session-tools-core/api-auth';
+export {
+  isMultiHeaderCredential,
+  parseStoredApiCredential,
+  serializeHeaderCredential,
+} from '@phaneris/session-tools-core/api-auth';
 
 /**
  * SourceCredentialManager - unified credential operations for sources
@@ -247,47 +239,29 @@ export class SourceCredentialManager {
   }
 
   /**
-   * Get API credential for a source (handles basic auth and multi-header JSON parsing)
+   * Get API credential for a source, parsed into the shape the request path
+   * expects: basic auth object, header map, or bare string. Parsing lives in
+   * @phaneris/session-tools-core/api-auth and is shared with source_test.
    */
   async getApiCredential(source: LoadedSource): Promise<ApiCredential | null> {
     const cred = await this.load(source);
-    // Check both API and MCP headerNames (same credential store pattern)
-    const headerNames = source.config.api?.headerNames || source.config.mcp?.headerNames;
-    debug(`[SourceCredentialManager] getApiCredential for ${source.config.slug}: cred.value exists=${!!cred?.value}, headerNames=${JSON.stringify(headerNames)}`);
     if (!cred?.value) return null;
 
-    // Check for multi-header auth (JSON with header names as keys)
-    // Works for both API sources (api.headerNames) and MCP sources (mcp.headerNames)
-    if (headerNames?.length) {
-      debug(`[SourceCredentialManager] Attempting multi-header parse for ${source.config.slug}, raw value length=${cred.value.length}`);
-      try {
-        const parsed = JSON.parse(cred.value);
-        debug(`[SourceCredentialManager] Parsed JSON keys: ${Object.keys(parsed).join(', ')}`);
-        // Validate all required headers are present
-        const hasAllHeaders = headerNames.every((h) => h in parsed);
-        debug(`[SourceCredentialManager] hasAllHeaders=${hasAllHeaders}`);
-        if (hasAllHeaders) {
-          return parsed as MultiHeaderCredential;
-        }
-      } catch (e) {
-        // Not JSON, fall through to other auth types
-        debug(`[SourceCredentialManager] JSON parse failed: ${e}`);
-      }
-    }
-
-    // Check for basic auth (JSON with username/password)
-    if (source.config.api?.authType === 'basic') {
-      try {
-        const parsed = JSON.parse(cred.value);
-        if (parsed.username && parsed.password) {
-          return parsed as BasicAuthCredential;
-        }
-      } catch {
-        // Not JSON, treat as regular credential
-      }
-    }
-
-    return cred.value;
+    const api = source.config.api;
+    // MCP sources with header credentials use the same JSON header-map storage
+    const headerNames = api?.headerNames || source.config.mcp?.headerNames;
+    const credential = parseStoredApiCredential(cred.value, {
+      authType: api?.authType,
+      headerName: api?.headerName,
+      headerNames,
+    });
+    const shape = typeof credential === 'string'
+      ? 'string'
+      : isMultiHeaderCredential(credential)
+        ? `header map (${Object.keys(credential).length} headers)`
+        : 'basic auth';
+    debug(`[SourceCredentialManager] getApiCredential for ${source.config.slug}: ${shape}`);
+    return credential;
   }
 
   // ============================================================
@@ -469,6 +443,18 @@ export class SourceCredentialManager {
           service = api.slackService;
         } else {
           service = inferSlackServiceFromUrl(api?.baseUrl) || 'full';
+        }
+
+        // The Slack app registers the owned relay's Slack route, not the generic
+        // relay callback (upstream #1068). A desktop flow hands us a loopback
+        // HTTP target, which that route serves directly
+        // (`<relay>/auth/slack/callback?port=N` → `http://localhost:<port>/callback`),
+        // so use it and skip the generic `state` envelope Slack would reject
+        // before consent. WebUI (HTTPS) targets keep the generic relay envelope.
+        // `relayReturnTo` is only set when an owned relay is configured.
+        const desktopCallbackPort = loopbackCallbackPort(relayReturnTo);
+        if (desktopCallbackPort !== undefined) {
+          return prepareSlackOAuth({ service, userScopes, callbackPort: desktopCallbackPort });
         }
 
         prepared = prepareSlackOAuth({ service, userScopes, callbackPort, callbackUrl: providerCallbackUrl });
@@ -1193,6 +1179,10 @@ export class SourceCredentialManager {
         oauthConfig.tokenUrl,
         cred.clientId || oauthConfig.clientId,
         cred.clientSecret || oauthConfig.clientSecret,
+        // RFC 8707 resource indicator: a refresh that drops the audience gets a
+        // token a resource-bound server rejects, so the configured
+        // `oauth.resource` has to ride along here too.
+        oauthConfig.resource,
       );
 
       await this.save(source, {

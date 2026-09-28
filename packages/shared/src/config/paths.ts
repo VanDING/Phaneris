@@ -20,12 +20,27 @@
  * outcome the fork plan forbids. An explicit `PHANERIS_CONFIG_DIR` pointing at
  * the legacy directory is therefore only a transitional bridge and warns
  * loudly; the supported path for that data is the import flow (fork plan §6).
+ *
+ * The resolver is a pure function of `(env, home)` (OSS #1062). Purity is the
+ * point: a resolver that reads `process.env` and emits side effects cannot be
+ * tested against a fixed environment, so the contract "one root, derived in one
+ * place" would stay unenforced and hardcoded roots would creep back in. The
+ * legacy-root warning is therefore emitted once at `CONFIG_DIR` evaluation,
+ * not from inside the resolver.
  */
 
 import { homedir } from 'os';
 import { join } from 'path';
 
 import { DATA_DIR_NAME, ENV_PREFIX, LEGACY_IDENTITY } from '../identity.generated.ts';
+
+/**
+ * Default directory name under the home directory — the fallback that
+ * `resolveConfigDir` joins onto `home`. Re-exported (this repo's equivalent of
+ * the upstream `DEFAULT_CONFIG_DIR_NAME`) so path consumers can read the default
+ * root name from the same module as the resolver.
+ */
+export { DATA_DIR_NAME };
 
 /** Environment variable that overrides the application data root. */
 export const CONFIG_DIR_ENV_VAR = `${ENV_PREFIX}CONFIG_DIR`;
@@ -34,33 +49,47 @@ const LEGACY_ROOT = join(homedir(), LEGACY_IDENTITY.dataDirName);
 
 let legacyRootNoticeEmitted = false;
 
-function noticeLegacyRoot(resolved: string): void {
+function noticeLegacyRoot(resolved: string, home: string): void {
   if (legacyRootNoticeEmitted) return;
   legacyRootNoticeEmitted = true;
   console.warn(
     `[paths] ${CONFIG_DIR_ENV_VAR} points at ${resolved}, which is the upstream application's ` +
       `data directory. Phaneris will read and write it in place — nothing is imported or copied, ` +
       `and the old application must not run against it at the same time. This is a transitional ` +
-      `bridge only; the supported path is to import that data into ${join(homedir(), DATA_DIR_NAME)}.`,
+      `bridge only; the supported path is to import that data into ${join(home, DATA_DIR_NAME)}.`,
   );
 }
 
 /**
- * Resolve the application data root. A function (not just the constant below)
- * because a few call sites must observe a `PHANERIS_CONFIG_DIR` set after this
- * module loaded — tests in particular.
+ * Resolve the application data root: a non-empty `PHANERIS_CONFIG_DIR` wins
+ * (trimmed), otherwise `<home>/.phaneris`.
+ *
+ * Pure — both inputs are injected — so call sites can be tested without
+ * mutating `process.env`, and nothing here can warn, cache or otherwise differ
+ * between two evaluations with the same arguments.
  */
-export function resolveConfigDir(): string {
-  const configured = process.env[CONFIG_DIR_ENV_VAR];
-  const resolved = configured && configured.trim() ? configured.trim() : join(homedir(), DATA_DIR_NAME);
+export function resolveConfigDir(env: NodeJS.ProcessEnv = process.env, home: string = homedir()): string {
+  const configured = env[CONFIG_DIR_ENV_VAR];
+  const override = configured?.trim();
+  return override ? override : join(home, DATA_DIR_NAME);
+}
+
+/**
+ * Warn once when the root resolves to the upstream application's data directory.
+ * Separate from `resolveConfigDir` so resolution stays pure and side-effect free.
+ */
+export function warnIfLegacyRoot(resolved: string, home: string = homedir()): void {
   if (resolved === LEGACY_ROOT || resolved === LEGACY_IDENTITY.dataDirName) {
-    noticeLegacyRoot(resolved);
+    noticeLegacyRoot(resolved, home);
   }
-  return resolved;
 }
 
 /** Root of all application-owned state. Resolved once at module load. */
 export const CONFIG_DIR = resolveConfigDir();
+
+// Emitted here rather than inside the resolver: a legacy root must stay loud,
+// but resolution itself must not depend on (or cause) observable state.
+warnIfLegacyRoot(CONFIG_DIR);
 
 /** App-level configuration (`config.json`). */
 export const CONFIG_FILE = join(CONFIG_DIR, 'config.json');

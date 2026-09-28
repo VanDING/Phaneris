@@ -24,6 +24,16 @@ import { isValidThinkingLevel, normalizeThinkingLevel } from '../agent/thinking-
 import { parsePermissionMode, PERMISSION_MODE_ORDER } from '../agent/mode-types.ts';
 import { type ConfigDefaults } from './config-defaults-schema.ts';
 import { PresetThemeSchema, ThemeOverrideSchema } from './validators.ts';
+// Decision layer: this file owns the WRITE path (`setDecisionLayerSettings`).
+// The read path is `decisions/resolve.ts:readDecisionLayerSettings()` — one
+// loader (`loadStoredConfig`), one normalizer, so there is no second reader to
+// drift. Keep it that way: a getter here would be the third.
+import {
+  mergeDecisionLayerSettings,
+  normalizeDecisionLayerSettings,
+  type DecisionLayerSettings,
+  type DecisionLayerStoredSettings,
+} from '../decisions/settings.ts';
 
 // Re-export CONFIG_DIR for convenience (centralized in paths.ts)
 export { CONFIG_DIR } from './paths.ts';
@@ -86,6 +96,8 @@ export interface StoredConfig {
   extendedPromptCache?: boolean;  // Use long-lived prompt cache retention where supported (default: false)
   // Token optimization
   rtkEnabled?: boolean;  // Route Bash commands through rtk to compress tool output (default: false). https://github.com/rtk-ai/rtk
+  // Decision layer (Jev / TypeSafe System One) — opt-in, off by default. See src/decisions/.
+  decisionLayer?: DecisionLayerStoredSettings;
   // Network proxy
   networkProxy?: import('./types.ts').NetworkProxySettings;
   // Windows: path to Git Bash (bash.exe) for the SDK subprocess
@@ -178,7 +190,7 @@ function syncConfigDefaults(): void {
 }
 
 /**
- * Load config defaults from ~/.craft-agent/config-defaults.json.
+ * Load config defaults from ~/.phaneris/config-defaults.json.
  * Desktop startup syncs this file from bundled assets. Library consumers,
  * tests and standalone servers may call this before that startup boundary, so
  * use the in-code defaults instead of coupling core behavior to a home file.
@@ -266,7 +278,7 @@ export function ensureConfigDir(): void {
   // Snapshot an existing config.json (dated, keep last 3) before anything can
   // mutate or — in a failure path — overwrite the workspace registry.
   backupConfigFile();
-  // Initialize bundled docs (creates ~/.craft-agent/docs/ with sources.md, agents.md, permissions.md)
+  // Initialize bundled docs (creates ~/.phaneris/docs/ with sources.md, agents.md, permissions.md)
   initializeDocs();
 
   // Initialize config defaults
@@ -590,6 +602,31 @@ export function setRtkEnabled(enabled: boolean): void {
   if (!config) return;
   config.rtkEnabled = enabled;
   saveConfig(config);
+}
+
+/**
+ * Merge a decision-layer settings patch (features merge key-wise; `null` clears
+ * an optional string) and persist it. Returns the normalized result so the
+ * Settings card can render what was actually stored.
+ *
+ * This is the only writer of `StoredConfig.decisionLayer`. The matching read
+ * path is `@phaneris/shared/decisions` → `readDecisionLayerSettings()` (same
+ * `loadStoredConfig()` + same normalizer), which is what `decisions:GET_SETTINGS`
+ * and `resolveDecisionClient()` both use.
+ *
+ * Unlike the void rtk setter, callers display the returned value — do not
+ * pretend a write happened when config.json has not been initialized.
+ */
+export function setDecisionLayerSettings(
+  patch: Partial<Record<keyof DecisionLayerStoredSettings, unknown>>,
+): DecisionLayerSettings {
+  const config = loadStoredConfig();
+  if (!config) {
+    throw new Error('Cannot save decision model settings: config.json is not initialized');
+  }
+  config.decisionLayer = mergeDecisionLayerSettings(config.decisionLayer, patch);
+  saveConfig(config);
+  return normalizeDecisionLayerSettings(config.decisionLayer);
 }
 
 /**
@@ -1355,7 +1392,7 @@ const THEME_BACKGROUND_MIME_TYPES: Record<string, string> = {
 
 /**
  * Get the app-level themes directory.
- * User themes are stored at ~/.craft-agent/themes/
+ * User themes are stored at ~/.phaneris/themes/
  */
 export function getAppThemesDir(): string {
   return APP_THEMES_DIR;
@@ -1372,7 +1409,7 @@ export function loadAppTheme(): ThemeOverrides | null {
   }
 }
 
-/** @deprecated Write a user theme in ~/.craft-agent/themes instead. */
+/** @deprecated Write a user theme in ~/.phaneris/themes instead. */
 export function saveAppTheme(theme: ThemeOverrides): void {
   ensureConfigDir();
   atomicWriteFileSync(APP_THEME_FILE, JSON.stringify(theme, null, 2), { mode: 0o600 });
@@ -1416,7 +1453,7 @@ export function migrateLegacyAppTheme(): string | null {
 
     const migrated: ThemeFile = {
       name: 'Migrated Custom Theme',
-      description: 'Migrated from the deprecated ~/.craft-agent/theme.json override.',
+      description: 'Migrated from the deprecated ~/.phaneris/theme.json override.',
       ...resolveTheme(parsed.data),
     };
     atomicWriteFileSync(destination, `${JSON.stringify(migrated, null, 2)}\n`);
@@ -3237,7 +3274,7 @@ import { copyFileSync } from 'fs';
 const TOOL_ICONS_DIR_NAME = 'tool-icons';
 
 /**
- * Returns the path to the tool-icons directory: ~/.craft-agent/tool-icons/
+ * Returns the path to the tool-icons directory: ~/.phaneris/tool-icons/
  */
 export function getToolIconsDir(): string {
   return join(CONFIG_DIR, TOOL_ICONS_DIR_NAME);

@@ -119,6 +119,69 @@ describe('Pi manual compaction RPC', () => {
     expect(events.at(-1)?.type).toBe('complete');
   });
 
+  it('cancels the child compaction on host timeout and reports the failure (#1060)', async () => {
+    const agent = makeAgent();
+    // Tests need the deadline to elapse in real time; the field is private.
+    (agent as unknown as { compactTimeoutMs: number }).compactTimeoutMs = 20;
+    const sent: { type: string; id?: string }[] = [];
+    Object.assign(agent, { send: (msg: { type: string; id?: string }) => { sent.push(msg); } });
+
+    const events = await collect(startCompact(agent));
+    // The deadline both rejects locally and tells the subprocess to abort.
+    expect(sent.map(m => m.type)).toEqual(['compact', 'abort']);
+    expect((agent as unknown as { pendingCompactions: Map<string, unknown> }).pendingCompactions.size).toBe(0);
+    // This repo has no `compaction_failed` event: the failure surfaces as one
+    // error of either flavour followed by the turn-terminating `complete`.
+    expect(events.at(-1)?.type).toBe('complete');
+    expect(events.some(e => e.type === 'error' || e.type === 'typed_error')).toBe(true);
+    expect(events.some(e => e.type === 'info' || e.type === 'context_usage')).toBe(false);
+    // The wording must keep "timed out" (durable-run bookkeeping classifies on
+    // it) and "cancelled" — never "abort", which `chatImpl` swallows into a
+    // plain successful `complete`.
+    const reported = events.find(e => e.type === 'error' || e.type === 'typed_error');
+    const message = (reported as { message?: string } | undefined)?.message ?? '';
+    expect(message).toContain('timed out');
+    expect(message).toContain('cancelled');
+    // A late success from the child no longer has a pending request to land on.
+    expect(sent[0]?.id).toBeString();
+    (agent as unknown as { handleCompactResult(msg: CompactReply): void })
+      .handleCompactResult({ id: sent[0]?.id ?? 'missing-id', success: true, result });
+    expect((agent as unknown as { pendingCompactions: Map<string, unknown> }).pendingCompactions.size).toBe(0);
+  });
+
+  it('refuses to steer while a manual compaction owns the turn and reports it in flight (#1058)', async () => {
+    const agent = makeAgent();
+    const sent: { type: string; id?: string }[] = [];
+    let requestId!: string;
+    let ready!: () => void;
+    const started = new Promise<void>(resolve => { ready = resolve; });
+    Object.assign(agent, {
+      send: (msg: { type: string; id?: string }) => {
+        sent.push(msg);
+        if (msg.type === 'compact') { requestId = msg.id!; ready(); }
+      },
+    });
+
+    expect(agent.isCompactionInFlight()).toBe(false);
+    const done = collect(startCompact(agent));
+    await started;
+    expect(agent.isCompactionInFlight()).toBe(true);
+
+    expect(agent.redirect('follow-up question')).toBe(false);
+    // No steer was sent into a turn with no agent loop, and the compaction was not aborted.
+    expect(sent.map(m => m.type)).toEqual(['compact']);
+    expect((agent as unknown as { pendingCompactions: Map<string, unknown> }).pendingCompactions.size).toBe(1);
+
+    (agent as unknown as { handleSubprocessEvent(event: unknown): void }).handleSubprocessEvent({
+      type: 'compaction_end', reason: 'manual', result, aborted: false,
+    });
+    (agent as unknown as { handleCompactResult(msg: CompactReply): void })
+      .handleCompactResult({ id: requestId, success: true, result });
+    const events = await done;
+    expect(events.at(-1)?.type).toBe('complete');
+    expect(agent.isCompactionInFlight()).toBe(false);
+  });
+
   it.each(['abort', 'forceAbort', 'destroy'] as const)(
     'cancels the pending manual RPC on %s and ignores its late success',
     async (method) => {

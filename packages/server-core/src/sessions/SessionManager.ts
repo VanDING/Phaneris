@@ -83,7 +83,7 @@ import {
   type SessionHeader,
   pickSessionFields,
 } from '@phaneris/shared/sessions'
-import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager } from '@phaneris/shared/sources'
+import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager, serializeHeaderCredential } from '@phaneris/shared/sources'
 import { listTaskSlugs, parseTaskSpec, uniqueTaskSlug } from '@phaneris/shared/tasks'
 import {
   acquireArtifactLease,
@@ -100,6 +100,7 @@ import {
 import { createTaskFromSpec, resolveCreateTaskProjectId } from '../tasks'
 import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config'
 import { buildPagesToolCallbacks } from '../pages/tool-callbacks'
+import { buildDecisionToolCallbacks } from '../decisions/tool-callbacks'
 import { buildServersFromSources as buildServersFromSourcesShared } from '../sources/build-servers'
 import { toolMetadataStore, getLastApiError } from '@phaneris/shared/interceptor'
 import { isParentTaskTool } from '@phaneris/shared/utils/toolNames'
@@ -945,6 +946,25 @@ export function claimAutoRetryPending(
 }
 
 /**
+ * Most-recent non-empty user message content, for the source-activation auto-retry
+ * fallback. The per-turn capture (`getCurrentTurnUserMessage`) can come back empty —
+ * an empty/attachment-only turn, or a capture that raced turn teardown — which used
+ * to strand the session: the activation force-aborted the turn but nothing was
+ * re-sent. Falling back to the last persisted user message keeps the turn continuing,
+ * while preserving the "no bogus empty resend" intent (returns '' only when there is
+ * genuinely nothing to resend).
+ */
+export function lastUserMessageContent(messages: Message[]): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i]
+    if (m.role === 'user' && typeof m.content === 'string' && m.content.trim()) {
+      return m.content
+    }
+  }
+  return ''
+}
+
+/**
  * Create a ManagedSession from any session-like source (SessionMetadata, SessionConfig, StoredSession).
  * Spreads all matching fields from the source so new persistent fields automatically propagate.
  * Runtime-only fields get sensible defaults.
@@ -1105,6 +1125,27 @@ export function resolveMidStreamDeliveryOutcome(
     shouldQueue: !steered,
     wasInterrupted: behavior === 'steer' && !steered,
   }
+}
+
+/**
+ * Whether a mid-stream message should be steered into the live turn.
+ *
+ * A manual compaction owns the turn without an agent loop to consume steers, so
+ * the message is queued for replay after `complete` instead (craft-agents-oss#1058).
+ * Callers must feed the *attempted* behavior into
+ * {@link resolveMidStreamDeliveryOutcome} — a steer that was never attempted is a
+ * forced queue, not an interruption.
+ *
+ * Unlike upstream this takes no `textOnly` argument: this branch has no payload
+ * predicate (there is no `canSteerTextPayload` equivalent here), so `behavior`
+ * and the compaction contract are the only inputs.
+ */
+export function shouldAttemptMidStreamSteer(
+  behavior: MidStreamBehavior,
+  agent: { isCompactionInFlight?: () => boolean } | null | undefined,
+): boolean {
+  if (behavior !== 'steer' || !agent) return false
+  return agent.isCompactionInFlight?.() !== true
 }
 
 /**
@@ -2387,10 +2428,15 @@ export class SessionManager implements ISessionManager {
           { value: response.value! }
         )
       } else if (request.mode === 'multi-header') {
-        // Store multi-header credentials as JSON { "DD-API-KEY": "...", "DD-APPLICATION-KEY": "..." }
+        // Store multi-header credentials as JSON { "DD-API-KEY": "...", "DD-APPLICATION-KEY": "..." }.
+        // A source configured with a single `headerName` is the exception: the
+        // value is stored bare so the runtime never sends a JSON blob as one
+        // header value (craft-agents-oss#1067). `serializeHeaderCredential`
+        // owns that decision and is the shared counterpart of
+        // `parseStoredApiCredential`.
         await credManager.set(
           { type: 'source_apikey', workspaceId: wsId, sourceId: request.sourceSlug },
-          { value: JSON.stringify(response.headers) }
+          { value: serializeHeaderCredential(response.headers ?? {}, request.headerName) }
         )
       } else {
         // header or query - both use API key storage
@@ -5421,6 +5467,14 @@ export class SessionManager implements ISessionManager {
             this.enqueuePageThumbnail(managed.workspace.id, managed.workspace.rootPath, pageSlug)
           },
         }),
+        // Decision model (`decide`) — always wired; the callback re-checks the
+        // Settings switch, the feature toggle and the key on every call, so an
+        // agent that still advertises the tool after the user disabled it gets
+        // a clear "not enabled" answer instead of a stale client.
+        decide: buildDecisionToolCallbacks({
+          sessionId: managed.id,
+          log: (message: string) => sessionLog.info(message),
+        }),
         getSessionInfoFn: (sessionId?: string) => {
           const targetId = sessionId ?? managed.id
           const session = this.sessions.get(targetId)
@@ -6427,6 +6481,15 @@ export class SessionManager implements ISessionManager {
 
         agent = createBackendFromConnection(managed.llmConnection, {
           workspace: managed.workspace,
+          // Preserve the selected model as a fallback if the account rejects its mini model.
+          // A temporary title agent runs through an ephemeral `queryLlm` session whose
+          // fallback chain is mini candidates → session model → provider defaults. With
+          // `sessionModel` left undefined the chain is exhausted whenever the account
+          // rejects the mini model — e.g. an openai-codex account refusing
+          // `pi/gpt-5.4-mini`: `pi/gpt-5-mini` only resolves under the `openai` provider
+          // and `getDefaultSummarizationModel()` returns Haiku/Opus, so both are dropped
+          // by the provider guard and title generation fails.
+          model: managed.model,
           miniModel: resolvedMiniModel,
           session: {
             id: `title-${managed.id}`,
@@ -6993,6 +7056,9 @@ export class SessionManager implements ISessionManager {
     // - 'queue': hold the message untouched; the current turn keeps running
     //   to natural completion; replay as a new turn afterwards. NO call to
     //   `agent.redirect()`, NO forceAbort, NO interruption.
+    // - either mode, while a manual compaction owns the turn: no `redirect()`
+    //   either. Nothing consumes steers during a compaction, so the message is
+    //   queued for replay and must NOT be reported as an interruption.
     if (managed.isProcessing) {
       const connection = resolveSessionConnection(managed.llmConnection, undefined)
       // Fallback to 'steer' when no connection is resolvable — preserves
@@ -7003,16 +7069,23 @@ export class SessionManager implements ISessionManager {
         ? 'queue' : connection ? resolveMidStreamBehavior(connection) : 'steer'
 
       const agent = managed.agent
+      // A manual compaction owns the turn: nothing consumes steers, so queue for
+      // replay after `complete` instead of steering (craft-agents-oss#1058).
+      const compactionInFlight = agent?.isCompactionInFlight?.() === true
+      const attemptedSteer = shouldAttemptMidStreamSteer(behavior, agent)
       let steered = false
-      if (behavior === 'steer') {
+      if (attemptedSteer) {
         steered = agent?.redirect(message) ?? false
       }
       // For 'queue': skip redirect entirely. The current turn is undisturbed.
+      // Same for a compaction-owned turn: `redirect()` would report success into
+      // an agent loop that `compact()` has already aborted, losing the message.
 
       sessionLog.info('mid-stream send', {
         sessionId,
         behavior,
         steered,
+        compactionInFlight,
         queueLengthBefore: managed.messageQueue.length,
         backend: agent ? agent.constructor.name : 'none',
         connectionSlug: connection?.slug,
@@ -7032,7 +7105,11 @@ export class SessionManager implements ISessionManager {
       }
       managed.messages.push(userMessage)
 
-      const delivery = resolveMidStreamDeliveryOutcome(behavior, steered)
+      // Feed the *attempted* behavior: a steer skipped because a compaction owns
+      // the turn is a forced queue, not an interruption. Passing 'steer' here
+      // would set `wasInterrupted` and make the replayed turn announce that its
+      // own complete answer was cut off.
+      const delivery = resolveMidStreamDeliveryOutcome(attemptedSteer ? 'steer' : 'queue', steered)
 
       // Emit to UI — 'accepted' iff a steer succeeded; 'queued' otherwise
       // (covers both queue-direct and queue-after-abort paths).
@@ -9160,6 +9237,10 @@ export class SessionManager implements ISessionManager {
 
         agent = createBackendFromConnection(managed.llmConnection, {
           workspace: managed.workspace,
+          // Same fallback-chain reason as refreshTitle: the temporary title agent must
+          // carry the session model so an account that rejects the mini model still
+          // has a resolvable candidate left.
+          model: managed.model,
           miniModel: connection ? (getMiniModel(connection) ?? connection.defaultModel) : undefined,
           session: {
             id: `title-${managed.id}`,
@@ -9301,8 +9382,7 @@ export class SessionManager implements ISessionManager {
                 usage: event.usage && usageIdentity ? {
                   usageId: `model:${usageIdentity}`,
                   provider: managed.llmConnection,
-                  model: managed.model,
-                  inputTokens: event.usage.input,
+                          inputTokens: event.usage.input,
                   outputTokens: event.usage.output,
                   costUsd: event.usage.cost.total,
                   payload: {
@@ -9376,8 +9456,11 @@ export class SessionManager implements ISessionManager {
       }
 
       case 'tool_start': {
-        // Format tool input paths to relative for better readability
-        const formattedToolInput = formatToolInputPaths(event.input)
+        // Format tool input paths to relative for better readability.
+        // Relativize against the session's working directory only: a session
+        // without one must keep absolute paths rather than gain a `./` prefix
+        // from the app's process directory (craft-agents-oss#1056).
+        const formattedToolInput = formatToolInputPaths(event.input, managed.workingDirectory)
 
         // Resolve call_llm model for TurnCard badge display.
         // Resolve call_llm model short names to full IDs for display.
@@ -9522,8 +9605,10 @@ export class SessionManager implements ISessionManager {
           })
         }
 
-        // Format absolute paths to relative paths for better readability
-        const rawFormattedResult = event.result ? formatPathsToRelative(event.result) : ''
+        // Format absolute paths to relative paths for better readability.
+        // Same rule as tool inputs: relativize against the session's working
+        // directory only (craft-agents-oss#1056).
+        const rawFormattedResult = event.result ? formatPathsToRelative(event.result, managed.workingDirectory) : ''
 
         // Safety net: prevent massive tool results from bloating session JSONL (protects all backends)
         const MAX_PERSISTED_RESULT_CHARS = 200_000 // ~50K tokens
@@ -10006,13 +10091,21 @@ export class SessionManager implements ISessionManager {
 
         if (!managed) break
 
-        const originalMessage = event.originalMessage ?? ''
-        if (!originalMessage.trim()) {
-          sessionLog.warn(`Source "${event.sourceSlug}" activated for session ${sessionId}, but originalMessage was empty; skipping auto-retry`)
+        // The captured original message can be empty — an empty/attachment-only
+        // turn, or a per-turn capture that raced turn teardown. Fall back to the
+        // last persisted user message so an activation that force-aborted the turn
+        // still continues; skip only when there is genuinely nothing to resend
+        // (preserves the "no bogus empty resend" intent).
+        const capturedMessage = event.originalMessage ?? ''
+        const resendMessage = capturedMessage.trim()
+          ? capturedMessage
+          : lastUserMessageContent(managed.messages)
+        if (!resendMessage.trim()) {
+          sessionLog.warn(`Source "${event.sourceSlug}" activated for session ${sessionId}, but no message to resend (empty capture, no prior user message); skipping auto-retry`)
           break
         }
 
-        const messageWithSuffix = `${originalMessage}\n\n[${event.sourceSlug} activated]`
+        const messageWithSuffix = `${resendMessage}\n\n[${event.sourceSlug} activated]`
         const messageCountAtSchedule = managed.messages.length
 
         // Stash the retry payload so a duplicate sendMessage from a legacy renderer
@@ -10369,7 +10462,6 @@ export class SessionManager implements ISessionManager {
           lastUsedAt: Date.now(),
           workingDirectory: managed.workingDirectory,
           sdkCwd: managed.sdkCwd,
-          model: managed.model,
           llmConnection: managed.llmConnection,
           permissionMode: managed.permissionMode,
           previousPermissionMode: managed.previousPermissionMode,

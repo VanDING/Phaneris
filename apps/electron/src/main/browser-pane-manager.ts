@@ -152,6 +152,12 @@ interface BrowserInstance {
   window: BrowserWindow
   toolbarView: BrowserView
   pageView: BrowserView
+  /**
+   * `pageView.webContents.id`, captured at creation. Lookups and teardown use
+   * this copy because reading `webContents` on a destroyed window throws
+   * "Object has been destroyed" (craft-agents-oss#1059).
+   */
+  pageWebContentsId: number
   nativeOverlayView: BrowserView
   cdp: BrowserCDP
   currentUrl: string
@@ -348,6 +354,9 @@ export class BrowserPaneManager implements IBrowserPaneManager {
   private lastNetworkActivityByWebContentsId = new Map<number, number>()
   private popupWindowsByParentInstanceId = new Map<string, Set<BrowserWindow>>()
   private popupParentByWebContentsId = new Map<number, string>()
+  // Popup webContents ids captured at registration: a closed popup's `webContents`
+  // getter throws, so cleanup must never read it (craft-agents-oss#1059).
+  private popupWebContentsIdByWindow = new WeakMap<BrowserWindow, number>()
   private windowManager: WindowManager | null = null
   private sessionPathResolver: ((sessionId: string) => string | null) | null = null
 
@@ -496,6 +505,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
       networkLogs: [],
       downloads: [],
       lastLaunchToken: null,
+      pageWebContentsId: pageView.webContents.id,
     }
 
     const defaultUa = pageView.webContents.userAgent || ''
@@ -553,7 +563,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     instance.pendingShowToken += 1
 
     // Clean up in-flight network tracking for this instance's webContents
-    const wcId = instance.pageView.webContents.id
+    const wcId = instance.pageWebContentsId
     this.inFlightRequestsByWebContentsId.delete(wcId)
     this.lastNetworkActivityByWebContentsId.delete(wcId)
 
@@ -634,7 +644,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
 
   private findInstanceByPageWebContentsId(senderWebContentsId: number): BrowserInstance | undefined {
     for (const instance of this.instances.values()) {
-      if (instance.pageView.webContents.id === senderWebContentsId) {
+      if (instance.pageWebContentsId === senderWebContentsId) {
         return instance
       }
     }
@@ -1580,7 +1590,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     }
 
     if (args.kind === 'network-idle') {
-      const wcId = instance.pageView.webContents.id
+      const wcId = instance.pageWebContentsId
       return until(async () => {
         const inflight = this.inFlightRequestsByWebContentsId.get(wcId) ?? 0
         const last = this.lastNetworkActivityByWebContentsId.get(wcId) ?? started
@@ -2141,11 +2151,14 @@ export class BrowserPaneManager implements IBrowserPaneManager {
 
     this.destroyingIds.delete(instance.id)
     // Each cleanup step is guarded — a throwing cleanup must never abort
-    // finalization (the instance would stay in the map forever).
+    // finalization (the instance would stay in the map forever, so every later
+    // browser_tool call would hit the dead window until the app restarted,
+    // craft-agents-oss#1059).
     const steps: Array<[string, () => void]> = [
       ['closePopupsForParent', () => this.closePopupsForParent(instance.id, 'parent_destroy')],
       ['applyAgentControlLock', () => this.applyAgentControlLock(instance, false)],
       ['updateNativeOverlayState', () => this.updateNativeOverlayState(instance)],
+      ['cdp.detach', () => instance.cdp.detach()],
     ]
     for (const [label, action] of steps) {
       try {
@@ -2154,7 +2167,6 @@ export class BrowserPaneManager implements IBrowserPaneManager {
         mainLog.warn(`[browser-pane] finalize cleanup failed id=${instance.id} step=${label} error=${error instanceof Error ? error.message : String(error)}`)
       }
     }
-    instance.cdp.detach()
     this.instances.delete(instance.id)
     this.removedCallback?.(instance.id)
     mainLog.info(`[browser-pane] Destroyed instance: ${instance.id} (${source})`)
@@ -3056,15 +3068,9 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     }, EARLY_THEME_EXTRACTION_DELAY_MS)
   }
 
-  private getInstanceByWebContentsId(webContentsId: number): BrowserInstance | undefined {
-    for (const instance of this.instances.values()) {
-      if (instance.pageView.webContents.id === webContentsId) return instance
-    }
-    return undefined
-  }
-
   private registerPopupWindow(parentInstance: BrowserInstance, popupWindow: BrowserWindow, sourceUrl?: string): void {
     const popupWcId = popupWindow.webContents.id
+    this.popupWebContentsIdByWindow.set(popupWindow, popupWcId)
     const existingParent = this.popupParentByWebContentsId.get(popupWcId)
     if (existingParent && existingParent !== parentInstance.id) {
       this.unregisterPopupWindow(popupWindow, 'reparented')
@@ -3108,11 +3114,15 @@ export class BrowserPaneManager implements IBrowserPaneManager {
   }
 
   private unregisterPopupWindow(popupWindow: BrowserWindow, reason: 'closed' | 'parent_destroy' | 'reparented'): void {
-    const popupWcId = popupWindow.webContents.id
+    // The popup is usually already destroyed here (`closed` fired), and reading
+    // `popupWindow.webContents` would throw; use the id captured at registration.
+    const popupWcId = this.popupWebContentsIdByWindow.get(popupWindow)
+    if (popupWcId === undefined) return
     const parentId = this.popupParentByWebContentsId.get(popupWcId)
     if (!parentId) return
 
     this.popupParentByWebContentsId.delete(popupWcId)
+    if (reason !== 'reparented') this.popupWebContentsIdByWindow.delete(popupWindow)
 
     const popups = this.popupWindowsByParentInstanceId.get(parentId)
     if (popups) {
@@ -3130,7 +3140,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     if (!popups || popups.size === 0) return
 
     for (const popupWindow of Array.from(popups)) {
-      const popupWcId = popupWindow.webContents.id
+      const popupWcId = this.popupWebContentsIdByWindow.get(popupWindow)
       this.unregisterPopupWindow(popupWindow, reason)
       try {
         if (!popupWindow.isDestroyed()) {
@@ -3204,7 +3214,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
       this.inFlightRequestsByWebContentsId.set(wcId, Math.max(0, current - 1))
       this.lastNetworkActivityByWebContentsId.set(wcId, Date.now())
 
-      const instance = this.getInstanceByWebContentsId(wcId)
+      const instance = this.findInstanceByPageWebContentsId(wcId)
       if (!instance) return
 
       this.pushNetworkLog(instance, {
@@ -3225,7 +3235,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
       this.inFlightRequestsByWebContentsId.set(wcId, Math.max(0, current - 1))
       this.lastNetworkActivityByWebContentsId.set(wcId, Date.now())
 
-      const instance = this.getInstanceByWebContentsId(wcId)
+      const instance = this.findInstanceByPageWebContentsId(wcId)
       if (!instance) return
 
       this.pushNetworkLog(instance, {
@@ -3241,7 +3251,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     ses.on('will-download', (_event, item, webContents) => {
       const wcId = webContents?.id
       if (typeof wcId !== 'number') return
-      const instance = this.getInstanceByWebContentsId(wcId)
+      const instance = this.findInstanceByPageWebContentsId(wcId)
       if (!instance) return
 
       // Auto-save: set a deterministic path so Electron doesn't show a native dialog

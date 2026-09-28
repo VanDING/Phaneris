@@ -11,6 +11,7 @@
  *   - claude_oauth::global
  *   - source_oauth::{workspaceId}::{sourceId}
  *   - source_bearer::{workspaceId}::{sourceId}
+ *   - decision_api_key::{provider}
  *
  * Note: Using "::" as delimiter to avoid conflicts with "/" in URLs or paths.
  */
@@ -27,7 +28,7 @@ export type CredentialType =
   | 'llm_service_account' // GCP service account JSON
   // Workspace credentials
   | 'workspace_oauth'    // Workspace MCP OAuth token
-  // Source credentials (stored at ~/.craft-agent/workspaces/{ws}/sources/{slug}/)
+  // Source credentials (stored at ~/.phaneris/workspaces/{ws}/sources/{slug}/)
   | 'source_oauth'       // OAuth tokens for MCP/API sources
   | 'source_bearer'      // Bearer tokens
   | 'source_apikey'      // API keys
@@ -37,7 +38,9 @@ export type CredentialType =
   // Page publication admin token (keyed by workspaceId + pageId)
   | 'page_publish_token' // Secret capability that authorizes publication update/unpublish
   // Remote server bearer token (keyed by workspaceId); never stored in config.json
-  | 'remote_server_token';
+  | 'remote_server_token'
+  // Decision layer (Jev / System One) API key, keyed by decision provider id via `name`
+  | 'decision_api_key';
 
 /** Valid credential types for validation */
 const VALID_CREDENTIAL_TYPES: readonly CredentialType[] = [
@@ -55,6 +58,7 @@ const VALID_CREDENTIAL_TYPES: readonly CredentialType[] = [
   'messaging_bearer',
   'page_publish_token',
   'remote_server_token',
+  'decision_api_key',
 ] as const;
 
 /** Check if a string is a valid CredentialType */
@@ -160,6 +164,11 @@ function isPageCredential(type: CredentialType): boolean {
   return type === 'page_publish_token';
 }
 
+/** Check if type is a decision-layer credential (decision provider id via `name`) */
+function isDecisionCredential(type: CredentialType): boolean {
+  return type === 'decision_api_key';
+}
+
 /** LLM connection credential types */
 const LLM_CREDENTIAL_TYPES = [
   'llm_api_key',
@@ -218,6 +227,13 @@ export function credentialIdToAccount(id: CredentialId): string {
   // page_publish_token::{workspaceId}::{pageId}
   if (isPageCredential(id.type) && id.workspaceId && id.name) {
     parts.push(id.workspaceId);
+    parts.push(id.name);
+    return parts.join(CREDENTIAL_DELIMITER);
+  }
+
+  // Decision-provider format:
+  // decision_api_key::{provider}
+  if (isDecisionCredential(id.type) && id.name) {
     parts.push(id.name);
     return parts.join(CREDENTIAL_DELIMITER);
   }
@@ -295,6 +311,12 @@ export function accountToCredentialId(account: string): CredentialId | null {
   // page_publish_token::{workspaceId}::{pageId}
   if (isPageCredential(type) && parts.length === 3) {
     return { type, workspaceId: parts[1], name: parts[2] };
+  }
+
+  // Decision-provider format:
+  // decision_api_key::{provider}
+  if (isDecisionCredential(type) && parts.length === 2 && parts[1] && parts[1] !== 'global') {
+    return { type, name: parts[1] };
   }
 
   if (parts.length === 2 && parts[1] === 'global') {

@@ -89,6 +89,28 @@ export {
   getEffectiveHeaderNames,
 } from './source-helpers.ts';
 
+// API credential parsing and request-auth assembly (shared with @phaneris/shared)
+export {
+  isBasicAuthCredential,
+  isMultiHeaderCredential,
+  parseJsonHeaderMap,
+  apiAuthSpecFromConfig,
+  parseStoredApiCredential,
+  serializeHeaderCredential,
+  buildAuthorizationHeader,
+  buildApiAuthHeaders,
+  appendQueryAuth,
+  describeApiAuth,
+} from './api-auth.ts';
+export type {
+  ApiCredential,
+  BasicAuthCredential,
+  MultiHeaderCredential,
+  ApiAuthKind,
+  ApiAuthSpec,
+  StoredCredentialShape,
+} from './api-auth.ts';
+
 // Validation
 export {
   // Result helpers
@@ -161,6 +183,18 @@ export type {
   PageDataToolPatch,
   PageDataWriteSummary,
   DeletePageToolResult,
+  // Decision tool types
+  DecisionToolCallbacks,
+  DecisionToolQuestionType,
+  DecisionToolInstructions,
+  DecisionToolCriteria,
+  DecisionToolQuestion,
+  DecisionToolState,
+  DecisionToolRequest,
+  DecisionToolAnswer,
+  DecisionToolUsage,
+  DecisionToolError,
+  DecisionToolResult,
 } from './context.ts';
 
 export { createNodeFileSystem } from './context.ts';
@@ -207,6 +241,8 @@ export {
   handleUpdatePage,
   handleWritePageData,
   handleDeletePage,
+  // Decision model
+  handleDecide,
 } from './handlers/index.ts';
 
 export type {
@@ -237,6 +273,7 @@ export type {
   UpdatePageArgs,
   WritePageDataArgs,
   DeletePageArgs,
+  DecideArgs,
 } from './handlers/index.ts';
 
 // Tool definitions — single source of truth
@@ -250,6 +287,7 @@ export {
   SourceOAuthTriggerSchema,
   CredentialPromptSchema,
   CallLlmSchema,
+  DecideSchema,
   UpdatePreferencesSchema,
   TransformDataSchema,
   ScriptSandboxSchema,

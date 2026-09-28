@@ -8,13 +8,13 @@ import type { IpcMainInvokeEvent } from 'electron'
 import { createHash, randomUUID } from 'crypto'
 import { spawnSync } from 'child_process'
 import { hostname, homedir } from 'os'
-import { join } from 'path'
+import { join, resolve } from 'path'
 
 // Product identity — single source of truth is phaneris.identity.json at the
 // repository root; these constants are generated from it. Never inline the app
 // name or userData directory name here.
 import { PRODUCT_NAME, RESOLVED_DEEPLINK_SCHEME, USER_DATA_DIR_NAME } from '@phaneris/shared'
-import { workspaceDir } from '@phaneris/shared/config/paths'
+import { CONFIG_DIR, CONFIG_DIR_ENV_VAR, workspaceDir } from '@phaneris/shared/config/paths'
 
 function isTelemetryEnabled(): boolean {
   const value = process.env.PHANERIS_TELEMETRY_ENABLED?.trim().toLowerCase()
@@ -252,8 +252,21 @@ app.setName(process.env.PHANERIS_APP_NAME || PRODUCT_NAME)
 //   2. The upstream app is expected to be installed side by side. Sharing a
 //      userData directory means fighting over the Chromium profile lock, the
 //      updater cache and the single-instance lock.
+//
+// One case overrides both: a configured PHANERIS_CONFIG_DIR is the documented
+// multi-instance switch (see config/paths.ts), so the Chromium profile, the
+// updater cache and the single-instance lock have to move with it. Pinning
+// userData while the data root moved left instances sharing a profile lock,
+// which is the opposite of what the switch promises. Without the env var the
+// directory is byte-identical to before.
 // Must run before anything reads app.getPath('userData').
-app.setPath('userData', join(app.getPath('appData'), USER_DATA_DIR_NAME))
+const configuredConfigDir = process.env[CONFIG_DIR_ENV_VAR]?.trim()
+app.setPath(
+  'userData',
+  configuredConfigDir
+    ? resolve(join(CONFIG_DIR, 'user-data'))
+    : join(app.getPath('appData'), USER_DATA_DIR_NAME)
+)
 
 // Register as default protocol client for the Phaneris deep-link scheme.
 // The upstream scheme is never claimed, so both apps can be installed at once

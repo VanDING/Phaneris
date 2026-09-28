@@ -491,6 +491,11 @@ export function useOnboarding({
         model: data.models?.[0],
         piAuthProvider: data.piAuthProvider,
         customEndpoint: data.customEndpoint,
+        // Editing: the key field may still hold the masked placeholder; the server
+        // resolves it to the stored credential by slug (craft-agents-oss#1048).
+        // This callback has no slug override of its own — it edits exactly
+        // `editingSlug`, which is also the slug it hands to handleSaveConfig below.
+        connectionSlug: editingSlug ?? undefined,
       })
 
       if (!testResult.success) {

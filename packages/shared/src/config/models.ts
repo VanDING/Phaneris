@@ -17,6 +17,8 @@ import type { ThinkingLevel } from '../agent/thinking-levels.ts';
 export const BEDROCK_TO_BARE: Record<string, string> = {
   // US inference profile IDs (primary)
   'us.anthropic.claude-opus-4-8': 'claude-opus-4-8',
+  'us.anthropic.claude-opus-5-5': 'claude-opus-5-5',
+  'us.anthropic.claude-opus-5': 'claude-opus-5',
   'us.anthropic.claude-fable-5': 'claude-fable-5',
   'us.anthropic.claude-opus-4-7': 'claude-opus-4-7',
   // Compatibility alias for an earlier incorrect 4.7 mapping.
@@ -29,6 +31,8 @@ export const BEDROCK_TO_BARE: Record<string, string> = {
   'us.anthropic.claude-sonnet-4-5-20250929-v1:0': 'claude-sonnet-4-5-20250929',
   // EU inference profile IDs
   'eu.anthropic.claude-opus-4-8': 'claude-opus-4-8',
+  'eu.anthropic.claude-opus-5-5': 'claude-opus-5-5',
+  'eu.anthropic.claude-opus-5': 'claude-opus-5',
   'eu.anthropic.claude-fable-5': 'claude-fable-5',
   'eu.anthropic.claude-opus-4-7': 'claude-opus-4-7',
   'eu.anthropic.claude-opus-4-7-v1': 'claude-opus-4-7',
@@ -40,6 +44,8 @@ export const BEDROCK_TO_BARE: Record<string, string> = {
   'eu.anthropic.claude-sonnet-4-5-20250929-v1:0': 'claude-sonnet-4-5-20250929',
   // Global inference profile IDs
   'global.anthropic.claude-opus-4-8': 'claude-opus-4-8',
+  'global.anthropic.claude-opus-5-5': 'claude-opus-5-5',
+  'global.anthropic.claude-opus-5': 'claude-opus-5',
   'global.anthropic.claude-fable-5': 'claude-fable-5',
   'global.anthropic.claude-opus-4-7': 'claude-opus-4-7',
   'global.anthropic.claude-opus-4-7-v1': 'claude-opus-4-7',
@@ -49,6 +55,8 @@ export const BEDROCK_TO_BARE: Record<string, string> = {
   'global.anthropic.claude-opus-4-6-v1': 'claude-opus-4-6',
   // Base IDs (no region prefix)
   'anthropic.claude-opus-4-8': 'claude-opus-4-8',
+  'anthropic.claude-opus-5-5': 'claude-opus-5-5',
+  'anthropic.claude-opus-5': 'claude-opus-5',
   'anthropic.claude-fable-5': 'claude-fable-5',
   'anthropic.claude-opus-4-7': 'claude-opus-4-7',
   'anthropic.claude-opus-4-7-v1': 'claude-opus-4-7',
@@ -72,6 +80,11 @@ const DEPRECATED_MODEL_REPLACEMENTS: Record<string, string> = {
   'eu.anthropic.claude-opus-4-5-20251101-v1:0': 'eu.anthropic.claude-opus-4-8',
   'eu.anthropic.claude-opus-4-7-v1': 'eu.anthropic.claude-opus-4-7',
   'global.anthropic.claude-opus-4-7-v1': 'global.anthropic.claude-opus-4-7',
+  // DeepSeek retired the v4 Flash aliases; pi 0.86+ catalogs only list
+  // `deepseek-flash`. Stored ids migrate here so an existing connection pinned
+  // to either retired alias keeps working instead of dangling.
+  'deepseek-v4-flash': 'deepseek-flash',
+  'deepseek-v4-flash-vision-exp': 'deepseek-flash',
 };
 
 /** Normalize deprecated built-in model IDs to the current supported replacement. */
@@ -141,6 +154,30 @@ export const MODEL_REGISTRY: ModelDefinition[] = [
     name: 'Opus 4.8',
     shortName: 'Opus',
     description: 'Most capable for complex work',
+    descriptionKey: 'model.opusDesc',
+    provider: 'pi',
+    contextWindow: 1_000_000,
+  },
+  // Opus 5.5 and Opus 5 entered the Pi catalog in SDK 0.87.1 / 0.82.1. Both are
+  // listed AFTER 4.8 so `findModelIdByShortName('Opus')` keeps resolving to 4.8 —
+  // adding these is a catalog entry, not a default change (the storage Opus
+  // migrations target 4.8 on purpose too). Registering Opus 5 matters on its own:
+  // unregistered ids fall back to a 200K context window and would under-report
+  // the real 1M window.
+  {
+    id: 'claude-opus-5-5',
+    name: 'Opus 5.5',
+    shortName: 'Opus',
+    description: 'Newest Opus generation (1M context)',
+    descriptionKey: 'model.opusDesc',
+    provider: 'pi',
+    contextWindow: 1_000_000,
+  },
+  {
+    id: 'claude-opus-5',
+    name: 'Opus 5',
+    shortName: 'Opus',
+    description: 'Previous Opus 5 generation',
     descriptionKey: 'model.opusDesc',
     provider: 'pi',
     contextWindow: 1_000_000,
@@ -359,19 +396,6 @@ export function isClaudeModel(modelId: string): boolean {
   const lower = modelId.toLowerCase();
   return lower.startsWith('claude-') || lower.includes('/claude') || lower.includes('.claude');
 }
-
-/**
- * Mythos-class models (Claude Fable 5 / Mythos 5 / Mythos Preview) where adaptive
- * thinking is ALWAYS ON and `thinking: { type: 'disabled' }` is rejected by the
- * Messages API. Callers must use adaptive thinking + the `effort` parameter to
- * control depth on these models — there is no way to turn thinking off.
- * (The Messages API is unchanged for Opus/Sonnet/Haiku, which still accept `disabled`.)
- * Matches bare, pi/-prefixed, and Bedrock-native id forms.
- */
-export function isAdaptiveThinkingAlwaysOnModel(modelId: string): boolean {
-  return /claude-(fable|mythos)/i.test(modelId);
-}
-
 
 /**
  * Get the provider for a model ID.
