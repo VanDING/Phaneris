@@ -20,6 +20,7 @@
 import { existsSync, writeFileSync } from 'fs';
 import { join, extname } from 'path';
 import { debug } from './debug.ts';
+import { PRODUCT_NAME } from '../identity.generated.ts';
 
 // Re-export pure constants from icon-constants.ts for backwards compatibility.
 // Renderer code should import directly from icon-constants.ts to avoid Node.js deps.
@@ -140,7 +141,7 @@ export async function downloadIcon(
   try {
     const response = await fetch(iconUrl, {
       headers: {
-        'User-Agent': 'Craft-Agent/1.0',
+        'User-Agent': `${PRODUCT_NAME}/1.0`,
       },
     });
 

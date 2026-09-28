@@ -1866,6 +1866,7 @@
   "tasks.maxRepairsHint": "Retries on a failed verdict before giving up · default 3 · max 10",
   "tasks.modeGenerate": "Generate",
   "tasks.modeManual": "Manual",
+  "tasks.noAvailableModels": "Connect an AI provider to select a model",
   "tasks.noAvailableSubtasks": "No available subtasks",
   "tasks.noDependencies": "No dependencies",
   "tasks.noOutput": "No output",

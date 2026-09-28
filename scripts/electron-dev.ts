@@ -65,7 +65,7 @@ async function ensureBundledUvForCurrentPlatform(): Promise<void> {
 }
 
 // Multi-instance detection (matches detect-instance.sh logic)
-// Detects instance number from folder name suffix (e.g., craft-agents-1 → instance 1)
+// Detects instance number from folder name suffix (e.g., Phaneris-1 → instance 1)
 function detectInstance(): void {
   // Don't override if already set (e.g., by sourcing detect-instance.sh first)
   if (process.env.PHANERIS_VITE_PORT) return;
@@ -78,8 +78,8 @@ function detectInstance(): void {
     process.env.PHANERIS_INSTANCE_NUMBER = instanceNum;
     process.env.PHANERIS_VITE_PORT = `${instanceNum}173`;
     process.env.PHANERIS_APP_NAME = `Phaneris [${instanceNum}]`;
-    process.env.PHANERIS_CONFIG_DIR = join(process.env.HOME || "", `.craft-agent-${instanceNum}`);
-    process.env.PHANERIS_DEEPLINK_SCHEME = `craftagents${instanceNum}`;
+    process.env.PHANERIS_CONFIG_DIR = join(process.env.HOME || "", `.phaneris-${instanceNum}`);
+    process.env.PHANERIS_DEEPLINK_SCHEME = `phaneris${instanceNum}`;
     console.log(`🔢 Instance ${instanceNum} detected: port=${process.env.PHANERIS_VITE_PORT}, config=${process.env.PHANERIS_CONFIG_DIR}`);
   }
 }
@@ -260,7 +260,7 @@ function getElectronEnv(): Record<string, string> {
     VITE_DEV_SERVER_URL: `http://localhost:${vitePort}`,
     PHANERIS_CONFIG_DIR: process.env.PHANERIS_CONFIG_DIR || "",
     PHANERIS_APP_NAME: process.env.PHANERIS_APP_NAME || "Phaneris",
-    PHANERIS_DEEPLINK_SCHEME: process.env.PHANERIS_DEEPLINK_SCHEME || "craftagents",
+    PHANERIS_DEEPLINK_SCHEME: process.env.PHANERIS_DEEPLINK_SCHEME || "phaneris",
     PHANERIS_INSTANCE_NUMBER: process.env.PHANERIS_INSTANCE_NUMBER || "",
   };
 }

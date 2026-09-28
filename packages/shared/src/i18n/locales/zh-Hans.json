@@ -1866,6 +1866,7 @@
   "tasks.maxRepairsHint": "判定失败后放弃前的重试次数 · 默认 3 · 最多 10",
   "tasks.modeGenerate": "生成",
   "tasks.modeManual": "手动",
+  "tasks.noAvailableModels": "请连接 AI 提供方以选择模型",
   "tasks.noAvailableSubtasks": "没有可用的子任务",
   "tasks.noDependencies": "无依赖",
   "tasks.noOutput": "无输出",

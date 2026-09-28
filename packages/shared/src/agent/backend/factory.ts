@@ -35,7 +35,7 @@ import {
 import { parseValidationError, type LlmValidationResult } from '../../config/llm-validation.ts';
 import type { ModelFetchResult } from '../../config/model-fetcher.ts';
 // Model resolution utilities
-import { getModelProvider, DEFAULT_MODEL, normalizeDeprecatedModelId } from '../../config/models.ts';
+import { getModelProvider, normalizeDeprecatedModelId } from '../../config/models.ts';
 import { homedir } from 'node:os';
 import { rm } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -555,12 +555,7 @@ export function resolveModelForProvider(
     }
   }
 
-  switch (provider) {
-    case 'pi':
-      return managedModel || connectionDefault || '';
-    default:
-      return managedModel || connectionDefault || DEFAULT_MODEL;
-  }
+  return managedModel || connectionDefault || '';
 }
 
 // ============================================================

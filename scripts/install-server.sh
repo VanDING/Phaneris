@@ -80,7 +80,7 @@ echo ""
 
 # Audit L-11: write the token to a 0600 file instead of printing it (terminal
 # history / CI logs). The printed run commands reference the file.
-TOKEN_FILE="$REPO_ROOT/.craft-server-token"
+TOKEN_FILE="$REPO_ROOT/.phaneris-server-token"
 printf '%s' "$TOKEN" > "$TOKEN_FILE"
 chmod 600 "$TOKEN_FILE"
 echo "Server token saved to: $TOKEN_FILE (chmod 600)"

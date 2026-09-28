@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, mock } from 'bun:test';
 
-import { OAUTH_RELAY_CALLBACK_URL, decodeOAuthRelayState, isOAuthRelayState } from '../../auth/oauth-relay.ts';
+import { isOAuthRelayState } from '../../auth/oauth-relay.ts';
 import { SourceCredentialManager } from '../credential-manager.ts';
 import type { LoadedSource, FolderSourceConfig } from '../types.ts';
 
@@ -70,61 +70,61 @@ describe('SourceCredentialManager.prepareOAuth relay wrapping', () => {
     }) as unknown as typeof fetch;
   });
 
-  it('uses the stable relay redirect URI for WebUI Google flows', async () => {
+  it('uses the direct WebUI callback when no owned relay is configured', async () => {
     const result = await credManager.prepareOAuth(createApiSource(), {
       callbackUrl: 'https://ghalmos.craftdocs-cf-t1.com/api/oauth/callback',
     });
 
-    expect(result.redirectUri).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(result.redirectUri).not.toContain('thecraftagents.com');
     expect(result.state).toBeTruthy();
 
     const authUrl = new URL(result.authUrl);
-    expect(authUrl.searchParams.get('redirect_uri')).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(authUrl.searchParams.get('redirect_uri')).toBe(result.redirectUri);
 
     const outerState = authUrl.searchParams.get('state');
     expect(outerState).toBeTruthy();
-    expect(isOAuthRelayState(outerState!)).toBe(true);
-    expect(decodeOAuthRelayState(outerState!)).toEqual({
+    expect(isOAuthRelayState(outerState!)).toBe(false);
+    expect({ returnTo: result.redirectUri, innerState: outerState }).toEqual({
       returnTo: 'https://ghalmos.craftdocs-cf-t1.com/api/oauth/callback',
       innerState: result.state,
     });
   });
 
-  it('uses the relay for desktop Google flows (callbackUrl)', async () => {
+  it('uses the local desktop callback when no owned relay is configured', async () => {
     const result = await credManager.prepareOAuth(createApiSource(), {
       callbackUrl: 'http://localhost:6477/callback',
     });
 
-    expect(result.redirectUri).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(result.redirectUri).not.toContain('thecraftagents.com');
     expect(result.state).toBeTruthy();
 
     const authUrl = new URL(result.authUrl);
-    expect(authUrl.searchParams.get('redirect_uri')).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(authUrl.searchParams.get('redirect_uri')).toBe(result.redirectUri);
 
     const outerState = authUrl.searchParams.get('state');
     expect(outerState).toBeTruthy();
-    expect(isOAuthRelayState(outerState!)).toBe(true);
-    expect(decodeOAuthRelayState(outerState!)).toEqual({
+    expect(isOAuthRelayState(outerState!)).toBe(false);
+    expect({ returnTo: result.redirectUri, innerState: outerState }).toEqual({
       returnTo: 'http://localhost:6477/callback',
       innerState: result.state,
     });
   });
 
-  it('passes the stable relay redirect URI into MCP prepare-time metadata flow', async () => {
+  it('passes the direct callback into MCP discovery', async () => {
     const result = await credManager.prepareOAuth(createMcpSource(), {
       callbackUrl: 'https://ghalmos.craftdocs-cf-t1.com/api/oauth/callback',
     });
 
-    expect(result.redirectUri).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(result.redirectUri).not.toContain('thecraftagents.com');
 
     const authUrl = new URL(result.authUrl);
     expect(authUrl.origin + authUrl.pathname).toBe('https://example.com/oauth/authorize');
-    expect(authUrl.searchParams.get('redirect_uri')).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(authUrl.searchParams.get('redirect_uri')).toBe(result.redirectUri);
 
     const outerState = authUrl.searchParams.get('state');
     expect(outerState).toBeTruthy();
-    expect(isOAuthRelayState(outerState!)).toBe(true);
-    expect(decodeOAuthRelayState(outerState!)).toEqual({
+    expect(isOAuthRelayState(outerState!)).toBe(false);
+    expect({ returnTo: result.redirectUri, innerState: outerState }).toEqual({
       returnTo: 'https://ghalmos.craftdocs-cf-t1.com/api/oauth/callback',
       innerState: result.state,
     });

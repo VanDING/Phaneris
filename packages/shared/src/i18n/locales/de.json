@@ -1866,6 +1866,7 @@
   "tasks.maxRepairsHint": "Wiederholungen nach einem negativen Urteil vor dem Abbruch · Standard 3 · max. 10",
   "tasks.modeGenerate": "Generieren",
   "tasks.modeManual": "Manuell",
+  "tasks.noAvailableModels": "Verbinde einen KI-Anbieter, um ein Modell auszuwählen",
   "tasks.noAvailableSubtasks": "Keine verfügbaren Teilaufgaben",
   "tasks.noDependencies": "Keine Abhängigkeiten",
   "tasks.noOutput": "Keine Ausgabe",

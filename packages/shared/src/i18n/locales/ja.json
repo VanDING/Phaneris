@@ -1866,6 +1866,7 @@
   "tasks.maxRepairsHint": "失敗の判定後にあきらめるまでの再試行回数 · デフォルト 3 · 最大 10",
   "tasks.modeGenerate": "生成",
   "tasks.modeManual": "手動",
+  "tasks.noAvailableModels": "モデルを選択するには AI プロバイダーに接続してください",
   "tasks.noAvailableSubtasks": "利用可能なサブタスクがありません",
   "tasks.noDependencies": "依存関係なし",
   "tasks.noOutput": "出力なし",

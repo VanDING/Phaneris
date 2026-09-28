@@ -833,7 +833,7 @@ Requires user-provided OAuth credentials in the source config:
 - `googleOAuthClientId`: Your Google OAuth Client ID
 - `googleOAuthClientSecret`: Your Google OAuth Client Secret
 
-Create credentials at [Google Cloud Console](https://console.cloud.google.com/apis/credentials) as a **Web application** client (not "Desktop app"), and add `https://thecraftagents.com/auth/callback` as an authorized redirect URI. A client secret is required.
+Create credentials at [Google Cloud Console](https://console.cloud.google.com/apis/credentials) as a **Web application** client (not "Desktop app"). Add the callback URL shown by Phaneris when you start OAuth; with a configured Phaneris OAuth relay it is your relay's `/auth/callback` endpoint, and without one the Web UI uses its own callback origin. A client secret is required.
 Uses OAuth via `source_google_oauth_trigger`.
 
 ### Linear

@@ -9,6 +9,7 @@ import { appendFile } from 'fs/promises';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
 import type { ActionExecutionResult } from './types.ts';
+import { PRODUCT_SLUG } from '../identity.generated.ts';
 
 // ============================================================================
 // Types
@@ -71,7 +72,7 @@ export class AutomationEventLogger {
     const entry: LoggedAutomationEvent = {
       id: randomUUID(),
       time: new Date().toISOString(),
-      source: 'craft-agent/automations',
+      source: `${PRODUCT_SLUG}/automations`,
       ...event,
     };
     this.buffer.push(JSON.stringify(entry));

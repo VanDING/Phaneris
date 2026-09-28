@@ -1866,6 +1866,7 @@
   "tasks.maxRepairsHint": "Reintentos tras un veredicto fallido antes de rendirse · predeterminado 3 · máx. 10",
   "tasks.modeGenerate": "Generar",
   "tasks.modeManual": "Manual",
+  "tasks.noAvailableModels": "Conecta un proveedor de IA para seleccionar un modelo",
   "tasks.noAvailableSubtasks": "No hay subtareas disponibles",
   "tasks.noDependencies": "Sin dependencias",
   "tasks.noOutput": "Sin salida",

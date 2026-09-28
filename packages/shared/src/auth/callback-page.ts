@@ -5,6 +5,11 @@
  */
 
 import { PHANERIS_LOGO_HTML } from '../branding.ts';
+import { PRODUCT_NAME } from '../identity.generated.ts';
+
+const escapeHtml = (value: string): string => value.replace(/[&<>"']/g, char => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+})[char]!);
 
 export type AppType = 'terminal' | 'electron';
 
@@ -32,7 +37,7 @@ export function generateCallbackPage(options: {
   const autoCloseScript = isSuccess
     ? `
     setTimeout(() => {
-      ${deeplinkUrl ? `window.location.href = '${deeplinkUrl}';` : ''}
+      ${deeplinkUrl ? `window.location.href = ${JSON.stringify(deeplinkUrl).replace(/</g, '\\u003c')};` : ''}
       window.close();
     }, 1500);`
     : '';
@@ -43,7 +48,7 @@ export function generateCallbackPage(options: {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Craft - ${title}</title>
+  <title>${PRODUCT_NAME} - ${escapeHtml(title)}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -62,12 +67,10 @@ export function generateCallbackPage(options: {
     .logo {
       /* Purple accent: oklch(0.62 0.13 293) */
       color: #8b5fb3;
-      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
-      font-size: 6px;
-      line-height: 1;
-      white-space: pre;
-      /* Negative letter-spacing to close gaps between block characters */
-      letter-spacing: -0.05em;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       /* 48px above the card */
       margin-bottom: 48px;
     }
@@ -112,7 +115,7 @@ export function generateCallbackPage(options: {
     .hint {
       margin-top: 24px;
       font-size: 13px;
-      color: rgba(0, 0, 0, 0.4);
+      color: #666;
     }
 
     .return-link {
@@ -163,19 +166,19 @@ export function generateCallbackPage(options: {
         color: ${isSuccess ? '#6bc489' : '#e88080'};
       }
       .hint {
-        color: rgba(255, 255, 255, 0.4);
+        color: #aaa;
       }
     }
   </style>
 </head>
 <body>
   <div class="content">
-    <pre class="logo">${PHANERIS_LOGO_HTML}</pre>
+    <div class="logo">${PHANERIS_LOGO_HTML}</div>
     <div class="card">
-      <div class="status">${statusMessage}</div>
+      <div class="status">${escapeHtml(statusMessage)}</div>
     </div>
     <div class="hint">${isSuccess ? 'You can now return to the application.' : 'Please close this window and try again.'}</div>
-    ${deeplinkUrl ? `<a href="${deeplinkUrl}" class="return-link">Phaneris</a>` : ''}
+    ${deeplinkUrl ? `<a href="${escapeHtml(deeplinkUrl)}" class="return-link">${PRODUCT_NAME}</a>` : ''}
   </div>
   <script>${autoCloseScript}</script>
 </body>

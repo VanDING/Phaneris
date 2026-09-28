@@ -325,7 +325,7 @@
       "name": "@phaneris/server",
       "version": "0.2.3",
       "bin": {
-        "craft-server": "src/index.ts",
+        "phaneris-server": "src/index.ts",
       },
       "dependencies": {
         "@phaneris/core": "workspace:*",

@@ -1,6 +1,16 @@
 import type { PreparedOAuthFlow } from './oauth-flow-types.ts';
+import { SERVICE_URLS } from '../identity.generated.ts';
 
-export const OAUTH_RELAY_CALLBACK_URL = 'https://thecraftagents.com/auth/callback';
+const relayBase: string | null = SERVICE_URLS.oauthRelay;
+export const OAUTH_RELAY_CALLBACK_URL = relayBase ? new URL('/auth/callback', relayBase).href : null;
+
+/** Slack requires HTTPS; a desktop flow needs an explicitly configured relay. */
+export function getSlackRelayCallbackUrl(port: string | number): string {
+  if (!relayBase) throw new Error('Slack desktop OAuth requires a Phaneris HTTPS relay. Configure services.oauthRelayUrl or use a server with an HTTPS callback.');
+  const url = new URL('/auth/slack/callback', relayBase);
+  url.searchParams.set('port', String(port));
+  return url.href;
+}
 const OAUTH_RELAY_STATE_PREFIX = 'ca1.';
 const OAUTH_RELAY_STATE_VERSION = 1;
 
@@ -76,14 +86,16 @@ export function decodeOAuthRelayState(value: string): OAuthRelayState {
 export function wrapPreparedOAuthFlowForRelay(
   prepared: PreparedOAuthFlow,
   returnTo: string,
+  relayCallbackUrl: string | null = OAUTH_RELAY_CALLBACK_URL,
 ): PreparedOAuthFlow {
+  if (!relayCallbackUrl) throw new Error('Phaneris OAuth relay is not configured.');
   const authUrl = new URL(prepared.authUrl);
-  authUrl.searchParams.set('redirect_uri', OAUTH_RELAY_CALLBACK_URL);
+  authUrl.searchParams.set('redirect_uri', relayCallbackUrl);
   authUrl.searchParams.set('state', encodeOAuthRelayState(returnTo, prepared.state));
 
   return {
     ...prepared,
     authUrl: authUrl.toString(),
-    redirectUri: OAUTH_RELAY_CALLBACK_URL,
+    redirectUri: relayCallbackUrl,
   };
 }

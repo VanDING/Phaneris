@@ -3,7 +3,7 @@
  *
  * Owns the single WebSocket connection for one Bot ID. Business APIs such as
  * WeDrive, Docs, Calendar, and Mail deliberately remain outside this adapter;
- * users can add the official CLI/MCP to Craft as an independent Source.
+ * users can add the official CLI/MCP to Phaneris as an independent Source.
  */
 
 import { unlinkSync, writeFileSync } from 'node:fs'
@@ -23,6 +23,7 @@ import type {
   SendOptions,
   SentMessage,
 } from '../../types'
+import { PRODUCT_SLUG } from '@phaneris/shared/identity.generated'
 
 const AUTH_TIMEOUT_MS = 15_000
 const MAX_SEEN_MESSAGES = 2_000
@@ -136,7 +137,7 @@ export class WeComAdapter implements PlatformAdapter {
     const creds = parseWeComCredentials(config.token)
     const owner = WeComAdapter.owners.get(creds.botId)
     if (owner && owner !== this) {
-      throw new Error(`WeCom Bot ID ${creds.botId} is already connected by another Craft workspace`)
+      throw new Error(`WeCom Bot ID ${creds.botId} is already connected by another ${PRODUCT_SLUG} workspace`)
     }
     WeComAdapter.owners.set(creds.botId, this)
     this.botId = creds.botId
@@ -148,7 +149,7 @@ export class WeComAdapter implements PlatformAdapter {
       botId: creds.botId,
       secret: creds.secret,
       ...(creds.wsUrl ? { wsUrl: creds.wsUrl } : {}),
-      plug_version: 'craft-agent/0.12.1',
+      plug_version: `${PRODUCT_SLUG}/0.12.1`,
       logger: {
         debug: (message: string, ...args: unknown[]) => this.log.info(message, { args }),
         info: (message: string, ...args: unknown[]) => this.log.info(message, { args }),

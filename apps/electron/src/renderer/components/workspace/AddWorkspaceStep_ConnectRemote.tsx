@@ -6,6 +6,7 @@ import { slugify } from "@/lib/slugify"
 import { Input } from "../ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { AddWorkspaceContainer, AddWorkspaceStepHeader, AddWorkspacePrimaryButton, AddWorkspaceSecondaryButton } from "./primitives"
+import { DATA_DIR_NAME } from "@phaneris/shared/identity.generated"
 
 const CREATE_NEW_VALUE = '__create_new__'
 
@@ -160,7 +161,7 @@ export function AddWorkspaceStep_ConnectRemote({
 
     if (!token) return
     if (!homeDir) return
-    const defaultBasePath = `${homeDir}/.craft-agent/workspaces`
+    const defaultBasePath = `${homeDir}/${DATA_DIR_NAME}/workspaces`
 
     if (isCreateNew || isFreshServer) {
       // Create new workspace on remote server via direct RPC, then connect locally

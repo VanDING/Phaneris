@@ -1866,6 +1866,7 @@
   "tasks.maxRepairsHint": "Újrapróbálkozások sikertelen ítélet után, mielőtt feladnánk · alapértelmezett 3 · max. 10",
   "tasks.modeGenerate": "Generálás",
   "tasks.modeManual": "Kézi",
+  "tasks.noAvailableModels": "Csatlakoztass egy AI-szolgáltatót a modell kiválasztásához",
   "tasks.noAvailableSubtasks": "Nincs elérhető részfeladat",
   "tasks.noDependencies": "Nincsenek függőségek",
   "tasks.noOutput": "Nincs kimenet",

@@ -496,7 +496,7 @@ function createRootConfig(config: ServerBuildConfig): void {
 
   // Root package.json with workspaces (Bun resolves @phaneris/* through this)
   const rootPkg = {
-    name: 'craft-server-dist',
+    name: 'phaneris-server-dist',
     version,
     private: true,
     workspaces: ['packages/*'],
@@ -558,8 +558,8 @@ function createEntryScripts(config: ServerBuildConfig): void {
   const binDir = join(outputDir, 'bin');
   mkdirSync(binDir, { recursive: true });
 
-  // bin/craft-server — main entry wrapper
-  const craftServer = `#!/bin/sh
+  // bin/phaneris-server — main entry wrapper
+  const phanerisServer = `#!/bin/sh
 set -e
 
 # Resolve the distribution root
@@ -582,13 +582,13 @@ export PATH="$ROOT/resources/bin:$ROOT/vendor/bun:$PATH"
 # Use bundled Bun runtime
 exec "$ROOT/vendor/bun/bun" run "$ROOT/packages/server/src/index.ts" "$@"
 `;
-  writeFileSync(join(binDir, 'craft-server'), craftServer);
+  writeFileSync(join(binDir, 'phaneris-server'), phanerisServer);
 
   // start.sh — convenience entry
   const startSh = `#!/bin/sh
 # Phaneris Server — convenience entry point
 DIR="$(cd "$(dirname "$0")" && pwd)"
-exec "$DIR/bin/craft-server" "$@"
+exec "$DIR/bin/phaneris-server" "$@"
 `;
   writeFileSync(join(outputDir, 'start.sh'), startSh);
 
@@ -602,7 +602,7 @@ echo "=== Phaneris Server Setup ==="
 echo ""
 
 # Make binaries executable
-chmod +x "$DIR/bin/craft-server" "$DIR/start.sh"
+chmod +x "$DIR/bin/phaneris-server" "$DIR/start.sh"
 [ -f "$DIR/vendor/bun/bun" ] && chmod +x "$DIR/vendor/bun/bun"
 [ -f "$DIR/resources/bin/uv" ] && chmod +x "$DIR/resources/bin/uv"
 
@@ -639,8 +639,8 @@ if [ "\${1:-}" = "--systemd" ]; then
     exit 1
   fi
 
-  SERVICE_USER="\${PHANERIS_USER:-\$(logname 2>/dev/null || echo craft)}"
-  SERVICE_FILE="/etc/systemd/system/craft-server.service"
+  SERVICE_USER="\${PHANERIS_USER:-\$(logname 2>/dev/null || echo phaneris)}"
+  SERVICE_FILE="/etc/systemd/system/phaneris-server.service"
 
   cat > "$SERVICE_FILE" <<UNIT
 [Unit]
@@ -654,7 +654,7 @@ WorkingDirectory=$DIR
 EnvironmentFile=$DIR/.env
 Environment=PHANERIS_RPC_HOST=127.0.0.1
 Environment=PHANERIS_RPC_PORT=9100
-ExecStart=$DIR/bin/craft-server
+ExecStart=$DIR/bin/phaneris-server
 Restart=on-failure
 RestartSec=5
 
@@ -663,13 +663,13 @@ WantedBy=multi-user.target
 UNIT
 
   systemctl daemon-reload
-  systemctl enable craft-server
+  systemctl enable phaneris-server
 
   echo ""
   echo "Systemd service installed."
-  echo "  Start:   sudo systemctl start craft-server"
-  echo "  Status:  sudo systemctl status craft-server"
-  echo "  Logs:    journalctl -u craft-server -f"
+  echo "  Start:   sudo systemctl start phaneris-server"
+  echo "  Status:  sudo systemctl status phaneris-server"
+  echo "  Logs:    journalctl -u phaneris-server -f"
   echo ""
   exit 0
 fi
@@ -686,7 +686,7 @@ echo ""
 
   // Make scripts executable at build time
   for (const script of [
-    join(binDir, 'craft-server'),
+    join(binDir, 'phaneris-server'),
     join(outputDir, 'start.sh'),
     join(outputDir, 'install.sh'),
   ]) {
@@ -709,7 +709,7 @@ WORKDIR /app
 COPY . .
 
 # Make binaries executable
-RUN chmod +x bin/craft-server vendor/bun/bun resources/bin/uv && \\
+RUN chmod +x bin/phaneris-server vendor/bun/bun resources/bin/uv && \\
     for f in resources/bin/*; do [ -f "$f" ] && chmod +x "$f"; done
 
 ENV PHANERIS_IS_PACKAGED=true
@@ -724,13 +724,13 @@ ENV PATH="/app/resources/bin:/app/vendor/bun:\${PATH}"
 
 EXPOSE 9100
 
-ENTRYPOINT ["/app/bin/craft-server"]
+ENTRYPOINT ["/app/bin/phaneris-server"]
 `;
   writeFileSync(join(outputDir, 'Dockerfile'), dockerfile);
 
   const dockerCompose = `version: "3.8"
 services:
-  craft-server:
+  phaneris-server:
     build: .
     ports:
       - "9100:9100"
@@ -741,13 +741,13 @@ services:
       # - PHANERIS_RPC_TLS_CERT=/certs/cert.pem
       # - PHANERIS_RPC_TLS_KEY=/certs/key.pem
     volumes:
-      - craft-data:/root/.craft-agent
+      - phaneris-data:/root/.phaneris
       # TLS — mount cert directory
       # - ./certs:/certs:ro
     restart: unless-stopped
 
 volumes:
-  craft-data:
+  phaneris-data:
 `;
   writeFileSync(join(outputDir, 'docker-compose.yml'), dockerCompose);
 }
@@ -874,7 +874,7 @@ async function main(): Promise<void> {
 
   // Compress if requested
   if (config.compress) {
-    const archiveName = `craft-server-${version}-${platform}-${arch}.tar.gz`;
+    const archiveName = `phaneris-server-${version}-${platform}-${arch}.tar.gz`;
     const archivePath = join(dirname(outputDir), archiveName);
     console.log(`\nCompressing to ${archiveName}...`);
     await $`tar -czf ${archivePath} -C ${outputDir} .`;

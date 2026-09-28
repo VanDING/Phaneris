@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "bin": {
-    "craft-server": "src/index.ts"
+    "phaneris-server": "src/index.ts"
   },
   "files": [
     "src/"
@@ -17,7 +17,7 @@
     "name": "VanDING"
   },
   "license": "Apache-2.0",
-  "homepage": "https://thecraftagents.com",
+  "homepage": "https://github.com/VanDING/Phaneris",
   "scripts": {
     "start": "bun run src/index.ts",
     "generate-token": "bun run src/index.ts --generate-token",

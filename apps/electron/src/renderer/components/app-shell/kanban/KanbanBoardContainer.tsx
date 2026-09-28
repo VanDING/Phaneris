@@ -16,7 +16,6 @@ import { useWorkItemViewState } from '@/hooks/useWorkItemViewState'
 import { getSessionTitle, isHandoffContinuation } from '@/utils/session'
 import { resolveTaskScopeLabelId } from '@phaneris/shared/labels'
 import { queryWorkItems, type WorkItem } from '@phaneris/shared/work-items/browser'
-import { DEFAULT_MODEL } from '@config/models'
 import type { SessionStatus } from '@/config/session-status-config'
 import type { KanbanColumnDef } from '@phaneris/shared/projects/types'
 import { KanbanBoard } from './KanbanBoard'
@@ -59,7 +58,7 @@ function deriveRunState(child: SessionMeta, statusesById: Map<string, SessionSta
  * the user opens execution-oriented actions such as adding a subtask.
  */
 export function KanbanBoardContainer() {
-  const { activeWorkspaceId, llmConnections, sessionStatuses, onCreateSession, onSendMessage, onJumpToTaskSessions, trailingAction, expandButton } =
+  const { activeWorkspaceId, llmConnections, workspaceDefaultLlmConnection, sessionStatuses, onCreateSession, onSendMessage, onJumpToTaskSessions, trailingAction, expandButton } =
     useAppShellContext()
   const compensateForStoplight = useCompensateForStoplight()
   const { t } = useTranslation()
@@ -132,9 +131,9 @@ export function KanbanBoardContainer() {
     [projects]
   )
 
-  const { groups: subtaskModelGroups, modelToConnection } = React.useMemo(
-    () => buildModelCatalog(llmConnections),
-    [llmConnections]
+  const { groups: subtaskModelGroups, modelToConnection, defaultModel: defaultSubtaskModel } = React.useMemo(
+    () => buildModelCatalog(llmConnections, workspaceDefaultLlmConnection),
+    [llmConnections, workspaceDefaultLlmConnection]
   )
 
   // Per-project columns apply only when exactly one project is in focus — the
@@ -235,14 +234,14 @@ export function KanbanBoardContainer() {
         id: child.id,
         title: getSessionTitle(child),
         runState: deriveRunState(child, statusesById),
-        model: child.model ?? DEFAULT_MODEL,
+        model: child.model ?? meta?.model ?? '',
         taskNodeId: child.taskNodeId,
         createdAt: child.createdAt,
       }))
       // Spec-backed tiles show one row per DAG node (bound to its latest child session,
       // or pending when never run) plus unadopted quick-adds; plain tiles show children.
       const specNodes = meta?.taskSlug ? specNodesBySlug.get(meta.taskSlug) : undefined
-      const subtasks = mergeSubtaskRows(specNodes, children, DEFAULT_MODEL)
+      const subtasks = mergeSubtaskRows(specNodes, children, meta?.model ?? '')
       result.push({
         id: workItem.id,
         title: workItem.title,
@@ -277,7 +276,6 @@ export function KanbanBoardContainer() {
     return tasks.filter(({ id }) => visibleIds.has(id))
   }, [tasks, workItems, query])
 
-  const defaultSubtaskModel = modelToConnection.has(DEFAULT_MODEL) ? DEFAULT_MODEL : undefined
 
   const primarySessionIdFor = React.useCallback(
     (workItemId: string) => workItemsById.get(workItemId)?.primarySessionId,

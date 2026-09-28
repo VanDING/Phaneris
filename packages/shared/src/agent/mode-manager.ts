@@ -16,6 +16,8 @@ import { homedir } from 'os';
 import { existsSync, realpathSync } from 'fs';
 import { debug } from '../utils/debug.ts';
 import { dirname, isAbsolute, relative, resolve } from 'path';
+import { CONFIG_DIR } from '../config/paths.ts';
+import { DATA_DIR_NAME, LEGACY_IDENTITY } from '../identity.generated.ts';
 import { getSessionSafeAllowedToolNames } from '@phaneris/session-tools-core';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
 import { isBrowserToolNameOrAlias } from './browser-tool-names.ts';
@@ -68,6 +70,20 @@ export {
   toCanonicalPermissionMode,
   parsePermissionMode,
 };
+
+const APP_DATA_DIR_NAMES = [DATA_DIR_NAME, LEGACY_IDENTITY.dataDirName].map((name) => name.toLowerCase());
+const CONFIG_ROOT_FOR_HINTS = CONFIG_DIR.replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+
+function isInsideAppDataRoot(normalizedPath: string): boolean {
+  return APP_DATA_DIR_NAMES.some((name) => normalizedPath.includes(`/${name}/`)) ||
+    normalizedPath === CONFIG_ROOT_FOR_HINTS ||
+    normalizedPath.startsWith(`${CONFIG_ROOT_FOR_HINTS}/`);
+}
+
+function isWorkspaceRootPath(normalizedPath: string): boolean {
+  return APP_DATA_DIR_NAMES.some((name) => normalizedPath.includes(`/${name}/workspaces/`)) ||
+    normalizedPath.startsWith(`${CONFIG_ROOT_FOR_HINTS}/workspaces/`);
+}
 
 // Re-export PowerShell validator types
 export {
@@ -1708,12 +1724,12 @@ export function getPathHint(targetPath: string, plansFolderPath: string, dataFol
   }
 
   // Case: Writing to workspace root instead of session
-  if (normalizedTarget.includes('/.craft-agent/workspaces/') && !normalizedTarget.includes('/sessions/')) {
+  if (isWorkspaceRootPath(normalizedTarget) && !normalizedTarget.includes('/sessions/')) {
     return 'Hint: Write to the session plans or data folder, not the workspace root.';
   }
 
-  // Case: Writing outside .craft-agent entirely
-  if (!normalizedTarget.includes('/.craft-agent/')) {
+  // Case: Writing outside the application data root entirely
+  if (!isInsideAppDataRoot(normalizedTarget)) {
     return 'Hint: Files must be written to the session plans or data folder. Use plansFolderPath or dataFolderPath from <session_state>.';
   }
 

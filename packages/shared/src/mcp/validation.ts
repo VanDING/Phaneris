@@ -12,6 +12,7 @@ import { normalizeMcpUrl } from '../sources/server-builder.ts';
 import type { McpTransport } from '../sources/types.ts';
 import { existsSync } from 'fs';
 import { join, delimiter } from 'path';
+import { PRODUCT_SLUG } from '../identity.generated.ts';
 
 export interface InvalidProperty {
   toolName: string;
@@ -454,7 +455,7 @@ export async function validateStdioMcpConnection(
     });
 
     client = new Client(
-      { name: 'craft-agent-validator', version: '1.0.0' },
+      { name: `${PRODUCT_SLUG}-validator`, version: '1.0.0' },
       { capabilities: {} }
     );
 

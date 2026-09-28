@@ -11,6 +11,7 @@ import { randomBytes, createHash } from 'node:crypto'
 import { CLAUDE_OAUTH_CONFIG } from './claude-oauth-config'
 import { openUrl } from '../utils/open-url.ts'
 import { APP_VERSION } from '../version/index.ts'
+import { PRODUCT_NAME } from '../identity.generated.ts'
 import { debug } from '../utils/debug.ts'
 
 // OAuth configuration from shared config
@@ -220,7 +221,7 @@ export async function exchangeClaudeCode(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': `CraftAgents/${APP_VERSION}`,
+        'User-Agent': `${PRODUCT_NAME}/${APP_VERSION}`,
         Accept: 'application/json',
       },
       body: JSON.stringify(params),

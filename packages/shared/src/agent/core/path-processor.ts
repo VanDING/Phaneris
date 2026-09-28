@@ -20,6 +20,7 @@ import {
   pathStartsWith,
   toPortablePath,
 } from '../../utils/paths.ts';
+import { DATA_DIR_NAME, LEGACY_IDENTITY } from '../../identity.generated.ts';
 import type { PathProcessorConfig } from './types.ts';
 
 // Re-export useful utilities from paths.ts
@@ -29,12 +30,16 @@ export { expandPath, normalizePath, pathStartsWith, toPortablePath };
  * Known configuration file patterns that may need validation before writing.
  * These files have specific formats (JSON, TOML, YAML) that can break apps if malformed.
  */
+const DATA_DIR_PATTERN = [DATA_DIR_NAME, LEGACY_IDENTITY.dataDirName]
+  .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  .join('|');
+
 const CONFIG_FILE_PATTERNS = [
   // Phaneris configs
-  /\.craft-agent\/.*\/(config|permissions|theme|guide|labels|statuses)\.json$/,
-  /\.craft-agent\/config\.json$/,
-  /\.craft-agent\/preferences\.json$/,
-  /\.craft-agent\/.*\/SKILL\.md$/,
+  new RegExp(`(?:${DATA_DIR_PATTERN})/.*\\/(config|permissions|theme|guide|labels|statuses)\\.json$`),
+  new RegExp(`(?:${DATA_DIR_PATTERN})/config\\.json$`),
+  new RegExp(`(?:${DATA_DIR_PATTERN})/preferences\\.json$`),
+  new RegExp(`(?:${DATA_DIR_PATTERN})/.*\\/SKILL\\.md$`),
   // Common config files
   /package\.json$/,
   /tsconfig\.json$/,

@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
 import { reactPdfAlias } from '../../scripts/build/react-pdf-alias'
+import { SERVICE_URLS } from '../../packages/shared/src/identity.generated'
+
+const viewerTarget = process.env.PHANERIS_VIEWER_URL || SERVICE_URLS.viewer
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -35,13 +38,13 @@ export default defineConfig({
   server: {
     port: 5174, // Different from Electron dev server
     open: true,
-    proxy: {
-      // Proxy API requests to production R2 during local dev
+    proxy: viewerTarget ? {
+      // Development only proxies to an explicitly configured viewer service.
       '/s/api': {
-        target: 'https://thecraftagents.com',
+        target: viewerTarget,
         changeOrigin: true,
         secure: true,
       },
-    },
+    } : undefined,
   },
 })

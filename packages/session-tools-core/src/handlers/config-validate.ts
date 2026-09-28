@@ -37,8 +37,8 @@ export async function handleConfigValidate(
 ): Promise<ToolResult> {
   const { target, sourceSlug } = args;
   // App-level config root, injected by the host (see SessionToolContext.appConfigDir).
-  // The fallback keeps hosts that do not inject it on the legacy default root.
-  const appConfigDir = ctx.appConfigDir ?? join(homedir(), '.craft-agent');
+  // The fallback keeps hosts that do not inject it on Phaneris' default root.
+  const appConfigDir = ctx.appConfigDir ?? (process.env.PHANERIS_CONFIG_DIR?.trim() || join(homedir(), '.phaneris'));
 
   // Audit H-13: sourceSlug is used in join() below — reject traversal.
   if (sourceSlug) {

@@ -9,6 +9,7 @@ import { tmpdir } from 'node:os'
 import { extname, join } from 'node:path'
 import { randomBytes } from 'node:crypto'
 import { Bot, InputFile, type Context } from 'grammy'
+import { PRODUCT_SLUG } from '@phaneris/shared/identity.generated'
 import type {
   PlatformAdapter,
   PlatformConfig,
@@ -593,7 +594,7 @@ export class TelegramAdapter implements PlatformAdapter {
 
     const localPath = join(
       tmpdir(),
-      `craft-agent-messaging-${randomBytes(8).toString('hex')}${ext}`,
+      `${PRODUCT_SLUG}-messaging-${randomBytes(8).toString('hex')}${ext}`,
     )
     writeFileSync(localPath, buf)
     return { localPath, fileName, fileSize: buf.byteLength }

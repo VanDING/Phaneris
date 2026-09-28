@@ -13,6 +13,16 @@ import {
   normalizeDeprecatedModelId,
 } from '../src/config/models.ts';
 
+// Pi is an internal routing prefix. Formatting it first produced "Pi/MiniMax"
+// and defeated the case-sensitive prefix cleanup in several model selectors.
+describe('Pi display names', () => {
+  it('strips routing metadata before formatting a model name', () => {
+    expect(getModelDisplayName('pi/MiniMax-M3')).toBe('MiniMax M3');
+    expect(getModelDisplayName('pi/deepseek-flash')).toBe('Deepseek flash');
+    expect(getModelDisplayName('pi/claude-opus-4-8')).toBe('Opus 4.8');
+  });
+});
+
 describe('isClaudeModel', () => {
   // Direct Anthropic model IDs
   it('detects direct Anthropic Claude model IDs', () => {

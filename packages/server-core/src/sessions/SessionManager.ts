@@ -1115,6 +1115,8 @@ export function resolveMidStreamDeliveryOutcome(
  * user because `ShareResult.error` reaches a toast verbatim.
  */
 async function sessionSharingDisabledReason(): Promise<string | null> {
+  const { VIEWER_URL } = await import('@phaneris/shared/branding')
+  if (!VIEWER_URL) return 'Phaneris session sharing is unavailable: no viewer service is configured.'
   const { isSessionSharingEnabled } = await import('@phaneris/shared/feature-flags')
   return isSessionSharingEnabled()
     ? null
@@ -5971,6 +5973,7 @@ export class SessionManager implements ISessionManager {
       }
 
       const { VIEWER_URL } = await import('@phaneris/shared/branding')
+      if (!VIEWER_URL) return { success: false, error: 'Phaneris viewer service is not configured.' }
       const response = await fetch(`${VIEWER_URL}/s/api`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -6042,6 +6045,7 @@ export class SessionManager implements ISessionManager {
       }
 
       const { VIEWER_URL } = await import('@phaneris/shared/branding')
+      if (!VIEWER_URL) return { success: false, error: 'Phaneris viewer service is not configured.' }
       const response = await fetch(`${VIEWER_URL}/s/api/${managed.sharedId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -6087,6 +6091,7 @@ export class SessionManager implements ISessionManager {
 
     try {
       const { VIEWER_URL } = await import('@phaneris/shared/branding')
+      if (!VIEWER_URL) return { success: false, error: 'Phaneris viewer service is not configured.' }
       const response = await fetch(
         `${VIEWER_URL}/s/api/${managed.sharedId}`,
         { method: 'DELETE' }
@@ -6820,6 +6825,7 @@ export class SessionManager implements ISessionManager {
     if (managed.sharedId) {
       try {
         const { VIEWER_URL } = await import('@phaneris/shared/branding')
+        if (!VIEWER_URL) throw new Error('Phaneris viewer service is not configured; remote share was not revoked.')
         const response = await fetch(
           `${VIEWER_URL}/s/api/${managed.sharedId}`,
           { method: 'DELETE', signal: AbortSignal.timeout(5000) }

@@ -18,6 +18,7 @@ import { createCallbackServer, type AppType } from './callback-server.ts';
 import type { SlackService } from '../sources/types.ts';
 import { type OAuthSessionContext, buildOAuthDeeplinkUrl } from './types.ts';
 import type { PreparedOAuthFlow, OAuthExchangeParams, OAuthExchangeResult } from './oauth-flow-types.ts';
+import { getSlackRelayCallbackUrl } from './oauth-relay.ts';
 
 // Re-export for convenience
 export type { SlackService } from '../sources/types.ts';
@@ -266,7 +267,7 @@ export function prepareSlackOAuth(options: PrepareSlackOAuthOptions): PreparedOA
 
   // Slack requires HTTPS → use Cloudflare relay when using callbackPort
   const redirectUri = options.callbackUrl
-    ?? `https://thecraftagents.com/auth/slack/callback?port=${options.callbackPort}`;
+    ?? getSlackRelayCallbackUrl(options.callbackPort!);
 
   const authUrl = new URL(SLACK_AUTH_URL);
   authUrl.searchParams.set('client_id', SLACK_CLIENT_ID);
@@ -346,6 +347,8 @@ export async function startSlackOAuth(options: SlackOAuthOptions = {}): Promise<
     // Generate state for CSRF protection
     const state = generateState();
 
+    // Fail before starting a listener when no owned HTTPS relay is configured.
+    getSlackRelayCallbackUrl(0);
     // Start local HTTP callback server with deeplink for returning to chat session
     const appType = options.appType || 'electron';
     const deeplinkUrl = buildOAuthDeeplinkUrl(options.sessionContext);
@@ -355,9 +358,8 @@ export async function startSlackOAuth(options: SlackOAuthOptions = {}): Promise<
     const localUrl = new URL(callbackServer.url);
     const port = localUrl.port;
 
-    // Use Cloudflare Worker relay for Slack OAuth (Slack requires HTTPS)
-    // The relay redirects: https://thecraftagents.com/auth/slack/callback → http://localhost:{port}/callback
-    const redirectUri = `https://thecraftagents.com/auth/slack/callback?port=${port}`;
+    // Slack requires HTTPS; only use the maintainer-configured relay.
+    const redirectUri = getSlackRelayCallbackUrl(port);
 
     // Build authorization URL
     // Use user_scope (not scope) to get a user token instead of bot token

@@ -1,5 +1,6 @@
 import { CLAUDE_OAUTH_CONFIG } from './claude-oauth-config';
 import { APP_VERSION } from '../version/index.ts';
+import { PRODUCT_NAME } from '../identity.generated.ts';
 import { debug } from '../utils/debug.ts';
 
 export interface ClaudeOAuthCredential {
@@ -29,7 +30,7 @@ export async function refreshClaudeToken(refreshToken: string): Promise<{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'User-Agent': `CraftAgents/${APP_VERSION}`,
+      'User-Agent': `${PRODUCT_NAME}/${APP_VERSION}`,
       Accept: 'application/json',
     },
     body: JSON.stringify(params),

@@ -28,11 +28,12 @@
 
 import type { PageConfig, PageShareInfo } from '@phaneris/core';
 import { isPagesSharingEnabled } from '../feature-flags.ts';
+import { SERVICE_URLS } from '../identity.generated.ts';
 import { deletePage, loadPageConfig, setPageShareState } from './storage.ts';
 import { buildPageShareBundle, PageShareError } from './share-bundle.ts';
 
 /** Default publication API base (the agents-router forwards /p/* to the Worker) */
-export const DEFAULT_PAGES_SHARE_API_BASE_URL = 'https://thecraftagents.com/p/api';
+export const DEFAULT_PAGES_SHARE_API_BASE_URL: string | null = SERVICE_URLS.pagesShareApi;
 
 /**
  * Resolve the publication API base URL. `PHANERIS_PAGES_SHARE_API_URL` overrides
@@ -41,7 +42,7 @@ export const DEFAULT_PAGES_SHARE_API_BASE_URL = 'https://thecraftagents.com/p/ap
 export function resolvePagesShareApiBaseUrl(): string {
   const override =
     typeof process !== 'undefined' ? process.env?.PHANERIS_PAGES_SHARE_API_URL : undefined;
-  const base = override?.trim() || DEFAULT_PAGES_SHARE_API_BASE_URL;
+  const base = override?.trim() || DEFAULT_PAGES_SHARE_API_BASE_URL || '';
   return base.replace(/\/+$/, '');
 }
 
@@ -80,7 +81,7 @@ export interface PagePublisherOptions {
   tokenStore: PagePublishTokenStore;
   /** Injectable for tests (defaults to global fetch) */
   fetchFn?: typeof fetch;
-  /** Publication API base, e.g. https://thecraftagents.com/p/api */
+  /** Maintainer-owned publication API base. */
   apiBaseUrl?: string;
   log?: (message: string) => void;
 }
@@ -328,6 +329,9 @@ export class PagePublisher {
   }
 
   private assertSharingEnabled(): void {
+    if (!this.apiBaseUrl) {
+      throw new PageShareError('PAGE_SHARING_DISABLED', 'Phaneris page sharing is unavailable: no publication service is configured.');
+    }
     if (!isPagesSharingEnabled()) {
       throw new PageShareError(
         'PAGE_SHARING_DISABLED',
@@ -365,6 +369,9 @@ export class PagePublisher {
     path: string,
     options: { body?: FormData; adminToken?: string } = {},
   ): Promise<Response> {
+    if (!this.apiBaseUrl) {
+      throw new PageShareError('PAGE_SHARING_DISABLED', 'Phaneris publication service is not configured.');
+    }
     const headers: Record<string, string> = {};
     if (options.adminToken) headers['Authorization'] = `Bearer ${options.adminToken}`;
     try {

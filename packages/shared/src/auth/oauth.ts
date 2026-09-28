@@ -2,7 +2,7 @@ import { createServer, type Server } from 'http';
 import { URL } from 'url';
 import { randomBytes, createHash } from 'crypto';
 import { openUrl } from '../utils/open-url.ts';
-import { PRODUCT_SLUG } from '../identity.generated.ts';
+import { PRODUCT_NAME, PRODUCT_SLUG } from '../identity.generated.ts';
 
 /**
  * Client ID used when a provider has no dynamic registration endpoint, or gates
@@ -36,7 +36,7 @@ export interface OAuthCallbacks {
 const CALLBACK_PORT_START = 8914;
 const CALLBACK_PORT_END = 8924;
 const CALLBACK_PATH = '/oauth/callback';
-const CLIENT_NAME = 'Claude Code (Phaneris)';
+const CLIENT_NAME = PRODUCT_NAME;
 
 // Generate PKCE code verifier and challenge
 function generatePKCE(): { verifier: string; challenge: string } {

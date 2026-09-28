@@ -1,6 +1,7 @@
-import { getModelDisplayName, getModelShortName, getModelProvider } from '@config/models'
-import { getProviderIcon } from '@/lib/provider-icons'
+import { getModelDisplayName, getModelShortName } from '@config/models'
+import { getModelVendorIcon } from '@/lib/provider-icons'
 import { cn } from '@/lib/utils'
+import { stripPiPrefixForDisplay } from '../input/model-picker-helpers'
 
 interface ModelChipProps {
   /** Model id, e.g. 'claude-opus-4-7'. */
@@ -16,9 +17,10 @@ interface ModelChipProps {
  * from the real model metadata.
  */
 export function ModelChip({ model, short = false, className }: ModelChipProps) {
-  const provider = getModelProvider(model) ?? 'anthropic'
-  const iconUrl = getProviderIcon(provider)
-  const label = short ? getModelShortName(model) : getModelDisplayName(model)
+  const displayId = stripPiPrefixForDisplay(model)
+  const iconUrl = getModelVendorIcon(displayId)
+  const label = short ? getModelShortName(displayId) : getModelDisplayName(displayId)
+  if (!model) return null
 
   return (
     <span

@@ -9,6 +9,7 @@ import { AddWorkspaceContainer, AddWorkspaceStepHeader, AddWorkspaceSecondaryBut
 import { AddWorkspace_RadioOption } from "./AddWorkspace_RadioOption"
 import { useDirectoryPicker } from "@/hooks/useDirectoryPicker"
 import { ServerDirectoryBrowser } from "@/components/ServerDirectoryBrowser"
+import { DATA_DIR_NAME } from "@phaneris/shared/identity.generated"
 
 type LocationOption = 'default' | 'custom'
 
@@ -23,7 +24,7 @@ interface AddWorkspaceStep_CreateNewProps {
  *
  * Fields:
  * - Workspace name (required)
- * - Location: Default (~/.craft-agent/workspaces/) or Custom
+ * - Location: Default (~/.phaneris/workspaces/) or Custom
  */
 export function AddWorkspaceStep_CreateNew({
   onBack,
@@ -44,7 +45,7 @@ export function AddWorkspaceStep_CreateNew({
   }, [])
 
   const slug = slugify(name)
-  const defaultBasePath = homeDir ? `${homeDir}/.craft-agent/workspaces` : null
+  const defaultBasePath = homeDir ? `${homeDir}/${DATA_DIR_NAME}/workspaces` : null
   const finalPath = locationOption === 'default'
     ? (defaultBasePath && slug ? `${defaultBasePath}/${slug}` : null)
     : customPath && slug

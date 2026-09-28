@@ -296,6 +296,7 @@ export function getModelById(modelId: string): ModelDefinition | undefined {
  * Get display name for a model ID (full name with version).
  */
 export function getModelDisplayName(modelId: string): string {
+  modelId = modelId.replace(/^pi\//i, '');
   const model = getModelById(modelId);
   if (model) return model.name;
   // Fallback: normalize deprecated/Bedrock-native IDs, then strip prefix and date suffix

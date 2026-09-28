@@ -3,7 +3,7 @@ import { Check, ChevronDown, ChevronRight, Clock, Flag, MessageSquare, Pencil, P
 import { useTranslation } from 'react-i18next'
 import { useAtomValue } from 'jotai'
 import { formatDistanceToNowStrict, type Locale } from 'date-fns'
-import { DEFAULT_MODEL, getModelShortName } from '@config/models'
+import { getModelShortName } from '@config/models'
 import { cn } from '@/lib/utils'
 import { getProviderIcon } from '@/lib/provider-icons'
 import { shortTimeLocale } from '@/utils/session'
@@ -422,7 +422,10 @@ function AddSubtask({
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
 
   const options = React.useMemo(() => (modelGroups ?? []).flatMap(g => g.models), [modelGroups])
-  const [model, setModel] = React.useState(() => defaultModel ?? options[0]?.id ?? DEFAULT_MODEL)
+  const [selectedModel, setModel] = React.useState<string | undefined>(undefined)
+  const model = selectedModel && options.some(option => option.id === selectedModel)
+    ? selectedModel
+    : defaultModel ?? options[0]?.id ?? ''
 
   React.useEffect(() => {
     if (composing) inputRef.current?.focus()
@@ -434,7 +437,7 @@ function AddSubtask({
 
   const submit = () => {
     const title = draft.trim()
-    if (!title) return
+    if (!title || !model) return
     onAdd(title, model)
     setDraft('')
     setComposing(false)
@@ -536,7 +539,7 @@ function AddSubtask({
         <button
           type="button"
           onClick={submit}
-          disabled={!draft.trim()}
+          disabled={!draft.trim() || !model}
           className="craft-focus shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-opacity disabled:opacity-40"
         >
           {t('kanban.add')}

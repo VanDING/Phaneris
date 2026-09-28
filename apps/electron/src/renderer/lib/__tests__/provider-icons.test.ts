@@ -1,7 +1,21 @@
 import { describe, expect, it } from 'bun:test'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { getProviderIcon, providerIcons } from '../provider-icons'
+import { getProviderIcon, getModelVendorIcon, providerIcons } from '../provider-icons'
+
+// Read-only model chips have no endpoint metadata. Unknown IDs must never
+// masquerade as Claude, and the Pi transport prefix must not affect the vendor.
+describe('model chip vendor icons', () => {
+  it('uses the model vendor for Pi model IDs', () => {
+    expect(getModelVendorIcon('pi/MiniMax-M3')).toBe(providerIcons.minimax)
+    expect(getModelVendorIcon('pi/deepseek-flash')).toBe(providerIcons.deepseek)
+    expect(getModelVendorIcon('pi/gpt-5')).toBe(providerIcons.openai)
+    expect(getModelVendorIcon('pi/claude-opus-4-8')).toBe(providerIcons.anthropic)
+  })
+  it('uses a neutral fallback for unknown model IDs', () => {
+    expect(getModelVendorIcon('pi/private-model')).toBeNull()
+  })
+})
 
 describe('provider marks are bundled', () => {
   // The user-visible contract: opening the app never reaches the network for a

@@ -14,7 +14,6 @@
 
 import * as React from 'react'
 import { useAtom } from 'jotai'
-import { DEFAULT_MODEL } from '@config/models'
 import { kanbanEditorTargetAtom } from '@/atoms/kanban'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { useNavigation } from '@/contexts/NavigationContext'
@@ -23,14 +22,13 @@ import { TaskEditor } from '@/components/app-shell/kanban/TaskEditor'
 
 export function TaskEditorOverlay() {
   const [target, setTarget] = useAtom(kanbanEditorTargetAtom)
-  const { activeWorkspaceId, llmConnections, onJumpToTaskSessions } = useAppShellContext()
+  const { activeWorkspaceId, llmConnections, workspaceDefaultLlmConnection, onJumpToTaskSessions } = useAppShellContext()
   const { navigateToSession } = useNavigation()
 
-  const { groups: modelGroups, modelToConnection } = React.useMemo(
-    () => buildModelCatalog(llmConnections ?? []),
-    [llmConnections],
+  const { groups: modelGroups, modelToConnection, defaultModel } = React.useMemo(
+    () => buildModelCatalog(llmConnections ?? [], workspaceDefaultLlmConnection),
+    [llmConnections, workspaceDefaultLlmConnection],
   )
-  const defaultModel = modelToConnection.has(DEFAULT_MODEL) ? DEFAULT_MODEL : undefined
 
   if (!target || !activeWorkspaceId) return null
 
@@ -63,7 +61,7 @@ export function TaskEditorOverlay() {
         }}
         modelGroups={modelGroups}
         modelToConnection={modelToConnection}
-        defaultModel={defaultModel ?? DEFAULT_MODEL}
+        defaultModel={defaultModel ?? ''}
       />
     </div>
   )

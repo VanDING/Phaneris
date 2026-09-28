@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Spinner, LoadingIndicator, Markdown } from '@phaneris/ui'
-import { MODEL_REGISTRY, DEFAULT_MODEL, getModelShortName } from '@config/models'
+import { getModelShortName } from '@config/models'
 import { useAtomValue, useStore } from 'jotai'
 import { useProjects } from '@/hooks/useProjects'
 import { useStatuses } from '@/hooks/useStatuses'
@@ -58,11 +58,8 @@ const GENERATE_CLIENT_TIMEOUT_MS = 200_000
 
 // ---------------------------------------------------------------------------
 // Model catalog — real provider→model groups (from the workspace's connections),
-// with a Claude (via Pi) fallback when nothing is connected yet.
+// restricted to authenticated connections.
 // ---------------------------------------------------------------------------
-const FALLBACK_MODEL_GROUPS: KanbanModelProviderGroup[] = [
-  { provider: 'anthropic', label: 'Claude (via Pi)', models: MODEL_REGISTRY.map((m) => ({ id: m.id, name: m.name })) },
-]
 function resolveModelName(groups: KanbanModelProviderGroup[], id: string): string {
   for (const g of groups) {
     const hit = g.models.find((m) => m.id === id)
@@ -148,11 +145,12 @@ function ModelSelect({
   width?: number
   size?: 'sm' | 'md'
 }) {
+  const { t } = useTranslation()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SelectButton size={size} style={{ width }}>
-          <span className="truncate">{resolveModelName(groups, value)}</span>
+        <SelectButton size={size} style={{ width }} disabled={groups.length === 0}>
+          <span className="truncate">{value ? resolveModelName(groups, value) : t('tasks.noAvailableModels')}</span>
         </SelectButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="max-h-[320px] min-w-[180px]">
@@ -517,8 +515,8 @@ export function TaskEditor({
   // in those cases buildSpec derives the id from the title.
   const editSlug = target.mode === 'edit' ? target.taskSlug : undefined
   const editSessionId = target.mode === 'edit' ? target.sessionId : undefined
-  const groups = modelGroups.length > 0 ? modelGroups : FALLBACK_MODEL_GROUPS
-  const fallbackModel = defaultModel || groups[0]?.models[0]?.id || DEFAULT_MODEL
+  const groups = modelGroups
+  const fallbackModel = (modelToConnection.has(defaultModel) ? defaultModel : undefined) || groups[0]?.models[0]?.id || ''
   const { projects } = useProjects(workspaceId)
   const [tab, setTab] = React.useState<Tab>('definition')
   const [mode, setMode] = React.useState<Mode>('manual')
@@ -534,6 +532,12 @@ export function TaskEditor({
   // Explicit connection serving the orch model; undefined lets buildSpec derive it from orchModel.
   // Preserved from the loaded spec so an authored connection isn't rewritten on save (round-trip).
   const [orchConnection, setOrchConnection] = React.useState<string | undefined>(undefined)
+  // A catalog may arrive after the editor mounts. Only seed an empty selection;
+  // never overwrite a user choice or an explicitly authored task model.
+  React.useEffect(() => {
+    if (!isEdit) setOrchModel(previous => previous || fallbackModel)
+  }, [isEdit, fallbackModel])
+  const hasAvailableModel = !!orchModel && modelToConnection.has(orchModel)
   // Task-family permission mode. New UI tasks default to autonomous (Execute/allow-all) so product
   // behavior is unchanged; edit mode prefills from the spec. Persisted to defaults.permissionMode so
   // subtask autonomy is explicit + visible, never a hidden runner default.
@@ -648,10 +652,10 @@ export function TaskEditor({
           if (spec.cwd) setCwd(spec.cwd)
           setSourceSlugs(spec.sources ?? [])
           setSkillSlugs(spec.skills ?? [])
-          if (spec.defaults?.model) setOrchModel(spec.defaults.model)
+          setOrchModel(spec.defaults?.model ?? sessionMeta?.model ?? fallbackModel)
           // Preserve the authored orchestrator connection + permission mode (round-trip, no silent rewrite).
           // Fall back to the session's actual mode so saving a bound tile can't silently escalate it.
-          setOrchConnection(spec.defaults?.llmConnection)
+          setOrchConnection(spec.defaults?.llmConnection ?? (spec.defaults?.model ? undefined : sessionMeta?.llmConnection))
           if (spec.defaults?.permissionMode) setPermissionMode(spec.defaults.permissionMode)
           else if (sessionMeta?.permissionMode) setPermissionMode(sessionMeta.permissionMode as TaskPermissionMode)
           const nodes = spec.nodes ?? []
@@ -667,6 +671,8 @@ export function TaskEditor({
       // saving it as a task neither drops its project nor silently changes its permission mode.
       setProjectId(sessionProjectId)
       setBoundProjectId(sessionProjectId)
+      if (sessionMeta?.model) setOrchModel(sessionMeta.model)
+      setOrchConnection(sessionMeta?.llmConnection)
       if (sessionMeta?.permissionMode) setPermissionMode(sessionMeta.permissionMode as TaskPermissionMode)
       setSubtasks(collectQuickAddRows(new Set()))
     }
@@ -824,6 +830,7 @@ export function TaskEditor({
   }, [])
 
   async function generatePlan() {
+    if (!hasAvailableModel) return
     const g = goal.trim() || title.trim()
     if (!g) {
       toast.error(t('tasks.toastNeedTitle'))
@@ -867,6 +874,7 @@ export function TaskEditor({
   // Create the task (write task.yaml + orchestrator session). When `run` is true, also start a
   // run; otherwise the task tile just lands on the board in ToDo for the user to run later.
   async function submit(run: boolean) {
+    if (run && !hasAvailableModel) return
     if (!title.trim()) {
       toast.error(t('tasks.toastNeedTitle'))
       return
@@ -1002,7 +1010,7 @@ export function TaskEditor({
               <Btn variant="secondary" onClick={() => submit(false)} disabled={busy}>
                 {isEdit ? t('common.save') : t('common.create')}
               </Btn>
-              <Btn variant="primary" onClick={() => submit(true)} disabled={busy}>
+              <Btn variant="primary" onClick={() => submit(true)} disabled={busy || !hasAvailableModel}>
                 {busy ? <Spinner /> : <Sparkles className="h-3.5 w-3.5" strokeWidth={2.5} />}
                 {busy ? t('tasks.starting') : isEdit ? t('tasks.saveAndRun') : t('tasks.createAndRun')}
               </Btn>
@@ -1272,7 +1280,7 @@ export function TaskEditor({
               </div>
               <div className="text-[14px] font-bold">{t('tasks.generatePlan')}</div>
               <p className="max-w-[360px] text-[12.5px] leading-relaxed text-foreground/55">{t('tasks.generateBody')}</p>
-              <Btn variant="primary" onClick={generatePlan} disabled={busy}>
+              <Btn variant="primary" onClick={generatePlan} disabled={busy || !hasAvailableModel}>
                 <Sparkles className="h-3.5 w-3.5" strokeWidth={2.5} /> {t('tasks.generatePlan')}
               </Btn>
               <span className="text-[11px] text-foreground/40">{t('tasks.generateHint')}</span>

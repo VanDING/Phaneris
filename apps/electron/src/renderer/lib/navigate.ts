@@ -19,7 +19,7 @@ export { routes }
 export type { Route }
 
 // Event name for internal navigation
-export const NAVIGATE_EVENT = 'craft-agent-navigate'
+export const NAVIGATE_EVENT = 'phaneris-navigate'
 
 export interface NavigateOptions {
   /** Skip auto-selecting the first item when navigating to a navigator root. */

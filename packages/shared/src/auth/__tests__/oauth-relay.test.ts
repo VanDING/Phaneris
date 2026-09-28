@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 
 import {
-  OAUTH_RELAY_CALLBACK_URL,
   decodeOAuthRelayState,
   encodeOAuthRelayState,
   isOAuthRelayState,
@@ -29,7 +28,7 @@ describe('oauth relay state', () => {
 });
 
 describe('wrapPreparedOAuthFlowForRelay', () => {
-  it('keeps the inner flow state but rewrites auth URL state and redirect_uri', () => {
+  it('keeps the inner flow state but rewrites auth URL state and redirect_uri for an explicit relay', () => {
     const prepared: PreparedOAuthFlow = {
       authUrl: 'https://accounts.google.com/o/oauth2/v2/auth?client_id=test-client&redirect_uri=https%3A%2F%2Fold.example%2Fcallback&response_type=code&state=inner-state-123',
       state: 'inner-state-123',
@@ -44,13 +43,14 @@ describe('wrapPreparedOAuthFlowForRelay', () => {
     const wrapped = wrapPreparedOAuthFlowForRelay(
       prepared,
       'https://ghalmos.craftdocs-cf-t1.com/api/oauth/callback',
+      'https://relay.example.com/auth/callback',
     );
 
     expect(wrapped.state).toBe('inner-state-123');
-    expect(wrapped.redirectUri).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(wrapped.redirectUri).toBe('https://relay.example.com/auth/callback');
 
     const authUrl = new URL(wrapped.authUrl);
-    expect(authUrl.searchParams.get('redirect_uri')).toBe(OAUTH_RELAY_CALLBACK_URL);
+    expect(authUrl.searchParams.get('redirect_uri')).toBe('https://relay.example.com/auth/callback');
 
     const outerState = authUrl.searchParams.get('state');
     expect(outerState).toBeTruthy();

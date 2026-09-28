@@ -115,6 +115,12 @@ function detectProviderFromModel(modelId?: string | null): ProviderIconKey | nul
   return null
 }
 
+/** Resolve a model vendor without treating its transport (Pi) as its brand. */
+export function getModelVendorIcon(modelId: string): string | null {
+  const provider = detectProviderFromModel(modelId)
+  return provider ? providerIcons[provider] : null
+}
+
 /**
  * Map Pi SDK auth provider names to icon keys.
  * For Pi connections, we show the actual upstream provider's icon

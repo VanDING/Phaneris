@@ -1866,6 +1866,7 @@
   "tasks.maxRepairsHint": "Ponowne próby po niepomyślnym werdykcie przed rezygnacją · domyślnie 3 · maks. 10",
   "tasks.modeGenerate": "Generuj",
   "tasks.modeManual": "Ręcznie",
+  "tasks.noAvailableModels": "Połącz dostawcę AI, aby wybrać model",
   "tasks.noAvailableSubtasks": "Brak dostępnych podzadań",
   "tasks.noDependencies": "Brak zależności",
   "tasks.noOutput": "Brak danych wyjściowych",
