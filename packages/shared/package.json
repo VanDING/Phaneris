@@ -13,6 +13,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./identity.generated": "./src/identity.generated.ts",
     "./agent/context-policy": "./src/agent/context-policy.ts",
     "./agent": "./src/agent/index.ts",
     "./agent/modes": "./src/agent/mode-types.ts",

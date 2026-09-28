@@ -111,12 +111,27 @@ const bootMarkerBefore = statMtime(bootMarker)
 const logFile = join(ROOT, '.cache', 'verification', `packaged-client-smoke${ARTIFACT_SUFFIX}.log`)
 mkdirSync(join(ROOT, '.cache', 'verification'), { recursive: true })
 const fd = openSync(logFile, 'w')
+
+// `ELECTRON_RUN_AS_NODE=1` turns the app binary into a plain Node interpreter
+// instead of an Electron app: the main bundle then touches `electron.app`
+// before it exists and dies on the first property read, so the launch "succeeds"
+// and exits 0 without a window, without a log line and without writing
+// config.json — every check below fails and nothing says why. Some tooling
+// environments (agent harnesses, editors) export it process-wide, so the child
+// gets a copy with it removed: this script's whole purpose is to observe the
+// app under Electron semantics.
+const childEnv = { ...process.env, [`${identity.runtime.envPrefix}CONFIG_DIR`]: bootRootDir }
+if (childEnv.ELECTRON_RUN_AS_NODE) {
+  console.log('NOTE  ELECTRON_RUN_AS_NODE was set in this environment; cleared it for the launch')
+  delete childEnv.ELECTRON_RUN_AS_NODE
+}
+
 const child = spawn(binary, [], {
   // `open`/`start` would detach and hide the exit code; running the executable
   // directly keeps the process handle and its stdio.
   stdio: ['ignore', fd, fd],
   detached: false,
-  env: { ...process.env, [`${identity.runtime.envPrefix}CONFIG_DIR`]: bootRootDir },
+  env: childEnv,
 })
 closeSync(fd)
 

@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-25T08:50:35.533Z",
+  "date": "2026-09-28T17:27:42.629Z",
   "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "graceMs": 25000,
   "checks": [
@@ -23,7 +23,7 @@
     },
     {
       "name": "main process booted and initialized its config",
-      "observation": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-7WNaex\\config.json",
+      "observation": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-VivDBH\\config.json",
       "status": "pass",
       "detail": null
     },
