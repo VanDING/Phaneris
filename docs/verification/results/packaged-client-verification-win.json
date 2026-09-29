@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-28T17:20:18.123Z",
+  "date": "2026-09-29T06:00:34.881Z",
   "arch": "x64",
   "expected": {
     "version": "0.2.4",
@@ -60,7 +60,7 @@
   ],
   "installer": {
     "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.2.4-win-x64.exe",
-    "bytes": 173485233
+    "bytes": 173488575
   },
   "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "identity": {
