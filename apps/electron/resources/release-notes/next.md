@@ -7,7 +7,14 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 ## Improvements
 
 - Upgraded the Pi SDK from 0.87.1 to 1.0.0, updating the model catalog and provider handling for tool calls, reasoning, retries, and usage costs.
+- Added linked decision outcomes and follow-ups, cancellation reporting, and a local decision usage report.
+- Require RTK 0.44.0 or newer for token optimization, with update guidance and re-checking for outdated installations.
 
 ## Bug Fixes
+
+- Tightened Explore checks for MCP write actions and shell commands with write or execution flags. Always Allow now remembers scoped commands, folders, API endpoints, and hosts; child sessions cannot exceed their parent's permissions.
+- Re-check permissions after source activation, deny requests without an approval handler, and discard activation results after Stop.
+- Prevent automation loops, preserve source retry attachments and corrections without duplicating the visible user message, and avoid notifications from untracked background tasks.
+- Refresh missing source-test credentials, avoid unnecessary pending-plan writes, snapshot completion listeners, and normalize new label identifiers.
 
 ## Breaking Changes

@@ -42,6 +42,8 @@ export interface UserPreferences {
    * Not user-editable; not exposed via the `update_user_preferences` tool.
    */
   uiLanguage?: LanguageCode;
+  /** UI-only: last outdated RTK version whose update prompt was dismissed. */
+  rtkUpdateDismissedVersion?: string;
   // When the preferences were last updated
   updatedAt?: number;
 }

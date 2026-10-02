@@ -594,6 +594,8 @@ export interface PermissionRequest {
   commandHash?: string;
   /** Approval validity window */
   approvalTtlSeconds?: number;
+  /** False when the operation has no safe session-scoped approval to remember. */
+  canRemember?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -800,6 +802,7 @@ export type AgentEvent =
       rememberForMinutes?: number;
       commandHash?: string;
       approvalTtlSeconds?: number;
+      canRemember?: boolean;
     }
   | { type: 'ask_user_request'; requestId: string; questions: AskUserQuestion[] }
   | { type: 'error'; message: string }

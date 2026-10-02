@@ -30,6 +30,7 @@
   ],
   "scripts": {
     "test": "bun run scripts/run-workspace-tests.ts",
+    "decisions:report": "bun run scripts/decisions-report.ts",
     "typecheck": "bun run typecheck:shared",
     "typecheck:shared": "cd packages/shared && bun run tsc --noEmit",
     "identity:generate": "bun run scripts/generate-identity.ts",

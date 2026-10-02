@@ -15,6 +15,7 @@
 import { homedir } from 'os';
 import { existsSync, realpathSync } from 'fs';
 import { debug } from '../utils/debug.ts';
+import { isReadOnlyMcpToolName } from './mcp-tool-names.ts';
 import { dirname, isAbsolute, relative, resolve } from 'path';
 import { CONFIG_DIR } from '../config/paths.ts';
 import { DATA_DIR_NAME, LEGACY_IDENTITY } from '../identity.generated.ts';
@@ -44,6 +45,7 @@ import {
   type CompiledBlockedCommandHint,
   type MismatchAnalysis,
   PERMISSION_MODE_ORDER,
+  clampPermissionMode,
   PERMISSION_MODE_CONFIG,
   SAFE_MODE_CONFIG,
   type PermissionModeCanonical,
@@ -65,6 +67,7 @@ export {
   type CompiledBlockedCommandHint,
   type MismatchAnalysis,
   PERMISSION_MODE_ORDER,
+  clampPermissionMode,
   PERMISSION_MODE_CONFIG,
   SAFE_MODE_CONFIG,
   toCanonicalPermissionMode,
@@ -1748,7 +1751,8 @@ export function getPathHint(targetPath: string, plansFolderPath: string, dataFol
  * Check if an MCP tool is read-only using the given config
  */
 function isReadOnlyMcpToolWithConfig(toolName: string, config: ToolCheckConfig): boolean {
-  return config.readOnlyMcpPatterns.some(pattern => pattern.test(toolName));
+  return isReadOnlyMcpToolName(toolName, config.readOnlyMcpVerbs ?? [])
+    || config.readOnlyMcpPatterns.some(pattern => pattern.test(toolName));
 }
 
 /**

@@ -39,6 +39,7 @@ export {
   cyclePermissionMode,
   subscribeModeChanges,
   PERMISSION_MODE_ORDER,
+  clampPermissionMode,
   PERMISSION_MODE_CONFIG,
   type PermissionMode,
   getModeState,

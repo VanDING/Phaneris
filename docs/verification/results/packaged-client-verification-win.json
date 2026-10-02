@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-29T06:00:34.881Z",
+  "date": "2026-10-02T23:51:50.349Z",
   "arch": "x64",
   "expected": {
     "version": "0.2.4",
@@ -10,6 +10,17 @@
   },
   "checks": [
     {
+      "name": "legacy bridge bundle is absent",
+      "observation": [
+        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\bridge-mcp-server\\index.js",
+        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\resources\\bridge-mcp-server\\index.js",
+        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\resources\\bridge-mcp-server\\index.js",
+        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\dist\\resources\\bridge-mcp-server\\index.js"
+      ],
+      "status": "pass",
+      "detail": null
+    },
+    {
       "name": "NSIS installer exists with the expected versioned name",
       "observation": "Phaneris-0.2.4-win-x64.exe",
       "status": "pass",
@@ -17,7 +28,7 @@
     },
     {
       "name": "unpacked win-unpacked tree exists",
-      "observation": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
+      "observation": "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked",
       "status": "pass",
       "detail": null
     },
@@ -58,11 +69,12 @@
       "detail": null
     }
   ],
+  "legacyBridgeBundle": "absent",
   "installer": {
-    "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.2.4-win-x64.exe",
-    "bytes": 173488575
+    "path": "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\Phaneris-0.2.4-win-x64.exe",
+    "bytes": 173345891
   },
-  "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
+  "app": "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "identity": {
     "productName": "Phaneris",
     "companyName": "VanDING",

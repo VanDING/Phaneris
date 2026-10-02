@@ -128,9 +128,10 @@ import { formatActivePluginContext } from '../plugins/plugin-context.ts';
 import { parseError, type AgentError } from './errors.ts';
 
 // Centralized PreToolUse pipeline
-import { runPreToolUseChecks, type PreToolUseCheckResult } from './core/pre-tool-use.ts';
+import { runPreToolUseChecks, type PreToolUseCheckResult, type PreToolUseInput } from './core/pre-tool-use.ts';
+import type { PermissionRemember } from './core/permission-remember.ts';
 import { getRtkPath } from './core/rtk-detector.ts';
-import { getRtkEnabled, getBrowserToolEnabled, getExtendedPromptCache, getPromptCacheWarming } from '../config/storage.ts';
+import { getRtkEnabled, getRtkExcludeCommands, getBrowserToolEnabled, getExtendedPromptCache, getPromptCacheWarming } from '../config/storage.ts';
 import type { RtkContext } from './core/rtk-rewrite.ts';
 
 // Workspace slug extraction for skill qualification
@@ -255,6 +256,8 @@ export class PiAgent extends BaseAgent {
   // State
   private _isProcessing: boolean = false;
   private abortReason?: AbortReason;
+  /** Invalidates checks that were awaiting an automation or source activation at Stop. */
+  private permissionEpoch = 0;
 
   // Event adapter
   private adapter: PiEventAdapter;
@@ -344,6 +347,7 @@ export class PiAgent extends BaseAgent {
   private pendingPermissions: Map<string, {
     resolve: (allowed: boolean) => void;
     toolName: string;
+    remember?: PermissionRemember;
   }> = new Map();
 
   // Pending tool executions (correlation map for subprocess tool_execute_request -> main process -> tool_execute_response)
@@ -1397,6 +1401,12 @@ export class PiAgent extends BaseAgent {
     input: Record<string, unknown>;
   }): Promise<void> {
     const { requestId, toolName, toolCallId, input } = req;
+    const permissionEpoch = this.permissionEpoch;
+    const cancelled = (): boolean => {
+      if (permissionEpoch === this.permissionEpoch) return false;
+      this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: 'The turn was cancelled.' });
+      return true;
+    };
     const debugSessionId = this.config.session?.id || this._sessionId;
     this.debug(`PreToolUse request from subprocess: ${toolName} (${requestId}, sessionId=${debugSessionId})`);
 
@@ -1419,6 +1429,7 @@ export class PiAgent extends BaseAgent {
       tool_name: toolName,
       tool_input: input,
     });
+    if (cancelled()) return;
 
     const rootPath = this.config.workspace.rootPath ?? this.workingDirectory;
     const workspaceSlug = extractWorkspaceSlug(rootPath, this.config.workspace.id);
@@ -1433,10 +1444,10 @@ export class PiAgent extends BaseAgent {
     // Build RTK context fresh per call so toggling the preference takes
     // effect without restart. `getRtkPath()` is cached per process.
     const rtkContext: RtkContext | undefined = getRtkEnabled()
-      ? { enabled: true, path: getRtkPath(), exclude: [] }
+      ? { enabled: true, path: getRtkPath(), exclude: getRtkExcludeCommands() }
       : undefined;
 
-    const checkResult = runPreToolUseChecks({
+    const buildCheckInput = (): PreToolUseInput => ({
       toolName,
       input,
       sessionId,
@@ -1454,6 +1465,45 @@ export class PiAgent extends BaseAgent {
       rtkContext,
       onDebug: (msg) => this.debug(`PreToolUse(sessionId=${sessionId}): ${msg}`),
     });
+
+    let checkResult = runPreToolUseChecks(buildCheckInput());
+    if (checkResult.type === 'source_activation_needed') {
+      const { sourceSlug, sourceExists } = checkResult;
+      this.debug(`PreToolUse(sessionId=${sessionId}): Source "${sourceSlug}" not active, attempting activation...`);
+
+      if (this.onSourceActivationRequest) {
+        try {
+          const activated = await this.onSourceActivationRequest(sourceSlug);
+          if (cancelled()) return;
+          if (!activated) {
+            const reason = sourceExists
+              ? `Source "${sourceSlug}" is not active. Activate it by @mentioning it in your message or via the source icon at the bottom of the input field.`
+              : `Source "${sourceSlug}" is not available yet. It needs to be created and configured first.`;
+            this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason });
+            return;
+          }
+          this.debug(`PreToolUse(sessionId=${sessionId}): Source "${sourceSlug}" activated successfully`);
+          this.eventQueue.enqueue({
+            type: 'source_activated' as const,
+            sourceSlug,
+            originalMessage: this.getCurrentTurnUserMessage() ?? '',
+          });
+        } catch (err) {
+          const reason = sourceExists
+            ? `Source "${sourceSlug}" could not be activated: ${err}`
+            : `Source "${sourceSlug}" is not available yet. It needs to be created and configured first.`;
+          this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason });
+          return;
+        }
+      }
+
+      // Re-enter every permission outcome, including prompt, after activation.
+      checkResult = runPreToolUseChecks(buildCheckInput());
+      if (checkResult.type === 'source_activation_needed') {
+        this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: `Source "${checkResult.sourceSlug}" is still not active.` });
+        return;
+      }
+    }
 
     switch (checkResult.type) {
       case 'allow':
@@ -1479,65 +1529,6 @@ export class PiAgent extends BaseAgent {
         return;
       }
 
-      case 'source_activation_needed': {
-        const { sourceSlug, sourceExists } = checkResult;
-        this.debug(`PreToolUse(sessionId=${sessionId}): Source "${sourceSlug}" not active, attempting activation...`);
-
-        if (this.onSourceActivationRequest) {
-          try {
-            const activated = await this.onSourceActivationRequest(sourceSlug);
-            if (!activated) {
-              const reason = sourceExists
-                ? `Source "${sourceSlug}" is not active. Activate it by @mentioning it in your message or via the source icon at the bottom of the input field.`
-                : `Source "${sourceSlug}" is not available yet. It needs to be created and configured first.`;
-              this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason });
-              return;
-            }
-            this.debug(`PreToolUse(sessionId=${sessionId}): Source "${sourceSlug}" activated successfully`);
-            this.eventQueue.enqueue({
-              type: 'source_activated' as const,
-              sourceSlug,
-              originalMessage: this.getCurrentTurnUserMessage() ?? '',
-            });
-          } catch (err) {
-            const reason = sourceExists
-              ? `Source "${sourceSlug}" could not be activated: ${err}`
-              : `Source "${sourceSlug}" is not available yet. It needs to be created and configured first.`;
-            this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason });
-            return;
-          }
-        }
-
-        // Re-run pipeline after activation
-        const postResult = runPreToolUseChecks({
-          toolName,
-          input,
-          sessionId,
-          permissionMode: this.permissionManager.getPermissionMode(),
-          workspaceRootPath: rootPath,
-          workspaceId: workspaceSlug,
-          plansFolderPath,
-          dataFolderPath,
-          workingDirectory: this.config.session?.workingDirectory,
-          activeSourceSlugs: Array.from(this.sourceManager.getActiveSlugs()),
-          allSourceSlugs: this.sourceManager.getAllSources().map(s => s.config.slug),
-          hasSourceActivation: !!this.onSourceActivationRequest,
-          permissionManager: this.permissionManager,
-          prerequisiteManager: this.prerequisiteManager,
-          rtkContext,
-          onDebug: (msg) => this.debug(`PreToolUse(sessionId=${sessionId}): ${msg}`),
-        });
-
-        if (postResult.type === 'modify') {
-          this.send({ type: 'pre_tool_use_response', requestId, action: 'modify', input: postResult.input });
-        } else if (postResult.type === 'block') {
-          this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: postResult.reason });
-        } else {
-          this.send({ type: 'pre_tool_use_response', requestId, action: 'allow' });
-        }
-        return;
-      }
-
       case 'call_llm_intercept':
       case 'spawn_session_intercept':
         // These tools are proxy tools handled via tool_execute_request — just allow
@@ -1546,12 +1537,7 @@ export class PiAgent extends BaseAgent {
 
       case 'prompt': {
         if (!this.onPermissionRequest) {
-          // No permission handler — allow
-          if (checkResult.modifiedInput) {
-            this.send({ type: 'pre_tool_use_response', requestId, action: 'modify', input: checkResult.modifiedInput });
-          } else {
-            this.send({ type: 'pre_tool_use_response', requestId, action: 'allow' });
-          }
+          this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: 'Permission is required, but no approval handler is available.' });
           return;
         }
 
@@ -1563,26 +1549,36 @@ export class PiAgent extends BaseAgent {
           this.pendingPermissions.set(permRequestId, {
             resolve,
             toolName,
+            remember: checkResult.remember,
           });
         });
 
-        this.onPermissionRequest({
-          requestId: permRequestId,
-          toolName,
-          command: checkResult.command,
-          description: checkResult.description,
-          type: checkResult.promptType,
-          appName: checkResult.appName,
-          reason: checkResult.reason,
-          impact: checkResult.impact,
-          requiresSystemPrompt: checkResult.requiresSystemPrompt,
-          rememberForMinutes: checkResult.rememberForMinutes,
-          commandHash: checkResult.commandHash,
-          approvalTtlSeconds: checkResult.approvalTtlSeconds,
-        });
+        try {
+          this.onPermissionRequest({
+            requestId: permRequestId,
+            toolName,
+            command: checkResult.command,
+            description: checkResult.description,
+            type: checkResult.promptType,
+            appName: checkResult.appName,
+            reason: checkResult.reason,
+            impact: checkResult.impact,
+            requiresSystemPrompt: checkResult.requiresSystemPrompt,
+            rememberForMinutes: checkResult.rememberForMinutes,
+            commandHash: checkResult.commandHash,
+            approvalTtlSeconds: checkResult.approvalTtlSeconds,
+            canRemember: !!checkResult.remember,
+          });
+        } catch (error) {
+          this.pendingPermissions.delete(permRequestId);
+          this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: 'The permission request could not be delivered.' });
+          this.debug(`Permission callback failed: ${error instanceof Error ? error.message : String(error)}`);
+          return;
+        }
 
         const allowed = await permissionPromise;
         this.pendingPermissions.delete(permRequestId);
+        if (cancelled()) return;
 
         if (!allowed) {
           this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: 'Permission denied by user.' });
@@ -2364,6 +2360,7 @@ export class PiAgent extends BaseAgent {
     const compactMatch = message.trim().match(/^\/compact(?:\s+([\s\S]+))?$/i);
     const compactEpoch = this.compactionEpoch;
     // Reset state for new turn
+    this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this._isProcessing = true;
     this.abortReason = undefined;
     this.eventQueue.reset();
@@ -2610,10 +2607,11 @@ export class PiAgent extends BaseAgent {
    * Respond to a pending permission request.
    * Permission checking now happens in the main process, so this resolves locally.
    */
-  respondToPermission(requestId: string, allowed: boolean, _alwaysAllow?: boolean): void {
+  respondToPermission(requestId: string, allowed: boolean, alwaysAllow?: boolean): void {
     const pending = this.pendingPermissions.get(requestId);
     if (pending) {
       this.pendingPermissions.delete(requestId);
+      if (allowed && alwaysAllow && pending.remember) this.permissionManager.remember(pending.remember);
       pending.resolve(allowed);
     }
   }
@@ -2806,6 +2804,7 @@ export class PiAgent extends BaseAgent {
   }
 
   async abort(reason?: string): Promise<void> {
+    this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
     // Fire Stop hook event (fire-and-forget)
     this.emitAutomationEvent('Stop', { hook_event_name: 'Stop' });
@@ -2826,6 +2825,7 @@ export class PiAgent extends BaseAgent {
   }
 
   forceAbort(reason: AbortReason): void {
+    this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
     // Fire Stop hook event (fire-and-forget)
     this.emitAutomationEvent('Stop', { hook_event_name: 'Stop' });
@@ -2959,6 +2959,7 @@ export class PiAgent extends BaseAgent {
   }
 
   async disposeForRestart(): Promise<void> {
+    this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.stopConfigWatcher();
 
     if (this.config.session?.id) {
@@ -3057,6 +3058,7 @@ export class PiAgent extends BaseAgent {
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
     this.rejectAllPendingEphemeral(new Error('Pi subprocess stopped'));
 

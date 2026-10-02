@@ -42,7 +42,6 @@ These files are used by electron-builder or the app directly, not synced to user
 | `phaneris-logos/` | Generated brand raster assets (app icon light/dark, mark black/white). |
 | `source.png` | Default source icon |
 | `generate-icons.sh` | Legacy macOS-only icon script (`sips`/`iconutil`). Superseded — see below. |
-| `bridge-mcp-server/` | Bundled MCP server for Codex/Copilot API source bridge |
 | `pi-agent-server/` | Bundled Pi agent server for Pi SDK sessions (#5b in build-win.ps1) |
 | `themes/default.json` | Immutable built-in Default theme; never copied into the user-owned themes directory |
 

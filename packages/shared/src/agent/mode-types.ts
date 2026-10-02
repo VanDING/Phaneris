@@ -33,6 +33,12 @@ export type PermissionModeCanonical = 'explore' | 'ask' | 'execute';
  */
 export const PERMISSION_MODE_ORDER: PermissionMode[] = ['safe', 'ask', 'allow-all'];
 
+/** Model-requested child permissions cannot exceed the live parent's mode. */
+export function clampPermissionMode(requested: PermissionMode | undefined, ceiling: PermissionMode): PermissionMode {
+  const index = PERMISSION_MODE_ORDER.indexOf(requested as PermissionMode);
+  return index < 0 || index > PERMISSION_MODE_ORDER.indexOf(ceiling) ? ceiling : requested!;
+}
+
 /**
  * Internal -> canonical mapping.
  */
@@ -238,6 +244,8 @@ export interface ModeConfig {
   blockedCommandHints?: CompiledBlockedCommandHint[];
   /** Read-only MCP patterns (tools matching these are allowed) */
   readOnlyMcpPatterns: RegExp[];
+  /** Plain read verbs match the action name, with a write-verb veto. */
+  readOnlyMcpVerbs?: string[];
   /** Fine-grained API endpoint rules (method + path pattern) */
   allowedApiEndpoints: CompiledApiEndpointRule[];
   /** File paths allowed for writes in Explore mode (glob patterns) */
@@ -278,6 +286,7 @@ export const SAFE_MODE_CONFIG: ModeConfig = {
   readOnlyBashPatterns: [],
   blockedCommandHints: [],
   readOnlyMcpPatterns: [],
+  readOnlyMcpVerbs: [],
   allowedApiEndpoints: [],
   displayName: 'Explore',
   shortcutHint: 'SHIFT+TAB',

@@ -4,7 +4,7 @@
  *
  * Two callers, one implementation:
  *
- *  * electron-builder's `beforeBuild` hook (the default export), because nothing
+ *  * electron-builder's `beforePack` hook, because nothing
  *    else in a packaging run produces this artefact and makensis would otherwise
  *    fail several minutes later with a missing `File` source;
  *  * `apps/electron/scripts/build-installer-plugin.cjs`, i.e.

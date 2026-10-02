@@ -32,7 +32,7 @@ import { spawn, spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, writeFileSync, openSync, closeSync, readFileSync, statSync, mkdtempSync, rmSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { homedir, tmpdir } from 'node:os'
+import { tmpdir } from 'node:os'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 process.chdir(ROOT)
@@ -79,11 +79,11 @@ const appPath = isWindows
 const binary = isWindows
   ? join(appPath, `${identity.product.name}.exe`)
   : join(appPath, 'Contents', 'MacOS', identity.product.name)
-const userDataDir = isWindows
-  ? join(process.env.APPDATA ?? join(homedir(), 'AppData', 'Roaming'), identity.runtime.userDataDirName)
-  : join(homedir(), 'Library', 'Application Support', identity.runtime.userDataDirName)
+// CONFIG_DIR also owns the Chromium profile and single-instance lock. Verify
+// this launch's profile rather than an existing directory from an installed app.
+const userDataDir = join(bootRootDir, 'user-data')
 
-const results = { date: new Date().toISOString(), app: appPath, graceMs, checks: [] }
+const results = { date: new Date().toISOString(), app: appPath, graceMs, userDataDir, checks: [] }
 function check(name, observation, run) {
   const record = { name, observation, status: 'pass', detail: null }
   try {
@@ -228,8 +228,15 @@ if (alive) {
     child.kill()
     await new Promise((resolvePromise) => setTimeout(resolvePromise, 2500))
     try {
-      for (const pid of bundleProcesses()) {
-        spawnSync('taskkill', ['/PID', pid, '/T', '/F'], { stdio: 'ignore' })
+      // Chromium helpers and the WMI process snapshot can settle after the main
+      // process exits. Re-probe only this bundle, with a bounded cleanup window.
+      for (let attempt = 0; attempt < 8; attempt++) {
+        const remaining = bundleProcesses()
+        if (remaining.length === 0) break
+        for (const pid of remaining) {
+          spawnSync(join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'taskkill.exe'), ['/PID', pid, '/T', '/F'], { stdio: 'ignore', windowsHide: true })
+        }
+        await new Promise((resolvePromise) => setTimeout(resolvePromise, 1000))
       }
     } catch {
       // Probe failed; the post-condition check below reports it.
@@ -295,7 +302,7 @@ check('process was terminated cleanly after the test', 'no stray processes', () 
 })
 
 // The launch ran against a scratch data root; leave the machine as it was found.
-rmSync(bootRootDir, { recursive: true, force: true })
+rmSync(bootRootDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 })
 
 const failed = results.checks.filter((entry) => entry.status === 'fail')
 mkdirSync(join(ROOT, 'docs/verification/results'), { recursive: true })

@@ -90,6 +90,8 @@ export type PermissionCallback = (request: {
   rememberForMinutes?: number;
   commandHash?: string;
   approvalTtlSeconds?: number;
+  /** False when the operation has no safe session-scoped approval to remember. */
+  canRemember?: boolean;
 }) => void;
 
 /**
@@ -141,28 +143,6 @@ export interface PostInitResult {
   authWarning?: string;
   /** Severity level for the warning */
   authWarningLevel?: 'error' | 'warning' | 'info';
-}
-
-/**
- * Context for applying bridge/config updates mid-session.
- * Used when sources change, tokens refresh, or auth completes.
- */
-export interface BridgeUpdateContext {
-  /** Path to the session folder */
-  sessionPath: string;
-  /** Currently enabled sources */
-  enabledSources: LoadedSource[];
-  /** Pre-built MCP server configs */
-  mcpServers: Record<string, AgentMcpServerConfig>;
-  /** Session ID */
-  sessionId: string;
-  /** Workspace root path */
-  workspaceRootPath: string;
-  /** Descriptive context for logging (e.g., 'token refresh', 'source enable') */
-  context: string;
-  /** URL of the McpPoolServer HTTP endpoint */
-  poolServerUrl?: string;
-
 }
 
 /**
@@ -478,16 +458,6 @@ export interface AgentBackend {
    * Called after construction and callback wiring, before first chat().
    */
   postInit(): Promise<PostInitResult>;
-
-  /**
-   * Apply bridge/config updates mid-session.
-   * Called when sources change, tokens refresh, or auth completes.
-   * Each backend implements its own strategy:
-   * - Codex: regenerates config.toml and queues reconnect
-   * - Copilot: writes bridge-config.json and credential cache
-   * - Claude/Pi: no-op (they don't use bridge-mcp-server)
-   */
-  applyBridgeUpdates(context: BridgeUpdateContext): Promise<void>;
 
   /**
    * Ensure branch sessions are backend-ready before first user message.

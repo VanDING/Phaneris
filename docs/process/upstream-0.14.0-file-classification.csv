@@ -1,0 +1,207 @@
+﻿upstream_status,path,relation,added,deleted,delta_conflict,feature_group,recommendation,batch,note,our_path
+M,.gitignore,DIVERGED,1,0,False,构建忽略项,按实际输出按需采纳,B3,避免保留不存在的 session server 构建机制,.gitignore
+M,Dockerfile.server,DIVERGED,2,5,True,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,Dockerfile.server
+M,apps/cli/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,apps/cli/package.json
+M,apps/cli/src/index.ts,DIVERGED,2,0,False,CLI 无人值守标识,适配后采纳,B1/B5,明确无人应答权限；不扩大模式,apps/cli/src/index.ts
+M,apps/electron/electron-builder.yml,DIVERGED,0,3,True,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,apps/electron/electron-builder.yml
+M,apps/electron/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,apps/electron/package.json
+M,apps/electron/resources/AGENTS.md,DIVERGED,0,2,True,协作约定,保留本仓；相关产品文档按需适配,B0,不得用上游约定覆盖本仓协作和发布流程,apps/electron/resources/AGENTS.md
+D,apps/electron/resources/bridge-mcp-server/index.js,SAME_AS_0136,0,18276,False,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,apps/electron/resources/bridge-mcp-server/index.js
+M,apps/electron/resources/docs/automations.md,DIVERGED,27,0,False,内置产品文档,随功能适配,B1/B2/B4/B5,craft-cli.md 对应本仓 phaneris-cli.md；不复活旧文件名,apps/electron/resources/docs/automations.md
+M,apps/electron/resources/docs/craft-cli.md,HEAD_MISSING,3,0,True,内置产品文档,随功能适配,B1/B2/B4/B5,craft-cli.md 对应本仓 phaneris-cli.md；不复活旧文件名,apps/electron/resources/docs/phaneris-cli.md
+M,apps/electron/resources/docs/labels.md,DIVERGED,28,0,False,内置产品文档,随功能适配,B1/B2/B4/B5,craft-cli.md 对应本仓 phaneris-cli.md；不复活旧文件名,apps/electron/resources/docs/labels.md
+M,apps/electron/resources/docs/permissions.md,DIVERGED,24,0,False,内置产品文档,随功能适配,B1/B2/B4/B5,craft-cli.md 对应本仓 phaneris-cli.md；不复活旧文件名,apps/electron/resources/docs/permissions.md
+A,apps/electron/resources/release-notes/0.14.0.md,HEAD_MISSING,58,0,False,上游发布说明,仅作出处；不作为本产品版本发布,—,本产品变更进入自己的 next.md,apps/electron/resources/release-notes/0.14.0.md
+M,apps/electron/src/renderer/App.tsx,DIVERGED,9,1,False,RTK 与决策设置界面，多功能混合,分段适配,B2/B4/B5,已有决策卡片不重复新增；守住本仓布局,apps/electron/src/renderer/App.tsx
+A,apps/electron/src/renderer/atoms/permission-modes.ts,HEAD_MISSING,14,0,False,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/atoms/permission-modes.ts
+M,apps/electron/src/renderer/atoms/sessions.ts,DIVERGED,1,1,False,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/atoms/sessions.ts
+A,apps/electron/src/renderer/components/RtkUpdateDialog.tsx,HEAD_MISSING,139,0,False,RTK 输出可靠性,适配后采纳,B2,安全版本下限、排除命令、生效路径一起移植；更新命令按运行端平台提供,apps/electron/src/renderer/components/RtkUpdateDialog.tsx
+M,apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx,DIVERGED,19,8,True,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx
+M,apps/electron/src/renderer/components/app-shell/AppShell.tsx,DIVERGED,40,2,True,RTK 与决策设置界面，多功能混合,分段适配,B2/B4/B5,已有决策卡片不重复新增；守住本仓布局,apps/electron/src/renderer/components/app-shell/AppShell.tsx
+M,apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx,DIVERGED,4,0,False,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx
+M,apps/electron/src/renderer/components/app-shell/input/CompactPermissionModeSelector.tsx,DIVERGED,16,7,True,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/components/app-shell/input/CompactPermissionModeSelector.tsx
+M,apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx,DIVERGED,16,14,True,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx
+M,apps/electron/src/renderer/components/app-shell/input/structured/PermissionRequest.tsx,DIVERGED,43,16,True,授权提示界面,适配后采纳,B1/B4,先 canRemember，再风险标记；尊重管理权限 broker,apps/electron/src/renderer/components/app-shell/input/structured/PermissionRequest.tsx
+M,apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx,DIVERGED,8,3,True,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx
+M,apps/electron/src/renderer/components/app-shell/kanban/task-spec-form.ts,SAME_AS_0136,5,0,False,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,apps/electron/src/renderer/components/app-shell/kanban/task-spec-form.ts
+M,apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx,SAME_AS_0136,2,1,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx
+M,apps/electron/src/renderer/components/automations/types.ts,DIVERGED,4,1,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,apps/electron/src/renderer/components/automations/types.ts
+M,apps/electron/src/renderer/components/info/AutoRulesDataTable.tsx,DIVERGED,33,17,True,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/components/info/AutoRulesDataTable.tsx
+M,apps/electron/src/renderer/components/settings/SettingsToggle.tsx,DIVERGED,27,1,False,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/components/settings/SettingsToggle.tsx
+M,apps/electron/src/renderer/components/ui/EditPopover.tsx,DIVERGED,4,2,False,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/components/ui/EditPopover.tsx
+M,apps/electron/src/renderer/components/ui/slash-command-menu.tsx,DIVERGED,21,13,True,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/components/ui/slash-command-menu.tsx
+M,apps/electron/src/renderer/contexts/NavigationContext.tsx,DIVERGED,5,0,False,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/contexts/NavigationContext.tsx
+M,apps/electron/src/renderer/hooks/useAutomations.ts,SAME_AS_0136,4,2,False,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/hooks/useAutomations.ts
+A,apps/electron/src/renderer/hooks/useAvailablePermissionModes.ts,HEAD_MISSING,14,0,False,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/hooks/useAvailablePermissionModes.ts
+M,apps/electron/src/renderer/hooks/useSessionOptions.ts,DIVERGED,3,1,False,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/hooks/useSessionOptions.ts
+M,apps/electron/src/renderer/pages/ChatPage.tsx,DIVERGED,2,0,False,Guarded 模式界面,后置，随模式决定,B5,统一模式可用性与快捷键，保留本仓设计和用户配置,apps/electron/src/renderer/pages/ChatPage.tsx
+M,apps/electron/src/renderer/pages/SkillInfoPage.tsx,DIVERGED,7,0,False,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/pages/SkillInfoPage.tsx
+M,apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx,DIVERGED,121,2,True,RTK 与决策设置界面，多功能混合,分段适配,B2/B4/B5,已有决策卡片不重复新增；守住本仓布局,apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx
+M,apps/electron/src/renderer/pages/settings/WorkspaceSettingsPage.tsx,DIVERGED,19,11,True,决策相关界面与状态,随功能适配,B4/B5,逐段合并，保留已定制的布局、消息和状态协议,apps/electron/src/renderer/pages/settings/WorkspaceSettingsPage.tsx
+M,apps/electron/src/shared/types.ts,DIVERGED,4,3,True,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,apps/electron/src/shared/types.ts
+M,apps/viewer/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,apps/viewer/package.json
+M,apps/webui/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,apps/webui/package.json
+M,bun.lock,DIVERGED,13,13,True,锁文件,保留本仓,B0,上游锁文件与本仓依赖策略不同,bun.lock
+M,package.json,DIVERGED,3,2,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,package.json
+M,packages/core/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/core/package.json
+M,packages/core/src/types/index.ts,DIVERGED,1,0,True,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/core/src/types/index.ts
+M,packages/core/src/types/message.ts,DIVERGED,13,2,False,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/core/src/types/message.ts
+M,packages/messaging-gateway/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/messaging-gateway/package.json
+M,packages/messaging-whatsapp-worker/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/messaging-whatsapp-worker/package.json
+M,packages/pi-agent-server/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/pi-agent-server/package.json
+M,packages/pi-agent-server/src/index.ts,DIVERGED,14,2,True,大结果摘要决策 gate,适配后采纳,B4,Pi 大结果前置处理已存在；这里只增补可选 summary gate,packages/pi-agent-server/src/index.ts
+A,packages/pi-agent-server/src/large-result-gate.test.ts,HEAD_MISSING,26,0,False,大结果摘要决策 gate,适配后采纳,B4,Pi 大结果前置处理已存在；这里只增补可选 summary gate,packages/pi-agent-server/src/large-result-gate.test.ts
+A,packages/pi-agent-server/src/large-result-gate.ts,HEAD_MISSING,48,0,False,大结果摘要决策 gate,适配后采纳,B4,Pi 大结果前置处理已存在；这里只增补可选 summary gate,packages/pi-agent-server/src/large-result-gate.ts
+M,packages/server-core/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/server-core/package.json
+A,packages/server-core/src/decisions/adaptive-thinking.test.ts,HEAD_MISSING,46,0,False,决策：行为及权限模式,单独产品决策，后置,B5,Guarded 超时继续执行；思考降档及中流分类需真实验收,packages/server-core/src/decisions/adaptive-thinking.test.ts
+A,packages/server-core/src/decisions/adaptive-thinking.ts,HEAD_MISSING,74,0,False,决策：行为及权限模式,单独产品决策，后置,B5,Guarded 超时继续执行；思考降档及中流分类需真实验收,packages/server-core/src/decisions/adaptive-thinking.ts
+A,packages/server-core/src/decisions/automation-condition.test.ts,HEAD_MISSING,60,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/automation-condition.test.ts
+A,packages/server-core/src/decisions/automation-condition.ts,HEAD_MISSING,100,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/automation-condition.ts
+A,packages/server-core/src/decisions/decision-outcomes.test.ts,HEAD_MISSING,106,0,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/server-core/src/decisions/decision-outcomes.test.ts
+A,packages/server-core/src/decisions/decision-point.ts,HEAD_MISSING,127,0,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/server-core/src/decisions/decision-point.ts
+A,packages/server-core/src/decisions/guarded-mode.test.ts,HEAD_MISSING,87,0,False,决策：行为及权限模式,单独产品决策，后置,B5,Guarded 超时继续执行；思考降档及中流分类需真实验收,packages/server-core/src/decisions/guarded-mode.test.ts
+A,packages/server-core/src/decisions/guarded-mode.ts,HEAD_MISSING,85,0,False,决策：行为及权限模式,单独产品决策，后置,B5,Guarded 超时继续执行；思考降档及中流分类需真实验收,packages/server-core/src/decisions/guarded-mode.ts
+A,packages/server-core/src/decisions/large-results.test.ts,HEAD_MISSING,39,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/large-results.test.ts
+A,packages/server-core/src/decisions/large-results.ts,HEAD_MISSING,52,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/large-results.ts
+A,packages/server-core/src/decisions/mid-turn-messages.test.ts,HEAD_MISSING,44,0,False,决策：行为及权限模式,单独产品决策，后置,B5,Guarded 超时继续执行；思考降档及中流分类需真实验收,packages/server-core/src/decisions/mid-turn-messages.test.ts
+A,packages/server-core/src/decisions/mid-turn-messages.ts,HEAD_MISSING,94,0,False,决策：行为及权限模式,单独产品决策，后置,B5,Guarded 超时继续执行；思考降档及中流分类需真实验收,packages/server-core/src/decisions/mid-turn-messages.ts
+A,packages/server-core/src/decisions/permission-risks.test.ts,HEAD_MISSING,30,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/permission-risks.test.ts
+A,packages/server-core/src/decisions/permission-risks.ts,HEAD_MISSING,72,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/permission-risks.ts
+A,packages/server-core/src/decisions/semantic-labels.test.ts,HEAD_MISSING,147,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/semantic-labels.test.ts
+A,packages/server-core/src/decisions/semantic-labels.ts,HEAD_MISSING,50,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/semantic-labels.ts
+A,packages/server-core/src/decisions/smart-titles.test.ts,HEAD_MISSING,58,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/smart-titles.test.ts
+A,packages/server-core/src/decisions/smart-titles.ts,HEAD_MISSING,86,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/smart-titles.ts
+A,packages/server-core/src/decisions/suggestions.test.ts,HEAD_MISSING,202,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/suggestions.test.ts
+A,packages/server-core/src/decisions/suggestions.ts,HEAD_MISSING,217,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/suggestions.ts
+A,packages/server-core/src/decisions/task-repairs.test.ts,HEAD_MISSING,41,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/task-repairs.test.ts
+A,packages/server-core/src/decisions/task-repairs.ts,HEAD_MISSING,65,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/task-repairs.ts
+A,packages/server-core/src/decisions/task-verdict.test.ts,HEAD_MISSING,69,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/task-verdict.test.ts
+A,packages/server-core/src/decisions/task-verdict.ts,HEAD_MISSING,21,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/task-verdict.ts
+A,packages/server-core/src/decisions/turn-outcome.test.ts,HEAD_MISSING,100,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/turn-outcome.test.ts
+A,packages/server-core/src/decisions/turn-outcome.ts,HEAD_MISSING,101,0,False,决策：产品功能接线,按功能逐项适配,B4,语义标签、任务裁决/修复、标题、风险标记、建议及大结果 gate；保持独立开关,packages/server-core/src/decisions/turn-outcome.ts
+M,packages/server-core/src/handlers/rpc/automations.ts,DIVERGED,3,2,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/server-core/src/handlers/rpc/automations.ts
+M,packages/server-core/src/handlers/rpc/sessions.ts,DIVERGED,5,0,True,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/server-core/src/handlers/rpc/sessions.ts
+M,packages/server-core/src/handlers/rpc/tasks.ts,DIVERGED,19,1,False,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,packages/server-core/src/handlers/rpc/tasks.ts
+M,packages/server-core/src/handlers/session-manager-interface.ts,DIVERGED,6,0,False,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/server-core/src/handlers/session-manager-interface.ts
+M,packages/server-core/src/sessions/SessionManager.ts,DIVERGED,828,177,True,会话主控，多功能混合,按功能分段适配,B1/B2/B4/B5,保留 Durable Runtime、Usage Ledger、handoff、现有消息确认；禁止整文件替换,packages/server-core/src/sessions/SessionManager.ts
+A,packages/server-core/src/sessions/attended-session.test.ts,HEAD_MISSING,26,0,False,会话重试与生命周期,适配后采纳,B2/B4,保留既有 Durable Runtime；完成订阅取快照、重试隐藏并保留纠正,packages/server-core/src/sessions/attended-session.test.ts
+A,packages/server-core/src/sessions/automation-loop-and-retry.test.ts,HEAD_MISSING,120,0,False,会话重试与生命周期,适配后采纳,B2/B4,保留既有 Durable Runtime；完成订阅取快照、重试隐藏并保留纠正,packages/server-core/src/sessions/automation-loop-and-retry.test.ts
+A,packages/server-core/src/sessions/automation-prompts.test.ts,HEAD_MISSING,72,0,False,会话重试与生命周期,适配后采纳,B2/B4,保留既有 Durable Runtime；完成订阅取快照、重试隐藏并保留纠正,packages/server-core/src/sessions/automation-prompts.test.ts
+M,packages/server-core/src/sessions/background-task-surface.test.ts,SAME_AS_0136,53,0,False,后台任务归属,按 Pi 事件适配,B2,采用确定归属与未知开始时间；不引入 Claude SDK 字段,packages/server-core/src/sessions/background-task-surface.test.ts
+A,packages/server-core/src/sessions/decision-lifecycle.test.ts,HEAD_MISSING,276,0,False,会话重试与生命周期,适配后采纳,B2/B4,保留既有 Durable Runtime；完成订阅取快照、重试隐藏并保留纠正,packages/server-core/src/sessions/decision-lifecycle.test.ts
+A,packages/server-core/src/sessions/turn-context.test.ts,HEAD_MISSING,75,0,False,会话重试与生命周期,适配后采纳,B2/B4,保留既有 Durable Runtime；完成订阅取快照、重试隐藏并保留纠正,packages/server-core/src/sessions/turn-context.test.ts
+M,packages/server-core/src/tasks/TaskRunner.test.ts,DIVERGED,294,5,False,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,packages/server-core/src/tasks/TaskRunner.test.ts
+M,packages/server-core/src/tasks/TaskRunner.ts,DIVERGED,161,13,True,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,packages/server-core/src/tasks/TaskRunner.ts
+A,packages/server-core/src/tasks/verdict-decision.test.ts,HEAD_MISSING,133,0,False,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,packages/server-core/src/tasks/verdict-decision.test.ts
+A,packages/server-core/src/tasks/verdict-decision.ts,HEAD_MISSING,145,0,False,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,packages/server-core/src/tasks/verdict-decision.ts
+M,packages/server/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/server/package.json
+M,packages/session-tools-core/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/session-tools-core/package.json
+M,packages/session-tools-core/src/context.ts,DIVERGED,11,5,True,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/session-tools-core/src/context.ts
+M,packages/session-tools-core/src/handlers/list-background-tasks.ts,SAME_AS_0136,4,0,False,后台任务归属,按 Pi 事件适配,B2,采用确定归属与未知开始时间；不引入 Claude SDK 字段,packages/session-tools-core/src/handlers/list-background-tasks.ts
+M,packages/session-tools-core/src/handlers/source-test.test.ts,HEAD_MISSING,28,0,False,source_test 凭据状态,适配后采纳,B2,先刷新，失败须报认证缺失；保留本仓 header 装配；测试映射到 .isolated.ts,packages/session-tools-core/src/handlers/source-test.isolated.ts
+M,packages/session-tools-core/src/handlers/source-test.ts,DIVERGED,21,1,False,source_test 凭据状态,适配后采纳,B2,先刷新，失败须报认证缺失；保留本仓 header 装配；测试映射到 .isolated.ts,packages/session-tools-core/src/handlers/source-test.ts
+M,packages/session-tools-core/src/tool-defs.ts,DIVERGED,6,4,True,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/session-tools-core/src/tool-defs.ts
+M,packages/shared/CLAUDE.md,DIVERGED,7,1,True,协作约定,保留本仓；相关产品文档按需适配,B0,不得用上游约定覆盖本仓协作和发布流程,packages/shared/CLAUDE.md
+M,packages/shared/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/shared/package.json
+A,packages/shared/src/agent/__tests__/base-agent-turn-context.test.ts,HEAD_MISSING,26,0,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/agent/__tests__/base-agent-turn-context.test.ts
+M,packages/shared/src/agent/__tests__/base-agent.test.ts,DIVERGED,1,1,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/agent/__tests__/base-agent.test.ts
+A,packages/shared/src/agent/__tests__/clamp-permission-mode.test.ts,HEAD_MISSING,20,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/__tests__/clamp-permission-mode.test.ts
+M,packages/shared/src/agent/__tests__/claude-agent-handoff.test.ts,HEAD_MISSING,55,0,True,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/__tests__/claude-agent-handoff.test.ts
+M,packages/shared/src/agent/__tests__/claude-background-message-routing.test.ts,HEAD_MISSING,12,0,True,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/__tests__/claude-background-message-routing.test.ts
+A,packages/shared/src/agent/__tests__/claude-event-adapter-tasks.test.ts,HEAD_MISSING,61,0,False,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/__tests__/claude-event-adapter-tasks.test.ts
+M,packages/shared/src/agent/__tests__/claude-event-adapter.test.ts,HEAD_MISSING,22,0,True,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/__tests__/claude-event-adapter.test.ts
+A,packages/shared/src/agent/__tests__/claude-keepalive-stop.test.ts,HEAD_MISSING,84,0,False,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/__tests__/claude-keepalive-stop.test.ts
+A,packages/shared/src/agent/__tests__/claude-large-mcp-results.test.ts,HEAD_MISSING,66,0,False,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/__tests__/claude-large-mcp-results.test.ts
+A,packages/shared/src/agent/__tests__/claude-live-thinking.test.ts,HEAD_MISSING,59,0,False,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/__tests__/claude-live-thinking.test.ts
+A,packages/shared/src/agent/__tests__/guarded-permission-mode.test.ts,HEAD_MISSING,89,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/__tests__/guarded-permission-mode.test.ts
+A,packages/shared/src/agent/__tests__/mcp-tool-names.test.ts,HEAD_MISSING,130,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/__tests__/mcp-tool-names.test.ts
+A,packages/shared/src/agent/__tests__/pi-agent-guarded-mode.test.ts,HEAD_MISSING,85,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/__tests__/pi-agent-guarded-mode.test.ts
+M,packages/shared/src/agent/__tests__/tool-matching.test.ts,SAME_AS_0136,14,0,False,Claude 旧事件适配,不适用；仅审查残留清理,B3,生产代码未找到 extractToolResults 的调用；Pi 走自己的事件适配,packages/shared/src/agent/__tests__/tool-matching.test.ts
+M,packages/shared/src/agent/backend/claude/event-adapter.ts,HEAD_MISSING,94,3,True,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/backend/claude/event-adapter.ts
+M,packages/shared/src/agent/backend/claude/pending-steers.ts,HEAD_MISSING,5,0,True,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/backend/claude/pending-steers.ts
+M,packages/shared/src/agent/backend/claude/task-notification.ts,HEAD_MISSING,4,0,True,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/backend/claude/task-notification.ts
+M,packages/shared/src/agent/backend/internal/driver-types.ts,DIVERGED,0,3,False,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,packages/shared/src/agent/backend/internal/driver-types.ts
+M,packages/shared/src/agent/backend/internal/runtime-resolver.ts,DIVERGED,0,4,True,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,packages/shared/src/agent/backend/internal/runtime-resolver.ts
+M,packages/shared/src/agent/backend/pi/protocol.ts,DIVERGED,21,0,False,大结果摘要决策 gate,适配后采纳,B4,Pi 大结果前置处理已存在；这里只增补可选 summary gate,packages/shared/src/agent/backend/pi/protocol.ts
+M,packages/shared/src/agent/backend/types.ts,DIVERGED,18,31,True,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/shared/src/agent/backend/types.ts
+M,packages/shared/src/agent/base-agent.ts,DIVERGED,12,87,True,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/shared/src/agent/base-agent.ts
+M,packages/shared/src/agent/bash-validator.ts,SAME_AS_0136,269,54,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/bash-validator.ts
+M,packages/shared/src/agent/claude-agent.ts,HEAD_MISSING,277,128,True,Claude 专属,不适用,—,本仓只有 Pi 后端；不恢复删除的源码或测试,packages/shared/src/agent/claude-agent.ts
+A,packages/shared/src/agent/core/__tests__/guarded-mode.test.ts,HEAD_MISSING,205,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/core/__tests__/guarded-mode.test.ts
+M,packages/shared/src/agent/core/__tests__/permission-manager.test.ts,DIVERGED,16,28,True,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/core/__tests__/permission-manager.test.ts
+A,packages/shared/src/agent/core/__tests__/permission-remember.test.ts,HEAD_MISSING,130,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/core/__tests__/permission-remember.test.ts
+M,packages/shared/src/agent/core/__tests__/pre-tool-use-checks.isolated.ts,DIVERGED,86,26,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/agent/core/__tests__/pre-tool-use-checks.isolated.ts
+A,packages/shared/src/agent/core/__tests__/rtk-rewrite.test.ts,HEAD_MISSING,61,0,False,RTK 输出可靠性,适配后采纳,B2,安全版本下限、排除命令、生效路径一起移植；更新命令按运行端平台提供,packages/shared/src/agent/core/__tests__/rtk-rewrite.test.ts
+A,packages/shared/src/agent/core/guarded-mode.ts,HEAD_MISSING,211,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/core/guarded-mode.ts
+M,packages/shared/src/agent/core/index.ts,DIVERGED,1,1,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/agent/core/index.ts
+M,packages/shared/src/agent/core/permission-manager.ts,DIVERGED,31,61,True,授权记忆,适配并修正上游后采纳,B1,本仓类已精简；精确 argv 不得统一转小写,packages/shared/src/agent/core/permission-manager.ts
+A,packages/shared/src/agent/core/permission-remember.ts,HEAD_MISSING,202,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/core/permission-remember.ts
+M,packages/shared/src/agent/core/pre-tool-use.ts,DIVERGED,34,18,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/agent/core/pre-tool-use.ts
+M,packages/shared/src/agent/core/rtk-detector.ts,SAME_AS_0136,45,12,False,RTK 输出可靠性,适配后采纳,B2,安全版本下限、排除命令、生效路径一起移植；更新命令按运行端平台提供,packages/shared/src/agent/core/rtk-detector.ts
+M,packages/shared/src/agent/core/rtk-rewrite.ts,SAME_AS_0136,14,2,False,RTK 输出可靠性,适配后采纳,B2,安全版本下限、排除命令、生效路径一起移植；更新命令按运行端平台提供,packages/shared/src/agent/core/rtk-rewrite.ts
+M,packages/shared/src/agent/index.ts,DIVERGED,12,0,True,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/agent/index.ts
+A,packages/shared/src/agent/mcp-tool-names.ts,HEAD_MISSING,94,0,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/mcp-tool-names.ts
+M,packages/shared/src/agent/mode-manager.ts,DIVERGED,53,7,False,权限模式与子会话边界,适配后采纳；新模式后置,B1/B5,先补父子权限钳制，再处理 guarded 枚举和计划返回模式,packages/shared/src/agent/mode-manager.ts
+M,packages/shared/src/agent/mode-types.ts,DIVERGED,79,5,False,权限模式与子会话边界,适配后采纳；新模式后置,B1/B5,先补父子权限钳制，再处理 guarded 枚举和计划返回模式,packages/shared/src/agent/mode-types.ts
+M,packages/shared/src/agent/permissions-config.ts,DIVERGED,11,1,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/permissions-config.ts
+M,packages/shared/src/agent/pi-agent.ts,DIVERGED,122,78,True,Pi 宿主，多功能混合,按功能分段适配,B1/B2/B4/B5,权限、记忆、source 重试、按轮思考分开移植；保留持久化工具身份及配置快照,packages/shared/src/agent/pi-agent.ts
+M,packages/shared/src/agent/plan-types.ts,SAME_AS_0136,3,1,False,权限模式与子会话边界,适配后采纳；新模式后置,B1/B5,先补父子权限钳制，再处理 guarded 枚举和计划返回模式,packages/shared/src/agent/plan-types.ts
+M,packages/shared/src/agent/source-policy.ts,SAME_AS_0136,4,1,False,权限与 Guarded 混合,权限修复采纳；Guarded 单独决定,B1/B5,权限修复可独立于决策模型；暂保留三模式,packages/shared/src/agent/source-policy.ts
+M,packages/shared/src/agent/spawn-session-tool.ts,DIVERGED,1,1,False,权限模式与子会话边界,适配后采纳；新模式后置,B1/B5,先补父子权限钳制，再处理 guarded 枚举和计划返回模式,packages/shared/src/agent/spawn-session-tool.ts
+M,packages/shared/src/agent/tool-matching.ts,DIVERGED,4,2,False,Claude 旧事件适配,不适用；仅审查残留清理,B3,生产代码未找到 extractToolResults 的调用；Pi 走自己的事件适配,packages/shared/src/agent/tool-matching.ts
+M,packages/shared/src/automations/handlers/prompt-handler.test.ts,DIVERGED,32,0,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/shared/src/automations/handlers/prompt-handler.test.ts
+M,packages/shared/src/automations/handlers/prompt-handler.ts,SAME_AS_0136,7,2,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/shared/src/automations/handlers/prompt-handler.ts
+M,packages/shared/src/automations/index.ts,DIVERGED,1,0,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/shared/src/automations/index.ts
+M,packages/shared/src/automations/schemas.ts,SAME_AS_0136,5,0,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/shared/src/automations/schemas.ts
+A,packages/shared/src/automations/semantic-condition.test.ts,HEAD_MISSING,27,0,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/shared/src/automations/semantic-condition.test.ts
+M,packages/shared/src/automations/types.ts,DIVERGED,20,0,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/shared/src/automations/types.ts
+M,packages/shared/src/automations/webhook-utils.ts,SAME_AS_0136,3,0,False,自动化防循环与语义条件,分段适配后采纳,B2/B4,防循环独立于模型；新增条件在无模型时按上游仍运行,packages/shared/src/automations/webhook-utils.ts
+M,packages/shared/src/config/storage.ts,DIVERGED,13,2,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/config/storage.ts
+M,packages/shared/src/config/validators.ts,DIVERGED,53,9,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/config/validators.ts
+M,packages/shared/src/decisions/client.ts,DIVERGED,1,1,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/client.ts
+M,packages/shared/src/decisions/index.ts,DIVERGED,1,0,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/index.ts
+M,packages/shared/src/decisions/records.test.ts,DIVERGED,19,1,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/records.test.ts
+M,packages/shared/src/decisions/records.ts,DIVERGED,111,3,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/records.ts
+M,packages/shared/src/decisions/settings.test.ts,DIVERGED,4,2,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/settings.test.ts
+M,packages/shared/src/decisions/settings.ts,SAME_AS_0136,47,5,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/settings.ts
+M,packages/shared/src/decisions/types.ts,SAME_AS_0136,2,1,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/types.ts
+A,packages/shared/src/decisions/usage.test.ts,HEAD_MISSING,101,0,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/usage.test.ts
+A,packages/shared/src/decisions/usage.ts,HEAD_MISSING,175,0,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,packages/shared/src/decisions/usage.ts
+M,packages/shared/src/i18n/locales/de.json,DIVERGED,81,1,True,界面文案,随功能适配,B1/B2/B4/B5,七语言键对齐；保留本仓中文措辞和四道 i18n 门禁,packages/shared/src/i18n/locales/de.json
+M,packages/shared/src/i18n/locales/en.json,DIVERGED,81,1,True,界面文案,随功能适配,B1/B2/B4/B5,七语言键对齐；保留本仓中文措辞和四道 i18n 门禁,packages/shared/src/i18n/locales/en.json
+M,packages/shared/src/i18n/locales/es.json,DIVERGED,81,1,True,界面文案,随功能适配,B1/B2/B4/B5,七语言键对齐；保留本仓中文措辞和四道 i18n 门禁,packages/shared/src/i18n/locales/es.json
+M,packages/shared/src/i18n/locales/hu.json,DIVERGED,81,1,True,界面文案,随功能适配,B1/B2/B4/B5,七语言键对齐；保留本仓中文措辞和四道 i18n 门禁,packages/shared/src/i18n/locales/hu.json
+M,packages/shared/src/i18n/locales/ja.json,DIVERGED,81,1,True,界面文案,随功能适配,B1/B2/B4/B5,七语言键对齐；保留本仓中文措辞和四道 i18n 门禁,packages/shared/src/i18n/locales/ja.json
+M,packages/shared/src/i18n/locales/pl.json,DIVERGED,81,1,True,界面文案,随功能适配,B1/B2/B4/B5,七语言键对齐；保留本仓中文措辞和四道 i18n 门禁,packages/shared/src/i18n/locales/pl.json
+M,packages/shared/src/i18n/locales/zh-Hans.json,DIVERGED,89,9,True,界面文案,随功能适配,B1/B2/B4/B5,七语言键对齐；保留本仓中文措辞和四道 i18n 门禁,packages/shared/src/i18n/locales/zh-Hans.json
+M,packages/shared/src/labels/__tests__/crud.test.ts,SAME_AS_0136,12,1,False,标签 id 修复,适配后采纳,B2,截断后修剪连字符；不改已有 id,packages/shared/src/labels/__tests__/crud.test.ts
+A,packages/shared/src/labels/auto/evaluator.test.ts,HEAD_MISSING,167,0,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/labels/auto/evaluator.test.ts
+M,packages/shared/src/labels/auto/evaluator.ts,SAME_AS_0136,142,7,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/labels/auto/evaluator.ts
+M,packages/shared/src/labels/auto/index.ts,SAME_AS_0136,13,2,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/labels/auto/index.ts
+A,packages/shared/src/labels/auto/semantic-rules-config.test.ts,HEAD_MISSING,37,0,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/labels/auto/semantic-rules-config.test.ts
+M,packages/shared/src/labels/auto/types.ts,SAME_AS_0136,6,2,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/labels/auto/types.ts
+M,packages/shared/src/labels/auto/validation.ts,SAME_AS_0136,34,0,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/labels/auto/validation.ts
+M,packages/shared/src/labels/crud.ts,SAME_AS_0136,9,4,False,标签 id 修复,适配后采纳,B2,截断后修剪连字符；不改已有 id,packages/shared/src/labels/crud.ts
+M,packages/shared/src/labels/types.ts,SAME_AS_0136,39,3,False,语义标签,适配后采纳,B4,现有 regex 与值模板语义必须保留；增补 semantic 分支,packages/shared/src/labels/types.ts
+M,packages/shared/src/prompts/__tests__/system.test.ts,HEAD_MISSING,9,1,False,提示词,按本仓体系适配,B2/B4/B5,本仓提示词结构不同；保持 canonical context 和瞬时指导分离,packages/shared/src/prompts/__tests__/system.isolated.ts
+M,packages/shared/src/prompts/system.ts,DIVERGED,40,24,True,提示词,按本仓体系适配,B2/B4/B5,本仓提示词结构不同；保持 canonical context 和瞬时指导分离,packages/shared/src/prompts/system.ts
+M,packages/shared/src/protocol/dto.ts,DIVERGED,21,5,False,跨层契约，多功能混合,按功能分段适配,B1/B2/B3/B4/B5,DTO、工具上下文、事件类型与消费者同批更新，保留本仓扩展字段,packages/shared/src/protocol/dto.ts
+M,packages/shared/src/protocol/routing.ts,DIVERGED,10,9,False,远程决策 RPC 路由,适配后采纳,B4,七个决策 RPC 指向会话所在服务器；核验远程密钥存储边界,packages/shared/src/protocol/routing.ts
+M,packages/shared/src/sessions/__tests__/pending-plan-execution.test.ts,DIVERGED,19,1,False,会话存储竞争,适配后采纳,B2,无 pending plan 则直接返回；保持本仓持久化队列,packages/shared/src/sessions/__tests__/pending-plan-execution.test.ts
+M,packages/shared/src/sessions/storage.ts,DIVERGED,3,1,False,会话存储竞争,适配后采纳,B2,无 pending plan 则直接返回；保持本仓持久化队列,packages/shared/src/sessions/storage.ts
+M,packages/shared/src/sessions/types.ts,DIVERGED,20,4,False,会话重试与生命周期,适配后采纳,B2/B4,保留既有 Durable Runtime；完成订阅取快照、重试隐藏并保留纠正,packages/shared/src/sessions/types.ts
+M,packages/shared/src/sources/index.ts,SAME_AS_0136,1,0,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/sources/index.ts
+M,packages/shared/src/tasks/storage.ts,DIVERGED,11,1,True,任务裁决与定向修复,适配后采纳,B4,保留现有任务预算、权限默认和结果持久化；展示推断来源,packages/shared/src/tasks/storage.ts
+A,packages/shared/src/utils/__tests__/large-result-summary-gate.test.ts,HEAD_MISSING,62,0,False,大结果摘要决策 gate,适配后采纳,B4,Pi 大结果前置处理已存在；这里只增补可选 summary gate,packages/shared/src/utils/__tests__/large-result-summary-gate.test.ts
+M,packages/shared/src/utils/large-response.ts,DIVERGED,37,3,False,大结果摘要决策 gate,适配后采纳,B4,Pi 大结果前置处理已存在；这里只增补可选 summary gate,packages/shared/src/utils/large-response.ts
+M,packages/shared/src/views/types.ts,SAME_AS_0136,1,1,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/views/types.ts
+M,packages/shared/src/views/validation.ts,SAME_AS_0136,1,1,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/views/validation.ts
+M,packages/shared/src/workspaces/storage.ts,DIVERGED,2,2,True,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/workspaces/storage.ts
+M,packages/shared/src/workspaces/types.ts,DIVERGED,2,2,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/src/workspaces/types.ts
+M,packages/shared/tests/mode-manager.test.ts,DIVERGED,53,0,False,跨层配套变更,按功能适配,B1/B2/B3/B4/B5,以评估文档的功能批次为准；不按完整文件覆盖,packages/shared/tests/mode-manager.test.ts
+M,packages/ui/package.json,DIVERGED,1,1,True,版本及依赖声明,保留本仓；仅移植必要新命令,B0/B3,保持 Phaneris 版本线、workspace 范围和 Pi 1.0.0,packages/ui/package.json
+M,scripts/build-server.ts,DIVERGED,6,23,True,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,scripts/build-server.ts
+M,scripts/build/common.ts,DIVERGED,5,42,True,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,scripts/build/common.ts
+A,scripts/decisions-report.ts,HEAD_MISSING,42,0,False,决策基础及可观测性,适配后采纳,B3,增量扩展开关、取消类型、outcome/followup、统计与测试日志隔离,scripts/decisions-report.ts
+M,scripts/electron-build-main.ts,DIVERGED,0,45,False,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,scripts/electron-build-main.ts
+M,scripts/electron-dev.ts,DIVERGED,6,25,True,打包及遗留 bridge 清理,适配后采纳,B3,保留本仓 Bun ESM bundle+launcher 和 Windows 打包机制；删除须按协作约定批准,scripts/electron-dev.ts

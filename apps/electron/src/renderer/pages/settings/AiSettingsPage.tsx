@@ -57,6 +57,7 @@ import { useAppShellContext } from '@/context/AppShellContext'
 import { getModelShortName, type ModelDefinition } from '@config/models'
 import { getModelsForProviderType, resolveMidStreamBehavior, type CustomEndpointApi, type MidStreamBehavior } from '@config/llm-connections'
 import { toast } from 'sonner'
+import { RtkUpdateDialog, type RtkStatusInfo } from '@/components/RtkUpdateDialog'
 
 /**
  * Compact token count: 1234 → "1.2K", 1234567 → "1.2M". Used by the RTK
@@ -647,8 +648,9 @@ export default function AiSettingsPage() {
   const [contextPolicy, setContextPolicy] = useState<ContextPolicy>('compact')
   const [savingContextPolicy, setSavingContextPolicy] = useState(false)
   const [rtkEnabled, setRtkEnabled] = useState(false)
-  const [rtkStatus, setRtkStatus] = useState<{ installed: boolean; path: string | null; version: string | null } | null>(null)
+  const [rtkStatus, setRtkStatus] = useState<RtkStatusInfo | null>(null)
   const [rtkRechecking, setRtkRechecking] = useState(false)
+  const [rtkUpdateOpen, setRtkUpdateOpen] = useState(false)
   const [rtkGain, setRtkGain] = useState<{ totalCommands: number; totalInput: number; totalOutput: number; totalSaved: number; avgSavingsPct: number; totalTimeMs: number; avgTimeMs: number } | null>(null)
 
   // Decision model (Jev / TypeSafe System One) — opt-in decision layer.
@@ -1072,12 +1074,12 @@ export default function AiSettingsPage() {
 
   // Refresh gain stats whenever rtk transitions to installed-and-enabled
   useEffect(() => {
-    if (rtkStatus?.installed && rtkEnabled) {
+    if (rtkStatus?.path && !rtkStatus.outdated && rtkEnabled) {
       refreshRtkGain()
     } else {
       setRtkGain(null)
     }
-  }, [rtkStatus?.installed, rtkEnabled, refreshRtkGain])
+  }, [rtkStatus?.path, rtkStatus?.outdated, rtkEnabled, refreshRtkGain])
 
   // ---- Decision model (Jev) ----
   const refreshDecisionStatus = useCallback(async (seedDrafts: boolean) => {
@@ -1380,10 +1382,22 @@ export default function AiSettingsPage() {
                       <SettingsToggle
                         label={t("settings.ai.rtk.title")}
                         description={t("settings.ai.rtk.description")}
-                        checked={rtkEnabled}
+                        checked={rtkEnabled && !rtkStatus.outdated}
+                        disabled={rtkStatus.outdated}
                         onCheckedChange={handleRtkToggle}
                       />
-                      {rtkEnabled && rtkGain && rtkGain.totalCommands > 0 && (
+                      {rtkStatus.outdated && (
+                        <SettingsRow
+                          label={t('settings.ai.rtk.outdated')}
+                          description={t('settings.ai.rtk.outdatedDesc', { version: rtkStatus.version ?? '?', min: rtkStatus.minSafeVersion })}
+                        >
+                          <Button variant="outline" size="sm" onClick={() => setRtkUpdateOpen(true)}>
+                            {t('settings.ai.rtk.update')}
+                          </Button>
+                        </SettingsRow>
+                      )}
+                      <RtkUpdateDialog open={rtkUpdateOpen} onOpenChange={setRtkUpdateOpen} status={rtkStatus} onStatusChange={setRtkStatus} />
+                      {!rtkStatus.outdated && rtkEnabled && rtkGain && rtkGain.totalCommands > 0 && (
                         <div className="px-4 pb-4 -mt-1">
                           <div className="flex items-center justify-between text-xs text-foreground/60">
                             <span>

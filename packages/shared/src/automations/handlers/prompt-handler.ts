@@ -111,6 +111,8 @@ export class PromptHandler implements AutomationHandler {
           sessionId: this.options.sessionId,
           matcherId,
           automationName,
+          event,
+          eventPayload: payload as unknown as Record<string, unknown>,
           prompt: expandedPrompt,
           mentions: references.mentions,
           labels: expandedLabels,

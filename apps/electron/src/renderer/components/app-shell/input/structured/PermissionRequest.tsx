@@ -24,6 +24,7 @@ interface PermissionRequestProps {
  */
 export function PermissionRequest({ request, onResponse, unstyled = false }: PermissionRequestProps) {
   const { t } = useTranslation()
+  const canRemember = request.canRemember !== false
 
   const handleAllow = () => {
     onResponse({ type: 'permission', allowed: true, alwaysAllow: false })
@@ -81,15 +82,17 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
           <Check className="h-3.5 w-3.5" />
           {t('chat.permissionAllow')}
         </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-7 gap-1.5 border border-foreground/10 hover:bg-foreground/5 active:bg-foreground/10"
-          onClick={handleAlwaysAllow}
-        >
-          <RefreshCw className="h-3.5 w-3.5" />
-          {t('chat.permissionAlwaysAllow')}
-        </Button>
+        {canRemember && (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 gap-1.5 border border-foreground/10 hover:bg-foreground/5 active:bg-foreground/10"
+            onClick={handleAlwaysAllow}
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            {t('chat.permissionAlwaysAllow')}
+          </Button>
+        )}
         <Button
           size="sm"
           variant="ghost"
@@ -101,9 +104,9 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
         </Button>
 
         {/* Tip text */}
-        <span className="min-w-0 flex-1 basis-full text-[10px] text-muted-foreground sm:basis-auto sm:text-right">
+        {canRemember && <span className="min-w-0 flex-1 basis-full text-[10px] text-muted-foreground sm:basis-auto sm:text-right">
           {t('chat.permissionAlwaysAllowHint')}
-        </span>
+        </span>}
       </div>
     </div>
   )

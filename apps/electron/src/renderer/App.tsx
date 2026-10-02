@@ -19,6 +19,7 @@ import { OnboardingWizard, ReauthScreen } from '@/components/onboarding'
 import { WorkspacePicker } from '@/components/workspace'
 import { ResetConfirmationDialog } from '@/components/ResetConfirmationDialog'
 import { SplashScreen } from '@/components/SplashScreen'
+import { RtkUpdatePrompt } from '@/components/RtkUpdateDialog'
 import { TooltipProvider } from '@phaneris/ui'
 import { FocusProvider } from '@/context/FocusContext'
 import { ModalProvider } from '@/context/ModalContext'
@@ -2292,6 +2293,7 @@ export default function App() {
 
           {/* Documentation overlay — the target of every in-app help link */}
           <DocsOverlay />
+          <RtkUpdatePrompt workspaceId={windowWorkspaceId} />
         </NavigationProvider>
         </TooltipProvider>
         </ModalProvider>

@@ -5,6 +5,7 @@
  * which are used by the Pi agent backend.
  */
 import { describe, it, expect, beforeEach, mock } from 'bun:test';
+import { dirname, resolve } from 'node:path';
 
 // ============================================================
 // Module mocks (must be before imports of the module under test)
@@ -66,6 +67,7 @@ mock.module('../../../utils/paths.ts', () => ({
 mock.module('node:fs', () => ({
   existsSync: (_path: string) => false,
   readFileSync: (_path: string) => '',
+  realpathSync: (path: string) => path,
 }));
 
 // Mock config validators (used by validateConfigWrite + CLI redirect)
@@ -1019,9 +1021,9 @@ describe('shouldPromptInAskMode', () => {
       expect(mockMatchesAllowedWritePath).not.toHaveBeenCalled();
     });
 
-    it('auto-allows whitelisted file write tools', () => {
+    it('auto-allows writes into the approved folder', () => {
       pm = createMockPermissionManager({
-        isCommandWhitelisted: (cmd) => cmd === 'Write',
+        isCommandWhitelisted: (cmd) => cmd === `write:${dirname(resolve('/test/a.ts'))}`,
       });
 
       const result = shouldPromptInAskMode('Write', { file_path: '/test/a.ts' }, pm, {
@@ -1074,7 +1076,7 @@ describe('shouldPromptInAskMode', () => {
 
     it('auto-allows whitelisted non-dangerous commands', () => {
       pm = createMockPermissionManager({
-        isCommandWhitelisted: (cmd) => cmd === 'npm',
+        isCommandWhitelisted: (cmd) => cmd === 'npm test',
         isDangerousCommand: () => false,
         getBaseCommand: (cmd) => cmd.split(/\s+/)[0] || cmd,
       });
@@ -1220,7 +1222,7 @@ describe('shouldPromptInAskMode', () => {
 
     it('auto-allows API mutations whitelisted in session', () => {
       pm = createMockPermissionManager({
-        isCommandWhitelisted: (cmd) => cmd === 'POST /repos',
+        isCommandWhitelisted: (cmd) => cmd === 'api:api_github:POST /repos',
       });
 
       const result = shouldPromptInAskMode('api_github', { method: 'POST', path: '/repos' }, pm, {

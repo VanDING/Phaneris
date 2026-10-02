@@ -485,7 +485,18 @@ async function testApiConnection(
     if (authResult.attempted) {
       return authResult;
     }
-    // If auth test wasn't attempted (no token), fall through to basic test
+    // Marked authenticated but nothing usable to send (missing, or expired and not refreshable):
+    // every api_<source> call would fail. The unauthenticated probe would get 401/403 and pass
+    // as "reachable", leaving the source green, so this is an auth error instead.
+    return {
+      lines: [
+        '✗ Source is marked authenticated but no usable credential is stored (missing, or expired and not refreshable)',
+        '  Re-enter the credential with source_credential_prompt, or re-authenticate the source',
+      ],
+      success: false,
+      hasError: true,
+      error: 'Stored credential missing or expired',
+    };
   }
 
   // Basic connection test (no auth)
@@ -518,7 +529,16 @@ async function testApiConnectionWithAuth(
   try {
     token = await ctx.credentialManager!.getToken(loadedSource);
   } catch {
-    // Couldn't get token, will fall through to basic test
+    // Missing credentials are handled by the refresh attempt below.
+  }
+
+  if (!token) {
+    // An expired OAuth token can be refreshed; checkAuthStatus would do it next anyway.
+    try {
+      token = await ctx.credentialManager!.refresh(loadedSource);
+    } catch {
+      token = null;
+    }
   }
 
   if (!token) {

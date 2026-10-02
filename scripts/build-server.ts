@@ -163,14 +163,6 @@ function assembleResources(config: ServerBuildConfig): void {
     }
   }
 
-  // Bridge MCP server
-  console.log('  Copying bridge MCP server...');
-  for (const server of ['bridge-mcp-server']) {
-    const src = join(srcResources, server);
-    if (existsSync(src)) {
-      cpSync(src, join(destResources, server), { recursive: true });
-    }
-  }
 }
 
 // ---------------------------------------------------------------------------

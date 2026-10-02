@@ -102,10 +102,10 @@ describe('PermissionManager', () => {
       expect(permissionManager.isCommandWhitelisted('git')).toBe(false);
     });
 
-    it('should be case-insensitive for command whitelisting', () => {
-      permissionManager.whitelistCommand('Git');
-      expect(permissionManager.isCommandWhitelisted('git')).toBe(true);
-      expect(permissionManager.isCommandWhitelisted('GIT')).toBe(true);
+    it('preserves exact command arguments and their case', () => {
+      permissionManager.whitelistCommand('exact:["python","Safe.py"]');
+      expect(permissionManager.isCommandWhitelisted('exact:["python","Safe.py"]')).toBe(true);
+      expect(permissionManager.isCommandWhitelisted('exact:["python","safe.py"]')).toBe(false);
     });
 
     it('should whitelist domains', () => {

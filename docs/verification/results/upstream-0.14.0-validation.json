@@ -1,0 +1,622 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-02T23:53:43.573063+00:00",
+  "result": "approved_first_batch_passed",
+  "branch": "codex/upstream-0.14.0-absorption",
+  "gitHeadAtVerification": "4613e04b2ab5e79477000ce0a457ab54a369325b",
+  "sourceSnapshotSha256": "7240219534d24c07e545d12a4070a47431f2808f7398d786e267e6a39e69cb7f",
+  "sourceSnapshotNote": "Verification ran on the working tree before its implementation commit. Hashes identify every changed product/build/verification source; docs and this aggregate are excluded to avoid self-reference.",
+  "upstream": {
+    "version": "0.14.0",
+    "commit": "73bd9c2a3573158bea880984eb8d5fdb41e0cac2",
+    "previousCommit": "3eac37be5eeee00d312239f21ce3b7c7db92502b",
+    "repository": "https://github.com/craft-ai-agents/craft-agents-oss"
+  },
+  "product": {
+    "version": "0.2.4",
+    "piCodingAgent": "1.0.0",
+    "piAi": "1.0.0",
+    "bun": "1.4.2",
+    "node": "24.15.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "dependencyLockChanged": false
+  },
+  "batches": {
+    "B0": {
+      "status": "complete",
+      "scope": "Frozen refs, assessment, file classification, isolated branch and before-code failure matrix"
+    },
+    "B1": {
+      "status": "complete",
+      "scope": "P01-P07 permission boundary and approval flow"
+    },
+    "B2": {
+      "status": "complete",
+      "scope": "R01-R08 session/source/automation/RTK/label reliability"
+    },
+    "B3": {
+      "status": "complete_for_first_batch",
+      "scope": "Decision cancellation/records/statistics/decision-point foundation; approved 8-file legacy bridge cleanup; necessary Windows packaging adaptation"
+    },
+    "B4": {
+      "status": "deferred_not_implemented",
+      "scope": "Decision consumers and remote RPC integration"
+    },
+    "B5": {
+      "status": "deferred_not_implemented",
+      "scope": "Guarded/adaptive thinking/mid-turn semantic classification and message merging"
+    }
+  },
+  "baseline": {
+    "artifact": "docs/verification/results/upstream-0.14.0-before.json",
+    "passed": 12,
+    "failed": 41,
+    "total": 53,
+    "countNote": "Additional boundary and persistence workflows were added during implementation; before/after totals are not directly subtractable."
+  },
+  "commands": [
+    {
+      "command": "bun run test",
+      "phase": "Full first-batch product implementation before the approved bridge deletion and final RTK preference/network-option hardening",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-tests-final.log",
+        "bytes": 745501,
+        "sha256": "4bd921dd0660c299b7a9b999caac8e0febf6f9614ed7c94655e56d905df1c0e1"
+      },
+      "passedExecutions": 6286,
+      "failedExecutions": 0,
+      "processes": 65,
+      "countNote": "Runner execution totals, not unique test cases; isolated files can also appear in workspace discovery."
+    },
+    {
+      "command": "bun run scripts/run-workspace-tests.ts --filter=packages/server-core",
+      "phase": "Server-core regression after approved bridge deletion",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-server-core-cleanup.log",
+        "bytes": 74463,
+        "sha256": "a624d5a4408cea101aaad0527963e70ea6302e4013d385e2776cc11a0defd3d3"
+      },
+      "passedExecutions": 478,
+      "failedExecutions": 0,
+      "processes": 10,
+      "countNote": "Runner execution totals, not unique test cases; isolated files can also appear in workspace discovery."
+    },
+    {
+      "command": "bun test packages/shared/src/agent/core/__tests__/permission-manager.test.ts packages/shared/src/agent/core/__tests__/pre-tool-use-checks.isolated.ts",
+      "phase": "Existing permission regressions after final network option parser",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-permissions-ready.log",
+        "bytes": 9982,
+        "sha256": "05b73e1c1abf61a8858b5dbc3b7fc0a7add1545d4a992ae6453700343c3d5601"
+      },
+      "passedExecutions": 86,
+      "failedExecutions": 0,
+      "processes": 0,
+      "countNote": "Runner execution totals, not unique test cases; isolated files can also appear in workspace discovery."
+    },
+    {
+      "command": "bun scripts/verification/upstream-0140.ts",
+      "phase": "Final product sources",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-host-ready.log",
+        "bytes": 3085,
+        "sha256": "05b12d141b5b81248ae3941e1cc5652c28b17bd2825e84417d576d1e29e6e365"
+      },
+      "artifact": "docs/verification/results/upstream-0.14.0-first-batch.json",
+      "passed": 61,
+      "failed": 0,
+      "scope": "Real host/permission/storage/source code with isolated transport and loopback API; no dangerous shell execution, GUI or live provider."
+    },
+    {
+      "command": "bun scripts/verification/verify-upstream-0140-ui.ts",
+      "phase": "Final native RTK preference/UI implementation; later changes were host network parser only",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-ui-final.log",
+        "bytes": 595,
+        "sha256": "8c21c6460197ac44f000d91bcd32b08949362eccf9aadd2208252bf8f735c024"
+      },
+      "artifact": "docs/verification/results/upstream-0.14.0-ui/report.json",
+      "passed": 7,
+      "failed": 0,
+      "screenshots": 3
+    },
+    {
+      "command": "bun run validate:ci",
+      "phase": "Final product sources",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-validate-ci-final-source.log",
+        "bytes": 44736,
+        "sha256": "f11ba5c97049c45189778966b558cf48322f399c7e03eca3b130d414e5a354f4"
+      },
+      "lintWarnings": {
+        "electron": 115,
+        "shared": 3,
+        "errors": 0
+      },
+      "identityResiduals": {
+        "unallowlisted": 145,
+        "note": "Informational source/provenance/fixture remnants reported by the existing identity checker; generated identity and packaging drift check passed."
+      },
+      "localeKeys": 2322,
+      "languagesIncludingEnglish": 7
+    },
+    {
+      "command": "bun run electron:build",
+      "phase": "Electron pipeline after bridge deletion, followed by final main/renderer refreshes below",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-electron-build-cleanup.log",
+        "bytes": 91232,
+        "sha256": "3192685dcd3844fab0542624ef947e23cb6711feea7003d3220a53f81ce1d004"
+      }
+    },
+    {
+      "command": "bun run electron:build:renderer",
+      "phase": "Final RTK preference/UI sources",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-renderer-final.log",
+        "bytes": 89348,
+        "sha256": "3aa58d87fd0e6e1bfeeef24857332cec3f24f06aee04b4f1ee2289ac3bfb4229"
+      }
+    },
+    {
+      "command": "bun run electron:build:assets",
+      "phase": "Final renderer resource staging",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-assets-final.log",
+        "bytes": 206,
+        "sha256": "30a93ff336ae4a25b29baf7194039985130218c0afa2b0339c095ad77b9b74fe"
+      }
+    },
+    {
+      "command": "bun run electron:build:main",
+      "phase": "Final host network parser sources",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-main-ready.log",
+        "bytes": 903,
+        "sha256": "2e8beb8e36202c3028b26922cfd19615f697a3d1cb490e40dbded44a10b4627f"
+      }
+    },
+    {
+      "command": "bun run electron-builder --config electron-builder.yml --win --x64 --publish never",
+      "phase": "Final main/renderer build; cwd apps/electron; no publishing",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-windows-package-final-source.log",
+        "bytes": 6625,
+        "sha256": "bbc3aecfcee8960f0efbd076d3df7e9f6c6b43aabfa9a423f8c4b2c44a124ba7"
+      }
+    },
+    {
+      "command": "node scripts/verification/packaged-client-verification.mjs --arch=x64",
+      "phase": "Final Windows package",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-packaged-structure-final.log",
+        "bytes": 568,
+        "sha256": "122db52f82c5911e2116b130ced54811ad87d0d386ada01322d6e0297a3d58e0"
+      },
+      "artifact": "docs/verification/results/packaged-client-verification-win.json",
+      "passed": 9,
+      "failed": 0,
+      "executedAt": "2026-10-02T23:51:50.349Z"
+    },
+    {
+      "command": "node scripts/verification/packaged-client-smoke.mjs",
+      "phase": "Final Windows package; temporary config/profile; existing protocol registry restored exactly",
+      "exitCode": 0,
+      "log": {
+        "path": ".cache/verification/upstream-0140-packaged-launch-final.log",
+        "bytes": 449,
+        "sha256": "7e68516b9fe84bb331b639a805579122e6dbc7511fbff5d52792e4f336fc5412"
+      },
+      "artifact": "docs/verification/results/packaged-client-smoke-win.json",
+      "passed": 5,
+      "failed": 0,
+      "executedAt": "2026-10-02T23:51:51.795Z"
+    },
+    {
+      "command": "bun run build:smoke",
+      "phase": "Earlier build smoke; Electron/Web UI/Viewer completed, final headless-server distribution explicitly rejects win32",
+      "exitCode": 1,
+      "log": {
+        "path": ".cache/verification/upstream-0140-build-smoke.log",
+        "bytes": 208122,
+        "sha256": "5081e0b1e8f10bbf83608ebdfe9fd4fc54f77a843257a611820081a1109ede8a"
+      },
+      "limitation": "headless_server_distribution_unsupported_on_win32"
+    }
+  ],
+  "windowsPackage": {
+    "path": "apps/electron/release/Phaneris-0.2.4-win-x64.exe",
+    "bytes": 173345891,
+    "sha256": "94e254c32c2772621f5219acedcb5f138550ca45151f9b16df1829327500ee00",
+    "published": false,
+    "installedToSystem": false,
+    "bundleBuildMatches": [
+      {
+        "path": "dist/main.cjs",
+        "sha256": "291e897a4913257f13a47a3c9ae0d6aec017d911bebbaa0be32b823717f4232d",
+        "packagedSha256": "291e897a4913257f13a47a3c9ae0d6aec017d911bebbaa0be32b823717f4232d",
+        "matchesBuild": true
+      },
+      {
+        "path": "dist/bootstrap-preload.cjs",
+        "sha256": "eb4f261695ec194941ac1d955b51508d9956922fccdf27dc19aa1449401ed31a",
+        "packagedSha256": "eb4f261695ec194941ac1d955b51508d9956922fccdf27dc19aa1449401ed31a",
+        "matchesBuild": true
+      },
+      {
+        "path": "dist/browser-toolbar-preload.cjs",
+        "sha256": "5778078b69762ac5edd8af94a820088c1ecfe02b4e26ace134ae6ea3d7a84049",
+        "packagedSha256": "5778078b69762ac5edd8af94a820088c1ecfe02b4e26ace134ae6ea3d7a84049",
+        "matchesBuild": true
+      },
+      {
+        "path": "dist/interceptor.cjs",
+        "sha256": "8c5424df90d6220d02d54ecc8335e78ad592428d9ce101a77572755637690d96",
+        "packagedSha256": "8c5424df90d6220d02d54ecc8335e78ad592428d9ce101a77572755637690d96",
+        "matchesBuild": true
+      }
+    ],
+    "rendererFilesMatchingBuild": 618,
+    "rendererExclusions": [
+      "**/*.map",
+      "dist/renderer/src/**"
+    ]
+  },
+  "legacyBridgeCleanup": {
+    "approvedFiles": 8,
+    "deletedAsset": "apps/electron/resources/bridge-mcp-server/index.js",
+    "deletedAssetBytes": 645687,
+    "deletedAssetLines": 18276,
+    "deletedAssetSha256": "5fd97a3dd191dfc2b1f3b7a36efe5fc50525d9dbf3e125ad1adb2efd302c9c4b",
+    "packagedBundleAbsent": true,
+    "approvalEvidence": "User replied 继续 after the concrete 8-file cleanup summary was shown."
+  },
+  "limitations": [
+    "No live provider/OAuth conversation verification.",
+    "No Linux/macOS distribution verification; headless server distribution is unsupported on win32.",
+    "No B4/B5 consumers or behaviour modes implemented.",
+    "Full suite totals refer to the documented earlier phase; later source edits were verified by final CI, targeted existing regressions and real-host/browser/packaged-client workflows.",
+    "No push or main-branch integration performed; implementation is isolated for review."
+  ],
+  "resolvedVerificationIssues": [
+    "One earlier Pi bundle cleanup hit EBUSY and one office preview hit its five-second deadline; isolated reruns and the subsequent full suite passed.",
+    "Persistence fixture initially used role instead of the stored type field; corrected the fixture and added JSONL reload verification without changing Durable Runtime.",
+    "Retry duplicate fixture now sends concurrent RPC arrivals inside the existing two-second de-duplication window.",
+    "Windows launch verifier now retries cleanup of its own packaged-image processes and temporary Chromium directory."
+  ],
+  "sourceManifest": [
+    {
+      "path": "apps/electron/electron-builder.yml",
+      "sha256": "8935de0f166c8cf85651450b29e0159c794be85b88a8ae21fc86eb9b88077098",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/resources/AGENTS.md",
+      "sha256": "05f4a2c6de5f98a45e60c108ab8f3ba19bfbfd53409f11776538c091eb820665",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/resources/bridge-mcp-server/index.js",
+      "sha256": null,
+      "deleted": true
+    },
+    {
+      "path": "apps/electron/resources/release-notes/next.md",
+      "sha256": "548aa338a8d5bc9c11a6925a12f746847d23c40dc0c08eb5bb35758c4690c029",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/scripts/beforePack.cjs",
+      "sha256": "0421ec1940e731fdd8059e4606d84957ed7a2c3569ab8fd35c8764a02702b884",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/scripts/prepare-windows-installer.cjs",
+      "sha256": "59c5c56da46a0af96bd95d9ada64a932eb1a85c33f9868b5c67841a135419d5f",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/src/renderer/App.tsx",
+      "sha256": "93f8d196ca09d41898e1e52f2c71bd386119a4b218aaf98a7f92bb6f0c01de06",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/src/renderer/components/RtkUpdateDialog.tsx",
+      "sha256": "f444226e5cb1c4b43ac4a70552be292602b9ca89cf4f1a3608f709cac4698119",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/src/renderer/components/app-shell/input/structured/PermissionRequest.tsx",
+      "sha256": "d22a25ffea4a046f074dae69b97e0ffce11fc13e267912be53cb767e7280f551",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+      "sha256": "1f39661d430a159dbb7c0a97b6a76c2eb0cd6f867ec3ebca6781ee16a5061f9d",
+      "deleted": false
+    },
+    {
+      "path": "apps/electron/src/shared/types.ts",
+      "sha256": "0ca3b231861f45d7eb350dd00fc41794654c416cdffabbb340239f9151866dd3",
+      "deleted": false
+    },
+    {
+      "path": "package.json",
+      "sha256": "ea9378bb5c8a9fbae61515e2fdd48a842db0f5b6f42b5d9e4da54335332ae186",
+      "deleted": false
+    },
+    {
+      "path": "packages/core/src/types/message.ts",
+      "sha256": "3d4057d563b125ad966e0122434c7fd7816b8ee497efecbe64b20c31abe5ee53",
+      "deleted": false
+    },
+    {
+      "path": "packages/server-core/src/decisions/decision-point.ts",
+      "sha256": "4322e2fae0eb37a4ca3f2b6dd78c498340ed4606f8e6cfb9dfc2832d95810567",
+      "deleted": false
+    },
+    {
+      "path": "packages/server-core/src/handlers/session-manager-interface.ts",
+      "sha256": "880444d16d91707eaffbdbc0dbed55a12e05f4a3ebd50134c2d8211a3be54300",
+      "deleted": false
+    },
+    {
+      "path": "packages/server-core/src/sessions/SessionManager.ts",
+      "sha256": "bf0e75e0e6389dc1ce0631f0743dd2971bf853afb1ac6210c469c8e8b485a6c8",
+      "deleted": false
+    },
+    {
+      "path": "packages/session-tools-core/src/context.ts",
+      "sha256": "722c14a966659b07207befeb1a31d0269c1754e147f5e3b7b6fcd78157096c8d",
+      "deleted": false
+    },
+    {
+      "path": "packages/session-tools-core/src/handlers/source-test.ts",
+      "sha256": "b895d97cc16c237f91b095e446add5475fa9c349d01428ab4fd552302b8f1b14",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/backend/types.ts",
+      "sha256": "4d168a64a5123b691a8e5cfce814741a52a2ce43b5f0352d79644894d4af3099",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/base-agent.ts",
+      "sha256": "b47b018728fe4c072c17159e4adaccb1ca25ce940e120bb9832b17c3f29b6cd9",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/bash-validator.ts",
+      "sha256": "9bc50152ebe397554674b6efd6055848d2e68ca3711382a860c92716d4c689fd",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/core/__tests__/permission-manager.test.ts",
+      "sha256": "b523d2563e0ec3588c6f015e2b160acaaffd9ce63628542dd532835adb25f8bf",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/core/__tests__/pre-tool-use-checks.isolated.ts",
+      "sha256": "a6d4ad02d8c56b1aed531a53055408fc00586d54d0d07b03f8fb71498f89e1cc",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/core/permission-manager.ts",
+      "sha256": "5a207f4e011682ca1fda63cda7d9392b763b4c39bc4fa77dc670646b1956ebf0",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/core/permission-remember.ts",
+      "sha256": "8caefc67fe4477dc5844681a6f86717b5527b7d2556c6783491384fdfd468104",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/core/pre-tool-use.ts",
+      "sha256": "d223bf03dcfb612a75f4956fbaaa78f5eee5eee22d317f09131e970388db5b5e",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/core/rtk-detector.ts",
+      "sha256": "71179fefe264d581a1f7095bd542c17427833b38f11030d41559ae351349a745",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/core/rtk-rewrite.ts",
+      "sha256": "5ac1c0a5af47286aef0e924c9ca418be44f5f4c7753954c05ba5d37e66a9c8f2",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/index.ts",
+      "sha256": "93eb6fa6445dcd35bf5cb70e894a5feca198f9ec756083ae3e4bac495a1a9110",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/mcp-tool-names.ts",
+      "sha256": "8788497df817334a7458b15f333546a13b8279afde04559cd7f493671d0d8e5b",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/mode-manager.ts",
+      "sha256": "3146c0bc316f2ff31fd92ca4d67cb97502f0e0b2902e7495471736f4a8c5e4fc",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/mode-types.ts",
+      "sha256": "cca08312809f71b3542c19438296f34a40ee68b44052cb9c1cb0f1f1d355d400",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/permissions-config.ts",
+      "sha256": "0e2dab6df0655a197c2588f896167635b04935e00114a3e4335180bcced3e5bd",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/pi-agent.ts",
+      "sha256": "01a53549c35e17f406ab94ad5b7b52f136d513f69e153b3f3c7271dd2e8e4a74",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/agent/source-policy.ts",
+      "sha256": "a4d785c9bd3f813866d045b1a6408f98b43d2ec70b18033647a9b87fbd76ebcc",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/automations/handlers/prompt-handler.ts",
+      "sha256": "7707c111f24758ca16f25d5b039196c4427f417f9892953e9ce57d250ca567a5",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/automations/types.ts",
+      "sha256": "c595b91adb011218da1c1af8de5d1fdd50e098a8be54f9728745817a1a0fb99a",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/automations/webhook-utils.ts",
+      "sha256": "d4cffa2be161c51cc6c2265e557694d2ccae5bd1b2734e302f49d142af3e92b1",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/config/preferences.ts",
+      "sha256": "81719fa850c125fc3c102fc65c2641dee856e80b4c2163bc27ddcab7f1f93b72",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/config/storage.ts",
+      "sha256": "dbaffc8fbf594d3577a2477edb01acf3ee1c55b7c795c11a22f6c965c300081a",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/decisions/client.ts",
+      "sha256": "54e0954697adbb3200f3cbb854793c71ba3771c283420f841b803e179f8b8041",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/decisions/index.ts",
+      "sha256": "673460998106470f50573e2f796e10712223d11a7c8d2e076cd8efb16decfdda",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/decisions/records.ts",
+      "sha256": "c21f8437ba066fb506d7ff478356a692a2c00be7bdd5dcca87ed5044934d2417",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/decisions/types.ts",
+      "sha256": "3e9e0c8a7b707dd1c251fd7696199c188267bc97c74ff96436ab0e7d7a8869b3",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/decisions/usage.ts",
+      "sha256": "d5fb562354b0920dc51adae8b48d8f6a1c708ce3833ebb1456ecee1e06ba3aec",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/i18n/locales/de.json",
+      "sha256": "539f8cb74b44a724764f36c031cfc9a879a81303153fe443397971ff2b351d3f",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/i18n/locales/en.json",
+      "sha256": "24d4479c40184b7c6f9b307959b3d4ae354d172a799795ac38b6a79af455e398",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/i18n/locales/es.json",
+      "sha256": "8feeb609268d13a756c1b7366be6cd22d16084342e639b796b6b8462e8064bd7",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/i18n/locales/hu.json",
+      "sha256": "0f972b663ebbfabc436ef11a1c7c8277e99d80725c33a960c7a4f0b23ef4609c",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/i18n/locales/ja.json",
+      "sha256": "0f7825dbf74f07f5196128dcb2213c14580d80f65b243aa0f23e365fd9fcbbe8",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/i18n/locales/pl.json",
+      "sha256": "1115665841ae7e20d6f0efb2843541deb6faff51eb72a705508af6f0b54ecae1",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+      "sha256": "5c047a90af7d979cf66354a2f49578f1723321570f8aeb102098db141a46cfc1",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/labels/crud.ts",
+      "sha256": "4bbb96ee85e518138d0846110bdeeb749c71586ddd945912711fc339f34410ec",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/sessions/storage.ts",
+      "sha256": "bdfa74c8ca2ba00a89e9614d2e1d7f458c97597db221bbe9e5d014290b6583f9",
+      "deleted": false
+    },
+    {
+      "path": "packages/shared/src/sessions/types.ts",
+      "sha256": "9114aad6fad4c87054282f1fe3f4b37401da6417d99da8c0c897124857173f3c",
+      "deleted": false
+    },
+    {
+      "path": "scripts/build-server.ts",
+      "sha256": "54f37d0d54fc4a3339c1b9ac56c2da429acb7d8ed3673a2080a16196607c671b",
+      "deleted": false
+    },
+    {
+      "path": "scripts/decisions-report.ts",
+      "sha256": "3cf855e13cd4fc18fe662d6207bfc21f1897f6f319f152aa63e429c8023532b2",
+      "deleted": false
+    },
+    {
+      "path": "scripts/identity-allowlist.json",
+      "sha256": "52059a398a9553297cf38b07675a94184cefdebe57fac2e8da88d2a0fb8ef4cb",
+      "deleted": false
+    },
+    {
+      "path": "scripts/verification/packaged-client-smoke.mjs",
+      "sha256": "5e21e105539de4b9260e7178a9beb078792d3e0b2417213413b02122a521f33e",
+      "deleted": false
+    },
+    {
+      "path": "scripts/verification/packaged-client-verification.mjs",
+      "sha256": "d323519bb9fe27bb8bc2e6e42492c20b52adc770a5e47d0e90e8c54f507317e3",
+      "deleted": false
+    },
+    {
+      "path": "scripts/verification/upstream-0140-ui.html",
+      "sha256": "a426117ba386bc74c54b1c7516df2341a51d17d19174a7a5a491785232c31f82",
+      "deleted": false
+    },
+    {
+      "path": "scripts/verification/upstream-0140-ui.tsx",
+      "sha256": "9d19aa7ab20ee8c2a52f582770e24a1c57c67a0d7880471e9eff01ff64cab557",
+      "deleted": false
+    },
+    {
+      "path": "scripts/verification/upstream-0140.ts",
+      "sha256": "cdc82302190f4bdddfc4293b88d76cbfa03ebd3eef6ce4aab15fd815c97aebe5",
+      "deleted": false
+    },
+    {
+      "path": "scripts/verification/verify-upstream-0140-ui.ts",
+      "sha256": "96f4202b6fe41f8ce7390ce35ad9fa86fae33cc23b93bfc508ab5f5753f1b7b2",
+      "deleted": false
+    }
+  ]
+}

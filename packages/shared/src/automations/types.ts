@@ -289,6 +289,9 @@ export type ActionExecutionResult = PromptActionResult | WebhookActionResult | S
 
 /** A pending prompt with its metadata */
 export interface PendingPrompt {
+  /** Origin event for deterministic automation loop guards, independent of decisions. */
+  event?: string;
+  eventPayload?: Record<string, unknown>;
   /** The session ID this prompt should be sent to */
   sessionId: string | undefined;
   /** The automation matcher ID this prompt originated from */

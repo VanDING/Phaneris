@@ -11,7 +11,7 @@ import { basename, dirname, extname, join } from 'path'
 import { existsSync } from 'fs'
 import { readFile, writeFile, mkdir, rename } from 'fs/promises'
 import { randomUUID } from 'node:crypto'
-import { setPermissionMode, hydratePreviousPermissionMode, getPermissionModeDiagnostics, type PermissionMode, unregisterSessionScopedToolCallbacks, mergeSessionScopedToolCallbacks, AbortReason, type AuthRequest, type AuthResult, type CredentialAuthRequest, type BrowserPaneFns, generateConversationSummary, resolveKeepBackgroundTasksAlive } from '@phaneris/shared/agent'
+import { setPermissionMode, clampPermissionMode, hydratePreviousPermissionMode, getPermissionModeDiagnostics, type PermissionMode, unregisterSessionScopedToolCallbacks, mergeSessionScopedToolCallbacks, AbortReason, type AuthRequest, type AuthResult, type CredentialAuthRequest, type BrowserPaneFns, generateConversationSummary, resolveKeepBackgroundTasksAlive } from '@phaneris/shared/agent'
 import {
   resolveSessionConnection,
   createBackendFromConnection,
@@ -122,7 +122,7 @@ import { listLabels, loadLabelConfig } from '@phaneris/shared/labels/storage'
 import { extractLabelId, resolveSessionLabels, findTaskItemLabelId } from '@phaneris/shared/labels'
 import { ensureLabelsExist, ensureTaskItemLabel } from '@phaneris/shared/labels/crud'
 import { loadStatusConfig } from '@phaneris/shared/statuses/storage'
-import { AutomationSystem, createPromptHistoryEntry, appendAutomationHistoryEntry, type AutomationSystemMetadataSnapshot } from '@phaneris/shared/automations'
+import { AutomationSystem, createPromptHistoryEntry, appendAutomationHistoryEntry, type AutomationSystemMetadataSnapshot, type PendingPrompt } from '@phaneris/shared/automations'
 import { buildBackendRuntimeSignature, buildRestartRequiredSignature, filterAttachmentsForModelInput } from './runtime-config'
 import { validateArchiveTarget } from './archive-guards'
 import { renderOfficeArtifactPreview } from '../services/artifact-preview'
@@ -380,32 +380,6 @@ async function refreshExpiredCredentials(
 }
 
 /**
- * Apply bridge-mcp-server updates for backends that use it.
- * Delegates to the backend's own applyBridgeUpdates() method.
- * Each backend handles its own strategy via applyBridgeUpdates().
- */
-async function applyBridgeUpdates(
-  agent: AgentInstance,
-  sessionPath: string,
-  enabledSources: LoadedSource[],
-  mcpServers: Record<string, import('@phaneris/shared/agent/backend').AgentMcpServerConfig>,
-  sessionId: string,
-  workspaceRootPath: string,
-  context: string,
-  poolServerUrl?: string
-): Promise<void> {
-  await agent.applyBridgeUpdates({
-    sessionPath,
-    enabledSources,
-    mcpServers,
-    sessionId,
-    workspaceRootPath,
-    context,
-    poolServerUrl,
-  })
-}
-
-/**
  * Resolve tool display metadata for a tool call.
  * Returns metadata with base64-encoded icon for viewer compatibility.
  *
@@ -642,7 +616,9 @@ interface RunningBackgroundTask {
   toolUseId?: string
   intent?: string
   /** ms timestamp when the task was backgrounded */
-  startTime: number
+  startTime?: number
+  untracked?: boolean
+  kind?: 'agent' | 'workflow' | 'shell' | 'task'
   /** ms timestamp of the last task_progress notification, if any */
   lastProgressAt?: number
   /** elapsed seconds from the most recent progress notification, if any */
@@ -873,7 +849,7 @@ interface ManagedSession {
   // Token refresh manager for OAuth token refresh with rate limiting
   tokenRefreshManager: TokenRefreshManager
   // Metadata for sessions created by automations
-  triggeredBy?: { automationName?: string; event?: string; timestamp?: number }
+  triggeredBy?: SessionHeader['triggeredBy']
   // Promise that resolves when the agent instance is ready (for title gen to await)
   agentReady?: Promise<void>
   agentReadyResolve?: () => void
@@ -904,19 +880,30 @@ interface ManagedSession {
   // after a short delay. The pending slot lets `sendMessage` dedup a duplicate
   // RPC from a legacy renderer that still ships the client-side auto_retry.
   autoRetryTimer?: ReturnType<typeof setTimeout>
+  turnSteers?: string[]
   autoRetryPending?: {
     content: string
+    retryContent?: string
+    attachments?: FileAttachment[]
+    storedAttachments?: StoredAttachment[]
+    options?: SendMessageOptions
     deadlineMs: number
     /** True after the first matching sendMessage consumes the slot; later matches drop. */
     committed: boolean
   }
 }
 
+export const MAX_AUTOMATION_CHAIN_DEPTH = 3
+
 const PI_SDK_MESSAGE_ID_CACHE_LIMIT = 256
 
 export interface AutoRetryPendingHost {
   autoRetryPending?: {
     content: string
+    retryContent?: string
+    attachments?: FileAttachment[]
+    storedAttachments?: StoredAttachment[]
+    options?: SendMessageOptions
     deadlineMs: number
     committed: boolean
   }
@@ -928,7 +915,7 @@ export function claimAutoRetryPending(
   nowMs = Date.now(),
 ): 'send' | 'drop' {
   const pending = host.autoRetryPending
-  if (pending && message === pending.content) {
+  if (pending && (message === pending.content || message === pending.retryContent)) {
     if (nowMs < pending.deadlineMs) {
       if (pending.committed) return 'drop'
       pending.committed = true
@@ -1197,6 +1184,56 @@ export class SessionManager implements ISessionManager {
     type?: 'bash' | 'file_write' | 'mcp_mutation' | 'api_mutation' | 'admin_approval'
     commandHash?: string
   }> = new Map()
+  private automationLoopGuard(pending: PendingPrompt): { run: true; depth: number } | { run: false; reason: string } {
+    const payload = pending.eventPayload ?? {}
+    const sessionId = typeof payload.sessionId === 'string' ? payload.sessionId : undefined
+    const origin = sessionId ? this.sessions.get(sessionId)?.triggeredBy : undefined
+    if (!origin) return { run: true, depth: 1 }
+    // Sessions created before automation ids were recorded carry only the name.
+    const sameAutomation = origin.automationId
+      ? origin.automationId === pending.matcherId
+      : !!origin.automationName && origin.automationName === pending.automationName
+    if (sameAutomation) return { run: false, reason: 'the event is about a session this automation created (loop guard)' }
+    const originDepth = Number.isInteger(origin.depth) && origin.depth! >= 1 ? origin.depth! : 1
+    const depth = originDepth + 1
+    if (depth > MAX_AUTOMATION_CHAIN_DEPTH) {
+      return { run: false, reason: `automation chain deeper than ${MAX_AUTOMATION_CHAIN_DEPTH} sessions (loop guard)` }
+    }
+    return { run: true, depth }
+  }
+
+  private async runPromptAutomations(workspaceId: string, workspaceRootPath: string, prompts: PendingPrompt[]): Promise<void> {
+    const writeHistory = async (entry: Parameters<typeof createPromptHistoryEntry>[0]) => {
+      try {
+        await appendAutomationHistoryEntry(workspaceRootPath, createPromptHistoryEntry(entry))
+      } catch (error) {
+        sessionLog.warn('[Automations] Failed to write history:', error)
+      }
+    }
+    await Promise.allSettled(prompts.map(async (pending) => {
+      const guard = this.automationLoopGuard(pending)
+      if (!guard.run) {
+        sessionLog.info(`[Automations] ${pending.automationName ?? 'Automation'} skipped: ${guard.reason}`)
+        if (pending.matcherId) await writeHistory({ matcherId: pending.matcherId, ok: true, prompt: pending.prompt, skipped: guard.reason })
+        return
+      }
+      try {
+        const { sessionId } = await this.executePromptAutomation({
+          workspaceId, workspaceRootPath, prompt: pending.prompt, labels: pending.labels,
+          permissionMode: pending.permissionMode, mentions: pending.mentions,
+          llmConnection: pending.llmConnection, model: pending.model, thinkingLevel: pending.thinkingLevel,
+          automationName: pending.automationName, automationId: pending.matcherId,
+          triggerEvent: pending.event, chainDepth: guard.depth, telegramTopic: pending.telegramTopic,
+        })
+        if (pending.matcherId) await writeHistory({ matcherId: pending.matcherId, ok: true, sessionId, prompt: pending.prompt })
+        sessionLog.info(`[Automations] Created session ${sessionId} from prompt action`)
+      } catch (error) {
+        if (pending.matcherId) await writeHistory({ matcherId: pending.matcherId, ok: false, prompt: pending.prompt, error: String(error) })
+        sessionLog.error('[Automations] Failed to execute prompt action:', error)
+      }
+    }))
+  }
+
   /**
    * Live ask_user questions (keyed by requestId).
    *
@@ -1742,48 +1779,7 @@ export class SessionManager implements ISessionManager {
         workspaceRootPath,
         workspaceId,
         enableScheduler: true,
-        onPromptsReady: async (prompts) => {
-          // Execute prompt automations by creating new sessions
-          const settled = await Promise.allSettled(
-            prompts.map((pending) =>
-              this.executePromptAutomation({
-                workspaceId,
-                workspaceRootPath,
-                prompt: pending.prompt,
-                labels: pending.labels,
-                permissionMode: pending.permissionMode,
-                mentions: pending.mentions,
-                llmConnection: pending.llmConnection,
-                model: pending.model,
-                thinkingLevel: pending.thinkingLevel,
-                automationName: pending.automationName,
-                telegramTopic: pending.telegramTopic,
-              })
-            )
-          )
-
-          // Write enriched history entries (with session IDs and prompt summaries)
-          for (const [idx, result] of settled.entries()) {
-            const pending = prompts[idx]
-            if (!pending.matcherId) continue
-
-            const entry = createPromptHistoryEntry({
-              matcherId: pending.matcherId,
-              ok: result.status === 'fulfilled',
-              sessionId: result.status === 'fulfilled' ? result.value.sessionId : undefined,
-              prompt: pending.prompt,
-              error: result.status === 'rejected' ? String(result.reason) : undefined,
-            })
-
-            appendAutomationHistoryEntry(workspaceRootPath, entry).catch(e => sessionLog.warn('[Automations] Failed to write history:', e))
-
-            if (result.status === 'rejected') {
-              sessionLog.error(`[Automations] Failed to execute prompt action ${idx + 1}:`, result.reason)
-            } else {
-              sessionLog.info(`[Automations] Created session ${result.value.sessionId} from prompt action`)
-            }
-          }
-        },
+        onPromptsReady: (prompts) => this.runPromptAutomations(workspaceId, workspaceRootPath, prompts),
         onError: (event, error) => {
           sessionLog.error(`Automation failed for ${event}:`, error.message)
         },
@@ -1972,9 +1968,6 @@ export class SessionManager implements ISessionManager {
     const sessionPath = getSessionStoragePath(workspaceRootPath, managed.id)
     const { mcpServers, apiServers } = await buildServersFromSources(enabledSources, sessionPath, managed.tokenRefreshManager, managed.agent?.getSummarizeCallback())
     const intendedSlugs = enabledSources.map(s => s.config.slug)
-
-    // Update bridge-mcp-server config/credentials for backends that need it
-    await applyBridgeUpdates(managed.agent, sessionPath, enabledSources, mcpServers, managed.id, workspaceRootPath, 'source reload', managed.poolServer?.url)
 
     await managed.agent.setSourceServers(mcpServers, apiServers, intendedSlugs)
     managed.sourceRuntime = { mcpServers, apiServers, intendedSlugs }
@@ -2356,21 +2349,6 @@ export class SessionManager implements ISessionManager {
 
     // Persist session with updated auth message and enabled sources
     this.persistSession(managed)
-
-    // Update bridge-mcp-server config/credentials for backends that need it
-    if (result.success && result.sourceSlug && managed.agent) {
-      const workspaceRootPath = managed.workspace.rootPath
-      const sessionPath = getSessionStoragePath(workspaceRootPath, managed.id)
-      const enabledSlugs = managed.enabledSourceSlugs || []
-      const allSources = loadAllSources(workspaceRootPath)
-      const enabledSources = allSources.filter(s =>
-        enabledSlugs.includes(s.config.slug) && isSourceUsable(s)
-      )
-      const { mcpServers } = await buildServersFromSources(
-        enabledSources, sessionPath, managed.tokenRefreshManager
-      )
-      await applyBridgeUpdates(managed.agent, sessionPath, enabledSources, mcpServers, managed.id, workspaceRootPath, 'source auth', managed.poolServer?.url)
-    }
 
     // Send the result as a new message to resume conversation
     // Use empty arrays for attachments since this is a system-generated message
@@ -4837,6 +4815,7 @@ export class SessionManager implements ISessionManager {
         rememberForMinutes?: number;
         commandHash?: string;
         approvalTtlSeconds?: number;
+        canRemember?: boolean;
       }) => {
         sessionLog.info(`Permission request for session ${managed.id}:`, request.command)
         let brokerMetadata: {
@@ -5092,7 +5071,7 @@ export class SessionManager implements ISessionManager {
           llmConnection: request.llmConnection ?? managed.llmConnection,
           model: request.model ?? managed.model,
           enabledSourceSlugs: request.enabledSourceSlugs ?? managed.enabledSourceSlugs,
-          permissionMode: request.permissionMode ?? managed.permissionMode,
+          permissionMode: clampPermissionMode(request.permissionMode, getPermissionModeDiagnostics(managed.id).permissionMode),
           thinkingLevel: request.thinkingLevel ?? managed.thinkingLevel,
           labels: request.labels ?? managed.labels,
           workingDirectory: request.workingDirectory,
@@ -5559,10 +5538,12 @@ export class SessionManager implements ISessionManager {
             // Prefer wall-clock elapsed; running tasks tick off startTime, terminal
             // tasks freeze at completion. Fall back to the last progress value.
             const anchorEnd = t.status === 'running' ? now : (t.completedAt ?? now)
-            const wallElapsed = Math.max(0, Math.round((anchorEnd - t.startTime) / 1000))
+            const wallElapsed = t.startTime === undefined ? undefined : Math.max(0, Math.round((anchorEnd - t.startTime) / 1000))
             return {
               taskId: t.taskId,
               intent: t.intent,
+              kind: t.kind,
+              untracked: t.untracked,
               status: t.status,
               startTime: t.startTime,
               elapsedSeconds: t.elapsedSeconds ?? wallElapsed,
@@ -5725,9 +5706,6 @@ export class SessionManager implements ISessionManager {
         const intendedSlugs = allEnabledSources
           .filter(isSourceUsable)
           .map(s => s.config.slug)
-
-        // Update bridge-mcp-server config/credentials for backends that need it
-        await applyBridgeUpdates(managed.agent!, sessionPath, allEnabledSources, mcpServers, managed.id, workspaceRootPath, 'source enable', managed.poolServer?.url)
 
         await managed.agent!.setSourceServers(mcpServers, apiServers, intendedSlugs)
 
@@ -6231,10 +6209,6 @@ export class SessionManager implements ISessionManager {
 
       // Set active source servers (tools are only available from these)
       const intendedSlugs = sources.filter(isSourceUsable).map(s => s.config.slug)
-
-      // Update bridge-mcp-server config/credentials for backends that need it
-      const usableSources = sources.filter(isSourceUsable)
-      await applyBridgeUpdates(managed.agent, sessionPath, usableSources, mcpServers, managed.id, workspaceRootPath, 'source config change', managed.poolServer?.url)
 
       await managed.agent.setSourceServers(mcpServers, apiServers, intendedSlugs)
       managed.sourceRuntime = { mcpServers, apiServers, intendedSlugs }
@@ -7033,9 +7007,19 @@ export class SessionManager implements ISessionManager {
     // duplicate that arrives from a legacy renderer still running the client-side
     // auto_retry. The first matching caller wins (server timer or legacy RPC,
     // whichever arrives first), subsequent matching calls within the deadline drop.
+    const activationRetry = managed.autoRetryPending && Date.now() < managed.autoRetryPending.deadlineMs
+      && (message === managed.autoRetryPending.content || message === managed.autoRetryPending.retryContent)
+      ? managed.autoRetryPending : undefined
     if (claimAutoRetryPending(managed, message) === 'drop') {
       sessionLog.info(`sendMessage: dropped duplicate source-activation retry for ${sessionId}`)
       return
+    }
+    if (activationRetry) {
+      // A legacy renderer may win the dispatch race: it receives the same hidden payload.
+      message = activationRetry.retryContent ?? activationRetry.content
+      attachments = activationRetry.attachments
+      storedAttachments = activationRetry.storedAttachments
+      options = { ...activationRetry.options, hidden: true }
     }
 
     // Clear any pending plan execution state when a new user message is sent.
@@ -7077,6 +7061,7 @@ export class SessionManager implements ISessionManager {
       if (attemptedSteer) {
         steered = agent?.redirect(message) ?? false
       }
+      if (steered) (managed.turnSteers ??= []).push(message)
       // For 'queue': skip redirect entirely. The current turn is undisturbed.
       // Same for a compaction-owned turn: `redirect()` would report success into
       // an agent loop that `compact()` has already aborted, losing the message.
@@ -7261,6 +7246,7 @@ export class SessionManager implements ISessionManager {
     managed.streamingTurnId = undefined
     managed.processingGeneration++
     managed.turnStartFinalMessageId = this.getLastFinalAssistantMessageId(managed.messages)
+    managed.turnSteers = []
 
     // Reset auth retry flag for this new message (allows one retry per message)
     // IMPORTANT: Skip reset if this is an auth retry call - the flag is already true
@@ -7363,9 +7349,7 @@ export class SessionManager implements ISessionManager {
       }
 
       if (managed.sourceRuntimeAppliedTo !== agent) {
-        const usableSources = sources.filter(isSourceUsable)
         await agent.setSourceServers(runtime.mcpServers, runtime.apiServers, runtime.intendedSlugs)
-        await applyBridgeUpdates(agent, sessionPath, usableSources, runtime.mcpServers, sessionId, workspaceRootPath, 'send message', managed.poolServer?.url)
         managed.sourceRuntimeAppliedTo = agent
         sessionLog.info(`Applied ${Object.keys(runtime.mcpServers).length} MCP + ${Object.keys(runtime.apiServers).length} API sources to session ${sessionId} (${allSources.length} total)`)
         sendSpan.mark('servers.applied')
@@ -7848,7 +7832,7 @@ export class SessionManager implements ISessionManager {
 
   private emitSessionComplete(evt: SessionCompletionEvent): void {
     if (this.sessionCompletionListeners.size === 0) return
-    for (const listener of this.sessionCompletionListeners) {
+    for (const listener of [...this.sessionCompletionListeners]) {
       try {
         listener(evt)
       } catch (err) {
@@ -8228,7 +8212,7 @@ export class SessionManager implements ISessionManager {
     if (!managed) return []
     return Array.from(managed.backgroundTaskRegistry.values())
       .map((t) => ({ ...t }))
-      .sort((a, b) => b.startTime - a.startTime)
+      .sort((a, b) => (b.startTime ?? b.completedAt ?? 0) - (a.startTime ?? a.completedAt ?? 0))
   }
 
   /**
@@ -9899,6 +9883,7 @@ export class SessionManager implements ISessionManager {
         if (managed) {
           managed.backgroundTaskRegistry.set(event.taskId, {
             taskId: event.taskId,
+            kind: event.kind ?? 'task',
             toolUseId: event.toolUseId,
             intent: event.intent,
             startTime: Date.now(),
@@ -9976,6 +9961,7 @@ export class SessionManager implements ISessionManager {
         const wasAlreadyTerminal = priorEntry
           ? priorEntry.status !== 'running'
           : this.taskOutputIndex.has(event.taskId)
+        const launchedHere = !!priorEntry && !priorEntry.untracked
 
         // Store output for later retrieval via getTaskOutput()
         if (managed) {
@@ -10003,7 +9989,8 @@ export class SessionManager implements ISessionManager {
             // matched). Record it so status queries are still truthful.
             managed.backgroundTaskRegistry.set(event.taskId, {
               taskId: event.taskId,
-              startTime: Date.now(),
+              kind: 'task',
+              untracked: true,
               status: event.status,
               completedAt: Date.now(),
             })
@@ -10031,7 +10018,7 @@ export class SessionManager implements ISessionManager {
         // the terminal notification reaches the agent through the live stream, so
         // we skip then. Gated on keep-alive because only that mode delivers this
         // event between turns; guarded against duplicate notifications.
-        if (managed && this.keepBackgroundTasksAlive && !managed.isProcessing && !wasAlreadyTerminal) {
+        if (managed && launchedHere && this.keepBackgroundTasksAlive && !managed.isProcessing && !wasAlreadyTerminal) {
           const taskIntent = managed.backgroundTaskRegistry.get(event.taskId)?.intent
           const outputFile = event.outputFile || managed.backgroundTaskOutputs.get(event.taskId)?.outputFile
           const label = taskIntent ? `"${taskIntent}"` : `task ${event.taskId}`
@@ -10106,6 +10093,13 @@ export class SessionManager implements ISessionManager {
         }
 
         const messageWithSuffix = `${resendMessage}\n\n[${event.sourceSlug} activated]`
+        const corrections = (managed.turnSteers ?? []).filter(text => text.trim())
+        const retryMessage = corrections.length > 0
+          ? `${resendMessage}\n\n${corrections.join('\n\n')}\n\n[${event.sourceSlug} activated]`
+          : messageWithSuffix
+        const retryAttachments = managed.lastSentAttachments
+        const retryStoredAttachments = managed.lastSentStoredAttachments
+        const retryOptions = { ...managed.lastSentOptions, hidden: true }
         const messageCountAtSchedule = managed.messages.length
 
         // Stash the retry payload so a duplicate sendMessage from a legacy renderer
@@ -10113,6 +10107,10 @@ export class SessionManager implements ISessionManager {
         // 2s window covers WS latency tail on flaky mobile / proxy links.
         managed.autoRetryPending = {
           content: messageWithSuffix,
+          retryContent: retryMessage,
+          attachments: retryAttachments,
+          storedAttachments: retryStoredAttachments,
+          options: retryOptions,
           deadlineMs: Date.now() + 2000,
           committed: false,
         }
@@ -10134,7 +10132,7 @@ export class SessionManager implements ISessionManager {
           // so a legacy renderer's duplicate RPC arriving ~50ms later gets dropped.
           // The pending slot is cleared by the deadline check in sendMessage, by the
           // next matching sendMessage that drops as a duplicate, or by session deletion.
-          this.sendMessage(sessionId, messageWithSuffix).catch(err => {
+          this.sendMessage(sessionId, retryMessage, retryAttachments, retryStoredAttachments, retryOptions).catch(err => {
             sessionLog.error(`Auto-retry sendMessage failed for ${sessionId}:`, err)
           })
         }, 100)
@@ -10302,6 +10300,9 @@ export class SessionManager implements ISessionManager {
       model,
       thinkingLevel,
       automationName,
+      automationId,
+      triggerEvent,
+      chainDepth,
       telegramTopic,
       waitForCompletion,
     } = input
@@ -10341,7 +10342,7 @@ export class SessionManager implements ISessionManager {
     // and the session is identifiable as automation-initiated after reload
     const managed = this.sessions.get(session.id)
     if (managed) {
-      managed.triggeredBy = { automationName, timestamp: Date.now() }
+      managed.triggeredBy = { automationName, automationId, event: triggerEvent, depth: chainDepth ?? 1, timestamp: Date.now() }
       this.persistSession(managed)
     }
 

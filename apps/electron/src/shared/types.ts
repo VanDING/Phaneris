@@ -2,6 +2,7 @@
 // Protocol re-exports (channels, DTOs, events, wire types)
 // =============================================================================
 export * from '@phaneris/shared/protocol'
+import type { RtkStatus } from '@phaneris/shared/agent/core/rtk-detector'
 
 // =============================================================================
 // Package re-exports (convenience for renderer imports)
@@ -768,7 +769,7 @@ export interface ElectronAPI {
   // RTK token optimization
   getRtkEnabled(): Promise<boolean>
   setRtkEnabled(enabled: boolean): Promise<void>
-  getRtkStatus(opts?: { forceRecheck?: boolean }): Promise<{ installed: boolean; path: string | null; version: string | null }>
+  getRtkStatus(opts?: { forceRecheck?: boolean }): Promise<RtkStatus>
   getRtkGain(): Promise<{ totalCommands: number; totalInput: number; totalOutput: number; totalSaved: number; avgSavingsPct: number; totalTimeMs: number; avgTimeMs: number } | null>
 
   // Decision model (Jev / TypeSafe System One) — opt-in decision layer

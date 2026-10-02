@@ -14,3 +14,5 @@ export * from './records.ts';
 export * from './resolve.ts';
 export * from './status.ts';
 export * from './health.ts';
+
+export * from './usage.ts';

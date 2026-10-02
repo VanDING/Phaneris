@@ -14,13 +14,9 @@ electronVersion: "44.4.3"
 # component is absent, so packaging must not rebuild native modules.
 npmRebuild: false
 
-# Fetch the pinned Bun and document-tool runtimes for the target before copying resources.
+# Fetch pinned runtimes and compile the Windows NSIS skin before copying resources.
+# beforeBuild is skipped with npmRebuild: false, so both run in beforePack.
 beforePack: scripts/beforePack.cjs
-
-# Compile installer/window-frame.cpp into the NSIS skin plugin. Must run before
-# makensis, and nothing else produces that DLL — see the hook for why a missing
-# toolchain fails the build instead of silently shipping an unbranded installer.
-beforeBuild: scripts/prepare-windows-installer.cjs
 
 # Hook to compile macOS 26+ Liquid Glass icon after packaging
 afterPack: scripts/afterPack.cjs
@@ -34,8 +30,6 @@ files:
   - "!dist/renderer/src/**"
   - "!**/*.map"
   - package.json
-  # Include bundled bridge MCP server for Codex sessions
-  - resources/bridge-mcp-server/**/*
   # Include Pi agent server subprocess for Pi SDK sessions
   - resources/pi-agent-server/**/*
   # The subprocess ships once via extraResources below. Excluding both staged
@@ -167,6 +161,3 @@ extraResources:
     to: app/vendor/bun
     filter:
       - "**/*"
-  # Bridge MCP server
-  - from: dist/resources/bridge-mcp-server
-    to: resources/bridge-mcp-server

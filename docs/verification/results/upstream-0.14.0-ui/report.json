@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "executedAt": "2026-10-02T23:22:14.517Z",
+  "checks": [
+    "Dangerous command has Allow and Deny, without Always Allow",
+    "Scoped approval sends the explicit remember answer",
+    "Windows update command is copied without execution",
+    "Outdated, missing, and failed re-checks keep the dialog available",
+    "Usable RTK closes the dialog after a forced re-check",
+    "Chinese translations render without unresolved keys",
+    "Dismissed RTK version uses native preferences, preserves other fields, and stays dismissed on remount"
+  ],
+  "responses": [
+    {
+      "action": "permission",
+      "response": {
+        "type": "permission",
+        "allowed": false,
+        "alwaysAllow": false
+      }
+    },
+    {
+      "action": "permission",
+      "response": {
+        "type": "permission",
+        "allowed": true,
+        "alwaysAllow": true
+      }
+    }
+  ],
+  "calls": [
+    {
+      "action": "permission",
+      "response": {
+        "type": "permission",
+        "allowed": false,
+        "alwaysAllow": false
+      }
+    },
+    {
+      "action": "permission",
+      "response": {
+        "type": "permission",
+        "allowed": true,
+        "alwaysAllow": true
+      }
+    },
+    {
+      "action": "rtk-recheck",
+      "opts": {
+        "forceRecheck": true
+      },
+      "mode": "old"
+    },
+    {
+      "action": "rtk-recheck",
+      "opts": {
+        "forceRecheck": true
+      },
+      "mode": "missing"
+    },
+    {
+      "action": "rtk-recheck",
+      "opts": {
+        "forceRecheck": true
+      },
+      "mode": "error"
+    },
+    {
+      "action": "rtk-recheck",
+      "opts": {
+        "forceRecheck": true
+      },
+      "mode": "updated"
+    },
+    {
+      "action": "rtk-recheck",
+      "mode": "old"
+    },
+    {
+      "action": "preferences-read"
+    },
+    {
+      "action": "preferences-read"
+    },
+    {
+      "action": "preferences-write",
+      "preferences": {
+        "name": "Fixture user",
+        "diffViewer": {
+          "diffStyle": "split"
+        },
+        "rtkUpdateDismissedVersion": "0.43.0"
+      }
+    },
+    {
+      "action": "rtk-recheck",
+      "mode": "old"
+    },
+    {
+      "action": "preferences-read"
+    }
+  ],
+  "errors": []
+}

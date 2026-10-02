@@ -1,0 +1,308 @@
+{
+  "executedAt": "2026-10-02T17:44:33.889Z",
+  "command": "bun scripts/verification/upstream-0140.ts --baseline",
+  "head": "4613e04b2ab5e79477000ce0a457ab54a369325b",
+  "upstream": "73bd9c2a3573158bea880984eb8d5fdb41e0cac2",
+  "baseline": true,
+  "fixtures": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-H3Ytim",
+  "scope": "Real host/permission/storage/source code with isolated transport and loopback API; no dangerous shell execution, GUI or live provider.",
+  "total": 53,
+  "passed": 12,
+  "failed": 41,
+  "records": [
+    {
+      "id": "P02 gh api /repos/example/project -X DELETE",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 gh api /repos/example/project -f title=x",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 gh api /repos/example/project --input body.json",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 gh api /repos/example/project -iXDELETE",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 gh api graphql -f \"query=mutation { deleteIssue }\"",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 gh api graphql -F query=@query.graphql",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 sed -n -i '1p' fixture.txt",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 sed -n 'w output.txt' fixture.txt",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 sed -n 's/a/b/e' fixture.txt",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 sed -n -f script.sed fixture.txt",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 sort -o output.txt fixture.txt",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 sort --output=output.txt fixture.txt",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 sort --compress-program=other fixture.txt",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P02 find . -delete",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `find . -delete` is not in the read-only allowlist.\n\nMatched: `find` (4 chars)\nFailed at: `.` (position 4)\n\nClosest allowlist hint (heuristic): Search for files in directory hierarchy\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-H3Ytim\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-H3Ytim\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-H3Ytim\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 gh api /repos/example/project -X GET",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P02 gh api /repos/example/project",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P02 sed -n '1p' fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P02 sort fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P01 mcp__demo__delete_account",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P01 mcp__demo__send_thread_reply",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P01 mcp__demo__update_spreadsheet",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P01 mcp__budget__create_issue",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P01 mcp__demo__get_or_create_issue",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P01 mcp__demo__searchAndReplace",
+      "pass": false,
+      "error": "expected allowed=false, got true"
+    },
+    {
+      "id": "P01 mcp__demo__list_items",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P01 mcp__demo__getCommit",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P03 Ask MCP read shares Explore rules",
+      "pass": false,
+      "error": "read tool prompted"
+    },
+    {
+      "id": "P01 custom regex remains explicit",
+      "pass": true
+    },
+    {
+      "id": "P06 activation→prompt→allow",
+      "pass": false,
+      "error": "activation skipped approval"
+    },
+    {
+      "id": "P06 activation→prompt→deny",
+      "pass": false,
+      "error": "activation skipped approval"
+    },
+    {
+      "id": "P06 activation fail",
+      "pass": true,
+      "observation": [
+        "activation",
+        "block"
+      ]
+    },
+    {
+      "id": "P06 activation unchanged",
+      "pass": false,
+      "error": "unavailable source allowed"
+    },
+    {
+      "id": "P07 absent permission handler blocks",
+      "pass": false,
+      "error": "unattended permission allowed"
+    },
+    {
+      "id": "P07 failing permission handler blocks and drains pending",
+      "pass": false,
+      "error": "fixture permission callback failed"
+    },
+    {
+      "id": "P04 real Pi remember, allowed=true",
+      "pass": false,
+      "error": "remember/deny changed the wrong scope"
+    },
+    {
+      "id": "P04 real Pi remember, allowed=false",
+      "pass": true,
+      "observation": [
+        {
+          "command": "python Safe.py"
+        },
+        {
+          "command": "python Safe.py"
+        },
+        {
+          "command": "python safe.py"
+        }
+      ]
+    },
+    {
+      "id": "P04 dangerous commands and chains cannot be remembered",
+      "pass": false,
+      "error": "unsafe Remember button remains available"
+    },
+    {
+      "id": "P04 write permission belongs to its directory",
+      "pass": false,
+      "error": "write approval leaked or was not remembered"
+    },
+    {
+      "id": "P04 network permission checks every host and shell shape",
+      "pass": false,
+      "error": "network approval leaked across host or shell chain"
+    },
+    {
+      "id": "P04 API permission remains source scoped",
+      "pass": false,
+      "error": "API approval leaked across sources"
+    },
+    {
+      "id": "P05 child mode never exceeds parent mode",
+      "pass": false,
+      "error": "clampPermissionMode missing"
+    },
+    {
+      "id": "R01 no pending plan does not rewrite session",
+      "pass": false,
+      "error": "no-op rewrote session"
+    },
+    {
+      "id": "R01 pending plan is actually removed",
+      "pass": true
+    },
+    {
+      "id": "R02 completion event uses subscription snapshot",
+      "pass": false,
+      "error": "live Set delivered same event to new subscriber"
+    },
+    {
+      "id": "R03 self, legacy, chain limit and metadata round trip",
+      "pass": false,
+      "error": "manager.automationLoopGuard is not a function. (In 'manager.automationLoopGuard(pending)', 'manager.automationLoopGuard' is undefined)"
+    },
+    {
+      "id": "R03 skipped prompt is recorded without executing",
+      "pass": false,
+      "error": "manager.runPromptAutomations is not a function. (In 'manager.runPromptAutomations(workspace.id, workspaceRoot, [{ matcherId: \"loop\", automationName: \"loop\", prompt: \"never executed\", eventPayload: { sessionId: managed.id } }])', 'manager.runPromptAutomations' is undefined)"
+    },
+    {
+      "id": "R04 source_test missing",
+      "pass": false,
+      "error": "missing credential marked connected"
+    },
+    {
+      "id": "R04 source_test failed",
+      "pass": false,
+      "error": "missing credential marked connected"
+    },
+    {
+      "id": "R04 source_test refreshed",
+      "pass": false,
+      "error": "refreshed credential not used"
+    },
+    {
+      "id": "R05 activation retry hides duplicate, keeps steers and attachments",
+      "pass": false,
+      "error": "steer lost"
+    },
+    {
+      "id": "R06 unknown background task does not wake host or invent start time",
+      "pass": false,
+      "error": "unknown task woke session"
+    },
+    {
+      "id": "R07 safe minimum, platform update and bypasses",
+      "pass": false,
+      "error": "safe RTK minimum missing"
+    },
+    {
+      "id": "R08 create accented, truncated and duplicate labels",
+      "pass": true,
+      "observation": [
+        "task-powershell-fejleszt-k-k-p",
+        "task-powershell-fejleszt-k-k-p-2"
+      ]
+    }
+  ]
+}

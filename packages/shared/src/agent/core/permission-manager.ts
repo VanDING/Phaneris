@@ -2,21 +2,9 @@
 import { getPermissionMode, setPermissionMode, cyclePermissionMode } from '../mode-manager.ts';
 import type { PermissionMode } from '../mode-types.ts';
 import type { PermissionManagerConfig } from './types.ts';
+import { DANGEROUS_COMMANDS, type PermissionRemember } from './permission-remember.ts';
 
 export type { PermissionMode };
-
-/**
- * Dangerous commands that should always require permission in 'ask' mode.
- * These are never auto-allowed regardless of user configuration.
- */
-const DANGEROUS_COMMANDS = new Set([
-  'rm', 'rmdir', 'sudo', 'su', 'chmod', 'chown', 'chgrp',
-  'mv', 'cp', 'dd', 'mkfs', 'fdisk', 'parted',
-  'kill', 'killall', 'pkill',
-  'reboot', 'shutdown', 'halt', 'poweroff',
-  'curl', 'wget', 'ssh', 'scp', 'rsync',
-  'git push', 'git reset', 'git rebase', 'git checkout',
-]);
 
 export class PermissionManager {
   private config: PermissionManagerConfig;
@@ -60,7 +48,7 @@ export class PermissionManager {
   // ============================================================
 
   /**
-   * Extract the base command (first word) from a bash command string.
+   * Extract the first word for display only; approval scopes are computed by permission-remember.ts.
    * Handles pipes, redirects, and other shell constructs.
    *
    * @param command - Full bash command
@@ -111,10 +99,10 @@ export class PermissionManager {
   // ============================================================
 
   /**
-   * Check if a base command has been whitelisted for this session.
+   * Check a scoped approval key without folding case-sensitive argv or tool names.
    */
   isCommandWhitelisted(baseCommand: string): boolean {
-    return this.alwaysAllowedCommands.has(baseCommand.toLowerCase());
+    return this.alwaysAllowedCommands.has(process.platform === 'win32' && baseCommand.startsWith('write:') ? baseCommand.toLowerCase() : baseCommand);
   }
 
   /**
@@ -122,7 +110,7 @@ export class PermissionManager {
    * Called when user clicks "Always Allow" for a command.
    */
   whitelistCommand(baseCommand: string): void {
-    this.alwaysAllowedCommands.add(baseCommand.toLowerCase());
+    this.alwaysAllowedCommands.add(process.platform === 'win32' && baseCommand.startsWith('write:') ? baseCommand.toLowerCase() : baseCommand);
   }
 
   /**
@@ -140,10 +128,16 @@ export class PermissionManager {
     this.alwaysAllowedDomains.add(domain.toLowerCase());
   }
 
-  /**
-   * Clear all session-scoped whitelists.
-   * Called on session clear or dispose.
-   */
+  /** Store exactly the scope supplied by the permission pipeline. */
+  remember(approval: PermissionRemember): void {
+    if (approval.kind === 'domains') {
+      for (const domain of approval.domains) this.whitelistDomain(domain);
+    } else {
+      this.whitelistCommand(approval.key);
+    }
+  }
+
+  /** Clear session-scoped approvals on session clear or dispose. */
   clearWhitelists(): void {
     this.alwaysAllowedCommands.clear();
     this.alwaysAllowedDomains.clear();

@@ -95,6 +95,7 @@ export interface StoredConfig {
   promptCacheWarming?: boolean; // Cost-aware warming during active tool runs (default: false)
   extendedPromptCache?: boolean;  // Use long-lived prompt cache retention where supported (default: false)
   // Token optimization
+  rtkExcludeCommands?: string[];
   rtkEnabled?: boolean;  // Route Bash commands through rtk to compress tool output (default: false). https://github.com/rtk-ai/rtk
   // Decision layer (Jev / TypeSafe System One) — opt-in, off by default. See src/decisions/.
   decisionLayer?: DecisionLayerStoredSettings;
@@ -592,6 +593,13 @@ export function setAllowRemoteEvaluate(allowed: boolean): void {
 export function getRtkEnabled(): boolean {
   const config = loadStoredConfig();
   return config?.rtkEnabled === true;
+}
+
+/** Base commands never routed through RTK. Invalid entries are ignored. */
+export function getRtkExcludeCommands(): string[] {
+  const value = loadStoredConfig()?.rtkExcludeCommands;
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry): entry is string => typeof entry === 'string' && entry.trim().length > 0).map(entry => entry.trim());
 }
 
 /**

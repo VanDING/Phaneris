@@ -88,11 +88,26 @@ function assertResourcesOutsideAsar(resourcesDir, required) {
   results.resources = required.map(([label]) => label)
 }
 
+function verifyNoLegacyBridge(resourcesDir) {
+  const candidates = [
+    join(resourcesDir, 'bridge-mcp-server', 'index.js'),
+    join(resourcesDir, 'resources', 'bridge-mcp-server', 'index.js'),
+    join(resourcesDir, 'app', 'resources', 'bridge-mcp-server', 'index.js'),
+    join(resourcesDir, 'app', 'dist', 'resources', 'bridge-mcp-server', 'index.js'),
+  ]
+  check('legacy bridge bundle is absent', candidates, () => {
+    const present = candidates.filter((path) => existsSync(path))
+    assert(present.length === 0, `obsolete bridge still packaged: ${present.join(', ')}`)
+    results.legacyBridgeBundle = 'absent'
+  })
+}
+
 function verifyMac() {
   const dmgName = `Phaneris-${expectedVersion}-mac-${argArch}.dmg`
   const dmgPath = join(RELEASE_DIR, dmgName)
   const appPath = join(RELEASE_DIR, `mac${argArch === 'arm64' ? '-arm64' : ''}`, `${identity.product.name}.app`)
   const resourcesDir = join(appPath, 'Contents', 'Resources')
+  verifyNoLegacyBridge(resourcesDir)
 
   // ---------------------------------------------------------------- artifacts ---
   check('DMG exists with the expected versioned name', dmgName, () => {
@@ -243,6 +258,7 @@ function verifyWindows() {
   const appPath = join(RELEASE_DIR, 'win-unpacked')
   const exePath = join(appPath, `${identity.product.name}.exe`)
   const resourcesDir = join(appPath, 'resources')
+  verifyNoLegacyBridge(resourcesDir)
 
   // ---------------------------------------------------------------- artifacts ---
   check('NSIS installer exists with the expected versioned name', installerName, () => {
