@@ -6,6 +6,8 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- Upgraded the Pi SDK from 0.87.1 to 1.0.0, updating the model catalog and provider handling for tool calls, reasoning, retries, and usage costs.
+
 ## Bug Fixes
 
 ## Breaking Changes

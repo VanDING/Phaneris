@@ -10,6 +10,7 @@ This index separates current product and architecture documentation from histori
 | [Electron app](../apps/electron/README.md) | Current | Desktop runtime, build, event contract, and diagnostics. |
 | [CLI reference](cli.md) | Current | Headless server client, commands, TLS, and scripting. |
 | [Pi kernel baseline](pi-kernel.md) | Current | Single-backend runtime contract, lifecycle, tool synchronization, and upgrade checks. |
+| [Pi 1.0.0 upgrade assessment](pi-sdk-1.0.0-upgrade-assessment.md) | Dated assessment (2026-10-03) | Upgrade boundaries, inherited provider fixes, and prioritized opportunities for tool orchestration, model discovery, and runtime integration. |
 | [Bundled user and agent guides](../apps/electron/resources/docs/) | Current | Sources, skills, permissions, automation, themes, previews, and built-in tools. These files ship with the app. |
 | [Contributing](../CONTRIBUTING.md) | Current | Local setup, validation, and contribution workflow. |
 | [Security](../SECURITY.md) | Current | Supported versions and private vulnerability reporting. |

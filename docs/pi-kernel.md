@@ -4,7 +4,7 @@
 
 ## 当前基线
 
-- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` **0.87.1**。
+- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` **1.0.0**。
 - 包管理器与打包运行时：Bun **1.4.2**；版本由 `package.json`、CI 和打包脚本共同固定。
 - 后台：只有 `PiAgent`。仓库不直接依赖 Claude Agent SDK，也不打包 Claude 原生二进制。
 - Anthropic/Claude 模型、OAuth 连接名以及 `CLAUDE.md` 项目上下文属于提供商或文件格式兼容，不代表存在第二套 agent 后台。
@@ -18,11 +18,13 @@ packages/server-core (SessionManager)
           │ AgentBackend + JSONL
 packages/shared (PiAgent + event adapter + permissions)
           │ stdio
-packages/pi-agent-server (Pi 0.87.1)
+packages/pi-agent-server (Pi 1.0.0)
           │ provider API / local tools / proxied session tools
 ```
 
 Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sources、浏览器与 UI 事件；子进程负责 Pi 会话、模型运行时、内置工具和 provider 请求。
+
+1.0.0 的 SDK 会话不自动加载内置 MCP、codemode 或 tool-search 扩展；本项目仍使用自己的 source 连接池与工具代理。新增能力、升级边界及验证记录见 [Pi 1.0.0 升级评估](pi-sdk-1.0.0-upgrade-assessment.md)。
 
 ## 生命周期约束
 

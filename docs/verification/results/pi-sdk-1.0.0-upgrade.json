@@ -1,0 +1,883 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-03",
+  "timezone": "Asia/Shanghai",
+  "generatedAtUtc": "2026-10-02T16:32:27.5661495Z",
+  "checkoutCommit": "15dafd3373f01393c6f5b2e4294e8755bed8042f",
+  "environment": {
+    "platform": "win32",
+    "node": "24.15.0",
+    "bun": "1.4.2"
+  },
+  "upgrade": {
+    "directDependencies": [
+      {
+        "manifest": "package.json",
+        "package": "@earendil-works/pi-ai",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "package.json",
+        "package": "@earendil-works/pi-coding-agent",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/shared/package.json",
+        "package": "@earendil-works/pi-agent-core",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/shared/package.json",
+        "package": "@earendil-works/pi-ai",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/shared/package.json",
+        "package": "@earendil-works/pi-coding-agent",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/server-core/package.json",
+        "package": "@earendil-works/pi-ai",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/pi-agent-server/package.json",
+        "package": "@earendil-works/pi-agent-core",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/pi-agent-server/package.json",
+        "package": "@earendil-works/pi-ai",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/pi-agent-server/package.json",
+        "package": "@earendil-works/pi-coding-agent",
+        "version": "1.0.0"
+      },
+      {
+        "manifest": "packages/pi-agent-server/package.json",
+        "package": "@earendil-works/pi-server",
+        "version": "1.0.0"
+      }
+    ],
+    "officialTarballIntegritiesVerified": true,
+    "from": "0.87.1",
+    "installedPackages": [
+      {
+        "package": "@earendil-works/pi-ai",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-agent-core",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-coding-agent",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-server",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-telemetry",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-tui",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-protocol",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-mcp",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/pi-codemode",
+        "version": "1.0.0"
+      },
+      {
+        "package": "@earendil-works/chord",
+        "version": "1.0.0"
+      }
+    ],
+    "to": "1.0.0"
+  },
+  "piSubprocessBaseline": {
+    "cwd": "packages/pi-agent-server",
+    "note": "Pre-upgrade command output recorded in this chat.",
+    "command": "bun test ./src --timeout 30000",
+    "fail": 0,
+    "version": "0.87.1",
+    "pass": 202
+  },
+  "testCoverage": {
+    "pass": 6286.0,
+    "initialFullRun": {
+      "failedScopes": [
+        {
+          "scope": "apps/electron",
+          "pass": 993,
+          "fail": 1,
+          "skip": 0,
+          "errors": 1,
+          "log": ".cache/pi-sdk-v1.0.0/tests.log"
+        },
+        {
+          "scope": "packages/server-core",
+          "pass": 426,
+          "fail": 1,
+          "skip": 0,
+          "errors": 0,
+          "log": ".cache/pi-sdk-v1.0.0/tests.log"
+        }
+      ],
+      "pass": 6284.0,
+      "note": "First full run exited 1: Pages build timed out at 30 seconds; XLSX preview timed out at the default 5 seconds. Both passed isolated retries, then the complete apps/electron and packages/server-core workspaces passed unchanged.",
+      "fail": 2.0,
+      "errors": 1.0
+    },
+    "errors": 0.0,
+    "fail": 0.0,
+    "skip": 7.0,
+    "latestScopes": [
+      {
+        "scope": "apps/cli",
+        "pass": 68,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "apps/electron",
+        "pass": 994,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "packages/core",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "packages/messaging-gateway",
+        "pass": 272,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "packages/messaging-whatsapp-worker",
+        "pass": 41,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "packages/pi-agent-server",
+        "pass": 202,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "packages/server",
+        "pass": 4,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "packages/server-core",
+        "pass": 427,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "packages/session-tools-core",
+        "pass": 131,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "packages/shared",
+        "pass": 3055,
+        "fail": 0,
+        "skip": 6,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "packages/ui",
+        "pass": 400,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: apps/cli/src/run.isolated.ts",
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/credential-key-provider.isolated.ts",
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/handlers/__tests__/browser-broadcast.isolated.ts",
+        "pass": 4,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/handlers/__tests__/registration-profiles.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/handlers/__tests__/registration.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/handlers/__tests__/session-watcher.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/handlers/__tests__/settings-default-thinking.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/__tests__/browser-cdp.isolated.ts",
+        "pass": 19,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/__tests__/browser-pane-manager.isolated.ts",
+        "pass": 88,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/__tests__/notifications-routing.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/__tests__/session-branch-rollback.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/main/__tests__/sessions-annotations.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/renderer/atoms/__tests__/sessions.isolated.ts",
+        "pass": 13,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/renderer/components/right-sidebar/__tests__/session-files-watch.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: apps/electron/src/renderer/components/ui/__tests__/mention-menu.isolated.ts",
+        "pass": 18,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+      },
+      {
+        "scope": "isolated: packages/messaging-gateway/src/__tests__/wechat-login-qr.isolated.ts",
+        "pass": 5,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/messaging-gateway/src/__tests__/wechat-monitor.isolated.ts",
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/messaging-gateway/src/__tests__/wechat-send.isolated.ts",
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/messaging-gateway/src/__tests__/wechat-url.isolated.ts",
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/pi-agent-server/src/tools/search/providers/chatgpt.isolated.ts",
+        "pass": 16,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/pi-agent-server/src/tools/search/providers/ddg.isolated.ts",
+        "pass": 4,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/pi-agent-server/src/tools/search/providers/openai.isolated.ts",
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/handlers/rpc/artifacts.isolated.ts",
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/handlers/rpc/onboarding.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/handlers/rpc/user-attachment.isolated.ts",
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/handlers/rpc/work-items.isolated.ts",
+        "pass": 8,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/handlers/rpc/workspace-image.isolated.ts",
+        "pass": 8,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/sessions/context-handoff-e2e.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/sessions/refresh-connection-runtime.isolated.ts",
+        "pass": 8,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/sessions/title-generation.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/server-core/src/webui/__tests__/http-server.isolated.ts",
+        "pass": 9,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+      },
+      {
+        "scope": "isolated: packages/session-tools-core/src/handlers/source-test.isolated.ts",
+        "pass": 21,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/agent/backend/internal/drivers/custom-model-discovery.isolated.ts",
+        "pass": 4,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/agent/core/__tests__/pre-tool-use-checks.isolated.ts",
+        "pass": 73,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/agent/core/__tests__/prerequisite-manager.isolated.ts",
+        "pass": 33,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/auth/__tests__/oauth-callback-url.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/auth/__tests__/oauth.isolated.ts",
+        "pass": 75,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/automations/handlers/event-log-handler.isolated.ts",
+        "pass": 9,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/config/__tests__/preferences-prompt-sanitize.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/config/__tests__/remote-token-vault.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/credentials/backends/secure-storage-key-provider.isolated.ts",
+        "pass": 4,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/i18n/__tests__/startup-language.isolated.ts",
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/plugins/__tests__/plugin-context.isolated.ts",
+        "pass": 11,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/plugins/__tests__/plugin-install.isolated.ts",
+        "pass": 32,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/plugins/__tests__/plugin-storage.isolated.ts",
+        "pass": 25,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/prompts/__tests__/system.isolated.ts",
+        "pass": 19,
+        "fail": 0,
+        "skip": 1,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/skills/__tests__/storage.isolated.ts",
+        "pass": 33,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/sources/__tests__/api-tools-credential-freshness.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/sources/__tests__/api-tools-log-redaction.isolated.ts",
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/sources/__tests__/credential-manager-renew.isolated.ts",
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/sources/__tests__/oauth-relay.isolated.ts",
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/sources/__tests__/slack-oauth-relay.isolated.ts",
+        "pass": 10,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/sources/__tests__/token-refresh-manager.isolated.ts",
+        "pass": 32,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      },
+      {
+        "scope": "isolated: packages/shared/src/utils/__tests__/logo-cache.isolated.ts",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "errors": 0,
+        "log": ".cache/pi-sdk-v1.0.0/tests.log"
+      }
+    ],
+    "status": "passed_after_complete_affected_workspace_retries"
+  },
+  "integrationCoverage": [
+    "Real Pi SDK session context restoration and system prompt delivery",
+    "Real Pi SDK steering and cache-warming accounting",
+    "Bundled subprocess ChatGPT credential resolution with blocked external network",
+    "Electron production build and asset validation"
+  ],
+  "limits": [
+    "No live paid model or real-account OAuth acceptance run.",
+    "Native MCP, codemode, tool search, virtual models and new image/classifier APIs are evaluated, not enabled by this upgrade.",
+    "Seven existing tests are skipped by their own conditions."
+  ],
+  "checks": [
+    {
+      "command": "bun run typecheck:all",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:15:21.3812753Z",
+      "finishedAt": "2026-10-02T16:16:35.11972Z",
+      "log": ".cache/pi-sdk-v1.0.0/typecheck.log"
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:22:38.1465517Z",
+      "finishedAt": "2026-10-02T16:24:00.6429407Z",
+      "log": ".cache/pi-sdk-v1.0.0/lint.log"
+    },
+    {
+      "command": "bun run lint:i18n:parity",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:00.6560664Z",
+      "finishedAt": "2026-10-02T16:24:00.8324608Z",
+      "log": ".cache/pi-sdk-v1.0.0/lint-i18n-parity.log"
+    },
+    {
+      "command": "bun run lint:i18n:sorted",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:00.8330085Z",
+      "finishedAt": "2026-10-02T16:24:01.0047379Z",
+      "log": ".cache/pi-sdk-v1.0.0/lint-i18n-sorted.log"
+    },
+    {
+      "command": "bun run lint:i18n:coverage",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:01.0057302Z",
+      "finishedAt": "2026-10-02T16:24:01.4972923Z",
+      "log": ".cache/pi-sdk-v1.0.0/lint-i18n-coverage.log"
+    },
+    {
+      "command": "bun run lint:i18n:dead-keys",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:01.4980725Z",
+      "finishedAt": "2026-10-02T16:24:02.1193731Z",
+      "log": ".cache/pi-sdk-v1.0.0/lint-i18n-dead-keys.log"
+    },
+    {
+      "command": "bun run identity:check",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:02.1200078Z",
+      "finishedAt": "2026-10-02T16:24:25.3686527Z",
+      "log": ".cache/pi-sdk-v1.0.0/identity-check.log"
+    },
+    {
+      "command": "bun run version:check",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:25.3692426Z",
+      "finishedAt": "2026-10-02T16:24:25.650693Z",
+      "log": ".cache/pi-sdk-v1.0.0/version-check.log"
+    },
+    {
+      "command": "bun run test",
+      "exitCode": 1,
+      "startedAt": "2026-10-02T16:15:20.6909768Z",
+      "finishedAt": "2026-10-02T16:22:15.8114668Z",
+      "log": ".cache/pi-sdk-v1.0.0/tests.log"
+    },
+    {
+      "command": "bun test ./src/main/__tests__/pages-react-build.test.js",
+      "cwd": "apps/electron",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:21.4995021Z",
+      "finishedAt": "2026-10-02T16:24:25.1248456Z",
+      "log": ".cache/pi-sdk-v1.0.0/pages-retry.log"
+    },
+    {
+      "command": "bun test ./src/services/artifact-preview.test.ts",
+      "cwd": "packages/server-core",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:24:37.5035485Z",
+      "finishedAt": "2026-10-02T16:24:38.5705024Z",
+      "log": ".cache/pi-sdk-v1.0.0/artifact-retry.log"
+    },
+    {
+      "command": "bun run scripts/run-workspace-tests.ts --filter=apps/electron",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:25:06.5278241Z",
+      "finishedAt": "2026-10-02T16:25:41.5950606Z",
+      "log": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log"
+    },
+    {
+      "command": "bun run scripts/run-workspace-tests.ts --filter=packages/server-core",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:25:41.6950998Z",
+      "finishedAt": "2026-10-02T16:26:11.9128874Z",
+      "log": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log"
+    },
+    {
+      "command": "bun install --frozen-lockfile --ignore-scripts",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:26:59.4324545Z",
+      "finishedAt": "2026-10-02T16:27:00.4612557Z",
+      "log": ".cache/pi-sdk-v1.0.0/install.log"
+    },
+    {
+      "command": "bun run server:build:subprocess",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:27:00.6210761Z",
+      "finishedAt": "2026-10-02T16:27:02.6077541Z",
+      "log": ".cache/pi-sdk-v1.0.0/server-build-subprocess.log"
+    },
+    {
+      "command": "bun run electron:build",
+      "exitCode": 0,
+      "startedAt": "2026-10-02T16:27:02.6622635Z",
+      "finishedAt": "2026-10-02T16:28:42.381674Z",
+      "log": ".cache/pi-sdk-v1.0.0/electron-build.log"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "bun.lock",
+      "bytes": 665862,
+      "sha256": "fc40a525668d3fb4f47b019246ce4611866225062c0b8e5121735eaaad7d2a0f"
+    },
+    {
+      "path": "packages/pi-agent-server/dist/bundle.js",
+      "bytes": 13001396,
+      "sha256": "def2db638d18c9b53255d5438a3ec6ee7f3a2df41c7527df7422bf06acbc117e"
+    },
+    {
+      "path": "packages/pi-agent-server/dist/index.js",
+      "bytes": 22,
+      "sha256": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e"
+    }
+  ],
+  "logHashes": [
+    {
+      "path": ".cache/pi-sdk-v1.0.0/typecheck.log",
+      "sha256": "eaaa5a544a50c418ff1a34647973c0e8bec5e7dde191be2f537b52553346a3e5"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/lint.log",
+      "sha256": "46607f0d6dec25fa3525b4e08732a54857c76b93345eed89efb7ded15d31f29b"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/lint-i18n-parity.log",
+      "sha256": "43f346f3a60125c29b7ac3eeb8cac9cf14d5a72e75da3e695ff7c9d6e5a06670"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/lint-i18n-sorted.log",
+      "sha256": "a385f7ad93d74caa977cc79adc9d67c665deb37126057e0e0db7e7da7f372059"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/lint-i18n-coverage.log",
+      "sha256": "a8e9b5d8a27ab39c5bdf74ca8bbc326175a1e256794935ffe1f225b40fc90b53"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/lint-i18n-dead-keys.log",
+      "sha256": "f2e68bf3bd96aea1da230442afc35d4d9ca1342325436f63b07ff55c2ee187f7"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/identity-check.log",
+      "sha256": "d64b1bf55527cd8bad258e70eb031e12549ca97a2906d2ac56d4841c65941cf1"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/version-check.log",
+      "sha256": "58ec4b69e7f472cf90ad79b5745a5480c771a19aa4bfb67c61c8fd723646bccd"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/tests.log",
+      "sha256": "b0e221f7abbf2c6d49781826447ae6a5fc741ec9fec4ab1ac15440c56c4eb12e"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/pages-retry.log",
+      "sha256": "f91d868b021bc4bc6a96720f08aee20d8341275321f913a722a987ce40e058c3"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/artifact-retry.log",
+      "sha256": "252f8ec110c25140de15c7ca24a5c51734abcd2d7f90b857a8c7472944bcc5cd"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/apps-electron-retry.log",
+      "sha256": "f126b0ae075f96ea309221418f0d3d04b6695cd46282f32f1b35a4f52932c272"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/packages-server-core-retry.log",
+      "sha256": "ecfd763a53559346c1bce0aafe0ea106322c92a8621b1fa242a18a114ebd9a81"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/install.log",
+      "sha256": "29c1446838e591d915e9c1d1d3c7cc9c048b1b34fa0bc91f1906e31abaae3d33"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/server-build-subprocess.log",
+      "sha256": "58538a0864022fdf047ee98f29d5bbdfa0fb4b9c9304c4e628a3876675a3e8ec"
+    },
+    {
+      "path": ".cache/pi-sdk-v1.0.0/electron-build.log",
+      "sha256": "80541444057f02aa578c4d1c8ba12bea4e825489d00f35a6770d95d3d386bfd6"
+    }
+  ],
+  "assessment": "docs/pi-sdk-1.0.0-upgrade-assessment.md"
+}
