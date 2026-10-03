@@ -32,6 +32,7 @@ describe('sendMessage OAuth refresh ordering (#710)', () => {
   })
 
   afterEach(() => {
+    sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 

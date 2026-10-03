@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { ShieldAlert, Check, X, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import type { PermissionRisk } from '@phaneris/core/types'
 import type { PermissionRequest as PermissionRequestType } from '../../../../../shared/types'
 import type { PermissionResponse } from './types'
 
@@ -25,6 +26,12 @@ interface PermissionRequestProps {
 export function PermissionRequest({ request, onResponse, unstyled = false }: PermissionRequestProps) {
   const { t } = useTranslation()
   const canRemember = request.canRemember !== false
+  const riskLabels: Record<PermissionRisk, string> = {
+    deletes: t('chat.permissionRisk.deletes'), sends: t('chat.permissionRisk.sends'),
+    publishes: t('chat.permissionRisk.publishes'), credentials: t('chat.permissionRisk.credentials'),
+    system: t('chat.permissionRisk.system'), spends: t('chat.permissionRisk.spends'),
+  }
+  const risks = (request.risks ?? []).filter(risk => risk in riskLabels)
 
   const handleAllow = () => {
     onResponse({ type: 'permission', allowed: true, alwaysAllow: false })
@@ -56,10 +63,19 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
             <span>{t('chat.permissionRequired')}</span>
           </div>
           <div className="text-xs leading-[18px] text-muted-foreground">
-            <span className="font-medium text-foreground">Tool:</span> {request.toolName}
+            <span className="font-medium text-foreground">{t('chat.permissionTool')}</span> {request.toolName}
             <br />
             {request.description}
           </div>
+          {risks.length > 0 && (
+            <div className="flex flex-wrap gap-1" title={t('chat.permissionRiskHint')}>
+              {risks.map((risk) => (
+                <span key={risk} className="rounded-[4px] bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive">
+                  {riskLabels[risk]}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Command preview */}
@@ -105,7 +121,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
 
         {/* Tip text */}
         {canRemember && <span className="min-w-0 flex-1 basis-full text-[10px] text-muted-foreground sm:basis-auto sm:text-right">
-          {t('chat.permissionAlwaysAllowHint')}
+          {request.type === 'bash' ? t('chat.permissionAlwaysAllowHint') : t('chat.permissionAlwaysAllowTip')}
         </span>}
       </div>
     </div>

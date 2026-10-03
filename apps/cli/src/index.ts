@@ -703,6 +703,7 @@ async function cmdRun(args: CliArgs): Promise<void> {
     }
 
     const session = (await client.invoke('sessions:create', workspaceId, {
+      unattended: true,
       permissionMode: args.mode || 'allow-all',
       enabledSourceSlugs: args.sources.length > 0 ? args.sources : undefined,
     })) as { id: string }

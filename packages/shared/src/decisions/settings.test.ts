@@ -33,7 +33,7 @@ describe('normalizeDecisionLayerSettings', () => {
     expect(settings.baseUrl).toBe('https://jev.local');
     expect(settings.model).toBeUndefined();
     expect(settings.deadlineMs).toBe(DECISION_MIN_DEADLINE_MS);
-    expect(settings.features).toEqual({ decideTool: false, taskVerdicts: true, semanticLabels: true });
+    expect(settings.features).toEqual({ ...DEFAULT_DECISION_LAYER_SETTINGS.features, decideTool: false, taskVerdicts: true, semanticLabels: true });
     expect(normalizeDecisionLayerSettings({ deadlineMs: 10 ** 9 }).deadlineMs).toBe(DECISION_MAX_DEADLINE_MS);
   });
 });

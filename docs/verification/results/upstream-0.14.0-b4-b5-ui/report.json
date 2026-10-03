@@ -1,0 +1,66 @@
+{
+  "executedAt": "2026-10-03T06:04:20.902Z",
+  "browser": "headless Edge",
+  "checks": [
+    "Risk badges render while Guarded keeps a one-time approval without Always Allow",
+    "Guarded is offered after availability changes and selection propagates to the session callback",
+    "Both production plan approval handlers return Explore to its previous Guarded mode",
+    "Advanced settings exposes all 13 feature switches and persists Guarded independently",
+    "Chinese feature and risk labels render without unresolved translation keys",
+    "Production components finish without browser exceptions"
+  ],
+  "errors": [],
+  "calls": [
+    {
+      "action": "approval",
+      "response": {
+        "type": "permission",
+        "allowed": true,
+        "alwaysAllow": false
+      }
+    },
+    {
+      "action": "mode",
+      "value": "guarded"
+    },
+    {
+      "action": "plan-mode",
+      "value": "guarded"
+    },
+    {
+      "action": "plan-submit",
+      "text": "Plan approved, please execute."
+    },
+    {
+      "action": "plan-mode",
+      "value": "guarded"
+    },
+    {
+      "action": "plan-submit",
+      "text": "/compact"
+    },
+    {
+      "action": "settings",
+      "patch": {
+        "features": {
+          "guardedMode": true
+        }
+      }
+    }
+  ],
+  "advertisedFeatures": [
+    "Agent tool (decide)",
+    "Skill and source suggestions",
+    "Adaptive thinking",
+    "Large tool results",
+    "Mid-turn messages",
+    "Turn outcome",
+    "Smarter titles",
+    "Guarded mode",
+    "Risk badges",
+    "Semantic label rules",
+    "Automation conditions",
+    "Task verdicts",
+    "Targeted task repairs"
+  ]
+}

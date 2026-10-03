@@ -26,6 +26,7 @@ describe('sendMessage durability', () => {
   })
 
   afterEach(() => {
+    sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 

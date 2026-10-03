@@ -53,6 +53,7 @@ export type {
   ErrorCode,
   TypedError,
   PermissionRequest,
+  PermissionRisk,
   // Ask-user questions (interactive agent → human question, answered in place)
   AskUserQuestionOption,
   AskUserQuestionIntent,

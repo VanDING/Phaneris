@@ -39,12 +39,19 @@ export {
   cyclePermissionMode,
   subscribeModeChanges,
   PERMISSION_MODE_ORDER,
+  DEFAULT_PERMISSION_MODES,
+  availablePermissionModes,
+  isAutonomousPermissionMode,
+  isPermissionMode,
+  planExecutionMode,
   clampPermissionMode,
   PERMISSION_MODE_CONFIG,
   type PermissionMode,
   getModeState,
   hydratePreviousPermissionMode,
   getPermissionModeDiagnostics,
+  resolveEffectivePermissionMode,
+  setGuardedModeActiveResolver,
   initializeModeState,
   cleanupModeState,
   // Tool blocking (centralized)
@@ -160,3 +167,5 @@ export {
 export { setPowerShellValidatorRoot } from './powershell-validator.ts';
 
 export { resolveKeepBackgroundTasksAlive } from './core/keep-alive.ts';
+
+export type { GuardedModeCheck, GuardedModeCall, GuardedModeRisk, GuardedModeVerdict } from './core/guarded-mode.ts';

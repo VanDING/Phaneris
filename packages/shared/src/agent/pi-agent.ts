@@ -30,7 +30,7 @@ import { getBackendRuntime } from './backend/internal/driver-types.ts';
 import { SourceActivationDrainController } from './source-activation-drain.ts';
 
 import type { PermissionMode } from './mode-manager.ts';
-import { normalizeThinkingLevel, type ThinkingLevel } from './thinking-levels.ts';
+import { normalizeThinkingLevel, THINKING_LEVEL_IDS, type ThinkingLevel } from './thinking-levels.ts';
 
 // Import models from centralized registry
 import { getModelById } from '../config/models.ts';
@@ -49,7 +49,9 @@ import type {
 
 // Event adapter
 import { PiEventAdapter } from './backend/pi/event-adapter.ts';
-import type { PiCompactResult } from './backend/pi/protocol.ts';
+import type { PiCompactResult, PiLargeResultGateRequest, PiLargeResultGateResponse } from './backend/pi/protocol.ts';
+import { askLargeResultSummaryGate } from '../utils/large-response.ts';
+import { applyGuardedModeCheck, needsGuardedModeCheck } from './core/guarded-mode.ts';
 import { EventQueue } from './backend/event-queue.ts';
 
 // System prompt for Phaneris context
@@ -258,6 +260,7 @@ export class PiAgent extends BaseAgent {
   private abortReason?: AbortReason;
   /** Invalidates checks that were awaiting an automation or source activation at Stop. */
   private permissionEpoch = 0;
+  private guardedCheckAbort = new AbortController();
 
   // Event adapter
   private adapter: PiEventAdapter;
@@ -1086,6 +1089,10 @@ export class PiAgent extends BaseAgent {
         });
         break;
 
+      case 'large_result_gate_request':
+        void this.handleLargeResultGateRequest(msg as unknown as PiLargeResultGateRequest);
+        break;
+
       case 'tool_execute_request':
         // Subprocess wants main process to execute a proxy tool (MCP/API/session)
         this.handleToolExecuteRequest(msg as {
@@ -1503,6 +1510,11 @@ export class PiAgent extends BaseAgent {
         this.send({ type: 'pre_tool_use_response', requestId, action: 'block', reason: `Source "${checkResult.sourceSlug}" is still not active.` });
         return;
       }
+    }
+
+    if (needsGuardedModeCheck(checkResult, { sessionId, toolName }, this.guardedModeCheck)) {
+      checkResult = await applyGuardedModeCheck(checkResult, buildCheckInput(), this.guardedModeCheck, { signal: this.guardedCheckAbort?.signal });
+      if (cancelled()) return;
     }
 
     switch (checkResult.type) {
@@ -2360,6 +2372,8 @@ export class PiAgent extends BaseAgent {
     const compactMatch = message.trim().match(/^\/compact(?:\s+([\s\S]+))?$/i);
     const compactEpoch = this.compactionEpoch;
     // Reset state for new turn
+    this.guardedCheckAbort?.abort();
+    this.guardedCheckAbort = new AbortController();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this._isProcessing = true;
     this.abortReason = undefined;
@@ -2520,6 +2534,11 @@ export class PiAgent extends BaseAgent {
         this.debug(`Canonical model context unavailable; retaining Pi context: ${error instanceof Error ? error.message : String(error)}`);
       }
 
+      // Adaptive thinking affects only the subprocess turn, never the stored setting.
+      if (options?.thinkingOverride && THINKING_LEVEL_IDS.indexOf(options.thinkingOverride) < THINKING_LEVEL_IDS.indexOf(this.getThinkingLevel())) {
+        this.send({ type: 'set_thinking_level', level: options.thinkingOverride });
+      }
+
       // Send prompt to subprocess
       const turnId = `turn-${++this.rpcIdCounter}`;
       this.send({
@@ -2595,6 +2614,9 @@ export class PiAgent extends BaseAgent {
 
       yield { type: 'complete' };
     } finally {
+      if (options?.thinkingOverride && this.subprocess) {
+        this.send({ type: 'set_thinking_level', level: this.getThinkingLevel() });
+      }
       this._isProcessing = false;
     }
   }
@@ -2804,6 +2826,7 @@ export class PiAgent extends BaseAgent {
   }
 
   async abort(reason?: string): Promise<void> {
+    this.guardedCheckAbort?.abort();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
     // Fire Stop hook event (fire-and-forget)
@@ -2825,6 +2848,7 @@ export class PiAgent extends BaseAgent {
   }
 
   forceAbort(reason: AbortReason): void {
+    this.guardedCheckAbort?.abort();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
     // Fire Stop hook event (fire-and-forget)
@@ -2877,6 +2901,10 @@ export class PiAgent extends BaseAgent {
    * queued tools, and continues with full context intact.
    * Events flow through the existing generator — no abort needed.
    */
+  override canSteerNow(): boolean {
+    return this._isProcessing && !!this.subprocess && !this.isCompactionInFlight();
+  }
+
   override redirect(message: string): boolean {
     if (this.isCompactionInFlight()) {
       // A manual /compact owns this turn: no agent loop is running to consume a
@@ -2959,6 +2987,7 @@ export class PiAgent extends BaseAgent {
   }
 
   async disposeForRestart(): Promise<void> {
+    this.guardedCheckAbort?.abort();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.stopConfigWatcher();
 
@@ -3058,6 +3087,7 @@ export class PiAgent extends BaseAgent {
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.guardedCheckAbort?.abort();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
     this.rejectAllPendingEphemeral(new Error('Pi subprocess stopped'));
@@ -3312,5 +3342,16 @@ export class PiAgent extends BaseAgent {
 
   protected override debug(message: string): void {
     this.onDebug?.(`[pi] ${message}`);
+  }
+
+  private async handleLargeResultGateRequest(msg: PiLargeResultGateRequest): Promise<void> {
+    const summarize = await askLargeResultSummaryGate({
+      text: msg.text,
+      context: { toolName: msg.toolName, intent: msg.intent },
+      estimatedTokens: msg.estimatedTokens,
+      sessionId: this.config.session?.id,
+    });
+    const response: PiLargeResultGateResponse = { type: 'large_result_gate_response', requestId: msg.requestId, summarize };
+    this.send({ ...response });
   }
 }

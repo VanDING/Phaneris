@@ -2,7 +2,7 @@
 
 实施基线：Phaneris `4613e04b2ab5e79477000ce0a457ab54a369325b`（0.2.4、Pi SDK 1.0.0）。移植出处：上游 `73bd9c2a3573158bea880984eb8d5fdb41e0cac2`，前版 `3eac37be5eeee00d312239f21ce3b7c7db92502b`。
 
-用户于 2026-10-03 批准[评估方案](upstream-0.14.0-assessment.md)。本次按首批范围实施 B1（P01–P07）、B2（R01–R08）与必要的 B3 基础。B4 为后续决策消费者接线；B5 按方案后置。本仓仅保留三个权限模式、Pi 后端、Durable Runtime 持久化权威及独立产品身份。
+用户于 2026-10-03 批准[评估方案](upstream-0.14.0-assessment.md)。本文保存 `f4846428` 首批交付的快照：B1（P01–P07）、B2（R01–R08）与必要的 B3 基础；当时 B4、B5 后置，仅保留三个权限模式。用户随后要求完整实施 B4–B5，后续四模式与决策接线状态见 [B4–B5 实施记录](upstream-0.14.0-b4-b5.md)。Pi 后端、Durable Runtime 持久化权威及独立产品身份继续保留。
 
 实施分支：`codex/upstream-0.14.0-absorption`；在隔离工作树中推进，不改原工作区的用户文档或 Pi SDK 升级提交。
 
@@ -66,7 +66,7 @@
 | 包资源 / 架构 / 身份 | 9/9 通过 | [包结构报告](../verification/results/packaged-client-verification-win.json)；废弃 bridge bundle 不在包中 |
 | 最终包实际启动 | 5/5 通过 | [启动报告](../verification/results/packaged-client-smoke-win.json)；保持运行 25 秒、生成 renderer/helper、无 fatal 输出、配置初始化、限定范围清理成功；既有协议注册恢复后哈希完全一致 |
 
-阶段状态：**B0、B1、B2 及 B3 首批范围完成；B4、B5 尚未实施。** 交付为隔离分支上的本地提交，未推送，未合入 `main`。
+首批 `f4846428` 的阶段状态：**B0、B1、B2 及 B3 首批范围完成；当时 B4、B5 尚未实施。** 后续实施和验收见 [B4–B5 记录](upstream-0.14.0-b4-b5.md)。交付为隔离分支上的本地提交，未推送，未合入 `main`。
 
 ## 实际覆盖与限制
 

@@ -572,6 +572,13 @@ export interface TypedError {
 export type PermissionRequestType = 'bash' | 'file_write' | 'mcp_mutation' | 'api_mutation' | 'admin_approval';
 
 /**
+ * What a permission prompt's action does, as judged by the decision model
+ * (opt-in, `riskBadges`). Informational badges only: they never change the
+ * prompt or its outcome.
+ */
+export type PermissionRisk = 'deletes' | 'sends' | 'publishes' | 'credentials' | 'system' | 'spends';
+
+/**
  * Permission request from agent (e.g., bash command approval)
  */
 export interface PermissionRequest {
@@ -594,6 +601,8 @@ export interface PermissionRequest {
   commandHash?: string;
   /** Approval validity window */
   approvalTtlSeconds?: number;
+  /** Informational decision-model risk badges. */
+  risks?: PermissionRisk[];
   /** False when the operation has no safe session-scoped approval to remember. */
   canRemember?: boolean;
 }
@@ -802,6 +811,8 @@ export type AgentEvent =
       rememberForMinutes?: number;
       commandHash?: string;
       approvalTtlSeconds?: number;
+  /** Informational decision-model risk badges. */
+  risks?: PermissionRisk[];
       canRemember?: boolean;
     }
   | { type: 'ask_user_request'; requestId: string; questions: AskUserQuestion[] }

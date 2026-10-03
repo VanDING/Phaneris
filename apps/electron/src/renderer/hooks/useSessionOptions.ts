@@ -18,8 +18,10 @@ import { DEFAULT_THINKING_LEVEL } from '@phaneris/shared/agent/thinking-levels'
  * All session-scoped options in one place.
  */
 export interface SessionOptions {
-  /** Permission mode ('safe', 'ask', 'allow-all') */
+  /** Permission mode ('safe', 'ask', 'guarded', 'allow-all') */
   permissionMode: PermissionMode
+  /** Mode before the latest transition, used when accepting a plan in Explore. */
+  previousPermissionMode?: PermissionMode
   /** Monotonic version from backend permission mode state (used to ignore stale events) */
   permissionModeVersion?: number
   /** Session-level thinking level — sticky, persisted. See {@link ThinkingLevel}. */

@@ -28,6 +28,7 @@ writeFileSync(join(configDir, 'config.json'), JSON.stringify({
 }), 'utf-8')
 
 const { SessionManager, createManagedSession } = await import('./SessionManager.ts')
+const managers: InstanceType<typeof SessionManager>[] = []
 const { getSessionPath } = await import('@phaneris/shared/sessions/storage')
 
 const DOCUMENT = [
@@ -46,6 +47,7 @@ interface Seams {
 }
 
 afterAll(() => {
+  for (const manager of managers) manager.cleanup()
   rmSync(configDir, { recursive: true, force: true })
   rmSync(workspaceRoot, { recursive: true, force: true })
 })
@@ -53,6 +55,7 @@ afterAll(() => {
 describe('handoff successor creation', () => {
   it('inherits the working context, records its lineage, and receives the document as its first message', async () => {
     const sm = new SessionManager()
+    managers.push(sm)
     const seams = sm as unknown as Seams
     const managed = createManagedSession(
       { id: 'parent', name: 'Parent task', permissionMode: 'ask' },
@@ -106,6 +109,7 @@ describe('handoff successor creation', () => {
 
   it('forwards a message typed into the finished handoff to the continuation', async () => {
     const sm = new SessionManager()
+    managers.push(sm)
     const seams = sm as unknown as Seams
     const parent = createManagedSession(
       { id: 'parent2', name: 'Parent task' },

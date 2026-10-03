@@ -714,6 +714,36 @@ export class DurableRuntimeCoordinator {
     return state
   }
 
+  /** Acknowledged host inputs retain separate identities even when model delivery is merged. */
+  recordUserInputAdmission(input: {
+    workspaceRootPath: string; sessionId: string; messageId: string; content: string;
+    createdAt: number; attachments?: unknown; options?: unknown;
+  }): number {
+    return this.storeFor(input.workspaceRootPath).appendEvents([{
+      eventId: `input:${input.messageId}:admitted`, operationId: `input:${input.messageId}`,
+      sessionId: input.sessionId, turnId: input.messageId, type: 'user_input_admitted',
+      schemaVersion: 1, modelVisible: false, partial: false,
+      payload: { messageId: input.messageId, content: input.content,
+        attachments: input.attachments ?? [], options: input.options ?? {} }, createdAt: input.createdAt,
+    }])[0]!
+  }
+
+  /** Additional original inputs in a merged/steered turn share its exclusion boundary. */
+  commitAdditionalUserMessage(input: {
+    workspaceRootPath: string; sessionId: string; turnId: string; operationId: string;
+    messageId: string; content: string; createdAt: number;
+  }): number {
+    const store = this.storeFor(input.workspaceRootPath)
+    const run = store.getOperation(input.operationId)
+    if (!run || run.sessionId !== input.sessionId) throw new Error('User message requires its owning run')
+    return store.appendEvents([{
+      eventId: `${input.operationId}:user:${input.messageId}`, operationId: input.operationId,
+      sessionId: input.sessionId, turnId: input.turnId, type: 'user_message_committed',
+      schemaVersion: 1, modelVisible: true, partial: false,
+      payload: { messageId: input.messageId, content: input.content }, createdAt: input.createdAt,
+    }])[0]!
+  }
+
   commitAssistantMessage(input: {
     workspaceRootPath: string
     operationId: string

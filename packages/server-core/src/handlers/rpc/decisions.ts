@@ -10,8 +10,8 @@
  * provider. Only `TEST` (server-side) ever touches a key. Keys go in through
  * `getCredentialManager().setDecisionApiKey(...)` and nowhere else.
  *
- * All seven channels are in `LOCAL_ONLY_CHANNELS`, so remote clients are routed
- * back to the local host; registration must therefore happen on the local host.
+ * All seven channels run on the authenticated workspace server, which owns
+ * the settings and credential vault used by that server’s sessions.
  */
 
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'

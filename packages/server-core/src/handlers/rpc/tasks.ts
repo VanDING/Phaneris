@@ -47,6 +47,9 @@ import { createLogger } from '@phaneris/shared/utils'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 import { TaskRunner, createTaskFromSpec, finishTaskOrchestrator } from '../../tasks'
+import { buildTaskVerdictDecider } from '../../decisions/task-verdict'
+import { buildRepairScopePicker } from '../../decisions/task-repairs'
+import { buildNodeOutcomeClassifier } from '../../decisions/turn-outcome'
 
 const tasksLog = createLogger('tasks-generate')
 
@@ -106,7 +109,10 @@ export function registerTasksHandlers(server: RpcServer, deps: HandlerDeps): voi
     let runner = runners.get(workspaceId)
     if (!runner) {
       const ws = workspaceOrThrow(workspaceId)
-      runner = new TaskRunner({ host: deps.sessionManager, workspaceId: ws.id, workspaceRoot: ws.rootPath })
+      const decisionDeps = { log: (line: string) => tasksLog.info(line) }
+      runner = new TaskRunner({ host: deps.sessionManager, workspaceId: ws.id, workspaceRoot: ws.rootPath,
+        decide: buildTaskVerdictDecider(decisionDeps), pickRepairNodes: buildRepairScopePicker(decisionDeps),
+        classifyNodeOutcome: buildNodeOutcomeClassifier(decisionDeps) })
       runners.set(workspaceId, runner)
     }
     return runner
@@ -430,6 +436,8 @@ function assertPlanValue(value: string | null | undefined, field: string): void 
       } else if (entry.kind === 'verdict') {
         verdicts.push({
           result: entry.result,
+          ...(entry.via ? { via: entry.via } : {}),
+          ...(entry.confidence !== undefined ? { confidence: entry.confidence } : {}),
           ...(entry.reason ? { reason: entry.reason } : {}),
           ...(entry.nodes?.length ? { nodes: entry.nodes } : {}),
         })

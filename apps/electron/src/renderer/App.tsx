@@ -394,6 +394,7 @@ export default function App() {
   const [menuNewChatTrigger, setMenuNewChatTrigger] = useState(0)
   // Permission requests per session (queue to handle multiple concurrent requests)
   const [pendingPermissions, setPendingPermissions] = useState<Map<string, PermissionRequest[]>>(new Map())
+  const notifiedPermissionRequests = useRef(new Set<string>())
   // Credential requests per session (queue to handle multiple concurrent requests)
   const [pendingCredentials, setPendingCredentials] = useState<Map<string, CredentialRequest[]>>(new Map())
   // ask_user questions per session (queue; the agent's tool call stays open until answered)
@@ -496,6 +497,7 @@ export default function App() {
         ...current,
         permissionMode: state.permissionMode,
         permissionModeVersion: state.modeVersion,
+        previousPermissionMode: state.previousPermissionMode,
       })
       return next
     })
@@ -878,13 +880,22 @@ export default function App() {
             setPendingPermissions(prevPerms => {
               const next = new Map(prevPerms)
               const existingQueue = next.get(sessionId) || []
-              next.set(sessionId, [...existingQueue, effect.request])
+              const index = existingQueue.findIndex(request => request.requestId === effect.request.requestId)
+              next.set(sessionId, index < 0 ? [...existingQueue, effect.request]
+                : existingQueue.map((request, i) => i === index ? effect.request : request))
               return next
             })
 
             // Native notification for approval-required pauses (same gating as completion notifications)
+            const notificationKey = `${sessionId}:${effect.request.requestId}`
+            const firstPrompt = !notifiedPermissionRequests.current.has(notificationKey)
+            notifiedPermissionRequests.current.add(notificationKey)
+            if (notifiedPermissionRequests.current.size > 1024) {
+              const oldest = notifiedPermissionRequests.current.values().next().value
+              if (oldest !== undefined) notifiedPermissionRequests.current.delete(oldest)
+            }
             const notifySession = store.get(sessionAtomFamily(sessionId))
-            if (notifySession && !notifySession.hidden) {
+            if (notifySession && !notifySession.hidden && firstPrompt) {
               const isAdminPrompt = effect.request.type === 'admin_approval'
               const promptBody = isAdminPrompt
                 ? `Admin approval required: ${effect.request.appName || effect.request.toolName}`
@@ -897,6 +908,7 @@ export default function App() {
             if (typeof effect.modeVersion === 'number' && effect.changedAt && effect.changedBy) {
               applyPermissionModeState(effect.sessionId, {
                 permissionMode: effect.permissionMode,
+                previousPermissionMode: effect.previousPermissionMode,
                 modeVersion: effect.modeVersion,
                 changedAt: effect.changedAt,
                 changedBy: effect.changedBy,

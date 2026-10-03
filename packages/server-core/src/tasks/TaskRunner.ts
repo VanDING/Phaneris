@@ -38,6 +38,8 @@ import {
   DEFAULT_REPAIR_ATTEMPTS,
   MAX_REPAIR_ATTEMPTS_CAP,
 } from '@phaneris/shared/tasks';
+import type { DecisionRequest, DecisionResult } from '@phaneris/shared/decisions';
+import { classifyVerdictWithDecision } from './verdict-decision';
 
 // ---------------------------------------------------------------------------
 // Host interface (SessionManager satisfies this structurally)
@@ -99,7 +101,40 @@ export interface TaskRunnerDeps {
   /** Injectable clock (run-log timestamps) + run-id generator, for determinism in tests. */
   now?: () => string;
   genRunId?: () => string;
+  /**
+   * Optional decision-model call (Jev). Used ONLY to read a verdict out of an orchestrator reply that
+   * has no parseable VERDICT line: a parseable line always wins, the model never changes what PASS or
+   * FAIL do, and `null` (layer off, unsure, failed) leaves the runner exactly as before — it re-asks.
+   */
+  decide?: TaskDecisionFn;
+  /**
+   * Optional decision-model read of how a child's turn ended (Jev). A child that asked for input or
+   * gave up is failed (retry with the reason, or needs-review) instead of marked done: children run
+   * unattended, so nobody would answer. `null` (layer off, unsure, failed) marks the node done as before.
+   */
+  classifyNodeOutcome?: NodeOutcomeFn;
+  /**
+   * Optional decision-model scoping of a FAIL repair (Jev). When the verifier's FAIL names no
+   * subtasks, the model picks the ones its reason implicates; `null` repairs the whole DAG as before.
+   */
+  pickRepairNodes?: RepairScopeFn;
 }
+
+/** Runs one decision request for a task run; `null` = unavailable. Must not throw (the runner also guards). */
+export type TaskDecisionFn = (request: DecisionRequest, context: { slug: string; runId: string }) => Promise<DecisionResult | null>;
+
+/** Picks the nodes a FAIL reason implicates; `null` = unavailable or none. Must not throw (the runner also guards). */
+export type RepairScopeFn = (
+  reason: string,
+  nodes: Array<{ id: string; description: string }>,
+  context: { slug: string; runId: string },
+) => Promise<string[] | null>;
+
+/** Reads how a child node's final turn ended; `null` = unavailable or unsure. Must not throw (the runner also guards). */
+export type NodeOutcomeFn = ((finalText: string, context: { slug: string; runId: string; nodeId: string }) => Promise<'finished' | 'needs_input' | 'blocked' | null>) & {
+  /** Synchronous gate: when false the node completes without the async check, as before. */
+  isActive?: () => boolean;
+};
 
 export interface RunOptions {
   /** The task's persistent parent/orchestrator session (author + final verifier). */
@@ -225,6 +260,8 @@ class ActiveRun {
   private verdictOff?: () => void;
   /** FAIL verdicts that have triggered a repair pass (bounded by `maxRepairs`). */
   private repairsUsed = 0;
+  /** The last repair was narrowed by the decision model: the next FAIL repairs the whole DAG. */
+  private lastRepairScoped = false;
   /** Malformed-verdict re-asks issued (bounded by MAX_UNPARSED_REASKS); not a repair. */
   private unparsedReAsks = 0;
   /** Resolved repair cap = min(spec.max_iterations ?? DEFAULT, CAP). */
@@ -609,16 +646,11 @@ class ActiveRun {
         return;
       }
 
-      const output: NodeOutput = { text };
-      this.outputs[nodeId] = output;
-      st.state = 'done';
-      this.inFlight = Math.max(0, this.inFlight - 1);
-      this.log({ kind: 'node-finished', nodeId, sessionId: evt.sessionId, state: 'done', output });
-      // Compatibility projection only: canonical fact above is authoritative.
-      writeNodeOutput(this.deps.workspaceRoot, this.slug, this.runId, nodeId, output);
-      void this.deps.host.setSessionStatus(evt.sessionId, DONE_STATUS);
-      void this.deps.host.setKanbanColumn(evt.sessionId, 'done');
-      this.scheduleReady();
+      if (this.deps.classifyNodeOutcome && (this.deps.classifyNodeOutcome.isActive?.() ?? true)) {
+        void this.finishNodeAfterOutcomeCheck(nodeId, evt.sessionId, text);
+        return;
+      }
+      this.markNodeDone(nodeId, evt.sessionId, text);
     } else if (evt.reason === 'interrupted') {
       // Externally aborted while running → cancelled (re-dispatched on resume). We do not
       // auto-retry here to avoid a stop/retry loop.
@@ -631,6 +663,25 @@ class ActiveRun {
       // 'error' | 'timeout'
       this.failNode(nodeId, evt.reason, evt.sessionId);
     }
+  }
+
+  private markNodeDone(nodeId: string, sessionId: string, text: string): void {
+    const st = this.state.get(nodeId)!;
+    const output: NodeOutput = { text };
+    this.outputs[nodeId] = output;
+    st.state = 'done';
+    this.inFlight = Math.max(0, this.inFlight - 1);
+    this.log({ kind: 'node-finished', nodeId, sessionId, state: 'done', output });
+    writeNodeOutput(this.deps.workspaceRoot, this.slug, this.runId, nodeId, output);
+    void this.deps.host.setSessionStatus(sessionId, DONE_STATUS);
+    void this.deps.host.setKanbanColumn(sessionId, 'done');
+    this.scheduleReady();
+  }
+
+  private recordVerdict(text: string, entry: Omit<Extract<RunLogEntry, { kind: 'verdict' }>, 't' | 'output'>): void {
+    this.log({ ...entry, output: { text } });
+    // Durable task fact is committed by log() before this compatibility projection.
+    writeNodeOutput(this.deps.workspaceRoot, this.slug, this.runId, '__verdict__', { text });
   }
 
   private failNode(nodeId: string, reason: string, sessionId?: string, allowRetry = true): void {
@@ -785,41 +836,36 @@ class ActiveRun {
    */
   private handleVerdict(text: string): void {
     if (this.runStatus !== 'verifying') return; // stopped/finalized while awaiting the verdict
-    const verdictOutput = { text };
     const verdict = parseVerdict(text);
-    this.log({ kind: 'verdict', result: verdict.result, reason: verdict.reason, nodes: verdict.nodes, output: verdictOutput });
-    writeNodeOutput(this.deps.workspaceRoot, this.slug, this.runId, '__verdict__', verdictOutput);
+    if (verdict.result === 'unparsed' && this.deps.decide) {
+      void this.classifyUnparsedVerdict(text);
+      return;
+    }
+    this.recordVerdict(text, { kind: 'verdict', result: verdict.result, reason: verdict.reason, nodes: verdict.nodes });
+    this.applyVerdict(verdict);
+  }
 
-    if (verdict.result === 'pass') {
-      this.unparsedReAsks = 0;
-      this.finish('completed');
-      return;
+  /**
+   * Ask the decision model which subtasks a FAIL reason implicates, then repair those (and their
+   * dependents); no answer repairs the whole DAG. Dropped if the run was stopped meanwhile.
+   */
+  private async repairAfterScoping(reason: string): Promise<void> {
+    let nodes: string[] | null = null;
+    try {
+      const candidates = this.spec.nodes.map((n) => ({ id: n.id, description: `${n.title ?? n.id}: ${n.prompt ?? ''}`.trim() }));
+      nodes = await this.deps.pickRepairNodes!(reason, candidates, { slug: this.slug, runId: this.runId });
+    } catch {
+      nodes = null;
     }
-
-    if (verdict.result === 'unparsed') {
-      if (this.unparsedReAsks < MAX_UNPARSED_REASKS) {
-        this.unparsedReAsks += 1;
-        void this.reAskVerdict();
-        return;
-      }
-      // Repeatedly malformed → don't hang the run forever.
-      this.finish('failed');
-      return;
+    if (this.runStatus !== 'verifying') return;
+    try {
+      this.lastRepairScoped = nodes !== null;
+      this.repairForVerdict(reason, nodes ?? undefined);
+    } catch (err) {
+      // Same reporting channel as classifyUnparsedVerdict; the async hop would otherwise route this
+      // to unhandledRejection.
+      console.error(`[conductor] repair failed for ${this.slug}/${this.runId}:`, err);
     }
-
-    // FAIL — repair the frontier if there is budget for it.
-    if (this.repairsUsed >= this.maxRepairs) {
-      this.log({ kind: 'budget-breach', metric: 'iterations', value: this.repairsUsed, limit: this.maxRepairs });
-      this.finish('failed');
-      return;
-    }
-    if (this.isOverBudget()) {
-      this.log({ kind: 'budget-breach', metric: 'tokens', value: this.tokensUsed, limit: this.spec.token_budget! });
-      this.finish('failed');
-      return;
-    }
-    this.repairsUsed += 1;
-    this.repairForVerdict(verdict.reason, verdict.nodes);
   }
 
   /** Re-ask the orchestrator for a parseable verdict line (format-only; does not consume repair budget). */
@@ -933,6 +979,97 @@ class ActiveRun {
     });
     this.factOrdinal += 1;
     appendRunLog(this.deps.workspaceRoot, this.slug, this.runId, committed);
+  }
+
+  private async finishNodeAfterOutcomeCheck(nodeId: string, sessionId: string, text: string): Promise<void> {
+    let outcome: 'finished' | 'needs_input' | 'blocked' | null = null;
+    try {
+      outcome = await this.deps.classifyNodeOutcome!(text, { slug: this.slug, runId: this.runId, nodeId });
+    } catch {
+      outcome = null;
+    }
+    const st = this.state.get(nodeId);
+    if (!st || st.state !== 'running' || st.sessionId !== sessionId) return;
+    if (this.runStatus === 'stopped' || this.runStatus === 'completed' || this.runStatus === 'failed') return;
+
+    try {
+      if (outcome === 'needs_input') {
+        this.failNode(nodeId, 'asked for input instead of finishing (nobody answers inside a task run: decide and continue)', sessionId);
+      } else if (outcome === 'blocked') {
+        this.failNode(nodeId, 'reported that it could not finish', sessionId);
+      } else {
+        this.markNodeDone(nodeId, sessionId, text);
+      }
+    } catch (err) {
+      // Same reporting channel as the synchronous completion listener; the async hop would
+      // otherwise route this to unhandledRejection.
+      console.error(`[conductor] node completion failed for ${this.slug}/${this.runId}/${nodeId}:`, err);
+    }
+  }
+
+  private applyVerdict(verdict: { result: 'pass' | 'fail' | 'unparsed'; reason?: string; nodes?: string[]; via?: 'decision' }): void {
+    if (verdict.result === 'pass') {
+      this.unparsedReAsks = 0;
+      this.finish('completed');
+      return;
+    }
+
+    if (verdict.result === 'unparsed') {
+      if (this.unparsedReAsks < MAX_UNPARSED_REASKS) {
+        this.unparsedReAsks += 1;
+        void this.reAskVerdict();
+        return;
+      }
+      // Repeatedly malformed → don't hang the run forever.
+      this.finish('failed');
+      return;
+    }
+
+    // FAIL — repair the frontier if there is budget for it.
+    if (this.repairsUsed >= this.maxRepairs) {
+      this.log({ kind: 'budget-breach', metric: 'iterations', value: this.repairsUsed, limit: this.maxRepairs });
+      this.finish('failed');
+      return;
+    }
+    if (this.isOverBudget()) {
+      this.log({ kind: 'budget-breach', metric: 'tokens', value: this.tokensUsed, limit: this.spec.token_budget! });
+      this.finish('failed');
+      return;
+    }
+    this.repairsUsed += 1;
+    // Scoping needs the verifier's own reason: a FAIL the decision model read out of an unparsed
+    // reply carries a fixed one. A narrowed repair gets one chance; the next FAIL repairs everything.
+    const scopable = this.deps.pickRepairNodes && this.repairsUsed === 1 && verdict.via !== 'decision' && !this.lastRepairScoped
+      && (verdict.nodes?.length ?? 0) === 0 && verdict.reason;
+    this.lastRepairScoped = false;
+    if (scopable) {
+      void this.repairAfterScoping(verdict.reason!);
+      return;
+    }
+    this.repairForVerdict(verdict.reason, verdict.nodes);
+  }
+
+  private async classifyUnparsedVerdict(text: string): Promise<void> {
+    const nodeIds = this.spec.nodes.map((n) => n.id);
+    const outcome = await classifyVerdictWithDecision(text, nodeIds, (request) =>
+      this.deps.decide!(request, { slug: this.slug, runId: this.runId }),
+    );
+    if (this.runStatus !== 'verifying') return;
+    try {
+      if (outcome.kind === 'decided') {
+        const { verdict } = outcome;
+        this.recordVerdict(text, { kind: 'verdict', result: verdict.result, reason: verdict.reason, nodes: verdict.nodes, via: 'decision', confidence: verdict.confidence });
+        this.applyVerdict({ result: verdict.result, reason: verdict.reason, nodes: verdict.nodes, via: 'decision' });
+        return;
+      }
+      // `via: 'decision'` only when a decision actually ran; an unavailable layer logs like before.
+      this.recordVerdict(text, outcome.kind === 'unsure' ? { kind: 'verdict', result: 'unparsed', via: 'decision' } : { kind: 'verdict', result: 'unparsed' });
+      this.applyVerdict({ result: 'unparsed' });
+    } catch (err) {
+      // Same reporting channel as synchronous listener failures (SessionManager logs those); the
+      // async hop would otherwise route this to unhandledRejection.
+      console.error(`[conductor] verdict handling failed for ${this.slug}/${this.runId}:`, err);
+    }
   }
 }
 

@@ -26,7 +26,7 @@ import type { PermissionMode } from '../agent/mode-types.ts';
 // ---------------------------------------------------------------------------
 
 /** Permission modes a node session can run under (fixed set, mirrors agent/mode-types). */
-export const PERMISSION_MODES = ['safe', 'ask', 'allow-all'] as const satisfies readonly PermissionMode[];
+export const PERMISSION_MODES = ['safe', 'ask', 'guarded', 'allow-all'] as const satisfies readonly PermissionMode[];
 
 /**
  * Node roles retained for reading existing YAML. Only `session` is executable;

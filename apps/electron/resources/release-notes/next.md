@@ -4,7 +4,12 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Features
 
+- Added independent decision features for Guarded permissions, risk badges, adaptive thinking, skill/source suggestions, large-result previews, mid-turn delivery, turn outcomes, smart titles, automation conditions, and targeted task repairs. The new switches default to off.
+
 ## Improvements
+
+- Completed semantic label evaluation and task verdict inference, preserving regex rules, explicit verdicts, task budgets, and manual edits.
+- Preserve separate acknowledged messages and durable input records when queued continuations share one model turn. Remote decision settings and credentials use the target server.
 
 - Upgraded the Pi SDK from 0.87.1 to 1.0.0, updating the model catalog and provider handling for tool calls, reasoning, retries, and usage costs.
 - Added linked decision outcomes and follow-ups, cancellation reporting, and a local decision usage report.

@@ -1,3 +1,4 @@
+import { useAvailablePermissionModes } from '@/hooks/useAvailablePermissionModes'
 import * as React from 'react'
 import { useTranslation } from "react-i18next"
 import { AnimatePresence, motion } from 'motion/react'
@@ -72,7 +73,7 @@ import { ConnectionIcon } from '@/components/icons/ConnectionIcon'
 import { FreeFormInputContextBadge } from './FreeFormInputContextBadge'
 import { derivePickerMode } from './picker-mode'
 import type { FileAttachment, LoadedSource, LoadedSkill, PluginSummary } from '../../../../shared/types'
-import type { PermissionMode } from '@phaneris/shared/agent/modes'
+import { planExecutionMode, type PermissionMode } from '@phaneris/shared/agent/modes'
 import { type ThinkingLevel, getThinkingLevelNameKey, getThinkingLevelsForModel } from '@phaneris/shared/agent/thinking-levels'
 import { useEscapeInterrupt } from '@/context/EscapeInterruptContext'
 import { hasOpenOverlay } from '@/lib/overlay-detection'
@@ -153,6 +154,7 @@ export interface FreeFormInputProps {
   onThinkingLevelChange?: (level: ThinkingLevel) => void
   // Advanced options
   permissionMode?: PermissionMode
+  previousPermissionMode?: PermissionMode
   onPermissionModeChange?: (mode: PermissionMode) => void
   /** Enabled permission modes for Shift+Tab cycling (min 2 modes) */
   enabledModes?: PermissionMode[]
@@ -286,6 +288,7 @@ export function FreeFormInput({
   thinkingLevel = 'medium',
   onThinkingLevelChange,
   permissionMode = 'ask',
+  previousPermissionMode,
   onPermissionModeChange,
   enabledModes = ['safe', 'ask', 'allow-all'],
   inputValue,
@@ -706,10 +709,10 @@ export function FreeFormInput({
         draftInput,
       })
 
-      // Switch to allow-all (Auto) mode if in Explore mode (allow execution without prompts)
+      // Return an approved plan to Guarded when Explore was entered from it.
       // Only switch if currently in safe mode - if user is in 'ask' mode, respect their choice
       if (permissionMode === 'safe') {
-        onPermissionModeChange?.('allow-all')
+        onPermissionModeChange?.(planExecutionMode(previousPermissionMode))
       }
 
       onSubmit(text, undefined)
@@ -717,7 +720,7 @@ export function FreeFormInput({
 
     window.addEventListener('craft:approve-plan', handleApprovePlan as EventListener)
     return () => window.removeEventListener('craft:approve-plan', handleApprovePlan as EventListener)
-  }, [sessionId, permissionMode, onPermissionModeChange, onSubmit, consumeInputDraftSnapshot])
+  }, [sessionId, permissionMode, previousPermissionMode, onPermissionModeChange, onSubmit, consumeInputDraftSnapshot])
 
   // Listen for craft:approve-plan-with-compact events (Accept & Compact option)
   // This compacts the conversation first, then executes the plan.
@@ -733,9 +736,9 @@ export function FreeFormInput({
       const shouldIncludeDraft = e.detail?.includeDraftInput !== false
       const draftInputSnapshot = shouldIncludeDraft ? consumeInputDraftSnapshot() : ''
 
-      // Switch to allow-all (Auto) mode if in Explore mode
+      // Preserve Guarded's risk checks after the approved compaction and plan.
       if (permissionMode === 'safe') {
-        onPermissionModeChange?.('allow-all')
+        onPermissionModeChange?.(planExecutionMode(previousPermissionMode))
       }
 
       // Persist the pending plan execution state BEFORE sending /compact.
@@ -756,7 +759,7 @@ export function FreeFormInput({
 
     window.addEventListener('craft:approve-plan-with-compact', handleApprovePlanWithCompact as unknown as EventListener)
     return () => window.removeEventListener('craft:approve-plan-with-compact', handleApprovePlanWithCompact as unknown as EventListener)
-  }, [sessionId, permissionMode, onPermissionModeChange, onSubmit, consumeInputDraftSnapshot])
+  }, [sessionId, permissionMode, previousPermissionMode, onPermissionModeChange, onSubmit, consumeInputDraftSnapshot])
 
   // Live completion and reload recovery share one dispatcher over the persisted
   // record: a "compaction complete" notification is only a wakeup, and execution is
@@ -911,6 +914,7 @@ export function FreeFormInput({
     // Add the currently active permission mode
     if (permissionMode === 'safe') active.push('safe')
     else if (permissionMode === 'ask') active.push('ask')
+    else if (permissionMode === 'guarded') active.push('guarded')
     else if (permissionMode === 'allow-all') active.push('allow-all')
     return active
   }, [permissionMode])
@@ -919,6 +923,7 @@ export function FreeFormInput({
   const handleSlashCommand = React.useCallback((commandId: SlashCommandId) => {
     if (commandId === 'safe') onPermissionModeChange?.('safe')
     else if (commandId === 'ask') onPermissionModeChange?.('ask')
+    else if (commandId === 'guarded') onPermissionModeChange?.('guarded')
     else if (commandId === 'allow-all') onPermissionModeChange?.('allow-all')
     else if (commandId === 'compact' && !isProcessing) onSubmit('/compact', undefined)
   }, [onPermissionModeChange, isProcessing, onSubmit])
@@ -964,7 +969,9 @@ export function FreeFormInput({
       pluginName: plugin.name,
     })), [plugins, t])
 
+  const availableModes = useAvailablePermissionModes(permissionMode)
   const inlineSlash = useInlineSlashCommand({
+    modes: availableModes,
     inputRef: richInputRef,
     onSelectCommand: handleSlashCommand,
     onSelectFolder: handleSlashFolderSelect,

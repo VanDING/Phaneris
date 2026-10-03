@@ -21,6 +21,7 @@ describe('mid-stream queue runtime invariants', () => {
   })
 
   afterEach(() => {
+    sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 

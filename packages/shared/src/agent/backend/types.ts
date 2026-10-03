@@ -24,6 +24,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Workspace } from '../../config/storage.ts';
 import type { SessionConfig as Session } from '../../sessions/storage.ts';
 import type { SourceManager } from '../core/source-manager.ts';
+import type { GuardedModeCheck } from '../core/guarded-mode.ts';
 
 // Import AbortReason and RecoveryMessage from core module (single source of truth)
 import { AbortReason, type RecoveryMessage } from '../core/index.ts';
@@ -90,6 +91,7 @@ export type PermissionCallback = (request: {
   rememberForMinutes?: number;
   commandHash?: string;
   approvalTtlSeconds?: number;
+  risks?: import("@phaneris/core/types").PermissionRisk[];
   /** False when the operation has no safe session-scoped approval to remember. */
   canRemember?: boolean;
 }) => void;
@@ -317,6 +319,8 @@ export interface ChatOptions {
   isRetry?: boolean;
   /** Override thinking level for this message only */
   thinkingOverride?: ThinkingLevel;
+  /** Host guidance for this turn only, outside the durable user message. */
+  turnContext?: string;
   /** Durable parent operation for this accepted unit of agent work. */
   durableRunOperationId?: string;
   /** Stable product turn identity used by durable projections. */
@@ -435,6 +439,7 @@ export interface AgentBackend {
    * report false.
    */
   isCompactionInFlight?(): boolean;
+  canSteerNow?(): boolean;
 
   /**
    * Run a simple text completion using the backend's auth infrastructure.
@@ -653,6 +658,9 @@ export interface AgentBackend {
 
   /** Called when a tool requires permission */
   onPermissionRequest: PermissionCallback | null;
+
+  /** Guarded-mode risk check (decision model): may turn an allowed call into a permission prompt, never the reverse */
+  guardedModeCheck: GuardedModeCheck | null;
 
   /** Called when agent submits a plan */
   onPlanSubmitted: PlanCallback | null;

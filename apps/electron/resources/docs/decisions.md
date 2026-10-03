@@ -1,6 +1,32 @@
 # Decision Model (`decide`)
 
-`decide` asks a decision model (Jev, TypeSafe AI's System One model) typed questions about a piece of text or JSON. It returns probabilities, not prose, in a fraction of a second, for a fraction of a cent. It is available only when the user enabled it in **Settings > AI > Decision model (Jev)**.
+`decide` asks the configured decision provider typed questions about text or JSON and returns probabilities rather than prose. Configure Jev, a local Laya server, or a compatible custom endpoint in **Settings > AI > Decision model**. The tool requires both the master switch and its feature switch; tool availability is applied when a session agent is created.
+
+## Automatic features and permissions
+
+Advanced settings exposes 13 independent feature switches. The master switch is off by default. Existing defaults for `decideTool`, `taskVerdicts`, and `semanticLabels` remain enabled behind it; the other ten switches default to off. A feature also needs a usable provider configuration and any required credential. Remote workspace settings and credentials belong to the target server.
+
+| Switch | Effect |
+|---|---|
+| `decideTool` | Expose typed decisions to the agent. |
+| `suggestions` | Add a transient hint for a clearly relevant skill or usable inactive source. The agent still chooses whether to use it under ordinary permissions; the decision does not activate a source. |
+| `adaptiveThinking` | Lower thinking for a simple interactive turn; never exceed the user's level or overwrite their saved preference. |
+| `largeResults` | Decide whether a result preview is sufficient after saving the complete result to a file. Without a clear answer, retain the normal summary path. |
+| `midTurnMessages` | Classify plain text sent during a turn as steering or queued follow-up. Adjacent continuations may share one model turn while retaining every original message and acknowledgment. Attachments and semantic send options take the complete queue path. |
+| `turnOutcome` | Detect completed, needs-input, and blocked replies. Interactive sessions needing help move to Needs Review; unattended task steps asking for input or reporting a blocker fail rather than count as done. |
+| `smartTitles` | Defer titles for small talk and refresh automatic titles after topic drift. Manual titles and newer turns remain protected. |
+| `guardedMode` | Make Guarded available for interactive permission checks as described below. |
+| `riskBadges` | Enrich approval prompts with informational badges for deletes, sends, publishes, credentials, system changes, or spending. Badges grant no permission. |
+| `semanticLabels` | Evaluate configured yes/no label rules alongside existing regex rules, respecting thresholds, valid values, and manual label edits. |
+| `automationConditions` | Evaluate a configured `semanticCondition` after loop prevention. Only a confident false answer skips the run and records it in automation history; a failed decision retains ordinary execution. |
+| `taskVerdicts` | Infer a confident pass/fail when a verifier omits its explicit VERDICT. Explicit verdicts take priority; uncertainty follows the existing re-ask path. |
+| `taskRepairs` | Scope the first repair to implicated nodes and their dependents. Explicit node scopes take priority; later failures can repair the whole DAG within the unchanged iteration budget. |
+
+Guarded runs authorized work with Execute's base permission rules, then adds one-time approval for risky commands and non-read-only calls. Direct file writes outside the working directory always ask, including paths that escape through symbolic links or directory junctions. Decision checks cannot override Explore restrictions or administrator approval.
+
+When Guarded's feature or master switch is off, its effective mode is Ask to Edit. With the feature active, a single failed, missing, or timed-out decision follows the upstream policy and may allow that call to continue as in Execute. Stop and mode changes still invalidate pending checks. Risk checks exclude hidden, mini, automation, and unattended task sessions; their existing permission handlers and denial rules remain authoritative. Child sessions cannot exceed their parent's permission ceiling.
+
+Enabled features send selected messages, tool arguments, result previews, or skill/source descriptions to the configured provider. The local decision log at `~/.phaneris/logs/decisions.jsonl` records usage, hashed request identity, outcomes, and linked follow-ups without input text. Runtime Host and Durable Runtime retain authority over user inputs, tool effects, task facts, and usage.
 
 ## When to use
 

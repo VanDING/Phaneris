@@ -50,6 +50,7 @@ import type { Workspace } from '../config/storage.ts';
 
 // Core modules
 import { PermissionManager } from './core/permission-manager.ts';
+import type { GuardedModeCheck } from './core/guarded-mode.ts';
 import { SourceManager } from './core/source-manager.ts';
 import { PromptBuilder } from './core/prompt-builder.ts';
 import { PathProcessor } from './core/path-processor.ts';
@@ -252,6 +253,7 @@ export abstract class BaseAgent implements AgentBackend {
   // Callbacks (public for facade wiring)
   // ============================================================
   onPermissionRequest: PermissionCallback | null = null;
+  guardedModeCheck: GuardedModeCheck | null = null;
   onPlanSubmitted: PlanCallback | null = null;
   onAuthRequest: AuthCallback | null = null;
   /** Publishes an ask_user question so the host can render it while the tool waits. */
@@ -1020,9 +1022,10 @@ ${formattedMessages}
       this.config.markTransferredSessionSummaryApplied?.();
     }
 
-    // Prepend read directive to the message so the model reads SKILL.md first.
+    // Prepend read directive to the message so the model reads SKILL.md first. Host guidance for
+    // this turn goes last, after mention parsing, so it can never register a skill or source.
     const directive = this.formatSkillDirective(skillPaths);
-    const messageParts = [branchSeedContext, transferredSessionContext, directive, cleanMessage].filter(Boolean);
+    const messageParts = [branchSeedContext, transferredSessionContext, directive, cleanMessage, options?.turnContext].filter(Boolean);
     const effectiveMessage = messageParts.join('\n\n');
 
     // Capture the raw user message for source-activation auto-retry. `cleanMessage`
@@ -1083,6 +1086,11 @@ ${formattedMessages}
    */
   redirect(_message: string): boolean {
     this.forceAbort(AbortReason.Redirect);
+    return false;
+  }
+
+  /** Whether redirect() would steer into a live turn now instead of aborting. Default: never. */
+  canSteerNow(): boolean {
     return false;
   }
 

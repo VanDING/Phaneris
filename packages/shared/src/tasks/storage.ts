@@ -39,7 +39,7 @@ export type RunLogEntry =
   | { t: string; kind: 'node-finished'; nodeId: string; sessionId: string; state: NodeRunState; reason?: string; output?: NodeOutput }
   | { t: string; kind: 'node-retry'; nodeId: string; attempt: number; reason: string }
   | { t: string; kind: 'run-paused' | 'run-resumed' | 'run-stopped' | 'run-completed' | 'run-failed' | 'run-verifying' }
-  | { t: string; kind: 'verdict'; result: 'pass' | 'fail' | 'unparsed'; reason?: string; nodes?: string[]; output?: NodeOutput }
+  | { t: string; kind: 'verdict'; via?: 'decision'; confidence?: number; result: 'pass' | 'fail' | 'unparsed'; reason?: string; nodes?: string[]; output?: NodeOutput }
   | { t: string; kind: 'budget-breach'; metric: 'tokens' | 'parallel' | 'iterations'; value: number; limit: number };
 
 // ---------------------------------------------------------------------------

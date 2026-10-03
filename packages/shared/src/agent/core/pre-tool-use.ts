@@ -38,6 +38,7 @@ import {
   shouldAllowToolInMode,
   isReadOnlyBashCommandWithConfig,
   getPermissionModeDiagnostics,
+  resolveEffectivePermissionMode,
   PERMISSION_MODE_CONFIG,
   matchesAllowedWritePath,
   type PermissionMode,
@@ -648,9 +649,9 @@ export interface PreToolUseInput {
  */
 export interface PermissionManagerLike {
   isCommandWhitelisted(command: string): boolean;
-  isDangerousCommand(command: string): boolean;
   getBaseCommand(command: string): string;
   extractDomainFromNetworkCommand(command: string): string | null;
+  isDangerousCommand(command: string): boolean;
   isDomainWhitelisted(domain: string): boolean;
 }
 
@@ -727,7 +728,8 @@ export function runPreToolUseChecks(ctx: PreToolUseInput): PreToolUseCheckResult
   // Canonical mode source of truth for this session.
   // Keep incoming permissionMode only for mismatch diagnostics.
   const diagnostics = getPermissionModeDiagnostics(sessionId);
-  const effectivePermissionMode = diagnostics.permissionMode;
+  // Guarded without an active risk check behaves as Ask (see resolveEffectivePermissionMode).
+  const effectivePermissionMode = resolveEffectivePermissionMode(diagnostics.permissionMode);
 
   if (permissionMode !== effectivePermissionMode) {
     onDebug?.(

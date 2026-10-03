@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'bun:test'
+import { afterEach, beforeAll, describe, expect, it } from 'bun:test'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -11,6 +11,13 @@ import {
 import { renderOfficeArtifactPreview } from './artifact-preview'
 
 const roots: string[] = []
+
+// Load the real, heavy parser stack within a bounded fixture setup. Cold module
+// resolution can exceed the default test budget on Windows; conversion assertions
+// below keep their default budget and still use the production preview path.
+beforeAll(async () => {
+  await import('markitdown-js')
+}, 60_000)
 
 afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true })

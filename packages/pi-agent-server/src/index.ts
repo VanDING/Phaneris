@@ -151,7 +151,7 @@ import {
 } from './length-continuation.ts';
 
 // Direct source imports from shared (bundled by bun build)
-import { handleLargeResponse, estimateTokens, tokenLimitFor } from '../../shared/src/utils/large-response.ts';
+import { handleLargeResponse, estimateTokens, tokenLimitFor, setLargeResultSummaryGate } from '../../shared/src/utils/large-response.ts';
 import { getSessionPlansPath, getSessionPath } from '../../shared/src/sessions/storage.ts';
 import { buildCallLlmRequest } from '../../shared/src/agent/llm-tool.ts';
 import type { LLMQueryRequest, LLMQueryResult } from '../../shared/src/agent/llm-tool.ts';
@@ -165,7 +165,8 @@ import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSyste
 import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { readContextUsage, deferContextUsage } from './context-usage.ts';
 import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS } from './compaction-wait.ts';
-import type { PiCompactResult, PiContextUsagePayload } from '../../shared/src/agent/backend/pi/protocol.ts';
+import { createLargeResultGateClient } from './large-result-gate.ts';
+import type { PiCompactResult, PiContextUsagePayload, PiLargeResultGateRequest, PiLargeResultGateResponse } from '../../shared/src/agent/backend/pi/protocol.ts';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '../../shared/src/durable-runtime/types.ts';
@@ -244,6 +245,7 @@ type InboundMessage =
   | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
   | { type: 'durable_model_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }
   | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
+  | PiLargeResultGateResponse
   | { type: 'abort' }
   | { type: 'mini_completion'; id: string; prompt: string; durableRunOperationId?: string; durableTurnId?: string }
   | { type: 'llm_query'; id: string; request: LLMQueryRequest; durableRunOperationId?: string; durableTurnId?: string }
@@ -436,6 +438,7 @@ type OutboundMessage =
   | OutboundSetModelResult
   | OutboundThinkingLevelState
   | OutboundSessionIdUpdate
+  | PiLargeResultGateRequest
   | OutboundError;
 
 // ============================================================
@@ -633,6 +636,11 @@ function debugLog(message: string): void {
   // Write debug messages to stderr so they don't interfere with JSONL protocol
   process.stderr.write(`[pi-server] ${message}\n`);
 }
+
+// Large tool results (decision model, toggle `largeResults`): handleLargeResponse asks the
+// main process whether a summary is needed before summarizing.
+const largeResultGate = createLargeResultGateClient(send);
+setLargeResultSummaryGate(largeResultGate.gate);
 
 /** Find the most recent .jsonl session file in a directory. */
 function findMostRecentSessionFile(sessionDir: string): string | null {
@@ -2265,6 +2273,7 @@ function handleCancelEphemeralQuery(
 }
 
 async function handleAbort(): Promise<void> {
+  largeResultGate.cancelAll();
   compactionEpoch++;
   if (piSession) {
     try {
@@ -2611,6 +2620,10 @@ async function processMessage(msg: InboundMessage): Promise<void> {
 
     case 'durable_model_outcome_response':
       handleDurableModelOutcomeResponse(msg);
+      break;
+
+    case 'large_result_gate_response':
+      largeResultGate.handleResponse(msg.requestId, msg.summarize);
       break;
 
     case 'abort':

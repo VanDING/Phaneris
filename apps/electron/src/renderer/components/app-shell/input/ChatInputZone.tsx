@@ -13,6 +13,7 @@ interface ChatInputZoneProps {
   compactMode?: boolean
   showOptionBadges?: boolean
   permissionMode?: PermissionMode
+  previousPermissionMode?: PermissionMode
   onPermissionModeChange?: (mode: PermissionMode) => void
   tasks?: BackgroundTask[]
   sessionId: string
@@ -37,6 +38,7 @@ export function ChatInputZone({
   compactMode = false,
   showOptionBadges,
   permissionMode = 'ask',
+  previousPermissionMode,
   onPermissionModeChange,
   tasks = [],
   sessionId,
@@ -117,6 +119,7 @@ export function ChatInputZone({
           {...inputProps}
           compactMode={compactMode}
           permissionMode={permissionMode}
+          previousPermissionMode={previousPermissionMode}
           onPermissionModeChange={onPermissionModeChange}
           labels={labels}
           sessionLabels={sessionLabels}

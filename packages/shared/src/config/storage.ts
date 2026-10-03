@@ -21,7 +21,7 @@ import type { Plan } from '../agent/plan-types.ts';
 import type { PermissionMode } from '../agent/mode-manager.ts';
 import type { ThinkingLevel } from '../agent/thinking-levels.ts';
 import { isValidThinkingLevel, normalizeThinkingLevel } from '../agent/thinking-levels.ts';
-import { parsePermissionMode, PERMISSION_MODE_ORDER } from '../agent/mode-types.ts';
+import { parsePermissionMode, PERMISSION_MODE_ORDER, DEFAULT_PERMISSION_MODES } from '../agent/mode-types.ts';
 import { type ConfigDefaults } from './config-defaults-schema.ts';
 import { PresetThemeSchema, ThemeOverrideSchema } from './validators.ts';
 // Decision layer: this file owns the WRITE path (`setDecisionLayerSettings`).
@@ -222,7 +222,7 @@ export function loadConfigDefaults(): ConfigDefaults {
   }
 
   defaults.workspaceDefaults.cyclablePermissionModes =
-    normalizedCyclable.length >= 2 ? normalizedCyclable : [...PERMISSION_MODE_ORDER];
+    normalizedCyclable.length >= 2 ? normalizedCyclable : [...DEFAULT_PERMISSION_MODES];
 
   return defaults;
 }

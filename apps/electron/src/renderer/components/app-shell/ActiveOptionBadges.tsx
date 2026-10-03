@@ -1,8 +1,9 @@
+import { useAvailablePermissionModes } from '@/hooks/useAvailablePermissionModes'
 import * as React from 'react'
 import { useTranslation } from "react-i18next"
 import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { SlashCommandMenu, DEFAULT_SLASH_COMMAND_GROUPS, type SlashCommandId } from '@/components/ui/slash-command-menu'
+import { SlashCommandMenu, permissionModeCommandsFor, type SlashCommandId } from '@/components/ui/slash-command-menu'
 import { ChevronDown, Info, Shapes, X } from 'lucide-react'
 import { PERMISSION_MODE_CONFIG, type PermissionMode } from '@phaneris/shared/agent/modes'
 import { ActiveTasksBar, type BackgroundTask } from './ActiveTasksBar'
@@ -516,9 +517,12 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
     return [optimisticMode as SlashCommandId]
   }, [optimisticMode])
 
+  const modes = useAvailablePermissionModes(optimisticMode)
+  const modeGroups = React.useMemo(() => [{ id: 'modes', commands: permissionModeCommandsFor(modes) }], [modes])
+
   // Handle command selection from dropdown
   const handleSelect = React.useCallback((commandId: SlashCommandId) => {
-    if (commandId === 'safe' || commandId === 'ask' || commandId === 'allow-all') {
+    if (commandId === 'safe' || commandId === 'ask' || commandId === 'guarded' || commandId === 'allow-all') {
       setOptimisticMode(commandId)
       onPermissionModeChange?.(commandId)
     }
@@ -541,6 +545,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
       className: 'bg-info/10 text-info',
       shadowVar: 'var(--info)',
     },
+  guarded: { className: 'bg-success/10 text-success', shadowVar: 'var(--success)' },
     'allow-all': {
       className: 'bg-accent/5 text-accent',
       shadowVar: 'var(--accent)',
@@ -582,7 +587,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
         }}
       >
         <SlashCommandMenu
-          commandGroups={DEFAULT_SLASH_COMMAND_GROUPS}
+          commandGroups={modeGroups}
           activeCommands={activeCommands}
           onSelect={handleSelect}
           showFilter

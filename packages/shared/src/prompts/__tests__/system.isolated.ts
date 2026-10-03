@@ -26,7 +26,7 @@ describe('system prompt guidance', () => {
   it('keeps execution rules before capability details and routes deliverables to a real guide', () => {
     const prompt = getSystemPrompt('', undefined, '/tmp/workspace', undefined, undefined, 'Phaneris Backend')
     expect(prompt.indexOf('## Execution Contract')).toBeLessThan(prompt.indexOf('## Documentation and Capability Discovery'))
-    expect(prompt).toContain('In Ask/Execute, do not require an additional `SubmitPlan` for work already authorized')
+    expect(prompt).toContain('In Ask/Guarded/Execute, do not require an additional `SubmitPlan` for work already authorized')
     expect(prompt).toContain('An analysis-only request needs no plan submission.')
     expect(prompt).toContain('Only the user accepts/discards it.')
     expect(prompt).not.toContain('Never try to execute a plan without submitting it first')

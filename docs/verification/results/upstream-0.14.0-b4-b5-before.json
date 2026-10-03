@@ -1,0 +1,85 @@
+{
+  "executedAt": "2026-10-03T00:03:26.468Z",
+  "baseline": true,
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-oNR7Hm",
+  "total": 15,
+  "passed": 0,
+  "failed": 15,
+  "records": [
+    {
+      "id": "13 feature gates, original three defaults preserved, ten new defaults off",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n3 !== 13\n"
+    },
+    {
+      "id": "Guarded parses and preserves four-mode child ceilings",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 'guarded'\n"
+    },
+    {
+      "id": "All seven decision channels route to the owning remote server",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: false == true"
+    },
+    {
+      "id": "Consumer available: task-verdict",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\task-verdict.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: task-repairs",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\task-repairs.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: semantic-labels",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\semantic-labels.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: turn-outcome",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\turn-outcome.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: automation-condition",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\automation-condition.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: smart-titles",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\smart-titles.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: permission-risks",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\permission-risks.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: large-results",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\large-results.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: suggestions",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\suggestions.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: guarded-mode",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\guarded-mode.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: adaptive-thinking",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\adaptive-thinking.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    },
+    {
+      "id": "Consumer available: mid-turn-messages",
+      "pass": false,
+      "error": "ResolveMessage: Cannot find module 'C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\packages\\server-core\\src\\decisions\\mid-turn-messages.ts' imported from C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\scripts\\verification\\upstream-0140-b4b5.ts"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ export type RuntimeEventType =
   | 'sdk_observation'
   | 'model_recovery_decided'
   | 'user_message_committed'
+  | 'user_input_admitted'
   | 'assistant_message_committed'
   | 'tool_call_observed'
   | 'tool_dispatch_committed'

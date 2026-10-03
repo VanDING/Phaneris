@@ -11,7 +11,7 @@ import { basename, dirname, extname, join } from 'path'
 import { existsSync } from 'fs'
 import { readFile, writeFile, mkdir, rename } from 'fs/promises'
 import { randomUUID } from 'node:crypto'
-import { setPermissionMode, clampPermissionMode, hydratePreviousPermissionMode, getPermissionModeDiagnostics, type PermissionMode, unregisterSessionScopedToolCallbacks, mergeSessionScopedToolCallbacks, AbortReason, type AuthRequest, type AuthResult, type CredentialAuthRequest, type BrowserPaneFns, generateConversationSummary, resolveKeepBackgroundTasksAlive } from '@phaneris/shared/agent'
+import { setPermissionMode, clampPermissionMode, planExecutionMode, hydratePreviousPermissionMode, getPermissionModeDiagnostics, type PermissionMode, unregisterSessionScopedToolCallbacks, mergeSessionScopedToolCallbacks, AbortReason, type AuthRequest, type AuthResult, type CredentialAuthRequest, type BrowserPaneFns, generateConversationSummary, resolveKeepBackgroundTasksAlive } from '@phaneris/shared/agent'
 import {
   resolveSessionConnection,
   createBackendFromConnection,
@@ -116,8 +116,22 @@ import { invalidateContextFileCache } from '@phaneris/shared/prompts/system'
 import { getToolIconsDir, getMiniModel } from '@phaneris/shared/config'
 import { getDefaultSummarizationModel } from '@phaneris/shared/config/models'
 import type { SummarizeCallback } from '@phaneris/shared/sources'
-import { type ThinkingLevel, DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
-import { evaluateAutoLabels } from '@phaneris/shared/labels/auto'
+import { type ThinkingLevel, THINKING_LEVEL_IDS, DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
+import { evaluateAutoLabels, autoLabelMatchToEntry, type AutoLabelMatch } from '@phaneris/shared/labels/auto'
+import type { LabelConfig } from '@phaneris/shared/labels'
+import { isDecisionFeatureActive, type DecisionLayerFeature } from '@phaneris/shared/decisions'
+import { evaluateSemanticLabelsForMessage } from '../decisions/semantic-labels'
+import { classifyTurnOutcome, TURN_OUTCOME_ATTENTION_STATUS } from '../decisions/turn-outcome'
+import { checkAutomationCondition } from '../decisions/automation-condition'
+import { isSmallTalk, titleNoLongerFits, TITLE_DRIFT_RECENT_MESSAGES } from '../decisions/smart-titles'
+import { buildGuardedModeCheck } from '../decisions/guarded-mode'
+import { buildLargeResultSummaryGate } from '../decisions/large-results'
+import { assessPermissionRisks } from '../decisions/permission-risks'
+import { pickTurnThinkingLevel } from '../decisions/adaptive-thinking'
+import { decideMidTurnDelivery, isContinuation } from '../decisions/mid-turn-messages'
+import { wantsSuggestion, collectSuggestionCandidates, pickSuggestion, formatSuggestionHint, candidatesUsedBy, suggestionFollowUp, type SuggestionTrace } from '../decisions/suggestions'
+import { setLargeResultSummaryGate } from '@phaneris/shared/utils'
+import { setGuardedModeActiveResolver } from '@phaneris/shared/agent'
 import { listLabels, loadLabelConfig } from '@phaneris/shared/labels/storage'
 import { extractLabelId, resolveSessionLabels, findTaskItemLabelId } from '@phaneris/shared/labels'
 import { ensureLabelsExist, ensureTaskItemLabel } from '@phaneris/shared/labels/crud'
@@ -668,7 +682,7 @@ interface ManagedSession {
   isArchived?: boolean
   /** Timestamp when session was archived (for retention policy) */
   archivedAt?: number
-  /** Permission mode for this session ('safe', 'ask', 'allow-all') */
+  /** Permission mode for this session ('safe', 'ask', 'guarded', 'allow-all') */
   permissionMode?: PermissionMode
   /** Previous permission mode (preserved across restarts for session_state modeTransition context) */
   previousPermissionMode?: PermissionMode
@@ -762,8 +776,16 @@ interface ManagedSession {
   connectionLocked?: boolean
   // Thinking level for this session ('off', 'think', 'max')
   thinkingLevel?: ThinkingLevel
+  // Per-turn decisions are runtime hints; they never change canonical input or saved preferences.
+  turnThinkingOverride?: ThinkingLevel | null
+  suggestionTrace?: { trace: SuggestionTrace; used: Set<string> }
+  autoTitle?: string
+  titleDeferred?: boolean
+  titleCheckedAtUserCount?: number
+  manualLabelsRevision?: number
   // System prompt preset for mini agents ('default' | 'mini')
   systemPromptPreset?: 'default' | 'mini' | string
+  unattended?: boolean
   // Role/type of the last message (for badge display without loading messages)
   lastMessageRole?: 'user' | 'assistant' | 'plan' | 'tool' | 'error'
   // ID of the last final (non-intermediate) assistant message - pre-computed for unread detection
@@ -793,6 +815,8 @@ interface ManagedSession {
     options?: SendMessageOptions
     messageId?: string  // Pre-generated ID for matching with UI
     optimisticMessageId?: string  // Frontend's ID for reliable event matching
+    mergeWith?: object
+    continuationCheck?: Promise<void>
   }>
   // Map of shellId -> command for killing background shells
   backgroundShellCommands: Map<string, string>
@@ -815,6 +839,8 @@ interface ManagedSession {
   // Auth retry tracking (for mid-session token expiry)
   // Store last sent message/attachments to enable retry after token refresh
   lastSentMessage?: string
+  lastSentMessageIds?: string[]
+  replayMergedMessages?: Map<string, Message[]>
   lastSentAttachments?: FileAttachment[]
   lastSentStoredAttachments?: StoredAttachment[]
   lastSentOptions?: SendMessageOptions
@@ -1151,6 +1177,21 @@ async function sessionSharingDisabledReason(): Promise<string | null> {
     : 'Sharing conversations is turned off in this build.'
 }
 
+export function isAttendedSession(managed: ManagedSession): boolean {
+  return !(managed.triggeredBy || managed.taskRunId || managed.taskSlug || managed.hidden || managed.unattended
+    || managed.systemPromptPreset === 'mini')
+}
+
+export function canSteerTextPayload(attachments?: FileAttachment[], storedAttachments?: StoredAttachment[], options?: SendMessageOptions): boolean {
+  if (attachments?.length || storedAttachments?.length) return false
+  return !Object.entries(options ?? {}).some(([key, value]) => {
+    if (value === undefined || key === 'optimisticMessageId') return false
+    if ((key === 'skillSlugs' || key === 'badges') && Array.isArray(value) && !value.length) return false
+    if (key === 'hidden' && value === false) return false
+    return true
+  })
+}
+
 export class SessionManager implements ISessionManager {
   private sessions: Map<string, ManagedSession> = new Map()
   private readonly durableRuntime = this.createDurableRuntime()
@@ -1210,12 +1251,23 @@ export class SessionManager implements ISessionManager {
         sessionLog.warn('[Automations] Failed to write history:', error)
       }
     }
+    const conditions = new Map<string, Promise<{ run: boolean; reason?: string }>>()
     await Promise.allSettled(prompts.map(async (pending) => {
       const guard = this.automationLoopGuard(pending)
       if (!guard.run) {
         sessionLog.info(`[Automations] ${pending.automationName ?? 'Automation'} skipped: ${guard.reason}`)
         if (pending.matcherId) await writeHistory({ matcherId: pending.matcherId, ok: true, prompt: pending.prompt, skipped: guard.reason })
         return
+      }
+      if (pending.semanticCondition && this.decisionFeatureActive('automationConditions')) {
+        const key = pending.matcherId ?? pending.semanticCondition.question
+        const condition = conditions.get(key) ?? this.shouldRunPromptAutomation(pending)
+        conditions.set(key, condition)
+        const result = await condition
+        if (!result.run) {
+          if (pending.matcherId) await writeHistory({ matcherId: pending.matcherId, ok: true, prompt: pending.prompt, skipped: result.reason })
+          return
+        }
       }
       try {
         const { sessionId } = await this.executePromptAutomation({
@@ -2011,6 +2063,8 @@ export class SessionManager implements ISessionManager {
   }
 
   async initialize(): Promise<void> {
+    setGuardedModeActiveResolver(() => isDecisionFeatureActive('guardedMode'))
+    setLargeResultSummaryGate(buildLargeResultSummaryGate({ log: line => sessionLog.info(line) }))
     try {
       initializeThemeStorage()
       this.userThemeWatcher ??= new UserThemeWatcher({
@@ -3415,6 +3469,7 @@ export class SessionManager implements ISessionManager {
       llmConnection: options?.llmConnection,
       thinkingLevel: defaultThinkingLevel,
       systemPromptPreset: options?.systemPromptPreset,
+      unattended: options?.unattended,
       enabledSourceSlugs: defaultEnabledSourceSlugs,
       branchFromMessageId: validatedBranch?.sourceMessageId,
       branchContextStrategy: validatedBranch?.branchContextStrategy,
@@ -4801,6 +4856,12 @@ export class SessionManager implements ISessionManager {
       // Signal that the agent instance is ready (unblocks title generation)
       managed.agentReadyResolve?.()
 
+      managed.agent.guardedModeCheck = buildGuardedModeCheck({
+        sessionId: managed.id,
+        isInteractive: () => this.sessions.get(managed.id) === managed && isAttendedSession(managed),
+        log: line => sessionLog.info(line),
+      })
+
       // Set up permission handler to forward requests to renderer
       managed.agent.onPermissionRequest = (request: {
         requestId: string;
@@ -4816,6 +4877,7 @@ export class SessionManager implements ISessionManager {
         commandHash?: string;
         approvalTtlSeconds?: number;
         canRemember?: boolean;
+        risks?: import('@phaneris/core/types').PermissionRisk[];
       }) => {
         sessionLog.info(`Permission request for session ${managed.id}:`, request.command)
         let brokerMetadata: {
@@ -4879,6 +4941,17 @@ export class SessionManager implements ISessionManager {
             sessionId: managed.id,
           }
         }, managed.workspace.id)
+        // Informational enrichment never delays or resolves the approval.
+        if (!request.risks && this.decisionFeatureActive('riskBadges')) {
+          const generation = managed.processingGeneration
+          void assessPermissionRisks(request, { sessionId: managed.id, log: line => sessionLog.info(line) }).then(risks => {
+            if (!risks?.length || this.sessions.get(managed.id) !== managed
+              || managed.processingGeneration !== generation
+              || this.pendingPermissionRequests.get(request.requestId)?.sessionId !== managed.id) return
+            this.sendEvent({ type: 'permission_request', sessionId: managed.id,
+              request: { ...request, ...brokerMetadata, sessionId: managed.id, risks } }, managed.workspace.id)
+          }).catch(error => sessionLog.warn('Permission risk enrichment failed:', error))
+        }
       }
 
       // Note: Credential requests now flow through onAuthRequest (unified auth flow)
@@ -5072,6 +5145,7 @@ export class SessionManager implements ISessionManager {
           model: request.model ?? managed.model,
           enabledSourceSlugs: request.enabledSourceSlugs ?? managed.enabledSourceSlugs,
           permissionMode: clampPermissionMode(request.permissionMode, getPermissionModeDiagnostics(managed.id).permissionMode),
+          unattended: !isAttendedSession(managed) || undefined,
           thinkingLevel: request.thinkingLevel ?? managed.thinkingLevel,
           labels: request.labels ?? managed.labels,
           workingDirectory: request.workingDirectory,
@@ -5950,8 +6024,8 @@ export class SessionManager implements ISessionManager {
   /**
    * Dispatch a plan approval for a session, equivalent to the desktop
    * "Accept plan" button. Switches the session out of Explore mode (safe)
-   * into allow-all if needed so the plan can execute without per-tool
-   * prompts, then sends the approval message through the normal sendMessage
+   * into Execute or the previous Guarded mode, then sends the approval
+   * message through the normal sendMessage
    * path.
    */
   async acceptPlan(sessionId: string, _planPath?: string): Promise<void> {
@@ -5962,7 +6036,7 @@ export class SessionManager implements ISessionManager {
     }
 
     if (managed.permissionMode === 'safe') {
-      this.setSessionPermissionMode(sessionId, 'allow-all')
+      this.setSessionPermissionMode(sessionId, planExecutionMode(managed.previousPermissionMode))
     }
 
     await this.sendMessage(sessionId, PLAN_APPROVAL_MESSAGE)
@@ -6385,6 +6459,8 @@ export class SessionManager implements ISessionManager {
     const managed = this.sessions.get(sessionId)
     if (managed) {
       managed.name = name
+      managed.autoTitle = undefined
+      managed.titleDeferred = false
       this.syncPrimaryWorkItem(managed, { title: name })
       this.persistSession(managed)
       // Notify renderer of the name change
@@ -6402,7 +6478,7 @@ export class SessionManager implements ISessionManager {
    * Uses the last few user messages to capture what the session has evolved into.
    * Automatically uses the same provider as the session (Claude or OpenAI).
    */
-  async refreshTitle(sessionId: string): Promise<{ success: boolean; title?: string; error?: string }> {
+  async refreshTitle(sessionId: string, guard?: { onlyIfName: string }): Promise<{ success: boolean; title?: string; error?: string }> {
     sessionLog.info(`refreshTitle called for session ${sessionId}`)
     const managed = this.sessions.get(sessionId)
     if (!managed) {
@@ -6410,6 +6486,8 @@ export class SessionManager implements ISessionManager {
       return { success: false, error: 'Session not found' }
     }
 
+    const nameAtDispatch = managed.name
+    if (guard && nameAtDispatch !== guard.onlyIfName) return { success: false, error: 'Title changed' }
     // Ensure messages are loaded from disk (lazy loading support)
     await this.ensureMessagesLoaded(managed)
 
@@ -6500,8 +6578,11 @@ export class SessionManager implements ISessionManager {
     try {
       const title = await agent.regenerateTitle(userMessages, assistantResponse, titleOptions)
       sessionLog.info(`refreshTitle: regenerateTitle returned: ${title ? `"${title}"` : 'null'}`)
-      if (title) {
+      if (title && this.sessions.get(sessionId) === managed && managed.name === nameAtDispatch
+        && (!guard || !managed.isProcessing)) {
         managed.name = title
+        managed.autoTitle = title
+        managed.titleDeferred = false
         this.syncPrimaryWorkItem(managed, { title })
         this.persistSession(managed)
         // title_generated will also clear isRegeneratingTitle via the event handler
@@ -7056,26 +7137,10 @@ export class SessionManager implements ISessionManager {
       // A manual compaction owns the turn: nothing consumes steers, so queue for
       // replay after `complete` instead of steering (craft-agents-oss#1058).
       const compactionInFlight = agent?.isCompactionInFlight?.() === true
-      const attemptedSteer = shouldAttemptMidStreamSteer(behavior, agent)
-      let steered = false
-      if (attemptedSteer) {
-        steered = agent?.redirect(message) ?? false
-      }
-      if (steered) (managed.turnSteers ??= []).push(message)
-      // For 'queue': skip redirect entirely. The current turn is undisturbed.
-      // Same for a compaction-owned turn: `redirect()` would report success into
-      // an agent loop that `compact()` has already aborted, losing the message.
-
-      sessionLog.info('mid-stream send', {
-        sessionId,
-        behavior,
-        steered,
-        compactionInFlight,
-        queueLengthBefore: managed.messageQueue.length,
-        backend: agent ? agent.constructor.name : 'none',
-        connectionSlug: connection?.slug,
-      })
-
+      const semanticDelivery = this.decisionFeatureActive('midTurnMessages') && canSteerTextPayload(attachments, storedAttachments, options)
+        && !compactionInFlight && !(managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase])
+      const attemptedSteer = !semanticDelivery && canSteerTextPayload(attachments, storedAttachments, options)
+        && shouldAttemptMidStreamSteer(behavior, agent)
       // Create user message for UI
       const userMessage: Message = {
         id: generateMessageId(),
@@ -7089,6 +7154,27 @@ export class SessionManager implements ISessionManager {
         ...(options?.hidden ? { hidden: true } : {}),
       }
       managed.messages.push(userMessage)
+
+      this.durableRuntime.recordUserInputAdmission({ workspaceRootPath: managed.workspace.rootPath,
+        sessionId, messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
+        attachments: storedAttachments, options })
+
+      // Admit the original input before either delivery path can reach the model.
+      let steered = false
+      if (attemptedSteer) steered = agent?.redirect(message) ?? false
+      if (steered) {
+        ;(managed.turnSteers ??= []).push(message)
+        if (managed.activeDurableRunOperationId) this.durableRuntime.commitAdditionalUserMessage({
+          workspaceRootPath: managed.workspace.rootPath, sessionId,
+          turnId: managed.activeDurableRunOperationId, operationId: managed.activeDurableRunOperationId,
+          messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
+        })
+      }
+      sessionLog.info('mid-stream send', {
+        sessionId, behavior, steered, compactionInFlight,
+        queueLengthBefore: managed.messageQueue.length,
+        backend: agent ? agent.constructor.name : 'none', connectionSlug: connection?.slug,
+      })
 
       // Feed the *attempted* behavior: a steer skipped because a compaction owns
       // the turn is a forced queue, not an interruption. Passing 'steer' here
@@ -7111,7 +7197,11 @@ export class SessionManager implements ISessionManager {
         // for both queue-direct (current turn still running) and
         // queue-after-abort (backend already aborted) — the replay path in
         // processNextQueuedMessage is identical.
-        managed.messageQueue.push({ message, attachments, storedAttachments, options, messageId: userMessage.id, optimisticMessageId: options?.optimisticMessageId })
+        userMessage.isQueued = true
+        const payload = { message, attachments, storedAttachments, options, messageId: userMessage.id, optimisticMessageId: options?.optimisticMessageId } as ManagedSession['messageQueue'][number]
+        managed.messageQueue.push(payload)
+        if (this.decisionFeatureActive('midTurnMessages')) payload.continuationCheck = this.markQueuedContinuation(managed, payload)
+        if (semanticDelivery) void this.steerQueuedIfDecided(managed, payload, userMessage, behavior)
         // Only claim interruption when a steer attempt actually aborted the
         // in-flight turn. In 'queue' mode the current turn runs to natural
         // completion, so the replayed turn must NOT inject the "previous response
@@ -7152,6 +7242,9 @@ export class SessionManager implements ISessionManager {
         ...(options?.hidden ? { hidden: true } : {}),
       }
       managed.messages.push(userMessage)
+      this.durableRuntime.recordUserInputAdmission({ workspaceRootPath: managed.workspace.rootPath,
+        sessionId, messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
+        attachments: storedAttachments, options })
 
       // Update lastMessageRole for badge display. Skip for hidden messages so the
       // session-list preview isn't briefly driven by an invisible system nudge.
@@ -7194,6 +7287,7 @@ export class SessionManager implements ISessionManager {
         const sanitized = sanitizeForTitle(titleSource)
         const initialTitle = sanitized.slice(0, 50) + (sanitized.length > 50 ? '…' : '')
         managed.name = initialTitle
+        managed.autoTitle = initialTitle
         this.syncPrimaryWorkItem(managed, { title: initialTitle })
         this.persistSession(managed)
         // Flush immediately so disk is authoritative before notifying renderer
@@ -7206,9 +7300,13 @@ export class SessionManager implements ISessionManager {
 
         // Generate AI title asynchronously using agent's SDK
         // (waits briefly for agent creation if needed)
-        this.generateTitle(managed, message)
+        if (this.decisionFeatureActive('smartTitles')) void this.generateTitleUnlessSmallTalk(managed, message)
+        else void this.generateTitle(managed, message)
       }
     }
+
+    if (!options?.hidden && !managed.triggeredBy && managed.titleDeferred && managed.name === managed.autoTitle
+      && this.decisionFeatureActive('smartTitles')) void this.generateTitleUnlessSmallTalk(managed, message)
 
     // Register only after the chat has content; empty placeholders never reach Kanban.
     this.ensurePrimaryWorkItem(managed)
@@ -7220,21 +7318,9 @@ export class SessionManager implements ISessionManager {
       const labelTree = listLabels(managed.workspace.rootPath)
       const autoMatches = evaluateAutoLabels(message, labelTree)
 
-      if (autoMatches.length > 0) {
-        const existingLabels = managed.labels ?? []
-        const newEntries = autoMatches
-          .map(m => `${m.labelId}::${m.value}`)
-          .filter(entry => !existingLabels.includes(entry))
-
-        if (newEntries.length > 0) {
-          managed.labels = [...existingLabels, ...newEntries]
-          this.persistSession(managed)
-          this.sendEvent({
-            type: 'labels_changed',
-            sessionId,
-            labels: managed.labels,
-          }, managed.workspace.id)
-        }
+      this.applyAutoLabelMatches(managed, autoMatches)
+      if (!options?.hidden && !activationRetry && this.decisionFeatureActive('semanticLabels')) {
+        void this.applySemanticAutoLabels(managed, message, labelTree)
       }
     } catch (e) {
       sessionLog.warn(`Auto-label evaluation failed for session ${sessionId}:`, e)
@@ -7267,6 +7353,10 @@ export class SessionManager implements ISessionManager {
     // Capture the generation to detect if a new request supersedes this one.
     // This prevents the finally block from clobbering state when a follow-up message arrives.
     const myGeneration = managed.processingGeneration
+    const replayedMessages = existingMessageId ? managed.replayMergedMessages?.get(existingMessageId) : undefined
+    if (existingMessageId) managed.replayMergedMessages?.delete(existingMessageId)
+    managed.lastSentMessageIds = (replayedMessages ?? [userMessage]).map(item => item.id)
+    const preTurnDecisions = this.startPreTurnDecisions(managed, message, options, { activationResend: !!activationRetry || !!_isAuthRetry })
 
     // Pre-enable sources required by invoked skills (Issue #249)
     // This eliminates the two-turn penalty where the agent discovers missing sources at runtime.
@@ -7419,12 +7509,22 @@ export class SessionManager implements ISessionManager {
         turnId: userMessage.id,
         operationId: durableRunOperationId,
         userMessageId: userMessage.id,
-        userMessage: message,
+        userMessage: userMessage.content,
       })
+      for (const original of replayedMessages ?? []) {
+        if (original.id !== userMessage.id) this.durableRuntime.commitAdditionalUserMessage({
+          workspaceRootPath, sessionId, turnId: userMessage.id, operationId: durableRunOperationId,
+          messageId: original.id, content: original.content, createdAt: original.timestamp,
+        })
+      }
       managed.activeDurableRunOperationId = durableRunOperationId
+      const turnDecision = preTurnDecisions ? await preTurnDecisions : null
+      if (this.sessions.get(sessionId) !== managed || managed.processingGeneration !== myGeneration || !managed.isProcessing || managed.stopRequested) return
       const chatIterator = agent.chat(effectiveMessage, modelInputAttachments.attachments, {
         durableRunOperationId,
         durableTurnId: userMessage.id,
+        thinkingOverride: turnDecision?.thinkingOverride ?? undefined,
+        turnContext: turnDecision?.suggestionHint ?? undefined,
       })
       sessionLog.info('Got chat iterator, starting iteration...')
 
@@ -7766,12 +7866,10 @@ export class SessionManager implements ISessionManager {
           sessionLog.info(`[auth-retry] Retrying message for session ${sessionId}`)
           this.setProcessing(managed, false)
 
-          // Remove the user message that was added for this failed attempt
-          // so we don't get duplicate messages when retrying
-          const lastUserMsgIndex = managed.messages.findLastIndex(m => m.role === 'user')
-          if (lastUserMsgIndex !== -1) {
-            managed.messages.splice(lastUserMsgIndex, 1)
-          }
+          // Auth retries preserve the original user inputs and their accepted IDs.
+          const originals = (managed.lastSentMessageIds ?? []).map(id => managed.messages.find(m => m.id === id)).filter((m): m is Message => !!m)
+          const retryMessageId = originals[0]?.id
+          if (retryMessageId && originals.length > 1) (managed.replayMergedMessages ??= new Map()).set(retryMessageId, originals)
 
           managed.authRetryInProgress = false
 
@@ -7781,7 +7879,7 @@ export class SessionManager implements ISessionManager {
             retryAttachments,
             retryStoredAttachments,
             retryOptions,
-            undefined,  // existingMessageId
+            retryMessageId,
             true        // _isAuthRetry - prevents infinite retry loop
           )
           sessionLog.info(`[auth-retry] Retry completed for session ${sessionId}`)
@@ -7979,6 +8077,11 @@ export class SessionManager implements ISessionManager {
       // Tasks Conductor seam: signal true completion (queue empty) with the stop
       // reason + this turn's final assistant message, so the Conductor can advance
       // the corresponding node. In-process only; never sent to the renderer/agents.
+      if (reason === 'complete' && currentFinalMessageId && !managed.hidden && managed.systemPromptPreset !== 'mini') {
+        if (this.decisionFeatureActive('turnOutcome') && !managed.taskRunId && !managed.taskSlug) void this.applyTurnOutcome(managed, currentFinalMessageId)
+        if (this.decisionFeatureActive('smartTitles') && !managed.triggeredBy) void this.refreshTitleIfDrifted(managed)
+      }
+      if (!managed.autoRetryPending || managed.autoRetryPending.committed) this.finishSuggestionTrace(managed)
       this.emitSessionComplete({
         sessionId: managed.handoffRootSessionId ?? sessionId,
         workspaceId: managed.workspace.id,
@@ -8003,7 +8106,19 @@ export class SessionManager implements ISessionManager {
     const managed = this.sessions.get(sessionId)
     if (!managed || managed.messageQueue.length === 0) return
 
-    const next = managed.messageQueue.shift()!
+    const first = managed.messageQueue.shift()!
+    const merged: typeof managed.messageQueue = []
+    let last: object = first
+    while (managed.messageQueue[0]?.mergeWith === last) {
+      last = managed.messageQueue.shift()!
+      merged.push(last as typeof first)
+    }
+    const entries = [first, ...merged]
+    const next = merged.length ? { ...first, message: entries.map(item => item.message).join('\n\n') } : first
+    if (merged.length && first.messageId) {
+      const originals = entries.map(item => managed.messages.find(m => m.id === item.messageId)).filter((m): m is Message => !!m)
+      ;(managed.replayMergedMessages ??= new Map()).set(first.messageId, originals)
+    }
     sessionLog.info('replay queued', {
       sessionId,
       messageId: next.messageId,
@@ -8011,8 +8126,9 @@ export class SessionManager implements ISessionManager {
     })
 
     // Update UI: queued → processing
-    if (next.messageId) {
-      const existingMessage = managed.messages.find(m => m.id === next.messageId)
+    for (const entry of entries) {
+      if (!entry.messageId) continue
+      const existingMessage = managed.messages.find(m => m.id === entry.messageId)
       if (existingMessage) {
         // Clear isQueued flag and persist - prevents re-queueing if crash during processing
         existingMessage.isQueued = false
@@ -8028,7 +8144,7 @@ export class SessionManager implements ISessionManager {
           sessionId,
           message: existingMessage,
           status: 'processing',
-          optimisticMessageId: next.optimisticMessageId
+          optimisticMessageId: entry.optimisticMessageId
         }, managed.workspace.id)
       }
     }
@@ -8364,7 +8480,7 @@ export class SessionManager implements ISessionManager {
   }
 
   /**
-   * Set the permission mode for a session ('safe', 'ask', 'allow-all')
+   * Set the permission mode for a session ('safe', 'ask', 'guarded', 'allow-all')
    */
   setSessionPermissionMode(sessionId: string, mode: PermissionMode): void {
     const managed = this.sessions.get(sessionId)
@@ -8487,6 +8603,7 @@ export class SessionManager implements ISessionManager {
    */
   async setSessionLabels(sessionId: string, labels: string[]): Promise<void> {
     const managed = this.sessions.get(sessionId)
+    if (managed) managed.manualLabelsRevision = (managed.manualLabelsRevision ?? 0) + 1
     if (managed) {
       managed.labels = labels
       this.setMetadataWriteGuard(managed)
@@ -9198,6 +9315,7 @@ export class SessionManager implements ISessionManager {
    * If no agent exists, creates a temporary one using the session's connection.
    */
   private async generateTitle(managed: ManagedSession, userMessage: string): Promise<void> {
+    const nameAtDispatch = managed.name
     sessionLog.info(`[generateTitle] Starting for session ${managed.id}`)
 
     // Use existing agent or create temporary one
@@ -9259,8 +9377,10 @@ export class SessionManager implements ISessionManager {
         titleLanguage: titleLanguage ?? null,
       })
       const title = await agent.generateTitle(userMessage, { language: titleLanguage })
-      if (title) {
+      if (title && this.sessions.get(managed.id) === managed && managed.name === nameAtDispatch) {
         managed.name = title
+        managed.autoTitle = title
+        managed.titleDeferred = false
         this.syncPrimaryWorkItem(managed, { title })
         this.persistSession(managed)
         // Flush immediately to ensure disk is up-to-date before notifying renderer.
@@ -9440,6 +9560,7 @@ export class SessionManager implements ISessionManager {
       }
 
       case 'tool_start': {
+        this.noteSuggestionUse(managed, { toolName: event.toolName, input: event.input ?? {} })
         // Format tool input paths to relative for better readability.
         // Relativize against the session's working directory only: a session
         // without one must keep absolute paths rather than gain a `./` prefix
@@ -10062,6 +10183,7 @@ export class SessionManager implements ISessionManager {
         break
 
       case 'source_activated': {
+        this.noteSuggestionUse(managed, { activatedSource: event.sourceSlug })
         // A source was auto-activated mid-turn. The server schedules a re-send of the
         // original message with a "[<slug> activated]" suffix so headless deployments
         // (WebUI, docker server) chain activations the same way the renderer used to.
@@ -10848,5 +10970,287 @@ export class SessionManager implements ISessionManager {
     this.durableRuntime.closeAll()
 
     sessionLog.info('Cleanup complete')
+  }
+
+  private startPreTurnDecisions(
+    managed: ManagedSession,
+    message: string,
+    options?: SendMessageOptions,
+    turn: { activationResend?: boolean } = {},
+  ): Promise<{ thinkingOverride: ThinkingLevel | null; suggestionHint: string | null }> | null {
+    // An auto-retry continues the same request: keep its thinking level, ask nothing again.
+    if (turn.activationResend) {
+      const kept = managed.turnThinkingOverride ?? null
+      return kept ? Promise.resolve({ thinkingOverride: kept, suggestionHint: null }) : null
+    }
+    managed.turnThinkingOverride = null
+    this.finishSuggestionTrace(managed)
+    const log = (line: string) => sessionLog.info(line)
+    const generation = managed.processingGeneration
+    const current = () => this.sessions.get(managed.id) === managed && managed.processingGeneration === generation && managed.isProcessing && !managed.stopRequested
+    const interactive = isAttendedSession(managed) && !options?.hidden
+    // Slash commands are instructions to the app, not requests to rate.
+    const rateThinking = interactive && !managed.taskRunId && !managed.taskSlug && !message.trim().startsWith('/') && this.decisionFeatureActive('adaptiveThinking')
+    const suggest = interactive && !managed.taskRunId && !managed.taskSlug
+      && this.decisionFeatureActive('suggestions') && wantsSuggestion(message, options)
+    // Nothing to ask: the caller skips the await entirely.
+    if (!rateThinking && !suggest) return null
+
+    // Adaptive thinking: a lower level for a simple turn, never above the session's.
+    const thinking = rateThinking
+      ? pickTurnThinkingLevel(message, managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL, { sessionId: managed.id, log })
+          .then((level) => {
+            if (level) sessionLog.info(`[adaptive-thinking] Session ${managed.id}: thinking ${level} for this turn`)
+            return level
+          })
+          .catch((e) => {
+            sessionLog.warn(`[adaptive-thinking] Check failed for session ${managed.id}:`, e)
+            return null
+          })
+      : Promise.resolve(null)
+
+    // Suggestions: point the agent at a skill or usable inactive source the message plainly needs.
+    const suggestion = suggest
+      ? (async () => {
+          const workspaceRoot = managed.workspace.rootPath
+          const candidates = collectSuggestionCandidates({
+            skills: loadAllSkills(workspaceRoot, managed.workingDirectory),
+            sources: loadAllSources(workspaceRoot),
+            activeSourceSlugs: managed.enabledSourceSlugs ?? [],
+          })
+          const { hint, trace } = await pickSuggestion(message, candidates, { sessionId: managed.id, log })
+          // Kept until the request is over, to record whether the agent used the pick anyway.
+          if (trace && current()) managed.suggestionTrace = { trace, used: new Set() }
+          if (!hint) return null
+          sessionLog.info(`[suggestions] Session ${managed.id}: suggesting ${hint.kind} "${hint.slug}"`)
+          return formatSuggestionHint(hint)
+        })().catch((e) => {
+          sessionLog.warn(`[suggestions] Check failed for session ${managed.id}:`, e)
+          return null
+        })
+      : Promise.resolve(null)
+
+    return Promise.all([thinking, suggestion]).then(([thinkingOverride, suggestionHint]) => {
+      if (!current()) return { thinkingOverride: null, suggestionHint: null }
+      const currentLevel = managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL
+      if (thinkingOverride && THINKING_LEVEL_IDS.indexOf(thinkingOverride) >= THINKING_LEVEL_IDS.indexOf(currentLevel)) thinkingOverride = null
+      managed.turnThinkingOverride = thinkingOverride
+      return { thinkingOverride, suggestionHint }
+    })
+  }
+
+  private decisionFeatureActive(feature: DecisionLayerFeature): boolean {
+    return isDecisionFeatureActive(feature)
+  }
+
+  private finishSuggestionTrace(managed: ManagedSession): void {
+    const tracked = managed.suggestionTrace
+    if (!tracked) return
+    managed.suggestionTrace = undefined
+    suggestionFollowUp(tracked.trace, tracked.used)
+  }
+
+  private noteSuggestionUse(managed: ManagedSession, call: Parameters<typeof candidatesUsedBy>[1]): void {
+    const tracked = managed.suggestionTrace
+    if (!tracked) return
+    for (const key of candidatesUsedBy(tracked.trace.candidates, call)) tracked.used.add(key)
+  }
+
+  private async decideMidTurnDelivery(managed: ManagedSession, message: string, configured: 'steer' | 'queue'): Promise<'steer' | 'queue' | null> {
+    try {
+      const runningRequest = managed.messages.findLast(m => m.role === 'user' && !m.isQueued && !m.hidden)?.content
+      const delivery = await decideMidTurnDelivery({ runningRequest, newMessage: message, configured }, {
+        sessionId: managed.id,
+        log: (line) => sessionLog.info(line),
+      })
+      if (delivery) sessionLog.info(`[mid-turn] Session ${managed.id}: ${delivery} (decision model)`)
+      return delivery
+    } catch (e) {
+      sessionLog.warn(`[mid-turn] Delivery check failed for session ${managed.id}:`, e)
+      return null
+    }
+  }
+
+  private async refreshTitleIfDrifted(managed: ManagedSession): Promise<void> {
+    try {
+      if (!managed.name || managed.name !== managed.autoTitle || managed.titleDeferred) return
+      // Auto-retries and nudges are hidden: they are not new user messages.
+      const userMessages = managed.messages.filter(m => m.role === 'user' && !m.hidden).map(m => m.content)
+      const checkedAt = managed.titleCheckedAtUserCount ?? 1
+      if (userMessages.length < TITLE_DRIFT_RECENT_MESSAGES || userMessages.length - checkedAt < TITLE_DRIFT_RECENT_MESSAGES) return
+      managed.titleCheckedAtUserCount = userMessages.length
+      const drifted = await titleNoLongerFits(managed.name, userMessages, { sessionId: managed.id, log: (line) => sessionLog.info(line) })
+      if (!drifted || managed.name !== managed.autoTitle || managed.isProcessing || this.sessions.get(managed.id) !== managed) return
+      sessionLog.info(`[smart-titles] Title of session ${managed.id} no longer fits, refreshing`)
+      await this.refreshTitle(managed.id, { onlyIfName: managed.name })
+    } catch (e) {
+      sessionLog.warn(`[smart-titles] Title drift check failed for session ${managed.id}:`, e)
+    }
+  }
+
+  private async generateTitleUnlessSmallTalk(managed: ManagedSession, message: string): Promise<void> {
+    const nameAtDispatch = managed.name
+    try {
+      if (await isSmallTalk(message, { sessionId: managed.id, log: (line) => sessionLog.info(line) })) {
+        if (this.sessions.get(managed.id) !== managed || managed.name !== nameAtDispatch) return
+        managed.titleDeferred = true
+        sessionLog.info(`[smart-titles] Small talk in session ${managed.id}: waiting for a request to title`)
+        return
+      }
+    } catch (e) {
+      sessionLog.warn(`[smart-titles] Small-talk check failed for session ${managed.id}:`, e)
+    }
+    if (this.sessions.get(managed.id) === managed && managed.name === nameAtDispatch) await this.generateTitle(managed, message)
+  }
+
+  private async shouldRunPromptAutomation(pending: PendingPrompt): Promise<{ run: boolean; reason?: string }> {
+    if (!pending.semanticCondition) return { run: true }
+    try {
+      const payload = pending.eventPayload ?? {}
+      const sessionId = typeof payload.sessionId === 'string' ? payload.sessionId : undefined
+      const managed = sessionId ? this.sessions.get(sessionId) : undefined
+      // Sessions changed from outside the app since launch have only their metadata in memory.
+      if (managed) await this.ensureMessagesLoaded(managed)
+      const lastContent = (role: 'user' | 'assistant') =>
+        managed?.messages.findLast(message => message.role === role && !message.isIntermediate)?.content
+      const verdict = await checkAutomationCondition(pending.semanticCondition, {
+        event: pending.event ?? 'unknown',
+        automationName: pending.automationName,
+        payload,
+        session: managed
+          ? {
+              name: managed.name,
+              labels: managed.labels,
+              status: managed.sessionStatus,
+              lastUserMessage: lastContent('user'),
+              lastAssistantMessage: lastContent('assistant'),
+            }
+          : undefined,
+      }, { sessionId, matcherId: pending.matcherId, log: (line) => sessionLog.info(line) })
+      if (!verdict || verdict.run) return { run: true }
+      return { run: false, reason: `condition not met ("yes" probability ${verdict.probability.toFixed(2)})` }
+    } catch (e) {
+      sessionLog.warn('[Automations] Semantic condition check failed, running the automation:', e)
+      return { run: true }
+    }
+  }
+
+  private async applyTurnOutcome(managed: ManagedSession, finalMessageId: string): Promise<void> {
+    const generation = managed.processingGeneration
+    const statusAtDispatch = managed.sessionStatus
+    try {
+      await Promise.resolve()
+      const index = managed.messages.findIndex(m => m.id === finalMessageId)
+      const reply = index === -1 ? undefined : managed.messages[index]?.content
+      if (!reply) return
+      let request: string | undefined
+      for (let i = index - 1; i >= 0 && request === undefined; i--) {
+        if (managed.messages[i]?.role === 'user') request = managed.messages[i]?.content
+      }
+
+      const result = await classifyTurnOutcome({ request, reply }, {
+        sessionId: managed.id,
+        log: (line) => sessionLog.info(line),
+      })
+      if (!result || result.outcome === 'finished') return
+      // Dropped when a newer turn started or already finished meanwhile: it answers for that turn.
+      if (this.sessions.get(managed.id) !== managed || managed.isProcessing || managed.processingGeneration !== generation
+        || managed.sessionStatus !== statusAtDispatch) return
+      if (this.getLastFinalAssistantMessageId(managed.messages) !== finalMessageId) return
+
+      const statuses = loadStatusConfig(managed.workspace.rootPath).statuses
+      const target = statuses.find(status => status.id === TURN_OUTCOME_ATTENTION_STATUS && status.category === 'open')
+      const current = statuses.find(status => status.id === managed.sessionStatus)
+      if (!target || managed.sessionStatus === target.id || current?.category === 'closed') return
+      sessionLog.info(`Turn outcome ${result.outcome} (confidence ${result.confidence.toFixed(2)}): session ${managed.id} → ${target.id}`)
+      await this.setSessionStatus(managed.id, target.id)
+    } catch (e) {
+      sessionLog.warn(`Turn outcome check failed for session ${managed.id}:`, e)
+    }
+  }
+
+  private async applySemanticAutoLabels(managed: ManagedSession, message: string, labelTree: LabelConfig[]): Promise<void> {
+    const revision = managed.manualLabelsRevision ?? 0
+    const labelsAtDispatch = new Set(managed.labels ?? [])
+    try {
+      await Promise.resolve()
+      const matches = await evaluateSemanticLabelsForMessage(message, labelTree, {
+        sessionId: managed.id,
+        existingEntries: [...labelsAtDispatch],
+        log: (line) => sessionLog.info(line),
+      })
+      if (matches.length === 0) return
+      if (this.sessions.get(managed.id) !== managed || (managed.manualLabelsRevision ?? 0) !== revision) return
+      // Present at dispatch → either still present (dedupe) or removed by the user since (respect it).
+      const fresh = matches.filter(m => !labelsAtDispatch.has(autoLabelMatchToEntry(m)))
+      this.applyAutoLabelMatches(managed, fresh)
+    } catch (e) {
+      sessionLog.warn(`Semantic auto-label evaluation failed for session ${managed.id}:`, e)
+    }
+  }
+
+  private applyAutoLabelMatches(managed: ManagedSession, matches: AutoLabelMatch[]): void {
+    if (matches.length === 0) return
+    const existingLabels = managed.labels ?? []
+    const newEntries = matches
+      .map(autoLabelMatchToEntry)
+      .filter((entry, index, all) => !existingLabels.includes(entry) && all.indexOf(entry) === index)
+    if (newEntries.length === 0) return
+    managed.labels = [...existingLabels, ...newEntries]
+    this.persistSession(managed)
+    this.sendEvent({
+      type: 'labels_changed',
+      sessionId: managed.id,
+      labels: managed.labels,
+    }, managed.workspace.id)
+  }
+
+  private async steerQueuedIfDecided(managed: ManagedSession, payload: ManagedSession['messageQueue'][number], userMessage: Message, configured: 'steer' | 'queue'): Promise<void> {
+    const generation = managed.processingGeneration
+    try {
+      const [decided] = await Promise.all([this.decideMidTurnDelivery(managed, payload.message, configured), payload.continuationCheck])
+      if ((decided ?? configured) !== 'steer') return
+      // A pending neighbour may still prove this is one half of a continued request.
+      await Promise.all(managed.messageQueue.map(item => item.continuationCheck))
+      const index = managed.messageQueue.indexOf(payload)
+      const agent = managed.agent
+      if (index < 0 || this.sessions.get(managed.id) !== managed || !managed.isProcessing
+        || managed.processingGeneration !== generation || !agent?.canSteerNow?.()
+        || agent.isCompactionInFlight?.() || (managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase])
+        || managed.messageQueue.some(item => item === payload.mergeWith || item.mergeWith === payload)) return
+      if (!agent.redirect(payload.message)) return
+      managed.messageQueue.splice(index, 1)
+      ;(managed.turnSteers ??= []).push(payload.message)
+      userMessage.isQueued = false
+      if (managed.activeDurableRunOperationId) this.durableRuntime.commitAdditionalUserMessage({
+        workspaceRootPath: managed.workspace.rootPath, sessionId: managed.id,
+        turnId: managed.activeDurableRunOperationId, operationId: managed.activeDurableRunOperationId,
+        messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
+      })
+      this.persistSession(managed)
+      this.sendEvent({ type: 'user_message', sessionId: managed.id, message: userMessage, status: 'accepted',
+        optimisticMessageId: payload.optimisticMessageId }, managed.workspace.id)
+    } catch (error) {
+      sessionLog.warn('Mid-turn delivery failed; retaining queued input:', error)
+    }
+  }
+
+  private async markQueuedContinuation(managed: ManagedSession, payload: ManagedSession['messageQueue'][number]): Promise<void> {
+    const generation = managed.processingGeneration
+    try {
+      if (managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase]) return
+      const index = managed.messageQueue.indexOf(payload)
+      const previous = index > 0 ? managed.messageQueue[index - 1] : undefined
+      if (!previous || !canSteerTextPayload(previous.attachments, previous.storedAttachments, previous.options)) return
+      if (!canSteerTextPayload(payload.attachments, payload.storedAttachments, payload.options)) return
+      const same = await isContinuation(previous.message, payload.message, { sessionId: managed.id, log: (line) => sessionLog.info(line) })
+      // Both must still be waiting, in the same order, when the answer arrives.
+      const now = managed.messageQueue.indexOf(payload)
+      if (same && now > 0 && managed.messageQueue[now - 1] === previous
+        && this.sessions.get(managed.id) === managed && managed.processingGeneration === generation
+        && !(managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase])) payload.mergeWith = previous
+    } catch (e) {
+      sessionLog.warn(`[mid-turn] Continuation check failed for session ${managed.id}:`, e)
+    }
   }
 }

@@ -176,15 +176,6 @@ export const LOCAL_ONLY_CHANNELS = new Set<string>([
   RPC_CHANNELS.rtk.GET_STATUS,
   RPC_CHANNELS.rtk.GET_GAIN,
 
-  // decisions — Jev decision-layer opt-in (app-level settings + provider keys)
-  RPC_CHANNELS.decisions.GET_SETTINGS,
-  RPC_CHANNELS.decisions.SET_SETTINGS,
-  RPC_CHANNELS.decisions.GET_STATUS,
-  RPC_CHANNELS.decisions.SET_API_KEY,
-  RPC_CHANNELS.decisions.DELETE_API_KEY,
-  RPC_CHANNELS.decisions.TEST,
-  RPC_CHANNELS.decisions.PROBE_SERVER,
-
   // tools — local tool settings
   RPC_CHANNELS.tools.GET_BROWSER_TOOL_ENABLED,
   RPC_CHANNELS.tools.SET_BROWSER_TOOL_ENABLED,
@@ -238,6 +229,15 @@ export const LOCAL_ONLY_CHANNELS = new Set<string>([
 // ---------------------------------------------------------------------------
 
 export const REMOTE_ELIGIBLE_CHANNELS = new Set<string>([
+  // Decision settings and credentials belong to the authenticated workspace server.
+  RPC_CHANNELS.decisions.GET_SETTINGS,
+  RPC_CHANNELS.decisions.SET_SETTINGS,
+  RPC_CHANNELS.decisions.GET_STATUS,
+  RPC_CHANNELS.decisions.SET_API_KEY,
+  RPC_CHANNELS.decisions.DELETE_API_KEY,
+  RPC_CHANNELS.decisions.TEST,
+  RPC_CHANNELS.decisions.PROBE_SERVER,
+
   // server — server-level operations (no workspace context needed)
   RPC_CHANNELS.server.GET_WORKSPACES,
   RPC_CHANNELS.server.CREATE_WORKSPACE,

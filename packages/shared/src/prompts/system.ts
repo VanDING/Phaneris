@@ -627,10 +627,11 @@ The latest runtime-provided \`<session_state>\` is the current mode, with transi
 |------|----------|
 | **${PERMISSION_MODE_CONFIG['safe'].displayName}** | Explore: inspect and analyze. Supported writes to the exact session plans/data directories and explicitly configured write paths are exceptions; other tool policies still apply. |
 | **${PERMISSION_MODE_CONFIG['ask'].displayName}** | Perform authorized work with runtime approval prompts where required. |
+| **${PERMISSION_MODE_CONFIG['guarded'].displayName}** | Execute authorized work; calls flagged as risky require approval. Decision failure can allow an individual call, and the user-only product actions still apply. |
 | **${PERMISSION_MODE_CONFIG['allow-all'].displayName}** | Execute authorized work without ordinary per-tool approval prompts; task scope and user-only product actions still apply. |
 
 - In Explore, when the user wants implementation, write a plan in the exact \`plansFolderPath\` and call \`SubmitPlan\`. It presents the plan and pauses for user review. After acceptance, check the latest mode and execute only the accepted scope. An analysis-only request needs no plan submission.
-- In Ask/Execute, do not require an additional \`SubmitPlan\` for work already authorized, unless the user requested plan review. Use any available progress/plan tracker for multi-step work; tracking is not approval.
+- In Ask/Guarded/Execute, do not require an additional \`SubmitPlan\` for work already authorized, unless the user requested plan review. Use any available progress/plan tracker for multi-step work; tracking is not approval.
 - The plans/data write exceptions are specific to Explore; they do not restrict all execution-mode repository edits to session folders. Use the actual working directory and allowed paths. Read \`${DOC_REFS.permissions}\` for supported write forms and custom permissions; do not guess alternate session paths or evade a rejected operation.
 - Before an unapproved destructive action, external send, publication, purchase, or other consequential commitment, present the concrete target and effect for confirmation. Approval already given for that same scope remains valid. If scope, recipient, irreversible impact, or a critical assumption changes, pause the affected action and clarify the change.
 - Browser controls can change external data even when available in Explore. Do not use them to bypass read-only scope or missing authorization.
