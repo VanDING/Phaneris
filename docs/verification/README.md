@@ -1,11 +1,12 @@
 # 验证脚本与结果
 
-本页汇总日历/Gantt、动效和打包客户端的验证入口。脚本从任意工作目录启动时都会定位仓库根目录；JSON 结果保存在 `results/`，运行日志保存在被忽略的 `.cache/verification/`。
+本页汇总日历/Gantt、动效、对话框页脚和打包客户端的验证入口。脚本从任意工作目录启动时都会定位仓库根目录；JSON 结果保存在 `results/`，运行日志保存在被忽略的 `.cache/verification/`。
 
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |
 | 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](results/)。 |
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
+| 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](results/)。 |
 | 打包客户端 | [结构验证](../../scripts/verification/packaged-client-verification.mjs) · [启动 smoke](../../scripts/verification/packaged-client-smoke.mjs) | 验证平台包内容与启动行为；macOS 和 Windows 各自保存结果。 |
 | Pi SDK 1.0.0 升级 | [评估与复现](../pi-sdk-1.0.0-upgrade-assessment.md) · [验证证据](results/pi-sdk-1.0.0-upgrade.json) | 依赖版本、真实 SDK/bundle smoke、全仓检查与生产构建；保留首次两项超时及完整工作区复测。日志位于 `.cache/pi-sdk-v1.0.0/`。 |
 | 日历原型 | [交互检查](../../scripts/verification/calendar-placement-demo-check.mjs) · [原型页面](../prototypes/calendar-untimed-placement-demo.html) | 检查独立的侧栏原型行为。 |
@@ -56,6 +57,25 @@ bun test ./packages/ui/src/lib/__tests__/motion.test.ts ./packages/ui/src/compon
 ```
 
 结果为 8 个测试通过、0 失败。它们验证参数与计算函数，不代表动效体验或全部应用验收通过。
+
+## 对话框页脚间距
+
+确认类弹窗的取消/确认按钮只靠 `DialogFooter` 上的 `gap-2` 分隔。调用点若把它覆盖成 `sm:gap-0`，从 40rem 起（也就是任何桌面窗口）两个按钮就会贴在一起——类型检查、lint、挂载都不报错，只有真正排版后的浏览器能看出来。
+
+```powershell
+# 完整验证（自行启动渲染层开发服务器与浏览器）
+node scripts/verification/dialog-footer-spacing.mjs
+
+# 复用已在运行的开发服务器 / 浏览器
+node scripts/verification/dialog-footer-spacing.mjs --base http://localhost:5173 --cdp http://127.0.0.1:9222
+
+# 只做调用点静态扫描（无浏览器环境）
+node scripts/verification/dialog-footer-spacing.mjs --static-only
+```
+
+脚本经开发服务器加载[探针模块](../../apps/electron/src/renderer/playground/probes/dialog-footer-probe.tsx)（只被该脚本加载，不进入任何构建入口），逐个挂载真实弹窗：删除会话（重放主进程转发的 `auth:showDeleteSessionConfirmation` 载荷）、退出登录、删除页面、重置确认、新建项目、发送资源。每个弹窗在 1280px 与 420px 两个宽度下测量相邻按钮的盒间距（期望值取自页面根字号：`gap-2` = 0.5rem，本应用根字号 15px 时为 7.5px）、断言页脚方向（行 / 列反向）、并校验“删除”按钮仍向主进程返回索引 1。截图与 JSON 结果写入 `results/`。
+
+最近一次运行（2026-10-03，Edge + Playwright）：修复前 10/17 通过——六个弹窗在桌面宽度全部测得 0.00px（手机宽度不受 `sm:` 覆盖影响，因此通过），另有 5 个调用点被静态扫描命中；修复后 [17/17 通过](results/dialog-footer-spacing-after.json)，每个按钮对均为 7.50px。`-before` 结果是在同一棵代码树上把 `className="gap-2 sm:gap-0"` 临时加回五个调用点后录制的，用来证明这套检查确实能发现该缺陷；`-after` 即当前代码。[对比图](results/dialog-footer-delete-session-comparison.png)由这两组“删除会话”截图裁剪放大合成。
 
 ## 打包客户端校验
 

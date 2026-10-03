@@ -1,0 +1,541 @@
+{
+  "date": "2026-10-03",
+  "label": "after",
+  "base": "http://localhost:5173",
+  "browser": "154.0.4258.53",
+  "expectedGapRem": 0.5,
+  "checks": [
+    {
+      "name": "no DialogFooter call site collapses the footer gap",
+      "observation": "21 call site(s) scanned for a gap-0 override: none found",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "delete-session @ desktop: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"删除会话\" — buttons \"取消\" | \"删除\", flex-direction row, gap 7.5px/7.5px, 取消 ↔ 删除 7.50px, screenshot docs\\verification\\results\\dialog-footer-delete-session-desktop-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "delete-session @ desktop: \"删除\" answers main with index 1",
+      "observation": "clicked the commit button, respondConfirmDialog received {\"id\":\"probe-delete-session\",\"response\":1}",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "delete-session @ phone: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"删除会话\" — buttons \"取消\" | \"删除\", flex-direction column-reverse, gap 7.5px/7.5px, 取消 ↔ 删除 7.50px, screenshot docs\\verification\\results\\dialog-footer-delete-session-phone-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "delete-session @ phone: \"删除\" answers main with index 1",
+      "observation": "clicked the commit button, respondConfirmDialog received {\"id\":\"probe-delete-session\",\"response\":1}",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "logout @ desktop: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"退出登录\" — buttons \"取消\" | \"退出登录\", flex-direction row, gap 7.5px/7.5px, 取消 ↔ 退出登录 7.50px, screenshot docs\\verification\\results\\dialog-footer-logout-desktop-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "logout @ desktop: \"退出登录\" answers main with index 1",
+      "observation": "clicked the commit button, respondConfirmDialog received {\"id\":\"probe-logout\",\"response\":1}",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "logout @ phone: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"退出登录\" — buttons \"取消\" | \"退出登录\", flex-direction column-reverse, gap 7.5px/7.5px, 取消 ↔ 退出登录 7.50px, screenshot docs\\verification\\results\\dialog-footer-logout-phone-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "logout @ phone: \"退出登录\" answers main with index 1",
+      "observation": "clicked the commit button, respondConfirmDialog received {\"id\":\"probe-logout\",\"response\":1}",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "delete-page @ desktop: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"删除此页面？\" — buttons \"取消\" | \"删除页面\", flex-direction row, gap 7.5px/7.5px, 取消 ↔ 删除页面 7.50px, screenshot docs\\verification\\results\\dialog-footer-delete-page-desktop-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "delete-page @ phone: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"删除此页面？\" — buttons \"取消\" | \"删除页面\", flex-direction column-reverse, gap 7.5px/7.5px, 取消 ↔ 删除页面 7.50px, screenshot docs\\verification\\results\\dialog-footer-delete-page-phone-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "reset-confirmation @ desktop: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"重置应用\" — buttons \"取消\" | \"重置应用\", flex-direction row, gap 7.5px/7.5px, 取消 ↔ 重置应用 7.50px, screenshot docs\\verification\\results\\dialog-footer-reset-confirmation-desktop-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "reset-confirmation @ phone: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"重置应用\" — buttons \"取消\" | \"重置应用\", flex-direction column-reverse, gap 7.5px/7.5px, 取消 ↔ 重置应用 7.50px, screenshot docs\\verification\\results\\dialog-footer-reset-confirmation-phone-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "create-project @ desktop: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"新项目\" — buttons \"取消\" | \"创建\", flex-direction row, gap 7.5px/7.5px, 取消 ↔ 创建 7.50px, screenshot docs\\verification\\results\\dialog-footer-create-project-desktop-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "create-project @ phone: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"新项目\" — buttons \"取消\" | \"创建\", flex-direction column-reverse, gap 7.5px/7.5px, 取消 ↔ 创建 7.50px, screenshot docs\\verification\\results\\dialog-footer-create-project-phone-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "send-resource @ desktop: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"Send to Workspace\" — buttons \"Cancel\" | \"Send\", flex-direction row, gap 7.5px/7.5px, Cancel ↔ Send 7.50px, screenshot docs\\verification\\results\\dialog-footer-send-resource-desktop-after.png",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "send-resource @ phone: footer buttons separated by 0.5rem (7.50px at 15px root)",
+      "observation": "\"Send to Workspace\" — buttons \"Cancel\" | \"Send\", flex-direction column-reverse, gap 7.5px/7.5px, Cancel ↔ Send 7.50px, screenshot docs\\verification\\results\\dialog-footer-send-resource-phone-after.png",
+      "status": "pass",
+      "detail": null
+    }
+  ],
+  "callSites": [
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      "line": 4154,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ModelRecoveryReconciliationDialog.tsx",
+      "line": 86,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/PluginsListPanel.tsx",
+      "line": 271,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/RecoveryReconciliationDialog.tsx",
+      "line": 242,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
+      "line": 284,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
+      "line": 242,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/LarkConnectDialog.tsx",
+      "line": 195,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/TelegramConnectDialog.tsx",
+      "line": 149,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/WeComConnectDialog.tsx",
+      "line": 79,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/DeletePageDialog.tsx",
+      "line": 35,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageGrantRequestDialog.tsx",
+      "line": 85,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageSourceAuthBanner.tsx",
+      "line": 226,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/SharePageDialog.tsx",
+      "line": 382,
+      "className": "gap-2 sm:gap-2",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/projects/CreateProjectDialog.tsx",
+      "line": 74,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ResetConfirmationDialog.tsx",
+      "line": 106,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/RtkUpdateDialog.tsx",
+      "line": 108,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ServerDirectoryBrowser.tsx",
+      "line": 303,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/confirm-dialog.tsx",
+      "line": 77,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/rename-dialog.tsx",
+      "line": 75,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/PluginInfoPage.tsx",
+      "line": 268,
+      "className": "",
+      "collapsesGap": false
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/probes/dialog-footer-probe.tsx",
+      "line": 8,
+      "className": "",
+      "collapsesGap": false
+    }
+  ],
+  "measurements": [
+    {
+      "dialogTitle": "删除会话",
+      "buttonLabels": [
+        "取消",
+        "删除"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "row",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "删除",
+          "gap": 7.5,
+          "orientation": "horizontal",
+          "overlap": false
+        }
+      ],
+      "scenario": "delete-session",
+      "viewport": "desktop",
+      "viewportWidth": 1280,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "删除会话",
+      "buttonLabels": [
+        "取消",
+        "删除"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "column-reverse",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "删除",
+          "gap": 7.5,
+          "orientation": "vertical",
+          "overlap": false
+        }
+      ],
+      "scenario": "delete-session",
+      "viewport": "phone",
+      "viewportWidth": 420,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "退出登录",
+      "buttonLabels": [
+        "取消",
+        "退出登录"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "row",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "退出登录",
+          "gap": 7.5,
+          "orientation": "horizontal",
+          "overlap": false
+        }
+      ],
+      "scenario": "logout",
+      "viewport": "desktop",
+      "viewportWidth": 1280,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "退出登录",
+      "buttonLabels": [
+        "取消",
+        "退出登录"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "column-reverse",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "退出登录",
+          "gap": 7.5,
+          "orientation": "vertical",
+          "overlap": false
+        }
+      ],
+      "scenario": "logout",
+      "viewport": "phone",
+      "viewportWidth": 420,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "删除此页面？",
+      "buttonLabels": [
+        "取消",
+        "删除页面"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "row",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "删除页面",
+          "gap": 7.5,
+          "orientation": "horizontal",
+          "overlap": false
+        }
+      ],
+      "scenario": "delete-page",
+      "viewport": "desktop",
+      "viewportWidth": 1280,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "删除此页面？",
+      "buttonLabels": [
+        "取消",
+        "删除页面"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "column-reverse",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "删除页面",
+          "gap": 7.5,
+          "orientation": "vertical",
+          "overlap": false
+        }
+      ],
+      "scenario": "delete-page",
+      "viewport": "phone",
+      "viewportWidth": 420,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "重置应用",
+      "buttonLabels": [
+        "取消",
+        "重置应用"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "row",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "重置应用",
+          "gap": 7.5,
+          "orientation": "horizontal",
+          "overlap": false
+        }
+      ],
+      "scenario": "reset-confirmation",
+      "viewport": "desktop",
+      "viewportWidth": 1280,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "重置应用",
+      "buttonLabels": [
+        "取消",
+        "重置应用"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "column-reverse",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "重置应用",
+          "gap": 7.5,
+          "orientation": "vertical",
+          "overlap": false
+        }
+      ],
+      "scenario": "reset-confirmation",
+      "viewport": "phone",
+      "viewportWidth": 420,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "新项目",
+      "buttonLabels": [
+        "取消",
+        "创建"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "row",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "创建",
+          "gap": 7.5,
+          "orientation": "horizontal",
+          "overlap": false
+        }
+      ],
+      "scenario": "create-project",
+      "viewport": "desktop",
+      "viewportWidth": 1280,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "新项目",
+      "buttonLabels": [
+        "取消",
+        "创建"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "column-reverse",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "取消",
+          "to": "创建",
+          "gap": 7.5,
+          "orientation": "vertical",
+          "overlap": false
+        }
+      ],
+      "scenario": "create-project",
+      "viewport": "phone",
+      "viewportWidth": 420,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "Send to Workspace",
+      "buttonLabels": [
+        "Cancel",
+        "Send"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "row",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "Cancel",
+          "to": "Send",
+          "gap": 7.5,
+          "orientation": "horizontal",
+          "overlap": false
+        }
+      ],
+      "scenario": "send-resource",
+      "viewport": "desktop",
+      "viewportWidth": 1280,
+      "expectedGapPx": 7.5
+    },
+    {
+      "dialogTitle": "Send to Workspace",
+      "buttonLabels": [
+        "Cancel",
+        "Send"
+      ],
+      "buttonCount": 2,
+      "flexDirection": "column-reverse",
+      "columnGap": 7.5,
+      "rowGap": 7.5,
+      "rootFontSizePx": 15,
+      "pairs": [
+        {
+          "from": "Cancel",
+          "to": "Send",
+          "gap": 7.5,
+          "orientation": "vertical",
+          "overlap": false
+        }
+      ],
+      "scenario": "send-resource",
+      "viewport": "phone",
+      "viewportWidth": 420,
+      "expectedGapPx": 7.5
+    }
+  ]
+}

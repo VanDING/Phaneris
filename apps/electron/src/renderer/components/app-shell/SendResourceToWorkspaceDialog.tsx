@@ -281,7 +281,7 @@ export function SendResourceToWorkspaceDialog({
           )}
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter>
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}

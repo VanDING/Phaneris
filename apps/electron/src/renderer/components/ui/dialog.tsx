@@ -90,6 +90,15 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Dialog action row (cancel / optional extra / confirm).
+ *
+ * `gap-2` is the only spacing between those buttons: `flex-col-reverse` on
+ * narrow viewports, a right-aligned row from `sm` up. Do not override it —
+ * `className="gap-0"` or `sm:gap-0` collapses the row into touching buttons,
+ * because a `sm:` utility beats the bare `gap-2` for every viewport ≥ 40rem,
+ * which is every desktop window.
+ */
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

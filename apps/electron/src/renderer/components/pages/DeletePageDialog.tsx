@@ -32,7 +32,7 @@ export function DeletePageDialog({ pageName, shared, onConfirm, onCancel }: Dele
             {shared ? ` ${t('pages.deleteSharedNote')}` : ''}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter>
           <Button variant="outline" onClick={onCancel}>
             {t('common.cancel')}
           </Button>
