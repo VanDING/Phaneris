@@ -1,5 +1,8 @@
+diff --git a/node_modules/node-tesseract-ocr/.bun-tag-6e98364c2a5a8f17 b/.bun-tag-6e98364c2a5a8f17
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/src/index.js b/src/index.js
-index ff8fd67e6b16c135a7ab33873ec7e1e59b18ec76..1c3e0b9d7e155e13c4a149b3810e8b33a52b42f2 100644
+index ff8fd67e6b16c135a7ab33873ec7e1e59b18ec76..c44780240a24464412214b1e14441c566fd2f48b 100644
 --- a/src/index.js
 +++ b/src/index.js
 @@ -1,27 +1,33 @@
@@ -42,3 +45,21 @@ index ff8fd67e6b16c135a7ab33873ec7e1e59b18ec76..1c3e0b9d7e155e13c4a149b3810e8b33
    })
  }
  
+@@ -42,12 +48,12 @@ function getOptions(config) {
+   const ocrOptions = ["tessdata-dir", "user-words", "user-patterns", "psm", "oem", "dpi"]
+ 
+   return Object.entries(config)
+-    .map(([key, value]) => {
+-      if (["debug", "presets", "binary"].includes(key)) return
+-      if (key === "lang") return `-l ${value}`
+-      if (ocrOptions.includes(key)) return `--${key} ${value}`
++    .flatMap(([key, value]) => {
++      if (["debug", "presets", "binary"].includes(key)) return []
++      if (key === "lang") return ["-l", String(value)]
++      if (ocrOptions.includes(key)) return [`--${key}`, String(value)]
+ 
+-      return `-c ${key}=${value}`
++      return ["-c", `${key}=${value}`]
+     })
+     .concat(config.presets) // options -l and --psm must occur before any CONFIGFILE
+     .filter(Boolean)

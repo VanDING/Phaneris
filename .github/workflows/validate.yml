@@ -28,7 +28,11 @@ jobs:
           bun-version: "1.4.2"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          # Must match UV_VERSION in scripts/build/common.ts so CI resolves the
+          # PEP 723 tool scripts with the uv the release bundles.
+          version: "0.12.22"
 
       - name: Reject Windows-illegal filenames
         run: |
@@ -91,6 +95,15 @@ jobs:
           bun run lint:i18n:parity
           bun run lint:i18n:sorted
           bun run lint:i18n:coverage
+
+      # Pin checks belong here as well as in `validate:ci`: `runtime:check`
+      # reads the Windows `.cmd` wrappers, and `electron-pin:check` guards the
+      # electron version this job is the closest to packaging.
+      - name: Pin checks
+        run: |
+          bun run runtime:check
+          bun run electron-pin:check
+          bun run version:check
 
       # Regression coverage for Windows path/permission behavior. Each command
       # runs in its own Bun process so mock.module() cannot leak between files.

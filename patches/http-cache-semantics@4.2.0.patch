@@ -1,0 +1,19 @@
+diff --git a/index.js b/index.js
+index f01e9a16b4781dc24c8f43dc7a4c8e6d1e4ae5eb..6fc4a7b059e0038e51f291c838d2f1ca1f9d09ec 100644
+--- a/index.js
++++ b/index.js
+@@ -394,6 +394,14 @@ module.exports = class CachePolicy {
+     evaluateRequest(req) {
+         this._assertRequestHasHeaders(req);
+ 
++        // Phaneris patch for GHSA-ch52-4w7c-c8xp: max-stale and
++        // stale-while-revalidate must not revive a zero-lifetime policy.
++        // This includes private, no-store, no-cache and sensitive shared
++        // responses. Positive-lifetime public responses keep normal behavior.
++        if (this.maxAge() <= 0) {
++            return this._evaluateRequestMissResult(req);
++        }
++
+         // In all circumstances, a cache MUST NOT ignore the must-revalidate directive
+         if (this._rescc['must-revalidate']) {
+             return this._evaluateRequestMissResult(req);

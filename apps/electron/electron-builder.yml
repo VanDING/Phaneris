@@ -5,7 +5,11 @@
 # `bun run identity:check` fails whenever these keys reappear in this file.
 extends: ./identity.generated.yml
 
-electronVersion: "44.4.3"
+# The Electron runtime baked into the installer. electron-builder reads this
+# literal rather than the `electron` range in package.json, so it must be bumped
+# by hand whenever that dependency moves — scripts/check-electron-pin.ts fails
+# otherwise, because a stale pin silently ships the previous runtime.
+electronVersion: "44.5.1"
 
 # Native addons ship as prebuilt N-API binaries via extraResources — node-pty's
 # prebuilds/<platform>-<arch>/*.node below, whose node-gyp build/** output is

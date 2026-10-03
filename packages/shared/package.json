@@ -101,11 +101,11 @@
     "glob": "^13.0.6",
     "i18next": "^26.4.2",
     "incr-regex-package": "^1.0.4",
-    "shell-quote": "^1.10.0",
+    "shell-quote": "^1.12.0",
     "yaml": "^2.9.1"
   },
   "peerDependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@modelcontextprotocol/sdk": "^1.32.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {

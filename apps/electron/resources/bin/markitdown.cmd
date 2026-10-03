@@ -6,4 +6,4 @@ set "ARGS=%ARGS% "%~1""
 shift
 goto :argloop
 :run
-"%PHANERIS_UV%" run --python 3.12 "%PHANERIS_SCRIPTS%\markitdown_cli.py"%ARGS%
+"%PHANERIS_UV%" run --python 3.12.15 "%PHANERIS_SCRIPTS%\markitdown_cli.py"%ARGS%

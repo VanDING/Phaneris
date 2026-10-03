@@ -44,7 +44,7 @@ export const BUN_VERSION = `bun-v${rootPackage.packageManager.split('@')[1]}`;
  * uv version to bundle with the app.
  * Update this when upgrading uv. Check latest at: https://github.com/astral-sh/uv/releases
  */
-export const UV_VERSION = '0.12.10';
+export const UV_VERSION = '0.12.22';
 
 /**
  * Get platform key for resources/bin folder naming.

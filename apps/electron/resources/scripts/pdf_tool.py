@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #   "pypdfium2==5.13.0",
-#   "pypdf==6.18.0",
+#   "pypdf==6.19.0",
 #   "img2pdf==0.6.3",
 #   "Pillow==12.3.0",
 #   "click==8.5.0",

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'bun:test';
 import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { resolveScriptRuntime } from './resolve-script-runtime.ts';
+import { resolveScriptRuntime, TOOL_PYTHON_VERSION } from './resolve-script-runtime.ts';
 
 describe('resolveScriptRuntime', () => {
   it('prefers PHANERIS_UV for python3', () => {
@@ -12,7 +12,7 @@ describe('resolveScriptRuntime', () => {
     try {
       const resolved = resolveScriptRuntime('python3', { isPackaged: false });
       expect(resolved.command).toBe('/tmp/custom-uv');
-      expect(resolved.argsPrefix).toEqual(['run', '--python', '3.12']);
+      expect(resolved.argsPrefix).toEqual(['run', '--python', TOOL_PYTHON_VERSION]);
       expect(resolved.source).toBe('env');
     } finally {
       if (prev === undefined) delete process.env.PHANERIS_UV;

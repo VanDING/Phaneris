@@ -85,7 +85,9 @@ async function main(): Promise<void> {
       "--bundle",
       "--platform=node",
       "--format=cjs",
-      "--target=node20",
+      // Must stay in step with ARG NODE_MAJOR in Dockerfile.server and the
+      // Electron embedded Node (24.x). Node 20 is end-of-life.
+      "--target=node24",
       `--outfile=${OUTPUT}`,
       // Inject build provenance. The worker logs these on startup so an
       // operator can confirm a rebuild actually propagated to the running

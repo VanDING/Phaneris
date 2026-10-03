@@ -13,10 +13,10 @@
     "typecheck": "bun run tsc --noEmit"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.17.16"
+    "@whiskeysockets/baileys": "6.7.24"
   },
   "devDependencies": {
-    "@types/node": "26.6.2",
+    "@types/node": "^24.19.1",
     "typescript": "7.0.2"
   }
 }

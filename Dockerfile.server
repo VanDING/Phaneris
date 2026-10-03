@@ -32,7 +32,9 @@ LABEL org.opencontainers.image.licenses="Apache-2.0"
 # Install system deps + Node.js (required by the WhatsApp worker subprocess;
 # Bun cannot run Baileys' crypto deps). Pin Node to a major via NodeSource so
 # upgrades are explicit — must match the --target in scripts/build-wa-worker.ts.
-ARG NODE_MAJOR=20
+# Node 20 reached end-of-life on 2026-04-30 and the Pi 1.0.0 SDK requires
+# >=22.19.0, so the container tracks the Node 24 LTS line.
+ARG NODE_MAJOR=24
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates git ripgrep curl gnupg && \
     curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash - && \

@@ -4,6 +4,22 @@ import { isAbsolute, join, resolve } from 'node:path';
 
 export type ScriptRuntimeLanguage = 'python3' | 'node' | 'bun';
 
+/**
+ * Python patch the bundled uv resolves for every PEP 723 tool script.
+ *
+ * Pinned to an exact patch, not to `3.12`. uv prefers an already-installed
+ * managed interpreter over a newer download, so `--python 3.12` silently keeps
+ * serving whatever patch the user first cached — a machine that installed
+ * cpython-3.12.12 keeps running 3.12.12 forever. An exact request either reuses
+ * the right patch or downloads it, so the interpreter cannot drift behind the
+ * security baseline shipped in this release.
+ *
+ * Must stay in step with the `--python` flag in
+ * apps/electron/resources/bin/*{,.cmd}; scripts/check-python-runtime-pin.ts
+ * enforces that.
+ */
+export const TOOL_PYTHON_VERSION = '3.12.15';
+
 export interface ResolvedScriptRuntime {
   command: string;
   argsPrefix: string[];
@@ -177,7 +193,7 @@ export function resolveScriptRuntime(
 
       return {
         command: cmd,
-        argsPrefix: ['run', '--python', '3.12'],
+        argsPrefix: ['run', '--python', TOOL_PYTHON_VERSION],
         source: 'env',
       };
     }
@@ -186,7 +202,7 @@ export function resolveScriptRuntime(
     if (bundledUv) {
       return {
         command: bundledUv,
-        argsPrefix: ['run', '--python', '3.12'],
+        argsPrefix: ['run', '--python', TOOL_PYTHON_VERSION],
         source: 'bundled',
       };
     }
@@ -196,7 +212,7 @@ export function resolveScriptRuntime(
       if (uvPath) {
         return {
           command: uvPath,
-          argsPrefix: ['run', '--python', '3.12'],
+          argsPrefix: ['run', '--python', TOOL_PYTHON_VERSION],
           source: 'path',
         };
       }

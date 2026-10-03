@@ -229,7 +229,8 @@ async function buildWhatsAppWorker(): Promise<void> {
       "--bundle",
       "--platform=node",
       "--format=cjs",
-      "--target=node20",
+      // Matches ARG NODE_MAJOR in Dockerfile.server and the worker build.
+      "--target=node24",
       `--outfile=${WA_WORKER_OUTPUT}`,
       '--minify',
       "--external:electron",

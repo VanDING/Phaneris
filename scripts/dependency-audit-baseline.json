@@ -1,9 +1,10 @@
 {
-  "$comment": "Known dependency advisories. New critical/high findings fail CI; refresh with `bun run audit:dependencies --update`.",
-  "generatedAt": "2026-09-20",
+  "$comment": "Known dependency advisories. New critical/high findings fail CI; refresh with `bun run audit:dependencies --update`. Every entry below is either locally patched or has no upstream fix; see docs/dependency-upgrade-2026-10-03.md.",
+  "generatedAt": "2026-10-03",
   "allowed": {
     "GHSA-5v7r-6r5c-r473": "moderate",
     "GHSA-8j44-735h-w4w2": "critical",
+    "GHSA-ch52-4w7c-c8xp": "high",
     "GHSA-v6c2-xwv6-8xf7": "high"
   }
 }
