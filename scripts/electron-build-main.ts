@@ -5,7 +5,7 @@
 
 import { spawn } from "bun";
 import * as esbuild from "esbuild";
-import { existsSync, readFileSync, statSync, mkdirSync, copyFileSync, rmSync } from "fs";
+import { existsSync, readFileSync, statSync, mkdirSync, copyFileSync, rmSync, cpSync } from "fs";
 import { join } from "path";
 
 const ROOT_DIR = join(import.meta.dir, "..");
@@ -202,6 +202,8 @@ async function buildPiAgentServer(): Promise<void> {
   copyFileSync(PI_AGENT_SERVER_OUTPUT, join(resourcesDest, "index.js"));
   console.log("  → Copied to resources/pi-agent-server/index.js");
   copyFileSync(PI_AGENT_SERVER_BUNDLE, join(resourcesDest, "bundle.js"));
+  copyFileSync(join(PI_AGENT_SERVER_DIR, 'dist/worker.js'), join(resourcesDest, 'worker.js'));
+  cpSync(join(PI_AGENT_SERVER_DIR, 'dist/node_modules/quickjs-wasi'), join(resourcesDest, 'node_modules/quickjs-wasi'), { recursive: true });
   console.log("  → Copied to resources/pi-agent-server/bundle.js");
 }
 

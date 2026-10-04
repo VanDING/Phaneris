@@ -542,9 +542,10 @@ export const RichTextInput = React.forwardRef<RichTextInputHandle, RichTextInput
         loadSourceIcon({ config: source.config, workspaceId })
       }
 
-      // Preload skill icons (handles emoji, URL, file, and auto-discovery)
+      // LoadedSkill.iconPath already comes from host file discovery. An absent
+      // path and config icon mean fallback, not another round of missing reads.
       for (const skill of skills) {
-        loadSkillIcon(skill, workspaceId)
+        if (skill.iconPath || skill.metadata.icon) loadSkillIcon(skill, workspaceId)
       }
     }, [sources, skills, workspaceId])
 

@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-02T23:51:50.349Z",
+  "date": "2026-10-04T05:26:19.954Z",
   "arch": "x64",
   "expected": {
     "version": "0.2.4",
@@ -12,23 +12,17 @@
     {
       "name": "legacy bridge bundle is absent",
       "observation": [
-        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\bridge-mcp-server\\index.js",
-        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\resources\\bridge-mcp-server\\index.js",
-        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\resources\\bridge-mcp-server\\index.js",
-        "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\dist\\resources\\bridge-mcp-server\\index.js"
+        "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\bridge-mcp-server\\index.js",
+        "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\resources\\bridge-mcp-server\\index.js",
+        "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\resources\\bridge-mcp-server\\index.js",
+        "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\dist\\resources\\bridge-mcp-server\\index.js"
       ],
       "status": "pass",
       "detail": null
     },
     {
-      "name": "NSIS installer exists with the expected versioned name",
-      "observation": "Phaneris-0.2.4-win-x64.exe",
-      "status": "pass",
-      "detail": null
-    },
-    {
       "name": "unpacked win-unpacked tree exists",
-      "observation": "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked",
+      "observation": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
       "status": "pass",
       "detail": null
     },
@@ -69,12 +63,9 @@
       "detail": null
     }
   ],
+  "scope": "unpacked resources and runtime; installer not verified",
   "legacyBridgeBundle": "absent",
-  "installer": {
-    "path": "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\Phaneris-0.2.4-win-x64.exe",
-    "bytes": 173345891
-  },
-  "app": "C:\\Users\\dotty\\.codex\\worktrees\\upstream-0140-absorption\\Phaneris\\apps\\electron\\release\\win-unpacked",
+  "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "identity": {
     "productName": "Phaneris",
     "companyName": "VanDING",
@@ -87,6 +78,8 @@
   "resources": [
     "bundled bun runtime",
     "pi agent server",
+    "codemode worker",
+    "codemode WASM",
     "whatsapp worker",
     "cli document tools (bin)",
     "cli document tools (scripts)",

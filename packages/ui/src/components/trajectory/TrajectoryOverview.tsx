@@ -36,6 +36,9 @@ export function TrajectoryOverview({
   onOpenContext,
 }: TrajectoryOverviewProps) {
   const { t } = useTranslation()
+  const cost = formatCost(contextSummary?.costUsd ?? snapshot.totalUsage?.cost.total)
+  const costLabel = contextSummary?.unknownCostRequests ? `${cost} + ${t('common.unknown')}`
+    : contextSummary?.estimatedCostRequests ? `≈${cost}` : cost
   const contentRecords = records.filter(record => record.collapsedSummary === undefined)
   const errorRecords = contentRecords.filter(record => record.cell.isError)
   const toolRecords = contentRecords.filter(record => record.cell.kind === 'tool' || record.cell.kind === 'subtool')
@@ -135,7 +138,7 @@ export function TrajectoryOverview({
                 [t('contentPanel.context.tokenOutput'), contextSummary.outputTokens?.toLocaleString()],
                 [t('contentPanel.context.tokenTotal'), contextSummary.totalTokens?.toLocaleString()],
                 [t('trajectory.overview.contextTokens'), contextSummary.contextTokens?.toLocaleString()],
-                [t('contentPanel.context.cost'), contextSummary.costUsd === undefined ? undefined : formatCost(contextSummary.costUsd)],
+                [t('contentPanel.context.cost'), contextSummary.costUsd === undefined ? undefined : costLabel],
               ].filter(([, value]) => value !== undefined && value !== null && value !== '').map(([label, value]) => (
                 <div key={label} className="flex min-w-0 items-center gap-3">
                   <span className="shrink-0 text-muted-foreground">{label}</span>
@@ -254,7 +257,7 @@ export function TrajectoryOverview({
             <Coins className="h-4 w-4 text-muted-foreground" />
             <span className="min-w-0 flex-1">
               <span className="block text-[12px] font-semibold">{t('trajectory.overview.costAndCompaction')}</span>
-              <span className="block truncate text-[11px] text-muted-foreground">{formatCost(snapshot.totalUsage?.cost.total)} · {t('trajectory.overview.compactions', { count: compactions })}</span>
+              <span className="block truncate text-[11px] text-muted-foreground">{costLabel} · {t('trajectory.overview.compactions', { count: compactions })}</span>
             </span>
           </div>
         </div>

@@ -168,6 +168,7 @@ export function SessionViewer({
                       content={turn.message.content}
                       attachments={turn.message.attachments}
                       badges={turn.message.badges}
+                      inputReception={turn.message.inputReception}
                       onUrlClick={platformActions.onOpenUrl}
                       onFileClick={platformActions.onOpenFile}
                     />

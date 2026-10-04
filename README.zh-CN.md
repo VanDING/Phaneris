@@ -10,8 +10,8 @@
 
 让 AI Agent 在文件、工具、服务和文档之间完成真正的工作，并让每个关键动作都可以检查、理解和确认。
 
-[![版本](https://img.shields.io/badge/版本-0.2.3-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.3.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.0-5b7cfa?style=flat-square)](docs/pi-kernel.md)
+[![版本](https://img.shields.io/badge/版本-0.2.4-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.4.md)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.2-5b7cfa?style=flat-square)](docs/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-2f855a?style=flat-square)](README.md)
@@ -33,7 +33,7 @@ Phaneris 是一个面向严肃 Agent 工作的开源桌面与服务端工作空�
 | **持久多会话工作空间** | 会话、项目、标签、状态、日历、看板和后台工作跨重启保留。 |
 | **Content Workbench** | 对话、Review、文件、预览、Artifact、上下文、Run 和浏览器可以并排打开。 |
 | **Sources 与 Skills** | 连接 MCP、REST API、本地目录和可复用的 `SKILL.md`，无需把每个服务硬编码进内核。 |
-| **权限与恢复** | Explore、Ask to Edit、Auto 与持久执行证据、显式恢复决策共同控制副作用。 |
+| **权限与恢复** | Explore、Ask to Edit、Auto、Admin 与持久执行证据、显式恢复决策共同控制副作用。 |
 | **自动化与消息入口** | 定时执行、事件触发，并通过支持的消息网关触达 Agent。 |
 | **Headless 与 CLI** | 长任务可以运行在远程服务端，桌面端、Web UI 和 `phaneris` 都可以作为客户端。 |
 
@@ -74,6 +74,12 @@ Artifact revision 带有校验结果和来源信息；支持的格式可以安�
 
 原生生图也遵循同一流程：一次工具调用生成一个经过验证的图片 Artifact，并记录 provider、model、connection、prompt、参数和 revision 来源。
 
+Markdown 草稿在能够无损往返时提供可视化编辑，复杂语法保留源码编辑入口。生图支持 OpenAI Images API 和 Pi 的 OpenRouter 图像模型。模型图像限制只调整请求副本，原始文件保持完整；历史图像恢复由用户明确发起，并创建关联的纯文本会话。
+
+MCP 工具保留输出 Schema 和结构化结果；`tool_search` 按需发现工具，沙箱 `codemode` 的每次嵌套调用都经过宿主权限与持久执行边界，模型访问关闭。配置、记账及条件式迁移结论见[能力采用指南](docs/architecture/capability-adoption-2026-10.md)，实测收益与验收范围见[闭合记录](docs/process/capability-completion-2026-10-04.md)。
+
+Pi SDK 运行时已统一固定为 1.0.2；升级验证及原生 MCP、classifier、模型路由的全面替换条件见[升级与收敛评估](docs/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。
+
 ## 真正属于个人的工作空间
 
 Profile 与外观都是本地产品能力，不依赖账户体系。Profile 根据本地会话形成活动概览，但不读取消息内容；用户明确填写的偏好与系统观察到的使用统计相互独立。语义主题引擎则控制颜色、表面、深度、边框、排版、图标线宽和密度，并支持应用默认值与工作空间覆盖。
@@ -101,10 +107,10 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
 
 | 层级 | 基线 |
 | --- | --- |
-| Agent 内核 | Pi SDK `1.0.0` |
-| 桌面端 | Electron `44.4.3`、React `19.3` |
+| Agent 内核 | Pi SDK `1.0.2` |
+| 桌面端 | Electron `44.5.1`、React `19.3` |
 | 运行时与工具链 | Bun `1.4.2`、TypeScript `7`、Vite `8.3` |
-| 集成协议 | MCP SDK `1.30`、原生 REST/本地文件/浏览器工具 |
+| 集成协议 | MCP SDK `1.32`、原生 REST/本地文件/浏览器工具 |
 | 存储 | 本地会话数据 + 工作空间级 SQLite/WAL Durable Runtime |
 
 ## 快速开始
@@ -122,7 +128,7 @@ bun install --frozen-lockfile
 bun run electron:start
 ```
 
-首次启动后，添加 AI 连接、创建工作空间，并按需连接 Source 或本地目录。在会话中按 **Shift+Tab** 可以循环切换 Explore、Ask to Edit 和 Auto 权限模式。
+首次启动后，添加 AI 连接、创建工作空间，并按需连接 Source 或本地目录。在会话中按 **Shift+Tab** 可以循环切换工作空间配置的权限模式。可选模式包括 Explore、Ask to Edit、Auto 和 Admin；内置默认循环为 Explore 与 Auto。
 
 ### Headless Server 与 CLI
 

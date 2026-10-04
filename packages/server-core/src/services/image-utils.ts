@@ -68,6 +68,10 @@ export function setImageProcessor(proc: ImageProcessor) {
   imageProcessor = proc
 }
 
+export async function convertGeneratedImage(buffer: Buffer, format: 'png' | 'jpeg'): Promise<Buffer> {
+  return imageProcessor.process(buffer, { format })
+}
+
 /**
  * Get image dimensions from a buffer.
  * Returns { width, height } or null if the buffer is not a valid image.
@@ -113,6 +117,9 @@ export async function resizeImageForAPI(
   options?: {
     /** Max output size in bytes. Default: IMAGE_LIMITS.MAX_SIZE (5MB) */
     maxSizeBytes?: number
+    maxWidth?: number
+    maxHeight?: number
+    jpegQuality?: number
     /** Prefer JPEG output (for photos). Default: false */
     isPhoto?: boolean
   },
@@ -123,14 +130,13 @@ export async function resizeImageForAPI(
   const metadata = await imageProcessor.getMetadata(buffer).catch(() => null)
   if (!metadata) return null
 
-  const maxEdge = Math.max(metadata.width, metadata.height)
-
   // Step 1: Compute target dimensions if resize needed
   let outWidth = metadata.width
   let outHeight = metadata.height
 
-  if (maxEdge > IMAGE_LIMITS.OPTIMAL_EDGE) {
-    const scale = IMAGE_LIMITS.OPTIMAL_EDGE / maxEdge
+  const scale = Math.min(1, (options?.maxWidth ?? IMAGE_LIMITS.OPTIMAL_EDGE) / metadata.width,
+    (options?.maxHeight ?? IMAGE_LIMITS.OPTIMAL_EDGE) / metadata.height)
+  if (scale < 1) {
     outWidth = Math.round(metadata.width * scale)
     outHeight = Math.round(metadata.height * scale)
   }
@@ -145,7 +151,7 @@ export async function resizeImageForAPI(
     output = await imageProcessor.process(buffer, {
       ...(needsResize && { resize: { width: outWidth, height: outHeight } }),
       format: 'jpeg',
-      quality: IMAGE_LIMITS.JPEG_QUALITY_HIGH,
+      quality: options?.jpegQuality ?? IMAGE_LIMITS.JPEG_QUALITY_HIGH,
     })
     format = 'jpeg'
   } else {
@@ -161,7 +167,7 @@ export async function resizeImageForAPI(
     output = await imageProcessor.process(buffer, {
       resize: { width: outWidth, height: outHeight },
       format: 'jpeg',
-      quality: IMAGE_LIMITS.JPEG_QUALITY_HIGH,
+      quality: options?.jpegQuality ?? IMAGE_LIMITS.JPEG_QUALITY_HIGH,
     })
     format = 'jpeg'
   }

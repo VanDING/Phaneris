@@ -73,7 +73,7 @@ const RETRYABLE_PROVIDER_SIDE_PATTERN =
  * pi-agent-server attaches SDK context metadata to boundaries, and emits the
  * synthetic `context_usage` event; both ride the same payload shape.
  */
-type PiEvent = (PiAgentEvent | AgentSessionEvent | { type: 'context_usage' }) & PiContextUsagePayload;
+type PiEvent = (PiAgentEvent | AgentSessionEvent | { type: 'context_usage' }) & PiContextUsagePayload & { parentToolCallId?: string };
 
 /**
  * Maps Pi SDK events to PhanerisEvents for UI compatibility.
@@ -740,7 +740,7 @@ export class PiEventAdapter extends BaseEventAdapter {
       // ============================================================
 
       case 'tool_execution_start': {
-        const durable = this.durableAttachments(event);
+        const durable = { ...this.durableAttachments(event), ...(event.parentToolCallId ? { parentToolUseId: event.parentToolCallId } : {}) };
         const toolCallId = event.toolCallId;
         const toolName = this.resolveToolName(event.toolName);
         this.toolNames.set(toolCallId, toolName);
@@ -854,7 +854,7 @@ export class PiEventAdapter extends BaseEventAdapter {
       }
 
       case 'tool_execution_end': {
-        const durable = this.durableAttachments(event);
+        const durable = { ...this.durableAttachments(event), ...(event.parentToolCallId ? { parentToolUseId: event.parentToolCallId } : {}) };
         const toolCallId = event.toolCallId;
         const resolvedToolName = this.toolNames.get(toolCallId) || 'tool';
         this.toolNames.delete(toolCallId);

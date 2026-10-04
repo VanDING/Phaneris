@@ -1,6 +1,8 @@
 import { navigate, routes } from '@/lib/navigate'
 import { dispatchFocusInputEvent } from '@/components/app-shell/input/focus-input-events'
 import type { Message } from '../../../shared/types'
+import { toast } from 'sonner'
+import { t } from 'i18next'
 
 export type ErrorMessageAction = NonNullable<Message['errorActions']>[number]
 
@@ -38,6 +40,13 @@ export function handleErrorMessageAction(
 
   if (action.action === 'settings') {
     onOpenSettings()
+    return
+  }
+
+  if (action.action === 'recover_images' && sessionId) {
+    void window.electronAPI.sessionCommand(sessionId, { type: 'recoverImageContext' })
+      .then(result => navigate(routes.view.allSessions(result.sessionId)))
+      .catch(error => toast.error(t('chat.imageRecoveryFailed'), { description: error instanceof Error ? error.message : String(error) }))
     return
   }
 

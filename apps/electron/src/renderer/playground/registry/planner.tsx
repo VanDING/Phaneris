@@ -27,7 +27,7 @@ import {
   StyledDropdownMenuContent,
   StyledDropdownMenuItem,
 } from '@/components/ui/styled-dropdown'
-import { TiptapMarkdownEditor } from '@phaneris/ui'
+import { TiptapMarkdownEditor } from '@phaneris/ui/markdown/editor'
 import { cn } from '@/lib/utils'
 import { getResizeGradientStyle } from '@/hooks/useResizeGradient'
 import {

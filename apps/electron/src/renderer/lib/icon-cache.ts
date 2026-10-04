@@ -67,6 +67,31 @@ export const iconCache = new Map<string, string>()
  */
 export const logoUrlCache = new Map<string, string | null>()
 
+type LoadedIcon = { dataUrl: string; colorable: boolean; rawSvg?: string }
+// Components mounted together share a read/discovery, without caching failures
+// or keeping raw SVGs across a later theme or workspace change.
+const pendingIconReads = new Map<string, Promise<string | null>>()
+const pendingIconDiscoveries = new Map<string, Promise<LoadedIcon | null>>()
+
+export function clearIconRequests(pathPrefix?: string): void {
+  for (const requests of [pendingIconReads, pendingIconDiscoveries]) {
+    for (const key of requests.keys()) {
+      if (!pathPrefix || (JSON.parse(key)[1] as string).startsWith(pathPrefix)) requests.delete(key)
+    }
+  }
+}
+
+function readWorkspaceIcon(workspaceId: string, relativePath: string): Promise<string | null> {
+  const key = JSON.stringify([workspaceId, relativePath])
+  const existing = pendingIconReads.get(key)
+  if (existing) return existing
+  const request = window.electronAPI.readWorkspaceImage(workspaceId, relativePath).finally(() => {
+    if (pendingIconReads.get(key) === request) pendingIconReads.delete(key)
+  })
+  pendingIconReads.set(key, request)
+  return request
+}
+
 // ============================================================================
 // Legacy exports (for backward compatibility during migration)
 // These are views into the unified cache, not separate maps.
@@ -82,6 +107,7 @@ export const sourceIconCache = {
   has: (key: string) => iconCache.has(`source:${key}`),
   delete: (key: string) => iconCache.delete(`source:${key}`),
   clear: () => {
+    clearIconRequests('sources/')
     // Clear only source entries
     for (const key of iconCache.keys()) {
       if (key.startsWith('source:')) iconCache.delete(key)
@@ -96,6 +122,7 @@ export const skillIconCache = {
   has: (key: string) => iconCache.has(`skill:${key}`),
   delete: (key: string) => iconCache.delete(`skill:${key}`),
   clear: () => {
+    clearIconRequests('skills/')
     // Clear only skill entries
     for (const key of iconCache.keys()) {
       if (key.startsWith('skill:')) iconCache.delete(key)
@@ -111,6 +138,7 @@ export const skillIconCache = {
  * Clear all icon caches (all entity types)
  */
 export function clearIconCaches(): void {
+  clearIconRequests()
   iconCache.clear()
   logoUrlCache.clear()
   colorableCache.clear()
@@ -259,7 +287,7 @@ export async function loadSourceIcon(
  */
 async function loadWorkspaceIcon(workspaceId: string, relativePath: string): Promise<string | null> {
   try {
-    const result = await window.electronAPI.readWorkspaceImage(workspaceId, relativePath)
+    const result = await readWorkspaceIcon(workspaceId, relativePath)
     // IPC returns null for missing files (silent fallback)
     if (!result) {
       return null
@@ -672,7 +700,7 @@ async function loadIconFile(
   relativePath: string
 ): Promise<{ dataUrl: string; colorable: boolean; rawSvg?: string } | null> {
   try {
-    const content = await window.electronAPI.readWorkspaceImage(workspaceId, relativePath)
+    const content = await readWorkspaceIcon(workspaceId, relativePath)
     // IPC returns null for missing files (silent fallback)
     if (!content) {
       return null
@@ -745,19 +773,22 @@ async function discoverIconFile(
   workspaceId: string,
   iconDir: string,
   fileName?: string
-): Promise<{ dataUrl: string; colorable: boolean; rawSvg?: string } | null> {
+): Promise<LoadedIcon | null> {
   const name = fileName ?? 'icon'
-
-  // Probe all extensions in parallel — reduces round-trips from N to 1
-  const results = await Promise.allSettled(
-    ICON_FILE_EXTENSIONS.map(ext =>
-      loadIconFile(workspaceId, `${iconDir}/${name}${ext}`)
-    )
-  )
-
-  // Return first successful result in priority order (svg > png > jpg > jpeg)
-  for (const result of results) {
-    if (result.status === 'fulfilled' && result.value) return result.value
-  }
-  return null
+  const key = JSON.stringify([workspaceId, `${iconDir}/${name}`])
+  const existing = pendingIconDiscoveries.get(key)
+  if (existing) return existing
+  const discovery = (async () => {
+    // Preserve extension priority while sharing the whole pending discovery.
+    const results = await Promise.allSettled(ICON_FILE_EXTENSIONS.map(ext =>
+      loadIconFile(workspaceId, `${iconDir}/${name}${ext}`)))
+    for (const result of results) {
+      if (result.status === 'fulfilled' && result.value) return result.value
+    }
+    return null
+  })().finally(() => {
+    if (pendingIconDiscoveries.get(key) === discovery) pendingIconDiscoveries.delete(key)
+  })
+  pendingIconDiscoveries.set(key, discovery)
+  return discovery
 }

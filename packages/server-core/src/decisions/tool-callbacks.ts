@@ -52,7 +52,7 @@ export function buildDecisionToolCallbacks(deps: DecisionToolCallbacksDeps): Dec
   let cached: { at: number; promise: Promise<DecisionClientResolution> } | null = null
   const resolveCached = (): Promise<DecisionClientResolution> => {
     if (cached && now() - cached.at < ttlMs) return cached.promise
-    const promise = resolveClient({ feature: 'decideTool' })
+    const promise = resolveClient({ feature: 'decideTool', sessionId: deps.sessionId })
     cached = { at: now(), promise }
     // Never cache a rejected resolution
     promise.catch(() => { if (cached?.promise === promise) cached = null })

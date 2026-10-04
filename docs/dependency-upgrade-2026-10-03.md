@@ -3,6 +3,8 @@
 基准：`029b3b9cc46a40b5094214e4fa54a2e810bee2d9`。工作分支：`codex/dependency-upgrade-20261003`。
 审计依据：[依赖版本与升级评估](dependency-audit-2026-10-03.md)。
 
+升级后的产品能力接入、MCP 1.32 无状态 transport 兼容修复与完整验收见 [能力采用指南](architecture/capability-adoption-2026-10.md)及[闭合记录](process/capability-completion-2026-10-04.md)。本页保持依赖升级批次的当时结果。
+
 按报告分批执行了全部建议升级，采用报告推荐的**兼容版本**而非一律追 `latest`；报告标记暂缓的主版本（Sentry 8/11、KaTeX 0.19、uuid 14、Node Current 26）保持不动。JS 依赖清单的 54 个升级目标已逐项核对，全部落在报告指定版本（见下方“逐项目标核对”）。
 
 ## 1. 批次结果

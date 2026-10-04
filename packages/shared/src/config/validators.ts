@@ -22,6 +22,7 @@ import { THINKING_LEVEL_IDS } from '../agent/thinking-levels.ts';
 import { isValidProviderAuthCombination } from './llm-connections.ts';
 import { SUPPORTED_LANGUAGE_CODES } from '../i18n/languages.ts';
 import type { LanguageCode } from '../i18n/languages.ts';
+import { ToolCallRulesSchema } from '../agent/core/tool-call-rules.ts';
 
 // ============================================================
 // Config Directory
@@ -2123,7 +2124,7 @@ export function formatValidationResult(result: ValidationResult): string {
  * Result of detecting what type of config file a path corresponds to.
  */
 export interface ConfigFileDetection {
-  type: 'source' | 'skill' | 'statuses' | 'labels' | 'permissions' | 'tool-icons' | 'automations';
+  type: 'source' | 'skill' | 'statuses' | 'labels' | 'permissions' | 'tool-icons' | 'automations' | 'tool-call-rules';
   /** Slug of the source or skill (if applicable) */
   slug?: string;
   /** Display file path for error messages */
@@ -2183,6 +2184,9 @@ export function detectConfigFileType(filePath: string, workspaceRootPath: string
   }
 
   // Match: permissions.json (workspace-level)
+  if (relativePath === 'tool-call-rules.json') {
+    return { type: 'tool-call-rules', displayFile: 'tool-call-rules.json' };
+  }
   if (relativePath === 'permissions.json') {
     return { type: 'permissions', displayFile: 'permissions.json' };
   }
@@ -2233,6 +2237,15 @@ export function validateConfigFileContent(
   content: string
 ): ValidationResult | null {
   switch (detection.type) {
+    case 'tool-call-rules': {
+      try {
+        if (Buffer.byteLength(content) > 64 * 1024) throw new Error('Rule file exceeds 64 KiB');
+        ToolCallRulesSchema.parse(safeJsonParse(content));
+        return { valid: true, errors: [], warnings: [] };
+      } catch (error) {
+        return { valid: false, warnings: [], errors: [{ file: detection.displayFile, path: '', severity: 'error', message: String(error) }] };
+      }
+    }
     case 'source':
       return validateSourceConfigContent(content);
     case 'skill':

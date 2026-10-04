@@ -147,6 +147,7 @@ export interface ISessionManager {
   refreshContextPolicy?(): Promise<void>
   setSessionContextPolicy(sessionId: string, policy: import('@phaneris/shared/agent/context-policy').ContextPolicy | null): Promise<void>
   retryContextHandoff(sessionId: string): Promise<void>
+  recoverImageContext(sessionId: string): Promise<{ sessionId: string }>
   refreshPromptCacheWarming?(enabled: boolean): void
 
   // ---------------------------------------------------------------------------

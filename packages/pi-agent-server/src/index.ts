@@ -142,6 +142,7 @@ import {
   normalizeCustomEndpointModelEntry,
   stripPiPrefix,
   type CustomEndpointModelEntry,
+  type CustomEndpointModelConfig,
   type CustomEndpointModelOverrides,
 } from './custom-endpoint-models.ts';
 import {
@@ -166,7 +167,8 @@ import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { readContextUsage, deferContextUsage } from './context-usage.ts';
 import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS } from './compaction-wait.ts';
 import { createLargeResultGateClient } from './large-result-gate.ts';
-import type { PiCompactResult, PiContextUsagePayload, PiLargeResultGateRequest, PiLargeResultGateResponse } from '../../shared/src/agent/backend/pi/protocol.ts';
+import type { PiCompactResult, PiContextUsagePayload, PiLargeResultGateRequest, PiLargeResultGateResponse, PiInputReception, PiProxyToolDefinition, PiProxyToolResult } from '../../shared/src/agent/backend/pi/protocol.ts';
+import { mcpStructuredContentSchema } from '@earendil-works/pi-codemode/declarations';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '../../shared/src/durable-runtime/types.ts';
@@ -213,7 +215,7 @@ interface InitMessage {
   branchFromSessionPath?: string;
   branchFromSdkTurnId?: string;
   customEndpoint?: { api: CustomEndpointApi; supportsImages?: boolean };
-  customModels?: Array<string | { id: string; contextWindow?: number; maxTokens?: number; supportsImages?: boolean; supportsThinking?: boolean; thinkingLevelMap?: CustomEndpointModelEntry['thinkingLevelMap'] }>;
+  customModels?: CustomEndpointModelConfig[];
   piAuth?: { provider: string; credential: PiCredential };
   /** Whether the browser session tool is enabled (false = exclude via SDK denylist) */
   browserToolEnabled?: boolean;
@@ -231,7 +233,7 @@ interface RuntimeConfigUpdateMessage {
   authType?: string;
   baseUrl?: string;
   customEndpoint?: { api: CustomEndpointApi; supportsImages?: boolean };
-  customModels?: Array<string | { id: string; contextWindow?: number; maxTokens?: number; supportsImages?: boolean; supportsThinking?: boolean; thinkingLevelMap?: CustomEndpointModelEntry['thinkingLevelMap'] }>;
+  customModels?: CustomEndpointModelConfig[];
 }
 
 /** Messages from main process (stdin) */
@@ -239,7 +241,7 @@ type InboundMessage =
   | InitMessage
   | { type: 'prompt'; id: string; message: string; systemPrompt: string; durableRunOperationId?: string; durableTurnId?: string; canonicalContext?: DurableCanonicalModelContext; images?: Array<{ type: 'image'; data: string; mimeType: string }> }
   | { type: 'sync_tools'; tools: ProxyToolDef[] }
-  | { type: 'tool_execute_response'; requestId: string; result: { content: string; isError: boolean } }
+  | { type: 'tool_execute_response'; requestId: string; result: PiProxyToolResult }
   | { type: 'pre_tool_use_response'; requestId: string; action: 'allow' | 'block' | 'modify'; input?: Record<string, unknown>; reason?: string }
   | { type: 'durable_tool_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; canonicalArgsHash: string; recoveryMode: ToolRecoveryMode; created: boolean; status: string; committedSeq: number }; reason?: string }
   | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
@@ -260,16 +262,12 @@ type InboundMessage =
   | { type: 'set_cache_retention'; cacheRetention: CacheRetention }
   | { type: 'set_cache_warming'; enabled: boolean }
   | RuntimeConfigUpdateMessage
-  | { type: 'steer'; message: string }
+  | { type: 'steer'; id?: string; message: string }
   | { type: 'token_update'; piAuth: { provider: string; credential: PiCredential } }
   | { type: 'shutdown' };
 
 /** Proxy tool definition from main process */
-interface ProxyToolDef {
-  name: string;
-  description: string;
-  inputSchema: Record<string, unknown>;
-}
+interface ProxyToolDef extends PiProxyToolDefinition {}
 
 /** Canonical tool metadata propagated on Pi tool start events */
 interface ToolExecutionMetadata {
@@ -308,6 +306,7 @@ interface OutboundPreToolUseReq {
   toolName: string;
   toolCallId?: string;
   input: Record<string, unknown>;
+  policyOnly?: boolean;
 }
 interface OutboundToolExecReq { type: 'tool_execute_request'; requestId: string; toolName: string; args: Record<string, unknown>; durableTool?: DurableToolExecutionIdentity }
 interface OutboundDurableToolPrepareReq {
@@ -418,6 +417,7 @@ interface OutboundSessionIdUpdate { type: 'session_id_update'; sessionId: string
 interface OutboundError { type: 'error'; message: string; code?: string; id?: string }
 
 type OutboundMessage =
+  | PiInputReception
   | { type: 'context_handoff'; signal: HandoffSignal }
   | OutboundReady
   | OutboundEvent
@@ -507,7 +507,7 @@ function sendThinkingLevelState(): void {
 
 // Pending promises for async handshakes
 const pendingPreToolUse = new Map<string, { resolve: (response: { action: string; input?: Record<string, unknown>; reason?: string }) => void }>();
-const pendingToolExecutions = new Map<string, { resolve: (result: { content: string; isError: boolean }) => void }>();
+const pendingToolExecutions = new Map<string, { resolve: (result: PiProxyToolResult) => void }>();
 const pendingDurableToolPrepares = new Map<string, { resolve: (response: { ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; reason?: string }) => void }>();
 const pendingDurableToolOutcomes = new Map<string, { resolve: (response: { ok: boolean; committedSeq?: number; reason?: string }) => void }>();
 const pendingDurableModelPrepares = new Map<string, { resolve: (response: { ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }) => void }>();
@@ -538,7 +538,7 @@ let proxyToolDefs: ProxyToolDef[] = [];
 // a durable T1 boundary. Keep it disabled until prefetch owns the same prepare
 // protocol as ordinary execution; performance must not weaken effect safety.
 const PREFETCHABLE_TOOLS = new Set<string>();
-const prefetchCache = new Map<string, Promise<{ content: string; isError: boolean }>>();
+const prefetchCache = new Map<string, Promise<PiProxyToolResult>>();
 
 // ============================================================
 // Prompt snapshots (trajectory request-header / prompt-diff data)
@@ -809,6 +809,7 @@ function registerCustomEndpointModels(
       || m.supportsImages !== undefined
       || m.supportsThinking !== undefined
       || m.thinkingLevelMap !== undefined
+      || m.inputLimits !== undefined || m.promptCache !== undefined || m.cost !== undefined
     ) {
       customModelOverrides.set(m.id, {
         ...(m.contextWindow !== undefined ? { contextWindow: m.contextWindow } : {}),
@@ -816,6 +817,9 @@ function registerCustomEndpointModels(
         ...(m.supportsImages !== undefined ? { supportsImages: m.supportsImages } : {}),
         ...(m.supportsThinking !== undefined ? { supportsThinking: m.supportsThinking } : {}),
         ...(m.thinkingLevelMap !== undefined ? { thinkingLevelMap: m.thinkingLevelMap } : {}),
+        ...(m.inputLimits ? { inputLimits: m.inputLimits } : {}),
+        ...(m.promptCache ? { promptCache: m.promptCache } : {}),
+        ...(m.cost ? { cost: m.cost } : {}),
       });
     }
   }
@@ -974,7 +978,7 @@ async function ensureSession(): Promise<AgentSession> {
     ...wrapToolsWithHooks([...builtinDefs, ...webTools, ...proxyTools]),
     createReportProgressTool(),
   ];
-  const toolAllowlist = wrappedAll.map(t => t.name);
+  const toolAllowlist = [...wrappedAll.map(t => t.name), 'tool_search', 'codemode'];
   debugLog(`Session tools: ${builtinDefs.length} builtin + ${webTools.length} web + ${proxyTools.length} proxy + 1 progress = ${wrappedAll.length} total`);
 
   // Build session options.
@@ -987,7 +991,9 @@ async function ensureSession(): Promise<AgentSession> {
     customTools: wrappedAll,
     tools: toolAllowlist,
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
-    resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), observeLifecycle: observeSdkLifecycle }),
+    resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), observeLifecycle: observeSdkLifecycle,
+      wrapOrchestrationTool: wrapSingleTool,
+      gateToolCall: async (toolName, input, toolCallId) => { await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true); } }),
     settingsManager: createPhanerisSettingsManager('main'),
   };
 
@@ -1072,6 +1078,7 @@ async function ensureSession(): Promise<AgentSession> {
 
   // Create the session — tools flow through customTools + allowlist (see comment above).
   const { session } = await createAgentSession(sessionOptions);
+  session.setActiveToolsByName([...wrappedAll.filter(t => !t.exposure || t.exposure === 'direct' || t.exposure === 'model-only').map(t => t.name), 'tool_search', 'codemode']);
   // Ordinary requests keep their existing boundary. SDK background refreshes
   // use a distinct boundary and never publish assistant/tool output.
   const sessionStream = installCacheWarmingAccounting(
@@ -1118,6 +1125,7 @@ async function requestPreToolUseApproval(
   sdkToolName: string,
   input: Record<string, unknown>,
   toolCallId?: string,
+  policyOnly = false,
 ): Promise<Record<string, unknown>> {
   const requestId = `pi-ptu-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -1127,6 +1135,7 @@ async function requestPreToolUseApproval(
     toolName: sdkToolName,
     ...(toolCallId ? { toolCallId } : {}),
     input,
+    policyOnly,
   });
 
   const response = await new Promise<{ action: string; input?: Record<string, unknown>; reason?: string }>((resolve) => {
@@ -1354,12 +1363,17 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     }
 
     // Send to main process for permission checking + transforms
-    inputObj = await requestPreToolUseApproval(sdkToolName, inputObj, toolCallId);
+    // Orchestration has no ambient effects. Its nested tools take the ordinary
+    // permission path individually; author-supplied annotations cannot skip it.
+    if (sdkToolName !== 'codemode' && sdkToolName !== 'tool_search') {
+      inputObj = await requestPreToolUseApproval(sdkToolName, inputObj, toolCallId);
+    }
 
     // Metadata is for the Phaneris UI only. Keep a final defensive strip here so the
     // upstream Pi tool implementation always receives clean executable args,
     // even if a future pre-tool-use path returns `allow` without modification.
     inputObj = stripPhanerisMetadata(inputObj);
+    signal?.throwIfAborted();
 
     // T1 must commit after preflight and before the implementation is allowed to run.
     const durable = await requestDurableToolPrepare(sdkToolName, inputObj, toolCallId);
@@ -1378,8 +1392,12 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
         toolBatchOrdinal: durable.toolBatchOrdinal,
       };
       const executionContext = attachDurableToolContext(ctx, durableTool) as typeof ctx;
+      signal?.throwIfAborted();
       result = await originalExecute(toolCallId, inputObj, signal, onUpdate, executionContext);
     } catch (error) {
+      // An aborted proxy may still be executing in the host/provider. Leave T1
+      // pending for reconciliation rather than assert an unobserved T2 failure.
+      if (signal?.aborted) throw error;
       await requestDurableToolOutcome(
         durable,
         sdkToolName,
@@ -1436,6 +1454,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
 
         if (largeResult) {
           result = {
+            ...result,
             content: [{ type: 'text', text: largeResult.message }],
             details: result.details,
           };
@@ -1486,10 +1505,14 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
       ? def.description.slice(0, 197) + '...'
       : def.description,
     parameters: def.inputSchema,
+    exposure: def.exposure,
+    namespace: def.namespace,
+    annotations: def.annotations,
+    ...(def.namespace ? { outputSchema: mcpStructuredContentSchema(def.outputSchema) ?? { type: 'object' } } : def.outputSchema ? { outputSchema: def.outputSchema } : {}),
     execute: async (
       toolCallId: string,
       params: any,
-      _signal,
+      signal,
       _onUpdate,
       ctx,
     ): Promise<AgentToolResult<any>> => {
@@ -1502,20 +1525,18 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
         debugLog(`Prefetch cache hit for ${def.name} (toolCallId: ${toolCallId})`);
         const result = await prefetched;
         if (result.isError) throw new Error(result.content);
-        return {
-          content: [{ type: 'text', text: result.content }],
-          details: undefined,
-        };
+        return proxyResultToSdk(def, result);
       }
 
       const inputObj = params as Record<string, unknown>;
 
-      // Permission checking via main process
-      const approvedInput = await requestPreToolUseApproval(def.name, inputObj, toolCallId);
+      // wrapSingleTool already confirmed and transformed these exact arguments.
+      const approvedInput = inputObj;
 
       // Execute via main process
       const requestId = `proxy-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
+      signal?.throwIfAborted();
       send({
         type: 'tool_execute_request',
         requestId,
@@ -1524,18 +1545,38 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
         durableTool: durableToolFromContext(ctx),
       });
 
-      const result = await new Promise<{ content: string; isError: boolean }>((resolve) => {
-        pendingToolExecutions.set(requestId, { resolve });
+      const result = await new Promise<PiProxyToolResult>((resolve, reject) => {
+        const abort = () => {
+          pendingToolExecutions.delete(requestId);
+          reject(new DOMException('Tool execution aborted; external outcome is unknown', 'AbortError'));
+        };
+        if (signal?.aborted) { abort(); return; }
+        signal?.addEventListener('abort', abort, { once: true });
+        pendingToolExecutions.set(requestId, { resolve: result => {
+          signal?.removeEventListener('abort', abort);
+          resolve(result);
+        } });
       });
 
       if (result.isError) throw new Error(result.content);
 
-      return {
-        content: [{ type: 'text', text: result.content }],
-        details: undefined,
-      };
+      return proxyResultToSdk(def, result);
     },
   }));
+}
+
+function proxyResultToSdk(def: ProxyToolDef, result: PiProxyToolResult): AgentToolResult<any> {
+  const structured = def.namespace ? {
+    content: result.contentBlocks ?? [{ type: 'text', text: result.content }],
+    isError: result.isError,
+    ...(result.structuredContent ? { structuredContent: result.structuredContent } : {}),
+  } : result.structuredContent;
+  return {
+    content: [{ type: 'text', text: result.content }],
+    details: undefined,
+    // The JSONL transport has already validated JSON serializability.
+    ...(structured ? { structuredContent: structured as NonNullable<AgentToolResult<any>['structuredContent']> } : {}),
+  };
 }
 
 /**
@@ -1933,6 +1974,11 @@ function handleSessionEvent(event: AgentSessionEvent): void {
 
   // Detect session MCP tool completions + enrich tool starts with canonical metadata
   if (event.type === 'tool_execution_start') {
+    if (event.parentToolCallId) {
+      const ordinal = Number(event.toolCallId.slice(event.toolCallId.lastIndexOf('/') + 1));
+      if (!Number.isSafeInteger(ordinal) || ordinal < 0) throw new Error('SDK nested tool ordinal is unavailable');
+      durableToolBatches.set(event.toolCallId, { toolBatchId: event.parentToolCallId, toolBatchOrdinal: ordinal });
+    }
     const toolName = event.toolName;
     if (toolName.startsWith('session__') || toolName.startsWith('mcp__session__')) {
       const mcpToolName = toolName.replace(/^(mcp__session__|session__)/, '');
@@ -2064,6 +2110,7 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
 }
 
 async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): Promise<void> {
+  let received = false;
   lengthContinuationTracker.reset();
   currentUserMessage = msg.message;
   durableToolBatches.clear();
@@ -2127,6 +2174,10 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     const invokePrompt = () => session.prompt(msg.message, {
       images: msg.images && msg.images.length > 0 ? msg.images : undefined,
       streamingBehavior: 'followUp',
+      preflightResult: (disposition) => {
+        received = true;
+        send({ type: 'input_received', id: msg.id, disposition });
+      },
     });
     if (msg.durableRunOperationId) {
       await durableModelRunStorage.run({
@@ -2149,6 +2200,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     // reaches the UI.
 
     debugLog(`Prompt failed: ${errorMsg}`);
+    if (!received) send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: errorMsg });
     send({ type: 'error', message: errorMsg, code: 'prompt_error' });
     // Prompt failed before Pi could establish a normal run, so synthesize the
     // same terminal boundary the SDK guarantees for started runs.
@@ -2275,6 +2327,9 @@ function handleCancelEphemeralQuery(
 async function handleAbort(): Promise<void> {
   largeResultGate.cancelAll();
   compactionEpoch++;
+  // Release permission waits before awaiting the SDK, which drains active tools.
+  for (const [, pending] of pendingPreToolUse) pending.resolve({ action: 'block', reason: 'Aborted' });
+  pendingPreToolUse.clear();
   if (piSession) {
     try {
       await piSession.abort();
@@ -2282,12 +2337,6 @@ async function handleAbort(): Promise<void> {
       debugLog(`Abort failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
-
-  // Reject all pending pre-tool-use requests
-  for (const [, pending] of pendingPreToolUse) {
-    pending.resolve({ action: 'block', reason: 'Aborted' });
-  }
-  pendingPreToolUse.clear();
 
   // Clear speculative prefetch cache — in-flight prefetches will resolve but never be consumed
   prefetchCache.clear();
@@ -2686,9 +2735,15 @@ async function processMessage(msg: InboundMessage): Promise<void> {
     case 'steer':
       if (piSession) {
         debugLog(`Steering with: "${msg.message.slice(0, 100)}"`);
-        await piSession.steer(msg.message);
+        try {
+          const disposition = await piSession.steer(msg.message);
+          if (msg.id) send({ type: 'input_received', id: msg.id, disposition });
+        } catch (error) {
+          if (msg.id) send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: String(error) });
+        }
       } else {
         debugLog('Steer ignored — no active session');
+        if (msg.id) send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: 'No active SDK session' });
       }
       break;
 

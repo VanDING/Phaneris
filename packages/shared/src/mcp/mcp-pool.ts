@@ -18,6 +18,7 @@ import { ApiSourcePoolClient } from './api-source-pool-client.ts';
 import { proxyToolName } from './proxy-tool-name.ts';
 import type { AgentMcpServerConfig } from '../agent/backend/types.ts';
 import type { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { PiProxyToolDefinition, PiProxyToolResult } from '../agent/backend/pi/protocol.ts';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isLocalMcpEnabled } from '../workspaces/storage.ts';
 import { guardLargeResult } from '../utils/large-response.ts';
@@ -31,18 +32,12 @@ import {
  * Proxy tool definition — the format passed to backends for registration.
  * Uses mcp__{slug}__{toolName} naming convention.
  */
-export interface ProxyToolDef {
-  name: string;
-  description: string;
-  inputSchema: Record<string, unknown>;
-}
+export interface ProxyToolDef extends PiProxyToolDefinition {}
 
 /**
  * Result of an MCP tool call, matching the subprocess protocol format.
  */
-export interface McpToolResult {
-  content: string;
-  isError: boolean;
+export interface McpToolResult extends PiProxyToolResult {
   /** Source slug for error attribution (set on failure) */
   sourceSlug?: string;
 }
@@ -381,6 +376,11 @@ export class McpClientPool {
           name,
           description: tool.description || `Tool from ${slug}`,
           inputSchema: Object.keys(cleanSchema).length > 0 ? cleanSchema : { type: 'object', properties: {} },
+          ...(tool.outputSchema ? { outputSchema: tool.outputSchema as Record<string, unknown> } : {}),
+          ...(tool.annotations ? { annotations: tool.annotations } : {}),
+          namespace: { name: `mcp__${slug}`, description: `Connected source: ${slug}` },
+          // Discovery replaces the growing per-request schema dump.
+          exposure: 'deferred',
         });
       }
     }
@@ -420,9 +420,14 @@ export class McpClientPool {
       const result = await client.callTool(originalName, args, options) as {
         content?: Array<{ type: string; text?: unknown; data?: string; mimeType?: string }>;
         isError?: boolean;
+        structuredContent?: Record<string, unknown>;
       };
 
       const contentBlocks = result.content || [];
+      const fullResult = {
+        contentBlocks: contentBlocks as Array<Record<string, unknown>>,
+        ...(result.structuredContent ? { structuredContent: result.structuredContent } : {}),
+      };
       const parts: string[] = [];
 
       // 1. Process each content block — handle text, image, audio
@@ -449,6 +454,9 @@ export class McpClientPool {
           } catch {
             // Base64 decode failed — skip this block
           }
+        } else if (block.type === 'resource_link' || block.type === 'resource') {
+          // Retain links and embedded resources both in the preview and structured output.
+          parts.push(JSON.stringify(block));
         }
       }
 
@@ -464,13 +472,14 @@ export class McpClientPool {
           summarize: this.summarizeCallback,
         });
         if (guarded) {
-          return { content: guarded, isError: false };
+          return { content: guarded, isError: false, ...fullResult };
         }
       }
 
       return {
         content: text,
         isError: !!result.isError,
+        ...fullResult,
       };
     } catch (err) {
       return {

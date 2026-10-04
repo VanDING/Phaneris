@@ -315,6 +315,8 @@ export interface CoreBackendConfig {
  * Options for the chat method.
  */
 export interface ChatOptions {
+  /** Original durable input identity, preserved across transport acknowledgements. */
+  inputId?: string;
   /** Retry flag (internal use for session recovery) */
   isRetry?: boolean;
   /** Override thinking level for this message only */
@@ -429,6 +431,8 @@ export interface AgentBackend {
    *          false if aborted (session layer must queue + re-send)
    */
   redirect(message: string): boolean;
+  /** Correlated SDK acknowledgement. Unknown delivery must never be automatically replayed. */
+  redirectConfirmed?(message: string, inputId: string): Promise<import('./pi/protocol.ts').PiInputReception>;
 
   /**
    * Whether a manual context compaction owns the current turn.

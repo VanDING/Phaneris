@@ -10,6 +10,7 @@ import { PanelHeader } from '../app-shell/PanelHeader'
 import { PanelEmptyState } from './PanelEmptyState'
 import { resolveFileFormat } from '@phaneris/shared/artifacts/browser'
 import { FilePreviewContent } from './FilePreviewContent'
+import { MarkdownArtifactEditor } from './MarkdownArtifactEditor'
 
 export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {
   const { t } = useTranslation()
@@ -237,7 +238,9 @@ export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {
       )}
 
       <div className="min-h-0 flex-1 overflow-hidden">
-        {editing ? (
+        {editing && sourceFormat?.preview === 'markdown' ? (
+          <MarkdownArtifactEditor value={draftText} onChange={setDraftText} />
+        ) : editing ? (
           <textarea
             value={draftText}
             onChange={(event) => setDraftText(event.target.value)}

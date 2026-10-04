@@ -889,6 +889,9 @@ export function acquireArtifactLease(
   if (artifact.status !== 'draft') throw new Error(`Artifact ${artifactId} must be draft before editing`);
   const current = effectiveLease(artifact);
   if (current) throw new Error(`Artifact ${artifactId} is already leased by ${current.owner}`);
+  // An earlier lease may have ended after an external checkout edit. Snapshot
+  // that edit before giving the next editor a revision for compare-and-swap.
+  syncCheckoutRevision({ ...scope, workspaceId: artifact.workspaceId }, artifact);
   const now = Date.now();
   artifact.lease = {
     id: randomUUID(),

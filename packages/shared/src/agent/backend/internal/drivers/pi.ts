@@ -265,7 +265,7 @@ export const piDriver: ProviderDriver = {
       const supportsThinking = typeof m.supportsThinking === 'boolean'
         ? m.supportsThinking
         : undefined;
-      if (m.contextWindow || m.maxTokens || supportsImages !== undefined || supportsThinking !== undefined || m.thinkingLevelMap) {
+      if (m.contextWindow || m.maxTokens || supportsImages !== undefined || supportsThinking !== undefined || m.thinkingLevelMap || m.inputLimits || m.promptCache || m.cost) {
         return {
           id: m.id,
           ...(m.contextWindow ? { contextWindow: m.contextWindow } : {}),
@@ -273,6 +273,9 @@ export const piDriver: ProviderDriver = {
           ...(supportsImages !== undefined ? { supportsImages } : {}),
           ...(supportsThinking !== undefined ? { supportsThinking } : {}),
           ...(m.thinkingLevelMap ? { thinkingLevelMap: m.thinkingLevelMap } : {}),
+          ...(m.inputLimits ? { inputLimits: m.inputLimits } : {}),
+          ...(m.promptCache ? { promptCache: m.promptCache } : {}),
+          ...(m.cost ? { cost: m.cost } : {}),
         };
       }
       return m.id;
@@ -355,8 +358,8 @@ export const piDriver: ProviderDriver = {
     let modelApi: string | undefined;
     let modelBaseUrl: string | undefined;
     try {
-      const { getModels } = await import('@earendil-works/pi-ai/compat');
-      const models = getModels(piAuthProvider as Parameters<typeof getModels>[0]);
+      const { getBuiltinModels } = await import('@earendil-works/pi-ai/providers/all');
+      const models = getBuiltinModels(piAuthProvider as Parameters<typeof getBuiltinModels>[0]);
       const requestedId = args.model.startsWith('pi/') ? args.model.slice(3) : args.model;
       const match = models.find(m => m.id === requestedId) || models[0];
       if (match) {

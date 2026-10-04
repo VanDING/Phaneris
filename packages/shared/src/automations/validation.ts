@@ -18,6 +18,7 @@ import type { ModelDefinition } from '../config/models.ts';
 import { Cron } from 'croner';
 import type { ValidationResult, ValidationIssue } from '../config/validators.ts';
 import type { AutomationsConfig, AutomationsValidationResult } from './types.ts';
+import { AGENT_EVENTS } from './types.ts';
 import { MAX_CONDITION_DEPTH_EXCLUSIVE, CONDITION_DEPTH_WARNING_THRESHOLD } from './conditions-constants.ts';
 
 /**
@@ -58,6 +59,10 @@ function runMatcherSemanticValidations(
 ): void {
   for (const [event, matchers] of Object.entries(config.automations)) {
     if (!matchers) continue;
+    if (AGENT_EVENTS.includes(event as typeof AGENT_EVENTS[number]) && matchers.length) warnings.push({
+      file, path: `automations.${event}`, severity: 'warning',
+      message: 'Agent-event automations currently match conditions only; prompt actions do not execute. Use tool-call-rules.json for deterministic blocking.',
+    });
     for (let i = 0; i < matchers.length; i++) {
       const matcher = matchers[i];
       if (!matcher) continue;

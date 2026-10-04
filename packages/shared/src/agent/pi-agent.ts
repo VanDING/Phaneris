@@ -14,6 +14,8 @@
  */
 
 import { spawn, type ChildProcess } from 'node:child_process';
+import type { PiInputReception, PiProxyToolResult } from './backend/pi/protocol.ts';
+import { evaluateToolCallRules } from './core/tool-call-rules.ts';
 import { createInterface, type Interface as ReadlineInterface } from 'node:readline';
 import type { AgentEvent } from '@phaneris/core/types';
 import type { FileAttachment } from '../utils/files.ts';
@@ -380,6 +382,7 @@ export class PiAgent extends BaseAgent {
   // Pending utility requests own their timeout handles so every terminal path
   // (result, error, timeout, exit, teardown) can release the timer immediately.
   private pendingMiniCompletions = new Map<string, PendingEphemeralRequest<string | null>>();
+  private pendingInputReceptions = new Map<string, { resolve: (receipt: PiInputReception) => void; timeout: ReturnType<typeof setTimeout> }>();
 
   // Separate from pendingMiniCompletions because the payload shape differs:
   // queryLlm returns a full LLMQueryResult, not just text.
@@ -1079,6 +1082,19 @@ export class PiAgent extends BaseAgent {
         break;
       }
 
+      case 'input_received': {
+        const receipt = msg as unknown as PiInputReception;
+        const pending = this.pendingInputReceptions.get(receipt.id);
+        if (pending) {
+          clearTimeout(pending.timeout);
+          this.pendingInputReceptions.delete(receipt.id);
+          pending.resolve(receipt);
+        } else if (receipt.id === this.activePromptInputId) {
+          this.eventQueue.enqueue(receipt);
+        }
+        break;
+      }
+
       case 'pre_tool_use_request':
         // Subprocess needs permission check + transforms before tool execution
         this.handlePreToolUseRequest(msg as {
@@ -1086,6 +1102,7 @@ export class PiAgent extends BaseAgent {
           toolName: string;
           toolCallId?: string;
           input: Record<string, unknown>;
+          policyOnly?: boolean;
         });
         break;
 
@@ -1406,8 +1423,16 @@ export class PiAgent extends BaseAgent {
     toolName: string;
     toolCallId?: string;
     input: Record<string, unknown>;
+    policyOnly?: boolean;
   }): Promise<void> {
     const { requestId, toolName, toolCallId, input } = req;
+    if (req.policyOnly) {
+      const decision = evaluateToolCallRules(this.config.workspace.rootPath, toolName, input);
+      const staleSource = toolName.startsWith('mcp__') && !toolName.startsWith('mcp__session__') && !this.mcpPool?.isProxyTool(toolName);
+      this.send({ type: 'pre_tool_use_response', requestId, action: decision.allowed && !staleSource ? 'allow' : 'block',
+        reason: staleSource ? 'The source is no longer connected or enabled.' : decision.reason });
+      return;
+    }
     const permissionEpoch = this.permissionEpoch;
     const cancelled = (): boolean => {
       if (permissionEpoch === this.permissionEpoch) return false;
@@ -1430,7 +1455,8 @@ export class PiAgent extends BaseAgent {
       this.debug(`Captured pre-tool metadata for ${toolName} (${toolCallId}, sessionId=${debugSessionId}): intent=${!!preIntent}, displayName=${!!preDisplayName}`);
     }
 
-    // Fire PreToolUse automation event — await so automations run before tool executes
+    // Publish compatibility event metadata. Legacy AgentEvent actions are
+    // recorded as unsupported; deterministic tool-call rules run separately.
     await this.emitAutomationEvent('PreToolUse', {
       hook_event_name: 'PreToolUse',
       tool_name: toolName,
@@ -1763,7 +1789,7 @@ export class PiAgent extends BaseAgent {
     toolName: string,
     args: Record<string, unknown>,
     durableTool?: DurableToolExecutionIdentity,
-  ): Promise<{ content: string; isError: boolean }> {
+  ): Promise<PiProxyToolResult> {
     // Session-scoped tools — strip mcp__session__ prefix added by the Pi SDK
     // registration (tools are registered as mcp__session__SubmitPlan, etc.)
     const strippedName = toolName.startsWith('mcp__session__')
@@ -2102,6 +2128,7 @@ export class PiAgent extends BaseAgent {
    */
   private handleSubprocessExit(code: number | null, signal: string | null): void {
     this.debug(`Pi subprocess exited: code=${code}, signal=${signal}`);
+    this.settlePendingInputReceptions('SDK exited before acknowledgement');
 
     this.subprocess = null;
     this.readline = null;
@@ -2541,9 +2568,10 @@ export class PiAgent extends BaseAgent {
 
       // Send prompt to subprocess
       const turnId = `turn-${++this.rpcIdCounter}`;
+      this.activePromptInputId = options?.inputId ?? turnId;
       this.send({
         type: 'prompt',
-        id: turnId,
+        id: this.activePromptInputId,
         message: userMessage,
         systemPrompt: fullSystemPrompt,
         durableRunOperationId: options?.durableRunOperationId,
@@ -2923,6 +2951,25 @@ export class PiAgent extends BaseAgent {
     return true;
   }
 
+  private activePromptInputId: string | null = null;
+
+  async redirectConfirmed(message: string, inputId: string): Promise<PiInputReception> {
+    if (!this.canSteerNow()) return { type: 'input_received', id: inputId, disposition: 'rejected', reason: 'SDK cannot accept steering now' };
+    return new Promise(resolve => {
+      const timeout = setTimeout(() => {
+        this.pendingInputReceptions.delete(inputId);
+        resolve({ type: 'input_received', id: inputId, disposition: 'unknown', reason: 'SDK acknowledgement timed out; review before retrying' });
+      }, 15_000);
+      this.pendingInputReceptions.set(inputId, { resolve, timeout });
+      try { this.send({ type: 'steer', id: inputId, message }); }
+      catch (error) {
+        clearTimeout(timeout);
+        this.pendingInputReceptions.delete(inputId);
+        resolve({ type: 'input_received', id: inputId, disposition: 'rejected', reason: String(error) });
+      }
+    });
+  }
+
   /** A pending manual compact RPC owns the turn; see AgentBackend.isCompactionInFlight. */
   override isCompactionInFlight(): boolean {
     return this.pendingCompactions.size > 0;
@@ -3087,6 +3134,7 @@ export class PiAgent extends BaseAgent {
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.settlePendingInputReceptions('SDK transport closed before acknowledgement');
     this.guardedCheckAbort?.abort();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
@@ -3118,6 +3166,15 @@ export class PiAgent extends BaseAgent {
     // Clear any in-flight overflow/auto-retry recovery state so a stale
     // fallback timer doesn't fire on a torn-down adapter.
     this.adapter.resetRecoveryState();
+  }
+
+  private settlePendingInputReceptions(reason: string): void {
+    for (const [id, pending] of this.pendingInputReceptions) {
+      clearTimeout(pending.timeout);
+      pending.resolve({ type: 'input_received', id, disposition: 'unknown', reason });
+    }
+    this.pendingInputReceptions.clear();
+    this.activePromptInputId = null;
   }
 
   // ============================================================

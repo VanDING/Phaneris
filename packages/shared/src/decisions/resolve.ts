@@ -15,6 +15,7 @@
 import { getCredentialManager } from '../credentials/index.ts';
 import { getLlmConnection, loadStoredConfig, type StoredConfig } from '../config/storage.ts';
 import { SystemOneClient } from './client.ts';
+import { resolveDecisionAccounting } from './accounting.ts';
 import { DECISION_PROVIDER_PRESETS, decisionProviderForConnection } from './providers.ts';
 import {
   normalizeDecisionLayerSettings,
@@ -86,6 +87,7 @@ export type DecisionClientResolution =
   | { ok: false; failure: DecisionFailure };
 
 export interface ResolveDecisionClientOptions {
+  sessionId?: string;
   /** Defaults to the stored settings. */
   settings?: DecisionLayerSettings;
   credentialManager?: DecisionCredentialSource;
@@ -170,6 +172,7 @@ export async function resolveDecisionClient(options: ResolveDecisionClientOption
   }
 
   const client = new SystemOneClient({
+    accounting: resolveDecisionAccounting({ sessionId: options.sessionId, feature: options.feature, provider, model: endpoint.model }),
     baseUrl: endpoint.baseUrl,
     apiKey,
     model: endpoint.model,

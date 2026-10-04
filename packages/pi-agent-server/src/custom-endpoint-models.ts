@@ -1,4 +1,5 @@
 export type CustomEndpointInput = 'text' | 'image'
+import type { ModelDefinition } from '../../shared/src/config/models.ts'
 
 /** Custom endpoint protocol — determines which streaming adapter Pi SDK uses. */
 export type CustomEndpointApi = 'openai-completions' | 'anthropic-messages'
@@ -13,6 +14,9 @@ export interface CustomEndpointModelOverrides {
   supportsImages?: boolean
   supportsThinking?: boolean
   thinkingLevelMap?: Partial<Record<'off' | 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max', string | null>>
+  inputLimits?: ModelDefinition['inputLimits']
+  promptCache?: ModelDefinition['promptCache']
+  cost?: ModelDefinition['cost']
 }
 
 export interface CustomEndpointModelEntry extends CustomEndpointModelOverrides {
@@ -26,6 +30,9 @@ export type CustomEndpointModelConfig = string | {
   supportsImages?: boolean
   supportsThinking?: boolean
   thinkingLevelMap?: CustomEndpointModelOverrides['thinkingLevelMap']
+  inputLimits?: CustomEndpointModelOverrides['inputLimits']
+  promptCache?: CustomEndpointModelOverrides['promptCache']
+  cost?: CustomEndpointModelOverrides['cost']
 }
 
 /** Strip bare model IDs (remove pi/ prefix if present). */
@@ -52,6 +59,9 @@ export function normalizeCustomEndpointModelEntry(model: CustomEndpointModelConf
     ...(model.supportsImages !== undefined ? { supportsImages: model.supportsImages } : {}),
     ...(model.supportsThinking !== undefined ? { supportsThinking: model.supportsThinking } : {}),
     ...(model.thinkingLevelMap ? { thinkingLevelMap: model.thinkingLevelMap } : {}),
+    ...(model.inputLimits ? { inputLimits: model.inputLimits } : {}),
+    ...(model.promptCache ? { promptCache: model.promptCache } : {}),
+    ...(model.cost ? { cost: model.cost } : {}),
   }
 }
 
@@ -81,7 +91,9 @@ export function buildCustomEndpointModelDef(
     reasoning: overrides?.supportsThinking ?? false,
     ...(overrides?.thinkingLevelMap ? { thinkingLevelMap: overrides.thinkingLevelMap } : {}),
     input,
-    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    cost: overrides?.cost ?? { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    ...(overrides?.inputLimits ? { inputLimits: overrides.inputLimits } : {}),
+    ...(overrides?.promptCache ? { promptCache: overrides.promptCache } : {}),
     contextWindow: overrides?.contextWindow ?? 131_072,
     maxTokens: overrides?.maxTokens ?? 16_384,
     ...(api === 'openai-completions' ? { compat: { supportsStore: false } } : {}),

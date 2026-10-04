@@ -33,6 +33,9 @@ export interface FeatureUsage {
   feature: string;
   calls: number;
   failures: number;
+  cancelled: number;
+  knownCostUsd: number;
+  unknownCostCalls: number;
   /** Failure kind → count. */
   failureKinds: Record<string, number>;
   /** Calls whose outcome was recorded. */
@@ -121,7 +124,7 @@ export function summarizeDecisionUsage(lines: readonly DecisionLogLine[], filter
     let entry = byFeature.get(record.feature);
     if (!entry) {
       entry = {
-        usage: { feature: record.feature, calls: 0, failures: 0, failureKinds: Object.create(null), withOutcome: 0, changed: 0, actions: Object.create(null), followUps: Object.create(null), inputTokens: 0, outputTokens: 0, sessions: 0 },
+        usage: { feature: record.feature, calls: 0, failures: 0, cancelled: 0, knownCostUsd: 0, unknownCostCalls: 0, failureKinds: Object.create(null), withOutcome: 0, changed: 0, actions: Object.create(null), followUps: Object.create(null), inputTokens: 0, outputTokens: 0, sessions: 0 },
         latencies: [],
         sessions: new Set(),
       };
@@ -133,6 +136,9 @@ export function summarizeDecisionUsage(lines: readonly DecisionLogLine[], filter
     if (typeof record.latencyMs === 'number') entry.latencies.push(record.latencyMs);
     usage.inputTokens += record.usage?.inputTokens ?? 0;
     usage.outputTokens += record.usage?.outputTokens ?? 0;
+    if (record.usage?.costUsd === undefined) usage.unknownCostCalls++;
+    else usage.knownCostUsd += record.usage.costUsd;
+    if (record.error?.kind === 'cancelled') usage.cancelled++;
     if (!record.ok) {
       usage.failures++;
       failures++;
@@ -168,12 +174,14 @@ export function formatDecisionUsage(summary: DecisionUsageSummary): string {
     f.feature,
     String(f.calls),
     String(f.failures),
+    String(f.cancelled),
+    `${f.knownCostUsd.toFixed(6)} + ${f.unknownCostCalls} unknown`,
     f.withOutcome > 0 ? `${f.changed}/${f.withOutcome}` : '-',
     f.latencyP50Ms !== undefined ? `${f.latencyP50Ms}/${f.latencyP95Ms}` : '-',
     String(f.sessions),
     Object.entries(f.actions).sort((a, b) => b[1] - a[1]).map(([action, count]) => `${action}×${count}`).join(' ') || '-',
   ]);
-  const header = ['feature', 'calls', 'failed', 'changed', 'p50/p95 ms', 'sessions', 'actions'];
+  const header = ['feature', 'calls', 'failed', 'cancelled', 'cost USD', 'changed', 'p50/p95 ms', 'sessions', 'actions'];
   const widths = header.map((h, i) => Math.max(h.length, ...rows.map(r => r[i]!.length)));
   const line = (cells: string[]) => cells.map((c, i) => (i === cells.length - 1 ? c : c.padEnd(widths[i]!))).join('  ');
   const followUps = summary.features

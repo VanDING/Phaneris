@@ -477,6 +477,9 @@ export default function App() {
         return prev
       }
 
+      if (state.modeVersion === currentVersion && current.permissionMode === state.permissionMode &&
+        current.previousPermissionMode === state.previousPermissionMode) return prev
+
       if (
         state.modeVersion === currentVersion &&
         current.permissionMode !== state.permissionMode
@@ -503,18 +506,31 @@ export default function App() {
     })
   }, [])
 
-  const reconcilePermissionModeState = useCallback(async (sessionId: string) => {
+  const loadPermissionModeState = useCallback(async (sessionId: string) => {
     try {
-      const state = await window.electronAPI.getSessionPermissionModeState(sessionId)
-      if (!state) return
-      applyPermissionModeState(sessionId, state, 'reconcile')
+      return await window.electronAPI.getSessionPermissionModeState(sessionId)
     } catch (error) {
       window.electronAPI.debugLog('[ModeSync] Failed to reconcile permission mode', {
         sessionId,
         error: error instanceof Error ? error.message : String(error),
       })
+      return null
     }
-  }, [applyPermissionModeState])
+  }, [])
+
+  const reconcilePermissionModeState = useCallback(async (sessionId: string) => {
+    const state = await loadPermissionModeState(sessionId)
+    if (state) applyPermissionModeState(sessionId, state, 'reconcile')
+  }, [applyPermissionModeState, loadPermissionModeState])
+
+  const reconcilePermissionModeStates = useCallback(async (sessionIds: string[]) => {
+    const states = await Promise.all(sessionIds.map(loadPermissionModeState))
+    // Apply within one continuation so React batches the root state updates.
+    // Each updater still compares against any newer event received meanwhile.
+    states.forEach((state, index) => {
+      if (state) applyPermissionModeState(sessionIds[index]!, state, 'reconcile')
+    })
+  }, [applyPermissionModeState, loadPermissionModeState])
 
   // Event processor hook - handles all agent events through pure functions
   const { processAgentEvent, clearStreamingState } = useEventProcessor()
@@ -589,9 +605,7 @@ export default function App() {
       }
       setSessionOptions(optionsMap)
 
-      await Promise.allSettled(
-        loadedSessions.map((s) => reconcilePermissionModeState(s.id))
-      )
+      await reconcilePermissionModeStates(loadedSessions.map(s => s.id))
 
       setSessionsLoaded(true)
 
@@ -615,7 +629,7 @@ export default function App() {
       setSessionLoadError(formatSessionLoadFailure(err))
       setSessionsLoaded(true)
     }
-  }, [initializeSessions, initialSessionId, reconcilePermissionModeState, windowWorkspaceId])
+  }, [initializeSessions, initialSessionId, reconcilePermissionModeStates, windowWorkspaceId])
 
   const refreshSessionListMetadataFromServer = useCallback(async (options: SessionListRefreshOptions = {}): Promise<Map<string, SessionMeta> | null> => {
     const {
@@ -665,7 +679,7 @@ export default function App() {
       for (const session of sessions) {
         syncSessionOptionsFromSession(session)
       }
-      await Promise.allSettled(sessions.map(s => reconcilePermissionModeState(s.id)))
+      await reconcilePermissionModeStates(sessions.map(s => s.id))
 
       return nextMetaMap
     } catch (err) {
@@ -683,7 +697,7 @@ export default function App() {
       })
       return null
     }
-  }, [store, syncSessionOptionsFromSession, reconcilePermissionModeState, windowWorkspaceId, windowRemoteWorkspaceId])
+  }, [store, syncSessionOptionsFromSession, reconcilePermissionModeStates, windowWorkspaceId, windowRemoteWorkspaceId])
 
   // Stale session watchdog — catches stuck sessions that the reconnect protocol misses
   const { trackSessionActivity } = useStaleSessionRecovery({

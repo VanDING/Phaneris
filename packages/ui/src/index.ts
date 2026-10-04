@@ -145,7 +145,6 @@ export {
   ImageCardStack,
   type MarkdownProps,
   type RenderMode,
-  TiptapMarkdownEditor,
   type TiptapMarkdownEditorProps,
   type MarkdownEngine,
   type MarkdownDatatableBlockProps,

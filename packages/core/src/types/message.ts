@@ -317,8 +317,12 @@ export interface Message {
   // Set to true when text_delta creates message, false when text_complete arrives
   // Also used for optimistic user messages before backend confirmation
   isPending?: boolean;
+  /** Renderer identity alias; avoids remounting optimistic bubbles on backend confirmation. */
+  backendMessageId?: string;
   // Queued: user message that is waiting to be processed (sent during ongoing response)
   isQueued?: boolean;
+  /** Host admission and SDK admission are independently observable. */
+  inputReception?: { disposition: 'saved' | 'started' | 'queued' | 'handled' | 'rejected' | 'unknown'; reason?: string };
   // Intermediate text (commentary between tool calls, not final response)
   isIntermediate?: boolean;
   // Hidden: a system-generated message that must reach the model (it drives a
@@ -349,7 +353,7 @@ export interface Message {
   errorActions?: Array<{
     key: string;
     label: string;
-    action?: 'retry' | 'settings' | 'reauth' | 'open_url' | 'reconnect_source';
+    action?: 'retry' | 'settings' | 'reauth' | 'open_url' | 'reconnect_source' | 'recover_images';
     url?: string;
     sourceSlug?: string;
   }>;
@@ -449,7 +453,7 @@ export interface StoredMessage {
   errorActions?: Array<{
     key: string;
     label: string;
-    action?: 'retry' | 'settings' | 'reauth' | 'open_url' | 'reconnect_source';
+    action?: 'retry' | 'settings' | 'reauth' | 'open_url' | 'reconnect_source' | 'recover_images';
     url?: string;
     sourceSlug?: string;
   }>;
@@ -478,6 +482,7 @@ export interface StoredMessage {
   authWorkspace?: string;
   // Queued: user message that is waiting to be processed (persisted for recovery)
   isQueued?: boolean;
+  inputReception?: Message['inputReception'];
   /** Hidden messages are filtered from turn grouping; persisted so reloads keep them hidden (audit L-1). */
   hidden?: boolean;
 }
@@ -493,6 +498,9 @@ export interface TokenUsage {
   /** Current context occupancy; independent of cumulative usage. */
   contextTokens: number;
   costUsd: number;
+  /** Requests whose price was not supplied. costUsd is only the known subtotal. */
+  unknownCostRequests?: number;
+  estimatedCostRequests?: number;
   cacheReadTokens?: number;
   cacheCreationTokens?: number;
   /** Cumulative provider buckets from the deduplicated request ledger. */
@@ -510,7 +518,7 @@ export interface RecoveryAction {
   /** Slash command to execute (e.g., '/settings') */
   command?: string;
   /** Custom action type for special handling */
-  action?: 'retry' | 'settings' | 'reauth' | 'open_url' | 'reconnect_source';
+  action?: 'retry' | 'settings' | 'reauth' | 'open_url' | 'reconnect_source' | 'recover_images';
   /** URL to open (for open_url action) */
   url?: string;
   /** Source slug (for reconnect_source action) */
@@ -783,6 +791,7 @@ export interface AgentEventUsage {
  * turnId: Correlation ID from the API's message.id, groups all events in an assistant turn
  */
 export type AgentEvent =
+  | { type: 'input_received'; id: string; disposition: 'started' | 'queued' | 'handled' | 'rejected' | 'unknown'; reason?: string }
   | { type: 'context_handoff'; phase: 'generating' | 'ready' | 'failed'; document?: string; error?: string }
   // Failed assistant output is discarded before a retry can produce more text.
   | { type: 'text_discard'; turnId: string }

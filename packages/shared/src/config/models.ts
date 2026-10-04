@@ -135,6 +135,17 @@ export interface ModelDefinition {
   thinkingLevelMap?: Partial<Record<ThinkingLevel, string | null>>;
   /** Explicit per-model image input capability hint, primarily for custom endpoints. */
   supportsImages?: boolean;
+  /** Native catalog identity; connections still scope model selection. */
+  sourceProvider?: string;
+  modelType?: 'chat';
+  inputLimits?: {
+    maxRequestBytes?: number;
+    images?: { maxPerMessage?: number; maxPerRequest?: number; resize?: { maxWidth?: number; maxHeight?: number; maxBytes?: number; jpegQuality?: number } };
+  };
+  /** Cache retention lifetime in seconds; absent means unknown. */
+  promptCache?: Partial<Record<'short' | 'long', number>>;
+  /** USD per million tokens. Unknown rates stay absent, not zero. */
+  cost?: { input: number; output: number; cacheRead: number; cacheWrite: number; tiers?: Array<{ inputTokensAbove: number; input: number; output: number; cacheRead: number; cacheWrite: number }> };
 }
 
 // ============================================

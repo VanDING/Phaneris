@@ -66,6 +66,8 @@ export interface SessionMeta {
     outputTokens: number
     totalTokens: number
     costUsd: number
+    unknownCostRequests?: number
+    estimatedCostRequests?: number
     contextTokens: number
     /** Model's context window size in tokens (from SDK modelUsage) */
     contextWindow?: number

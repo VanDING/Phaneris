@@ -13,7 +13,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Clock } from 'lucide-react'
-import type { StoredAttachment, ContentBadge } from '@phaneris/core'
+import type { StoredAttachment, ContentBadge, Message } from '@phaneris/core'
 import { normalizePath } from '@phaneris/core/utils'
 import { cn } from '../../lib/utils'
 import { Markdown } from '../markdown'
@@ -319,6 +319,7 @@ export interface UserMessageBubbleProps {
   isPending?: boolean
   /** Whether the message is queued (badge shown) */
   isQueued?: boolean
+  inputReception?: Message['inputReception']
   /** Compact mode - reduces padding for popover embedding */
   compactMode?: boolean
 }
@@ -337,9 +338,14 @@ export function UserMessageBubble({
   attachments,
   badges,
   isQueued,
+  inputReception,
   compactMode,
 }: UserMessageBubbleProps) {
   const { t } = useTranslation()
+  const receptionLabels = {
+    saved: t('chat.inputSaved'), started: t('chat.inputStarted'), queued: t('chat.inputQueued'),
+    handled: t('chat.inputHandled'), rejected: t('chat.inputRejected'), unknown: t('chat.inputUnknown'),
+  }
   const hasAttachments = attachments && attachments.length > 0
 
   // Show the queued chip while `isQueued` is true AND for at least
@@ -490,7 +496,7 @@ export function UserMessageBubble({
           compactMode ? "px-4 py-2" : "px-5 py-3.5"
         )}
       >
-        {showQueued && (
+        {showQueued && !inputReception && (
           <div
             className="flex items-center gap-1.5 text-foreground/55 mb-1.5"
             role="status"
@@ -498,6 +504,12 @@ export function UserMessageBubble({
           >
             <Clock className="h-3 w-3 animate-pulse" aria-hidden="true" />
             <span className="text-[11px] italic">{t('chat.queuedBadge')}</span>
+          </div>
+        )}
+        {inputReception && (
+          <div data-input-reception={inputReception.disposition} role="status" aria-live="polite"
+            className="text-[11px] text-foreground/55 mb-1.5">
+            {isQueued ? t('chat.queuedBadge') : receptionLabels[inputReception.disposition]}
           </div>
         )}
         {hasInlineBadges

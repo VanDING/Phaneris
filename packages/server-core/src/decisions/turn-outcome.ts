@@ -94,7 +94,7 @@ export async function classifyTurnOutcome(input: { request?: string; reply: stri
 /** Conductor seam: how a child node's final turn ended, recorded with the run context. */
 export function buildNodeOutcomeClassifier(deps: DecisionPointDeps = {}): NodeOutcomeFn {
   const classify: NodeOutcomeFn = async (finalText, context) =>
-    (await classifyTurnOutcome({ reply: finalText }, { ...deps, meta: context }))?.outcome ?? null
+    (await classifyTurnOutcome({ reply: finalText }, { ...deps, sessionId: context.sessionId, meta: context }))?.outcome ?? null
   // With the toggle off, nodes complete synchronously as before.
   classify.isActive = () => isDecisionFeatureActive('turnOutcome')
   return classify

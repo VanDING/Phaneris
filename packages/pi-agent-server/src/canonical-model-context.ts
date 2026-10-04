@@ -1,6 +1,6 @@
 import type { AgentMessage } from '@earendil-works/pi-agent-core';
 import type { SessionManager } from '@earendil-works/pi-coding-agent';
-import type { Model } from '@earendil-works/pi-ai/compat';
+import type { Model } from '@earendil-works/pi-ai';
 import type { DurableCanonicalModelContext } from '../../shared/src/durable-runtime/types.ts';
 
 const zeroUsage = () => ({

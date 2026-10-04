@@ -21,6 +21,9 @@ const required = [
   'resources/icon-macos.png',
   'resources/pi-agent-server/index.js',
   'resources/pi-agent-server/bundle.js',
+  'resources/pi-agent-server/worker.js',
+  'resources/pi-agent-server/node_modules/quickjs-wasi/quickjs.wasm',
+  'resources/pi-agent-server/node_modules/quickjs-wasi/package.json',
   'resources/themes/default.json',
   'resources/docs',
 ];

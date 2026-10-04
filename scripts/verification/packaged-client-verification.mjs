@@ -42,12 +42,14 @@ const OUTPUT = join(ROOT, 'docs/verification/results', `packaged-client-verifica
 
 const argArch = process.argv.find((a) => a.startsWith('--arch='))?.slice('--arch='.length) ?? 'x64'
 const expectSigned = process.argv.includes('--expect-signed')
+const unpackedOnly = process.argv.includes('--unpacked-only')
 
 const identity = JSON.parse(readFileSync(join(ROOT, 'phaneris.identity.json'), 'utf8'))
 const electronPkg = JSON.parse(readFileSync(join(ELECTRON_DIR, 'package.json'), 'utf8'))
 const expectedVersion = electronPkg.version
 
 const results = { date: new Date().toISOString(), arch: argArch, expected: {}, checks: [] }
+results.scope = unpackedOnly ? 'unpacked resources and runtime; installer not verified' : 'full packaged artifacts'
 function check(name, observation, run) {
   const record = { name, observation, status: 'pass', detail: null }
   try {
@@ -181,6 +183,8 @@ function verifyMac() {
     assertResourcesOutsideAsar(resourcesDir, [
       ['bundled bun runtime', join(resourcesDir, 'app', 'vendor', 'bun', 'bun')],
       ['pi agent server', join(resourcesDir, 'pi-agent-server')],
+      ['codemode worker', join(resourcesDir, 'pi-agent-server', 'worker.js')],
+      ['codemode WASM', join(resourcesDir, 'pi-agent-server', 'node_modules', 'quickjs-wasi', 'quickjs.wasm')],
       ['whatsapp worker', join(resourcesDir, 'messaging-whatsapp-worker', 'worker.cjs')],
       ['cli document tools (bin)', join(resourcesDir, 'app', 'resources', 'bin')],
       ['cli document tools (scripts)', join(resourcesDir, 'app', 'resources', 'scripts')],
@@ -261,7 +265,7 @@ function verifyWindows() {
   verifyNoLegacyBridge(resourcesDir)
 
   // ---------------------------------------------------------------- artifacts ---
-  check('NSIS installer exists with the expected versioned name', installerName, () => {
+  if (!unpackedOnly) check('NSIS installer exists with the expected versioned name', installerName, () => {
     assert(existsSync(installerPath), `missing ${installerPath}`)
     const size = statSync(installerPath).size
     // The bundle carries bun + uv + ripgrep; a wrong or truncated build is far smaller.
@@ -316,6 +320,8 @@ function verifyWindows() {
     assertResourcesOutsideAsar(resourcesDir, [
       ['bundled bun runtime', join(resourcesDir, 'app', 'vendor', 'bun', 'bun.exe')],
       ['pi agent server', join(resourcesDir, 'pi-agent-server')],
+      ['codemode worker', join(resourcesDir, 'pi-agent-server', 'worker.js')],
+      ['codemode WASM', join(resourcesDir, 'pi-agent-server', 'node_modules', 'quickjs-wasi', 'quickjs.wasm')],
       ['whatsapp worker', join(resourcesDir, 'messaging-whatsapp-worker', 'worker.cjs')],
       ['cli document tools (bin)', join(resourcesDir, 'app', 'resources', 'bin')],
       ['cli document tools (scripts)', join(resourcesDir, 'app', 'resources', 'scripts')],

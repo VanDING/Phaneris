@@ -495,6 +495,8 @@ export interface UserMessageEvent {
   status: 'accepted' | 'queued' | 'processing'
   /** Frontend's optimistic message ID for reliable matching */
   optimisticMessageId?: string
+  /** A correlated SDK receipt changes message metadata only, never session execution state. */
+  receptionOnly?: boolean
 }
 
 /**

@@ -198,6 +198,8 @@ export interface TiptapMarkdownEditorProps {
   content: string
   /** Called when content changes */
   onUpdate?: (markdown: string) => void
+  /** Initial serialization allows consumers to detect lossy source conversion. */
+  onReady?: (markdown: string) => void
   /** Placeholder text when empty */
   placeholder?: string
   className?: string
@@ -214,6 +216,7 @@ export interface TiptapMarkdownEditorProps {
 export function TiptapMarkdownEditor({
   content,
   onUpdate,
+  onReady,
   placeholder = 'Write something...',
   className,
   editable = true,
@@ -221,6 +224,8 @@ export function TiptapMarkdownEditor({
 }: TiptapMarkdownEditorProps) {
   const onUpdateRef = React.useRef(onUpdate)
   onUpdateRef.current = onUpdate
+  const onReadyRef = React.useRef(onReady)
+  onReadyRef.current = onReady
 
   // Ref for the editor instance — used by the Mathematics onClick callback
   // which is created at extension-configure time (before useEditor returns).
@@ -340,11 +345,15 @@ export function TiptapMarkdownEditor({
       },
     },
     onCreate: ({ editor }) => {
+      onReadyRef.current?.(useOfficialMarkdown ? postprocessMarkdownFromOfficial(getOfficialMarkdown(editor))
+        : getLegacyMarkdown(editor as { storage: { markdown?: { getMarkdown?: () => string } } }))
       queueMicrotask(() => {
         scheduleShikiRefresh(editor)
       })
     },
-    onUpdate: ({ editor }) => {
+    onUpdate: ({ editor, transaction }) => {
+      // Read-only initialization and setEditable notifications are not user edits.
+      if (!editor.isEditable || !transaction.docChanged) return
       const md = useOfficialMarkdown
         ? postprocessMarkdownFromOfficial(getOfficialMarkdown(editor as { getMarkdown?: () => string }))
         : getLegacyMarkdown(editor as { storage: { markdown?: { getMarkdown?: () => string } } })

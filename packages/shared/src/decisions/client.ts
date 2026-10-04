@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { createHash } from 'node:crypto';
 import { PRODUCT_FULL_NAME } from '../identity.generated.ts';
 import { buildSystemOneEndpoint } from './providers.ts';
+import type { DecisionAccounting } from './accounting.ts';
 import {
   DecisionError,
   DECISION_CHOICE_MAX_OPTIONS,
@@ -42,6 +43,7 @@ import {
 } from './types.ts';
 
 export interface SystemOneClientOptions {
+  accounting?: DecisionAccounting;
   /** Provider base URL; `/v1/systemone` is appended. */
   baseUrl: string;
   /** Bearer token. Optional only for self-hosted servers without auth. */
@@ -299,6 +301,7 @@ export function parseSystemOneResponse(
 // ============================================================
 
 export class SystemOneClient {
+  private readonly accounting?: DecisionAccounting;
   readonly endpoint: string;
   readonly model: string;
   private readonly apiKey?: string;
@@ -308,6 +311,7 @@ export class SystemOneClient {
   private readonly fetchImpl: typeof globalThis.fetch;
 
   constructor(options: SystemOneClientOptions) {
+    this.accounting = options.accounting;
     this.endpoint = buildSystemOneEndpoint(options.baseUrl);
     this.model = options.model;
     this.apiKey = options.apiKey?.trim() || undefined;
@@ -323,6 +327,12 @@ export class SystemOneClient {
    * and keep their pre-decision behaviour.
    */
   async decide(request: DecisionRequest, signal?: AbortSignal): Promise<DecisionResult> {
+    validateDecisionRequest(request);
+    if (signal?.aborted) throw new DecisionError('cancelled', 'Decision call was cancelled');
+    return this.accounting ? this.accounting(request, () => this.decideUnaccounted(request, signal)) : this.decideUnaccounted(request, signal);
+  }
+
+  private async decideUnaccounted(request: DecisionRequest, signal?: AbortSignal): Promise<DecisionResult> {
     validateDecisionRequest(request);
     const prepared = prepareDecisionState(request.state, this.maxStateBytes);
     const model = request.model?.trim() || this.model;

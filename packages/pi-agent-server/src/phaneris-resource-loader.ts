@@ -1,5 +1,5 @@
 import { mkdirSync } from 'node:fs';
-import { DefaultResourceLoader } from '@earendil-works/pi-coding-agent';
+import { DefaultResourceLoader, createCodemodeExtension, createToolSearchExtension, type ToolDefinition } from '@earendil-works/pi-coding-agent';
 import { registerNativeLifecycle, type ObserveLifecycle } from './native-lifecycle-observation.ts';
 
 /**
@@ -47,6 +47,9 @@ export async function createPhanerisResourceLoader(options: {
   /** Prompt source for this loader; defaults to the module-level current Phaneris prompt. */
   getPrompt?: () => string;
   observeLifecycle?: ObserveLifecycle;
+  /** Main sessions only. Ephemeral utility queries never get orchestration tools. */
+  wrapOrchestrationTool?: (tool: ToolDefinition<any, any>) => ToolDefinition<any, any>;
+  gateToolCall?: (toolName: string, input: Record<string, unknown>, toolCallId: string) => Promise<void>;
 }): Promise<DefaultResourceLoader> {
   mkdirSync(options.agentDir, { recursive: true });
   const getPrompt = options.getPrompt ?? (() => currentPhanerisPrompt);
@@ -60,13 +63,28 @@ export async function createPhanerisResourceLoader(options: {
     systemPromptOverride: () => getPrompt() || undefined,
     appendSystemPromptOverride: () => [],
     extensionFactories: [
+      ...(options.wrapOrchestrationTool ? [
+        { name: 'phaneris-codemode', factory: (pi: Parameters<ReturnType<typeof createCodemodeExtension>>[0]) => {
+          createCodemodeExtension({ models: false })({ ...pi, registerTool: tool => pi.registerTool(options.wrapOrchestrationTool!(tool)) });
+        } },
+        { name: 'phaneris-tool-search', factory: (pi: Parameters<ReturnType<typeof createToolSearchExtension>>[0]) => {
+          createToolSearchExtension()({ ...pi, registerTool: tool => pi.registerTool(options.wrapOrchestrationTool!(tool)) });
+        } },
+      ] : []),
       {
         name: 'phaneris-system-prompt',
         factory: (pi) => {
           if (options.observeLifecycle) registerNativeLifecycle(pi, options.observeLifecycle);
+          if (options.gateToolCall) pi.on('tool_call', async event => {
+            try { await options.gateToolCall!(event.toolName, event.input, event.toolCallId); }
+            catch (error) { return { block: true, reason: error instanceof Error ? error.message : String(error) }; }
+          });
           pi.on('before_agent_start', () => {
             const prompt = getPrompt();
-            return prompt ? { systemPrompt: prompt } : {};
+            const orchestration = options.wrapOrchestrationTool
+              ? '\n\nUse tool_search to discover connected source tools by name, namespace or purpose. Use codemode to batch or filter tool results. Scripts run in a sandbox; every nested call still requires host permission. structuredContent preserves full MCP data. Never replay a script with partially completed effects. The models global is disabled; use the managed host tools for model requests.'
+              : '';
+            return prompt ? { systemPrompt: prompt + orchestration } : {};
           });
         },
       },

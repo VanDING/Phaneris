@@ -117,6 +117,10 @@ function assembleResources(config: ServerBuildConfig): void {
   const srcResources = join(electronDir, 'resources');
   const destResources = join(outputDir, 'resources');
 
+  // Packaged runtime resolution uses resources/pi-agent-server, including the
+  // native codemode worker and its QuickJS WASM dependency.
+  cpSync(join(config.rootDir, 'packages', 'pi-agent-server', 'dist'), join(destResources, 'pi-agent-server'), { recursive: true });
+
   console.log('  Copying docs, themes, permissions, tool-icons...');
   for (const dir of ['docs', 'themes', 'permissions', 'tool-icons']) {
     const src = join(srcResources, dir);
@@ -347,6 +351,7 @@ function copyProductionDeps(config: ServerBuildConfig): void {
     'shared',
     'core',
     'session-tools-core',
+    'pi-agent-server',
     'messaging-gateway',
   ];
 
@@ -841,6 +846,8 @@ async function main(): Promise<void> {
   // The bundle embeds Baileys + transitive deps; see scripts/build-wa-worker.ts.
   console.log('  Building WhatsApp worker bundle...');
   await $`bun run ${join(rootDir, 'scripts', 'build-wa-worker.ts')}`.cwd(rootDir);
+  console.log('  Building Pi subprocess and codemode runtime...');
+  await $`bun run build`.cwd(join(rootDir, 'packages', 'pi-agent-server'));
 
   // Step 5: Assemble resources
   console.log('\n[5/8] Assembling resources...');

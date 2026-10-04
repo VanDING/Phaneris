@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
-import { reactPdfAlias } from '../../scripts/build/react-pdf-alias'
+import { reactPdfAlias } from '../../scripts/build/react-pdf-alias.ts'
 
 export default defineConfig({
   plugins: [
@@ -17,16 +17,16 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
-  root: resolve(__dirname, 'src'),
+  root: resolve(import.meta.dirname, 'src'),
   base: './',
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    outDir: resolve(import.meta.dirname, 'dist'),
     emptyOutDir: true,
     sourcemap: true,
     rolldownOptions: {
       input: {
-        main: resolve(__dirname, 'src/index.html'),
-        login: resolve(__dirname, 'src/login.html'),
+        main: resolve(import.meta.dirname, 'src/index.html'),
+        login: resolve(import.meta.dirname, 'src/login.html'),
       },
       // Suppress warnings for Node.js externalized modules — these are
       // referenced by shared code but only used in server/Electron codepaths.
@@ -40,31 +40,31 @@ export default defineConfig({
     alias: {
       ...reactPdfAlias(import.meta.url),
       // Reuse the Electron renderer's components, hooks, pages, etc.
-      '@': resolve(__dirname, '../electron/src/renderer'),
+      '@': resolve(import.meta.dirname, '../electron/src/renderer'),
       // Web-specific overrides
-      '@webui': resolve(__dirname, 'src'),
+      '@webui': resolve(import.meta.dirname, 'src'),
       // Config alias (same as Electron)
-      '@config': resolve(__dirname, '../../packages/shared/src/config'),
+      '@config': resolve(import.meta.dirname, '../../packages/shared/src/config'),
       // Force single React copy from root node_modules
-      'react': resolve(__dirname, '../../node_modules/react'),
-      'react-dom': resolve(__dirname, '../../node_modules/react-dom'),
+      'react': resolve(import.meta.dirname, '../../node_modules/react'),
+      'react-dom': resolve(import.meta.dirname, '../../node_modules/react-dom'),
       // rehype-katex 7 declares katex ^0.16 but only calls the stable
       // renderToString API; resolve both copies to the single current katex to
       // avoid shipping two ~240 KB copies in the initial renderer graph.
-      'katex': resolve(__dirname, '../../node_modules/katex'),
+      'katex': resolve(import.meta.dirname, '../../node_modules/katex'),
       // Electron-specific modules → empty shims for browser builds
-      '@sentry/electron/renderer': resolve(__dirname, 'src/shims/sentry-electron.ts'),
-      '@sentry/electron': resolve(__dirname, 'src/shims/sentry-electron.ts'),
+      '@sentry/electron/renderer': resolve(import.meta.dirname, 'src/shims/sentry-electron.ts'),
+      '@sentry/electron': resolve(import.meta.dirname, 'src/shims/sentry-electron.ts'),
       // Node.js 'ws' library → browser uses native WebSocket
-      'ws': resolve(__dirname, 'src/shims/ws.ts'),
+      'ws': resolve(import.meta.dirname, 'src/shims/ws.ts'),
       // Match subpaths before their parent aliases.
-      'electron-log/main': resolve(__dirname, 'src/shims/electron-log.ts'),
-      'electron-log/renderer': resolve(__dirname, 'src/shims/electron-log.ts'),
-      'electron-log': resolve(__dirname, 'src/shims/electron-log.ts'),
-      'fs/promises': resolve(__dirname, 'src/shims/fs-promises.ts'),
-      'node:fs/promises': resolve(__dirname, 'src/shims/fs-promises.ts'),
-      'stream/web': resolve(__dirname, 'src/shims/stream-web.ts'),
-      'node:stream/web': resolve(__dirname, 'src/shims/stream-web.ts'),
+      'electron-log/main': resolve(import.meta.dirname, 'src/shims/electron-log.ts'),
+      'electron-log/renderer': resolve(import.meta.dirname, 'src/shims/electron-log.ts'),
+      'electron-log': resolve(import.meta.dirname, 'src/shims/electron-log.ts'),
+      'fs/promises': resolve(import.meta.dirname, 'src/shims/fs-promises.ts'),
+      'node:fs/promises': resolve(import.meta.dirname, 'src/shims/fs-promises.ts'),
+      'stream/web': resolve(import.meta.dirname, 'src/shims/stream-web.ts'),
+      'node:stream/web': resolve(import.meta.dirname, 'src/shims/stream-web.ts'),
       // Node.js builtins → browser-safe shims (shared code imports these
       // but the codepaths aren't reached in browser — web API adapter intercepts)
       ...Object.fromEntries([
@@ -74,9 +74,9 @@ export default defineConfig({
         'crypto', 'https', 'http', 'net', 'events', 'util', 'buffer', 'stream',
         'node:stream', 'tls', 'node:tls', 'url', 'zlib', 'node:zlib',
         'string_decoder', 'node:string_decoder', 'assert', 'node:assert',
-      ].map(m => [m, resolve(__dirname, 'src/shims/node-builtins.ts')])),
+      ].map(m => [m, resolve(import.meta.dirname, 'src/shims/node-builtins.ts')])),
       // 'open' npm package (Node.js shell utility) — no-op in browser
-      'open': resolve(__dirname, 'src/shims/open.ts'),
+      'open': resolve(import.meta.dirname, 'src/shims/open.ts'),
     },
     dedupe: ['react', 'react-dom', 'katex'],
   },

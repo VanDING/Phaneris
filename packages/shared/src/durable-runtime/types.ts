@@ -237,7 +237,7 @@ export interface DurableToolBoundary {
 
 export interface DurableModelPrepareRequest {
   /** Background refresh: independently metered, never model-visible. */
-  purpose?: 'cache_warm'
+  purpose?: 'cache_warm' | 'decision' | 'image_generation'
   sessionId: string
   turnId?: string
   runOperationId: string
@@ -271,7 +271,7 @@ export interface NativeRequestObservation {
 
 export interface DurableModelOutcomeRequest {
   /** Background refresh: independently metered, never model-visible. */
-  purpose?: 'cache_warm'
+  purpose?: 'cache_warm' | 'decision' | 'image_generation'
   sessionId: string
   turnId?: string
   runOperationId: string

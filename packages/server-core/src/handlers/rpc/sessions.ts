@@ -476,6 +476,8 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
         return sessionManager.setSessionContextPolicy(sessionId, command.policy)
       case 'retryContextHandoff':
         return sessionManager.retryContextHandoff(sessionId)
+      case 'recoverImageContext':
+        return sessionManager.recoverImageContext(sessionId)
       case 'setThinkingLevel':
         // Validate thinking level before passing to session manager
         if (!isValidThinkingLevel(command.level)) {

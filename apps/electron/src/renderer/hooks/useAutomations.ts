@@ -167,11 +167,11 @@ export function useAutomations(
         id: `${e.id}-${e.ts}`,
         automationId: e.id,
         event: automation?.event ?? 'LabelAdd',
-        status: e.skipped ? 'skipped' as const : e.ok ? 'success' as const : 'error' as const,
+        status: e.unsupported ? 'unsupported' as const : e.skipped ? 'skipped' as const : e.ok ? 'success' as const : 'error' as const,
         duration: e.webhook?.durationMs ?? 0,
         timestamp: e.ts,
         sessionId: e.sessionId,
-        actionSummary: e.skipped
+        actionSummary: e.unsupported ? t('automations.unsupportedSummary') : e.skipped
           ? t('automations.skippedSummary', { reason: e.skipped })
           : e.webhook
           ? `Webhook ${e.webhook.method} ${e.webhook.url}${e.webhook.attempts && e.webhook.attempts > 1 ? ` (${e.webhook.attempts} attempts)` : ''}`

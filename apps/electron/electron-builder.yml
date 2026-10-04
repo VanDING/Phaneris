@@ -122,6 +122,12 @@ extraResources:
   # Pi agent server subprocess (Pi SDK sessions)
   - from: dist/resources/pi-agent-server
     to: pi-agent-server
+  # Generic resource directory copying excludes nested node_modules. These two
+  # explicit files keep codemode independent of the developer checkout.
+  - from: dist/resources/pi-agent-server/node_modules/quickjs-wasi/quickjs.wasm
+    to: pi-agent-server/node_modules/quickjs-wasi/quickjs.wasm
+  - from: dist/resources/pi-agent-server/node_modules/quickjs-wasi/package.json
+    to: pi-agent-server/node_modules/quickjs-wasi/package.json
   # ripgrep (used by search service)
   - from: node_modules/@vscode/ripgrep
     to: app/node_modules/@vscode/ripgrep

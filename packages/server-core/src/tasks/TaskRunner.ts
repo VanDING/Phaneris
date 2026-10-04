@@ -39,6 +39,8 @@ import {
   MAX_REPAIR_ATTEMPTS_CAP,
 } from '@phaneris/shared/tasks';
 import type { DecisionRequest, DecisionResult } from '@phaneris/shared/decisions';
+import { createHash } from 'node:crypto';
+import type { TokenUsage } from '@phaneris/core/types';
 import { classifyVerdictWithDecision } from './verdict-decision';
 
 // ---------------------------------------------------------------------------
@@ -57,6 +59,7 @@ export interface ConductorSessionHost {
   cancelProcessing(sessionId: string, silent?: boolean): Promise<void>;
   onSessionComplete(listener: (evt: SessionCompletionEvent) => void): () => void;
   getSessionFinalText(sessionId: string): string | undefined;
+  getSessionTokenUsage?(sessionId: string): TokenUsage | undefined;
   /** Resolved working directory of a session, so children inherit the orchestrator's cwd. */
   getSessionWorkingDirectory(sessionId: string): string | undefined;
   /** Optional Runtime Host boundary around child-session creation + first dispatch. */
@@ -121,17 +124,17 @@ export interface TaskRunnerDeps {
 }
 
 /** Runs one decision request for a task run; `null` = unavailable. Must not throw (the runner also guards). */
-export type TaskDecisionFn = (request: DecisionRequest, context: { slug: string; runId: string }) => Promise<DecisionResult | null>;
+export type TaskDecisionFn = (request: DecisionRequest, context: { slug: string; runId: string; sessionId?: string }) => Promise<DecisionResult | null>;
 
 /** Picks the nodes a FAIL reason implicates; `null` = unavailable or none. Must not throw (the runner also guards). */
 export type RepairScopeFn = (
   reason: string,
   nodes: Array<{ id: string; description: string }>,
-  context: { slug: string; runId: string },
+  context: { slug: string; runId: string; sessionId?: string },
 ) => Promise<string[] | null>;
 
 /** Reads how a child node's final turn ended; `null` = unavailable or unsure. Must not throw (the runner also guards). */
-export type NodeOutcomeFn = ((finalText: string, context: { slug: string; runId: string; nodeId: string }) => Promise<'finished' | 'needs_input' | 'blocked' | null>) & {
+export type NodeOutcomeFn = ((finalText: string, context: { slug: string; runId: string; nodeId: string; sessionId?: string }) => Promise<'finished' | 'needs_input' | 'blocked' | null>) & {
   /** Synchronous gate: when false the node completes without the async check, as before. */
   isActive?: () => boolean;
 };
@@ -254,6 +257,8 @@ class ActiveRun {
   private tokensUsed = 0;
   /** Last observed cumulative tokens per child session — for delta accounting. */
   private readonly sessionTokens = new Map<string, number>();
+  private verificationHash?: string;
+  private noProgressCycles = 0;
   private runStatus: RunStatus = 'running';
   private unsubscribe?: () => void;
   /** Detaches the one-shot orchestrator-verdict listener while a run is `verifying`. */
@@ -301,6 +306,12 @@ class ActiveRun {
       // ignore — Results falls back to run-log node ids when no snapshot exists
     }
     this.log({ kind: 'run-started', taskId: this.spec.id, runId: this.runId, orchestratorSessionId: this.opts.orchestratorSessionId });
+    if (this.opts.orchestratorSessionId) {
+      const sessionId = this.opts.orchestratorSessionId;
+      const baseline = this.deps.host.getSessionTokenUsage?.(sessionId)?.totalTokens ?? 0;
+      this.sessionTokens.set(sessionId, baseline);
+      this.log({ kind: 'usage-observed', sessionId, totalTokens: baseline, tokensUsed: 0 });
+    }
     this.runStatus = 'running';
     // Move the task tile to the in-progress column for the duration of the run.
     if (this.opts.orchestratorSessionId) {
@@ -356,10 +367,13 @@ class ActiveRun {
           st.state = e.state;
           if (e.output) this.outputs[e.nodeId] = e.output;
         }
+      } else if (e.kind === 'usage-observed') {
+        this.sessionTokens.set(e.sessionId, Math.max(this.sessionTokens.get(e.sessionId) ?? 0, e.totalTokens));
+        this.tokensUsed = Math.max(this.tokensUsed, e.tokensUsed);
       } else if (e.kind === 'verdict') {
         // Reconstruct the durable repair counters so a cross-restart resume honors the cap rather
         // than restarting the budget from zero (the in-memory counters reset on a fresh process).
-        if (e.result === 'fail') this.repairsUsed += 1;
+        if (e.result === 'fail') { this.repairsUsed += 1; this.observeVerificationProgress(e.reason, e.nodes); }
         else if (e.result === 'unparsed') this.unparsedReAsks += 1;
         else if (e.result === 'pass') this.unparsedReAsks = 0;
       }
@@ -619,14 +633,7 @@ class ActiveRun {
     const st = this.state.get(nodeId);
     if (!st || st.state !== 'running') return; // already settled/cancelled
 
-    if (evt.tokenUsage) {
-      // `tokenUsage` is cumulative-per-session; add only the delta since this session's last
-      // observed total so a node that ever runs >1 turn (future retry/loop) can't double-count.
-      const cumulative = evt.tokenUsage.totalTokens ?? 0;
-      const prev = this.sessionTokens.get(evt.sessionId) ?? 0;
-      this.tokensUsed += Math.max(0, cumulative - prev);
-      this.sessionTokens.set(evt.sessionId, cumulative);
-    }
+    this.captureSessionUsage(evt.sessionId, evt.tokenUsage);
 
     // Completion-time budget check: pause immediately on breach (not only at schedule-time), but
     // only while pending work remains — never block a run that is about to finish.
@@ -809,6 +816,7 @@ class ActiveRun {
     this.verdictOff?.();
     this.verdictOff = this.deps.host.onSessionComplete((evt) => {
       if (evt.sessionId !== orchestrator) return;
+      this.captureSessionUsage(orchestrator, evt.tokenUsage);
       this.verdictOff?.();
       this.verdictOff = undefined;
       const text = evt.finalText ?? this.deps.host.getSessionFinalText(orchestrator) ?? '';
@@ -853,11 +861,13 @@ class ActiveRun {
     let nodes: string[] | null = null;
     try {
       const candidates = this.spec.nodes.map((n) => ({ id: n.id, description: `${n.title ?? n.id}: ${n.prompt ?? ''}`.trim() }));
-      nodes = await this.deps.pickRepairNodes!(reason, candidates, { slug: this.slug, runId: this.runId });
+      nodes = await this.deps.pickRepairNodes!(reason, candidates, { slug: this.slug, runId: this.runId, sessionId: this.opts.orchestratorSessionId });
     } catch {
       nodes = null;
     }
+    if (this.opts.orchestratorSessionId) this.captureSessionUsage(this.opts.orchestratorSessionId);
     if (this.runStatus !== 'verifying') return;
+    if (this.isOverBudget()) { this.finish('failed'); return; }
     try {
       this.lastRepairScoped = nodes !== null;
       this.repairForVerdict(reason, nodes ?? undefined);
@@ -962,6 +972,23 @@ class ActiveRun {
 
   // --- helpers ---
 
+  private captureSessionUsage(sessionId: string, usage = this.deps.host.getSessionTokenUsage?.(sessionId)): void {
+    if (!usage) return;
+    const cumulative = usage.totalTokens;
+    const previous = this.sessionTokens.get(sessionId) ?? 0;
+    this.tokensUsed += Math.max(0, cumulative - previous);
+    this.sessionTokens.set(sessionId, Math.max(previous, cumulative));
+    if (cumulative > previous) this.log({ kind: 'usage-observed', sessionId, totalTokens: cumulative, tokensUsed: this.tokensUsed });
+  }
+
+  private observeVerificationProgress(reason?: string, nodes?: string[]): void {
+    if (!this.spec.max_no_progress) return;
+    const outputs = this.spec.nodes.map(node => [node.id, this.outputs[node.id] ?? null]);
+    const signature = createHash('sha256').update(JSON.stringify({ reason: reason ?? '', nodes: [...(nodes ?? [])].sort(), outputs })).digest('hex');
+    this.noProgressCycles = signature === this.verificationHash ? this.noProgressCycles + 1 : 1;
+    this.verificationHash = signature;
+  }
+
   private isTerminal(): boolean {
     return this.runStatus === 'completed' || this.runStatus === 'failed' || this.runStatus === 'stopped';
   }
@@ -984,10 +1011,12 @@ class ActiveRun {
   private async finishNodeAfterOutcomeCheck(nodeId: string, sessionId: string, text: string): Promise<void> {
     let outcome: 'finished' | 'needs_input' | 'blocked' | null = null;
     try {
-      outcome = await this.deps.classifyNodeOutcome!(text, { slug: this.slug, runId: this.runId, nodeId });
+      outcome = await this.deps.classifyNodeOutcome!(text, { slug: this.slug, runId: this.runId, nodeId, sessionId });
     } catch {
       outcome = null;
     }
+    this.captureSessionUsage(sessionId);
+    if (this.isOverBudget() && this.runStatus === 'running' && this.hasPendingNodes()) this.pauseForBudget();
     const st = this.state.get(nodeId);
     if (!st || st.state !== 'running' || st.sessionId !== sessionId) return;
     if (this.runStatus === 'stopped' || this.runStatus === 'completed' || this.runStatus === 'failed') return;
@@ -1025,6 +1054,11 @@ class ActiveRun {
       return;
     }
 
+    this.observeVerificationProgress(verdict.reason, verdict.nodes);
+    if (this.spec.max_no_progress && this.noProgressCycles >= this.spec.max_no_progress) {
+      this.log({ kind: 'budget-breach', metric: 'no_progress', value: this.noProgressCycles, limit: this.spec.max_no_progress });
+      this.finish('failed'); return;
+    }
     // FAIL — repair the frontier if there is budget for it.
     if (this.repairsUsed >= this.maxRepairs) {
       this.log({ kind: 'budget-breach', metric: 'iterations', value: this.repairsUsed, limit: this.maxRepairs });
@@ -1052,8 +1086,9 @@ class ActiveRun {
   private async classifyUnparsedVerdict(text: string): Promise<void> {
     const nodeIds = this.spec.nodes.map((n) => n.id);
     const outcome = await classifyVerdictWithDecision(text, nodeIds, (request) =>
-      this.deps.decide!(request, { slug: this.slug, runId: this.runId }),
+      this.deps.decide!(request, { slug: this.slug, runId: this.runId, sessionId: this.opts.orchestratorSessionId }),
     );
+    if (this.opts.orchestratorSessionId) this.captureSessionUsage(this.opts.orchestratorSessionId);
     if (this.runStatus !== 'verifying') return;
     try {
       if (outcome.kind === 'decided') {

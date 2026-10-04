@@ -1,0 +1,571 @@
+{
+  "createdAt": "2026-10-04T05:33:31.317Z",
+  "scope": "SDK 1.0.2 upgrade and migration assessment; broader completion remains pending the navigation budget.",
+  "productVersion": "0.2.4",
+  "commit": "69938ce0120091f08431c81111634eb3a369b6b1",
+  "sdkVersion": "1.0.2",
+  "directManifestFiles": [
+    "package.json",
+    "packages/shared/package.json",
+    "packages/server-core/package.json",
+    "packages/pi-agent-server/package.json"
+  ],
+  "directReferenceCount": 11,
+  "registryPackages": [
+    {
+      "name": "@earendil-works/pi-ai",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-JP59xGlSAQ/HhQ6EHN5qmneBlWfDyu6FPPryAvAaSo8A38ubAsEpS9YisCM5Jbbns0srrDffLZonE0OXorHI5A=="
+    },
+    {
+      "name": "@earendil-works/pi-agent-core",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-VRfewY1R5mbedJzlm01PxdCmqU8QrSXjXXhV50bp6rvVuT8YYQv1inTXRY4YzssmGAYpkC2rXipJKP5BpBFXew=="
+    },
+    {
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-3ZdIghMSELMGV3sKi5iASOb1Jwb696fLjmNu0aezaqDxTLLWWoRpqBYkGxJ1CgAMCbtfqXWEF0lcRrlVXmiEGQ=="
+    },
+    {
+      "name": "@earendil-works/pi-codemode",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-tvfDSVz984ra/4y/hIFmYGpP5ojC+C6/ey+DNbjTzfJvbXviW4JYTXwVcm33KAceI0xcOuE+P1yRGLtQgis0/w=="
+    },
+    {
+      "name": "@earendil-works/pi-server",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-Zqbs5GCLGDZNvjoqaNhK4QndiRsaotT9GP+s4x8ekj160inYf3A7Sw34kumg4nmzF15YcrYc3bOmAmseZ6imog=="
+    },
+    {
+      "name": "@earendil-works/pi-tui",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-ElfzjnckohEjzHK5Q5iOpqLpQ1YbM/c/XmjBdPVR5k4uoorQPnny5BtT+rvC0cAjVVCUOHWAWppust7FAaEsOQ=="
+    },
+    {
+      "name": "@earendil-works/pi-mcp",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-ED3+q41xLQkxzdadZIQy68SLYcqCJbve8iGbGkZoWjPJ9OZCPHTKcof24fjMO1LfnbIl1uMfhRBueS6IfdiCbQ=="
+    },
+    {
+      "name": "@earendil-works/pi-protocol",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-VT3/ha2XDDP6mesDVbsv2W7AQDnJFbNSdmCezmpaod6Jcq8KnV/2EPzDPtQ7qYntPq2Esx67M/4/c1YbhmkPag=="
+    },
+    {
+      "name": "@earendil-works/pi-telemetry",
+      "version": "1.0.2",
+      "gitHead": "cd32f7725fdbddbaecdff5b1e68491563394e0ca",
+      "integrity": "sha512-Ev5h9TE8nEXHCfRKhWj0qpUFhQgVqNteS95vsM2KNGRGm533vOO2ruDPaEwImBKPMBKXy4omz3D6V2cm41gLOQ=="
+    }
+  ],
+  "npmLockIntegrityChecked": true,
+  "frozenInstallPassed": true,
+  "contractAudit": {
+    "packageExportChanges": [],
+    "removedDeclarations": [
+      "dist/modes/interactive/components/daxnuts.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/pi-logo-animation.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/pi-logo-animation.lazy.d.ts:pi-coding-agent"
+    ],
+    "addedDeclarations": [
+      "dist/modes/interactive/components/auth-url.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/easter-egg-3d.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/easter-egg-3d.lazy.d.ts:pi-coding-agent"
+    ],
+    "changedFiles": [
+      "dist/api/simple-options.d.ts:pi-ai",
+      "dist/types.d.ts:pi-ai",
+      "dist/utils/transcript.d.ts:pi-ai",
+      "dist/core/export-html/tool-renderer.d.ts:pi-coding-agent",
+      "dist/core/extensions/index.d.ts:pi-coding-agent",
+      "dist/core/extensions/runner.d.ts:pi-coding-agent",
+      "dist/core/extensions/types.d.ts:pi-coding-agent",
+      "dist/core/mcp-servers.d.ts:pi-coding-agent",
+      "dist/core/model-config.d.ts:pi-coding-agent",
+      "dist/core/provider-composer.d.ts:pi-coding-agent",
+      "dist/core/tools/renderers/index.d.ts:pi-coding-agent",
+      "dist/extensions/mcp/config.d.ts:pi-coding-agent",
+      "dist/extensions/mcp/index.d.ts:pi-coding-agent",
+      "dist/extensions/mcp/oauth.d.ts:pi-coding-agent",
+      "dist/extensions/mcp/tools.d.ts:pi-coding-agent",
+      "dist/index.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/armin.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/index.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/login-dialog.d.ts:pi-coding-agent",
+      "dist/modes/interactive/components/tool-execution.d.ts:pi-coding-agent",
+      "dist/modes/interactive/interactive-mode.d.ts:pi-coding-agent",
+      "dist/utils/image-convert.d.ts:pi-coding-agent",
+      "docs/models.md:pi-coding-agent",
+      "docs/mcp.md:pi-coding-agent",
+      "dist/index.d.ts:pi-codemode",
+      "dist/runtime/prelude-source.d.ts:pi-codemode",
+      "dist/components/image.d.ts:pi-tui",
+      "dist/index.d.ts:pi-tui",
+      "dist/terminal-image.d.ts:pi-tui"
+    ]
+  },
+  "patchWorkflow": {
+    "passed": 5,
+    "total": 5,
+    "providerRequests": 4,
+    "paidRequests": 0,
+    "records": [
+      {
+        "id": "All installed Pi family packages are 1.0.2",
+        "pass": true,
+        "observation": {
+          "pi-ai": "1.0.2",
+          "pi-agent-core": "1.0.2",
+          "pi-coding-agent": "1.0.2",
+          "pi-codemode": "1.0.2",
+          "pi-server": "1.0.2",
+          "pi-mcp": "1.0.2",
+          "pi-protocol": "1.0.2",
+          "pi-telemetry": "1.0.2",
+          "pi-tui": "1.0.2"
+        }
+      },
+      {
+        "id": "models.json thinking-level defaults and request overrides reach the real provider",
+        "pass": true,
+        "observation": {
+          "sampling": [
+            {
+              "temperature": 0.7,
+              "top_p": 0.8
+            },
+            {
+              "temperature": 1,
+              "top_p": 0.95,
+              "top_k": 20
+            },
+            {
+              "temperature": 1,
+              "top_p": 0.77,
+              "top_k": 20
+            }
+          ],
+          "scope": "Native models.json; Phaneris connection settings do not yet expose these fields."
+        }
+      },
+      {
+        "id": "Virtual selection dispatches a physical model; failed routing sends no provider request",
+        "pass": true,
+        "observation": {
+          "reasons": [
+            "direct"
+          ],
+          "dispatchedProvider": "patch-fixture",
+          "dispatchedModel": "sampling",
+          "failedRouteMadeRequest": false,
+          "scope": "Native direct runtime primitive; host multi-connection, durable router accounting and session restoration remain unverified."
+        }
+      },
+      {
+        "id": "Trusted project MCP overrides preserve global identity; untrusted projects cannot override",
+        "pass": true,
+        "observation": {
+          "trustedOverrideApplied": true,
+          "globalIdentityPreserved": true,
+          "untrustedOverrideApplied": false,
+          "scope": "Native config loader only; no real CIMD OAuth sign-in or Phaneris settings migration."
+        }
+      },
+      {
+        "id": "Clef and Clef Flash are native classifiers rather than chat models",
+        "pass": true,
+        "observation": {
+          "models": [
+            {
+              "id": "@cf/cloudflare/clef",
+              "api": "cloudflare-workers-ai-system-one",
+              "type": "classifier"
+            },
+            {
+              "id": "@cf/cloudflare/clef-flash",
+              "api": "cloudflare-workers-ai-system-one",
+              "type": "classifier"
+            }
+          ],
+          "scope": "Catalog and model type; real accuracy and billing not tested."
+        }
+      }
+    ]
+  },
+  "validation": {
+    "ci": {
+      "pass": true,
+      "log": ".cache/capability-integration/validate-pi-1.0.2.log"
+    },
+    "workspaceTests": {
+      "pass": true,
+      "log": ".cache/capability-integration/workspace-tests-pi-1.0.2.log"
+    },
+    "electronBuild": {
+      "pass": true,
+      "log": ".cache/capability-integration/electron-build-pi-1.0.2.log"
+    },
+    "webuiBuild": {
+      "pass": true,
+      "log": ".cache/capability-integration/production-webui-build.log"
+    },
+    "viewerBuild": {
+      "pass": true,
+      "log": ".cache/capability-integration/viewer-build-pi-1.0.2.log"
+    },
+    "bundleBudget": {
+      "pass": true,
+      "log": ".cache/capability-integration/bundle-pi-1.0.2.log"
+    },
+    "capabilityStages": [
+      {
+        "name": "pi-build",
+        "pass": true,
+        "elapsedMs": 1937,
+        "exitCode": 0
+      },
+      {
+        "name": "sdk-tools",
+        "pass": true,
+        "elapsedMs": 3831,
+        "exitCode": 0
+      },
+      {
+        "name": "input-reception-ui",
+        "pass": true,
+        "elapsedMs": 43230,
+        "exitCode": 0
+      },
+      {
+        "name": "native-mcp-source",
+        "pass": true,
+        "elapsedMs": 1666,
+        "exitCode": 0
+      },
+      {
+        "name": "decisions-governance",
+        "pass": true,
+        "elapsedMs": 1579,
+        "exitCode": 0
+      },
+      {
+        "name": "decision-features",
+        "pass": true,
+        "elapsedMs": 984,
+        "exitCode": 0
+      },
+      {
+        "name": "classifier-comparison",
+        "pass": true,
+        "elapsedMs": 411,
+        "exitCode": 0
+      },
+      {
+        "name": "task-governance",
+        "pass": true,
+        "elapsedMs": 1123,
+        "exitCode": 0
+      },
+      {
+        "name": "images",
+        "pass": true,
+        "elapsedMs": 2270,
+        "exitCode": 0
+      },
+      {
+        "name": "markdown-workbench",
+        "pass": true,
+        "elapsedMs": 88332,
+        "exitCode": 0
+      },
+      {
+        "name": "adoption-audit",
+        "pass": true,
+        "elapsedMs": 1109,
+        "exitCode": 0
+      },
+      {
+        "name": "production-webui-build",
+        "pass": true,
+        "elapsedMs": 19552,
+        "exitCode": 0
+      },
+      {
+        "name": "production-workbench-smoke",
+        "pass": false,
+        "elapsedMs": 33229,
+        "exitCode": 1
+      }
+    ]
+  },
+  "distribution": {
+    "hashes": [
+      {
+        "root": "packages/pi-agent-server/dist",
+        "bundleSha256": "f4376e709320d621c5f4397954dc0629ddc3c46c1e51a17b04e808d265fd9632",
+        "workerSha256": "51618c69be483d4461f20bda9acb62860e253c613345f2b57f617f9bef3d22d8",
+        "wasmSha256": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+      },
+      {
+        "root": "apps/electron/dist/resources/pi-agent-server",
+        "bundleSha256": "f4376e709320d621c5f4397954dc0629ddc3c46c1e51a17b04e808d265fd9632",
+        "workerSha256": "51618c69be483d4461f20bda9acb62860e253c613345f2b57f617f9bef3d22d8",
+        "wasmSha256": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+      },
+      {
+        "root": "apps/electron/release/win-unpacked/resources/pi-agent-server",
+        "bundleSha256": "f4376e709320d621c5f4397954dc0629ddc3c46c1e51a17b04e808d265fd9632",
+        "workerSha256": "51618c69be483d4461f20bda9acb62860e253c613345f2b57f617f9bef3d22d8",
+        "wasmSha256": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+      }
+    ],
+    "initialRendererBytes": 4267991,
+    "chunks": 89
+  },
+  "packaged": {
+    "structure": [
+      {
+        "name": "legacy bridge bundle is absent",
+        "status": "pass"
+      },
+      {
+        "name": "unpacked win-unpacked tree exists",
+        "status": "pass"
+      },
+      {
+        "name": "bundle identity matches phaneris.identity.json",
+        "status": "pass"
+      },
+      {
+        "name": "main binary is the expected architecture",
+        "status": "pass"
+      },
+      {
+        "name": "code signature state",
+        "status": "pass"
+      },
+      {
+        "name": "runtime resources are outside asar and present",
+        "status": "pass"
+      },
+      {
+        "name": "ripgrep ships for the packaged architecture",
+        "status": "pass"
+      },
+      {
+        "name": "renderer bundle shipped",
+        "status": "pass"
+      }
+    ],
+    "launch": [
+      {
+        "name": "app launched and stayed alive without crashing",
+        "observation": "alive for 25000ms",
+        "status": "pass",
+        "detail": null
+      },
+      {
+        "name": "Chromium spawned renderer and helper processes",
+        "observation": "4 process(es) in the bundle",
+        "status": "pass",
+        "detail": null
+      },
+      {
+        "name": "no fatal errors on stdout/stderr",
+        "observation": "none",
+        "status": "pass",
+        "detail": null
+      },
+      {
+        "name": "main process booted and initialized its config",
+        "observation": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-0Cs9iv\\config.json",
+        "status": "pass",
+        "detail": null
+      },
+      {
+        "name": "process was terminated cleanly after the test",
+        "observation": "no stray processes",
+        "status": "pass",
+        "detail": null
+      }
+    ],
+    "externalSdk": {
+      "passed": 8,
+      "total": 8,
+      "artifact": ".cache/capability-integration/packaged-sdk-pi-1.0.2.json"
+    },
+    "scope": "Windows x64 unpacked, isolated launch and external subprocess. No installer, signature requirement or other operating systems."
+  },
+  "performance": {
+    "fullBaseline": {
+      "status": "failed",
+      "navigationMs": [
+        3119.0694000000003,
+        2527.565200000001
+      ],
+      "sessionLoads": [
+        {
+          "messageCount": 100,
+          "firstVisitMs": 299.2574999999997,
+          "warmSwitchMs": [
+            267.03540000000066,
+            268.3927999999996,
+            316.03240000000005,
+            251.78099999999904,
+            267.8888999999999
+          ]
+        },
+        {
+          "messageCount": 1000,
+          "firstVisitMs": 543.0013999999992,
+          "warmSwitchMs": [
+            276.9543999999987,
+            233.42020000000048,
+            235.5673999999999,
+            216.92640000000029,
+            218.08599999999933
+          ]
+        },
+        {
+          "messageCount": 5000,
+          "firstVisitMs": 977.5292000000009,
+          "warmSwitchMs": [
+            295.0057000000015,
+            380.9987999999976,
+            300.438900000001,
+            277.79859999999826,
+            517.1316999999981
+          ]
+        }
+      ],
+      "inputMs": [
+        70.8855999999978,
+        32.368900000001304,
+        34.3263999999981
+      ],
+      "firstStreamTwoFramesMs": 411.04459999999744,
+      "rendererHeapBytes": 43886588,
+      "backendRssBytes": 162308096,
+      "planningConsistent": true,
+      "artifact": ".cache/capability-integration/performance-pi-1.0.2-baseline.json"
+    },
+    "smokeBudgetChecks": [
+      {
+        "id": "navigation",
+        "pass": false,
+        "samples": [
+          3570.1447,
+          1681.9318000000003
+        ],
+        "limit": 3000
+      },
+      {
+        "id": "firstVisit",
+        "pass": true,
+        "samples": [
+          244.52720000000045,
+          444.1275000000005,
+          543.3604999999989
+        ],
+        "limit": 3000
+      },
+      {
+        "id": "warmSwitch",
+        "pass": true,
+        "samples": [
+          199.64140000000043,
+          217.21999999999935,
+          232.20169999999962,
+          355.1121000000003,
+          198.52529999999751,
+          216.85109999999986
+        ],
+        "limit": 2000
+      },
+      {
+        "id": "inputTwoFrames",
+        "pass": true,
+        "samples": [
+          32.234999999996944,
+          34.999400000000605,
+          31.66179999999804
+        ],
+        "limit": 250
+      },
+      {
+        "id": "firstStreamTwoFrames",
+        "pass": true,
+        "samples": [
+          183.6218000000008
+        ],
+        "limit": 1500
+      },
+      {
+        "id": "rendererHeapBytes",
+        "pass": true,
+        "samples": [
+          82851244
+        ],
+        "limit": 268435456
+      },
+      {
+        "id": "backendRssBytes",
+        "pass": true,
+        "samples": [
+          140791808
+        ],
+        "limit": 1073741824
+      }
+    ],
+    "scope": "Synthetic offline production WebUI; first 100-message session was already loaded at navigation. Sampled memory, not peak; frame proxy, not hardware presentation."
+  },
+  "convergence": {
+    "nativeMcpDefault": "retained host path; legacy SSE and host lifecycle/Vault/governance/recovery remain",
+    "classifier": {
+      "shapeSupported": 12,
+      "shapeUnsupported": [
+        {
+          "id": "taskVerdicts",
+          "reason": "Structured instructions or option descriptions cannot be represented without changing semantics."
+        },
+        {
+          "id": "adaptiveThinking",
+          "reason": "Pi 1.0 classifier score answers omit the probability distribution required by Phaneris."
+        },
+        {
+          "id": "decideTool",
+          "reason": "Pi classifier requires object state; wrapping or truncating text would change the existing protocol."
+        }
+      ],
+      "default": "System One"
+    },
+    "routing": "native direct primitive verified; host multi-connection/accounting/branch/quality integration pending"
+  },
+  "liveTesting": {
+    "paidRequestsThisUpgrade": 0,
+    "priorDeepSeekSdkVersion": "1.0.0",
+    "priorLedger": ".cache/capability-integration/live-deepseek-budget.json"
+  },
+  "excluded": [
+    "real remote MCP OAuth and recovery",
+    "native classifier quality and calibration",
+    "host automatic routing quality and total cost",
+    "signed installers and update/deep-link installation",
+    "macOS/Linux/Docker"
+  ],
+  "sourceAtCapabilityRun": {
+    "createdAt": "2026-10-04T05:28:44.323Z",
+    "workingTreeSha256": "dd58555587db96dbded542cdd46132ab16f010e8cf8f0bab53da65b34b031b9e",
+    "trackedDiffSha256": "818cb3dd976046b42cb93c953ef64c5fcea77d0c921d8e74c2d74f97fd6695ec",
+    "documentationUpdatedAfterRun": true
+  }
+}

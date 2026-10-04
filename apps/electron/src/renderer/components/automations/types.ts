@@ -255,7 +255,7 @@ export const AUTOMATION_TYPE_TO_FILTER_KIND: Record<string, AutomationFilterKind
 // ============================================================================
 
 /** `skipped`: the matcher's semanticCondition was not met, so no action ran. */
-export type ExecutionStatus = 'success' | 'error' | 'blocked' | 'skipped'
+export type ExecutionStatus = 'success' | 'error' | 'blocked' | 'skipped' | 'unsupported'
 
 export interface WebhookDetails {
   method: string

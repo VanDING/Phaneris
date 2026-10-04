@@ -26,14 +26,14 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  type CallToolResult,
 } from '@modelcontextprotocol/sdk/types.js';
 import type { McpClientPool } from './mcp-pool.ts';
 
 export class McpPoolServer {
   private pool: McpClientPool;
   private httpServer: HttpServer | null = null;
-  private mcpServer: Server | null = null;
-  private transport: StreamableHTTPServerTransport | null = null;
+  private requests = new Set<{ server: Server; transport: StreamableHTTPServerTransport }>();
   private debugFn: ((msg: string) => void) | undefined;
   private _port = 0;
 
@@ -63,13 +63,6 @@ export class McpPoolServer {
       return this.url;
     }
 
-    // Create a single MCP Server + Streamable HTTP transport pair (stateless mode)
-    this.transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined, // Stateless — no session tracking
-    });
-    this.mcpServer = this.createMcpServer();
-    await this.mcpServer.connect(this.transport);
-
     this.httpServer = createServer(async (req, res) => {
       const url = new URL(req.url || '/', `http://127.0.0.1`);
       if (url.pathname !== '/mcp') {
@@ -78,8 +71,29 @@ export class McpPoolServer {
         return;
       }
 
-      // Route all methods (POST, GET, DELETE) through the Streamable HTTP transport
-      await this.transport!.handleRequest(req, res);
+      // SDK 1.32 forbids reusing stateless transports across requests. The
+      // protocol instance is short-lived; the Source pool remains host-owned.
+      const request = { server: this.createMcpServer(), transport: new StreamableHTTPServerTransport({
+        sessionIdGenerator: undefined, enableJsonResponse: true,
+      }) };
+      this.requests.add(request);
+      const cleanup = async () => {
+        if (!this.requests.delete(request)) return;
+        await request.server.close().catch(() => {});
+        await request.transport.close().catch(() => {});
+      };
+      res.once('close', () => { void cleanup(); });
+      res.once('finish', () => { void cleanup(); });
+      try {
+        await request.server.connect(request.transport);
+        await request.transport.handleRequest(req, res);
+      } catch {
+        if (!res.headersSent) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32603, message: 'MCP request failed' } }));
+        } else res.destroy();
+        await cleanup();
+      }
     });
 
     await new Promise<void>((resolve, reject) => {
@@ -117,6 +131,8 @@ export class McpPoolServer {
         tools: proxyDefs.map(def => ({
           name: def.name.replace(/^mcp__/, ''),
           description: def.description,
+          ...(def.outputSchema ? { outputSchema: def.outputSchema } : {}),
+          ...(def.annotations ? { annotations: def.annotations } : {}),
           inputSchema: def.inputSchema as {
             type: 'object';
             properties?: Record<string, unknown>;
@@ -134,7 +150,8 @@ export class McpPoolServer {
       const result = await this.pool.callTool(internalName, args || {});
 
       return {
-        content: [{ type: 'text' as const, text: result.content }],
+        content: result.contentBlocks?.length ? result.contentBlocks as CallToolResult['content'] : [{ type: 'text' as const, text: result.content }],
+        ...(result.structuredContent ? { structuredContent: result.structuredContent } : {}),
         ...(result.isError ? { isError: true } : {}),
       };
     });
@@ -156,17 +173,15 @@ export class McpPoolServer {
    * Stop the HTTP server and close the transport.
    */
   async stop(): Promise<void> {
-    if (this.transport) {
-      await this.transport.close().catch(() => {});
-      this.transport = null;
-    }
-
-    if (this.mcpServer) {
-      await this.mcpServer.close().catch(() => {});
-      this.mcpServer = null;
-    }
+    const requests = [...this.requests];
+    this.requests.clear();
+    await Promise.all(requests.map(async request => {
+      await request.server.close().catch(() => {});
+      await request.transport.close().catch(() => {});
+    }));
 
     if (this.httpServer) {
+      this.httpServer.closeAllConnections();
       await new Promise<void>((resolve) => {
         this.httpServer!.close(() => resolve());
       });

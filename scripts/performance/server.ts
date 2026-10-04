@@ -25,10 +25,18 @@ const fixture = await seedFixtures(configDir, profile)
 const bootStart = performance.now()
 let web: ReturnType<typeof createWebuiHandler> | undefined
 let route: ReturnType<typeof nodeHttpAdapter> | undefined
+const handlerTimings: { channel: string; elapsedMs: number }[] = []
 const instance = await bootstrapServer({
   serverToken: token, rpcHost: '127.0.0.1', rpcPort: 0, bundledAssetsRoot: root,
   validateSessionCookie: async cookie => await validateSession(cookie, token) !== null,
-  httpHandler: (req, res) => { if (route) route(req, res); else { res.statusCode = 503; res.end() } },
+  httpHandler: (req, res) => {
+    // Browser-enforced offline fixture, without pausing production asset reads
+    // in the automation driver. Intersects the application's own CSP.
+    const host = req.headers.host ?? ''
+    const socket = /^127\.0\.0\.1:\d+$/.test(host) ? `ws://${host}` : ''
+    res.setHeader('Content-Security-Policy', `default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' ${socket}; frame-src 'self' blob: data:; object-src 'none'`)
+    if (route) route(req, res); else { res.statusCode = 503; res.end() }
+  },
   applyPlatformToSubsystems(platform) {
     setFetcherPlatform(platform); setSessionPlatform(platform)
     setSessionRuntimeHooks({ updateBadgeCount() {}, captureException: error => console.error(error) })
@@ -36,7 +44,15 @@ const instance = await bootstrapServer({
   },
   createSessionManager: () => new SessionManager(),
   createHandlerDeps: deps => deps,
-  registerAllRpcHandlers: registerCoreRpcHandlers,
+  registerAllRpcHandlers(server, deps) {
+    const register = server.handle.bind(server)
+    server.handle = (channel, handler) => register(channel, async (ctx, ...args) => {
+      const started = performance.now()
+      try { return await handler(ctx, ...args) }
+      finally { if (handlerTimings.length < 2000) handlerTimings.push({ channel, elapsedMs: performance.now() - started }) }
+    })
+    registerCoreRpcHandlers(server, deps)
+  },
   initializeSessionManager: sm => sm.initialize(),
   bindRpcServer: (sm, server) => sm.setRpcServer(server),
   setSessionEventSink: (sm, sink) => sm.setEventSink(sink),
@@ -145,6 +161,7 @@ route = nodeHttpAdapter(async req => {
     const body = await req.json() as { command: string; sessionId: string }
     switch (body.command) {
       case 'metrics': return Response.json(metrics())
+      case 'handler-timings': return Response.json(handlerTimings)
       case 'load-all': for (const session of fixture.sessions) await sm.getSession(session.id); return Response.json(metrics())
       case 'evict': await internal.releaseIdleSessions(Date.now() + 16 * 60_000); return Response.json(metrics())
       case 'stream': void stream(body.sessionId, profiles[profile].deltas).catch(error => { console.error(error); process.exitCode = 1 }); return Response.json({ started: true })

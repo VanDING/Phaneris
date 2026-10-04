@@ -491,7 +491,7 @@ export type SessionEvent =
   | { type: 'task_completed'; sessionId: string; taskId: string; status: 'completed' | 'failed' | 'stopped'; outputFile?: string; summary?: string; turnId?: string; toolUseId?: string; launchedHere?: boolean }
   | { type: 'workflow_agent_completed'; sessionId: string; workflowId: string; agentId: string; turnId?: string }
   | { type: 'shell_killed'; sessionId: string; shellId: string }
-  | { type: 'user_message'; sessionId: string; message: Message; status: 'accepted' | 'queued' | 'processing'; optimisticMessageId?: string }
+  | { type: 'user_message'; sessionId: string; message: Message; status: 'accepted' | 'queued' | 'processing'; optimisticMessageId?: string; receptionOnly?: boolean }
   | { type: 'session_flagged'; sessionId: string }
   | { type: 'session_unflagged'; sessionId: string }
   | { type: 'session_archived'; sessionId: string }
@@ -543,6 +543,7 @@ export type SessionCommand =
   | { type: 'setPermissionMode'; mode: PermissionMode }
   | { type: 'setContextPolicy'; policy: import('../agent/context-policy').ContextPolicy | null }
   | { type: 'retryContextHandoff' }
+  | { type: 'recoverImageContext' }
   | { type: 'setThinkingLevel'; level: ThinkingLevel }
   | { type: 'updateWorkingDirectory'; dir: string }
   | { type: 'setSources'; sourceSlugs: string[] }

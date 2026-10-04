@@ -25,6 +25,17 @@ export interface GeneratedImage {
   format: GeneratedImageFormat;
   revisedPrompt?: string;
   providerCreatedAt?: number;
+  provider?: string;
+  usage?: { inputTokens?: number; outputTokens?: number; costUsd?: number };
+  costStatus?: 'reported' | 'estimated' | 'unknown';
+}
+
+/** Validation can fail after a paid response; keep any usage the provider disclosed. */
+export class ImageGenerationError extends Error {
+  constructor(cause: unknown, public readonly usage: GeneratedImage['usage'], public readonly costStatus: GeneratedImage['costStatus']) {
+    super(cause instanceof Error ? cause.message : String(cause), { cause });
+    this.name = cause instanceof Error && cause.name === 'AbortError' ? 'AbortError' : 'ImageGenerationError';
+  }
 }
 
 export interface OpenAIImageProviderConfig {
@@ -32,6 +43,11 @@ export interface OpenAIImageProviderConfig {
   baseUrl?: string;
   timeoutMs?: number;
   maxRetries?: number;
+  signal?: AbortSignal;
+}
+
+export interface ImageProviderConfig extends OpenAIImageProviderConfig {
+  provider: 'openai' | 'openrouter';
 }
 
 export interface ImageApiClient {
@@ -56,7 +72,7 @@ function createClient(config: OpenAIImageProviderConfig): ImageApiClient {
 
 export function supportsNativeImageGeneration(connection: LlmConnection): boolean {
   return connection.providerType === 'pi'
-    && connection.piAuthProvider === 'openai'
+    && (connection.piAuthProvider === 'openai' || connection.piAuthProvider === 'openrouter')
     && connection.authType === 'api_key';
 }
 
@@ -76,14 +92,17 @@ export async function resolveImageGenerationConnection(input: {
   if (explicitSlug && candidates.length === 0) {
     throw new Error(`LLM connection "${explicitSlug}" was not found.`);
   }
+  if (explicitSlug && candidates[0]?.piAuthProvider === 'openai-codex') {
+    throw new Error('No image-capable OpenAI API-key connection was selected. ChatGPT OAuth credentials cannot call the Images API.');
+  }
 
   for (const connection of candidates) {
     if (!supportsNativeImageGeneration(connection)) continue;
     const apiKey = await input.getApiKey(connection.slug);
     if (apiKey) return { connection, apiKey };
-    if (explicitSlug) throw new Error(`OpenAI API key is missing for connection "${connection.slug}".`);
+    if (explicitSlug) throw new Error(`Image provider API key is missing for connection "${connection.slug}".`);
   }
-  throw new Error('No image-capable OpenAI API-key connection is configured. Add an OpenAI API connection in AI Settings.');
+  throw new Error('No image-capable API-key connection is configured. Add an OpenAI or OpenRouter API connection in AI Settings.');
 }
 
 function decodeBase64Image(value: string): Buffer {
@@ -148,7 +167,9 @@ export async function generateImageWithOpenAI(
     stream: false,
   };
 
-  const response = await client.images.generate(params);
+  const response = await (client.images.generate as (params: ImageGenerateParamsNonStreaming, options?: { signal?: AbortSignal }) => Promise<ImagesResponse>)(params, { signal: config.signal });
+  const usage = response.usage ? { inputTokens: response.usage.input_tokens, outputTokens: response.usage.output_tokens } : undefined;
+  try {
   const image = response.data?.[0];
   if (!image?.b64_json) {
     throw new Error('The image provider returned no inline image data.');
@@ -162,5 +183,58 @@ export async function generateImageWithOpenAI(
     format: actualFormat,
     revisedPrompt: image.revised_prompt,
     providerCreatedAt: response.created,
+    provider: 'openai',
+    usage,
+    costStatus: 'unknown',
   };
+  } catch (cause) { throw new ImageGenerationError(cause, usage, 'unknown'); }
+}
+
+/** Native Pi image models remain separate from the chat catalog. Auth is explicit. */
+export async function generateImage(config: ImageProviderConfig, request: GenerateImageRequest): Promise<GeneratedImage> {
+  if (config.provider === 'openai') return generateImageWithOpenAI(config, request);
+  if ((request.size && request.size !== 'auto') || (request.quality && request.quality !== 'auto')
+    || (request.background && request.background !== 'auto') || request.outputFormat === 'webp') {
+    throw new Error('This Pi image adapter does not support explicit size, quality, background, or WebP conversion. Use an OpenAI image connection for those controls.');
+  }
+  const prompt = request.prompt.trim();
+  if (!prompt || prompt.length > 32_000) throw new Error('Image prompt must contain 1–32,000 characters.');
+  const { getBuiltinImageModels, builtinModels } = await import('@earendil-works/pi-ai/providers/all');
+  const modelId = request.model?.trim() || 'google/gemini-2.5-flash-image';
+  const nativeModel = getBuiltinImageModels('openrouter').find(model => model.id === modelId);
+  if (!nativeModel) throw new Error(`No Pi image model "${modelId}" exists for OpenRouter. Chat models cannot be used for image generation.`);
+  const { InMemoryCredentialStore } = await import('@earendil-works/pi-ai');
+  const models = builtinModels({ credentials: new InMemoryCredentialStore() });
+  const model = config.baseUrl ? { ...nativeModel, baseUrl: config.baseUrl } : nativeModel;
+  const result = await models.generateImages(model, { input: [{ type: 'text', text: prompt }] }, {
+    apiKey: config.apiKey, signal: config.signal, timeoutMs: config.timeoutMs ?? 300_000,
+    // An image request is a paid effect. Retry belongs to the caller, never hidden replay.
+    maxRetries: config.maxRetries ?? 0,
+  });
+  const priced = Object.values(model.cost).some(rate => typeof rate === 'number' && rate > 0);
+  // The SDK supplies zero-valued usage on transport errors as well. Those are
+  // not evidence that an interrupted paid request was free.
+  const reportedUsage = result.usage;
+  const observedUsage = reportedUsage && (reportedUsage.input + reportedUsage.output + reportedUsage.cacheRead + reportedUsage.cacheWrite > 0 || reportedUsage.cost.total > 0) ? reportedUsage : undefined;
+  const usage = observedUsage ? { inputTokens: observedUsage.input + observedUsage.cacheRead + observedUsage.cacheWrite,
+    outputTokens: observedUsage.output, costUsd: priced ? observedUsage.cost.total : undefined } : undefined;
+  const costStatus = observedUsage && priced ? 'estimated' as const : 'unknown' as const;
+  try {
+  if (result.stopReason !== 'stop') throw new Error(result.errorMessage ?? `Image generation ${result.stopReason}`);
+  const images = result.output.filter(item => item.type === 'image');
+  if (images.length !== 1) throw new Error(`The image provider returned ${images.length} images; this Artifact operation requires exactly one.`);
+  const image = images[0]!;
+  const format = image.mimeType === 'image/png' ? 'png' : image.mimeType === 'image/jpeg' ? 'jpeg' : image.mimeType === 'image/webp' ? 'webp' : undefined;
+  if (!format) throw new Error(`Unsupported generated image type: ${image.mimeType}`);
+  const bytes = decodeBase64Image(image.data); assertImageSignature(bytes, format);
+  let output = bytes;
+  let outputFormat: GeneratedImageFormat = format;
+  if (request.outputFormat && request.outputFormat !== format) {
+    const { convertGeneratedImage } = await import('./image-utils');
+    output = await convertGeneratedImage(bytes, request.outputFormat); outputFormat = request.outputFormat;
+    assertImageSignature(output, outputFormat);
+  }
+  return { bytes: output, format: outputFormat, provider: 'openrouter', model: result.model,
+    providerCreatedAt: result.timestamp, usage, costStatus };
+  } catch (cause) { throw new ImageGenerationError(cause, usage, costStatus); }
 }

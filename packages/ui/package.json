@@ -13,6 +13,7 @@
     "./chat/TurnCard": "./src/components/chat/TurnCard.tsx",
     "./chat/turn-utils": "./src/components/chat/turn-utils.ts",
     "./markdown": "./src/components/markdown/index.ts",
+    "./markdown/editor": "./src/components/markdown/TiptapMarkdownEditor.tsx",
     "./annotations/follow-up-state": "./src/components/annotations/follow-up-state.ts",
     "./motion": "./src/lib/motion.ts",
     "./presence": "./src/lib/presence.ts",

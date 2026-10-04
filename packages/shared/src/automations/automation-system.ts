@@ -18,7 +18,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { resolveAutomationsConfigPath, generateShortId } from './resolve-config-path.ts';
-import { compactAutomationHistorySync } from './history-store.ts';
+import { compactAutomationHistorySync, appendAutomationHistoryEntry } from './history-store.ts';
 import { createLogger } from '../utils/debug.ts';
 import { WorkspaceEventBus, type EventPayloadMap } from './event-bus.ts';
 import { PromptHandler, EventLogHandler, WebhookHandler, ScriptHandler, type AutomationsConfigProvider } from './handlers/index.ts';
@@ -523,8 +523,7 @@ export class AutomationSystem implements AutomationsConfigProvider {
    * Execute agent event automations from the embedded backend.
    *
    * For each matching automation matcher, builds env vars and evaluates matching.
-   * Command execution has been removed — all automation actions now go through prompt-based
-   * execution (creating agent sessions via PromptHandler).
+   * Agent-event actions have no executor. Matching is diagnostic, never a successful run.
    * Catches all errors — automations must never break the agent flow.
    *
    * @param signal - Optional AbortSignal for cancelling automation execution on abort
@@ -546,7 +545,13 @@ export class AutomationSystem implements AutomationsConfigProvider {
       // Note: Command execution has been removed. Prompt-based execution for
       // agent events is not yet implemented. This method currently only
       // validates matching (including condition gating) — actual execution is a no-op.
-      log.debug(`[AutomationSystem] Matched ${event} automation (prompt-based execution pending)`);
+      if (signal?.aborted) break;
+      await appendAutomationHistoryEntry(this.options.workspaceRootPath, {
+        id: matcher.id ?? generateShortId(), ts: Date.now(), type: 'agent_event', event,
+        status: 'unsupported', ok: false, unsupported: true,
+        error: 'Agent-event actions are not supported. Use tool-call-rules.json for deterministic blocking.',
+      });
+      log.debug(`[AutomationSystem] Matched ${event} automation: unsupported, no action executed`);
     }
 
     return matchedCount;

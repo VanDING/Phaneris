@@ -2,9 +2,38 @@ import { createHash } from 'node:crypto';
 import type { ExtensionAPI, AgentSessionEvent, AgentSession } from '@earendil-works/pi-coding-agent';
 
 export type ObserveLifecycle = (event: string, data: Record<string, unknown>, sdkSessionId?: string) => void;
+const identity = (value: unknown): string | null => typeof value === 'string'
+  && /^[a-zA-Z0-9_.:/@+\-]{1,256}$/.test(value) ? value : null;
 
 /** Only observes; never returns block/transform or changes a message after T2. */
 export function registerNativeLifecycle(pi: ExtensionAPI, observe: ObserveLifecycle): void {
+  let streamObserved = false;
+  pi.on('before_provider_request', () => { streamObserved = false; });
+  pi.on('provider_stream_event', (event, ctx) => {
+    if (streamObserved) return;
+    streamObserved = true;
+    // Parsed chunks can contain credentials, message text and tool arguments.
+    // Keep only a known envelope kind, once per request; never serialize data.
+    const data = event.data && typeof event.data === 'object'
+      ? event.data as Record<string, unknown> : undefined;
+    const kind = data?.type ?? data?.object;
+    const safeKinds = new Set(['chat.completion.chunk', 'message_start', 'response.created', 'start']);
+    observe('provider_stream_observation', {
+      provider: identity(event.provider), api: identity(event.api), model: identity(event.model),
+      eventKind: typeof kind === 'string' && safeKinds.has(kind) ? kind : 'other',
+    }, ctx.sessionManager.getSessionId());
+  });
+  pi.on('message_end', (event, ctx) => {
+    if (event.message.role !== 'assistant') return;
+    const message = event.message;
+    observe('assistant_response_observation', {
+      provider: identity(message.provider), api: identity(message.api), model: identity(message.model),
+      responseModel: identity(message.responseModel),
+      requestedThinkingLevel: message.thinkingLevel ?? null,
+      providerThinkingLevel: identity(message.providerThinkingLevel),
+      stopReason: message.stopReason,
+    }, ctx.sessionManager.getSessionId());
+  });
   pi.on('cache_warming_decision', (event, ctx) => {
     observe(event.type, {
       action: event.action, warmCost: event.warmCost, missCost: event.missCost,

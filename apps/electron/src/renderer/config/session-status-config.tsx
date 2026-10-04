@@ -5,7 +5,7 @@ import { isEmoji } from '@phaneris/shared/utils/icon-constants'
 import { resolveEntityColor, getDefaultStatusColor } from '@phaneris/shared/colors'
 import type { EntityColor } from '@phaneris/shared/colors'
 import { StatusIcon } from '@/components/ui/status-icon'
-import { iconCache } from '@/lib/icon-cache'
+import { iconCache, clearIconRequests } from '@/lib/icon-cache'
 
 // ============================================================================
 // Types
@@ -169,6 +169,7 @@ export function getState(
  * Clears status-prefixed entries from the unified icon cache.
  */
 export function clearIconCache(): void {
+  clearIconRequests('statuses/')
   for (const key of iconCache.keys()) {
     if (key.startsWith('status:')) iconCache.delete(key)
   }

@@ -82,6 +82,8 @@ export interface TrajectoryContextSummary {
   totalTokens?: number
   contextTokens?: number
   costUsd?: number
+  unknownCostRequests?: number
+  estimatedCostRequests?: number
 }
 
 /** Stable record identity used for assistant folding. */

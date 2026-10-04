@@ -128,6 +128,8 @@ export type DecisionAnswer = ChoiceAnswer | ScoreAnswer | NoulAnswer;
 export interface DecisionUsage {
   inputTokens: number;
   outputTokens: number;
+  costUsd?: number;
+  costStatus?: 'known' | 'unknown';
 }
 
 /** What the client knows about the state it sent — never the state itself. */
@@ -142,6 +144,7 @@ export interface DecisionStateDigest {
 }
 
 export interface DecisionResult {
+  accountingOperationId?: string;
   /** Model id reported by the server, or the requested id when the server omitted it (see `modelReported`). */
   model: string;
   /** True when the server's response named the model; false when `model` is the requested id echoed back. */

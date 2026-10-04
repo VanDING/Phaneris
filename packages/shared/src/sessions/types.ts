@@ -115,6 +115,8 @@ export interface SessionTokenUsage {
   /** Current context occupancy, independent of cumulative usage. */
   contextTokens: number;
   costUsd: number;
+  unknownCostRequests?: number;
+  estimatedCostRequests?: number;
   cacheReadTokens?: number;
   cacheCreationTokens?: number;
   /** Cumulative provider usage from the request ledger. */

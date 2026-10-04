@@ -212,6 +212,8 @@ export const TaskSpecSchema = z
     /** Max repair attempts on a FAIL verdict (re-run the repair frontier). 0 disables repair;
      *  capped at MAX_REPAIR_ATTEMPTS_CAP. Omitted → runner uses DEFAULT_REPAIR_ATTEMPTS. */
     max_iterations: z.number().int().min(0).max(MAX_REPAIR_ATTEMPTS_CAP).optional(),
+    /** Opt-in cap on identical failed verification cycles; ordinary polling does not count. */
+    max_no_progress: z.number().int().min(2).max(10).optional(),
     nodes: z.array(TaskNodeSchema).min(1, 'A task must define at least one node'),
     /** Named task outputs → reference strings, e.g. { result: "${nodes.review.output}" }. */
     outputs: z.record(z.string(), z.string()).optional(),

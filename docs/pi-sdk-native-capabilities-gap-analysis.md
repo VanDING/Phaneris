@@ -1,6 +1,7 @@
 # Pi SDK 原生能力接入缺口分析
 
 状态：时点分析（point-in-time），不是当前接口契约。实施前请按仓库中的 Pi SDK 版本与最新代码重新核对。
+Pi 后续实现与闭合验收见 [能力采用指南](architecture/capability-adoption-2026-10.md)及[完整性复核](process/capability-completion-2026-10-04.md)；最新版本和全面替换条件见 [1.0.2 评估](pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。以下缺口保留历史语境。
 日期：2026-09-20
 Pi SDK：`@earendil-works/pi-ai` / `pi-agent-core` / `pi-coding-agent` **0.87.0**
 范围：Phaneris 单 Pi 后端（`packages/pi-agent-server` + `packages/shared/src/agent`）

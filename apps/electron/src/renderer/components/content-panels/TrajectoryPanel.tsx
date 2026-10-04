@@ -183,6 +183,8 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
               totalTokens: meta?.tokenUsage?.totalTokens,
               contextTokens: contextBadgeUsage(meta?.tokenUsage).inputTokens,
               costUsd: meta?.tokenUsage?.costUsd,
+              unknownCostRequests: meta?.tokenUsage?.unknownCostRequests,
+              estimatedCostRequests: meta?.tokenUsage?.estimatedCostRequests,
             }}
             sessionMap={sessionMap}
             focus={focusBySession[activeSessionId]}

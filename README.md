@@ -10,8 +10,8 @@
 
 Run capable AI agents across your files, tools, services, and documents — with a desktop workspace that makes every important action reviewable.
 
-[![Version](https://img.shields.io/badge/version-0.2.3-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.3.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.0-5b7cfa?style=flat-square)](docs/pi-kernel.md)
+[![Version](https://img.shields.io/badge/version-0.2.4-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.2.4.md)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.2-5b7cfa?style=flat-square)](docs/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![中文](https://img.shields.io/badge/README-中文-2f855a?style=flat-square)](README.zh-CN.md)
@@ -33,7 +33,7 @@ The desktop app is organized around durable work rather than disposable conversa
 | **Persistent multi-session workspace** | Sessions, projects, labels, statuses, calendar, board, and background work remain available across restarts. |
 | **Content Workbench** | Open chat, review, files, previews, artifacts, context, Run views, and browser surfaces side by side. |
 | **Sources and skills** | Connect MCP servers, REST APIs, local folders, and reusable `SKILL.md` instructions without hard-coding services into the agent. |
-| **Permissions and recovery** | Explore, Ask to Edit, and Auto modes combine with durable execution evidence and explicit recovery decisions. |
+| **Permissions and recovery** | Explore, Ask to Edit, Auto, and Admin modes combine with durable execution evidence and explicit recovery decisions. |
 | **Automations and messaging** | Schedule work, react to events, and reach agents through supported messaging gateways. |
 | **Headless and CLI operation** | Keep long-running sessions on a remote server while using the desktop app, Web UI, or `phaneris` as clients. |
 
@@ -74,6 +74,12 @@ The shared format registry covers text and source files, Markdown, structured da
 
 Native image generation follows the same path: one tool call produces a validated image Artifact with provider, model, connection, prompt, parameters, and revision metadata attached.
 
+Markdown drafts support visual editing when serialization preserves the source, with a source editor for richer syntax. Image generation supports OpenAI's Images API and Pi's OpenRouter image models. Model-specific input limits resize request copies while preserving original files; image-history recovery creates a linked text-only session explicitly.
+
+Connected MCP tools retain output schemas and structured results. `tool_search` discovers deferred tools, and sandboxed `codemode` calls each tool through the host permission and durable execution boundary. Its model access is disabled. See the [capability adoption guide](docs/architecture/capability-adoption-2026-10.md) for configuration, accounting, and migration decisions, and the [completion record](docs/process/capability-completion-2026-10-04.md) for measured benefits and verification scope.
+
+Pi SDK 1.0.2 is pinned across the runtime. The [upgrade and convergence assessment](docs/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md) records verification and the remaining requirements for native MCP, classifiers, and model routing.
+
 ## Personal by design
 
 Profile and appearance are local product surfaces, not account requirements. The profile summarizes local activity without including message content, and keeps user-authored preferences separate from observed usage. The semantic theme engine controls color, surfaces, depth, borders, typography, icon weight, and density, with app-level defaults and per-workspace overrides.
@@ -101,10 +107,10 @@ The connection layer supports major hosted providers, OAuth-backed products, clo
 
 | Layer | Baseline |
 | --- | --- |
-| Agent kernel | Pi SDK `1.0.0` |
-| Desktop | Electron `44.4.3`, React `19.3` |
+| Agent kernel | Pi SDK `1.0.2` |
+| Desktop | Electron `44.5.1`, React `19.3` |
 | Runtime and tooling | Bun `1.4.2`, TypeScript `7`, Vite `8.3` |
-| Integrations | MCP SDK `1.30`, native REST/local/browser tools |
+| Integrations | MCP SDK `1.32`, native REST/local/browser tools |
 | Storage | Local session data plus workspace-local SQLite/WAL durable runtime |
 
 ## Quick start
@@ -122,7 +128,7 @@ bun install --frozen-lockfile
 bun run electron:start
 ```
 
-On first launch, add an AI connection, create a workspace, and optionally connect sources or local folders. Use **Shift+Tab** in a session to cycle through Explore, Ask to Edit, and Auto permission modes.
+On first launch, add an AI connection, create a workspace, and optionally connect sources or local folders. Use **Shift+Tab** to cycle through the permission modes configured for the workspace. Explore, Ask to Edit, Auto, and Admin are available; the bundled defaults cycle through Explore and Auto.
 
 ### Headless server and CLI
 

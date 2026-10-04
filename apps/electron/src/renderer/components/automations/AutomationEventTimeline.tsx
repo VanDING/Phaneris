@@ -23,6 +23,7 @@ const statusConfig: Record<ExecutionStatus, { icon: React.ElementType; classes: 
   error:   { icon: XCircle,      classes: 'text-destructive' },
   blocked: { icon: ShieldAlert,   classes: 'text-warning' },
   skipped: { icon: CircleSlash,   classes: 'text-muted-foreground' },
+  unsupported: { icon: CircleSlash, classes: 'text-muted-foreground' },
 }
 
 function formatStatusCode(code: number, t: (key: string) => string): string {

@@ -20,4 +20,4 @@ export {
   type MarkdownPreviewSpec,
 } from './markdown-preview-helpers'
 export { ImageCardStack, type ImageCardStackProps, type ImageCardStackItem } from './ImageCardStack'
-export { TiptapMarkdownEditor, type TiptapMarkdownEditorProps, type MarkdownEngine } from './TiptapMarkdownEditor'
+export type { TiptapMarkdownEditorProps, MarkdownEngine } from './TiptapMarkdownEditor'

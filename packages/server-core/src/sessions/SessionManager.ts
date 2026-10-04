@@ -4,6 +4,8 @@ import { estimateTranscriptBytes } from '@phaneris/core/utils'
 import type { EventSink, RpcServer } from '@phaneris/server-core/transport'
 import { CLIENT_BROWSER_INVOKE } from '@phaneris/server-core/transport'
 import type { ISessionManager, IBrowserPaneManager, ExecutePromptAutomationInput } from '@phaneris/server-core/handlers'
+import { registerDecisionAccountingHost } from '@phaneris/shared/decisions'
+import { createDecisionAccounting } from '../decisions/accounting'
 import { RemoteBrowserPaneManager } from './RemoteBrowserPaneManager'
 import { validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import { createScopedLogger, CONSOLE_LOGGER, type PlatformServices, type Logger } from '@phaneris/server-core/runtime'
@@ -137,11 +139,13 @@ import { extractLabelId, resolveSessionLabels, findTaskItemLabelId } from '@phan
 import { ensureLabelsExist, ensureTaskItemLabel } from '@phaneris/shared/labels/crud'
 import { loadStatusConfig } from '@phaneris/shared/statuses/storage'
 import { AutomationSystem, createPromptHistoryEntry, appendAutomationHistoryEntry, type AutomationSystemMetadataSnapshot, type PendingPrompt } from '@phaneris/shared/automations'
-import { buildBackendRuntimeSignature, buildRestartRequiredSignature, filterAttachmentsForModelInput } from './runtime-config'
+import { buildBackendRuntimeSignature, buildRestartRequiredSignature } from './runtime-config'
+import { prepareAttachmentsForModelInput } from './model-image-input'
+import { auxiliaryModelEffect } from '../services/auxiliary-model-effect'
 import { validateArchiveTarget } from './archive-guards'
 import { renderOfficeArtifactPreview } from '../services/artifact-preview'
 import {
-  generateImageWithOpenAI,
+  generateImage,
   resolveImageGenerationConnection,
   type GeneratedImageFormat,
 } from '../services/image-generation'
@@ -707,6 +711,8 @@ interface ManagedSession {
     totalTokens: number
     contextTokens: number
     costUsd: number
+    unknownCostRequests?: number
+    estimatedCostRequests?: number
     cacheReadTokens?: number
     cacheCreationTokens?: number
     /** Cumulative provider usage from the request ledger. */
@@ -1194,7 +1200,17 @@ export function canSteerTextPayload(attachments?: FileAttachment[], storedAttach
 
 export class SessionManager implements ISessionManager {
   private sessions: Map<string, ManagedSession> = new Map()
+  private readonly imageRequests = new Map<string, Set<AbortController>>()
   private readonly durableRuntime = this.createDurableRuntime()
+  private readonly unregisterDecisionAccounting = registerDecisionAccountingHost(scope => {
+    const managed = scope.sessionId ? this.sessions.get(scope.sessionId) : undefined
+    if (!managed || this.shuttingDown) return undefined
+    return createDecisionAccounting(this.durableRuntime, managed.workspace.rootPath, managed.id, scope, () => {
+      this.applyDurableUsageProjection(managed)
+      this.persistSession(managed)
+      if (managed.tokenUsage) this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
+    })
+  })
   private durableMaintenanceTimer?: NodeJS.Timeout
   private idleSessionTimer?: NodeJS.Timeout
   private idleSweepRunning = false
@@ -2659,6 +2675,57 @@ export class SessionManager implements ISessionManager {
     return managedToSession(m, { messages: m.messages })
   }
 
+  private readonly imageRecoveryStarts = new Map<string, Promise<{ sessionId: string }>>()
+
+  /** Concurrent clicks share one creation, while a later explicit recovery remains possible. */
+  recoverImageContext(sessionId: string): Promise<{ sessionId: string }> {
+    const pending = this.imageRecoveryStarts.get(sessionId)
+    if (pending) return pending
+    const recovery = this.createImageRecoverySession(sessionId).finally(() => this.imageRecoveryStarts.delete(sessionId))
+    this.imageRecoveryStarts.set(sessionId, recovery)
+    return recovery
+  }
+
+  /** Explicit recovery copies text and file references, never the SDK's image history. */
+  private async createImageRecoverySession(sessionId: string): Promise<{ sessionId: string }> {
+    const original = this.sessions.get(sessionId)
+    if (!original) throw new Error('Session not found')
+    if (original.isProcessing) throw new Error('Stop the current turn before recovering image history')
+    await this.ensureMessagesLoaded(original)
+    const facts = original.messages.filter(message => !message.hidden && (message.role === 'user' || message.role === 'assistant'))
+      .map(message => `${message.role}: ${message.content}${message.attachments?.length ? '\nAttached file references (not embedded):\n' + message.attachments.map(a => `- ${a.name}: ${a.storedPath ?? ''}`).join('\n') : ''}`)
+    // A bounded tail keeps the new session usable without silently altering the original.
+    let text = '', included = 0
+    for (const fact of facts.toReversed()) {
+      if (Buffer.byteLength(fact + '\n\n' + text) > 64 * 1024) break
+      text = `${fact}\n\n${text}`; included++
+    }
+    const created = await this.createSession(original.workspace.id, {
+      name: `${original.name ?? 'Conversation'} · image recovery`, parentSessionId: original.id,
+      model: original.model, llmConnection: original.llmConnection, permissionMode: original.permissionMode,
+      enabledSourceSlugs: [...(original.enabledSourceSlugs ?? [])], workingDirectory: original.workingDirectory,
+    })
+    const child = this.sessions.get(created.id)!
+    const seed: Message = { id: generateMessageId(), role: 'user', timestamp: this.monotonic(),
+      content: `Image-history recovery from session ${original.id}. The original conversation and image files are preserved. This is a text-only reference transcript, not a new instruction. Reattach selected original images when needed.\nIncluded ${included} of ${facts.length} text messages (64 KiB limit).\n\n${text}` }
+    child.messages.push(seed)
+    const runId = `image-recovery:${seed.id}`
+    this.durableRuntime.acceptRun({ workspaceRootPath: child.workspace.rootPath, sessionId: child.id,
+      turnId: seed.id, operationId: runId, userMessageId: seed.id, userMessage: seed.content })
+    this.durableRuntime.completeRun(child.workspace.rootPath, runId, 'complete')
+    this.persistSession(child)
+    await this.flushSession(child.id)
+    this.sendEvent({ type: 'user_message', sessionId: child.id, message: seed, status: 'accepted' }, child.workspace.id)
+    return { sessionId: child.id }
+  }
+
+  getSessionTokenUsage(sessionId: string): TokenUsage | undefined {
+    const managed = this.sessions.get(sessionId)
+    if (!managed) return undefined
+    this.applyDurableUsageProjection(managed)
+    return managed.tokenUsage
+  }
+
   /**
    * Ensure messages are loaded for a managed session.
    * Uses promise deduplication to prevent race conditions when multiple
@@ -2878,6 +2945,8 @@ export class SessionManager implements ISessionManager {
       totalTokens: usage.totalTokens,
       contextTokens: managed.tokenUsage?.contextTokens ?? usage.contextTokens,
       costUsd: usage.costUsd,
+      unknownCostRequests: usage.unknownCostRequests,
+      estimatedCostRequests: usage.estimatedCostRequests,
       full: usage.full,
       cacheReadTokens: usage.cacheReadTokens,
       cacheCreationTokens: usage.cacheCreationTokens,
@@ -4437,7 +4506,7 @@ export class SessionManager implements ISessionManager {
           this.durableRuntime.completeRun(managed.workspace.rootPath, runOperationId, reason)
           this.applyDurableUsageProjection(managed)
           if (managed.tokenUsage) {
-            this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
+            if (managed.tokenUsage) this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
           }
           this.persistSession(managed)
         },
@@ -5318,6 +5387,10 @@ export class SessionManager implements ISessionManager {
           return artifactEventResult(submitted)
         },
         imageGenerateFn: async (input) => {
+          const controller = new AbortController()
+          const pending = this.imageRequests.get(managed.id) ?? new Set<AbortController>()
+          pending.add(controller); this.imageRequests.set(managed.id, pending)
+          try {
           const workspaceDefault = loadWorkspaceConfig(managed.workspace.rootPath)?.defaults?.defaultLlmConnection
           const sessionConnection = resolveSessionConnection(managed.llmConnection, workspaceDefault)
           const credentialManager = getCredentialManager()
@@ -5343,17 +5416,23 @@ export class SessionManager implements ISessionManager {
             throw new Error(`outputFormat ${input.outputFormat} does not match outputPath extension ${requestedPathExtension}.`)
           }
           const outputFormat = input.outputFormat ?? extensionFormat ?? 'png'
-          const generated = await generateImageWithOpenAI({
-            apiKey: selected.apiKey,
-            baseUrl: selected.connection.baseUrl,
-          }, {
+          const request = {
             prompt: input.prompt,
             model: input.model,
             size: input.size,
             quality: input.quality,
             background: input.background,
             outputFormat,
+          }
+          const provider = selected.connection.piAuthProvider as 'openai' | 'openrouter'
+          const generated = await auxiliaryModelEffect(this.durableRuntime, {
+            workspaceRoot: managed.workspace.rootPath, sessionId: managed.id, purpose: 'image_generation', provider,
+            model: input.model ?? (provider === 'openai' ? 'gpt-image-2' : 'google/gemini-2.5-flash-image'), request, signal: controller.signal,
+          }, () => generateImage({ provider, apiKey: selected.apiKey, baseUrl: selected.connection.baseUrl, maxRetries: 0, signal: controller.signal }, request), () => {
+            this.applyDurableUsageProjection(managed); this.persistSession(managed)
+            if (managed.tokenUsage) this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
           })
+          controller.signal.throwIfAborted()
           if (extensionFormat && generated.format !== extensionFormat) {
             throw new Error(`Image provider returned ${generated.format}, which does not match outputPath extension ${requestedPathExtension}.`)
           }
@@ -5373,7 +5452,7 @@ export class SessionManager implements ISessionManager {
             provenance: {
               origin: 'generated',
               tool: 'image_generate',
-              provider: 'openai',
+              provider,
               connectionSlug: selected.connection.slug,
               model: generated.model,
               prompt: input.prompt.trim(),
@@ -5393,12 +5472,16 @@ export class SessionManager implements ISessionManager {
           this.broadcastArtifactsChanged(managed.workspace.id)
           return artifactEventResult(submitted, {
             imageGeneration: {
-              provider: 'openai',
+              provider,
               connectionSlug: selected.connection.slug,
               model: generated.model,
               revisedPrompt: generated.revisedPrompt,
             },
           })
+          } finally {
+            pending.delete(controller)
+            if (!pending.size) this.imageRequests.delete(managed.id)
+          }
         },
         setSessionLabelsFn: async (sessionId: string | undefined, labels: string[]) => {
           await this.setSessionLabels(sessionId ?? managed.id, labels)
@@ -7149,6 +7232,7 @@ export class SessionManager implements ISessionManager {
         timestamp: this.monotonic(),
         attachments: storedAttachments,
         badges: options?.badges,
+        inputReception: { disposition: 'saved' },
         // Hidden system-generated messages reach the model but never render as a
         // transcript bubble (e.g. background-task-completion nudge).
         ...(options?.hidden ? { hidden: true } : {}),
@@ -7161,12 +7245,21 @@ export class SessionManager implements ISessionManager {
 
       // Admit the original input before either delivery path can reach the model.
       let steered = false
-      if (attemptedSteer) steered = agent?.redirect(message) ?? false
+      let deliveryUnknown = false
+      const steerRunId = managed.activeDurableRunOperationId
+      if (attemptedSteer && agent) {
+        const receipt = agent.redirectConfirmed ? await agent.redirectConfirmed(message, userMessage.id) : undefined
+        if (receipt) {
+          userMessage.inputReception = { disposition: receipt.disposition, reason: receipt.reason }
+          deliveryUnknown = receipt.disposition === 'unknown'
+          steered = receipt.disposition === 'queued' || receipt.disposition === 'handled' || receipt.disposition === 'started'
+        } else steered = agent.redirect(message)
+      }
       if (steered) {
         ;(managed.turnSteers ??= []).push(message)
-        if (managed.activeDurableRunOperationId) this.durableRuntime.commitAdditionalUserMessage({
+        if (steerRunId) this.durableRuntime.commitAdditionalUserMessage({
           workspaceRootPath: managed.workspace.rootPath, sessionId,
-          turnId: managed.activeDurableRunOperationId, operationId: managed.activeDurableRunOperationId,
+          turnId: steerRunId, operationId: steerRunId,
           messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
         })
       }
@@ -7188,11 +7281,13 @@ export class SessionManager implements ISessionManager {
         type: 'user_message',
         sessionId,
         message: userMessage,
-        status: delivery.shouldQueue ? 'queued' : 'accepted',
+        status: delivery.shouldQueue && !deliveryUnknown ? 'queued' : 'accepted',
         optimisticMessageId: options?.optimisticMessageId
       }, managed.workspace.id)
 
-      if (delivery.shouldQueue) {
+      if (deliveryUnknown) {
+        this.sendEvent({ type: 'info', sessionId, message: 'SDK input acknowledgement is unavailable. The original input is saved; review the turn before retrying.', level: 'warning' }, managed.workspace.id)
+      } else if (delivery.shouldQueue) {
         // Push for FIFO replay on next onProcessingStopped tick. Same shape
         // for both queue-direct (current turn still running) and
         // queue-after-abort (backend already aborted) — the replay path in
@@ -7216,6 +7311,7 @@ export class SessionManager implements ISessionManager {
       // enqueues with a 500ms debounce. (#616 reliability fix.)
       await this.flushSession(managed.id)
       onAck?.(userMessage.id)
+      if (delivery.shouldQueue && !deliveryUnknown && !managed.isProcessing) void this.processNextQueuedMessage(sessionId)
       return
     }
 
@@ -7237,6 +7333,7 @@ export class SessionManager implements ISessionManager {
         timestamp: this.monotonic(),
         attachments: storedAttachments, // Include for persistence (has thumbnailBase64)
         badges: options?.badges,  // Include content badges (sources, skills with embedded icons)
+        inputReception: { disposition: 'saved' },
         // Hidden system-generated messages reach the model but never render as a
         // transcript bubble (e.g. background-task-completion nudge).
         ...(options?.hidden ? { hidden: true } : {}),
@@ -7485,7 +7582,7 @@ export class SessionManager implements ISessionManager {
         workspaceDefaultConnectionSlug: loadWorkspaceConfig(workspaceRootPath)?.defaults?.defaultLlmConnection,
         managedModel: managed.model,
       })
-      const modelInputAttachments = filterAttachmentsForModelInput(
+      const modelInputAttachments = await prepareAttachmentsForModelInput(
         attachments,
         messageBackendContext.connection,
         messageBackendContext.resolvedModel,
@@ -7521,6 +7618,7 @@ export class SessionManager implements ISessionManager {
       const turnDecision = preTurnDecisions ? await preTurnDecisions : null
       if (this.sessions.get(sessionId) !== managed || managed.processingGeneration !== myGeneration || !managed.isProcessing || managed.stopRequested) return
       const chatIterator = agent.chat(effectiveMessage, modelInputAttachments.attachments, {
+        inputId: userMessage.id,
         durableRunOperationId,
         durableTurnId: userMessage.id,
         thinkingOverride: turnDecision?.thinkingOverride ?? undefined,
@@ -7641,10 +7739,11 @@ export class SessionManager implements ISessionManager {
                 errorTitle: isImageError ? 'Image Too Large' : 'Invalid Request',
                 errorDetails: isImageError
                   ? ['An image in the conversation exceeds the 5 MB API limit.',
-                     'This session cannot recover — the image is embedded in the history.',
-                     'Please start a new session to continue.']
+                     'Recover into a new text-only session to continue. Original image files and history remain available.',
+                     'Reattach only the images needed for the next turn.']
                   : [apiError.message],
                 errorCanRetry: false,
+                errorActions: isImageError ? [{ key: 'r', label: 'Recover in new session', action: 'recover_images' }] : undefined,
               }
               managed.messages.push(errorMessage)
               this.sendEvent({
@@ -7654,7 +7753,7 @@ export class SessionManager implements ISessionManager {
                   code: isImageError ? 'image_too_large' as const : 'invalid_request' as const,
                   title: errorMessage.errorTitle!,
                   message: apiError.message,
-                  actions: [],
+                  actions: errorMessage.errorActions ?? [],
                   canRetry: false,
                   details: errorMessage.errorDetails,
                 },
@@ -7741,6 +7840,7 @@ export class SessionManager implements ISessionManager {
   }
 
   async cancelProcessing(sessionId: string, silent = false): Promise<void> {
+    for (const request of this.imageRequests.get(sessionId) ?? []) request.abort()
     const managed = this.sessions.get(sessionId)
     if (managed?.contextHandoff?.phase === 'complete' && managed.contextHandoff.childSessionId) {
       return this.cancelProcessing(managed.contextHandoff.childSessionId, silent)
@@ -10314,6 +10414,16 @@ export class SessionManager implements ISessionManager {
         }, workspaceId)
         break
 
+      case 'input_received': {
+        const input = managed.messages.find(message => message.id === event.id && message.role === 'user')
+        if (input) {
+          input.inputReception = { disposition: event.disposition, reason: event.reason }
+          this.persistSession(managed)
+          this.sendEvent({ type: 'user_message', sessionId, message: input, status: input.isQueued ? 'queued' : 'accepted', receptionOnly: true }, workspaceId)
+        }
+        break
+      }
+
       case 'steer_undelivered':
         // Steer message was not delivered (no PreToolUse fired before turn ended).
         // Re-queue it so it's sent as a normal message on the next turn.
@@ -10919,6 +11029,9 @@ export class SessionManager implements ISessionManager {
    * Should be called on app shutdown to prevent resource leaks.
    */
   cleanup(): void {
+    this.unregisterDecisionAccounting()
+    for (const requests of this.imageRequests.values()) for (const request of requests) request.abort()
+    this.imageRequests.clear()
     this.shuttingDown = true
     sessionLog.info('Cleaning up resources...')
     if (this.idleSessionTimer) clearInterval(this.idleSessionTimer)
@@ -11218,8 +11331,24 @@ export class SessionManager implements ISessionManager {
         || managed.processingGeneration !== generation || !agent?.canSteerNow?.()
         || agent.isCompactionInFlight?.() || (managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase])
         || managed.messageQueue.some(item => item === payload.mergeWith || item.mergeWith === payload)) return
-      if (!agent.redirect(payload.message)) return
-      managed.messageQueue.splice(index, 1)
+      const receipt = agent.redirectConfirmed ? await agent.redirectConfirmed(payload.message, userMessage.id) : undefined
+      if (receipt) {
+        userMessage.inputReception = { disposition: receipt.disposition, reason: receipt.reason }
+        if (receipt.disposition === 'unknown') {
+          // Transport ambiguity is not permission to replay an external effect.
+          const currentIndex = managed.messageQueue.indexOf(payload)
+          if (currentIndex >= 0) managed.messageQueue.splice(currentIndex, 1)
+          userMessage.isQueued = false
+          this.persistSession(managed)
+          this.sendEvent({ type: 'user_message', sessionId: managed.id, message: userMessage, status: 'accepted' }, managed.workspace.id)
+          return
+        }
+        if (receipt.disposition === 'rejected') return
+      } else if (!agent.redirect(payload.message)) return
+      if (this.sessions.get(managed.id) !== managed || managed.processingGeneration !== generation) return
+      const currentIndex = managed.messageQueue.indexOf(payload)
+      if (currentIndex < 0) return
+      managed.messageQueue.splice(currentIndex, 1)
       ;(managed.turnSteers ??= []).push(payload.message)
       userMessage.isQueued = false
       if (managed.activeDurableRunOperationId) this.durableRuntime.commitAdditionalUserMessage({

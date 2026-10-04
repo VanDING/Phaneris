@@ -556,13 +556,25 @@ export function handleUserMessage(
   const { message, status } = event
 
   // Find existing message by ID match (backend ID, optimistic ID, or content+timestamp fallback)
-  const existingIndex = session.messages.findIndex(m =>
+  let existingIndex = session.messages.findIndex(m =>
     m.role === 'user' && (
       m.id === message.id ||
-      (event.optimisticMessageId && m.id === event.optimisticMessageId) ||
-      (m.content === message.content && Math.abs(m.timestamp - message.timestamp) < 5000)
+      m.backendMessageId === message.id ||
+      (event.optimisticMessageId && m.id === event.optimisticMessageId)
     )
   )
+  // Legacy senders may omit optimistic identity. Content is only safe when
+  // exactly one unbound candidate exists; SDK receipts always require identity.
+  if (existingIndex < 0 && !event.receptionOnly && !event.optimisticMessageId) {
+    const candidates = session.messages.flatMap((m, index) => m.role === 'user' && !m.backendMessageId
+      && m.content === message.content && Math.abs(m.timestamp - message.timestamp) < 5000 ? [index] : [])
+    if (candidates.length === 1) existingIndex = candidates[0]!
+  }
+  if (event.receptionOnly) {
+    if (existingIndex < 0) return { state, effects: [] }
+    return { state: { ...state, session: { ...session, messages: session.messages.map((m, index) => index === existingIndex
+      ? { ...m, inputReception: message.inputReception ?? m.inputReception } : m) } }, effects: [] }
+  }
 
   let updatedMessages: Message[]
 
@@ -597,6 +609,8 @@ export function handleUserMessage(
       if (i === existingIndex) {
         return {
           ...m,
+          backendMessageId: message.id,
+          inputReception: message.inputReception ?? m.inputReception,
           ...(status === 'processing' ? { timestamp: message.timestamp } : {}),
           isPending: false,
           isQueued: status === 'queued',

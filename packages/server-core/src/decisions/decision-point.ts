@@ -67,7 +67,7 @@ export async function openDecisionPoint(options: DecisionPointOptions): Promise<
   const tag = `[decision:${options.record}]`
   let resolution: DecisionClientResolution
   try {
-    resolution = await resolveClient({ feature: options.feature })
+    resolution = await resolveClient({ feature: options.feature, sessionId: options.sessionId })
   } catch (error) {
     options.log?.(`${tag} resolver failed: ${errorMessage(error)}`)
     return null

@@ -460,9 +460,9 @@ export function registerLlmConnectionsHandlers(server: RpcServer, deps: HandlerD
   })
 
   server.handle(RPC_CHANNELS.pi.GET_PROVIDER_MODELS, async (_ctx, provider: string) => {
-    const { getModels } = await import('@earendil-works/pi-ai/compat')
+    const { getBuiltinModels } = await import('@earendil-works/pi-ai/providers/all')
     try {
-      const models = getModels(provider as Parameters<typeof getModels>[0])
+      const models = getBuiltinModels(provider as Parameters<typeof getBuiltinModels>[0])
       const sorted = [...models].sort((a, b) => b.cost.output - a.cost.output || b.cost.input - a.cost.input)
       return {
         models: sorted.map(m => ({

@@ -252,6 +252,8 @@ export interface DurableUsageProjection {
   totalTokens: number
   contextTokens: number
   costUsd: number
+  unknownCostRequests: number
+  estimatedCostRequests: number
   cacheReadTokens: number
   cacheCreationTokens: number
   full: PiUsage
@@ -283,9 +285,9 @@ export function projectDurableUsage(rows: RuntimeUsageRow[]): DurableUsageProjec
     }])
   })
   const full = sumTokenUsage(usages)
-  // Background refresh usage contributes to cost, never to conversational context.
+  // Auxiliary usage contributes to totals, never to conversational context.
   const lastConversationIndex = ordered.findLastIndex(row =>
-    (row.payload as { kind?: string } | undefined)?.kind !== 'cache_warm')
+    !['cache_warm', 'decision', 'image_generation'].includes((row.payload as { kind?: string } | undefined)?.kind ?? ''))
   const lastFullUsage = lastConversationIndex >= 0 ? usages[lastConversationIndex] : undefined
   return {
     attempts: ordered.length,
@@ -294,6 +296,8 @@ export function projectDurableUsage(rows: RuntimeUsageRow[]): DurableUsageProjec
     totalTokens: full.totalTokens,
     contextTokens: lastFullUsage?.totalTokens ?? 0,
     costUsd: full.cost.total,
+    unknownCostRequests: ordered.filter(row => row.costUsd === undefined && (row.payload as { usage?: PiUsage } | undefined)?.usage?.cost?.total === undefined).length,
+    estimatedCostRequests: ordered.filter(row => (row.payload as { costSource?: string } | undefined)?.costSource === 'estimated').length,
     cacheReadTokens: full.cacheRead,
     cacheCreationTokens: full.cacheWrite,
     full,

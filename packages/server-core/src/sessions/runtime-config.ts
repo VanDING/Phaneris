@@ -28,6 +28,9 @@ function normalizeCustomModels(connection: LlmConnection): Array<Record<string, 
         id: model.id,
         contextWindow: model.contextWindow,
         supportsImages: typeof model.supportsImages === 'boolean' ? model.supportsImages : undefined,
+        inputLimits: model.inputLimits,
+        promptCache: model.promptCache,
+        cost: model.cost,
       })
     })
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))

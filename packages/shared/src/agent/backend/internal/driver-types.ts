@@ -9,6 +9,7 @@ import type {
 import type { ThinkingLevel } from '../../thinking-levels.ts';
 import type { LlmConnection } from '../../../config/storage.ts';
 import type { ModelFetchResult } from '../../../config/model-fetcher.ts';
+import type { ModelDefinition } from '../../../config/models.ts';
 import type { CredentialManager } from '../../../credentials/manager.ts';
 
 export interface BackendRuntimePaths {
@@ -43,6 +44,9 @@ export interface BackendRuntimePayload extends Record<string, unknown> {
     supportsImages?: boolean;
     supportsThinking?: boolean;
     thinkingLevelMap?: Partial<Record<ThinkingLevel, string | null>>;
+    inputLimits?: ModelDefinition['inputLimits'];
+    promptCache?: ModelDefinition['promptCache'];
+    cost?: ModelDefinition['cost'];
   }>;
 }
 

@@ -846,9 +846,9 @@ export class DurableRuntimeCoordinator {
     const runState = store.getOperation(request.runOperationId)
     if (!runState) throw new Error(`Durable run ${request.runOperationId} is not open`)
     if (runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
-    if (request.purpose === 'cache_warm') {
+    if (request.purpose) {
       if (runState.phase === 'terminal' || runState.phase === 'recovery_parked') {
-        throw new Error('Cache warming requires an active run')
+        throw new Error('Auxiliary model requests require an active run')
       }
       const operationId = durableModelOperationId(request.runOperationId, request.providerRequestId)
       const outcome = store.getEvent(`${operationId}:outcome`)
@@ -943,7 +943,7 @@ export class DurableRuntimeCoordinator {
     const store = this.storeFor(workspaceRootPath)
     const existing = store.getEvent(`${request.operationId}:outcome`)
     if (existing) return { committedSeq: existing.seq ?? 0 }
-    const warming = request.purpose === 'cache_warm'
+    const warming = Boolean(request.purpose)
     const runState = store.getOperation(request.runOperationId)
     if (!runState && !warming) throw new Error(`Durable run ${request.runOperationId} is not open`)
     if (runState && runState.sessionId !== request.sessionId) throw new Error('Durable run belongs to another session')
@@ -958,10 +958,10 @@ export class DurableRuntimeCoordinator {
       runOperationId?: string
       sessionId?: string
     } | undefined
-    if (warming && (currentModel?.purpose !== 'cache_warm'
-      || currentModel.runOperationId !== request.runOperationId
-      || currentModel.sessionId !== request.sessionId)) {
-      throw new Error('Cache warming outcome requires its matching dispatch')
+    if (warming && (currentModel?.purpose !== request.purpose
+      || currentModel?.runOperationId !== request.runOperationId
+      || currentModel?.sessionId !== request.sessionId)) {
+      throw new Error('Auxiliary model outcome requires its matching dispatch')
     }
     if (currentModel?.operationId !== request.operationId
       || currentModel.providerRequestId !== request.providerRequestId

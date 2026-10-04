@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
-import { reactPdfAlias } from '../../scripts/build/react-pdf-alias'
+import { reactPdfAlias } from '../../scripts/build/react-pdf-alias.ts'
 
 // NOTE: Source map upload to Sentry is intentionally disabled.
 // To re-enable, uncomment the sentryVitePlugin below and add SENTRY_AUTH_TOKEN,
@@ -54,34 +54,34 @@ export default defineConfig({
     //   },
     // }),
   ],
-  root: resolve(__dirname, 'src/renderer'),
+  root: resolve(import.meta.dirname, 'src/renderer'),
   base: './',
   build: {
-    outDir: resolve(__dirname, 'dist/renderer'),
+    outDir: resolve(import.meta.dirname, 'dist/renderer'),
     emptyOutDir: true,
     sourcemap: true,  // Source maps generated for debugging. Not uploaded to Sentry (see CLAUDE.md).
     rolldownOptions: {
       input: {
-        main: resolve(__dirname, 'src/renderer/index.html'),
-        playground: resolve(__dirname, 'src/renderer/playground.html'),
-        'browser-toolbar': resolve(__dirname, 'src/renderer/browser-toolbar.html'),
-        'browser-empty-state': resolve(__dirname, 'src/renderer/browser-empty-state.html'),
+        main: resolve(import.meta.dirname, 'src/renderer/index.html'),
+        playground: resolve(import.meta.dirname, 'src/renderer/playground.html'),
+        'browser-toolbar': resolve(import.meta.dirname, 'src/renderer/browser-toolbar.html'),
+        'browser-empty-state': resolve(import.meta.dirname, 'src/renderer/browser-empty-state.html'),
       }
     }
   },
   resolve: {
     alias: {
       ...reactPdfAlias(import.meta.url),
-      '@': resolve(__dirname, 'src/renderer'),
-      '@config': resolve(__dirname, '../../packages/shared/src/config'),
+      '@': resolve(import.meta.dirname, 'src/renderer'),
+      '@config': resolve(import.meta.dirname, '../../packages/shared/src/config'),
       // Force all React imports to use the root node_modules React
       // Bun hoists deps to root. This prevents "multiple React copies" error from @phaneris/ui
-      'react': resolve(__dirname, '../../node_modules/react'),
-      'react-dom': resolve(__dirname, '../../node_modules/react-dom'),
+      'react': resolve(import.meta.dirname, '../../node_modules/react'),
+      'react-dom': resolve(import.meta.dirname, '../../node_modules/react-dom'),
       // rehype-katex 7 declares katex ^0.16 but only calls the stable
       // renderToString API; resolve both copies to the single current katex to
       // avoid shipping two ~240 KB copies in the initial renderer graph.
-      'katex': resolve(__dirname, '../../node_modules/katex'),
+      'katex': resolve(import.meta.dirname, '../../node_modules/katex'),
     },
     dedupe: ['react', 'react-dom', 'katex']
   },
