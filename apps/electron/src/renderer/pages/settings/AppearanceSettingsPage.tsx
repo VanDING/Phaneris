@@ -44,7 +44,7 @@ import { setProjectColorTreatment, useProjectColorTreatment } from '@/hooks/useP
 import { PROJECT_COLOR_PALETTE, type ProjectColorTreatment } from '@/utils/project-colors'
 import { Info_DataTable, SortableHeader } from '@/components/info/Info_DataTable'
 import { Info_Badge } from '@/components/info/Info_Badge'
-import type { ThemeSummary } from '@config/theme'
+import { DEFAULT_THEME_FILE, type ThemeSummary } from '@config/theme'
 
 export const meta: DetailsPageMeta = {
   navigator: 'settings',
@@ -294,7 +294,7 @@ export default function AppearanceSettingsPage() {
 
   // Theme options for dropdowns
   const themeOptions = useMemo(() => [
-    { value: 'default', label: t("settings.appearance.useDefault") },
+    { value: 'default', label: DEFAULT_THEME_FILE.name },
     ...presetThemes
       .filter(t => t.id !== 'default')
       .map(t => ({
@@ -303,9 +303,9 @@ export default function AppearanceSettingsPage() {
       })),
   ], [presetThemes, t])
 
-  // Get current app default theme label for display (null when using 'default' to avoid redundant "Use Default (Default)")
+  // Workspace inheritance names the app's selected theme, including Twilight.
   const appDefaultLabel = useMemo(() => {
-    if (colorTheme === 'default') return null
+    if (colorTheme === 'default') return DEFAULT_THEME_FILE.name
     const preset = presetThemes.find(t => t.id === colorTheme)
     return preset?.name || colorTheme
   }, [colorTheme, presetThemes])
@@ -429,6 +429,7 @@ export default function AppearanceSettingsPage() {
                             onValueChange={(value) => handleWorkspaceThemeChange(workspace.id, value)}
                             options={[
                               { value: 'default', label: appDefaultLabel ? t("settings.appearance.useDefaultWithTheme", { theme: appDefaultLabel }) : t("settings.appearance.useDefault") },
+                              { value: 'twilight', label: DEFAULT_THEME_FILE.name },
                               ...presetThemes
                                 .filter(t => t.id !== 'default')
                                 .map(t => ({

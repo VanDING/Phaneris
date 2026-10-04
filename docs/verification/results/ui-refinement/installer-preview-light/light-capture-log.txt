@@ -1,0 +1,46 @@
+15:02:32.632  installer: E:/Phaneris/apps/electron/installer/probe-installer-nsh.exe
+15:02:32.786  theme:     light
+15:02:33.517  launched pid=23648 /THEME=light (cursor was 1581,1014)
+15:02:36.508  primary:   cls=Button                   id=1211  vis=True  en=True  rect=(848,756)-(1072,804) text="立即安装"
+15:02:36.510  secondary: cls=Button                   id=1206  vis=True  en=True  rect=(872,700)-(1048,736) text="选择安装位置"
+15:02:36.799  shot welcome-idle               E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-idle.png (13490 bytes) fill #733DF4  0x0000 hot=False pushed=False focus=False
+15:02:36.904  SetCursorPos(960,780)
+15:02:37.345  shot welcome-hover-primary      E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-hover-primary.png (13502 bytes) fill #6932E6  0x0200 hot=True pushed=False focus=False
+15:02:37.369  WM_LBUTTONDOWN(112,24)
+15:02:37.780  shot welcome-pressed-primary    E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-pressed-primary.png (14003 bytes) fill #5926C7  0x026C hot=True pushed=True focus=True
+15:02:38.540  WM_CANCELMODE
+15:02:38.613  cursor off the control
+15:02:38.937  WM_NEXTDLGCTL
+15:02:39.350  shot welcome-focus-primary      E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-focus-primary.png (13982 bytes) 0x0008 hot=False pushed=False focus=True
+15:02:39.467  SetCursorPos(960,718)
+15:02:39.890  shot welcome-hover-secondary    E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-hover-secondary.png (13998 bytes) fill #FFFFFF -> #FFFFFF  0x0000 hot=False pushed=False focus=False
+15:02:39.892  cursor off the control
+15:02:40.151  WM_NEXTDLGCTL
+15:02:40.558  shot welcome-focus-secondary    E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-focus-secondary.png (13995 bytes) 0x0008 hot=False pushed=False focus=True
+15:02:40.658  EnableWindow(FALSE)=False
+15:02:41.170  shot welcome-disabled-primary   E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-disabled-primary.png (14018 bytes) fill #E5E7EB  enabled=False
+15:02:41.240  EnableWindow(TRUE)=True
+15:02:41.602  BM_CLICK(posted)
+15:02:42.471  edit:      cls=Edit                     id=1208  vis=True  en=True  rect=(736,708)-(1096,728) text="C:\Users\dotty\AppData\Local\Temp\phaneris-ui-preview-23648"
+15:02:42.567  SetCursorPos(1156,718)
+15:02:42.940  shot welcome-expanded           E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-expanded.png (16122 bytes) path "C:\Users\dotty\AppData\Local\Temp\phaneris-ui-preview-23648" (59 chars)
+15:02:42.943  cursor off the control
+15:02:42.972  WM_SETTEXT(82 chars)
+15:02:43.948  shot welcome-expanded-longpath  E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-expanded-longpath.png (16080 bytes) 82 chars: C:\Users\dotty\AppData\Local\Programs\Phaneris-Enterprise-Preview-Channel-2026\app
+15:02:43.965  WM_SETTEXT(15 chars)
+15:02:44.988  shot welcome-invalid-path       E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-invalid-path.png (19650 bytes) inline validation; no install attempted
+15:02:44.996  WM_SETTEXT(59 chars)
+15:02:45.976  shot welcome-path-restored      E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-welcome-path-restored.png (16091 bytes) validation clears after restoring the path
+15:02:45.983  BM_CLICK(posted)
+15:02:46.205  overlay:   cls=PhanerisInstallerProgress id=0     vis=True  en=True  rect=(660,300)-(1260,900) text="正在准备安装… 0%"
+15:02:46.551  shot progress-early             E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-progress-early.png (16346 bytes) caption "正在准备安装… 2%"
+15:02:54.453  shot progress-late              E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-progress-late.png (16367 bytes) caption "正在解压文件… 42%" after 8s (+40 points)
+15:03:13.451  progress samples: 194
+15:03:14.167  shot finish                     E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-finish.png (15077 bytes) launch checkbox "立即启动" checked=1
+15:03:14.174  WM_NEXTDLGCTL
+15:03:14.539  shot finish-focus-checkbox      E:\Phaneris\docs\verification\results\ui-refinement\installer-preview-light\light-finish-focus-checkbox.png (15375 bytes) 0x0009 hot=False pushed=False focus=True
+15:03:14.543  BM_CLICK(posted)
+15:03:14.798  BM_CLICK(posted)
+15:03:17.811  installer exited with 0
+15:03:17.812  primary fill: idle #733DF4   hover #6932E6   pressed #5926C7   disabled #E5E7EB
+15:03:17.812  progress:     early "正在准备安装… 2%"   late "正在解压文件… 42%"

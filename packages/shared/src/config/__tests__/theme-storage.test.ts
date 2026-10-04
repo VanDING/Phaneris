@@ -46,7 +46,7 @@ afterEach(() => {
 });
 
 describe('user theme storage', () => {
-  test('lists only confined valid user themes and keeps Default immutable', () => {
+  test('lists built-ins and confined valid user themes while keeping Twilight immutable', () => {
     const configDir = makeConfigDir();
     const themesDir = join(configDir, 'themes');
     writeFileSync(join(themesDir, 'alpha.json'), validTheme('Alpha'));
@@ -89,11 +89,50 @@ describe('user theme storage', () => {
       validIds: boolean[];
     };
 
-    expect(result.ids).toEqual(['alpha']);
-    expect(result.builtinName).toBe('Default');
+    expect(result.ids).toEqual(['default', 'geek', 'cyberpunk-2077', 'ink', 'alpha']);
+    expect(result.builtinName).toBe('Twilight');
     expect(result.builtinPath).toBe('builtin:default');
     expect(result.traversal).toBeNull();
     expect(result.validIds).toEqual([true, false, false, false]);
+  });
+
+  test('loads four built-ins in an empty profile without seeding files', () => {
+    const configDir = makeConfigDir();
+    const result = runStorageScript(configDir, `
+      import { loadPresetTheme, loadPresetThemes, getThemePreferences, setThemePreferences } from '${STORAGE_MODULE}';
+      import { readdirSync } from 'node:fs';
+      const themes = loadPresetThemes();
+      setThemePreferences({ ...getThemePreferences(), colorTheme: 'twilight' });
+      console.log(JSON.stringify({
+        themes: themes.map(({ id, name }) => ({ id, name, path: loadPresetTheme(id)?.path })),
+        alias: loadPresetTheme('twilight')?.theme.name,
+        selection: getThemePreferences().colorTheme,
+        files: readdirSync(${JSON.stringify(join(configDir, 'themes'))}),
+      }));
+    `) as { themes: { id: string; name: string; path: string }[]; alias: string; selection: string; files: string[] };
+    expect(result.themes).toEqual([
+      { id: 'default', name: 'Twilight', path: 'builtin:default' },
+      { id: 'geek', name: 'Geek', path: 'builtin:geek' },
+      { id: 'cyberpunk-2077', name: 'Cyberpunk 2077', path: 'builtin:cyberpunk-2077' },
+      { id: 'ink', name: 'Ink', path: 'builtin:ink' },
+    ]);
+    expect(result.alias).toBe('Twilight');
+    expect(result.selection).toBe('default');
+    expect(result.files).toEqual([]);
+  });
+
+  test('preserves colliding legacy files without duplicating built-in choices', () => {
+    const configDir = makeConfigDir();
+    const collisions = ['twilight', 'geek', 'cyberpunk-2077', 'ink'];
+    for (const id of collisions) writeFileSync(join(configDir, 'themes', `${id}.json`), validTheme(`User ${id}`));
+    const result = runStorageScript(configDir, `
+      import { loadPresetTheme, loadPresetThemes, initializeThemeStorage } from '${STORAGE_MODULE}';
+      initializeThemeStorage();
+      console.log(JSON.stringify({ ids: loadPresetThemes().map(t => t.id), geek: loadPresetTheme('geek')?.theme.name }));
+    `) as { ids: string[]; geek: string };
+    expect(result.ids).toEqual(['default', 'geek', 'cyberpunk-2077', 'ink']);
+    expect(result.geek).toBe('Geek');
+    for (const id of collisions) expect(readFileSync(join(configDir, 'themes', `${id}.json`), 'utf8')).toBe(validTheme(`User ${id}`));
   });
 
   test('confines local scenic assets and only materializes the selected image', () => {

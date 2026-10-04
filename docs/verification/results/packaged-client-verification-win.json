@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-04T05:26:19.954Z",
+  "date": "2026-10-04T07:11:05.429Z",
   "arch": "x64",
   "expected": {
-    "version": "0.2.4",
+    "version": "0.3.0",
     "appId": "io.github.vanding.phaneris",
     "productName": "Phaneris",
     "scheme": "phaneris",
@@ -17,6 +17,18 @@
         "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\resources\\bridge-mcp-server\\index.js",
         "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\dist\\resources\\bridge-mcp-server\\index.js"
       ],
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "exactly four canonical themes are bundled, with Twilight as default",
+      "observation": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\dist\\resources\\themes",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "NSIS installer exists with the expected versioned name",
+      "observation": "Phaneris-0.3.0-win-x64.exe",
       "status": "pass",
       "detail": null
     },
@@ -63,14 +75,24 @@
       "detail": null
     }
   ],
-  "scope": "unpacked resources and runtime; installer not verified",
+  "scope": "full packaged artifacts",
   "legacyBridgeBundle": "absent",
+  "themes": [
+    "cyberpunk-2077.json",
+    "default.json",
+    "geek.json",
+    "ink.json"
+  ],
+  "installer": {
+    "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.3.0-win-x64.exe",
+    "bytes": 189350738
+  },
   "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "identity": {
     "productName": "Phaneris",
     "companyName": "VanDING",
-    "version": "0.2.4",
-    "fileVersion": "0.2.4",
+    "version": "0.3.0",
+    "fileVersion": "0.3.0",
     "fileDescription": "Phaneris"
   },
   "binary": "PE machine x64",

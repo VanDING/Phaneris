@@ -42,7 +42,7 @@ const outputPath = 'docs/verification/results/calendar-gantt-verification.json'
 const results = { date: new Date().toISOString(), base, browser: null, checks: [] }
 await mkdir('docs/verification/results', { recursive: true })
 
-const browser = await chromium.launch({ headless: true })
+const browser = await chromium.launch({ headless: true, ...(process.env.PHANERIS_VERIFY_BROWSER_CHANNEL ? { channel: process.env.PHANERIS_VERIFY_BROWSER_CHANNEL } : {}) })
 results.browser = browser.version()
 
 async function check(name, observation, run) {

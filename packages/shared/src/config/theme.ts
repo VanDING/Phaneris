@@ -5,9 +5,13 @@
  * Light mode is default, with optional dark mode overrides.
  *
  * Theme sources:
- * - Built in:       `default` only
+ * - Built in:       Twilight (`default`), Geek, Cyberpunk 2077, Ink
  * - User themes:    ~/.phaneris/themes/*.json
  */
+
+import geekTheme from './themes/geek.json';
+import cyberpunkTheme from './themes/cyberpunk-2077.json';
+import inkTheme from './themes/ink.json';
 
 /**
  * CSS color string - any valid CSS color format:
@@ -463,8 +467,8 @@ export function themeToCSS(theme: ThemeOverrides, isDark: boolean = false): stri
  * Keep these aligned with the canonical Default palette.
  */
 export const BACKGROUND_HEX = {
-  light: '#F6F7F8', // Matches DEFAULT_THEME.background
-  dark: '#080A10', // Matches DEFAULT_THEME.dark.background
+  light: '#FFFFFF', // Matches DEFAULT_THEME.background
+  dark: '#09080E', // Matches DEFAULT_THEME.dark.background
 } as const;
 
 /**
@@ -479,70 +483,70 @@ export function getBackgroundColor(isDark: boolean): string {
  * Default theme values (matches current index.css)
  */
 export const DEFAULT_THEME: ThemeOverrides = {
-  mode: 'solid',
-  background: '#F6F7F8',
-  foreground: '#2A2B30',
-  accent: '#7C3AED',
-  info: '#8C5F20',
-  success: '#2D7555',
-  destructive: '#AD484A',
-  backgroundElevated: '#FAFBFC',
-  foregroundDimmed: '#51535A',
-  secondary: '#ECEEF0',
-  secondaryForeground: '#383A40',
-  muted: '#ECEDEF',
-  mutedForeground: '#65676D',
-  card: '#FAFBFC',
-  cardForeground: '#2A2B30',
-  popoverForeground: '#2A2B30',
-  border: '#DEDFE2',
-  ring: '#7C3AED',
-  userMessageBubble: '#ECEBF2',
-  paper: '#FAFBFC',
-  input: '#F9FAFB',
-  popover: '#FCFCFD',
-  popoverSolid: '#FCFCFD',
-  depth: 'elevated',
-  shadowColor: '#26232D',
-  shadowStrength: 0.045,
-  radius: '8px',
-  borderWidth: '1px',
-  borderStyle: 'solid',
-  fontSans: '"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
-  fontSerif: '"JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
-  fontMono: '"JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
-  fontSize: '15px',
-  letterSpacing: '-0.006em',
-  lineHeight: 1.5,
-  iconStrokeWidth: 1.75,
-  iconStrokeLinecap: 'round',
-  density: 'comfortable',
-  dark: {
-    background: '#080A10',
-    foreground: '#DFE1E7',
-    accent: '#A78BFA',
-    info: '#CCA66C',
-    success: '#81B899',
-    destructive: '#D68B8D',
-    backgroundElevated: '#11131B',
-    foregroundDimmed: '#AFB3BF',
-    secondary: '#1C1E28',
-    secondaryForeground: '#CDD0D9',
-    muted: '#14161F',
-    mutedForeground: '#9298A7',
-    card: '#0D0F16',
-    cardForeground: '#DFE1E7',
-    popoverForeground: '#DFE1E7',
-    border: '#272A35',
-    ring: '#A78BFA',
-    userMessageBubble: '#171823',
-    paper: '#0D0F16',
-    input: '#11131B',
-    popover: '#181A23',
-    popoverSolid: '#181A23',
-    shadowColor: '#030409',
-    shadowStrength: 0.18,
-  },
+  "mode": "solid",
+  "background": "oklch(1 0 0)",
+  "backgroundElevated": "oklch(1 0 0)",
+  "foreground": "oklch(0.18 0.012 285)",
+  "foregroundDimmed": "oklch(0.50 0.005 285)",
+  "card": "oklch(0.985 0.002 285)",
+  "cardForeground": "oklch(0.18 0.012 285)",
+  "popoverForeground": "oklch(0.18 0.012 285)",
+  "secondary": "oklch(0.96 0.005 285)",
+  "secondaryForeground": "oklch(0.28 0.012 285)",
+  "muted": "oklch(0.96 0.005 285)",
+  "mutedForeground": "oklch(0.52 0.005 285)",
+  "border": "oklch(0.91 0.005 285)",
+  "userMessageBubble": "oklch(0.96 0.005 285)",
+  "accent": "oklch(0.488 0.275 280.3)",
+  "ring": "oklch(0.488 0.275 280.3)",
+  "info": "oklch(0.62 0.10 70)",
+  "success": "oklch(0.50 0.09 145)",
+  "destructive": "oklch(0.52 0.16 28)",
+  "paper": "oklch(1 0 0)",
+  "input": "oklch(1 0 0)",
+  "popover": "oklch(1 0 0)",
+  "popoverSolid": "oklch(1 0 0)",
+  "depth": "flat",
+  "shadowColor": "oklch(0.18 0.012 285)",
+  "shadowStrength": 0.05,
+  "radius": "8px",
+  "borderWidth": "1px",
+  "borderStyle": "solid",
+  "fontSans": "\"Inter\", \"Segoe UI Variable Text\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+  "fontSerif": "\"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+  "fontMono": "\"Cascadia Mono\", \"JetBrains Mono\", ui-monospace, SFMono-Regular, Consolas, \"Microsoft YaHei UI\", monospace",
+  "fontSize": "15px",
+  "lineHeight": 1.5,
+  "letterSpacing": "-0.005em",
+  "iconStrokeWidth": 1.5,
+  "iconStrokeLinecap": "round",
+  "density": "comfortable",
+  "dark": {
+    "background": "oklch(0.14 0.012 285)",
+    "backgroundElevated": "oklch(0.18 0.012 285)",
+    "foreground": "oklch(0.96 0.005 285)",
+    "foregroundDimmed": "oklch(0.65 0.005 285)",
+    "card": "oklch(0.17 0.012 285)",
+    "cardForeground": "oklch(0.96 0.005 285)",
+    "popoverForeground": "oklch(0.96 0.005 285)",
+    "secondary": "oklch(0.21 0.012 285)",
+    "secondaryForeground": "oklch(0.88 0.005 285)",
+    "muted": "oklch(0.18 0.012 285)",
+    "mutedForeground": "oklch(0.62 0.005 285)",
+    "border": "oklch(0.27 0.012 285)",
+    "userMessageBubble": "oklch(0.21 0.012 285)",
+    "accent": "oklch(0.626 0.221 291.7)",
+    "ring": "oklch(0.626 0.221 291.7)",
+    "info": "oklch(0.74 0.10 70)",
+    "success": "oklch(0.70 0.09 145)",
+    "destructive": "oklch(0.66 0.16 28)",
+    "paper": "oklch(0.17 0.012 285)",
+    "input": "oklch(0.17 0.012 285)",
+    "popover": "oklch(0.17 0.012 285)",
+    "popoverSolid": "oklch(0.17 0.012 285)",
+    "shadowColor": "oklch(0 0 0)",
+    "shadowStrength": 0.22
+  }
 };
 
 // ============================================
@@ -576,11 +580,11 @@ export interface ThemeFile extends ThemeOverrides {
  */
 export interface PresetTheme {
   id: string; // filename without .json (e.g., 'dracula')
-  path: string; // full path to the user theme file, or builtin:default
+  path: string; // full path to the user theme file, or builtin:<id>
   theme: ThemeFile; // parsed theme data
 }
 
-/** Lightweight metadata returned when listing user themes. */
+/** Lightweight metadata returned when listing built-in and user themes. */
 export interface ThemeSummary {
   id: string;
   name: string;
@@ -589,19 +593,39 @@ export interface ThemeSummary {
   supportedModes?: ('light' | 'dark')[];
 }
 
-/** The immutable built-in theme. All other themes come from the user directory. */
+/** Twilight is the immutable default; its stable selection ID remains `default`. */
 export const DEFAULT_THEME_FILE: ThemeFile = {
-  name: 'Default',
-  description: 'Refined cool-neutral surfaces, native transparent sidebar, near-black dark mode and vivid Violet Pulse accents.',
-  author: 'Phaneris',
-  license: 'MIT',
-  supportedModes: ['light', 'dark'],
-  shikiTheme: {
-    light: 'github-light',
-    dark: 'github-dark',
+  "name": "Twilight",
+  "description": "暮色平面：纯白画布与近黑墨字承担绝大部分视觉重量，Phaneris 品牌紫（#5420F3，logo 左上主色块的中段）仅在需要锚定的瞬间出现——介于 #2A0E92 的深紫与 #8F63FF 的亮紫之间。8px 圆角、细线图标、极浅阴影——只在暗色模式才缓慢浮起。",
+  "author": "Phaneris",
+  "license": "MIT",
+  "supportedModes": [
+    "light",
+    "dark"
+  ],
+  "shikiTheme": {
+    "light": "github-light",
+    "dark": "github-dark"
   },
   ...DEFAULT_THEME,
 };
+
+/** Read-only built-ins shared by desktop, standalone hosts and previews. */
+export const BUILTIN_THEMES: Readonly<Record<string, ThemeFile>> = {
+  default: DEFAULT_THEME_FILE,
+  geek: geekTheme as ThemeFile,
+  'cyberpunk-2077': cyberpunkTheme as ThemeFile,
+  ink: inkTheme as ThemeFile,
+};
+
+/** Compatibility alias for the user-designed Twilight theme's original filename. */
+export function normalizeBuiltinThemeId(id: string): string {
+  return id === 'twilight' ? 'default' : id;
+}
+
+export function isBuiltinThemeId(id: string): boolean {
+  return Object.hasOwn(BUILTIN_THEMES, normalizeBuiltinThemeId(id));
+}
 
 /** Resolve the actual visual mode supported by a theme. */
 export function resolveThemeMode(

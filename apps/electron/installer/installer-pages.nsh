@@ -1386,8 +1386,8 @@ FunctionEnd
 Function InstallerGuiInit
     HideWindow
     ; A borderless popup. WS_MINIMIZEBOX keeps ShowWindow(SW_MINIMIZE) working
-    ; from the caption button; WS_THICKFRAME is added by the plugin purely so the
-    ; DWM draws a shadow, and is neutralised in its WM_NCHITTEST.
+    ; from the caption button; the plugin keeps WS_THICKFRAME for native caption
+    ; dragging while suppressing non-client geometry, painting and resize hits.
     System::Call 'user32::SetWindowLongW(p $HWNDPARENT, i -16, i 0x800A0000)'
     System::Call 'user32::GetDC(p $HWNDPARENT) p.s'
     Pop $0

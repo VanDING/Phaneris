@@ -104,12 +104,29 @@ function verifyNoLegacyBridge(resourcesDir) {
   })
 }
 
+function verifyBundledThemes(resourcesDir) {
+  const dir = join(resourcesDir, 'app', 'dist', 'resources', 'themes')
+  const expected = ['cyberpunk-2077.json', 'default.json', 'geek.json', 'ink.json']
+  check('exactly four canonical themes are bundled, with Twilight as default', dir, () => {
+    const files = readdirSync(dir).filter(file => file.endsWith('.json')).sort()
+    assert(JSON.stringify(files) === JSON.stringify(expected), `unexpected bundled themes: ${files.join(', ')}`)
+    for (const file of files) {
+      const shipped = JSON.parse(readFileSync(join(dir, file), 'utf8'))
+      const source = JSON.parse(readFileSync(join(ELECTRON_DIR, 'resources', 'themes', file), 'utf8'))
+      assert(JSON.stringify(shipped) === JSON.stringify(source), `${file} differs from the canonical resource`)
+    }
+    assert(JSON.parse(readFileSync(join(dir, 'default.json'), 'utf8')).name === 'Twilight', 'default theme is not Twilight')
+    results.themes = files
+  })
+}
+
 function verifyMac() {
   const dmgName = `Phaneris-${expectedVersion}-mac-${argArch}.dmg`
   const dmgPath = join(RELEASE_DIR, dmgName)
   const appPath = join(RELEASE_DIR, `mac${argArch === 'arm64' ? '-arm64' : ''}`, `${identity.product.name}.app`)
   const resourcesDir = join(appPath, 'Contents', 'Resources')
   verifyNoLegacyBridge(resourcesDir)
+  verifyBundledThemes(resourcesDir)
 
   // ---------------------------------------------------------------- artifacts ---
   check('DMG exists with the expected versioned name', dmgName, () => {
@@ -263,6 +280,7 @@ function verifyWindows() {
   const exePath = join(appPath, `${identity.product.name}.exe`)
   const resourcesDir = join(appPath, 'resources')
   verifyNoLegacyBridge(resourcesDir)
+  verifyBundledThemes(resourcesDir)
 
   // ---------------------------------------------------------------- artifacts ---
   if (!unpackedOnly) check('NSIS installer exists with the expected versioned name', installerName, () => {

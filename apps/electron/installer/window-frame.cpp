@@ -391,11 +391,19 @@ LRESULT CALLBACK HiddenPageProc(HWND window, UINT message, WPARAM wparam, LPARAM
 // fixed. A visible frame is the defect; the shadow was only ever a nicety.
 LRESULT CALLBACK FrameProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam,
                            UINT_PTR id, DWORD_PTR) {
-    if (message == WM_NCCALCSIZE && wparam) return 0;
+    // Both forms describe the proposed client rectangle. Leaving FALSE to the
+    // default procedure reintroduces the native sizing border during redraws.
+    if (message == WM_NCCALCSIZE) return 0;
+    // NSIS's dialog procedure can repaint its classic bevel even when the
+    // default window procedure's -1 paint suppression is requested. Approve
+    // activation here; only a minimized window needs the native icon handling.
+    if (message == WM_NCACTIVATE) {
+        return IsIconic(window) ? DefWindowProcW(window, message, wparam, -1) : TRUE;
+    }
+    if (message == WM_NCPAINT) return 0;
     if (message == WM_NCHITTEST) {
         const LRESULT hit = DefSubclassProc(window, message, wparam, lparam);
-        // WS_THICKFRAME is set for the DWM shadow, not to make the installer
-        // resizable; the overlay provides the drag area and the size is fixed.
+        // Keep native caption dragging without enabling fixed-page resizing.
         return hit >= HTLEFT && hit <= HTBOTTOMRIGHT ? HTCLIENT : hit;
     }
     if (message == WM_NCDESTROY) {
@@ -658,7 +666,10 @@ extern "C" __declspec(dllexport) HRESULT __cdecl InstallerApplyFrame(HWND window
     //
     // Idempotent: styles and attributes are set, not toggled, so the second call
     // from the InstFiles page's SHOW callback is harmless.
-    SetWindowLongW(window, GWL_STYLE, GetWindowLongW(window, GWL_STYLE) | WS_THICKFRAME);
+    SetWindowLongW(window, GWL_STYLE,
+                   (GetWindowLongW(window, GWL_STYLE) & ~WS_CAPTION) | WS_THICKFRAME);
+    SetWindowLongW(window, GWL_EXSTYLE, GetWindowLongW(window, GWL_EXSTYLE)
+                   & ~(WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_DLGMODALFRAME | WS_EX_STATICEDGE));
     const DWMNCRENDERINGPOLICY policy = DWMNCRP_ENABLED;
     DwmSetWindowAttribute(window, DWMWA_NCRENDERING_POLICY, &policy, sizeof(policy));
     // Both Windows 11 attributes are best effort and deliberately unchecked:

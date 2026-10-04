@@ -23,7 +23,7 @@ const SELECTED_STORAGE_KEY = 'playground-selected-component'
 const VARIANTS_SIDEBAR_KEY = 'playground-variants-sidebar-open'
 
 const FALLBACK_THEME_OPTIONS = [
-  { value: 'default', label: 'Default' },
+  { value: 'default', label: 'Twilight' },
 ] as const
 
 export function PlaygroundApp() {

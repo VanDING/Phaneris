@@ -1,0 +1,149 @@
+{
+  "installer": "E:/Phaneris/apps/electron/release/Phaneris-0.3.0-win-x64.exe",
+  "checks": [
+    {
+      "pass": true,
+      "name": "welcome",
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "pass": true,
+      "name": "nccalcsize-False",
+      "window": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "client": [
+        180,
+        100,
+        780,
+        700
+      ]
+    },
+    {
+      "pass": true,
+      "name": "nccalcsize-True",
+      "window": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "client": [
+        180,
+        100,
+        780,
+        700
+      ]
+    },
+    {
+      "pass": true,
+      "name": "inactive",
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "pass": true,
+      "name": "active",
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "pass": true,
+      "name": "ncpaint",
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "pass": true,
+      "name": "restored",
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "pass": true,
+      "name": "moved",
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    }
+  ],
+  "os": "Microsoft Windows NT 10.0.26300.0",
+  "theme": "dark",
+  "date": "2026-10-04T07:14:54.6165903Z",
+  "dpi": 96
+}

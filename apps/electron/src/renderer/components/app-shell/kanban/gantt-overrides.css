@@ -65,14 +65,27 @@
 .phaneris-gantt .wx-material-theme {
   --wx-background: var(--background);
   --wx-background-alt: var(--card);
+  --pg-gantt-rule: color-mix(in oklab, var(--foreground) 9%, transparent);
 
   /* -- chrome: inherit the host surface instead of Material's own greys ------- */
-  --wx-gantt-border-color: var(--border);
-  --wx-gantt-border: 1px solid var(--border);
+  --wx-gantt-border-color: var(--pg-gantt-rule);
+  /* SVAR's raster grid extracts the substring starting at '#', then passes it
+   * to canvas.fillStyle once at mount. OKLCH/color-mix/rgb all become invalid
+   * there and canvas retains black. An alpha hex keeps the grid quiet in every
+   * palette, including live light/dark switches, without changing cell geometry. */
+  --wx-gantt-border: 1px solid #80808026;
+  --wx-timescale-border: 1px solid var(--pg-gantt-rule);
+  --wx-timescale-shadow: none;
+  --wx-timescale-font: 500 11px var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --wx-timescale-font-color: var(--muted-foreground);
+  --wx-grid-body-font: 500 12px var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --wx-grid-body-font-color: var(--foreground);
+  --wx-grid-header-font: 600 12px var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --wx-grid-body-row-border: 1px solid transparent;
   --wx-gantt-icon-color: var(--muted-foreground);
   --wx-gantt-select-color: color-mix(in oklab, var(--foreground) 4%, transparent);
-  --wx-gantt-holiday-background: color-mix(in oklab, var(--foreground) 4%, transparent);
-  --wx-gantt-holiday-color: color-mix(in oklab, var(--foreground) 45%, transparent);
+  --wx-gantt-holiday-background: color-mix(in oklab, var(--foreground) 2%, transparent);
+  --wx-gantt-holiday-color: var(--muted-foreground);
   --wx-gantt-link-color: color-mix(in oklab, var(--foreground) 35%, transparent);
   --wx-gantt-link-color-hovered: color-mix(in oklab, var(--foreground) 60%, transparent);
   --wx-gantt-link-marker-background: var(--card);
@@ -114,6 +127,45 @@
  * what conveys the time scale across an otherwise empty stretch, and removing
  * them made the chart harder to read rather than calmer. */
 
+.phaneris-gantt .wx-scale {
+  border-bottom: 1px solid var(--pg-gantt-rule);
+  font-variant-numeric: tabular-nums;
+}
+
+.phaneris-gantt .wx-scale .wx-row:first-child .wx-cell {
+  color: var(--foreground);
+  font-weight: 600;
+  background: color-mix(in oklab, var(--foreground) 2%, var(--background));
+}
+
+/* Keep the library's pointer hit area; draw only one quiet divider through it. */
+.phaneris-gantt .wx-resizer {
+  background: var(--background);
+}
+
+.phaneris-gantt .wx-resizer::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 1px;
+  background: var(--pg-gantt-rule);
+  pointer-events: none;
+}
+
+.phaneris-gantt .wx-resizer:hover::after {
+  background: color-mix(in oklab, var(--accent) 45%, var(--pg-gantt-rule));
+}
+
+.phaneris-gantt .wx-row.wx-selected .pg-task-cell {
+  background: color-mix(in oklab, var(--accent) 7%, transparent);
+}
+
+.phaneris-gantt .pg-task-toggle:focus-visible,
+.phaneris-gantt .pg-task-header-menu:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
 /* ---------------------------------------------------------------------------
  * 3. Bar vocabulary (`TimelineBar` in GanttView.tsx)
  *
@@ -144,12 +196,12 @@
 /* Match the prototype's compact timeline bars inside each 48px two-line row. */
 .phaneris-gantt .pg-bar {
   width: calc(100% - 6px);
-  height: 25px;
-  margin: 11px 3px;
+  height: 28px;
+  margin: 10px 3px;
 }
 
 .phaneris-gantt .pg-bar.pg-bar--summary {
-  height: 29px;
+  height: 30px;
   margin-block: 9px;
 }
 
@@ -205,6 +257,7 @@
   padding: 0 8px 0 12px;
   color: var(--muted-foreground);
   font-size: 12px;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
@@ -281,7 +334,7 @@
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .phaneris-gantt .pg-task-title {
@@ -333,7 +386,7 @@
   gap: 4px;
   overflow: hidden;
   color: var(--muted-foreground);
-  font-size: 10.5px;
+  font-size: 11px;
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -352,7 +405,9 @@
 }
 
 .phaneris-gantt .pg-task-meta__date {
-  background: color-mix(in oklab, var(--foreground) 3%, var(--background));
+  padding-left: 0;
+  border-color: transparent;
+  background: transparent;
   color: var(--muted-foreground);
 }
 
@@ -411,8 +466,8 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
-  border-radius: 4px;
-  background: color-mix(in oklab, var(--pg-color, var(--accent)) 7%, var(--card));
+  border-radius: min(var(--theme-radius, 8px), 6px);
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 8%, var(--card));
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--border) 88%, transparent);
   transition: background-color 120ms ease, box-shadow 120ms ease;
 }
@@ -428,7 +483,7 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 3px;
+  width: 2px;
   background: var(--pg-color, var(--accent));
 }
 
@@ -438,7 +493,7 @@
  */
 .pg-fill {
   position: absolute;
-  left: 3px;
+  left: 2px;
   right: 0;
   bottom: 0;
   height: 2px;
@@ -457,7 +512,7 @@
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  font: 500 11.5px/1.2 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font: 500 12px/1.2 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   color: var(--foreground);
   white-space: nowrap;
   overflow: hidden;
@@ -468,15 +523,16 @@
 
 /* ---- parent range: same task-bar shape, filled by the parent's progress ---- */
 .pg-bar--summary {
-  border-radius: 5px;
-  background: color-mix(in oklab, var(--pg-color, var(--accent)) 8%, var(--card));
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pg-color, var(--accent)) 26%, var(--border));
+  container-type: inline-size;
+  border-radius: min(var(--theme-radius, 8px), 6px);
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 10%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pg-color, var(--accent)) 16%, var(--border));
 }
 
 .pg-summary-fill {
   position: absolute;
   inset: 0 auto 0 0;
-  background: color-mix(in oklab, var(--pg-color, var(--accent)) 38%, var(--card));
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 16%, var(--card));
   pointer-events: none;
 }
 
@@ -502,11 +558,28 @@
   transform: translateY(-50%);
   padding: 0 4px;
   border-radius: 4px;
-  background: color-mix(in oklab, var(--card) 88%, transparent);
+  background: var(--background);
   color: var(--foreground);
   font: 600 10.5px/1 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-variant-numeric: tabular-nums;
   pointer-events: none;
+}
+
+/* On a short range, reserve the available width for a complete percentage.
+ * The full title remains in the navigator and the native bar tooltip. */
+@container (max-width: 72px) {
+  .pg-summary-progress {
+    left: 0;
+    right: 0;
+    justify-content: center;
+    padding-inline: 0;
+    background: transparent;
+    font-size: 10px;
+  }
+
+  .pg-bar--summary .pg-bar-label {
+    display: none;
+  }
 }
 
 /* ---- milestone: a point in time, so a diamond, not a bar ---------------- */
@@ -528,7 +601,7 @@
 }
 
 .pg-bar--summary.pg-bar--hovered .pg-summary-fill {
-  background: color-mix(in oklab, var(--pg-color, var(--accent)) 48%, var(--card));
+  background: color-mix(in oklab, var(--pg-color, var(--accent)) 22%, var(--card));
 }
 
 .pg-bar--milestone.pg-bar--hovered::before {

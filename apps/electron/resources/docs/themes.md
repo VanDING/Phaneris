@@ -4,24 +4,27 @@ This guide explains how to customize the visual theme of Phaneris.
 
 ## Overview
 
-Phaneris uses a semantic-token theme engine with app-level preferences and per-workspace theme selection. The application contains one immutable built-in theme, `default`. Every other theme is a user-owned JSON file.
+Phaneris uses a semantic-token theme engine with app-level preferences and per-workspace theme selection. The application bundles four read-only themes, with Twilight as the default. Additional custom themes are user-owned JSON files.
 
-### Built-in Theme
+### Built-in Themes
 
 | ID | Modes | Character |
 |----|-------|-----------|
-| `default` | Light + dark | Restrained neutral baseline |
+| `default` | Light + dark | Twilight: white canvas, near-black ink, brand purple |
+| `geek` | Dark | Phosphor green terminal |
+| `cyberpunk-2077` | Dark | Cyan and magenta on deep navy |
+| `ink` | Light + dark | Warm paper and restrained ink |
 
 ### Theme Hierarchy
 
 1. **App selection**: Selected in Settings → Appearance → Default Theme
 2. **Workspace selection**: Optional per-workspace theme ID in Settings → Appearance → Workspace Themes
-3. **Built-in source**: The reserved `default` theme
+3. **Built-in source**: Twilight, Geek, Cyberpunk 2077 and Ink
 4. **User source**: `~/.phaneris/themes/{id}.json`
 
 Workspaces without a selection override inherit the app selection. User theme files may be partial; omitted visual tokens inherit from `default`.
 
-The themes directory is never seeded, overwritten, reset, or cleaned by the application. Files copied there by older versions remain ordinary user themes. The deprecated `~/.phaneris/theme.json` file is migrated once to `themes/migrated-custom.json` (or a non-conflicting suffixed name), while the original file is retained and no longer participates in rendering.
+The themes directory is never seeded, overwritten, reset, or cleaned by the application. Built-in IDs resolve to the bundled definitions; older files with those IDs stay on disk without creating duplicate options. Other files remain ordinary custom themes. The `twilight` alias resolves to Twilight; in workspace settings it also allows an explicit Twilight selection independent of the app selection. The deprecated `~/.phaneris/theme.json` file is migrated once to `themes/migrated-custom.json` (or a non-conflicting suffixed name), while the original file is retained and no longer participates in rendering.
 
 App-level selection preferences are stored together in `~/.phaneris/config.json` as `themeMode`, `colorTheme`, and `themeFont`. A versioned renderer cache is used only to avoid a startup flash; `config.json` remains authoritative.
 

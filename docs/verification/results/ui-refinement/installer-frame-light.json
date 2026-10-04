@@ -1,0 +1,149 @@
+{
+  "dpi": 96,
+  "checks": [
+    {
+      "name": "welcome",
+      "pass": true,
+      "edgePixels": [
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nccalcsize-False",
+      "pass": true,
+      "client": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "window": [
+        180,
+        100,
+        780,
+        700
+      ]
+    },
+    {
+      "name": "nccalcsize-True",
+      "pass": true,
+      "client": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "window": [
+        180,
+        100,
+        780,
+        700
+      ]
+    },
+    {
+      "name": "inactive",
+      "pass": true,
+      "edgePixels": [
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "active",
+      "pass": true,
+      "edgePixels": [
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "ncpaint",
+      "pass": true,
+      "edgePixels": [
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "restored",
+      "pass": true,
+      "edgePixels": [
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "moved",
+      "pass": true,
+      "edgePixels": [
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF",
+        "FFFFFFFF"
+      ],
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    }
+  ],
+  "date": "2026-10-04T06:59:34.6864764Z",
+  "installer": "apps/electron/installer/probe-installer-nsh.exe",
+  "os": "Microsoft Windows NT 10.0.26300.0",
+  "theme": "light"
+}

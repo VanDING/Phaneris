@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   BACKGROUND_HEX,
+  BUILTIN_THEMES,
   DEFAULT_THEME_FILE,
   resolveTheme,
   resolveThemeMode,
@@ -152,14 +153,25 @@ describe('theme resolution', () => {
     expect(resourceTheme).toEqual(DEFAULT_THEME_FILE);
   });
 
+  test('bundles exactly the four canonical, valid themes', () => {
+    expect(Object.keys(BUILTIN_THEMES)).toEqual(['default', 'geek', 'cyberpunk-2077', 'ink']);
+    for (const [id, theme] of Object.entries(BUILTIN_THEMES)) {
+      const path = resolve(import.meta.dir, `../../../../../apps/electron/resources/themes/${id}.json`);
+      expect(JSON.parse(readFileSync(path, 'utf8'))).toEqual(theme);
+      expect(validateThemeContent(JSON.stringify(theme)).valid).toBe(true);
+    }
+    expect(DEFAULT_THEME_FILE.name).toBe('Twilight');
+    expect(DEFAULT_THEME_FILE.accent).toBe('oklch(0.488 0.275 280.3)');
+    expect(DEFAULT_THEME_FILE.dark?.accent).toBe('oklch(0.626 0.221 291.7)');
+  });
+
   test('keeps Electron startup backgrounds aligned with the Default CSS colors', () => {
     // Widen the theme-derived strings so this toEqual overload does not demand
     // the literal types produced by BACKGROUND_HEX's as-const assertion.
     const actual: Record<'light' | 'dark', string> = BACKGROUND_HEX;
-    expect(actual).toEqual({
-      light: DEFAULT_THEME_FILE.background!,
-      dark: DEFAULT_THEME_FILE.dark!.background!,
-    });
+    // BrowserWindow accepts hex; the supplied Twilight palette uses OKLCH.
+    // These are the sRGB conversions of its white and oklch(0.14 0.012 285).
+    expect(actual).toEqual({ light: '#FFFFFF', dark: '#09080E' });
   });
 
   test('keeps static CSS palettes, typography and material tokens synchronized with Default', () => {

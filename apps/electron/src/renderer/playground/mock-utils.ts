@@ -17,6 +17,7 @@ import type {
 } from '@phaneris/shared/work-items/browser'
 import type { StatusConfig } from '@phaneris/shared/statuses'
 import type { LoadedProject } from '@phaneris/shared/projects'
+import { BUILTIN_THEMES, normalizeBuiltinThemeId } from '@config/theme'
 
 // ============================================================================
 // Messaging mock state + control handle
@@ -349,6 +350,14 @@ export const playgroundAllowListHandle: PlaygroundAllowListHandle = {
 // ============================================================================
 
 export const mockElectronAPI = {
+  loadPresetThemes: async () => Object.entries(BUILTIN_THEMES).map(([id, theme]) => ({
+    id, name: theme.name, description: theme.description, author: theme.author, supportedModes: theme.supportedModes,
+  })),
+  loadPresetTheme: async (id: string) => {
+    const resolved = normalizeBuiltinThemeId(id)
+    const theme = Object.hasOwn(BUILTIN_THEMES, resolved) ? BUILTIN_THEMES[resolved] : undefined
+    return theme ? { id: resolved, path: `builtin:${resolved}`, theme } : null
+  },
   isDebugMode: async () => true,
 
   // Called at module-load time by SessionFilesSection.tsx (and others) to

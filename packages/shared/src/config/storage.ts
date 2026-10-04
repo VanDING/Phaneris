@@ -1368,7 +1368,9 @@ export function getAllSessionDrafts(): Record<string, SessionDraft> {
 // ============================================
 
 import {
-  DEFAULT_THEME_FILE,
+  BUILTIN_THEMES,
+  isBuiltinThemeId,
+  normalizeBuiltinThemeId,
   DEFAULT_THEME_PREFERENCES,
   isValidUserThemeId,
   resolveTheme,
@@ -1511,17 +1513,17 @@ export function ensurePresetThemes(): void {
 }
 
 /**
- * List valid user themes without resolving heavyweight background assets.
+ * List read-only built-ins followed by valid user themes, without loading images.
  */
 export function loadPresetThemes(): ThemeSummary[] {
-  ensureUserThemesDir();
   const themes: ThemeSummary[] = [];
 
   try {
+    ensureUserThemesDir();
     const themesRoot = realpathSync(APP_THEMES_DIR);
     for (const file of readdirSync(APP_THEMES_DIR).filter((entry) => entry.endsWith('.json'))) {
       const id = file.slice(0, -'.json'.length);
-      if (!isValidUserThemeId(id)) continue;
+      if (!isValidUserThemeId(id) || isBuiltinThemeId(id)) continue;
       const path = join(APP_THEMES_DIR, file);
       try {
         const realThemePath = realpathSync(path);
@@ -1540,10 +1542,14 @@ export function loadPresetThemes(): ThemeSummary[] {
       }
     }
   } catch {
-    return [];
+    // Built-ins remain available even if the user directory cannot be read.
   }
 
-  return themes.sort((a, b) => a.name.localeCompare(b.name));
+  const builtins = Object.entries(BUILTIN_THEMES).map(([id, theme]) => ({
+    id, name: theme.name, description: theme.description,
+    author: theme.author, supportedModes: theme.supportedModes,
+  }));
+  return [...builtins, ...themes.sort((a, b) => a.name.localeCompare(b.name))];
 }
 
 /**
@@ -1622,8 +1628,9 @@ function resolveThemeBackgroundImage(theme: ThemeFile, themePath: string): Theme
  * @param id - Theme ID (filename without .json)
  */
 export function loadPresetTheme(id: string): PresetTheme | null {
-  if (id === 'default') {
-    return { id, path: 'builtin:default', theme: DEFAULT_THEME_FILE };
+  const builtinId = normalizeBuiltinThemeId(id);
+  if (isBuiltinThemeId(builtinId)) {
+    return { id: builtinId, path: `builtin:${builtinId}`, theme: BUILTIN_THEMES[builtinId]! };
   }
   if (!isValidUserThemeId(id)) return null;
 
@@ -1669,6 +1676,7 @@ export function resetPresetTheme(_id: string): boolean {
  * Returns 'default' if not set.
  */
 function normalizeThemeSelectionId(value: unknown): string {
+  if (typeof value === 'string' && isBuiltinThemeId(value)) return normalizeBuiltinThemeId(value);
   if (value === 'default') return 'default';
   return typeof value === 'string' && isValidUserThemeId(value) ? value : 'default';
 }

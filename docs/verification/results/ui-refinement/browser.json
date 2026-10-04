@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-04T07:07:20.150Z",
+  "browser": "154.0.4258.53",
+  "checks": [
+    {
+      "name": "four built-in themes are available through the renderer API",
+      "status": "pass",
+      "observation": [
+        "Twilight",
+        "Geek",
+        "Cyberpunk 2077",
+        "Ink"
+      ]
+    },
+    {
+      "name": "default/light: quiet grid and visible progress",
+      "status": "pass",
+      "observation": {
+        "dark": false,
+        "gridSize": [
+          40,
+          48
+        ],
+        "gridMaxAlpha": 38,
+        "title": "Quarterly rollout",
+        "labelColor": "oklch(0.18 0.012 285)",
+        "rowHeight": 48,
+        "summaryProgress": "65%",
+        "headerColor": "oklch(1 0 0)"
+      }
+    },
+    {
+      "name": "default/dark: quiet grid and visible progress",
+      "status": "pass",
+      "observation": {
+        "dark": true,
+        "gridSize": [
+          40,
+          48
+        ],
+        "gridMaxAlpha": 38,
+        "title": "Quarterly rollout",
+        "labelColor": "oklch(0.96 0.005 285)",
+        "rowHeight": 48,
+        "summaryProgress": "65%",
+        "headerColor": "oklch(0.14 0.012 285)"
+      }
+    },
+    {
+      "name": "geek/dark: quiet grid and visible progress",
+      "status": "pass",
+      "observation": {
+        "dark": true,
+        "gridSize": [
+          40,
+          48
+        ],
+        "gridMaxAlpha": 38,
+        "title": "Quarterly rollout",
+        "labelColor": "rgb(232, 236, 234)",
+        "rowHeight": 48,
+        "summaryProgress": "65%",
+        "headerColor": "rgb(6, 10, 6)"
+      }
+    },
+    {
+      "name": "cyberpunk-2077/dark: quiet grid and visible progress",
+      "status": "pass",
+      "observation": {
+        "dark": true,
+        "gridSize": [
+          40,
+          48
+        ],
+        "gridMaxAlpha": 38,
+        "title": "Quarterly rollout",
+        "labelColor": "rgb(0, 255, 240)",
+        "rowHeight": 48,
+        "summaryProgress": "65%",
+        "headerColor": "rgb(11, 12, 16)"
+      }
+    },
+    {
+      "name": "ink/light: quiet grid and visible progress",
+      "status": "pass",
+      "observation": {
+        "dark": false,
+        "gridSize": [
+          40,
+          48
+        ],
+        "gridMaxAlpha": 38,
+        "title": "Quarterly rollout",
+        "labelColor": "rgb(35, 31, 26)",
+        "rowHeight": 48,
+        "summaryProgress": "65%",
+        "headerColor": "rgb(247, 245, 240)"
+      }
+    },
+    {
+      "name": "ink/dark: quiet grid and visible progress",
+      "status": "pass",
+      "observation": {
+        "dark": true,
+        "gridSize": [
+          40,
+          48
+        ],
+        "gridMaxAlpha": 38,
+        "title": "Quarterly rollout",
+        "labelColor": "rgb(237, 231, 218)",
+        "rowHeight": 48,
+        "summaryProgress": "65%",
+        "headerColor": "rgb(16, 14, 11)"
+      }
+    },
+    {
+      "name": "narrow Gantt keeps its task navigation and timeline visible",
+      "status": "pass",
+      "observation": {
+        "host": 835.5,
+        "table": 280,
+        "chart": 549
+      }
+    }
+  ],
+  "screenshots": [
+    "gantt-default-light.png",
+    "gantt-default-dark.png",
+    "gantt-geek-dark.png",
+    "gantt-cyberpunk-2077-dark.png",
+    "gantt-ink-light.png",
+    "gantt-ink-dark.png",
+    "gantt-narrow.png"
+  ]
+}

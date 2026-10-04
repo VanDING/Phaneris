@@ -1,0 +1,149 @@
+{
+  "theme": "dark",
+  "dpi": 96,
+  "date": "2026-10-04T06:59:44.1497302Z",
+  "checks": [
+    {
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "name": "welcome",
+      "pass": true,
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "client": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "window": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "name": "nccalcsize-False",
+      "pass": true
+    },
+    {
+      "client": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "window": [
+        180,
+        100,
+        780,
+        700
+      ],
+      "name": "nccalcsize-True",
+      "pass": true
+    },
+    {
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "name": "inactive",
+      "pass": true,
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "name": "active",
+      "pass": true,
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "name": "ncpaint",
+      "pass": true,
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "name": "restored",
+      "pass": true,
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    },
+    {
+      "edgePixels": [
+        "FF151517",
+        "FF151517",
+        "FF151517",
+        "FF151517"
+      ],
+      "name": "moved",
+      "pass": true,
+      "geometry": [
+        600,
+        600,
+        600,
+        600,
+        0,
+        0
+      ]
+    }
+  ],
+  "installer": "apps/electron/installer/probe-installer-nsh.exe",
+  "os": "Microsoft Windows NT 10.0.26300.0"
+}
