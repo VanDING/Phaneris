@@ -1,8 +1,8 @@
 {
-  "date": "2026-09-25T06:35:56.857Z",
+  "date": "2026-10-04T15:43:00.819Z",
   "arch": "x64",
   "expected": {
-    "version": "0.2.2",
+    "version": "0.3.0",
     "appId": "io.github.vanding.phaneris",
     "productName": "Phaneris",
     "scheme": "phaneris",
@@ -10,8 +10,25 @@
   },
   "checks": [
     {
+      "name": "legacy bridge bundle is absent",
+      "observation": [
+        "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app/Contents/Resources/bridge-mcp-server/index.js",
+        "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app/Contents/Resources/resources/bridge-mcp-server/index.js",
+        "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app/Contents/Resources/app/resources/bridge-mcp-server/index.js",
+        "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app/Contents/Resources/app/dist/resources/bridge-mcp-server/index.js"
+      ],
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "exactly four canonical themes are bundled, with Twilight as default",
+      "observation": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app/Contents/Resources/app/dist/resources/themes",
+      "status": "pass",
+      "detail": null
+    },
+    {
       "name": "DMG exists with the expected versioned name",
-      "observation": "Phaneris-0.2.2-mac-x64.dmg",
+      "observation": "Phaneris-0.3.0-mac-x64.dmg",
       "status": "pass",
       "detail": null
     },
@@ -64,14 +81,22 @@
       "detail": null
     }
   ],
+  "scope": "full packaged artifacts",
+  "legacyBridgeBundle": "absent",
+  "themes": [
+    "cyberpunk-2077.json",
+    "default.json",
+    "geek.json",
+    "ink.json"
+  ],
   "dmg": {
-    "path": "/Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.2.2-mac-x64.dmg",
-    "bytes": 207480148
+    "path": "/Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.3.0-mac-x64.dmg",
+    "bytes": 215246740
   },
   "app": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
   "identity": {
     "bundleId": "io.github.vanding.phaneris",
-    "version": "0.2.2",
+    "version": "0.3.0",
     "name": "Phaneris"
   },
   "schemes": [
@@ -82,6 +107,8 @@
   "resources": [
     "bundled bun runtime",
     "pi agent server",
+    "codemode worker",
+    "codemode WASM",
     "whatsapp worker",
     "cli document tools (bin)",
     "cli document tools (scripts)",
