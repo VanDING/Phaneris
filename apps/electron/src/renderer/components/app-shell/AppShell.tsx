@@ -1061,29 +1061,32 @@ function AppShellContent({
 
   // Guarded permission mode is offered while the decision layer and its `guardedMode` feature
   // are on, on the server this workspace talks to. Refreshed on workspace switch and when the AI
-  // settings page saves decision model settings.
+  // settings page saves decision model settings, connections change or the window regains focus.
   const guardedModeAvailable = useAtomValue(guardedModeAvailableAtom)
   const setGuardedModeAvailable = useSetAtom(guardedModeAvailableAtom)
   React.useEffect(() => {
     if (!activeWorkspaceId || typeof window.electronAPI?.getDecisionLayerStatus !== 'function') return
     let cancelled = false
+    let revision = 0
     const refresh = () => {
+      const requestedRevision = ++revision
       window.electronAPI.getDecisionLayerStatus().then((status) => {
         // Offered only when the check can actually run: switched on and a key (or keyless provider) to call it with.
-        const { settings } = status
-        const preset = status.presets.find(p => p.id === settings.provider)
-        const hasKey = !!settings.connectionSlug || status.providersWithKey.includes(settings.provider) || preset?.requiresKey === false
-        if (!cancelled) setGuardedModeAvailable(settings.enabled && settings.features.guardedMode === true && hasKey)
+        if (!cancelled && requestedRevision === revision) setGuardedModeAvailable(status.guardedMode?.available === true)
       }).catch((err) => {
         console.error('[AppShell] Failed to load decision model status:', err)
-        if (!cancelled) setGuardedModeAvailable(false)
+        if (!cancelled && requestedRevision === revision) setGuardedModeAvailable(false)
       })
     }
     refresh()
+    const unsubscribeConnections = window.electronAPI.onLlmConnectionsChanged?.(refresh)
     window.addEventListener(DECISION_SETTINGS_CHANGED_EVENT, refresh)
+    window.addEventListener('focus', refresh)
     return () => {
       cancelled = true
+      unsubscribeConnections?.()
       window.removeEventListener(DECISION_SETTINGS_CHANGED_EVENT, refresh)
+      window.removeEventListener('focus', refresh)
     }
   }, [activeWorkspaceId, setGuardedModeAvailable])
 
@@ -2668,7 +2671,7 @@ function AppShellContent({
                               variant="ghost"
                               onClick={() => handleNewChat()}
                               aria-label={t("session.newSession")}
-                              className="sidebar-new-session w-full justify-start gap-2 py-[7px] px-2 text-[13px] font-normal rounded-md shadow-minimal bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                              className="sidebar-new-session w-full justify-start gap-2 py-[7px] px-2 text-[13px] font-normal rounded-md shadow-minimal bg-card text-card-foreground hover:bg-card"
                               data-tutorial="new-chat-button"
                             >
                               <SquarePenRounded className="h-3.5 w-3.5 shrink-0" />

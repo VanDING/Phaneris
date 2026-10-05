@@ -48,7 +48,10 @@ export function isPathWithinDirectoryForCreation(targetPath: string, baseDir: st
   const realBase = realpathIfExists(resolvedBase);
 
   if (existsSync(resolvedTarget)) {
-    return isPathWithinDirectory(resolvedTarget, realBase);
+    // Keep both lexical paths in the same namespace before canonicalizing.
+    // On macOS, /tmp aliases /private/tmp; comparing only the base's real path
+    // would reject a legitimate existing descendant reached through /tmp.
+    return isPathWithinDirectory(resolvedTarget, resolvedBase);
   }
 
   let current = dirname(resolvedTarget);

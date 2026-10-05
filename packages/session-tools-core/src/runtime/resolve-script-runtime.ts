@@ -1,11 +1,13 @@
-import { existsSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
-import { isAbsolute, join, resolve } from 'node:path';
+import { existsSync, mkdirSync, realpathSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { homedir } from 'node:os';
+import { createSanitizedEnv } from './sandbox-env.ts';
 
 export type ScriptRuntimeLanguage = 'python3' | 'node' | 'bun';
 
 /**
- * Python patch the bundled uv resolves for every PEP 723 tool script.
+ * Python patch the bundled uv prepares for script tools and CLI wrappers.
  *
  * Pinned to an exact patch, not to `3.12`. uv prefers an already-installed
  * managed interpreter over a newer download, so `--python 3.12` silently keeps
@@ -23,7 +25,11 @@ export const TOOL_PYTHON_VERSION = '3.12.15';
 export interface ResolvedScriptRuntime {
   command: string;
   argsPrefix: string[];
-  source: 'env' | 'bundled' | 'path';
+  source: 'env' | 'bundled' | 'path' | 'electron' | 'managed';
+  /** Per-child environment changes; never applied to the host process. */
+  envPatch?: NodeJS.ProcessEnv;
+  /** Runtime assets mounted read-only by Linux isolation. */
+  readablePaths?: string[];
 }
 
 export interface ResolveScriptRuntimeContext {
@@ -238,6 +244,16 @@ export function resolveScriptRuntime(
       return { command: bundledNode, argsPrefix: [], source: 'bundled' };
     }
 
+    // Electron ships a real Node runtime. The host forwards this hint to its
+    // server subprocess, where process.execPath may instead be Bun.
+    const electron = process.env.PHANERIS_ELECTRON_EXECUTABLE
+      || (process.versions.electron ? process.execPath : undefined);
+    if (electron) {
+      const command = validatePackagedEnvRuntime(electron, 'Electron/Node');
+      const bundle = process.platform === 'darwin' ? resolve(command, '../../..') : dirname(command);
+      return { command, argsPrefix: [], source: 'electron', envPatch: { ELECTRON_RUN_AS_NODE: '1' }, readablePaths: [bundle] };
+    }
+
     if (!isPackaged) {
       const nodePath = resolveBinaryOnPath('node');
       if (nodePath) {
@@ -276,4 +292,66 @@ export function resolveScriptRuntime(
       ? 'Bun runtime unavailable in packaged app: bun was not found in env or bundled resources.'
       : 'Bun runtime unavailable: configure PHANERIS_BUN or install bun on PATH.'
   );
+}
+
+const pythonPreparations = new Map<string, Promise<ResolvedScriptRuntime>>();
+
+/** Run only fixed runtime-management commands outside the script sandbox. */
+async function runRuntimeSetup(command: string, args: string[], env: NodeJS.ProcessEnv): Promise<{ code: number | null; stdout: string; stderr: string }> {
+  return new Promise((resolveResult, reject) => {
+    const child = spawn(command, args, { env, cwd: env.UV_PYTHON_INSTALL_DIR, stdio: ['ignore', 'pipe', 'pipe'], detached: process.platform !== 'win32' });
+    let stdout = '', stderr = '';
+    const timer = setTimeout(() => {
+      try { if (process.platform !== 'win32' && child.pid) process.kill(-child.pid, 'SIGKILL'); else child.kill('SIGKILL'); }
+      catch { child.kill('SIGKILL'); }
+      reject(new Error('Runtime preparation timed out. Retry with a working connection or a previously prepared Python runtime.'));
+    }, 120_000);
+    child.stdout.on('data', (chunk: Buffer) => { stdout = (stdout + chunk.toString()).slice(-16_000); });
+    child.stderr.on('data', (chunk: Buffer) => { stderr = (stderr + chunk.toString()).slice(-16_000); });
+    child.on('error', error => { clearTimeout(timer); reject(error); });
+    child.on('close', code => { clearTimeout(timer); resolveResult({ code, stdout, stderr }); });
+  });
+}
+
+/**
+ * Prepare the pinned interpreter before isolation, then execute Python directly.
+ * No user script, dependency metadata, or project configuration reaches uv.
+ * The application-owned preparation is shared by concurrent calls.
+ */
+export async function prepareScriptRuntime(language: ScriptRuntimeLanguage, ctx?: ResolveScriptRuntimeContext): Promise<ResolvedScriptRuntime> {
+  const runtime = resolveScriptRuntime(language, ctx);
+  if (language !== 'python3') {
+    const command = existsSync(runtime.command) ? realpathSync(runtime.command) : resolveBinaryOnPath(runtime.command);
+    if (!command) throw new Error(`${language} runtime could not be located: ${runtime.command}`);
+    return { ...runtime, command, readablePaths: runtime.readablePaths ?? [dirname(command)] };
+  }
+  const configRoot = process.env.PHANERIS_CONFIG_DIR || join(homedir(), '.phaneris');
+  const runtimeRoot = resolve(process.env.PHANERIS_SCRIPT_RUNTIME_DIR || join(configRoot, 'runtimes'));
+  const installDir = join(runtimeRoot, getPlatformRuntimeDir(), `python-${TOOL_PYTHON_VERSION}`);
+  const pending = pythonPreparations.get(installDir);
+  if (pending) return pending;
+  const preparation = (async (): Promise<ResolvedScriptRuntime> => {
+    const cacheDir = join(runtimeRoot, 'uv-cache'), tempDir = join(runtimeRoot, 'tmp');
+    for (const path of [installDir, cacheDir, tempDir]) mkdirSync(path, { recursive: true });
+    const env = createSanitizedEnv();
+    Object.assign(env, { UV_PYTHON_INSTALL_DIR: installDir, UV_CACHE_DIR: cacheDir, TMPDIR: tempDir, TMP: tempDir, TEMP: tempDir });
+    const findArgs = ['python', 'find', '--managed-python', '--no-python-downloads', '--no-project', '--no-config', '--offline', TOOL_PYTHON_VERSION];
+    let found = await runRuntimeSetup(runtime.command, findArgs, env);
+    if (found.code !== 0) {
+      const installed = await runRuntimeSetup(runtime.command, ['python', 'install', '--install-dir', installDir, '--no-bin', '--no-registry', '--no-config', TOOL_PYTHON_VERSION], env);
+      if (installed.code !== 0) throw new Error(installed.stderr.trim() || 'Could not prepare the pinned Python interpreter.');
+      found = await runRuntimeSetup(runtime.command, findArgs, env);
+    }
+    if (found.code !== 0) throw new Error(found.stderr.trim() || 'Prepared Python interpreter could not be located.');
+    const command = realpathSync(found.stdout.trim());
+    const boundary = relative(realpathSync(installDir), command);
+    if (boundary.startsWith('..') || isAbsolute(boundary)) throw new Error('uv returned an interpreter outside the application runtime directory.');
+    const version = await runRuntimeSetup(command, ['-I', '--version'], env);
+    if (version.code !== 0 || version.stdout.trim() !== `Python ${TOOL_PYTHON_VERSION}`) throw new Error('Prepared Python does not match the pinned runtime version.');
+    return { command, argsPrefix: ['-I', '-B'], source: 'managed', readablePaths: [dirname(dirname(command))] };
+  })();
+  pythonPreparations.set(installDir, preparation);
+  try { return await preparation; }
+  catch (error) { throw new Error(`Python runtime not ready (${TOOL_PYTHON_VERSION}): ${error instanceof Error ? error.message : String(error)} Scripts have not run; sandbox restrictions remain enforced.`); }
+  finally { pythonPreparations.delete(installDir); }
 }

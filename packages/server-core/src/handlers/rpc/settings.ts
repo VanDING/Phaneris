@@ -39,6 +39,8 @@ export const HANDLED_CHANNELS = [
   RPC_CHANNELS.sessions.SET_MODEL,
   RPC_CHANNELS.settings.GET_DEFAULT_THINKING_LEVEL,
   RPC_CHANNELS.settings.SET_DEFAULT_THINKING_LEVEL,
+  RPC_CHANNELS.settings.GET_IMAGE_GENERATION_SETTINGS,
+  RPC_CHANNELS.settings.SET_IMAGE_GENERATION_SETTINGS,
   RPC_CHANNELS.tools.GET_BROWSER_TOOL_ENABLED,
   RPC_CHANNELS.tools.SET_BROWSER_TOOL_ENABLED,
   RPC_CHANNELS.settings.GET_NETWORK_PROXY,
@@ -50,6 +52,22 @@ export const HANDLED_CHANNELS = [
 ] as const
 
 export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): void {
+  server.handle(RPC_CHANNELS.settings.GET_IMAGE_GENERATION_SETTINGS, async () => {
+    const { getImageGenerationStatus } = await import('../../services/image-generation');
+    return getImageGenerationStatus();
+  });
+  server.handle(RPC_CHANNELS.settings.SET_IMAGE_GENERATION_SETTINGS, async (_ctx, input: unknown) => {
+    const { normalizeImageGenerationSettings, getLlmConnection, supportsNativeImageGeneration, setImageGenerationSettings } = await import('@phaneris/shared/config');
+    const { getImageGenerationStatus, getImageModels } = await import('../../services/image-generation');
+    const settings = normalizeImageGenerationSettings(input);
+    if (settings.connectionSlug) {
+      const connection = getLlmConnection(settings.connectionSlug);
+      if (!connection || !supportsNativeImageGeneration(connection)) throw new Error('Select an OpenAI or OpenRouter API-key connection for image generation.');
+      if (settings.model && !(await getImageModels(connection)).some(model => model.id === settings.model)) throw new Error('Select an image generation model supported by this connection.');
+    } else if (settings.model) throw new Error('Choose an image connection before overriding its model.');
+    setImageGenerationSettings(settings);
+    return getImageGenerationStatus();
+  });
   // ============================================================
   // Settings - Default Thinking Level (App-Level)
   // ============================================================
@@ -168,6 +186,16 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
       // Update the setting in defaults
       config.defaults = config.defaults || {}
       ;(config.defaults as Record<string, unknown>)[key] = normalizedValue
+    }
+
+    // A connection and its model are one configuration. Clear an incompatible
+    // model in the same write, including when returning to the app default.
+    if (key === 'defaultLlmConnection' && config.defaults?.model) {
+      const { getDefaultLlmConnection, getLlmConnection, getModelsForProviderType } = await import('@phaneris/shared/config');
+      const slug = typeof normalizedValue === 'string' ? normalizedValue : getDefaultLlmConnection();
+      const connection = slug ? getLlmConnection(slug) : null;
+      const models = connection?.models?.length ? connection.models : connection ? getModelsForProviderType(connection.providerType, connection.piAuthProvider) : [];
+      if (!models.some(model => (typeof model === 'string' ? model : model.id) === config.defaults!.model)) delete config.defaults.model;
     }
 
     // Save the config

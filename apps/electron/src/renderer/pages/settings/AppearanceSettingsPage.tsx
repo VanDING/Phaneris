@@ -303,7 +303,7 @@ export default function AppearanceSettingsPage() {
       })),
   ], [presetThemes, t])
 
-  // Workspace inheritance names the app's selected theme, including Twilight.
+  // Workspace inheritance names the app's selected theme, including Default.
   const appDefaultLabel = useMemo(() => {
     if (colorTheme === 'default') return DEFAULT_THEME_FILE.name
     const preset = presetThemes.find(t => t.id === colorTheme)

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Default · Phaneris</title>
+  <style>
+    :root { color-scheme:light; --page:#fff; --ink:#20232c; --sub:#606775; --edge:#e3e6ed; --selected:oklch(0.488 0.275 280.3); }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--page); color:var(--ink); font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header,main { max-width:1280px; margin:auto; padding:32px; }
+    header { padding-bottom:18px; }
+    h1 { margin:0; font-size:28px; letter-spacing:-.02em; }
+    h2 { font-size:17px; margin:0 0 12px; }
+    p { color:var(--sub); margin:10px 0; }
+    a { color:var(--selected); text-underline-offset:3px; }
+    nav { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    button { font:inherit; border:1px solid var(--edge); color:var(--ink); background:var(--page); border-radius:6px; padding:7px 16px; cursor:pointer; }
+    button[aria-pressed="true"] { background:var(--ink); color:var(--page); border-color:var(--ink); }
+    button:focus-visible { outline:2px solid var(--selected); outline-offset:3px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+    .image { display:block; width:100%; height:auto; border:1px solid var(--edge); border-radius:9px; }
+    .wide { grid-column:1/-1; max-width:1040px; margin:auto; width:100%; }
+    figure { margin:0; }
+    figcaption { margin:8px 0 0; font-size:13px; color:var(--sub); }
+    .detail { margin-top:32px; }
+    [hidden] { display:none !important; }
+    body.dark { color-scheme:dark; --page:#17191e; --ink:#eef0f6; --sub:#aab1c1; --edge:#343946; --selected:oklch(0.626 0.221 291.7); }
+    @media(max-width:720px) { header,main { padding:22px; } .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Default</h1>
+    <p>纯白纸面、墨色文字、灰白用户消息。已按用户授权替换内置 Default，安装新版客户端即可使用。</p>
+    <p><a href="default-preview.json" download>下载主题 JSON</a> · <a href="README.md">测试说明</a> · <a href="../ai-settings-replan.md">AI 设置规划</a></p>
+    <nav aria-label="主题效果预览">
+      <button type="button" data-view="chat" aria-pressed="true">对话气泡</button>
+      <button type="button" data-view="compare" aria-pressed="false">修改前 / 新版对照</button>
+      <button type="button" data-view="light" aria-pressed="false">浅色</button>
+      <button type="button" data-view="dark" aria-pressed="false">深色</button>
+      <button type="button" data-view="controls" aria-pressed="false">公共控件</button>
+    </nav>
+    <p>截图使用真实消息组件和设置页，数据为示例；对照保留修改前的 Default 效果。</p>
+  </header>
+  <main>
+    <div class="grid" data-panel="chat">
+      <figure><h2>浅色对话 · 灰白气泡</h2><a href="../../verification/results/default-purple-sidebar/chat-light.png"><img class="image" src="../../verification/results/default-purple-sidebar/chat-light.png" alt="实际用户消息组件的灰白气泡"></a><figcaption>中性灰白 #F3F3F3，不带紫色。</figcaption></figure>
+      <figure><h2>深色对话 · 中性深灰</h2><a href="../../verification/results/default-purple-sidebar/chat-dark.png"><img class="image" src="../../verification/results/default-purple-sidebar/chat-dark.png" alt="实际用户消息组件的中性深灰气泡"></a><figcaption>对应中性深灰 #2B2B2B，保持柔和、可读。</figcaption></figure>
+    </div>
+    <div class="grid" data-panel="compare" hidden>
+      <figure><h2>修改前 Default</h2><a href="previews/ai-current-light.png"><img class="image" src="previews/ai-current-light.png" alt="修改前 Default 的灰色卡片"></a></figure>
+      <figure><h2>新版 Default</h2><a href="../../verification/results/default-purple-sidebar/ai-light.png"><img class="image" src="../../verification/results/default-purple-sidebar/ai-light.png" alt="新版主题的白色设置卡片"></a></figure>
+    </div>
+    <div class="grid" data-panel="light" hidden>
+      <figure class="wide"><h2>浅色设置</h2><a href="../../verification/results/default-purple-sidebar/ai-light.png"><img class="image" src="../../verification/results/default-purple-sidebar/ai-light.png" alt="新版浅色设置页"></a></figure>
+      <figure class="detail"><h2>菜单</h2><a href="../../verification/results/default-purple-sidebar/menu-light.png"><img class="image" src="../../verification/results/default-purple-sidebar/menu-light.png" alt="浅色上下文菜单"></a></figure>
+      <figure class="detail"><h2>对话框</h2><a href="../../verification/results/default-purple-sidebar/dialog-light.png"><img class="image" src="../../verification/results/default-purple-sidebar/dialog-light.png" alt="浅色重命名对话框"></a></figure>
+    </div>
+    <div class="grid" data-panel="dark" hidden>
+      <figure class="wide"><h2>深色设置</h2><a href="../../verification/results/default-purple-sidebar/ai-dark.png"><img class="image" src="../../verification/results/default-purple-sidebar/ai-dark.png" alt="新版石墨色设置页"></a>
+        <figcaption>石墨色表面与中性深灰消息，单色 Logo 已适配深色，彩色商标保留原色。</figcaption></figure>
+      <figure class="detail"><h2>菜单</h2><a href="../../verification/results/default-purple-sidebar/menu-dark.png"><img class="image" src="../../verification/results/default-purple-sidebar/menu-dark.png" alt="深色上下文菜单"></a></figure>
+      <figure class="detail"><h2>对话框</h2><a href="../../verification/results/default-purple-sidebar/dialog-dark.png"><img class="image" src="../../verification/results/default-purple-sidebar/dialog-dark.png" alt="深色重命名对话框"></a></figure>
+    </div>
+    <div class="grid" data-panel="controls" hidden>
+      <figure><h2>浅色控件与消息表面</h2><a href="../../verification/results/default-purple-sidebar/controls-light.png"><img class="image" src="../../verification/results/default-purple-sidebar/controls-light.png" alt="浅色输入框、按钮与消息表面"></a></figure>
+      <figure><h2>深色控件与消息表面</h2><a href="../../verification/results/default-purple-sidebar/controls-dark.png"><img class="image" src="../../verification/results/default-purple-sidebar/controls-dark.png" alt="深色输入框、按钮与消息表面"></a></figure>
+      <figure><h2>中文窄窗口</h2><a href="../../verification/results/default-purple-sidebar/ai-light-zh-480.png"><img class="image" src="../../verification/results/default-purple-sidebar/ai-light-zh-480.png" alt="480 像素宽中文设置页"></a></figure>
+    </div>
+  </main>
+  <script>
+    document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+      const view = button.dataset.view;
+      document.querySelectorAll('[data-view]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      document.querySelectorAll('[data-panel]').forEach(panel => { panel.hidden = panel.dataset.panel !== view; });
+      document.body.classList.toggle('dark', view === 'dark');
+    }));
+  </script>
+</body>
+</html>

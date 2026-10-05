@@ -8,12 +8,13 @@
  * - Permissions (Default mode, Mode cycling)
  * - Advanced (Working directory, Local MCP servers)
  *
- * Note: AI settings (model, thinking, connection) have been moved to AiSettingsPage.
+ * Conversation overrides belong here; global defaults remain in AI settings.
  */
 
 import * as React from 'react'
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { WorkspaceConversationSettings } from '@/components/settings/WorkspaceConversationSettings'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { HeaderMenu } from '@/components/ui/HeaderMenu'
@@ -430,6 +431,8 @@ export default function WorkspaceSettingsPage() {
                 placeholder={t("settings.workspace.enterWorkspaceName")}
               />
             </SettingsSection>
+
+            <WorkspaceConversationSettings key={activeWorkspaceId} workspaceId={activeWorkspaceId} />
 
             {/* Permissions */}
             <SettingsSection title={t("settings.workspace.permissionsSection")}>

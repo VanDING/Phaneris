@@ -1,0 +1,44 @@
+{
+  "verifiedAt": "2026-10-05T06:06:50.582Z",
+  "version": "0.3.0",
+  "app": "/Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app",
+  "release": "/Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish",
+  "records": [
+    {
+      "id": "Application identity, version and x64 architecture match this local build",
+      "pass": true,
+      "observation": {
+        "version": "0.3.0",
+        "bundleId": "io.github.vanding.phaneris",
+        "architectures": "/Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris:               Mach-O 64-bit executable x86_64\n/Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/Resources/app/vendor/bun/bun: Mach-O 64-bit executable x86_64\n"
+      }
+    },
+    {
+      "id": "Packaged application contains the current main, preload and renderer build",
+      "pass": true,
+      "observation": {
+        "matchedBuildFiles": 632
+      }
+    },
+    {
+      "id": "ZIP archive is complete and contains the tested theme and compiled main process",
+      "pass": true,
+      "observation": {
+        "integrity": "No errors detected in compressed data of /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/Phaneris-0.3.0-mac-x64.zip.",
+        "sha256": "9dce28099faa496c32569e990b870d818a9054cb1b4cb5ad9c2cf0fffb5d4691"
+      }
+    },
+    {
+      "id": "DMG verifies, mounts read-only and contains the tested application",
+      "pass": true,
+      "observation": {
+        "readOnlyMount": true,
+        "sha256": "67aef4f8c2e1780e4a9030a40f2e0e2f62547c750ed7795632c333a193857673"
+      }
+    }
+  ],
+  "hashes": {
+    "Phaneris-0.3.0-mac-x64.zip": "9dce28099faa496c32569e990b870d818a9054cb1b4cb5ad9c2cf0fffb5d4691",
+    "Phaneris-0.3.0-mac-x64.dmg": "67aef4f8c2e1780e4a9030a40f2e0e2f62547c750ed7795632c333a193857673"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "app": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/package/mac/Phaneris.app",
+  "fixture": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/packaged-ui-ydYZ3U",
+  "records": [
+    {
+      "id": "Actual packaged app renders AI settings with one page and the standard context control",
+      "pass": true
+    },
+    {
+      "id": "Packaged image settings RPC persists the dedicated image model and returns its effective choice",
+      "pass": true
+    },
+    {
+      "id": "Packaged permissions page exposes Guarded setup with actual backend readiness",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

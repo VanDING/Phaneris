@@ -1,0 +1,25 @@
+{
+  "onlyAccentAndRingChanged": true,
+  "modifiedTokens": {
+    "light": {
+      "before": {
+        "accent": "#6554C0",
+        "ring": "#6554C0"
+      },
+      "after": {
+        "accent": "oklch(0.488 0.275 280.3)",
+        "ring": "oklch(0.488 0.275 280.3)"
+      }
+    },
+    "dark": {
+      "before": {
+        "accent": "#B8A6F5",
+        "ring": "#B8A6F5"
+      },
+      "after": {
+        "accent": "oklch(0.626 0.221 291.7)",
+        "ring": "oklch(0.626 0.221 291.7)"
+      }
+    }
+  }
+}

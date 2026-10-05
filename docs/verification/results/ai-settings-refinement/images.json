@@ -1,0 +1,45 @@
+{
+  "fixture": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/images-xRs4ye",
+  "records": [
+    {
+      "id": "Image defaults persist independently from conversation models",
+      "pass": true
+    },
+    {
+      "id": "A broken explicit default never falls back to another account",
+      "pass": true
+    },
+    {
+      "id": "Automatic selection and effective model are visible in backend status",
+      "pass": true
+    },
+    {
+      "id": "Authenticated settings RPC persists image defaults and exposes no credential",
+      "pass": true
+    },
+    {
+      "id": "RPC rejects removed connections and incompatible models without changing saved defaults",
+      "pass": true
+    },
+    {
+      "id": "Workspace connection RPC clears a foreign model atomically on disk",
+      "pass": true
+    },
+    {
+      "id": "RPC status keeps an explicit account with missing credentials unavailable",
+      "pass": true
+    }
+  ],
+  "received": [
+    {
+      "prompt": "fixture",
+      "model": "gpt-image-1",
+      "n": 1,
+      "output_format": "png",
+      "background": "auto",
+      "quality": "auto",
+      "size": "auto",
+      "stream": false
+    }
+  ]
+}

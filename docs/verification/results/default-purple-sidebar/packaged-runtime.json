@@ -1,0 +1,97 @@
+{
+  "app": "/Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app",
+  "code": 0,
+  "fixture": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x",
+  "host": "/Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris",
+  "records": [
+    {
+      "id": "Offline cold preparation fails clearly without executing the script and can retry",
+      "pass": true,
+      "observation": "[ERROR] Error running sandboxed script: Python runtime not ready (3.12.15): WARN Failed to fetch `cpython-3.12.15-macos-x86_64-none` from `https://releases.astral.sh/github/python-build-standalone/releases/download/20261001/cpython-3.12.15%2B20261001-x86_64-apple-darwin-install_only_stripped.tar.gz` (Failed to download `https://releases.astral.sh/github/python-build-standalone/releases/download/20261001/cpython-3.12.15%2B20261001-x86_64-apple-darwin-install_only_stripped.tar.gz`); falling back to `https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.12.15%2B20261001-x86_64-apple-darwin-install_only_stripped.tar.gz`\nerror: Failed to install cpython-3.12.15-macos-x86_64-none\n  cause: Failed to download `https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.12.15%2B20261001-x86_64-apple-darwin-install_only_stripped.tar.gz`\n  cause: Network connectivity is disabled, but the requested data wasn't found in the cache: https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.12.15%2B20261001-x86_64-apple-darwin-install_only_stripped.tar.gz Scripts have not run; sandbox restrictions remain enforced."
+    },
+    {
+      "id": "Concurrent cold Python requests prepare and execute the exact interpreter",
+      "pass": true,
+      "observation": [
+        "exitCode: 0\ndurationMs: 73\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/runtimes/darwin-x64/python-3.12.15/cpython-3.12.15-macos-x86_64-none/bin/python3.12 (source: managed)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\n3.12.15\n",
+        "exitCode: 0\ndurationMs: 65\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/runtimes/darwin-x64/python-3.12.15/cpython-3.12.15-macos-x86_64-none/bin/python3.12 (source: managed)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\n3.12.15\n"
+      ]
+    },
+    {
+      "id": "node: diagnostic and temp write in packaged sandbox",
+      "pass": true,
+      "observation": "exitCode: 0\ndurationMs: 327\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris (source: electron)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\nruntime-ready\nnode=24.21.0\n\n\nstderr:\n[1005/135640.627432:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)\n"
+    },
+    {
+      "id": "node: transform creates verifiable JSON",
+      "pass": true,
+      "observation": {
+        "output": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/node.json",
+        "diagnostic": "Output written to: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/node.json\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris (source: electron)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nUse this absolute path as the \"src\" value in your datatable, spreadsheet, html-preview, pdf-preview, or image-preview block."
+      }
+    },
+    {
+      "id": "python3: diagnostic and temp write in packaged sandbox",
+      "pass": true,
+      "observation": "exitCode: 0\ndurationMs: 196\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/runtimes/darwin-x64/python-3.12.15/cpython-3.12.15-macos-x86_64-none/bin/python3.12 (source: managed)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\nversion=3.12.15\nruntime-ready\n"
+    },
+    {
+      "id": "python3: transform creates verifiable JSON",
+      "pass": true,
+      "observation": {
+        "output": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/python3.json",
+        "diagnostic": "Output written to: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/python3.json\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/runtimes/darwin-x64/python-3.12.15/cpython-3.12.15-macos-x86_64-none/bin/python3.12 (source: managed)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nUse this absolute path as the \"src\" value in your datatable, spreadsheet, html-preview, pdf-preview, or image-preview block."
+      }
+    },
+    {
+      "id": "bun: diagnostic and temp write in packaged sandbox",
+      "pass": true,
+      "observation": "exitCode: 0\ndurationMs: 110\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/Resources/app/vendor/bun/bun (source: bundled)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\nruntime-ready\nnode=26.3.0\n"
+    },
+    {
+      "id": "bun: transform creates verifiable JSON",
+      "pass": true,
+      "observation": {
+        "output": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/bun.json",
+        "diagnostic": "Output written to: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/bun.json\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/Resources/app/vendor/bun/bun (source: bundled)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nUse this absolute path as the \"src\" value in your datatable, spreadsheet, html-preview, pdf-preview, or image-preview block."
+      }
+    },
+    {
+      "id": "Node accepts ES module imports alongside CommonJS diagnostics",
+      "pass": true,
+      "observation": "exitCode: 0\ndurationMs: 238\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris (source: electron)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\nesm-ready\n\n\nstderr:\n[1005/135641.719801:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)\n(node:35194) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/.script-YfL0Uw/script.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/.script-YfL0Uw/package.json.\n(Use `Phaneris --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "id": "OS temporary directory aliases retain valid session containment",
+      "pass": true,
+      "observation": {
+        "temporarySession": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-alias-JUNexf",
+        "diagnostic": "exitCode: 0\ndurationMs: 217\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris (source: electron)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\nALIAS-READY\n\n\nstderr:\n[1005/135641.939916:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)\n",
+        "transform": "Output written to: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-alias-JUNexf/data/alias.json\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris (source: electron)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nUse this absolute path as the \"src\" value in your datatable, spreadsheet, html-preview, pdf-preview, or image-preview block."
+      }
+    },
+    {
+      "id": "Prepared Python remains available offline and concurrent calls settle",
+      "pass": true,
+      "observation": [
+        "exitCode: 0\ndurationMs: 59\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/runtimes/darwin-x64/python-3.12.15/cpython-3.12.15-macos-x86_64-none/bin/python3.12 (source: managed)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\noffline-ready\n",
+        "exitCode: 0\ndurationMs: 73\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/runtimes/darwin-x64/python-3.12.15/cpython-3.12.15-macos-x86_64-none/bin/python3.12 (source: managed)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstdout:\noffline-ready\n"
+      ]
+    },
+    {
+      "id": "Network requests are denied",
+      "pass": true,
+      "observation": "[ERROR] exitCode: 7\ndurationMs: 259\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris (source: electron)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstderr:\n[1005/135642.612286:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)\nEPERM\n"
+    },
+    {
+      "id": "Outside-session writes remain denied",
+      "pass": true,
+      "observation": "[ERROR] exitCode: 1\ndurationMs: 62\ntimedOut: false\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/runtimes/darwin-x64/python-3.12.15/cpython-3.12.15-macos-x86_64-none/bin/python3.12 (source: managed)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstderr:\nTraceback (most recent call last):\n  File \"/Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/session/data/.script-SDq3UC/script.py\", line 1, in <module>\n    open(\"/Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/outside.txt\",'w').write('must not exist')\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 1] Operation not permitted: '/Users/van/projects/Phaneris/.cache/ai-settings-refinement/runtime-R8Gv5x/outside.txt'\n"
+    },
+    {
+      "id": "Timeout settles and kills child process group",
+      "pass": true,
+      "observation": "[ERROR] exitCode: null\ndurationMs: 232\ntimedOut: true\nisolationPolicy: required-in-all-modes\nruntime: /Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app/Contents/MacOS/Phaneris (source: electron)\nnetworkIsolation: enforced\nnetworkBackend: sandbox-exec\nfilesystemIsolation: enforced\nfilesystemBackend: sandbox-exec\n\nstderr:\n[1005/135642.999303:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)\n"
+    }
+  ]
+}

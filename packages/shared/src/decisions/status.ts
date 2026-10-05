@@ -36,6 +36,8 @@ export interface DecisionLayerStatus {
   /** LLM connections whose key can be reused (OpenRouter, Vercel AI Gateway). */
   reusableConnections: DecisionReusableConnection[];
   presets: DecisionProviderPresetSummary[];
+  /** Configuration readiness, including actual credentials. Connectivity is tested separately. */
+  guardedMode: { available: boolean; reason: 'ready' | 'disabled' | 'feature_disabled' | 'unconfigured' | 'unavailable'; failure?: DecisionFailure };
 }
 
 export async function getDecisionLayerStatus(credentialManager: DecisionCredentialSource = getDecisionCredentialSource()): Promise<DecisionLayerStatus> {
@@ -47,11 +49,24 @@ export async function getDecisionLayerStatus(credentialManager: DecisionCredenti
   const reusableConnections: DecisionReusableConnection[] = [];
   for (const connection of getLlmConnections()) {
     const provider = decisionProviderForConnection(connection.piAuthProvider);
-    if (provider) reusableConnections.push({ slug: connection.slug, name: connection.name, provider });
+    if (provider && connection.authType === 'api_key' && await credentialManager.getLlmApiKey(connection.slug)) reusableConnections.push({ slug: connection.slug, name: connection.name, provider });
+  }
+
+  const settings = readDecisionLayerSettings();
+  let guardedMode: DecisionLayerStatus['guardedMode'];
+  if (!settings.enabled) guardedMode = { available: false, reason: 'disabled' };
+  else if (!settings.features.guardedMode) guardedMode = { available: false, reason: 'feature_disabled' };
+  else {
+    try {
+      const resolution = await resolveDecisionClient({ settings, feature: 'guardedMode', credentialManager });
+      guardedMode = resolution.ok ? { available: true, reason: 'ready' }
+        : { available: false, reason: resolution.failure.kind === 'unconfigured' ? 'unconfigured' : 'unavailable', failure: resolution.failure };
+    } catch (error) { guardedMode = { available: false, reason: 'unavailable', failure: toDecisionFailure(error) }; }
   }
 
   return {
-    settings: readDecisionLayerSettings(),
+    settings,
+    guardedMode,
     providersWithKey,
     reusableConnections,
     presets: DECISION_PROVIDER_IDS.map(id => {

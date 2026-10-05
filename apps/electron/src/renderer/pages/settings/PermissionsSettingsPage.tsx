@@ -30,6 +30,11 @@ import { EditPopover, EditButton, getEditConfig } from '@/components/ui/EditPopo
 import { getDocSlug } from '@phaneris/shared/docs/doc-links'
 import { openDocs } from '@/atoms/docs'
 import { routes } from '@/lib/navigate'
+import { openDecisionModelSettings } from '@/lib/ai-settings-navigation'
+import { useAtomValue } from 'jotai'
+import { guardedModeAvailableAtom } from '@/atoms/permission-modes'
+import { Button } from '@/components/ui/button'
+import { SettingsRow } from '@/components/settings'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
 
 export const meta: DetailsPageMeta = {
@@ -135,6 +140,7 @@ export default function PermissionsSettingsPage() {
   const { t } = useTranslation()
   const { activeWorkspaceId } = useAppShellContext()
   const activeWorkspace = useActiveWorkspace()
+  const guardedAvailable = useAtomValue(guardedModeAvailableAtom)
 
   // Loading and data state
   const [isLoading, setIsLoading] = useState(true)
@@ -240,6 +246,15 @@ export default function PermissionsSettingsPage() {
                   </SettingsSection>
 
                   {/* Default Permissions Section */}
+                  <SettingsSection title={t("mode.guarded")} description={t("settings.ai.guarded.description")}>
+                    <SettingsCard>
+                      <SettingsRow label={guardedAvailable ? t("settings.ai.guarded.ready") : t("settings.ai.guarded.needsSetup")}
+                        description={t("settings.ai.guarded.failSafe")}>
+                        <Button variant="outline" size="sm" onClick={openDecisionModelSettings}>{t("settings.ai.configureDecisions")}</Button>
+                      </SettingsRow>
+                    </SettingsCard>
+                  </SettingsSection>
+
                   <SettingsSection
                     title={t("settings.permissions.defaultPermissions")}
                     description={t("settings.permissions.defaultPermissionsDesc")}

@@ -1,0 +1,5 @@
+
+/Users/van/projects/Phaneris/apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx
+  291:6  warning  React Hook useCallback has missing dependencies: 'DEFAULT_ENDPOINT_PROVIDERS', 'initialPreset', 'initialValues?.connectionDefaultModel', 'initialValues?.models', and 'initialValues?.utilityModel'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 1 problem (0 errors, 1 warning)

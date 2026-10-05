@@ -2,6 +2,7 @@ export * from './types.ts';
 export * from './llm-connections.ts';
 export * from './llm-validation.ts';
 export * from './models.ts';
+export * from './image-generation.ts';
 export * from './models-pi.ts';
 export * from './model-fetcher.ts';
 // The root every other path derives from. Previously `CONFIG_DIR` reached the

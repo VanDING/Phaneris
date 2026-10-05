@@ -173,6 +173,7 @@ if (isDebugMode) {
 
   // Runtime resolver hints for shared session tools
   process.env.PHANERIS_IS_PACKAGED = app.isPackaged ? '1' : '0'
+  process.env.PHANERIS_ELECTRON_EXECUTABLE = process.execPath
   process.env.PHANERIS_RESOURCES_BASE = resourcesBase
   process.env.PHANERIS_APP_ROOT = app.isPackaged ? app.getAppPath() : process.cwd()
 

@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai'
 import { formatDistanceToNowStrict, type Locale } from 'date-fns'
 import { getModelShortName } from '@config/models'
 import { cn } from '@/lib/utils'
-import { getProviderIcon } from '@/lib/provider-icons'
+import { getProviderIcon, isMonochromeProviderIcon } from '@/lib/provider-icons'
 import { shortTimeLocale } from '@/utils/session'
 import { kanbanLivePulseAtom } from '@/atoms/kanban'
 import { useKanbanColumnColors } from '@/hooks/useKanbanColumnColors'
@@ -500,7 +500,7 @@ function AddSubtask({
                 className="craft-focus inline-flex min-w-0 items-center gap-1 rounded-md border border-border/60 bg-background px-1.5 py-1 text-[11px] font-medium text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"
               >
                 {selectedIcon ? (
-                  <img src={selectedIcon} alt="" className="h-3 w-3 shrink-0 rounded-[2px]" aria-hidden />
+                  <img src={selectedIcon} alt="" className={cn('h-3 w-3 shrink-0 rounded-[2px]', isMonochromeProviderIcon(selectedIcon) && 'provider-icon-monochrome')} aria-hidden />
                 ) : (
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" aria-hidden />
                 )}
@@ -517,7 +517,7 @@ function AddSubtask({
                       <img
                         src={resolveProviderIcon(group.provider)!}
                         alt=""
-                        className="h-3 w-3 rounded-[2px]"
+                        className={cn('h-3 w-3 rounded-[2px]', isMonochromeProviderIcon(resolveProviderIcon(group.provider)) && 'provider-icon-monochrome')}
                         aria-hidden
                       />
                     )}

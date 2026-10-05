@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-04T18:00:49.856446+00:00",
+  "branch": "codex/ai-settings-runtime-refinement",
+  "baseCommit": "3fcad35e",
+  "platform": "darwin-x64",
+  "applicationVersion": "0.3.0",
+  "packagedApplication": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/package/mac/Phaneris.app",
+  "flows": {
+    "runtime": {
+      "passed": 14,
+      "total": 14
+    },
+    "guarded": {
+      "passed": 6,
+      "total": 6
+    },
+    "images": {
+      "passed": 7,
+      "total": 7
+    },
+    "settings": {
+      "passed": 9,
+      "total": 9
+    },
+    "packaged": {
+      "passed": 3,
+      "total": 3
+    },
+    "upstream": {
+      "passed": 20,
+      "total": 20
+    }
+  },
+  "totalFlows": 59,
+  "existingRegressionTests": 61,
+  "gates": {
+    "typecheck:all": "pass",
+    "lint": "pass (existing warnings)",
+    "i18n:parity": "pass",
+    "i18n:sorted": "pass",
+    "i18n:coverage": "pass",
+    "i18n:dead-keys": "pass",
+    "identity:check": "pass (existing residual warnings)",
+    "version:check": "pass",
+    "electron:build": "pass",
+    "electron-builder mac x64 dir": "pass (unsigned local verification build)"
+  }
+}

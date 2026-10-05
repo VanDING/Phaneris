@@ -34,12 +34,12 @@
 
 :root {
   /* === 6 BASE COLORS === */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.18 0.012 285);
+  --background: #FFFFFF;
+  --foreground: #20232C;
   --accent: oklch(0.488 0.275 280.3);           /* purple - brand, Auto mode */
-  --info: oklch(0.62 0.10 70);              /* amber - warnings, Ask mode */
-  --success: oklch(0.50 0.09 145);          /* green - connected, checkmarks */
-  --destructive: oklch(0.52 0.16 28);       /* red - errors, failed */
+  --info: #94601C;              /* amber - warnings, Ask mode */
+  --success: #267454;          /* green - connected, checkmarks */
+  --destructive: #B63E4C;       /* red - errors, failed */
 
   /* === TEXT VARIANTS (mixed toward foreground for better contrast) === */
   --success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));
@@ -51,14 +51,14 @@
   --shadow-blur-opacity: 0.06;              /* Blur layers opacity */
 
   /* === SHADOW VALUES (reusable across utility classes and component overrides) === */
-  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border);
+  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent);
 
   --shadow-minimal-flat:
     rgba(0, 0, 0, 0) 0px 0px 0px 0px,
     rgba(0, 0, 0, 0) 0px 0px 0px 0px,
     color-mix(in srgb, var(--foreground) 6%, transparent) 0px 0px 0px 1px;
 
-  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border);
+  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
 
   /* === Z-INDEX SCALE === */
   --z-base: 0;
@@ -94,44 +94,44 @@
   --foreground-95: color-mix(in oklch, var(--foreground) 95%, var(--background));
 
   /* === SHADCN COMPATIBILITY (Default semantic palette) === */
-  --secondary: oklch(0.96 0.005 285);
-  --secondary-foreground: oklch(0.28 0.012 285);
-  --muted: oklch(0.96 0.005 285);
-  --muted-foreground: oklch(0.52 0.005 285);
-  --card: oklch(0.985 0.002 285);
-  --card-foreground: oklch(0.18 0.012 285);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.012 285);
-  --border: oklch(0.91 0.005 285);
-  --input: oklch(1 0 0);
+  --secondary: #F2F3F8;
+  --secondary-foreground: #373D4B;
+  --muted: #F7F8FB;
+  --muted-foreground: #606775;
+  --card: #FFFFFF;
+  --card-foreground: #20232C;
+  --popover: #FFFFFF;
+  --popover-foreground: #20232C;
+  --border: #E3E6ED;
+  --input: #FFFFFF;
   --ring: oklch(0.488 0.275 280.3);
   --ring-width: 1px;
   --ring-offset: 0px;
 
   /* === COMPONENT TOKENS === */
-  --user-message-bubble: oklch(0.96 0.005 285);
+  --user-message-bubble: #F3F3F3;
 
   /* Markdown list markers */
   --md-bullets: var(--foreground-50);
   --md-counters: var(--foreground-50);
 
-  /* Fonts - Inter with system fallbacks for UI, JetBrains Mono for code */
-  --font-sans: "Inter", "Segoe UI Variable Text", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
-  --font-serif: "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
-  --font-mono: "Cascadia Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, "Microsoft YaHei UI", monospace;
+  /* Default typography follows the platform UI and code fonts. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  --font-serif: "New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
+  --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace;
   --font-default: var(--font-sans);
 
   /* Layout */
   --font-size-base: 15px;
   --line-height-base: 1.5;
-  --theme-radius: 8px;
-  --theme-panel-radius: 8px;
+  --theme-radius: 6px;
+  --theme-panel-radius: 6px;
   --radius: var(--theme-radius);
   --theme-border-width: 1px;
   --theme-border-style: solid;
-  --theme-depth: flat;
-  --theme-shadow-color: oklch(0.18 0.012 285);
-  --theme-shadow-strength: 0.05;
+  --theme-depth: elevated;
+  --theme-shadow-color: #20232C;
+  --theme-shadow-strength: 0.04;
   --theme-backdrop-blur: 0px;
   --theme-density: comfortable;
   --theme-density-scale: 1;
@@ -139,17 +139,18 @@
   --theme-menu-item-padding-y: 0.375rem;
   --theme-settings-row-padding-y: 0.875rem;
   --theme-activity-row-padding-y: 0.125rem;
-  --icon-stroke-width: 1.5;
+  --icon-stroke-width: 1.65;
   --icon-stroke-linecap: round;
   --spacing: 0.25rem;
-  --tracking-normal: -0.005em;
-  --background-elevated: oklch(1 0 0);
-  --foreground-dimmed: oklch(0.50 0.005 285);
-  --paper: oklch(1 0 0);
-  --popover-solid: oklch(1 0 0);
-  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border);
-  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border);
+  --tracking-normal: 0em;
+  --background-elevated: #FFFFFF;
+  --foreground-dimmed: #606775;
+  --paper: #FFFFFF;
+  --popover-solid: #FFFFFF;
+  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
+  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
   --theme-mode: solid;
+  --user-message-bubble-dimmed: #F7F7F7;
 }
 
 /* =============================================================================
@@ -158,12 +159,12 @@
 
 .dark {
   /* === 6 BASE COLORS === */
-  --background: oklch(0.14 0.012 285);
-  --foreground: oklch(0.96 0.005 285);
+  --background: #17191E;
+  --foreground: #EEF0F6;
   --accent: oklch(0.626 0.221 291.7);            /* brighter purple in dark */
-  --info: oklch(0.74 0.10 70);               /* amber */
-  --success: oklch(0.70 0.09 145);           /* green */
-  --destructive: oklch(0.66 0.16 28);        /* brighter red in dark */
+  --info: #E3B674;               /* amber */
+  --success: #83CBA7;           /* green */
+  --destructive: #F18C98;        /* brighter red in dark */
 
   /* === TEXT VARIANTS (mixed toward foreground for better contrast) === */
   --success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));
@@ -190,45 +191,45 @@
   --foreground-95: color-mix(in oklch, var(--foreground) 95%, var(--background));
 
   /* === SHADCN COMPATIBILITY (Default semantic palette) === */
-  --secondary: oklch(0.21 0.012 285);
-  --secondary-foreground: oklch(0.88 0.005 285);
-  --muted: oklch(0.18 0.012 285);
-  --muted-foreground: oklch(0.62 0.005 285);
-  --card: oklch(0.17 0.012 285);
-  --card-foreground: oklch(0.96 0.005 285);
-  --popover: oklch(0.17 0.012 285);
-  --popover-foreground: oklch(0.96 0.005 285);
-  --border: oklch(0.27 0.012 285);
-  --input: oklch(0.17 0.012 285);
+  --secondary: #282D38;
+  --secondary-foreground: #E0E4EE;
+  --muted: #222630;
+  --muted-foreground: #AAB1C1;
+  --card: #1C1F26;
+  --card-foreground: #EEF0F6;
+  --popover: #262A34;
+  --popover-foreground: #EEF0F6;
+  --border: #343946;
+  --input: #20232C;
   --ring: oklch(0.626 0.221 291.7);
 
   /* === COMPONENT TOKENS === */
-  --user-message-bubble: oklch(0.21 0.012 285);
+  --user-message-bubble: #2B2B2B;
 
   /* Markdown list markers */
   --md-bullets: var(--foreground-50);
   --md-counters: var(--foreground-50);
-  --background-elevated: oklch(0.18 0.012 285);
-  --foreground-dimmed: oklch(0.65 0.005 285);
-  --paper: oklch(0.17 0.012 285);
-  --popover-solid: oklch(0.17 0.012 285);
-  --theme-shadow-color: oklch(0 0 0);
+  --background-elevated: #242832;
+  --foreground-dimmed: #AAB1C1;
+  --paper: #1D2028;
+  --popover-solid: #262A34;
+  --theme-shadow-color: #08090C;
   --theme-shadow-strength: 0.22;
   --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border);
-  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border);
-  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border);
-  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border);
-  --theme-radius: 8px;
-  --theme-panel-radius: 8px;
+  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent);
+  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
+  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
+  --theme-radius: 6px;
+  --theme-panel-radius: 6px;
   --theme-border-width: 1px;
   --theme-border-style: solid;
-  --font-sans: "Inter", "Segoe UI Variable Text", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
-  --font-serif: "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
-  --font-mono: "Cascadia Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, "Microsoft YaHei UI", monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  --font-serif: "New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
+  --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace;
   --font-size-base: 15px;
-  --tracking-normal: -0.005em;
+  --tracking-normal: 0em;
   --line-height-base: 1.5;
-  --icon-stroke-width: 1.5;
+  --icon-stroke-width: 1.65;
   --icon-stroke-linecap: round;
   --theme-density: comfortable;
   --theme-density-scale: 1;
@@ -239,6 +240,7 @@
   --theme-depth: flat;
   --theme-backdrop-blur: 0px;
   --theme-mode: solid;
+  --user-message-bubble-dimmed: #252525;
 }
 
 /* Inter font option (requires loading Inter from Google Fonts or locally)

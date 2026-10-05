@@ -11,8 +11,8 @@
  * Execute mode itself is never checked: it always runs without prompts.
  *
  * Tighten-only by construction: the check can turn an allow into a prompt,
- * never a block or prompt into an allow. No check, an inactive check, no answer,
- * or an error means the call proceeds as it would in Execute mode. If the mode
+ * never a block or prompt into an allow. Missing or failed risk checks require
+ * confirmation; an unattended session blocks instead of waiting for a user. If the mode
  * changes while the check thinks, the call is re-decided under the new mode; if
  * the turn stops, it is blocked instead of raising a late prompt. Its prompts
  * carry no `remember` key, so "Always Allow" cannot whitelist them.
@@ -50,8 +50,10 @@ export interface GuardedModeVerdict {
 
 /** Host check. `isActive` is synchronous so an off toggle costs the tool path nothing. */
 export interface GuardedModeCheck {
-  /** Feature on and someone there to answer a prompt; checked on every call. */
+  /** Feature on; checked on every call. */
   isActive(): boolean;
+  /** An unattended session cannot authorize a guarded mutation. */
+  canPrompt?(): boolean;
   /** Judge one call; `null` means no answer. `signal` aborts when the turn stops. */
   check(call: GuardedModeCall, signal?: AbortSignal): Promise<GuardedModeVerdict | null>;
 }
@@ -160,22 +162,18 @@ function isGuardableTool(toolName: string): boolean {
 
 /**
  * Whether a pre-tool-use result goes to the check at all: an allow for a
- * guardable tool in Guarded mode with an active check. Synchronous, so call sites
+ * guardable tool in Guarded mode. Missing checks also enter the fail-safe path. Synchronous, so call sites
  * skip `applyGuardedModeCheck` (and its await) entirely otherwise; Execute mode
  * never gets here.
  */
 export function needsGuardedModeCheck(
   result: PreToolUseCheckResult,
   ctx: Pick<PreToolUseInput, 'sessionId' | 'toolName'>,
-  check: GuardedModeCheck | null | undefined,
-): check is GuardedModeCheck {
-  if (!check || (result.type !== 'allow' && result.type !== 'modify') || !isGuardableTool(ctx.toolName)) return false;
+  _check: GuardedModeCheck | null | undefined,
+): boolean {
+  if ((result.type !== 'allow' && result.type !== 'modify') || !isGuardableTool(ctx.toolName)) return false;
   if (getPermissionModeDiagnostics(ctx.sessionId).permissionMode !== 'guarded') return false;
-  try {
-    return check.isActive();
-  } catch {
-    return false;
-  }
+  return true;
 }
 
 /**
@@ -193,22 +191,33 @@ export async function applyGuardedModeCheck(
 
   // Judge what the agent asked for: a rewrite (e.g. rtk) only changes how it runs.
   let call: GuardedModeCall | null;
+  let classificationFailed = false;
   try {
     call = getGuardedModeCall(ctx.toolName, ctx.input, ctx);
   } catch {
-    return result;
+    classificationFailed = true;
+    call = { toolName: ctx.toolName, promptType: ctx.toolName === 'Bash' ? 'bash' : ctx.toolName.startsWith('api_') ? 'api_mutation' : FILE_WRITE_TOOLS.has(ctx.toolName) ? 'file_write' : 'mcp_mutation', description: ctx.toolName, command: ctx.toolName };
   }
   if (!call) return result;
+  if (options.signal?.aborted) return { type: 'block', reason: 'The turn was stopped.' };
+  if (resolveEffectivePermissionMode(getPermissionModeDiagnostics(ctx.sessionId).permissionMode) !== 'guarded') return runPreToolUseChecks(ctx);
+  try {
+    if (check?.canPrompt && !check.canPrompt()) return { type: 'block', reason: 'Guarded mode requires an attended session to authorize this action. Use Ask mode or review the action in an attended session.' };
+  } catch {
+    return { type: 'block', reason: 'Guarded mode could not determine whether confirmation is available.' };
+  }
 
   let risks: GuardedModeRisk[] = [];
+  let unavailable = classificationFailed;
   if (call.alwaysAsk) {
     risks = [call.alwaysAsk];
-  } else {
+  } else if (!classificationFailed) {
     try {
-      const verdict = await check.check(call, options.signal);
-      risks = Array.isArray(verdict?.risks) ? verdict.risks.filter(risk => Object.hasOwn(RISK_LABELS, risk)) : [];
+      const verdict = check?.isActive() ? await check.check(call, options.signal) : null;
+      if (!Array.isArray(verdict?.risks) || verdict.risks.some(risk => typeof risk !== 'string' || !Object.hasOwn(RISK_LABELS, risk))) unavailable = true;
+      else risks = verdict.risks;
     } catch {
-      risks = [];
+      unavailable = true;
     }
   }
 
@@ -216,9 +225,9 @@ export async function applyGuardedModeCheck(
   if (options.signal?.aborted) return { type: 'block', reason: 'The turn was stopped.' };
   // The mode changed meanwhile: decide under the current mode instead of returning a Guarded-mode allow.
   if (resolveEffectivePermissionMode(getPermissionModeDiagnostics(ctx.sessionId).permissionMode) !== 'guarded') return runPreToolUseChecks(ctx);
-  if (risks.length === 0) return result;
+  if (risks.length === 0 && !unavailable) return result;
 
-  const reason = risks.map(risk => RISK_LABELS[risk]).join(', ');
+  const reason = unavailable ? 'risk check unavailable; confirmation required' : risks.map(risk => RISK_LABELS[risk]).join(', ');
   ctx.onDebug?.(`Guarded mode: ${ctx.toolName} flagged (${reason})`);
   return {
     type: 'prompt',

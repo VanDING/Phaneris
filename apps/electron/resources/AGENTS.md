@@ -43,7 +43,7 @@ These files are used by electron-builder or the app directly, not synced to user
 | `source.png` | Default source icon |
 | `generate-icons.sh` | Legacy macOS-only icon script (`sips`/`iconutil`). Superseded — see below. |
 | `pi-agent-server/` | Bundled Pi agent server for Pi SDK sessions (#5b in build-win.ps1) |
-| `themes/*.json` | Four read-only built-ins: Twilight (`default`), Geek, Cyberpunk 2077 and Ink; never copied into the user-owned themes directory |
+| `themes/*.json` | Four read-only built-ins: Default (`default`), Geek, Cyberpunk 2077 and Ink; never copied into the user-owned themes directory |
 
 ## Icon generation
 
@@ -83,14 +83,14 @@ The files in this folder are the **source of truth** for bundled defaults:
 - Edit `config-defaults.json` here to change default settings
 - Edit files in `docs/` to update documentation
 - Edit `themes/default.json` together with the canonical `DEFAULT_THEME_FILE`
-  snapshot to update Twilight; a test prevents them from drifting
+  snapshot to update Default; a test prevents them from drifting
 - The other three canonical definitions live in `packages/shared/src/config/themes/`;
   keep their packaged JSON resources identical. The same theme test verifies all four.
 
 `~/.phaneris/themes/*.json` is user-owned. Never seed, overwrite, reset, or
 delete files in that directory. The application only ensures the directory exists.
 
-Twilight has a canonical TypeScript snapshot used at runtime and a
+Default has a canonical TypeScript snapshot used at runtime and a
 matching JSON resource for packaging/documentation. Keep them identical; the
 theme test enforces the invariant.
 

@@ -70,6 +70,18 @@ export const providerIcons = {
 
 export type ProviderIconKey = keyof typeof providerIcons
 
+// These bundled SVGs are black/currentColor marks when rendered through <img>.
+// Keep the list explicit so colored brands and user endpoint artwork stay intact.
+const monochromeProviderIcons = new Set<string>([
+  awsIcon, azureIcon, cerebrasIcon, copilotIcon, deepseekIcon, googleIcon, groqIcon,
+  huggingfaceIcon, kimiIcon, minimaxIcon, mistralIcon, ollamaIcon, openaiIcon,
+  openrouterIcon, piIcon, vercelIcon, xaiIcon, zaiIcon,
+])
+
+export function isMonochromeProviderIcon(icon: string | null | undefined): boolean {
+  return !!icon && monochromeProviderIcons.has(icon)
+}
+
 /**
  * Detect provider from base URL
  */

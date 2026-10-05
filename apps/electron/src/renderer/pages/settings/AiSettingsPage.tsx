@@ -1,4 +1,3 @@
-import { motion, AnimatePresence } from 'motion/react'
 import type { DecisionLayerFeature } from '@phaneris/shared/decisions/settings'
 import { DECISION_SETTINGS_CHANGED_EVENT, guardedModeAvailableAtom } from "@/atoms/permission-modes"
 /**
@@ -6,28 +5,33 @@ import { DECISION_SETTINGS_CHANGED_EVENT, guardedModeAvailableAtom } from "@/ato
  *
  * Unified AI settings page that consolidates all LLM-related configuration:
  * - Default connection, model, and thinking level
- * - Per-workspace overrides
+ * - Current workspace link (overrides are edited in Workspace settings)
  * - Connection management (add/edit/delete)
  *
- * Follows the Appearance settings pattern: app-level defaults + workspace overrides.
+ * Connections → conversation → independently expandable advanced settings.
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AI_SETTINGS_FOCUS_KEY, AI_SETTINGS_FOCUS_EVENT } from '@/lib/ai-settings-navigation'
+import { supportsNativeImageGeneration } from '@config/image-generation'
+import type { ImageGenerationSettings, ImageGenerationStatus } from '../../../shared/types'
 import { PanelHeader } from '@/components/app-shell/PanelHeader'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { HeaderMenu } from '@/components/ui/HeaderMenu'
-import { routes } from '@/lib/navigate'
-import { X, MoreHorizontal, Pencil, Trash2, Star, ChevronDown, ChevronRight, CheckCircle2, AlertTriangle, RefreshCcw, Settings2, MessageSquareMore, Zap, Clock, Check } from 'lucide-react'
+import { navigate, routes } from '@/lib/navigate'
+import { getModelOptionsForConnection, connectionImageUnderstanding } from '@/lib/ai-model-options'
+import { SettingsDisclosure } from '@/components/settings/SettingsDisclosure'
+import { X, MoreHorizontal, Pencil, Trash2, Star, ChevronRight, CheckCircle2, AlertTriangle, RefreshCcw, Settings2, MessageSquareMore, Zap, Clock, Check } from 'lucide-react'
 import type { CredentialHealthStatus, CredentialHealthIssue } from '../../../shared/types'
-import { InlineExpand, Spinner, FullscreenOverlayBase, Tooltip, TooltipTrigger, TooltipContent } from '@phaneris/ui'
+import { Spinner, FullscreenOverlayBase, Tooltip, TooltipTrigger, TooltipContent } from '@phaneris/ui'
 import { useSetAtom } from 'jotai'
 import { fullscreenOverlayOpenAtom } from '@/atoms/overlay'
-import type { LlmConnectionWithStatus, ThinkingLevel, WorkspaceSettings, Workspace } from '../../../shared/types'
+import type { LlmConnectionWithStatus, ThinkingLevel, WorkspaceSettings } from '../../../shared/types'
 import type { DecisionLayerStatus, DecisionLayerSettingsPatch, DecisionProviderId, DecisionServerProbe, DecisionTestResult } from '../../../shared/types'
 import { DEFAULT_THINKING_LEVEL, THINKING_LEVELS } from '@phaneris/shared/agent/thinking-levels'
-import { policyAfterToggle, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
+import { type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
 import {
   DropdownMenu,
@@ -54,12 +58,11 @@ import {
 } from '@/components/settings'
 import { useOnboarding } from '@/hooks/useOnboarding'
 import { RtkUpdateDialog, type RtkStatusInfo } from '@/components/RtkUpdateDialog'
-import { useWorkspaceIcon } from '@/hooks/useWorkspaceIcon'
 import { OnboardingWizard, type ApiSetupMethod } from '@/components/onboarding'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { getModelShortName, type ModelDefinition } from '@config/models'
-import { getModelsForProviderType, resolveMidStreamBehavior, type CustomEndpointApi, type MidStreamBehavior } from '@config/llm-connections'
+import { resolveMidStreamBehavior, type CustomEndpointApi, type MidStreamBehavior } from '@config/llm-connections'
 import { toast } from 'sonner'
 
 /**
@@ -71,37 +74,6 @@ function formatTokenCount(n: number): string {
   if (n < 1000) return String(n)
   if (n < 1_000_000) return `${(n / 1000).toFixed(1)}K`
   return `${(n / 1_000_000).toFixed(1)}M`
-}
-
-/**
- * Derive model dropdown options from a connection's models array,
- * falling back to registry models for the connection's provider type.
- */
-function getModelOptionsForConnection(
-  connection: LlmConnectionWithStatus | undefined,
-): Array<{ value: string; label: string; description: string; descriptionKey?: string }> {
-  if (!connection) return []
-
-  // If connection has explicit models, use those
-  if (connection.models && connection.models.length > 0) {
-    return connection.models.map((m) => {
-      if (typeof m === 'string') {
-        return { value: m, label: getModelShortName(m), description: '' }
-      }
-      // ModelDefinition object
-      const def = m as ModelDefinition
-      return { value: def.id, label: def.name, description: def.description, descriptionKey: def.descriptionKey }
-    })
-  }
-
-  // Fall back to registry models for this provider type
-  const registryModels = getModelsForProviderType(connection.providerType, connection.piAuthProvider)
-  return registryModels.map((m) => ({
-    value: m.id,
-    label: m.name,
-    description: m.description,
-    descriptionKey: m.descriptionKey,
-  }))
 }
 
 export const meta: DetailsPageMeta = {
@@ -137,14 +109,14 @@ function CredentialHealthBanner({ issues, onReauthenticate }: CredentialHealthBa
   if (issues.length === 0) return null
 
   return (
-    <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 mb-6">
+    <div className="rounded-lg border border-info/30 bg-info/10 p-4 mb-6">
       <div className="flex items-start gap-3">
-        <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+        <AlertTriangle className="h-5 w-5 text-info flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-amber-700 dark:text-amber-400">
+          <h4 className="text-sm font-medium text-info">
             {t("settings.ai.credentialIssue")}
           </h4>
-          <p className="mt-1 text-sm text-amber-600 dark:text-amber-300/80">
+          <p className="mt-1 text-sm text-info-text">
             {getHealthIssueMessage(issues[0], t)}
           </p>
         </div>
@@ -152,7 +124,7 @@ function CredentialHealthBanner({ issues, onReauthenticate }: CredentialHealthBa
           variant="outline"
           size="sm"
           onClick={onReauthenticate}
-          className="flex-shrink-0 border-amber-500/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500/10"
+          className="flex-shrink-0 border-amber-500/30 text-info hover:bg-amber-500/10"
         >
           {t("settings.ai.reAuthenticate")}
         </Button>
@@ -165,30 +137,6 @@ function CredentialHealthBanner({ issues, onReauthenticate }: CredentialHealthBa
 // Pi Auth Provider Display Names
 // ============================================
 
-const PI_AUTH_PROVIDER_LABELS: Record<string, string> = {
-  anthropic: 'Anthropic API',
-  openai: 'OpenAI API',
-  'openai-codex': 'OpenAI API',
-  google: 'Google AI Studio',
-  openrouter: 'OpenRouter',
-  'azure-openai-responses': 'Azure OpenAI',
-  'amazon-bedrock': 'Amazon Bedrock',
-  groq: 'Groq',
-  mistral: 'Mistral',
-  deepseek: 'DeepSeek',
-  xai: 'xAI',
-  cerebras: 'Cerebras',
-  zai: 'z.ai',
-  huggingface: 'Hugging Face',
-  minimax: 'Minimax',
-  'minimax-cn': 'Minimax (CN)',
-  'kimi-coding': 'Kimi (Coding)',
-  moonshotai: 'Moonshot AI',
-  'moonshotai-cn': 'Moonshot AI (CN)',
-  'vercel-ai-gateway': 'Vercel AI Gateway',
-  'github-copilot': 'GitHub Copilot',
-}
-
 // ============================================
 // Connection Row Component
 // ============================================
@@ -197,6 +145,7 @@ type ValidationState = 'idle' | 'validating' | 'success' | 'error'
 
 interface ConnectionRowProps {
   connection: LlmConnectionWithStatus
+  usedForImages?: boolean
   isLastConnection: boolean
   onRenameClick: () => void
   onDelete: () => void
@@ -211,10 +160,9 @@ interface ConnectionRowProps {
   isDuplicateAccount?: boolean
 }
 
-function ConnectionRow({ connection, isLastConnection, onRenameClick, onDelete, onSetDefault, onValidate, onReauthenticate, onEdit, onSetMidStreamBehavior, validationState, validationError, isDuplicateAccount }: ConnectionRowProps) {
+function ConnectionRow({ connection, usedForImages, isLastConnection, onRenameClick, onDelete, onSetDefault, onValidate, onReauthenticate, onEdit, onSetMidStreamBehavior, validationState, validationError, isDuplicateAccount }: ConnectionRowProps) {
   const { t } = useTranslation()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [piBaseUrl, setPiBaseUrl] = useState<string | undefined>(undefined)
 
   // Opening dialog/overlay flows directly from a dropdown item can race with
   // menu teardown and leave a transient interaction lock behind on some systems.
@@ -226,106 +174,47 @@ function ConnectionRow({ connection, isLastConnection, onRenameClick, onDelete, 
     })
   }, [])
 
-  // Load Pi provider base URL via IPC (Pi SDK can't run in renderer)
-  useEffect(() => {
-    const provider = connection.providerType || connection.type
-    if (provider === 'pi' && connection.piAuthProvider && !connection.baseUrl) {
-      window.electronAPI.getPiProviderBaseUrl(connection.piAuthProvider).then(url => setPiBaseUrl(url))
-    }
-  }, [connection.providerType, connection.type, connection.piAuthProvider, connection.baseUrl])
-
-  // Build description with provider, default indicator, auth status, and validation state
-  const getDescription = () => {
-    // Show validation state if not idle
-    if (validationState === 'validating') return t("settings.ai.validating")
-    if (validationState === 'success') return t("settings.ai.connectionValid")
-    if (validationState === 'error') return validationError || t("settings.ai.validationFailed")
-
-    const parts: string[] = []
-
-    // Provider type (fall back to legacy 'type' field if providerType missing)
-    // OAuth = subscription (Pro/Plus/Max), API key = API
-    const provider = connection.providerType || connection.type
-    const isSubscription = connection.authType === 'oauth'
-    switch (provider) {
-      case 'pi': {
-        // Show upstream provider name for API key connections (e.g. "Google AI Studio")
-        const piLabel = !isSubscription && connection.piAuthProvider
-          ? PI_AUTH_PROVIDER_LABELS[connection.piAuthProvider]
-          : null
-        parts.push(piLabel ?? 'Phaneris Backend')
-        break
-      }
-      case 'pi_compat':
-        parts.push(connection.baseUrl?.toLowerCase().includes('manifest.build')
-          ? 'Manifest'
-          : 'Custom Endpoint')
-        break
-      default: parts.push(provider || 'Unknown')
-    }
-
-    // Base URL for API key connections (show custom endpoint or default for provider)
-    if (connection.authType !== 'oauth') {
-      let endpoint = connection.baseUrl
-      // Use default endpoints for standard providers if no custom baseUrl
-      if (!endpoint) {
-        if (provider === 'pi' && connection.piAuthProvider) {
-          endpoint = piBaseUrl
-        }
-      }
-      if (endpoint) {
-        // Extract hostname from URL for cleaner display
-        try {
-          const url = new URL(endpoint)
-          parts.push(url.host)
-        } catch {
-          parts.push(endpoint)
-        }
-      }
-    }
-
-    // Auth status
-    if (!connection.isAuthenticated) parts.push(t("settings.ai.notAuthenticated"))
-
-    return parts.join(' · ')
-  }
-
-  // Resolved Anthropic identity (issue #838): render `email · org` independently of
-  // validation state. It cannot live in getDescription() — that short-circuits for
-  // validating/success/error and would hide the identity during those states.
-  const oauthIdentityLine = connection.authType === 'oauth' && connection.oauthAccountEmail
-    ? [connection.oauthAccountEmail, connection.oauthOrganizationName].filter(Boolean).join(' · ')
-    : null
+  const imageUnderstanding = connectionImageUnderstanding(connection)
+  const capabilities = [t("settings.ai.capabilityChat"),
+    imageUnderstanding === 'all' ? t("settings.ai.capabilityImageInput") : imageUnderstanding === 'some' ? t("settings.ai.capabilityImageInputSome") : null,
+    supportsNativeImageGeneration(connection) ? t("settings.ai.capabilityImageGeneration") : null,
+  ].filter(Boolean)
+  const identity = connection.authType === 'oauth' && connection.oauthAccountEmail
+    ? [connection.oauthAccountEmail, connection.oauthOrganizationName].filter(Boolean).join(' · ') : null
+  const validation = validationState === 'validating' ? t("settings.ai.validating")
+    : validationState === 'success' ? t("settings.ai.connectionValid")
+    : validationState === 'error' ? validationError || t("settings.ai.validationFailed")
+    : !connection.isAuthenticated ? t("settings.ai.notAuthenticated") : null
+  const description = [...capabilities, identity, validation].filter(Boolean).join(' · ')
 
   return (
-    <SettingsRow
+    <div data-connection-slug={connection.slug}><SettingsRow
       label={(
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <ConnectionIcon connection={connection} size={14} />
             <span>{connection.name}</span>
+            <span className="text-xs font-normal text-muted-foreground">{connection.authType === 'oauth' ? t("settings.ai.authSubscription") : t("settings.ai.authApiKey")}</span>
             {connection.isDefault && (
               <span className="inline-flex items-center h-5 px-2 text-[11px] font-medium rounded-[4px] bg-background shadow-minimal text-foreground/60">
-                {t("common.default")}
+                {t("settings.ai.defaultConversationUse")}
               </span>
             )}
+            {usedForImages && <span className="inline-flex items-center h-5 px-2 text-[11px] font-medium rounded-[4px] bg-background shadow-minimal text-foreground/60">{t("settings.ai.imageGenerationUse")}</span>}
             {isDuplicateAccount && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="inline-flex items-center" aria-label={t("settings.ai.duplicateAccount")}>
-                    <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                    <AlertTriangle className="h-3.5 w-3.5 text-info" />
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>{t("settings.ai.duplicateAccount")}</TooltipContent>
               </Tooltip>
             )}
           </div>
-          {oauthIdentityLine && (
-            <span className="text-xs text-muted-foreground truncate">{oauthIdentityLine}</span>
-          )}
         </div>
       )}
-      description={getDescription()}
+      description={description}
     >
       <DropdownMenu modal={false} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
@@ -399,210 +288,7 @@ function ConnectionRow({ connection, isLastConnection, onRenameClick, onDelete, 
           </StyledDropdownMenuItem>
         </StyledDropdownMenuContent>
       </DropdownMenu>
-    </SettingsRow>
-  )
-}
-
-// ============================================
-// Workspace Override Card Component
-// ============================================
-
-interface WorkspaceOverrideCardProps {
-  workspace: Workspace
-  llmConnections: LlmConnectionWithStatus[]
-  onSettingsChange: () => void
-}
-
-const WORKSPACE_SETTING_LABELS: Partial<Record<keyof WorkspaceSettings, string>> = {
-  defaultLlmConnection: 'workspace connection override',
-  model: 'workspace model override',
-  thinkingLevel: 'workspace thinking override',
-}
-
-function WorkspaceOverrideCard({ workspace, llmConnections, onSettingsChange }: WorkspaceOverrideCardProps) {
-  const { t } = useTranslation()
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [settings, setSettings] = useState<WorkspaceSettings | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  // Fetch workspace icon as data URL (file:// URLs don't work in renderer)
-  const iconUrl = useWorkspaceIcon(workspace)
-
-  // Load workspace settings
-  useEffect(() => {
-    const loadSettings = async () => {
-      if (!window.electronAPI) return
-      setIsLoading(true)
-      try {
-        const ws = await window.electronAPI.getWorkspaceSettings(workspace.id)
-        setSettings(ws)
-      } catch (error) {
-        console.error('Failed to load workspace settings:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadSettings()
-  }, [workspace.id])
-
-  // Save workspace setting helper (optimistic update with rollback)
-  const updateSetting = useCallback(async <K extends keyof WorkspaceSettings>(key: K, value: WorkspaceSettings[K]) => {
-    if (!window.electronAPI) return
-
-    const previousValue = settings?.[key]
-
-    // Optimistic UI update for immediate feedback
-    setSettings(prev => prev ? { ...prev, [key]: value } : prev)
-
-    try {
-      await window.electronAPI.updateWorkspaceSetting(workspace.id, key, value)
-      onSettingsChange()
-    } catch (error) {
-      // Roll back only the changed key
-      setSettings(prev => prev ? { ...prev, [key]: previousValue } : prev)
-
-      const message = error instanceof Error ? error.message : 'Unknown error'
-      const settingLabel = WORKSPACE_SETTING_LABELS[key] ?? String(key)
-      console.error(`Failed to save ${String(key)}:`, error)
-      toast.error(t("toast.failedToSaveSetting", { setting: settingLabel }), {
-        description: message,
-      })
-    }
-  }, [workspace.id, onSettingsChange, settings])
-
-  const handleConnectionChange = useCallback((slug: string) => {
-    // 'global' means use app default (clear workspace override)
-    updateSetting('defaultLlmConnection', slug === 'global' ? undefined : slug)
-  }, [updateSetting])
-
-  const handleModelChange = useCallback((model: string) => {
-    // 'global' means use app default (clear workspace override)
-    updateSetting('model', model === 'global' ? undefined : model)
-  }, [updateSetting])
-
-  const handleThinkingChange = useCallback((level: string) => {
-    // 'global' means use app default (clear workspace override)
-    updateSetting('thinkingLevel', level === 'global' ? undefined : level as ThinkingLevel)
-  }, [updateSetting])
-
-  // Determine if workspace has any overrides
-  const hasOverrides = settings && (
-    settings.defaultLlmConnection ||
-    settings.model ||
-    settings.thinkingLevel
-  )
-
-  // Get display values
-  const currentConnection = settings?.defaultLlmConnection || 'global'
-  const currentModel = settings?.model || 'global'
-  const currentThinking = settings?.thinkingLevel || 'global'
-
-  // Derive workspace's effective connection (override or default)
-  const workspaceEffectiveConnection = useMemo(() => {
-    const connSlug = settings?.defaultLlmConnection
-    return connSlug ? llmConnections.find(c => c.slug === connSlug) : llmConnections.find(c => c.isDefault)
-  }, [settings?.defaultLlmConnection, llmConnections])
-
-  // Get summary text for collapsed state
-  const getSummary = () => {
-    if (!hasOverrides) return t("settings.ai.usingDefaults")
-    const parts: string[] = []
-    if (settings?.defaultLlmConnection) {
-      const conn = llmConnections.find(c => c.slug === settings.defaultLlmConnection)
-      parts.push(conn?.name || settings.defaultLlmConnection)
-    }
-    if (settings?.model) {
-      parts.push(getModelShortName(settings.model))
-    }
-    if (settings?.thinkingLevel) {
-      const level = THINKING_LEVELS.find(l => l.id === settings.thinkingLevel)
-      parts.push(level ? t(level.nameKey) : settings.thinkingLevel)
-    }
-    return parts.join(' · ')
-  }
-
-  return (
-    <SettingsCard>
-      <button
-        type="button"
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between py-3 px-4 hover:bg-foreground/[0.02] transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              'w-6 h-6 rounded-full overflow-hidden bg-foreground/5 flex items-center justify-center',
-              'ring-1 ring-border/50'
-            )}
-          >
-            {iconUrl ? (
-              <img src={iconUrl} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-xs font-medium text-muted-foreground">
-                {workspace.name?.charAt(0)?.toUpperCase() || 'W'}
-              </span>
-            )}
-          </div>
-          <div className="text-left">
-            <div className="text-sm font-medium">{workspace.name}</div>
-            <div className="text-xs text-muted-foreground">
-              {isLoading ? t("common.loading") : getSummary()}
-            </div>
-          </div>
-        </div>
-        {isExpanded ? (
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        ) : (
-          <ChevronRight className="h-4 w-4 text-muted-foreground" />
-        )}
-      </button>
-
-      <InlineExpand isOpen={isExpanded}>
-        <div className="border-t border-border/50 px-4 py-2">
-          <SettingsMenuSelectRow
-            label={t("settings.ai.connection")}
-            description={t("settings.ai.connectionDesc")}
-            value={currentConnection}
-            onValueChange={handleConnectionChange}
-            options={[
-              { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
-              ...llmConnections.map((conn) => ({
-                value: conn.slug,
-                label: conn.name,
-                description: conn.providerType === 'pi' ? 'Phaneris Backend' :
-                             conn.providerType || 'Unknown',
-              })),
-            ]}
-          />
-          <SettingsMenuSelectRow
-            label={t("settings.ai.model")}
-            description={t("settings.ai.modelDesc")}
-            value={currentModel}
-            onValueChange={handleModelChange}
-            options={[
-              { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
-              ...getModelOptionsForConnection(workspaceEffectiveConnection).map(o => ({
-                ...o, description: o.descriptionKey ? t(o.descriptionKey) : o.description,
-              })),
-            ]}
-          />
-          <SettingsMenuSelectRow
-            label={t("settings.ai.thinking")}
-            description={t("settings.ai.thinkingDesc")}
-            value={currentThinking}
-            onValueChange={handleThinkingChange}
-            options={[
-              { value: 'global', label: t("settings.ai.useDefault"), description: t("settings.ai.inheritFromApp") },
-              ...THINKING_LEVELS.map(({ id, nameKey, descriptionKey }) => ({
-                value: id,
-                label: t(nameKey),
-                description: t(descriptionKey),
-              })),
-            ]}
-          />
-        </div>
-      </InlineExpand>
-    </SettingsCard>
+    </SettingsRow></div>
   )
 }
 
@@ -623,7 +309,13 @@ function getApiKeyMethodForConnection(conn: LlmConnectionWithStatus): ApiSetupMe
 
 export default function AiSettingsPage() {
   const { t } = useTranslation()
-  const { llmConnections, refreshLlmConnections, activeWorkspaceId } = useAppShellContext()
+  const { llmConnections, refreshLlmConnections, activeWorkspaceId, workspaces } = useAppShellContext()
+
+  const [decisionConfigurationOpen, setDecisionConfigurationOpen] = useState(() => sessionStorage.getItem(AI_SETTINGS_FOCUS_KEY) === 'decisions')
+  const [imageStatus, setImageStatus] = useState<ImageGenerationStatus | null>(null)
+  const [imageConfigurationOpen, setImageConfigurationOpen] = useState(false)
+  const [savingImages, setSavingImages] = useState(false)
+  const [imageSettingsError, setImageSettingsError] = useState<string | null>(null)
 
   // API Setup overlay state
   const [showApiSetup, setShowApiSetup] = useState(false)
@@ -639,18 +331,37 @@ export default function AiSettingsPage() {
     customApi?: CustomEndpointApi
   } | undefined>(undefined)
   const setFullscreenOverlayOpen = useSetAtom(fullscreenOverlayOpenAtom)
+  const setGuardedAvailable = useSetAtom(guardedModeAvailableAtom)
 
-  // Workspaces for override cards
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([])
+  const [workspaceSettings, setWorkspaceSettings] = useState<WorkspaceSettings | null>(null)
+  const [workspaceLoadError, setWorkspaceLoadError] = useState(false)
+  const activeWorkspace = workspaces.find(workspace => workspace.id === activeWorkspaceId)
+  useEffect(() => {
+    let cancelled = false
+    setWorkspaceSettings(null); setWorkspaceLoadError(false)
+    if (activeWorkspaceId) window.electronAPI.getWorkspaceSettings(activeWorkspaceId).then(settings => {
+      if (!cancelled) { setWorkspaceSettings(settings); setWorkspaceLoadError(!settings) }
+    }).catch(() => { if (!cancelled) setWorkspaceLoadError(true) })
+    return () => { cancelled = true }
+  }, [activeWorkspaceId, llmConnections])
 
   // Default settings state (app-level)
   const [defaultThinking, setDefaultThinking] = useState<ThinkingLevel>(DEFAULT_THINKING_LEVEL)
   const [extendedPromptCache, setExtendedPromptCache] = useState(false)
+  const [savingExtendedCache, setSavingExtendedCache] = useState(false)
+  const [performanceOpen, setPerformanceOpen] = useState(false)
+  const [imageConnectionSetup, setImageConnectionSetup] = useState(false)
   const [promptCacheWarming, setPromptCacheWarming] = useState(false)
   const [savingCacheWarming, setSavingCacheWarming] = useState(false)
   const [contextPolicy, setContextPolicy] = useState<ContextPolicy>('compact')
   const [savingContextPolicy, setSavingContextPolicy] = useState(false)
+  const contextPolicyOptions = [
+    { value: 'compact', label: t("settings.ai.context.autoCompact"), description: t("settings.ai.context.autoCompactDesc") },
+    { value: 'handoff', label: t("settings.ai.context.autoHandoff"), description: t("settings.ai.context.autoHandoffDesc") },
+    { value: 'manual', label: t("settings.ai.context.manual"), description: t("settings.ai.context.manualDesc") },
+  ]
   const [rtkEnabled, setRtkEnabled] = useState(false)
+  const [savingRtk, setSavingRtk] = useState(false)
   const [rtkStatus, setRtkStatus] = useState<RtkStatusInfo | null>(null)
   const [rtkRechecking, setRtkRechecking] = useState(false)
   const [rtkUpdateOpen, setRtkUpdateOpen] = useState(false)
@@ -658,7 +369,8 @@ export default function AiSettingsPage() {
 
   // Decision model (Jev / TypeSafe System One) — opt-in decision layer.
   // The card is always shown; everything behind it stays off until the user enables it.
-  const [decisionAdvancedOpen, setDecisionAdvancedOpen] = useState(false)
+  const [decisionLoadError, setDecisionLoadError] = useState<string | null>(null)
+  const [savingDecisions, setSavingDecisions] = useState(false)
   const [decisionStatus, setDecisionStatus] = useState<DecisionLayerStatus | null>(null)
   const [decisionKeyDraft, setDecisionKeyDraft] = useState('')
   const [decisionModelDraft, setDecisionModelDraft] = useState('')
@@ -691,9 +403,6 @@ export default function AiSettingsPage() {
     const load = async () => {
       if (!window.electronAPI) return
       try {
-        const ws = await window.electronAPI.getWorkspaces()
-        setWorkspaces(ws)
-
         const defaultThinkingLevel = await window.electronAPI.getDefaultThinkingLevel()
         setDefaultThinking(defaultThinkingLevel)
 
@@ -732,6 +441,9 @@ export default function AiSettingsPage() {
     setShowApiSetup(false)
     setFullscreenOverlayOpen(false)
     setEditingConnectionSlug(null)
+    setImageConnectionSetup(false)
+    setIsDirectEdit(false)
+    setEditInitialValues(undefined)
   }, [setFullscreenOverlayOpen])
 
   // Derive existing slugs for unique slug generation
@@ -907,28 +619,19 @@ export default function AiSettingsPage() {
 
       if (result.success) {
         setValidationStates(prev => ({ ...prev, [slug]: { state: 'success' } }))
-        // Auto-clear success state after 3 seconds
-        setTimeout(() => {
-          setValidationStates(prev => ({ ...prev, [slug]: { state: 'idle' } }))
-        }, 3000)
       } else {
         setValidationStates(prev => ({
           ...prev,
           [slug]: { state: 'error', error: result.error }
         }))
-        // Auto-clear error state after 5 seconds
-        setTimeout(() => {
-          setValidationStates(prev => ({ ...prev, [slug]: { state: 'idle' } }))
-        }, 5000)
+
       }
     } catch (error) {
       setValidationStates(prev => ({
         ...prev,
         [slug]: { state: 'error', error: t("settings.ai.validationFailed") }
       }))
-      setTimeout(() => {
-        setValidationStates(prev => ({ ...prev, [slug]: { state: 'idle' } }))
-      }, 5000)
+
     }
   }, [t])
 
@@ -1018,10 +721,12 @@ export default function AiSettingsPage() {
   }, [defaultThinking])
 
   const handleExtendedPromptCacheChange = useCallback(async (enabled: boolean) => {
-    setExtendedPromptCache(enabled)
-    await window.electronAPI?.setExtendedPromptCache(enabled)
-  }, [])
-
+    const previous = extendedPromptCache
+    setSavingExtendedCache(true); setExtendedPromptCache(enabled)
+    try { await window.electronAPI.setExtendedPromptCache(enabled) }
+    catch { setExtendedPromptCache(previous); toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.extendedPromptCache") })) }
+    finally { setSavingExtendedCache(false) }
+  }, [extendedPromptCache, t])
 
   const handlePromptCacheWarmingChange = useCallback(async (enabled: boolean) => {
     setSavingCacheWarming(true)
@@ -1053,9 +758,12 @@ export default function AiSettingsPage() {
   }, [contextPolicy, t])
 
   const handleRtkToggle = useCallback(async (enabled: boolean) => {
-    setRtkEnabled(enabled)
-    await window.electronAPI?.setRtkEnabled(enabled)
-  }, [])
+    const previous = rtkEnabled
+    setSavingRtk(true); setRtkEnabled(enabled)
+    try { await window.electronAPI.setRtkEnabled(enabled) }
+    catch { setRtkEnabled(previous); toast.error(t("toast.failedToSaveSetting", { setting: t("settings.ai.rtk.title") })) }
+    finally { setSavingRtk(false) }
+  }, [rtkEnabled, t])
 
   const handleRecheckRtk = useCallback(async () => {
     setRtkRechecking(true)
@@ -1085,21 +793,56 @@ export default function AiSettingsPage() {
     }
   }, [rtkStatus?.path, rtkStatus?.outdated, rtkEnabled, refreshRtkGain])
 
+  const [imageRetry, setImageRetry] = useState(0)
+  useEffect(() => {
+    let cancelled = false
+    if (typeof window.electronAPI.getImageGenerationSettings !== 'function') return
+    window.electronAPI.getImageGenerationSettings().then(status => {
+      if (!cancelled) { setImageStatus(status); setImageSettingsError(null) }
+    }).catch(error => { if (!cancelled) setImageSettingsError(String(error)) })
+    return () => { cancelled = true }
+  }, [llmConnections, imageRetry])
+
+  const saveImageSettings = useCallback(async (settings: ImageGenerationSettings) => {
+    setSavingImages(true)
+    try { setImageStatus(await window.electronAPI.setImageGenerationSettings(settings)); setImageSettingsError(null) }
+    catch (error) { setImageSettingsError(error instanceof Error ? error.message : String(error)) }
+    finally { setSavingImages(false) }
+  }, [])
+
+  useEffect(() => {
+    const focus = () => {
+      if (sessionStorage.getItem(AI_SETTINGS_FOCUS_KEY) !== 'decisions') return
+      setDecisionConfigurationOpen(true)
+      if (decisionStatus || decisionLoadError) {
+        sessionStorage.removeItem(AI_SETTINGS_FOCUS_KEY)
+        requestAnimationFrame(() => document.querySelector('[data-decision-settings]')?.scrollIntoView({ block: 'start' }))
+      }
+    }
+    focus(); window.addEventListener(AI_SETTINGS_FOCUS_EVENT, focus)
+    return () => window.removeEventListener(AI_SETTINGS_FOCUS_EVENT, focus)
+  }, [decisionStatus, decisionLoadError])
+
   // ---- Decision model (Jev) ----
   const refreshDecisionStatus = useCallback(async (seedDrafts: boolean) => {
     if (typeof window.electronAPI?.getDecisionLayerStatus !== 'function') return
     try {
       const status = await window.electronAPI.getDecisionLayerStatus()
       setDecisionStatus(status)
+      setDecisionLoadError(null)
+      setGuardedAvailable(status.guardedMode?.available === true)
       if (seedDrafts) {
         setDecisionModelDraft(status.settings.model ?? '')
         setDecisionBaseUrlDraft(status.settings.baseUrl ?? '')
         decisionDraftsSeededRef.current = true
       }
     } catch (error) {
+      setGuardedAvailable(false)
+      setDecisionLoadError(error instanceof Error ? error.message : String(error))
+      setDecisionStatus(previous => previous ? { ...previous, guardedMode: { available: false, reason: 'unavailable' } } : previous)
       console.error('Failed to load decision model settings:', error)
     }
-  }, [])
+  }, [setGuardedAvailable])
 
   // Reusable connections come from the LLM connection list, so refresh with it
   // (background model fetches re-emit that list; only the first load seeds drafts).
@@ -1108,10 +851,12 @@ export default function AiSettingsPage() {
   }, [refreshDecisionStatus, llmConnections])
 
   const updateDecisionSettings = useCallback(async (patch: DecisionLayerSettingsPatch) => {
+    setSavingDecisions(true)
     try {
       const next = await window.electronAPI.setDecisionLayerSettings(patch)
       setDecisionStatus(prev => (prev ? { ...prev, settings: next } : prev))
       setDecisionTestResult(null)
+      await refreshDecisionStatus(false)
       // Mode pickers offer Guarded mode only while it is on: let them refresh.
       window.dispatchEvent(new Event(DECISION_SETTINGS_CHANGED_EVENT))
       // A provider/connection switch drops the model + base URL overrides server-side
@@ -1123,8 +868,8 @@ export default function AiSettingsPage() {
     } catch (error) {
       console.error('Failed to update decision model settings:', error)
       toast.error(t("settings.ai.decisions.saveFailed"))
-    }
-  }, [t])
+    } finally { setSavingDecisions(false) }
+  }, [t, refreshDecisionStatus])
 
   const decisionPreset = useMemo(
     () => decisionStatus?.presets.find(p => p.id === decisionStatus.settings.provider),
@@ -1161,8 +906,6 @@ export default function AiSettingsPage() {
       .map(group => ({ ...group, toggles: group.toggles.filter(({ feature }) => feature in decisionStatus.settings.features) }))
       .filter(group => group.toggles.length > 0)
     : []
-  const decisionReportedToggles = decisionReportedGroups.flatMap(group => group.toggles)
-  const decisionFeaturesOn = decisionReportedToggles.filter(({ feature }) => decisionStatus?.settings.features[feature]).length
   const decisionKeySourceValue = decisionStatus?.settings.connectionSlug
     ? `connection:${decisionStatus.settings.connectionSlug}`
     : `provider:${decisionStatus?.settings.provider ?? 'typesafe'}`
@@ -1241,6 +984,7 @@ export default function AiSettingsPage() {
       setDecisionKeyDraft('')
       toast.success(t("settings.ai.decisions.keySaved"))
       await refreshDecisionStatus(false)
+      window.dispatchEvent(new Event(DECISION_SETTINGS_CHANGED_EVENT))
     } catch (error) {
       console.error('Failed to save decision model key:', error)
       toast.error(t("settings.ai.decisions.saveFailed"))
@@ -1253,6 +997,7 @@ export default function AiSettingsPage() {
       await window.electronAPI.deleteDecisionApiKey(decisionStatus.settings.provider)
       toast.success(t("settings.ai.decisions.keyRemoved"))
       await refreshDecisionStatus(false)
+      window.dispatchEvent(new Event(DECISION_SETTINGS_CHANGED_EVENT))
     } catch (error) {
       console.error('Failed to remove decision model key:', error)
       toast.error(t("settings.ai.decisions.saveFailed"))
@@ -1281,11 +1026,27 @@ export default function AiSettingsPage() {
       : t("settings.ai.decisions.testFailed", { message: decisionTestResult.failure.message })
     : t("settings.ai.decisions.testDesc")
 
-  // Refresh callback for workspace cards
-  const handleWorkspaceSettingsChange = useCallback(() => {
-    // Refresh context so changes propagate immediately
-    refreshLlmConnections?.()
-  }, [refreshLlmConnections])
+  const openImageConnectionSetup = () => {
+    setImageConnectionSetup(true)
+    setEditInitialValues({ activePreset: 'openai' })
+    openApiSetup()
+    apiSetupOnboarding.jumpToCredentials('pi_api_key')
+  }
+  const imageSelected = imageStatus?.connections.find(c => c.slug === imageStatus.settings.connectionSlug)
+  const imageSelectedName = imageSelected?.name || llmConnections.find(c => c.slug === imageStatus?.settings.connectionSlug)?.name || imageStatus?.settings.connectionSlug
+  const imageEffective = imageStatus?.effective
+  const imageUnconfigured = !!imageStatus && !imageStatus.settings.connectionSlug && !imageStatus.settings.model && !imageStatus.connections.length
+  const imageStatusError = imageUnconfigured ? undefined : imageStatus?.error
+  const imageModelConnection = imageSelected || (!imageStatus?.settings.connectionSlug ? imageStatus?.connections.find(c => c.slug === imageEffective?.connectionSlug)
+    || imageStatus?.connections.find(c => c.available && c.slug === defaultConnection?.slug) || imageStatus?.connections.find(c => c.available) : undefined)
+  const imageSummary = imageSettingsError ? t("settings.ai.statusUnavailable") : !imageStatus ? t("common.loading")
+    : imageEffective ? `${imageStatus.settings.connectionSlug ? '' : `${t("settings.ai.images.automatic")}: `}${imageEffective.connectionName} · ${imageEffective.model}`
+    : imageStatus.settings.connectionSlug ? t("settings.ai.images.accountUnavailable", { name: imageSelectedName }) : imageStatusError ? t("settings.ai.images.needsAttention") : t("settings.ai.images.notConfigured")
+  const decisionSummary = decisionLoadError ? t("settings.ai.statusUnavailable") : !decisionStatus ? t("common.loading")
+    : !decisionStatus.settings.enabled ? `${t("settings.ai.decisions.advancedSummaryOff")}${decisionStatus.settings.features.guardedMode ? ` · ${t("settings.ai.guarded.notReadySummary")}` : ''}`
+    : decisionStatus.settings.features.guardedMode && !decisionStatus.guardedMode?.available ? t("settings.ai.guarded.notReadySummary")
+    : t("settings.ai.decisionConfigured", { provider: decisionPreset?.label, model: decisionStatus.settings.model || decisionPreset?.defaultModel })
+  const performanceSummary = [extendedPromptCache && t("settings.ai.extendedPromptCache"), promptCacheWarming && t("settings.ai.promptCacheWarming"), rtkEnabled && rtkStatus?.installed && !rtkStatus.outdated && 'RTK'].filter(Boolean).join(' · ') || t("settings.ai.usingDefaults")
 
   return (
     <div className="h-full flex flex-col">
@@ -1300,65 +1061,8 @@ export default function AiSettingsPage() {
             />
 
             <div className="space-y-8">
-              {/* Default Settings - only show if connections exist */}
-              {llmConnections.length > 0 && (
-              <SettingsSection title={t("settings.ai.defaultSection")} description={t("settings.ai.defaultSectionDesc")}>
-                <SettingsCard>
-                  <SettingsMenuSelectRow
-                    label={t("settings.ai.connection")}
-                    description={t("settings.ai.connectionDesc")}
-                    value={defaultConnection?.slug || ''}
-                    onValueChange={handleSetDefaultConnection}
-                    options={llmConnections.map((conn) => ({
-                      value: conn.slug,
-                      label: conn.name,
-                      description: conn.providerType === 'pi' ? 'Phaneris Backend' :
-                                   conn.providerType === 'pi_compat' ? (conn.baseUrl?.toLowerCase().includes('manifest.build') ? 'Manifest' : 'Custom Endpoint') :
-                                   conn.providerType || 'Unknown',
-                    }))}
-                  />
-                  <SettingsMenuSelectRow
-                    label={t("settings.ai.model")}
-                    description={t("settings.ai.modelDesc")}
-                    value={defaultModel}
-                    onValueChange={handleDefaultModelChange}
-                    options={getModelOptionsForConnection(defaultConnection).map(o => ({
-                      ...o, description: o.descriptionKey ? t(o.descriptionKey) : o.description,
-                    }))}
-                  />
-                  <SettingsMenuSelectRow
-                    label={t("settings.ai.thinking")}
-                    description={t("settings.ai.thinkingDesc")}
-                    value={defaultThinking}
-                    onValueChange={(v) => handleDefaultThinkingChange(v as ThinkingLevel)}
-                    options={THINKING_LEVELS.map(({ id, nameKey, descriptionKey }) => ({
-                      value: id,
-                      label: t(nameKey),
-                      description: t(descriptionKey),
-                    }))}
-                  />
-                </SettingsCard>
-              </SettingsSection>
-              )}
-
-              {/* Workspace Overrides - only show if connections exist */}
-              {workspaces.length > 0 && llmConnections.length > 0 && (
-                <SettingsSection title={t("settings.ai.workspaceOverrides")} description={t("settings.ai.workspaceOverridesDesc")}>
-                  <div className="space-y-2">
-                    {workspaces.map((workspace) => (
-                      <WorkspaceOverrideCard
-                        key={workspace.id}
-                        workspace={workspace}
-                        llmConnections={llmConnections}
-                        onSettingsChange={handleWorkspaceSettingsChange}
-                      />
-                    ))}
-                  </div>
-                </SettingsSection>
-              )}
-
               {/* Connections Management */}
-              <SettingsSection title={t("settings.ai.connections")} description={t("settings.ai.connectionsDesc")}>
+              <div data-ai-settings-section="connections"><SettingsSection title={t("settings.ai.connections")} description={t("settings.ai.connectionsDesc")}>
                 <SettingsCard>
                   {llmConnections.length === 0 ? (
                     <div className="px-4 py-6 text-center text-sm text-muted-foreground">
@@ -1375,6 +1079,7 @@ export default function AiSettingsPage() {
                       <ConnectionRow
                         key={conn.slug}
                         connection={conn}
+                        usedForImages={imageStatus?.effective?.connectionSlug === conn.slug}
                         isLastConnection={false}
                         onRenameClick={() => handleRenameClick(conn)}
                         onDelete={() => handleDeleteConnection(conn.slug)}
@@ -1398,15 +1103,255 @@ export default function AiSettingsPage() {
                     {t("settings.ai.addConnection")}
                   </button>
                 </div>
-              </SettingsSection>
+              </SettingsSection></div>
 
-              {/* Performance */}
-              <SettingsSection title={t("settings.ai.performance")} description={t("settings.ai.performanceDesc")}>
+              <div data-ai-settings-section="conversation">
+              <SettingsSection title={t("settings.ai.defaultSection")} description={t("settings.ai.defaultSectionDesc")}>
                 <SettingsCard>
+                  <SettingsMenuSelectRow
+                    id="default-connection-select"
+                    label={t("settings.ai.connection")}
+                    description={t("settings.ai.connectionDesc")}
+                    value={defaultConnection?.slug || ''}
+                    disabled={!llmConnections.length}
+                    onValueChange={handleSetDefaultConnection}
+                    options={llmConnections.map((conn) => ({
+                      value: conn.slug,
+                      label: conn.name,
+                      description: conn.authType === 'oauth' ? t("settings.ai.authSubscription") : t("settings.ai.authApiKey"),
+                    }))}
+                  />
+                  <SettingsMenuSelectRow
+                    label={t("settings.ai.model")}
+                    description={t("settings.ai.modelDesc")}
+                    value={defaultModel}
+                    disabled={!defaultConnection}
+                    onValueChange={handleDefaultModelChange}
+                    options={getModelOptionsForConnection(defaultConnection).map(o => ({
+                      ...o, description: o.descriptionKey ? t(o.descriptionKey) : o.description,
+                    }))}
+                  />
+                  <SettingsMenuSelectRow
+                    label={t("settings.ai.thinking")}
+                    description={t("settings.ai.thinkingDesc")}
+                    value={defaultThinking}
+                    onValueChange={(v) => handleDefaultThinkingChange(v as ThinkingLevel)}
+                    options={THINKING_LEVELS.map(({ id, nameKey, descriptionKey }) => ({
+                      value: id,
+                      label: t(nameKey),
+                      description: t(descriptionKey),
+                    }))}
+                  />
+                  <SettingsMenuSelectRow
+                    id="context-policy-select"
+                    label={t("settings.ai.context.title")}
+                    description={contextPolicyOptions.find(option => option.value === contextPolicy)?.description}
+                    value={contextPolicy}
+                    options={contextPolicyOptions}
+                    disabled={savingContextPolicy}
+                    onValueChange={value => void handleContextPolicyChange(value as ContextPolicy)}
+                  />
+
+                </SettingsCard>
+                {activeWorkspace && <div data-workspace-conversation-link><SettingsCard>
+                  <SettingsRow label={t("settings.ai.workspaceModels")} onClick={() => navigate(routes.view.settings('workspace'))}
+                    description={workspaceLoadError ? t("settings.ai.workspaceLoadFailed") : !workspaceSettings ? t("common.loading") : workspaceSettings.defaultLlmConnection || workspaceSettings.model || workspaceSettings.thinkingLevel ? t("settings.ai.workspaceOverrideStatus", { name: activeWorkspace.name }) : t("settings.ai.workspaceInherited")}>
+                    <Button variant="ghost" size="sm" onClick={() => navigate(routes.view.settings('workspace'))} aria-label={t("settings.ai.workspaceModels")}><ChevronRight className="size-4" /></Button>
+                  </SettingsRow>
+                </SettingsCard></div>}
+              </SettingsSection></div>
+              <div data-ai-settings-section="advanced"><SettingsSection title={t("settings.ai.advanced")}>
+                <div className="space-y-3">
+                  <div data-ai-advanced="images" data-image-generation-settings>
+                    <SettingsDisclosure title={t("settings.ai.images.title")} summary={imageSummary} open={imageConfigurationOpen} onOpenChange={setImageConfigurationOpen}>
+                      <p className="px-4 pt-4 pb-1 text-xs text-muted-foreground">{t("settings.ai.images.description")}</p>
+                      {imageStatus && (imageStatus.connections.length > 0 || imageStatus.settings.connectionSlug) ? <>
+                        <SettingsMenuSelectRow label={t("settings.ai.connection")} value={imageStatus.settings.connectionSlug || 'automatic'} disabled={savingImages}
+                          onValueChange={slug => void saveImageSettings(slug === 'automatic' ? {} : { connectionSlug: slug })}
+                          options={[{ value: 'automatic', label: t("settings.ai.images.automatic"), description: imageEffective ? `${imageEffective.connectionName} · ${imageEffective.model}` : t("settings.ai.images.automaticDesc") },
+                            ...(imageStatus.settings.connectionSlug && !imageSelected ? [{ value: imageStatus.settings.connectionSlug, label: imageSelectedName || imageStatus.settings.connectionSlug, description: t("settings.ai.notAuthenticated") }] : []),
+                            ...imageStatus.connections.map(c => ({ value: c.slug, label: c.name, description: c.available ? c.provider : t("settings.ai.notAuthenticated") }))]} />
+                        {imageModelConnection && <SettingsMenuSelectRow label={t("settings.ai.model")} value={imageStatus.settings.model || 'provider-default'} disabled={savingImages}
+                          onValueChange={model => void saveImageSettings({ ...imageStatus.settings, ...(model === 'provider-default' ? { model: undefined } : { model }) })}
+                          options={[{ value: 'provider-default', label: t("settings.ai.useConnectionDefault"), description: imageEffective?.model },
+                            ...(imageStatus.settings.model && !imageModelConnection.models.some(m => m.id === imageStatus.settings.model) ? [{ value: imageStatus.settings.model, label: imageStatus.settings.model, description: t("settings.ai.unavailableModel") }] : []),
+                            ...imageModelConnection.models.map(model => ({ value: model.id, label: model.name }))]} />}
+                        {imageStatus.settings.connectionSlug && <p className="px-4 pb-4 text-xs text-muted-foreground">{t("settings.ai.images.selectionNote")}</p>}
+                      </> : !imageStatus && !imageSettingsError ? <SettingsRow label={t("settings.ai.images.effective")} description={t("common.loading")} /> : null}
+                      {imageStatus && !imageStatus.connections.length && !imageStatus.settings.connectionSlug && <SettingsRow label={t("settings.ai.images.notConfigured")} description={t("settings.ai.images.setupGuidance")}>
+                        <Button variant="outline" size="sm" onClick={openImageConnectionSetup}>{t("settings.ai.images.addConnection")}</Button>
+                      </SettingsRow>}
+                      {(imageSettingsError || imageStatusError) && <div role="alert" className="px-4 pb-4 space-y-3 text-sm text-destructive">
+                        <p>{imageSettingsError || imageStatusError}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {imageSettingsError && <Button variant="outline" size="sm" onClick={() => setImageRetry(n => n + 1)}>{t("common.retry")}</Button>}
+                          {imageStatus?.settings.connectionSlug && !imageEffective && <>
+                            {llmConnections.find(c => c.slug === imageStatus.settings.connectionSlug) && <Button variant="outline" size="sm" onClick={() => handleEditConnection(llmConnections.find(c => c.slug === imageStatus.settings.connectionSlug)!)}>{t("settings.ai.images.updateKey")}</Button>}
+                            <Button variant="outline" size="sm" onClick={openImageConnectionSetup}>{t("settings.ai.images.addConnection")}</Button>
+                          </>}
+                        </div>
+                      </div>}
+                    </SettingsDisclosure>
+                  </div>
+                  <div data-ai-advanced="decisions" data-decision-settings>
+                    <SettingsDisclosure title={t("settings.ai.decisions.title")} summary={decisionSummary} open={decisionConfigurationOpen} onOpenChange={setDecisionConfigurationOpen}>
+                      {decisionLoadError ? <div role="alert" className="craft-settings-padding flex flex-wrap items-center justify-between gap-3 text-sm text-destructive">
+                        <span>{decisionLoadError}</span><Button variant="outline" size="sm" onClick={() => void refreshDecisionStatus(!decisionDraftsSeededRef.current)}>{t("common.retry")}</Button>
+                      </div> : decisionStatus ? <>
+                    <SettingsToggle
+                      label={t("settings.ai.decisions.enable")}
+                      description={t("settings.ai.decisions.enableDesc")}
+                      checked={decisionStatus.settings.enabled}
+                      disabled={savingDecisions}
+                      onCheckedChange={(enabled) => { void updateDecisionSettings({ enabled }) }}
+                    />
+                    <SettingsMenuSelectRow
+                      label={t("settings.ai.decisions.keySource")}
+                      description={t("settings.ai.decisions.keySourceDesc")}
+                      value={decisionKeySourceValue}
+                      disabled={savingDecisions}
+                      onValueChange={handleDecisionKeySourceChange}
+                      options={decisionKeySourceOptions}
+                      menuWidth={340}
+                    />
+                    {decisionUsesLocalProvider && (
+                      <SettingsInput
+                        inCard
+                        type="url"
+                        label={t("settings.ai.decisions.baseUrl")}
+                        description={decisionUsesCustomProvider ? t("settings.ai.decisions.baseUrlDesc") : t("settings.ai.decisions.baseUrlLocalDesc")}
+                        value={decisionBaseUrlDraft}
+                        disabled={savingDecisions}
+                        onChange={setDecisionBaseUrlDraft}
+                        onBlur={() => commitDecisionField('baseUrl', decisionBaseUrlDraft)}
+                        placeholder={decisionPreset?.baseUrl || 'http://localhost:8080'}
+                      />
+                    )}
+                    {decisionUsesLocalProvider && (
+                      <SettingsRow
+                        label={t("settings.ai.decisions.localServer")}
+                        description={decisionProbeDescription}
+                      >
+                        {decisionPreset?.docsUrl && (
+                          <Button
+                            size="sm"
+                            onClick={() => window.electronAPI?.openUrl(decisionPreset.docsUrl!)}
+                            className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
+                          >
+                            {t("settings.ai.decisions.localServerDocs")}
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          onClick={() => { void probeDecisionServer(decisionBaseUrlDraft.trim() || undefined) }}
+                          disabled={decisionProbing}
+                          className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
+                        >
+                          {decisionProbing ? t("common.checking") : t("settings.ai.decisions.recheck")}
+                        </Button>
+                      </SettingsRow>
+                    )}
+                    {decisionUsesLocalProvider && decisionPreset?.installHint && decisionProbe && !decisionProbe.reachable && (
+                      <p className="px-4 pb-3 -mt-1 text-xs text-foreground/60">
+                        {t("settings.ai.decisions.localServerInstallHint")}{' '}
+                        <code className="font-mono text-[11px] text-foreground/80 select-all">{decisionPreset.installHint}</code>
+                      </p>
+                    )}
+                    {!decisionUsesConnection && decisionPreset?.requiresKey !== false && (
+                      decisionHasStoredKey ? (
+                        <SettingsRow
+                          label={t("settings.ai.decisions.apiKey")}
+                          description={t("settings.ai.decisions.apiKeySaved")}
+                        >
+                          <Button
+                            size="sm"
+                            onClick={handleRemoveDecisionKey}
+                            className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
+                          >
+                            {t("settings.ai.decisions.removeKey")}
+                          </Button>
+                        </SettingsRow>
+                      ) : (
+                        <SettingsInput
+                          inCard
+                          type="password"
+                          label={t("settings.ai.decisions.apiKey")}
+                          description={decisionKeyHelpUrl
+                            ? t("settings.ai.decisions.apiKeyDesc", { url: decisionKeyHelpUrl })
+                            : t("settings.ai.decisions.apiKeyDescGeneric")}
+                          value={decisionKeyDraft}
+                          onChange={setDecisionKeyDraft}
+                          placeholder={decisionPreset?.keyPlaceholder}
+                          action={(
+                            <Button
+                              size="sm"
+                              onClick={handleSaveDecisionKey}
+                              disabled={!decisionKeyDraft.trim()}
+                              className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
+                            >
+                              {t("settings.ai.decisions.saveKey")}
+                            </Button>
+                          )}
+                        />
+                      )
+                    )}
+                    <SettingsInput
+                      inCard
+                      label={t("settings.ai.decisions.model")}
+                      description={t("settings.ai.decisions.modelDesc")}
+                      value={decisionModelDraft}
+                      disabled={savingDecisions}
+                      onChange={setDecisionModelDraft}
+                      onBlur={() => commitDecisionField('model', decisionModelDraft)}
+                      placeholder={decisionPreset?.defaultModel}
+                    />
+                    <SettingsRow
+                      label={t("settings.ai.decisions.test")}
+                      description={decisionTestDescription}
+                    >
+                      <Button
+                        size="sm"
+                        onClick={handleTestDecision}
+                        disabled={decisionTesting}
+                        className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
+                      >
+                        {decisionTesting ? t("common.checking") : t("settings.ai.decisions.testRun")}
+                      </Button>
+                    </SettingsRow>
+                    <p className="px-4 pb-4 -mt-1 text-xs text-foreground/60">
+                      {t("settings.ai.decisions.privacyNote")}
+                    </p>
+                      <div className="border-t border-border/50">
+                            {decisionReportedGroups.map((group, index) => (
+                              <div key={group.id} className={cn(index > 0 && 'mt-1 border-t border-border/30')}>
+                                <div className="px-4 pt-3 pb-0.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                  {group.title}
+                                </div>
+                                {group.toggles.map(({ feature, label, description, tooltip }) => (
+                                  <SettingsToggle
+                                    key={feature}
+                                    label={label}
+                                    description={description}
+                                    tooltip={tooltip}
+                                    checked={decisionStatus.settings.features[feature] ?? false}
+                                    disabled={savingDecisions}
+                                    onCheckedChange={(checked) => { void updateDecisionSettings({ features: { [feature]: checked } }) }}
+                                  />
+                                ))}
+                              </div>
+                            ))}
+                      </div>
+                      </> : <SettingsRow label={t("settings.ai.decisions.title")} description={t("common.loading")} />}
+                    </SettingsDisclosure>
+                  </div>
+                  <div data-ai-advanced="performance">
+                    <SettingsDisclosure title={t("settings.ai.performance")} summary={performanceSummary} open={performanceOpen} onOpenChange={setPerformanceOpen}>
+                  <p className="px-4 pt-4 text-xs text-muted-foreground">{t("settings.ai.cacheScope")}</p>
                   <SettingsToggle
                     label={t("settings.ai.extendedPromptCache")}
                     description={t("settings.ai.extendedPromptCacheDesc")}
                     checked={extendedPromptCache}
+                    disabled={savingExtendedCache}
                     onCheckedChange={handleExtendedPromptCacheChange}
                   />
                   <SettingsToggle
@@ -1422,7 +1367,7 @@ export default function AiSettingsPage() {
                         label={t("settings.ai.rtk.title")}
                         description={t("settings.ai.rtk.description")}
                         checked={rtkEnabled && !rtkStatus.outdated}
-                        disabled={rtkStatus.outdated}
+                        disabled={rtkStatus.outdated || savingRtk}
                         onCheckedChange={handleRtkToggle}
                       />
                       {rtkStatus.outdated && (
@@ -1486,218 +1431,10 @@ export default function AiSettingsPage() {
                       </Button>
                     </SettingsRow>
                   )}
-                </SettingsCard>
-              </SettingsSection>
-
-              {/* Context Management */}
-              <SettingsSection title={t("settings.ai.context.title")} description={t("settings.ai.context.description")}>
-                <SettingsCard>
-                  <SettingsToggle
-                    label={t("settings.ai.context.autoCompact")}
-                    description={t("settings.ai.context.autoCompactDesc")}
-                    checked={contextPolicy === 'compact'}
-                    disabled={savingContextPolicy}
-                    onCheckedChange={(checked) => handleContextPolicyChange(policyAfterToggle(contextPolicy, 'compact', checked))}
-                  />
-                  <SettingsToggle
-                    label={t("settings.ai.context.autoHandoff")}
-                    description={t("settings.ai.context.autoHandoffDesc")}
-                    checked={contextPolicy === 'handoff'}
-                    disabled={savingContextPolicy}
-                    onCheckedChange={(checked) => handleContextPolicyChange(policyAfterToggle(contextPolicy, 'handoff', checked))}
-                  />
-                </SettingsCard>
-              </SettingsSection>
-
-              {/* Decision model (Jev) — opt-in decision layer, off by default */}
-              {decisionStatus && (
-                <SettingsSection title={t("settings.ai.decisions.title")} description={t("settings.ai.decisions.sectionDesc")}>
-                  <SettingsCard>
-                    <SettingsToggle
-                      label={t("settings.ai.decisions.enable")}
-                      description={t("settings.ai.decisions.enableDesc")}
-                      checked={decisionStatus.settings.enabled}
-                      onCheckedChange={(enabled) => { void updateDecisionSettings({ enabled }) }}
-                    />
-                    <SettingsMenuSelectRow
-                      label={t("settings.ai.decisions.keySource")}
-                      description={t("settings.ai.decisions.keySourceDesc")}
-                      value={decisionKeySourceValue}
-                      onValueChange={handleDecisionKeySourceChange}
-                      options={decisionKeySourceOptions}
-                      menuWidth={340}
-                    />
-                    {decisionUsesLocalProvider && (
-                      <SettingsInput
-                        inCard
-                        type="url"
-                        label={t("settings.ai.decisions.baseUrl")}
-                        description={decisionUsesCustomProvider ? t("settings.ai.decisions.baseUrlDesc") : t("settings.ai.decisions.baseUrlLocalDesc")}
-                        value={decisionBaseUrlDraft}
-                        onChange={setDecisionBaseUrlDraft}
-                        onBlur={() => commitDecisionField('baseUrl', decisionBaseUrlDraft)}
-                        placeholder={decisionPreset?.baseUrl || 'http://localhost:8080'}
-                      />
-                    )}
-                    {decisionUsesLocalProvider && (
-                      <SettingsRow
-                        label={t("settings.ai.decisions.localServer")}
-                        description={decisionProbeDescription}
-                      >
-                        {decisionPreset?.docsUrl && (
-                          <Button
-                            size="sm"
-                            onClick={() => window.electronAPI?.openUrl(decisionPreset.docsUrl!)}
-                            className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
-                          >
-                            {t("settings.ai.decisions.localServerDocs")}
-                          </Button>
-                        )}
-                        <Button
-                          size="sm"
-                          onClick={() => { void probeDecisionServer(decisionBaseUrlDraft.trim() || undefined) }}
-                          disabled={decisionProbing}
-                          className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
-                        >
-                          {decisionProbing ? t("common.checking") : t("settings.ai.decisions.recheck")}
-                        </Button>
-                      </SettingsRow>
-                    )}
-                    {decisionUsesLocalProvider && decisionPreset?.installHint && decisionProbe && !decisionProbe.reachable && (
-                      <p className="px-4 pb-3 -mt-1 text-xs text-foreground/60">
-                        {t("settings.ai.decisions.localServerInstallHint")}{' '}
-                        <code className="font-mono text-[11px] text-foreground/80 select-all">{decisionPreset.installHint}</code>
-                      </p>
-                    )}
-                    {!decisionUsesConnection && (
-                      decisionHasStoredKey ? (
-                        <SettingsRow
-                          label={t("settings.ai.decisions.apiKey")}
-                          description={t("settings.ai.decisions.apiKeySaved")}
-                        >
-                          <Button
-                            size="sm"
-                            onClick={handleRemoveDecisionKey}
-                            className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
-                          >
-                            {t("settings.ai.decisions.removeKey")}
-                          </Button>
-                        </SettingsRow>
-                      ) : (
-                        <SettingsInput
-                          inCard
-                          type="password"
-                          label={t("settings.ai.decisions.apiKey")}
-                          description={decisionKeyHelpUrl
-                            ? t("settings.ai.decisions.apiKeyDesc", { url: decisionKeyHelpUrl })
-                            : t("settings.ai.decisions.apiKeyDescGeneric")}
-                          value={decisionKeyDraft}
-                          onChange={setDecisionKeyDraft}
-                          placeholder={decisionPreset?.keyPlaceholder}
-                          action={(
-                            <Button
-                              size="sm"
-                              onClick={handleSaveDecisionKey}
-                              disabled={!decisionKeyDraft.trim()}
-                              className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
-                            >
-                              {t("settings.ai.decisions.saveKey")}
-                            </Button>
-                          )}
-                        />
-                      )
-                    )}
-                    <SettingsInput
-                      inCard
-                      label={t("settings.ai.decisions.model")}
-                      description={t("settings.ai.decisions.modelDesc")}
-                      value={decisionModelDraft}
-                      onChange={setDecisionModelDraft}
-                      onBlur={() => commitDecisionField('model', decisionModelDraft)}
-                      placeholder={decisionPreset?.defaultModel}
-                    />
-                    <SettingsRow
-                      label={t("settings.ai.decisions.test")}
-                      description={decisionTestDescription}
-                    >
-                      <Button
-                        size="sm"
-                        onClick={handleTestDecision}
-                        disabled={decisionTesting}
-                        className="bg-background shadow-minimal text-foreground hover:bg-foreground/5 rounded-lg"
-                      >
-                        {decisionTesting ? t("common.checking") : t("settings.ai.decisions.testRun")}
-                      </Button>
-                    </SettingsRow>
-                    <p className="px-4 pb-4 -mt-1 text-xs text-foreground/60">
-                      {t("settings.ai.decisions.privacyNote")}
-                    </p>
-                  </SettingsCard>
-
-                  {/* Advanced settings: what the decision model is used for, collapsed by default.
-                      Same structure as the Workspace Overrides cards: the toggles expand inside the card. */}
-                  <SettingsCard>
-                    <button
-                      type="button"
-                      aria-expanded={decisionAdvancedOpen}
-                      onClick={() => setDecisionAdvancedOpen(open => !open)}
-                      className="w-full flex items-center justify-between py-3 px-4 hover:bg-foreground/[0.02] transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-full bg-foreground/5 ring-1 ring-border/50 flex items-center justify-center">
-                          <Settings2 className="h-3.5 w-3.5 text-muted-foreground" />
-                        </div>
-                        <div className="text-left">
-                          <div className="text-sm font-medium">{t("settings.ai.decisions.advanced")}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {decisionStatus.settings.enabled
-                              ? t("settings.ai.decisions.advancedSummary", { on: decisionFeaturesOn, total: decisionReportedToggles.length })
-                              : t("settings.ai.decisions.advancedSummaryOff")}
-                          </div>
-                        </div>
-                      </div>
-                      {decisionAdvancedOpen ? (
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </button>
-
-                    <AnimatePresence initial={false}>
-                      {decisionAdvancedOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                          className="overflow-hidden"
-                        >
-                          <div className="border-t border-border/50 px-4 py-2">
-                            {decisionReportedGroups.map((group, index) => (
-                              <div key={group.id} className={cn(index > 0 && 'mt-1 border-t border-border/30')}>
-                                <div className="px-4 pt-3 pb-0.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                  {group.title}
-                                </div>
-                                {group.toggles.map(({ feature, label, description, tooltip }) => (
-                                  <SettingsToggle
-                                    key={feature}
-                                    label={label}
-                                    description={description}
-                                    tooltip={tooltip}
-                                    checked={decisionStatus.settings.features[feature] ?? false}
-                                    disabled={!decisionStatus.settings.enabled}
-                                    onCheckedChange={(checked) => { void updateDecisionSettings({ features: { [feature]: checked } }) }}
-                                  />
-                                ))}
-                              </div>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </SettingsCard>
-                </SettingsSection>
-              )}
+                    </SettingsDisclosure>
+                  </div>
+                </div>
+              </SettingsSection></div>
 
               {/* API Setup Fullscreen Overlay */}
               <FullscreenOverlayBase
@@ -1708,7 +1445,7 @@ export default function AiSettingsPage() {
                 <OnboardingWizard
                   state={apiSetupOnboarding.state}
                   onContinue={apiSetupOnboarding.handleContinue}
-                  onBack={isDirectEdit ? handleCloseApiSetup : apiSetupOnboarding.handleBack}
+                  onBack={isDirectEdit || imageConnectionSetup ? handleCloseApiSetup : apiSetupOnboarding.handleBack}
                   onSelectProvider={apiSetupOnboarding.handleSelectProvider}
                   onSelectApiSetupMethod={apiSetupOnboarding.handleSelectApiSetupMethod}
                   onSubmitCredential={apiSetupOnboarding.handleSubmitCredential}
@@ -1720,6 +1457,7 @@ export default function AiSettingsPage() {
                   onCancelOAuth={apiSetupOnboarding.handleCancelOAuth}
                   copilotDeviceCode={apiSetupOnboarding.copilotDeviceCode}
                   editInitialValues={editInitialValues}
+                  allowedApiKeyPresets={imageConnectionSetup ? ['openai', 'openrouter'] : undefined}
                   className="h-full"
                 />
                 <div
@@ -1727,6 +1465,7 @@ export default function AiSettingsPage() {
                   style={{ zIndex: 'var(--z-fullscreen, 350)' }}
                 >
                   <button
+                    data-onboarding-close
                     onClick={handleCloseApiSetup}
                     className="motion-interactive p-1.5 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] bg-background shadow-minimal text-muted-foreground/50 hover:text-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     title={t("common.closeEsc")}

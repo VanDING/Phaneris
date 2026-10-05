@@ -607,7 +607,7 @@ Use this tool when you need to transform large datasets (20+ rows) into structur
 - For datatable/spreadsheet: output must be valid JSON: \`{"title": "...", "columns": [...], "rows": [...]}\`
 - For html-preview: output is an HTML file (any valid HTML)
 
-**Security:** Runs in a stripped-environment subprocess with a 30-second timeout. On macOS and Linux the handler additionally enforces network deny and a session-scoped writable sandbox; if that backend is unavailable, execution fails closed.`,
+**Security:** Runs in a stripped-environment subprocess with a 30-second timeout. Enforced network deny and a session-scoped writable sandbox are required in all permission modes; if either backend is unavailable, execution is blocked.`,
 
   script_sandbox: `Run quick inline diagnostics in a sandboxed subprocess with network isolation.
 
@@ -626,7 +626,7 @@ Use this for short Python/Node/Bun snippets when strict Explore-mode Bash parsin
 - Timeout is capped (default 5000ms, max 15000ms)
 - Network/filesystem isolation is required in all permission modes; if unavailable, execution is blocked
 
-**Platform note:** Windows has no network-isolation backend (sandbox-exec/unshare/firejail are unavailable), so this tool always fails on Windows — prefer transform_data or direct Bash for inline diagnostics there.`,
+**Platform note:** Both script tools require an OS isolation backend. Windows currently has none; use the ordinary permission-reviewed Bash workflow there.`,
 
   render_template: `Render a source's HTML template with data.
 

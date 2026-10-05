@@ -1,0 +1,383 @@
+{
+  "selectedTheme": "default",
+  "themeSha256": "2cba0310fbe865bb5749ba4e1c02c452b45491c5ea3a5ed6ece23270cf4f453f",
+  "records": [
+    {
+      "id": "Applied Default matches approved visual tokens, bundled JSON, static CSS and startup backgrounds",
+      "pass": true
+    },
+    {
+      "id": "Default preserves its original light/dark purple without changing approved message surfaces",
+      "pass": true
+    },
+    {
+      "id": "Product theme schema and non-reserved filename",
+      "pass": true
+    },
+    {
+      "id": "Real theme storage loads, selects and restores in a temporary profile",
+      "pass": true
+    },
+    {
+      "id": "Baseline screenshot uses the same AI page and connection data",
+      "pass": true
+    },
+    {
+      "id": "light: monochrome logos adapt while colored and custom logos keep their colors",
+      "pass": true
+    },
+    {
+      "id": "light: actual user messages use neutral gray with readable text",
+      "pass": true
+    },
+    {
+      "id": "light: actual AI settings, readable tokens, right-side controls",
+      "pass": true
+    },
+    {
+      "id": "light: real buttons, input focus, toggles and destructive action",
+      "pass": true
+    },
+    {
+      "id": "light: actual connection menu and rename dialog",
+      "pass": true
+    },
+    {
+      "id": "dark: monochrome logos adapt while colored and custom logos keep their colors",
+      "pass": true
+    },
+    {
+      "id": "dark: actual user messages use neutral gray with readable text",
+      "pass": true
+    },
+    {
+      "id": "dark: actual AI settings, readable tokens, right-side controls",
+      "pass": true
+    },
+    {
+      "id": "dark: real buttons, input focus, toggles and destructive action",
+      "pass": true
+    },
+    {
+      "id": "dark: actual connection menu and rename dialog",
+      "pass": true
+    },
+    {
+      "id": "Chinese 480px: no overflow or missing translations",
+      "pass": true
+    },
+    {
+      "id": "Built-in theme, canonical definition, CSS and AI page unchanged",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "contrast": [
+    {
+      "mode": "light",
+      "readings": [
+        {
+          "text": "--foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--info",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.3176721088620535
+        },
+        {
+          "text": "--info",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.3176721088620535
+        },
+        {
+          "text": "--info-text",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 9.548673457311232
+        },
+        {
+          "text": "--info-text",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 9.548673457311232
+        },
+        {
+          "text": "--success",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.662531062840173
+        },
+        {
+          "text": "--success",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.662531062840173
+        },
+        {
+          "text": "--destructive",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.5519907850198615
+        },
+        {
+          "text": "--destructive",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.5519907850198615
+        },
+        {
+          "text": "--accent",
+          "surface": "--background",
+          "minimum": 3,
+          "ratio": 7.297288523189019
+        },
+        {
+          "text": "--accent",
+          "surface": "--card",
+          "minimum": 3,
+          "ratio": 7.297288523189019
+        },
+        {
+          "text": "--popover-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--foreground",
+          "surface": "--input",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--foreground",
+          "surface": "--user-message-bubble",
+          "minimum": 4.5,
+          "ratio": 14.142444233486248
+        },
+        {
+          "text": "--background",
+          "surface": "--foreground",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--background",
+          "surface": "--destructive",
+          "minimum": 4.5,
+          "ratio": 5.5519907850198615
+        },
+        {
+          "text": "--ring",
+          "surface": "--background",
+          "minimum": 3,
+          "ratio": 7.297288523189019
+        }
+      ]
+    },
+    {
+      "mode": "dark",
+      "readings": [
+        {
+          "text": "--foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 15.432710189990694
+        },
+        {
+          "text": "--foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 14.473720795179284
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 8.179416786240331
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 7.671147411828421
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 8.179416786240331
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 7.671147411828421
+        },
+        {
+          "text": "--info",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 9.386412358975454
+        },
+        {
+          "text": "--info",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 8.803140218387837
+        },
+        {
+          "text": "--info-text",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 12.113408339160364
+        },
+        {
+          "text": "--info-text",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 11.360680529899152
+        },
+        {
+          "text": "--success",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 9.26573929356459
+        },
+        {
+          "text": "--success",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 8.689965783388853
+        },
+        {
+          "text": "--destructive",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 7.489994886467893
+        },
+        {
+          "text": "--destructive",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 7.024566223913665
+        },
+        {
+          "text": "--accent",
+          "surface": "--background",
+          "minimum": 3,
+          "ratio": 4.518943089174542
+        },
+        {
+          "text": "--accent",
+          "surface": "--card",
+          "minimum": 3,
+          "ratio": 4.2381357361611105
+        },
+        {
+          "text": "--popover-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 12.595955094423998
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 6.675921809565401
+        },
+        {
+          "text": "--foreground",
+          "surface": "--input",
+          "minimum": 4.5,
+          "ratio": 13.77242491169947
+        },
+        {
+          "text": "--foreground",
+          "surface": "--user-message-bubble",
+          "minimum": 4.5,
+          "ratio": 12.426386492331888
+        },
+        {
+          "text": "--background",
+          "surface": "--foreground",
+          "minimum": 4.5,
+          "ratio": 15.432710189990694
+        },
+        {
+          "text": "--background",
+          "surface": "--destructive",
+          "minimum": 4.5,
+          "ratio": 7.489994886467893
+        },
+        {
+          "text": "--ring",
+          "surface": "--background",
+          "minimum": 3,
+          "ratio": 4.518943089174542
+        }
+      ]
+    }
+  ],
+  "messageSurfaces": [
+    {
+      "mode": "light",
+      "background": "rgb(243, 243, 243)",
+      "textContrast": 14.142444233486248
+    },
+    {
+      "mode": "dark",
+      "background": "rgb(43, 43, 43)",
+      "textContrast": 12.426386492331888
+    }
+  ],
+  "protectedFiles": {
+    "apps/electron/resources/themes/default.json": "2cba0310fbe865bb5749ba4e1c02c452b45491c5ea3a5ed6ece23270cf4f453f",
+    "packages/shared/src/config/theme.ts": "22aa7fd882d45e0bcf057ffb1ede1131989d334432186d14a76f2650b86a453d",
+    "apps/electron/src/renderer/index.css": "871a551d01050abc0e491ad66c9e0682163909a0942cc378c9deb322e9de8e3a",
+    "packages/ui/src/styles/index.css": "f98d420fc976c34b743c2c9c1792afa3ed3de283a13e1aee87b75fe13b6e9926",
+    "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx": "b739f9afa04ef9100c70243b10ccc3ef65ea0b30b297e9c3fb358ed7e91064e3"
+  },
+  "personalProfileAccess": false
+}

@@ -1,5 +1,5 @@
 import { getModelDisplayName, getModelShortName } from '@config/models'
-import { getModelVendorIcon } from '@/lib/provider-icons'
+import { getModelVendorIcon, isMonochromeProviderIcon } from '@/lib/provider-icons'
 import { cn } from '@/lib/utils'
 import { stripPiPrefixForDisplay } from '../input/model-picker-helpers'
 
@@ -31,7 +31,7 @@ export function ModelChip({ model, short = false, className }: ModelChipProps) {
       )}
     >
       {iconUrl ? (
-        <img src={iconUrl} alt="" className="h-3 w-3 shrink-0 rounded-[2px]" aria-hidden />
+        <img src={iconUrl} alt="" className={cn('h-3 w-3 shrink-0 rounded-[2px]', isMonochromeProviderIcon(iconUrl) && 'provider-icon-monochrome')} aria-hidden />
       ) : (
         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" aria-hidden />
       )}

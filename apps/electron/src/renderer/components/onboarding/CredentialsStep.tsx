@@ -45,6 +45,8 @@ interface CredentialsStepProps {
   /** Headless Pi OAuth: submit a pasted authorization code / redirect URL. */
   onSubmitPiOAuthCode?: (code: string) => void
   // Edit mode (pre-fill existing connection values)
+  /** Restrict guided API setup to providers supported by the calling feature. */
+  allowedApiKeyPresets?: readonly string[]
   editInitialValues?: {
     apiKey?: string
     baseUrl?: string
@@ -69,6 +71,7 @@ export function CredentialsStep({
   copilotDeviceCode,
   onSubmitPiOAuthCode,
   editInitialValues,
+  allowedApiKeyPresets,
 }: CredentialsStepProps) {
   const { t } = useTranslation()
   const isClaudeOAuth = apiSetupMethod === 'claude_oauth'
@@ -382,6 +385,7 @@ export function CredentialsStep({
         onSubmit={onSubmit}
         providerType={providerType}
         initialValues={editInitialValues}
+        allowedPresets={allowedApiKeyPresets}
       />
     </StepFormLayout>
   )

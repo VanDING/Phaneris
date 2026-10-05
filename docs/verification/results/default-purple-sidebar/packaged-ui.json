@@ -1,0 +1,31 @@
+{
+  "app": "/Users/van/projects/Phaneris/apps/electron/release/local-20261005-default-polish/mac/Phaneris.app",
+  "fixture": "/Users/van/projects/Phaneris/.cache/local-package-20261005-default-polish/ui/packaged-ui-DysKAa",
+  "records": [
+    {
+      "id": "Actual packaged app renders AI settings with one page and the standard context control",
+      "pass": true
+    },
+    {
+      "id": "Packaged builtin Default uses the approved white card and gray message palette",
+      "pass": true
+    },
+    {
+      "id": "New Session uses a white card surface through hover and opens a chat from the keyboard",
+      "pass": true
+    },
+    {
+      "id": "Packaged appearance controls switch Default to graphite dark mode and restore light mode",
+      "pass": true
+    },
+    {
+      "id": "Packaged image settings RPC persists the dedicated image model and returns its effective choice",
+      "pass": true
+    },
+    {
+      "id": "Packaged permissions page exposes Guarded setup with actual backend readiness",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

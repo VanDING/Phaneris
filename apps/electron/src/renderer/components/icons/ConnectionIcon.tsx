@@ -13,7 +13,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Sparkles } from 'lucide-react'
-import { getProviderIcon } from '@/lib/provider-icons'
+import { getProviderIcon, isMonochromeProviderIcon } from '@/lib/provider-icons'
 import { logoUrlCache } from '@/lib/icon-cache'
 import { CrossfadeAvatar } from '@/components/ui/avatar'
 import { connectionFallbackInitial } from './connection-icon-utils'
@@ -113,7 +113,7 @@ export function ConnectionIcon({ connection, size = 16, className = '', showTool
         fallback={fallbackGlyph}
         className="h-full w-full rounded-[3px]"
         fallbackClassName={fallbackToneClass}
-        imageClassName="object-contain"
+        imageClassName={`object-contain${isMonochromeProviderIcon(resolvedIcon) ? ' provider-icon-monochrome' : ''}`}
       />
     </div>
   )

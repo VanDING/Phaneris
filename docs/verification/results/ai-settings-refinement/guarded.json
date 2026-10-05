@@ -1,0 +1,73 @@
+{
+  "fixture": "/Users/van/projects/Phaneris/.cache/ai-settings-refinement/guarded-QtUI0K",
+  "records": [
+    {
+      "id": "Valid low-risk verdict permits the mutation; risky verdict prompts",
+      "pass": true,
+      "observation": {
+        "type": "prompt",
+        "promptType": "bash",
+        "description": "Guarded mode (reaches other people or services) · Execute: git push origin main",
+        "command": "git push origin main"
+      }
+    },
+    {
+      "id": "HTTP failure asks for confirmation instead of executing",
+      "pass": true,
+      "observation": {
+        "type": "prompt",
+        "promptType": "bash",
+        "description": "Guarded mode (risk check unavailable; confirmation required) · Execute: git push origin main",
+        "command": "git push origin main"
+      }
+    },
+    {
+      "id": "Absent checker and malformed verdict do not authorize a mutation",
+      "pass": true,
+      "observation": {
+        "type": "prompt",
+        "promptType": "bash",
+        "description": "Guarded mode (risk check unavailable; confirmation required) · Execute: git push origin main",
+        "command": "git push origin main"
+      }
+    },
+    {
+      "id": "Unattended guarded mutation blocks without making a decision request",
+      "pass": true,
+      "observation": {
+        "type": "block",
+        "reason": "Guarded mode requires an attended session to authorize this action. Use Ask mode or review the action in an attended session."
+      }
+    },
+    {
+      "id": "Read-only commands remain available without a checker",
+      "pass": true,
+      "observation": {
+        "type": "allow"
+      }
+    },
+    {
+      "id": "Backend status validates actual configuration and credentials",
+      "pass": true,
+      "observation": {
+        "ready": {
+          "available": true,
+          "reason": "ready"
+        },
+        "missing": {
+          "available": false,
+          "reason": "unconfigured",
+          "failure": {
+            "kind": "unconfigured",
+            "message": "Decision model: no API key stored for TypeSafe AI (direct). Add one in Settings > AI > Decision model"
+          }
+        },
+        "disabled": {
+          "available": false,
+          "reason": "disabled"
+        }
+      }
+    }
+  ],
+  "calls": 3
+}

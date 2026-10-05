@@ -160,7 +160,7 @@ describe('theme resolution', () => {
       expect(JSON.parse(readFileSync(path, 'utf8'))).toEqual(theme);
       expect(validateThemeContent(JSON.stringify(theme)).valid).toBe(true);
     }
-    expect(DEFAULT_THEME_FILE.name).toBe('Twilight');
+    expect(DEFAULT_THEME_FILE.name).toBe('Default');
     expect(DEFAULT_THEME_FILE.accent).toBe('oklch(0.488 0.275 280.3)');
     expect(DEFAULT_THEME_FILE.dark?.accent).toBe('oklch(0.626 0.221 291.7)');
   });
@@ -169,9 +169,8 @@ describe('theme resolution', () => {
     // Widen the theme-derived strings so this toEqual overload does not demand
     // the literal types produced by BACKGROUND_HEX's as-const assertion.
     const actual: Record<'light' | 'dark', string> = BACKGROUND_HEX;
-    // BrowserWindow accepts hex; the supplied Twilight palette uses OKLCH.
-    // These are the sRGB conversions of its white and oklch(0.14 0.012 285).
-    expect(actual).toEqual({ light: '#FFFFFF', dark: '#09080E' });
+    // BrowserWindow accepts hex; keep startup surfaces on the applied Default palette.
+    expect(actual).toEqual({ light: '#FFFFFF', dark: '#17191E' });
   });
 
   test('keeps static CSS palettes, typography and material tokens synchronized with Default', () => {

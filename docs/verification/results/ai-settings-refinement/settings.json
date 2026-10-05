@@ -1,0 +1,154 @@
+{
+  "records": [
+    {
+      "id": "One scrolling settings page with optional image configuration",
+      "pass": true
+    },
+    {
+      "id": "Context uses the standard right-side settings menu and persists one policy",
+      "pass": true
+    },
+    {
+      "id": "Context keyboard choice and save failure restore the previous policy",
+      "pass": true
+    },
+    {
+      "id": "Image controls save an explicit account and clear its model on account changes",
+      "pass": true
+    },
+    {
+      "id": "Workspace effective values reflect the selected connection and clear a foreign model in one save",
+      "pass": true
+    },
+    {
+      "id": "Connection errors persist and the existing menu and dialog remain usable",
+      "pass": true
+    },
+    {
+      "id": "light en 1040px screenshots and layout",
+      "pass": true
+    },
+    {
+      "id": "dark en 1040px screenshots and layout",
+      "pass": true
+    },
+    {
+      "id": "light zh-Hans 480px screenshots and layout",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "contrast": [
+    {
+      "mode": "light",
+      "lang": "en",
+      "width": 1040,
+      "readings": [
+        {
+          "text": "--foreground",
+          "surface": "--background",
+          "ratio": 18.81069774863135
+        },
+        {
+          "text": "--foreground",
+          "surface": "--card",
+          "ratio": 17.439114436107733
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--background",
+          "ratio": 5.9878059136906066
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--card",
+          "ratio": 5.551204636077403
+        },
+        {
+          "text": "--info-text",
+          "surface": "--background",
+          "ratio": 10.972477962128801
+        },
+        {
+          "text": "--info-text",
+          "surface": "--card",
+          "ratio": 10.172418981276591
+        }
+      ]
+    },
+    {
+      "mode": "dark",
+      "lang": "en",
+      "width": 1040,
+      "readings": [
+        {
+          "text": "--foreground",
+          "surface": "--background",
+          "ratio": 17.70776863719017
+        },
+        {
+          "text": "--foreground",
+          "surface": "--card",
+          "ratio": 16.563232769785603
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--background",
+          "ratio": 6.934318211307322
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--card",
+          "ratio": 6.486120808718191
+        },
+        {
+          "text": "--info-text",
+          "surface": "--background",
+          "ratio": 12.562354314158787
+        },
+        {
+          "text": "--info-text",
+          "surface": "--card",
+          "ratio": 11.750390628265457
+        }
+      ]
+    },
+    {
+      "mode": "light",
+      "lang": "zh-Hans",
+      "width": 480,
+      "readings": [
+        {
+          "text": "--foreground",
+          "surface": "--background",
+          "ratio": 18.81069774863135
+        },
+        {
+          "text": "--foreground",
+          "surface": "--card",
+          "ratio": 17.439114436107733
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--background",
+          "ratio": 5.9878059136906066
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--card",
+          "ratio": 5.551204636077403
+        },
+        {
+          "text": "--info-text",
+          "surface": "--background",
+          "ratio": 10.972477962128801
+        },
+        {
+          "text": "--info-text",
+          "surface": "--card",
+          "ratio": 10.172418981276591
+        }
+      ]
+    }
+  ]
+}

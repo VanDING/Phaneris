@@ -5,7 +5,7 @@
  * Light mode is default, with optional dark mode overrides.
  *
  * Theme sources:
- * - Built in:       Twilight (`default`), Geek, Cyberpunk 2077, Ink
+ * - Built in:       Default (`default`), Geek, Cyberpunk 2077, Ink
  * - User themes:    ~/.phaneris/themes/*.json
  */
 
@@ -310,11 +310,13 @@ function depthToCSS(
 
   switch (depth) {
     case 'flat':
+      // Cards remain flat; menus and dialogs gain only enough depth to
+      // separate them from the page beneath them.
       vars.push(
         `--shadow-minimal: 0 0 0 var(--theme-border-width) ${border};`,
-        `--shadow-middle: 0 0 0 var(--theme-border-width) ${border};`,
-        `--shadow-strong: 0 0 0 var(--theme-border-width) ${border};`,
-        `--shadow-modal-small: 0 0 0 var(--theme-border-width) ${border};`
+        `--shadow-middle: 0 0 0 var(--theme-border-width) ${border}, 0 4px 12px color-mix(in srgb, ${color} ${faint}%, transparent);`,
+        `--shadow-strong: 0 0 0 var(--theme-border-width) ${border}, 0 16px 48px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-modal-small: 0 0 0 var(--theme-border-width) ${border}, 0 8px 24px color-mix(in srgb, ${color} ${soft}%, transparent);`
       );
       break;
     case 'neon':
@@ -468,7 +470,7 @@ export function themeToCSS(theme: ThemeOverrides, isDark: boolean = false): stri
  */
 export const BACKGROUND_HEX = {
   light: '#FFFFFF', // Matches DEFAULT_THEME.background
-  dark: '#09080E', // Matches DEFAULT_THEME.dark.background
+  dark: '#17191E', // Matches DEFAULT_THEME.dark.background
 } as const;
 
 /**
@@ -484,67 +486,68 @@ export function getBackgroundColor(isDark: boolean): string {
  */
 export const DEFAULT_THEME: ThemeOverrides = {
   "mode": "solid",
-  "background": "oklch(1 0 0)",
-  "backgroundElevated": "oklch(1 0 0)",
-  "foreground": "oklch(0.18 0.012 285)",
-  "foregroundDimmed": "oklch(0.50 0.005 285)",
-  "card": "oklch(0.985 0.002 285)",
-  "cardForeground": "oklch(0.18 0.012 285)",
-  "popoverForeground": "oklch(0.18 0.012 285)",
-  "secondary": "oklch(0.96 0.005 285)",
-  "secondaryForeground": "oklch(0.28 0.012 285)",
-  "muted": "oklch(0.96 0.005 285)",
-  "mutedForeground": "oklch(0.52 0.005 285)",
-  "border": "oklch(0.91 0.005 285)",
-  "userMessageBubble": "oklch(0.96 0.005 285)",
+  "background": "#FFFFFF",
+  "backgroundElevated": "#FFFFFF",
+  "foreground": "#20232C",
+  "foregroundDimmed": "#606775",
+  "card": "#FFFFFF",
+  "cardForeground": "#20232C",
+  "popoverForeground": "#20232C",
+  "secondary": "#F2F3F8",
+  "secondaryForeground": "#373D4B",
+  "muted": "#F7F8FB",
+  "mutedForeground": "#606775",
+  "border": "#E3E6ED",
+  "userMessageBubble": "#F3F3F3",
   "accent": "oklch(0.488 0.275 280.3)",
   "ring": "oklch(0.488 0.275 280.3)",
-  "info": "oklch(0.62 0.10 70)",
-  "success": "oklch(0.50 0.09 145)",
-  "destructive": "oklch(0.52 0.16 28)",
-  "paper": "oklch(1 0 0)",
-  "input": "oklch(1 0 0)",
-  "popover": "oklch(1 0 0)",
-  "popoverSolid": "oklch(1 0 0)",
-  "depth": "flat",
-  "shadowColor": "oklch(0.18 0.012 285)",
-  "shadowStrength": 0.05,
-  "radius": "8px",
+  "info": "#94601C",
+  "success": "#267454",
+  "destructive": "#B63E4C",
+  "paper": "#FFFFFF",
+  "input": "#FFFFFF",
+  "popover": "#FFFFFF",
+  "popoverSolid": "#FFFFFF",
+  "depth": "elevated",
+  "shadowColor": "#20232C",
+  "shadowStrength": 0.04,
+  "radius": "6px",
   "borderWidth": "1px",
   "borderStyle": "solid",
-  "fontSans": "\"Inter\", \"Segoe UI Variable Text\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
-  "fontSerif": "\"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
-  "fontMono": "\"Cascadia Mono\", \"JetBrains Mono\", ui-monospace, SFMono-Regular, Consolas, \"Microsoft YaHei UI\", monospace",
+  "fontSans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter\", \"Segoe UI\", \"PingFang SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+  "fontSerif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+  "fontMono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono\", ui-monospace, Consolas, \"Microsoft YaHei UI\", monospace",
   "fontSize": "15px",
   "lineHeight": 1.5,
-  "letterSpacing": "-0.005em",
-  "iconStrokeWidth": 1.5,
+  "letterSpacing": "0em",
+  "iconStrokeWidth": 1.65,
   "iconStrokeLinecap": "round",
   "density": "comfortable",
   "dark": {
-    "background": "oklch(0.14 0.012 285)",
-    "backgroundElevated": "oklch(0.18 0.012 285)",
-    "foreground": "oklch(0.96 0.005 285)",
-    "foregroundDimmed": "oklch(0.65 0.005 285)",
-    "card": "oklch(0.17 0.012 285)",
-    "cardForeground": "oklch(0.96 0.005 285)",
-    "popoverForeground": "oklch(0.96 0.005 285)",
-    "secondary": "oklch(0.21 0.012 285)",
-    "secondaryForeground": "oklch(0.88 0.005 285)",
-    "muted": "oklch(0.18 0.012 285)",
-    "mutedForeground": "oklch(0.62 0.005 285)",
-    "border": "oklch(0.27 0.012 285)",
-    "userMessageBubble": "oklch(0.21 0.012 285)",
+    "background": "#17191E",
+    "backgroundElevated": "#242832",
+    "foreground": "#EEF0F6",
+    "foregroundDimmed": "#AAB1C1",
+    "card": "#1C1F26",
+    "cardForeground": "#EEF0F6",
+    "popoverForeground": "#EEF0F6",
+    "secondary": "#282D38",
+    "secondaryForeground": "#E0E4EE",
+    "muted": "#222630",
+    "mutedForeground": "#AAB1C1",
+    "border": "#343946",
+    "userMessageBubble": "#2B2B2B",
     "accent": "oklch(0.626 0.221 291.7)",
     "ring": "oklch(0.626 0.221 291.7)",
-    "info": "oklch(0.74 0.10 70)",
-    "success": "oklch(0.70 0.09 145)",
-    "destructive": "oklch(0.66 0.16 28)",
-    "paper": "oklch(0.17 0.012 285)",
-    "input": "oklch(0.17 0.012 285)",
-    "popover": "oklch(0.17 0.012 285)",
-    "popoverSolid": "oklch(0.17 0.012 285)",
-    "shadowColor": "oklch(0 0 0)",
+    "info": "#E3B674",
+    "success": "#83CBA7",
+    "destructive": "#F18C98",
+    "paper": "#1D2028",
+    "input": "#20232C",
+    "popover": "#262A34",
+    "popoverSolid": "#262A34",
+    "depth": "flat",
+    "shadowColor": "#08090C",
     "shadowStrength": 0.22
   }
 };
@@ -593,10 +596,10 @@ export interface ThemeSummary {
   supportedModes?: ('light' | 'dark')[];
 }
 
-/** Twilight is the immutable default; its stable selection ID remains `default`. */
+/** Default is the immutable default; its stable selection ID remains `default`. */
 export const DEFAULT_THEME_FILE: ThemeFile = {
-  "name": "Twilight",
-  "description": "暮色平面：纯白画布与近黑墨字承担绝大部分视觉重量，Phaneris 品牌紫（#5420F3，logo 左上主色块的中段）仅在需要锚定的瞬间出现——介于 #2A0E92 的深紫与 #8F63FF 的亮紫之间。8px 圆角、细线图标、极浅阴影——只在暗色模式才缓慢浮起。",
+  "name": "Default",
+  "description": "纯白纸面、墨色文字与灰白用户消息，细边线和轻投影建立清晰层次；配套石墨深色版，紫色仅用于重点。",
   "author": "Phaneris",
   "license": "MIT",
   "supportedModes": [

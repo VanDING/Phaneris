@@ -73,6 +73,8 @@ export interface ApiKeyInputProps {
   /** Provider type determines which presets and placeholders to show */
   providerType?: 'anthropic' | 'openai' | 'pi' | 'google' | 'pi_api_key'
   /** Pre-fill values when editing an existing connection */
+  /** Optional provider allowlist for a feature-specific setup flow. */
+  allowedPresets?: readonly string[]
   initialValues?: {
     apiKey?: string
     baseUrl?: string
@@ -197,14 +199,17 @@ export function ApiKeyInput({
   disabled,
   providerType = 'anthropic',
   initialValues,
+  allowedPresets,
 }: ApiKeyInputProps) {
   // Get presets based on provider type
-  const presets = getPresetsForProvider(providerType)
+  const presets = getPresetsForProvider(providerType).filter(preset => !allowedPresets || allowedPresets.includes(preset.key))
+  if (!presets.length) throw new Error('No supported API providers in this setup flow')
   const defaultPreset = presets[0]
 
   // Compute initial preset: explicit (Pi piAuthProvider), derived from URL, or default
-  const initialPreset = initialValues?.activePreset
+  const requestedPreset = initialValues?.activePreset
     ?? (initialValues?.baseUrl ? getPresetForUrl(initialValues.baseUrl, presets) : defaultPreset.key)
+  const initialPreset = allowedPresets && !presets.some(p => p.key === requestedPreset) ? defaultPreset.key : requestedPreset
 
   const { t } = useTranslation()
   const [apiKey, setApiKey] = useState(initialValues?.apiKey ?? '')
@@ -421,7 +426,7 @@ export function ApiKeyInput({
   }
 
   return (
-    <form id={formId} onSubmit={handleSubmit} className="space-y-6">
+    <form data-testid="api-key-input" id={formId} onSubmit={handleSubmit} className="space-y-6">
       {/* API Key — hidden for Bedrock (uses IAM/Environment auth) */}
       {!isBedrock && (<div className="space-y-2">
         <Label htmlFor="api-key">API Key</Label>
@@ -464,6 +469,7 @@ export function ApiKeyInput({
           <Label htmlFor="base-url">Endpoint</Label>
           <DropdownMenu>
             <DropdownMenuTrigger
+              data-testid="api-key-preset-trigger"
               disabled={isDisabled}
               className="flex h-6 items-center gap-1 rounded-[6px] bg-background shadow-minimal pl-2.5 pr-2 text-[12px] font-medium text-foreground/50 hover:bg-foreground/5 hover:text-foreground focus:outline-none"
             >

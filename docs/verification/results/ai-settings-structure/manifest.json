@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-05",
+  "e2e": {
+    "passed": 20,
+    "total": 20,
+    "uncaughtErrors": []
+  },
+  "checks": {
+    "typecheck:all": 0,
+    "lint:electron": 0,
+    "changed-renderer-lint": 0,
+    "i18n:parity": 0,
+    "i18n:sorted": 0,
+    "i18n:coverage": 0,
+    "i18n:dead-keys": 0
+  },
+  "scope": {
+    "transport": "in-memory fixture",
+    "realApiCalls": false,
+    "themeApplied": false,
+    "packaged": false,
+    "personalProfileAccess": false
+  },
+  "sourceSha256": {
+    "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx": "b739f9afa04ef9100c70243b10ccc3ef65ea0b30b297e9c3fb358ed7e91064e3",
+    "apps/electron/src/renderer/pages/settings/WorkspaceSettingsPage.tsx": "db4025daad1ba140f04201597b5abedc2bf8b4c61fc5076710382d4cc54e4e57",
+    "apps/electron/src/renderer/pages/settings/PermissionsSettingsPage.tsx": "c85c0c2ef1116bb0b111813e8a067eb8c924bd9bd22a6a1f180025d62e7610fb",
+    "apps/electron/src/renderer/components/settings/SettingsDisclosure.tsx": "8ab757614de02910fe97a391d05c0f3e7ec688ebe4122a72ab169c3b091a5971",
+    "apps/electron/src/renderer/components/settings/WorkspaceConversationSettings.tsx": "18d29c045d25c163e766b393584914b9b69a955f22738f4c70deba0f82f01847",
+    "apps/electron/src/renderer/lib/ai-model-options.ts": "33d00db596c00e931f2659c5a833c1cfa01668e859670ab555ade504feb4717d",
+    "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx": "b2a671c6584cc4017f4faf8e4f54bff3d0ba55f4d75006a6979ee042889cf95d",
+    "apps/electron/src/renderer/components/onboarding/OnboardingWizard.tsx": "d6b7471255433c1ad44bc094378c80429860c0862b7e3ed8328a64f7219d4ec4",
+    "apps/electron/src/renderer/components/onboarding/CredentialsStep.tsx": "a5c5adddde79ee20df461c78ed150bb5867d17d4ed7eae2bcd64627cb5c57fad",
+    "scripts/verification/ai-settings-structure-workflow.ts": "a84c4f062a6fda9105ec6ff1af6b815482825715b07f3fba402df4ce3f6a76a4",
+    "scripts/verification/fixtures/ai-settings-structure.tsx": "85f105507daec62e1b034dda4f40abe23db94724a7802e09a041b0e06bc343d6",
+    "packages/shared/src/i18n/locales/en.json": "246770d6194c5d1f4f467e16e2d26186522b31993ea207a01aa36ac0c7d0e684",
+    "packages/shared/src/i18n/locales/zh-Hans.json": "a6db9ff4479803ce52f5260d6e35e0f130fa84928854833a0f095a7dd7158e32"
+  },
+  "artifactsSha256": {
+    "light-zh-Hans-480-images.png": "956f1237fedb4eb0b526183b4ae83b8924e6d74ace3521934239ef95515bcb7e",
+    "light-zh-Hans-480-performance.png": "4b169abcd5042eebc73a368190670dc2c97b9acbd2b31000949d35908c3c5fd8",
+    "light-zh-Hans-480-decisions.png": "07fdc8e6f7b8a6d16865d1adae49edb0aaddc6c949d56734418553be3fa92149",
+    "light-en-1040-images.png": "e43c7967c36defb1aea11e9af34da4bf5f1cc92a1844d7401d700c3e3fd0b086",
+    "light-en-1040-performance.png": "29d4d43c7346d873e1e8d8dca325a4d7e5e6f7bca2f5f528dbcb42d02a7c09b8",
+    "light-zh-Hans-480-workspace.png": "9734e93fdce80037a0f37a177412fc062d48056e0e316f701998c5b4761f3f28",
+    "dark-en-1040-decisions.png": "889495ce7e02762879ce60cc22b44d22f96944a1310fd9abacf36ea59f4ae747",
+    "dark-en-1040-workspace.png": "eaa622cad98a6fc852cf520929ebfaf064534e2a7a34d006db2eae404e2be8bb",
+    "results.json": "bf00a82335b6eb356477cf88f3cd40ac902d9a7830f402f5f9167641c59ca2ea",
+    "light-zh-Hans-480-top.png": "2ec544933b3bf0e78eca1d0d18fa7f0bf2487fb9655a3746ea8ba7d405cbab49",
+    "light-en-1040-workspace.png": "df15b7445f768f359536d3399de972e2f9cd6c1bb45bda756e267bab1f3fd380",
+    "light-en-1040-decisions.png": "e667a556193944dbb5c909de31fd02f1c2945d32c2514f326bc23e9e8390a936",
+    "dark-en-1040-images.png": "7d035b432655275229e44252199d76d21faddc2749705a097142dcf355482485",
+    "light-en-1040-top.png": "b24c428049d2ccc03af3670387a1dd5713dc2314230f85f7a253723002f342a3",
+    "dark-en-1040-performance.png": "d9cec9f2005bdd1df3335495aca1ec7596c6ac309c83b423488c7013585e03fd",
+    "dark-en-1040-top.png": "5357f85e72162a39562fae08a99c196f797a7212c61286f0fd8dda5e4539a667"
+  }
+}

@@ -4,13 +4,13 @@ This guide explains how to customize the visual theme of Phaneris.
 
 ## Overview
 
-Phaneris uses a semantic-token theme engine with app-level preferences and per-workspace theme selection. The application bundles four read-only themes, with Twilight as the default. Additional custom themes are user-owned JSON files.
+Phaneris uses a semantic-token theme engine with app-level preferences and per-workspace theme selection. The application bundles four read-only themes, with Default as the default. Additional custom themes are user-owned JSON files.
 
 ### Built-in Themes
 
 | ID | Modes | Character |
 |----|-------|-----------|
-| `default` | Light + dark | Twilight: white canvas, near-black ink, brand purple |
+| `default` | Light + dark | Default: white paper, ink text, neutral gray messages; graphite dark mode |
 | `geek` | Dark | Phosphor green terminal |
 | `cyberpunk-2077` | Dark | Cyan and magenta on deep navy |
 | `ink` | Light + dark | Warm paper and restrained ink |
@@ -19,12 +19,12 @@ Phaneris uses a semantic-token theme engine with app-level preferences and per-w
 
 1. **App selection**: Selected in Settings → Appearance → Default Theme
 2. **Workspace selection**: Optional per-workspace theme ID in Settings → Appearance → Workspace Themes
-3. **Built-in source**: Twilight, Geek, Cyberpunk 2077 and Ink
+3. **Built-in source**: Default, Geek, Cyberpunk 2077 and Ink
 4. **User source**: `~/.phaneris/themes/{id}.json`
 
 Workspaces without a selection override inherit the app selection. User theme files may be partial; omitted visual tokens inherit from `default`.
 
-The themes directory is never seeded, overwritten, reset, or cleaned by the application. Built-in IDs resolve to the bundled definitions; older files with those IDs stay on disk without creating duplicate options. Other files remain ordinary custom themes. The `twilight` alias resolves to Twilight; in workspace settings it also allows an explicit Twilight selection independent of the app selection. The deprecated `~/.phaneris/theme.json` file is migrated once to `themes/migrated-custom.json` (or a non-conflicting suffixed name), while the original file is retained and no longer participates in rendering.
+The themes directory is never seeded, overwritten, reset, or cleaned by the application. Built-in IDs resolve to the bundled definitions; older files with those IDs stay on disk without creating duplicate options. Other files remain ordinary custom themes. The `twilight` alias resolves to Default; in workspace settings it also allows an explicit Default selection independent of the app selection. The deprecated `~/.phaneris/theme.json` file is migrated once to `themes/migrated-custom.json` (or a non-conflicting suffixed name), while the original file is retained and no longer participates in rendering.
 
 App-level selection preferences are stored together in `~/.phaneris/config.json` as `themeMode`, `colorTheme`, and `themeFont`. A versioned renderer cache is used only to avoid a startup flash; `config.json` remains authoritative.
 
@@ -212,11 +212,12 @@ Scenic mode benefits from semi-transparent surface colors:
 
 ## Default Theme
 
-The built-in Default uses the Default Refined design and ships with the app. It replaces the previous palette under the same `default` ID, so existing Default selections automatically receive the new design.
+The built-in Default ships with the app under the stable `default` ID, so existing Default selections automatically receive the new design.
 
-- **Light:** cool off-white canvas (`#F6F7F8`), charcoal text (`#2A2B30`), Violet Pulse (`#7C3AED`), and subtly lighter content surfaces.
-- **Dark:** near-black canvas (`#080A10`), softened cool text (`#DFE1E7`), violet (`#A78BFA`), and independently calibrated dark surface elevations.
-- **Style:** Inter with system fallbacks, 15px base type, 1.5 line height, 8px base radius, comfortable density, and subtle elevated shadows. Explicit font preferences still take precedence.
+- **Light:** pure white canvas, settings cards, inputs and menus (`#FFFFFF`), ink text (`#20232C`), neutral gray user messages (`#F3F3F3`), and the original Default purple (`oklch(0.488 0.275 280.3)`). Fine borders and light shadows define surfaces.
+- **Dark:** graphite canvas (`#17191E`), softened white text (`#EEF0F6`), neutral dark gray user messages (`#2B2B2B`), the original dark-mode purple (`oklch(0.626 0.221 291.7)`), and separate card, input and menu surfaces.
+- **New Session:** the sidebar button uses the same card surface and text colors as settings cards. It stays white in light mode and uses the theme's dark card surface in dark mode; hover changes its shadow while preserving the surface.
+- **Style:** platform UI and code fonts with CJK fallbacks, 15px base type, 1.5 line height, 6px base radius, comfortable density, light-mode elevation and flat dark cards with raised menus. Explicit font preferences still take precedence.
 - **Native sidebar:** no authored navigator color; platform transparency is preserved.
 
 The canonical runtime snapshot, bundled JSON, static CSS and Electron startup backgrounds share this baseline. User-owned theme files are not deleted or overwritten during upgrades.

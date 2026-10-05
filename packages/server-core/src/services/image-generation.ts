@@ -3,7 +3,9 @@ import type {
   ImageGenerateParamsNonStreaming,
   ImagesResponse,
 } from 'openai/resources/images';
-import type { LlmConnection } from '@phaneris/shared/config';
+import { getImageGenerationSettings, getLlmConnections, getLlmConnection, getDefaultLlmConnection, supportsNativeImageGeneration, type ImageGenerationSettings, type ImageGenerationStatus, type LlmConnection } from '@phaneris/shared/config';
+import { getCredentialManager } from '@phaneris/shared/credentials';
+export { supportsNativeImageGeneration } from '@phaneris/shared/config/image-generation';
 
 export const DEFAULT_IMAGE_GENERATION_MODEL = 'gpt-image-2';
 export const MAX_GENERATED_IMAGE_BYTES = 50 * 1024 * 1024;
@@ -70,10 +72,53 @@ function createClient(config: OpenAIImageProviderConfig): ImageApiClient {
   });
 }
 
-export function supportsNativeImageGeneration(connection: LlmConnection): boolean {
-  return connection.providerType === 'pi'
-    && (connection.piAuthProvider === 'openai' || connection.piAuthProvider === 'openrouter')
-    && connection.authType === 'api_key';
+export function getDefaultImageModel(connection: LlmConnection): string {
+  return connection.piAuthProvider === 'openrouter' ? 'google/gemini-2.5-flash-image' : DEFAULT_IMAGE_GENERATION_MODEL;
+}
+
+export async function getImageModels(connection: LlmConnection): Promise<Array<{ id: string; name: string }>> {
+  if (connection.piAuthProvider === 'openai') return [
+    { id: 'gpt-image-2', name: 'GPT Image 2' }, { id: 'gpt-image-1.5', name: 'GPT Image 1.5' },
+    { id: 'gpt-image-1', name: 'GPT Image 1' }, { id: 'gpt-image-1-mini', name: 'GPT Image 1 Mini' },
+  ];
+  const { getBuiltinImageModels } = await import('@earendil-works/pi-ai/providers/all');
+  return getBuiltinImageModels('openrouter').map(model => ({ id: model.id, name: model.name }));
+}
+
+interface ImageResolutionOptions {
+  explicitSlug?: string;
+  model?: string;
+  preferredConnection?: LlmConnection | null;
+  connections: readonly LlmConnection[];
+  getApiKey: (connectionSlug: string) => Promise<string | null>;
+  settings?: ImageGenerationSettings;
+}
+
+/** Explicit tool choices override app defaults. A saved explicit choice never falls back. */
+export async function resolveConfiguredImageGeneration(input: ImageResolutionOptions): Promise<ResolvedImageGenerationConnection & { model: string }> {
+  const settings = input.settings ?? getImageGenerationSettings();
+  const explicitSlug = input.explicitSlug?.trim();
+  const selected = await resolveImageGenerationConnection({ ...input, explicitSlug: explicitSlug || settings.connectionSlug });
+  // A one-off account override also uses that account's model default.
+  const model = input.model?.trim() || (!explicitSlug || explicitSlug === settings.connectionSlug ? settings.model : undefined) || getDefaultImageModel(selected.connection);
+  return { ...selected, model };
+}
+
+export async function getImageGenerationStatus(input: Partial<Pick<ImageResolutionOptions, 'connections' | 'getApiKey' | 'preferredConnection'>> = {}): Promise<ImageGenerationStatus> {
+  const settings = getImageGenerationSettings(), connections = input.connections ?? getLlmConnections();
+  const getApiKey = input.getApiKey ?? (slug => getCredentialManager().getLlmApiKey(slug));
+  const status: ImageGenerationStatus = { settings, connections: [] };
+  for (const connection of connections.filter(supportsNativeImageGeneration)) {
+    status.connections.push({ slug: connection.slug, name: connection.name, provider: connection.piAuthProvider as 'openai' | 'openrouter',
+      available: !!await getApiKey(connection.slug), models: await getImageModels(connection) });
+  }
+  try {
+    const defaultSlug = getDefaultLlmConnection();
+    const preferredConnection = input.preferredConnection ?? (defaultSlug ? getLlmConnection(defaultSlug) : null);
+    const selected = await resolveConfiguredImageGeneration({ connections, getApiKey, settings, preferredConnection });
+    status.effective = { connectionSlug: selected.connection.slug, connectionName: selected.connection.name, model: selected.model };
+  } catch (error) { status.error = error instanceof Error ? error.message : String(error); }
+  return status;
 }
 
 export async function resolveImageGenerationConnection(input: {

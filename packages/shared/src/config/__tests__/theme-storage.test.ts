@@ -90,7 +90,7 @@ describe('user theme storage', () => {
     };
 
     expect(result.ids).toEqual(['default', 'geek', 'cyberpunk-2077', 'ink', 'alpha']);
-    expect(result.builtinName).toBe('Twilight');
+    expect(result.builtinName).toBe('Default');
     expect(result.builtinPath).toBe('builtin:default');
     expect(result.traversal).toBeNull();
     expect(result.validIds).toEqual([true, false, false, false]);
@@ -111,12 +111,12 @@ describe('user theme storage', () => {
       }));
     `) as { themes: { id: string; name: string; path: string }[]; alias: string; selection: string; files: string[] };
     expect(result.themes).toEqual([
-      { id: 'default', name: 'Twilight', path: 'builtin:default' },
+      { id: 'default', name: 'Default', path: 'builtin:default' },
       { id: 'geek', name: 'Geek', path: 'builtin:geek' },
       { id: 'cyberpunk-2077', name: 'Cyberpunk 2077', path: 'builtin:cyberpunk-2077' },
       { id: 'ink', name: 'Ink', path: 'builtin:ink' },
     ]);
-    expect(result.alias).toBe('Twilight');
+    expect(result.alias).toBe('Default');
     expect(result.selection).toBe('default');
     expect(result.files).toEqual([]);
   });

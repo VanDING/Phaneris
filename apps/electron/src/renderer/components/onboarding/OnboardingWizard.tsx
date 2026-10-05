@@ -77,6 +77,8 @@ interface OnboardingWizardProps {
   onSubmitLocalModel?: (data: LocalModelSubmitData) => void
 
   // Edit mode (pre-fill existing connection values)
+  /** Restrict guided API setup to providers supported by the calling feature. */
+  allowedApiKeyPresets?: readonly string[]
   editInitialValues?: {
     apiKey?: string
     baseUrl?: string
@@ -127,6 +129,7 @@ export function OnboardingWizard({
   onSubmitLocalModel,
   // Edit mode
   editInitialValues,
+  allowedApiKeyPresets,
   className
 }: OnboardingWizardProps) {
   const renderStep = () => {
@@ -185,6 +188,7 @@ export function OnboardingWizard({
             onSubmitAuthCode={onSubmitAuthCode}
             onSubmitPiOAuthCode={onSubmitPiOAuthCode}
             editInitialValues={editInitialValues}
+            allowedApiKeyPresets={allowedApiKeyPresets}
             onCancelOAuth={onCancelOAuth}
             copilotDeviceCode={copilotDeviceCode}
           />

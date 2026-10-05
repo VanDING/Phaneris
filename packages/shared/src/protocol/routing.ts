@@ -363,6 +363,8 @@ export const REMOTE_ELIGIBLE_CHANNELS = new Set<string>([
   RPC_CHANNELS.settings.TEST_LLM_CONNECTION_SETUP,
   RPC_CHANNELS.settings.GET_DEFAULT_THINKING_LEVEL,
   RPC_CHANNELS.settings.SET_DEFAULT_THINKING_LEVEL,
+  RPC_CHANNELS.settings.GET_IMAGE_GENERATION_SETTINGS,
+  RPC_CHANNELS.settings.SET_IMAGE_GENERATION_SETTINGS,
 
   // pi — provider config on workspace server
   // pi — Pi SDK capabilities

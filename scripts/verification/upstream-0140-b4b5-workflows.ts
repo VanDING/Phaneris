@@ -156,7 +156,8 @@ try {
     managed.isProcessing = true
     assert.equal(f.manager.startPreTurnDecisions(managed, 'Implement the feature'), null)
     const riskCheck = buildGuardedModeCheck({ sessionId: created.id, isInteractive: () => host.isAttendedSession(managed) })
-    assert.equal(riskCheck.isActive(), false)
+    assert.equal(riskCheck.canPrompt?.(), false)
+    assert.equal(await riskCheck.check({ toolName: 'Bash', promptType: 'bash', description: 'unattended mutation', command: 'touch file' }), null)
     managed.isProcessing = false
     const boundaries = [{ hidden: true }, { systemPromptPreset: 'mini' }, { taskRunId: 'fixture-run' }, { taskSlug: 'fixture-task' }, { triggeredBy: 'automation' }]
     assert(boundaries.every(flags => !host.isAttendedSession({ ...f.managed, ...flags })))
@@ -217,7 +218,7 @@ try {
     assert(bubbles.every((m: any) => !m.isQueued))
     const journal = f.manager.durableRuntime.storeFor(workspaceRoot).listAllEvents({ sessionId: f.managed.id })
     assert.equal(journal.filter((e: any) => e.type === 'user_input_admitted').length, 3)
-    assert.deepEqual(journal.filter((e: any) => e.type === 'user_message_committed').map((e: any) => e.payload.content), bubbles.map((m: any) => m.content))
+    assert.deepEqual(journal.filter((e: any) => e.type === 'user_message_committed' && e.modelVisible).map((e: any) => e.payload.content), bubbles.map((m: any) => m.content))
     await f.manager.flushSession(f.managed.id)
     assert.equal(sessions.loadSession(workspaceRoot, f.managed.id)?.messages.filter(m => m.type === 'user').length, 3)
     return { acks: acks.length, turns: f.chats.length, originalInputs: bubbles.length }
@@ -341,7 +342,7 @@ try {
     fail = false
     assert.equal(created.length, 1)
   })
-  await check('Guarded adds risk prompts, outside writes always prompt, failure allows; mode changes and cancellation win', async () => {
+  await check('Guarded adds risk prompts, outside writes always prompt, failure prompts; mode changes and cancellation win', async () => {
     settings({ guardedMode: true })
     modes.setGuardedModeActiveResolver(() => decisions.isDecisionFeatureActive('guardedMode'))
     const sessionId = 'guarded-fixture'
@@ -356,7 +357,7 @@ try {
     const prompted: any = await guard.applyGuardedModeCheck(allowed, input, checker)
     assert.equal(prompted.type, 'prompt'); assert.equal(prompted.rememberKey, undefined)
     fail = true
-    assert.equal((await guard.applyGuardedModeCheck(allowed, input, checker)).type, 'allow')
+    assert.equal((await guard.applyGuardedModeCheck(allowed, input, checker)).type, 'prompt')
     fail = false
     const outside: any = { ...input, toolName: 'Write', input: { file_path: join(fixture, 'outside.txt'), content: 'never executed' } }
     assert.equal((await guard.applyGuardedModeCheck({ type: 'allow' } as any, outside, checker)).type, 'prompt')
@@ -575,7 +576,7 @@ try {
   for (const manager of managers) manager.durableRuntime.closeAll()
 }
 const failed = records.filter(record => !record.pass)
-const out = join(root, 'docs/verification/results/upstream-0.14.0-b4-b5-workflows.json')
+const out = process.argv.find(arg => arg.startsWith('--report='))?.slice(9) ?? join(root, 'docs/verification/results/upstream-0.14.0-b4-b5-workflows.json')
 writeFileSync(out, JSON.stringify({ executedAt: new Date().toISOString(), fixture, total: records.length, passed: records.length - failed.length,
   failed: failed.length, requests: network.length, records }, null, 2) + '\n')
 console.log(`${records.length - failed.length}/${records.length} passed; ${out}`)

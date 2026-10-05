@@ -1,4 +1,7 @@
 import { useAvailablePermissionModes } from '@/hooks/useAvailablePermissionModes'
+import { useAtomValue } from 'jotai'
+import { guardedModeAvailableAtom } from '@/atoms/permission-modes'
+import { openDecisionModelSettings } from '@/lib/ai-settings-navigation'
 import * as React from 'react'
 import { useTranslation } from "react-i18next"
 import { cn } from '@/lib/utils'
@@ -518,7 +521,8 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
   }, [optimisticMode])
 
   const modes = useAvailablePermissionModes(optimisticMode)
-  const modeGroups = React.useMemo(() => [{ id: 'modes', commands: permissionModeCommandsFor(modes) }], [modes])
+  const guardedAvailable = useAtomValue(guardedModeAvailableAtom)
+  const modeGroups = React.useMemo(() => [{ id: 'modes', commands: permissionModeCommandsFor(modes.filter(mode => mode !== 'guarded' || guardedAvailable)) }], [modes, guardedAvailable])
 
   // Handle command selection from dropdown
   const handleSelect = React.useCallback((commandId: SlashCommandId) => {
@@ -592,6 +596,11 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
           onSelect={handleSelect}
           showFilter
         />
+        {!guardedAvailable && <button type="button" onClick={() => { setOpen(false); openDecisionModelSettings() }}
+          className="craft-control flex w-full items-start gap-3 border-t border-border/60 px-3 py-3 text-left hover:bg-foreground/3">
+          <PermissionModeIcon mode="guarded" className="size-4 mt-0.5 text-muted-foreground" />
+          <span><span className="block text-sm">{t("mode.guarded")}</span><span className="block text-xs text-muted-foreground">{t("settings.ai.guarded.configureHint")}</span></span>
+        </button>}
       </PopoverContent>
     </Popover>
   )

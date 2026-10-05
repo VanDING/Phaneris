@@ -6,7 +6,7 @@
  * whether it is hard to undo, reaches outside the project, or reaches other
  * people or services. Any "yes" at or above the threshold turns the call into
  * an ordinary permission prompt. Tighten-only: the model can add a prompt,
- * never skip one, and no answer means no prompt (the call runs as in Execute).
+ * never skip one. Missing or failed answers require confirmation.
  * Execute mode never gets here.
  */
 
@@ -52,6 +52,10 @@ export function buildGuardedModeRequest(call: GuardedModeCall): DecisionRequest 
 /** Risks at or above the threshold; `null` when there is no result. */
 export function readGuardedModeVerdict(result: DecisionResult | null): GuardedModeVerdict | null {
   if (!result) return null
+  if (RISKS.some(risk => {
+    const answer = result.answers[risk]
+    return answer?.type !== 'noul' || !Number.isFinite(answer.noul) || answer.noul < 0 || answer.noul > 1
+  })) return null
   const risks = RISKS.filter(risk => {
     const answer = result.answers[risk]
     return answer?.type === 'noul' && answer.noul >= GUARDED_MODE_RISK_THRESHOLD
@@ -69,15 +73,17 @@ export function buildGuardedModeCheck(deps: GuardedModeCheckDeps): GuardedModeCh
   return {
     // Synchronous: with the toggle off (the default) the tool path does no work at all.
     // (Only Guarded-mode sessions ask; `needsGuardedModeCheck` checks the mode first.)
-    isActive: () => isDecisionFeatureActive('guardedMode') && deps.isInteractive(),
+    isActive: () => isDecisionFeatureActive('guardedMode'),
+    canPrompt: deps.isInteractive,
     check: async (call, signal) => {
+      if (!deps.isInteractive()) return null
       // The tool call waits on the answer: cap it like the other foreground points.
       const decide = await openDecisionPoint({ ...deps, feature: 'guardedMode', record: 'guarded_mode', maxDeadlineMs: FOREGROUND_MAX_DEADLINE_MS })
       if (!decide) return null
       const result = await decide(buildGuardedModeRequest(call), { tool: call.toolName, kind: call.promptType }, signal)
       const verdict = readGuardedModeVerdict(result)
-      recordDecisionOutcome(result, verdict && verdict.risks.length > 0
-        ? { action: 'prompt', changed: true, detail: { risks: verdict.risks } }
+      recordDecisionOutcome(result, !verdict || verdict.risks.length > 0
+        ? { action: 'prompt', changed: true, detail: verdict ? { risks: verdict.risks } : { unavailable: true } }
         : { action: 'allow', changed: false })
       return verdict
     },

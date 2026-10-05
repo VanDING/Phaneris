@@ -13,6 +13,8 @@ export interface FilesystemIsolationOptions {
   includeNetworkDeny?: boolean;
   /** Absolute paths that must remain writable inside the sandbox. */
   writablePaths?: string[];
+  /** Trusted interpreter/application assets, mounted read-only. */
+  readablePaths?: string[];
 }
 
 function existsOnPath(binary: string): boolean {
@@ -106,6 +108,7 @@ export function buildDarwinSandboxProfile(
     // blanket read allow — the last matching rule wins in sandbox-exec.
     '(deny file-read* (regex "^.*/\\.credential-cache\\.json$"))',
     '(deny file-write*)',
+    '(allow file-write* (literal "/dev/null"))',
     `(allow file-write* (subpath "${escapedRoot}"))`,
     ...(options?.writablePaths ?? []).map((writablePath) => `(allow file-write* (subpath "${escapeSandboxPath(canonicalSandboxPath(writablePath))}"))`),
   ];
@@ -157,6 +160,7 @@ export function applyFilesystemIsolation(
         args: [
           '--die-with-parent',
           '--ro-bind', sessionRoot, sessionRoot,
+          ...(options?.readablePaths ?? []).flatMap(path => ['--ro-bind', resolve(path), resolve(path)]),
           ...(options?.writablePaths ?? []).flatMap((writablePath) => ['--bind', resolve(writablePath), resolve(writablePath)]),
           // Essential runtime dirs (interpreters, shared libs, certs/locale).
           // --ro-bind-try tolerates dirs absent on some distros (e.g. /opt).
@@ -183,7 +187,9 @@ export function applyFilesystemIsolation(
         status: 'enforced',
         backend: 'firejail',
         command: 'firejail',
-        args: ['--quiet', `--private=${sessionRoot}`, `--whitelist=${sessionRoot}`, '--', command, ...args],
+        args: ['--quiet', `--private=${sessionRoot}`, `--whitelist=${sessionRoot}`,
+          ...(options?.readablePaths ?? []).flatMap(path => [`--whitelist=${resolve(path)}`, `--read-only=${resolve(path)}`]),
+          '--', command, ...args],
       };
     }
   }

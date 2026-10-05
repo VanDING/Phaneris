@@ -52,6 +52,7 @@ import type { Workspace, AuthType } from '@phaneris/core/types';
 
 // Import LLM connection types and constants
 import type { LlmConnection } from './llm-connections.ts';
+import { normalizeImageGenerationSettings, type ImageGenerationSettings } from './image-generation.ts';
 import { isValidProviderAuthCombination, getDefaultModelsForConnection, getDefaultModelForConnection, isPiProvider, toBedrockNativeId, type LlmProviderType } from './llm-connections.ts';
 import {
   getModelProvider,
@@ -67,6 +68,7 @@ export interface StoredConfig {
   llmConnections?: LlmConnection[];
   defaultLlmConnection?: string;  // Slug of default connection for new sessions
   defaultThinkingLevel?: ThinkingLevel;  // App-level default thinking level for new sessions
+  imageGeneration?: ImageGenerationSettings;
 
   workspaces: Workspace[];
   activeWorkspaceId: string | null;
@@ -635,6 +637,19 @@ export function setDecisionLayerSettings(
   config.decisionLayer = mergeDecisionLayerSettings(config.decisionLayer, patch);
   saveConfig(config);
   return normalizeDecisionLayerSettings(config.decisionLayer);
+}
+
+export function getImageGenerationSettings(): ImageGenerationSettings {
+  return normalizeImageGenerationSettings(loadStoredConfig()?.imageGeneration ?? {});
+}
+
+/** Replace both defaults together so switching providers cannot keep a foreign model. */
+export function setImageGenerationSettings(settings: ImageGenerationSettings): ImageGenerationSettings {
+  const config = loadStoredConfig();
+  if (!config) throw new Error('Cannot save image generation settings: config.json is not initialized.');
+  config.imageGeneration = normalizeImageGenerationSettings(settings);
+  saveConfig(config);
+  return config.imageGeneration;
 }
 
 /**

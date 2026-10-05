@@ -1,0 +1,379 @@
+{
+  "selectedTheme": "default",
+  "themeSha256": "b14cf0a379627272b3e3319ef20531c77c960f223b698a15edcabf4b1947df9f",
+  "records": [
+    {
+      "id": "Applied Default matches approved visual tokens, bundled JSON, static CSS and startup backgrounds",
+      "pass": true
+    },
+    {
+      "id": "Product theme schema and non-reserved filename",
+      "pass": true
+    },
+    {
+      "id": "Real theme storage loads, selects and restores in a temporary profile",
+      "pass": true
+    },
+    {
+      "id": "Baseline screenshot uses the same AI page and connection data",
+      "pass": true
+    },
+    {
+      "id": "light: monochrome logos adapt while colored and custom logos keep their colors",
+      "pass": true
+    },
+    {
+      "id": "light: actual user messages use neutral gray with readable text",
+      "pass": true
+    },
+    {
+      "id": "light: actual AI settings, readable tokens, right-side controls",
+      "pass": true
+    },
+    {
+      "id": "light: real buttons, input focus, toggles and destructive action",
+      "pass": true
+    },
+    {
+      "id": "light: actual connection menu and rename dialog",
+      "pass": true
+    },
+    {
+      "id": "dark: monochrome logos adapt while colored and custom logos keep their colors",
+      "pass": true
+    },
+    {
+      "id": "dark: actual user messages use neutral gray with readable text",
+      "pass": true
+    },
+    {
+      "id": "dark: actual AI settings, readable tokens, right-side controls",
+      "pass": true
+    },
+    {
+      "id": "dark: real buttons, input focus, toggles and destructive action",
+      "pass": true
+    },
+    {
+      "id": "dark: actual connection menu and rename dialog",
+      "pass": true
+    },
+    {
+      "id": "Chinese 480px: no overflow or missing translations",
+      "pass": true
+    },
+    {
+      "id": "Built-in theme, canonical definition, CSS and AI page unchanged",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "contrast": [
+    {
+      "mode": "light",
+      "readings": [
+        {
+          "text": "--foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--info",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.3176721088620535
+        },
+        {
+          "text": "--info",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.3176721088620535
+        },
+        {
+          "text": "--info-text",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 9.548673457311232
+        },
+        {
+          "text": "--info-text",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 9.548673457311232
+        },
+        {
+          "text": "--success",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.662531062840173
+        },
+        {
+          "text": "--success",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.662531062840173
+        },
+        {
+          "text": "--destructive",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.5519907850198615
+        },
+        {
+          "text": "--destructive",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.5519907850198615
+        },
+        {
+          "text": "--accent",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 5.8616253691773545
+        },
+        {
+          "text": "--accent",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 5.8616253691773545
+        },
+        {
+          "text": "--popover-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 5.684387692114481
+        },
+        {
+          "text": "--foreground",
+          "surface": "--input",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--foreground",
+          "surface": "--user-message-bubble",
+          "minimum": 4.5,
+          "ratio": 14.142444233486248
+        },
+        {
+          "text": "--background",
+          "surface": "--foreground",
+          "minimum": 4.5,
+          "ratio": 15.692747939272312
+        },
+        {
+          "text": "--background",
+          "surface": "--destructive",
+          "minimum": 4.5,
+          "ratio": 5.5519907850198615
+        },
+        {
+          "text": "--ring",
+          "surface": "--background",
+          "minimum": 3,
+          "ratio": 5.8616253691773545
+        }
+      ]
+    },
+    {
+      "mode": "dark",
+      "readings": [
+        {
+          "text": "--foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 15.432710189990694
+        },
+        {
+          "text": "--foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 14.473720795179284
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 8.179416786240331
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 7.671147411828421
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 8.179416786240331
+        },
+        {
+          "text": "--foreground-dimmed",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 7.671147411828421
+        },
+        {
+          "text": "--info",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 9.386412358975454
+        },
+        {
+          "text": "--info",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 8.803140218387837
+        },
+        {
+          "text": "--info-text",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 12.113408339160364
+        },
+        {
+          "text": "--info-text",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 11.360680529899152
+        },
+        {
+          "text": "--success",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 9.26573929356459
+        },
+        {
+          "text": "--success",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 8.689965783388853
+        },
+        {
+          "text": "--destructive",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 7.489994886467893
+        },
+        {
+          "text": "--destructive",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 7.024566223913665
+        },
+        {
+          "text": "--accent",
+          "surface": "--background",
+          "minimum": 4.5,
+          "ratio": 8.215384920388768
+        },
+        {
+          "text": "--accent",
+          "surface": "--card",
+          "minimum": 4.5,
+          "ratio": 7.704880484294569
+        },
+        {
+          "text": "--popover-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 12.595955094423998
+        },
+        {
+          "text": "--muted-foreground",
+          "surface": "--popover-solid",
+          "minimum": 4.5,
+          "ratio": 6.675921809565401
+        },
+        {
+          "text": "--foreground",
+          "surface": "--input",
+          "minimum": 4.5,
+          "ratio": 13.77242491169947
+        },
+        {
+          "text": "--foreground",
+          "surface": "--user-message-bubble",
+          "minimum": 4.5,
+          "ratio": 12.426386492331888
+        },
+        {
+          "text": "--background",
+          "surface": "--foreground",
+          "minimum": 4.5,
+          "ratio": 15.432710189990694
+        },
+        {
+          "text": "--background",
+          "surface": "--destructive",
+          "minimum": 4.5,
+          "ratio": 7.489994886467893
+        },
+        {
+          "text": "--ring",
+          "surface": "--background",
+          "minimum": 3,
+          "ratio": 8.215384920388768
+        }
+      ]
+    }
+  ],
+  "messageSurfaces": [
+    {
+      "mode": "light",
+      "background": "rgb(243, 243, 243)",
+      "textContrast": 14.142444233486248
+    },
+    {
+      "mode": "dark",
+      "background": "rgb(43, 43, 43)",
+      "textContrast": 12.426386492331888
+    }
+  ],
+  "protectedFiles": {
+    "apps/electron/resources/themes/default.json": "b14cf0a379627272b3e3319ef20531c77c960f223b698a15edcabf4b1947df9f",
+    "packages/shared/src/config/theme.ts": "3690e83a1b9f2652bbf789dda23310d549caaefb5a4d48a035e6697eeb78304c",
+    "apps/electron/src/renderer/index.css": "39a4ff63f337edaf4e80af9bb6cd16e29f181860dbfd3fe1e9787414d680b849",
+    "packages/ui/src/styles/index.css": "2177148b483274080a90e851c73470a54bdfda2547fc8574e3160e443209d64a",
+    "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx": "b739f9afa04ef9100c70243b10ccc3ef65ea0b30b297e9c3fb358ed7e91064e3"
+  },
+  "personalProfileAccess": false
+}

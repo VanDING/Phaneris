@@ -93,6 +93,8 @@ export type { ExportResourcesOptions, ExportResult, ResourceImportMode, Resource
 
 // LLM connection types
 import type { LlmConnection, LlmConnectionWithStatus, LlmAuthType, LlmProviderType, NetworkProxySettings } from '@phaneris/shared/config';
+import type { ImageGenerationSettings, ImageGenerationStatus } from '@phaneris/shared/config/image-generation';
+export type { ImageGenerationSettings, ImageGenerationStatus };
 export type { LlmConnection, LlmConnectionWithStatus, LlmAuthType, LlmProviderType, NetworkProxySettings };
 
 // Decision layer types (Jev / TypeSafe System One)
@@ -855,6 +857,8 @@ export interface ElectronAPI {
   testLlmConnection(slug: string): Promise<{ success: boolean; error?: string }>
   setDefaultLlmConnection(slug: string): Promise<{ success: boolean; error?: string }>
   getDefaultThinkingLevel(): Promise<ThinkingLevel>
+  getImageGenerationSettings(): Promise<ImageGenerationStatus>
+  setImageGenerationSettings(settings: ImageGenerationSettings): Promise<ImageGenerationStatus>
   setDefaultThinkingLevel(level: ThinkingLevel): Promise<{ success: boolean; error?: string }>
   setWorkspaceDefaultLlmConnection(workspaceId: string, slug: string | null): Promise<{ success: boolean; error?: string }>
 

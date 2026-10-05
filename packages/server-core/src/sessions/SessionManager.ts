@@ -146,7 +146,7 @@ import { validateArchiveTarget } from './archive-guards'
 import { renderOfficeArtifactPreview } from '../services/artifact-preview'
 import {
   generateImage,
-  resolveImageGenerationConnection,
+  resolveConfiguredImageGeneration,
   type GeneratedImageFormat,
 } from '../services/image-generation'
 
@@ -5391,12 +5391,12 @@ export class SessionManager implements ISessionManager {
           const pending = this.imageRequests.get(managed.id) ?? new Set<AbortController>()
           pending.add(controller); this.imageRequests.set(managed.id, pending)
           try {
-          const workspaceDefault = loadWorkspaceConfig(managed.workspace.rootPath)?.defaults?.defaultLlmConnection
-          const sessionConnection = resolveSessionConnection(managed.llmConnection, workspaceDefault)
+          const defaultImageConnectionSlug = getDefaultLlmConnection()
           const credentialManager = getCredentialManager()
-          const selected = await resolveImageGenerationConnection({
+          const selected = await resolveConfiguredImageGeneration({
             explicitSlug: input.connectionSlug,
-            preferredConnection: sessionConnection,
+            model: input.model,
+            preferredConnection: defaultImageConnectionSlug ? getLlmConnection(defaultImageConnectionSlug) : null,
             connections: getLlmConnections(),
             getApiKey: (connectionSlug) => credentialManager.getLlmApiKey(connectionSlug),
           })
@@ -5418,7 +5418,7 @@ export class SessionManager implements ISessionManager {
           const outputFormat = input.outputFormat ?? extensionFormat ?? 'png'
           const request = {
             prompt: input.prompt,
-            model: input.model,
+            model: selected.model,
             size: input.size,
             quality: input.quality,
             background: input.background,
@@ -5427,7 +5427,7 @@ export class SessionManager implements ISessionManager {
           const provider = selected.connection.piAuthProvider as 'openai' | 'openrouter'
           const generated = await auxiliaryModelEffect(this.durableRuntime, {
             workspaceRoot: managed.workspace.rootPath, sessionId: managed.id, purpose: 'image_generation', provider,
-            model: input.model ?? (provider === 'openai' ? 'gpt-image-2' : 'google/gemini-2.5-flash-image'), request, signal: controller.signal,
+            model: selected.model, request, signal: controller.signal,
           }, () => generateImage({ provider, apiKey: selected.apiKey, baseUrl: selected.connection.baseUrl, maxRetries: 0, signal: controller.signal }, request), () => {
             this.applyDurableUsageProjection(managed); this.persistSession(managed)
             if (managed.tokenUsage) this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)

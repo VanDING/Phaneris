@@ -22,6 +22,11 @@ export const BLOCKED_ENV_VARS = [
   'GOOGLE_API_KEY',
   'STRIPE_SECRET_KEY',
   'NPM_TOKEN',
+  'NODE_OPTIONS',
+  'NODE_PATH',
+  'PYTHONPATH',
+  'PYTHONHOME',
+  'PYTHONSTARTUP',
 ] as const;
 
 /**

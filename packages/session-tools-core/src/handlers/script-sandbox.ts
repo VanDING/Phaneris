@@ -1,14 +1,11 @@
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import type { SessionToolContext } from '../context.ts';
 import { errorResponse, successResponse } from '../response.ts';
 import type { ToolResult } from '../types.ts';
-import { applyNetworkIsolation } from '../runtime/network-isolation.ts';
-import { applyFilesystemIsolation } from '../runtime/filesystem-isolation.ts';
 import { isPathWithinDirectory } from '../runtime/path-security.ts';
-import { resolveScriptRuntime } from '../runtime/resolve-script-runtime.ts';
-import { createScriptRuntimeEnv } from '../runtime/sandbox-env.ts';
+import { createIsolatedScriptFile, prepareIsolatedScript } from '../runtime/isolated-script.ts';
 
 export interface ScriptSandboxArgs {
   language: 'python3' | 'node' | 'bun';
@@ -57,76 +54,17 @@ export async function handleScriptSandbox(
     resolvedInputs.push(resolvedInput);
   }
 
-  if (!existsSync(dataDir)) {
-    mkdirSync(dataDir, { recursive: true });
-  }
-
   const timeoutMs = Math.min(Math.max(args.timeoutMs ?? DEFAULT_TIMEOUT_MS, 1), MAX_TIMEOUT_MS);
-  const ext = args.language === 'python3' ? '.py' : '.js';
-  const sandboxScriptDir = join(dataDir, '.sandbox-scripts');
-  if (!existsSync(sandboxScriptDir)) {
-    mkdirSync(sandboxScriptDir, { recursive: true });
-  }
-  const tempScript = join(sandboxScriptDir, `craft-sandbox-${ctx.sessionId}-${Date.now()}${ext}`);
-
-  writeFileSync(tempScript, args.script, 'utf-8');
+  let scriptFile: ReturnType<typeof createIsolatedScriptFile> | undefined;
 
   try {
-    const runtime = resolveScriptRuntime(args.language);
-    const runtimeArgs = [...runtime.argsPrefix, tempScript, ...resolvedInputs];
-
-    let networkIsolation = applyNetworkIsolation(runtime.command, runtimeArgs);
-    let filesystemIsolation = applyFilesystemIsolation(runtime.command, runtimeArgs, sessionDir);
-
-    if (process.platform === 'darwin') {
-      // macOS: compose network + filesystem restrictions in a SINGLE sandbox-exec profile
-      // to avoid nested sandbox-exec wrapping failures.
-      filesystemIsolation = applyFilesystemIsolation(runtime.command, runtimeArgs, sessionDir, {
-        includeNetworkDeny: true,
-      });
-      networkIsolation = {
-        status: filesystemIsolation.status,
-        backend: filesystemIsolation.status === 'enforced' ? 'sandbox-exec' : 'none',
-        command: runtime.command,
-        args: runtimeArgs,
-      };
-    } else {
-      networkIsolation = applyNetworkIsolation(runtime.command, runtimeArgs);
-      if (networkIsolation.status !== 'enforced') {
-        return errorResponse(
-          'script_sandbox requires network isolation in all permission modes, but no supported isolation backend is available on this platform/runtime.'
-        );
-      }
-
-      filesystemIsolation = applyFilesystemIsolation(
-        networkIsolation.command,
-        networkIsolation.args,
-        sessionDir
-      );
-    }
-
-    if (networkIsolation.status !== 'enforced') {
-      return errorResponse(
-        'script_sandbox requires network isolation in all permission modes, but no supported isolation backend is available on this platform/runtime.'
-      );
-    }
-
-    if (filesystemIsolation.status !== 'enforced') {
-      return errorResponse(
-        'script_sandbox requires filesystem isolation in all permission modes, but no supported isolation backend is available on this platform/runtime.'
-      );
-    }
-
-    const env = createScriptRuntimeEnv({
-      language: args.language,
-      dataDir,
-    });
-
+    scriptFile = createIsolatedScriptFile(args.language, args.script, sessionDir, dataDir);
+    const execution = await prepareIsolatedScript(args.language, [scriptFile.path, ...resolvedInputs], sessionDir, dataDir);
     const startedAt = Date.now();
     const result = await new Promise<{ stdout: string; stderr: string; code: number | null; timedOut: boolean }>((resolvePromise, reject) => {
-      const child = spawn(filesystemIsolation.command, filesystemIsolation.args, {
+      const child = spawn(execution.command, execution.args, {
         cwd: dataDir,
-        env,
+        env: execution.env,
         stdio: ['pipe', 'pipe', 'pipe'],
         // Make the child a process-group leader so the timeout can SIGKILL the
         // whole group (N-5: previously only the direct child was killed,
@@ -196,12 +134,7 @@ export async function handleScriptSandbox(
       `exitCode: ${result.code ?? 'null'}`,
       `durationMs: ${durationMs}`,
       `timedOut: ${result.timedOut}`,
-      'isolationPolicy: required-in-all-modes',
-      `runtime: ${runtime.command} (source: ${runtime.source})`,
-      `networkIsolation: ${networkIsolation.status}`,
-      `networkBackend: ${networkIsolation.backend}`,
-      `filesystemIsolation: ${filesystemIsolation.status}`,
-      `filesystemBackend: ${filesystemIsolation.backend}`,
+      ...execution.diagnostics,
     ];
 
     if (stdout.text.length > 0) {
@@ -228,7 +161,7 @@ export async function handleScriptSandbox(
     return errorResponse(`Error running sandboxed script: ${msg}`);
   } finally {
     try {
-      unlinkSync(tempScript);
+      scriptFile?.cleanup();
     } catch {
       // ignore cleanup errors
     }

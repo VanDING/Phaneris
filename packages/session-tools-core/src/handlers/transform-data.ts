@@ -11,14 +11,10 @@ import type { SessionToolContext } from '../context.ts';
 import type { ToolResult } from '../types.ts';
 import { successResponse, errorResponse } from '../response.ts';
 import { spawn } from 'node:child_process';
-import { join, resolve } from 'node:path';
-import { existsSync, mkdirSync, writeFileSync, unlinkSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { createScriptRuntimeEnv } from '../runtime/sandbox-env.ts';
-import { applyFilesystemIsolation } from '../runtime/filesystem-isolation.ts';
-import { applyNetworkIsolation } from '../runtime/network-isolation.ts';
+import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
 import { isPathWithinDirectory, isPathWithinDirectoryForCreation } from '../runtime/path-security.ts';
-import { resolveScriptRuntime } from '../runtime/resolve-script-runtime.ts';
+import { createIsolatedScriptFile, prepareIsolatedScript } from '../runtime/isolated-script.ts';
 
 export interface TransformDataArgs {
   language: 'python3' | 'node' | 'bun';
@@ -79,63 +75,11 @@ export async function handleTransformData(
     resolvedInputs.push(resolvedInput);
   }
 
-  // Ensure data directory exists
-  if (!existsSync(dataDir)) {
-    mkdirSync(dataDir, { recursive: true });
-  }
-
-  // Write the script inside the session data dir: sandboxed runs can read it,
-  // and it is cleaned up with the session data lifecycle.
-  const ext = args.language === 'python3' ? '.py' : '.js';
-  const transformScriptDir = join(dataDir, '.transform-scripts');
-  if (!existsSync(transformScriptDir)) {
-    mkdirSync(transformScriptDir, { recursive: true });
-  }
-  const tempScript = join(transformScriptDir, `craft-transform-${ctx.sessionId}-${Date.now()}${ext}`);
-  writeFileSync(tempScript, args.script, 'utf-8');
+  let scriptFile: ReturnType<typeof createIsolatedScriptFile> | undefined;
 
   try {
-    // Build command from shared runtime resolver
-    const runtime = resolveScriptRuntime(args.language);
-    let cmd = runtime.command;
-    let spawnArgs = [...runtime.argsPrefix, tempScript, ...resolvedInputs, resolvedOutput];
-
-    if (process.platform === 'darwin' || process.platform === 'linux') {
-      // transform_data handles potentially untrusted document content. On the
-      // platforms with a sandbox backend, enforce network deny and make only
-      // the session data dir writable; without isolation the script would run
-      // with the user's full filesystem/network access (audit C-2).
-      if (process.platform === 'darwin') {
-        const plan = applyFilesystemIsolation(cmd, spawnArgs, sessionDir, {
-          includeNetworkDeny: true,
-          writablePaths: [dataDir],
-        });
-        if (plan.status !== 'enforced') {
-          return errorResponse('transform_data requires filesystem/network isolation, but no usable backend is available on this system.');
-        }
-        cmd = plan.command;
-        spawnArgs = plan.args;
-      } else {
-        const networkPlan = applyNetworkIsolation(cmd, spawnArgs);
-        if (networkPlan.status !== 'enforced') {
-          return errorResponse('transform_data requires network isolation, but no usable backend is available on this system.');
-        }
-        const fsPlan = applyFilesystemIsolation(networkPlan.command, networkPlan.args, sessionDir, {
-          writablePaths: [dataDir],
-        });
-        if (fsPlan.status !== 'enforced') {
-          return errorResponse('transform_data requires filesystem isolation, but no usable backend is available on this system.');
-        }
-        cmd = fsPlan.command;
-        spawnArgs = fsPlan.args;
-      }
-    }
-
-    // Strip sensitive env vars + redirect runtime cache/temp paths to session data dir
-    const env = createScriptRuntimeEnv({
-      language: args.language,
-      dataDir,
-    });
+    scriptFile = createIsolatedScriptFile(args.language, args.script, sessionDir, dataDir);
+    const execution = await prepareIsolatedScript(args.language, [scriptFile.path, ...resolvedInputs, resolvedOutput], sessionDir, dataDir, ctx.skillsPath ? [resolve(ctx.skillsPath)] : []);
 
     // Spawn subprocess with manual timeout that escalates to killing the whole
     // process group. We can't rely on spawn()'s built-in `timeout` option because
@@ -145,9 +89,9 @@ export async function handleTransformData(
     // killed, orphaning grandchildren). The promise settles on the timer itself,
     // so a `close` that never fires cannot hang the caller.
     const result = await new Promise<{ stdout: string; stderr: string; code: number | null; timedOut: boolean }>((resolvePromise, reject) => {
-      const child = spawn(cmd, spawnArgs, {
+      const child = spawn(execution.command, execution.args, {
         cwd: dataDir,
-        env,
+        env: execution.env,
         stdio: ['ignore', 'pipe', 'pipe'],
         detached: true,
       });
@@ -197,14 +141,14 @@ export async function handleTransformData(
 
     if (result.timedOut) {
       return errorResponse(
-        `Script timed out after ${TRANSFORM_DATA_TIMEOUT_MS / 1000}s and was killed (including child processes).`
+        `Script timed out after ${TRANSFORM_DATA_TIMEOUT_MS / 1000}s and was killed (including child processes).\n${execution.diagnostics.join('\n')}`
       );
     }
 
     if (result.code !== 0) {
       const errorOutput = result.stderr || result.stdout || 'Script exited with non-zero code';
       return errorResponse(
-        `Script failed (exit code ${result.code}):\n${errorOutput.slice(0, 2000)}`
+        `Script failed (exit code ${result.code}):\n${errorOutput.slice(0, 2000)}\n${execution.diagnostics.join('\n')}`
       );
     }
 
@@ -217,18 +161,18 @@ export async function handleTransformData(
 
     // Return the absolute path for use in preview/table block "src" fields
     const lines = [`Output written to: ${resolvedOutput}`];
-    lines.push(`Runtime: ${cmd} (source: ${runtime.source})`);
+    lines.push(...execution.diagnostics);
     lines.push(`\nUse this absolute path as the "src" value in your datatable, spreadsheet, html-preview, pdf-preview, or image-preview block.`);
     if (result.stdout.trim()) {
       lines.push(`\nStdout:\n${result.stdout.slice(0, 500)}`);
     }
 
-    return successResponse(lines.join(''));
+    return successResponse(lines.join('\n'));
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     return errorResponse(`Error running script: ${msg}`);
   } finally {
     // Clean up temp script
-    try { unlinkSync(tempScript); } catch { /* ignore */ }
+    try { scriptFile?.cleanup(); } catch { /* ignore */ }
   }
 }
