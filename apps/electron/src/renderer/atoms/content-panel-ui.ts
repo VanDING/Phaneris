@@ -9,10 +9,19 @@
 import { atom } from 'jotai'
 import type { WorkbenchFocus } from '@phaneris/ui'
 
-export type FilesPanelView = 'explorer' | 'changed' | 'opened' | 'activity' | 'attachments'
+export type FilesPanelView = 'browse' | 'artifacts' | 'changed'
 
 /** Active Files subview; lifted so triggered previews and fullscreen restoration agree. */
-export const filesPanelViewAtom = atom<FilesPanelView>('explorer')
+export const filesPanelViewAtom = atom<FilesPanelView>('browse')
+
+/**
+ * Browse > Artifacts filters. `current` entries are preview registrations
+ * written when an existing file is opened, so they stay hidden until the user
+ * asks for them by name.
+ */
+export type ArtifactStatusFilter = 'delivered' | 'all' | 'current'
+
+export const artifactsStatusFilterAtom = atom<ArtifactStatusFilter>('delivered')
 
 /** Persistent selection shared by the right-side evidence views, isolated per session. */
 export const workbenchFocusBySessionAtom = atom<Record<string, WorkbenchFocus>>({})
@@ -52,15 +61,14 @@ export const changedFilesSelectedKeyBySessionAtom = atom<Record<string, string |
 /**
  * Any evidence view → Files scroll/focus request.
  * `nonce` lets repeated requests for the same change re-fire; the panel
- * consumes (and clears) the request via an effect.
+ * consumes (and clears) the request via an effect. `view` is optional because
+ * only Files > Changed has a target that needs jumping to.
  */
 export interface FilesPanelFocusRequest {
   sessionId: string
-  view: FilesPanelView
+  view?: FilesPanelView
   changeId?: string
   nonce: number
 }
 export const filesPanelFocusRequestAtom = atom<FilesPanelFocusRequest | null>(null)
 
-/** PreviewPanel: currently selected preview entry key per session. */
-export const previewPanelSelectedKeyBySessionAtom = atom<Record<string, string | null>>({})

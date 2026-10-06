@@ -119,12 +119,12 @@ describe('Context Workbench state', () => {
     expect(store.get(workbenchStateAtom).items).toHaveLength(1)
   })
 
-  it('routes the legacy Preview entry to Files opened view', () => {
+  it('routes the legacy Preview entry to Files Browse', () => {
     const store = createStore()
     store.set(openWorkbenchItemAtom, 'preview')
 
     expect(store.get(workbenchStateAtom).items[0]?.route).toBe('files')
-    expect(store.get(filesPanelViewAtom)).toBe('opened')
+    expect(store.get(filesPanelViewAtom)).toBe('browse')
   })
 
   it('closes the active tab and selects its nearest sibling', () => {
@@ -253,7 +253,7 @@ describe('legacy peer-panel migration', () => {
 
     expect(restore.primaryRoute).toBe('allSessions/session/s1')
     expect(restore.activeWorkbenchRoute).toBe('files')
-    expect(restore.filesView).toBe('opened')
+    expect(restore.filesView).toBe('browse')
   })
 
   it('hydrates while preserving stable ids for matching kinds', () => {

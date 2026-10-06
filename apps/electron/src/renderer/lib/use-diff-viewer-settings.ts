@@ -4,9 +4,14 @@
  * Loaded from ~/.phaneris/preferences.json (diffViewer scope) and persisted
  * on change. Extracted from ChatDisplay's inline logic so the Review panel
  * shares the exact same settings source (the plan reuses the same stats/UI).
+ *
+ * The persisted read is asynchronous while the toggle is immediately
+ * interactive, so a late read must never clobber a choice the user already
+ * made. `update` flips `userChosenRef`; the initial read only applies when
+ * that flag is still false.
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type { DiffViewerSettings } from '@phaneris/ui'
 
 export interface ResolvedDiffViewerSettings {
@@ -19,6 +24,7 @@ export function useDiffViewerSettings(): [
   (settings: DiffViewerSettings) => void,
 ] {
   const [settings, setSettings] = useState<Partial<DiffViewerSettings>>({})
+  const userChosenRef = useRef(false)
 
   useEffect(() => {
     let stale = false
@@ -26,7 +32,10 @@ export function useDiffViewerSettings(): [
       if (stale) return
       try {
         const prefs = JSON.parse(content)
-        if (prefs.diffViewer) setSettings(prefs.diffViewer)
+        if (!prefs.diffViewer) return
+        // The user toggled before the read resolved: keep their selection.
+        if (userChosenRef.current) return
+        setSettings(prefs.diffViewer)
       } catch {
         // Ignore parse errors, use defaults
       }
@@ -35,6 +44,7 @@ export function useDiffViewerSettings(): [
   }, [])
 
   const update = useCallback((next: DiffViewerSettings) => {
+    userChosenRef.current = true
     setSettings(next)
     window.electronAPI.readPreferences().then(({ content }) => {
       try {
@@ -50,7 +60,10 @@ export function useDiffViewerSettings(): [
   }, [])
 
   return [
-    { diffStyle: settings.diffStyle ?? 'unified', disableBackground: settings.disableBackground ?? false },
+    {
+      diffStyle: settings.diffStyle ?? 'unified',
+      disableBackground: settings.disableBackground ?? false,
+    },
     update,
   ]
 }

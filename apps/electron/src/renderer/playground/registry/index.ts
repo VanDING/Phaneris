@@ -30,10 +30,12 @@ import { taskEditorComponents } from './task-editor'
 import { controlSystemComponents } from './control-system'
 import { executionMapComponents } from './execution-map'
 import { motionComponents } from './motion'
+import { filesPanelComponents } from './files-panel'
 
 export * from './types'
 
 export const componentRegistry: ComponentEntry[] = [
+  ...filesPanelComponents,
   ...motionComponents,
   ...executionMapComponents,
   ...controlSystemComponents,

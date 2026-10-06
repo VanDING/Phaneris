@@ -1,6 +1,7 @@
 import { resolveFileFormat } from '@phaneris/shared/artifacts/browser'
 import { FileText } from 'lucide-react'
 import { FilePreviewContent } from '@/components/content-panels/FilePreviewContent'
+import { MarkdownPopoutOverlay } from '@/components/content-panels/MarkdownPopoutOverlay'
 import { PreviewOverlay } from '@phaneris/ui'
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -2316,6 +2317,9 @@ export default function App() {
               onOpenUrl={handleOpenUrl}
             />
           )}
+
+          {/* Chat pop-outs (message / response / turn details) — read-only documents */}
+          <MarkdownPopoutOverlay isDark={isDark} onOpenUrl={handleOpenUrl} onOpenFile={handleOpenFile} />
 
           {/* Documentation overlay — the target of every in-app help link */}
           <DocsOverlay />

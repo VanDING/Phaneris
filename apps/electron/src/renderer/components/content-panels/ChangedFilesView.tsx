@@ -130,18 +130,43 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
 
   // Review-specific controls live below the shared panel header so its centered
   // title and bound-session subtitle keep the same geometry as every other panel.
+  //
+  // The style toggle only ever changes what an expanded section renders, so it
+  // is disabled while everything is collapsed and explains why. A section whose
+  // diff has no deletions (a brand-new file) still renders in both styles, but
+  // the split view shows the same single column, so it gets a hint instead of a
+  // silently inert switch.
+  const expandedSections = useMemo(
+    () => sections.filter((section) => section.key === selectedKey),
+    [sections, selectedKey],
+  )
+  const styleSwitchable = expandedSections.length > 0
+  const styleEffective = expandedSections.some((section) => section.changes.some((change) => {
+    if (change.error) return false
+    if (change.unifiedDiff) return true
+    return change.original.trim().length > 0
+  }))
+  const styleHint = !styleSwitchable
+    ? t('contentPanel.diff.expandToStyle')
+    : styleEffective
+      ? undefined
+      : t('contentPanel.diff.styleUnavailable')
+
   const toolbarActions = useMemo(() => {
     const styleButtons = (['unified', 'split'] as const).map((style) => (
       <button
         key={style}
         type="button"
         aria-pressed={viewerSettings.diffStyle === style}
+        disabled={!styleSwitchable}
+        title={styleHint}
         onClick={() => setViewerSettings({ diffStyle: style, disableBackground: viewerSettings.disableBackground })}
         className={cn(
           'relative isolate h-7 rounded-md px-2 text-[12px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
           viewerSettings.diffStyle === style
             ? 'text-foreground'
             : 'text-muted-foreground hover:text-foreground',
+          !styleSwitchable && 'cursor-not-allowed opacity-40 hover:text-muted-foreground',
         )}
       >
         {viewerSettings.diffStyle === style && (
@@ -151,14 +176,24 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
             transition={motionSpring(reduceMotion, 'responsive')}
           />
         )}
-        <span className="relative z-[1]">{t(`contentPanel.diff.style${style === 'unified' ? 'Unified' : 'Split'}`)}</span>
+        <span className="relative z-[1]">{style === 'unified' ? t('contentPanel.diff.styleUnified') : t('contentPanel.diff.styleSplit')}</span>
       </button>
     ))
     return (
       <div className="flex items-center gap-1.5">
         <LayoutGroup id="changed-files-diff-style">
-          <div className="flex items-center rounded-lg border border-border/60 bg-foreground/[0.025] p-0.5">{styleButtons}</div>
+          <div
+            className="flex items-center rounded-lg border border-border/60 bg-foreground/[0.025] p-0.5"
+            aria-disabled={!styleSwitchable}
+          >
+            {styleButtons}
+          </div>
         </LayoutGroup>
+        {styleHint && (
+          <span className="hidden max-w-40 truncate text-[10px] text-muted-foreground/70 @min-[520px]/files:block" title={styleHint}>
+            {styleHint}
+          </span>
+        )}
         <div className="border-l border-border/55 pl-1.5">
           <button
             type="button"
@@ -173,7 +208,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
         </div>
       </div>
     )
-  }, [viewerSettings, setViewerSettings, selectedKey, setSelectedKey, t, reduceMotion])
+  }, [viewerSettings, setViewerSettings, selectedKey, setSelectedKey, t, reduceMotion, styleSwitchable, styleHint])
 
   return (
     <div className="flex h-full min-h-0 flex-col">

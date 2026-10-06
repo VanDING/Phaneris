@@ -2286,12 +2286,12 @@ function AppShellContent({
     openSurfaceLauncher('files')
   })
   useAction('panel.files', () => {
-    store.set(filesPanelViewAtom, 'explorer')
+    store.set(filesPanelViewAtom, 'browse')
     openSurfaceLauncher('files')
   })
   useAction('panel.context', () => openSurfaceLauncher('trajectory'))
-  useAction('panel.preview', () => {
-    store.set(filesPanelViewAtom, 'opened')
+  useAction('panel.artifacts', () => {
+    store.set(filesPanelViewAtom, 'artifacts')
     openSurfaceLauncher('files')
   })
   useAction('panel.toggle', toggleWorkbench)

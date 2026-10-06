@@ -103,9 +103,10 @@ describe('v2 Surface URL', () => {
 })
 
 describe('legacy panel URL migration', () => {
+  // `view` is undefined for aliases that do not address the Files subviews.
   for (const [alias, kind, view] of [
-    ['context', 'trajectory', 'explorer'],
-    ['preview', 'files', 'opened'],
+    ['context', 'trajectory', undefined],
+    ['preview', 'files', 'browse'],
     ['diff', 'files', 'changed'],
   ] as const) {
     it(`preserves ${alias} intent through URL normalization and hydration`, () => {
@@ -121,7 +122,7 @@ describe('legacy panel URL migration', () => {
         const store = createStore()
         store.set(hydrateSurfaceStateAtom, parsed!.restore)
         expect(store.get(workbenchStateAtom).items.map(item => item.kind)).toEqual([kind])
-        expect(store.get(filesPanelViewAtom)).toBe(view)
+        if (view) expect(store.get(filesPanelViewAtom)).toBe(view)
       }
     })
   }

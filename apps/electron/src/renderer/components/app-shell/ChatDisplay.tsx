@@ -72,7 +72,7 @@ import { navigate, routes } from "@/lib/navigate"
 import { CHAT_LAYOUT } from "@/config/layout"
 import { collectFileChangesFromActivities, getFirstFileChangeIdForActivity } from "@/lib/file-changes"
 import { handleErrorMessageAction } from "./error-message-actions"
-import { addPreviewEntryAtom, type PreviewEntry } from "@/atoms/preview"
+import { openMarkdownPopoutAtom } from "@/atoms/preview"
 import { chatFocusRequestAtom, filesPanelFocusRequestAtom } from "@/atoms/content-panel-ui"
 import { usePanelTriggerOpener } from "@/lib/panel-triggers"
 import { useArtifacts } from "@/hooks/useArtifacts"
@@ -1000,11 +1000,11 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   }, [validMatches.length, currentMatchIndex, isHighlighting, session?.id, onMatchInfoChange])
 
   // ============================================================================
-  // Preview / changed-files triggers (consolidated into the Files workbench)
+  // Pop-out / changed-files triggers (Files workbench + shared preview overlay)
   // ============================================================================
 
   const openTriggeredPanel = usePanelTriggerOpener()
-  const addPreviewEntry = useSetAtom(addPreviewEntryAtom)
+  const openMarkdownPopout = useSetAtom(openMarkdownPopoutAtom)
   const setFilesPanelFocusRequest = useSetAtom(filesPanelFocusRequestAtom)
   const artifactStore = useArtifacts(workspaceId ?? session?.workspaceId ?? null, session?.id)
 
@@ -1043,17 +1043,16 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     }
   }, [artifactStore, t])
 
-  // Push a preview entry for the current session and open/focus the Preview
-  // item using the trigger strategy (activate existing or create a tab).
-  const openPreviewEntry = useCallback((entry: PreviewEntry) => {
+  // Show a chat pop-out as a read-only document in the shared preview overlay.
+  // Files panels stay single-purpose; pop-outs no longer open a second browser.
+  const openPreviewEntry = useCallback((entry: { content: string; title: string; id: string }) => {
     if (!session) return
-    addPreviewEntry({ sessionId: session.id, entry })
-    openTriggeredPanel('preview')
-  }, [session, addPreviewEntry, openTriggeredPanel])
+    openMarkdownPopout({ ...entry, sessionId: session.id })
+  }, [session, openMarkdownPopout])
 
   // Pop-out handler - a message shown read-only (read-only markdown preview)
   const handlePopOut = useCallback((message: Message) => {
-    openPreviewEntry({ type: 'markdown', content: message.content, title: t('contentPanel.preview.message'), id: `msg:${message.id}` })
+    openPreviewEntry({ content: message.content, title: t('contentPanel.preview.message'), id: `msg:${message.id}` })
   }, [openPreviewEntry, t])
 
   // Open Files > Changed, optionally scrolling to a specific change.
@@ -1927,17 +1926,17 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                           }))
                         }}
                         onPopOut={(text) => {
-                          // Raw markdown source → preview panel markdown entry
-                          openPreviewEntry({ type: 'markdown', content: text, title: t('contentPanel.preview.response'), id: `raw:${assistantUiKey}` })
+                          // Raw markdown source → read-only pop-out document
+                          openPreviewEntry({ content: text, title: t('contentPanel.preview.response'), id: `raw:${assistantUiKey}` })
                         }}
                         onOpenDetails={() => {
-                          // Turn details → preview panel markdown entry
+                          // Turn details → read-only pop-out document
                           const markdown = formatTurnAsMarkdown(turn)
-                          openPreviewEntry({ type: 'markdown', content: markdown, title: t('contentPanel.preview.turnDetails'), id: `turn:${assistantUiKey}` })
+                          openPreviewEntry({ content: markdown, title: t('contentPanel.preview.turnDetails'), id: `turn:${assistantUiKey}` })
                         }}
                         onOpenActivityDetails={(activity) => {
-                          // Write tool for .md/.txt → preview panel markdown entry (document)
-                          // rather than a diff, since these are better viewed as formatted documents
+                          // Write tool for .md/.txt → pop-out document rather than a
+                          // diff, since these are better viewed as formatted documents
                           const isDocumentWrite = activity.toolName === 'Write' && (() => {
                             const actInput = activity.toolInput as Record<string, unknown> | undefined
                             const fp = (actInput?.file_path as string) || ''
@@ -1956,7 +1955,6 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                           } else {
                             // All other tools → preview panel markdown entry (formatted activity)
                             openPreviewEntry({
-                              type: 'markdown',
                               content: formatActivityAsMarkdown(activity),
                               title: activity.displayName || activity.toolName || t('contentPanel.preview.activity'),
                               id: `activity:${activity.id}`,

@@ -220,7 +220,7 @@ export function deriveSurfaceRestoreState(
   const filesView = preferredFilesAlias === 'diff'
     ? 'changed'
     : preferredFilesAlias === 'preview'
-      ? 'opened'
+      ? 'browse'
       : undefined
 
   return {
@@ -502,7 +502,7 @@ export const setPrimarySurfaceRouteAtom = atom(
 export const openWorkbenchItemAtom = atom(
   null,
   (get, set, route: ViewRoute) => {
-    if (route === 'preview') set(filesPanelViewAtom, 'opened')
+    if (route === 'preview') set(filesPanelViewAtom, 'browse')
     if (route === 'diff') set(filesPanelViewAtom, 'changed')
     const candidate = createWorkbenchItem(route)
     if (!candidate) {
@@ -677,7 +677,7 @@ export const hydrateSurfaceStateAtom = atom(
     } else if (preferredFilesAlias === 'diff') {
       set(filesPanelViewAtom, 'changed')
     } else if (preferredFilesAlias === 'preview') {
-      set(filesPanelViewAtom, 'opened')
+      set(filesPanelViewAtom, 'browse')
     }
 
     const canonicalActiveRoute = restore.activeWorkbenchRoute

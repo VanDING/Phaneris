@@ -80,3 +80,6 @@ credentials.enc
 .secrets
 .actrc
 openclaw-*/
+
+# Local verification artifacts (scripts/verify-*.ts)
+.verify/

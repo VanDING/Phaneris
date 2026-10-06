@@ -1,30 +1,34 @@
-/** Consolidated session content workbench: explorer, opened previews, changes and attachments. */
+/**
+ * Files panel — the session's file workbench.
+ *
+ * Three views, one job each:
+ * - Browse: find and open a file (working directory + this session's folder)
+ * - Artifacts: review and accept what the agent produced
+ * - Changed: see exactly what this session modified
+ */
 
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { Eye, FileDiff, FilePenLine, FileText, FolderOpen, FolderTree, Paperclip, Search } from 'lucide-react'
+import { FolderTree, Search } from 'lucide-react'
 import { Spinner } from '@phaneris/ui'
+import type { StoredAttachment } from '../../../shared/types'
 import { Input } from '@/components/ui/input'
 import { PanelEmptyState } from './PanelEmptyState'
 import { ChangedFilesView } from './ChangedFilesView'
-import { PreviewPanel } from './PreviewPanel'
-import { SessionFilesSection } from '../right-sidebar/SessionFilesSection'
+import { BrowseTree } from './BrowseTree'
+import { ArtifactsPanel } from './ArtifactsPanel'
 import { activeSessionIdAtom } from '@/atoms/active-session'
 import { ensureSessionMessagesLoadedAtom, loadedSessionsAtom, sessionAtomFamily, sessionMetaMapAtom } from '@/atoms/sessions'
-import { filesPanelFocusRequestAtom, filesPanelViewAtom, updateWorkbenchFocusAtom, type FilesPanelView } from '@/atoms/content-panel-ui'
-import { getPathBasename } from '@/lib/platform'
+import { filesPanelFocusRequestAtom, filesPanelViewAtom, type FilesPanelView } from '@/atoms/content-panel-ui'
 import { useSessionActivities } from '@/lib/use-session-activities'
-import { collectFileChangesFromActivities, getFirstFileChangeIdForActivity } from '@/lib/file-changes'
-import { collectFileActivity, resolveFileActivityPath, type FileActivityOperation } from '@/lib/file-activity'
+import { collectFileChangesFromActivities } from '@/lib/file-changes'
 import { useAppShellContext } from '@/context/AppShellContext'
 
 const FILE_VIEWS: ReadonlyArray<{ id: FilesPanelView; key: string }> = [
-  { id: 'explorer', key: 'contentPanel.files.view.explorer' },
+  { id: 'browse', key: 'contentPanel.files.view.browse' },
+  { id: 'artifacts', key: 'contentPanel.files.view.artifacts' },
   { id: 'changed', key: 'contentPanel.files.view.changed' },
-  { id: 'opened', key: 'contentPanel.files.view.opened' },
-  { id: 'activity', key: 'contentPanel.files.view.activity' },
-  { id: 'attachments', key: 'contentPanel.files.view.attachments' },
 ]
 
 export function FilesPanel({ sessionId }: { sessionId?: string }) {
@@ -37,22 +41,21 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
   const ensureMessagesLoaded = useSetAtom(ensureSessionMessagesLoadedAtom)
   const [view, setView] = useAtom(filesPanelViewAtom)
   const [query, setQuery] = useState('')
-  const [activityFilter, setActivityFilter] = useState<'all' | FileActivityOperation>('all')
   const [loadError, setLoadError] = useState(false)
   const { onOpenFile, workspaces } = useAppShellContext()
-  const updateWorkbenchFocus = useSetAtom(updateWorkbenchFocusAtom)
   const focusRequest = useAtomValue(filesPanelFocusRequestAtom)
   const setFilesFocusRequest = useSetAtom(filesPanelFocusRequestAtom)
 
   const meta = activeSessionId ? sessionMetaMap.get(activeSessionId) : undefined
   const workingDirectory = meta?.workingDirectory
-  const activityBaseDirectory = workingDirectory ?? workspaces.find(workspace => workspace.id === meta?.workspaceId)?.rootPath
   const messagesLoaded = activeSessionId ? loadedSessions.has(activeSessionId) : false
-  const needsMessages = view === 'changed' || view === 'activity' || view === 'attachments'
+  // Browse reads its pinned attachments straight from the transcript, and
+  // Changed derives its diffs from tool activities — both need the messages.
+  // A restored session starts with an empty message list, so ask for them
+  // rather than rendering an attachment-less tree until something else loads.
+  const needsMessages = view === 'changed' || (view === 'browse' && (session?.messages?.length ?? 0) === 0)
   const activities = useSessionActivities(session)
   const changes = useMemo(() => collectFileChangesFromActivities(activities), [activities])
-  const fileActivity = useMemo(() => collectFileActivity(activities), [activities])
-  const filteredActivity = useMemo(() => activityFilter === 'all' ? fileActivity : fileActivity.filter(record => record.operation === activityFilter), [activityFilter, fileActivity])
   const attachments = useMemo(() => {
     const seen = new Set<string>()
     return (session?.messages ?? []).flatMap(message => message.attachments ?? []).filter(attachment => {
@@ -60,23 +63,23 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
       seen.add(attachment.id)
       return true
     })
-  }, [session])
+  }, [session]) as StoredAttachment[]
 
   useEffect(() => {
     if (focusRequest?.sessionId !== activeSessionId) return
-    if (focusRequest.view !== view) setView(focusRequest.view)
+    if (focusRequest.view && focusRequest.view !== view) setView(focusRequest.view)
     if (!focusRequest.changeId) setFilesFocusRequest(null)
   }, [activeSessionId, focusRequest, setFilesFocusRequest, setView, view])
 
   useEffect(() => {
-    if (!activeSessionId || view === 'explorer' || view === 'opened') return
+    if (!activeSessionId || !needsMessages) return
     let cancelled = false
     setLoadError(false)
     void ensureMessagesLoaded(activeSessionId).catch(() => {
       if (!cancelled) setLoadError(true)
     })
     return () => { cancelled = true }
-  }, [activeSessionId, ensureMessagesLoaded, view])
+  }, [activeSessionId, ensureMessagesLoaded, needsMessages])
 
   if (!activeSessionId) {
     return <PanelEmptyState title={t('contentPanel.noActiveSession')} icon={<FolderTree className="h-6 w-6" />} />
@@ -106,110 +109,36 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
         {needsMessages && loadError && (
           <PanelEmptyState title={t('errors.failedToLoadSession')} hint={t('errors.pleaseReload')} />
         )}
-        {view === 'explorer' && (
-          workingDirectory ? (
-            <div className="flex h-full min-h-0 flex-col">
-              <div className="shrink-0 border-b border-border/50 bg-background/60 px-2.5 pb-2.5 pt-1.5">
-                <div className="mb-2 flex min-w-0 items-center gap-1.5 px-1 text-[11px] font-medium text-muted-foreground" title={workingDirectory}>
-                  <FolderOpen className="h-3.5 w-3.5 shrink-0" />
-                  <span className="min-w-0 truncate">{getPathBasename(workingDirectory) || workingDirectory}</span>
-                </div>
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50" />
-                  <Input
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder={t('contentPanel.files.filterPlaceholder')}
-                    className="h-8 rounded-lg border-border/60 bg-foreground/[0.02] pl-8 text-[13px] shadow-none focus-visible:bg-background"
-                    aria-label={t('contentPanel.files.filterPlaceholder')}
-                  />
-                </div>
-              </div>
-              <div className="min-h-0 flex-1 bg-foreground/[0.012] pt-1">
-                <SessionFilesSection sessionId={activeSessionId} fileScope="working" rootPath={workingDirectory} hideHeader filterQuery={query} />
+
+        {view === 'browse' && (
+          <div className="flex h-full min-h-0 flex-col">
+            <div className="shrink-0 border-b border-border/50 bg-background/60 px-2.5 pb-2.5 pt-1.5">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50" />
+                <Input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder={t('contentPanel.files.filterPlaceholder')}
+                  className="h-8 rounded-lg border-border/60 bg-foreground/[0.02] pl-8 text-[13px] shadow-none focus-visible:bg-background"
+                  aria-label={t('contentPanel.files.filterPlaceholder')}
+                />
               </div>
             </div>
-          ) : (
-            <PanelEmptyState title={t('workspace.noFolderSelected')} hint={t('chat.chooseWorkingDirectory')} icon={<FolderTree className="h-6 w-6" />} />
-          )
+            <div className="min-h-0 flex-1 overflow-y-auto bg-foreground/[0.012] pt-1">
+              <BrowseTree
+                sessionId={activeSessionId}
+                workingDirectory={workingDirectory}
+                attachments={attachments}
+                filterQuery={query}
+                onOpenFile={(path) => onOpenFile(path, activeSessionId)}
+              />
+            </div>
+          </div>
         )}
 
-        {view === 'opened' && <PreviewPanel sessionId={activeSessionId} />}
+        {view === 'artifacts' && <ArtifactsPanel sessionId={activeSessionId} />}
 
         {view === 'changed' && messagesLoaded && <ChangedFilesView sessionId={activeSessionId} changes={changes} />}
-
-        {view === 'activity' && messagesLoaded && (
-          fileActivity.length > 0 ? (
-            <div className="flex h-full min-h-0 flex-col bg-foreground/[0.012]">
-              <div className="flex h-10 shrink-0 items-center gap-1 border-b border-border/50 bg-background/60 px-2.5">
-                {(['all', 'read', 'search', 'edit', 'write'] as const).map(filter => (
-                  <button key={filter} type="button" aria-pressed={activityFilter === filter} onClick={() => setActivityFilter(filter)} className={`h-6 rounded-md px-2 text-[10px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${activityFilter === filter ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-foreground/[0.035]'}`}>
-                    {t(`contentPanel.files.activity.${filter}`)}
-                  </button>
-                ))}
-              </div>
-              <div className="min-h-0 flex-1 overflow-y-auto">
-                <div className="min-w-0 border-b border-border/50 bg-background/55">
-                  {filteredActivity.map(record => {
-                    const changeId = getFirstFileChangeIdForActivity(record.activityId, changes)
-                    const resolvedPath = resolveFileActivityPath(record.path, activityBaseDirectory)
-                    const Icon = record.operation === 'read' ? Eye : record.operation === 'search' ? Search : FilePenLine
-                    return (
-                      <div key={record.id} className="grid min-h-12 grid-cols-[20px_minmax(0,1fr)_auto] items-center gap-2 border-b border-border/45 px-3 last:border-b-0 hover:bg-foreground/[0.025] @min-[720px]/files:grid-cols-[20px_minmax(180px,1.6fr)_minmax(120px,0.8fr)_90px_auto]" style={{ paddingLeft: `${12 + Math.min(record.depth, 3) * 10}px` }}>
-                        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-                        <button type="button" disabled={!resolvedPath} title={resolvedPath ?? t('contentPanel.files.activity.unresolvedPath')} className="min-w-0 text-left outline-none disabled:cursor-not-allowed disabled:opacity-60 focus-visible:underline" onClick={() => {
-                          if (!resolvedPath) return
-                          updateWorkbenchFocus({ sessionId: activeSessionId, source: 'files', filePath: resolvedPath, callId: record.activityId })
-                          onOpenFile?.(resolvedPath, activeSessionId)
-                        }}>
-                          <span className="block truncate text-[13px] font-medium">{getPathBasename(record.path) || record.path}</span>
-                          <span className="block truncate text-[12px] text-muted-foreground @min-[720px]/files:hidden">{record.path}</span>
-                        </button>
-                        <span className="hidden min-w-0 truncate text-[12px] text-muted-foreground @min-[720px]/files:block">{t(`contentPanel.files.activity.${record.operation}`)} · {record.toolName}</span>
-                        <span className="hidden text-right text-[12px] tabular-nums text-muted-foreground @min-[720px]/files:block">{new Date(record.timestamp).toLocaleTimeString()}</span>
-                        {changeId && (
-                          <button type="button" className="rounded px-1.5 py-1 text-[10px] font-medium text-accent hover:bg-accent/10" onClick={() => {
-                            updateWorkbenchFocus({ sessionId: activeSessionId, source: 'files', filePath: resolvedPath ?? record.path, callId: record.activityId, changeId })
-                            setFilesFocusRequest({ sessionId: activeSessionId, view: 'changed', changeId, nonce: Date.now() })
-                            setView('changed')
-                          }}>{t('contentPanel.files.activity.review')}</button>
-                        )}
-                      </div>
-                    )
-                  })}
-                  {filteredActivity.length === 0 && <div className="px-3 py-8 text-center text-[12px] text-muted-foreground">{t('contentPanel.files.activity.noMatches')}</div>}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <PanelEmptyState title={t('contentPanel.files.activity.empty')} hint={t('contentPanel.files.activity.emptyHint')} icon={<FileDiff className="h-6 w-6" />} />
-          )
-        )}
-
-        {view === 'attachments' && messagesLoaded && (
-          attachments.length > 0 ? (
-            <div className="h-full overflow-y-auto bg-foreground/[0.012] p-2.5">
-              <div className="overflow-hidden border-y border-border/55 bg-background/70 p-1">
-                {attachments.map(attachment => (
-                  <button
-                    key={attachment.id}
-                    type="button"
-                    title={attachment.name}
-                    onClick={() => onOpenFile?.(attachment.storedPath, activeSessionId)}
-                    className="flex min-h-8 w-full items-center gap-2 rounded-lg px-2 text-left text-[13px] text-foreground/85 outline-none transition-[background-color,transform] hover:bg-foreground/[0.045] active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <span className="shrink-0 text-muted-foreground/75">
-                      {attachment.name ? <FileText className="h-3.5 w-3.5" /> : <Paperclip className="h-3.5 w-3.5" />}
-                    </span>
-                    <span className="min-w-0 flex-1 truncate">{attachment.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <PanelEmptyState title={t('contentPanel.context.attachmentsEmpty')} icon={<Paperclip className="h-6 w-6" />} />
-          )
-        )}
       </div>
     </div>
   )

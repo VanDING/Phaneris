@@ -195,10 +195,10 @@ export const actions = {
     defaultHotkey: 'mod+shift+o',
     category: 'Panels',
   },
-  'panel.preview': {
-    id: 'panel.preview',
-    label: 'Open File Previews',
-    description: 'Open the Opened view in the session Files panel',
+  'panel.artifacts': {
+    id: 'panel.artifacts',
+    label: 'Open Artifacts',
+    description: 'Open the Artifacts view in the session Files panel',
     defaultHotkey: 'mod+shift+p',
     category: 'Panels',
   },
