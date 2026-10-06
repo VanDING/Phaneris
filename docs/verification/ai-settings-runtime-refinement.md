@@ -17,26 +17,26 @@
 
 | 流程 | 结果 | 保存的证据 |
 | --- | --- | --- |
-| 实际打包解释器与 macOS 沙箱 | 14/14 | [runtime.json](results/ai-settings-refinement/runtime.json) |
-| Guarded 实际权限与 HTTP 决策路径 | 6/6 | [guarded.json](results/ai-settings-refinement/guarded.json) |
-| 图像模型、持久化、认证 RPC 与原子工作区保存 | 7/7 | [images.json](results/ai-settings-refinement/images.json) |
-| 真实 AI 页面、键盘、回滚、继承与截图 | 9/9 | [settings.json](results/ai-settings-refinement/settings.json) |
-| 完整打包应用启动、设置页面及实际 IPC | 3/3 | [packaged.json](results/ai-settings-refinement/packaged.json) |
-| 已有主机、权限取消、模式切换和任务流程回归 | 20/20 | [upstream.json](results/ai-settings-refinement/upstream.json) |
+| 实际打包解释器与 macOS 沙箱 | 14/14 | [runtime.json](./results/ai-settings-refinement/runtime.json) |
+| Guarded 实际权限与 HTTP 决策路径 | 6/6 | [guarded.json](./results/ai-settings-refinement/guarded.json) |
+| 图像模型、持久化、认证 RPC 与原子工作区保存 | 7/7 | [images.json](./results/ai-settings-refinement/images.json) |
+| 真实 AI 页面、键盘、回滚、继承与截图 | 9/9 | [settings.json](./results/ai-settings-refinement/settings.json) |
+| 完整打包应用启动、设置页面及实际 IPC | 3/3 | [packaged.json](./results/ai-settings-refinement/packaged.json) |
+| 已有主机、权限取消、模式切换和任务流程回归 | 20/20 | [upstream.json](./results/ai-settings-refinement/upstream.json) |
 
 合计 **59/59 项流程通过**，另外运行的 **61 项现有回归检查全部通过**。
 `typecheck:all`、`lint`、四项 i18n 门禁、身份与版本检查、Python/Electron 运行时版本检查、完整 Electron 构建和 macOS x64 目录打包通过。
-Lint 与身份检查仍报告仓库已有警告。完整结果索引：[checks.json](results/ai-settings-refinement/checks.json)。
+Lint 与身份检查仍报告仓库已有警告。完整结果索引：[checks.json](./results/ai-settings-refinement/checks.json)。
 
 基础文字 token（正文、辅助文字、警告文字）对页面及卡片底色的抽查，明暗模式最低对比度为 **5.55:1**；记录在 `settings.json`。截图覆盖英文、中文 480px 窄窗口、菜单、弹窗及完整应用。
 
-![真实打包应用中的上下文管理](results/ai-settings-refinement/packaged-context-card.png)
+![真实打包应用中的上下文管理](./results/ai-settings-refinement/packaged-context-card.png)
 
-- [完整应用 AI 页面](results/ai-settings-refinement/packaged-ai-context.png)
-- [真实 Guarded 配置入口](results/ai-settings-refinement/packaged-guarded-setup.png)
-- [Default 浅色](results/ai-settings-refinement/settings-light-en-1040-top.png) / [深色](results/ai-settings-refinement/settings-dark-en-1040-top.png)
-- [中文窄窗口与上下文菜单](results/ai-settings-refinement/settings-light-zh-Hans-480-context-menu.png)
-- [连接菜单](results/ai-settings-refinement/settings-connection-menu.png) / [弹窗](results/ai-settings-refinement/settings-rename-dialog.png)
+- [完整应用 AI 页面](./results/ai-settings-refinement/packaged-ai-context.png)
+- [真实 Guarded 配置入口](./results/ai-settings-refinement/packaged-guarded-setup.png)
+- [Default 浅色](./results/ai-settings-refinement/settings-light-en-1040-top.png) / [深色](./results/ai-settings-refinement/settings-dark-en-1040-top.png)
+- [中文窄窗口与上下文菜单](./results/ai-settings-refinement/settings-light-zh-Hans-480-context-menu.png)
+- [连接菜单](./results/ai-settings-refinement/settings-connection-menu.png) / [弹窗](./results/ai-settings-refinement/settings-rename-dialog.png)
 
 ## 复现
 
@@ -51,7 +51,7 @@ bun run scripts/verification/runtime-refinement-workflow.ts --app=/absolute/path
 bun run scripts/verification/packaged-refinement-workflow.ts --app=/absolute/path/Phaneris.app
 ```
 
-输出保存在 `.cache/ai-settings-refinement/`，包括 JSON、截图、运行日志和实际生成的 JSON 数据文件。失败场景先行记录在 [验收矩阵](ai-settings-runtime-failure-matrix.md)。
+输出保存在 `.cache/ai-settings-refinement/`，包括 JSON、截图、运行日志和实际生成的 JSON 数据文件。失败场景先行记录在 [验收矩阵](./ai-settings-runtime-failure-matrix.md)。
 
 ## 验证范围
 

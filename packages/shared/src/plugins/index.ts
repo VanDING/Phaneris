@@ -7,8 +7,8 @@
  * materialize into the native tiers, plus its own identity file, prompt
  * fragment, and client extension namespace.
  *
- * Design: docs/plugin-bundles-design.md
- * Decisions (all closed): docs/plugin-bundles-decisions.md
+ * Design: docs/design/plugin-bundles-design.md
+ * Decisions (all closed): docs/design/plugin-bundles-decisions.md
  */
 
 export {

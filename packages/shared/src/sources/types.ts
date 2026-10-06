@@ -292,7 +292,7 @@ export interface McpSourceConfig {
    *
    * Only meaningful for plugin-provided sources, and only when rooted at
    * `${PLUGIN_ROOT}`: a server always runs from its plugin root so its
-   * relative-path view stays inside the plugin (docs/plugin-bundles-design.md
+   * relative-path view stays inside the plugin (docs/design/plugin-bundles-design.md
    * §5.4.1). A non-plugin source may set an absolute path here.
    *
    * Before plugins existed this field was absent from the config schema, so a

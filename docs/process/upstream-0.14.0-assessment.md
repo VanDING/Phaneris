@@ -2,9 +2,9 @@
 
 评估日期：2026-10-03（Asia/Shanghai）。本仓基线：Phaneris **0.2.4 / `4613e04b`**；上游目标：**v0.14.0 / `73bd9c2a`**。
 
-本报告保存批准实施前的评估快照；批准后的实际改动与验收结果见[首批吸纳记录](upstream-0.14.0-absorption.md)。
+本报告保存批准实施前的评估快照；批准后的实际改动与验收结果见[首批吸纳记录](./upstream-0.14.0-absorption.md)。
 
-随后结合 Pi 1.0.0 与依赖升级的整体能力采用及复核见[采用指南](../architecture/capability-adoption-2026-10.md)与[闭合记录](capability-completion-2026-10-04.md)；本文建议保留其原始评估时点。
+随后结合 Pi 1.0.0 与依赖升级的整体能力采用及复核见[采用指南](../architecture/capability-adoption-2026-10.md)与[闭合记录](./capability-completion-2026-10-04.md)；本文建议保留其原始评估时点。
 
 ## 1. 结论
 
@@ -14,7 +14,7 @@
 
 直接合并预演得到 **184 个冲突文件**；只重放 `0.13.6→0.14.0` 增量的预演也有 **66 个**。因此，`git merge upstream/main` 和整版 cherry-pick 都不是合适的实施路径。
 
-本次已完成源码评估、合并预演、隔离探针和文件分类；**产品源码未改动，未创建合并提交，未提交或推送**。新增交付物只有本报告、[206 文件分类表](upstream-0.14.0-file-classification.csv)和[机器可复核证据](../verification/results/upstream-0.14.0-assessment.json)。
+本次已完成源码评估、合并预演、隔离探针和文件分类；**产品源码未改动，未创建合并提交，未提交或推送**。新增交付物只有本报告、[206 文件分类表](./upstream-0.14.0-file-classification.csv)和[机器可复核证据](../verification/results/upstream-0.14.0-assessment.json)。
 
 ## 2. 基线与改动规模
 
@@ -31,7 +31,7 @@
 | Git 分叉数量 | 本仓 393 个独有提交，上游 4 个独有提交；不是“本仓尚未吸收四版” |
 | 工作区原有未跟踪文件 | `docs/Phaneris_Project_Deep_Analysis.md`、`docs/unreal-agent-design-analysis.md`；均未触碰 |
 
-上游每版发布压成一个提交；本仓对 0.13.4/0.13.5/0.13.6 的吸纳没有改变共同祖先。这也是“此前已经移植过”与“Git 仍然尝试合并旧改动”同时成立的原因。历史依据见[上次吸纳记录](upstream-0.13.5-0.13.6-absorption.md)。
+上游每版发布压成一个提交；本仓对 0.13.4/0.13.5/0.13.6 的吸纳没有改变共同祖先。这也是“此前已经移植过”与“Git 仍然尝试合并旧改动”同时成立的原因。历史依据见[上次吸纳记录](./upstream-0.13.5-0.13.6-absorption.md)。
 
 ### 2.2 本次增量
 
@@ -255,7 +255,7 @@ git merge-tree --write-tree --name-only --no-messages 4613e04b 73bd9c2a
 git merge-tree --write-tree --name-only --no-messages --merge-base=3eac37be 4613e04b 73bd9c2a
 ```
 
-- [文件分类 CSV](upstream-0.14.0-file-classification.csv)：206 行，含状态、blob 关系、增删行、增量冲突、功能归类、建议批次和本仓对应路径。
+- [文件分类 CSV](./upstream-0.14.0-file-classification.csv)：206 行，含状态、blob 关系、增删行、增量冲突、功能归类、建议批次和本仓对应路径。
 - [证据 JSON](../verification/results/upstream-0.14.0-assessment.json)：冻结 SHA、两个合并预演的完整名单、23+1 探针结果、验证结果和复现脚本。
 - 本地探针为 `.git/upstream-0140-audit/probes.ts` 与 `upstream-key-probe.ts`；复现所需源码及上游 import 重定向说明均嵌入 JSON 的 `reproduction`，不依赖忽略目录长期存在。
 

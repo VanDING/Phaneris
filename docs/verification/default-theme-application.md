@@ -30,7 +30,7 @@ DMG SHA-256：`16b54673abe6255cc4f8f1115d45e32f387d61f116a32d04a1d799b1c0e866fc`
 
 ZIP SHA-256：`51108ea610651d0170f6916f66689310efc20a9eb1e85f995ad801f7990ecb9b`。
 
-页面结果及截图见 [内置主题验收](results/default-theme-application/validation.json)；实际客户端和沙箱报告同步保存在同一目录的 `packaged-ui.json` 与 `packaged-runtime.json`。失败条件见 [事先列出的矩阵](default-theme-application-failure-matrix.md)。
+页面结果及截图见 [内置主题验收](./results/default-theme-application/validation.json)；实际客户端和沙箱报告同步保存在同一目录的 `packaged-ui.json` 与 `packaged-runtime.json`。失败条件见 [事先列出的矩阵](./default-theme-application-failure-matrix.md)。
 
 复验命令（在仓库根目录运行）：
 

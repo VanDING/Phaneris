@@ -15,6 +15,7 @@
     "scripts/run-recovery-tests.ts",
     "scripts/check-environment.ts",
     "scripts/check-environment.test.ts",
+    "scripts/check-docs.ts",
     "scripts/build-smoke.ts",
     "scripts/test-critical.ts"
   ]

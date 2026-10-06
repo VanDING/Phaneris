@@ -54,7 +54,7 @@ SDK 提供 `createMcpExtension({ loadConfig, credentials, createTransport, updat
 | 工具与资源兼容 | **验收欠缺**：完整 descriptor / content 已局部通过；资源与命名边界尚未全覆盖 | 工具名归一化 / 碰撞映射、动态增删、资源列表 / cursor / 二进制 / 全文截断、图片、错误、超时与长任务进度逐项对照；保留原可见工具身份和历史引用 |
 | 恢复与收益 | **生产证据欠缺**：上游支持按需重连，但本项目未做完整故障矩阵 | 网络断开、401、429 / 5xx、stdio 退出、宿主及子进程崩溃，验证读请求重试 / 写请求不重放；同 Source 与任务跨多轮测量质量、连接数、资源、首工具和总耗时 / 费用 |
 
-上游支持 stdio / streamable HTTP 的 transport 边界、配置、权限与资源规则见 [1.0.2 MCP 文档](https://github.com/earendil-works/pi/blob/v1.0.2/packages/coding-agent/docs/mcp.md)。宿主实现见 [mcp-pool.ts](../packages/shared/src/mcp/mcp-pool.ts)、[pool-server.ts](../packages/shared/src/mcp/pool-server.ts)、[resource loader](../packages/pi-agent-server/src/phaneris-resource-loader.ts)。
+上游支持 stdio / streamable HTTP 的 transport 边界、配置、权限与资源规则见 [1.0.2 MCP 文档](https://github.com/earendil-works/pi/blob/v1.0.2/packages/coding-agent/docs/mcp.md)。宿主实现见 [mcp-pool.ts](../../packages/shared/src/mcp/mcp-pool.ts)、[pool-server.ts](../../packages/shared/src/mcp/pool-server.ts)、[resource loader](../../packages/pi-agent-server/src/phaneris-resource-loader.ts)。
 
 **迁移入口**：先对一个 streamable HTTP Source 接入完整 AgentSession，配置和凭据由宿主注入，原生注册工具经过现有执行包装。未完成生命周期与共享连接设计前，不同时让宿主和每个 Pi 会话启动同一个 stdio 服务。真正的连接所有者迁移是后一步；通过宿主 bridge 的原生工具注册只是一阶段接入。
 
@@ -72,7 +72,7 @@ SDK 提供 `createMcpExtension({ loadConfig, credentials, createTransport, updat
 
 现有 DeepSeek Flash 是聊天语义参考，不是 Jev / Clef 原生 classifier 的质量证明。Pi 1.0.0 下完整决策协议仅 3/15 合格，简化语义 14/15；这些为 agent 整理的合成标签，不能当作人工生产准确率。该付费记录本轮未重跑。
 
-声明证据：安装包 `pi-ai/dist/types.d.ts` 的 ClassifierContext / ClassifierScoreAnswer；项目 [types.ts](../packages/shared/src/decisions/types.ts)、[client.ts](../packages/shared/src/decisions/client.ts)、[comparison](../packages/shared/src/decisions/pi-classifier-comparison.ts)、[accounting](../packages/server-core/src/decisions/accounting.ts)。上游入口见 [classifier 文档](https://github.com/earendil-works/pi/blob/v1.0.2/packages/coding-agent/docs/models.md#use-classifier-models)。
+声明证据：安装包 `pi-ai/dist/types.d.ts` 的 ClassifierContext / ClassifierScoreAnswer；项目 [types.ts](../../packages/shared/src/decisions/types.ts)、[client.ts](../../packages/shared/src/decisions/client.ts)、[comparison](../../packages/shared/src/decisions/pi-classifier-comparison.ts)、[accounting](../../packages/server-core/src/decisions/accounting.ts)。上游入口见 [classifier 文档](https://github.com/earendil-works/pi/blob/v1.0.2/packages/coding-agent/docs/models.md#use-classifier-models)。
 
 **迁移入口**：先把等价 bool / choice 的底层请求切到 Pi Models，保持宿主 DecisionClient 契约、记账和失败策略；不同协议的 provider 仍保留适配。待三类差异解决且质量通过后再讨论默认与完整移除。成本 UI、Task 预算和用户开关继续由宿主管理；不开放 codemode 的 `models` global 绕过受管请求。
 
@@ -91,7 +91,7 @@ SDK 提供 `createMcpExtension({ loadConfig, credentials, createTransport, updat
 | 产品收益与回退 | 定义明确的自动模式与候选集；展示选择、物理模型及原因；用同任务多轮比较完成质量、人工纠正、首 token / 总耗时、路由及下游总费用。先满足用户确定的业务门槛，再切默认；保留手动模式和可重复回退 |
 | Radius 与虚拟模型的关系 | Radius provider 连接 / OAuth 已有目录与凭据入口；它是另一种路由服务，不能等同宿主跨连接路由已接入。单独验证实际响应身份、计费、数据发送边界及不可用时策略，再决定是否作为自动模式候选 |
 
-原生 contract 见 [virtual models](https://github.com/earendil-works/pi/blob/v1.0.2/packages/coding-agent/docs/virtual-models.md)。项目责任位置：[connection transport](../packages/server-core/src/domain/connection-setup-logic.ts)、[模型解析](../packages/pi-agent-server/src/model-resolution.ts)、[运行时与凭据注入](../packages/pi-agent-server/src/index.ts)、[durable model 包装](../packages/pi-agent-server/src/durable-model-stream.ts)。
+原生 contract 见 [virtual models](https://github.com/earendil-works/pi/blob/v1.0.2/packages/coding-agent/docs/virtual-models.md)。项目责任位置：[connection transport](../../packages/server-core/src/domain/connection-setup-logic.ts)、[模型解析](../../packages/pi-agent-server/src/model-resolution.ts)、[运行时与凭据注入](../../packages/pi-agent-server/src/index.ts)、[durable model 包装](../../packages/pi-agent-server/src/durable-model-stream.ts)。
 
 **迁移入口**：先做同一连接内的确定性 virtual model 路由，将选择与物理执行分别落账；通过四类请求和恢复验证后，再加入受管 classifier 及多连接候选。Radius 与自定义 router 分别评测，不能通过换默认模型同时完成两种迁移。
 
@@ -118,9 +118,9 @@ SDK 提供 `createMcpExtension({ loadConfig, credentials, createTransport, updat
 | Windows 当前产物 | 解包 8/8、隔离启动 5/5、随包 Bun 的仓库外 SDK 工作流 8/8；三个位置的 bundle / worker / WASM SHA-256 一致 |
 | 前轮整合的未闭合项 | 完整基线首次导航 3,119.07 ms，后一次 2,527.57 ms；smoke 首次 3,570.14 ms，均保留 3,000 ms 门限并记失败。其余六类性能预算与交互通过；不据此宣称原整合计划已全部验收 |
 
-复核命令：`bun install --frozen-lockfile`、`bun run scripts/verification/pi-1.0.2-upgrade-workflow.ts`、`bun run verify:capabilities`、`bun run validate:ci`、`bun run test`。完整整合与外部发布边界见 [2026-10-04 完整性复核](process/capability-completion-2026-10-04.md)。
+复核命令：`bun install --frozen-lockfile`、`bun run scripts/verification/pi-1.0.2-upgrade-workflow.ts`、`bun run verify:capabilities`、`bun run validate:ci`、`bun run test`。完整整合与外部发布边界见 [2026-10-04 完整性复核](./capability-completion-2026-10-04.md)。
 
-可版本控制的升级证据：[pi-sdk-1.0.2-upgrade.json](verification/results/pi-sdk-1.0.2-upgrade.json)。SDK 升级的类型、业务工作流、构建及本机分发验证已通过；此前扩展性能门限仍为单独未闭合项，没有把汇总失败改成通过。未提交、推送、签名或发布。
+可版本控制的升级证据：[pi-sdk-1.0.2-upgrade.json](../verification/results/pi-sdk-1.0.2-upgrade.json)。SDK 升级的类型、业务工作流、构建及本机分发验证已通过；此前扩展性能门限仍为单独未闭合项，没有把汇总失败改成通过。未提交、推送、签名或发布。
 
 ## 回退
 

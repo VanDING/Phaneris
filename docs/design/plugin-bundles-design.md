@@ -1,9 +1,9 @@
 # Plugin bundles：在 Agent Plugins 1.0.0 上聚合 skills、source 与 prompt
 
-- 性质：**proposed**（设计提案，未实施。实施前需按本文末尾的决策清单拍板）
+- 性质：**implemented**（设计已落地；实施前的决策清单见 [`plugin-bundles-decisions.md`](./plugin-bundles-decisions.md)，61 项已全部关闭）
 - 日期：2026-09-17
-- 关联：[`cross-ecosystem-plugin-porting-assessment.md`](process/cross-ecosystem-plugin-porting-assessment.md)（探索性研究）、
-  [`system-prompt-per-turn-analysis.md`](system-prompt-per-turn-analysis.md)（缓存前缀约束的唯一依据）
+- 关联：[`cross-ecosystem-plugin-porting-assessment.md`](../research/cross-ecosystem-plugin-porting-assessment.md)（探索性研究）、
+  [`system-prompt-per-turn-analysis.md`](../process/system-prompt-per-turn-analysis.md)（缓存前缀约束的唯一依据）
 
 ---
 

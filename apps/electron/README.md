@@ -23,7 +23,7 @@ renderer (React)
 Electron main process
     │ packages/server-core SessionManager
     │ packages/shared PiAgent
-    └─ JSONL stdio → bundled pi-agent-server → Pi SDK 0.86.1
+    └─ JSONL stdio → bundled pi-agent-server → Pi SDK 1.0.2
 ```
 
 Agent execution stays in the separately built `packages/pi-agent-server` subprocess staged under `resources/pi-agent-server`. The main bundle only carries model-catalog and credential plumbing for UI/runtime coordination; provider request paths execute in the subprocess.
@@ -94,4 +94,4 @@ This avoids attributing network or model latency to the desktop renderer.
 - Main-process and subprocess logs identify session lifecycle, auth refresh, tool sync, and process exits.
 - If a packaged session stays on “thinking,” verify `resources/pi-agent-server/index.js` and the platform Bun executable exist in the unpacked app.
 
-For the complete backend contract, see [`docs/pi-kernel.md`](../../docs/pi-kernel.md).
+For the complete backend contract, see [`docs/guides/pi-kernel.md`](../../docs/guides/pi-kernel.md).

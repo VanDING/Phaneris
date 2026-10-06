@@ -1,6 +1,6 @@
 # Plugin bundles：决策登记册（实施前须全部关闭）
 
-- 性质：**decision register**，设计文档的配套件。设计本身见 [`plugin-bundles-design.md`](plugin-bundles-design.md)
+- 性质：**decision register**，设计文档的配套件。设计本身见 [`plugin-bundles-design.md`](./plugin-bundles-design.md)
 - 日期：2026-09-18
 - 规则：**本册任一条未关闭，不得进入实施。** 关闭一条 = 选定一个选项并回写设计文档
 
@@ -16,7 +16,7 @@
 
 ## 零之一、决策依据留档（原 6 项 OPEN 的利弊展开）
 
-> 原有 6 项 OPEN **已全部关闭**，另有 1 项新识别（P1-8）仍开放。
+> 原有 6 项 OPEN **已全部关闭**；后续新增的 P1-8 亦已关闭（见本条下方"✅ 已关闭：仅 tar(.gz)"）。登记册现为 **0 OPEN / 0 REC**。
 > 本节保留关闭时所依据的利弊展开，供日后回溯"为什么这样定"；
 > 各小节标题已标注结论。**状态以 §P1–P9 的表格为准。**
 

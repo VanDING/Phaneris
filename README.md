@@ -11,7 +11,7 @@
 Run capable AI agents across your files, tools, services, and documents — with a desktop workspace that makes every important action reviewable.
 
 [![Version](https://img.shields.io/badge/version-0.3.0-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.3.0.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.2-5b7cfa?style=flat-square)](docs/pi-kernel.md)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.2-5b7cfa?style=flat-square)](docs/guides/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![中文](https://img.shields.io/badge/README-中文-2f855a?style=flat-square)](README.zh-CN.md)
@@ -78,7 +78,7 @@ Markdown drafts support visual editing when serialization preserves the source, 
 
 Connected MCP tools retain output schemas and structured results. `tool_search` discovers deferred tools, and sandboxed `codemode` calls each tool through the host permission and durable execution boundary. Its model access is disabled. See the [capability adoption guide](docs/architecture/capability-adoption-2026-10.md) for configuration, accounting, and migration decisions, and the [completion record](docs/process/capability-completion-2026-10-04.md) for measured benefits and verification scope.
 
-Pi SDK 1.0.2 is pinned across the runtime. The [upgrade and convergence assessment](docs/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md) records verification and the remaining requirements for native MCP, classifiers, and model routing.
+Pi SDK 1.0.2 is pinned across the runtime. The [upgrade and convergence assessment](docs/process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md) records verification and the remaining requirements for native MCP, classifiers, and model routing.
 
 ## Personal by design
 
@@ -137,7 +137,7 @@ PHANERIS_SERVER_TOKEN=$(openssl rand -hex 32) bun run server:start
 bun run apps/cli/src/index.ts run "Summarize this repository"
 ```
 
-See the [CLI reference](docs/cli.md) for remote connections, TLS, scripting, and validation.
+See the [CLI reference](docs/guides/cli.md) for remote connections, TLS, scripting, and validation.
 
 ## Development
 
@@ -152,9 +152,9 @@ Use Bun for this repository's dependency installation and local tools (`bun run 
 `bun run vite`, `bun run electron-builder`). Commit `bun.lock` with dependency changes;
 do not generate a second lockfile with npm, Yarn, or pnpm. The npm registry remains the
 package source. Node.js is still used by Electron tooling and the WhatsApp worker.
-See [the September dependency upgrade](docs/dependency-upgrade-2026-09.md) for migration details and exceptions.
+See [the September dependency upgrade](docs/dependencies/dependency-upgrade-2026-09.md) for migration details and exceptions.
 
-Start with the [documentation index](docs/README.md), [contribution guide](CONTRIBUTING.md), and [Pi kernel maintenance baseline](docs/pi-kernel.md).
+Start with the [documentation index](docs/README.md), [contribution guide](CONTRIBUTING.md), and [Pi kernel maintenance baseline](docs/guides/pi-kernel.md).
 
 ## Built on Craft, with gratitude
 

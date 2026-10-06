@@ -572,7 +572,7 @@ across the whole repo (excluding `node_modules`) finds **no virtualisation libra
   `REQUEST_BOUNDARY_HEIGHT`) and a visible slice (`computeVirtualRowWindow`, `projectVirtualRows`),
   consumed only by `TrajectoryTable.tsx:12,92-132`.
 - `packages/ui/src/components/trajectory/TrajectoryTable.module.css` — CSS for that table.
-- A repo doc, `docs/right-panel-audit-report.md:283`, **claims this virtualization is a shell**
+- A repo doc, `docs/archive/right-panel-audit-report.md:283`, **claims this virtualization is a shell**
   ("`const virtualRows = rows` … thousands of `<tr tabIndex={0}>` rendered; `projectVirtualRows`
   computes a height that is never used"). **INFERRED:** the doc is a prior internal audit and was not
   re-verified here beyond confirming that no third-party virtualizer exists.

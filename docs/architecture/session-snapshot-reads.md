@@ -1,5 +1,7 @@
 # Session snapshot storage and bounded reads
 
+Status: accepted — implemented; the limits below match `protocol/session-read.ts` and `handlers/rpc/session-read-store.ts` as of 2026-10-06.
+
 Session message reads keep the complete `Session` contract used by Chat, Map and Trajectory. The transport no longer requires the complete session to fit in one WebSocket envelope.
 
 - `sessions:readMessages(sessionId, cursor?)` captures an immutable snapshot on the first call. Later calls pull up to 512 KiB of UTF-8 JSONL bytes using the returned read ID and offset. Binary RPC encoding keeps each envelope below the existing 16 MiB limit, even for a single message larger than that limit.

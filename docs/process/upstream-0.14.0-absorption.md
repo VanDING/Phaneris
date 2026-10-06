@@ -2,7 +2,7 @@
 
 实施基线：Phaneris `4613e04b2ab5e79477000ce0a457ab54a369325b`（0.2.4、Pi SDK 1.0.0）。移植出处：上游 `73bd9c2a3573158bea880984eb8d5fdb41e0cac2`，前版 `3eac37be5eeee00d312239f21ce3b7c7db92502b`。
 
-用户于 2026-10-03 批准[评估方案](upstream-0.14.0-assessment.md)。本文保存 `f4846428` 首批交付的快照：B1（P01–P07）、B2（R01–R08）与必要的 B3 基础；当时 B4、B5 后置，仅保留三个权限模式。用户随后要求完整实施 B4–B5，后续四模式与决策接线状态见 [B4–B5 实施记录](upstream-0.14.0-b4-b5.md)。Pi 后端、Durable Runtime 持久化权威及独立产品身份继续保留。
+用户于 2026-10-03 批准[评估方案](./upstream-0.14.0-assessment.md)。本文保存 `f4846428` 首批交付的快照：B1（P01–P07）、B2（R01–R08）与必要的 B3 基础；当时 B4、B5 后置，仅保留三个权限模式。用户随后要求完整实施 B4–B5，后续四模式与决策接线状态见 [B4–B5 实施记录](./upstream-0.14.0-b4-b5.md)。Pi 后端、Durable Runtime 持久化权威及独立产品身份继续保留。
 
 实施分支：`codex/upstream-0.14.0-absorption`；在隔离工作树中推进，不改原工作区的用户文档或 Pi SDK 升级提交。
 
@@ -50,7 +50,7 @@
 | R07–R08 | RTK 最低 0.44.0、outdated/强制重查/排除命令/绕过；更新对话框及 7 种语言；label id 重音归一化、截断后 trim | Windows 提供 winget 命令、其他平台沿用 RTK 官方安装入口；复制命令由用户在终端执行；缺二进制不误报更新成功；忽略版本使用原生 preferences.json 并保留其他字段；不改已有 label id |
 | B3 决策基础 | cancelled/timeout 区分、关联 outcome/followup、串行日志、测试临时日志、统计命令、公共 decision point | 沿用现有 3 个 feature gate；决策只提供建议，失败回原行为；未接入 B4/B5 消费方 |
 | Windows 打包 | NSIS 插件构建移入 beforePack | 干净工作树确认原 beforeBuild 被 npmRebuild=false 跳过；保留预编译原生模块，打包流程自动生成 DLL |
-| C01 清理 | 删除废弃 bridge bundle、Electron/server 打包引用、allowlist 项和无消费方 no-op 契约 | 已展示[8 文件清理摘要](upstream-0.14.0-bridge-cleanup.md)，用户回复“继续”后按原范围应用；保留 source runtime、权限 broker 与 Pi subprocess |
+| C01 清理 | 删除废弃 bridge bundle、Electron/server 打包引用、allowlist 项和无消费方 no-op 契约 | 已展示[8 文件清理摘要](./upstream-0.14.0-bridge-cleanup.md)，用户回复“继续”后按原范围应用；保留 source runtime、权限 broker 与 Pi subprocess |
 
 移植依据为[上游 v0.14.0](https://github.com/craft-ai-agents/craft-agents-oss/tree/v0.14.0)，核心入口包括 [Bash 检查](../../packages/shared/src/agent/bash-validator.ts)、[Pi 权限往返](../../packages/shared/src/agent/pi-agent.ts)、[主机会话管理](../../packages/server-core/src/sessions/SessionManager.ts)、[公共 decision point](../../packages/server-core/src/decisions/decision-point.ts)。RTK 平台安装指令核对[官方安装说明](https://github.com/rtk-ai/rtk#installation)；网络记忆键按 [curl 官方手册](https://curl.se/docs/manpage.html)区分选项值和 URL 操作数。
 
@@ -66,7 +66,7 @@
 | 包资源 / 架构 / 身份 | 9/9 通过 | [包结构报告](../verification/results/packaged-client-verification-win.json)；废弃 bridge bundle 不在包中 |
 | 最终包实际启动 | 5/5 通过 | [启动报告](../verification/results/packaged-client-smoke-win.json)；保持运行 25 秒、生成 renderer/helper、无 fatal 输出、配置初始化、限定范围清理成功；既有协议注册恢复后哈希完全一致 |
 
-首批 `f4846428` 的阶段状态：**B0、B1、B2 及 B3 首批范围完成；当时 B4、B5 尚未实施。** 后续实施和验收见 [B4–B5 记录](upstream-0.14.0-b4-b5.md)。交付为隔离分支上的本地提交，未推送，未合入 `main`。
+首批 `f4846428` 的阶段状态：**B0、B1、B2 及 B3 首批范围完成；当时 B4、B5 尚未实施。** 后续实施和验收见 [B4–B5 记录](./upstream-0.14.0-b4-b5.md)。交付当时为隔离分支上的本地提交。**后续核对（2026-10-06）：`f4846428` 已在 `main` 历史中**，早先"未推送，未合入 `main`"的表述已不成立。
 
 ## 实际覆盖与限制
 

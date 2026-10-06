@@ -234,7 +234,7 @@ README 保留英文与中文两份；更新贡献指南、问题模板、安全�
 
 ## 9. 实施前待确定与外部操作边界
 
-相关文档：本方案的上游风险与优先级判断见[项目综合评估与发展路线图](project-assessment-and-roadmap-2026-08-31.md)第 4.1 节（独立品牌与发布信任链，P0）；公开发布前的签名、校验和、SBOM 与隐私门槛见[发布就绪清单](../release-readiness.md)的"Branding and update chain"一节。
+相关文档：本方案的上游风险与优先级判断见[项目综合评估与发展路线图](./project-assessment-and-roadmap-2026-08-31.md)第 4.1 节（独立品牌与发布信任链，P0）；公开发布前的签名、校验和、SBOM 与隐私门槛见[发布就绪清单](../release-readiness.md)的"Branding and update chain"一节。
 
 不阻塞规划的建议默认值：Windows 首先验收，其他平台以实际设备/CI条件为准；GitHub Releases 为第一发布渠道；域名未就绪时关闭依赖云端的入口；内部命名在首次独立版本中统一。
 

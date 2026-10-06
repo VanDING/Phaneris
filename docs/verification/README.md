@@ -4,12 +4,25 @@
 
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |
-| 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](results/)。 |
+| 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](./results)。 |
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
-| 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](results/)。 |
+| 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](./results)。 |
 | 打包客户端 | [结构验证](../../scripts/verification/packaged-client-verification.mjs) · [启动 smoke](../../scripts/verification/packaged-client-smoke.mjs) | 验证平台包内容与启动行为；macOS 和 Windows 各自保存结果。 |
-| Pi SDK 1.0.0 升级 | [评估与复现](../pi-sdk-1.0.0-upgrade-assessment.md) · [验证证据](results/pi-sdk-1.0.0-upgrade.json) | 依赖版本、真实 SDK/bundle smoke、全仓检查与生产构建；保留首次两项超时及完整工作区复测。日志位于 `.cache/pi-sdk-v1.0.0/`。 |
+| Pi SDK 1.0.0 升级 | [评估与复现](../process/pi-sdk-1.0.0-upgrade-assessment.md) · [验证证据](./results/pi-sdk-1.0.0-upgrade.json) | 依赖版本、真实 SDK/bundle smoke、全仓检查与生产构建；保留首次两项超时及完整工作区复测。日志位于 `.cache/pi-sdk-v1.0.0/`。 |
 | 日历原型 | [交互检查](../../scripts/verification/calendar-placement-demo-check.mjs) · [原型页面](../prototypes/calendar-untimed-placement-demo.html) | 检查独立的侧栏原型行为。 |
+
+## 逐项验收记录
+
+每个特性成对出现：先在产品代码修改**前**写下失败场景（failure matrix），再记录实测验收。`check:docs` 不校验结果文件是否存在，因此"[流程已写、结果未归档]"一类状态需要人工判读。
+
+| 特性 | 失败场景（先写） | 验收记录 | 状态 |
+| --- | --- | --- | --- |
+| AI 设置结构（连接 → 会话 → 高级） | [失败矩阵](./ai-settings-structure-failure-matrix.md) | [验收](./ai-settings-structure.md) | 已实施 |
+| AI 设置与脚本运行时 | [失败矩阵](./ai-settings-runtime-failure-matrix.md) | [验收](./ai-settings-runtime-refinement.md) | 已实施 |
+| 内置 Default 主题替换 | [失败矩阵](./default-theme-application-failure-matrix.md) | [验收](./default-theme-application.md) | 已实施（macOS x64，未签名本地构建） |
+| Default 紫色与 New Session 表面 | [失败矩阵](./default-purple-sidebar-failure-matrix.md) | [验收](./default-purple-sidebar.md) | 已实施 |
+| Twilight / Gantt / 安装器细化 | [失败矩阵](./ui-refinement-failure-matrix.md) | [结果目录](./results/ui-refinement/)（25 个文件：Gantt 四主题截图、安装器六态帧、`browser.json`） | 已记录；无单独验收文档 |
+| Windows 安装器皮肤 | — | [验收清单](./installer-skin-refinement.md) | **流程已写；`results/` 中无对应结果文件** |
 
 ## 全项目动效审视
 
@@ -17,15 +30,15 @@
 
 | 交付物 | 用途 | 状态 |
 | --- | --- | --- |
-| [完整审计](motion-audit.md) | 覆盖地图、确定问题、设计差异、待实测风险、保留项 | 完成源码审视与指定隔离验证 |
-| [统一动效规则建议](motion-specification.md) | 全项目共享语义、参数、状态与生命周期契约 | 已作为实施基线落地 |
-| [验收矩阵](motion-validation.md) | 每条主要操作链路的正常、逆向、打断、无障碍与性能验收 | 部分关闭；P 项见实施状态第 9 节 |
-| [实施状态](motion-implementation-status.md) | M01–M16、V01–V08、新增机会的逐项状态、文件与验证结果 | 实施完成；遗留项已列出 |
-| [实施验证脚本](../../scripts/verification/motion-verification.mjs) | 真实组件（Playground）在真实浏览器中的 18 项行为检查 | 18/18 通过，结果见 [验证结果](results/motion-verification-results.json) |
-| [扫描清单](results/motion-audit-inventory.json) | 每个界面文件及动效候选行号，可追溯覆盖范围 | 已生成；命中不等于缺陷 |
-| [隔离验证结果](results/motion-audit-probes.json) | 启动 HTML 与平滑滚动的浏览器观测 | 已运行（M02 已修复，结论由实施验证脚本继续覆盖） |
+| [完整审计](./motion-audit.md) | 覆盖地图、确定问题、设计差异、待实测风险、保留项 | 完成源码审视与指定隔离验证 |
+| [统一动效规则建议](./motion-specification.md) | 全项目共享语义、参数、状态与生命周期契约 | 已作为实施基线落地 |
+| [验收矩阵](./motion-validation.md) | 每条主要操作链路的正常、逆向、打断、无障碍与性能验收 | 部分关闭；P 项见实施状态第 9 节 |
+| [实施状态](./motion-implementation-status.md) | M01–M16、V01–V08、新增机会的逐项状态、文件与验证结果 | 实施完成；遗留项已列出 |
+| [实施验证脚本](../../scripts/verification/motion-verification.mjs) | 真实组件（Playground）在真实浏览器中的 18 项行为检查 | 18/18 通过，结果见 [验证结果](./results/motion-verification-results.json) |
+| [扫描清单](./results/motion-audit-inventory.json) | 每个界面文件及动效候选行号，可追溯覆盖范围 | 已生成；命中不等于缺陷 |
+| [隔离验证结果](./results/motion-audit-probes.json) | 启动 HTML 与平滑滚动的浏览器观测 | 已运行（M02 已修复，结论由实施验证脚本继续覆盖） |
 
-范围是整个项目，不限定首批组件。实施阶段的源码改动见[实施状态](motion-implementation-status.md)第 1 节摘要；仓库内已有的插件相关未提交修改未被触碰。
+范围是整个项目，不限定首批组件。实施阶段的源码改动见[实施状态](./motion-implementation-status.md)第 1 节摘要；仓库内已有的插件相关未提交修改未被触碰。
 
 建议依赖顺序：验收环境对齐 → 减弱动态与交互生命周期 → 主布局和导航 → 会话/输入/状态 → 预览/标注/拖拽 → 参数收敛及全链路回归。该顺序已在实施中遵循。
 
@@ -75,7 +88,7 @@ node scripts/verification/dialog-footer-spacing.mjs --static-only
 
 脚本经开发服务器加载[探针模块](../../apps/electron/src/renderer/playground/probes/dialog-footer-probe.tsx)（只被该脚本加载，不进入任何构建入口），逐个挂载真实弹窗：删除会话（重放主进程转发的 `auth:showDeleteSessionConfirmation` 载荷）、退出登录、删除页面、重置确认、新建项目、发送资源。每个弹窗在 1280px 与 420px 两个宽度下测量相邻按钮的盒间距（期望值取自页面根字号：`gap-2` = 0.5rem，本应用根字号 15px 时为 7.5px）、断言页脚方向（行 / 列反向）、并校验“删除”按钮仍向主进程返回索引 1。截图与 JSON 结果写入 `results/`。
 
-最近一次运行（2026-10-03，Edge + Playwright）：修复前 10/17 通过——六个弹窗在桌面宽度全部测得 0.00px（手机宽度不受 `sm:` 覆盖影响，因此通过），另有 5 个调用点被静态扫描命中；修复后 [17/17 通过](results/dialog-footer-spacing-after.json)，每个按钮对均为 7.50px。`-before` 结果是在同一棵代码树上把 `className="gap-2 sm:gap-0"` 临时加回五个调用点后录制的，用来证明这套检查确实能发现该缺陷；`-after` 即当前代码。[对比图](results/dialog-footer-delete-session-comparison.png)由这两组“删除会话”截图裁剪放大合成。
+最近一次运行（2026-10-03，Edge + Playwright）：修复前 10/17 通过——六个弹窗在桌面宽度全部测得 0.00px（手机宽度不受 `sm:` 覆盖影响，因此通过），另有 5 个调用点被静态扫描命中；修复后 [17/17 通过](./results/dialog-footer-spacing-after.json)，每个按钮对均为 7.50px。`-before` 结果是在同一棵代码树上把 `className="gap-2 sm:gap-0"` 临时加回五个调用点后录制的，用来证明这套检查确实能发现该缺陷；`-after` 即当前代码。[对比图](./results/dialog-footer-delete-session-comparison.png)由这两组“删除会话”截图裁剪放大合成。
 
 ## 打包客户端校验
 

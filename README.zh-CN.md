@@ -11,7 +11,7 @@
 让 AI Agent 在文件、工具、服务和文档之间完成真正的工作，并让每个关键动作都可以检查、理解和确认。
 
 [![版本](https://img.shields.io/badge/版本-0.3.0-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.3.0.md)
-[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.2-5b7cfa?style=flat-square)](docs/pi-kernel.md)
+[![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.0.2-5b7cfa?style=flat-square)](docs/guides/pi-kernel.md)
 [![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-2f855a?style=flat-square)](README.md)
@@ -78,7 +78,7 @@ Markdown 草稿在能够无损往返时提供可视化编辑，复杂语法保�
 
 MCP 工具保留输出 Schema 和结构化结果；`tool_search` 按需发现工具，沙箱 `codemode` 的每次嵌套调用都经过宿主权限与持久执行边界，模型访问关闭。配置、记账及条件式迁移结论见[能力采用指南](docs/architecture/capability-adoption-2026-10.md)，实测收益与验收范围见[闭合记录](docs/process/capability-completion-2026-10-04.md)。
 
-Pi SDK 运行时已统一固定为 1.0.2；升级验证及原生 MCP、classifier、模型路由的全面替换条件见[升级与收敛评估](docs/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。
+Pi SDK 运行时已统一固定为 1.0.2；升级验证及原生 MCP、classifier、模型路由的全面替换条件见[升级与收敛评估](docs/process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。
 
 ## 真正属于个人的工作空间
 
@@ -137,7 +137,7 @@ PHANERIS_SERVER_TOKEN=$(openssl rand -hex 32) bun run server:start
 bun run apps/cli/src/index.ts run "Summarize this repository"
 ```
 
-远程连接、TLS、脚本调用和验证方式见 [CLI 参考文档](docs/cli.md)。
+远程连接、TLS、脚本调用和验证方式见 [CLI 参考文档](docs/guides/cli.md)。
 
 ## 开发
 
@@ -148,9 +148,9 @@ bun run validate:dev       # 类型检查与运行时/文档聚焦测试
 bun run validate:ci        # CI 验证与 i18n 一致性、覆盖检查
 ```
 
-本仓库的依赖安装与本地工具统一使用 Bun（`bun run eslint`、`bun run vite`、`bun run electron-builder`）。依赖变更请一并提交 `bun.lock`，不要用 npm、Yarn 或 pnpm 生成第二个 lockfile；包来源仍为 npm registry。Electron 工具链与 WhatsApp worker 仍使用 Node.js。迁移细节与例外见 [2026 年 9 月依赖升级说明](docs/dependency-upgrade-2026-09.md)。
+本仓库的依赖安装与本地工具统一使用 Bun（`bun run eslint`、`bun run vite`、`bun run electron-builder`）。依赖变更请一并提交 `bun.lock`，不要用 npm、Yarn 或 pnpm 生成第二个 lockfile；包来源仍为 npm registry。Electron 工具链与 WhatsApp worker 仍使用 Node.js。迁移细节与例外见 [2026 年 9 月依赖升级说明](docs/dependencies/dependency-upgrade-2026-09.md)。
 
-建议从[文档索引](docs/README.md)、[贡献指南](CONTRIBUTING.md)和 [Pi 内核维护基线](docs/pi-kernel.md)开始。
+建议从[文档索引](docs/README.md)、[贡献指南](CONTRIBUTING.md)和 [Pi 内核维护基线](docs/guides/pi-kernel.md)开始。
 
 ## 建立在 Craft 的开源基础之上
 

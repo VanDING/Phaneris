@@ -5,8 +5,8 @@
 > **定位**：能力方向规划（与 2026-08-31 收敛路线图互补）
 > **依据**：
 > - 当前源码快照（v0.2.0 / Bun 1.4.2 / Pi SDK 0.85.1）
-> - [项目综合评估与发展路线图](project-assessment-and-roadmap-2026-08-31.md)
-> - [Pi SDK 原生能力接入缺口分析](../pi-sdk-native-capabilities-gap-analysis.md)（2026-09-19）
+> - [项目综合评估与发展路线图](./project-assessment-and-roadmap-2026-08-31.md)
+> - [Pi SDK 原生能力接入缺口分析](./pi-sdk-native-capabilities-gap-analysis.md)（2026-09-19）
 > - [Durable Agent Runtime ADR](../architecture/durable-agent-runtime.md) 与[目标架构文档](../architecture/durable-agent-runtime-target-architecture.md)
 > - 五个标杆产品源码拆解（2026-09-19 对比研究：MiniMax Code、OpenAI Codex、PI-Desktop、Apache Maka、MonoCode）
 > **证据边界**：源码结论来自对上述文档与关键模块的阅读及关键词扫描（worktree / sandbox / runaway / verifier / eval 等），未执行构建、测试与运行时验证。方向排序是建议，不是范围承诺。
@@ -33,7 +33,7 @@ graph LR
 - **随后（与既有阶段 3/4 协同）**：C 上下文与工具面预算工程；D 编排 2.0（执行已定义的 verify/approval 节点、worktree 隔离、审批路由）。
 - **契约稳定后再做**：F 生命周期钩子与受管扩展；G 外部 Agent 控制面。
 
-> **补充（2026-09-20）**：F 的**内部那一半**已提前定案为独立设计——[`agentic-interception-design.md`](agentic-interception-design.md) 采用「治理与介入」定位，用 Pi 原生 extension 钩子（`tool_call` 的 `block`、`session_before_compact` 的 `cancel`、`input` 的 `transform`）实现拦截。它**不依赖 F 的"契约稳定"前置条件**，因为它是内联 extension + 工作区用户规则，不打开第三方 extension 加载。F 的**外部那一半**（插件分发行为）仍按原计划延后。
+> **补充（2026-09-20）**：F 的**内部那一半**已提前定案为独立设计——[`agentic-interception-design.md`](./agentic-interception-design.md) 采用「治理与介入」定位，用 Pi 原生 extension 钩子（`tool_call` 的 `block`、`session_before_compact` 的 `cancel`、`input` 的 `transform`）实现拦截。它**不依赖 F 的"契约稳定"前置条件**，因为它是内联 extension + 工作区用户规则，不打开第三方 extension 加载。F 的**外部那一半**（插件分发行为）仍按原计划延后。
 - **明确不做**：自研引擎、自建 TUI、Peer Mesh、通用工作流平台、多 CLI 适配器集合（§7 给出理由）。
 
 ---
@@ -48,7 +48,7 @@ graph LR
 | **可检查运行（Run 工作区）** | README：Overview / Trajectory / Context / Map 四视图；轨迹含轮次、请求、工具调用、错误、压缩、时间关系 | 五个标杆中只有 Maka 有同等叙事（但其偏工程文档，不是产品视图）；这是我们最强的用户可见差异点 |
 | **Artifact 闭环** | revision / checkout / preview / review；路径、符号链接、hash、lease、CAS 保护（8-31 路线图 §3.3） | 比 PI-Desktop 的"计划工件"、Codex 的 rollout 更完整地覆盖"交付物"而非"过程" |
 | **多入口同一运行时** | Desktop / WebUI / CLI / Headless Server / Messaging / Automation 全部走 SessionManager | 形态接近 Codex 的 app-server 多客户端架构，但入口面更宽 |
-| **Provider 中立 + Pi 子进程隔离** | [`pi-kernel.md`](../pi-kernel.md)：Pi 0.85.1 被隔离在 `packages/pi-agent-server` 子进程；主进程拥有会话、权限、sources | 与 MonoCode 的"适配器外壳"相比更可控；与 Codex 自研引擎相比成本更低 |
+| **Provider 中立 + Pi 子进程隔离** | [`pi-kernel.md`](../guides/pi-kernel.md)：Pi 0.85.1 被隔离在 `packages/pi-agent-server` 子进程；主进程拥有会话、权限、sources | 与 MonoCode 的"适配器外壳"相比更可控；与 Codex 自研引擎相比成本更低 |
 | **无人值守与治理面已经存在** | automations（prompt/webhook/script 严格联合类型、并发锁）、tasks DAG（Conductor）、labels/statuses、kanban/calendar 投影 | 五个标杆里没有一家有同等"任务治理面"（Maka 有 scheduling 但无产品层） |
 
 ### 2.2 关键空缺（本次分析新发现或已列于路线图）
@@ -148,7 +148,7 @@ graph LR
 
 **对标证据**：Codex tool_search 延迟披露（按需装 schema、每新提示重置、只恢复成功证据）；Maka auto-compact window（用服务端观测的 prefill 校正本地估算）；MiniMax context-manager（双通道 token 计数 + 安全切点 + 策略版本）。
 
-**现状与缺口**：43 个会话工具 + 动态源工具全量常驻；Pi 压缩参数未暴露（gap 文档 P3）；[`system-prompt-per-turn-analysis.md`](../system-prompt-per-turn-analysis.md) 已确立缓存前缀约束；Run Context 视图已能展示装配，但策略层是隐式的。
+**现状与缺口**：43 个会话工具 + 动态源工具全量常驻；Pi 压缩参数未暴露（gap 文档 P3）；[`system-prompt-per-turn-analysis.md`](./system-prompt-per-turn-analysis.md) 已确立缓存前缀约束；Run Context 视图已能展示装配，但策略层是隐式的。
 
 **设计要点**：
 1. **延迟工具目录**：把低频工具（部分 session tools、按需源工具）移入"按需目录"，模型先搜索再装载；遵守缓存前缀约束（隐藏目录本身必须稳定）。
@@ -306,9 +306,9 @@ graph LR
 - `packages/shared/src/agent/core/pre-tool-use.ts`（六步权限管线）
 - `packages/session-tools-core/src/tool-defs.ts`（43 个会话工具枚举）
 - [`architecture/durable-agent-runtime.md`](../architecture/durable-agent-runtime.md)（T1/T2、恢复模式与裁决、8 条不变量）
-- [`project-assessment-and-roadmap-2026-08-31.md`](project-assessment-and-roadmap-2026-08-31.md)（§4.7 无人值守权限；§6 北极星；§7 阶段）
-- [`pi-sdk-native-capabilities-gap-analysis.md`](../pi-sdk-native-capabilities-gap-analysis.md)（钩子 1/13；P0–P6 清单）
-- [`plugin-bundles-design.md`](../plugin-bundles-design.md)
+- [`project-assessment-and-roadmap-2026-08-31.md`](./project-assessment-and-roadmap-2026-08-31.md)（§4.7 无人值守权限；§6 北极星；§7 阶段）
+- [`pi-sdk-native-capabilities-gap-analysis.md`](./pi-sdk-native-capabilities-gap-analysis.md)（钩子 1/13；P0–P6 清单）
+- [`plugin-bundles-design.md`](../design/plugin-bundles-design.md)
 
 **五个标杆（外部项目；本次对比研究的证据）**
 - MiniMax Code（`MiniMax-AI/minimax-code`）：`packages/agent-modules/runaway-guard/`、`goal/`、`context-manager/`

@@ -1,6 +1,6 @@
 # AI 设置结构实施与验收
 
-2026-10-05。已实现用户确认的“连接 → 会话 → 高级”，对应 [规划](../design/ai-settings-replan.md)。修改产品代码前的 [失败场景](ai-settings-structure-failure-matrix.md) 和浏览器验收流程保留在仓库中。
+2026-10-05。已实现用户确认的“连接 → 会话 → 高级”，对应 [规划](../design/ai-settings-replan.md)。修改产品代码前的 [失败场景](./ai-settings-structure-failure-matrix.md) 和浏览器验收流程保留在仓库中。
 
 ## 已实现
 
@@ -37,13 +37,13 @@ bun run scripts/verification/ai-settings-structure-workflow.ts
 
 ## 记录与截图
 
-- [逐项结果 JSON](results/ai-settings-structure/results.json)
-- [源文件与截图 SHA-256 清单](results/ai-settings-structure/manifest.json)
-- [中文窄窗口：页面首屏](results/ai-settings-structure/light-zh-Hans-480-top.png)
-- [中文窄窗口：图像生成](results/ai-settings-structure/light-zh-Hans-480-images.png)
-- [中文窄窗口：决策辅助](results/ai-settings-structure/light-zh-Hans-480-decisions.png)
-- [中文窄窗口：缓存与运行优化](results/ai-settings-structure/light-zh-Hans-480-performance.png)
-- [深色：工作区模型设置](results/ai-settings-structure/dark-en-1040-workspace.png)
+- [逐项结果 JSON](./results/ai-settings-structure/results.json)
+- [源文件与截图 SHA-256 清单](./results/ai-settings-structure/manifest.json)
+- [中文窄窗口：页面首屏](./results/ai-settings-structure/light-zh-Hans-480-top.png)
+- [中文窄窗口：图像生成](./results/ai-settings-structure/light-zh-Hans-480-images.png)
+- [中文窄窗口：决策辅助](./results/ai-settings-structure/light-zh-Hans-480-decisions.png)
+- [中文窄窗口：缓存与运行优化](./results/ai-settings-structure/light-zh-Hans-480-performance.png)
+- [深色：工作区模型设置](./results/ai-settings-structure/dark-en-1040-workspace.png)
 
 另有对应的浅色英文、深色英文和中文工作区截图，均保存在同一目录。图片展示当前内置主题；新 Default 候选仍在 `docs/design/default-redesign/default-preview.json`，本轮未应用，等待用户测试确认。
 

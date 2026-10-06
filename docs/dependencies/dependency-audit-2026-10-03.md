@@ -55,11 +55,11 @@
 
 ### 交付文件
 
-- [全量逐项明细 CSV](E:/Phaneris/docs/dependency-audit-2026-10-03/all-dependencies.csv)：**1640 行**，包括外部 JavaScript、Python、运行环境和 13 个内部 workspace；每行有当前版本、最新版本、推荐目标、理由和来源。
-- [逐声明清单 CSV](E:/Phaneris/docs/dependency-audit-2026-10-03/declarations.csv)：**353 行**，保留每个 manifest / PEP 723 文件、声明范围、override 和 patch，便于执行时防止遗漏。
-- [全部锁实例 CSV](E:/Phaneris/docs/dependency-audit-2026-10-03/lock-instances.csv)：**2,012 行**，保留同名包各版本、解析位置、来源及父依赖范围。
-- [证据快照 JSON](E:/Phaneris/docs/dependency-audit-2026-10-03/evidence.json)：官方版本元数据、查询时间、推荐版元数据、漏洞路径、源码 SHA-256 与安全门禁结果。
-- [npm 审计原始文本](E:/Phaneris/docs/dependency-audit-2026-10-03/npm-audit.txt)、[Python 解析快照](E:/Phaneris/docs/dependency-audit-2026-10-03/python-resolution.txt)。
+- [全量逐项明细 CSV](./dependency-audit-2026-10-03/all-dependencies.csv)：**1640 行**，包括外部 JavaScript、Python、运行环境和 13 个内部 workspace；每行有当前版本、最新版本、推荐目标、理由和来源。
+- [逐声明清单 CSV](./dependency-audit-2026-10-03/declarations.csv)：**353 行**，保留每个 manifest / PEP 723 文件、声明范围、override 和 patch，便于执行时防止遗漏。
+- [全部锁实例 CSV](./dependency-audit-2026-10-03/lock-instances.csv)：**2,012 行**，保留同名包各版本、解析位置、来源及父依赖范围。
+- [证据快照 JSON](./dependency-audit-2026-10-03/evidence.json)：官方版本元数据、查询时间、推荐版元数据、漏洞路径、源码 SHA-256 与安全门禁结果。
+- [npm 审计原始文本](./dependency-audit-2026-10-03/npm-audit.txt)、[Python 解析快照](./dependency-audit-2026-10-03/python-resolution.txt)。
 
 ## 2. 安全问题与当前门禁
 
@@ -141,15 +141,15 @@
 | [astral-sh/setup-uv](https://github.com/astral-sh/setup-uv/releases/tag/v10.2.0) | v10.0.1 / 20cfd1bf945f4377ade1205e4dbc17946fc9a30d | v10.2.0 | c18668ad3cf93ea998bef934396af7bb5c839dc7（v10.2.0） / P2 | 同 major 更新；固定新的 SHA，并显式设置 uv 0.12.22，与产品打包版本一致。 |
 | [RTK（可选集成）](https://github.com/rtk-ai/rtk/releases) | 未盘点用户安装；最低安全要求 0.44.0 | 0.51.0 | 已启用的环境可升 0.51.0 / P2 | 最低版本不是已安装版本。仅对使用此可选功能的环境升级，回归命令压缩输出和 Guarded 模式。 |
 | [Tesseract OCR 二进制](https://github.com/tesseract-ocr/tesseract/releases/tag/5.5.3) | 本机未发现；不由仓库打包固定 | 5.5.3 | 使用 OCR 的环境选受支持 5.5.3 / P2 | 新版有 traineddata 反序列化与溢出修复；用户机器安装状况未知，需同时验证语言数据与 OCR 输出。升级二进制不能替代 Node 包命令注入补丁。 |
-| [ca-certificates](E:/Phaneris/Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | TLS 根证书；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
-| [git](E:/Phaneris/Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 仓库操作；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
-| [ripgrep](E:/Phaneris/Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 内容检索；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
-| [curl](E:/Phaneris/Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 安装下载；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
-| [gnupg](E:/Phaneris/Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 密钥/包来源校验；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
+| [ca-certificates](../../Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | TLS 根证书；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
+| [git](../../Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 仓库操作；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
+| [ripgrep](../../Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 内容检索；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
+| [curl](../../Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 安装下载；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
+| [gnupg](../../Dockerfile.server) | 源码未锁定；已构建镜像版本未知 | 由该 Debian 镜像的软件源决定 | 重建受支持镜像取得发行补丁 / P2 | 密钥/包来源校验；未构建/盘点实际镜像，不能从源码给出已安装版本或跨发行版的唯一最新版。 |
 
 ### Node 版本需要优先对齐
 
-[Dockerfile.server](E:/Phaneris/Dockerfile.server) 仍是 `NODE_MAJOR=20`，[WhatsApp worker 构建脚本](E:/Phaneris/scripts/build-wa-worker.ts) 目标为 `node20`。Node 20 已于 **2026-04-30** 结束官方支持；当前直接使用的 Pi 1.0.0 要求 `>=22.19.0`，Babel 8 和多个依赖也已要求 Node 22 或更高。建议运行环境统一到 **Node 24 LTS**，当前补丁 **24.21.0**。[Node 官方 EOL](https://nodejs.org/en/about/eol)、[发行版本数据](https://nodejs.org/dist/index.json)
+[Dockerfile.server](../../Dockerfile.server) 仍是 `NODE_MAJOR=20`，[WhatsApp worker 构建脚本](../../scripts/build-wa-worker.ts) 目标为 `node20`。Node 20 已于 **2026-04-30** 结束官方支持；当前直接使用的 Pi 1.0.0 要求 `>=22.19.0`，Babel 8 和多个依赖也已要求 Node 22 或更高。建议运行环境统一到 **Node 24 LTS**，当前补丁 **24.21.0**。[Node 官方 EOL](https://nodejs.org/en/about/eol)、[发行版本数据](https://nodejs.org/dist/index.json)
 
 编译目标为 node20 本身并不证明产物不能运行于 Node 24；这里需要同时维护 Docker、worker 构建配置和实际部署文档，避免约定继续指向已失去支持的系列。容器验证应覆盖 **安装与生产构建、Pi 子进程、WhatsApp 子进程、WebUI、鉴权、重启和退出**。
 
@@ -526,7 +526,7 @@ builder 默认下载的 NSIS、资源、签名工具另有自己的发布渠道�
 | 无修复版待处理 | 最新版本仍在受影响范围 | 处理入口、缓存、补丁或明确风险决定 |
 | 保持 Git 固定 | 当前固定提交与官方 HEAD 一致 | 跟随父项目，不比较 npm 同名包 |
 
-特别注意：Bun 使用 hoisted linker，源码会消费部分顶层可见的传递包。Tiptap、i18next、PDF worker 等相关更新需要实际构建验证；只看 package.json 表面声明无法完整判断运行路径。[bunfig.toml](E:/Phaneris/bunfig.toml)
+特别注意：Bun 使用 hoisted linker，源码会消费部分顶层可见的传递包。Tiptap、i18next、PDF worker 等相关更新需要实际构建验证；只看 package.json 表面声明无法完整判断运行路径。[bunfig.toml](../../bunfig.toml)
 
 ## 9. 建议实施批次与验证产物
 
@@ -548,20 +548,20 @@ builder 默认下载的 NSIS、资源、签名工具另有自己的发布渠道�
 
 | 范围文件 | 直接外部声明次数 | 内部声明次数 |
 | --- | --- | --- |
-| [package.json](E:/Phaneris/package.json) | 130 | 0 |
-| [apps/cli/package.json](E:/Phaneris/apps/cli/package.json) | 3 | 2 |
-| [apps/electron/package.json](E:/Phaneris/apps/electron/package.json) | 47 | 5 |
-| [apps/viewer/package.json](E:/Phaneris/apps/viewer/package.json) | 19 | 2 |
-| [apps/webui/package.json](E:/Phaneris/apps/webui/package.json) | 9 | 2 |
-| [packages/core/package.json](E:/Phaneris/packages/core/package.json) | 1 | 0 |
-| [packages/messaging-gateway/package.json](E:/Phaneris/packages/messaging-gateway/package.json) | 5 | 4 |
-| [packages/messaging-whatsapp-worker/package.json](E:/Phaneris/packages/messaging-whatsapp-worker/package.json) | 3 | 0 |
-| [packages/pi-agent-server/package.json](E:/Phaneris/packages/pi-agent-server/package.json) | 10 | 0 |
-| [packages/server-core/package.json](E:/Phaneris/packages/server-core/package.json) | 9 | 2 |
-| [packages/server/package.json](E:/Phaneris/packages/server/package.json) | 3 | 4 |
-| [packages/session-tools-core/package.json](E:/Phaneris/packages/session-tools-core/package.json) | 5 | 0 |
-| [packages/shared/package.json](E:/Phaneris/packages/shared/package.json) | 17 | 2 |
-| [packages/ui/package.json](E:/Phaneris/packages/ui/package.json) | 33 | 2 |
+| [package.json](../../package.json) | 130 | 0 |
+| [apps/cli/package.json](../../apps/cli/package.json) | 3 | 2 |
+| [apps/electron/package.json](../../apps/electron/package.json) | 47 | 5 |
+| [apps/viewer/package.json](../../apps/viewer/package.json) | 19 | 2 |
+| [apps/webui/package.json](../../apps/webui/package.json) | 9 | 2 |
+| [packages/core/package.json](../../packages/core/package.json) | 1 | 0 |
+| [packages/messaging-gateway/package.json](../../packages/messaging-gateway/package.json) | 5 | 4 |
+| [packages/messaging-whatsapp-worker/package.json](../../packages/messaging-whatsapp-worker/package.json) | 3 | 0 |
+| [packages/pi-agent-server/package.json](../../packages/pi-agent-server/package.json) | 10 | 0 |
+| [packages/server-core/package.json](../../packages/server-core/package.json) | 9 | 2 |
+| [packages/server/package.json](../../packages/server/package.json) | 3 | 4 |
+| [packages/session-tools-core/package.json](../../packages/session-tools-core/package.json) | 5 | 0 |
+| [packages/shared/package.json](../../packages/shared/package.json) | 17 | 2 |
+| [packages/ui/package.json](../../packages/ui/package.json) | 33 | 2 |
 
 13 个内部 workspace 当前均为项目版本 **0.2.4**；25 条内部依赖声明是 `workspace:*`，不对应外部仓库新版本。它们已纳入逐声明清单，属于项目发布版本同步工作。
 

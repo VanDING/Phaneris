@@ -2,9 +2,9 @@
 
 状态：2026-10-05，用户授权直接替换内置 Default，已同步内置 JSON、canonical TypeScript、Electron/shared UI 静态样式与窗口启动背景。稳定选择 ID 保持 `default`。
 
-内置文件：[`default.json`](../../../apps/electron/resources/themes/default.json)。[`default-preview.json`](default-preview.json) 保留为独立设计参考，在用户主题列表里显示 **Default Preview**；正式内置主题名称为 **Default**。
+内置文件：[`default.json`](../../../apps/electron/resources/themes/default.json)。[`default-preview.json`](./default-preview.json) 保留为独立设计参考，在用户主题列表里显示 **Default Preview**；正式内置主题名称为 **Default**。
 
-预览：[对照与明暗效果](preview.html)、[浅色对话](../../verification/results/default-purple-sidebar/chat-light.png)、[深色对话](../../verification/results/default-purple-sidebar/chat-dark.png)、[浅色设置页](../../verification/results/default-purple-sidebar/ai-light.png)、[深色设置页](../../verification/results/default-purple-sidebar/ai-dark.png)。使用真实组件与示例数据；对照页保留修改前的 Default 截图。
+预览：[对照与明暗效果](./preview.html)、[浅色对话](../../verification/results/default-purple-sidebar/chat-light.png)、[深色对话](../../verification/results/default-purple-sidebar/chat-dark.png)、[浅色设置页](../../verification/results/default-purple-sidebar/ai-light.png)、[深色设置页](../../verification/results/default-purple-sidebar/ai-dark.png)。使用真实组件与示例数据；对照页保留修改前的 Default 截图。
 
 ## 设计方向
 
@@ -42,10 +42,10 @@
 
 ## 初版设计阶段验证结果
 
-13 项流程全部通过，无页面运行错误。抽查语义文字、辅助文字、菜单文字、消息文字和按钮标签，对比度最低为 **5.32:1**；浅色聚焦环对背景为 **5.86:1**，深色为 **8.22:1**。完整测量见 [`validation.json`](validation.json)。这组数字针对主题 token 的实色组合，不把禁用控件的透明文字算作常规正文。
+13 项流程全部通过，无页面运行错误。抽查语义文字、辅助文字、菜单文字、消息文字和按钮标签，对比度最低为 **5.32:1**；浅色聚焦环对背景为 **5.86:1**，深色为 **8.22:1**。完整测量见 [`validation.json`](./validation.json)。这组数字针对主题 token 的实色组合，不把禁用控件的透明文字算作常规正文。
 
 用户消息实测：浅色背景 rgb(243, 243, 243)，文字对比度 14.14:1；深色背景 rgb(43, 43, 43)，文字对比度 12.43:1。明暗两种气泡均为中性灰。
 
 设计阶段发现的单色供应商 Logo 问题已在应用阶段修复：连接图标、看板模型标签及模型菜单只为已识别的单色资产提供深色反色，Claude、Manifest 与自定义图标保留颜色。使用应用当前明暗模式，不依赖系统明暗设置。JSON 本身不修改图片资产。
 
-应用阶段独立验收保留明暗消息、设置、菜单、对话框、控件、Logo 及中文窄窗口截图；打包应用验收另外覆盖真实设置路由、IPC 与包内主题。个人配置和用户主题文件均未改动。后续恢复原有紫色与白色 New Session 的验收独立保存在 [default-purple-sidebar](../../verification/results/default-purple-sidebar/)，以上初版数值与截图保留为阶段记录。
+应用阶段独立验收保留明暗消息、设置、菜单、对话框、控件、Logo 及中文窄窗口截图；打包应用验收另外覆盖真实设置路由、IPC 与包内主题。个人配置和用户主题文件均未改动。后续恢复原有紫色与白色 New Session 的验收独立保存在 [default-purple-sidebar](../../verification/results/default-purple-sidebar)，以上初版数值与截图保留为阶段记录。

@@ -437,7 +437,7 @@ export function getSystemPrompt(
   const basePrompt = getPhanerisAssistantPrompt(workspaceRootPath, backendName);
   // The environment marker closes the assembled prompt: it carries the app
   // version, so anywhere earlier would invalidate the whole prefix cache on
-  // every release (see docs/system-prompt-per-turn-analysis.md §S).
+  // every release (see docs/process/system-prompt-per-turn-analysis.md §S).
   const fullPrompt = `${basePrompt}${preferences}${projectBlock}${debugContext}${projectContextFiles}\n${getPhanerisEnvironmentMarker()}`;
 
   debug('[getSystemPrompt] full prompt length:', fullPrompt.length);

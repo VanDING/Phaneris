@@ -1,6 +1,8 @@
 # 升级能力采用与运行约定
 
-适用基线：Craft 上游 0.14.0 的既有吸收结果、Pi SDK 1.0.2、Phaneris 0.2.4。机制实施见 [批次记录](../process/capability-integration-2026-10-03.md)，原计划完整性、真实模型与补齐验收见 [闭合记录](../process/capability-completion-2026-10-04.md)，最新升级及全面替换条件见 [1.0.2 评估](../pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。这里区分产品实现、实测收益与条件式采用。
+Status: accepted — 采用约定；四个条件式延后项的再评估证据见「条件式迁移结论」
+
+适用基线：Craft 上游 0.14.0 的既有吸收结果、Pi SDK 1.0.2、Phaneris 0.2.4。机制实施见 [批次记录](../process/capability-integration-2026-10-03.md)，原计划完整性、真实模型与补齐验收见 [闭合记录](../process/capability-completion-2026-10-04.md)，最新升级及全面替换条件见 [1.0.2 评估](../process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。这里区分产品实现、实测收益与条件式采用。
 
 ## 能力采用表
 

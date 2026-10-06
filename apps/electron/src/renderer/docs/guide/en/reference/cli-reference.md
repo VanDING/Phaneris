@@ -5,7 +5,7 @@ implementation of the app: it connects to the same backend over the same channel
 the desktop app uses, so a session you start from the terminal is the same
 session you can open in the window.
 
-The full command reference ships with the source tree at `docs/cli.md`. This page
+The full command reference ships with the source tree at `docs/guides/cli.md`. This page
 covers the shape of it and the parts worth knowing before you start.
 
 ## When to use it

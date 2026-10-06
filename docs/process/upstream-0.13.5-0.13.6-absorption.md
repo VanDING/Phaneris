@@ -72,7 +72,7 @@
 git rev-parse "HEAD:<path>"; git rev-parse "v0.13.5:<path>"; git rev-parse "v0.13.6:<path>"
 ```
 
-逐文件结果（146 行）见 [`upstream-0.13.6-file-classification.csv`](upstream-0.13.6-file-classification.csv)，列为：`upstream_status`（上游 M/A）、`path`、`our_relation_to_v0_13_5`（下面的三类之一）、`upstream_changed_lines`、`our_diverged_lines`。
+逐文件结果（146 行）见 [`upstream-0.13.6-file-classification.csv`](./upstream-0.13.6-file-classification.csv)，列为：`upstream_status`（上游 M/A）、`path`、`our_relation_to_v0_13_5`（下面的三类之一）、`upstream_changed_lines`、`our_diverged_lines`。
 
 | 类别 | 文件数 | 含义 |
 |---|---|---|

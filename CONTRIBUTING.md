@@ -24,7 +24,7 @@ Do not commit credentials, workspace data, session transcripts, or generated pro
 
 Start with the [documentation index](docs/README.md). Before changing runtime, provider, event, permission, or tool behavior, read:
 
-- [Pi kernel maintenance baseline](docs/pi-kernel.md)
+- [Pi kernel maintenance baseline](docs/guides/pi-kernel.md)
 - [Durable Agent Runtime ADR](docs/architecture/durable-agent-runtime.md)
 - [Electron runtime guide](apps/electron/README.md)
 

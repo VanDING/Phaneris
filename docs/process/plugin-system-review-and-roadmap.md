@@ -4,7 +4,7 @@
 - 代码基线：`f2f5ef74`
 - 状态：分析与实施建议；本轮未修改运行时代码。
 - 证据范围：本仓库源码、既有决策、定向测试、隔离临时工作区复现。未做外部插件生态兼容性认证，也未实测 Electron 完整交互。
-- 历史依据：[设计稿](plugin-bundles-design.md)、[决策登记册](plugin-bundles-decisions.md)。下文明确区分既定设计的缺陷修复与需要重新确认的设计变更。
+- 历史依据：[设计稿](../design/plugin-bundles-design.md)、[决策登记册](../design/plugin-bundles-decisions.md)。下文明确区分既定设计的缺陷修复与需要重新确认的设计变更。
 
 ## 1. 结论
 
@@ -51,7 +51,7 @@
 | 文件编辑、对话式管理 | 符合产品现有工作方式 | 保留，补一个可靠的机器操作入口 |
 | 派生索引 | 易重建，不承担权威状态 | 保留，但不能把引用者误当成实际提供者 |
 
-主要入口：[shared/plugins](../packages/shared/src/plugins/index.ts)、[RPC](../packages/server-core/src/handlers/rpc/plugins.ts)、[会话管理](../packages/server-core/src/sessions/SessionManager.ts)、[详情页](../apps/electron/src/renderer/pages/PluginInfoPage.tsx)。
+主要入口：[shared/plugins](../../packages/shared/src/plugins/index.ts)、[RPC](../../packages/server-core/src/handlers/rpc/plugins.ts)、[会话管理](../../packages/server-core/src/sessions/SessionManager.ts)、[详情页](../../apps/electron/src/renderer/pages/PluginInfoPage.tsx)。
 
 ## 3. 已确认问题
 
@@ -59,12 +59,12 @@
 
 **已复现。** 先安装包含 `good` source 的插件，重装时先覆盖 `good`，再让另一个 source 因非法 `args` 校验失败：安装抛错后，原 `good/config.json` 已被删除，同时本次新增的 skill 仍留在工作区。
 
-原因在 [install.ts](../packages/shared/src/plugins/install.ts)：
+原因在 [install.ts](../../packages/shared/src/plugins/install.ts)：
 
 - source 直接写入正式目录，没有保存旧目录；catch 把本次已写入的 source 一律删除，包括被覆盖的旧 source。
 - skill 回滚只处理存在 `backupDir` 的项，新建且已提交的 skill 没有被撤回。
 - `placePackage` 先删除旧包再 rename，新旧包之间没有完整的可恢复切换。
-- source 保存还可能触发凭据清理，文件回滚无法撤销该副作用，见 [sources/storage.ts](../packages/shared/src/sources/storage.ts)。
+- source 保存还可能触发凭据清理，文件回滚无法撤销该副作用，见 [sources/storage.ts](../../packages/shared/src/sources/storage.ts)。
 
 这直接违反现有文档“失败后工作区保持原样”的承诺，属于既定设计修复。
 
@@ -74,7 +74,7 @@
 
 **候选路径越界已复现；破坏性删除未执行。** `mcpServers` 的 key 使用 `../../outside` 时，安装分析生成的资源路径已越出 `sources/`。
 
-[readPluginMcpServers](../packages/shared/src/plugins/storage.ts) 未验证 key 的 slug 规则；[getSourcePath](../packages/shared/src/sources/storage.ts) 直接拼接路径；卸载使用相同声明生成删除路径。即使 source 写入阶段拒绝非法配置，也不能覆盖“直接放入插件目录再卸载”的路径。
+[readPluginMcpServers](../../packages/shared/src/plugins/storage.ts) 未验证 key 的 slug 规则；[getSourcePath](../../packages/shared/src/sources/storage.ts) 直接拼接路径；卸载使用相同声明生成删除路径。即使 source 写入阶段拒绝非法配置，也不能覆盖“直接放入插件目录再卸载”的路径。
 
 **修复：** 在解析入口统一校验资源名；每次写入、覆盖、删除前，另行检查目标为预期资源根目录内的合法子目录，拒绝根目录自身、父级跳转、绝对路径及重解析点逃逸。不能只依赖 manifest 校验或 source 保存校验。
 
@@ -82,7 +82,7 @@
 
 **已复现。** A、B 都提供同名 stdio source，依次安装 A、B 后，source 的 `pluginRoot` 指向 B。卸载 B 时，因为 A 仍声明同名 source，配置被保留；B 的包目录却已删除。
 
-结果：**“保留了资源”但资源依赖的执行目录不存在。** [引用计数](../packages/shared/src/plugins/install.ts) 只描述谁声明 slug，不能表达当前内容来自谁、执行时依赖哪个包。
+结果：**“保留了资源”但资源依赖的执行目录不存在。** [引用计数](../../packages/shared/src/plugins/install.ts) 只描述谁声明 slug，不能表达当前内容来自谁、执行时依赖哪个包。
 
 另一个静态确认问题：其他插件加载失败时，`collectClaimsExcluding` 直接跳过。损坏插件的引用会从删除决策中消失，不能把“无法读取”当成“没有引用”。
 
@@ -92,7 +92,7 @@
 
 ### F04 · P1：skill 存在两条执行路径
 
-**已复现名单路径。** [buildPluginRoster](../packages/shared/src/plugins/plugin-context.ts) 使用包内 `skill.path`，产生 `plugins/demo/skills/.../SKILL.md`；原生 skill 则位于 `skills/.../SKILL.md`。
+**已复现名单路径。** [buildPluginRoster](../../packages/shared/src/plugins/plugin-context.ts) 使用包内 `skill.path`，产生 `plugins/demo/skills/.../SKILL.md`；原生 skill 则位于 `skills/.../SKILL.md`。
 
 因此修改物化后的 skill，`@skill` 和 `/plugin` 可能读取不同内容；修改包内 skill，插件名单又可能在未重装时提前看到新内容。这与“编辑包后重装才生效”的操作文档冲突。
 
@@ -100,13 +100,13 @@
 
 ### F05 · P1：Windows 参数与环境变量被当作路径改写
 
-**已复现。** [normalizeTemplateSeparators](../packages/shared/src/plugins/resolve.ts) 对整个字符串执行 `/` → `\`，普通参数 `https://example.com/api` 变成 `https:\\example.com\api`。
+**已复现。** [normalizeTemplateSeparators](../../packages/shared/src/plugins/resolve.ts) 对整个字符串执行 `/` → `\`，普通参数 `https://example.com/api` 变成 `https:\\example.com\api`。
 
 **修复：** `args`、`env` 默认是不可解释的字符串，只替换明确支持的占位符；command 的路径规范化独立处理。URL、正则表达式、JSON、标志参数必须逐字保留。新增 Windows 与 POSIX 的语义测试，不只测路径拼接。
 
 ### F06 · P1：安装确认未与实际安装内容绑定
 
-**源码确认。** [RPC](../packages/server-core/src/handlers/rpc/plugins.ts) 的 `INSTALL` 只接收路径并重新分析；没有要求消费此前 `ANALYZE_INSTALL` 的计划，也未验证包和覆盖目标在确认后是否变化。卸载也重新计算清单。
+**源码确认。** [RPC](../../packages/server-core/src/handlers/rpc/plugins.ts) 的 `INSTALL` 只接收路径并重新分析；没有要求消费此前 `ANALYZE_INSTALL` 的计划，也未验证包和覆盖目标在确认后是否变化。卸载也重新计算清单。
 
 **修复：** 生成短期、workspace 绑定、一次性 `planId`，绑定暂存包摘要与受影响资源状态；执行时校验前置条件，发生变化则返回新计划。分析不写正式资源目录，但可以建立临时快照。该机制服务于已有 D9 确认承诺，不等于增加永久安装注册表。
 
@@ -129,7 +129,7 @@
 
 这不意味着 AI 完全不能通过 shell 操作，而是产品没有保证这些操作必经统一的分析、事务和审计路径。
 
-[import.ts](../packages/shared/src/plugins/import.ts) 还有这些静态问题：
+[import.ts](../../packages/shared/src/plugins/import.ts) 还有这些静态问题：
 
 - 解压总量在完成落盘后才检查，不能保证写盘过程受上限约束。
 - 符号链接在解压后检查；应提前拒绝链接与非普通文件条目，并对解压库行为做专项测试。
@@ -141,7 +141,7 @@
 
 ### F09 · P1：健康状态没有变化时，UI 可能不刷新
 
-**源码确认。** [watcher.ts](../packages/shared/src/config/watcher.ts) 的插件分支只监听包根、manifest 和 PROMPT；未覆盖 MCP 与扩展声明。处理函数又在目录集合、成功/失败状态都不变时直接返回，所以正常的版本或描述更新可能不会广播。
+**源码确认。** [watcher.ts](../../packages/shared/src/config/watcher.ts) 的插件分支只监听包根、manifest 和 PROMPT；未覆盖 MCP 与扩展声明。处理函数又在目录集合、成功/失败状态都不变时直接返回，所以正常的版本或描述更新可能不会广播。
 
 `PluginLoadError.path` 实际可以是 `plugin.json` 等包内路径，watcher 却用 basename 当插件名，错误归属也不稳定。
 
@@ -149,7 +149,7 @@
 
 ### F10 · P1：激活状态与可用状态混在一起
 
-**源码确认。** [SessionManager](../packages/server-core/src/sessions/SessionManager.ts) 在切换或取消插件时保留既有 enabled sources；当前插件的 sources 每轮还会自动预启用。卸载后会话槽位仍可保留，但 prompt 静默跳过。
+**源码确认。** [SessionManager](../../packages/server-core/src/sessions/SessionManager.ts) 在切换或取消插件时保留既有 enabled sources；当前插件的 sources 每轮还会自动预启用。卸载后会话槽位仍可保留，但 prompt 静默跳过。
 
 保留 sources 是目前有意选择，不应直接视为 bug。不过“取消插件”不能被解释成关闭其所有工具，手动关闭的 source 也可能被后续预启用恢复。
 

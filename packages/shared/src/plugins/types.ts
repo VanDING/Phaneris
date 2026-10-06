@@ -11,8 +11,8 @@
  *   ├── PROMPT.md                resident prompt fragment (injected per turn)
  *   └── phaneris/sources.json    client extension: api / local source declarations
  *
- * Design contract lives in docs/plugin-bundles-design.md; every decision
- * referenced below as D<n> / P<n> is closed in docs/plugin-bundles-decisions.md.
+ * Design contract lives in docs/design/plugin-bundles-design.md; every decision
+ * referenced below as D<n> / P<n> is closed in docs/design/plugin-bundles-decisions.md.
  */
 
 /** Agent Plugins 1.0.0 canonical manifest schema identifier. */

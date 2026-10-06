@@ -1,6 +1,6 @@
 # Default 紫色与白色 New Session 验收
 
-2026-10-05。已恢复原有 Default 的精确明暗紫色：浅色 `oklch(0.488 0.275 280.3)`、深色 `oklch(0.626 0.221 291.7)`，并同步聚焦环、canonical、内置 JSON、默认 CSS 与预览参考文件。主题资源其余字段与上一版完全一致，检查记录见 [修改范围](results/default-purple-sidebar/theme-change-scope.json)。
+2026-10-05。已恢复原有 Default 的精确明暗紫色：浅色 `oklch(0.488 0.275 280.3)`、深色 `oklch(0.626 0.221 291.7)`，并同步聚焦环、canonical、内置 JSON、默认 CSS 与预览参考文件。主题资源其余字段与上一版完全一致，检查记录见 [修改范围](./results/default-purple-sidebar/theme-change-scope.json)。
 
 New Session 使用设置卡片的 `card/cardForeground`，浅色为纯白、深色为对应卡片色。悬停保持表面色，以主题阴影反馈；键盘聚焦显示原有紫色环，Space 可打开新会话。全局 secondary、其他控件选中态、灰白用户消息与个人主题文件保持原样。
 
@@ -13,7 +13,7 @@ New Session 使用设置卡片的 `card/cardForeground`，浅色为纯白、深�
 | 安装包 | 4/4，版本身份、构建文件一致性、ZIP 完整性、DMG 校验与只读挂载；主题、main、页面入口与 CSS 匹配实际验收应用 |
 | 静态与构建 | typecheck:all、lint、版本/身份/runtime pin/Electron pin、完整构建与最终 renderer 构建/资源校验、git diff --check 通过 |
 
-常规正文及辅助/语义文字 token 最低 5.32:1，消息正文浅色 14.14:1、深色 12.43:1。原有品牌紫色单独测量：浅色对白底 7.30:1，深色对背景 4.52:1、对卡片 4.24:1；不将品牌色算入常规正文 ≥4.5:1 的结论。失败条件在修改前记录于 [矩阵](default-purple-sidebar-failure-matrix.md)。
+常规正文及辅助/语义文字 token 最低 5.32:1，消息正文浅色 14.14:1、深色 12.43:1。原有品牌紫色单独测量：浅色对白底 7.30:1，深色对背景 4.52:1、对卡片 4.24:1；不将品牌色算入常规正文 ≥4.5:1 的结论。失败条件在修改前记录于 [矩阵](./default-purple-sidebar-failure-matrix.md)。
 
 版本 **0.3.0**，**macOS Intel/x64**，本地未签名构建。使用独立临时配置和示例账户，无付费模型调用。当前运行时验收使用本轮应用包内的 Electron/uv/Bun；随后仅修正 renderer 悬停样式，运行时及 main bundle 未修改。上一版安装文件保留。
 

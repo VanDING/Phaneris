@@ -85,7 +85,7 @@ PHANERIS_SERVER_TOKEN=$(openssl rand -hex 32) bun run server:start
 bun run apps/cli/src/index.ts run "Summarize this repository"
 ```
 
-`docs/cli.md` in the repository covers remote connections, TLS, and scripting.
+`docs/guides/cli.md` in the repository covers remote connections, TLS, and scripting.
 
 ## Next steps
 

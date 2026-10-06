@@ -1,7 +1,7 @@
 # Pi SDK 原生能力接入缺口分析
 
 状态：时点分析（point-in-time），不是当前接口契约。实施前请按仓库中的 Pi SDK 版本与最新代码重新核对。
-Pi 后续实现与闭合验收见 [能力采用指南](architecture/capability-adoption-2026-10.md)及[完整性复核](process/capability-completion-2026-10-04.md)；最新版本和全面替换条件见 [1.0.2 评估](pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。以下缺口保留历史语境。
+Pi 后续实现与闭合验收见 [能力采用指南](../architecture/capability-adoption-2026-10.md)及[完整性复核](./capability-completion-2026-10-04.md)；最新版本和全面替换条件见 [1.0.2 评估](./pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。以下缺口保留历史语境。
 日期：2026-09-20
 Pi SDK：`@earendil-works/pi-ai` / `pi-agent-core` / `pi-coding-agent` **0.87.0**
 范围：Phaneris 单 Pi 后端（`packages/pi-agent-server` + `packages/shared/src/agent`）
@@ -33,11 +33,11 @@ Pi 的核心链路已经接入：模型流、工具执行、会话 JSONL、恢�
 - 主进程核对当前 run 的模型 outcome 与 usage ledger，保留缓存和 reasoning 用量细分，区分未决结果与已完成结果。原生 session 全量统计仅作为独立参考，SDK cost 标记为估算，不重复计费。
 - 不变更权限审批、T1/T2、canonical context，不启用提交后的结果改写，不开放另一套资源自动发现。
 
-限制：provider 回调证据不是网络尝试计数或原始网络报文；未返回原生结果的请求仍可能未决。生命周期采集属于可报告失败的观测，不是新增的强制授权/事务闸门；执行外切换不记到无关回合。完整基线见 [pi-kernel.md](pi-kernel.md)。
+限制：provider 回调证据不是网络尝试计数或原始网络报文；未返回原生结果的请求仍可能未决。生命周期采集属于可报告失败的观测，不是新增的强制授权/事务闸门；执行外切换不记到无关回合。完整基线见 [pi-kernel.md](../guides/pi-kernel.md)。
 
 ### 2026-09-21 Pi 0.86.1 缓存预热接入
 
-现已提供默认关闭的 `promptCacheWarming` 全局开关，仅主会话可选 `streaming`。刷新有独立 durable dispatch/outcome 与费用记录，不改写主任务检查点，不进入对话；ephemeral 和 idle 保持关闭。以下 0.86.0 升级核对保留当时的决策背景，当前实现见 [提示缓存与预热](pi-kernel.md#提示缓存与预热)。
+现已提供默认关闭的 `promptCacheWarming` 全局开关，仅主会话可选 `streaming`。刷新有独立 durable dispatch/outcome 与费用记录，不改写主任务检查点，不进入对话；ephemeral 和 idle 保持关闭。以下 0.86.0 升级核对保留当时的决策背景，当前实现见 [提示缓存与预热](../guides/pi-kernel.md#提示缓存与预热)。
 
 ### 2026-09-21 Pi 0.87.0 升级核对
 
@@ -138,7 +138,7 @@ Pi 0.86.0 还提供以下事件（`node_modules/@earendil-works/pi-coding-agent/
 
 判断：内联 extension 可接管适配与观测职责，但不能直接替换包含权限或 T1/T2 的包装层。provider 请求钩子异常可能被 SDK 捕获后继续执行，不能据此提供强制阻断保证；tool_result/message_end 改写必须先解决提交顺序。第三方 extension/package 不直接打开。
 
-> **更新（2026-09-20）**：本节的**内联 extension**路线已定案为 [`agentic-interception-design.md`](process/agentic-interception-design.md)（定位：治理与介入；首个切片：`tool_call` 阻断）。该设计**只做内联 extension + 工作区用户规则**，明确不打开第三方 extension/package 加载，因此与本节的判断一致。
+> **更新（2026-09-20）**：本节的**内联 extension**路线已定案为 [`agentic-interception-design.md`](./agentic-interception-design.md)（定位：治理与介入；首个切片：`tool_call` 阻断）。该设计**只做内联 extension + 工作区用户规则**，明确不打开第三方 extension/package 加载，因此与本节的判断一致。
 >
 > 为什么不是"事件 → 动作"：现有 `automations` 的动作面（`prompt | webhook | script`）只能启动新会话/发请求/跑脚本，无法改变当前回合，而 `PreToolUse` 这类词表表达的是闸门——两者错位，这正是它今天空转的原因（见该设计 §1.2 与 §5）。
 
@@ -259,4 +259,4 @@ Phaneris 用自己的 skills、plugins、memory、source 和 system prompt 体�
 
 - 本文是能力 gap 的时点记录，不代表已批准的实现计划。
 - 实施任何一项前，先核对当前 Pi SDK 版本、对应 .d.ts 与现有 Phaneris 抽象，避免与 durable runtime / session 持久化 / 权限模型冲突。
-- 新增原生能力接入后，应同步更新 docs/pi-kernel.md 的当前基线和本文状态。
+- 新增原生能力接入后，应同步更新 docs/guides/pi-kernel.md 的当前基线和本文状态。

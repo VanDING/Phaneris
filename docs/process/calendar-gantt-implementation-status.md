@@ -237,17 +237,17 @@ node scripts/verification/calendar-gantt-verification.mjs http://localhost:5199
   ```
 - 默认套件零网络 I/O，连续 3 次运行结果完全一致（2 pass / 3 skip / 0 fail）。
 
-## 4. 尚未开始
+## 4. 后续状态（2026-10-06 核对）
 
-**P3 门禁增强**（计划 3.5，非阻塞）：
+**P3 门禁增强**（计划 3.5，非阻塞）——**三项中前两项已落地**：
 
-1. `eslint-plugin-jsx-a11y`（先在两个视图 + kanban 目录开启 `recommended`）；
-2. i18n 增加"死键"检查（当前 `check-i18n-coverage.ts` 只查"引用的 key 是否存在"，查不出"key 已死"）；
-3. Playground 注册表与 `PROJECT_MANAGEMENT_VIEWS` 的一致性断言（本轮已手工发现甘特条目曾被还原而无人察觉）。
+1. ✅ `eslint-plugin-jsx-a11y` 已启用 —— `apps/electron/eslint.config.mjs:12,169`。
+2. ✅ i18n "死键"检查已落地并进入 `validate:ci` —— `package.json:59`（`lint:i18n:dead-keys`）、`package.json:119`（脚本定义）、`scripts/check-i18n-dead-keys.ts`。
+3. ⬜ Playground 注册表与 `PROJECT_MANAGEMENT_VIEWS` 的一致性断言 —— **仍未做**（本轮已手工发现甘特条目曾被还原而无人察觉）。
 
 **计划中明确不做**（评估已论证）：不引入第二个甘特库；不在阶段 0/1 引入 recurrence。
 
-**可选增强**（产品决定）：日历议程视图；甘特依赖编辑与关键路径（PRO）；`apps/webui` 的 `temporal-polyfill` 体积实测（当前未测）。
+**可选增强**（产品决定，均未做）：日历议程视图；甘特依赖编辑与关键路径（PRO）；`apps/webui` 的 `temporal-polyfill` 体积实测（当前未测）。
 
 ## 5. 本轮新增 / 修改文件索引
 

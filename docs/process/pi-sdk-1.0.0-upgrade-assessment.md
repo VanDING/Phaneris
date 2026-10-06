@@ -4,7 +4,7 @@
 
 本次范围包括同步依赖、验证现有接入和评估优化方向。下文提议的新功能尚未实施。评估覆盖 0.99.0、0.99.1、0.99.2 和 1.0.0，不能只看最后一个版本的发布说明。
 
-此文保存升级时评估快照。随后批准的能力整合、实测与迁移结论见 [能力采用指南](architecture/capability-adoption-2026-10.md)及[完整性复核](process/capability-completion-2026-10-04.md)。最新版本和全面替换条件见 [1.0.2 评估](pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。
+此文保存升级时评估快照。随后批准的能力整合、实测与迁移结论见 [能力采用指南](../architecture/capability-adoption-2026-10.md)及[完整性复核](./capability-completion-2026-10-04.md)。最新版本和全面替换条件见 [1.0.2 评估](./pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。
 
 ## 结论
 
@@ -36,7 +36,7 @@ Phaneris 的持久化权威仍是 Runtime Host。Pi 1.0.0 删除 agent-core 的�
 | 内置 MCP/codemode/tool-search | SDK 会话须主动注册扩展。本项目的 resource loader 只注册自己的扩展，升级不会自动启用这些功能 |
 | OAuth 与 provider 变化 | 保留当前 openai-codex 连接语义；没有把已有凭据自动改成新的 openai OAuth |
 
-依据：[SDK MCP 接入说明](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/mcp.md#use-mcp-from-the-sdk)、[pi-server 变更记录](https://github.com/earendil-works/pi/blob/v1.0.0/packages/server/CHANGELOG.md)。本地边界见 [`index.ts`](../packages/pi-agent-server/src/index.ts)、[`phaneris-resource-loader.ts`](../packages/pi-agent-server/src/phaneris-resource-loader.ts)、[`canonical-model-context.ts`](../packages/pi-agent-server/src/canonical-model-context.ts)。
+依据：[SDK MCP 接入说明](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/mcp.md#use-mcp-from-the-sdk)、[pi-server 变更记录](https://github.com/earendil-works/pi/blob/v1.0.0/packages/server/CHANGELOG.md)。本地边界见 [`index.ts`](../../packages/pi-agent-server/src/index.ts)、[`phaneris-resource-loader.ts`](../../packages/pi-agent-server/src/phaneris-resource-loader.ts)、[`canonical-model-context.ts`](../../packages/pi-agent-server/src/canonical-model-context.ts)。
 
 ## 升级后直接继承的改善
 
@@ -66,7 +66,7 @@ Phaneris 的持久化权威仍是 Runtime Host。Pi 1.0.0 删除 agent-core 的�
 
 ### 1. codemode 与工具发现：优先复用代理，不先迁移连接池
 
-当前 [`SessionManager.ts`](../packages/server-core/src/sessions/SessionManager.ts) 为每个会话创建 [`McpClientPool`](../packages/shared/src/mcp/mcp-pool.ts)，由宿主统一管理该会话的 source 连接，并非全局跨会话共享；[`index.ts`](../packages/pi-agent-server/src/index.ts) 将工具注册进 Pi，并在执行前后走权限与 durable T1/T2。可以先让 codemode 调用这些已注册的工具，保留现有凭据管理和 source 开关。
+当前 [`SessionManager.ts`](../../packages/server-core/src/sessions/SessionManager.ts) 为每个会话创建 [`McpClientPool`](../../packages/shared/src/mcp/mcp-pool.ts)，由宿主统一管理该会话的 source 连接，并非全局跨会话共享；[`index.ts`](../../packages/pi-agent-server/src/index.ts) 将工具注册进 Pi，并在执行前后走权限与 durable T1/T2。可以先让 codemode 调用这些已注册的工具，保留现有凭据管理和 source 开关。
 
 1. 为代理工具传递 `namespace`、`exposure`、`annotations`、`outputSchema` 和 `structuredContent`。池的 `McpToolResult` 当前主要是文本，脚本需要可验证的结构化结果。
 2. 选取工具较多的 source 做按需发现，让稳定的工具名空间摘要驻留 prompt，详细 schema 在调用前加载。常用直接工具继续保留直接声明。
@@ -83,15 +83,15 @@ Phaneris 的持久化权威仍是 Runtime Host。Pi 1.0.0 删除 agent-core 的�
 
 建议为输入增加 request ID 和确认事件，把 SDK disposition 与出错/无 active session 状态传回。保留原有“压缩期间排队”的规则，确认到达前不要让 UI 把输入视为已经被模型接收。端到端覆盖处理中 steering、压缩边界、会话结束竞态和扩展处理输入。
 
-依据：[AgentSession 源码](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/src/core/agent-session.ts)。本地接入见 [`pi-agent.ts`](../packages/shared/src/agent/pi-agent.ts) 和子进程的 `steer` 分支。
+依据：[AgentSession 源码](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/src/core/agent-session.ts)。本地接入见 [`pi-agent.ts`](../../packages/shared/src/agent/pi-agent.ts) 和子进程的 `steer` 分支。
 
 ### 3. 模型目录：先清理已被上游覆盖的补丁，再考虑动态刷新
 
-[`models-pi.ts`](../packages/shared/src/config/models-pi.ts) 仍保留 DeepSeek Flash 的注入与覆盖代码。已读取 1.0.0 安装目录并确认：SDK 的 `deepseek-flash` 已具备补丁声明的名称、上下文、输出上限、图像输入和 low/high/max 推理映射。该补丁现在可以在独立清理中退出，避免以后覆盖上游的新字段。
+[`models-pi.ts`](../../packages/shared/src/config/models-pi.ts) 仍保留 DeepSeek Flash 的注入与覆盖代码。已读取 1.0.0 安装目录并确认：SDK 的 `deepseek-flash` 已具备补丁声明的名称、上下文、输出上限、图像输入和 low/high/max 推理映射。该补丁现在可以在独立清理中退出，避免以后覆盖上游的新字段。
 
 该文件和 backend driver 仍读取 `pi-ai/compat` 的静态目录。新代码应评估改用 `providers/all` 的目录读取或共享 `Models` 实例；`pi-ai/models` 提供轻量的集合与 provider 构造入口，适合自定义 provider 路径，但**不会自己提供完整内置目录**。不能简单把所有 import 路径替换成 `/models`。
 
-[`model-fetchers/pi.ts`](../packages/server-core/src/model-fetchers/pi.ts) 当前明确不做周期刷新。后续可让宿主目录与实际 ModelRuntime 刷新结果一致，减少应用升级之间的目录滞后。chat/image/classifier 必须分类型，图像和分类模型不能混入普通聊天选择器。
+[`model-fetchers/pi.ts`](../../packages/server-core/src/model-fetchers/pi.ts) 当前明确不做周期刷新。后续可让宿主目录与实际 ModelRuntime 刷新结果一致，减少应用升级之间的目录滞后。chat/image/classifier 必须分类型，图像和分类模型不能混入普通聊天选择器。
 
 验收：既有连接默认模型保持原语义，目录过滤和推理档位正确；验证 provider 元数据与 chat-only 选择器；对主进程冷启动和构建体积做前后实测。
 
@@ -99,7 +99,7 @@ Phaneris 的持久化权威仍是 Runtime Host。Pi 1.0.0 删除 agent-core 的�
 
 ### 4. 请求诊断：接入解析后的 provider 事件，不复制完整流
 
-[`native-request-observation.ts`](../packages/pi-agent-server/src/native-request-observation.ts) 当前记录 payload 摘要、响应状态和允许的 headers。新 `provider_stream_event` 可以补足 SDK 归一化前的协议诊断。它是解析后的结构化事件，不是原始 HTTP/SSE 字节，也不会由 SDK 自动持久化。
+[`native-request-observation.ts`](../../packages/pi-agent-server/src/native-request-observation.ts) 当前记录 payload 摘要、响应状态和允许的 headers。新 `provider_stream_event` 可以补足 SDK 归一化前的协议诊断。它是解析后的结构化事件，不是原始 HTTP/SSE 字节，也不会由 SDK 自动持久化。
 
 建议先采样事件种类、provider/api/model、序号与异常标记，再扩展必要字段；不要默认存储内容、凭据或完整 provider payload。将 `AssistantMessage.thinkingLevel` 与实际 physical model 一并映射到诊断视图，继续保持 ledger 对已提交 usage 的唯一记账来源。
 
@@ -107,7 +107,7 @@ Phaneris 的持久化权威仍是 Runtime Host。Pi 1.0.0 删除 agent-core 的�
 
 ### 5. 图像与 OAuth：扩展 provider 支持，保留 Artifact 契约
 
-当前 [`image-generation.ts`](../packages/server-core/src/services/image-generation.ts) 直接调用 OpenAI Images API，并只接受 OpenAI API-key 连接。Pi 新的 `ModelRuntime.generateImages()` 提供 provider-resolved auth 和多类型目录，当前内置 OpenRouter provider 具备 image 实现。
+当前 [`image-generation.ts`](../../packages/server-core/src/services/image-generation.ts) 直接调用 OpenAI Images API，并只接受 OpenAI API-key 连接。Pi 新的 `ModelRuntime.generateImages()` 提供 provider-resolved auth 和多类型目录，当前内置 OpenRouter provider 具备 image 实现。
 
 建议增加 provider-neutral 图像适配层，先接入 OpenRouter 路径。不要直接用 codemode 的 base64 返回替代 Artifact 文件、格式验证、大小限制、审核与保存流程；也不能假设 Pi 的 OpenAI chat provider 已支持项目当前的 GPT Image API。独立图像请求要纳入 durable prepare/outcome 和 usage 记账，避免和工具聚合 usage 重复计算。
 
@@ -160,4 +160,4 @@ bun run scripts/run-workspace-tests.ts --filter=apps/electron
 bun run scripts/run-workspace-tests.ts --filter=packages/server-core
 ```
 
-可复核结果与具体复现命令保存在 [验证证据](verification/results/pi-sdk-1.0.0-upgrade.json)，包含安装版本、首次失败与复测、各检查的退出码和时间、lockfile/构建产物 SHA-256，以及本地日志摘要。完整日志位于被忽略的 `.cache/pi-sdk-v1.0.0/`。
+可复核结果与具体复现命令保存在 [验证证据](../verification/results/pi-sdk-1.0.0-upgrade.json)，包含安装版本、首次失败与复测、各检查的退出码和时间、lockfile/构建产物 SHA-256，以及本地日志摘要。完整日志位于被忽略的 `.cache/pi-sdk-v1.0.0/`。

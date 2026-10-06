@@ -1,5 +1,5 @@
 {
-  "$comment": "Known dependency advisories. New critical/high findings fail CI; refresh with `bun run audit:dependencies --update`. Every entry below is either locally patched or has no upstream fix; see docs/dependency-upgrade-2026-10-03.md.",
+  "$comment": "Known dependency advisories. New critical/high findings fail CI; refresh with `bun run audit:dependencies --update`. Every entry below is either locally patched or has no upstream fix; see docs/dependencies/dependency-upgrade-2026-10-03.md.",
   "generatedAt": "2026-10-03",
   "allowed": {
     "GHSA-5v7r-6r5c-r473": "moderate",
