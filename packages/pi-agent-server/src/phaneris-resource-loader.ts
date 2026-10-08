@@ -56,6 +56,7 @@ export async function createPhanerisResourceLoader(options: {
   const loader = new DefaultResourceLoader({
     cwd: options.cwd,
     agentDir: options.agentDir,
+    noExtensions: true,
     noSkills: true,
     noPromptTemplates: true,
     noThemes: true,

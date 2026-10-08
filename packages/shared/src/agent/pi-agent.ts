@@ -29,6 +29,7 @@ import type {
 } from './backend/types.ts';
 import { AbortReason } from './backend/types.ts';
 import { getBackendRuntime } from './backend/internal/driver-types.ts';
+import { normalizePiProvider } from '../config/pi-provider-compat.ts';
 import { SourceActivationDrainController } from './source-activation-drain.ts';
 
 import type { PermissionMode } from './mode-manager.ts';
@@ -1073,6 +1074,9 @@ export class PiAgent extends BaseAgent {
     }
 
     switch (type) {
+      case 'oauth_credential_update_request':
+        void this.persistSdkOAuthCredential(msg);
+        break;
       case 'ready':
         // Subprocess initialized, callback server listening
         this.callbackPort = (msg.callbackPort as number) || 0;
@@ -2144,6 +2148,24 @@ export class PiAgent extends BaseAgent {
   /**
    * Handle subprocess exit.
    */
+  private async persistSdkOAuthCredential(msg: Record<string, unknown>): Promise<void> {
+    const requestId = msg.requestId as string;
+    const credential = msg.credential as { type?: string; access?: string; refresh?: string; expires?: number } | undefined;
+    const expected = getBackendRuntime(this.config).piAuthProvider;
+    let ok = false;
+    try {
+      if (!expected || msg.provider !== normalizePiProvider(expected) || credential?.type !== 'oauth'
+        || typeof credential.access !== 'string' || typeof credential.refresh !== 'string'
+        || typeof credential.expires !== 'number' || !Number.isFinite(credential.expires)) throw new Error('Invalid SDK credential update');
+      const manager = getCredentialManager();
+      const slug = this.config.connectionSlug || 'pi';
+      const stored = await manager.getLlmOAuth(slug);
+      await manager.setLlmOAuth(slug, { ...stored, accessToken: credential.access, refreshToken: credential.refresh, expiresAt: credential.expires });
+      ok = true;
+    } catch { this.debug('SDK OAuth credential persistence failed'); }
+    this.send({ type: 'oauth_credential_update_response', requestId, ok });
+  }
+
   private handleSubprocessExit(code: number | null, signal: string | null): void {
     this.debug(`Pi subprocess exited: code=${code}, signal=${signal}`);
     this.settlePendingInputReceptions('SDK exited before acknowledgement');

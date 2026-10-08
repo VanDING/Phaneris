@@ -1,4 +1,5 @@
 import type { ModelRegistry as PiModelRegistry } from '@earendil-works/pi-coding-agent';
+import { normalizePiProvider } from '../../shared/src/config/pi-provider-compat.ts';
 
 // Re-export from shared so the auth-aware mini-model denylist has a single
 // source of truth (also used by `getMiniModel()` at selection time).
@@ -24,6 +25,7 @@ export function resolvePiModel(
 ): PiModel | undefined {
   // Strip Phaneris's pi/ prefix — Pi SDK uses bare model IDs (e.g. "claude-sonnet-4-6")
   const bareId = modelId.startsWith('pi/') ? modelId.slice(3) : modelId;
+  if (piAuthProvider) piAuthProvider = normalizePiProvider(piAuthProvider);
 
   // Custom-endpoint takes precedence when configured
   if (preferCustomEndpoint) {

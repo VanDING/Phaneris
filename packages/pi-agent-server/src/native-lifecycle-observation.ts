@@ -94,6 +94,7 @@ export function observeNativeSessionEvent(
   } else if (event.type === 'agent_settled') {
     const stats = session.getSessionStats();
     observe('agent_settled', {
+      aborted: event.aborted,
       scope: 'all_sdk_session_entries', costSource: 'pi_sdk_estimate',
       // A reference snapshot, NOT another usage row. Includes inherited entries.
       tokens: stats.tokens, cost: stats.cost,

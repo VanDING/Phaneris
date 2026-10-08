@@ -863,7 +863,9 @@ export class PiEventAdapter extends BaseEventAdapter {
         const endTs = this.serverTimestamp(event) ?? Date.now();
         const startTs = this.toolStartTimes.get(toolCallId);
         this.toolStartTimes.delete(toolCallId);
-        const durationMs = startTs !== undefined ? endTs - startTs : undefined;
+        const durationMs = typeof event.durationMs === 'number' && Number.isFinite(event.durationMs) && event.durationMs >= 0
+          ? event.durationMs
+          : startTs !== undefined ? Math.max(0, endTs - startTs) : undefined;
 
         if (resolvedToolName === 'report_progress') {
           // The corresponding start event is rendered as intermediate text;

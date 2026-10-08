@@ -15,6 +15,7 @@
 
 import { getBuiltinProviders as getProviders, getBuiltinModels as getModels } from '@earendil-works/pi-ai/providers/all';
 import { getSupportedThinkingLevels } from '@earendil-works/pi-ai';
+import { normalizePiProvider } from './pi-provider-compat.ts';
 import type { Model, Api } from '@earendil-works/pi-ai';
 import type { ThinkingLevel } from '../agent/thinking-levels.ts';
 import type { ModelDefinition } from './models.ts';
@@ -106,7 +107,7 @@ function isBareBedrockClaudeModel(modelId: string): boolean {
  */
 export function getPiModelsForAuthProvider(piAuthProvider: string): ModelDefinition[] {
   try {
-    const models = getModels(piAuthProvider as Parameters<typeof getModels>[0]);
+    const models = getModels(normalizePiProvider(piAuthProvider) as Parameters<typeof getModels>[0]);
     if (models.length > 0) {
       return models
         .filter(m => !isExcludedPiModel(m.id))
@@ -163,6 +164,7 @@ const PI_PROVIDER_DISPLAY: Partial<Record<string, { label: string; placeholder: 
   'cerebras':               { label: 'Cerebras',           placeholder: 'csk-...' },
   'amazon-bedrock':         { label: 'Amazon Bedrock',     placeholder: 'AKIA...' },
   'azure-openai-responses': { label: 'Azure OpenAI',       placeholder: 'Paste your key here...' },
+  'azure':                 { label: 'Azure OpenAI',       placeholder: 'Paste your key here...' },
   'vercel-ai-gateway':      { label: 'Vercel AI Gateway',  placeholder: 'Paste your key here...' },
   'huggingface':            { label: 'Hugging Face',       placeholder: 'hf_...' },
   'minimax':                { label: 'Minimax',            placeholder: 'Paste your key here...' },

@@ -49,8 +49,9 @@ import type {
   CreateAgentSessionOptions,
   ToolDefinition,
 } from '@earendil-works/pi-coding-agent';
-import type { AssistantMessage, CacheRetention, Context, Credential, Model } from '@earendil-works/pi-ai';
-import { InMemoryCredentialStore } from '@earendil-works/pi-ai';
+import type { AssistantMessage, CacheRetention, Context, Credential, Model, OAuthCredential } from '@earendil-works/pi-ai';
+import { HostCredentialStore } from './host-credential-store.ts';
+import { normalizePiProvider } from '../../shared/src/config/pi-provider-compat.ts';
 
 // Pi AI types
 import type { TextContent as PiTextContent } from '@earendil-works/pi-ai';
@@ -264,6 +265,7 @@ type InboundMessage =
   | RuntimeConfigUpdateMessage
   | { type: 'steer'; id?: string; message: string }
   | { type: 'token_update'; piAuth: { provider: string; credential: PiCredential } }
+  | { type: 'oauth_credential_update_response'; requestId: string; ok: boolean }
   | { type: 'shutdown' };
 
 /** Proxy tool definition from main process */
@@ -417,6 +419,7 @@ interface OutboundSessionIdUpdate { type: 'session_id_update'; sessionId: string
 interface OutboundError { type: 'error'; message: string; code?: string; id?: string }
 
 type OutboundMessage =
+  | { type: 'oauth_credential_update_request'; requestId: string; provider: string; credential: OAuthCredential }
   | PiInputReception
   | { type: 'context_handoff'; signal: HandoffSignal }
   | OutboundReady
@@ -454,7 +457,26 @@ let forcedContextHandoff = false;
 let compactionEpoch = 0;
 let piModelRuntime: ModelRuntime | null = null;
 let piModelRegistry: PiModelRegistry | null = null;
-let moduleCredentialStore: InMemoryCredentialStore | null = null;
+let moduleCredentialStore: HostCredentialStore | null = null;
+const pendingCredentialWrites = new Map<string, (ok: boolean) => void>();
+let credentialWriteId = 0;
+
+async function persistOAuthCredential(provider: string, credential: OAuthCredential): Promise<void> {
+  const requestId = `oauth-write-${++credentialWriteId}`;
+  await new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      pendingCredentialWrites.delete(requestId);
+      reject(new Error('Host did not confirm OAuth credential persistence within 30s'));
+    }, 30_000);
+    pendingCredentialWrites.set(requestId, ok => {
+      clearTimeout(timer);
+      pendingCredentialWrites.delete(requestId);
+      if (ok) resolve(); else reject(new Error('Host could not persist OAuth credential'));
+    });
+    send({ type: 'oauth_credential_update_request', requestId, provider, credential });
+  });
+  if (initConfig?.piAuth?.provider === provider) initConfig.piAuth.credential = credential;
+}
 let unsubscribeEvents: (() => void) | null = null;
 const lengthContinuationTracker = new LengthContinuationTracker();
 
@@ -844,23 +866,22 @@ function registerCustomEndpointModels(
  * ephemeral queryLlm sessions.
  */
 async function createAuthenticatedRuntime(): Promise<{
-  credentialStore: InMemoryCredentialStore;
+  credentialStore: HostCredentialStore;
   modelRuntime: ModelRuntime;
   modelRegistry: PiModelRegistry;
 }> {
   // Reuse module-level credential store if already created (allows token_update to mutate it).
   // Only create a new one on first call or after re-init.
-  if (!moduleCredentialStore) {
-    moduleCredentialStore = new InMemoryCredentialStore();
-  }
+  const needsSeed = !moduleCredentialStore;
+  if (!moduleCredentialStore) moduleCredentialStore = new HostCredentialStore(persistOAuthCredential);
   const credentialStore = moduleCredentialStore;
 
   // Pre-load credentials from initConfig
-  if (initConfig?.piAuth) {
+  if (needsSeed && initConfig?.piAuth) {
     const { provider, credential } = initConfig.piAuth;
-    await credentialStore.modify(provider, async () => credential as unknown as Credential);
+    await credentialStore.inject(provider, credential as unknown as Credential);
     debugLog(`Injected ${credential.type} credential for provider: ${provider}`);
-  } else {
+  } else if (needsSeed) {
     const apiKey = initConfig?.apiKey;
     if (apiKey) {
       await credentialStore.modify('anthropic', async () => ({ type: 'api_key', key: apiKey } as Credential));
@@ -1042,30 +1063,13 @@ async function ensureSession(): Promise<AgentSession> {
 
   // Set model if specified
   if (initConfig.model) {
-    try {
-      const piModel = resolvePiModel(modelRegistry, initConfig.model, initConfig.piAuth?.provider, shouldPreferCustomEndpoint());
-      if (piModel) {
-        // Verify resolved model's provider is compatible with the authenticated provider.
-        // Without this, a model that resolves to a different provider (e.g. azure-openai-responses
-        // when authed as github-copilot) would cause "No API key found" at runtime.
-        const resolvedProvider = (piModel as any)?.provider;
-        const isCompatible = !initConfig.piAuth ||
-          resolvedProvider === initConfig.piAuth.provider ||
-          resolvedProvider === 'custom-endpoint';
-        if (isCompatible) {
-          sessionOptions.model = piModel;
-          setInterceptorApiHints(piModel as { api?: string; provider?: string; baseUrl?: string });
-        } else {
-          debugLog(`Model ${initConfig.model} resolved to incompatible provider ${resolvedProvider} (expected ${initConfig.piAuth!.provider}), skipping`);
-          setInterceptorApiHints(undefined);
-        }
-      } else {
-        setInterceptorApiHints(undefined);
-      }
-    } catch {
-      debugLog(`Could not resolve Pi model: ${initConfig.model}`);
-      setInterceptorApiHints(undefined);
+    const piModel = resolvePiModel(modelRegistry, initConfig.model, initConfig.piAuth?.provider, shouldPreferCustomEndpoint());
+    if (!piModel && initConfig.piAuth) throw new Error(`Configured model ${initConfig.model} is unavailable for provider ${initConfig.piAuth.provider}; select a model on this connection.`);
+    if (piModel && initConfig.piAuth && piModel.provider !== initConfig.piAuth.provider && piModel.provider !== 'custom-endpoint') {
+      throw new Error(`Configured model resolves to an incompatible provider: ${piModel.provider}`);
     }
+    sessionOptions.model = piModel;
+    setInterceptorApiHints(piModel as { api?: string; provider?: string; baseUrl?: string } | undefined);
   } else {
     setInterceptorApiHints(undefined);
   }
@@ -1078,6 +1082,10 @@ async function ensureSession(): Promise<AgentSession> {
 
   // Create the session — tools flow through customTools + allowlist (see comment above).
   const { session } = await createAgentSession(sessionOptions);
+  if (sessionOptions.model && (session.agent.state.model.provider !== sessionOptions.model.provider || session.agent.state.model.id !== sessionOptions.model.id)) {
+    session.dispose();
+    throw new Error('Pi resumed a different model or provider than the configured connection; reselect the model before continuing.');
+  }
   session.setActiveToolsByName([...wrappedAll.filter(t => !t.exposure || t.exposure === 'direct' || t.exposure === 'model-only').map(t => t.name), 'tool_search', 'codemode']);
   // Ordinary requests keep their existing boundary. SDK background refreshes
   // use a distinct boundary and never publish assistant/tool output.
@@ -2074,6 +2082,7 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
   }
 
   initConfig = msg;
+  if (initConfig.piAuth) initConfig.piAuth.provider = normalizePiProvider(initConfig.piAuth.provider);
   piCacheRetention = msg.cacheRetention === 'long' ? 'long' : 'short';
   process.env.PI_CACHE_RETENTION = piCacheRetention;
   clearPromptSnapshots();
@@ -2093,7 +2102,7 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
 
   // Azure OpenAI requires a tenant-specific endpoint URL.
   // The Pi SDK (via Vercel AI SDK) reads AZURE_OPENAI_BASE_URL from env.
-  if (initConfig.piAuth?.provider === 'azure-openai-responses' && initConfig.baseUrl) {
+  if (initConfig.piAuth?.provider === 'azure' && initConfig.baseUrl) {
     process.env.AZURE_OPENAI_BASE_URL = initConfig.baseUrl;
     debugLog(`Set AZURE_OPENAI_BASE_URL=${initConfig.baseUrl}`);
   }
@@ -2204,7 +2213,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     send({ type: 'error', message: errorMsg, code: 'prompt_error' });
     // Prompt failed before Pi could establish a normal run, so synthesize the
     // same terminal boundary the SDK guarantees for started runs.
-    send({ type: 'event', event: { type: 'agent_settled' } });
+    if (!received) send({ type: 'event', event: { type: 'agent_settled', aborted: error instanceof Error && error.name === 'AbortError' } });
   }
 }
 
@@ -2749,15 +2758,20 @@ async function processMessage(msg: InboundMessage): Promise<void> {
 
     case 'token_update':
       if (moduleCredentialStore) {
-        const { provider, credential } = msg.piAuth;
-        await moduleCredentialStore.modify(provider, async () => credential as unknown as Credential);
+        const provider = normalizePiProvider(msg.piAuth.provider);
+        const { credential } = msg.piAuth;
+        await moduleCredentialStore.inject(provider, credential as unknown as Credential);
         if (initConfig) {
-          initConfig.piAuth = msg.piAuth;
+          initConfig.piAuth = { provider, credential };
         }
         debugLog(`Updated credential for provider: ${provider}`);
       } else {
         debugLog('token_update received but no credential store initialized');
       }
+      break;
+
+    case 'oauth_credential_update_response':
+      pendingCredentialWrites.get(msg.requestId)?.(msg.ok);
       break;
 
     case 'shutdown':
