@@ -784,6 +784,7 @@ interface ManagedSession {
   thinkingLevel?: ThinkingLevel
   // Per-turn decisions are runtime hints; they never change canonical input or saved preferences.
   turnThinkingOverride?: ThinkingLevel | null
+  turnSuggestionHint?: string | null
   suggestionTrace?: { trace: SuggestionTrace; used: Set<string> }
   autoTitle?: string
   titleDeferred?: boolean
@@ -7453,7 +7454,7 @@ export class SessionManager implements ISessionManager {
     const replayedMessages = existingMessageId ? managed.replayMergedMessages?.get(existingMessageId) : undefined
     if (existingMessageId) managed.replayMergedMessages?.delete(existingMessageId)
     managed.lastSentMessageIds = (replayedMessages ?? [userMessage]).map(item => item.id)
-    const preTurnDecisions = this.startPreTurnDecisions(managed, message, options, { activationResend: !!activationRetry || !!_isAuthRetry })
+    const preTurnDecisions = this.startPreTurnDecisions(managed, message, options, { activationResend: !!activationRetry, authRetry: !!_isAuthRetry })
 
     // Pre-enable sources required by invoked skills (Issue #249)
     // This eliminates the two-turn penalty where the agent discovers missing sources at runtime.
@@ -11089,14 +11090,16 @@ export class SessionManager implements ISessionManager {
     managed: ManagedSession,
     message: string,
     options?: SendMessageOptions,
-    turn: { activationResend?: boolean } = {},
+    turn: { activationResend?: boolean; authRetry?: boolean } = {},
   ): Promise<{ thinkingOverride: ThinkingLevel | null; suggestionHint: string | null }> | null {
     // An auto-retry continues the same request: keep its thinking level, ask nothing again.
-    if (turn.activationResend) {
-      const kept = managed.turnThinkingOverride ?? null
-      return kept ? Promise.resolve({ thinkingOverride: kept, suggestionHint: null }) : null
+    if (turn.activationResend || turn.authRetry) {
+      const thinkingOverride = managed.turnThinkingOverride ?? null
+      const suggestionHint = turn.authRetry ? managed.turnSuggestionHint ?? null : null
+      return thinkingOverride || suggestionHint ? Promise.resolve({ thinkingOverride, suggestionHint }) : null
     }
     managed.turnThinkingOverride = null
+    managed.turnSuggestionHint = null
     this.finishSuggestionTrace(managed)
     const log = (line: string) => sessionLog.info(line)
     const generation = managed.processingGeneration
@@ -11148,6 +11151,7 @@ export class SessionManager implements ISessionManager {
       const currentLevel = managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL
       if (thinkingOverride && THINKING_LEVEL_IDS.indexOf(thinkingOverride) >= THINKING_LEVEL_IDS.indexOf(currentLevel)) thinkingOverride = null
       managed.turnThinkingOverride = thinkingOverride
+      managed.turnSuggestionHint = suggestionHint
       return { thinkingOverride, suggestionHint }
     })
   }

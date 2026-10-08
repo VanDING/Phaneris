@@ -39,6 +39,7 @@ export type DecisionPointFn = (request: DecisionRequest, meta?: Record<string, u
 
 /** Test seams and logging shared by every decision point. */
 export interface DecisionPointDeps {
+  now?: () => number
   log?: (message: string) => void
   resolveClient?: (options: ResolveDecisionClientOptions) => Promise<DecisionClientResolution>
   recorder?: DecisionRecorder
@@ -56,6 +57,9 @@ export interface DecisionPointOptions extends DecisionPointDeps {
 
 /** Deadline cap for decision points that hold up a turn start or a message acknowledgement. */
 export const FOREGROUND_MAX_DEADLINE_MS = 3_000
+export const DECISION_COLD_AFTER_MS = 30_000
+export const DECISION_COLD_DEADLINE_MS = 2_800
+const lastAnsweredAt = new Map<string, number>()
 
 /**
  * Resolve once and return a function that asks the model, possibly several
@@ -77,14 +81,22 @@ export async function openDecisionPoint(options: DecisionPointOptions): Promise<
     return null
   }
 
-  const { client, provider, endpoint, settings } = resolution.value
+  const { client, provider, endpoint, settings, keySource, deadlineIsExplicit } = resolution.value
   const recorder = options.recorder ?? getDecisionRecorder()
+  const now = options.now ?? Date.now
+  const warmthKey = JSON.stringify([provider, settings.connectionSlug ?? keySource, endpoint.baseUrl, endpoint.model])
   return async (request, meta, signal) => {
     const startedAt = performance.now()
-    const base = { feature: options.record, provider, model: endpoint.model, questions: request.questions, sessionId: options.sessionId, meta }
+    const lastAnswer = lastAnsweredAt.get(warmthKey)
+    const coldStart = lastAnswer === undefined || now() - lastAnswer >= DECISION_COLD_AFTER_MS
+    const defaultBudget = coldStart && !deadlineIsExplicit ? Math.max(settings.deadlineMs, DECISION_COLD_DEADLINE_MS) : settings.deadlineMs
+    const deadlineMs = Math.min(request.deadlineMs ?? defaultBudget, options.maxDeadlineMs ?? Number.POSITIVE_INFINITY)
+    const base = { feature: options.record, provider, model: endpoint.model, questions: request.questions, sessionId: options.sessionId, meta: { ...meta, deadlineMs }, coldStart }
     try {
-      const deadlineMs = Math.min(request.deadlineMs ?? settings.deadlineMs, options.maxDeadlineMs ?? Number.POSITIVE_INFINITY)
       const result = await client.decide({ ...request, deadlineMs }, signal)
+      lastAnsweredAt.delete(warmthKey)
+      if (lastAnsweredAt.size >= 256) lastAnsweredAt.delete(lastAnsweredAt.keys().next().value!)
+      lastAnsweredAt.set(warmthKey, now())
       const record = buildDecisionRecord({ ...base, result })
       void recorder.append(record)
       recordHandles.set(result, { record, recorder })

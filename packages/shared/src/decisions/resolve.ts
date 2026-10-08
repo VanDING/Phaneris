@@ -74,6 +74,8 @@ export function readDecisionLayerSettings(): DecisionLayerSettings {
 }
 
 export interface ResolvedDecisionClient {
+  /** An explicitly configured budget is a hard cap, including on cold calls. */
+  deadlineIsExplicit?: boolean;
   client: SystemOneClient;
   settings: DecisionLayerSettings;
   provider: DecisionProviderId;
@@ -115,7 +117,9 @@ function fail(failure: DecisionFailure): DecisionClientResolution {
 }
 
 export async function resolveDecisionClient(options: ResolveDecisionClientOptions = {}): Promise<DecisionClientResolution> {
-  const settings = options.settings ?? readDecisionLayerSettings();
+  const stored = options.settings ? undefined : loadStoredConfig()?.decisionLayer;
+  const settings = options.settings ?? normalizeDecisionLayerSettings(stored);
+  const deadlineIsExplicit = !!options.settings || stored?.deadlineMs !== undefined;
 
   if (!options.skipGates) {
     if (!settings.enabled) {
@@ -183,7 +187,7 @@ export async function resolveDecisionClient(options: ResolveDecisionClientOption
     fetch: options.fetch,
   });
 
-  return { ok: true, value: { client, settings, provider, endpoint, keySource } };
+  return { ok: true, value: { client, settings, provider, endpoint, keySource, deadlineIsExplicit } };
 }
 
 /** Fail-closed convenience: `null` whenever the layer cannot be used. */

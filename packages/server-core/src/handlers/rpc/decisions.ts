@@ -21,6 +21,7 @@ import type { HandlerDeps } from '../handler-deps'
 
 export const HANDLED_CHANNELS = [
   RPC_CHANNELS.decisions.GET_SETTINGS,
+  RPC_CHANNELS.decisions.GET_USAGE,
   RPC_CHANNELS.decisions.SET_SETTINGS,
   RPC_CHANNELS.decisions.GET_STATUS,
   RPC_CHANNELS.decisions.SET_API_KEY,
@@ -36,6 +37,10 @@ function assertProvider(provider: unknown): asserts provider is DecisionProvider
 }
 
 export function registerDecisionsHandlers(server: RpcServer, _deps: HandlerDeps): void {
+  server.handle(RPC_CHANNELS.decisions.GET_USAGE, async () => {
+    const { readDecisionUsageReport } = await import('@phaneris/shared/decisions')
+    return readDecisionUsageReport(new Date(Date.now() - 7 * 24 * 3_600_000))
+  })
   // The decision layer's single read path: `decisions/resolve.ts` reads
   // config.json → `decisionLayer` through the same loader + normalizer that
   // `resolveDecisionClient()` uses. `config/storage.ts` owns only the writer.

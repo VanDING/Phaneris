@@ -68,6 +68,7 @@ export interface DecisionRecord {
   /** Model id the server reported (invariant 4). Absent when the response did not name one. */
   responseModel?: string;
   ok: boolean;
+  coldStart?: boolean;
   latencyMs?: number;
   /** Question key → type. */
   questions: Record<string, DecisionQuestionType>;
@@ -134,6 +135,7 @@ export function isDecisionFollowUpRecord(line: DecisionLogLine): line is Decisio
 }
 
 export interface DecisionRecordInput {
+  coldStart?: boolean;
   feature: DecisionFeature;
   provider: DecisionProviderId;
   model: string;
@@ -176,6 +178,7 @@ export function buildDecisionRecord(input: DecisionRecordInput): DecisionRecord 
     provider: input.provider,
     model: input.model,
     ok: input.result !== undefined && input.error === undefined,
+    ...(input.coldStart !== undefined ? { coldStart: input.coldStart } : {}),
     questions,
     state: null,
   };
@@ -277,12 +280,16 @@ export class DecisionRecorder {
       return; // no file yet
     }
     if (size <= this.maxBytes) return;
-    const previous = this.path.endsWith('.jsonl') ? `${this.path.slice(0, -'.jsonl'.length)}.prev.jsonl` : `${this.path}.prev`;
+    const previous = previousDecisionsLogPath(this.path);
     await rename(this.path, previous);
   }
 }
 
 let defaultRecorder: DecisionRecorder | null = null;
+
+export function previousDecisionsLogPath(path: string): string {
+  return path.endsWith('.jsonl') ? `${path.slice(0, -'.jsonl'.length)}.prev.jsonl` : `${path}.prev`;
+}
 
 /**
  * Where the process-wide recorder writes. Under `bun test` (NODE_ENV=test) that is a

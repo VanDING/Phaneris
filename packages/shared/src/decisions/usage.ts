@@ -11,7 +11,10 @@
  */
 
 import { readFile } from 'node:fs/promises';
+import type { DecisionLayerFeature } from './settings.ts';
 import {
+  defaultDecisionsLogPath,
+  previousDecisionsLogPath,
   isDecisionFollowUpRecord,
   isDecisionOutcomeRecord,
   type DecisionFollowUpRecord,
@@ -34,6 +37,8 @@ export interface FeatureUsage {
   calls: number;
   failures: number;
   cancelled: number;
+  coldCalls: number;
+  coldFailures: number;
   knownCostUsd: number;
   unknownCostCalls: number;
   /** Failure kind → count. */
@@ -46,6 +51,7 @@ export interface FeatureUsage {
   actions: Record<string, number>;
   /** Follow-up result → count (a decision can have several). */
   followUps: Record<string, number>;
+  followUpsByAction: Record<string, Record<string, number>>;
   latencyP50Ms?: number;
   latencyP95Ms?: number;
   inputTokens: number;
@@ -110,10 +116,18 @@ export function summarizeDecisionUsage(lines: readonly DecisionLogLine[], filter
   const outcomes = new Map<string, DecisionOutcomeRecord>();
   const followUps = new Map<string, DecisionFollowUpRecord[]>();
   const decisions: DecisionRecord[] = [];
+  const seenDecisions = new Set<string>();
+  const seenFollowUps = new Set<string>();
   for (const line of lines) {
     if (isDecisionOutcomeRecord(line)) outcomes.set(line.decisionId, line);
-    else if (isDecisionFollowUpRecord(line)) followUps.set(line.decisionId, [...(followUps.get(line.decisionId) ?? []), line]);
-    else if (keep(line) && (!filter.providers || filter.providers.includes(line.provider))) decisions.push(line);
+    else if (isDecisionFollowUpRecord(line)) {
+      const key = JSON.stringify(line);
+      if (!seenFollowUps.has(key)) followUps.set(line.decisionId, [...(followUps.get(line.decisionId) ?? []), line]);
+      seenFollowUps.add(key);
+    } else if (keep(line) && (!filter.providers || filter.providers.includes(line.provider)) && (!line.id || !seenDecisions.has(line.id))) {
+      decisions.push(line);
+      if (line.id) seenDecisions.add(line.id);
+    }
   }
 
   const byFeature = new Map<string, { usage: FeatureUsage; latencies: number[]; sessions: Set<string> }>();
@@ -124,7 +138,7 @@ export function summarizeDecisionUsage(lines: readonly DecisionLogLine[], filter
     let entry = byFeature.get(record.feature);
     if (!entry) {
       entry = {
-        usage: { feature: record.feature, calls: 0, failures: 0, cancelled: 0, knownCostUsd: 0, unknownCostCalls: 0, failureKinds: Object.create(null), withOutcome: 0, changed: 0, actions: Object.create(null), followUps: Object.create(null), inputTokens: 0, outputTokens: 0, sessions: 0 },
+        usage: { feature: record.feature, calls: 0, failures: 0, cancelled: 0, coldCalls: 0, coldFailures: 0, knownCostUsd: 0, unknownCostCalls: 0, failureKinds: Object.create(null), withOutcome: 0, changed: 0, actions: Object.create(null), followUps: Object.create(null), followUpsByAction: Object.create(null), inputTokens: 0, outputTokens: 0, sessions: 0 },
         latencies: [],
         sessions: new Set(),
       };
@@ -136,20 +150,25 @@ export function summarizeDecisionUsage(lines: readonly DecisionLogLine[], filter
     if (typeof record.latencyMs === 'number') entry.latencies.push(record.latencyMs);
     usage.inputTokens += record.usage?.inputTokens ?? 0;
     usage.outputTokens += record.usage?.outputTokens ?? 0;
-    if (record.usage?.costUsd === undefined) usage.unknownCostCalls++;
-    else usage.knownCostUsd += record.usage.costUsd;
+    const cost = record.usage?.costUsd;
+    if (typeof cost !== 'number' || !Number.isFinite(cost) || cost < 0) usage.unknownCostCalls++;
+    else usage.knownCostUsd += cost;
     if (record.error?.kind === 'cancelled') usage.cancelled++;
+    if (record.coldStart) usage.coldCalls++;
     if (!record.ok) {
+      if (record.coldStart) usage.coldFailures++;
       usage.failures++;
       failures++;
       const kind = record.error?.kind ?? 'unknown';
       usage.failureKinds[kind] = (usage.failureKinds[kind] ?? 0) + 1;
       continue;
     }
+    const outcome = record.id ? outcomes.get(record.id) : undefined;
     for (const followUp of (record.id ? followUps.get(record.id) : undefined) ?? []) {
       usage.followUps[followUp.result] = (usage.followUps[followUp.result] ?? 0) + 1;
+      const byAction = (usage.followUpsByAction[outcome?.action ?? '-'] ??= Object.create(null));
+      byAction[followUp.result] = (byAction[followUp.result] ?? 0) + 1;
     }
-    const outcome = record.id ? outcomes.get(record.id) : undefined;
     if (!outcome) continue;
     usage.withOutcome++;
     if (outcome.changed) usage.changed++;
@@ -166,6 +185,34 @@ export function summarizeDecisionUsage(lines: readonly DecisionLogLine[], filter
   return { total: decisions.length, failures, providers, features };
 }
 
+export const DECISION_RECORD_TAGS: Record<DecisionLayerFeature, string> = {
+  decideTool: 'decide_tool', taskVerdicts: 'task_verdict', semanticLabels: 'semantic_labels', turnOutcome: 'turn_outcome',
+  guardedMode: 'guarded_mode', riskBadges: 'risk_badges', automationConditions: 'automation_condition', taskRepairs: 'task_repairs',
+  smartTitles: 'smart_titles', adaptiveThinking: 'adaptive_thinking', midTurnMessages: 'mid_turn_messages', largeResults: 'large_results', suggestions: 'suggestions',
+};
+
+export interface DecisionUsageReport {
+  since: string;
+  retainedFrom?: string;
+  /** Logs are bounded; absence of older records does not prove zero earlier usage. */
+  retentionLimited: boolean;
+  features: Partial<Record<DecisionLayerFeature, FeatureUsage>>;
+}
+
+export async function readDecisionUsageReport(since: Date, logPath: string = defaultDecisionsLogPath()): Promise<DecisionUsageReport> {
+  const [previous, current] = await Promise.all([readDecisionLog(previousDecisionsLogPath(logPath)), readDecisionLog(logPath)]);
+  const lines = [...previous, ...current];
+  const byTag = new Map(summarizeDecisionUsage(lines, { since }).features.map(feature => [feature.feature, feature]));
+  const features: DecisionUsageReport['features'] = {};
+  for (const [toggle, tag] of Object.entries(DECISION_RECORD_TAGS) as [DecisionLayerFeature, string][]) {
+    const feature = byTag.get(tag);
+    if (feature) features[toggle] = feature;
+  }
+  const times = lines.map(line => Date.parse(line.t)).filter(Number.isFinite);
+  const retained = times.length ? times.reduce((oldest, time) => Math.min(oldest, time), Infinity) : undefined;
+  return { since: since.toISOString(), ...(retained !== undefined ? { retainedFrom: new Date(retained).toISOString() } : {}), retentionLimited: retained === undefined || retained > since.getTime(), features };
+}
+
 /** Plain-text table for terminals. */
 export function formatDecisionUsage(summary: DecisionUsageSummary): string {
   if (summary.total === 0) return 'No decision records match.';
@@ -175,18 +222,20 @@ export function formatDecisionUsage(summary: DecisionUsageSummary): string {
     String(f.calls),
     String(f.failures),
     String(f.cancelled),
+    f.coldCalls > 0 ? `${f.coldFailures}/${f.coldCalls}` : '-',
     `${f.knownCostUsd.toFixed(6)} + ${f.unknownCostCalls} unknown`,
     f.withOutcome > 0 ? `${f.changed}/${f.withOutcome}` : '-',
     f.latencyP50Ms !== undefined ? `${f.latencyP50Ms}/${f.latencyP95Ms}` : '-',
     String(f.sessions),
     Object.entries(f.actions).sort((a, b) => b[1] - a[1]).map(([action, count]) => `${action}×${count}`).join(' ') || '-',
   ]);
-  const header = ['feature', 'calls', 'failed', 'cancelled', 'cost USD', 'changed', 'p50/p95 ms', 'sessions', 'actions'];
+  const header = ['feature', 'calls', 'failed', 'cancelled', 'cold failed', 'cost USD', 'changed', 'p50/p95 ms', 'sessions', 'actions'];
   const widths = header.map((h, i) => Math.max(h.length, ...rows.map(r => r[i]!.length)));
   const line = (cells: string[]) => cells.map((c, i) => (i === cells.length - 1 ? c : c.padEnd(widths[i]!))).join('  ');
   const followUps = summary.features
     .filter(f => Object.keys(f.followUps).length > 0)
-    .map(f => `${f.feature}: ${Object.entries(f.followUps).sort((a, b) => b[1] - a[1]).map(([result, count]) => `${result}×${count}`).join(' ')}`);
+    .flatMap(f => Object.entries(f.followUpsByAction).map(([action, results]) =>
+      `${f.feature} [${action}]: ${Object.entries(results).sort((a, b) => b[1] - a[1]).map(([result, count]) => `${result}×${count}`).join(' ')}`));
   return [
     `${summary.total} decisions (${summary.failures} failed) — ${providers}`, '', line(header), ...rows.map(line),
     ...(followUps.length > 0 ? ['', 'follow-ups', ...followUps] : []),

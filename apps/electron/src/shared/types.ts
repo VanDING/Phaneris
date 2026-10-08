@@ -103,6 +103,8 @@ export type { LlmConnection, LlmConnectionWithStatus, LlmAuthType, LlmProviderTy
 import type { DecisionProviderId } from '@phaneris/shared/decisions/types';
 import type { DecisionLayerSettings, DecisionLayerSettingsPatch } from '@phaneris/shared/decisions/settings';
 import type { DecisionLayerStatus, DecisionServerProbe, DecisionTestResult } from '@phaneris/shared/decisions';
+import type { DecisionUsageReport } from '@phaneris/shared/decisions';
+export type { DecisionUsageReport };
 export type { DecisionLayerSettings, DecisionLayerSettingsPatch, DecisionLayerStatus, DecisionProviderId, DecisionServerProbe, DecisionTestResult };
 
 // =============================================================================
@@ -777,6 +779,7 @@ export interface ElectronAPI {
 
   // Decision model (Jev / TypeSafe System One) — opt-in decision layer
   getDecisionLayerSettings(): Promise<DecisionLayerSettings>
+  getDecisionUsage(): Promise<DecisionUsageReport>
   setDecisionLayerSettings(patch: DecisionLayerSettingsPatch): Promise<DecisionLayerSettings>
   getDecisionLayerStatus(): Promise<DecisionLayerStatus>
   setDecisionApiKey(provider: DecisionProviderId, apiKey: string): Promise<void>

@@ -537,7 +537,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
             renderIcon(link)
           )}
         </span>
-        <span className="sidebar-label truncate">{link.title}</span>
+        <span className="sidebar-label truncate" title={link.title}>{link.title}</span>
         {/* After-title element: type indicator icon, right-aligned before count badge, revealed on hover */}
         {!isCollapsed && link.afterTitle && (
           <span data-touch-reveal="true" className="ml-auto opacity-0 group-hover/section:opacity-100 group-data-[state=open]:opacity-100 group-data-[edit-active=true]:opacity-100 transition-opacity">
