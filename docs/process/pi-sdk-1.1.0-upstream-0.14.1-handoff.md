@@ -18,7 +18,7 @@ B5（全仓门禁、Electron/WebUI/Viewer 构建、Windows 最终包、包外运
     git log --oneline --decorate -8
     git status --short
 
-当前 HEAD：ac4c4f57（B3 提交）。原始仓库 E:\Phaneris 的 main / origin/main 仍是 351f592c，没有合并、推送或发布。
+当前 HEAD：eee91f62（本交接文档提交）；业务实现基线为 ac4c4f57（B3）。原始仓库 E:\Phaneris 的 main / origin/main 仍是 351f592c，没有合并、推送或发布。
 
 已提交的边界：
 
