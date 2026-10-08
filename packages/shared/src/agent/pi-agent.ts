@@ -247,6 +247,11 @@ export class PiAgent extends BaseAgent {
   private readline: ReadlineInterface | null = null;
   private subprocessReady: Promise<void> | null = null;
   private subprocessReadyResolve: (() => void) | null = null;
+  private subprocessReadyReject: ((error: Error) => void) | null = null;
+  /** Includes credentials, transport readiness, policy acknowledgement and tool sync. */
+  private subprocessStartup: Promise<void> | null = null;
+  private subprocessEpoch = 0;
+  private destroyed = false;
 
   // Pi session ID (managed by subprocess, reported back)
   private piSessionId: string | null = null;
@@ -522,18 +527,21 @@ export class PiAgent extends BaseAgent {
    * Lazy initialization -- spawns on first use.
    */
   private async ensureSubprocess(): Promise<void> {
-    if (this.subprocess && this.subprocessReady) {
-      await this.subprocessReady;
-      return;
+    if (this.destroyed) throw new Error('Pi agent destroyed');
+    if (!this.subprocessStartup) {
+      const startup = this.spawnSubprocess(this.subprocessEpoch);
+      this.subprocessStartup = startup;
+      void startup.catch(() => {
+        if (this.subprocessStartup === startup) this.killSubprocess();
+      });
     }
-
-    await this.spawnSubprocess();
+    await this.subprocessStartup;
   }
 
   /**
    * Spawn the pi-agent-server subprocess and set up JSONL communication.
    */
-  private async spawnSubprocess(): Promise<void> {
+  private async spawnSubprocess(epoch: number): Promise<void> {
     const runtime = getBackendRuntime(this.config);
     const piServerPath = runtime.paths?.piServer;
     if (!piServerPath) {
@@ -545,11 +553,6 @@ export class PiAgent extends BaseAgent {
 
     this.debug(`Spawning Pi subprocess: ${nodePath} ${piServerPath}`);
     this.resetSubprocessErrorDedup();
-
-    // Set up ready promise before spawning
-    this.subprocessReady = new Promise<void>((resolve) => {
-      this.subprocessReadyResolve = resolve;
-    });
 
     // Build session ID and session dir path upfront (used for spawn env + init command)
     const sessionId = this.config.session?.id || `agent-${Date.now()}`;
@@ -599,6 +602,15 @@ export class PiAgent extends BaseAgent {
     // so a setting change during spawn is reflected in this session.
     const extendedPromptCache = getExtendedPromptCache();
 
+    if (this.destroyed || epoch !== this.subprocessEpoch) throw new Error('Pi subprocess startup cancelled');
+    // Register readiness only after asynchronous credentials, before spawn. Rejections
+    // remain handled even if transport fails before the awaiting line below.
+    this.subprocessReady = new Promise<void>((resolve, reject) => {
+      this.subprocessReadyResolve = resolve;
+      this.subprocessReadyReject = reject;
+    });
+    void this.subprocessReady.catch(() => {});
+
     // Spawn the subprocess
     const child = spawn(nodePath, args, {
       cwd,
@@ -627,7 +639,7 @@ export class PiAgent extends BaseAgent {
     });
 
     this.readline.on('line', (line: string) => {
-      this.handleLine(line);
+      if (this.subprocess === child) this.handleLine(line);
     });
 
     // Always capture stderr into a bounded ring buffer so callers (e.g. the
@@ -644,10 +656,12 @@ export class PiAgent extends BaseAgent {
 
     // Handle subprocess exit
     child.on('exit', (code, signal) => {
-      this.handleSubprocessExit(code, signal);
+      if (this.subprocess === child) this.handleSubprocessExit(code, signal);
     });
 
     child.on('error', (error) => {
+      if (this.subprocess !== child) return;
+      this.subprocessReadyReject?.(error);
       this.debug(`Subprocess error: ${error.message}`);
       this.resetSubprocessErrorDedup();
       this.eventQueue.enqueue({ type: 'error', message: `Pi subprocess error: ${error.message}` });
@@ -691,7 +705,9 @@ export class PiAgent extends BaseAgent {
     });
 
     // Wait for subprocess to report ready
-    await this.subprocessReady;
+    const readyTimer = setTimeout(() => this.subprocessReadyReject?.(new Error('Pi subprocess startup timed out after 30s')), 30_000);
+    try { await this.subprocessReady; } finally { clearTimeout(readyTimer); }
+    if (epoch !== this.subprocessEpoch) throw new Error('Pi subprocess startup cancelled');
     this.debug('Pi subprocess is ready');
 
     // Apply the policy before the first model request, including resumed sessions.
@@ -699,7 +715,8 @@ export class PiAgent extends BaseAgent {
     // A confirmed policy is recorded here so later sends can skip the round trip.
     this.config.contextPolicy ??= 'compact';
     try {
-      const enabled = await this.requestSetAutoCompaction(this.config.contextPolicy === 'compact');
+      // The transport is ready, but external callers still await the full startup.
+      const enabled = await this.sendAutoCompactionRequest(this.config.contextPolicy === 'compact');
       this.debug(`PI auto-compaction enabled: ${enabled}`);
     } catch (error) {
       throw new Error(`Failed to apply context policy: ${error instanceof Error ? error.message : String(error)}`);
@@ -720,6 +737,7 @@ export class PiAgent extends BaseAgent {
     }
 
     this.sessionProxyToolDefs = sessionToolDefs;
+    if (epoch !== this.subprocessEpoch) throw new Error('Pi subprocess startup cancelled');
     this.syncProxyToolsWithSubprocess();
   }
 
@@ -2129,6 +2147,10 @@ export class PiAgent extends BaseAgent {
   private handleSubprocessExit(code: number | null, signal: string | null): void {
     this.debug(`Pi subprocess exited: code=${code}, signal=${signal}`);
     this.settlePendingInputReceptions('SDK exited before acknowledgement');
+    this.subprocessReadyReject?.(new Error('Pi subprocess exited during startup'));
+    this.subprocessReadyReject = null;
+    this.subprocessStartup = null;
+    this.subprocessEpoch++;
 
     this.subprocess = null;
     this.readline = null;
@@ -2296,7 +2318,11 @@ export class PiAgent extends BaseAgent {
    */
   private async requestSetAutoCompaction(enabled: boolean): Promise<boolean> {
     await this.ensureSubprocess();
+    return this.sendAutoCompactionRequest(enabled);
+  }
 
+  /** Internal transport RPC; caller must already own a ready child. */
+  private sendAutoCompactionRequest(enabled: boolean): Promise<boolean> {
     const id = `set-auto-compaction-${++this.rpcIdCounter}`;
     const timeoutMs = 15_000;
 
@@ -3002,6 +3028,7 @@ export class PiAgent extends BaseAgent {
   }
 
   destroy(): void {
+    this.destroyed = true;
     this.stopConfigWatcher();
 
     // Unregister session-scoped tool callbacks
@@ -3106,6 +3133,10 @@ export class PiAgent extends BaseAgent {
     if (this.subprocess === child) {
       this.subprocess = null;
     }
+    this.subprocessReadyReject?.(new Error('Pi subprocess stopped for restart'));
+    this.subprocessReadyReject = null;
+    this.subprocessStartup = null;
+    this.subprocessEpoch++;
     this.subprocessReady = null;
     this.syncedProxyToolsSignature = null;
     this.subprocessReadyResolve = null;
@@ -3134,6 +3165,12 @@ export class PiAgent extends BaseAgent {
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.subprocessEpoch++;
+    this.subprocessStartup = null;
+    this.subprocessReadyReject?.(new Error('Pi subprocess startup cancelled'));
+    this.subprocessReadyReject = null;
+    for (const pending of this.pendingAutoCompactionToggles.values()) pending.reject(new Error('Pi subprocess stopped'));
+    this.pendingAutoCompactionToggles.clear();
     this.settlePendingInputReceptions('SDK transport closed before acknowledgement');
     this.guardedCheckAbort?.abort();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;

@@ -1,0 +1,892 @@
+{
+  "assessmentDate": "2026-10-08",
+  "timezone": "Asia/Shanghai",
+  "kind": "static_upgrade_plan",
+  "status": "proposed_not_implemented",
+  "local": {
+    "head": "351f592c3f0614bb9ad9e6244210d58b63f5db67",
+    "originMain": "351f592c3f0614bb9ad9e6244210d58b63f5db67",
+    "branch": "main",
+    "productVersion": "0.3.0",
+    "piSdk": "1.0.2",
+    "directReferenceCount": 11,
+    "directManifestCount": 4,
+    "originalUncommittedFiles": [
+      {
+        "path": "docs/verification/README.md",
+        "sha256AtReport": "24dce5b191d6b1f2d74592b2b2489691fcdfc6ae280180f43af5ce39c36557ce"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256AtReport": "7ae91fffdf252fbf9a98e5a8d32c82f6a736a1c60c419d5a189ab6931f2a09e1"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256AtReport": "3aacf1970341ab1663973b6e0be824e2f3780139eaee6bae12eb02e447c1a2a4"
+      },
+      {
+        "path": "scripts/verification/files-panel-packaged-workflow.ts",
+        "sha256AtReport": "2104da83a3d2535090362e5c4b0c65003755d0ac24e463aa799adcb2e9f39973"
+      },
+      {
+        "path": "scripts/verification/packaged-client-verification.mjs",
+        "sha256AtReport": "3aac4e8c13f73cd1b52e091e615c9853e7ad73f498807af1af0e2f3536314c7f"
+      },
+      {
+        "path": "scripts/verification/ui-refinement-workflow.mjs",
+        "sha256AtReport": "77551f17e14127ed7f1a4a181f864714581bfa7bc537f36e23a0f66baa83a4c5"
+      }
+    ]
+  },
+  "remoteBaselines": [
+    {
+      "repo": "craft-ai-agents/craft-agents-oss",
+      "ref": "main",
+      "sha": "332533f3096d12500012fe089c3f155e32af1c44",
+      "commitDate": "2026-10-06T02:35:22Z",
+      "latestRelease": "v0.14.1",
+      "releasePublishedAt": "2026-10-06T02:35:59Z",
+      "prerelease": false,
+      "releaseUrl": "https://github.com/craft-ai-agents/craft-agents-oss/releases/tag/v0.14.1",
+      "source": "Successful GitHub REST responses observed during this assessment; a later redundant retrieval failed with transport EOF."
+    },
+    {
+      "repo": "earendil-works/pi",
+      "ref": "v1.1.0",
+      "sha": "abe508e1b89912adde45528136c3221eb69acdd7",
+      "commitDate": "2026-10-07T21:33:33Z",
+      "latestRelease": "v1.1.0",
+      "releasePublishedAt": "2026-10-07T22:26:31Z",
+      "prerelease": false,
+      "releaseUrl": "https://github.com/earendil-works/pi/releases/tag/v1.1.0",
+      "source": "Successful GitHub REST release-list and tag commit responses observed during this assessment."
+    }
+  ],
+  "fetch": {
+    "method": "SSH on port 443",
+    "upstreamSucceeded": false,
+    "attempts": 2,
+    "failure": "Connection closed during upstream SSH transport",
+    "fallback": "Successful GitHub REST main SHA matches local upstream object",
+    "upstreamTagNamespaceMappingRestored": true,
+    "tagOpt": "--no-tags",
+    "fetchSpecs": [
+      "+refs/heads/*:refs/remotes/upstream/*",
+      "+refs/tags/*:refs/upstream-tags/*"
+    ]
+  },
+  "upstream": {
+    "from": "73bd9c2a3573158bea880984eb8d5fdb41e0cac2",
+    "to": "332533f3096d12500012fe089c3f155e32af1c44",
+    "fileCount": 67,
+    "insertions": 1521,
+    "deletions": 351,
+    "statusCounts": [
+      {
+        "Name": "A",
+        "Count": 8
+      },
+      {
+        "Name": "D",
+        "Count": 1
+      },
+      {
+        "Name": "M",
+        "Count": 58
+      }
+    ],
+    "categoryCounts": [
+      {
+        "Name": "adapt_selected_behavior",
+        "Count": 22
+      },
+      {
+        "Name": "adapt_selected_i18n",
+        "Count": 7
+      },
+      {
+        "Name": "partial_existing_ui",
+        "Count": 1
+      },
+      {
+        "Name": "retain_stronger_local_guarded",
+        "Count": 3
+      },
+      {
+        "Name": "reuse_failure_scenarios",
+        "Count": 15
+      },
+      {
+        "Name": "skip_claude_only_intent_switch",
+        "Count": 1
+      },
+      {
+        "Name": "skip_removed_backend",
+        "Count": 1
+      },
+      {
+        "Name": "skip_upstream_release_identity",
+        "Count": 17
+      }
+    ],
+    "files": [
+      {
+        "status": "M",
+        "path": "apps/cli/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "apps/electron/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "A",
+        "path": "apps/electron/resources/release-notes/0.14.1.md",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "category": "partial_existing_ui",
+        "reason": "Existing truncation and collapsed tooltip; expanded full-title affordance remains."
+      },
+      {
+        "status": "M",
+        "path": "apps/electron/src/renderer/components/settings/SettingsToggle.tsx",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "apps/electron/src/shared/types.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "apps/electron/src/transport/channel-map.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "apps/viewer/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "apps/webui/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "bun.lock",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/core/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/messaging-gateway/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/messaging-whatsapp-worker/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/pi-agent-server/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/pi-agent-server/src/index.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/pi-agent-server/src/large-result-gate.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/pi-agent-server/src/large-result-gate.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "A",
+        "path": "packages/server-core/src/decisions/__fixtures__/adaptive-thinking.cases.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "A",
+        "path": "packages/server-core/src/decisions/__fixtures__/large-results.cases.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/decisions/adaptive-thinking.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/decisions/adaptive-thinking.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/decisions/decision-outcomes.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "A",
+        "path": "packages/server-core/src/decisions/decision-point.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/decisions/decision-point.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/decisions/guarded-mode.ts",
+        "category": "retain_stronger_local_guarded",
+        "reason": "Current implementation already confirms or blocks unavailable/malformed checks and handles unattended callers."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/decisions/large-results.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/decisions/large-results.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "A",
+        "path": "packages/server-core/src/decisions/relevance.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "A",
+        "path": "packages/server-core/src/decisions/relevance.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/handlers/rpc/decisions.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/sessions/SessionManager.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/server-core/src/sessions/automation-loop-and-retry.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/server/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/session-tools-core/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/CLAUDE.md",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/backend/pi/protocol.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/claude-agent.ts",
+        "category": "skip_removed_backend",
+        "reason": "Pi is the sole agent backend."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/core/__tests__/guarded-mode.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/core/__tests__/pre-tool-use-checks.isolated.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/core/guarded-mode.ts",
+        "category": "retain_stronger_local_guarded",
+        "reason": "Current implementation already confirms or blocks unavailable/malformed checks and handles unattended callers."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/core/pre-tool-use.ts",
+        "category": "skip_claude_only_intent_switch",
+        "reason": "keepSourceToolIntent supports Claude; Pi uses explicit metadata."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/mode-types.ts",
+        "category": "retain_stronger_local_guarded",
+        "reason": "Current implementation already confirms or blocks unavailable/malformed checks and handles unattended callers."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/agent/pi-agent.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/decisions/records.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/decisions/usage.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/decisions/usage.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "category": "adapt_selected_i18n",
+        "reason": "Only selected feature keys; preserve local translations and explain data scope."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "category": "adapt_selected_i18n",
+        "reason": "Only selected feature keys; preserve local translations and explain data scope."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "category": "adapt_selected_i18n",
+        "reason": "Only selected feature keys; preserve local translations and explain data scope."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "category": "adapt_selected_i18n",
+        "reason": "Only selected feature keys; preserve local translations and explain data scope."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "category": "adapt_selected_i18n",
+        "reason": "Only selected feature keys; preserve local translations and explain data scope."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "category": "adapt_selected_i18n",
+        "reason": "Only selected feature keys; preserve local translations and explain data scope."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "category": "adapt_selected_i18n",
+        "reason": "Only selected feature keys; preserve local translations and explain data scope."
+      },
+      {
+        "status": "A",
+        "path": "packages/shared/src/mcp/__tests__/api-source-intent.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/mcp/api-source-pool-client.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/mcp/client.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/mcp/mcp-pool.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/protocol/channels.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/protocol/routing.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "A",
+        "path": "packages/shared/src/utils/__tests__/large-result-filter.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "D",
+        "path": "packages/shared/src/utils/__tests__/large-result-summary-gate.test.ts",
+        "category": "reuse_failure_scenarios",
+        "reason": "Use applicable scenarios before coding; prefer real host/subprocess E2E."
+      },
+      {
+        "status": "M",
+        "path": "packages/shared/src/utils/large-response.ts",
+        "category": "adapt_selected_behavior",
+        "reason": "Map selected behavior to Phaneris; preserve Runtime Host, permissions and persistence."
+      },
+      {
+        "status": "M",
+        "path": "packages/ui/package.json",
+        "category": "skip_upstream_release_identity",
+        "reason": "Keep local version, SDK pins, lockfile and docs."
+      }
+    ]
+  },
+  "npm": {
+    "targetVersion": "1.1.0",
+    "packages": [
+      {
+        "name": "@earendil-works/pi-ai",
+        "version": "1.1.0",
+        "integrity": "sha512-1T7LAkc/5Bvc0v6w4vAGVdCrli0o/E0pEmYKTnixu95vSFArBjvbhS/G4ZwI0RUePgf0Imcu0VyqlM4EcXxqfw==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [
+          "@earendil-works/pi-telemetry: ^1.0.2 -> ^1.1.0"
+        ],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-agent-core",
+        "version": "1.1.0",
+        "integrity": "sha512-aX1KZomNCPmwYnXa3OivF3VYLJ+WPUkIJlEIZTgwdOZdY/+oToWTQ334WYpQeOz9POpiYFNMJLPwIhXQ4e48kg==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [
+          "@earendil-works/pi-ai: ^1.0.2 -> ^1.1.0"
+        ],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.1.0",
+        "integrity": "sha512-SeEi/4hdcHNgA9UWlefZl7ZZpm3dzi2OoxNjDHsBJ9o298LNOtbL4DGKgitlEj6uCTccvtw6f2hlCkTPVJ2RXg==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [
+          "@earendil-works/chord: ^1.0.2 -> ^1.1.0",
+          "@earendil-works/pi-ai: ^1.0.2 -> ^1.1.0",
+          "@earendil-works/pi-mcp: ^1.0.2 -> ^1.1.0",
+          "@earendil-works/pi-tui: ^1.0.2 -> ^1.1.0",
+          "@earendil-works/pi-codemode: ^1.0.2 -> ^1.1.0",
+          "@earendil-works/pi-agent-core: ^1.0.2 -> ^1.1.0"
+        ],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-codemode",
+        "version": "1.1.0",
+        "integrity": "sha512-8Asc2AzhoNaXS1snmRFa96OhcWIlFM5k1Kuiz6p2DvIYgi5QHQccRAmDVY9oO92TzWrizpvQpconZGQ7JhlI7Q==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-server",
+        "version": "1.1.0",
+        "integrity": "sha512-L7yMVtBezWHo8KppSPULW89u1Tiu3c5bkU5/LIL25UgsTAZHU0K6U1iD6gJrbHAdTnl1wt6HBhqz7ZkjpzmkWg==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [
+          "@earendil-works/chord: ^1.0.2 -> ^1.1.0",
+          "@earendil-works/pi-protocol: ^1.0.2 -> ^1.1.0"
+        ],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-mcp",
+        "version": "1.1.0",
+        "integrity": "sha512-xGKwvu3SvVTeoIx8Z7UGoJprB4VK20wKORMhufcWGx61fIauhu3J+UqfB5eeoF1oE/geYBA598K6nh1SdABQkg==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-protocol",
+        "version": "1.1.0",
+        "integrity": "sha512-XMZIOJeqodY9QRfcnyBwDEKA1upgVgl2Rq0hm0Jnd/VmvGhgwHUvxu7PA/5aWLL+umJI2mwG10uW2SMzgEGvEA==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [
+          "@earendil-works/chord: ^1.0.2 -> ^1.1.0"
+        ],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-telemetry",
+        "version": "1.1.0",
+        "integrity": "sha512-8gAK05/2pPozZZz6hCLOi8x2vsqzvsmO9gG92kbvuvTPm0qMHaFlaXX98ndXsrOi5pmzha7vNLguuG4+0Rgxjw==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.1.0",
+        "integrity": "sha512-v7wkS0y2ErZvZkSfemqd9RrBZJ5x6p8Ujsv7NdJj01IXJyFM0kNL6rMdcKcvTe7EVTd6ugvDB9VPZSoaBF9QxQ==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [],
+        "removedDependencies": [],
+        "enginesChanged": false
+      },
+      {
+        "name": "@earendil-works/chord",
+        "version": "1.1.0",
+        "integrity": "sha512-gsHzKfyQ3t0ZIQ3cLBjJ5Vqy1TYnFyruHIV3g3BwmulCDYe5BW4yT9vaJk9QzN6YANILIO75uzuq+Gdxtzz1og==",
+        "integrityVerified": true,
+        "enginesNode": ">=22.19.0",
+        "gitHead": null,
+        "dependencyChanges": [],
+        "removedDependencies": [],
+        "enginesChanged": false
+      }
+    ],
+    "declarationDeltas": [
+      {
+        "name": "pi-ai",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": [
+          "M dist\\models.generated.d.ts",
+          "M dist\\types.d.ts",
+          "A dist\\api\\azure-openai-config.d.ts",
+          "M dist\\api\\azure-openai-responses.d.ts",
+          "A dist\\api\\classifier-shared.d.ts",
+          "A dist\\api\\openai-decisions.d.ts",
+          "A dist\\api\\openai-decisions.lazy.d.ts",
+          "M dist\\api\\system-one-shared.d.ts",
+          "M dist\\auth\\resolve.d.ts",
+          "M dist\\auth\\types.d.ts",
+          "A dist\\providers\\azure.d.ts",
+          "A dist\\providers\\azure.models.d.ts",
+          "M dist\\utils\\event-stream.d.ts",
+          "M dist\\utils\\model-operations.d.ts",
+          "M dist\\utils\\provider-retry.d.ts",
+          "D dist\\providers\\azure-openai-responses.d.ts",
+          "D dist\\providers\\azure-openai-responses.models.d.ts"
+        ]
+      },
+      {
+        "name": "pi-agent-core",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": [
+          "M dist\\proxy.d.ts",
+          "M dist\\types.d.ts"
+        ]
+      },
+      {
+        "name": "pi-coding-agent",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": [
+          "M dist\\config.d.ts",
+          "M dist\\cli\\args.d.ts",
+          "M dist\\core\\agent-session.d.ts",
+          "M dist\\core\\keybindings.d.ts",
+          "M dist\\core\\mcp-servers.d.ts",
+          "M dist\\core\\nested-tool-calls.d.ts",
+          "M dist\\core\\resource-loader.d.ts",
+          "M dist\\core\\sdk.d.ts",
+          "M dist\\core\\settings-manager.d.ts",
+          "M dist\\core\\skills.d.ts",
+          "M dist\\core\\system-prompt.d.ts",
+          "M dist\\core\\extensions\\types.d.ts",
+          "M dist\\core\\tools\\read.d.ts",
+          "M dist\\extensions\\codemode\\tool.d.ts",
+          "M dist\\extensions\\mcp\\oauth.d.ts",
+          "M dist\\extensions\\mcp\\resources.d.ts",
+          "M dist\\extensions\\mcp\\runtime.d.ts",
+          "M dist\\extensions\\mcp\\tools.d.ts",
+          "M dist\\extensions\\mcp\\ui.d.ts",
+          "M dist\\modes\\interactive\\interactive-mode.d.ts",
+          "A dist\\modes\\interactive\\program-status-reporter.d.ts",
+          "M dist\\modes\\interactive\\components\\bash-execution.d.ts",
+          "M dist\\modes\\interactive\\components\\branch-summary-message.d.ts",
+          "M dist\\modes\\interactive\\components\\compaction-summary-message.d.ts",
+          "M dist\\modes\\interactive\\components\\custom-entry.d.ts",
+          "M dist\\modes\\interactive\\components\\skill-invocation-message.d.ts",
+          "M dist\\modes\\interactive\\components\\tool-execution.d.ts",
+          "M dist\\utils\\ansi.d.ts",
+          "M dist\\utils\\image-resize-core.d.ts",
+          "A dist\\utils\\output-files.d.ts"
+        ]
+      },
+      {
+        "name": "pi-codemode",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": [
+          "M dist\\types.d.ts",
+          "M dist\\runtime\\prelude-source.d.ts"
+        ]
+      },
+      {
+        "name": "pi-server",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": []
+      },
+      {
+        "name": "pi-mcp",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": [
+          "M dist\\auth-provider.d.ts",
+          "M dist\\oauth\\discovery.d.ts",
+          "M dist\\oauth\\flow.d.ts",
+          "M dist\\oauth\\types.d.ts",
+          "M dist\\transports\\streamable-http.d.ts"
+        ]
+      },
+      {
+        "name": "pi-protocol",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": []
+      },
+      {
+        "name": "pi-telemetry",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": []
+      },
+      {
+        "name": "pi-tui",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": [
+          "M dist\\index.d.ts",
+          "M dist\\keybindings.d.ts",
+          "A dist\\program-status.d.ts",
+          "M dist\\terminal.d.ts",
+          "M dist\\tui-alt-screen.d.ts",
+          "M dist\\components\\box.d.ts",
+          "M dist\\components\\text.d.ts"
+        ]
+      },
+      {
+        "name": "chord",
+        "before": "1.0.2",
+        "after": "1.1.0",
+        "exportsChanged": false,
+        "deltas": []
+      }
+    ],
+    "provenanceLimit": "Registry gitHead absent; archive integrity is verified, not source-to-package reproducibility."
+  },
+  "verifiedFindings": [
+    {
+      "observation": "Provider becomes azure; API type remains azure-openai-responses",
+      "id": "PI-AZURE",
+      "files": [
+        "packages/shared/src/config/models-pi.ts",
+        "packages/pi-agent-server/src/index.ts",
+        "packages/pi-agent-server/src/model-resolution.ts"
+      ]
+    },
+    {
+      "observation": "agent_settled.aborted is required; synthetic prompt failure event lacks it",
+      "id": "PI-SETTLED",
+      "files": [
+        "packages/pi-agent-server/src/index.ts",
+        "packages/pi-agent-server/src/native-lifecycle-observation.ts"
+      ]
+    },
+    {
+      "observation": "SDK adds tool duration; local adapter uses wall-clock delta",
+      "id": "PI-DURATION",
+      "files": [
+        "packages/shared/src/agent/backend/pi/event-adapter.ts"
+      ]
+    },
+    {
+      "observation": "Local fail-safe behavior already exceeds upstream on unavailable/malformed checks and unattended contexts",
+      "id": "U-GUARDED",
+      "files": [
+        "packages/shared/src/agent/core/guarded-mode.ts"
+      ]
+    },
+    {
+      "observation": "Local code already excludes hidden, unattended and task messages from interactive thinking",
+      "id": "U-HIDDEN",
+      "files": [
+        "packages/server-core/src/sessions/SessionManager.ts"
+      ]
+    },
+    {
+      "observation": "Pool route passes durableTool, but not captured intent",
+      "id": "U-INTENT",
+      "files": [
+        "packages/shared/src/agent/pi-agent.ts",
+        "packages/shared/src/mcp/api-source-pool-client.ts"
+      ]
+    },
+    {
+      "observation": "3000-character host sample, 8000-character Pi bridge; existing cancellation hardening must remain",
+      "id": "U-FILTER",
+      "files": [
+        "packages/server-core/src/decisions/large-results.ts",
+        "packages/pi-agent-server/src/large-result-gate.ts"
+      ]
+    },
+    {
+      "observation": "Documented ready/tools window remains by source inspection; no runtime reproduction in this assessment",
+      "id": "BASELINE-RACE",
+      "files": [
+        "packages/shared/src/agent/pi-agent.ts",
+        "docs/process/workstream-sequencing-2026-10-06.md"
+      ]
+    }
+  ],
+  "assessmentChecks": {
+    "documentationCommand": "bun run check:docs",
+    "documentationPassed": true,
+    "documentsChecked": 82,
+    "relativeLinksChecked": 403,
+    "trackedDocumentDiffWhitespaceCheckPassed": true,
+    "originalWipHashMismatchesAtFinalCheck": 0
+  },
+  "validationBoundary": {
+    "newDependenciesInstalled": false,
+    "newSdkRuntimeExecuted": false,
+    "productCodeModified": false,
+    "liveProviderCalls": false,
+    "newE2EExecuted": false,
+    "newPackageBuilt": false,
+    "mergeSimulationPerformed": false,
+    "committedOrPushed": false
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-08T02:50:02.635Z",
+  "fixture": "pi-110-startup-v1",
+  "checks": [
+    {
+      "id": "first and subsequent provider tools are identical",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: First turn lacks session tools"
+    },
+    {
+      "id": "concurrent startup waits for policy and sync_tools",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: false == true"
+    },
+    {
+      "id": "concurrent credential lookup owns a single child",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n2 !== 1\n"
+    },
+    {
+      "id": "destroy during credential lookup rejects startup",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /destroy|cancel|abort|exit/i. Input:\n\n'Error: deadline guard'\n"
+    }
+  ],
+  "providerTools": [
+    [
+      "read",
+      "powershell",
+      "edit",
+      "write",
+      "grep",
+      "find",
+      "ls",
+      "mcp__session__web_search",
+      "mcp__session__web_fetch",
+      "report_progress",
+      "tool_search",
+      "codemode"
+    ],
+    [
+      "read",
+      "powershell",
+      "edit",
+      "write",
+      "grep",
+      "find",
+      "ls",
+      "mcp__session__web_search",
+      "mcp__session__web_fetch",
+      "report_progress",
+      "tool_search",
+      "codemode",
+      "mcp__session__SubmitPlan",
+      "mcp__session__ask_user",
+      "mcp__session__config_validate",
+      "mcp__session__skill_validate",
+      "mcp__session__mermaid_validate",
+      "mcp__session__source_test",
+      "mcp__session__source_oauth_trigger",
+      "mcp__session__source_google_oauth_trigger",
+      "mcp__session__source_slack_oauth_trigger",
+      "mcp__session__source_microsoft_oauth_trigger",
+      "mcp__session__source_credential_prompt",
+      "mcp__session__update_user_preferences",
+      "mcp__session__transform_data",
+      "mcp__session__script_sandbox",
+      "mcp__session__render_template",
+      "mcp__session__call_llm",
+      "mcp__session__spawn_session",
+      "mcp__session__browser_tool",
+      "mcp__session__terminal_read",
+      "mcp__session__set_session_labels",
+      "mcp__session__set_session_status",
+      "mcp__session__update_session_planning",
+      "mcp__session__archive_session",
+      "mcp__session__create_task",
+      "mcp__session__artifact_status",
+      "mcp__session__artifact_create",
+      "mcp__session__artifact_apply",
+      "mcp__session__artifact_inspect",
+      "mcp__session__artifact_render",
+      "mcp__session__artifact_submit",
+      "mcp__session__image_generate",
+      "mcp__session__list_pages",
+      "mcp__session__get_page",
+      "mcp__session__create_page",
+      "mcp__session__update_page",
+      "mcp__session__write_page_data",
+      "mcp__session__delete_page",
+      "mcp__session__get_session_info",
+      "mcp__session__list_sessions",
+      "mcp__session__list_background_tasks",
+      "mcp__session__send_agent_message",
+      "mcp__session__list_messaging_channels",
+      "mcp__session__unbind_messaging_channel"
+    ]
+  ],
+  "commands": [
+    {
+      "type": "init",
+      "at": 12948.1893
+    },
+    {
+      "type": "set_auto_compaction",
+      "at": 14521.4667
+    },
+    {
+      "type": "prompt",
+      "at": 14524.9271
+    },
+    {
+      "type": "durable_model_prepare_response",
+      "at": 14878.7863
+    },
+    {
+      "type": "durable_model_outcome_response",
+      "at": 14969.8464
+    },
+    {
+      "type": "sync_tools",
+      "at": 15047.124
+    },
+    {
+      "type": "prompt",
+      "at": 15047.6804
+    },
+    {
+      "type": "durable_model_prepare_response",
+      "at": 15178.1224
+    },
+    {
+      "type": "durable_model_outcome_response",
+      "at": 15214.8084
+    },
+    {
+      "type": "shutdown",
+      "at": 15238.89
+    }
+  ]
+}
