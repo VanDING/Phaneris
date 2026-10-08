@@ -121,7 +121,7 @@ import type { SummarizeCallback } from '@phaneris/shared/sources'
 import { type ThinkingLevel, THINKING_LEVEL_IDS, DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
 import { evaluateAutoLabels, autoLabelMatchToEntry, type AutoLabelMatch } from '@phaneris/shared/labels/auto'
 import type { LabelConfig } from '@phaneris/shared/labels'
-import { isDecisionFeatureActive, type DecisionLayerFeature } from '@phaneris/shared/decisions'
+import { isDecisionFeatureActive, type DecisionLayerFeature, type DecisionResult } from '@phaneris/shared/decisions'
 import { evaluateSemanticLabelsForMessage } from '../decisions/semantic-labels'
 import { classifyTurnOutcome, TURN_OUTCOME_ATTENTION_STATUS } from '../decisions/turn-outcome'
 import { checkAutomationCondition } from '../decisions/automation-condition'
@@ -129,7 +129,7 @@ import { isSmallTalk, titleNoLongerFits, TITLE_DRIFT_RECENT_MESSAGES } from '../
 import { buildGuardedModeCheck } from '../decisions/guarded-mode'
 import { buildLargeResultSummaryGate } from '../decisions/large-results'
 import { assessPermissionRisks } from '../decisions/permission-risks'
-import { pickTurnThinkingLevel } from '../decisions/adaptive-thinking'
+import { pickTurnThinkingLevel, recordThinkingFollowUp } from '../decisions/adaptive-thinking'
 import { decideMidTurnDelivery, isContinuation } from '../decisions/mid-turn-messages'
 import { wantsSuggestion, collectSuggestionCandidates, pickSuggestion, formatSuggestionHint, candidatesUsedBy, suggestionFollowUp, type SuggestionTrace } from '../decisions/suggestions'
 import { setLargeResultSummaryGate } from '@phaneris/shared/utils'
@@ -785,6 +785,8 @@ interface ManagedSession {
   // Per-turn decisions are runtime hints; they never change canonical input or saved preferences.
   turnThinkingOverride?: ThinkingLevel | null
   turnSuggestionHint?: string | null
+  preTurnDecisionAbort?: AbortController
+  thinkingTrace?: { result: DecisionResult; userMessageId: string }
   suggestionTrace?: { trace: SuggestionTrace; used: Set<string> }
   autoTitle?: string
   titleDeferred?: boolean
@@ -7454,7 +7456,7 @@ export class SessionManager implements ISessionManager {
     const replayedMessages = existingMessageId ? managed.replayMergedMessages?.get(existingMessageId) : undefined
     if (existingMessageId) managed.replayMergedMessages?.delete(existingMessageId)
     managed.lastSentMessageIds = (replayedMessages ?? [userMessage]).map(item => item.id)
-    const preTurnDecisions = this.startPreTurnDecisions(managed, message, options, { activationResend: !!activationRetry, authRetry: !!_isAuthRetry })
+    const preTurnDecisions = this.startPreTurnDecisions(managed, message, options, { activationResend: !!activationRetry, authRetry: !!_isAuthRetry, attachments: storedAttachments ?? attachments })
 
     // Pre-enable sources required by invoked skills (Issue #249)
     // This eliminates the two-turn penalty where the agent discovers missing sources at runtime.
@@ -7875,6 +7877,8 @@ export class SessionManager implements ISessionManager {
     // Signal intent to stop - let the event loop drain remaining events before clearing isProcessing
     // This prevents losing in-flight messages after soft interrupt
     managed.stopRequested = true
+    managed.preTurnDecisionAbort?.abort()
+    managed.thinkingTrace = undefined
 
     // Track interruption so the next user message gets a context note
     // telling the LLM the previous response was cut short
@@ -11031,6 +11035,7 @@ export class SessionManager implements ISessionManager {
    */
   cleanup(): void {
     this.unregisterDecisionAccounting()
+    for (const managed of this.sessions.values()) managed.preTurnDecisionAbort?.abort()
     for (const requests of this.imageRequests.values()) for (const request of requests) request.abort()
     this.imageRequests.clear()
     this.shuttingDown = true
@@ -11090,7 +11095,7 @@ export class SessionManager implements ISessionManager {
     managed: ManagedSession,
     message: string,
     options?: SendMessageOptions,
-    turn: { activationResend?: boolean; authRetry?: boolean } = {},
+    turn: { activationResend?: boolean; authRetry?: boolean; attachments?: Array<{ name: string; type: string; size: number }> } = {},
   ): Promise<{ thinkingOverride: ThinkingLevel | null; suggestionHint: string | null }> | null {
     // An auto-retry continues the same request: keep its thinking level, ask nothing again.
     if (turn.activationResend || turn.authRetry) {
@@ -11100,6 +11105,10 @@ export class SessionManager implements ISessionManager {
     }
     managed.turnThinkingOverride = null
     managed.turnSuggestionHint = null
+    managed.preTurnDecisionAbort?.abort()
+    managed.preTurnDecisionAbort = undefined
+    const previousThinking = managed.thinkingTrace
+    managed.thinkingTrace = undefined
     this.finishSuggestionTrace(managed)
     const log = (line: string) => sessionLog.info(line)
     const generation = managed.processingGeneration
@@ -11112,10 +11121,22 @@ export class SessionManager implements ISessionManager {
     // Nothing to ask: the caller skips the await entirely.
     if (!rateThinking && !suggest) return null
 
+    const abort = new AbortController()
+    managed.preTurnDecisionAbort = abort
+    const previousReplyIndex = managed.messages.findLastIndex(m => m.role === 'assistant' && !m.isIntermediate && !m.hidden)
+    const previousReply = managed.messages[previousReplyIndex]?.content
+    const repliedTo = managed.messages.slice(0, previousReplyIndex).findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id
+    const userMessageId = managed.messages.findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id
+
     // Adaptive thinking: a lower level for a simple turn, never above the session's.
     const thinking = rateThinking
-      ? pickTurnThinkingLevel(message, managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL, { sessionId: managed.id, log })
-          .then((level) => {
+      ? pickTurnThinkingLevel({ message, previousReply, attachments: turn.attachments?.map(a => `${a.name.slice(0, 200)} (${a.type}, ${a.size} bytes)`) },
+          managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL, { sessionId: managed.id, log, signal: abort.signal,
+            isCurrent: current, getSessionLevel: () => managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL })
+          .then(({ level, result }) => {
+            if (!current()) return null
+            if (previousThinking && repliedTo === previousThinking.userMessageId) recordThinkingFollowUp(previousThinking.result, result)
+            if (result && userMessageId) managed.thinkingTrace = { result, userMessageId }
             if (level) sessionLog.info(`[adaptive-thinking] Session ${managed.id}: thinking ${level} for this turn`)
             return level
           })
@@ -11134,7 +11155,7 @@ export class SessionManager implements ISessionManager {
             sources: loadAllSources(workspaceRoot),
             activeSourceSlugs: managed.enabledSourceSlugs ?? [],
           })
-          const { hint, trace } = await pickSuggestion(message, candidates, { sessionId: managed.id, log })
+          const { hint, trace } = await pickSuggestion(message, candidates, { sessionId: managed.id, log, signal: abort.signal, isCurrent: current })
           // Kept until the request is over, to record whether the agent used the pick anyway.
           if (trace && current()) managed.suggestionTrace = { trace, used: new Set() }
           if (!hint) return null
@@ -11153,6 +11174,8 @@ export class SessionManager implements ISessionManager {
       managed.turnThinkingOverride = thinkingOverride
       managed.turnSuggestionHint = suggestionHint
       return { thinkingOverride, suggestionHint }
+    }).finally(() => {
+      if (managed.preTurnDecisionAbort === abort) managed.preTurnDecisionAbort = undefined
     })
   }
 

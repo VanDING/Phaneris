@@ -81,7 +81,7 @@ const cases: any[] = [
     invoke: () => isContinuation('整理 Q3 收入', '请同时按地区细分这份 Q3 收入', deps) },
   { id: 'automationConditions', positive: false, uncertain: true, failure: null, yes: { condition: false },
     invoke: async () => (await checkAutomationCondition({ question: 'Does the session report an unresolved production failure?' }, { event: 'SessionStatusChange', session: { lastAssistantMessage: 'All production services are healthy; no unresolved failures.' } }, deps))?.run ?? null },
-  { id: 'adaptiveThinking', positive: 'low', uncertain: null, failure: null, choice: { demand: '0' },
+  { id: 'adaptiveThinking', positive: 'low', uncertain: null, failure: null, choice: { demand: '0' }, yes: { consequential: false },
     invoke: () => pickTurnThinkingLevel('你好', 'max', deps) },
   { id: 'guardedMode', positive: ['external'], uncertain: [], failure: null, yes: { irreversible: false, outside_workspace: false, external: true },
     invoke: async () => (await buildGuardedModeCheck({ ...deps, isInteractive: () => true }).check({ promptType: 'bash', toolName: 'Bash', command: 'git push origin main', workingDirectory: '/fixture', arguments: { command: 'git push origin main' } }))?.risks ?? null },

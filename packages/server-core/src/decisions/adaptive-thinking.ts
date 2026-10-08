@@ -2,31 +2,62 @@
  * Adaptive thinking via the decision model (feature toggle `adaptiveThinking`).
  *
  * Before a turn starts, the model rates how demanding the user's message is on
- * a four-level rubric; simple requests run with a lower thinking level for that
- * turn only. It never raises the level above the session's, and no confident
- * answer keeps the session level.
+ * a four-level rubric, reading it with the end of the previous reply and the
+ * names of attached files (a short "here" can continue demanding work); simple
+ * requests run with a lower thinking level for that turn only. It never raises
+ * the level above the session's, no confident answer keeps the session level,
+ * pushback on the previous reply keeps it, and a request to change or send
+ * something hard to undo gets at least `high`.
+ *
+ * Feedback: the next user turn's `corrects_previous` answer is written as a
+ * follow-up on this turn's decision. These are model estimates of correction,
+ * not acceptance or a human judgement of answer quality.
  */
 
 import type { ThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
 import { THINKING_LEVEL_IDS } from '@phaneris/shared/agent/thinking-levels'
-import type { DecisionRequest } from '@phaneris/shared/decisions'
-import { FOREGROUND_MAX_DEADLINE_MS, openDecisionPoint, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
+import type { DecisionRequest, DecisionResult } from '@phaneris/shared/decisions'
+import { FOREGROUND_MAX_DEADLINE_MS, openDecisionPoint, recordDecisionFollowUp, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
 
 /** The rated level must come with this much confidence. */
 export const ADAPTIVE_THINKING_MIN_CONFIDENCE = 0.6
 /** The message is cut to this many characters before it is sent. */
 export const ADAPTIVE_THINKING_MAX_MESSAGE_CHARS = 4_000
+/** Only the end of the previous reply is sent: enough to read a follow-up, little enough not to drown the message. */
+export const ADAPTIVE_THINKING_PREVIOUS_REPLY_CHARS = 1_200
+/** "The user says the previous reply was wrong" at or above this keeps the session level. */
+export const ADAPTIVE_THINKING_CORRECTION_AT = 0.6
+/** "Changes or sends something hard to undo" at or above this: at least `high`. */
+export const ADAPTIVE_THINKING_CONSEQUENTIAL_AT = 0.5
 
 /** Thinking cap per rubric level; the top level keeps the session's setting. */
 const CAP_BY_LEVEL: readonly (ThinkingLevel | null)[] = ['low', 'medium', 'high', null]
 
-export function buildDemandRequest(message: string): DecisionRequest {
+export interface TurnToRate {
+  message: string
+  /** The last final assistant reply, if any. */
+  previousReply?: string
+  /** Attached files as "name (type, size)": never their content. */
+  attachments?: string[]
+}
+
+export function buildDemandRequest(input: TurnToRate | string): DecisionRequest {
+  const turn = typeof input === 'string' ? { message: input } : input
+  const { message } = turn
+  const previous = turn.previousReply?.trim()
   return {
-    state: { message: message.length > ADAPTIVE_THINKING_MAX_MESSAGE_CHARS ? `${message.slice(0, ADAPTIVE_THINKING_MAX_MESSAGE_CHARS)}…` : message },
+    state: {
+      message: message.length > ADAPTIVE_THINKING_MAX_MESSAGE_CHARS ? `${message.slice(0, ADAPTIVE_THINKING_MAX_MESSAGE_CHARS)}…` : message,
+      ...(previous ? { previous_assistant_reply: previous.length > ADAPTIVE_THINKING_PREVIOUS_REPLY_CHARS ? `…${previous.slice(-ADAPTIVE_THINKING_PREVIOUS_REPLY_CHARS)}` : previous } : {}),
+      ...(turn.attachments?.length ? {
+        attachments: turn.attachments.slice(0, 16).map(metadata => metadata.slice(0, 256)),
+        ...(turn.attachments.length > 16 ? { additional_attachment_count: turn.attachments.length - 16 } : {}),
+      } : {}),
+    },
     questions: {
       demand: {
         type: 'score',
-        instructions: 'How much reasoning does the assistant need to answer this message well?',
+        instructions: 'How much reasoning does the assistant need for its next reply? Read the message in light of the previous reply and any attached files: a short message can continue demanding work.',
         criteria: [
           'A greeting, a thank-you, or a simple factual question with a short answer',
           'A routine request with clear instructions: a small edit, a lookup, a short summary',
@@ -34,6 +65,16 @@ export function buildDemandRequest(message: string): DecisionRequest {
           'A hard problem: complex reasoning, debugging, architecture, or ambiguous requirements',
         ],
       },
+      consequential: {
+        type: 'noul',
+        instructions: 'Does the message ask the assistant to change or send something that is hard to undo or reaches other people or systems (update or delete records, deploy, push, publish, send messages, spend money)? Local code edits and reading do not count.',
+      },
+      ...(previous ? {
+        corrects_previous: {
+          type: 'noul' as const,
+          instructions: "Does the user say the assistant's previous reply was wrong, incomplete, or not what they asked for?",
+        },
+      } : {}),
     },
   }
 }
@@ -43,32 +84,77 @@ function lowerOf(a: ThinkingLevel, b: ThinkingLevel): ThinkingLevel {
   return THINKING_LEVEL_IDS.indexOf(a) <= THINKING_LEVEL_IDS.indexOf(b) ? a : b
 }
 
+const noul = (result: DecisionResult | null, key: string): number | undefined => {
+  const answer = result?.answers[key]
+  return answer?.type === 'noul' && Number.isFinite(answer.noul) && answer.noul >= 0 && answer.noul <= 1 ? answer.noul : undefined
+}
+
+export type TurnLevelChoice =
+  | { level: ThinkingLevel; floored: boolean }
+  | { keep: 'no_answer' | 'low_confidence' | 'correction' | 'needs_session_level' | 'not_lower' }
+
+/** The policy, on the answers alone. */
+export function chooseTurnLevel(result: DecisionResult | null, sessionLevel: ThinkingLevel, hasPreviousReply = false): TurnLevelChoice {
+  const demand = result?.answers.demand
+  if (!demand || demand.type !== 'score' || !Number.isFinite(demand.score) || demand.score < 0 || demand.score > 3
+    || !Number.isFinite(demand.confidence) || demand.confidence > 1 || noul(result, 'consequential') === undefined
+    || (hasPreviousReply && noul(result, 'corrects_previous') === undefined)) return { keep: 'no_answer' }
+  if (demand.confidence < ADAPTIVE_THINKING_MIN_CONFIDENCE) return { keep: 'low_confidence' }
+  // Pushback gets the session's full thinking.
+  if ((noul(result, 'corrects_previous') ?? 0) >= ADAPTIVE_THINKING_CORRECTION_AT) return { keep: 'correction' }
+  let cap = CAP_BY_LEVEL[Math.min(CAP_BY_LEVEL.length - 1, Math.max(0, Math.round(demand.score)))]
+  if (!cap) return { keep: 'needs_session_level' }
+  const floored = cap !== 'high' && (noul(result, 'consequential') ?? 0) >= ADAPTIVE_THINKING_CONSEQUENTIAL_AT
+  if (floored) cap = 'high'
+  const level = lowerOf(cap, sessionLevel)
+  if (level === sessionLevel) return { keep: 'not_lower' }
+  return { level, floored }
+}
+
 /**
- * The thinking level to use for this turn when it is lower than `sessionLevel`,
- * or `null` to keep the session level. Never throws.
+ * The thinking level to use for this turn when it is lower than `sessionLevel`
+ * (`null` keeps the session level), and the answer for the next turn's
+ * follow-up. Never throws.
  */
+interface ThinkingDeps extends DecisionPointDeps {
+  sessionId?: string
+  signal?: AbortSignal
+  isCurrent?: () => boolean
+  getSessionLevel?: () => ThinkingLevel
+}
+interface ThinkingPick { level: ThinkingLevel | null; result: DecisionResult | null }
+export function pickTurnThinkingLevel(turn: TurnToRate, sessionLevel: ThinkingLevel, deps?: ThinkingDeps): Promise<ThinkingPick>
+export function pickTurnThinkingLevel(message: string, sessionLevel: ThinkingLevel, deps?: ThinkingDeps): Promise<ThinkingLevel | null>
 export async function pickTurnThinkingLevel(
-  message: string,
+  input: TurnToRate | string,
   sessionLevel: ThinkingLevel,
-  deps: DecisionPointDeps & { sessionId?: string } = {},
-): Promise<ThinkingLevel | null> {
-  if (sessionLevel === 'off' || !message.trim()) return null
+  deps: ThinkingDeps = {},
+): Promise<ThinkingPick | ThinkingLevel | null> {
+  const turn = typeof input === 'string' ? { message: input } : input
+  const finish = (level: ThinkingLevel | null, result: DecisionResult | null) => typeof input === 'string' ? level : { level, result }
+  const message = turn.message.trim()
+  if (sessionLevel === 'off' || !message || deps.signal?.aborted) return finish(null, null)
   // The turn start waits for this answer.
   const decide = await openDecisionPoint({ ...deps, feature: 'adaptiveThinking', record: 'adaptive_thinking', maxDeadlineMs: FOREGROUND_MAX_DEADLINE_MS })
-  if (!decide) return null
-  const result = await decide(buildDemandRequest(message.trim()), { sessionLevel })
-  const answer = result?.answers.demand
-  const keep = (reason: string) => {
-    recordDecisionOutcome(result, { action: 'keep', changed: false, detail: { reason, sessionLevel } })
-    return null
+  if (!decide) return finish(null, null)
+  const result = await decide(buildDemandRequest({ ...turn, message }), { sessionLevel, attachments: turn.attachments?.length ?? 0 }, deps.signal)
+  if (deps.signal?.aborted || (deps.isCurrent && !deps.isCurrent())) {
+    recordDecisionOutcome(result, { action: 'keep', changed: false, detail: { reason: 'obsolete_turn' } })
+    return finish(null, null)
   }
-  if (!answer || answer.type !== 'score') return keep('no_answer')
-  if (answer.confidence < ADAPTIVE_THINKING_MIN_CONFIDENCE) return keep('low_confidence')
-  const level = Math.min(CAP_BY_LEVEL.length - 1, Math.max(0, Math.round(answer.score)))
-  const cap = CAP_BY_LEVEL[level]
-  if (!cap) return keep('needs_session_level')
-  const turnLevel = lowerOf(cap, sessionLevel)
-  if (turnLevel === sessionLevel) return keep('not_lower')
-  recordDecisionOutcome(result, { action: `thinking:${turnLevel}`, changed: true, detail: { sessionLevel } })
-  return turnLevel
+  sessionLevel = deps.getSessionLevel?.() ?? sessionLevel
+  const choice = chooseTurnLevel(result, sessionLevel, !!turn.previousReply?.trim())
+  if ('keep' in choice) {
+    recordDecisionOutcome(result, { action: 'keep', changed: false, detail: { reason: choice.keep, sessionLevel } })
+    return finish(null, result)
+  }
+  recordDecisionOutcome(result, { action: `thinking:${choice.level}`, changed: true, detail: { sessionLevel, ...(choice.floored ? { reason: 'consequential_floor' } : {}) } })
+  return finish(choice.level, result)
+}
+
+/** Whether the user pushed back on the reply to `previous`, as judged with the next turn's answer. */
+export function recordThinkingFollowUp(previous: DecisionResult, next: DecisionResult | null): void {
+  const p = noul(next, 'corrects_previous')
+  if (p === undefined) return
+  recordDecisionFollowUp(previous, { result: p >= ADAPTIVE_THINKING_CORRECTION_AT ? 'correction_likely' : 'correction_not_detected', detail: { p: Math.round(p * 100) / 100, inferred: true } })
 }

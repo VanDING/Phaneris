@@ -64,7 +64,7 @@ if (!baseline) {
     return result
   })
   await check('Adaptive thinking only lowers this turn', async () => {
-    answers = { demand: { type: 'score', score: 0, confidence: 0.95, probabilities: { '0': 0.98, '1': 0.01, '2': 0.005, '3': 0.005 } } }
+    answers = { demand: { type: 'score', score: 0, confidence: 0.95, probabilities: { '0': 0.98, '1': 0.01, '2': 0.005, '3': 0.005 } }, consequential: noul(0.01) }
     assert.equal(await modules['adaptive-thinking'].pickTurnThinkingLevel('hello', 'max', deps), 'low')
     assert.equal(await modules['adaptive-thinking'].pickTurnThinkingLevel('hello', 'low', deps), null)
   })

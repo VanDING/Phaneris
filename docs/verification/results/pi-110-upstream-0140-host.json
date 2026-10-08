@@ -1,0 +1,306 @@
+{
+  "executedAt": "2026-10-08T07:16:55.688Z",
+  "baseline": false,
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-gB8t09",
+  "total": 23,
+  "passed": 23,
+  "failed": 0,
+  "records": [
+    {
+      "id": "13 feature gates, original three defaults preserved, ten new defaults off",
+      "pass": true,
+      "observation": {
+        "enabled": false,
+        "provider": "typesafe",
+        "deadlineMs": 1500,
+        "features": {
+          "decideTool": true,
+          "taskVerdicts": true,
+          "semanticLabels": true,
+          "turnOutcome": false,
+          "guardedMode": false,
+          "riskBadges": false,
+          "automationConditions": false,
+          "taskRepairs": false,
+          "smartTitles": false,
+          "adaptiveThinking": false,
+          "midTurnMessages": false,
+          "largeResults": false,
+          "suggestions": false
+        }
+      }
+    },
+    {
+      "id": "Guarded parses and preserves four-mode child ceilings",
+      "pass": true
+    },
+    {
+      "id": "All seven decision channels route to the owning remote server",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: task-verdict",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: task-repairs",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: semantic-labels",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: turn-outcome",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: automation-condition",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: smart-titles",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: permission-risks",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: large-results",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: suggestions",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: guarded-mode",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: adaptive-thinking",
+      "pass": true
+    },
+    {
+      "id": "Consumer available: mid-turn-messages",
+      "pass": true
+    },
+    {
+      "id": "Turn outcome loopback classification and linked outcome",
+      "pass": true,
+      "observation": {
+        "outcome": "needs_input",
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "Adaptive thinking only lowers this turn",
+      "pass": true
+    },
+    {
+      "id": "Automation condition false skips; provider failure preserves run fallback",
+      "pass": true
+    },
+    {
+      "id": "Large result gate preview; failure keeps summarization",
+      "pass": true
+    },
+    {
+      "id": "Smart title defers small talk and detects drift",
+      "pass": true
+    },
+    {
+      "id": "Risk badges only annotate the prompt",
+      "pass": true
+    },
+    {
+      "id": "Mid-turn delivery and continuation use actual HTTP decisions",
+      "pass": true
+    },
+    {
+      "id": "Decision logs contain outcomes, usage and hashes without input bodies",
+      "pass": true,
+      "observation": {
+        "calls": 12,
+        "summary": {
+          "total": 12,
+          "failures": 2,
+          "providers": {
+            "custom": 12
+          },
+          "features": [
+            {
+              "feature": "adaptive_thinking",
+              "calls": 2,
+              "failures": 0,
+              "cancelled": 0,
+              "coldCalls": 0,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 2,
+              "failureKinds": {},
+              "withOutcome": 2,
+              "changed": 1,
+              "actions": {
+                "thinking:low": 1,
+                "keep": 1
+              },
+              "followUps": {},
+              "followUpsByAction": {},
+              "inputTokens": 14,
+              "outputTokens": 6,
+              "sessions": 1,
+              "latencyP50Ms": 1,
+              "latencyP95Ms": 1
+            },
+            {
+              "feature": "automation_condition",
+              "calls": 2,
+              "failures": 1,
+              "cancelled": 0,
+              "coldCalls": 0,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 2,
+              "failureKinds": {
+                "unavailable": 1
+              },
+              "withOutcome": 1,
+              "changed": 1,
+              "actions": {
+                "skip": 1
+              },
+              "followUps": {},
+              "followUpsByAction": {},
+              "inputTokens": 7,
+              "outputTokens": 3,
+              "sessions": 1,
+              "latencyP50Ms": 1,
+              "latencyP95Ms": 1
+            },
+            {
+              "feature": "large_results",
+              "calls": 2,
+              "failures": 1,
+              "cancelled": 0,
+              "coldCalls": 0,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 2,
+              "failureKinds": {
+                "unavailable": 1
+              },
+              "withOutcome": 1,
+              "changed": 1,
+              "actions": {
+                "skip_summary": 1
+              },
+              "followUps": {},
+              "followUpsByAction": {},
+              "inputTokens": 7,
+              "outputTokens": 3,
+              "sessions": 1,
+              "latencyP50Ms": 0,
+              "latencyP95Ms": 0
+            },
+            {
+              "feature": "mid_turn_messages",
+              "calls": 2,
+              "failures": 0,
+              "cancelled": 0,
+              "coldCalls": 0,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 2,
+              "failureKinds": {},
+              "withOutcome": 2,
+              "changed": 2,
+              "actions": {
+                "steer": 1,
+                "merge": 1
+              },
+              "followUps": {},
+              "followUpsByAction": {},
+              "inputTokens": 14,
+              "outputTokens": 6,
+              "sessions": 1,
+              "latencyP50Ms": 0,
+              "latencyP95Ms": 2
+            },
+            {
+              "feature": "smart_titles",
+              "calls": 2,
+              "failures": 0,
+              "cancelled": 0,
+              "coldCalls": 0,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 2,
+              "failureKinds": {},
+              "withOutcome": 2,
+              "changed": 2,
+              "actions": {
+                "defer_title": 1,
+                "refresh_title": 1
+              },
+              "followUps": {},
+              "followUpsByAction": {},
+              "inputTokens": 14,
+              "outputTokens": 6,
+              "sessions": 1,
+              "latencyP50Ms": 0,
+              "latencyP95Ms": 1
+            },
+            {
+              "feature": "risk_badges",
+              "calls": 1,
+              "failures": 0,
+              "cancelled": 0,
+              "coldCalls": 0,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 1,
+              "failureKinds": {},
+              "withOutcome": 1,
+              "changed": 1,
+              "actions": {
+                "badges": 1
+              },
+              "followUps": {},
+              "followUpsByAction": {},
+              "inputTokens": 7,
+              "outputTokens": 3,
+              "sessions": 1,
+              "latencyP50Ms": 0,
+              "latencyP95Ms": 0
+            },
+            {
+              "feature": "turn_outcome",
+              "calls": 1,
+              "failures": 0,
+              "cancelled": 0,
+              "coldCalls": 1,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 1,
+              "failureKinds": {},
+              "withOutcome": 1,
+              "changed": 1,
+              "actions": {
+                "needs_input": 1
+              },
+              "followUps": {},
+              "followUpsByAction": {},
+              "inputTokens": 7,
+              "outputTokens": 3,
+              "sessions": 1,
+              "latencyP50Ms": 3,
+              "latencyP95Ms": 3
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

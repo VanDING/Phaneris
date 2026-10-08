@@ -56,7 +56,7 @@ const api = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(req) {
   if (pause) await Bun.sleep(pause)
   if (failing) return new Response('fixture failure', { status: 503 })
   const result = Object.fromEntries(Object.entries(body.questions).map(([key, q]: any) => [key, snapshot[key]
-    ?? (q.type === 'noul' ? noul(.98) : q.type === 'choice' ? choice(Object.keys(q.criteria)[0]!, Object.keys(q.criteria))
+    ?? (q.type === 'noul' ? noul(['consequential', 'corrects_previous'].includes(key) ? .02 : .98) : q.type === 'choice' ? choice(Object.keys(q.criteria)[0]!, Object.keys(q.criteria))
       : { type: 'score', score: 0, confidence: .95, probabilities: Object.fromEntries(q.criteria.map((_: unknown, i: number) => [i, i === 0 ? .98 : .02 / (q.criteria.length - 1)])) })]))
   return Response.json({ model: 'fixture', answers: result, usage: { input_tokens: 7, output_tokens: 3 } })
 } })

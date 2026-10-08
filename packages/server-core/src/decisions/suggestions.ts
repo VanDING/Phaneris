@@ -129,14 +129,14 @@ export interface SuggestionPick {
 export async function pickSuggestion(
   message: string,
   candidates: readonly SuggestionCandidate[],
-  deps: DecisionPointDeps & { sessionId?: string } = {},
+  deps: DecisionPointDeps & { sessionId?: string; signal?: AbortSignal; isCurrent?: () => boolean } = {},
 ): Promise<SuggestionPick> {
   const nothing: SuggestionPick = { hint: null, trace: null }
   if (!message.trim() || candidates.length === 0) return nothing
   // The turn start waits for this answer.
   const decide = await openDecisionPoint({ ...deps, feature: 'suggestions', record: 'suggestions', maxDeadlineMs: FOREGROUND_MAX_DEADLINE_MS })
   if (!decide) return nothing
-  const result = await decide(buildSuggestionRequest(message, candidates), { candidates: candidates.length })
+  const result = await decide(buildSuggestionRequest(message, candidates), { candidates: candidates.length }, deps.signal)
   if (!result) return nothing
   const answer = result.answers.needed
   const choice = answer?.type === 'choice' ? candidates.find(candidate => optionKey(candidate) === answer.choice) ?? null : null
@@ -144,6 +144,7 @@ export async function pickSuggestion(
     recordDecisionOutcome(result, { action: 'none', changed: false, detail: { reason } })
     return { hint: null, trace: { result, choice, hinted: false, candidates } }
   }
+  if (deps.signal?.aborted || (deps.isCurrent && !deps.isCurrent())) return none('obsolete_turn')
   if (!answer || answer.type !== 'choice') return none('no_answer')
   if (answer.choice === NONE) return none('nothing_needed')
   if (answer.confidence < SUGGESTION_MIN_CONFIDENCE) return none('low_confidence')

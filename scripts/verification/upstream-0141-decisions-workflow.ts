@@ -11,13 +11,14 @@ mkdirSync(join(configRoot, 'permissions'), { recursive: true }); mkdirSync(works
 copyFileSync(join(root, 'apps/electron/resources/permissions/default.json'), join(configRoot, 'permissions/default.json'))
 process.env.PHANERIS_CONFIG_DIR = configRoot; process.env.NODE_ENV = 'test'
 const requests: any[] = [], checks: any[] = []
-let correction = 0, consequential = 0, delay = 0
+let correction = 0, consequential = 0, delay = 0, omitGuard = false
 const api = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(req) {
   const body = await req.json() as any; requests.push(body)
   if (delay) await Bun.sleep(delay)
-  return Response.json({ model: body.model, answers: Object.fromEntries(Object.entries(body.questions).map(([key, q]: any) => [key,
+  return Response.json({ model: body.model, answers: Object.fromEntries(Object.entries(body.questions).filter(([key]) => !(omitGuard && key === 'consequential')).map(([key, q]: any) => [key,
     q.type === 'score' ? { type: 'score', score: 0, confidence: .97, probabilities: { '0': .97, '1': .01, '2': .01, '3': .01 } }
-      : { type: 'noul', noul: key === 'corrects_previous' ? correction : key === 'consequential' ? consequential : .95 }])), usage: { input_tokens: 7, output_tokens: 3 } })
+      : q.type === 'choice' ? { type: 'choice', choice: 'none', confidence: .95, probabilities: Object.fromEntries(Object.keys(q.criteria).map(key => [key, key === 'none' ? 1 : 0])) }
+        : { type: 'noul', noul: key === 'corrects_previous' ? correction : key === 'consequential' ? consequential : .95 }])), usage: { input_tokens: 7, output_tokens: 3 } })
 } })
 const decisions = await import('../../packages/shared/src/decisions/index.ts')
 const host = await import('../../packages/server-core/src/sessions/SessionManager.ts')
@@ -68,13 +69,33 @@ try {
     return { deadlines }
   })
   if (!process.argv.includes('--b2')) {
+    await check('missing guard answers preserve the cap; follow-ups refer only to the immediately rated reply', async () => {
+      omitGuard = true
+      assert.equal((await manager.startPreTurnDecisions(managed, 'routine')).thinkingOverride, null)
+      omitGuard = false
+      managed.messages = [{ id: 'first-user', role: 'user', content: 'routine' }]
+      await manager.startPreTurnDecisions(managed, 'routine')
+      managed.messages.push({ id: 'reply', role: 'assistant', content: 'final answer' }, { id: 'second-user', role: 'user', content: 'wrong' })
+      correction = .9
+      await manager.startPreTurnDecisions(managed, 'wrong')
+      await decisions.getDecisionRecorder().flush()
+      const lines = await decisions.readDecisionLog(decisions.defaultDecisionsLogPath())
+      const followUps = lines.filter((line: any) => line.kind === 'followup' && line.feature === 'adaptive_thinking') as any[]
+      assert.equal(followUps.length, 1); assert.equal(followUps[0].result, 'correction_likely')
+      manager.startPreTurnDecisions(managed, 'hidden', { hidden: true })
+      await manager.startPreTurnDecisions(managed, 'another user')
+      await decisions.getDecisionRecorder().flush()
+      const after = (await decisions.readDecisionLog(decisions.defaultDecisionsLogPath())).filter((line: any) => line.kind === 'followup' && line.feature === 'adaptive_thinking')
+      assert.equal(after.length, 1)
+      correction = 0
+    })
     await check('thinking reads final reply tail and attachment metadata; correction and consequential floor respect user cap', async () => {
       managed.messages = [{ role: 'assistant', isIntermediate: false, content: 'prefix'.repeat(500) + 'TAIL EVIDENCE' }]
       const attachment = { name: '模型.xlsx', type: 'document', size: 4096, base64: 'PRIVATE_ATTACHMENT_BODY' }
       correction = .9
       const corrected = await manager.startPreTurnDecisions(managed, '不对，请按附件重新算', {}, { attachments: [attachment] })
       assert.equal(corrected.thinkingOverride, null)
-      const state = requests.at(-1).state
+      const state = requests.findLast(r => r.questions.demand).state
       assert(state.previous_assistant_reply.endsWith('TAIL EVIDENCE')); assert(state.previous_assistant_reply.length <= 1201)
       assert(JSON.stringify(state.attachments).includes('模型.xlsx')); assert(!JSON.stringify(state).includes(attachment.base64))
       correction = 0; consequential = .9
