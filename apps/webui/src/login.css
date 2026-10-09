@@ -1,0 +1,15 @@
+/**
+ * Login page fonts.
+ *
+ * The login screen is a standalone HTML entry with its own inline styles, so it
+ * cannot inherit the app stylesheet. It still needs the bundled Inter rather than
+ * a Google Fonts <link>: the server may be reached over a LAN or an air-gapped
+ * network where fonts.googleapis.com is unreachable, and the app deliberately
+ * makes no third-party font requests.
+ *
+ * `opsz.css` is the variant that carries Inter's optical-size axis, so the login
+ * page's `font-optical-sizing: auto` behaves the same as in the app shell. The
+ * monospace face is bundled too — the token inputs use it.
+ */
+@import "@fontsource-variable/inter/opsz.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";

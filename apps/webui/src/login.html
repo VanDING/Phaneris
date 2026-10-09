@@ -8,9 +8,8 @@
   <link rel="icon" type="image/x-icon" href="./favicon.ico" />
   <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
   <meta name="theme-color" content="#1F1F24" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <!-- Bundled Inter (variable, optical-size axis included) — see login.css. -->
+  <link rel="stylesheet" href="./login.css" />
   <style>
     :root {
       color-scheme: light dark;
@@ -37,7 +36,8 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-optical-sizing: auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -121,7 +121,7 @@
       width: 100%;
       padding: 10px 12px;
       font-size: 14px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
       border: 1px solid var(--input-border);
       border-radius: 8px;
       outline: none;
@@ -145,7 +145,7 @@
       padding: 10px;
       font-size: 14px;
       font-weight: 500;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter Variable', sans-serif;
       color: white;
       background: linear-gradient(180deg, #7b6dff 0%, var(--accent) 100%);
       border: none;

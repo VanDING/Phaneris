@@ -36,9 +36,14 @@ export default defineConfig({
           if (ctx.server) return html
           return html
             .replace(/\n?\s*<script src="\.\/react-devtools\.js"><\/script>/, '')
+            // Production CSP. Fonts ship inside the bundle
+            // (packages/ui/src/styles/typography.css), so no font CDN is allowed
+            // here. Workspace Pages are the deliberate exception: they opt into
+            // Google Fonts through their own craft-page: response policy
+            // (src/shared/page-document.ts), because their HTML is user-authored.
             .replace(
               /(<meta http-equiv="Content-Security-Policy" content=")[^"]*(")/,
-              '$1' + "default-src 'self'; frame-src 'self' craft-page:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: file: thumbnail: blob:; connect-src 'self' https: http://localhost:* ws://localhost:* wss://localhost:* http://127.0.0.1:* ws://127.0.0.1:* wss://127.0.0.1:* wss:; font-src 'self' data: https://fonts.gstatic.com; worker-src 'self' blob:; object-src 'self' file:;" + '$2',
+              '$1' + "default-src 'self'; frame-src 'self' craft-page:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: file: thumbnail: blob:; connect-src 'self' https: http://localhost:* ws://localhost:* wss://localhost:* http://127.0.0.1:* ws://127.0.0.1:* wss://127.0.0.1:* wss:; font-src 'self' data:; worker-src 'self' blob:; object-src 'self' file:;" + '$2',
             )
         },
       },

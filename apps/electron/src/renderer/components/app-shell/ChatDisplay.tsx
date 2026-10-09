@@ -2247,12 +2247,15 @@ function MessageBubble({
               <ExternalLink className="w-4 h-4 text-muted-foreground hover:text-foreground" />
             </button>
           )}
-          {/* Use StreamingMarkdown for block-level memoization during streaming */}
+          {/* Use StreamingMarkdown for block-level memoization during streaming.
+              Both branches carry the same reading class so the transcript does
+              not resize when a streamed answer settles. */}
           {message.isStreaming ? (
             <StreamingMarkdown
               content={message.content}
               isStreaming={true}
               mode={renderMode}
+              className="text-reading"
               onUrlClick={onOpenUrl}
               onFileClick={onOpenFile}
             />
@@ -2263,7 +2266,7 @@ function MessageBubble({
                 onUrlClick={onOpenUrl}
                 onFileClick={onOpenFile}
                 id={message.id}
-                className="text-sm"
+                className="text-reading"
                 collapsible
               >
                 {message.content}

@@ -9,3 +9,15 @@ to their respective licenses.
 
 The agent runtime is built on the Pi SDK packages published by
 earendil-works. Individual model providers may have separate service terms.
+
+Bundled fonts: the UI ships three SIL Open Font License 1.1 typefaces and makes
+no request to any font CDN at runtime.
+  - Noto Sans SC     Copyright Google Inc.
+                     https://github.com/google/fonts/tree/main/ofl/notosanssc
+  - Inter            Copyright 2016 The Inter Project Authors
+                     https://github.com/rsms/inter
+  - JetBrains Mono   Copyright 2020 The JetBrains Mono Project Authors
+                     https://github.com/JetBrains/JetBrainsMono
+
+The full licence text for each is in apps/electron/resources/licenses/ and is
+copied into the packaged app's resources/licenses/ directory.

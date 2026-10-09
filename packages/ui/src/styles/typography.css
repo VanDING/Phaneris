@@ -1,0 +1,72 @@
+/**
+ * Typography tokens — the single source of truth for every Phaneris font stack.
+ *
+ * Imported by this package's theme (`./index.css`) and by the Electron renderer
+ * (`apps/electron/src/renderer/index.css`) so the stacks cannot drift apart.
+ * Theme files may still override `fontSans` / `fontSerif` / `fontMono`; the theme
+ * engine injects those as an inline `:root` block, which outranks these defaults.
+ *
+ * ## Why the faces are bundled
+ *
+ * Every face here is served from the app bundle, never from a font CDN. The app
+ * is local-first and ships with telemetry off; a launch-time request to
+ * fonts.googleapis.com told a third party when the app was opened, and failed
+ * outright on an offline or firewalled machine. The content security policy of
+ * every renderer entry now refuses remote fonts, so a regression cannot quietly
+ * reintroduce the dependency — `bun run check:fonts` enforces the same rule.
+ *
+ * Bundled faces (all OFL-1.1, all variable):
+ *   - `@fontsource-variable/inter`           → "Inter Variable"           (Latin UI)
+ *   - `@fontsource-variable/jetbrains-mono`  → "JetBrains Mono Variable"  (code)
+ *   - `@fontsource-variable/noto-sans-sc`    → "Noto Sans SC Variable"    (Han)
+ *
+ * ## Why the CJK face matters for weight
+ *
+ * Han characters used to fall through to Microsoft YaHei on Windows, which ships
+ * only Light/Regular/Bold. The CSS font-matching algorithm then resolves
+ * `font-weight: 500` to 400 and `font-weight: 600` to 700, so every
+ * `font-medium`/`font-semibold` in the UI changed the Latin beside it and left
+ * the Han untouched (or jumped it straight to full bold). Bundling a variable
+ * CJK face makes 100–900 real for both scripts, and makes rendering identical on
+ * Windows, macOS and Linux instead of depending on what the user has installed.
+ *
+ * Noto Sans SC ships ~101 woff2 slices keyed by `unicode-range`, so a screen only
+ * downloads the slices it actually renders rather than one multi-megabyte file.
+ * Inter and JetBrains Mono are sliced the same way (per script subset).
+ *
+ * Stack order matters: the Latin families come first so Latin stays on the
+ * platform UI face (Segoe UI Variable on Windows, SF Pro on macOS), and the
+ * bundled CJK family is the first family that can render Han. `PingFang SC` and
+ * friends sit behind it so an explicitly installed native face still wins if the
+ * bundled slices ever fail to load.
+ */
+
+@import "@fontsource-variable/inter/opsz.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";
+@import "@fontsource-variable/noto-sans-sc/wght.css";
+
+:root {
+  /* Families that can render Han, most preferred first. Kept separate so the
+     explicit `data-font` overrides can splice it into their own Latin stack —
+     otherwise picking Inter would drop Han to the generic `sans-serif` default
+     and reintroduce the system-font lottery this file exists to remove. */
+  --font-cjk: "Noto Sans SC Variable", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei UI", "Microsoft YaHei";
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter Variable", "Segoe UI", var(--font-cjk), sans-serif;
+  --font-serif: "New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
+  /* Han in code/pre: the bundled CJK face keeps Han at a clean 1em advance next
+     to the 0.5em Latin advance, so monospace columns stay aligned. */
+  --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono Variable", ui-monospace, Consolas, "Noto Sans SC Variable", "Microsoft YaHei UI", monospace;
+  --font-default: var(--font-sans);
+}
+
+@theme inline {
+  /* Reading surfaces (chat messages, document views). Simplified Chinese needs
+     at least 14px: below that, dense glyphs such as 陕西煤业 or 闸门 lose their
+     stroke separation and the text reads as a grey smear. Expressed in rem so it
+     still follows a theme's `--font-size-base`; 0.93334rem = 14px at the default
+     15px root. Named `reading` rather than `prose` to stay clear of the
+     `@tailwindcss/typography` plugin's own `prose` classes. */
+  --text-reading: 0.93334rem;
+  --text-reading--line-height: 1.7;
+}

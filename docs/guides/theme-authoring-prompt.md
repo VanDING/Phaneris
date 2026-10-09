@@ -191,11 +191,13 @@ dark（44 个）：
    **纯中性黑（饱和度 0–10%）是最平淡的选择**：它让主题失去材质，且会让大量暗色主题彼此雷同。至少给底色 20% 以上的色相偏移，让"底"本身成为一种材质。
 5. **`shadowColor` 不要用纯黑。** 用带主题色相的深色（例如紫色主题用 `#2D1E3E`），暗色模式下进一步加深。
 6. **一套主题内部要克制**：`radius` / `borderWidth` / `fontSize` / `density` 只表达一种气质，不要在同一份文件里既想极简又想要粗野。
-7. **字体必须给完整回退栈**，以 `sans-serif` 或 `monospace` 收尾，并保留系统字体兜底：
-   `"\"Inter\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif"`
-   **注意：字体栈只能引用系统已安装的字体。** 首选字体若未安装会**静默回退**到后面的字体——写一个不存在的字体不会报错，只会让设计意图落空。优先使用系统自带字体（Windows：`Segoe UI Variable Text`、`Cascadia Mono`、`Sitka Text`、`Bahnschrift`、`Corbel`、`Consolas`；中文：`Microsoft YaHei UI`、`Noto Serif SC`、`Noto Sans SC`），把市面上流行的开源字体放在**兜底位置**而非首位。
-8. **中文场景**：字体栈里应保留 `"Microsoft YaHei UI"` 或 `"Noto Sans SC"`/`"Noto Serif SC"`，否则中文字形会掉到默认字体、与拉丁字形气质割裂。
-9. **字号与行高**：`fontSize` 用 `16px`（低于 16px 会损害正文可读性），`lineHeight` 不低于 `1.5`；长文/衬线主题可到 1.6–1.8。
+7. **字体必须给完整回退栈**，以 `sans-serif` 或 `monospace` 收尾，并保留系统字体兜底。
+   默认栈由 `packages/ui/src/styles/typography.css` 统一持有（`--font-sans` / `--font-serif` / `--font-mono`，以及只含汉字可用字族的 `--font-cjk`），`packages/shared/src/config/theme.ts` 的 `DEFAULT_THEME` 必须与它逐字一致 —— `bun run check:fonts` 会检查这一点。
+   **主题若要自带字体栈，请保留 `var(--font-cjk)`。** 应用自带 Noto Sans SC 来渲染汉字；丢掉它，汉字会回落到系统默认字体（Windows 上是微软雅黑），而微软雅黑只有 Light/Regular/Bold 三档 —— `font-weight: 500` 会静默退化成 400、600 直接跳成粗体，同一行里的拉丁文却拿到了真正的 500/600。
+   **注意：字体栈只能引用系统已安装的字体，或应用自带的字体。** 首选字体若未安装会**静默回退**到后面的字体——写一个不存在的字体不会报错，只会让设计意图落空。可用的系统字体：Windows 为 `Segoe UI Variable Text`、`Cascadia Mono`、`Sitka Text`、`Bahnschrift`、`Corbel`、`Consolas`；macOS 为 `SF Pro`/`PingFang SC`/`Songti SC`。
+   **自带字体（随包分发，OFL-1.1，均为变量字体）只有三个**：`Inter Variable`（拉丁界面）、`JetBrains Mono Variable`（代码）、`Noto Sans SC Variable`（汉字，即 `--font-cjk`）。应用**不向任何字体 CDN 发请求** —— 每个渲染器入口的 CSP 都拒绝远程字体，`bun run check:fonts` 也会拦下重新引入的 Google Fonts 链接（工作区 Pages 是唯一例外，它们自带独立 CSP）。
+8. **中文场景**：字体栈里必须保留 `var(--font-cjk)`，不要只写 `sans-serif` —— 否则中文字形会掉到系统默认字体，与拉丁字形气质割裂，字重也会失配。
+9. **字号与行高**：`fontSize` **保持默认 15px，不要改**。它改的是根字号，Tailwind 的 `p-*`/`m-*`/`gap-*` 全部基于 rem，动它等于给整个 UI 加全局缩放（`docs/guides/graphite-theme.md` 记录过 16px 版本把界面撑大一圈的实测）。正文可读性靠 `--text-reading`（默认 `0.93334rem` = 14px，见 `typography.css`）而不是根字号；中文低于 14px 时多笔画字（如「陕西煤业」「闸门」）笔画会糊在一起。`lineHeight` 不低于 `1.5`，中文正文建议 1.6–1.8。
 10. **字距要克制**：`letterSpacing` 保持在 `-0.01em` ~ `0.03em` 区间。超过 `0.05em` 的全局字距会让正文松散难读——需要"科技感"或"标签感"时应靠字体选择而非全局拉开字距。
 
 ## 避免"AI 生成主题"的默认脸
@@ -253,10 +255,10 @@ dark（44 个）：
   "radius": "10px",
   "borderWidth": "1px",
   "borderStyle": "solid",
-  "fontSans": "\"Inter\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+  "fontSans": "\"Inter Variable\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", var(--font-cjk), sans-serif",
   "fontSerif": "……",
-  "fontMono": "\"JetBrains Mono\", ui-monospace, SFMono-Regular, \"SF Mono\", Menlo, Consolas, monospace",
-  "fontSize": "16px",
+  "fontMono": "\"JetBrains Mono Variable\", ui-monospace, SFMono-Regular, \"SF Mono\", Menlo, Consolas, var(--font-cjk), monospace",
+  "fontSize": "15px",
   "lineHeight": 1.55,
   "letterSpacing": "-0.008em",
   "iconStrokeWidth": 1.7,
@@ -307,8 +309,8 @@ dark（44 个）：
 - [ ] 正文对比度 ≥ 4.5:1，次要文字 ≥ 3:1
 - [ ] **表面阶梯可测量**：`background`→`card`→`backgroundElevated` 每一级都有可见明度差（不要出现 `card` 与 `background` 同值）
 - [ ] **语义色两两色相 ≥ 20°**，`accent` 未与 `info`/`destructive` 撞色
-- [ ] `fontSize` = 16px、`lineHeight` ≥ 1.5、`letterSpacing` 在 -0.01em ~ 0.03em
-- [ ] 字体栈首选字体**已确认安装在目标系统上**（否则会静默回退，设计意图落空）
+- [ ] `fontSize` = 15px（默认值，不要改动根字号）、`lineHeight` ≥ 1.5、`letterSpacing` 在 -0.01em ~ 0.03em
+- [ ] 字体栈首选字体**已确认安装在目标系统上**（否则会静默回退，设计意图落空），且栈里保留了 `var(--font-cjk)`
 - [ ] 未落入第七节列出的五种「AI 默认脸」组合
 - [ ] 左侧边栏未着色（**没有**写 `navigator`）
 - [ ] `shikiTheme` 取值在白名单内（或省略该字段）

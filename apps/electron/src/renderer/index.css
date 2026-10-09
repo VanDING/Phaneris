@@ -1,4 +1,5 @@
 @import "tailwindcss" source(none);
+@import "../../../../packages/ui/src/styles/typography.css";
 @import "../../../../packages/ui/src/styles/motion.css";
 @import "../../../../packages/ui/src/styles/controls.css";
 @plugin "@tailwindcss/typography";
@@ -184,11 +185,8 @@
   --step-content-gap: 1.5rem;
   --step-actions-margin: 2rem;
 
-  /* Theme typography; explicit Inter/System preferences override below. */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
-  --font-serif: "New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
-  --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace;
-  --font-default: var(--font-sans);
+  /* Typography (font stacks, reading size) comes from
+     packages/ui/src/styles/typography.css — see the import at the top. */
 
   /* Layout */
   --font-size-base: 15px;
@@ -328,9 +326,6 @@
   --theme-panel-radius: 6px;
   --theme-border-width: 1px;
   --theme-border-style: solid;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
-  --font-serif: "New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
-  --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace;
   --font-size-base: 15px;
   --tracking-normal: 0em;
   --line-height-base: 1.5;
@@ -420,17 +415,22 @@ html[data-scenic] {
   --background: oklch(0.2 0.005 270 / 0.55);
 }
 
-/* Inter Font - Opt-in via data-font="inter" attribute
-   Loaded from Google Fonts in index.html with optical sizing (opsz) axis */
+/* Inter Font - Opt-in via data-font="inter" attribute.
+   Bundled via @fontsource-variable/inter, whose `opsz` entry carries the optical
+   size axis, so `font-optical-sizing: auto` below is meaningful.
+   `--font-cjk` keeps Han on the bundled CJK face — Inter has no Han glyphs, so
+   without it the Chinese would drop to the generic `sans-serif` default. */
 html[data-font="inter"] {
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, var(--font-cjk), sans-serif;
   --font-default: var(--font-sans);
   font-optical-sizing: auto;
   font-feature-settings: "cv01", "cv02", "cv03", "cv04", "case";
 }
 
 /* Explicit user override. The selector outranks dynamically injected :root
-   theme tokens, so choosing System always wins over a theme-authored font. */
+   theme tokens, so choosing System always wins over a theme-authored font.
+   This variant is deliberately native end to end: Han falls to the OS CJK face
+   (Microsoft YaHei on Windows, PingFang on macOS) rather than the bundled one. */
 html[data-font="system"] {
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-default: var(--font-sans);

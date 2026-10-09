@@ -24,6 +24,7 @@
  */
 
 @import "tailwindcss";
+@import "./typography.css";
 @import "./motion.css";
 @import "./controls.css";
 @plugin "@tailwindcss/typography";
@@ -115,11 +116,8 @@
   --md-bullets: var(--foreground-50);
   --md-counters: var(--foreground-50);
 
-  /* Default typography follows the platform UI and code fonts. */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
-  --font-serif: "New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
-  --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace;
-  --font-default: var(--font-sans);
+  /* Font stacks live in ./typography.css (single source of truth, shared with
+     the Electron renderer). */
 
   /* Layout */
   --font-size-base: 15px;
@@ -223,9 +221,6 @@
   --theme-panel-radius: 6px;
   --theme-border-width: 1px;
   --theme-border-style: solid;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
-  --font-serif: "New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif;
-  --font-mono: SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace;
   --font-size-base: 15px;
   --tracking-normal: 0em;
   --line-height-base: 1.5;
@@ -243,10 +238,11 @@
   --user-message-bubble-dimmed: #252525;
 }
 
-/* Inter font option (requires loading Inter from Google Fonts or locally)
-   For best results, load Inter with optical sizing: family=Inter:opsz,wght@14..32,400;... */
+/* Inter font option. Inter is bundled (`@fontsource-variable/inter`, opt-in via
+   `data-font="inter"` in the appearance settings) with its optical-size axis;
+   `--font-cjk` keeps Han on the bundled CJK face. */
 html[data-font="inter"] {
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, var(--font-cjk), sans-serif;
   --font-default: var(--font-sans);
   font-optical-sizing: auto;
   font-feature-settings: "cv01", "cv02", "cv03", "cv04", "case";
