@@ -2,6 +2,7 @@ import { describe, it, expect } from 'bun:test'
 import { mkdtemp, realpath, rm, writeFile } from 'fs/promises'
 import { homedir, tmpdir } from 'os'
 import { join, sep } from 'path'
+import { CONFIG_DIR } from '@phaneris/shared/config/paths'
 import { validateFilePath } from '../utils'
 
 const home = homedir()
@@ -118,7 +119,7 @@ describe('validateFilePath', () => {
   })
 
   it('blocks the app-level config root config.json', async () => {
-    const path = join(home, '.phaneris', 'config.json')
+    const path = join(CONFIG_DIR, 'config.json')
     await expect(validateFilePath(path)).rejects.toThrow('sensitive')
   })
 

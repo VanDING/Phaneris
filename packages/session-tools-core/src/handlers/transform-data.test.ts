@@ -117,7 +117,7 @@ afterAll(() => {
     expect(result.content[0]?.text).toContain('outputFile must be within the session data directory');
   });
 
-  it('allows valid descendant paths and writes output', async () => {
+  it('allows valid descendant paths only with platform isolation', async () => {
     const result = await handleTransformData(ctx(), {
       language: 'node',
       script: "const fs=require('node:fs');fs.writeFileSync(process.argv.at(-1), JSON.stringify({ok:true}));",
@@ -125,11 +125,19 @@ afterAll(() => {
       outputFile: 'out.json',
     });
 
+    if (process.platform === 'win32') {
+      // Windows has no isolation backend yet; valid paths do not authorize an
+      // unsandboxed child. Preserve the same fail-closed contract as production.
+      expect(result.isError).toBe(true);
+      expect(result.content[0]?.text).toContain('no supported backend is available on this platform');
+      expect(existsSync(join(dataDir, 'out.json'))).toBe(false);
+      return;
+    }
     expect(result.isError).toBe(false);
     expect(existsSync(join(dataDir, 'out.json'))).toBe(true);
   });
 
-  it('allows input files from skills directory (absolute path)', async () => {
+  it('allows skills input only with platform isolation', async () => {
     const skillAsset = join(skillsDir, 'branding', 'assets', 'template.pptx');
     const result = await handleTransformData(ctx(), {
       language: 'node',
@@ -138,6 +146,12 @@ afterAll(() => {
       outputFile: 'out.json',
     });
 
+    if (process.platform === 'win32') {
+      expect(result.isError).toBe(true);
+      expect(result.content[0]?.text).toContain('no supported backend is available on this platform');
+      expect(existsSync(join(dataDir, 'out.json'))).toBe(false);
+      return;
+    }
     expect(result.isError).toBe(false);
     expect(existsSync(join(dataDir, 'out.json'))).toBe(true);
   });
