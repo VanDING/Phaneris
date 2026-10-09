@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-10-09T00:20:33.050Z",
+  "fixture": "upstream-0141-large-v1",
+  "checks": [
+    {
+      "id": "tail evidence reaches a bounded excerpt; full original is saved exactly",
+      "pass": true,
+      "observation": {
+        "rawChars": 102726,
+        "outputChars": 412,
+        "sha256": "0d763a083072b4a940b2930286f7edc80ccc096c113935d23d25bd00fa70a75a",
+        "filePath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-0141-large-oWQ2xJ\\sessions\\filter\\long_responses\\2026-10-09T00-20-22-575_fixture_.txt"
+      }
+    },
+    {
+      "id": "missing answers, failed calls, none and nearly all relevant fall back without dropping unscored parts",
+      "pass": true
+    },
+    {
+      "id": "Chinese long lines and formatted headers/gaps obey the complete output budget",
+      "pass": true,
+      "observation": {
+        "outputChars": 12393,
+        "boundedWholeText": true
+      }
+    },
+    {
+      "id": "one total deadline and cancellation stop all waves; cancellation never starts a summary",
+      "pass": true
+    },
+    {
+      "id": "JSONL filter settles send failures, cancellation, lost replies and ignores stale replies",
+      "pass": true
+    },
+    {
+      "id": "embedded API only receives declared intent; durable identity and cancellation survive",
+      "pass": true
+    },
+    {
+      "id": "actual Pi host/child to MCP and API preserves intent, raw structured data and one T1/T2 per execution",
+      "pass": true,
+      "observation": {
+        "filterInChild": false,
+        "executions": 2,
+        "externalExecutions": 1,
+        "t1": 2,
+        "t2": 2,
+        "rawHash": "0d763a083072b4a940b2930286f7edc80ccc096c113935d23d25bd00fa70a75a",
+        "modelRequests": 4,
+        "filterRequests": 0,
+        "wireTypes": [
+          "ready",
+          "session_id_update",
+          "thinking_level_state",
+          "set_auto_compaction_result",
+          "input_received",
+          "event",
+          "durable_model_prepare_request",
+          "sdk_observation",
+          "durable_model_outcome_request",
+          "pre_tool_use_request",
+          "durable_tool_prepare_request",
+          "tool_execute_request",
+          "durable_tool_outcome_request"
+        ]
+      }
+    },
+    {
+      "id": "follow-up labels only exact-path access attempts; logs contain no result text",
+      "pass": true
+    }
+  ],
+  "decisionRequests": 35,
+  "rawSha256": "0d763a083072b4a940b2930286f7edc80ccc096c113935d23d25bd00fa70a75a"
+}

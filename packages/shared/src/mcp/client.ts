@@ -75,6 +75,8 @@ const BLOCKED_ENV_VARS = [
  * cancellation notifications instead of orphaned in-flight requests.
  */
 export interface PoolCallToolOptions {
+  /** Host metadata; never injected into external MCP arguments. */
+  intent?: string;
   /** Cancels the in-flight request when aborted */
   signal?: AbortSignal;
   /** Request timeout in ms (SDK default applies when omitted) */

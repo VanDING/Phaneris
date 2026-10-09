@@ -52,8 +52,8 @@ import type {
 
 // Event adapter
 import { PiEventAdapter } from './backend/pi/event-adapter.ts';
-import type { PiCompactResult, PiLargeResultGateRequest, PiLargeResultGateResponse } from './backend/pi/protocol.ts';
-import { askLargeResultSummaryGate } from '../utils/large-response.ts';
+import type { PiCompactResult, PiLargeResultGateRequest, PiLargeResultGateResponse, PiLargeResultFilterRequest } from './backend/pi/protocol.ts';
+import { askLargeResultSummaryGate, askLargeResultFilter } from '../utils/large-response.ts';
 import { applyGuardedModeCheck, needsGuardedModeCheck } from './core/guarded-mode.ts';
 import { EventQueue } from './backend/event-queue.ts';
 
@@ -430,6 +430,8 @@ export class PiAgent extends BaseAgent {
 
   // Metadata captured before PreToolUse stripping, keyed by toolCallId.
   // This provides a deterministic bridge when side-channel metadata store misses.
+  private pendingHostToolRequests = new Map<string, AbortController>();
+  private pendingLargeResultFilters = new Map<string, AbortController>();
   private preToolMetadataByCallId: Map<string, {
     intent?: string;
     displayName?: string;
@@ -1132,10 +1134,21 @@ export class PiAgent extends BaseAgent {
         void this.handleLargeResultGateRequest(msg as unknown as PiLargeResultGateRequest);
         break;
 
+      case 'large_result_filter_request':
+        void this.handleLargeResultFilterRequest(msg as unknown as PiLargeResultFilterRequest);
+        break;
+      case 'large_result_filter_cancel':
+        this.pendingLargeResultFilters.get(msg.requestId as string)?.abort();
+        break;
+      case 'tool_execute_cancel':
+        this.pendingHostToolRequests.get(msg.requestId as string)?.abort();
+        break;
+
       case 'tool_execute_request':
         // Subprocess wants main process to execute a proxy tool (MCP/API/session)
         this.handleToolExecuteRequest(msg as {
           requestId: string;
+          toolCallId?: string;
           toolName: string;
           args: Record<string, unknown>;
           durableTool?: DurableToolExecutionIdentity;
@@ -1664,6 +1677,7 @@ export class PiAgent extends BaseAgent {
    */
   private async handleToolExecuteRequest(request: {
     requestId: string;
+    toolCallId?: string;
     toolName: string;
     args: Record<string, unknown>;
     durableTool?: DurableToolExecutionIdentity;
@@ -1679,14 +1693,20 @@ export class PiAgent extends BaseAgent {
       return;
     }
 
+    const epoch = this.subprocessEpoch;
+    const abort = new AbortController();
+    this.pendingHostToolRequests.set(request.requestId, abort);
+    const intent = request.toolCallId ? this.preToolMetadataByCallId.get(request.toolCallId)?.intent : undefined;
     try {
-      const result = await this.routeToolCall(request.toolName, request.args, request.durableTool);
+      const result = await this.routeToolCall(request.toolName, request.args, request.durableTool, intent, abort.signal);
+      if (epoch !== this.subprocessEpoch || abort.signal.aborted) return;
       this.send({
         type: 'tool_execute_response',
         requestId: request.requestId,
         result,
       });
     } catch (error) {
+      if (epoch !== this.subprocessEpoch || abort.signal.aborted) return;
       this.send({
         type: 'tool_execute_response',
         requestId: request.requestId,
@@ -1695,6 +1715,8 @@ export class PiAgent extends BaseAgent {
           isError: true,
         },
       });
+    } finally {
+      this.pendingHostToolRequests.delete(request.requestId);
     }
   }
 
@@ -1811,6 +1833,8 @@ export class PiAgent extends BaseAgent {
     toolName: string,
     args: Record<string, unknown>,
     durableTool?: DurableToolExecutionIdentity,
+    intent?: string,
+    signal?: AbortSignal,
   ): Promise<PiProxyToolResult> {
     // Session-scoped tools — strip mcp__session__ prefix added by the Pi SDK
     // registration (tools are registered as mcp__session__SubmitPlan, etc.)
@@ -1824,7 +1848,7 @@ export class PiAgent extends BaseAgent {
 
     // MCP source tools — route through centralized pool
     if (this.mcpPool?.isProxyTool(toolName)) {
-      return this.mcpPool.callTool(toolName, args, { durableTool });
+      return this.mcpPool.callTool(toolName, args, { durableTool, intent, signal });
     }
 
     // Unknown tool
@@ -2238,6 +2262,7 @@ export class PiAgent extends BaseAgent {
     this.settlePendingAskUser();
 
     // Drop any cached pre-tool metadata for the dead subprocess.
+    this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
     this.bufferedDurableToolStarts.clear();
   }
@@ -2919,6 +2944,7 @@ export class PiAgent extends BaseAgent {
     this.eventQueue.complete();
 
     // Clear bridge cache for this interrupted turn.
+    this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
     this.bufferedDurableToolStarts.clear();
   }
@@ -2959,6 +2985,7 @@ export class PiAgent extends BaseAgent {
     this.adapter.resetRecoveryState();
 
     // Clear bridge cache for aborted turn.
+    this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
     this.bufferedDurableToolStarts.clear();
 
@@ -3163,6 +3190,7 @@ export class PiAgent extends BaseAgent {
     this.syncedProxyToolsSignature = null;
     this.subprocessReadyResolve = null;
     this.callbackPort = 0;
+    this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
     this.bufferedDurableToolStarts.clear();
     this.adapter.resetRecoveryState();
@@ -3219,6 +3247,7 @@ export class PiAgent extends BaseAgent {
     this.syncedProxyToolsSignature = null;
     this.subprocessReadyResolve = null;
     this.callbackPort = 0;
+    this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
     this.bufferedDurableToolStarts.clear();
 
@@ -3469,5 +3498,23 @@ export class PiAgent extends BaseAgent {
     });
     const response: PiLargeResultGateResponse = { type: 'large_result_gate_response', requestId: msg.requestId, summarize };
     this.send({ ...response });
+  }
+
+  private cancelPendingHostRequests(): void {
+    for (const request of this.pendingLargeResultFilters.values()) request.abort();
+    for (const request of this.pendingHostToolRequests.values()) request.abort();
+    this.pendingLargeResultFilters.clear();
+    this.pendingHostToolRequests.clear();
+  }
+
+  private async handleLargeResultFilterRequest(msg: PiLargeResultFilterRequest): Promise<void> {
+    const epoch = this.subprocessEpoch;
+    const abort = new AbortController();
+    this.pendingLargeResultFilters.set(msg.requestId, abort);
+    try {
+      const excerpt = await askLargeResultFilter({ text: msg.text, context: { toolName: msg.toolName, intent: msg.intent },
+        budgetChars: msg.budgetChars, filePath: msg.filePath, sessionId: this.config.session?.id, signal: abort.signal });
+      if (epoch === this.subprocessEpoch && !abort.signal.aborted) this.send({ type: 'large_result_filter_response', requestId: msg.requestId, excerpt });
+    } finally { this.pendingLargeResultFilters.delete(msg.requestId); }
   }
 }

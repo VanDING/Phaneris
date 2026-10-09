@@ -153,7 +153,7 @@ import {
 } from './length-continuation.ts';
 
 // Direct source imports from shared (bundled by bun build)
-import { handleLargeResponse, estimateTokens, tokenLimitFor, setLargeResultSummaryGate } from '../../shared/src/utils/large-response.ts';
+import { handleLargeResponse, estimateTokens, tokenLimitFor, setLargeResultFilter } from '../../shared/src/utils/large-response.ts';
 import { getSessionPlansPath, getSessionPath } from '../../shared/src/sessions/storage.ts';
 import { buildCallLlmRequest } from '../../shared/src/agent/llm-tool.ts';
 import type { LLMQueryRequest, LLMQueryResult } from '../../shared/src/agent/llm-tool.ts';
@@ -167,8 +167,8 @@ import { createPhanerisResourceLoader, getPhanerisSystemPrompt, setPhanerisSyste
 import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { readContextUsage, deferContextUsage } from './context-usage.ts';
 import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS } from './compaction-wait.ts';
-import { createLargeResultGateClient } from './large-result-gate.ts';
-import type { PiCompactResult, PiContextUsagePayload, PiLargeResultGateRequest, PiLargeResultGateResponse, PiInputReception, PiProxyToolDefinition, PiProxyToolResult } from '../../shared/src/agent/backend/pi/protocol.ts';
+import { createLargeResultFilterClient } from './large-result-filter.ts';
+import type { PiCompactResult, PiContextUsagePayload, PiLargeResultFilterRequest, PiLargeResultFilterResponse, PiLargeResultFilterCancel, PiInputReception, PiProxyToolDefinition, PiProxyToolResult } from '../../shared/src/agent/backend/pi/protocol.ts';
 import { mcpStructuredContentSchema } from '@earendil-works/pi-codemode/declarations';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
@@ -248,7 +248,7 @@ type InboundMessage =
   | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
   | { type: 'durable_model_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }
   | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
-  | PiLargeResultGateResponse
+  | PiLargeResultFilterResponse
   | { type: 'abort' }
   | { type: 'mini_completion'; id: string; prompt: string; durableRunOperationId?: string; durableTurnId?: string }
   | { type: 'llm_query'; id: string; request: LLMQueryRequest; durableRunOperationId?: string; durableTurnId?: string }
@@ -310,7 +310,8 @@ interface OutboundPreToolUseReq {
   input: Record<string, unknown>;
   policyOnly?: boolean;
 }
-interface OutboundToolExecReq { type: 'tool_execute_request'; requestId: string; toolName: string; args: Record<string, unknown>; durableTool?: DurableToolExecutionIdentity }
+interface OutboundToolExecReq { type: 'tool_execute_request'; requestId: string; toolCallId?: string; toolName: string; args: Record<string, unknown>; durableTool?: DurableToolExecutionIdentity }
+interface OutboundToolExecCancel { type: 'tool_execute_cancel'; requestId: string }
 interface OutboundDurableToolPrepareReq {
   type: 'durable_tool_prepare_request';
   requestId: string;
@@ -441,7 +442,9 @@ type OutboundMessage =
   | OutboundSetModelResult
   | OutboundThinkingLevelState
   | OutboundSessionIdUpdate
-  | PiLargeResultGateRequest
+  | PiLargeResultFilterRequest
+  | PiLargeResultFilterCancel
+  | OutboundToolExecCancel
   | OutboundError;
 
 // ============================================================
@@ -661,8 +664,8 @@ function debugLog(message: string): void {
 
 // Large tool results (decision model, toggle `largeResults`): handleLargeResponse asks the
 // main process whether a summary is needed before summarizing.
-const largeResultGate = createLargeResultGateClient(send);
-setLargeResultSummaryGate(largeResultGate.gate);
+const largeResultFilter = createLargeResultFilterClient(send);
+setLargeResultFilter(largeResultFilter.filter);
 
 /** Find the most recent .jsonl session file in a directory. */
 function findMostRecentSessionFile(sessionDir: string): string | null {
@@ -1458,6 +1461,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
           },
           summarize: runMiniCompletion,
           contextWindow: modelContextWindow,
+          signal,
         });
 
         if (largeResult) {
@@ -1548,6 +1552,7 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
       send({
         type: 'tool_execute_request',
         requestId,
+        toolCallId,
         toolName: def.name,
         args: approvedInput,
         durableTool: durableToolFromContext(ctx),
@@ -1556,6 +1561,7 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
       const result = await new Promise<PiProxyToolResult>((resolve, reject) => {
         const abort = () => {
           pendingToolExecutions.delete(requestId);
+          send({ type: 'tool_execute_cancel', requestId });
           reject(new DOMException('Tool execution aborted; external outcome is unknown', 'AbortError'));
         };
         if (signal?.aborted) { abort(); return; }
@@ -1970,6 +1976,7 @@ function handleSessionEvent(event: AgentSessionEvent): void {
             send({
               type: 'tool_execute_request',
               requestId,
+              toolCallId: tc.id,
               toolName: tc.name!,
               args: (tc.arguments ?? {}) as Record<string, unknown>,
             });
@@ -2334,7 +2341,7 @@ function handleCancelEphemeralQuery(
 }
 
 async function handleAbort(): Promise<void> {
-  largeResultGate.cancelAll();
+  largeResultFilter.cancelAll();
   compactionEpoch++;
   // Release permission waits before awaiting the SDK, which drains active tools.
   for (const [, pending] of pendingPreToolUse) pending.resolve({ action: 'block', reason: 'Aborted' });
@@ -2680,8 +2687,8 @@ async function processMessage(msg: InboundMessage): Promise<void> {
       handleDurableModelOutcomeResponse(msg);
       break;
 
-    case 'large_result_gate_response':
-      largeResultGate.handleResponse(msg.requestId, msg.summarize);
+    case 'large_result_filter_response':
+      largeResultFilter.handleResponse(msg.requestId, msg.excerpt);
       break;
 
     case 'abort':

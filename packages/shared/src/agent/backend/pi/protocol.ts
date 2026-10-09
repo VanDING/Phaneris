@@ -67,3 +67,14 @@ export interface PiLargeResultGateResponse {
   requestId: string;
   summarize: boolean | null;
 }
+
+/** Bounded whole-result filter; the raw file was already saved by the caller. */
+export interface PiLargeResultFilterRequest {
+  type: 'large_result_filter_request'; requestId: string; toolName: string; intent?: string;
+  text: string; budgetChars: number; filePath: string;
+}
+export interface PiLargeResultFilterResponse {
+  type: 'large_result_filter_response'; requestId: string;
+  excerpt: { text: string; kept: number; total: number } | null;
+}
+export interface PiLargeResultFilterCancel { type: 'large_result_filter_cancel'; requestId: string }

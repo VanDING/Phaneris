@@ -127,12 +127,12 @@ import { classifyTurnOutcome, TURN_OUTCOME_ATTENTION_STATUS } from '../decisions
 import { checkAutomationCondition } from '../decisions/automation-condition'
 import { isSmallTalk, titleNoLongerFits, TITLE_DRIFT_RECENT_MESSAGES } from '../decisions/smart-titles'
 import { buildGuardedModeCheck } from '../decisions/guarded-mode'
-import { buildLargeResultSummaryGate } from '../decisions/large-results'
+import { buildLargeResultFilter, noteLargeResultFileUse, finishLargeResultExcerpts } from '../decisions/large-result-filter'
 import { assessPermissionRisks } from '../decisions/permission-risks'
 import { pickTurnThinkingLevel, recordThinkingFollowUp } from '../decisions/adaptive-thinking'
 import { decideMidTurnDelivery, isContinuation } from '../decisions/mid-turn-messages'
 import { wantsSuggestion, collectSuggestionCandidates, pickSuggestion, formatSuggestionHint, candidatesUsedBy, suggestionFollowUp, type SuggestionTrace } from '../decisions/suggestions'
-import { setLargeResultSummaryGate } from '@phaneris/shared/utils'
+import { setLargeResultFilter } from '@phaneris/shared/utils'
 import { setGuardedModeActiveResolver } from '@phaneris/shared/agent'
 import { listLabels, loadLabelConfig } from '@phaneris/shared/labels/storage'
 import { extractLabelId, resolveSessionLabels, findTaskItemLabelId } from '@phaneris/shared/labels'
@@ -2083,7 +2083,7 @@ export class SessionManager implements ISessionManager {
 
   async initialize(): Promise<void> {
     setGuardedModeActiveResolver(() => isDecisionFeatureActive('guardedMode'))
-    setLargeResultSummaryGate(buildLargeResultSummaryGate({ log: line => sessionLog.info(line) }))
+    setLargeResultFilter(buildLargeResultFilter({ log: line => sessionLog.info(line) }))
     try {
       initializeThemeStorage()
       this.userThemeWatcher ??= new UserThemeWatcher({
@@ -8186,7 +8186,10 @@ export class SessionManager implements ISessionManager {
         if (this.decisionFeatureActive('turnOutcome') && !managed.taskRunId && !managed.taskSlug) void this.applyTurnOutcome(managed, currentFinalMessageId)
         if (this.decisionFeatureActive('smartTitles') && !managed.triggeredBy) void this.refreshTitleIfDrifted(managed)
       }
-      if (!managed.autoRetryPending || managed.autoRetryPending.committed) this.finishSuggestionTrace(managed)
+      if (!managed.autoRetryPending || managed.autoRetryPending.committed) {
+        this.finishSuggestionTrace(managed)
+        finishLargeResultExcerpts(managed.id)
+      }
       this.emitSessionComplete({
         sessionId: managed.handoffRootSessionId ?? sessionId,
         workspaceId: managed.workspace.id,
@@ -9666,6 +9669,7 @@ export class SessionManager implements ISessionManager {
 
       case 'tool_start': {
         this.noteSuggestionUse(managed, { toolName: event.toolName, input: event.input ?? {} })
+        noteLargeResultFileUse(managed.id, event.input)
         // Format tool input paths to relative for better readability.
         // Relativize against the session's working directory only: a session
         // without one must keep absolute paths rather than gain a `./` prefix
@@ -11035,7 +11039,10 @@ export class SessionManager implements ISessionManager {
    */
   cleanup(): void {
     this.unregisterDecisionAccounting()
-    for (const managed of this.sessions.values()) managed.preTurnDecisionAbort?.abort()
+    for (const managed of this.sessions.values()) {
+      managed.preTurnDecisionAbort?.abort()
+      finishLargeResultExcerpts(managed.id)
+    }
     for (const requests of this.imageRequests.values()) for (const request of requests) request.abort()
     this.imageRequests.clear()
     this.shuttingDown = true

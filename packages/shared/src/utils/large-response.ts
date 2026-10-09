@@ -504,6 +504,22 @@ export function formatLargeResponseMessage(opts: FormatOptions): string {
 // High-level Pipeline (orchestrates save + summarize + format)
 // ============================================================
 
+/** Complete input only: larger results fall back, never silently filter a prefix. */
+export const LARGE_RESULT_MAX_TEXT_CHARS = 400_000;
+export const LARGE_RESULT_FILTER_DEADLINE_MS = 6_000;
+export interface LargeResultExcerpt { text: string; kept: number; total: number }
+export type LargeResultFilter = (input: {
+  text: string; context: SummarizationContext; budgetChars: number; filePath: string;
+  sessionId?: string; signal?: AbortSignal;
+}) => Promise<LargeResultExcerpt | null>;
+let largeResultFilter: LargeResultFilter | null = null;
+export function setLargeResultFilter(filter: LargeResultFilter | null): void { largeResultFilter = filter; }
+export async function askLargeResultFilter(input: Parameters<LargeResultFilter>[0]): Promise<LargeResultExcerpt | null> {
+  if (!largeResultFilter || input.signal?.aborted || input.text.length > LARGE_RESULT_MAX_TEXT_CHARS) return null;
+  try { return await largeResultFilter(input); }
+  catch { return null; }
+}
+
 /**
  * Optional host hook deciding whether a large result needs a summary at all
  * (decision model, toggle `largeResults`). `false` skips the summarization call
@@ -538,6 +554,7 @@ export async function askLargeResultSummaryGate(input: Parameters<LargeResultSum
 }
 
 export interface HandleLargeResponseOptions {
+  signal?: AbortSignal;
   /** Full response text */
   text: string;
   /** Path to the session folder */
@@ -585,8 +602,10 @@ export async function guardLargeResult(
      *  summarization threshold scales via {@link tokenLimitFor}. Omit at
      *  call sites without model knowledge to retain the fixed default. */
     contextWindow?: number;
+    signal?: AbortSignal;
   }
 ): Promise<string | null> {
+  opts.signal?.throwIfAborted();
   // 1. Binary detection — check before any text processing
   const buffer = Buffer.isBuffer(input) ? input : Buffer.from(input, 'utf-8');
   if (looksLikeBinary(buffer)) {
@@ -637,6 +656,7 @@ export async function guardLargeResult(
     context: { toolName: opts.toolName, input: opts.input, intent: opts.intent },
     summarize: opts.summarize,
     contextWindow: opts.contextWindow,
+    signal: opts.signal,
   });
   return result?.message ?? null;
 }
@@ -654,6 +674,7 @@ export async function handleLargeResponse(
   opts: HandleLargeResponseOptions
 ): Promise<HandleLargeResponseResult | null> {
   const { text, sessionPath, context, summarize, contextWindow } = opts;
+  opts.signal?.throwIfAborted();
   const estimatedTokens = estimateTokensDensityAware(text);
 
   if (estimatedTokens <= tokenLimitFor(contextWindow)) {
@@ -682,10 +703,16 @@ export async function handleLargeResponse(
 
   const { absolutePath, relativePath } = saveResult;
 
+  const excerpt = await askLargeResultFilter({ text, context, filePath: absolutePath,
+    budgetChars: Math.min(12_000, tokenLimitFor(contextWindow) * 4), sessionId: basename(sessionPath), signal: opts.signal });
+  opts.signal?.throwIfAborted();
+  if (excerpt) return { message: excerpt.text, filePath: absolutePath, wasSummarized: false };
+
   // 2. Try summarization if within limits and callback provided (and the host's gate does not
   //    judge the preview + saved file to be enough)
   let summary: string | undefined;
   if (summarize && estimatedTokens <= MAX_SUMMARIZATION_INPUT && (await askLargeResultSummaryGate({ text, context, estimatedTokens, sessionId: basename(sessionPath) })) !== false) {
+    opts.signal?.throwIfAborted();
     try {
       const prompt = buildSummarizationPrompt(text, context);
       const result = await summarize(prompt);
@@ -696,6 +723,8 @@ export async function handleLargeResponse(
       debug('large-response', `Summarization failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
+
+  opts.signal?.throwIfAborted();
 
   // 3. Format message
   const message = formatLargeResponseMessage({

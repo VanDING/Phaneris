@@ -295,14 +295,15 @@ export function createApiTool(
       params: z.record(z.string(), z.unknown()).optional().describe('Request body (POST/PUT/PATCH) or query parameters (GET). For non-JSON bodies, pass { _rawBody: "raw string content", _contentType: "text/plain" } — _rawBody is sent as-is without JSON encoding, _contentType defaults to text/plain if omitted'),
       _intent: z.string().optional().describe('REQUIRED: Describe what you are trying to accomplish with this API call (1-2 sentences)'),
     },
-    async (args: Record<string, unknown>) => {
+    async (args: Record<string, unknown>, extra?: unknown) => {
       const path = args.path as string;
       const method = args.method as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
       const params = args.params as Record<string, unknown> | undefined;
       const _intent = args._intent as string | undefined;
+      const signal = (extra as { signal?: AbortSignal } | undefined)?.signal;
 
       try {
-        const outcome = await executeApiRequest(config, credential, { path, method, params });
+        const outcome = await executeApiRequest(config, credential, { path, method, params }, { signal });
 
         // Check for error responses first (errors are always text)
         if (!outcome.ok) {
@@ -324,6 +325,7 @@ export function createApiTool(
             toolName: `api_${config.name}`,
             input: params,
             intent: _intent,
+            signal,
             summarize,
           });
           if (guarded) {
