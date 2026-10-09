@@ -1,0 +1,85 @@
+{
+  "records": [
+    {
+      "id": "Connections, conversation, advanced; no tabs and independent collapsed summaries",
+      "pass": true
+    },
+    {
+      "id": "Context is in conversation, on the right, with persistence and rollback",
+      "pass": true
+    },
+    {
+      "id": "Workspace editor is owned by Workspace; switching connection clears a foreign model in one write",
+      "pass": true
+    },
+    {
+      "id": "Global changes preserve workspace override; per-field inheritance uses the new global value",
+      "pass": true
+    },
+    {
+      "id": "Workspace save failure restores the choice; workspace switches isolate late loads",
+      "pass": true
+    },
+    {
+      "id": "Subscription-only images show neutral guidance and a compatible API-only setup",
+      "pass": true
+    },
+    {
+      "id": "Compatible image setup saves only on submission and preserves the default conversation",
+      "pass": true
+    },
+    {
+      "id": "Workspace load failure exposes retry and does not invent editable defaults",
+      "pass": true
+    },
+    {
+      "id": "Image automatic account is explicit; switching accounts resets model; save failure keeps prior choice",
+      "pass": true
+    },
+    {
+      "id": "broken explicit image account is preserved without fallback",
+      "pass": true
+    },
+    {
+      "id": "deleted explicit image account is preserved without fallback",
+      "pass": true
+    },
+    {
+      "id": "Image request failure is visible and can retry instead of claiming unconfigured",
+      "pass": true
+    },
+    {
+      "id": "Decisions are configurable while disabled; features are in the same disclosure",
+      "pass": true
+    },
+    {
+      "id": "Permissions has no redundant Guarded configuration redirect",
+      "pass": true
+    },
+    {
+      "id": "Decision load failure leaves a visible section with retry",
+      "pass": true
+    },
+    {
+      "id": "Connection identity, capability scope, default purpose and persistent validation",
+      "pass": true
+    },
+    {
+      "id": "Cache and runtime controls persist across disclosure and rollback failed changes",
+      "pass": true
+    },
+    {
+      "id": "light en 1040px visual artifact and layout",
+      "pass": true
+    },
+    {
+      "id": "dark en 1040px visual artifact and layout",
+      "pass": true
+    },
+    {
+      "id": "light zh-Hans 480px visual artifact and layout",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

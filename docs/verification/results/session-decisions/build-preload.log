@@ -1,0 +1,11 @@
+🔨 Building preload entries...
+
+  apps\electron\dist\bootstrap-preload.cjs  1.1mb
+
+Done in 170ms
+
+  apps\electron\dist\browser-toolbar-preload.cjs  2.2kb
+
+Done in 8ms
+🔍 Verifying preload outputs...
+✅ Preload builds complete and verified

@@ -9,4 +9,5 @@ export { TrajectoryToolbar, type TrajectoryToolbarProps } from './TrajectoryTool
 export { TrajectoryStrip, type TrajectoryStripProps } from './TrajectoryStrip'
 export { RecordInspector, type RecordInspectorProps } from './RecordInspector'
 export type { WorkbenchFocus } from './trajectory-contract'
+export { EMPTY_TRAJECTORY_SNAPSHOT } from './trajectory-contract'
 export { deriveRequestContexts, requestContextDelta, type TrajectoryRequestContext, type TrajectoryContextGroup, type TrajectoryContextItem, type TrajectoryContextCategory } from './trajectory-context'

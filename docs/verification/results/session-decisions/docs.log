@@ -1,0 +1,3 @@
+$ bun run scripts/check-docs.ts
+check:docs — 88 documents, 482 relative links checked.
+Documentation gate OK.

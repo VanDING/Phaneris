@@ -1,5 +1,4 @@
 import type { DecisionLayerFeature } from '@phaneris/shared/decisions/settings'
-import type { DecisionUsageReport } from '@phaneris/shared/decisions'
 import { DECISION_SETTINGS_CHANGED_EVENT, guardedModeAvailableAtom } from "@/atoms/permission-modes"
 /**
  * AiSettingsPage
@@ -313,26 +312,6 @@ export default function AiSettingsPage() {
   const { llmConnections, refreshLlmConnections, activeWorkspaceId, workspaces } = useAppShellContext()
 
   const [decisionConfigurationOpen, setDecisionConfigurationOpen] = useState(() => sessionStorage.getItem(AI_SETTINGS_FOCUS_KEY) === 'decisions')
-  const [decisionUsage, setDecisionUsage] = useState<DecisionUsageReport | null>(null)
-  const [decisionUsageError, setDecisionUsageError] = useState(false)
-  const [decisionUsageRetry, setDecisionUsageRetry] = useState(0)
-  const decisionUsageGeneration = useRef(0)
-  useEffect(() => window.electronAPI?.onTransportConnectionStateChanged?.(() => {
-    decisionUsageGeneration.current++
-    setDecisionUsageRetry(n => n + 1)
-  }), [])
-  useEffect(() => {
-    let current = true
-    const generation = ++decisionUsageGeneration.current
-    setDecisionUsage(null)
-    setDecisionUsageError(false)
-    if (!decisionConfigurationOpen) return
-    if (typeof window.electronAPI?.getDecisionUsage !== 'function') { setDecisionUsageError(true); return }
-    window.electronAPI.getDecisionUsage().then(report => {
-      if (current && generation === decisionUsageGeneration.current) setDecisionUsage(report)
-    }).catch(() => { if (current && generation === decisionUsageGeneration.current) setDecisionUsageError(true) })
-    return () => { current = false }
-  }, [decisionConfigurationOpen, activeWorkspaceId, decisionUsageRetry])
   const [imageStatus, setImageStatus] = useState<ImageGenerationStatus | null>(null)
   const [imageConfigurationOpen, setImageConfigurationOpen] = useState(false)
   const [savingImages, setSavingImages] = useState(false)
@@ -845,17 +824,6 @@ export default function AiSettingsPage() {
   }, [decisionStatus, decisionLoadError])
 
   // ---- Decision model (Jev) ----
-  const decisionUsageNote = (feature: DecisionLayerFeature) => {
-    if (!decisionUsage) return undefined
-    const usage = decisionUsage.features[feature]
-    if (!usage) return t(decisionStatus?.settings.enabled && decisionStatus.settings.features[feature] ? 'settings.ai.decisions.usageNone' : 'settings.ai.decisions.usageDisabled')
-    return <div className="space-y-1" data-decision-usage={feature}>
-      <p>{t('settings.ai.decisions.usageSummary', { calls: usage.calls, failures: usage.failures, changed: usage.changed, outcomes: usage.withOutcome })}</p>
-      <p>{t('settings.ai.decisions.usageDetails', { cancelled: usage.cancelled, coldFailed: usage.coldFailures, coldCalls: usage.coldCalls,
-        cost: usage.knownCostUsd.toLocaleString(i18n.language, { minimumFractionDigits: 2, maximumFractionDigits: 6 }), unknown: usage.unknownCostCalls })}</p>
-      {usage.withOutcome >= 30 && usage.changed === 0 && <p>{t('settings.ai.decisions.usageNoChange')}</p>}
-    </div>
-  }
   const refreshDecisionStatus = useCallback(async (seedDrafts: boolean) => {
     if (typeof window.electronAPI?.getDecisionLayerStatus !== 'function') return
     try {
@@ -1355,9 +1323,7 @@ export default function AiSettingsPage() {
                     </p>
                       <div className="border-t border-border/50">
                             <div className="px-4 pt-3 text-xs text-muted-foreground" aria-live="polite">
-                              {decisionUsageError ? <div className="flex flex-wrap items-center justify-between gap-2" role="status">
-                                <span>{t('settings.ai.decisions.usageFailed')}</span><Button variant="ghost" size="sm" onClick={() => setDecisionUsageRetry(n => n + 1)}>{t('common.retry')}</Button>
-                              </div> : decisionUsage ? t(decisionUsage.retentionLimited ? 'settings.ai.decisions.usageWindowLimited' : 'settings.ai.decisions.usageWindow') : t('common.loading')}
+                              {t('settings.ai.decisions.runHint')}
                             </div>
                             {decisionReportedGroups.map((group, index) => (
                               <div key={group.id} className={cn(index > 0 && 'mt-1 border-t border-border/30')}>
@@ -1370,7 +1336,6 @@ export default function AiSettingsPage() {
                                     label={label}
                                     description={description}
                                     tooltip={tooltip}
-                                    note={decisionUsageNote(feature)}
                                     checked={decisionStatus.settings.features[feature] ?? false}
                                     disabled={savingDecisions}
                                     onCheckedChange={(checked) => { void updateDecisionSettings({ features: { [feature]: checked } }) }}

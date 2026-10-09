@@ -388,6 +388,8 @@ export const CHANNEL_MAP = {
   // Decision model (Jev)
   getDecisionLayerSettings: invoke(RPC_CHANNELS.decisions.GET_SETTINGS),
   getDecisionUsage: invoke(RPC_CHANNELS.decisions.GET_USAGE),
+  getSessionDecisions: invoke(RPC_CHANNELS.decisions.GET_SESSION),
+  onSessionDecisionsChanged: listener(RPC_CHANNELS.decisions.SESSION_CHANGED),
   setDecisionLayerSettings: invoke(RPC_CHANNELS.decisions.SET_SETTINGS),
   getDecisionLayerStatus: invoke(RPC_CHANNELS.decisions.GET_STATUS),
   setDecisionApiKey: invoke(RPC_CHANNELS.decisions.SET_API_KEY),

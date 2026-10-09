@@ -14,7 +14,7 @@
 import { normalize } from 'node:path'
 import { LARGE_RESULT_MAX_TEXT_CHARS, LARGE_RESULT_FILTER_DEADLINE_MS, type LargeResultFilter } from '@phaneris/shared/utils'
 import type { DecisionResult } from '@phaneris/shared/decisions'
-import { openDecisionPoint, recordDecisionFollowUp, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
+import { DecisionCapture, openDecisionPoint, recordDecisionFollowUp, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
 import { scoreRelevance } from './relevance'
 
 /** P(needed) at or above which a part is kept. */
@@ -156,13 +156,14 @@ export function buildLargeResultFilter(deps: DecisionPointDeps & { totalDeadline
   return async ({ text, context, budgetChars, filePath, sessionId, signal }) => {
     if (!context.intent?.trim() || text.length > LARGE_RESULT_MAX_TEXT_CHARS || !Number.isFinite(budgetChars) || budgetChars < 1 || signal?.aborted) return null
     const abort = new AbortController()
+    const capture = new DecisionCapture(deps.source)
     const cancel = () => abort.abort()
     signal?.addEventListener('abort', cancel, { once: true })
     const timer = setTimeout(cancel, Math.min(LARGE_RESULT_FILTER_DEADLINE_MS, Math.max(1, deps.totalDeadlineMs ?? LARGE_RESULT_FILTER_DEADLINE_MS)))
     const operation = async () => {
       const parts = splitLargeResult(text)
       if (parts.length < LARGE_RESULT_MIN_PARTS) return null
-      const decide = await openDecisionPoint({ ...deps, feature: 'largeResults', record: 'large_results', sessionId })
+      const decide = await openDecisionPoint({ ...deps, ...capture.deps, feature: 'largeResults', record: 'large_results', sessionId })
       if (!decide || abort.signal.aborted) return null
       const scored = await scoreRelevance(decide, context.intent!, parts, { tool: context.toolName }, abort.signal)
       if (!scored || abort.signal.aborted) return null
@@ -182,17 +183,25 @@ export function buildLargeResultFilter(deps: DecisionPointDeps & { totalDeadline
         if (tracked.length >= 128) recordDecisionFollowUp(tracked.shift()!.result, { result: 'observation_limit' })
         openExcerpts.set(sessionId, [...tracked, { result: first, filePath: canonicalPath(filePath) }])
       }
-      return { text: render(choice.kept), kept: choice.kept.length, total: parts.length }
+      return { text: render(choice.kept), kept: choice.kept.length, total: parts.length,
+        onApplied: (applied: boolean) => applied ? capture.resolve('filter', true, { kept: choice.kept.length, total: parts.length }) : capture.discard('request_changed') }
     }
     let onAbort: (() => void) | undefined
     try {
-      return await Promise.race([operation(), new Promise<null>(resolve => {
+      const result = await Promise.race([operation(), new Promise<null>(resolve => {
         onAbort = () => resolve(null)
         abort.signal.addEventListener('abort', onAbort, { once: true })
         if (abort.signal.aborted) resolve(null)
       })])
+      if (!result) {
+        if (signal?.aborted) capture.discard('cancelled')
+        else capture.resolve('summarize')
+      }
+      return result
     } catch (error) {
       deps.log?.(`[decision:large_results] filter failed: ${error instanceof Error ? error.message : String(error)}`)
+      if (capture.trace) capture.trace.failed = true
+      capture.resolve('summarize')
       return null
     } finally {
       clearTimeout(timer); signal?.removeEventListener('abort', cancel)

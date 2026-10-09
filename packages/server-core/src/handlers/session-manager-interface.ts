@@ -45,6 +45,7 @@ export interface ISessionManager {
 
   getSessions(workspaceId?: string): Session[]
   getSession(sessionId: string): Promise<Session | null>
+  getSessionDecisions(sessionId: string, query?: import('@phaneris/shared/decisions/session').SessionDecisionQuery): Promise<import('@phaneris/shared/decisions/session').SessionDecisionReport>
   getRecoveryEvidence(
     sessionId: string,
     toolOperationId: string,

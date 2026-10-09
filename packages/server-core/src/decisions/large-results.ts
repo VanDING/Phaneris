@@ -10,7 +10,7 @@
 
 import type { LargeResultSummaryGate } from '@phaneris/shared/utils'
 import type { DecisionRequest } from '@phaneris/shared/decisions'
-import { openDecisionPoint, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
+import { DecisionCapture, openDecisionPoint, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
 
 /** "Preview is enough" needs this much confidence. */
 export const LARGE_RESULT_MIN_CONFIDENCE = 0.75
@@ -40,12 +40,15 @@ export function buildLargeResultRequest(input: { toolName: string; intent?: stri
 
 /** Host gate for `setLargeResultSummaryGate`: `false` = preview is enough. Never throws. */
 export function buildLargeResultSummaryGate(deps: DecisionPointDeps = {}): LargeResultSummaryGate {
-  return async ({ text, context, estimatedTokens, sessionId }) => {
-    const decide = await openDecisionPoint({ ...deps, feature: 'largeResults', record: 'large_results', sessionId })
+  return async ({ text, context, estimatedTokens, sessionId, onApplication }) => {
+    const capture = new DecisionCapture(deps.source)
+    let preview = false
+    onApplication?.(applied => applied ? capture.resolve(preview ? 'skip_summary' : 'summarize', preview) : capture.discard('request_changed'))
+    const decide = await openDecisionPoint({ ...deps, ...capture.deps, feature: 'largeResults', record: 'large_results', sessionId })
     if (!decide) return null
     const result = await decide(buildLargeResultRequest({ toolName: context.toolName, intent: context.intent, text, estimatedTokens }), { tool: context.toolName, estimatedTokens })
     const answer = result?.answers.handling
-    const preview = answer?.type === 'choice' && answer.confidence >= LARGE_RESULT_MIN_CONFIDENCE && answer.choice === 'preview'
+    preview = answer?.type === 'choice' && answer.confidence >= LARGE_RESULT_MIN_CONFIDENCE && answer.choice === 'preview'
     recordDecisionOutcome(result, preview ? { action: 'skip_summary', changed: true } : { action: 'summarize', changed: false })
     return preview ? false : null
   }

@@ -53,7 +53,7 @@ export function readRepairScope(result: DecisionResult | null): string[] | null 
 export function buildRepairScopePicker(deps: DecisionPointDeps = {}): RepairScopeFn {
   return async (reason, nodes, context) => {
     if (!reason.trim() || nodes.length === 0 || nodes.length > REPAIR_MAX_NODES) return null
-    const decide = await openDecisionPoint({ ...deps, sessionId: context.sessionId, feature: 'taskRepairs', record: 'task_repairs' })
+    const decide = await openDecisionPoint({ ...deps, source: { taskRunId: context.runId }, onTrace: context.onTrace ?? deps.onTrace, sessionId: context.sessionId, feature: 'taskRepairs', record: 'task_repairs' })
     if (!decide) return null
     const result = await decide(buildRepairScopeRequest(reason, nodes), { slug: context.slug, runId: context.runId, nodes: nodes.length })
     const proposed = readRepairScope(result)

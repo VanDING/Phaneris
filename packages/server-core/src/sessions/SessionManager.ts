@@ -4,8 +4,11 @@ import { estimateTranscriptBytes } from '@phaneris/core/utils'
 import type { EventSink, RpcServer } from '@phaneris/server-core/transport'
 import { CLIENT_BROWSER_INVOKE } from '@phaneris/server-core/transport'
 import type { ISessionManager, IBrowserPaneManager, ExecutePromptAutomationInput } from '@phaneris/server-core/handlers'
-import { registerDecisionAccountingHost } from '@phaneris/shared/decisions'
+import { registerDecisionAccountingHost, registerDecisionObservationHost, readDecisionLayerSettings,
+  readDecisionLog, defaultDecisionsLogPath, previousDecisionsLogPath, type DecisionRecord, type DecisionPointTrace } from '@phaneris/shared/decisions'
 import { createDecisionAccounting } from '../decisions/accounting'
+import { buildSessionDecisionReport } from '../decisions/session-report'
+import { DecisionCapture } from '../decisions/decision-point'
 import { RemoteBrowserPaneManager } from './RemoteBrowserPaneManager'
 import { validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import { createScopedLogger, CONSOLE_LOGGER, type PlatformServices, type Logger } from '@phaneris/server-core/runtime'
@@ -825,6 +828,7 @@ interface ManagedSession {
     messageId?: string  // Pre-generated ID for matching with UI
     optimisticMessageId?: string  // Frontend's ID for reliable event matching
     mergeWith?: object
+    mergeDecision?: DecisionPointTrace
     continuationCheck?: Promise<void>
   }>
   // Map of shellId -> command for killing background shells
@@ -1205,6 +1209,21 @@ export class SessionManager implements ISessionManager {
   private sessions: Map<string, ManagedSession> = new Map()
   private readonly imageRequests = new Map<string, Set<AbortController>>()
   private readonly durableRuntime = this.createDurableRuntime()
+  private readonly decisionRecordingSince = Date.now()
+  private decisionLegacy?: Promise<DecisionRecord[]>
+  private readonly unregisterDecisionObservation = registerDecisionObservationHost(event => {
+    const managed = event.sessionId ? this.sessions.get(event.sessionId) : undefined
+    if (!managed || this.shuttingDown) return false
+    const store = this.durableRuntime.storeFor(managed.workspace.rootPath)
+    store.decisionRecordingSince(this.decisionRecordingSince)
+    try {
+      const revision = store.appendEvents([{ eventId: event.eventId, sessionId: managed.id, turnId: event.source?.turnId,
+        operationId: event.decisionPointId, type: 'decision_observed', schemaVersion: 1, modelVisible: false,
+        partial: false, payload: event, createdAt: event.t }])[0]!
+      this.eventSink?.(RPC_CHANNELS.decisions.SESSION_CHANGED, { to: 'workspace', workspaceId: managed.workspace.id }, managed.id, revision)
+    } catch (error) { sessionLog.warn('Could not persist decision evidence:', error) }
+    return true
+  })
   private readonly unregisterDecisionAccounting = registerDecisionAccountingHost(scope => {
     const managed = scope.sessionId ? this.sessions.get(scope.sessionId) : undefined
     if (!managed || this.shuttingDown) return undefined
@@ -2959,6 +2978,20 @@ export class SessionManager implements ISessionManager {
   }
 
   /** Read canonical recovery evidence, scoped to the owning session. */
+  async getSessionDecisions(sessionId: string, query?: import('@phaneris/shared/decisions/session').SessionDecisionQuery): Promise<import('@phaneris/shared/decisions/session').SessionDecisionReport> {
+    const managed = this.sessions.get(sessionId)
+    if (!managed) throw new Error('Session not found')
+    const store = this.durableRuntime.storeFor(managed.workspace.rootPath)
+    this.decisionLegacy ??= Promise.all([readDecisionLog(previousDecisionsLogPath(defaultDecisionsLogPath())), readDecisionLog(defaultDecisionsLogPath())])
+      .then(files => files.flat().filter((line): line is DecisionRecord => !('kind' in line)))
+      .catch(error => { sessionLog.warn('Legacy decision evidence unavailable', error); this.decisionLegacy = undefined; return [] })
+    const legacy = await this.decisionLegacy
+    if (this.sessions.get(sessionId) !== managed) throw new Error('Session no longer exists')
+    return buildSessionDecisionReport({ sessionId, workspaceId: managed.workspace.id,
+      enabled: readDecisionLayerSettings().enabled, completeSince: store.decisionRecordingSince(this.decisionRecordingSince), activeSince: this.decisionRecordingSince, sessionCreatedAt: managed.createdAt ?? 0,
+      events: store.listDecisionEvents(sessionId), usage: store.listUsage({ sessionId }), legacy, query })
+  }
+
   getRecoveryEvidence(
     sessionId: string,
     toolOperationId: string,
@@ -4930,6 +4963,7 @@ export class SessionManager implements ISessionManager {
 
       managed.agent.guardedModeCheck = buildGuardedModeCheck({
         sessionId: managed.id,
+        sourceForCall: () => ({ runOperationId: managed.activeDurableRunOperationId }),
         isInteractive: () => this.sessions.get(managed.id) === managed && isAttendedSession(managed),
         log: line => sessionLog.info(line),
       })
@@ -5016,12 +5050,15 @@ export class SessionManager implements ISessionManager {
         // Informational enrichment never delays or resolves the approval.
         if (!request.risks && this.decisionFeatureActive('riskBadges')) {
           const generation = managed.processingGeneration
-          void assessPermissionRisks(request, { sessionId: managed.id, log: line => sessionLog.info(line) }).then(risks => {
-            if (!risks?.length || this.sessions.get(managed.id) !== managed
+          const capture = new DecisionCapture()
+          void assessPermissionRisks(request, { ...capture.deps, sessionId: managed.id, log: line => sessionLog.info(line) }).then(risks => {
+            if (!risks?.length) { capture.resolve('none'); return }
+            if (this.sessions.get(managed.id) !== managed
               || managed.processingGeneration !== generation
-              || this.pendingPermissionRequests.get(request.requestId)?.sessionId !== managed.id) return
+              || this.pendingPermissionRequests.get(request.requestId)?.sessionId !== managed.id) { capture.discard('permission_resolved_or_obsolete'); return }
             this.sendEvent({ type: 'permission_request', sessionId: managed.id,
               request: { ...request, ...brokerMetadata, sessionId: managed.id, risks } }, managed.workspace.id)
+            capture.resolve('badges', true, { risks })
           }).catch(error => sessionLog.warn('Permission risk enrichment failed:', error))
         }
       }
@@ -5612,6 +5649,7 @@ export class SessionManager implements ISessionManager {
         // a clear "not enabled" answer instead of a stale client.
         decide: buildDecisionToolCallbacks({
           sessionId: managed.id,
+          source: () => ({ runOperationId: managed.activeDurableRunOperationId }),
           log: (message: string) => sessionLog.info(message),
         }),
         getSessionInfoFn: (sessionId?: string) => {
@@ -7098,6 +7136,7 @@ export class SessionManager implements ISessionManager {
     }
 
     // Delete from disk too
+    this.durableRuntime.storeFor(workspaceRootPath).deleteDecisionEvidence(sessionId)
     deleteStoredSession(workspaceRootPath, sessionId)
     this.detachSessionWorkItems(managed)
 
@@ -7420,7 +7459,7 @@ export class SessionManager implements ISessionManager {
 
       this.applyAutoLabelMatches(managed, autoMatches)
       if (!options?.hidden && !activationRetry && this.decisionFeatureActive('semanticLabels')) {
-        void this.applySemanticAutoLabels(managed, message, labelTree)
+        void this.applySemanticAutoLabels(managed, message, labelTree, userMessage.id)
       }
     } catch (e) {
       sessionLog.warn(`Auto-label evaluation failed for session ${sessionId}:`, e)
@@ -7619,7 +7658,7 @@ export class SessionManager implements ISessionManager {
       }
       managed.activeDurableRunOperationId = durableRunOperationId
       const turnDecision = preTurnDecisions ? await preTurnDecisions : null
-      if (this.sessions.get(sessionId) !== managed || managed.processingGeneration !== myGeneration || !managed.isProcessing || managed.stopRequested) return
+      if (this.sessions.get(sessionId) !== managed || managed.processingGeneration !== myGeneration || !managed.isProcessing || managed.stopRequested) { turnDecision?.discard?.(); return }
       const chatIterator = agent.chat(effectiveMessage, modelInputAttachments.attachments, {
         inputId: userMessage.id,
         durableRunOperationId,
@@ -7627,6 +7666,7 @@ export class SessionManager implements ISessionManager {
         thinkingOverride: turnDecision?.thinkingOverride ?? undefined,
         turnContext: turnDecision?.suggestionHint ?? undefined,
       })
+      turnDecision?.apply?.()
       sessionLog.info('Got chat iterator, starting iteration...')
 
       let sawFirstEvent = false
@@ -8222,6 +8262,8 @@ export class SessionManager implements ISessionManager {
       merged.push(last as typeof first)
     }
     const entries = [first, ...merged]
+    for (const entry of merged) entry.mergeDecision?.apply({ action: 'merge', changed: true, status: 'applied' })
+    first.mergeDecision?.apply({ action: 'separate', changed: false, status: 'discarded', reason: 'previous_message_no_longer_queued' })
     const next = merged.length ? { ...first, message: entries.map(item => item.message).join('\n\n') } : first
     if (merged.length && first.messageId) {
       const originals = entries.map(item => managed.messages.find(m => m.id === item.messageId)).filter((m): m is Message => !!m)
@@ -11039,6 +11081,7 @@ export class SessionManager implements ISessionManager {
    */
   cleanup(): void {
     this.unregisterDecisionAccounting()
+    this.unregisterDecisionObservation()
     for (const managed of this.sessions.values()) {
       managed.preTurnDecisionAbort?.abort()
       finishLargeResultExcerpts(managed.id)
@@ -11103,7 +11146,7 @@ export class SessionManager implements ISessionManager {
     message: string,
     options?: SendMessageOptions,
     turn: { activationResend?: boolean; authRetry?: boolean; attachments?: Array<{ name: string; type: string; size: number }> } = {},
-  ): Promise<{ thinkingOverride: ThinkingLevel | null; suggestionHint: string | null }> | null {
+  ): Promise<{ thinkingOverride: ThinkingLevel | null; suggestionHint: string | null; apply?: () => void; discard?: () => void }> | null {
     // An auto-retry continues the same request: keep its thinking level, ask nothing again.
     if (turn.activationResend || turn.authRetry) {
       const thinkingOverride = managed.turnThinkingOverride ?? null
@@ -11134,11 +11177,13 @@ export class SessionManager implements ISessionManager {
     const previousReply = managed.messages[previousReplyIndex]?.content
     const repliedTo = managed.messages.slice(0, previousReplyIndex).findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id
     const userMessageId = managed.messages.findLast(m => m.role === 'user' && !m.hidden && !m.isQueued)?.id
+    const thinkingCapture = new DecisionCapture({ messageId: userMessageId, turnId: userMessageId })
+    const suggestionCapture = new DecisionCapture({ messageId: userMessageId, turnId: userMessageId })
 
     // Adaptive thinking: a lower level for a simple turn, never above the session's.
     const thinking = rateThinking
       ? pickTurnThinkingLevel({ message, previousReply, attachments: turn.attachments?.map(a => `${a.name.slice(0, 200)} (${a.type}, ${a.size} bytes)`) },
-          managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL, { sessionId: managed.id, log, signal: abort.signal,
+          managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL, { ...thinkingCapture.deps, sessionId: managed.id, log, signal: abort.signal,
             isCurrent: current, getSessionLevel: () => managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL })
           .then(({ level, result }) => {
             if (!current()) return null
@@ -11162,7 +11207,7 @@ export class SessionManager implements ISessionManager {
             sources: loadAllSources(workspaceRoot),
             activeSourceSlugs: managed.enabledSourceSlugs ?? [],
           })
-          const { hint, trace } = await pickSuggestion(message, candidates, { sessionId: managed.id, log, signal: abort.signal, isCurrent: current })
+          const { hint, trace } = await pickSuggestion(message, candidates, { ...suggestionCapture.deps, sessionId: managed.id, log, signal: abort.signal, isCurrent: current })
           // Kept until the request is over, to record whether the agent used the pick anyway.
           if (trace && current()) managed.suggestionTrace = { trace, used: new Set() }
           if (!hint) return null
@@ -11175,12 +11220,21 @@ export class SessionManager implements ISessionManager {
       : Promise.resolve(null)
 
     return Promise.all([thinking, suggestion]).then(([thinkingOverride, suggestionHint]) => {
-      if (!current()) return { thinkingOverride: null, suggestionHint: null }
+      if (!current()) {
+        thinkingCapture.discard('obsolete_turn'); suggestionCapture.discard('obsolete_turn')
+        return { thinkingOverride: null, suggestionHint: null }
+      }
       const currentLevel = managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL
       if (thinkingOverride && THINKING_LEVEL_IDS.indexOf(thinkingOverride) >= THINKING_LEVEL_IDS.indexOf(currentLevel)) thinkingOverride = null
       managed.turnThinkingOverride = thinkingOverride
       managed.turnSuggestionHint = suggestionHint
-      return { thinkingOverride, suggestionHint }
+      return { thinkingOverride, suggestionHint,
+        apply: () => {
+          thinkingCapture.resolve(thinkingOverride ? `thinking:${thinkingOverride}` : 'keep', !!thinkingOverride, { sessionLevel: currentLevel })
+          suggestionCapture.resolve(suggestionHint ? 'hint_injected' : 'none', !!suggestionHint)
+        },
+        discard: () => { thinkingCapture.discard('chat_not_started'); suggestionCapture.discard('chat_not_started') },
+      }
     }).finally(() => {
       if (managed.preTurnDecisionAbort === abort) managed.preTurnDecisionAbort = undefined
     })
@@ -11203,10 +11257,11 @@ export class SessionManager implements ISessionManager {
     for (const key of candidatesUsedBy(tracked.trace.candidates, call)) tracked.used.add(key)
   }
 
-  private async decideMidTurnDelivery(managed: ManagedSession, message: string, configured: 'steer' | 'queue'): Promise<'steer' | 'queue' | null> {
+  private async decideMidTurnDelivery(managed: ManagedSession, message: string, configured: 'steer' | 'queue', capture: DecisionCapture): Promise<'steer' | 'queue' | null> {
     try {
       const runningRequest = managed.messages.findLast(m => m.role === 'user' && !m.isQueued && !m.hidden)?.content
       const delivery = await decideMidTurnDelivery({ runningRequest, newMessage: message, configured }, {
+        ...capture.deps,
         sessionId: managed.id,
         log: (line) => sessionLog.info(line),
       })
@@ -11219,6 +11274,7 @@ export class SessionManager implements ISessionManager {
   }
 
   private async refreshTitleIfDrifted(managed: ManagedSession): Promise<void> {
+    const capture = new DecisionCapture()
     try {
       if (!managed.name || managed.name !== managed.autoTitle || managed.titleDeferred) return
       // Auto-retries and nudges are hidden: they are not new user messages.
@@ -11226,10 +11282,13 @@ export class SessionManager implements ISessionManager {
       const checkedAt = managed.titleCheckedAtUserCount ?? 1
       if (userMessages.length < TITLE_DRIFT_RECENT_MESSAGES || userMessages.length - checkedAt < TITLE_DRIFT_RECENT_MESSAGES) return
       managed.titleCheckedAtUserCount = userMessages.length
-      const drifted = await titleNoLongerFits(managed.name, userMessages, { sessionId: managed.id, log: (line) => sessionLog.info(line) })
-      if (!drifted || managed.name !== managed.autoTitle || managed.isProcessing || this.sessions.get(managed.id) !== managed) return
+      const drifted = await titleNoLongerFits(managed.name, userMessages, { ...capture.deps, sessionId: managed.id, log: (line) => sessionLog.info(line) })
+      if (!drifted) { capture.resolve('keep_title'); return }
+      if (managed.name !== managed.autoTitle || managed.isProcessing || this.sessions.get(managed.id) !== managed) { capture.discard('title_changed_or_obsolete'); return }
       sessionLog.info(`[smart-titles] Title of session ${managed.id} no longer fits, refreshing`)
+      const nameBefore = managed.name
       await this.refreshTitle(managed.id, { onlyIfName: managed.name })
+      capture.trace?.apply({ action: 'refresh_title', status: managed.name !== nameBefore ? 'applied' : 'unknown', changed: managed.name !== nameBefore })
     } catch (e) {
       sessionLog.warn(`[smart-titles] Title drift check failed for session ${managed.id}:`, e)
     }
@@ -11237,21 +11296,27 @@ export class SessionManager implements ISessionManager {
 
   private async generateTitleUnlessSmallTalk(managed: ManagedSession, message: string): Promise<void> {
     const nameAtDispatch = managed.name
+    const capture = new DecisionCapture()
     try {
-      if (await isSmallTalk(message, { sessionId: managed.id, log: (line) => sessionLog.info(line) })) {
-        if (this.sessions.get(managed.id) !== managed || managed.name !== nameAtDispatch) return
+      if (await isSmallTalk(message, { ...capture.deps, sessionId: managed.id, log: (line) => sessionLog.info(line) })) {
+        if (this.sessions.get(managed.id) !== managed || managed.name !== nameAtDispatch) { capture.discard('title_changed_or_obsolete'); return }
         managed.titleDeferred = true
+        capture.resolve('defer_title', true)
         sessionLog.info(`[smart-titles] Small talk in session ${managed.id}: waiting for a request to title`)
         return
       }
     } catch (e) {
       sessionLog.warn(`[smart-titles] Small-talk check failed for session ${managed.id}:`, e)
     }
-    if (this.sessions.get(managed.id) === managed && managed.name === nameAtDispatch) await this.generateTitle(managed, message)
+    if (this.sessions.get(managed.id) === managed && managed.name === nameAtDispatch) {
+      await this.generateTitle(managed, message)
+      capture.resolve('title_now')
+    } else capture.discard('title_changed_or_obsolete')
   }
 
   private async shouldRunPromptAutomation(pending: PendingPrompt): Promise<{ run: boolean; reason?: string }> {
     if (!pending.semanticCondition) return { run: true }
+    const capture = new DecisionCapture({ automationId: pending.matcherId })
     try {
       const payload = pending.eventPayload ?? {}
       const sessionId = typeof payload.sessionId === 'string' ? payload.sessionId : undefined
@@ -11273,8 +11338,9 @@ export class SessionManager implements ISessionManager {
               lastAssistantMessage: lastContent('assistant'),
             }
           : undefined,
-      }, { sessionId, matcherId: pending.matcherId, log: (line) => sessionLog.info(line) })
-      if (!verdict || verdict.run) return { run: true }
+      }, { ...capture.deps, sessionId, matcherId: pending.matcherId, log: (line) => sessionLog.info(line) })
+      if (!verdict || verdict.run) { capture.resolve('run'); return { run: true } }
+      capture.resolve('skip', true)
       return { run: false, reason: `condition not met ("yes" probability ${verdict.probability.toFixed(2)})` }
     } catch (e) {
       sessionLog.warn('[Automations] Semantic condition check failed, running the automation:', e)
@@ -11283,6 +11349,8 @@ export class SessionManager implements ISessionManager {
   }
 
   private async applyTurnOutcome(managed: ManagedSession, finalMessageId: string): Promise<void> {
+    const capture = new DecisionCapture({ messageId: finalMessageId,
+      turnId: managed.messages.find(message => message.id === finalMessageId)?.turnId })
     const generation = managed.processingGeneration
     const statusAtDispatch = managed.sessionStatus
     try {
@@ -11296,41 +11364,48 @@ export class SessionManager implements ISessionManager {
       }
 
       const result = await classifyTurnOutcome({ request, reply }, {
+        ...capture.deps,
         sessionId: managed.id,
         log: (line) => sessionLog.info(line),
       })
-      if (!result || result.outcome === 'finished') return
       // Dropped when a newer turn started or already finished meanwhile: it answers for that turn.
       if (this.sessions.get(managed.id) !== managed || managed.isProcessing || managed.processingGeneration !== generation
-        || managed.sessionStatus !== statusAtDispatch) return
-      if (this.getLastFinalAssistantMessageId(managed.messages) !== finalMessageId) return
+        || managed.sessionStatus !== statusAtDispatch) { capture.discard('obsolete_turn_or_manual_status'); return }
+      if (this.getLastFinalAssistantMessageId(managed.messages) !== finalMessageId) { capture.discard('obsolete_reply'); return }
+      if (!result || result.outcome === 'finished') { capture.resolve('keep_status'); return }
 
       const statuses = loadStatusConfig(managed.workspace.rootPath).statuses
       const target = statuses.find(status => status.id === TURN_OUTCOME_ATTENTION_STATUS && status.category === 'open')
       const current = statuses.find(status => status.id === managed.sessionStatus)
-      if (!target || managed.sessionStatus === target.id || current?.category === 'closed') return
+      if (!target || managed.sessionStatus === target.id || current?.category === 'closed') { capture.resolve('keep_status'); return }
       sessionLog.info(`Turn outcome ${result.outcome} (confidence ${result.confidence.toFixed(2)}): session ${managed.id} → ${target.id}`)
       await this.setSessionStatus(managed.id, target.id)
+      capture.resolve(`status:${target.id}`, managed.sessionStatus === target.id, { previousStatus: statusAtDispatch })
     } catch (e) {
       sessionLog.warn(`Turn outcome check failed for session ${managed.id}:`, e)
     }
   }
 
-  private async applySemanticAutoLabels(managed: ManagedSession, message: string, labelTree: LabelConfig[]): Promise<void> {
+  private async applySemanticAutoLabels(managed: ManagedSession, message: string, labelTree: LabelConfig[], messageId?: string): Promise<void> {
+    const capture = new DecisionCapture({ messageId, turnId: messageId })
     const revision = managed.manualLabelsRevision ?? 0
     const labelsAtDispatch = new Set(managed.labels ?? [])
     try {
       await Promise.resolve()
       const matches = await evaluateSemanticLabelsForMessage(message, labelTree, {
+        ...capture.deps,
         sessionId: managed.id,
         existingEntries: [...labelsAtDispatch],
         log: (line) => sessionLog.info(line),
       })
-      if (matches.length === 0) return
-      if (this.sessions.get(managed.id) !== managed || (managed.manualLabelsRevision ?? 0) !== revision) return
+      if (this.sessions.get(managed.id) !== managed || (managed.manualLabelsRevision ?? 0) !== revision) { capture.discard('manual_labels_or_obsolete'); return }
+      if (matches.length === 0) { capture.resolve('none'); return }
       // Present at dispatch → either still present (dedupe) or removed by the user since (respect it).
       const fresh = matches.filter(m => !labelsAtDispatch.has(autoLabelMatchToEntry(m)))
+      const before = new Set(managed.labels ?? [])
       this.applyAutoLabelMatches(managed, fresh)
+      const added = (managed.labels ?? []).filter(label => !before.has(label)).length
+      capture.resolve(added ? 'labels' : 'none', added > 0, { added })
     } catch (e) {
       sessionLog.warn(`Semantic auto-label evaluation failed for session ${managed.id}:`, e)
     }
@@ -11354,9 +11429,10 @@ export class SessionManager implements ISessionManager {
 
   private async steerQueuedIfDecided(managed: ManagedSession, payload: ManagedSession['messageQueue'][number], userMessage: Message, configured: 'steer' | 'queue'): Promise<void> {
     const generation = managed.processingGeneration
+    const capture = new DecisionCapture({ messageId: userMessage.id, runOperationId: managed.activeDurableRunOperationId })
     try {
-      const [decided] = await Promise.all([this.decideMidTurnDelivery(managed, payload.message, configured), payload.continuationCheck])
-      if ((decided ?? configured) !== 'steer') return
+      const [decided] = await Promise.all([this.decideMidTurnDelivery(managed, payload.message, configured, capture), payload.continuationCheck])
+      if ((decided ?? configured) !== 'steer') { capture.resolve('queue', configured !== 'queue'); return }
       // A pending neighbour may still prove this is one half of a continued request.
       await Promise.all(managed.messageQueue.map(item => item.continuationCheck))
       const index = managed.messageQueue.indexOf(payload)
@@ -11364,11 +11440,12 @@ export class SessionManager implements ISessionManager {
       if (index < 0 || this.sessions.get(managed.id) !== managed || !managed.isProcessing
         || managed.processingGeneration !== generation || !agent?.canSteerNow?.()
         || agent.isCompactionInFlight?.() || (managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase])
-        || managed.messageQueue.some(item => item === payload.mergeWith || item.mergeWith === payload)) return
+        || managed.messageQueue.some(item => item === payload.mergeWith || item.mergeWith === payload)) { capture.discard('delivery_obsolete_or_unavailable'); return }
       const receipt = agent.redirectConfirmed ? await agent.redirectConfirmed(payload.message, userMessage.id) : undefined
       if (receipt) {
         userMessage.inputReception = { disposition: receipt.disposition, reason: receipt.reason }
         if (receipt.disposition === 'unknown') {
+          capture.trace?.apply({ action: 'steer', status: 'unknown', changed: false, reason: 'sdk_acknowledgement_unknown' })
           // Transport ambiguity is not permission to replay an external effect.
           const currentIndex = managed.messageQueue.indexOf(payload)
           if (currentIndex >= 0) managed.messageQueue.splice(currentIndex, 1)
@@ -11377,11 +11454,11 @@ export class SessionManager implements ISessionManager {
           this.sendEvent({ type: 'user_message', sessionId: managed.id, message: userMessage, status: 'accepted' }, managed.workspace.id)
           return
         }
-        if (receipt.disposition === 'rejected') return
-      } else if (!agent.redirect(payload.message)) return
-      if (this.sessions.get(managed.id) !== managed || managed.processingGeneration !== generation) return
+        if (receipt.disposition === 'rejected') { capture.resolve('queue'); return }
+      } else if (!agent.redirect(payload.message)) { capture.resolve('queue'); return }
+      if (this.sessions.get(managed.id) !== managed || managed.processingGeneration !== generation) { capture.discard('obsolete_turn'); return }
       const currentIndex = managed.messageQueue.indexOf(payload)
-      if (currentIndex < 0) return
+      if (currentIndex < 0) { capture.discard('input_already_delivered'); return }
       managed.messageQueue.splice(currentIndex, 1)
       ;(managed.turnSteers ??= []).push(payload.message)
       userMessage.isQueued = false
@@ -11391,6 +11468,7 @@ export class SessionManager implements ISessionManager {
         messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
       })
       this.persistSession(managed)
+      capture.resolve('steer', configured !== 'steer')
       this.sendEvent({ type: 'user_message', sessionId: managed.id, message: userMessage, status: 'accepted',
         optimisticMessageId: payload.optimisticMessageId }, managed.workspace.id)
     } catch (error) {
@@ -11400,18 +11478,23 @@ export class SessionManager implements ISessionManager {
 
   private async markQueuedContinuation(managed: ManagedSession, payload: ManagedSession['messageQueue'][number]): Promise<void> {
     const generation = managed.processingGeneration
+    const capture = new DecisionCapture({ messageId: payload.messageId })
     try {
       if (managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase]) return
       const index = managed.messageQueue.indexOf(payload)
       const previous = index > 0 ? managed.messageQueue[index - 1] : undefined
       if (!previous || !canSteerTextPayload(previous.attachments, previous.storedAttachments, previous.options)) return
       if (!canSteerTextPayload(payload.attachments, payload.storedAttachments, payload.options)) return
-      const same = await isContinuation(previous.message, payload.message, { sessionId: managed.id, log: (line) => sessionLog.info(line) })
+      const same = await isContinuation(previous.message, payload.message, { ...capture.deps, sessionId: managed.id, log: (line) => sessionLog.info(line) })
       // Both must still be waiting, in the same order, when the answer arrives.
       const now = managed.messageQueue.indexOf(payload)
       if (same && now > 0 && managed.messageQueue[now - 1] === previous
         && this.sessions.get(managed.id) === managed && managed.processingGeneration === generation
-        && !(managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase])) payload.mergeWith = previous
+        && !(managed.contextHandoff && CONTEXT_HANDOFF_ACTIVE_PHASES[managed.contextHandoff.phase])) {
+        payload.mergeWith = previous
+        payload.mergeDecision = capture.trace
+      } else if (!same) capture.resolve('separate')
+      else capture.discard('queue_changed_or_obsolete')
     } catch (e) {
       sessionLog.warn(`[mid-turn] Continuation check failed for session ${managed.id}:`, e)
     }

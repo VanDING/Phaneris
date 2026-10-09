@@ -4,7 +4,7 @@
  * record inspector. Ported from the VanDSH view over the Craft snapshot.
  */
 
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '../../lib/motion'
 import { useTranslation } from 'react-i18next'
@@ -25,9 +25,9 @@ import './trajectory-theme.css'
 
 const DURATION_PREFERENCE_KEY = 'craft.trajectory.duration'
 const VIEW_PREFERENCE_KEY = 'craft.trajectory.view'
-const RUN_VIEWS = ['overview', 'trajectory', 'context', 'map'] as const
+const RUN_VIEWS = ['overview', 'trajectory', 'decisions', 'context', 'map'] as const
 
-export type TrajectoryRunView = 'overview' | 'trajectory' | 'context' | 'map'
+export type TrajectoryRunView = typeof RUN_VIEWS[number]
 
 function readDurationPreference(): boolean {
   try {
@@ -42,7 +42,7 @@ function readViewPreference(): TrajectoryRunView {
     const value = localStorage.getItem(VIEW_PREFERENCE_KEY)
     if (value === 'prompt') return 'context'
     if (value === 'timeline' || value === 'events') return 'trajectory'
-    if (value === 'overview' || value === 'trajectory' || value === 'context' || value === 'map') return value
+    if (value === 'overview' || value === 'trajectory' || value === 'decisions' || value === 'context' || value === 'map') return value
   } catch {
     // Best-effort preference only.
   }
@@ -50,6 +50,9 @@ function readViewPreference(): TrajectoryRunView {
 }
 
 export interface TrajectoryViewProps {
+  decisions?: ReactNode
+  decisionSummary?: (onOpen: () => void) => ReactNode
+  trajectoryState?: ReactNode
   snapshot: TrajectorySnapshot
   /** Session cumulative usage for the inspector's usage tab. */
   sessionTotal?: PiUsage
@@ -91,7 +94,7 @@ function assistantRecordId(cell: TrajectoryCellProps): string {
   return cell.sourceSeq ?? cell.callId ?? `index-${cell.index}`
 }
 
-export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSummary, sessionMap, onOpenChat, onOpenReview, onOpenFile, onOpenSession, focus, onFocusChange }: TrajectoryViewProps) {
+export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSummary, sessionMap, decisions, decisionSummary, trajectoryState, onOpenChat, onOpenReview, onOpenFile, onOpenSession, focus, onFocusChange }: TrajectoryViewProps) {
   const { t } = useTranslation()
   const [runView, setRunView] = useState<TrajectoryRunView>(readViewPreference)
   const [visitedViews, setVisitedViews] = useState(() => new Set<TrajectoryRunView>([runView]))
@@ -364,6 +367,7 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
               records={flatRecords}
               isProcessing={isProcessing}
               contextSummary={contextSummary}
+              decisionSummary={decisionSummary?.(() => selectRunView('decisions'))}
               onOpenTrajectory={openTrajectory}
               onOpenContext={(requestSeq) => {
                 if (requestSeq !== undefined) onFocusChange?.({ source: 'run', requestSeq })
@@ -387,8 +391,13 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
                 }}
                 onRecordSelect={onSelectIndex}
               />
-              {ledger}
+              {trajectoryState ?? ledger}
             </div>
+          </section>
+        )}
+        {visitedViews.has('decisions') && (
+          <section id={`${viewId}-panel-decisions`} role="tabpanel" aria-labelledby={`${viewId}-tab-decisions`} hidden={runView !== 'decisions'} className="h-full min-h-0 motion-view-enter">
+            {decisions}
           </section>
         )}
         {visitedViews.has('context') && (

@@ -65,6 +65,7 @@ Documentation is filed by **what kind of document it is**, not by how finished t
 | Document | Status | Scope |
 | --- | --- | --- |
 | [AI settings replan](design/ai-settings-replan.md) | Implemented | Connections → Conversation → Advanced structure, verified by 20 acceptance scenarios. |
+| [Decision assistance and Run](design/decision-assistance-run-plan.md) | Implemented | Configuration responsibilities, session decisions, application evidence and accounting; current results in verification. |
 | [Default redesign](design/default-redesign/README.md) | Implemented | The built-in Default theme (light/dark palettes, canonical JSON, static styles) with preview assets. |
 | [Plugin bundles design](design/plugin-bundles-design.md) | Implemented | Aggregating skills, sources, and a prompt fragment into an Agent Plugins 1.0.0 package. |
 | [Plugin bundles decision register](design/plugin-bundles-decisions.md) | 0 open / 0 REC | The decisions the plugin-bundle implementation rests on, with the alternative each rejected. |
@@ -84,6 +85,8 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | [Motion validation matrix](verification/motion-validation.md) | **Partially closed** | Per-path acceptance for normal, reverse, interrupt, a11y and performance. **26 rows are pure `P`** (full-product verification outstanding) and a further 7 are partially verified with a remaining `P` — see §9 of the implementation status. |
 | [Motion implementation status](verification/motion-implementation-status.md) | Implemented; §9 lists the remainder | Item-by-item status, files, and results for M01–M16, V01–V08, plus two issues found during implementation. |
 | [AI settings structure](verification/ai-settings-structure.md) | Implemented | Acceptance for the Connections → Conversation → Advanced structure. |
+| [Session decisions](verification/session-decisions.md) | Implemented | Session, browser and isolated Electron acceptance, scope and accounting evidence. |
+| [Decision Run failure matrix](verification/decision-run-failure-matrix.md) | Written before implementation | Failure cases for session ownership, real application, costs, persistence and UI. |
 | [AI settings structure failure matrix](verification/ai-settings-structure-failure-matrix.md) | Written before implementation | Failure scenarios recorded before product code changed. |
 | [AI settings runtime refinement](verification/ai-settings-runtime-refinement.md) | Implemented | Default theme and script-runtime verification. |
 | [AI settings runtime failure matrix](verification/ai-settings-runtime-failure-matrix.md) | Written before implementation | Acceptance conditions recorded before product code changed. |

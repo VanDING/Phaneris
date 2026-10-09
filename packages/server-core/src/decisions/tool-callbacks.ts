@@ -18,6 +18,10 @@
 
 import type { DecisionToolCallbacks, DecisionToolRequest, DecisionToolResult } from '@phaneris/session-tools-core'
 import {
+  createDecisionPointTrace,
+  decisionObservation,
+  buildDecisionRecord,
+  type DecisionSource,
   getDecisionRecorder,
   resolveDecisionClient,
   toDecisionFailure,
@@ -26,9 +30,11 @@ import {
   type DecisionRequest,
   type ResolveDecisionClientOptions,
 } from '@phaneris/shared/decisions'
+import { randomUUID } from 'node:crypto'
 
 export interface DecisionToolCallbacksDeps {
   sessionId: string
+  source?: () => DecisionSource
   log?: (message: string) => void
   /** Injectable for tests; defaults to the shared resolver. */
   resolveClient?: (options: ResolveDecisionClientOptions) => Promise<DecisionClientResolution>
@@ -61,32 +67,47 @@ export function buildDecisionToolCallbacks(deps: DecisionToolCallbacksDeps): Dec
 
   return {
     async decide(request: DecisionToolRequest): Promise<DecisionToolResult> {
+      const source = deps.source?.()
       let resolution: DecisionClientResolution
       try {
         resolution = await resolveCached()
       } catch (error) {
         // Fail closed even when settings/credential access itself blows up.
         const failure = toDecisionFailure(error)
+        const trace = createDecisionPointTrace({ sessionId: deps.sessionId, feature: 'decideTool' }, source)
+        decisionObservation(trace, { kind: 'unavailable', reason: failure.kind })
+        trace.apply({ action: 'tool_error', changed: false, status: 'fallback' })
         deps.log?.(`[decide] resolver failed: ${failure.message}`)
         return { ok: false, error: failure }
       }
       if (!resolution.ok) {
+        if (resolution.failure.kind !== 'disabled') {
+          const trace = createDecisionPointTrace({ sessionId: deps.sessionId, feature: 'decideTool' }, source)
+          decisionObservation(trace, { kind: 'unavailable', reason: resolution.failure.kind })
+          trace.apply({ action: 'tool_error', changed: false, status: 'fallback' })
+        }
         deps.log?.(`[decide] unavailable: ${resolution.failure.kind} — ${resolution.failure.message}`)
         return { ok: false, error: resolution.failure }
       }
 
       const { client, provider, endpoint } = resolution.value
+      const trace = createDecisionPointTrace({ sessionId: deps.sessionId, feature: 'decideTool' }, source)
+      const attemptId = randomUUID()
+      const identity = { decisionPointId: trace.decisionPointId, sessionId: deps.sessionId, feature: trace.feature, attemptId }
+      decisionObservation(identity, { kind: 'attempt_started', provider, model: endpoint.model })
       // The tool schema is a looser mirror of the shared types; the client
       // validates the request before anything leaves the process.
       const decisionRequest: DecisionRequest = {
         state: request.state,
         questions: request.questions as DecisionRequest['questions'],
         deadlineMs: request.deadlineMs,
+        observation: identity,
       }
       const startedAt = performance.now()
       try {
-        const result = await client.decide(decisionRequest)
-        void recorder.record({
+        const response = await client.decide(decisionRequest)
+        const result = { ...response, decisionPointId: trace.decisionPointId, attemptId }
+        const record = buildDecisionRecord({
           feature: 'decide_tool',
           provider,
           model: endpoint.model,
@@ -95,6 +116,9 @@ export function buildDecisionToolCallbacks(deps: DecisionToolCallbacksDeps): Dec
           sessionId: deps.sessionId,
           meta: request.meta,
         })
+        void recorder.append(record)
+        decisionObservation(identity, { kind: 'answered', record })
+        trace.apply({ action: 'advice_delivered', changed: false, status: 'unknown', reason: 'agent_adoption_not_observed' })
         return {
           ok: true,
           model: result.model,
@@ -105,7 +129,7 @@ export function buildDecisionToolCallbacks(deps: DecisionToolCallbacksDeps): Dec
         }
       } catch (error) {
         const failure = toDecisionFailure(error)
-        void recorder.record({
+        const record = buildDecisionRecord({
           feature: 'decide_tool',
           provider,
           model: endpoint.model,
@@ -115,6 +139,11 @@ export function buildDecisionToolCallbacks(deps: DecisionToolCallbacksDeps): Dec
           sessionId: deps.sessionId,
           meta: request.meta,
         })
+        record.decisionPointId = trace.decisionPointId
+        record.attemptId = attemptId
+        void recorder.append(record)
+        decisionObservation(identity, { kind: 'answered', record })
+        trace.apply({ action: 'tool_error', changed: false, status: failure.kind === 'cancelled' ? 'discarded' : 'fallback' })
         deps.log?.(`[decide] failed: ${failure.kind} — ${failure.message}`)
         return { ok: false, error: failure }
       }

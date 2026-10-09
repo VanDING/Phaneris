@@ -83,6 +83,8 @@ export type DecisionQuestionType = DecisionQuestion['type'];
 export type DecisionState = string | Record<string, unknown> | unknown[];
 
 export interface DecisionRequest {
+  /** Internal observation identity; never sent in the provider body. */
+  observation?: import('./session.ts').DecisionObservationIdentity;
   state: DecisionState;
   /** Non-empty map of question key → question. */
   questions: Record<string, DecisionQuestion>;
@@ -144,6 +146,8 @@ export interface DecisionStateDigest {
 }
 
 export interface DecisionResult {
+  decisionPointId?: string;
+  attemptId?: string;
   accountingOperationId?: string;
   /** Model id reported by the server, or the requested id when the server omitted it (see `modelReported`). */
   model: string;

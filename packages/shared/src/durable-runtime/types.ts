@@ -9,6 +9,7 @@ export type ToolRecoveryMode =
   | 'never_auto_retry'
 
 export type RuntimeEventType =
+  | 'decision_observed'
   | 'operation_accepted'
   | 'model_dispatch_committed'
   | 'model_outcome_committed'

@@ -231,6 +231,8 @@ export const LOCAL_ONLY_CHANNELS = new Set<string>([
 export const REMOTE_ELIGIBLE_CHANNELS = new Set<string>([
   // Decision settings and credentials belong to the authenticated workspace server.
   RPC_CHANNELS.decisions.GET_SETTINGS,
+  RPC_CHANNELS.decisions.GET_SESSION,
+  RPC_CHANNELS.decisions.SESSION_CHANGED,
   RPC_CHANNELS.decisions.GET_USAGE,
   RPC_CHANNELS.decisions.SET_SETTINGS,
   RPC_CHANNELS.decisions.GET_STATUS,

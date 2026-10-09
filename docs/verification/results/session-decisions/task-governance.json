@@ -1,0 +1,131 @@
+{
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-task-governance-1jwmiW",
+  "records": [
+    {
+      "id": "Repeated failed verification with identical outputs stops the configured no-progress loop",
+      "pass": true,
+      "observation": {
+        "status": "failed",
+        "log": [
+          {
+            "kind": "run-started",
+            "taskId": "stalled",
+            "runId": "r1",
+            "orchestratorSessionId": "orchestrator",
+            "t": "2026-10-09T06:48:58.938Z"
+          },
+          {
+            "kind": "usage-observed",
+            "sessionId": "orchestrator",
+            "totalTokens": 0,
+            "tokensUsed": 0,
+            "t": "2026-10-09T06:48:58.939Z"
+          },
+          {
+            "kind": "node-scheduled",
+            "nodeId": "a",
+            "t": "2026-10-09T06:48:58.940Z"
+          },
+          {
+            "kind": "node-spawned",
+            "nodeId": "a",
+            "sessionId": "session-a",
+            "t": "2026-10-09T06:48:58.942Z"
+          },
+          {
+            "kind": "node-finished",
+            "nodeId": "a",
+            "sessionId": "session-a",
+            "state": "done",
+            "output": {
+              "text": "same output"
+            },
+            "t": "2026-10-09T06:48:58.967Z"
+          },
+          {
+            "kind": "run-verifying",
+            "t": "2026-10-09T06:48:58.971Z"
+          },
+          {
+            "kind": "verdict",
+            "result": "fail",
+            "reason": "missing result",
+            "output": {
+              "text": "VERDICT: FAIL — missing result"
+            },
+            "t": "2026-10-09T06:48:58.998Z"
+          },
+          {
+            "kind": "node-retry",
+            "nodeId": "a",
+            "attempt": 1,
+            "reason": "verdict-fail: missing result",
+            "t": "2026-10-09T06:48:59.002Z"
+          },
+          {
+            "kind": "node-scheduled",
+            "nodeId": "a",
+            "t": "2026-10-09T06:48:59.003Z"
+          },
+          {
+            "kind": "node-spawned",
+            "nodeId": "a",
+            "sessionId": "session-a",
+            "t": "2026-10-09T06:48:59.004Z"
+          },
+          {
+            "kind": "node-finished",
+            "nodeId": "a",
+            "sessionId": "session-a",
+            "state": "done",
+            "output": {
+              "text": "same output"
+            },
+            "t": "2026-10-09T06:48:59.029Z"
+          },
+          {
+            "kind": "run-verifying",
+            "t": "2026-10-09T06:48:59.032Z"
+          },
+          {
+            "kind": "verdict",
+            "result": "fail",
+            "reason": "missing result",
+            "output": {
+              "text": "VERDICT: FAIL — missing result"
+            },
+            "t": "2026-10-09T06:48:59.059Z"
+          },
+          {
+            "kind": "budget-breach",
+            "metric": "no_progress",
+            "value": 2,
+            "limit": 2,
+            "t": "2026-10-09T06:48:59.062Z"
+          },
+          {
+            "kind": "run-failed",
+            "t": "2026-10-09T06:48:59.063Z"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Auxiliary decision tokens are added once to the owning task session budget",
+      "pass": true,
+      "observation": {
+        "status": "paused",
+        "tokens": 20
+      }
+    },
+    {
+      "id": "Run budget survives restart and excludes pre-run orchestrator history",
+      "pass": true,
+      "observation": {
+        "status": "completed",
+        "tokens": 20,
+        "previousHistory": 1000
+      }
+    }
+  ]
+}

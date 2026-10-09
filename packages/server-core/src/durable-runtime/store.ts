@@ -460,6 +460,21 @@ export class DurableRuntimeStore {
     return rows.map(row => this.decodeEvent(row))
   }
 
+  /** Indexed decision evidence only; unrelated conversation events are not scanned. */
+  listDecisionEvents(sessionId: string): RuntimeEvent[] {
+    const rows = this.db.prepare("SELECT * FROM runtime_events WHERE session_id = ? AND event_type = 'decision_observed' ORDER BY seq ASC")
+      .all(sessionId) as RuntimeEventRow[]
+    return rows.map(row => this.decodeEvent(row))
+  }
+  decisionRecordingSince(startedAt: number): number {
+    this.db.prepare('INSERT OR IGNORE INTO decision_recording_metadata (id, started_at) VALUES (1, ?)').run(startedAt)
+    return (this.db.prepare('SELECT started_at FROM decision_recording_metadata WHERE id = 1').get() as { started_at: number }).started_at
+  }
+
+  deleteDecisionEvidence(sessionId: string): void {
+    this.db.prepare("DELETE FROM runtime_events WHERE session_id = ? AND event_type = 'decision_observed'").run(sessionId)
+  }
+
   getToolRecoveryEvidence(operationId: string): ToolRecoveryEvidence | undefined {
     const row = this.getToolOperationRow(operationId)
     if (!row) return undefined
@@ -846,6 +861,9 @@ export class DurableRuntimeStore {
         throw error
       }
     }
+    this.db.exec(`CREATE INDEX IF NOT EXISTS ix_runtime_decisions_session
+      ON runtime_events(session_id, seq) WHERE event_type = 'decision_observed'`)
+    this.db.exec('CREATE TABLE IF NOT EXISTS decision_recording_metadata (id INTEGER PRIMARY KEY CHECK(id = 1), started_at INTEGER NOT NULL)')
   }
 
   private appendEvent(event: RuntimeEvent): number {

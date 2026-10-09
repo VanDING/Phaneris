@@ -50,6 +50,8 @@ export interface GuardedModeVerdict {
 
 /** Host check. `isActive` is synchronous so an off toggle costs the tool path nothing. */
 export interface GuardedModeCheck {
+  /** Observation only, after the host has selected the actual permission path. */
+  applied?(call: GuardedModeCall, action: 'allow' | 'prompt' | 'discarded', unavailable: boolean): void;
   /** Feature on; checked on every call. */
   isActive(): boolean;
   /** An unattended session cannot authorize a guarded mutation. */
@@ -209,6 +211,9 @@ export async function applyGuardedModeCheck(
 
   let risks: GuardedModeRisk[] = [];
   let unavailable = classificationFailed;
+  const noteApplied = (action: 'allow' | 'prompt' | 'discarded', failed: boolean) => {
+    try { check?.applied?.(call, action, failed); } catch { /* Observation cannot change authority. */ }
+  };
   if (call.alwaysAsk) {
     risks = [call.alwaysAsk];
   } else if (!classificationFailed) {
@@ -222,13 +227,14 @@ export async function applyGuardedModeCheck(
   }
 
   // The turn stopped while the check thought: nothing should run, and a prompt now would be a ghost.
-  if (options.signal?.aborted) return { type: 'block', reason: 'The turn was stopped.' };
+  if (options.signal?.aborted) { noteApplied('discarded', unavailable); return { type: 'block', reason: 'The turn was stopped.' }; }
   // The mode changed meanwhile: decide under the current mode instead of returning a Guarded-mode allow.
-  if (resolveEffectivePermissionMode(getPermissionModeDiagnostics(ctx.sessionId).permissionMode) !== 'guarded') return runPreToolUseChecks(ctx);
-  if (risks.length === 0 && !unavailable) return result;
+  if (resolveEffectivePermissionMode(getPermissionModeDiagnostics(ctx.sessionId).permissionMode) !== 'guarded') { noteApplied('discarded', unavailable); return runPreToolUseChecks(ctx); }
+  if (risks.length === 0 && !unavailable) { noteApplied('allow', false); return result; }
 
   const reason = unavailable ? 'risk check unavailable; confirmation required' : risks.map(risk => RISK_LABELS[risk]).join(', ');
   ctx.onDebug?.(`Guarded mode: ${ctx.toolName} flagged (${reason})`);
+  noteApplied('prompt', unavailable);
   return {
     type: 'prompt',
     promptType: call.promptType,

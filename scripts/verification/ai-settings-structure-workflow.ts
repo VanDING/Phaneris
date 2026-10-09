@@ -160,12 +160,14 @@ try {
     assert.equal(await advanced('decisions').getByRole('switch').count(), 4)
     assert((await advanced('decisions').innerText()).includes('Guarded'))
     assert.equal(await page.locator('[data-ai-settings-section]').count(), 3)
+    assert.equal(await page.locator('[data-decision-usage]').count(), 0)
+    assert.equal(await page.evaluate(() => (window as any).aiStructureState().calls.filter((call: any) => call.method === 'getDecisionUsage').length), 0)
   })
-  await check('Guarded Permissions entry opens only decision assistance', async () => {
+  await check('Permissions has no redundant Guarded configuration redirect', async () => {
     await load(); await page.evaluate(() => (window as any).aiStructureNavigate('permissions'))
-    await page.getByRole('button', { name: 'Configure decision model' }).click()
-    await toggle('decisions').waitFor(); assert.equal(await toggle('decisions').getAttribute('aria-expanded'), 'true')
-    assert.equal(await toggle('images').getAttribute('aria-expanded'), 'false'); assert.equal(await toggle('performance').getAttribute('aria-expanded'), 'false')
+    await page.getByText('About Permissions', { exact: true }).waitFor()
+    assert.equal(await page.getByRole('button', { name: 'Configure decision model' }).count(), 0)
+    assert.equal(await page.getByText('Guarded', { exact: true }).count(), 0)
   })
   await check('Decision load failure leaves a visible section with retry', async () => {
     await load('scenario=decision-error'); await toggle('decisions').click()

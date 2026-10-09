@@ -507,7 +507,7 @@ export function formatLargeResponseMessage(opts: FormatOptions): string {
 /** Complete input only: larger results fall back, never silently filter a prefix. */
 export const LARGE_RESULT_MAX_TEXT_CHARS = 400_000;
 export const LARGE_RESULT_FILTER_DEADLINE_MS = 6_000;
-export interface LargeResultExcerpt { text: string; kept: number; total: number }
+export interface LargeResultExcerpt { text: string; kept: number; total: number; onApplied?: (applied: boolean) => void }
 export type LargeResultFilter = (input: {
   text: string; context: SummarizationContext; budgetChars: number; filePath: string;
   sessionId?: string; signal?: AbortSignal;
@@ -533,6 +533,8 @@ export type LargeResultSummaryGate = (input: {
   estimatedTokens: number;
   /** Session the result belongs to (for the decision record). */
   sessionId?: string;
+  /** Internal: defer confirmation until the caller accepts the branch or IPC response. */
+  onApplication?: (confirm: (applied: boolean) => void) => void;
 }) => Promise<boolean | null>;
 
 let largeResultSummaryGate: LargeResultSummaryGate | null = null;
@@ -545,8 +547,11 @@ export function setLargeResultSummaryGate(gate: LargeResultSummaryGate | null): 
 /** Ask the installed gate; `null` without one or when it fails. Also answers for the Pi subprocess. */
 export async function askLargeResultSummaryGate(input: Parameters<LargeResultSummaryGate>[0]): Promise<boolean | null> {
   if (!largeResultSummaryGate) return null;
+  let confirm: ((applied: boolean) => void) | undefined;
   try {
-    return await largeResultSummaryGate(input);
+    const result = await largeResultSummaryGate({ ...input, onApplication: input.onApplication ?? (callback => { confirm = callback; }) });
+    confirm?.(true);
+    return result;
   } catch (error) {
     debug('large-response', `Summary gate failed, summarizing: ${error instanceof Error ? error.message : String(error)}`);
     return null;
@@ -705,13 +710,22 @@ export async function handleLargeResponse(
 
   const excerpt = await askLargeResultFilter({ text, context, filePath: absolutePath,
     budgetChars: Math.min(12_000, tokenLimitFor(contextWindow) * 4), sessionId: basename(sessionPath), signal: opts.signal });
+  excerpt?.onApplied?.(!opts.signal?.aborted);
   opts.signal?.throwIfAborted();
   if (excerpt) return { message: excerpt.text, filePath: absolutePath, wasSummarized: false };
 
   // 2. Try summarization if within limits and callback provided (and the host's gate does not
   //    judge the preview + saved file to be enough)
   let summary: string | undefined;
-  if (summarize && estimatedTokens <= MAX_SUMMARIZATION_INPUT && (await askLargeResultSummaryGate({ text, context, estimatedTokens, sessionId: basename(sessionPath) })) !== false) {
+  let shouldSummarize = !!summarize && estimatedTokens <= MAX_SUMMARIZATION_INPUT;
+  if (shouldSummarize) {
+    let confirm: ((applied: boolean) => void) | undefined;
+    const selection = await askLargeResultSummaryGate({ text, context, estimatedTokens, sessionId: basename(sessionPath), onApplication: callback => { confirm = callback; } });
+    confirm?.(!opts.signal?.aborted);
+    opts.signal?.throwIfAborted();
+    shouldSummarize = selection !== false;
+  }
+  if (summarize && shouldSummarize) {
     opts.signal?.throwIfAborted();
     try {
       const prompt = buildSummarizationPrompt(text, context);

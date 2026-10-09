@@ -13,7 +13,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Activity } from 'lucide-react'
-import { TrajectoryView, buildTrajectorySnapshot, Spinner, type TrajectorySessionMap } from '@phaneris/ui'
+import { TrajectoryView, buildTrajectorySnapshot, EMPTY_TRAJECTORY_SNAPSHOT, Spinner, type TrajectorySessionMap } from '@phaneris/ui'
+import { useSessionDecisions } from '@/hooks/useSessionDecisions'
+import { DecisionSummary, SessionDecisions } from './SessionDecisions'
+import { openDecisionModelSettings } from '@/lib/ai-settings-navigation'
 import { PanelEmptyState } from './PanelEmptyState'
 import { activeSessionIdAtom } from '@/atoms/active-session'
 import { sessionAtomFamily, sessionMetaMapAtom, ensureSessionMessagesLoadedAtom } from '@/atoms/sessions'
@@ -39,7 +42,7 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
   const openWorkbenchItem = useSetAtom(openWorkbenchItemAtom)
   const setWorkbenchItemBinding = useSetAtom(setWorkbenchItemBindingAtom)
   const collapseWorkbench = useSetAtom(collapseWorkbenchAtom)
-  const { activeWorkspaceId, onOpenFile } = useAppShellContext()
+  const { activeWorkspaceId, workspaces, onOpenFile } = useAppShellContext()
   const { navigateToSession } = useNavigation()
   const { labels: labelConfigs } = useLabels(activeWorkspaceId)
 
@@ -68,7 +71,7 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
   }, [activeSessionId, ensureMessagesLoaded])
 
   const snapshot = useMemo(() => {
-    if (!session) return null
+    if (!session) return EMPTY_TRAJECTORY_SNAPSHOT
     return buildTrajectorySnapshot({
       messages: session.messages,
       isProcessing: session.isProcessing,
@@ -77,6 +80,10 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
     })
   }, [session])
   const meta = activeSessionId ? sessionMetaMap.get(activeSessionId) : undefined
+  const workspace = workspaces.find(candidate => candidate.id === activeWorkspaceId)
+  const decisionWorkspaceId = session?.workspaceId ?? meta?.workspaceId ?? workspace?.remoteServer?.remoteWorkspaceId ?? activeWorkspaceId ?? undefined
+  const decisionServerScope = JSON.stringify([activeWorkspaceId, workspace?.remoteServer])
+  const decisions = useSessionDecisions(activeSessionId ?? undefined, decisionWorkspaceId, {}, true, decisionServerScope)
   const labelNames = useMemo(() => (
     meta?.labels?.map((id) => findLabelById(labelConfigs, id)?.name ?? id) ?? []
   ), [labelConfigs, meta?.labels])
@@ -125,47 +132,25 @@ export function TrajectoryPanel({ sessionId }: { sessionId?: string }) {
     )
   }
 
-  if (messagesLoading) {
-    return (
-      <div className="flex h-full flex-col">
-        <div className="flex flex-1 items-center justify-center">
-          <Spinner />
-        </div>
-      </div>
-    )
-  }
-
-  if (loadError) {
-    return (
-      <div className="flex h-full flex-col">
-        <PanelEmptyState
-          icon={<Activity className="h-8 w-8" />}
-          title={t('errors.failedToLoadSession')}
-          hint={t('errors.pleaseReload')}
-        />
-      </div>
-    )
-  }
-
-  if (!snapshot || snapshot.contributions.length === 0) {
-    return (
-      <div className="flex h-full flex-col">
-        <PanelEmptyState
-          icon={<Activity className="h-8 w-8" />}
-          title={t('contentPanel.trajectory.noRecords')}
-          hint={t('contentPanel.trajectory.noRecordsHint')}
-        />
-      </div>
-    )
-  }
+  const trajectoryState = messagesLoading ? <div className="flex flex-1 items-center justify-center"><Spinner /></div>
+    : loadError ? <PanelEmptyState icon={<Activity className="h-8 w-8" />} title={t('errors.failedToLoadSession')} hint={t('errors.pleaseReload')} />
+      : snapshot.contributions.length === 0 ? <PanelEmptyState icon={<Activity className="h-8 w-8" />} title={t('contentPanel.trajectory.noRecords')} hint={t('contentPanel.trajectory.noRecordsHint')} /> : undefined
 
   return (
     <div className="flex h-full flex-col">
       <div className="min-h-0 flex-1 bg-background">
         <div className="h-full min-h-0 overflow-hidden bg-background">
           <TrajectoryView
-            key={activeSessionId}
+            key={`${decisionServerScope}:${decisionWorkspaceId}:${activeSessionId}`}
             snapshot={snapshot}
+            trajectoryState={trajectoryState}
+            decisionSummary={onOpen => <DecisionSummary data={decisions} onOpen={onOpen} />}
+            decisions={<SessionDecisions sessionId={activeSessionId} workspaceId={decisionWorkspaceId} serverScope={decisionServerScope} data={decisions}
+              onConfigure={openDecisionModelSettings} onOpenChat={messageId => {
+                navigateToSession(activeSessionId)
+                setChatFocusRequest({ sessionId: activeSessionId, messageId, nonce: Date.now() })
+                collapseWorkbench()
+              }} />}
             sessionTotal={snapshot.totalUsage}
             isProcessing={session?.isProcessing}
             contextSummary={{

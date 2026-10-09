@@ -33,7 +33,7 @@ try {
   await page.locator('.phaneris-gantt .pg-bar').first().waitFor({ timeout: 120_000 })
   await check('four built-in themes are available through the renderer API', async () => {
     const names = await page.evaluate(async () => (await window.electronAPI.loadPresetThemes()).map(t => t.name))
-    assert.deepEqual(names, ['Twilight', 'Geek', 'Cyberpunk 2077', 'Ink'])
+    assert.deepEqual(names, ['Default', 'Geek', 'Cyberpunk 2077', 'Ink'])
     return names
   })
   for (const id of themes) {
@@ -42,7 +42,7 @@ try {
         // Switch using the actual control and ThemeProvider, including partial
         // theme inheritance, supported-mode resolution and the IPC loader.
         await page.locator('header [role="combobox"]').click()
-        const name = { default: 'Twilight', geek: 'Geek', 'cyberpunk-2077': 'Cyberpunk 2077', ink: 'Ink' }[id]
+        const name = { default: 'Default', geek: 'Geek', 'cyberpunk-2077': 'Cyberpunk 2077', ink: 'Ink' }[id]
         await page.getByRole('option', { name, exact: true }).click()
         await page.getByRole('button', { name: mode === 'dark' ? 'Dark' : 'Light', exact: true }).click()
         await page.waitForFunction(({ id, mode }) => document.documentElement.dataset.themeStatus === 'ready'

@@ -31,6 +31,7 @@
     "./decisions": "./src/decisions/index.ts",
     "./decisions/types": "./src/decisions/types.ts",
     "./decisions/settings": "./src/decisions/settings.ts",
+    "./decisions/session": "./src/decisions/session.ts",
     "./mcp": "./src/mcp/index.ts",
     "./prompts": "./src/prompts/index.ts",
     "./sessions": "./src/sessions/index.ts",

@@ -1,0 +1,26 @@
+🔍 Verifying Session Tools Core...
+✅ Session tools core verified
+🥧 Building Pi Agent Server...
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 3229 modules in 1423ms
+
+  bundle.js  13.98 MB  (entry point)
+
+✅ Pi agent server built successfully
+  → Copied to resources/pi-agent-server/index.js
+  → Copied to resources/pi-agent-server/bundle.js
+🔌 Building unified network interceptor...
+
+  apps\electron\dist\interceptor.cjs  30.6kb
+
+Done in 48ms
+✅ Interceptor built successfully
+📨 Building WhatsApp worker...
+
+  packages\messaging-whatsapp-worker\dist\worker.cjs  7.7mb
+
+Done in 1385ms
+✅ WhatsApp worker built successfully
+🔨 Building main process...
+🔍 Verifying build output...
+✅ Build complete and verified

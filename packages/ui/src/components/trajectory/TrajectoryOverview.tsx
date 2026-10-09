@@ -1,5 +1,6 @@
 import { Activity, AlertTriangle, Braces, Clock3, Coins, Wrench } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import type { ReactNode } from 'react'
 import type { TrajectorySnapshot } from './trajectory-contract'
 import type { TrajectoryContextSummary } from './TrajectoryView'
 import { formatDurationMillis, type TrajectoryRenderRecord, type TrajectoryTurnModel } from './trajectory-layout'
@@ -12,6 +13,7 @@ interface TrajectoryOverviewProps {
   records: readonly TrajectoryRenderRecord[]
   isProcessing?: boolean
   contextSummary?: TrajectoryContextSummary
+  decisionSummary?: ReactNode
   onOpenTrajectory: (index?: number) => void
   onOpenContext: (requestSeq?: number) => void
 }
@@ -32,6 +34,7 @@ export function TrajectoryOverview({
   records,
   isProcessing,
   contextSummary,
+  decisionSummary,
   onOpenTrajectory,
   onOpenContext,
 }: TrajectoryOverviewProps) {
@@ -90,7 +93,7 @@ export function TrajectoryOverview({
         <div className="flex min-w-0 items-center gap-2 border-b border-border/50 pb-3">
           <span className={`h-2 w-2 shrink-0 rounded-full ${isProcessing ? 'animate-pulse bg-accent' : errorRecords.length > 0 ? 'bg-destructive' : 'bg-success'}`} />
           <span className="text-[13px] font-semibold">
-            {isProcessing
+            {contentRecords.length === 0 ? t('contentPanel.trajectory.noRecords') : isProcessing
               ? t('trajectory.overview.processing')
               : errorRecords.length > 0
                 ? t('trajectory.overview.completedWithIssues')
@@ -120,6 +123,7 @@ export function TrajectoryOverview({
           })}
         </div>
 
+        {decisionSummary}
         {contextSummary && (
           <section>
             <h3 className="mb-2 text-[12px] font-semibold">{t('trajectory.overview.environment')}</h3>

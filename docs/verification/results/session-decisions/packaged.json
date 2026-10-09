@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-10-09T07:15:17.835Z",
+  "app": "E:\\Phaneris\\.cache\\session-decisions\\packaged\\runtime-x0rBqK",
+  "stagedFrom": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
+  "bundles": {
+    "main.cjs": "0f29a7ef2bada1b7c39a2c1507adfdf142bab90300e10ac2309ea034463858d7",
+    "bootstrap-preload.cjs": "ff7901bbd36c757906a2fbb17cced9e9d7f216e430b4d444866577c53029dc88",
+    "browser-toolbar-preload.cjs": "5778078b69762ac5edd8af94a820088c1ecfe02b4e26ace134ae6ea3d7a84049",
+    "renderer/index.html": "7076ff24182cfc490a6b77ca4b72421586c68d332e03b4844ce5a1951764a22d",
+    "resources/docs/decisions.md": "1cbc3d877cf4b9fe84f4b4971e1943f6956267d77586ef6c49c0221b49d542d6"
+  },
+  "scope": "Existing unpacked runtime/resources with freshly built worktree bundles; installer not verified",
+  "fixture": "E:\\Phaneris\\.cache\\session-decisions\\packaged\\profile-muldet",
+  "sessionId": "261009-eager-blossom",
+  "providerRequests": 1,
+  "checks": [
+    {
+      "id": "Actual preload and authenticated main return the persisted session report",
+      "pass": true
+    },
+    {
+      "id": "Packaged Run renders Decisions for a session with no chat messages",
+      "pass": true
+    },
+    {
+      "id": "Changing the active chat updates the session-bound Decisions range",
+      "pass": true
+    },
+    {
+      "id": "Packaged AI settings show configuration without runtime statistics",
+      "pass": true
+    },
+    {
+      "id": "Packaged Permissions retain their rules without the Guarded redirect",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

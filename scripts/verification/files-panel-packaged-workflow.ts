@@ -18,6 +18,11 @@
  *   bun run scripts/verification/files-panel-packaged-workflow.ts \
  *     --app="$PWD/apps/electron/release/mac/Phaneris.app" \
  *     --output="$PWD/.verify/files-panel-packaged"
+ *
+ * On Windows pass the unpacked directory instead — the executable is resolved
+ * per platform (`Phaneris.exe` vs `Contents/MacOS/Phaneris`):
+ *   bun run scripts/verification/files-panel-packaged-workflow.ts \
+ *     --app="$PWD/apps/electron/release/win-unpacked"
  */
 
 import { strict as assert } from 'node:assert'
@@ -86,7 +91,7 @@ delete env.NODE_OPTIONS
 let application: Awaited<ReturnType<typeof _electron.launch>> | undefined
 try {
   application = await _electron.launch({
-    executablePath: join(app, 'Contents/MacOS/Phaneris'),
+    executablePath: process.platform === 'win32' ? join(app, 'Phaneris.exe') : join(app, 'Contents/MacOS/Phaneris'),
     args: ['--disable-gpu'],
     env,
     timeout: 60_000,

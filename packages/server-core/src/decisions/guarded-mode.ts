@@ -12,7 +12,7 @@
 
 import type { GuardedModeCheck, GuardedModeCall, GuardedModeRisk, GuardedModeVerdict } from '@phaneris/shared/agent'
 import { isDecisionFeatureActive, type DecisionRequest, type DecisionResult } from '@phaneris/shared/decisions'
-import { FOREGROUND_MAX_DEADLINE_MS, openDecisionPoint, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
+import { DecisionCapture, FOREGROUND_MAX_DEADLINE_MS, openDecisionPoint, recordDecisionOutcome, type DecisionPointDeps } from './decision-point'
 
 /** "Yes" probability that escalates a call. High, because every escalation costs a prompt the user chose to mostly avoid. */
 export const GUARDED_MODE_RISK_THRESHOLD = 0.8
@@ -64,13 +64,21 @@ export function readGuardedModeVerdict(result: DecisionResult | null): GuardedMo
 }
 
 export interface GuardedModeCheckDeps extends DecisionPointDeps {
+  sourceForCall?: () => import('@phaneris/shared/decisions').DecisionSource
   sessionId: string
   /** Checked on every call: only a session with someone to answer the prompt is guarded. */
   isInteractive: () => boolean
 }
 
 export function buildGuardedModeCheck(deps: GuardedModeCheckDeps): GuardedModeCheck {
+  const captures = new WeakMap<GuardedModeCall, DecisionCapture>()
   return {
+    applied: (call, action, unavailable) => {
+      const capture = captures.get(call)
+      if (action === 'discarded') capture?.discard('mode_changed_or_stopped')
+      else capture?.trace?.apply({ action, status: unavailable ? 'fallback' : action === 'prompt' ? 'applied' : 'unchanged', changed: !unavailable && action === 'prompt' })
+      captures.delete(call)
+    },
     // Synchronous: with the toggle off (the default) the tool path does no work at all.
     // (Only Guarded-mode sessions ask; `needsGuardedModeCheck` checks the mode first.)
     isActive: () => isDecisionFeatureActive('guardedMode'),
@@ -78,7 +86,9 @@ export function buildGuardedModeCheck(deps: GuardedModeCheckDeps): GuardedModeCh
     check: async (call, signal) => {
       if (!deps.isInteractive()) return null
       // The tool call waits on the answer: cap it like the other foreground points.
-      const decide = await openDecisionPoint({ ...deps, feature: 'guardedMode', record: 'guarded_mode', maxDeadlineMs: FOREGROUND_MAX_DEADLINE_MS })
+      const capture = new DecisionCapture(deps.sourceForCall?.() ?? deps.source)
+      captures.set(call, capture)
+      const decide = await openDecisionPoint({ ...deps, ...capture.deps, feature: 'guardedMode', record: 'guarded_mode', maxDeadlineMs: FOREGROUND_MAX_DEADLINE_MS })
       if (!decide) return null
       const result = await decide(buildGuardedModeRequest(call), { tool: call.toolName, kind: call.promptType }, signal)
       const verdict = readGuardedModeVerdict(result)

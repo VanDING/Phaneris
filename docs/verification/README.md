@@ -7,7 +7,7 @@
 | 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](./results)。 |
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
 | 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](./results)。 |
-| 打包客户端 | [结构验证](../../scripts/verification/packaged-client-verification.mjs) · [启动 smoke](../../scripts/verification/packaged-client-smoke.mjs) | 验证平台包内容与启动行为；macOS 和 Windows 各自保存结果。 |
+| 打包客户端 | [结构验证](../../scripts/verification/packaged-client-verification.mjs) · [启动 smoke](../../scripts/verification/packaged-client-smoke.mjs) · [Files 面板（打包产物）](../../scripts/verification/files-panel-packaged-workflow.ts) | 验证平台包内容与启动行为；macOS 和 Windows 各自保存结果。 |
 | Pi SDK 1.0.0 升级 | [评估与复现](../process/pi-sdk-1.0.0-upgrade-assessment.md) · [验证证据](./results/pi-sdk-1.0.0-upgrade.json) | 依赖版本、真实 SDK/bundle smoke、全仓检查与生产构建；保留首次两项超时及完整工作区复测。日志位于 `.cache/pi-sdk-v1.0.0/`。 |
 | 日历原型 | [交互检查](../../scripts/verification/calendar-placement-demo-check.mjs) · [原型页面](../prototypes/calendar-untimed-placement-demo.html) | 检查独立的侧栏原型行为。 |
 
@@ -111,3 +111,21 @@ node scripts/verification/packaged-client-smoke.mjs --arch=x64
 `packaged-client-verification.mjs` 只读取打包产物：版本与 `phaneris.identity.json` 一致（macOS 读 bundle 的 Info.plist，Windows 读 exe 的 VERSIONINFO 与包内 `package.json`）、asar 保持关闭且 bun/ripgrep/文档工具/WhatsApp worker/node-pty 等资源位于包外、主程序架构正确、renderer 已打包且不带 sourcemap。深链 scheme 只在 macOS 断言——Windows 的注册表项由安装器写入，属于安装后检查，不在只读校验范围内。
 
 `packaged-client-smoke.mjs` 用一次性空数据根目录（`PHANERIS_CONFIG_DIR`，见 `packages/shared/src/config/paths.ts`）直接启动打包产物并观察 25 秒：断言进程不崩、Chromium 拉起了 renderer/helper、无致命输出、首次运行初始化写出了 app 级 `config.json`（只有这一项能区分“跑起来了”和“弹了错误窗口”：入口缺失时 Electron 依然存活、照样拉起 helper、照样创建 userData 目录），结束时清掉全部残留进程与临时目录，机器上的真实数据目录不受影响。之所以不用真实数据目录里的 `config.json` 作判据：本仓库所有 `config.json` 写入都以“配置缺失或数据变更”为条件（`config/storage.ts` 的 `saveConfig` 调用点），遇到健康配置就不写，判据会随机器数据状态时灵时不灵，也无法重复运行。结果分别写入 `results/packaged-client-verification.json` / `-win.json` 与 `results/packaged-client-smoke.json` / `-win.json`。运行日志保存在被忽略的 `.cache/verification/`。
+
+`files-panel-packaged-workflow.ts` 更进一步：用 Playwright 驱动打包产物本体（真实主进程 / preload / renderer 构建 / 磁盘上的会话目录 / 一次性 profile），断言 Files 工作台打开、三个整合视图（Browse / Artifacts / Changed）按当前语言解析出标签、Browse 读到工作目录的真实文件树。`--app` 传平台产物目录，可执行文件按平台解析（`Phaneris.exe` 与 `Contents/MacOS/Phaneris`）；产物与截图写入 `--output`（默认 `.verify/files-panel-packaged`，该目录已在 `.gitignore` 内）。
+
+```powershell
+# Windows
+bun run scripts/verification/files-panel-packaged-workflow.ts `
+  --app="$PWD/apps/electron/release/win-unpacked"
+```
+
+```bash
+# macOS
+bun run scripts/verification/files-panel-packaged-workflow.ts \
+  --app="$PWD/apps/electron/release/mac/Phaneris.app"
+```
+
+## 会话决策专项
+
+[实施与验收](session-decisions.md) 记录配置页统计移除、Run → Decisions、会话归属、实际应用与账本口径，以及可重复的会话／浏览器／隔离 Electron 客户端流程。对应 [实现前失败矩阵](decision-run-failure-matrix.md) 与 [结果证据](results/session-decisions/)；不覆盖或安装既有发布产物。

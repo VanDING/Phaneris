@@ -3493,14 +3493,20 @@ export class PiAgent extends BaseAgent {
   }
 
   private async handleLargeResultGateRequest(msg: PiLargeResultGateRequest): Promise<void> {
+    const epoch = this.subprocessEpoch;
+    let confirm: ((applied: boolean) => void) | undefined;
     const summarize = await askLargeResultSummaryGate({
       text: msg.text,
       context: { toolName: msg.toolName, intent: msg.intent },
       estimatedTokens: msg.estimatedTokens,
       sessionId: this.config.session?.id,
+      onApplication: callback => { confirm = callback; },
     });
     const response: PiLargeResultGateResponse = { type: 'large_result_gate_response', requestId: msg.requestId, summarize };
-    this.send({ ...response });
+    if (epoch === this.subprocessEpoch) {
+      this.send({ ...response });
+      confirm?.(true);
+    } else confirm?.(false);
   }
 
   private cancelPendingHostRequests(): void {
@@ -3517,7 +3523,11 @@ export class PiAgent extends BaseAgent {
     try {
       const excerpt = await askLargeResultFilter({ text: msg.text, context: { toolName: msg.toolName, intent: msg.intent },
         budgetChars: msg.budgetChars, filePath: msg.filePath, sessionId: this.config.session?.id, signal: abort.signal });
-      if (epoch === this.subprocessEpoch && !abort.signal.aborted) this.send({ type: 'large_result_filter_response', requestId: msg.requestId, excerpt });
+      if (epoch === this.subprocessEpoch && !abort.signal.aborted) {
+        this.send({ type: 'large_result_filter_response', requestId: msg.requestId,
+          excerpt: excerpt ? { text: excerpt.text, kept: excerpt.kept, total: excerpt.total } : null });
+        excerpt?.onApplied?.(true);
+      } else excerpt?.onApplied?.(false);
     } finally { this.pendingLargeResultFilters.delete(msg.requestId); }
   }
 }

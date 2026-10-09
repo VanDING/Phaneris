@@ -1,0 +1,128 @@
+{
+  "generatedAt": "2026-10-09T07:13:04.530Z",
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-session-decisions-p4RaKa",
+  "requests": 83,
+  "checks": [
+    {
+      "id": "Batch is one point; recommendation, discarded application and observation stay separate",
+      "pass": true,
+      "observation": {
+        "points": 1,
+        "requests": 3,
+        "legacyCalls": 1,
+        "changed": 0,
+        "fallback": 0,
+        "unconfirmed": 1,
+        "failures": 0,
+        "cancelled": 0,
+        "knownCostUsd": 0.003,
+        "knownCostRequests": 3,
+        "unknownCostRequests": 0,
+        "inputTokens": 21,
+        "outputTokens": 9
+      }
+    },
+    {
+      "id": "All 13 feature routes persist exact attempt and accounting identities",
+      "pass": true,
+      "observation": {
+        "points": 13,
+        "requests": 13,
+        "legacyCalls": 0,
+        "changed": 0,
+        "fallback": 0,
+        "unconfirmed": 0,
+        "failures": 0,
+        "cancelled": 0,
+        "knownCostUsd": 0.013000000000000005,
+        "knownCostRequests": 13,
+        "unknownCostRequests": 0,
+        "inputTokens": 91,
+        "outputTokens": 39
+      }
+    },
+    {
+      "id": "Known zero price remains known; an in-flight request has unknown cost until accounted",
+      "pass": true
+    },
+    {
+      "id": "Host title and pre-turn boundaries confirm actual changes; stopped results are discarded",
+      "pass": true
+    },
+    {
+      "id": "Guarded permission still prompts; unavailable check falls back without auto-approval",
+      "pass": true
+    },
+    {
+      "id": "Decision tool delivery leaves adoption unconfirmed; free-form metadata is not in session evidence",
+      "pass": true
+    },
+    {
+      "id": "Large result is confirmed only when the host actually delivers the excerpt",
+      "pass": true
+    },
+    {
+      "id": "Semantic labels and turn outcome discard late answers after manual edits",
+      "pass": true
+    },
+    {
+      "id": "Missing configuration records a zero-request fallback; provider timeout is explicit",
+      "pass": true
+    },
+    {
+      "id": "Failure, cancellation, unknown price and disabled feature retain accurate counts",
+      "pass": true,
+      "observation": {
+        "points": 20,
+        "requests": 21,
+        "legacyCalls": 1,
+        "changed": 6,
+        "fallback": 4,
+        "unconfirmed": 2,
+        "failures": 3,
+        "cancelled": 1,
+        "knownCostUsd": 0.017000000000000008,
+        "knownCostRequests": 17,
+        "unknownCostRequests": 4,
+        "inputTokens": 119,
+        "outputTokens": 51
+      }
+    },
+    {
+      "id": "Authenticated RPC rejects foreign workspace, missing session, invalid filters and invalid cursors",
+      "pass": true
+    },
+    {
+      "id": "Historical missing identities are explicit; no-session automation never joins a chat",
+      "pass": true
+    },
+    {
+      "id": "Pagination totals cover the full session and late observations invalidate old cursors",
+      "pass": true
+    },
+    {
+      "id": "Reopening the durable host preserves decisions and cost without provider replay",
+      "pass": true
+    },
+    {
+      "id": "Real Run renders decisions with zero chat messages, filters, pagination and keyboard tabs",
+      "pass": true
+    },
+    {
+      "id": "Pinned and following Run bindings remain separate; stale A responses cannot paint B",
+      "pass": true
+    },
+    {
+      "id": "Application-only updates refresh; query errors retry and old-server capability stays explicit",
+      "pass": true
+    },
+    {
+      "id": "Batched light/dark and narrow Chinese captures have no horizontal overflow",
+      "pass": true
+    },
+    {
+      "id": "Deleted session rejects reads and late observations cannot restore evidence",
+      "pass": true
+    }
+  ]
+}

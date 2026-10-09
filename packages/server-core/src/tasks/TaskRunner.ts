@@ -38,7 +38,8 @@ import {
   DEFAULT_REPAIR_ATTEMPTS,
   MAX_REPAIR_ATTEMPTS_CAP,
 } from '@phaneris/shared/tasks';
-import type { DecisionRequest, DecisionResult } from '@phaneris/shared/decisions';
+import type { DecisionRequest, DecisionResult, DecisionPointTrace } from '@phaneris/shared/decisions';
+import { DecisionCapture } from '../decisions/decision-point';
 import { createHash } from 'node:crypto';
 import type { TokenUsage } from '@phaneris/core/types';
 import { classifyVerdictWithDecision } from './verdict-decision';
@@ -124,17 +125,23 @@ export interface TaskRunnerDeps {
 }
 
 /** Runs one decision request for a task run; `null` = unavailable. Must not throw (the runner also guards). */
-export type TaskDecisionFn = (request: DecisionRequest, context: { slug: string; runId: string; sessionId?: string }) => Promise<DecisionResult | null>;
+export interface TaskDecisionContext {
+  slug: string;
+  runId: string;
+  sessionId?: string;
+  onTrace?: (trace: DecisionPointTrace) => void;
+}
+export type TaskDecisionFn = (request: DecisionRequest, context: TaskDecisionContext) => Promise<DecisionResult | null>;
 
 /** Picks the nodes a FAIL reason implicates; `null` = unavailable or none. Must not throw (the runner also guards). */
 export type RepairScopeFn = (
   reason: string,
   nodes: Array<{ id: string; description: string }>,
-  context: { slug: string; runId: string; sessionId?: string },
+  context: TaskDecisionContext,
 ) => Promise<string[] | null>;
 
 /** Reads how a child node's final turn ended; `null` = unavailable or unsure. Must not throw (the runner also guards). */
-export type NodeOutcomeFn = ((finalText: string, context: { slug: string; runId: string; nodeId: string; sessionId?: string }) => Promise<'finished' | 'needs_input' | 'blocked' | null>) & {
+export type NodeOutcomeFn = ((finalText: string, context: TaskDecisionContext & { nodeId: string }) => Promise<'finished' | 'needs_input' | 'blocked' | null>) & {
   /** Synchronous gate: when false the node completes without the async check, as before. */
   isActive?: () => boolean;
 };
@@ -858,19 +865,22 @@ class ActiveRun {
    * dependents); no answer repairs the whole DAG. Dropped if the run was stopped meanwhile.
    */
   private async repairAfterScoping(reason: string): Promise<void> {
+    const capture = new DecisionCapture({ taskRunId: this.runId });
     let nodes: string[] | null = null;
     try {
       const candidates = this.spec.nodes.map((n) => ({ id: n.id, description: `${n.title ?? n.id}: ${n.prompt ?? ''}`.trim() }));
-      nodes = await this.deps.pickRepairNodes!(reason, candidates, { slug: this.slug, runId: this.runId, sessionId: this.opts.orchestratorSessionId });
+      nodes = await this.deps.pickRepairNodes!(reason, candidates, { slug: this.slug, runId: this.runId, sessionId: this.opts.orchestratorSessionId, onTrace: capture.onTrace });
     } catch {
       nodes = null;
     }
     if (this.opts.orchestratorSessionId) this.captureSessionUsage(this.opts.orchestratorSessionId);
-    if (this.runStatus !== 'verifying') return;
-    if (this.isOverBudget()) { this.finish('failed'); return; }
+    if (this.runStatus !== 'verifying') { capture.discard('run_changed'); return; }
+    if (this.isOverBudget()) { capture.discard('budget_exhausted'); this.finish('failed'); return; }
     try {
       this.lastRepairScoped = nodes !== null;
-      this.repairForVerdict(reason, nodes ?? undefined);
+      const baseline = [...this.state.values()].filter(state => state.state === 'done').length;
+      const repaired = this.repairForVerdict(reason, nodes ?? undefined);
+      capture.resolve(nodes ? 'scoped' : 'whole_dag', nodes !== null && repaired > 0 && repaired < baseline, { repaired, baseline });
     } catch (err) {
       // Same reporting channel as classifyUnparsedVerdict; the async hop would otherwise route this
       // to unhandledRejection.
@@ -902,7 +912,7 @@ class ActiveRun {
    * node forces everything that consumes its output to re-run too). With no usable names it is the
    * whole DAG. Only `done` nodes are reset; scheduleReady re-dispatches from the satisfied sources.
    */
-  private repairForVerdict(reason: string | undefined, named?: string[]): void {
+  private repairForVerdict(reason: string | undefined, named?: string[]): number {
     const detail = reason ?? 'the result did not meet the acceptance criteria';
     let reset = 0;
     for (const id of this.computeFrontier(named)) {
@@ -916,10 +926,11 @@ class ActiveRun {
     if (reset === 0) {
       // No `done` node in the frontier to re-run → don't hang the run.
       this.finish('failed');
-      return;
+      return 0;
     }
     this.runStatus = 'running';
     this.scheduleReady();
+    return reset;
   }
 
   /**
@@ -1009,17 +1020,18 @@ class ActiveRun {
   }
 
   private async finishNodeAfterOutcomeCheck(nodeId: string, sessionId: string, text: string): Promise<void> {
+    const capture = new DecisionCapture({ taskRunId: this.runId, nodeId });
     let outcome: 'finished' | 'needs_input' | 'blocked' | null = null;
     try {
-      outcome = await this.deps.classifyNodeOutcome!(text, { slug: this.slug, runId: this.runId, nodeId, sessionId });
+      outcome = await this.deps.classifyNodeOutcome!(text, { slug: this.slug, runId: this.runId, nodeId, sessionId, onTrace: capture.onTrace });
     } catch {
       outcome = null;
     }
     this.captureSessionUsage(sessionId);
     if (this.isOverBudget() && this.runStatus === 'running' && this.hasPendingNodes()) this.pauseForBudget();
     const st = this.state.get(nodeId);
-    if (!st || st.state !== 'running' || st.sessionId !== sessionId) return;
-    if (this.runStatus === 'stopped' || this.runStatus === 'completed' || this.runStatus === 'failed') return;
+    if (!st || st.state !== 'running' || st.sessionId !== sessionId) { capture.discard('node_changed'); return; }
+    if (this.runStatus === 'stopped' || this.runStatus === 'completed' || this.runStatus === 'failed') { capture.discard('run_changed'); return; }
 
     try {
       if (outcome === 'needs_input') {
@@ -1029,6 +1041,7 @@ class ActiveRun {
       } else {
         this.markNodeDone(nodeId, sessionId, text);
       }
+      capture.resolve(outcome === 'needs_input' || outcome === 'blocked' ? `fail_node:${outcome}` : 'complete_node', outcome === 'needs_input' || outcome === 'blocked');
     } catch (err) {
       // Same reporting channel as the synchronous completion listener; the async hop would
       // otherwise route this to unhandledRejection.
@@ -1084,22 +1097,25 @@ class ActiveRun {
   }
 
   private async classifyUnparsedVerdict(text: string): Promise<void> {
+    const capture = new DecisionCapture({ taskRunId: this.runId });
     const nodeIds = this.spec.nodes.map((n) => n.id);
     const outcome = await classifyVerdictWithDecision(text, nodeIds, (request) =>
-      this.deps.decide!(request, { slug: this.slug, runId: this.runId, sessionId: this.opts.orchestratorSessionId }),
+      this.deps.decide!(request, { slug: this.slug, runId: this.runId, sessionId: this.opts.orchestratorSessionId, onTrace: capture.onTrace }),
     );
     if (this.opts.orchestratorSessionId) this.captureSessionUsage(this.opts.orchestratorSessionId);
-    if (this.runStatus !== 'verifying') return;
+    if (this.runStatus !== 'verifying') { capture.discard('run_changed'); return; }
     try {
       if (outcome.kind === 'decided') {
         const { verdict } = outcome;
         this.recordVerdict(text, { kind: 'verdict', result: verdict.result, reason: verdict.reason, nodes: verdict.nodes, via: 'decision', confidence: verdict.confidence });
         this.applyVerdict({ result: verdict.result, reason: verdict.reason, nodes: verdict.nodes, via: 'decision' });
+        capture.resolve(`verdict:${verdict.result}`, true);
         return;
       }
       // `via: 'decision'` only when a decision actually ran; an unavailable layer logs like before.
       this.recordVerdict(text, outcome.kind === 'unsure' ? { kind: 'verdict', result: 'unparsed', via: 'decision' } : { kind: 'verdict', result: 'unparsed' });
       this.applyVerdict({ result: 'unparsed' });
+      capture.resolve('reask');
     } catch (err) {
       // Same reporting channel as synchronous listener failures (SessionManager logs those); the
       // async hop would otherwise route this to unhandledRejection.

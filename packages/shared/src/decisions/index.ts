@@ -16,5 +16,7 @@ export * from './status.ts';
 export * from './health.ts';
 
 export * from './usage.ts';
+export * from './session.ts';
+export * from './observation.ts';
 export { registerDecisionAccountingHost } from './accounting.ts';
 export type { DecisionAccounting, DecisionAccountingScope } from './accounting.ts';

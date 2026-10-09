@@ -1,0 +1,467 @@
+{
+  "archivedAt": "2026-10-09T07:16:27.015Z",
+  "baseCommit": "ad8d8915741521ba4d2b7faa6421567a8d84169c",
+  "testedState": "Uncommitted working tree, not the base commit alone",
+  "workflows": [
+    {
+      "file": "results.json",
+      "passed": 19,
+      "total": 19
+    },
+    {
+      "file": "ai-settings.json",
+      "passed": 20,
+      "total": 20
+    },
+    {
+      "file": "packaged.json",
+      "passed": 5,
+      "total": 5,
+      "scope": "Existing unpacked runtime/resources with freshly built worktree bundles; installer not verified"
+    },
+    {
+      "file": "decision-features.json",
+      "passed": 46,
+      "total": 46
+    },
+    {
+      "file": "task-governance.json",
+      "passed": 3,
+      "total": 3
+    }
+  ],
+  "checks": [
+    {
+      "command": "bun run typecheck:all",
+      "exitCode": 0,
+      "evidence": "typecheck.log"
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "evidence": "lint.log",
+      "existingWarnings": 120
+    },
+    {
+      "command": "bun run typecheck:electron",
+      "exitCode": 0,
+      "evidence": "typecheck-electron.log",
+      "scope": "Final UI data binding changes"
+    },
+    {
+      "command": "bun run lint:electron",
+      "exitCode": 0,
+      "evidence": "lint-electron.log",
+      "scope": "Final UI data binding changes"
+    },
+    {
+      "command": "bun run typecheck:shared",
+      "exitCode": 0,
+      "evidence": "typecheck-shared.log",
+      "scope": "Final summary branch cancellation confirmation"
+    },
+    {
+      "command": "bun run lint:shared",
+      "exitCode": 0,
+      "evidence": "lint-shared.log",
+      "scope": "Final summary branch cancellation confirmation"
+    },
+    {
+      "command": "bun run lint:i18n:parity",
+      "exitCode": 0,
+      "result": "Observed passing in tool execution; 2513 keys per locale"
+    },
+    {
+      "command": "bun run lint:i18n:sorted",
+      "exitCode": 0,
+      "result": "Observed passing in tool execution; 2513 keys per locale"
+    },
+    {
+      "command": "bun run lint:i18n:coverage",
+      "exitCode": 0,
+      "result": "Observed passing in tool execution; 2513 keys per locale"
+    },
+    {
+      "command": "bun run lint:i18n:dead-keys",
+      "exitCode": 0,
+      "result": "Observed passing in tool execution; 2513 keys per locale"
+    },
+    {
+      "command": "bun run identity:check",
+      "exitCode": 0,
+      "result": "Generated identity matches; existing non-blocking upstream residual report remains"
+    },
+    {
+      "command": "bun run version:check",
+      "exitCode": 0,
+      "result": "0.3.1 across 27 declarations"
+    },
+    {
+      "command": "bun run check:docs",
+      "exitCode": 0,
+      "evidence": "docs.log"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "captureNote": "Layout captures and final assertions are separate isolated fixture runs; displayed example counts are not the final statistics evidence.",
+  "sourceHashes": [
+    {
+      "file": "apps/electron/resources/docs/decisions.md",
+      "sha256": "1cbc3d877cf4b9fe84f4b4971e1943f6956267d77586ef6c49c0221b49d542d6"
+    },
+    {
+      "file": "apps/electron/resources/release-notes/next.md",
+      "sha256": "469624a3d59c7f2c6cfacf580d383378f277b36c4acc450a5e99b0cd1a7ee1b7"
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/SessionDecisions.tsx",
+      "sha256": "37a9d0bfd4a1979f1d5fbcc6c304d5af84937321931968e7e777dd470234290a"
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/TrajectoryPanel.tsx",
+      "sha256": "25b1b266cf1fcc658c7f0d978cff38eca2b9d9b952a0ae88c56aecb856b2c510"
+    },
+    {
+      "file": "apps/electron/src/renderer/hooks/useSessionDecisions.ts",
+      "sha256": "12dd53a16e5dfdf55149554968dd326c3c955b4b3b3fd1a76623996ffda84598"
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+      "sha256": "cef429abd6fdee78a8b8af30d5b8c43664a50cfcd00bc8bb0178b74921d2c87d"
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/PermissionsSettingsPage.tsx",
+      "sha256": "f3fc7c8691eb10408032e2bbb79ed15263778d2baa820c87fa3b32dbe915ea0c"
+    },
+    {
+      "file": "apps/electron/src/shared/types.ts",
+      "sha256": "617044ff848860a408f577f76e9a6c3bcc606e85550a2dbe4f2c51474cf7a380"
+    },
+    {
+      "file": "apps/electron/src/transport/channel-map.ts",
+      "sha256": "86b715cd1a8574336353196d97b50011f80e0fa8fe9f7155cd88ef17f874835a"
+    },
+    {
+      "file": "docs/README.md",
+      "sha256": "023e5d036e2aab06292d677b45c45d89d8e0ff058764750d7e74ff91131a8873"
+    },
+    {
+      "file": "docs/design/ai-settings-replan.md",
+      "sha256": "7880ae36f6a8f3c2f61b3681e5a205f109808799cf1c7d5c9b9d0ed3d8ced2f5"
+    },
+    {
+      "file": "docs/design/decision-assistance-run-plan.md",
+      "sha256": "c6d57d237b3b230fab305e02badf4431b9640ee3170e6c8c7de43c73d1491002"
+    },
+    {
+      "file": "docs/verification/README.md",
+      "sha256": "2f7b9985c6e7be560829b9e516bd85ea56df5a370cb2a502aa3f739dd2a3eba9"
+    },
+    {
+      "file": "docs/verification/ai-settings-structure.md",
+      "sha256": "6785704919207c5a0b1f8f6a6ce4e4c2ed0111348ebd2e0ce1ceeae4d2c34f92"
+    },
+    {
+      "file": "docs/verification/decision-run-failure-matrix.md",
+      "sha256": "5c43f1ebb3c2689f6e0e3b6cf038dbcf39c106b15cef91741adf0258f9695133"
+    },
+    {
+      "file": "docs/verification/session-decisions.md",
+      "sha256": "ece4fc9a07c64b5e546cda145d6ed10c61efb81b6d1669a13403b6d3f54edded"
+    },
+    {
+      "file": "packages/server-core/src/decisions/accounting.ts",
+      "sha256": "1c8c3f43c97ea00eca8c66d31c08a7d808606e28b687d57433b575e020c62525"
+    },
+    {
+      "file": "packages/server-core/src/decisions/decision-point.ts",
+      "sha256": "d0d9787081ea80f5b4243b0da8803271801199d94d55c2f25306857ac3fa2382"
+    },
+    {
+      "file": "packages/server-core/src/decisions/guarded-mode.ts",
+      "sha256": "7c1015fd9d525112e19c333f620ac58a4638a99eccbb6bb707ee2fbe3d9ed584"
+    },
+    {
+      "file": "packages/server-core/src/decisions/large-result-filter.ts",
+      "sha256": "8077fc103893c38fde375207392db52f663424cef7ea0830d7df5a656e306d9d"
+    },
+    {
+      "file": "packages/server-core/src/decisions/large-results.ts",
+      "sha256": "4980bd55e158fbb476ec04cdda7789c5681d7706800cf55897c40393c64d6353"
+    },
+    {
+      "file": "packages/server-core/src/decisions/session-report.ts",
+      "sha256": "3da239bc3f9c6af8fb245fa6cbfd7fe0a69b2e6dc518d6dd22c67d7bbe7986d1"
+    },
+    {
+      "file": "packages/server-core/src/decisions/task-repairs.ts",
+      "sha256": "4c422fa55500362373f4bebb26022a3c06cb007146f69b03faad1b71a1cc80ab"
+    },
+    {
+      "file": "packages/server-core/src/decisions/task-verdict.ts",
+      "sha256": "5340b85fda1c9f53d4c1de24d80c693baf2a3d8391c65fd3329ba5bd9786ae93"
+    },
+    {
+      "file": "packages/server-core/src/decisions/tool-callbacks.ts",
+      "sha256": "87c3d335a8eca24e56f5fc953ab8efaedd1f0aa6889376adcfbf46d9f605907c"
+    },
+    {
+      "file": "packages/server-core/src/decisions/turn-outcome.ts",
+      "sha256": "c6037242d949a143e78beee2babbf2abe5788b33cffb632edc0aba6101f1fe08"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/store.ts",
+      "sha256": "dbd7eba3a92b9afc61a031352775ea42a0828c3b4e75e29543f8e0aa2a69a970"
+    },
+    {
+      "file": "packages/server-core/src/handlers/rpc/decisions.ts",
+      "sha256": "f0f82e796bec29c3881915474b5d86f43dff2816ef183226ef2039113c97fe29"
+    },
+    {
+      "file": "packages/server-core/src/handlers/session-manager-interface.ts",
+      "sha256": "e0b0530c31cd0e983c50e7f661a1329c493466c5c74671512f40468c20ab9e97"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "sha256": "4e8a131b003f854fd23eb89b454dd73d4b50c6fa6a134e0ff0c0e8f6aeba0b12"
+    },
+    {
+      "file": "packages/server-core/src/tasks/TaskRunner.ts",
+      "sha256": "b286b9a8393a19d3ddb517c63264fbe9109c4b737762ed821c111c9c0e82bf7c"
+    },
+    {
+      "file": "packages/shared/package.json",
+      "sha256": "2c714786cb2f0d1e0f8b81e8923660fb30027c8f9be188b09e0e25d58b03c1c0"
+    },
+    {
+      "file": "packages/shared/src/agent/core/guarded-mode.ts",
+      "sha256": "1d8d82c11d0efdef7f061d0e9f7403e79df543c7f5de4c93e90423e60f3c7693"
+    },
+    {
+      "file": "packages/shared/src/agent/pi-agent.ts",
+      "sha256": "7a2944a90e67a954c8822670731f588a0dd764717d9db809532e2b2264114416"
+    },
+    {
+      "file": "packages/shared/src/decisions/client.ts",
+      "sha256": "7abb722222aa3ca6389d792abc0508b5a593d50f9605c704c4dafe053443e7f9"
+    },
+    {
+      "file": "packages/shared/src/decisions/index.ts",
+      "sha256": "73869621b80da62255cd021a1ffb77f8cd3b7c48ede85bd038347781dc761eed"
+    },
+    {
+      "file": "packages/shared/src/decisions/observation.ts",
+      "sha256": "e240b03c0ffe88c00d4bb1989a0b7db61b086e5e242382e0b0aecf868bb9d2e5"
+    },
+    {
+      "file": "packages/shared/src/decisions/records.ts",
+      "sha256": "acbf045502c8fa2b5993e0ecddd47b004535165909e57a1bff532d2fc9f5e5f8"
+    },
+    {
+      "file": "packages/shared/src/decisions/session.ts",
+      "sha256": "0620d7d54d967929c07b403c6ef988cd636639478d2ffd12cb387964e117202c"
+    },
+    {
+      "file": "packages/shared/src/decisions/types.ts",
+      "sha256": "6dbae2ccf04c7874bf5796687c32eb5d739545aadad6e0d1b36d8a8c44bd7f75"
+    },
+    {
+      "file": "packages/shared/src/durable-runtime/types.ts",
+      "sha256": "ff363e284a57e552ed96379d8e8e0283578b1e861a7fdd78eb226bde918e6628"
+    },
+    {
+      "file": "packages/shared/src/i18n/locales/de.json",
+      "sha256": "eb7fb40281e239dacc878fd4106ad970c99494e8834c24dccf9e07e303dec539"
+    },
+    {
+      "file": "packages/shared/src/i18n/locales/en.json",
+      "sha256": "0dcd9c3e0e66cb699c7e2ee4888d536aed57d01b911337dc09e0965820ad3ab2"
+    },
+    {
+      "file": "packages/shared/src/i18n/locales/es.json",
+      "sha256": "bb3f54ecaa6d2f8862bb552ada713de0e76c73e7cc45ca9d86c5e7a181c199a7"
+    },
+    {
+      "file": "packages/shared/src/i18n/locales/hu.json",
+      "sha256": "5b095f94dd8f23e54e1e04731432f3e842f7c4f8b63431255700a6c4e2c388e4"
+    },
+    {
+      "file": "packages/shared/src/i18n/locales/ja.json",
+      "sha256": "fb79352c677d3d70ee1ca6f9353f902986c4e7c687a1185deb0129fc33243a44"
+    },
+    {
+      "file": "packages/shared/src/i18n/locales/pl.json",
+      "sha256": "458e02a62be934284ede0769332a4dca9af81a1c0e6f7729566e72b9623c1110"
+    },
+    {
+      "file": "packages/shared/src/i18n/locales/zh-Hans.json",
+      "sha256": "e737c3a5717460fc713e1f7be318e1d32ff99c8cadc83cd7a1668e20e71900f3"
+    },
+    {
+      "file": "packages/shared/src/protocol/channels.ts",
+      "sha256": "688bafe82c9c603e5ace8b2e40d32058eabfe881ddd95142c8cae4ebc19a87b6"
+    },
+    {
+      "file": "packages/shared/src/protocol/events.ts",
+      "sha256": "16a55f04f93be7d2dcbc03619b659219249665adc9c9f7899a499db3181e4ac9"
+    },
+    {
+      "file": "packages/shared/src/protocol/routing.ts",
+      "sha256": "58fce0b6050ece9ee8b6396b986e2a0bb6b49f7dc3734b269ccfe34692cdb9ce"
+    },
+    {
+      "file": "packages/shared/src/utils/large-response.ts",
+      "sha256": "7c40d03ab49f6b6141b824513dea58d9f75990e531b823659160bf2ae3412032"
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryOverview.tsx",
+      "sha256": "4bb624a645b15622c03b1e0fd354524539827274538a30114fc45a07aa710c2e"
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryView.tsx",
+      "sha256": "af3df7b9f60cf2e24278a7f1c584da9e744f21d6e19157cf5d3a15fccb7e2cd7"
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/index.ts",
+      "sha256": "361870975d8538e1a463029fc57202a1c980ed24815cace55e0ee15ab93dda37"
+    },
+    {
+      "file": "scripts/verification/ai-settings-structure-workflow.ts",
+      "sha256": "2ff3cfa144fd23d7938dcba74e6a08040a31057e64e6cbf4a53d1c9a7effe080"
+    },
+    {
+      "file": "scripts/verification/fixtures/session-decisions.tsx",
+      "sha256": "12bacbc88375dcd8ebadb1a5eb9b8dfcf6e18581a547841e83dfe1339b0bc2a2"
+    },
+    {
+      "file": "scripts/verification/session-decisions-packaged-workflow.ts",
+      "sha256": "1d8a108ad14a4b32d8725440bb69868e50eb7a52b648baf0196b8f72a8d7a489"
+    },
+    {
+      "file": "scripts/verification/session-decisions-workflow.ts",
+      "sha256": "9a9f4f684a4ff427b984b4bcbf8574fb68c69c52987d38c5456081bf20c0c934"
+    }
+  ],
+  "sourceScopeNote": "Includes feature source and documentation. Existing user changes in shared verification README are included without claiming ownership; unrelated preexisting scripts and release results are excluded.",
+  "artifactHashes": [
+    {
+      "file": "ai-settings-narrow.png",
+      "sha256": "9e00a2a6d606bf99d1f0fd7920e366516fbdb4f1fc26e984b318c7528c98655f"
+    },
+    {
+      "file": "ai-settings.json",
+      "sha256": "3b1a51944127ed88c48859c2f71e053faae704ee6a0659d631238077f547d89c"
+    },
+    {
+      "file": "build-main.log",
+      "sha256": "c14ff353c938aee57d3e6822d2e85c7e0c3428df79928c7760c86f9478408761"
+    },
+    {
+      "file": "build-preload.log",
+      "sha256": "83386e2d8399cb8e0e297c5a6064bc973fc2f4d6f32765db45d2c758d9bcbea2"
+    },
+    {
+      "file": "build-renderer.log",
+      "sha256": "7e31b746308ad26c383e1a4d5945114c2be97e7573b91e245442d061127526f8"
+    },
+    {
+      "file": "dark-en-1040.png",
+      "sha256": "1eddff4afbfb55f4e0e368aba72c9e4ece6b576fe3153aa871a9410dcf2c17b4"
+    },
+    {
+      "file": "decision-features.json",
+      "sha256": "34a0ded5d0269d2a9027cd46fed9d752dcf4115cc47791e860c9b0b7b3281326"
+    },
+    {
+      "file": "decision-features.log",
+      "sha256": "dacc628b26fc0aa93092334da15647fadc0dc99aa1db3c688e73827666b35ea4"
+    },
+    {
+      "file": "docs.log",
+      "sha256": "9db56c0e60cd082fab722ad521196ce4649777425e0d573fdf7f1532ba735217"
+    },
+    {
+      "file": "evidence.json",
+      "sha256": "45399336ff798aa771bd9b09f11c2f0902fe165016780e990495f68cb0313db9"
+    },
+    {
+      "file": "impeccable.json",
+      "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+    },
+    {
+      "file": "light-en-1040-detail.png",
+      "sha256": "c52985583057cc33ac8b3f4e063139743a163604a3d4ce809654e6dc0fe92c0d"
+    },
+    {
+      "file": "light-zh-Hans-480-detail.png",
+      "sha256": "fc7520f84d46bcad9ba2fb41b1ec3d48ac79b60e5ca6ee7f36c99fd8edcfbeea"
+    },
+    {
+      "file": "lint-electron.log",
+      "sha256": "a8f0788a626d1dcc85af30c00833f59ac43728dc69883bbd53e697c1f074990c"
+    },
+    {
+      "file": "lint-shared.log",
+      "sha256": "12712645d6d7abb1d84931a1bcf07c39681131d4161928f8300fe572c7e42907"
+    },
+    {
+      "file": "lint.log",
+      "sha256": "96f13956033bf7376f6d1331cc468111a839511e756aaca4cfebbbe1e93385f4"
+    },
+    {
+      "file": "packaged-ai-settings.png",
+      "sha256": "d9b3b9d3420ced651802e2f775f866e7e8ac7c8abd4711baa11227853edc6f04"
+    },
+    {
+      "file": "packaged-permissions.png",
+      "sha256": "25f611a7148f3ef8db407cb5b30ae365ecea6b236fbc2852316782dde377f1bf"
+    },
+    {
+      "file": "packaged-report.json",
+      "sha256": "f1da44854cddd4859f813e7753221a63757cb64c3b86afb8f778f7ce92725e6a"
+    },
+    {
+      "file": "packaged-run.png",
+      "sha256": "ad92c9337cd3ca4e3e3b1a36474e44e29bcd54d9ee326a6700baeb4000a3557b"
+    },
+    {
+      "file": "packaged.json",
+      "sha256": "5c71337ef9d44fde8b85c84d96e8592622bcc29c68bc0f24ea7abfa215d88537"
+    },
+    {
+      "file": "packaged.log",
+      "sha256": "e1cdcf62e8de9dd21faeb0aa7916d76643d5e449dad2bf17efb692941dca96dd"
+    },
+    {
+      "file": "results.json",
+      "sha256": "c989e903ebddccbee21dd835f683327df26e66d663ad21f894ec2bd4b5f4da54"
+    },
+    {
+      "file": "task-governance.json",
+      "sha256": "c5825c77f4cd31e33ba745137c3896dcd34cd57a03d22b7136779811f4f57ebd"
+    },
+    {
+      "file": "task-governance.log",
+      "sha256": "4eb1369091949ae90311c68cd5c8ec68f322d36133410671c6f65ac6e6c6bd41"
+    },
+    {
+      "file": "typecheck-electron.log",
+      "sha256": "40f85eca7e3ed7de721db7da3257fc77d41407ba310fad8b9bfe444ddc36c8c9"
+    },
+    {
+      "file": "typecheck-shared.log",
+      "sha256": "6fe920b50439a13a1fb1334d54d33d807928238834b2d0f98218164e515f1433"
+    },
+    {
+      "file": "typecheck.log",
+      "sha256": "eaaa5a544a50c418ff1a34647973c0e8bec5e7dde191be2f537b52553346a3e5"
+    },
+    {
+      "file": "workflow.log",
+      "sha256": "1b2efcf369309e5f27cc6a8508c702b4295000c1639a8885779f2c2bbec36fbd"
+    }
+  ]
+}

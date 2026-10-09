@@ -10,7 +10,7 @@
  * provider. Only `TEST` (server-side) ever touches a key. Keys go in through
  * `getCredentialManager().setDecisionApiKey(...)` and nowhere else.
  *
- * All seven channels run on the authenticated workspace server, which owns
+ * All channels run on the authenticated workspace server, which owns
  * the settings and credential vault used by that server’s sessions.
  */
 
@@ -18,8 +18,10 @@ import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import { isDecisionProviderId, type DecisionProviderId } from '@phaneris/shared/decisions/types'
 import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
+import { validateSessionId } from '@phaneris/shared/sessions'
 
 export const HANDLED_CHANNELS = [
+  RPC_CHANNELS.decisions.GET_SESSION,
   RPC_CHANNELS.decisions.GET_SETTINGS,
   RPC_CHANNELS.decisions.GET_USAGE,
   RPC_CHANNELS.decisions.SET_SETTINGS,
@@ -36,7 +38,16 @@ function assertProvider(provider: unknown): asserts provider is DecisionProvider
   }
 }
 
-export function registerDecisionsHandlers(server: RpcServer, _deps: HandlerDeps): void {
+export function registerDecisionsHandlers(server: RpcServer, deps: HandlerDeps): void {
+  server.handle(RPC_CHANNELS.decisions.GET_SESSION, async (ctx, sessionId: string, query?: import('@phaneris/shared/decisions/session').SessionDecisionQuery) => {
+    validateSessionId(sessionId)
+    // Decisions are available even when the chat transcript cannot be loaded.
+    const session = deps.sessionManager.getSessions().find(session => session.id === sessionId)
+    if (!session) throw new Error('Session not found')
+    if (ctx.workspaceId && session.workspaceId !== ctx.workspaceId) throw new Error('Session belongs to another workspace')
+    if (query != null && (typeof query !== 'object' || Array.isArray(query))) throw new Error('Invalid decision query')
+    return deps.sessionManager.getSessionDecisions(sessionId, query ?? undefined)
+  })
   server.handle(RPC_CHANNELS.decisions.GET_USAGE, async () => {
     const { readDecisionUsageReport } = await import('@phaneris/shared/decisions')
     return readDecisionUsageReport(new Date(Date.now() - 7 * 24 * 3_600_000))

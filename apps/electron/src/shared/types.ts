@@ -780,6 +780,8 @@ export interface ElectronAPI {
   // Decision model (Jev / TypeSafe System One) — opt-in decision layer
   getDecisionLayerSettings(): Promise<DecisionLayerSettings>
   getDecisionUsage(): Promise<DecisionUsageReport>
+  getSessionDecisions(sessionId: string, query?: import('@phaneris/shared/decisions/session').SessionDecisionQuery): Promise<import('@phaneris/shared/decisions/session').SessionDecisionReport>
+  onSessionDecisionsChanged(callback: (sessionId: string, revision: number) => void): () => void
   setDecisionLayerSettings(patch: DecisionLayerSettingsPatch): Promise<DecisionLayerSettings>
   getDecisionLayerStatus(): Promise<DecisionLayerStatus>
   setDecisionApiKey(provider: DecisionProviderId, apiKey: string): Promise<void>

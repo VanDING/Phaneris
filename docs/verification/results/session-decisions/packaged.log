@@ -1,0 +1,9 @@
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+PASS Actual preload and authenticated main return the persisted session report
+PASS Packaged Run renders Decisions for a session with no chat messages
+PASS Changing the active chat updates the session-bound Decisions range
+PASS Packaged AI settings show configuration without runtime statistics
+PASS Packaged Permissions retain their rules without the Guarded redirect
+{"output":"E:\\Phaneris\\.cache\\session-decisions\\packaged","passed":5,"total":5,"errors":[]}

@@ -1,0 +1,13 @@
+$ cd packages/shared && bun run eslint .
+
+E:\Phaneris\packages\shared\src\decisions\health.ts
+  48:5  warning  Unused eslint-disable directive (no problems were reported from 'no-new')
+
+E:\Phaneris\packages\shared\src\decisions\settings.ts
+  234:5  warning  Unused eslint-disable directive (no problems were reported from 'no-new')
+
+E:\Phaneris\packages\shared\src\projects\storage.ts
+  351:3  warning  Unused eslint-disable directive (no problems were reported from 'no-control-regex')
+
+✖ 3 problems (0 errors, 3 warnings)
+  0 errors and 3 warnings potentially fixable with the `--fix` option.

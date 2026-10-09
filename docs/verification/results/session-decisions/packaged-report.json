@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "sessionId": "261009-eager-blossom",
+  "workspaceId": "packaged-decisions",
+  "revision": 12,
+  "enabled": true,
+  "coverage": "partial",
+  "recordedFrom": 1791530106829,
+  "totals": {
+    "points": 1,
+    "requests": 1,
+    "legacyCalls": 0,
+    "changed": 1,
+    "fallback": 0,
+    "unconfirmed": 0,
+    "failures": 0,
+    "cancelled": 0,
+    "knownCostUsd": 0.001,
+    "knownCostRequests": 1,
+    "unknownCostRequests": 0,
+    "inputTokens": 7,
+    "outputTokens": 3
+  },
+  "features": [
+    {
+      "feature": "riskBadges",
+      "totals": {
+        "points": 1,
+        "requests": 1,
+        "legacyCalls": 0,
+        "changed": 1,
+        "fallback": 0,
+        "unconfirmed": 0,
+        "failures": 0,
+        "cancelled": 0,
+        "knownCostUsd": 0.001,
+        "knownCostRequests": 1,
+        "unknownCostRequests": 0,
+        "inputTokens": 7,
+        "outputTokens": 3
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "6949f74a-0a5f-4560-94da-2e36c4490eb6",
+      "feature": "riskBadges",
+      "startedAt": 1791530106829,
+      "updatedAt": 1791530106871,
+      "source": {
+        "runOperationId": "fixture-execution"
+      },
+      "attempts": [
+        {
+          "id": "d2482521-8f02-4d09-88b3-53d775257dbf",
+          "provider": "custom",
+          "model": "fixture",
+          "sent": true,
+          "status": "succeeded",
+          "record": {
+            "accountingOperationId": "modelop_1f96bc94c069202ee0580dd86a0faaf5",
+            "answers": {
+              "sends": {
+                "noul": 0.95,
+                "type": "noul"
+              }
+            },
+            "attemptId": "d2482521-8f02-4d09-88b3-53d775257dbf",
+            "coldStart": true,
+            "decisionPointId": "6949f74a-0a5f-4560-94da-2e36c4490eb6",
+            "feature": "risk_badges",
+            "id": "898bb17b-3448-4a22-a704-6414b3426e42",
+            "latencyMs": 5,
+            "meta": {
+              "deadlineMs": 2800
+            },
+            "model": "fixture",
+            "ok": true,
+            "provider": "custom",
+            "questions": {
+              "sends": "noul"
+            },
+            "responseModel": "fixture",
+            "sessionId": "261009-eager-blossom",
+            "state": {
+              "bytes": 27,
+              "sha256": "17510626485f8bdd3caa93149420720b54d4e50f68c3fa207092bfd79e718513",
+              "truncated": false
+            },
+            "t": "2026-10-09T07:15:06.868Z",
+            "usage": {
+              "costStatus": "known",
+              "costUsd": 0.001,
+              "inputTokens": "[REDACTED]",
+              "outputTokens": "[REDACTED]"
+            }
+          },
+          "accountingOperationId": "modelop_1f96bc94c069202ee0580dd86a0faaf5",
+          "inputTokens": 7,
+          "outputTokens": 3,
+          "costUsd": 0.001
+        }
+      ],
+      "observations": [],
+      "recommendation": {
+        "action": "badges",
+        "changed": true
+      },
+      "application": {
+        "action": "badges",
+        "changed": true,
+        "detail": {
+          "count": 1
+        },
+        "status": "applied"
+      }
+    }
+  ],
+  "turnIds": []
+}

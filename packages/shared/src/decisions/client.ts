@@ -232,6 +232,8 @@ const EnvelopeSchema = z.object({
     .object({
       input_tokens: z.number().optional(),
       output_tokens: z.number().optional(),
+      // Optional extension for gateways that report an actual charge; never estimate it here.
+      cost_usd: z.unknown().optional(),
     })
     .optional(),
 });
@@ -292,6 +294,8 @@ export function parseSystemOneResponse(
     usage: {
       inputTokens: envelope.data.usage?.input_tokens ?? 0,
       outputTokens: envelope.data.usage?.output_tokens ?? 0,
+      ...(typeof envelope.data.usage?.cost_usd === 'number' && Number.isFinite(envelope.data.usage.cost_usd) && envelope.data.usage.cost_usd >= 0
+        ? { costUsd: envelope.data.usage.cost_usd } : {}),
     },
   };
 }
@@ -352,6 +356,10 @@ export class SystemOneClient {
     const startedAt = performance.now();
     let response: Response;
     try {
+      if (request.observation) {
+        const { decisionObservation } = await import('./observation.ts');
+        decisionObservation(request.observation, { kind: 'sent' });
+      }
       response = await this.fetchImpl(this.endpoint, { method: 'POST', headers, body, signal: combinedSignal });
     } catch (error) {
       throw this.networkError(error, deadlineMs, signal, prepared.digest);

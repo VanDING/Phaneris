@@ -107,7 +107,7 @@ function verifyNoLegacyBridge(resourcesDir) {
 function verifyBundledThemes(resourcesDir) {
   const dir = join(resourcesDir, 'app', 'dist', 'resources', 'themes')
   const expected = ['cyberpunk-2077.json', 'default.json', 'geek.json', 'ink.json']
-  check('exactly four canonical themes are bundled, with Twilight as default', dir, () => {
+  check('exactly four canonical themes are bundled, with Default as the default theme', dir, () => {
     const files = readdirSync(dir).filter(file => file.endsWith('.json')).sort()
     assert(JSON.stringify(files) === JSON.stringify(expected), `unexpected bundled themes: ${files.join(', ')}`)
     for (const file of files) {
@@ -115,7 +115,7 @@ function verifyBundledThemes(resourcesDir) {
       const source = JSON.parse(readFileSync(join(ELECTRON_DIR, 'resources', 'themes', file), 'utf8'))
       assert(JSON.stringify(shipped) === JSON.stringify(source), `${file} differs from the canonical resource`)
     }
-    assert(JSON.parse(readFileSync(join(dir, 'default.json'), 'utf8')).name === 'Twilight', 'default theme is not Twilight')
+    assert(JSON.parse(readFileSync(join(dir, 'default.json'), 'utf8')).name === 'Default', 'default theme is not Default')
     results.themes = files
   })
 }

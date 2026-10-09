@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-04T07:11:05.429Z",
+  "date": "2026-10-07T05:21:38.980Z",
   "arch": "x64",
   "expected": {
     "version": "0.3.0",
@@ -21,7 +21,7 @@
       "detail": null
     },
     {
-      "name": "exactly four canonical themes are bundled, with Twilight as default",
+      "name": "exactly four canonical themes are bundled, with Default as the default theme",
       "observation": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked\\resources\\app\\dist\\resources\\themes",
       "status": "pass",
       "detail": null
@@ -85,7 +85,7 @@
   ],
   "installer": {
     "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.3.0-win-x64.exe",
-    "bytes": 189350738
+    "bytes": 189359237
   },
   "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "identity": {

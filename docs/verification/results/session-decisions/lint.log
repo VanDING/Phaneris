@@ -1,0 +1,217 @@
+$ bun run lint:electron && bun run lint:shared && bun run lint:ui && bun run lint:transition-all
+$ cd apps/electron && bun run lint
+$ bun run eslint src/
+
+E:\Phaneris\apps\electron\src\main\browser-pane-manager.ts
+  3328:7  warning  Unused eslint-disable directive (no problems were reported)
+  3339:7  warning  Unused eslint-disable directive (no problems were reported)
+
+E:\Phaneris\apps\electron\src\renderer\App.tsx
+   745:6   warning  React Hook useCallback has a missing dependency: 'setWindowWorkspaceId'. Either include it or remove the dependency array                                                                                                                                                              react-hooks/exhaustive-deps
+   803:6   warning  React Hook useEffect has a missing dependency: 'setWindowWorkspaceId'. Either include it or remove the dependency array                                                                                                                                                                react-hooks/exhaustive-deps
+   856:6   warning  React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array                                                                                                                                                                                   react-hooks/exhaustive-deps
+  1174:6   warning  React Hook useEffect has a missing dependency: 'handleInputChange'. Either include it or remove the dependency array                                                                                                                                                                   react-hooks/exhaustive-deps
+  1562:6   warning  React Hook useCallback has missing dependencies: 'store' and 'windowWorkspaceSlug'. Either include them or remove the dependency array                                                                                                                                                 react-hooks/exhaustive-deps
+  1585:6   warning  React Hook useCallback has an unnecessary dependency: 'sessionOptions'. Either exclude it or remove the dependency array                                                                                                                                                               react-hooks/exhaustive-deps
+  1594:27  warning  The ref value 'draftSaveTimeoutRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'draftSaveTimeoutRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  1866:6   warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array                                                                                                                                                                                 react-hooks/exhaustive-deps
+  1958:6   warning  React Hook useCallback has a missing dependency: 'setWindowWorkspaceId'. Either include it or remove the dependency array                                                                                                                                                              react-hooks/exhaustive-deps
+  2011:6   warning  React Hook useCallback has a missing dependency: 'setWindowWorkspaceId'. Either include it or remove the dependency array                                                                                                                                                              react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\actions\useAction.ts
+  31:25  warning  React Hook useEffect has a spread element in its dependency array. This means we can't statically verify whether you've passed the correct dependencies  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\ResetConfirmationDialog.tsx
+  44:6  warning  React Hook useMemo has an unnecessary dependency: 'open'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\apisetup\ApiKeyInput.tsx
+  291:6  warning  React Hook useCallback has missing dependencies: 'DEFAULT_ENDPOINT_PROVIDERS', 'initialPreset', 'initialValues?.connectionDefaultModel', 'initialValues?.models', and 'initialValues?.utilityModel'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\AppShell.tsx
+   638:6  warning  React Hook React.useMemo has an unnecessary dependency: 'isSessionsListVisible'. Either exclude it or remove the dependency array                                                                                                             react-hooks/exhaustive-deps
+  1292:6  warning  React Hook React.useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array. Outer scope values like 'navigate' aren't valid dependencies because mutating them doesn't re-render the component  react-hooks/exhaustive-deps
+  1298:6  warning  React Hook React.useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array. Outer scope values like 'navigate' aren't valid dependencies because mutating them doesn't re-render the component  react-hooks/exhaustive-deps
+  1305:6  warning  React Hook React.useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array. Outer scope values like 'navigate' aren't valid dependencies because mutating them doesn't re-render the component  react-hooks/exhaustive-deps
+  1816:6  warning  React Hook useMemo has a missing dependency: 'evaluateViews'. Either include it or remove the dependency array                                                                                                                                react-hooks/exhaustive-deps
+  2174:6  warning  React Hook useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array. Outer scope values like 'navigate' aren't valid dependencies because mutating them doesn't re-render the component        react-hooks/exhaustive-deps
+  2211:6  warning  React Hook useCallback has an unnecessary dependency: 'navigate'. Either exclude it or remove the dependency array. Outer scope values like 'navigate' aren't valid dependencies because mutating them doesn't re-render the component        react-hooks/exhaustive-deps
+  2311:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array                                                                                                                                        react-hooks/exhaustive-deps
+  2323:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array                                                                                                                                        react-hooks/exhaustive-deps
+  2376:6  warning  React Hook React.useMemo has unnecessary dependencies: 'handleViewClick', 'labelConfigs', and 'viewConfigs'. Either exclude them or remove the dependency array                                                                               react-hooks/exhaustive-deps
+  2597:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array                                                                                                                                        react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\ChatDisplay.tsx
+   428:6  warning  React Hook React.useLayoutEffect has missing dependencies: 'onScroll' and 'targetRef'. Either include them or remove the dependency array. If 'onScroll' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+   636:6  warning  React Hook useEffect has missing dependencies: 'session' and 'textareaRef'. Either include them or remove the dependency array                                                                                                                                 react-hooks/exhaustive-deps
+   692:6  warning  React Hook React.useMemo has a missing dependency: 'session'. Either include it or remove the dependency array                                                                                                                                                 react-hooks/exhaustive-deps
+   990:7  warning  React Hook React.useImperativeHandle has a missing dependency: 'isHighlighting'. Either include it or remove the dependency array                                                                                                                              react-hooks/exhaustive-deps
+  1288:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array                                                                                                                                                         react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\SendResourceToWorkspaceDialog.tsx
+  120:6   warning  React Hook useEffect has a missing dependency: 'targetWorkspaces'. Either include it or remove the dependency array                       react-hooks/exhaustive-deps
+  120:13  warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\SendToWorkspaceDialog.tsx
+  126:6   warning  React Hook useEffect has a missing dependency: 'remoteTargets'. Either include it or remove the dependency array                          react-hooks/exhaustive-deps
+  126:13  warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+  169:6   warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array                                    react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\SessionList.tsx
+  201:6  warning  React Hook useMemo has a missing dependency: 'currentFilter'. Either include it or remove the dependency array                          react-hooks/exhaustive-deps
+  205:5  warning  React Hook useMemo has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+  206:5  warning  React Hook useMemo has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+  207:5  warning  React Hook useMemo has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\WorkspaceSwitcher.tsx
+  155:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  176:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\input\CompactModelSelector.tsx
+  84:9  warning  The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 98) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\input\FreeFormInput.tsx
+   349:9  warning  The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 363) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   349:9  warning  The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 390) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   349:9  warning  The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 402) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   349:9  warning  The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 435) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   349:9  warning  The 'llmConnections' logical expression could make the dependencies of useMemo Hook (at line 446) change on every render. To fix this, wrap the initialization of 'llmConnections' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   909:6  warning  React Hook React.useEffect has a missing dependency: 'readFileAsAttachment'. Either include it or remove the dependency array                                                                                 react-hooks/exhaustive-deps
+  1249:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1309:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1501:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1509:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1517:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1525:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1537:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1545:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+  1556:6  warning  React Hook React.useCallback has a missing dependency: 'richInputRef'. Either include it or remove the dependency array                                                                                       react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\input\useModelVisionToggle.ts
+  27:9  warning  The 'llmConnections' logical expression could make the dependencies of useCallback Hook (at line 48) change on every render. Move it inside the useCallback callback. Alternatively, wrap the initialization of 'llmConnections' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\app-shell\kanban\TaskEditor.tsx
+  622:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  807:5  warning  React Hook React.useCallback has missing dependencies: 'goal', 'permissionMode', and 'title'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\ui\EditPopover.tsx
+  809:9  warning  The 'setOpen' function makes the dependencies of useCallback Hook (at line 1052) change on every render. To fix this, wrap the definition of 'setOpen' in its own useCallback() Hook  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\ui\label-menu.tsx
+  425:6  warning  React Hook React.useCallback has an unnecessary dependency: 'items'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\ui\rich-text-input.tsx
+  771:8  warning  React Hook React.useMemo has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\workspace\AddWorkspaceStep_ConnectRemote.tsx
+   38:3  warning  Unused eslint-disable directive (no problems were reported from 'no-constant-condition')
+  139:6  warning  React Hook useCallback has a missing dependency: 'isReconnectMode'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\components\workspace\WorkspaceCreationScreen.tsx
+  87:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\hooks\useAutomations.ts
+  137:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  144:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  158:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  193:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  205:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\hooks\useDirectoryPicker.ts
+  54:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\hooks\useEntityListInteractions.ts
+  145:6   warning  React Hook useCallback has a missing dependency: 'setSelectionState'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+  149:6   warning  React Hook useCallback has a missing dependency: 'setSelectionState'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+  153:6   warning  React Hook useCallback has a missing dependency: 'setSelectionState'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+  157:6   warning  React Hook useCallback has a missing dependency: 'setSelectionState'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+  253:6   warning  React Hook useCallback has a missing dependency: 'setSelectionState'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+  287:7   warning  React Hook useMemo has a missing dependency: 'containerProps'. Either include it or remove the dependency array                         react-hooks/exhaustive-deps
+  287:29  warning  React Hook useMemo has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\hooks\useOnboarding.ts
+  374:6  warning  React Hook useCallback has an unnecessary dependency: 'state.apiSetupMethod'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+  538:6  warning  React Hook useCallback has a missing dependency: 'editingSlug'. Either include it or remove the dependency array                react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\hooks\useSessionDecisions.ts
+  54:85  warning  The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\hooks\useUpdateChecker.ts
+   87:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  157:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\hooks\useWorkspaceIcon.ts
+  117:6  warning  React Hook useEffect has a missing dependency: 'workspace'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\lib\local-storage.ts
+   92:18  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  105:5   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  115:3   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  122:10  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  129:3   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+
+E:\Phaneris\apps\electron\src\renderer\pages\ChatPage.tsx
+  331:6  warning  React Hook React.useMemo has an unnecessary dependency: 'session.id'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+  477:6  warning  React Hook React.useCallback has a missing dependency: 't'. Either include it or remove the dependency array            react-hooks/exhaustive-deps
+  486:6  warning  React Hook React.useCallback has a missing dependency: 't'. Either include it or remove the dependency array            react-hooks/exhaustive-deps
+  495:6  warning  React Hook React.useCallback has a missing dependency: 't'. Either include it or remove the dependency array            react-hooks/exhaustive-deps
+  536:6  warning  React Hook React.useMemo has a missing dependency: 't'. Either include it or remove the dependency array                react-hooks/exhaustive-deps
+  554:6  warning  React Hook React.useMemo has a missing dependency: 't'. Either include it or remove the dependency array                react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\pages\SkillInfoPage.tsx
+   87:6  warning  React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+  116:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\pages\SourceInfoPage.tsx
+  220:6  warning  React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+  257:6  warning  React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+  350:6  warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\pages\settings\AppSettingsPage.tsx
+  178:6  warning  React Hook useEffect has a missing dependency: 'loadSettings'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\pages\settings\AppearanceSettingsPage.tsx
+  304:6  warning  React Hook useMemo has an unnecessary dependency: 't'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\Phaneris\apps\electron\src\renderer\playground\ComponentPreview.tsx
+   19:19  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+   89:11  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  125:17  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+
+E:\Phaneris\apps\electron\src\renderer\playground\MotionToggle.tsx
+  39:19  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  52:7   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+
+E:\Phaneris\apps\electron\src\renderer\playground\PlaygroundApp.tsx
+   43:22  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+   60:22  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  120:9   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  122:9   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  132:7   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+
+E:\Phaneris\apps\electron\src\renderer\playground\Sidebar.tsx
+  18:22  warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+  32:7   warning  Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API  craft-agent/no-localstorage
+
+E:\Phaneris\apps\electron\src\renderer\playground\demos\messaging\PairingCodeDialogPreview.tsx
+  43:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+
+✖ 117 problems (0 errors, 117 warnings)
+  0 errors and 5 warnings potentially fixable with the `--fix` option.
+
+$ cd packages/shared && bun run eslint .
+
+E:\Phaneris\packages\shared\src\decisions\health.ts
+  48:5  warning  Unused eslint-disable directive (no problems were reported from 'no-new')
+
+E:\Phaneris\packages\shared\src\decisions\settings.ts
+  234:5  warning  Unused eslint-disable directive (no problems were reported from 'no-new')
+
+E:\Phaneris\packages\shared\src\projects\storage.ts
+  351:3  warning  Unused eslint-disable directive (no problems were reported from 'no-control-regex')
+
+✖ 3 problems (0 errors, 3 warnings)
+  0 errors and 3 warnings potentially fixable with the `--fix` option.
+
+$ cd packages/ui && bun run eslint .
+$ bun run scripts/check-transition-all.ts
+transition-all: clean (967 files scanned)

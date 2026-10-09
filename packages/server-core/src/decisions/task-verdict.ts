@@ -14,7 +14,7 @@ export type TaskVerdictDeciderDeps = DecisionPointDeps
 
 export function buildTaskVerdictDecider(deps: TaskVerdictDeciderDeps = {}): TaskDecisionFn {
   return async (request, context) => {
-    const decide = await openDecisionPoint({ ...deps, sessionId: context.sessionId, feature: 'taskVerdicts', record: 'task_verdict' })
+    const decide = await openDecisionPoint({ ...deps, source: { taskRunId: context.runId }, onTrace: context.onTrace ?? deps.onTrace, sessionId: context.sessionId, feature: 'taskVerdicts', record: 'task_verdict' })
     if (!decide) return null
     return decide(request, { slug: context.slug, runId: context.runId, questions: Object.keys(request.questions).length })
   }

@@ -57,6 +57,9 @@ export interface DecisionRecordAnswer {
 }
 
 export interface DecisionRecord {
+  accountingOperationId?: string;
+  decisionPointId?: string;
+  attemptId?: string;
   /** Record id; outcome lines point at it. Absent in records written before outcomes existed. */
   id?: string;
   /** ISO timestamp. */
@@ -184,6 +187,9 @@ export function buildDecisionRecord(input: DecisionRecordInput): DecisionRecord 
   };
 
   if (input.result) {
+    record.accountingOperationId = input.result.accountingOperationId;
+    record.decisionPointId = input.result.decisionPointId;
+    record.attemptId = input.result.attemptId;
     if (input.result.modelReported) record.responseModel = input.result.model;
     record.latencyMs = input.result.latencyMs;
     record.state = input.result.state;

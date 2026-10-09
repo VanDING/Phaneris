@@ -408,6 +408,8 @@ export const RPC_CHANNELS = {
     GET_GAIN: 'rtk:getGain',
   },
   decisions: {
+    GET_SESSION: 'decisions:getSession',
+    SESSION_CHANGED: 'decisions:sessionChanged',
     GET_USAGE: 'decisions:getUsage',
     GET_SETTINGS: 'decisions:getSettings',
     SET_SETTINGS: 'decisions:setSettings',

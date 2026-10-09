@@ -1,6 +1,6 @@
 # Decision Model (`decide`)
 
-`decide` asks the configured decision provider typed questions about text or JSON and returns probabilities rather than prose. Configure Jev, a local Laya server, or a compatible custom endpoint in **Settings > AI > Decision model**. The tool requires both the master switch and its feature switch; tool availability is applied when a session agent is created.
+`decide` asks the configured decision provider typed questions about text or JSON and returns probabilities rather than prose. Configure Jev, a local Laya server, or a compatible custom endpoint in **Settings > AI > Advanced > Decision assistance**. The tool requires both the master switch and its feature switch; tool availability is applied when a session agent is created.
 
 ## Automatic features and permissions
 
@@ -24,9 +24,21 @@ Advanced settings exposes 13 independent feature switches. The master switch is 
 
 Guarded runs authorized work with Execute's base permission rules, then adds one-time approval for risky commands and non-read-only calls. Direct file writes outside the working directory always ask, including paths that escape through symbolic links or directory junctions. Decision checks cannot override Explore restrictions or administrator approval.
 
-When Guarded's feature or master switch is off, its effective mode is Ask to Edit. With the feature active, a single failed, missing, or timed-out decision follows the upstream policy and may allow that call to continue as in Execute. Stop and mode changes still invalidate pending checks. Risk checks exclude hidden, mini, automation, and unattended task sessions; their existing permission handlers and denial rules remain authoritative. Child sessions cannot exceed their parent's permission ceiling.
+When Guarded's feature or master switch is off, its effective mode is Ask to Edit. With the feature active, a failed, missing, or timed-out risk decision requires confirmation. Stop and mode changes still invalidate pending checks. Risk checks exclude hidden, mini, automation, and unattended task sessions; their existing permission handlers and denial rules remain authoritative. Child sessions cannot exceed their parent's permission ceiling.
 
 Enabled features send selected messages, tool arguments, result previews, or skill/source descriptions to the configured provider. The local decision log at `~/.phaneris/logs/decisions.jsonl` records usage, hashed request identity, outcomes, and linked follow-ups without input text. Runtime Host and Durable Runtime retain authority over user inputs, tool effects, task facts, and usage.
+
+## Session decisions in Run
+
+Settings contains configuration and connection tests. Open **Run > Decisions** to inspect the bound session's available history, including sessions with no chat messages. Pin Run to keep that session selected, or leave it following the active chat. Branches and task sessions have separate totals.
+
+Filter by feature, execution status, or a recorded turn. Totals and the record list use the same filter. Expand a record to distinguish the model recommendation, the host's actual handling, and later observations; use the source-message link when one is recorded. Viewing records never calls the decision model.
+
+An actual change requires host confirmation. Returning advice through `decide` does not prove the agent adopted it; stale or cancelled results do not count as applied changes. Multiple requests for one batched judgment remain one decision point.
+
+Decision usage is already included in session consumption. Costs come from the existing ledger; a missing price remains unknown, while an explicitly reported zero remains known. Auxiliary tokens do not occupy the main model's context. Old records without stable identities have incomplete coverage and are not reconstructed by matching timestamps.
+
+Queries follow the bound session's server and workspace. A server without this capability shows an unsupported state rather than global statistics. Automation conditions without an event session stay in automation history and diagnostics.
 
 ## When to use
 

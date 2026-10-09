@@ -6,7 +6,7 @@ import type { DurableRuntimeCoordinator } from '../durable-runtime/coordinator.t
 export function createDecisionAccounting(runtime: DurableRuntimeCoordinator, workspaceRoot: string, sessionId: string,
   scope: DecisionAccountingScope, settled: () => void): DecisionAccounting {
   return async (request, invoke) => {
-    const requestId = `decision:${randomUUID()}`, operationId = `utility:${sessionId}:${requestId}`
+    const requestId = `decision:${request.observation?.attemptId ?? randomUUID()}`, operationId = `utility:${sessionId}:${requestId}`
     const digest = prepareDecisionState(request.state).digest
     const canonicalRequestHash = createHash('sha256').update(JSON.stringify({ digest, questions: request.questions, model: request.model ?? scope.model })).digest('hex')
     runtime.acceptRun({ workspaceRootPath: workspaceRoot, sessionId, turnId: operationId, operationId,
@@ -25,7 +25,9 @@ export function createDecisionAccounting(runtime: DurableRuntimeCoordinator, wor
         stopReason: safeFailure?.kind === 'cancelled' ? 'aborted' : safeFailure ? 'error' : 'stop',
         content: result ? { answers: result.answers, state: digest } : { error: safeFailure?.kind ?? 'unknown', state: digest },
         usage: { inputTokens: result?.usage.inputTokens, outputTokens: result?.usage.outputTokens, costUsd: result?.usage.costUsd,
-          payload: { kind: 'decision', feature: scope.feature, costSource: result?.usage.costUsd === undefined ? 'unknown' : 'provider_reported', failure: safeFailure?.kind } } })
+          payload: { kind: 'decision', feature: scope.feature, decisionPointId: request.observation?.decisionPointId,
+            attemptId: request.observation?.attemptId, accountingOperationId: prepared.operationId,
+            costSource: result?.usage.costUsd === undefined ? 'unknown' : 'provider_reported', failure: safeFailure?.kind } } })
       runtime.completeRun(workspaceRoot, operationId, safeFailure?.kind === 'timeout' ? 'timeout' : safeFailure?.kind === 'cancelled' ? 'interrupted' : safeFailure ? 'error' : 'complete')
       settled()
     }
