@@ -1,0 +1,201 @@
+{
+  "records": [
+    {
+      "id": "Native Pi discovers the same output schema and annotations through the host Source",
+      "pass": true,
+      "observation": {
+        "host": {
+          "name": "mcp__fixture__read",
+          "description": "Read the fixture report",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "citation": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "citation"
+            ],
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false
+          },
+          "namespace": {
+            "name": "mcp__fixture",
+            "description": "Connected source: fixture"
+          },
+          "exposure": "deferred"
+        },
+        "native": {
+          "name": "mcp__sources__fixture__read",
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "structuredContent": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "number"
+                  },
+                  "citation": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "citation"
+                ],
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false
+              },
+              "isError": {
+                "type": "boolean"
+              },
+              "_meta": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "content"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false
+          }
+        }
+      }
+    },
+    {
+      "id": "Host and native transport both preserve structured data and resource references",
+      "pass": true,
+      "observation": {
+        "host": {
+          "content": "full fixture text\n{\"name\":\"Report\",\"uri\":\"https://example.invalid/report\",\"type\":\"resource_link\"}",
+          "isError": false,
+          "contentBlocks": [
+            {
+              "type": "text",
+              "text": "full fixture text"
+            },
+            {
+              "name": "Report",
+              "uri": "https://example.invalid/report",
+              "type": "resource_link"
+            }
+          ],
+          "structuredContent": {
+            "value": 42,
+            "citation": "https://example.invalid/report"
+          }
+        },
+        "native": {
+          "content": [
+            {
+              "type": "text",
+              "text": "full fixture text"
+            },
+            {
+              "type": "text",
+              "text": "[Resource https://example.invalid/report \"Report\"]"
+            }
+          ],
+          "details": {
+            "server": "sources",
+            "tool": "fixture__read"
+          },
+          "structuredContent": {
+            "content": [
+              {
+                "type": "text",
+                "text": "full fixture text"
+              },
+              {
+                "name": "Report",
+                "uri": "https://example.invalid/report",
+                "type": "resource_link"
+              }
+            ],
+            "structuredContent": {
+              "value": 42,
+              "citation": "https://example.invalid/report"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "Concurrent and repeated native HTTP calls have independent protocol instances",
+      "pass": true,
+      "observation": {
+        "concurrentCalls": 8,
+        "executed": 8
+      }
+    },
+    {
+      "id": "Withdrawing the host Source prevents native cached definitions from executing it",
+      "pass": true,
+      "observation": {
+        "executed": 10,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Unknown MCP proxy tool: mcp__fixture__read"
+            }
+          ],
+          "details": {
+            "server": "sources",
+            "tool": "fixture__read"
+          },
+          "structuredContent": {
+            "content": [
+              {
+                "type": "text",
+                "text": "Unknown MCP proxy tool: mcp__fixture__read"
+              }
+            ],
+            "isError": true
+          },
+          "isError": true
+        }
+      }
+    },
+    {
+      "id": "Source configuration and credentials keep one host owner; native shutdown releases its connection",
+      "pass": true,
+      "observation": {
+        "configReads": 1,
+        "configWrites": 0,
+        "ambientCredentials": false
+      }
+    }
+  ],
+  "timings": {
+    "hostConnectMs": 36.14229999999998,
+    "nativeConnectMs": 118.64959999999996,
+    "hostCallMs": 4.32140000000004,
+    "nativeCallMs": 4.059200000000146
+  },
+  "notices": [],
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-native-mcp-6NPJOr",
+  "scope": "Same in-process Source, actual HTTP transport and native extension; one local timing sample, no OAuth/remote/recovery performance claim"
+}

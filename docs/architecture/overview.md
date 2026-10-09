@@ -41,7 +41,7 @@ Status: accepted — 当前实现基线
                 ▼                                    ▼
 ┌───────────────────────────────┐   ┌────────────────────────────────────────────┐
 │  pi-agent-server（独立子进程）│   │  <workspace>/runtime/runtime.db   ← 权威     │
-│  @earendil-works/pi-* 1.0.2   │   │  runtime_events · operations ·              │
+│  @earendil-works/pi-* 1.1.0   │   │  runtime_events · operations ·              │
 │  provider API · 内置工具      │   │  tool_operations · usage_ledger · 投影游标   │
 └───────────────────────────────┘   └────────────────────────────────────────────┘
                                                              ▲
@@ -128,7 +128,7 @@ apps/                          packages/
 ├──────────────────────────────────────────────────────────────────────────┤
 │ L-1 运行时      durable-runtime（T1/T2 权威）· agent backend 驱动         │
 ├──────────────────────────────────────────────────────────────────────────┤
-│ L-2 Agent 进程  pi-agent-server  ←→  @earendil-works/pi-* 1.0.2          │
+│ L-2 Agent 进程  pi-agent-server  ←→  @earendil-works/pi-* 1.1.0          │
 ├──────────────────────────────────────────────────────────────────────────┤
 │ L-3 持久化      runtime.db（权威）· session.jsonl · .pi-sessions · 凭据   │
 └──────────────────────────────────────────────────────────────────────────┘

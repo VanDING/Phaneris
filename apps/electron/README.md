@@ -23,7 +23,7 @@ renderer (React)
 Electron main process
     │ packages/server-core SessionManager
     │ packages/shared PiAgent
-    └─ JSONL stdio → bundled pi-agent-server → Pi SDK 1.0.2
+    └─ JSONL stdio → bundled pi-agent-server → Pi SDK 1.1.0
 ```
 
 Agent execution stays in the separately built `packages/pi-agent-server` subprocess staged under `resources/pi-agent-server`. The main bundle only carries model-catalog and credential plumbing for UI/runtime coordination; provider request paths execute in the subprocess.

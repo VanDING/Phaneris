@@ -1,0 +1,370 @@
+{
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-feature-decisions-or4wJ7",
+  "records": [
+    {
+      "id": "smartTitles/small-talk",
+      "phase": "positive",
+      "pass": true,
+      "actual": true
+    },
+    {
+      "id": "smartTitles/small-talk",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": false
+    },
+    {
+      "id": "smartTitles/small-talk",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "smartTitles/drift",
+      "phase": "positive",
+      "pass": true,
+      "actual": true
+    },
+    {
+      "id": "smartTitles/drift",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": false
+    },
+    {
+      "id": "smartTitles/drift",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "suggestions",
+      "phase": "positive",
+      "pass": true,
+      "actual": "calendar"
+    },
+    {
+      "id": "suggestions",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "suggestions",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "riskBadges",
+      "phase": "positive",
+      "pass": true,
+      "actual": [
+        "sends",
+        "publishes"
+      ]
+    },
+    {
+      "id": "riskBadges",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": []
+    },
+    {
+      "id": "riskBadges",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "turnOutcome",
+      "phase": "positive",
+      "pass": true,
+      "actual": "finished"
+    },
+    {
+      "id": "turnOutcome",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "turnOutcome",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "semanticLabels",
+      "phase": "positive",
+      "pass": true,
+      "actual": [
+        "bug"
+      ]
+    },
+    {
+      "id": "semanticLabels",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": []
+    },
+    {
+      "id": "semanticLabels",
+      "phase": "failure",
+      "pass": true,
+      "actual": []
+    },
+    {
+      "id": "taskVerdicts",
+      "phase": "positive",
+      "pass": true,
+      "actual": "pass"
+    },
+    {
+      "id": "taskVerdicts",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": "unsure"
+    },
+    {
+      "id": "taskVerdicts",
+      "phase": "failure",
+      "pass": true,
+      "actual": "unavailable"
+    },
+    {
+      "id": "taskRepairs",
+      "phase": "positive",
+      "pass": true,
+      "actual": [
+        "draft"
+      ]
+    },
+    {
+      "id": "taskRepairs",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "taskRepairs",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "largeResults",
+      "phase": "positive",
+      "pass": true,
+      "actual": false
+    },
+    {
+      "id": "largeResults",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "largeResults",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "midTurnMessages/delivery",
+      "phase": "positive",
+      "pass": true,
+      "actual": "steer"
+    },
+    {
+      "id": "midTurnMessages/delivery",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "midTurnMessages/delivery",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "midTurnMessages/continuation",
+      "phase": "positive",
+      "pass": true,
+      "actual": true
+    },
+    {
+      "id": "midTurnMessages/continuation",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": false
+    },
+    {
+      "id": "midTurnMessages/continuation",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "automationConditions",
+      "phase": "positive",
+      "pass": true,
+      "actual": false
+    },
+    {
+      "id": "automationConditions",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": true
+    },
+    {
+      "id": "automationConditions",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "adaptiveThinking",
+      "phase": "positive",
+      "pass": true,
+      "actual": "low"
+    },
+    {
+      "id": "adaptiveThinking",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "adaptiveThinking",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "guardedMode",
+      "phase": "positive",
+      "pass": true,
+      "actual": [
+        "external"
+      ]
+    },
+    {
+      "id": "guardedMode",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": []
+    },
+    {
+      "id": "guardedMode",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "decideTool",
+      "phase": "positive",
+      "pass": true,
+      "actual": 0.98
+    },
+    {
+      "id": "decideTool",
+      "phase": "uncertain",
+      "pass": true,
+      "actual": 0.5
+    },
+    {
+      "id": "decideTool",
+      "phase": "failure",
+      "pass": true,
+      "actual": null
+    },
+    {
+      "id": "Records cover outcomes, failures, follow-ups and unknown cost without state",
+      "pass": true,
+      "lines": 75
+    }
+  ],
+  "native": [
+    {
+      "id": "smartTitles/small-talk",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "smartTitles/drift",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "suggestions",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "riskBadges",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "turnOutcome",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "semanticLabels",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "taskVerdicts",
+      "supported": false,
+      "reason": "Structured instructions or option descriptions cannot be represented without changing semantics.",
+      "pass": true
+    },
+    {
+      "id": "taskRepairs",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "largeResults",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "midTurnMessages/delivery",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "midTurnMessages/continuation",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "automationConditions",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "adaptiveThinking",
+      "supported": false,
+      "reason": "Pi 1.0 classifier score answers omit the probability distribution required by Phaneris.",
+      "pass": true
+    },
+    {
+      "id": "guardedMode",
+      "supported": true,
+      "pass": true
+    },
+    {
+      "id": "decideTool",
+      "supported": false,
+      "reason": "Pi classifier requires object state; wrapping or truncating text would change the existing protocol.",
+      "pass": true
+    }
+  ],
+  "defaultAdapter": "Keep direct System One: actual verdict structured instructions, score distributions and free-text decide state cannot all pass the Pi 1.0 classifier contract."
+}

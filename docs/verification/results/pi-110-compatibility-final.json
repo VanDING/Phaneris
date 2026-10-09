@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-10-09T00:21:22.797Z",
+  "fixture": "pi-110-compatibility-v1",
+  "checks": [
+    {
+      "id": "the complete native SDK family is exactly 1.1.0",
+      "pass": true,
+      "observation": {
+        "pi-agent-core": "1.1.0",
+        "pi-ai": "1.1.0",
+        "pi-coding-agent": "1.1.0",
+        "pi-codemode": "1.1.0",
+        "pi-server": "1.1.0",
+        "pi-mcp": "1.1.0",
+        "pi-protocol": "1.1.0",
+        "pi-telemetry": "1.1.0",
+        "pi-tui": "1.1.0",
+        "chord": "1.1.0"
+      }
+    },
+    {
+      "id": "legacy Azure provider resolves native Azure while API and Vault identity remain stable",
+      "pass": true,
+      "observation": {
+        "provider": "azure",
+        "api": "azure-openai-responses",
+        "catalogCount": 35
+      }
+    },
+    {
+      "id": "rotation persists once despite cancellation and an aborted lock waiter",
+      "pass": true,
+      "observation": {
+        "rotations": 1,
+        "persisted": 1,
+        "vaultUpdated": true
+      }
+    }
+  ]
+}

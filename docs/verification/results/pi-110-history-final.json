@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-10-09T00:27:34.124Z",
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-pi-history-fIL5hr",
+  "baselineEntry": "E:/Phaneris/packages/pi-agent-server/dist/index.js",
+  "currentEntry": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\packages\\pi-agent-server\\dist\\index.js",
+  "scope": "Real saved 1.0.2 sessions, Pi host/child and loopback provider; synthetic inference.",
+  "checks": [
+    {
+      "id": "Pi 1.1.0 restores a real 1.0.2 journal without losing its identity or previous messages",
+      "pass": true,
+      "observation": {
+        "oldSessionId": "01a11e0e-b0e0-768c-9a78-014f64294a1d",
+        "restoredSessionId": "01a11e0e-b0e0-768c-9a78-014f64294a1d",
+        "baselineSha256": "0fea305c22344b234d7a682ae67fb22caa0633db97757cc7706145bdb527bf30",
+        "anchor": "4b7b391e"
+      }
+    },
+    {
+      "id": "A real host branch uses the selected SDK cutoff and leaves the parent intact",
+      "pass": true,
+      "observation": {
+        "branchSessionId": "01a11e0e-c902-741c-99e4-10447f21fb75",
+        "parentSha256": "f00f7ed0dcf052b95da569b2832c4fe836f43d70d63971ecef8014fe09bfc356",
+        "afterCutoffExcluded": true
+      }
+    },
+    {
+      "id": "Manual compaction crosses the real provider and durable model boundary and survives restart",
+      "pass": true,
+      "observation": {
+        "tokensBefore": 48963,
+        "estimatedTokensAfter": 45204,
+        "sessionId": "01a11e0e-b0e0-768c-9a78-014f64294a1d"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "model": "fixture",
+      "before": true,
+      "after": false,
+      "compacted": false
+    },
+    {
+      "model": "fixture",
+      "before": true,
+      "after": true,
+      "compacted": false
+    },
+    {
+      "model": "fixture",
+      "before": true,
+      "after": true,
+      "compacted": false
+    },
+    {
+      "model": "fixture",
+      "before": true,
+      "after": false,
+      "compacted": false
+    },
+    {
+      "model": "fixture",
+      "before": true,
+      "after": false,
+      "compacted": false
+    },
+    {
+      "model": "fixture",
+      "before": false,
+      "after": true,
+      "compacted": true
+    }
+  ],
+  "modelPreparations": 6,
+  "modelOutcomes": 6
+}

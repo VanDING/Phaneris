@@ -98,7 +98,10 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | What remains |
 | --- | --- | --- |
-| [Pi SDK 1.1.0 and upstream 0.14.1 plan](process/pi-sdk-1.1.0-upstream-0.14.1-plan.md) | **Proposed; not implemented** | SDK compatibility, selected upstream decision improvements, and staged E2E/package acceptance; source and npm package assessment completed 2026-10-08. |
+| [Pi SDK 1.1.0 and upstream 0.14.1 plan](process/pi-sdk-1.1.0-upstream-0.14.1-plan.md) | **Implemented and verified on Windows** | Approved scope, frozen baselines, adoption decisions and deliberate deferrals. |
+| [Pi 1.1.0 / Craft 0.14.1 implementation](process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) | Complete; performance scope is limited | B0–B5 results, 6,289 passing tests, final package evidence, same-drive smoke, earlier failures and reproduction commands. |
+| [Pi 1.1.0 implementation failure matrix](process/pi-110-implementation-failure-matrix.md) | Written before implementation | Failure conditions and acceptance boundaries for B0–B5. |
+| [Pi 1.1.0 / Craft 0.14.1 handoff](process/pi-sdk-1.1.0-upstream-0.14.1-handoff.md) | Historical checkpoint | B0–B3 completed; B4/B5 continuation details recorded before work resumed. |
 | [Workstream sequencing](process/workstream-sequencing-2026-10-06.md) | **Decided; not started** | Six ordered steps across four workstreams. Zero code changed. |
 | [Project assessment and roadmap](process/project-assessment-and-roadmap-2026-08-31.md) | **Proposed; not started** | Five-phase roadmap. Its top risks (SessionManager as bottleneck, WebUI reuse fragility) are still present. |
 | [Product development directions](process/product-development-directions-2026-09-19.md) | Discussion draft; partial | Removing the allow-all fallback and the completion-rate metric are outstanding; other directions not started. |

@@ -1,0 +1,88 @@
+{
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-decisions-integration-CaH3Lk",
+  "records": [
+    {
+      "id": "Success and failed decision requests both cross T1/T2 and unknown price stays unknown",
+      "pass": true,
+      "observation": {
+        "dispatch": 2,
+        "outcomes": 2,
+        "usage": [
+          {
+            "usageId": "model:utility:261009-quick-creek:decision:daf06435-7d95-4fae-9808-c5615aa15eb0:decision:daf06435-7d95-4fae-9808-c5615aa15eb0",
+            "operationId": "utility:261009-quick-creek:decision:daf06435-7d95-4fae-9808-c5615aa15eb0",
+            "sessionId": "261009-quick-creek",
+            "provider": "custom",
+            "model": "fixture",
+            "inputTokens": 7,
+            "outputTokens": 3,
+            "payload": {
+              "costSource": "unknown",
+              "feature": "decideTool",
+              "kind": "decision"
+            },
+            "createdAt": 1791505336497
+          },
+          {
+            "usageId": "model:utility:261009-quick-creek:decision:e0557cbb-5bf5-4946-b8e8-aaf94b1b10a9:decision:e0557cbb-5bf5-4946-b8e8-aaf94b1b10a9",
+            "operationId": "utility:261009-quick-creek:decision:e0557cbb-5bf5-4946-b8e8-aaf94b1b10a9",
+            "sessionId": "261009-quick-creek",
+            "provider": "custom",
+            "model": "fixture",
+            "payload": {
+              "costSource": "unknown",
+              "failure": "unavailable",
+              "feature": "decideTool",
+              "kind": "decision"
+            },
+            "createdAt": 1791505336532
+          }
+        ],
+        "feature": {
+          "feature": "integration",
+          "calls": 2,
+          "failures": 1,
+          "cancelled": 0,
+          "coldCalls": 1,
+          "coldFailures": 0,
+          "knownCostUsd": 0,
+          "unknownCostCalls": 2,
+          "failureKinds": {
+            "unavailable": 1
+          },
+          "withOutcome": 1,
+          "changed": 1,
+          "actions": {
+            "fixture": 1
+          },
+          "followUps": {
+            "used": 1
+          },
+          "followUpsByAction": {
+            "fixture": {
+              "used": 1
+            }
+          },
+          "inputTokens": 7,
+          "outputTokens": 3,
+          "sessions": 1,
+          "latencyP50Ms": 13,
+          "latencyP95Ms": 23
+        }
+      }
+    },
+    {
+      "id": "Workspace rules block a native or nested call before effects; malformed rules fail closed",
+      "pass": true
+    },
+    {
+      "id": "Legacy AgentEvent actions produce unsupported history without dispatching prompts",
+      "pass": true,
+      "observation": {
+        "matched": 1,
+        "dispatched": 0,
+        "status": "unsupported"
+      }
+    }
+  ]
+}

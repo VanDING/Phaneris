@@ -1,0 +1,29 @@
+{
+  "app": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\apps\\electron\\release\\win-unpacked",
+  "fixture": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\.cache\\pi-110-implementation\\files-packaged-final\\profile-rRCgvD",
+  "sessionId": "261009-swift-nebula",
+  "ranAt": "2026-10-09T01:05:43.772Z",
+  "records": [
+    {
+      "id": "packaged app opens the Files workbench",
+      "pass": true
+    },
+    {
+      "id": "packaged Files panel ships the three consolidated views",
+      "pass": true
+    },
+    {
+      "id": "packaged Browse renders the working directory and session roots",
+      "pass": true
+    },
+    {
+      "id": "packaged Browse lists real files from the work folder",
+      "pass": true
+    },
+    {
+      "id": "packaged Changed view renders its empty state with a resolved label",
+      "pass": true
+    }
+  ],
+  "pageErrors": []
+}

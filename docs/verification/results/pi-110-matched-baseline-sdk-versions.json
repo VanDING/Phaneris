@@ -1,0 +1,12 @@
+{
+  "pi-protocol": "1.0.2",
+  "chord": "1.0.2",
+  "pi-ai": "1.0.2",
+  "pi-mcp": "1.0.2",
+  "pi-telemetry": "1.0.2",
+  "pi-tui": "1.0.2",
+  "pi-coding-agent": "1.0.2",
+  "pi-agent-core": "1.0.2",
+  "pi-server": "1.0.2",
+  "pi-codemode": "1.0.2"
+}

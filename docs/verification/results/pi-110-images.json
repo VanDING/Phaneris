@@ -1,0 +1,66 @@
+{
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-images-V2MjrN",
+  "records": [
+    {
+      "id": "Pi image model uses native adapter; invalid output and unsupported options fail explicitly",
+      "pass": true,
+      "observation": {
+        "provider": "openrouter",
+        "model": "google/gemini-2.5-flash-image",
+        "requests": 2,
+        "costStatus": "estimated"
+      }
+    },
+    {
+      "id": "Model projection resizes copies and enforces image counts without altering original bytes",
+      "pass": true,
+      "observation": {
+        "width": 64,
+        "height": 48,
+        "originalBytes": 1676
+      }
+    },
+    {
+      "id": "Explicit image-history recovery creates a linked text-only session and leaves evidence intact",
+      "pass": true,
+      "observation": {
+        "sourceId": "261009-deep-spruce",
+        "childId": "261009-sleek-beach",
+        "textOnly": true
+      }
+    },
+    {
+      "id": "Paid image outcomes retain observed usage on invalid data and record cancellation independently",
+      "pass": true,
+      "observation": {
+        "outcomes": 2,
+        "invalidOutputUsage": {
+          "usageId": "model:utility:image-accounting:image_generation:3b413422-5f04-4fa6-a120-4f1e7f19dc4b:image_generation:3b413422-5f04-4fa6-a120-4f1e7f19dc4b",
+          "operationId": "utility:image-accounting:image_generation:3b413422-5f04-4fa6-a120-4f1e7f19dc4b",
+          "sessionId": "image-accounting",
+          "provider": "openrouter",
+          "model": "google/gemini-2.5-flash-image",
+          "inputTokens": 10,
+          "outputTokens": 20,
+          "costUsd": 0.000053,
+          "payload": {
+            "cancelled": false,
+            "costSource": "estimated",
+            "failed": true,
+            "kind": "image_generation"
+          },
+          "createdAt": 1791505340160
+        },
+        "cancelled": true
+      }
+    },
+    {
+      "id": "Generated image remains a reviewed Artifact until explicit acceptance",
+      "pass": true,
+      "observation": {
+        "artifactId": "f69e28b9-cbfe-4aad-bb90-f419e5e672eb",
+        "reviewBeforeMaterialize": true
+      }
+    }
+  ]
+}

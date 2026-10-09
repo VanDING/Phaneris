@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-09T01:03:19.978Z",
+  "app": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\apps\\electron\\release\\win-unpacked",
+  "graceMs": 30000,
+  "userDataDir": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-lIJIB6\\user-data",
+  "checks": [
+    {
+      "name": "app launched and stayed alive without crashing",
+      "observation": "alive for 30000ms",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Chromium spawned renderer and helper processes",
+      "observation": "4 process(es) in the bundle",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "no fatal errors on stdout/stderr",
+      "observation": "none",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "main process booted and initialized its config",
+      "observation": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-smoke-lIJIB6\\config.json",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "process was terminated cleanly after the test",
+      "observation": "no stray processes",
+      "status": "pass",
+      "detail": null
+    }
+  ],
+  "exitCode": null,
+  "signalCode": "SIGTERM",
+  "processCount": 4,
+  "outputBytes": 2
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "source": "E:\\Phaneris\\apps\\electron\\vendor\\bun\\bun.exe",
+    "target": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\apps\\electron\\vendor\\bun\\bun.exe",
+    "sha256": "15277C59CCD6C6C20F8DC9716C2B59C1776320D606B6A8658F70BE8799519CA4"
+  },
+  {
+    "source": "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+    "target": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe",
+    "sha256": "99AB16660D3B19F4E336EEE57E7203DAA52C18D3CEC8AAE13A95B9CFA46D85D1"
+  },
+  {
+    "source": "E:\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe.version",
+    "target": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\apps\\electron\\resources\\bin\\win32-x64\\uv.exe.version",
+    "sha256": "96D3FF2E0459CA8E31BB7D9D8E3C378F3DD85814235F68842656339B2DB9C9B7"
+  }
+]

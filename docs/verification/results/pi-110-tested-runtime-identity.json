@@ -1,0 +1,32 @@
+[
+  {
+    "path": "bundle.js",
+    "sha256": "C45E1E078F3E1889668EFC77E3EAA18EF50B83E7A7614197E4FA2A0D8F3754C6",
+    "identical": true,
+    "bytes": 13940006
+  },
+  {
+    "path": "index.js",
+    "sha256": "1C6352BA99FD9CCFC803BAA7FCF95A01F3E9767349C9168BC3B7C866EC73EC6E",
+    "identical": true,
+    "bytes": 22
+  },
+  {
+    "path": "worker.js",
+    "sha256": "0DB015780CD7480D1221F0E93D16A45AF5E1AB51824D23DAD10BD4EE9F798040",
+    "identical": true,
+    "bytes": 60776
+  },
+  {
+    "path": "node_modules\\quickjs-wasi\\package.json",
+    "sha256": "6C9239B4D180A083729E099689297164544024ED81DC5066336895B7C3A2231B",
+    "identical": true,
+    "bytes": 84
+  },
+  {
+    "path": "node_modules\\quickjs-wasi\\quickjs.wasm",
+    "sha256": "D4C9375F2B1CA4DC95F72C8AA2982A7A9951AC8011490D79C6582DF732B4BBD9",
+    "identical": true,
+    "bytes": 637405
+  }
+]

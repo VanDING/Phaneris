@@ -4,7 +4,7 @@
 
 ## 当前基线
 
-- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` **1.0.2**。
+- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` 及其 Pi 家族依赖统一固定 **1.1.0**。
 - 包管理器与打包运行时：Bun **1.4.2**；版本由 `package.json`、CI 和打包脚本共同固定。
 - 后台：只有 `PiAgent`。仓库不直接依赖 Claude Agent SDK，也不打包 Claude 原生二进制。
 - Anthropic/Claude 模型、OAuth 连接名以及 `CLAUDE.md` 项目上下文属于提供商或文件格式兼容，不代表存在第二套 agent 后台。
@@ -18,13 +18,13 @@ packages/server-core (SessionManager)
           │ AgentBackend + JSONL
 packages/shared (PiAgent + event adapter + permissions)
           │ stdio
-packages/pi-agent-server (Pi 1.0.0)
+packages/pi-agent-server (Pi 1.1.0)
           │ provider API / local tools / proxied session tools
 ```
 
 Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sources、浏览器与 UI 事件；子进程负责 Pi 会话、模型运行时、内置工具和 provider 请求。
 
-1.0.0 的 SDK 会话不自动加载内置 MCP、codemode 或 tool-search 扩展；本项目仍使用自己的 source 连接池与工具代理。新增能力、升级边界及验证记录见 [Pi 1.0.0 升级评估](../process/pi-sdk-1.0.0-upgrade-assessment.md)。
+资源加载器禁用自动发现扩展，主会话显式注册受管 `tool_search` / `codemode`，辅助查询不注册编排工具；`codemode` 的 `models` 全局关闭。Source 连接仍由宿主连接池与工具代理唯一持有。升级边界及验证记录见 [Pi 1.1.0 / Craft 0.14.1 实施记录](../process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
 
 ## 生命周期约束
 
@@ -34,12 +34,15 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 
 会话重试策略显式声明 `maxAgentDelayMs`（Pi 0.86.0 引入的 agent 级退避上限），不依赖 SDK 默认值。主会话与 ephemeral 会话仍是各自的 in-memory settings，互不泄漏。
 
-`agent_settled` 还会携带 `getContextUsage()` 的结果。UI 的上下文占用以该值为准，避免在压缩后用最后一次 provider usage 误估。
+`agent_settled` 携带明确的 `aborted` 状态和 `getContextUsage()` 结果。UI 的上下文占用以该值为准，避免在压缩后用最后一次 provider usage 误估；未取消不等于执行成功。
 
 ## 工具与 sources
 
 - 会话工具的 schema 和 handler 单一来源位于 `packages/session-tools-core`。
 - `PiAgent` 将会话工具与 source 工具合并为完整集合，通过 `sync_tools` 同步。
+- 首轮请求等待同一个完整初始化 promise，完成策略、压缩设置和工具同步后才进入；退出、销毁及超时会结束等待。
+- 工具时长优先保留 SDK 的有效 `durationMs`，旧记录兼容墙钟差值；它可能包含审批和宿主往返，不作为纯命令执行耗时。
+- 大结果先完整保存，再在用户开关下按全结果分块摘取；失败、缺答案或无有效裁剪时沿用摘要/预览，完整结构化值与执行事实保留。
 - 相同定义不会重复同步；新增、删除或 schema 变化才会让 Pi 会话在下一轮重建。
 - source runtime 在 `SessionManager` 中缓存，并只对同一个 agent 实例应用一次。
 - 浏览器工具开关会推送给所有存活的 Pi 子进程；忙碌会话在下一轮安全刷新，不中断当前工作。
@@ -49,6 +52,7 @@ Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sour
 
 - 连接分类只看协议，不看有没有 URL：`pi_compat` 的判据是 `customEndpoint.api` 存在，即 Pi SDK 会在 `baseUrl` 注册这个协议。原生 provider（DeepSeek、Minimax、Groq 等）自带端点，预设会把它预填进 `baseUrl` —— 这不足以构成自定义端点。把它误判为 `pi_compat` 会让 Pi 既无法按 provider 路由，也无法注册端点，同时 renderer 会按端点规则判定能力（丢弃图像、禁用思考等级），模型刷新也会因缺少协议而失败。启动迁移会把 `customEndpoint` 与 `pi_compat` 的对应关系收敛回一致状态。
 - 标准 Pi provider 的模型与能力来自 Pi SDK catalog；`ModelDefinition` 保留 `reasoning`、`thinkingLevelMap`、图像输入和 `getSupportedThinkingLevels()` 的结果。
+- Azure 旧 provider `azure-openai-responses` 仅在进入 SDK 时映射为 `azure`，API 类型仍为 `azure-openai-responses`；连接 slug、Vault 归属与用户配置保持可回读，恢复不得静默换账户或模型。
 - 自定义 endpoint 保存前会依次尝试标准模型列表地址：`/models`、`/v1/models`，并兼容 Ollama 的 `/api/tags`。发现的 ID 会用 Pi catalog 补全上下文窗口和能力；端点返回的显式元数据优先。
 - 模型列表不是所有兼容协议的强制接口。发现失败时 UI 允许用户填写逗号分隔的模型 ID，持久化的手动模型不会因后台刷新失败而丢失。
 - 思考等级不是全局固定能力。界面按当前模型展示 Pi 报告的 `off / minimal / low / medium / high / xhigh / max` 子集。

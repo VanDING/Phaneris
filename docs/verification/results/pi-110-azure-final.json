@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-10-09T00:21:31.152Z",
+  "fixture": "pi-110-azure-v1",
+  "checks": [
+    {
+      "id": "native Azure endpoint and legacy session preserve configured model/account",
+      "pass": true,
+      "observation": {
+        "first": {
+          "sessionId": "01a11e09-4bf8-77ec-8d91-73199ee6c9df",
+          "settled": true
+        },
+        "resumed": {
+          "sessionId": "01a11e09-4bf8-77ec-8d91-73199ee6c9df",
+          "settled": true
+        },
+        "requests": [
+          {
+            "path": "/responses",
+            "model": "gpt-5-mini"
+          },
+          {
+            "path": "/responses",
+            "model": "gpt-5-mini"
+          }
+        ],
+        "effects": [
+          {
+            "phase": "T1",
+            "provider": "azure",
+            "model": "gpt-5-mini"
+          },
+          {
+            "phase": "T2",
+            "provider": "azure",
+            "stopReason": "stop"
+          },
+          {
+            "phase": "T1",
+            "provider": "azure",
+            "model": "gpt-5-mini"
+          },
+          {
+            "phase": "T2",
+            "provider": "azure",
+            "stopReason": "stop"
+          }
+        ]
+      }
+    }
+  ]
+}

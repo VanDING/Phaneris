@@ -1,0 +1,146 @@
+{
+  "executedAt": "2026-10-09T00:30:06.154Z",
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-A0cxvl",
+  "total": 20,
+  "passed": 20,
+  "failed": 0,
+  "requests": 28,
+  "records": [
+    {
+      "id": "Host turn applies lowered thinking, persists original setting, classifies Needs Review",
+      "pass": true,
+      "observation": {
+        "status": "needs-review",
+        "thinking": "low"
+      }
+    },
+    {
+      "id": "A lowered user preference wins over an adaptive decision still in flight",
+      "pass": true
+    },
+    {
+      "id": "Stop during a foreground decision cannot start a model turn or attach a late suggestion",
+      "pass": true
+    },
+    {
+      "id": "Approving a plan returns Explore to its previous Guarded mode on the real host",
+      "pass": true,
+      "observation": {
+        "executionMode": "guarded",
+        "acceptedChildSchema": true
+      }
+    },
+    {
+      "id": "The real host preserves unattended admission and excludes unattended, hidden, mini and task sessions from interactive decisions",
+      "pass": true,
+      "observation": {
+        "unattended": true,
+        "excludedContexts": 6,
+        "decisionRequests": 0
+      }
+    },
+    {
+      "id": "Late turn outcome cannot override a manually chosen status or newer generation",
+      "pass": true
+    },
+    {
+      "id": "Semantic and regex labels persist together; manual removal blocks a late result",
+      "pass": true
+    },
+    {
+      "id": "Queued continuations replay once while preserving all ACKs, bubbles and durable originals",
+      "pass": true,
+      "observation": {
+        "acks": 3,
+        "turns": 2,
+        "originalInputs": 3
+      }
+    },
+    {
+      "id": "Correction steers within its running generation; attachments always take full queue path",
+      "pass": true
+    },
+    {
+      "id": "Late delivery decisions cannot steer a newer turn; compaction and handoff retain queued inputs",
+      "pass": true,
+      "observation": {
+        "lateRedirects": 0,
+        "blockedDecisionCalls": 0,
+        "queuedInputs": 2
+      }
+    },
+    {
+      "id": "Existing native steering admits and commits the original input before its ACK",
+      "pass": true
+    },
+    {
+      "id": "Suggestions reach only the current model turn and record actual use without changing the original input",
+      "pass": true,
+      "observation": {
+        "transientHint": true,
+        "implicitActivation": false,
+        "linkedFollowup": true
+      }
+    },
+    {
+      "id": "Smart titles defer greeting, generate substantive title, preserve manual rename",
+      "pass": true
+    },
+    {
+      "id": "Automation loop guard precedes semantic cost; false condition records skipped history once",
+      "pass": true
+    },
+    {
+      "id": "Guarded adds risk prompts, outside writes always prompt, failure prompts; mode changes and cancellation win",
+      "pass": true
+    },
+    {
+      "id": "Large-result host/Pi exchange preserves original file and bounds lost/invalid responses",
+      "pass": true
+    },
+    {
+      "id": "Task scheduler infers verdict, scopes dependency repair once, then falls back to whole DAG within budget",
+      "pass": true,
+      "observation": {
+        "facts": 28,
+        "repairs": 3,
+        "laterRepairDecisionCalls": 0
+      }
+    },
+    {
+      "id": "Actual task child completion classifies needs-input as failure and preserves the normal completion fallback",
+      "pass": true,
+      "observation": {
+        "needsInput": "failed",
+        "unavailableDecision": "completed via existing behavior"
+      }
+    },
+    {
+      "id": "All seven authenticated remote decision RPCs use the target server config and encrypted vault",
+      "pass": true,
+      "observation": {
+        "channels": 7,
+        "wrongTokenRejected": true,
+        "localConfigUnchanged": true,
+        "responseSecretAbsent": true,
+        "taskResultsInference": {
+          "via": "decision",
+          "confidence": 0.95
+        }
+      }
+    },
+    {
+      "id": "Real PiAgent JSONL subprocess lowers one turn and restores the latest user thinking level",
+      "pass": true,
+      "observation": {
+        "completed": true,
+        "levels": [
+          "low",
+          "high",
+          "high"
+        ],
+        "suggestionCopies": 1
+      }
+    }
+  ]
+}
