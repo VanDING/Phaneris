@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-10-09T00:35:54.665Z",
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-ask-stop-4IAA1K",
+  "checks": [
+    {
+      "id": "question cancellation",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: Stop must return the completed question dismissal to the live child\n    at C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\scripts\\verification\\pi-110-ask-user-workflow.ts:50:3\n    at processTicksAndRejections (native:7:39)"
+    }
+  ]
+}

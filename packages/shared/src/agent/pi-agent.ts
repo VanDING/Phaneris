@@ -1697,9 +1697,12 @@ export class PiAgent extends BaseAgent {
     const abort = new AbortController();
     this.pendingHostToolRequests.set(request.requestId, abort);
     const intent = request.toolCallId ? this.preToolMetadataByCallId.get(request.toolCallId)?.intent : undefined;
+    const isQuestion = request.toolName === 'ask_user' || request.toolName === 'mcp__session__ask_user';
     try {
       const result = await this.routeToolCall(request.toolName, request.args, request.durableTool, intent, abort.signal);
-      if (epoch !== this.subprocessEpoch || abort.signal.aborted) return;
+      // Stop resolves an open question as a dismissal. Deliver that pure result
+      // so the live child can drain its wait; cancelled external effects stay unknown.
+      if (epoch !== this.subprocessEpoch || (abort.signal.aborted && !isQuestion)) return;
       this.send({
         type: 'tool_execute_response',
         requestId: request.requestId,

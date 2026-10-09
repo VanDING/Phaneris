@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-10-09T00:36:30.719Z",
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-ask-stop-rlqotf",
+  "checks": [
+    {
+      "id": "Stop returns the question dismissal, drains host/child waits and settles once as aborted",
+      "pass": true,
+      "observation": {
+        "requests": 1,
+        "toolResponses": 1,
+        "settled": true
+      }
+    }
+  ]
+}
