@@ -1,0 +1,132 @@
+{
+  "generatedAt": "2026-10-09T01:04:24.211Z",
+  "app": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\apps\\electron\\release\\win-unpacked",
+  "executable": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\apps\\electron\\release\\win-unpacked\\Phaneris.exe",
+  "executableSha256": "44bbbe6a1c1ae82106aae088768b309d251dae24d9789c1fe25343c7ec7ab873",
+  "fixture": "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\.cache\\pi-110-implementation\\packaged-ui-closed\\profile-YG5H1B",
+  "scope": "Actual packaged Electron, renderer, preload, authenticated RPC and local synthetic usage logs; no real provider inference.",
+  "records": [
+    {
+      "id": "The actual packaged window, preload and authenticated usage RPC are available",
+      "pass": true,
+      "observation": {
+        "since": "2026-10-02T01:04:15.506Z",
+        "retainedFrom": "2026-10-09T01:03:57.932Z",
+        "retentionLimited": true,
+        "features": {
+          "adaptiveThinking": {
+            "feature": "adaptive_thinking",
+            "calls": 30,
+            "failures": 0,
+            "cancelled": 0,
+            "coldCalls": 0,
+            "coldFailures": 0,
+            "knownCostUsd": 0,
+            "unknownCostCalls": 0,
+            "failureKinds": {},
+            "withOutcome": 30,
+            "changed": 0,
+            "actions": {
+              "thinking:medium": 30
+            },
+            "followUps": {},
+            "followUpsByAction": {},
+            "inputTokens": 150,
+            "outputTokens": 30,
+            "sessions": 0,
+            "latencyP50Ms": 10,
+            "latencyP95Ms": 10
+          },
+          "largeResults": {
+            "feature": "large_results",
+            "calls": 2,
+            "failures": 1,
+            "cancelled": 1,
+            "coldCalls": 2,
+            "coldFailures": 1,
+            "knownCostUsd": 0.001,
+            "unknownCostCalls": 1,
+            "failureKinds": {
+              "cancelled": 1
+            },
+            "withOutcome": 1,
+            "changed": 1,
+            "actions": {
+              "filter": 1
+            },
+            "followUps": {
+              "file_access_attempted": 1
+            },
+            "followUpsByAction": {
+              "filter": {
+                "file_access_attempted": 1
+              }
+            },
+            "inputTokens": 10,
+            "outputTokens": 2,
+            "sessions": 0,
+            "latencyP50Ms": 20,
+            "latencyP95Ms": 20
+          }
+        }
+      }
+    },
+    {
+      "id": "AI settings keep the existing single-page structure and collapsed disclosure",
+      "pass": true
+    },
+    {
+      "id": "Feature rows expose real counts, known and unknown cost, with accessible descriptions",
+      "pass": true,
+      "observation": {
+        "thinking": "30 checks · 0 failed · 0/30 recorded outcomes changed behavior\n\n0 cancelled · cold failures 0/0 · estimated USD 0.00 + 0 unpriced calls\n\nNo behavior changes observed in at least 30 outcomes. Review whether this feature is useful.",
+        "largeResults": "2 checks · 1 failed · 1/1 recorded outcomes changed behavior\n\n1 cancelled · cold failures 1/2 · estimated USD 0.001 + 1 unpriced calls"
+      }
+    },
+    {
+      "id": "A no-change observation never disables a feature, and toggles persist through real RPC",
+      "pass": true
+    },
+    {
+      "id": "Expanded sidebar labels retain their complete title while long names truncate",
+      "pass": true,
+      "observation": {
+        "scroll": 906,
+        "client": 131,
+        "whiteSpace": "nowrap",
+        "overflow": "ellipsis",
+        "display": "block",
+        "width": 130.75,
+        "html": "<span class=\"sidebar-label truncate\" title=\"Pi SDK 1.1.0 / Craft 0.14.1 验证标签与完整名称 Long verification label Long verification label Long verification label Long verification label Long verification label \">Pi SDK 1.1.0 / Craft 0.14.1 验证标签与完整名称 Long verification label Long verification label Long verification label Long verification label Long verification label </span>"
+      }
+    },
+    {
+      "id": "Wide light and narrow dark settings retain readable statistics without horizontal overflow",
+      "pass": true,
+      "observation": {
+        "screenshots": [
+          "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\.cache\\pi-110-implementation\\packaged-ui-closed\\decisions-en-light-wide.png",
+          "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\.cache\\pi-110-implementation\\packaged-ui-closed\\decisions-zh-dark-narrow.png"
+        ],
+        "dark": true,
+        "language": "zh-Hans"
+      }
+    },
+    {
+      "id": "Disabled and no-data states remain distinguishable, and the window has no renderer exception",
+      "pass": true,
+      "observation": {
+        "errors": []
+      }
+    }
+  ],
+  "errors": [],
+  "measurements": {
+    "launchToReadyMs": 15056.31,
+    "aiSettingsNavigationMs": 403.42579999999725
+  },
+  "screenshots": [
+    "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\.cache\\pi-110-implementation\\packaged-ui-closed\\decisions-en-light-wide.png",
+    "C:\\Users\\dotty\\.codex\\worktrees\\pi-110-upstream-0141\\Phaneris\\.cache\\pi-110-implementation\\packaged-ui-closed\\decisions-zh-dark-narrow.png"
+  ]
+}

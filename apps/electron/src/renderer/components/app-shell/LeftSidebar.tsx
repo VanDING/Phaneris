@@ -183,7 +183,7 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
     <div className={cn("flex flex-col select-none", !isNested && "py-1")}>
       <NavWrapper
         className={cn(
-          "grid gap-0.5",
+          "grid grid-cols-1 gap-0.5",
           isNested ? "pl-5 pr-0 relative" : "px-2"
         )}
         role="navigation"
@@ -384,7 +384,7 @@ function SortableStatusList({ items, onReorder, getItemProps, focusedItemId, tra
         <SortableList
           items={sortableItems}
           onReorder={handleReorder}
-          className="grid gap-0.5"
+          className="grid grid-cols-1 gap-0.5"
           renderItem={(item) => (
             <div className="group/section">
               {item.contextMenu ? (
@@ -438,7 +438,7 @@ function SortableStatusList({ items, onReorder, getItemProps, focusedItemId, tra
             <div className="my-1 ml-2" aria-hidden="true">
               <div className="h-px bg-foreground/5" />
             </div>
-            <div className="grid gap-0.5">
+            <div className="grid grid-cols-1 gap-0.5">
               {trailingItems.map(item => (
                 <div key={item.id} className="group/section">
                   <SidebarButton
