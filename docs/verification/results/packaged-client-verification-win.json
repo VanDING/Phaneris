@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-07T05:21:38.980Z",
+  "date": "2026-10-09T08:07:41.011Z",
   "arch": "x64",
   "expected": {
-    "version": "0.3.0",
+    "version": "0.3.1",
     "appId": "io.github.vanding.phaneris",
     "productName": "Phaneris",
     "scheme": "phaneris",
@@ -28,7 +28,7 @@
     },
     {
       "name": "NSIS installer exists with the expected versioned name",
-      "observation": "Phaneris-0.3.0-win-x64.exe",
+      "observation": "Phaneris-0.3.1-win-x64.exe",
       "status": "pass",
       "detail": null
     },
@@ -84,15 +84,15 @@
     "ink.json"
   ],
   "installer": {
-    "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.3.0-win-x64.exe",
-    "bytes": 189359237
+    "path": "E:\\Phaneris\\apps\\electron\\release\\Phaneris-0.3.1-win-x64.exe",
+    "bytes": 194362591
   },
   "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
   "identity": {
     "productName": "Phaneris",
     "companyName": "VanDING",
-    "version": "0.3.0",
-    "fileVersion": "0.3.0",
+    "version": "0.3.1",
+    "fileVersion": "0.3.1",
     "fileDescription": "Phaneris"
   },
   "binary": "PE machine x64",
