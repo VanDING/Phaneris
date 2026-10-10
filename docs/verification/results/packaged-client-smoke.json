@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-04T15:44:32.260Z",
+  "date": "2026-10-10T14:11:21.371Z",
   "app": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
   "graceMs": 25000,
-  "userDataDir": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-smoke-99qFIM/user-data",
+  "userDataDir": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-smoke-KzMlei/user-data",
   "checks": [
     {
       "name": "app launched and stayed alive without crashing",
@@ -24,7 +24,7 @@
     },
     {
       "name": "main process booted and initialized its config",
-      "observation": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-smoke-99qFIM/config.json",
+      "observation": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-smoke-KzMlei/config.json",
       "status": "pass",
       "detail": null
     },

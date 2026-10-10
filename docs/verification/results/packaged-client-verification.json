@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-04T15:43:00.819Z",
+  "date": "2026-10-10T14:11:17.938Z",
   "arch": "x64",
   "expected": {
-    "version": "0.3.0",
+    "version": "0.3.1",
     "appId": "io.github.vanding.phaneris",
     "productName": "Phaneris",
     "scheme": "phaneris",
@@ -21,14 +21,14 @@
       "detail": null
     },
     {
-      "name": "exactly four canonical themes are bundled, with Twilight as default",
+      "name": "exactly four canonical themes are bundled, with Default as the default theme",
       "observation": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app/Contents/Resources/app/dist/resources/themes",
       "status": "pass",
       "detail": null
     },
     {
       "name": "DMG exists with the expected versioned name",
-      "observation": "Phaneris-0.3.0-mac-x64.dmg",
+      "observation": "Phaneris-0.3.1-mac-x64.dmg",
       "status": "pass",
       "detail": null
     },
@@ -90,13 +90,13 @@
     "ink.json"
   ],
   "dmg": {
-    "path": "/Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.3.0-mac-x64.dmg",
-    "bytes": 215246740
+    "path": "/Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.3.1-mac-x64.dmg",
+    "bytes": 220474357
   },
   "app": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
   "identity": {
     "bundleId": "io.github.vanding.phaneris",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "name": "Phaneris"
   },
   "schemes": [
