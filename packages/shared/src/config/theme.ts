@@ -514,13 +514,18 @@ export const DEFAULT_THEME: ThemeOverrides = {
   "radius": "6px",
   "borderWidth": "1px",
   "borderStyle": "solid",
-  // Default font stacks. Keep byte-identical to the `:root` block in
-  // `packages/ui/src/styles/typography.css`: this value is what the theme engine
-  // reports as the resolved theme's typography, and any theme that omits
-  // `fontSans` inherits it. The bundled faces ("Inter Variable",
-  // "JetBrains Mono Variable" and the Han-capable "Noto Sans SC Variable", all
-  // from `@fontsource-variable/*`) are served from the app bundle — no font CDN.
-  // See that file for why the system CJK fallbacks are not enough on their own.
+  // Default font stacks. `packages/ui/src/styles/typography.css` owns the static
+  // declaration; this snapshot must resolve to the same stacks, not repeat it
+  // character for character — that file factors the Han families into
+  // `--font-cjk` and splices them in, while a theme file has to spell them out
+  // because this value is what the engine reports as the resolved typography.
+  // The theme test compares the expanded forms, so the two may differ in
+  // formatting but never in resolved family order. Any theme that omits
+  // `fontSans` inherits this one; every built-in declares its own.
+  // The bundled faces ("Inter Variable", "JetBrains Mono Variable" and the
+  // Han-capable "Noto Sans SC Variable", all from `@fontsource-variable/*`) are
+  // served from the app bundle — no font CDN. See that file for why the system
+  // CJK fallbacks are not enough on their own.
   "fontSans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
   "fontSerif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
   "fontMono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",

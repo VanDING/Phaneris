@@ -182,20 +182,82 @@ describe('theme resolution', () => {
       import.meta.dir,
       '../../../../ui/src/styles/index.css'
     ), 'utf-8');
+    const typographyCSS = readFileSync(resolve(
+      import.meta.dir,
+      '../../../../ui/src/styles/typography.css'
+    ), 'utf-8');
 
     const declarations = (css: string) => new Map(
       [...css.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map(match => [match[1]!, match[2]!.trim()])
     );
+    const rootBlock = (css: string) => {
+      const match = css.match(/:root \{([\s\S]*?)\n\}/);
+      if (!match) throw new Error('No :root block found');
+      return match[1]!;
+    };
+
+    // Font stacks are owned by typography.css, which both app stylesheets import;
+    // every other token is declared in each app's own `:root`. Asserting the font
+    // tokens against those two files would demand a second static source of truth
+    // (and did, until this assertion was corrected).
+    const fontTokens = new Set(['--font-sans', '--font-serif', '--font-mono']);
     for (const css of [electronCSS, sharedUICSS]) {
-      const light = declarations(css.match(/:root \{([\s\S]*?)\n\}/)![1]!);
+      const light = declarations(rootBlock(css));
       const dark = new Map([...light, ...declarations(css.match(/\.dark \{([\s\S]*?)\n\}/)![1]!)]);
+      for (const token of fontTokens) {
+        expect(light.has(token)).toBe(false);
+      }
       for (const isDark of [false, true]) {
         const actual = isDark ? dark : light;
         for (const [key, value] of declarations(themeToCSS(DEFAULT_THEME_FILE, isDark))) {
+          if (fontTokens.has(key)) continue;
           expect(actual.get(key)).toBe(value);
         }
       }
     }
+
+    // `--font-cjk` keeps Han on the bundled face when a stack splices it in, so the
+    // canonical theme expands it rather than repeating the family list. Compare the
+    // expanded forms: formatting may differ, the resolved family order may not.
+    const typography = declarations(rootBlock(typographyCSS));
+    const expandCJK = (value: string) => {
+      const cjk = typography.get('--font-cjk');
+      if (cjk === undefined) throw new Error('typography.css must declare --font-cjk');
+      return value.replaceAll('var(--font-cjk)', cjk).replace(/\s+/g, ' ').trim();
+    };
+    for (const token of fontTokens) {
+      const declared = typography.get(token);
+      expect(declared).toBeDefined();
+      expect(expandCJK(declared!)).toBe(expandCJK(themeToCSS(DEFAULT_THEME_FILE, false).match(
+        new RegExp(`${token}:\\s*([^;]+);`)
+      )![1]!));
+    }
+
+    // The two `data-font` overrides deliberately outrank the theme token, so each
+    // declaring file must keep them after its `:root` block. `inter` splices in the
+    // bundled Han face; `system` is native end to end on purpose (Han falls to the
+    // OS face), so it must NOT — pinning both directions keeps either from being
+    // "fixed" into the other.
+    const blockFor = (css: string, selector: string) => {
+      const start = css.indexOf(`${selector} {`);
+      if (start === -1) return null;
+      return declarations(css.slice(start, css.indexOf('\n}', start)));
+    };
+    for (const font of ['inter', 'system']) {
+      const selector = `html[data-font="${font}"]`;
+      const owners = [electronCSS, sharedUICSS].filter(css => css.includes(`${selector} {`));
+      expect(owners.length).toBeGreaterThan(0);
+      for (const owner of owners) {
+        const block = blockFor(owner, selector)!;
+        expect(block.has('--font-sans')).toBe(true);
+        expect(block.has('--font-default')).toBe(true);
+        // Later in the file than `:root`, so it still wins at equal specificity.
+        expect(owner.indexOf(`${selector} {`)).toBeGreaterThan(owner.indexOf(':root {'));
+        const usesBundledHan = block.get('--font-sans')!.includes('var(--font-cjk)');
+        expect(usesBundledHan).toBe(font === 'inter');
+      }
+    }
+
     expect(DEFAULT_THEME_FILE.navigator).toBeUndefined();
     expect(DEFAULT_THEME_FILE.dark?.navigator).toBeUndefined();
   });
