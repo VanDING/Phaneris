@@ -536,11 +536,11 @@ export class DurableRuntimeStore {
     return row?.last_seq ?? 0
   }
 
-  listAllEvents(options: { sessionId?: string; afterSeq?: number } = {}): RuntimeEvent[] {
+  listAllEvents(options: { sessionId?: string; operationId?: string; afterSeq?: number } = {}): RuntimeEvent[] {
     const events: RuntimeEvent[] = []
     let afterSeq = options.afterSeq ?? 0
     while (true) {
-      const batch = this.listEvents({ sessionId: options.sessionId, afterSeq, limit: 10_000 })
+      const batch = this.listEvents({ sessionId: options.sessionId, operationId: options.operationId, afterSeq, limit: 10_000 })
       events.push(...batch)
       if (batch.length < 10_000) break
       afterSeq = batch.at(-1)?.seq ?? afterSeq

@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { createServer } from 'vite'
 import { chromium } from 'playwright'
+import { launchWorkflowBrowser } from './workflow-browser'
 
 const root = resolve(import.meta.dir, '../..'), fixture = mkdtempSync(join(tmpdir(), 'phaneris-session-decisions-'))
 const configRoot = join(fixture, 'config'), workspaceRoot = join(fixture, 'workspace')
@@ -45,7 +46,7 @@ let manager = new host.SessionManager() as any
 async function add(name: string, owner = workspace) {
   const stored = await storage.createSession(owner.rootPath, { name })
   const managed = host.createManagedSession(stored, owner as any, { messagesLoaded: true }) as any
-  manager.sessions.set(stored.id, managed); return managed
+  manager.registerManagedSession(managed); return managed
 }
 const a = await add('Session A'), b = await add('Session B'), empty = await add('Empty branch')
 empty.branchFromSessionId = a.id
@@ -69,6 +70,7 @@ const request = { state: 'PRIVATE_INPUT_MUST_NOT_PERSIST', questions: { yes: { t
 async function check(id: string, action: () => any) { try { checks.push({ id, pass: true, observation: await action() }) } catch (e) { checks.push({ id, pass: false, error: e instanceof Error ? e.stack : String(e) }); console.error(checks.at(-1).error) } console.log(`${checks.at(-1).pass ? 'PASS' : 'FAIL'} ${id}`) }
 async function point(feature: typeof features[number], sessionId = a.id) { return (await points.openDecisionPoint({ feature, record: tags[features.indexOf(feature)] ?? feature, sessionId, source: { messageId: 'source-message', turnId: 'source-turn' } }))! }
 let vite: Awaited<ReturnType<typeof createServer>> | undefined, browser: Awaited<ReturnType<typeof chromium.launch>> | undefined
+let closeBrowser: (() => Promise<void>) | undefined
 try {
   await check('Batch is one point; recommendation, discarded application and observation stay separate', async () => {
     const decide = await point('largeResults'), answers = await Promise.all([decide(request), decide(request), decide(request)])
@@ -102,11 +104,11 @@ try {
   })
   await check('Host title and pre-turn boundaries confirm actual changes; stopped results are discarded', async () => {
     noul = 0; await manager.generateTitleUnlessSmallTalk(a, 'Hi'); assert.equal(a.titleDeferred, true)
-    a.isProcessing = true; a.processingGeneration = 1; a.thinkingLevel = 'max'; a.messages = [{ id: 'source-message', role: 'user', content: 'routine' }]
+    manager.execution.begin({ sessionId: a.id, workspaceRootPath: a.workspace.rootPath }); a.thinkingLevel = 'max'; a.messages = [{ id: 'source-message', role: 'user', content: 'routine' }]
     const first = await manager.startPreTurnDecisions(a, 'routine'); assert.equal(first.thinkingOverride, 'low')
     assert(!(await report()).items.find((item: any) => item.feature === 'adaptiveThinking').application)
     first.apply()
-    delay = 100; const late = manager.startPreTurnDecisions(a, 'routine'); a.stopRequested = true; await late; a.stopRequested = false; delay = 0; a.isProcessing = false; noul = .95
+    delay = 100; const late = manager.startPreTurnDecisions(a, 'routine'); manager.execution.requestStop(a.id); await late;  delay = 0; await manager.execution.finish(manager.execution.current(a.id), 'interrupted', { notify: false, advanceQueue: false }); noul = .95
     const value = await report(); assert(value.items.some((item: any) => item.feature === 'smartTitles' && item.application?.action === 'defer_title' && item.application.changed))
     assert(value.items.some((item: any) => item.feature === 'adaptiveThinking' && item.application?.status === 'discarded'))
   })
@@ -165,7 +167,7 @@ try {
     await until(() => requests.length > count)
     a.manualLabelsRevision++; a.labels = ['manual']; await lateLabels
     assert.deepEqual(a.labels, ['manual'])
-    a.isProcessing = false; a.sessionStatus = 'todo'; a.messages = [{ id: 'user-outcome', role: 'user', content: 'Do the work' }, { id: 'final-outcome', role: 'assistant', content: 'Which option?', turnId: 'outcome-turn' }]
+    await manager.execution.finish(manager.execution.current(a.id), 'interrupted', { notify: false, advanceQueue: false }); a.sessionStatus = 'todo'; a.messages = [{ id: 'user-outcome', role: 'user', content: 'Do the work' }, { id: 'final-outcome', role: 'assistant', content: 'Which option?', turnId: 'outcome-turn' }]
     const lateStatus = manager.applyTurnOutcome(a, 'final-outcome'); await Bun.sleep(30); a.sessionStatus = 'in-progress'; await lateStatus
     assert.equal(a.sessionStatus, 'in-progress'); delay = 0
     const value = await report(a.id, { limit: 100 })
@@ -220,20 +222,23 @@ try {
     await Bun.sleep(2)
     await decisions.getDecisionRecorder().flush()
     const before = await report(), count = requests.length, stored = [...manager.sessions.values()]
-    manager.cleanup(); manager = new host.SessionManager() as any; for (const entry of stored) manager.sessions.set(entry.id, entry); manager.eventSink = sink
+    await manager.cleanup(); manager = new host.SessionManager() as any; for (const entry of stored) manager.registerManagedSession(entry); manager.eventSink = sink
     const after = await report(); assert.deepEqual(after.totals, before.totals); assert.equal(requests.length, count)
-    const store = manager.durableRuntime.storeFor(workspaceRoot), usage = store.listUsage({ sessionId: a.id })
+    const queries = manager.durableRuntime.queries, usage = queries.usage(workspaceRoot, { sessionId: a.id })
     assert.equal(after.totals.knownCostUsd, usage.reduce((sum: number, row: any) => sum + (row.costUsd ?? 0), 0))
     const interrupted = await report(b.id); assert.equal(interrupted.items.find((item: any) => item.id === trace.decisionPointId).attempts[0].status, 'unknown'); assert.equal(interrupted.totals.unknownCostRequests, 1)
-    writeFileSync(join(output, 'evidence.json'), JSON.stringify({ report: after, events: store.listDecisionEvents(a.id), usage }, null, 2))
+    writeFileSync(join(output, 'evidence.json'), JSON.stringify({ report: after, events: queries.decisionEvents(workspaceRoot, a.id), usage }, null, 2))
   })
   writeFileSync(join(output, 'run.html'), '<!doctype html><html><head><meta charset="utf-8"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/session-decisions.tsx"></script></body></html>')
-  vite = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root, server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**'] } } }); await vite.listen()
+  vite = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
+    optimizeDeps: { entries: [join(output, 'run.html')] },
+    server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**'] } } }); await vite.listen()
   const port = (vite.httpServer!.address() as any).port, base = `http://127.0.0.1:${port}/.cache/session-decisions/run.html`
-  browser = await chromium.launch({ headless: true, channel: process.env.PHANERIS_TEST_BROWSER_CHANNEL })
+  const launched = await launchWorkflowBrowser()
+  browser = launched.browser; closeBrowser = launched.close
   const page = await browser.newPage({ viewport: { width: 1040, height: 1000 } }), pageErrors: string[] = []
   page.on('pageerror', error => pageErrors.push(error.message)); page.setDefaultTimeout(8000)
-  const load = async (extra = '') => { await page.goto(`${base}?rpc=${encodeURIComponent(`ws://127.0.0.1:${rpc.port}`)}&a=${a.id}&b=${b.id}&empty=${empty.id}&${extra}`, { waitUntil: 'networkidle', timeout: 90000 }); await page.waitForFunction(() => (window as any).decisionsFixture); await page.getByRole('tab', { name: 'Decisions', exact: true }).click(); await page.locator('[data-decision-id]').first().waitFor() }
+  const load = async (extra = '') => { await page.goto(`${base}?rpc=${encodeURIComponent(`ws://127.0.0.1:${rpc.port}`)}&a=${a.id}&b=${b.id}&empty=${empty.id}&${extra}`, { waitUntil: 'domcontentloaded', timeout: 90000 }); await page.waitForFunction(() => (window as any).decisionsFixture, undefined, { timeout: 90000 }); await page.getByRole('tab', { name: 'Decisions', exact: true }).click(); await page.locator('[data-decision-id]').first().waitFor() }
   await check('Real Run renders decisions with zero chat messages, filters, pagination and keyboard tabs', async () => {
     await load(); assert.equal(await page.getByRole('tab').count(), 5); assert.equal(await page.locator('[data-decision-id]').count(), 40)
     await page.getByRole('button', { name: 'Load more' }).click(); await page.waitForFunction(() => document.querySelectorAll('[data-decision-id]').length > 40)
@@ -322,10 +327,10 @@ try {
   await check('Deleted session rejects reads and late observations cannot restore evidence', async () => {
     const deleted = await add('Delete fixture'), decide = await point('suggestions', deleted.id); await decide(request)
     await manager.deleteSession(deleted.id); decide.trace!.apply({ action: 'late', status: 'applied', changed: true })
-    await assert.rejects(report(deleted.id)); assert.equal(manager.durableRuntime.storeFor(workspaceRoot).listDecisionEvents(deleted.id).length, 0)
+    await assert.rejects(report(deleted.id)); assert.equal(manager.durableRuntime.queries.decisionEvents(workspaceRoot, deleted.id).length, 0)
   })
 } finally {
-  await browser?.close(); await vite?.close(); client.destroy(); rpc.close(); await decisions.getDecisionRecorder().flush(); manager.cleanup(); api.stop(true)
+  await closeBrowser?.(); await vite?.close(); client.destroy(); rpc.close(); await decisions.getDecisionRecorder().flush(); await manager.cleanup(); api.stop(true)
   writeFileSync(join(output, 'results.json'), JSON.stringify({ generatedAt: new Date().toISOString(), fixture, requests: requests.length, checks }, null, 2)+'\n')
   console.log(JSON.stringify({ output, passed: checks.filter(check => check.pass).length, total: checks.length }))
 }

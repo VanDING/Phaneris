@@ -7,7 +7,7 @@ import { registerCoreRpcHandlers, cleanupSessionFileWatchForClient } from '@phan
 import { SessionManager, setSessionPlatform, setSessionRuntimeHooks } from '@phaneris/server-core/sessions'
 import { setFetcherPlatform } from '@phaneris/server-core/model-fetchers'
 import { setSearchPlatform, setImageProcessor } from '@phaneris/server-core/services'
-import { DurableRuntimeCoordinator } from '@phaneris/server-core/durable-runtime'
+import { createDurableRuntime } from '@phaneris/server-core/durable-runtime'
 import { getCredentialManager } from '@phaneris/shared/credentials'
 import { SecureStorageBackend } from '../../packages/shared/src/credentials/backends/secure-storage'
 import { saveSession, loadSession, getSessionFilePath } from '@phaneris/shared/sessions'
@@ -42,7 +42,7 @@ const instance = await bootstrapServer({
     setSessionRuntimeHooks({ updateBadgeCount() {}, captureException: error => console.error(error) })
     setSearchPlatform(platform); setImageProcessor(platform.imageProcessor)
   },
-  createSessionManager: () => new SessionManager(),
+  createSessionManager: runtime => new SessionManager(runtime),
   createHandlerDeps: deps => deps,
   registerAllRpcHandlers(server, deps) {
     const register = server.handle.bind(server)
@@ -57,7 +57,7 @@ const instance = await bootstrapServer({
   bindRpcServer: (sm, server) => sm.setRpcServer(server),
   setSessionEventSink: (sm, sink) => sm.setEventSink(sink),
   initModelRefreshService: () => ({ startAll() {}, stopAll() {} }),
-  cleanupSessionManager: async sm => { await sm.flushAllSessions(); sm.cleanup() },
+  cleanupSessionManager: async sm => { await sm.flushAllSessions(); await sm.cleanup() },
   cleanupClientResources: cleanupSessionFileWatchForClient,
 })
 const bootMs = performance.now() - bootStart
@@ -65,6 +65,7 @@ const sm = instance.sessionManager
 // These private seams supply synthetic agent output and advance the idle clock.
 // Everything downstream runs the production implementation. Keep them here only.
 const internal = sm as unknown as {
+  execution: ReturnType<typeof createDurableRuntime>['execution']
   sessions: SessionManager['sessions']
   processEvent: SessionManager['processEvent']
   sendEvent: SessionManager['sendEvent']
@@ -92,7 +93,7 @@ async function stream(sessionId: string, count: number) {
     await sm.getSession(sessionId)
     const managed = internal.sessions.get(sessionId)!
     const message = { id: 'perf-stream-user', role: 'user' as const, content: 'Performance stream fixture', timestamp: Date.now() }
-    managed.messages.push(message); managed.isProcessing = true
+    managed.messages.push(message); const handle = internal.execution.begin({ sessionId, workspaceRootPath: managed.workspace.rootPath }); internal.execution.accept(handle, { operationId: `perf-stream-${Date.now()}`, userMessageId: message.id, userMessage: message.content })
     internal.sendEvent({ type: 'user_message', sessionId, message, status: 'accepted' }, workspaceId)
     let content = ''
     for (let i = 0; i < count; i++) {
@@ -103,7 +104,7 @@ async function stream(sessionId: string, count: number) {
     }
     content += ' PERF_STREAM_DONE'
     await internal.processEvent(managed, { type: 'text_complete', text: content, turnId: 'perf-stream-turn' })
-    managed.isProcessing = false
+    await internal.execution.finish(handle, 'complete', { notify: false, advanceQueue: false })
     internal.sendEvent({ type: 'complete', sessionId }, workspaceId)
     await sm.flushSession(sessionId)
   } finally { streamRunning = false }
@@ -134,23 +135,23 @@ async function persistence() {
       snapshotBytes, appendedContentBytes, logicalWriteAmplification: snapshotBytes / appendedContentBytes })
   }
   const durableRoot = join(configDir, 'durable-measurement')
-  const coordinator = new DurableRuntimeCoordinator()
+  const coordinator = createDurableRuntime()
   const durableMs = []
   try {
     for (let i = 0; i < profiles[profile].writes; i++) {
       const operationId = `perf-operation-${i}`, sessionId = 'perf-durable', turnId = `turn-${i}`
       const start = performance.now()
-      coordinator.acceptRun({ workspaceRootPath: durableRoot, sessionId, operationId, turnId, userMessageId: `u-${i}`, userMessage: 'Measure durable commit' })
-      coordinator.commitAssistantMessage({ workspaceRootPath: durableRoot, sessionId, operationId, turnId, messageId: `a-${i}`, content: 'verified '.repeat(128) })
-      coordinator.completeRun(durableRoot, operationId, 'complete')
+      coordinator.commands.acceptRun({ workspaceRootPath: durableRoot, sessionId, operationId, turnId, userMessageId: `u-${i}`, userMessage: 'Measure durable commit' })
+      coordinator.commands.commitAssistantMessage({ workspaceRootPath: durableRoot, sessionId, operationId, turnId, messageId: `a-${i}`, content: 'verified '.repeat(128) })
+      coordinator.commands.completeRun(durableRoot, operationId, 'complete')
       durableMs.push(performance.now() - start)
     }
     const beforeBackup = diskFiles(durableRoot)
     const backupStart = performance.now()
-    coordinator.backupDatabase(durableRoot, join(durableRoot, 'measured-backup.sqlite'))
+    coordinator.admin.backupDatabase(durableRoot, join(durableRoot, 'measured-backup.sqlite'))
     return { snapshots: results, durableCommitMs: durableMs, backupMs: performance.now() - backupStart,
       durableFilesBeforeBackup: beforeBackup, durableFilesAfterBackup: diskFiles(durableRoot) }
-  } finally { coordinator.closeAll() }
+  } finally { await coordinator.close() }
 }
 web = createWebuiHandler({ webuiDir: join(root, 'apps/webui/dist'), secret: token, secureCookies: false,
   wsProtocol: 'ws', wsPort: instance.port, getHealthCheck: () => ({ status: 'ok' }), logger: instance.platform.logger })

@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T04:45:51.862Z",
+  "baselineSha": "dbd32f60b5d90e20b1bc2b231035baf6b171ddc2",
+  "dirty": true,
+  "command": "bun run scripts/verification/durable-runtime-boundary-baseline.ts",
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-runtime-boundary-baseline-eV0IUC",
+  "runtime": {
+    "bun": "1.4.2",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "platform": "win32"
+  },
+  "scope": "Production SessionManager stop/completion and task reconciliation paths, real SQLite; no model or external tool implementation invoked.",
+  "checks": [
+    {
+      "id": "F06",
+      "status": "observed",
+      "parkedState": {
+        "createdAt": 1791607551735,
+        "data": {
+          "stopReason": "complete",
+          "unsettledToolOperationIds": [
+            "toolop_67f6dd83dc83f39108df988f61c0cd6d"
+          ]
+        },
+        "kind": "agent_turn",
+        "operationId": "baseline-run",
+        "phase": "recovery_parked",
+        "sessionId": "261010-onyx-plateau",
+        "stateVersion": 3,
+        "turnId": "input",
+        "updatedAt": 1791607551746
+      },
+      "completionEvents": [
+        {
+          "sessionId": "261010-onyx-plateau",
+          "workspaceId": "baseline",
+          "reason": "complete",
+          "finalMessageId": "reply",
+          "finalText": "fixture response"
+        }
+      ],
+      "conforms": false
+    },
+    {
+      "id": "F13",
+      "status": "observed",
+      "emptyRegistryVerdict": {
+        "decision": "definitely_not_executed",
+        "reason": "The fully loaded authoritative session registry contains no matching task child",
+        "evidence": [
+          {
+            "source": "external_query",
+            "summary": "No child session exists for fixture/run/node",
+            "observedAt": 1791607551817
+          }
+        ],
+        "result": {
+          "childSessionId": null
+        }
+      },
+      "conforms": false
+    }
+  ],
+  "events": [
+    {
+      "eventId": "baseline-run:accepted",
+      "seq": 1,
+      "sessionId": "261010-onyx-plateau",
+      "turnId": "input",
+      "operationId": "baseline-run",
+      "type": "operation_accepted",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "kind": "agent_turn",
+        "userMessageId": "input"
+      },
+      "createdAt": 1791607551735
+    },
+    {
+      "eventId": "baseline-run:user",
+      "seq": 2,
+      "sessionId": "261010-onyx-plateau",
+      "turnId": "input",
+      "operationId": "baseline-run",
+      "type": "user_message_committed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "content": "fixture",
+        "messageId": "input"
+      },
+      "createdAt": 1791607551735
+    },
+    {
+      "eventId": "toolop_67f6dd83dc83f39108df988f61c0cd6d:call",
+      "seq": 3,
+      "sessionId": "261010-onyx-plateau",
+      "turnId": "input",
+      "operationId": "baseline-run",
+      "type": "tool_call_observed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "args": {
+          "path": "fixture.txt"
+        },
+        "providerToolCallId": "effect",
+        "toolName": "Write",
+        "toolOperationId": "toolop_67f6dd83dc83f39108df988f61c0cd6d"
+      },
+      "createdAt": 1791607551739
+    },
+    {
+      "eventId": "toolop_67f6dd83dc83f39108df988f61c0cd6d:dispatch",
+      "seq": 4,
+      "sessionId": "261010-onyx-plateau",
+      "turnId": "input",
+      "operationId": "baseline-run",
+      "type": "tool_dispatch_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalArgsHash": "73047ebe7acc854b7106c6c05eec47c6bbd2bb0011eb248c4d796cec13ce01b8",
+        "idempotencyKey": "toolop_67f6dd83dc83f39108df988f61c0cd6d",
+        "operationId": "toolop_67f6dd83dc83f39108df988f61c0cd6d",
+        "protocol": "t1_after_preflight_v1",
+        "providerToolCallId": "effect",
+        "recoveryMode": "never_auto_retry",
+        "runOperationId": "baseline-run",
+        "toolName": "Write"
+      },
+      "createdAt": 1791607551739
+    },
+    {
+      "eventId": "baseline-run:recovery-parked",
+      "seq": 5,
+      "sessionId": "261010-onyx-plateau",
+      "turnId": "input",
+      "operationId": "baseline-run",
+      "type": "tool_recovery_decided",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "reason": "Run stopped with an unsettled tool effect",
+        "verdict": "reconcile_required"
+      },
+      "createdAt": 1791607551746
+    }
+  ],
+  "database": {
+    "path": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-runtime-boundary-baseline-eV0IUC\\runtime.db",
+    "sha256": "6ce64215da24c24236e83082613d2785e0d991075a69dcfe1cc6498a114bf6af"
+  }
+}

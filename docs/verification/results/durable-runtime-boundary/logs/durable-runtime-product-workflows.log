@@ -1,0 +1,372 @@
+[session] Starting chat for session: 261010-swift-pebble
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Implement feature
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] [adaptive-thinking] Session 261010-swift-pebble: thinking low for this turn
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Turn outcome needs_input (confidence 0.95): session 261010-swift-pebble → needs-review
+[session] Session 261010-fresh-crystal: thinking level set to off
+[session] Starting chat for session: 261010-warm-otter
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Simple request
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Cancelling processing for session: 261010-warm-otter (silent)
+[session] [decision:adaptive_thinking] failed: Decision call was cancelled
+[session] Finally block cleanup - unexpected exit
+[session] Permission mode changed {
+  sessionId: "261010-light-breeze",
+  permissionMode: "guarded",
+  modeVersion: 1,
+  changedBy: "user",
+  changedAt: "2026-10-10T09:05:57.287Z",
+}
+[session] Permission mode changed {
+  sessionId: "261010-light-breeze",
+  permissionMode: "safe",
+  modeVersion: 2,
+  changedBy: "user",
+  changedAt: "2026-10-10T09:05:57.287Z",
+}
+[session] Permission mode changed {
+  sessionId: "261010-light-breeze",
+  permissionMode: "guarded",
+  modeVersion: 3,
+  changedBy: "user",
+  changedAt: "2026-10-10T09:05:57.287Z",
+}
+[session] Starting chat for session: 261010-rapid-ocean
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: BUG-123 billing invoice
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] [adaptive-thinking] Session 261010-rapid-ocean: thinking low for this turn
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Starting chat for session: 261010-clear-comet
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Initial request
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] mid-stream send {
+  sessionId: "261010-clear-comet",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] [mid-turn] Session 261010-clear-comet: queue (decision model)
+[session] mid-stream send {
+  sessionId: "261010-clear-comet",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 1,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] [mid-turn] Session 261010-clear-comet: queue (decision model)
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] replay queued {
+  sessionId: "261010-clear-comet",
+  messageId: "msg-1791623158448-9486e3d332d9",
+  queueLengthAfterShift: 0,
+}
+[session] Starting chat for session: 261010-clear-comet
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Next request
+
+Keep original exports
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Starting chat for session: 261010-tall-moss
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Build
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] mid-stream send {
+  sessionId: "261010-tall-moss",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] [mid-turn] Session 261010-tall-moss: steer (decision model)
+[session] mid-stream send {
+  sessionId: "261010-tall-moss",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] replay queued {
+  sessionId: "261010-tall-moss",
+  messageId: "msg-1791623159296-24e319fcac7a",
+  queueLengthAfterShift: 0,
+}
+[session] Starting chat for session: 261010-tall-moss
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Read attached
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Attachments: 1
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Starting chat for session: 261010-bright-sky
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Initial request
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] mid-stream send {
+  sessionId: "261010-bright-sky",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] replay queued {
+  sessionId: "261010-bright-sky",
+  messageId: "msg-1791623159637-027ba4e97a40",
+  queueLengthAfterShift: 0,
+}
+[session] Starting chat for session: 261010-bright-sky
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: A new request
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] [mid-turn] Session 261010-bright-sky: steer (decision model)
+[session] Starting chat for session: 261010-long-shoal
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Initial request
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] mid-stream send {
+  sessionId: "261010-long-shoal",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: true,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] mid-stream send {
+  sessionId: "261010-long-shoal",
+  behavior: "queue",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 1,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] replay queued {
+  sessionId: "261010-long-shoal",
+  messageId: "msg-1791623159989-62eedb7f76b8",
+  queueLengthAfterShift: 1,
+}
+[session] Starting chat for session: 261010-long-shoal
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: During compaction
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] replay queued {
+  sessionId: "261010-long-shoal",
+  messageId: "msg-1791623160055-5b9341991865",
+  queueLengthAfterShift: 0,
+}
+[session] Starting chat for session: 261010-long-shoal
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: During handoff
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Starting chat for session: 261010-broad-swamp
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Initial native turn
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] mid-stream send {
+  sessionId: "261010-broad-swamp",
+  behavior: "steer",
+  steered: true,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: undefined,
+}
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Starting chat for session: 261010-slim-zinc
+[session] Workspace: {
+  "id": "fixture-workspace",
+  "name": "Fixture",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-b4b5-workflows-V9kQ0e\\workspace",
+  "createdAt": 1791623156528
+}
+[session] Message: Use the workflow fixture policy
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] [suggestions] Session 261010-slim-zinc: suggesting skill "workflow-skill"
+[session] tool_start: Read (skill-read)
+[session] tool_result: skill-read isError=false
+[session] RESULT MATCH: toolUseId=skill-read, found=true, toolName=Read, wasComplete=false
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] [smart-titles] Small talk in session 261010-swift-pine: waiting for a request to title
+[session] [generateTitle] Starting for session 261010-swift-pine
+[session] [generateTitle] language at call time {
+  sessionId: "261010-swift-pine",
+  persistedUiLanguage: null,
+  resolvedLanguage: null,
+  titleLanguage: null,
+}
+[session] Generated title for session 261010-swift-pine: "Generated fixture title"
+[session] [Automations] Automation skipped: the event is about a session this automation created (loop guard)
+[session] [decision:automation_condition] failed: Decision provider error (HTTP 503)
+[session] [Automations] Created session inert-automation from prompt action
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+20/20 passed; docs/verification/results/durable-runtime-boundary/product-workflows.json

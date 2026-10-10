@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { SessionManager } from './SessionManager.ts'
+import { SessionManager, createManagedSession } from './SessionManager.ts'
 
 // Locks the adoption state machine that prevents "Generate → Create & Run" from minting a duplicate
 // top-level orchestrator (#bug1). The success path needs full storage wiring, so here we pin the
@@ -8,7 +8,7 @@ import { SessionManager } from './SessionManager.ts'
 describe('adoptGeneratedTaskOrchestrator guards', () => {
   function seed(sm: SessionManager, id: string, fields: { taskDraft?: boolean; taskSlug?: string }) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(sm as any).sessions.set(id, { id, ...fields })
+    ;(sm as any).sessions.set(id, createManagedSession({ id, ...fields }, { id: 'test', rootPath: '/tmp/unused' } as any))
   }
 
   it('returns false when the session does not exist', async () => {
@@ -45,7 +45,7 @@ describe('adoptGeneratedTaskOrchestrator guards', () => {
 describe('bindExistingSessionToTask guards', () => {
   function seed(sm: SessionManager, id: string, fields: { taskDraft?: boolean; taskSlug?: string }) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(sm as any).sessions.set(id, { id, ...fields })
+    ;(sm as any).sessions.set(id, createManagedSession({ id, ...fields }, { id: 'test', rootPath: '/tmp/unused' } as any))
   }
 
   it('returns false when the session does not exist', async () => {
@@ -88,7 +88,7 @@ describe('adopt/bind route changed fields through canonical live-update mutators
     any.updateSessionModel = async (_id: string, _ws: string, m: string) => { calls.model.push(m) }
     any.updateWorkingDirectory = (_id: string, p: string) => { calls.cwd.push(p) }
     any.setSessionPermissionMode = (_id: string, m: string) => { calls.mode.push(m) }
-    any.sessions.set('s', {
+    any.sessions.set('s', { runtime: { agent: null, isProcessing: false },
       id: 's',
       taskDraft: true,
       messages: [],

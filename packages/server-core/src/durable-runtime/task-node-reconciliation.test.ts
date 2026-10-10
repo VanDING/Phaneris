@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'bun:test'
-import { createTaskNodeReconciliationAdapter, type ReconciliationTaskChild } from './task-node-reconciliation.js'
+import { createTaskNodeReconciliationAdapter, type ReconciliationTaskChild } from '../tasks/runtime-reconciliation.js'
 
 describe('task_node_dispatch production reconciliation adapter', () => {
   test('requires a committed child input before deciding the dispatch completed', async () => {
     const child: ReconciliationTaskChild = {
       id: 'child-1', taskSlug: 'build', taskRunId: 'r1', taskNodeId: 'write', messages: [],
     }
-    const adapter = createTaskNodeReconciliationAdapter(() => [child], async () => {})
+    const adapter = createTaskNodeReconciliationAdapter(() => [child], async () => {}, session => session.messages.find(message => message.role === 'user'))
     const input = {
       operationId: 'tool-op', idempotencyKey: 'tool-op',
       args: { taskSlug: 'build', runId: 'r1', nodeId: 'write', attempt: 1 },
@@ -21,11 +21,11 @@ describe('task_node_dispatch production reconciliation adapter', () => {
     })
   })
 
-  test('only reports definitely-not-executed when no child identity exists', async () => {
+  test('requires durable absence evidence rather than an empty session registry', async () => {
     const adapter = createTaskNodeReconciliationAdapter(() => [], async () => {})
     await expect(adapter.queryExternal({
       operationId: 'tool-op', idempotencyKey: 'tool-op',
       args: { taskSlug: 'build', runId: 'r1', nodeId: 'write' },
-    })).resolves.toMatchObject({ decision: 'definitely_not_executed', result: { childSessionId: null } })
+    })).rejects.toThrow(/absence.*evidence/)
   })
 })

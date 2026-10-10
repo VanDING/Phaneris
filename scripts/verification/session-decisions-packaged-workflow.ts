@@ -55,8 +55,8 @@ const { getDecisionRecorder } = await import('../../packages/shared/src/decision
 const stored = await createSession(workspaceRoot, { name: 'Decision acceptance A', permissionMode: 'ask' })
 const other = await createSession(workspaceRoot, { name: 'Decision acceptance B', permissionMode: 'ask' })
 const manager = new SessionManager() as any
-manager.sessions.set(stored.id, createManagedSession(stored, workspace as any, { messagesLoaded: true }))
-manager.sessions.set(other.id, createManagedSession(other, workspace as any, { messagesLoaded: true }))
+manager.registerManagedSession(createManagedSession(stored, workspace as any, { messagesLoaded: true }))
+manager.registerManagedSession(createManagedSession(other, workspace as any, { messagesLoaded: true }))
 const decide = (await openDecisionPoint({ feature: 'riskBadges', record: 'risk_badges', sessionId: stored.id,
   source: { runOperationId: 'fixture-execution' } }))!
 const answer = await decide({ state: 'Disposable acceptance input', questions: { sends: { type: 'noul', instructions: 'Does this send a message?' } } })
@@ -65,7 +65,7 @@ recordDecisionOutcome(answer, { action: 'badges', changed: true })
 decide.trace!.apply({ action: 'badges', status: 'applied', changed: true, detail: { count: 1 } })
 const expected = await manager.getSessionDecisions(stored.id)
 assert.equal(expected.totals.points, 1); assert.equal(expected.totals.knownCostUsd, .001)
-await getDecisionRecorder().flush(); manager.cleanup()
+await getDecisionRecorder().flush(); await manager.cleanup()
 
 const checks: any[] = [], errors: string[] = []
 async function check(id: string, action: () => Promise<void>) {

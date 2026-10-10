@@ -24,7 +24,7 @@ writeFileSync(join(configRoot, 'config.json'), JSON.stringify({ workspaces: [wor
 const manager = new host.SessionManager() as any
 const session = await storage.createSession(workspaceRoot, { name: 'Fixture' })
 const managed = host.createManagedSession(session, workspace as any, { messagesLoaded: true }) as any
-manager.sessions.set(session.id, managed); manager.eventSink = () => {}
+manager.registerManagedSession(managed); manager.eventSink = () => {}
 const records: any[] = []
 async function check(id: string, action: () => any) {
   try { records.push({ id, pass: true, observation: await action() }) } catch (error) { records.push({ id, pass: false, error: String(error) }) }
@@ -41,13 +41,13 @@ try {
     recordDecisionOutcome(answer, { action: 'fixture', changed: true }); recordDecisionFollowUp(answer, { result: 'used' })
     fail = true; assert.equal(await point(request), null)
     await decisions.getDecisionRecorder().flush()
-    const store = manager.durableRuntime.storeFor(workspaceRoot)
-    const events = store.listEvents({ sessionId: session.id, afterSeq: 0, limit: 500 })
+    const queries = manager.durableRuntime.queries
+    const events = queries.events(workspaceRoot, { sessionId: session.id, afterSeq: 0, limit: 500 })
     const dispatch = events.filter((e: any) => e.type === 'model_dispatch_committed' && e.payload.purpose === 'decision')
     const outcomes = events.filter((e: any) => e.type === 'model_outcome_committed' && e.payload.purpose === 'decision')
     assert.equal(dispatch.length, 2); assert.equal(outcomes.length, 2)
     assert.equal(events.filter((e: any) => e.type === 'assistant_message_committed').length, 0)
-    const usage = store.listUsage({ sessionId: session.id })
+    const usage = queries.usage(workspaceRoot, { sessionId: session.id })
     assert.equal(usage.length, 2)
     assert.equal(usage[0].costUsd, undefined)
     assert.equal(usage[0].inputTokens, 7)
@@ -78,7 +78,7 @@ try {
     } finally { await system.dispose() }
   })
 } finally {
-  manager.cleanup(); api.stop(true)
+  await manager.cleanup(); api.stop(true)
   const output = join(root, '.cache/capability-integration/decision-governance.json')
   writeFileSync(output, JSON.stringify({ fixture, records }, null, 2)); console.log(JSON.stringify({ output, records }))
 }

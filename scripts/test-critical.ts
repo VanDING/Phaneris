@@ -4,6 +4,10 @@ import { resolve } from 'node:path'
 import { checkEnvironment, root, run } from './check-environment'
 
 checkEnvironment()
+await run(['run', 'scripts/check-runtime-boundary.ts'], root)
+await run(['run', 'scripts/verification/runtime-boundary-gate-workflow.ts'], root)
+await run(['run', 'scripts/verification/durable-runtime-boundary-workflow.ts'], root)
+await run(['run', 'scripts/verification/durable-runtime-crash-workflow.ts'], root)
 // Separate package processes preserve Bun mock isolation. No provider credentials required.
 const groups: [string, string[]][] = [
   ['.', ['scripts/check-environment.test.ts']],

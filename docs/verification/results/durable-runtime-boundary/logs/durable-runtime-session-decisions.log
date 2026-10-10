@@ -1,0 +1,28 @@
+PASS Batch is one point; recommendation, discarded application and observation stay separate
+PASS All 13 feature routes persist exact attempt and accounting identities
+PASS Known zero price remains known; an in-flight request has unknown cost until accounted
+[session] [smart-titles] Small talk in session 261010-windy-flint: waiting for a request to title
+[session] [adaptive-thinking] Session 261010-windy-flint: thinking low for this turn
+PASS Host title and pre-turn boundaries confirm actual changes; stopped results are discarded
+PASS Guarded permission still prompts; unavailable check falls back without auto-approval
+PASS Decision tool delivery leaves adoption unconfirmed; free-form metadata is not in session evidence
+PASS Large result is confirmed only when the host actually delivers the excerpt
+PASS Semantic labels and turn outcome discard late answers after manual edits
+PASS Missing configuration records a zero-request fallback; provider timeout is explicit
+PASS Failure, cancellation, unknown price and disabled feature retain accurate counts
+PASS Authenticated RPC rejects foreign workspace, missing session, invalid filters and invalid cursors
+PASS Historical missing identities are explicit; no-session automation never joins a chat
+PASS Pagination totals cover the full session and late observations invalidate old cursors
+[session] Cleaning up resources...
+[session] Cleanup complete
+PASS Reopening the durable host preserves decisions and cost without provider replay
+PASS Real Run renders decisions with zero chat messages, filters, pagination and keyboard tabs
+PASS Overview carries a decision summary that opens the Decisions tab
+PASS Pinned and following Run bindings remain separate; stale A responses cannot paint B
+PASS Application-only updates refresh; query errors retry and old-server capability stays explicit
+PASS Batched light/dark and narrow Chinese captures have no horizontal overflow
+[session] Deleted session 261010-sunny-swamp
+PASS Deleted session rejects reads and late observations cannot restore evidence
+[session] Cleaning up resources...
+[session] Cleanup complete
+{"output":"E:\\Phaneris\\.cache\\session-decisions","passed":20,"total":20}

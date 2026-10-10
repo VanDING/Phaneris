@@ -1,0 +1,4 @@
+# Captured output is hashed in validation.json; preserve its original bytes.
+# Trailing spaces printed by test diagnostics are part of the captured evidence.
+logs/*.log -text whitespace=-trailing-space
+*.db -text

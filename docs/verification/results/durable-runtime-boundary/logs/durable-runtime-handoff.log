@@ -1,0 +1,106 @@
+bun test v1.4.2 (744846f84)
+
+src\sessions\context-handoff-e2e.isolated.ts:
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] 🤖 Creating mini agent session: model=fixture-model, systemPromptPreset=undefined
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] No LLM connection found for session 261010-fluid-current, using default pi provider
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 210 |     ...hooks,
+211 |   }
+212 | }
+213 | 
+214 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+215 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "261010-fluid-current",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:215:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4420:22)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4166:24)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) handoff successor creation > inherits the working context, records its lineage, and receives the document as its first message [451.94ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] No LLM connection found for session 261010-lean-cloud, using default pi provider
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 210 |     ...hooks,
+211 |   }
+212 | }
+213 | 
+214 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+215 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "261010-lean-cloud",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:215:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4420:22)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4166:24)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] No LLM connection found for session 261010-lean-cloud, using default pi provider
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 210 |     ...hooks,
+211 |   }
+212 | }
+213 | 
+214 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+215 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "261010-lean-cloud",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:215:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4420:22)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4166:24)",
+}
+(pass) handoff successor creation > forwards a message typed into the finished handoff to the continuation [467.05ms]
+[session] Cleaning up resources...
+[session] Cleanup complete
+[session] Cleaning up resources...
+[session] Cleanup complete
+
+ 2 pass
+ 0 fail
+ 22 expect() calls
+Ran 2 tests across 1 file. [3.55s]

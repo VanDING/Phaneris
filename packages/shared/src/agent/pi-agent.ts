@@ -662,6 +662,19 @@ export class PiAgent extends BaseAgent {
       if (this.subprocess === child) this.handleSubprocessExit(code, signal);
     });
 
+    // Shutdown can close stdin between writable checking and the queued write.
+    // A stream error is asynchronous; the send() try/catch cannot contain it.
+    child.stdin?.on('error', (error) => {
+      if (this.subprocess !== child) return;
+      this.debug(`Pi subprocess input pipe closed: ${error.message}`);
+      this.subprocessReadyReject?.(error);
+      this.rejectAllPendingEphemeral(error);
+      if (this._isProcessing) {
+        this.eventQueue.enqueue({ type: 'error', message: `Pi subprocess input failed: ${error.message}` });
+        this.eventQueue.complete();
+      }
+    });
+
     child.on('error', (error) => {
       if (this.subprocess !== child) return;
       this.subprocessReadyReject?.(error);

@@ -1,0 +1,10 @@
+bun test v1.4.2 (744846f84)
+
+src\sessions\title-generation.isolated.ts:
+(pass) temporary title agents > preserves the cold session model for regenerate-title fallback and cleans up the agent [4.92ms]
+(pass) temporary title agents > preserves the session model when initial title generation also needs a temporary agent [1028.84ms]
+
+ 2 pass
+ 0 fail
+ 12 expect() calls
+Ran 2 tests across 1 file. [3.54s]

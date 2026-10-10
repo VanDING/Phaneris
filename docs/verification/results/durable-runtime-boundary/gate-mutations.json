@@ -1,0 +1,168 @@
+{
+  "command": "bun run scripts/verification/runtime-boundary-gate-workflow.ts",
+  "fixture": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-runtime-gate-HLhhGy",
+  "passed": true,
+  "rejectedExitCode": 1,
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-10-10T09:30:16.547Z",
+  "scannedFiles": 6,
+  "violationCount": 23,
+  "violations": [
+    {
+      "file": "packages/server-core/src/consumer.ts",
+      "line": 1,
+      "rule": "no-private-object-export",
+      "detail": "DurableRuntimeCoordinator"
+    },
+    {
+      "file": "packages/server-core/src/consumer.ts",
+      "line": 2,
+      "rule": "public-api-only",
+      "detail": "./durable-runtime/coordinator.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/barrel.ts",
+      "line": 1,
+      "rule": "runtime-no-product-import",
+      "detail": "../sessions/SessionManager.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/barrel.ts",
+      "line": 1,
+      "rule": "runtime-no-product-object",
+      "detail": "ManagedSession"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/barrel.ts",
+      "line": 1,
+      "rule": "runtime-no-product-object",
+      "detail": "ManagedSession"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "line": 1,
+      "rule": "runtime-no-product-object",
+      "detail": "ManagedSession"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "line": 1,
+      "rule": "runtime-no-product-object",
+      "detail": "ManagedSession"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "line": 2,
+      "rule": "runtime-no-product-import",
+      "detail": "../sessions/SessionManager.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 1,
+      "rule": "explicit-public-exports",
+      "detail": "./coordinator.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/js-bridge.js",
+      "line": 1,
+      "rule": "runtime-no-product-import",
+      "detail": "../sessions/SessionManager.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/js-bridge.js",
+      "line": 1,
+      "rule": "runtime-no-product-object",
+      "detail": "SessionManager"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/js-bridge.js",
+      "line": 1,
+      "rule": "runtime-no-product-object",
+      "detail": "SessionManager"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 1,
+      "rule": "no-second-run-state",
+      "detail": "isProcessing"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2,
+      "rule": "host-owns-state",
+      "detail": "managed.runtime.isProcessing"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2,
+      "rule": "host-owns-state",
+      "detail": "managed.runtime.processingGeneration"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2,
+      "rule": "host-owns-queue",
+      "detail": "managed.runtime.messageQueue.push"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2,
+      "rule": "host-owns-execution",
+      "detail": "managed.runtime.agent.chat"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/barrel.ts",
+      "line": 1,
+      "rule": "runtime-transitive-product-dependency",
+      "detail": "packages/server-core/src/durable-runtime/barrel.ts -> packages/server-core/src/sessions/SessionManager.ts"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "line": 1,
+      "rule": "runtime-transitive-product-dependency",
+      "detail": "packages/server-core/src/durable-runtime/coordinator.ts -> packages/server-core/src/durable-runtime/barrel.ts -> packages/server-core/src/sessions/SessionManager.ts"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "line": 2,
+      "rule": "runtime-transitive-product-dependency",
+      "detail": "packages/server-core/src/durable-runtime/coordinator.ts -> packages/server-core/src/sessions/SessionManager.ts"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 1,
+      "rule": "runtime-transitive-product-dependency",
+      "detail": "packages/server-core/src/durable-runtime/index.ts -> packages/server-core/src/durable-runtime/coordinator.ts -> packages/server-core/src/durable-runtime/barrel.ts -> packages/server-core/src/sessions/SessionManager.ts"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 2,
+      "rule": "runtime-transitive-product-dependency",
+      "detail": "packages/server-core/src/durable-runtime/index.ts -> packages/server-core/src/durable-runtime/coordinator.ts -> packages/server-core/src/sessions/SessionManager.ts"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/js-bridge.js",
+      "line": 1,
+      "rule": "runtime-transitive-product-dependency",
+      "detail": "packages/server-core/src/durable-runtime/js-bridge.js -> packages/server-core/src/sessions/SessionManager.ts"
+    }
+  ],
+  "runtimeModuleClosures": {
+    "packages/server-core/src/durable-runtime/barrel.ts": [
+      "packages/server-core/src/durable-runtime/barrel.ts"
+    ],
+    "packages/server-core/src/durable-runtime/coordinator.ts": [
+      "packages/server-core/src/durable-runtime/barrel.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts"
+    ],
+    "packages/server-core/src/durable-runtime/index.ts": [
+      "packages/server-core/src/durable-runtime/barrel.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/index.ts"
+    ],
+    "packages/server-core/src/durable-runtime/js-bridge.js": [
+      "packages/server-core/src/durable-runtime/js-bridge.js"
+    ]
+  }
+}

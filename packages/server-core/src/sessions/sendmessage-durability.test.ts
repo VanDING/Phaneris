@@ -25,8 +25,8 @@ describe('sendMessage durability', () => {
     sm = new SessionManager()
   })
 
-  afterEach(() => {
-    sm.cleanup()
+  afterEach(async () => {
+    await sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 
@@ -42,7 +42,7 @@ describe('sendMessage durability', () => {
       workspace as never,
       { messagesLoaded: true },
     )
-    ;(sm as unknown as { sessions: Map<string, unknown> }).sessions.set(id, managed)
+    ;(sm as any).registerManagedSession(managed)
     return managed
   }
 
@@ -90,7 +90,7 @@ describe('sendMessage durability', () => {
     const managed = buildSession(sessionId)
     // Force the mid-stream branch. Agent is null, so redirect() falls back to
     // false and the queue path runs.
-    managed.isProcessing = true
+    true && (sm as any).execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
 
     let ackedMessageId: string | null = null
     let onDiskAtAck = false

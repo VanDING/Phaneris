@@ -26,6 +26,7 @@ const pretool = await import('../../packages/shared/src/agent/core/pre-tool-use.
 const { PermissionManager } = await import('../../packages/shared/src/agent/core/permission-manager.ts')
 const { PiAgent } = await import('../../packages/shared/src/agent/pi-agent.ts')
 const host = await import('../../packages/server-core/src/sessions/SessionManager.ts')
+const { PiRuntimeDriver } = await import('../../packages/server-core/src/runtime-adapters/pi-driver')
 const storage = await import('../../packages/shared/src/sessions/storage.ts')
 const labels = await import('../../packages/shared/src/labels/crud.ts')
 const { isValidLabelIdFormat } = await import('../../packages/shared/src/labels/storage.ts')
@@ -162,6 +163,8 @@ await check('P06 Stop during source activation cannot prompt or allow later', as
   fixture.agent.eventQueue.complete = () => {}
   fixture.agent.preToolMetadataByCallId = new Map()
   fixture.agent.bufferedDurableToolStarts = new Map()
+  fixture.agent.pendingLargeResultFilters = new Map()
+  fixture.agent.pendingHostToolRequests = new Map()
   const pending = fixture.agent.handlePreToolUseRequest({ requestId: 'cancel-activation', toolName: 'mcp__demo__create_issue', input: {} })
   await new Promise(resolve => setTimeout(resolve, 0))
   await fixture.agent.abort()
@@ -286,7 +289,7 @@ const workspace = { id: 'ws-verification', name: 'Verification', rootPath: works
 await check('R03 self, legacy, chain limit and metadata round trip', async () => {
   const manager = new host.SessionManager() as any
   const managed = host.createManagedSession({ id: 'automation-origin', triggeredBy: { automationName: 'before-rename', automationId: 'a', depth: 1 } } as any, workspace as any, { messagesLoaded: true })
-  manager.sessions.set(managed.id, managed)
+  manager.registerManagedSession(managed)
   const pending = { matcherId: 'a', automationName: 'after-rename', eventPayload: { sessionId: managed.id } }
   assert(!manager.automationLoopGuard(pending).run, 'self recursion after rename')
   managed.triggeredBy = { automationName: 'legacy', depth: 1 }
@@ -305,7 +308,7 @@ await check('R03 self, legacy, chain limit and metadata round trip', async () =>
 await check('R03 skipped prompt is recorded without executing', async () => {
   const manager = new host.SessionManager() as any
   const managed = host.createManagedSession({ id: 'loop-origin', triggeredBy: { automationId: 'loop', depth: 1 } } as any, workspace as any, { messagesLoaded: true })
-  manager.sessions.set(managed.id, managed)
+  manager.registerManagedSession(managed)
   let executed = 0
   manager.executePromptAutomation = async () => { executed++; return { sessionId: 'must-not-run' } }
   await manager.runPromptAutomations(workspace.id, workspaceRoot, [{ matcherId: 'loop', automationName: 'loop', prompt: 'never executed', eventPayload: { sessionId: managed.id } }])
@@ -373,7 +376,7 @@ await check('R05 activation retry hides duplicate, keeps steers and attachments'
   managed.lastSentStoredAttachments = [{ id: 'attachment' }]
   managed.thinkingLevel = 'max'
   managed.lastSentOptions = { skillSlugs: ['fixture-skill'] }
-  manager.sessions.set(managed.id, managed)
+  manager.registerManagedSession(managed)
   const calls: any[] = []
   manager.sendMessage = async (...args: any[]) => {
     if (host.claimAutoRetryPending(managed, args[1]) !== 'drop') calls.push(args)
@@ -392,7 +395,7 @@ await check('R05 activation retry hides duplicate, keeps steers and attachments'
 await check('R06 unknown background task does not wake host or invent start time', async () => {
   const manager = new host.SessionManager() as any
   const managed = host.createManagedSession({ id: 'background', name: 'background' }, workspace as any, { messagesLoaded: true }) as any
-  manager.sessions.set(managed.id, managed)
+  manager.registerManagedSession(managed)
   manager.keepBackgroundTasksAlive = true
   let wakes = 0
   manager.sendMessage = async () => { wakes++ }
@@ -410,7 +413,7 @@ await check('R05 real host retry persists one visible input and one hidden conti
   const manager = new host.SessionManager() as any
   const managed = host.createManagedSession({ ...session, thinkingLevel: 'max' }, workspace as any, { messagesLoaded: true }) as any
   const events: any[] = [], chats: any[] = []
-  manager.sessions.set(managed.id, managed)
+  manager.registerManagedSession(managed)
   manager.eventSink = (_channel: string, _target: unknown, event: any) => events.push(event)
   const agent = new Proxy({
     getModel: () => 'pi/gpt-5-mini', getSessionId: () => null, getBackendProvider: () => 'pi',
@@ -420,7 +423,10 @@ await check('R05 real host retry persists one visible input and one hidden conti
       yield { type: 'complete' }
     },
   }, { get: (target, key) => key === 'then' ? undefined : key in target ? target[key as keyof typeof target] : () => undefined })
-  manager.getOrCreateAgent = async () => { managed.agent = agent; return agent }
+  manager.getOrCreateAgent = async () => {
+    const driver = await manager.execution.ensureDriver(managed.id, async () => new PiRuntimeDriver(agent as never))
+    return driver.controls
+  }
   const attachment = { id: 'fixture-file', name: 'fixture.txt', type: 'text', mimeType: 'text/plain', storedPath: join(workspaceRoot, 'fixture.txt') }
   await manager.sendMessage(managed.id, 'original durable request', [attachment], [attachment])
   managed.turnSteers = ['correction: keep the attachment']
@@ -440,7 +446,7 @@ await check('R05 real host retry persists one visible input and one hidden conti
   assert(chats[1].content.includes('correction: keep the attachment') && chats[1].attachments?.length === 1, 'real retry lost its corrections or attachment')
   assert(managed.thinkingLevel === 'max', 'session thinking level changed')
   assert(!events.some(event => event.type === 'error'), 'real retry failed in the host')
-  const projection = manager.durableRuntime.getCanonicalSessionProjection(workspaceRoot, managed.id)
+  const projection = manager.durableRuntime.queries.getCanonicalSessionProjection(workspaceRoot, managed.id)
   assert(projection.items.filter((item: any) => item.kind === 'user').length === 2, 'canonical inputs duplicated or missing')
   const reloaded = host.createManagedSession({ id: managed.id }, workspace as any) as any
   await manager.ensureMessagesLoaded(reloaded)
@@ -525,7 +531,7 @@ await check('B3 default test recorder stays outside user configuration', () => {
 decisionApi.stop(true)
 
 const baseline = process.argv.includes('--baseline')
-const resultPath = join(root, 'docs/verification/results', baseline ? 'upstream-0.14.0-before.json' : 'upstream-0.14.0-first-batch.json')
+const resultPath = resolve(process.argv.find(arg => arg.startsWith('--output='))?.slice(9) ?? join(root, 'docs/verification/results', baseline ? 'upstream-0.14.0-before.json' : 'upstream-0.14.0-first-batch.json'))
 mkdirSync(resolve(resultPath, '..'), { recursive: true })
 const failures = records.filter(record => !record.pass)
 writeFileSync(resultPath, JSON.stringify({

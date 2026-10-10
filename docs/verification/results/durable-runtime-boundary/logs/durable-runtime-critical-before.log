@@ -1,0 +1,284 @@
+$ bun run scripts/test-critical.ts
+Environment OK: Bun 1.4.2, Node v24.15.0; local script entries exist.
+
+> test ./scripts/check-environment.test.ts
+bun test v1.4.2 (744846f84)
+
+scripts\check-environment.test.ts:
+(pass) resolves script targets after cd without flagging workspace-relative assets as missing [1.64ms]
+
+ 1 pass
+ 0 fail
+ 1 expect() calls
+Ran 1 test across 1 file. [91.00ms]
+
+> test ./src/durable-runtime/coordinator.test.ts ./src/durable-runtime/process-crash.test.ts ./src/durable-runtime/projection-runner.test.ts ./src/sessions/idle-session-cache.test.ts ./src/tasks/TaskRunner.test.ts ./src/transport/__tests__/server-lifecycle.test.ts
+bun test v1.4.2 (744846f84)
+
+src\durable-runtime\coordinator.test.ts:
+(pass) DurableRuntimeCoordinator > persists native observations without changing execution state, context or usage [109.08ms]
+(pass) DurableRuntimeCoordinator > owns a complete cross-process T1/T2 boundary [63.36ms]
+(pass) DurableRuntimeCoordinator > aggregates a parallel tool batch and accepts out-of-order T2 commits [62.34ms]
+(pass) DurableRuntimeCoordinator > does not start the next model attempt while any tool effect is unsettled [41.91ms]
+(pass) DurableRuntimeCoordinator > commits final assistant output before it is projected [45.58ms]
+(pass) DurableRuntimeCoordinator > parks a run whose tool outcome is unknown [39.33ms]
+(pass) DurableRuntimeCoordinator > startup recovery parks an unknown effect without replaying it [41.14ms]
+(pass) DurableRuntimeCoordinator > startup recovery terminalizes an interrupted run with no unknown effect [37.10ms]
+(pass) DurableRuntimeCoordinator > atomically commits an assistant model outcome and deduplicated usage [44.43ms]
+(pass) DurableRuntimeCoordinator > owns model T1/T2 and usage across the provider effect boundary [49.69ms]
+(pass) DurableRuntimeCoordinator > parks a provider request left between model T1 and T2 [47.47ms]
+(pass) DurableRuntimeCoordinator > durably resolves an unknown provider attempt without retrying it [52.60ms]
+(pass) DurableRuntimeCoordinator > atomically commits a verified reconciliation and resumes the program counter [57.15ms]
+(pass) DurableRuntimeCoordinator > queries a registered adapter using the durable idempotency identity [56.58ms]
+(pass) DurableRuntimeCoordinator > makes TaskRunner facts authoritative and replayable after terminal cleanup [48.27ms]
+(pass) DurableRuntimeCoordinator > restores a verified backup atomically while retaining the previous live database [132.72ms]
+(pass) DurableRuntimeCoordinator > imports branch history without fabricating tool dispatch evidence [46.93ms]
+(pass) background cache warming ledger > meters warming without disturbing pending tool or adding context [41.27ms]
+(pass) background cache warming ledger > meters warming without disturbing pending model or adding context [43.48ms]
+(pass) background cache warming ledger > accepts metered cancellation after the owning task settles, without reopening it [36.74ms]
+(pass) background cache warming ledger > retains an unknown refresh as pending audit evidence across restart without replay [47.90ms]
+
+src\durable-runtime\process-crash.test.ts:
+(pass) durable runtime process crash recovery > a kill before T1 produces zero external effect calls [324.71ms]
+(pass) durable runtime process crash recovery > a kill after an external effect but before T2 parks without replay [246.69ms]
+(pass) durable runtime process crash recovery > a kill after T1 but before the effect remains unknown and never executes automatically [262.66ms]
+(pass) durable runtime process crash recovery > a kill after tool T2 but before publish rebuilds the settled outcome [284.44ms]
+(pass) durable runtime process crash recovery > a kill after a billable model request but before T2 parks without rebilling [278.00ms]
+(pass) durable runtime process crash recovery > a kill after model T2 but before publish rebuilds response and usage [272.64ms]
+
+src\durable-runtime\projection-runner.test.ts:
+(pass) DurableProjectionRunner > persists an incremental cursor and atomically materialized snapshot [5.40ms]
+(pass) DurableProjectionRunner > rebuilds the same snapshot from seq zero [3.80ms]
+(pass) DurableProjectionRunner > fails closed on an incompatible persisted projection schema [5.55ms]
+(pass) DurableProjectionRunner > CAS prevents two projection writers from advancing the same cursor [5.28ms]
+(pass) session projections skip other sessions without treating their global sequence gaps as corruption [4.33ms]
+
+src\sessions\idle-session-cache.test.ts:
+[session] Lazy-loaded 1 messages for session reload
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) idle eviction flushes pending changes and reloads the complete transcript [183.75ms]
+(pass) idle cleanup protects running work and retires eligible runtime resources [1.66ms]
+(pass) a session accessed during flush is not evicted [0.57ms]
+(pass) failed persistence prevents idle eviction [0.57ms]
+(pass) a new turn during runtime retirement retains its history [0.61ms]
+
+src\tasks\TaskRunner.test.ts:
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"approval"} [96.65ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"loop"} [48.04ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"orchestrator"} [61.37ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"approval":true} [69.08ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"when":"false"} [63.81ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"loop":{"until":"done","max":2}} [63.52ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"for_each":"items"} [53.35ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"trigger":"one_success"} [37.16ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"replicas":2} [58.56ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"aggregate":"concat"} [38.78ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"max_parallel":2} [40.03ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"timeout":10} [48.51ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"cache":"pure"} [51.70ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"backoff":{"base":1}}} [72.55ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"when":"empty"}} [45.48ms]
+(pass) TaskRunner (Conductor) > pauses at the cumulative token budget even when current context is small [84.23ms]
+(pass) TaskRunner (Conductor) > runs a dependency chain, feeding each output into the next [165.58ms]
+(pass) TaskRunner (Conductor) > passes llmConnection (node value, else the task default) to createSession [70.55ms]
+(pass) TaskRunner (Conductor) > resolves permissionMode: node override → task default → child (never the workspace default) [82.35ms]
+(pass) TaskRunner (Conductor) > defaults an omitted permission mode to allow-all (unattended-safe), not undefined/ask [49.06ms]
+(pass) TaskRunner (Conductor) > stamps task/run/node linkage on each dispatched child session [61.67ms]
+(pass) TaskRunner (Conductor) > creates a child session per node (createSession announces each to the renderer by default) [67.50ms]
+(pass) TaskRunner (Conductor) > children inherit the orchestrator's working directory (falling back to spec.cwd) [71.33ms]
+(pass) TaskRunner (Conductor) > moves the orchestrator tile to in-progress on start and done on completion [78.79ms]
+(pass) TaskRunner (Conductor) > runs a fan-out and joins at the synthesizer [92.82ms]
+(pass) TaskRunner (Conductor) > marks a node failed, leaves dependents pending, and settles the run as failed [134.65ms]
+(pass) TaskRunner (Conductor) > honors max_parallel [102.75ms]
+(pass) TaskRunner (Conductor) > pauses scheduling and resumes [88.62ms]
+(pass) TaskRunner (Conductor) > stops a run and cancels in-flight children [69.41ms]
+(pass) TaskRunner (Conductor) > resumes a run from the persisted run-log after a restart, reusing finished node outputs [175.04ms]
+(pass) TaskRunner (Conductor) > refuses to replay an in-flight node whose external outcome is unknown after restart [109.61ms]
+(pass) TaskRunner (Conductor) > rehydrates node output from canonical task facts without the run-log files [51.77ms]
+(pass) TaskRunner (Conductor) > wraps child dispatch in durable T1/T2 around the external send [72.15ms]
+(pass) TaskRunner (Conductor) > never retries a child dispatch after durable T1 when T2 is missing [93.12ms]
+(pass) TaskRunner (Conductor) > retries a failed node up to retry.limit, then fails [96.85ms]
+(pass) TaskRunner (Conductor) > does not retry when retry.limit is 0 [60.88ms]
+(pass) TaskRunner (Conductor) > feeds the prior failure into the retried prompt and can then succeed [92.03ms]
+(pass) TaskRunner (Conductor) > completes without verifying when there is no orchestrator [101.01ms]
+(pass) TaskRunner (Conductor) > gates the run on the orchestrator verdict and includes acceptance_criteria in the prompt [99.14ms]
+(pass) TaskRunner (Conductor) > re-runs the terminal node once on a FAIL verdict, then completes on PASS [143.54ms]
+(pass) TaskRunner (Conductor) > fails the run when FAIL verdicts exhaust the repair budget (max_iterations) [116.10ms]
+(pass) TaskRunner (Conductor) > re-asks on an unparsable verdict and fails only after the re-ask budget is exhausted [117.11ms]
+(pass) TaskRunner (Conductor) > scopes a repair to the named nodes and their transitive dependents [122.37ms]
+(pass) TaskRunner (Conductor) > an unparsed re-ask does not consume the repair budget [69.03ms]
+(pass) TaskRunner (Conductor) > does not hang in verifying when the verification send rejects [52.25ms]
+(pass) TaskRunner (Conductor) > ignores a verdict that arrives after the run was stopped [80.16ms]
+(pass) TaskRunner (Conductor) > reconstructs the repair counter from the run-log on a cross-restart resume [172.86ms]
+(pass) TaskRunner (Conductor) > fails a node that completes with no text despite declaring outputs (instead of marking it done) [77.24ms]
+(pass) TaskRunner (Conductor) > still marks a node done on empty text when it declares no outputs (lenient default) [86.68ms]
+(pass) TaskRunner (Conductor) > publishes the total node count to the orchestrator at run start (stable board denominator) [62.99ms]
+(pass) TaskRunner (Conductor) > fails a run that exceeds the wall-clock timeout and cancels in-flight children [134.88ms]
+(pass) TaskRunner (Conductor) > fails a run stuck in verifying (orchestrator never returns a verdict) [89.41ms]
+
+src\transport\__tests__\server-lifecycle.test.ts:
+(pass) WsRpcServer lifecycle > accepts valid token [60.60ms]
+(pass) WsRpcServer lifecycle > rejects invalid token with 4005 [8.33ms]
+(pass) WsRpcServer lifecycle > rejects missing token [6.28ms]
+(pass) WsRpcServer lifecycle > rejects connections when at maxClients [10.59ms]
+(pass) WsRpcServer lifecycle > allows new connections after a client disconnects [60.76ms]
+(pass) WsRpcServer lifecycle > times out slow handlers [6.75ms]
+(pass) WsRpcServer lifecycle > closes connections that exceed maxPayload (16MiB) [45.83ms]
+(pass) WsRpcServer lifecycle > rejects wrong protocol major version [11.47ms]
+(pass) WsRpcServer lifecycle > terminates all clients on close() [11.82ms]
+(pass) transport memory budgets > bounds replay bytes for large events and preserves sequence gaps for resync [13.79ms]
+(pass) transport memory budgets > disconnects an over-budget socket instead of growing its outgoing queue [0.17ms]
+
+ 100 pass
+ 0 fail
+ 374 expect() calls
+Ran 100 tests across 6 files. [32.74s]
+
+> test ./src/sessions/__tests__/persistence-queue.test.ts ./src/durable-runtime/recovery.test.ts ./src/config/__tests__/theme.test.ts
+bun test v1.4.2 (744846f84)
+
+src\sessions\__tests__\persistence-queue.test.ts:
+(pass) session persistence header conflict helpers > metadata signature ignores non-metadata fields [0.54ms]
+(pass) session persistence header conflict helpers > metadata signature changes when metadata changes [0.28ms]
+(pass) session persistence header conflict helpers > merge preserves external metadata while keeping local computed fields [0.54ms]
+(pass) session persistence header conflict helpers > startup scenario: external metadata differs from local signature [0.20ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > tracks a debounce-started write so flush() awaits it even when nothing is pending [173.82ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > flushAll() awaits in-flight writes so quit never drops data [113.73ms]
+(pass) SessionPersistenceQueue write failures > reports a failed write without skipping a newer queued snapshot [94.16ms]
+[PersistenceQueue] Failed to write session s1: 253 |       await queue.flush('s1')
+254 |       const signature = queue.getLastWrittenSignature('s1')
+255 |       const file = getSessionFilePath(root, 's1')
+256 |       mkdirSync(file + '.tmp') // Force a real write failure without changing the last good snapshot.
+257 |       queue.enqueue({ ...session, name: 'Failed update' })
+258 |       await expect(queue.flush('s1')).rejects.toThrow()
+                                                    ^
+EISDIR: illegal operation on a directory, open 'C:\Users\dotty\AppData\Local\Temp\craft-pq-metadata-fail-ryua5M\sessions\s1\session.jsonl.tmp'
+    path: "C:\\Users\\dotty\\AppData\\Local\\Temp\\craft-pq-metadata-fail-ryua5M\\sessions\\s1\\session.jsonl.tmp",
+ syscall: "open",
+   errno: -4068,
+    code: "EISDIR"
+
+      at <anonymous> (E:\Phaneris\packages\shared\src\sessions\__tests__\persistence-queue.test.ts:258:47)
+
+(pass) SessionPersistenceQueue write failures > does not treat a failed file write as the last saved metadata [77.94ms]
+(pass) SessionPersistenceQueue write failures > keeps a debounce failure observable until a newer write succeeds [42.74ms]
+(pass) lazy persistence snapshots > coalesces snapshot creation and preserves multi-batch Unicode transcripts [46.12ms]
+
+src\durable-runtime\recovery.test.ts:
+(pass) resolveToolRecovery > marks a matching outcome completed [0.26ms]
+(pass) resolveToolRecovery > requires reconciliation after dispatch without an outcome [0.11ms]
+(pass) resolveToolRecovery > proves non-dispatch only under the current boundary protocol [0.03ms]
+(pass) resolveToolRecovery > fails closed for the same legacy evidence [0.02ms]
+(pass) resolveToolRecovery > detects identity and argument mismatches [0.04ms]
+
+src\config\__tests__\theme.test.ts:
+(pass) themeToCSS > emits semantic and visual tokens from a theme file [0.63ms]
+(pass) themeToCSS > expands each high-level depth preset [0.56ms]
+(pass) themeToCSS > glass depth exposes blur while other depths disable it [0.07ms]
+(pass) themeToCSS > raised depth combines a hard border ring with zero-blur offset shadows [0.05ms]
+(pass) themeToCSS > keeps status colors in their original CSS syntax without parallel RGB channels [0.06ms]
+(pass) themeToCSS > leaves omitted surfaces and material tokens on the static Default baseline [0.04ms]
+(pass) themeToCSS > dark mode overrides visual tokens without losing light defaults [0.11ms]
+(pass) theme resolution > deeply overlays a user theme onto the canonical default [0.32ms]
+(pass) theme resolution > normalizes both light-only and dark-only themes [0.09ms]
+148 |     const resourcePath = resolve(
+149 |       import.meta.dir,
+150 |       '../../../../../apps/electron/resources/themes/default.json'
+151 |     );
+152 |     const resourceTheme = JSON.parse(readFileSync(resourcePath, 'utf-8'));
+153 |     expect(resourceTheme).toEqual(DEFAULT_THEME_FILE);
+                                ^
+error: expect(received).toEqual(expected)
+
+@@ -37,12 +37,12 @@
+    },
+    "density": "comfortable",
+    "depth": "elevated",
+    "description": "纯白纸面、墨色文字与灰白用户消息，细边线和轻投影建立清晰层次；配套石墨深色版，紫色仅用于重点。",
+    "destructive": "#B63E4C",
+-   "fontMono": "SFMono-Regular, "Cascadia Mono", "JetBrains Mono Variable", ui-monospace, Consolas, "Noto Sans SC Variable", "Microsoft YaHei UI", monospace",
+-   "fontSans": "-apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter Variable", "Segoe UI", "Noto Sans SC Variable", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif",
++   "fontMono": "SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace",
++   "fontSans": "-apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif",
+    "fontSerif": ""New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif",
+    "fontSize": "15px",
+    "foreground": "#20232C",
+    "foregroundDimmed": "#606775",
+    "iconStrokeLinecap": "round",
+
+- Expected  - 2
++ Received  + 2
+
+      at <anonymous> (E:\Phaneris\packages\shared\src\config\__tests__\theme.test.ts:153:27)
+(fail) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [11.73ms]
+155 | 
+156 |   test('bundles exactly the four canonical, valid themes', () => {
+157 |     expect(Object.keys(BUILTIN_THEMES)).toEqual(['default', 'geek', 'cyberpunk-2077', 'ink']);
+158 |     for (const [id, theme] of Object.entries(BUILTIN_THEMES)) {
+159 |       const path = resolve(import.meta.dir, `../../../../../apps/electron/resources/themes/${id}.json`);
+160 |       expect(JSON.parse(readFileSync(path, 'utf8'))).toEqual(theme);
+                                                           ^
+error: expect(received).toEqual(expected)
+
+@@ -37,12 +37,12 @@
+    },
+    "density": "comfortable",
+    "depth": "elevated",
+    "description": "纯白纸面、墨色文字与灰白用户消息，细边线和轻投影建立清晰层次；配套石墨深色版，紫色仅用于重点。",
+    "destructive": "#B63E4C",
+-   "fontMono": "SFMono-Regular, "Cascadia Mono", "JetBrains Mono Variable", ui-monospace, Consolas, "Noto Sans SC Variable", "Microsoft YaHei UI", monospace",
+-   "fontSans": "-apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter Variable", "Segoe UI", "Noto Sans SC Variable", "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif",
++   "fontMono": "SFMono-Regular, "Cascadia Mono", "JetBrains Mono", ui-monospace, Consolas, "Microsoft YaHei UI", monospace",
++   "fontSans": "-apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif",
+    "fontSerif": ""New York", "Sitka Text", "Songti SC", "SimSun", Georgia, serif",
+    "fontSize": "15px",
+    "foreground": "#20232C",
+    "foregroundDimmed": "#606775",
+    "iconStrokeLinecap": "round",
+
+- Expected  - 2
++ Received  + 2
+
+      at <anonymous> (E:\Phaneris\packages\shared\src\config\__tests__\theme.test.ts:160:54)
+(fail) theme resolution > bundles exactly the four canonical, valid themes [1.29ms]
+(pass) theme resolution > keeps Electron startup backgrounds aligned with the Default CSS colors [0.09ms]
+190 |       const light = declarations(css.match(/:root \{([\s\S]*?)\n\}/)![1]!);
+191 |       const dark = new Map([...light, ...declarations(css.match(/\.dark \{([\s\S]*?)\n\}/)![1]!)]);
+192 |       for (const isDark of [false, true]) {
+193 |         const actual = isDark ? dark : light;
+194 |         for (const [key, value] of declarations(themeToCSS(DEFAULT_THEME_FILE, isDark))) {
+195 |           expect(actual.get(key)).toBe(value);
+                                        ^
+error: expect(received).toBe(expected)
+
+Expected: "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif"
+Received: undefined
+
+      at <anonymous> (E:\Phaneris\packages\shared\src\config\__tests__\theme.test.ts:195:35)
+(fail) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [47.25ms]
+(pass) theme validation > accepts the expanded preset schema [12.51ms]
+(pass) theme validation > rejects unsupported values and CSS declaration injection [4.54ms]
+(pass) theme validation > rejects unknown preset fields and ambiguous supported modes [0.81ms]
+
+3 tests failed:
+(fail) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [11.73ms]
+(fail) theme resolution > bundles exactly the four canonical, valid themes [1.29ms]
+(fail) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [47.25ms]
+
+ 28 pass
+ 3 fail
+ 224 expect() calls
+Ran 31 tests across 3 files. [1378.00ms]
+43 |   const child = Bun.spawn([process.execPath, ...args], {
+44 |     cwd, stdout: 'inherit', stderr: 'inherit',
+45 |     env: { ...process.env, PATH: `${dirname(process.execPath)}${process.platform === 'win32' ? ';' : ':'}${process.env.PATH ?? ''}` },
+46 |   })
+47 |   const code = await child.exited
+48 |   if (code !== 0) throw new Error(`${args.join(' ')} exited with ${code}`)
+                                 ^
+error: test ./src/sessions/__tests__/persistence-queue.test.ts ./src/durable-runtime/recovery.test.ts ./src/config/__tests__/theme.test.ts exited with 1
+      at run (E:\Phaneris\scripts\check-environment.ts:48:29)
+
+Bun v1.4.2 (Windows x64)
+error: script "test:critical" exited with code 1

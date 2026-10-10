@@ -41,7 +41,7 @@ function setup() {
   managed.messages = [{
     id: 'user-1', role: 'user', content: 'Fix ChatGPT title regeneration', timestamp: 1,
   }]
-  ;(manager as any).sessions.set(managed.id, managed)
+  ;(manager as any).registerManagedSession(managed)
 
   const agent = {
     postInit: mock(async () => undefined),

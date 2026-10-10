@@ -22,19 +22,19 @@ describe('session usage ledger authority', () => {
     managed = createManagedSession({ id: 's', createdAt: 1 }, {
       id: 'ws', slug: 'test', name: 'Test', rootPath: root, createdAt: 1,
     }, { messagesLoaded: true })
-    internals.durableRuntime.acceptRun({
+    internals.durableRuntime.commands.acceptRun({
       workspaceRootPath: root, sessionId: 's', turnId: 'turn', operationId: 'run',
       userMessageId: 'user', userMessage: 'test', acceptedAt: 1,
     })
   })
 
-  afterEach(() => {
-    internals.durableRuntime.closeAll()
+  afterEach(async () => {
+    await internals.durableRuntime.close()
     rmSync(root, { recursive: true, force: true })
   })
 
   async function commit(requestSeq: number, usage: PiUsage, stopReason: 'toolUse' | 'error' | 'stop') {
-    const boundary = internals.durableRuntime.modelBoundaryFor(root)
+    const boundary = internals.durableRuntime.effects.modelBoundaryFor(root)
     const request = {
       sessionId: 's', turnId: 'turn', runOperationId: 'run',
       providerRequestId: String(requestSeq), provider: 'test', model: 'test',

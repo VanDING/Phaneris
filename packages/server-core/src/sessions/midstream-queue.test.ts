@@ -1,3 +1,4 @@
+import { PiRuntimeDriver } from '../runtime-adapters/pi-driver'
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -18,10 +19,12 @@ describe('mid-stream queue runtime invariants', () => {
   beforeEach(() => {
     tmpRoot = mkdtempSync(join(tmpdir(), 'sm-midstream-'))
     sm = new SessionManager()
+    // This fixture pins configured delivery, independently of personal decision settings.
+    ;(sm as any).decisionFeatureActive = () => false
   })
 
-  afterEach(() => {
-    sm.cleanup()
+  afterEach(async () => {
+    await sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 
@@ -37,7 +40,7 @@ describe('mid-stream queue runtime invariants', () => {
       workspace as never,
       { messagesLoaded: true },
     )
-    ;(sm as unknown as { sessions: Map<string, unknown> }).sessions.set(id, managed)
+    ;(sm as any).registerManagedSession(managed)
     return managed
   }
 
@@ -89,7 +92,11 @@ describe('mid-stream queue runtime invariants', () => {
     opts: { compactionInFlight?: boolean; redirectResult?: boolean },
   ) {
     const redirectCalls: string[] = []
-    managed.agent = {
+    const handle = (sm as any).execution.current(managed.id)
+    if (handle && !(sm as any).execution.view(managed.id).activeRunOperationId) {
+      ;(sm as any).execution.accept(handle, { operationId: `${managed.id}:run`, userMessageId: `${managed.id}:input`, userMessage: 'foreground input' })
+    }
+    ;(sm as any).execution.installDriver(managed.id, new PiRuntimeDriver({
       redirect: (message: string) => {
         redirectCalls.push(message)
         return opts.redirectResult ?? true
@@ -98,7 +105,7 @@ describe('mid-stream queue runtime invariants', () => {
       ...(opts.compactionInFlight === undefined
         ? {}
         : { isCompactionInFlight: () => opts.compactionInFlight === true }),
-    } as never
+    } as never))
     return redirectCalls
   }
 
@@ -122,7 +129,7 @@ describe('mid-stream queue runtime invariants', () => {
   it('mid-stream send during a manual compaction is queued for replay, not steered, and not an interruption', async () => {
     const sessionId = 'compaction-midstream'
     const managed = buildSession(sessionId)
-    managed.isProcessing = true
+    true && (sm as any).execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
     const redirectCalls = setAgent(managed, { compactionInFlight: true })
     const events = captureEvents()
 
@@ -134,15 +141,15 @@ describe('mid-stream queue runtime invariants', () => {
     // Forced queue, NOT an interruption — the compaction runs to completion and
     // the replayed turn must not announce that its own answer was cut off.
     expect(managed.wasInterrupted).toBeUndefined()
-    expect(managed.messageQueue).toHaveLength(1)
-    expect(managed.messageQueue[0]?.message).toBe('queued behind the compaction')
+    expect(managed.runtime.messageQueue).toHaveLength(1)
+    expect(managed.runtime.messageQueue[0]?.message).toBe('queued behind the compaction')
     expect(events.find(event => event.type === 'user_message')?.status).toBe('queued')
   })
 
   it('non-compacting mid-stream send keeps the resolved behavior and stays non-interrupting', async () => {
     const sessionId = 'idle-midstream'
     const managed = buildSession(sessionId)
-    managed.isProcessing = true
+    true && (sm as any).execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
     const redirectCalls = setAgent(managed, { compactionInFlight: false })
     const events = captureEvents()
 
@@ -152,12 +159,12 @@ describe('mid-stream queue runtime invariants', () => {
       // Nothing changed for a normal in-flight turn: redirect() is attempted and
       // the message is delivered into the live turn.
       expect(redirectCalls).toEqual(['steer me'])
-      expect(managed.messageQueue).toHaveLength(0)
+      expect(managed.runtime.messageQueue).toHaveLength(0)
       expect(events.find(event => event.type === 'user_message')?.status).toBe('accepted')
     } else {
       // A connection configured for queue mode never reaches redirect().
       expect(redirectCalls).toEqual([])
-      expect(managed.messageQueue).toHaveLength(1)
+      expect(managed.runtime.messageQueue).toHaveLength(1)
       expect(events.find(event => event.type === 'user_message')?.status).toBe('queued')
     }
     // Holds either way: a send that was never aborted never claims an interruption.
@@ -167,7 +174,7 @@ describe('mid-stream queue runtime invariants', () => {
   it('a backend without the compaction concept is treated as not compacting', async () => {
     const sessionId = 'legacy-backend-midstream'
     const managed = buildSession(sessionId)
-    managed.isProcessing = true
+    true && (sm as any).execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
     // No `isCompactionInFlight` at all — the pre-#1058 backend contract.
     const redirectCalls = setAgent(managed, {})
     const events = captureEvents()
@@ -176,7 +183,7 @@ describe('mid-stream queue runtime invariants', () => {
 
     if (midStreamMode() === 'steer') {
       expect(redirectCalls).toEqual(['legacy steer'])
-      expect(managed.messageQueue).toHaveLength(0)
+      expect(managed.runtime.messageQueue).toHaveLength(0)
       expect(events.find(event => event.type === 'user_message')?.status).toBe('accepted')
     }
     expect(managed.wasInterrupted).toBeUndefined()
@@ -185,13 +192,13 @@ describe('mid-stream queue runtime invariants', () => {
   it('a failed steer on a normal turn still marks the replay as interrupted', async () => {
     const sessionId = 'failed-steer-midstream'
     const managed = buildSession(sessionId)
-    managed.isProcessing = true
+    true && (sm as any).execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
     setAgent(managed, { compactionInFlight: false, redirectResult: false })
     captureEvents()
 
     await sm.sendMessage(sessionId, 'lost steer')
 
-    expect(managed.messageQueue).toHaveLength(1)
+    expect(managed.runtime.messageQueue).toHaveLength(1)
     if (midStreamMode() === 'steer') {
       // The steer was attempted and the backend aborted the turn: the replay must
       // still be flagged as an interruption (pre-#1058 semantics, unchanged).
@@ -227,7 +234,7 @@ describe('mid-stream queue runtime invariants', () => {
         timestamp: priorFinalTimestamp,
       },
     ]
-    managed.messageQueue.push({
+    ;(sm as any).execution.enqueue(managed.id, {
       message: 'follow up',
       messageId: 'queued-user',
       optimisticMessageId: 'optimistic-user',

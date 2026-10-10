@@ -782,6 +782,8 @@ installer metadata
 
 # 10. 最大架构债：SessionManager
 
+> 2026-10-10 设计更新：本节的九服务清单保留为原始职责分析。“让 Durable Runtime 独立于 SessionManager 演进”的目标现按[Runtime 边界实施设计](../architecture/durable-runtime-boundary.md)完成 B0–B5 实施，验收以状态所有权、依赖方向和独立执行证据为准，不以创建九个文件为准。实际代码、验证产物与覆盖限制见该文档。
+
 当前：
 
 ```text

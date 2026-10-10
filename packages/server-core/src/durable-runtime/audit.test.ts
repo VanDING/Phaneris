@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import type { Message } from '@phaneris/core/types'
 import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
-import { auditLegacyProjection, reportLegacyProjectionParity } from './audit.js'
+import { auditLegacyProjection, reportLegacyProjectionParity } from '../runtime-adapters/projection-audit.js'
 
 const event: RuntimeEvent = {
   eventId: 'e-1', seq: 1, sessionId: 's', operationId: 'r',

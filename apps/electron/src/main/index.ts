@@ -910,8 +910,8 @@ app.whenReady().then(async () => {
           setSearchPlatform(p)
           setImageProcessor(p.imageProcessor)
         },
-        createSessionManager: () => {
-          const sm = new SessionManager()
+        createSessionManager: (runtime) => {
+          const sm = new SessionManager(runtime)
           sm.setBrowserPaneManager(browserPaneManager!)
           sm.setTerminalReader((workspaceId, maxChars) => terminalManager?.readForWorkspace(workspaceId, maxChars) ?? null)
           // Page preview posters: offscreen capture is Electron-main-only. On
@@ -976,6 +976,7 @@ app.whenReady().then(async () => {
           await sm.initialize()
           mainLog.info('[startup] SessionManager.initialize complete', { ms: Date.now() - startedAt })
         },
+        cleanupSessionManager: async (sm) => { await sm.cleanup() },
         initModelRefreshService: () => initModelRefreshService(async (slug: string) => {
           const { getCredentialManager } = await import('@phaneris/shared/credentials')
           const manager = getCredentialManager()
@@ -1589,7 +1590,7 @@ async function performQuitCleanup(): Promise<void> {
       mainLog.error('Failed to flush sessions:', error)
     }
     // Clean up SessionManager resources (file watchers, timers, etc.)
-    sessionManager.cleanup()
+    await sessionManager.cleanup()
   }
 
   // Clean up browser pane instances

@@ -1,0 +1,23 @@
+bun test v1.4.2 (744846f84)
+
+src\sessions\refresh-connection-runtime.isolated.ts:
+[session] Refreshed runtime config for session matching (connection update)
+(pass) refreshConnectionRuntime > pushes updateRuntimeConfig to sessions on the matching connection slug [26.64ms]
+[session] Runtime config changed for busy; deferring refresh until session is idle (connection update)
+(pass) refreshConnectionRuntime > skips sessions whose agent is mid-stream (defers, does not yank) [12.70ms]
+[session] Refreshed runtime config for session sending (connection update)
+(pass) refreshConnectionRuntime > does not defer just because managed.isProcessing is true (Fix 1 regression) [11.72ms]
+(pass) refreshConnectionRuntime > is a no-op when there is no agent yet (cold session) [6.46ms]
+[session] Recreating backend runtime for session failing after config change (connection update)
+(pass) refreshConnectionRuntime > disposes the runtime when in-place refresh fails so the next send rebuilds it [11.07ms]
+[session] Restart-required field changed for session auth-changed; recreating backend runtime (connection update)
+(pass) refreshConnectionRuntime > skips in-place refresh and forces recreation when a restart-required field changed [8.71ms]
+[session] Refreshed runtime config for session concurrent (connection update)
+(pass) refreshConnectionRuntime > serializes concurrent refresh requests via the per-session mutex [71.42ms]
+[session] Refreshed runtime config for session shape-check (connection update)
+(pass) refreshConnectionRuntime > records customModels with the per-model supportsImages flag in the IPC payload [17.72ms]
+
+ 8 pass
+ 0 fail
+ 15 expect() calls
+Ran 8 tests across 1 file. [2.26s]

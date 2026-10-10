@@ -31,8 +31,8 @@ describe('sendMessage OAuth refresh ordering (#710)', () => {
     sm = new SessionManager()
   })
 
-  afterEach(() => {
-    sm.cleanup()
+  afterEach(async () => {
+    await sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 
@@ -48,7 +48,7 @@ describe('sendMessage OAuth refresh ordering (#710)', () => {
       workspace as never,
       { messagesLoaded: true },
     )
-    ;(sm as unknown as { sessions: Map<string, unknown> }).sessions.set(id, managed)
+    ;(sm as any).registerManagedSession(managed)
     return managed
   }
 

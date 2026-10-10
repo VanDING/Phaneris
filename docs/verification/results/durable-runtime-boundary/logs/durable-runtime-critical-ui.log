@@ -1,0 +1,40 @@
+bun test v1.4.2 (744846f84)
+
+src\components\chat\__tests__\streaming-projection.test.ts:
+(pass) streaming projection preserves completed cards and matches the full reducer [1.38ms]
+(pass) out-of-order, hidden and interleaved histories keep full grouping semantics [1.59ms]
+(pass) structural selectors retain one version across deltas but invalidate annotated content [0.72ms]
+
+src\components\chat\__tests__\turn-utils-grouping.test.ts:
+(pass) groupActivitiesByParent > empty and flat cases > returns empty array for empty input [0.21ms]
+(pass) groupActivitiesByParent > empty and flat cases > returns flat list when no Task tools present [0.17ms]
+(pass) groupActivitiesByParent > single Task with children > groups child activities under Task parent [0.12ms]
+(pass) groupActivitiesByParent > single Task with children > maintains chronological order of children within group [0.08ms]
+(pass) groupActivitiesByParent > SDK Agent tool name (post v0.2.72 rename) > groups children under an Agent parent identically to a Task parent [0.08ms]
+(pass) groupActivitiesByParent > multiple Tasks with children > groups each Task with its own children [0.13ms]
+(pass) groupActivitiesByParent > mixed orphans and Task groups > preserves orphan activities alongside Task groups in chronological order [0.11ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > attaches TaskOutput data to parent Task group via agentId chain [0.31ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > handles Task without TaskOutput data gracefully [0.07ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > hides TaskOutput activities from result [0.11ms]
+(pass) groupActivitiesByParent > edge cases > handles Task with no children (empty group) [0.04ms]
+(pass) groupActivitiesByParent > edge cases > shows children with missing parents as orphan activities at root level [0.04ms]
+(pass) groupActivitiesByParent > edge cases > handles malformed TaskOutput JSON gracefully [0.11ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > out-of-order stored messages: children before parent still group correctly [0.34ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > restored session with nested Task hierarchy produces correct groups [0.18ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > mixed top-level and nested tools group into correct turns [0.21ms]
+(pass) computeLastChildSet > returns empty set for empty input [0.11ms]
+(pass) computeLastChildSet > returns empty set when no activities have parents (all depth 0) [0.05ms]
+(pass) computeLastChildSet > identifies last child for single parent [0.07ms]
+(pass) computeLastChildSet > identifies last child for multiple parents [0.08ms]
+(pass) computeLastChildSet > handles nested parent-child relationships (depth > 1) [0.07ms]
+(pass) computeLastChildSet > handles single child (is both first and last) [0.04ms]
+(pass) isActivityGroup > returns true for ActivityGroup objects [0.03ms]
+(pass) isActivityGroup > returns false for ActivityItem objects [0.03ms]
+(pass) isActivityGroup > returns false for activity with type property that is not "group" [0.02ms]
+(pass) TodoWrite extraction > includes TodoWrite activities in flat list (not grouped) [0.14ms]
+(pass) TodoWrite extraction > handles TodoWrite as child of Task [0.10ms]
+
+ 30 pass
+ 0 fail
+ 118 expect() calls
+Ran 30 tests across 2 files. [76.00ms]

@@ -1,0 +1,70 @@
+[session] [Automations] loop skipped: the event is about a session this automation created (loop guard)
+[session] Source "demo" activated for session activation-retry, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] task completed {
+  sessionId: "background",
+  taskId: "unknown",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] task completed {
+  sessionId: "background",
+  taskId: "known",
+  status: "completed",
+}
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "background",
+  taskId: "known",
+  status: "completed",
+}
+[session] [bg-lifecycle] task completed {
+  sessionId: "background",
+  taskId: "known",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+[session] Starting chat for session: 261010-fresh-moon
+[session] Workspace: {
+  "id": "ws-verification",
+  "name": "Verification",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace",
+  "createdAt": 1791623510986
+}
+[session] Message: original durable request
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Attachments: 1
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Source "demo" activated for session 261010-fresh-moon, scheduling auto-retry
+[session] Starting chat for session: 261010-fresh-moon
+[session] Workspace: {
+  "id": "ws-verification",
+  "name": "Verification",
+  "rootPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace",
+  "createdAt": 1791623510986
+}
+[session] Message: original durable request
+
+correction: keep the attachment
+
+[demo activated]
+[session] Agent model: pi/gpt-5-mini
+[session] process.cwd(): E:\Phaneris
+[session] Submitting turn to Runtime Host...
+[session] Attachments: 1
+[session] sendMessage: dropped duplicate source-activation retry for 261010-fresh-moon
+[session] Got event: text_complete
+[session] Got event: complete
+[session] Chat completed via complete event
+[session] Auto-retry skipped for 261010-fresh-moon: follow-up message arrived first
+[session] Canonical runtime facts selected as session UI read authority {
+  sessionId: "261010-fresh-moon",
+  canonicalFacts: 4,
+}
+[session] Lazy-loaded 4 messages for session 261010-fresh-moon
+INFO: Could not find files for the given pattern(s).
+61/61 passed; 0 failed. E:\Phaneris\docs\verification\results\durable-runtime-boundary\upstream-0140.json

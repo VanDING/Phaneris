@@ -25,7 +25,7 @@ import { createHash } from 'node:crypto';
 import { randomBytes } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join, relative, resolve, isAbsolute } from 'node:path';
-import { DurableRuntimeStore } from '../durable-runtime/store.js';
+import { backupRuntimeDatabase } from '../durable-runtime/index.js';
 
 const MANIFEST_NAME = 'manifest.json';
 const MANIFEST_VERSION = 1;
@@ -119,12 +119,7 @@ function prepareRuntimeDatabaseCopy(workspaceRootPath: string, tempDir: string):
   if (!existsSync(databasePath)) return null;
 
   const tempDatabase = join(tempDir, `runtime-${process.pid}-${randomBytes(4).toString('hex')}.db`);
-  const store = new DurableRuntimeStore(workspaceRootPath);
-  try {
-    store.backupTo(tempDatabase);
-  } finally {
-    store.close();
-  }
+  backupRuntimeDatabase(workspaceRootPath, tempDatabase);
   return tempDatabase;
 }
 

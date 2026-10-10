@@ -33,8 +33,8 @@ describe('cold-session metadata persistence', () => {
     sm = new SessionManager()
   })
 
-  afterEach(() => {
-    sm.cleanup()
+  afterEach(async () => {
+    await sm.cleanup()
     rmSync(tmpRoot, { recursive: true, force: true })
   })
 
@@ -84,7 +84,7 @@ describe('cold-session metadata persistence', () => {
       buildWorkspace(),
       // messagesLoaded defaults to false — this is the cold-session state.
     )
-    ;(sm as unknown as { sessions: Map<string, unknown> }).sessions.set(sessionId, managed)
+    ;(sm as any).registerManagedSession(managed)
   }
 
   function readDiskHeader(sessionId: string): Record<string, unknown> {

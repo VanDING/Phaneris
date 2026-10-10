@@ -1,0 +1,21 @@
+bun test v1.4.2 (744846f84)
+
+src\renderer\atoms\__tests__\sessions.isolated.ts:
+(pass) session message loading atoms > merges full history with live updates even when streaming finishes during the read [5.10ms]
+(pass) session message loading atoms > replaceLoadedSessionAtom marks authoritative full sessions as loaded [0.83ms]
+(pass) session message loading atoms > forceSessionMessagesReloadAtom reloads an empty-but-loaded session [0.80ms]
+(pass) session message loading atoms > does not mark stale empty-response fallback as loaded [0.93ms]
+(pass) streaming session metadata > updates the transcript without notifying list subscribers for text-only deltas [3.78ms]
+(pass) streaming session metadata > publishes appended messages, changed metadata and removed optional fields [0.80ms]
+(pass) refreshSessionsMetadataAtom > preserves messages for already-loaded sessions [0.94ms]
+(pass) refreshSessionsMetadataAtom > marks sessions as unloaded when atom was cleared but loadedSessionIds still tracked them [0.26ms]
+(pass) refreshSessionsMetadataAtom > removes stale sessions from all atoms [0.92ms]
+(pass) refreshSessionsMetadataAtom > preserves omitted sessions when removeMissing is false [0.40ms]
+(pass) refreshSessionsMetadataAtom > non-destructive refresh still preserves loaded messages for returned sessions [0.56ms]
+(pass) refreshSessionsMetadataAtom > updates metadata map and returns it [0.36ms]
+(pass) idle session cache > releases old unmounted histories while preserving active work, readers and metadata [4.86ms]
+
+ 13 pass
+ 0 fail
+ 54 expect() calls
+Ran 13 tests across 1 file. [698.00ms]

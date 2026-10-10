@@ -46,8 +46,8 @@ interface Seams {
   startContextSuccessor(managed: Managed): Promise<void>
 }
 
-afterAll(() => {
-  for (const manager of managers) manager.cleanup()
+afterAll(async () => {
+  for (const manager of managers) await manager.cleanup()
   rmSync(configDir, { recursive: true, force: true })
   rmSync(workspaceRoot, { recursive: true, force: true })
 })
@@ -65,7 +65,7 @@ describe('handoff successor creation', () => {
     managed.messages = [{ id: 'm1', role: 'user', content: 'do the thing', timestamp: Date.now() } as never]
     managed.workingDirectory = workspaceRoot
     managed.model = 'fixture-model'
-    seams.sessions.set('parent', managed)
+    ;(sm as any).registerManagedSession(managed)
 
     await seams.recordContextHandoff(managed, { phase: 'generating' })
     await seams.recordContextHandoff(managed, { phase: 'ready', document: DOCUMENT })
@@ -116,7 +116,7 @@ describe('handoff successor creation', () => {
       { id: 'ws_e2e', name: 'Handoff Workspace', rootPath: workspaceRoot, createdAt: Date.now() } as never,
       { messagesLoaded: true },
     )
-    seams.sessions.set('parent2', parent)
+    ;(sm as any).registerManagedSession(parent)
 
     await seams.recordContextHandoff(parent, { phase: 'generating' })
     await seams.recordContextHandoff(parent, { phase: 'ready', document: DOCUMENT })

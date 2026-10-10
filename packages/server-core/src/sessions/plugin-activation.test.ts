@@ -1,3 +1,4 @@
+import { PiRuntimeDriver } from '../runtime-adapters/pi-driver'
 /**
  * Plugin activation, end to end through SessionManager.
  *
@@ -164,9 +165,9 @@ describe('setSessionActivePlugin (D12 single slot, P9-3 no restart)', () => {
       workspace as never,
       { messagesLoaded: true },
     )
-    managed.agent = agent as never
+    ;(sm as any).execution.installDriver(managed.id, new PiRuntimeDriver(agent as never))
     managed.enabledSourceSlugs = []
-    ;(sm as unknown as { sessions: Map<string, unknown> }).sessions.set(id, managed)
+    ;(sm as any).registerManagedSession(managed)
     return { managed, agent }
   }
 
@@ -320,7 +321,7 @@ describe('setSessionActivePlugin (D12 single slot, P9-3 no restart)', () => {
     // cache exists and describes an empty set, which is exactly the state that
     // used to survive activation.
     managed.sourceRuntime = { mcpServers: {}, apiServers: {}, intendedSlugs: [] }
-    managed.sourceRuntimeAppliedTo = managed.agent ?? undefined
+    managed.sourceRuntimeAppliedTo = managed.runtime.agent ?? undefined
 
     await sm.setSessionActivePlugin('s9', PLUGIN_NAME)
 
@@ -338,7 +339,7 @@ describe('setSessionActivePlugin (D12 single slot, P9-3 no restart)', () => {
     // The turn that follows rebuilt the snapshot for the current set.
     const rebuilt = { mcpServers: {}, apiServers: {}, intendedSlugs: ['alpha'] }
     managed.sourceRuntime = rebuilt
-    managed.sourceRuntimeAppliedTo = managed.agent ?? undefined
+    managed.sourceRuntimeAppliedTo = managed.runtime.agent ?? undefined
 
     // Re-activating the same plugin is a no-op, so the snapshot must survive —
     // otherwise every redundant activation would force a needless rebuild and
@@ -347,6 +348,6 @@ describe('setSessionActivePlugin (D12 single slot, P9-3 no restart)', () => {
 
     expect(second.enabledSources).toEqual([])
     expect(managed.sourceRuntime).toBe(rebuilt)
-    expect(managed.sourceRuntimeAppliedTo).toBe(managed.agent ?? undefined)
+    expect(managed.sourceRuntimeAppliedTo).toBe(managed.runtime.agent ?? undefined)
   })
 })

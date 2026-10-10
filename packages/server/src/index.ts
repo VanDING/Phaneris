@@ -215,7 +215,7 @@ const instance = await (async () => {
           oauthIdToken: oauth?.idToken,
         }
       }),
-      createSessionManager: () => new SessionManager(),
+      createSessionManager: runtime => new SessionManager(runtime),
       bindRpcServer: (sm, server) => sm.setRpcServer(server),
       createHandlerDeps: ({ sessionManager, platform, oauthFlowStore }) => {
         messagingHandle = createMessagingBootstrap({
@@ -257,7 +257,7 @@ const instance = await (async () => {
         try {
           await sessionManager.flushAllSessions()
         } finally {
-          sessionManager.cleanup()
+          await sessionManager.cleanup()
         }
       },
       cleanupClientResources: cleanupSessionFileWatchForClient,

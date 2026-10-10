@@ -107,6 +107,12 @@ export interface DurableRecoveryReport {
   items: DurableRecoveryItem[]
 }
 
+export type DurableRunStopReason = 'complete' | 'interrupted' | 'error' | 'timeout'
+export type DurableRunSettlement =
+  | { kind: 'terminal'; operationId: string; reason: DurableRunStopReason; committedSeq: number }
+  | { kind: 'parked'; operationId: string; reason: DurableRunStopReason }
+  | { kind: 'absent'; operationId: string }
+
 export class DurableRuntimeCoordinator {
   private readonly stores = new Map<string, DurableRuntimeStore>()
   private readonly reconciliationAdapters = new Map<string, ToolReconciliationAdapter>()
@@ -227,147 +233,8 @@ export class DurableRuntimeCoordinator {
     }
   }
 
-  /**
-   * Commit one TaskRunner state transition before updating its JSONL/file
-   * compatibility projections. The ordinal is owned by the task state machine
-   * and makes a replay of the same transition idempotent.
-   */
-  commitTaskRunFact(input: {
-    workspaceRootPath: string
-    sessionId: string
-    taskSlug: string
-    runId: string
-    ordinal: number
-    entry: import('@phaneris/shared/tasks').RunLogEntry
-  }): number {
-    const operationId = `taskrun:${input.taskSlug}:${input.runId}`
-    const store = this.storeFor(input.workspaceRootPath)
-    if (!store.getOperation(operationId)) {
-      if (input.entry.kind !== 'run-started') {
-        throw new Error(`Canonical task run ${input.taskSlug}:${input.runId} has no run-started fact`)
-      }
-      this.acceptRun({
-        workspaceRootPath: input.workspaceRootPath,
-        sessionId: input.sessionId,
-        turnId: operationId,
-        operationId,
-        userMessageId: `${operationId}:definition`,
-        userMessage: `Task run ${input.taskSlug}/${input.runId}`,
-        kind: 'task_run',
-        modelVisible: false,
-        acceptedAt: Date.parse(input.entry.t) || Date.now(),
-      })
-    }
-    const createdAt = Date.parse(input.entry.t) || Date.now()
-    const [seq] = store.appendEvents([{
-      eventId: `${operationId}:fact:${input.ordinal}`,
-      sessionId: input.sessionId,
-      turnId: operationId,
-      operationId,
-      type: 'task_fact_committed',
-      schemaVersion: 1,
-      modelVisible: false,
-      partial: false,
-      payload: {
-        taskSlug: input.taskSlug,
-        runId: input.runId,
-        ordinal: input.ordinal,
-        entry: input.entry,
-      },
-      createdAt,
-    }])
-    if (input.entry.kind === 'run-completed' || input.entry.kind === 'run-failed' || input.entry.kind === 'run-stopped') {
-      this.completeRun(
-        input.workspaceRootPath,
-        operationId,
-        input.entry.kind === 'run-completed' ? 'complete' : input.entry.kind === 'run-stopped' ? 'interrupted' : 'error',
-      )
-    }
-    return seq ?? 0
-  }
-
-  /** Replay canonical TaskRunner facts in their committed order. */
-  listTaskRunFacts(
-    workspaceRootPath: string,
-    taskSlug: string,
-    runId: string,
-  ): import('@phaneris/shared/tasks').RunLogEntry[] {
-    const store = this.storeFor(workspaceRootPath)
-    const facts: Array<{ ordinal: number; entry: import('@phaneris/shared/tasks').RunLogEntry }> = []
-    let afterSeq = 0
-    while (true) {
-      const batch = store.listEvents({ afterSeq, limit: 10_000 })
-      if (batch.length === 0) break
-      for (const event of batch) {
-        if (event.type !== 'task_fact_committed') continue
-        const payload = event.payload as {
-          taskSlug?: string
-          runId?: string
-          ordinal?: number
-          entry?: import('@phaneris/shared/tasks').RunLogEntry
-        }
-        if (payload.taskSlug === taskSlug && payload.runId === runId && payload.entry && typeof payload.ordinal === 'number') {
-          facts.push({ ordinal: payload.ordinal, entry: payload.entry })
-        }
-      }
-      afterSeq = batch.at(-1)?.seq ?? afterSeq
-      if (batch.length < 10_000) break
-    }
-    return facts.sort((a, b) => a.ordinal - b.ordinal).map(fact => fact.entry)
-  }
-
-  /**
-   * Safe compatibility import for branch/history context. These facts carry an
-   * explicit unverified provenance and never create tool dispatch evidence or
-   * operation state, so they cannot authorize recovery/replay.
-   */
-  importLegacyContext(
-    workspaceRootPath: string,
-    sessionId: string,
-    messages: import('@phaneris/core/types').Message[],
-    importedAt = Date.now(),
-  ): number[] {
-    const operationId = `legacy-import:${sessionId}`
-    const events: RuntimeEvent[] = messages.flatMap((message, index) => {
-      const kind = message.toolUseId
-        ? 'tool'
-        : message.role === 'user'
-          ? 'user'
-          : message.role === 'assistant'
-            ? 'assistant'
-            : undefined
-      if (!kind) return []
-      return [{
-        eventId: `${operationId}:${index}:${message.toolUseId ?? message.id}`,
-        sessionId,
-        turnId: message.turnId,
-        operationId,
-        type: 'legacy_context_imported' as const,
-        schemaVersion: 1 as const,
-        modelVisible: true,
-        partial: false,
-        payload: redactDurablePayload({
-          provenance: 'legacy_cache_unverified',
-          dispatchEvidence: false,
-          kind,
-          messageId: message.id,
-          content: message.content,
-          toolCallId: message.toolUseId,
-          toolName: message.toolName,
-          args: message.toolInput,
-          result: message.toolResult,
-          isError: message.isError ?? message.toolStatus === 'error',
-          hasOutcome: (message.toolStatus === 'completed' || message.toolStatus === 'error')
-            && message.toolResult !== undefined,
-        }),
-        createdAt: message.timestamp || importedAt,
-      }]
-    })
-    return events.length > 0 ? this.storeFor(workspaceRootPath).appendEvents(events) : []
-  }
-
-  registerReconciliationAdapter(toolName: string, adapter: ToolReconciliationAdapter): void {
-    this.reconciliationAdapters.set(toolName, adapter)
+  registerReconciliationAdapter(toolName: string, adapter: ToolReconciliationAdapter, workspaceRootPath?: string): void {
+    this.reconciliationAdapters.set(workspaceRootPath ? `${resolve(workspaceRootPath)}:${toolName}` : toolName, adapter)
   }
 
   reconcileModel(
@@ -540,7 +407,9 @@ export class DurableRuntimeCoordinator {
     if (!snapshot || snapshot.verdict.kind !== 'reconcile_required') {
       throw new Error(`Tool operation ${request.toolOperationId} does not require reconciliation`)
     }
-    const adapter = this.reconciliationAdapters.get(snapshot.verdict.dispatch.toolName)
+    if (snapshot.sessionId !== request.sessionId) throw new Error('Tool operation belongs to another session')
+    const adapter = this.reconciliationAdapters.get(`${resolve(workspaceRootPath)}:${snapshot.verdict.dispatch.toolName}`)
+      ?? this.reconciliationAdapters.get(snapshot.verdict.dispatch.toolName)
     if (!adapter) throw new Error(`No reconciliation adapter is registered for ${snapshot.verdict.dispatch.toolName}`)
     const callEvent = this.storeFor(workspaceRootPath).getEvent(`${snapshot.verdict.dispatch.operationId}:call`)
     const callPayload = callEvent?.payload as { args?: Record<string, unknown> } | undefined
@@ -724,7 +593,7 @@ export class DurableRuntimeCoordinator {
       sessionId: input.sessionId, turnId: input.messageId, type: 'user_input_admitted',
       schemaVersion: 1, modelVisible: false, partial: false,
       payload: { messageId: input.messageId, content: input.content,
-        attachments: input.attachments ?? [], options: input.options ?? {} }, createdAt: input.createdAt,
+        attachments: input.attachments ?? [], options: input.options ?? {}, deliveryTrackingVersion: 1 }, createdAt: input.createdAt,
     }])[0]!
   }
 
@@ -1179,11 +1048,17 @@ export class DurableRuntimeCoordinator {
   completeRun(
     workspaceRootPath: string,
     operationId: string,
-    reason: 'complete' | 'interrupted' | 'error' | 'timeout',
-  ): void {
+    reason: DurableRunStopReason,
+  ): DurableRunSettlement {
     const store = this.storeFor(workspaceRootPath)
     const state = store.getOperation(operationId)
-    if (!state) return
+    if (!state) {
+      const terminal = store.getEvent(`${operationId}:terminal`)
+      return terminal?.type === 'operation_terminal'
+        ? { kind: 'terminal', operationId, reason: (terminal.payload as { reason: DurableRunStopReason }).reason, committedSeq: terminal.seq ?? 0 }
+        : { kind: 'absent', operationId }
+    }
+    if (state.phase === 'recovery_parked') return { kind: 'parked', operationId, reason }
     const now = Date.now()
     const unsettled = store.listUnsettledToolOperations(operationId)
     if (unsettled.length > 0) {
@@ -1203,7 +1078,7 @@ export class DurableRuntimeCoordinator {
         payload: { verdict: 'reconcile_required', reason: 'Run stopped with an unsettled tool effect' },
         createdAt: now,
       }], parked)
-      return
+      return { kind: 'parked', operationId, reason }
     }
     const currentModel = (state.data as { currentModel?: { operationId?: string } }).currentModel
     if (state.phase === 'model_effect_pending' && currentModel?.operationId) {
@@ -1224,9 +1099,9 @@ export class DurableRuntimeCoordinator {
         payload: { verdict: 'indeterminate', reason: 'Run stopped with an unsettled provider request' },
         createdAt: now,
       }], parked)
-      return
+      return { kind: 'parked', operationId, reason }
     }
-    store.deleteOperation(operationId, {
+    const committedSeq = store.deleteOperation(operationId, {
       eventId: `${operationId}:terminal`,
       sessionId: state.sessionId,
       turnId: state.turnId,
@@ -1238,5 +1113,6 @@ export class DurableRuntimeCoordinator {
       payload: { reason },
       createdAt: now,
     })
+    return { kind: 'terminal', operationId, reason, committedSeq }
   }
 }

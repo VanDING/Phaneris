@@ -1,0 +1,516 @@
+{
+  "generatedAt": "2026-10-10T09:31:18.509Z",
+  "command": "Verification ledger; replay commands are recorded per entry",
+  "fixture": "E:\\Phaneris\\docs\\verification\\results\\durable-runtime-boundary",
+  "baselineSha": "dbd32f60b5d90e20b1bc2b231035baf6b171ddc2",
+  "headSha": "dbd32f60b5d90e20b1bc2b231035baf6b171ddc2",
+  "dirty": true,
+  "runtime": {
+    "bun": "1.4.2",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "platform": "win32",
+    "architecture": "x64",
+    "piSdk": "1.1.0"
+  },
+  "sourceFingerprint": "ddf1c66a5f7b459004bce8cee0803d0e158b558c550b8cb05a35f1de0cbe5a35",
+  "sourceManifest": [
+    {
+      "path": "packages/pi-agent-server/src/ambient.d.ts",
+      "sha256": "e407dbb5a13822b949cae3dabfed2e9046a433fb9851a14a7ce2a7527317456c"
+    },
+    {
+      "path": "packages/pi-agent-server/src/cache-warming-accounting.ts",
+      "sha256": "fe03d54115b75d7c38dffdec84e075342e4146d0f28a65cc442c5a6d5eb99a48"
+    },
+    {
+      "path": "packages/pi-agent-server/src/callback-auth.ts",
+      "sha256": "259bd9585614ea3578b358c3dc7d25dde6e4adae8ee1dc32ab50e10a0b56079e"
+    },
+    {
+      "path": "packages/pi-agent-server/src/canonical-model-context.ts",
+      "sha256": "4f2f00a57cb92b81370855b944cad1c8910dea4fa125fad8c9e4f276ac54ed7a"
+    },
+    {
+      "path": "packages/pi-agent-server/src/compaction-wait.ts",
+      "sha256": "34727369e94578adbf777361f2e1e071f6c3761e979ed74ad8fe150d486bd445"
+    },
+    {
+      "path": "packages/pi-agent-server/src/context-policy-stream.ts",
+      "sha256": "e57d2a76446c14c2d8971c4d5065e2da68488e2e518a6aa1aa0fd6bfab09516a"
+    },
+    {
+      "path": "packages/pi-agent-server/src/context-usage.ts",
+      "sha256": "fd85744f47ba4409726ff409491282ead36dc5afc0d18fd81aa9971e8a57b0a8"
+    },
+    {
+      "path": "packages/pi-agent-server/src/custom-endpoint-auth.ts",
+      "sha256": "1cbf0a1fd65a9aa754e90a444b3b8eabbd525bd62e491aa098280dd27835eed6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/custom-endpoint-models.ts",
+      "sha256": "707d2f0164d6fad809dc4fe3ac58d40132c0c6e070fc8a2288f5cb7f14550390"
+    },
+    {
+      "path": "packages/pi-agent-server/src/durable-model-stream.ts",
+      "sha256": "16bf00a346db2465da19ccfc573fc9abcf289a1931db0f4e2be626fe3a0a42a6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/durable-tool-context.ts",
+      "sha256": "fccf0ab2afc1329149e4a4d39aff156af477b41574dc1a257e335395a7265ccc"
+    },
+    {
+      "path": "packages/pi-agent-server/src/ephemeral-query-lifecycle.ts",
+      "sha256": "e02622897c901761b1965b3d038f951ef868c83730a3c5cf46ab2532cf112948"
+    },
+    {
+      "path": "packages/pi-agent-server/src/host-credential-store.ts",
+      "sha256": "34e890a4e86f044a48bb1b02ed997cbc036edf3b27fddcdd0961e7bdebd1350d"
+    },
+    {
+      "path": "packages/pi-agent-server/src/index.ts",
+      "sha256": "a5dc788819dfaf9ba2c0c5f7590cb161aa3edef4727a147f2023a4e02df4c510"
+    },
+    {
+      "path": "packages/pi-agent-server/src/large-result-filter.ts",
+      "sha256": "0ffd6228a0f87490b1baf504eae87c9522995e20fd11207fc39897a69b00f5c0"
+    },
+    {
+      "path": "packages/pi-agent-server/src/large-result-gate.ts",
+      "sha256": "65480c34481e9012d99a4bed3fad7d9e04a0c8b1c1b35ca21d02fc8805cc7cde"
+    },
+    {
+      "path": "packages/pi-agent-server/src/length-continuation.ts",
+      "sha256": "2d42bf553d990ba609978966e426d08244080f275ed5defcee343dda5be20d2c"
+    },
+    {
+      "path": "packages/pi-agent-server/src/mini-model-query.ts",
+      "sha256": "0372c24929f87c08871e7268d7a9a14ef444126a81f9fe619d7ac012ccea5d32"
+    },
+    {
+      "path": "packages/pi-agent-server/src/model-resolution.ts",
+      "sha256": "59826e9e8f5721ffdced4ad1d9bfaef891c73aa76b162801af86e09301cce0bc"
+    },
+    {
+      "path": "packages/pi-agent-server/src/native-lifecycle-observation.ts",
+      "sha256": "2dffa0cbca1751cf3a83346741713fb453c76a0044443a0b3fd74aec03bf9b67"
+    },
+    {
+      "path": "packages/pi-agent-server/src/native-request-observation.ts",
+      "sha256": "0539bc29ed4f8e52674228dbda839ef744252ce52e77adb077137eba335a689b"
+    },
+    {
+      "path": "packages/pi-agent-server/src/phaneris-metadata-schema.ts",
+      "sha256": "f051deef3a548fc9d8f53a94f6b6ad070ea1a73a8c09dbfced27797b72c0f757"
+    },
+    {
+      "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      "sha256": "48b41af02e1e1496ddf2bb778052cff204df9417401c59ce9653288de9019514"
+    },
+    {
+      "path": "packages/pi-agent-server/src/pick-mini-model.ts",
+      "sha256": "da965ec64cf53d5c8ae253a3acc77bf6e86625747158c604ea0e982d21e09775"
+    },
+    {
+      "path": "packages/pi-agent-server/src/proxy-tool-sync.ts",
+      "sha256": "838fc068ce3b07819b0f9c478f34105ea19bb2304fb0787adc6b8953576338c8"
+    },
+    {
+      "path": "packages/pi-agent-server/src/request-diagnostics.ts",
+      "sha256": "433f97b027be327f06388e669f2ecaee0b10a68d5dcd941c03a2e9abb4cd85ba"
+    },
+    {
+      "path": "packages/pi-agent-server/src/session-settings.ts",
+      "sha256": "e8d8569afca18388feb59f36bc326125da962189656ed044c51367e5abdbac24"
+    },
+    {
+      "path": "packages/pi-agent-server/src/test-fixtures/block-network.ts",
+      "sha256": "7726d1ee4e96d437b72abd4171243089b23d3c50fef811ea8c9ef5094da31113"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/create-search-tool.ts",
+      "sha256": "ab6efa5c74fe8048243655240e3e4ce6e77b79f1a3d144156c9f736e5cc8d220"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/chatgpt.ts",
+      "sha256": "c12ccb805c065da76e630b540c4197315d6ba1af0c2a50b7018d2e58617785c1"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/ddg.ts",
+      "sha256": "719bf7e34693873cafd524cbd3bf28b116e3635742e7e31c948df2266bec2bb4"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/google.ts",
+      "sha256": "173f5c13bc341cddfd02885874e0b10ccf5d1dd3836384ece9d732505f6c4388"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/openai.ts",
+      "sha256": "db4425669472c7772d22b895a65ceb59bfbb29711a34392329e258802e431d98"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/responses-api-parser.ts",
+      "sha256": "70fca17d561ea5d498507d255cec1f02bf347ea3440ac9c28f0938dc500046e5"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/resolve-provider.ts",
+      "sha256": "d2a84ea7a7fd759ceda94f5d6efde003077ff65ffd403458e98c745e4360f9d8"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/types.ts",
+      "sha256": "da5c41f98bf6d5d8e3781aa4d1f144c85d5c6ee4c082795ce855ebe2fe797094"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/web-fetch.ts",
+      "sha256": "ae970ac329c328f7a914a97367e8e5e76edfd57ae0ccb8386bd4cc5d17f6bd75"
+    },
+    {
+      "path": "packages/pi-agent-server/src/transport-delta.ts",
+      "sha256": "c7156b7d182c46cc341d1d290f1f9571b557ff70138fcfd9e7e6d078f214e4e8"
+    },
+    {
+      "path": "packages/server-core/src/bootstrap/headless-start.ts",
+      "sha256": "81de0112f649b391ac7ca765c0e15b75fbd28aae7ef5fc47a5c9782e2a8cc6b0"
+    },
+    {
+      "path": "packages/server-core/src/decisions/accounting.ts",
+      "sha256": "2c787c586fa2f5264fbac8fd7642e27fc336d17602c81170372f8c9dec18cdaa"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/api/database-admin.ts",
+      "sha256": "af8673e95c6ba1f5d48dcb7d4fe3f09332109b1ad7247887f409bba1e0c3d3a2"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/api/runtime.ts",
+      "sha256": "66e2e332a15286c06e427f247b446079f7796d6f357df4de472770fa036131a1"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "sha256": "6780ee54728e764fe3a9097504ccbca5d9cd681a2b1dd6f34d0989291e9c8d43"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "sha256": "f0c88a41a6530adcc53b9f6e278d4e8422a20bed2e09f031fca0c9eb25e321d7"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/execution/deadline.ts",
+      "sha256": "09ef070ddf8dc217fe0a4e059d48ac15fe483f6fc818596ce2a3f83c05f40554"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/execution/host.ts",
+      "sha256": "f9eea18333627dc1a7b2500c7de10abd2e64e3d3ca44c2a77baab0bc739644db"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/index.ts",
+      "sha256": "845a63c7cf88d77f8afa416e0ec39fe156096f90df26485774dc2331779add76"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "sha256": "205a7cc55ecfc72147b296f713b30477d770ebf4805121f0e6878da9cfc6774f"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "sha256": "3ab9ec9ac45266ec19a183b4f93a480273865d47762074cb5747d493230ee800"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/projection.ts",
+      "sha256": "30de84b0c4162a4ba1438453b79219f9e62d3c071a560953fb4f026f04013724"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "sha256": "c7eccd5b1973f98209641c4636e9bb06c1bd5309c4079e2ee7ad3b07fa4ace26"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "sha256": "8699383bf3439286a274ae019b851155010153f0306ddda04afab964dd748cd5"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/store.ts",
+      "sha256": "a7d286a7a1a427a5320d246841c141d18bbe6379dc401c09ef17d23607e0660f"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "sha256": "3653beecb84fc59bfcd05634ea0803287f7e5a5222d295c1ef0cc20b89de9a37"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/legacy-context.ts",
+      "sha256": "920f48f07763ad795996477f8b13c8fbf796418abe0dfebafea2c4c658fd97e9"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/pi-driver.ts",
+      "sha256": "ecdccdbda5899a9fd1c6a61760291acdf9a45e1772fad30af7ac771623445fbe"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/projection-audit.ts",
+      "sha256": "7ce206a22c87b831a0ca9b708e6572cbc7437b90daa0c5411cf2918830447994"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-input-recovery.ts",
+      "sha256": "a5dd82545df9799a50c7e67ecfbb676d4ca382927cef3c71c5f2eeeb1d49040a"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-projection.ts",
+      "sha256": "3acb9baf5c087e89fc67d5ac43e0786e534f26c44624bd55966cff2bf34d4028"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-runtime-view.ts",
+      "sha256": "cfac44cbc59d500546015d5d41955ca1235f30612bf4c06ba6b00762c99968ff"
+    },
+    {
+      "path": "packages/server-core/src/services/auxiliary-model-effect.ts",
+      "sha256": "14daa7bf38b8ba308b8ca017e9ca0b50a5098f71754f92c51f5e62c972d1b4da"
+    },
+    {
+      "path": "packages/server-core/src/sessions/SessionManager.ts",
+      "sha256": "18a41baa86a29c84ff1ee35c8f0f3795665453b6f61e02e4dfcffeca3f9fc67a"
+    },
+    {
+      "path": "packages/server-core/src/tasks/TaskRunner.ts",
+      "sha256": "aa5549688729cf7793f55a71e37b0c46245730b9315151fda8439d5893f5a7a6"
+    },
+    {
+      "path": "packages/server-core/src/tasks/runtime-facts.ts",
+      "sha256": "ee0a32db58257d7e886aab84dd80a5efb54b6e6e08544518d47649a1be32b437"
+    },
+    {
+      "path": "packages/server-core/src/tasks/runtime-reconciliation.ts",
+      "sha256": "f0891cdcbcbb84fc7a692d666b356a01507dec29fed131381ce0b1c187b82596"
+    },
+    {
+      "path": "packages/shared/src/agent/pi-agent.ts",
+      "sha256": "b3c81a7d0bff04005a81a69540256dded3c45c21fff79c9177fefdfea31bab11"
+    },
+    {
+      "path": "scripts/check-runtime-boundary.ts",
+      "sha256": "9a14806545c56200bfc8f4c5e7bf1956aec02dd62d3f3c2c0d7aa8045ff86304"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-boundary-workflow.ts",
+      "sha256": "6d5fb43aa043bed833a2bf80174f5013a0f27e1275a821a7efb1bb1cf5eeda83"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-crash-workflow.ts",
+      "sha256": "84ad1c00ebaff990753c5adc4a60f9e5c0263713049ba8249bda69fdbe9a3423"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-pi-workflow.ts",
+      "sha256": "831af21a19a73f893192ad39934b27694db0235092030a6ea8a7cd56c009a7d2"
+    },
+    {
+      "path": "scripts/verification/runtime-boundary-evidence.ts",
+      "sha256": "b06b410173ed390f4e425619097200476ea29490315a64c5f26c3355e46566db"
+    }
+  ],
+  "validation": [
+    {
+      "command": "bun run validate:ci",
+      "exitCode": 0,
+      "outcome": "passed",
+      "log": "logs/durable-runtime-validate-ci.log",
+      "sha256": "1ddf2bdffad82020c640b398040fb96df3565ba03865a69512f21c0175bd8396"
+    },
+    {
+      "command": "bun run test:runtime-boundary",
+      "exitCode": 0,
+      "outcome": "passed",
+      "log": "logs/durable-runtime-acceptance.log",
+      "sha256": "2c762b9517ec11886b986248c335bc543eedad5811e812cd7661333e257d78bd"
+    },
+    {
+      "command": "cd packages/server-core; bun test ./src/durable-runtime ./src/sessions",
+      "exitCode": 0,
+      "outcome": "181 passed",
+      "log": "logs/durable-runtime-related-tests.log",
+      "sha256": "28a7998c377ce17195d5ffc6d4d0649c7bd4330d1c789a712efe6486aabc7c56"
+    },
+    {
+      "command": "bun run scripts/verification/upstream-0140-b4b5-workflows.ts --report=docs/verification/results/durable-runtime-boundary/product-workflows.json",
+      "exitCode": 0,
+      "outcome": "20 passed",
+      "log": "logs/durable-runtime-product-workflows.log",
+      "sha256": "de966f2d2c24ca2be24b16b7bed27bf27151654a5d687079a8f4eee7bdb8e4d0"
+    },
+    {
+      "command": "PHANERIS_TEST_BROWSER_CHANNEL=msedge bun run scripts/verification/session-decisions-workflow.ts",
+      "exitCode": 0,
+      "outcome": "20 passed",
+      "log": "logs/durable-runtime-session-decisions.log",
+      "sha256": "adef32b6ae4d30a5f2a6a8b53957b4dccdb1699d8c25fe5bf4811d860c8b45bb"
+    },
+    {
+      "command": "bun run scripts/verification/upstream-0140.ts --output=docs/verification/results/durable-runtime-boundary/upstream-0140.json",
+      "exitCode": 0,
+      "outcome": "61 passed",
+      "log": "logs/durable-runtime-upstream-0140.log",
+      "sha256": "18cef93325193d02db123dd99d54395b579a52134e7cc5f83b61d8f90f0d72cf"
+    },
+    {
+      "command": "bun run scripts/verification/upstream-0141-decisions-workflow.ts docs/verification/results/durable-runtime-boundary/decisions-0141.json",
+      "exitCode": 0,
+      "outcome": "8 passed",
+      "log": "logs/durable-runtime-decisions-0141.log",
+      "sha256": "af1cdc4bf4dc229034bbc5dd473ece7fb1ff25107c3e590d863dc8270f57b07f"
+    },
+    {
+      "command": "bun run scripts/verification/image-capability-workflows.ts",
+      "exitCode": 0,
+      "outcome": "5 passed",
+      "log": "logs/durable-runtime-images-final.log",
+      "sha256": "2e4fcec649e5e04c6748e9da3f33f2b4d4175332e500497def97c975b23d2cad"
+    },
+    {
+      "command": "bun run scripts/verification/decision-governance-workflows.ts",
+      "exitCode": 0,
+      "outcome": "3 passed",
+      "log": "logs/durable-runtime-governance-final.log",
+      "sha256": "fcb432d29e56fd10988e3fa108ed6ab1cfb9820937473ed65eb8761edb6c8344"
+    },
+    {
+      "command": "cd packages/server-core; bun test ./src/sessions/context-handoff-e2e.isolated.ts",
+      "exitCode": 0,
+      "outcome": "2 passed",
+      "log": "logs/durable-runtime-handoff.log",
+      "sha256": "5aca7c3edd364e4f9d87aa0e07655872d565cc86919ef9bb069a690390ddd5db"
+    },
+    {
+      "command": "cd packages/server-core; bun test ./src/sessions/title-generation.isolated.ts",
+      "exitCode": 0,
+      "outcome": "2 passed",
+      "log": "logs/durable-runtime-titles.log",
+      "sha256": "1b105f831e208165fca65cc02b3dba08caa3f42dd15e446da2950f734f898f9f"
+    },
+    {
+      "command": "cd packages/server-core; bun test ./src/sessions/refresh-connection-runtime.isolated.ts",
+      "exitCode": 0,
+      "outcome": "8 passed",
+      "log": "logs/durable-runtime-refresh.log",
+      "sha256": "4fe6c7c03cade3b6ae3db64e2645a756310d1bb9c2b54a94d0dd6fddf54b6c0c"
+    },
+    {
+      "command": "cd packages/pi-agent-server; bun test ./src/transport-delta.test.ts ./src/request-diagnostics.test.ts ./src/durable-model-stream.test.ts ./src/length-continuation.test.ts",
+      "exitCode": 0,
+      "outcome": "16 passed",
+      "log": "logs/durable-runtime-critical-pi.log",
+      "sha256": "e4a45d6b6ae47dfdf94ae0591564137f3e0ae38769fcc0db9a382be0c0d7dfd5"
+    },
+    {
+      "command": "cd packages/ui; bun test ./src/components/chat/__tests__/streaming-projection.test.ts ./src/components/chat/__tests__/turn-utils-grouping.test.ts",
+      "exitCode": 0,
+      "outcome": "30 passed",
+      "log": "logs/durable-runtime-critical-ui.log",
+      "sha256": "4015e75ebfa2556240f6955cdf79e3b5e7fcb750f5863ab0aa90e8b381429712"
+    },
+    {
+      "command": "cd apps/electron; bun test ./src/renderer/atoms/__tests__/sessions.isolated.ts",
+      "exitCode": 0,
+      "outcome": "13 passed",
+      "log": "logs/durable-runtime-critical-renderer-sessions.log",
+      "sha256": "0d1e4ad17b68e542db8bdce8e270bcf41cdb669a80d60cbd04d1e72e1ca8f93c"
+    },
+    {
+      "command": "cd apps/electron; bun test ./src/renderer/lib/__tests__/reconnect-recovery.test.ts",
+      "exitCode": 0,
+      "outcome": "2 passed",
+      "log": "logs/durable-runtime-critical-reconnect.log",
+      "sha256": "dbb156ad0a616abfcbae2601672f6d773b907651f90a78ed1232d0a444ee1c01"
+    },
+    {
+      "command": "bun run test:critical",
+      "exitCode": 1,
+      "outcome": "baseline theme failures only; 100 server-core critical cases passed",
+      "log": "logs/durable-runtime-critical-after.log",
+      "sha256": "e1ccc2c3287ad84515823dc05855985022ddc935f901e920c94a1ce7fb72c9ec"
+    },
+    {
+      "command": "bun run test:critical (before production changes)",
+      "exitCode": 1,
+      "outcome": "historical baseline",
+      "log": "logs/durable-runtime-critical-before.log",
+      "sha256": "b8e604794831e3b9936352c5a8a6c88cab81bcea5cf9006d1c8cddf0f01c231a"
+    },
+    {
+      "command": "cd .cache/durable-runtime-baseline-source/packages/server-core; bun test ./src/tasks/TaskRunner.test.ts",
+      "exitCode": 1,
+      "outcome": "baseline 40ms timeout flake reproduced under load; final production critical group passed",
+      "log": "logs/durable-runtime-task-timing-baseline.log",
+      "sha256": "eae7f3cdd9a46978d2fa211c700ccde8f0490e4cb6fa7f1b9a856c46a957c921"
+    }
+  ],
+  "databases": [
+    {
+      "path": "baseline-reproduced.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "ff15cfa7c4a8a397be8da9606584e214c03f62c3b02759ae3a7fad75c8d9b28e"
+    },
+    {
+      "path": "crash-model-after-effect.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "54e93a5795172f230a9b8929739fbfa3604120f320a20eda6ee1ddbb9bed9e0c"
+    },
+    {
+      "path": "crash-model-after-t1.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "2cbf04d9c719ad5c073be6882906b32012048ae657772b2cc959b82509a66c56"
+    },
+    {
+      "path": "crash-model-after-t2.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "b2526d87b28ac41c1fd22478db1c17ba261283b0ebd83f1f317c78924f126481"
+    },
+    {
+      "path": "crash-model-t1-failure.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "27865c3667591a9bd37d8f22d0124066e37b2f84d13164945372266e49e101ac"
+    },
+    {
+      "path": "crash-tool-after-effect.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "1073350c95f7aac36f9331f99eaf3ae06a01d1b9279e7ba290def1470a16ba9f"
+    },
+    {
+      "path": "crash-tool-after-t1.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "a3768166bbb4e8088b3ce0cb099cde7f5c57c74a423234103afd1ece792e29cc"
+    },
+    {
+      "path": "crash-tool-after-t2.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "83def9f41893e62855dda2eab5fdfd926ac3d651e45956f2b7f82559f898aedc"
+    },
+    {
+      "path": "crash-tool-t1-failure.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "fab3c8f889bc886065ed97e66c6a87f60fb9b8d038747853d51c0f4739ece48f"
+    },
+    {
+      "path": "independent-pi.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "5190b66318d7e4d3282edaad87f5a4ec9700ef6944b3522b43b44adb387c0f42"
+    },
+    {
+      "path": "workflow.db",
+      "schemaVersion": 4,
+      "integrity": "ok",
+      "sha256": "ec32ac86179862084454522b1d293007b83e5281512f09557b456c9fb2d9082c"
+    }
+  ],
+  "baselineFailures": [
+    "(fail) theme resolution > bundles exactly the four canonical, valid themes",
+    "(fail) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default",
+    "(fail) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot"
+  ],
+  "deliberatelyNotRun": [
+    "live provider inference",
+    "Electron installer/packaged-client run",
+    "old binary hot rollback",
+    "every handoff/child dispatch crash permutation"
+  ]
+}

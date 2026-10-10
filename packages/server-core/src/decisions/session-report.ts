@@ -2,7 +2,7 @@ import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
 import { DECISION_LAYER_FEATURES } from '@phaneris/shared/decisions/settings'
 import type { DecisionRecord } from '@phaneris/shared/decisions'
 import type { DecisionObservation, SessionDecisionItem, SessionDecisionQuery, SessionDecisionReport, SessionDecisionTotals } from '@phaneris/shared/decisions/session'
-import type { RuntimeUsageRow } from '../durable-runtime/store'
+import type { RuntimeUsageRow } from '../durable-runtime/index'
 import { createHash } from 'node:crypto'
 
 const emptyTotals = (): SessionDecisionTotals => ({ points: 0, requests: 0, legacyCalls: 0, changed: 0, fallback: 0,

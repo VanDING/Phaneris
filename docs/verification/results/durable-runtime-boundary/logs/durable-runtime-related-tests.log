@@ -1,0 +1,677 @@
+bun test v1.4.2 (744846f84)
+
+src\durable-runtime\audit.test.ts:
+(pass) legacy projection audit > detects divergence without mutating either representation [0.85ms]
+(pass) legacy projection audit > emits structured parity metrics for the production shadow read [0.35ms]
+
+src\durable-runtime\coordinator.test.ts:
+(pass) DurableRuntimeCoordinator > persists native observations without changing execution state, context or usage [101.08ms]
+(pass) DurableRuntimeCoordinator > owns a complete cross-process T1/T2 boundary [42.03ms]
+(pass) DurableRuntimeCoordinator > aggregates a parallel tool batch and accepts out-of-order T2 commits [47.72ms]
+(pass) DurableRuntimeCoordinator > does not start the next model attempt while any tool effect is unsettled [34.84ms]
+(pass) DurableRuntimeCoordinator > commits final assistant output before it is projected [36.57ms]
+(pass) DurableRuntimeCoordinator > parks a run whose tool outcome is unknown [37.26ms]
+(pass) DurableRuntimeCoordinator > startup recovery parks an unknown effect without replaying it [37.20ms]
+(pass) DurableRuntimeCoordinator > startup recovery terminalizes an interrupted run with no unknown effect [35.09ms]
+(pass) DurableRuntimeCoordinator > atomically commits an assistant model outcome and deduplicated usage [32.11ms]
+(pass) DurableRuntimeCoordinator > owns model T1/T2 and usage across the provider effect boundary [38.09ms]
+(pass) DurableRuntimeCoordinator > parks a provider request left between model T1 and T2 [30.97ms]
+(pass) DurableRuntimeCoordinator > durably resolves an unknown provider attempt without retrying it [32.70ms]
+(pass) DurableRuntimeCoordinator > atomically commits a verified reconciliation and resumes the program counter [36.58ms]
+(pass) DurableRuntimeCoordinator > queries a registered adapter using the durable idempotency identity [52.22ms]
+(pass) DurableRuntimeCoordinator > makes TaskRunner facts authoritative and replayable after terminal cleanup [87.05ms]
+(pass) DurableRuntimeCoordinator > restores a verified backup atomically while retaining the previous live database [95.69ms]
+(pass) DurableRuntimeCoordinator > imports branch history without fabricating tool dispatch evidence [77.62ms]
+(pass) background cache warming ledger > meters warming without disturbing pending tool or adding context [42.84ms]
+(pass) background cache warming ledger > meters warming without disturbing pending model or adding context [41.87ms]
+(pass) background cache warming ledger > accepts metered cancellation after the owning task settles, without reopening it [37.61ms]
+(pass) background cache warming ledger > retains an unknown refresh as pending audit evidence across restart without replay [54.60ms]
+
+src\durable-runtime\model-usage-audit.test.ts:
+(pass) native usage parity preserves cache and reasoning breakdown without summing subsets twice [55.26ms]
+(pass) detects missing, duplicate and orphan model rows and excludes tool usage [0.41ms]
+(pass) a dispatched request without a provider outcome is indeterminate, not a zero-cost success [0.31ms]
+
+src\durable-runtime\process-crash.test.ts:
+(pass) durable runtime process crash recovery > a kill before T1 produces zero external effect calls [219.85ms]
+(pass) durable runtime process crash recovery > a kill after an external effect but before T2 parks without replay [204.48ms]
+(pass) durable runtime process crash recovery > a kill after T1 but before the effect remains unknown and never executes automatically [288.95ms]
+(pass) durable runtime process crash recovery > a kill after tool T2 but before publish rebuilds the settled outcome [254.24ms]
+(pass) durable runtime process crash recovery > a kill after a billable model request but before T2 parks without rebilling [182.51ms]
+(pass) durable runtime process crash recovery > a kill after model T2 but before publish rebuilds response and usage [276.44ms]
+
+src\durable-runtime\projection-runner.test.ts:
+(pass) DurableProjectionRunner > persists an incremental cursor and atomically materialized snapshot [6.93ms]
+(pass) DurableProjectionRunner > rebuilds the same snapshot from seq zero [8.03ms]
+(pass) DurableProjectionRunner > fails closed on an incompatible persisted projection schema [6.13ms]
+(pass) DurableProjectionRunner > CAS prevents two projection writers from advancing the same cursor [6.34ms]
+(pass) session projections skip other sessions without treating their global sequence gaps as corruption [7.40ms]
+
+src\durable-runtime\projection.test.ts:
+(pass) durable projections > derive deterministic model context while excluding transport and control state [0.44ms]
+(pass) durable projections > rebuild produces the same projection from the same immutable facts [0.09ms]
+(pass) durable projections > incrementally materializes isolated session histories behind one workspace cursor [0.56ms]
+(pass) durable projections > rebuilds token and cost totals from deduplicated model attempts [1.01ms]
+(pass) durable projections > uses canonical semantic order while retaining rich UI-only cache metadata [1.32ms]
+(pass) usage regression cases > deduplicates requests and counts reasoning/cache subcategories once [0.25ms]
+(pass) usage regression cases > preserves tool-only request usage through canonical projection without inventing model text [0.38ms]
+(pass) warming increases cumulative cost and tokens without replacing current context usage [0.27ms]
+
+src\durable-runtime\sensitive-payload.test.ts:
+(pass) redactDurablePayload > redacts credential-shaped fields recursively while preserving operational identity [0.49ms]
+
+src\durable-runtime\store.test.ts:
+(pass) DurableRuntimeStore > commits T1 and classifies its uncertain tail for reconciliation [66.14ms]
+(pass) DurableRuntimeStore > commits T2, usage, and next operation state atomically [73.56ms]
+(pass) DurableRuntimeStore > rolls back events when the expected operation version is stale [72.94ms]
+(pass) DurableRuntimeStore > rejects operation identity reuse with different arguments [75.56ms]
+(pass) DurableRuntimeStore > maintains monotonic projection cursors [56.92ms]
+(pass) DurableRuntimeStore > migrates a schema-v1 runtime database through the latest schema without losing canonical facts [127.50ms]
+(pass) DurableRuntimeStore > checks integrity and creates a standalone consistent backup [114.78ms]
+(pass) DurableRuntimeStore > retires only stale rebuildable projections and vacuums without deleting facts [87.24ms]
+(pass) DurableRuntimeStore > persists parity observations as rollout/dashboard evidence [65.00ms]
+(pass) DurableRuntimeStore > classifies actionable SQLite lifecycle failures [0.41ms]
+(pass) DurableRuntimeStore > fails closed with a structured busy error under a real competing writer lock [204.12ms]
+(pass) DurableRuntimeStore > fails closed with a structured readonly error from real SQLite query-only mode [54.77ms]
+(pass) DurableRuntimeStore > fails closed with a structured full error at SQLite max_page_count [54.25ms]
+(pass) DurableRuntimeStore > fails closed with a classified error for a corrupt runtime database [15.70ms]
+
+src\durable-runtime\task-node-reconciliation.test.ts:
+(pass) task_node_dispatch production reconciliation adapter > requires a committed child input before deciding the dispatch completed [1.16ms]
+(pass) task_node_dispatch production reconciliation adapter > requires durable absence evidence rather than an empty session registry [0.34ms]
+
+src\sessions\adopt-task-draft.test.ts:
+[session] adoptGeneratedTaskOrchestrator: session not found {
+  sessionId: "missing",
+  taskSlug: "slug-a",
+}
+(pass) adoptGeneratedTaskOrchestrator guards > returns false when the session does not exist [2.37ms]
+[session] adoptGeneratedTaskOrchestrator: session is not a task draft {
+  sessionId: "plain",
+  taskSlug: "slug-a",
+}
+(pass) adoptGeneratedTaskOrchestrator guards > returns false when the session is not a task draft [1.26ms]
+(pass) adoptGeneratedTaskOrchestrator guards > is an idempotent no-op (true) when already bound to the same slug [0.46ms]
+[session] adoptGeneratedTaskOrchestrator: slug mismatch, refusing to rebind {
+  sessionId: "orch",
+  existing: "slug-a",
+  requested: "slug-b",
+}
+(pass) adoptGeneratedTaskOrchestrator guards > refuses (false) to rebind a session already bound to a different slug [0.48ms]
+[session] bindExistingSessionToTask: session not found {
+  sessionId: "missing",
+  taskSlug: "slug-a",
+}
+(pass) bindExistingSessionToTask guards > returns false when the session does not exist [1.25ms]
+(pass) bindExistingSessionToTask guards > is an idempotent no-op (true) when already bound to the same slug [0.54ms]
+[session] bindExistingSessionToTask: slug mismatch, refusing to rebind {
+  sessionId: "orch",
+  existing: "slug-a",
+  requested: "slug-b",
+}
+(pass) bindExistingSessionToTask guards > refuses (false) to rebind a session already owned by a different slug [0.45ms]
+[session] adoptGeneratedTaskOrchestrator: promoted draft {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+  modelChanged: true,
+  connectionChanged: true,
+  cwdChanged: true,
+  modeChanged: true,
+}
+(pass) adopt/bind route changed fields through canonical live-update mutators > adopt delegates each changed field to its canonical mutator + sets connection directly [1.62ms]
+[session] adoptGeneratedTaskOrchestrator: promoted draft {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+  modelChanged: false,
+  connectionChanged: false,
+  cwdChanged: false,
+  modeChanged: false,
+}
+(pass) adopt/bind route changed fields through canonical live-update mutators > adopt does NOT touch the mutators when nothing changed (no agent churn) [0.54ms]
+[session] bindExistingSessionToTask: bound existing session {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+(pass) adopt/bind route changed fields through canonical live-update mutators > bind delegates each changed field to its canonical mutator [0.57ms]
+  modelChanged: true,
+  connectionChanged: true,
+  cwdChanged: true,
+  modeChanged: true,
+}
+[session] bindExistingSessionToTask: bound existing session {
+  sessionId: "s",
+  taskSlug: "slug",
+  renamed: false,
+  modelChanged: false,
+  connectionChanged: false,
+  cwdChanged: false,
+  modeChanged: false,
+}
+(pass) adopt/bind route changed fields through canonical live-update mutators > bind does NOT touch the mutators when nothing changed [0.46ms]
+
+src\sessions\archive-guards.test.ts:
+(pass) validateArchiveTarget (archive_session guards) > allows archiving an idle session in the same workspace [0.20ms]
+(pass) validateArchiveTarget (archive_session guards) > allows unarchiving an idle session in the same workspace [0.05ms]
+(pass) validateArchiveTarget (archive_session guards) > rejects an unknown target [0.06ms]
+(pass) validateArchiveTarget (archive_session guards) > rejects a cross-workspace target with the same opaque message as unknown [0.08ms]
+(pass) validateArchiveTarget (archive_session guards) > rejects archiving a session that is mid-turn [0.06ms]
+(pass) validateArchiveTarget (archive_session guards) > allows UNarchiving a session that is mid-turn [0.04ms]
+
+src\sessions\background-task-surface.test.ts:
+[session] [bg-lifecycle] task completed {
+  sessionId: "idle-complete",
+  taskId: "task_1",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "idle-complete",
+  taskId: "task_1",
+  status: "completed",
+}
+(pass) background task completion surfacing (idle keep-alive) > surfaces a completed task to an idle keep-alive session with intent + output file [13.49ms]
+[session] [bg-lifecycle] task completed {
+  sessionId: "in-turn",
+  taskId: "task_2",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+(pass) background task completion surfacing (idle keep-alive) > does NOT surface while a turn is active (agent sees the notification via the live stream) [4.73ms]
+[session] [bg-lifecycle] task completed {
+  sessionId: "keepalive-off",
+  taskId: "task_3",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+(pass) background task completion surfacing (idle keep-alive) > does NOT surface when keep-alive is OFF [3.78ms]
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] task completed {
+  sessionId: "dupe",
+  taskId: "task_4",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+(pass) background task completion surfacing (idle keep-alive) > surfaces at most once even if a duplicate terminal notification arrives [4.06ms]
+[session] Cannot send event - no event sink
+(pass) background task completion surfacing (idle keep-alive) > surfaces a failure with a status-appropriate message [4.36ms]
+
+src\sessions\cold-session-metadata.test.ts:
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "dupe",
+  taskId: "task_4",
+  status: "completed",
+}
+[session] [bg-lifecycle] task completed {
+  sessionId: "dupe",
+  taskId: "task_4",
+  status: "completed",
+}
+[session] [bg-lifecycle] task completed {
+  sessionId: "failed",
+  taskId: "task_5",
+  status: "failed",
+}
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "failed",
+  taskId: "task_5",
+  status: "failed",
+}
+[session] Cold-load triggered for persistSession on cold-status
+[session] Cold-hydrated 0 messages for session cold-status
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > setSessionStatus on a cold session is on disk after flushSession resolves [202.88ms]
+[session] Cannot send event - no event sink
+[session] Cold-load triggered for persistSession on cold-labels
+[session] Cold-hydrated 0 messages for session cold-labels
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > setSessionLabels on a cold session is on disk after flushSession resolves [176.96ms]
+[session] Cold-load triggered for persistSession on cold-rename
+[session] Cold-hydrated 0 messages for session cold-rename
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > renameSession on a cold session persists (with explicit flushSession) [156.88ms]
+[session] Cold-load triggered for persistSession on cold-preserve-msgs
+[session] Cold-hydrated 3 messages for session cold-preserve-msgs
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > cold-session persist preserves existing messages on disk [163.35ms]
+[session] Cold-load triggered for persistSession on cold-concurrent
+[session] Cold-hydrated 0 messages for session cold-concurrent
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > concurrent cold-session status changes serialize to last-writer-wins on disk [250.73ms]
+[session] Cold-load triggered for persistSession on cold-flush-ordering
+[session] Cold-hydrated 0 messages for session cold-flush-ordering
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) cold-session metadata persistence > flushSession on a cold session returns only after the disk write lands [150.10ms]
+
+src\sessions\context-handoff.test.ts:
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > records a complete document on disk before reporting the handoff ready [116.61ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > fails the handoff instead of dispatching a document the model left incomplete [78.86ms]
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > never resurrects a cancelled handoff when the document arrives late [37.88ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > turns a handoff interrupted by shutdown into an explicit retryable failure [97.08ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > reuses the successor created before the crash instead of spawning a second one [157.19ms]
+(pass) context handoff orchestration > leaves a handoff whose document never materialised untouched rather than dispatching an empty continuation [4.21ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Context handoff successor failed 3126 |     // `{ emitCreatedEvent: false }` to avoid a redundant hydrate.
+3127 |     internal?: { emitCreatedEvent?: boolean },
+3128 |   ): Promise<Session> {
+3129 |     const workspace = getWorkspaceByNameOrId(workspaceId)
+3130 |     if (!workspace) {
+3131 |       throw new Error(`Workspace ${workspaceId} not found`)
+                       ^
+error: Workspace ws_test not found
+      at createSession (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:3131:17)
+      at startContextSuccessor (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4025:36)
+      at async recoverContextHandoffs (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4137:79)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\context-handoff.test.ts:162:17)
+
+(pass) context handoff orchestration > keeps the document and records a retryable failure when the successor cannot be created [130.31ms]
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) context handoff orchestration > rewrites only the handing-off session and leaves unrelated sessions untouched [94.89ms]
+
+src\sessions\create-managed-session.test.ts:
+(pass) createManagedSession > normalizes legacy thinkingLevel=think on restore [0.20ms]
+(pass) createManagedSession > drops invalid thinking levels instead of leaking them into runtime state [0.14ms]
+
+src\sessions\execute-prompt-automation-test-mode.test.ts:
+(pass) executePromptAutomation waitForCompletion > waitForCompletion:false returns as soon as the session is created (does not await the turn) [4.47ms]
+(pass) executePromptAutomation waitForCompletion > default (waitForCompletion unset) awaits sendMessage and propagates its error [3.22ms]
+
+src\sessions\idle-session-cache.test.ts:
+[session] Lazy-loaded 1 messages for session reload
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) idle eviction flushes pending changes and reloads the complete transcript [101.66ms]
+(pass) idle cleanup protects running work and retires eligible runtime resources [3.38ms]
+(pass) a session accessed during flush is not evicted [0.65ms]
+(pass) failed persistence prevents idle eviction [0.82ms]
+(pass) a new turn during runtime retirement retains its history [0.83ms]
+
+src\sessions\midstream-queue.test.ts:
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > distinguishes non-interrupting queue mode from a failed steer [3.25ms]
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > queues instead of steering while a manual compaction owns the turn (#1058) [3.53ms]
+[session] mid-stream send {
+  sessionId: "compaction-midstream",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: true,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > mid-stream send during a manual compaction is queued for replay, not steered, and not an interruption [97.32ms]
+[session] mid-stream send {
+  sessionId: "idle-midstream",
+  behavior: "steer",
+  steered: true,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > non-compacting mid-stream send keeps the resolved behavior and stays non-interrupting [89.12ms]
+[session] mid-stream send {
+  sessionId: "legacy-backend-midstream",
+  behavior: "steer",
+  steered: true,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > a backend without the compaction concept is treated as not compacting [100.66ms]
+[session] mid-stream send {
+  sessionId: "failed-steer-midstream",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "bound Object",
+  connectionSlug: "pi-api-key",
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > a failed steer on a normal turn still marks the replay as interrupted [97.58ms]
+[session] replay queued {
+  sessionId: "queue-ordering",
+  messageId: "queued-user",
+  queueLengthAfterShift: 0,
+}
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) mid-stream queue runtime invariants > re-stamps replay after the prior final response and emits that timestamp [24.19ms]
+
+src\sessions\pi-retry-streaming.test.ts:
+(pass) Pi retry streaming boundaries > discards pending failed deltas before backoff and never sends them later [1.69ms]
+(pass) Pi retry streaming boundaries > discards already-flushed partials and persists only the recovered answer [1.31ms]
+(pass) Pi retry streaming boundaries > a discard for another identity cannot wipe a newer stream or its batch [0.57ms]
+(pass) Pi retry streaming boundaries > repeated failed attempts leave no fused text or unfinished delta timer [0.93ms]
+
+src\sessions\pi-turn-anchors.test.ts:
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor then loadPiTurnAnchors round-trips [27.49ms]
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor is idempotent for the same value [15.26ms]
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor overwrites when the anchor changes [59.28ms]
+(pass) pi-turn-anchors sidecar > savePiTurnAnchor with empty arguments is a no-op [5.36ms]
+(pass) pi-turn-anchors sidecar > loadPiTurnAnchors tolerates a missing sidecar file [4.46ms]
+(pass) pi-turn-anchors sidecar > loadPiTurnAnchors tolerates a malformed sidecar file [11.79ms]
+(pass) copyPiTurnAnchorsForBranch > copies only anchors whose Craft message id is in the branch path [84.12ms]
+(pass) copyPiTurnAnchorsForBranch > does not write a file when the source has no anchors [8.86ms]
+(pass) copyPiTurnAnchorsForBranch > does not write a file when no source anchor matches the branched ids [16.51ms]
+(pass) copyPiTurnAnchorsForBranch > writes a sidecar in the documented v1 shape [26.13ms]
+
+src\sessions\plugin-activation.test.ts:
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s1: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > enables the plugin own sources through enabledSourceSlugs [55.60ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s2: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > never aborts the agent and never emits source_activated (P9-3) [38.51ms]
+[session] Session s3: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > hands the live agent the new slot without rebuilding it [22.31ms]
+[session] Session s4: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+[session] Session s4: active plugin cleared
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > clears the slot with null and reports it [22.70ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s5: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+[session] Session s5: active plugin set to "other" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > replaces the previous plugin silently (D12) and keeps its sources enabled [60.10ms]
+[session] Sources required by plugin "market-analyst" are not usable (missing or unauthenticated): needsAuth
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s6: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 1 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > reports unusable contributed sources instead of failing the activation [58.81ms]
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > rejects activating a plugin that is not installed [6.92ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s8: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+[session] Session s8: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > is idempotent — re-activating does not duplicate enabled sources [60.84ms]
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > throws for an unknown session rather than silently doing nothing [3.81ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s9: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > drops the cached source runtime so the next turn rebuilds for the new set [43.15ms]
+[session] Pre-enabled sources for plugin "market-analyst": alpha
+[session] Session s10: active plugin set to "market-analyst" (0 skills, 1 sources enabled, 0 unusable)
+[session] Session s10: active plugin set to "market-analyst" (0 skills, 0 sources enabled, 0 unusable)
+(pass) setSessionActivePlugin (D12 single slot, P9-3 no restart) > leaves an up-to-date runtime alone when activation enables nothing new [61.77ms]
+
+src\sessions\runtime-config.test.ts:
+(pass) buildBackendRuntimeSignature > changes when a custom endpoint model image override changes [1.10ms]
+(pass) buildBackendRuntimeSignature > ignores non-runtime metadata such as lastUsedAt [0.42ms]
+(pass) buildRestartRequiredSignature > changes when the utility model changes [0.29ms]
+(pass) filterAttachmentsForModelInput > omits images for pi_compat text-only models while preserving other attachments [0.96ms]
+(pass) filterAttachmentsForModelInput > keeps images when the per-model override enables images [0.15ms]
+(pass) filterAttachmentsForModelInput > treats explicit supportsImages=false as overriding endpoint-level true [0.12ms]
+
+src\sessions\sendmessage-durability.test.ts:
+[session] Cannot send event - no event sink
+[session] Locked session durability-normal to connection "pi-api-key"
+[session] Cannot send event - no event sink
+[session] Using LLM connection "pi-api-key" (pi_compat) for session durability-normal
+[session] [decision:adaptive_thinking] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] [decision:suggestions] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 210 |     ...hooks,
+211 |   }
+212 | }
+213 | 
+214 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+215 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+    at processTicksAndRejections (native:7:39)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "durability-normal",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:215:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4420:22)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4166:24)\n    at processTicksAndRejections (native:7:39)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage durability > user message is on disk before onAck fires (normal branch) [567.85ms]
+[session] mid-stream send {
+[session] Cannot send event - no event sink
+  sessionId: "durability-midstream",
+  behavior: "steer",
+  steered: false,
+  compactionInFlight: false,
+  queueLengthBefore: 0,
+  backend: "none",
+  connectionSlug: "pi-api-key",
+}
+[session] [decision:mid_turn_messages] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage durability > user message is on disk before onAck fires (mid-stream / queued branch) [168.82ms]
+
+src\sessions\sendmessage-oauth-refresh.test.ts:
+[session] Cannot send event - no event sink
+[session] [OAuth] Checking if any tokens need refresh
+[session] [decision:adaptive_thinking] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] [decision:suggestions] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] Locked session cold-oauth to connection "pi-api-key"
+[session] Cannot send event - no event sink
+[session] Using LLM connection "pi-api-key" (pi_compat) for session cold-oauth
+[session] Marked source test-oauth-mcp as needing re-auth
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 210 |     ...hooks,
+211 |   }
+212 | }
+213 | 
+214 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+215 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+    at processTicksAndRejections (native:7:39)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "cold-oauth",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:215:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4420:22)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4166:24)\n    at processTicksAndRejections (native:7:39)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage OAuth refresh ordering (#710) > cold session: tokenRefreshManager runs before getOrCreateAgent [393.72ms]
+[session] Cannot send event - no event sink
+[session] [OAuth] Checking if any tokens need refresh
+[session] [OAuth] Refreshing 1 source(s): failing-mcp
+[session] [OAuth] Some sources failed token refresh: [ "failing-mcp" ]
+[session] [decision:adaptive_thinking] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] [decision:suggestions] unavailable: Decision model: no API key stored for OpenRouter. Add one in Settings > AI > Decision model
+[session] Locked session failed-oauth to connection "pi-api-key"
+[session] Using LLM connection "pi-api-key" (pi_compat) for session failed-oauth
+[session] Cannot send event - no event sink
+[session] Marked source failing-mcp as needing re-auth
+[session] [McpClientPool] Disconnected all MCP clients
+[session] Error in chat: 210 |     ...hooks,
+211 |   }
+212 | }
+213 | 
+214 | function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
+215 |   if (!_platform) throw new Error('setSessionPlatform() must be called before session creation')
+                                  ^
+error: setSessionPlatform() must be called before session creation
+      at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+      at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+      at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+
+[session] Error message: setSessionPlatform() must be called before session creation
+[session] Error stack: Error: setSessionPlatform() must be called before session creation
+    at buildBackendHostRuntimeContext (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:215:29)
+    at buildSessionAgent (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4420:22)
+    at async <anonymous> (E:\Phaneris\packages\server-core\src\sessions\SessionManager.ts:4166:24)
+    at processTicksAndRejections (native:7:39)
+[session] [runtime-hooks] captureException fallback: {
+  errorSource: "chat",
+  sessionId: "failed-oauth",
+  message: "setSessionPlatform() must be called before session creation",
+  stack: "Error: setSessionPlatform() must be called before session creation\n    at buildBackendHostRuntimeContext (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:215:29)\n    at buildSessionAgent (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4420:22)\n    at async <anonymous> (E:\\Phaneris\\packages\\server-core\\src\\sessions\\SessionManager.ts:4166:24)\n    at processTicksAndRejections (native:7:39)",
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) sendMessage OAuth refresh ordering (#710) > failed refresh: source excluded from usable set via in-memory mutation [396.40ms]
+
+src\sessions\session-created-notify.test.ts:
+(pass) notifySessionCreated > emits a session_created session-event scoped to the workspace [8.19ms]
+
+src\sessions\session-usage.test.ts:
+(pass) session usage ledger authority > counts all requests and caches, keeps context separate, and survives repeated completion and reload [115.20ms]
+(pass) session usage ledger authority > publishes authoritative occupancy and never re-publishes a pre-compaction count [58.86ms]
+(pass) session usage ledger authority > leaves sessions without a ledger unchanged [55.80ms]
+
+src\sessions\source-activated-auto-retry.test.ts:
+(pass) claimAutoRetryPending > allows the first matching retry and drops later duplicates within the deadline [0.16ms]
+(pass) claimAutoRetryPending > clears stale pending slots without dropping the message [0.06ms]
+(pass) claimAutoRetryPending > does not over-dedup unrelated messages [0.04ms]
+[session] Source "github" activated for session basic-resend, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > basic re-send — fires sendMessage with "[<slug> activated]" suffix [156.61ms]
+[session] Source "github" activated for session chained, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Source "linear" activated for session chained, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > chained activations — produces two retries with different suffixes [308.56ms]
+[session] Source "github" activated for session empty-original, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Source "github" activated for session empty-original, but no message to resend (empty capture, no prior user message); skipping auto-retry
+(pass) source_activated auto-retry > empty originalMessage and no prior user message — skips (nothing to resend) [157.86ms]
+[session] Cannot send event - no event sink
+[session] Source "my-space" activated for session empty-with-history, scheduling auto-retry
+(pass) source_activated auto-retry > empty originalMessage with a prior user message — falls back to the last user message [156.41ms]
+(pass) source_activated auto-retry > lastUserMessageContent skips non-user, empty and non-string entries [5.02ms]
+[session] Source "github" activated for session preempted, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Auto-retry skipped for preempted: follow-up message arrived first
+(pass) source_activated auto-retry > legitimate user message preempts retry — skipped when follow-up arrived [156.62ms]
+[session] Source "github" activated for session race-rpc-first, scheduling auto-retry
+[session] Cannot send event - no event sink
+[session] Auto-retry skipped for race-rpc-first: follow-up message arrived first
+(pass) source_activated auto-retry > mixed-version race: legacy RPC arrives BEFORE timer fires — exactly one message committed [205.01ms]
+[session] Source "github" activated for session race-timer-first, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > mixed-version race: timer fires BEFORE legacy RPC arrives — exactly one message committed [158.43ms]
+[session] Cannot send event - no event sink
+[session] Source "github" activated for session unrelated-message, scheduling auto-retry
+[session] Auto-retry skipped for unrelated-message: follow-up message arrived first
+(pass) source_activated auto-retry > user message with different content still goes through — pending slot does not over-dedup [175.97ms]
+[session] Source "github" activated for session deleted-mid-window, scheduling auto-retry
+[session] Cannot send event - no event sink
+(pass) source_activated auto-retry > timer cancelled on session delete — no auto-retry fires after deletion [207.38ms]
+
+src\sessions\workflow-task-progress.test.ts:
+[session] [bg-lifecycle] task backgrounded {
+[session] Cannot send event - no event sink
+  sessionId: "wf-register",
+  taskId: "w5x",
+  intent: "PII sweep",
+  turnId: undefined,
+}
+(pass) workflow background-task progress > registers a workflow launch with workflowId and a zeroed agent count [10.53ms]
+[session] [bg-lifecycle] task backgrounded {
+  sessionId: "wf-count",
+  taskId: "w5x",
+  intent: undefined,
+  turnId: undefined,
+}
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+(pass) workflow background-task progress > increments the completed-agent count on workflow_agent_completed [9.33ms]
+[session] [bg-lifecycle] task backgrounded {
+  sessionId: "wf-complete-by-wfid",
+  taskId: "w5x",
+  intent: undefined,
+  turnId: undefined,
+}
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] task completed {
+  sessionId: "wf-complete-by-wfid",
+  taskId: "wf_1",
+  status: "completed",
+}
+[session] Cannot send event - no event sink
+[session] [bg-lifecycle] surfacing completed background task to idle session {
+  sessionId: "wf-complete-by-wfid",
+  taskId: "wf_1",
+  status: "completed",
+}
+(pass) workflow background-task progress > resolves completion keyed on the wf_ run id (not just the Task ID) [10.48ms]
+
+src\sessions\__tests__\host-client-fallback.test.ts:
+(pass) SessionManager — host-client fallback > returns the pinned client when it still advertises the capability [1.19ms]
+(pass) SessionManager — host-client fallback > re-pins to a different connected client in the same workspace when the pinned client is gone [0.84ms]
+(pass) SessionManager — host-client fallback > returns null when no client in the workspace advertises the capability [0.43ms]
+(pass) SessionManager — host-client fallback > does not pick clients that lack the capability [0.33ms]
+
+src\sessions\__tests__\RemoteBrowserPaneManager.test.ts:
+(pass) RemoteBrowserPaneManager — wire packaging > packages async methods into a BrowserCapabilityRequest with sessionId + workspaceId [2.79ms]
+(pass) RemoteBrowserPaneManager — wire packaging > createForSessionAsync awaits the WS round-trip and returns the resolved id [0.98ms]
+(pass) RemoteBrowserPaneManager — wire packaging > throws BROWSER_NO_CAPABLE_CLIENT when no host client is connected [1.16ms]
+(pass) RemoteBrowserPaneManager — wire packaging > throws BROWSER_REMOTE_UPLOAD_NOT_SUPPORTED for uploadFile [1.07ms]
+(pass) RemoteBrowserPaneManager — wire packaging > throws CAPABILITY_UNAVAILABLE when host client does not advertise the capability [0.88ms]
+(pass) RemoteBrowserPaneManager — screenshot wire conversion > converts Uint8Array imageBytes → Buffer [3.38ms]
+(pass) RemoteBrowserPaneManager — screenshot wire conversion > handles wire arrival as serialized {data} object (structured-clone variant) [1.35ms]
+(pass) RemoteBrowserPaneManager — sync stubs > listInstances (sync) returns []; listInstancesAsync hits the wire [4.29ms]
+
+ 181 pass
+ 0 fail
+ 515 expect() calls
+Ran 181 tests across 30 files. [13.19s]

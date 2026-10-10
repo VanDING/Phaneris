@@ -54,7 +54,7 @@ try {
     const stored = await storage.createSession(workspaceRoot, { name: 'Original' })
     const source = host.createManagedSession(stored, workspace as any, { messagesLoaded: true }) as any
     source.messages = [{ id: 'user', role: 'user', timestamp: 1, content: 'Describe this picture', attachments: [{ id: 'image', type: 'image', name: 'original.png', mimeType: 'image/png', storedPath: join(fixture, 'original.png') }] }, { id: 'assistant', role: 'assistant', timestamp: 2, content: 'Recorded observation' }]
-    manager.sessions.set(source.id, source); manager.eventSink = () => {}
+    manager.registerManagedSession(source); manager.eventSink = () => {}
     const before = JSON.stringify(source.messages)
     try {
       const recovered = await manager.recoverImageContext(source.id)
@@ -63,12 +63,12 @@ try {
       assert(child.messages[0].content.includes('Recorded observation')); assert(!child.messages[0].attachments?.length)
       assert.equal(JSON.stringify(source.messages), before)
       return { sourceId: source.id, childId: child.id, textOnly: true }
-    } finally { manager.cleanup() }
+    } finally { await manager.cleanup() }
   })
   await check('Paid image outcomes retain observed usage on invalid data and record cancellation independently', async () => {
-    const { DurableRuntimeCoordinator } = await import('../../packages/server-core/src/durable-runtime/coordinator.ts')
+    const { createDurableRuntime } = await import('../../packages/server-core/src/durable-runtime')
     const { auxiliaryModelEffect } = await import('../../packages/server-core/src/services/auxiliary-model-effect.ts')
-    const runtime = new DurableRuntimeCoordinator(), sessionId = 'image-accounting'
+    const runtime = createDurableRuntime(), sessionId = 'image-accounting'
     const config = { provider: 'openrouter' as const, apiKey: 'fixture', baseUrl: api.url.href }
     const request = { prompt: 'Fixture image' }
     const identity = { workspaceRoot, sessionId, purpose: 'image_generation' as const, provider: 'openrouter', model: 'google/gemini-2.5-flash-image', request }
@@ -80,16 +80,16 @@ try {
       const pending = auxiliaryModelEffect(runtime, { ...identity, signal: controller.signal }, () => generation.generateImage({ ...config, signal: controller.signal }, request), () => {})
       while (requests === before) await Bun.sleep(10)
       controller.abort(); await assert.rejects(pending)
-      const events = runtime.storeFor(workspaceRoot).listEvents({ sessionId, afterSeq: 0, limit: 100 })
+      const events = runtime.queries.events(workspaceRoot, { sessionId, afterSeq: 0, limit: 100 })
       const outcomes = events.filter((e: any) => e.type === 'model_outcome_committed')
       assert.equal(outcomes.length, 2)
       assert.equal(outcomes[1]!.payload.stopReason, 'aborted')
-      const usage = runtime.storeFor(workspaceRoot).listUsage({ sessionId })
+      const usage = runtime.queries.usage(workspaceRoot, { sessionId })
       assert.equal(usage[0]!.inputTokens, 10); assert.equal(usage[0]!.outputTokens, 20)
       assert.equal(usage[1]!.costUsd, undefined); assert.equal(usage[1]!.payload.costSource, 'unknown')
-      assert.equal(runtime.getCanonicalModelContext(workspaceRoot, sessionId).items.length, 0)
+      assert.equal(runtime.queries.getCanonicalModelContext(workspaceRoot, sessionId).items.length, 0)
       return { outcomes: outcomes.length, invalidOutputUsage: usage[0], cancelled: true }
-    } finally { runtime.closeAll(); delayed = false; corrupt = false }
+    } finally { await runtime.close(); delayed = false; corrupt = false }
   })
   await check('Generated image remains a reviewed Artifact until explicit acceptance', async () => {
     const { createArtifactDraft, submitArtifact, acceptArtifact, reviseArtifact, discardArtifact } = await import('../../packages/shared/src/artifacts/index.ts')

@@ -1,0 +1,20 @@
+$ bun run server:build:subprocess && bun run lint:runtime-boundary && bun run scripts/verification/runtime-boundary-gate-workflow.ts && bun run scripts/verification/durable-runtime-boundary-workflow.ts && bun run scripts/verification/durable-runtime-crash-workflow.ts && bun run scripts/verification/durable-runtime-pi-workflow.ts
+$ cd packages/pi-agent-server && bun run build
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 3229 modules in 576ms
+
+  bundle.js  14.0 MB  (entry point)
+
+$ bun run scripts/check-runtime-boundary.ts
+{
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-10-10T09:30:16.333Z",
+  "scannedFiles": 1462,
+  "violationCount": 0,
+  "violations": []
+}
+{"passed":true,"rejectedViolations":23,"output":"E:\\Phaneris\\docs\\verification\\results\\durable-runtime-boundary\\gate-mutations.json"}
+{"passed":15,"output":"E:\\Phaneris\\docs\\verification\\results\\durable-runtime-boundary\\workflow.json"}
+{"passed":8,"output":"E:\\Phaneris\\docs\\verification\\results\\durable-runtime-boundary\\crash.json"}
+{"passed":6,"output":"E:\\Phaneris\\docs\\verification\\results\\durable-runtime-boundary\\independent-pi.json"}

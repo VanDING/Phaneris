@@ -1,0 +1,563 @@
+{
+  "schemaVersion": 2,
+  "mode": "baseline",
+  "generatedAt": "2026-10-10T08:49:12.949Z",
+  "scannedFiles": 1451,
+  "violationCount": 68,
+  "violations": [
+    {
+      "file": "packages/server-core/src/decisions/accounting.ts",
+      "line": 4,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/coordinator.ts"
+    },
+    {
+      "file": "packages/server-core/src/decisions/accounting.ts",
+      "line": 4,
+      "rule": "no-private-object-export",
+      "detail": "DurableRuntimeCoordinator"
+    },
+    {
+      "file": "packages/server-core/src/decisions/session-report.ts",
+      "line": 5,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/store"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/audit.ts",
+      "line": 1,
+      "rule": "kernel-no-client-type",
+      "detail": "@phaneris/core/types"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 1,
+      "rule": "explicit-public-exports",
+      "detail": "./canonical-json.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 2,
+      "rule": "explicit-public-exports",
+      "detail": "./audit.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 3,
+      "rule": "explicit-public-exports",
+      "detail": "./coordinator.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 4,
+      "rule": "explicit-public-exports",
+      "detail": "./tool-identity.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 5,
+      "rule": "explicit-public-exports",
+      "detail": "./projection.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 6,
+      "rule": "explicit-public-exports",
+      "detail": "./projection-runner.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 7,
+      "rule": "explicit-public-exports",
+      "detail": "./sensitive-payload.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 8,
+      "rule": "explicit-public-exports",
+      "detail": "./task-node-reconciliation.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 9,
+      "rule": "explicit-public-exports",
+      "detail": "./sqlite-driver.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/index.ts",
+      "line": 10,
+      "rule": "explicit-public-exports",
+      "detail": "./store.js"
+    },
+    {
+      "file": "packages/server-core/src/durable-runtime/projection.ts",
+      "line": 3,
+      "rule": "kernel-no-client-type",
+      "detail": "@phaneris/core/types"
+    },
+    {
+      "file": "packages/server-core/src/services/auxiliary-model-effect.ts",
+      "line": 2,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/coordinator"
+    },
+    {
+      "file": "packages/server-core/src/services/auxiliary-model-effect.ts",
+      "line": 2,
+      "rule": "no-private-object-export",
+      "detail": "DurableRuntimeCoordinator"
+    },
+    {
+      "file": "packages/server-core/src/services/workspace-backup.ts",
+      "line": 28,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/store.js"
+    },
+    {
+      "file": "packages/server-core/src/services/workspace-backup.ts",
+      "line": 28,
+      "rule": "no-private-object-export",
+      "detail": "DurableRuntimeStore"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 37,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/coordinator"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 37,
+      "rule": "no-private-object-export",
+      "detail": "DurableRuntimeCoordinator"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 38,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/task-node-reconciliation"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 39,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/audit"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 40,
+      "rule": "public-api-only",
+      "detail": "../durable-runtime/projection"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 667,
+      "rule": "no-second-run-state",
+      "detail": "agent"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 669,
+      "rule": "no-second-run-state",
+      "detail": "isProcessing"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 671,
+      "rule": "no-second-run-state",
+      "detail": "stopRequested"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 678,
+      "rule": "no-second-run-state",
+      "detail": "processingGeneration"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 680,
+      "rule": "no-second-run-state",
+      "detail": "activeDurableRunOperationId"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 823,
+      "rule": "no-second-run-state",
+      "detail": "messageQueue"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 1217,
+      "rule": "no-store-capability",
+      "detail": "this.durableRuntime.storeFor"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 1398,
+      "rule": "host-owns-state",
+      "detail": "managed.isProcessing"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2302,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.push"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2813,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.push"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2835,
+      "rule": "no-store-capability",
+      "detail": "this.durableRuntime.storeFor"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2960,
+      "rule": "no-store-capability",
+      "detail": "this.durableRuntime.storeFor"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 2984,
+      "rule": "no-store-capability",
+      "detail": "this.durableRuntime.storeFor"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 3764,
+      "rule": "host-owns-execution",
+      "detail": "managed.agent.disposeForRestart"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 3789,
+      "rule": "host-owns-state",
+      "detail": "managed.agent"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 4066,
+      "rule": "host-owns-state",
+      "detail": "managed.activeDurableRunOperationId"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 4087,
+      "rule": "host-owns-state",
+      "detail": "managed.stopRequested"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 4155,
+      "rule": "host-owns-state",
+      "detail": "managed.messageQueue"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 4183,
+      "rule": "host-owns-state",
+      "detail": "managed.stopRequested"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 4477,
+      "rule": "host-owns-state",
+      "detail": "managed.agent"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 4516,
+      "rule": "no-store-capability",
+      "detail": "this.durableRuntime.storeFor"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 5160,
+      "rule": "host-owns-execution",
+      "detail": "managed.agent.interruptForHandoff"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 5219,
+      "rule": "host-owns-execution",
+      "detail": "managed.agent.interruptForHandoff"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7060,
+      "rule": "host-owns-execution",
+      "detail": "managed.agent.forceAbort"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7139,
+      "rule": "no-store-capability",
+      "detail": "this.durableRuntime.storeFor"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7293,
+      "rule": "host-owns-execution",
+      "detail": "agent.redirectConfirmed"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7298,
+      "rule": "host-owns-execution",
+      "detail": "agent.redirect"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7339,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.push"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7472,
+      "rule": "host-owns-state",
+      "detail": "managed.processingGeneration"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7659,
+      "rule": "host-owns-state",
+      "detail": "managed.activeDurableRunOperationId"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7662,
+      "rule": "host-owns-execution",
+      "detail": "agent.chat"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7910,
+      "rule": "host-owns-state",
+      "detail": "managed.messageQueue"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7919,
+      "rule": "host-owns-state",
+      "detail": "managed.stopRequested"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 7929,
+      "rule": "host-owns-execution",
+      "detail": "managed.agent.forceAbort"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 8002,
+      "rule": "host-owns-state",
+      "detail": "managed.agent"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 8108,
+      "rule": "host-owns-state",
+      "detail": "managed.activeDurableRunOperationId"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 8121,
+      "rule": "host-owns-state",
+      "detail": "managed.stopRequested"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 8257,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.shift"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 8261,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.shift"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 10482,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.push"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 11444,
+      "rule": "host-owns-execution",
+      "detail": "agent.redirectConfirmed"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 11451,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.splice"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 11458,
+      "rule": "host-owns-execution",
+      "detail": "agent.redirect"
+    },
+    {
+      "file": "packages/server-core/src/sessions/SessionManager.ts",
+      "line": 11462,
+      "rule": "host-owns-queue",
+      "detail": "managed.messageQueue.splice"
+    }
+  ],
+  "runtimeModuleClosures": {
+    "packages/server-core/src/durable-runtime/audit.ts": [
+      "packages/core/src/types/context-usage.ts",
+      "packages/core/src/types/index.ts",
+      "packages/core/src/types/message-mapper.ts",
+      "packages/core/src/types/message.ts",
+      "packages/core/src/types/page.ts",
+      "packages/core/src/types/server.ts",
+      "packages/core/src/types/session.ts",
+      "packages/core/src/types/workspace.ts",
+      "packages/server-core/src/durable-runtime/audit.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/canonical-json.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts"
+    ],
+    "packages/server-core/src/durable-runtime/coordinator.ts": [
+      "packages/core/src/types/context-usage.ts",
+      "packages/core/src/types/index.ts",
+      "packages/core/src/types/message-mapper.ts",
+      "packages/core/src/types/message.ts",
+      "packages/core/src/types/page.ts",
+      "packages/core/src/types/server.ts",
+      "packages/core/src/types/session.ts",
+      "packages/core/src/types/workspace.ts",
+      "packages/core/src/utils/debug.ts",
+      "packages/core/src/utils/index.ts",
+      "packages/core/src/utils/message-text-update.ts",
+      "packages/core/src/utils/paths.ts",
+      "packages/core/src/utils/snapshot-codec.ts",
+      "packages/core/src/utils/token-usage.ts",
+      "packages/core/src/utils/transcript-size.ts",
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/index.ts": [
+      "packages/core/src/types/context-usage.ts",
+      "packages/core/src/types/index.ts",
+      "packages/core/src/types/message-mapper.ts",
+      "packages/core/src/types/message.ts",
+      "packages/core/src/types/page.ts",
+      "packages/core/src/types/server.ts",
+      "packages/core/src/types/session.ts",
+      "packages/core/src/types/workspace.ts",
+      "packages/core/src/utils/debug.ts",
+      "packages/core/src/utils/index.ts",
+      "packages/core/src/utils/message-text-update.ts",
+      "packages/core/src/utils/paths.ts",
+      "packages/core/src/utils/snapshot-codec.ts",
+      "packages/core/src/utils/token-usage.ts",
+      "packages/core/src/utils/transcript-size.ts",
+      "packages/server-core/src/durable-runtime/audit.ts",
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/index.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/server-core/src/durable-runtime/task-node-reconciliation.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/model-usage-audit.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/projection-runner.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/projection.ts": [
+      "packages/core/src/types/context-usage.ts",
+      "packages/core/src/types/index.ts",
+      "packages/core/src/types/message-mapper.ts",
+      "packages/core/src/types/message.ts",
+      "packages/core/src/types/page.ts",
+      "packages/core/src/types/server.ts",
+      "packages/core/src/types/session.ts",
+      "packages/core/src/types/workspace.ts",
+      "packages/core/src/utils/debug.ts",
+      "packages/core/src/utils/index.ts",
+      "packages/core/src/utils/message-text-update.ts",
+      "packages/core/src/utils/paths.ts",
+      "packages/core/src/utils/snapshot-codec.ts",
+      "packages/core/src/utils/token-usage.ts",
+      "packages/core/src/utils/transcript-size.ts",
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/sensitive-payload.ts": [
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts"
+    ],
+    "packages/server-core/src/durable-runtime/sqlite-driver.ts": [
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts"
+    ],
+    "packages/server-core/src/durable-runtime/store.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/task-node-reconciliation.ts": [
+      "packages/server-core/src/durable-runtime/task-node-reconciliation.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/tool-identity.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts"
+    ]
+  }
+}

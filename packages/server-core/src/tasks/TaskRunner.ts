@@ -19,7 +19,7 @@
  * SessionManager structurally satisfies) so it is unit-testable with a mock.
  */
 import type { CreateSessionOptions } from '@phaneris/shared/protocol';
-import type { SessionCompletionEvent } from '../sessions/SessionManager';
+import type { SessionCompletionEvent } from '../domain/session-completion';
 import {
   type TaskSpec,
   type TaskNode,

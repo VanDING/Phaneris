@@ -30,8 +30,8 @@ writeFileSync(join(configRoot, 'config.json'), JSON.stringify({ workspaces: [wor
 const manager = new host.SessionManager() as any
 const session = await storage.createSession(workspaceRoot, { name: 'Fixture' })
 const managed = host.createManagedSession(session, workspace as any, { messagesLoaded: true }) as any
-manager.sessions.set(session.id, managed); manager.eventSink = () => {}
-managed.isProcessing = true; managed.processingGeneration = 1; managed.thinkingLevel = 'max'
+manager.registerManagedSession(managed); manager.eventSink = () => {}
+manager.execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath }); managed.thinkingLevel = 'max'
 async function check(id: string, run: () => any) { try { checks.push({ id, pass: true, observation: await run() }) } catch (e) { checks.push({ id, pass: false, error: String(e) }) } }
 async function until(f: () => boolean, ms = 10000) { const end = Date.now() + ms; while (!f()) { if (Date.now() > end) throw Error('Workflow deadline'); await Bun.sleep(10) } }
 try {
@@ -108,9 +108,9 @@ try {
     await check('a late thinking answer cannot override a stopped turn or a user lower cap', async () => {
       delay = 100
       const stopped = manager.startPreTurnDecisions(managed, 'routine')
-      managed.stopRequested = true
+      manager.execution.requestStop(managed.id)
       assert.deepEqual(await stopped, { thinkingOverride: null, suggestionHint: null })
-      managed.stopRequested = false
+      await manager.execution.finish(manager.execution.current(managed.id), 'interrupted', { notify: false, advanceQueue: false }); manager.execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
       const lowered = manager.startPreTurnDecisions(managed, 'routine')
       managed.thinkingLevel = 'off'
       assert.equal((await lowered).thinkingOverride, null)
@@ -155,7 +155,7 @@ try {
       return { remoteCalls: 1, unauthorizedRejected: true }
     } finally { good?.destroy(); bad?.destroy(); child.kill() }
   })
-} finally { await decisions.getDecisionRecorder().flush(); manager.cleanup(); api.stop(true) }
+} finally { await decisions.getDecisionRecorder().flush(); await manager.cleanup(); api.stop(true) }
 const output = resolve(process.argv.find(a => a.endsWith('.json')) ?? join(root, '.cache/pi-110-implementation/decisions-0141.json'))
 mkdirSync(resolve(output, '..'), { recursive: true }); writeFileSync(output, JSON.stringify({ generatedAt: new Date().toISOString(), fixture: 'upstream-0141-decisions-v1', checks }, null, 2) + '\n')
 console.log(JSON.stringify({ output, checks })); process.exit(checks.every(c => c.pass) ? 0 : 1)

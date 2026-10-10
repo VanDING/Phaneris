@@ -1,0 +1,76 @@
+bun test v1.4.2 (744846f84)
+
+src\tasks\TaskRunner.test.ts:
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"approval"} [75.90ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"loop"} [84.37ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"orchestrator"} [95.67ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"approval":true} [121.12ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"when":"false"} [135.41ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"loop":{"until":"done","max":2}} [87.23ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"for_each":"items"} [41.01ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"trigger":"one_success"} [10.87ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"replicas":2} [13.07ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"aggregate":"concat"} [11.81ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"max_parallel":2} [79.03ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"timeout":10} [18.85ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"cache":"pure"} [31.59ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"backoff":{"base":1}}} [29.71ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"when":"empty"}} [17.72ms]
+(pass) TaskRunner (Conductor) > pauses at the cumulative token budget even when current context is small [75.74ms]
+(pass) TaskRunner (Conductor) > runs a dependency chain, feeding each output into the next [420.72ms]
+(pass) TaskRunner (Conductor) > passes llmConnection (node value, else the task default) to createSession [55.09ms]
+(pass) TaskRunner (Conductor) > resolves permissionMode: node override → task default → child (never the workspace default) [30.36ms]
+(pass) TaskRunner (Conductor) > defaults an omitted permission mode to allow-all (unattended-safe), not undefined/ask [52.94ms]
+(pass) TaskRunner (Conductor) > stamps task/run/node linkage on each dispatched child session [25.61ms]
+(pass) TaskRunner (Conductor) > creates a child session per node (createSession announces each to the renderer by default) [48.18ms]
+(pass) TaskRunner (Conductor) > children inherit the orchestrator's working directory (falling back to spec.cwd) [33.37ms]
+(pass) TaskRunner (Conductor) > moves the orchestrator tile to in-progress on start and done on completion [158.79ms]
+(pass) TaskRunner (Conductor) > runs a fan-out and joins at the synthesizer [156.13ms]
+(pass) TaskRunner (Conductor) > marks a node failed, leaves dependents pending, and settles the run as failed [1005.80ms]
+(pass) TaskRunner (Conductor) > honors max_parallel [100.23ms]
+(pass) TaskRunner (Conductor) > pauses scheduling and resumes [88.76ms]
+(pass) TaskRunner (Conductor) > stops a run and cancels in-flight children [28.40ms]
+(pass) TaskRunner (Conductor) > resumes a run from the persisted run-log after a restart, reusing finished node outputs [199.31ms]
+(pass) TaskRunner (Conductor) > refuses to replay an in-flight node whose external outcome is unknown after restart [127.58ms]
+(pass) TaskRunner (Conductor) > rehydrates node output from canonical task facts without the run-log files [62.79ms]
+(pass) TaskRunner (Conductor) > wraps child dispatch in durable T1/T2 around the external send [123.33ms]
+(pass) TaskRunner (Conductor) > never retries a child dispatch after durable T1 when T2 is missing [166.15ms]
+(pass) TaskRunner (Conductor) > retries a failed node up to retry.limit, then fails [189.64ms]
+(pass) TaskRunner (Conductor) > does not retry when retry.limit is 0 [298.03ms]
+(pass) TaskRunner (Conductor) > feeds the prior failure into the retried prompt and can then succeed [128.94ms]
+(pass) TaskRunner (Conductor) > completes without verifying when there is no orchestrator [303.64ms]
+(pass) TaskRunner (Conductor) > gates the run on the orchestrator verdict and includes acceptance_criteria in the prompt [103.46ms]
+(pass) TaskRunner (Conductor) > re-runs the terminal node once on a FAIL verdict, then completes on PASS [120.89ms]
+(pass) TaskRunner (Conductor) > fails the run when FAIL verdicts exhaust the repair budget (max_iterations) [209.22ms]
+(pass) TaskRunner (Conductor) > re-asks on an unparsable verdict and fails only after the re-ask budget is exhausted [82.98ms]
+(pass) TaskRunner (Conductor) > scopes a repair to the named nodes and their transitive dependents [68.81ms]
+(pass) TaskRunner (Conductor) > an unparsed re-ask does not consume the repair budget [91.97ms]
+(pass) TaskRunner (Conductor) > does not hang in verifying when the verification send rejects [86.20ms]
+(pass) TaskRunner (Conductor) > ignores a verdict that arrives after the run was stopped [84.34ms]
+(pass) TaskRunner (Conductor) > reconstructs the repair counter from the run-log on a cross-restart resume [289.37ms]
+(pass) TaskRunner (Conductor) > fails a node that completes with no text despite declaring outputs (instead of marking it done) [36.81ms]
+(pass) TaskRunner (Conductor) > still marks a node done on empty text when it declares no outputs (lenient default) [174.18ms]
+(pass) TaskRunner (Conductor) > publishes the total node count to the orchestrator at run start (stable board denominator) [33.72ms]
+(pass) TaskRunner (Conductor) > fails a run that exceeds the wall-clock timeout and cancels in-flight children [220.32ms]
+1031 |       runner.run('vto', { runId: 'r1', orchestratorSessionId: 'orch' });
+1032 |       await tick();
+1033 | 
+1034 |       host.complete('a', { finalText: 'A' });
+1035 |       await tick();
+1036 |       expect(runner.getRunState('vto', 'r1')!.status).toBe('verifying');
+                                                             ^
+error: expect(received).toBe(expected)
+
+Expected: "verifying"
+Received: "failed"
+
+      at <anonymous> (E:\Phaneris\.cache\durable-runtime-baseline-source\packages\server-core\src\tasks\TaskRunner.test.ts:1036:55)
+(fail) TaskRunner (Conductor) > fails a run stuck in verifying (orchestrator never returns a verdict) [452.93ms]
+
+1 tests failed:
+(fail) TaskRunner (Conductor) > fails a run stuck in verifying (orchestrator never returns a verdict) [452.93ms]
+
+ 51 pass
+ 1 fail
+ 192 expect() calls
+Ran 52 tests across 1 file. [7.50s]

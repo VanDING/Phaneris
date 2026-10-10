@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'bun:test'
-import { auditLegacyProjection } from './audit.js'
+import { auditLegacyProjection } from '../runtime-adapters/projection-audit.js'
 import type { RuntimeEvent } from '@phaneris/shared/durable-runtime'
-import { projectCanonicalSessionMessages, projectDurableSession, projectDurableUsage, projectModelContext, reduceWorkspaceSessionProjection } from './projection.js'
+import { projectDurableSession, projectModelContext, reduceWorkspaceSessionProjection } from './projection.js'
+import { projectCanonicalSessionMessages, projectDurableUsage } from '../runtime-adapters/session-projection.js'
 
 function fact(seq: number, type: RuntimeEvent['type'], payload: unknown, modelVisible = true, partial = false): RuntimeEvent {
   return {

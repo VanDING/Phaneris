@@ -11,6 +11,7 @@ export interface ReconciliationTaskChild {
 export function createTaskNodeReconciliationAdapter(
   listSessions: () => ReconciliationTaskChild[],
   ensureLoaded: (session: ReconciliationTaskChild) => Promise<void>,
+  committedInputFor: (session: ReconciliationTaskChild) => { id: string; role: string } | undefined = () => undefined,
 ): ToolReconciliationAdapter {
   return {
     queryExternal: async ({ args }) => {
@@ -29,7 +30,7 @@ export function createTaskNodeReconciliationAdapter(
       const child = matches[0]
       if (child) {
         await ensureLoaded(child)
-        const dispatchedMessage = child.messages.find(message => message.role === 'user')
+        const dispatchedMessage = committedInputFor(child)
         if (!dispatchedMessage) {
           throw new Error(`task_node_dispatch found child session ${child.id} without a committed input message; operator review is required`)
         }
@@ -46,16 +47,7 @@ export function createTaskNodeReconciliationAdapter(
           externalReference: child.id,
         }
       }
-      return {
-        decision: 'definitely_not_executed',
-        reason: 'The fully loaded authoritative session registry contains no matching task child',
-        evidence: [{
-          source: 'external_query',
-          summary: `No child session exists for ${taskSlug}/${runId}/${nodeId}`,
-          observedAt,
-        }],
-        result: { childSessionId: null },
-      }
+      throw new Error('Task child absence is not durable non-execution evidence; deletion or incomplete catalog requires operator review')
     },
   }
 }

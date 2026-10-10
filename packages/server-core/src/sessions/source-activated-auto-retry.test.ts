@@ -88,7 +88,7 @@ describe('source_activated auto-retry', () => {
       workspace as never,
       { messagesLoaded: true },
     )
-    ;(sm as unknown as { sessions: Map<string, unknown> }).sessions.set(id, managed)
+    ;(sm as any).registerManagedSession(managed)
     return managed
   }
 

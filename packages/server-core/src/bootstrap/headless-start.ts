@@ -7,6 +7,7 @@ import { lockHolderMatchesLock, parseTasklistImageName, type LockIdentity } from
 import { OAuthFlowStore } from '@phaneris/shared/auth'
 import { ensureConfigDir, loadStoredConfig, saveConfig } from '@phaneris/shared/config'
 import { CONFIG_DIR } from '@phaneris/shared/config/paths'
+import { createDurableRuntime, type DurableRuntime } from '../durable-runtime/index'
 
 /** Constant-time string comparison for bearer-token validation (audit L-15). */
 function timingSafeEqualStrings(a: string, b: string): boolean {
@@ -33,7 +34,7 @@ export interface ServerBootstrapOptions<TSessionManager, THandlerDeps> {
   bundledAssetsRoot?: string
   platformFactory?: () => PlatformServices
   applyPlatformToSubsystems?: (platform: PlatformServices) => void
-  createSessionManager: () => TSessionManager
+  createSessionManager: (runtime: DurableRuntime) => TSessionManager
   createHandlerDeps: (ctx: {
     sessionManager: TSessionManager
     platform: PlatformServices
@@ -367,132 +368,150 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
   ensureGlobalConfigExists(platform)
   acquireServerLock(platform.logger)
 
-  const modelRefreshService = options.initModelRefreshService()
-  const sessionManager = options.createSessionManager()
+  const startupCleanup: Array<() => void | Promise<void>> = []
+  try {
+    const modelRefreshService = options.initModelRefreshService()
+    startupCleanup.push(() => modelRefreshService.stopAll?.())
+    const runtime = createDurableRuntime()
+    startupCleanup.push(() => runtime.close())
+    const sessionManager = options.createSessionManager(runtime)
+    startupCleanup.push(() => options.cleanupSessionManager?.(sessionManager))
 
-  const rpcHost = options.rpcHost ?? process.env.PHANERIS_RPC_HOST ?? '127.0.0.1'
-  const rpcPortRaw = options.rpcPort ?? parseInt(process.env.PHANERIS_RPC_PORT ?? '9100', 10)
-  if (!Number.isFinite(rpcPortRaw) || rpcPortRaw < 0 || rpcPortRaw > 65535) {
-    throw new Error(`Invalid RPC port: ${rpcPortRaw}`)
-  }
-  const rpcPort = Math.trunc(rpcPortRaw)
+    const rpcHost = options.rpcHost ?? process.env.PHANERIS_RPC_HOST ?? '127.0.0.1'
+    const rpcPortRaw = options.rpcPort ?? parseInt(process.env.PHANERIS_RPC_PORT ?? '9100', 10)
+    if (!Number.isFinite(rpcPortRaw) || rpcPortRaw < 0 || rpcPortRaw > 65535) {
+      throw new Error(`Invalid RPC port: ${rpcPortRaw}`)
+    }
+    const rpcPort = Math.trunc(rpcPortRaw)
 
-  const wsServer = new WsRpcServer({
-    host: rpcHost,
-    port: rpcPort,
-    requireAuth: true,
-    // Audit L-15: constant-time comparison (short user tokens make a timing
-    // side-channel measurable; 192-bit tokens make it impractical but the fix
-    // is free).
-    validateToken: async (t) => timingSafeEqualStrings(t, serverToken),
-    validateSessionCookie: options.validateSessionCookie,
-    serverId: options.serverId ?? 'headless',
-    serverVersion: options.serverVersion,
-    tls: options.tls,
-    httpHandler: options.httpHandler,
-    onClientConnected: options.onClientConnected,
-    onClientDisconnected: (clientId) => {
-      options.cleanupClientResources?.(clientId)
-      // Best-effort: notify SM so it can drop browser-host pins for this client.
-      // Duck-typed because TSessionManager is generic at the bootstrap layer.
-      const smWithDisconnect = sessionManager as unknown as { onClientDisconnected?: (id: string) => void }
-      if (typeof smWithDisconnect.onClientDisconnected === 'function') {
-        try {
-          smWithDisconnect.onClientDisconnected(clientId)
-        } catch {
-          // Cleanup hook failures must not break the transport.
+    const wsServer = new WsRpcServer({
+      host: rpcHost,
+      port: rpcPort,
+      requireAuth: true,
+      // Audit L-15: constant-time comparison (short user tokens make a timing
+      // side-channel measurable; 192-bit tokens make it impractical but the fix
+      // is free).
+      validateToken: async (t) => timingSafeEqualStrings(t, serverToken),
+      validateSessionCookie: options.validateSessionCookie,
+      serverId: options.serverId ?? 'headless',
+      serverVersion: options.serverVersion,
+      tls: options.tls,
+      httpHandler: options.httpHandler,
+      onClientConnected: options.onClientConnected,
+      onClientDisconnected: (clientId) => {
+        options.cleanupClientResources?.(clientId)
+        // Best-effort: notify SM so it can drop browser-host pins for this client.
+        // Duck-typed because TSessionManager is generic at the bootstrap layer.
+        const smWithDisconnect = sessionManager as unknown as { onClientDisconnected?: (id: string) => void }
+        if (typeof smWithDisconnect.onClientDisconnected === 'function') {
+          try {
+            smWithDisconnect.onClientDisconnected(clientId)
+          } catch {
+            // Cleanup hook failures must not break the transport.
+          }
         }
+      },
+    })
+
+    startupCleanup.push(() => wsServer.close())
+
+    options.bindRpcServer?.(sessionManager, wsServer)
+
+    const oauthFlowStore = new OAuthFlowStore()
+    startupCleanup.push(() => oauthFlowStore.dispose())
+
+    const deps = options.createHandlerDeps({
+      sessionManager,
+      platform,
+      oauthFlowStore,
+    })
+
+    const startedAt = Date.now()
+    const serverHandlerContext: ServerHandlerContext = {
+      getConnectedClientCount: () => wsServer.getConnectedClientCount(),
+      serverId: options.serverId ?? 'headless',
+      startedAt,
+    }
+
+    options.registerAllRpcHandlers(wsServer, deps, serverHandlerContext)
+
+    options.setSessionEventSink(sessionManager, wsServer.push.bind(wsServer))
+
+    await options.initializeSessionManager(sessionManager)
+
+    // Recovery and the session catalog must be ready before accepting clients.
+    await wsServer.listen()
+
+    modelRefreshService.startAll()
+
+    platform.logger.info(`Phaneris server listening on ${wsServer.protocol}://${rpcHost}:${wsServer.port}`)
+
+    let stopped = false
+    const stop = async (): Promise<void> => {
+      if (stopped) return
+      stopped = true
+
+      platform.logger.info('Shutting down...')
+
+      // Notify connected clients before closing connections
+      try {
+        wsServer.push('server:shuttingDown', { to: 'all' }, {
+          reason: 'shutdown',
+          graceMs: 2000,
+          timestamp: Date.now(),
+        })
+        // Brief drain period so clients receive the notification
+        await new Promise(resolve => setTimeout(resolve, 2000))
+      } catch (error) {
+        platform.logger.error('[bootstrap] Failed to send shutdown notification:', error)
       }
-    },
-  })
 
-  await wsServer.listen()
+      try {
+        modelRefreshService.stopAll?.()
+      } catch (error) {
+        platform.logger.error('[bootstrap] Failed to stop model refresh service:', error)
+      }
 
-  options.bindRpcServer?.(sessionManager, wsServer)
+      try {
+        await options.cleanupSessionManager?.(sessionManager)
+      } catch (error) {
+        platform.logger.error('[bootstrap] Failed to clean up session manager:', error)
+      }
+      await runtime.close()
 
-  const oauthFlowStore = new OAuthFlowStore()
+      try {
+        wsServer.close()
+      } catch (error) {
+        platform.logger.error('[bootstrap] Failed to close WS server:', error)
+      }
 
-  const deps = options.createHandlerDeps({
-    sessionManager,
-    platform,
-    oauthFlowStore,
-  })
+      try {
+        oauthFlowStore.dispose()
+      } catch (error) {
+        platform.logger.error('[bootstrap] Failed to dispose OAuth flow store:', error)
+      }
 
-  const startedAt = Date.now()
-  const serverHandlerContext: ServerHandlerContext = {
-    getConnectedClientCount: () => wsServer.getConnectedClientCount(),
-    serverId: options.serverId ?? 'headless',
-    startedAt,
-  }
-
-  options.registerAllRpcHandlers(wsServer, deps, serverHandlerContext)
-
-  options.setSessionEventSink(sessionManager, wsServer.push.bind(wsServer))
-
-  await options.initializeSessionManager(sessionManager)
-
-  modelRefreshService.startAll()
-
-  platform.logger.info(`Phaneris server listening on ${wsServer.protocol}://${rpcHost}:${wsServer.port}`)
-
-  let stopped = false
-  const stop = async (): Promise<void> => {
-    if (stopped) return
-    stopped = true
-
-    platform.logger.info('Shutting down...')
-
-    // Notify connected clients before closing connections
-    try {
-      wsServer.push('server:shuttingDown', { to: 'all' }, {
-        reason: 'shutdown',
-        graceMs: 2000,
-        timestamp: Date.now(),
-      })
-      // Brief drain period so clients receive the notification
-      await new Promise(resolve => setTimeout(resolve, 2000))
-    } catch (error) {
-      platform.logger.error('[bootstrap] Failed to send shutdown notification:', error)
+      releaseServerLock()
     }
 
-    try {
-      modelRefreshService.stopAll?.()
-    } catch (error) {
-      platform.logger.error('[bootstrap] Failed to stop model refresh service:', error)
+    return {
+      platform,
+      sessionManager,
+      wsServer,
+      oauthFlowStore,
+      host: rpcHost,
+      port: wsServer.port,
+      protocol: wsServer.protocol,
+      token: serverToken,
+      serverHandlerContext,
+      stop,
     }
-
-    try {
-      await options.cleanupSessionManager?.(sessionManager)
-    } catch (error) {
-      platform.logger.error('[bootstrap] Failed to clean up session manager:', error)
+  } catch (error) {
+    for (const cleanup of startupCleanup.reverse()) {
+      try { await cleanup() } catch (cleanupError) { platform.logger.error('[bootstrap] Startup cleanup failed:', cleanupError) }
     }
-
-    try {
-      wsServer.close()
-    } catch (error) {
-      platform.logger.error('[bootstrap] Failed to close WS server:', error)
-    }
-
-    try {
-      oauthFlowStore.dispose()
-    } catch (error) {
-      platform.logger.error('[bootstrap] Failed to dispose OAuth flow store:', error)
-    }
-
     releaseServerLock()
-  }
-
-  return {
-    platform,
-    sessionManager,
-    wsServer,
-    oauthFlowStore,
-    host: rpcHost,
-    port: wsServer.port,
-    protocol: wsServer.protocol,
-    token: serverToken,
-    serverHandlerContext,
-    stop,
+    throw error
   }
 }
 

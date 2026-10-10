@@ -1,0 +1,718 @@
+{
+  "executedAt": "2026-10-10T09:11:53.060Z",
+  "command": "bun scripts/verification/upstream-0140.ts",
+  "head": "dbd32f60b5d90e20b1bc2b231035baf6b171ddc2",
+  "upstream": "73bd9c2a3573158bea880984eb8d5fdb41e0cac2",
+  "baseline": false,
+  "fixtures": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE",
+  "scope": "Real host/permission/storage/source code with isolated transport and loopback API; no dangerous shell execution, GUI or live provider.",
+  "total": 61,
+  "passed": 61,
+  "failed": 0,
+  "records": [
+    {
+      "id": "P02 gh api /repos/example/project -X DELETE",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `gh api /repos/example/project -X DELETE` is not in the read-only allowlist.\n\nMatched: `gh api /repos/example/project -X DELETE` (39 chars)\n\nClosest allowlist hint (heuristic): GitHub API with explicit GET method\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 gh api /repos/example/project -f title=x",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `gh api /repos/example/project -f title=x` is not in the read-only allowlist.\n\nMatched: `gh api /repos/example/project -f title=x` (40 chars)\n\nClosest allowlist hint (heuristic): GitHub API with explicit GET method\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 gh api /repos/example/project --input body.json",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `gh api /repos/example/project --input body.json` is not in the read-only allowlist.\n\nMatched: `gh api /repos/example/project --input body.json` (47 chars)\n\nClosest allowlist hint (heuristic): GitHub API with explicit GET method\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 gh api /repos/example/project -iXDELETE",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `gh api /repos/example/project -iXDELETE` is not in the read-only allowlist.\n\nMatched: `gh api /repos/example/project -iXDELETE` (39 chars)\n\nClosest allowlist hint (heuristic): GitHub API with explicit GET method\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 gh api graphql -f \"query=mutation { deleteIssue }\"",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `gh api graphql -f query=mutation { deleteIssue }` is not in the read-only allowlist.\n\nMatched: `gh api graphql -f query=mutation { deleteIssue }` (48 chars)\n\nClosest allowlist hint (heuristic): GitHub API with explicit GET method\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 gh api graphql -F query=@query.graphql",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `gh api graphql -F query=@query.graphql` is not in the read-only allowlist.\n\nMatched: `gh api graphql -F query=@query.graphql` (38 chars)\n\nClosest allowlist hint (heuristic): GitHub API with explicit GET method\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 sed -n -i '1p' fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `sed -n -i 1p fixture.txt` is not in the read-only allowlist.\n\nMatched: `sed -n` (6 chars)\nFailed at: `-i` (position 6)\n\nClosest allowlist hint (heuristic): sed in print-only mode (no editing)\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 sed -n 'w output.txt' fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `sed -n w output.txt fixture.txt` is not in the read-only allowlist.\n\nMatched: `sed -n` (6 chars)\nFailed at: `w` (position 6)\n\nClosest allowlist hint (heuristic): sed in print-only mode (no editing)\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 sed -n 's/a/b/e' fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `sed -n s/a/b/e fixture.txt` is not in the read-only allowlist.\n\nMatched: `sed -n` (6 chars)\nFailed at: `s/a/b/e` (position 6)\n\nClosest allowlist hint (heuristic): sed in print-only mode (no editing)\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 sed -n -f script.sed fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `sed -n -f script.sed fixture.txt` is not in the read-only allowlist.\n\nMatched: `sed -n` (6 chars)\nFailed at: `-f` (position 6)\n\nClosest allowlist hint (heuristic): sed in print-only mode (no editing)\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 sort -o output.txt fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `sort -o output.txt fixture.txt` is not in the read-only allowlist.\n\nMatched: `sort` (4 chars)\nFailed at: `-o` (position 4)\n\nClosest allowlist hint (heuristic): Sort lines of text files\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 sort --output=output.txt fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `sort --output=output.txt fixture.txt` is not in the read-only allowlist.\n\nMatched: `sort` (4 chars)\nFailed at: `--output=output.txt` (position 4)\n\nClosest allowlist hint (heuristic): Sort lines of text files\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 sort --compress-program=other fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `sort --compress-program=other fixture.txt` is not in the read-only allowlist.\n\nMatched: `sort` (4 chars)\nFailed at: `--compress-program=other` (position 4)\n\nClosest allowlist hint (heuristic): Sort lines of text files\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 find . -delete",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "Bash command `find . -delete` is not in the read-only allowlist.\n\nMatched: `find` (4 chars)\nFailed at: `.` (position 4)\n\nClosest allowlist hint (heuristic): Search for files in directory hierarchy\n\nTo see what commands are allowed in Explore mode, read:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\permissions.json\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\permissions\\default.json\n\nTo understand the permission system and how to customize:\n  • C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\config\\docs\\permissions.md\n\nSwitch to Ask or Allow All mode (SHIFT+TAB) to run it."
+      }
+    },
+    {
+      "id": "P02 gh api /repos/example/project -X GET",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P02 gh api /repos/example/project",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P02 sed -n '1p' fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P02 sort fixture.txt",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P01 mcp__demo__delete_account",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "MCP write operations are blocked in Explore. Switch to Ask or Allow All mode (SHIFT+TAB) to make changes."
+      }
+    },
+    {
+      "id": "P01 mcp__demo__send_thread_reply",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "MCP write operations are blocked in Explore. Switch to Ask or Allow All mode (SHIFT+TAB) to make changes."
+      }
+    },
+    {
+      "id": "P01 mcp__demo__update_spreadsheet",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "MCP write operations are blocked in Explore. Switch to Ask or Allow All mode (SHIFT+TAB) to make changes."
+      }
+    },
+    {
+      "id": "P01 mcp__budget__create_issue",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "MCP write operations are blocked in Explore. Switch to Ask or Allow All mode (SHIFT+TAB) to make changes."
+      }
+    },
+    {
+      "id": "P01 mcp__demo__get_or_create_issue",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "MCP write operations are blocked in Explore. Switch to Ask or Allow All mode (SHIFT+TAB) to make changes."
+      }
+    },
+    {
+      "id": "P01 mcp__demo__searchAndReplace",
+      "pass": true,
+      "observation": {
+        "allowed": false,
+        "reason": "MCP write operations are blocked in Explore. Switch to Ask or Allow All mode (SHIFT+TAB) to make changes."
+      }
+    },
+    {
+      "id": "P01 mcp__demo__list_items",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P01 mcp__demo__getCommit",
+      "pass": true,
+      "observation": {
+        "allowed": true
+      }
+    },
+    {
+      "id": "P03 Ask MCP read shares Explore rules",
+      "pass": true
+    },
+    {
+      "id": "P01 custom regex remains explicit",
+      "pass": true
+    },
+    {
+      "id": "P06 activation→prompt→allow",
+      "pass": true,
+      "observation": [
+        "activation",
+        "prompt",
+        "answer",
+        "allow"
+      ]
+    },
+    {
+      "id": "P06 activation→prompt→deny",
+      "pass": true,
+      "observation": [
+        "activation",
+        "prompt",
+        "deny",
+        "block"
+      ]
+    },
+    {
+      "id": "P06 activation fail",
+      "pass": true,
+      "observation": [
+        "activation",
+        "block"
+      ]
+    },
+    {
+      "id": "P06 activation unchanged",
+      "pass": true,
+      "observation": [
+        "activation",
+        "block"
+      ]
+    },
+    {
+      "id": "P07 absent permission handler blocks",
+      "pass": true,
+      "observation": [
+        {
+          "type": "pre_tool_use_response",
+          "requestId": "unattended",
+          "action": "block",
+          "reason": "Permission is required, but no approval handler is available."
+        }
+      ]
+    },
+    {
+      "id": "P07 failing permission handler blocks and drains pending",
+      "pass": true
+    },
+    {
+      "id": "P06 Stop during source activation cannot prompt or allow later",
+      "pass": true
+    },
+    {
+      "id": "P04 real Pi remember, allowed=true",
+      "pass": true,
+      "observation": [
+        {
+          "command": "python Safe.py",
+          "canRemember": true
+        },
+        {
+          "command": "python safe.py",
+          "canRemember": true
+        }
+      ]
+    },
+    {
+      "id": "P04 real Pi remember, allowed=false",
+      "pass": true,
+      "observation": [
+        {
+          "command": "python Safe.py",
+          "canRemember": true
+        },
+        {
+          "command": "python Safe.py",
+          "canRemember": true
+        },
+        {
+          "command": "python safe.py",
+          "canRemember": true
+        }
+      ]
+    },
+    {
+      "id": "P04 dangerous commands and chains cannot be remembered",
+      "pass": true,
+      "observation": [
+        {
+          "command": "git push --force",
+          "canRemember": false
+        },
+        {
+          "command": "git -C repo push",
+          "canRemember": false
+        },
+        {
+          "command": "git commit -m fixture && rm -rf never-executed",
+          "canRemember": false
+        },
+        {
+          "command": "sudo touch fixture",
+          "canRemember": false
+        },
+        {
+          "command": "gh api /repos/x -X DELETE",
+          "canRemember": false
+        }
+      ]
+    },
+    {
+      "id": "P04 write permission belongs to its directory",
+      "pass": true
+    },
+    {
+      "id": "P04 network permission checks every host and shell shape",
+      "pass": true
+    },
+    {
+      "id": "P04 opaque network routing cannot reuse domain permission",
+      "pass": true
+    },
+    {
+      "id": "P04 combined short options cannot hide network configuration",
+      "pass": true,
+      "observation": [
+        {
+          "command": "curl https://api.example.test/a",
+          "canRemember": true
+        },
+        {
+          "command": "curl -sKhidden.conf https://api.example.test/a",
+          "canRemember": false
+        },
+        {
+          "command": "curl -sxhidden.test:3128 https://api.example.test/a",
+          "canRemember": false
+        },
+        {
+          "command": "wget -qi hidden.txt https://api.example.test/a",
+          "canRemember": false
+        },
+        {
+          "command": "wget -qe input=hidden.txt https://api.example.test/a",
+          "canRemember": false
+        }
+      ]
+    },
+    {
+      "id": "P04 network option values never become approved hosts",
+      "pass": true,
+      "observation": [
+        {
+          "command": "curl -X PATCH --header header.fixture.test https://api.example.test/a",
+          "canRemember": true
+        },
+        {
+          "command": "curl https://patch/a",
+          "canRemember": true
+        },
+        {
+          "command": "curl https://header.fixture.test/a",
+          "canRemember": true
+        }
+      ]
+    },
+    {
+      "id": "P04 API permission remains source scoped",
+      "pass": true
+    },
+    {
+      "id": "P05 child mode never exceeds parent mode",
+      "pass": true
+    },
+    {
+      "id": "R01 no pending plan does not rewrite session",
+      "pass": true
+    },
+    {
+      "id": "R01 pending plan is actually removed",
+      "pass": true
+    },
+    {
+      "id": "R02 completion event uses subscription snapshot",
+      "pass": true
+    },
+    {
+      "id": "R03 self, legacy, chain limit and metadata round trip",
+      "pass": true
+    },
+    {
+      "id": "R03 skipped prompt is recorded without executing",
+      "pass": true,
+      "observation": [
+        {
+          "id": "loop",
+          "ts": 1791623511090,
+          "ok": true,
+          "prompt": "never executed",
+          "skipped": "the event is about a session this automation created (loop guard)"
+        }
+      ]
+    },
+    {
+      "id": "R04 source_test missing",
+      "pass": true,
+      "observation": {
+        "state": "missing",
+        "savedStatus": "error",
+        "refreshes": 2,
+        "isError": true
+      }
+    },
+    {
+      "id": "R04 source_test failed",
+      "pass": true,
+      "observation": {
+        "state": "failed",
+        "savedStatus": "error",
+        "refreshes": 2,
+        "isError": true
+      }
+    },
+    {
+      "id": "R04 source_test refreshed",
+      "pass": true,
+      "observation": {
+        "state": "refreshed",
+        "savedStatus": "connected",
+        "refreshes": 2,
+        "isError": false
+      }
+    },
+    {
+      "id": "R05 activation retry hides duplicate, keeps steers and attachments",
+      "pass": true,
+      "observation": {
+        "content": "original request\n\ncorrection: use latest data\n\n[demo activated]",
+        "options": {
+          "skillSlugs": [
+            "fixture-skill"
+          ],
+          "hidden": true
+        },
+        "messageCount": 1
+      }
+    },
+    {
+      "id": "R06 unknown background task does not wake host or invent start time",
+      "pass": true
+    },
+    {
+      "id": "R05 real host retry persists one visible input and one hidden continuation",
+      "pass": true,
+      "observation": {
+        "sessionFile": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\sessions\\261010-fresh-moon\\session.jsonl",
+        "userInputs": [
+          {
+            "id": "msg-1791623511650-b521050c2142",
+            "content": "original durable request",
+            "timestamp": 1791623511650,
+            "attachments": [
+              {
+                "id": "fixture-file",
+                "name": "fixture.txt",
+                "type": "text",
+                "mimeType": "text/plain",
+                "storedPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\fixture.txt"
+              }
+            ],
+            "inputReception": {
+              "disposition": "saved"
+            },
+            "type": "user"
+          },
+          {
+            "id": "msg-1791623511922-3c093cca964d",
+            "content": "original durable request\n\ncorrection: keep the attachment\n\n[demo activated]",
+            "timestamp": 1791623511922,
+            "attachments": [
+              {
+                "id": "fixture-file",
+                "name": "fixture.txt",
+                "type": "text",
+                "mimeType": "text/plain",
+                "storedPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\fixture.txt"
+              }
+            ],
+            "inputReception": {
+              "disposition": "saved"
+            },
+            "hidden": true,
+            "type": "user"
+          }
+        ],
+        "chats": [
+          {
+            "content": "original durable request",
+            "attachments": [
+              {
+                "id": "fixture-file",
+                "name": "fixture.txt",
+                "type": "text",
+                "mimeType": "text/plain",
+                "storedPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\fixture.txt"
+              }
+            ],
+            "options": {
+              "inputId": "msg-1791623511650-b521050c2142",
+              "durableRunOperationId": "run_msg-1791623511650-b521050c2142_1",
+              "durableTurnId": "msg-1791623511650-b521050c2142"
+            }
+          },
+          {
+            "content": "original durable request\n\ncorrection: keep the attachment\n\n[demo activated]",
+            "attachments": [
+              {
+                "id": "fixture-file",
+                "name": "fixture.txt",
+                "type": "text",
+                "mimeType": "text/plain",
+                "storedPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\fixture.txt"
+              }
+            ],
+            "options": {
+              "inputId": "msg-1791623511922-3c093cca964d",
+              "durableRunOperationId": "run_msg-1791623511922-3c093cca964d_2",
+              "durableTurnId": "msg-1791623511922-3c093cca964d"
+            }
+          }
+        ],
+        "acceptedEvents": [
+          {
+            "type": "user_message",
+            "sessionId": "261010-fresh-moon",
+            "message": {
+              "id": "msg-1791623511650-b521050c2142",
+              "role": "user",
+              "content": "original durable request",
+              "timestamp": 1791623511650,
+              "attachments": [
+                {
+                  "id": "fixture-file",
+                  "name": "fixture.txt",
+                  "type": "text",
+                  "mimeType": "text/plain",
+                  "storedPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\fixture.txt"
+                }
+              ],
+              "inputReception": {
+                "disposition": "saved"
+              }
+            },
+            "status": "accepted"
+          },
+          {
+            "type": "user_message",
+            "sessionId": "261010-fresh-moon",
+            "message": {
+              "id": "msg-1791623511922-3c093cca964d",
+              "role": "user",
+              "content": "original durable request\n\ncorrection: keep the attachment\n\n[demo activated]",
+              "timestamp": 1791623511922,
+              "attachments": [
+                {
+                  "id": "fixture-file",
+                  "name": "fixture.txt",
+                  "type": "text",
+                  "mimeType": "text/plain",
+                  "storedPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\workspace\\fixture.txt"
+                }
+              ],
+              "inputReception": {
+                "disposition": "saved"
+              },
+              "hidden": true
+            },
+            "status": "accepted"
+          }
+        ],
+        "durableProjection": {
+          "cursor": 10,
+          "items": [
+            {
+              "kind": "user",
+              "eventId": "run_msg-1791623511650-b521050c2142_1:user",
+              "seq": 3,
+              "operationId": "run_msg-1791623511650-b521050c2142_1",
+              "content": "original durable request"
+            },
+            {
+              "kind": "assistant",
+              "eventId": "run_msg-1791623511650-b521050c2142_1:assistant:msg-1791623511903-5fb287bffe33",
+              "seq": 4,
+              "operationId": "run_msg-1791623511650-b521050c2142_1",
+              "content": "fixture reply"
+            },
+            {
+              "kind": "user",
+              "eventId": "run_msg-1791623511922-3c093cca964d_2:user",
+              "seq": 8,
+              "operationId": "run_msg-1791623511922-3c093cca964d_2",
+              "content": "original durable request\n\ncorrection: keep the attachment\n\n[demo activated]"
+            },
+            {
+              "kind": "assistant",
+              "eventId": "run_msg-1791623511922-3c093cca964d_2:assistant:msg-1791623511993-b3527f7bf4e1",
+              "seq": 9,
+              "operationId": "run_msg-1791623511922-3c093cca964d_2",
+              "content": "fixture reply"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "R07 safe minimum, platform update and bypasses",
+      "pass": true,
+      "observation": {
+        "installed": false,
+        "path": null,
+        "version": null,
+        "outdated": false,
+        "minSafeVersion": "0.44.0",
+        "foundPath": null,
+        "updateCommand": "winget install --id rtk-ai.rtk --exact"
+      }
+    },
+    {
+      "id": "R08 create accented, truncated and duplicate labels",
+      "pass": true,
+      "observation": [
+        "task-powershell-fejlesztok-kep",
+        "task-powershell-fejlesztok-kep-2"
+      ]
+    },
+    {
+      "id": "B3 caller cancellation differs from a deadline",
+      "pass": true
+    },
+    {
+      "id": "B3 decision logs, linked outcomes and report remain private",
+      "pass": true,
+      "observation": {
+        "logPath": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-upstream-0140-OH39mE\\decisions.jsonl",
+        "summary": {
+          "total": 1,
+          "failures": 0,
+          "providers": {
+            "custom": 1
+          },
+          "features": [
+            {
+              "feature": "integration",
+              "calls": 1,
+              "failures": 0,
+              "cancelled": 0,
+              "coldCalls": 1,
+              "coldFailures": 0,
+              "knownCostUsd": 0,
+              "unknownCostCalls": 1,
+              "failureKinds": {},
+              "withOutcome": 1,
+              "changed": 0,
+              "actions": {
+                "kept": 1
+              },
+              "followUps": {
+                "verified": 1
+              },
+              "followUpsByAction": {
+                "kept": {
+                  "verified": 1
+                }
+              },
+              "inputTokens": 9,
+              "outputTokens": 2,
+              "sessions": 1,
+              "latencyP50Ms": 4,
+              "latencyP95Ms": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B3 default test recorder stays outside user configuration",
+      "pass": true,
+      "observation": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-decisions-test-29836.jsonl"
+    }
+  ]
+}

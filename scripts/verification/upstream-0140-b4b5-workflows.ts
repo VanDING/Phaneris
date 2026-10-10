@@ -19,6 +19,7 @@ process.env.NODE_ENV = 'test'
 const decisions = await import('../../packages/shared/src/decisions/index.ts')
 const config = await import('../../packages/shared/src/config/storage.ts')
 const host = await import('../../packages/server-core/src/sessions/SessionManager.ts')
+const { PiRuntimeDriver } = await import('../../packages/server-core/src/runtime-adapters/pi-driver')
 const sessions = await import('../../packages/shared/src/sessions/storage.ts')
 const tasks = await import('../../packages/shared/src/tasks/index.ts')
 const { TaskRunner } = await import('../../packages/server-core/src/tasks/TaskRunner.ts')
@@ -79,7 +80,7 @@ async function makeSession(hold = false, toolEvents: any[] = []) {
   const gate = new Promise<void>(resolve => { release = resolve })
   const agent = new Proxy({
     getModel: () => 'pi/gpt-5-mini', getSessionId: () => null, getBackendProvider: () => 'pi',
-    canSteerNow: () => managed.isProcessing, isCompactionInFlight: () => false,
+    canSteerNow: () => managed.runtime.isProcessing, isCompactionInFlight: () => false,
     redirect: (text: string) => { redirects.push(text); return true },
     generateTitle: async () => 'Generated fixture title', regenerateTitle: async () => 'Refreshed fixture title',
     chat: async function* (content: string, attachments: unknown, options: unknown) {
@@ -89,9 +90,9 @@ async function makeSession(hold = false, toolEvents: any[] = []) {
       yield { type: 'text_complete', text: 'Which account should I use?' }
       yield { type: 'complete' }
     },
-  }, { get: (target, key) => key === 'then' ? undefined : key in target ? target[key as keyof typeof target] : () => undefined })
-  managed.agent = agent
-  manager.sessions.set(managed.id, managed)
+  }, { get: (target, key) => key === 'then' || key === 'redirectConfirmed' ? undefined : key in target ? target[key as keyof typeof target] : () => undefined })
+  manager.execution.installDriver(managed.id, new PiRuntimeDriver(agent as never))
+  manager.registerManagedSession(managed)
   manager.eventSink = (_channel: string, _target: unknown, event: any) => events.push(event)
   manager.getOrCreateAgent = async () => agent
   return { manager, managed, events, chats, redirects, release }
@@ -112,7 +113,7 @@ try {
   await check('A lowered user preference wins over an adaptive decision still in flight', async () => {
     settings({ adaptiveThinking: true, semanticLabels: false, turnOutcome: false })
     const f = await makeSession()
-    f.managed.isProcessing = true
+    f.manager.execution.begin({ sessionId: f.managed.id, workspaceRootPath: f.managed.workspace.rootPath })
     delay = 100
     const pending = f.manager.startPreTurnDecisions(f.managed, 'Simple request')
     f.manager.setSessionThinkingLevel(f.managed.id, 'off')
@@ -131,7 +132,7 @@ try {
     await pending
     assert.equal(f.chats.length, 0)
     assert.equal(f.managed.suggestionTrace, undefined)
-    assert.equal(f.managed.isProcessing, false)
+    assert.equal(f.managed.runtime.isProcessing, false)
     delay = 0; settings()
   })
   await check('Approving a plan returns Explore to its previous Guarded mode on the real host', async () => {
@@ -153,12 +154,12 @@ try {
     const managed = f.manager.sessions.get(created.id)
     assert.equal(managed.unattended, true)
     const before = network.length
-    managed.isProcessing = true
+    f.manager.execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
     assert.equal(f.manager.startPreTurnDecisions(managed, 'Implement the feature'), null)
     const riskCheck = buildGuardedModeCheck({ sessionId: created.id, isInteractive: () => host.isAttendedSession(managed) })
     assert.equal(riskCheck.canPrompt?.(), false)
     assert.equal(await riskCheck.check({ toolName: 'Bash', promptType: 'bash', description: 'unattended mutation', command: 'touch file' }), null)
-    managed.isProcessing = false
+    await f.manager.execution.finish(f.manager.execution.current(managed.id), 'interrupted', { notify: false, advanceQueue: false })
     const boundaries = [{ hidden: true }, { systemPromptPreset: 'mini' }, { taskRunId: 'fixture-run' }, { taskSlug: 'fixture-task' }, { triggeredBy: 'automation' }]
     assert(boundaries.every(flags => !host.isAttendedSession({ ...f.managed, ...flags })))
     assert(host.isAttendedSession(f.managed))
@@ -174,7 +175,7 @@ try {
     const pending = f.manager.applyTurnOutcome(f.managed, 'a')
     await Bun.sleep(25)
     f.managed.sessionStatus = 'in-progress'
-    f.managed.processingGeneration++
+    f.manager.execution.begin({ sessionId: f.managed.id, workspaceRootPath: f.managed.workspace.rootPath })
     await pending
     delay = 0
     assert.equal(f.managed.sessionStatus, 'in-progress')
@@ -208,15 +209,15 @@ try {
     await until(() => f.chats.length === 1)
     await f.manager.sendMessage(f.managed.id, 'Next request', undefined, undefined, undefined, undefined, false, (id: string) => acks.push(id))
     await f.manager.sendMessage(f.managed.id, 'Keep original exports', undefined, undefined, undefined, undefined, false, (id: string) => acks.push(id))
-    await until(() => f.managed.messageQueue[1]?.mergeWith === f.managed.messageQueue[0])
+    await until(() => f.managed.runtime.messageQueue[1]?.mergeWith === f.managed.runtime.messageQueue[0])
     f.release(); await running
-    await until(() => f.chats.length === 2 && !f.managed.isProcessing)
+    await until(() => f.chats.length === 2 && !f.managed.runtime.isProcessing)
     assert.equal(f.chats[1].content, 'Next request\n\nKeep original exports')
     assert.equal(new Set(acks).size, 3)
     const bubbles = f.managed.messages.filter((m: any) => m.role === 'user')
     assert.deepEqual(bubbles.map((m: any) => m.content), ['Initial request', 'Next request', 'Keep original exports'])
     assert(bubbles.every((m: any) => !m.isQueued))
-    const journal = f.manager.durableRuntime.storeFor(workspaceRoot).listAllEvents({ sessionId: f.managed.id })
+    const journal = f.manager.durableRuntime.queries.events(workspaceRoot, { sessionId: f.managed.id })
     assert.equal(journal.filter((e: any) => e.type === 'user_input_admitted').length, 3)
     assert.deepEqual(journal.filter((e: any) => e.type === 'user_message_committed' && e.modelVisible).map((e: any) => e.payload.content), bubbles.map((m: any) => m.content))
     await f.manager.flushSession(f.managed.id)
@@ -233,9 +234,9 @@ try {
     const attachment = { id: 'file', name: 'fixture.txt', type: 'text', mimeType: 'text/plain', storedPath: join(fixture, 'fixture.txt') }
     await f.manager.sendMessage(f.managed.id, 'Read attached', [attachment], [attachment])
     assert.equal(f.redirects.length, 1)
-    assert.equal(f.managed.messageQueue.length, 1)
+    assert.equal(f.managed.runtime.messageQueue.length, 1)
     f.release(); await running
-    await until(() => f.chats.length === 2 && !f.managed.isProcessing)
+    await until(() => f.chats.length === 2 && !f.managed.runtime.isProcessing)
     assert.equal(f.chats[1].attachments[0].id, 'file')
   })
   await check('Late delivery decisions cannot steer a newer turn; compaction and handoff retain queued inputs', async () => {
@@ -247,24 +248,24 @@ try {
     delay = 150
     await f.manager.sendMessage(f.managed.id, 'A new request')
     f.release(); await running
-    await until(() => f.chats.length === 2 && !f.managed.isProcessing)
+    await until(() => f.chats.length === 2 && !f.managed.runtime.isProcessing)
     await Bun.sleep(200); delay = 0
     assert.deepEqual(f.redirects, [])
     const held = await makeSession(true), turn = held.manager.sendMessage(held.managed.id, 'Initial request')
     await until(() => held.chats.length === 1)
     const before = network.length
-    held.managed.agent.isCompactionInFlight = () => true
+    held.managed.runtime.agent.isCompactionInFlight = () => true
     await held.manager.sendMessage(held.managed.id, 'During compaction')
-    held.managed.agent.isCompactionInFlight = () => false
+    held.managed.runtime.agent.isCompactionInFlight = () => false
     held.managed.contextHandoff = { phase: 'generating' }
     await held.manager.sendMessage(held.managed.id, 'During handoff')
-    await Promise.all(held.managed.messageQueue.map((item: any) => item.continuationCheck))
+    await Promise.all(held.managed.runtime.messageQueue.map((item: any) => item.continuationCheck))
     assert.equal(network.length, before)
-    assert.equal(held.managed.messageQueue.length, 2)
+    assert.equal(held.managed.runtime.messageQueue.length, 2)
     assert.deepEqual(held.redirects, [])
     held.managed.contextHandoff = undefined
     held.release(); await turn
-    await until(() => held.chats.length === 3 && !held.managed.isProcessing)
+    await until(() => held.chats.length === 3 && !held.managed.runtime.isProcessing)
     return { lateRedirects: f.redirects.length, blockedDecisionCalls: network.length - before, queuedInputs: 2 }
   })
   await check('Existing native steering admits and commits the original input before its ACK', async () => {
@@ -273,7 +274,7 @@ try {
     const running = f.manager.sendMessage(f.managed.id, 'Initial native turn')
     await until(() => f.chats.length === 1)
     await f.manager.sendMessage(f.managed.id, 'Native correction', undefined, undefined, undefined, undefined, false, (id: string) => {
-      const rows = f.manager.durableRuntime.storeFor(workspaceRoot).listEvents({ sessionId: f.managed.id, limit: 100 })
+      const rows = f.manager.durableRuntime.queries.events(workspaceRoot, { sessionId: f.managed.id, limit: 100 })
       assert(rows.some((row: any) => row.type === 'user_input_admitted' && row.payload.messageId === id))
       assert(rows.some((row: any) => row.type === 'user_message_committed' && row.payload.messageId === id))
     })
@@ -573,7 +574,7 @@ try {
   api.stop(true); modes.setGuardedModeActiveResolver(null); setLargeResultSummaryGate(null)
   for (const runner of runners) for (const active of runner.runs.values()) { clearTimeout(active.timeoutTimer); active.unsubscribe?.() }
   for (const manager of managers) await manager.flushAllSessions()
-  for (const manager of managers) manager.durableRuntime.closeAll()
+  for (const manager of managers) await manager.cleanup()
 }
 const failed = records.filter(record => !record.pass)
 const out = process.argv.find(arg => arg.startsWith('--report='))?.slice(9) ?? join(root, 'docs/verification/results/upstream-0.14.0-b4-b5-workflows.json')

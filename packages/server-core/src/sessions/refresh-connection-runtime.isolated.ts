@@ -1,3 +1,4 @@
+import { PiRuntimeDriver } from '../runtime-adapters/pi-driver'
 import { afterAll, afterEach, beforeEach, describe, expect, it, jest } from 'bun:test'
 import { mkdtempSync, rmSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
@@ -104,8 +105,8 @@ function injectSession(
     { id, name: id, llmConnection },
     workspace as never,
     { messagesLoaded: true },
-  ) as unknown as { agent: AgentStub | null; backendRuntimeSignature?: string; backendRestartSignature?: string; isProcessing: boolean; llmConnection?: string }
-  managed.agent = agent
+  )
+  if (agent) (sm as any).execution.installDriver(managed.id, new PiRuntimeDriver(agent as never))
   // Force a stale runtime signature so the helper's comparison always reaches
   // the refresh branch — the signature it computes from real disk config will
   // never equal this sentinel.
@@ -128,9 +129,9 @@ function injectSession(
       resolvedModel: ctx.resolvedModel,
     })
   }
-  managed.isProcessing = opts.isProcessing ?? false
+  (opts.isProcessing ?? false) && (sm as any).execution.begin({ sessionId: managed.id, workspaceRootPath: managed.workspace.rootPath })
   managed.llmConnection = llmConnection
-  ;(sm as unknown as { sessions: Map<string, unknown> }).sessions.set(id, managed)
+  ;(sm as any).registerManagedSession(managed)
   return managed
 }
 
@@ -196,7 +197,7 @@ describe('refreshConnectionRuntime', () => {
     await sm.refreshConnectionRuntime('slug-A')
 
     expect(failingAgent.updateRuntimeConfig).toHaveBeenCalledTimes(1)
-    expect(managed.agent).toBeNull()
+    expect(managed.runtime.agent).toBeNull()
   })
 
   it('skips in-place refresh and forces recreation when a restart-required field changed', async () => {
@@ -212,7 +213,7 @@ describe('refreshConnectionRuntime', () => {
     await sm.refreshConnectionRuntime('slug-A')
 
     expect(agent.updateRuntimeConfig).not.toHaveBeenCalled()
-    expect(managed.agent).toBeNull()
+    expect(managed.runtime.agent).toBeNull()
   })
 
   it('serializes concurrent refresh requests via the per-session mutex', async () => {

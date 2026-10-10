@@ -3,6 +3,9 @@
 规划日期：2026-10-06
 范围：① 大文件拆分 ② 会话工具竞态 ③ 架构分析发现 ④ decide 模式优化
 状态：**规划已定案**（§3 三项决策于 2026-10-06 确认）；尚无任何代码改动
+
+> 2026-10-10 更新：上行及正文的实施状态均是原规划时点记录。用户已将本轮目标明确为“让 Durable Runtime 拥有自己的边界”；第 5 步的九服务清单、仅两个文件和“纯移动”约束已按[Runtime 边界实施设计](../architecture/durable-runtime-boundary.md)完成 B0–B5 迁移，不应继续直接当作当前实施蓝图；其余历史决策保留，前置工作需结合后续实施记录逐项核验。
+
 依据：[Phaneris_Project_Deep_Analysis.md](./Phaneris_Project_Deep_Analysis.md)（§10 拆分方案、§11 shared 膨胀、§12 优先级）、[architecture/overview.md](../architecture/overview.md)、[dependency-graph-2026-10-06.md](../dependencies/dependency-graph-2026-10-06.md)，以及 2026-10-06 会话中对竞态与 Guarded 的源码级核查
 
 ---
@@ -135,6 +138,8 @@
 ---
 
 ### 第 5 步 — 拆分大文件（①）
+
+> 本节保留旧方案作为决策依据。本轮执行边界、迁移阶段及验收标准的替代设计见[Runtime 边界实施设计](../architecture/durable-runtime-boundary.md)；其中明确区分保持行为的结构迁移与先复现、单独交付的语义修正。
 
 **权威文档**：[Phaneris_Project_Deep_Analysis.md](./Phaneris_Project_Deep_Analysis.md) §10「最大架构债：SessionManager」给出九服务拆分方案（SessionRegistry / SessionPersistenceService / AgentRunService / DurableExecutionService / SessionContextService / ToolRuntimeService / SessionArtifactService / SessionAutomationService / SessionProjectionService），目标是让 `SessionManager` 退化为 Facade，**真正目的是让 Durable Runtime 独立于 SessionManager 演进**（§10 结尾）。该文档把它列为 §12.4 第四优先级。
 

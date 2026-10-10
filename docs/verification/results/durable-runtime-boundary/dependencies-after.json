@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-10-10T09:11:57.406Z",
+  "scannedFiles": 1462,
+  "violationCount": 0,
+  "violations": [],
+  "runtimeModuleClosures": {
+    "packages/server-core/src/durable-runtime/api/database-admin.ts": [
+      "packages/server-core/src/durable-runtime/api/database-admin.ts",
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/api/runtime.ts": [
+      "packages/server-core/src/durable-runtime/api/runtime.ts",
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/execution/deadline.ts",
+      "packages/server-core/src/durable-runtime/execution/host.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/canonical-json.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts"
+    ],
+    "packages/server-core/src/durable-runtime/coordinator.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/execution/deadline.ts": [
+      "packages/server-core/src/durable-runtime/execution/deadline.ts"
+    ],
+    "packages/server-core/src/durable-runtime/execution/host.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/execution/deadline.ts",
+      "packages/server-core/src/durable-runtime/execution/host.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/index.ts": [
+      "packages/server-core/src/durable-runtime/api/database-admin.ts",
+      "packages/server-core/src/durable-runtime/api/runtime.ts",
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/coordinator.ts",
+      "packages/server-core/src/durable-runtime/execution/deadline.ts",
+      "packages/server-core/src/durable-runtime/execution/host.ts",
+      "packages/server-core/src/durable-runtime/index.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/model-usage-audit.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/projection-runner.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/projection.ts": [
+      "packages/server-core/src/durable-runtime/projection.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/sensitive-payload.ts": [
+      "packages/server-core/src/durable-runtime/sensitive-payload.ts"
+    ],
+    "packages/server-core/src/durable-runtime/sqlite-driver.ts": [
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts"
+    ],
+    "packages/server-core/src/durable-runtime/store.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "packages/server-core/src/durable-runtime/store.ts",
+      "packages/shared/src/durable-runtime/index.ts",
+      "packages/shared/src/durable-runtime/recovery.ts",
+      "packages/shared/src/durable-runtime/types.ts"
+    ],
+    "packages/server-core/src/durable-runtime/tool-identity.ts": [
+      "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "packages/server-core/src/durable-runtime/tool-identity.ts"
+    ]
+  }
+}

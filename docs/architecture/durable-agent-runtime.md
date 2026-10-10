@@ -2,6 +2,10 @@
 
 Status: Accepted for incremental implementation
 
+The Kernel/Host module ownership and the production SessionManager cutover are implemented in
+[Durable Runtime boundary](./durable-runtime-boundary.md). Its independent Pi, crash and dependency
+evidence supplements the protocol guarantees below; it does not retire compatibility storage.
+
 ## Phase 0–5 implementation status
 
 | Phase | Delivered baseline |
@@ -20,6 +24,10 @@ evidence.
 
 The deliberately deferred end-state is described in
 [durable-agent-runtime-target-architecture.md](./durable-agent-runtime-target-architecture.md).
+
+The separate [Runtime boundary redesign proposal](./durable-runtime-boundary.md) (2026-10-10)
+addresses execution ownership and dependencies between the Runtime and SessionManager. It is not
+implemented and does not replace this ADR's accepted persistence and recovery guarantees.
 
 ## Decision
 

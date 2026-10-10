@@ -1,3 +1,6 @@
+import { createDurableRuntime } from './index.js'
+import { TaskRuntimeFacts } from '../tasks/runtime-facts.js'
+import { importLegacyContext } from '../runtime-adapters/legacy-context.js'
 import { afterEach, describe, expect, test } from 'bun:test'
 import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
@@ -453,34 +456,37 @@ describe('DurableRuntimeCoordinator', () => {
 
   test('makes TaskRunner facts authoritative and replayable after terminal cleanup', () => {
     const { root, coordinator } = setup()
+    const runtime = createDurableRuntime()
+    const facts = new TaskRuntimeFacts(runtime)
     const base = {
       workspaceRootPath: root,
       sessionId: 'orchestrator-1',
       taskSlug: 'build',
       runId: 'run-1',
     }
-    coordinator.commitTaskRunFact({
+    facts.commitTaskRunFact({
       ...base,
       ordinal: 0,
       entry: { t: '2026-08-26T00:00:00.000Z', kind: 'run-started', taskId: 'build', runId: 'run-1', orchestratorSessionId: 'orchestrator-1' },
     })
-    coordinator.commitTaskRunFact({
+    facts.commitTaskRunFact({
       ...base,
       ordinal: 1,
       entry: { t: '2026-08-26T00:00:01.000Z', kind: 'node-finished', nodeId: 'write', sessionId: 'child-1', state: 'done', output: { text: 'done' } },
     })
-    coordinator.commitTaskRunFact({
+    facts.commitTaskRunFact({
       ...base,
       ordinal: 2,
       entry: { t: '2026-08-26T00:00:02.000Z', kind: 'run-completed' },
     })
 
     expect(coordinator.storeFor(root).getOperation('taskrun:build:run-1')).toBeUndefined()
-    expect(coordinator.listTaskRunFacts(root, 'build', 'run-1')).toEqual([
+    expect(facts.listTaskRunFacts(root, 'build', 'run-1')).toEqual([
       expect.objectContaining({ kind: 'run-started' }),
       expect.objectContaining({ kind: 'node-finished', output: { text: 'done' } }),
       expect.objectContaining({ kind: 'run-completed' }),
     ])
+    void runtime.close()
     coordinator.closeAll()
   })
 
@@ -508,7 +514,8 @@ describe('DurableRuntimeCoordinator', () => {
 
   test('imports branch history without fabricating tool dispatch evidence', () => {
     const { root, coordinator } = setup()
-    coordinator.importLegacyContext(root, 'branch-1', [
+    const runtime = createDurableRuntime()
+    importLegacyContext(runtime, root, 'branch-1', [
       { id: 'u1', role: 'user', content: 'question', timestamp: 1 },
       {
         id: 't1', role: 'assistant', content: '', timestamp: 2,
@@ -523,6 +530,7 @@ describe('DurableRuntimeCoordinator', () => {
     expect(context.items.find(item => item.kind === 'tool_call')).toMatchObject({ args: { path: 'a', apiKey: '[REDACTED]' } })
     expect(coordinator.storeFor(root).listUnsettledToolOperations()).toHaveLength(0)
     expect(coordinator.storeFor(root).listOperations().some(item => item.sessionId === 'branch-1')).toBe(false)
+    void runtime.close()
     coordinator.closeAll()
   })
 })

@@ -1,0 +1,30 @@
+bun test v1.4.2 (744846f84)
+
+src\transport-delta.test.ts:
+(pass) wire delta size is independent of accumulated SDK response size [0.61ms]
+
+src\request-diagnostics.test.ts:
+(pass) derives prompt and tools from the transcript instead of listing system messages twice [1.34ms]
+(pass) hash covers prompt, conversation and tool declarations [0.74ms]
+
+src\durable-model-stream.test.ts:
+(pass) durable model stream > commits native request evidence with the outcome before publishing completion [1.86ms]
+(pass) durable model stream > leaves an indeterminate thrown stream pending instead of committing fabricated zero usage [0.32ms]
+(pass) durable model stream > commits tool-only usage before forwarding the response [0.46ms]
+(pass) durable model stream > commits failed partial usage before forwarding the response [0.06ms]
+(pass) durable model stream > does not call the provider when preparation fails [0.17ms]
+(pass) durable model stream > does not publish successful completion when the usage commit fails [0.20ms]
+(pass) durable model stream cache retention > applies the configured default when callers omit cacheRetention [0.27ms]
+(pass) durable model stream cache retention > preserves an explicit cacheRetention and skips the default resolver [0.21ms]
+(pass) cancellation while awaiting T1 commits known zero usage without dispatching [0.35ms]
+
+src\length-continuation.test.ts:
+(pass) exhaustedModelOutputLimit > detects an assistant response that reached the declared model output limit [0.07ms]
+(pass) exhaustedModelOutputLimit > leaves context-clamped length stops to Pi compaction recovery [0.02ms]
+(pass) exhaustedModelOutputLimit > does not continue complete, non-assistant or unmetered responses [0.04ms]
+(pass) LengthContinuationTracker > bounds automatic continuations and resets for the next user prompt [0.10ms]
+
+ 16 pass
+ 0 fail
+ 53 expect() calls
+Ran 16 tests across 4 files. [239.00ms]

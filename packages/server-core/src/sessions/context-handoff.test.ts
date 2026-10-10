@@ -60,7 +60,7 @@ describe('context handoff orchestration', () => {
       { messagesLoaded: true },
     )
     managed.messages = messages.map(message => ({ ...message, timestamp: Date.now() })) as never
-    seams.sessions.set(id, managed)
+    ;(sm as any).registerManagedSession(managed)
     return managed
   }
 
