@@ -329,7 +329,13 @@ const healthServer = await startHealthHttpServer({
 
 const serverProto = instance.protocol === 'wss' ? 'https' : 'http'
 console.log(`PHANERIS_SERVER_URL=${instance.protocol}://${instance.host}:${instance.port}`)
-console.log(`PHANERIS_SERVER_TOKEN=${instance.token}`)
+// The token is NOT printed by default: it is the RPC credential, and stdout
+// routinely ends up in container logs, journald and CI transcripts. Clients do
+// not need it from here — the CLI already holds it (server-spawner.ts injects
+// it into the child env), so this print only ever leaked it.
+if (process.env.PHANERIS_PRINT_SERVER_TOKEN === '1') {
+  console.log(`PHANERIS_SERVER_TOKEN=${instance.token}`)
+}
 if (webuiHandler) {
   console.log(`PHANERIS_WEBUI_URL=${serverProto}://0.0.0.0:${instance.port}`)
 }

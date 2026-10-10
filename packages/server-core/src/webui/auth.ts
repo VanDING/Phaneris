@@ -82,7 +82,13 @@ export async function createSessionToken(secret: string): Promise<string> {
 // Cookie helpers
 // ---------------------------------------------------------------------------
 
-const SESSION_COOKIE_NAME = 'craft_session'
+const SESSION_COOKIE_NAME = 'phaneris_session'
+/**
+ * Pre-rename cookie name. Still accepted on read: the rename must not sign every
+ * existing session out. Writing uses the new name only, so old cookies age out
+ * with their own 24h expiry.
+ */
+const LEGACY_SESSION_COOKIE_NAME = 'craft_session'
 
 export function buildSessionCookie(jwt: string, secure: boolean): string {
   const parts = [
@@ -112,7 +118,7 @@ export function extractSessionCookie(cookieHeader: string | null): string | null
   if (!cookieHeader) return null
   for (const pair of cookieHeader.split(';')) {
     const [name, ...rest] = pair.trim().split('=')
-    if (name === SESSION_COOKIE_NAME) return rest.join('=')
+    if (name === SESSION_COOKIE_NAME || name === LEGACY_SESSION_COOKIE_NAME) return rest.join('=')
   }
   return null
 }
@@ -145,17 +151,31 @@ export async function verifyPassword(input: string): Promise<boolean> {
 // ---------------------------------------------------------------------------
 
 interface RateLimitEntry {
-  attempts: number
+  failures: number
   windowStart: number
 }
 
+/**
+ * Failed-authentication limiter.
+ *
+ * Only failures consume budget. The previous `check(ip)` incremented a global
+ * counter on *every* call — including successful logins — so 21 unauthenticated
+ * `POST /api/auth` requests in a minute returned 429 to everyone, legitimate
+ * users included. Authentication decisions and budget accounting are now
+ * separate: ask with `canAttempt`, then report with `recordFailure` /
+ * `recordSuccess`.
+ */
 export class RateLimiter {
   private entries = new Map<string, RateLimitEntry>()
   private readonly maxAttempts: number
   private readonly windowMs: number
-  /** Global counter — blocks all IPs after too many total failures (defeats IP spoofing). */
+  /**
+   * Backstop for a deployment behind a trusted proxy, where per-IP keys can be
+   * spoofed via forwarded headers. It counts failures only, so ordinary use
+   * cannot trip it.
+   */
   private readonly maxGlobalAttempts: number
-  private globalAttempts = 0
+  private globalFailures = 0
   private globalWindowStart = Date.now()
 
   constructor(maxAttempts = 5, windowMs = 60_000, maxGlobalAttempts = 20) {
@@ -164,31 +184,39 @@ export class RateLimiter {
     this.maxGlobalAttempts = maxGlobalAttempts
   }
 
-  /** Returns true if the request should be allowed, false if rate-limited. */
-  check(ip: string): boolean {
+  /** Read-only: may this attempt proceed? Consumes nothing, so it is safe to call before hashing. */
+  canAttempt(ip: string): boolean {
     const now = Date.now()
-
-    // Reset global window if expired
     if (now - this.globalWindowStart > this.windowMs) {
-      this.globalAttempts = 0
+      this.globalFailures = 0
       this.globalWindowStart = now
     }
-
-    // Global rate limit — blocks everyone if too many total attempts
-    this.globalAttempts++
-    if (this.globalAttempts > this.maxGlobalAttempts) return false
-
-    // Per-IP rate limit
+    if (this.globalFailures >= this.maxGlobalAttempts) return false
     const entry = this.entries.get(ip)
+    if (!entry || now - entry.windowStart > this.windowMs) return true
+    return entry.failures < this.maxAttempts
+  }
 
-    if (!entry || now - entry.windowStart > this.windowMs) {
-      this.entries.set(ip, { attempts: 1, windowStart: now })
-      return true
+  /** Record one failed authentication against both budgets. */
+  recordFailure(ip: string): void {
+    const now = Date.now()
+    if (now - this.globalWindowStart > this.windowMs) {
+      this.globalFailures = 0
+      this.globalWindowStart = now
     }
+    this.globalFailures++
 
-    entry.attempts++
-    if (entry.attempts > this.maxAttempts) return false
-    return true
+    const entry = this.entries.get(ip)
+    if (!entry || now - entry.windowStart > this.windowMs) {
+      this.entries.set(ip, { failures: 1, windowStart: now })
+      return
+    }
+    entry.failures++
+  }
+
+  /** A correct password clears that client's failure record. */
+  recordSuccess(ip: string): void {
+    this.entries.delete(ip)
   }
 
   /** Periodic cleanup of stale entries (call on a timer). */

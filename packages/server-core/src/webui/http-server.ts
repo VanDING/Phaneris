@@ -204,14 +204,34 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
   // Hash the login password at startup (async, but resolves before first auth attempt in practice)
   const passwordReady = initPasswordHash(loginPassword)
 
-  /** Extract client IP — only trusts proxy headers when trustedProxies is configured. */
+  /**
+   * Extract client IP.
+   *
+   * Forwarded headers are honoured only when the *direct peer* is itself in
+   * `trustedProxies`. Trusting the header merely because the list is non-empty
+   * let any client choose its own rate-limit key by sending `X-Forwarded-For`.
+   */
   function getClientIp(req: Request): string {
-    if (trustedProxySet.size > 0) {
-      return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-        ?? req.headers.get('x-real-ip')
-        ?? 'direct'
+    const socketIp = clientIpByRequest.get(req) ?? 'direct'
+    if (trustedProxySet.size === 0 || !trustedProxySet.has(socketIp)) return socketIp
+    return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      ?? req.headers.get('x-real-ip')
+      ?? socketIp
+  }
+
+  /**
+   * Reject oversized bodies before they are buffered. `node-adapter.ts` reads the
+   * whole body into memory, so checking afterwards would already have paid the
+   * cost this guards against.
+   */
+  const MAX_REQUEST_BODY_BYTES = 256 * 1024
+  function bodyTooLarge(req: Request): boolean {
+    const declared = req.headers.get('content-length')
+    if (declared) {
+      const length = Number(declared)
+      return Number.isFinite(length) && length > MAX_REQUEST_BODY_BYTES
     }
-    return clientIpByRequest.get(req) ?? 'direct'
+    return false
   }
 
   async function fetch(req: Request): Promise<Response> {
@@ -254,7 +274,14 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
       await passwordReady
       const ip = getClientIp(req)
 
-      if (!rateLimiter.check(ip)) {
+      if (bodyTooLarge(req)) {
+        logger.warn(`[webui] Rejected oversized auth request from ${ip}`)
+        return Response.json({ error: 'Request body too large' }, { status: 413 })
+      }
+
+      // Decide before hashing: a rejected attempt must not pay for argon2, and
+      // must not consume budget either — only failures do that, below.
+      if (!rateLimiter.canAttempt(ip)) {
         logger.warn(`[webui] Rate limited auth attempt from ${ip}`)
         return Response.json(
           { error: 'Too many attempts. Try again later.' },
@@ -274,10 +301,14 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
       }
 
       if (!await verifyPassword(body.password)) {
+        rateLimiter.recordFailure(ip)
         logger.warn(`[webui] Failed auth attempt from ${ip}`)
         return Response.json({ error: 'Invalid credentials' }, { status: 401 })
       }
 
+      // A correct password clears this client's failure record, so ordinary
+      // reconnects can never accumulate toward the limit.
+      rateLimiter.recordSuccess(ip)
       const jwt = await createSessionToken(secret)
       logger.info(`[webui] Successful auth from ${ip}`)
 

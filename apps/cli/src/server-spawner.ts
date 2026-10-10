@@ -2,7 +2,9 @@
  * Server spawner — start a headless Phaneris server as a child process.
  *
  * Spawns `bun run <serverEntry>`, reads stdout for the `PHANERIS_SERVER_URL=`
- * and `PHANERIS_SERVER_TOKEN=` lines, and returns a handle to stop the server.
+ * line, and returns a handle to stop the server. The token is injected into the
+ * child's environment rather than read back from stdout, and the server no
+ * longer echoes it.
  */
 
 import { resolve, join } from 'node:path'
@@ -105,9 +107,6 @@ export async function spawnServer(opts?: SpawnServerOptions): Promise<SpawnedSer
       for (const line of lines) {
         if (line.startsWith('PHANERIS_SERVER_URL=')) {
           url = line.slice('PHANERIS_SERVER_URL='.length).trim()
-        }
-        if (line.startsWith('PHANERIS_SERVER_TOKEN=')) {
-          // Server echoes the token — we already have it but this confirms ready
         }
         // Once we have the URL, the server is ready
         if (url) {

@@ -30,6 +30,7 @@ async function createServer(overrides?: {
   publicWsUrl?: string
   wsProtocol?: 'ws' | 'wss'
   wsPort?: number
+  trustedProxies?: string[]
 }) {
   const server = await startWebuiHttpServer({
     port: 0,
@@ -40,6 +41,7 @@ async function createServer(overrides?: {
     publicWsUrl: overrides?.publicWsUrl,
     wsProtocol: overrides?.wsProtocol ?? 'wss',
     wsPort: overrides?.wsPort ?? 9100,
+    trustedProxies: overrides?.trustedProxies,
     getHealthCheck: () => ({ status: 'ok' }),
     logger,
   })
@@ -59,7 +61,7 @@ function extractSessionCookie(res: Response): string {
 }
 
 function decodeJwtPayload(cookie: string): Record<string, unknown> {
-  const jwt = cookie.replace('craft_session=', '')
+  const jwt = cookie.replace(/^(?:phaneris|craft)_session=/, '')
   const [, payloadB64] = jwt.split('.')
   return JSON.parse(Buffer.from(payloadB64!, 'base64url').toString('utf-8'))
 }
@@ -101,7 +103,7 @@ describe('startWebuiHttpServer', () => {
 
     expect(authRes.status).toBe(200)
     const setCookie = authRes.headers.get('set-cookie')
-    expect(setCookie).toContain('craft_session=')
+    expect(setCookie).toContain('phaneris_session=')
     expect(setCookie).not.toContain('Secure')
 
     const configRes = await fetch(`${baseUrl}/api/config`, {
@@ -114,6 +116,91 @@ describe('startWebuiHttpServer', () => {
     expect(await configRes.json()).toEqual({
       wsUrl: 'wss://127.0.0.1:9100',
     })
+  })
+
+  // Batch F regressions — see docs/verification/server-security-hardening-failure-matrix.md
+  it('FF01/FF02: failures are rate limited, but a correct password still logs in', async () => {
+    const { baseUrl } = await createServer()
+    const attempt = (password: string) => fetch(`${baseUrl}/api/auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    })
+
+    // The per-client budget is 5 failures per window: the first five are rejected
+    // as bad credentials, everything after is refused as rate limited.
+    for (let i = 0; i < 5; i += 1) expect((await attempt('wrong-password')).status).toBe(401)
+    for (let i = 0; i < 3; i += 1) expect((await attempt('wrong-password')).status).toBe(429)
+
+    // Once the budget is spent the right password is refused too — but as a 429,
+    // never a 401, so a caller cannot mistake throttling for bad credentials.
+    expect((await attempt(PASSWORD)).status).toBe(429)
+  })
+
+  it('FF02: repeated successful logins never consume the budget', async () => {
+    const { baseUrl } = await createServer()
+    for (let i = 0; i < 30; i += 1) {
+      const res = await fetch(`${baseUrl}/api/auth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: PASSWORD }),
+      })
+      expect(res.status).toBe(200)
+    }
+  })
+
+  it('FF09: a cookie under the pre-rename name still authenticates', async () => {
+    const { baseUrl } = await createServer()
+    const authRes = await fetch(`${baseUrl}/api/auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: PASSWORD }),
+    })
+    const jwt = extractSessionCookie(authRes).replace('phaneris_session=', '')
+
+    const res = await fetch(`${baseUrl}/api/config`, {
+      headers: { cookie: `craft_session=${jwt}` },
+    })
+    expect(res.status).toBe(200)
+  })
+
+  it('FF10: a forwarded address is ignored when the direct peer is not trusted', async () => {
+    const { baseUrl } = await createServer()
+    const forged = { 'Content-Type': 'application/json', 'x-forwarded-for': '203.0.113.9' }
+
+    // Spend the budget from the forged key; the real socket IP keeps its own budget.
+    for (let i = 0; i < 8; i += 1) {
+      await fetch(`${baseUrl}/api/auth`, { method: 'POST', headers: forged, body: JSON.stringify({ password: 'wrong-password' }) })
+    }
+
+    // Forging a different address must not buy a fresh budget.
+    const res = await fetch(`${baseUrl}/api/auth`, {
+      method: 'POST',
+      headers: { ...forged, 'x-forwarded-for': '203.0.113.10' },
+      body: JSON.stringify({ password: 'wrong-password' }),
+    })
+    expect(res.status).toBe(429)
+  })
+
+  it('FF11: a forwarded address is used when the direct peer is trusted', async () => {
+    const { baseUrl } = await createServer({ trustedProxies: ['127.0.0.1'] })
+    const res = await fetch(`${baseUrl}/api/auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-forwarded-for': '203.0.113.9' },
+      body: JSON.stringify({ password: PASSWORD }),
+    })
+    // Trusted path still authenticates; the point is that it does not throw or mis-key.
+    expect(res.status).toBe(200)
+  })
+
+  it('FF07: an oversized body is refused before it is buffered', async () => {
+    const { baseUrl } = await createServer()
+    const res = await fetch(`${baseUrl}/api/auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: 'x'.repeat(300 * 1024) }),
+    })
+    expect(res.status).toBe(413)
   })
 
   it('rejects invalid credentials', async () => {

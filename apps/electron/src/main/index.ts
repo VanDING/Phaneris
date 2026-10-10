@@ -1397,7 +1397,10 @@ app.whenReady().then(async () => {
       // Headless: print connection details
       if (isHeadless) {
         console.log(`PHANERIS_SERVER_URL=${instance.protocol}://${instance.host}:${instance.port}`)
-        console.log(`PHANERIS_SERVER_TOKEN=${instance.token}`)
+        // Opt-in only — see the note in packages/server/src/index.ts.
+        if (process.env.PHANERIS_PRINT_SERVER_TOKEN === '1') {
+          console.log(`PHANERIS_SERVER_TOKEN=${instance.token}`)
+        }
       }
     }
 

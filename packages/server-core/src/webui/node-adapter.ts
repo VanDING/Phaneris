@@ -32,6 +32,13 @@ export function nodeHttpAdapter(
   }
 }
 
+/**
+ * Ceiling for a buffered request body. Kept in step with MAX_REQUEST_BODY_BYTES
+ * in http-server.ts: the handler rejects on the declared length, this stops a
+ * chunked request that declares nothing.
+ */
+const MAX_BUFFERED_BODY_BYTES = 256 * 1024
+
 async function handleRequest(
   handler: WebHandler,
   nodeReq: IncomingMessage,
@@ -52,8 +59,22 @@ async function handleRequest(
   let body: Buffer | null = null
   if (nodeReq.method !== 'GET' && nodeReq.method !== 'HEAD') {
     const chunks: Buffer[] = []
+    let received = 0
     for await (const chunk of nodeReq) {
-      chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+      const buffer = typeof chunk === 'string' ? Buffer.from(chunk) : chunk
+      received += buffer.byteLength
+      // Hard stop while reading, not after: a chunked request without a
+      // Content-Length would otherwise be buffered in full before anyone could
+      // reject it. See MAX_REQUEST_BODY_BYTES in http-server.ts.
+      if (received > MAX_BUFFERED_BODY_BYTES) {
+        nodeReq.destroy()
+        if (!nodeRes.headersSent) {
+          nodeRes.writeHead(413, { 'Content-Type': 'application/json' })
+        }
+        nodeRes.end(JSON.stringify({ error: 'Request body too large' }))
+        return
+      }
+      chunks.push(buffer)
     }
     body = Buffer.concat(chunks)
   }
