@@ -46,6 +46,7 @@ export type {
 } from './types.ts';
 
 export { APP_EVENTS, AGENT_EVENTS } from './types.ts';
+export { UNEMITTED_AGENT_EVENTS, EMITTED_AGENT_EVENTS } from './emitted-events.ts';
 
 // ============================================================================
 // Validation

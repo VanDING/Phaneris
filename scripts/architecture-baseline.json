@@ -1,0 +1,12 @@
+{
+  "$comment": "Known architecture-gate findings. Pay an entry down by declaring the export in the target package or shimming the module in apps/webui/vite.config.ts; never add one to make a build pass.",
+  "generatedAt": "2026-10-10T16:41:08.510Z",
+  "allowed": {
+    "webui-unshimmed-node": {
+      "electron :: packages/shared/src/utils/open-url.ts": "dynamic import",
+      "node:readline :: packages/shared/src/agent/pi-agent.ts": "static import",
+      "node:module :: packages/shared/src/agent/backend/internal/runtime-resolver.ts": "static import"
+    },
+    "undeclared-subpath-import": {}
+  }
+}

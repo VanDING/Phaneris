@@ -7,6 +7,26 @@ import { validateAutomationsConfig, validateAutomationsContent } from './validat
 import { AutomationsConfigSchema, PromptActionSchema } from './schemas.ts';
 
 describe('validation', () => {
+  describe('unemitted agent events', () => {
+    // The semantic warnings are produced by the content validator.
+    // validateAutomationsConfig discards them (validation.ts passes `[]`).
+    const content = (event: string) => JSON.stringify({
+      automations: { [event]: [{ matcher: '.*', actions: [{ type: 'script', script: 'a.sh' }] }] },
+    });
+
+    it('warns that an automation on an event nobody emits will never run', () => {
+      const result = validateAutomationsContent(content('Setup'));
+      const warning = result.warnings.find(i => i.path === 'automations.Setup');
+      expect(warning?.message).toContain('will never run');
+    });
+
+    it('keeps the conditions-only wording for an event that is emitted', () => {
+      const result = validateAutomationsContent(content('PreToolUse'));
+      const warning = result.warnings.find(i => i.path === 'automations.PreToolUse');
+      expect(warning?.message).toContain('match conditions only');
+    });
+  });
+
   describe('validateAutomationsConfig', () => {
     it('should accept a valid config', () => {
       const config = {

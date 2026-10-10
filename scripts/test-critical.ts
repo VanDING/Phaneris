@@ -5,6 +5,8 @@ import { checkEnvironment, root, run } from './check-environment'
 
 checkEnvironment()
 await run(['run', 'scripts/check-runtime-boundary.ts'], root)
+await run(['run', 'scripts/check-architecture.ts'], root)
+await run(['run', 'scripts/check-automation-events.ts'], root)
 await run(['run', 'scripts/verification/runtime-boundary-gate-workflow.ts'], root)
 await run(['run', 'scripts/verification/durable-runtime-boundary-workflow.ts'], root)
 await run(['run', 'scripts/verification/durable-runtime-crash-workflow.ts'], root)

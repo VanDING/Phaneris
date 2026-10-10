@@ -1,0 +1,14 @@
+{
+  "$comment": "Agent events with no emission site. Implement the hook or remove the vocabulary member; never grow this to make a build pass.",
+  "generatedAt": "2026-10-10T16:51:56.787Z",
+  "allowed": [
+    "Notification",
+    "PermissionRequest",
+    "PreCompact",
+    "SessionEnd",
+    "SessionStart",
+    "Setup",
+    "SubagentStart",
+    "SubagentStop"
+  ]
+}
