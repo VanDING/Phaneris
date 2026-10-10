@@ -26,9 +26,10 @@
     "typecheck": "bun run tsc --noEmit"
   },
   "dependencies": {
-    "@phaneris/core": "workspace:*",
-    "@phaneris/shared": "workspace:*",
     "@earendil-works/pi-ai": "1.1.0",
+    "@phaneris/core": "workspace:*",
+    "@phaneris/session-tools-core": "workspace:*",
+    "@phaneris/shared": "workspace:*",
     "jose": "^6.2.12",
     "markitdown-js": "^0.0.14",
     "openai": "^7.27.0",

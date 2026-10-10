@@ -249,8 +249,8 @@ export interface CompiledBlockedCommandHint {
 
 /**
  * Analysis of why a command didn't match a pattern.
- * Used by incr-regex-package to provide detailed diagnostics showing
- * exactly WHERE matching failed and what was expected.
+ * Provides detailed diagnostics showing exactly WHERE matching failed and what was
+ * expected; computed locally by `readPatternExpectation` in mode-manager.ts.
  */
 export interface MismatchAnalysis {
   /** How much of the command matched before failure */

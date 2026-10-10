@@ -11,7 +11,6 @@
  * - 'guarded': Like 'allow-all', plus the decision model's risk check (core/guarded-mode.ts)
  */
 
-/// <reference path="../types/incr-regex-package.d.ts" />
 
 import { homedir } from 'os';
 import { existsSync, realpathSync } from 'fs';
@@ -59,9 +58,9 @@ import {
   parsePermissionMode,
 } from './mode-types.ts';
 
-// Import incr-regex-package for smart pattern mismatch diagnostics
-// This library allows character-by-character matching to find WHERE a regex match failed
-import { IREGEX, DONE, MORE, FAILED } from 'incr-regex-package';
+// Pattern mismatch diagnostics are computed locally — see readPatternExpectation.
+// They used to come from `incr-regex-package`, whose only use in the repository was
+// this diagnostics path and which pulled a 47-node ESLint 7 chain behind it.
 
 // Re-export types and config from mode-types (single source of truth)
 export {
@@ -882,13 +881,86 @@ function findBlockedCommandHint(command: string, config: ToolCheckConfig): Compi
 }
 
 /**
- * Analyze WHY a command didn't match any pattern using incremental regex matching.
- * Uses incr-regex-package to find exactly WHERE in the command matching stopped,
- * which helps generate actionable error messages.
+ * The shape a read-only bash pattern states, reduced to what the diagnostics need:
+ * the literal it starts with, whether it requires whitespace after that literal,
+ * and the alternatives it accepts at the next position.
+ */
+interface PatternExpectation {
+  literal: string;
+  requiresSeparator: boolean;
+  alternatives: string[] | null;
+}
+
+const PATTERN_LITERAL = /^[A-Za-z0-9_@./-]+/;
+
+/**
+ * Read the leading expectations out of a pattern source, or null when the pattern
+ * does not start with a literal (nothing to compare a command against).
+ *
+ * Anchors and word boundaries are dropped: they pin positions this comparison
+ * already establishes, and they are not part of the expected text.
+ */
+function readPatternExpectation(source: string): PatternExpectation | null {
+  let rest = source.replace(/^\^/, '').replace(/\$$/g, '').replace(/\\b/g, '');
+
+  const literal = rest.match(PATTERN_LITERAL)?.[0];
+  if (!literal) return null;
+  rest = rest.slice(literal.length);
+
+  let requiresSeparator = false;
+  const separator = rest.match(/^(?:\\s\+|\\s\*|\\s| )/);
+  if (separator) {
+    requiresSeparator = true;
+    rest = rest.slice(separator[0].length);
+  }
+
+  let alternatives: string[] | null = null;
+  const group = rest.match(/^\(\?:?([^()]*)\)/);
+  if (group?.[1]?.includes('|')) {
+    const parts = group[1]
+      .split('|')
+      .map(part => part.match(PATTERN_LITERAL)?.[0])
+      .filter((part): part is string => Boolean(part));
+    if (parts.length > 0) alternatives = parts;
+  }
+
+  return { literal, requiresSeparator, alternatives };
+}
+
+/** Longest prefix of the command that is consistent with the pattern's expectations. */
+function matchExpectation(command: string, expectation: PatternExpectation): number {
+  if (!command.startsWith(expectation.literal)) return 0;
+
+  let count = expectation.literal.length;
+
+  if (expectation.requiresSeparator) {
+    const separator = /^\s+/.exec(command.slice(count));
+    if (!separator) return count;
+    count += separator[0].length;
+  }
+
+  if (expectation.alternatives) {
+    const token = /^\S+/.exec(command.slice(count))?.[0] ?? '';
+    const accepted = expectation.alternatives.find(alternative => token.startsWith(alternative));
+    if (accepted) count += accepted.length;
+  }
+
+  return count;
+}
+
+/**
+ * Analyze WHY a command didn't match any pattern, so the rejection message can say
+ * where the command diverged from the closest pattern instead of dumping patterns.
+ *
+ * This is a token-level comparison against each pattern's stated expectations, not
+ * an NFA simulation of the pattern: read-only bash patterns are all written as
+ * "literal command [whitespace (alternative|alternative)]", and that is the shape
+ * this reads. Patterns it cannot reduce to that shape are skipped, which only means
+ * a less specific message — never a wrong one.
  *
  * For example, if the command is "git -C /path status" and the pattern is
- * "^git\s+(status|log|diff)", this will detect that matching stopped at "-C"
- * and suggest running from within the repo directory instead.
+ * "^git\s+(status|log|diff)", this detects that matching stopped at "-C" and
+ * suggests running from within the repo directory instead.
  */
 function analyzePatternMismatch(command: string, patterns: CompiledBashPattern[]): MismatchAnalysis | null {
   const trimmedCommand = command.trim();
@@ -904,33 +976,22 @@ function analyzePatternMismatch(command: string, patterns: CompiledBashPattern[]
 
   for (const pattern of patterns) {
     try {
-      // Simplify the pattern for incr-regex: remove anchors and word boundaries
-      // which aren't supported by the incremental matching library.
-      // This is fine since we only use it for diagnostic purposes.
-      const simplifiedPattern = pattern.source
-        .replace(/^\^/, '')     // Remove start anchor
-        .replace(/\$$/g, '')    // Remove end anchor
-        .replace(/\\b/g, '');   // Remove word boundaries
+      const expectation = readPatternExpectation(pattern.source);
+      if (!expectation) continue;
 
-      // Create incremental regex matcher from the simplified pattern
-      // IREGEX is a class that takes a regex pattern string in its constructor
-      const incr = new IREGEX(simplifiedPattern);
-
-      // Use matchStr to process the entire command and get match info
-      // Returns [success, charCount, matchedString]
-      const [_success, charCount, matchedStr] = incr.matchStr(trimmedCommand);
+      const matchedCount = matchExpectation(trimmedCommand, expectation);
 
       // Track the pattern that matched the most characters (best partial match)
-      if (charCount > 0 && (!bestMatch || charCount > bestMatch.matchedCount)) {
+      if (matchedCount > 0 && (!bestMatch || matchedCount > bestMatch.matchedCount)) {
         bestMatch = {
-          matchedCount: charCount,
-          matchedPrefix: matchedStr || trimmedCommand.substring(0, charCount),
+          matchedCount,
+          matchedPrefix: trimmedCommand.substring(0, matchedCount),
           pattern,
         };
       }
     } catch {
-      // If incr-regex can't parse the pattern (complex regex features),
-      // skip this pattern - we'll fall back to basic diagnostics
+      // A pattern we cannot read is skipped rather than fatal; the rejection
+      // message falls back to the pattern list.
       continue;
     }
   }

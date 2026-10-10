@@ -1270,7 +1270,7 @@ describe('getBashRejectionReason with pattern metadata', () => {
     });
   });
 
-  describe('mismatch analysis with incr-regex', () => {
+  describe('mismatch analysis of pattern expectations', () => {
     it('should include mismatch analysis for git command with flags', () => {
       const reason = getBashRejectionReason('git -C /path status', testConfig);
       expect(reason).not.toBeNull();
