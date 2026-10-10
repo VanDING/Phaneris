@@ -80,6 +80,10 @@ Electron 生产构建中，入口 HTML 直接引用及 modulepreload 的 JS 总�
 - **katex 双副本已消除。** rehype-katex 仅使用稳定的 `renderToString` API，三个 Vite 配置将 katex 统一解析到当前根版本，并新增 root katex 选项兼容回归测试。
 - **主进程仍高于 15 MB 目标。** minify 后 `main.cjs` 为 19.86 MB raw / 5.30 MB gzip。剩余体积来自 pdf-parse/markitdown、provider SDK、messaging adapter 等静态图；把这部分降到目标需要 ESM splitting 或独立 worker bundle，属于单独的构建架构改动，不在拆包/测试修复批次内混做。
 
+> **2026-10-10 更新（批次 D）。** `main.cjs` 已增至 **20.27 MiB（21,253,281 字节）**，而当时的预算上限是 25 MB，因此这 ~1.4 MB 的增长没有被任何门禁拦下。现改为 **21.5 MB 棘轮**：它高于今天的体积，但任何真实增长都会失败；把 15 MB 目标逐步逼近的方式是持续下调这个棘轮，而不是继续留一个 25 MB 的天花板。`bun run bundle:report --check` 已确认该棘轮会咬合。
+>
+> 同批次还移除了生产渲染构建里的 `playground` 入口（详见[证据](../verification/results/bundle-hygiene/README.md)）：dist 由 104 MB 降至 101 MB，并**顺带把初始图从 89 个 chunk / 4.12 MB 降到 71 个 / 4.08 MB**——playground 作为入口时会把共享依赖拆成主入口也要预加载的 chunk。katex 经评估**本轮不改**：唯一的急切路径是 `Markdown.tsx:3` 的静态 `rehype-katex`（直接 `import katex` 的 `MarkdownLatexBlock` 已是 `React.lazy`），要移出初始图必须把 markdown 插件改为异步加载，属渲染路径改动，需要单独的前后启动测量。
+
 
 ## 2026-09-12 基准输入修正
 

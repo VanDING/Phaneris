@@ -49,7 +49,13 @@ console.log(`  pi bundle:        ${(piRaw / 1024 / 1024).toFixed(2)} MB raw`);
 
 if (process.argv.includes('--check')) {
   const maxRendererRaw = Number(process.env.PHANERIS_MAX_RENDERER_INITIAL_BYTES ?? 4_800_000);
-  const maxMainRaw = Number(process.env.PHANERIS_MAX_MAIN_BYTES ?? 25_000_000);
+  // A ratchet, not a target. The documented 15 MB goal for main.cjs needs ESM
+  // splitting or a separate worker bundle — a build-architecture change that has
+  // not been made, so the old 25 MB ceiling let main.cjs reach 20.27 MiB
+  // (21,253,281 bytes) unnoticed. This ceiling sits just above today's size, so
+  // any real growth fails and lowering it is how the 15 MB goal gets approached.
+  // See docs/process/performance-implementation-2026-09-10.md.
+  const maxMainRaw = Number(process.env.PHANERIS_MAX_MAIN_BYTES ?? 21_500_000);
   const failures: string[] = [];
   for (const limit of [maxRendererRaw, maxMainRaw]) {
     if (!Number.isSafeInteger(limit) || limit <= 0) throw new Error('Bundle budgets must be positive safe integers');

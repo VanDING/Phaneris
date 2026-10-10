@@ -68,7 +68,11 @@ export default defineConfig({
     rolldownOptions: {
       input: {
         main: resolve(import.meta.dirname, 'src/renderer/index.html'),
-        playground: resolve(import.meta.dirname, 'src/renderer/playground.html'),
+        // The component playground is developer tooling and is deliberately NOT a
+        // packaging input: it used to ship a 752 KB chunk plus a 1.8 MB source map
+        // into every installer, referenced by nothing. `vite dev` serves
+        // `src/renderer/playground.html` straight from source (root is
+        // `src/renderer`), which is how every verification script loads it.
         'browser-toolbar': resolve(import.meta.dirname, 'src/renderer/browser-toolbar.html'),
         'browser-empty-state': resolve(import.meta.dirname, 'src/renderer/browser-empty-state.html'),
       }
