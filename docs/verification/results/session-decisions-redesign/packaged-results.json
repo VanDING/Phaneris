@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-10-10T02:53:11.372Z",
+  "app": "E:\\Phaneris\\apps\\electron\\release\\win-unpacked",
+  "bundles": {},
+  "scope": "Supplied unpacked app",
+  "fixture": "E:\\Phaneris\\.cache\\session-decisions\\packaged\\profile-YnpBHs",
+  "sessionId": "261010-onyx-wave",
+  "providerRequests": 1,
+  "checks": [
+    {
+      "id": "Actual preload and authenticated main return the persisted session report",
+      "pass": true
+    },
+    {
+      "id": "Packaged Run renders Decisions for a session with no chat messages",
+      "pass": true
+    },
+    {
+      "id": "Changing the active chat updates the session-bound Decisions range",
+      "pass": true
+    },
+    {
+      "id": "Packaged AI settings show configuration without runtime statistics",
+      "pass": true
+    },
+    {
+      "id": "Packaged Permissions retain their rules without the Guarded redirect",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

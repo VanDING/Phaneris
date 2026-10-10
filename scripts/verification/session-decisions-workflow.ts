@@ -237,17 +237,47 @@ try {
   await check('Real Run renders decisions with zero chat messages, filters, pagination and keyboard tabs', async () => {
     await load(); assert.equal(await page.getByRole('tab').count(), 5); assert.equal(await page.locator('[data-decision-id]').count(), 40)
     await page.getByRole('button', { name: 'Load more' }).click(); await page.waitForFunction(() => document.querySelectorAll('[data-decision-id]').length > 40)
-    const previousCount = await page.locator('[data-decision-id]').count(), previousLast = await page.locator('[data-decision-id]').last().getAttribute('data-decision-id')
-    await page.locator('[data-decision-id] button').last().click()
+    // Selecting a record opens the detail without disturbing the list, and a
+    // live update must not steal the open detail.
+    const previousCount = await page.locator('[data-decision-id]').count(), target = await page.locator('[data-decision-id]').last().getAttribute('data-decision-id')
+    await page.locator(`[data-decision-id="${target}"]`).click()
+    await page.locator('[data-decision-detail]').waitFor()
+    assert.equal(await page.locator('[data-decision-detail]').getAttribute('data-decision-detail'), target)
+    assert.equal(await page.locator('[data-decision-id]').count(), previousCount)
     const refresh = await point('suggestions'); await refresh(request); refresh.trace!.apply({ action: 'none', status: 'unchanged', changed: false })
     await page.waitForFunction(count => document.querySelectorAll('[data-decision-id]').length === count + 1, previousCount)
-    assert.equal(await page.locator(`[data-decision-id="${previousLast}"] button`).getAttribute('aria-expanded'), 'true')
-    assert.equal(await page.evaluate(() => document.activeElement?.closest('[data-decision-id]')?.getAttribute('data-decision-id')), previousLast)
+    assert.equal(await page.locator('[data-decision-detail]').getAttribute('data-decision-detail'), target)
+    await page.getByLabel('Decision record detail').getByRole('button', { name: 'Close' }).click()
+    assert.equal(await page.locator('[data-decision-detail]').count(), 0)
+    // The status filter is exactly the server contract, and the tiles follow the
+    // filtered scope rather than the page.
     const expected = await report(a.id, { status: 'changed' })
-    await page.getByLabel('Execution status', { exact: true }).selectOption('changed')
+    await page.getByRole('button', { name: 'Changed', exact: true }).click()
     await page.waitForFunction(points => document.querySelector('[data-session-decisions] dl dd')?.textContent?.trim() === String(points), expected.totals.points)
-    await page.locator('[data-decision-id]').first().waitFor(); assert((await page.locator('[data-session-decisions]').innerText()).includes('Changed'))
+    assert((await page.locator('[data-session-decisions]').innerText()).includes('Changed'))
+    // The feature matrix is the feature filter.
+    await page.getByRole('button', { name: 'All statuses', exact: true }).click()
+    const byFeature = await report(a.id, { feature: 'suggestions' })
+    await page.locator('[data-decision-feature="suggestions"]').first().click()
+    await page.waitForFunction(points => document.querySelector('[data-session-decisions] dl dd')?.textContent?.trim() === String(points), byFeature.totals.points)
+    assert.equal(await page.locator('[data-decision-feature="suggestions"]').first().getAttribute('aria-selected'), 'true')
+    await page.getByRole('button', { name: 'Clear filters', exact: true }).click()
+    await page.waitForFunction(points => document.querySelector('[data-session-decisions] dl dd')?.textContent?.trim() === String(points), (await report(a.id)).totals.points)
     await page.getByRole('tab', { name: 'Decisions', exact: true }).focus(); await page.keyboard.press('ArrowRight'); assert.equal(await page.getByRole('tab', { name: 'Context', exact: true }).getAttribute('aria-selected'), 'true')
+  })
+  await check('Overview carries a decision summary that opens the Decisions tab', async () => {
+    await load()
+    await page.getByRole('tab', { name: 'Overview', exact: true }).click()
+    const summary = page.locator('[data-decision-summary]')
+    await summary.waitFor()
+    const expected = await report(a.id)
+    const text = await summary.innerText()
+    assert(text.includes(expected.totals.points.toLocaleString()), 'summary must carry the scope point count')
+    assert(text.includes(expected.totals.changed.toLocaleString()), 'summary must carry the actual change count')
+    assert(text.includes('Unknown ×'), 'summary must present unknown cost as its own tag, not inside the amount')
+    await summary.getByRole('button', { name: 'View records', exact: true }).click()
+    assert.equal(await page.getByRole('tab', { name: 'Decisions', exact: true }).getAttribute('aria-selected'), 'true')
+    await page.locator('[data-decision-id]').first().waitFor()
   })
   await check('Pinned and following Run bindings remain separate; stale A responses cannot paint B', async () => {
     await load(); await page.evaluate(() => (window as any).decisionsFixture.pin(0)); await page.evaluate(() => (window as any).decisionsFixture.select(1)); assert.equal(await page.locator('[data-session-decisions]').getAttribute('data-session-decisions'), a.id)
@@ -272,9 +302,20 @@ try {
         await page.setViewportSize({ width, height: 1000 }); await page.goto(`${base}?rpc=${encodeURIComponent(`ws://127.0.0.1:${rpc.port}`)}&a=${a.id}&b=${b.id}&empty=${empty.id}&mode=${mode}&lang=${lang}`, { waitUntil: 'networkidle', timeout: 90000 }); await page.getByRole('tab', { name: '决策', exact: true }).click(); await page.locator('[data-decision-id]').first().waitFor()
       } else { await page.setViewportSize({ width, height: 1000 }); await load(`mode=${mode}&lang=${lang}`) }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      // The responsive branch is measured, not guessed: wide renders real
+      // tables, narrow degrades both tables to rows/cards.
+      const narrow = width < 760
+      assert.equal(await page.locator('[data-decision-records]').getAttribute('data-decision-records'), narrow ? 'list' : 'table')
+      assert.equal(await page.locator('[data-decision-id]').first().evaluate(el => el.tagName), narrow ? 'BUTTON' : 'TR')
       if (!process.env.PHANERIS_VERIFY_SKIP_SCREENSHOTS) await page.screenshot({ path: join(output, `${mode}-${lang}-${width}.png`) })
-      await page.locator('[data-decision-id] button').first().click()
+      await page.locator('[data-decision-id]').first().click()
+      await page.locator('[data-decision-detail]').waitFor()
       if (!process.env.PHANERIS_VERIFY_SKIP_SCREENSHOTS) await page.screenshot({ path: join(output, `${mode}-${lang}-${width}-detail.png`) })
+      await page.getByLabel(narrow ? '决策记录详情' : 'Decision record detail').getByRole('button', { name: narrow ? '关闭' : 'Close' }).click()
+      // The Overview summary is the other half of the surface this workflow owns.
+      await page.getByRole('tab', { name: /Overview|概览/ }).click()
+      await page.locator('[data-decision-summary]').waitFor()
+      if (!process.env.PHANERIS_VERIFY_SKIP_SCREENSHOTS) await page.screenshot({ path: join(output, `overview-${mode}-${lang}-${width}.png`) })
     }
     assert.deepEqual(pageErrors, [])
   })

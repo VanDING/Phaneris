@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-Hans" data-theme="light" data-dir="A" data-state="ready">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run → 决策 视图改版方案 · 三个方向对比</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- ───────────────────────── review chrome (not product UI) ───────────────────────── -->
+<header class="chrome">
+  <div class="chrome-in">
+    <div class="chrome-title">
+      <span class="mark">P</span>
+      <div>
+        <strong>Run → 决策 视图改版</strong>
+        <span class="chrome-sub">三个方向对比稿 · 同一份数据 · 点选与筛选全部可交互</span>
+      </div>
+    </div>
+
+    <div class="chrome-controls">
+      <div class="ctl">
+        <span class="ctl-label">方向</span>
+        <div class="seg" data-act="dir">
+          <button type="button" data-dir="A" class="is-on"><i data-icon="list-tree"></i>A · 台账</button>
+          <button type="button" data-dir="B"><i data-icon="activity"></i>B · 时间流</button>
+          <button type="button" data-dir="C"><i data-icon="layers"></i>C · 决策板</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ctl-label">面板宽度</span>
+        <div class="seg" data-act="width">
+          <button type="button" data-width="420">420</button>
+          <button type="button" data-width="560">560</button>
+          <button type="button" data-width="820">820</button>
+          <button type="button" data-width="1040">1040</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ctl-label">数据状态</span>
+        <select class="chrome-select" data-act="state">
+          <option value="ready">正常（59 事项）</option>
+          <option value="empty">空 · 未触发</option>
+          <option value="loading">加载中</option>
+          <option value="error">加载失败</option>
+          <option value="unsupported">服务端不支持</option>
+          <option value="disabled">功能已关闭（有历史）</option>
+          <option value="nomatch">筛选无结果</option>
+          <option value="nosession">没有绑定会话</option>
+        </select>
+      </div>
+
+      <div class="ctl">
+        <span class="ctl-label">状态逻辑</span>
+        <div class="seg" data-act="legacy">
+          <button type="button" data-legacy="0" class="is-on">修正后</button>
+          <button type="button" data-legacy="1">现状</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ctl-label">主题 / 语言</span>
+        <div class="seg" data-act="theme">
+          <button type="button" data-theme="light" class="is-on">浅色</button>
+          <button type="button" data-theme="dark">深色</button>
+        </div>
+        <div class="seg" data-act="lang">
+          <button type="button" data-lang="zh-Hans" class="is-on">中</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ───────────────────────── brief ───────────────────────── -->
+  <section class="brief">
+    <div class="brief-lead">
+      <h1>为什么现在看起来「简陋」</h1>
+      <p>
+        当前实现（<code>SessionDecisions.tsx</code>，148 行单文件）已经把所有事实都取回来了，问题在于<strong>它把事实平铺成了一条灰色长列</strong>：
+        所有文字都在 11–12px、所有分区都用同一条 <code>border-y</code> 分隔、所有状态都只是右对齐的一行灰字。
+        信息没有层次，也就没有可读性；<strong>不需要改数据契约，只需要重建信息架构与视觉系统。</strong>
+      </p>
+    </div>
+    <ol class="brief-list">
+      <li><b>层级缺失</b>标题、指标、功能分布、记录、详情共用同一字重与字号，视线没有落点。</li>
+      <li><b>控件是原生的</b>三个裸 <code>&lt;select&gt;</code> 并排；没有筛选态、计数或清除入口。</li>
+      <li><b>数字不可扫</b><code>1 points · 0 changes $0.0010</code> 计数与金额混排，未对齐、未用等宽数字。</li>
+      <li><b>状态没有编码</b><code>changed</code> 只有紫色文字，其余状态一律灰字，无法一眼区分失败 / 回退 / 未确认。</li>
+      <li><b>详情是 JSON 倾倒</b>触发来源直接 <code>&lt;pre&gt;{JSON}</code>，可读信息被噪声淹没。</li>
+      <li><b>未知被写成文字</b><code>$0.06 + Unknown × 4</code> 拼在数字后面，不是状态，也无法对齐。</li>
+      <li><b>展开即挤压</b>详情内联展开把下方内容推走，再看下一条要重新找位置。</li>
+      <li><b>空 / 错误态是一行灰字</b>设计文档 §9 要求的 16 种状态，目前只有三四种有像样的表达。</li>
+    </ol>
+    <p class="brief-note">
+      下面三个方向<strong>共用同一份 fixture 数据</strong>（取自现有验收截图：59 事项 / 4 改变 / 4 回退 / $0.06 + 4 次未知 / 8 项功能 / 59 次请求）。
+      切换方向只会换信息架构，不会换数据 —— 这样比较的才是设计，不是数据。
+      <br>
+      顶部<strong>「状态逻辑」</strong>可以在<strong>修正后</strong>与<strong>现状</strong>之间切换：切到「现状」后，
+      「已应用但未改变基线」的记录会像今天一样把 <code>trajectory.decisions.status.applied</code> 这串键名直接漏在界面上；
+      带请求层失败 / 取消的记录也会一律显示成「未确认」。
+      <br>
+      链接可分享，参数：<code>?dir=A|B|C&amp;width=420&amp;theme=light|dark&amp;lang=zh-Hans|en&amp;state=ready|empty|loading|error|unsupported|disabled|nomatch|nosession&amp;legacyStatus=1&amp;view=panel</code>
+    </p>
+  </section>
+
+  <!-- ───────────────────────── stage ───────────────────────── -->
+  <section class="stage">
+    <div class="stage-panel">
+      <div class="stage-bar">
+        <span class="stage-bar-label">Run 面板</span>
+        <span class="stage-bar-meta" id="stageMeta">方向 A · 420px · 浅色 · 中文</span>
+        <span class="stage-bar-wide" id="stageWide">窄面板 · 单列</span>
+      </div>
+      <div class="frame" id="frame">
+        <div class="panel" id="panel">
+          <!-- mirrors TrajectoryView's tab strip so the mock reads as the real Run panel -->
+          <div class="tabs" role="tablist">
+            <button type="button" role="tab" aria-selected="false">概览</button>
+            <button type="button" role="tab" aria-selected="false">轨迹</button>
+            <button type="button" role="tab" aria-selected="true" class="is-on">决策<span class="tab-underline"></span></button>
+            <button type="button" role="tab" aria-selected="false">上下文</button>
+            <button type="button" role="tab" aria-selected="false">地图</button>
+          </div>
+          <div class="panel-host" id="host"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="stage-notes" id="notes"></aside>
+  </section>
+
+  <!-- ───────────────────────── comparison ───────────────────────── -->
+  <section class="compare">
+    <h2>三个方向怎么选</h2>
+    <div class="table-scroll">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th class="col-a">A · 台账 Ledger</th>
+            <th>B · 时间流 Stream</th>
+            <th>C · 决策板 Board</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>一句话</th>
+            <td>列表即索引，详情在旁；选择而非展开。</td>
+            <td>按轮次分组的活动流，就地展开。</td>
+            <td>先看功能对比矩阵，再看记录表。</td></tr>
+          <tr><th>420–560px 窄面板</th>
+            <td class="good">好 · 列表↔详情整屏切换，返回位置保留</td>
+            <td class="good">很好 · 单列天然适配</td>
+            <td class="warn">中 · 需把表降级为双行卡片</td></tr>
+          <tr><th>≥ 820px 宽面板</th>
+            <td class="good">很好 · 真正的左右主从</td>
+            <td class="warn">中 · 单列会显得空且行过长</td>
+            <td class="good">很好 · 表格列全部展开</td></tr>
+          <tr><th>记录很多（50+）</th>
+            <td>好 · 列表密排 + 分页</td>
+            <td class="warn">中 · 流很长，靠轮次分组缓解</td>
+            <td class="good">很好 · 表格 + 排序</td></tr>
+          <tr><th>跨功能对比</th>
+            <td>中 · 功能条只有占比</td>
+            <td class="warn">弱 · 被时间顺序打散</td>
+            <td class="good">很强 · 矩阵直接横向比</td></tr>
+          <tr><th>回到聊天证据</th>
+            <td class="good">详情内一个按钮</td>
+            <td class="good">展开卡片内一个按钮</td>
+            <td class="good">抽屉内一个按钮</td></tr>
+          <tr><th>实现成本</th>
+            <td class="warn">高 · 新增选择态、详情面板、两套布局</td>
+            <td class="good">低 · 现有结构加层级与分组</td>
+            <td class="warn">高 · 新增表格、排序、抽屉</td></tr>
+          <tr><th>回归风险</th>
+            <td>中 · 键盘与焦点需要重做</td>
+            <td class="good">低 · 交互模型不变</td>
+            <td>中 · 表格在窄面板的降级要单独验</td></tr>
+          <tr><th>与 <code>decision-assistance-run-plan.md</code> §4.2 的一致度</th>
+            <td class="good">完全一致（该文档第 4 条就是「宽面板侧边展开／窄面板同面板详情」）</td>
+            <td class="warn">部分一致（缺侧栏详情）</td>
+            <td class="warn">部分一致（详情改为抽屉，需回写文档）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="compare-foot">
+      <b>我的建议：A 为主干，吸收 B 与 C 的两个零件</b> ——
+      ① 取 B 的<strong>按轮次分组</strong>，让列表在 59 条时仍然有段落感；
+      ② 取 C 的<strong>功能对比矩阵</strong>，替换现在那条只有「事项 / 改变 / 费用」三段的窄条。
+      这样落地的是 A 的结构，但不会丢掉另外两个方向各自的强项。
+    </p>
+  </section>
+
+  <!-- ───────────────────────── shared system ───────────────────────── -->
+  <section class="compare">
+    <h2>三个方向共用的一套视觉系统</h2>
+    <p class="compare-foot" style="margin-top:-4px">
+      下面是无论选哪个方向都会落地的部分。它们才是「不再简陋」的主要来源，也是实施时真正要写的东西。
+    </p>
+    <div class="sys-grid" id="sysGrid"></div>
+  </section>
+
+  <!-- ───────────────────────── run alignment ───────────────────────── -->
+  <section class="compare">
+    <h2>与 Run 其余四个标签页的对齐</h2>
+    <p class="compare-foot" style="margin-top:-4px">
+      这一版不再自造视觉体系：<strong>组件、字号、间距、圆角、色调全部从 Run 已有的四个标签页里取</strong>。
+      下表左边是来源文件，右边是这里照搬的做法 —— 实施时可以直接对照抄。
+    </p>
+    <div class="table-scroll">
+      <table class="compare-table">
+        <thead>
+          <tr><th>来源</th><th>采用的做法</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><code>TrajectoryOverview.tsx</code></th>
+            <td>页面外壳 <code>bg-foreground/[0.012] px-3 py-3 pb-8</code> + 内容 <code>max-w-5xl</code> 居中；
+              <strong>状态行</strong>（8px 状态点 + 13px semibold 标题 + 11px tabular 右侧元信息 + <code>border-b border-border/50 pb-3</code>）；
+              <strong>指标瓷砖</strong>（<code>grid-cols-2 → @min-[760px] grid-cols-4</code>、<code>rounded-lg bg-foreground/[0.025] px-3 py-2.5</code>、
+              11px medium 标签带 14px 图标、16px semibold tabular 数值）；
+              <strong>分区</strong>（12px semibold 标题 + <code>text-accent</code> 11px 文字动作）；
+              <strong>KV 列表</strong>（<code>gap-x-5 gap-y-2 border-y border-border/50 py-3</code>、<code>@min-[620px]</code> 双列、标签左值右）；
+              <strong>列表容器</strong> <code>rounded-lg border border-border/55 bg-background/70</code>，行 <code>min-h-10 border-b border-border/45</code>；
+              <strong>卡片</strong> <code>rounded-xl border border-border/55 bg-background/70</code>。</td>
+          </tr>
+          <tr>
+            <th><code>TrajectoryToolbar.module.css</code></th>
+            <td>筛选按钮 24px 高 / <code>6px</code> 圆角 / 11px 字号 / 透明底，hover 与 <code>aria-pressed</code> 都是「主文字色 + <code>--foreground-10</code> 底」；
+              分隔线 <code>1×16px</code>；搜索框 26px 高 / <code>7px</code> 圆角 / <code>border-l2</code> / 弹性 <code>0 1 164px</code> / focus-within 换品牌色边；
+              计数 11px tabular 三级文字。<strong>原来的裸 <code>&lt;select&gt;</code> 与自造 chip 全部换成这一套。</strong></td>
+          </tr>
+          <tr>
+            <th><code>TrajectoryTable.module.css</code></th>
+            <td>表格 30px 行高 / <code>0 8px</code> 单元格内边距 / <code>border-l1</code> 分隔 / 单行省略；
+              选中行 <code>accent 10%</code> 底 + <strong>3px 左侧色轨</strong>（失败行改用红色轨）；
+              时间列 <code>10px/14px</code> 等宽 + tabular；
+              <strong>轮次标记</strong>（9px 等宽、module 底色、tabular）；<code>focus-visible</code> 用内描边而不是外发光。</td>
+          </tr>
+          <tr>
+            <th><code>trajectory-theme.css</code></th>
+            <td>整套 <code>--dsw-alias-*</code> 别名层：<code>label-primary/secondary/tertiary/caption/dimmed</code>、
+              <code>border-l1/l2/l3</code>、<code>interactive-bg-hover</code>、<code>bg-module-platform</code>、
+              <code>state-warn-tertiary</code> / <code>state-business-tertiary</code>。
+              <strong>状态标签直接沿用表格的 <code>kindTag</code> 规格</strong>（18px 高 / 4px 圆角 / 10px 600 / 字距 .035em）。</td>
+          </tr>
+          <tr>
+            <th><code>index.css</code> · <code>motion.css</code></th>
+            <td><code>--foreground-2/3/5/10/20</code> 透明度阶梯；圆角走 theme radius（<code>rounded-lg</code> = 6px、<code>rounded-xl</code> = 9px）；
+              动效只用 <code>--motion-duration-fast/standard/emphasis</code> 与 <code>ease-enter/move</code>，并整体遵守 <code>prefers-reduced-motion</code>。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="compare-foot">
+      <b>两处刻意的偏离，需要你确认：</b>
+      ① <strong>「已应用」不用绿色</strong> —— 绿色会被读成「已批准」，而设计文档 §3.3 明确要求风险标记只能是信息辅助；
+      改用「中性底 + 品牌色文字」，与「已改变」（品牌色底 + 品牌色文字）形成两级而不是两种语义。
+      ② <strong>不再内嵌第二层标签条</strong> —— Run 已经有一层标签，再套一层会让人不知道自己在哪；
+      改用与概览一致的分区（功能对比 → 决策记录），窄面板下功能对比默认收起。
+    </p>
+  </section>
+
+  <!-- ───────────────────────── current impl ───────────────────────── -->
+  <section class="compare">
+    <h2>对照：当前实现</h2>
+    <div class="current-shot">
+      <figure>
+        <img src="../../verification/results/session-decisions/light-en-1040-detail.png" alt="当前决策视图（1040px，英文）" onerror="this.closest('figure').classList.add('is-missing')">
+        <figcaption>当前实现 · 1040px · 英文（<code>docs/verification/results/session-decisions/</code>）</figcaption>
+      </figure>
+      <div class="current-notes">
+        <p>可以看到问题集中在三处：</p>
+        <ol>
+          <li>顶部 4 个数字和下面所有内容之间<strong>没有视觉分区</strong>，一路灰到底。</li>
+          <li>「Features used」是一列纯文本，金额右对齐但没有等宽数字，也没有占比形状。</li>
+          <li>展开后的记录里，「Trigger and source」把 <code>{'{ "messageId": …, "turnId": … }'}</code> 原样贴出，而真正的动作（Keep title / Unchanged）反而只有一行小字。</li>
+        </ol>
+        <p class="muted">图片路径失效时会自动隐藏（本文件被移动后不影响其余部分）。</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="./app.js"></script>
+</body>
+</html>

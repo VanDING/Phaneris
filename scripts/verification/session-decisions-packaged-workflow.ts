@@ -99,8 +99,11 @@ try {
     await page.getByRole('tab', { name: messages['trajectory.views.decisions'], exact: true }).click()
     await page.locator(`[data-decision-id="${decide.trace!.decisionPointId}"]`).waitFor()
     assert.equal(await page.locator('[data-session-decisions]').getAttribute('data-session-decisions'), stored.id)
-    await page.locator('[data-decision-id] button').first().click()
-    assert((await page.locator('[data-session-decisions]').innerText()).includes(messages['trajectory.decisions.application']))
+    // Selecting a record opens the detail drawer; the record list stays mounted.
+    await page.locator(`[data-decision-id="${decide.trace!.decisionPointId}"]`).click()
+    await page.locator('[data-decision-detail]').waitFor()
+    assert((await page.locator('[data-decision-detail]').innerText()).includes(messages['trajectory.decisions.application']))
+    assert.equal(await page.locator(`[data-decision-id="${decide.trace!.decisionPointId}"]`).count(), 1)
     if (!process.env.PHANERIS_VERIFY_SKIP_SCREENSHOTS) await page.screenshot({ path: join(output, 'run-decisions.png') })
   })
   await check('Changing the active chat updates the session-bound Decisions range', async () => {

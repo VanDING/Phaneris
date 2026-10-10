@@ -1,0 +1,92 @@
+{
+  "scope": "Run → Decisions 视图改版（方案 C：状态行 → 四块同权重指标瓷砖 → 功能对比 → 决策记录 → 详情抽屉）",
+  "archivedAt": "2026-10-10",
+  "command": "$env:PHANERIS_TEST_BROWSER_CHANNEL='msedge'; bun run scripts/verification/session-decisions-workflow.ts",
+  "browserChannel": "msedge",
+  "workflow": { "file": "results.json", "passed": 20, "total": 20 },
+  "packaged": {
+    "command": "bun run electron:dist:win && bun run scripts/verification/session-decisions-packaged-workflow.ts",
+    "workflow": { "file": "packaged-results.json", "passed": 5, "total": 5, "pageErrors": 0 },
+    "installer": {
+      "file": "apps/electron/release/Phaneris-0.3.1-win-x64.exe",
+      "sizeMB": 185.4,
+      "sha256": "626A632E384420459B1A3FBB0647F10DEC482C586732AE8E2E7BB0D6FDF40983",
+      "signature": "NotSigned（未配置代码签名证书，与 release-readiness 未决项一致）"
+    },
+    "unpacked": { "path": "apps/electron/release/win-unpacked", "sizeMB": 594 },
+    "covers": [
+      "真实主进程与 preload 返回持久化报告",
+      "打包后的 Run 在无聊天消息的会话上渲染决策；点选记录打开详情抽屉并显示「实际处理」",
+      "切换活动会话后范围跟随",
+      "打包后的 AI 设置无运行统计、Permissions 无 Guarded 跳转",
+      "全程未调用决策供应商（providerRequests = 1，仅夹具那次）"
+    ],
+    "note": "截图为 1600×1000 真实客户端窗口；此处 Run 面板宽约 460px，因此详情走窄面板的底部模态抽屉分支 —— 这也是打包环境下对「宽窄分支由实测面板宽度决定」的验证。"
+  },
+  "uiChecks": [
+    {
+      "id": "Real Run renders decisions with zero chat messages, filters, pagination and keyboard tabs",
+      "covers": [
+        "五个 Run 标签、40 条首页记录、加载更多后仍保留已加载历史",
+        "点选记录打开详情抽屉且列表不被卸载；实时更新不夺走已打开的详情",
+        "状态筛选即服务端查询契约（changed/fallback/unconfirmed/failed/cancelled），筛选后瓷砖显示筛选范围而非第一页",
+        "功能对比矩阵行即功能筛选，清除筛选后回到全量范围",
+        "Run 标签的左右方向键导航"
+      ]
+    },
+    {
+      "id": "Overview carries a decision summary that opens the Decisions tab",
+      "covers": [
+        "概览的决策摘要携带范围级事项数与实际改变数",
+        "未知费用是独立标签而不是拼进金额",
+        "「查看记录」把 Run 切到决策标签"
+      ]
+    },
+    {
+      "id": "Pinned and following Run bindings remain separate; stale A responses cannot paint B",
+      "covers": ["固定／跟随绑定隔离", "慢响应不能覆盖新范围", "空会话显示明确空态"]
+    },
+    {
+      "id": "Application-only updates refresh; query errors retry and old-server capability stays explicit",
+      "covers": ["仅处理结果更新也会刷新", "重连后重新读取", "查询失败可重试", "旧服务器能力缺失明确表达"]
+    },
+    {
+      "id": "Batched light/dark and narrow Chinese captures have no horizontal overflow",
+      "covers": [
+        "浅色 1040px 英文、深色 1040px 英文、浅色 480px 中文三组均无横向溢出",
+        "宽／窄分支由实测面板宽度决定：宽面板渲染真实表格，窄面板把两张表都降级为行／卡片",
+        "详情抽屉：宽面板为右侧非模态抽屉，窄面板为底部模态抽屉",
+        "零页面错误"
+      ]
+    }
+  ],
+  "fixes": [
+    "trajectory.decisions.status.applied 此前不存在，'已应用但未改变基线'的记录会把键名漏在界面上",
+    "failed / cancelled 在行内状态里不可达（application.status 的联合类型不含这两个值），按失败筛选会看到未确认徽标",
+    "attemptCount / featureCounts / legacyCalls 缺复数形式，英文下出现 '1 model attempts'、'1 points · 0 changes'",
+    "详情把原始 JSON 倾倒进 <pre>；现改为键值行，原始记录退到折叠里"
+  ],
+  "screenshots": [
+    { "file": "light-en-1040.png", "shows": "宽面板：状态行、四块瓷砖、功能对比矩阵（含合计与 +n? 图例）、决策记录表" },
+    { "file": "light-en-1040-detail.png", "shows": "宽面板：右侧非模态详情抽屉，列表保持可用" },
+    { "file": "dark-en-1040.png", "shows": "深色主题同一布局" },
+    { "file": "dark-en-1040-detail.png", "shows": "深色主题详情抽屉" },
+    { "file": "light-zh-Hans-480.png", "shows": "窄面板：矩阵默认收起、记录降级为卡片列表" },
+    { "file": "light-zh-Hans-480-detail.png", "shows": "窄面板：底部模态详情抽屉" },
+    { "file": "overview-light-en-1040.png", "shows": "概览：决策摘要区块（四个内联数字 + 未知费用标签 + 查看记录）" },
+    { "file": "overview-dark-en-1040.png", "shows": "概览摘要 · 深色" },
+    { "file": "overview-light-zh-Hans-480.png", "shows": "概览摘要 · 中文窄面板" },
+    { "file": "packaged-run-decisions.png", "shows": "打包客户端：Run → 决策，面板约 460px，详情为底部模态抽屉" },
+    { "file": "packaged-ai-settings.png", "shows": "打包客户端：AI 设置的决策辅助配置" },
+    { "file": "packaged-permissions.png", "shows": "打包客户端：Permissions 无 Guarded 重复入口" }
+  ],
+  "gateResults": {
+    "typecheck:all": "exit 0",
+    "lint": "0 errors, 117 pre-existing warnings",
+    "lint:i18n:parity": "OK (2561 keys per locale)",
+    "lint:i18n:sorted": "OK",
+    "lint:i18n:coverage": "OK (2799 references)",
+    "lint:i18n:dead-keys": "OK (2561 keys, all referenced)"
+  },
+  "notes": "evidence.json 为脱敏的决策事件与用量账本关联证据。截图中的示例数值来自隔离夹具，不作为统计口径依据。"
+}

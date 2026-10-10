@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "sessionId": "261010-onyx-wave",
+  "workspaceId": "packaged-decisions",
+  "revision": 12,
+  "enabled": true,
+  "coverage": "partial",
+  "recordedFrom": 1791600777982,
+  "totals": {
+    "points": 1,
+    "requests": 1,
+    "legacyCalls": 0,
+    "changed": 1,
+    "fallback": 0,
+    "unconfirmed": 0,
+    "failures": 0,
+    "cancelled": 0,
+    "knownCostUsd": 0.001,
+    "knownCostRequests": 1,
+    "unknownCostRequests": 0,
+    "inputTokens": 7,
+    "outputTokens": 3
+  },
+  "features": [
+    {
+      "feature": "riskBadges",
+      "totals": {
+        "points": 1,
+        "requests": 1,
+        "legacyCalls": 0,
+        "changed": 1,
+        "fallback": 0,
+        "unconfirmed": 0,
+        "failures": 0,
+        "cancelled": 0,
+        "knownCostUsd": 0.001,
+        "knownCostRequests": 1,
+        "unknownCostRequests": 0,
+        "inputTokens": 7,
+        "outputTokens": 3
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "82cd4edc-9382-4925-8c8f-0040baf11825",
+      "feature": "riskBadges",
+      "startedAt": 1791600777982,
+      "updatedAt": 1791600778057,
+      "source": {
+        "runOperationId": "fixture-execution"
+      },
+      "attempts": [
+        {
+          "id": "19d0dd19-5f8a-4ec8-8ab6-738c64fe464b",
+          "provider": "custom",
+          "model": "fixture",
+          "sent": true,
+          "status": "succeeded",
+          "record": {
+            "accountingOperationId": "modelop_9a9d10a5d0c05c791135a8348236f076",
+            "answers": {
+              "sends": {
+                "noul": 0.95,
+                "type": "noul"
+              }
+            },
+            "attemptId": "19d0dd19-5f8a-4ec8-8ab6-738c64fe464b",
+            "coldStart": true,
+            "decisionPointId": "82cd4edc-9382-4925-8c8f-0040baf11825",
+            "feature": "risk_badges",
+            "id": "5b5b9c28-086a-4de4-b1a0-50a7d3be0d4d",
+            "latencyMs": 7,
+            "meta": {
+              "deadlineMs": 2800
+            },
+            "model": "fixture",
+            "ok": true,
+            "provider": "custom",
+            "questions": {
+              "sends": "noul"
+            },
+            "responseModel": "fixture",
+            "sessionId": "261010-onyx-wave",
+            "state": {
+              "bytes": 27,
+              "sha256": "17510626485f8bdd3caa93149420720b54d4e50f68c3fa207092bfd79e718513",
+              "truncated": false
+            },
+            "t": "2026-10-10T02:52:58.050Z",
+            "usage": {
+              "costStatus": "known",
+              "costUsd": 0.001,
+              "inputTokens": "[REDACTED]",
+              "outputTokens": "[REDACTED]"
+            }
+          },
+          "accountingOperationId": "modelop_9a9d10a5d0c05c791135a8348236f076",
+          "inputTokens": 7,
+          "outputTokens": 3,
+          "costUsd": 0.001
+        }
+      ],
+      "observations": [],
+      "recommendation": {
+        "action": "badges",
+        "changed": true
+      },
+      "application": {
+        "action": "badges",
+        "changed": true,
+        "detail": {
+          "count": 1
+        },
+        "status": "applied"
+      }
+    }
+  ],
+  "turnIds": []
+}
