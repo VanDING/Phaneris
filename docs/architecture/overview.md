@@ -1,7 +1,7 @@
 # Phaneris 架构总览
 
 Status: accepted — 当前实现基线
-最后核对：2026-10-06
+最后核对：2026-10-11
 适用范围：仓库结构、运行时拓扑、协议边界、持久化、构建发布
 不在范围内：版本升级建议（见 [dependency-graph-2026-10-06.md](../dependencies/dependency-graph-2026-10-06.md)）、durable runtime 的设计论证（见 [durable-agent-runtime.md](./durable-agent-runtime.md)）
 
@@ -30,9 +30,9 @@ Status: accepted — 当前实现基线
 │                                                                                │
 │  transport/    WsRpcServer · WsRpcClient · codec · push · 16 MiB 上限          │
 │  handlers/rpc/ 26 个 channel 模块（sessions·tasks·sources·artifacts·…）        │
-│  sessions/     SessionManager（11,385 行，编排中枢）                            │
+│  sessions/     SessionManager（11,322 行，产品逻辑与兼容入口）                  │
 │  tasks/        TaskRunner（Conductor DAG）                                      │
-│  durable-runtime/   T1/T2 事务 · 恢复判定 · 投影                               │
+│  durable-runtime/   Kernel（T1/T2·恢复·投影）+ execution/（Runtime Host）+ api/  │
 │  services/ domain/ model-fetchers/ webui/                                       │
 └───────────────┬────────────────────────────────────┬───────────────────────────┘
                 │                                    │
@@ -99,7 +99,7 @@ apps/                          packages/
 | --- | --- | --- |
 | `@phaneris/core` | **只有类型与纯工具**，不是存储层也不是 agent 层 | `types/`, `utils/` |
 | `@phaneris/shared` | 业务逻辑 + 磁盘存储 | `agent/`, `config/`, `credentials/`, `mcp/`, `sessions/`, `sources/`, `protocol/`, `automations/`, `skills/`, `plugins/`, `i18n/` |
-| `@phaneris/server-core` | 无头服务器基础设施；Electron 与 standalone 共用 | `transport/`, `handlers/rpc/`, `sessions/`, `durable-runtime/`, `tasks/`, `bootstrap/`, `runtime/`, `webui/` |
+| `@phaneris/server-core` | 无头服务器基础设施；Electron 与 standalone 共用 | `transport/`, `handlers/rpc/`, `sessions/`, `durable-runtime/`（含 `execution/`、`api/`）, `runtime-adapters/`, `tasks/`, `decisions/`, `domain/`, `bootstrap/`, `runtime/`, `webui/` |
 | `@phaneris/session-tools-core` | 会话工具 schema + handler 的**单一来源** | `tool-defs.ts`, `handlers/`, `runtime/`（沙箱与路径安全） |
 | `@phaneris/pi-agent-server` | Agent 子进程宿主；Pi SDK 唯一加载点 | `index.ts`（JSONL 分发）, `durable-*`, `tools/` |
 | `@phaneris/ui` | 共享 React 组件；**无构建步骤**，直接消费 TS 源码 | `chat/`, `markdown/`, `overlays/`, `trajectory/`, `styles/` |
@@ -126,7 +126,7 @@ apps/                          packages/
 ├──────────────────────────────────────────────────────────────────────────┤
 │ L0  编排        SessionManager · TaskRunner · services/ · domain/        │
 ├──────────────────────────────────────────────────────────────────────────┤
-│ L-1 运行时      durable-runtime（T1/T2 权威）· agent backend 驱动         │
+│ L-1 运行时      durable-runtime（T1/T2 权威 + Runtime Host）· agent driver  │
 ├──────────────────────────────────────────────────────────────────────────┤
 │ L-2 Agent 进程  pi-agent-server  ←→  @earendil-works/pi-* 1.1.0          │
 ├──────────────────────────────────────────────────────────────────────────┤
@@ -211,7 +211,8 @@ const child = spawn(nodePath, args, { cwd, stdio: ['pipe','pipe','pipe'], env: {
       │  写 runtime_events + tool_operations + 下一个 operation state
       │  ⚠ T1 未提交 → 实现绝对不执行
       ▼
-⑤ agent backend 驱动（shared/agent/backend/internal/drivers/pi.ts）
+⑤ agent backend 驱动（durable runtime 路径：runtime-adapters/pi-driver.ts；
+      shared/agent/backend/internal/drivers/pi.ts 仍是底层的 SDK 接线）
       │  经 JSONL stdio 下发到 pi-agent-server
       ▼
 ⑥ pi-agent-server → Pi SDK → provider API / 本地工具
@@ -384,9 +385,9 @@ bun run build:wa-worker            WhatsApp worker（--target=node）
 | 项 | 事实 | 影响 |
 | --- | --- | --- |
 | **webui 与 electron 无 API 边界** | webui 的 tsconfig `include` 了 `../electron/src/renderer/**`，vite 把 `@` 别名指向该源码树 | electron renderer 成了**未版本化、未发布**的库。renderer 里任何新增的 Electron/Node 专用 import 都会静默打断浏览器构建，直到有人补一个 shim。`import.meta.env.IS_WEBUI` 是唯一缝隙，且**没有测试门禁**断言 webui 产物不含 Electron/Node 代码 |
-| **两套主题源头** | `packages/ui/src/styles/index.css`（仅 viewer 用）与 electron 自维护的 1717 行 `index.css`（electron 用，webui 靠 `@import` 继承） | 桌面与 viewer 的主题 token 可能静默漂移，**没有检查比对两者** |
+| **两套主题源头** | `packages/ui/src/styles/index.css`（585 行，仅 viewer 用）与 electron 自维护的 1717 行 `index.css`（electron 用，webui 靠 `@import` 继承）；字体栈单源于 `packages/ui/src/styles/typography.css` | **已有检查**：`packages/shared/src/config/__tests__/theme.test.ts` 逐 token 比对两者与 `themeToCSS(DEFAULT_THEME_FILE)`，并已进入 `test:shared:config`（`validate:ci` 与 pre-push）与 `test:critical`。2026-10-10 之前该检查是红的，见[清理计划 §2.1](../process/system-cleanup-optimization-plan-2026-10-10.md) |
 | **bootstrap 顺序是隐式契约** | renderer 模块假定 `window.electronAPI` 已存在，webui 必须**先赋值再** `import('@/App')` | 未来任何模块级调用会让浏览器端白屏，且**无编译错误** |
-| **Pi SDK 版本已对齐（2026-10-06）** | 原先三处不一致：`docs/pi-kernel.md` 写 1.0.0、`apps/electron/README.md` 写 0.86.1、实际 **1.0.2** | 前两处已改为 1.0.2；本行保留作为"文档版本会漂移"的证据 |
+| **Pi SDK 版本已对齐（2026-10-11 核对）** | 当前四处声明与安装版本均为 **1.1.0**（`packages/shared`、`packages/pi-agent-server`、`packages/server-core`、根 `package.json`）；`docs/guides/pi-kernel.md` 与 `apps/electron/README.md` 同步 | 历史上曾出现三处不一致（1.0.0 / 0.86.1 / 实际 1.0.2），本行保留作为"文档版本会漂移"的证据 |
 | **`@phaneris/core` 描述失真** | `package.json` 写 "Core types, storage, and agent logic"，实际**只有类型与纯工具**（存储/agent 仍在 shared） | 误导分层判断 |
 | **`@earendil-works/pi-server` 声明未使用** | 全仓库零 import（唯一的 `[pi-server]` 是日志前缀） | 死声明，见依赖梳理 §7 |
 | **viewer 后端未配置** | `SERVICE_URLS.viewer = null`（`identity.generated.ts`） | 本 fork 不提供 viewer 服务端；`/s/{id}` 路由依赖外部部署 |
@@ -401,7 +402,7 @@ bun run build:wa-worker            WhatsApp worker（--target=node）
 | 进程拓扑与 spawn | `packages/shared/src/agent/pi-agent.ts:532-610`、`packages/shared/src/agent/backend/internal/runtime-resolver.ts:23` |
 | 本地/远程路由 | `apps/electron/src/preload/bootstrap.ts:95-140`、`apps/electron/src/transport/routed-client.ts:1-12` |
 | 分层与 DI | `packages/server-core/src/handlers/`（类型化 seams）、`packages/server-core/src/transport/server.ts` |
-| durable runtime | `packages/server-core/src/durable-runtime/{store,coordinator,projection}.ts`、`docs/architecture/durable-agent-runtime.md` |
+| durable runtime | `packages/server-core/src/durable-runtime/{store,coordinator,projection}.ts`、`execution/host.ts`、`runtime-adapters/`、`docs/architecture/durable-runtime-boundary.md` |
 | 存储布局 | `packages/shared/src/config/paths.ts`、`packages/shared/src/sessions/storage.ts:1-15` |
 | 客户端矩阵 | 各 app 的 `vite.config.ts` / `tsconfig.json` / `package.json` |
 | 打包 | `apps/electron/electron-builder.yml` |

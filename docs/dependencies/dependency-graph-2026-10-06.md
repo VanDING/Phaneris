@@ -109,7 +109,7 @@
 
 典型例子：`packages/ui` 只声明 10 个 `dependencies`，却 import 了 24 个根级包（全部 `@tiptap/*`、`@radix-ui/react-tooltip`、`linkify-it`、`pdfjs-dist`、`rehype-sanitize`、`tiptap-markdown`、`tiptap-extension-code-block-shiki`）。
 
-**这本身是一种刻意的设计**——`packages/ui` 用 25 个 `peerDependencies` 声明契约，由消费方（根或 electron）提供实现，可以避免 React/Tiptap 多实例。问题在于**契约没有被完整遵守**：`@tiptap/*` 等 13 个包被 import 但连 peer 都没写。
+**这本身是一种刻意的设计**——`packages/ui` 用 25 个 `peerDependencies` 声明契约，由消费方（根或 electron）提供实现，可以避免 React/Tiptap 多实例。问题在于**契约没有被完整遵守**：`@tiptap/*` 等 **12** 个包被 import 但连 peer 都没写（原文写 13，2026-10-11 核对为 12 个不同的 specifier）。
 
 ### 各 workspace 各自的传递闭包
 
@@ -220,7 +220,7 @@ Babel 7/8 并存、`brace-expansion` 三分支是上游父包范围约束的结�
 | workspace | 未声明外部包 | 代表 |
 | --- | ---: | --- |
 | `apps/electron` | 34 | `@radix-ui/react-avatar/scroll-area/select/separator/slot/tabs`、`@sentry/electron`、`@sentry/react`、`@svar-ui/react-grid`、`class-variance-authority`、`clsx`、`croner`、`date-fns`、`i18next`、`jotai`、`lucide-react`、`react-resizable-panels`、`shiki`、`tailwind-merge`、`vite` |
-| `packages/ui` | 24 | 全部 `@tiptap/*`（13 个）、`@radix-ui/react-tooltip`、`linkify-it`、`pdfjs-dist`、`rehype-sanitize`、`tiptap-markdown`、`tiptap-extension-code-block-shiki` |
+| `packages/ui` | 24 | 全部 `@tiptap/*`（12 个）、`@radix-ui/react-tooltip`、`linkify-it`、`pdfjs-dist`、`rehype-sanitize`、`tiptap-markdown`、`tiptap-extension-code-block-shiki` |
 | `(root scripts/)` | 19 | `@modelcontextprotocol/sdk`、`@earendil-works/pi-ai`、`@earendil-works/pi-coding-agent`、`@whiskeysockets/baileys`、`electron`、`esbuild`、`i18next`、`jotai`、`node-tesseract-ocr`、`pkg`、`playwright`、`react`、`react-dom`、`react-i18next`、`semver`、`sharp`、`sonner`、`vite`、`zod` |
 | `packages/shared` | 8 | `electron`、`electron-log`、`gray-matter`、`marked`、`open`、`tar` |
 | `apps/webui` | 5 | `motion`、`@tailwindcss/vite`、`@vitejs/plugin-react`、`@rolldown/plugin-babel` |
@@ -256,7 +256,7 @@ Babel 7/8 并存、`brace-expansion` 三分支是上游父包范围约束的结�
 | `packages/pi-agent-server` | `@earendil-works/pi-server` | 零引用（连带 `@earendil-works/pi-protocol`） |
 | `packages/pi-agent-server` | `duck-duck-scrape` | 零引用，搜索能力已内联实现 |
 | `packages/session-tools-core` | `zod-to-json-schema` | 源码注释明写"Zod v4 有原生 `.toJSONSchema()`，`zod-to-json-schema` 与 v4 不兼容"——已被取代 |
-| `apps/electron` | `temporal-polyfill` | 零引用 |
+| `apps/electron` | `temporal-polyfill` | 零直接 import，但**不是死声明**：它是 `@fullcalendar/core` 与 `@fullcalendar/react` 的必需 peer，而 electron 声明了后者（2026-10-11 核对，批次 C 因此保留该声明） |
 | `apps/electron` | `unist-util-visit` | 已由 `packages/ui` 声明 |
 | `apps/electron` | `sharp` | 见下方边界问题 |
 
@@ -291,7 +291,7 @@ incr-regex-package@1.0.4
                     react-devtools-core, concurrently
 packages/shared:    incr-regex-package, @isaacs/ttlcache
 pi-agent-server:    @earendil-works/pi-server, duck-duck-scrape
-apps/electron:      temporal-polyfill
+apps/electron:      temporal-polyfill   # 必需 peer 提供者，保留；见上文更正
 session-tools-core: zod-to-json-schema
 ```
 
@@ -332,7 +332,7 @@ session-tools-core: zod-to-json-schema
 | P0 | 删除 §7 的 17 条零引用声明 | **-54 节点**，去掉两套打包链之一 | 低。逐条 grep 已验证零引用 |
 | P1 | `apps/webui` 的 `vite` 从 `dependencies` 移到 `devDependencies` | 语义修正 | 低 |
 | P1 | `packages/server-core` 补声明 `@phaneris/session-tools-core`；`apps/viewer` 补声明 `@phaneris/shared` | 消除 2 条隐式内部边 | 低 |
-| P1 | `packages/ui` 把实际 import 的 13 个 `@tiptap/*` 等补进 `peerDependencies` | 让契约与代码一致 | 中。需确认 electron 侧仍提供实现 |
+| P1 | `packages/ui` 把实际 import 的 12 个 `@tiptap/*` 等补进 `peerDependencies` | 让契约与代码一致 | 中。需确认 electron 侧仍提供实现 |
 | P2 | 对齐 5 组版本分歧范围 | 防止 viewer 与根漂移 | 低 |
 | P2 | 删除或修复 `packages/ui` 里 3 个 `import 'vitest'` 的测试 | 消除不可运行的测试 | 低 |
 | P3 | 评估把根清单的 UI/编辑器栈下沉到 `packages/ui` 的 `dependencies` | 让根回归"根"的角色 | **高**。会改变 hoisting 布局，可能引入 React/Tiptap 多实例，需完整 E2E |

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "claim": "Extracting the shared resolver into scripts/lib/import-graph.ts left the runtime boundary gate byte-identical",
+  "command": "bun run scripts/check-runtime-boundary.ts --baseline --output=<file>",
+  "hashExcludingGeneratedAt": {
+    "before": "4d0d2b9bc911745a11f8acd2eb667ab168f83b2501f8ceda19cfc53beed20133",
+    "after": "4d0d2b9bc911745a11f8acd2eb667ab168f83b2501f8ceda19cfc53beed20133"
+  },
+  "identical": true
+}

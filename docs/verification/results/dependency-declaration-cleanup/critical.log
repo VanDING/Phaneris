@@ -1,0 +1,97 @@
+$ bun run scripts/test-critical.ts
+Environment OK: Bun 1.4.2, Node v24.16.0; local script entries exist.
+
+> run scripts/check-runtime-boundary.ts
+{
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-10-10T16:43:45.890Z",
+  "scannedFiles": 1461,
+  "violationCount": 0,
+  "violations": []
+}
+
+> run scripts/check-architecture.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T16:43:48.443Z",
+  "scannedFiles": 1461,
+  "webuiClosureSize": 1011,
+  "webuiShimCount": 46,
+  "inspected": {
+    "webui-unshimmed-node": 236,
+    "undeclared-subpath-import": 936
+  },
+  "baselineSize": {
+    "webui-unshimmed-node": 3,
+    "undeclared-subpath-import": 0
+  },
+  "currentSize": {
+    "webui-unshimmed-node": 3,
+    "undeclared-subpath-import": 0
+  },
+  "failures": []
+}
+
+> run scripts/verification/runtime-boundary-gate-workflow.ts
+{"passed":true,"rejectedViolations":23,"output":"/Users/van/projects/Phaneris/docs/verification/results/durable-runtime-boundary/gate-mutations.json"}
+
+> run scripts/verification/durable-runtime-boundary-workflow.ts
+{"passed":15,"output":"/Users/van/projects/Phaneris/docs/verification/results/durable-runtime-boundary/workflow.json"}
+
+> run scripts/verification/durable-runtime-crash-workflow.ts
+{"passed":8,"output":"/Users/van/projects/Phaneris/docs/verification/results/durable-runtime-boundary/crash.json"}
+
+> test ./scripts/check-environment.test.ts
+bun test v1.4.2 (744846f84)
+
+scripts/check-environment.test.ts:
+(pass) resolves script targets after cd without flagging workspace-relative assets as missing [0.58ms]
+
+ 1 pass
+ 0 fail
+ 1 expect() calls
+Ran 1 test across 1 file. [14.00ms]
+
+> test ./src/durable-runtime/coordinator.test.ts ./src/durable-runtime/process-crash.test.ts ./src/durable-runtime/projection-runner.test.ts ./src/sessions/idle-session-cache.test.ts ./src/tasks/TaskRunner.test.ts ./src/transport/__tests__/server-lifecycle.test.ts
+bun test v1.4.2 (744846f84)
+
+src/durable-runtime/coordinator.test.ts:
+(pass) DurableRuntimeCoordinator > persists native observations without changing execution state, context or usage [19.06ms]
+(pass) DurableRuntimeCoordinator > owns a complete cross-process T1/T2 boundary [15.23ms]
+(pass) DurableRuntimeCoordinator > aggregates a parallel tool batch and accepts out-of-order T2 commits [16.14ms]
+(pass) DurableRuntimeCoordinator > does not start the next model attempt while any tool effect is unsettled [11.63ms]
+(pass) DurableRuntimeCoordinator > commits final assistant output before it is projected [11.16ms]
+(pass) DurableRuntimeCoordinator > parks a run whose tool outcome is unknown [12.04ms]
+(pass) DurableRuntimeCoordinator > startup recovery parks an unknown effect without replaying it [12.42ms]
+(pass) DurableRuntimeCoordinator > startup recovery terminalizes an interrupted run with no unknown effect [11.38ms]
+(pass) DurableRuntimeCoordinator > atomically commits an assistant model outcome and deduplicated usage [12.54ms]
+(pass) DurableRuntimeCoordinator > owns model T1/T2 and usage across the provider effect boundary [14.44ms]
+(pass) DurableRuntimeCoordinator > parks a provider request left between model T1 and T2 [11.50ms]
+(pass) DurableRuntimeCoordinator > durably resolves an unknown provider attempt without retrying it [12.55ms]
+(pass) DurableRuntimeCoordinator > atomically commits a verified reconciliation and resumes the program counter [13.87ms]
+(pass) DurableRuntimeCoordinator > queries a registered adapter using the durable idempotency identity [13.26ms]
+(pass) DurableRuntimeCoordinator > makes TaskRunner facts authoritative and replayable after terminal cleanup [15.13ms]
+(pass) DurableRuntimeCoordinator > restores a verified backup atomically while retaining the previous live database [26.04ms]
+(pass) DurableRuntimeCoordinator > imports branch history without fabricating tool dispatch evidence [15.51ms]
+(pass) background cache warming ledger > meters warming without disturbing pending tool or adding context [14.29ms]
+(pass) background cache warming ledger > meters warming without disturbing pending model or adding context [13.51ms]
+(pass) background cache warming ledger > accepts metered cancellation after the owning task settles, without reopening it [11.80ms]
+(pass) background cache warming ledger > retains an unknown refresh as pending audit evidence across restart without replay [17.83ms]
+
+src/durable-runtime/process-crash.test.ts:
+(pass) durable runtime process crash recovery > a kill before T1 produces zero external effect calls [51.72ms]
+(pass) durable runtime process crash recovery > a kill after an external effect but before T2 parks without replay [50.66ms]
+(pass) durable runtime process crash recovery > a kill after T1 but before the effect remains unknown and never executes automatically [53.17ms]
+(pass) durable runtime process crash recovery > a kill after tool T2 but before publish rebuilds the settled outcome [54.70ms]
+(pass) durable runtime process crash recovery > a kill after a billable model request but before T2 parks without rebilling [49.62ms]
+(pass) durable runtime process crash recovery > a kill after model T2 but before publish rebuilds response and usage [52.32ms]
+
+src/durable-runtime/projection-runner.test.ts:
+(pass) DurableProjectionRunner > persists an incremental cursor and atomically materialized snapshot [2.43ms]
+(pass) DurableProjectionRunner > rebuilds the same snapshot from seq zero [2.19ms]
+(pass) DurableProjectionRunner > fails closed on an incompatible persisted projection schema [1.92ms]
+(pass) DurableProjectionRunner > CAS prevents two projection writers from advancing the same cursor [2.07ms]
+(pass) session projections skip other sessions without treating their global sequence gaps as corruption [2.33ms]
+
+src/sessions/idle-session-cache.test.ts:

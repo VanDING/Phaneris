@@ -1,0 +1,43 @@
+bun test v1.4.2 (744846f84)
+
+src/automations/validation.test.ts:
+(pass) validation > unemitted agent events > warns that an automation on an event nobody emits will never run [6.72ms]
+(pass) validation > unemitted agent events > keeps the conditions-only wording for an event that is emitted [0.24ms]
+(pass) validation > validateAutomationsConfig > should accept a valid config [0.78ms]
+(pass) validation > validateAutomationsConfig > should accept an empty automations object [0.07ms]
+(pass) validation > validateAutomationsConfig > should reject non-object input [0.61ms]
+(pass) validation > validateAutomationsConfig > should accept config without automations key (defaults to empty) [0.08ms]
+(pass) validation > validateAutomationsConfig > should accept config with prompt actions [0.89ms]
+(pass) validation > validateAutomationsConfig > should accept config with disabled matchers [0.12ms]
+(pass) validation > validateAutomationsConfig > should accept config with optional name field [0.21ms]
+(pass) validation > validateAutomationsConfig > should accept thinkingLevel on prompt actions [0.17ms]
+(pass) validation > validateAutomationsConfig > PromptActionSchema rejects invalid thinkingLevel values [0.17ms]
+(pass) validation > validateAutomationsConfig > should migrate legacy thinkingLevel "think" to "medium" [0.12ms]
+(pass) validation > validateAutomationsConfig > should accept prompt actions without thinkingLevel (backward compat) [0.09ms]
+(pass) validation > validateAutomationsConfig > should reject state conditions with no operator [1.05ms]
+(pass) validation > validateAutomationsConfig > should reject state conditions with conflicting operator groups [0.19ms]
+(pass) validation > validateAutomationsConfig > should reject semantically invalid time values in object validation path [0.67ms]
+(pass) validation > validateAutomationsConfig > should reject condition nesting beyond maximum depth [0.46ms]
+(pass) validation > validateAutomationsContent > should accept valid JSON config [0.14ms]
+(pass) validation > validateAutomationsContent > should reject invalid JSON [0.13ms]
+(pass) validation > validateAutomationsContent > should reject ReDoS patterns (nested quantifiers) [0.11ms]
+(pass) validation > validateAutomationsContent > should reject ReDoS patterns (repeated alternation) [0.07ms]
+(pass) validation > validateAutomationsContent > should reject ReDoS patterns (repeated greedy quantifiers) [0.19ms]
+(pass) validation > validateAutomationsContent > should reject invalid regex syntax [0.32ms]
+(pass) validation > validateAutomationsContent > should reject regex patterns that are too long [0.12ms]
+(pass) validation > validateAutomationsContent > should reject invalid cron expressions [0.26ms]
+(pass) validation > validateAutomationsContent > should reject invalid timezone [5.01ms]
+(pass) validation > validateAutomationsContent > should warn about allow-all permission mode [0.26ms]
+(pass) validation > validateAutomationsContent > should warn about empty automations config [0.12ms]
+(pass) validation > validateAutomationsContent > should warn when cron is used on non-SchedulerTick event [0.49ms]
+(pass) validation > validateAutomationsContent > should accept valid simple regex patterns [0.14ms]
+(pass) validation > validateAutomationsContent > should accept valid cron with timezone [1.62ms]
+[automations] Deprecated event name "TodoStateChange" — use "SessionStatusChange" instead
+(pass) validation > deprecated event aliases > should accept TodoStateChange as deprecated alias [0.22ms]
+[automations] Deprecated event name "TodoStateChange" — use "SessionStatusChange" instead
+(pass) validation > deprecated event aliases > should rewrite TodoStateChange to SessionStatusChange in schema transform [0.12ms]
+
+ 33 pass
+ 0 fail
+ 56 expect() calls
+Ran 33 tests across 1 file. [226.00ms]

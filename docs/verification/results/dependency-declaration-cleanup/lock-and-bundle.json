@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T16:44:04.160Z",
+  "lockPackageEntries": {
+    "before": 2066,
+    "after": 2066,
+    "delta": 0,
+    "explanation": "A manifest change prunes orphaned lock entries only during a real resolve. Resolution is blocked in this environment by the xlsx override tarball (see README), so the orphaned entries remain. They are unused and bun accepts the lock under --frozen-lockfile. A plain `bun install` with normal access to cdn.sheetjs.com will prune them; CI runs --frozen-lockfile, which does not.",
+    "auditEstimate": 101
+  },
+  "bundleReport": {
+    "before": {
+      "rendererRawMB": 4.12,
+      "rendererGzipMB": 1.23,
+      "chunks": 89,
+      "mainRawMB": 20.27,
+      "mainGzipMB": 5.38,
+      "piRawMB": 13.36
+    },
+    "after": {
+      "rendererRawMB": 4.12,
+      "rendererGzipMB": 1.23,
+      "chunks": 89,
+      "mainRawMB": 20.27,
+      "mainGzipMB": 5.38,
+      "piRawMB": 13.36
+    },
+    "note": "main.cjs and the pi bundle were not rebuilt in this batch; the renderer was rebuilt after the change and is unchanged."
+  }
+}

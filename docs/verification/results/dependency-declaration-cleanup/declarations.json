@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T16:44:04.160Z",
+  "removed": [
+    {
+      "file": "package.json",
+      "section": "devDependencies",
+      "name": "@rollup/rollup-win32-arm64-msvc"
+    },
+    {
+      "file": "package.json",
+      "section": "devDependencies",
+      "name": "@aws-sdk/client-s3"
+    },
+    {
+      "file": "package.json",
+      "section": "devDependencies",
+      "name": "@electron/packager"
+    },
+    {
+      "file": "package.json",
+      "section": "dependencies",
+      "name": "@shikijs/cli"
+    },
+    {
+      "file": "package.json",
+      "section": "dependencies",
+      "name": "@radix-ui/react-collapsible"
+    },
+    {
+      "file": "package.json",
+      "section": "dependencies",
+      "name": "@tiptap/extension-bubble-menu"
+    },
+    {
+      "file": "package.json",
+      "section": "dependencies",
+      "name": "@dnd-kit/helpers"
+    },
+    {
+      "file": "package.json",
+      "section": "devDependencies",
+      "name": "autoprefixer"
+    },
+    {
+      "file": "package.json",
+      "section": "devDependencies",
+      "name": "postcss"
+    },
+    {
+      "file": "package.json",
+      "section": "devDependencies",
+      "name": "react-devtools-core"
+    },
+    {
+      "file": "package.json",
+      "section": "devDependencies",
+      "name": "concurrently"
+    },
+    {
+      "file": "packages/shared/package.json",
+      "section": "dependencies",
+      "name": "incr-regex-package"
+    },
+    {
+      "file": "packages/shared/package.json",
+      "section": "dependencies",
+      "name": "@isaacs/ttlcache"
+    },
+    {
+      "file": "packages/pi-agent-server/package.json",
+      "section": "dependencies",
+      "name": "@earendil-works/pi-server"
+    },
+    {
+      "file": "packages/pi-agent-server/package.json",
+      "section": "dependencies",
+      "name": "duck-duck-scrape"
+    },
+    {
+      "file": "packages/session-tools-core/package.json",
+      "section": "dependencies",
+      "name": "zod-to-json-schema"
+    }
+  ],
+  "retained": [
+    {
+      "name": "temporal-polyfill",
+      "file": "apps/electron/package.json",
+      "section": "dependencies",
+      "reason": "Required peer of @fullcalendar/core and @fullcalendar/react (both declare ^1.0.1). apps/electron declares @fullcalendar/react, and the installed implementation @full-ui/headless-calendar references temporal-polyfill. Not dead weight: the audit document classified it as a plain zero-reference declaration, which is wrong for this entry."
+    },
+    {
+      "name": "@tiptap/extension-text-style",
+      "file": "package.json",
+      "section": "dependencies",
+      "reason": "Required peer of @tiptap/extension-file-handler (3.31.4), which packages/ui/src/components/markdown/TiptapMarkdownEditor.tsx imports. Retained at the root because packages/ui declares no @tiptap/* at all; relocating it belongs with the ui peer-dependency work, not this batch."
+    }
+  ],
+  "note": "16 of the 18 candidates were removed; two are required peer providers and are retained with the reason recorded here."
+}

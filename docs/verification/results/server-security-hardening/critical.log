@@ -1,0 +1,368 @@
+$ bun run scripts/test-critical.ts
+Environment OK: Bun 1.4.2, Node v24.16.0; local script entries exist.
+
+> run scripts/check-runtime-boundary.ts
+{
+  "schemaVersion": 2,
+  "mode": "acceptance",
+  "generatedAt": "2026-10-10T17:00:43.982Z",
+  "scannedFiles": 1462,
+  "violationCount": 0,
+  "violations": []
+}
+
+> run scripts/check-architecture.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T17:00:46.517Z",
+  "scannedFiles": 1462,
+  "webuiClosureSize": 1012,
+  "webuiShimCount": 46,
+  "inspected": {
+    "webui-unshimmed-node": 236,
+    "undeclared-subpath-import": 936
+  },
+  "baselineSize": {
+    "webui-unshimmed-node": 3,
+    "undeclared-subpath-import": 0
+  },
+  "currentSize": {
+    "webui-unshimmed-node": 3,
+    "undeclared-subpath-import": 0
+  },
+  "failures": []
+}
+
+> run scripts/check-automation-events.ts
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T17:00:46.616Z",
+  "vocabularySize": 13,
+  "emittedCount": 5,
+  "unemittedCount": 8,
+  "emitted": {},
+  "unemitted": [
+    "Notification",
+    "PermissionRequest",
+    "PreCompact",
+    "SessionEnd",
+    "SessionStart",
+    "Setup",
+    "SubagentStart",
+    "SubagentStop"
+  ],
+  "failures": []
+}
+
+> run scripts/verification/runtime-boundary-gate-workflow.ts
+{"passed":true,"rejectedViolations":23,"output":"/Users/van/projects/Phaneris/docs/verification/results/durable-runtime-boundary/gate-mutations.json"}
+
+> run scripts/verification/durable-runtime-boundary-workflow.ts
+{"passed":15,"output":"/Users/van/projects/Phaneris/docs/verification/results/durable-runtime-boundary/workflow.json"}
+
+> run scripts/verification/durable-runtime-crash-workflow.ts
+{"passed":8,"output":"/Users/van/projects/Phaneris/docs/verification/results/durable-runtime-boundary/crash.json"}
+
+> test ./scripts/check-environment.test.ts
+bun test v1.4.2 (744846f84)
+
+scripts/check-environment.test.ts:
+(pass) resolves script targets after cd without flagging workspace-relative assets as missing [0.55ms]
+
+ 1 pass
+ 0 fail
+ 1 expect() calls
+Ran 1 test across 1 file. [15.00ms]
+
+> test ./src/durable-runtime/coordinator.test.ts ./src/durable-runtime/process-crash.test.ts ./src/durable-runtime/projection-runner.test.ts ./src/sessions/idle-session-cache.test.ts ./src/tasks/TaskRunner.test.ts ./src/transport/__tests__/server-lifecycle.test.ts
+bun test v1.4.2 (744846f84)
+
+src/durable-runtime/coordinator.test.ts:
+(pass) DurableRuntimeCoordinator > persists native observations without changing execution state, context or usage [18.99ms]
+(pass) DurableRuntimeCoordinator > owns a complete cross-process T1/T2 boundary [15.30ms]
+(pass) DurableRuntimeCoordinator > aggregates a parallel tool batch and accepts out-of-order T2 commits [18.49ms]
+(pass) DurableRuntimeCoordinator > does not start the next model attempt while any tool effect is unsettled [14.04ms]
+(pass) DurableRuntimeCoordinator > commits final assistant output before it is projected [13.15ms]
+(pass) DurableRuntimeCoordinator > parks a run whose tool outcome is unknown [14.91ms]
+(pass) DurableRuntimeCoordinator > startup recovery parks an unknown effect without replaying it [14.53ms]
+(pass) DurableRuntimeCoordinator > startup recovery terminalizes an interrupted run with no unknown effect [12.60ms]
+(pass) DurableRuntimeCoordinator > atomically commits an assistant model outcome and deduplicated usage [13.10ms]
+(pass) DurableRuntimeCoordinator > owns model T1/T2 and usage across the provider effect boundary [14.63ms]
+(pass) DurableRuntimeCoordinator > parks a provider request left between model T1 and T2 [12.32ms]
+(pass) DurableRuntimeCoordinator > durably resolves an unknown provider attempt without retrying it [12.55ms]
+(pass) DurableRuntimeCoordinator > atomically commits a verified reconciliation and resumes the program counter [13.72ms]
+(pass) DurableRuntimeCoordinator > queries a registered adapter using the durable idempotency identity [13.45ms]
+(pass) DurableRuntimeCoordinator > makes TaskRunner facts authoritative and replayable after terminal cleanup [15.47ms]
+(pass) DurableRuntimeCoordinator > restores a verified backup atomically while retaining the previous live database [25.93ms]
+(pass) DurableRuntimeCoordinator > imports branch history without fabricating tool dispatch evidence [12.38ms]
+(pass) background cache warming ledger > meters warming without disturbing pending tool or adding context [13.69ms]
+(pass) background cache warming ledger > meters warming without disturbing pending model or adding context [15.35ms]
+(pass) background cache warming ledger > accepts metered cancellation after the owning task settles, without reopening it [13.23ms]
+(pass) background cache warming ledger > retains an unknown refresh as pending audit evidence across restart without replay [17.76ms]
+
+src/durable-runtime/process-crash.test.ts:
+(pass) durable runtime process crash recovery > a kill before T1 produces zero external effect calls [54.79ms]
+(pass) durable runtime process crash recovery > a kill after an external effect but before T2 parks without replay [56.78ms]
+(pass) durable runtime process crash recovery > a kill after T1 but before the effect remains unknown and never executes automatically [52.92ms]
+(pass) durable runtime process crash recovery > a kill after tool T2 but before publish rebuilds the settled outcome [56.13ms]
+(pass) durable runtime process crash recovery > a kill after a billable model request but before T2 parks without rebilling [54.42ms]
+(pass) durable runtime process crash recovery > a kill after model T2 but before publish rebuilds response and usage [56.88ms]
+
+src/durable-runtime/projection-runner.test.ts:
+(pass) DurableProjectionRunner > persists an incremental cursor and atomically materialized snapshot [1.97ms]
+(pass) DurableProjectionRunner > rebuilds the same snapshot from seq zero [2.11ms]
+(pass) DurableProjectionRunner > fails closed on an incompatible persisted projection schema [1.90ms]
+(pass) DurableProjectionRunner > CAS prevents two projection writers from advancing the same cursor [2.46ms]
+(pass) session projections skip other sessions without treating their global sequence gaps as corruption [3.40ms]
+
+src/sessions/idle-session-cache.test.ts:
+[session] Lazy-loaded 1 messages for session reload
+[session] Cleaning up resources...
+[session] Cleanup complete
+(pass) idle eviction flushes pending changes and reloads the complete transcript [29.12ms]
+(pass) idle cleanup protects running work and retires eligible runtime resources [0.94ms]
+(pass) a session accessed during flush is not evicted [0.19ms]
+(pass) failed persistence prevents idle eviction [0.29ms]
+(pass) a new turn during runtime retirement retains its history [0.30ms]
+
+src/tasks/TaskRunner.test.ts:
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"approval"} [24.12ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"loop"} [3.86ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"kind":"orchestrator"} [2.90ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"approval":true} [2.69ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"when":"false"} [3.82ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"loop":{"until":"done","max":2}} [5.20ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"for_each":"items"} [2.80ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"trigger":"one_success"} [2.07ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"replicas":2} [2.83ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"aggregate":"concat"} [2.44ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"max_parallel":2} [2.71ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"timeout":10} [2.75ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"cache":"pure"} [3.24ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"backoff":{"base":1}}} [3.80ms]
+(pass) TaskRunner (Conductor) > rejects unsupported semantics before creating children, including after restart: {"retry":{"limit":2,"when":"empty"}} [2.74ms]
+(pass) TaskRunner (Conductor) > pauses at the cumulative token budget even when current context is small [10.09ms]
+(pass) TaskRunner (Conductor) > runs a dependency chain, feeding each output into the next [14.32ms]
+(pass) TaskRunner (Conductor) > passes llmConnection (node value, else the task default) to createSession [6.01ms]
+(pass) TaskRunner (Conductor) > resolves permissionMode: node override → task default → child (never the workspace default) [5.89ms]
+(pass) TaskRunner (Conductor) > defaults an omitted permission mode to allow-all (unattended-safe), not undefined/ask [3.69ms]
+(pass) TaskRunner (Conductor) > stamps task/run/node linkage on each dispatched child session [3.57ms]
+(pass) TaskRunner (Conductor) > creates a child session per node (createSession announces each to the renderer by default) [3.41ms]
+(pass) TaskRunner (Conductor) > children inherit the orchestrator's working directory (falling back to spec.cwd) [8.18ms]
+(pass) TaskRunner (Conductor) > moves the orchestrator tile to in-progress on start and done on completion [5.83ms]
+(pass) TaskRunner (Conductor) > runs a fan-out and joins at the synthesizer [11.73ms]
+(pass) TaskRunner (Conductor) > marks a node failed, leaves dependents pending, and settles the run as failed [6.35ms]
+(pass) TaskRunner (Conductor) > honors max_parallel [7.84ms]
+(pass) TaskRunner (Conductor) > pauses scheduling and resumes [10.19ms]
+(pass) TaskRunner (Conductor) > stops a run and cancels in-flight children [4.73ms]
+(pass) TaskRunner (Conductor) > resumes a run from the persisted run-log after a restart, reusing finished node outputs [12.44ms]
+(pass) TaskRunner (Conductor) > refuses to replay an in-flight node whose external outcome is unknown after restart [4.85ms]
+(pass) TaskRunner (Conductor) > rehydrates node output from canonical task facts without the run-log files [3.69ms]
+(pass) TaskRunner (Conductor) > wraps child dispatch in durable T1/T2 around the external send [3.65ms]
+(pass) TaskRunner (Conductor) > never retries a child dispatch after durable T1 when T2 is missing [6.58ms]
+(pass) TaskRunner (Conductor) > retries a failed node up to retry.limit, then fails [6.93ms]
+(pass) TaskRunner (Conductor) > does not retry when retry.limit is 0 [5.17ms]
+(pass) TaskRunner (Conductor) > feeds the prior failure into the retried prompt and can then succeed [7.22ms]
+(pass) TaskRunner (Conductor) > completes without verifying when there is no orchestrator [7.21ms]
+(pass) TaskRunner (Conductor) > gates the run on the orchestrator verdict and includes acceptance_criteria in the prompt [7.13ms]
+(pass) TaskRunner (Conductor) > re-runs the terminal node once on a FAIL verdict, then completes on PASS [12.31ms]
+(pass) TaskRunner (Conductor) > fails the run when FAIL verdicts exhaust the repair budget (max_iterations) [11.82ms]
+(pass) TaskRunner (Conductor) > re-asks on an unparsable verdict and fails only after the re-ask budget is exhausted [10.97ms]
+(pass) TaskRunner (Conductor) > scopes a repair to the named nodes and their transitive dependents [12.31ms]
+(pass) TaskRunner (Conductor) > an unparsed re-ask does not consume the repair budget [9.13ms]
+(pass) TaskRunner (Conductor) > does not hang in verifying when the verification send rejects [6.90ms]
+(pass) TaskRunner (Conductor) > ignores a verdict that arrives after the run was stopped [7.46ms]
+(pass) TaskRunner (Conductor) > reconstructs the repair counter from the run-log on a cross-restart resume [13.66ms]
+(pass) TaskRunner (Conductor) > fails a node that completes with no text despite declaring outputs (instead of marking it done) [6.81ms]
+(pass) TaskRunner (Conductor) > still marks a node done on empty text when it declares no outputs (lenient default) [5.13ms]
+(pass) TaskRunner (Conductor) > publishes the total node count to the orchestrator at run start (stable board denominator) [4.58ms]
+(pass) TaskRunner (Conductor) > fails a run that exceeds the wall-clock timeout and cancels in-flight children [43.64ms]
+(pass) TaskRunner (Conductor) > fails a run stuck in verifying (orchestrator never returns a verdict) [44.77ms]
+
+src/transport/__tests__/server-lifecycle.test.ts:
+(pass) WsRpcServer lifecycle > accepts valid token [12.08ms]
+(pass) WsRpcServer lifecycle > rejects invalid token with 4005 [3.06ms]
+(pass) WsRpcServer lifecycle > rejects missing token [2.89ms]
+(pass) WsRpcServer lifecycle > rejects connections when at maxClients [4.58ms]
+(pass) WsRpcServer lifecycle > allows new connections after a client disconnects [54.38ms]
+(pass) WsRpcServer lifecycle > times out slow handlers [3.04ms]
+(pass) WsRpcServer lifecycle > closes connections that exceed maxPayload (16MiB) [34.98ms]
+(pass) WsRpcServer lifecycle > rejects wrong protocol major version [3.09ms]
+(pass) WsRpcServer lifecycle > terminates all clients on close() [3.36ms]
+(pass) transport memory budgets > bounds replay bytes for large events and preserves sequence gaps for resync [9.34ms]
+(pass) transport memory budgets > disconnects an over-budget socket instead of growing its outgoing queue [0.09ms]
+
+ 100 pass
+ 0 fail
+ 374 expect() calls
+Ran 100 tests across 6 files. [1.88s]
+
+> test ./src/sessions/__tests__/persistence-queue.test.ts ./src/durable-runtime/recovery.test.ts ./src/config/__tests__/theme.test.ts
+bun test v1.4.2 (744846f84)
+
+src/sessions/__tests__/persistence-queue.test.ts:
+(pass) session persistence header conflict helpers > metadata signature ignores non-metadata fields [0.15ms]
+(pass) session persistence header conflict helpers > metadata signature changes when metadata changes [0.05ms]
+(pass) session persistence header conflict helpers > merge preserves external metadata while keeping local computed fields [0.14ms]
+(pass) session persistence header conflict helpers > startup scenario: external metadata differs from local signature [0.07ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > tracks a debounce-started write so flush() awaits it even when nothing is pending [67.59ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > flushAll() awaits in-flight writes so quit never drops data [50.23ms]
+(pass) SessionPersistenceQueue write failures > reports a failed write without skipping a newer queued snapshot [3.62ms]
+[PersistenceQueue] Failed to write session s1: 253 |       await queue.flush('s1')
+254 |       const signature = queue.getLastWrittenSignature('s1')
+255 |       const file = getSessionFilePath(root, 's1')
+256 |       mkdirSync(file + '.tmp') // Force a real write failure without changing the last good snapshot.
+257 |       queue.enqueue({ ...session, name: 'Failed update' })
+258 |       await expect(queue.flush('s1')).rejects.toThrow()
+                                                    ^
+EISDIR: illegal operation on a directory, open '/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-pq-metadata-fail-W2Cuip/sessions/s1/session.jsonl.tmp'
+    path: "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-pq-metadata-fail-W2Cuip/sessions/s1/session.jsonl.tmp",
+ syscall: "open",
+   errno: -21,
+    code: "EISDIR"
+
+      at <anonymous> (/Users/van/projects/Phaneris/packages/shared/src/sessions/__tests__/persistence-queue.test.ts:258:47)
+
+(pass) SessionPersistenceQueue write failures > does not treat a failed file write as the last saved metadata [3.96ms]
+(pass) SessionPersistenceQueue write failures > keeps a debounce failure observable until a newer write succeeds [4.32ms]
+(pass) lazy persistence snapshots > coalesces snapshot creation and preserves multi-batch Unicode transcripts [9.49ms]
+
+src/durable-runtime/recovery.test.ts:
+(pass) resolveToolRecovery > marks a matching outcome completed [0.14ms]
+(pass) resolveToolRecovery > requires reconciliation after dispatch without an outcome [0.02ms]
+(pass) resolveToolRecovery > proves non-dispatch only under the current boundary protocol [0.02ms]
+(pass) resolveToolRecovery > fails closed for the same legacy evidence [0.01ms]
+(pass) resolveToolRecovery > detects identity and argument mismatches [0.02ms]
+
+src/config/__tests__/theme.test.ts:
+(pass) themeToCSS > emits semantic and visual tokens from a theme file [0.40ms]
+(pass) themeToCSS > expands each high-level depth preset [0.26ms]
+(pass) themeToCSS > glass depth exposes blur while other depths disable it [0.04ms]
+(pass) themeToCSS > raised depth combines a hard border ring with zero-blur offset shadows [0.03ms]
+(pass) themeToCSS > keeps status colors in their original CSS syntax without parallel RGB channels [0.04ms]
+(pass) themeToCSS > leaves omitted surfaces and material tokens on the static Default baseline [0.03ms]
+(pass) themeToCSS > dark mode overrides visual tokens without losing light defaults [0.05ms]
+(pass) theme resolution > deeply overlays a user theme onto the canonical default [0.18ms]
+(pass) theme resolution > normalizes both light-only and dark-only themes [0.05ms]
+(pass) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [0.13ms]
+(pass) theme resolution > bundles exactly the four canonical, valid themes [8.29ms]
+(pass) theme resolution > keeps Electron startup backgrounds aligned with the Default CSS colors [0.04ms]
+(pass) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [1.79ms]
+(pass) theme validation > accepts the expanded preset schema [0.19ms]
+(pass) theme validation > rejects unsupported values and CSS declaration injection [3.31ms]
+(pass) theme validation > rejects unknown preset fields and ambiguous supported modes [0.40ms]
+
+ 31 pass
+ 0 fail
+ 410 expect() calls
+Ran 31 tests across 3 files. [362.00ms]
+
+> test ./src/transport-delta.test.ts ./src/request-diagnostics.test.ts ./src/durable-model-stream.test.ts ./src/length-continuation.test.ts
+bun test v1.4.2 (744846f84)
+
+src/transport-delta.test.ts:
+(pass) wire delta size is independent of accumulated SDK response size [1.37ms]
+
+src/request-diagnostics.test.ts:
+(pass) derives prompt and tools from the transcript instead of listing system messages twice [1.05ms]
+(pass) hash covers prompt, conversation and tool declarations [0.34ms]
+
+src/durable-model-stream.test.ts:
+(pass) durable model stream > commits native request evidence with the outcome before publishing completion [1.43ms]
+(pass) durable model stream > leaves an indeterminate thrown stream pending instead of committing fabricated zero usage [0.25ms]
+(pass) durable model stream > commits tool-only usage before forwarding the response [0.31ms]
+(pass) durable model stream > commits failed partial usage before forwarding the response [0.05ms]
+(pass) durable model stream > does not call the provider when preparation fails [0.13ms]
+(pass) durable model stream > does not publish successful completion when the usage commit fails [0.14ms]
+(pass) durable model stream cache retention > applies the configured default when callers omit cacheRetention [0.17ms]
+(pass) durable model stream cache retention > preserves an explicit cacheRetention and skips the default resolver [0.17ms]
+(pass) cancellation while awaiting T1 commits known zero usage without dispatching [0.24ms]
+
+src/length-continuation.test.ts:
+(pass) exhaustedModelOutputLimit > detects an assistant response that reached the declared model output limit [0.03ms]
+(pass) exhaustedModelOutputLimit > leaves context-clamped length stops to Pi compaction recovery [0.01ms]
+(pass) exhaustedModelOutputLimit > does not continue complete, non-assistant or unmetered responses [0.05ms]
+(pass) LengthContinuationTracker > bounds automatic continuations and resets for the next user prompt [0.07ms]
+
+ 16 pass
+ 0 fail
+ 53 expect() calls
+Ran 16 tests across 4 files. [158.00ms]
+
+> test ./src/components/chat/__tests__/streaming-projection.test.ts ./src/components/chat/__tests__/turn-utils-grouping.test.ts
+bun test v1.4.2 (744846f84)
+
+src/components/chat/__tests__/streaming-projection.test.ts:
+(pass) streaming projection preserves completed cards and matches the full reducer [1.42ms]
+(pass) out-of-order, hidden and interleaved histories keep full grouping semantics [0.18ms]
+(pass) structural selectors retain one version across deltas but invalidate annotated content [0.38ms]
+
+src/components/chat/__tests__/turn-utils-grouping.test.ts:
+(pass) groupActivitiesByParent > empty and flat cases > returns empty array for empty input [0.41ms]
+(pass) groupActivitiesByParent > empty and flat cases > returns flat list when no Task tools present [0.32ms]
+(pass) groupActivitiesByParent > single Task with children > groups child activities under Task parent [0.16ms]
+(pass) groupActivitiesByParent > single Task with children > maintains chronological order of children within group [0.07ms]
+(pass) groupActivitiesByParent > SDK Agent tool name (post v0.2.72 rename) > groups children under an Agent parent identically to a Task parent [0.10ms]
+(pass) groupActivitiesByParent > multiple Tasks with children > groups each Task with its own children [0.16ms]
+(pass) groupActivitiesByParent > mixed orphans and Task groups > preserves orphan activities alongside Task groups in chronological order [0.19ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > attaches TaskOutput data to parent Task group via agentId chain [0.50ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > handles Task without TaskOutput data gracefully [0.06ms]
+(pass) groupActivitiesByParent > TaskOutput data attachment > hides TaskOutput activities from result [0.12ms]
+(pass) groupActivitiesByParent > edge cases > handles Task with no children (empty group) [0.04ms]
+(pass) groupActivitiesByParent > edge cases > shows children with missing parents as orphan activities at root level [0.05ms]
+(pass) groupActivitiesByParent > edge cases > handles malformed TaskOutput JSON gracefully [0.15ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > out-of-order stored messages: children before parent still group correctly [0.12ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > restored session with nested Task hierarchy produces correct groups [0.15ms]
+(pass) groupActivitiesByParent > stateless invariants (post-refactor) > mixed top-level and nested tools group into correct turns [0.15ms]
+(pass) computeLastChildSet > returns empty set for empty input [0.09ms]
+(pass) computeLastChildSet > returns empty set when no activities have parents (all depth 0) [0.05ms]
+(pass) computeLastChildSet > identifies last child for single parent [0.07ms]
+(pass) computeLastChildSet > identifies last child for multiple parents [0.07ms]
+(pass) computeLastChildSet > handles nested parent-child relationships (depth > 1) [0.07ms]
+(pass) computeLastChildSet > handles single child (is both first and last) [0.04ms]
+(pass) isActivityGroup > returns true for ActivityGroup objects [0.03ms]
+(pass) isActivityGroup > returns false for ActivityItem objects [0.03ms]
+(pass) isActivityGroup > returns false for activity with type property that is not "group" [0.03ms]
+(pass) TodoWrite extraction > includes TodoWrite activities in flat list (not grouped) [0.09ms]
+(pass) TodoWrite extraction > handles TodoWrite as child of Task [0.10ms]
+
+ 30 pass
+ 0 fail
+ 118 expect() calls
+Ran 30 tests across 2 files. [20.00ms]
+
+> test ./src/renderer/lib/__tests__/reconnect-recovery.test.ts
+bun test v1.4.2 (744846f84)
+
+src/renderer/lib/__tests__/reconnect-recovery.test.ts:
+(pass) getSessionsToRefreshAfterStaleReconnect > includes the active session and all processing sessions [0.54ms]
+(pass) getSessionsToRefreshAfterStaleReconnect > deduplicates the active session when it is already processing [0.12ms]
+
+ 2 pass
+ 0 fail
+ 2 expect() calls
+Ran 2 tests across 1 file. [10.00ms]
+
+> test ./src/renderer/atoms/__tests__/sessions.isolated.ts
+bun test v1.4.2 (744846f84)
+
+src/renderer/atoms/__tests__/sessions.isolated.ts:
+(pass) session message loading atoms > merges full history with live updates even when streaming finishes during the read [2.69ms]
+(pass) session message loading atoms > replaceLoadedSessionAtom marks authoritative full sessions as loaded [0.51ms]
+(pass) session message loading atoms > forceSessionMessagesReloadAtom reloads an empty-but-loaded session [0.48ms]
+(pass) session message loading atoms > does not mark stale empty-response fallback as loaded [0.51ms]
+(pass) streaming session metadata > updates the transcript without notifying list subscribers for text-only deltas [1.69ms]
+(pass) streaming session metadata > publishes appended messages, changed metadata and removed optional fields [0.35ms]
+(pass) refreshSessionsMetadataAtom > preserves messages for already-loaded sessions [0.39ms]
+(pass) refreshSessionsMetadataAtom > marks sessions as unloaded when atom was cleared but loadedSessionIds still tracked them [0.11ms]
+(pass) refreshSessionsMetadataAtom > removes stale sessions from all atoms [0.51ms]
+(pass) refreshSessionsMetadataAtom > preserves omitted sessions when removeMissing is false [0.24ms]
+(pass) refreshSessionsMetadataAtom > non-destructive refresh still preserves loaded messages for returned sessions [0.42ms]
+(pass) refreshSessionsMetadataAtom > updates metadata map and returns it [0.17ms]
+(pass) idle session cache > releases old unmounted histories while preserving active work, readers and metadata [1.26ms]
+
+ 13 pass
+ 0 fail
+ 54 expect() calls
+Ran 13 tests across 1 file. [56.00ms]
+EXIT=0

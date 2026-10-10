@@ -1,0 +1,24 @@
+bun test v1.4.2 (744846f84)
+
+src/config/__tests__/theme.test.ts:
+(pass) themeToCSS > emits semantic and visual tokens from a theme file [0.38ms]
+(pass) themeToCSS > expands each high-level depth preset [0.28ms]
+(pass) themeToCSS > glass depth exposes blur while other depths disable it [0.06ms]
+(pass) themeToCSS > raised depth combines a hard border ring with zero-blur offset shadows [0.03ms]
+(pass) themeToCSS > keeps status colors in their original CSS syntax without parallel RGB channels [0.04ms]
+(pass) themeToCSS > leaves omitted surfaces and material tokens on the static Default baseline [0.03ms]
+(pass) themeToCSS > dark mode overrides visual tokens without losing light defaults [0.05ms]
+(pass) theme resolution > deeply overlays a user theme onto the canonical default [0.17ms]
+(pass) theme resolution > normalizes both light-only and dark-only themes [0.05ms]
+(pass) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [0.33ms]
+(pass) theme resolution > bundles exactly the four canonical, valid themes [9.10ms]
+(pass) theme resolution > keeps Electron startup backgrounds aligned with the Default CSS colors [0.03ms]
+(pass) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [2.03ms]
+(pass) theme validation > accepts the expanded preset schema [0.20ms]
+(pass) theme validation > rejects unsupported values and CSS declaration injection [2.88ms]
+(pass) theme validation > rejects unknown preset fields and ambiguous supported modes [0.32ms]
+
+ 16 pass
+ 0 fail
+ 304 expect() calls
+Ran 16 tests across 1 file. [213.00ms]
