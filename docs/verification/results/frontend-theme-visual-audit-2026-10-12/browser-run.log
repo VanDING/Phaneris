@@ -1,0 +1,25 @@
+12:38:22 AM [vite] (client) page reload .cache/frontend-theme-visual-audit/product.html
+{
+  "output": "/Users/van/projects/Phaneris/docs/verification/results/frontend-theme-visual-audit-2026-10-12",
+  "hostSamples": 14,
+  "lifecycleSamples": 11,
+  "pageErrors": [],
+  "sourceUnchanged": true,
+  "production": {
+    "files": 740,
+    "nativeButtonElements": 370,
+    "filesWithNativeButtons": 167,
+    "filesWithRoleClassStrings": 55,
+    "candidates": {
+      "arbitraryRadius": 284,
+      "arbitraryFontSize": 513,
+      "arbitrarySpacingOrSize": 354,
+      "arbitraryForegroundFill": 181,
+      "numericZClass": 66,
+      "arbitraryNumericZClass": 21,
+      "transitionAll": 0,
+      "literalDurationClass": 25,
+      "hexLiteral": 242
+    }
+  }
+}

@@ -16,6 +16,8 @@ export interface MarkdownPopout {
   title: string
   content: string
   sessionId: string
+  /** Formatted reading by default; source preserves Markdown syntax and line numbers. */
+  renderMode?: 'formatted' | 'source'
 }
 
 /** Currently shown pop-out document, or null when the overlay is closed. */

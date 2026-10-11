@@ -1,0 +1,41 @@
+[
+  {
+    "command": "bun run typecheck:electron",
+    "exitCode": 0
+  },
+  {
+    "command": "bun run tsc --noEmit -p packages/ui/tsconfig.json",
+    "exitCode": 0
+  },
+  {
+    "command": "bun run typecheck:scripts",
+    "exitCode": 0
+  },
+  {
+    "command": "Electron specialized eslint (3 modified files)",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  {
+    "command": "UI specialized eslint (ContentFrame)",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  {
+    "command": "root common eslint (3 tooling files)",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  {
+    "command": "bun run scripts/test-critical.ts --preflight",
+    "exitCode": 0
+  },
+  {
+    "command": "verifyVerificationDirectory(archived after)",
+    "exitCode": 0,
+    "passed": 18
+  }
+]

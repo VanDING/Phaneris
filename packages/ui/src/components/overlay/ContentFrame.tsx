@@ -18,7 +18,7 @@
  *   - Default: card fills available width up to maxWidth (numeric, default 850px).
  *   - fitContent: card uses CSS `width: max-content` to grow to its content width.
  *     Useful for overlays with variable-width content (e.g., diff tables). Capped at
- *     100% of the outer container, floored at minWidth. More reliable than JS measurement
+ *     100% of the outer container, floored at minWidth up to that available width. More reliable than JS measurement
  *     because it works with async-rendered content (Shiki syntax highlighting).
  *
  * Layout (flow-based — lives inside the parent's scroll container):
@@ -42,11 +42,11 @@ export interface ContentFrameProps {
   /** Max width of the card (default: 850). Sidebars are outside this constraint.
    *  Ignored when fitContent is true (card uses max-content width instead). */
   maxWidth?: number
-  /** Minimum width of the card. Only used when fitContent is true. */
+  /** Preferred minimum width, capped by available space. Only used when fitContent is true. */
   minWidth?: number
   /** When true, the card uses CSS `width: max-content` to naturally grow to fit
    *  its content width (e.g., wide diff tables). The card is capped at 100% of
-   *  the viewport (minus padding) and floored at minWidth. This is more reliable
+   *  the viewport (minus padding) and floored at minWidth up to available space. This is more reliable
    *  than JS-based measurement because it works with async-rendered content (Shiki). */
   fitContent?: boolean
   /** Optional content rendered to the left of the card (e.g., sidebar navigation) */
@@ -70,7 +70,7 @@ export function ContentFrame({
   // Capped at 100% of the outer container so it never exceeds the viewport.
   // Fallback mode: card fills available width up to maxWidth (fixed/numeric).
   const wrapperStyle = fitContent
-    ? { width: 'max-content' as const, maxWidth: '100%', minWidth }
+    ? { width: 'max-content' as const, maxWidth: '100%', minWidth: minWidth === undefined ? undefined : `min(${minWidth}px, 100%)` }
     : { maxWidth }
 
   return (

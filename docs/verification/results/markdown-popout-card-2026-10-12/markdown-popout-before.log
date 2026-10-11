@@ -1,0 +1,21 @@
+{"output":"/Users/van/projects/Phaneris/.cache/verification/markdown-popout-KkxnEq","passed":2,"total":18}
+147 |     run.complete(checks.filter(check => check.passed).map(check => check.id), [
+148 |       'Real ChatDisplay/host boot and persisted session integration (call sites reviewed and typechecked)',
+149 |       'Native Electron package, macOS material, Windows/Linux execution', 'Signed installer/release',
+150 |       'Modal branch: current modalBreakpoint=99999; all tested viewports use fullscreen',
+151 |     ])
+152 |     assert(checks.every(check => check.passed), JSON.stringify(checks.filter(check => !check.passed)))
+          ^
+AssertionError: [{"id":"MP01-light-message","passed":false,"error":"Content must have a separate card"},{"id":"MP01-light-response","passed":false,"error":"Content must have a separate card"},{"id":"MP01-light-turn","passed":false,"error":"Content must have a separate card"},{"id":"MP01-light-activity","passed":false,"error":"Content must have a separate card"},{"id":"MP01-dark-message","passed":false,"error":"Content must have a separate card"},{"id":"MP01-dark-response","passed":false,"error":"Content must have a separate card"},{"id":"MP01-dark-turn","passed":false,"error":"Content must have a separate card"},{"id":"MP01-dark-activity","passed":false,"error":"Content must have a separate card"},{"id":"MP02-MP03-source","passed":false,"error":"Content must have a separate card"},{"id":"MP03-formatted","passed":false,"error":"Content must have a separate card"},{"id":"MP04-desktop-pane","passed":false,"error":"Content must have a separate card"},{"id":"MP05-open-source-theme-switch","passed":false,"error":"Content must have a separate card"},{"id":"MP06-mobile-message","passed":false,"error":"Content must have a separate card"},{"id":"MP06-mobile-source","passed":false,"error":"Content must have a separate card"},{"id":"MP07-long","passed":false,"error":"Content must have a separate card"},{"id":"MP07-long-source","passed":false,"error":"Content must have a separate card"}]
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/markdown-popout-workflow.ts:152:5
+      at verificationWorkflow (native:1:1)
+      at processTicksAndRejections (native:1:1)
+
+Bun v1.4.2 (macOS x64)

@@ -55,6 +55,7 @@ export const criticalWorkflows = [
   { id: 'durable-runtime-pi', entry: 'scripts/verification/durable-runtime-pi-workflow.ts', minimum: 6, required: ['independent-pi.json', 'independent-pi.db'] },
   { id: 'session-owners', entry: 'scripts/verification/session-owners-workflow.ts', minimum: 8, required: ['session-owners.json'] },
   { id: 'client-platform', entry: 'scripts/verification/client-platform-workflow.ts', minimum: 24, required: ['client-platform.json', 'webui-420.png', 'webui-1280.png', 'web-conversation.json', 'web-file-preview.png', 'web-plan.png', 'conversation-provider.json', 'web-conversation-runtime.json', 'web-conversation.db'] },
+  { id: 'markdown-popout', entry: 'scripts/verification/markdown-popout-workflow.ts', minimum: 18, required: ['markdown-popout.json', 'message-light.png', 'source-light.png', 'source-dark.png', 'source-390.png', 'trace.zip'] },
   { id: 'distribution-inputs', entry: 'scripts/verification/distribution-inputs-workflow.ts', minimum: 10, required: ['distribution-inputs.json'] },
   { id: 'identity-gate', entry: 'scripts/verification/identity-gate-workflow.ts', minimum: 6, required: ['identity-gate.json'] },
 ] as const

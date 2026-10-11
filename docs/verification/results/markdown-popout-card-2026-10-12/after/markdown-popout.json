@@ -1,0 +1,422 @@
+{
+  "checks": [
+    {
+      "id": "MP01-light-message",
+      "passed": true
+    },
+    {
+      "id": "MP01-light-response",
+      "passed": true
+    },
+    {
+      "id": "MP01-light-turn",
+      "passed": true
+    },
+    {
+      "id": "MP01-light-activity",
+      "passed": true
+    },
+    {
+      "id": "MP01-dark-message",
+      "passed": true
+    },
+    {
+      "id": "MP01-dark-response",
+      "passed": true
+    },
+    {
+      "id": "MP01-dark-turn",
+      "passed": true
+    },
+    {
+      "id": "MP01-dark-activity",
+      "passed": true
+    },
+    {
+      "id": "MP02-MP03-source",
+      "passed": true
+    },
+    {
+      "id": "MP03-formatted",
+      "passed": true
+    },
+    {
+      "id": "MP04-desktop-pane",
+      "passed": true
+    },
+    {
+      "id": "MP05-open-source-theme-switch",
+      "passed": true
+    },
+    {
+      "id": "MP06-mobile-message",
+      "passed": true
+    },
+    {
+      "id": "MP06-mobile-source",
+      "passed": true
+    },
+    {
+      "id": "MP07-long",
+      "passed": true
+    },
+    {
+      "id": "MP07-long-source",
+      "passed": true
+    },
+    {
+      "id": "MP08-close-escape-replace",
+      "passed": true
+    },
+    {
+      "id": "MP09-link-callbacks",
+      "passed": true
+    }
+  ],
+  "geometry": [
+    {
+      "name": "message-light",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "response-light",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "turn-light",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "activity-light",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "message-dark",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "background": "rgb(23, 25, 30)",
+        "canvas": "color(srgb 0.11549 0.123333 0.143059)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "response-dark",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "background": "rgb(23, 25, 30)",
+        "canvas": "color(srgb 0.11549 0.123333 0.143059)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "turn-dark",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "background": "rgb(23, 25, 30)",
+        "canvas": "color(srgb 0.11549 0.123333 0.143059)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "activity-dark",
+      "sample": {
+        "x": 240,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "background": "rgb(23, 25, 30)",
+        "canvas": "color(srgb 0.11549 0.123333 0.143059)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "source-light",
+      "sample": {
+        "x": 295,
+        "y": 314,
+        "width": 850,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "message-1100",
+      "sample": {
+        "x": 70,
+        "y": 314,
+        "width": 960,
+        "height": 320,
+        "centerX": 550,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1100,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "source-dark",
+      "sample": {
+        "x": 295,
+        "y": 314,
+        "width": 850,
+        "height": 320,
+        "centerX": 720,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "background": "rgb(23, 25, 30)",
+        "canvas": "color(srgb 0.11549 0.123333 0.143059)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "message-390",
+      "sample": {
+        "x": 22.5,
+        "y": 314,
+        "width": 345,
+        "height": 320,
+        "centerX": 195,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "source-390",
+      "sample": {
+        "x": 22.5,
+        "y": 314,
+        "width": 345,
+        "height": 320,
+        "centerX": 195,
+        "centerY": 474,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": []
+      }
+    },
+    {
+      "name": "long",
+      "sample": {
+        "x": 70,
+        "y": 72,
+        "width": 960,
+        "height": 7218.609375,
+        "centerX": 550,
+        "centerY": 3681.3046875,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1100,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": [
+          {
+            "client": 900,
+            "scroll": 7315
+          }
+        ]
+      }
+    },
+    {
+      "name": "long-source",
+      "sample": {
+        "x": 22.5,
+        "y": 72,
+        "width": 1055,
+        "height": 3229.625,
+        "centerX": 550,
+        "centerY": 1686.8125,
+        "dialog": {
+          "x": 0,
+          "y": 0,
+          "width": 1100,
+          "height": 900
+        },
+        "radius": "12px",
+        "shadow": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "background": "rgb(255, 255, 255)",
+        "canvas": "color(srgb 0.973765 0.974118 0.975177)",
+        "scrolls": [
+          {
+            "client": 900,
+            "scroll": 3326
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [],
+  "browser": "153.0.8010.12",
+  "viewportModes": "actual fullscreen at 1440/1100/390; current modalBreakpoint=99999"
+}

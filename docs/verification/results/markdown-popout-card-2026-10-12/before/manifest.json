@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 1,
+  "workflow": "markdown-popout",
+  "startedAt": "2026-10-11T16:51:17.328Z",
+  "finishedAt": "2026-10-11T16:51:49.063Z",
+  "command": [
+    "/Users/van/.bun/bin/bun",
+    "/Users/van/projects/Phaneris/scripts/verification/markdown-popout-workflow.ts"
+  ],
+  "source": {
+    "headSha": "e39f60cb2bfafe30476ca35774aec87ffa9629aa",
+    "dirtyPaths": [
+      "M docs/README.md",
+      " M docs/verification/README.md",
+      "?? docs/process/theme-engine-frontend-governance-plan-2026-10-12.md",
+      "?? docs/verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md",
+      "?? docs/verification/markdown-popout-card-failure-matrix-2026-10-12.md",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/README.md",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/SHA256SUMS",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/audit-data.json",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/audit-fixture.tsx",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/audit-tooling-lint.json",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/browser-run.log",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/docs-check.log",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-cyberpunk-2077-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-cyberpunk-2077-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-default-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-default-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-geek-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-geek-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-ink-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-ink-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/fonts-check.log",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/keyboard-native.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/keyboard-role-button.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/lint-data.json",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/lint-probe.mjs",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/lint-run.log",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/open-menu-theme-change.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-ai-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-ai-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-chat-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-chat-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-controls-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-controls-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/reduce-forced.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/reproduce.mjs",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/theme-existing-tests.log",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/ui-default-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/ui-default-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-app-code-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-app-code-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-code-dark-toggle.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-default-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-default-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/webui-default-dark.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/webui-default-light.png",
+      "?? docs/verification/results/frontend-theme-visual-audit-2026-10-12/webui-touch-390.png",
+      "?? scripts/verification/fixtures/markdown-popout.tsx",
+      "?? scripts/verification/markdown-popout-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "docs/README.md",
+        "sha256": "130763f800c1167d4bcb0d1f4ba8cbef5949c973408087264a802fb63f41e5b8"
+      },
+      {
+        "path": "docs/process/theme-engine-frontend-governance-plan-2026-10-12.md",
+        "sha256": "6454b8d720e36ff28dbfb5cadc1f32af1673e4ffac6a28a68acd32bd30c1db18"
+      },
+      {
+        "path": "docs/verification/README.md",
+        "sha256": "c22100257d9792afb4e4f71f1baf3e8493b4ecb83f0eeb0a9b418ea59f5c6c83"
+      },
+      {
+        "path": "docs/verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md",
+        "sha256": "df6d4ae53300ab5c57da168486a2e16a111c4ee98dc78224a74f3c96e91b4575"
+      },
+      {
+        "path": "docs/verification/markdown-popout-card-failure-matrix-2026-10-12.md",
+        "sha256": "844c680c9c8f899bb8250ce2c2c8a1dd391d0f1a0a2b99636934138a1581acf3"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/README.md",
+        "sha256": "1bcbfe7132107dfee00327b9631cb6a13d381e6368912092e1a1e5d4326cbaad"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/SHA256SUMS",
+        "sha256": "8319915549c437cc6c237d229f37e59e159e52ed1e2c87ef00736d0a53a139ea"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/audit-data.json",
+        "sha256": "8aeffc124571d7a79b74ee1b087a8fbee67f739a5865c5267557da92505171d8"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/audit-fixture.tsx",
+        "sha256": "2f16cc827f21770d7f1f04c577d22485c732f4a88abd77bd63deaf151d353fd8"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/audit-tooling-lint.json",
+        "sha256": "64320b4493e73cdff75a5aec9c62d039f890968dac43a17faa385d55d0f7333e"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/browser-run.log",
+        "sha256": "5eaaadb4c798cd60241e74403874ef514e7341af735bd48febea93a1ea32174e"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/docs-check.log",
+        "sha256": "b790e37481681463f4f90e429bfa415786814bc26f9f030d9810ae3c12270c97"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-cyberpunk-2077-dark.png",
+        "sha256": "ceb90d0b2e6f6fab74135deeaa70b87f9173e534f09d877934455a11f5308d58"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-cyberpunk-2077-light.png",
+        "sha256": "ceb90d0b2e6f6fab74135deeaa70b87f9173e534f09d877934455a11f5308d58"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-default-dark.png",
+        "sha256": "229e1846c78ddc58f638deaa8805c4535eb0e41f33e15bb3955dda802e327f53"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-default-light.png",
+        "sha256": "66c5dedb984df8e4e355d51acee743230edb9a5357e756ace8e6bfa09990c4bf"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-geek-dark.png",
+        "sha256": "a22db773fe03a1b5189b143bf2e5348861e09c82092bd425582ac8fb5f6add0f"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-geek-light.png",
+        "sha256": "a22db773fe03a1b5189b143bf2e5348861e09c82092bd425582ac8fb5f6add0f"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-ink-dark.png",
+        "sha256": "11dc0c8dd1faac9b6fe14b1cd0fc522b8fa7538618d0e549b51fd47071fca6e7"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/electron-ink-light.png",
+        "sha256": "66c8e7f515f82a6aa4adfcb0ca3656928abbbbcb771ddf27e72011f2e6b25636"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/fonts-check.log",
+        "sha256": "847701825d15a555f075315622910c7aad3e959c58df8418ee8351bd82570ff6"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/keyboard-native.png",
+        "sha256": "66c5dedb984df8e4e355d51acee743230edb9a5357e756ace8e6bfa09990c4bf"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/keyboard-role-button.png",
+        "sha256": "b50db960e5ddbb848b5ad1087f4a08ea2579d393557d9f986dd6a4280223583f"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/lint-data.json",
+        "sha256": "511abe57d64e18db98d999b59cf413287aa88135ca3c8c94009da611893b96ac"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/lint-probe.mjs",
+        "sha256": "026a5f6d25cf0df4fe73f9ca1f05694f7a5c7fa338855e9e34766eb847999e9c"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/lint-run.log",
+        "sha256": "7d9d945ee661dc6ea6f9e4dde9673438fa321459160df3e6bbb409cb679ac642"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/open-menu-theme-change.png",
+        "sha256": "e91db4a726ed9b01abf7e582c9e0845bd3c2e92f9ae5e4307704876432b4c210"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-ai-dark.png",
+        "sha256": "d70f4fd4734ff687e02ce0d83ccd6992d7e2dd2d0c3dd86d61a8831b17cbbf68"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-ai-light.png",
+        "sha256": "62edfcc59a863f1df24458b38391c60fb83c5d2c992c47369fa4713b467a48d8"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-chat-dark.png",
+        "sha256": "723a3b1f8dd3dead05f3d99bf0e9ce4d698f8256bb5262e3c942df265156e126"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-chat-light.png",
+        "sha256": "f5dbebe1c230e349b801b078e836d66954cead91fb954f840abecf08212bf6c4"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-controls-dark.png",
+        "sha256": "749fd170a1c785ead5545d6c9c285d96dfa2441adc517f2476fcf3e153f8d6fa"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/product-controls-light.png",
+        "sha256": "789678a7cfee44e9ace76cdd6ce3a235d4b6670279ae8d107188444bb50efded"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/reduce-forced.png",
+        "sha256": "db9c93ee1438a5362a3045f7386f06cd1128755d16b3aeab95be1089179476a3"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/reproduce.mjs",
+        "sha256": "8cc5f1ed45e1e3e7c20d9c44351b10c74f7fe8c6b18794a66a694d3f3322f8ea"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/theme-existing-tests.log",
+        "sha256": "b0a889beefc267fa450efc6cf1639636c70643b3304b86b6cc9250ff21ddb425"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/ui-default-dark.png",
+        "sha256": "ea5b90bb3aafcf74e666afd0e73b40e869dfeb9e5cc9c8ce438fe4f27be52d4d"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/ui-default-light.png",
+        "sha256": "0bb99506ffe99dc7df840528d01c64bd609d91f1ee4af248128ba41cfbe94bfa"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-app-code-dark.png",
+        "sha256": "1bd14ed9732c1a8cc602ea2eae9e72bd6fe0593e49eb9e9cdfbd9ba67b0d4c8b"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-app-code-light.png",
+        "sha256": "1b0a9b3f4176bad472404d6c39e0a9acccc25b55dbde5392ae5382ce61dda11a"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-code-dark-toggle.png",
+        "sha256": "f9e9595ba6cd0c53f2fffafca3f19f7c38da62df93e1d11e6b28244a6e790541"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-default-dark.png",
+        "sha256": "3143f633ccfd24303c8d9c4a78178fc4557afef2a0913ce9993ab30923c9b7af"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/viewer-default-light.png",
+        "sha256": "16153ffb51d5692af3ae87b8a7a816be6bea63cd18a7085ce5df1767bf810bc1"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/webui-default-dark.png",
+        "sha256": "3be9f4510c0d49c4ea426d59aea7a0623a51ad2455dadd0622bb7f7298ddfe6e"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/webui-default-light.png",
+        "sha256": "2f78e0cfed85f320f031ae9a6af3ce0c2085b1b6de14bbe2c84435e0e33d1a1b"
+      },
+      {
+        "path": "docs/verification/results/frontend-theme-visual-audit-2026-10-12/webui-touch-390.png",
+        "sha256": "bb8a042e78cf4c01864d1fa6f9f1eae547535a31c37566d9e39f1d9e59fc3a4f"
+      },
+      {
+        "path": "scripts/verification/fixtures/markdown-popout.tsx",
+        "sha256": "7d8fef5bb48cf7313d0c494109c2ab1249e2db2b4646d8dfb925a40e9dafbf03"
+      },
+      {
+        "path": "scripts/verification/markdown-popout-workflow.ts",
+        "sha256": "fccac5669052a51823df2055d17803049c78ae96dec63a808045e3a57e5b524d"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "uv": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+    "platform": "darwin",
+    "architecture": "x64",
+    "osRelease": "25.6.0",
+    "executable": "/Users/van/.bun/bin/bun"
+  },
+  "sceneIds": [
+    "MP08-close-escape-replace",
+    "MP09-link-callbacks"
+  ],
+  "passed": 2,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "activity-dark.png",
+      "sha256": "58d5ae1b50a6c89a143e4876422cec8038c5105f4f2060a1da66d56dcdfefd33",
+      "bytes": 17265
+    },
+    {
+      "path": "activity-light.png",
+      "sha256": "65344b52ad371f7854272e8e45a435830ef9649ac623ce06aec3b76035836565",
+      "bytes": 17261
+    },
+    {
+      "path": "failure.json",
+      "sha256": "a7fa36912f1e5ba7c4d1dcdef9b7f36ea4a1556795375e6ecf908fe5ca3f7314",
+      "bytes": 3311
+    },
+    {
+      "path": "index.html",
+      "sha256": "db21d7edfa5061c5139028b87e7c250175a4c61ab6ae51661261eb11ffbc4031",
+      "bytes": 252
+    },
+    {
+      "path": "long-source.png",
+      "sha256": "6fa16061bebd29ab67f28e97195d922a346449c201f690b55590c3f75ef35633",
+      "bytes": 179454
+    },
+    {
+      "path": "long.png",
+      "sha256": "cc028cbd51f3ad3a962a23134e00a9f8265dc97dc5732f63827457aea6529f55",
+      "bytes": 112943
+    },
+    {
+      "path": "markdown-popout.json",
+      "sha256": "778f297ced4f27dc7c552c6821da6829a1f0f6d43ec341c98881e0e63f9e4c16",
+      "bytes": 3152
+    },
+    {
+      "path": "message-1100.png",
+      "sha256": "9315c6682e0111e0d9aa88a570c95218e873507f358e0cfb881441b93db1d61c",
+      "bytes": 13911
+    },
+    {
+      "path": "message-390.png",
+      "sha256": "7c070eed5969eb30f0376a71124bed29f77cb3875ab2137fa381243a9415cc8d",
+      "bytes": 11615
+    },
+    {
+      "path": "message-dark.png",
+      "sha256": "107ef8155932a45f0281fe901496a187e4449844deb6c35933c6d9e991b5d614",
+      "bytes": 14906
+    },
+    {
+      "path": "message-light.png",
+      "sha256": "ac259182ba1e6078032833fa6a2798f44ceffea35dfb6d3f9334c36de002d0b7",
+      "bytes": 15039
+    },
+    {
+      "path": "response-dark.png",
+      "sha256": "f2dca9dd56073828d4c3f4181b6ef9fee2f0e6bf6b1f8204f37eac0def8cf045",
+      "bytes": 15407
+    },
+    {
+      "path": "response-light.png",
+      "sha256": "8cc4764190e27c1c3e88107f5e0e894e605d614c7ab8cba041d8a12633f9c9a3",
+      "bytes": 15531
+    },
+    {
+      "path": "source-390.png",
+      "sha256": "65e64a8d83982ff70062e57209950bd56f2e5eaa5ac54ba5bb9623d8d4533ebe",
+      "bytes": 28661
+    },
+    {
+      "path": "source-light.png",
+      "sha256": "c4e601ee7f60b290e9fc00a925be6400c981d4ca9d1528b78714c04aac8de0f4",
+      "bytes": 34218
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "ceeaf8718e81dd9b3ffb5ab7a488d40fb10bb61a5f2ebfab92c5d242400162d3",
+      "bytes": 3372627
+    },
+    {
+      "path": "turn-dark.png",
+      "sha256": "6e6de8259c40cb91f938f4966569b52c969bde7caf521bae54dff57651b3763d",
+      "bytes": 16179
+    },
+    {
+      "path": "turn-light.png",
+      "sha256": "83d7c959e86f30d0d06182d2490314ed686f9d3226ebd42ee024d5f80f1b141f",
+      "bytes": 16341
+    }
+  ],
+  "untested": [
+    "Real ChatDisplay/host boot and persisted session integration (call sites reviewed and typechecked)",
+    "Native Electron package, macOS material, Windows/Linux execution",
+    "Signed installer/release",
+    "Modal branch: current modalBreakpoint=99999; all tested viewports use fullscreen"
+  ]
+}

@@ -9,7 +9,7 @@
 | 命令 | 实际验证 | 结果口径 |
 | --- | --- | --- |
 | `bun run validate:full` | 13 workspace 类型/全库 lint、配置/文档工具、身份/i18n/Runtime/资源与完整既有回归 | workspace 6,285 pass、14 skip；CI 子集 87 次执行另计，Python 文档工具 24 项另计 |
-| `bun run test:critical` | 六组既有关键回归及 21 个生产/故障/门禁工作流 | 243 项既有测试；每个工作流 manifest 要求非零场景、必要产物与 SHA；聚合项数不是测试数 |
+| `bun run test:critical` | 六组既有关键回归及当前 22 个生产/故障/门禁工作流 | 原收口为21工作流及243项既有测试；新增markdown-popout单独通过18场景，本轮未重跑整链。每个manifest要求非零场景、必要产物与SHA；聚合项数不是测试数 |
 | `bun run test:native-client` | 共同 Pi/worker 构建、真实 Electron main/preload/renderer、与 Web 同场景 loopback provider | 权限前后真实写入、SubmitPlan/继续、取消、草稿/语言/workspace/重连/预览/截图；主进程 fatal/cause/有界退出；SQLite 事实 |
 | `bun run build:smoke` | 五个生产 bundler + 移出源码树的 server/必要资源缺失/离线 boot/RPC/生产 Pi | 14 项聚合检查；独立 Pi 子工作流 6 场景，完整 SHA；不代替签名安装器 |
 | `bun run test:clean-install` | 独立 checkout、空缓存、必要 patch 移除失败、frozen install、共同 runtime 构建 | 4 个真实场景；负例后删除部分安装，正例仍从空缓存/无 node_modules 起步 |
@@ -23,6 +23,8 @@
 
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |
+| 对话 / 行为预览卡片 | `bun run test:markdown-popout` · [失败矩阵](markdown-popout-card-failure-matrix-2026-10-12.md) · [前后证据](results/markdown-popout-card-2026-10-12/README.md) | 恢复卡片和Markdown源码路径；18个浏览器场景通过，接入critical registry；正式包未验收。 |
+| 主题引擎 / 前端视觉 | [独立治理方案](../process/theme-engine-frontend-governance-plan-2026-10-12.md) · [事先失败矩阵](frontend-theme-visual-audit-failure-matrix-2026-10-12.md) · [结果与复现](results/frontend-theme-visual-audit-2026-10-12/README.md) | 当前源码的主题、CSS、控件、门禁审计；浏览器证据已建立，产品治理与真实宿主矩阵尚未完成。 |
 | 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](./results)。 |
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
 | 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](./results)。 |

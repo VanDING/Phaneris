@@ -73,7 +73,7 @@ import { navigate, routes } from "@/lib/navigate"
 import { CHAT_LAYOUT } from "@/config/layout"
 import { collectFileChangesFromActivities, getFirstFileChangeIdForActivity } from "@/lib/file-changes"
 import { handleErrorMessageAction } from "./error-message-actions"
-import { openMarkdownPopoutAtom } from "@/atoms/preview"
+import { openMarkdownPopoutAtom, type MarkdownPopout } from "@/atoms/preview"
 import { chatFocusRequestAtom, filesPanelFocusRequestAtom } from "@/atoms/content-panel-ui"
 import { usePanelTriggerOpener } from "@/lib/panel-triggers"
 import { useArtifacts } from "@/hooks/useArtifacts"
@@ -1050,7 +1050,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
 
   // Show a chat pop-out as a read-only document in the shared preview overlay.
   // Files panels stay single-purpose; pop-outs no longer open a second browser.
-  const openPreviewEntry = useCallback((entry: { content: string; title: string; id: string }) => {
+  const openPreviewEntry = useCallback((entry: Omit<MarkdownPopout, 'sessionId'>) => {
     if (!session) return
     openMarkdownPopout({ ...entry, sessionId: session.id })
   }, [session, openMarkdownPopout])
@@ -1931,8 +1931,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
                           }))
                         }}
                         onPopOut={(text) => {
-                          // Raw markdown source → read-only pop-out document
-                          openPreviewEntry({ content: text, title: t('contentPanel.preview.response'), id: `raw:${assistantUiKey}` })
+                          // Raw markdown source → code card with syntax and line numbers intact
+                          openPreviewEntry({ content: text, title: t('contentPanel.preview.response'), id: `raw:${assistantUiKey}`, renderMode: 'source' })
                         }}
                         onOpenDetails={() => {
                           // Turn details → read-only pop-out document

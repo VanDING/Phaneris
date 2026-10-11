@@ -1,0 +1,2 @@
+$ bun run scripts/check-font-stacks.ts
+Font stacks OK: typography.css and DEFAULT_THEME agree; bundled faces installed and variable; no font CDN in shipped sources.

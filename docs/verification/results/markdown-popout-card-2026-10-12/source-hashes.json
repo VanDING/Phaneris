@@ -1,0 +1,10 @@
+{
+  "apps/electron/src/renderer/atoms/preview.ts": "f47fc0612abbb0abb982ecf7876162250ea766d05d3456a1100afc66693b1800",
+  "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx": "6f0f41092d3e54fc50b559136742e3d8694602a718fff3d12ba9258ae285547f",
+  "apps/electron/src/renderer/components/content-panels/MarkdownPopoutOverlay.tsx": "50af190560ced5db86dcbd39f3e665a9af170e42d17031c2aa93a97b2cfffe7c",
+  "packages/ui/src/components/overlay/ContentFrame.tsx": "9595c4bd5278a0e38bb9024f8268dcd49ba8f554ea1965da31f260e7d44bb7db",
+  "package.json": "1f9c608e5b0e5dda408c0222643bb4dd938a3c36d7ea0ff56842a1c5ade72646",
+  "scripts/critical-scenarios.ts": "41581b0c4cbef15f5b8400ff5916fe6c3b3cd0ad281cae6995dfcabb912307df",
+  "scripts/verification/markdown-popout-workflow.ts": "fccac5669052a51823df2055d17803049c78ae96dec63a808045e3a57e5b524d",
+  "scripts/verification/fixtures/markdown-popout.tsx": "7d8fef5bb48cf7313d0c494109c2ab1249e2db2b4646d8dfb925a40e9dafbf03"
+}

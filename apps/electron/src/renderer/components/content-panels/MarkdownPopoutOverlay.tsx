@@ -10,7 +10,7 @@
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { MessageSquare } from 'lucide-react'
-import { Markdown, PreviewOverlay } from '@phaneris/ui'
+import { CodePreviewOverlay, ContentFrame, Markdown, PreviewOverlay } from '@phaneris/ui'
 import { closeMarkdownPopoutAtom, markdownPopoutAtom } from '@/atoms/preview'
 
 export function MarkdownPopoutOverlay({
@@ -28,6 +28,20 @@ export function MarkdownPopoutOverlay({
 
   if (!popout) return null
 
+  if (popout.renderMode === 'source') {
+    return (
+      <CodePreviewOverlay
+        isOpen
+        onClose={close}
+        content={popout.content}
+        filePath="response.md"
+        language="markdown"
+        mode="read"
+        theme={isDark ? 'dark' : 'light'}
+      />
+    )
+  }
+
   return (
     <PreviewOverlay
       isOpen
@@ -35,10 +49,13 @@ export function MarkdownPopoutOverlay({
       theme={isDark ? 'dark' : 'light'}
       typeBadge={{ icon: MessageSquare, label: t('contentPanel.preview.message'), variant: 'default' }}
       title={popout.title}
+      className="bg-foreground-3"
     >
-      <div className="h-full overflow-auto px-4 py-3">
-        <Markdown children={popout.content} onUrlClick={onOpenUrl} onFileClick={onOpenFile} />
-      </div>
+      <ContentFrame title={popout.title} maxWidth={960}>
+        <div className="px-10 py-8 text-sm">
+          <Markdown mode="minimal" onUrlClick={onOpenUrl} onFileClick={onOpenFile}>{popout.content}</Markdown>
+        </div>
+      </ContentFrame>
     </PreviewOverlay>
   )
 }

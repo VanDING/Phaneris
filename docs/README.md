@@ -36,6 +36,7 @@ Documentation is filed by **what kind of document it is**, not by how finished t
 
 | Document | Status | Scope |
 | --- | --- | --- |
+| [Chat popout card failure matrix](verification/markdown-popout-card-failure-matrix-2026-10-12.md) | Written before implementation; browser verified | Restore centered cards and Markdown source mode; 18 browser scenes and archived before/after evidence. [Results](verification/results/markdown-popout-card-2026-10-12/README.md). |
 | [Governance domain ownership](architecture/governance-domain-ownership.md) | Accepted | Configuration, protocol, Pi and product assembly ownership. |
 | [Architecture overview](architecture/overview.md) | Current baseline | Structural map; §10 lists the known drift and tech debt without owners. |
 | [Durable Agent Runtime ADR](architecture/durable-agent-runtime.md) | Accepted, implemented incrementally | Runtime Host authority, T1/T2 effects, recovery, projections. Two workstreams stay open: read-model cutover after measured parity, and automatic bounded continuation. |
@@ -84,6 +85,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | Scope |
 | --- | --- | --- |
+| [Theme and frontend visual audit failure matrix](verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md) | Written before audit probes; audit evidence recorded | Independent theme/CSS/interaction checks and remaining real-host E2E. [Reproduction evidence](verification/results/frontend-theme-visual-audit-2026-10-12/README.md). |
 | [Governance completion failure matrix](verification/governance-completion-failure-matrix.md) | Written before implementation | G3–G8 failure cases and actual workflow acceptance. |
 | [Verification index](verification/README.md) | Maintained | Commands, platform notes, and result locations. |
 | [Governance first wave failure matrix](verification/governance-first-wave-failure-matrix.md) | Written before implementation; locally verified | G1 evidence isolation, CI/coverage/warning canaries, Babel type-import detection, plugin transactions and Runtime branch lifecycle. [Evidence](verification/results/governance-first-wave-2026-10-11/README.md). |
@@ -114,6 +116,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | What remains |
 | --- | --- | --- |
+| [Theme engine and frontend visual governance plan](process/theme-engine-frontend-governance-plan-2026-10-12.md) | **Proposed; independent audit completed** | Confirmed issues, corrected earlier claims, five-layer contract and W1–W5 acceptance. Full governance remains open; the user-reported popout-card regression is restored and browser verified (F20). |
 | [Pi SDK 1.1.0 and upstream 0.14.1 plan](process/pi-sdk-1.1.0-upstream-0.14.1-plan.md) | **Implemented and verified on Windows** | Approved scope, frozen baselines, adoption decisions and deliberate deferrals. |
 | [Pi 1.1.0 / Craft 0.14.1 implementation](process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) | Complete; performance scope is limited | B0–B5 results, 6,289 passing tests, final package evidence, same-drive smoke, earlier failures and reproduction commands. |
 | [Pi 1.1.0 implementation failure matrix](process/pi-110-implementation-failure-matrix.md) | Written before implementation | Failure conditions and acceptance boundaries for B0–B5. |

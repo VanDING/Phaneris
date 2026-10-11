@@ -1,0 +1,2 @@
+$ bun run scripts/verification/markdown-popout-workflow.ts
+{"output":"/Users/van/projects/Phaneris/.cache/verification/markdown-popout-nKx32I","passed":18,"total":18}

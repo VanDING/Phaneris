@@ -1,0 +1,154 @@
+{
+  "checks": [
+    {
+      "id": "MP01-light-message",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP01-light-response",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP01-light-turn",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP01-light-activity",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP01-dark-message",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP01-dark-response",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP01-dark-turn",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP01-dark-activity",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP02-MP03-source",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP03-formatted",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP04-desktop-pane",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP05-open-source-theme-switch",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP06-mobile-message",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP06-mobile-source",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP07-long",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP07-long-source",
+      "passed": false,
+      "error": "Content must have a separate card"
+    },
+    {
+      "id": "MP08-close-escape-replace",
+      "passed": true
+    },
+    {
+      "id": "MP09-link-callbacks",
+      "passed": true
+    }
+  ],
+  "geometry": [
+    {
+      "name": "message-light",
+      "sample": null
+    },
+    {
+      "name": "response-light",
+      "sample": null
+    },
+    {
+      "name": "turn-light",
+      "sample": null
+    },
+    {
+      "name": "activity-light",
+      "sample": null
+    },
+    {
+      "name": "message-dark",
+      "sample": null
+    },
+    {
+      "name": "response-dark",
+      "sample": null
+    },
+    {
+      "name": "turn-dark",
+      "sample": null
+    },
+    {
+      "name": "activity-dark",
+      "sample": null
+    },
+    {
+      "name": "source-light",
+      "sample": null
+    },
+    {
+      "name": "message-1100",
+      "sample": null
+    },
+    {
+      "name": "message-390",
+      "sample": null
+    },
+    {
+      "name": "source-390",
+      "sample": null
+    },
+    {
+      "name": "long",
+      "sample": null
+    },
+    {
+      "name": "long-source",
+      "sample": null
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [],
+  "browser": "153.0.8010.12",
+  "viewportModes": "actual fullscreen at 1440/1100/390; current modalBreakpoint=99999"
+}

@@ -1,0 +1,623 @@
+{
+  "ruleCoverage": [
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          2,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SurfaceSlot.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          2,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "apps/electron/src/renderer/browser-toolbar.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          2,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/button.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          2,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/sortable-list.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          0,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          2,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ],
+        "jsx-a11y/alt-text": [
+          2
+        ],
+        "jsx-a11y/anchor-ambiguous-text": [
+          0
+        ],
+        "jsx-a11y/anchor-has-content": [
+          2
+        ],
+        "jsx-a11y/anchor-is-valid": [
+          2
+        ],
+        "jsx-a11y/aria-activedescendant-has-tabindex": [
+          2
+        ],
+        "jsx-a11y/aria-props": [
+          2
+        ],
+        "jsx-a11y/aria-proptypes": [
+          2
+        ],
+        "jsx-a11y/aria-role": [
+          2
+        ],
+        "jsx-a11y/aria-unsupported-elements": [
+          2
+        ],
+        "jsx-a11y/autocomplete-valid": [
+          2
+        ],
+        "jsx-a11y/click-events-have-key-events": [
+          2
+        ],
+        "jsx-a11y/control-has-associated-label": [
+          0,
+          {
+            "ignoreElements": [
+              "audio",
+              "canvas",
+              "embed",
+              "input",
+              "textarea",
+              "tr",
+              "video"
+            ],
+            "ignoreRoles": [
+              "grid",
+              "listbox",
+              "menu",
+              "menubar",
+              "radiogroup",
+              "row",
+              "tablist",
+              "toolbar",
+              "tree",
+              "treegrid"
+            ],
+            "includeRoles": [
+              "alert",
+              "dialog"
+            ]
+          }
+        ],
+        "jsx-a11y/heading-has-content": [
+          2
+        ],
+        "jsx-a11y/html-has-lang": [
+          2
+        ],
+        "jsx-a11y/iframe-has-title": [
+          2
+        ],
+        "jsx-a11y/img-redundant-alt": [
+          2
+        ],
+        "jsx-a11y/interactive-supports-focus": [
+          2,
+          {
+            "tabbable": [
+              "button",
+              "checkbox",
+              "link",
+              "searchbox",
+              "spinbutton",
+              "switch",
+              "textbox"
+            ]
+          }
+        ],
+        "jsx-a11y/label-has-associated-control": [
+          2
+        ],
+        "jsx-a11y/label-has-for": [
+          0
+        ],
+        "jsx-a11y/media-has-caption": [
+          2
+        ],
+        "jsx-a11y/mouse-events-have-key-events": [
+          2
+        ],
+        "jsx-a11y/no-access-key": [
+          2
+        ],
+        "jsx-a11y/no-autofocus": [
+          2
+        ],
+        "jsx-a11y/no-distracting-elements": [
+          2
+        ],
+        "jsx-a11y/no-interactive-element-to-noninteractive-role": [
+          2,
+          {
+            "tr": [
+              "none",
+              "presentation"
+            ],
+            "canvas": [
+              "img"
+            ]
+          }
+        ],
+        "jsx-a11y/no-noninteractive-element-interactions": [
+          2,
+          {
+            "handlers": [
+              "onClick",
+              "onError",
+              "onLoad",
+              "onMouseDown",
+              "onMouseUp",
+              "onKeyPress",
+              "onKeyDown",
+              "onKeyUp"
+            ],
+            "alert": [
+              "onKeyUp",
+              "onKeyDown",
+              "onKeyPress"
+            ],
+            "body": [
+              "onError",
+              "onLoad"
+            ],
+            "dialog": [
+              "onKeyUp",
+              "onKeyDown",
+              "onKeyPress"
+            ],
+            "iframe": [
+              "onError",
+              "onLoad"
+            ],
+            "img": [
+              "onError",
+              "onLoad"
+            ]
+          }
+        ],
+        "jsx-a11y/no-noninteractive-element-to-interactive-role": [
+          2,
+          {
+            "ul": [
+              "listbox",
+              "menu",
+              "menubar",
+              "radiogroup",
+              "tablist",
+              "tree",
+              "treegrid"
+            ],
+            "ol": [
+              "listbox",
+              "menu",
+              "menubar",
+              "radiogroup",
+              "tablist",
+              "tree",
+              "treegrid"
+            ],
+            "li": [
+              "menuitem",
+              "menuitemradio",
+              "menuitemcheckbox",
+              "option",
+              "row",
+              "tab",
+              "treeitem"
+            ],
+            "table": [
+              "grid"
+            ],
+            "td": [
+              "gridcell"
+            ],
+            "fieldset": [
+              "radiogroup",
+              "presentation"
+            ]
+          }
+        ],
+        "jsx-a11y/no-noninteractive-tabindex": [
+          2,
+          {
+            "tags": [],
+            "roles": [
+              "tabpanel"
+            ],
+            "allowExpressionValues": true
+          }
+        ],
+        "jsx-a11y/no-redundant-roles": [
+          2
+        ],
+        "jsx-a11y/no-static-element-interactions": [
+          2,
+          {
+            "allowExpressionValues": true,
+            "handlers": [
+              "onClick",
+              "onMouseDown",
+              "onMouseUp",
+              "onKeyPress",
+              "onKeyDown",
+              "onKeyUp"
+            ]
+          }
+        ],
+        "jsx-a11y/role-has-required-aria-props": [
+          2
+        ],
+        "jsx-a11y/role-supports-aria-props": [
+          2
+        ],
+        "jsx-a11y/scope": [
+          2
+        ],
+        "jsx-a11y/tabindex-no-positive": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "packages/ui/src/components/chat/TurnCard.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-floating-z-tokens-in-island": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          2,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "packages/ui/src/components/ui/BrowserControls.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-floating-z-tokens-in-island": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          0,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
+      "rules": {
+        "craft-styles/no-hardcoded-z-index": [
+          2
+        ],
+        "craft-styles/no-floating-z-tokens-in-island": [
+          2
+        ],
+        "craft-styles/no-nonstandard-shadows": [
+          2,
+          {
+            "allowedClasses": [
+              "shadow-none",
+              "shadow-xs",
+              "shadow-minimal",
+              "shadow-tinted",
+              "shadow-thin",
+              "shadow-middle",
+              "shadow-strong",
+              "shadow-panel-focused",
+              "shadow-modal-small",
+              "shadow-bottom-border",
+              "shadow-bottom-border-thin"
+            ],
+            "allowInlineNone": true
+          }
+        ],
+        "craft-styles/no-transition-all": [
+          2
+        ]
+      }
+    },
+    {
+      "file": "apps/webui/src/App.tsx",
+      "rules": {}
+    },
+    {
+      "file": "apps/viewer/src/App.tsx",
+      "rules": {}
+    }
+  ],
+  "results": [
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SurfaceSlot.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "apps/electron/src/renderer/browser-toolbar.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/button.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/sortable-list.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx",
+      "errors": 0,
+      "warnings": 2,
+      "messages": [
+        {
+          "ruleId": null,
+          "message": "Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps').",
+          "line": 622,
+          "column": 5,
+          "severity": 1,
+          "fix": {
+            "range": [
+              26723,
+              26778
+            ],
+            "text": " "
+          }
+        },
+        {
+          "ruleId": "react-hooks/exhaustive-deps",
+          "severity": 1,
+          "message": "React Hook React.useCallback has missing dependencies: 'goal', 'permissionMode', and 'title'. Either include them or remove the dependency array.",
+          "line": 807,
+          "column": 5,
+          "endLine": 807,
+          "endColumn": 37,
+          "suggestions": [
+            {
+              "desc": "Update the dependencies array to be: [title, goal, permissionMode, discardDraft, t]",
+              "fix": {
+                "range": [
+                  36720,
+                  36752
+                ],
+                "text": "[title, goal, permissionMode, discardDraft, t]"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/TurnCard.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "packages/ui/src/components/ui/BrowserControls.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
+      "errors": 0,
+      "warnings": 0,
+      "messages": []
+    }
+  ]
+}
