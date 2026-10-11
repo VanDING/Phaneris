@@ -177,6 +177,19 @@
       ]
     },
     {
+      "id": "markdown-popout",
+      "entry": "scripts/verification/markdown-popout-workflow.ts",
+      "minimum": 18,
+      "required": [
+        "markdown-popout.json",
+        "message-light.png",
+        "source-light.png",
+        "source-dark.png",
+        "source-390.png",
+        "trace.zip"
+      ]
+    },
+    {
       "id": "distribution-inputs",
       "entry": "scripts/verification/distribution-inputs-workflow.ts",
       "minimum": 10,

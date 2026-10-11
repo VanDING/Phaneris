@@ -268,6 +268,6 @@ ResolvedTheme 建议成为一个有版本的不可变快照，至少含 `request
 - `MarkdownPopoutOverlay.tsx`：source复用现有CodePreviewOverlay；formatted复用ContentFrame，保持URL/文件回调。
 - `ContentFrame.tsx`：preferred minWidth限制为`min(Npx, 100%)`，使源码卡片在390px时宽345px，桌面850px基数保留。
 - 浏览器工作流与fixture在改产品代码前编写并执行；修复前18项中16项因卡片缺失失败，修复后18项全部通过。close/Esc、焦点恢复、链接/文件回调、长文单层滚动、源码行号与明暗切换均有实际断言。
-- 新增`test:markdown-popout`，接入现有critical registry，要求18个场景及JSON/关键截图/trace。Electron/UI/scripts类型检查及修改文件lint通过；本轮未重跑全量critical，也未重新打包客户端。
+- 新增`test:markdown-popout`，接入现有critical registry并同步锁定policy，要求18个场景及JSON/关键截图/trace。Electron/UI/scripts类型检查及修改文件lint通过；本轮未重跑全量critical，也未重新打包客户端。
 
 完整[失败矩阵](../verification/markdown-popout-card-failure-matrix-2026-10-12.md)和[前后证据](../verification/results/markdown-popout-card-2026-10-12/README.md)保留原manifest、SHA与截图。F01–F19和W1–W5仍按前述范围推进；此局部恢复不等于全面主题治理完成。

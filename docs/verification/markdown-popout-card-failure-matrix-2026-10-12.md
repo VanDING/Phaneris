@@ -1,6 +1,6 @@
 # 对话与行为全屏预览卡片：事先失败矩阵（2026-10-12）
 
-状态：先于本次产品修复和浏览器工作流编写；修复后浏览器18/18通过。用户要求恢复图二的卡片呈现；源码查看应保留源码，普通阅读和行为详情应保留格式化内容。主题全局治理仍按独立方案执行。前后结果见[归档](results/markdown-popout-card-2026-10-12/README.md)。
+状态：MP01–MP12先于本次产品修复和浏览器工作流编写；修复后浏览器18/18通过。MP13在pre-push发现后、同步policy前补充。用户要求恢复图二的卡片呈现；源码查看应保留源码，普通阅读和行为详情应保留格式化内容。主题全局治理仍按独立方案执行。前后结果见[归档](results/markdown-popout-card-2026-10-12/README.md)。
 
 | ID | 可能失败的方式 | 浏览器验收与证据 |
 | --- | --- | --- |
@@ -16,5 +16,6 @@
 | MP10 | UI只改了展示，ChatDisplay源码入口仍不传source | 源码审查真实onPopOut调用、类型检查；fixture到生产状态/overlay的浏览器验收不冒充完整ChatDisplay或正式包验收 |
 | MP11 | 回归修复重新引入已移除的Files/Opened面板 | 保持既有popout atom和Files三职责；定向源码审查，不恢复旧panel registry |
 | MP12 | E2E结果不可重复、覆盖历史或缺截图/失败产物 | 沿用VerificationRun唯一输出，保存scenes、几何、错误、前后截图、manifest/SHA；保留修复前失败运行 |
+| MP13 | 新critical workflow只登记执行registry，遗漏锁定policy，导致pre-push/CI拒绝 | 同步critical-scenarios.ts与critical-scenario-policy.json的id/entry/minimum/required；保持既有条目与门禁，check:governance和完整pre-push均必须通过 |
 
 本轮真实服务、Electron正式包、原生窗口材质及三平台验收未闭环；本次可关闭的是状态到生产组件的浏览器视觉与交互路径。额外原生验收按主题治理的H矩阵继续执行。
