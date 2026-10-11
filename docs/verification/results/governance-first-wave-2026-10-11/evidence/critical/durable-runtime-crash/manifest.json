@@ -1,0 +1,1083 @@
+{
+  "schemaVersion": 1,
+  "workflow": "durable-runtime-crash",
+  "startedAt": "2026-10-10T18:46:04.933Z",
+  "finishedAt": "2026-10-10T18:46:06.131Z",
+  "command": [
+    "/Users/van/.bun/bin/bun",
+    "/Users/van/projects/Phaneris/scripts/verification/durable-runtime-crash-workflow.ts",
+    "--output-dir=/Users/van/projects/Phaneris/.cache/verification/critical-p9IPH3/durable-runtime-crash"
+  ],
+  "source": {
+    "headSha": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+    "dirtyPaths": [
+      "M .github/workflows/validate.yml",
+      " M CONTRIBUTING.md",
+      " M apps/electron/eslint.config.mjs",
+      " M apps/electron/src/main/__tests__/session-branch-cleanup.test.ts",
+      " M apps/electron/src/main/__tests__/session-branch-rollback.isolated.ts",
+      " M apps/electron/src/shared/__tests__/ipc-channels.test.ts",
+      " M apps/webui/src/shims/ws.ts",
+      " M docs/README.md",
+      " M docs/architecture/durable-agent-runtime.md",
+      " M docs/architecture/overview.md",
+      " M docs/architecture/phaneris-phase-b-brand-identity.md",
+      " M docs/archive/code-audit-2026-08-01.md",
+      " M docs/dependencies/dependency-graph-2026-10-06.md",
+      " M docs/process/Phaneris_Project_Deep_Analysis.md",
+      " M docs/process/performance-implementation-2026-09-10.md",
+      " M docs/process/phaneris-fork-plan.md",
+      " M docs/process/plugin-system-review-and-roadmap.md",
+      " M docs/process/project-assessment-and-roadmap-2026-08-31.md",
+      " M docs/process/system-cleanup-optimization-plan-2026-10-10.md",
+      " M docs/process/workstream-sequencing-2026-10-06.md",
+      " M docs/release-readiness.md",
+      " M docs/research/native-frontend-migration-gpuix-assessment.md",
+      " M package.json",
+      " M packages/core/README.md",
+      " M packages/core/package.json",
+      " M packages/core/src/utils/debug.ts",
+      " M packages/messaging-gateway/src/__tests__/registry-allow-pending.test.ts",
+      " M packages/messaging-gateway/src/__tests__/registry-config-preservation.test.ts",
+      " M packages/messaging-gateway/src/__tests__/registry.test.ts",
+      " M packages/messaging-gateway/src/__tests__/router.test.ts",
+      " M packages/server-core/README.md",
+      " M packages/server-core/src/domain/session-branch-cleanup.ts",
+      " M packages/server-core/src/sessions/SessionManager.ts",
+      " M packages/server-core/src/sessions/adopt-task-draft.test.ts",
+      " M packages/server-core/src/transport/client.ts",
+      " M packages/shared/CLAUDE.md",
+      " M packages/shared/eslint.config.mjs",
+      " M packages/shared/src/agent/__tests__/mode-manager-bash-hints.test.ts",
+      " M packages/shared/src/agent/__tests__/pi-extended-prompt-cache.test.ts",
+      " M packages/shared/src/credentials/backends/secure-storage.ts",
+      " M packages/shared/src/credentials/manager.ts",
+      " M packages/shared/src/plugins/audit.ts",
+      " M packages/shared/src/plugins/install.ts",
+      " M packages/shared/src/sources/credential-manager.ts",
+      " M packages/shared/src/sources/storage.ts",
+      " M packages/ui/eslint.config.mjs",
+      " M scripts/benchmark-streaming.ts",
+      " M scripts/build-smoke.ts",
+      " M scripts/check-environment.ts",
+      " M scripts/identity-core.ts",
+      " M scripts/lib/import-graph.ts",
+      " M scripts/test-critical.ts",
+      " M scripts/verification/decision-feature-workflow.ts",
+      " M scripts/verification/durable-runtime-boundary-baseline.ts",
+      " M scripts/verification/durable-runtime-boundary-workflow.ts",
+      " M scripts/verification/durable-runtime-crash-workflow.ts",
+      " M scripts/verification/durable-runtime-pi-workflow.ts",
+      " M scripts/verification/files-panel-packaged-workflow.ts",
+      " M scripts/verification/fixtures/default-theme-preview.tsx",
+      " M scripts/verification/image-capability-workflows.ts",
+      " M scripts/verification/motion-verification.mjs",
+      " M scripts/verification/packaged-refinement-workflow.ts",
+      " M scripts/verification/pi-110-azure-workflow.ts",
+      " M scripts/verification/pi-110-packaged-workflow.ts",
+      " M scripts/verification/runtime-boundary-gate-workflow.ts",
+      " M scripts/verification/runtime-refinement-workflow.ts",
+      " M scripts/verification/session-decisions-packaged-workflow.ts",
+      " M scripts/verification/upstream-0140-b4b5-ui.tsx",
+      " M scripts/verification/upstream-0140-ui.tsx",
+      " M scripts/verification/upstream-0141-decisions-workflow.ts",
+      " M scripts/verification/upstream-0141-large-results-workflow.ts",
+      "?? docs/process/architecture-code-governance-implementation-plan-2026-10-11.md",
+      "?? docs/process/governance-first-wave-2026-10-11.md",
+      "?? docs/verification/governance-first-wave-failure-matrix.md",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/README.md",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/SHA256SUMS",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/build-smoke.log",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/bundle-report.log",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/critical-generated-paths.json",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/docs-check.log",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/identity-strict.log",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/import-graph.json",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/inventory.json",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/scan-import-graph.ts",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/scan-repository.py",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/stage-assets.log",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/test-critical.log",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/tracked-files.csv",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/validate-ci.log",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/validation-summary.json",
+      "?? docs/verification/results/architecture-code-governance-2026-10-11/webui-auth.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/README.md",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/historical-branch-failures.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/historical-shared-failures.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/initial-validate-full.log.gz",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/plugin-index-before.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/plugin-transaction-before.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/pre-final-delete-validate-full.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/session-branch-before.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/before/session-deletion-before.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/build-smoke.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/electron-build-main.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/electron-build-preload.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/electron-build-renderer.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/server-assembly.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/server-import.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/viewer-build.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/webui-build.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/.-tests.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/apps-electron-src-main-__tests__-session-branch-rollback.isolated.ts.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/apps-electron-src-renderer-atoms-__tests__-sessions.isolated.ts.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/apps-electron-tests.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/architecture.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/automation-events.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/critical.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary/workflow.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary/workflow.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-after-effect.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-after-t1.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-after-t2.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-t1-failure.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-after-effect.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-after-t1.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-after-t2.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-t1-failure.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-pi-agent-server-tests.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-server-core-tests.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-shared-src-plugins-__tests__-plugin-install.isolated.ts.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-shared-tests.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-ui-tests.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/audit-write.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/backup-cleanup.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/credential-cleanup.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/credentials-before-rollback.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/index-invalidate.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/index-write.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/package-backup-copy.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/package-rename.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/plugin-transaction.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/skill-copy.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/skill-rename.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/source-backup-copy.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/success.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate-mutations.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate-report.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate.stderr.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate.stdout.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/session-branch.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/session-branch/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/session-branch/session-branch.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V08-upload.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V08-uv.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V09-coverage.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V09-warning.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/governance-gates.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-member.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-upload.yml",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-uv.yml",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-warning.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/runtime-pi/independent-pi.db",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/runtime-pi/independent-pi.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/runtime-pi/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/gate-report.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/gate.stderr.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/gate.stdout.log",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/failed/failure.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/failed/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/manifest.json",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/occupied/sentinel",
+      "?? docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/verification-output.json",
+      "?? eslint.config.mjs",
+      "?? scripts/check-governance.ts",
+      "?? scripts/critical-scenarios.ts",
+      "?? scripts/eslint-common.mjs",
+      "?? scripts/ipc-inventory.ts",
+      "?? scripts/lint-warning-baseline.json",
+      "?? scripts/lint-workspace.ts",
+      "?? scripts/quality-coverage.json",
+      "?? scripts/verification/governance-gates-workflow.ts",
+      "?? scripts/verification/plugin-transaction-workflow.ts",
+      "?? scripts/verification/session-branch-workflow.ts",
+      "?? scripts/verification/verification-artifacts.ts",
+      "?? scripts/verification/verification-output-workflow.ts",
+      "?? tsconfig.tooling.json"
+    ],
+    "lockfileSha256": "363dc1148933c57cadd06362084b297f8015389b00737d0d34f422f22cb04ca1",
+    "changedFiles": [
+      {
+        "path": ".github/workflows/validate.yml",
+        "sha256": "5091e52708940b61a3843ab8cd0d47f4e94c6742712c68e22994d5b9006a551c"
+      },
+      {
+        "path": "CONTRIBUTING.md",
+        "sha256": "722d062568de14c4d772d2541502dc67440e5d73e776efc2879699d0251d86a7"
+      },
+      {
+        "path": "apps/electron/eslint.config.mjs",
+        "sha256": "ac0cd758857f356e7da7974d38f1da8ef72e28bebf9d018907f1f512a5e8a494"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/session-branch-cleanup.test.ts",
+        "sha256": "f02d41e081f4f5d89bf7d0bf82fa91d37b08734874e976928dfbb377ac00074a"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/session-branch-rollback.isolated.ts",
+        "sha256": "6444b87e662cad04ec8d77bbcb6f830802d32f94678fb7dad976fff607917252"
+      },
+      {
+        "path": "apps/electron/src/shared/__tests__/ipc-channels.test.ts",
+        "sha256": "3c5f91a2f02a3815f866b61327a5524f9de41e1f387283fbb4e5623a59f1ed35"
+      },
+      {
+        "path": "apps/webui/src/shims/ws.ts",
+        "sha256": "e5d6ce0cfec4973f358b100edcc8318f4aa9053517dae77f93d074aeeacc2525"
+      },
+      {
+        "path": "docs/README.md",
+        "sha256": "e5ebc7687f0b256a48e4b8d67c8d013ff3db092951fdca9d158f43688324b14f"
+      },
+      {
+        "path": "docs/architecture/durable-agent-runtime.md",
+        "sha256": "b2f1b8c25cda7e72be38756ccf425bb2e003664566bccadb814b3969f5a53cd0"
+      },
+      {
+        "path": "docs/architecture/overview.md",
+        "sha256": "4b55a8644ef994241889bf0caff9c5adc11468b5372b8c0f81cd15d0aca81e06"
+      },
+      {
+        "path": "docs/architecture/phaneris-phase-b-brand-identity.md",
+        "sha256": "e44c0b499935268354b7995ba629d8f9f66fd2b11e27a0d333939ab2d80f90a7"
+      },
+      {
+        "path": "docs/archive/code-audit-2026-08-01.md",
+        "sha256": "110973da263d81ac96602f745594908b31df444f6e7b9d2a38075fa84289c3d3"
+      },
+      {
+        "path": "docs/dependencies/dependency-graph-2026-10-06.md",
+        "sha256": "751e0d0f271b33c1c2569f21537d3c89f878f4b761c029018626f68d14b571ba"
+      },
+      {
+        "path": "docs/process/Phaneris_Project_Deep_Analysis.md",
+        "sha256": "9fec9db55342b83298193cf69f351abce8c3e241ce38ab585ff4a70a41c7bbe8"
+      },
+      {
+        "path": "docs/process/architecture-code-governance-implementation-plan-2026-10-11.md",
+        "sha256": "8bd915e81dac4a4a9174394607430936e572debf562da7b16a4542bf26ccb7d6"
+      },
+      {
+        "path": "docs/process/governance-first-wave-2026-10-11.md",
+        "sha256": "80c36c3187e6df69492993ace9c642d5c4f9c8c876b93f89d49c2485c31cd65f"
+      },
+      {
+        "path": "docs/process/performance-implementation-2026-09-10.md",
+        "sha256": "e7ea732c7bbd9143af90fcb2431c02385dd8c1c6ff77272dda9d381206507eef"
+      },
+      {
+        "path": "docs/process/phaneris-fork-plan.md",
+        "sha256": "b813741eda2a5c047b8aba64f8dc53a6e33ba23f0d987e18634d2638d174be90"
+      },
+      {
+        "path": "docs/process/plugin-system-review-and-roadmap.md",
+        "sha256": "2107e3a72137c1f0da701cc383da57d706be03e67cc21692d217906857cf5de6"
+      },
+      {
+        "path": "docs/process/project-assessment-and-roadmap-2026-08-31.md",
+        "sha256": "d3796851e7aecbf1ab799ca21ab2f3d7a8b1c8b46a2e8313ac9375b1bf10e7aa"
+      },
+      {
+        "path": "docs/process/system-cleanup-optimization-plan-2026-10-10.md",
+        "sha256": "fd3fdada4be34b1fef41806e5a26396b25630ecac6f1e9b9afe8c30c351afffa"
+      },
+      {
+        "path": "docs/process/workstream-sequencing-2026-10-06.md",
+        "sha256": "89df0929faf50d27b08f9ec37cd97afa1103f5018b8c1b6509a7258173e3376c"
+      },
+      {
+        "path": "docs/release-readiness.md",
+        "sha256": "ef5be5bce48cc848d24e9434faecfa702d14d6ce72e1f49981263a1b3bf77b05"
+      },
+      {
+        "path": "docs/research/native-frontend-migration-gpuix-assessment.md",
+        "sha256": "f23083b802b46ac5599773e39881e202ff180d668fc5107beca1ac9f85de37a3"
+      },
+      {
+        "path": "docs/verification/governance-first-wave-failure-matrix.md",
+        "sha256": "187ca9dda7d736383731479d46c8b78c365e94bdaeccdef8b9e2974e142f85a1"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/README.md",
+        "sha256": "bc0bffe043b609f7df23681878459123d97a5a7857365a55dc4c68d6eae74fca"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/SHA256SUMS",
+        "sha256": "4862548ec5e470c215a5a94f632fe063b5820f341abab95f7e6a02553ac2e9f0"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/build-smoke.log",
+        "sha256": "8cf998136855341a0fa554e5f5e2671d2160cccd39e1f2073dde7da9105fb86f"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/bundle-report.log",
+        "sha256": "cf94495f1ab0367f086d67c8cbacbd1a8ba168886a3c1ee7eb1fc5642f023304"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/critical-generated-paths.json",
+        "sha256": "b4b6a672b51b14d3c56b2e8906b0b837a94b19be5b3df862bcba29c24a311c3d"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/docs-check.log",
+        "sha256": "71d1cae63fcf6c8f246ec5ce07bb866b50ea05a3a79db9c89c5fefe181baa625"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/identity-strict.log",
+        "sha256": "4a8eb9b11f6d4f23bf952c6d59cd50fef60a2672e9f93a509ee41c0cccce1b82"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/import-graph.json",
+        "sha256": "21dada5f7bf9312abd8cd4560a94a56b18fa53f4cf976233c96691c6c3731a17"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/inventory.json",
+        "sha256": "1f99250395cc7fad0884f48793b9ab36563c4730dfedc24380dc88619855847d"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/scan-import-graph.ts",
+        "sha256": "ea3a14e905cd6632fee225ce3cce983fb5074613cb002a6ee0a0911a04c68f38"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/scan-repository.py",
+        "sha256": "6c286afeaa829e995301c1853bf7296b1c6bf4ecb993830ec13268a7dfc9841c"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/stage-assets.log",
+        "sha256": "e6fce4ae204a23fdff079beccdb1e00a4cf83f778812abf0a7bc52634fe9a2e7"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/test-critical.log",
+        "sha256": "3002a36cb0809466d329cc8b75804e668f6d1364b849190365f2242252f6e9c6"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/tracked-files.csv",
+        "sha256": "73e5effd45ddfa259121a4f5ec4c00a0efc745691a299081e710a7df2c5be8b3"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/validate-ci.log",
+        "sha256": "37ef303165032806abc3f3649e5b9cbe1d71dd8b37356862fb25a7eab309d377"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/validation-summary.json",
+        "sha256": "ac7a5ab74c7f6e1c7d7c15c6f8fb8d9a3a731f1740b3a3af718fe17b9a22ee10"
+      },
+      {
+        "path": "docs/verification/results/architecture-code-governance-2026-10-11/webui-auth.log",
+        "sha256": "d5d7fd880a04ce6d752ada1250fe96c6b61c9a6463d9afbbaed7adca563e863b"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/README.md",
+        "sha256": "755a6a9788fa86ca32a1512115418d39bbb6fae7354310fbc149df20db0a087d"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/historical-branch-failures.log",
+        "sha256": "9a6c8cea8b75cb15f78de22ca60003e712b21a84d2dda4f9e9a0ed2abe1f2138"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/historical-shared-failures.log",
+        "sha256": "ab9ee9a9f138fdac86f2db20996c2a386a59a2c8ddb584f831981e32ff0dac87"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/initial-validate-full.log.gz",
+        "sha256": "e83c38d656c202772283d4196250333b700b05661d9ae6e7764d4d516ab6c357"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/plugin-index-before.log",
+        "sha256": "7755710f1122451d328473320f663e4d18c00d3d1453d4d71156f08c126f59bf"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/plugin-transaction-before.log",
+        "sha256": "73031f6066554ac508ec3f4818b1a627810e39fcf15b9a20bde5945c58ade9d0"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/pre-final-delete-validate-full.log",
+        "sha256": "fd9d37c18eb77706b8d7baff91303cb8cbe5c4ceef9da7a6d54ac3e087ab393b"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/session-branch-before.log",
+        "sha256": "3bf0270aae34f2263a65387d4dcc07bd45e3bd6ff36eef4d10680c0dbc8232b7"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/before/session-deletion-before.log",
+        "sha256": "efca589ef7ee37c9c617449ae534a669cdb9bb2fa8f59f49b6b7863dadb060c2"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/build-smoke.json",
+        "sha256": "3695662be14e84fe78b5ca5cf182c4340d947eadc3212408e38b68564b0e48a6"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/electron-build-main.log",
+        "sha256": "00fc9bc889b2275e982e1b446b63b8b31512665efd2133ee5f3cd69d41807c94"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/electron-build-preload.log",
+        "sha256": "a79274edfc99fc263f501c937998f44a5b27c1219ce5ebceb67c758ea5273634"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/electron-build-renderer.log",
+        "sha256": "2554f873eb29c7cc846527aa07cb6fcbe0eb30daa495d403067b106e4276d53e"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/manifest.json",
+        "sha256": "f1aad7c6ef9630ba77d704ebb148f39b3f7a65c964e296449cd241028b746bd6"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/server-assembly.log",
+        "sha256": "065b20f240bd9d7f25f5df3a9fff975c498e0808adc22224c9b23c502e1cbdb7"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/server-import.json",
+        "sha256": "fd9e87f857f3c90d4c97a59e39db58e93f34f58726647e347821d6d6ca3dbb01"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/viewer-build.log",
+        "sha256": "4743bdf920f7374d398c7494c1fc1adc90804e63d9e583616da2e7bb15c08132"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/build-smoke/webui-build.log",
+        "sha256": "ad90b363ae2ed2e088b5957771d2fafd3f3de3f3e901fd5070bf8c21e94ad2ca"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/.-tests.log",
+        "sha256": "ec0c5f27e6db345dd362496868841376289ec0fb246ad4ab06183f58ade6a02d"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/apps-electron-src-main-__tests__-session-branch-rollback.isolated.ts.log",
+        "sha256": "43f470bbad56f270f92eac7493a41dd8d87833a36f18a76e588853b2af30e704"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/apps-electron-src-renderer-atoms-__tests__-sessions.isolated.ts.log",
+        "sha256": "a2085bbbd0a522acdb5cb69005c10327e460b44fcd330eff71547e6c06414bd2"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/apps-electron-tests.log",
+        "sha256": "647824b30ae77528e84d00f30a3ca4f67ab00e9afc6d5ea495a3aad175411502"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/architecture.log",
+        "sha256": "2c58cfa652be52d88a99c7a11539306907316015646bd0cd009533e3a0e6136e"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/automation-events.log",
+        "sha256": "e03e46acc322f181a3b25b759913faeb22d0d8c1c7d1989a0a08c4ba41c710d6"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/critical.json",
+        "sha256": "91154a16ef0051f96458e0b76dedc25e4cac9146d24d6892fa435f7cc7e84b56"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary.log",
+        "sha256": "f202c1c5ea305eb1d9e076bc95c94231ec295910bee161cd8167b5228c2bac32"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary/manifest.json",
+        "sha256": "2d8ae730dbb37ccd34328295fbaca65ec07138ae5c07c542a1fb5cf9c2cf2ad3"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary/workflow.db",
+        "sha256": "705f461fa5608bda56681f7b4b0b0922a2512a4b73b2ba412481737f4a44a3c5"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-boundary/workflow.json",
+        "sha256": "bc79563d142581aeede8e341f463350975a6f519bc170ed9fb5c686491eaf289"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash.log",
+        "sha256": "69ca702ef87c4ef3d12b4cdd173d50fefc14c87c8c8aa93ec161926633f69fcd"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-after-effect.db",
+        "sha256": "f9dff31d137f5d5b334dcd6f442679eb3bc551f38381132d1accd673524d91e0"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-after-t1.db",
+        "sha256": "b0f10b1745d6312fc03203b112552007cda27e4e78bc2981092526475d5d79c7"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-after-t2.db",
+        "sha256": "832627083aa42a033020136cceaa8f6837b8338e30fe46156dc39efb76021b19"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-model-t1-failure.db",
+        "sha256": "490197a2bf4e7860953517cd0447a0748a819799082f4fcd394005f5d6d462c1"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-after-effect.db",
+        "sha256": "934d9354e353f2df5f9d35aaf12a7fb54f8c3889e77420859904781061ee0fa7"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-after-t1.db",
+        "sha256": "1172b1336e66f52ca35b654709244dbe08dfa7478182d2323046417bf62a0673"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-after-t2.db",
+        "sha256": "846ac9cd2eaaeda079a3d5e2da585624b7ac0b0fae53bfabb84585226307b3f8"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash-tool-t1-failure.db",
+        "sha256": "2f033c46494bda197d347d5e7a3bc19e7b530e59589cb50d16dcf51a2c43c97a"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/crash.json",
+        "sha256": "7ce18d49e4ed03ed84969fc1cae28e30163401be2f942821ca7979cee78c2dbe"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/durable-runtime-crash/manifest.json",
+        "sha256": "b4ea910b955e1a5951df54f1c6d2c5d7266372d22d0befa6d5a4fcac50dba9ee"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/manifest.json",
+        "sha256": "9cc4e437e827b5b80d5a7ecd720a1d1d1ab9b952e0b3ff5e3d6371e8e5079685"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-pi-agent-server-tests.log",
+        "sha256": "7f26023656e8b926cff4fee3772a285184f4c31930bc03d8b1cbf8bba7f70ec9"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-server-core-tests.log",
+        "sha256": "d3bfe02c43c968b1e4b6aa17747de79e93766aa26d8a41b73a4b83832c80acef"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-shared-src-plugins-__tests__-plugin-install.isolated.ts.log",
+        "sha256": "1852e12239d3850467d91bfcc26c88af1eeaa72b76d78dbc9f50ca496ddc5234"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-shared-tests.log",
+        "sha256": "90f0202c7f688c1f2109de1997afecb7b87a6e9b19c51f67930740c24b0d7073"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/packages-ui-tests.log",
+        "sha256": "f81aa6407f892201dace49545283907f216963d677e9890b2b609d34b9d18037"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction.log",
+        "sha256": "07e8b746dba825f749a830b9fb609ed7ae196e8f6dd85fd1402d6dbd2df372fb"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/audit-write.log",
+        "sha256": "e70ae568c3a20a846ece9435ccae65a3b0e3ab88dae5f79fec6b6cb16a5300bb"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/backup-cleanup.log",
+        "sha256": "ce25497c6d145e853639e970ee6b0dd4fdcf403ac2dd0387cff0dbbb5d53f7d1"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/credential-cleanup.log",
+        "sha256": "3bca7f71c8f2832cdf62abe487a799a61cd995b3b8941754a9bb7d06b0d6c74b"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/credentials-before-rollback.log",
+        "sha256": "13353cdff61f375bf1022cd6f2a6c9f5495206f085918b5c3594de12459c494a"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/index-invalidate.log",
+        "sha256": "84168669902daaf71ebf130cfab1d29ac5c70a0b0e5628a2eb04aa4cc13efad8"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/index-write.log",
+        "sha256": "462eadf4cecf235574ddba13e37508eeb9a643211efbf81c99eb16ee6c179576"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/manifest.json",
+        "sha256": "4b8d82b1185e7750dac6c369003d17fc46b6d6ea0172a60b6aa8537244434900"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/package-backup-copy.log",
+        "sha256": "38977c65324889ef4d9d174bc98cbbad4ea0e8b356fe3a68b04cb2f779322f10"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/package-rename.log",
+        "sha256": "9684fbb53fd2c5827d88f5d9a35a8b1102e5cf9b5e41cb91ea243fe47eaada80"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/plugin-transaction.json",
+        "sha256": "314e8e22bf31e2b5724d485463cc428970a07cf1e59e97ae02ecd094defeb11b"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/skill-copy.log",
+        "sha256": "c22297d1033947d29d04fbe863f6df822cd88af57e3cb6653c09289053c663cc"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/skill-rename.log",
+        "sha256": "65b23f5f9a5a3314a53b539a5d223d522f04d15dbfc4ad11fd6338b65d13b6af"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/source-backup-copy.log",
+        "sha256": "dcfb96b39eaf369de796af9c680a539206294baa3a9df3ca796cdf032c3a234c"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/plugin-transaction/success.log",
+        "sha256": "44c4d8c88f04c1a6ac0a38a48dfe6d5017ab41dc928909a7a3be83b2991c9e53"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate.log",
+        "sha256": "4b9ba7fb8e2a63711a13ba2a999a07dc8e25c995a83a2ef4d2a3af50d70bb5fa"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate-mutations.json",
+        "sha256": "d6b7e9351093cfda30ec7312b2a874bbb6611b2c43e8b6df3caae16e3e76ce1c"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate-report.json",
+        "sha256": "2339d988c9250adf4f58a5949f9c37f445c7ec96a1c82ba5a19fcb5e3064b846"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/gate.stdout.log",
+        "sha256": "621837a1873dde98aab15a6a071a56bf7d0b40f54bba5f8988d0ee4d25c22cb8"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary-gate/manifest.json",
+        "sha256": "2b50bb63da87e14a1161f62bc3dcb134037a7a758467b63d8399633880b488b0"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/runtime-boundary.log",
+        "sha256": "ac4b72d1aaa0a3659855fbd33d57fcab556011d7a3836ff36b6a23fd15d2ca10"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/session-branch.log",
+        "sha256": "f3d95f4045705dde3176681f12748d2741d1bed974cb6593b3ed49b02cb97e2d"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/session-branch/manifest.json",
+        "sha256": "f1f3dce4da6e1b7afde1d2cb4907774d7b736ca4f96429b018af487bbe82ac36"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/critical/session-branch/session-branch.json",
+        "sha256": "5392962a36d695a7991ffcaa3493996fc1dc3ed0b46d14f11639ea18b8ef2dd4"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V08-upload.log",
+        "sha256": "7f8467e4382db962ad0478f3f69d76df2a43101c7e8fc0ce7f7cd8f47fd43e5f"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V08-uv.log",
+        "sha256": "c145759288d5c2c01a6694911d12127e767e9d86ab2a129c1d76f628d398a497"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V09-coverage.log",
+        "sha256": "6037c7c1c4bef1cda1bb8e44c8b839d7aa87538669575656586f71bdc49109ce"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/V09-warning.log",
+        "sha256": "f166f46a56d9e511583855896baf2b370728a34f6f3782f8c0c74c84833f1ddc"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/governance-gates.json",
+        "sha256": "453d43eddfa96e7d344c6067cdeef5120fec92db08f1713c327bb6da508c20d1"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/manifest.json",
+        "sha256": "59f611cdb066e0cc8032ecfb79e9a7e53d6d19165f36e3d56ba8d368b5d1643a"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-member.json",
+        "sha256": "305e0257c16e99c724998dff064210e7d42605b0e426fab6e91c66c34cc9d9ed"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-upload.yml",
+        "sha256": "0f98c3bb2bf9554f3c6d114487a5148c750f948cc2ca09428f8908756c1f7371"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-uv.yml",
+        "sha256": "5e82f946e5fa817518e087a04a238e3ae2e5cd32b3e4fce14a8dae6c79ad76ba"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/governance-gates/missing-warning.json",
+        "sha256": "c1626e2901fb5174a999904bdb8376135d268e27c569404b11c8feb9f063ecc0"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/runtime-pi/independent-pi.db",
+        "sha256": "f5c0f6fd782b03874c0281d0020c743fe041464fd04b7e706cbc0b114bbc164d"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/runtime-pi/independent-pi.json",
+        "sha256": "999655f8d4f38df10c182b0e520bdcaf76ca98680846a81230fa681d43e73a78"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/runtime-pi/manifest.json",
+        "sha256": "a91f2b6e06a490ade707a8fc26b43d0f61b7f074b5681415d4bdcfdb6b4871d4"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/gate-report.json",
+        "sha256": "354f7eb78997d4d00c2fae03034ccdfe38d1f929fb26930f97896e33e983c6e0"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/gate.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/gate.stdout.log",
+        "sha256": "abaaaa29cdea79d1d67cc820e1501d841d680972223c2e4bc1409dbeb16f5a02"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/corrupt/manifest.json",
+        "sha256": "a74c167e61461a18864ff713e282db196900d639469d445e8b9be2d87831869f"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/failed/failure.json",
+        "sha256": "70f1623757493e4a2160a67657546d258258526e589961dce09ae148d076045e"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/failed/manifest.json",
+        "sha256": "9a31f1fd8035a6d4a18195499c5b80027ea3a800f575f9965a03dcf5877d5265"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/manifest.json",
+        "sha256": "ad4e943bccf4a95c2e0b5539208ecc17601b77b97c4720314dd2e50cf05b1db3"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/occupied/sentinel",
+        "sha256": "1daf82f62247f3a1d148c2d88b1828c9efa2d5f087d7059e98650aafe7afdea3"
+      },
+      {
+        "path": "docs/verification/results/governance-first-wave-2026-10-11/evidence/verification-output/verification-output.json",
+        "sha256": "404b0717b2bd872063cee98e713f556bfb7887fa935c1fed41acc6fdcf58f50d"
+      },
+      {
+        "path": "eslint.config.mjs",
+        "sha256": "8dfa854c6a1668119c61d56185996cbdbbf47132019243b5380ea8e5af078aa5"
+      },
+      {
+        "path": "package.json",
+        "sha256": "bc4ae8277172128fe312037282f9116b7bc5c43aa4111ddc012499681d868182"
+      },
+      {
+        "path": "packages/core/README.md",
+        "sha256": "1f1a330f163531e9a8d2a5438331568ba63a9dae31f9ced5198a4107cf7ccef0"
+      },
+      {
+        "path": "packages/core/package.json",
+        "sha256": "2392da6118584895141c90aa534fe8f22e3a678dffccd03cdec05aa4c2577cba"
+      },
+      {
+        "path": "packages/core/src/utils/debug.ts",
+        "sha256": "3a52c91100b1689123f770111b16666259e10ad233fa98add5dc5562511e88a0"
+      },
+      {
+        "path": "packages/messaging-gateway/src/__tests__/registry-allow-pending.test.ts",
+        "sha256": "d30b0b87e448a6e872af0311a9cbabc3199b87c256b0982126e2ade6beade216"
+      },
+      {
+        "path": "packages/messaging-gateway/src/__tests__/registry-config-preservation.test.ts",
+        "sha256": "4ea07a97dcb3e08a6ea1b235e10361859517d0bb117926e18ec63cd8e0ab5059"
+      },
+      {
+        "path": "packages/messaging-gateway/src/__tests__/registry.test.ts",
+        "sha256": "70ba49678d408f62aca7feb5965361768065b1d86b1ce5863b57a93bb85ccd12"
+      },
+      {
+        "path": "packages/messaging-gateway/src/__tests__/router.test.ts",
+        "sha256": "841c8ff63a0793e836e16b9feaa2f3af33673d0ac2bd91be1c07b62f05a55e2d"
+      },
+      {
+        "path": "packages/server-core/README.md",
+        "sha256": "e0aba51f1530875fce561d0c801be9be390ff9c0c531eb66e4177ccbd2737a88"
+      },
+      {
+        "path": "packages/server-core/src/domain/session-branch-cleanup.ts",
+        "sha256": "977235efabe23deee1cc2941f7cd71f71f984600efaefde46bd1cf3b563faea9"
+      },
+      {
+        "path": "packages/server-core/src/sessions/SessionManager.ts",
+        "sha256": "0042b5d80ea390886a0ec47fb4df8c4625fccf5766ee70d5c112924c43e69acb"
+      },
+      {
+        "path": "packages/server-core/src/sessions/adopt-task-draft.test.ts",
+        "sha256": "92e42d2a74fe342dd8a1ca93dcb17f0c8e8e25ee2a315cc6010865a1b97c4195"
+      },
+      {
+        "path": "packages/server-core/src/transport/client.ts",
+        "sha256": "6481eddf38f2b63669006846656031d5a2ed5f211399b92aa3305819114e370e"
+      },
+      {
+        "path": "packages/shared/CLAUDE.md",
+        "sha256": "4f23330957106c37bb89b6b66094ac6559ff3052083e0bf6a6237a9499ec9f1c"
+      },
+      {
+        "path": "packages/shared/eslint.config.mjs",
+        "sha256": "bbccc7bfddd09c9e7a0ffc530ade0beb3bd03a27668c251d66689dc0ffb4944a"
+      },
+      {
+        "path": "packages/shared/src/agent/__tests__/mode-manager-bash-hints.test.ts",
+        "sha256": "7aee83864a266137c0620113f75b8a1031f1248efef7430c88e96858aa0f8ecd"
+      },
+      {
+        "path": "packages/shared/src/agent/__tests__/pi-extended-prompt-cache.test.ts",
+        "sha256": "25f7b46121f13cd741c1ba00bf5d05daf929efa0c59d2538db42b775426707aa"
+      },
+      {
+        "path": "packages/shared/src/credentials/backends/secure-storage.ts",
+        "sha256": "31bae83bc180e3d06fd4c5cb092413d40bb8f962b8f7709b1ca163154047d94f"
+      },
+      {
+        "path": "packages/shared/src/credentials/manager.ts",
+        "sha256": "1accd1af2ee881bcae2c0adccaf21cd55f845eabf5948d99939e1c7845aec3e4"
+      },
+      {
+        "path": "packages/shared/src/plugins/audit.ts",
+        "sha256": "c7d7a4157b53b8af6eac347745ce6570928fc839814daf11efd89005d614c935"
+      },
+      {
+        "path": "packages/shared/src/plugins/install.ts",
+        "sha256": "ada33ec9e2ba825e9eba9baa591c9edcf506ea4302d0bee4e398a492943bdcef"
+      },
+      {
+        "path": "packages/shared/src/sources/credential-manager.ts",
+        "sha256": "7181c21232cc21a98f8d3ebd64db659b96723bc601fd626f242dc8e8b616408e"
+      },
+      {
+        "path": "packages/shared/src/sources/storage.ts",
+        "sha256": "62a670f14881be1937bd290f8e92dea85759f3340b486d575a76e07b681f0fe3"
+      },
+      {
+        "path": "packages/ui/eslint.config.mjs",
+        "sha256": "6a2d34c9ed6cf4c27e6b6104ea10bd722ad7de352cd66966c4666ff865520177"
+      },
+      {
+        "path": "scripts/benchmark-streaming.ts",
+        "sha256": "907cd11ed94de24dc2e37aeb0bfc56e96f97d6462da2ed77f4c5f1697d156876"
+      },
+      {
+        "path": "scripts/build-smoke.ts",
+        "sha256": "0cc956fe775fffb681ec7eb1cf09fd27d3fc6d7c774f0491c6391ee2b2e03455"
+      },
+      {
+        "path": "scripts/check-environment.ts",
+        "sha256": "ea8df4458a9dfe9080d965b9dea2150a06b2f53cb9d0693886975646168aa77d"
+      },
+      {
+        "path": "scripts/check-governance.ts",
+        "sha256": "3f6d714a581b5627c87090026abc0c08ac35bbf81085eff7f2d7a6ade012f17d"
+      },
+      {
+        "path": "scripts/critical-scenarios.ts",
+        "sha256": "5fdb769445fe0f81843d3f7bbcad5174f54cadc70823900fbd0d9ce5acf13632"
+      },
+      {
+        "path": "scripts/eslint-common.mjs",
+        "sha256": "7fffe26623240ecbfc9b3e08626af89effc4852f2910b1f54a542753f59d81d8"
+      },
+      {
+        "path": "scripts/identity-core.ts",
+        "sha256": "60381fcb8d72dd217a3fb6ff50aba4390e3c56aedcf5d58ed00619a1f0a667f2"
+      },
+      {
+        "path": "scripts/ipc-inventory.ts",
+        "sha256": "fa269698582ff81c4d66d8008a013403e22cf17c017be041f52e8a8bc71dfc18"
+      },
+      {
+        "path": "scripts/lib/import-graph.ts",
+        "sha256": "17ad87dc545a1e07fc1171632598ae05f05522b9f14cb753ce93b6db9123a3b7"
+      },
+      {
+        "path": "scripts/lint-warning-baseline.json",
+        "sha256": "64614e617a771083252fca22333c2ae9e300570f82339a548afa76812b93099c"
+      },
+      {
+        "path": "scripts/lint-workspace.ts",
+        "sha256": "cdb04d37914fb4e0d030dfbaf4b04132618e229b92b0f446dcd3573e895d4aaa"
+      },
+      {
+        "path": "scripts/quality-coverage.json",
+        "sha256": "5c464eb1a8fe22fee9c99425f805656c0e2712665cd1889c8b6afd402f17392a"
+      },
+      {
+        "path": "scripts/test-critical.ts",
+        "sha256": "34a64bcd7b7a2a9b9bccdda8db500dcf60c27b77f2a805900024501175e9f752"
+      },
+      {
+        "path": "scripts/verification/decision-feature-workflow.ts",
+        "sha256": "c852f81ebc7af48a388a1a2a60b1d290cf7804250d8471c65184ba86f26e4246"
+      },
+      {
+        "path": "scripts/verification/durable-runtime-boundary-baseline.ts",
+        "sha256": "892d9ed1af62b6b030c36e284b4a189230af2309ba40d2cef8d28f345ac6b247"
+      },
+      {
+        "path": "scripts/verification/durable-runtime-boundary-workflow.ts",
+        "sha256": "6fcf13b96757a53a56c80d8b56c1e6c8e9ef534d3b20b392b374b4f0c81e2d02"
+      },
+      {
+        "path": "scripts/verification/durable-runtime-crash-workflow.ts",
+        "sha256": "7b3c2ee4420ced59e8f9d386d5e7dfb2c9e53749a6b51d902da8563bfd8c9fca"
+      },
+      {
+        "path": "scripts/verification/durable-runtime-pi-workflow.ts",
+        "sha256": "152c6d12167de26b76bf6937eec273d28572e546c224a4131607eeda236ba42c"
+      },
+      {
+        "path": "scripts/verification/files-panel-packaged-workflow.ts",
+        "sha256": "59c29079ec06187cfd06a2391a11e7e3c8ef627c9f8a86e5dc8c51043e259c40"
+      },
+      {
+        "path": "scripts/verification/fixtures/default-theme-preview.tsx",
+        "sha256": "a0746f13277663459c0cd8391d9f83dc62c83b2e53036f9a2ed4887792a83ad2"
+      },
+      {
+        "path": "scripts/verification/governance-gates-workflow.ts",
+        "sha256": "66386b6e8c1cd4398ee7c6923a69195c71f8ebeffde1fd8003def0098a4aa8c8"
+      },
+      {
+        "path": "scripts/verification/image-capability-workflows.ts",
+        "sha256": "894f61382bbf8c2046799a81247abe9a9953a0fe33fe28ed609d2d906cce1288"
+      },
+      {
+        "path": "scripts/verification/motion-verification.mjs",
+        "sha256": "25e07736fe4be027a23f470d8db660a3c646349ab14eb984f672856e3c6e51ae"
+      },
+      {
+        "path": "scripts/verification/packaged-refinement-workflow.ts",
+        "sha256": "640f33f6a82bd71bb74237bd1dcd3d9c820c2754b922fdb8808454dc0b744e89"
+      },
+      {
+        "path": "scripts/verification/pi-110-azure-workflow.ts",
+        "sha256": "0e2419fd10221fa6ecf03409e16a720e9930952e3cc253095d20bdde255d27ec"
+      },
+      {
+        "path": "scripts/verification/pi-110-packaged-workflow.ts",
+        "sha256": "e922ce9747983d7e7ad700b2e3695c664520df8c649b9c6d1a34ea51af5f1c24"
+      },
+      {
+        "path": "scripts/verification/plugin-transaction-workflow.ts",
+        "sha256": "2502b18117eb43e4ac25691263eaae846d7b95bda872deb0ea8f4029ef396d10"
+      },
+      {
+        "path": "scripts/verification/runtime-boundary-gate-workflow.ts",
+        "sha256": "7f36cd7f022cf494c53e907dfcfdb3ace990f25c7a7f81ae6ff3be68735b0225"
+      },
+      {
+        "path": "scripts/verification/runtime-refinement-workflow.ts",
+        "sha256": "201d099015620dfd0d9284e9e9b1ca70667255a5db5aabe7d68a3321d4451ba4"
+      },
+      {
+        "path": "scripts/verification/session-branch-workflow.ts",
+        "sha256": "ab159ea4a4e490cf8c8818a24d1186d0f6ffc3958ef163ca23d54759cf136255"
+      },
+      {
+        "path": "scripts/verification/session-decisions-packaged-workflow.ts",
+        "sha256": "5a1c41326a7e9b02d128ca59410ce35ea3cbc9d0dc9fde13b26808c8dd2ea9b8"
+      },
+      {
+        "path": "scripts/verification/upstream-0140-b4b5-ui.tsx",
+        "sha256": "b9efa048e39740aeb0013dfd79740ab8411e657eddcd677526a75e5bcb34e76b"
+      },
+      {
+        "path": "scripts/verification/upstream-0140-ui.tsx",
+        "sha256": "c60441b237375d4d9826b1976d2d35d4853719d82a680bfa8336b40777248401"
+      },
+      {
+        "path": "scripts/verification/upstream-0141-decisions-workflow.ts",
+        "sha256": "a1aa762e9a425b6e6d3eece18c3f4ab69dc9a56e805b57a67add43ee1c7b3842"
+      },
+      {
+        "path": "scripts/verification/upstream-0141-large-results-workflow.ts",
+        "sha256": "d34325825d0e55906db50885abbf72932b541705aad7c25a99b9f01174d832a9"
+      },
+      {
+        "path": "scripts/verification/verification-artifacts.ts",
+        "sha256": "1b1c5a36f8750344a18efc21a3c7622bf21e9a90c76ea2a9714fb95eddde1af7"
+      },
+      {
+        "path": "scripts/verification/verification-output-workflow.ts",
+        "sha256": "e02d27a684f84d82bace781012e25b9d92707d5d48f15013e5e28a03cbfa7a40"
+      },
+      {
+        "path": "tsconfig.tooling.json",
+        "sha256": "f776e1f18ba4c8fbf9ea1cac3d947b3870b4d11769badd6b8009c41b3be5c51c"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "uv": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+    "platform": "darwin",
+    "architecture": "x64",
+    "osRelease": "25.6.0",
+    "executable": "/Users/van/.bun/bin/bun"
+  },
+  "sceneIds": [
+    "tool-t1-failure",
+    "tool-after-t1",
+    "tool-after-effect",
+    "tool-after-t2",
+    "model-t1-failure",
+    "model-after-t1",
+    "model-after-effect",
+    "model-after-t2"
+  ],
+  "passed": 8,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "crash-model-after-effect.db",
+      "sha256": "8f2c42006d1c16e4280776afcf5fbb2502870d627552e7b9b63fa0fb57265590",
+      "bytes": 110592
+    },
+    {
+      "path": "crash-model-after-t1.db",
+      "sha256": "f17a100d5b8260c30d0b2cabf3b5e57555756b0fa14e280f1dde67812f2e2b9d",
+      "bytes": 110592
+    },
+    {
+      "path": "crash-model-after-t2.db",
+      "sha256": "4bee14f295f6740279207f35928a914ba96dd772047fc2b014cf757fec6c1e64",
+      "bytes": 110592
+    },
+    {
+      "path": "crash-model-t1-failure.db",
+      "sha256": "29606ceb363e40b62fe7ac21752d7d5d320f4b369d75711c46800f221135bd35",
+      "bytes": 110592
+    },
+    {
+      "path": "crash-tool-after-effect.db",
+      "sha256": "8dbc85912cdfcb10d17d3c47a517c3091756929b4a1afe60b2dc8a5f23affc2b",
+      "bytes": 110592
+    },
+    {
+      "path": "crash-tool-after-t1.db",
+      "sha256": "b3b78f54ada1f6779a8d78da5d644d2f7eb817e347ee623fb4b93ed8a364699d",
+      "bytes": 110592
+    },
+    {
+      "path": "crash-tool-after-t2.db",
+      "sha256": "ba0cc447b71e37fa997f43e6532e70ab7bf1a8e635089fb92cf7167335720369",
+      "bytes": 110592
+    },
+    {
+      "path": "crash-tool-t1-failure.db",
+      "sha256": "322831ba19461388dc16f477f04093567c1784e54086fc1ff26aee8cd53b7a88",
+      "bytes": 110592
+    },
+    {
+      "path": "crash.json",
+      "sha256": "889f20ce9b19152532ab393db994526c232812c38ebfa7ebdb982d140cd2552a",
+      "bytes": 83465
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

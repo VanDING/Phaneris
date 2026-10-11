@@ -2,4 +2,4 @@ export {
   serializeEnvelope,
   deserializeEnvelope,
   validateEnvelopeShape,
-} from '@phaneris/server-core/transport'
+} from '@phaneris/server-core/transport/codec'

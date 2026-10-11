@@ -2,7 +2,7 @@ import type { StreamFn } from '@earendil-works/pi-agent-core';
 import type { AssistantMessage, CacheRetention } from '@earendil-works/pi-ai';
 import { createAssistantMessageEventStream } from '@earendil-works/pi-ai';
 import { observeNativeRequest } from './native-request-observation.ts';
-import type { NativeRequestObservation } from '../../shared/src/durable-runtime/types.ts';
+import type { NativeRequestObservation } from '@phaneris/shared/durable-runtime/types';
 
 /** Wrap the session's actual stream, preserving SDK authentication and retry options. */
 export function wrapDurableModelStream(

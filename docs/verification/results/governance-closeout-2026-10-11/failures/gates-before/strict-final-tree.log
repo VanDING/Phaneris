@@ -1,0 +1,24 @@
+identity: Phaneris (io.github.vanding.phaneris, phaneris://)
+
+drift check
+  OK — generated identity artifacts and packaging config are in sync
+
+residual upstream identifiers
+  390 unallowlisted hit(s) across 6 file(s); 833 allowlisted
+    package-scope                6  internal npm scope for workspace packages
+    kebab-slug                 178  kebab-case slug: data directory, package name, file and identifier names
+    display-name                33  user-visible product name
+    display-name-singular        2  user-visible product name, singular form
+    scheme-or-domain            43  deep-link scheme and the upstream hosted domain
+    env-prefix                  28  environment variable prefix
+    code-identifier             61  PascalCase/camelCase code identifiers
+    upstream-owner              39  upstream app id namespace, copyright holder and site
+  worst files:
+      382  docs/verification/results/governance-completion-2026-10-11/analysis/identity-decisions.json
+        4  docs/verification/results/governance-completion-2026-10-11/selection-manifest.json
+        1  docs/verification/results/governance-completion-2026-10-11/failures/offline-draft-native-settings/manifest.json
+        1  docs/verification/results/governance-completion-2026-10-11/failures/plan-handoff/manifest.json
+        1  docs/verification/results/governance-completion-2026-10-11/critical/client-platform/manifest.json
+        1  docs/verification/results/governance-completion-2026-10-11/critical/manifest.json
+
+identity check failed (--strict): 390 unallowlisted upstream identifier(s) remain

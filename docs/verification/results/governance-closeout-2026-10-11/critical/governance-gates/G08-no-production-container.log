@@ -1,0 +1,19 @@
+
+19 | assert(workflow.on && Object.hasOwn(workflow.on, 'push') && Object.hasOwn(workflow.on, 'workflow_dispatch'), 'Push and manual validation triggers are required')
+20 | const push = workflow.on.push as { branches?: string[] }
+21 | assert(push.branches?.includes('main'), 'origin/main pushes must validate')
+22 | for (const name of ['validate', 'quality-windows', 'full-validation', 'production-container', 'native-macos']) {
+23 |   const job = workflow.jobs[name]
+24 |   assert(job, `Missing validation job: ${name}`)
+       ^
+AssertionError: Missing validation job: production-container
+ generatedMessage: false,
+     actual: undefined,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:24:3
+
+Bun v1.4.2 (macOS x64)

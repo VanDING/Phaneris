@@ -1,3 +1,4 @@
+import { commonRules } from '../../scripts/eslint-common.mjs'
 /**
  * ESLint Configuration for UI Package
  *
@@ -47,6 +48,7 @@ export default [
       },
     },
     rules: {
+      ...commonRules,
       // Prevent direct Radix dropdown imports — use StyledDropdown wrappers instead
       'no-restricted-imports': ['error', {
         paths: [

@@ -1,0 +1,9 @@
+error: socket hang up
+ code: "ECONNRESET"
+
+      at socketOnEndInner (node:_http_client:322:74)
+      at emit (node:events:118:23)
+      at endReadableNT (internal:streams/readable:901:50)
+      at processTicksAndRejections (native:7:39)
+
+Bun v1.4.2 (macOS x64)

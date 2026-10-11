@@ -1,3 +1,4 @@
+import type { RpcResult, RpcMethodResults } from '@phaneris/shared/protocol';
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import type { HandlerFn, RpcServer } from '@phaneris/server-core/transport'
@@ -29,7 +30,7 @@ mock.module('@phaneris/shared/auth', () => ({
   prepareMcpOAuth() { throw new Error('not used') },
 }))
 
-mock.module('@phaneris/shared/config', () => ({
+mock.module('@phaneris/shared/config/appearance', () => ({
   isSetupDeferred: () => deferred,
   setSetupDeferred: (value: boolean) => { deferred = value },
 
@@ -63,10 +64,10 @@ function createHarness() {
 
   return import('./onboarding').then(({ registerOnboardingHandlers }) => {
     registerOnboardingHandlers(server, deps)
-    return (channel: string) => {
+    return <Channel extends keyof RpcMethodResults>(channel: Channel) => {
       const handler = handlers.get(channel)
       if (!handler) throw new Error(`Handler not registered: ${channel}`)
-      return handler
+      return handler as HandlerFn<RpcResult<Channel>>
     }
   })
 }

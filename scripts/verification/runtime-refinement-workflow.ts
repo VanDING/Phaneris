@@ -12,7 +12,7 @@ const resources = process.platform === 'darwin' ? join(app, 'Contents/Resources/
 if (!existsSync(executable)) throw new Error(`Packaged app executable missing: ${executable}`)
 const probe = join(fixture, 'probe.cjs')
 await build({ entryPoints: [join(root, 'scripts/verification/runtime-refinement-probe.ts')], outfile: probe, bundle: true, platform: 'node', format: 'cjs', target: 'node24' })
-const env = { ...process.env, ELECTRON_RUN_AS_NODE: '1', PHANERIS_IS_PACKAGED: '1', PHANERIS_RESOURCES_BASE: resources,
+const env: NodeJS.ProcessEnv = { ...process.env, ELECTRON_RUN_AS_NODE: '1', PHANERIS_IS_PACKAGED: '1', PHANERIS_RESOURCES_BASE: resources,
   PHANERIS_ELECTRON_EXECUTABLE: executable, PHANERIS_CONFIG_DIR: join(fixture, 'config'), PHANERIS_SCRIPT_RUNTIME_DIR: join(fixture, 'runtimes'),
   PHANERIS_VERIFICATION_FIXTURE: fixture, OPENAI_API_KEY: 'verification-secret-must-be-stripped' }
 delete env.PHANERIS_UV; delete env.PHANERIS_NODE; delete env.PHANERIS_BUN; delete env.UV_OFFLINE

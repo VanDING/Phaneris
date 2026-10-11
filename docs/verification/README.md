@@ -1,6 +1,25 @@
 # 验证脚本与结果
 
-本页汇总日历/Gantt、动效、对话框页脚和打包客户端的验证入口。脚本从任意工作目录启动时都会定位仓库根目录；JSON 结果保存在 `results/`，运行日志保存在被忽略的 `.cache/verification/`。
+本页汇总架构治理与产品验证入口。治理工作流默认生成唯一 `.cache/verification/<run-id>/`，成功/失败均保留 manifest、SHA、日志及数据库；历史 `results/` 只由明确归档操作写入。部分历史产品脚本仍写固定结果，其范围见各行说明。
+
+## 架构与代码治理
+
+当前证据：[审计收口归档](results/governance-closeout-2026-10-11/README.md)，[初次 G3–G8 快照](results/governance-completion-2026-10-11/README.md)。当前裁定：[完整实施台账](../process/governance-completion-2026-10-11.md)；先写的[失败矩阵](governance-completion-failure-matrix.md)；基线与前两轮冻结证据保持原 SHA。
+
+| 命令 | 实际验证 | 结果口径 |
+| --- | --- | --- |
+| `bun run validate:full` | 13 workspace 类型/全库 lint、配置/文档工具、身份/i18n/Runtime/资源与完整既有回归 | workspace 6,285 pass、14 skip；CI 子集 87 次执行另计，Python 文档工具 24 项另计 |
+| `bun run test:critical` | 六组既有关键回归及 21 个生产/故障/门禁工作流 | 243 项既有测试；每个工作流 manifest 要求非零场景、必要产物与 SHA；聚合项数不是测试数 |
+| `bun run test:native-client` | 共同 Pi/worker 构建、真实 Electron main/preload/renderer、与 Web 同场景 loopback provider | 权限前后真实写入、SubmitPlan/继续、取消、草稿/语言/workspace/重连/预览/截图；主进程 fatal/cause/有界退出；SQLite 事实 |
+| `bun run build:smoke` | 五个生产 bundler + 移出源码树的 server/必要资源缺失/离线 boot/RPC/生产 Pi | 14 项聚合检查；独立 Pi 子工作流 6 场景，完整 SHA；不代替签名安装器 |
+| `bun run test:clean-install` | 独立 checkout、空缓存、必要 patch 移除失败、frozen install、共同 runtime 构建 | 4 个真实场景；负例后删除部分安装，正例仍从空缓存/无 node_modules 起步 |
+| `bun run test:container` | Docker 真正 build/run/离线 boot/RPC，清理自己的实例 | Linux CI 接线已实现；本机 Colima VZ 不支持硬件虚拟化，未宣称镜像通过 |
+| `bun run scripts/performance/run.ts --skip-build --output=<unique.json>` | 生产 WebUI + 真实 WS/SessionManager，100/1,000/5,000 条消息、24 个 backend history、60 秒 soak | 同机三次完整采样，原预算不变；离线合成负载，frame proxy/RSS 样本限度保留 |
+| `bun run bundle:report --check` | 当前 staged main、renderer 初始 HTML 引用图、Pi bundle | main 21,500,000 B / renderer 4,800,000 B 硬预算保持；延迟 App 不等于总 JS 同幅减少 |
+
+`check:boundaries`、`check:cycles`、`check:rpc-contracts`、`check:distribution`、严格 `identity:check` 已进入 `lint`/验证链。新根借用、相对/barrel 绕行、第二 config writer、新或变化的值循环、未分类身份和分发输入缺失均失败。归档保留原 manifest 和选取/排除映射，不公开临时 credential store、浏览器 profile、node_modules 或个人虚拟机配置。
+
+## 产品验证入口
 
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |

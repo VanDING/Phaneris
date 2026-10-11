@@ -1,0 +1,51 @@
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-still-thistle",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation failed: sdk-fork requires parent SDK session ID {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-still-thistle",
+  sourceProvider: "pi",
+  targetProvider: "pi",
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-ready-heron",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-ready-heron",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261011-light-chrome
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "branch-fixture",
+  sessionId: "261011-light-chrome",
+  branchFromSessionId: "261011-ready-heron",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "fixture preflight failed",
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-ready-heron",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-ready-heron",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261011-young-cypress
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Deleted session 261011-young-cypress
+{"passed":4,"output":"/Users/van/projects/Phaneris/.cache/verification/critical-A21q9O/session-branch/session-branch.json"}

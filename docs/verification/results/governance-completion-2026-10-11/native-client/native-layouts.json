@@ -1,0 +1,21 @@
+{
+  "originalMinimum": [
+    800,
+    600
+  ],
+  "fixtureMinimumOverride": true,
+  "layouts": [
+    {
+      "viewportWidth": 1280,
+      "viewportHeight": 900,
+      "contentWidth": 1280,
+      "devicePixelRatio": 2
+    },
+    {
+      "viewportWidth": 420,
+      "viewportHeight": 900,
+      "contentWidth": 420,
+      "devicePixelRatio": 2
+    }
+  ]
+}

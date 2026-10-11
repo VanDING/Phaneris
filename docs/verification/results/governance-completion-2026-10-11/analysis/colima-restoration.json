@@ -1,0 +1,9 @@
+{
+  "original": "/Users/van/.colima/default/colima.yaml",
+  "backup": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-colima-config-5hket7pn/colima.yaml",
+  "originalStatus": "Stopped",
+  "restoredSha256": "379026ec4a5c026982e1fb19085eb8a1b085431d67c815c1b85d29b1eb518531",
+  "statusExitCode": 1,
+  "statusOutput": "time=\"2026-10-11T19:03:09+08:00\" level=fatal msg=\"colima is not running\"\n",
+  "unchanged": true
+}

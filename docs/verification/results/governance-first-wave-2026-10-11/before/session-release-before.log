@@ -1,0 +1,52 @@
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-alert-horizon",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation failed: sdk-fork requires parent SDK session ID {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-alert-horizon",
+  sourceProvider: "pi",
+  targetProvider: "pi",
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-warm-delta",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-warm-delta",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261011-sleek-moss
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "branch-fixture",
+  sessionId: "261011-sleek-moss",
+  branchFromSessionId: "261011-warm-delta",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "fixture preflight failed",
+}
+60 |     assert.equal(parentHash(), before)
+61 |     checks.push({ id: 'missing-parent-sdk', passed: true, childId, disposed })
+62 |     await assert.rejects(manager.createSession(workspace.id, { name: 'Failed branch', branchFromSessionId: parent.id, branchFromMessageId: 'm1' }), /fixture preflight failed/)
+63 |     assert(disposed && poolStopped && mcpDisconnected, 'Branch failure must release Host driver and both pool endpoints')
+64 |     assert.equal(childView?.driver, null)
+65 |     assert(childView && childView.generation > 0, 'Failure rollback must release the Host session, not just drop its driver')
+         ^
+AssertionError: Failure rollback must release the Host session, not just drop its driver
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/session-branch-workflow.ts:65:5
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+
+Bun v1.4.2 (macOS x64)

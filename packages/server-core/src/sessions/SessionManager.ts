@@ -1,4 +1,9 @@
-import { getContextPolicy } from '@phaneris/shared/config/storage'
+import { getContextPolicy } from '@phaneris/shared/config/appearance';
+import { assembleSessionAgent } from './agent-assembly'
+import { buildAgentSessionSnapshot } from './agent-product-context'
+import { createSessionAgentCallbacks } from './agent-product-callbacks'
+import { prepareSessionSourceResources, type SessionSourceResources } from './source-resources'
+import { SessionProductRepository } from './product-repository'
 import { isContextPolicy, validateHandoffDocument, buildHandoffSeed, HANDOFF_INSTRUCTION, CONTEXT_HANDOFF_ACTIVE_PHASES, type ContextPolicy, type ContextHandoffState } from '@phaneris/shared/agent/context-policy'
 import { estimateTranscriptBytes } from '@phaneris/core/utils'
 import type { EventSink, RpcServer } from '@phaneris/server-core/transport'
@@ -21,14 +26,14 @@ import {
   resolveSessionConnection,
   createBackendFromConnection,
   resolveBackendContext,
-  createBackendFromResolvedContext,
   cleanupSourceRuntimeArtifacts,
   providerTypeToAgentProvider,
   type BackendHostRuntimeContext,
   type PostInitResult,
 } from '@phaneris/shared/agent/backend'
-import { getLlmConnection, getLlmConnections, getDefaultLlmConnection, getDefaultThinkingLevel, resolveMidStreamBehavior, getPersistedUiLanguage, resolveTitleLanguageName } from '@phaneris/shared/config'
-import type { MidStreamBehavior } from '@phaneris/shared/config'
+import { getLlmConnection, getLlmConnections, getDefaultLlmConnection, getDefaultThinkingLevel } from '@phaneris/shared/config/connections';
+import { resolveMidStreamBehavior, getPersistedUiLanguage, resolveTitleLanguageName } from '@phaneris/shared/config';
+import type { MidStreamBehavior } from '@phaneris/shared/config';
 import { PrivilegedExecutionBroker } from '@phaneris/server-core/services'
 import { planRangeError } from '@phaneris/shared/work-items'
 import { isValidWorkingDirectory } from '../utils/path-validation'
@@ -45,26 +50,16 @@ import { createTaskNodeReconciliationAdapter } from '../tasks/runtime-reconcilia
 import { reportLegacyProjectionParity } from '../runtime-adapters/projection-audit'
 import { projectCanonicalSessionMessages, projectDurableUsage } from '../runtime-adapters/session-projection'
 import { i18n } from '@phaneris/shared/i18n'
-import {
-  getWorkspaces,
-  getWorkspaceByNameOrId,
-  loadConfigDefaults,
-  loadPreferences,
-  migrateLegacyCredentials,
-  migrateLegacyLlmConnectionsConfig,
-  migrateRemoteServerTokens,
-  migrateOrphanedDefaultConnections,
-  initializeThemeStorage,
-  MODEL_REGISTRY,
-  type Workspace,
-  type WorkspaceInfo,
-} from '@phaneris/shared/config'
+import { getWorkspaces, getWorkspaceByNameOrId, migrateRemoteServerTokens } from '@phaneris/shared/config/workspace-selection';
+import { loadConfigDefaults } from '@phaneris/shared/config/defaults';
+import { loadPreferences, MODEL_REGISTRY, type Workspace, type WorkspaceInfo } from '@phaneris/shared/config';
+import { migrateLegacyCredentials, migrateLegacyLlmConnectionsConfig, migrateOrphanedDefaultConnections } from '@phaneris/shared/config/migrations';
+import { initializeThemeStorage } from '@phaneris/shared/config/appearance';
 import type { ActiveSessionInfo, ContextUsageSnapshot, SessionProcessingStatus } from '@phaneris/core/types'
 import { loadWorkspaceConfig } from '@phaneris/shared/workspaces'
 import {
   // Session persistence functions
   listSessions as listStoredSessions,
-  loadSession as loadStoredSession,
   saveSession as saveStoredSession,
   createSession as createStoredSession,
   deleteSession as deleteStoredSession,
@@ -80,7 +75,6 @@ import {
   ensureSessionDir,
   getSessionFilePath,
   generateSessionId,
-  sessionPersistenceQueue,
   getHeaderMetadataSignature,
   writeSessionJsonl,
   serializeSession,
@@ -109,7 +103,7 @@ import {
   type ResolvedArtifact,
 } from '@phaneris/shared/artifacts'
 import { createTaskFromSpec, resolveCreateTaskProjectId } from '../tasks'
-import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config'
+import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config';
 import { buildPagesToolCallbacks } from '../pages/tool-callbacks'
 import { buildDecisionToolCallbacks } from '../decisions/tool-callbacks'
 import { buildServersFromSources as buildServersFromSourcesShared } from '../sources/build-servers'
@@ -119,12 +113,13 @@ import { restoreFiles } from '@phaneris/shared/utils/bundle-files'
 import { getCredentialManager } from '@phaneris/shared/credentials'
 import { CraftMcpClient, McpClientPool, McpPoolServer } from '@phaneris/shared/mcp'
 import { type Session, type SessionEvent, type FileAttachment, type SendMessageOptions, type UnreadSummary, type RemoteSessionTransferPayload, type ImportRemoteSessionTransferResult, RPC_CHANNELS, generateMessageId } from '@phaneris/shared/protocol'
-import { messageToStored, storedToMessage, type AgentEvent, type Message, type StoredAttachment, type ToolDisplayMeta, type TokenUsage, type PiUsage } from '@phaneris/core/types'
+import { storedToMessage, type AgentEvent, type Message, type StoredAttachment, type ToolDisplayMeta, type TokenUsage, type PiUsage } from '@phaneris/core/types'
 import { formatPathsToRelative, formatToolInputPaths, perf, encodeIconToDataUrlAsync, getEmojiIcon, resolveToolIcon, readFileAttachment, selectSpreadMessages, normalizePath } from '@phaneris/shared/utils'
 import { loadAllSkills, loadSkillBySlug, invalidateSkillsCache, type LoadedSkill } from '@phaneris/shared/skills'
 import { loadPluginByName, summarizePluginsForRenderer } from '@phaneris/shared/plugins'
 import { invalidateContextFileCache } from '@phaneris/shared/prompts/system'
-import { getToolIconsDir, getMiniModel } from '@phaneris/shared/config'
+import { getToolIconsDir } from '@phaneris/shared/config/bundled-assets';
+import { getMiniModel } from '@phaneris/shared/config';
 import { getDefaultSummarizationModel } from '@phaneris/shared/config/models'
 import type { SummarizeCallback } from '@phaneris/shared/sources'
 import { type ThinkingLevel, THINKING_LEVEL_IDS, DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
@@ -217,6 +212,7 @@ function buildBackendHostRuntimeContext(): BackendHostRuntimeContext {
     appRootPath: _platform.appRootPath,
     resourcesPath: _platform.resourcesPath,
     isPackaged: _platform.isPackaged,
+    nodeRuntimePath: _platform.nodeRuntimePath,
   }
 }
 
@@ -677,7 +673,7 @@ interface ManagedSession {
   /** Identity of the unfinished assistant text, used for retry discard boundaries. */
   streamingTurnId?: string
   // NOTE: Parent-child tracking state (pendingTools, parentToolStack, toolToParentMap,
-  // pendingTextParent) has been removed. CraftAgent now provides parentToolUseId
+  // pendingTextParent) has been removed. PiAgent now provides parentToolUseId
   // directly on all events using the SDK's authoritative parent_tool_use_id field.
   // See: packages/shared/src/agent/tool-matching.ts
   // Session name (user-defined or AI-generated)
@@ -703,6 +699,7 @@ interface ManagedSession {
   sourceRuntimeAppliedTo?: AgentInstance
   /** HTTP MCP server exposing pool tools to external SDK subprocesses */
   poolServer?: McpPoolServer
+  sourceResources?: SessionSourceResources
   // SDK session ID for conversation continuity
   sdkSessionId?: string
   // Token usage for display
@@ -1180,6 +1177,7 @@ export function canSteerTextPayload(attachments?: FileAttachment[], storedAttach
 
 export class SessionManager implements ISessionManager {
   private sessions: Map<string, ManagedSession> = new Map()
+  private readonly productRepository = new SessionProductRepository()
   private readonly imageRequests = new Map<string, Set<AbortController>>()
   private readonly taskRuntimeFacts: TaskRuntimeFacts
   private readonly execution: DurableRuntime['execution']
@@ -1686,7 +1684,7 @@ export class SessionManager implements ISessionManager {
       sessionLog.info(`External metadata change detected for session ${sessionId}`)
 
       // Prevent stale pending writes from reverting externally-updated metadata.
-      sessionPersistenceQueue.cancel(sessionId)
+      this.productRepository.cancel(sessionId)
       this.persistSession(managed)
       this.syncPrimaryWorkItem(managed, {
         title: managed.name?.trim() || 'Untitled task',
@@ -1812,7 +1810,7 @@ export class SessionManager implements ISessionManager {
         // Self-writes don't need in-memory sync (already up to date), but
         // still need to notify the automation system for event matching.
         const incomingSignature = getHeaderMetadataSignature(header)
-        const lastWrittenSignature = sessionPersistenceQueue.getLastWrittenSignature(sessionId)
+        const lastWrittenSignature = this.productRepository.getLastWrittenSignature(sessionId)
         const isSelfWrite = !!(lastWrittenSignature && incomingSignature === lastWrittenSignature)
 
         // For external writes: sync in-memory state + emit UI events.
@@ -2258,7 +2256,7 @@ export class SessionManager implements ISessionManager {
   // queue recovery has already run here.
   private hydrateMessagesForColdPersist(managed: ManagedSession): void {
     sessionLog.debug(`Cold-load triggered for persistSession on ${managed.id}`)
-    const stored = loadStoredSession(managed.workspace.rootPath, managed.id)
+    const stored = this.productRepository.load(managed.workspace.rootPath, managed.id)
     if (stored) {
       managed.messages = (stored.messages || []).map(storedToMessage)
       this.applyDurableRecoveryStatus(managed)
@@ -2286,26 +2284,26 @@ export class SessionManager implements ISessionManager {
   // Build the StoredSession snapshot and hand it to the persistence queue.
   // Caller must ensure `managed.messagesLoaded` is true.
   private enqueuePersist(managed: ManagedSession): void {
-    sessionPersistenceQueue.enqueueLazy(managed.id, () => ({
+    this.productRepository.enqueue(managed.id, () => ({
       ...pickSessionFields(managed),
+      id: managed.id,
       workspaceRootPath: managed.workspace.rootPath,
-      createdAt: managed.createdAt ?? Date.now(),
-      lastUsedAt: Date.now(),
-      messages: managed.messages.filter(m => m.role !== 'status').map(messageToStored),
-      tokenUsage: managed.tokenUsage ?? DEFAULT_TOKEN_USAGE,
-    } as StoredSession))
+      createdAt: managed.createdAt,
+      messages: managed.messages,
+      tokenUsage: managed.tokenUsage,
+    }))
   }
 
   // Flush a specific session immediately (call on session close/switch).
   // Cold-persist hydration is synchronous, so by the time we reach here the
   // queue already has an entry whenever persistSession was just called.
   async flushSession(sessionId: string): Promise<void> {
-    await sessionPersistenceQueue.flush(sessionId)
+    await this.productRepository.flush(sessionId)
   }
 
   // Flush all pending sessions (call on app quit).
   async flushAllSessions(): Promise<void> {
-    await sessionPersistenceQueue.flushAll()
+    await this.productRepository.flushAll()
   }
 
   // ============================================
@@ -2743,7 +2741,7 @@ export class SessionManager implements ISessionManager {
    * Internal: Load messages from disk storage into the managed session.
    */
   private async loadMessagesFromDisk(managed: ManagedSession): Promise<void> {
-    const storedSession = loadStoredSession(managed.workspace.rootPath, managed.id)
+    const storedSession = this.productRepository.load(managed.workspace.rootPath, managed.id)
     if (storedSession) {
       managed.messages = (storedSession.messages || []).map(storedToMessage)
       this.applyDurableRecoveryStatus(managed)
@@ -3267,10 +3265,10 @@ export class SessionManager implements ISessionManager {
 
         // Flush source session to disk to ensure latest message list is available for branch copy.
         this.persistSession(sourceManaged)
-        await sessionPersistenceQueue.flush(sourceManaged.id)
+        await this.productRepository.flush(sourceManaged.id)
       }
 
-      const sourceSession = loadStoredSession(workspaceRootPath, options.branchFromSessionId)
+      const sourceSession = this.productRepository.load(workspaceRootPath, options.branchFromSessionId)
       if (!sourceSession) {
         sessionLog.warn('Branch validation failed: source session not found on disk', {
           workspaceId,
@@ -3421,7 +3419,7 @@ export class SessionManager implements ISessionManager {
 
     // Branch: copy messages from source session up to and including the branch point
     if (validatedBranch) {
-      const branchedStored = loadStoredSession(workspaceRootPath, storedSession.id)
+      const branchedStored = this.productRepository.load(workspaceRootPath, storedSession.id)
       if (!branchedStored) {
         throw new Error(`Failed to load newly created session ${storedSession.id} for branch copy`)
       }
@@ -3496,6 +3494,8 @@ export class SessionManager implements ISessionManager {
     const isBranch = !!validatedBranch
 
     const managed = createManagedSession(storedSession, workspace, {
+      // Preflight runs before product registration, but the Host already owns its driver.
+      runtime: sessionRuntimeView(this.durableRuntime, storedSession.id),
       permissionMode: defaultPermissionMode,
       workingDirectory: resolvedWorkingDir,
       model: resolvedModel,
@@ -3538,7 +3538,10 @@ export class SessionManager implements ISessionManager {
           })
 
           await rollbackFailedBranchCreation({
-            managed,
+            disposeRuntime: async () => {
+              try { await this.execution.releaseSession(managed.id) }
+              finally { await this.disposeManagedAgentResources(managed, 'failed branch preflight') }
+            },
             workspaceRootPath,
             sessionId: storedSession.id,
             deleteFromRuntimeSessions: (id) => {
@@ -3663,7 +3666,7 @@ export class SessionManager implements ISessionManager {
         this.agentRefreshLocks.set(managed.id, work)
         try {
           await work
-          if (!eligible(managed) || sessionPersistenceQueue.hasPending(managed.id)
+          if (!eligible(managed) || this.productRepository.hasPending(managed.id)
             || now - (managed.lastAccessAt ?? 0) < 2 * 60_000) continue
           managed.messageCount = Math.max(managed.messageCount ?? 0, managed.messages.length)
           managed.lastFinalMessageId = this.getLastFinalAssistantMessageId(managed.messages)
@@ -3689,22 +3692,25 @@ export class SessionManager implements ISessionManager {
     try { await this.execution.disposeDriver(sessionId) }
     catch (error) { sessionLog.warn(`Failed to dispose Runtime driver for ${sessionId} during ${reason}:`, error) }
 
-    if (managed.poolServer) {
-      try {
-        await managed.poolServer.stop()
-      } catch (error) {
-        sessionLog.warn(`Failed to stop pool server for ${sessionId} during ${reason}: ${error instanceof Error ? error.message : error}`)
-      }
-    }
+    await this.disposeManagedAgentResources(managed, reason)
+  }
 
-    if (managed.mcpPool) {
-      try {
-        await managed.mcpPool.disconnectAll()
-      } catch (error) {
-        sessionLog.warn(`Failed to disconnect MCP pool for ${sessionId} during ${reason}: ${error instanceof Error ? error.message : error}`)
-      }
-    }
+  /** Product resources are released separately from Host session admission/driver ownership. */
+  private async disposeManagedAgentResources(managed: ManagedSession, reason: string): Promise<void> {
+    const sessionId = managed.id
 
+    if (managed.sourceResources) {
+      try { await managed.sourceResources.release() }
+      catch (error) { sessionLog.warn(`Failed to release sources for ${sessionId} during ${reason}:`, error) }
+    } else {
+      // Compatibility for resources registered by older host adapters.
+      const results = await Promise.allSettled([
+        Promise.resolve().then(() => managed.poolServer?.stop()),
+        Promise.resolve().then(() => managed.mcpPool?.disconnectAll()),
+      ])
+      for (const result of results) if (result.status === 'rejected') sessionLog.warn(`Failed to release sources for ${sessionId}:`, result.reason)
+    }
+    managed.sourceResources = undefined
     managed.poolServer = undefined
     managed.mcpPool = undefined
     managed.envOverrides = undefined
@@ -4251,17 +4257,16 @@ export class SessionManager implements ISessionManager {
       }
       managed.sourceRuntimeAppliedTo = undefined
 
-      // Create centralized MCP client pool (all backends use it)
-      managed.mcpPool = new McpClientPool({ debug: (msg) => sessionLog.debug(msg), workspaceRootPath: managed.workspace.rootPath, sessionPath })
-
-      // Backends that run as external subprocesses need an HTTP pool server
-      let poolServerUrl: string | undefined
-      if (backendContext.capabilities.needsHttpPoolServer) {
-        managed.poolServer = new McpPoolServer(managed.mcpPool, { debug: (msg) => sessionLog.debug(msg) })
-        managed.mcpPool.onToolsChanged = () => managed.poolServer?.notifyToolsChanged()
-        poolServerUrl = await managed.poolServer.start()
-        await managed.mcpPool.sync(mcpServers) // Ensure pool has tools before SDK connects
-      }
+      // The resource owner prepares the pool before the first SDK tool snapshot.
+      const sourceResources = await prepareSessionSourceResources({
+        workspaceRootPath: managed.workspace.rootPath, sessionPath, servers: mcpServers,
+        needsHttpServer: backendContext.capabilities.needsHttpPoolServer,
+        debug: message => sessionLog.debug(message),
+      })
+      managed.sourceResources = sourceResources
+      managed.mcpPool = sourceResources.pool
+      managed.poolServer = sourceResources.server
+      const poolServerUrl = sourceResources.url
 
       // Per-session env overrides
       const miniModel = connection ? (getMiniModel(connection) ?? connection.defaultModel) : undefined
@@ -4277,14 +4282,15 @@ export class SessionManager implements ISessionManager {
       // Common session + callback config (identical for all backends)
       // ============================================================
 
-      const sessionConfig = {
+      const sessionConfig = buildAgentSessionSnapshot({
         id: managed.id,
         workspaceRootPath: managed.workspace.rootPath,
         sdkSessionId: managed.sdkSessionId,
-        branchFromSdkSessionId: managed.branchContextStrategy === 'sdk-fork' ? managed.branchFromSdkSessionId : undefined,
-        branchFromSessionPath: managed.branchContextStrategy === 'sdk-fork' ? managed.branchFromSessionPath : undefined,
-        branchFromSdkCwd: managed.branchContextStrategy === 'sdk-fork' ? managed.branchFromSdkCwd : undefined,
-        branchFromSdkTurnId: managed.branchContextStrategy === 'sdk-fork' ? managed.branchFromSdkTurnId : undefined,
+        branchContextStrategy: managed.branchContextStrategy,
+        branchFromSdkSessionId: managed.branchFromSdkSessionId,
+        branchFromSessionPath: managed.branchFromSessionPath,
+        branchFromSdkCwd: managed.branchFromSdkCwd,
+        branchFromSdkTurnId: managed.branchFromSdkTurnId,
         branchFromMessageId: managed.branchFromMessageId,
         createdAt: managed.lastMessageAt,
         lastUsedAt: managed.lastMessageAt,
@@ -4298,163 +4304,47 @@ export class SessionManager implements ISessionManager {
         // D12: the single active-plugin slot. Read per turn by the agent, so
         // activating a plugin takes effect on the next message.
         activePlugin: managed.activePlugin,
-      }
+      })
 
-      const onSdkSessionIdUpdate = (sdkSessionId: string) => {
-        managed.sdkSessionId = sdkSessionId
-        // Retire branch-only fork metadata now that child session is established
-        if (managed.branchFromSdkSessionId) {
-          sessionLog.info(`Branch fork established for ${managed.id}: child=${sdkSessionId}, retiring parent fork metadata (parent=${managed.branchFromSdkSessionId})`)
-          managed.branchFromSdkSessionId = undefined
-          managed.branchFromSdkCwd = undefined
-          managed.branchFromSdkTurnId = undefined
-        } else {
-          sessionLog.info(`SDK session ID captured for ${managed.id}: ${sdkSessionId}`)
-        }
-        this.persistSession(managed)
-        void sessionPersistenceQueue.flush(managed.id).catch(error => {
-          sessionLog.error(`Failed to persist session ${managed.id}:`, error)
-        })
-      }
-
-      const onSdkSessionIdCleared = () => {
-        managed.sdkSessionId = undefined
-        sessionLog.info(`SDK session ID cleared for ${managed.id} (resume recovery)`)
-        this.persistSession(managed)
-        void sessionPersistenceQueue.flush(managed.id).catch(error => {
-          sessionLog.error(`Failed to persist session ${managed.id}:`, error)
-        })
-      }
-
-      const onBranchForkInvalidated = () => {
-        managed.sdkSessionId = undefined
-        managed.branchFromSdkSessionId = undefined
-        managed.branchFromSdkCwd = undefined
-        managed.branchFromSdkTurnId = undefined
-        sessionLog.info(`Branch fork invalidated for ${managed.id}: cleared all fork metadata`)
-        this.persistSession(managed)
-        void sessionPersistenceQueue.flush(managed.id).catch(error => {
-          sessionLog.error(`Failed to persist session ${managed.id}:`, error)
-        })
-      }
-
-      const onThinkingLevelStateUpdate = ({ effectiveLevel }: { effectiveLevel: ThinkingLevel }) => {
-        if (managed.thinkingLevel === effectiveLevel) return
-        managed.thinkingLevel = effectiveLevel
-        this.persistSession(managed)
-        this.sendEvent({
-          type: 'session_metadata_changed',
-          sessionId: managed.id,
-          changes: { thinkingLevel: effectiveLevel },
-        }, managed.workspace.id)
-        sessionLog.info(`Session ${managed.id}: Pi clamped thinking level to ${effectiveLevel}`)
-      }
-
-      const getRecoveryMessages = () => {
-        const relevantMessages = managed.messages
-          .filter(m => m.role === 'user' || m.role === 'assistant')
-          .filter(m => !m.isIntermediate)
-          .slice(-6)
-        return relevantMessages.map(m => ({
-          type: m.role as 'user' | 'assistant',
-          content: m.content,
-        }))
-      }
-
-      const getBranchFallbackMessages = () => {
-        if (!managed.branchFromMessageId) return []
-        return managed.messages
-          .filter(m => m.role === 'user' || m.role === 'assistant')
-          .filter(m => !m.isIntermediate)
-          .map(m => ({
-            type: m.role as 'user' | 'assistant',
-            content: m.content,
-          }))
-      }
-
-      const getBranchSeedMessages = () => {
-        if (managed.branchContextStrategy !== 'seeded-fresh-session') return []
-        if (managed.branchSeedApplied) return []
-
-        const seedMessages = managed.messages
-          .filter(m => m.role === 'user' || m.role === 'assistant')
-          .filter(m => !m.isIntermediate)
-
-        return seedMessages.map(m => ({
-          type: m.role as 'user' | 'assistant',
-          content: m.content,
-        }))
-      }
-
-      const markBranchSeedApplied = () => {
-        if (managed.branchContextStrategy !== 'seeded-fresh-session') return
-        if (managed.branchSeedApplied) return
-        managed.branchSeedApplied = true
-        sessionLog.info('Branch seed context applied', {
-          sessionId: managed.id,
-          strategy: managed.branchContextStrategy,
-        })
-      }
-
-      const getTransferredSessionSummary = () => {
-        const summary = managed.transferredSessionSummaryApplied ? null : (managed.transferredSessionSummary ?? null)
-        sessionLog.info(`[transfer-context] getTransferredSessionSummary for ${managed.id}: applied=${managed.transferredSessionSummaryApplied}, has_summary=${!!managed.transferredSessionSummary}, returning=${summary ? `${summary.length} chars` : 'null'}`)
-        return summary
-      }
-
-      const markTransferredSessionSummaryApplied = () => {
-        if (managed.transferredSessionSummaryApplied || !managed.transferredSessionSummary) return
-        managed.transferredSessionSummaryApplied = true
-        this.persistSession(managed)
-        sessionLog.info('Transferred session summary applied', {
-          sessionId: managed.id,
-        })
-      }
+      const productCallbacks = createSessionAgentCallbacks({
+        read: () => ({ id: managed.id, sdkSessionId: managed.sdkSessionId,
+          branchFromSdkSessionId: managed.branchFromSdkSessionId, branchFromSdkCwd: managed.branchFromSdkCwd,
+          branchFromSdkTurnId: managed.branchFromSdkTurnId, branchFromMessageId: managed.branchFromMessageId,
+          branchContextStrategy: managed.branchContextStrategy, branchSeedApplied: managed.branchSeedApplied,
+          transferredSessionSummary: managed.transferredSessionSummary,
+          transferredSessionSummaryApplied: managed.transferredSessionSummaryApplied, thinkingLevel: managed.thinkingLevel,
+          messages: managed.messages.map(({ role, content, isIntermediate }) => ({ role, content, isIntermediate })) }),
+        patch: changes => { Object.assign(managed, changes) },
+        persist: () => this.persistSession(managed),
+        flush: () => this.productRepository.flush(managed.id),
+        thinkingChanged: thinkingLevel => this.sendEvent({ type: 'session_metadata_changed',
+          sessionId: managed.id, changes: { thinkingLevel } }, managed.workspace.id),
+        log: (message, details) => sessionLog.info(message, details),
+        error: (message, error) => sessionLog.error(message, error),
+      })
 
       // ============================================================
       // Construct backend via factory
       // ============================================================
 
-      const backend = createBackendFromResolvedContext({
-        context: backendContext,
-        hostRuntime: buildBackendHostRuntimeContext(),
-        coreConfig: {
-        contextPolicy: managed.contextPolicy ?? getContextPolicy(),
-        workspace: managed.workspace,
-        miniModel,
-        thinkingLevel: managed.thinkingLevel,
-        session: sessionConfig,
-        onSdkSessionIdUpdate,
-        onSdkSessionIdCleared,
-        onBranchForkInvalidated,
-        onThinkingLevelStateUpdate,
-        getRecoveryMessages,
-        getBranchFallbackMessages,
-        getBranchSeedMessages,
-        markBranchSeedApplied,
-        getTransferredSessionSummary,
-        markTransferredSessionSummaryApplied,
-        mcpPool: managed.mcpPool,
-        poolServerUrl,
-        ...bindPiRuntime(this.durableRuntime, { workspaceRootPath: managed.workspace.rootPath, sessionId: managed.id }, {
-          compatibilityMessages: () => managed.messages,
-          auxiliarySettled: () => {
-            this.applyDurableUsageProjection(managed)
-            if (this.sessions.get(managed.id) !== managed || this.shuttingDown) return
-            if (managed.tokenUsage) this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
-            this.persistSession(managed)
-          },
-          observerError: error => sessionLog.warn('Runtime auxiliary projection failed', error),
-        }),
-        envOverrides,
-        // Shared backend runtime options
-        isHeadless: !AGENT_FLAGS.defaultModesEnabled,
-        skipConfigWatcher: true, // Server owns workspace-level ConfigWatcher — don't duplicate in agents
-        automationSystem: this.automationSystems.get(managed.workspace.rootPath),
-        systemPromptPreset: managed.systemPromptPreset,
-        debugMode: _platform?.isDebugMode ? { enabled: true, logFilePath: _platform.getLogFilePath?.() } : undefined,
-        // Image resize callback — prevents oversized images from entering conversation history
-        onImageResize: async (filePath: string, maxSizeBytes: number): Promise<string | null> => {
+      const backend = assembleSessionAgent({
+context: backendContext,
+hostRuntime: buildBackendHostRuntimeContext(),
+config: {
+contextPolicy: managed.contextPolicy ?? getContextPolicy(),
+workspace: managed.workspace,
+miniModel,
+thinkingLevel: managed.thinkingLevel,
+session: sessionConfig,
+envOverrides,
+isHeadless: !AGENT_FLAGS.defaultModesEnabled,
+skipConfigWatcher: true,
+systemPromptPreset: managed.systemPromptPreset,
+debugMode: _platform?.isDebugMode ? { enabled: true, logFilePath: _platform.getLogFilePath?.() } : undefined
+},
+callbacks: {
+...productCallbacks,
+onImageResize: async (filePath: string, maxSizeBytes: number): Promise<string | null> => {
           try {
             const buffer = await readFile(filePath)
             const result = await resizeImageForAPI(buffer, { maxSizeBytes })
@@ -4473,25 +4363,40 @@ export class SessionManager implements ISessionManager {
             sessionLog.error('Image resize failed:', err)
             return null
           }
-        },
-        // Source configs for postInit() — backends set up their own bridge/config
-        initialSources: {
+        }
+},
+resources: {
+mcpPool: managed.mcpPool,
+poolServerUrl,
+...bindPiRuntime(this.durableRuntime, { workspaceRootPath: managed.workspace.rootPath, sessionId: managed.id }, {
+          compatibilityMessages: () => managed.messages,
+          auxiliarySettled: () => {
+            this.applyDurableUsageProjection(managed)
+            if (this.sessions.get(managed.id) !== managed || this.shuttingDown) return
+            if (managed.tokenUsage) this.sendEvent({ type: 'usage_update', sessionId: managed.id, tokenUsage: managed.tokenUsage }, managed.workspace.id)
+            this.persistSession(managed)
+          },
+          observerError: error => sessionLog.warn('Runtime auxiliary projection failed', error),
+        }),
+automationSystem: this.automationSystems.get(managed.workspace.rootPath),
+initialSources: {
           enabledSources,
           mcpServers,
           apiServers,
           enabledSlugs,
-        },
-        },
-      })
-      const poolServer = managed.poolServer, mcpPool = managed.mcpPool
+        }
+}
+})
       this.execution.installDriver(managed.id, new PiRuntimeDriver(backend, async () => {
-        const released = await Promise.allSettled([
-          Promise.resolve().then(() => poolServer?.stop()),
-          Promise.resolve().then(() => mcpPool?.disconnectAll()),
-        ])
-        for (const result of released) if (result.status === 'rejected') sessionLog.warn(`Failed to release Pi resources for ${managed.id}:`, result.reason)
-        if (managed.poolServer === poolServer) managed.poolServer = undefined
-        if (managed.mcpPool === mcpPool) managed.mcpPool = undefined
+        try { await sourceResources.release() }
+        catch (error) { sessionLog.warn(`Failed to release Pi resources for ${managed.id}:`, error) }
+        finally {
+          if (managed.sourceResources === sourceResources) {
+            managed.sourceResources = undefined
+            managed.poolServer = undefined
+            managed.mcpPool = undefined
+          }
+        }
       }))
 
       sessionLog.info(`Created ${provider} agent for session ${managed.id} (model: ${backendContext.resolvedModel})${managed.sdkSessionId ? ' (resuming)' : ''}`)
@@ -4974,7 +4879,7 @@ export class SessionManager implements ISessionManager {
       }
 
       // Note: Credential requests now flow through onAuthRequest (unified auth flow)
-      // The legacy onCredentialRequest callback has been removed from CraftAgent
+      // The legacy onCredentialRequest callback has been removed from PiAgent
       // Auth refresh for mid-session token expiry is handled by the error handler in sendMessage
       // which destroys/recreates the agent to get fresh credentials
 
@@ -6087,7 +5992,7 @@ export class SessionManager implements ISessionManager {
 
     try {
       // Load session directly from disk (already in correct format)
-      const storedSession = loadStoredSession(managed.workspace.rootPath, sessionId)
+      const storedSession = this.productRepository.load(managed.workspace.rootPath, sessionId)
       if (!storedSession) {
         return { success: false, error: 'Session file not found' }
       }
@@ -6159,7 +6064,7 @@ export class SessionManager implements ISessionManager {
 
     try {
       // Load session directly from disk (already in correct format)
-      const storedSession = loadStoredSession(managed.workspace.rootPath, sessionId)
+      const storedSession = this.productRepository.load(managed.workspace.rootPath, sessionId)
       if (!storedSession) {
         return { success: false, error: 'Session file not found' }
       }
@@ -6949,7 +6854,8 @@ export class SessionManager implements ISessionManager {
     for (const request of this.imageRequests.get(sessionId) ?? []) request.abort()
     managed.preTurnDecisionAbort?.abort()
     this.execution.clearQueue(sessionId)
-    await this.execution.releaseSession(sessionId)
+    try { await this.execution.releaseSession(sessionId) }
+    finally { await this.disposeManagedAgentResources(managed, 'session deletion') }
 
     // Revoke share if session was shared (prevent orphaned viewer copies)
     if (managed.sharedId) {
@@ -6982,7 +6888,7 @@ export class SessionManager implements ISessionManager {
     this.clearPendingAskUserRequestsForSession(sessionId)
 
     // Cancel any pending persistence write (session is being deleted, no need to save)
-    sessionPersistenceQueue.cancel(sessionId)
+    this.productRepository.cancel(sessionId)
 
     // Clean up session-scoped tool callbacks to prevent memory accumulation
     unregisterSessionScopedToolCallbacks(sessionId)
@@ -6995,13 +6901,6 @@ export class SessionManager implements ISessionManager {
     // Drop the per-session remote bridge + host-client pin on destroy.
     this.remoteBpms.delete(sessionId)
     this.browserHostByCanvas.delete(sessionId)
-
-    // Stop pool server (HTTP MCP server for external SDK subprocesses)
-    if (managed.poolServer) {
-      managed.poolServer.stop().catch(err => {
-        sessionLog.warn(`Failed to stop pool server for ${sessionId}: ${err instanceof Error ? err.message : err}`)
-      })
-    }
 
     // Cancel any pending source-activation auto-retry timer (craft-agents-oss#804).
     if (managed.autoRetryTimer) {
@@ -7590,7 +7489,7 @@ export class SessionManager implements ISessionManager {
             sessionLog.info(`Captured SDK session ID via fallback: ${sdkId}`)
             // Also flush here since we're in fallback mode
             this.persistSession(managed)
-            void sessionPersistenceQueue.flush(managed.id).catch(error => {
+            void this.productRepository.flush(managed.id).catch(error => {
               sessionLog.error(`Failed to persist session ${managed.id}:`, error)
             })
           }
@@ -9574,7 +9473,7 @@ export class SessionManager implements ISessionManager {
         const existingStartMsg = managed.messages.find(m => m.toolUseId === event.toolUseId)
         const isDuplicateEvent = !!existingStartMsg
 
-        // Use parentToolUseId directly from the event — CraftAgent resolves this
+        // Use parentToolUseId directly from the event — PiAgent resolves this
         // from SDK's parent_tool_use_id (authoritative, handles parallel Tasks correctly).
         // No stack or map needed; the event carries the correct parent from the start.
         const parentToolUseId = event.parentToolUseId
@@ -9679,7 +9578,7 @@ export class SessionManager implements ISessionManager {
       }
 
       case 'tool_result': {
-        // toolName comes directly from CraftAgent (resolved via ToolIndex)
+        // toolName comes directly from PiAgent (resolved via ToolIndex)
         const toolName = event.toolName || 'unknown'
         if (event.durationMs !== undefined) {
           perf.record('agent.tool.roundTrip', event.durationMs, {
@@ -9711,7 +9610,7 @@ export class SessionManager implements ISessionManager {
 
         sessionLog.info(`RESULT MATCH: toolUseId=${event.toolUseId}, found=${!!existingToolMsg}, toolName=${existingToolMsg?.toolName || toolName}, wasComplete=${wasAlreadyComplete}`)
 
-        // parentToolUseId comes from CraftAgent (SDK-authoritative) or existing message
+        // parentToolUseId comes from PiAgent (SDK-authoritative) or existing message
         const parentToolUseId = existingToolMsg?.parentToolUseId || event.parentToolUseId
 
         if (existingToolMsg) {
@@ -10562,12 +10461,13 @@ export class SessionManager implements ISessionManager {
       ...(miniModel ? { ANTHROPIC_DEFAULT_HAIKU_MODEL: miniModel } : {}),
     }
 
-    const driver = new PiRuntimeDriver(createBackendFromResolvedContext({
-      context: backendContext,
-      hostRuntime: buildBackendHostRuntimeContext(),
-      coreConfig: {
-        workspace: managed.workspace,
-        session: {
+    const driver = new PiRuntimeDriver(assembleSessionAgent({
+context: backendContext,
+hostRuntime: buildBackendHostRuntimeContext(),
+providerOptions: { piAuthProvider: backendContext.connection?.piAuthProvider },
+config: {
+workspace: managed.workspace,
+session: {
           id: `${managed.id}-remote-transfer-summary`,
           workspaceRootPath,
           createdAt: Date.now(),
@@ -10578,13 +10478,17 @@ export class SessionManager implements ISessionManager {
           permissionMode: managed.permissionMode,
           previousPermissionMode: managed.previousPermissionMode,
         },
-        miniModel,
-        envOverrides,
-        isHeadless: true,
-        ...bindPiRuntime(this.durableRuntime, { sessionId: managed.id, workspaceRootPath }),
-      },
-      providerOptions: { piAuthProvider: backendContext.connection?.piAuthProvider },
-    }))
+miniModel,
+envOverrides,
+isHeadless: true
+},
+callbacks: {
+
+},
+resources: {
+...bindPiRuntime(this.durableRuntime, { sessionId: managed.id, workspaceRootPath })
+}
+}))
     const release = this.execution.retainDriver(driver)
     const agent = driver.controls
 
@@ -10613,7 +10517,7 @@ export class SessionManager implements ISessionManager {
     }
 
     this.persistSession(managed)
-    await sessionPersistenceQueue.flush(sessionId)
+    await this.productRepository.flush(sessionId)
 
     const summary = await this.generateRemoteTransferSummary(managed)
     if (!summary) {
@@ -10654,7 +10558,7 @@ export class SessionManager implements ISessionManager {
     managed.transferredSessionSummary = payload.summary.trim()
     managed.transferredSessionSummaryApplied = false
     this.persistSession(managed)
-    await sessionPersistenceQueue.flush(session.id)
+    await this.productRepository.flush(session.id)
 
     return { sessionId: session.id }
   }
@@ -10687,7 +10591,7 @@ export class SessionManager implements ISessionManager {
 
     // Flush pending writes to ensure JSONL is up to date
     this.persistSession(managed)
-    await sessionPersistenceQueue.flush(sessionId)
+    await this.productRepository.flush(sessionId)
 
     const bundle = serializeSession(managed.workspace.rootPath, sessionId)
     if (!bundle) {

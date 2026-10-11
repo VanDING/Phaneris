@@ -2138,6 +2138,7 @@
   "toast.failedToRefreshTitle": "无法刷新标题",
   "toast.failedToReveal": "无法在 {{fileManager}} 中显示",
   "toast.failedToSaveSetting": "无法保存 {{setting}}",
+  "toast.failedToSwitchWorkspace": "切换工作区失败",
   "toast.failedToToggleAutomation": "无法切换自动化",
   "toast.failedToUpdateProject": "更新会话项目失败",
   "toast.installingUpdate": "正在安装更新...",

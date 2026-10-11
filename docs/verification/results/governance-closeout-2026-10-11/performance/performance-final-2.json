@@ -1,0 +1,6402 @@
+{
+  "schemaVersion": 1,
+  "profile": "baseline",
+  "options": {
+    "sizes": [
+      100,
+      1000,
+      5000
+    ],
+    "sessions": 24,
+    "repeats": 5,
+    "deltas": 200,
+    "soakSeconds": 60,
+    "writes": 10
+  },
+  "createdAt": "2026-10-11T15:16:33.334Z",
+  "git": {
+    "revision": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+    "dirty": true
+  },
+  "machine": {
+    "platform": "darwin",
+    "release": "25.6.0",
+    "arch": "x64",
+    "cpu": "AMD Ryzen 5 3600 6-Core Processor              ",
+    "logicalCpus": 12,
+    "totalMemoryBytes": 34359738368,
+    "bun": "1.4.2",
+    "bunExecutableArch": "x64",
+    "node": "v24.16.0"
+  },
+  "builds": {
+    "reused": true,
+    "bundles": [
+      {
+        "path": "apps/webui/dist/index.html",
+        "bytes": 3948,
+        "modifiedAt": "2026-10-11T15:11:31.067Z"
+      },
+      {
+        "path": "packages/pi-agent-server/dist/index.js",
+        "bytes": 22,
+        "modifiedAt": "2026-10-11T15:09:35.364Z"
+      }
+    ]
+  },
+  "version": "0.3.1",
+  "budgets": {
+    "navigationMs": 3000,
+    "coldSessionMs": 3000,
+    "warmSwitchMs": 2000,
+    "inputToTwoFramesMs": 250,
+    "firstStreamMs": 1500,
+    "rendererHeapBytes": 268435456,
+    "backendRssBytes": 1073741824
+  },
+  "scope": "Production Web UI + real WebSocket RPC + SessionManager, synthetic offline workload. No Electron main/native startup or provider inference. Idle eviction uses an advanced clock; soak uses real time. Frame proxy = marker present plus two requestAnimationFrame callbacks, not hardware presentation. RSS is sampled, not peak or retained heap.",
+  "offlineNetworkPolicy": "Fixture HTTP CSP blocks external network in the browser; local production assets have no Playwright request interception.",
+  "serverStartup": {
+    "processToFixtureReadyMs": 752.7027460000002,
+    "bootstrapMs": 69.52402399999994,
+    "initial": {
+      "memory": {
+        "rss": 164077568,
+        "heapTotal": 31890432,
+        "heapUsed": 24395781,
+        "external": 6701333,
+        "arrayBuffers": 306
+      },
+      "cpu": {
+        "user": 1092755,
+        "system": 336443
+      },
+      "loadedSessions": 0,
+      "loadedMessages": 0,
+      "pid": 39545
+    }
+  },
+  "chromium": "153.0.8010.12",
+  "navigationStartup": {
+    "firstNavigationMs": 1114.420235,
+    "secondNavigationMs": 913.5301359999999,
+    "resources": [
+      {
+        "navigation": [
+          {
+            "name": "http://127.0.0.1:53949/?route=allSessions/session/perf-000",
+            "entryType": "navigation",
+            "startTime": 0,
+            "duration": 160.70000000298023,
+            "navigationId": 4193,
+            "initiatorType": "navigation",
+            "deliveryType": "",
+            "nextHopProtocol": "http/1.1",
+            "renderBlockingStatus": "non-blocking",
+            "contentType": "text/html",
+            "contentEncoding": "",
+            "workerStart": 0,
+            "workerRouterEvaluationStart": 0,
+            "workerCacheLookupStart": 0,
+            "workerMatchedSourceType": "",
+            "workerFinalSourceType": "",
+            "redirectStart": 0,
+            "redirectEnd": 0,
+            "fetchStart": 0.29999999701976776,
+            "domainLookupStart": 1.5,
+            "domainLookupEnd": 1.7000000029802322,
+            "connectStart": 1.7000000029802322,
+            "secureConnectionStart": 0,
+            "connectEnd": 1.7999999970197678,
+            "requestStart": 2,
+            "responseStart": 4.100000008940697,
+            "firstInterimResponseStart": 0,
+            "finalResponseHeadersStart": 4.100000008940697,
+            "responseEnd": 4.9000000059604645,
+            "transferSize": 4248,
+            "encodedBodySize": 3948,
+            "decodedBodySize": 3948,
+            "responseStatus": 200,
+            "serverTiming": [],
+            "unloadEventStart": 0,
+            "unloadEventEnd": 0,
+            "domInteractive": 14.700000002980232,
+            "domContentLoadedEventStart": 158.6000000089407,
+            "domContentLoadedEventEnd": 158.6000000089407,
+            "domComplete": 160,
+            "loadEventStart": 160.70000000298023,
+            "loadEventEnd": 160.70000000298023,
+            "type": "navigate",
+            "redirectCount": 0,
+            "activationStart": 0,
+            "criticalCHRestart": 0,
+            "notRestoredReasons": null,
+            "confidence": {
+              "randomizedTriggerRate": 0.4994798,
+              "value": "high"
+            }
+          }
+        ],
+        "resources": [
+          {
+            "path": "/assets/main-Ccv00Nxf.js",
+            "kind": "script",
+            "startTime": 8.5,
+            "duration": 17,
+            "transferSize": 266175,
+            "encodedBodySize": 265875
+          },
+          {
+            "path": "/assets/rolldown-runtime-C0FnF6B9.js",
+            "kind": "other",
+            "startTime": 8.700000002980232,
+            "duration": 13.5,
+            "transferSize": 1591,
+            "encodedBodySize": 1291
+          },
+          {
+            "path": "/assets/react-kHW2V6fO.js",
+            "kind": "other",
+            "startTime": 8.900000005960464,
+            "duration": 14.399999991059303,
+            "transferSize": 8586,
+            "encodedBodySize": 8286
+          },
+          {
+            "path": "/assets/dist-D2WIawe4.js",
+            "kind": "other",
+            "startTime": 8.900000005960464,
+            "duration": 15.599999994039536,
+            "transferSize": 97498,
+            "encodedBodySize": 97198
+          },
+          {
+            "path": "/assets/preload-helper-Dm0RifCr.js",
+            "kind": "other",
+            "startTime": 9.100000008940697,
+            "duration": 13.799999997019768,
+            "transferSize": 1848,
+            "encodedBodySize": 1548
+          },
+          {
+            "path": "/assets/sparkles-DHF6nsjr.js",
+            "kind": "other",
+            "startTime": 9.100000008940697,
+            "duration": 21.69999998807907,
+            "transferSize": 44423,
+            "encodedBodySize": 44123
+          },
+          {
+            "path": "/assets/sessions-DGmIlXfK.js",
+            "kind": "other",
+            "startTime": 9.100000008940697,
+            "duration": 20.69999998807907,
+            "transferSize": 391254,
+            "encodedBodySize": 390954
+          },
+          {
+            "path": "/assets/clsx-DB0hHKMi.js",
+            "kind": "other",
+            "startTime": 9.200000002980232,
+            "duration": 23.400000005960464,
+            "transferSize": 711,
+            "encodedBodySize": 411
+          },
+          {
+            "path": "/assets/useTranslation-RafYWE-u.js",
+            "kind": "other",
+            "startTime": 9.200000002980232,
+            "duration": 23.599999994039536,
+            "transferSize": 6182,
+            "encodedBodySize": 5882
+          },
+          {
+            "path": "/assets/bundle-mjs-BtkjxxEO.js",
+            "kind": "other",
+            "startTime": 9.299999997019768,
+            "duration": 23.600000008940697,
+            "transferSize": 27572,
+            "encodedBodySize": 27272
+          },
+          {
+            "path": "/assets/utils-C2VDmFUD.js",
+            "kind": "other",
+            "startTime": 9.400000005960464,
+            "duration": 25.399999991059303,
+            "transferSize": 615,
+            "encodedBodySize": 315
+          },
+          {
+            "path": "/assets/StyledDropdown-BEwFAQqS.js",
+            "kind": "other",
+            "startTime": 9.400000005960464,
+            "duration": 25.799999997019768,
+            "transferSize": 4741,
+            "encodedBodySize": 4441
+          },
+          {
+            "path": "/assets/CodeBlock-ZSXjOtCC.js",
+            "kind": "other",
+            "startTime": 9.5,
+            "duration": 25.900000005960464,
+            "transferSize": 6339,
+            "encodedBodySize": 6039
+          },
+          {
+            "path": "/assets/plus--Hw9WC_I.js",
+            "kind": "other",
+            "startTime": 9.5,
+            "duration": 29.100000008940697,
+            "transferSize": 624,
+            "encodedBodySize": 324
+          },
+          {
+            "path": "/assets/ItemNavigator-CPh6rAFT.js",
+            "kind": "other",
+            "startTime": 9.5,
+            "duration": 29.400000005960464,
+            "transferSize": 2845,
+            "encodedBodySize": 2545
+          },
+          {
+            "path": "/assets/CopyButton-C9wu8wys.js",
+            "kind": "other",
+            "startTime": 9.700000002980232,
+            "duration": 29.299999997019768,
+            "transferSize": 12749,
+            "encodedBodySize": 12449
+          },
+          {
+            "path": "/assets/dist-BdnVrMIA.js",
+            "kind": "other",
+            "startTime": 9.700000002980232,
+            "duration": 29.599999994039536,
+            "transferSize": 9321,
+            "encodedBodySize": 9021
+          },
+          {
+            "path": "/assets/file-text-CQ3z4_5L.js",
+            "kind": "other",
+            "startTime": 9.700000002980232,
+            "duration": 30.900000005960464,
+            "transferSize": 761,
+            "encodedBodySize": 461
+          },
+          {
+            "path": "/assets/SimpleDropdown-BBza6fgo.js",
+            "kind": "other",
+            "startTime": 9.799999997019768,
+            "duration": 30.900000005960464,
+            "transferSize": 18509,
+            "encodedBodySize": 18209
+          },
+          {
+            "path": "/assets/katex-D5ZBl1ym.js",
+            "kind": "other",
+            "startTime": 9.799999997019768,
+            "duration": 36.900000005960464,
+            "transferSize": 262459,
+            "encodedBodySize": 262159
+          },
+          {
+            "path": "/assets/dist-DMFPrbqJ.js",
+            "kind": "other",
+            "startTime": 9.799999997019768,
+            "duration": 34.900000005960464,
+            "transferSize": 156269,
+            "encodedBodySize": 155969
+          },
+          {
+            "path": "/assets/browser-aYsrqzFa.js",
+            "kind": "other",
+            "startTime": 9.900000005960464,
+            "duration": 33.8999999910593,
+            "transferSize": 6373,
+            "encodedBodySize": 6073
+          },
+          {
+            "path": "/assets/PDFPreviewOverlay-DFh9rPXh.js",
+            "kind": "other",
+            "startTime": 10,
+            "duration": 33.400000005960464,
+            "transferSize": 1601,
+            "encodedBodySize": 1301
+          },
+          {
+            "path": "/assets/i18n-_okMsHr2.js",
+            "kind": "other",
+            "startTime": 10,
+            "duration": 36.29999999701977,
+            "transferSize": 1626,
+            "encodedBodySize": 1326
+          },
+          {
+            "path": "/assets/src-DMWJVdIm.js",
+            "kind": "other",
+            "startTime": 10,
+            "duration": 42.70000000298023,
+            "transferSize": 1247208,
+            "encodedBodySize": 1246908
+          },
+          {
+            "path": "/assets/client-DYWoGJJs.js",
+            "kind": "other",
+            "startTime": 10.100000008940697,
+            "duration": 40.599999994039536,
+            "transferSize": 2639,
+            "encodedBodySize": 2339
+          },
+          {
+            "path": "/assets/dist-kVMGskFy.js",
+            "kind": "other",
+            "startTime": 10.100000008940697,
+            "duration": 40.8999999910593,
+            "transferSize": 33926,
+            "encodedBodySize": 33626
+          },
+          {
+            "path": "/assets/ThemeContext-Cx2Zj3Ao.js",
+            "kind": "other",
+            "startTime": 10.200000002980232,
+            "duration": 40.70000000298023,
+            "transferSize": 17108,
+            "encodedBodySize": 16808
+          },
+          {
+            "path": "/assets/local-storage-B82WpaCT.js",
+            "kind": "other",
+            "startTime": 10.200000002980232,
+            "duration": 40.900000005960464,
+            "transferSize": 2091,
+            "encodedBodySize": 1791
+          },
+          {
+            "path": "/assets/SimpleDropdown-DFBh95Kb.css",
+            "kind": "link",
+            "startTime": 10.299999997019768,
+            "duration": 16.400000005960464,
+            "transferSize": 29749,
+            "encodedBodySize": 29449
+          },
+          {
+            "path": "/assets/src-Cq9RUcCA.css",
+            "kind": "link",
+            "startTime": 10.400000005960464,
+            "duration": 17,
+            "transferSize": 30522,
+            "encodedBodySize": 30222
+          },
+          {
+            "path": "/assets/main-DK9nbD0F.css",
+            "kind": "link",
+            "startTime": 10.400000005960464,
+            "duration": 18.099999994039536,
+            "transferSize": 348344,
+            "encodedBodySize": 348044
+          },
+          {
+            "path": "/api/config",
+            "kind": "fetch",
+            "startTime": 179.20000000298023,
+            "duration": 1.7999999970197678,
+            "transferSize": 332,
+            "encodedBodySize": 32
+          },
+          {
+            "path": "/api/config/workspaces",
+            "kind": "fetch",
+            "startTime": 190,
+            "duration": 2.1000000089406967,
+            "transferSize": 346,
+            "encodedBodySize": 46
+          },
+          {
+            "path": "/assets/App-pGCXPcEw.js",
+            "kind": "script",
+            "startTime": 201.1000000089407,
+            "duration": 21,
+            "transferSize": 737720,
+            "encodedBodySize": 737420
+          },
+          {
+            "path": "/assets/trash-D4dOnWz_.js",
+            "kind": "script",
+            "startTime": 201.29999999701977,
+            "duration": 5.700000002980232,
+            "transferSize": 950,
+            "encodedBodySize": 650
+          },
+          {
+            "path": "/assets/NavigationContext-PB3dLioI.js",
+            "kind": "script",
+            "startTime": 201.40000000596046,
+            "duration": 11.200000002980232,
+            "transferSize": 26143,
+            "encodedBodySize": 25843
+          },
+          {
+            "path": "/assets/docs-Jm-hGY1K.js",
+            "kind": "script",
+            "startTime": 201.5,
+            "duration": 11.900000005960464,
+            "transferSize": 6969,
+            "encodedBodySize": 6669
+          },
+          {
+            "path": "/assets/ChatDisplay-Bpi3gCBx.js",
+            "kind": "script",
+            "startTime": 201.70000000298023,
+            "duration": 16.299999997019768,
+            "transferSize": 360124,
+            "encodedBodySize": 359824
+          },
+          {
+            "path": "/assets/Trans-8DMebg7l.js",
+            "kind": "script",
+            "startTime": 201.79999999701977,
+            "duration": 13.600000008940697,
+            "transferSize": 11088,
+            "encodedBodySize": 10788
+          },
+          {
+            "path": "/assets/model-picker-helpers-CVLxXJqi.js",
+            "kind": "script",
+            "startTime": 201.90000000596046,
+            "duration": 16.5,
+            "transferSize": 81558,
+            "encodedBodySize": 81258
+          },
+          {
+            "path": "/assets/layout-CbFv5Cjl.js",
+            "kind": "script",
+            "startTime": 202,
+            "duration": 19.200000002980232,
+            "transferSize": 6030,
+            "encodedBodySize": 5730
+          },
+          {
+            "path": "/assets/hash-CE1NubKY.js",
+            "kind": "script",
+            "startTime": 202.1000000089407,
+            "duration": 18.799999997019768,
+            "transferSize": 667,
+            "encodedBodySize": 367
+          },
+          {
+            "path": "/assets/dropdown-menu-Cc9Y6pzb.js",
+            "kind": "script",
+            "startTime": 202.20000000298023,
+            "duration": 19.400000005960464,
+            "transferSize": 4560,
+            "encodedBodySize": 4260
+          },
+          {
+            "path": "/assets/ServerDirectoryBrowser-BfHz7qkC.js",
+            "kind": "script",
+            "startTime": 202.20000000298023,
+            "duration": 22.5,
+            "transferSize": 7503,
+            "encodedBodySize": 7203
+          },
+          {
+            "path": "/assets/AppShellContext-CmZnAsGe.js",
+            "kind": "script",
+            "startTime": 202.40000000596046,
+            "duration": 22,
+            "transferSize": 1945,
+            "encodedBodySize": 1645
+          },
+          {
+            "path": "/assets/PanelHeader-6ZJY96r5.js",
+            "kind": "script",
+            "startTime": 202.40000000596046,
+            "duration": 22.700000002980232,
+            "transferSize": 19468,
+            "encodedBodySize": 19168
+          },
+          {
+            "path": "/assets/button-DOVqwzsZ.js",
+            "kind": "script",
+            "startTime": 202.5,
+            "duration": 22.100000008940697,
+            "transferSize": 2928,
+            "encodedBodySize": 2628
+          },
+          {
+            "path": "/assets/dialog-DOnQ1qWG.js",
+            "kind": "script",
+            "startTime": 202.6000000089407,
+            "duration": 22.399999991059303,
+            "transferSize": 2644,
+            "encodedBodySize": 2344
+          },
+          {
+            "path": "/assets/llm-connections-Bd3Mt9TR.js",
+            "kind": "script",
+            "startTime": 202.70000000298023,
+            "duration": 24,
+            "transferSize": 9641,
+            "encodedBodySize": 9341
+          },
+          {
+            "path": "/assets/source-avatar-BvmH6uMV.js",
+            "kind": "script",
+            "startTime": 202.79999999701977,
+            "duration": 26.100000008940697,
+            "transferSize": 7738,
+            "encodedBodySize": 7438
+          },
+          {
+            "path": "/assets/icon-cache-Cer2XIdv.js",
+            "kind": "script",
+            "startTime": 202.90000000596046,
+            "duration": 26.200000002980232,
+            "transferSize": 7845,
+            "encodedBodySize": 7545
+          },
+          {
+            "path": "/assets/provider-icons-1pGh3FwK.js",
+            "kind": "script",
+            "startTime": 203,
+            "duration": 26.200000002980232,
+            "transferSize": 44646,
+            "encodedBodySize": 44346
+          },
+          {
+            "path": "/assets/platform-DtquDxPg.js",
+            "kind": "script",
+            "startTime": 203.1000000089407,
+            "duration": 25.399999991059303,
+            "transferSize": 898,
+            "encodedBodySize": 598
+          },
+          {
+            "path": "/assets/getTimezoneOffsetInMilliseconds-0FiB7mCn.js",
+            "kind": "script",
+            "startTime": 203.20000000298023,
+            "duration": 25.5,
+            "transferSize": 620,
+            "encodedBodySize": 320
+          },
+          {
+            "path": "/assets/textarea-lC1ch2zh.js",
+            "kind": "script",
+            "startTime": 203.29999999701977,
+            "duration": 26.900000005960464,
+            "transferSize": 6131,
+            "encodedBodySize": 5831
+          },
+          {
+            "path": "/assets/select-DUWmynlW.js",
+            "kind": "script",
+            "startTime": 203.40000000596046,
+            "duration": 29.599999994039536,
+            "transferSize": 22837,
+            "encodedBodySize": 22537
+          },
+          {
+            "path": "/assets/ConnectionIcon-DNqV-tJi.js",
+            "kind": "script",
+            "startTime": 203.40000000596046,
+            "duration": 30.200000002980232,
+            "transferSize": 7558,
+            "encodedBodySize": 7258
+          },
+          {
+            "path": "/assets/lock-DT2o4OXG.js",
+            "kind": "script",
+            "startTime": 203.5,
+            "duration": 29.700000002980232,
+            "transferSize": 577,
+            "encodedBodySize": 277
+          },
+          {
+            "path": "/assets/shield-alert-QafnpYt-.js",
+            "kind": "script",
+            "startTime": 203.70000000298023,
+            "duration": 29.599999994039536,
+            "transferSize": 732,
+            "encodedBodySize": 432
+          },
+          {
+            "path": "/assets/permission-modes-kUi6KV1_.js",
+            "kind": "script",
+            "startTime": 203.70000000298023,
+            "duration": 29.799999997019768,
+            "transferSize": 801,
+            "encodedBodySize": 501
+          },
+          {
+            "path": "/assets/keybinding-context-BINK_-4j.js",
+            "kind": "script",
+            "startTime": 203.79999999701977,
+            "duration": 29.700000002980232,
+            "transferSize": 2319,
+            "encodedBodySize": 2019
+          },
+          {
+            "path": "/assets/styled-context-menu-BUkOqJmk.js",
+            "kind": "script",
+            "startTime": 203.79999999701977,
+            "duration": 33.5,
+            "transferSize": 6031,
+            "encodedBodySize": 5731
+          },
+          {
+            "path": "/assets/useAvailablePermissionModes-7yrQT3to.js",
+            "kind": "script",
+            "startTime": 204,
+            "duration": 32.900000005960464,
+            "transferSize": 793,
+            "encodedBodySize": 493
+          },
+          {
+            "path": "/assets/switch-Cl7jRYRy.js",
+            "kind": "script",
+            "startTime": 204.1000000089407,
+            "duration": 33.3999999910593,
+            "transferSize": 4948,
+            "encodedBodySize": 4648
+          },
+          {
+            "path": "/assets/app-window-ByGpLKeW.js",
+            "kind": "script",
+            "startTime": 204.20000000298023,
+            "duration": 32.900000005960464,
+            "transferSize": 635,
+            "encodedBodySize": 335
+          },
+          {
+            "path": "/assets/arrow-left-DxAWkJAS.js",
+            "kind": "script",
+            "startTime": 204.29999999701977,
+            "duration": 32.900000005960464,
+            "transferSize": 542,
+            "encodedBodySize": 242
+          },
+          {
+            "path": "/assets/SendResourceToWorkspaceDialog-D3FftYB4.js",
+            "kind": "script",
+            "startTime": 204.40000000596046,
+            "duration": 33.20000000298023,
+            "transferSize": 5729,
+            "encodedBodySize": 5429
+          },
+          {
+            "path": "/assets/monitor-_WdgCWvy.js",
+            "kind": "script",
+            "startTime": 204.6000000089407,
+            "duration": 35.8999999910593,
+            "transferSize": 633,
+            "encodedBodySize": 333
+          },
+          {
+            "path": "/assets/useWorkspaceIcon-CXMzEY6H.js",
+            "kind": "script",
+            "startTime": 204.70000000298023,
+            "duration": 35.900000005960464,
+            "transferSize": 2942,
+            "encodedBodySize": 2642
+          },
+          {
+            "path": "/assets/play-W-V1IZ0a.js",
+            "kind": "script",
+            "startTime": 204.79999999701977,
+            "duration": 36.1000000089407,
+            "transferSize": 787,
+            "encodedBodySize": 487
+          },
+          {
+            "path": "/assets/projects-BNGiWWr0.js",
+            "kind": "script",
+            "startTime": 204.79999999701977,
+            "duration": 36.400000005960464,
+            "transferSize": 2271,
+            "encodedBodySize": 1971
+          },
+          {
+            "path": "/assets/useStatuses-BF_VzU21.js",
+            "kind": "script",
+            "startTime": 204.90000000596046,
+            "duration": 36.79999999701977,
+            "transferSize": 50635,
+            "encodedBodySize": 50335
+          },
+          {
+            "path": "/assets/AutomationAvatar-DFuYf6WU.js",
+            "kind": "script",
+            "startTime": 205,
+            "duration": 37,
+            "transferSize": 38091,
+            "encodedBodySize": 37791
+          },
+          {
+            "path": "/assets/power-off-DB40Kvby.js",
+            "kind": "script",
+            "startTime": 205.1000000089407,
+            "duration": 40.29999999701977,
+            "transferSize": 655,
+            "encodedBodySize": 355
+          },
+          {
+            "path": "/assets/menu-context-D_8syrsQ.js",
+            "kind": "script",
+            "startTime": 205.1000000089407,
+            "duration": 40.5,
+            "transferSize": 1218,
+            "encodedBodySize": 918
+          },
+          {
+            "path": "/assets/loader-circle-OgcpOM77.js",
+            "kind": "script",
+            "startTime": 205.20000000298023,
+            "duration": 40.5,
+            "transferSize": 545,
+            "encodedBodySize": 245
+          },
+          {
+            "path": "/assets/useOnboarding-CxiFhXW7.js",
+            "kind": "script",
+            "startTime": 205.29999999701977,
+            "duration": 41.20000000298023,
+            "transferSize": 64064,
+            "encodedBodySize": 63764
+          },
+          {
+            "path": "/assets/entity-list-empty-Gj4KxVFU.js",
+            "kind": "script",
+            "startTime": 205.40000000596046,
+            "duration": 40.79999999701977,
+            "transferSize": 3200,
+            "encodedBodySize": 2900
+          },
+          {
+            "path": "/assets/doc-links-By5nI1Ld.js",
+            "kind": "script",
+            "startTime": 205.40000000596046,
+            "duration": 40.8999999910593,
+            "transferSize": 3837,
+            "encodedBodySize": 3537
+          },
+          {
+            "path": "/assets/settings-2-DDgypbkd.js",
+            "kind": "script",
+            "startTime": 205.6000000089407,
+            "duration": 43.5,
+            "transferSize": 629,
+            "encodedBodySize": 329
+          },
+          {
+            "path": "/assets/WeChatConnectDialog-DBqrtSYj.js",
+            "kind": "script",
+            "startTime": 205.6000000089407,
+            "duration": 44.5,
+            "transferSize": 23471,
+            "encodedBodySize": 23171
+          },
+          {
+            "path": "/assets/actions-B6rZjnKt.js",
+            "kind": "script",
+            "startTime": 205.79999999701977,
+            "duration": 44.400000005960464,
+            "transferSize": 8434,
+            "encodedBodySize": 8134
+          },
+          {
+            "path": "/assets/HeaderIconButton-PBTEJSX4.js",
+            "kind": "script",
+            "startTime": 205.90000000596046,
+            "duration": 43.79999999701977,
+            "transferSize": 1466,
+            "encodedBodySize": 1166
+          },
+          {
+            "path": "/assets/session-BUMBx4j5.js",
+            "kind": "script",
+            "startTime": 205.90000000596046,
+            "duration": 43.8999999910593,
+            "transferSize": 2666,
+            "encodedBodySize": 2366
+          },
+          {
+            "path": "/assets/rename-dialog-DWf5zbY0.js",
+            "kind": "script",
+            "startTime": 206,
+            "duration": 43.79999999701977,
+            "transferSize": 1712,
+            "encodedBodySize": 1412
+          },
+          {
+            "path": "/assets/kanban-C2QsHkp6.js",
+            "kind": "script",
+            "startTime": 206.1000000089407,
+            "duration": 45.69999998807907,
+            "transferSize": 3771,
+            "encodedBodySize": 3471
+          },
+          {
+            "path": "/assets/SourceMenu-DmIRwho3.js",
+            "kind": "script",
+            "startTime": 206.20000000298023,
+            "duration": 47.20000000298023,
+            "transferSize": 1785,
+            "encodedBodySize": 1485
+          },
+          {
+            "path": "/assets/SkillMenu-eHyymrNG.js",
+            "kind": "script",
+            "startTime": 206.20000000298023,
+            "duration": 47.20000000298023,
+            "transferSize": 1867,
+            "encodedBodySize": 1567
+          },
+          {
+            "path": "/assets/plugin-avatar-CxJ3KJZH.js",
+            "kind": "script",
+            "startTime": 206.29999999701977,
+            "duration": 47.30000001192093,
+            "transferSize": 2199,
+            "encodedBodySize": 1899
+          },
+          {
+            "path": "/assets/useProjects-CYvhYsWg.js",
+            "kind": "script",
+            "startTime": 206.29999999701977,
+            "duration": 47.400000005960464,
+            "transferSize": 1213,
+            "encodedBodySize": 913
+          },
+          {
+            "path": "/assets/pages-DrT1r4ww.js",
+            "kind": "script",
+            "startTime": 206.5,
+            "duration": 47.29999999701977,
+            "transferSize": 904,
+            "encodedBodySize": 604
+          },
+          {
+            "path": "/assets/personal-profile-rUk6ND0q.js",
+            "kind": "script",
+            "startTime": 206.6000000089407,
+            "duration": 47.29999999701977,
+            "transferSize": 1767,
+            "encodedBodySize": 1467
+          },
+          {
+            "path": "/assets/useUpdateChecker-BPsaFJ6E.js",
+            "kind": "script",
+            "startTime": 206.70000000298023,
+            "duration": 48.20000000298023,
+            "transferSize": 2589,
+            "encodedBodySize": 2289
+          },
+          {
+            "path": "/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2",
+            "kind": "css",
+            "startTime": 1032.1000000089407,
+            "duration": 26.099999994039536,
+            "transferSize": 40704,
+            "encodedBodySize": 40404
+          }
+        ]
+      },
+      {
+        "navigation": [
+          {
+            "name": "http://127.0.0.1:53949/?route=allSessions/session/perf-000",
+            "entryType": "navigation",
+            "startTime": 0,
+            "duration": 91.20000000298023,
+            "navigationId": 7299,
+            "initiatorType": "navigation",
+            "deliveryType": "",
+            "nextHopProtocol": "http/1.1",
+            "renderBlockingStatus": "non-blocking",
+            "contentType": "text/html",
+            "contentEncoding": "",
+            "workerStart": 0,
+            "workerRouterEvaluationStart": 0,
+            "workerCacheLookupStart": 0,
+            "workerMatchedSourceType": "",
+            "workerFinalSourceType": "",
+            "redirectStart": 0,
+            "redirectEnd": 0,
+            "fetchStart": 0.20000000298023224,
+            "domainLookupStart": 0.20000000298023224,
+            "domainLookupEnd": 0.20000000298023224,
+            "connectStart": 0.20000000298023224,
+            "secureConnectionStart": 0,
+            "connectEnd": 0.20000000298023224,
+            "requestStart": 0.9000000059604645,
+            "responseStart": 1.7000000029802322,
+            "firstInterimResponseStart": 0,
+            "finalResponseHeadersStart": 1.7000000029802322,
+            "responseEnd": 2,
+            "transferSize": 4248,
+            "encodedBodySize": 3948,
+            "decodedBodySize": 3948,
+            "responseStatus": 200,
+            "serverTiming": [],
+            "unloadEventStart": 4.800000011920929,
+            "unloadEventEnd": 4.800000011920929,
+            "domInteractive": 13.900000005960464,
+            "domContentLoadedEventStart": 90.1000000089407,
+            "domContentLoadedEventEnd": 90.1000000089407,
+            "domComplete": 91,
+            "loadEventStart": 91.20000000298023,
+            "loadEventEnd": 91.20000000298023,
+            "type": "navigate",
+            "redirectCount": 0,
+            "activationStart": 0,
+            "criticalCHRestart": 0,
+            "notRestoredReasons": null,
+            "confidence": {
+              "randomizedTriggerRate": 0.4994798,
+              "value": "high"
+            }
+          }
+        ],
+        "resources": [
+          {
+            "path": "/assets/main-Ccv00Nxf.js",
+            "kind": "script",
+            "startTime": 9.200000002980232,
+            "duration": 11.400000005960464,
+            "transferSize": 266175,
+            "encodedBodySize": 265875
+          },
+          {
+            "path": "/assets/rolldown-runtime-C0FnF6B9.js",
+            "kind": "other",
+            "startTime": 9.400000005960464,
+            "duration": 6.9000000059604645,
+            "transferSize": 1591,
+            "encodedBodySize": 1291
+          },
+          {
+            "path": "/assets/preload-helper-Dm0RifCr.js",
+            "kind": "other",
+            "startTime": 9.400000005960464,
+            "duration": 9.599999994039536,
+            "transferSize": 1848,
+            "encodedBodySize": 1548
+          },
+          {
+            "path": "/assets/react-kHW2V6fO.js",
+            "kind": "other",
+            "startTime": 9.400000005960464,
+            "duration": 10,
+            "transferSize": 8586,
+            "encodedBodySize": 8286
+          },
+          {
+            "path": "/assets/dist-D2WIawe4.js",
+            "kind": "other",
+            "startTime": 9.400000005960464,
+            "duration": 10.700000002980232,
+            "transferSize": 97498,
+            "encodedBodySize": 97198
+          },
+          {
+            "path": "/assets/useTranslation-RafYWE-u.js",
+            "kind": "other",
+            "startTime": 9.5,
+            "duration": 13.600000008940697,
+            "transferSize": 6182,
+            "encodedBodySize": 5882
+          },
+          {
+            "path": "/assets/sparkles-DHF6nsjr.js",
+            "kind": "other",
+            "startTime": 9.5,
+            "duration": 12.900000005960464,
+            "transferSize": 44423,
+            "encodedBodySize": 44123
+          },
+          {
+            "path": "/assets/sessions-DGmIlXfK.js",
+            "kind": "other",
+            "startTime": 9.5,
+            "duration": 15.600000008940697,
+            "transferSize": 391254,
+            "encodedBodySize": 390954
+          },
+          {
+            "path": "/assets/clsx-DB0hHKMi.js",
+            "kind": "other",
+            "startTime": 9.600000008940697,
+            "duration": 13.099999994039536,
+            "transferSize": 711,
+            "encodedBodySize": 411
+          },
+          {
+            "path": "/assets/bundle-mjs-BtkjxxEO.js",
+            "kind": "other",
+            "startTime": 9.600000008940697,
+            "duration": 17.799999997019768,
+            "transferSize": 27572,
+            "encodedBodySize": 27272
+          },
+          {
+            "path": "/assets/utils-C2VDmFUD.js",
+            "kind": "other",
+            "startTime": 9.700000002980232,
+            "duration": 17.5,
+            "transferSize": 615,
+            "encodedBodySize": 315
+          },
+          {
+            "path": "/assets/StyledDropdown-BEwFAQqS.js",
+            "kind": "other",
+            "startTime": 9.700000002980232,
+            "duration": 17.900000005960464,
+            "transferSize": 4741,
+            "encodedBodySize": 4441
+          },
+          {
+            "path": "/assets/CodeBlock-ZSXjOtCC.js",
+            "kind": "other",
+            "startTime": 9.700000002980232,
+            "duration": 18.600000008940697,
+            "transferSize": 6339,
+            "encodedBodySize": 6039
+          },
+          {
+            "path": "/assets/plus--Hw9WC_I.js",
+            "kind": "other",
+            "startTime": 9.800000011920929,
+            "duration": 19.099999994039536,
+            "transferSize": 624,
+            "encodedBodySize": 324
+          },
+          {
+            "path": "/assets/ItemNavigator-CPh6rAFT.js",
+            "kind": "other",
+            "startTime": 9.800000011920929,
+            "duration": 19.399999991059303,
+            "transferSize": 2845,
+            "encodedBodySize": 2545
+          },
+          {
+            "path": "/assets/dist-BdnVrMIA.js",
+            "kind": "other",
+            "startTime": 9.800000011920929,
+            "duration": 21.099999994039536,
+            "transferSize": 9321,
+            "encodedBodySize": 9021
+          },
+          {
+            "path": "/assets/file-text-CQ3z4_5L.js",
+            "kind": "other",
+            "startTime": 9.900000005960464,
+            "duration": 20.5,
+            "transferSize": 761,
+            "encodedBodySize": 461
+          },
+          {
+            "path": "/assets/CopyButton-C9wu8wys.js",
+            "kind": "other",
+            "startTime": 9.900000005960464,
+            "duration": 21.5,
+            "transferSize": 12749,
+            "encodedBodySize": 12449
+          },
+          {
+            "path": "/assets/SimpleDropdown-BBza6fgo.js",
+            "kind": "other",
+            "startTime": 10,
+            "duration": 22,
+            "transferSize": 18509,
+            "encodedBodySize": 18209
+          },
+          {
+            "path": "/assets/katex-D5ZBl1ym.js",
+            "kind": "other",
+            "startTime": 10.100000008940697,
+            "duration": 22.700000002980232,
+            "transferSize": 262459,
+            "encodedBodySize": 262159
+          },
+          {
+            "path": "/assets/dist-DMFPrbqJ.js",
+            "kind": "other",
+            "startTime": 10.100000008940697,
+            "duration": 22.399999991059303,
+            "transferSize": 156269,
+            "encodedBodySize": 155969
+          },
+          {
+            "path": "/assets/PDFPreviewOverlay-DFh9rPXh.js",
+            "kind": "other",
+            "startTime": 10.200000002980232,
+            "duration": 26.299999997019768,
+            "transferSize": 1601,
+            "encodedBodySize": 1301
+          },
+          {
+            "path": "/assets/browser-aYsrqzFa.js",
+            "kind": "other",
+            "startTime": 10.200000002980232,
+            "duration": 26.799999997019768,
+            "transferSize": 6373,
+            "encodedBodySize": 6073
+          },
+          {
+            "path": "/assets/i18n-_okMsHr2.js",
+            "kind": "other",
+            "startTime": 10.300000011920929,
+            "duration": 26.399999991059303,
+            "transferSize": 1626,
+            "encodedBodySize": 1326
+          },
+          {
+            "path": "/assets/client-DYWoGJJs.js",
+            "kind": "other",
+            "startTime": 10.300000011920929,
+            "duration": 26.599999994039536,
+            "transferSize": 2639,
+            "encodedBodySize": 2339
+          },
+          {
+            "path": "/assets/dist-kVMGskFy.js",
+            "kind": "other",
+            "startTime": 10.300000011920929,
+            "duration": 26.799999997019768,
+            "transferSize": 33926,
+            "encodedBodySize": 33626
+          },
+          {
+            "path": "/assets/local-storage-B82WpaCT.js",
+            "kind": "other",
+            "startTime": 10.300000011920929,
+            "duration": 29.5,
+            "transferSize": 2091,
+            "encodedBodySize": 1791
+          },
+          {
+            "path": "/assets/src-DMWJVdIm.js",
+            "kind": "other",
+            "startTime": 10.300000011920929,
+            "duration": 30.099999994039536,
+            "transferSize": 1247208,
+            "encodedBodySize": 1246908
+          },
+          {
+            "path": "/assets/ThemeContext-Cx2Zj3Ao.js",
+            "kind": "other",
+            "startTime": 10.400000005960464,
+            "duration": 29.799999997019768,
+            "transferSize": 17108,
+            "encodedBodySize": 16808
+          },
+          {
+            "path": "/assets/src-Cq9RUcCA.css",
+            "kind": "link",
+            "startTime": 10.5,
+            "duration": 13.700000002980232,
+            "transferSize": 30522,
+            "encodedBodySize": 30222
+          },
+          {
+            "path": "/assets/SimpleDropdown-DFBh95Kb.css",
+            "kind": "link",
+            "startTime": 10.5,
+            "duration": 14.5,
+            "transferSize": 29749,
+            "encodedBodySize": 29449
+          },
+          {
+            "path": "/assets/main-DK9nbD0F.css",
+            "kind": "link",
+            "startTime": 10.5,
+            "duration": 16.400000005960464,
+            "transferSize": 348344,
+            "encodedBodySize": 348044
+          },
+          {
+            "path": "/api/config",
+            "kind": "fetch",
+            "startTime": 93,
+            "duration": 1.300000011920929,
+            "transferSize": 332,
+            "encodedBodySize": 32
+          },
+          {
+            "path": "/api/config/workspaces",
+            "kind": "fetch",
+            "startTime": 103.90000000596046,
+            "duration": 1.4000000059604645,
+            "transferSize": 346,
+            "encodedBodySize": 46
+          },
+          {
+            "path": "/assets/App-pGCXPcEw.js",
+            "kind": "script",
+            "startTime": 108.90000000596046,
+            "duration": 17.599999994039536,
+            "transferSize": 737720,
+            "encodedBodySize": 737420
+          },
+          {
+            "path": "/assets/trash-D4dOnWz_.js",
+            "kind": "script",
+            "startTime": 109.1000000089407,
+            "duration": 5,
+            "transferSize": 950,
+            "encodedBodySize": 650
+          },
+          {
+            "path": "/assets/NavigationContext-PB3dLioI.js",
+            "kind": "script",
+            "startTime": 109.20000000298023,
+            "duration": 7.600000008940697,
+            "transferSize": 26143,
+            "encodedBodySize": 25843
+          },
+          {
+            "path": "/assets/docs-Jm-hGY1K.js",
+            "kind": "script",
+            "startTime": 109.5,
+            "duration": 8,
+            "transferSize": 6969,
+            "encodedBodySize": 6669
+          },
+          {
+            "path": "/assets/ChatDisplay-Bpi3gCBx.js",
+            "kind": "script",
+            "startTime": 109.70000000298023,
+            "duration": 15.400000005960464,
+            "transferSize": 360124,
+            "encodedBodySize": 359824
+          },
+          {
+            "path": "/assets/Trans-8DMebg7l.js",
+            "kind": "script",
+            "startTime": 109.90000000596046,
+            "duration": 9.099999994039536,
+            "transferSize": 11088,
+            "encodedBodySize": 10788
+          },
+          {
+            "path": "/assets/model-picker-helpers-CVLxXJqi.js",
+            "kind": "script",
+            "startTime": 109.90000000596046,
+            "duration": 14.700000002980232,
+            "transferSize": 81558,
+            "encodedBodySize": 81258
+          },
+          {
+            "path": "/assets/layout-CbFv5Cjl.js",
+            "kind": "script",
+            "startTime": 110,
+            "duration": 14.800000011920929,
+            "transferSize": 6030,
+            "encodedBodySize": 5730
+          },
+          {
+            "path": "/assets/hash-CE1NubKY.js",
+            "kind": "script",
+            "startTime": 110.1000000089407,
+            "duration": 14.799999997019768,
+            "transferSize": 667,
+            "encodedBodySize": 367
+          },
+          {
+            "path": "/assets/dropdown-menu-Cc9Y6pzb.js",
+            "kind": "script",
+            "startTime": 110.1000000089407,
+            "duration": 15.299999997019768,
+            "transferSize": 4560,
+            "encodedBodySize": 4260
+          },
+          {
+            "path": "/assets/ServerDirectoryBrowser-BfHz7qkC.js",
+            "kind": "script",
+            "startTime": 110.20000000298023,
+            "duration": 19.400000005960464,
+            "transferSize": 7503,
+            "encodedBodySize": 7203
+          },
+          {
+            "path": "/assets/AppShellContext-CmZnAsGe.js",
+            "kind": "script",
+            "startTime": 110.40000000596046,
+            "duration": 18.700000002980232,
+            "transferSize": 1945,
+            "encodedBodySize": 1645
+          },
+          {
+            "path": "/assets/PanelHeader-6ZJY96r5.js",
+            "kind": "script",
+            "startTime": 110.40000000596046,
+            "duration": 19.299999997019768,
+            "transferSize": 19468,
+            "encodedBodySize": 19168
+          },
+          {
+            "path": "/assets/button-DOVqwzsZ.js",
+            "kind": "script",
+            "startTime": 110.5,
+            "duration": 18.700000002980232,
+            "transferSize": 2928,
+            "encodedBodySize": 2628
+          },
+          {
+            "path": "/assets/dialog-DOnQ1qWG.js",
+            "kind": "script",
+            "startTime": 110.6000000089407,
+            "duration": 18.700000002980232,
+            "transferSize": 2644,
+            "encodedBodySize": 2344
+          },
+          {
+            "path": "/assets/llm-connections-Bd3Mt9TR.js",
+            "kind": "script",
+            "startTime": 110.80000001192093,
+            "duration": 19,
+            "transferSize": 9641,
+            "encodedBodySize": 9341
+          },
+          {
+            "path": "/assets/source-avatar-BvmH6uMV.js",
+            "kind": "script",
+            "startTime": 110.80000001192093,
+            "duration": 22.69999998807907,
+            "transferSize": 7738,
+            "encodedBodySize": 7438
+          },
+          {
+            "path": "/assets/icon-cache-Cer2XIdv.js",
+            "kind": "script",
+            "startTime": 111,
+            "duration": 22.700000002980232,
+            "transferSize": 7845,
+            "encodedBodySize": 7545
+          },
+          {
+            "path": "/assets/provider-icons-1pGh3FwK.js",
+            "kind": "script",
+            "startTime": 111.1000000089407,
+            "duration": 22.700000002980232,
+            "transferSize": 44646,
+            "encodedBodySize": 44346
+          },
+          {
+            "path": "/assets/platform-DtquDxPg.js",
+            "kind": "script",
+            "startTime": 111.20000000298023,
+            "duration": 22,
+            "transferSize": 898,
+            "encodedBodySize": 598
+          },
+          {
+            "path": "/assets/getTimezoneOffsetInMilliseconds-0FiB7mCn.js",
+            "kind": "script",
+            "startTime": 111.40000000596046,
+            "duration": 22,
+            "transferSize": 620,
+            "encodedBodySize": 320
+          },
+          {
+            "path": "/assets/textarea-lC1ch2zh.js",
+            "kind": "script",
+            "startTime": 111.6000000089407,
+            "duration": 22.299999997019768,
+            "transferSize": 6131,
+            "encodedBodySize": 5831
+          },
+          {
+            "path": "/assets/select-DUWmynlW.js",
+            "kind": "script",
+            "startTime": 111.6000000089407,
+            "duration": 25.799999997019768,
+            "transferSize": 22837,
+            "encodedBodySize": 22537
+          },
+          {
+            "path": "/assets/ConnectionIcon-DNqV-tJi.js",
+            "kind": "script",
+            "startTime": 111.70000000298023,
+            "duration": 25.900000005960464,
+            "transferSize": 7558,
+            "encodedBodySize": 7258
+          },
+          {
+            "path": "/assets/lock-DT2o4OXG.js",
+            "kind": "script",
+            "startTime": 111.80000001192093,
+            "duration": 25.099999994039536,
+            "transferSize": 577,
+            "encodedBodySize": 277
+          },
+          {
+            "path": "/assets/shield-alert-QafnpYt-.js",
+            "kind": "script",
+            "startTime": 111.90000000596046,
+            "duration": 25.099999994039536,
+            "transferSize": 732,
+            "encodedBodySize": 432
+          },
+          {
+            "path": "/assets/permission-modes-kUi6KV1_.js",
+            "kind": "script",
+            "startTime": 112,
+            "duration": 25.200000002980232,
+            "transferSize": 801,
+            "encodedBodySize": 501
+          },
+          {
+            "path": "/assets/keybinding-context-BINK_-4j.js",
+            "kind": "script",
+            "startTime": 112.1000000089407,
+            "duration": 25.200000002980232,
+            "transferSize": 2319,
+            "encodedBodySize": 2019
+          },
+          {
+            "path": "/assets/styled-context-menu-BUkOqJmk.js",
+            "kind": "script",
+            "startTime": 112.20000000298023,
+            "duration": 27.5,
+            "transferSize": 6031,
+            "encodedBodySize": 5731
+          },
+          {
+            "path": "/assets/useAvailablePermissionModes-7yrQT3to.js",
+            "kind": "script",
+            "startTime": 112.30000001192093,
+            "duration": 27.19999998807907,
+            "transferSize": 793,
+            "encodedBodySize": 493
+          },
+          {
+            "path": "/assets/switch-Cl7jRYRy.js",
+            "kind": "script",
+            "startTime": 112.30000001192093,
+            "duration": 28.099999994039536,
+            "transferSize": 4948,
+            "encodedBodySize": 4648
+          },
+          {
+            "path": "/assets/app-window-ByGpLKeW.js",
+            "kind": "script",
+            "startTime": 112.5,
+            "duration": 28.100000008940697,
+            "transferSize": 635,
+            "encodedBodySize": 335
+          },
+          {
+            "path": "/assets/arrow-left-DxAWkJAS.js",
+            "kind": "script",
+            "startTime": 112.6000000089407,
+            "duration": 28.099999994039536,
+            "transferSize": 542,
+            "encodedBodySize": 242
+          },
+          {
+            "path": "/assets/SendResourceToWorkspaceDialog-D3FftYB4.js",
+            "kind": "script",
+            "startTime": 112.70000000298023,
+            "duration": 28.5,
+            "transferSize": 5729,
+            "encodedBodySize": 5429
+          },
+          {
+            "path": "/assets/monitor-_WdgCWvy.js",
+            "kind": "script",
+            "startTime": 112.70000000298023,
+            "duration": 29.900000005960464,
+            "transferSize": 633,
+            "encodedBodySize": 333
+          },
+          {
+            "path": "/assets/useWorkspaceIcon-CXMzEY6H.js",
+            "kind": "script",
+            "startTime": 112.90000000596046,
+            "duration": 29.799999997019768,
+            "transferSize": 2942,
+            "encodedBodySize": 2642
+          },
+          {
+            "path": "/assets/play-W-V1IZ0a.js",
+            "kind": "script",
+            "startTime": 112.90000000596046,
+            "duration": 31,
+            "transferSize": 787,
+            "encodedBodySize": 487
+          },
+          {
+            "path": "/assets/projects-BNGiWWr0.js",
+            "kind": "script",
+            "startTime": 113,
+            "duration": 31.200000002980232,
+            "transferSize": 2271,
+            "encodedBodySize": 1971
+          },
+          {
+            "path": "/assets/useStatuses-BF_VzU21.js",
+            "kind": "script",
+            "startTime": 113.1000000089407,
+            "duration": 32.099999994039536,
+            "transferSize": 50635,
+            "encodedBodySize": 50335
+          },
+          {
+            "path": "/assets/power-off-DB40Kvby.js",
+            "kind": "script",
+            "startTime": 113.30000001192093,
+            "duration": 31.299999997019768,
+            "transferSize": 655,
+            "encodedBodySize": 355
+          },
+          {
+            "path": "/assets/AutomationAvatar-DFuYf6WU.js",
+            "kind": "script",
+            "startTime": 113.30000001192093,
+            "duration": 32,
+            "transferSize": 38091,
+            "encodedBodySize": 37791
+          },
+          {
+            "path": "/assets/menu-context-D_8syrsQ.js",
+            "kind": "script",
+            "startTime": 113.40000000596046,
+            "duration": 31.599999994039536,
+            "transferSize": 1218,
+            "encodedBodySize": 918
+          },
+          {
+            "path": "/assets/loader-circle-OgcpOM77.js",
+            "kind": "script",
+            "startTime": 113.5,
+            "duration": 35,
+            "transferSize": 545,
+            "encodedBodySize": 245
+          },
+          {
+            "path": "/assets/useOnboarding-CxiFhXW7.js",
+            "kind": "script",
+            "startTime": 113.6000000089407,
+            "duration": 35.70000000298023,
+            "transferSize": 64064,
+            "encodedBodySize": 63764
+          },
+          {
+            "path": "/assets/entity-list-empty-Gj4KxVFU.js",
+            "kind": "script",
+            "startTime": 113.70000000298023,
+            "duration": 35.1000000089407,
+            "transferSize": 3200,
+            "encodedBodySize": 2900
+          },
+          {
+            "path": "/assets/doc-links-By5nI1Ld.js",
+            "kind": "script",
+            "startTime": 113.80000001192093,
+            "duration": 35.19999998807907,
+            "transferSize": 3837,
+            "encodedBodySize": 3537
+          },
+          {
+            "path": "/assets/settings-2-DDgypbkd.js",
+            "kind": "script",
+            "startTime": 114,
+            "duration": 35,
+            "transferSize": 629,
+            "encodedBodySize": 329
+          },
+          {
+            "path": "/assets/WeChatConnectDialog-DBqrtSYj.js",
+            "kind": "script",
+            "startTime": 114.1000000089407,
+            "duration": 35.3999999910593,
+            "transferSize": 23471,
+            "encodedBodySize": 23171
+          },
+          {
+            "path": "/assets/actions-B6rZjnKt.js",
+            "kind": "script",
+            "startTime": 114.1000000089407,
+            "duration": 38.8999999910593,
+            "transferSize": 8434,
+            "encodedBodySize": 8134
+          },
+          {
+            "path": "/assets/HeaderIconButton-PBTEJSX4.js",
+            "kind": "script",
+            "startTime": 114.20000000298023,
+            "duration": 38.1000000089407,
+            "transferSize": 1466,
+            "encodedBodySize": 1166
+          },
+          {
+            "path": "/assets/session-BUMBx4j5.js",
+            "kind": "script",
+            "startTime": 114.30000001192093,
+            "duration": 38.19999998807907,
+            "transferSize": 2666,
+            "encodedBodySize": 2366
+          },
+          {
+            "path": "/assets/rename-dialog-DWf5zbY0.js",
+            "kind": "script",
+            "startTime": 114.40000000596046,
+            "duration": 38.099999994039536,
+            "transferSize": 1712,
+            "encodedBodySize": 1412
+          },
+          {
+            "path": "/assets/kanban-C2QsHkp6.js",
+            "kind": "script",
+            "startTime": 114.40000000596046,
+            "duration": 38.29999999701977,
+            "transferSize": 3771,
+            "encodedBodySize": 3471
+          },
+          {
+            "path": "/assets/SourceMenu-DmIRwho3.js",
+            "kind": "script",
+            "startTime": 114.6000000089407,
+            "duration": 38.29999999701977,
+            "transferSize": 1785,
+            "encodedBodySize": 1485
+          },
+          {
+            "path": "/assets/SkillMenu-eHyymrNG.js",
+            "kind": "script",
+            "startTime": 114.6000000089407,
+            "duration": 40.79999999701977,
+            "transferSize": 1867,
+            "encodedBodySize": 1567
+          },
+          {
+            "path": "/assets/plugin-avatar-CxJ3KJZH.js",
+            "kind": "script",
+            "startTime": 114.70000000298023,
+            "duration": 41,
+            "transferSize": 2199,
+            "encodedBodySize": 1899
+          },
+          {
+            "path": "/assets/useProjects-CYvhYsWg.js",
+            "kind": "script",
+            "startTime": 114.90000000596046,
+            "duration": 40.79999999701977,
+            "transferSize": 1213,
+            "encodedBodySize": 913
+          },
+          {
+            "path": "/assets/pages-DrT1r4ww.js",
+            "kind": "script",
+            "startTime": 115,
+            "duration": 40.900000005960464,
+            "transferSize": 904,
+            "encodedBodySize": 604
+          },
+          {
+            "path": "/assets/personal-profile-rUk6ND0q.js",
+            "kind": "script",
+            "startTime": 115,
+            "duration": 41,
+            "transferSize": 1767,
+            "encodedBodySize": 1467
+          },
+          {
+            "path": "/assets/useUpdateChecker-BPsaFJ6E.js",
+            "kind": "script",
+            "startTime": 115.1000000089407,
+            "duration": 41,
+            "transferSize": 2589,
+            "encodedBodySize": 2289
+          },
+          {
+            "path": "/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2",
+            "kind": "css",
+            "startTime": 820.7000000029802,
+            "duration": 20.400000005960464,
+            "transferSize": 40704,
+            "encodedBodySize": 40404
+          }
+        ]
+      }
+    ],
+    "rpc": [
+      {
+        "channel": "onboarding:getAuthState",
+        "startedMs": 1663.8130240000003,
+        "navigation": 0,
+        "elapsedMs": 2.899717999999666
+      },
+      {
+        "channel": "LLM_Connection:listWithStatus",
+        "startedMs": 1762.930635,
+        "navigation": 0,
+        "elapsedMs": 17.730054999999993
+      },
+      {
+        "channel": "theme:getWorkspaceColorTheme",
+        "startedMs": 1763.047354,
+        "navigation": 0,
+        "elapsedMs": 30.86884599999985
+      },
+      {
+        "channel": "preferences:read",
+        "startedMs": 1763.0984839999999,
+        "navigation": 0,
+        "elapsedMs": 30.883406000000377
+      },
+      {
+        "channel": "plugins:list",
+        "startedMs": 1763.107944,
+        "navigation": 0,
+        "elapsedMs": 30.882466000000022
+      },
+      {
+        "channel": "workspaceSettings:get",
+        "startedMs": 1763.3107740000003,
+        "navigation": 0,
+        "elapsedMs": 30.702565999999933
+      },
+      {
+        "channel": "decisions:getStatus",
+        "startedMs": 1763.3190240000001,
+        "navigation": 0,
+        "elapsedMs": 31.006515000000036
+      },
+      {
+        "channel": "sources:get",
+        "startedMs": 1763.326334,
+        "navigation": 0,
+        "elapsedMs": 31.15336500000012
+      },
+      {
+        "channel": "skills:get",
+        "startedMs": 1763.488044,
+        "navigation": 0,
+        "elapsedMs": 34.00252300000011
+      },
+      {
+        "channel": "sessions:getUnreadSummary",
+        "startedMs": 1763.497254,
+        "navigation": 0,
+        "elapsedMs": 34.07571300000018
+      },
+      {
+        "channel": "rtk:getEnabled",
+        "startedMs": 1763.5039640000002,
+        "navigation": 0,
+        "elapsedMs": 34.07828299999983
+      },
+      {
+        "channel": "rtk:getStatus",
+        "startedMs": 1763.515894,
+        "navigation": 0,
+        "elapsedMs": 51.02405900000031
+      },
+      {
+        "channel": "preferences:read",
+        "startedMs": 1763.522984,
+        "navigation": 0,
+        "elapsedMs": 51.06015900000011
+      },
+      {
+        "channel": "labels:list",
+        "startedMs": 1763.531494,
+        "navigation": 0,
+        "elapsedMs": 51.080659000000196
+      },
+      {
+        "channel": "workspaces:get",
+        "startedMs": 1763.5400940000002,
+        "navigation": 0,
+        "elapsedMs": 51.07869899999969
+      },
+      {
+        "channel": "notification:getEnabled",
+        "startedMs": 1763.5478840000003,
+        "navigation": 0,
+        "elapsedMs": 51.301528999999846
+      },
+      {
+        "channel": "sessions:get",
+        "startedMs": 1763.5551739999999,
+        "navigation": 0,
+        "elapsedMs": 53.6896270000002
+      },
+      {
+        "channel": "LLM_Connection:listWithStatus",
+        "startedMs": 1763.5609540000003,
+        "navigation": 0,
+        "elapsedMs": 54.28960599999982
+      },
+      {
+        "channel": "drafts:getAll",
+        "startedMs": 1763.5698640000003,
+        "navigation": 0,
+        "elapsedMs": 54.28938599999992
+      },
+      {
+        "channel": "automations:get",
+        "startedMs": 1763.1171339999999,
+        "navigation": 0,
+        "elapsedMs": 54.79232600000023
+      },
+      {
+        "channel": "projects:get",
+        "startedMs": 1763.1409340000002,
+        "navigation": 0,
+        "elapsedMs": 54.778726000000006
+      },
+      {
+        "channel": "workspaceSettings:get",
+        "startedMs": 1780.6759800000002,
+        "navigation": 0,
+        "elapsedMs": 37.24935000000005
+      },
+      {
+        "channel": "pages:get",
+        "startedMs": 1763.2955640000002,
+        "navigation": 0,
+        "elapsedMs": 54.634845999999925
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.313011,
+        "navigation": 0,
+        "elapsedMs": 165.3379170000003
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.331771,
+        "navigation": 0,
+        "elapsedMs": 171.5388420000004
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.3372510000002,
+        "navigation": 0,
+        "elapsedMs": 171.75499200000013
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.3429710000003,
+        "navigation": 0,
+        "elapsedMs": 171.764502
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.3487710000002,
+        "navigation": 0,
+        "elapsedMs": 171.76812199999995
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.457431,
+        "navigation": 0,
+        "elapsedMs": 171.66591199999993
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.475361,
+        "navigation": 0,
+        "elapsedMs": 171.65383199999997
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.480201,
+        "navigation": 0,
+        "elapsedMs": 171.65506199999982
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.4842610000003,
+        "navigation": 0,
+        "elapsedMs": 171.65708199999972
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.522611,
+        "navigation": 0,
+        "elapsedMs": 171.93852199999992
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.5392610000001,
+        "navigation": 0,
+        "elapsedMs": 171.93322200000011
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.545731,
+        "navigation": 0,
+        "elapsedMs": 171.93391199999996
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.689501,
+        "navigation": 0,
+        "elapsedMs": 171.79725199999984
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.7101209999998,
+        "navigation": 0,
+        "elapsedMs": 171.78347200000007
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.718521,
+        "navigation": 0,
+        "elapsedMs": 171.78855199999998
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.722101,
+        "navigation": 0,
+        "elapsedMs": 171.80319199999985
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.727071,
+        "navigation": 0,
+        "elapsedMs": 171.81186200000002
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.8110210000002,
+        "navigation": 0,
+        "elapsedMs": 171.73717199999965
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.81631,
+        "navigation": 0,
+        "elapsedMs": 171.73986300000024
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.8198300000001,
+        "navigation": 0,
+        "elapsedMs": 171.7496729999998
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.82621,
+        "navigation": 0,
+        "elapsedMs": 171.76343300000008
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.8293999999999,
+        "navigation": 0,
+        "elapsedMs": 171.77205300000014
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.8333100000002,
+        "navigation": 0,
+        "elapsedMs": 171.78062299999965
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 1817.8369,
+        "navigation": 0,
+        "elapsedMs": 171.78464299999996
+      },
+      {
+        "channel": "automations:getLastExecuted",
+        "startedMs": 1817.91549,
+        "navigation": 0,
+        "elapsedMs": 171.71166300000004
+      },
+      {
+        "channel": "labels:list",
+        "startedMs": 1975.834924,
+        "navigation": 0,
+        "elapsedMs": 13.895128000000113
+      },
+      {
+        "channel": "sessions:getUnreadSummary",
+        "startedMs": 1975.845854,
+        "navigation": 0,
+        "elapsedMs": 13.894658000000163
+      },
+      {
+        "channel": "system:homeDir",
+        "startedMs": 1975.9427040000003,
+        "navigation": 0,
+        "elapsedMs": 13.805877999999666
+      },
+      {
+        "channel": "git:getBranch",
+        "startedMs": 1976.0159030000002,
+        "navigation": 0,
+        "elapsedMs": 62.31305999999995
+      },
+      {
+        "channel": "input:getAutoCapitalisation",
+        "startedMs": 1976.019893,
+        "navigation": 0,
+        "elapsedMs": 63.44526900000028
+      },
+      {
+        "channel": "input:getSendMessageKey",
+        "startedMs": 1976.0232429999999,
+        "navigation": 0,
+        "elapsedMs": 63.62096900000006
+      },
+      {
+        "channel": "input:getSpellCheck",
+        "startedMs": 1976.0287730000002,
+        "navigation": 0,
+        "elapsedMs": 63.62321900000006
+      },
+      {
+        "channel": "views:list",
+        "startedMs": 1975.840594,
+        "navigation": 0,
+        "elapsedMs": 63.878357999999935
+      },
+      {
+        "channel": "statuses:list",
+        "startedMs": 1975.7714640000002,
+        "navigation": 0,
+        "elapsedMs": 63.965447999999924
+      },
+      {
+        "channel": "system:homeDir",
+        "startedMs": 1976.033783,
+        "navigation": 0,
+        "elapsedMs": 63.707258999999794
+      },
+      {
+        "channel": "input:getSendMessageKey",
+        "startedMs": 1976.0413529999998,
+        "navigation": 0,
+        "elapsedMs": 63.70309900000029
+      },
+      {
+        "channel": "artifacts:list",
+        "startedMs": 1976.1038730000002,
+        "navigation": 0,
+        "elapsedMs": 63.64671899999985
+      },
+      {
+        "channel": "sessions:command",
+        "startedMs": 1976.113423,
+        "navigation": 0,
+        "elapsedMs": 63.649769000000106
+      },
+      {
+        "channel": "skills:get",
+        "startedMs": 1976.1189630000001,
+        "navigation": 0,
+        "elapsedMs": 65.65633799999978
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 1976.134993,
+        "navigation": 0,
+        "elapsedMs": 65.69032800000014
+      },
+      {
+        "channel": "labels:list",
+        "startedMs": 1989.6499430000001,
+        "navigation": 0,
+        "elapsedMs": 52.19551799999999
+      },
+      {
+        "channel": "labels:list",
+        "startedMs": 1989.6575920000002,
+        "navigation": 0,
+        "elapsedMs": 52.19665899999973
+      },
+      {
+        "channel": "views:list",
+        "startedMs": 1989.662802,
+        "navigation": 0,
+        "elapsedMs": 52.20153900000014
+      },
+      {
+        "channel": "sessions:readMessages",
+        "startedMs": 1976.1079929999999,
+        "navigation": 0,
+        "elapsedMs": 68.87625500000013
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2036.4905350000001,
+        "navigation": 0,
+        "elapsedMs": 8.572063000000071
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2045.0683780000002,
+        "navigation": 0,
+        "elapsedMs": 65.37136699999951
+      },
+      {
+        "channel": "sessions:closeMessagesRead",
+        "startedMs": 2045.054868,
+        "navigation": 0,
+        "elapsedMs": 66.70383599999991
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.111899,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.svg\"]",
+        "elapsedMs": 6.429304999999658,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.190839,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.png\"]",
+        "elapsedMs": 6.405604999999923,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.3373589999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.jpg\"]",
+        "elapsedMs": 6.31999500000029,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.3742589999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.jpeg\"]",
+        "elapsedMs": 6.33223500000031,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.3829889999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.svg\"]",
+        "elapsedMs": 6.459395000000313,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.4498989999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.png\"]",
+        "elapsedMs": 6.446975000000293,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.454099,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.jpg\"]",
+        "elapsedMs": 6.4497449999998935,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.4582889999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.jpeg\"]",
+        "elapsedMs": 6.743334000000232,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.4618189999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.svg\"]",
+        "elapsedMs": 6.815134000000398,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.4659389999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.png\"]",
+        "elapsedMs": 6.846684000000096,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.4697189999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.jpg\"]",
+        "elapsedMs": 6.8517940000001545,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.4754089999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.jpeg\"]",
+        "elapsedMs": 99.75622999999996,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.528469,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.svg\"]",
+        "elapsedMs": 99.87943899999982,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.532389,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.png\"]",
+        "elapsedMs": 99.90932900000007,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.535699,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.jpg\"]",
+        "elapsedMs": 99.91207899999972,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.5453089999996,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.jpeg\"]",
+        "elapsedMs": 99.91975900000034,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.554169,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.svg\"]",
+        "elapsedMs": 99.98474899999974,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.557659,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.png\"]",
+        "elapsedMs": 100.03647899999987,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.5609489999997,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.jpg\"]",
+        "elapsedMs": 100.0482390000002,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2106.564519,
+        "navigation": 0,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.jpeg\"]",
+        "elapsedMs": 118.03266499999972,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2106.5679889999997,
+        "navigation": 0,
+        "elapsedMs": 118.03595500000029
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2206.200509,
+        "navigation": 0,
+        "elapsedMs": 24.78666999999996
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2230.996389,
+        "navigation": 0,
+        "elapsedMs": 4.312935999999809
+      },
+      {
+        "channel": "onboarding:getAuthState",
+        "startedMs": 2692.4803079999997,
+        "navigation": 1,
+        "elapsedMs": 1.2461990000001606
+      },
+      {
+        "channel": "LLM_Connection:listWithStatus",
+        "startedMs": 2744.581366,
+        "navigation": 1,
+        "elapsedMs": 10.062931999999819
+      },
+      {
+        "channel": "theme:getWorkspaceColorTheme",
+        "startedMs": 2744.647236,
+        "navigation": 1,
+        "elapsedMs": 21.97133299999996
+      },
+      {
+        "channel": "preferences:read",
+        "startedMs": 2744.667356,
+        "navigation": 1,
+        "elapsedMs": 22.0809119999999
+      },
+      {
+        "channel": "plugins:list",
+        "startedMs": 2744.6738659999996,
+        "navigation": 1,
+        "elapsedMs": 22.089642000000367
+      },
+      {
+        "channel": "projects:get",
+        "startedMs": 2744.787336,
+        "navigation": 1,
+        "elapsedMs": 21.982652000000144
+      },
+      {
+        "channel": "pages:get",
+        "startedMs": 2744.796536,
+        "navigation": 1,
+        "elapsedMs": 21.977891999999883
+      },
+      {
+        "channel": "automations:get",
+        "startedMs": 2744.679376,
+        "navigation": 1,
+        "elapsedMs": 22.145151999999598
+      },
+      {
+        "channel": "workspaceSettings:get",
+        "startedMs": 2744.801516,
+        "navigation": 1,
+        "elapsedMs": 22.049802
+      },
+      {
+        "channel": "decisions:getStatus",
+        "startedMs": 2744.808216,
+        "navigation": 1,
+        "elapsedMs": 22.11282200000005
+      },
+      {
+        "channel": "sources:get",
+        "startedMs": 2744.881086,
+        "navigation": 1,
+        "elapsedMs": 22.05827199999976
+      },
+      {
+        "channel": "skills:get",
+        "startedMs": 2744.886166,
+        "navigation": 1,
+        "elapsedMs": 24.271670000000086
+      },
+      {
+        "channel": "sessions:getUnreadSummary",
+        "startedMs": 2744.8916059999997,
+        "navigation": 1,
+        "elapsedMs": 24.402050000000145
+      },
+      {
+        "channel": "rtk:getEnabled",
+        "startedMs": 2744.895236,
+        "navigation": 1,
+        "elapsedMs": 24.40747999999985
+      },
+      {
+        "channel": "rtk:getStatus",
+        "startedMs": 2744.899666,
+        "navigation": 1,
+        "elapsedMs": 24.41831000000002
+      },
+      {
+        "channel": "preferences:read",
+        "startedMs": 2744.9545759999996,
+        "navigation": 1,
+        "elapsedMs": 24.3723600000003
+      },
+      {
+        "channel": "labels:list",
+        "startedMs": 2744.9631259999996,
+        "navigation": 1,
+        "elapsedMs": 24.391759999999977
+      },
+      {
+        "channel": "workspaces:get",
+        "startedMs": 2745.0251759999996,
+        "navigation": 1,
+        "elapsedMs": 24.348450000000412
+      },
+      {
+        "channel": "notification:getEnabled",
+        "startedMs": 2745.032926,
+        "navigation": 1,
+        "elapsedMs": 24.36099000000013
+      },
+      {
+        "channel": "sessions:get",
+        "startedMs": 2745.037136,
+        "navigation": 1,
+        "elapsedMs": 25.448949000000084
+      },
+      {
+        "channel": "LLM_Connection:listWithStatus",
+        "startedMs": 2745.0408159999997,
+        "navigation": 1,
+        "elapsedMs": 26.01396900000009
+      },
+      {
+        "channel": "drafts:getAll",
+        "startedMs": 2745.0492759999997,
+        "navigation": 1,
+        "elapsedMs": 26.012498999999934
+      },
+      {
+        "channel": "workspaceSettings:get",
+        "startedMs": 2754.6688679999997,
+        "navigation": 1,
+        "elapsedMs": 141.198347
+      },
+      {
+        "channel": "automations:getLastExecuted",
+        "startedMs": 2766.8400779999997,
+        "navigation": 1,
+        "elapsedMs": 129.04948700000023
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.608385,
+        "navigation": 1,
+        "elapsedMs": 152.1738479999999
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.615945,
+        "navigation": 1,
+        "elapsedMs": 152.91059799999994
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.619895,
+        "navigation": 1,
+        "elapsedMs": 152.91653799999995
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.6237849999998,
+        "navigation": 1,
+        "elapsedMs": 152.9219579999999
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.627035,
+        "navigation": 1,
+        "elapsedMs": 152.92652799999996
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.630265,
+        "navigation": 1,
+        "elapsedMs": 152.92927700000018
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.6338149999997,
+        "navigation": 1,
+        "elapsedMs": 152.9340070000003
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.637175,
+        "navigation": 1,
+        "elapsedMs": 152.93612699999994
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.6409049999997,
+        "navigation": 1,
+        "elapsedMs": 153.0880870000001
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.792505,
+        "navigation": 1,
+        "elapsedMs": 152.94238700000005
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.8257449999996,
+        "navigation": 1,
+        "elapsedMs": 152.91728700000021
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.835305,
+        "navigation": 1,
+        "elapsedMs": 152.912327
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.854605,
+        "navigation": 1,
+        "elapsedMs": 152.89749699999993
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.861255,
+        "navigation": 1,
+        "elapsedMs": 152.89545700000008
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.868415,
+        "navigation": 1,
+        "elapsedMs": 152.89290699999992
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.872625,
+        "navigation": 1,
+        "elapsedMs": 152.89307699999972
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.8763249999997,
+        "navigation": 1,
+        "elapsedMs": 152.89395700000023
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.880835,
+        "navigation": 1,
+        "elapsedMs": 152.89445699999987
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.9854849999997,
+        "navigation": 1,
+        "elapsedMs": 152.79487700000027
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.991905,
+        "navigation": 1,
+        "elapsedMs": 152.7932169999999
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2770.9971649999998,
+        "navigation": 1,
+        "elapsedMs": 152.79278699999986
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2771.004935,
+        "navigation": 1,
+        "elapsedMs": 152.7893570000001
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2771.0422049999997,
+        "navigation": 1,
+        "elapsedMs": 152.757157
+      },
+      {
+        "channel": "sessions:getPermissionModeState",
+        "startedMs": 2771.047865,
+        "navigation": 1,
+        "elapsedMs": 152.77100699999983
+      },
+      {
+        "channel": "statuses:list",
+        "startedMs": 2891.473048,
+        "navigation": 1,
+        "elapsedMs": 32.372573999999986
+      },
+      {
+        "channel": "labels:list",
+        "startedMs": 2891.485568,
+        "navigation": 1,
+        "elapsedMs": 32.447404000000006
+      },
+      {
+        "channel": "views:list",
+        "startedMs": 2891.5752479999996,
+        "navigation": 1,
+        "elapsedMs": 32.37243400000034
+      },
+      {
+        "channel": "sessions:getUnreadSummary",
+        "startedMs": 2891.582168,
+        "navigation": 1,
+        "elapsedMs": 32.37619399999994
+      },
+      {
+        "channel": "system:homeDir",
+        "startedMs": 2891.587768,
+        "navigation": 1,
+        "elapsedMs": 32.37519400000019
+      },
+      {
+        "channel": "git:getBranch",
+        "startedMs": 2891.606418,
+        "navigation": 1,
+        "elapsedMs": 95.58878300000015
+      },
+      {
+        "channel": "input:getAutoCapitalisation",
+        "startedMs": 2891.6144179999997,
+        "navigation": 1,
+        "elapsedMs": 98.67029100000036
+      },
+      {
+        "channel": "input:getSendMessageKey",
+        "startedMs": 2891.6225879999997,
+        "navigation": 1,
+        "elapsedMs": 98.90717100000029
+      },
+      {
+        "channel": "input:getSpellCheck",
+        "startedMs": 2891.627228,
+        "navigation": 1,
+        "elapsedMs": 98.93710099999998
+      },
+      {
+        "channel": "system:homeDir",
+        "startedMs": 2891.632478,
+        "navigation": 1,
+        "elapsedMs": 98.93981099999974
+      },
+      {
+        "channel": "input:getSendMessageKey",
+        "startedMs": 2891.636768,
+        "navigation": 1,
+        "elapsedMs": 98.93929100000014
+      },
+      {
+        "channel": "artifacts:list",
+        "startedMs": 2891.6981779999996,
+        "navigation": 1,
+        "elapsedMs": 98.88274100000035
+      },
+      {
+        "channel": "sessions:command",
+        "startedMs": 2891.716548,
+        "navigation": 1,
+        "elapsedMs": 98.86910099999977
+      },
+      {
+        "channel": "skills:get",
+        "startedMs": 2891.742538,
+        "navigation": 1,
+        "elapsedMs": 100.8645590000001
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2891.745838,
+        "navigation": 1,
+        "elapsedMs": 100.88484900000003
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2919.8285849999997,
+        "navigation": 1,
+        "elapsedMs": 72.80622200000016
+      },
+      {
+        "channel": "sessions:readMessages",
+        "startedMs": 2891.705458,
+        "navigation": 1,
+        "elapsedMs": 102.97214699999995
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.416315,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.svg\"]",
+        "elapsedMs": 12.333509999999933,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.5134949999997,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.png\"]",
+        "elapsedMs": 12.240960000000086,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.5256649999997,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.jpg\"]",
+        "elapsedMs": 12.232420000000275,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.529525,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/backlog.jpeg\"]",
+        "elapsedMs": 12.23194999999987,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.5986749999997,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.svg\"]",
+        "elapsedMs": 12.171110000000226,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.605685,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.png\"]",
+        "elapsedMs": 12.181679999999687,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.6096549999997,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.jpg\"]",
+        "elapsedMs": 12.195510000000013,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.619655,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/todo.jpeg\"]",
+        "elapsedMs": 12.226580000000013,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.6249249999996,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.svg\"]",
+        "elapsedMs": 12.409670000000006,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.628515,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.png\"]",
+        "elapsedMs": 12.433669999999893,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.677725,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.jpg\"]",
+        "elapsedMs": 12.409169999999904,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.770685,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/needs-review.jpeg\"]",
+        "elapsedMs": 12.346439999999802,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.778695,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.svg\"]",
+        "elapsedMs": 12.486390000000029,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.7980949999996,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.png\"]",
+        "elapsedMs": 12.496900000000096,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.8056349999997,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.jpg\"]",
+        "elapsedMs": 12.51727000000028,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.809645,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/done.jpeg\"]",
+        "elapsedMs": 12.604130000000168,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.8143849999997,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.svg\"]",
+        "elapsedMs": 12.829910000000382,
+        "resultKind": "image"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.850005,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.png\"]",
+        "elapsedMs": 12.829929999999877,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.862675,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.jpg\"]",
+        "elapsedMs": 12.821240000000216,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "workspace:readImage",
+        "startedMs": 2982.867835,
+        "navigation": 1,
+        "resourceKey": "[\"performance-workspace\",\"statuses/icons/cancelled.jpeg\"]",
+        "elapsedMs": 12.83326999999963,
+        "resultKind": "missing"
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2982.873415,
+        "navigation": 1,
+        "elapsedMs": 12.935158999999658
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 2995.844264,
+        "navigation": 1,
+        "elapsedMs": 46.54729300000008
+      },
+      {
+        "channel": "sessions:closeMessagesRead",
+        "startedMs": 2994.741815,
+        "navigation": 1,
+        "elapsedMs": 51.09518900000012
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 3042.3367169999997,
+        "navigation": 1,
+        "elapsedMs": 70.53844300000037
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 3112.86526,
+        "navigation": 1,
+        "elapsedMs": 7.525173999999879
+      },
+      {
+        "channel": "sessions:getPendingPlanExecution",
+        "startedMs": 3120.4097739999997,
+        "navigation": 1,
+        "elapsedMs": 9.226623000000018
+      }
+    ],
+    "after": {
+      "atMs": 3198.488562,
+      "renderer": {
+        "Timestamp": 91995.180282,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 8,
+        "Frames": 4,
+        "JSEventListeners": 1820,
+        "LayoutObjects": 4850,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 5615,
+        "Resources": 529,
+        "ContextLifecycleStateObservers": 48,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 9,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 4,
+        "ArrayBufferContents": 107,
+        "LayoutCount": 41,
+        "RecalcStyleCount": 78,
+        "LayoutDuration": 0.014848,
+        "RecalcStyleDuration": 0.054379,
+        "DevToolsCommandDuration": 0.019702,
+        "ScriptDuration": 0.379962,
+        "V8CompileDuration": 0,
+        "TaskDuration": 0.548437,
+        "TaskOtherDuration": 0.079546,
+        "ThreadTime": 0.556257,
+        "ProcessTime": 2.620299,
+        "JSHeapUsedSize": 44759068,
+        "JSHeapTotalSize": 105803776,
+        "FirstMeaningfulPaint": 0,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 8,
+        "nodes": 5615,
+        "jsEventListeners": 1820
+      },
+      "backend": {
+        "memory": {
+          "rss": 245960704,
+          "heapTotal": 24559616,
+          "heapUsed": 47450966,
+          "external": 39120853,
+          "arrayBuffers": 30156097
+        },
+        "cpu": {
+          "user": 1658788,
+          "system": 491663
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 100,
+        "pid": 39545
+      },
+      "wsBytes": 443106,
+      "wsFrames": 187
+    }
+  },
+  "startupHandlerTimings": [
+    {
+      "channel": "onboarding:getAuthState",
+      "elapsedMs": 0.9134090000000015
+    },
+    {
+      "channel": "LLM_Connection:listWithStatus",
+      "elapsedMs": 0.43855999999982487
+    },
+    {
+      "channel": "theme:getWorkspaceColorTheme",
+      "elapsedMs": 0.5671089999998458
+    },
+    {
+      "channel": "preferences:read",
+      "elapsedMs": 0.11033999999995103
+    },
+    {
+      "channel": "plugins:list",
+      "elapsedMs": 0.5794489999998405
+    },
+    {
+      "channel": "workspaceSettings:get",
+      "elapsedMs": 0.37612000000012813
+    },
+    {
+      "channel": "decisions:getStatus",
+      "elapsedMs": 0.7827190000000428
+    },
+    {
+      "channel": "sources:get",
+      "elapsedMs": 0.3542600000000675
+    },
+    {
+      "channel": "skills:get",
+      "elapsedMs": 7.71802300000013
+    },
+    {
+      "channel": "sessions:getUnreadSummary",
+      "elapsedMs": 0.5731299999999919
+    },
+    {
+      "channel": "rtk:getEnabled",
+      "elapsedMs": 0.2618800000000192
+    },
+    {
+      "channel": "rtk:getStatus",
+      "elapsedMs": 5.074175999999852
+    },
+    {
+      "channel": "preferences:read",
+      "elapsedMs": 0.03181999999992513
+    },
+    {
+      "channel": "labels:list",
+      "elapsedMs": 1.0001389999999901
+    },
+    {
+      "channel": "workspaces:get",
+      "elapsedMs": 0.2581399999999121
+    },
+    {
+      "channel": "sessions:get",
+      "elapsedMs": 0.6292300000000068
+    },
+    {
+      "channel": "LLM_Connection:listWithStatus",
+      "elapsedMs": 0.17567899999994552
+    },
+    {
+      "channel": "drafts:getAll",
+      "elapsedMs": 0.10413999999991574
+    },
+    {
+      "channel": "automations:get",
+      "elapsedMs": 20.994423000000097
+    },
+    {
+      "channel": "projects:get",
+      "elapsedMs": 20.829273000000057
+    },
+    {
+      "channel": "workspaceSettings:get",
+      "elapsedMs": 0.31405900000004294
+    },
+    {
+      "channel": "pages:get",
+      "elapsedMs": 22.620771999999988
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.7164589999999862
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.15627999999992426
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.16035000000010768
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.18394999999986794
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.21769900000003872
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.12873999999987973
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.17275999999992564
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.13871999999992113
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.12051999999994223
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.10861999999997352
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08869000000004235
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.13998000000015054
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.13442000000009102
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.11782999999991262
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.1545699999999215
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08597899999995207
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.0887000000000171
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.09898999999995794
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08726999999998952
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.1163600000002134
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.09071999999991931
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.09530999999992673
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08096000000000458
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.09206000000017411
+    },
+    {
+      "channel": "automations:getLastExecuted",
+      "elapsedMs": 0.6535699999999451
+    },
+    {
+      "channel": "labels:list",
+      "elapsedMs": 0.4770499999999629
+    },
+    {
+      "channel": "sessions:getUnreadSummary",
+      "elapsedMs": 0.16363000000001193
+    },
+    {
+      "channel": "system:homeDir",
+      "elapsedMs": 0.039139999999861175
+    },
+    {
+      "channel": "git:getBranch",
+      "elapsedMs": 35.123190999999906
+    },
+    {
+      "channel": "input:getAutoCapitalisation",
+      "elapsedMs": 0.45893999999998414
+    },
+    {
+      "channel": "input:getSendMessageKey",
+      "elapsedMs": 0.3199690000001283
+    },
+    {
+      "channel": "input:getSpellCheck",
+      "elapsedMs": 0.17564999999990505
+    },
+    {
+      "channel": "views:list",
+      "elapsedMs": 42.360185999999885
+    },
+    {
+      "channel": "statuses:list",
+      "elapsedMs": 44.052265000000034
+    },
+    {
+      "channel": "system:homeDir",
+      "elapsedMs": 0.02476000000001477
+    },
+    {
+      "channel": "input:getSendMessageKey",
+      "elapsedMs": 0.2120399999998881
+    },
+    {
+      "channel": "artifacts:list",
+      "elapsedMs": 0.5395990000001802
+    },
+    {
+      "channel": "sessions:command",
+      "elapsedMs": 0.36829999999986285
+    },
+    {
+      "channel": "skills:get",
+      "elapsedMs": 0.8050889999999526
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.6935700000001361
+    },
+    {
+      "channel": "labels:list",
+      "elapsedMs": 0.31213900000011563
+    },
+    {
+      "channel": "labels:list",
+      "elapsedMs": 0.3227200000001176
+    },
+    {
+      "channel": "views:list",
+      "elapsedMs": 0.21543999999994412
+    },
+    {
+      "channel": "sessions:readMessages",
+      "elapsedMs": 11.345411000000013
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.5736289999999826
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.7954389999999876
+    },
+    {
+      "channel": "sessions:closeMessagesRead",
+      "elapsedMs": 1.555058999999801
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.6164489999996476
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.18686999999999898
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.15692000000035478
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.15968000000020766
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.19626000000016575
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.15985000000000582
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.152400000000398
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1576799999998002
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.18739000000005035
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.17374900000004345
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.15558000000009997
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.20731000000023414
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.33824900000035996
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.34465999999974883
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.40237900000010995
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.18267999999989115
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.312460000000101
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.2147500000000946
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.16889899999978297
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.2108100000000377
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.5491700000002311
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.7132289999999557
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.872548999999708
+    },
+    {
+      "channel": "onboarding:getAuthState",
+      "elapsedMs": 0.3318600000002334
+    },
+    {
+      "channel": "LLM_Connection:listWithStatus",
+      "elapsedMs": 0.23473999999987427
+    },
+    {
+      "channel": "theme:getWorkspaceColorTheme",
+      "elapsedMs": 0.24620999999979176
+    },
+    {
+      "channel": "preferences:read",
+      "elapsedMs": 0.015890000000126747
+    },
+    {
+      "channel": "plugins:list",
+      "elapsedMs": 0.2245389999998224
+    },
+    {
+      "channel": "projects:get",
+      "elapsedMs": 0.22281999999995605
+    },
+    {
+      "channel": "pages:get",
+      "elapsedMs": 0.1628099999998085
+    },
+    {
+      "channel": "automations:get",
+      "elapsedMs": 0.7604899999996633
+    },
+    {
+      "channel": "workspaceSettings:get",
+      "elapsedMs": 0.2456200000001445
+    },
+    {
+      "channel": "decisions:getStatus",
+      "elapsedMs": 0.21730999999999767
+    },
+    {
+      "channel": "sources:get",
+      "elapsedMs": 0.40362899999990987
+    },
+    {
+      "channel": "skills:get",
+      "elapsedMs": 0.5758599999999205
+    },
+    {
+      "channel": "sessions:getUnreadSummary",
+      "elapsedMs": 0.23262999999997191
+    },
+    {
+      "channel": "rtk:getEnabled",
+      "elapsedMs": 0.1307000000001608
+    },
+    {
+      "channel": "rtk:getStatus",
+      "elapsedMs": 0.03508000000010725
+    },
+    {
+      "channel": "preferences:read",
+      "elapsedMs": 0.019609999999829597
+    },
+    {
+      "channel": "labels:list",
+      "elapsedMs": 0.330489999999827
+    },
+    {
+      "channel": "workspaces:get",
+      "elapsedMs": 0.1993000000002212
+    },
+    {
+      "channel": "sessions:get",
+      "elapsedMs": 0.2799199999999473
+    },
+    {
+      "channel": "LLM_Connection:listWithStatus",
+      "elapsedMs": 0.1691000000000713
+    },
+    {
+      "channel": "drafts:getAll",
+      "elapsedMs": 0.022870000000239088
+    },
+    {
+      "channel": "workspaceSettings:get",
+      "elapsedMs": 0.3054699999997865
+    },
+    {
+      "channel": "automations:getLastExecuted",
+      "elapsedMs": 0.2864199999999073
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.21349999999983993
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.1674790000001849
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.13168999999970765
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.1275300000002062
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.13045000000010987
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.10329000000001543
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.1243600000002516
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.11754900000005364
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.13538999999991574
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.246719999999641
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.1224699999997938
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.12681000000020504
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.13960900000029142
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.0932900000002519
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08535999999958221
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08294999999998254
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08041999999977634
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.07803999999987354
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08100999999987835
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.07834000000002561
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.0898389999997562
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.09070000000019718
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08080000000018117
+    },
+    {
+      "channel": "sessions:getPermissionModeState",
+      "elapsedMs": 0.08161000000018248
+    },
+    {
+      "channel": "statuses:list",
+      "elapsedMs": 0.6451990000000478
+    },
+    {
+      "channel": "labels:list",
+      "elapsedMs": 0.25010000000020227
+    },
+    {
+      "channel": "views:list",
+      "elapsedMs": 0.19201999999995678
+    },
+    {
+      "channel": "sessions:getUnreadSummary",
+      "elapsedMs": 0.15243000000009488
+    },
+    {
+      "channel": "system:homeDir",
+      "elapsedMs": 0.012670000000071013
+    },
+    {
+      "channel": "git:getBranch",
+      "elapsedMs": 33.67520299999978
+    },
+    {
+      "channel": "input:getAutoCapitalisation",
+      "elapsedMs": 0.2597200000000157
+    },
+    {
+      "channel": "input:getSendMessageKey",
+      "elapsedMs": 0.1121499999999287
+    },
+    {
+      "channel": "input:getSpellCheck",
+      "elapsedMs": 0.11686999999983527
+    },
+    {
+      "channel": "system:homeDir",
+      "elapsedMs": 0.013140000000021246
+    },
+    {
+      "channel": "input:getSendMessageKey",
+      "elapsedMs": 0.24582999999984168
+    },
+    {
+      "channel": "artifacts:list",
+      "elapsedMs": 0.19102999999995518
+    },
+    {
+      "channel": "sessions:command",
+      "elapsedMs": 0.13284999999996217
+    },
+    {
+      "channel": "skills:get",
+      "elapsedMs": 0.28318999999964944
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.4515689999998358
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.6279300000001058
+    },
+    {
+      "channel": "sessions:readMessages",
+      "elapsedMs": 6.072685000000092
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.43723999999974694
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1552999999998974
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1515190000000075
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.14158999999972366
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.17071000000032654
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1417900000001282
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1801500000001397
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.17876999999998588
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1811000000002423
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1444299999998293
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.14409900000009657
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.14683999999988373
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.17387000000007902
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.15988000000015745
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.1439500000001317
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.16447999999991225
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.24276999999983673
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.19824000000016895
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.21188000000029206
+    },
+    {
+      "channel": "workspace:readImage",
+      "elapsedMs": 0.19189000000005763
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.5435589999997319
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.522530000000188
+    },
+    {
+      "channel": "sessions:closeMessagesRead",
+      "elapsedMs": 3.145817999999963
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.5616090000003169
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.6097199999999248
+    },
+    {
+      "channel": "sessions:getPendingPlanExecution",
+      "elapsedMs": 0.8174099999996542
+    }
+  ],
+  "startupIcons": {
+    "totalReads": 40,
+    "successfulReads": 10,
+    "distinctSuccessfulFilesPerNavigation": 10,
+    "maximumSuccessfulFileReads": 1
+  },
+  "resolvedSkillIcons": {
+    "iconlessSkills": 2,
+    "unexpectedProbes": 0
+  },
+  "sessionLoads": [
+    {
+      "id": "perf-000",
+      "name": "Performance 0 (100 messages)",
+      "messageCount": 100,
+      "firstVisitMs": 165.82759699999997,
+      "warmSwitchMs": [
+        149.7291699999996,
+        132.19326400000045,
+        133.22324300000037,
+        127.06269799999973,
+        132.86416299999928
+      ],
+      "before": {
+        "atMs": 3536.7442899999996,
+        "renderer": {
+          "Timestamp": 91995.519309,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 8,
+          "Frames": 4,
+          "JSEventListeners": 2455,
+          "LayoutObjects": 6066,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 6871,
+          "Resources": 529,
+          "ContextLifecycleStateObservers": 63,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 4,
+          "ArrayBufferContents": 131,
+          "LayoutCount": 76,
+          "RecalcStyleCount": 120,
+          "LayoutDuration": 0.023305,
+          "RecalcStyleDuration": 0.074463,
+          "DevToolsCommandDuration": 0.046105,
+          "ScriptDuration": 0.507825,
+          "V8CompileDuration": 0,
+          "TaskDuration": 0.768476,
+          "TaskOtherDuration": 0.116778,
+          "ThreadTime": 0.781016,
+          "ProcessTime": 3.338718,
+          "JSHeapUsedSize": 62722664,
+          "JSHeapTotalSize": 108924928,
+          "FirstMeaningfulPaint": 0,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 8,
+          "nodes": 6871,
+          "jsEventListeners": 2455
+        },
+        "backend": {
+          "memory": {
+            "rss": 251760640,
+            "heapTotal": 26262528,
+            "heapUsed": 29826479,
+            "external": 11236581,
+            "arrayBuffers": 43368
+          },
+          "cpu": {
+            "user": 1750541,
+            "system": 530642
+          },
+          "loadedSessions": 2,
+          "loadedMessages": 1100,
+          "pid": 39545
+        },
+        "wsBytes": 1304956,
+        "wsFrames": 206
+      },
+      "first": {
+        "atMs": 3703.598576,
+        "renderer": {
+          "Timestamp": 91995.6864,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 8,
+          "Frames": 4,
+          "JSEventListeners": 3002,
+          "LayoutObjects": 7255,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 8106,
+          "Resources": 529,
+          "ContextLifecycleStateObservers": 77,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 4,
+          "ArrayBufferContents": 144,
+          "LayoutCount": 97,
+          "RecalcStyleCount": 147,
+          "LayoutDuration": 0.031142,
+          "RecalcStyleDuration": 0.087496,
+          "DevToolsCommandDuration": 0.055628,
+          "ScriptDuration": 0.615367,
+          "V8CompileDuration": 0,
+          "TaskDuration": 0.914678,
+          "TaskOtherDuration": 0.125045,
+          "ThreadTime": 0.927224,
+          "ProcessTime": 3.589446,
+          "JSHeapUsedSize": 71533412,
+          "JSHeapTotalSize": 114253824,
+          "FirstMeaningfulPaint": 0,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 8,
+          "nodes": 8106,
+          "jsEventListeners": 3002
+        },
+        "backend": {
+          "memory": {
+            "rss": 251764736,
+            "heapTotal": 24783872,
+            "heapUsed": 29826479,
+            "external": 11257753,
+            "arrayBuffers": 64540
+          },
+          "cpu": {
+            "user": 1759096,
+            "system": 534384
+          },
+          "loadedSessions": 2,
+          "loadedMessages": 1100,
+          "pid": 39545
+        },
+        "wsBytes": 1306546,
+        "wsFrames": 220
+      },
+      "after": {
+        "atMs": 5102.753172000001,
+        "renderer": {
+          "Timestamp": 91997.085384,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 4182,
+          "LayoutObjects": 10582,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 12382,
+          "Resources": 266,
+          "ContextLifecycleStateObservers": 120,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 107,
+          "LayoutCount": 288,
+          "RecalcStyleCount": 396,
+          "LayoutDuration": 0.093362,
+          "RecalcStyleDuration": 0.200463,
+          "DevToolsCommandDuration": 0.149589,
+          "ScriptDuration": 1.454789,
+          "V8CompileDuration": 0,
+          "TaskDuration": 2.156494,
+          "TaskOtherDuration": 0.258291,
+          "ThreadTime": 2.16442,
+          "ProcessTime": 5.549488,
+          "JSHeapUsedSize": 60028032,
+          "JSHeapTotalSize": 121593856,
+          "FirstMeaningfulPaint": 91994.889724,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 1,
+          "nodes": 12382,
+          "jsEventListeners": 4182
+        },
+        "backend": {
+          "memory": {
+            "rss": 253689856,
+            "heapTotal": 25334784,
+            "heapUsed": 30102017,
+            "external": 11491317,
+            "arrayBuffers": 261754
+          },
+          "cpu": {
+            "user": 1868677,
+            "system": 568211
+          },
+          "loadedSessions": 2,
+          "loadedMessages": 1100,
+          "pid": 39545
+        },
+        "wsBytes": 1321470,
+        "wsFrames": 352
+      }
+    },
+    {
+      "id": "perf-001",
+      "name": "Performance 1 (1000 messages)",
+      "messageCount": 1000,
+      "firstVisitMs": 279.54151600000023,
+      "warmSwitchMs": [
+        150.01585999999952,
+        133.25765300000057,
+        133.17338300000029,
+        129.91918600000008,
+        116.67486599999938
+      ],
+      "before": {
+        "atMs": 5222.263436,
+        "renderer": {
+          "Timestamp": 91997.204663,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 4666,
+          "LayoutObjects": 11767,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 13612,
+          "Resources": 266,
+          "ContextLifecycleStateObservers": 134,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 119,
+          "LayoutCount": 306,
+          "RecalcStyleCount": 419,
+          "LayoutDuration": 0.098927,
+          "RecalcStyleDuration": 0.210249,
+          "DevToolsCommandDuration": 0.158024,
+          "ScriptDuration": 1.524479,
+          "V8CompileDuration": 0,
+          "TaskDuration": 2.261418,
+          "TaskOtherDuration": 0.269739,
+          "ThreadTime": 2.269627,
+          "ProcessTime": 5.699125,
+          "JSHeapUsedSize": 63166880,
+          "JSHeapTotalSize": 122904576,
+          "FirstMeaningfulPaint": 91994.889724,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 1,
+          "nodes": 13612,
+          "jsEventListeners": 4666
+        },
+        "backend": {
+          "memory": {
+            "rss": 253689856,
+            "heapTotal": 24960000,
+            "heapUsed": 30102017,
+            "external": 11508818,
+            "arrayBuffers": 279255
+          },
+          "cpu": {
+            "user": 1877551,
+            "system": 571135
+          },
+          "loadedSessions": 2,
+          "loadedMessages": 1100,
+          "pid": 39545
+        },
+        "wsBytes": 1322694,
+        "wsFrames": 363
+      },
+      "first": {
+        "atMs": 5505.099579000001,
+        "renderer": {
+          "Timestamp": 91997.487141,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 5227,
+          "LayoutObjects": 12981,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 14868,
+          "Resources": 266,
+          "ContextLifecycleStateObservers": 148,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 140,
+          "LayoutCount": 328,
+          "RecalcStyleCount": 456,
+          "LayoutDuration": 0.105745,
+          "RecalcStyleDuration": 0.222769,
+          "DevToolsCommandDuration": 0.173947,
+          "ScriptDuration": 1.610997,
+          "V8CompileDuration": 0,
+          "TaskDuration": 2.410063,
+          "TaskOtherDuration": 0.296605,
+          "ThreadTime": 2.421317,
+          "ProcessTime": 5.922033,
+          "JSHeapUsedSize": 77823640,
+          "JSHeapTotalSize": 129110016,
+          "FirstMeaningfulPaint": 91994.889724,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 1,
+          "nodes": 14868,
+          "jsEventListeners": 5227
+        },
+        "backend": {
+          "memory": {
+            "rss": 256077824,
+            "heapTotal": 25633792,
+            "heapUsed": 32017297,
+            "external": 13195777,
+            "arrayBuffers": 308616
+          },
+          "cpu": {
+            "user": 1939655,
+            "system": 606987
+          },
+          "loadedSessions": 3,
+          "loadedMessages": 2100,
+          "pid": 39545
+        },
+        "wsBytes": 2142486,
+        "wsFrames": 383
+      },
+      "after": {
+        "atMs": 6828.1407070000005,
+        "renderer": {
+          "Timestamp": 91998.802285,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 2056,
+          "LayoutObjects": 5828,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 7477,
+          "Resources": 266,
+          "ContextLifecycleStateObservers": 64,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 48,
+          "LayoutCount": 509,
+          "RecalcStyleCount": 697,
+          "LayoutDuration": 0.17068,
+          "RecalcStyleDuration": 0.332156,
+          "DevToolsCommandDuration": 0.267541,
+          "ScriptDuration": 2.365311,
+          "V8CompileDuration": 0,
+          "TaskDuration": 3.540177,
+          "TaskOtherDuration": 0.404489,
+          "ThreadTime": 3.544252,
+          "ProcessTime": 7.634791,
+          "JSHeapUsedSize": 57647636,
+          "JSHeapTotalSize": 138371072,
+          "FirstMeaningfulPaint": 91994.889724,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 1,
+          "nodes": 7477,
+          "jsEventListeners": 2056
+        },
+        "backend": {
+          "memory": {
+            "rss": 258695168,
+            "heapTotal": 25482240,
+            "heapUsed": 32227138,
+            "external": 13397354,
+            "arrayBuffers": 491189
+          },
+          "cpu": {
+            "user": 2054626,
+            "system": 642097
+          },
+          "loadedSessions": 3,
+          "loadedMessages": 2100,
+          "pid": 39545
+        },
+        "wsBytes": 2155890,
+        "wsFrames": 502
+      }
+    },
+    {
+      "id": "perf-002",
+      "name": "Performance 2 (5000 messages)",
+      "messageCount": 5000,
+      "firstVisitMs": 414.1942170000002,
+      "warmSwitchMs": [
+        135.19554199999948,
+        133.45101200000045,
+        118.34695499999907,
+        133.35135300000002,
+        122.19349199999851
+      ],
+      "before": {
+        "atMs": 6953.9127960000005,
+        "renderer": {
+          "Timestamp": 91998.935556,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 2540,
+          "LayoutObjects": 7013,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 8707,
+          "Resources": 266,
+          "ContextLifecycleStateObservers": 78,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 60,
+          "LayoutCount": 527,
+          "RecalcStyleCount": 721,
+          "LayoutDuration": 0.176474,
+          "RecalcStyleDuration": 0.342459,
+          "DevToolsCommandDuration": 0.276336,
+          "ScriptDuration": 2.443417,
+          "V8CompileDuration": 0,
+          "TaskDuration": 3.650946,
+          "TaskOtherDuration": 0.41226,
+          "ThreadTime": 3.655344,
+          "ProcessTime": 7.811159,
+          "JSHeapUsedSize": 60671644,
+          "JSHeapTotalSize": 138371072,
+          "FirstMeaningfulPaint": 91994.889724,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 1,
+          "nodes": 8707,
+          "jsEventListeners": 2546
+        },
+        "backend": {
+          "memory": {
+            "rss": 258695168,
+            "heapTotal": 25714688,
+            "heapUsed": 32227138,
+            "external": 13417719,
+            "arrayBuffers": 511554
+          },
+          "cpu": {
+            "user": 2063870,
+            "system": 645216
+          },
+          "loadedSessions": 3,
+          "loadedMessages": 2100,
+          "pid": 39545
+        },
+        "wsBytes": 2157464,
+        "wsFrames": 516
+      },
+      "first": {
+        "atMs": 7369.267382,
+        "renderer": {
+          "Timestamp": 91999.351887,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 3124,
+          "LayoutObjects": 8225,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 9963,
+          "Resources": 266,
+          "ContextLifecycleStateObservers": 92,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 85,
+          "LayoutCount": 548,
+          "RecalcStyleCount": 767,
+          "LayoutDuration": 0.18276,
+          "RecalcStyleDuration": 0.355498,
+          "DevToolsCommandDuration": 0.294904,
+          "ScriptDuration": 2.548079,
+          "V8CompileDuration": 0,
+          "TaskDuration": 3.833985,
+          "TaskOtherDuration": 0.452744,
+          "ThreadTime": 3.859758,
+          "ProcessTime": 8.10707,
+          "JSHeapUsedSize": 59262460,
+          "JSHeapTotalSize": 138371072,
+          "FirstMeaningfulPaint": 91994.889724,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 1,
+          "nodes": 9963,
+          "jsEventListeners": 3124
+        },
+        "backend": {
+          "memory": {
+            "rss": 262520832,
+            "heapTotal": 31577088,
+            "heapUsed": 39880079,
+            "external": 20132139,
+            "arrayBuffers": 548483
+          },
+          "cpu": {
+            "user": 2233833,
+            "system": 791829
+          },
+          "loadedSessions": 4,
+          "loadedMessages": 7100,
+          "pid": 39545
+        },
+        "wsBytes": 6260443,
+        "wsFrames": 543
+      },
+      "after": {
+        "atMs": 8609.787135999999,
+        "renderer": {
+          "Timestamp": 92000.591393,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 3761,
+          "LayoutObjects": 5954,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 9030,
+          "Resources": 266,
+          "ContextLifecycleStateObservers": 173,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 203,
+          "LayoutCount": 729,
+          "RecalcStyleCount": 1006,
+          "LayoutDuration": 0.241434,
+          "RecalcStyleDuration": 0.458169,
+          "DevToolsCommandDuration": 0.384922,
+          "ScriptDuration": 3.240893,
+          "V8CompileDuration": 0,
+          "TaskDuration": 4.919825,
+          "TaskOtherDuration": 0.594407,
+          "ThreadTime": 4.945902,
+          "ProcessTime": 9.735608,
+          "JSHeapUsedSize": 34439012,
+          "JSHeapTotalSize": 143089664,
+          "FirstMeaningfulPaint": 91994.889724,
+          "DomContentLoaded": 91994.346682,
+          "NavigationStart": 91994.256603
+        },
+        "dom": {
+          "documents": 1,
+          "nodes": 9030,
+          "jsEventListeners": 3761
+        },
+        "backend": {
+          "memory": {
+            "rss": 263598080,
+            "heapTotal": 26715136,
+            "heapUsed": 40155440,
+            "external": 20392136,
+            "arrayBuffers": 721472
+          },
+          "cpu": {
+            "user": 2433293,
+            "system": 847972
+          },
+          "loadedSessions": 4,
+          "loadedMessages": 7100,
+          "pid": 39545
+        },
+        "wsBytes": 6273005,
+        "wsFrames": 655
+      }
+    }
+  ],
+  "interactions": {
+    "inputSamples": [
+      38.23230899999908,
+      33.48452300000099,
+      33.19443299999875
+    ],
+    "copiedBytes": 568,
+    "copiedFinalResponse": true,
+    "searchedFinalMessage": true,
+    "quoted": "PERF_END_perf-002",
+    "reference": [
+      {
+        "id": "ann-1791731803248-h1p3hq",
+        "schemaVersion": 1,
+        "createdAt": 1791731803248,
+        "intent": "comment",
+        "body": [
+          {
+            "type": "highlight"
+          },
+          {
+            "type": "note",
+            "text": "保留这段引用，稍后核查",
+            "format": "plain"
+          }
+        ],
+        "target": {
+          "source": {
+            "sessionId": "perf-002",
+            "messageId": "perf-002-message-4999"
+          },
+          "selectors": [
+            {
+              "type": "text-position",
+              "start": 540,
+              "end": 557
+            },
+            {
+              "type": "text-quote",
+              "exact": "PERF_END_perf-002",
+              "prefix": "ount: 4999, ok: true };\n",
+              "suffix": ""
+            }
+          ]
+        },
+        "style": {
+          "color": "yellow"
+        },
+        "meta": {
+          "followUp": {
+            "text": "保留这段引用，稍后核查",
+            "createdAt": 1791731803248
+          }
+        }
+      }
+    ]
+  },
+  "streaming": {
+    "firstFrameMs": 143.75601500000084,
+    "completeFrameMs": 4717.4150420000005,
+    "browserTiming": {
+      "longTasks": [],
+      "frameGaps": [
+        16.799999999999272,
+        33.20000000000073,
+        16.69999999999891,
+        33.399999999999636,
+        33.20000000000073,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.600000000000364,
+        16.700000000000728,
+        16.599999999998545,
+        16.80000000000109,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.599999999998545,
+        16.80000000000109,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.80000000000109,
+        16.600000000000364,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.600000000000364,
+        16.799999999999272,
+        16.600000000000364,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.600000000000364,
+        16.80000000000109,
+        16.599999999998545,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.799999999999272,
+        16.5,
+        16.80000000000109,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.599999999998545,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.799999999999272,
+        16.600000000000364,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.700000000000728,
+        16.599999999998545,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.80000000000109,
+        16.599999999998545,
+        16.600000000000364,
+        16.80000000000109,
+        16.599999999998545,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.600000000000364,
+        16.799999999999272,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.600000000000364,
+        33.399999999999636,
+        33.399999999999636,
+        33.20000000000073,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.69999999999891,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364,
+        16.799999999999272,
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        16.600000000000364,
+        16.799999999999272,
+        16.5,
+        16.700000000000728,
+        16.69999999999891,
+        16.600000000000364,
+        16.799999999999272,
+        16.600000000000364,
+        16.600000000000364,
+        16.700000000000728
+      ],
+      "lastFrame": 13027.2
+    },
+    "before": {
+      "atMs": 10591.847523999999,
+      "renderer": {
+        "Timestamp": 92002.574487,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 2578,
+        "LayoutObjects": 3713,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 5280,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 22,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 49,
+        "LayoutCount": 822,
+        "RecalcStyleCount": 1221,
+        "LayoutDuration": 0.277016,
+        "RecalcStyleDuration": 0.54927,
+        "DevToolsCommandDuration": 0.435145,
+        "ScriptDuration": 3.583874,
+        "V8CompileDuration": 0,
+        "TaskDuration": 5.73649,
+        "TaskOtherDuration": 0.891185,
+        "ThreadTime": 5.760735,
+        "ProcessTime": 11.028526,
+        "JSHeapUsedSize": 49134944,
+        "JSHeapTotalSize": 143351808,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 5280,
+        "jsEventListeners": 2578
+      },
+      "backend": {
+        "memory": {
+          "rss": 266436608,
+          "heapTotal": 28737536,
+          "heapUsed": 49759498,
+          "external": 29453706,
+          "arrayBuffers": 3136739
+        },
+        "cpu": {
+          "user": 2920860,
+          "system": 1174893
+        },
+        "loadedSessions": 4,
+        "loadedMessages": 7100,
+        "pid": 39545
+      },
+      "wsBytes": 14480926,
+      "wsFrames": 698
+    },
+    "after": {
+      "atMs": 15311.964183999999,
+      "renderer": {
+        "Timestamp": 92007.294652,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 1111,
+        "LayoutObjects": 2290,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2629,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 29,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512138,
+        "ScriptDuration": 3.786332,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.280444,
+        "TaskOtherDuration": 1.104624,
+        "ThreadTime": 6.334512,
+        "ProcessTime": 12.019069,
+        "JSHeapUsedSize": 58042668,
+        "JSHeapTotalSize": 148774912,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2629,
+        "jsEventListeners": 1111
+      },
+      "backend": {
+        "memory": {
+          "rss": 269828096,
+          "heapTotal": 26966016,
+          "heapUsed": 34227038,
+          "external": 14795695,
+          "arrayBuffers": 52151
+        },
+        "cpu": {
+          "user": 3154469,
+          "system": 1331290
+        },
+        "loadedSessions": 4,
+        "loadedMessages": 7102,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    }
+  },
+  "retention": {
+    "beforeLoad": {
+      "memory": {
+        "rss": 269828096,
+        "heapTotal": 26968064,
+        "heapUsed": 34227038,
+        "external": 14795994,
+        "arrayBuffers": 52450
+      },
+      "cpu": {
+        "user": 3154806,
+        "system": 1331345
+      },
+      "loadedSessions": 4,
+      "loadedMessages": 7102,
+      "pid": 39545
+    },
+    "afterLoad": {
+      "memory": {
+        "rss": 271757312,
+        "heapTotal": 31881216,
+        "heapUsed": 44296009,
+        "external": 22961897,
+        "arrayBuffers": 52749
+      },
+      "cpu": {
+        "user": 3205640,
+        "system": 1342111
+      },
+      "loadedSessions": 24,
+      "loadedMessages": 27102,
+      "pid": 39545
+    },
+    "afterAdvancedClockSweep": {
+      "memory": {
+        "rss": 271937536,
+        "heapTotal": 31932416,
+        "heapUsed": 44296009,
+        "external": 22962198,
+        "arrayBuffers": 53050
+      },
+      "cpu": {
+        "user": 3211170,
+        "system": 1342395
+      },
+      "loadedSessions": 1,
+      "loadedMessages": 5002,
+      "pid": 39545
+    }
+  },
+  "idleSamples": [
+    {
+      "atMs": 18367.55663,
+      "renderer": {
+        "Timestamp": 92010.350167,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 1111,
+        "LayoutObjects": 2290,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2629,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 29,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512222,
+        "ScriptDuration": 3.788453,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.299456,
+        "TaskOtherDuration": 1.121431,
+        "ThreadTime": 6.356169,
+        "ProcessTime": 12.056401,
+        "JSHeapUsedSize": 58054484,
+        "JSHeapTotalSize": 148774912,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2629,
+        "jsEventListeners": 1111
+      },
+      "backend": {
+        "memory": {
+          "rss": 271937536,
+          "heapTotal": 29112320,
+          "heapUsed": 44423407,
+          "external": 23049407,
+          "arrayBuffers": 54780
+        },
+        "cpu": {
+          "user": 3222004,
+          "system": 1347030
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 21369.062789,
+      "renderer": {
+        "Timestamp": 92013.351648,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 1111,
+        "LayoutObjects": 2290,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2629,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 29,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512316,
+        "ScriptDuration": 3.790655,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.319444,
+        "TaskOtherDuration": 1.139123,
+        "ThreadTime": 6.378802,
+        "ProcessTime": 12.094826,
+        "JSHeapUsedSize": 58066236,
+        "JSHeapTotalSize": 148774912,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2629,
+        "jsEventListeners": 1111
+      },
+      "backend": {
+        "memory": {
+          "rss": 271945728,
+          "heapTotal": 29094912,
+          "heapUsed": 44427669,
+          "external": 23051621,
+          "arrayBuffers": 55079
+        },
+        "cpu": {
+          "user": 3229299,
+          "system": 1349351
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 24370.629739,
+      "renderer": {
+        "Timestamp": 92016.353138,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 1111,
+        "LayoutObjects": 2290,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2629,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 29,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512405,
+        "ScriptDuration": 3.792671,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.337381,
+        "TaskOtherDuration": 1.154955,
+        "ThreadTime": 6.399325,
+        "ProcessTime": 12.130139,
+        "JSHeapUsedSize": 58075756,
+        "JSHeapTotalSize": 148774912,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2629,
+        "jsEventListeners": 1111
+      },
+      "backend": {
+        "memory": {
+          "rss": 271945728,
+          "heapTotal": 29094912,
+          "heapUsed": 44431872,
+          "external": 23053936,
+          "arrayBuffers": 56809
+        },
+        "cpu": {
+          "user": 3237378,
+          "system": 1352070
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 27372.056448,
+      "renderer": {
+        "Timestamp": 92019.354645,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 1111,
+        "LayoutObjects": 2290,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2629,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 29,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512518,
+        "ScriptDuration": 3.79471,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.360092,
+        "TaskOtherDuration": 1.175514,
+        "ThreadTime": 6.425126,
+        "ProcessTime": 12.173563,
+        "JSHeapUsedSize": 58085216,
+        "JSHeapTotalSize": 148774912,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2629,
+        "jsEventListeners": 1111
+      },
+      "backend": {
+        "memory": {
+          "rss": 271998976,
+          "heapTotal": 26209280,
+          "heapUsed": 32431041,
+          "external": 13262673,
+          "arrayBuffers": 41499
+        },
+        "cpu": {
+          "user": 3284973,
+          "system": 1358600
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 30373.561697999998,
+      "renderer": {
+        "Timestamp": 92022.356196,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 1111,
+        "LayoutObjects": 2290,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2629,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 29,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512624,
+        "ScriptDuration": 3.7967,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.381108,
+        "TaskOtherDuration": 1.194434,
+        "ThreadTime": 6.449044,
+        "ProcessTime": 12.213296,
+        "JSHeapUsedSize": 58089648,
+        "JSHeapTotalSize": 148774912,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2629,
+        "jsEventListeners": 1111
+      },
+      "backend": {
+        "memory": {
+          "rss": 271998976,
+          "heapTotal": 26192896,
+          "heapUsed": 32440194,
+          "external": 13269794,
+          "arrayBuffers": 43229
+        },
+        "cpu": {
+          "user": 3292969,
+          "system": 1361355
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 33374.865118,
+      "renderer": {
+        "Timestamp": 92025.357574,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.51273,
+        "ScriptDuration": 3.798954,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.454546,
+        "TaskOtherDuration": 1.265512,
+        "ThreadTime": 6.524838,
+        "ProcessTime": 12.462817,
+        "JSHeapUsedSize": 37238824,
+        "JSHeapTotalSize": 40329216,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 271958016,
+          "heapTotal": 26243072,
+          "heapUsed": 32454460,
+          "external": 13280620,
+          "arrayBuffers": 44959
+        },
+        "cpu": {
+          "user": 3306434,
+          "system": 1365152
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 36376.280657,
+      "renderer": {
+        "Timestamp": 92028.358811,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512844,
+        "ScriptDuration": 3.800655,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.472696,
+        "TaskOtherDuration": 1.281847,
+        "ThreadTime": 6.545645,
+        "ProcessTime": 12.512395,
+        "JSHeapUsedSize": 37243072,
+        "JSHeapTotalSize": 40329216,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 271974400,
+          "heapTotal": 26192896,
+          "heapUsed": 32455175,
+          "external": 13281207,
+          "arrayBuffers": 45258
+        },
+        "cpu": {
+          "user": 3313804,
+          "system": 1368077
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 39377.594547,
+      "renderer": {
+        "Timestamp": 92031.360205,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.512954,
+        "ScriptDuration": 3.802644,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.49384,
+        "TaskOtherDuration": 1.300892,
+        "ThreadTime": 6.569839,
+        "ProcessTime": 12.553667,
+        "JSHeapUsedSize": 37247480,
+        "JSHeapTotalSize": 40329216,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272003072,
+          "heapTotal": 26192896,
+          "heapUsed": 32457935,
+          "external": 13283343,
+          "arrayBuffers": 46988
+        },
+        "cpu": {
+          "user": 3322206,
+          "system": 1370993
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 42378.918417,
+      "renderer": {
+        "Timestamp": 92034.361615,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513063,
+        "ScriptDuration": 3.804503,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.538435,
+        "TaskOtherDuration": 1.343519,
+        "ThreadTime": 6.619291,
+        "ProcessTime": 12.7114,
+        "JSHeapUsedSize": 36653052,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272003072,
+          "heapTotal": 26192896,
+          "heapUsed": 32458650,
+          "external": 13283930,
+          "arrayBuffers": 47287
+        },
+        "cpu": {
+          "user": 3329211,
+          "system": 1373453
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 45380.202856,
+      "renderer": {
+        "Timestamp": 92037.362883,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513152,
+        "ScriptDuration": 3.806204,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.556026,
+        "TaskOtherDuration": 1.35932,
+        "ThreadTime": 6.639398,
+        "ProcessTime": 12.745841,
+        "JSHeapUsedSize": 36669840,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272003072,
+          "heapTotal": 26192896,
+          "heapUsed": 32461121,
+          "external": 13286017,
+          "arrayBuffers": 49017
+        },
+        "cpu": {
+          "user": 3336490,
+          "system": 1375848
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 48381.517146000006,
+      "renderer": {
+        "Timestamp": 92040.364181,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513247,
+        "ScriptDuration": 3.807909,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.574454,
+        "TaskOtherDuration": 1.375948,
+        "ThreadTime": 6.66036,
+        "ProcessTime": 12.780308,
+        "JSHeapUsedSize": 36674452,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272003072,
+          "heapTotal": 26243072,
+          "heapUsed": 32463561,
+          "external": 13288057,
+          "arrayBuffers": 50747
+        },
+        "cpu": {
+          "user": 3343685,
+          "system": 1378242
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 51383.112706,
+      "renderer": {
+        "Timestamp": 92043.365651,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513349,
+        "ScriptDuration": 3.809594,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.593573,
+        "TaskOtherDuration": 1.39328,
+        "ThreadTime": 6.682149,
+        "ProcessTime": 12.817119,
+        "JSHeapUsedSize": 36678772,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272003072,
+          "heapTotal": 26192896,
+          "heapUsed": 32464276,
+          "external": 13288644,
+          "arrayBuffers": 51046
+        },
+        "cpu": {
+          "user": 3351021,
+          "system": 1381014
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 54384.542965,
+      "renderer": {
+        "Timestamp": 92046.367147,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513463,
+        "ScriptDuration": 3.811478,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.613627,
+        "TaskOtherDuration": 1.411336,
+        "ThreadTime": 6.705028,
+        "ProcessTime": 12.855943,
+        "JSHeapUsedSize": 36683476,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272003072,
+          "heapTotal": 26192896,
+          "heapUsed": 32466716,
+          "external": 13290684,
+          "arrayBuffers": 52776
+        },
+        "cpu": {
+          "user": 3359330,
+          "system": 1383901
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 57385.885805000005,
+      "renderer": {
+        "Timestamp": 92049.368394,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513576,
+        "ScriptDuration": 3.813481,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.635347,
+        "TaskOtherDuration": 1.43094,
+        "ThreadTime": 6.729856,
+        "ProcessTime": 12.897034,
+        "JSHeapUsedSize": 36688148,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272023552,
+          "heapTotal": 26243072,
+          "heapUsed": 32467431,
+          "external": 13292702,
+          "arrayBuffers": 54506
+        },
+        "cpu": {
+          "user": 3370193,
+          "system": 1386835
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 60387.307615000005,
+      "renderer": {
+        "Timestamp": 92052.369917,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513683,
+        "ScriptDuration": 3.815108,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.652348,
+        "TaskOtherDuration": 1.446207,
+        "ThreadTime": 6.749429,
+        "ProcessTime": 12.931425,
+        "JSHeapUsedSize": 36710196,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272023552,
+          "heapTotal": 26192896,
+          "heapUsed": 32469577,
+          "external": 13293289,
+          "arrayBuffers": 54805
+        },
+        "cpu": {
+          "user": 3377801,
+          "system": 1389730
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 63388.851384,
+      "renderer": {
+        "Timestamp": 92055.371294,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.51379,
+        "ScriptDuration": 3.818583,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.676519,
+        "TaskOtherDuration": 1.466796,
+        "ThreadTime": 6.776364,
+        "ProcessTime": 12.978492,
+        "JSHeapUsedSize": 36875684,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272068608,
+          "heapTotal": 26243072,
+          "heapUsed": 32504260,
+          "external": 13319540,
+          "arrayBuffers": 56535
+        },
+        "cpu": {
+          "user": 3389821,
+          "system": 1393498
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 66390.53121300001,
+      "renderer": {
+        "Timestamp": 92058.373057,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.513907,
+        "ScriptDuration": 3.820465,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.699889,
+        "TaskOtherDuration": 1.488167,
+        "ThreadTime": 6.802696,
+        "ProcessTime": 13.021413,
+        "JSHeapUsedSize": 36879824,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272072704,
+          "heapTotal": 26192896,
+          "heapUsed": 32504975,
+          "external": 13320127,
+          "arrayBuffers": 56834
+        },
+        "cpu": {
+          "user": 3397121,
+          "system": 1396242
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 69392.08313300001,
+      "renderer": {
+        "Timestamp": 92061.374654,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.514032,
+        "ScriptDuration": 3.822401,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.72037,
+        "TaskOtherDuration": 1.506587,
+        "ThreadTime": 6.826102,
+        "ProcessTime": 13.06125,
+        "JSHeapUsedSize": 36884744,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272084992,
+          "heapTotal": 26192896,
+          "heapUsed": 32508215,
+          "external": 13322631,
+          "arrayBuffers": 58564
+        },
+        "cpu": {
+          "user": 3405626,
+          "system": 1399322
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 72393.421573,
+      "renderer": {
+        "Timestamp": 92064.376101,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.514148,
+        "ScriptDuration": 3.823993,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.735944,
+        "TaskOtherDuration": 1.520453,
+        "ThreadTime": 6.844107,
+        "ProcessTime": 13.094193,
+        "JSHeapUsedSize": 36889136,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272089088,
+          "heapTotal": 26243072,
+          "heapUsed": 32509890,
+          "external": 13325289,
+          "arrayBuffers": 60294
+        },
+        "cpu": {
+          "user": 3413797,
+          "system": 1402160
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    },
+    {
+      "atMs": 75394.856162,
+      "renderer": {
+        "Timestamp": 92067.3775,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 701,
+        "LayoutObjects": 2212,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 2542,
+        "Resources": 266,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 2,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 1,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 9,
+        "LayoutCount": 863,
+        "RecalcStyleCount": 1506,
+        "LayoutDuration": 0.287215,
+        "RecalcStyleDuration": 0.590135,
+        "DevToolsCommandDuration": 0.514261,
+        "ScriptDuration": 3.826014,
+        "V8CompileDuration": 0,
+        "TaskDuration": 6.760227,
+        "TaskOtherDuration": 1.542602,
+        "ThreadTime": 6.871521,
+        "ProcessTime": 13.139647,
+        "JSHeapUsedSize": 36893384,
+        "JSHeapTotalSize": 38232064,
+        "FirstMeaningfulPaint": 91994.889724,
+        "DomContentLoaded": 91994.346682,
+        "NavigationStart": 91994.256603
+      },
+      "dom": {
+        "documents": 1,
+        "nodes": 2542,
+        "jsEventListeners": 701
+      },
+      "backend": {
+        "memory": {
+          "rss": 272076800,
+          "heapTotal": 26192896,
+          "heapUsed": 32512036,
+          "external": 13325876,
+          "arrayBuffers": 60593
+        },
+        "cpu": {
+          "user": 3421374,
+          "system": 1404747
+        },
+        "loadedSessions": 1,
+        "loadedMessages": 5002,
+        "pid": 39545
+      },
+      "wsBytes": 18603650,
+      "wsFrames": 777
+    }
+  ],
+  "persistence": {
+    "snapshots": [
+      {
+        "initialMessages": 100,
+        "initialBytes": 61725,
+        "flushMs": [
+          1.1920090000057826,
+          1.1261490000033518,
+          1.182318999999552,
+          1.2225089999992633,
+          1.0657300000020768,
+          1.1179290000000037,
+          1.2395489999908023,
+          1.0318289999995613,
+          1.21388900000602,
+          1.180168999999296
+        ],
+        "synchronousReadMs": [
+          0.34556899999734014,
+          0.33998000000428874,
+          0.4636800000007497,
+          0.3077590000029886,
+          0.31146900000749156,
+          0.35680999999749474,
+          0.302720000006957,
+          0.3347199999989243,
+          0.37907899999117944,
+          0.33196999999927357
+        ],
+        "snapshotBytes": 678125,
+        "appendedContentBytes": 10330,
+        "logicalWriteAmplification": 65.64617618586641
+      },
+      {
+        "initialMessages": 1000,
+        "initialBytes": 614628,
+        "flushMs": [
+          3.261717999994289,
+          3.1868970000068657,
+          3.200647999998182,
+          3.6284169999998994,
+          3.3769370000081835,
+          3.574276999992435,
+          3.1889269999956014,
+          3.6580070000054548,
+          3.243226999999024,
+          3.1532379999989644
+        ],
+        "synchronousReadMs": [
+          2.255727999989176,
+          2.260357999999542,
+          2.2377080000005662,
+          2.228588000012678,
+          2.1883989999914775,
+          2.199007999995956,
+          4.399567000000388,
+          2.4250479999900563,
+          2.444787999993423,
+          2.3741579999914393
+        ],
+        "snapshotBytes": 6207145,
+        "appendedContentBytes": 10330,
+        "logicalWriteAmplification": 600.8852855759923
+      },
+      {
+        "initialMessages": 5000,
+        "initialBytes": 3084879,
+        "flushMs": [
+          14.55792899998778,
+          12.324640000006184,
+          19.11523500000476,
+          12.282980999996653,
+          13.967529000001377,
+          12.547819999992498,
+          13.277710000009392,
+          12.574430000007851,
+          13.161489000005531,
+          13.278109000006225
+        ],
+        "synchronousReadMs": [
+          11.751430000003893,
+          9.840812000009464,
+          11.725669999999809,
+          10.39910099998815,
+          10.861960999987787,
+          12.282189999998081,
+          10.656621000001905,
+          18.728254999994533,
+          11.881800999995903,
+          11.608260999986669
+        ],
+        "snapshotBytes": 30909645,
+        "appendedContentBytes": 10330,
+        "logicalWriteAmplification": 2992.221200387222
+      }
+    ],
+    "durableCommitMs": [
+      10.699260999987018,
+      1.1935389999998733,
+      1.2979489999997895,
+      1.194908999998006,
+      1.1903889999957755,
+      0.8188800000061747,
+      0.8209389999974519,
+      0.7774000000063097,
+      0.7838189999893075,
+      0.8596590000088327
+    ],
+    "backupMs": 6.464575000005425,
+    "durableFilesBeforeBackup": {
+      "runtime/runtime.db-wal": 1050632,
+      "runtime/runtime.db-shm": 32768,
+      "runtime/runtime.db": 4096
+    },
+    "durableFilesAfterBackup": {
+      "runtime/runtime.db-wal": 1050632,
+      "runtime/runtime.db-shm": 32768,
+      "runtime/runtime.db": 131072,
+      "measured-backup.sqlite": 131072
+    }
+  },
+  "piStartup": {
+    "model": "pi/gpt-6-astra",
+    "offline": true,
+    "samples": [
+      {
+        "processReadyMs": 503.54323500000464,
+        "sdkReadyMs": 35.557591999997385,
+        "warmEnsureMs": 0.1711700000014389
+      },
+      {
+        "processReadyMs": 543.8257230000017,
+        "sdkReadyMs": 34.50110300000233,
+        "warmEnsureMs": 0.24541899999894667
+      },
+      {
+        "processReadyMs": 481.73658300000534,
+        "sdkReadyMs": 29.22762700000021,
+        "warmEnsureMs": 0.14797900000121444
+      },
+      {
+        "processReadyMs": 471.5296620000008,
+        "sdkReadyMs": 31.80673399999796,
+        "warmEnsureMs": 0.19530000000668224
+      },
+      {
+        "processReadyMs": 462.80038899999636,
+        "sdkReadyMs": 30.147205999994185,
+        "warmEnsureMs": 0.15387900000496302
+      }
+    ]
+  },
+  "planning": {
+    "item": {
+      "id": "261011-jade-harbor",
+      "title": "FACT_SHARED_已完成",
+      "statusId": "done",
+      "startAt": "2026-10-11",
+      "dueAt": "2026-10-11",
+      "progress": 100,
+      "dependencyIds": [],
+      "sessionIds": [
+        "261011-jade-harbor"
+      ],
+      "primarySessionId": "261011-jade-harbor",
+      "createdAt": 1791731871778,
+      "updatedAt": 1791731871778
+    },
+    "calendar": {
+      "id": "261011-jade-harbor",
+      "title": "FACT_SHARED_已完成",
+      "date": "2026-10-11",
+      "endDate": "2026-10-11",
+      "allDay": true,
+      "createdAt": 1791731871778,
+      "updatedAt": 1791731871778
+    },
+    "session": {
+      "id": "261011-jade-harbor",
+      "name": "FACT_SHARED_已完成",
+      "sessionStatus": "done",
+      "startAt": "2026-10-11",
+      "dueAt": "2026-10-11",
+      "progress": 100
+    }
+  },
+  "budgetChecks": [
+    {
+      "id": "navigation",
+      "pass": true,
+      "samples": [
+        1114.420235,
+        913.5301359999999
+      ],
+      "limit": 3000
+    },
+    {
+      "id": "firstVisit",
+      "pass": true,
+      "samples": [
+        165.82759699999997,
+        279.54151600000023,
+        414.1942170000002
+      ],
+      "limit": 3000
+    },
+    {
+      "id": "warmSwitch",
+      "pass": true,
+      "samples": [
+        149.7291699999996,
+        132.19326400000045,
+        133.22324300000037,
+        127.06269799999973,
+        132.86416299999928,
+        150.01585999999952,
+        133.25765300000057,
+        133.17338300000029,
+        129.91918600000008,
+        116.67486599999938,
+        135.19554199999948,
+        133.45101200000045,
+        118.34695499999907,
+        133.35135300000002,
+        122.19349199999851
+      ],
+      "limit": 2000
+    },
+    {
+      "id": "inputTwoFrames",
+      "pass": true,
+      "samples": [
+        38.23230899999908,
+        33.48452300000099,
+        33.19443299999875
+      ],
+      "limit": 250
+    },
+    {
+      "id": "firstStreamTwoFrames",
+      "pass": true,
+      "samples": [
+        143.75601500000084
+      ],
+      "limit": 1500
+    },
+    {
+      "id": "rendererHeapBytes",
+      "pass": true,
+      "samples": [
+        58042668
+      ],
+      "limit": 268435456
+    },
+    {
+      "id": "backendRssBytes",
+      "pass": true,
+      "samples": [
+        269828096
+      ],
+      "limit": 1073741824
+    }
+  ],
+  "budgetStatus": "passed",
+  "browserErrors": [],
+  "blockedExternalRequestCount": 0,
+  "status": "passed"
+}

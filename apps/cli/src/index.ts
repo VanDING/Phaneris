@@ -10,6 +10,11 @@
 import { resolve } from 'path'
 import { CliRpcClient } from './client.ts'
 
+/** Boundary values stay unknown until the required shape is checked. */
+function recordOf(value: unknown): Record<string, unknown> | undefined {
+  return value !== null && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : undefined
+}
+
 // ---------------------------------------------------------------------------
 // Arg parsing
 // ---------------------------------------------------------------------------
@@ -171,7 +176,7 @@ async function resolveWorkspace(
     return explicit
   }
   try {
-    const workspaces = (await client.invoke('workspaces:get')) as any[]
+    const workspaces = (await client.invoke('workspaces:get'))
     if (workspaces?.length > 0) {
       const id = workspaces[0].id
       await client.invoke('window:switchWorkspace', id).catch(() => {})
@@ -270,7 +275,7 @@ async function cmdVersions(client: CliRpcClient, args: CliArgs): Promise<void> {
 
 async function cmdWorkspaces(client: CliRpcClient, args: CliArgs): Promise<void> {
   await client.connect()
-  const result = (await client.invoke('workspaces:get')) as any[]
+  const result = (await client.invoke('workspaces:get'))
   if (args.json) {
     out(result, true)
   } else {
@@ -279,7 +284,7 @@ async function cmdWorkspaces(client: CliRpcClient, args: CliArgs): Promise<void>
       return
     }
     for (const ws of result) {
-      out(`${ws.id}  ${ws.name ?? '(unnamed)'}  ${ws.path ?? ''}`, false)
+      out(`${ws.id}  ${ws.name ?? '(unnamed)'}  ${ws.rootPath ?? ''}`, false)
     }
   }
 }
@@ -291,7 +296,7 @@ async function cmdSessions(client: CliRpcClient, args: CliArgs): Promise<void> {
     err('No workspace available. Use --workspace <id>')
     process.exit(1)
   }
-  const result = (await client.invoke('sessions:get', workspaceId)) as any[]
+  const result = (await client.invoke('sessions:get', workspaceId))
   if (args.json) {
     out(result, true)
   } else {
@@ -685,7 +690,7 @@ async function cmdRun(args: CliArgs): Promise<void> {
     // Auto-setup LLM connection from flags / env vars.
     // When --base-url is provided, always create the custom endpoint connection
     // (even if other connections exist) so the session routes through it.
-    const connections = (await client.invoke('LLM_Connection:list')) as any[]
+    const connections = (await client.invoke('LLM_Connection:list'))
     let connectionSlug: string | undefined
     if (shouldSetupLlmConnection(connections?.length ?? 0, args)) {
       const result = await setupLlmConnection(client, args)
@@ -881,6 +886,7 @@ interface ValidateMessageBlock {
 }
 
 interface ValidateMessage {
+  id?: string
   role: string
   content: string | ValidateMessageBlock[]
 }
@@ -1022,14 +1028,14 @@ export function getValidateSteps(): ValidateStep[] {
     {
       name: 'credentials:healthCheck',
       fn: async (client) => {
-        const r = (await client.invoke('credentials:healthCheck')) as any
+        const r = await client.invoke('credentials:healthCheck')
         return JSON.stringify(r)
       },
     },
     {
       name: 'system:versions',
       fn: async (client) => {
-        const r = (await client.invoke('system:versions')) as any
+        const r = await client.invoke('system:versions')
         return r?.node ? `node=${r.node}` : JSON.stringify(r)
       },
     },
@@ -1053,10 +1059,10 @@ export function getValidateSteps(): ValidateStep[] {
           await client.invoke('window:switchWorkspace', ws.id)
           return `registered: ${absPath}`
         }
-        const r = (await client.invoke('workspaces:get')) as any[]
+        const r = (await client.invoke('workspaces:get'))
         if (r?.length > 0) {
           ctx.workspaceId = r[0].id
-          ctx.workspaceRootPath = r[0].rootPath ?? r[0].path
+          ctx.workspaceRootPath = r[0].rootPath
           // Bind this client to the workspace so push events (e.g. session:event)
           // routed { to: 'workspace' } reach us.
           await client.invoke('window:switchWorkspace', r[0].id)
@@ -1078,14 +1084,14 @@ export function getValidateSteps(): ValidateStep[] {
       name: 'sessions:get',
       fn: async (client, ctx) => {
         if (!ctx.workspaceId) return 'skipped (no workspace)'
-        const r = (await client.invoke('sessions:get', ctx.workspaceId)) as any[]
+        const r = (await client.invoke('sessions:get', ctx.workspaceId))
         return `${r?.length ?? 0} sessions`
       },
     },
     {
       name: 'LLM_Connection:list',
       fn: async (client, ctx) => {
-        const r = (await client.invoke('LLM_Connection:list')) as any[]
+        const r = (await client.invoke('LLM_Connection:list'))
 
         // Custom endpoint: always create/update when --base-url is provided
         if (ctx.baseUrl) {
@@ -1181,7 +1187,7 @@ export function getValidateSteps(): ValidateStep[] {
       name: 'sources:get',
       fn: async (client, ctx) => {
         if (!ctx.workspaceId) return 'skipped (no workspace)'
-        const r = (await client.invoke('sources:get', ctx.workspaceId)) as any[]
+        const r = (await client.invoke('sources:get', ctx.workspaceId))
         return `${r?.length ?? 0} sources`
       },
     },
@@ -1190,10 +1196,10 @@ export function getValidateSteps(): ValidateStep[] {
       fn: async (client, ctx) => {
         if (!ctx.workspaceId) return 'skipped (no workspace)'
         const name = `__cli-validate-${Date.now()}`
-        const r = (await client.invoke('sessions:create', ctx.workspaceId, {
+        const r = await client.invoke('sessions:create', ctx.workspaceId, {
           name,
           permissionMode: 'allow-all',
-        })) as any
+        })
         ctx.createdSessionId = r?.id
         return ctx.createdSessionId ?? 'created'
       },
@@ -1227,10 +1233,10 @@ export function getValidateSteps(): ValidateStep[] {
       name: 'labels:create (e2e-test)',
       fn: async (client, ctx) => {
         if (!ctx.workspaceId) return 'skipped (no workspace)'
-        const r = (await client.invoke('labels:create', ctx.workspaceId, {
+        const r = await client.invoke('labels:create', ctx.workspaceId, {
           name: 'e2e-test',
           color: 'gray',
-        })) as any
+        })
         ctx.e2eTestLabelId = r?.id
         return `label created: ${r?.id}`
       },
@@ -1244,9 +1250,9 @@ export function getValidateSteps(): ValidateStep[] {
           'Use the set_session_labels tool to set labels: ["e2e-test"] on the current session. Do NOT use any other tool.',
           90_000, true, undefined, ctx.onEvent, 'set_session_labels')
         // Verify labels were actually applied
-        const sessions = (await client.invoke('sessions:get', ctx.workspaceId)) as any[]
-        const session = sessions?.find((s: any) => s.id === ctx.createdSessionId)
-        const labels = session?.labels ?? session?.labelIds ?? []
+        const sessions = (await client.invoke('sessions:get', ctx.workspaceId))
+        const session = sessions?.find((s) => s.id === ctx.createdSessionId)
+        const labels = session?.labels ?? (session as (typeof session & { labelIds?: string[] }))?.labelIds ?? []
         if (!labels.length) throw new Error('Labels not applied to session')
         return `${result} — labels verified: ${JSON.stringify(labels)}`
       },
@@ -1276,14 +1282,14 @@ export function getValidateSteps(): ValidateStep[] {
         if (!ctx.createdSessionId || !ctx.workspaceId) return 'skipped (no session)'
         const r = (await client.invoke('sessions:getMessages', ctx.createdSessionId)) as ValidateMessagesResponse
         const messages = r?.messages ?? r?.conversation ?? []
-        const firstAssistant = messages.find((m) => m.role === 'assistant') as any
+        const firstAssistant = messages.find((m) => m.role === 'assistant')
         if (!firstAssistant?.id) throw new Error('No assistant message found to branch from')
-        const branch = (await client.invoke('sessions:create', ctx.workspaceId, {
+        const branch = await client.invoke('sessions:create', ctx.workspaceId, {
           name: `__cli-validate-branch-${Date.now()}`,
           permissionMode: 'allow-all',
           branchFromSessionId: ctx.createdSessionId,
           branchFromMessageId: firstAssistant.id,
-        })) as any
+        })
         ctx.branchedSessionId = branch?.id
         return `branched at message ${firstAssistant.id} → session ${branch?.id}`
       },
@@ -1317,13 +1323,13 @@ export function getValidateSteps(): ValidateStep[] {
       name: 'sources:create',
       fn: async (client, ctx) => {
         if (!ctx.workspaceId) return 'skipped (no workspace)'
-        const r = (await client.invoke('sources:create', ctx.workspaceId, {
+        const r = await client.invoke('sources:create', ctx.workspaceId, {
           name: 'Cat Facts',
           provider: 'catfact',
           type: 'api',
           api: { baseUrl: 'https://catfact.ninja', authType: 'none' },
           icon: '🐱',
-        })) as any
+        })
         ctx.createdSourceSlug = r?.slug
         return ctx.createdSourceSlug ? `slug=${ctx.createdSourceSlug}` : JSON.stringify(r)
       },
@@ -1407,10 +1413,10 @@ SKILLEOF`, 90_000, true, undefined, ctx.onEvent)
       name: 'skills:get (verify)',
       fn: async (client, ctx) => {
         if (!ctx.workspaceId || !ctx.createdSkillSlug) return 'skipped (no skill)'
-        const r = (await client.invoke('skills:get', ctx.workspaceId)) as any[]
-        const found = r?.find((s: any) => s.slug === ctx.createdSkillSlug)
+        const r = await client.invoke('skills:get', ctx.workspaceId)
+        const found = r?.find((s) => s.slug === ctx.createdSkillSlug)
         if (!found) throw new Error(`Skill '${ctx.createdSkillSlug}' not found in skills list`)
-        return `found: ${found.name ?? found.slug}`
+        return `found: ${found.metadata.name ?? found.slug}`
       },
     },
     {
@@ -1598,15 +1604,16 @@ SKILLEOF`, 90_000, true, undefined, ctx.onEvent)
       name: 'webhook:test (RPC)',
       fn: async (client, ctx) => {
         if (!ctx.workspaceId) return 'skipped (no workspace)'
-        const r = (await client.invoke('automations:test', {
+        const r = await client.invoke('automations:test', {
           workspaceId: ctx.workspaceId,
           actions: [{
             type: 'webhook',
             url: 'http://127.0.0.1:19999/validate-test',
             method: 'GET',
           }],
-        })) as any
+        })
         const result = r?.actions?.[0]
+        if (!result || result.type !== 'webhook') throw new Error('Expected webhook result from automation probe')
         if (result?.success) throw new Error('Expected webhook to fail (nothing listening)')
         if (!result?.error && result?.statusCode !== 0) throw new Error('Expected error or statusCode 0 in result')
         return `correctly failed: ${(result.error ?? `statusCode=${result.statusCode}`).slice(0, 80)}`
@@ -1642,19 +1649,22 @@ SKILLEOF`, 90_000, true, undefined, ctx.onEvent)
             })
             .filter(Boolean) as Array<Record<string, unknown>>
 
-          const webhookEntries = entries.filter((e) => !!e.webhook)
+          const webhookEntries: Array<Record<string, unknown> & { webhook: Record<string, unknown> }> = entries.flatMap(e => {
+            const webhook = recordOf(e.webhook)
+            return webhook ? [{ ...e, webhook }] : []
+          })
           lastWebhookCount = webhookEntries.length
 
           if (webhookEntries.length > 0) {
             const recentThreshold = Date.now() - 120_000
-            const recentFailed = webhookEntries.find((e: any) =>
-              !e.ok && e.ts > recentThreshold && e.webhook?.method === 'POST'
-            ) as any
+            const recentFailed = webhookEntries.find((e) =>
+              !e.ok && typeof e.ts === 'number' && e.ts > recentThreshold && e.webhook?.method === 'POST'
+            )
             if (recentFailed) {
-              return `webhook failure recorded: method=${recentFailed.webhook.method}, url=${recentFailed.webhook.url?.slice(0, 50)}`
+              return `webhook failure recorded: method=${recentFailed.webhook.method}, url=${typeof recentFailed.webhook.url === 'string' ? recentFailed.webhook.url.slice(0, 50) : undefined}`
             }
 
-            const latest = webhookEntries[webhookEntries.length - 1] as any
+            const latest = webhookEntries[webhookEntries.length - 1]
             lastSummary = `latest: ok=${String(latest?.ok)} method=${String(latest?.webhook?.method ?? 'n/a')} ts=${String(latest?.ts ?? 'n/a')}`
           }
 
@@ -1782,12 +1792,15 @@ export async function runValidation(
         switch (ev.type) {
           // Buffer prompt — shown when agent starts responding
           case 'user_message': {
-            const msg = ev.message as any
+            const msg = recordOf(ev.message)
             let text = ''
             if (typeof msg?.content === 'string') {
               text = msg.content
             } else if (Array.isArray(msg?.content)) {
-              text = msg.content.filter((b: any) => b.type === 'text').map((b: any) => b.text).join(' ')
+              text = msg.content.flatMap(block => {
+                const value = recordOf(block)
+                return value?.type === 'text' && typeof value.text === 'string' ? [value.text] : []
+              }).join(' ')
             }
             const clean = text.replace(/\n/g, ' ').trim()
             bufferedPrompt = clean.length > 100 ? clean.slice(0, 100) + '…' : clean

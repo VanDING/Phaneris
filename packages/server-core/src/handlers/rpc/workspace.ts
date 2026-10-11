@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { join } from 'path'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import { WORKSPACES_DIR } from '@phaneris/shared/config/paths'
-import { getWorkspaceByNameOrId, addWorkspace, setActiveWorkspace, updateWorkspaceRemoteServer, setRemoteServerToken, getRemoteServerTokenSync } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId, addWorkspace, setActiveWorkspace, updateWorkspaceRemoteServer, setRemoteServerToken, getRemoteServerTokenSync } from '@phaneris/shared/config/workspace-selection';
 import { perf } from '@phaneris/shared/utils'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'

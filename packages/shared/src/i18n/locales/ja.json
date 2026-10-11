@@ -2138,6 +2138,7 @@
   "toast.failedToRefreshTitle": "タイトルの更新に失敗しました",
   "toast.failedToReveal": "{{fileManager}}での表示に失敗しました",
   "toast.failedToSaveSetting": "{{setting}}の保存に失敗しました",
+  "toast.failedToSwitchWorkspace": "ワークスペースの切り替えに失敗しました",
   "toast.failedToToggleAutomation": "オートメーションの切り替えに失敗しました",
   "toast.failedToUpdateProject": "セッションのプロジェクト更新に失敗しました",
   "toast.installingUpdate": "アップデートをインストール中...",

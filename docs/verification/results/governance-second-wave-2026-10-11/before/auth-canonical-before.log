@@ -1,0 +1,23 @@
+41 |     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
+42 |     const last = revoked.at(-1)!
+43 |     const variant = revoked.slice(0, -1) + alphabet[alphabet.indexOf(last) ^ 1]
+44 |     assert.notEqual(variant, revoked)
+45 |     assert.deepEqual(Buffer.from(variant.split('.').at(-1)!, 'base64url'), Buffer.from(revoked.split('.').at(-1)!, 'base64url'))
+46 |     assert.equal(await status(server, variant), 401, 'Equivalent JWT signature spellings cannot bypass logout')
+                ^
+AssertionError: Equivalent JWT signature spellings cannot bypass logout
+
+200 !== 401
+
+ generatedMessage: false,
+     actual: 200,
+   expected: 401,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/webui-auth-lifecycle-workflow.ts:46:12
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+      at processTicksAndRejections (native:7:39)
+
+Bun v1.4.2 (macOS x64)

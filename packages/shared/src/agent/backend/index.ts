@@ -63,6 +63,7 @@ export {
   createConfigFromConnection,
   createBackendFromConnection,
   createBackendFromResolvedContext,
+  type ResolvedBackendContext,
   initializeBackendHostRuntime,
   resolveBackendHostTooling,
   fetchBackendModels,

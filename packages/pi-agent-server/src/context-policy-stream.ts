@@ -1,7 +1,7 @@
 import type { StreamFn } from '@earendil-works/pi-agent-core'
 import { createAssistantMessageEventStream, getCurrentTools, type AssistantMessage, type TranscriptContext } from '@earendil-works/pi-ai'
 import { calculateContextTokens, estimateTokens } from '@earendil-works/pi-coding-agent'
-import { contextHandoffBudget, HANDOFF_INSTRUCTION, validateHandoffDocument, type ContextPolicy } from '../../shared/src/agent/context-policy.ts'
+import { contextHandoffBudget, HANDOFF_INSTRUCTION, validateHandoffDocument, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 
 export type HandoffSignal = { phase: 'generating' | 'ready' | 'failed'; document?: string; error?: string }
 

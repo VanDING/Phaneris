@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T18:57:21.266050+00:00",
+  "headSha": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+  "dirty": true,
+  "branch": "main",
+  "implementedLocally": [
+    "G0",
+    "G1",
+    "G2a",
+    "G6-R1 branch/session release regression"
+  ],
+  "notStarted": [
+    "G2b",
+    "G2c",
+    "G3",
+    "G4",
+    "G5",
+    "G6 structural split",
+    "G7",
+    "G8"
+  ],
+  "validateFull": {
+    "exitCode": 0,
+    "validationBun": {
+      "pass": 87,
+      "skip": 0,
+      "fail": 0
+    },
+    "workspaceBun": {
+      "pass": 6285,
+      "skip": 14,
+      "fail": 0
+    },
+    "totalBunPassingExecutions": 6372,
+    "countingPolicy": "Execution counts; CI subset overlaps workspace suite. Existing skips retained.",
+    "documentToolChecks": 24,
+    "log": "logs/validate-full.log"
+  },
+  "critical": {
+    "exitCode": 0,
+    "workflowAndGroupCount": 11,
+    "existingBun": {
+      "pass": 228,
+      "skip": 0,
+      "fail": 0
+    },
+    "workflowMinimums": {
+      "runtime-boundary-gate": 9,
+      "durable-runtime-boundary": 15,
+      "durable-runtime-crash": 8,
+      "plugin-transaction": 12,
+      "session-branch": 4
+    },
+    "verifiedSceneCounts": {
+      "runtime-boundary-gate": 10,
+      "durable-runtime-boundary": 15,
+      "durable-runtime-crash": 8,
+      "plugin-transaction": 12,
+      "session-branch": 4
+    },
+    "runtimeGateViolationCount": 25
+  },
+  "canaries": {
+    "verificationOutput": 7,
+    "governanceGates": 4
+  },
+  "independentRealPiLoopback": 6,
+  "buildSmoke": 6,
+  "qualityCoverage": {
+    "workspaceMembers": 13,
+    "toolingProjects": 4,
+    "lintedFiles": 2143,
+    "registeredWarnings": 120,
+    "reactHooks": 95,
+    "localStorage": 17,
+    "unusedSuppressions": 8,
+    "frozenHistoricalToolingExceptions": 3,
+    "ipcLiteralChannels": 425
+  },
+  "build": {
+    "mainBytes": 21442474,
+    "maxMainBytes": 21500000,
+    "headroomBytes": 57526,
+    "rendererInitialChunks": 71,
+    "rendererInitialBytes": 4279927,
+    "piBytes": 14004547
+  },
+  "documentation": {
+    "documents": 106,
+    "relativeLinks": 698,
+    "releaseGateOpenItems": 15,
+    "gateLog": "logs/docs.log"
+  },
+  "sourcePatch": {
+    "path": "implementation.patch",
+    "bytes": 303244,
+    "sha256": "08b246fd69803aa8594f187137533bd9a306d893a0cbc0cb85dd9743e75cfd0e",
+    "reverseApplyReadOnlyCheckExitCode": 0,
+    "resultsDirectoriesExcluded": true
+  },
+  "untested": [
+    "GitHub Actions remote jobs",
+    "native Windows/Linux execution",
+    "first runtime download",
+    "signed installers/notarization/release",
+    "live providers/IM",
+    "concurrent same-name plugin install",
+    "plugin process-crash cross-directory recovery"
+  ],
+  "knownOpen": [
+    "new API/local plugin source empty default validation (F07)",
+    "strict identity remnants",
+    "remaining internal module cycles/dependency ownership",
+    "authentication revocation persistence/Origin policy",
+    "later architectural stages"
+  ],
+  "committed": false,
+  "pushed": false
+}

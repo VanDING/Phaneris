@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "events": [
+    "user_message",
+    "connection_changed",
+    "error",
+    "complete"
+  ]
+}

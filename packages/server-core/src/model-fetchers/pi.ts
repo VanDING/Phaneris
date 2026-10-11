@@ -4,8 +4,8 @@
  * Provider-agnostic wrapper that delegates model discovery to backend drivers.
  */
 
-import type { ModelFetcher, ModelFetchResult, ModelFetcherCredentials } from '@phaneris/shared/config'
-import type { LlmConnection } from '@phaneris/shared/config'
+import type { ModelFetcher, ModelFetchResult, ModelFetcherCredentials } from '@phaneris/shared/config';
+import type { LlmConnection } from '@phaneris/shared/config';
 import { fetchBackendModels } from '@phaneris/shared/agent/backend'
 import { getHostRuntime } from './runtime'
 

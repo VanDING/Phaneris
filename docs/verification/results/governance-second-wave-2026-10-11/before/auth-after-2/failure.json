@@ -1,0 +1,4 @@
+{
+  "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ws://proxy.example:0'\n- 'ws://proxy.example:62521'\n                      ^\n",
+  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ws://proxy.example:0'\n- 'ws://proxy.example:62521'\n                      ^\n\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/webui-auth-lifecycle-workflow.ts:75:12)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

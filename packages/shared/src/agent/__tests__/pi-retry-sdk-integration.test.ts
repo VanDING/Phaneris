@@ -7,7 +7,7 @@
  * runtime keep these tests independent of disk state, credentials, and network.
  */
 import { describe, expect, it } from 'bun:test';
-import type { AgentEvent as CraftAgentEvent } from '@phaneris/core/types';
+import type { AgentEvent as ProductAgentEvent } from '@phaneris/core/types';
 import {
   createAgentSession,
   createExtensionRuntime,
@@ -56,14 +56,14 @@ interface Attempt {
 
 interface TraceEntry {
   sdkEvent: AgentSessionEvent;
-  adapted: CraftAgentEvent[];
+  adapted: ProductAgentEvent[];
   completedQueue: boolean;
 }
 
 interface ScenarioResult {
   callCount: number;
   trace: TraceEntry[];
-  events: CraftAgentEvent[];
+  events: ProductAgentEvent[];
   queueCompletionSdkEvents: AgentSessionEvent['type'][];
   isHoldingTurn: boolean;
   hasExtraQueueCompletion: boolean;

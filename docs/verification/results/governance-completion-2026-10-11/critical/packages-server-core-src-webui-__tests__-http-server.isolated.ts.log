@@ -1,0 +1,23 @@
+bun test v1.4.2 (744846f84)
+
+src/webui/__tests__/http-server.isolated.ts:
+(pass) startWebuiHttpServer > allows plain-http login even when the RPC transport is wss [260.56ms]
+(pass) startWebuiHttpServer > FF01/FF02: failures are rate limited, but a correct password still logs in [675.98ms]
+(pass) startWebuiHttpServer > FF02: repeated successful logins never consume the budget [3410.21ms]
+(pass) startWebuiHttpServer > FF09: a cookie under the pre-rename name still authenticates [260.80ms]
+(pass) startWebuiHttpServer > FF10: a forwarded address is ignored when the direct peer is not trusted [672.32ms]
+(pass) startWebuiHttpServer > FF11: a forwarded address is used when the direct peer is trusted [228.48ms]
+(pass) startWebuiHttpServer > FF07: an oversized body is refused before it is buffered [125.31ms]
+(pass) startWebuiHttpServer > rejects invalid credentials [228.29ms]
+(pass) startWebuiHttpServer > honors an explicit secure-cookie override [226.28ms]
+(pass) startWebuiHttpServer > infers secure cookies from proxy https headers when no override is set [229.98ms]
+(pass) startWebuiHttpServer > derives a browser-facing websocket URL from forwarded public host headers [231.73ms]
+(pass) startWebuiHttpServer > returns an explicit public websocket URL override from /api/config [229.49ms]
+(pass) startWebuiHttpServer > issues each session token with a unique jti claim [332.59ms]
+(pass) startWebuiHttpServer > revokes the session on logout so a replayed cookie is rejected [240.90ms]
+(pass) startWebuiHttpServer > rate limits per client IP when no trusted proxies are configured [767.27ms]
+
+ 15 pass
+ 0 fail
+ 78 expect() calls
+Ran 15 tests across 1 file. [8.18s]

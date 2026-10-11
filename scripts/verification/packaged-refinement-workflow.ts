@@ -28,7 +28,7 @@ async function check(id: string, action: () => Promise<void>) {
   catch (error) { records.push({ id, pass: false, error: error instanceof Error ? error.stack : String(error) }) }
 }
 try {
-  application = await _electron.launch({ executablePath: join(app, 'Contents/MacOS/Phaneris'), args: ['--disable-gpu'], env, timeout: 60_000 })
+  application = await _electron.launch({ executablePath: join(app, 'Contents/MacOS/Phaneris'), args: ['--disable-gpu'], env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)), timeout: 60_000 })
   const page = await application.firstWindow()
   page.on('pageerror', error => errors.push(error.message))
   await page.waitForLoadState('domcontentloaded')

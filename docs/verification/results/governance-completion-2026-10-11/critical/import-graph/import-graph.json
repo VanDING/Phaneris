@@ -1,0 +1,115 @@
+{
+  "cases": [
+    [
+      "type-import",
+      "import type { T } from './value';",
+      true
+    ],
+    [
+      "type-specifier",
+      "import { type T } from './value';",
+      true
+    ],
+    [
+      "type-export",
+      "export type { T } from './value';",
+      true
+    ],
+    [
+      "type-export-specifier",
+      "export { type T } from './value';",
+      true
+    ],
+    [
+      "mixed-specifier",
+      "import { type T, value } from './value';",
+      false
+    ],
+    [
+      "side-effect",
+      "import './value';",
+      false
+    ],
+    [
+      "dynamic-value",
+      "void import('./value');",
+      false
+    ]
+  ],
+  "edges": [
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/type-export.ts",
+      [
+        {
+          "target": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+          "line": 1,
+          "typeOnly": true
+        }
+      ]
+    ],
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/type-specifier.ts",
+      [
+        {
+          "target": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+          "line": 1,
+          "typeOnly": true
+        }
+      ]
+    ],
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/dynamic-value.ts",
+      [
+        {
+          "target": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+          "line": 1,
+          "typeOnly": false
+        }
+      ]
+    ],
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+      []
+    ],
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/mixed-specifier.ts",
+      [
+        {
+          "target": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+          "line": 1,
+          "typeOnly": false
+        }
+      ]
+    ],
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/type-import.ts",
+      [
+        {
+          "target": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+          "line": 1,
+          "typeOnly": true
+        }
+      ]
+    ],
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/type-export-specifier.ts",
+      [
+        {
+          "target": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+          "line": 1,
+          "typeOnly": true
+        }
+      ]
+    ],
+    [
+      "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/side-effect.ts",
+      [
+        {
+          "target": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/import-graph/fixture/packages/example/src/value.ts",
+          "line": 1,
+          "typeOnly": false
+        }
+      ]
+    ]
+  ]
+}

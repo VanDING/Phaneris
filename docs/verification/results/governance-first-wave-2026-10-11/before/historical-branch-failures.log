@@ -1,0 +1,90 @@
+bun test v1.4.2 (744846f84)
+
+apps/electron/src/main/__tests__/session-branch-rollback.isolated.ts:
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "ws-1",
+  sessionId: "child-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "null is not an object (evaluating 'managed.runtime.agent.ensureBranchReady')",
+}
+320 |     await expect(
+321 |       manager.createSession('ws-1', {
+322 |         branchFromSessionId: 'source-1',
+323 |         branchFromMessageId: 'm1',
+324 |       } as any)
+325 |     ).rejects.toThrow('Could not create branch: preflight boom')
+                    ^
+error: expect(received).toThrow(expected)
+
+Expected substring: "Could not create branch: preflight boom"
+Received message: "Could not create branch: null is not an object (evaluating 'managed.runtime.agent.ensureBranchReady')"
+
+      at <anonymous> (/Users/van/projects/Phaneris/apps/electron/src/main/__tests__/session-branch-rollback.isolated.ts:325:15)
+(fail) session branch rollback on preflight failure > deletes newly created child session when ensureBranchReady throws [3.70ms]
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation failed: sdk-fork requires parent SDK session ID {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  sourceProvider: "pi",
+  targetProvider: "pi",
+}
+(pass) session branch rollback on preflight failure > fails branch creation when parent pi sdk session id is missing [0.25ms]
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "ws-1",
+  sessionId: "child-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "null is not an object (evaluating 'managed.runtime.agent.ensureBranchReady')",
+}
+372 |     await expect(
+373 |       manager.createSession('ws-1', {
+374 |         branchFromSessionId: 'source-1',
+375 |         branchFromMessageId: 'm1',
+376 |       } as any)
+377 |     ).rejects.toThrow('Could not create branch: pi preflight boom')
+                    ^
+error: expect(received).toThrow(expected)
+
+Expected substring: "Could not create branch: pi preflight boom"
+Received message: "Could not create branch: null is not an object (evaluating 'managed.runtime.agent.ensureBranchReady')"
+
+      at <anonymous> (/Users/van/projects/Phaneris/apps/electron/src/main/__tests__/session-branch-rollback.isolated.ts:377:15)
+(fail) session branch rollback on preflight failure > runs backend preflight for pi branches and rolls back on failure [0.55ms]
+
+ 1 pass
+ 2 fail
+ 5 expect() calls
+Ran 3 tests across 1 file. [462.00ms]

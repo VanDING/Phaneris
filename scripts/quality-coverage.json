@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "members": {
+    "apps/cli": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "Source Bun entry with typecheck; CLI spawner boot in test:critical; independent executable packaging remains a gap",
+      "behavior": "workspace CLI tests and test:critical real CLI-to-server bearer handshake; full command/user-flow coverage remains separate",
+      "owner": "apps/cli"
+    },
+    "apps/electron": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "build:smoke: production main/preload/renderer bundlers; installer/signing remain separate release gates",
+      "behavior": "Existing workspace tests, critical runtime/branch workflows, and test:native-client (actual main/preload/renderer; isolated profile; local macOS verified, Windows/Linux native and signed release require their own runs).",
+      "owner": "apps/electron"
+    },
+    "apps/viewer": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "build:smoke: production Vite bundle",
+      "behavior": "build:smoke production bundle; hosted sharing service is unconfigured, user-flow E2E remains a gap",
+      "owner": "apps/viewer"
+    },
+    "apps/webui": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "build:smoke: production Vite bundle",
+      "behavior": "test:critical client-platform: real authenticated browser boot, adapter delay, persisted session/workspace drafts, language change, capability errors, reconnect, keyboard rows and 420/1280 reduced-motion screenshots; live provider/OAuth remains external",
+      "owner": "apps/webui"
+    },
+    "packages/core": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "Source/types package; production consumers bundle its exports (build:smoke)",
+      "behavior": "type-only/pure utilities consumed by critical scenarios; no separate end-user flow",
+      "owner": "packages/core"
+    },
+    "packages/messaging-gateway": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "Source package; packaged server/Electron consumer builds (build:smoke); live IM integration is separate",
+      "behavior": "Windows isolated WeChat regression and existing workspace suites; real IM service E2E remains a gap",
+      "owner": "packages/messaging-gateway"
+    },
+    "packages/messaging-whatsapp-worker": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "build:runtime in test:critical and clean-install; same worker command in Docker/server/desktop",
+      "behavior": "consumer/workspace checks; real WhatsApp pairing/send E2E remains a gap",
+      "owner": "packages/messaging-whatsapp-worker"
+    },
+    "packages/pi-agent-server": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "server:build:subprocess in full-validation and server distribution assembly; no independent installer",
+      "behavior": "test:critical real production JSONL pi-control and independent durable-runtime-pi loopback provider, first read tool and SQLite T1/T2; live providers remain external",
+      "owner": "packages/pi-agent-server"
+    },
+    "packages/server": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "build:smoke: actual server assembly plus import/token generation in the assembled tree",
+      "behavior": "test:critical real headless startup/auth/fatal shutdown; packaged imports in build:smoke; live-provider E2E remains a gap",
+      "owner": "packages/server"
+    },
+    "packages/server-core": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "Source package; production main and packaged server import smoke (build:smoke)",
+      "behavior": "test:critical Runtime gate/workflow/crash, task/lifecycle, auth restart/Origin/proxy/body failures and existing WebUI isolated regression; RPC input/codec/timeout and standalone Session product/source owners",
+      "owner": "packages/server-core"
+    },
+    "packages/session-tools-core": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "Source package; server/Pi consumers bundle its exports; document runtimes are separately pinned",
+      "behavior": "existing workspace tests and consumer workflows; real document tools via test:doc-tools",
+      "owner": "packages/session-tools-core"
+    },
+    "packages/shared": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "Source package; desktop/browser/server production consumer builds (build:smoke)",
+      "behavior": "test:critical persistence/theme and plugin-transaction; validate:ci config; provider-backed paths are separate; test:critical config-domains and exact cycle/identity/boundary canaries",
+      "owner": "packages/shared"
+    },
+    "packages/ui": {
+      "typecheck": "tsconfig.json",
+      "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+      "build": "Source React package; renderer/WebUI/viewer consumer builds (build:smoke)",
+      "behavior": "test:critical streaming/grouping and validate:ci table; full shared component browser E2E remains a gap",
+      "owner": "packages/ui"
+    }
+  },
+  "tooling": {
+    "projects": [
+      "tsconfig.build.json",
+      "tsconfig.tooling.json",
+      "scripts/performance/tsconfig.runner.json",
+      "scripts/performance/tsconfig.server.json"
+    ],
+    "lint": "lint:workspace covers root TS/JS maintenance scripts and Electron build scripts; Python lint remains a gap",
+    "behavior": "verification-output/governance-gates E2E plus existing check-environment tests; Python document tools use test:doc-tools",
+    "typecheckExceptions": [
+      {
+        "file": "scripts/performance/server.ts",
+        "reason": "Checked separately with the server-core runtime context in scripts/performance/tsconfig.server.json."
+      },
+      {
+        "file": "scripts/verification/pi-1.0.2-upgrade-workflow.ts",
+        "reason": "Frozen 1.0.2 SDK upgrade experiment; its dated contract is obsolete after the 1.1.0 migration. Revalidate before running.",
+        "sha256": "2f2adf8b78ef75b32e93b38bdfc2c3b3e491b6cd691d648b549cf7a3b6601821"
+      },
+      {
+        "file": "scripts/verification/upstream-0140-b4b5-workflows.ts",
+        "reason": "Frozen upstream 0.14.0 experiment referencing removed createSession options; revalidate before running.",
+        "sha256": "d5db7deceb0bdcc80ab78bd11d37e9e3e65554b466e91f741fb7b3656ce8e806"
+      },
+      {
+        "file": "scripts/verification/classifier-comparison-workflow.ts",
+        "reason": "Frozen classifier comparison targets removed SystemOne options; no production or CI entry calls it.",
+        "sha256": "158c8e3bc7d4a2bc0296a20da671055ceec414a316968acea44a43da4adf5e55"
+      }
+    ],
+    "typecheckContext": "strict Node/Bun + DOM/Vite declarations; follows server/Electron noUncheckedIndexedAccess policy. Individual package projects keep their existing stricter settings."
+  }
+}

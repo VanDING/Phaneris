@@ -1,0 +1,23 @@
+20 | const push = workflow.on.push as { branches?: string[] }
+21 | assert(push.branches?.includes('main'), 'origin/main pushes must validate')
+22 | for (const name of ['validate', 'quality-windows', 'full-validation', 'production-container', 'native-macos']) {
+23 |   const job = workflow.jobs[name]
+24 |   assert(job, `Missing validation job: ${name}`)
+25 |   assert.equal(job.if, name === 'full-validation' ? "github.event_name != 'pull_request'" : undefined, `${name} has an unapproved job condition`)
+              ^
+AssertionError: validate has an unapproved job condition
++ actual - expected
+
++ false
+- undefined
+
+ generatedMessage: false,
+     actual: false,
+   expected: undefined,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:25:10
+
+Bun v1.4.2 (macOS x64)

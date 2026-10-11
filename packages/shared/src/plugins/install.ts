@@ -31,7 +31,7 @@ import {
 import { basename, join, relative, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { getWorkspacePluginsPath, getWorkspaceSkillsPath, getWorkspaceSourcesPath } from '../workspaces/storage.ts';
-import { loadSourceConfig, saveSourceConfig } from '../sources/storage.ts';
+import { cleanupSourceApiKeyCredential, loadSourceConfig, saveSourceConfig } from '../sources/storage.ts';
 import type { FolderSourceConfig, McpSourceConfig } from '../sources/types.ts';
 import { debug } from '../utils/debug.ts';
 import { appendPluginAuditEntry } from './audit.ts';
@@ -357,6 +357,8 @@ interface StagedSkill {
 interface SourceBackup {
   targetDir: string;
   backupDir?: string;
+  backupReady: boolean;
+  touched: boolean;
 }
 
 /**
@@ -366,7 +368,7 @@ interface SourceBackup {
  * the new version deleted in place, where the skill loader would keep reading
  * them. The plugin's mutable `data/` directory is the single exception (§5.4.7).
  *
- * @throws {PluginInstallError} when nothing was written.
+ * @throws {PluginInstallError} on a pre-commit failure, with rollback failures reported in detail.
  */
 export function installPlugin(
   workspaceRootPath: string,
@@ -382,6 +384,9 @@ export function installPlugin(
   const packageTarget = pluginResourcePath(getWorkspacePluginsPath(workspaceRootPath), plugin.name);
   const packageBackup = `${packageTarget}.replaced-${randomUUID().slice(0, 8)}`;
   const packageExisted = existsSync(packageTarget) && plan.packageRoot !== packageTarget;
+  const packageStaging = `${packageTarget}.staging-${randomUUID().slice(0, 8)}`;
+  let packageBackupReady = false;
+  let packageTouched = false;
 
   mkdirSync(skillsDir, { recursive: true });
   mkdirSync(getWorkspacePluginsPath(workspaceRootPath), { recursive: true });
@@ -429,7 +434,8 @@ export function installPlugin(
         continue;
       }
 
-      backupSource(server.slug);
+      const backup = backupSource(server.slug);
+      backup.touched = true;
       writeSourceConfig(workspaceRootPath, plan.targetRoot, server.slug, server.slug, plugin.name, {
         type: 'mcp',
         mcp: built.config,
@@ -440,7 +446,8 @@ export function installPlugin(
     // --- materialize extension sources (api / local) ---
     const extension = readPluginExtensionSources(plugin.path);
     for (const source of extension.sources) {
-      backupSource(source.slug);
+      const backup = backupSource(source.slug);
+      backup.touched = true;
       writeSourceConfig(workspaceRootPath, plan.targetRoot, source.slug, source.slug, plugin.name, {
         type: source.type,
       });
@@ -448,11 +455,15 @@ export function installPlugin(
     }
 
     // --- place the package itself ---
-    if (packageExisted) cpSync(packageTarget, packageBackup, { recursive: true });
-    placePackage(plan.packageRoot, plan.targetRoot);
+    if (packageExisted) {
+      cpSync(packageTarget, packageBackup, { recursive: true });
+      packageBackupReady = true;
+    }
+    packageTouched = plan.packageRoot !== packageTarget;
+    placePackage(plan.packageRoot, plan.targetRoot, packageStaging);
 
     // --- derived reverse index + audit ---
-    const index = rebuildPluginIndex(workspaceRootPath);
+    const index = rebuildPluginIndex(workspaceRootPath, (error) => warn('plugins/_index.json', 'Plugin index write failed', error));
     appendPluginAuditEntry({
       action: 'install',
       plugin: plugin.name,
@@ -466,7 +477,7 @@ export function installPlugin(
         command: c.command,
         args: c.args,
       })),
-    });
+    }, (error) => warn('audit', 'Plugin audit write failed', error));
 
     debug(
       `[PluginInstall] Installed "${plugin.name}": ${installedSkillSlugs.length} skills, ` +
@@ -474,56 +485,71 @@ export function installPlugin(
         `${Object.keys(index.resources.skills).length} tracked skills`,
     );
 
-    // --- drop the backups now that the swap succeeded ---
-    for (const record of staged) {
-      if (record.backupDir) rmSync(record.backupDir, { recursive: true, force: true });
-    }
-    for (const backup of sourceBackups) {
-      if (backup.backupDir) rmSync(backup.backupDir, { recursive: true, force: true });
-    }
-    if (packageExisted && existsSync(packageBackup)) rmSync(packageBackup, { recursive: true, force: true });
-
-    return {
-      name: plugin.name,
-      skills: installedSkillSlugs,
-      sources: createdSourceSlugs,
-      replaced: plan.overwrites,
-      warnings: skippedWarnings,
-    };
   } catch (error) {
-    // Roll back: remove anything already swapped in, restore what was moved aside.
-    for (const record of staged) {
-      if (existsSync(record.tmpDir)) rmSync(record.tmpDir, { recursive: true, force: true });
-      if (record.backupDir && record.backupDir.length > 0) {
-        if (existsSync(record.targetDir)) rmSync(record.targetDir, { recursive: true, force: true });
-        if (existsSync(record.backupDir)) renameSync(record.backupDir, record.targetDir);
-      } else if (record.committed && existsSync(record.targetDir)) {
-        rmSync(record.targetDir, { recursive: true, force: true });
-      }
+    // Each recovery is independent. Only a completed, still-present backup may
+    // authorize deleting the target; an incomplete copy is never a restore source.
+    const rollbackFailures: string[] = [];
+    const attempt = (path: string, action: () => void) => {
+      try { action(); } catch (failure) { rollbackFailures.push(`${path}: ${String(failure)}`); }
+    };
+    const restore = (target: string, backup: string | undefined) => {
+      if (backup) {
+        if (!existsSync(backup)) throw new Error(`Backup missing; retained current target ${target}`);
+        if (existsSync(target)) rmSync(target, { recursive: true, force: true });
+        renameSync(backup, target);
+      } else if (existsSync(target)) rmSync(target, { recursive: true, force: true });
+    };
+    for (const record of [...staged].reverse()) {
+      attempt(record.tmpDir, () => rmSync(record.tmpDir, { recursive: true, force: true }));
+      if (record.backupDir || record.committed) attempt(record.targetDir, () => restore(record.targetDir, record.backupDir));
     }
-    for (const backup of sourceBackups.reverse()) {
-      if (existsSync(backup.targetDir)) rmSync(backup.targetDir, { recursive: true, force: true });
-      if (backup.backupDir && existsSync(backup.backupDir)) renameSync(backup.backupDir, backup.targetDir);
+    for (const backup of [...sourceBackups].reverse()) {
+      if (backup.touched) attempt(backup.targetDir, () => restore(backup.targetDir, backup.backupDir));
+      else if (backup.backupDir && !backup.backupReady) attempt(backup.backupDir, () => rmSync(backup.backupDir!, { recursive: true, force: true }));
     }
-    if (packageExisted) {
-      if (existsSync(packageTarget)) rmSync(packageTarget, { recursive: true, force: true });
-      if (existsSync(packageBackup)) renameSync(packageBackup, packageTarget);
-    } else if (packageTarget !== plan.packageRoot && existsSync(packageTarget)) {
-      rmSync(packageTarget, { recursive: true, force: true });
-    }
+    if (packageTouched) attempt(packageTarget, () => restore(packageTarget, packageExisted ? packageBackup : undefined));
+    else if (!packageBackupReady) attempt(packageBackup, () => rmSync(packageBackup, { recursive: true, force: true }));
+    attempt(packageStaging, () => rmSync(packageStaging, { recursive: true, force: true }));
+    // A failed install cannot leave an index of partially swapped resources.
+    rebuildPluginIndex(workspaceRootPath, failure => rollbackFailures.push(`index: ${String(failure)}`));
 
-    if (error instanceof PluginInstallError) throw error;
+    if (error instanceof PluginInstallError && !rollbackFailures.length) throw error;
     const message = error instanceof Error ? error.message : String(error);
-    throw new PluginInstallError(`Failed to install plugin "${plugin.name}": ${message}`);
+    throw new PluginInstallError(`Failed to install plugin "${plugin.name}": ${message}` +
+      (rollbackFailures.length ? '; rollback incomplete; retained recovery copies' : ''), rollbackFailures.join('\n') || undefined);
   }
 
-  function backupSource(slug: string): void {
+  // Commit point: all resource/package swaps succeeded. Cleanup failures are
+  // warnings from here on and can never re-enter the pre-commit rollback path.
+  for (const backup of [...staged, ...sourceBackups]) {
+    if (backup.backupDir) cleanup(backup.backupDir, () => rmSync(backup.backupDir!, { recursive: true, force: true }));
+  }
+  if (packageBackupReady) cleanup(packageBackup, () => rmSync(packageBackup, { recursive: true, force: true }));
+  for (const slug of createdSourceSlugs) {
+    cleanup(`sources/${slug}`, () => {
+      const config = loadSourceConfig(workspaceRootPath, slug);
+      if (config) cleanupSourceApiKeyCredential(workspaceRootPath, config);
+    }, 'Post-commit credential cleanup failed');
+  }
+  return { name: plugin.name, skills: installedSkillSlugs, sources: createdSourceSlugs,
+    replaced: plan.overwrites, warnings: skippedWarnings };
+
+  function warn(path: string, message: string, error: unknown): void {
+    skippedWarnings.push({ path, message: `${message}: ${error instanceof Error ? error.message : String(error)}` });
+  }
+  function cleanup(path: string, action: () => void, message = 'Post-commit backup cleanup failed'): void {
+    try { action(); } catch (error) { warn(path, message, error); }
+  }
+  function backupSource(slug: string): SourceBackup {
     const targetDir = pluginResourcePath(getWorkspaceSourcesPath(workspaceRootPath), slug);
     const backupDir = existsSync(targetDir)
       ? `${targetDir}.replaced-${randomUUID().slice(0, 8)}`
       : undefined;
+    const record: SourceBackup = { targetDir, backupDir, backupReady: false, touched: false };
+    sourceBackups.push(record);
     if (backupDir) cpSync(targetDir, backupDir, { recursive: true });
-    sourceBackups.push({ targetDir, backupDir });
+    record.backupReady = true;
+    return record;
   }
 }
 
@@ -571,19 +597,18 @@ function writeSourceConfig(
     // An api source declared by a plugin carries no endpoints of its own: the
     // package author configures it through the normal conversational flow after
     // install, because credentials are client-managed (P6-5).
-    config.api = { baseUrl: '', authType: 'none' };
+    config.api = { baseUrl: existing?.type === 'api' ? existing.api?.baseUrl ?? '' : '', authType: 'none' };
   } else if (body.type === 'local') {
     config.local = { path: '', format: 'filesystem' };
   }
 
-  saveSourceConfig(workspaceRootPath, config);
+  saveSourceConfig(workspaceRootPath, config, { deferCredentialCleanup: true });
 }
 
 /** Move a package into the workspace plugins directory (directory-level replace). */
-function placePackage(packageRoot: string, targetRoot: string): void {
+function placePackage(packageRoot: string, targetRoot: string, stagingDir: string): void {
   if (packageRoot === targetRoot) return; // already in place (a placed/edited plugin)
 
-  const stagingDir = `${targetRoot}.staging-${randomUUID().slice(0, 8)}`;
   cpSync(packageRoot, stagingDir, { recursive: true });
 
   // Preserve the plugin's mutable data directory across a replace (§5.4.7).
@@ -623,7 +648,7 @@ export function getPluginIndexPath(workspaceRootPath: string): string {
  * (D10). Its single consumer is uninstall, which deletes a resource only when
  * the last referencing plugin goes away.
  */
-export function rebuildPluginIndex(workspaceRootPath: string): PluginIndex {
+export function rebuildPluginIndex(workspaceRootPath: string, onError?: (error: unknown) => void): PluginIndex {
   const index: PluginIndex = { version: 1, resources: { skills: {}, sources: {} } };
   const pluginsDir = getWorkspacePluginsPath(workspaceRootPath);
 
@@ -653,22 +678,18 @@ export function rebuildPluginIndex(workspaceRootPath: string): PluginIndex {
   } catch (error) {
     // The index is derived: failing to persist it must not fail the install.
     debug('[PluginInstall] Failed to write plugin index:', error);
+    // Do not leave the old cache claiming a successful but different install.
+    try { rmSync(getPluginIndexPath(workspaceRootPath), { force: true }); }
+    catch (cleanupError) { onError?.(cleanupError); }
+    onError?.(error);
   }
 
   return index;
 }
 
-/** Read the derived reverse index, rebuilding it when missing or unreadable. */
+/** Read current claims from packages. The persisted index is an output cache,
+ * never authority: it may be stale when a previous write/invalidation failed. */
 export function readPluginIndex(workspaceRootPath: string): PluginIndex {
-  const indexPath = getPluginIndexPath(workspaceRootPath);
-  if (existsSync(indexPath)) {
-    try {
-      const parsed = JSON.parse(readFileSync(indexPath, 'utf-8')) as PluginIndex;
-      if (parsed?.version === 1 && parsed.resources) return parsed;
-    } catch {
-      debug('[PluginInstall] Plugin index unreadable; rebuilding');
-    }
-  }
   return rebuildPluginIndex(workspaceRootPath);
 }
 

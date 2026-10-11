@@ -1,5 +1,5 @@
 export type CustomEndpointInput = 'text' | 'image'
-import type { ModelDefinition } from '../../shared/src/config/models.ts'
+import type { ModelDefinition } from '@phaneris/shared/config/models'
 
 /** Custom endpoint protocol — determines which streaming adapter Pi SDK uses. */
 export type CustomEndpointApi = 'openai-completions' | 'anthropic-messages'

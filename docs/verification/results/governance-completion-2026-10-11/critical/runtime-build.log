@@ -1,0 +1,15 @@
+$ bun run server:build:subprocess && bun run build:wa-worker
+$ cd packages/pi-agent-server && bun run build
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 2709 modules in 485ms
+
+  bundle.js  10.59 MB  (entry point)
+
+$ bun run scripts/build-wa-worker.ts
+📨 Building WhatsApp worker (bundling Baileys) — build 2026-10-11T10:50:16.535Z (8e5bf13b+dirty)...
+
+  packages/messaging-whatsapp-worker/dist/worker.cjs  11.5mb ⚠️
+
+⚡ Done in 432ms
+🔍 Verifying worker output...
+✅ WhatsApp worker built (11.51 MB) → /Users/van/projects/Phaneris/packages/messaging-whatsapp-worker/dist/worker.cjs

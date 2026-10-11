@@ -1,5 +1,5 @@
 import type { AgentProvider, LlmAuthType } from '@phaneris/shared/agent/backend'
-import { isCompatProvider, modelSupportsImages, type LlmConnection } from '@phaneris/shared/config'
+import { isCompatProvider, modelSupportsImages, type LlmConnection } from '@phaneris/shared/config';
 import type { FileAttachment } from '@phaneris/shared/protocol'
 
 export interface BackendRuntimeSignatureInput {

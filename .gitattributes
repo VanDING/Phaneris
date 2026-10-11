@@ -45,3 +45,7 @@
 *.zip   binary
 *.asar  binary
 *.wasm  binary
+
+# Verification archives record SHA256 of original evidence bytes, including
+# deliberate line endings. Preserve those bytes in commits and checkouts.
+/docs/verification/results/** -text

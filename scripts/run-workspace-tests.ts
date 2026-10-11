@@ -7,8 +7,9 @@
  * scoped per workspace, then `.isolated.ts` files run one process each to
  * avoid Bun module-mock leakage across files.
  */
-import { readdirSync, existsSync } from 'node:fs';
+import { readdirSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { tmpdir } from 'node:os';
 
 const ROOT = join(import.meta.dir, '..');
 const TEST_SUFFIXES = ['.test.ts', '.test.tsx', '.test.js', '.test.jsx', '.spec.ts', '.spec.tsx', '.spec.js', '.spec.jsx'];
@@ -55,13 +56,18 @@ function firstTestFile(dir: string): string | null {
 }
 
 function runBunTest(cwd: string, args: string[]): number {
-  const proc = Bun.spawnSync({
-    cmd: ['bun', 'test', ...args],
-    cwd,
-    stdio: ['inherit', 'inherit', 'inherit'],
-    env: process.env,
-  });
-  return proc.exitCode ?? 1;
+  const config = mkdtempSync(join(tmpdir(), 'phaneris-workspace-tests-'));
+  try {
+    const proc = Bun.spawnSync({
+      cmd: ['bun', 'test', ...args],
+      cwd,
+      stdio: ['inherit', 'inherit', 'inherit'],
+      env: { ...process.env, PHANERIS_CONFIG_DIR: config },
+    });
+    return proc.exitCode ?? 1;
+  } finally {
+    rmSync(config, { recursive: true, force: true });
+  }
 }
 
 const listOnly = process.argv.includes('--list');

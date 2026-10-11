@@ -1,0 +1,119 @@
+{
+  "workflows": [
+    {
+      "id": "runtime-boundary-gate",
+      "entry": "scripts/verification/runtime-boundary-gate-workflow.ts",
+      "minimum": 9,
+      "required": [
+        "gate-mutations.json",
+        "gate-report.json"
+      ]
+    },
+    {
+      "id": "durable-runtime-boundary",
+      "entry": "scripts/verification/durable-runtime-boundary-workflow.ts",
+      "minimum": 15,
+      "required": [
+        "workflow.json",
+        "workflow.db"
+      ]
+    },
+    {
+      "id": "durable-runtime-crash",
+      "entry": "scripts/verification/durable-runtime-crash-workflow.ts",
+      "minimum": 8,
+      "required": [
+        "crash.json",
+        "crash-tool-t1-failure.db",
+        "crash-tool-after-t1.db",
+        "crash-tool-after-effect.db",
+        "crash-tool-after-t2.db",
+        "crash-model-t1-failure.db",
+        "crash-model-after-t1.db",
+        "crash-model-after-effect.db",
+        "crash-model-after-t2.db"
+      ]
+    },
+    {
+      "id": "plugin-transaction",
+      "entry": "scripts/verification/plugin-transaction-workflow.ts",
+      "minimum": 12,
+      "required": [
+        "plugin-transaction.json"
+      ]
+    },
+    {
+      "id": "session-branch",
+      "entry": "scripts/verification/session-branch-workflow.ts",
+      "minimum": 4,
+      "required": [
+        "session-branch.json"
+      ]
+    }
+  ],
+  "groups": [
+    [
+      ".",
+      [
+        "scripts/check-environment.test.ts"
+      ]
+    ],
+    [
+      "packages/server-core",
+      [
+        "src/durable-runtime/coordinator.test.ts",
+        "src/durable-runtime/process-crash.test.ts",
+        "src/durable-runtime/projection-runner.test.ts",
+        "src/sessions/idle-session-cache.test.ts",
+        "src/tasks/TaskRunner.test.ts",
+        "src/transport/__tests__/server-lifecycle.test.ts"
+      ]
+    ],
+    [
+      "packages/shared",
+      [
+        "src/sessions/__tests__/persistence-queue.test.ts",
+        "src/durable-runtime/recovery.test.ts",
+        "src/config/__tests__/theme.test.ts",
+        "src/plugins/__tests__/plugin-install.isolated.ts"
+      ]
+    ],
+    [
+      "packages/pi-agent-server",
+      [
+        "src/transport-delta.test.ts",
+        "src/request-diagnostics.test.ts",
+        "src/durable-model-stream.test.ts",
+        "src/length-continuation.test.ts"
+      ]
+    ],
+    [
+      "packages/ui",
+      [
+        "src/components/chat/__tests__/streaming-projection.test.ts",
+        "src/components/chat/__tests__/turn-utils-grouping.test.ts"
+      ]
+    ],
+    [
+      "apps/electron",
+      [
+        "src/renderer/atoms/__tests__/sessions.isolated.ts",
+        "src/renderer/lib/__tests__/reconnect-recovery.test.ts",
+        "src/main/__tests__/session-branch-rollback.isolated.ts"
+      ]
+    ]
+  ],
+  "completed": [
+    "runtime-boundary-gate",
+    "durable-runtime-boundary",
+    "durable-runtime-crash",
+    "plugin-transaction",
+    "session-branch",
+    "tests:.",
+    "tests:packages/server-core",
+    "tests:packages/shared",
+    "tests:packages/pi-agent-server",
+    "tests:packages/ui",
+    "tests:apps/electron"
+  ]
+}

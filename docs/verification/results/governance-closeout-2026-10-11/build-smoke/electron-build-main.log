@@ -1,0 +1,31 @@
+$ bun run scripts/electron-build-main.ts
+🔍 Verifying Session Tools Core...
+✅ Session tools core verified
+🥧 Building Pi Agent Server...
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 2710 modules in 304ms
+
+  bundle.js  10.59 MB  (entry point)
+
+✅ Pi agent server built successfully
+  → Copied to resources/pi-agent-server/index.js
+  → Copied to resources/pi-agent-server/bundle.js
+🔌 Building unified network interceptor...
+
+  apps/electron/dist/interceptor.cjs  30.6kb
+
+⚡ Done in 12ms
+✅ Interceptor built successfully
+📨 Building WhatsApp worker...
+$ bun run scripts/build-wa-worker.ts
+📨 Building WhatsApp worker (bundling Baileys) — build 2026-10-11T14:59:06.406Z (8e5bf13b+dirty)...
+
+  packages/messaging-whatsapp-worker/dist/worker.cjs  11.5mb ⚠️
+
+⚡ Done in 363ms
+🔍 Verifying worker output...
+✅ WhatsApp worker built (11.51 MB) → /Users/van/projects/Phaneris/packages/messaging-whatsapp-worker/dist/worker.cjs
+✅ WhatsApp worker built successfully
+🔨 Building main process...
+🔍 Verifying build output...
+✅ Build complete and verified

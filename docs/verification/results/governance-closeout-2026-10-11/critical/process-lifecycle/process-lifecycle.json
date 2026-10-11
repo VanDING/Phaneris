@@ -1,0 +1,57 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-process-lifecycle-MaYyY9",
+  "checks": [
+    {
+      "id": "L01-server-unhandled",
+      "passed": true,
+      "elapsedMs": 2035
+    },
+    {
+      "id": "L01-server-uncaught",
+      "passed": true,
+      "elapsedMs": 2032
+    },
+    {
+      "id": "L01-server-hang-cleanup",
+      "passed": true,
+      "elapsedMs": 10029
+    },
+    {
+      "id": "L01-server-throw-cleanup",
+      "passed": true,
+      "elapsedMs": 2030
+    },
+    {
+      "id": "L01-normal-signal-shutdown",
+      "passed": true
+    },
+    {
+      "id": "L02-electron-port-hang",
+      "passed": true
+    },
+    {
+      "id": "L02-electron-port-throw",
+      "passed": true
+    },
+    {
+      "id": "L02-electron-port-normal",
+      "passed": true
+    },
+    {
+      "id": "L06-runtime-admission-quiesce",
+      "passed": true
+    },
+    {
+      "id": "L07-bootstrap-stop-owner",
+      "passed": true
+    },
+    {
+      "id": "L04-pi-unhandled",
+      "passed": true
+    },
+    {
+      "id": "L04-pi-uncaught",
+      "passed": true
+    }
+  ]
+}

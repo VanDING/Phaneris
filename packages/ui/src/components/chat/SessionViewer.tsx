@@ -49,21 +49,22 @@ export interface SessionViewerProps {
 }
 
 /**
- * CraftAgentLogo - The Phaneris "C" logo for branding
+ * PhanerisLogo - Monochrome Phaneris mark from the canonical icon artwork
  */
-function CraftAgentLogo({ className }: { className?: string }) {
+function PhanerisLogo({ className }: { className?: string }) {
   return (
     <svg
       className={className}
-      viewBox="0 0 24 24"
+      viewBox="0 0 1000 1000"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g transform="translate(3.4502, 3)" fill="currentColor">
-        <path
-          d="M3.17890888,3.6 L3.17890888,0 L16,0 L16,3.6 L3.17890888,3.6 Z M9.642,7.2 L9.64218223,10.8 L0,10.8 L0,3.6 L16,3.6 L16,7.2 L9.642,7.2 Z M3.17890888,18 L3.178,14.4 L0,14.4 L0,10.8 L16,10.8 L16,18 L3.17890888,18 Z"
-          fillRule="nonzero"
-        />
+      <g fill="currentColor">
+        <polygon points="180,270 500,90 500,270 330,365" />
+        <polygon points="180,270 330,365 330,790 180,875" />
+        <polygon points="500,90 760,235 610,320 500,270" />
+        <polygon points="610,320 760,235 760,510 610,595" />
+        <polygon points="380,555 610,425 610,595 380,725" />
       </g>
     </svg>
   )
@@ -228,7 +229,7 @@ export function SessionViewer({
 
             {/* Bottom branding */}
             <div className={CHAT_CLASSES.brandingContainer}>
-              <CraftAgentLogo className="w-8 h-8 text-[#9570BE]/40" />
+              <PhanerisLogo className="w-8 h-8 text-[#9570BE]/40" />
             </div>
             </div>
           </div>

@@ -1,0 +1,20 @@
+{"output":"/Users/van/projects/Phaneris/.cache/verification/plugin-transaction-enBHfT","passed":11,"total":12}
+148 |     artifacts: fs.readdirSync(output).map(path => ({ path: relative(output, join(output, path)), sha256: hash(join(output, path)) })),
+149 |     untested: ['SIGKILL/power loss during installation', 'concurrent installation of the same plugin', 'Windows/Linux native filesystem'] }, null, 2) + '\n')
+150 |   console.log(JSON.stringify({ output, passed: checks.filter((check) => (check as { passed: boolean }).passed).length, total: cases.length }))
+151 |   const passed = checks.every(check => (check as { passed: boolean }).passed)
+152 |   if (passed) run.complete(cases, ['SIGKILL/power loss during installation', 'concurrent installation of the same plugin', 'Windows/Linux native filesystem'])
+153 |   assert(passed, `Plugin transaction verification failed; see ${output}`)
+        ^
+AssertionError: Plugin transaction verification failed; see /Users/van/projects/Phaneris/.cache/verification/plugin-transaction-enBHfT
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/plugin-transaction-workflow.ts:153:3
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:82:37)
+
+Bun v1.4.2 (macOS x64)

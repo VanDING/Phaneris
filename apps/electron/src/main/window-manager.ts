@@ -4,7 +4,7 @@ import { join, resolve, sep } from 'path'
 import { existsSync } from 'fs'
 import { release } from 'os'
 import { fileURLToPath } from 'url'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { classifyExternalUrl, formatBlockedUrlError } from '@phaneris/shared/utils/url-safety'
 import { RPC_CHANNELS, type WindowCloseRequestSource } from '../shared/types'
 import type { SavedWindow, WindowBounds } from './window-state'

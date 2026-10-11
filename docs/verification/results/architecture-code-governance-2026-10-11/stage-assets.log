@@ -1,0 +1,3 @@
+$ cd apps/electron && bun run scripts/copy-assets.ts
+✓ Copied resources/ → dist/resources/ (excluded bin/ + scripts/, shipped via extraResources)
+✓ Copied powershell-parser.ps1 → dist/resources/

@@ -1,0 +1,41 @@
+{
+  "validateFull": {
+    "log": "validate-full-final-6.log",
+    "exitCode": 0,
+    "workspaceTests": {
+      "pass": 6285,
+      "skip": 14,
+      "fail": 0
+    },
+    "ciSubsetDuplicateExecutions": {
+      "pass": 87,
+      "skip": 0,
+      "fail": 0
+    },
+    "pythonDocumentTests": 24
+  },
+  "critical": {
+    "log": "critical-final-4.log",
+    "existingTests": {
+      "pass": 243,
+      "skip": 0,
+      "fail": 0
+    },
+    "workflows": 21,
+    "groups": 6,
+    "workflowScenes": 235
+  },
+  "native": {
+    "run": "native-client-ZNjs0c",
+    "scenes": 20
+  },
+  "buildSmoke": {
+    "run": "build-smoke-hTX2ag",
+    "checks": 14,
+    "packagedPiScenes": 6
+  },
+  "cleanInstall": {
+    "run": "clean-install-eSkIo8",
+    "scenes": 4
+  }
+}

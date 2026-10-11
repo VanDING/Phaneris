@@ -1,0 +1,69 @@
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-active-meadow",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation failed: sdk-fork requires parent SDK session ID {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-active-meadow",
+  sourceProvider: "pi",
+  targetProvider: "pi",
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-crisp-rainbow",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-crisp-rainbow",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261011-clear-crystal
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "branch-fixture",
+  sessionId: "261011-clear-crystal",
+  branchFromSessionId: "261011-crisp-rainbow",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "fixture preflight failed",
+}
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-crisp-rainbow",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-crisp-rainbow",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261011-clever-cascade
+[session] Cannot send event - no event sink
+[session] Cannot send event - no event sink
+[session] Deleted session 261011-clever-cascade
+68 |     assert(existsSync(getSessionPath(ws, branch.id)))
+69 |     assert(runtime.execution.view(branch.id).driver, 'Successful branch remains owned by Host')
+70 |     assert.equal(parentHash(), before)
+71 |     checks.push({ id: 'successful-preflight', passed: true, childId: branch.id, disposed })
+72 |     await manager.deleteSession(branch.id)
+73 |     assert(disposed && poolStopped && mcpDisconnected)
+         ^
+AssertionError: false == true
+ generatedMessage: true,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/session-branch-workflow.ts:73:5
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+
+Bun v1.4.2 (macOS x64)

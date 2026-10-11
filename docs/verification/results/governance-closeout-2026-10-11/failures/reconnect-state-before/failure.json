@@ -1,0 +1,4 @@
+{
+  "message": "Closing the old socket must synchronously retire its connected status",
+  "stack": "AssertionError [ERR_ASSERTION]: Closing the old socket must synchronously retire its connected status\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/client-platform-workflow.ts:101:5)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

@@ -1,0 +1,88 @@
+{
+  "records": [
+    {
+      "id": "disabled-job",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "ignored-job-errors",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "missing-pr-trigger",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "disabled-step",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "ignored-step-errors",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "missing-evidence",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "missing-runtime-supply",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "missing-critical-workflow",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "missing-critical-group",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    },
+    {
+      "id": "strict-final-tree",
+      "passed": false,
+      "detail": "exit=1; expected=0"
+    },
+    {
+      "id": "rpc-census-gate",
+      "passed": true,
+      "detail": "exit=0; expected=0"
+    },
+    {
+      "id": "nonempty-handler-census",
+      "passed": false
+    },
+    {
+      "id": "all-central-contracts-have-handlers",
+      "passed": false
+    },
+    {
+      "id": "apps/electron:debugger",
+      "passed": false
+    },
+    {
+      "id": "apps/electron:unsafe-finally",
+      "passed": false
+    },
+    {
+      "id": "packages/ui:debugger",
+      "passed": false
+    },
+    {
+      "id": "packages/ui:unsafe-finally",
+      "passed": false
+    },
+    {
+      "id": "no-baseline-initialization",
+      "passed": false,
+      "detail": "exit=0; expected=1"
+    }
+  ]
+}

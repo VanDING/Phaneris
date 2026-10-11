@@ -1,0 +1,97 @@
+[
+  {
+    "time": 1791713767755,
+    "value": {
+      "drafts": {
+        "261011-coral-horizon": {
+          "text": "Native session draft"
+        }
+      },
+      "updatedAt": 1791713767744
+    }
+  },
+  {
+    "time": 1791713768720,
+    "value": {
+      "drafts": {
+        "261011-coral-horizon": {
+          "text": "Native session draft"
+        },
+        "261011-clear-gecko": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791713768710
+    }
+  },
+  {
+    "time": 1791713768720,
+    "value": {
+      "drafts": {
+        "261011-coral-horizon": {
+          "text": "Native session draft"
+        },
+        "261011-clear-gecko": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791713768710
+    }
+  },
+  {
+    "time": 1791713769959,
+    "value": {
+      "drafts": {
+        "261011-coral-horizon": {
+          "text": "Native pending draft"
+        },
+        "261011-clear-gecko": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791713769946
+    }
+  },
+  {
+    "time": 1791713769959,
+    "value": {
+      "drafts": {
+        "261011-coral-horizon": {
+          "text": "Native pending draft"
+        },
+        "261011-clear-gecko": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791713769946
+    }
+  },
+  {
+    "time": 1791713771798,
+    "value": {
+      "drafts": {
+        "261011-coral-horizon": {
+          "text": "Native pending draft"
+        },
+        "261011-clear-gecko": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791713771788
+    }
+  },
+  {
+    "time": 1791713771799,
+    "value": {
+      "drafts": {
+        "261011-coral-horizon": {
+          "text": "Native pending draft"
+        },
+        "261011-clear-gecko": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791713771788
+    }
+  }
+]

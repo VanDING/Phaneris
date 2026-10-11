@@ -291,7 +291,7 @@ A semantic rule is a yes/no question instead of a regex. The decision model (Jev
 - **Exactly one kind per rule**: a rule carries either `pattern` or `semantic`, never both (validation rejects hybrids).
 - **Automations**: a semantic match fires `LabelAdd` automations like any other label change. That is why the default threshold is high — lower it only for labels that trigger nothing important.
 - **Privacy**: the message (code blocks stripped, cut to 8k characters) is sent to the configured decision provider; every call is recorded in `~/.phaneris/logs/decisions.jsonl` without the text.
-- **CLI**: `craft-agent label auto-rule-add <id> --semantic "Is …?" [--threshold 0.9] [--value "…"]`
+- **CLI**: `phaneris label auto-rule-add <id> --semantic "Is …?" [--threshold 0.9] [--value "…"]`
 
 ### Full Example
 

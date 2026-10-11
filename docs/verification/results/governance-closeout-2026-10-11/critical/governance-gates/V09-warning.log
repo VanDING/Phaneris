@@ -1,0 +1,22 @@
+
+59 |     if (!allowance || entry.count > allowance.count) changes.push(`New warning: ${entry.file} ${entry.rule}: ${entry.message}`)
+60 |   }
+61 |   for (const [key, entry] of registered) {
+62 |     if ((current.get(key)?.count ?? 0) < entry.count) changes.push(`Retire stale warning allowance: ${entry.file} ${entry.rule}`)
+63 |   }
+64 |   assert.equal(changes.length, 0, changes.join('\n'))
+              ^
+AssertionError: New warning: apps/electron/src/renderer/actions/useAction.ts react-hooks/exhaustive-deps: React Hook useEffect has a spread element in its dependency array. This means we can't statically verify whether you've passed the correct dependencies.
+
+1 !== 0
+
+ generatedMessage: false,
+     actual: 1,
+   expected: 0,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/lint-workspace.ts:64:10
+
+Bun v1.4.2 (macOS x64)

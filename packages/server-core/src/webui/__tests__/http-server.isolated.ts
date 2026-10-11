@@ -3,7 +3,6 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { startWebuiHttpServer, createWebuiHandler, setRequestClientIp } from '../http-server'
-import { initPasswordHash } from '../auth'
 
 const SECRET = 'test-server-secret'
 const PASSWORD = 'test-password'
@@ -32,9 +31,11 @@ async function createServer(overrides?: {
   wsPort?: number
   trustedProxies?: string[]
 }) {
+  const webuiDir = createTestWebuiDir()
   const server = await startWebuiHttpServer({
     port: 0,
-    webuiDir: createTestWebuiDir(),
+    webuiDir,
+    revocationStorePath: join(webuiDir, 'auth.sqlite'),
     secret: SECRET,
     password: PASSWORD,
     secureCookies: overrides?.secureCookies,
@@ -81,14 +82,10 @@ afterEach(() => {
 // from another file turns every request here into a 404. Restore the real
 // fetch before each test so this suite is deterministic.
 const realFetch = globalThis.fetch
-beforeEach(async () => {
+beforeEach(() => {
   // 1. Worker reuse: a leaked global fetch mock from another test file turns
   // every request here into a 404. Restore the real fetch each time.
   if (globalThis.fetch !== realFetch) globalThis.fetch = realFetch
-  // 2. initPasswordHash is module-level: a sibling test file that hashes a
-  // DIFFERENT password in the same worker overwrites it, breaking login.
-  // Re-hash our password so this suite is deterministic.
-  await initPasswordHash(PASSWORD)
 })
 
 describe('startWebuiHttpServer', () => {
@@ -230,7 +227,7 @@ describe('startWebuiHttpServer', () => {
   })
 
   it('infers secure cookies from proxy https headers when no override is set', async () => {
-    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100 })
+    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100, trustedProxies: ['127.0.0.1'] })
 
     const res = await fetch(`${baseUrl}/api/auth`, {
       method: 'POST',
@@ -246,7 +243,7 @@ describe('startWebuiHttpServer', () => {
   })
 
   it('derives a browser-facing websocket URL from forwarded public host headers', async () => {
-    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100 })
+    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100, trustedProxies: ['127.0.0.1'] })
 
     const authRes = await fetch(`${baseUrl}/api/auth`, {
       method: 'POST',
@@ -344,8 +341,10 @@ describe('startWebuiHttpServer', () => {
   })
 
   it('rate limits per client IP when no trusted proxies are configured', async () => {
+    const webuiDir = createTestWebuiDir()
     const handler = createWebuiHandler({
-      webuiDir: createTestWebuiDir(),
+      webuiDir,
+      revocationStorePath: join(webuiDir, 'auth.sqlite'),
       secret: SECRET,
       password: PASSWORD,
       wsProtocol: 'ws',
@@ -353,6 +352,7 @@ describe('startWebuiHttpServer', () => {
       getHealthCheck: () => ({ status: 'ok' }),
       logger,
     })
+    SERVERS.push({ stop: handler.dispose })
 
     const attempt = (ip: string) => {
       const req = new Request('http://localhost/api/auth', {

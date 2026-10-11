@@ -24,28 +24,6 @@ export interface JwtPayload {
   jti?: string
 }
 
-// ---------------------------------------------------------------------------
-// JWT revocation (in-memory, server-side)
-// ---------------------------------------------------------------------------
-
-/** Revoked session token ids (jti → revocation timestamp ms). Pruned lazily. */
-const revokedJtis = new Map<string, number>()
-/** Retain revoked ids for at most one token lifetime — after that the token has expired anyway. */
-const REVOCATION_RETENTION_MS = JWT_EXPIRY_SECONDS * 1000
-
-function pruneRevoked(): void {
-  const cutoff = Date.now() - REVOCATION_RETENTION_MS
-  for (const [jti, revokedAt] of revokedJtis) {
-    if (revokedAt < cutoff) revokedJtis.delete(jti)
-  }
-}
-
-/** Revoke a session token id so every verifyJwt of that token fails until it expires. */
-export function revokeJwt(jti: string): void {
-  pruneRevoked()
-  revokedJtis.set(jti, Date.now())
-}
-
 export async function signJwt(payload: JwtPayload, secret: string): Promise<string> {
   const key = new TextEncoder().encode(secret)
   const builder = new SignJWT({ sub: payload.sub } as Record<string, unknown>)
@@ -60,8 +38,8 @@ export async function verifyJwt(token: string, secret: string): Promise<JwtPaylo
   try {
     const key = new TextEncoder().encode(secret)
     const { payload } = await jwtVerify(token, key, { algorithms: ['HS256'] })
-    // A logged-out session must be rejected even if the cookie is replayed.
-    if (typeof payload.jti === 'string' && revokedJtis.has(payload.jti)) return null
+    // Signature verification is not session authorization; the handler owns revocations.
+    if (payload.sub !== 'webui' || !Number.isFinite(payload.iat) || !Number.isFinite(payload.exp)) return null
     return {
       sub: payload.sub as string,
       iat: payload.iat as number,
@@ -121,29 +99,6 @@ export function extractSessionCookie(cookieHeader: string | null): string | null
     if (name === SESSION_COOKIE_NAME || name === LEGACY_SESSION_COOKIE_NAME) return rest.join('=')
   }
   return null
-}
-
-// ---------------------------------------------------------------------------
-// Password verification (argon2id via Bun.password)
-// ---------------------------------------------------------------------------
-
-let hashedPassword: string | null = null
-
-/**
- * Hash the login password at startup. Must be called before any auth requests.
- * The hash is stored in memory — the raw password is not retained.
- */
-export async function initPasswordHash(plaintext: string): Promise<void> {
-  hashedPassword = await Bun.password.hash(plaintext, { algorithm: 'argon2id' })
-}
-
-/**
- * Verify a user-supplied password against the pre-hashed password.
- * Uses Bun's built-in argon2id verification (constant-time).
- */
-export async function verifyPassword(input: string): Promise<boolean> {
-  if (!hashedPassword) return false
-  return Bun.password.verify(input, hashedPassword)
 }
 
 // ---------------------------------------------------------------------------
@@ -228,17 +183,4 @@ export class RateLimiter {
       }
     }
   }
-}
-
-// ---------------------------------------------------------------------------
-// Session validator (used by both HTTP and WebSocket)
-// ---------------------------------------------------------------------------
-
-export async function validateSession(
-  cookieHeader: string | null,
-  secret: string,
-): Promise<JwtPayload | null> {
-  const token = extractSessionCookie(cookieHeader)
-  if (!token) return null
-  return verifyJwt(token, secret)
 }

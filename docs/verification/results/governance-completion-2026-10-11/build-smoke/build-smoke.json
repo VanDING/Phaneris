@@ -1,0 +1,17 @@
+{
+  "completed": [
+    "electron:build:main",
+    "electron:build:preload",
+    "electron:build:renderer",
+    "webui:build",
+    "viewer:build",
+    "server-distribution-import",
+    "missing-pi-fails-before-listen",
+    "missing-wasm-fails-before-listen",
+    "missing-worker-fails-before-listen",
+    "off-tree-production-wrapper-boot-and-authenticated-rpc",
+    "production-wrapper-bounded-clean-shutdown",
+    "off-tree-production-pi-host-effect-and-tool-parity"
+  ],
+  "nativeRuntimeDownloads": false
+}

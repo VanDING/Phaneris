@@ -23,7 +23,7 @@
 #     phaneris-server
 # =============================================================================
 
-FROM oven/bun:1.4-slim
+FROM oven/bun:1.4.2-slim
 
 LABEL org.opencontainers.image.source="https://github.com/VanDING/Phaneris"
 LABEL org.opencontainers.image.description="Phaneris Server — headless AI workflow server"
@@ -68,21 +68,16 @@ COPY apps/electron/package.json apps/electron/
 COPY apps/cli/package.json apps/cli/
 COPY apps/viewer/package.json apps/viewer/
 COPY apps/webui/package.json apps/webui/
+COPY patches/ patches/
 
 RUN bun install --frozen-lockfile
 
 # Copy source
 COPY . .
 
-# Build Pi agent server subprocess (bundled CJS). Bundled into bundle.js with
-# a thin dist/index.js launcher: Pi 0.85+ ships top-level entry guards that
-# throw when the bundle is executed directly (argv[1] === import.meta.url).
-RUN bun build packages/pi-agent-server/src/index.ts \
-      --outfile packages/pi-agent-server/dist/bundle.js --target node --format cjs --minify \
-      && bun packages/pi-agent-server/scripts/write-launcher.ts
-
-# Build the WhatsApp worker bundle (CJS, Node target — Bun cannot run it).
-RUN bun run scripts/build-wa-worker.ts
+# The same Pi launcher and Node worker commands are used by standalone and desktop builds.
+RUN bun run build:runtime && mkdir -p apps/electron/resources/pi-agent-server && \
+    cp -R packages/pi-agent-server/dist/. apps/electron/resources/pi-agent-server/
 
 # Build web UI assets (served by the server on the RPC port).
 # vite's bundler runs under Node (via shebang in vite's bin) and hits V8's
@@ -103,9 +98,11 @@ RUN find /app -not -perm -o=r -exec chmod o+r {} + && \
 USER phaneris
 
 ENV PHANERIS_RPC_HOST=0.0.0.0
+ENV PHANERIS_IS_PACKAGED=true
 ENV PHANERIS_RPC_PORT=9100
 ENV PHANERIS_WEBUI_DIR=/app/apps/webui/dist
 ENV PHANERIS_BUNDLED_ASSETS_ROOT=/app/apps/electron
+ENV PHANERIS_RESOURCES_PATH=/app/apps/electron/resources
 # WhatsApp worker — Bun cannot run the CJS worker, so we point the adapter at
 # system `node` (installed above). If PHANERIS_BUNDLED_ASSETS_ROOT changes, update
 # PHANERIS_MESSAGING_WA_WORKER to match; the default in packages/server resolves

@@ -1,3 +1,5 @@
+import type { RpcResult } from '@phaneris/shared/protocol';
+import type { RpcCallback, CapabilityHandler } from '@phaneris/server-core/transport';
 /**
  * RoutedClient — client-side channel router.
  *
@@ -20,7 +22,7 @@ import { isLocalOnly, RPC_CHANNELS } from '@phaneris/shared/protocol'
 // ---------------------------------------------------------------------------
 
 interface ListenerEntry {
-  callback: (...args: any[]) => void
+  callback: RpcCallback
   unsub: () => void
 }
 
@@ -44,7 +46,7 @@ export class RoutedClient implements RpcClient {
   private remoteListeners = new Map<string, Set<ListenerEntry>>()
 
   /** Capability handlers — re-registered on workspace switch. */
-  private capabilities = new Map<string, (...args: any[]) => Promise<any> | any>()
+  private capabilities = new Map<string, CapabilityHandler>()
 
   /** Connection state listeners (delegates to workspaceClient). */
   private connectionStateListeners = new Set<(state: TransportConnectionState) => void>()
@@ -92,7 +94,7 @@ export class RoutedClient implements RpcClient {
   // RpcClient interface
   // -------------------------------------------------------------------------
 
-  async invoke(channel: string, ...args: any[]): Promise<any> {
+  async invoke<Channel extends string>(channel: Channel, ...args: unknown[]): Promise<RpcResult<Channel>> {
     const isLocal = isLocalOnly(channel)
     const target = isLocal ? this.localClient : this.workspaceClient
 
@@ -116,13 +118,15 @@ export class RoutedClient implements RpcClient {
 
     // Intercept SWITCH_WORKSPACE response to swap workspace client
     if (channel === RPC_CHANNELS.window.SWITCH_WORKSPACE) {
-      this.handleWorkspaceSwitch(result as WorkspaceSwitchResult)
+      const accepted = result as WorkspaceSwitchResult
+      this.localClient.setAcceptedWorkspaceId(accepted.workspaceId)
+      this.handleWorkspaceSwitch(accepted)
     }
 
     return result
   }
 
-  on(channel: string, callback: (...args: any[]) => void): () => void {
+  on(channel: string, callback: RpcCallback): () => void {
     if (isLocalOnly(channel)) {
       return this.localClient.on(channel, callback)
     }
@@ -145,7 +149,7 @@ export class RoutedClient implements RpcClient {
     }
   }
 
-  handleCapability(channel: string, handler: (...args: any[]) => Promise<any> | any): void {
+  handleCapability(channel: string, handler: CapabilityHandler): void {
     this.capabilities.set(channel, handler)
     // Register on both clients — either server can invoke capabilities
     this.localClient.handleCapability(channel, handler)

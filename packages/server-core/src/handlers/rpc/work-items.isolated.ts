@@ -1,3 +1,4 @@
+import type { RpcResult, RpcMethodResults } from '@phaneris/shared/protocol';
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
 import { mkdtempSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -110,10 +111,10 @@ function createHarness(options?: {
   }
   registerWorkItemHandlers(server, deps)
 
-  const handler = (channel: string): HandlerFn => {
+  const handler = <Channel extends keyof RpcMethodResults>(channel: Channel): HandlerFn<RpcResult<Channel>> => {
     const registered = handlers.get(channel)
     if (!registered) throw new Error(`Handler not registered: ${channel}`)
-    return registered
+    return registered as HandlerFn<RpcResult<Channel>>
   }
 
   return { sessions, pushes, calls, warnings, handler }

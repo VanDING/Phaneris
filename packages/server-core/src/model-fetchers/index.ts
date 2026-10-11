@@ -10,14 +10,10 @@
  * 3. MODEL_REGISTRY — hardcoded offline seed data, last resort
  */
 
-import type { ModelFetcherMap, ModelFetcherCredentials, FetchableProvider } from '@phaneris/shared/config'
-import type { ModelDefinition } from '@phaneris/shared/config'
-import {
-  getLlmConnections,
-  getLlmConnection,
-  updateLlmConnection,
-  getModelsForProviderType,
-} from '@phaneris/shared/config'
+import type { ModelFetcherMap, ModelFetcherCredentials, FetchableProvider } from '@phaneris/shared/config';
+import type { ModelDefinition } from '@phaneris/shared/config';
+import { getLlmConnections, getLlmConnection, updateLlmConnection } from '@phaneris/shared/config/connections';
+import { getModelsForProviderType } from '@phaneris/shared/config';
 import { MODEL_FETCHERS } from './registry'
 import { handlerLog } from './runtime'
 

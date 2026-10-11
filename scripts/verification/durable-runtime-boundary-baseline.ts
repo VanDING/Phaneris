@@ -36,7 +36,7 @@ const manager = new SessionManager()
 // Inspect production seams; only browser/provider transport is absent in this baseline.
 const seam = manager as any
 const observed: unknown[] = []
-manager.onSessionComplete(event => observed.push(event))
+manager.onSessionComplete((event: unknown) => observed.push(event))
 const stored = await createSession(workspace.rootPath, { name: 'Settlement evidence' })
 const session = createManagedSession(stored, workspace, { messagesLoaded: true })
 seam.sessions.set(session.id, session)

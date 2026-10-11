@@ -25,9 +25,10 @@ evidence.
 The deliberately deferred end-state is described in
 [durable-agent-runtime-target-architecture.md](./durable-agent-runtime-target-architecture.md).
 
-The separate [Runtime boundary redesign proposal](./durable-runtime-boundary.md) (2026-10-10)
-addresses execution ownership and dependencies between the Runtime and SessionManager. It is not
-implemented and does not replace this ADR's accepted persistence and recovery guarantees.
+The [Runtime boundary redesign](./durable-runtime-boundary.md) (2026-10-10) is implemented through
+B0–B5 and addresses execution ownership and dependencies between the Runtime and SessionManager.
+Its implementation evidence and coverage limits are recorded in that document; this ADR's accepted
+persistence and recovery guarantees remain in force.
 
 ## Decision
 

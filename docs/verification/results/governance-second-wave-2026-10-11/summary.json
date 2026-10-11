@@ -1,0 +1,431 @@
+{
+  "fullPassingExecutions": 6372,
+  "fullSkipped": 14,
+  "fullFailed": 0,
+  "criticalBunTests": 243,
+  "criticalFailed": 0,
+  "bundle": {
+    "mainBytes": 21444207,
+    "mainBudget": 21500000,
+    "mainHeadroom": 55793,
+    "rendererInitialBytes": 4279927,
+    "rendererChunks": 71,
+    "rendererBudget": 4800000,
+    "piBytes": 14004547
+  },
+  "headSha": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+  "dirty": true,
+  "committed": false,
+  "pushed": false,
+  "capturedAt": "2026-10-11T04:09:06.331802+00:00",
+  "positiveRuns": {
+    "critical": "critical-A21q9O",
+    "auth": "webui-auth-lifecycle-eff7Vm",
+    "runtime-pi": "durable-runtime-pi-8q7V4A",
+    "build-smoke": "build-smoke-ibi7Zo",
+    "verification-output": "verification-output-MAHtJW",
+    "governance-canary": "governance-gates-bdYRNu"
+  },
+  "authScenes": 14,
+  "lifecycleScenes": 12,
+  "criticalAggregate": 13,
+  "piScenes": 6,
+  "buildScenes": 6,
+  "outputCanaryScenes": 7,
+  "governanceCanaryScenes": 4,
+  "pythonDocTests": 24,
+  "workspacePass": 6285,
+  "workspaceSkip": 14,
+  "ciSubsetPass": 87,
+  "lintFiles": 2155,
+  "registeredWarnings": 120,
+  "ipcChannels": 425,
+  "secondWaveChangedFiles": 36,
+  "sourceSnapshotFiles": 118,
+  "beforeFailures": 9,
+  "untested": [
+    "native Electron app.exit/UI",
+    "native Windows/Linux",
+    "real browser SameSite policy",
+    "real remote TLS proxy",
+    "signed installer/release",
+    "live provider/IM",
+    "G3-G8 and strict identity residuals"
+  ],
+  "buildArtifacts": [
+    {
+      "path": "apps/electron/dist/main.cjs",
+      "bytes": 21444207,
+      "sha256": "2b880a123a2bbeedaad8e8b9d22d3ac60f5cbc05164ac5687b7d1975094b7c7c"
+    },
+    {
+      "path": "apps/electron/dist/resources/pi-agent-server/bundle.js",
+      "bytes": 14004547,
+      "sha256": "b521d095cc13308326efa4a1ed8980248cb5faa55bf40705445a6d4a62188da2"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/main-duJLD6A_.js",
+      "bytes": 989564,
+      "sha256": "fa13be071797f4fb533ef8e421ba8ac0aa3f67763bea9673a84dfe39fe88db86"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/rolldown-runtime-C0FnF6B9.js",
+      "bytes": 1291,
+      "sha256": "e0a79ad36c6ca1ffbc796c80aa5661803a9d1bc684e29d1587f48b4ba9a82714"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/react-kHW2V6fO.js",
+      "bytes": 8286,
+      "sha256": "87f525f02b73211bdf8a00cbf93a68e0da97485512567d6777aac2f80564bb37"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/dist-D2WIawe4.js",
+      "bytes": 97198,
+      "sha256": "bc140e9d1a3a7f023f5a2d2978fa1f5fab0df831d9cedf9f800e66cf01b705e6"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/browser-aYsrqzFa.js",
+      "bytes": 6073,
+      "sha256": "b9197adfad3b971bb0e1c3af78a84a9d7a2c8dce495f1095de28e211cba20154"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/i18next-DQ_PihEv.js",
+      "bytes": 44118,
+      "sha256": "a26682abd9b9ba080c2501a6c892a54ddf4500b29f3536379b662a547d227e0c"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/plus--Hw9WC_I.js",
+      "bytes": 324,
+      "sha256": "eea2cf3807778aa5692ffda8ebf8617253bbae739b863e7984d9f25b7d10ac56"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/clsx-DB0hHKMi.js",
+      "bytes": 411,
+      "sha256": "48834494519d869b2ccfa2a45cf3527a3d2d761679f332f51134280007526947"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/bundle-mjs-BtkjxxEO.js",
+      "bytes": 27272,
+      "sha256": "32ab8632e967025daffc9bb9386ebad617649b4ede6ba3da1b89c9b76beed57a"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/utils-C2VDmFUD.js",
+      "bytes": 315,
+      "sha256": "c1352e6cf299efa0f575b13626a361c4329c3d2dd7ac318f717beebcbcc1343a"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/StyledDropdown-BEwFAQqS.js",
+      "bytes": 4441,
+      "sha256": "b4311647c34eb7b6050f546f3280a67a70657f3eecc87eb08f229f10f52d3558"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/useTranslation-RafYWE-u.js",
+      "bytes": 5882,
+      "sha256": "bdafdb5bd9dfe4abcd5a47f9fc4c58d6ccbafba2f99ffd5d1a085b3224db2615"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/ItemNavigator-CLzBBCcw.js",
+      "bytes": 2545,
+      "sha256": "084bfe1533517e6b45b0c5f3041c96ddf9e094edab5cdee5751c1d99cccc33bd"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/dist-BdnVrMIA.js",
+      "bytes": 9021,
+      "sha256": "5b7169f05391e4b0d2e81db78baa6d34307e665dcaef8cec86515b0d615565b9"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/CopyButton-TUVgOLSa.js",
+      "bytes": 12454,
+      "sha256": "ff86b5896ff66d674ccc787de141b1862c3c962651be3480ab107918698eaf60"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/file-text-CQ3z4_5L.js",
+      "bytes": 461,
+      "sha256": "43a619326a342d1dea58272575f31bfecd0038f1a1f0f15ca8fc67cd3f589f91"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/preload-helper-Dm0RifCr.js",
+      "bytes": 1548,
+      "sha256": "ad501340792fbbf2ed9bf6c9ff59cc5a5d654eb9712722871ab4e45b20f73317"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/CodeBlock-BqYEvMyq.js",
+      "bytes": 6035,
+      "sha256": "c6cee7a71e527a083d2be4a828ae2cd01265e37bf42946d16ded2dd6cfbd5c43"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/SimpleDropdown-wSnXaeUN.js",
+      "bytes": 18209,
+      "sha256": "ce1944ec084ffcdfc5362edcb79bc45455e605721bb0677328e88d1658ae4d6b"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/types-8vAkwCcW.js",
+      "bytes": 3000,
+      "sha256": "e36fc05bd803f887fac88cb55822475c4231fbdf53d4e2cffd4b313614e4da6a"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/dist-DMFPrbqJ.js",
+      "bytes": 155969,
+      "sha256": "6bc0e89faa4de2387e8f03e5f218a768368c9335971b8522c628ae9f97a6629d"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/katex-D5ZBl1ym.js",
+      "bytes": 262159,
+      "sha256": "67534aef20d0f0f1d61697aad70a62c6588f591dfa7e003c73d0e4c35013f04c"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/PDFPreviewOverlay-Bxg0MA4a.js",
+      "bytes": 1301,
+      "sha256": "6abf5cb525552f055d70ce2bed9e04995d677f5021f458f4767d620b78ed05fb"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/src-Vi8zLEJE.js",
+      "bytes": 1252866,
+      "sha256": "60c320a66bf9ca0ea7a02b7a0635b43c547bb5300b4e80b951bf4d358cdf09a8"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/renderer-DlzvEi3_.js",
+      "bytes": 208125,
+      "sha256": "29979cd74b41d953e353b38ac4fd5bb87f46abd289fcc32abb4bc986d899a7e6"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/AppShellContext-D3FOp_UJ.js",
+      "bytes": 158458,
+      "sha256": "cabc78e4008570456c43b57e8a6ee9de6fc1712b33b972b95efa3256552e7abf"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/hash-CE1NubKY.js",
+      "bytes": 367,
+      "sha256": "af67b6ac6a018d49ef1a42ad342cb53464bacf20a184ff95b93dc41c26cfe467"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/local-storage-B82WpaCT.js",
+      "bytes": 1791,
+      "sha256": "e1bfe2c6d95012367cd0a4aa53638772ad84629d1b665160e2bd2aa7fb6db6d4"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/utils-CM4MSQ9n.js",
+      "bytes": 315,
+      "sha256": "5e3213f9fa4950e3df6881d4be85c5dfa03d8eab596e474a8f7e5f1e75d73d04"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/layout-DJ2CicOv.js",
+      "bytes": 24902,
+      "sha256": "2cadb1efb8c20fde79395a66906c6a0e9dfaee289c0dc4417d4150bea3e9dc03"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/button-D32Lz0Sp.js",
+      "bytes": 36062,
+      "sha256": "6c60fc9f0f82a1c9b099c1a6f07cf52e6324665ca4c14b6d1086013c4b612391"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/styled-dropdown-BW5hV1bC.js",
+      "bytes": 225,
+      "sha256": "3572c628c82f908a7cd64568d395c58de5f2da971574b32500c7e875fa8abd72"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/dropdown-menu-DN6CFbO1.js",
+      "bytes": 4031,
+      "sha256": "5142442e7c04a4a186de8fa3e77dd4e48e348df27c3899b341a1fc2a5431f90a"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/PanelHeader-CNtHYmC1.js",
+      "bytes": 19092,
+      "sha256": "28be5144e82d77667998b67c911ca60b0f4896fa6883d94113e3c91c6c5473fb"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/dialog-rcLLRRcI.js",
+      "bytes": 2336,
+      "sha256": "8a1cb5efa4e31cc48ad35092959c58875793a32ec01bf223268018d8ec89f01d"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/llm-connections-Bd3Mt9TR.js",
+      "bytes": 9341,
+      "sha256": "aff9afc004f48b62a90ce4349b6f0655acf6c767f7586bee8de1ae13e66b304e"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/ServerDirectoryBrowser-DNfeFUTz.js",
+      "bytes": 7178,
+      "sha256": "b9a4b252a3dc36049477de07883e964c2ed426175301a866c12ca368f9e90288"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/icon-cache-JwE_hm4R.js",
+      "bytes": 7537,
+      "sha256": "9a0c08683c0675ec29592134e3a913e2f4f4ae112b9c6f8693fff62b04721568"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/source-avatar-DDy9geOB.js",
+      "bytes": 7430,
+      "sha256": "88f77be723e0a7915b7ef9ec1f7dedc63c4e1ec54b98b3f6d16fb0396bdb4d2d"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/provider-icons-1pGh3FwK.js",
+      "bytes": 44346,
+      "sha256": "19bfc5e079d2ff9c20d7417b8467b5c8d154a0a2d2d78923e142894bdec797d2"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/platform-D7LxW--e.js",
+      "bytes": 598,
+      "sha256": "c6443f92593462e4216bfe4184b656f1f33f17aa2ade6feb0a784d7553d0cc29"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/en-US-CfKYTKvT.js",
+      "bytes": 7441,
+      "sha256": "0b0540000574b2fe9875a1cdeea687fb023a892ee3f94cb8ce26a46ba6118528"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/startOfWeek-BYTgH7kD.js",
+      "bytes": 337,
+      "sha256": "3798319a72e6072a9c218bee0a018c9cbd8e942fc251376a3a67322a0bb800f1"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/getTimezoneOffsetInMilliseconds-B2wdnC41.js",
+      "bytes": 316,
+      "sha256": "2748ebb1342f4084e36ed7dae886e7601c9931ddb2c490f45b46cf5480c24418"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/textarea-BFd6MNBm.js",
+      "bytes": 5823,
+      "sha256": "c44832b6d96be9c0436e008cd99e31ab6a9a75f2609737aef19b0e114dbb74c4"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/model-picker-helpers-CVXSrjXd.js",
+      "bytes": 171479,
+      "sha256": "df1139e3f4df94602b8f07a50ef49fd795433bc258e85435db4aaf086091787b"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/trash-DYcE5Eoz.js",
+      "bytes": 657,
+      "sha256": "1220585deff55728b34aa36390b027e2f513830ac84a4a984408b4940a91ec5f"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/routes-CO-qvgYI.js",
+      "bytes": 2530,
+      "sha256": "d1acfc25042c7afe879a54f8f26b9fa44a43a543e91b8a06b0c56bb9dca54d52"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/docs-BUkj5qnQ.js",
+      "bytes": 4212,
+      "sha256": "f125c9330718c8883105abf6fad850777e102a228d7b164b3b7ecbde98b5d53f"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/NavigationContext-DCdFVJAj.js",
+      "bytes": 25885,
+      "sha256": "8b2d1be18054b6a627f7b208a9ae8017c54407236ef3710e9ead6748f1d327ad"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/select-xA3zX8ch.js",
+      "bytes": 22115,
+      "sha256": "fd36467eab6426525c7b38b8ac243f5468539dbda81309228a7038f0d2b32feb"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/eye-off-BJt5qePg.js",
+      "bytes": 504,
+      "sha256": "39ac511d25b8afd35cbb0a647c3f40f5bed5b423adbfe9f421f3ae4f737eacb6"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/ai-settings-navigation-KsyQibWV.js",
+      "bytes": 7291,
+      "sha256": "7498681cc24c20e987bc6221b3acd40029c780479b7a06e10ec61f4b534e9d83"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/lock-DT2o4OXG.js",
+      "bytes": 277,
+      "sha256": "5731e0831c44a667b8c21cbc5ff09bb044abccead601f5438d97c572c51acf52"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/shield-alert-QafnpYt-.js",
+      "bytes": 432,
+      "sha256": "af88de83c3403e2afe8ccacaf768ad01ac56ca7a392647d23329c46fdc97e4d8"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/Trans-Bh5gNYgp.js",
+      "bytes": 10782,
+      "sha256": "05e90ee297f7d676b4d476aa18bf0445b7466f25a710da7960cdb339617f703b"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/permission-modes-DRaFUDnh.js",
+      "bytes": 508,
+      "sha256": "cdfb0c176f4cec6665e0b354e54142ed7a18e2b4b4aedb54434303267c4db0de"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/keybinding-context-BINK_-4j.js",
+      "bytes": 2019,
+      "sha256": "6bf7066f5e060edb745af3b8416e88bd7e2674ee6dbe521de5dd6ee49e78d37a"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/styled-context-menu-M9GlTu5Z.js",
+      "bytes": 5723,
+      "sha256": "a87cb36d129de3c927994bc7b5d1b69a358c6bed2f5ca5a04616b23b92457f68"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/useAvailablePermissionModes-XvLvrDfe.js",
+      "bytes": 500,
+      "sha256": "5d2e64bb70e4abf94ad78eccb545fcb62f63f6e69150a082ae0f2f5536aa850d"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/switch-CApGX_uc.js",
+      "bytes": 4645,
+      "sha256": "253240d6826f5b811b4d1cfd3d42109a1e88b6c4c7bf47014b9f0ce309d4319e"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/ChatDisplay-PpU-NMVx.js",
+      "bytes": 358850,
+      "sha256": "14dcbb6a694100bc2061d320248eb3ac04b5275b3db27ee182f6e98342a7dbc9"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/app-window-ByGpLKeW.js",
+      "bytes": 335,
+      "sha256": "a57d9cd183b66cf765dfe59657fa63bb26fd69078628d9d3919bbd9573010728"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/play-W-V1IZ0a.js",
+      "bytes": 487,
+      "sha256": "4eb21fb564f5bb5ccbf10d9fd3ac8e1ed7780b8ddd9188998764e0d23c30181a"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/projects-DpQUp3L3.js",
+      "bytes": 2002,
+      "sha256": "b3a5b2fae8094c3c189625cef04b7bca8d2d7fc3b8ca0bb28e3f9d8076a3b99b"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/loader-circle-OgcpOM77.js",
+      "bytes": 245,
+      "sha256": "e1f130792588212b78c7080886c5454819f01a1ef24d7f0e610c7969ffefefba"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/monitor-_WdgCWvy.js",
+      "bytes": 333,
+      "sha256": "a1bdbc255012efa5c37add9cbe3822de0c70a4e716d7f8a3a5d3fb7bf46c2d05"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/i18nextBrowserLanguageDetector-0v5-epqA.js",
+      "bytes": 6940,
+      "sha256": "f388ca9fa39f83d62880bbbe4d180c6b015f23cfe20143db78d138861200bdb0"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/HeaderIconButton-Bi8ynTlw.js",
+      "bytes": 1158,
+      "sha256": "c5f6e5cd95fc52703e3d85cf9bb1c56e7c54b58b2199aefd3165e991654662e0"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/menu-context-Dn8mfXW0.js",
+      "bytes": 922,
+      "sha256": "7b3c28ac5b3caefa28b1c508e12cf8fc0e5457bdabc26739fbce14b2b65d64ae"
+    },
+    {
+      "path": "apps/electron/dist/renderer/assets/i18n-DjdsNigZ.js",
+      "bytes": 192302,
+      "sha256": "84f662f32a04328868f1700bfc32257e4077fa1c9dbeb41ffc0708ec7a8efdce"
+    }
+  ],
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "uv": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+    "platform": "darwin",
+    "architecture": "x64",
+    "osRelease": "25.6.0",
+    "executable": "/Users/van/.bun/bin/bun"
+  }
+}

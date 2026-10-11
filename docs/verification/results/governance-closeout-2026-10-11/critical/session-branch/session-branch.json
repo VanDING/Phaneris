@@ -1,0 +1,43 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-branch-workflow-SemxEl",
+  "checks": [
+    {
+      "id": "missing-parent-sdk",
+      "passed": true,
+      "childId": "",
+      "disposed": false,
+      "poolStopped": false,
+      "mcpDisconnected": false,
+      "hostGeneration": null
+    },
+    {
+      "id": "preflight-rollback",
+      "passed": true,
+      "childId": "261011-first-ravine",
+      "disposed": true,
+      "poolStopped": true,
+      "mcpDisconnected": true,
+      "hostGeneration": 1
+    },
+    {
+      "id": "successful-preflight",
+      "passed": true,
+      "childId": "261011-fresh-lotus",
+      "disposed": false,
+      "poolStopped": false,
+      "mcpDisconnected": false,
+      "hostGeneration": 0
+    },
+    {
+      "id": "successful-branch-delete",
+      "passed": true,
+      "childId": "261011-fresh-lotus",
+      "disposed": true,
+      "poolStopped": true,
+      "mcpDisconnected": true,
+      "hostGeneration": 1
+    }
+  ],
+  "parentUnchanged": true,
+  "parentSha256": "5ce6cf60ef8e54745c66cbd5d8eda10a23a1721a2f7650a47c67274fa217e718"
+}

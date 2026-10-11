@@ -1,0 +1,16 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-auth-lifecycle-VMSbnD",
+  "checks": [],
+  "processes": [
+    {
+      "pid": 40240,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 40244,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "cases": [
+    {
+      "id": "reasoned-exact-compatibility",
+      "exitCode": 0,
+      "residual": 0
+    },
+    {
+      "id": "new-token-in-approved-file",
+      "exitCode": 1,
+      "residual": 1
+    },
+    {
+      "id": "changed-compatibility-line",
+      "exitCode": 1,
+      "residual": 1
+    },
+    {
+      "id": "new-maintainer-document",
+      "exitCode": 1,
+      "residual": 1
+    },
+    {
+      "id": "stale-allowance",
+      "exitCode": 1,
+      "residual": 0
+    },
+    {
+      "id": "generated-identity-drift",
+      "exitCode": 1,
+      "residual": 0
+    }
+  ]
+}

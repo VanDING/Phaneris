@@ -1,6 +1,5 @@
-import { unlink } from 'fs/promises'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { CONFIG_FILE } from '@phaneris/shared/config/paths'
+import { deleteConfigFile } from '@phaneris/shared/config/repository'
 import { getCredentialManager } from '@phaneris/shared/credentials'
 import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -82,16 +81,13 @@ export function registerAuthHandlers(server: RpcServer, deps: HandlerDeps): void
       const manager = getCredentialManager()
 
       // List and delete all stored credentials
-      const allCredentials = await manager.list()
+      const allCredentials = await manager.list(undefined, { throwOnError: true })
       for (const credId of allCredentials) {
-        await manager.delete(credId)
+        await manager.delete(credId, { throwOnError: true })
       }
 
       // Delete the config file
-      const configPath = CONFIG_FILE
-      await unlink(configPath).catch(() => {
-        // Ignore if file doesn't exist
-      })
+      deleteConfigFile()
 
       deps.platform.logger.info('Logout complete - cleared all credentials and config')
     } catch (error) {

@@ -7,7 +7,7 @@ import {
 
 /**
  * Create a distributable, dependency-local human preview for standard Office
- * artifacts. MarkItDown is already shipped with CraftAgent and does not require
+ * artifacts. MarkItDown is already shipped with PiAgent and does not require
  * LibreOffice/ONLYOFFICE or a network service.
  */
 export async function renderOfficeArtifactPreview(

@@ -70,7 +70,7 @@ function readWebuiShims(): Set<string> {
   const array = config.match(/Object\.fromEntries\(\[([\s\S]*?)\]/)
   if (array) for (const match of array[1]!.matchAll(/'([^']+)'/g)) shims.add(match[1]!)
   // Canaries: a restructured Vite config must be loud, not a silent pass.
-  const missing = ['fs', 'node:fs', 'ws', 'open', 'electron-log', '@sentry/electron'].filter(name => !shims.has(name))
+  const missing = ['ws', 'electron-log/main', 'electron-log/renderer', '@sentry/electron/renderer'].filter(name => !shims.has(name))
   if (missing.length) fail(`webui shim list could not be read from vite.config.ts (missing: ${missing.join(', ')}); update this checker with the config`)
   return shims
 }
@@ -164,7 +164,7 @@ else {
     const file = queue.pop()!
     if (webuiReachable.has(file)) continue
     webuiReachable.add(file)
-    for (const edge of scan.graph.get(file) ?? []) queue.push(edge.target)
+    for (const edge of scan.graph.get(file) ?? []) if (!edge.typeOnly) queue.push(edge.target)
   }
 }
 

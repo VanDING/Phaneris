@@ -1,5 +1,5 @@
 $ErrorActionPreference = "Continue"
-$projectRoot = "E:\craft-agents"
+$projectRoot = Split-Path -Parent $PSScriptRoot
 $rootNM = Join-Path -Path $projectRoot -ChildPath "node_modules"
 
 # Prosemirror packages that may need deduplication

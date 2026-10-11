@@ -1,0 +1,30 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": false,
+    "types": [
+      "node",
+      "bun",
+      "vite/client"
+    ],
+    "paths": {
+      "@/*": [
+        "./apps/electron/src/renderer/*"
+      ],
+      "@config/*": [
+        "./packages/shared/src/config/*"
+      ]
+    }
+  },
+  "include": [
+    "scripts/**/*.ts",
+    "scripts/**/*.tsx",
+    "apps/electron/scripts/**/*.ts"
+  ],
+  "exclude": [
+    "scripts/performance/server.ts",
+    "scripts/verification/pi-1.0.2-upgrade-workflow.ts",
+    "scripts/verification/upstream-0140-b4b5-workflows.ts",
+    "scripts/verification/classifier-comparison-workflow.ts"
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-11T01:27:15.349914+08:00",
+  "baseHead": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+  "sourceTreeInitiallyClean": true,
+  "host": {
+    "platform": "macOS x86_64 (uname: Darwin x86_64)",
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "hostPython": "3.14.6",
+    "documentToolsPythonPin": "3.12.15",
+    "uvPin": "0.12.22"
+  },
+  "inventory": {
+    "trackedFiles": 3125,
+    "trackedBytes": 75559643,
+    "sourceFiles": 2272,
+    "sourceLines": 480919,
+    "productionSrcFiles": 1482,
+    "productionSrcLines": 341378,
+    "testOrFixtureFiles": 571,
+    "markdownFiles": 195,
+    "docsMarkdownFiles": 101,
+    "workspaceMembers": 13,
+    "declaredWorkspaceEdges": 27
+  },
+  "ast": {
+    "scannedModules": 1462,
+    "literalImportSites": 8148,
+    "resolvedLocalImportSites": 5907,
+    "packageCycleCandidates": 0,
+    "fileCycleCandidates": 16,
+    "valueFileCycleCandidates": 6,
+    "anyKeywords": 291,
+    "asAny": 113,
+    "rootOnlyImportCandidates": 39
+  },
+  "validation": [
+    {
+      "command": "bun run validate:ci",
+      "exitCode": 0,
+      "log": "validate-ci.log",
+      "existingBunTestPasses": 87,
+      "existingBunTestFailures": 0
+    },
+    {
+      "command": "bun run test:critical",
+      "exitCode": 0,
+      "log": "test-critical.log",
+      "existingBunTestPasses": 193,
+      "existingBunTestFailures": 0
+    },
+    {
+      "command": "bun run build:smoke",
+      "exitCode": 0,
+      "log": "build-smoke.log",
+      "existingBunTestPasses": 0,
+      "existingBunTestFailures": 0
+    },
+    {
+      "command": "bun run electron:build:assets && bun run bundle:report --check",
+      "exitCode": 0,
+      "log": "bundle-report.log",
+      "existingBunTestPasses": 0,
+      "existingBunTestFailures": 0
+    },
+    {
+      "command": "bun test ./packages/server-core/src/webui/__tests__/http-server.isolated.ts",
+      "exitCode": 0,
+      "log": "webui-auth.log",
+      "existingBunTestPasses": 15,
+      "existingBunTestFailures": 0
+    },
+    {
+      "command": "bun run identity:check:strict",
+      "exitCode": 1,
+      "log": "identity-strict.log",
+      "existingBunTestPasses": 0,
+      "existingBunTestFailures": 0
+    }
+  ],
+  "lintWarnings": {
+    "unused-eslint-disable": 8,
+    "react-hooks/exhaustive-deps": 95,
+    "craft-agent/no-localstorage": 17
+  },
+  "architectureGate": {
+    "scannedModules": 1462,
+    "webuiClosureSize": 1012,
+    "webuiShimCount": 46,
+    "webuiUnshimmedNodeBaseline": 3,
+    "undeclaredSubpathImports": 0,
+    "runtimeBoundaryViolations": 0
+  },
+  "runtimeWorkflows": {
+    "boundaryChecks": 15,
+    "crashCases": 8,
+    "gateRejectedViolations": 23
+  },
+  "identityStrict": {
+    "unallowlistedHits": 152,
+    "files": 67,
+    "intentionalCompatibilityRequiresTriage": true
+  },
+  "bundles": {
+    "rendererInitialJsBytes": 4279927,
+    "rendererInitialChunks": 71,
+    "mainBytes": 21441491,
+    "piStagedBytes": 14004547,
+    "mainBudgetBytes": 21500000,
+    "rendererInitialBudgetBytes": 4800000,
+    "mainHeadroomBytes": 58509
+  },
+  "verificationSideEffect": {
+    "overwrittenTrackedEvidenceFiles": 12,
+    "restoredAfterRun": true,
+    "note": "Only files overwritten by the audit run were restored; no production source was edited. Build stamped dirty while those generated evidence files were modified."
+  },
+  "notRun": [
+    "validate:full/full workspace tests",
+    "perf:smoke/perf:baseline",
+    "Docker image build",
+    "Windows/Linux packaged clients",
+    "installer/signing/notarization",
+    "remote GitHub Actions state",
+    "live external provider or messaging requests",
+    "current external advisory audit"
+  ],
+  "limitations": [
+    "File size is an investigation signal, not a defect.",
+    "Lexical markers include comments/strings and do not identify bugs.",
+    "Test-file counts describe presence, not coverage.",
+    "No external advisories, provider calls, or user workspace data were queried.",
+    "Type-only imports are excluded from the value graph; TS compiler may also erase value imports used only as types.",
+    "Cycle candidates include barrel re-exports; they require manual triage.",
+    "Browser aliases follow the architecture gate; per-app aliases and conditional exports are not fully modeled.",
+    "Root-only import candidates are ownership evidence, not proof that a package fails to build.",
+    "No dead-code claim is made from a module having zero incoming edges."
+  ],
+  "planArtifactChecks": {
+    "documentationGateExitCode": 0,
+    "documentCountAfterPlan": 103,
+    "gitDiffCheckExitCode": 0
+  }
+}

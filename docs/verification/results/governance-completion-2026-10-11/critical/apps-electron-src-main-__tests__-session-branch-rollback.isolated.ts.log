@@ -1,0 +1,64 @@
+bun test v1.4.2 (744846f84)
+
+src/main/__tests__/session-branch-rollback.isolated.ts:
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "ws-1",
+  sessionId: "child-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "preflight boom",
+}
+(pass) session branch rollback on preflight failure > deletes newly created child session when ensureBranchReady throws [5.08ms]
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation failed: sdk-fork requires parent SDK session ID {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  sourceProvider: "pi",
+  targetProvider: "pi",
+}
+(pass) session branch rollback on preflight failure > fails branch creation when parent pi sdk session id is missing [0.27ms]
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "ws-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "ws-1",
+  sessionId: "child-1",
+  branchFromSessionId: "source-1",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "pi preflight boom",
+}
+(pass) session branch rollback on preflight failure > runs backend preflight for pi branches and rolls back on failure [0.54ms]
+
+ 3 pass
+ 0 fail
+ 13 expect() calls
+Ran 3 tests across 1 file. [501.00ms]

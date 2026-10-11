@@ -11,7 +11,7 @@ import { registerWorkspaceCoreHandlers } from './workspace'
 let wsRoot = ''
 const workspaceFixture = { id: 'ws-test', name: 'ws-test', rootPath: '' }
 
-mock.module('@phaneris/shared/config', () => ({
+mock.module('@phaneris/shared/config/workspace-selection', () => ({
   getWorkspaceByNameOrId: (id: string) => (id === 'ws-test' ? workspaceFixture : null),
   addWorkspace: () => undefined,
   setActiveWorkspace: () => undefined,

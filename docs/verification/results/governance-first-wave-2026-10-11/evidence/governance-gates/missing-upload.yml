@@ -1,0 +1,232 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: "1.4.2"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          # Must match UV_VERSION in scripts/build/common.ts so CI resolves the
+          # PEP 723 tool scripts with the uv the release bundles.
+          version: "0.12.22"
+
+      - name: Reject Windows-illegal filenames
+        run: |
+          BAD=$(git ls-files | grep -E '[<>:"|?*]' || true)
+          if [ -n "$BAD" ]; then
+            echo "::error::Files with characters illegal on Windows:"
+            echo "$BAD"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run validation suite
+        run: |
+          mkdir -p .cache/verification
+          bun run validate:ci 2>&1 | tee .cache/verification/validate-ci.log
+
+      # Curated runtime/streaming/recovery paths (server-core, pi-agent-server,
+      # ui, electron) that validate:ci does not reach, each package in its own
+      # process so Bun module mocks cannot leak across files.
+      - name: Critical path tests
+        run: bun run test:critical
+
+      - name: Production bundle and server distribution smoke
+        if: github.event_name == 'pull_request'
+        run: bun run build:smoke
+
+      - name: Governance artifact and gate regressions
+        run: bun run scripts/verification/verification-output-workflow.ts && bun run scripts/verification/governance-gates-workflow.ts
+
+      - name: Remote credential vault regression
+        run: bun test ./packages/shared/src/config/__tests__/remote-token-vault.isolated.ts
+
+      - name: Recovery regression tests
+        run: bun run scripts/run-recovery-tests.ts
+
+      - name: Upload verification evidence
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}
+          path: .cache/verification/
+          if-no-files-found: warn
+          retention-days: 14
+
+  quality-windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: "1.4.2"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Type checks
+        run: |
+          New-Item -ItemType Directory -Force .cache/verification | Out-Null
+          bun run typecheck:all 2>&1 | Tee-Object -FilePath .cache/verification/typecheck-windows.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Lint
+        run: bun run lint
+
+      - name: i18n checks
+        run: |
+          bun run lint:i18n:parity
+          bun run lint:i18n:sorted
+          bun run lint:i18n:coverage
+
+      # Pin checks belong here as well as in `validate:ci`: `runtime:check`
+      # reads the Windows `.cmd` wrappers, and `electron-pin:check` guards the
+      # electron version this job is the closest to packaging.
+      - name: Pin checks
+        run: |
+          bun run runtime:check
+          bun run electron-pin:check
+          bun run version:check
+
+      # Regression coverage for Windows path/permission behavior. Each command
+      # runs in its own Bun process so mock.module() cannot leak between files.
+      - name: Cross-platform regression tests
+        run: |
+          bun test ./apps/electron/eslint-rules/__tests__
+          bun test ./apps/electron/src/shared/__tests__/ipc-channels.test.ts
+          bun test ./packages/server-core/src/utils/path-validation.test.ts
+          bun test ./packages/ui/eslint-rules/__tests__
+          bun test ./packages/messaging-gateway/src/__tests__/wechat-send.isolated.ts
+          bun test ./packages/messaging-gateway/src/__tests__/wechat-url.isolated.ts
+          bun test ./packages/shared/src/config/__tests__/theme.test.ts
+          bun test ./packages/shared/src/sessions/__tests__/persistence-queue.test.ts
+
+      - name: Recovery regression tests
+        run: bun run scripts/run-recovery-tests.ts
+
+      - name: Upload verification evidence
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}
+          path: .cache/verification/
+          if-no-files-found: warn
+          retention-days: 14
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: "1.4.2"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dependency audit
+        run: bun run audit:dependencies
+
+  full-validation:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: "1.4.2"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: "0.12.22"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Full workspace validation
+        run: |
+          mkdir -p .cache/verification
+          bun run validate:full 2>&1 | tee .cache/verification/validate-full.log
+
+      # Runs every production bundler (main, preload, renderer, Web UI, viewer),
+      # then assembles the server distribution and boots it out of the source
+      # tree to prove its imports resolve after packaging.
+      - name: Production bundle and server distribution smoke
+        run: bun run build:smoke
+
+      - name: Bundle size report
+        # The report checks staged Pi resources as well as main/renderer.
+        # Do not treat an un-staged subprocess as a zero-byte success.
+        run: bun run electron:build:assets && bun run bundle:report --check 2>&1 | tee .cache/verification/bundle-report.log
+
+      - name: Pi subprocess build smoke
+        run: bun run server:build:subprocess
+
+      - name: Upload verification evidence
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}
+          path: .cache/verification/
+          if-no-files-found: warn
+          retention-days: 14

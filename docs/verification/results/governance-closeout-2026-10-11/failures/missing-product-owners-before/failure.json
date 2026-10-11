@@ -1,0 +1,4 @@
+{
+  "message": "Cannot find module '../../packages/server-core/src/sessions/agent-product-context' imported from /Users/van/projects/Phaneris/scripts/verification/session-owners-workflow.ts",
+  "stack": "ResolveMessage: Cannot find module '../../packages/server-core/src/sessions/agent-product-context' imported from /Users/van/projects/Phaneris/scripts/verification/session-owners-workflow.ts"
+}

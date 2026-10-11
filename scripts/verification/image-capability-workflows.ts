@@ -83,10 +83,10 @@ try {
       const events = runtime.queries.events(workspaceRoot, { sessionId, afterSeq: 0, limit: 100 })
       const outcomes = events.filter((e: any) => e.type === 'model_outcome_committed')
       assert.equal(outcomes.length, 2)
-      assert.equal(outcomes[1]!.payload.stopReason, 'aborted')
+      assert.equal((outcomes[1]!.payload as { stopReason: string }).stopReason, 'aborted')
       const usage = runtime.queries.usage(workspaceRoot, { sessionId })
       assert.equal(usage[0]!.inputTokens, 10); assert.equal(usage[0]!.outputTokens, 20)
-      assert.equal(usage[1]!.costUsd, undefined); assert.equal(usage[1]!.payload.costSource, 'unknown')
+      assert.equal(usage[1]!.costUsd, undefined); assert.equal((usage[1]!.payload as { costSource: string }).costSource, 'unknown')
       assert.equal(runtime.queries.getCanonicalModelContext(workspaceRoot, sessionId).items.length, 0)
       return { outcomes: outcomes.length, invalidOutputUsage: usage[0], cancelled: true }
     } finally { await runtime.close(); delayed = false; corrupt = false }

@@ -199,7 +199,7 @@ export interface FileTreeNodeProps {
   onToggleExpand: (path: string) => void
   onFileClick: (file: SessionFile) => void
   onFileDoubleClick: (file: SessionFile) => void
-  onRevealInFileManager: (path: string) => void
+  onRevealInFileManager?: (path: string) => void
   /** Whether this item is inside an expanded folder (for stagger animation) */
   isNested?: boolean
   /** Render a root row: medium weight, always shows its folder icon. */
@@ -353,12 +353,12 @@ export function FileTreeNode({
             {t('common.copyPath')}
           </StyledContextMenuItem>
           {/* Show in file manager */}
-          <StyledContextMenuItem
+          {onRevealInFileManager && <StyledContextMenuItem
             onSelect={() => onRevealInFileManager(file.path)}
           >
             <FolderOpen className="h-3.5 w-3.5" />
             {t("chat.showInFileManager", { fileManager: fileManagerName })}
-          </StyledContextMenuItem>
+          </StyledContextMenuItem>}
         </StyledContextMenuContent>
       </ContextMenu>
       {/* Expandable children with framer-motion animation - matches LeftSidebar exactly */}

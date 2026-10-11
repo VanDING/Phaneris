@@ -1,0 +1,22 @@
+{
+  "identity": {
+    "name": "Phaneris",
+    "fullName": "Phaneris Agent",
+    "slug": "phaneris",
+    "description": "Local AI workspace with durable, inspectable execution",
+    "appId": "io.github.vanding.phaneris",
+    "scheme": "phaneris"
+  },
+  "driftProblems": [
+    "packages/shared/src/identity.generated.ts is out of date — run \"bun run identity:generate\""
+  ],
+  "residual": {
+    "open": 0,
+    "allowed": 23,
+    "byToken": {},
+    "topFiles": []
+  },
+  "unusedRules": [
+    "packages/shared/src/identity.generated.ts"
+  ]
+}

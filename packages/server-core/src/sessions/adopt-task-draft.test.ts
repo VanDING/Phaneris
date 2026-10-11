@@ -7,7 +7,6 @@ import { SessionManager, createManagedSession } from './SessionManager.ts'
 // review asked for (no silent capture of an unrelated/non-draft session).
 describe('adoptGeneratedTaskOrchestrator guards', () => {
   function seed(sm: SessionManager, id: string, fields: { taskDraft?: boolean; taskSlug?: string }) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(sm as any).sessions.set(id, createManagedSession({ id, ...fields }, { id: 'test', rootPath: '/tmp/unused' } as any))
   }
 
@@ -33,7 +32,6 @@ describe('adoptGeneratedTaskOrchestrator guards', () => {
     seed(sm, 'orch', { taskDraft: false, taskSlug: 'slug-a' })
     expect(await sm.adoptGeneratedTaskOrchestrator('orch', 'slug-b')).toBe(false)
     // The existing binding is untouched.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((sm as any).sessions.get('orch').taskSlug).toBe('slug-a')
   })
 })
@@ -44,7 +42,6 @@ describe('adoptGeneratedTaskOrchestrator guards', () => {
 // storage wiring), so we pin the three early-return guards that run before any I/O.
 describe('bindExistingSessionToTask guards', () => {
   function seed(sm: SessionManager, id: string, fields: { taskDraft?: boolean; taskSlug?: string }) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(sm as any).sessions.set(id, createManagedSession({ id, ...fields }, { id: 'test', rootPath: '/tmp/unused' } as any))
   }
 
@@ -64,7 +61,6 @@ describe('bindExistingSessionToTask guards', () => {
     seed(sm, 'orch', { taskSlug: 'slug-a' })
     expect(await sm.bindExistingSessionToTask('orch', 'slug-b')).toBe(false)
     // The existing binding is untouched.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((sm as any).sessions.get('orch').taskSlug).toBe('slug-a')
   })
 })
@@ -74,12 +70,10 @@ describe('bindExistingSessionToTask guards', () => {
 // must NOT churn the agent when nothing changed. We stub the (separately-tested) mutators + the
 // persistence seam so these tests isolate the delegation contract without full storage wiring.
 describe('adopt/bind route changed fields through canonical live-update mutators', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function harness(seedFields: Record<string, unknown>) {
     const sm = new SessionManager()
     const calls = { model: [] as unknown[], cwd: [] as unknown[], mode: [] as unknown[] }
     const events: string[] = []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const any = sm as any
     any.sendEvent = (e: { type: string }) => events.push(e.type)
     any.persistSession = () => {}
@@ -112,7 +106,6 @@ describe('adopt/bind route changed fields through canonical live-update mutators
     expect(calls.cwd).toEqual(['/new/dir'])
     expect(calls.mode).toEqual(['allow-all'])
     // Draft adoption reconciles its seeded connection directly + emits the event.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((sm as any).sessions.get('s').llmConnection).toBe('new-conn')
     expect(events).toContain('connection_changed')
     expect(events).toContain('session_metadata_changed')

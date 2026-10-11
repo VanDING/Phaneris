@@ -14,7 +14,7 @@
  */
 
 import type { FileAttachment } from '@phaneris/shared/protocol'
-import type { DraftAttachmentContent, DraftAttachmentRef } from '@phaneris/shared/config'
+import type { DraftAttachmentContent, DraftAttachmentRef } from '@phaneris/shared/config/persisted-types';
 
 /** Per-attachment cap on inlined draft content. Huge pastes are dropped from the draft
  *  (with a warn) rather than bloating drafts.json. Tuned to the same 20 MB limit the

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "policy": "Exact runtime SCC members and edges. No update/rebaseline command. New, expanded, changed or stale cycles fail. Type-only edges are reported separately by the architecture census.",
+  "allowed": [
+    {
+      "members": [
+        "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx",
+        "apps/electron/src/renderer/components/ui/EditPopover.tsx"
+      ],
+      "edges": [
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+          "to": "apps/electron/src/renderer/components/ui/EditPopover.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/ui/EditPopover.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx"
+        }
+      ],
+      "owner": "renderer/chat-composition",
+      "reason": "EditPopover embeds compact ChatDisplay, whose input can open an edit popover on explicit user action. There is no top-level render/initialization recursion; the compact child is bounded by component state. Internal barrel value imports have been removed."
+    },
+    {
+      "members": [
+        "packages/shared/src/sources/credential-manager.ts",
+        "packages/shared/src/sources/storage.ts"
+      ],
+      "edges": [
+        {
+          "from": "packages/shared/src/sources/credential-manager.ts",
+          "to": "packages/shared/src/sources/storage.ts"
+        },
+        {
+          "from": "packages/shared/src/sources/storage.ts",
+          "to": "packages/shared/src/sources/credential-manager.ts"
+        }
+      ],
+      "owner": "shared/source-resource",
+      "reason": "SourceCredentialManager persists canonical authentication metadata through source storage. Source storage invokes best-effort credential cleanup only after a config write or an explicit committed plugin cleanup. Neither module calls the other during evaluation. This existing source aggregate bridge preserves cleanup/commit order and the single credential vault; expanding it requires a new owner review."
+    },
+    {
+      "members": [
+        "packages/ui/src/components/markdown/Markdown.tsx",
+        "packages/ui/src/components/markdown/MarkdownDocBlock.tsx"
+      ],
+      "edges": [
+        {
+          "from": "packages/ui/src/components/markdown/Markdown.tsx",
+          "to": "packages/ui/src/components/markdown/MarkdownDocBlock.tsx"
+        },
+        {
+          "from": "packages/ui/src/components/markdown/MarkdownDocBlock.tsx",
+          "to": "packages/ui/src/components/markdown/Markdown.tsx"
+        }
+      ],
+      "owner": "ui/markdown",
+      "reason": "The renderer handles markdown-preview through MarkdownDocBlock, whose inner Markdown explicitly disables markdown-preview fences. DISABLE_INNER_MARKDOWN_PREVIEW is the existing recursion guard; no storage or runtime owner is involved."
+    }
+  ]
+}

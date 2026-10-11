@@ -25,11 +25,13 @@
  */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { UV_VERSION } from './build/common';
 import { TOOL_PYTHON_VERSION } from '../packages/session-tools-core/src/runtime/resolve-script-runtime';
 
-const ROOT = join(import.meta.dir, '..');
+const args = process.argv.slice(2);
+if (args.some(arg => !arg.startsWith('--repository='))) throw new Error('Usage: check-python-runtime-pin.ts [--repository=path]');
+const ROOT = resolve(args.find(arg => arg.startsWith('--repository='))?.slice(13) ?? join(import.meta.dir, '..'));
 const BIN_DIR = join(ROOT, 'apps', 'electron', 'resources', 'bin');
 const RESOLVER = join(ROOT, 'packages', 'session-tools-core', 'src', 'runtime', 'resolve-script-runtime.ts');
 
@@ -88,6 +90,8 @@ for (const entry of existsSync(join(BIN_DIR)) ? readdirSync(BIN_DIR, { withFileT
   const posixStamp = join(BIN_DIR, entry.name, 'uv.version');
   const stampPath = existsSync(stamp) ? stamp : existsSync(posixStamp) ? posixStamp : null;
   if (!stampPath) continue;
+  const binary = stampPath.slice(0, -'.version'.length);
+  if (!existsSync(binary)) failures.push(`Bundled uv stamp has no binary: ${binary}`);
   const version = readFileSync(stampPath, 'utf8').trim();
   stamped.push(`${entry.name}=${version}`);
   if (version !== UV_VERSION) {

@@ -2,7 +2,7 @@
   "name": "@phaneris/core",
   "version": "0.3.1",
   "license": "Apache-2.0",
-  "description": "Core types, storage, and agent logic for Phaneris",
+  "description": "Shared TypeScript types and pure utilities for Phaneris",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",

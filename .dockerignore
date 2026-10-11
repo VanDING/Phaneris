@@ -7,6 +7,10 @@
 # container, triggering "cannot copy to non-directory" during `COPY . .`.
 node_modules/
 **/node_modules
+.cache/
+.codegraph/
+.ui-refinement/
+.vite/
 
 # Build artifacts
 dist/

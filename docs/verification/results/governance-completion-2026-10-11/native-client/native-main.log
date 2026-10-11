@@ -1,0 +1,295 @@
+2026-10-11T10:55:08.903Z [PowerShellValidator] Root set to: /Users/van/projects/Phaneris/apps/electron/dist/resources
+2026-10-11T10:55:08.910Z [docs] Synced 22 docs
+2026-10-11T10:55:08.912Z [release-notes] Synced 8 release notes
+2026-10-11T10:55:08.913Z [Permissions] Installed default.json
+2026-10-11T10:55:09.177Z [config] Synced config-defaults.json from bundled assets
+2026-10-11T10:55:09.186Z [UserThemeWatcher] Watching: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Uds54J/themes
+2026-10-11T10:55:09.312Z [ConfigWatcher] Starting for workspace: workspace
+2026-10-11T10:55:09.313Z [ConfigWatcher] Watching global configs: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Uds54J
+2026-10-11T10:55:09.313Z [ConfigWatcher] Setting up workspace watcher for: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace
+2026-10-11T10:55:09.313Z [ConfigWatcher] Watching workspace recursively: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace
+2026-10-11T10:55:09.314Z [ConfigWatcher] Watching app permissions directory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Uds54J/permissions
+2026-10-11T10:55:09.314Z [ConfigWatcher] Known sources: []
+2026-10-11T10:55:09.314Z [ConfigWatcher] Known skills: []
+2026-10-11T10:55:09.315Z [ConfigWatcher] Started watching files
+2026-10-11T10:55:09.316Z [PERF] configWatcher.start: 3.20ms (ensureDir:0.3ms → watchGlobalConfigs:0.6ms → watchWorkspaceDir:1.2ms → watchAppPermissionsDir:1.6ms → scanSources:2.0ms → scanSkills:2.4ms → scanPlugins:2.5ms → initLlmConnectionsHash:2.8ms) {"workspaceId":"workspace"}
+2026-10-11T10:55:09.316Z [event-bus] DEBUG [EventBus] Created for workspace: fixture
+2026-10-11T10:55:09.316Z [automation-system] DEBUG [AutomationSystem] No automations config found at /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace/automations.json
+2026-10-11T10:55:09.317Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.317Z [prompt-handler] DEBUG [PromptHandler] Subscribed to event bus
+2026-10-11T10:55:09.317Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.317Z [retry-scheduler] DEBUG [RetryScheduler] Started
+2026-10-11T10:55:09.318Z [webhook-handler] DEBUG [WebhookHandler] Subscribed to event bus
+2026-10-11T10:55:09.318Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.318Z [script-handler] DEBUG [ScriptHandler] Subscribed to event bus
+2026-10-11T10:55:09.319Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.319Z [event-log-handler] DEBUG [EventLogHandler] Subscribed to event bus, logging to /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace/events.jsonl
+2026-10-11T10:55:09.319Z [automation-system] DEBUG [AutomationSystem] Handlers created and subscribed
+2026-10-11T10:55:09.319Z [automation-system] DEBUG [AutomationSystem] Scheduler started
+2026-10-11T10:55:09.319Z [automation-system] DEBUG [AutomationSystem] Created for workspace: fixture
+2026-10-11T10:55:09.320Z [ConfigWatcher] Starting for workspace: second-workspace
+2026-10-11T10:55:09.320Z [ConfigWatcher] Watching global configs: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Uds54J
+2026-10-11T10:55:09.321Z [ConfigWatcher] Setting up workspace watcher for: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace
+2026-10-11T10:55:09.321Z [ConfigWatcher] Watching workspace recursively: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace
+2026-10-11T10:55:09.321Z [ConfigWatcher] Watching app permissions directory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Uds54J/permissions
+2026-10-11T10:55:09.321Z [ConfigWatcher] Known sources: []
+2026-10-11T10:55:09.322Z [ConfigWatcher] Known skills: []
+2026-10-11T10:55:09.322Z [ConfigWatcher] Started watching files
+2026-10-11T10:55:09.322Z [PERF] configWatcher.start: 2.24ms (ensureDir:0.2ms → watchGlobalConfigs:0.5ms → watchWorkspaceDir:1.0ms → watchAppPermissionsDir:1.3ms → scanSources:1.6ms → scanSkills:1.9ms → scanPlugins:1.9ms → initLlmConnectionsHash:2.0ms) {"workspaceId":"second-workspace"}
+2026-10-11T10:55:09.322Z [event-bus] DEBUG [EventBus] Created for workspace: second
+2026-10-11T10:55:09.323Z [automation-system] DEBUG [AutomationSystem] No automations config found at /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace/automations.json
+2026-10-11T10:55:09.323Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.323Z [prompt-handler] DEBUG [PromptHandler] Subscribed to event bus
+2026-10-11T10:55:09.323Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.324Z [retry-scheduler] DEBUG [RetryScheduler] Started
+2026-10-11T10:55:09.324Z [webhook-handler] DEBUG [WebhookHandler] Subscribed to event bus
+2026-10-11T10:55:09.324Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.325Z [script-handler] DEBUG [ScriptHandler] Subscribed to event bus
+2026-10-11T10:55:09.325Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T10:55:09.325Z [event-log-handler] DEBUG [EventLogHandler] Subscribed to event bus, logging to /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace/events.jsonl
+2026-10-11T10:55:09.325Z [automation-system] DEBUG [AutomationSystem] Handlers created and subscribed
+2026-10-11T10:55:09.326Z [automation-system] DEBUG [AutomationSystem] Scheduler started
+2026-10-11T10:55:09.326Z [automation-system] DEBUG [AutomationSystem] Created for workspace: second
+2026-10-11T10:55:09.328Z [PERF] session.listSessions: 0.87ms (readdir:0.2ms → parsed:0.8ms) {"count":3}
+2026-10-11T10:55:09.329Z [PERF] session.listSessions: 0.19ms (readdir:0.1ms → parsed:0.2ms) {"count":1}
+2026-10-11T10:55:09.632Z [ConfigWatcher] config.json changed
+2026-10-11T10:55:09.636Z [ConfigWatcher] Config validation failed: [{"file":"config.json","path":"activeSessionId","message":"Invalid input: expected string, received undefined","severity":"error"}]
+2026-10-11T10:55:09.636Z [ConfigWatcher] config.json changed
+2026-10-11T10:55:09.637Z [ConfigWatcher] Config validation failed: [{"file":"config.json","path":"activeSessionId","message":"Invalid input: expected string, received undefined","severity":"error"}]
+2026-10-11T10:55:09.763Z [ws-rpc-server] INFO  Client connected {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976","webContentsId":1,"workspaceId":"fixture"}
+2026-10-11T10:55:10.144Z [ConfigWatcher] preferences.json changed
+2026-10-11T10:55:10.146Z [ConfigWatcher] preferences.json changed
+2026-10-11T10:55:10.228Z [PERF] rpc.getSessions: 0.39ms
+2026-10-11T10:55:10.427Z [PERF] session.loadSession: 0.35ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:10.430Z [PERF] session.loadSession: 0.10ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:10.431Z [loadViewsConfig] No config found, seeding with default views
+2026-10-11T10:55:10.484Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:10.546Z [PERF] session.loadSession: 0.07ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:10.551Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:10.553Z [PERF] rpc.getSessions: 0.06ms
+2026-10-11T10:55:10.555Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:12.247Z [PERF] session.loadSession: 0.21ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:12.249Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:12.482Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:12.483Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:13.022Z [PERF] session.loadSession: 0.08ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.025Z [PERF] session.loadSession: 0.07ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.034Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.037Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.042Z [PERF] session.loadSession: 0.10ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.044Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.045Z [PERF] session.loadSession: 0.09ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.361Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.362Z [PERF] session.loadSession: 0.07ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:13.983Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:13.992Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:13.995Z [PERF] session.loadSession: 0.08ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:13.995Z [PERF] session.loadSession: 0.07ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:14.311Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:14.312Z [PERF] session.loadSession: 0.07ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:14.924Z [PERF] session.loadSession: 0.08ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:14.933Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:14.936Z [PERF] session.loadSession: 0.10ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:14.937Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.600Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.608Z [PERF] session.loadSession: 0.21ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.615Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.620Z [PERF] session.loadSession: 0.18ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.661Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.666Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.749Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:15.763Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:15.766Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:15.767Z [PERF] session.loadSession: 0.11ms {"sessionId":"261011-airy-spruce"}
+2026-10-11T10:55:15.828Z [PERF] session.loadSession: 0.09ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.837Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.841Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:15.842Z [PERF] session.loadSession: 0.07ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.016Z WARN  [window] No windows for workspace 'fixture', have: [second]
+2026-10-11T10:55:16.017Z [PERF] ipc.switchWorkspace: 1.38ms {"workspaceId":"second"}
+2026-10-11T10:55:16.047Z [PERF] rpc.getSessions: 0.02ms
+2026-10-11T10:55:16.048Z [loadViewsConfig] No config found, seeding with default views
+2026-10-11T10:55:16.127Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.128Z [PERF] session.loadSession: 0.08ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.143Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.158Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.162Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.167Z [PERF] session.loadSession: 0.09ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.171Z [PERF] session.loadSession: 0.11ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.172Z [ws-rpc-server] INFO  Client disconnected {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976"}
+2026-10-11T10:55:16.176Z [ws-rpc-server] INFO  Client reconnected with replay {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976","replayedCount":0,"lastSeq":1}
+2026-10-11T10:55:16.177Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.188Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.192Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-lucid-grove"}
+2026-10-11T10:55:16.231Z [PERF] rpc.getSessions: 0.02ms
+2026-10-11T10:55:16.392Z WARN  [window] No windows for workspace 'second', have: [fixture]
+2026-10-11T10:55:16.393Z [PERF] ipc.switchWorkspace: 1.37ms {"workspaceId":"fixture"}
+2026-10-11T10:55:16.438Z [PERF] rpc.getSessions: 0.02ms
+2026-10-11T10:55:16.510Z [PERF] session.loadSession: 0.08ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.529Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.543Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.555Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.557Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.576Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.579Z [PERF] session.loadSession: 0.11ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.583Z [ws-rpc-server] INFO  Client disconnected {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976"}
+2026-10-11T10:55:16.585Z [ws-rpc-server] INFO  Client reconnected with replay {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976","replayedCount":0,"lastSeq":1}
+2026-10-11T10:55:16.586Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.598Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.601Z [PERF] session.loadSession: 0.09ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:16.989Z [ConfigWatcher] preferences.json changed
+2026-10-11T10:55:16.989Z [ConfigWatcher] preferences.json changed
+2026-10-11T10:55:17.003Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:17.011Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:17.014Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:17.015Z [PERF] session.loadSession: 0.08ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:17.117Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.125Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.152Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.156Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.164Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.165Z [PERF] session.loadSession: 0.07ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.215Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.262Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.264Z [PersistenceQueue] Session 261011-mild-pond metadata mismatch detected (local preserved, previousSig=<none>)
+2026-10-11T10:55:17.277Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:17.284Z [PERF] sources.buildServers: 0.26ms (credentials.loaded:0.1ms → servers.built:0.3ms) {"count":0,"mcpCount":0,"apiCount":0}
+2026-10-11T10:55:17.288Z session-scoped-tools Merged callbacks for session 261011-mild-pond
+2026-10-11T10:55:17.289Z session-scoped-tools Merged callbacks for session 261011-mild-pond
+2026-10-11T10:55:17.289Z [PERF] agent.create: 6.96ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:17.297Z [pi-event] DEBUG Turn started {"turnIndex":1}
+2026-10-11T10:55:17.297Z session-scoped-tools Merged callbacks for session 261011-mild-pond
+2026-10-11T10:55:17.796Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:17.932Z [findAllProjectContextFiles] Found 4 files, returning 4
+2026-10-11T10:55:17.933Z [getSystemPrompt] full prompt length: 25364
+2026-10-11T10:55:18.137Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:18.165Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:18.200Z [Permissions] Loaded default permissions from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Uds54J/permissions/default.json
+2026-10-11T10:55:18.201Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+label\s+(list|get|auto-rule-list|auto-rule-validate)\b
+2026-10-11T10:55:18.201Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+source\s+(list|get|validate|test|auth-help)\b
+2026-10-11T10:55:18.201Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+skill\s+(list|get|validate|where)\b
+2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+automation\s+(list|get|validate|history|last-executed|test|lint)\b
+2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+permission\s+(list|get|validate)\b
+2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+theme\s+(get|validate|list-presets|get-preset)\b
+2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s*$
+2026-10-11T10:55:18.203Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+(label|source|skill|automation|permission|theme)\s*$
+2026-10-11T10:55:18.203Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+(label|source|skill|automation|permission|theme)\s+--help\b
+2026-10-11T10:55:18.203Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\s+--(help|version|discover)\b
+2026-10-11T10:55:18.686Z [pi-event] DEBUG Tool metadata resolution {"toolName":"Write","toolCallId":"ui-permission","metadataSource":"fallback","hasIntent":false,"hasDisplayName":true}
+2026-10-11T10:55:18.693Z [PERF] agent.tool.roundTrip: 495.00ms {"sessionId":"261011-mild-pond","toolName":"Write","isError":false}
+2026-10-11T10:55:18.754Z [PERF] session.sendMessage: 1473.97ms (agent.ready:9.6ms → sources.loaded:9.7ms → chat.starting:12.0ms → chat.first_event:860.5ms → chat.first_response:911.2ms → chat.first_tool:1406.4ms → chat.complete:1474.0ms) {"sessionId":"261011-mild-pond","agentState":"cold","enabledSourceCount":0,"messageCount":1}
+2026-10-11T10:55:18.757Z [PERF] session.loadSession: 0.24ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.757Z [PersistenceQueue] Session 261011-mild-pond metadata mismatch detected (local preserved, previousSig={"name":"Gov)
+2026-10-11T10:55:18.762Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:18.828Z [PERF] session.loadSession: 0.24ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.836Z [PERF] session.loadSession: 0.19ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.919Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.921Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.953Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.988Z [PERF] session.loadSession: 0.27ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.989Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:18.993Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:19.269Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:19.340Z [PERF] session.loadSession: 0.89ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:19.371Z [PERF] session.loadSession: 0.78ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:19.381Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:19.388Z [pi-event] DEBUG Turn started {"turnIndex":2}
+2026-10-11T10:55:19.388Z session-scoped-tools Merged callbacks for session 261011-mild-pond
+2026-10-11T10:55:19.389Z [findAllProjectContextFiles] Cache hit for /Users/van/projects/Phaneris (4 files)
+2026-10-11T10:55:19.389Z [getSystemPrompt] full prompt length: 25364
+2026-10-11T10:55:19.550Z [pi-event] DEBUG Tool metadata resolution {"toolName":"mcp__session__SubmitPlan","toolCallId":"ui-plan","metadataSource":"fallback","hasIntent":false,"hasDisplayName":false}
+2026-10-11T10:55:19.559Z [PERF] agent.tool.roundTrip: 10.00ms {"sessionId":"261011-mild-pond","toolName":"mcp__session__SubmitPlan","isError":false}
+2026-10-11T10:55:19.571Z WARN   [session] Session 261011-mild-pond completed without assistant response - possible context overflow or API issue
+2026-10-11T10:55:19.571Z [PERF] session.sendMessage: 188.44ms (agent.ready:0.8ms → sources.loaded:0.9ms → chat.starting:3.0ms → chat.first_event:147.4ms → chat.first_response:160.2ms → chat.first_tool:167.8ms → chat.complete:188.4ms) {"sessionId":"261011-mild-pond","agentState":"warm","enabledSourceCount":0,"messageCount":5}
+2026-10-11T10:55:19.639Z [PERF] session.loadSession: 0.85ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:19.649Z [PERF] session.loadSession: 0.90ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:19.925Z [PERF] session.loadSession: 0.90ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:19.932Z [PERF] session.loadSession: 1.07ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:19.975Z [PERF] session.loadSession: 0.87ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.010Z [PERF] session.loadSession: 0.91ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.018Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:20.022Z [pi-event] DEBUG Turn started {"turnIndex":3}
+2026-10-11T10:55:20.023Z session-scoped-tools Merged callbacks for session 261011-mild-pond
+2026-10-11T10:55:20.023Z [findAllProjectContextFiles] Cache hit for /Users/van/projects/Phaneris (4 files)
+2026-10-11T10:55:20.024Z [getSystemPrompt] full prompt length: 25364
+2026-10-11T10:55:20.180Z [PERF] session.sendMessage: 161.18ms (agent.ready:0.4ms → sources.loaded:0.5ms → chat.starting:1.9ms → chat.first_event:140.8ms → chat.first_response:153.2ms → chat.complete:161.2ms) {"sessionId":"261011-mild-pond","agentState":"warm","enabledSourceCount":0,"messageCount":10}
+2026-10-11T10:55:20.182Z [PERF] session.loadSession: 0.70ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.182Z [PersistenceQueue] Session 261011-mild-pond metadata mismatch detected (local preserved, previousSig={"name":"Gov)
+2026-10-11T10:55:20.188Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:20.247Z [PERF] session.loadSession: 0.92ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.254Z [PERF] session.loadSession: 0.96ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.316Z [PERF] session.loadSession: 0.77ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.349Z [PERF] session.loadSession: 0.73ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.355Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:20.361Z [pi-event] DEBUG Turn started {"turnIndex":4}
+2026-10-11T10:55:20.362Z session-scoped-tools Merged callbacks for session 261011-mild-pond
+2026-10-11T10:55:20.362Z [findAllProjectContextFiles] Cache hit for /Users/van/projects/Phaneris (4 files)
+2026-10-11T10:55:20.363Z [getSystemPrompt] full prompt length: 25364
+2026-10-11T10:55:20.695Z [PERF] session.loadSession: 1.17ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.719Z [PERF] session.loadSession: 0.98ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.726Z [PERF] session.loadSession: 0.90ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.750Z [ws-rpc-server] INFO  Client disconnected {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976"}
+2026-10-11T10:55:20.752Z [ws-rpc-server] INFO  Client reconnected with replay {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976","replayedCount":0,"lastSeq":71}
+2026-10-11T10:55:20.758Z [PERF] session.loadSession: 0.65ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.767Z [PERF] session.loadSession: 0.65ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:20.770Z [PERF] session.loadSession: 0.61ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:21.050Z [PERF] session.loadSession: 0.67ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:21.051Z [PERF] session.loadSession: 0.51ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:21.168Z [PersistenceQueue] Wrote session 261011-mild-pond
+2026-10-11T10:55:21.636Z [PERF] session.loadSession: 0.09ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:21.646Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:21.670Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:21.673Z [PERF] session.loadSession: 0.11ms {"sessionId":"261011-fresh-ravine"}
+2026-10-11T10:55:21.780Z [PERF] session.loadSession: 0.59ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:21.784Z [PERF] session.loadSession: 0.71ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:21.809Z [PERF] session.loadSession: 0.75ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:21.812Z [PERF] session.loadSession: 0.73ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:22.426Z [PERF] session.loadSession: 0.99ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:22.428Z [PERF] session.loadSession: 0.92ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:22.431Z [PERF] session.loadSession: 0.91ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:22.435Z [PERF] session.loadSession: 0.89ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:22.437Z [PERF] session.loadSession: 0.82ms {"sessionId":"261011-mild-pond"}
+2026-10-11T10:55:23.115Z ERROR [main] unhandledRejection: [electron] Error: governance-native-fatal
+    at Timeout.eval [as _onTimeout] (eval at evaluate (:311:30), <anonymous>:2:46)
+    at listOnTimeout (node:internal/timers:685:17)
+    at process.processTimers (node:internal/timers:618:7)
+Caused by: Error: governance-native-first-cause
+    at Timeout.eval [as _onTimeout] (eval at evaluate (:311:30), <anonymous>:2:92)
+    at listOnTimeout (node:internal/timers:685:17)
+    at process.processTimers (node:internal/timers:618:7)
+2026-10-11T10:55:23.123Z [ConfigWatcher] Stopped
+2026-10-11T10:55:23.125Z [ConfigWatcher] Stopped
+2026-10-11T10:55:23.126Z [automation-system] DEBUG [AutomationSystem] Disposing for workspace: fixture
+2026-10-11T10:55:23.126Z [automation-system] DEBUG [AutomationSystem] Scheduler stopped
+2026-10-11T10:55:23.126Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.127Z [prompt-handler] DEBUG [PromptHandler] Disposed
+2026-10-11T10:55:23.127Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.127Z [retry-scheduler] DEBUG [RetryScheduler] Disposed
+2026-10-11T10:55:23.127Z [webhook-handler] DEBUG [WebhookHandler] Disposed
+2026-10-11T10:55:23.128Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.128Z [script-handler] DEBUG [ScriptHandler] Disposed
+2026-10-11T10:55:23.128Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.129Z [automation-system] DEBUG [AutomationSystem] Disposing for workspace: second
+2026-10-11T10:55:23.129Z [automation-system] DEBUG [AutomationSystem] Scheduler stopped
+2026-10-11T10:55:23.129Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.129Z [prompt-handler] DEBUG [PromptHandler] Disposed
+2026-10-11T10:55:23.130Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.130Z [retry-scheduler] DEBUG [RetryScheduler] Disposed
+2026-10-11T10:55:23.130Z [webhook-handler] DEBUG [WebhookHandler] Disposed
+2026-10-11T10:55:23.130Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.130Z [script-handler] DEBUG [ScriptHandler] Disposed
+2026-10-11T10:55:23.131Z [event-bus] DEBUG [EventBus] Unregistered any-handler
+2026-10-11T10:55:23.131Z session-scoped-tools Unregistered callbacks for session 261011-airy-spruce
+2026-10-11T10:55:23.131Z session-scoped-tools Unregistered callbacks for session 261011-fresh-ravine
+2026-10-11T10:55:23.132Z session-scoped-tools Unregistered callbacks for session 261011-mild-pond
+2026-10-11T10:55:23.132Z session-scoped-tools Unregistered callbacks for session 261011-lucid-grove
+2026-10-11T10:55:23.133Z [event-log-handler] DEBUG [EventLogHandler] Disposed
+2026-10-11T10:55:23.133Z [event-log-handler] DEBUG [EventLogHandler] Disposed
+2026-10-11T10:55:23.133Z [event-bus] DEBUG [EventBus] Disposing for workspace: fixture
+2026-10-11T10:55:23.133Z [automation-system] DEBUG [AutomationSystem] Disposed
+2026-10-11T10:55:23.133Z [event-bus] DEBUG [EventBus] Disposing for workspace: second
+2026-10-11T10:55:23.134Z [automation-system] DEBUG [AutomationSystem] Disposed
+2026-10-11T10:55:23.134Z session-scoped-tools Unregistered callbacks for session 261011-mild-pond
+2026-10-11T10:55:23.141Z [ws-rpc-server] INFO  Client disconnected {"clientId":"a342e66f-47b3-490c-b72d-348f9bff8976"}
+2026-10-11T10:55:23.143Z session-scoped-tools Unregistered callbacks for session 261011-mild-pond
+Waiting for the debugger to disconnect...

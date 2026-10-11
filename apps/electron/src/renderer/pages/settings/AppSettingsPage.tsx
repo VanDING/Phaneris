@@ -34,6 +34,7 @@ import {
   SettingsInput,
 } from '@/components/settings'
 import { useUpdateChecker } from '@/hooks/useUpdateChecker'
+import { getClientPlatform } from '@/platform/client'
 
 export const meta: DetailsPageMeta = {
   navigator: 'settings',
@@ -113,7 +114,7 @@ export default function AppSettingsPage() {
   const [isSavingProxy, setIsSavingProxy] = useState(false)
 
   // Auto-update state (Check Now / Update Ready only shown in Electron, not WebUI)
-  const isElectron = window.electronAPI.getRuntimeEnvironment() === 'electron'
+  const isElectron = getClientPlatform().kind === 'electron'
   const updateChecker = useUpdateChecker()
   const [isCheckingForUpdates, setIsCheckingForUpdates] = useState(false)
 
@@ -154,7 +155,7 @@ export default function AppSettingsPage() {
 
   // Load settings on mount
   const loadSettings = useCallback(async () => {
-    if (!window.electronAPI) return
+    if (!isElectron) return
     try {
       const [notificationsOn, keepAwakeOn, browserToolOn, proxySettings] = await Promise.all([
         window.electronAPI.getNotificationsEnabled(),
@@ -171,11 +172,11 @@ export default function AppSettingsPage() {
     } catch (error) {
       console.error('Failed to load settings:', error)
     }
-  }, [])
+  }, [isElectron])
 
   useEffect(() => {
-    loadSettings()
-  }, [])
+    void loadSettings()
+  }, [loadSettings])
 
   const handleNotificationsEnabledChange = useCallback(async (enabled: boolean) => {
     setNotificationsEnabled(enabled)
@@ -240,6 +241,7 @@ export default function AppSettingsPage() {
         <ScrollArea className="h-full">
           <div className="px-5 py-7 max-w-3xl mx-auto">
             <div className="space-y-8">
+              {isElectron && <>
               {/* Notifications */}
               <SettingsSection title={t("settings.notifications.title")}>
                 <SettingsCard>
@@ -342,6 +344,7 @@ export default function AppSettingsPage() {
                 </SettingsCard>
               </SettingsSection>
 
+              </>}
               {/* About */}
               <SettingsSection title={t("settings.about.title")}>
                 <SettingsCard>

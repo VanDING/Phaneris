@@ -1,0 +1,43 @@
+
+46 |   members: Record<string, { typecheck: string; lint: string; build: string; behavior: string; owner: string }>
+47 |   tooling: { projects: string[]; behavior: string; lint: string; typecheckExceptions: { file: string; reason: string; sha256?: string }[] }
+48 | }
+49 | const members = ['packages', 'apps'].flatMap(parent => readdirSync(join(root, parent), { withFileTypes: true })
+50 |   .filter(entry => entry.isDirectory() && existsSync(join(root, parent, entry.name, 'package.json'))).map(entry => `${parent}/${entry.name}`)).sort()
+51 | assert.deepEqual(Object.keys(coverage.members).sort(), members, 'Every workspace member must have a quality coverage row')
+            ^
+AssertionError: Every workspace member must have a quality coverage row
++ actual - expected
+... Skipped lines
+
+  [
+    'apps/cli',
+    'apps/electron',
+    'apps/viewer',
+    'apps/webui',
+...
+    'packages/server',
+-   'packages/server-core',
+    'packages/session-tools-core',
+    'packages/shared',
+    'packages/ui'
+  ]
+
+ generatedMessage: false,
+     actual: [
+  "apps/cli", "apps/electron", "apps/viewer", "apps/webui", "packages/core", "packages/messaging-gateway",
+  "packages/messaging-whatsapp-worker", "packages/pi-agent-server", "packages/server", "packages/session-tools-core",
+  "packages/shared", "packages/ui"
+],
+   expected: [
+  "apps/cli", "apps/electron", "apps/viewer", "apps/webui", "packages/core", "packages/messaging-gateway",
+  "packages/messaging-whatsapp-worker", "packages/pi-agent-server", "packages/server", "packages/server-core",
+  "packages/session-tools-core", "packages/shared", "packages/ui"
+],
+   operator: "deepStrictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:51:8
+
+Bun v1.4.2 (macOS x64)

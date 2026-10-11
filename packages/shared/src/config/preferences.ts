@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { ensureConfigDir } from './storage.ts';
+import { ensureConfigDir } from './repository.ts';
 import { CONFIG_DIR } from './paths.ts';
 import { readJsonFileSync } from '../utils/files.ts';
 import { i18n, SUPPORTED_LANGUAGE_CODES } from '../i18n/index.ts';

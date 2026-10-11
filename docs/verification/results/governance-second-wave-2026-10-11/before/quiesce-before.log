@@ -1,0 +1,11 @@
+3 | const runtime = createDurableRuntime()
+4 | const scope = { sessionId: 'quiesce-fixture', workspaceRootPath: process.argv[2]! }
+5 | const operationId = 'quiesce-run'
+6 | runtime.commands.acceptRun({ ...scope, operationId, turnId: 't1', userMessageId: 'm1', userMessage: 'Retain recovery evidence' })
+7 | const before = runtime.queries.events(scope.workspaceRootPath, { sessionId: scope.sessionId })
+8 | runtime.quiesce()
+            ^
+TypeError: runtime.quiesce is not a function. (In 'runtime.quiesce()', 'runtime.quiesce' is undefined)
+      at /Users/van/projects/Phaneris/scripts/verification/fixtures/runtime-quiesce.ts:8:9
+
+Bun v1.4.2 (macOS x64)

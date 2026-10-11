@@ -1,0 +1,193 @@
+[
+  {
+    "time": 1791716113866,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native session draft"
+        }
+      },
+      "updatedAt": 1791716113859
+    }
+  },
+  {
+    "time": 1791716114819,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native session draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716114808
+    }
+  },
+  {
+    "time": 1791716114819,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native session draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716114808
+    }
+  },
+  {
+    "time": 1791716116013,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716116001
+    }
+  },
+  {
+    "time": 1791716116014,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716116001
+    }
+  },
+  {
+    "time": 1791716117759,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716117748
+    }
+  },
+  {
+    "time": 1791716117759,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716117748
+    }
+  },
+  {
+    "time": 1791716119865,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716119855
+    }
+  },
+  {
+    "time": 1791716119865,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        }
+      },
+      "updatedAt": 1791716119855
+    }
+  },
+  {
+    "time": 1791716120761,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        },
+        "261011-mild-pond": {
+          "text": "GOVERNANCE_CANCEL: keep streaming until stopped."
+        }
+      },
+      "updatedAt": 1791716120753
+    }
+  },
+  {
+    "time": 1791716120761,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        },
+        "261011-mild-pond": {
+          "text": "GOVERNANCE_CANCEL: keep streaming until stopped."
+        }
+      },
+      "updatedAt": 1791716120753
+    }
+  },
+  {
+    "time": 1791716121597,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        },
+        "261011-mild-pond": {
+          "text": "Retained reconnect draft"
+        }
+      },
+      "updatedAt": 1791716121546
+    }
+  },
+  {
+    "time": 1791716121597,
+    "value": {
+      "drafts": {
+        "261011-fresh-ravine": {
+          "text": "Native pending draft"
+        },
+        "261011-airy-spruce": {
+          "text": "Other native draft"
+        },
+        "261011-mild-pond": {
+          "text": "Retained reconnect draft"
+        }
+      },
+      "updatedAt": 1791716121546
+    }
+  }
+]

@@ -93,7 +93,7 @@ try {
   application = await _electron.launch({
     executablePath: process.platform === 'win32' ? join(app, 'Phaneris.exe') : join(app, 'Contents/MacOS/Phaneris'),
     args: ['--disable-gpu'],
-    env,
+    env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)),
     timeout: 60_000,
   })
   const page = await application.firstWindow()

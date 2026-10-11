@@ -1,10 +1,5 @@
-export interface BranchRollbackManagedSession {
-  agent?: { destroy?: () => void } | null
-  poolServer?: { stop?: () => void }
-}
-
 interface RollbackParams {
-  managed: BranchRollbackManagedSession
+  disposeRuntime: () => void | Promise<void>
   workspaceRootPath: string
   sessionId: string
   deleteFromRuntimeSessions: (sessionId: string) => void
@@ -16,22 +11,12 @@ interface RollbackParams {
  * Ensures no orphan child session remains in memory or persistent storage.
  */
 export async function rollbackFailedBranchCreation(params: RollbackParams): Promise<void> {
-  const { managed, workspaceRootPath, sessionId, deleteFromRuntimeSessions, deleteStoredSession } = params
+  const { disposeRuntime, workspaceRootPath, sessionId, deleteFromRuntimeSessions, deleteStoredSession } = params
 
   try {
-    managed.agent?.destroy?.()
+    await disposeRuntime()
   } catch {
-    // Best-effort cleanup
-  }
-  managed.agent = null
-
-  if (managed.poolServer) {
-    try {
-      managed.poolServer.stop?.()
-    } catch {
-      // Best-effort cleanup
-    }
-    managed.poolServer = undefined
+    // Best-effort cleanup: session deletion still runs if the owner cannot dispose.
   }
 
   deleteFromRuntimeSessions(sessionId)

@@ -1,4 +1,4 @@
-import { getNetworkProxySettings } from './storage.ts';
+import { getNetworkProxySettings } from './appearance.ts';
 
 /**
  * Convert stored proxy settings into environment variables for subprocesses.

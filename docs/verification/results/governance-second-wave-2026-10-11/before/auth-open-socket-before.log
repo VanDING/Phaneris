@@ -1,0 +1,25 @@
+100 |       socket.send(JSON.stringify({ id: 'existing-socket', type: 'handshake', protocolVersion: PROTOCOL_VERSION }))
+101 |       assert.equal((await ack).type, 'handshake_ack')
+102 |       assert.equal((await logout(server, socketCookie)).status, 204)
+103 |       const response = nextMessage()
+104 |       socket.send(JSON.stringify({ id: 'after-logout', type: 'request', channel: 'server:getStatus', args: [] }))
+105 |       assert.equal((await response).error?.code, 'AUTH_FAILED')
+                   ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 'AUTH_FAILED'
+
+ generatedMessage: true,
+     actual: undefined,
+   expected: "AUTH_FAILED",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/webui-auth-lifecycle-workflow.ts:105:14
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+      at processTicksAndRejections (native:7:39)
+
+Bun v1.4.2 (macOS x64)

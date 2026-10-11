@@ -1,0 +1,63 @@
+66 | assert.equal(metadata.scripts['identity:check'], 'bun run scripts/check-identity.ts --strict', 'Identity validation must reject unclassified residuals')
+67 | const registryPath = process.argv.some(arg => arg.startsWith('--registry=')) ? input('registry', '') : undefined
+68 | const registry = registryPath ? JSON.parse(readFileSync(registryPath, 'utf8')) : { workflows: criticalWorkflows, groups: criticalTestGroups }
+69 | const policy = JSON.parse(readFileSync(join(root, 'scripts/critical-scenario-policy.json'), 'utf8'))
+70 | assert.deepEqual(registry.workflows, policy.workflows, 'Every required workflow, minimum and artifact must remain wired')
+71 | assert.deepEqual(registry.groups, policy.groups, 'Every required package test group must remain wired')
+            ^
+AssertionError: Every required package test group must remain wired
++ actual - expected
+
+  [
+    [
+-     '.',
+-     [
+-       'scripts/check-environment.test.ts'
+-     ]
+-   ],
+-   [
+      'packages/server-core',
+      [
+        'src/durable-runtime/coordinator.test.ts',
+        'src/durable-runtime/process-crash.test.ts',
+        'src/durable-runtime/projection-runner.test.ts',
+
+ generatedMessage: false,
+     actual: [
+  [ "packages/server-core", [ "src/durable-runtime/coordinator.test.ts", "src/durable-runtime/process-crash.test.ts",
+      "src/durable-runtime/projection-runner.test.ts", "src/sessions/idle-session-cache.test.ts",
+      "src/tasks/TaskRunner.test.ts", "src/transport/__tests__/server-lifecycle.test.ts",
+      "src/webui/__tests__/http-server.isolated.ts"
+    ] ], [ "packages/shared", [ "src/sessions/__tests__/persistence-queue.test.ts",
+      "src/durable-runtime/recovery.test.ts", "src/config/__tests__/theme.test.ts", "src/plugins/__tests__/plugin-install.isolated.ts"
+    ] ], [ "packages/pi-agent-server", [ "src/transport-delta.test.ts", "src/request-diagnostics.test.ts",
+      "src/durable-model-stream.test.ts", "src/length-continuation.test.ts"
+    ] ], [ "packages/ui", [ "src/components/chat/__tests__/streaming-projection.test.ts",
+      "src/components/chat/__tests__/turn-utils-grouping.test.ts"
+    ] ], [ "apps/electron", [ "src/renderer/atoms/__tests__/sessions.isolated.ts",
+      "src/renderer/lib/__tests__/reconnect-recovery.test.ts", "src/main/__tests__/session-branch-rollback.isolated.ts"
+    ] ]
+],
+   expected: [
+  [ ".", [ "scripts/check-environment.test.ts" ] ], [ "packages/server-core", [
+      "src/durable-runtime/coordinator.test.ts", "src/durable-runtime/process-crash.test.ts",
+      "src/durable-runtime/projection-runner.test.ts", "src/sessions/idle-session-cache.test.ts",
+      "src/tasks/TaskRunner.test.ts", "src/transport/__tests__/server-lifecycle.test.ts",
+      "src/webui/__tests__/http-server.isolated.ts"
+    ] ], [ "packages/shared", [ "src/sessions/__tests__/persistence-queue.test.ts",
+      "src/durable-runtime/recovery.test.ts", "src/config/__tests__/theme.test.ts", "src/plugins/__tests__/plugin-install.isolated.ts"
+    ] ], [ "packages/pi-agent-server", [ "src/transport-delta.test.ts", "src/request-diagnostics.test.ts",
+      "src/durable-model-stream.test.ts", "src/length-continuation.test.ts"
+    ] ], [ "packages/ui", [ "src/components/chat/__tests__/streaming-projection.test.ts",
+      "src/components/chat/__tests__/turn-utils-grouping.test.ts"
+    ] ], [ "apps/electron", [ "src/renderer/atoms/__tests__/sessions.isolated.ts",
+      "src/renderer/lib/__tests__/reconnect-recovery.test.ts", "src/main/__tests__/session-branch-rollback.isolated.ts"
+    ] ]
+],
+   operator: "deepStrictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:71:8
+
+Bun v1.4.2 (macOS x64)

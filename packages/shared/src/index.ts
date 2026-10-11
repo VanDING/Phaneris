@@ -5,7 +5,7 @@
  * Used by the Electron app.
  *
  * Import specific modules via subpath exports:
- *   import { CraftAgent } from '@phaneris/shared/agent';
+ *   import { PiAgent } from '@phaneris/shared/agent';
  *   import { loadStoredConfig } from '@phaneris/shared/config';
  *   import { getCredentialManager } from '@phaneris/shared/credentials';
  *   import { CraftMcpClient } from '@phaneris/shared/mcp';
@@ -14,7 +14,7 @@
  *   import { createWorkspace, loadWorkspace } from '@phaneris/shared/workspaces';
  *
  * Available modules:
- *   - agent: CraftAgent SDK wrapper, plan tools
+ *   - agent: PiAgent SDK wrapper, plan tools
  *   - auth: OAuth, token management, auth state
  *   - clients: Craft API client
  *   - config: Storage, models, preferences

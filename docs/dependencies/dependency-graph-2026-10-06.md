@@ -1,5 +1,7 @@
 # Phaneris 依赖关联关系梳理
 
+> 2026-10-11 裁定：本文数字是 10-06 的历史图。当前清单为 27 条 workspace 边；session-tools-core/server-core、viewer/shared 声明已补齐，26 undeclared subpath 已有门禁。39 个根借用候选加 8 个消费对已逐项裁定，当前扫描借用为 0；Bun 按清单裁剪/rehoist lock，未引入新 package@version。当前结果见[完整实施台账](../process/governance-completion-2026-10-11.md)。
+
 分析日期：2026-10-06（Asia/Shanghai）
 仓库基准：工作区 `main` 当前 checkout
 分析范围：**结构关系**（谁依赖谁、归属、重复、幽灵依赖、可削减项），不含版本升级与安全公告判断

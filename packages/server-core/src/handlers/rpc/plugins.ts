@@ -18,7 +18,7 @@
 import { existsSync, statSync } from 'fs'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import type { RpcServer } from '@phaneris/server-core/transport'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import type { HandlerDeps } from '../handler-deps'
 
 export const HANDLED_CHANNELS = [

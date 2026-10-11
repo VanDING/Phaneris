@@ -1,0 +1,12 @@
+Environment OK: Bun 1.4.2, Node v24.16.0; local script entries exist.
+[performance] baseline: browser startup
+[performance] 100 messages: load and warm switches
+[performance] 1000 messages: load and warm switches
+[performance] 5000 messages: load and warm switches
+[performance] longest history: input, copy, search and quoted text
+[performance] 50 deltas/second on the longest conversation
+[performance] 24 backend histories, 60s real idle, accelerated eviction
+[performance] atomic JSONL barriers, synchronous reads, SQLite commits and backup
+[performance] Pi distribution process and lazy SDK initialization (offline)
+[performance] shared task facts across real RPC, table and calendar
+[performance] passed: /Users/van/projects/Phaneris/.cache/governance-closeout/performance-final-1.json

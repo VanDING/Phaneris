@@ -1,0 +1,58 @@
+bun test v1.4.2 (744846f84)
+
+src/sessions/__tests__/persistence-queue.test.ts:
+(pass) session persistence header conflict helpers > metadata signature ignores non-metadata fields [0.13ms]
+(pass) session persistence header conflict helpers > metadata signature changes when metadata changes [0.04ms]
+(pass) session persistence header conflict helpers > merge preserves external metadata while keeping local computed fields [0.10ms]
+(pass) session persistence header conflict helpers > startup scenario: external metadata differs from local signature [0.04ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > tracks a debounce-started write so flush() awaits it even when nothing is pending [63.21ms]
+(pass) SessionPersistenceQueue in-flight write tracking (M-17) > flushAll() awaits in-flight writes so quit never drops data [54.46ms]
+(pass) SessionPersistenceQueue write failures > reports a failed write without skipping a newer queued snapshot [2.67ms]
+[PersistenceQueue] Failed to write session s1: 253 |       await queue.flush('s1')
+254 |       const signature = queue.getLastWrittenSignature('s1')
+255 |       const file = getSessionFilePath(root, 's1')
+256 |       mkdirSync(file + '.tmp') // Force a real write failure without changing the last good snapshot.
+257 |       queue.enqueue({ ...session, name: 'Failed update' })
+258 |       await expect(queue.flush('s1')).rejects.toThrow()
+                                                    ^
+EISDIR: illegal operation on a directory, open '/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-pq-metadata-fail-qP6wow/sessions/s1/session.jsonl.tmp'
+    path: "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-pq-metadata-fail-qP6wow/sessions/s1/session.jsonl.tmp",
+ syscall: "open",
+   errno: -21,
+    code: "EISDIR"
+
+      at <anonymous> (/Users/van/projects/Phaneris/packages/shared/src/sessions/__tests__/persistence-queue.test.ts:258:47)
+
+(pass) SessionPersistenceQueue write failures > does not treat a failed file write as the last saved metadata [6.19ms]
+(pass) SessionPersistenceQueue write failures > keeps a debounce failure observable until a newer write succeeds [4.06ms]
+(pass) lazy persistence snapshots > coalesces snapshot creation and preserves multi-batch Unicode transcripts [10.80ms]
+
+src/durable-runtime/recovery.test.ts:
+(pass) resolveToolRecovery > marks a matching outcome completed [0.11ms]
+(pass) resolveToolRecovery > requires reconciliation after dispatch without an outcome [0.02ms]
+(pass) resolveToolRecovery > proves non-dispatch only under the current boundary protocol [0.01ms]
+(pass) resolveToolRecovery > fails closed for the same legacy evidence [0.01ms]
+(pass) resolveToolRecovery > detects identity and argument mismatches [0.09ms]
+
+src/config/__tests__/theme.test.ts:
+(pass) themeToCSS > emits semantic and visual tokens from a theme file [0.39ms]
+(pass) themeToCSS > expands each high-level depth preset [0.30ms]
+(pass) themeToCSS > glass depth exposes blur while other depths disable it [0.06ms]
+(pass) themeToCSS > raised depth combines a hard border ring with zero-blur offset shadows [0.05ms]
+(pass) themeToCSS > keeps status colors in their original CSS syntax without parallel RGB channels [0.05ms]
+(pass) themeToCSS > leaves omitted surfaces and material tokens on the static Default baseline [0.05ms]
+(pass) themeToCSS > dark mode overrides visual tokens without losing light defaults [0.08ms]
+(pass) theme resolution > deeply overlays a user theme onto the canonical default [0.25ms]
+(pass) theme resolution > normalizes both light-only and dark-only themes [0.07ms]
+(pass) theme resolution > keeps the bundled default resource synchronized with the canonical snapshot [0.18ms]
+(pass) theme resolution > bundles exactly the four canonical, valid themes [11.37ms]
+(pass) theme resolution > keeps Electron startup backgrounds aligned with the Default CSS colors [0.03ms]
+(pass) theme resolution > keeps static CSS palettes, typography and material tokens synchronized with Default [1.54ms]
+(pass) theme validation > accepts the expanded preset schema [0.13ms]
+(pass) theme validation > rejects unsupported values and CSS declaration injection [4.05ms]
+(pass) theme validation > rejects unknown preset fields and ambiguous supported modes [0.41ms]
+
+ 31 pass
+ 0 fail
+ 407 expect() calls
+Ran 31 tests across 3 files. [374.00ms]

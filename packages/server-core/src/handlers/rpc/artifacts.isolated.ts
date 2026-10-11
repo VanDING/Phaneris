@@ -1,3 +1,4 @@
+import type { RpcResult, RpcMethodResults } from '@phaneris/shared/protocol';
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -12,7 +13,7 @@ let workspaceRoot = ''
 let contentRoot = ''
 const workspaceFixture = { id: 'ws-artifacts', name: 'ws-artifacts', rootPath: '' }
 
-mock.module('@phaneris/shared/config', () => ({
+mock.module('@phaneris/shared/config/workspace-selection', () => ({
   getWorkspaceByNameOrId: (id: string) => (id === workspaceFixture.id ? workspaceFixture : null),
 
   migrateRemoteServerTokens: async () => 0,
@@ -57,10 +58,10 @@ function createHarness() {
   registerArtifactHandlers(server, deps)
   return {
     pushes,
-    handler(channel: string): HandlerFn {
+    handler<Channel extends keyof RpcMethodResults>(channel: Channel): HandlerFn<RpcResult<Channel>> {
       const registered = handlers.get(channel)
       if (!registered) throw new Error(`Handler not registered: ${channel}`)
-      return registered
+      return registered as HandlerFn<RpcResult<Channel>>
     },
   }
 }

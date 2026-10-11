@@ -9,7 +9,7 @@
 import { app, session } from 'electron';
 import { Agent, Dispatcher, ProxyAgent, setGlobalDispatcher } from 'undici';
 import { parseNoProxyRules, shouldBypassProxy, splitCommaSeparated, type NoProxyRule } from './network-proxy-utils';
-import { getNetworkProxySettings, setNetworkProxySettings } from '@phaneris/shared/config/storage';
+import { getNetworkProxySettings, setNetworkProxySettings } from '@phaneris/shared/config/appearance';
 import type { NetworkProxySettings } from '@phaneris/shared/config/types';
 import { BROWSER_PANE_SESSION_PARTITION } from './browser-pane-manager';
 import log from './logger';

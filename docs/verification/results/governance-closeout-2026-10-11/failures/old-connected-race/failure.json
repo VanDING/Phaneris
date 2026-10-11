@@ -1,0 +1,4 @@
+{
+  "message": "evaluate: Error: Not connected (channel: sessions:get)\n    at http://127.0.0.1:53248/assets/main-DIKhlWX-.js:10:55432\n    at new Promise (<anonymous>)\n    at t.invoke (http://127.0.0.1:53248/assets/main-DIKhlWX-.js:10:54682)\n    at async <anonymous>:337:30",
+  "stack": "evaluate: Error: Not connected (channel: sessions:get)\n    at http://127.0.0.1:53248/assets/main-DIKhlWX-.js:10:55432\n    at new Promise (<anonymous>)\n    at t.invoke (http://127.0.0.1:53248/assets/main-DIKhlWX-.js:10:54682)\n    at async <anonymous>:337:30\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/client-platform-workflow.ts:98:24)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

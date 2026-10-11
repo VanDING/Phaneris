@@ -5,7 +5,7 @@ import { spawn } from 'node:child_process'
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import electronPath from 'electron'
-import { getLlmConnections } from '../../packages/shared/src/config/storage'
+import { getLlmConnections } from '../../packages/shared/src/config/connections.ts';
 import { getCredentialManager, setCredentialKeyProvider } from '../../packages/shared/src/credentials'
 import { CONFIG_DIR, CREDENTIALS_KEY_FILE } from '../../packages/shared/src/config/paths'
 import { PRODUCT_NAME, USER_DATA_DIR_NAME } from '../../packages/shared/src/identity.generated'

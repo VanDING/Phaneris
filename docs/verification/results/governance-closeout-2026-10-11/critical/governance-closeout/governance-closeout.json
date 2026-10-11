@@ -1,0 +1,108 @@
+{
+  "records": [
+    {
+      "id": "disabled-job",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "ignored-job-errors",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "missing-pr-trigger",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "disabled-step",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "ignored-step-errors",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "missing-evidence",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "missing-runtime-supply",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "missing-critical-workflow",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "missing-critical-group",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "strict-final-tree",
+      "passed": true,
+      "detail": "exit=0; expected=0"
+    },
+    {
+      "id": "rpc-census-gate",
+      "passed": true,
+      "detail": "exit=0; expected=0"
+    },
+    {
+      "id": "nonempty-handler-census",
+      "passed": true
+    },
+    {
+      "id": "all-central-contracts-have-handlers",
+      "passed": true
+    },
+    {
+      "id": "apps/electron:debugger",
+      "passed": true
+    },
+    {
+      "id": "apps/electron:unsafe-finally",
+      "passed": true
+    },
+    {
+      "id": "packages/ui:debugger",
+      "passed": true
+    },
+    {
+      "id": "packages/ui:unsafe-finally",
+      "passed": true
+    },
+    {
+      "id": "no-baseline-initialization",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "cold-runtime-missing-stamp",
+      "passed": true,
+      "detail": "exit=1; expected=1"
+    },
+    {
+      "id": "cold-runtime-provision",
+      "passed": true,
+      "detail": "exit=0; expected=0"
+    },
+    {
+      "id": "cold-runtime-pinned",
+      "passed": true,
+      "detail": "exit=0; expected=0"
+    },
+    {
+      "id": "cold-runtime-executable-version",
+      "passed": true,
+      "detail": "uv 0.12.22 (70fe1196a 2026-10-01 x86_64-apple-darwin)"
+    }
+  ]
+}

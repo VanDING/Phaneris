@@ -1,0 +1,111 @@
+2026-10-11T15:01:35.701Z [PowerShellValidator] Root set to: /Users/van/projects/Phaneris/apps/electron/dist/resources
+2026-10-11T15:01:35.719Z [docs] Synced 22 docs
+2026-10-11T15:01:35.724Z [release-notes] Synced 8 release notes
+2026-10-11T15:01:35.726Z [Permissions] Installed default.json
+2026-10-11T15:01:36.092Z [config] Synced config-defaults.json from bundled assets
+2026-10-11T15:01:36.106Z [UserThemeWatcher] Watching: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Vem1yF/themes
+2026-10-11T15:01:36.262Z [ConfigWatcher] Starting for workspace: workspace
+2026-10-11T15:01:36.262Z [ConfigWatcher] Watching global configs: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Vem1yF
+2026-10-11T15:01:36.262Z [ConfigWatcher] Setting up workspace watcher for: /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/workspace
+2026-10-11T15:01:36.263Z [ConfigWatcher] Watching workspace recursively: /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/workspace
+2026-10-11T15:01:36.263Z [ConfigWatcher] Watching app permissions directory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Vem1yF/permissions
+2026-10-11T15:01:36.264Z [ConfigWatcher] Known sources: []
+2026-10-11T15:01:36.264Z [ConfigWatcher] Known skills: []
+2026-10-11T15:01:36.265Z [ConfigWatcher] Started watching files
+2026-10-11T15:01:36.265Z [PERF] configWatcher.start: 3.19ms (ensureDir:0.4ms → watchGlobalConfigs:0.8ms → watchWorkspaceDir:1.6ms → watchAppPermissionsDir:2.0ms → scanSources:2.4ms → scanSkills:2.7ms → scanPlugins:2.8ms → initLlmConnectionsHash:2.9ms) {"workspaceId":"workspace"}
+2026-10-11T15:01:36.265Z [event-bus] DEBUG [EventBus] Created for workspace: fixture
+2026-10-11T15:01:36.265Z [automation-system] DEBUG [AutomationSystem] No automations config found at /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/workspace/automations.json
+2026-10-11T15:01:36.266Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.266Z [prompt-handler] DEBUG [PromptHandler] Subscribed to event bus
+2026-10-11T15:01:36.267Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.267Z [retry-scheduler] DEBUG [RetryScheduler] Started
+2026-10-11T15:01:36.267Z [webhook-handler] DEBUG [WebhookHandler] Subscribed to event bus
+2026-10-11T15:01:36.268Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.268Z [script-handler] DEBUG [ScriptHandler] Subscribed to event bus
+2026-10-11T15:01:36.269Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.269Z [event-log-handler] DEBUG [EventLogHandler] Subscribed to event bus, logging to /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/workspace/events.jsonl
+2026-10-11T15:01:36.270Z [automation-system] DEBUG [AutomationSystem] Handlers created and subscribed
+2026-10-11T15:01:36.270Z [automation-system] DEBUG [AutomationSystem] Scheduler started
+2026-10-11T15:01:36.270Z [automation-system] DEBUG [AutomationSystem] Created for workspace: fixture
+2026-10-11T15:01:36.271Z [ConfigWatcher] Starting for workspace: second-workspace
+2026-10-11T15:01:36.272Z [ConfigWatcher] Watching global configs: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Vem1yF
+2026-10-11T15:01:36.272Z [ConfigWatcher] Setting up workspace watcher for: /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/second-workspace
+2026-10-11T15:01:36.273Z [ConfigWatcher] Watching workspace recursively: /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/second-workspace
+2026-10-11T15:01:36.273Z [ConfigWatcher] Watching app permissions directory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Vem1yF/permissions
+2026-10-11T15:01:36.273Z [ConfigWatcher] Known sources: []
+2026-10-11T15:01:36.274Z [ConfigWatcher] Known skills: []
+2026-10-11T15:01:36.274Z [ConfigWatcher] Started watching files
+2026-10-11T15:01:36.274Z [PERF] configWatcher.start: 2.81ms (ensureDir:0.4ms → watchGlobalConfigs:0.8ms → watchWorkspaceDir:1.5ms → watchAppPermissionsDir:1.9ms → scanSources:2.2ms → scanSkills:2.5ms → scanPlugins:2.5ms → initLlmConnectionsHash:2.6ms) {"workspaceId":"second-workspace"}
+2026-10-11T15:01:36.274Z [event-bus] DEBUG [EventBus] Created for workspace: second
+2026-10-11T15:01:36.275Z [automation-system] DEBUG [AutomationSystem] No automations config found at /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/second-workspace/automations.json
+2026-10-11T15:01:36.275Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.275Z [prompt-handler] DEBUG [PromptHandler] Subscribed to event bus
+2026-10-11T15:01:36.275Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.276Z [retry-scheduler] DEBUG [RetryScheduler] Started
+2026-10-11T15:01:36.276Z [webhook-handler] DEBUG [WebhookHandler] Subscribed to event bus
+2026-10-11T15:01:36.276Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.277Z [script-handler] DEBUG [ScriptHandler] Subscribed to event bus
+2026-10-11T15:01:36.277Z [event-bus] DEBUG [EventBus] Registered any-handler
+2026-10-11T15:01:36.277Z [event-log-handler] DEBUG [EventLogHandler] Subscribed to event bus, logging to /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/second-workspace/events.jsonl
+2026-10-11T15:01:36.278Z [automation-system] DEBUG [AutomationSystem] Handlers created and subscribed
+2026-10-11T15:01:36.278Z [automation-system] DEBUG [AutomationSystem] Scheduler started
+2026-10-11T15:01:36.278Z [automation-system] DEBUG [AutomationSystem] Created for workspace: second
+2026-10-11T15:01:36.281Z [PERF] session.listSessions: 1.27ms (readdir:0.2ms → parsed:1.2ms) {"count":3}
+2026-10-11T15:01:36.283Z [PERF] session.listSessions: 0.28ms (readdir:0.1ms → parsed:0.3ms) {"count":1}
+2026-10-11T15:01:36.649Z [ConfigWatcher] config.json changed
+2026-10-11T15:01:36.654Z [ConfigWatcher] Config validation failed: [{"file":"config.json","path":"activeSessionId","message":"Invalid input: expected string, received undefined","severity":"error"}]
+2026-10-11T15:01:36.655Z [ConfigWatcher] config.json changed
+2026-10-11T15:01:36.655Z [ConfigWatcher] Config validation failed: [{"file":"config.json","path":"activeSessionId","message":"Invalid input: expected string, received undefined","severity":"error"}]
+2026-10-11T15:01:36.853Z [ws-rpc-server] INFO  Client connected {"clientId":"89473c50-0327-4abd-8836-a2881c49e96a","webContentsId":1,"workspaceId":"fixture"}
+2026-10-11T15:01:37.300Z [ConfigWatcher] preferences.json changed
+2026-10-11T15:01:37.301Z [ConfigWatcher] preferences.json changed
+2026-10-11T15:01:37.452Z [PERF] rpc.getSessions: 0.42ms
+2026-10-11T15:01:37.737Z [loadViewsConfig] No config found, seeding with default views
+2026-10-11T15:01:37.741Z [PERF] session.loadSession: 0.38ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:37.745Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:37.814Z [PERF] session.loadSession: 0.18ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:37.886Z [PERF] session.loadSession: 0.21ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:37.891Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:37.898Z [PERF] rpc.getSessions: 0.07ms
+2026-10-11T15:01:37.901Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:39.372Z [PERF] session.loadSession: 0.18ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:39.375Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:39.608Z [PERF] session.loadSession: 0.25ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:39.609Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:39.857Z [PERF] session.loadSession: 0.10ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:39.860Z [PERF] session.loadSession: 0.09ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:39.918Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:39.926Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:39.929Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:39.931Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:39.932Z [PERF] session.loadSession: 0.23ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:40.256Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:40.257Z [PERF] session.loadSession: 0.11ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:40.839Z [PERF] session.loadSession: 0.09ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:40.848Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:40.850Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:40.857Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:41.174Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:41.175Z [PERF] session.loadSession: 0.11ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:41.797Z [PERF] session.loadSession: 0.10ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:41.806Z [PERF] session.loadSession: 0.15ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:41.809Z [PERF] session.loadSession: 0.10ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:41.810Z [PERF] session.loadSession: 0.10ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.518Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.527Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.531Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.534Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.581Z [PERF] session.loadSession: 0.16ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.589Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.687Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:42.705Z [PERF] session.loadSession: 0.19ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:42.709Z [PERF] session.loadSession: 0.14ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:42.710Z [PERF] session.loadSession: 0.12ms {"sessionId":"261011-misty-cedar"}
+2026-10-11T15:01:42.781Z [PERF] session.loadSession: 0.17ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.794Z [PERF] session.loadSession: 0.18ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.797Z [PERF] session.loadSession: 0.13ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.798Z [PERF] session.loadSession: 0.08ms {"sessionId":"261011-broad-flint"}
+2026-10-11T15:01:42.963Z WARN  [window] No windows for workspace 'fixture', have: [second]
+2026-10-11T15:01:42.964Z [PERF] ipc.switchWorkspace: 1.68ms {"workspaceId":"second"}
+2026-10-11T15:01:42.973Z [PERF] rpc.getSessions: 0.02ms
+2026-10-11T15:01:43.021Z [loadViewsConfig] No config found, seeding with default views

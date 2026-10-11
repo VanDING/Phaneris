@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { appendAutomationHistoryEntry } from '@phaneris/shared/automations/history-store'
 import { AUTOMATION_HISTORY_MAX_RUNS_PER_MATCHER } from '@phaneris/shared/automations/constants'
 import type { RpcServer } from '@phaneris/server-core/transport'
@@ -275,7 +275,7 @@ export function registerAutomationsHandlers(server: RpcServer, deps: HandlerDeps
   })
 
   // Read execution history for a specific automation
-  server.handle(RPC_CHANNELS.automations.GET_HISTORY, async (_ctx, workspaceId: string, automationId: string, limit = AUTOMATION_HISTORY_MAX_RUNS_PER_MATCHER) => {
+  server.handle(RPC_CHANNELS.automations.GET_HISTORY, async (_ctx, workspaceId: string, automationId: string, limit: number = AUTOMATION_HISTORY_MAX_RUNS_PER_MATCHER) => {
     const workspace = getWorkspaceByNameOrId(workspaceId)
     if (!workspace) throw new Error('Workspace not found')
 

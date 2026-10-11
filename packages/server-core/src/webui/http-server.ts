@@ -11,16 +11,16 @@
  */
 
 import { join, extname } from 'node:path'
+import type { IncomingMessage } from 'node:http'
+import { CONFIG_DIR } from '@phaneris/shared/config/paths'
+import { SessionRevocations, AuthStorageFailure } from './session-revocations'
+import { cookieOriginAllowed, isTrustedProxy, parseWebuiOrigin } from './request-origin'
 import {
   RateLimiter,
-  initPasswordHash,
-  verifyPassword,
   createSessionToken,
-  validateSession,
   buildSessionCookie,
   buildLogoutCookie,
   extractSessionCookie,
-  revokeJwt,
   verifyJwt,
 } from './auth'
 import { generateCallbackPage } from '@phaneris/shared/auth'
@@ -135,7 +135,7 @@ export interface WebuiHandlerOptions {
   /** RPC WebSocket protocol used when building a browser-facing fallback URL. */
   wsProtocol: 'ws' | 'wss'
   /** RPC WebSocket port used when building a browser-facing fallback URL. */
-  wsPort: number
+  wsPort: number | (() => number)
   /** Health check function (injected from existing server handler). */
   getHealthCheck: () => { status: string }
   /** Logger. */
@@ -143,11 +143,15 @@ export interface WebuiHandlerOptions {
   /** OAuth callback deps — when provided, enables /api/oauth/callback route. */
   oauthCallbackDeps?: OAuthCallbackDeps
   /**
-   * Trusted proxy IPs/CIDRs. When set, proxy headers (x-forwarded-for, x-forwarded-proto)
+   * Exact trusted proxy IPs. When set, proxy headers (x-forwarded-for, x-forwarded-proto)
    * are only trusted from these sources. When empty/unset, proxy headers are ignored and the
    * transport socket address (see setRequestClientIp) is used as the rate-limit key.
    */
   trustedProxies?: string[]
+  /** Exact browser page origins allowed in addition to the request's own origin. */
+  allowedOrigins?: string[]
+  /** Isolated deployment/test storage; defaults to CONFIG_DIR/security/webui-auth.sqlite. */
+  revocationStorePath?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -159,6 +163,8 @@ export interface WebuiHandler {
   fetch: (req: Request) => Promise<Response>
   /** Call on shutdown to release timers. */
   dispose: () => void
+  /** Shared cookie authority, including the Origin of the WS upgrade. */
+  validateSessionCookie: (cookie: string | null, request: IncomingMessage) => Promise<boolean>
   /** Inject OAuth callback deps after bootstrap (lazy wiring). */
   setOAuthCallbackDeps: (deps: OAuthCallbackDeps) => void
 }
@@ -195,14 +201,25 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
     trustedProxies,
   } = options
 
+  const allowedOrigins = (options.allowedOrigins ?? []).map(parseWebuiOrigin)
+  const revocations = new SessionRevocations(options.revocationStorePath ?? join(CONFIG_DIR, 'security/webui-auth.sqlite'), secret)
   const rateLimiter = new RateLimiter(5, 60_000)
   const cleanupTimer = setInterval(() => rateLimiter.cleanup(), 120_000)
 
   const loginPassword = password || secret
-  const trustedProxySet = new Set(trustedProxies ?? [])
 
   // Hash the login password at startup (async, but resolves before first auth attempt in practice)
-  const passwordReady = initPasswordHash(loginPassword)
+  const passwordReady = Bun.password.hash(loginPassword, { algorithm: 'argon2id' })
+  // Keep initialization owned even if no login arrives before shutdown.
+  void passwordReady.catch(error => logger.error('[webui] Password initialization failed:', error))
+
+  async function validateCookie(cookie: string | null) {
+    revocations.checkAvailable()
+    const token = extractSessionCookie(cookie)
+    if (!token) return null
+    const payload = await verifyJwt(token, secret)
+    return payload && !revocations.isRevoked(token) ? payload : null
+  }
 
   /**
    * Extract client IP.
@@ -213,7 +230,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
    */
   function getClientIp(req: Request): string {
     const socketIp = clientIpByRequest.get(req) ?? 'direct'
-    if (trustedProxySet.size === 0 || !trustedProxySet.has(socketIp)) return socketIp
+    if (!isTrustedProxy(socketIp, trustedProxies)) return socketIp
     return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
       ?? req.headers.get('x-real-ip')
       ?? socketIp
@@ -235,6 +252,14 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
   }
 
   async function fetch(req: Request): Promise<Response> {
+    // Use a single peer decision for Secure cookies, public WS URL and IP budgets.
+    if (!isTrustedProxy(clientIpByRequest.get(req) ?? '', trustedProxies)) {
+      const headers = new Headers(req.headers)
+      for (const name of ['forwarded', 'x-forwarded-proto', 'x-forwarded-host', 'x-forwarded-for', 'x-real-ip']) headers.delete(name)
+      const peer = clientIpByRequest.get(req)
+      req = new Request(req, { headers })
+      if (peer) setRequestClientIp(req, peer)
+    }
     const url = new URL(req.url)
     const path = url.pathname
     const useSecureCookies = shouldUseSecureCookies(req, secureCookies)
@@ -271,7 +296,8 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
 
     // ── Auth endpoint ──
     if (path === '/api/auth' && req.method === 'POST') {
-      await passwordReady
+      revocations.checkAvailable()
+      const passwordHash = await passwordReady
       const ip = getClientIp(req)
 
       if (bodyTooLarge(req)) {
@@ -300,7 +326,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
         return Response.json({ error: 'Password is required' }, { status: 400 })
       }
 
-      if (!await verifyPassword(body.password)) {
+      if (!await Bun.password.verify(body.password, passwordHash)) {
         rateLimiter.recordFailure(ip)
         logger.warn(`[webui] Failed auth attempt from ${ip}`)
         return Response.json({ error: 'Invalid credentials' }, { status: 401 })
@@ -309,6 +335,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
       // A correct password clears this client's failure record, so ordinary
       // reconnects can never accumulate toward the limit.
       rateLimiter.recordSuccess(ip)
+      revocations.checkAvailable()
       const jwt = await createSessionToken(secret)
       logger.info(`[webui] Successful auth from ${ip}`)
 
@@ -327,7 +354,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
       const token = extractSessionCookie(req.headers.get('cookie'))
       if (token) {
         const payload = await verifyJwt(token, secret)
-        if (payload?.jti) revokeJwt(payload.jti)
+        if (payload) revocations.revoke(token, payload)
       }
       return new Response(null, {
         status: 204,
@@ -400,18 +427,18 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
 
     // ── Config endpoint (requires session cookie) ──
     if (path === '/api/config' && req.method === 'GET') {
-      const configSession = await validateSession(req.headers.get('cookie'), secret)
+      const configSession = await validateCookie(req.headers.get('cookie'))
       if (!configSession) {
         return Response.json({ error: 'Unauthorized' }, { status: 401 })
       }
       return Response.json({
-        wsUrl: resolveWebSocketUrl(req, { publicWsUrl, wsProtocol, wsPort }),
+        wsUrl: resolveWebSocketUrl(req, { publicWsUrl, wsProtocol, wsPort: typeof wsPort === 'function' ? wsPort() : wsPort }),
       })
     }
 
     // Return the default workspace ID so the webui can include it in the WS handshake
     if (path === '/api/config/workspaces' && req.method === 'GET') {
-      const configSession = await validateSession(req.headers.get('cookie'), secret)
+      const configSession = await validateCookie(req.headers.get('cookie'))
       if (!configSession) {
         return Response.json({ error: 'Unauthorized' }, { status: 401 })
       }
@@ -424,7 +451,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
 
     // ── Everything below requires a valid session cookie ──
     const cookieHeader = req.headers.get('cookie')
-    const session = await validateSession(cookieHeader, secret)
+    const session = await validateCookie(cookieHeader)
 
     if (!session) {
       const accept = req.headers.get('accept') ?? ''
@@ -456,8 +483,21 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
   }
 
   return {
-    fetch,
-    dispose: () => clearInterval(cleanupTimer),
+    fetch: async req => {
+      try { return await fetch(req) } catch (error) {
+        if (!(error instanceof AuthStorageFailure)) throw error
+        logger.error('[webui] Cookie authentication unavailable:', error)
+        return Response.json({ error: 'Authentication storage unavailable' }, { status: 503 })
+      }
+    },
+    validateSessionCookie: async (cookie, request) => {
+      if (!cookieOriginAllowed(request, allowedOrigins, trustedProxies ?? [])) return false
+      try { return await validateCookie(cookie) !== null } catch (error) {
+        logger.error('[webui] Cookie authentication unavailable:', error)
+        return false
+      }
+    },
+    dispose: () => { clearInterval(cleanupTimer); revocations.close() },
     setOAuthCallbackDeps: (deps: OAuthCallbackDeps) => {
       options.oauthCallbackDeps = deps
     },

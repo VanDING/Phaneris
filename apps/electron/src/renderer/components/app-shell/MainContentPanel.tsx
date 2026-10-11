@@ -457,9 +457,12 @@ export function MainContentPanel({
     }
 
     if (navState.details) {
+      const metadata = sessionMetaMap.get(navState.details.sessionId)
       return wrapWithStoplight(
         <Panel variant="grow" className={className}>
-          <ChatPage sessionId={navState.details.sessionId} />
+          {metadata?.workspaceId === activeWorkspaceId
+            ? <ChatPage sessionId={navState.details.sessionId} />
+            : <div className="h-full w-full" aria-busy="true" />}
         </Panel>
       )
     }

@@ -1,0 +1,7 @@
+identity: Phaneris (io.github.vanding.phaneris, phaneris://)
+
+drift check
+  OK — generated identity artifacts and packaging config are in sync
+
+residual upstream identifiers
+  OK — no unallowlisted upstream identifier remains

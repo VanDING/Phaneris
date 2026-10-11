@@ -5,7 +5,7 @@
  */
 import { getAuthState, getSetupNeeds } from '@phaneris/shared/auth'
 import { getCredentialManager } from '@phaneris/shared/credentials'
-import { isSetupDeferred, setSetupDeferred } from '@phaneris/shared/config'
+import { isSetupDeferred, setSetupDeferred } from '@phaneris/shared/config/appearance';
 import { prepareClaudeOAuth, exchangeClaudeCode, hasValidOAuthState, clearOAuthState, prepareMcpOAuth } from '@phaneris/shared/auth'
 import { validateMcpConnection } from '@phaneris/shared/mcp'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'

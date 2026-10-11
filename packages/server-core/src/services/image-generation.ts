@@ -3,7 +3,9 @@ import type {
   ImageGenerateParamsNonStreaming,
   ImagesResponse,
 } from 'openai/resources/images';
-import { getImageGenerationSettings, getLlmConnections, getLlmConnection, getDefaultLlmConnection, supportsNativeImageGeneration, type ImageGenerationSettings, type ImageGenerationStatus, type LlmConnection } from '@phaneris/shared/config';
+import { getImageGenerationSettings } from '@phaneris/shared/config/appearance';
+import { getLlmConnections, getLlmConnection, getDefaultLlmConnection } from '@phaneris/shared/config/connections';
+import { supportsNativeImageGeneration, type ImageGenerationSettings, type ImageGenerationStatus, type LlmConnection } from '@phaneris/shared/config';
 import { getCredentialManager } from '@phaneris/shared/credentials';
 export { supportsNativeImageGeneration } from '@phaneris/shared/config/image-generation';
 

@@ -1,3 +1,4 @@
+import { useInputDraft } from './use-input-draft'
 import { useAvailablePermissionModes } from '@/hooks/useAvailablePermissionModes'
 import * as React from 'react'
 import { useTranslation } from "react-i18next"
@@ -346,7 +347,7 @@ export function FreeFormInput({
   // Read connection default model, connections, and workspace info from context.
   // Uses optional variant so playground (no provider) doesn't crash.
   const appShellCtx = useOptionalAppShellContext()
-  const llmConnections = appShellCtx?.llmConnections ?? []
+  const llmConnections = React.useMemo(() => appShellCtx?.llmConnections ?? [], [appShellCtx?.llmConnections])
   const workspaceDefaultConnection = appShellCtx?.workspaceDefaultLlmConnection
 
   // Derive connectionDefaultModel per-session from the effective connection.
@@ -493,7 +494,7 @@ export function FreeFormInput({
   // Performance optimization: Always use internal state for typing to avoid parent re-renders
   // Sync FROM parent on mount/change (for restoring drafts)
   // Sync TO parent on blur/submit (debounced persistence)
-  const [input, setInput] = React.useState(() => coerceInputText(inputValue))
+  const { input, setInput, inputRef, prevInputValueRef, syncTimeoutRef, syncToParent, clearInputDraft, consumeInputDraftSnapshot } = useInputDraft(inputValue, onInputChange)
   const [attachments, setAttachments] = React.useState<FileAttachment[]>(attachmentsValue ?? [])
 
   // Ref to track current attachments for use in event handlers (avoids stale closure issues)
@@ -549,45 +550,6 @@ export function FreeFormInput({
       prevEnabledSourceSlugsRef.current = enabledSourceSlugs
     }
   }, [enabledSourceSlugs])
-
-  // Sync from parent when inputValue changes externally (e.g., switching sessions)
-  const prevInputValueRef = React.useRef(coerceInputText(inputValue))
-  React.useEffect(() => {
-    if (inputValue === undefined) return
-    const nextInputValue = coerceInputText(inputValue)
-    if (nextInputValue !== prevInputValueRef.current) {
-      setInput(nextInputValue)
-      prevInputValueRef.current = nextInputValue
-    }
-  }, [inputValue])
-
-  // Debounced sync to parent (saves draft without blocking typing)
-  const syncTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
-  const syncToParent = React.useCallback((value: string) => {
-    if (!onInputChange) return
-    if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current)
-    syncTimeoutRef.current = setTimeout(() => {
-      onInputChange(value)
-      prevInputValueRef.current = value
-    }, 300) // Debounce 300ms
-  }, [onInputChange])
-
-  // Sync immediately on unmount to preserve input across mode switches
-  // Also cleanup any pending debounced sync
-  const inputRef = React.useRef(input)
-  inputRef.current = input // Keep ref in sync with state
-
-  React.useEffect(() => {
-    return () => {
-      // Cancel pending debounced sync
-      if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current)
-      // Immediately sync current value to parent on unmount
-      // This preserves input when switching to structured input (e.g., permission request)
-      if (onInputChange && inputRef.current !== prevInputValueRef.current) {
-        onInputChange(inputRef.current)
-      }
-    }
-  }, [onInputChange])
 
   const [isDraggingOver, setIsDraggingOver] = React.useState(false)
   const [loadingCount, setLoadingCount] = React.useState(0)
@@ -668,22 +630,9 @@ export function FreeFormInput({
 
     window.addEventListener('craft:insert-text', handleInsertText as EventListener)
     return () => window.removeEventListener('craft:insert-text', handleInsertText as EventListener)
-  }, [sessionId, isFocusedPanel, syncToParent, richInputRef])
-
-  const clearInputDraft = React.useCallback(() => {
-    setInput('')
-    if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current)
-    onInputChange?.('')
-    prevInputValueRef.current = ''
-  }, [onInputChange])
+  }, [sessionId, isFocusedPanel, syncToParent, richInputRef, setInput])
 
   const handleToggleModelVision = useModelVisionToggle()
-
-  const consumeInputDraftSnapshot = React.useCallback((): string => {
-    const snapshot = input.trim()
-    clearInputDraft()
-    return snapshot
-  }, [input, clearInputDraft])
 
   type PlanApprovalEventDetail = {
     sessionId?: string
@@ -786,9 +735,11 @@ export function FreeFormInput({
     })
 
     const request = () => {
-      void dispatcher.request().catch(error => {
+      void window.electronAPI.getTransportConnectionState().then(state => {
+        if (state.status === 'connected') return dispatcher.request()
+      }).catch(error => {
         const message = error instanceof Error ? error.message : String(error)
-        if (!/Connection closed|Client disconnected|transport|socket/.test(message)) {
+        if (!/Connection (?:closed|lost)|Client disconnected|Not connected|transport|socket/.test(message)) {
           console.error('[FreeFormInput] Failed to resume pending plan execution:', error)
         }
       })
@@ -800,11 +751,15 @@ export function FreeFormInput({
 
     requestPendingPlanRef.current = request
     window.addEventListener('craft:compaction-complete', handleCompactionComplete)
+    const offConnection = window.electronAPI.onTransportConnectionStateChanged(state => {
+      if (state.status === 'connected') request()
+    })
     // Reload recovery: the record survives, the wakeup does not.
     request()
 
     return () => {
       window.removeEventListener('craft:compaction-complete', handleCompactionComplete)
+      offConnection()
       if (requestPendingPlanRef.current === request) requestPendingPlanRef.current = null
       dispatcher.dispose()
     }
@@ -866,47 +821,6 @@ export function FreeFormInput({
   }
 
   // Listen for craft:paste-files events (for global paste when input not focused)
-  React.useEffect(() => {
-    const handlePasteFiles = async (e: CustomEvent<{ files: File[]; sessionId?: string }>) => {
-      if (disabled) return
-
-      const targetSessionId = e.detail?.sessionId
-      if (!shouldHandleScopedInputEvent({ sessionId, isFocusedPanel, targetSessionId })) return
-
-      const { files } = e.detail
-      if (!files || files.length === 0) return
-
-      setLoadingCount(prev => prev + files.length)
-
-      // Pre-assign sequential names using ref to avoid race conditions
-      let nextImageNum = getNextPastedNumber('image', attachmentsRef.current)
-      const fileNames: string[] = files.map(file => {
-        if (!file.name || file.name === 'image.png' || file.name === 'image.jpg' || file.name === 'blob') {
-          const ext = file.type.split('/')[1] || 'png'
-          return `pasted-image-${nextImageNum++}.${ext}`
-        }
-        return file.name
-      })
-
-      for (let i = 0; i < files.length; i++) {
-        try {
-          const attachment = await readFileAsAttachment(files[i], fileNames[i])
-          if (attachment) {
-            setAttachments(prev => [...prev, attachment])
-          }
-        } catch (error) {
-          console.error('[FreeFormInput] Failed to process pasted file:', error)
-        }
-        setLoadingCount(prev => prev - 1)
-      }
-
-      // Focus the input after adding attachments
-      richInputRef.current?.focus()
-    }
-
-    window.addEventListener('craft:paste-files', handlePasteFiles as unknown as EventListener)
-    return () => window.removeEventListener('craft:paste-files', handlePasteFiles as unknown as EventListener)
-  }, [disabled, sessionId, isFocusedPanel, richInputRef])
 
   // Build active commands list for slash command menu
   const activeCommands = React.useMemo(() => {
@@ -1042,7 +956,7 @@ export function FreeFormInput({
 
     // Open the EditPopover for label creation
     setAddLabelPopoverOpen(true)
-  }, [workspaceRootPath, inlineLabel, syncToParent, t])
+  }, [workspaceRootPath, inlineLabel, syncToParent, t, setInput])
 
   // Memoize the add-label config so the EditPopover doesn't recreate on every render
   const addLabelEditConfig = React.useMemo(() => {
@@ -1142,7 +1056,7 @@ export function FreeFormInput({
   }
 
   // Helper to read a File using FileReader API
-  const readFileAsAttachment = async (file: File, overrideName?: string): Promise<FileAttachment | null> => {
+  const readFileAsAttachment = React.useCallback(async (file: File, overrideName?: string): Promise<FileAttachment | null> => {
     // Capture the absolute OS path at attach time. Works for <input type="file"> and
     // OS drag-drop; returns null for clipboard paste and web-drag (no disk origin).
     // When null, the draft layer falls back to persisting content inline (Track C).
@@ -1201,7 +1115,50 @@ export function FreeFormInput({
       reader.onerror = () => resolve(null)
       reader.readAsArrayBuffer(file)
     })
-  }
+  }, [hasElectronAPI])
+
+  React.useEffect(() => {
+    const handlePasteFiles = async (e: CustomEvent<{ files: File[]; sessionId?: string }>) => {
+      if (disabled) return
+
+      const targetSessionId = e.detail?.sessionId
+      if (!shouldHandleScopedInputEvent({ sessionId, isFocusedPanel, targetSessionId })) return
+
+      const { files } = e.detail
+      if (!files || files.length === 0) return
+
+      setLoadingCount(prev => prev + files.length)
+
+      // Pre-assign sequential names using ref to avoid race conditions
+      let nextImageNum = getNextPastedNumber('image', attachmentsRef.current)
+      const fileNames: string[] = files.map(file => {
+        if (!file.name || file.name === 'image.png' || file.name === 'image.jpg' || file.name === 'blob') {
+          const ext = file.type.split('/')[1] || 'png'
+          return `pasted-image-${nextImageNum++}.${ext}`
+        }
+        return file.name
+      })
+
+      for (let i = 0; i < files.length; i++) {
+        try {
+          const attachment = await readFileAsAttachment(files[i], fileNames[i])
+          if (attachment) {
+            setAttachments(prev => [...prev, attachment])
+          }
+        } catch (error) {
+          console.error('[FreeFormInput] Failed to process pasted file:', error)
+        }
+        setLoadingCount(prev => prev - 1)
+      }
+
+      // Focus the input after adding attachments
+      richInputRef.current?.focus()
+    }
+
+    window.addEventListener('craft:paste-files', handlePasteFiles as unknown as EventListener)
+    return () => window.removeEventListener('craft:paste-files', handlePasteFiles as unknown as EventListener)
+  }, [disabled, sessionId, isFocusedPanel, richInputRef, readFileAsAttachment])
+
 
   // Clipboard paste handler for files/images
   const handlePaste = async (e: React.ClipboardEvent) => {
@@ -1246,7 +1203,7 @@ export function FreeFormInput({
     setAttachments(prev => [...prev, attachment])
     // Focus input after adding attachment
     richInputRef.current?.focus()
-  }, []) // No deps needed - uses ref
+  }, [richInputRef]) // Uses the current attachment ref
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault()
@@ -1306,7 +1263,7 @@ export function FreeFormInput({
     })
 
     return true
-  }, [input, attachments, followUpItems, disabled, disableSend, onInputChange, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, onWorkingDirectoryChange, homeDir])
+  }, [input, attachments, followUpItems, disabled, disableSend, onInputChange, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, richInputRef, setInput, prevInputValueRef, syncTimeoutRef])
 
   // Listen for craft:submit-input events (simulate pressing the Send button)
   React.useEffect(() => {
@@ -1459,7 +1416,7 @@ export function FreeFormInput({
         onSourcesChange(newSlugs)
       }
     }
-  }, [syncToParent, sources, optimisticSourceSlugs, onSourcesChange])
+  }, [syncToParent, sources, optimisticSourceSlugs, onSourcesChange, setInput, inputRef])
 
   // Handle input with cursor position (for menu detection)
   const handleRichInput = React.useCallback((value: string, cursorPosition: number) => {
@@ -1498,7 +1455,7 @@ export function FreeFormInput({
       setInput(newValue)
       syncToParent(newValue)
     }
-  }, [inlineSlash, inlineMention, inlineLabel, syncToParent, autoCapitalisation])
+  }, [inlineSlash, inlineMention, inlineLabel, syncToParent, autoCapitalisation, richInputRef, setInput])
 
   // Handle inline slash command selection (removes the /command text)
   const handleInlineSlashCommandSelect = React.useCallback((commandId: SlashCommandId) => {
@@ -1506,7 +1463,7 @@ export function FreeFormInput({
     setInput(newValue)
     syncToParent(newValue)
     richInputRef.current?.focus()
-  }, [inlineSlash, syncToParent])
+  }, [inlineSlash, syncToParent, richInputRef, setInput])
 
   // Handle inline slash folder selection (inserts a directory badge)
   const handleInlineSlashFolderSelect = React.useCallback((path: string) => {
@@ -1514,7 +1471,7 @@ export function FreeFormInput({
     setInput(newValue)
     syncToParent(newValue)
     richInputRef.current?.focus()
-  }, [inlineSlash, syncToParent])
+  }, [inlineSlash, syncToParent, richInputRef, setInput])
 
   // Handle inline slash plugin selection (consumes the /name text, activates the plugin)
   const handleInlineSlashPluginSelect = React.useCallback((pluginName: string) => {
@@ -1522,7 +1479,7 @@ export function FreeFormInput({
     setInput(newValue)
     syncToParent(newValue)
     richInputRef.current?.focus()
-  }, [inlineSlash, syncToParent])
+  }, [inlineSlash, syncToParent, richInputRef, setInput])
 
   // Handle inline mention selection (inserts appropriate mention text)
   const handleInlineMentionSelect = React.useCallback((item: MentionItem) => {
@@ -1534,7 +1491,7 @@ export function FreeFormInput({
       richInputRef.current?.focus()
       richInputRef.current?.setSelectionRange(cursorPosition, cursorPosition)
     }, 0)
-  }, [inlineMention, syncToParent])
+  }, [inlineMention, syncToParent, richInputRef, setInput])
 
   // Handle inline label selection (removes the #label text from input)
   const handleInlineLabelSelect = React.useCallback((labelId: string) => {
@@ -1542,7 +1499,7 @@ export function FreeFormInput({
     setInput(newValue)
     syncToParent(newValue)
     richInputRef.current?.focus()
-  }, [inlineLabel, syncToParent])
+  }, [inlineLabel, syncToParent, richInputRef, setInput])
 
   // Handle inline state selection from # menu (removes #text, changes session state)
   const handleInlineStateSelect = React.useCallback((stateId: string) => {
@@ -1553,7 +1510,7 @@ export function FreeFormInput({
       onSessionStatusChange?.(sessionId, stateId)
     }
     richInputRef.current?.focus()
-  }, [inlineLabel, syncToParent, sessionId, onSessionStatusChange])
+  }, [inlineLabel, syncToParent, sessionId, onSessionStatusChange, richInputRef, setInput])
 
   const followUpLayoutKey = React.useMemo(
     () => followUpItems.map(item => [

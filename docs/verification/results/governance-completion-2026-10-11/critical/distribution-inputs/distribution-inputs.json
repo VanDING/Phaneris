@@ -1,0 +1,34 @@
+{
+  "records": [
+    {
+      "id": "complete",
+      "passed": true,
+      "output": "Distribution inputs OK: Bun 1.4.2; 13 workspaces; 3 patches before install\n"
+    },
+    {
+      "id": "floating-bun",
+      "passed": true,
+      "output": "Docker Bun must match packageManager 1.4.2\n"
+    },
+    {
+      "id": "missing-patch-copy",
+      "passed": true,
+      "output": "All patches must be copied before frozen install\n"
+    },
+    {
+      "id": "missing-patch-file",
+      "passed": true,
+      "output": "Missing distribution input: patches/node-tesseract-ocr@2.2.1.patch\n"
+    },
+    {
+      "id": "missing-pi-command",
+      "passed": true,
+      "output": "Docker must use the shared Pi/worker build command\n"
+    },
+    {
+      "id": "missing-workspace-manifest",
+      "passed": true,
+      "output": "Workspace install input missing: packages/core/package.json\n"
+    }
+  ]
+}

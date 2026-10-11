@@ -240,7 +240,7 @@ export interface PageActionResult {
 export interface PageShareInfo {
   /** Public publication id (random capability; identifies, never authorizes writes) */
   publicationId: string;
-  /** Public URL of the trusted shell, e.g. https://thecraftagents.com/p/{id} */
+  /** Public URL of the trusted shell, e.g. https://example.test/p/{id} */
   url: string;
   /** Remote revision id currently live */
   publishedRevision: string;

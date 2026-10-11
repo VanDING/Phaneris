@@ -1,3 +1,4 @@
+import { getFileManagerName } from '@/lib/platform'
 /**
  * BrowseTree - Files > Browse.
  *
@@ -25,6 +26,8 @@ import {
 } from '@/lib/session-file-tree'
 import { useFileTreeExpansion, useSessionFileTree } from '@/lib/use-session-file-tree'
 import { getPathBasename } from '@/lib/platform'
+import { getClientPlatform } from '@/platform/client'
+import { toast } from 'sonner'
 
 const TREE_ICON_CLASS = 'h-3.5 w-3.5 text-muted-foreground'
 
@@ -56,6 +59,7 @@ export function BrowseTree({
   onOpenFile,
 }: BrowseTreeProps) {
   const { t } = useTranslation()
+  const nativeFiles = getClientPlatform().hasCapability('native-file')
   const working = useSessionFileTree(sessionId, 'working')
   const session = useSessionFileTree(sessionId, 'session')
   const [selectedPath, setSelectedPath] = useState<string>()
@@ -93,13 +97,14 @@ export function BrowseTree({
   // Double-click keeps the section's semantics: hand a file to the system
   // default app instead of the in-app preview.
   const openExternal = useCallback((path: string) => {
-    // eslint-disable-next-line craft-links/no-direct-file-open -- external open is the intended double-click semantic
-    window.electronAPI.openFile(path)
-  }, [])
+    if (!nativeFiles) { onOpenFile(path); return }
+    void getClientPlatform().files.openFile(path).catch(() => toast.error(t('toast.failedToOpenFile')))
+  }, [nativeFiles, onOpenFile, t])
 
   const revealInFileManager = useCallback((path: string) => {
-    window.electronAPI.showInFolder(path)
-  }, [])
+    if (!nativeFiles) return
+    void getClientPlatform().files.showInFolder(path).catch(() => toast.error(t('toast.failedToReveal', { fileManager: getFileManagerName() })))
+  }, [nativeFiles, t])
 
   // Root nodes are synthetic rows over the two real roots.
   const workingRoot: SessionFile = useMemo(() => ({
@@ -139,7 +144,7 @@ export function BrowseTree({
           onToggleExpand={workingExpansion.toggleExpand}
           onFileClick={handleFileClick}
           onFileDoubleClick={(file) => openExternal(file.path)}
-          onRevealInFileManager={revealInFileManager}
+          onRevealInFileManager={nativeFiles ? revealInFileManager : undefined}
         />
       )}
       {showWorkingGroup && working.isLoading && working.files.length === 0 && <TreeSpinner />}
@@ -159,7 +164,7 @@ export function BrowseTree({
           onToggleExpand={sessionExpansion.toggleExpand}
           onFileClick={handleFileClick}
           onFileDoubleClick={(file) => openExternal(file.path)}
-          onRevealInFileManager={revealInFileManager}
+          onRevealInFileManager={nativeFiles ? revealInFileManager : undefined}
           iconForPath={(path) => (pinnedPaths.has(normalizeTreePath(path))
             ? <Paperclip className={TREE_ICON_CLASS} />
             : null)}

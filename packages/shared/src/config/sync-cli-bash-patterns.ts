@@ -19,22 +19,22 @@ interface PermissionsConfig {
   [key: string]: unknown
 }
 
-function isCraftAgentPattern(entry: AllowedBashEntry): boolean {
+function isPhanerisPattern(entry: AllowedBashEntry): boolean {
   return typeof entry.pattern === 'string' && entry.pattern.startsWith(CLI_BASH_PATTERN_PREFIX)
 }
 
-function syncCraftAgentPatterns(config: PermissionsConfig): PermissionsConfig {
+function syncPhanerisPatterns(config: PermissionsConfig): PermissionsConfig {
   const patterns = config.allowedBashPatterns ?? []
-  const firstCraftIndex = patterns.findIndex(isCraftAgentPattern)
+  const firstProductIndex = patterns.findIndex(isPhanerisPattern)
 
-  const withoutCraft = patterns.filter(entry => !isCraftAgentPattern(entry))
+  const withoutProduct = patterns.filter(entry => !isPhanerisPattern(entry))
   const generated = getPhanerisReadOnlyBashPatterns()
 
-  const insertAt = firstCraftIndex >= 0 ? firstCraftIndex : withoutCraft.length
+  const insertAt = firstProductIndex >= 0 ? firstProductIndex : withoutProduct.length
   const nextAllowedBashPatterns = [
-    ...withoutCraft.slice(0, insertAt),
+    ...withoutProduct.slice(0, insertAt),
     ...generated,
-    ...withoutCraft.slice(insertAt),
+    ...withoutProduct.slice(insertAt),
   ]
 
   return {
@@ -49,7 +49,7 @@ function main() {
     : resolve(process.cwd(), 'apps/electron/resources/permissions/default.json')
 
   const config = JSON.parse(readFileSync(targetPath, 'utf-8')) as PermissionsConfig
-  const nextConfig = syncCraftAgentPatterns(config)
+  const nextConfig = syncPhanerisPatterns(config)
 
   writeFileSync(targetPath, `${JSON.stringify(nextConfig, null, 2)}\n`, 'utf-8')
   process.stdout.write(`Synced CLI bash patterns in ${targetPath}\n`)

@@ -1,0 +1,4 @@
+{
+  "message": "Missing expected rejection.",
+  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at innerFail (node:assert:50:27)\n    at expectsError (node:assert:385:14)\n    at assert.rejects (node:assert:434:17)\n    at async <anonymous> (/Users/van/projects/Phaneris/scripts/verification/process-lifecycle-workflow.ts:20:20)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

@@ -1,3 +1,4 @@
+import type { RpcResult } from '@phaneris/shared/protocol';
 /**
  * WsRpcClient — WebSocket-based RPC client.
  *
@@ -19,7 +20,7 @@ import {
   type ErrorCode,
   type MessageEnvelope,
 } from '@phaneris/shared/protocol'
-import type { RpcClient } from './types'
+import type { RpcClient, RpcCallback, CapabilityHandler } from './types'
 import { serializeEnvelope, deserializeEnvelope } from './codec'
 
 // ---------------------------------------------------------------------------
@@ -27,7 +28,7 @@ import { serializeEnvelope, deserializeEnvelope } from './codec'
 // ---------------------------------------------------------------------------
 
 interface PendingRequest {
-  resolve: (value: any) => void
+  resolve: (value: unknown) => void
   reject: (error: Error) => void
   timeout: ReturnType<typeof setTimeout>
 }
@@ -111,10 +112,10 @@ export interface WsRpcClientOptions {
 export class WsRpcClient implements RpcClient {
   private ws: WebSocket | null = null
   private pending = new Map<string, PendingRequest>()
-  private listeners = new Map<string, Set<(...args: any[]) => void>>()
-  private capabilityHandlers = new Map<string, (...args: any[]) => Promise<any> | any>()
+  private listeners = new Map<string, Set<RpcCallback>>()
+  private capabilityHandlers = new Map<string, CapabilityHandler>()
   private connectionStateListeners = new Set<(state: TransportConnectionState) => void>()
-  private anyEventListeners = new Set<(channel: string, ...args: any[]) => void>()
+  private anyEventListeners = new Set<(channel: string, ...args: unknown[]) => void>()
   private clientId: string | null = null
   private _serverVersion: string | null = null
   private connected = false
@@ -139,7 +140,7 @@ export class WsRpcClient implements RpcClient {
   private serverChannels: Set<string> | null = null
 
   private readonly url: string
-  private readonly workspaceId: string | undefined
+  private workspaceId: string | undefined
   private readonly webContentsId: number | undefined
   private readonly token: string | undefined
   private readonly clientCapabilities: string[]
@@ -176,10 +177,10 @@ export class WsRpcClient implements RpcClient {
   // RpcClient interface
   // -------------------------------------------------------------------------
 
-  async invoke(channel: string, ...args: any[]): Promise<any> {
+  async invoke<Channel extends string>(channel: Channel, ...args: unknown[]): Promise<RpcResult<Channel>> {
     await this.ensureConnected(channel)
 
-    return await new Promise((resolve, reject) => {
+    return await new Promise<unknown>((resolve, reject) => {
       if (!this.connected || !this.ws) {
         reject(new Error(`Not connected (channel: ${channel})`))
         return
@@ -228,10 +229,10 @@ export class WsRpcClient implements RpcClient {
         clearTimeout(timeout)
         reject(new Error(`Not connected (channel: ${channel})`))
       }
-    })
+    }) as RpcResult<Channel>
   }
 
-  on(channel: string, callback: (...args: any[]) => void): () => void {
+  on(channel: string, callback: RpcCallback): () => void {
     let set = this.listeners.get(channel)
     if (!set) {
       set = new Set()
@@ -247,7 +248,7 @@ export class WsRpcClient implements RpcClient {
     }
   }
 
-  handleCapability(channel: string, handler: (...args: any[]) => Promise<any> | any): void {
+  handleCapability(channel: string, handler: CapabilityHandler): void {
     this.capabilityHandlers.set(channel, handler)
   }
 
@@ -262,6 +263,15 @@ export class WsRpcClient implements RpcClient {
   }
 
   /** Server version from handshake_ack (null if server didn't send one / not yet connected). */
+  /** Remember a workspace switch only after the host acknowledges it; reconnect reuses this binding. */
+  setAcceptedWorkspaceId(workspaceId: string): void {
+    this.workspaceId = workspaceId
+  }
+
+  getWorkspaceId(): string | undefined {
+    return this.workspaceId
+  }
+
   getServerVersion(): string | null {
     return this._serverVersion
   }
@@ -283,7 +293,7 @@ export class WsRpcClient implements RpcClient {
   }
 
   /** Subscribe to all push events regardless of channel. Used by RemoteClientBridge for event forwarding. */
-  onAnyEvent(callback: (channel: string, ...args: any[]) => void): () => void {
+  onAnyEvent(callback: (channel: string, ...args: unknown[]) => void): () => void {
     this.anyEventListeners.add(callback)
     return () => {
       this.anyEventListeners.delete(callback)
@@ -317,6 +327,8 @@ export class WsRpcClient implements RpcClient {
 
     this.connectStarted = false
     this.connectError = null
+    // Retire the old socket's advertised readiness before close dispatches asynchronously.
+    this.setConnectionState({ status: 'reconnecting', attempt: this.reconnectAttempt, nextRetryInMs: undefined })
 
     if (!this.ws) {
       this.setConnectionState({
@@ -358,7 +370,6 @@ export class WsRpcClient implements RpcClient {
     if (needsTlsOptions && typeof process !== 'undefined' && process.versions?.node) {
       // Node.js / Electron main process — use `ws` library for TLS options
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { WebSocket: WsWebSocket } = require('ws') as typeof import('ws')
         return new WsWebSocket(url, { rejectUnauthorized: false }) as unknown as WebSocket
       } catch {
@@ -599,8 +610,8 @@ export class WsRpcClient implements RpcClient {
           clearTimeout(req.timeout)
           if (envelope.error) {
             const err = new Error(envelope.error.message)
-            ;(err as any).code = envelope.error.code
-            ;(err as any).data = envelope.error.data
+            ;(err as Error & { code?: string; data?: unknown; kind?: unknown }).code = envelope.error.code
+            ;(err as Error & { code?: string; data?: unknown; kind?: unknown }).data = envelope.error.data
             req.reject(err)
           } else {
             req.resolve(envelope.result)
@@ -1006,14 +1017,14 @@ export class WsRpcClient implements RpcClient {
 
   private createConnectionError(kind: TransportConnectionErrorKind, message: string, code?: string): Error {
     const err = new Error(message)
-    ;(err as any).kind = kind
-    if (code) (err as any).code = code
+    ;(err as Error & { code?: string; data?: unknown; kind?: unknown }).kind = kind
+    if (code) (err as Error & { code?: string; data?: unknown; kind?: unknown }).code = code
     return err
   }
 
   private toErrorState(err: Error): TransportConnectionError {
-    const code = (err as any).code ? String((err as any).code) : undefined
-    const kind = (err as any).kind as TransportConnectionErrorKind | undefined
+    const code = (err as Error & { code?: string; data?: unknown; kind?: unknown }).code ? String((err as Error & { code?: string; data?: unknown; kind?: unknown }).code) : undefined
+    const kind = (err as Error & { code?: string; data?: unknown; kind?: unknown }).kind as TransportConnectionErrorKind | undefined
       ?? this.classifyErrorKindFromCode(code)
 
     return {

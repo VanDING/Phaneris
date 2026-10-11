@@ -1,0 +1,36 @@
+2026-10-11T10:34:14.424Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T10:34:14.424Z INFO  [bootstrap] Global config found
+2026-10-11T10:34:14.425Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available
+2026-10-11T10:34:14.440Z INFO  [session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T10:34:14.448Z INFO  Phaneris server listening on ws://127.0.0.1:53420
+[messaging] Disabled via PHANERIS_DISABLE_MESSAGING — skipping workspace messaging init
+PHANERIS_SERVER_URL=ws://127.0.0.1:53420
+PHANERIS_WEBUI_URL=http://0.0.0.0:53420
+2026-10-11T10:34:14.481Z INFO  Shutting down...
+
+2026-10-11T10:34:14.440Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-10-11T10:34:14.440Z ERROR [session] No LLM connection found for slug: null
+[server] unhandledRejection: [server] Error
+    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/fixtures/governance-process-faults.ts:8:21)
+    at emit (node:events:100:22)
+    at [_onLine] (internal:readline/interface:201:16)
+    at [_normalWrite] (internal:readline/interface:289:22)
+    at ondata (internal:readline/interface:66:23)
+    at emit (node:events:100:22)
+    at addChunk (internal:streams/readable:267:47)
+    at readableAddChunkPushByteMode (internal:streams/readable:245:18)
+    at internalRead (unknown:45:40)
+    at processTicksAndRejections (unknown:7:39)
+Caused by: Error
+    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/fixtures/governance-process-faults.ts:8:81)
+    at emit (node:events:100:22)
+    at [_onLine] (internal:readline/interface:201:16)
+    at [_normalWrite] (internal:readline/interface:289:22)
+    at ondata (internal:readline/interface:66:23)
+    at emit (node:events:100:22)
+    at addChunk (internal:streams/readable:267:47)
+    at readableAddChunkPushByteMode (internal:streams/readable:245:18)
+    at internalRead (unknown:45:40)
+    at processTicksAndRejections (unknown:7:39)
+[server] shutdown_deadline: [server] Error: Process cleanup deadline exceeded
+    at <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/runtime/process-lifecycle.ts:39:53)

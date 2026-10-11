@@ -7,7 +7,7 @@
  * Same class used locally (127.0.0.1, no auth) and remotely (0.0.0.0, auth).
  */
 
-import { WebSocketServer, type WebSocket } from 'ws'
+import { WebSocketServer, WebSocket } from 'ws'
 import { createServer as createHttpServer, type Server as HttpServer } from 'node:http'
 import { createServer as createHttpsServer, type Server as HttpsServer } from 'node:https'
 import { randomUUID } from 'node:crypto'
@@ -20,6 +20,7 @@ import {
   DISCONNECTED_CLIENT_TTL_MS,
   MAX_MESSAGE_PAYLOAD_BYTES,
   isErrorCode,
+  validateRpcArguments,
   type MessageEnvelope,
   type PushTarget,
   type ErrorCode,
@@ -59,7 +60,7 @@ interface ClientConnection {
 
 interface PendingInvoke {
   clientId: string
-  resolve: (value: any) => void
+  resolve: (value: unknown) => void
   reject: (error: Error) => void
   timeout: ReturnType<typeof setTimeout>
 }
@@ -93,7 +94,7 @@ export interface WsRpcServerOptions {
    * Called with the Cookie header from the HTTP upgrade request.
    * If provided, a valid session cookie is accepted as an alternative to a bearer token.
    */
-  validateSessionCookie?: (cookieHeader: string | null) => Promise<boolean>
+  validateSessionCookie?: (cookieHeader: string | null, request: import('node:http').IncomingMessage) => Promise<boolean>
   /** Server identity stamp on outgoing events. Default: 'local' */
   serverId?: string
   /** TLS configuration. When provided, the server listens on wss:// instead of ws://. */
@@ -132,6 +133,7 @@ export class WsRpcServer implements RpcServer {
   private heartbeatTimer: ReturnType<typeof setInterval> | null = null
   private _port = 0
   private _protocol: 'ws' | 'wss' = 'ws'
+  private closing = false
 
   /** Recently disconnected clients retained for reconnect replay. */
   private disconnectedClients = new Map<string, { client: ClientConnection; timer: ReturnType<typeof setTimeout> }>()
@@ -140,7 +142,7 @@ export class WsRpcServer implements RpcServer {
   private readonly requestedPort: number
   private readonly requireAuth: boolean
   private readonly validateToken: ((token: string) => Promise<boolean>) | null
-  private readonly validateSessionCookie: ((cookieHeader: string | null) => Promise<boolean>) | null
+  private readonly validateSessionCookie: WsRpcServerOptions['validateSessionCookie']
   private readonly serverId: string
   private readonly tlsOptions: WsRpcTlsOptions | null
   private readonly serverVersion: string
@@ -154,7 +156,7 @@ export class WsRpcServer implements RpcServer {
     this.requestedPort = opts?.port ?? 0
     this.requireAuth = opts?.requireAuth ?? false
     this.validateToken = opts?.validateToken ?? null
-    this.validateSessionCookie = opts?.validateSessionCookie ?? null
+    this.validateSessionCookie = opts?.validateSessionCookie
     this.serverId = opts?.serverId ?? 'local'
     this.serverVersion = opts?.serverVersion ?? ''
     this.tlsOptions = opts?.tls ?? null
@@ -190,7 +192,7 @@ export class WsRpcServer implements RpcServer {
     this.handlers.set(channel, handler)
   }
 
-  push(channel: string, target: PushTarget, ...args: any[]): void {
+  push(channel: string, target: PushTarget, ...args: unknown[]): void {
     const timestamp = Date.now()
 
     for (const client of this.clients.values()) {
@@ -219,14 +221,14 @@ export class WsRpcServer implements RpcServer {
     return results
   }
 
-  invokeClient(clientId: string, channel: string, ...args: any[]): Promise<any> {
+  invokeClient(clientId: string, channel: string, ...args: unknown[]): Promise<unknown> {
     return new Promise((resolve, reject) => {
       const client = this.clients.get(clientId)
 
       // Check connection
       if (!client) {
         const err = new Error(`Client not connected: ${clientId}`)
-        ;(err as any).code = 'CLIENT_DISCONNECTED'
+        ;(err as Error & { code?: string; data?: unknown }).code = 'CLIENT_DISCONNECTED'
         reject(err)
         return
       }
@@ -234,7 +236,7 @@ export class WsRpcServer implements RpcServer {
       // Check capability
       if (!client.capabilities.has(channel)) {
         const err = new Error(`Client lacks capability: ${channel}`)
-        ;(err as any).code = 'CAPABILITY_UNAVAILABLE'
+        ;(err as Error & { code?: string; data?: unknown }).code = 'CAPABILITY_UNAVAILABLE'
         reject(err)
         return
       }
@@ -243,7 +245,7 @@ export class WsRpcServer implements RpcServer {
       const timeout = setTimeout(() => {
         this.pendingInvokes.delete(id)
         const err = new Error(`Client request timeout: ${channel} (30000ms)`)
-        ;(err as any).code = 'CLIENT_REQUEST_TIMEOUT'
+        ;(err as Error & { code?: string; data?: unknown }).code = 'CLIENT_REQUEST_TIMEOUT'
         reject(err)
       }, 30_000)
 
@@ -265,6 +267,7 @@ export class WsRpcServer implements RpcServer {
   // -------------------------------------------------------------------------
 
   async listen(): Promise<void> {
+    this.closing = false
     return new Promise((resolve, reject) => {
       if (this.tlsOptions) {
         // TLS mode: create HTTPS server, attach WebSocketServer to it.
@@ -333,12 +336,13 @@ export class WsRpcServer implements RpcServer {
       }
 
       this.wss.on('connection', (ws, req) => {
-        this.onConnection(ws, req.headers.cookie ?? null)
+        this.onConnection(ws, req)
       })
     })
   }
 
   close(): void {
+    this.closing = true
     if (this.heartbeatTimer) {
       clearInterval(this.heartbeatTimer)
       this.heartbeatTimer = null
@@ -347,7 +351,7 @@ export class WsRpcServer implements RpcServer {
     for (const [id, pending] of this.pendingInvokes) {
       clearTimeout(pending.timeout)
       const err = new Error('Server shutting down')
-      ;(err as any).code = 'CLIENT_DISCONNECTED'
+      ;(err as Error & { code?: string; data?: unknown }).code = 'CLIENT_DISCONNECTED'
       pending.reject(err)
       this.pendingInvokes.delete(id)
     }
@@ -360,6 +364,8 @@ export class WsRpcServer implements RpcServer {
       clearTimeout(entry.timer)
     }
     this.disconnectedClients.clear()
+    // Includes unauthenticated and asynchronously validating handshakes.
+    for (const socket of this.wss?.clients ?? []) socket.terminate()
     this.wss?.close()
     this.wss = null
     this.httpServer?.close()
@@ -372,7 +378,8 @@ export class WsRpcServer implements RpcServer {
   // Connection handling
   // -------------------------------------------------------------------------
 
-  private onConnection(ws: WebSocket, upgradeRequestCookie: string | null): void {
+  private onConnection(ws: WebSocket, upgradeRequest: import('node:http').IncomingMessage): void {
+    if (this.closing) { ws.terminate(); return }
     // Reject if at capacity
     if (this.maxClients > 0 && this.clients.size >= this.maxClients) {
       transportLog.warn('Connection rejected: at capacity', {
@@ -384,6 +391,7 @@ export class WsRpcServer implements RpcServer {
     }
 
     let handshakeCompleted = false
+    let cookieAuthenticated = false
     let handshakeTimeout: ReturnType<typeof setTimeout> | null = null
 
     // Give the client 5 seconds to send a handshake
@@ -394,6 +402,7 @@ export class WsRpcServer implements RpcServer {
     }, 5_000)
 
     ws.on('message', async (raw) => {
+      if (this.closing) return
       // M-9: hard message-size cap, enforced here in addition to the
       // WebSocketServer `maxPayload` option. Under the real `ws` package the
       // receiver closes the connection with 1009 before the message is ever
@@ -458,8 +467,9 @@ export class WsRpcServer implements RpcServer {
           }
 
           // 2. Fallback: try session cookie from HTTP upgrade request (web UI path)
-          if (!authenticated && this.validateSessionCookie && upgradeRequestCookie) {
-            authenticated = await this.validateSessionCookie(upgradeRequestCookie)
+          if (!authenticated && this.validateSessionCookie && upgradeRequest.headers.cookie) {
+            authenticated = await this.validateSessionCookie(upgradeRequest.headers.cookie, upgradeRequest)
+            cookieAuthenticated = authenticated
           }
 
           if (!authenticated) {
@@ -469,6 +479,7 @@ export class WsRpcServer implements RpcServer {
             return
           }
         }
+        if (this.closing || ws.readyState !== WebSocket.OPEN) { ws.terminate(); return }
 
         // ── Reconnect attempt ──
         if (envelope.reconnectClientId && envelope.lastSeq != null) {
@@ -623,6 +634,15 @@ export class WsRpcServer implements RpcServer {
       }
 
       // Post-handshake: find the client for this ws
+      if (cookieAuthenticated && this.validateSessionCookie) {
+        const valid = await this.validateSessionCookie(upgradeRequest.headers.cookie ?? null, upgradeRequest)
+        if (!valid) {
+          this.sendError(ws, envelope.id, 'AUTH_FAILED', 'Session expired or revoked')
+          ws.close(4005, 'Auth failed')
+          return
+        }
+        if (this.closing || ws.readyState !== WebSocket.OPEN) return
+      }
       const client = this.findClientByWs(ws)
       if (!client) {
         ws.close(4006, 'Unknown client')
@@ -693,7 +713,7 @@ export class WsRpcServer implements RpcServer {
     let handlerTimer: ReturnType<typeof setTimeout> | null = null
     try {
       const result = await Promise.race([
-        handler(ctx, ...(args ?? [])),
+        handler(ctx, ...validateRpcArguments(channel, args ?? [])),
         new Promise<never>((_, reject) => {
           handlerTimer = setTimeout(
             () => reject(new Error(`Handler timeout: ${channel} (${WsRpcServer.HANDLER_TIMEOUT_MS}ms)`)),
@@ -790,7 +810,7 @@ export class WsRpcServer implements RpcServer {
   private bufferAndMaybeSendEvent(
     client: ClientConnection,
     channel: string,
-    args: any[],
+    args: unknown[],
     timestamp: number,
     shouldSend: boolean,
   ): void {
@@ -909,8 +929,8 @@ export class WsRpcServer implements RpcServer {
 
     if (envelope.error) {
       const err = new Error(envelope.error.message)
-      ;(err as any).code = envelope.error.code
-      ;(err as any).data = envelope.error.data
+      ;(err as Error & { code?: string; data?: unknown }).code = envelope.error.code
+      ;(err as Error & { code?: string; data?: unknown }).data = envelope.error.data
       pending.reject(err)
     } else {
       pending.resolve(envelope.result)
@@ -922,7 +942,7 @@ export class WsRpcServer implements RpcServer {
       if (pending.clientId !== clientId) continue
       clearTimeout(pending.timeout)
       const err = new Error(`Client disconnected: ${clientId}`)
-      ;(err as any).code = 'CLIENT_DISCONNECTED'
+      ;(err as Error & { code?: string; data?: unknown }).code = 'CLIENT_DISCONNECTED'
       pending.reject(err)
       this.pendingInvokes.delete(id)
     }

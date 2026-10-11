@@ -35,8 +35,8 @@ async function round(prompt: string) {
     session: { id, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1 } as any, isHeadless: true,
     runtime: { paths: { piServer: process.env.PHANERIS_VERIFY_PI_ENTRY ?? join(root, 'packages/pi-agent-server/dist/index.js'), node: process.env.PHANERIS_VERIFY_PI_BUN ?? process.execPath }, piAuthProvider: 'azure-openai-responses', baseUrl: api.url.href },
     envOverrides: { HOME: fixture, USERPROFILE: fixture, PHANERIS_CONFIG_DIR: fixture, NODE_ENV: 'test' },
-    durableModelBoundary: { prepare: async request => { effects.push({ phase: 'T1', provider: request.provider, model: request.model }); return { operationId: `m-${effects.length}`, idempotencyKey: `m-${effects.length}`, created: true, status: 'prepared', committedSeq: effects.length } },
-      commitOutcome: async request => { effects.push({ phase: 'T2', provider: request.provider, stopReason: request.stopReason }); return { committedSeq: effects.length } }, recordObservation: () => {} } as any,
+    durableModelBoundary: { prepare: async (request: { provider: string; model: string }) => { effects.push({ phase: 'T1', provider: request.provider, model: request.model }); return { operationId: `m-${effects.length}`, idempotencyKey: `m-${effects.length}`, created: true, status: 'prepared', committedSeq: effects.length } },
+      commitOutcome: async (request: { provider: string; stopReason: string }) => { effects.push({ phase: 'T2', provider: request.provider, stopReason: request.stopReason }); return { committedSeq: effects.length } }, recordObservation: () => {} } as any,
   }) as any
   const handle = agent.handleLine.bind(agent)
   agent.handleLine = (line: string) => { try { wire.push(JSON.parse(line)) } catch {} handle(line) }

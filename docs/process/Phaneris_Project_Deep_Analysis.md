@@ -1,5 +1,7 @@
 # Phaneris 项目深度分析报告
 
+> 2026-10-11 裁定：本文保留原审查基线。Runtime 旧拆分已由 B0–B5 接替；限流、请求体与可信代理已有修复。JWT/Origin 与 Pi/Session/client 装配已接续治理，依旧保留分发/外部平台的验证限度；当前结果见[完整实施台账](./governance-completion-2026-10-11.md)。
+
 > 审查对象：<https://github.com/VanDING/Phaneris>  
 > 审查基线：`15dafd3373f01393c6f5b2e4294e8755bed8042f`  
 > 审查范围：项目架构、核心 Runtime、Server/WebUI、安全边界、Electron Renderer、CI、Monorepo 组织、测试与未来演进方向。

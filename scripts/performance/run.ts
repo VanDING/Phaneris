@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+import { waitForBrowserCondition } from '../verification/workflow-browser'
 import { spawn, execFileSync } from 'node:child_process'
 import { strict as assert } from 'node:assert'
 import { createInterface } from 'node:readline'
@@ -181,7 +182,7 @@ try {
   async function select(id: string) {
     // Exercise the actual SessionItem mouse-down handler; exclude Playwright's
     // actionability polling/animation delay from the timestamp.
-    const row = page!.locator(`[data-session-id="${id}"] button`).first()
+    const row = page!.locator(`[data-session-id="${id}"] .entity-row-btn`)
     await row.waitFor({ state: 'attached' })
     await row.dispatchEvent('mousedown', { button: 0 })
     await page!.getByText(`PERF_END_${id}`, { exact: true }).waitFor({ state: 'visible' })
@@ -214,7 +215,7 @@ try {
   await page.getByRole('button', { name: 'Copy', exact: true }).last().click()
   const copied = await page.evaluate(() => navigator.clipboard.readText())
   assert(copied.includes('PERF_END_perf-002') && copied.includes(`count: ${options.sizes[2] - 1}`), 'Copy lost the final response or code block')
-  await page.keyboard.press('Control+f')
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+f' : 'Control+f')
   const search = page.getByPlaceholder('Search titles and content...')
   await search.fill('PERF_END_perf-002')
   await page.getByText('PERF_END_perf-002', { exact: true }).waitFor({ state: 'visible' })
@@ -233,7 +234,7 @@ try {
   await island.getByRole('button', { name: 'Follow-up', exact: true }).click()
   await island.getByPlaceholder('Add comments the agent should consider in the next turn…').fill('保留这段引用，稍后核查')
   await island.getByRole('button', { name: 'Save', exact: true }).click()
-  await page.waitForFunction(async () => {
+  await waitForBrowserCondition(page, async () => {
     const session = await (window as any).electronAPI.getSessionMessages('perf-002')
     return JSON.stringify(session.messages).includes('保留这段引用，稍后核查')
   })

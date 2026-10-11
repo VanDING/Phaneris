@@ -2,7 +2,7 @@
  * Decision layer — status + connectivity test for the Settings UI (and RPC).
  */
 
-import { getLlmConnections } from '../config/storage.ts';
+import { getLlmConnections } from '../config/connections.ts';
 import { DECISION_PROVIDER_IDS, toDecisionFailure, type DecisionFailure, type DecisionProviderId, type DecisionRequest } from './types.ts';
 import { DECISION_PROVIDER_PRESETS, decisionProviderForConnection } from './providers.ts';
 import { getDecisionRecorder } from './records.ts';

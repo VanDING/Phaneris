@@ -8,10 +8,11 @@
  * in the shared renderer components — no webui-specific layout hacks needed.
  */
 
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createWebApi } from './adapter/web-api'
 import type { WsRpcClient } from '../../electron/src/transport/client'
+import { createClientPlatform, initializeClient } from '@/platform/client'
 
 // Lazy-load the Electron App after window.electronAPI is set up.
 // This prevents any Electron component from accessing window.electronAPI
@@ -64,15 +65,18 @@ export default function App() {
   const [phase, setPhase] = useState<Phase>('loading')
   const [error, setError] = useState('')
   const clientRef = useRef<WsRpcClient | null>(null)
-  const initRef = useRef(false)
+  const initialization = useRef<AbortController | null>(null)
 
-  const initialize = async () => {
+  const initialize = useCallback(async () => {
+    initialization.current?.abort()
+    const controller = new AbortController()
+    initialization.current = controller
     setPhase('loading')
     setError('')
 
     try {
       // 1. Fetch WS URL from the server (cookie auth)
-      const configRes = await fetch('/api/config', { credentials: 'same-origin' })
+      const configRes = await fetch('/api/config', { credentials: 'same-origin', signal: controller.signal })
       if (!configRes.ok) {
         if (configRes.status === 401) {
           // Session expired — redirect to login
@@ -93,7 +97,7 @@ export default function App() {
       // so we can include it in the WebSocket handshake
       if (!workspaceId) {
         try {
-          const wsRes = await fetch('/api/config/workspaces', { credentials: 'same-origin' })
+          const wsRes = await fetch('/api/config/workspaces', { credentials: 'same-origin', signal: controller.signal })
           if (wsRes.ok) {
             const { defaultWorkspaceId } = await wsRes.json() as { defaultWorkspaceId?: string }
             if (defaultWorkspaceId) workspaceId = defaultWorkspaceId
@@ -110,33 +114,30 @@ export default function App() {
       }
 
       const { api, client } = createWebApi({ serverUrl: wsUrl, workspaceId })
+      if (controller.signal.aborted) { client.destroy(); return }
       clientRef.current = client
 
-      // 4. Set window.electronAPI — must happen before any Electron component mounts
-      ;(window as any).electronAPI = api
-
-      // 5. Connect the WebSocket client
+      // Connect and initialize the finite platform before loading business components.
       client.connect()
-
+      await initializeClient(createClientPlatform('web', api), api, controller.signal)
       setPhase('ready')
     } catch (err) {
+      if (controller.signal.aborted) return
       const msg = err instanceof Error ? err.message : String(err)
       setError(msg)
       setPhase('error')
     }
-  }
+  }, [])
 
   useEffect(() => {
-    if (!initRef.current) {
-      initRef.current = true
-      initialize()
-    }
+    void initialize()
 
     return () => {
       // Cleanup on unmount
+      initialization.current?.abort()
       clientRef.current?.destroy()
     }
-  }, [])
+  }, [initialize])
 
   if (phase === 'loading') return <LoadingScreen />
   if (phase === 'error') return <ErrorScreen message={error} onRetry={initialize} />

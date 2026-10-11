@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import type { FileAttachment } from '@phaneris/shared/protocol'
-import * as modelConfig from '@phaneris/shared/config'
-import type { LlmConnection, ModelDefinition } from '@phaneris/shared/config'
+import * as modelConfig from '@phaneris/shared/config';
+import type { LlmConnection, ModelDefinition } from '@phaneris/shared/config';
 import { getPiModelsForAuthProvider } from '@phaneris/shared/config/models-pi'
 import { filterAttachmentsForModelInput, isImageAttachment } from './runtime-config'
 import { getImageSize, resizeImageForAPI } from '../services/image-utils'

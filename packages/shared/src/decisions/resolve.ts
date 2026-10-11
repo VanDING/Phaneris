@@ -13,7 +13,9 @@
  */
 
 import { getCredentialManager } from '../credentials/index.ts';
-import { getLlmConnection, loadStoredConfig, type StoredConfig } from '../config/storage.ts';
+import { getLlmConnection } from '../config/connections.ts';
+import { loadStoredConfig } from '../config/repository.ts';
+import { type StoredConfig } from '../config/persisted-types.ts';
 import { SystemOneClient } from './client.ts';
 import { resolveDecisionAccounting } from './accounting.ts';
 import { DECISION_PROVIDER_PRESETS, decisionProviderForConnection } from './providers.ts';

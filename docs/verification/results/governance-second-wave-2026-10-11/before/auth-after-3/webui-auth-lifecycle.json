@@ -1,0 +1,69 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-auth-lifecycle-LQ5AHr",
+  "checks": [
+    {
+      "id": "A01-logout-kill-restart",
+      "passed": true
+    },
+    {
+      "id": "A12-canonical-token-replay",
+      "passed": true
+    },
+    {
+      "id": "A02-shared-process-revocation",
+      "passed": true
+    },
+    {
+      "id": "A03-config-directory-isolation",
+      "passed": true
+    },
+    {
+      "id": "A04-legacy-cookie-without-jti",
+      "passed": true
+    },
+    {
+      "id": "A07-cookie-origin-and-bearer",
+      "passed": true
+    },
+    {
+      "id": "A08-explicit-origin-trusted-proxy",
+      "passed": true
+    },
+    {
+      "id": "A09-actual-proxy-failure-budgets",
+      "passed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 41249,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41273,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41279,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41282,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41285,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41286,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    }
+  ]
+}

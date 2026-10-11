@@ -1,0 +1,14 @@
+
+[server] uncaughtException: [server] AuthStorageFailure: WebUI authentication storage unavailable
+    at new SessionRevocations (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:30:50)
+    at createWebuiHandler (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:205:27)
+    at /Users/van/projects/Phaneris/packages/server/src/index.ts:162:18
+    at processTicksAndRejections (native:7:39)
+Caused by: SQLiteError: file is not a database
+    at run (unknown)
+    at run (bun:sqlite:318:21)
+    at exec (/Users/van/projects/Phaneris/packages/server-core/src/runtime/sqlite.ts:37:17)
+    at new SessionRevocations (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:25:15)
+    at createWebuiHandler (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:205:27)
+    at /Users/van/projects/Phaneris/packages/server/src/index.ts:162:18
+    at processTicksAndRejections (native:7:39)

@@ -1,0 +1,331 @@
+[
+  {
+    "package": "apps/electron",
+    "dependency": "@dnd-kit/dom",
+    "owner": "dependencies",
+    "version": "0.5.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@radix-ui/react-avatar",
+    "owner": "dependencies",
+    "version": "^1.2.6",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@radix-ui/react-scroll-area",
+    "owner": "dependencies",
+    "version": "^1.2.18",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@radix-ui/react-select",
+    "owner": "dependencies",
+    "version": "^2.3.7",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@radix-ui/react-separator",
+    "owner": "dependencies",
+    "version": "^1.1.15",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@radix-ui/react-slot",
+    "owner": "dependencies",
+    "version": "^1.3.3",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@radix-ui/react-tabs",
+    "owner": "dependencies",
+    "version": "^1.1.21",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@sentry/electron",
+    "owner": "dependencies",
+    "version": "7.20.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@sentry/react",
+    "owner": "dependencies",
+    "version": "10.75.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "class-variance-authority",
+    "owner": "dependencies",
+    "version": "^0.7.1",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "clsx",
+    "owner": "dependencies",
+    "version": "^2.1.1",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "date-fns",
+    "owner": "dependencies",
+    "version": "^4.4.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "electron",
+    "owner": "devDependencies",
+    "version": "^44.5.1",
+    "reason": "desktop build host (root provides same binary)"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "jotai",
+    "owner": "dependencies",
+    "version": "^3.0.1",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "lucide-react",
+    "owner": "dependencies",
+    "version": "^1.51.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "react-resizable-panels",
+    "owner": "dependencies",
+    "version": "4.14.2",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "shiki",
+    "owner": "dependencies",
+    "version": "^4.5.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "tailwind-merge",
+    "owner": "dependencies",
+    "version": "^3.7.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "apps/webui",
+    "dependency": "motion",
+    "owner": "dependencies",
+    "version": "^14.0.0",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "packages/shared",
+    "dependency": "electron",
+    "owner": "peerDependencies",
+    "version": "^44.5.1",
+    "reason": "optional Electron host adapter"
+  },
+  {
+    "package": "packages/shared",
+    "dependency": "gray-matter",
+    "owner": "dependencies",
+    "version": "^4.0.3",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "packages/shared",
+    "dependency": "marked",
+    "owner": "dependencies",
+    "version": "^18.0.14",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "packages/shared",
+    "dependency": "open",
+    "owner": "dependencies",
+    "version": "^11.0.4",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "packages/shared",
+    "dependency": "tar",
+    "owner": "dependencies",
+    "version": "^7.5.22",
+    "reason": "direct production consumer"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@radix-ui/react-tooltip",
+    "owner": "peerDependencies",
+    "version": "^1.2.16",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/extension-file-handler",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/extension-image",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/extension-mathematics",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/extension-placeholder",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/extension-task-item",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/extension-task-list",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/markdown",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/react",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/starter-kit",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/suggestion",
+    "owner": "peerDependencies",
+    "version": "^3.31.4",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "linkify-it",
+    "owner": "peerDependencies",
+    "version": "6.1.0",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "rehype-sanitize",
+    "owner": "peerDependencies",
+    "version": "^6.0.0",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "tiptap-extension-code-block-shiki",
+    "owner": "peerDependencies",
+    "version": "^1.2.0",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "tiptap-markdown",
+    "owner": "peerDependencies",
+    "version": "^0.9.0",
+    "reason": "UI host provides matching framework/editor library"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@svar-ui/react-grid",
+    "owner": "dependencies",
+    "version": "2.7.4",
+    "reason": "direct production import previously borrowed from a transitive consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "@uiw/react-json-view",
+    "owner": "dependencies",
+    "version": "^2.0.0-alpha.43",
+    "reason": "direct production import previously borrowed from a transitive consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "croner",
+    "owner": "dependencies",
+    "version": "^10.0.1",
+    "reason": "direct production import previously borrowed from a transitive consumer"
+  },
+  {
+    "package": "apps/electron",
+    "dependency": "i18next",
+    "owner": "dependencies",
+    "version": "^26.4.2",
+    "reason": "direct production import previously borrowed from a transitive consumer"
+  },
+  {
+    "package": "packages/shared",
+    "dependency": "electron-log",
+    "owner": "dependencies",
+    "version": "^5.4.4",
+    "reason": "direct production import previously borrowed from a transitive consumer"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/core",
+    "owner": "peerDependencies",
+    "version": "3.31.4",
+    "reason": "direct editor/PDF consumer; host supplies a single matching instance"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "@tiptap/pm",
+    "owner": "peerDependencies",
+    "version": "3.31.4",
+    "reason": "direct editor/PDF consumer; host supplies a single matching instance"
+  },
+  {
+    "package": "packages/ui",
+    "dependency": "pdfjs-dist",
+    "owner": "peerDependencies",
+    "version": "6.3.289",
+    "reason": "direct editor/PDF consumer; host supplies a single matching instance"
+  }
+]

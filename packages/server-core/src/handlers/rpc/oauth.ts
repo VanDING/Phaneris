@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { loadSource, loadWorkspaceSources, getSourceCredentialManager } from '@phaneris/shared/sources'
 import { createPendingFlow } from '@phaneris/shared/auth'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'

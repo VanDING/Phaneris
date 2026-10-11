@@ -17,7 +17,7 @@ import type {
   LoadedSource,
   CreateSourceInput,
 } from './types.ts';
-import { validateSourceConfig } from '../config/validators.ts';
+import { validateSourceConfig } from '../config/source-validation.ts';
 import { debug } from '../utils/debug.ts';
 import { readJsonFileSync } from '../utils/files.ts';
 import { expandPath, toPortablePath } from '../utils/paths.ts';
@@ -115,7 +115,8 @@ export function markSourceAuthenticated(
  */
 export function saveSourceConfig(
   workspaceRootPath: string,
-  config: FolderSourceConfig
+  config: FolderSourceConfig,
+  options: { deferCredentialCleanup?: boolean } = {},
 ): void {
   // Validate config before writing
   const validation = validateSourceConfig(config);
@@ -148,7 +149,7 @@ export function saveSourceConfig(
   // becomes addressable garbage. getCredentialId() maps 'none', 'header', and
   // 'query' to the same source_apikey slot, so a stored value can silently
   // override defaultHeaders on a future config change. Delete it here.
-  if (storageConfig.type === 'api' && storageConfig.api?.authType === 'none') {
+  if (!options.deferCredentialCleanup && storageConfig.type === 'api' && storageConfig.api?.authType === 'none') {
     deleteApiKeyCredentialBestEffort(workspaceRootPath, storageConfig);
   }
 }
@@ -162,6 +163,15 @@ function deleteApiKeyCredentialBestEffort(
   config: FolderSourceConfig
 ): void {
   try {
+    cleanupSourceApiKeyCredential(workspaceRootPath, config);
+  } catch (err) {
+    debug('[saveSourceConfig] orphan credential cleanup threw:', err);
+  }
+}
+
+/** Run after the enclosing install commits; throws so callers can report cleanup failure. */
+export function cleanupSourceApiKeyCredential(workspaceRootPath: string, config: FolderSourceConfig): void {
+    if (config.type !== 'api' || config.api?.authType !== 'none') return;
     const cm = getSourceCredentialManager();
     // Minimal LoadedSource shape: getCredentialId() only reads config + workspaceId.
     const source: LoadedSource = {
@@ -171,10 +181,7 @@ function deleteApiKeyCredentialBestEffort(
       workspaceRootPath,
       workspaceId: basename(workspaceRootPath),
     };
-    cm.deleteSync(source);
-  } catch (err) {
-    debug('[saveSourceConfig] orphan credential cleanup threw:', err);
-  }
+    cm.deleteSync(source, { throwOnError: true });
 }
 
 // ============================================================

@@ -1,0 +1,32 @@
+{
+  "url": "http://127.0.0.1:53248/?ws=workspace&sv=2&route=allSessions%2Fsession%2F261011-prime-ravine&pw=600",
+  "focused": "<div contenteditable=\"true\" tabindex=\"0\" autocapitalize=\"none\" autocorrect=\"off\" class=\"outline-none text-sm whitespace-pre-wrap break-words pl-5 pr-4 pt-4 pb-3 overflow-y-auto min-h-[88px]\" aria-disabled=\"false\" aria-placeholder=\"What would you like to work on?\" role=\"textbox\" aria-multiline=\"true\" data-tutorial=\"chat-input\" spellcheck=\"false\" style=\"max-height: 540px;\">Other independent draft</div>",
+  "inputs": [
+    {
+      "text": "Other independent draft",
+      "visible": true
+    }
+  ],
+  "rows": [
+    {
+      "text": "\n  \nOther governance session15s",
+      "selected": "true"
+    },
+    {
+      "text": "\n  \nGovernance session15s",
+      "selected": "false"
+    },
+    {
+      "text": "\n  \nGovernance conversation15s",
+      "selected": "false"
+    }
+  ],
+  "drafts": [
+    {
+      "text": "Draft remains with its session"
+    },
+    {
+      "text": "Other independent draft"
+    }
+  ]
+}

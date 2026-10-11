@@ -52,31 +52,11 @@ export default defineConfig({
       // renderToString API; resolve both copies to the single current katex to
       // avoid shipping two ~240 KB copies in the initial renderer graph.
       'katex': resolve(import.meta.dirname, '../../node_modules/katex'),
-      // Electron-specific modules → empty shims for browser builds
+      // The browser runtime closure needs only optional diagnostics and the Node WS fallback.
       '@sentry/electron/renderer': resolve(import.meta.dirname, 'src/shims/sentry-electron.ts'),
-      '@sentry/electron': resolve(import.meta.dirname, 'src/shims/sentry-electron.ts'),
-      // Node.js 'ws' library → browser uses native WebSocket
       'ws': resolve(import.meta.dirname, 'src/shims/ws.ts'),
-      // Match subpaths before their parent aliases.
       'electron-log/main': resolve(import.meta.dirname, 'src/shims/electron-log.ts'),
       'electron-log/renderer': resolve(import.meta.dirname, 'src/shims/electron-log.ts'),
-      'electron-log': resolve(import.meta.dirname, 'src/shims/electron-log.ts'),
-      'fs/promises': resolve(import.meta.dirname, 'src/shims/fs-promises.ts'),
-      'node:fs/promises': resolve(import.meta.dirname, 'src/shims/fs-promises.ts'),
-      'stream/web': resolve(import.meta.dirname, 'src/shims/stream-web.ts'),
-      'node:stream/web': resolve(import.meta.dirname, 'src/shims/stream-web.ts'),
-      // Node.js builtins → browser-safe shims (shared code imports these
-      // but the codepaths aren't reached in browser — web API adapter intercepts)
-      ...Object.fromEntries([
-        'fs', 'node:fs', 'path', 'node:path', 'child_process', 'node:child_process',
-        'os', 'node:os', 'node:crypto', 'node:util', 'node:process', 'node:buffer',
-        'node:https', 'node:http', 'node:net', 'node:url', 'node:events',
-        'crypto', 'https', 'http', 'net', 'events', 'util', 'buffer', 'stream',
-        'node:stream', 'tls', 'node:tls', 'url', 'zlib', 'node:zlib',
-        'string_decoder', 'node:string_decoder', 'assert', 'node:assert',
-      ].map(m => [m, resolve(import.meta.dirname, 'src/shims/node-builtins.ts')])),
-      // 'open' npm package (Node.js shell utility) — no-op in browser
-      'open': resolve(import.meta.dirname, 'src/shims/open.ts'),
     },
     dedupe: ['react', 'react-dom', 'katex'],
   },

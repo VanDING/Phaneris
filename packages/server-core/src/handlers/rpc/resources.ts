@@ -5,7 +5,7 @@
  */
 
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { getCredentialManager, SOURCE_CREDENTIAL_TYPES } from '@phaneris/shared/credentials'
 import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'

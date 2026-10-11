@@ -19,7 +19,9 @@ import { readJsonFileSync, safeJsonParse } from '../utils/files.ts';
 import { CONFIG_DIR, resolveConfigDir } from '../config/paths.ts';
 import { getBundledAssetsDir } from '../utils/paths.ts';
 import { getSourcePath } from '../sources/storage.ts';
-import { isValidPermissionsFile } from '../config/validators.ts';
+import { isValidPermissionsFile } from '../config/permissions-file-validation.ts';
+import { validateRegex } from './permissions-validation.ts';
+export { validatePermissionsConfig } from './permissions-validation.ts';
 import { FEATURE_FLAGS } from '../feature-flags.ts';
 import { CLI_NAME } from '../identity.generated.ts';
 import {
@@ -346,13 +348,6 @@ export function parsePermissionsJson(content: string): PermissionsCustomConfig {
 /**
  * Validate a regex pattern string, return null if invalid
  */
-function validateRegex(pattern: string): RegExp | null {
-  try {
-    return new RegExp(pattern);
-  } catch {
-    return null;
-  }
-}
 
 function compileBlockedCommandHint(hint: BlockedCommandHintRule): CompiledBlockedCommandHint | null {
   const command = hint.command.trim().toLowerCase();
@@ -399,47 +394,6 @@ function shouldCompileBashPattern(pattern: string): boolean {
 /**
  * Validate permissions config and return errors
  */
-export function validatePermissionsConfig(config: PermissionsConfigFile): string[] {
-  const errors: string[] = [];
-
-  // Validate regex patterns
-  const checkPatterns = (patterns: Array<string | { pattern: string }> | undefined, name: string) => {
-    if (!patterns) return;
-    for (let i = 0; i < patterns.length; i++) {
-      const p = patterns[i];
-      if (!p) continue;
-      const patternStr = typeof p === 'string' ? p : p.pattern;
-      if (!validateRegex(patternStr)) {
-        errors.push(`${name}[${i}]: Invalid regex pattern: ${patternStr}`);
-      }
-    }
-  };
-
-  checkPatterns(config.allowedBashPatterns, 'allowedBashPatterns');
-  checkPatterns(config.allowedMcpPatterns, 'allowedMcpPatterns');
-
-  // Validate API endpoint patterns
-  if (config.allowedApiEndpoints) {
-    for (let i = 0; i < config.allowedApiEndpoints.length; i++) {
-      const rule = config.allowedApiEndpoints[i];
-      if (rule && !validateRegex(rule.path)) {
-        errors.push(`allowedApiEndpoints[${i}].path: Invalid regex pattern: ${rule.path}`);
-      }
-    }
-  }
-
-  // Validate blocked command hint conditional regex patterns
-  if (config.blockedCommandHints) {
-    for (let i = 0; i < config.blockedCommandHints.length; i++) {
-      const hint = config.blockedCommandHints[i];
-      if (hint?.whenNotMatching && !validateRegex(hint.whenNotMatching)) {
-        errors.push(`blockedCommandHints[${i}].whenNotMatching: Invalid regex pattern: ${hint.whenNotMatching}`);
-      }
-    }
-  }
-
-  return errors;
-}
 
 // ============================================================
 // Storage Functions

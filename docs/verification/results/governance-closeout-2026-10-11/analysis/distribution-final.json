@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "bun": "1.4.2",
+  "workspaces": 13,
+  "patches": 3,
+  "commands": {
+    "runtime": "bun run server:build:subprocess && bun run build:wa-worker",
+    "server": "bun run build:runtime && bun run webui:build && PHANERIS_WEBUI_DIR=apps/webui/dist PHANERIS_BUNDLED_ASSETS_ROOT=$PWD/apps/electron bun run packages/server/src/index.ts",
+    "desktop": "bun run electron:build:main && bun run electron:build:preload && bun run electron:build:renderer && bun run electron:build:resources && bun run electron:build:assets && bun run electron:build:validate",
+    "webui": "bun run vite build --config apps/webui/vite.config.ts"
+  },
+  "inputs": [
+    {
+      "path": "package.json",
+      "sha256": "647693eed97960d1e9dcbb29c4ba1c245d96a0ce9574bff6838e781b32fa8934"
+    },
+    {
+      "path": "bun.lock",
+      "sha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40"
+    },
+    {
+      "path": "bunfig.toml",
+      "sha256": "0bd425e641dda6373d493ee31a8895d8821253d42c43b849db7a0080f3103d72"
+    },
+    {
+      "path": "Dockerfile.server",
+      "sha256": "3f5bc6e5ea8dbdd42f1c68fbb35e600a3a40fa9f4095fd4cbc7d8d6d3c59b58a"
+    },
+    {
+      "path": ".dockerignore",
+      "sha256": "83ec1053050cc11831d7b8156a8f29e75d736be4ee90435614f0195652e782ae"
+    },
+    {
+      "path": "scripts/build-server.ts",
+      "sha256": "50a8aba280a48a63e7aa71b09925359a961497808285964efa3d2cbe3fbe2ecc"
+    },
+    {
+      "path": "scripts/electron-build-main.ts",
+      "sha256": "61d4fe1ef1979cfb829d073053a751e0a3fb9eecc611f76ffe602f844938214e"
+    },
+    {
+      "path": "scripts/build/common.ts",
+      "sha256": "cfbfb672716ddd810164be1196a39459810c7551c28fcf5500543fe846124f1d"
+    },
+    {
+      "path": "apps/cli/package.json",
+      "sha256": "0c3e12e6bca9e88c7ff09d4164af441715b4279c74b9c2c6b0ff3dab93bd457d"
+    },
+    {
+      "path": "apps/electron/package.json",
+      "sha256": "00588351684543f04fe8ed393a12659222138ac838e8445e18119694e0aab103"
+    },
+    {
+      "path": "apps/viewer/package.json",
+      "sha256": "6d6cd34158d47d119af6d214a2ba4f10762c4a19cf386271c116fa15db8e8fd7"
+    },
+    {
+      "path": "apps/webui/package.json",
+      "sha256": "72e82718e8851997682262c6428e9148355fd60dbeee750bdf0354754df4ce95"
+    },
+    {
+      "path": "packages/core/package.json",
+      "sha256": "2392da6118584895141c90aa534fe8f22e3a678dffccd03cdec05aa4c2577cba"
+    },
+    {
+      "path": "packages/messaging-gateway/package.json",
+      "sha256": "a0843c8a7cb6c10f6197a8035849da29e2b5a0314de38a9fa4361e022ca4b686"
+    },
+    {
+      "path": "packages/messaging-whatsapp-worker/package.json",
+      "sha256": "2516a20268f39580b8fbf15b9ab214c5a57a09470ce1b910eaf6764c040e31b6"
+    },
+    {
+      "path": "packages/pi-agent-server/package.json",
+      "sha256": "6c300b30e69cbb8de9fb84899618d81af03b1914547e2b6bc8b74092657d9f25"
+    },
+    {
+      "path": "packages/server/package.json",
+      "sha256": "74669c95597878493b8480a454383da0d2bdcbb89ee835a053d0fdb5f5e0409b"
+    },
+    {
+      "path": "packages/server-core/package.json",
+      "sha256": "1812bfa340be6889fe511567eaeb9f4fe3895bfc2305e6a506a6ef183b9624c0"
+    },
+    {
+      "path": "packages/session-tools-core/package.json",
+      "sha256": "8e31ada422b7685947ae9389cdb9e7a3e7ec2dadd8903266196b0db9f779e1fc"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "7921dd09913df72181e832ff28a2817727fcbb60add5a311a4e251c9cadd44d0"
+    },
+    {
+      "path": "packages/ui/package.json",
+      "sha256": "0a69f123e3c947551476c5dc625fc59726eb5c0383f18a26e168c12f709cead2"
+    },
+    {
+      "path": "patches/node-tesseract-ocr@2.2.1.patch",
+      "sha256": "c8f58841a41d8a93992c1b9d9eb729d1da13f5f02f3a3ba893ad0d5238f537a9"
+    },
+    {
+      "path": "patches/markitdown-js@0.0.14.patch",
+      "sha256": "0dab99ffd405ef43a155a9b52589844fc9fe71415c32eb6b4612dfd432562b25"
+    },
+    {
+      "path": "patches/http-cache-semantics@4.2.0.patch",
+      "sha256": "d225ce131bfbdc8f9774d51ac9ee56ffdc4017235d16b225f97922818914e155"
+    }
+  ],
+  "failures": []
+}

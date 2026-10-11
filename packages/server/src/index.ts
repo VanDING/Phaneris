@@ -21,6 +21,8 @@
  *   PHANERIS_WEBUI_PASSWORD       — optional shorter password for web login (falls back to PHANERIS_SERVER_TOKEN)
  *   PHANERIS_WEBUI_SECURE_COOKIE  — optional true/false override for the session cookie Secure flag
  *   PHANERIS_WEBUI_WS_URL         — optional browser-facing ws:// or wss:// URL returned by /api/config
+ *   PHANERIS_WEBUI_ALLOWED_ORIGINS — comma-separated exact HTTP(S) page origins for cookie WS
+ *   PHANERIS_TRUSTED_PROXIES      — comma-separated exact direct-peer proxy IPs (no CIDR)
  *   PHANERIS_MESSAGING_WA_WORKER  — absolute path to worker.cjs (default: packages/messaging-whatsapp-worker/dist/worker.cjs)
  *   PHANERIS_MESSAGING_NODE_BIN   — Node binary used to spawn the WhatsApp worker (default: node)
  */
@@ -31,11 +33,14 @@ import { version as packageVersion } from '../package.json'
 import { enableDebug } from '@phaneris/shared/utils/debug'
 import { workspaceDir } from '@phaneris/shared/config/paths'
 import { bootstrapServer, startHealthHttpServer, generateServerToken } from '@phaneris/server-core/bootstrap'
-import { validateSession, createWebuiHandler, nodeHttpAdapter } from '@phaneris/server-core/webui'
+import { createWebuiHandler, nodeHttpAdapter, parseWebuiOrigin } from '@phaneris/server-core/webui'
 import type { WebuiHandler } from '@phaneris/server-core/webui'
+import { installProcessLifecycle } from '@phaneris/server-core/runtime'
+import { isIP } from 'node:net'
 import { getCredentialManager, installCredentialKeyProviderFromEnv } from '@phaneris/shared/credentials'
-import { getWorkspaces, hydrateRemoteServerTokenCache } from '@phaneris/shared/config'
+import { getWorkspaces, hydrateRemoteServerTokenCache } from '@phaneris/shared/config/workspace-selection';
 import { createMessagingBootstrap, type MessagingBootstrapHandle } from '@phaneris/messaging-gateway'
+import { assertProductionRuntimeResources } from './distribution-resources'
 
 // --generate-token: print a crypto-random token and exit
 if (process.argv.includes('--generate-token')) {
@@ -62,13 +67,12 @@ try {
   process.exit(1)
 }
 
-// Prevent unhandled rejections from crashing the server.
-// SDK subprocess abort can reject promises that propagate up unhandled;
-// Bun (unlike Node) terminates the process on unhandled rejections by default.
-process.on('unhandledRejection', (reason) => {
-  const msg = reason instanceof Error ? reason.message : String(reason)
-  console.error(`[server] Unhandled rejection (caught, not crashing): ${msg}`)
-})
+// Set owner callbacks as resources become available; fatal startup also exits nonzero.
+let stopAccepting = () => {}
+let cleanupProcess: () => Promise<void> = async () => {}
+const lifecycle = installProcessLifecycle({ owner: 'server', stopAccepting: () => stopAccepting(),
+  cleanup: () => cleanupProcess(), report: (kind, detail) => console.error(`[server] ${kind}: ${detail}`),
+  exit: code => process.exit(code) })
 
 if (process.env.PHANERIS_DEBUG === 'true' || process.env.PHANERIS_DEBUG === '1') {
   enableDebug()
@@ -106,6 +110,11 @@ function parseOptionalWebSocketUrl(name: string, value: string | undefined): str
 const bundledAssetsRoot = process.env.PHANERIS_BUNDLED_ASSETS_ROOT
   ?? join(import.meta.dir, '..', '..', '..', '..')
 
+if (process.env.PHANERIS_IS_PACKAGED === 'true') {
+  assertProductionRuntimeResources(process.env.PHANERIS_RESOURCES_PATH ?? join(bundledAssetsRoot, 'resources'),
+    bundledAssetsRoot, process.env.PHANERIS_MESSAGING_WA_WORKER)
+}
+
 // TLS configuration — when cert + key paths are provided, server listens on wss://
 let tls: WsRpcTlsOptions | undefined
 const tlsCertPath = process.env.PHANERIS_RPC_TLS_CERT
@@ -128,6 +137,10 @@ const webuiEnabled = webuiDir && existsSync(webuiDir)
 const webuiSecureCookies = parseOptionalBooleanEnv('PHANERIS_WEBUI_SECURE_COOKIE', process.env.PHANERIS_WEBUI_SECURE_COOKIE)
 const webuiWsUrl = parseOptionalWebSocketUrl('PHANERIS_WEBUI_WS_URL', process.env.PHANERIS_WEBUI_WS_URL)
 const serverToken = process.env.PHANERIS_SERVER_TOKEN
+const splitList = (value: string | undefined) => value?.split(',').map(entry => entry.trim()).filter(Boolean) ?? []
+const trustedProxies = splitList(process.env.PHANERIS_TRUSTED_PROXIES)
+if (trustedProxies.some(ip => !isIP(ip))) throw new Error('PHANERIS_TRUSTED_PROXIES requires exact IP addresses (no CIDR)')
+const allowedOrigins = splitList(process.env.PHANERIS_WEBUI_ALLOWED_ORIGINS).map(parseWebuiOrigin)
 
 // ---------------------------------------------------------------------------
 // Create WebUI handler early so it can be embedded in the WsRpcServer.
@@ -141,9 +154,9 @@ let webuiNodeHandler: ReturnType<typeof nodeHttpAdapter> | undefined
 // Health check is injected lazily — the session manager isn't ready until
 // after bootstrap completes, but the handler captures the closure.
 let healthCheckFn: (() => { status: string }) | null = null
+let boundRpcPort = parseInt(process.env.PHANERIS_RPC_PORT ?? '9100', 10)
 
 if (webuiEnabled && serverToken) {
-  const rpcPort = parseInt(process.env.PHANERIS_RPC_PORT ?? '9100', 10)
   const rpcProtocol = tls ? 'wss' as const : 'ws' as const
 
   webuiHandler = createWebuiHandler({
@@ -152,9 +165,11 @@ if (webuiEnabled && serverToken) {
     password: process.env.PHANERIS_WEBUI_PASSWORD || undefined,
     secureCookies: webuiSecureCookies,
     publicWsUrl: webuiWsUrl,
+    trustedProxies,
+    allowedOrigins,
     wsProtocol: rpcProtocol,
     // WebUI is served on the same port as WS — wsPort matches the RPC port
-    wsPort: rpcPort,
+    wsPort: () => boundRpcPort,
     getHealthCheck: () => healthCheckFn?.() ?? { status: 'starting' },
     logger: { info: console.log, warn: console.warn, error: console.error } as any,
   })
@@ -181,12 +196,7 @@ const instance = await (async () => {
       serverVersion: process.env.PHANERIS_VERSION ?? packageVersion,
       tls,
       // When web UI is enabled, accept JWT session cookies on WebSocket upgrade
-      validateSessionCookie: webuiEnabled && serverToken
-        ? async (cookieHeader) => {
-            const session = await validateSession(cookieHeader, serverToken)
-            return session !== null
-          }
-        : undefined,
+      validateSessionCookie: webuiHandler?.validateSessionCookie,
       // Embed the WebUI HTTP handler on the WS server's port
       httpHandler: webuiNodeHandler,
       applyPlatformToSubsystems: (platform) => {
@@ -267,6 +277,15 @@ const instance = await (async () => {
     process.exit(1)
   }
 })()
+stopAccepting = instance.quiesce
+boundRpcPort = instance.port
+cleanupProcess = async () => {
+  const failures: unknown[] = []
+  try { webuiHandler?.dispose() } catch (error) { failures.push(error) }
+  try { await messagingHandle?.dispose() } catch (error) { failures.push(error) }
+  try { await instance.stop() } catch (error) { failures.push(error) }
+  if (failures.length) throw new AggregateError(failures, 'Server cleanup failed', { cause: failures[0] })
+}
 
 // ---------------------------------------------------------------------------
 // Messaging post-bootstrap: bind the WS publisher and initialize local
@@ -363,19 +382,11 @@ if (!isLocalBind && instance.protocol === 'ws') {
   }
 }
 
-const shutdown = async () => {
-  webuiHandler?.dispose()
+const disposeServerResources = cleanupProcess
+cleanupProcess = async () => {
   healthServer?.stop()
-  if (messagingHandle) {
-    try {
-      await messagingHandle.dispose()
-    } catch (error) {
-      console.error('[messaging] dispose failed:', error)
-    }
-  }
-  await instance.stop()
-  process.exit(0)
+  await disposeServerResources()
 }
 
-process.on('SIGINT', shutdown)
-process.on('SIGTERM', shutdown)
+process.on('SIGINT', lifecycle.shutdown)
+process.on('SIGTERM', lifecycle.shutdown)

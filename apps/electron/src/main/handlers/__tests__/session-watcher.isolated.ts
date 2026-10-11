@@ -43,6 +43,15 @@ interface PushCall {
 
 let tempDirs: string[] = []
 
+async function waitForPush(calls: PushCall[], clientId: string, sessionId: string): Promise<void> {
+  const deadline = Date.now() + 2000
+  while (!calls.some(call => call.channel === RPC_CHANNELS.sessions.FILES_CHANGED
+    && call.target?.clientId === clientId && call.args[0] === sessionId)) {
+    if (Date.now() >= deadline) throw new Error(`No file-change notification for ${clientId}/${sessionId}`)
+    await new Promise(resolve => setTimeout(resolve, 25))
+  }
+}
+
 function makeTempSessionDir(): string {
   const dir = mkdtempSync(join(tmpdir(), 'watcher-test-'))
   tempDirs.push(dir)
@@ -97,7 +106,9 @@ function makeCtx(clientId: string, workspaceId = 'ws-1'): RequestContext {
 // ---------------------------------------------------------------------------
 
 describe('session file watcher isolation', () => {
-  afterEach(() => {
+  afterEach(async () => {
+    const { cleanupSessionFileWatchForClient } = await import('@phaneris/server-core/handlers/rpc')
+    for (const clientId of ['client-a', 'client-b']) cleanupSessionFileWatchForClient(clientId)
     for (const dir of tempDirs) {
       try { rmSync(dir, { recursive: true, force: true }) } catch {}
     }
@@ -123,8 +134,8 @@ describe('session file watcher isolation', () => {
     // Trigger a change in s1
     writeFileSync(join(dir1, 'output.txt'), 'hello')
 
-    // Wait for debounce + fs.watch delay
-    await new Promise(r => setTimeout(r, 300))
+    // Wait for the actual debounced OS event, within the existing test deadline.
+    await waitForPush(pushCalls, 'client-a', 's1')
 
     // Only client-a should have received the notification
     const clientAPushes = pushCalls.filter(p => p.target?.clientId === 'client-a')
@@ -144,7 +155,7 @@ describe('session file watcher isolation', () => {
 
     // Trigger a change in s2
     writeFileSync(join(dir2, 'data.json'), '{}')
-    await new Promise(r => setTimeout(r, 300))
+    await waitForPush(pushCalls, 'client-b', 's2')
 
     // Client B should still receive notifications
     const clientBAfter = pushCalls.filter(p => p.target?.clientId === 'client-b')
@@ -185,7 +196,7 @@ describe('session file watcher isolation', () => {
 
     // Write to s2 — should trigger notification
     writeFileSync(join(dir2, 'new.txt'), 'fresh')
-    await new Promise(r => setTimeout(r, 300))
+    await waitForPush(pushCalls, 'client-a', 's2')
 
     const s2Pushes = pushCalls.filter(p =>
       p.args[0] === 's2' && p.channel === RPC_CHANNELS.sessions.FILES_CHANGED
@@ -215,7 +226,7 @@ describe('session file watcher isolation', () => {
 
     // Write a normal file — should trigger notification
     writeFileSync(join(dir, 'result.txt'), 'output')
-    await new Promise(r => setTimeout(r, 300))
+    await waitForPush(pushCalls, 'client-a', 's1')
 
     expect(pushCalls.length).toBeGreaterThanOrEqual(1)
 

@@ -33,6 +33,7 @@ import { ROOT, buildArtifacts, loadIdentity, IdentityError } from './identity-co
 
 const STRICT = process.argv.includes('--strict');
 const JSON_OUT = process.argv.includes('--json');
+const DETAILS = process.argv.includes('--details');
 const BUILDER_CONFIG = join(ROOT, 'apps', 'electron', 'electron-builder.yml');
 const ALLOWLIST_PATH = join(ROOT, 'scripts', 'identity-allowlist.json');
 
@@ -109,6 +110,9 @@ interface AllowRule {
   glob: string;
   tokens: string[];
   reason: string;
+  /** Exact trimmed source lines for compatibility/provenance exceptions. */
+  lines?: string[];
+  category?: string;
 }
 
 /**
@@ -116,7 +120,7 @@ interface AllowRule {
  * project on purpose — a fork that rewrites its own lineage is lying about
  * where the code came from — so they are never rebrand work.
  */
-const PROVENANCE = /\bcraft-agents-oss(?:#\d+)?\b|\bcraft-ai-agents\/[\w.-]+/;
+const PROVENANCE = /(?:https:\/\/github\.com\/)?\b(?:craft-ai-agents\/[\w.-]+|(?:lukilabs\/)?craft-agents-oss(?:#\d+)?)/g;
 
 interface Hit {
   file: string;
@@ -131,7 +135,7 @@ function walk(dir: string, out: string[] = []): string[] {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
       walk(full, out);
-    } else if (entry.isFile()) {
+    } else if (entry.isFile() && !entry.name.endsWith('.tsbuildinfo')) {
       out.push(full);
     }
   }
@@ -157,11 +161,19 @@ function loadAllowlist(): AllowRule[] {
     process.exit(1);
   }
   const parsed = JSON.parse(readFileSync(ALLOWLIST_PATH, 'utf-8')) as { rules?: AllowRule[] };
-  return parsed.rules ?? [];
+  const rules = parsed.rules ?? [];
+  for (const rule of rules) {
+    if (!rule.glob || !rule.reason?.trim() || !Array.isArray(rule.tokens)) throw new Error('Identity exceptions require a path, tokens and reason');
+    if (rule.lines && (!rule.category?.trim() || !rule.lines.length || rule.lines.some(line => !line.trim()))) {
+      throw new Error(`Exact identity exceptions need nonempty lines and a category: ${rule.glob}`);
+    }
+  }
+  return rules;
 }
 
-function ruleMatches(rule: AllowRule, relPath: string, tokenId: string): boolean {
+function ruleMatches(rule: AllowRule, relPath: string, tokenId: string, line: string): boolean {
   if (rule.tokens.length && !rule.tokens.includes('*') && !rule.tokens.includes(tokenId)) return false;
+  if (rule.lines && !rule.lines.includes(line.trim())) return false;
   return new Bun.Glob(rule.glob).match(relPath);
 }
 
@@ -275,15 +287,14 @@ for (const path of walk(ROOT)) {
   const lines = text.split(/\r?\n/);
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index]!;
-    // Provenance, not a product surface: links and citations of the upstream
-    // repository and its issues must stay truthful, so they are excluded before
-    // token matching rather than buried in a per-file allowlist rule.
-    if (PROVENANCE.test(line)) continue;
+    // Exclude only the repository citation itself. A new product token elsewhere
+    // on the same line must still fail the strict gate.
+    const scannedLine = line.replace(PROVENANCE, '');
     for (const token of TOKENS) {
       token.pattern.lastIndex = 0;
-      if (!token.pattern.test(line)) continue;
+      if (!token.pattern.test(scannedLine)) continue;
       const hit: Hit = { file: relPath, line: index + 1, token: token.id, text: line.trim().slice(0, 200) };
-      const ruleIndex = allowlist.findIndex((rule) => ruleMatches(rule, relPath, token.id));
+      const ruleIndex = allowlist.findIndex((rule) => ruleMatches(rule, relPath, token.id, line));
       if (ruleIndex >= 0) {
         usedRules.add(ruleIndex);
         allowedHits.push(hit);
@@ -314,7 +325,8 @@ if (JSON_OUT) {
       {
         identity: identity.product,
         driftProblems,
-        residual: { open: hits.length, allowed: allowedHits.length, byToken: Object.fromEntries(byToken), topFiles },
+        residual: { open: hits.length, allowed: allowedHits.length, byToken: Object.fromEntries(byToken), topFiles,
+          ...(DETAILS ? { hits, allowedHits } : {}) },
         unusedRules: unusedRules.map(({ rule }) => rule.glob),
       },
       null,
@@ -354,6 +366,10 @@ if (JSON_OUT) {
 }
 
 if (driftProblems.length) process.exit(1);
+if (STRICT && unusedRules.length) {
+  if (!JSON_OUT) console.error(`identity check failed (--strict): ${unusedRules.length} stale allowlist rule(s)`);
+  process.exit(1);
+}
 if (STRICT && hits.length) {
   console.error('');
   console.error(`identity check failed (--strict): ${hits.length} unallowlisted upstream identifier(s) remain`);

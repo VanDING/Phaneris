@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "id": "complete",
+      "exitCode": 0,
+      "passed": true,
+      "diagnostic": "{\"directInputs\": 57, \"explicitlyOmittedArtifacts\": 1060, \"retainedArtifacts\": 214, \"sourceRuns\": 30, \"verifiedFiles\": 304}\n"
+    },
+    {
+      "id": "retained-file-corruption",
+      "exitCode": 1,
+      "passed": true,
+      "diagnostic": "Traceback (most recent call last):\n  File \"/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-archive-l681atto/evidence/verify-archive.py\", line 66, in <module>\n    print(json.dumps(verify(Path(__file__).resolve().parent), sort_keys=True))\n                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-archive-l681atto/evidence/verify-archive.py\", line 24, in verify\n    assert sha(file(name)) == digest, f'Archive SHA mismatch: {name}'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Archive SHA mismatch: critical/.-tests.log\n"
+    },
+    {
+      "id": "undeclared-extra-file",
+      "exitCode": 1,
+      "passed": true,
+      "diagnostic": "Traceback (most recent call last):\n  File \"/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-archive-6isl_5ry/evidence/verify-archive.py\", line 66, in <module>\n    print(json.dumps(verify(Path(__file__).resolve().parent), sort_keys=True))\n                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-archive-6isl_5ry/evidence/verify-archive.py\", line 27, in verify\n    assert set(listed) == actual, f'Archive file inventory mismatch: {set(listed) ^ actual}'\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Archive file inventory mismatch: {'undeclared.txt'}\n"
+    },
+    {
+      "id": "selection-drops-omission",
+      "exitCode": 1,
+      "passed": true,
+      "diagnostic": "last):\n  File \"/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-archive-sdaux_o6/evidence/verify-archive.py\", line 66, in <module>\n    print(json.dumps(verify(Path(__file__).resolve().parent), sort_keys=True))\n                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-archive-sdaux_o6/evidence/verify-archive.py\", line 58, in verify\n    assert not selected & excluded and selected | excluded == set(artifacts), f'Incomplete selection: {directory}'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Incomplete selection: critical\n"
+    }
+  ]
+}

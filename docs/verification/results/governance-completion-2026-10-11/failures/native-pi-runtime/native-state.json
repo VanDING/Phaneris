@@ -1,0 +1,14 @@
+{
+  "url": "file:///Users/van/projects/Phaneris/apps/electron/dist/renderer/index.html?workspaceId=fixture&ws=workspace&sv=2&route=allSessions%2Fsession%2F261011-grand-quasar&pw=600",
+  "inputs": [
+    ""
+  ],
+  "drafts": {
+    "261011-coral-horizon": {
+      "text": "Native pending draft"
+    },
+    "261011-clear-gecko": {
+      "text": "Other native draft"
+    }
+  }
+}

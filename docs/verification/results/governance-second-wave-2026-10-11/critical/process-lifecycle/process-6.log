@@ -1,0 +1,5 @@
+{"type":"error","message":"Uncaught exception: governance-uncaught","code":"uncaught"}
+
+[pi-server] Pi agent server starting
+[pi-server] Unknown message type: undefined
+[pi-server] Uncaught exception: governance-uncaught

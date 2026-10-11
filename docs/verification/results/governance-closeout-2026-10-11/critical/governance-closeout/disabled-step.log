@@ -1,0 +1,18 @@
+24 |   assert(job, `Missing validation job: ${name}`)
+25 |   assert.equal(job.if, name === 'full-validation' ? "github.event_name != 'pull_request'" : undefined, `${name} has an unapproved job condition`)
+26 |   assert.equal(job['continue-on-error'] ?? false, false, `${name} must propagate failures`)
+27 |   for (const step of job.steps) {
+28 |     assert.equal(step['continue-on-error'] ?? false, false, `${name}/${step.name} must propagate failures`)
+29 |     if (step.run || step.uses) assert(step.if === undefined || step.if === 'always()'
+                                    ^
+AssertionError: validate/Run validation suite has an unapproved step condition
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:29:32
+
+Bun v1.4.2 (macOS x64)

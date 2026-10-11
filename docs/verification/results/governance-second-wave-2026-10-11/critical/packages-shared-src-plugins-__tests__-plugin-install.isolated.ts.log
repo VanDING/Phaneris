@@ -1,0 +1,40 @@
+bun test v1.4.2 (744846f84)
+
+src/plugins/__tests__/plugin-install.isolated.ts:
+(pass) plugin placeholder resolution > expands PLUGIN_ROOT and PLUGIN_DATA as plain string substitutions [4.83ms]
+(pass) plugin placeholder resolution > leaves unrelated text untouched [1.19ms]
+(pass) plugin placeholder resolution > resolves command, args, and env together [1.41ms]
+(pass) plugin placeholder resolution > normalizes a plugin-relative command to an absolute path [0.71ms]
+(pass) plugin placeholder resolution > rejects a bare executable name (spec §7.2.1 forbids depending on PATH) [0.75ms]
+(pass) plugin placeholder resolution > rejects a command that escapes the plugin root [0.61ms]
+(pass) plugin placeholder resolution > accepts an absent, dot, or PLUGIN_ROOT cwd — they all mean the plugin root [0.81ms]
+(pass) plugin placeholder resolution > rejects any other cwd with an actionable message (design §5.4.1) [1.08ms]
+(pass) analyzePluginInstall > splits existing resources into overwrites and new ones into creates [10.67ms]
+(pass) analyzePluginInstall > shows the stdio command and args verbatim, before expansion (P5-5) [3.72ms]
+(pass) analyzePluginInstall > skips a stdio entry with an unsupported cwd but keeps the package [3.84ms]
+(pass) analyzePluginInstall > rejects a source key that would escape the workspace sources directory [3.53ms]
+(pass) analyzePluginInstall > rejects a package that contributes nothing (D3) [1.34ms]
+(pass) installPlugin > restores existing resources and removes staged additions when a later source write fails [20.66ms]
+(pass) installPlugin > materializes skills into <ws>/skills and MCP servers into <ws>/sources [11.13ms]
+(pass) installPlugin > stores placeholders verbatim plus a workspace-relative pluginRoot (design §5.4.3/§5.4.4) [9.54ms]
+(pass) installPlugin > replaces an existing skill directory wholesale instead of merging (P5-1) [9.56ms]
+(pass) installPlugin > preserves the plugin data directory across a reinstall (§5.4.7) [8.37ms]
+(pass) installPlugin > rebuilds the derived reverse index (D10) [7.95ms]
+(pass) installPlugin > leaves no staging directories behind after a successful install [5.60ms]
+(pass) installPlugin > rejects a package containing a symbolic link before writing anything (D11) [2.49ms]
+(pass) installPlugin > writes a one-line audit record naming the stdio command (P5-4) [8.02ms]
+(pass) installPlugin > makes the materialized source addressable by the ordinary source loader [11.41ms]
+(pass) P9-4: uninstall and reference counting (D10) > deletes resources only this plugin provided [9.52ms]
+(pass) P9-4: uninstall and reference counting (D10) > keeps a skill another installed plugin still references [13.94ms]
+(pass) P9-4: uninstall and reference counting (D10) > deletes the shared resource once the last referencing plugin goes [51.33ms]
+(pass) P9-4: uninstall and reference counting (D10) > leaves no orphans and keeps the derived index self-consistent [32.52ms]
+(pass) P9-4: uninstall and reference counting (D10) > recovers when the derived index is deleted outright [18.45ms]
+(pass) P9-4: uninstall and reference counting (D10) > rejects uninstalling a plugin that is not installed [0.97ms]
+(pass) plugin stdio resolution for the source_test path > expands ${PLUGIN_ROOT} in the command before it is spawned [2.18ms]
+(pass) plugin stdio resolution for the source_test path > expands placeholders in args and env too [3.60ms]
+(pass) plugin stdio resolution for the source_test path > gives the same expansion the runtime builder uses [1.32ms]
+
+ 32 pass
+ 0 fail
+ 85 expect() calls
+Ran 32 tests across 1 file. [479.00ms]

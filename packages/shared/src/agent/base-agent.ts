@@ -25,7 +25,7 @@ import { DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from './thinking-level
 import type { PermissionMode } from './mode-manager.ts';
 import type { LoadedSource } from '../sources/types.ts';
 import { buildCallLlmRequest, type LLMQueryRequest, type LLMQueryResult } from './llm-tool.ts';
-import { getLlmConnections, getDefaultLlmConnection } from '../config/storage.ts';
+import { getLlmConnections, getDefaultLlmConnection } from '../config/connections.ts';
 import { loadAllSources } from '../sources/storage.ts';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 

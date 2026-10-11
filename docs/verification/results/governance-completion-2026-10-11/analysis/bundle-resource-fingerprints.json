@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "rendererInitial": {
+    "bytes": 819167,
+    "gzipBytes": 242074,
+    "chunks": 14,
+    "files": [
+      {
+        "path": "apps/electron/dist/renderer/assets/main-4kdxJbE7.js",
+        "sha256": "9deec0ee19672daf95718c032d76f670d4aee28ae257ca18b5e6179d94d546c0"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/rolldown-runtime-C0FnF6B9.js",
+        "sha256": "e0a79ad36c6ca1ffbc796c80aa5661803a9d1bc684e29d1587f48b4ba9a82714"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/react-kHW2V6fO.js",
+        "sha256": "87f525f02b73211bdf8a00cbf93a68e0da97485512567d6777aac2f80564bb37"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/react-dom-Cnt_32xx.js",
+        "sha256": "d40b1e400f28a4f59bf52b20ae96d65ed27795f2152ff817e6cf9c4751cef71e"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/MotionConfigContext-CTPcN308.js",
+        "sha256": "a852e830c4c42ab9dddea68a8f8d2d131a0661242870c812d7d1375c6f2a7149"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/renderer-mvfCYSDp.js",
+        "sha256": "2988ab72ef210305409fa7d81363c3b60ae5649a4f4bc208881efcae8cdac6b0"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/local-storage-B82WpaCT.js",
+        "sha256": "e1bfe2c6d95012367cd0a4aa53638772ad84629d1b665160e2bd2aa7fb6db6d4"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/types-8vAkwCcW.js",
+        "sha256": "e36fc05bd803f887fac88cb55822475c4231fbdf53d4e2cffd4b313614e4da6a"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/preload-helper-Dm0RifCr.js",
+        "sha256": "ad501340792fbbf2ed9bf6c9ff59cc5a5d654eb9712722871ab4e45b20f73317"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/languages-nfvBTJyX.js",
+        "sha256": "bdd437ee528fa284fb6ebd2145ac11e7868848394d373f00859827e302471cb3"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/i18next-CZ8kjqXA.js",
+        "sha256": "38ecda1e09f48082684a147ee959e8d3de98ee694923818eb7e1f6981ad366ec"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/i18n-CJ8y21Qt.js",
+        "sha256": "0b6e6199234963907b7eca82a6846c86ad74b40fb3d6c99eb3ca4ffc89a1b769"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/i18nInstance-CZ6SuJbU.js",
+        "sha256": "c7332811262af47ee80ec1cef14ebb152b0b209879f9d0f14d9f3e0196c45ceb"
+      },
+      {
+        "path": "apps/electron/dist/renderer/assets/i18nextBrowserLanguageDetector-Mnqog6fK.js",
+        "sha256": "67628bcd88ada809058ab38c2fd115c5165a3ab07b4f801bb5e018d909443096"
+      }
+    ]
+  },
+  "rendererAllJsBytes": 27924600,
+  "budgets": {
+    "mainBytes": 21500000,
+    "rendererInitialBytes": 4800000
+  },
+  "resources": [
+    {
+      "path": "apps/electron/dist/main.cjs",
+      "bytes": 21454223,
+      "sha256": "a58806cba98ff2eb009842a82fb6d701819ffb54fc5b457f4f48d03f831ca3f2"
+    },
+    {
+      "path": "packages/pi-agent-server/dist/index.js",
+      "bytes": 22,
+      "sha256": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e"
+    },
+    {
+      "path": "packages/pi-agent-server/dist/bundle.js",
+      "bytes": 10590610,
+      "sha256": "f911cc8a6f933be5ce9a5fb770e4e04b26da5307bf6a85d9f7fbcb918c6c5b9a"
+    },
+    {
+      "path": "packages/pi-agent-server/dist/node_modules/quickjs-wasi/quickjs.wasm",
+      "bytes": 637405,
+      "sha256": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+    },
+    {
+      "path": "apps/electron/dist/resources/pi-agent-server/bundle.js",
+      "bytes": 10590585,
+      "sha256": "7423f181e485f81c3e9fd15f8518e3bdf092245f0daedbf55de5e0d6aa272b8d"
+    },
+    {
+      "path": "packages/messaging-whatsapp-worker/dist/worker.cjs",
+      "bytes": 12065513,
+      "sha256": "924335c7f981be06c7cf57f66b2f1547695371dd97a78d2ead1ac46a4a821341"
+    }
+  ],
+  "scope": "Initial HTML JS references; lazy App business graph is loaded later. Worker build provenance timestamps are per build, not byte reproducibility across builds."
+}

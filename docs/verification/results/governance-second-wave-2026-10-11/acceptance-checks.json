@@ -1,0 +1,90 @@
+{
+  "positiveManifests": [
+    {
+      "path": "critical",
+      "workflow": "critical",
+      "passed": 13,
+      "exitCode": 0
+    },
+    {
+      "path": "critical/runtime-boundary-gate",
+      "workflow": "runtime-boundary-gate",
+      "passed": 10,
+      "exitCode": 0
+    },
+    {
+      "path": "critical/durable-runtime-boundary",
+      "workflow": "durable-runtime-boundary",
+      "passed": 15,
+      "exitCode": 0
+    },
+    {
+      "path": "critical/durable-runtime-crash",
+      "workflow": "durable-runtime-crash",
+      "passed": 8,
+      "exitCode": 0
+    },
+    {
+      "path": "critical/plugin-transaction",
+      "workflow": "plugin-transaction",
+      "passed": 12,
+      "exitCode": 0
+    },
+    {
+      "path": "critical/session-branch",
+      "workflow": "session-branch",
+      "passed": 4,
+      "exitCode": 0
+    },
+    {
+      "path": "critical/webui-auth-lifecycle",
+      "workflow": "webui-auth-lifecycle",
+      "passed": 14,
+      "exitCode": 0
+    },
+    {
+      "path": "critical/process-lifecycle",
+      "workflow": "process-lifecycle",
+      "passed": 12,
+      "exitCode": 0
+    },
+    {
+      "path": "auth",
+      "workflow": "webui-auth-lifecycle",
+      "passed": 14,
+      "exitCode": 0
+    },
+    {
+      "path": "build-smoke",
+      "workflow": "build-smoke",
+      "passed": 6,
+      "exitCode": 0
+    },
+    {
+      "path": "runtime-pi",
+      "workflow": "durable-runtime-pi",
+      "passed": 6,
+      "exitCode": 0
+    },
+    {
+      "path": "verification-output",
+      "workflow": "verification-output",
+      "passed": 7,
+      "exitCode": 0
+    },
+    {
+      "path": "governance-canary",
+      "workflow": "governance-gates",
+      "passed": 4,
+      "exitCode": 0
+    }
+  ],
+  "reversePatchCheck": true,
+  "oldArchivesUnchanged": {
+    "audit": 16,
+    "firstWave": 113
+  },
+  "docsCheck": "$ bun run scripts/check-docs.ts\ncheck:docs \u2014 110 documents, 730 relative links checked.\nDocumentation gate OK.",
+  "diffCheck": true,
+  "sourceSnapshotMatchesCurrent": true
+}

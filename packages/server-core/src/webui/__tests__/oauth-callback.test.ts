@@ -49,8 +49,10 @@ describe('WebUI /api/oauth/callback', () => {
     };
     const flows = new Map([[flow.state, flow]]);
 
+    const webuiDir = createTestWebuiDir();
     const handler = createWebuiHandler({
-      webuiDir: createTestWebuiDir(),
+      webuiDir,
+      revocationStorePath: join(webuiDir, 'auth.sqlite'),
       secret: 'test-secret',
       password: 'test-password',
       wsProtocol: 'wss',
@@ -67,7 +69,7 @@ describe('WebUI /api/oauth/callback', () => {
         },
       },
       credManager: {
-        exchangeAndStore: async () => ({ success: true, email: 'gyula@craft.do' }),
+        exchangeAndStore: async () => ({ success: true, email: 'fixture@example.test' }),
       },
       sessionManager: {
         completeAuthRequest: async () => {},
@@ -94,8 +96,10 @@ describe('WebUI /api/oauth/callback', () => {
     };
     const flows = new Map([[flow.state, flow]]);
 
+    const webuiDir = createTestWebuiDir();
     const handler = createWebuiHandler({
-      webuiDir: createTestWebuiDir(),
+      webuiDir,
+      revocationStorePath: join(webuiDir, 'auth.sqlite'),
       secret: 'test-secret',
       password: 'test-password',
       wsProtocol: 'wss',

@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { join } from 'path'
 import { homedir } from 'os'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { addWorkspace, setActiveWorkspace } from '@phaneris/shared/config'
+import { addWorkspace, setActiveWorkspace } from '@phaneris/shared/config/workspace-selection';
 import { getDefaultWorkspacesDir, ensureDefaultWorkspacesDir } from '@phaneris/shared/workspaces'
 import type { ServerStatus, ServerHealth } from '@phaneris/core/types'
 import type { RpcServer } from '@phaneris/server-core/transport'

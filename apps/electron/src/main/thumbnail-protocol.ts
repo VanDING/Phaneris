@@ -23,7 +23,7 @@ import { stat } from 'fs/promises'
 import { isAbsolute, resolve, relative } from 'path'
 import { mainLog } from './logger'
 import { getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
-import { getWorkspaces } from '@phaneris/shared/config'
+import { getWorkspaces } from '@phaneris/shared/config/workspace-selection';
 
 /**
  * Audit L-7: the thumbnail protocol must only serve files inside a

@@ -21,9 +21,9 @@ describe('pi-agent browser_tool toggle (contract)', () => {
   const piAgentSource = readFileSync(join(__dirname, '..', 'pi-agent.ts'), 'utf-8')
   const serverSource = readFileSync(join(__dirname, '..', '..', '..', '..', 'pi-agent-server', 'src', 'index.ts'), 'utf-8')
 
-  it('imports getBrowserToolEnabled from config storage', () => {
+  it('imports getBrowserToolEnabled from the appearance config domain', () => {
     expect(piAgentSource).toContain('getBrowserToolEnabled')
-    expect(piAgentSource).toMatch(/from ['"]\.\.\/config\/storage(\.ts)?['"]/)
+    expect(piAgentSource).toMatch(/from ['"]\.\.\/config\/appearance(\.ts)?['"]/)
   })
 
   it('sends browserToolEnabled in the init message', () => {
@@ -34,7 +34,7 @@ describe('pi-agent browser_tool toggle (contract)', () => {
   it('pushes live setting changes without interrupting the active turn', () => {
     expect(piAgentSource).toContain("type: 'set_browser_tool_enabled', enabled")
     expect(serverSource).toContain("case 'set_browser_tool_enabled':")
-    expect(serverSource).toContain('if (piSession) toolsChanged = true')
+    expect(serverSource).toContain('if (sessionLifecycle.current) toolsChanged = true')
   })
 
   it('no longer filters the tool manually in the main process', () => {

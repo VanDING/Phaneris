@@ -1,0 +1,13 @@
+{
+  "checks": [
+    "missing-pi-fails-before-listen",
+    "missing-wasm-fails-before-listen",
+    "missing-worker-fails-before-listen",
+    "off-tree-production-wrapper-boot-and-authenticated-rpc",
+    "production-wrapper-bounded-clean-shutdown"
+  ],
+  "stdout": "2026-10-11T10:49:57.888Z INFO  [bootstrap] Config artifacts initialized\n2026-10-11T10:49:57.888Z INFO  [bootstrap] Global config found\n2026-10-11T10:49:57.889Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available\n2026-10-11T10:49:57.900Z INFO  [session] Loaded 0 sessions from disk (metadata only)\n2026-10-11T10:49:57.907Z INFO  Phaneris server listening on ws://127.0.0.1:54093\n[messaging] Disabled via PHANERIS_DISABLE_MESSAGING — skipping workspace messaging init\nPHANERIS_SERVER_URL=ws://127.0.0.1:54093\n2026-10-11T10:49:57.939Z INFO  Shutting down...\n2026-10-11T10:49:59.941Z INFO  [session] Cleaning up resources...\n2026-10-11T10:49:59.945Z INFO  [session] Cleanup complete\n",
+  "stderr": "2026-10-11T10:49:57.900Z WARN  [session] No LLM connection slug available for reinitializeAuth\n2026-10-11T10:49:57.900Z ERROR [session] No LLM connection found for slug: null\n",
+  "assembly": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-distribution-yyRopQ/distribution",
+  "workingDirectory": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-distribution-yyRopQ"
+}

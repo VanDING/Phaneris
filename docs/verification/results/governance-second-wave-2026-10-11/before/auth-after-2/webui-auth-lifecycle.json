@@ -1,0 +1,57 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-auth-lifecycle-mZi64K",
+  "checks": [
+    {
+      "id": "A01-logout-kill-restart",
+      "passed": true
+    },
+    {
+      "id": "A02-shared-process-revocation",
+      "passed": true
+    },
+    {
+      "id": "A03-config-directory-isolation",
+      "passed": true
+    },
+    {
+      "id": "A04-legacy-cookie-without-jti",
+      "passed": true
+    },
+    {
+      "id": "A07-cookie-origin-and-bearer",
+      "passed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 40979,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41000,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41152,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41153,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41154,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 41156,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    }
+  ]
+}

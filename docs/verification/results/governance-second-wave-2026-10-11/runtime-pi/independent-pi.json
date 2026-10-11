@@ -1,0 +1,1469 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-11T04:01:28.680Z",
+  "command": "bun run scripts/verification/durable-runtime-pi-workflow.ts",
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-independent-pi-cXfPBw",
+  "baselineSha": "dbd32f60b5d90e20b1bc2b231035baf6b171ddc2",
+  "headSha": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+  "dirty": true,
+  "runtime": {
+    "bun": "1.4.2",
+    "executable": "/Users/van/.bun/bin/bun",
+    "platform": "darwin",
+    "architecture": "x64",
+    "piSdk": "1.1.0"
+  },
+  "sourceFingerprint": "348f686eeefad31874fda4e33bda7653768c7e60c913a9831243e2a430b2e2ff",
+  "sourceManifest": [
+    {
+      "path": "packages/pi-agent-server/src/ambient.d.ts",
+      "sha256": "0fe29a03826becfb584dc97ba84da88deefc61aaf05dcf9c751362f11d70d077"
+    },
+    {
+      "path": "packages/pi-agent-server/src/cache-warming-accounting.ts",
+      "sha256": "fe03d54115b75d7c38dffdec84e075342e4146d0f28a65cc442c5a6d5eb99a48"
+    },
+    {
+      "path": "packages/pi-agent-server/src/callback-auth.ts",
+      "sha256": "d21e5aa0d6a176788db03dbee2cc7e00870bdc5c977cdbf3902c77f79ea6674e"
+    },
+    {
+      "path": "packages/pi-agent-server/src/canonical-model-context.ts",
+      "sha256": "4f2f00a57cb92b81370855b944cad1c8910dea4fa125fad8c9e4f276ac54ed7a"
+    },
+    {
+      "path": "packages/pi-agent-server/src/compaction-wait.ts",
+      "sha256": "34727369e94578adbf777361f2e1e071f6c3761e979ed74ad8fe150d486bd445"
+    },
+    {
+      "path": "packages/pi-agent-server/src/context-policy-stream.ts",
+      "sha256": "e57d2a76446c14c2d8971c4d5065e2da68488e2e518a6aa1aa0fd6bfab09516a"
+    },
+    {
+      "path": "packages/pi-agent-server/src/context-usage.ts",
+      "sha256": "fd85744f47ba4409726ff409491282ead36dc5afc0d18fd81aa9971e8a57b0a8"
+    },
+    {
+      "path": "packages/pi-agent-server/src/custom-endpoint-auth.ts",
+      "sha256": "0d514a51b046adc9a50d44891a44e384bd7e27fbd88aae84342e0e92c7832739"
+    },
+    {
+      "path": "packages/pi-agent-server/src/custom-endpoint-models.ts",
+      "sha256": "707d2f0164d6fad809dc4fe3ac58d40132c0c6e070fc8a2288f5cb7f14550390"
+    },
+    {
+      "path": "packages/pi-agent-server/src/durable-model-stream.ts",
+      "sha256": "16bf00a346db2465da19ccfc573fc9abcf289a1931db0f4e2be626fe3a0a42a6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/durable-tool-context.ts",
+      "sha256": "fccf0ab2afc1329149e4a4d39aff156af477b41574dc1a257e335395a7265ccc"
+    },
+    {
+      "path": "packages/pi-agent-server/src/ephemeral-query-lifecycle.ts",
+      "sha256": "530b59743bb3482c22d7d30b906f34fef7acc20409255186913b607cd9b130b1"
+    },
+    {
+      "path": "packages/pi-agent-server/src/host-credential-store.ts",
+      "sha256": "34e890a4e86f044a48bb1b02ed997cbc036edf3b27fddcdd0961e7bdebd1350d"
+    },
+    {
+      "path": "packages/pi-agent-server/src/index.ts",
+      "sha256": "a5dc788819dfaf9ba2c0c5f7590cb161aa3edef4727a147f2023a4e02df4c510"
+    },
+    {
+      "path": "packages/pi-agent-server/src/large-result-filter.ts",
+      "sha256": "0ffd6228a0f87490b1baf504eae87c9522995e20fd11207fc39897a69b00f5c0"
+    },
+    {
+      "path": "packages/pi-agent-server/src/large-result-gate.ts",
+      "sha256": "65480c34481e9012d99a4bed3fad7d9e04a0c8b1c1b35ca21d02fc8805cc7cde"
+    },
+    {
+      "path": "packages/pi-agent-server/src/length-continuation.ts",
+      "sha256": "2d42bf553d990ba609978966e426d08244080f275ed5defcee343dda5be20d2c"
+    },
+    {
+      "path": "packages/pi-agent-server/src/mini-model-query.ts",
+      "sha256": "0372c24929f87c08871e7268d7a9a14ef444126a81f9fe619d7ac012ccea5d32"
+    },
+    {
+      "path": "packages/pi-agent-server/src/model-resolution.ts",
+      "sha256": "59826e9e8f5721ffdced4ad1d9bfaef891c73aa76b162801af86e09301cce0bc"
+    },
+    {
+      "path": "packages/pi-agent-server/src/native-lifecycle-observation.ts",
+      "sha256": "2dffa0cbca1751cf3a83346741713fb453c76a0044443a0b3fd74aec03bf9b67"
+    },
+    {
+      "path": "packages/pi-agent-server/src/native-request-observation.ts",
+      "sha256": "0539bc29ed4f8e52674228dbda839ef744252ce52e77adb077137eba335a689b"
+    },
+    {
+      "path": "packages/pi-agent-server/src/phaneris-metadata-schema.ts",
+      "sha256": "f051deef3a548fc9d8f53a94f6b6ad070ea1a73a8c09dbfced27797b72c0f757"
+    },
+    {
+      "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      "sha256": "48b41af02e1e1496ddf2bb778052cff204df9417401c59ce9653288de9019514"
+    },
+    {
+      "path": "packages/pi-agent-server/src/pick-mini-model.ts",
+      "sha256": "cdbc325a3517fa79a2b57f2bf844e189e007c0684e3d5bba035f82c8aa3c428c"
+    },
+    {
+      "path": "packages/pi-agent-server/src/proxy-tool-sync.ts",
+      "sha256": "541e59df36f73dc46352b6f3a1f7978764b2785d3e9ecbf55eb20cb3d69b3238"
+    },
+    {
+      "path": "packages/pi-agent-server/src/request-diagnostics.ts",
+      "sha256": "433f97b027be327f06388e669f2ecaee0b10a68d5dcd941c03a2e9abb4cd85ba"
+    },
+    {
+      "path": "packages/pi-agent-server/src/session-settings.ts",
+      "sha256": "e8d8569afca18388feb59f36bc326125da962189656ed044c51367e5abdbac24"
+    },
+    {
+      "path": "packages/pi-agent-server/src/test-fixtures/block-network.ts",
+      "sha256": "dca859153abd603effa2e4c2ac68856efc707929d4d2d3523300bab3c13fbec6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/create-search-tool.ts",
+      "sha256": "515f4efab91cd1fb6017145a6ddef278fdeb6ca2ebe749266ed3d686a369b7bd"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/chatgpt.ts",
+      "sha256": "f39db01965ab6ee1b61c51bff442f10322fe8b03af21cd458df180ce322ede66"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/ddg.ts",
+      "sha256": "719bf7e34693873cafd524cbd3bf28b116e3635742e7e31c948df2266bec2bb4"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/google.ts",
+      "sha256": "55789437dc197cf1335c04044dab137f92ac7c749f9ea2366fef1e5dcf398f12"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/openai.ts",
+      "sha256": "4aba8337447e6c27f47d23a4003d0f9ef6d5fcc07dbca3d1a5ea44c0e009aa5f"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/responses-api-parser.ts",
+      "sha256": "a226653ccbb9c9c31c0ef9344f445c594299a19bc6a6dfe4dc9634b8fb1d1549"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/resolve-provider.ts",
+      "sha256": "1f812a8785d374ba9f05439a69f9bef5f8253d4da076efed2d8cebcd2d9159e6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/types.ts",
+      "sha256": "53f83645996a91666dc904969fd5fed667e8993f19604a784684d76bd05735ba"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/web-fetch.ts",
+      "sha256": "ae970ac329c328f7a914a97367e8e5e76edfd57ae0ccb8386bd4cc5d17f6bd75"
+    },
+    {
+      "path": "packages/pi-agent-server/src/transport-delta.ts",
+      "sha256": "3c7ee73203a233d1ee433783bf2b904385bbe146d6f686e2d945ccc612bb5527"
+    },
+    {
+      "path": "packages/server-core/src/bootstrap/headless-start.ts",
+      "sha256": "6107152e19fe4e4988a9a05632d6762679c3e0eca40d3a5576711adfea19007e"
+    },
+    {
+      "path": "packages/server-core/src/decisions/accounting.ts",
+      "sha256": "d7545f772536cc8d3455bac0ec3f78c6ad2a3fe772108506e118990ebf9e3866"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/api/database-admin.ts",
+      "sha256": "af8673e95c6ba1f5d48dcb7d4fe3f09332109b1ad7247887f409bba1e0c3d3a2"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/api/runtime.ts",
+      "sha256": "bb5b0f651f9b76a4063d9b5ecca271a9bb1765e1bb44afec177466910c5df3f8"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "sha256": "d4df77d7b2b0187b8eedc9f0826fd7ec2e01a39286355e195859e4ad238b4682"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "sha256": "cc7d65e34c9682ad263645413e0befdf6efdf609ba428b36cc5c1255a5577bc3"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/execution/deadline.ts",
+      "sha256": "09ef070ddf8dc217fe0a4e059d48ac15fe483f6fc818596ce2a3f83c05f40554"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/execution/host.ts",
+      "sha256": "a113075ccfb7172ac0ed78f75886d0272bad1a21f91d0e1f37f60926dc59fcb5"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/index.ts",
+      "sha256": "e1b6d852c26843fe9f28e5b53ba9aeb9a410ee0822f5fb6d61121fd7104eba01"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "sha256": "205a7cc55ecfc72147b296f713b30477d770ebf4805121f0e6878da9cfc6774f"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "sha256": "d04eae8852205e6bb1f0bce4b595085d5d6ebf8eb5c51a286880c210580b7d0b"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/projection.ts",
+      "sha256": "b687c87c491d23eb4c95f5b63fe08d868f16bf4f580db4b92c07525ada551dd1"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "sha256": "29e81fafe61e620a03a8c709d7ad051676c04902bc1cffe3afac1e9c9ad5df32"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "sha256": "a4dc4325758c86929e1a8851ab65e655d9cb648fd82fb5409c2f8b0d9b651179"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/store.ts",
+      "sha256": "a7d286a7a1a427a5320d246841c141d18bbe6379dc401c09ef17d23607e0660f"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "sha256": "8f7df35dc3ba391d237b2815232b083f1833570cfde32cb1b34256f0631cd89c"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/legacy-context.ts",
+      "sha256": "e7a5d5cac15aaddd11045ae071e7570755a921d2e3552c45914f9f2457f1cf57"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/pi-driver.ts",
+      "sha256": "ecdccdbda5899a9fd1c6a61760291acdf9a45e1772fad30af7ac771623445fbe"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/projection-audit.ts",
+      "sha256": "4a1d349d0cb276bc70d5660c347b4c41fe4a25ccabee292b3fa91a051c631411"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-input-recovery.ts",
+      "sha256": "a5dd82545df9799a50c7e67ecfbb676d4ca382927cef3c71c5f2eeeb1d49040a"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-projection.ts",
+      "sha256": "6040411a9af7e2e60dd6aeb0be0e9c689329030803be5c6cf043e01379fe8fd5"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-runtime-view.ts",
+      "sha256": "cfac44cbc59d500546015d5d41955ca1235f30612bf4c06ba6b00762c99968ff"
+    },
+    {
+      "path": "packages/server-core/src/services/auxiliary-model-effect.ts",
+      "sha256": "9fe39dbc9591db6ae6654a5fbdbb35450c43f4a1b1d785ce9edd117e0066b2ee"
+    },
+    {
+      "path": "packages/server-core/src/sessions/SessionManager.ts",
+      "sha256": "0042b5d80ea390886a0ec47fb4df8c4625fccf5766ee70d5c112924c43e69acb"
+    },
+    {
+      "path": "packages/server-core/src/tasks/TaskRunner.ts",
+      "sha256": "b92d31b0c1d8ef7a4fa3e6326e0d562ff40720e950949fdc7fb7d48c2db4b17c"
+    },
+    {
+      "path": "packages/server-core/src/tasks/runtime-facts.ts",
+      "sha256": "08b83041ba306825583a55ae8c0b77de27a792b1842e0e640946a91d644c2c9b"
+    },
+    {
+      "path": "packages/server-core/src/tasks/runtime-reconciliation.ts",
+      "sha256": "e382fd065a54e5091d9f81e22a5bde525ecd5cec4457fce0bbb858e0874fcb29"
+    },
+    {
+      "path": "packages/shared/src/agent/pi-agent.ts",
+      "sha256": "b3c81a7d0bff04005a81a69540256dded3c45c21fff79c9177fefdfea31bab11"
+    },
+    {
+      "path": "scripts/check-runtime-boundary.ts",
+      "sha256": "bd0dd3d04fb46b03296234ecfba3286e51c72b9757c5d611af5dba21f557fbba"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-boundary-workflow.ts",
+      "sha256": "6fcf13b96757a53a56c80d8b56c1e6c8e9ef534d3b20b392b374b4f0c81e2d02"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-crash-workflow.ts",
+      "sha256": "7b3c2ee4420ced59e8f9d386d5e7dfb2c9e53749a6b51d902da8563bfd8c9fca"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-pi-workflow.ts",
+      "sha256": "152c6d12167de26b76bf6937eec273d28572e546c224a4131607eeda236ba42c"
+    },
+    {
+      "path": "scripts/verification/runtime-boundary-evidence.ts",
+      "sha256": "b06b410173ed390f4e425619097200476ea29490315a64c5f26c3355e46566db"
+    }
+  ],
+  "scope": "Real Pi/SQLite/Host, deterministic loopback inference, no SessionManager",
+  "checks": [
+    "independent execution",
+    "real read effect T1/T2",
+    "usage",
+    "two terminal turns",
+    "first-turn tool parity",
+    "canonical tool context"
+  ],
+  "providerCalls": 3,
+  "toolCalls": 1,
+  "tools": [
+    [
+      "bash",
+      "codemode",
+      "edit",
+      "find",
+      "grep",
+      "ls",
+      "mcp__session__SubmitPlan",
+      "mcp__session__archive_session",
+      "mcp__session__artifact_apply",
+      "mcp__session__artifact_create",
+      "mcp__session__artifact_inspect",
+      "mcp__session__artifact_render",
+      "mcp__session__artifact_status",
+      "mcp__session__artifact_submit",
+      "mcp__session__ask_user",
+      "mcp__session__browser_tool",
+      "mcp__session__call_llm",
+      "mcp__session__config_validate",
+      "mcp__session__create_page",
+      "mcp__session__create_task",
+      "mcp__session__delete_page",
+      "mcp__session__get_page",
+      "mcp__session__get_session_info",
+      "mcp__session__image_generate",
+      "mcp__session__list_background_tasks",
+      "mcp__session__list_messaging_channels",
+      "mcp__session__list_pages",
+      "mcp__session__list_sessions",
+      "mcp__session__mermaid_validate",
+      "mcp__session__render_template",
+      "mcp__session__script_sandbox",
+      "mcp__session__send_agent_message",
+      "mcp__session__set_session_labels",
+      "mcp__session__set_session_status",
+      "mcp__session__skill_validate",
+      "mcp__session__source_credential_prompt",
+      "mcp__session__source_google_oauth_trigger",
+      "mcp__session__source_microsoft_oauth_trigger",
+      "mcp__session__source_oauth_trigger",
+      "mcp__session__source_slack_oauth_trigger",
+      "mcp__session__source_test",
+      "mcp__session__spawn_session",
+      "mcp__session__terminal_read",
+      "mcp__session__transform_data",
+      "mcp__session__unbind_messaging_channel",
+      "mcp__session__update_page",
+      "mcp__session__update_session_planning",
+      "mcp__session__update_user_preferences",
+      "mcp__session__web_fetch",
+      "mcp__session__web_search",
+      "mcp__session__write_page_data",
+      "read",
+      "report_progress",
+      "tool_search",
+      "write"
+    ],
+    [
+      "bash",
+      "codemode",
+      "edit",
+      "find",
+      "grep",
+      "ls",
+      "mcp__session__SubmitPlan",
+      "mcp__session__archive_session",
+      "mcp__session__artifact_apply",
+      "mcp__session__artifact_create",
+      "mcp__session__artifact_inspect",
+      "mcp__session__artifact_render",
+      "mcp__session__artifact_status",
+      "mcp__session__artifact_submit",
+      "mcp__session__ask_user",
+      "mcp__session__browser_tool",
+      "mcp__session__call_llm",
+      "mcp__session__config_validate",
+      "mcp__session__create_page",
+      "mcp__session__create_task",
+      "mcp__session__delete_page",
+      "mcp__session__get_page",
+      "mcp__session__get_session_info",
+      "mcp__session__image_generate",
+      "mcp__session__list_background_tasks",
+      "mcp__session__list_messaging_channels",
+      "mcp__session__list_pages",
+      "mcp__session__list_sessions",
+      "mcp__session__mermaid_validate",
+      "mcp__session__render_template",
+      "mcp__session__script_sandbox",
+      "mcp__session__send_agent_message",
+      "mcp__session__set_session_labels",
+      "mcp__session__set_session_status",
+      "mcp__session__skill_validate",
+      "mcp__session__source_credential_prompt",
+      "mcp__session__source_google_oauth_trigger",
+      "mcp__session__source_microsoft_oauth_trigger",
+      "mcp__session__source_oauth_trigger",
+      "mcp__session__source_slack_oauth_trigger",
+      "mcp__session__source_test",
+      "mcp__session__spawn_session",
+      "mcp__session__terminal_read",
+      "mcp__session__transform_data",
+      "mcp__session__unbind_messaging_channel",
+      "mcp__session__update_page",
+      "mcp__session__update_session_planning",
+      "mcp__session__update_user_preferences",
+      "mcp__session__web_fetch",
+      "mcp__session__web_search",
+      "mcp__session__write_page_data",
+      "read",
+      "report_progress",
+      "tool_search",
+      "write"
+    ],
+    [
+      "bash",
+      "codemode",
+      "edit",
+      "find",
+      "grep",
+      "ls",
+      "mcp__session__SubmitPlan",
+      "mcp__session__archive_session",
+      "mcp__session__artifact_apply",
+      "mcp__session__artifact_create",
+      "mcp__session__artifact_inspect",
+      "mcp__session__artifact_render",
+      "mcp__session__artifact_status",
+      "mcp__session__artifact_submit",
+      "mcp__session__ask_user",
+      "mcp__session__browser_tool",
+      "mcp__session__call_llm",
+      "mcp__session__config_validate",
+      "mcp__session__create_page",
+      "mcp__session__create_task",
+      "mcp__session__delete_page",
+      "mcp__session__get_page",
+      "mcp__session__get_session_info",
+      "mcp__session__image_generate",
+      "mcp__session__list_background_tasks",
+      "mcp__session__list_messaging_channels",
+      "mcp__session__list_pages",
+      "mcp__session__list_sessions",
+      "mcp__session__mermaid_validate",
+      "mcp__session__render_template",
+      "mcp__session__script_sandbox",
+      "mcp__session__send_agent_message",
+      "mcp__session__set_session_labels",
+      "mcp__session__set_session_status",
+      "mcp__session__skill_validate",
+      "mcp__session__source_credential_prompt",
+      "mcp__session__source_google_oauth_trigger",
+      "mcp__session__source_microsoft_oauth_trigger",
+      "mcp__session__source_oauth_trigger",
+      "mcp__session__source_slack_oauth_trigger",
+      "mcp__session__source_test",
+      "mcp__session__spawn_session",
+      "mcp__session__terminal_read",
+      "mcp__session__transform_data",
+      "mcp__session__unbind_messaging_channel",
+      "mcp__session__update_page",
+      "mcp__session__update_session_planning",
+      "mcp__session__update_user_preferences",
+      "mcp__session__web_fetch",
+      "mcp__session__web_search",
+      "mcp__session__write_page_data",
+      "read",
+      "report_progress",
+      "tool_search",
+      "write"
+    ]
+  ],
+  "facts": [
+    {
+      "eventId": "run-first:accepted",
+      "seq": 1,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "operation_accepted",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "kind": "agent_turn",
+        "userMessageId": "first"
+      },
+      "createdAt": 1791691287770
+    },
+    {
+      "eventId": "run-first:user",
+      "seq": 2,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "user_message_committed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "content": "Read the evidence first",
+        "messageId": "first"
+      },
+      "createdAt": 1791691287770
+    },
+    {
+      "eventId": "modelop_7beb3659a4d0ab183e622afbf887cb96:dispatch",
+      "seq": 3,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "model_dispatch_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalRequestHash": "d2631cf380a295243810d3c40a2274feda6b5d617405ae7f482caf8ff3055a72",
+        "idempotencyKey": "modelop_7beb3659a4d0ab183e622afbf887cb96",
+        "model": "fixture",
+        "operationId": "modelop_7beb3659a4d0ab183e622afbf887cb96",
+        "provider": "custom-endpoint",
+        "providerRequestId": "1",
+        "requestId": "pi-model-t1-1791691288552-xhcj9t",
+        "runOperationId": "run-first",
+        "sessionId": "independent-pi",
+        "turnId": "first",
+        "type": "durable_model_prepare_request"
+      },
+      "createdAt": 1791691288553
+    },
+    {
+      "eventId": "run-first:sdk:e520f4208b7a233e1870821f:1",
+      "seq": 4,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288590,
+        "data": {
+          "api": "openai-completions",
+          "eventKind": "chat.completion.chunk",
+          "model": "fixture",
+          "provider": "custom-endpoint"
+        },
+        "event": "provider_stream_observation",
+        "observationId": "e520f4208b7a233e1870821f:1",
+        "runOperationId": "run-first",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "first"
+      },
+      "createdAt": 1791691288590
+    },
+    {
+      "eventId": "modelop_7beb3659a4d0ab183e622afbf887cb96:outcome",
+      "seq": 5,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "model_outcome_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalRequestHash": "d2631cf380a295243810d3c40a2274feda6b5d617405ae7f482caf8ff3055a72",
+        "content": [
+          {
+            "arguments": {
+              "path": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-independent-pi-cXfPBw/workspace/evidence.txt"
+            },
+            "id": "boundary-read",
+            "name": "read",
+            "type": "toolCall"
+          }
+        ],
+        "model": "fixture",
+        "operationId": "modelop_7beb3659a4d0ab183e622afbf887cb96",
+        "provider": "custom-endpoint",
+        "providerRequestId": "1",
+        "requestId": "pi-model-t2-1791691288591-getdb1",
+        "requestObservation": {
+          "droppedObservations": 0,
+          "observationErrors": 0,
+          "payloadCallbackCount": 1,
+          "payloads": [
+            {
+              "bytes": 103436,
+              "capturedAt": 1791691288578,
+              "hash": "11cf2700d831cadbd057b538fc247d21889b2dfde09517f8739767bd52e3d690",
+              "ordinal": 1
+            }
+          ],
+          "requestedOptions": {
+            "cacheRetention": "short",
+            "maxRetryDelayMs": 60000,
+            "transport": "auto"
+          },
+          "responseCallbackCount": 1,
+          "responses": [
+            {
+              "capturedAt": 1791691288588,
+              "headers": {},
+              "ordinal": 1,
+              "status": 200
+            }
+          ],
+          "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+          "source": "pi_native_callbacks",
+          "version": 1
+        },
+        "responseId": "boundary-1",
+        "runOperationId": "run-first",
+        "sessionId": "independent-pi",
+        "stopReason": "toolUse",
+        "text": "",
+        "turnId": "first",
+        "type": "durable_model_outcome_request",
+        "usage": {
+          "costUsd": 0,
+          "inputTokens": 100,
+          "outputTokens": 10,
+          "payload": {
+            "costSource": "pi_sdk_estimate",
+            "kind": "model_attempt",
+            "requestSeq": 1,
+            "usage": {
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "cost": {
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "input": 0,
+                "output": 0,
+                "total": 0
+              },
+              "input": 100,
+              "output": 10,
+              "reasoning": 0,
+              "totalTokens": 110
+            }
+          }
+        }
+      },
+      "createdAt": 1791691288592
+    },
+    {
+      "eventId": "model:run-first:1:committed",
+      "seq": 6,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "usage_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "costUsd": 0,
+        "createdAt": 1791691288592,
+        "inputTokens": 100,
+        "model": "fixture",
+        "operationId": "run-first",
+        "outputTokens": 10,
+        "payload": {
+          "costSource": "pi_sdk_estimate",
+          "kind": "model_attempt",
+          "requestSeq": 1,
+          "usage": {
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "cost": {
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "input": 0,
+              "output": 0,
+              "total": 0
+            },
+            "input": 100,
+            "output": 10,
+            "reasoning": 0,
+            "totalTokens": 110
+          }
+        },
+        "provider": "custom-endpoint",
+        "sessionId": "independent-pi",
+        "usageId": "model:run-first:1"
+      },
+      "createdAt": 1791691288592
+    },
+    {
+      "eventId": "run-first:sdk:e520f4208b7a233e1870821f:2",
+      "seq": 7,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288593,
+        "data": {
+          "api": "openai-completions",
+          "model": "fixture",
+          "provider": "custom-endpoint",
+          "providerThinkingLevel": null,
+          "requestedThinkingLevel": "off",
+          "responseModel": null,
+          "stopReason": "toolUse"
+        },
+        "event": "assistant_response_observation",
+        "observationId": "e520f4208b7a233e1870821f:2",
+        "runOperationId": "run-first",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "first"
+      },
+      "createdAt": 1791691288593
+    },
+    {
+      "eventId": "run-first:sdk:e520f4208b7a233e1870821f:3",
+      "seq": 8,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288596,
+        "data": {
+          "proposedArgsHash": "62d3e13942403e81618796339b2f6d12db267b0cba740b6b875d2532ac0c7624",
+          "stage": "sdk_proposal_before_phaneris_preflight",
+          "toolCallId": "boundary-read",
+          "toolName": "read"
+        },
+        "event": "tool_call",
+        "observationId": "e520f4208b7a233e1870821f:3",
+        "runOperationId": "run-first",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "first"
+      },
+      "createdAt": 1791691288596
+    },
+    {
+      "eventId": "toolop_57bd4294379f180b8c2e9c043841ccb0:call",
+      "seq": 9,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "tool_call_observed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "args": {
+          "path": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-independent-pi-cXfPBw/workspace/evidence.txt"
+        },
+        "providerToolCallId": "boundary-read",
+        "toolBatchId": "modelop_7beb3659a4d0ab183e622afbf887cb96",
+        "toolBatchOrdinal": 0,
+        "toolName": "Read",
+        "toolOperationId": "toolop_57bd4294379f180b8c2e9c043841ccb0"
+      },
+      "createdAt": 1791691288601
+    },
+    {
+      "eventId": "toolop_57bd4294379f180b8c2e9c043841ccb0:dispatch",
+      "seq": 10,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "tool_dispatch_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalArgsHash": "b8de3ddd4b1e391343715df7386c91bd09a0fe4939bde4dd3f580ec4d7cea7ee",
+        "idempotencyKey": "toolop_57bd4294379f180b8c2e9c043841ccb0",
+        "operationId": "toolop_57bd4294379f180b8c2e9c043841ccb0",
+        "protocol": "t1_after_preflight_v1",
+        "providerToolCallId": "boundary-read",
+        "recoveryMode": "safe_replay",
+        "runOperationId": "run-first",
+        "toolBatchId": "modelop_7beb3659a4d0ab183e622afbf887cb96",
+        "toolBatchOrdinal": 0,
+        "toolName": "Read"
+      },
+      "createdAt": 1791691288601
+    },
+    {
+      "eventId": "toolop_57bd4294379f180b8c2e9c043841ccb0:outcome",
+      "seq": 11,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "tool_outcome_committed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "canonicalArgsHash": "b8de3ddd4b1e391343715df7386c91bd09a0fe4939bde4dd3f580ec4d7cea7ee",
+        "isError": false,
+        "operationId": "toolop_57bd4294379f180b8c2e9c043841ccb0",
+        "providerToolCallId": "boundary-read",
+        "result": {
+          "content": [
+            {
+              "text": "INDEPENDENT_TOOL_EVIDENCE",
+              "type": "text"
+            }
+          ],
+          "structuredContent": "INDEPENDENT_TOOL_EVIDENCE"
+        },
+        "runOperationId": "run-first",
+        "toolBatchId": "modelop_7beb3659a4d0ab183e622afbf887cb96",
+        "toolBatchOrdinal": 0,
+        "toolName": "Read"
+      },
+      "createdAt": 1791691288606
+    },
+    {
+      "eventId": "run-first:sdk:e520f4208b7a233e1870821f:4",
+      "seq": 12,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288608,
+        "data": {
+          "isError": false,
+          "stage": "sdk_result_after_tool_return",
+          "toolCallId": "boundary-read",
+          "toolName": "read"
+        },
+        "event": "tool_result",
+        "observationId": "e520f4208b7a233e1870821f:4",
+        "runOperationId": "run-first",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "first"
+      },
+      "createdAt": 1791691288608
+    },
+    {
+      "eventId": "modelop_4ade5d10c862a2c94641e163d0fa24ad:dispatch",
+      "seq": 13,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "model_dispatch_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalRequestHash": "c4ba9d8d7f465ed8b8a4f32b3c08708c1e4b4389d3a69a0d6fbea71a1fae0481",
+        "idempotencyKey": "modelop_4ade5d10c862a2c94641e163d0fa24ad",
+        "model": "fixture",
+        "operationId": "modelop_4ade5d10c862a2c94641e163d0fa24ad",
+        "provider": "custom-endpoint",
+        "providerRequestId": "2",
+        "requestId": "pi-model-t1-1791691288615-nlwbuy",
+        "runOperationId": "run-first",
+        "sessionId": "independent-pi",
+        "turnId": "first",
+        "type": "durable_model_prepare_request"
+      },
+      "createdAt": 1791691288615
+    },
+    {
+      "eventId": "run-first:sdk:e520f4208b7a233e1870821f:5",
+      "seq": 14,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288620,
+        "data": {
+          "api": "openai-completions",
+          "eventKind": "chat.completion.chunk",
+          "model": "fixture",
+          "provider": "custom-endpoint"
+        },
+        "event": "provider_stream_observation",
+        "observationId": "e520f4208b7a233e1870821f:5",
+        "runOperationId": "run-first",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "first"
+      },
+      "createdAt": 1791691288620
+    },
+    {
+      "eventId": "modelop_4ade5d10c862a2c94641e163d0fa24ad:outcome",
+      "seq": 15,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "model_outcome_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalRequestHash": "c4ba9d8d7f465ed8b8a4f32b3c08708c1e4b4389d3a69a0d6fbea71a1fae0481",
+        "content": [
+          {
+            "text": "INDEPENDENT_RUN_COMPLETE",
+            "type": "text"
+          }
+        ],
+        "model": "fixture",
+        "operationId": "modelop_4ade5d10c862a2c94641e163d0fa24ad",
+        "provider": "custom-endpoint",
+        "providerRequestId": "2",
+        "requestId": "pi-model-t2-1791691288621-rqvvqr",
+        "requestObservation": {
+          "droppedObservations": 0,
+          "observationErrors": 0,
+          "payloadCallbackCount": 1,
+          "payloads": [
+            {
+              "bytes": 103772,
+              "capturedAt": 1791691288618,
+              "hash": "655a89b07f0f8619589fff8663c894033217351dd02af22567165a4a9401945f",
+              "ordinal": 1
+            }
+          ],
+          "requestedOptions": {
+            "cacheRetention": "short",
+            "maxRetryDelayMs": 60000,
+            "transport": "auto"
+          },
+          "responseCallbackCount": 1,
+          "responses": [
+            {
+              "capturedAt": 1791691288620,
+              "headers": {},
+              "ordinal": 1,
+              "status": 200
+            }
+          ],
+          "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+          "source": "pi_native_callbacks",
+          "version": 1
+        },
+        "responseId": "boundary-2",
+        "runOperationId": "run-first",
+        "sessionId": "independent-pi",
+        "stopReason": "stop",
+        "text": "INDEPENDENT_RUN_COMPLETE",
+        "turnId": "first",
+        "type": "durable_model_outcome_request",
+        "usage": {
+          "costUsd": 0,
+          "inputTokens": 100,
+          "outputTokens": 10,
+          "payload": {
+            "costSource": "pi_sdk_estimate",
+            "kind": "model_attempt",
+            "requestSeq": 2,
+            "usage": {
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "cost": {
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "input": 0,
+                "output": 0,
+                "total": 0
+              },
+              "input": 100,
+              "output": 10,
+              "reasoning": 0,
+              "totalTokens": 110
+            }
+          }
+        }
+      },
+      "createdAt": 1791691288621
+    },
+    {
+      "eventId": "modelop_4ade5d10c862a2c94641e163d0fa24ad:assistant",
+      "seq": 16,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "assistant_message_committed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "content": "INDEPENDENT_RUN_COMPLETE",
+        "isIntermediate": false,
+        "messageId": "model:modelop_4ade5d10c862a2c94641e163d0fa24ad",
+        "modelOperationId": "modelop_4ade5d10c862a2c94641e163d0fa24ad"
+      },
+      "createdAt": 1791691288621
+    },
+    {
+      "eventId": "model:run-first:2:committed",
+      "seq": 17,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "usage_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "costUsd": 0,
+        "createdAt": 1791691288621,
+        "inputTokens": 100,
+        "model": "fixture",
+        "operationId": "run-first",
+        "outputTokens": 10,
+        "payload": {
+          "costSource": "pi_sdk_estimate",
+          "kind": "model_attempt",
+          "requestSeq": 2,
+          "usage": {
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "cost": {
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "input": 0,
+              "output": 0,
+              "total": 0
+            },
+            "input": 100,
+            "output": 10,
+            "reasoning": 0,
+            "totalTokens": 110
+          }
+        },
+        "provider": "custom-endpoint",
+        "sessionId": "independent-pi",
+        "usageId": "model:run-first:2"
+      },
+      "createdAt": 1791691288621
+    },
+    {
+      "eventId": "run-first:sdk:e520f4208b7a233e1870821f:6",
+      "seq": 18,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288622,
+        "data": {
+          "api": "openai-completions",
+          "model": "fixture",
+          "provider": "custom-endpoint",
+          "providerThinkingLevel": null,
+          "requestedThinkingLevel": "off",
+          "responseModel": null,
+          "stopReason": "stop"
+        },
+        "event": "assistant_response_observation",
+        "observationId": "e520f4208b7a233e1870821f:6",
+        "runOperationId": "run-first",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "first"
+      },
+      "createdAt": 1791691288622
+    },
+    {
+      "eventId": "run-first:terminal",
+      "seq": 19,
+      "sessionId": "independent-pi",
+      "turnId": "first",
+      "operationId": "run-first",
+      "type": "operation_terminal",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "reason": "complete"
+      },
+      "createdAt": 1791691288626
+    },
+    {
+      "eventId": "run-second:accepted",
+      "seq": 20,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "operation_accepted",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "kind": "agent_turn",
+        "userMessageId": "second"
+      },
+      "createdAt": 1791691288627
+    },
+    {
+      "eventId": "run-second:user",
+      "seq": 21,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "user_message_committed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "content": "Read the evidence second",
+        "messageId": "second"
+      },
+      "createdAt": 1791691288627
+    },
+    {
+      "eventId": "modelop_f4363d9765b8603f99e6d7da19be854f:dispatch",
+      "seq": 22,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "model_dispatch_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalRequestHash": "825d6780aceeb3ea5f8036f2b22b7f587291a5779f7a154fc59308ed42dcf261",
+        "idempotencyKey": "modelop_f4363d9765b8603f99e6d7da19be854f",
+        "model": "fixture",
+        "operationId": "modelop_f4363d9765b8603f99e6d7da19be854f",
+        "provider": "custom-endpoint",
+        "providerRequestId": "3",
+        "requestId": "pi-model-t1-1791691288639-qtibld",
+        "runOperationId": "run-second",
+        "sessionId": "independent-pi",
+        "turnId": "second",
+        "type": "durable_model_prepare_request"
+      },
+      "createdAt": 1791691288639
+    },
+    {
+      "eventId": "run-second:sdk:e520f4208b7a233e1870821f:8",
+      "seq": 23,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288644,
+        "data": {
+          "api": "openai-completions",
+          "eventKind": "chat.completion.chunk",
+          "model": "fixture",
+          "provider": "custom-endpoint"
+        },
+        "event": "provider_stream_observation",
+        "observationId": "e520f4208b7a233e1870821f:8",
+        "runOperationId": "run-second",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "second"
+      },
+      "createdAt": 1791691288644
+    },
+    {
+      "eventId": "modelop_f4363d9765b8603f99e6d7da19be854f:outcome",
+      "seq": 24,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "model_outcome_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalRequestHash": "825d6780aceeb3ea5f8036f2b22b7f587291a5779f7a154fc59308ed42dcf261",
+        "content": [
+          {
+            "text": "INDEPENDENT_RUN_COMPLETE",
+            "type": "text"
+          }
+        ],
+        "model": "fixture",
+        "operationId": "modelop_f4363d9765b8603f99e6d7da19be854f",
+        "provider": "custom-endpoint",
+        "providerRequestId": "3",
+        "requestId": "pi-model-t2-1791691288644-3xf60g",
+        "requestObservation": {
+          "droppedObservations": 0,
+          "observationErrors": 0,
+          "payloadCallbackCount": 1,
+          "payloads": [
+            {
+              "bytes": 103984,
+              "capturedAt": 1791691288642,
+              "hash": "53be6855f92a83ff102cf42c453e5eae19074d124fa94995c73231f941f8732a",
+              "ordinal": 1
+            }
+          ],
+          "requestedOptions": {
+            "cacheRetention": "short",
+            "maxRetryDelayMs": 60000,
+            "transport": "auto"
+          },
+          "responseCallbackCount": 1,
+          "responses": [
+            {
+              "capturedAt": 1791691288644,
+              "headers": {},
+              "ordinal": 1,
+              "status": 200
+            }
+          ],
+          "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+          "source": "pi_native_callbacks",
+          "version": 1
+        },
+        "responseId": "boundary-3",
+        "runOperationId": "run-second",
+        "sessionId": "independent-pi",
+        "stopReason": "stop",
+        "text": "INDEPENDENT_RUN_COMPLETE",
+        "turnId": "second",
+        "type": "durable_model_outcome_request",
+        "usage": {
+          "costUsd": 0,
+          "inputTokens": 100,
+          "outputTokens": 10,
+          "payload": {
+            "costSource": "pi_sdk_estimate",
+            "kind": "model_attempt",
+            "requestSeq": 3,
+            "usage": {
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "cost": {
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "input": 0,
+                "output": 0,
+                "total": 0
+              },
+              "input": 100,
+              "output": 10,
+              "reasoning": 0,
+              "totalTokens": 110
+            }
+          }
+        }
+      },
+      "createdAt": 1791691288648
+    },
+    {
+      "eventId": "modelop_f4363d9765b8603f99e6d7da19be854f:assistant",
+      "seq": 25,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "assistant_message_committed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "content": "INDEPENDENT_RUN_COMPLETE",
+        "isIntermediate": false,
+        "messageId": "model:modelop_f4363d9765b8603f99e6d7da19be854f",
+        "modelOperationId": "modelop_f4363d9765b8603f99e6d7da19be854f"
+      },
+      "createdAt": 1791691288648
+    },
+    {
+      "eventId": "model:run-second:3:committed",
+      "seq": 26,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "usage_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "costUsd": 0,
+        "createdAt": 1791691288648,
+        "inputTokens": 100,
+        "model": "fixture",
+        "operationId": "run-second",
+        "outputTokens": 10,
+        "payload": {
+          "costSource": "pi_sdk_estimate",
+          "kind": "model_attempt",
+          "requestSeq": 3,
+          "usage": {
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "cost": {
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "input": 0,
+              "output": 0,
+              "total": 0
+            },
+            "input": 100,
+            "output": 10,
+            "reasoning": 0,
+            "totalTokens": 110
+          }
+        },
+        "provider": "custom-endpoint",
+        "sessionId": "independent-pi",
+        "usageId": "model:run-second:3"
+      },
+      "createdAt": 1791691288648
+    },
+    {
+      "eventId": "run-second:sdk:e520f4208b7a233e1870821f:9",
+      "seq": 27,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "sdk_observation",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "capturedAt": 1791691288650,
+        "data": {
+          "api": "openai-completions",
+          "model": "fixture",
+          "provider": "custom-endpoint",
+          "providerThinkingLevel": null,
+          "requestedThinkingLevel": "off",
+          "responseModel": null,
+          "stopReason": "stop"
+        },
+        "event": "assistant_response_observation",
+        "observationId": "e520f4208b7a233e1870821f:9",
+        "runOperationId": "run-second",
+        "sdkSessionId": "01a1291f-6fd4-718e-be8b-82c37af27b99",
+        "sessionId": "independent-pi",
+        "turnId": "second"
+      },
+      "createdAt": 1791691288650
+    },
+    {
+      "eventId": "run-second:terminal",
+      "seq": 28,
+      "sessionId": "independent-pi",
+      "turnId": "second",
+      "operationId": "run-second",
+      "type": "operation_terminal",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "reason": "complete"
+      },
+      "createdAt": 1791691288655
+    }
+  ],
+  "wireTypes": [
+    "ready",
+    "session_id_update",
+    "thinking_level_state",
+    "set_auto_compaction_result",
+    "session_id_update",
+    "thinking_level_state",
+    "input_received",
+    "event",
+    "event",
+    "event",
+    "event",
+    "event",
+    "event",
+    "durable_model_prepare_request",
+    "sdk_observation",
+    "event",
+    "durable_model_outcome_request",
+    "sdk_observation",
+    "event",
+    "event",
+    "event",
+    "event",
+    "sdk_observation",
+    "pre_tool_use_request",
+    "pre_tool_use_request",
+    "durable_tool_prepare_request",
+    "durable_tool_outcome_request",
+    "sdk_observation",
+    "event",
+    "event",
+    "event",
+    "event",
+    "event",
+    "durable_model_prepare_request",
+    "sdk_observation",
+    "event",
+    "event",
+    "durable_model_outcome_request",
+    "sdk_observation",
+    "event",
+    "event",
+    "event",
+    "event",
+    "event",
+    "sdk_observation",
+    "event",
+    "input_received",
+    "event",
+    "event",
+    "event",
+    "event",
+    "durable_model_prepare_request",
+    "sdk_observation",
+    "event",
+    "event",
+    "durable_model_outcome_request",
+    "sdk_observation",
+    "event",
+    "event",
+    "event",
+    "event",
+    "event",
+    "sdk_observation",
+    "event"
+  ],
+  "lifecycle": {
+    "closed": true,
+    "childPid": 43464,
+    "exitCode": null,
+    "signal": "SIGTERM"
+  },
+  "database": {
+    "path": "/Users/van/projects/Phaneris/.cache/verification/durable-runtime-pi-8q7V4A/independent-pi.db",
+    "sha256": "cf29dc53e24384b9fc240ae643c7071310996aeebd1789e03d9d21d194e9b832"
+  }
+}

@@ -1,0 +1,24 @@
+
+40 | }
+41 | for (const job of ['validate', 'full-validation']) {
+42 |   const steps = workflow.jobs[job]?.steps
+43 |   assert(steps, `Missing validation job: ${job}`)
+44 |   const uv = steps.find(step => step.uses?.startsWith('astral-sh/setup-uv@'))
+45 |   assert.equal(uv?.with?.version, UV_VERSION, `${job} must pin uv ${UV_VERSION}`)
+              ^
+AssertionError: full-validation must pin uv 0.12.22
++ actual - expected
+
++ undefined
+- '0.12.22'
+
+ generatedMessage: false,
+     actual: undefined,
+   expected: "0.12.22",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:45:10
+
+Bun v1.4.2 (macOS x64)

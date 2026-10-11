@@ -166,7 +166,7 @@ describe('RPC', () => {
       workspaceId: ctx.workspaceId,
     }))
 
-    const result = await client.invoke('whoami')
+    const result = await client.invoke('whoami') as { clientId: string; workspaceId: string }
     expect(result.clientId).toBeTruthy()
     expect(result.workspaceId).toBe('test-workspace')
   })

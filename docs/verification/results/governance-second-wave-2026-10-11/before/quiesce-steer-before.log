@@ -1,0 +1,23 @@
+15 | assert(recovery)
+16 | const before = runtime.queries.events(scope.workspaceRootPath, { sessionId: scope.sessionId })
+17 | runtime.quiesce()
+18 | assert.throws(() => runtime.execution.begin(scope), /admission is closed/)
+19 | assert.throws(() => runtime.commands.acceptRun({ ...scope, operationId: 'forbidden-run', turnId: 't2', userMessageId: 'm2', userMessage: 'Must not execute' }), /admission is closed/)
+20 | assert.equal((await runtime.execution.steer(scope.sessionId, 'No late input', { messageId: 'late', content: 'No late input', createdAt: Date.now() })).disposition, 'rejected')
+            ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ 'handled'
+- 'rejected'
+
+ generatedMessage: true,
+     actual: "handled",
+   expected: "rejected",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/fixtures/runtime-quiesce.ts:20:8
+
+Bun v1.4.2 (macOS x64)

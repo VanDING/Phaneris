@@ -67,8 +67,8 @@ describe('Transport — error code preservation', () => {
     const { server, client } = await startPair()
     const reads = new SessionReadStore()
     const session = { id: 'large-session', workspaceId: 'ws-a', messages: [{ id: 'm', role: 'assistant', content: '中'.repeat(7 * 1024 * 1024), timestamp: 1 }] } as Session
-    server.handle(RPC_CHANNELS.sessions.READ_MESSAGES, (ctx, id, cursor) => cursor ? reads.read(ctx, id, cursor.readId, cursor.offset) : reads.start(ctx, session))
-    server.handle(RPC_CHANNELS.sessions.CLOSE_MESSAGES_READ, (ctx, id, readId) => reads.close(ctx, id, readId))
+    server.handle(RPC_CHANNELS.sessions.READ_MESSAGES, (ctx, id: string, cursor?: { readId: string; offset: number }) => cursor ? reads.read(ctx, id, cursor.readId, cursor.offset) : reads.start(ctx, session))
+    server.handle(RPC_CHANNELS.sessions.CLOSE_MESSAGES_READ, (ctx, id: string, readId: string) => reads.close(ctx, id, readId))
     expect(await readSessionSnapshot(client, session.id)).toEqual(session)
   }, 20_000)
   it('rejects oversized replies without disconnecting the client', async () => {

@@ -1,0 +1,23 @@
+15 |       const child = await startProcess(seedServer(join(fixture, fault))); children.push(child)
+16 |       const started = performance.now()
+17 |       child.process.stdin.write(`${JSON.stringify({ governanceFault: fault })}\n`)
+18 |       // First observe the synchronous admission close before waiting for cleanup.
+19 |       await new Promise(resolve => setTimeout(resolve, 200))
+20 |       await assert.rejects(fetch(child.url.replace(/^ws/, 'http') + '/api/config'))
+                        ^
+AssertionError: Missing expected rejection.
+ generatedMessage: false,
+     actual: undefined,
+   expected: undefined,
+   operator: "rejects",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at innerFail (node:assert:50:27)
+      at expectsError (node:assert:385:14)
+      at assert.rejects (node:assert:434:17)
+      at /Users/van/projects/Phaneris/scripts/verification/process-lifecycle-workflow.ts:20:20
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+      at processTicksAndRejections (native:7:39)
+
+Bun v1.4.2 (macOS x64)

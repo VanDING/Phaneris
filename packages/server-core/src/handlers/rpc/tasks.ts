@@ -26,7 +26,7 @@ import type {
   TaskResultNodeDto,
   TaskPlanningInput,
 } from '@phaneris/shared/protocol'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import {
   parseTaskYaml,
   saveTaskSpec,

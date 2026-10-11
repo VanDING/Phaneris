@@ -21,7 +21,8 @@
     "@sinclair/typebox": "^0.34.52",
     "node-html-parser": "9.0.4",
     "pdfjs-dist": "6.3.289",
-    "turndown": "^7.2.4"
+    "turndown": "^7.2.4",
+    "@phaneris/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.19.1"

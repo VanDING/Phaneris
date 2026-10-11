@@ -21,6 +21,11 @@ mock.module('@phaneris/shared/config', () => ({
   migrateRemoteServerTokens: async () => 0,
 }))
 
+mock.module('@phaneris/shared/config/connections', () => ({
+  getDefaultThinkingLevel: getDefaultThinkingLevelMock,
+  setDefaultThinkingLevel: setDefaultThinkingLevelMock,
+}))
+
 describe('settings default thinking RPC handlers', () => {
   const handlers = new Map<string, HandlerFn>()
 

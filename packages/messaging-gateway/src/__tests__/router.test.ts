@@ -101,7 +101,6 @@ function makeRouter() {
   store.bind('ws1', 'sess-A', 'telegram', 'chat-1')
   const sessionManager = makeFakeSessionManager()
   const commands = makeFakeCommands()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const router = new Router(sessionManager as any, store, commands as unknown as Commands)
   return { router, store, sessionManager, commands }
 }
@@ -208,7 +207,6 @@ describe('Router', () => {
 
     const sessionManager = makeFakeSessionManager()
     const commands = makeFakeCommands()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const router = new Router(sessionManager as any, store, commands as unknown as Commands)
     const adapter = makeFakeAdapter()
 
@@ -226,7 +224,6 @@ describe('Router', () => {
     store.bind('ws1', 'sess-A', 'telegram', '-1001', undefined, undefined, 5)
     const sessionManager = makeFakeSessionManager()
     const commands = makeFakeCommands()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const router = new Router(sessionManager as any, store, commands as unknown as Commands)
 
     await router.route(makeFakeAdapter(), baseMsg({ channelId: '-1001', threadId: 7, text: '/help' }))

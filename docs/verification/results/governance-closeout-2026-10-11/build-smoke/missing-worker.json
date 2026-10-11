@@ -1,0 +1,5 @@
+{
+  "code": 1,
+  "stderr": "[server] uncaughtException: [server] Error: Missing production runtime resource: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-distribution-IMWwwT/distribution/packages/messaging-whatsapp-worker/dist/worker.cjs\n    at assertProductionRuntimeResources (/private/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-distribution-IMWwwT/distribution/packages/server/src/distribution-resources.ts:14:66)\n    at /private/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-distribution-IMWwwT/distribution/packages/server/src/index.ts:114:3\n",
+  "listening": false
+}

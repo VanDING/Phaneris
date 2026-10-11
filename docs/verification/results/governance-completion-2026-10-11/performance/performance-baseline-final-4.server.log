@@ -1,0 +1,104 @@
+2026-10-11T10:46:39.284Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T10:46:39.285Z INFO  [bootstrap] Global config found
+2026-10-11T10:46:39.286Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available
+2026-10-11T10:46:39.300Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-10-11T10:46:39.300Z ERROR [session] No LLM connection found for slug: null
+2026-10-11T10:46:39.321Z INFO  [session] Setting up ConfigWatcher for workspace: performance-workspace (/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace)
+2026-10-11T10:46:39.325Z INFO  [session] Initialized AutomationSystem for workspace performance-workspace
+2026-10-11T10:46:39.333Z INFO  [session] Loaded 24 sessions from disk (metadata only)
+2026-10-11T10:46:39.338Z INFO  Phaneris server listening on ws://127.0.0.1:53954
+PERF_READY {"port":53954,"bootMs":60.370530999999914,"workspaceRoot":"/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace","sessions":[{"id":"perf-000","name":"Performance 0 (100 messages)","messageCount":100},{"id":"perf-001","name":"Performance 1 (1000 messages)","messageCount":1000},{"id":"perf-002","name":"Performance 2 (5000 messages)","messageCount":5000},{"id":"perf-003","name":"Performance 3 (1000 messages)","messageCount":1000},{"id":"perf-004","name":"Performance 4 (1000 messages)","messageCount":1000},{"id":"perf-005","name":"Performance 5 (1000 messages)","messageCount":1000},{"id":"perf-006","name":"Performance 6 (1000 messages)","messageCount":1000},{"id":"perf-007","name":"Performance 7 (1000 messages)","messageCount":1000},{"id":"perf-008","name":"Performance 8 (1000 messages)","messageCount":1000},{"id":"perf-009","name":"Performance 9 (1000 messages)","messageCount":1000},{"id":"perf-010","name":"Performance 10 (1000 messages)","messageCount":1000},{"id":"perf-011","name":"Performance 11 (1000 messages)","messageCount":1000},{"id":"perf-012","name":"Performance 12 (1000 messages)","messageCount":1000},{"id":"perf-013","name":"Performance 13 (1000 messages)","messageCount":1000},{"id":"perf-014","name":"Performance 14 (1000 messages)","messageCount":1000},{"id":"perf-015","name":"Performance 15 (1000 messages)","messageCount":1000},{"id":"perf-016","name":"Performance 16 (1000 messages)","messageCount":1000},{"id":"perf-017","name":"Performance 17 (1000 messages)","messageCount":1000},{"id":"perf-018","name":"Performance 18 (1000 messages)","messageCount":1000},{"id":"perf-019","name":"Performance 19 (1000 messages)","messageCount":1000},{"id":"perf-020","name":"Performance 20 (1000 messages)","messageCount":1000},{"id":"perf-021","name":"Performance 21 (1000 messages)","messageCount":1000},{"id":"perf-022","name":"Performance 22 (1000 messages)","messageCount":1000},{"id":"perf-023","name":"Performance 23 (1000 messages)","messageCount":1000}],"metrics":{"memory":{"rss":165982208,"heapTotal":32056320,"heapUsed":24392258,"external":6701058,"arrayBuffers":306},"cpu":{"user":1072574,"system":315955},"loadedSessions":0,"loadedMessages":0,"pid":74619}}
+2026-10-11T10:46:39.449Z INFO  [session] Status icon changed: backlog.svg in performance-workspace
+2026-10-11T10:46:39.449Z INFO  [session] Broadcasting statuses changed for performance-workspace
+2026-10-11T10:46:39.449Z INFO  [session] Status icon changed: todo.svg in performance-workspace
+2026-10-11T10:46:39.449Z INFO  [session] Broadcasting statuses changed for performance-workspace
+2026-10-11T10:46:39.449Z INFO  [session] Status icon changed: in-progress.svg in performance-workspace
+2026-10-11T10:46:39.449Z INFO  [session] Broadcasting statuses changed for performance-workspace
+2026-10-11T10:46:39.478Z INFO  [session] Status icon changed: needs-review.svg in performance-workspace
+2026-10-11T10:46:39.478Z INFO  [session] Broadcasting statuses changed for performance-workspace
+2026-10-11T10:46:39.478Z INFO  [session] Status icon changed: done.svg in performance-workspace
+2026-10-11T10:46:39.478Z INFO  [session] Broadcasting statuses changed for performance-workspace
+2026-10-11T10:46:39.478Z INFO  [session] Status icon changed: cancelled.svg in performance-workspace
+2026-10-11T10:46:39.478Z INFO  [session] Broadcasting statuses changed for performance-workspace
+2026-10-11T10:46:39.821Z INFO  [webui] Successful auth from 127.0.0.1
+2026-10-11T10:46:40.528Z INFO  PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:40.528Z INFO  AUTOMATIONS_GET: Loading automations for workspace: performance-workspace
+2026-10-11T10:46:40.529Z INFO  AUTOMATIONS_GET: Reading config from: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace/automations.json
+2026-10-11T10:46:40.529Z INFO  AUTOMATIONS_GET: No automations.json found for workspace performance-workspace
+2026-10-11T10:46:40.533Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace
+2026-10-11T10:46:40.540Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:40.549Z INFO  [sessions:get] result {"ctxWorkspaceId":"performance-workspace","webContentsId":null,"resolvedWorkspaceId":"performance-workspace","returnedCount":24,"returnedWorkspaceIds":{"performance-workspace":24},"returnedIds":{"count":24,"ids":["perf-000","perf-001","perf-002","perf-003","perf-004","perf-005","perf-006","perf-007","perf-008","perf-009","perf-010","perf-011","perf-012","perf-013","perf-014","perf-015","perf-016","perf-017","perf-018","perf-019","perf-020","perf-021","perf-022","perf-023"],"truncated":false}}
+2026-10-11T10:46:40.694Z INFO  [session] Label config changed in performance-workspace
+2026-10-11T10:46:40.694Z INFO  [session] Broadcasting labels changed for performance-workspace
+2026-10-11T10:46:40.772Z DEBUG [session] Lazy-loaded 100 messages for session perf-000
+2026-10-11T10:46:40.776Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace, workingDirectory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:40.776Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:41.501Z INFO  PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:41.501Z INFO  AUTOMATIONS_GET: Loading automations for workspace: performance-workspace
+2026-10-11T10:46:41.501Z INFO  AUTOMATIONS_GET: Reading config from: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace/automations.json
+2026-10-11T10:46:41.502Z INFO  AUTOMATIONS_GET: No automations.json found for workspace performance-workspace
+2026-10-11T10:46:41.506Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace
+2026-10-11T10:46:41.506Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:41.508Z INFO  [sessions:get] result {"ctxWorkspaceId":"performance-workspace","webContentsId":null,"resolvedWorkspaceId":"performance-workspace","returnedCount":24,"returnedWorkspaceIds":{"performance-workspace":24},"returnedIds":{"count":24,"ids":["perf-000","perf-001","perf-002","perf-003","perf-004","perf-005","perf-006","perf-007","perf-008","perf-009","perf-010","perf-011","perf-012","perf-013","perf-014","perf-015","perf-016","perf-017","perf-018","perf-019","perf-020","perf-021","perf-022","perf-023"],"truncated":false}}
+2026-10-11T10:46:41.680Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace, workingDirectory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:41.680Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:41.957Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace
+2026-10-11T10:46:41.958Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:46:42.092Z DEBUG [session] Lazy-loaded 1000 messages for session perf-003
+2026-10-11T10:46:44.019Z DEBUG [session] Lazy-loaded 1000 messages for session perf-001
+2026-10-11T10:46:45.778Z DEBUG [session] Lazy-loaded 5000 messages for session perf-002
+2026-10-11T10:46:47.780Z INFO  [search] ipc:request {"searchId":"mv3p7mv2","query":"PERF_END_perf-002"}
+2026-10-11T10:46:47.781Z DEBUG SEARCH_SESSIONS: Searching "PERF_END_perf-002" in /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace/sessions
+2026-10-11T10:46:47.781Z INFO  [search] ripgrep:start {"searchId":"mv3p7mv2","query":"PERF_END_perf-002"}
+2026-10-11T10:46:47.782Z DEBUG [handler] [search] Ripgrep path: /Users/van/projects/Phaneris/node_modules/@vscode/ripgrep-darwin-x64/bin/rg
+2026-10-11T10:46:47.782Z DEBUG [handler] [search] Sessions directory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace/sessions
+2026-10-11T10:46:47.784Z DEBUG [handler] [search] Running ripgrep: /Users/van/projects/Phaneris/node_modules/@vscode/ripgrep-darwin-x64/bin/rg --json --max-count 10 -g **/session.jsonl -i -e "type":"(user|assistant)".*PERF_END_perf-002|PERF_END_perf-002.*"type":"(user|assistant)" /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace/sessions
+2026-10-11T10:46:47.804Z INFO  [search] ripgrep:complete {"searchId":"mv3p7mv2","durationMs":22,"totalSessions":1,"returnedSessions":1}
+2026-10-11T10:46:47.804Z INFO  [search] ipc:response {"searchId":"mv3p7mv2","resultCount":1,"totalFound":1}
+2026-10-11T10:46:54.004Z DEBUG [session] Lazy-loaded 1000 messages for session perf-004
+2026-10-11T10:46:54.007Z DEBUG [session] Lazy-loaded 1000 messages for session perf-005
+2026-10-11T10:46:54.009Z DEBUG [session] Lazy-loaded 1000 messages for session perf-006
+2026-10-11T10:46:54.012Z DEBUG [session] Lazy-loaded 1000 messages for session perf-007
+2026-10-11T10:46:54.014Z DEBUG [session] Lazy-loaded 1000 messages for session perf-008
+2026-10-11T10:46:54.016Z DEBUG [session] Lazy-loaded 1000 messages for session perf-009
+2026-10-11T10:46:54.018Z DEBUG [session] Lazy-loaded 1000 messages for session perf-010
+2026-10-11T10:46:54.020Z DEBUG [session] Lazy-loaded 1000 messages for session perf-011
+2026-10-11T10:46:54.023Z DEBUG [session] Lazy-loaded 1000 messages for session perf-012
+2026-10-11T10:46:54.025Z DEBUG [session] Lazy-loaded 1000 messages for session perf-013
+2026-10-11T10:46:54.027Z DEBUG [session] Lazy-loaded 1000 messages for session perf-014
+2026-10-11T10:46:54.029Z DEBUG [session] Lazy-loaded 1000 messages for session perf-015
+2026-10-11T10:46:54.032Z DEBUG [session] Lazy-loaded 1000 messages for session perf-016
+2026-10-11T10:46:54.035Z DEBUG [session] Lazy-loaded 1000 messages for session perf-017
+2026-10-11T10:46:54.039Z DEBUG [session] Lazy-loaded 1000 messages for session perf-018
+2026-10-11T10:46:54.041Z DEBUG [session] Lazy-loaded 1000 messages for session perf-019
+2026-10-11T10:46:54.043Z DEBUG [session] Lazy-loaded 1000 messages for session perf-020
+2026-10-11T10:46:54.045Z DEBUG [session] Lazy-loaded 1000 messages for session perf-021
+2026-10-11T10:46:54.047Z DEBUG [session] Lazy-loaded 1000 messages for session perf-022
+2026-10-11T10:46:54.050Z DEBUG [session] Lazy-loaded 1000 messages for session perf-023
+[SchedulerService] TICK at 18:47 UTC: 2026-10-11T10:47:00.002Z
+[SchedulerService] TICK callback completed
+2026-10-11T10:47:57.516Z INFO  PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:57.516Z INFO  AUTOMATIONS_GET: Loading automations for workspace: performance-workspace
+2026-10-11T10:47:57.516Z INFO  AUTOMATIONS_GET: Reading config from: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace/automations.json
+2026-10-11T10:47:57.518Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace
+2026-10-11T10:47:57.519Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:57.519Z INFO  AUTOMATIONS_GET: No automations.json found for workspace performance-workspace
+2026-10-11T10:47:57.523Z INFO  [sessions:get] result {"ctxWorkspaceId":"performance-workspace","webContentsId":null,"resolvedWorkspaceId":"performance-workspace","returnedCount":25,"returnedWorkspaceIds":{"performance-workspace":25},"returnedIds":{"count":25,"ids":["261011-agile-dawn","perf-000","perf-001","perf-002","perf-003","perf-004","perf-005","perf-006","perf-007","perf-008","perf-009","perf-010","perf-011","perf-012","perf-013","perf-014","perf-015","perf-016","perf-017","perf-018","perf-019","perf-020","perf-021","perf-022","perf-023"],"truncated":false}}
+2026-10-11T10:47:57.720Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace, workingDirectory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:57.721Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:58.961Z INFO  PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:58.961Z INFO  AUTOMATIONS_GET: Loading automations for workspace: performance-workspace
+2026-10-11T10:47:58.961Z INFO  AUTOMATIONS_GET: Reading config from: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace/automations.json
+2026-10-11T10:47:58.962Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace
+2026-10-11T10:47:58.963Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:58.963Z INFO  AUTOMATIONS_GET: No automations.json found for workspace performance-workspace
+2026-10-11T10:47:58.966Z INFO  [sessions:get] result {"ctxWorkspaceId":"performance-workspace","webContentsId":null,"resolvedWorkspaceId":"performance-workspace","returnedCount":25,"returnedWorkspaceIds":{"performance-workspace":25},"returnedIds":{"count":25,"ids":["261011-agile-dawn","perf-000","perf-001","perf-002","perf-003","perf-004","perf-005","perf-006","perf-007","perf-008","perf-009","perf-010","perf-011","perf-012","perf-013","perf-014","perf-015","perf-016","perf-017","perf-018","perf-019","perf-020","perf-021","perf-022","perf-023"],"truncated":false}}
+2026-10-11T10:47:59.149Z INFO  SKILLS_GET: Loading skills for workspace: performance-workspace, workingDirectory: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:59.150Z INFO  SKILLS_GET: Loaded 2 skills from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:47:59.982Z INFO  Shutting down...
+[SchedulerService] TICK at 18:48 UTC: 2026-10-11T10:48:00.002Z
+[SchedulerService] TICK callback completed
+2026-10-11T10:48:01.984Z INFO  [session] Cleaning up resources...
+2026-10-11T10:48:01.986Z INFO  [session] Stopped config watcher for /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:48:01.986Z INFO  [session] Disposed AutomationSystem for /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/craft-performance-fmYyeb/workspaces/performance-workspace
+2026-10-11T10:48:01.992Z INFO  [session] Cleanup complete

@@ -1,0 +1,7 @@
+bun install v1.4.2 (744846f84)
+Resolving dependencies
+error: Couldn't find patch file: 'patches/node-tesseract-ocr@2.2.1.patch'
+
+To create a new patch file run:
+
+  bun patch patches/node-tesseract-ocr@2.2.1.patch

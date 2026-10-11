@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-11T10:50:26.439Z",
+  "scannedFiles": 1497,
+  "webuiClosureSize": 740,
+  "webuiShimCount": 4,
+  "inspected": {
+    "webui-unshimmed-node": 8,
+    "undeclared-subpath-import": 1193
+  },
+  "baselineSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "currentSize": {
+    "webui-unshimmed-node": 0,
+    "undeclared-subpath-import": 0
+  },
+  "failures": []
+}

@@ -1,0 +1,14 @@
+2026-10-11T04:02:12.074Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T04:02:12.074Z INFO  [bootstrap] Global config found
+2026-10-11T04:02:12.075Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available
+2026-10-11T04:02:12.084Z INFO  [session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T04:02:12.088Z INFO  Phaneris server listening on ws://127.0.0.1:63339
+[messaging] Disabled via PHANERIS_DISABLE_MESSAGING — skipping workspace messaging init
+PHANERIS_SERVER_URL=ws://127.0.0.1:63339
+PHANERIS_WEBUI_URL=http://0.0.0.0:63339
+2026-10-11T04:02:12.107Z INFO  Shutting down...
+2026-10-11T04:02:14.109Z INFO  [session] Cleaning up resources...
+2026-10-11T04:02:14.110Z INFO  [session] Cleanup complete
+
+2026-10-11T04:02:12.084Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-10-11T04:02:12.084Z ERROR [session] No LLM connection found for slug: null

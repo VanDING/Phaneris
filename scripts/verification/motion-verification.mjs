@@ -70,7 +70,6 @@ const sample = (page, read, count) =>
   page.evaluate(async ({ source, total }) => {
     // The reader is a real function again inside the page; calling it here would
     // return a single value instead of a per-frame series.
-    // eslint-disable-next-line no-new-func
     const read = new Function(`return (${source})`)()
     const values = []
     for (let index = 0; index < total; index += 1) {

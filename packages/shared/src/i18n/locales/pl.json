@@ -2138,6 +2138,7 @@
   "toast.failedToRefreshTitle": "Nie udało się odświeżyć tytułu",
   "toast.failedToReveal": "Nie udało się pokazać w {{fileManager}}",
   "toast.failedToSaveSetting": "Nie udało się zapisać ustawienia {{setting}}",
+  "toast.failedToSwitchWorkspace": "Nie udało się przełączyć obszaru roboczego",
   "toast.failedToToggleAutomation": "Nie udało się przełączyć automatyzacji",
   "toast.failedToUpdateProject": "Nie udało się zaktualizować projektu sesji",
   "toast.installingUpdate": "Instalowanie aktualizacji...",

@@ -1,0 +1,19 @@
+
+27 |   assert(upload.uses?.match(/@[a-f0-9]{40}$/), 'Artifact action must be pinned to a commit')
+28 |   assert.equal(upload.with?.path, '.cache/verification/')
+29 | }
+30 | assert(workflow.jobs.validate?.steps.some(step => step.run === 'bun run build:smoke' && step.if === "github.event_name == 'pull_request'"), 'PRs must build the production paths')
+31 | assert(workflow.jobs.validate?.steps.some(step => step.run === 'bun run test:critical'), 'Critical scenarios must run in CI')
+32 | assert(workflow.jobs.validate.steps.some(step => step.run === 'bunx playwright install --with-deps chromium'), 'Production renderer workflows require a real browser in CI')
+     ^
+AssertionError: Production renderer workflows require a real browser in CI
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:32:1
+
+Bun v1.4.2 (macOS x64)

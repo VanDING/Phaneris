@@ -14,4 +14,4 @@ export {
   type TransportConnectionError,
   type TransportCloseInfo,
   type TransportConnectionState,
-} from '@phaneris/server-core/transport'
+} from '@phaneris/server-core/transport/client'

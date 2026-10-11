@@ -14,12 +14,12 @@ import { SESSION_PERSISTENT_FIELDS, type SessionPersistentField } from './types.
  */
 export function pickSessionFields<T extends object>(
   source: T
-): Partial<Record<SessionPersistentField, unknown>> {
+): Partial<Pick<T, Extract<keyof T, SessionPersistentField>>> {
   const result: Partial<Record<SessionPersistentField, unknown>> = {};
   for (const field of SESSION_PERSISTENT_FIELDS) {
     if (field in source && (source as Record<string, unknown>)[field] !== undefined) {
       result[field] = (source as Record<string, unknown>)[field];
     }
   }
-  return result;
+  return result as Partial<Pick<T, Extract<keyof T, SessionPersistentField>>>;
 }

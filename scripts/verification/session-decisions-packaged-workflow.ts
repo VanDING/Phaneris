@@ -78,7 +78,7 @@ delete env.ELECTRON_RUN_AS_NODE; delete env.NODE_OPTIONS
 let application: Awaited<ReturnType<typeof _electron.launch>> | undefined
 try {
   application = await _electron.launch({ executablePath: process.platform === 'win32' ? join(app, 'Phaneris.exe') : join(app, 'Contents/MacOS/Phaneris'),
-    args: ['--disable-gpu'], env, timeout: 60000 })
+    args: ['--disable-gpu'], env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)), timeout: 60000 })
   const page = await application.firstWindow(); page.on('pageerror', error => errors.push(error.message)); page.setDefaultTimeout(15000)
   await page.waitForLoadState('domcontentloaded')
   await page.waitForFunction(() => typeof (window as any).electronAPI?.getSessionDecisions === 'function')

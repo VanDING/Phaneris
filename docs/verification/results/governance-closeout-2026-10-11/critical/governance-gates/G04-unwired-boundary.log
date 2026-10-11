@@ -1,0 +1,19 @@
+
+58 | assert(workflow.jobs['native-macos']?.steps.some(step => step.run === 'bun run test:native-client'), 'Native main/preload renderer acceptance must run in macOS CI')
+59 | assert(workflow.jobs['production-container']?.steps.some(step => step.run === 'bun run test:container'), 'Production container acceptance must run in Linux CI')
+60 | assert(workflow.jobs['full-validation'].steps.some(step => step.run === 'bun run test:clean-install'), 'Independent frozen install must run in CI')
+61 | const metadata = JSON.parse(readFileSync(input('manifest', 'package.json'), 'utf8')) as { scripts: Record<string, string> }
+62 | for (const gate of ['boundaries', 'cycles', 'rpc-contracts', 'distribution']) {
+63 |   assert(metadata.scripts.lint?.split(' && ').includes(`bun run check:${gate}`), `${gate} must run in the lint/pre-push gate`)
+       ^
+AssertionError: boundaries must run in the lint/pre-push gate
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:63:3
+
+Bun v1.4.2 (macOS x64)

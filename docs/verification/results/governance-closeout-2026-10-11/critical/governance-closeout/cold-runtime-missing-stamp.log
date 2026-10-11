@@ -1,0 +1,2 @@
+Python runtime pin check failed:
+  - No bundled uv version stamp found under /Users/van/projects/Phaneris/.cache/verification/critical-jfhLnx/governance-closeout/clean-runtime/apps/electron/resources/bin; the check would be vacuous.

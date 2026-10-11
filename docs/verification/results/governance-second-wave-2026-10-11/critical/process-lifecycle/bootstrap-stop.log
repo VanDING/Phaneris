@@ -1,0 +1,10 @@
+2026-10-11T04:02:15.086Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T04:02:15.086Z INFO  [bootstrap] Global config found
+[session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T04:02:15.098Z INFO  Phaneris server listening on ws://127.0.0.1:63340
+2026-10-11T04:02:15.099Z INFO  Shutting down...
+[session] Cleaning up resources...
+[session] Cleanup complete
+{"id":"L07-bootstrap-stop-owner","passed":true,"cleanups":1}
+[session] No LLM connection slug available for reinitializeAuth
+[session] No LLM connection found for slug: null

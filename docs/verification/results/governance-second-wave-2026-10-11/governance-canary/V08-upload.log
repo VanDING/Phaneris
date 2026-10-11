@@ -1,0 +1,19 @@
+
+20 |   assert.equal(uv?.with?.version, UV_VERSION, `${job} must pin uv ${UV_VERSION}`)
+21 | }
+22 | for (const job of ['validate', 'quality-windows', 'full-validation']) {
+23 |   const steps = workflow.jobs[job]?.steps ?? []
+24 |   const upload = steps.find(step => step.uses?.startsWith('actions/upload-artifact@'))
+25 |   assert(upload && upload.if === 'always()', `${job} must always upload verification evidence`)
+       ^
+AssertionError: validate must always upload verification evidence
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:25:3
+
+Bun v1.4.2 (macOS x64)

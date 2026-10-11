@@ -22,11 +22,8 @@ import type {
   CoreBackendConfig,
   BackendHostRuntimeContext,
 } from './types.ts';
-import {
-  getLlmConnection,
-  getDefaultLlmConnection,
-  type LlmConnection,
-} from '../../config/storage.ts';
+import { getLlmConnection, getDefaultLlmConnection } from '../../config/connections.ts';
+import { type LlmConnection } from '../../config/storage.ts';
 import type { CustomEndpointConfig } from '../../config/llm-connections.ts';
 // Import validation helpers for provider-auth combinations
 import {

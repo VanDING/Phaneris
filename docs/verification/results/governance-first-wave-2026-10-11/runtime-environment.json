@@ -1,0 +1,13 @@
+{
+  "bun": "1.4.2",
+  "nodeOnPath": "v24.16.0",
+  "uvOnPath": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+  "documentTools": {
+    "binary": "apps/electron/resources/bin/darwin-x64/uv",
+    "version": "uv 0.12.22 (70fe1196a 2026-10-01 x86_64-apple-darwin)",
+    "sha256": "26bb76bfabdaf5ab53ddba2d028520d070a7c15c896896d155af324c2f3a7059",
+    "selection": "_tool_test_harness.py resolve_uv_binary prefers bundled runtime"
+  },
+  "ciConfiguredUv": "0.12.22",
+  "remoteCiExecuted": false
+}

@@ -62,7 +62,8 @@ __pycache__/
 # Lock files from other package managers
 pnpm-lock.yaml
 
-# Phaneris local data (sessions, credentials, config)
+# Phaneris local data; keep the legacy migration input ignored too
+.phaneris/
 .craft-agent/
 
 # SSH keys and secrets

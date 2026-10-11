@@ -1,6 +1,6 @@
 # Release readiness checklist
 
-Status: proposed release gate; identity/signing entries require maintainer decisions and credentials.
+Status: proposed release gate; external ownership/signing entries require maintainer decisions and credentials.
 
 This checklist tracks the trust chain that must be complete before binaries are distributed outside the development team. Code-verifiable items should run in CI; the remaining items are manual release-owner decisions.
 
@@ -16,15 +16,15 @@ This checklist tracks the trust chain that must be complete before binaries are 
 
 ## Branding and update chain
 
-The fork must not ship upstream identity. Maintainers must choose and record:
+Phaneris uses its independent product identity; external release ownership still requires verification:
 
-- [ ] independent product name and bundle/application id;
+- [x] independent product name and bundle/application id: `Phaneris`, `io.github.vanding.phaneris` (identity manifest and generated packaging metadata).
 - [ ] owned update feed domain and release bucket;
 - [ ] owned support, security, and documentation URLs;
 - [ ] signing certificate / notarization identity per platform;
 - [ ] release notes and rollback policy.
 
-Until these are decided, `appId`, `productName`, update feed, and publisher metadata intentionally remain unmodified; do not publish public binaries from this branch.
+Code identity and publisher metadata are independent. All optional service URLs are currently null, with no upstream fallback; owned service deployment and platform signing remain release-owner work. Public distribution still requires the unchecked gates below. Current adjudication: [governance completion ledger](process/governance-completion-2026-10-11.md).
 
 ## Artifact verification
 
@@ -39,6 +39,6 @@ Until these are decided, `appId`, `productName`, update feed, and publisher meta
 
 ## Privacy
 
-- [ ] Crash reporting is opt-in (`PHANERIS_TELEMETRY_ENABLED=1` plus a DSN).
+- [x] Crash reporting defaults to disabled (`services.telemetry.enabled = false`, DSN null in the identity manifest); opt-in requires explicit configuration. Runtime/packaging verification remains part of release rehearsal.
 - [ ] A user-visible telemetry description and local diagnostic export exist.
 - [ ] No provider tokens or workspace content are present in release artifacts or logs.

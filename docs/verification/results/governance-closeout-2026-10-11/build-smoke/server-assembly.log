@@ -1,0 +1,63 @@
+=== Building Phaneris Server 0.3.1 for darwin-x64 ===
+  Output: /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-distribution-IMWwwT/distribution
+
+[1/8] Cleaning output directory...
+
+[2/8] Downloading Bun bun-v1.4.2...
+Bun 1.4.2 already present at /Users/van/projects/Phaneris/apps/electron/vendor/bun/bun
+  Bun runtime installed (66.1 MB)
+
+[3/8] Downloading uv 0.12.22...
+uv already present at /Users/van/projects/Phaneris/apps/electron/resources/bin/darwin-x64/uv
+  uv binary installed (47.3 MB)
+
+[4/8] Building MCP servers...
+Building Pi agent server...
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 2710 modules in 387ms
+
+  bundle.js  10.59 MB  (entry point)
+
+$ bun run server:build:subprocess && bun run build:wa-worker
+$ cd packages/pi-agent-server && bun run build
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+Bundled 2710 modules in 410ms
+
+  bundle.js  10.59 MB  (entry point)
+
+$ bun run scripts/build-wa-worker.ts
+📨 Building WhatsApp worker (bundling Baileys) — build 2026-10-11T14:59:38.916Z (8e5bf13b+dirty)...
+
+  packages/messaging-whatsapp-worker/dist/worker.cjs  11.5mb ⚠️
+
+⚡ Done in 497ms
+🔍 Verifying worker output...
+✅ WhatsApp worker built (11.51 MB) → /Users/van/projects/Phaneris/packages/messaging-whatsapp-worker/dist/worker.cjs
+
+[5/8] Assembling resources...
+  Copying docs, themes, permissions, tool-icons...
+  Copying Python scripts...
+  Copying doc tool wrappers...
+
+[6/8] Copying production dependencies...
+  Found 50 external packages referenced in source
+  Source imports + declared deps: 498 packages
+  Total: 499 packages copied to node_modules
+
+[7/8] Copying workspace packages...
+  Symlink: @phaneris/core -> packages/core
+  Symlink: @phaneris/messaging-whatsapp-worker -> packages/messaging-whatsapp-worker
+  Symlink: @phaneris/session-tools-core -> packages/session-tools-core
+  Symlink: @phaneris/server -> packages/server
+  Symlink: @phaneris/shared -> packages/shared
+  Symlink: @phaneris/server-core -> packages/server-core
+  Symlink: @phaneris/messaging-gateway -> packages/messaging-gateway
+
+[8/8] Creating entry scripts...
+
+  Assembly complete: 1572 MB
+
+  Build completed successfully!
+
+Quick start:
+  PHANERIS_SERVER_TOKEN=<secret> /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-distribution-IMWwwT/distribution/start.sh

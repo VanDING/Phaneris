@@ -41,6 +41,8 @@ export interface PlatformServices {
   appRootPath: string
   resourcesPath: string
   isPackaged: boolean
+  /** Host executable for the Pi subprocess when the host already runs under Bun. */
+  nodeRuntimePath?: string
 
   // -- App metadata --
   appVersion: string

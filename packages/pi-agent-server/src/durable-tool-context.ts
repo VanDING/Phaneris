@@ -1,4 +1,4 @@
-import type { DurableToolExecutionIdentity } from '../../shared/src/durable-runtime/types.ts'
+import type { DurableToolExecutionIdentity } from '@phaneris/shared/durable-runtime/types'
 
 export type ContextWithDurableTool<T> = T & {
   durableTool: DurableToolExecutionIdentity

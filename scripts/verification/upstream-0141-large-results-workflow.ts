@@ -50,7 +50,7 @@ try {
     const text = '正文'.repeat(30000) + 'TAIL_EVIDENCE' + '结尾'.repeat(100)
     const filter = filtering.buildLargeResultFilter()
     const result = await filter({ text, context: { toolName: 'long-line', intent: 'TAIL_EVIDENCE' }, budgetChars: 27000, filePath: 'C:/fixture/original.txt' })
-    assert(result?.text.includes('TAIL_EVIDENCE')); assert(result.text.length <= 27000)
+    assert(result); assert(result.text.includes('TAIL_EVIDENCE')); assert(result.text.length <= 27000)
     assert.equal(await filter({ text: raw, context: { toolName: 'tiny', intent: 'TAIL_EVIDENCE' }, budgetChars: 90, filePath: 'C:/fixture/' + 'x'.repeat(1000) }), null)
     const before = requests.length
     assert.equal(await filter({ text: '正文'.repeat(large.LARGE_RESULT_MAX_TEXT_CHARS), context: { toolName: 'too-large', intent: 'tail' }, budgetChars: 12000, filePath: 'fixture' }), null)

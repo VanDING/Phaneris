@@ -1,58 +1,50 @@
 #!/usr/bin/env bun
 import { existsSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { checkEnvironment, root, run } from './check-environment'
+import { criticalTestGroups, criticalWorkflows } from './critical-scenarios'
+import { VerificationRun, verifyVerificationDirectory } from './verification/verification-artifacts'
 
-checkEnvironment()
-await run(['run', 'scripts/check-runtime-boundary.ts'], root)
-await run(['run', 'scripts/check-architecture.ts'], root)
-await run(['run', 'scripts/check-automation-events.ts'], root)
-await run(['run', 'scripts/verification/runtime-boundary-gate-workflow.ts'], root)
-await run(['run', 'scripts/verification/durable-runtime-boundary-workflow.ts'], root)
-await run(['run', 'scripts/verification/durable-runtime-crash-workflow.ts'], root)
-// Separate package processes preserve Bun mock isolation. No provider credentials required.
-const groups: [string, string[]][] = [
-  ['.', ['scripts/check-environment.test.ts']],
-  ['packages/server-core', [
-    'src/durable-runtime/coordinator.test.ts',
-    'src/durable-runtime/process-crash.test.ts',
-    'src/durable-runtime/projection-runner.test.ts',
-    'src/sessions/idle-session-cache.test.ts',
-    'src/tasks/TaskRunner.test.ts',
-    'src/transport/__tests__/server-lifecycle.test.ts',
-  ]],
-  ['packages/shared', [
-    'src/sessions/__tests__/persistence-queue.test.ts',
-    'src/durable-runtime/recovery.test.ts',
-    'src/config/__tests__/theme.test.ts',
-  ]],
-  ['packages/pi-agent-server', [
-    'src/transport-delta.test.ts',
-    'src/request-diagnostics.test.ts',
-    'src/durable-model-stream.test.ts',
-    'src/length-continuation.test.ts',
-  ]],
-  ['packages/ui', [
-    'src/components/chat/__tests__/streaming-projection.test.ts',
-    'src/components/chat/__tests__/turn-utils-grouping.test.ts',
-  ]],
-  ['apps/electron', [
-    'src/renderer/atoms/__tests__/sessions.isolated.ts',
-    'src/renderer/lib/__tests__/reconnect-recovery.test.ts',
-  ]],
-]
-
-// Bun treats positional arguments as path filters, so a renamed or deleted file
-// silently narrows the run and still exits 0. Resolve every entry up front.
-const missing = groups.flatMap(([cwd, files]) =>
-  files.map(file => resolve(root, cwd, file)).filter(absolute => !existsSync(absolute)))
-if (missing.length) throw new Error(`Missing critical test files:\n${missing.join('\n')}`)
-
-for (const [cwd, files] of groups) {
-  // Global-mutating suites are `.isolated.ts` and must not share a process.
-  const isolated = files.filter(file => file.includes('.isolated.'))
-  const shared = files.filter(file => !file.includes('.isolated.'))
-  const groupCwd = resolve(root, cwd)
-  if (shared.length) await run(['test', ...shared.map(file => './' + file)], groupCwd)
-  for (const file of isolated) await run(['test', './' + file], groupCwd)
+const args = process.argv.slice(2)
+const repositoryArgument = args.find(arg => arg.startsWith('--repository='))?.slice('--repository='.length)
+if (repositoryArgument && !args.includes('--preflight')) throw new Error('--repository is only supported for read-only preflight')
+const checkedRoot = repositoryArgument ? resolve(repositoryArgument) : root
+const missing = [
+  ...criticalWorkflows.map(scene => resolve(checkedRoot, scene.entry)),
+  ...criticalTestGroups.flatMap(([cwd, files]) => files.map(file => resolve(checkedRoot, cwd, file))),
+].filter(file => !existsSync(file))
+if (missing.length) throw new Error(`Missing critical scenario entries:\n${missing.join('\n')}`)
+if (args.includes('--preflight')) {
+  console.log(`Critical preflight OK: ${criticalWorkflows.length} workflows and ${criticalTestGroups.length} package groups`)
+} else {
+  const evidence = new VerificationRun('critical', args)
+  let failure: unknown
+  const completed: string[] = []
+  try {
+    evidence.checkArguments()
+    checkEnvironment()
+    await run(['run', 'build:runtime'], root, { logFile: join(evidence.directory, 'runtime-build.log') })
+    for (const gate of ['runtime-boundary', 'architecture', 'automation-events']) {
+      await run(['run', `scripts/check-${gate}.ts`], root, { logFile: join(evidence.directory, `${gate}.log`) })
+    }
+    for (const scene of criticalWorkflows) {
+      const directory = join(evidence.directory, scene.id)
+      await run(['run', scene.entry, `--output-dir=${directory}`], root, { logFile: join(evidence.directory, `${scene.id}.log`) })
+      verifyVerificationDirectory(directory, { workflow: scene.id, minimum: scene.minimum, required: scene.required })
+      completed.push(scene.id)
+    }
+    // Separate package processes preserve Bun mock isolation. No provider credentials required.
+    for (const [cwd, files] of criticalTestGroups) {
+      const isolated = files.filter(file => file.includes('.isolated.'))
+      const shared = files.filter(file => !file.includes('.isolated.'))
+      const groupCwd = resolve(root, cwd)
+      if (shared.length) await run(['test', ...shared.map(file => './' + file)], groupCwd, { logFile: join(evidence.directory, `${cwd.replaceAll('/', '-')}-tests.log`), minimumTests: 1 })
+      for (const file of isolated) await run(['test', './' + file], groupCwd, { logFile: join(evidence.directory, `${cwd.replaceAll('/', '-')}-${file.replaceAll('/', '-')}.log`), minimumTests: 1 })
+      completed.push(`tests:${cwd}`)
+    }
+    evidence.complete(completed)
+  } catch (error) { failure = error }
+  evidence.json('critical.json', { workflows: criticalWorkflows, groups: criticalTestGroups, completed })
+  evidence.finish(failure)
+  console.log(JSON.stringify({ passed: completed.length, output: join(evidence.directory, 'critical.json') }))
 }

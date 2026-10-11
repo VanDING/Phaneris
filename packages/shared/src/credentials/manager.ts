@@ -1,3 +1,4 @@
+import { loadStoredConfig } from '../config/repository.ts';
 /**
  * Credential Manager
  *
@@ -26,29 +27,32 @@ export class CredentialManager {
     await this.backend.set(id, credential);
   }
 
-  async delete(id: CredentialId): Promise<boolean> {
+  async delete(id: CredentialId, options: { throwOnError?: boolean } = {}): Promise<boolean> {
     try {
       return await this.backend.delete(id);
     } catch (err) {
       debug('[CredentialManager] Error deleting credentials:', err);
+      if (options.throwOnError) throw err;
       return false;
     }
   }
 
-  deleteSync(id: CredentialId): boolean {
+  deleteSync(id: CredentialId, options: { throwOnError?: boolean } = {}): boolean {
     try {
       return this.backend.deleteSync(id);
     } catch (err) {
       debug('[CredentialManager] Error deleting credentials:', err);
+      if (options.throwOnError) throw err;
       return false;
     }
   }
 
-  async list(filter?: Partial<CredentialId>): Promise<CredentialId[]> {
+  async list(filter?: Partial<CredentialId>, options: { throwOnError?: boolean } = {}): Promise<CredentialId[]> {
     try {
       return await this.backend.list(filter);
     } catch (err) {
       debug('[CredentialManager] Error listing credentials:', err);
+      if (options.throwOnError) throw err;
       return [];
     }
   }
@@ -146,10 +150,10 @@ export class CredentialManager {
   }
 
   /** Delete all credentials for a workspace (source credentials) */
-  async deleteWorkspaceCredentials(workspaceId: string): Promise<void> {
-    const allCreds = await this.list({ workspaceId });
+  async deleteWorkspaceCredentials(workspaceId: string, options: { throwOnError?: boolean } = {}): Promise<void> {
+    const allCreds = await this.list({ workspaceId }, options);
     for (const cred of allCreds) {
-      await this.delete(cred);
+      await this.delete(cred, options);
     }
   }
 
@@ -526,13 +530,12 @@ export class CredentialManager {
     }
 
     // 2. Check if default connection has credentials
-    // Import lazily to avoid circular dependency
     try {
-      const { getDefaultLlmConnection, getLlmConnection } = await import('../config/storage.ts');
-      const defaultSlug = getDefaultLlmConnection();
+      const config = loadStoredConfig();
+      const defaultSlug = config?.llmConnections?.length ? (config.defaultLlmConnection || config.llmConnections[0]?.slug) : null;
 
       if (defaultSlug) {
-        const connection = getLlmConnection(defaultSlug);
+        const connection = config?.llmConnections?.find(candidate => candidate.slug === defaultSlug);
         if (connection && connection.authType !== 'none' && connection.authType !== 'environment') {
           const hasCredentials = await this.hasLlmCredentials(
             defaultSlug,

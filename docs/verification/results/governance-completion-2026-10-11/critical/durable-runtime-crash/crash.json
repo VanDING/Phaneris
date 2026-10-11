@@ -1,0 +1,2303 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-11T10:50:32.457Z",
+  "command": "bun run scripts/verification/durable-runtime-crash-workflow.ts",
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F",
+  "baselineSha": "dbd32f60b5d90e20b1bc2b231035baf6b171ddc2",
+  "headSha": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+  "dirty": true,
+  "runtime": {
+    "bun": "1.4.2",
+    "executable": "/Users/van/.bun/bin/bun",
+    "platform": "darwin",
+    "architecture": "x64",
+    "piSdk": "1.1.0"
+  },
+  "sourceFingerprint": "df09fe97eb7cb0ef9a3386af4328f0184a338b9d6246d811595741d3fb0c51fa",
+  "sourceManifest": [
+    {
+      "path": "packages/pi-agent-server/src/ambient.d.ts",
+      "sha256": "0fe29a03826becfb584dc97ba84da88deefc61aaf05dcf9c751362f11d70d077"
+    },
+    {
+      "path": "packages/pi-agent-server/src/cache-warming-accounting.ts",
+      "sha256": "fe03d54115b75d7c38dffdec84e075342e4146d0f28a65cc442c5a6d5eb99a48"
+    },
+    {
+      "path": "packages/pi-agent-server/src/callback-auth.ts",
+      "sha256": "d21e5aa0d6a176788db03dbee2cc7e00870bdc5c977cdbf3902c77f79ea6674e"
+    },
+    {
+      "path": "packages/pi-agent-server/src/canonical-model-context.ts",
+      "sha256": "31c68c44b00e149d27381d9db50a5ec84613eae4b12f73a878e1e60a24034fd0"
+    },
+    {
+      "path": "packages/pi-agent-server/src/compaction-wait.ts",
+      "sha256": "34727369e94578adbf777361f2e1e071f6c3761e979ed74ad8fe150d486bd445"
+    },
+    {
+      "path": "packages/pi-agent-server/src/context-policy-stream.ts",
+      "sha256": "eece1533e1dd7d453c0c518e2b23d91bfdab762265a412fdfe54b6cf0934e4d6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/context-usage.ts",
+      "sha256": "94df111170c398c59d8045323ea3524afc269cc523b94566b37297d2fd523f46"
+    },
+    {
+      "path": "packages/pi-agent-server/src/custom-endpoint-auth.ts",
+      "sha256": "0d514a51b046adc9a50d44891a44e384bd7e27fbd88aae84342e0e92c7832739"
+    },
+    {
+      "path": "packages/pi-agent-server/src/custom-endpoint-models.ts",
+      "sha256": "0a024925fe41941b543b6c08e2ebdc05f48cd06cc98b9892a1509b4f89518e73"
+    },
+    {
+      "path": "packages/pi-agent-server/src/durable-model-stream.ts",
+      "sha256": "c81436405710d85a8fbdf8ae616323c4aab2210c3e5da359d30b4642cbfd4952"
+    },
+    {
+      "path": "packages/pi-agent-server/src/durable-tool-context.ts",
+      "sha256": "e314d4f9f6130678a1dd38a5fd9dd366bfe42856442869d96bedd0ba2d3f5355"
+    },
+    {
+      "path": "packages/pi-agent-server/src/ephemeral-query-lifecycle.ts",
+      "sha256": "530b59743bb3482c22d7d30b906f34fef7acc20409255186913b607cd9b130b1"
+    },
+    {
+      "path": "packages/pi-agent-server/src/host-credential-store.ts",
+      "sha256": "34e890a4e86f044a48bb1b02ed997cbc036edf3b27fddcdd0961e7bdebd1350d"
+    },
+    {
+      "path": "packages/pi-agent-server/src/index.ts",
+      "sha256": "26f8f0aecfc319593da1fd9804aae9b7123dcae0a9810d5bc1e9b9f4af03cd42"
+    },
+    {
+      "path": "packages/pi-agent-server/src/jsonl-transport.ts",
+      "sha256": "47431ff9fc25d6546d4a3d9c15ee00b18843562fde2c89a3471e30b224eb0171"
+    },
+    {
+      "path": "packages/pi-agent-server/src/large-result-filter.ts",
+      "sha256": "01c9b3a1d581be6460401529d634d08a6e10722ef7fdb858d7b1507333b3ae86"
+    },
+    {
+      "path": "packages/pi-agent-server/src/large-result-gate.ts",
+      "sha256": "b318f6a12bc25e197cace8ed50d9fe1caf2298c5ca6d6dc47d105d3431e72d66"
+    },
+    {
+      "path": "packages/pi-agent-server/src/length-continuation.ts",
+      "sha256": "2d42bf553d990ba609978966e426d08244080f275ed5defcee343dda5be20d2c"
+    },
+    {
+      "path": "packages/pi-agent-server/src/messages.ts",
+      "sha256": "f6191816d9fa8dd0ba886d2d104a7572c296b822a47d49af074311a366f4d571"
+    },
+    {
+      "path": "packages/pi-agent-server/src/mini-model-query.ts",
+      "sha256": "0f18eb7d77dba1b89def55f7b7a1fe1c4551e2984603f32f635d23fccd60f0f1"
+    },
+    {
+      "path": "packages/pi-agent-server/src/model-resolution.ts",
+      "sha256": "0335fba9f2cdffe997a837ee5a40bde38c516f962b409ed9dd5861483968165c"
+    },
+    {
+      "path": "packages/pi-agent-server/src/model-runtime-owner.ts",
+      "sha256": "87a13b600a6b6e443edc5405b3b7f57f3fd4f7cb49e50e81a31c130ecc89d201"
+    },
+    {
+      "path": "packages/pi-agent-server/src/native-lifecycle-observation.ts",
+      "sha256": "2dffa0cbca1751cf3a83346741713fb453c76a0044443a0b3fd74aec03bf9b67"
+    },
+    {
+      "path": "packages/pi-agent-server/src/native-request-observation.ts",
+      "sha256": "1b3514e35d37a3fab22238449b498ee6415da5953ad5a9f5a5c53d838db5800c"
+    },
+    {
+      "path": "packages/pi-agent-server/src/pending-replies.ts",
+      "sha256": "904824f4f070c349433ff2be02ae4c6444acf73949a554451d234af66773ec9b"
+    },
+    {
+      "path": "packages/pi-agent-server/src/phaneris-metadata-schema.ts",
+      "sha256": "f051deef3a548fc9d8f53a94f6b6ad070ea1a73a8c09dbfced27797b72c0f757"
+    },
+    {
+      "path": "packages/pi-agent-server/src/phaneris-resource-loader.ts",
+      "sha256": "48b41af02e1e1496ddf2bb778052cff204df9417401c59ce9653288de9019514"
+    },
+    {
+      "path": "packages/pi-agent-server/src/pick-mini-model.ts",
+      "sha256": "b5a7e57f305edc8647ed1632c7eb5ccd2d5df7d1742d4510653bb32b3a26dc7a"
+    },
+    {
+      "path": "packages/pi-agent-server/src/proxy-tool-sync.ts",
+      "sha256": "541e59df36f73dc46352b6f3a1f7978764b2785d3e9ecbf55eb20cb3d69b3238"
+    },
+    {
+      "path": "packages/pi-agent-server/src/request-diagnostics.ts",
+      "sha256": "433f97b027be327f06388e669f2ecaee0b10a68d5dcd941c03a2e9abb4cd85ba"
+    },
+    {
+      "path": "packages/pi-agent-server/src/sdk-registration.ts",
+      "sha256": "fcb8e04f8d341c49399a4635fa43e6a91a49c551d120864981dfeb1a2643517b"
+    },
+    {
+      "path": "packages/pi-agent-server/src/session-event-adapter.ts",
+      "sha256": "fdd05bb8372fa826a66bd9fe56736e985c6ae7468685e3fdae9ecf717de29ad3"
+    },
+    {
+      "path": "packages/pi-agent-server/src/session-lifecycle.ts",
+      "sha256": "13c0c45626121ba3ecf2f7b97b36520876e58a8a61f432d753380a2946737945"
+    },
+    {
+      "path": "packages/pi-agent-server/src/session-settings.ts",
+      "sha256": "f980e068c7f5eeaf374f17403c1f9d933791c7d497cfa0cd695f7f2d9486fb61"
+    },
+    {
+      "path": "packages/pi-agent-server/src/test-fixtures/block-network.ts",
+      "sha256": "dca859153abd603effa2e4c2ac68856efc707929d4d2d3523300bab3c13fbec6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tool-composition.ts",
+      "sha256": "1bf48651ddc6ed5294ca3a3aa14c3b52dcd6622b213e232eb8bdc19d857c8257"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/create-search-tool.ts",
+      "sha256": "515f4efab91cd1fb6017145a6ddef278fdeb6ca2ebe749266ed3d686a369b7bd"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/chatgpt.ts",
+      "sha256": "3373ebb966b50d1bc9f31225f94f4818a3f8a4f40af549dc793bca3792728e76"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/ddg.ts",
+      "sha256": "719bf7e34693873cafd524cbd3bf28b116e3635742e7e31c948df2266bec2bb4"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/google.ts",
+      "sha256": "55789437dc197cf1335c04044dab137f92ac7c749f9ea2366fef1e5dcf398f12"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/openai.ts",
+      "sha256": "4aba8337447e6c27f47d23a4003d0f9ef6d5fcc07dbca3d1a5ea44c0e009aa5f"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/providers/responses-api-parser.ts",
+      "sha256": "a226653ccbb9c9c31c0ef9344f445c594299a19bc6a6dfe4dc9634b8fb1d1549"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/resolve-provider.ts",
+      "sha256": "1f812a8785d374ba9f05439a69f9bef5f8253d4da076efed2d8cebcd2d9159e6"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/search/types.ts",
+      "sha256": "53f83645996a91666dc904969fd5fed667e8993f19604a784684d76bd05735ba"
+    },
+    {
+      "path": "packages/pi-agent-server/src/tools/web-fetch.ts",
+      "sha256": "ae970ac329c328f7a914a97367e8e5e76edfd57ae0ccb8386bd4cc5d17f6bd75"
+    },
+    {
+      "path": "packages/pi-agent-server/src/transport-delta.ts",
+      "sha256": "3c7ee73203a233d1ee433783bf2b904385bbe146d6f686e2d945ccc612bb5527"
+    },
+    {
+      "path": "packages/server-core/src/bootstrap/headless-start.ts",
+      "sha256": "5644bd56d152adf23830b157752f30315b24ab1ed2609146d7d1188eeb801176"
+    },
+    {
+      "path": "packages/server-core/src/decisions/accounting.ts",
+      "sha256": "d7545f772536cc8d3455bac0ec3f78c6ad2a3fe772108506e118990ebf9e3866"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/api/database-admin.ts",
+      "sha256": "af8673e95c6ba1f5d48dcb7d4fe3f09332109b1ad7247887f409bba1e0c3d3a2"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/api/runtime.ts",
+      "sha256": "bb5b0f651f9b76a4063d9b5ecca271a9bb1765e1bb44afec177466910c5df3f8"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/canonical-json.ts",
+      "sha256": "d4df77d7b2b0187b8eedc9f0826fd7ec2e01a39286355e195859e4ad238b4682"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/coordinator.ts",
+      "sha256": "cc7d65e34c9682ad263645413e0befdf6efdf609ba428b36cc5c1255a5577bc3"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/execution/deadline.ts",
+      "sha256": "09ef070ddf8dc217fe0a4e059d48ac15fe483f6fc818596ce2a3f83c05f40554"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/execution/host.ts",
+      "sha256": "a113075ccfb7172ac0ed78f75886d0272bad1a21f91d0e1f37f60926dc59fcb5"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/index.ts",
+      "sha256": "e1b6d852c26843fe9f28e5b53ba9aeb9a410ee0822f5fb6d61121fd7104eba01"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/model-usage-audit.ts",
+      "sha256": "205a7cc55ecfc72147b296f713b30477d770ebf4805121f0e6878da9cfc6774f"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/projection-runner.ts",
+      "sha256": "d04eae8852205e6bb1f0bce4b595085d5d6ebf8eb5c51a286880c210580b7d0b"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/projection.ts",
+      "sha256": "b687c87c491d23eb4c95f5b63fe08d868f16bf4f580db4b92c07525ada551dd1"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/sensitive-payload.ts",
+      "sha256": "29e81fafe61e620a03a8c709d7ad051676c04902bc1cffe3afac1e9c9ad5df32"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/sqlite-driver.ts",
+      "sha256": "a4dc4325758c86929e1a8851ab65e655d9cb648fd82fb5409c2f8b0d9b651179"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/store.ts",
+      "sha256": "a7d286a7a1a427a5320d246841c141d18bbe6379dc401c09ef17d23607e0660f"
+    },
+    {
+      "path": "packages/server-core/src/durable-runtime/tool-identity.ts",
+      "sha256": "8f7df35dc3ba391d237b2815232b083f1833570cfde32cb1b34256f0631cd89c"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/legacy-context.ts",
+      "sha256": "e7a5d5cac15aaddd11045ae071e7570755a921d2e3552c45914f9f2457f1cf57"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/pi-driver.ts",
+      "sha256": "ecdccdbda5899a9fd1c6a61760291acdf9a45e1772fad30af7ac771623445fbe"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/projection-audit.ts",
+      "sha256": "4a1d349d0cb276bc70d5660c347b4c41fe4a25ccabee292b3fa91a051c631411"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-input-recovery.ts",
+      "sha256": "a5dd82545df9799a50c7e67ecfbb676d4ca382927cef3c71c5f2eeeb1d49040a"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-projection.ts",
+      "sha256": "6040411a9af7e2e60dd6aeb0be0e9c689329030803be5c6cf043e01379fe8fd5"
+    },
+    {
+      "path": "packages/server-core/src/runtime-adapters/session-runtime-view.ts",
+      "sha256": "cfac44cbc59d500546015d5d41955ca1235f30612bf4c06ba6b00762c99968ff"
+    },
+    {
+      "path": "packages/server-core/src/services/auxiliary-model-effect.ts",
+      "sha256": "9fe39dbc9591db6ae6654a5fbdbb35450c43f4a1b1d785ce9edd117e0066b2ee"
+    },
+    {
+      "path": "packages/server-core/src/sessions/SessionManager.ts",
+      "sha256": "14013a0ebcb4f5fd3d988c7d9728a98f68cb28b8bcab5d409bf08f56f6ae0813"
+    },
+    {
+      "path": "packages/server-core/src/tasks/TaskRunner.ts",
+      "sha256": "b92d31b0c1d8ef7a4fa3e6326e0d562ff40720e950949fdc7fb7d48c2db4b17c"
+    },
+    {
+      "path": "packages/server-core/src/tasks/runtime-facts.ts",
+      "sha256": "08b83041ba306825583a55ae8c0b77de27a792b1842e0e640946a91d644c2c9b"
+    },
+    {
+      "path": "packages/server-core/src/tasks/runtime-reconciliation.ts",
+      "sha256": "e382fd065a54e5091d9f81e22a5bde525ecd5cec4457fce0bbb858e0874fcb29"
+    },
+    {
+      "path": "packages/shared/src/agent/pi-agent.ts",
+      "sha256": "bfa71926067f5ba07b4371f6529e06cc8befa0aa0a46900c58b52a6a0be56224"
+    },
+    {
+      "path": "scripts/check-runtime-boundary.ts",
+      "sha256": "bd0dd3d04fb46b03296234ecfba3286e51c72b9757c5d611af5dba21f557fbba"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-boundary-workflow.ts",
+      "sha256": "6fcf13b96757a53a56c80d8b56c1e6c8e9ef534d3b20b392b374b4f0c81e2d02"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-crash-workflow.ts",
+      "sha256": "7b3c2ee4420ced59e8f9d386d5e7dfb2c9e53749a6b51d902da8563bfd8c9fca"
+    },
+    {
+      "path": "scripts/verification/durable-runtime-pi-workflow.ts",
+      "sha256": "d12372c3fef0b8f89b3e7b160d8635041ff3ead42f830037ffd8db0c155fe71f"
+    },
+    {
+      "path": "scripts/verification/runtime-boundary-evidence.ts",
+      "sha256": "b06b410173ed390f4e425619097200476ea29490315a64c5f26c3355e46566db"
+    }
+  ],
+  "cases": [
+    {
+      "phase": "tool-t1-failure",
+      "barrier": {
+        "barrier": "tool-t1-failure",
+        "pid": 75164
+      },
+      "exitCode": 137,
+      "externalCalls": 0,
+      "markers": [],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-t1-failure",
+            "recoveredAt": 1791715830836,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "terminalized_interrupted",
+                "unsettledToolOperationIds": []
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715830760
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715830760
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715830836
+              },
+              "createdAt": 1791715830836
+            }
+          ],
+          "operations": [],
+          "usage": []
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-t1-failure",
+            "recoveredAt": 1791715830934,
+            "items": []
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715830760
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715830760
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715830836
+              },
+              "createdAt": 1791715830836
+            }
+          ],
+          "operations": [],
+          "usage": []
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-tool-t1-failure.db",
+        "sha256": "347138f66c1d65e2db7fd837c46af46380cb85552a8377e74dd0928052ca9a45"
+      }
+    },
+    {
+      "phase": "tool-after-t1",
+      "barrier": {
+        "barrier": "tool-after-t1",
+        "pid": 75167
+      },
+      "exitCode": 137,
+      "externalCalls": 0,
+      "markers": [],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-after-t1",
+            "recoveredAt": 1791715831115,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "parked_unknown_effect",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ]
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831049
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831049
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:call",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_call_observed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "args": {
+                  "path": "marker.txt"
+                },
+                "providerToolCallId": "call-1",
+                "toolName": "external_write",
+                "toolOperationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+              },
+              "createdAt": 1791715831055
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:dispatch",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "idempotencyKey": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "protocol": "t1_after_preflight_v1",
+                "providerToolCallId": "call-1",
+                "recoveryMode": "never_auto_retry",
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831055
+            },
+            {
+              "eventId": "crash-run:restart-recovery",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715831115,
+                "reason": "Process restarted after T1 without a durable T2 outcome",
+                "verdict": "reconcile_required"
+              },
+              "createdAt": 1791715831115
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715831049,
+              "data": {
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ],
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715831115
+            }
+          ],
+          "usage": []
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-after-t1",
+            "recoveredAt": 1791715831201,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "already_parked",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ]
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831049
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831049
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:call",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_call_observed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "args": {
+                  "path": "marker.txt"
+                },
+                "providerToolCallId": "call-1",
+                "toolName": "external_write",
+                "toolOperationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+              },
+              "createdAt": 1791715831055
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:dispatch",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "idempotencyKey": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "protocol": "t1_after_preflight_v1",
+                "providerToolCallId": "call-1",
+                "recoveryMode": "never_auto_retry",
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831055
+            },
+            {
+              "eventId": "crash-run:restart-recovery",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715831115,
+                "reason": "Process restarted after T1 without a durable T2 outcome",
+                "verdict": "reconcile_required"
+              },
+              "createdAt": 1791715831115
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715831049,
+              "data": {
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ],
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715831115
+            }
+          ],
+          "usage": []
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-tool-after-t1.db",
+        "sha256": "7b2f6b22df9216d2cdc45475662a1a1a08845bbbfb5093c14ee79323d1acb42d"
+      }
+    },
+    {
+      "phase": "tool-after-effect",
+      "barrier": {
+        "barrier": "tool-after-effect",
+        "pid": 75170
+      },
+      "exitCode": 137,
+      "externalCalls": 1,
+      "markers": [
+        "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+      ],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-after-effect",
+            "recoveredAt": 1791715831350,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "parked_unknown_effect",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ]
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831289
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831289
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:call",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_call_observed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "args": {
+                  "path": "marker.txt"
+                },
+                "providerToolCallId": "call-1",
+                "toolName": "external_write",
+                "toolOperationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+              },
+              "createdAt": 1791715831293
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:dispatch",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "idempotencyKey": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "protocol": "t1_after_preflight_v1",
+                "providerToolCallId": "call-1",
+                "recoveryMode": "never_auto_retry",
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831293
+            },
+            {
+              "eventId": "crash-run:restart-recovery",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715831350,
+                "reason": "Process restarted after T1 without a durable T2 outcome",
+                "verdict": "reconcile_required"
+              },
+              "createdAt": 1791715831350
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715831289,
+              "data": {
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ],
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715831350
+            }
+          ],
+          "usage": []
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-after-effect",
+            "recoveredAt": 1791715831437,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "already_parked",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ]
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831289
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831289
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:call",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_call_observed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "args": {
+                  "path": "marker.txt"
+                },
+                "providerToolCallId": "call-1",
+                "toolName": "external_write",
+                "toolOperationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+              },
+              "createdAt": 1791715831293
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:dispatch",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "idempotencyKey": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "protocol": "t1_after_preflight_v1",
+                "providerToolCallId": "call-1",
+                "recoveryMode": "never_auto_retry",
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831293
+            },
+            {
+              "eventId": "crash-run:restart-recovery",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715831350,
+                "reason": "Process restarted after T1 without a durable T2 outcome",
+                "verdict": "reconcile_required"
+              },
+              "createdAt": 1791715831350
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715831289,
+              "data": {
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledToolOperationIds": [
+                  "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+                ],
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715831350
+            }
+          ],
+          "usage": []
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-tool-after-effect.db",
+        "sha256": "5654b3fcea6dc8601edc1631f0f1ec002382feb67e2b0df69f37e3ac55d66efd"
+      }
+    },
+    {
+      "phase": "tool-after-t2",
+      "barrier": {
+        "barrier": "tool-after-t2",
+        "pid": 75173
+      },
+      "exitCode": 137,
+      "externalCalls": 1,
+      "markers": [
+        "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+      ],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-after-t2",
+            "recoveredAt": 1791715831568,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "terminalized_interrupted",
+                "unsettledToolOperationIds": []
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831516
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831516
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:call",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_call_observed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "args": {
+                  "path": "marker.txt"
+                },
+                "providerToolCallId": "call-1",
+                "toolName": "external_write",
+                "toolOperationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+              },
+              "createdAt": 1791715831520
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:dispatch",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "idempotencyKey": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "protocol": "t1_after_preflight_v1",
+                "providerToolCallId": "call-1",
+                "recoveryMode": "never_auto_retry",
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831520
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:outcome",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_outcome_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "isError": false,
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "providerToolCallId": "call-1",
+                "result": {
+                  "receipt": "accepted"
+                },
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831523
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 6,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715831568
+              },
+              "createdAt": 1791715831568
+            }
+          ],
+          "operations": [],
+          "usage": []
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/tool-after-t2",
+            "recoveredAt": 1791715831640,
+            "items": []
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831516
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831516
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:call",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_call_observed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "args": {
+                  "path": "marker.txt"
+                },
+                "providerToolCallId": "call-1",
+                "toolName": "external_write",
+                "toolOperationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e"
+              },
+              "createdAt": 1791715831520
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:dispatch",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "idempotencyKey": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "protocol": "t1_after_preflight_v1",
+                "providerToolCallId": "call-1",
+                "recoveryMode": "never_auto_retry",
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831520
+            },
+            {
+              "eventId": "toolop_f4a51d58973b0f09441e7edde53a4e2e:outcome",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "tool_outcome_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "canonicalArgsHash": "30d7ec96f6e023e3ce79335f25b90155d8833c7b425c2bf02b4070753eba5cba",
+                "isError": false,
+                "operationId": "toolop_f4a51d58973b0f09441e7edde53a4e2e",
+                "providerToolCallId": "call-1",
+                "result": {
+                  "receipt": "accepted"
+                },
+                "runOperationId": "crash-run",
+                "toolName": "external_write"
+              },
+              "createdAt": 1791715831523
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 6,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715831568
+              },
+              "createdAt": 1791715831568
+            }
+          ],
+          "operations": [],
+          "usage": []
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-tool-after-t2.db",
+        "sha256": "8631697f6f9953b7f9b6a9e6a35b7c45bf0f070bc4139e7ea18b67f05e5b8442"
+      }
+    },
+    {
+      "phase": "model-t1-failure",
+      "barrier": {
+        "barrier": "model-t1-failure",
+        "pid": 75176
+      },
+      "exitCode": 137,
+      "externalCalls": 0,
+      "markers": [],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-t1-failure",
+            "recoveredAt": 1791715831763,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "terminalized_interrupted",
+                "unsettledToolOperationIds": []
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831720
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831720
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715831763
+              },
+              "createdAt": 1791715831763
+            }
+          ],
+          "operations": [],
+          "usage": []
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-t1-failure",
+            "recoveredAt": 1791715831823,
+            "items": []
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831720
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831720
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715831763
+              },
+              "createdAt": 1791715831763
+            }
+          ],
+          "operations": [],
+          "usage": []
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-model-t1-failure.db",
+        "sha256": "1a00684a9d802128d3e2bba60d9ba400d3b9d3f0dec760a6178a266a1ad56584"
+      }
+    },
+    {
+      "phase": "model-after-t1",
+      "barrier": {
+        "barrier": "model-after-t1",
+        "pid": 75179
+      },
+      "exitCode": 137,
+      "externalCalls": 0,
+      "markers": [],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-after-t1",
+            "recoveredAt": 1791715831939,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "parked_unknown_effect",
+                "unsettledToolOperationIds": [],
+                "unsettledModelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c"
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831892
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831892
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:dispatch",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "idempotencyKey": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "turnId": "crash-input"
+              },
+              "createdAt": 1791715831897
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:restart-recovery",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715831939,
+                "reason": "Process restarted after model T1 without a durable T2 outcome",
+                "verdict": "indeterminate"
+              },
+              "createdAt": 1791715831939
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715831892,
+              "data": {
+                "currentModel": {
+                  "canonicalRequestHash": "fixture-request",
+                  "model": "fixture",
+                  "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                  "provider": "loopback",
+                  "providerRequestId": "request-1"
+                },
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledModelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715831939
+            }
+          ],
+          "usage": []
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-after-t1",
+            "recoveredAt": 1791715832000,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "already_parked",
+                "unsettledToolOperationIds": []
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715831892
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715831892
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:dispatch",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "idempotencyKey": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "turnId": "crash-input"
+              },
+              "createdAt": 1791715831897
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:restart-recovery",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715831939,
+                "reason": "Process restarted after model T1 without a durable T2 outcome",
+                "verdict": "indeterminate"
+              },
+              "createdAt": 1791715831939
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715831892,
+              "data": {
+                "currentModel": {
+                  "canonicalRequestHash": "fixture-request",
+                  "model": "fixture",
+                  "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                  "provider": "loopback",
+                  "providerRequestId": "request-1"
+                },
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledModelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715831939
+            }
+          ],
+          "usage": []
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-model-after-t1.db",
+        "sha256": "4051f7c209d6a9b90048f3e7717763244efe087114b2cc6c0537edd5c625ac23"
+      }
+    },
+    {
+      "phase": "model-after-effect",
+      "barrier": {
+        "barrier": "model-after-effect",
+        "pid": 75182
+      },
+      "exitCode": 137,
+      "externalCalls": 1,
+      "markers": [
+        "modelop_2d72fb5c179c12b23cba471e9477e57c"
+      ],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-after-effect",
+            "recoveredAt": 1791715832113,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "parked_unknown_effect",
+                "unsettledToolOperationIds": [],
+                "unsettledModelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c"
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715832068
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715832068
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:dispatch",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "idempotencyKey": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "turnId": "crash-input"
+              },
+              "createdAt": 1791715832071
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:restart-recovery",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715832113,
+                "reason": "Process restarted after model T1 without a durable T2 outcome",
+                "verdict": "indeterminate"
+              },
+              "createdAt": 1791715832113
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715832068,
+              "data": {
+                "currentModel": {
+                  "canonicalRequestHash": "fixture-request",
+                  "model": "fixture",
+                  "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                  "provider": "loopback",
+                  "providerRequestId": "request-1"
+                },
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledModelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715832113
+            }
+          ],
+          "usage": []
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-after-effect",
+            "recoveredAt": 1791715832200,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "already_parked",
+                "unsettledToolOperationIds": []
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715832068
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715832068
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:dispatch",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "idempotencyKey": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "turnId": "crash-input"
+              },
+              "createdAt": 1791715832071
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:restart-recovery",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_recovery_decided",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "decidedAt": 1791715832113,
+                "reason": "Process restarted after model T1 without a durable T2 outcome",
+                "verdict": "indeterminate"
+              },
+              "createdAt": 1791715832113
+            }
+          ],
+          "operations": [
+            {
+              "createdAt": 1791715832068,
+              "data": {
+                "currentModel": {
+                  "canonicalRequestHash": "fixture-request",
+                  "model": "fixture",
+                  "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                  "provider": "loopback",
+                  "providerRequestId": "request-1"
+                },
+                "modelVisible": true,
+                "stopReason": "process_restart",
+                "unsettledModelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "userMessageId": "crash-input"
+              },
+              "kind": "agent_turn",
+              "operationId": "crash-run",
+              "phase": "recovery_parked",
+              "sessionId": "crash-session",
+              "stateVersion": 3,
+              "turnId": "crash-input",
+              "updatedAt": 1791715832113
+            }
+          ],
+          "usage": []
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-model-after-effect.db",
+        "sha256": "ca2a642f00665740d62c802838f566af2f8a77aea9df008c1b2db1071e0f823d"
+      }
+    },
+    {
+      "phase": "model-after-t2",
+      "barrier": {
+        "barrier": "model-after-t2",
+        "pid": 75187
+      },
+      "exitCode": 137,
+      "externalCalls": 1,
+      "markers": [
+        "modelop_2d72fb5c179c12b23cba471e9477e57c"
+      ],
+      "recoveryResults": [
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-after-t2",
+            "recoveredAt": 1791715832369,
+            "items": [
+              {
+                "operationId": "crash-run",
+                "sessionId": "crash-session",
+                "action": "terminalized_interrupted",
+                "unsettledToolOperationIds": []
+              }
+            ]
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715832275
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715832275
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:dispatch",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "idempotencyKey": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "turnId": "crash-input"
+              },
+              "createdAt": 1791715832281
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:outcome",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_outcome_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "content": [
+                  {
+                    "text": "committed answer",
+                    "type": "text"
+                  }
+                ],
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "stopReason": "stop",
+                "text": "committed answer",
+                "turnId": "crash-input",
+                "usage": {
+                  "costUsd": 0.1,
+                  "inputTokens": 10,
+                  "outputTokens": 2
+                }
+              },
+              "createdAt": 1791715832282
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:assistant",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "assistant_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "committed answer",
+                "isIntermediate": false,
+                "messageId": "model:modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "modelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c"
+              },
+              "createdAt": 1791715832282
+            },
+            {
+              "eventId": "model:crash-run:request-1:committed",
+              "seq": 6,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "usage_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "costUsd": 0.1,
+                "createdAt": 1791715832282,
+                "inputTokens": 10,
+                "model": "fixture",
+                "operationId": "crash-run",
+                "outputTokens": 2,
+                "provider": "loopback",
+                "sessionId": "crash-session",
+                "usageId": "model:crash-run:request-1"
+              },
+              "createdAt": 1791715832282
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 7,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715832369
+              },
+              "createdAt": 1791715832369
+            }
+          ],
+          "operations": [],
+          "usage": [
+            {
+              "usageId": "model:crash-run:request-1",
+              "operationId": "crash-run",
+              "sessionId": "crash-session",
+              "provider": "loopback",
+              "model": "fixture",
+              "inputTokens": 10,
+              "outputTokens": 2,
+              "costUsd": 0.1,
+              "createdAt": 1791715832282
+            }
+          ]
+        },
+        {
+          "report": {
+            "workspaceRootPath": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-runtime-crash-sDZI0F/model-after-t2",
+            "recoveredAt": 1791715832442,
+            "items": []
+          },
+          "events": [
+            {
+              "eventId": "crash-run:accepted",
+              "seq": 1,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_accepted",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "kind": "agent_turn",
+                "userMessageId": "crash-input"
+              },
+              "createdAt": 1791715832275
+            },
+            {
+              "eventId": "crash-run:user",
+              "seq": 2,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "user_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "one external effect",
+                "messageId": "crash-input"
+              },
+              "createdAt": 1791715832275
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:dispatch",
+              "seq": 3,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_dispatch_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "idempotencyKey": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "turnId": "crash-input"
+              },
+              "createdAt": 1791715832281
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:outcome",
+              "seq": 4,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "model_outcome_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "canonicalRequestHash": "fixture-request",
+                "content": [
+                  {
+                    "text": "committed answer",
+                    "type": "text"
+                  }
+                ],
+                "model": "fixture",
+                "operationId": "modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "provider": "loopback",
+                "providerRequestId": "request-1",
+                "runOperationId": "crash-run",
+                "sessionId": "crash-session",
+                "stopReason": "stop",
+                "text": "committed answer",
+                "turnId": "crash-input",
+                "usage": {
+                  "costUsd": 0.1,
+                  "inputTokens": 10,
+                  "outputTokens": 2
+                }
+              },
+              "createdAt": 1791715832282
+            },
+            {
+              "eventId": "modelop_2d72fb5c179c12b23cba471e9477e57c:assistant",
+              "seq": 5,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "assistant_message_committed",
+              "schemaVersion": 1,
+              "modelVisible": true,
+              "partial": false,
+              "payload": {
+                "content": "committed answer",
+                "isIntermediate": false,
+                "messageId": "model:modelop_2d72fb5c179c12b23cba471e9477e57c",
+                "modelOperationId": "modelop_2d72fb5c179c12b23cba471e9477e57c"
+              },
+              "createdAt": 1791715832282
+            },
+            {
+              "eventId": "model:crash-run:request-1:committed",
+              "seq": 6,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "usage_committed",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "costUsd": 0.1,
+                "createdAt": 1791715832282,
+                "inputTokens": 10,
+                "model": "fixture",
+                "operationId": "crash-run",
+                "outputTokens": 2,
+                "provider": "loopback",
+                "sessionId": "crash-session",
+                "usageId": "model:crash-run:request-1"
+              },
+              "createdAt": 1791715832282
+            },
+            {
+              "eventId": "crash-run:restart-terminal",
+              "seq": 7,
+              "sessionId": "crash-session",
+              "turnId": "crash-input",
+              "operationId": "crash-run",
+              "type": "operation_terminal",
+              "schemaVersion": 1,
+              "modelVisible": false,
+              "partial": false,
+              "payload": {
+                "reason": "interrupted",
+                "recoveredAt": 1791715832369
+              },
+              "createdAt": 1791715832369
+            }
+          ],
+          "operations": [],
+          "usage": [
+            {
+              "usageId": "model:crash-run:request-1",
+              "operationId": "crash-run",
+              "sessionId": "crash-session",
+              "provider": "loopback",
+              "model": "fixture",
+              "inputTokens": 10,
+              "outputTokens": 2,
+              "costUsd": 0.1,
+              "createdAt": 1791715832282
+            }
+          ]
+        }
+      ],
+      "database": {
+        "path": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/durable-runtime-crash/crash-model-after-t2.db",
+        "sha256": "0a03223fcec990623e6a49b1d0ea577b80d127d68b3d7b7f81301140ecc3eefc"
+      }
+    }
+  ]
+}

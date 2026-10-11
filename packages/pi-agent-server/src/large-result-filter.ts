@@ -1,6 +1,6 @@
 /** Whole-result JSONL bridge. The host owns settings, credentials and accounting. */
-import { LARGE_RESULT_FILTER_DEADLINE_MS, LARGE_RESULT_MAX_TEXT_CHARS, type LargeResultFilter, type LargeResultExcerpt } from '../../shared/src/utils/large-response.ts';
-import type { PiLargeResultFilterRequest, PiLargeResultFilterCancel } from '../../shared/src/agent/backend/pi/protocol.ts';
+import { LARGE_RESULT_FILTER_DEADLINE_MS, LARGE_RESULT_MAX_TEXT_CHARS, type LargeResultFilter, type LargeResultExcerpt } from '@phaneris/shared/utils/large-response';
+import type { PiLargeResultFilterRequest, PiLargeResultFilterCancel } from '@phaneris/shared/agent/backend/pi/protocol';
 
 export function createLargeResultFilterClient(
   send: (message: PiLargeResultFilterRequest | PiLargeResultFilterCancel) => void,

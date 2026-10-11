@@ -1,0 +1,25 @@
+
+36 | const metadata = JSON.parse(readFileSync(input('manifest', 'package.json'), 'utf8')) as { scripts: Record<string, string> }
+37 | for (const gate of ['boundaries', 'cycles', 'rpc-contracts', 'distribution']) {
+38 |   assert(metadata.scripts.lint?.split(' && ').includes(`bun run check:${gate}`), `${gate} must run in the lint/pre-push gate`)
+39 |   assert(metadata.scripts[`check:${gate}`], `Missing ${gate} entry`)
+40 | }
+41 | assert.equal(metadata.scripts['identity:check'], 'bun run scripts/check-identity.ts --strict', 'Identity validation must reject unclassified residuals')
+            ^
+AssertionError: Identity validation must reject unclassified residuals
++ actual - expected
+
++ 'bun run scripts/check-identity.ts'
+- 'bun run scripts/check-identity.ts --strict'
+                                    ^
+
+ generatedMessage: false,
+     actual: "bun run scripts/check-identity.ts",
+   expected: "bun run scripts/check-identity.ts --strict",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:41:8
+
+Bun v1.4.2 (macOS x64)

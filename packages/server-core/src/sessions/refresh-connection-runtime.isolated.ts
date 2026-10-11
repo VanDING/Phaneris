@@ -1,4 +1,3 @@
-import { PiRuntimeDriver } from '../runtime-adapters/pi-driver'
 import { afterAll, afterEach, beforeEach, describe, expect, it, jest } from 'bun:test'
 import { mkdtempSync, rmSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
@@ -42,6 +41,7 @@ writeFileSync(
 )
 
 const { resolveBackendContext } = await import('@phaneris/shared/agent/backend')
+const { PiRuntimeDriver } = await import('../runtime-adapters/pi-driver')
 const { loadWorkspaceConfig } = await import('@phaneris/shared/workspaces')
 const { SessionManager: SessionManagerCtor, createManagedSession } = await import('./SessionManager.ts')
 const { buildRestartRequiredSignature } = await import('./runtime-config.ts')

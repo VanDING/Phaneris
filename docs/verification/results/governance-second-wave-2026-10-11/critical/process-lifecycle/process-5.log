@@ -1,0 +1,5 @@
+{"type":"error","message":"Unhandled rejection: governance-unhandled","code":"unhandled_rejection"}
+
+[pi-server] Pi agent server starting
+[pi-server] Unknown message type: undefined
+[pi-server] Unhandled rejection: governance-unhandled

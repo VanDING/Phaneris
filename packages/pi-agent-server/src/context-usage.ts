@@ -8,7 +8,7 @@
  */
 
 import type { AgentSession } from '@earendil-works/pi-coding-agent';
-import type { PiContextUsagePayload } from '../../shared/src/agent/backend/pi/protocol.ts';
+import type { PiContextUsagePayload } from '@phaneris/shared/agent/backend/pi/protocol';
 
 type ContextSession = Pick<AgentSession, 'getContextUsage' | 'settingsManager'>;
 

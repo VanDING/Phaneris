@@ -38,10 +38,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { mainLog, autoUpdateLog } from './logger'
 import { getAppVersion } from '@phaneris/shared/version'
-import {
-  getDismissedUpdateVersion,
-  clearDismissedUpdateVersion,
-} from '@phaneris/shared/config'
+import { getDismissedUpdateVersion, clearDismissedUpdateVersion } from '@phaneris/shared/config/appearance';
 import { readJsonFileSync } from '@phaneris/shared/utils/files'
 import { RPC_CHANNELS, type UpdateInfo } from '../shared/types'
 import type { EventSink } from '@phaneris/server-core/transport'
@@ -108,6 +105,12 @@ export function isUpdateFeedConfigured(): boolean {
 }
 
 let eventSink: EventSink | null = null
+let updateMenuRefreshHook: (() => void | Promise<void>) | null = null
+
+/** The host composes menu refresh; the updater owns no menu implementation. */
+export function setUpdateMenuRefreshHook(refresh: () => void | Promise<void>): void {
+  updateMenuRefreshHook = refresh
+}
 
 // Flag to indicate update is in progress — used to prevent force exit during quitAndInstall
 let __isUpdating = false
@@ -293,8 +296,7 @@ autoUpdater.on('update-downloaded', async (info) => {
   broadcastUpdateInfo()
 
   // Rebuild menu to show "Install Update..." option
-  const { rebuildMenu } = await import('./menu')
-  rebuildMenu()
+  await updateMenuRefreshHook?.()
 })
 
 autoUpdater.on('error', (error) => {

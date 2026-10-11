@@ -273,6 +273,7 @@ mock.module('@phaneris/shared/sessions', () => ({
 }))
 
 const { SessionManager } = await import('@phaneris/server-core/sessions')
+const { PiRuntimeDriver } = await import('../../../../../packages/server-core/src/runtime-adapters/pi-driver')
 
 describe('session branch rollback on preflight failure', () => {
   beforeEach(() => {
@@ -305,7 +306,7 @@ describe('session branch rollback on preflight failure', () => {
     ;(manager as any).ensureMessagesLoaded = async (_managed: any) => {}
     ;(manager as any).getOrCreateAgent = async (managed: any) => {
       managed.poolServer = { stop: () => { poolStopCalled = true } }
-      managed.agent = {
+      const agent = {
         supportsBranching: true,
         ensureBranchReady: async () => {
           throw new Error('preflight boom')
@@ -314,7 +315,8 @@ describe('session branch rollback on preflight failure', () => {
           destroyCalled = true
         },
       }
-      return managed.agent
+      ;(manager as any).execution.installDriver(managed.id, new PiRuntimeDriver(agent as any))
+      return agent
     }
 
     await expect(
@@ -359,14 +361,15 @@ describe('session branch rollback on preflight failure', () => {
     ;(manager as any).getOrCreateAgent = async (managed: any) => {
       getOrCreateAgentCalled = true
       managed.poolServer = { stop: () => {} }
-      managed.agent = {
+      const agent = {
         supportsBranching: true,
         ensureBranchReady: async () => {
           throw new Error('pi preflight boom')
         },
         destroy: () => {},
       }
-      return managed.agent
+      ;(manager as any).execution.installDriver(managed.id, new PiRuntimeDriver(agent as any))
+      return agent
     }
 
     await expect(

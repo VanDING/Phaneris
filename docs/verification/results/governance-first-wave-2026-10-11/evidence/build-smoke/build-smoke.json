@@ -1,0 +1,11 @@
+{
+  "completed": [
+    "electron:build:main",
+    "electron:build:preload",
+    "electron:build:renderer",
+    "webui:build",
+    "viewer:build",
+    "server-distribution-import"
+  ],
+  "nativeRuntimeDownloads": false
+}

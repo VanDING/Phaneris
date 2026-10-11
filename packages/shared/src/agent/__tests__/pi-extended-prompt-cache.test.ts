@@ -23,14 +23,15 @@ import { join } from 'node:path'
 describe('pi extended prompt cache (native cacheRetention contract)', () => {
   const piAgentSource = readFileSync(join(__dirname, '..', 'pi-agent.ts'), 'utf-8')
   const serverSource = readFileSync(join(__dirname, '..', '..', '..', '..', 'pi-agent-server', 'src', 'index.ts'), 'utf-8')
+  const messageSource = readFileSync(join(__dirname, '..', '..', '..', '..', 'pi-agent-server', 'src', 'messages.ts'), 'utf-8')
   const streamWrapperSource = readFileSync(join(__dirname, '..', '..', '..', '..', 'pi-agent-server', 'src', 'durable-model-stream.ts'), 'utf-8')
   const settingsSource = readFileSync(join(__dirname, '..', '..', '..', '..', 'server-core', 'src', 'handlers', 'rpc', 'settings.ts'), 'utf-8')
   const sessionManagerSource = readFileSync(join(__dirname, '..', '..', '..', '..', 'server-core', 'src', 'sessions', 'SessionManager.ts'), 'utf-8')
   const interceptorSource = readFileSync(join(__dirname, '..', '..', 'unified-network-interceptor.ts'), 'utf-8')
 
-  it('imports the setting from config storage in PiAgent', () => {
+  it('imports the setting from the appearance config domain in PiAgent', () => {
     expect(piAgentSource).toContain('getExtendedPromptCache')
-    expect(piAgentSource).toMatch(/from ['"]\.\.\/config\/storage(\.ts)?['"]/)
+    expect(piAgentSource).toMatch(/from ['"]\.\.\/config\/appearance(\.ts)?['"]/)
   })
 
   it('spawns with the Pi-native env default and sends it on init', () => {
@@ -48,7 +49,7 @@ describe('pi extended prompt cache (native cacheRetention contract)', () => {
 
   it('applies the retention as a default on wrapped Pi SDK streams', () => {
     expect(serverSource).toContain('let piCacheRetention: CacheRetention')
-    expect(serverSource).toContain('cacheRetention?: CacheRetention')
+    expect(messageSource).toContain('cacheRetention?: CacheRetention')
     expect(serverSource).toContain('() => piCacheRetention')
     expect(streamWrapperSource).toContain('resolveDefaultCacheRetention?: () => CacheRetention')
     expect(streamWrapperSource).toContain("options?.cacheRetention === undefined")
@@ -61,6 +62,6 @@ describe('pi extended prompt cache (native cacheRetention contract)', () => {
   it('notifies live sessions when the global setting changes', () => {
     expect(settingsSource).toContain('deps.sessionManager.refreshExtendedPromptCache?.(enabled)')
     expect(sessionManagerSource).toContain('refreshExtendedPromptCache(enabled: boolean): void')
-    expect(sessionManagerSource).toContain('managed.agent?.updateExtendedPromptCache?.(enabled)')
+    expect(sessionManagerSource).toContain('managed.runtime.agent?.updateExtendedPromptCache?.(enabled)')
   })
 })

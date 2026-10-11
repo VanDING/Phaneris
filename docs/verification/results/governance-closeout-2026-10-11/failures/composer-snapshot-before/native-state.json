@@ -1,0 +1,12 @@
+{
+  "url": "file:///Users/van/projects/Phaneris/apps/electron/dist/renderer/index.html?workspaceId=fixture&ws=second-workspace&sv=2&route=allSessions%2Fsession%2F261011-broad-flint&pw=600",
+  "inputs": [],
+  "drafts": {
+    "261011-broad-flint": {
+      "text": "Native session draft"
+    },
+    "261011-misty-cedar": {
+      "text": "Other native draft"
+    }
+  }
+}

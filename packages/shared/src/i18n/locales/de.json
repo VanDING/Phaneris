@@ -2138,6 +2138,7 @@
   "toast.failedToRefreshTitle": "Titel konnte nicht aktualisiert werden",
   "toast.failedToReveal": "Anzeigen in {{fileManager}} fehlgeschlagen",
   "toast.failedToSaveSetting": "{{setting}} konnte nicht gespeichert werden",
+  "toast.failedToSwitchWorkspace": "Arbeitsbereich konnte nicht gewechselt werden",
   "toast.failedToToggleAutomation": "Automatisierung konnte nicht umgeschaltet werden",
   "toast.failedToUpdateProject": "Projektzuordnung der Sitzung konnte nicht aktualisiert werden",
   "toast.installingUpdate": "Update wird installiert...",

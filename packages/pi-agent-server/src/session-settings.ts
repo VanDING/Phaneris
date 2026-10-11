@@ -15,7 +15,7 @@
  * see `packages/shared/src/agent/backend/pi/event-adapter.ts`.
  */
 import { SettingsManager } from '@earendil-works/pi-coding-agent';
-import { LLM_QUERY_TIMEOUT_MS } from '../../shared/src/agent/llm-tool.ts';
+import { LLM_QUERY_TIMEOUT_MS } from '@phaneris/shared/agent/llm-tool';
 
 type PiSettings = NonNullable<Parameters<typeof SettingsManager.inMemory>[0]>;
 

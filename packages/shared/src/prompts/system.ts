@@ -1,5 +1,5 @@
 import { formatPreferencesForPrompt } from '../config/preferences.ts';
-import { getBrowserToolEnabled } from '../config/storage.ts';
+import { getBrowserToolEnabled } from '../config/appearance.ts';
 import { debug } from '../utils/debug.ts';
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { dirname, join, relative, resolve } from 'path';

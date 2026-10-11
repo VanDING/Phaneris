@@ -1,7 +1,7 @@
 import type { ModelRegistry as PiModelRegistry } from '@earendil-works/pi-coding-agent';
-import type { LLMQueryResult } from '../../shared/src/agent/llm-tool.ts';
-import { getDefaultSummarizationModel } from '../../shared/src/config/models.ts';
-import { PI_PREFERRED_DEFAULTS } from '../../shared/src/config/llm-connections.ts';
+import type { LLMQueryResult } from '@phaneris/shared/agent/llm-tool';
+import { getDefaultSummarizationModel } from '@phaneris/shared/config/models';
+import { PI_PREFERRED_DEFAULTS } from '@phaneris/shared/config/llm-connections';
 import { stripPiPrefix } from './custom-endpoint-models.ts';
 import { isDeniedMiniModelId, isModelRejectionError, resolvePiModel } from './model-resolution.ts';
 

@@ -1,0 +1,20 @@
+{
+  "identity": {
+    "name": "Phaneris",
+    "fullName": "Phaneris Agent",
+    "slug": "phaneris",
+    "description": "Local AI workspace with durable, inspectable execution",
+    "appId": "io.github.vanding.phaneris",
+    "scheme": "phaneris"
+  },
+  "driftProblems": [],
+  "residual": {
+    "open": 0,
+    "allowed": 31,
+    "byToken": {},
+    "topFiles": []
+  },
+  "unusedRules": [
+    "missing-fixture.ts"
+  ]
+}

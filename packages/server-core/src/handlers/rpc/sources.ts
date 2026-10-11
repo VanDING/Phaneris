@@ -1,5 +1,5 @@
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { loadWorkspaceSources } from '@phaneris/shared/sources'
 import { safeJsonParse } from '@phaneris/shared/utils/files'
 import { getCredentialManager } from '@phaneris/shared/credentials'

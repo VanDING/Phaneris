@@ -13,7 +13,7 @@ import type { WebSearchProvider, WebSearchResult } from '../types.ts';
 import { parseResponsesApiResults, type ResponsesApiResponse } from './responses-api-parser.ts';
 import { isModelRejectionError } from '../../../model-resolution.ts';
 import { stripPiPrefix } from '../../../custom-endpoint-models.ts';
-import { PI_PREFERRED_DEFAULTS } from '../../../../../shared/src/config/llm-connections.ts';
+import { PI_PREFERRED_DEFAULTS } from '@phaneris/shared/config/llm-connections';
 
 /**
  * Codex backend request contract (search path):

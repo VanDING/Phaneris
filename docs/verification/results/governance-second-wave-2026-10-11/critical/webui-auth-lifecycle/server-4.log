@@ -1,0 +1,86 @@
+2026-10-11T04:01:43.710Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T04:01:43.710Z INFO  [bootstrap] Global config found
+2026-10-11T04:01:43.711Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available
+2026-10-11T04:01:43.720Z INFO  [session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T04:01:43.724Z INFO  Phaneris server listening on ws://127.0.0.1:63277
+[messaging] Disabled via PHANERIS_DISABLE_MESSAGING — skipping workspace messaging init
+PHANERIS_SERVER_URL=ws://127.0.0.1:63277
+PHANERIS_WEBUI_URL=http://0.0.0.0:63277
+[webui] Successful auth from 127.0.0.1
+[webui] Successful auth from 127.0.0.1
+[webui] Successful auth from 127.0.0.1
+
+2026-10-11T04:01:43.711Z WARN  [bootstrap] Stale lock file found (PID 43583), overwriting
+2026-10-11T04:01:43.720Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-10-11T04:01:43.720Z ERROR [session] No LLM connection found for slug: null
+[webui] Cookie authentication unavailable: 29 |         );`)
+30 |     } catch (error) { this.db.close(); throw new AuthStorageFailure(error) }
+31 |   }
+32 |   private access<T>(action: () => T): T {
+33 |     if (this.failure) throw this.failure
+34 |     try { return action() } catch (error) { this.failure = new AuthStorageFailure(error); throw this.failure }
+                                                                ^
+AuthStorageFailure: WebUI authentication storage unavailable
+      at access (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:34:60)
+      at revoke (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:42:10)
+      at fetch (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:357:34)
+      at async <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:487:26)
+      at async handleRequest (/Users/van/projects/Phaneris/packages/server-core/src/webui/node-adapter.ts:94:26)
+
+45 |     return statement
+46 |   }
+47 | 
+48 |   transaction<TArgs extends unknown[], TResult>(fn: (...args: TArgs) => TResult): (...args: TArgs) => TResult {
+49 |     return (...args: TArgs): TResult => {
+50 |       this.native.exec('BEGIN IMMEDIATE')
+                       ^
+SQLiteError: database is locked
+      errno: 5,
+ byteOffset: -1,
+       code: "SQLITE_BUSY"
+
+      at run (bun:sqlite:318:21)
+      at <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/runtime/sqlite.ts:50:19)
+      at access (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:34:18)
+      at revoke (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:42:10)
+      at fetch (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:357:34)
+      at async <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:487:26)
+      at async handleRequest (/Users/van/projects/Phaneris/packages/server-core/src/webui/node-adapter.ts:94:26)
+
+[webui] Cookie authentication unavailable: 29 |         );`)
+30 |     } catch (error) { this.db.close(); throw new AuthStorageFailure(error) }
+31 |   }
+32 |   private access<T>(action: () => T): T {
+33 |     if (this.failure) throw this.failure
+34 |     try { return action() } catch (error) { this.failure = new AuthStorageFailure(error); throw this.failure }
+                                                                    ^
+AuthStorageFailure: WebUI authentication storage unavailable
+      at access (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:34:64)
+      at revoke (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:42:10)
+      at fetch (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:357:34)
+      at /Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:487:26
+      at handleRequest (/Users/van/projects/Phaneris/packages/server-core/src/webui/node-adapter.ts:94:26)
+      at processTicksAndRejections (unknown:7:39)
+
+45 |     return statement
+46 |   }
+47 | 
+48 |   transaction<TArgs extends unknown[], TResult>(fn: (...args: TArgs) => TResult): (...args: TArgs) => TResult {
+49 |     return (...args: TArgs): TResult => {
+50 |       this.native.exec('BEGIN IMMEDIATE')
+     ^
+SQLiteError: database is locked
+      errno: 5,
+ byteOffset: -1,
+       code: "SQLITE_BUSY"
+
+      at run (unknown:1:1)
+      at run (bun:sqlite:318:21)
+      at /Users/van/projects/Phaneris/packages/server-core/src/runtime/sqlite.ts:50:19
+      at access (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:34:18)
+      at revoke (/Users/van/projects/Phaneris/packages/server-core/src/webui/session-revocations.ts:42:10)
+      at fetch (/Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:357:34)
+      at /Users/van/projects/Phaneris/packages/server-core/src/webui/http-server.ts:487:26
+      at handleRequest (/Users/van/projects/Phaneris/packages/server-core/src/webui/node-adapter.ts:94:26)
+      at processTicksAndRejections (unknown:7:39)
+

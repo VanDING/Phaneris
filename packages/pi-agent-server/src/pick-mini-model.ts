@@ -1,6 +1,6 @@
 import type { ModelRegistry as PiModelRegistry } from '@earendil-works/pi-coding-agent';
 import { resolvePiModel, isDeniedMiniModelId } from './model-resolution.ts';
-import { PI_PREFERRED_DEFAULTS } from '../../shared/src/config/llm-connections.ts';
+import { PI_PREFERRED_DEFAULTS } from '@phaneris/shared/config/llm-connections';
 
 /**
  * Pick an auth-provider-appropriate default mini model.

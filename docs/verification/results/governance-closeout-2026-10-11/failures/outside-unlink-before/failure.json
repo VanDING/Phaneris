@@ -1,0 +1,4 @@
+{
+  "message": "outside-unlink: Governance boundaries OK: 20 modules; 6 references; 6 pure entries; one config writer\n",
+  "stack": "AssertionError [ERR_ASSERTION]: outside-unlink: Governance boundaries OK: 20 modules; 6 references; 6 pure entries; one config writer\n\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/governance-boundaries-workflow.ts:58:12)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)"
+}

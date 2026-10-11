@@ -18,15 +18,9 @@ import {
   type BrowserEmptyStateLaunchResult,
   type BrowserInstanceInfo,
 } from '../shared/types'
-import {
-  DEFAULT_THEME,
-  getAllowRemoteEvaluate,
-  getThemePreferences,
-  getWorkspaceByNameOrId,
-  loadPresetTheme,
-  resolveTheme,
-  resolveThemeMode,
-} from '@phaneris/shared/config'
+import { DEFAULT_THEME, resolveTheme, resolveThemeMode } from '@phaneris/shared/config';
+import { getAllowRemoteEvaluate, getThemePreferences, loadPresetTheme } from '@phaneris/shared/config/appearance';
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { getWorkspaceColorTheme } from '@phaneris/shared/workspaces'
 import { DEEPLINK_SCHEME_PREFIX } from '@phaneris/shared'
 import { CodedError } from '@phaneris/shared/protocol'
@@ -3325,7 +3319,6 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     ])
 
     if (typeof ses.setPermissionCheckHandler === 'function') {
-      // eslint-disable-next-line
       ses.setPermissionCheckHandler((_webContents, permission: string, requestingOrigin: string, _details: any) => {
         const allowed = allow.has(permission)
         if (!allowed) {
@@ -3336,7 +3329,6 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     }
 
     if (typeof ses.setPermissionRequestHandler === 'function') {
-      // eslint-disable-next-line
       ses.setPermissionRequestHandler((_webContents, permission: string, callback: (allow: boolean) => void, details: any) => {
         const allowed = allow.has(permission)
         if (!allowed) {

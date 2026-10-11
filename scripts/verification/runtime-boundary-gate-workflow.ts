@@ -4,7 +4,9 @@ import assert from 'node:assert/strict'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
+import { verificationWorkflow } from './verification-artifacts'
 
+await verificationWorkflow('runtime-boundary-gate', async run => {
 const root = resolve(import.meta.dir, '../..'), fixture = mkdtempSync(join(tmpdir(), 'phaneris-runtime-gate-'))
 const source = (path: string, code: string) => { const file = join(fixture, path); mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, code) }
 mkdirSync(join(fixture, 'apps'))
@@ -18,14 +20,20 @@ source('packages/server-core/src/durable-runtime/barrel.ts', "export type { Mana
 source('packages/server-core/src/consumer.ts', `import { DurableRuntimeCoordinator } from '@phaneris/server-core/runtime'
 const deep = import('./durable-runtime/coordinator.js'); type Deep = import('./durable-runtime/coordinator.js').DurableRuntimeCoordinator`)
 source('packages/server-core/src/durable-runtime/js-bridge.js', "export { SessionManager } from '../sessions/SessionManager.js'")
+source('packages/server-core/src/type-only-consumer.ts', "type Forbidden = import('./durable-runtime/coordinator.js').DurableRuntimeCoordinator")
 const output = join(fixture, 'report.json')
 const process = Bun.spawn([Bun.which('bun')!, join(root, 'scripts/check-runtime-boundary.ts'), `--repository=${fixture}`, `--output=${output}`], { cwd: root, stdout: 'pipe', stderr: 'pipe' })
 const [stdout, stderr, code] = await Promise.all([new Response(process.stdout).text(), new Response(process.stderr).text(), process.exited])
+writeFileSync(join(run.directory, 'gate.stdout.log'), stdout)
+writeFileSync(join(run.directory, 'gate.stderr.log'), stderr)
+writeFileSync(join(run.directory, 'gate-report.json'), readFileSync(output))
 assert.equal(code, 1, stderr)
 const result = JSON.parse(readFileSync(output, 'utf8')), rules = new Set(result.violations.map((item: { rule: string }) => item.rule))
 for (const rule of ['runtime-no-product-import', 'runtime-transitive-product-dependency', 'public-api-only', 'no-private-object-export', 'explicit-public-exports', 'host-owns-execution', 'host-owns-state', 'host-owns-queue', 'no-second-run-state']) assert(rules.has(rule), `Missing gate rule: ${rule}`)
 assert(result.violations.some((item: { file: string }) => item.file.endsWith('js-bridge.js')))
-const archive = join(root, 'docs/verification/results/durable-runtime-boundary/gate-mutations.json')
-mkdirSync(dirname(archive), { recursive: true })
+assert(result.violations.some((item: { file: string; rule: string }) => item.file.endsWith('type-only-consumer.ts') && item.rule === 'public-api-only'))
+const archive = join(run.directory, 'gate-mutations.json')
 writeFileSync(archive, JSON.stringify({ command: 'bun run scripts/verification/runtime-boundary-gate-workflow.ts', fixture, passed: true, rejectedExitCode: code, ...result }, null, 2) + '\n')
+run.complete([...rules] as string[])
 console.log(JSON.stringify({ passed: true, rejectedViolations: result.violationCount, output: archive }))
+})

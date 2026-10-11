@@ -1,0 +1,24 @@
+{
+  "runs": 3,
+  "status": "passed",
+  "budgetsUnchanged": true,
+  "budgets": {
+    "navigationMs": 3000,
+    "coldSessionMs": 3000,
+    "warmSwitchMs": 2000,
+    "inputToTwoFramesMs": 250,
+    "firstStreamMs": 1500,
+    "rendererHeapBytes": 268435456,
+    "backendRssBytes": 1073741824
+  },
+  "maximumSamples": {
+    "navigation": 1147.8704089999999,
+    "firstVisit": 416.08176600000024,
+    "warmSwitch": 150.01585999999952,
+    "inputTwoFrames": 64.03020900000047,
+    "firstStreamTwoFrames": 146.44347300000118,
+    "rendererHeapBytes": 58094604,
+    "backendRssBytes": 273719296
+  },
+  "scope": "Production Web UI + real WebSocket RPC + SessionManager, synthetic offline workload. No Electron main/native startup or provider inference. Idle eviction uses an advanced clock; soak uses real time. Frame proxy = marker present plus two requestAnimationFrame callbacks, not hardware presentation. RSS is sampled, not peak or retained heap."
+}

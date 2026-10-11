@@ -79,7 +79,7 @@ try {
     decide.trace!.apply({ action: 'discard', status: 'discarded', changed: false, reason: 'new_turn' })
     decide.trace!.apply({ action: 'filter', status: 'applied', changed: true })
     points.recordDecisionFollowUp(answers[0], { result: 'file_access_attempted' })
-    value = await report(); assert.equal(value.totals.changed, 0); assert.equal(value.items.find((item: any) => !item.legacy).observations[0].result, 'file_access_attempted')
+    value = await report(); assert.equal(value.totals.changed, 0); const recorded = value.items.find(item => !item.legacy); assert(recorded); assert.equal(recorded.observations[0].result, 'file_access_attempted')
     return value.totals
   })
   await check('All 13 feature routes persist exact attempt and accounting identities', async () => {
@@ -106,7 +106,7 @@ try {
     noul = 0; await manager.generateTitleUnlessSmallTalk(a, 'Hi'); assert.equal(a.titleDeferred, true)
     manager.execution.begin({ sessionId: a.id, workspaceRootPath: a.workspace.rootPath }); a.thinkingLevel = 'max'; a.messages = [{ id: 'source-message', role: 'user', content: 'routine' }]
     const first = await manager.startPreTurnDecisions(a, 'routine'); assert.equal(first.thinkingOverride, 'low')
-    assert(!(await report()).items.find((item: any) => item.feature === 'adaptiveThinking').application)
+    const thinking = (await report()).items.find(item => item.feature === 'adaptiveThinking'); assert(thinking && !thinking.application)
     first.apply()
     delay = 100; const late = manager.startPreTurnDecisions(a, 'routine'); manager.execution.requestStop(a.id); await late;  delay = 0; await manager.execution.finish(manager.execution.current(a.id), 'interrupted', { notify: false, advanceQueue: false }); noul = .95
     const value = await report(); assert(value.items.some((item: any) => item.feature === 'smartTitles' && item.application?.action === 'defer_title' && item.application.changed))
@@ -128,16 +128,16 @@ try {
     const callbacks = buildDecisionToolCallbacks({ sessionId: a.id })
     assert((await callbacks.decide({ ...request, meta: { payload: request.state, apiKey: 'SECRET_TOKEN' } })).ok)
     const value = await report(); const tool = value.items.find((item: any) => item.feature === 'decideTool')
-    assert.equal(tool.application.status, 'unknown'); assert(value.totals.unconfirmed > 0)
+    assert(tool?.application); assert.equal(tool.application.status, 'unknown'); assert(value.totals.unconfirmed > 0)
     assert(!JSON.stringify(value).includes(request.state)); assert(!JSON.stringify(value).includes('SECRET_TOKEN'))
   })
   await check('Large result is confirmed only when the host actually delivers the excerpt', async () => {
     const { buildLargeResultFilter, finishLargeResultExcerpts } = await import('../../packages/server-core/src/decisions/large-result-filter.ts')
     const filter = buildLargeResultFilter(), excerpt = await filter({ text: Array.from({ length: 8 }, (_, i) => `# section ${i}\n${'evidence '.repeat(160)}`).join('\n'), context: { toolName: 'Read', intent: 'Find relevant evidence' }, budgetChars: 9000, filePath: '/fixture/saved.txt', sessionId: a.id })
     assert(excerpt)
-    let value = await report(); const item = value.items.find((item: any) => item.feature === 'largeResults' && item.recommendation?.action === 'filter'); assert(!item.application)
+    let value = await report(); const item = value.items.find((item: any) => item.feature === 'largeResults' && item.recommendation?.action === 'filter'); assert(item && !item.application)
     excerpt.onApplied!(true); finishLargeResultExcerpts(a.id)
-    value = await report(); assert.equal(value.items.find((row: any) => row.id === item.id).application.status, 'applied')
+    value = await report(); const applied = value.items.find(row => row.id === item.id)?.application; assert(applied); assert.equal(applied.status, 'applied')
     const { buildLargeResultSummaryGate } = await import('../../packages/server-core/src/decisions/large-results.ts')
     const { setLargeResultSummaryGate, askLargeResultSummaryGate, handleLargeResponse } = await import('../../packages/shared/src/utils/large-response.ts')
     setLargeResultSummaryGate(buildLargeResultSummaryGate())
@@ -226,7 +226,7 @@ try {
     const after = await report(); assert.deepEqual(after.totals, before.totals); assert.equal(requests.length, count)
     const queries = manager.durableRuntime.queries, usage = queries.usage(workspaceRoot, { sessionId: a.id })
     assert.equal(after.totals.knownCostUsd, usage.reduce((sum: number, row: any) => sum + (row.costUsd ?? 0), 0))
-    const interrupted = await report(b.id); assert.equal(interrupted.items.find((item: any) => item.id === trace.decisionPointId).attempts[0].status, 'unknown'); assert.equal(interrupted.totals.unknownCostRequests, 1)
+    const interrupted = await report(b.id); const interruptedPoint = interrupted.items.find(item => item.id === trace.decisionPointId); assert(interruptedPoint); assert.equal(interruptedPoint.attempts[0].status, 'unknown'); assert.equal(interrupted.totals.unknownCostRequests, 1)
     writeFileSync(join(output, 'evidence.json'), JSON.stringify({ report: after, events: queries.decisionEvents(workspaceRoot, a.id), usage }, null, 2))
   })
   writeFileSync(join(output, 'run.html'), '<!doctype html><html><head><meta charset="utf-8"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/session-decisions.tsx"></script></body></html>')

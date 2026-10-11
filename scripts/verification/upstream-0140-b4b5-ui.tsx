@@ -44,9 +44,9 @@ function Fixture() {
       <button onClick={() => window.dispatchEvent(new CustomEvent('craft:approve-plan-with-compact', { detail: { sessionId: 'plan-fixture', planPath: '/fixture/plan.md', includeDraftInput: false } }))}>Approve fixture plan with compact</button>
       <div data-testid="modes"><CompactPermissionModeSelector permissionMode={mode} onPermissionModeChange={value => { setMode(value); calls.push({ action: 'mode', value }) }} /></div>
     </div>
-    <div className="mx-4 h-60" data-testid="risks"><PermissionRequest request={{ requestId: 'guarded', toolName: 'Bash', type: 'bash', command: 'git push origin HEAD', description: 'Guarded approval', risks: ['publishes', 'sends'], canRemember: false }} onResponse={response => calls.push({ action: 'approval', response })} /></div>
+    <div className="mx-4 h-60" data-testid="risks"><PermissionRequest request={{ sessionId: 'plan-fixture', requestId: 'guarded', toolName: 'Bash', type: 'bash', command: 'git push origin HEAD', description: 'Guarded approval', risks: ['publishes', 'sends'], canRemember: false }} onResponse={response => calls.push({ action: 'approval', response })} /></div>
     <div className="mx-4" data-testid="plan-input"><EscapeInterruptProvider><FreeFormInput sessionId="plan-fixture" currentModel="pi/gpt-5-mini" permissionMode="safe" previousPermissionMode="guarded"
-      onPermissionModeChange={value => calls.push({ action: 'plan-mode', value })} onSubmit={text => calls.push({ action: 'plan-submit', text })} /></EscapeInterruptProvider></div>
+      onModelChange={() => {}} onPermissionModeChange={value => calls.push({ action: 'plan-mode', value })} onSubmit={text => calls.push({ action: 'plan-submit', text })} /></EscapeInterruptProvider></div>
     <div className="h-[900px]" data-testid="settings"><AiSettingsPage /></div>
   </div>
 }

@@ -125,6 +125,7 @@ try {
     writeFileSync(path, [call, outcome, { ...call, id: 'two', usage: { inputTokens: 0, outputTokens: 0, costUsd: 0 } }].map(r => JSON.stringify(r)).join('\n'))
     const report = await decisions.readDecisionUsageReport(new Date(Date.now() - 7 * 86400000), path)
     const f = report.features.adaptiveThinking
+    assert(f, 'Expected adaptiveThinking feature usage')
     assert.equal(f.calls, 2); assert.equal(f.withOutcome, 1); assert.equal(f.changed, 0); assert.equal(f.unknownCostCalls, 1); assert.equal(f.knownCostUsd, 0)
     assert.equal(report.features.largeResults, undefined); assert.equal(report.retentionLimited, true)
     return report

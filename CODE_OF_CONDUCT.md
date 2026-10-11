@@ -15,7 +15,7 @@ We expect all participants to:
 
 ## Enforcement
 
-Instances of unacceptable behavior may be reported to: conduct@craft.do
+Instances of unacceptable behavior may be reported to: the project maintainer at https://github.com/VanDING
 
 All complaints will be reviewed and investigated promptly and fairly.
 

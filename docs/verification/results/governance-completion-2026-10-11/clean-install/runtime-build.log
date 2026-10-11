@@ -1,0 +1,15 @@
+Bundled 2630 modules in 351ms
+
+  bundle.js  9.75 MB  (entry point)
+
+📨 Building WhatsApp worker (bundling Baileys) — build 2026-10-11T10:50:46.926Z (8e5bf13b+dirty)...
+🔍 Verifying worker output...
+✅ WhatsApp worker built (7.16 MB) → /private/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-clean-install-Cl3EVE/repository/packages/messaging-whatsapp-worker/dist/worker.cjs
+$ bun run server:build:subprocess && bun run build:wa-worker
+$ cd packages/pi-agent-server && bun run build
+$ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+$ bun run scripts/build-wa-worker.ts
+
+  packages/messaging-whatsapp-worker/dist/worker.cjs  7.2mb ⚠️
+
+⚡ Done in 360ms

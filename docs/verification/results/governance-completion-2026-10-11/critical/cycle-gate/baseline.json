@@ -1,0 +1,1 @@
+{"schemaVersion":1,"allowed":[{"members":["packages/fixture/src/a.ts","packages/fixture/src/b.ts"],"reason":"Verified recursive fixture composition","owner":"verification","edges":[{"from":"packages/fixture/src/a.ts","to":"packages/fixture/src/b.ts"},{"from":"packages/fixture/src/b.ts","to":"packages/fixture/src/a.ts"}]}]}

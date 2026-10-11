@@ -1,0 +1,59 @@
+[
+  {
+    "id": "auth-before",
+    "exitCode": 1,
+    "failure": "Logout must survive",
+    "log": "auth-before.log",
+    "manifest": "auth-before/manifest.json"
+  },
+  {
+    "id": "lifecycle-before",
+    "exitCode": 1,
+    "failure": "Missing expected rejection",
+    "log": "lifecycle-before.log",
+    "manifest": "lifecycle-before/manifest.json"
+  },
+  {
+    "id": "auth-canonical-before",
+    "exitCode": 1,
+    "failure": "Equivalent JWT signature",
+    "log": "auth-canonical-before.log",
+    "manifest": "auth-canonical-before/manifest.json"
+  },
+  {
+    "id": "auth-after-2",
+    "exitCode": 1,
+    "failure": "proxy.example:0",
+    "log": "auth-after-2.log",
+    "manifest": "auth-after-2/manifest.json"
+  },
+  {
+    "id": "auth-after-3",
+    "exitCode": 1,
+    "failure": "socket hang up",
+    "log": "auth-after-3.log",
+    "manifest": "auth-after-3/manifest.json"
+  },
+  {
+    "id": "auth-open-socket-before",
+    "exitCode": 1,
+    "failure": "AUTH_FAILED",
+    "log": "auth-open-socket-before.log",
+    "manifest": "auth-open-socket-before/manifest.json"
+  },
+  {
+    "id": "quiesce-before",
+    "exitCode": 1,
+    "log": "quiesce-before.log"
+  },
+  {
+    "id": "quiesce-steer-before",
+    "exitCode": 1,
+    "log": "quiesce-steer-before.log"
+  },
+  {
+    "id": "stop-before",
+    "exitCode": 1,
+    "log": "stop-before.log"
+  }
+]

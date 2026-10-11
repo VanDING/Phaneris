@@ -217,7 +217,7 @@ describe('CliRpcClient', () => {
     server = createMockServer()
     const client = new CliRpcClient(server.url)
     await client.connect()
-    const result = await client.invoke('sessions:get', 'workspace-1')
+    const result = await client.invoke('fixture:result', 'workspace-1')
     expect(result).toEqual(['workspace-1'])
     client.destroy()
   })

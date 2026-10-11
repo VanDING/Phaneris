@@ -136,7 +136,7 @@ import { parseError, type AgentError } from './errors.ts';
 import { runPreToolUseChecks, type PreToolUseCheckResult, type PreToolUseInput } from './core/pre-tool-use.ts';
 import type { PermissionRemember } from './core/permission-remember.ts';
 import { getRtkPath } from './core/rtk-detector.ts';
-import { getRtkEnabled, getRtkExcludeCommands, getBrowserToolEnabled, getExtendedPromptCache, getPromptCacheWarming } from '../config/storage.ts';
+import { getRtkEnabled, getRtkExcludeCommands, getBrowserToolEnabled, getExtendedPromptCache, getPromptCacheWarming } from '../config/appearance.ts';
 import type { RtkContext } from './core/rtk-rewrite.ts';
 
 // Workspace slug extraction for skill qualification
@@ -1420,7 +1420,7 @@ export class PiAgent extends BaseAgent {
       }
     }
 
-    // Adapt event to CraftAgentEvents
+    // Adapt event to ProductAgentEvents
     // The event adapter expects typed PiAgentEvent/AgentSessionEvent objects,
     // but since we're receiving plain JSON, we cast through unknown.
     for (const agentEvent of this.adapter.adaptEvent(adaptedEvent as any)) {
@@ -2963,6 +2963,13 @@ export class PiAgent extends BaseAgent {
     this.cancelPendingHostRequests();
     this.preToolMetadataByCallId.clear();
     this.bufferedDurableToolStarts.clear();
+  }
+
+  override interruptForHandoff(reason: AbortReason): void {
+    // The subprocess pauses a presenting tool only after its T2 ACK. Keep
+    // draining until SDK agent_end; completing this queue here would let the
+    // Host park a still-pending tool as an unknown effect.
+    this.abortReason = reason;
   }
 
   forceAbort(reason: AbortReason): void {

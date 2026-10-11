@@ -1,0 +1,7245 @@
+{
+  "checks": [
+    "business renderer is absent while adapter configuration is delayed",
+    "authenticated transport is ready before business renderer mounts",
+    "production RPC facade reads persisted fixture sessions",
+    "session switching preserves separate persisted input drafts",
+    "session row keyboard activation preserves draft ownership",
+    "language change retains current input draft",
+    "workspace switching and reconnect keep the accepted client binding",
+    "returning to a workspace restores its session draft",
+    "rapid workspace switching flushes pending composer and persistence timers",
+    "unsupported native file capability fails explicitly",
+    "reconnect retains production session domain state",
+    "real browser offline edits persist after reconnection without an unhandled rejection",
+    "web permission waits before real file effect",
+    "web permission approval completes real Pi write",
+    "web preview reads the actual written file",
+    "web real SubmitPlan card accepts and continues once",
+    "web actual response cancellation returns the session to idle",
+    "web reconnect preserves and persists the latest queued draft",
+    "web reconnect and history merge preserve single user and plan facts",
+    "1280px renderer with reduced motion",
+    "420px renderer with reduced motion"
+  ],
+  "errors": [],
+  "consoleTrace": [
+    {
+      "type": "debug",
+      "text": "[vite] connecting...",
+      "duringOffline": false
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected.",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "duringOffline": false
+    },
+    {
+      "type": "warning",
+      "text": "You have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Renderer performance tracking enabled",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Renderer performance tracking enabled",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 40.1ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session.loaded: 40.6ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... data.ready: 40.9ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 61.3ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 397.1ms (panel.mounted:40ms → session.loaded:41ms → data.ready:41ms → panel.mounted:61ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-r... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-r... panel.mounted: 150.4ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-r... session.loaded: 150.9ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-r... data.ready: 151.2ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-r... panel.mounted: 168.2ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 310.5ms (panel.mounted:150ms → session.loaded:151ms → data.ready:151ms → panel.mounted:168ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 153.6ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session.loaded: 154.1ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... data.ready: 154.4ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 171.9ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 319.8ms (panel.mounted:154ms → session.loaded:154ms → data.ready:154ms → panel.mounted:172ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 39.3ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session.loaded: 39.8ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... data.ready: 40.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 55.7ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 117.8ms (panel.mounted:39ms → session.loaded:40ms → data.ready:40ms → panel.mounted:56ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "[i18n] Appearance dropdown change {from: en, to: zh-Hans}",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 1970.4ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session.loaded: 1970.9ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... data.ready: 1971.2ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 1986.4ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 2067.0ms (panel.mounted:1970ms → session.loaded:1971ms → data.ready:1971ms → panel.mounted:1986ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed",
+      "duringOffline": false
+    },
+    {
+      "type": "error",
+      "text": "WebSocket connection to 'ws://127.0.0.1:57300/' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED",
+      "duringOffline": true
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed",
+      "duringOffline": true
+    },
+    {
+      "type": "info",
+      "text": "[i18n] Appearance dropdown change {from: zh-Hans, to: en}",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 1864.5ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session.loaded: 1864.9ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... data.ready: 1865.3ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 1881.6ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 1971.3ms (panel.mounted:1865ms → session.loaded:1865ms → data.ready:1865ms → panel.mounted:1882ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... panel.mounted: 37.2ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... session.loaded: 37.7ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... data.ready: 38.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... panel.mounted: 55.1ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 146.4ms (panel.mounted:37ms → session.loaded:38ms → data.ready:38ms → panel.mounted:55ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 143.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... session.loaded: 143.3ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... data.ready: 143.7ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-p... panel.mounted: 172.3ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 275.3ms (panel.mounted:143ms → session.loaded:143ms → data.ready:144ms → panel.mounted:172ms)",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... session-list.tap: 0.0ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... panel.mounted: 69.2ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... session.loaded: 69.6ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... data.ready: 69.9ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "261011-s... panel.mounted: 84.1ms",
+      "duringOffline": false
+    },
+    {
+      "type": "info",
+      "text": "Session switch complete: 151.5ms (panel.mounted:69ms → session.loaded:70ms → data.ready:70ms → panel.mounted:84ms)",
+      "duringOffline": false
+    }
+  ],
+  "expectedNetworkErrors": [
+    {
+      "type": "error",
+      "text": "WebSocket connection to 'ws://127.0.0.1:57300/' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED",
+      "duringOffline": true
+    }
+  ],
+  "traces": [
+    {
+      "direction": "receive",
+      "type": "connected"
+    },
+    {
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "direction": "receive",
+      "type": "handshake_ack"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "custom"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "onboarding:getAuthState"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "onboarding:getAuthState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "onboarding:getAuthState"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaces:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "notification:getEnabled"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "onboarding:getAuthState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaces:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "notification:getEnabled"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "statuses:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "views:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "views:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "statuses:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "window:switchWorkspace"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "window:switchWorkspace"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "statuses:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "views:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaces:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "notification:getEnabled"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "statuses:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "views:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaces:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "notification:getEnabled"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspace:readImage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "direction": "receive",
+      "type": "handshake_ack"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "window:switchWorkspace"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "window:switchWorkspace"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "statuses:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "views:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaces:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "notification:getEnabled"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "plugins:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "projects:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "pages:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "decisions:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sources:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "statuses:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "views:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getEnabled"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "rtk:getStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "preferences:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "labels:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaces:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "notification:getEnabled"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:getAll"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "LLM_Connection:listWithStatus"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "automations:getLastExecuted"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPermissionModeState"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "workspaceSettings:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getUnreadSummary"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "direction": "receive",
+      "type": "handshake_ack"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:get"
+    },
+    {
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "direction": "receive",
+      "type": "handshake_ack"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "releaseNotes:getLatestVersion"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "releaseNotes:getLatestVersion"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "releaseNotes:getLatestVersion"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "releaseNotes:getLatestVersion"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "appearance:getRichToolDescriptions"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getPresets"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getAllWorkspaceThemes"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "toolIcons:getMappings"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "workItems:changed"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "calendar:changed"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:respondToPermission"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:respondToPermission"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "sessions:unreadSummaryChanged"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "file:resolve"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "file:resolve"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:registerCurrent"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "artifacts:changed"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:registerCurrent"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "file:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "file:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "file:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "file:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "workItems:changed"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "calendar:changed"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "sequence_ack"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "sessions:unreadSummaryChanged"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "workItems:changed"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "calendar:changed"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:sendMessage"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "workItems:changed"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "calendar:changed"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:cancel"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:cancel"
+    },
+    {
+      "direction": "receive",
+      "type": "event",
+      "channel": "session:event"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "direction": "receive",
+      "type": "handshake_ack"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "skills:get"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:command"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:readMessages"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:closeMessagesRead"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "drafts:set"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "git:getBranch"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getAutoCapitalisation"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSpellCheck"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "system:homeDir"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "input:getSendMessageKey"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "artifacts:list"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "file:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "file:read"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "send",
+      "type": "request",
+      "channel": "sessions:getPendingPlanExecution"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "file:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "file:read"
+    },
+    {
+      "direction": "receive",
+      "type": "response",
+      "channel": "sessions:getPendingPlanExecution"
+    }
+  ],
+  "server": "ws://127.0.0.1:57300"
+}

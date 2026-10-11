@@ -1,7 +1,13 @@
-#!/usr/bin/env node
+import { DurableToolAccounting } from './durable-tool-accounting';
+import { PiModelRuntimeOwner } from './model-runtime-owner';
+import { createSessionEventAdapter } from './session-event-adapter';
+import type { PromptSnapshot, PiCredential, CustomEndpointApi, InitMessage, RuntimeConfigUpdateMessage, InboundMessage, ProxyToolDef, ToolExecutionMetadata, EnrichedToolExecutionStartEvent, TrajectoryEventAttachments, OutboundAgentEvent, OutboundReady, OutboundEvent, OutboundPreToolUseReq, OutboundToolExecReq, OutboundToolExecCancel, OutboundDurableToolPrepareReq, OutboundDurableToolOutcomeReq, OutboundDurableModelPrepareReq, OutboundDurableModelOutcomeReq, OutboundSessionToolCompleted, OutboundMiniResult, OutboundLlmQueryResult, OutboundEnsureSessionReadyResult, OutboundCompactResult, OutboundSetAutoCompactionResult, OutboundRuntimeConfigUpdateResult, OutboundSetModelResult, OutboundThinkingLevelState, OutboundSessionIdUpdate, OutboundError, OutboundMessage } from './messages.ts';
+import { SessionLifecycle } from './session-lifecycle.ts';
+import { PendingReplies } from './pending-replies.ts';
+import { createJsonlTransport } from './jsonl-transport.ts';
+import { composeToolCatalog, handsControlToUI } from './tool-composition.ts';
 import { createContextPolicyStream, type HandoffSignal } from './context-policy-stream'
-import { isContextPolicy, type ContextPolicy } from '../../shared/src/agent/context-policy.ts'
-import { compactTextUpdate } from './transport-delta.ts';
+import { isContextPolicy, type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import { prepareRequestDiagnostics } from './request-diagnostics.ts';
 /**
  * Pi Agent Server
@@ -20,7 +26,6 @@ import { prepareRequestDiagnostics } from './request-diagnostics.ts';
 
 import http from 'node:http';
 import { createHash, randomBytes } from 'node:crypto';
-import { createInterface } from 'node:readline';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { join } from 'node:path';
 import { mkdirSync, readdirSync, statSync, existsSync } from 'node:fs';
@@ -51,36 +56,13 @@ import type {
 } from '@earendil-works/pi-coding-agent';
 import type { AssistantMessage, CacheRetention, Context, Credential, Model, OAuthCredential } from '@earendil-works/pi-ai';
 import { HostCredentialStore } from './host-credential-store.ts';
-import { normalizePiProvider } from '../../shared/src/config/pi-provider-compat.ts';
+import { normalizePiProvider } from '@phaneris/shared/config/pi-provider-compat';
 
 // Pi AI types
 import type { TextContent as PiTextContent } from '@earendil-works/pi-ai';
 
-// Pre-register the Bedrock provider module so the Pi SDK doesn't attempt a
-// dynamic import of "./amazon-bedrock.js" — which fails in the bundled output
-// because bun collapses everything into a single file.
-// pi-ai is deduped (single hoisted copy), so one registration covers both
-// pi-ai and pi-agent-core module scopes.
-import { setBedrockProviderModule } from '@earendil-works/pi-ai/api/bedrock-converse-stream.lazy';
-import { bedrockProviderModule } from '@earendil-works/pi-ai/bedrock-provider';
-setBedrockProviderModule(bedrockProviderModule);
-
-// Pre-register the Pi SDK's OAuth flow modules (GitHub Copilot, xAI, Kimi,
-// OpenRouter, Anthropic, …) so the SDK never attempts its lazy dynamic import
-// of e.g. "./github-copilot.js" — which fails in the bundled output because
-// bun collapses everything into a single file ("Cannot find module
-// './github-copilot.js' from .../pi-agent-server/index.js").
-// Same rationale as setBedrockProviderModule above.
-import { registerBunOAuthFlows } from '@earendil-works/pi-ai/bun-oauth';
-registerBunOAuthFlows();
-
-// Register streamSimple as the default streamFn. pi-coding-agent's sdk.js
-// does this at its own module top-level, but bun's bundler drops that
-// side-effect call when bundling (the ./compat export resolves lazily), so
-// Agent construction would throw "No default stream function configured"
-// in the bundled output. Same pattern as setBedrockProviderModule above;
-// the call is idempotent.
-import { setDefaultStreamFn, type StreamFn } from '@earendil-works/pi-agent-core';
+import { registerPiSdkRuntime } from './sdk-registration.ts';
+import type { StreamFn } from '@earendil-works/pi-agent-core';
 import { wrapDurableModelStream } from './durable-model-stream.ts';
 import { installCacheWarmingAccounting } from './cache-warming-accounting.ts';
 import { streamSimple } from '@earendil-works/pi-ai/compat';
@@ -121,7 +103,7 @@ function withDurableAccounting(stream: StreamFn, purpose?: 'cache_warm'): Stream
   }, () => piCacheRetention);
 }
 
-setDefaultStreamFn(withDurableAccounting(streamSimple));
+registerPiSdkRuntime(withDurableAccounting(streamSimple));
 
 // Model resolution (extracted for testability + custom-endpoint precedence)
 import { resolvePiModel, isDeniedMiniModelId } from './model-resolution.ts';
@@ -153,12 +135,12 @@ import {
 } from './length-continuation.ts';
 
 // Direct source imports from shared (bundled by bun build)
-import { handleLargeResponse, estimateTokens, tokenLimitFor, setLargeResultFilter } from '../../shared/src/utils/large-response.ts';
-import { getSessionPlansPath, getSessionPath } from '../../shared/src/sessions/storage.ts';
-import { buildCallLlmRequest } from '../../shared/src/agent/llm-tool.ts';
-import type { LLMQueryRequest, LLMQueryResult } from '../../shared/src/agent/llm-tool.ts';
-import { PI_TOOL_NAME_MAP, THINKING_TO_PI } from '../../shared/src/agent/backend/pi/constants.ts';
-import { getDefaultSummarizationModel } from '../../shared/src/config/models.ts';
+import { handleLargeResponse, estimateTokens, tokenLimitFor, setLargeResultFilter } from '@phaneris/shared/utils/large-response';
+import { getSessionPlansPath, getSessionPath } from '@phaneris/shared/sessions/paths';
+import { buildCallLlmRequest } from '@phaneris/shared/agent/llm-tool';
+import type { LLMQueryRequest, LLMQueryResult } from '@phaneris/shared/agent/llm-tool';
+import { PI_TOOL_NAME_MAP, THINKING_TO_PI } from '@phaneris/shared/agent/backend/pi/constants';
+import { getDefaultSummarizationModel } from '@phaneris/shared/config/models';
 import { createWebFetchTool } from './tools/web-fetch.ts';
 import { resolveSearchProvider } from './tools/search/resolve-provider.ts';
 import { createSearchTool } from './tools/search/create-search-tool.ts';
@@ -168,11 +150,11 @@ import { observeNativeSessionEvent } from './native-lifecycle-observation.ts';
 import { readContextUsage, deferContextUsage } from './context-usage.ts';
 import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS } from './compaction-wait.ts';
 import { createLargeResultFilterClient } from './large-result-filter.ts';
-import type { PiCompactResult, PiContextUsagePayload, PiLargeResultFilterRequest, PiLargeResultFilterResponse, PiLargeResultFilterCancel, PiInputReception, PiProxyToolDefinition, PiProxyToolResult } from '../../shared/src/agent/backend/pi/protocol.ts';
+import type { PiCompactResult, PiContextUsagePayload, PiLargeResultFilterRequest, PiLargeResultFilterResponse, PiLargeResultFilterCancel, PiInputReception, PiProxyToolDefinition, PiProxyToolResult } from '@phaneris/shared/agent/backend/pi/protocol';
 import { mcpStructuredContentSchema } from '@earendil-works/pi-codemode/declarations';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
-import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '../../shared/src/durable-runtime/types.ts';
+import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '@phaneris/shared/durable-runtime/types';
 import { attachDurableToolContext, durableToolFromContext } from './durable-tool-context.ts';
 import { convergeCanonicalContext } from './canonical-model-context.ts';
 import {
@@ -181,287 +163,20 @@ import {
   resolveCustomEndpointApiKeyFor,
 } from './custom-endpoint-auth.ts';
 
-// ============================================================
-// Types — JSONL Protocol
-// ============================================================
-
-/** Credential union used in init and token_update messages */
-type PiCredential =
-  | { type: 'api_key'; key: string }
-  | { type: 'oauth'; access: string; refresh: string; expires: number }
-  | { type: 'iam'; accessKeyId: string; secretAccessKey: string; region?: string; sessionToken?: string };
-
-/** Custom endpoint protocol — determines which streaming adapter Pi SDK uses */
-type CustomEndpointApi = 'openai-completions' | 'openai-responses' | 'anthropic-messages';
-
-/** Init message from main process — configures the Pi agent server */
-interface InitMessage {
-  type: 'init';
-  apiKey: string;
-  model: string;
-  cwd: string;
-  thinkingLevel: string;
-  workspaceRootPath: string;
-  sessionId: string;
-  sessionPath: string;
-  workingDirectory: string;
-  plansFolderPath: string;
-  miniModel?: string;
-  agentDir?: string;
-  providerType?: string;
-  authType?: string;
-  workspaceId?: string;
-  baseUrl?: string;
-  branchFromSdkSessionId?: string;
-  branchFromSessionPath?: string;
-  branchFromSdkTurnId?: string;
-  customEndpoint?: { api: CustomEndpointApi; supportsImages?: boolean };
-  customModels?: CustomEndpointModelConfig[];
-  piAuth?: { provider: string; credential: PiCredential };
-  /** Whether the browser session tool is enabled (false = exclude via SDK denylist) */
-  browserToolEnabled?: boolean;
-  /** Pi SDK native prompt-cache retention ('long' = extended TTL where supported) */
-  cacheRetention?: CacheRetention;
-  promptCacheWarming?: boolean;
-  contextPolicy?: ContextPolicy;
-}
-
-interface RuntimeConfigUpdateMessage {
-  type: 'update_runtime_config';
-  id: string;
-  model: string;
-  providerType?: string;
-  authType?: string;
-  baseUrl?: string;
-  customEndpoint?: { api: CustomEndpointApi; supportsImages?: boolean };
-  customModels?: CustomEndpointModelConfig[];
-}
-
-/** Messages from main process (stdin) */
-type InboundMessage =
-  | InitMessage
-  | { type: 'prompt'; id: string; message: string; systemPrompt: string; durableRunOperationId?: string; durableTurnId?: string; canonicalContext?: DurableCanonicalModelContext; images?: Array<{ type: 'image'; data: string; mimeType: string }> }
-  | { type: 'sync_tools'; tools: ProxyToolDef[] }
-  | { type: 'tool_execute_response'; requestId: string; result: PiProxyToolResult }
-  | { type: 'pre_tool_use_response'; requestId: string; action: 'allow' | 'block' | 'modify'; input?: Record<string, unknown>; reason?: string }
-  | { type: 'durable_tool_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; canonicalArgsHash: string; recoveryMode: ToolRecoveryMode; created: boolean; status: string; committedSeq: number }; reason?: string }
-  | { type: 'durable_tool_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
-  | { type: 'durable_model_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }
-  | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
-  | PiLargeResultFilterResponse
-  | { type: 'abort' }
-  | { type: 'mini_completion'; id: string; prompt: string; durableRunOperationId?: string; durableTurnId?: string }
-  | { type: 'llm_query'; id: string; request: LLMQueryRequest; durableRunOperationId?: string; durableTurnId?: string }
-  | { type: 'cancel_ephemeral_query'; id: string }
-  | { type: 'ensure_session_ready'; id: string }
-  | { type: 'set_model'; model: string }
-  | { type: 'set_thinking_level'; level: string }
-  | { type: 'compact'; id: string; customInstructions?: string; durableRunOperationId?: string; durableTurnId?: string }
-  | { type: 'set_auto_compaction'; id: string; enabled: boolean; policy?: ContextPolicy }
-  | { type: 'force_context_handoff' }
-  | { type: 'set_browser_tool_enabled'; enabled: boolean }
-  | { type: 'set_cache_retention'; cacheRetention: CacheRetention }
-  | { type: 'set_cache_warming'; enabled: boolean }
-  | RuntimeConfigUpdateMessage
-  | { type: 'steer'; id?: string; message: string }
-  | { type: 'token_update'; piAuth: { provider: string; credential: PiCredential } }
-  | { type: 'oauth_credential_update_response'; requestId: string; ok: boolean }
-  | { type: 'shutdown' };
-
-/** Proxy tool definition from main process */
-interface ProxyToolDef extends PiProxyToolDefinition {}
-
-/** Canonical tool metadata propagated on Pi tool start events */
-interface ToolExecutionMetadata {
-  intent?: string;
-  displayName?: string;
-  source: 'interceptor';
-}
-
-type EnrichedToolExecutionStartEvent = Extract<AgentSessionEvent, { type: 'tool_execution_start' }> & {
-  toolMetadata?: ToolExecutionMetadata;
-  /** Wall-clock stamp (epoch ms) added at forward time for trajectory timing. */
-  ts?: number;
-};
-
-/** Trajectory-enrichment fields attached at forward time (main process reads
- *  them via the typed adapter boundary; they are not part of the SDK event). */
-interface TrajectoryEventAttachments {
-  /** Wall-clock stamp (epoch ms) added at forward time for trajectory timing. */
-  ts?: number;
-  /** Server-assigned per-session request ordinal (matches prompt snapshots). */
-  requestSeq?: number;
-  /** Effective system prompt captured for this request. */
-  promptSnapshot?: string;
-  /** Content-addressed manifest of the actual request-time context. */
-  contextSnapshot?: PromptSnapshot['contextSnapshot'];
-}
-
-type OutboundAgentEvent = (AgentSessionEvent | (EnrichedToolExecutionStartEvent & TrajectoryEventAttachments) | { type: 'context_usage' }) & PiContextUsagePayload;
-
-/** Messages to main process (stdout) */
-interface OutboundReady { type: 'ready'; sessionId: string | null; callbackPort: number; callbackToken: string }
-interface OutboundEvent { type: 'event'; event: OutboundAgentEvent }
-interface OutboundPreToolUseReq {
-  type: 'pre_tool_use_request';
-  requestId: string;
-  toolName: string;
-  toolCallId?: string;
-  input: Record<string, unknown>;
-  policyOnly?: boolean;
-}
-interface OutboundToolExecReq { type: 'tool_execute_request'; requestId: string; toolCallId?: string; toolName: string; args: Record<string, unknown>; durableTool?: DurableToolExecutionIdentity }
-interface OutboundToolExecCancel { type: 'tool_execute_cancel'; requestId: string }
-interface OutboundDurableToolPrepareReq {
-  type: 'durable_tool_prepare_request';
-  requestId: string;
-  sessionId: string;
-  turnId: string;
-  runOperationId: string;
-  providerToolCallId: string;
-  toolBatchId?: string;
-  toolBatchOrdinal?: number;
-  toolName: string;
-  args: Record<string, unknown>;
-}
-interface OutboundDurableToolOutcomeReq {
-  type: 'durable_tool_outcome_request';
-  requestId: string;
-  sessionId: string;
-  turnId: string;
-  runOperationId: string;
-  operationId: string;
-  providerToolCallId: string;
-  toolBatchId?: string;
-  toolBatchOrdinal?: number;
-  toolName: string;
-  canonicalArgsHash: string;
-  result: unknown;
-  isError: boolean;
-}
-interface OutboundDurableModelPrepareReq {
-  purpose?: 'cache_warm';
-  type: 'durable_model_prepare_request';
-  requestId: string;
-  sessionId: string;
-  turnId: string;
-  runOperationId: string;
-  providerRequestId: string;
-  provider: string;
-  model: string;
-  canonicalRequestHash: string;
-}
-interface OutboundDurableModelOutcomeReq {
-  purpose?: 'cache_warm';
-  type: 'durable_model_outcome_request';
-  requestId: string;
-  sessionId: string;
-  turnId: string;
-  runOperationId: string;
-  operationId: string;
-  providerRequestId: string;
-  provider: string;
-  model: string;
-  canonicalRequestHash: string;
-  stopReason: string;
-  responseId?: string;
-  requestObservation?: import('../../shared/src/durable-runtime/types.ts').NativeRequestObservation;
-  content: unknown;
-  text?: string;
-  usage?: { inputTokens?: number; outputTokens?: number; costUsd?: number; payload?: unknown };
-}
-interface OutboundSessionToolCompleted { type: 'session_tool_completed'; toolName: string; args: Record<string, unknown>; isError: boolean }
-interface OutboundMiniResult { type: 'mini_completion_result'; id: string; text: string | null }
-interface OutboundLlmQueryResult {
-  type: 'llm_query_result';
-  id: string;
-  result: LLMQueryResult | null;
-  errorMessage?: string;
-  /**
-   * When set, signals the main process that a generic `error` with the same code
-   * was also emitted on the error channel (for centralized auth-refresh detection).
-   */
-  errorCode?: string;
-}
-interface OutboundEnsureSessionReadyResult { type: 'ensure_session_ready_result'; id: string; sessionId: string | null }
-interface OutboundCompactResult {
-  type: 'compact_result';
-  id: string;
-  success: boolean;
-  result?: PiCompactResult;
-  errorMessage?: string;
-}
-interface OutboundSetAutoCompactionResult {
-  type: 'set_auto_compaction_result';
-  id: string;
-  success: boolean;
-  enabled: boolean;
-  errorMessage?: string;
-}
-interface OutboundRuntimeConfigUpdateResult {
-  type: 'update_runtime_config_result';
-  id: string;
-  success: boolean;
-  updated: boolean;
-  contextWindow?: number;
-  errorMessage?: string;
-}
-interface OutboundSetModelResult {
-  type: 'set_model_result';
-  model: string;
-  contextWindow?: number;
-}
-interface OutboundThinkingLevelState {
-  type: 'thinking_level_state';
-  effectiveLevel: string;
-  availableLevels: string[];
-}
-interface OutboundSessionIdUpdate { type: 'session_id_update'; sessionId: string }
-interface OutboundError { type: 'error'; message: string; code?: string; id?: string }
-
-type OutboundMessage =
-  | { type: 'oauth_credential_update_request'; requestId: string; provider: string; credential: OAuthCredential }
-  | PiInputReception
-  | { type: 'context_handoff'; signal: HandoffSignal }
-  | OutboundReady
-  | OutboundEvent
-  | OutboundPreToolUseReq
-  | OutboundToolExecReq
-  | OutboundDurableToolPrepareReq
-  | OutboundDurableToolOutcomeReq
-  | OutboundDurableModelPrepareReq
-  | OutboundDurableModelOutcomeReq
-  | { type: 'sdk_observation'; observation: import('../../shared/src/durable-runtime/types.ts').DurableSdkObservation }
-  | OutboundSessionToolCompleted
-  | OutboundMiniResult
-  | OutboundLlmQueryResult
-  | OutboundEnsureSessionReadyResult
-  | OutboundCompactResult
-  | OutboundSetAutoCompactionResult
-  | OutboundRuntimeConfigUpdateResult
-  | OutboundSetModelResult
-  | OutboundThinkingLevelState
-  | OutboundSessionIdUpdate
-  | PiLargeResultFilterRequest
-  | PiLargeResultFilterCancel
-  | OutboundToolExecCancel
-  | OutboundError;
 
 // ============================================================
 // State
 // ============================================================
 
-let piSession: AgentSession | null = null;
+const sessionLifecycle = new SessionLifecycle<AgentSession>();
 let contextPolicy: ContextPolicy = 'compact';
 // Set by the host when a user retries a failed handoff: the next request
 // generates the document regardless of the measured budget.
 let forcedContextHandoff = false;
 // A stop must also cancel a manual compact still waiting for auto-compaction.
 let compactionEpoch = 0;
-let piModelRuntime: ModelRuntime | null = null;
-let piModelRegistry: PiModelRegistry | null = null;
-let moduleCredentialStore: HostCredentialStore | null = null;
-const pendingCredentialWrites = new Map<string, (ok: boolean) => void>();
+const modelOwner = new PiModelRuntimeOwner();
+const pendingCredentialWrites = new PendingReplies<boolean>();
 let credentialWriteId = 0;
 
 async function persistOAuthCredential(provider: string, credential: OAuthCredential): Promise<void> {
@@ -471,7 +186,7 @@ async function persistOAuthCredential(provider: string, credential: OAuthCredent
       pendingCredentialWrites.delete(requestId);
       reject(new Error('Host did not confirm OAuth credential persistence within 30s'));
     }, 30_000);
-    pendingCredentialWrites.set(requestId, ok => {
+    pendingCredentialWrites.register(requestId, ok => {
       clearTimeout(timer);
       pendingCredentialWrites.delete(requestId);
       if (ok) resolve(); else reject(new Error('Host could not persist OAuth credential'));
@@ -522,35 +237,28 @@ function observeSdkLifecycle(event: string, data: Record<string, unknown>, sdkSe
 }
 
 function sendThinkingLevelState(): void {
-  if (!piSession) return;
+  if (!sessionLifecycle.current) return;
   send({
     type: 'thinking_level_state',
-    effectiveLevel: piSession.thinkingLevel,
-    availableLevels: piSession.getAvailableThinkingLevels(),
+    effectiveLevel: sessionLifecycle.current.thinkingLevel,
+    availableLevels: sessionLifecycle.current.getAvailableThinkingLevels(),
   });
 }
 
 // Pending promises for async handshakes
-const pendingPreToolUse = new Map<string, { resolve: (response: { action: string; input?: Record<string, unknown>; reason?: string }) => void }>();
-const pendingToolExecutions = new Map<string, { resolve: (result: PiProxyToolResult) => void }>();
-const pendingDurableToolPrepares = new Map<string, { resolve: (response: { ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; reason?: string }) => void }>();
-const pendingDurableToolOutcomes = new Map<string, { resolve: (response: { ok: boolean; committedSeq?: number; reason?: string }) => void }>();
-const pendingDurableModelPrepares = new Map<string, { resolve: (response: { ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }) => void }>();
-const pendingDurableModelOutcomes = new Map<string, { resolve: (response: { ok: boolean; committedSeq?: number; reason?: string }) => void }>();
-const durableToolCommits = new Map<string, { operationId: string; startSeq: number; outcomeSeq?: number }>();
-const durableToolBatches = new Map<string, { toolBatchId: string; toolBatchOrdinal: number }>();
+const pendingPreToolUse = new PendingReplies<{ action: string; input?: Record<string, unknown>; reason?: string }>();
+const pendingToolExecutions = new PendingReplies<PiProxyToolResult>();
+const pendingDurableToolPrepares = new PendingReplies<{ ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; reason?: string }>();
+const pendingDurableToolOutcomes = new PendingReplies<{ ok: boolean; committedSeq?: number; reason?: string }>();
+const pendingDurableModelPrepares = new PendingReplies<{ ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }>();
+const pendingDurableModelOutcomes = new PendingReplies<{ ok: boolean; committedSeq?: number; reason?: string }>();
+const durableToolAccounting = new DurableToolAccounting();
 
 function rememberDurableToolBatch(message: AssistantMessage, toolBatchId: string): void {
-  let ordinal = 0;
-  for (const part of message.content) {
-    if (part.type !== 'toolCall') continue;
-    durableToolBatches.set(part.id, { toolBatchId, toolBatchOrdinal: ordinal });
-    ordinal += 1;
-  }
+  durableToolAccounting.rememberBatch(message.content.filter(part => part.type === 'toolCall'), toolBatchId);
 }
 
 // Pending session MCP tool calls for completion detection
-const pendingSessionToolCalls = new Map<string, { toolName: string; arguments: Record<string, unknown> }>();
 
 // Proxy tool definitions from main process
 let proxyToolDefs: ProxyToolDef[] = [];
@@ -570,19 +278,7 @@ const prefetchCache = new Map<string, Promise<PiProxyToolResult>>();
 // ============================================================
 
 /** One captured request snapshot: the effective system prompt at request time. */
-export interface PromptSnapshot {
-  seq: number;
-  prompt: string;
-  contextSnapshot?: {
-    version: 1;
-    capturedAt: number;
-    provider: string;
-    model: string;
-    system: { hash: string; chars: number };
-    messages: Array<{ role: string; hash: string; chars: number }>;
-    tools: Array<{ name: string; description?: string; hash: string; schemaChars: number }>;
-  };
-}
+
 
 const PROMPT_SNAPSHOT_LIMIT = 50;
 const promptSnapshots = new Map<number, PromptSnapshot>();
@@ -652,15 +348,9 @@ const callbackToken = randomBytes(32).toString('hex');
 // JSONL I/O
 // ============================================================
 
-function send(msg: OutboundMessage): void {
-  const line = JSON.stringify(msg);
-  process.stdout.write(line + '\n');
-}
-
-function debugLog(message: string): void {
-  // Write debug messages to stderr so they don't interfere with JSONL protocol
-  process.stderr.write(`[pi-server] ${message}\n`);
-}
+const transport = createJsonlTransport<OutboundMessage>();
+const send = transport.send;
+const debugLog = transport.debug;
 
 // Large tool results (decision model, toggle `largeResults`): handleLargeResponse asks the
 // main process whether a summary is needed before summarizing.
@@ -873,24 +563,7 @@ async function createAuthenticatedRuntime(): Promise<{
   modelRuntime: ModelRuntime;
   modelRegistry: PiModelRegistry;
 }> {
-  // Reuse module-level credential store if already created (allows token_update to mutate it).
-  // Only create a new one on first call or after re-init.
-  const needsSeed = !moduleCredentialStore;
-  if (!moduleCredentialStore) moduleCredentialStore = new HostCredentialStore(persistOAuthCredential);
-  const credentialStore = moduleCredentialStore;
-
-  // Pre-load credentials from initConfig
-  if (needsSeed && initConfig?.piAuth) {
-    const { provider, credential } = initConfig.piAuth;
-    await credentialStore.inject(provider, credential as unknown as Credential);
-    debugLog(`Injected ${credential.type} credential for provider: ${provider}`);
-  } else if (needsSeed) {
-    const apiKey = initConfig?.apiKey;
-    if (apiKey) {
-      await credentialStore.modify('anthropic', async () => ({ type: 'api_key', key: apiKey } as Credential));
-      debugLog('Injected API key into credential store (legacy fallback)');
-    }
-  }
+  const credentialStore = await modelOwner.credentialStoreFor(initConfig, persistOAuthCredential, debugLog);
 
   // Create ModelRuntime with our credential store
   const modelRuntime = await ModelRuntime.create({ credentials: credentialStore, allowModelNetwork: false });
@@ -926,14 +599,21 @@ function resolveIsolatedAgentDir(): string {
 }
 
 async function ensureSession(): Promise<AgentSession> {
-  if (piSession) return piSession;
+  return sessionLifecycle.getOrCreate(createSession, session => {
+    send({ type: 'session_id_update', sessionId: session.sessionId });
+    sendThinkingLevelState();
+  });
+}
+
+async function createSession(): Promise<AgentSession> {
+  if (sessionLifecycle.current) return sessionLifecycle.current;
   if (!initConfig) throw new Error('Cannot create session: init not received');
 
   const cwd = resolvedCwd();
 
   const { modelRuntime, modelRegistry } = await createAuthenticatedRuntime();
   // Store at module scope for set_model handler
-  piModelRuntime = modelRuntime;
+  modelOwner.publish(modelRuntime, modelRegistry);
 
   // Build tools: coding tools + web tools wrapped with permission hooks + proxy tools.
   // Search provider is selected based on the user's LLM connection:
@@ -1002,7 +682,7 @@ async function ensureSession(): Promise<AgentSession> {
     ...wrapToolsWithHooks([...builtinDefs, ...webTools, ...proxyTools]),
     createReportProgressTool(),
   ];
-  const toolAllowlist = [...wrappedAll.map(t => t.name), 'tool_search', 'codemode'];
+  const catalog = composeToolCatalog([wrappedAll], ['tool_search', 'codemode']);
   debugLog(`Session tools: ${builtinDefs.length} builtin + ${webTools.length} web + ${proxyTools.length} proxy + 1 progress = ${wrappedAll.length} total`);
 
   // Build session options.
@@ -1012,8 +692,8 @@ async function ensureSession(): Promise<AgentSession> {
   const sessionOptions: CreateAgentSessionOptions = {
     cwd,
     modelRuntime,
-    customTools: wrappedAll,
-    tools: toolAllowlist,
+    customTools: [...catalog.customTools],
+    tools: [...catalog.allowlist],
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
     resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), observeLifecycle: observeSdkLifecycle,
       wrapOrchestrationTool: wrapSingleTool,
@@ -1089,7 +769,7 @@ async function ensureSession(): Promise<AgentSession> {
     session.dispose();
     throw new Error('Pi resumed a different model or provider than the configured connection; reselect the model before continuing.');
   }
-  session.setActiveToolsByName([...wrappedAll.filter(t => !t.exposure || t.exposure === 'direct' || t.exposure === 'model-only').map(t => t.name), 'tool_search', 'codemode']);
+  session.setActiveToolsByName([...catalog.activeNames]);
   // Ordinary requests keep their existing boundary. SDK background refreshes
   // use a distinct boundary and never publish assistant/tool output.
   const sessionStream = installCacheWarmingAccounting(
@@ -1105,14 +785,10 @@ async function ensureSession(): Promise<AgentSession> {
     () => { const forced = forcedContextHandoff; forcedContextHandoff = false; return forced },
   );
   session.setCacheWarmingMode(initConfig?.promptCacheWarming === true ? 'streaming' : 'off');
-  piSession = session;
 
   toolsChanged = false;
   debugLog(`Created Pi session: ${session.sessionId} (${wrappedAll.length} tools)`);
 
-  // Notify main process of session ID
-  send({ type: 'session_id_update', sessionId: session.sessionId });
-  sendThinkingLevelState();
 
   return session;
 }
@@ -1150,7 +826,7 @@ async function requestPreToolUseApproval(
   });
 
   const response = await new Promise<{ action: string; input?: Record<string, unknown>; reason?: string }>((resolve) => {
-    pendingPreToolUse.set(requestId, { resolve });
+    pendingPreToolUse.register(requestId, resolve);
   });
 
   if (response.action === 'block') {
@@ -1179,9 +855,9 @@ async function requestDurableToolPrepare(
     throw new Error(`Durable tool boundary is unavailable for "${toolName}"`);
   }
   const requestId = `pi-durable-t1-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const batch = durableToolBatches.get(toolCallId);
+  const batch = durableToolAccounting.readBatch(toolCallId);
   const responsePromise = new Promise<{ ok: boolean; prepared?: PreparedDurableTool & { created: boolean; status: string }; reason?: string }>((resolve) => {
-    pendingDurableToolPrepares.set(requestId, { resolve });
+    pendingDurableToolPrepares.register(requestId, resolve);
   });
   send({
     type: 'durable_tool_prepare_request',
@@ -1201,7 +877,7 @@ async function requestDurableToolPrepare(
   if (!response.prepared.created) {
     throw new Error(`Tool operation ${response.prepared.operationId} already crossed T1 and requires recovery`);
   }
-  durableToolCommits.set(toolCallId, {
+  durableToolAccounting.rememberCommit(toolCallId, {
     operationId: response.prepared.operationId,
     startSeq: response.prepared.committedSeq,
   });
@@ -1220,7 +896,7 @@ async function requestDurableToolOutcome(
   }
   const requestId = `pi-durable-t2-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const responsePromise = new Promise<{ ok: boolean; committedSeq?: number; reason?: string }>((resolve) => {
-    pendingDurableToolOutcomes.set(requestId, { resolve });
+    pendingDurableToolOutcomes.register(requestId, resolve);
   });
   send({
     type: 'durable_tool_outcome_request',
@@ -1240,7 +916,7 @@ async function requestDurableToolOutcome(
   const response = await responsePromise;
   if (!response.ok) throw new Error(response.reason || `Durable T2 failed for "${toolName}"`);
   if (response.committedSeq === undefined) throw new Error(`Durable T2 returned no commit sequence for "${toolName}"`);
-  durableToolCommits.set(toolCallId, {
+  durableToolAccounting.rememberCommit(toolCallId, {
     operationId: prepared.operationId,
     startSeq: prepared.committedSeq,
     outcomeSeq: response.committedSeq,
@@ -1267,7 +943,7 @@ async function requestDurableModelPrepare(
   }
   const requestId = `pi-model-t1-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const responsePromise = new Promise<{ ok: boolean; prepared?: PreparedDurableModel & { created: boolean; status: string }; reason?: string }>((resolve) => {
-    pendingDurableModelPrepares.set(requestId, { resolve });
+    pendingDurableModelPrepares.register(requestId, resolve);
   });
   send({
     type: 'durable_model_prepare_request',
@@ -1298,7 +974,7 @@ async function requestDurableModelOutcome(input: {
   model: string;
   canonicalRequestHash: string;
   message: AssistantMessage;
-  requestObservation?: import('../../shared/src/durable-runtime/types.ts').NativeRequestObservation;
+  requestObservation?: import('@phaneris/shared/durable-runtime/types').NativeRequestObservation;
 }): Promise<number> {
   const durableRun = input.durableRun ?? currentDurableModelRun();
   if (!initConfig || !durableRun) {
@@ -1306,7 +982,7 @@ async function requestDurableModelOutcome(input: {
   }
   const requestId = `pi-model-t2-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const responsePromise = new Promise<{ ok: boolean; committedSeq?: number; reason?: string }>((resolve) => {
-    pendingDurableModelOutcomes.set(requestId, { resolve });
+    pendingDurableModelOutcomes.register(requestId, resolve);
   });
   send({
     type: 'durable_model_outcome_request',
@@ -1442,7 +1118,7 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
     // Source the active model's contextWindow each call so the threshold
     // tracks set_model mid-session, not the model that was active at session
     // creation. Falls back to the fixed default when the model isn't set yet.
-    const modelContextWindow = piSession?.agent.state.model?.contextWindow;
+    const modelContextWindow = sessionLifecycle.current?.agent.state.model?.contextWindow;
     if (estimateTokens(resultText) > tokenLimitFor(modelContextWindow) && initConfig) {
       try {
         const sessionPath = getSessionPath(
@@ -1486,6 +1162,9 @@ function wrapSingleTool(tool: ToolDefinition<any, any>): ToolDefinition<any, any
       result,
       false,
     );
+    // Handoff is a successful tool boundary. Keep T2 before SDK abort, and
+    // abort synchronously so no follow-up model request outruns the UI pause.
+    if (handsControlToUI(sdkToolName)) sessionLifecycle.current?.agent.abort();
     return result;
   };
 
@@ -1566,10 +1245,10 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
         };
         if (signal?.aborted) { abort(); return; }
         signal?.addEventListener('abort', abort, { once: true });
-        pendingToolExecutions.set(requestId, { resolve: result => {
+        pendingToolExecutions.register(requestId, result => {
           signal?.removeEventListener('abort', abort);
           resolve(result);
-        } });
+        });
       });
 
       if (result.isError) throw new Error(result.content);
@@ -1840,233 +1519,23 @@ async function runMiniCompletion(prompt: string): Promise<string | null> {
 // Event Handling
 // ============================================================
 
-function extractToolExecutionMetadata(args: Record<string, unknown> | undefined): ToolExecutionMetadata | undefined {
-  if (!args) return undefined;
-
-  const intent = typeof args._intent === 'string' ? args._intent : undefined;
-  const displayName = typeof args._displayName === 'string' ? args._displayName : undefined;
-
-  if (!intent && !displayName) return undefined;
-
-  return {
-    intent,
-    displayName,
-    source: 'interceptor',
-  };
-}
-
-function handleSessionEvent(event: AgentSessionEvent): void {
-  if (piSession) observeNativeSessionEvent(event, piSession, observeSdkLifecycle);
-  // SDK partials contain the accumulated response (and sometimes image data).
-  // Re-sending them on every token creates quadratic serialization and pipe
-  // traffic. The host uses only delta + timestamp until message_end.
-  if (event.type === 'message_update') {
-    const compact = compactTextUpdate(event);
-    if (compact) send({ type: 'event', event: compact as unknown as OutboundAgentEvent });
-    return;
-  }
-  let forwardedEvent: OutboundAgentEvent = event;
-  let lengthContinuationAttempt: number | undefined;
-
-  // Log API errors for debugging and attach provider-native turn anchor for branch cutoffs.
-  if (event.type === 'message_end') {
-    const msg = event.message as {
-      role?: string;
-      stopReason?: string;
-      errorMessage?: string;
-      usage?: { output?: number };
-      durableOperationId?: string;
-      durableSeq?: number;
-      durableRequestSeq?: number;
-    } | undefined;
-    if (msg?.stopReason === 'error') {
-      debugLog(`API error in message_end: ${msg.errorMessage || 'unknown'}`);
+const handleSessionEvent = createSessionEventAdapter({
+  currentSession: () => sessionLifecycle.current, send, debugLog, observeSdkLifecycle,
+  lengthContinuationTracker, accounting: durableToolAccounting,
+  diagnostics: { capturePromptSnapshot, rememberPromptSnapshot, getPhanerisSystemPrompt, promptSnapshots },
+  prefetch(content) {
+    const calls = content.filter(c => c.type === 'toolCall' && c.name && isPrefetchableTool(c.name));
+    if (calls.length < 2) return;
+    debugLog(`Prefetching ${calls.length} parallel ${calls[0].name} calls`);
+    for (const tc of calls) {
+      const requestId = `prefetch-${tc.id}`;
+      const promise = new Promise<PiProxyToolResult>(resolve => pendingToolExecutions.register(requestId, resolve));
+      send({ type: 'tool_execute_request', requestId, toolCallId: tc.id, toolName: tc.name!, args: (tc.arguments ?? {}) as Record<string, unknown> });
+      prefetchCache.set(tc.id!, promise);
     }
-
-    if (msg?.role === 'assistant' && piSession) {
-      // The SDK's post-compaction usage gate reads the journal, which is only
-      // appended after this callback returns. Defer rather than report an old count.
-      deferContextUsage(piSession, () => piSession, (payload) => {
-        send({ type: 'event', event: { type: 'context_usage', ...payload } });
-      });
-      const modelMaxTokens = piSession.agent.state.model?.maxTokens;
-      lengthContinuationAttempt = lengthContinuationTracker.nextAttempt(msg, modelMaxTokens);
-
-      // CRITICAL: do NOT read `getLeafId()` here.
-      //
-      // The Pi SDK fires `message_end` synchronously BEFORE calling
-      // `appendMessage(event.message)` (see `agent-session.js:_processAgentEvent`).
-      // At this moment the assistant entry does not yet exist in the
-      // SessionManager — `leafId` still points at the *previous* leaf, which for
-      // a plain text turn is the user message that triggered the response.
-      // Recording that wrong anchor and using it for `branch()` makes the next
-      // turn a sibling of the assistant message, dropping the assistant reply
-      // from the LLM's view of history (craft-agents-oss#782).
-      //
-      // Instead, attach a correlation id to the forwarded event so the main
-      // process can correlate this turn, then queue a microtask to read the
-      // correct leaf AFTER `appendMessage` has run. The microtask drains before
-      // any subsequent SDK event is dispatched, so the follow-up
-      // `pi_turn_anchor` event is delivered to the main process in the right
-      // order (after this `message_end`, before the next event).
-      //
-      // SDK 0.84 assistant messages carry no `id` at message_end — only the
-      // provider `responseId` (unique per assistant message, verified against
-      // persisted SDK sessions). Fall back to it for correlation.
-      const sdkMessageId = (msg as { id?: string }).id ?? (msg as { responseId?: string }).responseId;
-
-      // Per-session request ordinal + system-prompt snapshot for the
-      // trajectory view's request-header grouping and prompt diff. The
-      // snapshot is captured here because the SDK's `systemPrompt` getter is
-      // only meaningful while a session exists, and message_end is the
-      // earliest point after the request completed.
-      // Deliberately NOT gated on sdkMessageId: the enrichment is independent
-      // of the anchor correlation and must survive providers that omit ids.
-      const requestSeq = typeof msg.durableRequestSeq === 'number'
-        ? msg.durableRequestSeq
-        : capturePromptSnapshot();
-      if (!promptSnapshots.has(requestSeq)) rememberPromptSnapshot(requestSeq, getPhanerisSystemPrompt());
-      const snapshot = promptSnapshots.get(requestSeq);
-      forwardedEvent = {
-        ...(event as Record<string, unknown>),
-        ...(sdkMessageId ? { sdkMessageId } : {}),
-        requestSeq,
-        ...(msg.durableOperationId ? { durableOperationId: msg.durableOperationId } : {}),
-        ...(typeof msg.durableSeq === 'number' ? { durableSeq: msg.durableSeq } : {}),
-        ...(snapshot ? { promptSnapshot: snapshot.prompt } : {}),
-        ...(snapshot?.contextSnapshot ? { contextSnapshot: snapshot.contextSnapshot } : {}),
-      } as unknown as OutboundAgentEvent;
-
-      if (sdkMessageId) {
-        const sessionManagerSnapshot = piSession.sessionManager;
-        queueMicrotask(() => {
-          // Defensive: session may have been disposed between the message_end
-          // emit and the microtask drain.
-          if (!piSession || piSession.sessionManager !== sessionManagerSnapshot) {
-            return;
-          }
-          const sdkTurnAnchor = sessionManagerSnapshot.getLeafId();
-          if (!sdkTurnAnchor) return;
-          send({
-            type: 'event',
-            event: {
-              type: 'pi_turn_anchor',
-              sdkMessageId,
-              sdkTurnAnchor,
-            } as unknown as OutboundAgentEvent,
-          });
-        });
-      }
-
-      // Speculative prefetch: if the assistant message contains 2+ prefetchable tool calls,
-      // fire all requests to the main process in parallel NOW, before executeToolCalls
-      // iterates sequentially. Each proxy tool's execute() will hit the cache.
-      const content = (msg as { content?: Array<{ type: string; id?: string; name?: string; arguments?: unknown }> }).content;
-      if (Array.isArray(content)) {
-        const prefetchableToolCalls = content.filter(
-          (c) => c.type === 'toolCall' && c.name && isPrefetchableTool(c.name),
-        );
-        if (prefetchableToolCalls.length >= 2) {
-          debugLog(`Prefetching ${prefetchableToolCalls.length} parallel ${prefetchableToolCalls[0].name} calls`);
-          for (const tc of prefetchableToolCalls) {
-            const requestId = `prefetch-${tc.id}`;
-            const promise = new Promise<{ content: string; isError: boolean }>((resolve) => {
-              pendingToolExecutions.set(requestId, { resolve });
-            });
-            send({
-              type: 'tool_execute_request',
-              requestId,
-              toolCallId: tc.id,
-              toolName: tc.name!,
-              args: (tc.arguments ?? {}) as Record<string, unknown>,
-            });
-            prefetchCache.set(tc.id!, promise);
-          }
-        }
-      }
-    }
-  }
-
-  // Detect session MCP tool completions + enrich tool starts with canonical metadata
-  if (event.type === 'tool_execution_start') {
-    if (event.parentToolCallId) {
-      const ordinal = Number(event.toolCallId.slice(event.toolCallId.lastIndexOf('/') + 1));
-      if (!Number.isSafeInteger(ordinal) || ordinal < 0) throw new Error('SDK nested tool ordinal is unavailable');
-      durableToolBatches.set(event.toolCallId, { toolBatchId: event.parentToolCallId, toolBatchOrdinal: ordinal });
-    }
-    const toolName = event.toolName;
-    if (toolName.startsWith('session__') || toolName.startsWith('mcp__session__')) {
-      const mcpToolName = toolName.replace(/^(mcp__session__|session__)/, '');
-      pendingSessionToolCalls.set(event.toolCallId, {
-        toolName: mcpToolName,
-        arguments: (event.args ?? {}) as Record<string, unknown>,
-      });
-    }
-
-    const toolMetadata = extractToolExecutionMetadata((event.args ?? {}) as Record<string, unknown>);
-    // Wall-clock stamp for trajectory timing (authoritative over adapter-local time).
-    const durable = durableToolCommits.get(event.toolCallId);
-    forwardedEvent = {
-      ...event,
-      ...(toolMetadata ? { toolMetadata } : {}),
-      ...(durable ? { durableOperationId: durable.operationId, durableSeq: durable.startSeq } : {}),
-      ts: Date.now(),
-    } as unknown as OutboundAgentEvent;
-  }
-
-  if (event.type === 'tool_execution_end') {
-    const durable = durableToolCommits.get(event.toolCallId);
-    const pending = pendingSessionToolCalls.get(event.toolCallId);
-    if (pending) {
-      pendingSessionToolCalls.delete(event.toolCallId);
-      send({
-        type: 'session_tool_completed',
-        toolName: pending.toolName,
-        args: pending.arguments,
-        isError: !!event.isError,
-      });
-    }
-
-    // Wall-clock stamp for trajectory duration (start → end delta).
-    forwardedEvent = {
-      ...event,
-      ...(durable?.outcomeSeq !== undefined
-        ? { durableOperationId: durable.operationId, durableSeq: durable.outcomeSeq }
-        : {}),
-      ts: Date.now(),
-    } as unknown as OutboundAgentEvent;
-    durableToolCommits.delete(event.toolCallId);
-    durableToolBatches.delete(event.toolCallId);
-  }
-
-  // These boundaries already have committed SDK history; keep metadata inline
-  // so agent_end cannot close the host queue before occupancy reaches it. A
-  // settled session is the last chance to publish the run's final count, and it
-  // carries the same reserve as every other boundary.
-  if (piSession && (
-    event.type === 'turn_end' ||
-    event.type === 'agent_end' ||
-    event.type === 'compaction_end' ||
-    event.type === 'agent_settled'
-  )) {
-    forwardedEvent = { ...forwardedEvent, ...readContextUsage(piSession) } as OutboundAgentEvent;
-  }
-
-  // Forward all events to main process
-  send({ type: 'event', event: forwardedEvent });
-  if (lengthContinuationAttempt !== undefined && piSession) {
-    const activeSession = piSession;
-    debugLog(`Output limit reached; queuing automatic continuation ${lengthContinuationAttempt}/${MAX_AUTO_LENGTH_CONTINUATIONS}`);
-    void activeSession.followUp(LENGTH_CONTINUATION_PROMPT).catch(error => {
-      debugLog(`Could not queue automatic length continuation: ${error instanceof Error ? error.message : String(error)}`);
-    });
-  }
-  if (event.type === 'agent_settled') {
-    durableToolBatches.clear();
-    currentDurableRunOperationId = undefined;
-    currentDurableTurnId = undefined;
-  }
-}
+  },
+  settled() { currentDurableRunOperationId = undefined; currentDurableTurnId = undefined; },
+});
 
 // ============================================================
 // Command Handlers
@@ -2076,17 +1545,10 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
   // A re-init invalidates every utility query created under the old credentials.
   ephemeralQueries.cancelAll(new EphemeralQueryCancelledError('Pi server reinitialized'));
 
-  // Clean up any existing session from a previous init
-  if (piSession) {
-    if (unsubscribeEvents) {
-      unsubscribeEvents();
-      unsubscribeEvents = null;
-    }
-    piSession.dispose();
-    piSession = null;
-    moduleCredentialStore = null; // Reset so createAuthenticatedRuntime() creates fresh store
-    debugLog('Cleaned up existing session for re-init');
-  }
+  // Invalidate an in-flight factory before accepting another config.
+  await sessionLifecycle.reset();
+  if (unsubscribeEvents) { unsubscribeEvents(); unsubscribeEvents = null; }
+  modelOwner.reset();
 
   initConfig = msg;
   if (initConfig.piAuth) initConfig.piAuth.provider = normalizePiProvider(initConfig.piAuth.provider);
@@ -2129,7 +1591,7 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
   let received = false;
   lengthContinuationTracker.reset();
   currentUserMessage = msg.message;
-  durableToolBatches.clear();
+  durableToolAccounting.resetBatches();
   currentDurableRunOperationId = msg.durableRunOperationId;
   currentDurableTurnId = msg.durableTurnId ?? msg.id;
 
@@ -2137,14 +1599,13 @@ async function handlePrompt(msg: Extract<InboundMessage, { type: 'prompt' }>): P
     // If proxy tools changed since last session creation, dispose and recreate.
     // This avoids calling _buildRuntime() for dynamic tool updates — instead
     // we create a fresh session via continueRecent() with all tools known upfront.
-    if (toolsChanged && piSession) {
+    if (toolsChanged && sessionLifecycle.current) {
       debugLog('Recreating session due to tool changes');
       if (unsubscribeEvents) {
         unsubscribeEvents();
         unsubscribeEvents = null;
       }
-      piSession.dispose();
-      piSession = null;
+      await sessionLifecycle.reset();
     }
 
     const session = await ensureSession();
@@ -2237,7 +1698,7 @@ function handleSyncTools(msg: Extract<InboundMessage, { type: 'sync_tools' }>): 
 
   // Pi registers custom tool definitions at construction time. Recreate only
   // after a real definition change, never for an identical per-turn sync.
-  if (piSession) {
+  if (sessionLifecycle.current) {
     toolsChanged = true;
     debugLog('Proxy tool definitions changed — session will be recreated on next prompt');
   }
@@ -2250,7 +1711,7 @@ function handleSetBrowserToolEnabled(
   initConfig.browserToolEnabled = msg.enabled;
   // Built-in denylisting is fixed at AgentSession construction. Defer the
   // rebuild to the next prompt so an in-flight turn is never interrupted.
-  if (piSession) toolsChanged = true;
+  if (sessionLifecycle.current) toolsChanged = true;
   debugLog(`Browser tool ${msg.enabled ? 'enabled' : 'disabled'}; session refresh queued`);
 }
 
@@ -2262,72 +1723,42 @@ function handleSetCacheRetention(
   debugLog(`Prompt cache retention set to '${piCacheRetention}'`);
   // The saved candidate belongs to the previous retention tier. Cancel it;
   // the next real request schedules a candidate with the new tier's TTL.
-  if (piSession) {
-    piSession.setCacheWarmingMode('off');
-    piSession.setCacheWarmingMode(initConfig?.promptCacheWarming === true ? 'streaming' : 'off');
+  if (sessionLifecycle.current) {
+    sessionLifecycle.current.setCacheWarmingMode('off');
+    sessionLifecycle.current.setCacheWarmingMode(initConfig?.promptCacheWarming === true ? 'streaming' : 'off');
   }
 }
 
 function handleToolExecuteResponse(msg: Extract<InboundMessage, { type: 'tool_execute_response' }>): void {
-  const pending = pendingToolExecutions.get(msg.requestId);
-  if (pending) {
-    pendingToolExecutions.delete(msg.requestId);
-    pending.resolve(msg.result);
-  } else {
-    debugLog(`No pending tool execution for requestId: ${msg.requestId}`);
-  }
+  if (!pendingToolExecutions.settle(msg.requestId, msg.result)) debugLog('Ignoring late or duplicate handleToolExecuteResponse');
 }
 
 function handlePreToolUseResponse(msg: Extract<InboundMessage, { type: 'pre_tool_use_response' }>): void {
-  const pending = pendingPreToolUse.get(msg.requestId);
-  if (pending) {
-    pendingPreToolUse.delete(msg.requestId);
-    pending.resolve({ action: msg.action, input: msg.input, reason: msg.reason });
-  } else {
-    debugLog(`No pending pre_tool_use for requestId: ${msg.requestId}`);
-  }
+  if (!pendingPreToolUse.settle(msg.requestId, { action: msg.action, input: msg.input, reason: msg.reason })) debugLog('Ignoring late or duplicate handlePreToolUseResponse');
 }
 
 function handleDurableToolPrepareResponse(
   msg: Extract<InboundMessage, { type: 'durable_tool_prepare_response' }>,
 ): void {
-  const pending = pendingDurableToolPrepares.get(msg.requestId);
-  if (!pending) {
-    debugLog(`No pending durable T1 for requestId: ${msg.requestId}`);
-    return;
-  }
-  pendingDurableToolPrepares.delete(msg.requestId);
-  pending.resolve({ ok: msg.ok, prepared: msg.prepared, reason: msg.reason });
+  if (!pendingDurableToolPrepares.settle(msg.requestId, { ok: msg.ok, prepared: msg.prepared, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableToolPrepareResponse');
 }
 
 function handleDurableToolOutcomeResponse(
   msg: Extract<InboundMessage, { type: 'durable_tool_outcome_response' }>,
 ): void {
-  const pending = pendingDurableToolOutcomes.get(msg.requestId);
-  if (!pending) {
-    debugLog(`No pending durable T2 for requestId: ${msg.requestId}`);
-    return;
-  }
-  pendingDurableToolOutcomes.delete(msg.requestId);
-  pending.resolve({ ok: msg.ok, committedSeq: msg.committedSeq, reason: msg.reason });
+  if (!pendingDurableToolOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableToolOutcomeResponse');
 }
 
 function handleDurableModelPrepareResponse(
   msg: Extract<InboundMessage, { type: 'durable_model_prepare_response' }>,
 ): void {
-  const pending = pendingDurableModelPrepares.get(msg.requestId);
-  if (!pending) return;
-  pendingDurableModelPrepares.delete(msg.requestId);
-  pending.resolve({ ok: msg.ok, prepared: msg.prepared, reason: msg.reason });
+  if (!pendingDurableModelPrepares.settle(msg.requestId, { ok: msg.ok, prepared: msg.prepared, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableModelPrepareResponse');
 }
 
 function handleDurableModelOutcomeResponse(
   msg: Extract<InboundMessage, { type: 'durable_model_outcome_response' }>,
 ): void {
-  const pending = pendingDurableModelOutcomes.get(msg.requestId);
-  if (!pending) return;
-  pendingDurableModelOutcomes.delete(msg.requestId);
-  pending.resolve({ ok: msg.ok, committedSeq: msg.committedSeq, reason: msg.reason });
+  if (!pendingDurableModelOutcomes.settle(msg.requestId, { ok: msg.ok, committedSeq: msg.committedSeq, reason: msg.reason })) debugLog('Ignoring late or duplicate handleDurableModelOutcomeResponse');
 }
 
 function handleCancelEphemeralQuery(
@@ -2344,11 +1775,10 @@ async function handleAbort(): Promise<void> {
   largeResultFilter.cancelAll();
   compactionEpoch++;
   // Release permission waits before awaiting the SDK, which drains active tools.
-  for (const [, pending] of pendingPreToolUse) pending.resolve({ action: 'block', reason: 'Aborted' });
-  pendingPreToolUse.clear();
-  if (piSession) {
+  pendingPreToolUse.cancelAll({ action: 'block', reason: 'Aborted' });
+  if (sessionLifecycle.current) {
     try {
-      await piSession.abort();
+      await sessionLifecycle.current.abort();
     } catch (error) {
       debugLog(`Abort failed: ${error instanceof Error ? error.message : String(error)}`);
     }
@@ -2431,13 +1861,13 @@ async function handleCompact(msg: Extract<InboundMessage, { type: 'compact' }>):
     // the cap is deliberate, since compact() begins with abort() and thereby
     // cancels the stale compaction.
     const wait = await waitForCompaction(session, { timeoutMs: MANUAL_COMPACT_WAIT_MS, log: debugLog });
-    if (piSession !== session || epoch !== compactionEpoch) throw new Error('Compaction aborted or session replaced');
+    if (sessionLifecycle.current !== session || epoch !== compactionEpoch) throw new Error('Compaction aborted or session replaced');
     debugLog(
       `[compact] Starting manual compaction after ${wait.waitedMs}ms wait` +
         (wait.timedOut ? ' (prior compaction still flagged; compact() aborts it)' : ''),
     );
     const result = await runWithDurableUtilityContext(msg, () => session.compact(msg.customInstructions));
-    if (piSession !== session || epoch !== compactionEpoch) throw new Error('Compaction aborted or session replaced');
+    if (sessionLifecycle.current !== session || epoch !== compactionEpoch) throw new Error('Compaction aborted or session replaced');
     debugLog(`[compact] Done in ${Date.now() - startedAt}ms: ${result.tokensBefore} -> ~${result.estimatedTokensAfter} tokens`);
     send({
       type: 'compact_result',
@@ -2506,7 +1936,7 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
       customModels: msg.customModels,
     };
 
-    if (piModelRegistry && shouldPreferCustomEndpoint()) {
+    if (modelOwner.activeRegistry && shouldPreferCustomEndpoint()) {
       const modelEntries: CustomEndpointModelEntry[] = (initConfig.customModels?.length
         ? initConfig.customModels
         : [initConfig.model || 'default']
@@ -2514,15 +1944,15 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
 
       customEndpointModelIds = new Set();
       customModelOverrides.clear();
-      registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), modelEntries);
+      registerCustomEndpointModels(modelOwner.activeRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), modelEntries);
     }
 
-    if (piSession && piModelRegistry) {
-      let piModel = resolvePiModel(piModelRegistry, msg.model, initConfig.piAuth?.provider, shouldPreferCustomEndpoint());
+    if (sessionLifecycle.current && modelOwner.activeRegistry) {
+      let piModel = resolvePiModel(modelOwner.activeRegistry, msg.model, initConfig.piAuth?.provider, shouldPreferCustomEndpoint());
       if (!piModel && shouldPreferCustomEndpoint()) {
         const bareId = stripPiPrefix(msg.model);
-        registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), [{ id: bareId }]);
-        piModel = piModelRegistry.find('custom-endpoint', bareId) ?? undefined;
+        registerCustomEndpointModels(modelOwner.activeRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), [{ id: bareId }]);
+        piModel = modelOwner.activeRegistry.find('custom-endpoint', bareId) ?? undefined;
         debugLog(`[runtime_config] Dynamically registered custom endpoint model: ${bareId}`);
       }
 
@@ -2530,7 +1960,7 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
         throw new Error(`Could not resolve model after runtime update: ${msg.model}`);
       }
 
-      await piSession.setModel(piModel);
+      await sessionLifecycle.current.setModel(piModel);
       setInterceptorApiHints(piModel as { api?: string; provider?: string; baseUrl?: string });
       sendThinkingLevelState();
       debugLog(`[runtime_config] Updated runtime config and active model: ${piModel.provider}/${piModel.id}`);
@@ -2538,7 +1968,7 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
       debugLog('[runtime_config] Stored update; no active session/model registry yet');
     }
 
-    const contextWindow = piSession?.agent.state.model?.contextWindow;
+    const contextWindow = sessionLifecycle.current?.agent.state.model?.contextWindow;
     send({ type: 'update_runtime_config_result', id: msg.id, success: true, updated: true, contextWindow });
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
@@ -2550,19 +1980,19 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
 async function handleSetModel(msg: Extract<InboundMessage, { type: 'set_model' }>): Promise<void> {
   debugLog(`[set_model] Received: ${msg.model}`);
   if (initConfig) initConfig.model = msg.model;
-  if (!piSession || !piModelRegistry) {
+  if (!sessionLifecycle.current || !modelOwner.activeRegistry) {
     debugLog(`[set_model] No active session or model registry, stored for session creation`);
     return;
   }
-  let piModel = resolvePiModel(piModelRegistry, msg.model, initConfig?.piAuth?.provider, shouldPreferCustomEndpoint());
+  let piModel = resolvePiModel(modelOwner.activeRegistry, msg.model, initConfig?.piAuth?.provider, shouldPreferCustomEndpoint());
 
   // For custom endpoints, dynamically register unknown models so mid-session switching works.
   // Uses registerCustomEndpointModels which accumulates into the existing model set
   // (registerProvider replaces, so we track all IDs and re-register the full set).
   if (!piModel && initConfig && shouldPreferCustomEndpoint(initConfig)) {
     const bareId = stripPiPrefix(msg.model);
-    registerCustomEndpointModels(piModelRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), [{ id: bareId }]);
-    piModel = piModelRegistry.find('custom-endpoint', bareId) ?? undefined;
+    registerCustomEndpointModels(modelOwner.activeRegistry, initConfig.customEndpoint!.api, initConfig.baseUrl!.trim(), [{ id: bareId }]);
+    piModel = modelOwner.activeRegistry.find('custom-endpoint', bareId) ?? undefined;
     debugLog(`[set_model] Dynamically registered custom endpoint model: ${bareId}`);
   }
 
@@ -2572,9 +2002,9 @@ async function handleSetModel(msg: Extract<InboundMessage, { type: 'set_model' }
     return;
   }
   try {
-    await piSession.setModel(piModel);
+    await sessionLifecycle.current.setModel(piModel);
     setInterceptorApiHints(piModel as { api?: string; provider?: string; baseUrl?: string });
-    const contextWindow = piSession.agent.state.model?.contextWindow;
+    const contextWindow = sessionLifecycle.current.agent.state.model?.contextWindow;
     send({ type: 'set_model_result', model: msg.model, contextWindow });
     sendThinkingLevelState();
     debugLog(`[set_model] Model changed to: ${msg.model} (resolved: ${piModel.provider}/${piModel.id})`);
@@ -2589,7 +2019,7 @@ async function handleSetThinkingLevel(msg: Extract<InboundMessage, { type: 'set_
 
   if (initConfig) initConfig.thinkingLevel = msg.level;
 
-  if (!piSession) {
+  if (!sessionLifecycle.current) {
     debugLog('[set_thinking_level] No active session, stored for session creation');
     return;
   }
@@ -2601,7 +2031,7 @@ async function handleSetThinkingLevel(msg: Extract<InboundMessage, { type: 'set_
   }
 
   try {
-    piSession.setThinkingLevel(piLevel);
+    sessionLifecycle.current.setThinkingLevel(piLevel);
     sendThinkingLevelState();
     debugLog(`[set_thinking_level] Thinking level changed to: ${msg.level} (mapped: ${piLevel})`);
   } catch (error) {
@@ -2610,7 +2040,7 @@ async function handleSetThinkingLevel(msg: Extract<InboundMessage, { type: 'set_
   }
 }
 
-function handleShutdown(): void {
+async function handleShutdown(): Promise<void> {
   debugLog('Shutdown requested');
 
   // Abort utility sessions independently from the main chat session.
@@ -2623,24 +2053,16 @@ function handleShutdown(): void {
   }
 
   // Dispose session
-  if (piSession) {
-    piSession.dispose();
-    piSession = null;
-  }
+  await sessionLifecycle.reset();
 
   // Stop callback server
   stopCallbackServer();
 
   // Reject pending promises
-  for (const [, pending] of pendingPreToolUse) {
-    pending.resolve({ action: 'block', reason: 'Server shutting down' });
-  }
-  pendingPreToolUse.clear();
+  pendingPreToolUse.cancelAll({ action: 'block', reason: 'Server shutting down' });
 
-  for (const [, pending] of pendingToolExecutions) {
-    pending.resolve({ content: 'Server shutting down', isError: true });
-  }
-  pendingToolExecutions.clear();
+  pendingToolExecutions.cancelAll({ content: 'Server shutting down', isError: true });
+  pendingCredentialWrites.cancelAll(false);
 
   process.exit(0);
 }
@@ -2649,12 +2071,23 @@ function handleShutdown(): void {
 // Main JSONL Reader Loop
 // ============================================================
 
-async function processMessage(msg: InboundMessage): Promise<void> {
-  switch (msg.type) {
-    case 'init':
-      await handleInit(msg);
-      break;
+let initialization: Promise<void> | null = null;
 
+async function processMessage(msg: InboundMessage): Promise<void> {
+  if (msg.type === 'init') {
+    const previous = initialization;
+    const pending = (async () => {
+      if (previous) await previous;
+      await handleInit(msg);
+    })().finally(() => { if (initialization === pending) initialization = null; });
+    initialization = pending;
+    await pending;
+    return;
+  }
+  // Preserve stdin ordering across asynchronous initialization without
+  // serializing a whole prompt: permission replies and abort must stay live.
+  if (initialization) await initialization;
+  switch (msg.type) {
     case 'prompt':
       await handlePrompt(msg);
       break;
@@ -2737,7 +2170,7 @@ async function processMessage(msg: InboundMessage): Promise<void> {
 
     case 'set_cache_warming':
       if (initConfig) initConfig.promptCacheWarming = msg.enabled === true;
-      piSession?.setCacheWarmingMode(msg.enabled === true ? 'streaming' : 'off');
+      sessionLifecycle.current?.setCacheWarmingMode(msg.enabled === true ? 'streaming' : 'off');
       break;
 
     case 'set_cache_retention':
@@ -2749,10 +2182,10 @@ async function processMessage(msg: InboundMessage): Promise<void> {
       break;
 
     case 'steer':
-      if (piSession) {
+      if (sessionLifecycle.current) {
         debugLog(`Steering with: "${msg.message.slice(0, 100)}"`);
         try {
-          const disposition = await piSession.steer(msg.message);
+          const disposition = await sessionLifecycle.current.steer(msg.message);
           if (msg.id) send({ type: 'input_received', id: msg.id, disposition });
         } catch (error) {
           if (msg.id) send({ type: 'input_received', id: msg.id, disposition: 'rejected', reason: String(error) });
@@ -2764,10 +2197,10 @@ async function processMessage(msg: InboundMessage): Promise<void> {
       break;
 
     case 'token_update':
-      if (moduleCredentialStore) {
+      if (modelOwner.credentialStore) {
         const provider = normalizePiProvider(msg.piAuth.provider);
         const { credential } = msg.piAuth;
-        await moduleCredentialStore.inject(provider, credential as unknown as Credential);
+        await modelOwner.credentialStore.inject(provider, credential as unknown as Credential);
         if (initConfig) {
           initConfig.piAuth = { provider, credential };
         }
@@ -2778,11 +2211,11 @@ async function processMessage(msg: InboundMessage): Promise<void> {
       break;
 
     case 'oauth_credential_update_response':
-      pendingCredentialWrites.get(msg.requestId)?.(msg.ok);
+      pendingCredentialWrites.settle(msg.requestId, msg.ok);
       break;
 
     case 'shutdown':
-      handleShutdown();
+      await handleShutdown();
       break;
 
     default:
@@ -2793,25 +2226,16 @@ async function processMessage(msg: InboundMessage): Promise<void> {
 function main(): void {
   debugLog('Pi agent server starting');
 
-  const rl = createInterface({ input: process.stdin });
-
-  rl.on('line', (line: string) => {
-    if (!line.trim()) return;
-    try {
-      const msg = JSON.parse(line) as InboundMessage;
-      processMessage(msg).catch((error) => {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        debugLog(`Error processing message: ${errorMsg}`);
-        send({ type: 'error', message: errorMsg });
-      });
-    } catch (parseError) {
-      debugLog(`Failed to parse JSONL: ${parseError}`);
-    }
-  });
-
-  rl.on('close', () => {
+  transport.listen(async value => {
+    if (!value || typeof value !== 'object' || !('type' in value) || typeof value.type !== 'string') throw new Error('JSONL message requires a type');
+    await processMessage(value as InboundMessage);
+  }, () => {
     debugLog('stdin closed, shutting down');
-    handleShutdown();
+    void handleShutdown().catch(error => { debugLog(String(error)); process.exit(1); });
+  }, error => {
+    const message = error instanceof Error ? error.message : String(error);
+    debugLog(`Error processing message: ${message}`);
+    send({ type: 'error', message });
   });
 
   // Handle unexpected errors — process state is unreliable after these,

@@ -1,3 +1,4 @@
+import { useSessionNavigation } from './use-session-navigation'
 import { DEFAULT_PERMISSION_MODES } from "@phaneris/shared/agent/modes"
 import { DECISION_SETTINGS_CHANGED_EVENT, guardedModeAvailableAtom } from "@/atoms/permission-modes"
 import * as React from "react"
@@ -130,7 +131,6 @@ import { navigate, routes } from "@/lib/navigate"
 import { buildNavigatorRootRoute, hasNavigator } from "@/lib/nav-helpers"
 import {
   useNavigation,
-  useNavigationState,
   isSessionsNavigation,
   isSourcesNavigation,
   isSettingsNavigation,
@@ -617,25 +617,13 @@ function AppShellContent({
 
   // UNIFIED NAVIGATION STATE - single source of truth from NavigationContext
   // Derived from the single Primary Surface; Workbench focus cannot change it.
-  const navState = useNavigationState()
+  const { navState, sessionsContext, isSessionsListVisible } = useSessionNavigation()
 
   const store = useStore()
   const surfaceCount = useAtomValue(renderedSurfaceCountAtom)
   const primarySessionId = useAtomValue(primarySessionIdAtom)
   const isWorkbenchFullWidth = useAtomValue(workbenchFullWidthAtom)
   const navigatorRevealRequest = useAtomValue(navigatorRevealRequestAtom)
-
-  const isSessionsListVisible = isSessionsNavigation(navState)
-
-  const sessionsContext = React.useMemo(() => {
-    if (isSessionsNavigation(navState)) {
-      return {
-        filter: navState.filter,
-        sessionId: navState.details?.sessionId ?? null,
-      }
-    }
-    return null
-  }, [navState, isSessionsListVisible])
 
   const sessionFilter = sessionsContext?.filter ?? null
 
@@ -1289,20 +1277,20 @@ function AppShellContent({
   const handleSkillSelect = React.useCallback((skill: LoadedSkill) => {
     if (!activeWorkspaceId) return
     navigate(routes.view.skills(skill.slug))
-  }, [activeWorkspaceId, navigate])
+  }, [activeWorkspaceId])
 
   // Handle selecting a plugin bundle — opens its own page, like a skill or source.
   const handlePluginSelect = React.useCallback((plugin: PluginSummary) => {
     if (!activeWorkspaceId) return
     navigate(routes.view.plugins(plugin.name))
-  }, [activeWorkspaceId, navigate])
+  }, [activeWorkspaceId])
 
   // Handle selecting an automation from the list
   const handleAutomationSelect = React.useCallback((automationId: string) => {
     // Preserve current automation filter when selecting an automation
     const type = isAutomationsNavigation(navState) ? navState.filter?.automationType : undefined
     navigate(routes.view.automations({ automationId, type }))
-  }, [navState, navigate])
+  }, [navState])
 
   // Focus zone management
   const { focusZone, focusNextZone, focusPreviousZone } = useFocusContext()
@@ -1813,7 +1801,7 @@ function AppShellContent({
     }
 
     return result
-  }, [workspaceSessionMetas, activeSessionMetas, sessionFilter, listFilter, labelFilter, projectFilter, labelConfigs])
+  }, [workspaceSessionMetas, activeSessionMetas, sessionFilter, listFilter, labelFilter, projectFilter, labelConfigs, evaluateViews])
 
   // Derive "pinned" (non-removable) filters from the current sessionFilter path.
   // These represent filters that are implicit in the current deeplink/route and
@@ -2171,7 +2159,7 @@ function AppShellContent({
       console.error('[AppShell] Failed to create project:', err)
       toast.error(t('projectsList.createFailed'))
     }
-  }, [activeWorkspace?.id, navigate, t])
+  }, [activeWorkspace?.id, t])
 
   /**
    * Resolve the "inherit sole active filter" rule for new sessions. Only
@@ -2208,7 +2196,7 @@ function AppShellContent({
 
     // Focus the chat input after navigation completes
     setTimeout(() => focusZone('chat', { intent: 'programmatic' }), 50)
-  }, [activeWorkspace, focusZone, navigate, resolveInheritedNewSessionParams, store, t])
+  }, [activeWorkspace, focusZone, resolveInheritedNewSessionParams, store, t])
 
   // Create a brand new dedicated browser window and focus it.
   // Intentionally unbound: this action should always create a NEW window.
@@ -2308,7 +2296,7 @@ function AppShellContent({
       console.error('[Chat] Failed to delete source:', error)
       toast.error(t('toast.failedToDeleteSource'))
     }
-  }, [activeWorkspace])
+  }, [activeWorkspace, t])
 
   // Delete Skill
   const handleDeleteSkill = useCallback(async (skillSlug: string) => {
@@ -2320,7 +2308,7 @@ function AppShellContent({
       console.error('[Chat] Failed to delete skill:', error)
       toast.error(t('toast.failedToDeleteSkill'))
     }
-  }, [activeWorkspace])
+  }, [activeWorkspace, t])
 
   // Respond to menu bar "New Chat" trigger
   const menuTriggerRef = useRef(menuNewChatTrigger)
@@ -2373,7 +2361,7 @@ function AppShellContent({
     result.push({ id: 'nav:settings', type: 'nav', action: () => handleSettingsClick() })
 
     return isSidebarVisible ? result : result.filter(item => ['nav:allSessions', 'nav:labels', 'nav:sources', 'nav:skills', 'nav:plugins', 'nav:projects', 'nav:pages', 'nav:automations', 'nav:profile', 'nav:settings'].includes(item.id))
-  }, [isSidebarVisible, handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelConfigs, labelTree, viewConfigs, handleViewClick, handleSourcesClick, handleSkillsClick, handlePluginsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
+  }, [isSidebarVisible, handleAllSessionsClick, handleFlaggedClick, handleArchivedClick, handleSessionStatusClick, effectiveSessionStatuses, handleLabelClick, labelTree, handleSourcesClick, handleSkillsClick, handlePluginsClick, handleProjectsClick, handlePagesClick, handleAutomationsClick, handleSettingsClick])
 
   // Toggle folder expanded state
   const handleToggleFolder = React.useCallback((path: string) => {
@@ -2594,7 +2582,7 @@ function AppShellContent({
 
       return item
     })
-  }, [sessionFilter, labelCounts, activeWorkspace?.id, handleLabelClick, isExpanded, toggleExpanded, openConfigureLabels, handleAddLabel, handleDeleteLabel])
+  }, [sessionFilter, labelCounts, activeWorkspace?.id, handleLabelClick, isExpanded, toggleExpanded, openConfigureLabels, handleAddLabel, handleDeleteLabel, t])
 
   return (
     <AppShellProvider value={appShellContextValue}>

@@ -9,6 +9,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./transport": "./src/transport/index.ts",
+    "./transport/client": "./src/transport/client.ts",
+    "./transport/codec": "./src/transport/codec.ts",
+    "./transport/session-read-client": "./src/transport/session-read-client.ts",
     "./runtime": "./src/runtime/index.ts",
     "./handlers": "./src/handlers/index.ts",
     "./bootstrap": "./src/bootstrap/index.ts",
@@ -20,7 +23,8 @@
     "./sessions": "./src/sessions/index.ts",
     "./durable-runtime": "./src/durable-runtime/index.ts",
     "./tasks": "./src/tasks/index.ts",
-    "./webui": "./src/webui/index.ts"
+    "./webui": "./src/webui/index.ts",
+    "./handlers/rpc/server": "./src/handlers/rpc/server.ts"
   },
   "scripts": {
     "typecheck": "bun run tsc --noEmit"

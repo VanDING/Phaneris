@@ -5,9 +5,9 @@
  * checks. A reply that never comes counts as "no answer": summarize as before.
  */
 
-import type { LargeResultSummaryGate } from '../../shared/src/utils/large-response.ts';
-import type { PiLargeResultGateRequest } from '../../shared/src/agent/backend/pi/protocol.ts';
-import { DECISION_MAX_DEADLINE_MS } from '../../shared/src/decisions/types.ts';
+import type { LargeResultSummaryGate } from '@phaneris/shared/utils/large-response';
+import type { PiLargeResultGateRequest } from '@phaneris/shared/agent/backend/pi/protocol';
+import { DECISION_MAX_DEADLINE_MS } from '@phaneris/shared/decisions/types';
 
 /** How much of the result is sent; more than the main-process gate reads. */
 export const LARGE_RESULT_GATE_TEXT_CHARS = 8_000;

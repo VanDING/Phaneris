@@ -18,6 +18,8 @@ import type { SessionFile } from '../../../shared/types'
 import * as storage from '@/lib/local-storage'
 import { useAppShellContext } from '@/context/AppShellContext'
 import { getFileManagerName } from '@/lib/platform'
+import { getClientPlatform } from '@/platform/client'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import {
   collectDirectoryPaths,
@@ -40,6 +42,7 @@ export function SessionFilesSection({
   filterQuery = '',
 }: SessionFilesSectionProps) {
   const { t } = useTranslation()
+  const nativeFiles = getClientPlatform().hasCapability('native-file')
   const [files, setFiles] = useState<SessionFile[]>([])
   const expansionStorageKey = `${sessionId ?? 'none'}:${fileScope}:${rootPath ?? 'default'}`
 
@@ -167,26 +170,26 @@ export function SessionFilesSection({
 
   // Reveal a file/folder in the system file manager
   const handleRevealInFileManager = useCallback((path: string) => {
-    window.electronAPI.showInFolder(path)
-  }, [])
+    if (!nativeFiles) return
+    void getClientPlatform().files.showInFolder(path).catch(() => toast.error(t('toast.failedToReveal', { fileManager: fileManagerName })))
+  }, [nativeFiles, t, fileManagerName])
 
   // Handle file click — preview in-app if possible, open directory in file manager
   const handleFileClick = useCallback((file: SessionFile) => {
     if (file.type === 'directory') {
-      // eslint-disable-next-line craft-links/no-direct-file-open -- directories can't be previewed in-app
-      window.electronAPI.openFile(file.path)
+      if (nativeFiles) void getClientPlatform().files.openFile(file.path).catch(() => toast.error(t('toast.failedToOpenFile')))
     } else {
       setSelectedPath(file.path)
       onOpenFile(file.path, sessionId)
     }
-  }, [onOpenFile, sessionId])
+  }, [onOpenFile, sessionId, nativeFiles, t])
 
   // Handle double-click — open in the system default app (distinct from the
   // in-app preview on single click; directories go to the file manager).
   const handleFileDoubleClick = useCallback((file: SessionFile) => {
-    // eslint-disable-next-line craft-links/no-direct-file-open -- external open is the intended double-click semantic
-    window.electronAPI.openFile(file.path)
-  }, [])
+    if (!nativeFiles) { if (file.type !== 'directory') onOpenFile(file.path, sessionId); return }
+    void getClientPlatform().files.openFile(file.path).catch(() => toast.error(t('toast.failedToOpenFile')))
+  }, [nativeFiles, onOpenFile, sessionId, t])
 
   // Toggle folder expanded state
   const handleToggleExpand = useCallback((path: string) => {
@@ -212,10 +215,10 @@ export function SessionFilesSection({
       {!hideHeader && (
         <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0 select-none">
           <span className="text-xs font-medium text-muted-foreground">{t("chat.sessionFiles")}</span>
-          {sessionFolderPath && (
+          {nativeFiles && sessionFolderPath && (
             <button
               type="button"
-              onClick={() => window.electronAPI.showInFolder(sessionFolderPath)}
+              onClick={() => handleRevealInFileManager(sessionFolderPath)}
               className="text-xs text-foreground/50 hover:text-foreground/80 hover:underline underline-offset-2 transition-colors"
             >
               {t("chat.viewInFileManager", { fileManager: fileManagerName })}
@@ -263,7 +266,7 @@ export function SessionFilesSection({
                 onToggleExpand={handleToggleExpand}
                 onFileClick={handleFileClick}
                 onFileDoubleClick={handleFileDoubleClick}
-                onRevealInFileManager={handleRevealInFileManager}
+                onRevealInFileManager={nativeFiles ? handleRevealInFileManager : undefined}
               />
             ))}
           </nav>

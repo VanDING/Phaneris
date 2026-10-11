@@ -8,7 +8,8 @@ import { RPC_CHANNELS, type FileAttachment, type DirectoryListingResult } from '
 import type { StoredAttachment } from '@phaneris/core/types'
 import { readFileAttachment, validateImageForClaudeAPI, IMAGE_LIMITS } from '@phaneris/shared/utils'
 import { getSessionAttachmentsPath, validateSessionId } from '@phaneris/shared/sessions'
-import { getWorkspaceByNameOrId, getAllSessionDrafts } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
+import { getAllSessionDrafts } from '@phaneris/shared/config/drafts';
 import { resizeImageForAPI, inspectImageBuffer } from '@phaneris/server-core/services'
 import { sanitizeFilename, validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import type { RpcServer } from '@phaneris/server-core/transport'
@@ -115,7 +116,7 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
 
   // Read an image file as a small preview data URL for lightweight thumbnail rendering.
   // Returns a PNG data URL resized to fit within maxSize×maxSize.
-  server.handle(RPC_CHANNELS.file.READ_PREVIEW_DATA_URL, async (ctx, path: string, maxSize = 64) => {
+  server.handle(RPC_CHANNELS.file.READ_PREVIEW_DATA_URL, async (ctx, path: string, maxSize: number = 64) => {
     try {
       const workspaceId = ctx.workspaceId ?? deps.windowManager?.getWorkspaceForWindow(ctx.webContentsId!)
       const safePath = await validateFilePath(path, getWorkspaceAllowedDirs(workspaceId))

@@ -114,15 +114,19 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
       return reports
     }),
   })
-  const close = () => closing ??= (async () => {
+  const quiesce = () => {
     draining = true
+    execution.closeAdmission()
+  }
+  const close = () => closing ??= (async () => {
+    quiesce()
     if (maintenanceTimer) clearInterval(maintenanceTimer)
     for (const cancel of auxiliaries.values()) try { cancel?.() } catch { /* Drain the remaining effects even if cancellation fails. */ }
     await Promise.all([execution.shutdown(), withinDeadline(Promise.allSettled([...auxiliaries.keys()]), deadlineMs)])
     closed = true
     kernel.closeAll()
   })()
-  return Object.freeze({ commands, effects, queries, evidence, admin, execution, close })
+  return Object.freeze({ commands, effects, queries, evidence, admin, execution, quiesce, close })
 }
 
 export type DurableRuntime = ReturnType<typeof createDurableRuntime>

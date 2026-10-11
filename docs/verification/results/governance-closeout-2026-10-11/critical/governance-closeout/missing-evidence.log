@@ -1,0 +1,21 @@
+48 |   const steps = workflow.jobs[job]?.steps ?? []
+49 |   const upload = steps.find(step => step.uses?.startsWith('actions/upload-artifact@'))
+50 |   assert(upload && upload.if === 'always()', `${job} must always upload verification evidence`)
+51 |   assert(upload.uses?.match(/@[a-f0-9]{40}$/), 'Artifact action must be pinned to a commit')
+52 |   assert.equal(upload.with?.path, '.cache/verification/')
+53 |   assert.equal(upload.with?.['if-no-files-found'], 'error', `${job} must reject missing evidence`)
+              ^
+AssertionError: validate must reject missing evidence
+
+'warn' !== 'error'
+
+ generatedMessage: false,
+     actual: "warn",
+   expected: "error",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:53:10
+
+Bun v1.4.2 (macOS x64)

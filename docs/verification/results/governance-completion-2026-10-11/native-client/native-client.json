@@ -1,0 +1,1343 @@
+{
+  "checks": [
+    "native main/preload initializes transport before business renderer",
+    "native RPC facade reads the same persisted domain fixture",
+    "native session switching preserves separate persisted drafts",
+    "native language change retains current input draft",
+    "native keyboard activation preserves draft ownership",
+    "native workspace switch updates the host binding",
+    "native rapid workspace switch flushes pending composer and persistence timers",
+    "native reconnect retains the second workspace binding",
+    "native returning workspace restores its draft",
+    "native reconnect preserves accepted workspace and session facts",
+    "electron permission waits before real file effect",
+    "electron permission approval completes real Pi write",
+    "electron preview reads the actual written file",
+    "electron real SubmitPlan card accepts and continues once",
+    "electron actual response cancellation returns the session to idle",
+    "electron reconnect preserves and persists the latest queued draft",
+    "electron reconnect and history merge preserve single user and plan facts",
+    "native 1280px reduced-motion layout",
+    "native 420px reduced-motion layout",
+    "native main fatal rejection preserves its cause and exits nonzero within the original deadline"
+  ],
+  "errors": [],
+  "consoleTrace": [
+    {
+      "type": "info",
+      "text": "18:55:09.921 (window) › Renderer finished loading"
+    },
+    {
+      "type": "info",
+      "text": "18:55:09.989 (main) › [i18n] changeLanguage IPC applied {incoming: zh-Hans, previousResolved: en, newResolved: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.070 (perf) › Renderer performance tracking enabled"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.144 › 2026-10-11T10:55:10.144Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.146 › 2026-10-11T10:55:10.146Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.218 › AUTOMATIONS_GET: Loading automations for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.220 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.221 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.222 › AUTOMATIONS_GET: No automations.json found for workspace fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.224 › SKILLS_GET: Loading skills for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.228 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.232 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:10.429 › [session] Lazy-loaded 0 messages for session 261011-airy-spruce"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.431 › 2026-10-11T10:55:10.431Z [loadViewsConfig] No config found, seeding with default views"
+    },
+    {
+      "type": "info",
+      "text": "18:55:10.553 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:12.962 (perf) › 261011-f... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:12.978 (perf) › 261011-f... panel.mounted: 16.1ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:12.979 (perf) › 261011-f... session.loaded: 16.1ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:12.979 (perf) › 261011-f... data.ready: 16.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:13.028 (perf) › Session switch complete: 65.5ms (panel.mounted:16ms → session.loaded:16ms → data.ready:16ms)"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:13.023 › [session] Lazy-loaded 0 messages for session 261011-fresh-ravine"
+    },
+    {
+      "type": "info",
+      "text": "18:55:13.932 (perf) › 261011-a... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:13.949 (perf) › 261011-a... panel.mounted: 16.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:13.949 (perf) › 261011-a... session.loaded: 16.3ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:13.949 (perf) › 261011-a... data.ready: 16.4ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:13.985 (perf) › Session switch complete: 52.5ms (panel.mounted:16ms → session.loaded:16ms → data.ready:16ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:14.872 (perf) › 261011-f... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:14.889 (perf) › 261011-f... panel.mounted: 16.6ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:14.889 (perf) › 261011-f... session.loaded: 16.8ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:14.889 (perf) › 261011-f... data.ready: 16.8ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:14.926 (perf) › Session switch complete: 54.2ms (panel.mounted:17ms → session.loaded:17ms → data.ready:17ms)"
+    },
+    {
+      "type": "info",
+      "text": "[i18n] Appearance dropdown change {from: zh-Hans, to: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:15.455 (main) › [i18n] changeLanguage IPC applied {incoming: zh-Hans, previousResolved: zh-Hans, newResolved: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:15.644 (perf) › 261011-f... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:15.791 (perf) › 261011-f... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:15.806 (perf) › 261011-f... panel.mounted: 14.5ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:15.806 (perf) › 261011-f... session.loaded: 14.6ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:15.806 (perf) › 261011-f... data.ready: 14.7ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:15.830 (perf) › Session switch complete: 38.9ms (panel.mounted:15ms → session.loaded:15ms → data.ready:15ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.016 (window) › Updated window 1 from workspace fixture to second"
+    },
+    {
+      "type": "warning",
+      "text": "18:55:16.016 (window) › No windows for workspace 'fixture', have: [second]"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.041 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.041 › AUTOMATIONS_GET: Loading automations for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.044 › SKILLS_GET: Loading skills for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.047 › [sessions:get] result {ctxWorkspaceId: second, webContentsId: 1, windowWorkspaceId: second, resolvedWorkspaceId: second, returnedCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.047 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.048 › 2026-10-11T10:55:16.048Z [loadViewsConfig] No config found, seeding with default views"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.050 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.053 › AUTOMATIONS_GET: No automations.json found for workspace second"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:16.127 › [session] Lazy-loaded 0 messages for session 261011-lucid-grove"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.172 › 2026-10-11T10:55:16.172Z [ws-rpc-server] INFO  Client disconnected {\"clientId\":\"a342e66f-47b3-490c-b72d-348f9bff8976\"}"
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.176 › 2026-10-11T10:55:16.176Z [ws-rpc-server] INFO  Client reconnected with replay {\"clientId\":\"a342e66f-47b3-490c-b72d-348f9bff8976\",\"replayedCount\":0,\"lastSeq\":1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.231 › [sessions:get] result {ctxWorkspaceId: second, webContentsId: 1, windowWorkspaceId: second, resolvedWorkspaceId: second, returnedCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.392 (window) › Updated window 1 from workspace second to fixture"
+    },
+    {
+      "type": "warning",
+      "text": "18:55:16.392 (window) › No windows for workspace 'second', have: [fixture]"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.431 › AUTOMATIONS_GET: Loading automations for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.432 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.432 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.436 › SKILLS_GET: Loading skills for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.438 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.439 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.440 › AUTOMATIONS_GET: No automations.json found for workspace fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.562 (perf) › 261011-f... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.583 › 2026-10-11T10:55:16.583Z [ws-rpc-server] INFO  Client disconnected {\"clientId\":\"a342e66f-47b3-490c-b72d-348f9bff8976\"}"
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.585 › 2026-10-11T10:55:16.585Z [ws-rpc-server] INFO  Client reconnected with replay {\"clientId\":\"a342e66f-47b3-490c-b72d-348f9bff8976\",\"replayedCount\":0,\"lastSeq\":1}"
+    },
+    {
+      "type": "info",
+      "text": "[i18n] Appearance dropdown change {from: zh-Hans, to: en}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.864 (main) › [i18n] changeLanguage IPC applied {incoming: en, previousResolved: zh-Hans, newResolved: en}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.970 (perf) › 261011-f... panel.mounted: 408.6ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.970 (perf) › 261011-f... session.loaded: 408.7ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.970 (perf) › 261011-f... data.ready: 408.7ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.004 (perf) › Session switch complete: 442.3ms (panel.mounted:409ms → session.loaded:409ms → data.ready:409ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.989 › 2026-10-11T10:55:16.989Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:16.989 › 2026-10-11T10:55:16.989Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.044 (perf) › 261011-m... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.058 (perf) › 261011-m... panel.mounted: 14.5ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.058 (perf) › 261011-m... session.loaded: 14.6ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.058 (perf) › 261011-m... data.ready: 14.6ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.092 (perf) › Session switch complete: 48.3ms (panel.mounted:15ms → session.loaded:15ms → data.ready:15ms)"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:17.118 › [session] Lazy-loaded 0 messages for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.119 › SKILLS_GET: Loading skills for workspace: fixture, workingDirectory: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.121 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.264 › 2026-10-11T10:55:17.264Z [PersistenceQueue] Session 261011-mild-pond metadata mismatch detected (local preserved, previousSig=<none>)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.277 › 2026-10-11T10:55:17.277Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:17.279 (main) › [power] Session started processing {activeSessionCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.282 › [session] Locked session 261011-mild-pond to connection \"fixture\""
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.283 › [session] Using LLM connection \"fixture\" (pi_compat) for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.286 › [session] Created pi agent for session 261011-mild-pond (model: fixture)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.287 › [session] [browser-pane] BPF gate check {sessionId: 261011-mild-pond, hasLocalBpm: true, hasRpcServer: true}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.287 › [session] [browser-pane] BPF block resolved BPM {sessionId: 261011-mild-pond, bpmKind: local}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.287 › [session] [browser-pane] BPF registering browserPaneFns {sessionId: 261011-mild-pond}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.288 › 2026-10-11T10:55:17.288Z session-scoped-tools Merged callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.289 › 2026-10-11T10:55:17.289Z session-scoped-tools Merged callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.289 › [session] Applied permission mode to agent {sessionId: 261011-mild-pond, permissionMode: ask, modeVersion: 0, changedBy: system, changedAt: 2026-10-11T10:55:09.329Z}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.290 › [session] Starting chat for session: 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.290 › [session] Workspace: {\n  \"id\": \"fixture\",\n  \"name\": \"Governance workspace\",\n  \"rootPath\": \"/Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace\",\n  \"createdAt\": 1,\n  \"slug\": \"workspace\"\n}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.290 › [session] Message: GOVERNANCE_PERMISSION: write the fixture file after approval."
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.291 › [session] Agent model: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.291 › [session] process.cwd(): /Users/van/projects/Phaneris"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.291 › [session] Submitting turn to Runtime Host..."
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.294 › [session] [pi] [extractSkillPaths] Available skills: book-rework, officecli"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.295 › [session] [pi] [extractSkillPaths] Parsed skills: []"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.295 › [session] [pi] [extractSkillPaths] Clean message: \"GOVERNANCE_PERMISSION: write the fixture file after approval....\", skills: 0"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.296 › [session] [transfer-context] getTransferredSessionSummary for 261011-mild-pond: applied=undefined, has_summary=false, returning=null"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.297 › 2026-10-11T10:55:17.297Z [pi-event] DEBUG Turn started {\"turnIndex\":1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.297 › 2026-10-11T10:55:17.297Z session-scoped-tools Merged callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.298 › [session] [pi] Spawning Pi subprocess: bun /Users/van/projects/Phaneris/packages/pi-agent-server/dist/index.js"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.299 › [session] [pi] Custom endpoint mode: no provider credential configured, sending empty API key"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.789 › [session] [pi] [subprocess stderr] [pi-server] Pi agent server starting"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.796 › 2026-10-11T10:55:17.796Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.805 › [session] [pi] [subprocess stderr] [pi-server] Callback server listening on 127.0.0.1:57740"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.806 › [session] [pi] Pi subprocess is ready"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.824 › [session] [pi] [subprocess stderr] [pi-server] Registered custom endpoint: http://127.0.0.1:57721/v1 with 1 model(s) [fixture], api: openai-completions"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.826 › [session] [pi] [subprocess stderr] [pi-server] Building proxy tools from 0 definitions:"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.826 › [session] [pi] [subprocess stderr] [pi-server] Session tools: 7 builtin + 2 web + 0 proxy + 1 progress = 10 total"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.834 › [session] [pi] [subprocess stderr] [pi-server] [interceptor-hint] api=openai-completions provider=custom-endpoint baseUrl=http://127.0.0.1:57721/v1"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.840 › [session] [pi] [subprocess stderr] [pi-server] Created Pi session: 01a12a9a-4d4a-7503-9449-6cd6553b3c1a (10 tools)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.840 › [session] SDK session ID captured for 261011-mild-pond: 01a12a9a-4d4a-7503-9449-6cd6553b3c1a"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.841 › [session] [pi] Thinking level set to: off"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.841 › [session] Session 261011-mild-pond: Pi clamped thinking level to off"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.842 › [session] [pi] PI auto-compaction enabled: true"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.850 › [session] [pi] Synced 44 session + 0 source tools with subprocess"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.932 › 2026-10-11T10:55:17.932Z [findAllProjectContextFiles] Found 4 files, returning 4"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.933 › 2026-10-11T10:55:17.933Z [getSystemPrompt] full prompt length: 25364"
+    },
+    {
+      "type": "info",
+      "text": "18:55:17.934 › [session] [pi] [ModeSnapshot] sessionId=261011-mild-pond chatPrompt mode=ask modeVersion=0 changedBy=system changedAt=2026-10-11T10:55:09.329Z"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.122 › [session] [pi] [subprocess stderr] [pi-server] Synced 44 proxy tools: mcp__session__SubmitPlan, mcp__session__ask_user, mcp__session__config_validate, mcp__session__skill_validate, mcp__session__mermaid_validate, mcp__session__source_test, mcp__session__source_oauth_trigger, mcp__session__source_google_oauth_trigger, mcp__session__source_slack_oauth_trigger, mcp__session__source_microsoft_oauth_trigger, mcp__session__source_credential_prompt, mcp__session__update_user_preferences, mcp__session__transform_data, mcp__session__script_sandbox, mcp__session__render_template, mcp__session__send_developer_feedback, mcp__session__call_llm, mcp__session__spawn_session, mcp__session__browser_tool, mcp__session__terminal_read, mcp__session__set_session_labels, mcp__session__set_session_status, mcp__session__update_session_planning, mcp__session__archive_session, mcp__session__create_task, mcp__session__artifact_status, mcp__session__artifact_create, mcp__session__artifact_apply, mcp__session__artifact_inspect, mcp__session__artifact_render, mcp__session__artifact_submit, mcp__session__image_generate, mcp__session__list_pages, mcp__session__get_page, mcp__session__create_page, mcp__session__update_page, mcp__session__write_page_data, mcp__session__delete_page, mcp__session__get_session_info, mcp__session__list_sessions, mcp__session__list_background_tasks, mcp__session__send_agent_message, mcp__session__list_messaging_channels, mcp__session__unbind_messaging_channel\n[pi-server] Proxy tool definitions changed — session will be recreated on next prompt\n[pi-server] Recreating session due to tool changes"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.129 › [session] [pi] [subprocess stderr] [pi-server] Registered custom endpoint: http://127.0.0.1:57721/v1 with 1 model(s) [fixture], api: openai-completions"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.129 › [session] [pi] [subprocess stderr] [pi-server] Building proxy tools from 44 definitions: mcp__session__SubmitPlan, mcp__session__ask_user, mcp__session__config_validate, mcp__session__skill_validate, mcp__session__mermaid_validate, mcp__session__source_test, mcp__session__source_oauth_trigger, mcp__session__source_google_oauth_trigger, mcp__session__source_slack_oauth_trigger, mcp__session__source_microsoft_oauth_trigger, mcp__session__source_credential_prompt, mcp__session__update_user_preferences, mcp__session__transform_data, mcp__session__script_sandbox, mcp__session__render_template, mcp__session__send_developer_feedback, mcp__session__call_llm, mcp__session__spawn_session, mcp__session__browser_tool, mcp__session__terminal_read, mcp__session__set_session_labels, mcp__session__set_session_status, mcp__session__update_session_planning, mcp__session__archive_session, mcp__session__create_task, mcp__session__artifact_status, mcp__session__artifact_create, mcp__session__artifact_apply, mcp__session__artifact_inspect, mcp__session__artifact_render, mcp__session__artifact_submit, mcp__session__image_generate, mcp__session__list_pages, mcp__session__get_page, mcp__session__create_page, mcp__session__update_page, mcp__session__write_page_data, mcp__session__delete_page, mcp__session__get_session_info, mcp__session__list_sessions, mcp__session__list_background_tasks, mcp__session__send_agent_message, mcp__session__list_messaging_channels, mcp__session__unbind_messaging_channel"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.136 › [session] [pi] [subprocess stderr] [pi-server] Session tools: 7 builtin + 2 web + 44 proxy + 1 progress = 54 total\n[pi-server] [interceptor-hint] api=openai-completions provider=custom-endpoint baseUrl=http://127.0.0.1:57721/v1\n[pi-server] Created Pi session: 01a12a9a-4e73-7503-9449-6cd93d8374bf (54 tools)\n[pi-server] [canonical-context] aligned 0 committed facts at cursor 3"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.137 › 2026-10-11T10:55:18.137Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.137 › [session] SDK session ID captured for 261011-mild-pond: 01a12a9a-4e73-7503-9449-6cd93d8374bf"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.138 › [session] [pi] Thinking level set to: off"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.140 › [session] Got event: input_received"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.165 › 2026-10-11T10:55:18.165Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.191 › [session] Got event: text_complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.193 › [session] Got event: usage_update"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.194 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.195 › [session] Got event: pi_turn_anchor"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:18.196 › [session] pi_turn_anchor for unknown sdkMessageId=ui-1; ignoring"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.197 › [session] [pi] PreToolUse request from subprocess: Write (pi-ptu-1791716118196-ndjqnc, sessionId=261011-mild-pond)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.200 › 2026-10-11T10:55:18.200Z [Permissions] Loaded default permissions from /var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-native-profile-Uds54J/permissions/default.json"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.201 › 2026-10-11T10:55:18.201Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+label\\s+(list|get|auto-rule-list|auto-rule-validate)\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.201 › 2026-10-11T10:55:18.201Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+source\\s+(list|get|validate|test|auth-help)\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.201 › 2026-10-11T10:55:18.201Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+skill\\s+(list|get|validate|where)\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.202 › 2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+automation\\s+(list|get|validate|history|last-executed|test|lint)\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.202 › 2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+permission\\s+(list|get|validate)\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.202 › 2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+theme\\s+(get|validate|list-presets|get-preset)\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.202 › 2026-10-11T10:55:18.202Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s*$"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.203 › 2026-10-11T10:55:18.203Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+(label|source|skill|automation|permission|theme)\\s*$"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.203 › 2026-10-11T10:55:18.203Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+(label|source|skill|automation|permission|theme)\\s+--help\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.203 › 2026-10-11T10:55:18.203Z [Permissions] Skipping CLI bash pattern (feature disabled): ^phaneris\\s+--(help|version|discover)\\b"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.206 › [session] [pi] PreToolUse(sessionId=261011-mild-pond): Prompting user for Write - Write: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace/governance-write.txt"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.206 › [session] Permission request for session 261011-mild-pond: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace/governance-write.txt"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.679 › [session] Permission response for pi-perm-1791716118206-bvit9h: allowed=true, alwaysAllow=false"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.686 › 2026-10-11T10:55:18.686Z [pi-event] DEBUG Tool metadata resolution {\"toolName\":\"Write\",\"toolCallId\":\"ui-permission\",\"metadataSource\":\"fallback\",\"hasIntent\":false,\"hasDisplayName\":true}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.686 › [session] tool_start: Write (ui-permission)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.692 › [session] tool_result: ui-permission isError=false"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.693 › [session] RESULT MATCH: toolUseId=ui-permission, found=true, toolName=Write, wasComplete=false"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.694 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.744 › [session] Got event: text_complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.746 › [session] Got event: usage_update"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.747 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.748 › [session] Got event: pi_turn_anchor"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.752 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.753 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.753 › [session] Got event: complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.754 › [session] Chat completed via complete event"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:18.755 (main) › [power] Session stopped processing {activeSessionCount: 0}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.757 › 2026-10-11T10:55:18.757Z [PersistenceQueue] Session 261011-mild-pond metadata mismatch detected (local preserved, previousSig={\"name\":\"Gov)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:18.762 › 2026-10-11T10:55:18.762Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.269 › 2026-10-11T10:55:19.269Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.381 › 2026-10-11T10:55:19.381Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:19.382 (main) › [power] Session started processing {activeSessionCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.383 › [session] Starting chat for session: 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.384 › [session] Workspace: {\n  \"id\": \"fixture\",\n  \"name\": \"Governance workspace\",\n  \"rootPath\": \"/Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace\",\n  \"createdAt\": 1,\n  \"slug\": \"workspace\"\n}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.384 › [session] Message: GOVERNANCE_PLAN_REQUEST: submit the prepared fixture plan."
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.384 › [session] Agent model: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.385 › [session] process.cwd(): /Users/van/projects/Phaneris"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.385 › [session] Submitting turn to Runtime Host..."
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.386 › [session] [pi] [extractSkillPaths] Available skills: book-rework, officecli"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.387 › [session] [pi] [extractSkillPaths] Parsed skills: []"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.387 › [session] [pi] [extractSkillPaths] Clean message: \"GOVERNANCE_PLAN_REQUEST: submit the prepared fixture plan....\", skills: 0"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.387 › [session] [transfer-context] getTransferredSessionSummary for 261011-mild-pond: applied=undefined, has_summary=false, returning=null"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.388 › 2026-10-11T10:55:19.388Z [pi-event] DEBUG Turn started {\"turnIndex\":2}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.388 › 2026-10-11T10:55:19.388Z session-scoped-tools Merged callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.389 › 2026-10-11T10:55:19.389Z [findAllProjectContextFiles] Cache hit for /Users/van/projects/Phaneris (4 files)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.389 › 2026-10-11T10:55:19.389Z [getSystemPrompt] full prompt length: 25364"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.390 › [session] [pi] [ModeSnapshot] sessionId=261011-mild-pond chatPrompt mode=ask modeVersion=0 changedBy=system changedAt=2026-10-11T10:55:09.329Z"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.530 › [session] Got event: input_received"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.543 › [session] Got event: text_complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.544 › [session] Got event: usage_update"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.545 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.545 › [session] Got event: pi_turn_anchor"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:19.546 › [session] pi_turn_anchor for unknown sdkMessageId=ui-3; ignoring"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.547 › [session] [pi] PreToolUse request from subprocess: mcp__session__SubmitPlan (pi-ptu-1791716119547-koimna, sessionId=261011-mild-pond)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.550 › 2026-10-11T10:55:19.550Z [pi-event] DEBUG Tool metadata resolution {\"toolName\":\"mcp__session__SubmitPlan\",\"toolCallId\":\"ui-plan\",\"metadataSource\":\"fallback\",\"hasIntent\":false,\"hasDisplayName\":false}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.550 › [session] tool_start: mcp__session__SubmitPlan (ui-plan)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.554 › [session] Plan submitted for session 261011-mild-pond: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace/sessions/261011-mild-pond/plans/governance.md"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.555 › [session] Interrupting for plan submission in session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.558 › [session] [pi] Session tool completed: SubmitPlan (isError=false)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.558 › [session] tool_result: ui-plan isError=false"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.559 › [session] RESULT MATCH: toolUseId=ui-plan, found=true, toolName=mcp__session__SubmitPlan, wasComplete=true"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.559 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.566 › [session] Got event: text_complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.567 › [session] Got event: usage_update"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.568 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.568 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.570 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.570 › [session] Got event: complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:19.570 › [session] Chat completed via complete event"
+    },
+    {
+      "type": "warning",
+      "text": "18:55:19.571 › [session] Session 261011-mild-pond completed without assistant response - possible context overflow or API issue"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:19.572 (main) › [power] Session stopped processing {activeSessionCount: 0}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.018 › 2026-10-11T10:55:20.018Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:20.019 (main) › [power] Session started processing {activeSessionCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.019 › [session] Starting chat for session: 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.020 › [session] Workspace: {\n  \"id\": \"fixture\",\n  \"name\": \"Governance workspace\",\n  \"rootPath\": \"/Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace\",\n  \"createdAt\": 1,\n  \"slug\": \"workspace\"\n}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.020 › [session] Message: Plan approved, please execute."
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.020 › [session] Agent model: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.020 › [session] process.cwd(): /Users/van/projects/Phaneris"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.020 › [session] Submitting turn to Runtime Host..."
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.021 › [session] [pi] [extractSkillPaths] Available skills: book-rework, officecli"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.022 › [session] [pi] [extractSkillPaths] Parsed skills: []"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.022 › [session] [pi] [extractSkillPaths] Clean message: \"Plan approved, please execute....\", skills: 0"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.022 › [session] [transfer-context] getTransferredSessionSummary for 261011-mild-pond: applied=undefined, has_summary=false, returning=null"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.022 › 2026-10-11T10:55:20.022Z [pi-event] DEBUG Turn started {\"turnIndex\":3}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.023 › 2026-10-11T10:55:20.023Z session-scoped-tools Merged callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.023 › 2026-10-11T10:55:20.023Z [findAllProjectContextFiles] Cache hit for /Users/van/projects/Phaneris (4 files)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.024 › 2026-10-11T10:55:20.024Z [getSystemPrompt] full prompt length: 25364"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.024 › [session] [pi] [ModeSnapshot] sessionId=261011-mild-pond chatPrompt mode=ask modeVersion=0 changedBy=system changedAt=2026-10-11T10:55:09.329Z"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.160 › [session] Got event: input_received"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.173 › [session] Got event: text_complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.175 › [session] Got event: usage_update"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.176 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.176 › [session] Got event: pi_turn_anchor"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.179 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.179 › [session] Got event: context_usage"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.180 › [session] Got event: complete"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.180 › [session] Chat completed via complete event"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:20.181 (main) › [power] Session stopped processing {activeSessionCount: 0}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.182 › 2026-10-11T10:55:20.182Z [PersistenceQueue] Session 261011-mild-pond metadata mismatch detected (local preserved, previousSig={\"name\":\"Gov)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.188 › 2026-10-11T10:55:20.188Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.355 › 2026-10-11T10:55:20.355Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:20.356 (main) › [power] Session started processing {activeSessionCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.357 › [session] Starting chat for session: 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.358 › [session] Workspace: {\n  \"id\": \"fixture\",\n  \"name\": \"Governance workspace\",\n  \"rootPath\": \"/Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace\",\n  \"createdAt\": 1,\n  \"slug\": \"workspace\"\n}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.358 › [session] Message: GOVERNANCE_CANCEL: keep streaming until stopped."
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.358 › [session] Agent model: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.358 › [session] process.cwd(): /Users/van/projects/Phaneris"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.359 › [session] Submitting turn to Runtime Host..."
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.360 › [session] [pi] [extractSkillPaths] Available skills: book-rework, officecli"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.360 › [session] [pi] [extractSkillPaths] Parsed skills: []"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.361 › [session] [pi] [extractSkillPaths] Clean message: \"GOVERNANCE_CANCEL: keep streaming until stopped....\", skills: 0"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.361 › [session] [transfer-context] getTransferredSessionSummary for 261011-mild-pond: applied=undefined, has_summary=false, returning=null"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.361 › 2026-10-11T10:55:20.361Z [pi-event] DEBUG Turn started {\"turnIndex\":4}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.362 › 2026-10-11T10:55:20.362Z session-scoped-tools Merged callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.362 › 2026-10-11T10:55:20.362Z [findAllProjectContextFiles] Cache hit for /Users/van/projects/Phaneris (4 files)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.363 › 2026-10-11T10:55:20.363Z [getSystemPrompt] full prompt length: 25364"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.363 › [session] [pi] [ModeSnapshot] sessionId=261011-mild-pond chatPrompt mode=ask modeVersion=0 changedBy=system changedAt=2026-10-11T10:55:09.329Z"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.508 › [session] Got event: input_received"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.660 › [session] Cancelling processing for session: 261011-mild-pond "
+    },
+    {
+      "type": "debug",
+      "text": "18:55:20.662 (main) › [power] Session stopped processing {activeSessionCount: 0}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.750 › 2026-10-11T10:55:20.750Z [ws-rpc-server] INFO  Client disconnected {\"clientId\":\"a342e66f-47b3-490c-b72d-348f9bff8976\"}"
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:20.752 › 2026-10-11T10:55:20.752Z [ws-rpc-server] INFO  Client reconnected with replay {\"clientId\":\"a342e66f-47b3-490c-b72d-348f9bff8976\",\"replayedCount\":0,\"lastSeq\":71}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.168 › 2026-10-11T10:55:21.168Z [PersistenceQueue] Wrote session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.600 (perf) › 261011-f... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.615 (perf) › 261011-f... panel.mounted: 14.6ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.615 (perf) › 261011-f... session.loaded: 14.6ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.615 (perf) › 261011-f... data.ready: 14.7ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.638 (perf) › Session switch complete: 37.4ms (panel.mounted:15ms → session.loaded:15ms → data.ready:15ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.634 › SKILLS_GET: Loading skills for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.635 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.702 (perf) › 261011-m... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.728 (perf) › 261011-m... panel.mounted: 26.3ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.728 (perf) › 261011-m... session.loaded: 26.4ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.728 (perf) › 261011-m... data.ready: 26.5ms"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.754 (perf) › Session switch complete: 52.4ms (panel.mounted:26ms → session.loaded:26ms → data.ready:27ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.779 › SKILLS_GET: Loading skills for workspace: fixture, workingDirectory: /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:21.781 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "error",
+      "text": "18:55:23.115 (main) › unhandledRejection: [electron] Error: governance-native-fatal\n    at Timeout.eval [as _onTimeout] (eval at evaluate (:311:30), <anonymous>:2:46)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)\nCaused by: Error: governance-native-first-cause\n    at Timeout.eval [as _onTimeout] (eval at evaluate (:311:30), <anonymous>:2:92)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.120 (main) › Flushed all pending session writes"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.121 › [session] Cleaning up resources..."
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.123 › 2026-10-11T10:55:23.123Z [ConfigWatcher] Stopped"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.123 › [session] Stopped config watcher for /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.125 › 2026-10-11T10:55:23.125Z [ConfigWatcher] Stopped"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.125 › [session] Stopped config watcher for /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.126 › 2026-10-11T10:55:23.126Z [automation-system] DEBUG [AutomationSystem] Disposing for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.126 › 2026-10-11T10:55:23.126Z [automation-system] DEBUG [AutomationSystem] Scheduler stopped"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.126 › 2026-10-11T10:55:23.126Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.127 › 2026-10-11T10:55:23.127Z [prompt-handler] DEBUG [PromptHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.127 › 2026-10-11T10:55:23.127Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.127 › 2026-10-11T10:55:23.127Z [retry-scheduler] DEBUG [RetryScheduler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.127 › 2026-10-11T10:55:23.127Z [webhook-handler] DEBUG [WebhookHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.128 › 2026-10-11T10:55:23.128Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.128 › 2026-10-11T10:55:23.128Z [script-handler] DEBUG [ScriptHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.128 › 2026-10-11T10:55:23.128Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.129 › [session] Disposed AutomationSystem for /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.129 › 2026-10-11T10:55:23.129Z [automation-system] DEBUG [AutomationSystem] Disposing for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.129 › 2026-10-11T10:55:23.129Z [automation-system] DEBUG [AutomationSystem] Scheduler stopped"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.129 › 2026-10-11T10:55:23.129Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.129 › 2026-10-11T10:55:23.129Z [prompt-handler] DEBUG [PromptHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.130 › 2026-10-11T10:55:23.130Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.130 › 2026-10-11T10:55:23.130Z [retry-scheduler] DEBUG [RetryScheduler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.130 › 2026-10-11T10:55:23.130Z [webhook-handler] DEBUG [WebhookHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.130 › 2026-10-11T10:55:23.130Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.130 › 2026-10-11T10:55:23.130Z [script-handler] DEBUG [ScriptHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.131 › 2026-10-11T10:55:23.131Z [event-bus] DEBUG [EventBus] Unregistered any-handler"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.131 › [session] Disposed AutomationSystem for /Users/van/projects/Phaneris/.cache/verification/native-client-0hAZnP/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.131 › 2026-10-11T10:55:23.131Z session-scoped-tools Unregistered callbacks for session 261011-airy-spruce"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.131 › 2026-10-11T10:55:23.131Z session-scoped-tools Unregistered callbacks for session 261011-fresh-ravine"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.132 › 2026-10-11T10:55:23.132Z session-scoped-tools Unregistered callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.132 › 2026-10-11T10:55:23.132Z session-scoped-tools Unregistered callbacks for session 261011-lucid-grove"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.133 › 2026-10-11T10:55:23.133Z [event-log-handler] DEBUG [EventLogHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.133 › 2026-10-11T10:55:23.133Z [event-log-handler] DEBUG [EventLogHandler] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.133 › 2026-10-11T10:55:23.133Z [event-bus] DEBUG [EventBus] Disposing for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.133 › 2026-10-11T10:55:23.133Z [automation-system] DEBUG [AutomationSystem] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.133 › 2026-10-11T10:55:23.133Z [event-bus] DEBUG [EventBus] Disposing for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.134 › 2026-10-11T10:55:23.134Z [automation-system] DEBUG [AutomationSystem] Disposed"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.134 › 2026-10-11T10:55:23.134Z session-scoped-tools Unregistered callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.140 › [session] [pi] [subprocess stderr] [pi-server] Shutdown requested"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.141 › 2026-10-11T10:55:23.141Z [ws-rpc-server] INFO  Client disconnected {\"clientId\":\"a342e66f-47b3-490c-b72d-348f9bff8976\"}"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.142 › [session] [pi] Pi subprocess exited: code=0, signal=null"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.142 › [session] [pi] Pi subprocess 77275 stopped for restart: code=0, signal=null"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.143 › [session] [pi] PiAgent disposed for restart"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.143 › 2026-10-11T10:55:23.143Z session-scoped-tools Unregistered callbacks for session 261011-mild-pond"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.143 › [session] [pi] PiAgent destroyed"
+    },
+    {
+      "type": "debug",
+      "text": "18:55:23.144 › [session] [McpClientPool] Disconnected all MCP clients"
+    },
+    {
+      "type": "info",
+      "text": "18:55:23.146 › [session] Cleanup complete"
+    }
+  ]
+}

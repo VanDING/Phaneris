@@ -68,7 +68,7 @@ export interface PluginAuditEntry {
  * and args — so no credential redaction pass is needed here. A package's secrets
  * live in the credential store, never in the audit trail.
  */
-export function appendPluginAuditEntry(entry: PluginAuditEntry): void {
+export function appendPluginAuditEntry(entry: PluginAuditEntry, onError?: (error: unknown) => void): void {
   const record = { at: new Date().toISOString(), ...entry };
   const logPath = resolveAuditLogPath();
 
@@ -77,6 +77,7 @@ export function appendPluginAuditEntry(entry: PluginAuditEntry): void {
     appendFileSync(logPath, `${JSON.stringify(record)}\n`, 'utf-8');
   } catch (error) {
     debug('[PluginAudit] Failed to append audit entry:', error);
+    onError?.(error);
   }
 }
 

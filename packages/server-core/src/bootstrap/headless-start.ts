@@ -5,7 +5,7 @@ import { uptime as osUptime } from 'node:os'
 import { join, basename } from 'node:path'
 import { lockHolderMatchesLock, parseTasklistImageName, type LockIdentity } from './lock-identity.ts'
 import { OAuthFlowStore } from '@phaneris/shared/auth'
-import { ensureConfigDir, loadStoredConfig, saveConfig } from '@phaneris/shared/config'
+import { ensureConfigDir, loadStoredConfig, saveConfig } from '@phaneris/shared/config/repository';
 import { CONFIG_DIR } from '@phaneris/shared/config/paths'
 import { createDurableRuntime, type DurableRuntime } from '../durable-runtime/index'
 
@@ -59,7 +59,7 @@ export interface ServerBootstrapOptions<TSessionManager, THandlerDeps> {
   /** TLS configuration. When provided, the server listens on wss:// instead of ws://. */
   tls?: WsRpcTlsOptions
   /** Cookie-based session validator for web UI auth on WebSocket upgrade. */
-  validateSessionCookie?: (cookieHeader: string | null) => Promise<boolean>
+  validateSessionCookie?: import('../transport/server').WsRpcServerOptions['validateSessionCookie']
   /**
    * Optional HTTP request handler for non-WebSocket requests on the RPC port.
    * When provided, the WsRpcServer serves HTTP (e.g. WebUI) on the same port.
@@ -84,6 +84,8 @@ export interface ServerInstance<TSessionManager> {
   token: string
   /** Context for server-level RPC handlers (status, health, active sessions). */
   serverHandlerContext: ServerHandlerContext
+  /** Synchronously close execution and external RPC admission before asynchronous drain. */
+  quiesce: () => void
   stop: () => Promise<void>
 }
 
@@ -446,12 +448,15 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
 
     platform.logger.info(`Phaneris server listening on ${wsServer.protocol}://${rpcHost}:${wsServer.port}`)
 
-    let stopped = false
-    const stop = async (): Promise<void> => {
-      if (stopped) return
-      stopped = true
-
+    let stopping: Promise<void> | undefined
+    const stop = (): Promise<void> => stopping ??= (async () => {
       platform.logger.info('Shutting down...')
+      const failures: unknown[] = []
+      const clean = async (name: string, action: () => void | Promise<void>) => {
+        try { await action() } catch (error) {
+          failures.push(error); platform.logger.error(`[bootstrap] Failed to ${name}:`, error)
+        }
+      }
 
       // Notify connected clients before closing connections
       try {
@@ -466,33 +471,14 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
         platform.logger.error('[bootstrap] Failed to send shutdown notification:', error)
       }
 
-      try {
-        modelRefreshService.stopAll?.()
-      } catch (error) {
-        platform.logger.error('[bootstrap] Failed to stop model refresh service:', error)
-      }
-
-      try {
-        await options.cleanupSessionManager?.(sessionManager)
-      } catch (error) {
-        platform.logger.error('[bootstrap] Failed to clean up session manager:', error)
-      }
-      await runtime.close()
-
-      try {
-        wsServer.close()
-      } catch (error) {
-        platform.logger.error('[bootstrap] Failed to close WS server:', error)
-      }
-
-      try {
-        oauthFlowStore.dispose()
-      } catch (error) {
-        platform.logger.error('[bootstrap] Failed to dispose OAuth flow store:', error)
-      }
-
-      releaseServerLock()
-    }
+      await clean('stop model refresh service', () => modelRefreshService.stopAll?.())
+      await clean('clean up session manager', async () => { await options.cleanupSessionManager?.(sessionManager) })
+      await clean('close Runtime', () => runtime.close())
+      await clean('close WS server', () => wsServer.close())
+      await clean('dispose OAuth flow store', () => oauthFlowStore.dispose())
+      await clean('release server lock', () => releaseServerLock())
+      if (failures.length) throw new AggregateError(failures, 'Server resource cleanup failed', { cause: failures[0] })
+    })()
 
     return {
       platform,
@@ -504,6 +490,7 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
       protocol: wsServer.protocol,
       token: serverToken,
       serverHandlerContext,
+      quiesce: () => { runtime.quiesce(); wsServer.close() },
       stop,
     }
   } catch (error) {

@@ -1,5 +1,7 @@
 # Craft Agents — 全面代码审计报告 (v2, 合并版)
 
+> 2026-10-11 裁定：本文 OPEN/FIXED 属原审计基线，须在当前源码上重新复现，不能直接当作当前缺陷。历史漏洞数字不替代新的依赖审计；当前执行队列见统一台账。 [首轮实施台账](../process/governance-first-wave-2026-10-11.md)。
+
 > **历史快照（2026-08-01）**：本报告记录当时提交的审计结果，不代表当前代码状态。文中部分路径（包括 `packages/session-mcp-server`）和结论已随单 Pi 后台收敛而失效；当前内核基线请以 [`docs/guides/pi-kernel.md`](../guides/pi-kernel.md) 和现行测试为准。
 
 审计对象: `/Users/van/projects/CraftAgent`。基线 HEAD `ef67d7ac`(2026-08-01 首版审计),本版合并原 `docs/archive/code-audit-2026-08-01.md` + `AUDIT_REVIEW.md`(对抗性审查的修正、归属裁决、方法局限全部并入),并纳入截至 `80559086` 的修复执行状态。

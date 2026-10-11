@@ -22,20 +22,24 @@ Documentation is filed by **what kind of document it is**, not by how finished t
 | Document | Status | Purpose |
 | --- | --- | --- |
 | [Project README](../README.md) / [中文](../README.zh-CN.md) | Current | Product introduction, capabilities, screenshots, setup, and positioning. |
-| [Architecture overview](architecture/overview.md) | Current baseline | Repository topology, layering, process and protocol boundaries, request path, client matrix, persistence, build, invariants, and known drift. **Start here for a structural map.** |
+| [Architecture overview](architecture/overview.md) | Current baseline | Repository topology, layering, process and protocol boundaries, request path, client matrix, persistence, build, invariants, and known drift. **Start here for a structural map.** Current measurements and the next governance work are in the [2026-10-11 governance plan](process/architecture-code-governance-implementation-plan-2026-10-11.md). |
 | [Electron app](../apps/electron/README.md) | Current | Desktop runtime, build, event contract, and diagnostics. |
 | [Contributing](../CONTRIBUTING.md) | Current | Local setup, validation, and contribution workflow. |
 | [Security](../SECURITY.md) | Current | Supported versions and private vulnerability reporting. |
-| [Release readiness checklist](release-readiness.md) | **Proposed** release gate — 17 items open | Identity, recovery, signing, checksum, SBOM, and privacy items required before public binaries. |
+| [Release readiness checklist](release-readiness.md) | **Proposed** release gate — 15 items open | Identity, recovery, signing, checksum, SBOM, and privacy items required before public binaries. |
 | [CLI reference](guides/cli.md) | Current | Headless server client, commands, TLS, and scripting. |
 | [Pi kernel baseline](guides/pi-kernel.md) | Current | Single-backend runtime contract, lifecycle, tool synchronization, and upgrade checks. |
+
+| [Governance ownership inventory](process/governance-ownership-inventory-2026-10-11.md) | Accepted | All configuration ports, original SessionManager members, dependencies, cycles and presentation storage decisions. |
 
 ## Architecture
 
 | Document | Status | Scope |
 | --- | --- | --- |
+| [Governance domain ownership](architecture/governance-domain-ownership.md) | Accepted | Configuration, protocol, Pi and product assembly ownership. |
 | [Architecture overview](architecture/overview.md) | Current baseline | Structural map; §10 lists the known drift and tech debt without owners. |
 | [Durable Agent Runtime ADR](architecture/durable-agent-runtime.md) | Accepted, implemented incrementally | Runtime Host authority, T1/T2 effects, recovery, projections. Two workstreams stay open: read-model cutover after measured parity, and automatic bounded continuation. |
+| [Authentication and process lifecycle](architecture/authentication-process-lifecycle.md) | Accepted, implemented | Persistent cookie revocation scope, exact Origin/proxy trust, fail-closed storage and bounded global-failure shutdown. Native-platform limits are explicit. |
 | [Durable Runtime boundary redesign](architecture/durable-runtime-boundary.md) | Implemented — B0–B5 | Runtime Kernel/Host ownership, restricted APIs, external adapters, resolved dependency gate and independent Pi/crash verification. Replaces the earlier nine-service split; evidence and coverage limits are linked from the document. |
 | [Durable Runtime target architecture](architecture/durable-agent-runtime-target-architecture.md) | **Deferred** | Seven target components (batch entity, admission controller, effect registry, workspace checkpoints, fenced leases, continuation supervisor, observability). None exists in code. Activation criteria are stated in the document; each activation additionally needs an ADR, failure-injection tests, a reversible migration, and a rollback path. |
 | [Session snapshot storage and bounded reads](architecture/session-snapshot-reads.md) | Accepted | Immutable snapshots, 512 KiB chunked reads, lease limits, and the compact snapshot-reference format. |
@@ -80,7 +84,10 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | Scope |
 | --- | --- | --- |
+| [Governance completion failure matrix](verification/governance-completion-failure-matrix.md) | Written before implementation | G3–G8 failure cases and actual workflow acceptance. |
 | [Verification index](verification/README.md) | Maintained | Commands, platform notes, and result locations. |
+| [Governance first wave failure matrix](verification/governance-first-wave-failure-matrix.md) | Written before implementation; locally verified | G1 evidence isolation, CI/coverage/warning canaries, Babel type-import detection, plugin transactions and Runtime branch lifecycle. [Evidence](verification/results/governance-first-wave-2026-10-11/README.md). |
+| [Governance authentication/lifecycle failure matrix](verification/governance-auth-lifecycle-failure-matrix.md) | Written before corresponding fixes; locally verified | Real process restart/logout, canonical JWT replay, Origin/proxy/body limits, fatal exits, Runtime quiesce and cleanup ownership. [Evidence](verification/results/governance-second-wave-2026-10-11/README.md). |
 | [Durable Runtime boundary failure matrix](verification/durable-runtime-boundary-failure-matrix.md) | Written before implementation; coverage recorded | Independent Host/Pi execution, real T1/T2 process crashes, delivery, settlement, adapters and lifecycle. Links repeatable evidence and explicitly untested combinations. |
 | [Theme and architecture gate failure matrix](verification/theme-and-architecture-gate-failure-matrix.md) | Written before implementation; coverage recorded (19 mutations) | Failure modes for the theme-declaration invariant (FA01–FA12) and the architecture gate (FB01–FB11). §1 records the pre-implementation facts, including that CI was red on `main`; §4 records what was and was not verified, and the sandbox limit on `test:doc-tools`. |
 | [Dependency and declaration cleanup failure matrix](verification/dependency-declaration-cleanup-failure-matrix.md) | Written before implementation; coverage recorded | Failure modes for batch C (FC01–FC15): the local replacement for `incr-regex-package`, which declarations are genuinely dead versus peer providers, lockfile consistency, and the 26 undeclared cross-package subpaths. §4 records what was and was not verified, including that the lock's orphaned entries were **not** pruned. |
@@ -111,19 +118,25 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | [Pi 1.1.0 / Craft 0.14.1 implementation](process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) | Complete; performance scope is limited | B0–B5 results, 6,289 passing tests, final package evidence, same-drive smoke, earlier failures and reproduction commands. |
 | [Pi 1.1.0 implementation failure matrix](process/pi-110-implementation-failure-matrix.md) | Written before implementation | Failure conditions and acceptance boundaries for B0–B5. |
 | [Pi 1.1.0 / Craft 0.14.1 handoff](process/pi-sdk-1.1.0-upstream-0.14.1-handoff.md) | Historical checkpoint | B0–B3 completed; B4/B5 continuation details recorded before work resumed. |
-| [System cleanup and optimization plan](process/system-cleanup-optimization-plan-2026-10-10.md) | Batches **A, B and C implemented**; D–H proposed | Verified inventory of what is actually still open after the Runtime boundary landed: the red `test:critical` theme gate, the un-applied dependency cleanup, bundle hygiene, three by-default server security issues, automation events with no emitter, and documentation that disagrees with the code in both directions. Batches A–H with exit criteria; §7 records the judgements its own failure matrices disproved. |
-| [Workstream sequencing](process/workstream-sequencing-2026-10-06.md) | Dated sequencing record; step 5 superseded by implemented boundary; step 1 since landed | Original six-step plan and decisions. The Runtime boundary implementation replaces its nine-service / pure-move approach; its step 1 race is fixed (see the system cleanup plan §2.6), its steps 2–3 remain open, and later records identify the actual code and validation status. |
-| [Project assessment and roadmap](process/project-assessment-and-roadmap-2026-08-31.md) | **Proposed; not started** | Five-phase roadmap. Its top risks (SessionManager as bottleneck, WebUI reuse fragility) are still present. |
+| [Governance first wave ledger](process/governance-first-wave-2026-10-11.md) | Historical G0/G1/G2a acceptance snapshot | Original source adjudication and evidence; current execution results are in the completion ledger. |
+| [Governance second wave ledger](process/governance-second-wave-2026-10-11.md) | Historical G2b/G2c acceptance snapshot | Cookie/Origin/cleanup evidence at that wave; later native acceptance is in the completion ledger. |
+| [System cleanup and optimization plan](process/system-cleanup-optimization-plan-2026-10-10.md) | Batches **A–H implemented**; G continued through governance G3/G5 | The landed cleanup and its corrected findings are recorded in §7–8. Batch G's config/storage and Pi entry boundaries were implemented through G3/G5 in the governance completion; the existing automation vocabulary and deliberately deferred security/rendering work remain explicitly limited. |
+| [Workstream sequencing](process/workstream-sequencing-2026-10-06.md) | Dated sequencing record; step 5 superseded by implemented boundary; step 1 since landed | Original six-step plan and decisions. The Runtime boundary implementation replaces its nine-service / pure-move approach; its step 1 race is fixed (see the system cleanup plan §2.6), its remaining ownership cuts were continued in governance G3–G7, with deliberate deferrals recorded in the completion ledger. |
+| [Project assessment and roadmap](process/project-assessment-and-roadmap-2026-08-31.md) | Historical roadmap; governance continued through G0–G8 | Feature ideas retain their original deferrals; current architecture and code ownership adjudication is in the completion ledger. |
 | [Product development directions](process/product-development-directions-2026-09-19.md) | Discussion draft; partial | Removing the allow-all fallback and the completion-rate metric are outstanding; other directions not started. |
 | [Agentic interception design](process/agentic-interception-design.md) | Design settled; **implementation not started** | First slice is `tool_call` blocking. Records three live defects: agentic automations execute no action, docs advertise a no-op, and 8 of 13 events have no emitter. |
 | [Calendar and Gantt optimization plan](process/calendar-gantt-optimization-plan.md) | Phase 0 done; phases 1–3 open | Roughly 10–16 person-days. `GanttView` is still read-only. |
 | [Phaneris fork plan](process/phaneris-fork-plan.md) | In progress | Phases C–F pending. **Phase D blocks public release** (release/update channel, trademark). |
-| [Plugin system review and roadmap](process/plugin-system-review-and-roadmap.md) | Phased plan; **stale** — the three P0s shipped in `c89614a5` | The system cleanup plan §2.6 records this document as out of date, together with two real residuals the fix left behind (backup cleanup inside the install `try`, and credential cleanup that is not deferred). P1 F04/F06/F07/F08/F10 and Phase E remain open. |
+| [Plugin system review and roadmap](process/plugin-system-review-and-roadmap.md) | Historical phased plan; G2a residuals locally verified | Three P0s shipped in `c89614a5`; this wave fixes pre-commit backup recovery, post-commit cleanup, credential timing and stale derived index reads. F04/F06, the remaining F07 validation surface, F10 and Phase E remain open; F08 stays deferred. See the governance ledger. |
 
 ## Process — records (landed)
 
 | Document | Status |
 | --- | --- |
+| [Architecture and code governance implementation plan](process/architecture-code-governance-implementation-plan-2026-10-11.md) | **G0–G8 implemented locally**; historical baseline and acceptance rules, with external platform limits in the completion ledger. |
+| [Architecture and code governance completion](process/governance-completion-2026-10-11.md) | **Implemented; local acceptance and explicit external limits**. Config/protocol/dependency/Pi/Session/client/distribution owners, real fault fixes, regression and evidence. |
+| [Governance G3–G8 evidence](verification/results/governance-completion-2026-10-11/README.md) | **Pre-audit snapshot**. Original manifests, explicit archive selection and standalone SHA verification; preserved as historical evidence. |
+| [Governance audit closeout evidence](verification/results/governance-closeout-2026-10-11/README.md) | **Locally verified**. Audit fixes, 235 workflow scenes, full regression, three unchanged-budget performance runs and standalone archive/source verification. |
 | [Upstream 0.13.4 absorption](process/upstream-0.13.4-absorption.md) | Implemented; item 6 deliberately not adopted |
 | [Upstream 0.13.5–0.13.6 absorption](process/upstream-0.13.5-0.13.6-absorption.md) | Implemented (batches B0–B5) |
 | [Upstream 0.14.0 absorption](process/upstream-0.14.0-absorption.md) | Implemented; delivery is now in `main` (verified 2026-10-06) |
@@ -156,7 +169,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | Scope |
 | --- | --- | --- |
-| [GPUIX / gpui-kit migration assessment](research/native-frontend-migration-gpuix-assessment.md) | Exploratory; no route adopted | Of its two zero-risk items, the dead-code half is **done** — ProseMirror/Tiptap now loads as an isolated lazy chunk with zero hits in the entry graph. Still undone: exporting the RPC contract as a language-neutral schema. The remaining production-chunk waste is the dev-only `playground` entry; see the [system cleanup plan](process/system-cleanup-optimization-plan-2026-10-10.md) §2.3. |
+| [GPUIX / gpui-kit migration assessment](research/native-frontend-migration-gpuix-assessment.md) | Exploratory; no route adopted | ProseMirror/Tiptap is an isolated lazy chunk and the dev-only playground production input has been removed. A language-neutral RPC schema remains deferred to contract governance. See the [system cleanup plan](process/system-cleanup-optimization-plan-2026-10-10.md) §2.3. |
 | [GPUIX profile](research/gpuix-profile.md) | Research annex (2026-09-11) | Source-level evidence for the migration assessment. |
 | [gpui-kit profile](research/gpui-kit-profile.md) | Research annex (2026-09-12) | Source-level evidence. |
 | [GPUI ecosystem and gaps](research/gpui-ecosystem-and-gaps.md) | Research annex (2026-09-12) | Six conditional spikes, none run. |

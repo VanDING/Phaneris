@@ -1,0 +1,10 @@
+{
+  "unchangedAssertions": true,
+  "positiveWait": "real event with 2000ms deadline",
+  "repeatExitCodes": [
+    0,
+    0,
+    0
+  ],
+  "cleanupOnAssertionFailure": true
+}

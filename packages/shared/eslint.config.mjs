@@ -1,3 +1,4 @@
+import { commonRules } from '../../scripts/eslint-common.mjs'
 import babelParser from '@babel/eslint-parser'
 
 export default [
@@ -6,6 +7,7 @@ export default [
   },
   {
     files: ['src/**/*.{ts,tsx}'],
+    rules: commonRules,
     languageOptions: {
       parser: babelParser,
       parserOptions: {

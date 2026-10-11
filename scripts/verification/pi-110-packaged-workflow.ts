@@ -62,7 +62,7 @@ async function check(id: string, action: () => unknown | Promise<unknown>) {
 }
 try {
   const started = performance.now()
-  application = await _electron.launch({ executablePath: executable, args: ['--disable-gpu'], env, timeout: 90_000 })
+  application = await _electron.launch({ executablePath: executable, args: ['--disable-gpu'], env: Object.fromEntries(Object.entries(env).filter((entry): entry is [string, string] => entry[1] !== undefined)), timeout: 90_000 })
   const page = await application.firstWindow()
   page.on('pageerror', error => errors.push(error.message))
   await page.waitForLoadState('domcontentloaded')

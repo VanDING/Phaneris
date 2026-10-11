@@ -1,0 +1,4402 @@
+{
+  "schemaVersion": 1,
+  "baselineHead": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+  "config": {
+    "exportDeclarations": 121,
+    "publicPorts": 129,
+    "ports": [
+      {
+        "name": "CONFIG_DIR",
+        "typeOnly": false,
+        "owner": "./paths.ts",
+        "baselineLine": 39,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 17,
+            "port": "@phaneris/shared/config/paths"
+          },
+          {
+            "file": "apps/electron/src/main/window-state.ts",
+            "line": 3,
+            "port": "@phaneris/shared/config/paths"
+          },
+          {
+            "file": "packages/messaging-gateway/src/adapters/wechat/ilink/storage/state-dir.ts",
+            "line": 6,
+            "port": "@phaneris/shared/config/paths"
+          },
+          {
+            "file": "packages/server-core/src/bootstrap/headless-start.ts",
+            "line": 9,
+            "port": "@phaneris/shared/config/paths"
+          },
+          {
+            "file": "packages/server-core/src/handlers/utils.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/paths"
+          },
+          {
+            "file": "packages/server-core/src/webui/http-server.ts",
+            "line": 15,
+            "port": "@phaneris/shared/config/paths"
+          },
+          {
+            "file": "packages/shared/src/agent/core/config-validator.ts",
+            "line": 16,
+            "port": "../../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/mode-manager.ts",
+            "line": 20,
+            "port": "../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/permissions-config.ts",
+            "line": 19,
+            "port": "../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/session-context.ts",
+            "line": 13,
+            "port": "../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/decisions/records.ts",
+            "line": 25,
+            "port": "../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/pages/action-bridge.ts",
+            "line": 44,
+            "port": "../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/utils/logo-cache.ts",
+            "line": 4,
+            "port": "../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/utils/logo.ts",
+            "line": 11,
+            "port": "../config/paths.ts"
+          },
+          {
+            "file": "packages/shared/src/workspaces/storage.ts",
+            "line": 20,
+            "port": "../config/paths.ts"
+          }
+        ]
+      },
+      {
+        "name": "WorkspaceInfo",
+        "typeOnly": true,
+        "owner": "@phaneris/core/types",
+        "baselineLine": 42,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 53,
+            "port": "@phaneris/shared/config"
+          }
+        ]
+      },
+      {
+        "name": "Workspace",
+        "typeOnly": true,
+        "owner": "@phaneris/core/types",
+        "baselineLine": 42,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/utils.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 53,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/shared/src/agent/backend/types.ts",
+            "line": 24,
+            "port": "../../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/base-agent.ts",
+            "line": 49,
+            "port": "../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/core/types.ts",
+            "line": 10,
+            "port": "../../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/pi-agent.ts",
+            "line": 44,
+            "port": "../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/auth/state.ts",
+            "line": 18,
+            "port": "../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/auth/types.ts",
+            "line": 8,
+            "port": "../config/types.ts"
+          }
+        ]
+      },
+      {
+        "name": "McpAuthType",
+        "typeOnly": true,
+        "owner": "@phaneris/core/types",
+        "baselineLine": 42,
+        "consumers": []
+      },
+      {
+        "name": "AuthType",
+        "typeOnly": true,
+        "owner": "@phaneris/core/types",
+        "baselineLine": 42,
+        "consumers": [
+          {
+            "file": "apps/electron/src/shared/types.ts",
+            "line": 54,
+            "port": "@phaneris/shared/config/types"
+          },
+          {
+            "file": "packages/shared/src/agent/diagnostics.ts",
+            "line": 11,
+            "port": "../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/auth/state.ts",
+            "line": 18,
+            "port": "../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/auth/types.ts",
+            "line": 8,
+            "port": "../config/types.ts"
+          }
+        ]
+      },
+      {
+        "name": "OAuthCredentials",
+        "typeOnly": true,
+        "owner": "@phaneris/core/types",
+        "baselineLine": 42,
+        "consumers": []
+      },
+      {
+        "name": "StoredConfig",
+        "typeOnly": true,
+        "owner": "persisted-types",
+        "baselineLine": 66,
+        "consumers": [
+          {
+            "file": "packages/shared/src/decisions/resolve.ts",
+            "line": 18,
+            "port": "../config/persisted-types.ts"
+          }
+        ]
+      },
+      {
+        "name": "FALLBACK_CONFIG_DEFAULTS",
+        "typeOnly": false,
+        "owner": "defaults",
+        "baselineLine": 142,
+        "consumers": []
+      },
+      {
+        "name": "loadConfigDefaults",
+        "typeOnly": false,
+        "owner": "defaults",
+        "baselineLine": 201,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 52,
+            "port": "@phaneris/shared/config/defaults"
+          },
+          {
+            "file": "packages/shared/src/workspaces/storage.ts",
+            "line": 25,
+            "port": "../config/defaults.ts"
+          }
+        ]
+      },
+      {
+        "name": "ensureConfigDefaults",
+        "typeOnly": false,
+        "owner": "defaults",
+        "baselineLine": 236,
+        "consumers": []
+      },
+      {
+        "name": "backupConfigFile",
+        "typeOnly": false,
+        "owner": "repository",
+        "baselineLine": 251,
+        "consumers": []
+      },
+      {
+        "name": "ensureConfigDir",
+        "typeOnly": false,
+        "owner": "repository",
+        "baselineLine": 274,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/bootstrap/headless-start.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/repository"
+          }
+        ]
+      },
+      {
+        "name": "loadStoredConfig",
+        "typeOnly": false,
+        "owner": "repository",
+        "baselineLine": 296,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 110,
+            "port": "@phaneris/shared/config/repository"
+          },
+          {
+            "file": "packages/server-core/src/bootstrap/headless-start.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/repository"
+          },
+          {
+            "file": "packages/shared/src/auth/state.ts",
+            "line": 15,
+            "port": "../config/repository.ts"
+          },
+          {
+            "file": "packages/shared/src/credentials/manager.ts",
+            "line": 1,
+            "port": "../config/repository.ts"
+          },
+          {
+            "file": "packages/shared/src/decisions/resolve.ts",
+            "line": 17,
+            "port": "../config/repository.ts"
+          }
+        ]
+      },
+      {
+        "name": "saveConfig",
+        "typeOnly": false,
+        "owner": "repository",
+        "baselineLine": 343,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 110,
+            "port": "@phaneris/shared/config/repository"
+          },
+          {
+            "file": "packages/server-core/src/bootstrap/headless-start.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/repository"
+          }
+        ]
+      },
+      {
+        "name": "getNotificationsEnabled",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 374,
+        "consumers": []
+      },
+      {
+        "name": "setNotificationsEnabled",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 386,
+        "consumers": []
+      },
+      {
+        "name": "getAutoCapitalisation",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 397,
+        "consumers": []
+      },
+      {
+        "name": "setAutoCapitalisation",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 409,
+        "consumers": []
+      },
+      {
+        "name": "getSendMessageKey",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 420,
+        "consumers": []
+      },
+      {
+        "name": "setSendMessageKey",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 432,
+        "consumers": []
+      },
+      {
+        "name": "getSpellCheck",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 442,
+        "consumers": []
+      },
+      {
+        "name": "setSpellCheck",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 454,
+        "consumers": []
+      },
+      {
+        "name": "getKeepAwakeWhileRunning",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 465,
+        "consumers": []
+      },
+      {
+        "name": "setKeepAwakeWhileRunning",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 477,
+        "consumers": []
+      },
+      {
+        "name": "getRichToolDescriptions",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 489,
+        "consumers": []
+      },
+      {
+        "name": "setRichToolDescriptions",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 500,
+        "consumers": []
+      },
+      {
+        "name": "getExtendedPromptCache",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 513,
+        "consumers": [
+          {
+            "file": "packages/shared/src/agent/pi-agent.ts",
+            "line": 139,
+            "port": "../config/appearance.ts"
+          }
+        ]
+      },
+      {
+        "name": "setExtendedPromptCache",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 521,
+        "consumers": []
+      },
+      {
+        "name": "getPromptCacheWarming",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 529,
+        "consumers": [
+          {
+            "file": "packages/shared/src/agent/pi-agent.ts",
+            "line": 139,
+            "port": "../config/appearance.ts"
+          }
+        ]
+      },
+      {
+        "name": "setPromptCacheWarming",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 533,
+        "consumers": []
+      },
+      {
+        "name": "getBrowserToolEnabled",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 545,
+        "consumers": [
+          {
+            "file": "packages/shared/src/agent/core/prerequisite-manager.ts",
+            "line": 17,
+            "port": "../../config/appearance.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/pi-agent.ts",
+            "line": 139,
+            "port": "../config/appearance.ts"
+          },
+          {
+            "file": "packages/shared/src/prompts/system.ts",
+            "line": 2,
+            "port": "../config/appearance.ts"
+          }
+        ]
+      },
+      {
+        "name": "setBrowserToolEnabled",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 557,
+        "consumers": []
+      },
+      {
+        "name": "getAllowRemoteEvaluate",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 572,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/browser-pane-manager.ts",
+            "line": 22,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setAllowRemoteEvaluate",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 581,
+        "consumers": []
+      },
+      {
+        "name": "getRtkEnabled",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 595,
+        "consumers": [
+          {
+            "file": "packages/shared/src/agent/pi-agent.ts",
+            "line": 139,
+            "port": "../config/appearance.ts"
+          }
+        ]
+      },
+      {
+        "name": "getRtkExcludeCommands",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 601,
+        "consumers": [
+          {
+            "file": "packages/shared/src/agent/pi-agent.ts",
+            "line": 139,
+            "port": "../config/appearance.ts"
+          }
+        ]
+      },
+      {
+        "name": "setRtkEnabled",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 610,
+        "consumers": []
+      },
+      {
+        "name": "setDecisionLayerSettings",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 630,
+        "consumers": []
+      },
+      {
+        "name": "getImageGenerationSettings",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 642,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/services/image-generation.ts",
+            "line": 6,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setImageGenerationSettings",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 647,
+        "consumers": []
+      },
+      {
+        "name": "getGitBashPath",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 659,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/handlers/system.ts",
+            "line": 6,
+            "port": "@phaneris/shared/config/appearance"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/system.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setGitBashPath",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 669,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/handlers/system.ts",
+            "line": 6,
+            "port": "@phaneris/shared/config/appearance"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/system.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "clearGitBashPath",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 684,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/handlers/system.ts",
+            "line": 6,
+            "port": "@phaneris/shared/config/appearance"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/system.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "getConfigPath",
+        "typeOnly": false,
+        "owner": "repository",
+        "baselineLine": 696,
+        "consumers": []
+      },
+      {
+        "name": "clearAllConfig",
+        "typeOnly": false,
+        "owner": "repository",
+        "baselineLine": 704,
+        "consumers": []
+      },
+      {
+        "name": "generateWorkspaceId",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 731,
+        "consumers": []
+      },
+      {
+        "name": "findWorkspaceIcon",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 743,
+        "consumers": []
+      },
+      {
+        "name": "getWorkspaces",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 747,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 109,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "apps/electron/src/main/thumbnail-protocol.ts",
+            "line": 26,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 51,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server/src/index.ts",
+            "line": 41,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "getActiveWorkspace",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 779,
+        "consumers": [
+          {
+            "file": "packages/shared/src/auth/state.ts",
+            "line": 16,
+            "port": "../config/workspace-selection.ts"
+          }
+        ]
+      },
+      {
+        "name": "getWorkspaceByNameOrId",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 791,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/browser-pane-manager.ts",
+            "line": 23,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 109,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "apps/electron/src/main/window-manager.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/artifacts.ts",
+            "line": 21,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/automations.ts",
+            "line": 4,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/files.ts",
+            "line": 11,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/labels.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/oauth.ts",
+            "line": 3,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/pages.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/plugins.ts",
+            "line": 21,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/projects.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/resources.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/sessions.ts",
+            "line": 6,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/settings.ts",
+            "line": 6,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/skills.ts",
+            "line": 4,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/sources.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/statuses.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/system.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/tasks.ts",
+            "line": 29,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/workspace.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/utils.ts",
+            "line": 4,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 51,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "getRemoteServerTokenSync",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 816,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/handlers/workspace.ts",
+            "line": 4,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 109,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/workspace.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "getRemoteServerToken",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 820,
+        "consumers": []
+      },
+      {
+        "name": "setRemoteServerToken",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 831,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/workspace.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "deleteRemoteServerToken",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 836,
+        "consumers": []
+      },
+      {
+        "name": "hydrateRemoteServerTokenCache",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 842,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 109,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server/src/index.ts",
+            "line": 41,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "migrateRemoteServerTokens",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 856,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 51,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "updateWorkspaceRemoteServer",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 871,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/workspace.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "setActiveWorkspace",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 888,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/server.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/workspace.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "switchWorkspaceAtomic",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 906,
+        "consumers": []
+      },
+      {
+        "name": "addWorkspace",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 928,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 109,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/server.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/workspace.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/workspace-selection"
+          }
+        ]
+      },
+      {
+        "name": "syncWorkspaces",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 981,
+        "consumers": []
+      },
+      {
+        "name": "removeWorkspace",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1017,
+        "consumers": []
+      },
+      {
+        "name": "StoredAttachment",
+        "typeOnly": true,
+        "owner": "@phaneris/core/types",
+        "baselineLine": 1071,
+        "consumers": []
+      },
+      {
+        "name": "StoredMessage",
+        "typeOnly": true,
+        "owner": "@phaneris/core/types",
+        "baselineLine": 1071,
+        "consumers": []
+      },
+      {
+        "name": "WorkspaceConversation",
+        "typeOnly": true,
+        "owner": "persisted-types",
+        "baselineLine": 1073,
+        "consumers": []
+      },
+      {
+        "name": "saveWorkspaceConversation",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1088,
+        "consumers": []
+      },
+      {
+        "name": "loadWorkspaceConversation",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1136,
+        "consumers": []
+      },
+      {
+        "name": "getWorkspaceDataPath",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1150,
+        "consumers": []
+      },
+      {
+        "name": "clearWorkspaceConversation",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1155,
+        "consumers": []
+      },
+      {
+        "name": "saveWorkspacePlan",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1175,
+        "consumers": []
+      },
+      {
+        "name": "loadWorkspacePlan",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1185,
+        "consumers": []
+      },
+      {
+        "name": "clearWorkspacePlan",
+        "typeOnly": false,
+        "owner": "workspace-selection",
+        "baselineLine": 1202,
+        "consumers": []
+      },
+      {
+        "name": "DraftAttachmentContent",
+        "typeOnly": true,
+        "owner": "persisted-types",
+        "baselineLine": 1221,
+        "consumers": [
+          {
+            "file": "apps/electron/src/renderer/lib/drafts.ts",
+            "line": 17,
+            "port": "@phaneris/shared/config/persisted-types"
+          }
+        ]
+      },
+      {
+        "name": "DraftAttachmentRef",
+        "typeOnly": true,
+        "owner": "persisted-types",
+        "baselineLine": 1230,
+        "consumers": [
+          {
+            "file": "apps/electron/src/renderer/App.tsx",
+            "line": 13,
+            "port": "@phaneris/shared/config/persisted-types"
+          },
+          {
+            "file": "apps/electron/src/renderer/lib/drafts.ts",
+            "line": 17,
+            "port": "@phaneris/shared/config/persisted-types"
+          }
+        ]
+      },
+      {
+        "name": "SessionDraft",
+        "typeOnly": true,
+        "owner": "persisted-types",
+        "baselineLine": 1238,
+        "consumers": [
+          {
+            "file": "apps/electron/src/renderer/hooks/use-draft-persistence.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/persisted-types"
+          },
+          {
+            "file": "apps/electron/src/renderer/App.tsx",
+            "line": 13,
+            "port": "@phaneris/shared/config/persisted-types"
+          }
+        ]
+      },
+      {
+        "name": "getSessionDraft",
+        "typeOnly": false,
+        "owner": "drafts",
+        "baselineLine": 1327,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/settings.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/drafts"
+          }
+        ]
+      },
+      {
+        "name": "setSessionDraft",
+        "typeOnly": false,
+        "owner": "drafts",
+        "baselineLine": 1336,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/settings.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/drafts"
+          }
+        ]
+      },
+      {
+        "name": "deleteSessionDraft",
+        "typeOnly": false,
+        "owner": "drafts",
+        "baselineLine": 1367,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/settings.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/drafts"
+          }
+        ]
+      },
+      {
+        "name": "getAllSessionDrafts",
+        "typeOnly": false,
+        "owner": "drafts",
+        "baselineLine": 1376,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/files.ts",
+            "line": 12,
+            "port": "@phaneris/shared/config/drafts"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/settings.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/drafts"
+          }
+        ]
+      },
+      {
+        "name": "getAppThemePath",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1403,
+        "consumers": []
+      },
+      {
+        "name": "getAppThemesDir",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1422,
+        "consumers": []
+      },
+      {
+        "name": "loadAppTheme",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1427,
+        "consumers": []
+      },
+      {
+        "name": "saveAppTheme",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1438,
+        "consumers": []
+      },
+      {
+        "name": "ensureUserThemesDir",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1449,
+        "consumers": []
+      },
+      {
+        "name": "migrateLegacyAppTheme",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1459,
+        "consumers": []
+      },
+      {
+        "name": "initializeThemeStorage",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1495,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 116,
+            "port": "@phaneris/shared/config/appearance"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 55,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "isValidUserThemeId",
+        "typeOnly": false,
+        "owner": "./theme.ts",
+        "baselineLine": 1500,
+        "consumers": [
+          {
+            "file": "apps/electron/src/renderer/context/ThemeContext.tsx",
+            "line": 12,
+            "port": "@config/theme"
+          },
+          {
+            "file": "packages/shared/src/workspaces/storage.ts",
+            "line": 26,
+            "port": "../config/theme.ts"
+          }
+        ]
+      },
+      {
+        "name": "ensurePresetThemes",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1526,
+        "consumers": []
+      },
+      {
+        "name": "loadPresetThemes",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1533,
+        "consumers": []
+      },
+      {
+        "name": "loadPresetTheme",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1645,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/browser-pane-manager.ts",
+            "line": 22,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "getPresetThemesDir",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1674,
+        "consumers": []
+      },
+      {
+        "name": "resetPresetTheme",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1681,
+        "consumers": []
+      },
+      {
+        "name": "getThemePreferences",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1700,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/browser-pane-manager.ts",
+            "line": 22,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setThemePreferences",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1715,
+        "consumers": []
+      },
+      {
+        "name": "getColorTheme",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1735,
+        "consumers": []
+      },
+      {
+        "name": "setColorTheme",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1742,
+        "consumers": []
+      },
+      {
+        "name": "getDismissedUpdateVersion",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1754,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/auto-update.ts",
+            "line": 41,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setDismissedUpdateVersion",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1763,
+        "consumers": []
+      },
+      {
+        "name": "clearDismissedUpdateVersion",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 1774,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/auto-update.ts",
+            "line": 41,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "LlmConnection",
+        "typeOnly": true,
+        "owner": "./llm-connections.ts",
+        "baselineLine": 1786,
+        "consumers": [
+          {
+            "file": "packages/shared/src/protocol/method-contracts.ts",
+            "line": 9,
+            "port": "../config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/renderer/components/app-shell/input/useModelVisionToggle.ts",
+            "line": 4,
+            "port": "@config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/shared/types.ts",
+            "line": 95,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/domain/connection-setup-logic.ts",
+            "line": 9,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 3,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/model-fetchers/pi.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/services/image-generation.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/sessions/model-image-input.ts",
+            "line": 4,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/sessions/runtime-config.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/shared/src/agent/backend/factory.ts",
+            "line": 26,
+            "port": "../../config/storage.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/backend/internal/driver-types.ts",
+            "line": 10,
+            "port": "../../../config/storage.ts"
+          }
+        ]
+      },
+      {
+        "name": "LlmProviderType",
+        "typeOnly": true,
+        "owner": "./llm-connections.ts",
+        "baselineLine": 1786,
+        "consumers": [
+          {
+            "file": "apps/electron/src/renderer/components/onboarding/APISetupStep.tsx",
+            "line": 6,
+            "port": "@phaneris/shared/config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/renderer/hooks/useOnboarding.ts",
+            "line": 19,
+            "port": "@phaneris/shared/config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/renderer/lib/provider-icons.ts",
+            "line": 29,
+            "port": "@phaneris/shared/config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/shared/types.ts",
+            "line": 95,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/domain/connection-setup-logic.ts",
+            "line": 9,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/shared/src/agent/backend/types.ts",
+            "line": 37,
+            "port": "../../config/llm-connections.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/diagnostics.ts",
+            "line": 14,
+            "port": "../config/llm-connections.ts"
+          },
+          {
+            "file": "packages/shared/src/credentials/manager.ts",
+            "line": 10,
+            "port": "../config/llm-connections.ts"
+          },
+          {
+            "file": "packages/shared/src/protocol/dto.ts",
+            "line": 25,
+            "port": "../config/llm-connections"
+          }
+        ]
+      },
+      {
+        "name": "LlmAuthType",
+        "typeOnly": true,
+        "owner": "./llm-connections.ts",
+        "baselineLine": 1786,
+        "consumers": [
+          {
+            "file": "apps/electron/src/renderer/components/onboarding/APISetupStep.tsx",
+            "line": 6,
+            "port": "@phaneris/shared/config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/shared/types.ts",
+            "line": 95,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/shared/src/agent/backend/types.ts",
+            "line": 37,
+            "port": "../../config/llm-connections.ts"
+          },
+          {
+            "file": "packages/shared/src/credentials/manager.ts",
+            "line": 10,
+            "port": "../config/llm-connections.ts"
+          }
+        ]
+      },
+      {
+        "name": "LlmConnectionWithStatus",
+        "typeOnly": true,
+        "owner": "./llm-connections.ts",
+        "baselineLine": 1786,
+        "consumers": [
+          {
+            "file": "packages/shared/src/protocol/method-contracts.ts",
+            "line": 9,
+            "port": "../config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
+            "line": 28,
+            "port": "@config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/renderer/components/app-shell/kanban/model-catalog.ts",
+            "line": 9,
+            "port": "@config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/renderer/playground/demos/mobile-webui/MobilePlaygroundProviders.tsx",
+            "line": 11,
+            "port": "@config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/renderer/playground/demos/mobile-webui/mock-mobile-data.ts",
+            "line": 12,
+            "port": "@config/llm-connections"
+          },
+          {
+            "file": "apps/electron/src/shared/types.ts",
+            "line": 95,
+            "port": "@phaneris/shared/config"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 3,
+            "port": "@phaneris/shared/config"
+          }
+        ]
+      },
+      {
+        "name": "shouldMigratePiOpenAiProvider",
+        "typeOnly": false,
+        "owner": "migrations",
+        "baselineLine": 1867,
+        "consumers": []
+      },
+      {
+        "name": "shouldRepairPiApiKeyCodexProvider",
+        "typeOnly": false,
+        "owner": "migrations",
+        "baselineLine": 1881,
+        "consumers": []
+      },
+      {
+        "name": "inferModelSelectionMode",
+        "typeOnly": false,
+        "owner": "migrations",
+        "baselineLine": 1906,
+        "consumers": []
+      },
+      {
+        "name": "migrateLegacyLlmConnectionsConfig",
+        "typeOnly": false,
+        "owner": "migrations",
+        "baselineLine": 2546,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 54,
+            "port": "@phaneris/shared/config/migrations"
+          }
+        ]
+      },
+      {
+        "name": "migrateOrphanedDefaultConnections",
+        "typeOnly": false,
+        "owner": "migrations",
+        "baselineLine": 2816,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 54,
+            "port": "@phaneris/shared/config/migrations"
+          }
+        ]
+      },
+      {
+        "name": "migrateLegacyCredentials",
+        "typeOnly": false,
+        "owner": "migrations",
+        "baselineLine": 2885,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 54,
+            "port": "@phaneris/shared/config/migrations"
+          }
+        ]
+      },
+      {
+        "name": "getLlmConnections",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 2941,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/model-fetchers/index.ts",
+            "line": 15,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/services/image-generation.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 32,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/shared/src/agent/base-agent.ts",
+            "line": 28,
+            "port": "../config/connections.ts"
+          },
+          {
+            "file": "packages/shared/src/decisions/status.ts",
+            "line": 5,
+            "port": "../config/connections.ts"
+          }
+        ]
+      },
+      {
+        "name": "getLlmConnection",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 2954,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/model-fetchers/index.ts",
+            "line": 15,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/services/image-generation.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 32,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/shared/src/agent/backend/factory.ts",
+            "line": 25,
+            "port": "../../config/connections.ts"
+          },
+          {
+            "file": "packages/shared/src/auth/state.ts",
+            "line": 17,
+            "port": "../config/connections.ts"
+          },
+          {
+            "file": "packages/shared/src/automations/validation.ts",
+            "line": 15,
+            "port": "../config/connections.ts"
+          },
+          {
+            "file": "packages/shared/src/decisions/resolve.ts",
+            "line": 16,
+            "port": "../config/connections.ts"
+          }
+        ]
+      },
+      {
+        "name": "addLlmConnection",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 2964,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          }
+        ]
+      },
+      {
+        "name": "updateLlmConnection",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 2997,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/model-fetchers/index.ts",
+            "line": 15,
+            "port": "@phaneris/shared/config/connections"
+          }
+        ]
+      },
+      {
+        "name": "deleteLlmConnection",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 3095,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          }
+        ]
+      },
+      {
+        "name": "getDefaultLlmConnection",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 3148,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/services/image-generation.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 32,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/shared/src/agent/backend/factory.ts",
+            "line": 25,
+            "port": "../../config/connections.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/base-agent.ts",
+            "line": 28,
+            "port": "../config/connections.ts"
+          },
+          {
+            "file": "packages/shared/src/agent/diagnostics.ts",
+            "line": 12,
+            "port": "../config/connections.ts"
+          },
+          {
+            "file": "packages/shared/src/auth/state.ts",
+            "line": 17,
+            "port": "../config/connections.ts"
+          }
+        ]
+      },
+      {
+        "name": "setDefaultLlmConnection",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 3165,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          }
+        ]
+      },
+      {
+        "name": "getDefaultThinkingLevel",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 3188,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/settings.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/connections"
+          },
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 32,
+            "port": "@phaneris/shared/config/connections"
+          }
+        ]
+      },
+      {
+        "name": "setDefaultThinkingLevel",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 3202,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/settings.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/connections"
+          }
+        ]
+      },
+      {
+        "name": "touchLlmConnection",
+        "typeOnly": false,
+        "owner": "connections",
+        "baselineLine": 3215,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 2,
+            "port": "@phaneris/shared/config/connections"
+          }
+        ]
+      },
+      {
+        "name": "getNetworkProxySettings",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3255,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/network-proxy.ts",
+            "line": 12,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setNetworkProxySettings",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3264,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/network-proxy.ts",
+            "line": 12,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "isSetupDeferred",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3284,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/onboarding.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/appearance"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/onboarding.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setSetupDeferred",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3288,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/onboarding.ts",
+            "line": 7,
+            "port": "@phaneris/shared/config/appearance"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/llm-connections.ts",
+            "line": 5,
+            "port": "@phaneris/shared/config/appearance"
+          },
+          {
+            "file": "packages/server-core/src/handlers/rpc/onboarding.ts",
+            "line": 8,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "getToolIconsDir",
+        "typeOnly": false,
+        "owner": "bundled-assets",
+        "baselineLine": 3310,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 119,
+            "port": "@phaneris/shared/config/bundled-assets"
+          }
+        ]
+      },
+      {
+        "name": "ensureToolIcons",
+        "typeOnly": false,
+        "owner": "bundled-assets",
+        "baselineLine": 3320,
+        "consumers": [
+          {
+            "file": "apps/electron/src/main/index.ts",
+            "line": 115,
+            "port": "@phaneris/shared/config/bundled-assets"
+          }
+        ]
+      },
+      {
+        "name": "getServerConfig",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3361,
+        "consumers": []
+      },
+      {
+        "name": "setServerConfig",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3370,
+        "consumers": []
+      },
+      {
+        "name": "getContextPolicy",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3385,
+        "consumers": [
+          {
+            "file": "packages/server-core/src/sessions/SessionManager.ts",
+            "line": 1,
+            "port": "@phaneris/shared/config/appearance"
+          }
+        ]
+      },
+      {
+        "name": "setContextPolicy",
+        "typeOnly": false,
+        "owner": "appearance",
+        "baselineLine": 3389,
+        "consumers": []
+      }
+    ]
+  },
+  "manager": {
+    "methods": 206,
+    "fields": 40,
+    "currentMethods": 207,
+    "currentFields": 41,
+    "members": [
+      {
+        "name": "sessions",
+        "kind": "ClassProperty",
+        "line": 1182,
+        "currentLine": 1177,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "imageRequests",
+        "kind": "ClassProperty",
+        "line": 1183,
+        "currentLine": 1179,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "taskRuntimeFacts",
+        "kind": "ClassProperty",
+        "line": 1184,
+        "currentLine": 1180,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "execution",
+        "kind": "ClassProperty",
+        "line": 1185,
+        "currentLine": 1181,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "decisionRecordingSince",
+        "kind": "ClassProperty",
+        "line": 1186,
+        "currentLine": 1182,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "decisionLegacy",
+        "kind": "ClassProperty",
+        "line": 1187,
+        "currentLine": 1183,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "unregisterDecisionObservation",
+        "kind": "ClassProperty",
+        "line": 1188,
+        "currentLine": 1184,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "unregisterDecisionAccounting",
+        "kind": "ClassProperty",
+        "line": 1201,
+        "currentLine": 1197,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "idleSessionTimer",
+        "kind": "ClassProperty",
+        "line": 1211,
+        "currentLine": 1207,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "idleSweepRunning",
+        "kind": "ClassProperty",
+        "line": 1212,
+        "currentLine": 1208,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "shuttingDown",
+        "kind": "ClassProperty",
+        "line": 1213,
+        "currentLine": 1209,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "constructor",
+        "kind": "ClassMethod",
+        "line": 1215,
+        "currentLine": 1211,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "pendingDeltas",
+        "kind": "ClassProperty",
+        "line": 1220,
+        "currentLine": 1216,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "deltaFlushTimers",
+        "kind": "ClassProperty",
+        "line": 1221,
+        "currentLine": 1217,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "configWatchers",
+        "kind": "ClassProperty",
+        "line": 1223,
+        "currentLine": 1219,
+        "owner": "现有 ConfigWatcher + 配置 domain owner",
+        "reason": "监听句柄由 workspace/process 生命周期管理；配置写入统一 repository"
+      },
+      {
+        "name": "userThemeWatcher",
+        "kind": "ClassProperty",
+        "line": 1225,
+        "currentLine": 1221,
+        "owner": "现有 ConfigWatcher + 配置 domain owner",
+        "reason": "监听句柄由 workspace/process 生命周期管理；配置写入统一 repository"
+      },
+      {
+        "name": "automationSystems",
+        "kind": "ClassProperty",
+        "line": 1227,
+        "currentLine": 1223,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "pendingCredentialResolvers",
+        "kind": "ClassProperty",
+        "line": 1229,
+        "currentLine": 1225,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "pendingPermissionRequests",
+        "kind": "ClassProperty",
+        "line": 1231,
+        "currentLine": 1227,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "automationLoopGuard",
+        "kind": "ClassMethod",
+        "line": 1236,
+        "currentLine": 1232,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "runPromptAutomations",
+        "kind": "ClassMethod",
+        "line": 1254,
+        "currentLine": 1250,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "pendingAskUserRequests",
+        "kind": "ClassProperty",
+        "line": 1304,
+        "currentLine": 1300,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "privilegedExecutionBroker",
+        "kind": "ClassProperty",
+        "line": 1306,
+        "currentLine": 1302,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "adminRememberApprovals",
+        "kind": "ClassProperty",
+        "line": 1308,
+        "currentLine": 1304,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "messageLoadingPromises",
+        "kind": "ClassProperty",
+        "line": 1314,
+        "currentLine": 1310,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "activeViewingSession",
+        "kind": "ClassProperty",
+        "line": 1320,
+        "currentLine": 1316,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "initGate",
+        "kind": "ClassProperty",
+        "line": 1322,
+        "currentLine": 1318,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "taskOutputIndex",
+        "kind": "ClassProperty",
+        "line": 1324,
+        "currentLine": 1320,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "keepBackgroundTasksAlive",
+        "kind": "ClassProperty",
+        "line": 1335,
+        "currentLine": 1331,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "agentRefreshLocks",
+        "kind": "ClassProperty",
+        "line": 1344,
+        "currentLine": 1340,
+        "owner": "agent-assembly.ts + Runtime Host 调用端",
+        "reason": "只读配置和有限 callbacks/resources 构造 backend；Host 安装/暂停/释放继续由调用端执行"
+      },
+      {
+        "name": "lastTimestamp",
+        "kind": "ClassProperty",
+        "line": 1346,
+        "currentLine": 1342,
+        "owner": "SessionManager 产品事件时钟",
+        "reason": "保留产品事件时间戳，不属于 JSONL 队列或 Host 权威时钟"
+      },
+      {
+        "name": "automationBinder",
+        "kind": "ClassProperty",
+        "line": 1355,
+        "currentLine": 1351,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "registerManagedSession",
+        "kind": "ClassMethod",
+        "line": 1366,
+        "currentLine": 1362,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "pauseSessionExecution",
+        "kind": "ClassMethod",
+        "line": 1392,
+        "currentLine": 1388,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "waitForInit",
+        "kind": "ClassMethod",
+        "line": 1402,
+        "currentLine": 1398,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "setAutomationBinder",
+        "kind": "ClassMethod",
+        "line": 1411,
+        "currentLine": 1407,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "browserPaneManager",
+        "kind": "ClassProperty",
+        "line": 1417,
+        "currentLine": 1413,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "terminalReader",
+        "kind": "ClassProperty",
+        "line": 1418,
+        "currentLine": 1414,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "enqueuePageThumbnailFn",
+        "kind": "ClassProperty",
+        "line": 1419,
+        "currentLine": 1415,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "rpcServer",
+        "kind": "ClassProperty",
+        "line": 1420,
+        "currentLine": 1416,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "remoteBpms",
+        "kind": "ClassProperty",
+        "line": 1421,
+        "currentLine": 1417,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "browserHostByCanvas",
+        "kind": "ClassProperty",
+        "line": 1423,
+        "currentLine": 1419,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "eventSink",
+        "kind": "ClassProperty",
+        "line": 1424,
+        "currentLine": 1420,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "pendingPlanningChanged",
+        "kind": "ClassProperty",
+        "line": 1426,
+        "currentLine": 1422,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "setEventSink",
+        "kind": "ClassMethod",
+        "line": 1428,
+        "currentLine": 1424,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "setBrowserPaneManager",
+        "kind": "ClassMethod",
+        "line": 1432,
+        "currentLine": 1428,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "setTerminalReader",
+        "kind": "ClassMethod",
+        "line": 1437,
+        "currentLine": 1433,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "setPageThumbnailer",
+        "kind": "ClassMethod",
+        "line": 1446,
+        "currentLine": 1442,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "enqueuePageThumbnail",
+        "kind": "ClassMethod",
+        "line": 1455,
+        "currentLine": 1451,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "setRpcServer",
+        "kind": "ClassMethod",
+        "line": 1471,
+        "currentLine": 1467,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "getBrowserPaneManagerForSession",
+        "kind": "ClassMethod",
+        "line": 1486,
+        "currentLine": 1482,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "setLastMessageClientId",
+        "kind": "ClassMethod",
+        "line": 1514,
+        "currentLine": 1510,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "onClientDisconnected",
+        "kind": "ClassMethod",
+        "line": 1524,
+        "currentLine": 1520,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "getBrowserHostClient",
+        "kind": "ClassMethod",
+        "line": 1535,
+        "currentLine": 1531,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "monotonic",
+        "kind": "ClassMethod",
+        "line": 1555,
+        "currentLine": 1551,
+        "owner": "SessionManager 产品事件时钟",
+        "reason": "保留产品事件时间戳，不属于 JSONL 队列或 Host 权威时钟"
+      },
+      {
+        "name": "getAdminRememberKey",
+        "kind": "ClassMethod",
+        "line": 1561,
+        "currentLine": 1557,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "hasActiveAdminRememberApproval",
+        "kind": "ClassMethod",
+        "line": 1565,
+        "currentLine": 1561,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "storeAdminRememberApproval",
+        "kind": "ClassMethod",
+        "line": 1586,
+        "currentLine": 1582,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "clearAdminRememberApprovalsForSession",
+        "kind": "ClassMethod",
+        "line": 1607,
+        "currentLine": 1603,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "clearPendingPermissionRequestsForSession",
+        "kind": "ClassMethod",
+        "line": 1616,
+        "currentLine": 1612,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "clearPendingAskUserRequestsForSession",
+        "kind": "ClassMethod",
+        "line": 1624,
+        "currentLine": 1620,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "applyExternalSessionMetadata",
+        "kind": "ClassMethod",
+        "line": 1636,
+        "currentLine": 1632,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setupConfigWatcher",
+        "kind": "ClassMethod",
+        "line": 1710,
+        "currentLine": 1706,
+        "owner": "现有 ConfigWatcher + 配置 domain owner",
+        "reason": "监听句柄由 workspace/process 生命周期管理；配置写入统一 repository"
+      },
+      {
+        "name": "notifyConfigFileChange",
+        "kind": "ClassMethod",
+        "line": 1880,
+        "currentLine": 1876,
+        "owner": "现有 ConfigWatcher + 配置 domain owner",
+        "reason": "监听句柄由 workspace/process 生命周期管理；配置写入统一 repository"
+      },
+      {
+        "name": "reloadSourcesForWorkspace",
+        "kind": "ClassMethod",
+        "line": 1888,
+        "currentLine": 1884,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "broadcastSourcesChanged",
+        "kind": "ClassMethod",
+        "line": 1900,
+        "currentLine": 1896,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "broadcastStatusesChanged",
+        "kind": "ClassMethod",
+        "line": 1905,
+        "currentLine": 1901,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastLabelsChanged",
+        "kind": "ClassMethod",
+        "line": 1911,
+        "currentLine": 1907,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastWorkItemsChanged",
+        "kind": "ClassMethod",
+        "line": 1917,
+        "currentLine": 1913,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastArtifactsChanged",
+        "kind": "ClassMethod",
+        "line": 1922,
+        "currentLine": 1918,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastPlanningChanged",
+        "kind": "ClassMethod",
+        "line": 1937,
+        "currentLine": 1933,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "syncPrimaryWorkItem",
+        "kind": "ClassMethod",
+        "line": 1956,
+        "currentLine": 1952,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "ensurePrimaryWorkItem",
+        "kind": "ClassMethod",
+        "line": 1960,
+        "currentLine": 1956,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "detachSessionWorkItems",
+        "kind": "ClassMethod",
+        "line": 1964,
+        "currentLine": 1960,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastAutomationsChanged",
+        "kind": "ClassMethod",
+        "line": 1968,
+        "currentLine": 1964,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "broadcastUserThemesChanged",
+        "kind": "ClassMethod",
+        "line": 1974,
+        "currentLine": 1970,
+        "owner": "现有 ConfigWatcher + 配置 domain owner",
+        "reason": "监听句柄由 workspace/process 生命周期管理；配置写入统一 repository"
+      },
+      {
+        "name": "broadcastLlmConnectionsChanged",
+        "kind": "ClassMethod",
+        "line": 1981,
+        "currentLine": 1977,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastSkillsChanged",
+        "kind": "ClassMethod",
+        "line": 1987,
+        "currentLine": 1983,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastPagesChanged",
+        "kind": "ClassMethod",
+        "line": 1993,
+        "currentLine": 1989,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "broadcastPluginsChanged",
+        "kind": "ClassMethod",
+        "line": 2006,
+        "currentLine": 2002,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "broadcastDefaultPermissionsChanged",
+        "kind": "ClassMethod",
+        "line": 2025,
+        "currentLine": 2021,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "reloadSessionSources",
+        "kind": "ClassMethod",
+        "line": 2036,
+        "currentLine": 2032,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "reinitializeAuth",
+        "kind": "ClassMethod",
+        "line": 2072,
+        "currentLine": 2068,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "initialize",
+        "kind": "ClassMethod",
+        "line": 2097,
+        "currentLine": 2093,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "loadSessionsFromDisk",
+        "kind": "ClassMethod",
+        "line": 2159,
+        "currentLine": 2155,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "setMetadataWriteGuard",
+        "kind": "ClassMethod",
+        "line": 2231,
+        "currentLine": 2227,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "persistSession",
+        "kind": "ClassMethod",
+        "line": 2247,
+        "currentLine": 2243,
+        "owner": "product-repository.ts",
+        "reason": "唯一 JSONL 持久化队列和产品 snapshot；Manager 保留调用适配，无第二队列"
+      },
+      {
+        "name": "hydrateMessagesForColdPersist",
+        "kind": "ClassMethod",
+        "line": 2259,
+        "currentLine": 2255,
+        "owner": "product-repository.ts",
+        "reason": "唯一 JSONL 持久化队列和产品 snapshot；Manager 保留调用适配，无第二队列"
+      },
+      {
+        "name": "enqueuePersist",
+        "kind": "ClassMethod",
+        "line": 2288,
+        "currentLine": 2284,
+        "owner": "product-repository.ts",
+        "reason": "唯一 JSONL 持久化队列和产品 snapshot；Manager 保留调用适配，无第二队列"
+      },
+      {
+        "name": "flushSession",
+        "kind": "ClassMethod",
+        "line": 2302,
+        "currentLine": 2298,
+        "owner": "product-repository.ts",
+        "reason": "唯一 JSONL 持久化队列和产品 snapshot；Manager 保留调用适配，无第二队列"
+      },
+      {
+        "name": "flushAllSessions",
+        "kind": "ClassMethod",
+        "line": 2307,
+        "currentLine": 2303,
+        "owner": "product-repository.ts",
+        "reason": "唯一 JSONL 持久化队列和产品 snapshot；Manager 保留调用适配，无第二队列"
+      },
+      {
+        "name": "getAuthRequestDescription",
+        "kind": "ClassMethod",
+        "line": 2318,
+        "currentLine": 2314,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "formatAuthResultMessage",
+        "kind": "ClassMethod",
+        "line": 2336,
+        "currentLine": 2332,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "completeAuthRequest",
+        "kind": "ClassMethod",
+        "line": 2355,
+        "currentLine": 2351,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "handleCredentialInput",
+        "kind": "ClassMethod",
+        "line": 2421,
+        "currentLine": 2417,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "getWorkspaces",
+        "kind": "ClassMethod",
+        "line": 2509,
+        "currentLine": 2505,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getWorkspacesInfo",
+        "kind": "ClassMethod",
+        "line": 2513,
+        "currentLine": 2509,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getActiveSessionCount",
+        "kind": "ClassMethod",
+        "line": 2517,
+        "currentLine": 2513,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getWorkspaceAutomationSummary",
+        "kind": "ClassMethod",
+        "line": 2526,
+        "currentLine": 2522,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "getActiveSessionsInfo",
+        "kind": "ClassMethod",
+        "line": 2548,
+        "currentLine": 2544,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "reloadSessions",
+        "kind": "ClassMethod",
+        "line": 2575,
+        "currentLine": 2571,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getSessions",
+        "kind": "ClassMethod",
+        "line": 2579,
+        "currentLine": 2575,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getUnreadSummary",
+        "kind": "ClassMethod",
+        "line": 2598,
+        "currentLine": 2594,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "refreshBadge",
+        "kind": "ClassMethod",
+        "line": 2630,
+        "currentLine": 2626,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "emitUnreadSummaryChanged",
+        "kind": "ClassMethod",
+        "line": 2638,
+        "currentLine": 2634,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getSession",
+        "kind": "ClassMethod",
+        "line": 2655,
+        "currentLine": 2651,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "imageRecoveryStarts",
+        "kind": "ClassProperty",
+        "line": 2665,
+        "currentLine": 2661,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "recoverImageContext",
+        "kind": "ClassMethod",
+        "line": 2668,
+        "currentLine": 2664,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "createImageRecoverySession",
+        "kind": "ClassMethod",
+        "line": 2677,
+        "currentLine": 2673,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getSessionTokenUsage",
+        "kind": "ClassMethod",
+        "line": 2709,
+        "currentLine": 2705,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "ensureMessagesLoaded",
+        "kind": "ClassMethod",
+        "line": 2722,
+        "currentLine": 2718,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "loadMessagesFromDisk",
+        "kind": "ClassMethod",
+        "line": 2745,
+        "currentLine": 2741,
+        "owner": "product-repository.ts",
+        "reason": "唯一 JSONL 持久化队列和产品 snapshot；Manager 保留调用适配，无第二队列"
+      },
+      {
+        "name": "applyDurableRecoveryStatus",
+        "kind": "ClassMethod",
+        "line": 2780,
+        "currentLine": 2776,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "shouldUseCanonicalSessionRead",
+        "kind": "ClassMethod",
+        "line": 2871,
+        "currentLine": 2867,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "applyDurableUsageProjection",
+        "kind": "ClassMethod",
+        "line": 2885,
+        "currentLine": 2881,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getSessionDecisions",
+        "kind": "ClassMethod",
+        "line": 2906,
+        "currentLine": 2902,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "getRecoveryEvidence",
+        "kind": "ClassMethod",
+        "line": 2920,
+        "currentLine": 2916,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "reconcileTool",
+        "kind": "ClassMethod",
+        "line": 2931,
+        "currentLine": 2927,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "queryAndReconcileTool",
+        "kind": "ClassMethod",
+        "line": 2942,
+        "currentLine": 2938,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "reconcileModel",
+        "kind": "ClassMethod",
+        "line": 2959,
+        "currentLine": 2955,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "applyToolReconciliation",
+        "kind": "ClassMethod",
+        "line": 2976,
+        "currentLine": 2972,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "prepareTaskNodeDispatch",
+        "kind": "ClassMethod",
+        "line": 3010,
+        "currentLine": 3006,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "commitTaskRunFact",
+        "kind": "ClassMethod",
+        "line": 3061,
+        "currentLine": 3057,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "listTaskRunFacts",
+        "kind": "ClassMethod",
+        "line": 3079,
+        "currentLine": 3075,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "commitTaskNodeDispatch",
+        "kind": "ClassMethod",
+        "line": 3087,
+        "currentLine": 3083,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "getSessionPath",
+        "kind": "ClassMethod",
+        "line": 3114,
+        "currentLine": 3110,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "createSession",
+        "kind": "ClassMethod",
+        "line": 3120,
+        "currentLine": 3116,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "notifySessionCreated",
+        "kind": "ClassMethod",
+        "line": 3628,
+        "currentLine": 3629,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getSessionWorkingDirectory",
+        "kind": "ClassMethod",
+        "line": 3634,
+        "currentLine": 3635,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "releaseIdleSessions",
+        "kind": "ClassMethod",
+        "line": 3639,
+        "currentLine": 3640,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "disposeManagedAgentRuntime",
+        "kind": "ClassMethod",
+        "line": 3686,
+        "currentLine": 3687,
+        "owner": "agent-assembly.ts + Runtime Host 调用端",
+        "reason": "只读配置和有限 callbacks/resources 构造 backend；Host 安装/暂停/释放继续由调用端执行"
+      },
+      {
+        "name": "tryRefreshAgentRuntime",
+        "kind": "ClassMethod",
+        "line": 3741,
+        "currentLine": 3745,
+        "owner": "agent-assembly.ts + Runtime Host 调用端",
+        "reason": "只读配置和有限 callbacks/resources 构造 backend；Host 安装/暂停/释放继续由调用端执行"
+      },
+      {
+        "name": "runAgentRuntimeRefresh",
+        "kind": "ClassMethod",
+        "line": 3809,
+        "currentLine": 3813,
+        "owner": "agent-assembly.ts + Runtime Host 调用端",
+        "reason": "只读配置和有限 callbacks/resources 构造 backend；Host 安装/暂停/释放继续由调用端执行"
+      },
+      {
+        "name": "refreshConnectionRuntime",
+        "kind": "ClassMethod",
+        "line": 3874,
+        "currentLine": 3878,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "refreshBrowserToolAvailability",
+        "kind": "ClassMethod",
+        "line": 3890,
+        "currentLine": 3894,
+        "owner": "已注册客户端/宿主 capability port",
+        "reason": "浏览器、终端和缩略图仍是外部资源；禁止装配器引用完整 Manager"
+      },
+      {
+        "name": "refreshExtendedPromptCache",
+        "kind": "ClassMethod",
+        "line": 3901,
+        "currentLine": 3905,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "refreshContextPolicy",
+        "kind": "ClassMethod",
+        "line": 3914,
+        "currentLine": 3918,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setSessionContextPolicy",
+        "kind": "ClassMethod",
+        "line": 3926,
+        "currentLine": 3930,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "handoffStarts",
+        "kind": "ClassProperty",
+        "line": 3942,
+        "currentLine": 3946,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "updateContextHandoff",
+        "kind": "ClassMethod",
+        "line": 3944,
+        "currentLine": 3948,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "recordContextHandoff",
+        "kind": "ClassMethod",
+        "line": 3951,
+        "currentLine": 3955,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "finishContextHandoffTurn",
+        "kind": "ClassMethod",
+        "line": 3981,
+        "currentLine": 3985,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "startContextSuccessor",
+        "kind": "ClassMethod",
+        "line": 4010,
+        "currentLine": 4014,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "retryContextHandoff",
+        "kind": "ClassMethod",
+        "line": 4108,
+        "currentLine": 4112,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "recoverContextHandoffs",
+        "kind": "ClassMethod",
+        "line": 4132,
+        "currentLine": 4136,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "refreshPromptCacheWarming",
+        "kind": "ClassMethod",
+        "line": 4146,
+        "currentLine": 4150,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getOrCreateAgent",
+        "kind": "ClassMethod",
+        "line": 4163,
+        "currentLine": 4167,
+        "owner": "agent-assembly.ts + Runtime Host 调用端",
+        "reason": "只读配置和有限 callbacks/resources 构造 backend；Host 安装/暂停/释放继续由调用端执行"
+      },
+      {
+        "name": "buildSessionAgent",
+        "kind": "ClassMethod",
+        "line": 4174,
+        "currentLine": 4178,
+        "owner": "agent-assembly.ts + Runtime Host 调用端",
+        "reason": "只读配置和有限 callbacks/resources 构造 backend；Host 安装/暂停/释放继续由调用端执行"
+      },
+      {
+        "name": "flagSession",
+        "kind": "ClassMethod",
+        "line": 5843,
+        "currentLine": 5848,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "unflagSession",
+        "kind": "ClassMethod",
+        "line": 5860,
+        "currentLine": 5865,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "archiveSession",
+        "kind": "ClassMethod",
+        "line": 5877,
+        "currentLine": 5882,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "unarchiveSession",
+        "kind": "ClassMethod",
+        "line": 5894,
+        "currentLine": 5899,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setSessionStatus",
+        "kind": "ClassMethod",
+        "line": 5911,
+        "currentLine": 5916,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setSessionConnection",
+        "kind": "ClassMethod",
+        "line": 5935,
+        "currentLine": 5940,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setPendingPlanExecution",
+        "kind": "ClassMethod",
+        "line": 5972,
+        "currentLine": 5977,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "markCompactionComplete",
+        "kind": "ClassMethod",
+        "line": 5985,
+        "currentLine": 5990,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "markPendingPlanExecutionDispatched",
+        "kind": "ClassMethod",
+        "line": 6004,
+        "currentLine": 6009,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "clearPendingPlanExecution",
+        "kind": "ClassMethod",
+        "line": 6020,
+        "currentLine": 6025,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "getPendingPlanExecution",
+        "kind": "ClassMethod",
+        "line": 6032,
+        "currentLine": 6037,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "acceptPlan",
+        "kind": "ClassMethod",
+        "line": 6045,
+        "currentLine": 6050,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "shareToViewer",
+        "kind": "ClassMethod",
+        "line": 6073,
+        "currentLine": 6078,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "updateShare",
+        "kind": "ClassMethod",
+        "line": 6142,
+        "currentLine": 6147,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "revokeShare",
+        "kind": "ClassMethod",
+        "line": 6199,
+        "currentLine": 6204,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setSessionSources",
+        "kind": "ClassMethod",
+        "line": 6257,
+        "currentLine": 6262,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "getSessionSources",
+        "kind": "ClassMethod",
+        "line": 6324,
+        "currentLine": 6329,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "getLastFinalAssistantMessageId",
+        "kind": "ClassMethod",
+        "line": 6336,
+        "currentLine": 6341,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "getSessionFinalText",
+        "kind": "ClassMethod",
+        "line": 6353,
+        "currentLine": 6358,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setActiveViewingSession",
+        "kind": "ClassMethod",
+        "line": 6366,
+        "currentLine": 6371,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "clearActiveViewingSession",
+        "kind": "ClassMethod",
+        "line": 6383,
+        "currentLine": 6388,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "isSessionBeingViewed",
+        "kind": "ClassMethod",
+        "line": 6390,
+        "currentLine": 6395,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "markSessionRead",
+        "kind": "ClassMethod",
+        "line": 6398,
+        "currentLine": 6403,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "markSessionUnread",
+        "kind": "ClassMethod",
+        "line": 6438,
+        "currentLine": 6443,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "markAllSessionsRead",
+        "kind": "ClassMethod",
+        "line": 6454,
+        "currentLine": 6459,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "renameSession",
+        "kind": "ClassMethod",
+        "line": 6472,
+        "currentLine": 6477,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "refreshTitle",
+        "kind": "ClassMethod",
+        "line": 6495,
+        "currentLine": 6500,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "updateWorkingDirectory",
+        "kind": "ClassMethod",
+        "line": 6636,
+        "currentLine": 6641,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "updateSessionModel",
+        "kind": "ClassMethod",
+        "line": 6690,
+        "currentLine": 6695,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "updateMessageContent",
+        "kind": "ClassMethod",
+        "line": 6752,
+        "currentLine": 6757,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "addMessageAnnotation",
+        "kind": "ClassMethod",
+        "line": 6775,
+        "currentLine": 6780,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "updateMessageAnnotation",
+        "kind": "ClassMethod",
+        "line": 6836,
+        "currentLine": 6841,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "removeMessageAnnotation",
+        "kind": "ClassMethod",
+        "line": 6915,
+        "currentLine": 6920,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "deleteSession",
+        "kind": "ClassMethod",
+        "line": 6939,
+        "currentLine": 6944,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "sendMessage",
+        "kind": "ClassMethod",
+        "line": 7034,
+        "currentLine": 7033,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "admitSessionInput",
+        "kind": "ClassMethod",
+        "line": 7045,
+        "currentLine": 7044,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "runSessionTurn",
+        "kind": "ClassMethod",
+        "line": 7359,
+        "currentLine": 7358,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "cancelProcessing",
+        "kind": "ClassMethod",
+        "line": 7754,
+        "currentLine": 7753,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "attemptAuthRetry",
+        "kind": "ClassMethod",
+        "line": 7831,
+        "currentLine": 7830,
+        "owner": "agent-assembly.ts + Runtime Host 调用端",
+        "reason": "只读配置和有限 callbacks/resources 构造 backend；Host 安装/暂停/释放继续由调用端执行"
+      },
+      {
+        "name": "sessionCompletionListeners",
+        "kind": "ClassProperty",
+        "line": 7920,
+        "currentLine": 7919,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "onSessionComplete",
+        "kind": "ClassMethod",
+        "line": 7926,
+        "currentLine": 7925,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "emitSessionComplete",
+        "kind": "ClassMethod",
+        "line": 7933,
+        "currentLine": 7932,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "notifyRuntimeCompletion",
+        "kind": "ClassMethod",
+        "line": 7944,
+        "currentLine": 7943,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "applyRuntimeSettlement",
+        "kind": "ClassMethod",
+        "line": 7958,
+        "currentLine": 7957,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "processNextQueuedMessage",
+        "kind": "ClassMethod",
+        "line": 8088,
+        "currentLine": 8087,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "replayQueuedMessage",
+        "kind": "ClassMethod",
+        "line": 8090,
+        "currentLine": 8089,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "killShell",
+        "kind": "ClassMethod",
+        "line": 8165,
+        "currentLine": 8164,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "evictStaleBackgroundTasks",
+        "kind": "ClassMethod",
+        "line": 8248,
+        "currentLine": 8247,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "markOrphanedBackgroundTasks",
+        "kind": "ClassMethod",
+        "line": 8276,
+        "currentLine": 8275,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "listBackgroundTasks",
+        "kind": "ClassMethod",
+        "line": 8302,
+        "currentLine": 8301,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "getTaskOutput",
+        "kind": "ClassMethod",
+        "line": 8320,
+        "currentLine": 8319,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "respondToPermission",
+        "kind": "ClassMethod",
+        "line": 8354,
+        "currentLine": 8353,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "respondToAskUser",
+        "kind": "ClassMethod",
+        "line": 8398,
+        "currentLine": 8397,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "respondToCredential",
+        "kind": "ClassMethod",
+        "line": 8436,
+        "currentLine": 8435,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "setSessionPermissionMode",
+        "kind": "ClassMethod",
+        "line": 8461,
+        "currentLine": 8460,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "getSessionPermissionModeState",
+        "kind": "ClassMethod",
+        "line": 8528,
+        "currentLine": 8527,
+        "owner": "SessionManager 授权/凭据适配 + broker",
+        "reason": "既有 request registry 和策略归属；不复制授权 authority 或更改默认模式"
+      },
+      {
+        "name": "setSessionLabels",
+        "kind": "ClassMethod",
+        "line": 8580,
+        "currentLine": 8579,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "applyTaskLabel",
+        "kind": "ClassMethod",
+        "line": 8614,
+        "currentLine": 8613,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "setSessionProjectId",
+        "kind": "ClassMethod",
+        "line": 8660,
+        "currentLine": 8659,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setKanbanColumn",
+        "kind": "ClassMethod",
+        "line": 8684,
+        "currentLine": 8683,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "updateSessionPlanning",
+        "kind": "ClassMethod",
+        "line": 8702,
+        "currentLine": 8701,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setTaskNodeCount",
+        "kind": "ClassMethod",
+        "line": 8796,
+        "currentLine": 8795,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "adoptGeneratedTaskOrchestrator",
+        "kind": "ClassMethod",
+        "line": 8824,
+        "currentLine": 8823,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "bindExistingSessionToTask",
+        "kind": "ClassMethod",
+        "line": 8922,
+        "currentLine": 8921,
+        "owner": "现有 TaskRunner/后台任务资源 + 产品适配",
+        "reason": "任务资源不进入 agent assembler；不创建新执行队列或改变任务权限"
+      },
+      {
+        "name": "setSessionThinkingLevel",
+        "kind": "ClassMethod",
+        "line": 8997,
+        "currentLine": 8996,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "setSessionActivePlugin",
+        "kind": "ClassMethod",
+        "line": 9041,
+        "currentLine": 9040,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "applyActivePluginToAgent",
+        "kind": "ClassMethod",
+        "line": 9141,
+        "currentLine": 9140,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "preEnableActivePluginSources",
+        "kind": "ClassMethod",
+        "line": 9157,
+        "currentLine": 9156,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "preEnableSkillSources",
+        "kind": "ClassMethod",
+        "line": 9193,
+        "currentLine": 9192,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "enableContributedSources",
+        "kind": "ClassMethod",
+        "line": 9231,
+        "currentLine": 9230,
+        "owner": "source-resources.ts + SessionManager 产品适配",
+        "reason": "HTTP/MCP lease 唯一创建、先 ready 后装配、幂等释放；选择和事件归产品层"
+      },
+      {
+        "name": "generateTitle",
+        "kind": "ClassMethod",
+        "line": 9293,
+        "currentLine": 9292,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "processEvent",
+        "kind": "ClassMethod",
+        "line": 9399,
+        "currentLine": 9398,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "sendEvent",
+        "kind": "ClassMethod",
+        "line": 10319,
+        "currentLine": 10318,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "queueDelta",
+        "kind": "ClassMethod",
+        "line": 10337,
+        "currentLine": 10336,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "discardDelta",
+        "kind": "ClassMethod",
+        "line": 10359,
+        "currentLine": 10358,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "flushDelta",
+        "kind": "ClassMethod",
+        "line": 10371,
+        "currentLine": 10370,
+        "owner": "SessionManager 客户端事件投影",
+        "reason": "单一 push/delta/连接绑定；退出、断连和 flush 保留原有收口顺序"
+      },
+      {
+        "name": "executePromptAutomation",
+        "kind": "ClassMethod",
+        "line": 10400,
+        "currentLine": 10399,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "resolveAutomationMentions",
+        "kind": "ClassMethod",
+        "line": 10511,
+        "currentLine": 10510,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "generateRemoteTransferSummary",
+        "kind": "ClassMethod",
+        "line": 10534,
+        "currentLine": 10533,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "exportRemoteSessionTransfer",
+        "kind": "ClassMethod",
+        "line": 10598,
+        "currentLine": 10602,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "importRemoteSessionTransfer",
+        "kind": "ClassMethod",
+        "line": 10634,
+        "currentLine": 10638,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "exportSession",
+        "kind": "ClassMethod",
+        "line": 10671,
+        "currentLine": 10675,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "importSession",
+        "kind": "ClassMethod",
+        "line": 10712,
+        "currentLine": 10716,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "findCompatibleLlmConnection",
+        "kind": "ClassMethod",
+        "line": 10896,
+        "currentLine": 10900,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "cleanup",
+        "kind": "ClassMethod",
+        "line": 10913,
+        "currentLine": 10917,
+        "owner": "SessionManager 生命周期和产品缓存",
+        "reason": "初始化 promise、按 session 合并加载、idle eviction 与全局退出保持单 owner"
+      },
+      {
+        "name": "startPreTurnDecisions",
+        "kind": "ClassMethod",
+        "line": 10973,
+        "currentLine": 10977,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "decisionFeatureActive",
+        "kind": "ClassMethod",
+        "line": 11072,
+        "currentLine": 11076,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "finishSuggestionTrace",
+        "kind": "ClassMethod",
+        "line": 11076,
+        "currentLine": 11080,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "noteSuggestionUse",
+        "kind": "ClassMethod",
+        "line": 11083,
+        "currentLine": 11087,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "decideMidTurnDelivery",
+        "kind": "ClassMethod",
+        "line": 11089,
+        "currentLine": 11093,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "refreshTitleIfDrifted",
+        "kind": "ClassMethod",
+        "line": 11105,
+        "currentLine": 11109,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "generateTitleUnlessSmallTalk",
+        "kind": "ClassMethod",
+        "line": 11126,
+        "currentLine": 11130,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "shouldRunPromptAutomation",
+        "kind": "ClassMethod",
+        "line": 11146,
+        "currentLine": 11150,
+        "owner": "现有 workspace AutomationSystem + 产品适配",
+        "reason": "一 workspace 一系统；原 binder/loop guard/工具注册顺序保留"
+      },
+      {
+        "name": "applyTurnOutcome",
+        "kind": "ClassMethod",
+        "line": 11180,
+        "currentLine": 11184,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "applySemanticAutoLabels",
+        "kind": "ClassMethod",
+        "line": 11218,
+        "currentLine": 11222,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "applyAutoLabelMatches",
+        "kind": "ClassMethod",
+        "line": 11243,
+        "currentLine": 11247,
+        "owner": "SessionManager 产品 API/metadata 适配",
+        "reason": "用户可见会话字段、筛选、已读、分享和迁移保留产品 owner；IO 委托原存储/新 repository"
+      },
+      {
+        "name": "steerQueuedIfDecided",
+        "kind": "ClassMethod",
+        "line": 11259,
+        "currentLine": 11263,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      },
+      {
+        "name": "markQueuedContinuation",
+        "kind": "ClassMethod",
+        "line": 11299,
+        "currentLine": 11303,
+        "owner": "既有 Runtime Host + SessionManager 产品适配",
+        "reason": "事实、输入准入、T1/T2、恢复、终态仍由 Host；产品层只保留投影和调用编排"
+      }
+    ]
+  },
+  "dependencies": [
+    {
+      "package": "apps/electron",
+      "dependency": "@dnd-kit/dom",
+      "owner": "dependencies",
+      "version": "0.5.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@radix-ui/react-avatar",
+      "owner": "dependencies",
+      "version": "^1.2.6",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@radix-ui/react-scroll-area",
+      "owner": "dependencies",
+      "version": "^1.2.18",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@radix-ui/react-select",
+      "owner": "dependencies",
+      "version": "^2.3.7",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@radix-ui/react-separator",
+      "owner": "dependencies",
+      "version": "^1.1.15",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@radix-ui/react-slot",
+      "owner": "dependencies",
+      "version": "^1.3.3",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@radix-ui/react-tabs",
+      "owner": "dependencies",
+      "version": "^1.1.21",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@sentry/electron",
+      "owner": "dependencies",
+      "version": "7.20.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@sentry/react",
+      "owner": "dependencies",
+      "version": "10.75.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "class-variance-authority",
+      "owner": "dependencies",
+      "version": "^0.7.1",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "clsx",
+      "owner": "dependencies",
+      "version": "^2.1.1",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "date-fns",
+      "owner": "dependencies",
+      "version": "^4.4.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "electron",
+      "owner": "devDependencies",
+      "version": "^44.5.1",
+      "reason": "desktop build host (root provides same binary)"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "jotai",
+      "owner": "dependencies",
+      "version": "^3.0.1",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "lucide-react",
+      "owner": "dependencies",
+      "version": "^1.51.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "react-resizable-panels",
+      "owner": "dependencies",
+      "version": "4.14.2",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "shiki",
+      "owner": "dependencies",
+      "version": "^4.5.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "tailwind-merge",
+      "owner": "dependencies",
+      "version": "^3.7.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "apps/webui",
+      "dependency": "motion",
+      "owner": "dependencies",
+      "version": "^14.0.0",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "packages/shared",
+      "dependency": "electron",
+      "owner": "peerDependencies",
+      "version": "^44.5.1",
+      "reason": "optional Electron host adapter"
+    },
+    {
+      "package": "packages/shared",
+      "dependency": "gray-matter",
+      "owner": "dependencies",
+      "version": "^4.0.3",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "packages/shared",
+      "dependency": "marked",
+      "owner": "dependencies",
+      "version": "^18.0.14",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "packages/shared",
+      "dependency": "open",
+      "owner": "dependencies",
+      "version": "^11.0.4",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "packages/shared",
+      "dependency": "tar",
+      "owner": "dependencies",
+      "version": "^7.5.22",
+      "reason": "direct production consumer"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@radix-ui/react-tooltip",
+      "owner": "peerDependencies",
+      "version": "^1.2.16",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/extension-file-handler",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/extension-image",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/extension-mathematics",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/extension-placeholder",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/extension-task-item",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/extension-task-list",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/markdown",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/react",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/starter-kit",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/suggestion",
+      "owner": "peerDependencies",
+      "version": "^3.31.4",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "linkify-it",
+      "owner": "peerDependencies",
+      "version": "6.1.0",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "rehype-sanitize",
+      "owner": "peerDependencies",
+      "version": "^6.0.0",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "tiptap-extension-code-block-shiki",
+      "owner": "peerDependencies",
+      "version": "^1.2.0",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "tiptap-markdown",
+      "owner": "peerDependencies",
+      "version": "^0.9.0",
+      "reason": "UI host provides matching framework/editor library"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@svar-ui/react-grid",
+      "owner": "dependencies",
+      "version": "2.7.4",
+      "reason": "direct production import previously borrowed from a transitive consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "@uiw/react-json-view",
+      "owner": "dependencies",
+      "version": "^2.0.0-alpha.43",
+      "reason": "direct production import previously borrowed from a transitive consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "croner",
+      "owner": "dependencies",
+      "version": "^10.0.1",
+      "reason": "direct production import previously borrowed from a transitive consumer"
+    },
+    {
+      "package": "apps/electron",
+      "dependency": "i18next",
+      "owner": "dependencies",
+      "version": "^26.4.2",
+      "reason": "direct production import previously borrowed from a transitive consumer"
+    },
+    {
+      "package": "packages/shared",
+      "dependency": "electron-log",
+      "owner": "dependencies",
+      "version": "^5.4.4",
+      "reason": "direct production import previously borrowed from a transitive consumer"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/core",
+      "owner": "peerDependencies",
+      "version": "3.31.4",
+      "reason": "direct editor/PDF consumer; host supplies a single matching instance"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "@tiptap/pm",
+      "owner": "peerDependencies",
+      "version": "3.31.4",
+      "reason": "direct editor/PDF consumer; host supplies a single matching instance"
+    },
+    {
+      "package": "packages/ui",
+      "dependency": "pdfjs-dist",
+      "owner": "peerDependencies",
+      "version": "6.3.289",
+      "reason": "direct editor/PDF consumer; host supplies a single matching instance"
+    }
+  ],
+  "localStorage": [
+    {
+      "file": "apps/electron/src/renderer/lib/local-storage.ts",
+      "rule": "phaneris/no-localstorage",
+      "message": "Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API.",
+      "count": 5,
+      "reason": "Accepted device/window presentation cache; preferences and Runtime facts retain their existing authoritative owners.",
+      "owner": "apps/electron",
+      "classification": "设备/窗口展示偏好缓存；不能持有 credential、RPC auth 或 canonical runtime 事实"
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/ComponentPreview.tsx",
+      "rule": "phaneris/no-localstorage",
+      "message": "Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API.",
+      "count": 3,
+      "reason": "Accepted development-only playground display state; excluded from production execution and credentials.",
+      "owner": "apps/electron",
+      "classification": "开发 playground 的设备展示状态；不进入生产 workspace/Host 事实"
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/MotionToggle.tsx",
+      "rule": "phaneris/no-localstorage",
+      "message": "Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API.",
+      "count": 2,
+      "reason": "Accepted development-only playground display state; excluded from production execution and credentials.",
+      "owner": "apps/electron",
+      "classification": "开发 playground 的设备展示状态；不进入生产 workspace/Host 事实"
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/PlaygroundApp.tsx",
+      "rule": "phaneris/no-localstorage",
+      "message": "Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API.",
+      "count": 5,
+      "reason": "Accepted development-only playground display state; excluded from production execution and credentials.",
+      "owner": "apps/electron",
+      "classification": "开发 playground 的设备展示状态；不进入生产 workspace/Host 事实"
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/Sidebar.tsx",
+      "rule": "phaneris/no-localstorage",
+      "message": "Avoid localStorage in Phaneris. Store settings in ~/.phaneris/preferences.json using window.electronAPI.readPreferences/writePreferences. See packages/shared/src/config/preferences.ts for the preferences API.",
+      "count": 2,
+      "reason": "Accepted development-only playground display state; excluded from production execution and credentials.",
+      "owner": "apps/electron",
+      "classification": "开发 playground 的设备展示状态；不进入生产 workspace/Host 事实"
+    }
+  ],
+  "cycles": {
+    "original": [
+      [
+        "packages/shared/src/agent/mode-manager.ts",
+        "packages/shared/src/agent/permissions-config.ts",
+        "packages/shared/src/agent/plan-types.ts",
+        "packages/shared/src/automations/automation-system.ts",
+        "packages/shared/src/automations/handlers/index.ts",
+        "packages/shared/src/automations/handlers/script-handler.ts",
+        "packages/shared/src/automations/index.ts",
+        "packages/shared/src/automations/schemas.ts",
+        "packages/shared/src/automations/script-executor.ts",
+        "packages/shared/src/automations/validation.ts",
+        "packages/shared/src/config/config-defaults-schema.ts",
+        "packages/shared/src/config/storage.ts",
+        "packages/shared/src/config/validators.ts",
+        "packages/shared/src/credentials/index.ts",
+        "packages/shared/src/credentials/manager.ts",
+        "packages/shared/src/pages/refresh.ts",
+        "packages/shared/src/pages/storage.ts",
+        "packages/shared/src/pages/validation.ts",
+        "packages/shared/src/plugins/storage.ts",
+        "packages/shared/src/sessions/bundle.ts",
+        "packages/shared/src/sessions/index.ts",
+        "packages/shared/src/sessions/jsonl.ts",
+        "packages/shared/src/sessions/persistence-queue.ts",
+        "packages/shared/src/sessions/storage.ts",
+        "packages/shared/src/sessions/types.ts",
+        "packages/shared/src/sessions/utils.ts",
+        "packages/shared/src/sources/api-tools.ts",
+        "packages/shared/src/sources/credential-manager.ts",
+        "packages/shared/src/sources/storage.ts",
+        "packages/shared/src/workspaces/storage.ts",
+        "packages/shared/src/workspaces/types.ts"
+      ],
+      [
+        "apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx",
+        "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "apps/electron/src/renderer/components/app-shell/SessionInfoPopover.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/ToolbarStatusSlot.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/index.ts",
+        "apps/electron/src/renderer/components/app-shell/input/useModelVisionToggle.ts",
+        "apps/electron/src/renderer/components/right-sidebar/SessionFilesSection.tsx",
+        "apps/electron/src/renderer/components/ui/EditPopover.tsx",
+        "apps/electron/src/renderer/context/AppShellContext.tsx"
+      ],
+      [
+        "packages/shared/src/agent/backend/types.ts",
+        "packages/shared/src/agent/base-agent.ts",
+        "packages/shared/src/agent/session-scoped-tool-callback-registry.ts",
+        "packages/shared/src/agent/session-scoped-tools.ts",
+        "packages/shared/src/agent/spawn-session-tool.ts",
+        "packages/shared/src/mcp/mcp-pool.ts"
+      ],
+      [
+        "packages/ui/src/components/chat/TurnCard.tsx",
+        "packages/ui/src/components/chat/recovery-policy.ts",
+        "packages/ui/src/components/chat/turn-utils.ts",
+        "packages/ui/src/components/overlay/ActivityCardsOverlay.tsx",
+        "packages/ui/src/components/overlay/index.ts",
+        "packages/ui/src/lib/tool-parsers.ts"
+      ],
+      [
+        "packages/messaging-whatsapp-worker/src/media.ts",
+        "packages/messaging-whatsapp-worker/src/upsert.ts",
+        "packages/messaging-whatsapp-worker/src/worker.ts"
+      ],
+      [
+        "packages/ui/src/components/chat/InlineExecution.tsx",
+        "packages/ui/src/components/chat/index.ts",
+        "packages/ui/src/index.ts"
+      ],
+      [
+        "apps/electron/src/main/auto-update.ts",
+        "apps/electron/src/main/menu.ts"
+      ],
+      [
+        "apps/electron/src/main/deep-link.ts",
+        "apps/electron/src/main/window-manager.ts"
+      ],
+      [
+        "apps/electron/src/renderer/actions/keybinding-context.ts",
+        "apps/electron/src/renderer/context/FocusContext.tsx"
+      ],
+      [
+        "apps/electron/src/renderer/components/app-shell/ActiveTasksBar.tsx",
+        "apps/electron/src/renderer/components/app-shell/TaskActionMenu.tsx"
+      ],
+      [
+        "apps/electron/src/renderer/components/messaging/access/TelegramAccessSection.tsx",
+        "apps/electron/src/renderer/components/messaging/access/index.ts"
+      ],
+      [
+        "packages/server-core/src/bootstrap/headless-start.ts",
+        "packages/server-core/src/handlers/rpc/server.ts"
+      ],
+      [
+        "packages/session-tools-core/src/runtime/resolve-script-runtime.ts",
+        "packages/session-tools-core/src/runtime/sandbox-env.ts"
+      ],
+      [
+        "packages/shared/src/agent/browser-tool-runtime.ts",
+        "packages/shared/src/agent/browser-tools.ts"
+      ],
+      [
+        "packages/ui/src/components/markdown/Markdown.tsx",
+        "packages/ui/src/components/markdown/MarkdownDocBlock.tsx"
+      ],
+      [
+        "packages/ui/src/components/trajectory/TrajectoryOverview.tsx",
+        "packages/ui/src/components/trajectory/TrajectoryView.tsx"
+      ]
+    ],
+    "currentRuntime": [
+      [
+        "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx",
+        "apps/electron/src/renderer/components/ui/EditPopover.tsx"
+      ],
+      [
+        "packages/shared/src/sources/credential-manager.ts",
+        "packages/shared/src/sources/storage.ts"
+      ],
+      [
+        "packages/ui/src/components/markdown/Markdown.tsx",
+        "packages/ui/src/components/markdown/MarkdownDocBlock.tsx"
+      ]
+    ]
+  },
+  "baselineSha256": {
+    "storage": "05de25c2b995a9ce0bdae4d7aa49240b0aa82bf26eb897fde5349354c69623ff",
+    "manager": "2fec0f9a488fcf1c547e507aa1bd9e15d1fa36710bd3bb5932220486f756425f"
+  }
+}

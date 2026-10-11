@@ -1,4 +1,5 @@
 import { resolveFileFormat } from '@phaneris/shared/artifacts/browser'
+import { flushSync } from 'react-dom'
 import { FileText } from 'lucide-react'
 import { FilePreviewContent } from '@/components/content-panels/FilePreviewContent'
 import { MarkdownPopoutOverlay } from '@/components/content-panels/MarkdownPopoutOverlay'
@@ -9,7 +10,7 @@ import { useTheme } from '@/context/ThemeContext'
 import { useSetAtom, useStore, useAtomValue, useAtom } from 'jotai'
 import type { Session, Workspace, SessionEvent, Message, FileAttachment, StoredAttachment, PermissionRequest, CredentialRequest, CredentialResponse, AskUserRequest, AskUserResponse, SetupNeeds, SessionStatus, NewChatActionParams, ContentBadge, LlmConnectionWithStatus, PermissionModeState } from '../shared/types'
 import { generateMessageId, MAX_MESSAGE_PAYLOAD_BYTES, MAX_MESSAGE_PAYLOAD_MARGIN_BYTES } from '../shared/types'
-import type { SessionDraft, DraftAttachmentRef } from '@phaneris/shared/config'
+import type { SessionDraft, DraftAttachmentRef } from '@phaneris/shared/config/persisted-types';
 import type { SessionOptions, SessionOptionUpdates } from './hooks/useSessionOptions'
 import { defaultSessionOptions, mergeSessionOptions } from './hooks/useSessionOptions'
 import { useEventProcessor } from './event-processor'
@@ -30,6 +31,8 @@ import { useWindowCloseHandler } from '@/hooks/useWindowCloseHandler'
 import { useOnboarding } from '@/hooks/useOnboarding'
 import { useNotifications } from '@/hooks/useNotifications'
 import { useSession } from '@/hooks/useSession'
+import { useDraftPersistence } from '@/hooks/use-draft-persistence'
+import { flushInputDrafts } from '@/lib/input-draft-flush'
 import { useUpdateChecker } from '@/hooks/useUpdateChecker'
 import { NavigationProvider } from '@/contexts/NavigationContext'
 import { navigate, routes } from './lib/navigate'
@@ -307,6 +310,8 @@ function SessionLoadErrorScreen({
 
 export default function App() {
   const { t } = useTranslation()
+  const startupTranslateRef = useRef(t)
+  useEffect(() => { startupTranslateRef.current = t }, [t])
 
   // Publishes --titlebar-controls-inset so surfaces that put controls in the
   // window's top-right corner can clear the Windows caption buttons.
@@ -322,6 +327,7 @@ export default function App() {
 
   // App state: loading -> check auth -> onboarding or ready
   const [appState, setAppState] = useState<AppState>('loading')
+  const [workspaceDraftRestore, setWorkspaceDraftRestore] = useState<'idle' | 'loading' | 'failed'>('idle')
   const [setupNeeds, setSetupNeeds] = useState<SetupNeeds | null>(null)
 
   // Per-session Jotai atom setters for isolated updates
@@ -405,6 +411,40 @@ export default function App() {
   // during typing; attachments are stored as lightweight refs (path + name) and
   // hydrated via readFileAttachment() on session switch.
   const sessionDraftsRef = useRef<Map<string, SessionDraft>>(new Map())
+  const readDraftSnapshot = useCallback((id: string): SessionDraft =>
+    sessionDraftsRef.current.get(id) ?? { text: '' }, [])
+  const { schedule: schedulePersistDraft, flush: flushDrafts } = useDraftPersistence(readDraftSnapshot)
+  const restoreWorkspaceDrafts = useCallback(async () => {
+    setWorkspaceDraftRestore('loading')
+    try {
+      const drafts = await window.electronAPI.getAllDrafts()
+      sessionDraftsRef.current = new Map(Object.entries(drafts))
+      setWorkspaceDraftRestore('idle')
+    } catch {
+      // Binding is already acknowledged. Keep composers unmounted until a read retry succeeds.
+      setWorkspaceDraftRestore('failed')
+    }
+  }, [])
+
+  const handleInputChange = useCallback((sessionId: string, value: string) => {
+    const text = coerceInputText(value)
+    const existing = sessionDraftsRef.current.get(sessionId)
+    const existingAttachments = Array.isArray(existing?.attachments) ? existing.attachments : []
+    const nextDraft: SessionDraft = {
+      text,
+      ...(existingAttachments.length > 0
+        ? { attachments: existingAttachments }
+        : {}),
+    }
+    const isEmpty = !nextDraft.text && (!nextDraft.attachments || nextDraft.attachments.length === 0)
+    if (isEmpty) {
+      sessionDraftsRef.current.delete(sessionId)
+    } else {
+      sessionDraftsRef.current.set(sessionId, nextDraft)
+    }
+    schedulePersistDraft(sessionId)
+  }, [schedulePersistDraft])
+
   // Unified session options for all session-scoped settings
   const [sessionOptions, setSessionOptions] = useState<Map<string, SessionOptions>>(new Map())
 
@@ -706,8 +746,6 @@ export default function App() {
     refreshSessionFromServer,
   })
 
-  const DRAFT_SAVE_DEBOUNCE_MS = 500
-
   const resolveDefaultConnectionSlug = useCallback((connections: LlmConnectionWithStatus[]) => {
     return connections.find(c => c.isDefault)?.slug ?? connections[0]?.slug
   }, [])
@@ -742,7 +780,7 @@ export default function App() {
       // Still transition to ready — the app can recover via reconnect
     }
     setAppState('ready')
-  }, [])
+  }, [setWindowWorkspaceId])
 
   // Onboarding hook — onConfigSaved fires immediately when billing is saved,
   // ensuring connection state updates before the wizard closes.
@@ -800,7 +838,7 @@ export default function App() {
     }
 
     initialize()
-  }, [])
+  }, [setWindowWorkspaceId])
 
   // Session selection state
   const [sessionSelection, setSession] = useSession()
@@ -823,14 +861,14 @@ export default function App() {
   useEffect(() => {
     if (appState !== 'ready') return
 
-    window.electronAPI.getWorkspaces().then(setWorkspaces)
+    window.electronAPI.getWorkspaces().then(setWorkspaces).catch(error => console.warn('Workspace refresh failed; retaining current workspaces:', error))
     window.electronAPI.getNotificationsEnabled().then(setNotificationsEnabled).catch(() => {})
 
     // Show actionable toast for missing system dependencies (Windows only)
     window.electronAPI.getSystemWarnings().then((warnings) => {
       if (warnings.vcredistMissing) {
-        toast.warning(t('toast.vcRedistNotFound'), {
-          description: t('toast.vcRedistNotFoundDesc'),
+        toast.warning(startupTranslateRef.current('toast.vcRedistNotFound'), {
+          description: startupTranslateRef.current('toast.vcRedistNotFoundDesc'),
           duration: Infinity,
           action: {
             label: 'Install',
@@ -844,7 +882,7 @@ export default function App() {
     window.electronAPI.listLlmConnectionsWithStatus().then((connections) => {
       setLlmConnections(connections)
       setDefaultLlmConnectionSlug(resolveDefaultConnectionSlug(connections))
-    })
+    }).catch(error => console.warn('Connection refresh failed; retaining current connections:', error))
     // Load persisted input drafts into ref (no re-render needed).
     // Attachment files are not read here — hydration happens lazily when the session
     // is opened so app startup isn't delayed by reading potentially large files.
@@ -852,7 +890,7 @@ export default function App() {
       if (Object.keys(drafts).length > 0) {
         sessionDraftsRef.current = new Map(Object.entries(drafts))
       }
-    })
+    }).catch(error => console.warn('Draft loading failed; retaining pending drafts:', error))
   }, [appState, loadSessionsFromServer, resolveDefaultConnectionSlug])
 
   // Subscribe to LLM connections change events (live updates when models are fetched)
@@ -1185,6 +1223,7 @@ export default function App() {
     syncSessionOptionsFromSession,
     applyPermissionModeState,
     reconcilePermissionModeState,
+    handleInputChange,
   ])
 
   // Transport reconnect recovery — refresh session metadata plus active/processing
@@ -1559,7 +1598,7 @@ export default function App() {
         ]
       }))
     }
-  }, [sessionOptions, updateSessionById, skills, sources, windowWorkspaceId])
+  }, [updateSessionById, skills, sources, windowWorkspaceSlug, store])
 
   /**
    * Unified handler for all session option changes.
@@ -1581,17 +1620,6 @@ export default function App() {
     if (updates.thinkingLevel !== undefined) {
       // Sync thinking level change with backend (session-level, persisted)
       window.electronAPI.sessionCommand(sessionId, { type: 'setThinkingLevel', level: updates.thinkingLevel })
-    }
-  }, [sessionOptions])
-
-  // Handle input draft changes per session with debounced persistence
-  const draftSaveTimeoutRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
-
-  // Cleanup draft save timers on unmount to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      draftSaveTimeoutRef.current.forEach(clearTimeout)
-      draftSaveTimeoutRef.current.clear()
     }
   }, [])
 
@@ -1640,39 +1668,6 @@ export default function App() {
     )
     return results.filter((a): a is FileAttachment => a !== null)
   }, [])
-
-  // Write a debounced snapshot of the current ref entry to disk.
-  const schedulePersistDraft = useCallback((sessionId: string) => {
-    const existingTimeout = draftSaveTimeoutRef.current.get(sessionId)
-    if (existingTimeout) {
-      clearTimeout(existingTimeout)
-    }
-    const timeout = setTimeout(() => {
-      const draft = sessionDraftsRef.current.get(sessionId) ?? { text: '' }
-      window.electronAPI.setDraft(sessionId, draft)
-      draftSaveTimeoutRef.current.delete(sessionId)
-    }, DRAFT_SAVE_DEBOUNCE_MS)
-    draftSaveTimeoutRef.current.set(sessionId, timeout)
-  }, [])
-
-  const handleInputChange = useCallback((sessionId: string, value: string) => {
-    const text = coerceInputText(value)
-    const existing = sessionDraftsRef.current.get(sessionId)
-    const existingAttachments = Array.isArray(existing?.attachments) ? existing.attachments : []
-    const nextDraft: SessionDraft = {
-      text,
-      ...(existingAttachments.length > 0
-        ? { attachments: existingAttachments }
-        : {}),
-    }
-    const isEmpty = !nextDraft.text && (!nextDraft.attachments || nextDraft.attachments.length === 0)
-    if (isEmpty) {
-      sessionDraftsRef.current.delete(sessionId)
-    } else {
-      sessionDraftsRef.current.set(sessionId, nextDraft)
-    }
-    schedulePersistDraft(sessionId)
-  }, [schedulePersistDraft])
 
   const handleAttachmentsChange = useCallback((sessionId: string, attachments: FileAttachment[]) => {
     const existing = sessionDraftsRef.current.get(sessionId)
@@ -1863,7 +1858,7 @@ export default function App() {
       const message = error instanceof Error ? error.message : 'Unknown error'
       toast.error(t('toast.reconnectFailed'), { description: message })
     })
-  }, [])
+  }, [t])
 
   // Existing files enter the same durable Artifact/Workbench model as Agent
   // drafts. Markdown turn/activity pop-outs still use the lightweight Preview
@@ -1955,7 +1950,7 @@ export default function App() {
     } finally {
       setShowResetDialog(false)
     }
-  }, [onboarding, initializeSessions])
+  }, [onboarding, initializeSessions, setWindowWorkspaceId])
 
   // Handle workspace selection
   // - Default: switch workspace in same window (in-window switching)
@@ -1966,14 +1961,37 @@ export default function App() {
 
     if (openInNewWindow) {
       // Open (or focus) the window for the selected workspace
-      window.electronAPI.openWorkspace(workspaceId)
+      try { await window.electronAPI.openWorkspace(workspaceId) }
+      catch { toast.error(t('toast.failedToSwitchWorkspace')) }
     } else {
-      // Switch workspace in current window
-      // 1. Update the main process's window-workspace mapping
-      await window.electronAPI.switchWorkspace(workspaceId)
+      // A failed draft flush must leave the mounted session and its subscriptions intact.
+      try { flushInputDrafts(); await flushDrafts() }
+      catch { toast.error(t('toast.failedToSwitchWorkspace')); return }
+      // Dispose the old session's listeners before changing its RPC scope.
+      const oldSelection = sessionSelection.selected
+      const oldMetadata = store.get(sessionMetaMapAtom)
+      const oldIds = store.get(sessionIdsAtom)
+      flushSync(() => {
+        setSession({ selected: null })
+        store.set(sessionMetaMapAtom, new Map())
+        store.set(sessionIdsAtom, [])
+      })
+      try {
+        await window.electronAPI.switchWorkspace(workspaceId)
+      } catch {
+        flushSync(() => {
+          store.set(sessionMetaMapAtom, oldMetadata)
+          store.set(sessionIdsAtom, oldIds)
+          setSession({ selected: oldSelection })
+        })
+        toast.error(t('toast.failedToSwitchWorkspace'))
+        return
+      }
 
+      // Restore drafts before the target workspace can mount a composer.
       // 2. Update React state to trigger re-renders
       setWindowWorkspaceId(workspaceId)
+      await restoreWorkspaceDrafts()
 
       // 3. Clear selected session - the old session belongs to the previous workspace
       // and should not remain selected when switching to a new workspace.
@@ -1989,9 +2007,7 @@ export default function App() {
       // and ensures no stale state from old workspace persists)
       setSessionOptions(new Map())
 
-      // 6. Clear message drafts from previous workspace
-      // (prevents memory growth on repeated workspace switches)
-      sessionDraftsRef.current.clear()
+      // 6. The draft snapshot above belongs to the accepted workspace binding.
 
       // 7. Reset sources and skills atoms to empty
       // (prevents stale data flash during workspace switch - AppShell will reload)
@@ -2008,7 +2024,7 @@ export default function App() {
       // Sessions and theme will reload automatically due to windowWorkspaceId dependency
       // in useEffect hooks.
     }
-  }, [windowWorkspaceId, setSession, store])
+  }, [windowWorkspaceId, sessionSelection.selected, setSession, store, flushDrafts, setWindowWorkspaceId, restoreWorkspaceDrafts, t])
 
   // Handle workspace switch by slug (called by NavigationContext on popstate when ?ws= changes)
   const handleSwitchWorkspaceBySlug = useCallback((slug: string) => {
@@ -2020,7 +2036,7 @@ export default function App() {
 
   // Handle workspace refresh (e.g., after icon upload)
   const handleRefreshWorkspaces = useCallback(() => {
-    window.electronAPI.getWorkspaces().then(setWorkspaces)
+    window.electronAPI.getWorkspaces().then(setWorkspaces).catch(error => console.warn('Workspace refresh failed; retaining current workspaces:', error))
   }, [])
 
   // Handle cancel during onboarding
@@ -2153,7 +2169,13 @@ export default function App() {
   }), [handleOpenFile, handleOpenUrl, linkInterceptor.openFileExternal])
 
   // Loading state - show splash screen
-  if (appState === 'loading') {
+  if (workspaceDraftRestore === 'failed') {
+    return <div className="h-full flex flex-col items-center justify-center gap-4">
+      <p>{t('toast.failedToSwitchWorkspace')}</p>
+      <button type="button" onClick={() => { void restoreWorkspaceDrafts() }}>{t('common.retry')}</button>
+    </div>
+  }
+  if (appState === 'loading' || workspaceDraftRestore === 'loading') {
     return <SplashScreen isExiting={false} />
   }
 

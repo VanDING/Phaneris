@@ -6,7 +6,11 @@ import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
 import { runtimeBoundaryEvidence } from './runtime-boundary-evidence'
+import { verificationWorkflow } from './verification-artifacts'
+await verificationWorkflow('durable-runtime-pi', async evidence => {
 const repo = resolve(import.meta.dir, '../..')
+const distribution = process.env.PHANERIS_VERIFY_PI_DISTRIBUTION
+const moduleRoot = distribution ? resolve(distribution) : repo
 const fixture = mkdtempSync(join(tmpdir(), 'phaneris-independent-pi-'))
 process.env.PHANERIS_CONFIG_DIR = join(fixture, 'config')
 process.env.NODE_ENV = 'test'
@@ -28,21 +32,26 @@ const api = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(req) {
     : chunk({ content: 'INDEPENDENT_RUN_COMPLETE' }) + chunk({}, 'stop')
   return new Response(chunk({ role: 'assistant' }) + reply + 'data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } })
 } })
-const { PiAgent } = await import('../../packages/shared/src/agent/pi-agent')
-const { createDurableRuntime } = await import('../../packages/server-core/src/durable-runtime')
-const { PiRuntimeDriver, bindPiRuntime } = await import('../../packages/server-core/src/runtime-adapters/pi-driver')
+const { assembleSessionAgent } = await import(join(moduleRoot, 'packages/server-core/src/sessions/agent-assembly.ts')) as typeof import('../../packages/server-core/src/sessions/agent-assembly')
+const { createDurableRuntime } = await import(join(moduleRoot, 'packages/server-core/src/durable-runtime/index.ts')) as typeof import('../../packages/server-core/src/durable-runtime')
+const { PiRuntimeDriver, bindPiRuntime } = await import(join(moduleRoot, 'packages/server-core/src/runtime-adapters/pi-driver.ts')) as typeof import('../../packages/server-core/src/runtime-adapters/pi-driver')
 const runtime = createDurableRuntime()
 const scope = { sessionId, workspaceRootPath: workspace }
-const agent = new PiAgent({ provider: 'pi', providerType: 'pi_compat', authType: 'api_key', model: 'pi/fixture', miniModel: 'pi/fixture',
-  workspace: { id: 'independent', name: 'Independent runtime fixture', rootPath: workspace },
+const agent = assembleSessionAgent({
+  context: { provider: 'pi', authType: 'api_key', resolvedModel: 'pi/fixture', capabilities: { needsHttpPoolServer: true },
+    connection: { slug: 'fixture', name: 'Fixture', providerType: 'pi_compat', authType: 'api_key', createdAt: 1,
+      baseUrl: api.url.href, customEndpoint: { api: 'openai-completions' }, models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Loopback fixture', provider: 'pi', contextWindow: 128000, maxTokens: 4096 }] } },
+  hostRuntime: { appRootPath: moduleRoot, isPackaged: !!distribution, resourcesPath: distribution ? join(moduleRoot, 'resources') : undefined, nodeRuntimePath: distribution ? join(moduleRoot, 'vendor/bun/bun') : process.execPath },
+  config: { model: 'pi/fixture', miniModel: 'pi/fixture',
+  workspace: { id: 'independent', slug: 'independent', createdAt: 1, name: 'Independent runtime fixture', rootPath: workspace },
   session: { id: sessionId, workspaceRootPath: workspace, createdAt: 1, lastUsedAt: 1 }, isHeadless: true,
-  runtime: { paths: { piServer: join(repo, 'packages/pi-agent-server/dist/index.js'), node: process.execPath },
-    baseUrl: api.url.href, customEndpoint: { api: 'openai-completions' }, customModels: [{ id: 'fixture', contextWindow: 128000, maxTokens: 4096 }] },
   envOverrides: { PHANERIS_CONFIG_DIR: process.env.PHANERIS_CONFIG_DIR!, HOME: fixture, USERPROFILE: fixture, NODE_ENV: 'test' },
-  ...bindPiRuntime(runtime, scope),
+  },
+  callbacks: {}, resources: bindPiRuntime(runtime, scope),
 })
 const original = (agent as any).handleLine.bind(agent)
 ;(agent as any).handleLine = (line: string) => { try { wire.push(JSON.parse(line)) } catch {} return original(line) }
+let completed = false
 try {
   runtime.execution.subscribe(sessionId, { event: event => { events.push(event) } })
   const driver = await runtime.execution.ensureDriver(sessionId, async () => new PiRuntimeDriver(agent))
@@ -61,8 +70,7 @@ try {
   assert.ok(events.some(e => e.type === 'text_complete'))
   const tools = requests.map(r => (r.tools ?? []).map((t: any) => t.function.name).sort())
   assert.deepEqual(tools[0], tools.at(-1))
-  const output = join(repo, 'docs/verification/results/durable-runtime-boundary')
-  mkdirSync(output, { recursive: true })
+  const output = evidence.directory
   const backup = runtime.admin.backupDatabase(workspace, join(workspace, 'independent-pi-backup.db'))
   const db = join(output, 'independent-pi.db')
   writeFileSync(db, readFileSync(backup))
@@ -70,11 +78,18 @@ try {
   await runtime.close()
   assert.equal((agent as any).subprocess, null, 'Host close must release the real Pi subprocess')
   if (child) assert(child.exitCode !== null || child.signalCode, 'The retained Pi subprocess must exit before close returns')
-  writeFileSync(join(output, 'independent-pi.json'), JSON.stringify({ schemaVersion: 1, generatedAt: new Date().toISOString(), fixture,
-    ...runtimeBoundaryEvidence('bun run scripts/verification/durable-runtime-pi-workflow.ts', fixture), scope: 'Real Pi/SQLite/Host, deterministic loopback inference, no SessionManager',
+  evidence.json('independent-pi.json', { schemaVersion: 1, generatedAt: new Date().toISOString(),
+    ...runtimeBoundaryEvidence('bun run scripts/verification/durable-runtime-pi-workflow.ts', fixture), scope: 'Real Pi/SQLite/Host, deterministic loopback inference, no SessionManager', distribution: distribution ?? null,
     checks: ['independent execution', 'real read effect T1/T2', 'usage', 'two terminal turns', 'first-turn tool parity', 'canonical tool context'],
     providerCalls: requests.length, toolCalls: 1, tools, facts, wireTypes: wire.map(w => w.type),
     lifecycle: { closed: true, childPid: child?.pid, exitCode: child?.exitCode, signal: child?.signalCode },
-    database: { path: db, sha256: createHash('sha256').update(readFileSync(db)).digest('hex') } }, null, 2) + '\n')
+    database: { path: db, sha256: createHash('sha256').update(readFileSync(db)).digest('hex') } })
+  evidence.complete(['independent execution', 'real read effect T1/T2', 'usage', 'two terminal turns', 'first-turn tool parity', 'canonical tool context'],
+    ['live provider APIs', 'native Windows/Linux execution', 'signed installer/release'])
+  completed = true
   console.log(JSON.stringify({ passed: 6, output: join(output, 'independent-pi.json') }))
-} finally { await runtime.close(); api.stop(true) }
+} finally {
+  await runtime.close(); api.stop(true)
+  if (!completed) evidence.json('independent-pi.json', { completed, fixture, providerCalls: requests.length, wireTypes: wire.map(w => w.type), events })
+}
+})

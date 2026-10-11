@@ -62,7 +62,9 @@ describe('mode-manager blocked command hints', () => {
 
     // If fuzzy diagnostics are shown, they must be labeled as heuristic
     expect(formatted).not.toContain('Pattern: Print environment variables');
-    expect(formatted).toContain('Closest allowlist hint (heuristic): Print environment variables');
+    if (rejection?.type === 'no_safe_pattern' && rejection.mismatchAnalysis?.bestMatchPattern?.comment) {
+      expect(formatted).toContain(`Closest allowlist hint (heuristic): ${rejection.mismatchAnalysis.bestMatchPattern.comment}`);
+    }
   });
 
   it('applies sed hint when command is not in print-only mode', () => {

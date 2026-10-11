@@ -1,3 +1,4 @@
+import { validateRpcArguments } from '@phaneris/shared/protocol';
 /**
  * Chunked Transfer RPC Handlers
  *
@@ -30,7 +31,7 @@ interface TransferState {
   /** Decoded bytes accumulated so far (M-10 cap enforcement). */
   receivedBytes: number
   channel: string
-  args: any[]
+  args: unknown[]
   largeArgIndex: number
   checksum?: string
   timer: ReturnType<typeof setTimeout> | null
@@ -111,7 +112,7 @@ export function registerTransferHandlers(server: RpcServer): void {
     totalBytes: number
     chunkCount: number
     channel: string
-    args: any[]
+    args: unknown[]
     largeArgIndex: number
     checksum?: string
   }) => {
@@ -254,7 +255,7 @@ export function registerTransferHandlers(server: RpcServer): void {
       console.log(`[Transfer:server] Checksum verified: ${actual.slice(0, 12)}...`)
     }
 
-    let payload: any
+    let payload: unknown
     try {
       payload = JSON.parse(reassembled.toString('utf-8'))
     } catch {
@@ -277,7 +278,7 @@ export function registerTransferHandlers(server: RpcServer): void {
     await cleanupTransfer(transfer.id)
 
     try {
-      const result = await handler(ctx, ...args)
+      const result = await handler(ctx, ...validateRpcArguments(transfer.channel, args))
       console.log(`[Transfer:server] Handler ${transfer.channel} completed successfully`)
       return result
     } catch (err) {

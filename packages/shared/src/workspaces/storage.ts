@@ -22,7 +22,7 @@ import { expandPath, toPortablePath } from '../utils/paths.ts';
 import { atomicWriteFileSync, readJsonFileSync } from '../utils/files.ts';
 import { getDefaultStatusConfig, saveStatusConfig, ensureDefaultIconFiles } from '../statuses/storage.ts';
 import { getDefaultLabelConfig, saveLabelConfig } from '../labels/storage.ts';
-import { loadConfigDefaults } from '../config/storage.ts';
+import { loadConfigDefaults } from '../config/defaults.ts';
 import { isValidUserThemeId } from '../config/theme.ts';
 import { parsePermissionMode, DEFAULT_PERMISSION_MODES } from '../agent/mode-types.ts';
 import { normalizeThinkingLevel } from '../agent/thinking-levels.ts';

@@ -50,7 +50,7 @@ function Fixture() {
       <button onClick={() => setAutomatic(value => !value)}>Toggle automatic prompt</button>
     </div>
     <div className="h-64" data-testid="permission">
-      <PermissionRequest request={{ requestId: 'fixture-permission', toolName: 'Bash', command: canRemember ? 'python Safe.py' : 'git push --force', description: 'Approval scope verification', type: 'bash', canRemember }} onResponse={response => calls.push({ action: 'permission', response })} />
+      <PermissionRequest request={{ sessionId: 'fixture', requestId: 'fixture-permission', toolName: 'Bash', command: canRemember ? 'python Safe.py' : 'git push --force', description: 'Approval scope verification', type: 'bash', canRemember }} onResponse={response => calls.push({ action: 'permission', response })} />
     </div>
     <RtkUpdateDialog open={open} onOpenChange={setOpen} status={status} onStatusChange={setStatus} />
     {automatic && <RtkUpdatePrompt workspaceId="fixture" />}

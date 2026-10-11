@@ -86,7 +86,6 @@ describe('MessagingGatewayRegistry — config preservation across writes', () =>
     ])
 
     // Inject an adapter and bind a supergroup.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const state = (registry as any).workspaces.get(workspaceId)
     state.gateway.registerAdapter(makeFakeTelegramAdapter())
     await registry.bindWorkspaceSupergroup(workspaceId, 'telegram', '-100123', 'My SG')
@@ -104,7 +103,6 @@ describe('MessagingGatewayRegistry — config preservation across writes', () =>
     registry.setPlatformOwners(workspaceId, 'telegram', [
       { userId: 'first-owner', addedAt: Date.now() },
     ])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const state = (registry as any).workspaces.get(workspaceId)
     state.gateway.registerAdapter(makeFakeTelegramAdapter())
     await registry.bindWorkspaceSupergroup(workspaceId, 'telegram', '-100123', 'My SG')
@@ -147,7 +145,6 @@ describe('MessagingGatewayRegistry — config preservation across writes', () =>
     registry.setPlatformOwners(workspaceId, 'telegram', [
       { userId: 'first', addedAt: Date.now() },
     ])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const seeded = await (registry as any).seedFirstOwner(workspaceId, 'telegram', {
       userId: 'second',
       addedAt: Date.now(),
@@ -163,9 +160,7 @@ describe('MessagingGatewayRegistry — config preservation across writes', () =>
 describe('MessagingGatewayRegistry — lock-down migrates open bindings', () => {
   it('setPlatformAccessMode("owner-only") flips legacy open bindings to inherit', () => {
     const { registry, workspaceId } = makeRegistry()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const state = (registry as any).workspaces.get(workspaceId) ??
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (registry as any).bootstrapWorkspace(workspaceId)
     const store = state.gateway.getBindingStore()
     // Persist a binding in legacy 'open' mode (mimics migration).
@@ -185,9 +180,7 @@ describe('MessagingGatewayRegistry — lock-down migrates open bindings', () => 
 
   it('non-telegram bindings are not touched by the lock-down', () => {
     const { registry, workspaceId } = makeRegistry()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const state = (registry as any).workspaces.get(workspaceId) ??
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (registry as any).bootstrapWorkspace(workspaceId)
     const store = state.gateway.getBindingStore()
     const wa = store.bind('ws-test', 'sess-A', 'whatsapp', 'chan-A', undefined, {
@@ -202,9 +195,7 @@ describe('MessagingGatewayRegistry — lock-down migrates open bindings', () => 
 
   it('WeCom lock-down migrates only WeCom open bindings to inherit', () => {
     const { registry, workspaceId } = makeRegistry()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const state = (registry as any).workspaces.get(workspaceId) ??
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (registry as any).bootstrapWorkspace(workspaceId)
     const store = state.gateway.getBindingStore()
     const wecom = store.bind('ws-test', 'sess-A', 'wecom', 'group-1', undefined, {

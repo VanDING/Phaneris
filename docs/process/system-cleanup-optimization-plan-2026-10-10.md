@@ -1,8 +1,10 @@
 # 系统清理与优化计划
 
+2026-10-11 完整裁定：原 A–F/H 验收保持；G 的配置/Pi 切口已由[治理总计划](./architecture-code-governance-implementation-plan-2026-10-11.md) G3/G5 实施，当前结果见[完整台账](./governance-completion-2026-10-11.md)。以下规划正文保留历史基线，不再作为当前待批队列。
+
 计划日期：2026-10-10（Asia/Shanghai）
 源码基线：`61970997`；工作树另有 2 个未提交文件（`docs/verification/results/packaged-client-smoke.json`、`packaged-client-verification.json`）
-状态：**A、B、C、D、E、F、H 已实施（2026-10-11）**；G 待批且另立一波。本文其余部分保留规划时的核实结果；A、B 的实施产出见[故障矩阵](../verification/theme-and-architecture-gate-failure-matrix.md)与[验收说明](../verification/results/theme-architecture-gate/README.md)，C 见[故障矩阵](../verification/dependency-declaration-cleanup-failure-matrix.md)与[验收说明](../verification/results/dependency-declaration-cleanup/README.md)。实施中修正了本文多处判断，见 §7。
+状态：**A–H 已实施（2026-10-11）**；G 由治理 G3/G5 接续完成。本文其余部分保留规划时的核实结果；A、B 的实施产出见[故障矩阵](../verification/theme-and-architecture-gate-failure-matrix.md)与[验收说明](../verification/results/theme-architecture-gate/README.md)，C 见[故障矩阵](../verification/dependency-declaration-cleanup-failure-matrix.md)与[验收说明](../verification/results/dependency-declaration-cleanup/README.md)。实施中修正了本文多处判断，见 §7。
 
 关系：[Durable Runtime 边界实施设计](../architecture/durable-runtime-boundary.md) 已按 B0–B5 完成执行所有权迁移；本文承接它，处理它留下的**证据层**问题。本文修正并部分取代[四条工作流的排序规划](./workstream-sequencing-2026-10-06.md)（第 1 步已落地、第 5 步已由边界工程完成、第 2/3 步的 4 项仍 open，见 §2.6）。
 

@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-motion="full">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaneris 前端视觉系统审计 · 合并版</title>
+<style>
+/* ===========================================================================
+   本页面自身使用上游 v0.15.0 的设计语言实现(tokens → base → 组件),
+   以便在阅读分析的同时直接看到这套设计系统长什么样。
+   =========================================================================== */
+:root{
+  --background:#fcfdfe; --foreground:#1a1c1e;
+  --surface-navigator:#f2f3f4; --surface-paper:#fcfdfe; --surface-raised:#fcfdfe;
+  --surface-sunken:#f4f5f6; --surface-floating:#fcfdfe;
+  --fg-base:#1a1c1e;
+  --text:#1a1c1e; --text-secondary:#424446; --text-tertiary:#5d5f60; --text-disabled:#a3a4a6;
+  --border-subtle:color-mix(in srgb, var(--fg-base) 7%, transparent);
+  --border:color-mix(in srgb, var(--fg-base) 10%, transparent);
+  --border-strong:color-mix(in srgb, var(--fg-base) 16%, transparent);
+  --border-control:#8a8c8d;
+  --fill-hover:color-mix(in srgb, var(--fg-base) 4.5%, transparent);
+  --fill-pressed:color-mix(in srgb, var(--fg-base) 7.5%, transparent);
+  --fill-selected:color-mix(in srgb, var(--fg-base) 7%, transparent);
+  --accent-raw:#6f49ca; --accent-solid:#6f49ca; --on-accent:#fff; --accent-text:#6942c3;
+  --focus-ring:#6f49ca;
+  --accent-tint:color-mix(in srgb, var(--accent-raw) 10%, transparent);
+  --accent-tint-strong:color-mix(in srgb, var(--accent-raw) 20%, transparent);
+  --info-raw:#eb9f2c; --info-text:#865600; --success-raw:#2e9e52; --success-text:#006f30;
+  --destructive-raw:#db2c2b; --destructive-text:#bc0013;
+  --info-tint:color-mix(in srgb, var(--info-raw) 10%, transparent);
+  --success-tint:color-mix(in srgb, var(--success-raw) 10%, transparent);
+  --destructive-tint:color-mix(in srgb, var(--destructive-raw) 10%, transparent);
+  --info-border:color-mix(in srgb, var(--info-raw) 32%, transparent);
+  --success-border:color-mix(in srgb, var(--success-raw) 32%, transparent);
+  --destructive-border:color-mix(in srgb, var(--destructive-raw) 32%, transparent);
+  --elev-0:0 0 0 1px var(--border);
+  --elev-1:0 0 0 1px var(--border), 0 1px 2px rgb(0 0 0 / .04), 0 2px 8px -2px rgb(0 0 0 / .06);
+  --elev-2:0 0 0 1px var(--border), 0 1px 1px rgb(0 0 0 / .03), 0 4px 8px -4px rgb(0 0 0 / .08), 0 16px 32px -8px rgb(0 0 0 / .14);
+  --elev-3:0 0 0 1px var(--border), 0 2px 4px rgb(0 0 0 / .04), 0 12px 24px -6px rgb(0 0 0 / .12), 0 32px 64px -12px rgb(0 0 0 / .22);
+  --fs-caption:11px; --lh-caption:14px; --fs-label-sm:12px; --lh-label-sm:16px;
+  --fs-label:13px; --lh-label:18px; --fs-label-lg:14px; --lh-label-lg:20px;
+  --fs-copy:15px; --lh-copy:24px; --fs-copy-lg:16px; --lh-copy-lg:26px;
+  --fs-title:20px; --lh-title:28px; --fs-display:30px; --lh-display:36px;
+  --fs-mono:12px; --lh-mono:18px;
+  --tracking-copy:-.011em; --tracking-title:-.015em; --tracking-display:-.02em;
+  --dur-instant:0ms; --dur-micro:100ms; --dur-fast:150ms; --dur-base:200ms; --dur-slow:300ms; --dur-exit:100ms;
+  --ease-out:cubic-bezier(.23,1,.32,1); --ease-out-subtle:cubic-bezier(.25,.46,.45,.94);
+  --ease-standard:cubic-bezier(.4,0,.2,1); --ease-exit:cubic-bezier(.4,0,1,1);
+  --motion-scale:1; --gutter:16px; --card-pad:14px;
+  --font-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --font-serif:ui-serif,"New York","Source Serif 4","Iowan Old Style",Charter,Georgia,"Songti SC","Source Han Serif SC",serif;
+  --font-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+.dark{
+  --background:#151618; --foreground:#ecedef;
+  --surface-navigator:#0d0e10; --surface-paper:#151618; --surface-raised:#1a1b1d;
+  --surface-sunken:#111214; --surface-floating:#1f2022;
+  --fg-base:#ecedef; --text:#ecedef; --text-secondary:#c3c4c6; --text-tertiary:#9e9fa1; --text-disabled:#545557;
+  --border-control:#6a6b6d;
+  --accent-raw:#a18bf3; --accent-solid:#7e66ca; --on-accent:#fff; --accent-text:#b29fff;
+  --info-raw:#f2af48; --info-text:#f2af48; --success-raw:#5ac576; --success-text:#5ac576;
+  --destructive-raw:#f0666e; --destructive-text:#ff9aa0;
+  --elev-0:0 0 0 1px var(--border);
+  --elev-1:0 0 0 1px var(--border), 0 1px 2px rgb(0 0 0 / .3), 0 2px 8px -2px rgb(0 0 0 / .4);
+  --elev-2:0 0 0 1px var(--border), 0 2px 4px rgb(0 0 0 / .35), 0 12px 24px -6px rgb(0 0 0 / .5);
+  --elev-3:0 0 0 1px var(--border), 0 4px 8px rgb(0 0 0 / .4), 0 32px 64px -12px rgb(0 0 0 / .6);
+}
+@media (prefers-reduced-motion: reduce){ :root:not([data-motion="full"]){ --motion-scale:0; --dur-base:150ms; --dur-slow:150ms; } }
+
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:16px}
+body{
+  margin:0; background:var(--surface-navigator); color:var(--text);
+  font-family:var(--font-sans); font-size:var(--fs-copy); line-height:var(--lh-copy);
+  letter-spacing:var(--tracking-copy);
+  -webkit-font-smoothing:antialiased;
+}
+:focus-visible{outline:2px solid var(--focus-ring); outline-offset:2px}
+a{color:var(--accent-text); text-decoration:none}
+a:hover{text-decoration:underline}
+code,kbd,.mono{font-family:var(--font-mono); font-size:var(--fs-mono); line-height:var(--lh-mono)}
+code{background:var(--surface-sunken); border:1px solid var(--border-subtle); border-radius:5px; padding:1px 5px; overflow-wrap:anywhere}
+
+/* ── 外壳:navigator 画布 + 连接的 paper 卡 ───────────────────────────── */
+.shell{display:grid; grid-template-columns:274px minmax(0,1fr); min-height:100vh}
+.nav{
+  background:var(--surface-navigator); padding:20px 12px 40px; position:sticky; top:0;
+  height:100vh; overflow-y:auto; display:flex; flex-direction:column; gap:2px;
+}
+.nav .brand{display:flex; align-items:center; gap:10px; padding:0 10px 4px; }
+.brand-mark{width:28px;height:28px;border-radius:8px;background:var(--accent-solid);color:var(--on-accent);
+  display:grid;place-items:center;font-weight:600;font-size:13px;flex:none; box-shadow:var(--elev-1)}
+.brand-text{min-width:0}
+.brand-title{font-size:var(--fs-label-lg); line-height:var(--lh-label-lg); font-weight:600; letter-spacing:var(--tracking-title)}
+.brand-sub{font-size:var(--fs-label-sm); line-height:var(--lh-label-sm); color:var(--text-tertiary)}
+.nav-group{padding:14px 10px 4px; font-size:var(--fs-caption); line-height:var(--lh-caption);
+  text-transform:uppercase; letter-spacing:.06em; color:var(--text-tertiary)}
+.nav a{
+  display:flex; align-items:center; gap:8px; min-height:28px; padding:3px 8px; margin-left:-2px;
+  border-radius:7px; color:var(--text-secondary); font-size:var(--fs-label); line-height:var(--lh-label);
+  transition:background-color var(--dur-micro) var(--ease-out-subtle), color var(--dur-micro) var(--ease-out-subtle);
+}
+.nav a:hover{background:var(--fill-hover); color:var(--text); text-decoration:none}
+.nav a.active{background:var(--fill-selected); color:var(--text); font-weight:500}
+.nav a .tick{width:6px;height:6px;border-radius:99px;background:currentColor;opacity:.35;flex:none}
+.nav a.v-high .tick{background:var(--success-raw);opacity:1}
+.nav a.v-mid .tick{background:var(--info-raw);opacity:1}
+.nav a.v-no .tick{background:var(--destructive-raw);opacity:1}
+.nav-foot{margin-top:auto; padding:16px 10px 0; display:flex; flex-direction:column; gap:8px}
+
+.card-wrap{padding:0}
+.paper{
+  background:var(--surface-paper); min-height:100vh;
+  border-left:1px solid var(--border-subtle);
+  border-top-left-radius:14px; border-bottom-left-radius:14px;
+  box-shadow:var(--elev-1);
+}
+main{max-width:1000px; margin:0 auto; padding:28px 40px 96px}
+section{scroll-margin-top:20px}
+h1,h2,h3,h4{margin:0; letter-spacing:var(--tracking-title)}
+h1{font-family:var(--font-serif); font-size:clamp(30px,4.4vw,42px); line-height:1.14; letter-spacing:var(--tracking-display); font-weight:600}
+h2{font-size:var(--fs-title); line-height:var(--lh-title); font-weight:600}
+h3{font-size:var(--fs-label-lg); line-height:var(--lh-label-lg); font-weight:600}
+h4{font-size:var(--fs-label); line-height:var(--lh-label); font-weight:600; color:var(--text-secondary)}
+p{margin:0}
+.lede{font-size:var(--fs-copy-lg); line-height:var(--lh-copy-lg); color:var(--text-secondary)}
+.muted{color:var(--text-tertiary)}
+.sec{padding:44px 0 8px; border-top:1px solid var(--border-subtle); margin-top:36px}
+.sec:first-of-type{border-top:none; margin-top:0}
+.sec-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px}
+.sec-head h2{flex:1 1 auto}
+.sec-num{font-family:var(--font-mono); font-size:var(--fs-label-sm); color:var(--text-tertiary)}
+.sec > p{margin-top:10px; max-width:74ch; color:var(--text-secondary)}
+.sub{padding:26px 0 0; margin-top:26px; border-top:1px solid var(--border-subtle)}
+.sub:first-of-type{border-top:none; margin-top:8px}
+.sub > h3{margin-bottom:4px}
+.sub > p{margin-top:8px; max-width:76ch; color:var(--text-secondary)}
+.grid{display:grid; gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.card{background:var(--surface-raised); border-radius:10px; box-shadow:var(--elev-1); padding:var(--card-pad)}
+.card.sunken{background:var(--surface-sunken); box-shadow:var(--elev-0)}
+.card.flat{box-shadow:var(--elev-0); background:transparent}
+.card h4{margin-bottom:6px}
+.card p{font-size:var(--fs-label); line-height:var(--lh-label); color:var(--text-secondary)}
+.stat{background:var(--surface-raised); border-radius:10px; box-shadow:var(--elev-1); padding:12px 14px}
+.stat .n{font-size:var(--fs-title); line-height:var(--lh-title); font-weight:600; font-variant-numeric:tabular-nums}
+.stat .k{font-size:var(--fs-label-sm); line-height:var(--lh-label-sm); color:var(--text-tertiary); margin-top:2px}
+.chip{
+  display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px; border-radius:99px;
+  font-size:var(--fs-label-sm); line-height:1; font-weight:500; white-space:nowrap;
+  background:var(--fill-hover); color:var(--text-secondary);
+}
+.chip.ok{background:var(--success-tint); color:var(--success-text)}
+.chip.warn{background:var(--info-tint); color:var(--info-text)}
+.chip.bad{background:var(--destructive-tint); color:var(--destructive-text)}
+.chip.acc{background:var(--accent-tint); color:var(--accent-text)}
+.chip.solid{background:var(--accent-solid); color:var(--on-accent)}
+.chip.line{background:transparent; box-shadow:inset 0 0 0 1px var(--border)}
+.chip-row{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+table{width:100%; border-collapse:collapse; font-size:var(--fs-label); line-height:var(--lh-label)}
+th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--border-subtle); vertical-align:top}
+th{font-size:var(--fs-label-sm); color:var(--text-tertiary); font-weight:500; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap}
+tbody tr:hover{background:var(--fill-hover)}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; font-family:var(--font-mono); font-size:var(--fs-mono)}
+.tbl-wrap{overflow-x:auto; margin-top:12px}
+.bar{height:8px;border-radius:99px;background:var(--fill-hover);overflow:hidden;min-width:60px}
+.bar > i{display:block;height:100%;background:var(--accent-solid);border-radius:99px}
+.bar.ok > i{background:var(--success-raw)}
+.bar.bad > i{background:var(--destructive-raw)}
+ul.tight{margin:8px 0 0; padding-left:18px}
+ul.tight li{margin:4px 0; font-size:var(--fs-label); line-height:var(--lh-label); color:var(--text-secondary)}
+ul.tight li b,ul.tight li strong{color:var(--text)}
+.callout{border-radius:10px; padding:12px 14px; background:var(--surface-sunken); box-shadow:var(--elev-0); margin-top:12px}
+.callout.warn{background:var(--info-tint); box-shadow:inset 0 0 0 1px var(--info-border)}
+.callout.bad{background:var(--destructive-tint); box-shadow:inset 0 0 0 1px var(--destructive-border)}
+.callout.ok{background:var(--success-tint); box-shadow:inset 0 0 0 1px var(--success-border)}
+.callout p{font-size:var(--fs-label); line-height:var(--lh-label)}
+.callout h4{margin-bottom:4px}
+.verdict{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;
+  font-size:11px;font-weight:600;letter-spacing:.02em;font-family:var(--font-mono)}
+.v-HIGH{background:var(--success-tint);color:var(--success-text)}
+.v-MEDIUM{background:var(--info-tint);color:var(--info-text)}
+.v-LOW{background:var(--fill-hover);color:var(--text-secondary)}
+.v-NONE{background:var(--destructive-tint);color:var(--destructive-text)}
+.v-ALREADY{background:var(--accent-tint);color:var(--accent-text)}
+details{border-radius:10px; background:var(--surface-sunken); box-shadow:var(--elev-0); margin-top:10px}
+details > summary{cursor:pointer; padding:10px 14px; font-size:var(--fs-label); font-weight:500; color:var(--text-secondary); list-style:none}
+details > summary::-webkit-details-marker{display:none}
+details > summary::before{content:"▸"; display:inline-block; margin-right:8px; color:var(--text-tertiary); transition:transform var(--dur-fast) var(--ease-out)}
+details[open] > summary::before{transform:rotate(90deg)}
+details .body{padding:0 14px 14px; font-size:var(--fs-label); line-height:var(--lh-label); color:var(--text-secondary)}
+details .body ul{margin:6px 0 0}
+pre{margin:10px 0 0; padding:11px 13px; background:var(--surface-sunken); border-radius:8px;
+  box-shadow:inset 0 0 0 1px var(--border-subtle); overflow-x:auto;
+  font-family:var(--font-mono); font-size:var(--fs-mono); line-height:var(--lh-mono); color:var(--text)}
+pre .c{color:var(--text-tertiary)}
+tbody td:first-child code{overflow-wrap:normal}
+kbd.keycap{display:inline-flex;align-items:center;height:19px;padding:0 5px;border-radius:5px;
+  background:var(--surface-raised); box-shadow:var(--elev-1); font-size:11px;font-family:var(--font-mono); color:var(--text-secondary)}
+.btn{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:7px;
+  border:none;cursor:pointer;font-family:inherit;font-size:var(--fs-label);font-weight:500;
+  background:var(--surface-raised); color:var(--text); box-shadow:var(--elev-1);
+  transition:background-color var(--dur-micro) var(--ease-out-subtle), transform var(--dur-micro) var(--ease-out-subtle)}
+.btn:hover{background:color-mix(in srgb, var(--surface-raised), var(--fg-base) 5%)}
+.btn:active{transform:scale(calc(1 - .03 * var(--motion-scale)))}
+.btn.primary{background:var(--accent-solid); color:var(--on-accent)}
+.btn.primary:hover{background:color-mix(in srgb, var(--accent-solid), var(--fg-base) 8%)}
+.btn.ghost{background:transparent; box-shadow:none; color:var(--text-secondary)}
+.btn.ghost:hover{background:var(--fill-hover); color:var(--text)}
+.seg{display:inline-flex; background:var(--fill-hover); border-radius:9px; padding:2px; gap:2px}
+.seg button{height:26px;padding:0 12px;border:none;border-radius:7px;background:transparent;cursor:pointer;
+  font-family:inherit;font-size:var(--fs-label);color:var(--text-secondary);font-weight:500;
+  transition:background-color var(--dur-micro) var(--ease-out-subtle)}
+.seg button[aria-pressed="true"]{background:var(--surface-raised);color:var(--text);box-shadow:var(--elev-0)}
+.seg button:hover[aria-pressed="false"]{color:var(--text)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}
+select,input[type=search]{height:28px;border:none;border-radius:7px;padding:0 9px;background:var(--surface-sunken);
+  box-shadow:inset 0 0 0 1px var(--border);color:var(--text);font-family:inherit;font-size:var(--fs-label)}
+.hero{padding:6px 0 4px}
+.hero .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.demo{border-radius:10px;overflow:hidden;box-shadow:var(--elev-1);background:var(--surface-paper)}
+.demo-head{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border-subtle);
+  font-size:var(--fs-label-sm);color:var(--text-tertiary)}
+.demo-body{padding:12px}
+.demo.old{background:var(--surface-sunken)}
+/* 旧转录:卡片 + 药丸 + 工具行 */
+.old-turn{background:var(--surface-raised);border-radius:8px;box-shadow:var(--elev-1);padding:10px 12px}
+.old-pill{display:inline-flex;gap:6px;align-items:center;height:22px;padding:0 9px;border-radius:99px;
+  background:var(--fill-hover);font-size:var(--fs-label-sm);color:var(--text-secondary)}
+.old-tool{display:flex;gap:8px;align-items:center;padding:5px 0;font-size:var(--fs-label);color:var(--text-secondary)}
+.old-badge{width:16px;height:16px;border-radius:5px;background:var(--success-tint);flex:none}
+/* 新转录:安静的工作日志行 + 平铺答案 */
+.wl{display:flex;align-items:center;gap:8px;min-height:28px;padding:2px 8px 2px 6px;border-radius:7px;
+  font-size:var(--fs-label);color:var(--text-secondary);cursor:pointer;
+  transition:background-color var(--dur-micro) var(--ease-out-subtle)}
+.wl:hover{background:var(--fill-hover)}
+.wl .lead{color:var(--text);font-weight:500}
+.wl .chev{width:14px;color:var(--text-tertiary);transition:transform var(--dur-fast) var(--ease-out)}
+.wl.open .chev{transform:rotate(90deg)}
+.wl-fail{height:19px;padding:0 7px;border-radius:99px;background:var(--destructive-tint);color:var(--destructive-text);
+  font-size:11px;display:inline-flex;align-items:center}
+.answer{margin-top:10px;font-size:var(--fs-copy);line-height:var(--lh-copy)}
+.well{margin-top:10px;background:var(--surface-sunken);border-radius:8px;box-shadow:inset 0 0 0 1px var(--border-subtle);padding:10px 12px}
+.well-head{display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-label-sm);color:var(--text-tertiary)}
+.well pre{background:transparent;box-shadow:none;padding:6px 0 0;margin:0}
+.diff{font-family:var(--font-mono);font-size:var(--fs-mono);line-height:var(--lh-mono);margin-top:8px}
+.diff .l{display:block;padding:0 6px;border-radius:3px}
+.diff .add{background:color-mix(in srgb, var(--success-raw) 12%, transparent)}
+.diff .del{background:color-mix(in srgb, var(--destructive-raw) 12%, transparent)}
+.inline-err{display:flex;gap:8px;align-items:flex-start;margin-top:10px;padding:9px 11px;border-radius:8px;
+  background:var(--destructive-tint);box-shadow:inset 0 0 0 1px var(--destructive-border);
+  font-size:var(--fs-label);color:var(--destructive-text)}
+.composer{border-radius:12px;background:var(--surface-raised);box-shadow:var(--elev-1);padding:10px 12px}
+.composer .ph{color:var(--text-tertiary);font-size:var(--fs-copy)}
+.composer .bar2{display:flex;align-items:center;gap:6px;margin-top:10px}
+.tchip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:7px;
+  font-size:var(--fs-label-sm);color:var(--text-secondary);
+  transition:background-color var(--dur-micro) var(--ease-out-subtle)}
+.tchip:hover{background:var(--fill-hover)}
+.tchip.solid{background:var(--surface-sunken);box-shadow:inset 0 0 0 1px var(--border-subtle)}
+.send{margin-left:auto;width:26px;height:26px;border-radius:7px;background:var(--accent-solid);color:var(--on-accent);
+  display:grid;place-items:center;font-size:12px}
+.shell-demo{display:grid;grid-template-columns:132px 1fr;gap:0;border-radius:10px;overflow:hidden;box-shadow:var(--elev-1)}
+.shell-demo .navd{background:var(--surface-navigator);padding:9px}
+.shell-demo .paperd{background:var(--surface-paper);padding:9px;border-left:1px solid var(--border-subtle)}
+.rowd{height:20px;border-radius:5px;background:var(--fill-hover);margin:5px 0}
+.rowd.sel{background:var(--fill-selected)}
+.rowd.w80{width:80%} .rowd.w60{width:60%} .rowd.w40{width:40%}
+.emptystate{text-align:center;padding:26px 16px}
+.emptystate .serif{font-family:var(--font-serif);font-size:var(--fs-display);line-height:var(--lh-display);letter-spacing:var(--tracking-display)}
+.emptystate .hint{margin-top:8px;font-size:var(--fs-label);color:var(--text-tertiary)}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:12px}
+.sw{border-radius:8px;box-shadow:var(--elev-0);overflow:hidden;background:var(--surface-paper)}
+.sw .box{height:38px}
+.sw .cap{padding:5px 8px;font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);line-height:1.35}
+.scale-demo{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.scale-demo div{display:flex;align-items:baseline;gap:10px}
+.scale-demo .nm{font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);width:96px;flex:none}
+.matrix td:first-child{min-width:210px}
+.matrix .why{color:var(--text-tertiary);font-size:var(--fs-label-sm);line-height:1.45}
+.hide{display:none !important}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:var(--fs-label-sm);color:var(--text-tertiary);margin-top:10px}
+.wave{border-left:2px solid var(--border-strong); padding:2px 0 2px 16px; margin-left:6px}
+.wave + .wave{margin-top:18px}
+.wave h4{color:var(--text)}
+.wave .when{font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary)}
+.toc-note{font-size:var(--fs-label-sm);color:var(--text-tertiary);padding:0 10px}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .nav{position:static;height:auto;flex-direction:column}
+  .paper{border-left:none;border-radius:0}
+  main{padding:20px 18px 72px}
+}
+</style>
+
+<style>
+/* ===== 合并自《逐像素微优化清单》 ===== */
+
+/* 本页专用 */
+.measure-table td:first-child{white-space:nowrap}
+.finding{border-radius:10px;box-shadow:var(--elev-1);background:var(--surface-raised);padding:var(--card-pad);margin-top:14px}
+.finding h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.finding .q{font-size:var(--fs-label);color:var(--text-tertiary);font-weight:400}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin-top:10px;font-size:var(--fs-label);line-height:var(--lh-label)}
+.kv dt{color:var(--text-tertiary);white-space:nowrap;font-family:var(--font-mono);font-size:11.5px;padding-top:1px}
+.kv dd{margin:0;color:var(--text-secondary)}
+.kv dd b{color:var(--text)}
+.mono{font-family:var(--font-mono);font-size:11.5px}
+.aba{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:820px){.aba{grid-template-columns:1fr}}
+.aba .pane{border-radius:9px;overflow:hidden;box-shadow:var(--elev-0)}
+.aba .cap{font-size:11px;font-family:var(--font-mono);padding:6px 9px;color:var(--text-tertiary);background:var(--surface-sunken)}
+.aba .canvas{padding:14px}
+/* 圆角对比 */
+.rr{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.rr figure{margin:0;text-align:center}
+.rr .box{width:64px;height:52px;background:var(--surface-raised);box-shadow:inset 0 0 0 1px var(--border);}
+.rr figcaption{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);margin-top:5px}
+/* 边框/阴影对比 */
+.edge-demo{display:grid;gap:10px}
+.edge-demo .cell{display:grid;grid-template-columns:88px 1fr;gap:10px;align-items:center}
+.edge-demo .lbl{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);text-align:right}
+.edge-demo .art{height:44px;border-radius:9px;position:relative}
+/* 顶部对齐演示 */
+.align-demo{display:grid;grid-template-columns:120px 1fr;gap:0;border-radius:9px;overflow:hidden;box-shadow:var(--elev-1)}
+.align-demo .sb{background:var(--surface-navigator);padding:0 8px}
+.align-demo .pn{background:var(--surface-paper);border-left:1px solid var(--border-subtle);padding:0 10px}
+.align-demo .ph{height:34px;display:flex;align-items:center;font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono)}
+.align-demo .row{height:26px;border-radius:6px;margin-bottom:6px;background:var(--fill-hover)}
+.align-demo .btnrow{background:var(--surface-raised);box-shadow:var(--elev-1);display:flex;align-items:center;gap:6px;padding:0 8px;font-size:11px;height:30px}
+.align-demo .off{height:7px}
+/* 列宽演示 */
+.col-demo{border-radius:9px;overflow:hidden;box-shadow:var(--elev-0);background:var(--surface-paper)}
+.col-demo .band{background:var(--surface-sunken);padding:12px}
+.col-demo .col{margin:0 auto;background:var(--surface-paper);box-shadow:inset 0 0 0 1px var(--border);border-radius:6px;padding:10px 12px;font-size:11.5px;line-height:1.6;color:var(--text-secondary)}
+.tier{border-left:2px solid var(--border-strong);padding:2px 0 2px 14px;margin-left:4px}
+.tier+.tier{margin-top:14px}
+.p0{border-left-color:var(--destructive-raw)}
+.p1{border-left-color:var(--info-raw)}
+.p2{border-left-color:var(--success-raw)}
+
+/* ===== 合并自《四问回复与全项目审计》 ===== */
+
+.qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px}
+.qa .card{cursor:pointer}
+.qa .card:hover{box-shadow:inset 0 0 0 1px var(--border-strong),var(--elev-1)}
+.big{font-size:26px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.small{font-size:var(--fs-label-sm);color:var(--text-tertiary)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.tok-ledger td:first-child{white-space:nowrap}
+.yes{color:var(--success-text);font-weight:600}
+.no{color:var(--destructive-text);font-weight:600}
+.part{color:var(--info-text);font-weight:600}
+.bar2{height:7px;border-radius:99px;background:var(--fill-hover);overflow:hidden;margin-top:6px}
+.bar2>i{display:block;height:100%}
+.sidebar-demo{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}
+.sbcol{width:200px;border-radius:9px;overflow:hidden;box-shadow:var(--elev-0);background:var(--surface-navigator)}
+.sbcol .it{display:flex;align-items:center;gap:8px;padding:0 8px;font-size:13px;color:var(--text-secondary)}
+.sbcol .hdr{padding:6px 10px;font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);background:var(--surface-paper)}
+.swatch-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:10px}
+.swatch-strip div{border-radius:8px;padding:8px 10px;font-family:var(--font-mono);font-size:10.5px;box-shadow:var(--elev-0)}
+
+</style>
+<style>
+/* ===== 合并版专用:审计地图 / 图表 / 侧栏全貌 ===== */
+.map td:first-child{white-space:nowrap;font-weight:600}
+.map .rate{font-family:var(--font-mono);font-size:11px;padding:1px 6px;border-radius:5px;white-space:nowrap}
+.r-bad{background:var(--destructive-tint);color:var(--destructive-text)}
+.r-mid{background:var(--info-tint);color:var(--info-text)}
+.r-ok{background:var(--success-tint);color:var(--success-text)}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin-top:12px}
+.toc a{display:block;border-radius:9px;box-shadow:var(--elev-1);background:var(--surface-raised);padding:10px 12px;text-decoration:none;color:inherit}
+.toc a:hover{box-shadow:inset 0 0 0 1px var(--border-strong),var(--elev-1);text-decoration:none}
+.toc .no{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary)}
+.toc .ti{font-weight:600;font-size:var(--fs-label-lg);margin:2px 0 3px}
+.toc .ds{font-size:var(--fs-label-sm);color:var(--text-secondary);line-height:1.5}
+.chart{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.chart .row{display:grid;grid-template-columns:132px 1fr 54px;gap:10px;align-items:center;font-size:var(--fs-label-sm)}
+.chart .lb{color:var(--text-secondary);text-align:right;font-family:var(--font-mono);font-size:10.5px}
+.chart .vl{font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);text-align:right}
+.chart .tr{height:9px;border-radius:99px;background:var(--fill-hover);overflow:hidden}
+.chart .tr>i{display:block;height:100%;background:var(--accent-solid)}
+.chart .tr.bad>i{background:var(--destructive-raw)}
+.chart .tr.mid>i{background:var(--info-raw)}
+.scale-ledger td:nth-child(2),.scale-ledger td:nth-child(3){white-space:nowrap}
+.target{background:var(--surface-sunken);border-radius:9px;padding:10px 12px;margin-top:10px;box-shadow:inset 0 0 0 1px var(--border-subtle)}
+.target code{background:var(--surface-paper)}
+.sidebar-full{display:grid;grid-template-columns:230px 1fr;gap:14px;align-items:start}
+@media (max-width:820px){.sidebar-full{grid-template-columns:1fr}}
+.sbframe{border-radius:10px;overflow:hidden;box-shadow:var(--elev-1);background:var(--surface-navigator)}
+.sbframe .item{display:flex;align-items:center;gap:9.5px;padding-left:18.5px;font-size:13px;color:var(--text-secondary)}
+.sbframe .item.sel{background:color-mix(in srgb,var(--fg-base) 7%,transparent);margin:0 7.5px;border-radius:6px;padding-left:11px}
+.sbframe .btn{margin:6px 6px 6px 6.5px;height:40px;border-radius:6px;background:var(--surface-raised);box-shadow:var(--elev-0);display:flex;align-items:center;gap:8px;padding-left:12px;font-size:13px}
+.sbframe .foot{padding:8px 12px;font-size:13px;color:var(--text-secondary);border-top:1px solid var(--border-subtle)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:820px){.duo{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+<div class="shell">
+  <nav class="nav">
+    <div class="brand">
+      <span class="brand-mark">P</span>
+      <span class="brand-text">
+        <span class="brand-title">前端视觉系统审计</span>
+        <span class="brand-sub">合并版 · 只读分析</span>
+      </span>
+    </div>
+    <div class="nav-group">总览</div>
+    <a href="#summary" class="v-high"><span class="tick"></span>摘要与审计地图</a>
+    <a href="#baseline" class="v-mid"><span class="tick"></span>实测基线(逐像素)</a>
+    <div class="nav-group">正文 · 八个维度</div>
+    <a href="#surfaces" class="v-high"><span class="tick"></span>一 · 面(surfaces)</a>
+    <a href="#scales" class="v-high"><span class="tick"></span>二 · 尺度(scales)</a>
+    <a href="#grid" class="v-high"><span class="tick"></span>三 · 栅格与对齐</a>
+    <a href="#sidebar" class="v-high"><span class="tick"></span>四 · 侧栏专章</a>
+    <a href="#states" class="v-mid"><span class="tick"></span>五 · 状态与反馈</a>
+    <a href="#a11y" class="v-high"><span class="tick"></span>六 · 无障碍</a>
+    <a href="#systems" class="v-high"><span class="tick"></span>七 · 体系与门禁</a>
+    <a href="#debt" class="v-mid"><span class="tick"></span>八 · 债务与趋势</a>
+    <div class="nav-group">收束</div>
+    <a href="#plan" class="v-high"><span class="tick"></span>修复路线与目标态</a>
+    <a href="#method" class="v-mid"><span class="tick"></span>方法与不确定项</a>
+    <div class="nav-foot">
+      <div class="chip-row"><button class="btn ghost" id="themeBtn">◐ 明/暗</button></div>
+      <div class="toc-note">本页合并了原先两份:<br>《逐像素微优化清单》+《四问回复与全项目审计》</div>
+    </div>
+  </nav>
+  <div class="card-wrap">
+  <div class="paper">
+  <main>
+
+<section class="sec" id="summary">
+  <div class="hero">
+    <div class="meta">
+      <span class="chip solid">系统性审计 · 一份读完</span>
+      <span class="chip line">截图 @2x 逐像素 + 396 个组件文件统计</span>
+      <span class="chip line">只读分析产物 · 分析过程未改动源码</span>
+    </div>
+    <h1>前端视觉系统审计</h1>
+    <p class="lede" style="margin-top:14px;max-width:80ch">
+      这份文档把先前分开看的两件事合成一条主线:<b>你在截图上看到的问题</b>(面太灰、圆角不一致、顶部不齐、边界不清、卡片过宽、侧栏偏大)
+      与<b>全项目统计出来的成因</b>(尺度没有 token、六类体系并存、门禁有盲区、无障碍缺陷、债务随新功能增加)。
+      它们不是十来个孤立毛病,而是同一套"缺失的约束"在八个维度上的投影。
+    </p>
+  </div>
+
+  <div class="target" style="margin-top:18px">
+    <h4 style="margin-bottom:6px">三个根因 + 一条趋势(全文都围绕这四句)</h4>
+    <ul class="tight" style="margin-top:4px">
+      <li><b>根因 A · 亮色主题没有"面"的层次。</b>面板、卡片、输入框全是 <code>#FFFFFF</code>;画面里唯一的"灰"来自 macOS 材质(实测 <code>#E8E8E9</code>,随壁纸变化)。→ 解释"背景偏灰"与"边界不清"。</li>
+      <li><b>根因 B · 没有共享的内容边与栅格。</b>侧栏首行比面板顶边低 7.0、文字中心低 5.5;转录列 20px 内距 vs 输入区 16px;列宽 840。<b>侧栏本身也在这条里</b>(行高由内距推导,不是命名尺寸)。→ 解释"顶部不齐""卡片过宽""侧栏偏大"。</li>
+      <li><b>根因 C · 尺度没有 token,只有基数。</b>引擎给"一个 6px / 一个 15px",不给"可选集合";圆角 328 处字面量、10 个取值;字号 590 处、8+ 取值;填充 204 处、12 个 alpha。→ 解释"圆角不一致",也是所有细节问题的上游。</li>
+      <li><b>趋势 · 债务在增长,不是遗留。</b>违规最集中的文件里,除 AppShell / TurnCard 外全是我们最近新写的功能(session-decisions、trajectory、kanban)。<b>不做约束,半年后数字会回到今天。</b></li>
+    </ul>
+  </div>
+
+  <h4 style="margin-top:26px">审计地图:八个维度 × 现状 × 关键数字</h4>
+  <p class="small" style="margin-top:4px">这张表是全文的目录。每一行都对应后面的一章,点章节号可跳转。</p>
+  <div class="tbl-wrap">
+    <table class="map">
+      <thead><tr><th>维度</th><th>现状</th><th>关键实测数字</th><th>优先级</th><th>章节</th></tr></thead>
+      <tbody>
+        <tr><td>一 · 面(surfaces)</td><td><span class="rate r-bad">缺失</span></td>
+          <td>画布 #E8E8E9(系统材质,非我们定义)· 5 个面值全是 #FFFFFF(或近白)· 面板外阴影峰值 Δ3</td>
+          <td><span class="rate r-bad">P0–P1</span></td><td><a href="#surfaces">§1</a></td></tr>
+        <tr><td>二 · 尺度(scales)</td><td><span class="rate r-bad">缺失</span></td>
+          <td>圆角 328 处 / 10 取值 · 字号 590 处 / 8+ 取值 · 任意间距 407 处 · 填充 204 处 / 12 alpha · 阴影 84% 挤在最弱档</td>
+          <td><span class="rate r-bad">P2(根)</span></td><td><a href="#scales">§2</a></td></tr>
+        <tr><td>三 · 栅格与对齐</td><td><span class="rate r-mid">部分</span></td>
+          <td>侧栏首行 +7.0 css · 文字中心 +5.5 · 卡片 804 vs 输入卡 811 · 列宽 840 · 窗口四边内距 1 / 4.5 / 3 / 0</td>
+          <td><span class="rate r-bad">P0–P1</span></td><td><a href="#grid">§3</a></td></tr>
+        <tr><td>四 · 侧栏</td><td><span class="rate r-mid">偏大</span></td>
+          <td>宽 256(默认 220 / 上游 232)· 行高 38–42(上游 28)· 图标 16(上游 14)· 文字左内距 43.5(上游模型 38)· 导航栈占 380 css</td>
+          <td><span class="rate r-bad">P1</span></td><td><a href="#sidebar">§4</a></td></tr>
+        <tr><td>五 · 状态与反馈</td><td><span class="rate r-mid">不统一</span></td>
+          <td>12 个 alpha 取值 · 选中态两种强度(7% / 3%)· hover 填充仅 4.5%(暗 6%)· 气泡与画布只差 11 阶</td>
+          <td><span class="rate r-mid">P1</span></td><td><a href="#states">§5</a></td></tr>
+        <tr><td>六 · 无障碍</td><td><span class="rate r-bad">有系统缺陷</span></td>
+          <td>全局关闭原生焦点环 + 环仅 1px/0 偏移 + 192 处 outline-none · 对比度 6/56 项不达标 · h-5/6/7 目标 228 处</td>
+          <td><span class="rate r-bad">P0</span></td><td><a href="#a11y">§6</a></td></tr>
+        <tr><td>七 · 体系与门禁</td><td><span class="rate r-mid">并存/有盲区</span></td>
+          <td>颜色三套(shadcn 1394 / 前景阶梯 1248 / 主题层 146,fill·surface 为 0)· z-[N] 漏网 22 处 · 角色层覆盖 35/396</td>
+          <td><span class="rate r-bad">P2</span></td><td><a href="#systems">§7</a></td></tr>
+        <tr><td>八 · 债务与趋势</td><td><span class="rate r-mid">在增长</span></td>
+          <td>硬编码合计 2,244 处 · 分布 renderer 655 / ui 263 / webui 6 / viewer 0 · Top 文件多为新功能</td>
+          <td><span class="rate r-mid">持续</span></td><td><a href="#debt">§8</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid g4" style="margin-top:18px">
+    <div class="stat"><div class="n">2,244</div><div class="k">前端硬编码总量</div></div>
+    <div class="stat"><div class="n">15</div><div class="k">同时存在的圆角取值</div></div>
+    <div class="stat"><div class="n">6 / 56</div><div class="k">对比度检查不达标项</div></div>
+    <div class="stat"><div class="n">35 / 396</div><div class="k">使用角色层的组件文件</div></div>
+  </div>
+
+  <h4 style="margin-top:26px">怎么读这份文档</h4>
+  <div class="toc">
+    <a href="#baseline"><span class="no">§0</span><div class="ti">实测基线</div><div class="ds">标定方法 + 完整骨架表 + 色值表。后面每一章的"实测"都引用这里。</div></a>
+    <a href="#surfaces"><span class="no">§1</span><div class="ti">面:一切边界问题之源</div><div class="ds">背景偏灰的真实成因、面板/卡片边界为何不清、着色决策的三个方案与量化后果。</div></a>
+    <a href="#scales"><span class="no">§2</span><div class="ti">尺度账本:六类尺度一张表</div><div class="ds">圆角/字号/间距/填充/阴影/时长——现状分布、目标四级、迁移方法。这是元问题所在。</div></a>
+    <a href="#grid"><span class="no">§3</span><div class="ti">栅格与对齐</div><div class="ds">内容边、顶部对齐、列宽、窗口内距、面板间隙:一条看不见的线为什么没有建立起来。</div></a>
+    <a href="#sidebar"><span class="no">§4</span><div class="ti">侧栏专章(间距 + 大小)</div><div class="ds">宽度、行高、图标、文字内距、按钮、底部行、总占高,与上游逐项对照。</div></a>
+    <a href="#states"><span class="no">§5</span><div class="ti">状态与反馈</div><div class="ds">12 个 alpha、两种选中强度、hover 可见性、气泡与背景的关系。</div></a>
+    <a href="#a11y"><span class="no">§6</span><div class="ti">无障碍</div><div class="ds">焦点可见性(最大缺陷)、对比度矩阵、触摸目标、减少动效。</div></a>
+    <a href="#systems"><span class="no">§7</span><div class="ti">体系与门禁</div><div class="ds">token 归属的三层答案、六类竞争体系、我们 lint 规则的盲区与覆盖率。</div></a>
+    <a href="#debt"><span class="no">§8</span><div class="ti">债务与趋势</div><div class="ds">2,244 处的分布、Top 违规文件、按应用分布,以及"为什么它会涨回来"。</div></a>
+    <a href="#plan"><span class="no">§9</span><div class="ti">修复路线与目标态</div><div class="ds">P0/P1/P2 清单 + "改完之后各维度长什么样"的对照表。</div></a>
+  </div>
+</section>
+
+<section class="sec" id="baseline">
+  <div class="sec-head"><span class="sec-num">§0</span><h2>实测基线</h2></div>
+  <p>后文所有"实测"都来自这一节。方法:在你提供的截图(3424×2382)上逐像素扫描——颜色取样、水平/垂直边界扫描、圆角弧线最小二乘拟合(残差 &lt; 0.35px 才采信);
+  代码侧用正则统计命中次数(口径见 §10)。</p>
+
+  <div class="duo" style="margin-top:14px">
+    <div class="card">
+      <h4>标定:为什么是 @2x</h4>
+      <ul class="tight">
+        <li>窗口内宽实测 3199 原始像素 ↔ 若为 <b>1600</b> css 则比例 <b>1.9994</b>;</li>
+        <li>侧栏实测 512 原始像素 ↔ <b>恰好 256</b> css。</li>
+        <li>两处独立标定互证 → 取 <b>@2x</b>,下文所有长度 = 原始像素 ÷ 2。</li>
+        <li>反例:交通灯按钮实测 28px(=14pt),说明这台机器的窗口按钮比经典 12pt 大,所以<b>不用它标定</b>(按 12pt 会得到 2.33 的错误比例)。</li>
+      </ul>
+    </div>
+    <div class="card sunken">
+      <h4>色值实测(截图上的真实像素)</h4>
+      <div class="kv">
+        <dt>标题栏 / 侧栏</dt><dd><b>#E8E8E9</b> —— 两者同色,来自 macOS 材质</dd>
+        <dt>会话列表面板 / 内容面板</dt><dd><b>#FFFFFF</b></dd>
+        <dt>面板边框</dt><dd><b>rgb(227,229,236)</b> = <code>#E3E5EC</code>(与 token <code>#E3E6ED</code> 吻合,偏蓝 B−R=9)</dd>
+        <dt>面板间隙带</dt><dd><b>#E2E2E5</b>(6 css 间隙里的一条 4 css 灰带)</dd>
+        <dt>卡片内表格分隔</dt><dd><b>#F0F2F5</b>(比外框更浅)</dd>
+        <dt>侧栏选中行填充</dt><dd><b>#DBDBDC</b>(≈前景 7% 叠在灰底上)</dd>
+        <dt>列表选中行填充</dt><dd><b>#F8F9F9</b>(≈前景 3% 叠在白底上)</dd>
+        <dt>用户气泡</dt><dd><b>#F3F3F3</b>(= token <code>--user-message-bubble</code>)</dd>
+        <dt>桌面(窗口之外)</dt><dd><b>#000000</b> —— 证明侧栏的灰是材质与桌面合成结果</dd>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="margin-top:20px">界面骨架(全部实测,单位 css)</h4>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>元素</th><th class="num">实测值</th><th>来源 / 代码定位</th><th>对比参照(上游 v0.15.0)</th></tr></thead>
+      <tbody>
+        <tr><td>窗口内宽</td><td class="num">1600</td><td>—</td><td>—</td></tr>
+        <tr><td>窗口外框圆角</td><td class="num">10–12</td><td>系统绘制(不可控)</td><td>同</td></tr>
+        <tr><td>标题栏高</td><td class="num">45.5</td><td>窗口顶 39 → 面板顶 84.5</td><td>TopBar 44(紧凑 56)</td></tr>
+        <tr><td>侧栏宽</td><td class="num">256</td><td><code>AppShell.tsx:575</code> 默认 220(此处被拖宽)</td><td>默认 232</td></tr>
+        <tr><td>会话列表面板宽</td><td class="num">315</td><td>—</td><td>—</td></tr>
+        <tr><td>内容面板宽</td><td class="num">1009.5</td><td>—</td><td>—</td></tr>
+        <tr><td>面板圆角</td><td class="num">6</td><td><code>--theme-panel-radius: 6px</code>(<code>RADIUS_EDGE/INNER</code> 的 14/10 fallback 已死)</td><td>内角 12 / 连体内角 0</td></tr>
+        <tr><td>面板间隙</td><td class="num">1 / 6</td><td>侧栏↔列表 ≈1;列表↔内容 =6(含灰带)</td><td><code>PANEL_GAP 6</code></td></tr>
+        <tr><td>回复卡宽 / 圆角</td><td class="num">804 / 5–6</td><td><code>CHAT_LAYOUT.maxWidth 840</code> + <code>px-5</code>;卡片类写 <code>rounded-[8px]</code></td><td>列 768(卡 720)</td></tr>
+        <tr><td>输入卡宽 / 圆角</td><td class="num">811 / 9</td><td><code>ChatInputZone.tsx:82</code> 用 <code>px-3 @xs:px-4</code></td><td>与转录列同宽(共用常量)</td></tr>
+        <tr><td>新建会话按钮</td><td class="num">237 × 40</td><td>左内距 6.5 / 右内距 <b>12.5</b>(不对称)</td><td><code>--h-control-xl 40</code></td></tr>
+        <tr><td>侧栏行高 / 间距</td><td class="num">38 / 41.5</td><td>选中填充 234.5 宽,内距 7.5 / 13.5</td><td><code>--row-sidebar 28</code></td></tr>
+        <tr><td>侧栏图标 / 文字左内距</td><td class="num">16 / 43.5</td><td>图标距左 18.5;图标↔文字 9.5</td><td>图标 14;文字 ≈38</td></tr>
+        <tr><td>侧栏导航栈占高</td><td class="num">380</td><td>按钮顶 92 → 最后一项底 472(9 项 + 按钮)</td><td>同等项数约 290</td></tr>
+        <tr><td>侧栏底部 profile 行</td><td class="num">32</td><td>墨迹高,中心在 1098.8</td><td>—</td></tr>
+        <tr><td>面板底边距窗口</td><td class="num">4.5</td><td>左 1 / 右 ≈3 / 下 4.5 / 上 (标题栏)</td><td><code>PANEL_EDGE_INSET 6</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted" style="margin-top:8px;font-size:var(--fs-label-sm)">说明:面板宽/高、"占高"等衍生值可能存在 ±0.5 css 误差(1px 边框与抗锯齿)。圆角一律给区间,因为弧线拟合会因边框厚度偏低 0.5–1px。</p>
+</section>
+<section class="sec" id="surfaces">
+  <div class="sec-head"><span class="sec-num">§1</span><h2>面(surfaces):一切边界问题都源于这里</h2></div>
+  <p>这一章解释三件你直接感觉到的事:<b>背景偏灰</b>、<b>卡片边界不清</b>、以及"要不要给侧栏上色"这个决策。
+  它们其实是同一个问题的三个侧面 —— <b>我们的界面里,"面"没有层次,而唯一的灰不是我们选的。</b></p>
+
+  <div class="sub">
+    <h3>1.1 背景为什么偏灰:因为它不是我们的颜色</h3>
+    <div class="duo">
+      <div class="card">
+        <dl class="kv">
+          <dt>侧栏 / 标题栏</dt><dd><b>#E8E8E9</b>(232,232,233)—— 两者同色,合计构成一个 L 形灰区:横 1600×45.5、纵 256×1070</dd>
+          <dt>面板</dt><dd><b>#FFFFFF</b> —— 中间没有任何过渡色</dd>
+          <dt>窗口之外</dt><dd><b>#000000</b> —— 证明这块灰是"系统材质 + 桌面"的合成结果</dd>
+          <dt>上游同位置</dt><dd>navigator <b>#F2F3F4</b>(242)、paper <b>#FCFDFE</b> —— 画布比我们亮 <b>10 个灰阶</b>,纸面不是纯白</dd>
+        </dl>
+      </div>
+      <div class="card sunken">
+        <h4>代码链:为什么它由系统决定</h4>
+        <ul class="tight">
+          <li><code>window-manager.ts:248</code> → <code>vibrancy: 'under-window'</code> + <code>visualEffectState: 'active'</code></li>
+          <li><code>index.css:558</code> → <code>html, body, #root</code> <b>只有高度与 overflow,没有背景色</b></li>
+          <li><code>AppShell.tsx:2636</code> → 侧栏背景是条件性的:<code>hasThemedNavigatorSurface &amp;&amp; "bg-navigator"</code></li>
+          <li><code>default.json</code> → <b>没有设置 <code>navigator</code></b>(主题注释也写明"未显式作者化时侧栏保持透明")</li>
+        </ul>
+        <p style="margin-top:8px"><b>后果:</b>这个灰随用户壁纸与系统外观变化,<b>我们无法保证任何一台机器上的背景色</b>;而且它恰好比我们想要的暗一档。</p>
+      </div>
+    </div>
+
+    <h4 style="margin-top:18px">着色决策:三个方案与量化后果</h4>
+    <p class="small" style="margin-top:4px">先明确"整体感"从哪来:今天标题栏、侧栏、面板间隙、窗口留白<b>全是同一块材质</b>,连成一个连续场 —— 这是"什么都没画"的副产品。
+    因此风险不是"上色",而是<b>只给一部分上色</b>(侧栏上色、标题栏留材质 → 左上角出现 L 形分裂)。只要两者同源,连续场就保住。</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>方案</th><th>navigator 取值</th><th class="num">画布↔纸面灰阶差</th><th>观感变化</th><th>前置条件</th></tr></thead>
+        <tbody>
+          <tr><td><b>A · 锁色(建议先做)</b></td><td><code>#E9E9EA</code>(≈今天实测值)</td><td class="num">22 <span class="small">(今天 23)</span></td>
+            <td><b>几乎为零</b> —— 只是从"随壁纸"变成"我们定"</td><td>无,一行配置</td></tr>
+          <tr><td><b>B · 提亮(向上游靠)</b></td><td><code>#F2F3F4</code></td><td class="num">13 <span class="small">(−43%)</span></td>
+            <td>整屏更亮更干净;但卡片边界<b>明显变弱</b></td><td><b>必须先做 1.2 + 1.3</b>(边框中性化 + 卡片高程),否则更糊</td></tr>
+          <tr><td>C · 半透明叠加</td><td><code>bg-navigator/70</code> 之类</td><td class="num">取决于比例</td><td>保留一点通透感</td><td>无;但颜色仍受壁纸影响约 30%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="swatch-strip">
+      <div style="background:#e8e8e9;color:#424446">今天 #E8E8E9<br>Δ23 vs 纸面</div>
+      <div style="background:#e9e9ea;color:#424446">A #E9E9EA<br>Δ22</div>
+      <div style="background:#f2f3f4;color:#424446">B #F2F3F4<br>Δ13</div>
+      <div style="background:#f5f6f8;color:#424446">更亮 #F5F6F8<br>Δ10</div>
+      <div style="background:#ffffff;color:#424446;box-shadow:inset 0 0 0 1px #e3e6ed">纸面 #FFFFFF<br>基准</div>
+    </div>
+    <div class="callout ok" style="margin-top:12px">
+      <p><b>建议:A 打底,B 做成主题选项,并且"标题栏与侧栏永远同源"。</b>
+      我们的主题引擎本来就有 <code>depth</code>(flat / elevated / neon / glass / raised)与 <code>scenic</code> 模式 ——
+      "画布多亮、要不要材质"天然属于主题能力,不该由全局 CSS 一刀切。这样偏好通透与偏好干净的用户都能满足。
+      <b>如果选 B,必须与 1.2/1.3 打包上线</b>,否则画布提亮 10 阶、卡片对比降 43%,界面会明显更平。</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>1.2 面板边界:一条偏蓝的 1px 线,零阴影</h3>
+    <div class="duo">
+      <div class="card">
+        <h4>实测剖面(从画布到面板内部)</h4>
+        <pre style="margin-top:0">画布 232 → 紧贴面板 229 → 边框 227,229,236 → 面板内 255
+                 ↑ 阴影峰值 Δ3(肉眼≈0)   ↑ 蓝相 B−R=9   ↑ 白</pre>
+        <p style="margin-top:8px">也就是:<b>高程完全没有落在阴影上</b>,边界完全由那条 1px 线承担;而这条线<b>偏蓝</b>,画布却是<b>中性</b>灰 → 冷暖不一致,边界看着"脏"。</p>
+      </div>
+      <div class="card">
+        <h4>代码:2% 的阴影在数学上存在、视觉上为零</h4>
+        <pre style="margin-top:0">--shadow-minimal: 0 0 0 1px var(--border),
+                  0 1px 2px mix(shadow 2%),
+                  0 3px 6px  mix(shadow 2%);
+--shadow-middle : 1px 环 + 0 4px 12px mix(4%)
+--theme-shadow-color: #20232C · shadowStrength: 0.04</pre>
+        <p style="margin-top:8px">2% 的黑在 6px 模糊下峰值不到 1%;<code>--shadow-minimal</code> 被用了 <b>214 处</b>(84% 的表面),所以整个界面是平的。</p>
+      </div>
+    </div>
+    <div class="edge-demo" style="margin-top:12px">
+      <div class="cell"><span class="lbl">现状</span><div class="art" style="background:#fff;box-shadow:0 0 0 1px #e3e6ed"></div></div>
+      <div class="cell"><span class="lbl">中性边 + 一档高程</span><div class="art" style="background:#fff;box-shadow:0 0 0 1px #e6e6e8,0 1px 2px rgb(0 0 0/.05),0 3px 8px -2px rgb(0 0 0/.07)"></div></div>
+      <div class="cell"><span class="lbl">面板同色时的替代</span><div class="art" style="background:#fcfcfd;box-shadow:inset 0 0 0 1px #ececee"></div></div>
+    </div>
+    <div class="grid g3" style="margin-top:12px">
+      <div class="card"><h4>改法 ① 边框中性化</h4><p>亮色 <code>--border: #E3E6ED → #E6E6E8</code>(或 <code>color-mix(in oklab, var(--foreground) 10%, transparent)</code>);
+        暗色 <code>#343946</code> 也偏蓝(B−R=14),同步去蓝。<b>改动最小、收益最直接。</b></p></div>
+      <div class="card"><h4>改法 ② 卡片级高程</h4><p>新增 <code>--shadow-card</code>(中性边 + 5–6% 阴影),只用于卡片/浮层/输入卡;<b>不要全局加重</b>(214 处一起变会过头)。</p></div>
+      <div class="card"><h4>改法 ③ 间隙也要一起处理</h4><p>列表↔内容之间 6 css 的间隙里叠出了 4 css 的 <code>#E2E2E5</code> 灰带(缩放条 2px 线 + 两侧阴影),而侧栏↔列表只有 1 css。<b>两个接缝的视觉重量不一致</b>,应让间隙里的东西与面板边框同色同权重。</p></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>1.3 卡片边界:白底上的白卡,只有一条线</h3>
+    <div class="duo">
+      <div class="card">
+        <dl class="kv">
+          <dt>回复卡</dt><dd><code>bg-background</code>(= #FFFFFF)放在 <code>bg-paper</code>(= #FFFFFF)的面板上 → <b>同色</b></dd>
+          <dt>它的分离手段</dt><dd>只有 <code>shadow-minimal</code> 的那条 1px 线;卡片外侧实测<b>全 255(纯白)</b></dd>
+          <dt>代码</dt><dd><code>TurnCard.tsx:2689</code> <code>bg-background shadow-minimal rounded-[8px]</code>(圆角硬编码)</dd>
+          <dt>卡内分隔</dt><dd>表格行分隔是 <code>#F0F2F5</code>,比外框 <code>#E3E5EC</code> 更浅 —— <b>有层次但差距很小(Δ13)</b></dd>
+        </dl>
+      </div>
+      <div class="card sunken">
+        <h4>三条可选出路(选一条,不要混)</h4>
+        <ul class="tight">
+          <li><b>给它底:</b>卡片底色 <code>#FCFCFD</code>(比面板浅一档),边界靠色差而非线;</li>
+          <li><b>给它高程:</b>用 §1.2 的 <code>--shadow-card</code>,让"抬起"可感知;</li>
+          <li><b>取消它的边界:</b>——这正是上游 0.15.0 的选择:答案<b>平铺成正文</b>,没有卡片。</li>
+        </ul>
+        <p style="margin-top:8px"><b>最不讨好的组合就是我们现在这样</b>:白底 + 一条浅蓝细线,既不像卡片也不像正文。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>1.4 两个"面积性"问题:气泡与纯白</h3>
+    <div class="duo">
+      <div class="card"><h4>用户气泡融进背景</h4>
+        <p>气泡 <b>#F3F3F3</b> 与画布 <b>#E8E8E9</b> 只差 <b>11 个灰阶</b>;而它是固定色 <code>--user-message-bubble: #F3F3F3</code>,
+        <b>没有相对"它所在的纸面"计算</b>。建议改为按前景混合的填充(气泡在纸面上应该比纸面暗一档,而不是与画布竞争),或至少压到 #F0F0F0 拉开距离。</p></div>
+      <div class="card"><h4>大面积纯白</h4>
+        <p>亮色下 <code>background / paper / card / popover / input</code> <b>全部是 #FFFFFF 或近白</b>。
+        纯白大面积铺开会让旁边的灰显得更脏,也让"哪块是凹陷"无法从颜色判断。建议纸面保留纯白,把<b>输入框与代码块改成下沉色</b>(如 #F7F8FA),
+        让凹陷一眼可辨 —— 这也顺带解决"输入卡和消息卡长得一样"的问题。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="scales">
+  <div class="sec-head"><span class="sec-num">§2</span><h2>尺度账本:六类尺度,一张表看清"元问题"</h2></div>
+  <p>把全项目的硬编码按"尺度类别"汇总后,元问题就非常清楚了:<b>主题引擎提供的是"值",不是"可选集合";而每个组件都在自己发明数值。</b>
+  下面六类尺度合起来就是 2,244 处硬编码的来源。</p>
+
+  <div class="tbl-wrap">
+    <table class="scale-ledger">
+      <thead><tr><th>尺度</th><th class="num">硬编码</th><th class="num">取值个数</th><th>引擎状态</th><th>目标(建议)</th></tr></thead>
+      <tbody>
+        <tr><td><b>字号</b></td><td class="num">590</td><td class="num">8+</td>
+          <td>只有单一 <code>--font-size-base</code>(主题写 15px)</td>
+          <td><b>4 级</b>:11 / 12 / 13.5 / 15</td></tr>
+        <tr><td><b>间距 / 尺寸</b></td><td class="num">407</td><td class="num">—</td>
+          <td>density 三档只给 4 个内距;无 gutter / 卡内距 / 命名行高</td>
+          <td><b>栅格 + 命名行高</b>:gutter 16 / card-pad 14 / row 32·30·36</td></tr>
+        <tr><td><b>圆角</b></td><td class="num">328</td><td class="num">10(+5 来自尺度类)</td>
+          <td>一个基数 6px × 系数 → 3 / 4.5 / 6 / 9 / 12 / 18 / 24</td>
+          <td><b>4 级 + 嵌套公式</b>(见 2.1)</td></tr>
+        <tr><td><b>状态填充</b></td><td class="num">204</td><td class="num">12</td>
+          <td><b>完全没有</b>(无 <code>--fill-*</code>;全项目 <code>--fill-*</code> 使用 0 处)</td>
+          <td><b>3 档</b>:hover 3.5% / selected 6% / pressed 8%</td></tr>
+        <tr><td><b>阴影</b></td><td class="num">—</td><td class="num">4 档 + 坏的别名组</td>
+          <td>只有 <code>shadowColor</code> + <code>strength</code> 两个旋钮,四档结构硬编码在 CSS</td>
+          <td><b>3 级语义</b>:flat / card / floating(+ 模态),整体可调强弱</td></tr>
+        <tr><td><b>时长 / 过渡</b></td><td class="num">27 + 320</td><td class="num">两套表</td>
+          <td>两套时长表并存(<code>motion.css</code> 与 <code>lib/motion.ts</code>),数值不同</td>
+          <td><b>唯一来源</b>:4 档(instant / fast / base / slow)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="chart">
+    <div class="row"><span class="lb">字号字面量</span><span class="tr bad"><i style="width:100%"></i></span><span class="vl">590</span></div>
+    <div class="row"><span class="lb">任意值间距</span><span class="tr bad"><i style="width:69%"></i></span><span class="vl">407</span></div>
+    <div class="row"><span class="lb">圆角字面量</span><span class="tr bad"><i style="width:56%"></i></span><span class="vl">328</span></div>
+    <div class="row"><span class="lb">非 token 过渡</span><span class="tr mid"><i style="width:54%"></i></span><span class="vl">320</span></div>
+    <div class="row"><span class="lb">tsx 内 hex</span><span class="tr mid"><i style="width:37%"></i></span><span class="vl">221</span></div>
+    <div class="row"><span class="lb">填充 alpha</span><span class="tr bad"><i style="width:35%"></i></span><span class="vl">204</span></div>
+    <div class="row"><span class="lb">rgb()/rgba()</span><span class="tr mid"><i style="width:12%"></i></span><span class="vl">70</span></div>
+    <div class="row"><span class="lb">时长字面量</span><span class="tr mid"><i style="width:5%"></i></span><span class="vl">27</span></div>
+  </div>
+
+  <div class="sub">
+    <h3>2.1 圆角:三个来源、十五个取值,而且"嵌套"设计是死代码</h3>
+    <div class="rr" style="margin-top:6px">
+      <figure><div class="box" style="border-radius:11px"></div><figcaption>窗口 10–12<br>(系统)</figcaption></figure>
+      <figure><div class="box" style="border-radius:9px"></div><figcaption>输入卡 9</figcaption></figure>
+      <figure><div class="box" style="border-radius:6px"></div><figcaption>面板 6</figcaption></figure>
+      <figure><div class="box" style="border-radius:5.5px"></div><figcaption>按钮 4.5–6</figcaption></figure>
+      <figure><div class="box" style="border-radius:5px"></div><figcaption>回复卡 5–6<br>(代码写 8)</figcaption></figure>
+      <figure><div class="box" style="border-radius:3px"></div><figcaption>侧栏行 ≈3</figcaption></figure>
+    </div>
+    <div class="duo" style="margin-top:12px">
+      <div class="card">
+        <h4>三个来源</h4>
+        <div class="kv">
+          <dt>① 硬编码</dt><dd><b>328 处 / 10 个取值</b>:8px 119 · 6px 73 · 4px 50 · 10px 32 · 3px 13 · 2px 10 · 5px 9 · 12px 6 · 16px 4 · 9px 3</dd>
+          <dt>② 尺度类</dt><dd>478 处,值为 <code>--theme-radius × k</code> = 3 / 4.5 / 6 / 9 / 12 / 18 / 24(含非整数);<b>直接引用 <code>var(--radius…)</code> 的地方 0 处</b></dd>
+          <dt>③ 面板专用</dt><dd><code>--theme-panel-radius</code>(6),它覆盖了 <code>RADIUS_EDGE(14)/RADIUS_INNER(10)</code> → 那两个 fallback <b>永不生效</b></dd>
+        </div>
+      </div>
+      <div class="card">
+        <h4>为什么眼睛会觉得"不一致"</h4>
+        <p>圆角是<b>同族关系</b>的信号:两个嵌套圆角只有满足 <b>内 = 外 − 间距</b> 时才同心。
+        我们的窗口是 10–12、面板是 6,而两者之间只隔 1–5px → 差值被直接看见。上游把这条写成了算术(连体内角 = 0、外角 = <code>--radius-lg</code>),不是靠手感。</p>
+        <div class="target"><b>目标:4 级 + 嵌套公式</b>
+          <pre style="margin-top:6px">--r-panel: max(6px, calc(var(--r-window) - var(--panel-inset)))
+--r-card:  var(--r-panel)     <span class="c">/* 卡片与面板同族 */</span>
+--r-row:   6px                <span class="c">/* 行、菜单项 */</span>
+--r-chip:  4px                <span class="c">/* 徽标、芯片、小按钮 */</span></pre></div>
+      </div>
+    </div>
+    <p style="margin-top:10px"><b>迁移顺序:</b>①先让 <code>RADIUS_EDGE/INNER</code> 生效(或把主题字段拆成 edge/inner 两个);②按映射表 codemod 替换 328 处(8→card、6→row、4→chip、10/12→panel);
+    ③加门禁禁止新字面量(见 §7.3)。</p>
+  </div>
+
+  <div class="sub">
+    <h3>2.2 字号:589 处字面量 + 两套尺度</h3>
+    <div class="duo">
+      <div class="card">
+        <dl class="kv">
+          <dt>字面量</dt><dd><code>text-[11px]</code> 201 · <code>[12px]</code> 97 · <code>[10px]</code> 96 · <code>[13px]</code> 91 · <code>[12.5px]</code> 22 · <code>[11.5px]</code> 19 · <code>[10.5px]</code> 11 · <code>[8px]</code> 10 —— <b>还有半像素</b></dd>
+          <dt>Tailwind 尺度</dt><dd><code>text-xs</code> <b>505</b> 处 · <code>text-sm</code> <b>481</b> 处(界面基准在 12px 与 14px 之间摇摆)</dd>
+          <dt>引擎</dt><dd>只有 <code>--font-size-base</code>(15px);<b>没有任何字号角色</b></dd>
+        </dl>
+        <p style="margin-top:8px">这与上游 0.15.0 的处境相似(它也有两套尺度混用:新 <code>text-label</code> 640 处 + 旧 <code>text-xs/sm</code> 326 处),区别是<b>上游是迁移没做完,我们是从来没有过尺度</b>。</p>
+      </div>
+      <div class="card sunken">
+        <div class="target"><b>目标:4 级</b>
+          <pre style="margin-top:6px">--fs-caption: 11px   <span class="c">/* 徽标、角标 */</span>
+--fs-label:   12px   <span class="c">/* 次要信息、时间戳 */</span>
+--fs-ui:      13.5px <span class="c">/* 行、菜单、按钮 = 界面基准 */</span>
+--fs-copy:    15px   <span class="c">/* 正文(保持现状) */</span></pre></div>
+        <p style="margin-top:8px"><b>为什么是 13.5 而不是 13</b>:中文在 13px 下的字面偏小、需要更宽的行距;13.5 与 15 的比例也更接近我们的现状(14/15),迁移时的视觉跳变小。
+        真正关键的不是选哪四个数,而是<b>"只能从这四个里选"</b>。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>2.3 / 2.4 间距与状态填充:两类"无处安放"的数值</h3>
+    <div class="duo">
+      <div class="card"><h4>间距与尺寸:407 处任意值</h4>
+        <p>写法如 <code>p-[13px]</code>、<code>h-[34px]</code>、<code>gap-[6px]</code>。引擎只给 density 的 4 个内距,<b>没有 gutter(内容边)、没有卡内距、没有命名行高</b>,
+        所以"某个容器该多宽/多高"只能手写。</p>
+        <div class="target"><b>目标:</b><code>--gutter 16</code> · <code>--card-pad 14</code> · <code>--row-inset 8</code> · 命名行高 <code>32 / 30 / 36</code></div></div>
+      <div class="card"><h4>状态填充:204 处、12 个 alpha</h4>
+        <p>取值分布:0.03 53 处 · 0.02 36 · 0.05 31 · 0.025 23 · 0.06 15 · 0.04 12 · 0.015 11 · 0.012 9 · 0.07 5 · 0.035 5 …
+        <b>引擎里没有 <code>--fill-*</code>,全项目使用 0 处</b>(因为不存在)。</p>
+        <div class="target"><b>目标 3 档:</b><code>--fill-hover 3.5%</code> · <code>--fill-selected 6%</code> · <code>--fill-pressed 8%</code>(另加 <code>--fill-bubble</code>)</div></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>2.5 / 2.6 阴影与时长:一个是"挤在最弱档",一个是"两套表"</h3>
+    <div class="duo">
+      <div class="card"><h4>阴影</h4>
+        <dl class="kv">
+          <dt>使用分布</dt><dd><code>shadow-minimal</code> <b>214</b> · <code>middle</code> 15 · <code>strong</code> 11 · <code>modal-small</code> 15 → <b>84% 在最弱档</b></dd>
+          <dt>强度</dt><dd>最弱档两层只有 2%(视觉为零);<code>--theme-shadow-color #20232C</code> + <code>strength 0.04</code></dd>
+          <dt>坏掉的别名</dt><dd><code>--shadow-sm: var(--shadow-sm)</code> 自引用 → <code>shadow-xs/sm/md/lg/xl/2xl</code> <b>整条渲染为无阴影</b>(已在打包产物中确认)</dd>
+          <dt>规则</dt><dd>已有 <code>no-nonstandard-shadows</code> 白名单规则,但对 5 个路径 <code>off</code>,仍有 35 处非白名单</dd>
+        </dl>
+        <div class="target"><b>目标 3 级:</b><code>--shadow-flat</code>(仅环)· <code>--shadow-card</code>(5–6%)· <code>--shadow-floating</code>(2 层),并修好坏掉的别名</div></div>
+      <div class="card"><h4>时长与过渡</h4>
+        <dl class="kv">
+          <dt>两套时长表</dt><dd><code>styles/motion.css</code>:instant 60 / fast 100 / standard 160 / emphasis 220 / spatial 280<br>
+            <code>lib/motion.ts</code>:另一套(JS 侧)<b>数值不同</b></dd>
+          <dt>字面量</dt><dd>27 处 <code>duration-N</code></dd>
+          <dt>过渡</dt><dd>320 处非 token 的 <code>transition-*</code>(其中 <code>transition-all</code> 只剩 4 处,全在 playground —— 这项我们做得比上游好)</dd>
+          <dt>减少动效</dt><dd><b>两种策略并存</b>:一刀切 <code>1ms !important</code> + <code>data-reduce-motion</code>(只有 playground 设置)</dd>
+        </dl>
+        <div class="target"><b>目标:</b>唯一来源 + 4 档(instant 0 / fast 100 / base 160 / slow 240),并让"减少动效"成为产品开关(见 §6.4)</div></div>
+    </div>
+  </div>
+</section>
+<section class="sec" id="grid">
+  <div class="sec-head"><span class="sec-num">§3</span><h2>栅格与对齐:一条看不见的线,我们还没建立起来</h2></div>
+  <p>"质感"里最容易被忽略、也最容易被眼睛抓到的是<b>对齐</b>。这一章用三个实测把这件说清:顶部对齐、内容边与列宽、窗口内距与接缝。</p>
+
+  <div class="sub">
+    <h3>3.1 顶部对齐:三列各有各的第一条内容线</h3>
+    <div class="duo">
+      <div class="card">
+        <dl class="kv">
+          <dt>面板顶边</dt><dd>会话列表与内容面板都是 <b>85.0</b> css(标题栏下沿)</dd>
+          <dt>侧栏首元素顶边</dt><dd><b>92.0</b> css → 低 <b>7.0</b></dd>
+          <dt>文字中心</dt><dd>按钮 <b>111.5</b> vs 内容面板标题 <b>106.0</b> → 低 <b>5.5</b></dd>
+          <dt>首行高度</dt><dd>按钮 <b>40</b>;列表面板头 <b>58.5</b>(下沿有分隔线);内容面板头无分隔线 → <b>三种节奏</b></dd>
+          <dt>代码</dt><dd><code>AppShell.tsx:2645</code> 用 <code>paddingTop: PANEL_EDGE_INSET</code>(窗口边缘内距 6)而不是与面板头一致的内距</dd>
+        </dl>
+      </div>
+      <div class="card sunken">
+        <h4>上游的做法(只借观念)</h4>
+        <p>它把栅格写成 token 并配了一条原则,注释原文是"<i>Layout grid: every panel has ONE content edge</i>"(每个面板只有一个内容边):</p>
+        <pre style="margin-top:8px">--gutter  16px   <span class="c">/* 面板内的内容边:标题、行图标、分组箭头都对齐它 */</span>
+--row-inset 8px  <span class="c">/* 行的填充可比 gutter 多出 8px(即左右各 8) */</span>
+--card-pad 14px  <span class="c">/* 卡片/表格/输入区的内距 */</span></pre>
+        <p style="margin-top:8px">有了这三条,首行自然对齐;<b>而"每个面板只有一个内容边"这条原则,正好也是 §3.2 的解法。</b></p>
+      </div>
+    </div>
+    <div class="aba" style="margin-top:12px">
+      <div class="pane"><div class="cap">现状:侧栏首行下沉 7px</div>
+        <div class="align-demo">
+          <div class="sb"><div class="btnrow" style="margin-top:7px">✎ 新建会话</div><div class="row" style="margin-top:6px"></div><div class="row"></div></div>
+          <div class="pn"><div class="ph">所有会话</div><div class="row"></div><div class="row"></div></div>
+        </div></div>
+      <div class="pane"><div class="cap">建议:三列共用同一条首行线</div>
+        <div class="align-demo">
+          <div class="sb"><div class="btnrow">✎ 新建会话</div><div class="row" style="margin-top:6px"></div><div class="row"></div></div>
+          <div class="pn"><div class="ph">所有会话</div><div class="row"></div><div class="row"></div></div>
+        </div></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>3.2 内容边与列宽:输入卡比消息卡宽 7px,两列边缘对不上</h3>
+    <div class="duo">
+      <div class="card">
+        <dl class="kv">
+          <dt>回复卡</dt><dd><b>804</b> css · 左留白 105.5 / 右留白 100.0</dd>
+          <dt>输入卡</dt><dd><b>811</b> css —— 比消息卡宽 <b>7</b>,左右各错开 <b>4</b></dd>
+          <dt>原因</dt><dd>转录列用 <code>CHAT_LAYOUT.containerPadding = px-5</code>(20px);输入区用 <code>px-3 @xs/panel:px-4</code>(<code>ChatInputZone.tsx:82</code>)</dd>
+          <dt>列宽</dt><dd><code>maxWidth: 'max-w-[840px]'</code> → 卡片占面板宽度 <b>79.6%</b></dd>
+          <dt>上游</dt><dd>列宽收到 <b>768</b>(720 卡片 + 2×24),<b>且输入区与转录列共用同一个常量</b>,所以两者边缘严格对齐</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h4>为什么"过宽"会被感觉到</h4>
+        <ul class="tight">
+          <li><b>测量宽度:</b>15px 正文在 800px 上约 <b>100+ 拉丁字符/行</b>(排版舒适区 60–75;中文约 53 字/行,也偏宽)。</li>
+          <li><b>填充率:</b>回复常常是短句、表格、清单 —— 卡片越宽,留白占比越高,越显"空"。</li>
+          <li><b>与窗口的关系:</b>1600 宽的窗口里,一个 800 的列 + 两侧各 100 的留白,中间那块"浮"在大片空白里。</li>
+        </ul>
+        <div class="aba" style="margin-top:10px">
+          <div class="pane"><div class="cap">现状 800 / 面板 1009</div>
+            <div class="col-demo"><div class="band"><div class="col" style="max-width:100%;font-size:11px">正文在 800px 上排布…</div></div></div></div>
+          <div class="pane"><div class="cap">建议 720 / 面板 1009</div>
+            <div class="col-demo"><div class="band"><div class="col" style="max-width:72%;font-size:11px">正文在 720px 上排布…</div></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout ok" style="margin-top:12px">
+      <p><b>一次改两个常量:</b><code>maxWidth 840 → 768</code>(或 720),以及把输入区的水平内距与转录列统一(都用 <code>px-5</code> 或都用 <code>px-6</code>)。
+      这样输入卡与消息卡左右边缘完全对齐 —— 这是"整体感"最便宜的来源。<b>如果窗口很宽,不要靠拉宽列来填充,而是给右侧一个上下文栏</b>(我们的右侧栏组件已存在)。</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>3.3 窗口内距与两个接缝:四边不等,两个接缝不一样重</h3>
+    <div class="duo">
+      <div class="card"><h4>窗口四边内距不等</h4>
+        <dl class="kv">
+          <dt>实测</dt><dd>左 <b>1</b> · 下 <b>4.5</b> · 右 <b>≈3</b> · 上(标题栏区)0</dd>
+          <dt>代码</dt><dd><code>AppShell.tsx:2624</code> 的 shell 容器只设 <code>paddingRight / paddingBottom = PANEL_EDGE_INSET(6)</code>,且 <code>paddingLeft: 0</code></dd>
+          <dt>后果</dt><dd>纸面在窗口里<b>偏左上</b>;右下有 4.5–6px 的空隙,左边却贴着窗口边</dd>
+        </dl>
+        <p style="margin-top:8px"><b>改法:</b>要么四边都给(侧栏也让出 6px,视觉更"居中"),要么明确"侧栏顶到窗口边"并把这个取舍写进注释。<b>关键是显式化,而不是现在这种半套。</b></p></div>
+      <div class="card"><h4>两个面板接缝的视觉重量不一样</h4>
+        <dl class="kv">
+          <dt>侧栏↔列表</dt><dd>≈ <b>1</b> css(两侧同为灰/白,接缝几乎看不出)</dd>
+          <dt>列表↔内容</dt><dd>= <b>6</b> css,其中间 4 css 是一条 <b>#E2E2E5</b> 灰带</dd>
+          <dt>成因</dt><dd>两侧面板的 1px 边框 + 缩放条 2px 线 + 两层阴影在 6px 间隙里叠成一条"抹布状"接缝(<code>PANEL_SASH_LINE_WIDTH 2</code>、<code>PANEL_SASH_FLEX_MARGIN = −PANEL_GAP/2</code>)</dd>
+          <dt>可见后果</dt><dd>列表与内容之间像"粘在一起又脏了一条";侧栏与列表之间却像"没有边界"</dd>
+        </dl>
+        <p style="margin-top:8px"><b>改法:</b>让间隙里的缩放条与面板边框同色同权重,或让间隙直接露出画布色(不加线)。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="sidebar">
+  <div class="sec-head"><span class="sec-num">§4</span><h2>侧栏专章:不只是间距,还有大小</h2></div>
+  <p>上一轮的结论是"行距偏大";这次把侧栏的<b>每一个尺寸</b>都量了一遍,结论更完整:
+  <b>它不是某一项偏大,而是"宽度、行高、图标、文字内距、按钮、底部行"整体大了一档,并且横向内距还是不对称的。</b>
+  同时它也和 §3 的栅格问题同源 —— 因为行高是"内距推导"出来的,不是命名尺寸。</p>
+
+  <div class="sidebar-full" style="margin-top:14px">
+    <div class="sbframe" style="display:flex;flex-direction:column">
+      <div class="btn">✎ 新建会话</div>
+      <div class="item sel" style="height:38px">▤ 所有会话</div>
+      <div class="item" style="height:38px">◇ 标签</div>
+      <div class="item" style="height:38px">▣ 数据源</div>
+      <div class="item" style="height:38px">⚡ 技能</div>
+      <div class="item" style="height:38px">◈ 插件</div>
+      <div class="item" style="height:38px">◫ 项目</div>
+      <div class="item" style="height:38px">▦ 页面</div>
+      <div class="item" style="height:38px">⌘ 自动化</div>
+      <div class="foot" style="display:flex;align-items:center;gap:8px">🙂 Captain <span style="margin-left:auto">⚙</span></div>
+    </div>
+    <div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>尺寸项</th><th class="num">我们(实测)</th><th class="num">上游</th><th>差异与说明</th></tr></thead>
+          <tbody>
+            <tr><td>侧栏宽度</td><td class="num">256</td><td class="num">232</td><td>我们的<b>默认是 220</b>(<code>AppShell.tsx:575</code>),截图里 256 是<b>被拖宽过</b>;宽度会持久化</td></tr>
+            <tr><td>行高 / 行间距</td><td class="num">38 / 41.5</td><td class="num">28</td><td><b>+36% ~ +48%</b> —— 这是"显得大"的主因</td></tr>
+            <tr><td>图标尺寸</td><td class="num">16</td><td class="num">14</td><td>+14%;且我们的图标距左 18.5</td></tr>
+            <tr><td>文字左内距</td><td class="num">43.5</td><td class="num">≈38</td><td>+5.5;图标↔文字间距 9.5(上游约 8)</td></tr>
+            <tr><td>字号</td><td class="num">13–14</td><td class="num">13</td><td>基本一致 —— <b>不是字号问题</b></td></tr>
+            <tr><td>行填充宽度 / 内距</td><td class="num">234.5 · 7.5 / 13.5</td><td class="num">— · 8 / 8</td><td><b>左右不对称 6px</b>(右侧多出滚动条 gutter)</td></tr>
+            <tr><td>新建会话按钮</td><td class="num">237 × 40</td><td class="num">— × 40</td><td>高一致;宽 237 且内距 <b>6.5 / 12.5 不对称</b>(同样受 gutter 影响)</td></tr>
+            <tr><td>底部 profile 行</td><td class="num">32</td><td class="num">—</td><td>—</td></tr>
+            <tr><td><b>导航栈总占高</b></td><td class="num"><b>380</b></td><td class="num">≈290</td><td>9 项 + 按钮;<b>+31%</b> —— 这就是"侧栏整体显得大"的量化表达</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <h4>为什么调不动:density 只能把 42 降到 38</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>density</th><th class="num">行内距</th><th class="num">推出行高</th><th>对上游 28px</th></tr></thead>
+          <tbody>
+            <tr><td>compact</td><td class="num">10px</td><td class="num">≈38</td><td>仍高 <b>36%</b></td></tr>
+            <tr><td>comfortable(当前)</td><td class="num">12px</td><td class="num">≈42</td><td>高 <b>50%</b></td></tr>
+            <tr><td>cozy</td><td class="num">14px</td><td class="num">≈46</td><td>高 <b>64%</b></td></tr>
+          </tbody>
+        </table></div>
+        <p style="margin-top:8px">上游的行高是<b>命名尺寸</b>(<code>--row-sidebar 28</code> / <code>--row-menu 30</code> / <code>--row-list 36</code> / <code>--row-touch 44</code>),
+        与字号解耦;我们的行高是内距的副产品,所以怎么调都落不到 28。</p>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="margin-top:20px">目标态与预期效果</h4>
+  <div class="duo">
+    <div class="card">
+      <div class="target"><b>改法(成本 S)</b>
+        <pre style="margin-top:6px">--row-sidebar: 32px   <span class="c">/* 不用 28:中文需要一点呼吸 */</span>
+--row-menu:    30px
+--row-list:    36px
+--nav-item-gap: 2px   <span class="c">/* 行间距与行高解耦 */</span></pre>
+        <p style="margin-top:8px">侧栏项与菜单项改用 <code>min-height</code> 而不是 <code>py</code> 推导;<code>--theme-row-padding-y</code> 退化为"内容与行高的差值";
+        density 三档改为调<b>行高</b>(32 / 36 / 40)而不是调 padding。顺带把左右内距做成对称(把滚动条 gutter 用 <code>scrollbar-gutter: stable</code> 或 padding 补回来)。</p>
+      </div>
+    </div>
+    <div class="card">
+      <h4>改完之后的量化结果</h4>
+      <div class="chart">
+        <div class="row"><span class="lb">导航栈占高 现在</span><span class="tr bad"><i style="width:100%"></i></span><span class="vl">380</span></div>
+        <div class="row"><span class="lb">改为 32px 行高</span><span class="tr"><i style="width:86%"></i></span><span class="vl">330</span></div>
+        <div class="row"><span class="lb">若也去掉额外间距</span><span class="tr"><i style="width:76%"></i></span><span class="vl">约 290</span></div>
+      </div>
+      <ul class="tight" style="margin-top:10px">
+        <li>侧栏一屏能多放 <b>2–3 项</b>;</li>
+        <li>"侧栏显得大"的观感消失,而<b>不需要缩小字号或图标</b>;</li>
+        <li>行高变成 token 之后,density 才真正可调(这同时解决了 §2.3 的间距问题)。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="states">
+  <div class="sec-head"><span class="sec-num">§5</span><h2>状态与反馈:同一件事有多种强度</h2></div>
+  <p>状态(悬停/选中/按下/禁用)是"界面是否活"的关键。我们的问题是:<b>没有状态 token,于是每个组件自己定一个强度</b> ——
+  这既是 §2.4 的 12 个 alpha,也是"同一屏里两个选中态看起来不一样重"的直接原因。</p>
+
+  <div class="duo" style="margin-top:12px">
+    <div class="card">
+      <h4>实测:同一语义,两种强度</h4>
+      <div class="kv">
+        <dt>侧栏选中行</dt><dd><b>#DBDBDC</b> ≈ 前景 <b>7%</b> 叠在灰底上(看起来明显)</dd>
+        <dt>列表选中行</dt><dd><b>#F8F9F9</b> ≈ 前景 <b>3%</b> 叠在白底上(几乎看不出)</dd>
+        <dt>hover 填充</dt><dd>最常用的写法 <code>bg-foreground/[0.03]</code>(53 处)与 <code>/5</code>(246 处)→ <b>3–5%</b></dd>
+      </div>
+      <p style="margin-top:8px">3–5% 的填充在部分显示器/亮度下几乎不可见,于是"能点的东西看起来不能点";
+      而侧栏用了 7%,又显得过重。<b>两者都不是错,错在没有统一。</b></p>
+      <div class="target"><b>目标:</b>只保留三档 + 一个气泡档
+        <pre style="margin-top:6px">--fill-hover:    3.5%   <span class="c">/* 悬停 */</span>
+--fill-selected: 6%     <span class="c">/* 选中 */</span>
+--fill-pressed:  8%     <span class="c">/* 按下 */</span>
+--fill-bubble:   5.5%   <span class="c">/* 气泡(相对纸面) */</span></pre></div>
+    </div>
+    <div class="card">
+      <h4>附带一条:触摸设备上"悬停才出现"的功能</h4>
+      <p>我们已经有 <code>data-touch-reveal</code> 机制(<code>index.css:1585</code>:在紧凑模式下把 <code>opacity-0</code> 强制为 1),也已在若干处使用。
+      但全项目仍有约 <b>32 处</b>"<code>opacity-0 … group-hover:opacity-100</code>"的模式,其中一部分没有加这个属性 ——
+      <b>在触摸设备上那些操作等于不存在</b>。</p>
+      <p style="margin-top:8px"><b>做法:</b>把"hover 才出现的操作"列为设计规则:要么默认可见(降权显示),要么必须带 <code>data-touch-reveal</code>;
+      可以用一条 lint 规则来兜(检测 <code>opacity-0</code> + <code>group-hover</code> 同现且无该属性)。</p>
+      <div class="callout" style="margin-top:10px">
+        <p><b>状态清单(建议统一后)</b>:默认 / 悬停 / 选中 / 按下 / 聚焦 / 禁用 —— 六态各对应一个 token,
+        组件不再自己发明数值。禁用态目前是 <code>opacity-50</code> 之类的写法,建议换成 <code>--text-disabled</code> + 填充降档。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec" id="a11y">
+  <div class="sec-head"><span class="sec-num">§6</span><h2>无障碍:本次审计里最该优先处理的一块</h2></div>
+  <p>视觉微调影响"好不好看",而无障碍影响"能不能用"。我们在这方面有一个<b>系统性缺陷</b>,而且它不是新问题。</p>
+
+  <div class="sub">
+    <h3>6.1 焦点可见性:我们把原生焦点环全局关掉了</h3>
+    <div class="duo">
+      <div class="card">
+        <div class="kv">
+          <dt>全局规则</dt><dd><code>index.css:599</code> <code>*:focus-visible { outline: none; --tw-ring-width: var(--ring-width); … }</code>
+            —— <b>原生焦点环被全局关闭</b>,改由 Tailwind 的 ring 承担</dd>
+          <dt>环的强度</dt><dd><code>--ring-width: 1px</code> · <code>--ring-offset: 0px</code>;上游是 <code>outline: 2px solid</code> + <code>offset 2px</code></dd>
+          <dt>显式焦点样式</dt><dd>全项目 318 处 <code>focus-visible</code>/<code>craft-focus</code> 写法;但其中 <code>craft-*</code> 角色类只被 <b>35 个文件</b>使用</dd>
+          <dt>焦点抑制</dt><dd><b>192 处</b> <code>outline-none</code> / <code>focus:outline-none</code> / <code>outline: none</code></dd>
+        </div>
+        <div class="callout bad" style="margin-top:10px">
+          <p><b>结论:</b>凡是<b>没有显式写 ring 的可点元素,键盘聚焦时没有可见反馈</b>。而角色层覆盖率只有 9%(35/396 文件),
+          其余 192 个文件直接写 <code>&lt;button&gt;</code> —— 也就是说,这个缺陷的暴露面是"大部分界面"。</p>
+        </div>
+      </div>
+      <div class="card sunken">
+        <h4>为什么这条优先级最高</h4>
+        <ul class="tight">
+          <li>它影响的是<b>键盘用户能不能操作</b>,而不是"看起来是否精致";</li>
+          <li>修复成本极低:<b>把全局规则从"关闭"改成"给一个默认环"</b>,再把 <code>craft-*</code> 作为自定义样式的例外;</li>
+          <li>它顺带解决"1px 环太弱":改成 <code>2px + 2px offset</code> 与上游同级即可;</li>
+          <li>这条改完,后续所有组件的焦点表现自动变好 —— 不需要逐个组件补。</li>
+        </ul>
+        <div class="target"><b>目标</b>
+          <pre style="margin-top:6px">*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+<span class="c">/* 需要自定义外观的组件(如输入框)再用 .craft-focus 覆盖 */</span></pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>6.2 对比度:56 项检查,6 项不达标(亮/暗各 3)</h3>
+    <div class="duo">
+      <div class="card">
+        <h4>不达标项</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>检查项</th><th class="num">实测</th><th class="num">目标</th><th>影响</th></tr></thead>
+          <tbody>
+            <tr><td>亮色:边框 / 背景(非文字)</td><td class="num">1.25:1</td><td class="num">3.0</td><td rowspan="2">任何<b>靠边框表达状态</b>的控件(勾选框、开关轨道、输入框边界)在视觉上不够明确</td></tr>
+            <tr><td>暗色:边框 / 背景</td><td class="num">1.52:1</td><td class="num">3.0</td></tr>
+            <tr><td>暗色:白字 / 品牌色实心(主按钮)</td><td class="num">3.89:1</td><td class="num">4.5</td><td>实心按钮上的文字对比不足</td></tr>
+            <tr><td>暗色:品牌色当链接文字</td><td class="num">4.52:1</td><td class="num">4.5</td><td>刚好过线,余量 0.02</td></tr>
+          </tbody>
+        </table></div>
+        <p style="margin-top:8px"><b>解法(暗色主按钮):换标签色,不换品牌色。</b>实测:白字压 <code>#8f63ff</code> 是 3.89,而<b>墨色 <code>#17191e</code> 压同一支紫是 4.52</b> —— 达标且品牌色完全保留。</p>
+      </div>
+      <div class="card">
+        <h4>另一类问题:不是不够,而是"过度"</h4>
+        <div class="kv">
+          <dt>状态文字(推导值)</dt><dd>亮色 <b>9.5–9.8:1</b>、暗色 <b>10.9–12.2:1</b> —— 远超目标 4.5</dd>
+          <dt>成因</dt><dd>我们的状态文字是 <code>color-mix(in oklab, 状态色 50%, 前景)</code>,等于把颜色往正文色拉了一半</dd>
+          <dt>后果</dt><dd>颜色变成"接近深灰的褐/绿/红",<b>状态色失去色相识别度</b>(例如 info 的 <code>#94601C</code> → 推导值 <code>rgb(87,65,45)</code>)</dd>
+        </div>
+        <p style="margin-top:8px"><b>解法:</b>把状态文字改成"只求解到达标所需的最小调整"(例如按对比度目标反推混合比例,而不是固定 50%),保留色相;参考上游的思路 —— 它的状态文字<b>彩度只降 3–29%</b>,且有一条测试专门断言"状态色不许变成灰"。</p>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:10px;font-size:var(--fs-label-sm)">其余 50 项全部通过:正文对 8 个面 14–15.7:1;次级文字(muted-foreground)对 7 个面 5.1–8.2:1;气泡内文字 12.4–14.1:1;次级前景对次级面 9.8–10.8:1。
+    <b>也就是说:文字对比度整体健康,问题集中在"控件边界"与"暗色主按钮"两处。</b></p>
+  </div>
+
+  <div class="sub">
+    <h3>6.3 触摸目标与 6.4 减少动效</h3>
+    <div class="duo">
+      <div class="card"><h4>触摸目标</h4>
+        <div class="kv">
+          <dt><code>h-5/h-6/h-7</code>(20/24/28px)</dt><dd><b>228 处</b></dd>
+          <dt>图标按钮 <code>size-3/3.5/4/5</code></dt><dd><b>111 处</b></dd>
+          <dt>参照</dt><dd>Apple HIG 44pt;上游在紧凑模式把按钮补到 36–44px</dd>
+        </div>
+        <p style="margin-top:8px">桌面为主时不是硬缺陷,但 <b>WebUI 移动端复用同一套组件</b>,会直接继承这些小目标。
+        我们已有 <code>data-touch-reveal</code> 处理"hover 才出现",但<b>没有"小目标放大"的统一机制</b>。
+        建议引入上游那种"在紧凑断点把图标按钮抬到 36px"的容器查询规则(成本 S)。</p></div>
+      <div class="card"><h4>减少动效</h4>
+        <div class="kv">
+          <dt>策略一</dt><dd><code>motion.css</code>:<code>animation-duration / transition-duration: 1ms !important</code>(一刀切,连淡入淡出也杀掉)</dd>
+          <dt>策略二</dt><dd><code>data-reduce-motion</code> —— 目前<b>只有 playground</b> 会设置它</dd>
+          <dt>产品开关</dt><dd><b>没有</b>(设置里没有"动效偏好")</dd>
+        </div>
+        <p style="margin-top:8px"><b>后果:</b>①减动用户看到的是"硬切",反而更难跟踪状态变化;
+        ②两套策略并存,排查困难;③用户无法主动选择。<br>
+        <b>改法(并入 §2.6):</b>统一成"距离归零、淡入保留"的一档策略 + 一个三态产品开关(<code>system / reduced / full</code>)。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="systems">
+  <div class="sec-head"><span class="sec-num">§7</span><h2>体系与门禁:token 归属、六类并存、规则的盲区</h2></div>
+
+  <div class="sub">
+    <h3>7.1 token 那件事的完整答案:三层问题</h3>
+    <p>"是引擎缺失,还是引擎有而我们没应用?"——<b>两者都有,而且是三层叠加</b>。逐类核对如下。</p>
+    <div class="tbl-wrap">
+      <table class="tok-ledger">
+        <thead><tr><th>类别</th><th>引擎是否提供</th><th>实际使用</th><th>缺口</th></tr></thead>
+        <tbody>
+          <tr><td>圆角</td><td class="yes">有</td><td><code>--theme-radius</code> 一基数 + 派生 7 档;但<b>直接引用 <code>var(--radius…)</code> 0 处</b></td>
+            <td><b>被绕过</b>:328 处字面量。引擎给"基数 × 系数",不给"四级语义"。</td></tr>
+          <tr><td>字号</td><td class="part">只有一半</td><td>仅 <code>--font-size-base</code> 一个值</td>
+            <td><b>缺尺度</b>:没有字号角色 → 590 处字面量只能用。</td></tr>
+          <tr><td>行高 / 间距</td><td class="part">只有一半</td><td>density 三档 → 只输出 4 个内距;无 gutter / 卡内距 / 命名行高</td>
+            <td><b>缺行高与栅格</b>:行高成为内距副产品 → 407 处任意值间距。</td></tr>
+          <tr><td>状态填充</td><td class="no">没有</td><td><code>--fill-*</code> 全项目 <b>0 处</b>(不存在)</td>
+            <td><b>完全缺失</b> → 204 处手写、12 个 alpha。</td></tr>
+          <tr><td>高程</td><td class="part">两个旋钮</td><td>只有 color + strength;四档结构硬编码在 CSS;84% 挤在最弱档</td>
+            <td><b>缺语义分级</b>(flat / card / floating),也不能整体调强弱。</td></tr>
+          <tr><td>颜色角色</td><td class="part">多套并存</td><td>主力是 shadcn 层 <b>1394</b> + 前景阶梯 <b>1248</b>;主题语义层 146;<code>--surface-*</code> 0</td>
+            <td><b>缺唯一入口</b>:新组件不知道用哪套(详见 7.2)。</td></tr>
+          <tr><td>动效</td><td class="part">两套</td><td><code>motion.css</code> 与 <code>lib/motion.ts</code> 数值不同;27 处时长字面量</td>
+            <td><b>缺唯一来源</b>。</td></tr>
+          <tr><td>z-index</td><td class="yes">有</td><td>16 个 token 齐全 + lint 规则(error)</td><td><b>规则有形式盲区</b>(见 7.3)。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn" style="margin-top:12px">
+      <p><b>三段话总结:</b>①引擎缺的是<b>"尺度"(可选集合)</b>,不是"值";只给一个基数等于没有约束 —— 6 的 0.5/0.75/1/1.5/2 倍是 3/4.5/6/9/12,这些非整数是<b>算出来的</b>,不是<b>选出来的</b>。
+      ②引擎已经给出的东西<b>确实被大面积绕过</b>(圆角直接引用 0 处)。
+      ③最根本的是<b>没有强制机制</b>:396 个组件文件里只有 35 个用角色类,192 个直接写 <code>&lt;button&gt;</code> —— "怎么写都行"。</p>
+      <p style="margin-top:8px"><b>因此顺序是"补尺度 → 迁用量 → 加门禁",而不是先加门禁。</b>
+      先加门禁会把 2,244 处一次报出来,反而挡住开发 —— 上游这次正是踩了这个坑(它的两条规则至今仍是 <code>warn</code>,因为自己的 codemod 没做完)。</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>7.2 六类竞争体系(同一件事有几种做法)</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>领域</th><th>并存的体系</th><th>实测</th><th>后果</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="4"><b>颜色</b></td><td>shadcn 兼容层(<code>text-muted-foreground</code>…)</td><td><b>1,394</b></td>
+            <td rowspan="4">写新组件时"用哪套"没有答案;同一语义多种表达,改一次主题要动多处</td></tr>
+          <tr><td>前景透明度阶梯(<code>foreground/70</code>…)</td><td><b>1,248</b></td></tr>
+          <tr><td>主题语义层(<code>--theme-*</code>)</td><td>146</td></tr>
+          <tr><td>面 / 填充角色</td><td><code>--surface-*</code> <b>0</b> · <code>--fill-*</code> <b>0</b> · <code>bg-navigator</code> 4 · <code>bg-paper</code> 6</td></tr>
+          <tr><td><b>动效</b></td><td>两套时长表 + 两种减少动效策略</td><td>—</td><td>组件按哪套都合法;减动策略互相覆盖</td></tr>
+          <tr><td><b>圆角</b></td><td>字面量 / 派生尺度 / 面板专用变量(含已死的 14-10 fallback)</td><td>328 / 478 / 6</td><td>15 个取值,相邻元素可能不同族</td></tr>
+          <tr><td><b>阴影</b></td><td>四档静态 + Tailwind 别名(自引用已坏)+ 白名单 lint</td><td>214 / 15 / 11 / 15</td><td>84% 最弱档;想加阴影的人会踩到坏别名</td></tr>
+          <tr><td><b>面板/行尺寸</b></td><td>density 内距推导 vs 上游式命名行高(我们没有)</td><td>146</td><td>行高无法精确对齐栅格(§4)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>7.3 我们自己的门禁有什么盲区</h3>
+    <p>我们有 5 条自定义 ESLint 规则 + 12 道脚本门禁(i18n、架构、契约、身份、版本…),这套基础设施比上游更严 —— 但实测仍有漏网。</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>规则</th><th>级别</th><th>漏网</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td><code>no-hardcoded-z-index</code></td><td>error</td><td><b>22 处 <code>z-[N]</code></b>(PanelHeader 10 · SurfaceSlot 3 · ContextWorkbenchTabs 2 · browser-toolbar 2 …)</td>
+            <td>规则处理"静态值",而 <code>z-[3]</code> 是任意值形式,未被匹配 —— <b>我们自己的规则有形式盲区</b>。这条应优先补:z 层级混乱会盖住交互,比圆角更伤。</td></tr>
+          <tr><td><code>no-nonstandard-shadows</code></td><td>error(带例外)</td><td><b>35 处</b>非白名单阴影类</td>
+            <td>配置里对 5 个路径 <code>off</code>(sortable-list、browser-pane-manager、browser-live-fx、KeyboardShortcutsDialog、playground);且白名单本身很宽。</td></tr>
+          <tr><td><code>no-transition-all</code></td><td>warn</td><td>4 处,全在 playground(按设计豁免)</td>
+            <td><span class="yes">基本达标</span> —— 这项我们比上游做得好(上游 0.14.1 有 43 处)。</td></tr>
+          <tr><td>圆角 / 字号 / 填充</td><td><b>无规则</b></td><td>328 / 590 / 204</td>
+            <td>正是 §9 要新增的三条。<b>但必须先有尺度 token,否则规则没有替代方案可指。</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>7.4 角色层覆盖率:约束需要落点,而落点几乎没人用</h3>
+    <div class="grid g3">
+      <div class="stat"><div class="n">35</div><div class="k">使用 <code>craft-*</code> 角色类的组件文件</div>
+        <div class="bar bad" style="margin-top:8px"><i style="width:9%"></i></div></div>
+      <div class="stat"><div class="n">192</div><div class="k">直接手写 <code>&lt;button&gt;</code> 的文件</div>
+        <div class="bar bad" style="margin-top:8px"><i style="width:48%"></i></div></div>
+      <div class="stat"><div class="n">396</div><div class="k">组件文件总数(renderer 306 + ui 90)</div>
+        <div class="bar" style="margin-top:8px"><i style="width:100%"></i></div></div>
+    </div>
+    <p style="margin-top:10px">角色层是"设计约束"唯一的物理落点:只有组件走同一套类,改一处才能影响全局。
+    <b>覆盖率不到 9%,等于约束没有落地。</b>这也是为什么 P2 里要包含"把 192 个手写按钮逐步迁移" —— 它比新增规则更重要。</p>
+  </div>
+</section>
+
+<section class="sec" id="debt">
+  <div class="sec-head"><span class="sec-num">§8</span><h2>债务统计与趋势:为什么它会涨回来</h2></div>
+  <div class="duo" style="margin-top:12px">
+    <div class="card">
+      <h4>总量与分布(圆角 + 字号字面量)</h4>
+      <div class="chart">
+        <div class="row"><span class="lb">electron renderer</span><span class="tr bad"><i style="width:100%"></i></span><span class="vl">655</span></div>
+        <div class="row"><span class="lb">packages/ui</span><span class="tr mid"><i style="width:40%"></i></span><span class="vl">263</span></div>
+        <div class="row"><span class="lb">apps/webui</span><span class="tr"><i style="width:1%"></i></span><span class="vl">6</span></div>
+        <div class="row"><span class="lb">apps/viewer</span><span class="tr"><i style="width:0%"></i></span><span class="vl">0</span></div>
+      </div>
+      <p style="margin-top:10px">外围两个应用几乎干净 —— 因为它们<b>复用组件而不自己写样式</b>。这反过来说明:债务的来源不是"应用多",而是"谁写样式谁造债"。</p>
+    </div>
+    <div class="card">
+      <h4>违规最集中的 10 个文件</h4>
+      <div class="kv">
+        <dt>72</dt><dd>kanban/TaskEditor.tsx</dd>
+        <dt>66</dt><dd>session-decisions/DecisionBoard.tsx</dd>
+        <dt>47</dt><dd>packages/ui · chat/TurnCard.tsx</dd>
+        <dt>45</dt><dd>playground/registry/entity-lists.tsx <span class="small">(演示页,可排除)</span></dd>
+        <dt>42</dt><dd>packages/ui · chat/UserMessageBubble.tsx</dd>
+        <dt>30</dt><dd>session-decisions/decision-view.tsx</dd>
+        <dt>28 / 26 / 23</dt><dd>packages/ui · trajectory/(Overview / ContextView / RecordInspector)</dd>
+        <dt>27</dt><dd>app-shell/AppShell.tsx</dd>
+      </div>
+      <div class="callout warn" style="margin-top:10px">
+        <p><b>这份榜单本身就是最重要的结论:</b>除 AppShell 与 TurnCard,其余全是<b>我们最近新做的功能</b>
+        (session-decisions、trajectory、kanban)。<b>债务不是遗留的,新功能还在持续增加。</b></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>8.1 两条结构性风险</h3>
+    <div class="duo">
+      <div class="card"><h4>同一套调色板被两份 CSS 维护</h4>
+        <p><code>apps/electron/src/renderer/index.css</code> 与 <code>packages/ui/src/styles/index.css</code> 各自定义 <code>:root</code>/<code>.dark</code>。
+        我核对了 9 个关键 token(<code>--background / --foreground / --border / --secondary / --muted / --card / --popover / --input / --ring</code>)——
+        <b>当前 9/9 完全一致</b>。</p>
+        <p style="margin-top:8px"><b>今天安全,明天危险:</b>两份独立维护的同源数据必然漂移;而且 viewer 与 webui 走的是不同 import 路径,
+        改一处漏一处时不会报错。<b>解法:单一 tokens 文件 + 引用</b>(上游正是这么做的)。</p></div>
+      <div class="card"><h4>两处"设计了但没生效"</h4>
+        <dl class="kv">
+          <dt><code>RADIUS_EDGE/INNER</code></dt><dd>14 / 10 的 macOS 嵌套圆角设计,被 <code>--theme-panel-radius: 6px</code> 覆盖成死代码(§2.1)</dd>
+          <dt><code>--shadow-sm…2xl</code></dt><dd>自引用循环 → <code>shadow-xs/sm/md/lg/xl/2xl</code> 全部渲染为无阴影</dd>
+          <dt>另一处</dt><dd><code>useDynamicStack.ts</code>(185 行)全仓库只有 1 处引用 —— 可评估移除(上游已连同使用它的组件一起删除)</dd>
+        </dl>
+        <p style="margin-top:8px">这三处都属于"看不出坏了、但其实没在工作"的类型,建议在 P0 一并处理:它们修复后<b>行为会对,外观几乎不变</b>。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="plan">
+  <div class="sec-head"><span class="sec-num">§9</span><h2>修复路线与目标态</h2></div>
+  <p>所有条目都是<b>微优化</b>:不动布局结构、不动交互模型、不引入新依赖。P0 只改变量与少数内距,风险接近零。</p>
+
+  <div class="tier p0">
+    <h4>P0 · 正确性与可见缺陷(1–2 天,不动设计取向)</h4>
+    <ul class="tight">
+      <li><b>① 焦点可见性</b>(§6.1):全局 <code>*:focus-visible</code> 从 <code>outline: none</code> 改成默认环 + 2px 偏移;<code>craft-*</code> 作为例外。<b>无障碍收益最大的一条。</b></li>
+      <li><b>② 修 <code>z-[N]</code> 22 处</b>并补齐规则对任意值形式的覆盖(§7.3)。</li>
+      <li><b>③ 边框中性化</b>(亮 <code>#E6E6E8</code>、暗去蓝)+ 修 <code>shadow-*</code> 自引用(§1.2 / §2.5)。</li>
+      <li><b>④ 暗色主按钮标签改墨色</b>:3.89 → 4.52,品牌色不动(§6.2)。</li>
+      <li><b>⑤ 让 <code>RADIUS_EDGE/INNER</code> 生效</b>(或把主题字段拆成 edge/inner)(§2.1)。</li>
+      <li><b>⑥ 画布锁色</b>:<code>default.json</code> 写 <code>navigator: #E9E9EA</code>,标题栏与侧栏同源(§1.1 方案 A)。</li>
+    </ul>
+  </div>
+  <div class="tier p1">
+    <h4>P1 · 尺寸与一致性(3–5 天,改数值 + 少量组件)</h4>
+    <ul class="tight">
+      <li><b>⑦ 命名行高</b>:<code>--row-sidebar 32 / --row-menu 30 / --row-list 36</code>,侧栏与菜单改用 <code>min-height</code>;density 改为调行高。→ 解决"侧栏偏大"(§4)。</li>
+      <li><b>⑧ 侧栏横向内距对称化</b>(滚动条 gutter 补偿),并把首行与面板头对齐(§3.1 / §4)。</li>
+      <li><b>⑨ 统一列宽与内容边</b>:<code>840 → 768</code>;输入区与转录列同 padding(§3.2)。</li>
+      <li><b>⑩ 状态统一</b>:三档填充 + 选中态统一 + 气泡改用填充 token(§5)。</li>
+      <li><b>⑪ 分隔线两档化</b> + 面板接缝与面板边框同权重(§1.2 / §3.3)。</li>
+      <li><b>⑫ 卡片一档真实高程</b> + 输入框/代码块用下沉色(§1.3 / §1.4)。</li>
+      <li><b>⑬ 紧凑断点的触摸目标放大</b>(图标按钮 → 36px)(§6.3)。</li>
+    </ul>
+  </div>
+  <div class="tier p2">
+    <h4>P2 · 尺度与门禁(1–2 周,防止数字回到今天)</h4>
+    <ul class="tight">
+      <li><b>⑭ 补四类 token</b>:4 级字号、4 级圆角、3 档填充、命名行高 + 栅格(§2)。</li>
+      <li><b>⑮ codemod 收敛</b>:328 圆角 + 590 字号 + 204 填充 + 407 间距按映射表替换;<code>--fill-*</code>、<code>--surface-*</code> 真正落地。</li>
+      <li><b>⑯ 提高角色层覆盖率</b>:192 个手写 <code>&lt;button&gt;</code> 逐步迁到 <code>craft-*</code> —— 约束的落点(§7.4)。</li>
+      <li><b>⑰ 加三条规则</b>(禁止圆角/字号/填充字面量),先 <code>warn</code> 后 <code>error</code>;并把"hover 才出现必须带 <code>data-touch-reveal</code>"也做成规则(§5)。</li>
+      <li><b>⑱ 单一来源</b>:两份 <code>index.css</code> 合并为一份 tokens + 引用(§8.1)。</li>
+      <li><b>⑲ 动效唯一来源 + 减少动效产品开关</b>(§2.6 / §6.4)。</li>
+    </ul>
+  </div>
+
+  <h4 style="margin-top:24px">目标态对照表(改完之后各维度长什么样)</h4>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>维度</th><th>现在</th><th>目标</th><th>可验证的判据</th></tr></thead>
+      <tbody>
+        <tr><td>面</td><td>画布 #E8E8E9(随壁纸)· 五面全白 · 卡片无高程</td><td>画布 #E9E9EA(设计值)· 纸面白 · 下沉井 #F7F8FA · 卡片一档高程</td>
+          <td>截图取样:画布与纸面 Δ22;卡片外侧可见 5–6% 阴影梯度</td></tr>
+        <tr><td>圆角</td><td>15 个取值</td><td>4 级 + 嵌套公式</td><td>全项目 <code>rounded-[Npx]</code> 命中 0</td></tr>
+        <tr><td>字号</td><td>590 字面量 + 两套尺度</td><td>4 级</td><td><code>text-[Npx]</code> 命中 0;<code>text-xs/sm</code> 退场</td></tr>
+        <tr><td>填充</td><td>12 个 alpha</td><td>3 档 + 气泡档</td><td><code>bg-foreground/[0.0N]</code> 命中 0</td></tr>
+        <tr><td>栅格</td><td>三列各自的第一条线;卡片 804 / 输入卡 811</td><td>共享 gutter;两卡同宽</td><td>截图量:两卡左右边缘差 ≤1px</td></tr>
+        <tr><td>侧栏</td><td>行高 38–42 · 栈占 380 · 内距不对称</td><td>行高 32 · 栈占 ≈330 · 对称</td><td>截图量:行间距 32–34;左右内距差 ≤1px</td></tr>
+        <tr><td>焦点</td><td>全局关闭 · 1px / 0 偏移</td><td>默认 2px + 2px 偏移</td><td>键盘 Tab 走查:每个可点元素都有环</td></tr>
+        <tr><td>对比度</td><td>6/56 不达标</td><td>0 不达标,且状态色保留色相</td><td>脚本断言(每个主题 × 明暗)</td></tr>
+        <tr><td>门禁</td><td>3 类无规则 · z-[N] 漏网</td><td>6 条规则覆盖</td><td>lint 报告:对应命中数 0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout ok" style="margin-top:14px">
+    <h4>如果只做三件事</h4>
+    <ul class="tight">
+      <li><b>① 修焦点可见性</b> —— 影响"能不能用键盘",而不是"好不好看";一处全局规则,全项目受益。</li>
+      <li><b>② 命名行高 + 画布锁色</b> —— 分别回答你问的"侧栏偏大"与"着色风险",且都不改变设计取向。</li>
+      <li><b>③ 边框中性化 + 卡片一档高程</b> —— 让"边界"这件事从"一条偏蓝的线"变成"色差 + 阴影",这是"质感"最直接的变化。</li>
+    </ul>
+    <p style="margin-top:8px">做完这三件,你在截图上指出的五条(背景偏灰、圆角不一致、顶部不齐、边界不清、卡片过宽)里<b>四条会有明显变化</b>;
+    而圆角与字号的彻底一致、以及不再复发,取决于 P2。</p>
+  </div>
+</section>
+
+<section class="sec" id="method">
+  <div class="sec-head"><span class="sec-num">§10</span><h2>方法、口径与不确定项</h2></div>
+  <div class="duo" style="margin-top:12px">
+    <div class="card">
+      <h4>统计与测量口径</h4>
+      <ul class="tight">
+        <li><b>像素测量</b>:Pillow 逐像素扫描 —— 颜色取样、水平/垂直边界扫描、圆角弧线最小二乘拟合(残差 &lt; 0.35px 才采信);标定 @2x(§0)。</li>
+        <li><b>代码统计</b>:范围 <code>apps/electron/src/renderer</code>、<code>packages/ui/src</code>、<code>apps/webui/src</code>、<code>apps/viewer/src</code>,
+        文件类型 <code>.ts/.tsx/.css</code>,正则命中次数 —— <b>不是 ESLint 运行结果</b>,所以与 lint 报告可能有少量差异。</li>
+        <li><b>对比度</b>:WCAG 2.x 在 8 位 sRGB 上计算;我们的状态文字按 <code>color-mix(in oklab, 色 50%, 前景)</code> 推导。</li>
+        <li><b>灰阶差</b>:sRGB 通道值直接差,用于比较"画布/纸面"的相对亮度,<b>不是对比度比</b>。</li>
+        <li><b>只读</b>:两个仓库都没有文件被修改;本文档位于项目目录之外。</li>
+      </ul>
+    </div>
+    <div class="card sunken">
+      <h4>不确定项(不要当结论用)</h4>
+      <ul class="tight">
+        <li><b>面板间隙里 4px 灰带的成分</b>:推断是"缩放条 2px 线 + 两侧面板阴影叠加",未逐层验证;要改先确认是谁画的。</li>
+        <li><b>回复卡圆角</b>:代码在 <code>TurnCard.tsx:2689</code> 写 <code>rounded-[8px]</code>,实测弧线却是 5–6 —— 可能截图里那张卡片是另一个带 <code>overflow-hidden</code> 的包装组件,落地前需确认是哪一层。</li>
+        <li><b>列表头 58.5 css</b>:只量到"顶边到下沿分隔线",组成(标题行 + 分组标签 + 间距)未逐层核对。</li>
+        <li><b><code>z-[N]</code> 未被规则拦截的确切原因</b>:确认了规则以 error 接入且这 22 处存在,但未逐行读规则实现定位是"任意值未覆盖"还是"文件被 exclude"。补规则前需确认。</li>
+        <li><b>35 处非白名单阴影</b>:包含配置里显式 <code>off</code> 的路径,未区分"豁免"与"真漏"。</li>
+        <li><b>角色层覆盖率 35/396</b>:是"含 <code>craft-*</code> 字符串的文件数",不是组件个数;真实覆盖率可能更低。</li>
+        <li><b>行高 42 → 32 的观感</b>:由上游 28 与我们的实测反推,未做渲染验证;建议 32 与 34 各试一版再定。</li>
+        <li><b>方案 B 的"−43%"</b>:是灰阶差比值(23→13),不是感知亮度比;真实观感受边框/阴影影响,必须与 P0 的边界改动一起评估。</li>
+        <li><b>暗色模式未实测</b>:本文档的暗色是用我们的 token 值还原的,不是你截图里的暗色界面。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer style="margin-top:44px;padding-top:20px;border-top:1px solid var(--border-subtle);color:var(--text-tertiary);font-size:var(--fs-label-sm);line-height:var(--lh-label)">
+  <p><b>这份文档是什么。</b>对 Phaneris 当前前端的一次系统性视觉审计:先用一张 Retina 截图(@2x)做逐像素实测建立基线,
+  再用正则统计覆盖 396 个组件文件(renderer 306 + ui 90),最后把两侧证据合并为八个维度与一份修复路线。
+  它由两份更早的分析合并而成 ——《逐像素微优化清单》(基于截图的实测)与《四问回复与全项目审计》(侧栏尺寸、token 归属、着色风险、硬编码统计) ——
+  重排为一条主线:基线 → 面 → 尺度 → 栅格 → 侧栏 → 状态 → 无障碍 → 体系与门禁 → 债务趋势 → 路线与目标态。</p>
+  <p style="margin-top:6px"><b>证据口径与边界。</b>像素测量用 Pillow 逐像素扫描(颜色取样、边界扫描、圆角弧线最小二乘拟合,残差 &lt; 0.35px 才采信);
+  代码统计是正则命中次数而<b>不是</b> ESLint 运行结果;对比度按 WCAG 2.x 在 8 位 sRGB 上计算。不确定项集中列在 §10,请勿把推断当结论。
+  审计时点:<b>2026-10-11</b>(审计开始时工作区已有 361 项未提交改动,因此统计包含未完成工作)。</p>
+  <p style="margin-top:6px">相关但未归档在这里的材料:上游 v0.15.0 的变更评估与"机制 vs 皮肤"评估是同一轮分析的另外两份产物,不随本文档进入仓库。</p>
+</footer>
+
+  </main>
+  </div><!-- /paper -->
+  </div><!-- /card-wrap -->
+</div><!-- /shell -->
+
+<script>
+(function(){
+  var btn=document.getElementById('themeBtn'), root=document.documentElement, saved=null;
+  try{ saved=localStorage.getItem('v015-preview-theme'); }catch(e){}
+  if(saved==='dark') root.classList.add('dark');
+  btn && btn.addEventListener('click',function(){
+    root.classList.toggle('dark');
+    try{ localStorage.setItem('v015-preview-theme', root.classList.contains('dark')?'dark':'light'); }catch(e){}
+  });
+})();
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function onScroll(){
+    var best=0, y=window.scrollY+120;
+    secs.forEach(function(s,i){ if(s && s.offsetTop<=y) best=i; });
+    links.forEach(function(a,i){ a.classList.toggle('active', i===best); });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+</script>
+</body>
+</html>

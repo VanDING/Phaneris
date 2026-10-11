@@ -9,12 +9,15 @@
  */
 
 import i18n from 'i18next'
+import { SUPPORTED_LANGUAGE_CODES } from '@phaneris/shared/i18n/languages'
+import { changeAppLanguage } from '@phaneris/shared/i18n'
 import { toast } from 'sonner'
 import { openExternalUrl } from '@phaneris/ui'
 import { WsRpcClient } from '../../../electron/src/transport/client'
 import { buildClientApi } from '../../../electron/src/transport/build-api'
 import { CHANNEL_MAP } from '../../../electron/src/transport/channel-map'
 import type { ElectronAPI, TransportConnectionState } from '../../../electron/src/shared/types'
+import { unavailableClientCapability } from '@/platform/client'
 
 // ---------------------------------------------------------------------------
 // Web file picker (replaces native Electron dialog)
@@ -99,8 +102,8 @@ export function createWebApi(options: WebApiOptions): {
       }
       return Promise.resolve()
     },
-    openFile: () => Promise.resolve(), // no-op in browser
-    showInFolder: () => Promise.resolve(), // no-op in browser
+    openFile: () => unavailableClientCapability('native-file'),
+    showInFolder: () => unavailableClientCapability('native-file'),
 
     // File dialogs
     openFileDialog: webFilePicker,
@@ -111,6 +114,11 @@ export function createWebApi(options: WebApiOptions): {
     getRuntimeEnvironment: () => 'web',
     getSystemWarnings: () => Promise.resolve({ vcredistMissing: false }),
     isDebugMode: () => Promise.resolve(import.meta.env.DEV),
+    // Browser language is a persistent browser preference; native menus belong to the desktop host.
+    changeLanguage: async (language: string) => {
+      if (!SUPPORTED_LANGUAGE_CODES.some(code => code === language)) throw new Error(`Unsupported UI language: ${language}`)
+      await changeAppLanguage(language)
+    },
 
     // Theme
     getSystemTheme: () => Promise.resolve(getSystemTheme()),
@@ -140,12 +148,13 @@ export function createWebApi(options: WebApiOptions): {
     },
 
     // Workspace operations — web UI works with a single connection
-    getWindowWorkspace: () => Promise.resolve(workspaceId ?? null),
+    getWindowWorkspace: () => Promise.resolve(client.getWorkspaceId() ?? null),
     getWindowMode: () => Promise.resolve('main'),
     // switchWorkspace must call the server so it registers the client's
     // workspaceId — otherwise push events (session updates) won't arrive.
     switchWorkspace: async (wsId: string) => {
       await client.invoke('window:switchWorkspace', wsId)
+      client.setAcceptedWorkspaceId(wsId)
     },
     openWorkspace: async () => {},
     openSessionInNewWindow: async (_wsId: string, sessionId: string) => {
@@ -156,7 +165,7 @@ export function createWebApi(options: WebApiOptions): {
     // Auto-update — not applicable to web (but expose server version for About page)
     checkForUpdates: () => Promise.resolve({ available: false, currentVersion: client.getServerVersion() ?? '' } as any),
     getUpdateInfo: () => Promise.resolve({ available: false, currentVersion: client.getServerVersion() ?? '', selfUpdateEnabled: false } as any),
-    installUpdate: () => Promise.resolve(),
+    installUpdate: () => unavailableClientCapability('native-update'),
     dismissUpdate: () => Promise.resolve(),
     getDismissedUpdateVersion: () => Promise.resolve(null),
     onUpdateAvailable: () => () => {},
@@ -204,13 +213,14 @@ export function createWebApi(options: WebApiOptions): {
     onNotificationNavigate: () => () => {},
 
     // Git bash (Windows-only) — not applicable
-    checkGitBash: () => Promise.resolve({ available: true } as any),
+    checkGitBash: () => Promise.resolve({ found: false, path: null,
+      platform: navigator.platform.toLowerCase().includes('win') ? 'win32' : navigator.platform.toLowerCase().includes('mac') ? 'darwin' : 'linux' }),
     browseForGitBash: () => Promise.resolve(null),
-    setGitBashPath: () => Promise.resolve({ success: true }),
+    setGitBashPath: () => unavailableClientCapability('git-bash'),
 
     // Skills — open in browser not possible
-    openSkillInEditor: () => Promise.resolve(),
-    openSkillInFinder: () => Promise.resolve(),
+    openSkillInEditor: () => unavailableClientCapability('native-editor'),
+    openSkillInFinder: () => unavailableClientCapability('native-file'),
 
     // Confirmation dialogs — use browser confirm()
     showLogoutConfirmation: () => Promise.resolve(window.confirm(i18n.t('dialog.logoutConfirmation'))),
@@ -218,7 +228,7 @@ export function createWebApi(options: WebApiOptions): {
 
     // Power settings — not applicable
     getKeepAwakeWhileRunning: () => Promise.resolve(false),
-    setKeepAwakeWhileRunning: () => Promise.resolve(),
+    setKeepAwakeWhileRunning: () => unavailableClientCapability('keep-awake'),
 
     // Transport state
     getTransportConnectionState: () => Promise.resolve(client.getConnectionState() as TransportConnectionState),

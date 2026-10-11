@@ -2138,6 +2138,7 @@
   "toast.failedToRefreshTitle": "Failed to refresh title",
   "toast.failedToReveal": "Failed to reveal in {{fileManager}}",
   "toast.failedToSaveSetting": "Failed to save {{setting}}",
+  "toast.failedToSwitchWorkspace": "Failed to switch workspace",
   "toast.failedToToggleAutomation": "Failed to toggle automation",
   "toast.failedToUpdateProject": "Failed to update session project",
   "toast.installingUpdate": "Installing update...",

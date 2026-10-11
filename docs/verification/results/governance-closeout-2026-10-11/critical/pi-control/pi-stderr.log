@@ -1,0 +1,28 @@
+[pi-server] Pi agent server starting
+[pi-server] Callback server listening on 127.0.0.1:53693
+[pi-server] Injected API key into credential store (legacy fallback)
+[pi-server] Registered custom endpoint: http://127.0.0.1:53690/v1 with 1 model(s) [fixture], api: openai-completions
+[pi-server] Building proxy tools from 0 definitions: 
+[pi-server] Session tools: 7 builtin + 2 web + 0 proxy + 1 progress = 10 total
+[pi-server] [interceptor-hint] api=openai-completions provider=custom-endpoint baseUrl=http://127.0.0.1:53690/v1
+[pi-server] Created Pi session: 01a12b84-b2eb-726b-b009-abe4788879e6 (10 tools)
+[pi-server] [set_model] Received: pi/fixture
+[pi-server] [interceptor-hint] api=openai-completions provider=custom-endpoint baseUrl=http://127.0.0.1:53690/v1
+[pi-server] [set_model] Model changed to: pi/fixture (resolved: custom-endpoint/fixture)
+[pi-server] Ignoring late or duplicate handlePreToolUseResponse
+[pi-server] Ignoring late or duplicate handleDurableModelOutcomeResponse
+[pi-server] Steering with: "Do not execute"
+[pi-server] Injected API key into credential store (legacy fallback)
+[pi-server] Registered custom endpoint: http://127.0.0.1:53690/v1 with 1 model(s) [fixture], api: openai-completions
+[pi-server] Building proxy tools from 0 definitions: 
+[pi-server] Session tools: 7 builtin + 2 web + 0 proxy + 1 progress = 10 total
+[pi-server] [interceptor-hint] api=openai-completions provider=custom-endpoint baseUrl=http://127.0.0.1:53690/v1
+[pi-server] Created Pi session: 01a12b84-b31b-726b-b009-abe6816499d3 (10 tools)
+[pi-server] Injected API key into credential store (legacy fallback)
+[pi-server] Registered custom endpoint: http://127.0.0.1:53690/v1 with 1 model(s) [fixture], api: openai-completions
+[pi-server] Building proxy tools from 0 definitions: 
+[pi-server] Session tools: 7 builtin + 2 web + 0 proxy + 1 progress = 10 total
+[pi-server] [interceptor-hint] api=openai-completions provider=custom-endpoint baseUrl=http://127.0.0.1:53690/v1
+[pi-server] Created Pi session: 01a12b84-b325-726b-b009-abe82bdfd2e0 (10 tools)
+[pi-server] stdin closed, shutting down
+[pi-server] Shutdown requested

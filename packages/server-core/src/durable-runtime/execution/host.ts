@@ -205,6 +205,7 @@ export class RuntimeHost {
     })
   }
   async steer(sessionId: string, input: unknown, original: { messageId: string; content: string; createdAt: number }, queued?: RuntimeQueueInput): Promise<RuntimeInputReceipt> {
+    if (this.closing) return { disposition: 'rejected', reason: 'runtime_admission_closed' }
     const s = this.slot(sessionId), generation = s.generation, runId = s.activeRun
     if (!s.processing || s.stopRequested || s.blocked || !s.driver?.steer || !runId || !s.scope) return { disposition: 'rejected', reason: 'foreground_unavailable' }
     const observe = (event: string, data: Record<string, unknown>) => this.observations.recordSdkObservation(s.scope!.workspaceRootPath, {
@@ -386,7 +387,7 @@ export class RuntimeHost {
     s.generation++; s.observers.clear(); this.slots.delete(sessionId)
   }
   async shutdown(): Promise<void> {
-    this.closing = true
+    this.closeAdmission()
     const drivers = [...this.auxiliaryDrivers]; this.auxiliaryDrivers.clear()
     for (const driver of drivers) try { driver.stop('shutdown') } catch { /* Continue draining other drivers. */ }
     await Promise.allSettled([
@@ -394,4 +395,5 @@ export class RuntimeHost {
       ...drivers.map(driver => withinDeadline(Promise.resolve().then(() => driver.dispose()), this.deadlineMs)),
     ])
   }
+  closeAdmission(): void { this.closing = true }
 }

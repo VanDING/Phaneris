@@ -1,0 +1,18 @@
+13 |   return explicit ? resolve(explicit) : join(root, fallback)
+14 | }
+15 | interface Step { name?: string; uses?: string; if?: unknown; run?: string; with?: Record<string, unknown>; 'continue-on-error'?: unknown }
+16 | interface Job { steps: Step[]; if?: unknown; 'continue-on-error'?: unknown }
+17 | const workflow = loadYaml(readFileSync(input('workflow', '.github/workflows/validate.yml'), 'utf8')) as { on?: Record<string, unknown>; jobs: Record<string, Job> }
+18 | assert(workflow.on && Object.hasOwn(workflow.on, 'pull_request'), 'PR validation trigger is required')
+     ^
+AssertionError: PR validation trigger is required
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:18:1
+
+Bun v1.4.2 (macOS x64)

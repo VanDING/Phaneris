@@ -1,0 +1,94 @@
+{
+  "scenes": [
+    "first:corrupt-preserved",
+    "first:migration-idempotent",
+    "first:concurrent-in-process-settings",
+    "first:windows-draft",
+    "first:without-bundled-assets",
+    "first:compatibility-owner-identity",
+    "first:connection-refresh",
+    "first:credential-failure-preserves-cache-and-vault",
+    "second:corrupt-preserved",
+    "second:migration-idempotent",
+    "second:concurrent-in-process-settings",
+    "second:windows-draft",
+    "second:without-bundled-assets",
+    "second:compatibility-owner-identity",
+    "second:connection-refresh",
+    "second:credential-failure-preserves-cache-and-vault",
+    "browser-pure-schema",
+    "isolated-config-dirs"
+  ],
+  "results": [
+    {
+      "dir": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/config-domains/first",
+      "checks": [
+        "corrupt-preserved",
+        "migration-idempotent",
+        "concurrent-in-process-settings",
+        "windows-draft",
+        "without-bundled-assets",
+        "compatibility-owner-identity",
+        "connection-refresh",
+        "credential-failure-preserves-cache-and-vault"
+      ],
+      "persisted": {
+        "workspaces": [],
+        "activeWorkspaceId": null,
+        "activeSessionId": null,
+        "llmConnections": [
+          {
+            "slug": "old",
+            "name": "Refreshed",
+            "providerType": "pi",
+            "authType": "oauth",
+            "modelSelectionMode": "automaticallySyncedFromProvider",
+            "piAuthProvider": "openai-codex"
+          }
+        ],
+        "defaultLlmConnection": "old",
+        "migrationsApplied": [
+          "opus-4-6-restored-2"
+        ],
+        "notificationsEnabled": true,
+        "spellCheck": true,
+        "sendMessageKey": "cmd-enter"
+      }
+    },
+    {
+      "dir": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/config-domains/second",
+      "checks": [
+        "corrupt-preserved",
+        "migration-idempotent",
+        "concurrent-in-process-settings",
+        "windows-draft",
+        "without-bundled-assets",
+        "compatibility-owner-identity",
+        "connection-refresh",
+        "credential-failure-preserves-cache-and-vault"
+      ],
+      "persisted": {
+        "workspaces": [],
+        "activeWorkspaceId": null,
+        "activeSessionId": null,
+        "llmConnections": [
+          {
+            "slug": "old",
+            "name": "Refreshed",
+            "providerType": "pi",
+            "authType": "oauth",
+            "modelSelectionMode": "automaticallySyncedFromProvider",
+            "piAuthProvider": "openai-codex"
+          }
+        ],
+        "defaultLlmConnection": "old",
+        "migrationsApplied": [
+          "opus-4-6-restored-2"
+        ],
+        "notificationsEnabled": true,
+        "spellCheck": true,
+        "sendMessageKey": "cmd-enter"
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{"event":"quiesced"}
+{"event":"cleanup","count":1}
+{"event":"exit","code":1,"cleanups":1,"reports":2}
+
+{"event":"diagnostic","kind":"unhandledRejection","detail":"[electron-ports] Error: port-first-failure\n    at /Users/van/projects/Phaneris/scripts/verification/fixtures/process-lifecycle-port.ts:18:44\nCaused by: Error: port-original-cause\n    at /Users/van/projects/Phaneris/scripts/verification/fixtures/process-lifecycle-port.ts:18:85","count":1}
+{"event":"diagnostic","kind":"shutdown_deadline","detail":"[electron-ports] Error: Process cleanup deadline exceeded\n    at <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/runtime/process-lifecycle.ts:39:53)","count":2}

@@ -216,36 +216,8 @@ async function buildWhatsAppWorker(): Promise<void> {
 
   console.log("📨 Building WhatsApp worker...");
 
-  const workerDistDir = join(WA_WORKER_DIR, "dist");
-  if (!existsSync(workerDistDir)) {
-    mkdirSync(workerDistDir, { recursive: true });
-  }
-
-  // Baileys is bundled INTO worker.cjs (not external) so the packaged app is
-  // self-contained. Dynamic `import('@whiskeysockets/baileys')` is resolved
-  // at bundle time because the specifier is a literal.
   const proc = spawn({
-    cmd: [
-      "bun", "run", "esbuild",
-      WA_WORKER_SOURCE,
-      "--bundle",
-      "--platform=node",
-      "--format=cjs",
-      // Matches ARG NODE_MAJOR in Dockerfile.server and the worker build.
-      "--target=node24",
-      `--outfile=${WA_WORKER_OUTPUT}`,
-      '--minify',
-      "--external:electron",
-      "--external:node-pty",
-      // Baileys' runtime-optional features — wrapped in try/catch at the
-      // call site and not used by Phaneris (we send text + documents, no
-      // link previews, no inline image processing, no terminal QR).
-      "--external:link-preview-js",
-      "--external:qrcode-terminal",
-      "--external:sharp",
-      "--external:@img/sharp-*",
-      "--external:jimp",
-    ],
+    cmd: ["bun", "run", "build:wa-worker"],
     cwd: ROOT_DIR,
     stdout: "inherit",
     stderr: "inherit",

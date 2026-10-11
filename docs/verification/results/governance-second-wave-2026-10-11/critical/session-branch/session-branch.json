@@ -1,0 +1,43 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-branch-workflow-EFLeWz",
+  "checks": [
+    {
+      "id": "missing-parent-sdk",
+      "passed": true,
+      "childId": "",
+      "disposed": false,
+      "poolStopped": false,
+      "mcpDisconnected": false,
+      "hostGeneration": null
+    },
+    {
+      "id": "preflight-rollback",
+      "passed": true,
+      "childId": "261011-light-chrome",
+      "disposed": true,
+      "poolStopped": true,
+      "mcpDisconnected": true,
+      "hostGeneration": 1
+    },
+    {
+      "id": "successful-preflight",
+      "passed": true,
+      "childId": "261011-young-cypress",
+      "disposed": false,
+      "poolStopped": false,
+      "mcpDisconnected": false,
+      "hostGeneration": 0
+    },
+    {
+      "id": "successful-branch-delete",
+      "passed": true,
+      "childId": "261011-young-cypress",
+      "disposed": true,
+      "poolStopped": true,
+      "mcpDisconnected": true,
+      "hostGeneration": 1
+    }
+  ],
+  "parentUnchanged": true,
+  "parentSha256": "81e2298cefcda049045907ca390cc45863c0aa96ba41c6547403d44164fb34d0"
+}

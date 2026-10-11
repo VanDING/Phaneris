@@ -1,0 +1,4 @@
+{
+  "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'AUTH_FAILED'\n",
+  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'AUTH_FAILED'\n\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/webui-auth-lifecycle-workflow.ts:105:14)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

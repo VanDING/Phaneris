@@ -23,7 +23,8 @@ import { debug } from '../utils/debug.ts';
 import { expandPath } from '../utils/paths.ts';
 import { readJsonFileSync } from '../utils/files.ts';
 import { perf } from '../utils/perf.ts';
-import { loadStoredConfig, type StoredConfig } from './storage.ts';
+import { loadStoredConfig } from './repository.ts';
+import { type StoredConfig } from './persisted-types.ts';
 import {
   validateConfig,
   validatePreferences,
@@ -60,7 +61,8 @@ import {
 import { readSessionHeader } from '../sessions/jsonl.ts';
 import type { SessionHeader } from '../sessions/types.ts';
 import { AUTOMATIONS_CONFIG_FILE } from '../automations/constants.ts';
-import { ensureUserThemesDir, getAppThemesDir, isValidUserThemeId } from './storage.ts';
+import { ensureUserThemesDir, getAppThemesDir } from './appearance.ts';
+import { isValidUserThemeId } from './theme.ts';
 
 // ============================================================
 // Active Watcher Registry (duplicate detection)
@@ -122,7 +124,7 @@ export interface ConfigWatcherCallbacks {
   /** Called when preferences.json changes */
   onPreferencesChange?: (prefs: UserPreferences) => void;
   /** Called when LLM connections array changes (add/remove/update connections) */
-  onLlmConnectionsChange?: (connections: import('./storage.ts').LlmConnection[]) => void;
+  onLlmConnectionsChange?: (connections: import('./llm-connections.ts').LlmConnection[]) => void;
 
   // Source callbacks
   /** Called when a specific source config changes (null if deleted) */

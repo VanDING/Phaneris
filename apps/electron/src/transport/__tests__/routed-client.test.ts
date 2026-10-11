@@ -10,7 +10,7 @@ import type { WsRpcClient, TransportConnectionState } from '../client'
 // Minimal WsRpcClient stub
 // ---------------------------------------------------------------------------
 
-function stubClient(overrides?: Partial<WsRpcClient>): WsRpcClient {
+function stubClient(overrides?: Partial<Omit<WsRpcClient, 'invoke'>> & { invoke?: (channel: string, ...args: unknown[]) => Promise<unknown> }): WsRpcClient {
   const listeners = new Map<string, Set<(...args: any[]) => void>>()
   const capabilities = new Map<string, (...args: any[]) => any>()
 
@@ -36,6 +36,7 @@ function stubClient(overrides?: Partial<WsRpcClient>): WsRpcClient {
       return () => {}
     }),
     reconnectNow: mock(() => {}),
+    setAcceptedWorkspaceId: mock((_workspaceId: string) => {}),
     emitReconnected: mock((isStale: boolean) => {
       const set = listeners.get('__transport:reconnected')
       if (!set) return
@@ -54,7 +55,7 @@ function stubClient(overrides?: Partial<WsRpcClient>): WsRpcClient {
 import { isLocalOnly, RPC_CHANNELS } from '@phaneris/shared/protocol'
 
 const LOCAL_CHANNEL = RPC_CHANNELS.window.GET_WORKSPACE   // LOCAL_ONLY
-const REMOTE_CHANNEL = RPC_CHANNELS.sessions.GET           // REMOTE_ELIGIBLE
+const REMOTE_CHANNEL: string = RPC_CHANNELS.sessions.GET           // REMOTE_ELIGIBLE
 const SWITCH_CHANNEL = RPC_CHANNELS.window.SWITCH_WORKSPACE
 
 describe('RoutedClient', () => {

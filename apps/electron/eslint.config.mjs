@@ -1,3 +1,4 @@
+import { commonRules } from '../../scripts/eslint-common.mjs'
 /**
  * ESLint Configuration for Electron App
  *
@@ -51,7 +52,7 @@ export default [
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       // Custom plugin for Phaneris rules
-      'craft-agent': {
+      'phaneris': {
         rules: {
           'no-direct-navigation-state': noDirectNavigationState,
           'no-localstorage': noLocalStorage,
@@ -96,13 +97,14 @@ export default [
       },
     },
     rules: {
+      ...commonRules,
       // React Hooks rules
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
       // Custom Phaneris rules
-      'craft-agent/no-direct-navigation-state': 'error',
-      'craft-agent/no-localstorage': 'warn',
+      'phaneris/no-direct-navigation-state': 'error',
+      'phaneris/no-localstorage': 'warn',
 
       // Custom platform detection rule
       'craft-platform/no-direct-platform-check': 'error',

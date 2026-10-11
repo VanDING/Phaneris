@@ -1,0 +1,4 @@
+{
+  "message": "socket hang up",
+  "stack": "Error: socket hang up\n    at socketOnEndInner (node:_http_client:322:74)\n    at emit (node:events:118:23)\n    at endReadableNT (internal:streams/readable:901:50)\n    at processTicksAndRejections (native:7:39)"
+}

@@ -1,0 +1,82 @@
+{
+  "scenes": [
+    "batched-init-before-dependent-commands",
+    "concurrent-ready-single-session",
+    "active-model-registry-refresh",
+    "late-response-does-not-create-session",
+    "abort-and-steer-control",
+    "reinitialize-ready",
+    "parent-pipe-close-shutdown"
+  ],
+  "messages": [
+    {
+      "type": "ready",
+      "sessionId": null,
+      "callbackPort": 57291
+    },
+    {
+      "type": "session_id_update",
+      "sessionId": "01a12a96-cf13-7634-966d-79c079015674"
+    },
+    {
+      "type": "thinking_level_state",
+      "effectiveLevel": "off",
+      "availableLevels": [
+        "off"
+      ]
+    },
+    {
+      "type": "ensure_session_ready_result",
+      "id": "first",
+      "sessionId": "01a12a96-cf13-7634-966d-79c079015674"
+    },
+    {
+      "type": "ensure_session_ready_result",
+      "id": "second",
+      "sessionId": "01a12a96-cf13-7634-966d-79c079015674"
+    },
+    {
+      "type": "set_model_result",
+      "model": "pi/fixture",
+      "contextWindow": 128000
+    },
+    {
+      "type": "thinking_level_state",
+      "effectiveLevel": "off",
+      "availableLevels": [
+        "off"
+      ]
+    },
+    {
+      "type": "ensure_session_ready_result",
+      "id": "third",
+      "sessionId": "01a12a96-cf13-7634-966d-79c079015674"
+    },
+    {
+      "type": "input_received",
+      "id": "after-abort",
+      "disposition": "queued"
+    },
+    {
+      "type": "ready",
+      "sessionId": null,
+      "callbackPort": 57291
+    },
+    {
+      "type": "session_id_update",
+      "sessionId": "01a12a96-cf45-7634-966d-79c331b3b616"
+    },
+    {
+      "type": "thinking_level_state",
+      "effectiveLevel": "off",
+      "availableLevels": [
+        "off"
+      ]
+    },
+    {
+      "type": "ensure_session_ready_result",
+      "id": "after-init",
+      "sessionId": "01a12a96-cf45-7634-966d-79c331b3b616"
+    }
+  ]
+}

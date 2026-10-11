@@ -1,9 +1,9 @@
 import type { ModelRegistry as PiModelRegistry } from '@earendil-works/pi-coding-agent';
-import { normalizePiProvider } from '../../shared/src/config/pi-provider-compat.ts';
+import { normalizePiProvider } from '@phaneris/shared/config/pi-provider-compat';
 
 // Re-export from shared so the auth-aware mini-model denylist has a single
 // source of truth (also used by `getMiniModel()` at selection time).
-export { isDeniedMiniModelId } from '../../shared/src/config/llm-connections.ts';
+export { isDeniedMiniModelId } from '@phaneris/shared/config/llm-connections';
 
 // Re-export the PiModel type used by callers
 type PiModel<T = any> = ReturnType<PiModelRegistry['find']>;

@@ -3,7 +3,7 @@ import { join } from 'path'
 import { RPC_CHANNELS, type FileAttachment, type SendMessageOptions, type SessionEvent, type SessionFileScope } from '@phaneris/shared/protocol'
 import { validateSessionId } from '@phaneris/shared/sessions'
 import type { StoredAttachment } from '@phaneris/core/types'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { perf } from '@phaneris/shared/utils'
 import { isValidThinkingLevel, THINKING_LEVEL_IDS } from '@phaneris/shared/agent/thinking-levels'
 
@@ -755,7 +755,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   // Import a session bundle into a target workspace
   // targetWorkspaceId is passed explicitly (not from context) so the renderer
   // can import into any workspace the server manages, not just the active one.
-  const importHandler = async (_ctx: any, targetWorkspaceId: string, bundle: unknown, mode: string) => {
+  const importHandler = async (_ctx: RequestContext, targetWorkspaceId: string, bundle: unknown, mode: string) => {
     await sessionManager.waitForInit()
     if (!targetWorkspaceId || typeof targetWorkspaceId !== 'string') throw new Error('targetWorkspaceId is required')
     if (mode !== 'move' && mode !== 'fork') throw new Error(`Invalid dispatch mode: ${mode}`)

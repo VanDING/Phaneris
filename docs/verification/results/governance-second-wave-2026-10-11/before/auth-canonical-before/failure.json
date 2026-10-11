@@ -1,0 +1,4 @@
+{
+  "message": "Equivalent JWT signature spellings cannot bypass logout\n\n200 !== 401\n",
+  "stack": "AssertionError [ERR_ASSERTION]: Equivalent JWT signature spellings cannot bypass logout\n\n200 !== 401\n\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/webui-auth-lifecycle-workflow.ts:46:12)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

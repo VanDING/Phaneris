@@ -2,7 +2,7 @@
 import { readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { bootstrapServer } from '@phaneris/server-core/bootstrap'
-import { createWebuiHandler, nodeHttpAdapter, validateSession } from '@phaneris/server-core/webui'
+import { createWebuiHandler, nodeHttpAdapter } from '@phaneris/server-core/webui'
 import { registerCoreRpcHandlers, cleanupSessionFileWatchForClient } from '@phaneris/server-core/handlers/rpc'
 import { SessionManager, setSessionPlatform, setSessionRuntimeHooks } from '@phaneris/server-core/sessions'
 import { setFetcherPlatform } from '@phaneris/server-core/model-fetchers'
@@ -28,7 +28,7 @@ let route: ReturnType<typeof nodeHttpAdapter> | undefined
 const handlerTimings: { channel: string; elapsedMs: number }[] = []
 const instance = await bootstrapServer({
   serverToken: token, rpcHost: '127.0.0.1', rpcPort: 0, bundledAssetsRoot: root,
-  validateSessionCookie: async cookie => await validateSession(cookie, token) !== null,
+  validateSessionCookie: async (cookie, request) => await web?.validateSessionCookie(cookie, request) ?? false,
   httpHandler: (req, res) => {
     // Browser-enforced offline fixture, without pausing production asset reads
     // in the automation driver. Intersects the application's own CSP.

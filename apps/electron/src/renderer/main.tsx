@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/react'
 import { captureConsoleIntegration } from '@sentry/react'
 import { Provider as JotaiProvider, useAtomValue, getDefaultStore } from 'jotai'
 import { MotionConfig } from 'motion/react'
-import App from './App'
+import { createClientPlatform, initializeClient } from './platform/client'
 import { ThemeProvider } from './context/ThemeContext'
 import { windowWorkspaceIdAtom } from './atoms/sessions'
 import { Toaster } from '@/components/ui/sonner'
@@ -17,6 +17,8 @@ import './index.css'
 
 // Initialize i18n before any React rendering
 setupI18n([LanguageDetector, initReactI18next])
+const App = React.lazy(() => import('./App'))
+const clientReady = initializeClient(createClientPlatform('electron', window.electronAPI), window.electronAPI)
 
 // One-shot bootstrap: ensure the main process's i18n + preferences.json learn
 // the language we just restored from localStorage. The main-process IPC handler
@@ -24,7 +26,7 @@ setupI18n([LanguageDetector, initReactI18next])
 // renderer startup. Without this push, a freshly-installed (or freshly-upgraded)
 // app would still generate titles in English until the user manually re-picks
 // the language in Appearance.
-void whenI18nReady().then(() => {
+void Promise.all([whenI18nReady(), clientReady]).then(() => {
   const resolvedLanguage = i18n.resolvedLanguage
   if (resolvedLanguage) return window.electronAPI?.changeLanguage?.(resolvedLanguage)
 }).catch(error => console.error('[i18n] startup language could not be loaded', error))
@@ -105,13 +107,14 @@ function Root() {
 
   return (
     <ThemeProvider activeWorkspaceId={workspaceId}>
-      <App />
+      <React.Suspense fallback={null}><App /></React.Suspense>
       <Toaster />
     </ThemeProvider>
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const root = ReactDOM.createRoot(document.getElementById('root')!)
+void clientReady.then(() => root.render(
   <React.StrictMode>
     <Sentry.ErrorBoundary fallback={<CrashFallback />}>
       {/*
@@ -129,4 +132,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </JotaiProvider>
     </Sentry.ErrorBoundary>
   </React.StrictMode>
-)
+)).catch(error => {
+  console.error('Client platform initialization failed', error)
+  root.render(<CrashFallback />)
+})

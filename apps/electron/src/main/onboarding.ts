@@ -4,7 +4,7 @@
  * Handles workspace setup and configuration persistence.
  */
 import { getAuthState, getSetupNeeds } from '@phaneris/shared/auth'
-import { isSetupDeferred, setSetupDeferred } from '@phaneris/shared/config/storage'
+import { isSetupDeferred, setSetupDeferred } from '@phaneris/shared/config/appearance';
 import { getCredentialManager } from '@phaneris/shared/credentials'
 import { prepareClaudeOAuth, exchangeClaudeCode, hasValidOAuthState, clearOAuthState, prepareMcpOAuth } from '@phaneris/shared/auth'
 import { validateMcpConnection } from '@phaneris/shared/mcp'

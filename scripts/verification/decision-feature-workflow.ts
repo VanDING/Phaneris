@@ -84,7 +84,7 @@ const cases: any[] = [
   { id: 'adaptiveThinking', positive: 'low', uncertain: null, failure: null, choice: { demand: '0' }, yes: { consequential: false },
     invoke: () => pickTurnThinkingLevel('你好', 'max', deps) },
   { id: 'guardedMode', positive: ['external'], uncertain: [], failure: null, yes: { irreversible: false, outside_workspace: false, external: true },
-    invoke: async () => (await buildGuardedModeCheck({ ...deps, isInteractive: () => true }).check({ promptType: 'bash', toolName: 'Bash', command: 'git push origin main', workingDirectory: '/fixture', arguments: { command: 'git push origin main' } }))?.risks ?? null },
+    invoke: async () => (await buildGuardedModeCheck({ ...deps, isInteractive: () => true }).check({ promptType: 'bash', toolName: 'Bash', description: 'Verification git push fixture', command: 'git push origin main', workingDirectory: '/fixture', arguments: { command: 'git push origin main' } }))?.risks ?? null },
   { id: 'decideTool', positive: .98, uncertain: .5, failure: null,
     invoke: async () => { const r = await buildDecisionToolCallbacks(deps).decide({ state: 'The fixture file contains the value 42.', questions: { present: { type: 'noul', instructions: 'Does the state mention 42?' } } }); return r.ok && r.answers.present?.type === 'noul' ? r.answers.present.noul : null } },
 ]

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "policy": "Every declared channel without an active handler or event producer must have an explicit decision. Adding an implementation requires retiring its reservation.",
+  "surfaces": [
+    {
+      "channel": "messaging:wa:register",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:incoming",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:buttonPress",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:status",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:qr",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:send",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:sendButtons",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:sendTyping",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:sendFile",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:connect",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "messaging:wa:disconnect",
+      "kind": "reserved-subprocess-surface",
+      "owner": "messaging-gateway / messaging-whatsapp-worker",
+      "reason": "Declared legacy subprocess wire surface; no active literal consumer or handler in the current source graph. The active WhatsApp integration uses the worker IPC protocol and WA_START_CONNECT/WA_SUBMIT_PHONE/WA_UI_EVENT. Preserve the wire name without claiming implemented RPC validation."
+    },
+    {
+      "channel": "server:statusChanged",
+      "kind": "reserved-event",
+      "owner": "server-core transport/bootstrap",
+      "reason": "Declared status notification with no active producer or listener. Preserve the stable wire name; GET_STATUS remains the active request path."
+    }
+  ]
+}

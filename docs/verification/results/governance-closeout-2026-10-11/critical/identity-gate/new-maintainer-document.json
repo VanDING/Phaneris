@@ -1,0 +1,25 @@
+{
+  "identity": {
+    "name": "Phaneris",
+    "fullName": "Phaneris Agent",
+    "slug": "phaneris",
+    "description": "Local AI workspace with durable, inspectable execution",
+    "appId": "io.github.vanding.phaneris",
+    "scheme": "phaneris"
+  },
+  "driftProblems": [],
+  "residual": {
+    "open": 1,
+    "allowed": 31,
+    "byToken": {
+      "kebab-slug": 1
+    },
+    "topFiles": [
+      [
+        "docs/new.md",
+        1
+      ]
+    ]
+  },
+  "unusedRules": []
+}

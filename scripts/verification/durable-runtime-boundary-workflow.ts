@@ -14,7 +14,9 @@ import { createDurableRuntime, RuntimeCommitFailure, type RuntimeDriver } from '
 import { createTaskNodeReconciliationAdapter } from '../../packages/server-core/src/tasks/runtime-reconciliation'
 import { auxiliaryModelEffect } from '../../packages/server-core/src/services/auxiliary-model-effect'
 import { runtimeBoundaryEvidence } from './runtime-boundary-evidence'
+import { verificationWorkflow } from './verification-artifacts'
 
+await verificationWorkflow('durable-runtime-boundary', async run => {
 const root = mkdtempSync(join(tmpdir(), 'phaneris-runtime-boundary-'))
 const checks: Array<{ id: string; passed: boolean; detail: string }> = []
 let runtime = createDurableRuntime()
@@ -63,7 +65,7 @@ try {
   const child = { id: 'task-child', taskSlug: 'task', taskRunId: 'run', taskNodeId: 'node', messages: [{ id: 'cached-input', role: 'user' }] }
   const taskRequest = { args: { taskSlug: 'task', runId: 'run', nodeId: 'node' } } as never
   await assert.rejects(() => createTaskNodeReconciliationAdapter(() => [child], async () => {}).queryExternal!(taskRequest), /committed input/)
-  runtime.commands.acceptRun({ workspaceRootPath: root, sessionId: child.id, operationId: 'task-child-run', userMessageId: 'canonical-task-input', userMessage: 'task input' })
+  runtime.commands.acceptRun({ workspaceRootPath: root, sessionId: child.id, operationId: 'task-child-run', turnId: 'canonical-task-input', userMessageId: 'canonical-task-input', userMessage: 'task input' })
   const canonicalTaskAdapter = createTaskNodeReconciliationAdapter(() => [child], async () => {}, session => {
     const event = runtime.queries.events(root, { sessionId: session.id }).find(event => event.type === 'user_message_committed')
     return event ? { id: (event.payload as { messageId: string }).messageId, role: 'user' } : undefined
@@ -235,7 +237,7 @@ try {
   assert.equal(runtime.queries.operations(root).find(item => item.operationId === 'parked')?.phase, 'recovery_parked')
   check('F03/F16/F19', 'Recovery and canonical queries work after reopening without a session application')
   const restoreRuntime = createDurableRuntime(), restoreRoot = join(root, 'restore'), restoreScope = { sessionId: 'restore', workspaceRootPath: restoreRoot }
-  restoreRuntime.commands.acceptRun({ ...restoreScope, operationId: 'backup-run', userMessageId: 'backup-input', userMessage: 'backed up' })
+  restoreRuntime.commands.acceptRun({ ...restoreScope, operationId: 'backup-run', turnId: 'backup-input', userMessageId: 'backup-input', userMessage: 'backed up' })
   restoreRuntime.commands.completeRun(restoreRoot, 'backup-run', 'complete')
   const restoreBackup = restoreRuntime.admin.backupDatabase(restoreRoot, join(root, 'restore-backup.db'))
   const restoreHandle = restoreRuntime.execution.begin(restoreScope)
@@ -250,7 +252,7 @@ try {
   check('F21', 'Database restore requires drained execution and restores canonical facts from a verified backup')
   const closing = createDurableRuntime({ shutdownDeadlineMs: 50 }), closeScope = { ...session, sessionId: 'shutdown' }
   const closeHandle = closing.execution.begin(closeScope)
-  closing.execution.accept(closeHandle, { operationId: 'shutdown-run', userMessageId: 'shutdown-input', userMessage: 'pending' })
+  closing.execution.accept(closeHandle, { operationId: 'shutdown-run', turnId: 'shutdown-input', userMessageId: 'shutdown-input', userMessage: 'pending' })
   await closing.effects.prepareTool(root, { ...identity('shutdown-run', 'pending'), sessionId: closeScope.sessionId, turnId: 'shutdown-input' })
   const stuck: RuntimeDriver = { async *run() { await new Promise(() => {}); yield { type: 'complete' } }, stop() {}, async dispose() { await new Promise(() => {}) } }
   closing.execution.installDriver(closeScope.sessionId, stuck)
@@ -265,15 +267,19 @@ try {
   await assert.rejects(() => closing.execution.admission(closeScope.sessionId, async () => {}))
   assert.equal(runtime.queries.operations(root, closeScope.sessionId)[0]?.phase, 'recovery_parked')
   check('F19', 'Non-cooperative resources cannot hang shutdown or reopen a closed database; unknown effects retain recovery evidence')
-  const outputDir = resolve(import.meta.dir, '../../docs/verification/results/durable-runtime-boundary')
-  mkdirSync(outputDir, { recursive: true })
+  run.complete(checks.map(check => check.id))
+} finally {
+  const outputDir = run.directory
+  try {
   const backup = runtime.admin.backupDatabase(root, join(root, 'workflow-backup.db'))
   const db = join(outputDir, 'workflow.db')
   writeFileSync(db, readFileSync(backup))
-  const output = { schemaVersion: 1, generatedAt: new Date().toISOString(), command: 'bun run scripts/verification/durable-runtime-boundary-workflow.ts',
+  const output = { schemaVersion: 1, generatedAt: new Date().toISOString(),
     ...runtimeBoundaryEvidence('bun run scripts/verification/durable-runtime-boundary-workflow.ts', root), checks,
     eventTrace: runtime.queries.events(root), operations: runtime.queries.operations(root), usage: runtime.queries.usage(root),
     database: { path: db, sha256: createHash('sha256').update(readFileSync(db)).digest('hex') } }
   writeFileSync(join(outputDir, 'workflow.json'), JSON.stringify(output, null, 2) + '\n')
   console.log(JSON.stringify({ passed: checks.length, output: join(outputDir, 'workflow.json') }))
-} finally { await runtime.close() }
+  } finally { await runtime.close() }
+}
+})

@@ -11,7 +11,7 @@
 
 import { sumTokenUsage } from '@phaneris/core/utils';
 import type {
-  AgentEvent as CraftAgentEvent,
+  AgentEvent as ProductAgentEvent,
   ContextUsageSnapshot,
   PiUsage,
   RequestContextSnapshot,
@@ -119,7 +119,7 @@ export class PiEventAdapter extends BaseEventAdapter {
   private contextUsage: ContextUsageSnapshot | undefined;
 
   /** Normalize raw subprocess metadata at the host boundary (also used by manual RPC). */
-  *adaptContextUsage(payload: PiContextUsagePayload, afterCompaction = false, estimatedTokensAfter?: number): Generator<CraftAgentEvent> {
+  *adaptContextUsage(payload: PiContextUsagePayload, afterCompaction = false, estimatedTokensAfter?: number): Generator<ProductAgentEvent> {
     const snapshot = contextFromPi(payload.contextUsage, payload.compactionSettings, estimatedTokensAfter)
       ?? (afterCompaction ? contextAfterCompaction(estimatedTokensAfter, this.contextUsage) : undefined);
     if (snapshot) {
@@ -190,7 +190,7 @@ export class PiEventAdapter extends BaseEventAdapter {
   //   recovering ──agent_end───────────► none          (normal complete)
   //   awaitingRetry|backoff ──auto_retry_end{success:false}──► none (release, complete)
   private retryState: 'none' | 'held' | 'awaitingRetry' | 'backoff' | 'recovering' = 'none';
-  private heldRetryError: CraftAgentEvent | null = null;
+  private heldRetryError: ProductAgentEvent | null = null;
   private retryFallbackTimerId: ReturnType<typeof setTimeout> | null = null;
 
   /** Set when the adapter wants the caller to call `eventQueue.complete()`
@@ -200,7 +200,7 @@ export class PiEventAdapter extends BaseEventAdapter {
   /** Caller-supplied callbacks for the asynchronous fallback timer paths —
    *  the timers fire outside `adaptEvent()` so we can't yield through the
    *  generator. */
-  private onFallbackEvent: ((event: CraftAgentEvent) => void) | null = null;
+  private onFallbackEvent: ((event: ProductAgentEvent) => void) | null = null;
   private onFallbackComplete: (() => void) | null = null;
 
   constructor() {
@@ -222,7 +222,7 @@ export class PiEventAdapter extends BaseEventAdapter {
    * parked error, then `onComplete` to terminate the iterator.
    */
   setRecoveryFallbackHandlers(
-    onEvent: (event: CraftAgentEvent) => void,
+    onEvent: (event: ProductAgentEvent) => void,
     onComplete: () => void,
   ): void {
     this.onFallbackEvent = onEvent;
@@ -268,7 +268,7 @@ export class PiEventAdapter extends BaseEventAdapter {
    * machine. Used when the SDK will not retry (disabled/exhausted) or when a
    * retry was cancelled.
    */
-  private *releaseHeldRetryError(): Generator<CraftAgentEvent> {
+  private *releaseHeldRetryError(): Generator<ProductAgentEvent> {
     const held = this.heldRetryError;
     this.heldRetryError = null;
     this.retryState = 'none';
@@ -288,7 +288,7 @@ export class PiEventAdapter extends BaseEventAdapter {
       this.retryFallbackTimerId = null;
       if (this.retryState !== armedState) return;
       this.log.warn(`Auto-retry fallback fired — ${reason}`, { timeoutMs, state: armedState });
-      const held: CraftAgentEvent = this.heldRetryError ?? {
+      const held: ProductAgentEvent = this.heldRetryError ?? {
         type: 'error',
         message: 'The model request failed and the automatic retry did not start. Please try again.',
       };
@@ -316,7 +316,7 @@ export class PiEventAdapter extends BaseEventAdapter {
    * "socket hang up", "stream ended before message_stop", …) become typed
    * connection/service errors so the UI offers Retry instead of a raw string.
    */
-  private classifyAssistantError(message: AssistantMessage, errorMessage: string): CraftAgentEvent {
+  private classifyAssistantError(message: AssistantMessage, errorMessage: string): ProductAgentEvent {
     const parsed = parseError(new Error(errorMessage));
     if (parsed.code !== 'unknown_error') {
       return { type: 'typed_error', error: parsed };
@@ -398,7 +398,7 @@ export class PiEventAdapter extends BaseEventAdapter {
   /**
    * Adapt a Pi SDK event to zero or more PhanerisEvents.
    */
-  *adaptEvent(event: PiEvent): Generator<CraftAgentEvent> {
+  *adaptEvent(event: PiEvent): Generator<ProductAgentEvent> {
     // Craft-injected event from pi-agent-server (not part of the Pi SDK).
     // The subprocess emits this immediately after each `message_end` to deliver
     // the correct `sdkTurnAnchor` (the leaf id AFTER the SDK has appended the

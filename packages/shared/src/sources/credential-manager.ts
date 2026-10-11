@@ -211,10 +211,10 @@ export class SourceCredentialManager {
    * Delete credential for a source synchronously.
    * Used by sync config-save paths to avoid stale credential reads on immediate reload.
    */
-  deleteSync(source: LoadedSource): boolean {
+  deleteSync(source: LoadedSource, options: { throwOnError?: boolean } = {}): boolean {
     const credentialId = this.getCredentialId(source);
     const manager = getCredentialManager();
-    const deleted = manager.deleteSync(credentialId);
+    const deleted = manager.deleteSync(credentialId, options);
     if (deleted) {
       debug(`[SourceCredentialManager] Deleted ${credentialId.type} for ${source.config.slug}`);
     }

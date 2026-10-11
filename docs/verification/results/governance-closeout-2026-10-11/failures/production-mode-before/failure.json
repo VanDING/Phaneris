@@ -1,0 +1,4 @@
+{
+  "message": "disabled-production-mode: Distribution inputs OK: Bun 1.4.2; 13 workspaces; 3 patches before install\n\n\ntrue !== false\n",
+  "stack": "AssertionError [ERR_ASSERTION]: disabled-production-mode: Distribution inputs OK: Bun 1.4.2; 13 workspaces; 3 patches before install\n\n\ntrue !== false\n\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/distribution-inputs-workflow.ts:44:12)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)"
+}

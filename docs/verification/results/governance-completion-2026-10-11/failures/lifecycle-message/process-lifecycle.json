@@ -1,0 +1,15 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-process-lifecycle-ihTSVq",
+  "checks": [
+    {
+      "id": "L01-server-unhandled",
+      "passed": true,
+      "elapsedMs": 2034
+    },
+    {
+      "id": "L01-server-uncaught",
+      "passed": true,
+      "elapsedMs": 2038
+    }
+  ]
+}

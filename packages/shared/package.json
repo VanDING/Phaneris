@@ -56,6 +56,7 @@
     "./durable-runtime": "./src/durable-runtime/index.ts",
     "./feature-flags": "./src/feature-flags.ts",
     "./i18n": "./src/i18n/index.ts",
+    "./i18n/languages": "./src/i18n/languages.ts",
     "./icons": "./src/icons/index.ts",
     "./identity.generated": "./src/identity.generated.ts",
     "./interceptor": "./src/interceptor-common.ts",
@@ -111,7 +112,28 @@
     "./work-items": "./src/work-items/index.ts",
     "./work-items/browser": "./src/work-items/browser.ts",
     "./workspaces": "./src/workspaces/index.ts",
-    "./workspaces/storage": "./src/workspaces/storage.ts"
+    "./workspaces/storage": "./src/workspaces/storage.ts",
+    "./config/appearance": "./src/config/appearance.ts",
+    "./config/bundled-assets": "./src/config/bundled-assets.ts",
+    "./config/connections": "./src/config/connections.ts",
+    "./config/defaults": "./src/config/defaults.ts",
+    "./config/drafts": "./src/config/drafts.ts",
+    "./config/migrations": "./src/config/migrations.ts",
+    "./config/persisted-normalize": "./src/config/persisted-normalize.ts",
+    "./config/persisted-types": "./src/config/persisted-types.ts",
+    "./config/repository": "./src/config/repository.ts",
+    "./config/schemas": "./src/config/schemas.ts",
+    "./config/workspace-selection": "./src/config/workspace-selection.ts",
+    "./config/connection-normalize": "./src/config/connection-normalize.ts",
+    "./config/source-validation": "./src/config/source-validation.ts",
+    "./utils/json": "./src/utils/json.ts",
+    "./durable-runtime/types": "./src/durable-runtime/types.ts",
+    "./agent/backend/pi/constants": "./src/agent/backend/pi/constants.ts",
+    "./agent/backend/pi/protocol": "./src/agent/backend/pi/protocol.ts",
+    "./agent/llm-tool": "./src/agent/llm-tool.ts",
+    "./config/pi-provider-compat": "./src/config/pi-provider-compat.ts",
+    "./utils/large-response": "./src/utils/large-response.ts",
+    "./sessions/paths": "./src/sessions/paths.ts"
   },
   "dependencies": {
     "@phaneris/core": "workspace:*",
@@ -127,13 +149,24 @@
     "glob": "^13.0.6",
     "i18next": "^26.4.2",
     "shell-quote": "^1.12.0",
-    "yaml": "^2.9.1"
+    "yaml": "^2.9.1",
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.14",
+    "open": "^11.0.4",
+    "tar": "^7.5.22",
+    "electron-log": "^5.4.4"
   },
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.32.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "electron": "^44.5.1"
   },
   "devDependencies": {
     "@types/shell-quote": "^1.7.5"
+  },
+  "peerDependenciesMeta": {
+    "electron": {
+      "optional": true
+    }
   }
 }

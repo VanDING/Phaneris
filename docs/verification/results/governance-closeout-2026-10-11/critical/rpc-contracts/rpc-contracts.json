@@ -1,0 +1,12 @@
+{
+  "scenes": [
+    "invalid-message-before-effect",
+    "invalid-attachments-before-effect",
+    "workspace-ownership",
+    "old-optional-args-and-unknown-fields",
+    "binary-codec-compatibility",
+    "timeout-does-not-retry-or-cancel-effect",
+    "late-response-does-not-poison-next-request"
+  ],
+  "effects": 2
+}

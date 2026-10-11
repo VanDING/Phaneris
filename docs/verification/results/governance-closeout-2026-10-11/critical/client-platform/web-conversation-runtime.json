@@ -1,0 +1,114 @@
+{
+  "checks": [
+    "one real Write T2",
+    "one real SubmitPlan T2",
+    "plan T2 before Host terminal",
+    "no successful-plan recovery parking"
+  ],
+  "facts": [
+    {
+      "seq": 11,
+      "operation_id": "run_msg-1791731507466-88a4f50c0e80_1",
+      "event_type": "tool_dispatch_committed",
+      "payload": {
+        "canonicalArgsHash": "ca49d82eabc68db0ebead6a4e879db7cf689682a33b0262ca02f7e4f460a8d83",
+        "idempotencyKey": "toolop_e94d06f9e1b4487fd9763c731f709abc",
+        "operationId": "toolop_e94d06f9e1b4487fd9763c731f709abc",
+        "protocol": "t1_after_preflight_v1",
+        "providerToolCallId": "ui-permission",
+        "recoveryMode": "never_auto_retry",
+        "runOperationId": "run_msg-1791731507466-88a4f50c0e80_1",
+        "toolBatchId": "modelop_2fb4e47ede54a2c8ad6b6fc6210a5f9a",
+        "toolBatchOrdinal": 0,
+        "toolName": "Write"
+      }
+    },
+    {
+      "seq": 12,
+      "operation_id": "run_msg-1791731507466-88a4f50c0e80_1",
+      "event_type": "tool_outcome_committed",
+      "payload": {
+        "canonicalArgsHash": "ca49d82eabc68db0ebead6a4e879db7cf689682a33b0262ca02f7e4f460a8d83",
+        "isError": false,
+        "operationId": "toolop_e94d06f9e1b4487fd9763c731f709abc",
+        "providerToolCallId": "ui-permission",
+        "result": {
+          "content": [
+            {
+              "text": "Successfully wrote to /Users/van/projects/Phaneris/.cache/verification/critical-jfhLnx/client-platform/workspace/governance-write.txt",
+              "type": "text"
+            }
+          ]
+        },
+        "runOperationId": "run_msg-1791731507466-88a4f50c0e80_1",
+        "toolBatchId": "modelop_2fb4e47ede54a2c8ad6b6fc6210a5f9a",
+        "toolBatchOrdinal": 0,
+        "toolName": "Write"
+      }
+    },
+    {
+      "seq": 21,
+      "operation_id": "run_msg-1791731507466-88a4f50c0e80_1",
+      "event_type": "operation_terminal",
+      "payload": {
+        "reason": "complete"
+      }
+    },
+    {
+      "seq": 32,
+      "operation_id": "run_msg-1791731509242-5fce9629f483_2",
+      "event_type": "tool_dispatch_committed",
+      "payload": {
+        "canonicalArgsHash": "77867cff15bcfed3db01d7f8e1e8f7e72149912cb75233e812582fc08730b3cc",
+        "idempotencyKey": "toolop_a76d48611f23bf3c4a0b3d79faf49ec2",
+        "operationId": "toolop_a76d48611f23bf3c4a0b3d79faf49ec2",
+        "protocol": "t1_after_preflight_v1",
+        "providerToolCallId": "ui-plan",
+        "recoveryMode": "never_auto_retry",
+        "runOperationId": "run_msg-1791731509242-5fce9629f483_2",
+        "toolBatchId": "modelop_2e2ebd5378111c04e0ec5bf50edd9661",
+        "toolBatchOrdinal": 0,
+        "toolName": "mcp__session__SubmitPlan"
+      }
+    },
+    {
+      "seq": 33,
+      "operation_id": "run_msg-1791731509242-5fce9629f483_2",
+      "event_type": "tool_outcome_committed",
+      "payload": {
+        "canonicalArgsHash": "77867cff15bcfed3db01d7f8e1e8f7e72149912cb75233e812582fc08730b3cc",
+        "isError": false,
+        "operationId": "toolop_a76d48611f23bf3c4a0b3d79faf49ec2",
+        "providerToolCallId": "ui-plan",
+        "result": {
+          "content": [
+            {
+              "text": "Plan submitted for review. Waiting for user feedback.",
+              "type": "text"
+            }
+          ]
+        },
+        "runOperationId": "run_msg-1791731509242-5fce9629f483_2",
+        "toolBatchId": "modelop_2e2ebd5378111c04e0ec5bf50edd9661",
+        "toolBatchOrdinal": 0,
+        "toolName": "mcp__session__SubmitPlan"
+      }
+    },
+    {
+      "seq": 40,
+      "operation_id": "run_msg-1791731509242-5fce9629f483_2",
+      "event_type": "operation_terminal",
+      "payload": {
+        "reason": "interrupted"
+      }
+    },
+    {
+      "seq": 51,
+      "operation_id": "run_msg-1791731509751-723cc8765704_3",
+      "event_type": "operation_terminal",
+      "payload": {
+        "reason": "complete"
+      }
+    }
+  ]
+}

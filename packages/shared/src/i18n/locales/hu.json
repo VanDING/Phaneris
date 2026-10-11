@@ -2138,6 +2138,7 @@
   "toast.failedToRefreshTitle": "Nem sikerült frissíteni a címet",
   "toast.failedToReveal": "Nem sikerült megjeleníteni itt: {{fileManager}}",
   "toast.failedToSaveSetting": "Nem sikerült menteni: {{setting}}",
+  "toast.failedToSwitchWorkspace": "Nem sikerült váltani a munkaterületet",
   "toast.failedToToggleAutomation": "Nem sikerült váltani az automatizáción",
   "toast.failedToUpdateProject": "A munkamenet projektjének frissítése nem sikerült",
   "toast.installingUpdate": "Frissítés telepítése...",

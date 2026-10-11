@@ -1,0 +1,209 @@
+{
+  "checks": [
+    "native main/preload initializes transport before business renderer",
+    "native RPC facade reads the same persisted domain fixture",
+    "native session switching preserves separate persisted drafts",
+    "native language change retains current input draft",
+    "native keyboard activation preserves draft ownership",
+    "native workspace switch updates the host binding"
+  ],
+  "errors": [],
+  "consoleTrace": [
+    {
+      "type": "info",
+      "text": "23:01:37.043 (window) › Renderer finished loading"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.073 (main) › [i18n] changeLanguage IPC applied {incoming: zh-Hans, previousResolved: en, newResolved: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.216 (perf) › Renderer performance tracking enabled"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.300 › 2026-10-11T15:01:37.300Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.301 › 2026-10-11T15:01:37.301Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.444 › AUTOMATIONS_GET: Loading automations for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.448 › SKILLS_GET: Loading skills for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.452 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.453 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/workspace"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.453 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.461 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/workspace"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.471 › AUTOMATIONS_GET: No automations.json found for workspace fixture"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.737 › 2026-10-11T15:01:37.737Z [loadViewsConfig] No config found, seeding with default views"
+    },
+    {
+      "type": "debug",
+      "text": "23:01:37.743 › [session] Lazy-loaded 0 messages for session 261011-misty-cedar"
+    },
+    {
+      "type": "info",
+      "text": "23:01:37.898 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "23:01:39.792 (perf) › 261011-b... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:39.810 (perf) › 261011-b... panel.mounted: 17.8ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:39.810 (perf) › 261011-b... session.loaded: 17.9ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:39.810 (perf) › 261011-b... data.ready: 18.0ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:39.911 (perf) › Session switch complete: 118.9ms (panel.mounted:18ms → session.loaded:18ms → data.ready:18ms)"
+    },
+    {
+      "type": "debug",
+      "text": "23:01:39.858 › [session] Lazy-loaded 0 messages for session 261011-broad-flint"
+    },
+    {
+      "type": "info",
+      "text": "23:01:40.788 (perf) › 261011-m... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:40.805 (perf) › 261011-m... panel.mounted: 17.5ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:40.805 (perf) › 261011-m... session.loaded: 17.7ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:40.805 (perf) › 261011-m... data.ready: 17.7ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:40.842 (perf) › Session switch complete: 53.9ms (panel.mounted:18ms → session.loaded:18ms → data.ready:18ms)"
+    },
+    {
+      "type": "info",
+      "text": "23:01:41.748 (perf) › 261011-b... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:41.765 (perf) › 261011-b... panel.mounted: 17.0ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:41.765 (perf) › 261011-b... session.loaded: 17.1ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:41.765 (perf) › 261011-b... data.ready: 17.2ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:41.799 (perf) › Session switch complete: 50.7ms (panel.mounted:17ms → session.loaded:17ms → data.ready:17ms)"
+    },
+    {
+      "type": "info",
+      "text": "[i18n] Appearance dropdown change {from: zh-Hans, to: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.359 (main) › [i18n] changeLanguage IPC applied {incoming: zh-Hans, previousResolved: zh-Hans, newResolved: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.561 (perf) › 261011-b... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.737 (perf) › 261011-b... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.755 (perf) › 261011-b... panel.mounted: 17.5ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.755 (perf) › 261011-b... session.loaded: 17.6ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.755 (perf) › 261011-b... data.ready: 17.7ms"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.784 (perf) › Session switch complete: 46.6ms (panel.mounted:18ms → session.loaded:18ms → data.ready:18ms)"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.963 (window) › Updated window 1 from workspace fixture to second"
+    },
+    {
+      "type": "warning",
+      "text": "23:01:42.963 (window) › No windows for workspace 'fixture', have: [second]"
+    },
+    {
+      "type": "info",
+      "text": "23:01:42.973 › [sessions:get] result {ctxWorkspaceId: second, webContentsId: 1, windowWorkspaceId: second, resolvedWorkspaceId: second, returnedCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "23:01:43.013 › AUTOMATIONS_GET: Loading automations for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "23:01:43.016 › SKILLS_GET: Loading skills for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "23:01:43.019 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "23:01:43.019 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/second-workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "23:01:43.021 › 2026-10-11T15:01:43.021Z [loadViewsConfig] No config found, seeding with default views"
+    },
+    {
+      "type": "info",
+      "text": "23:01:43.022 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-LID0EC/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "23:01:43.024 › AUTOMATIONS_GET: No automations.json found for workspace second"
+    }
+  ]
+}

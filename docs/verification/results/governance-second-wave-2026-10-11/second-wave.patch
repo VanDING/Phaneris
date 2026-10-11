@@ -1,0 +1,2103 @@
+diff --git a/apps/electron/src/main/index.ts b/apps/electron/src/main/index.ts
+index 259e607b..45a458f2 100644
+--- a/apps/electron/src/main/index.ts
++++ b/apps/electron/src/main/index.ts
+@@ -89,6 +89,7 @@ import { delimiter } from 'path'
+ import { existsSync, readFileSync } from 'fs'
+ import { RPC_CHANNELS, REMOTE_ELIGIBLE_CHANNELS } from '@phaneris/shared/protocol'
+ import { SessionManager, setSessionPlatform, setSessionRuntimeHooks } from '@phaneris/server-core/sessions'
++import { installProcessLifecycle } from '@phaneris/server-core/runtime'
+ import { PageThumbnailer } from './page-thumbnailer'
+ import { registerAllRpcHandlers } from './handlers/index'
+ import { registerCoreRpcHandlers, cleanupSessionFileWatchForClient } from '@phaneris/server-core/handlers/rpc'
+@@ -225,6 +226,7 @@ const DEEPLINK_SCHEME = RESOLVED_DEEPLINK_SCHEME
+ 
+ let windowManager: WindowManager | null = null
+ let sessionManager: SessionManager | null = null
++let stopLocalRpc: (() => void) | undefined
+ let browserPaneManager: BrowserPaneManager | null = null
+ let terminalManager: TerminalManager | null = null
+ let oauthFlowStore: OAuthFlowStore | null = null
+@@ -1011,6 +1013,7 @@ app.whenReady().then(async () => {
+ 
+       // Capture module-level references for before-quit cleanup and deep-link handlers
+       sessionManager = instance.sessionManager
++      stopLocalRpc = instance.quiesce
+       oauthFlowStore = instance.oauthFlowStore
+       moduleSink = instance.wsServer.push.bind(instance.wsServer)
+       moduleClientResolver = resolveClientId
+@@ -1575,15 +1578,15 @@ function captureAndSaveWindowState(reason: 'before-quit' | 'pre-update'): number
+ // Flush sessions and release all quit-time resources. Shared by the normal quit
+ // path (before-quit) and the update-install handoff (beforeUpdateInstallHook), so
+ // the two cleanup sequences can't drift (#891).
+-let quitCleanupRan = false
+-async function performQuitCleanup(): Promise<void> {
++let quitCleanup: Promise<void> | undefined
++function performQuitCleanup(): Promise<void> {
+   // Idempotent: a failed update install may retry, and the update path plus a
+   // subsequent quit must not dispose already-disposed services.
+-  if (quitCleanupRan) {
+-    mainLog.info('Quit cleanup already ran, skipping')
+-    return
++  if (quitCleanup) {
++    mainLog.info('Reusing quit cleanup owner')
++    return quitCleanup
+   }
+-  quitCleanupRan = true
++  return quitCleanup = (async () => {
+ 
+   if (sessionManager) {
+     try {
+@@ -1625,6 +1628,7 @@ async function performQuitCleanup(): Promise<void> {
+ 
+   // Release the server lock file so the next launch doesn't see a stale PID.
+   releaseServerLock()
++  })()
+ }
+ 
+ // Save window state and clean up resources before quitting
+@@ -1675,20 +1679,11 @@ app.on('before-quit', async (event) => {
+   }
+ })
+ 
+-// Handle uncaught exceptions — forward to Sentry explicitly since registering
+-// a custom handler can interfere with @sentry/electron's automatic capture.
+-process.on('uncaughtException', (error) => {
+-  mainLog.error('Uncaught exception:', error)
+-  Sentry.captureException(error)
+-})
+-
+-process.on('unhandledRejection', (reason, promise) => {
+-  // Log the stack explicitly. electron-log's structured formatter serialises an
+-  // Error to `{}`, so the obvious `mainLog.error(..., reason)` produced a log
+-  // line reading "Unhandled rejection at: {} reason: {}" — an error report with
+-  // no error in it, and a startup failure that took far longer to find than it
+-  // should have.
+-  const detail = reason instanceof Error ? (reason.stack ?? reason.message) : String(reason)
+-  mainLog.error('Unhandled rejection at:', promise, 'reason:', detail)
+-  Sentry.captureException(reason instanceof Error ? reason : new Error(String(reason)))
++// Unknown global failures close admission and reuse the existing quit resource owners.
++installProcessLifecycle({
++  owner: 'electron',
++  stopAccepting: () => { isQuitting = true; windowManager?.setAppQuitting(true); stopLocalRpc?.() },
++  cleanup: performQuitCleanup,
++  report: (kind, detail, reason) => { mainLog.error(`${kind}:`, detail); Sentry.captureException(reason instanceof Error ? reason : new Error(detail)) },
++  exit: code => app.exit(code),
+ })
+diff --git a/docs/README.md b/docs/README.md
+index 36a4b127..9c5b202b 100644
+--- a/docs/README.md
++++ b/docs/README.md
+@@ -36,6 +36,7 @@ Documentation is filed by **what kind of document it is**, not by how finished t
+ | --- | --- | --- |
+ | [Architecture overview](architecture/overview.md) | Current baseline | Structural map; §10 lists the known drift and tech debt without owners. |
+ | [Durable Agent Runtime ADR](architecture/durable-agent-runtime.md) | Accepted, implemented incrementally | Runtime Host authority, T1/T2 effects, recovery, projections. Two workstreams stay open: read-model cutover after measured parity, and automatic bounded continuation. |
++| [Authentication and process lifecycle](architecture/authentication-process-lifecycle.md) | Accepted, implemented | Persistent cookie revocation scope, exact Origin/proxy trust, fail-closed storage and bounded global-failure shutdown. Native-platform limits are explicit. |
+ | [Durable Runtime boundary redesign](architecture/durable-runtime-boundary.md) | Implemented — B0–B5 | Runtime Kernel/Host ownership, restricted APIs, external adapters, resolved dependency gate and independent Pi/crash verification. Replaces the earlier nine-service split; evidence and coverage limits are linked from the document. |
+ | [Durable Runtime target architecture](architecture/durable-agent-runtime-target-architecture.md) | **Deferred** | Seven target components (batch entity, admission controller, effect registry, workspace checkpoints, fenced leases, continuation supervisor, observability). None exists in code. Activation criteria are stated in the document; each activation additionally needs an ADR, failure-injection tests, a reversible migration, and a rollback path. |
+ | [Session snapshot storage and bounded reads](architecture/session-snapshot-reads.md) | Accepted | Immutable snapshots, 512 KiB chunked reads, lease limits, and the compact snapshot-reference format. |
+@@ -82,6 +83,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
+ | --- | --- | --- |
+ | [Verification index](verification/README.md) | Maintained | Commands, platform notes, and result locations. |
+ | [Governance first wave failure matrix](verification/governance-first-wave-failure-matrix.md) | Written before implementation; locally verified | G1 evidence isolation, CI/coverage/warning canaries, Babel type-import detection, plugin transactions and Runtime branch lifecycle. [Evidence](verification/results/governance-first-wave-2026-10-11/README.md). |
++| [Governance authentication/lifecycle failure matrix](verification/governance-auth-lifecycle-failure-matrix.md) | Written before corresponding fixes; locally verified | Real process restart/logout, canonical JWT replay, Origin/proxy/body limits, fatal exits, Runtime quiesce and cleanup ownership. [Evidence](verification/results/governance-second-wave-2026-10-11/README.md). |
+ | [Durable Runtime boundary failure matrix](verification/durable-runtime-boundary-failure-matrix.md) | Written before implementation; coverage recorded | Independent Host/Pi execution, real T1/T2 process crashes, delivery, settlement, adapters and lifecycle. Links repeatable evidence and explicitly untested combinations. |
+ | [Theme and architecture gate failure matrix](verification/theme-and-architecture-gate-failure-matrix.md) | Written before implementation; coverage recorded (19 mutations) | Failure modes for the theme-declaration invariant (FA01–FA12) and the architecture gate (FB01–FB11). §1 records the pre-implementation facts, including that CI was red on `main`; §4 records what was and was not verified, and the sandbox limit on `test:doc-tools`. |
+ | [Dependency and declaration cleanup failure matrix](verification/dependency-declaration-cleanup-failure-matrix.md) | Written before implementation; coverage recorded | Failure modes for batch C (FC01–FC15): the local replacement for `incr-regex-package`, which declarations are genuinely dead versus peer providers, lockfile consistency, and the 26 undeclared cross-package subpaths. §4 records what was and was not verified, including that the lock's orphaned entries were **not** pruned. |
+@@ -112,8 +114,9 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
+ | [Pi 1.1.0 / Craft 0.14.1 implementation](process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) | Complete; performance scope is limited | B0–B5 results, 6,289 passing tests, final package evidence, same-drive smoke, earlier failures and reproduction commands. |
+ | [Pi 1.1.0 implementation failure matrix](process/pi-110-implementation-failure-matrix.md) | Written before implementation | Failure conditions and acceptance boundaries for B0–B5. |
+ | [Pi 1.1.0 / Craft 0.14.1 handoff](process/pi-sdk-1.1.0-upstream-0.14.1-handoff.md) | Historical checkpoint | B0–B3 completed; B4/B5 continuation details recorded before work resumed. |
+-| [Architecture and code governance implementation plan](process/architecture-code-governance-implementation-plan-2026-10-11.md) | **Accepted; G0/G1/G2a implemented locally** | Current execution queue for architecture/code governance: historical-plan adjudication, reproducible evidence and CI, existing correctness residuals, config/protocol/Pi/Session/client boundaries, dependency ownership and distribution. G0–G8 include prerequisites, failure-first E2E, acceptance evidence, estimates and rollback. [Full scan evidence](verification/results/architecture-code-governance-2026-10-11/README.md). |
++| [Architecture and code governance implementation plan](process/architecture-code-governance-implementation-plan-2026-10-11.md) | **Accepted; G0/G1/G2a/G2b/G2c implemented locally** | Current execution queue for architecture/code governance: historical-plan adjudication, reproducible evidence and CI, existing correctness residuals, config/protocol/Pi/Session/client boundaries, dependency ownership and distribution. G0–G8 include prerequisites, failure-first E2E, acceptance evidence, estimates and rollback. [Full scan evidence](verification/results/architecture-code-governance-2026-10-11/README.md). |
+ | [Governance first wave ledger](process/governance-first-wave-2026-10-11.md) | G0/G1/G2a locally verified; remote/platform checks pending | Single execution queue, source-by-source historical adjudication and implementation/verification limits. |
++| [Governance second wave ledger](process/governance-second-wave-2026-10-11.md) | G2b/G2c locally verified; native/remote limits retained | Persistent cookie authority, Origin/proxy policy, bounded server/Electron lifecycle, Pi preservation and synchronous Runtime admission close. |
+ | [System cleanup and optimization plan](process/system-cleanup-optimization-plan-2026-10-10.md) | Batches **A, B, C, D, E, F and H implemented**; G remains proposed | The landed cleanup and its corrected findings are recorded in §7–8. Batch G's config/storage and Pi entry boundaries are now carried by G3/G5 in the governance plan; the existing automation vocabulary and deliberately deferred security/rendering work remain explicitly limited. |
+ | [Workstream sequencing](process/workstream-sequencing-2026-10-06.md) | Dated sequencing record; step 5 superseded by implemented boundary; step 1 since landed | Original six-step plan and decisions. The Runtime boundary implementation replaces its nine-service / pure-move approach; its step 1 race is fixed (see the system cleanup plan §2.6), its steps 2–3 remain open, and later records identify the actual code and validation status. |
+ | [Project assessment and roadmap](process/project-assessment-and-roadmap-2026-08-31.md) | **Proposed; not started** | Five-phase roadmap. Its top risks (SessionManager as bottleneck, WebUI reuse fragility) are still present. |
+diff --git a/docs/process/architecture-code-governance-implementation-plan-2026-10-11.md b/docs/process/architecture-code-governance-implementation-plan-2026-10-11.md
+index c9e5c202..9bdb6aef 100644
+--- a/docs/process/architecture-code-governance-implementation-plan-2026-10-11.md
++++ b/docs/process/architecture-code-governance-implementation-plan-2026-10-11.md
+@@ -1,6 +1,6 @@
+ # Phaneris 架构与代码治理实施计划
+ 
+-状态：**accepted — 首轮 G0/G1/G2a 已实施并完成本地验证；后续阶段未启动**。
++状态：**accepted — G0/G1/G2a/G2b/G2c 已实施并完成本地验证；原生/远端验证限度保留；G3–G8 未启动**。
+ 执行状态与历史裁定：[首轮实施台账](./governance-first-wave-2026-10-11.md)；[实施前失败矩阵](../verification/governance-first-wave-failure-matrix.md)。
+ 日期：2026-10-11（Asia/Shanghai）。
+ 核实于：`8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda`，扫描开始时工作区干净。
+@@ -400,4 +400,4 @@ PR04→05 是设计/实现先后关系；同一提交也可以包含先写出的
+ 
+ 已完成：文档盘点、全库文件/AST 扫描、关键路径核对、指定现有检查复跑、本计划与可复跑证据归档、docs 索引接入。
+ 
+-已实施并本地验证：G0/G1/G2a，以及完整回归发现的 Runtime 分支/删除资源释放遗漏；插件事务 12 个故障/成功场景已通过。逐项结果见[首轮台账](./governance-first-wave-2026-10-11.md)。尚未实施：G2b/G2c、G3–G8。严格身份残留、循环候选和所有未运行平台场景继续保留，不标记为已修复。
++已实施并本地验证：G0/G1/G2a，以及完整回归发现的 Runtime 分支/删除资源释放遗漏；插件事务 12 个故障/成功场景已通过。逐项结果见[首轮台账](./governance-first-wave-2026-10-11.md)。第二轮 G2b/G2c 已本地验证：持久化撤销/Origin/代理边界和有界异常收口；26 个新增 E2E、既有 Runtime 崩溃/边界/Pi 验证及全库回归通过。GOV-10 的本地残余由[第二轮台账](./governance-second-wave-2026-10-11.md)关闭，原生 Electron/Windows/Linux、远程 TLS 代理和线上服务仍待验收。尚未实施：G3–G8。严格身份残留、循环候选和所有未运行平台场景继续保留，不标记为已修复。
+diff --git a/docs/process/governance-first-wave-2026-10-11.md b/docs/process/governance-first-wave-2026-10-11.md
+index 9f2e5ad4..b59b15fd 100644
+--- a/docs/process/governance-first-wave-2026-10-11.md
++++ b/docs/process/governance-first-wave-2026-10-11.md
+@@ -14,8 +14,8 @@
+ | G1b CI、覆盖、lint ratchet | CI/各包维护 | V08–V09、V11 | verified（本地）；远端待验收 | GOV-03/GOV-11：13 成员、4 tooling project、120 warning 精确基线；仅回退本轮配置与入口 |
+ | G2a 插件提交与清理 | shared/plugins + sources/credentials 维护 | P01–P10、12 个独立进程场景 | verified（本地） | GOV-01：临时工作区真实文件/凭据读写；回退代码，不回写用户工作区 |
+ | G6-R1 Runtime 迁移回归修复 | server-core/sessions 维护 | V12 先失败复现 | verified（本地） | 四个分支 E2E、父会话哈希、Host driver 与两类 pool 清理；没有提前拆分 SessionManager |
+-| G2b 认证持久化/Origin | server-core/webui 维护 | 认证作用域 ADR、失败矩阵 | proposed | 独立后续工作，现有认证政策保留 |
+-| G2c 异常归属 | server/Pi 启动维护 | 逐个 failure owner | proposed | 独立后续工作 |
++| G2b 认证持久化/Origin | server-core/webui 维护 | 认证作用域 ADR、失败矩阵 | verified（本地）；远程/浏览器限度保留 | [第二轮台账](./governance-second-wave-2026-10-11.md)；回退须读兼容撤销库或停服轮换 secret |
++| G2c 异常归属 | server/Electron/Pi 启动维护 | 逐个 failure owner | verified（本地）；原生 Electron/平台待验收 | [第二轮台账](./governance-second-wave-2026-10-11.md)；停止接入与执行 admission，保留 recovery evidence |
+ | G3–G8 内部职责与分发 | 相应模块维护 | 首轮门禁、各阶段 ADR/失败矩阵 | proposed | 按总计划顺序逐包推进；G6-R1 不等于 G6 完成 |
+ 
+ ## 2. 历史来源逐项裁定
+diff --git a/package.json b/package.json
+index 69963fe2..c712aabc 100644
+--- a/package.json
++++ b/package.json
+@@ -119,6 +119,7 @@
+     "benchmark:session-io": "bun run scripts/benchmark-session-io.ts",
+     "typecheck:scripts": "bun run tsc --noEmit -p tsconfig.tooling.json && bun run tsc --noEmit -p scripts/performance/tsconfig.runner.json && bun run tsc --noEmit -p scripts/performance/tsconfig.server.json",
+     "test:critical": "bun run scripts/test-critical.ts",
++    "test:auth-lifecycle": "bun run scripts/verification/webui-auth-lifecycle-workflow.ts && bun run scripts/verification/process-lifecycle-workflow.ts",
+     "build:smoke": "bun run scripts/build-smoke.ts",
+     "perf:smoke": "bun run scripts/performance/run.ts --smoke",
+     "perf:baseline": "bun run scripts/performance/run.ts",
+diff --git a/packages/server-core/src/bootstrap/headless-start.ts b/packages/server-core/src/bootstrap/headless-start.ts
+index d5af8955..17a8cb9c 100644
+--- a/packages/server-core/src/bootstrap/headless-start.ts
++++ b/packages/server-core/src/bootstrap/headless-start.ts
+@@ -59,7 +59,7 @@ export interface ServerBootstrapOptions<TSessionManager, THandlerDeps> {
+   /** TLS configuration. When provided, the server listens on wss:// instead of ws://. */
+   tls?: WsRpcTlsOptions
+   /** Cookie-based session validator for web UI auth on WebSocket upgrade. */
+-  validateSessionCookie?: (cookieHeader: string | null) => Promise<boolean>
++  validateSessionCookie?: import('../transport/server').WsRpcServerOptions['validateSessionCookie']
+   /**
+    * Optional HTTP request handler for non-WebSocket requests on the RPC port.
+    * When provided, the WsRpcServer serves HTTP (e.g. WebUI) on the same port.
+@@ -84,6 +84,8 @@ export interface ServerInstance<TSessionManager> {
+   token: string
+   /** Context for server-level RPC handlers (status, health, active sessions). */
+   serverHandlerContext: ServerHandlerContext
++  /** Synchronously close execution and external RPC admission before asynchronous drain. */
++  quiesce: () => void
+   stop: () => Promise<void>
+ }
+ 
+@@ -446,12 +448,15 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
+ 
+     platform.logger.info(`Phaneris server listening on ${wsServer.protocol}://${rpcHost}:${wsServer.port}`)
+ 
+-    let stopped = false
+-    const stop = async (): Promise<void> => {
+-      if (stopped) return
+-      stopped = true
+-
++    let stopping: Promise<void> | undefined
++    const stop = (): Promise<void> => stopping ??= (async () => {
+       platform.logger.info('Shutting down...')
++      const failures: unknown[] = []
++      const clean = async (name: string, action: () => void | Promise<void>) => {
++        try { await action() } catch (error) {
++          failures.push(error); platform.logger.error(`[bootstrap] Failed to ${name}:`, error)
++        }
++      }
+ 
+       // Notify connected clients before closing connections
+       try {
+@@ -466,33 +471,14 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
+         platform.logger.error('[bootstrap] Failed to send shutdown notification:', error)
+       }
+ 
+-      try {
+-        modelRefreshService.stopAll?.()
+-      } catch (error) {
+-        platform.logger.error('[bootstrap] Failed to stop model refresh service:', error)
+-      }
+-
+-      try {
+-        await options.cleanupSessionManager?.(sessionManager)
+-      } catch (error) {
+-        platform.logger.error('[bootstrap] Failed to clean up session manager:', error)
+-      }
+-      await runtime.close()
+-
+-      try {
+-        wsServer.close()
+-      } catch (error) {
+-        platform.logger.error('[bootstrap] Failed to close WS server:', error)
+-      }
+-
+-      try {
+-        oauthFlowStore.dispose()
+-      } catch (error) {
+-        platform.logger.error('[bootstrap] Failed to dispose OAuth flow store:', error)
+-      }
+-
+-      releaseServerLock()
+-    }
++      await clean('stop model refresh service', () => modelRefreshService.stopAll?.())
++      await clean('clean up session manager', async () => { await options.cleanupSessionManager?.(sessionManager) })
++      await clean('close Runtime', () => runtime.close())
++      await clean('close WS server', () => wsServer.close())
++      await clean('dispose OAuth flow store', () => oauthFlowStore.dispose())
++      await clean('release server lock', () => releaseServerLock())
++      if (failures.length) throw new AggregateError(failures, 'Server resource cleanup failed', { cause: failures[0] })
++    })()
+ 
+     return {
+       platform,
+@@ -504,6 +490,7 @@ export async function bootstrapServer<TSessionManager, THandlerDeps>(
+       protocol: wsServer.protocol,
+       token: serverToken,
+       serverHandlerContext,
++      quiesce: () => { runtime.quiesce(); wsServer.close() },
+       stop,
+     }
+   } catch (error) {
+diff --git a/packages/server-core/src/durable-runtime/api/runtime.ts b/packages/server-core/src/durable-runtime/api/runtime.ts
+index 8fc35a79..ae3d7c9c 100644
+--- a/packages/server-core/src/durable-runtime/api/runtime.ts
++++ b/packages/server-core/src/durable-runtime/api/runtime.ts
+@@ -114,15 +114,19 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } =
+       return reports
+     }),
+   })
+-  const close = () => closing ??= (async () => {
++  const quiesce = () => {
+     draining = true
++    execution.closeAdmission()
++  }
++  const close = () => closing ??= (async () => {
++    quiesce()
+     if (maintenanceTimer) clearInterval(maintenanceTimer)
+     for (const cancel of auxiliaries.values()) try { cancel?.() } catch { /* Drain the remaining effects even if cancellation fails. */ }
+     await Promise.all([execution.shutdown(), withinDeadline(Promise.allSettled([...auxiliaries.keys()]), deadlineMs)])
+     closed = true
+     kernel.closeAll()
+   })()
+-  return Object.freeze({ commands, effects, queries, evidence, admin, execution, close })
++  return Object.freeze({ commands, effects, queries, evidence, admin, execution, quiesce, close })
+ }
+ 
+ export type DurableRuntime = ReturnType<typeof createDurableRuntime>
+diff --git a/packages/server-core/src/durable-runtime/execution/host.ts b/packages/server-core/src/durable-runtime/execution/host.ts
+index 852b08c7..832378bf 100644
+--- a/packages/server-core/src/durable-runtime/execution/host.ts
++++ b/packages/server-core/src/durable-runtime/execution/host.ts
+@@ -205,6 +205,7 @@ export class RuntimeHost {
+     })
+   }
+   async steer(sessionId: string, input: unknown, original: { messageId: string; content: string; createdAt: number }, queued?: RuntimeQueueInput): Promise<RuntimeInputReceipt> {
++    if (this.closing) return { disposition: 'rejected', reason: 'runtime_admission_closed' }
+     const s = this.slot(sessionId), generation = s.generation, runId = s.activeRun
+     if (!s.processing || s.stopRequested || s.blocked || !s.driver?.steer || !runId || !s.scope) return { disposition: 'rejected', reason: 'foreground_unavailable' }
+     const observe = (event: string, data: Record<string, unknown>) => this.observations.recordSdkObservation(s.scope!.workspaceRootPath, {
+@@ -386,7 +387,7 @@ export class RuntimeHost {
+     s.generation++; s.observers.clear(); this.slots.delete(sessionId)
+   }
+   async shutdown(): Promise<void> {
+-    this.closing = true
++    this.closeAdmission()
+     const drivers = [...this.auxiliaryDrivers]; this.auxiliaryDrivers.clear()
+     for (const driver of drivers) try { driver.stop('shutdown') } catch { /* Continue draining other drivers. */ }
+     await Promise.allSettled([
+@@ -394,4 +395,5 @@ export class RuntimeHost {
+       ...drivers.map(driver => withinDeadline(Promise.resolve().then(() => driver.dispose()), this.deadlineMs)),
+     ])
+   }
++  closeAdmission(): void { this.closing = true }
+ }
+diff --git a/packages/server-core/src/durable-runtime/sqlite-driver.ts b/packages/server-core/src/durable-runtime/sqlite-driver.ts
+index 9ec71e46..c975e828 100644
+--- a/packages/server-core/src/durable-runtime/sqlite-driver.ts
++++ b/packages/server-core/src/durable-runtime/sqlite-driver.ts
+@@ -1,89 +1,3 @@
+-import { createRequire } from 'node:module'
+-
+-export interface SqliteRunResult {
+-  changes: number
+-  lastInsertRowid: number | bigint
+-}
+-export interface SqliteStatement {
+-  run(...params: unknown[]): SqliteRunResult
+-  get(...params: unknown[]): unknown
+-  all(...params: unknown[]): unknown[]
+-}
+-
+-export interface SqliteDatabase {
+-  exec(sql: string): void
+-  prepare(sql: string): SqliteStatement
+-  transaction<TArgs extends unknown[], TResult>(fn: (...args: TArgs) => TResult): (...args: TArgs) => TResult
+-  close(): void
+-}
+-
+-interface NativeStatement {
+-  run(...params: unknown[]): { changes: number; lastInsertRowid: number | bigint }
+-  get(...params: unknown[]): unknown
+-  all(...params: unknown[]): unknown[]
+-}
+-
+-interface NativeDatabase {
+-  exec(sql: string): void
+-  prepare?(sql: string): NativeStatement
+-  query?(sql: string): NativeStatement
+-  close(): void
+-}
+-
+-class RuntimeSqliteDatabase implements SqliteDatabase {
+-  constructor(private readonly native: NativeDatabase, private readonly bunRuntime: boolean) {}
+-
+-  exec(sql: string): void {
+-    this.native.exec(sql)
+-  }
+-
+-  prepare(sql: string): SqliteStatement {
+-    const statement = this.bunRuntime
+-      ? this.native.query?.(sql)
+-      : this.native.prepare?.(sql)
+-    if (!statement) throw new Error('SQLite runtime did not provide a statement API')
+-    return statement
+-  }
+-
+-  transaction<TArgs extends unknown[], TResult>(fn: (...args: TArgs) => TResult): (...args: TArgs) => TResult {
+-    return (...args: TArgs): TResult => {
+-      this.native.exec('BEGIN IMMEDIATE')
+-      try {
+-        const result = fn(...args)
+-        this.native.exec('COMMIT')
+-        return result
+-      } catch (error) {
+-        try { this.native.exec('ROLLBACK') } catch { /* preserve original failure */ }
+-        throw error
+-      }
+-    }
+-  }
+-
+-  close(): void {
+-    this.native.close()
+-  }
+-}
+-
+-/**
+- * Use the SQLite implementation shipped with the active runtime. This avoids an
+- * additional native ABI dependency while keeping the durable store available in
+- * both Bun headless builds and Electron/Node.
+- */
+-export function openSqliteDatabase(path: string): SqliteDatabase {
+-  // The Electron main bundle is CommonJS while the Pi subprocess bundle is
+-  // ESM. `import.meta.url` is erased by the CJS build, so use the active
+-  // runtime executable as a stable absolute base. Only built-in modules are
+-  // loaded through this require, making its directory irrelevant.
+-  const runtimeRequire = createRequire(process.execPath)
+-  if (typeof process.versions.bun === 'string') {
+-    const { Database } = runtimeRequire('bun:sqlite') as {
+-      Database: new (filename: string, options?: { create?: boolean }) => NativeDatabase
+-    }
+-    return new RuntimeSqliteDatabase(new Database(path, { create: true }), true)
+-  }
+-
+-  const { DatabaseSync } = runtimeRequire('node:sqlite') as {
+-    DatabaseSync: new (filename: string) => NativeDatabase
+-  }
+-  return new RuntimeSqliteDatabase(new DatabaseSync(path), false)
+-}
++// Compatibility entry for the Runtime's existing internal consumers.
++export { openSqliteDatabase } from '../runtime/sqlite'
++export type { SqliteRunResult, SqliteStatement, SqliteDatabase } from '../runtime/sqlite'
+diff --git a/packages/server-core/src/runtime/index.ts b/packages/server-core/src/runtime/index.ts
+index a8df7670..9b7e9185 100644
+--- a/packages/server-core/src/runtime/index.ts
++++ b/packages/server-core/src/runtime/index.ts
+@@ -1,3 +1,4 @@
+ export * from './platform.ts'
+ export * from './platform-headless.ts'
+ export * from './null-browser-pane-manager.ts'
++export { installProcessLifecycle } from './process-lifecycle'
+diff --git a/packages/server-core/src/transport/server.ts b/packages/server-core/src/transport/server.ts
+index 05e12698..522f86d0 100644
+--- a/packages/server-core/src/transport/server.ts
++++ b/packages/server-core/src/transport/server.ts
+@@ -7,7 +7,7 @@
+  * Same class used locally (127.0.0.1, no auth) and remotely (0.0.0.0, auth).
+  */
+ 
+-import { WebSocketServer, type WebSocket } from 'ws'
++import { WebSocketServer, WebSocket } from 'ws'
+ import { createServer as createHttpServer, type Server as HttpServer } from 'node:http'
+ import { createServer as createHttpsServer, type Server as HttpsServer } from 'node:https'
+ import { randomUUID } from 'node:crypto'
+@@ -93,7 +93,7 @@ export interface WsRpcServerOptions {
+    * Called with the Cookie header from the HTTP upgrade request.
+    * If provided, a valid session cookie is accepted as an alternative to a bearer token.
+    */
+-  validateSessionCookie?: (cookieHeader: string | null) => Promise<boolean>
++  validateSessionCookie?: (cookieHeader: string | null, request: import('node:http').IncomingMessage) => Promise<boolean>
+   /** Server identity stamp on outgoing events. Default: 'local' */
+   serverId?: string
+   /** TLS configuration. When provided, the server listens on wss:// instead of ws://. */
+@@ -132,6 +132,7 @@ export class WsRpcServer implements RpcServer {
+   private heartbeatTimer: ReturnType<typeof setInterval> | null = null
+   private _port = 0
+   private _protocol: 'ws' | 'wss' = 'ws'
++  private closing = false
+ 
+   /** Recently disconnected clients retained for reconnect replay. */
+   private disconnectedClients = new Map<string, { client: ClientConnection; timer: ReturnType<typeof setTimeout> }>()
+@@ -140,7 +141,7 @@ export class WsRpcServer implements RpcServer {
+   private readonly requestedPort: number
+   private readonly requireAuth: boolean
+   private readonly validateToken: ((token: string) => Promise<boolean>) | null
+-  private readonly validateSessionCookie: ((cookieHeader: string | null) => Promise<boolean>) | null
++  private readonly validateSessionCookie: WsRpcServerOptions['validateSessionCookie']
+   private readonly serverId: string
+   private readonly tlsOptions: WsRpcTlsOptions | null
+   private readonly serverVersion: string
+@@ -154,7 +155,7 @@ export class WsRpcServer implements RpcServer {
+     this.requestedPort = opts?.port ?? 0
+     this.requireAuth = opts?.requireAuth ?? false
+     this.validateToken = opts?.validateToken ?? null
+-    this.validateSessionCookie = opts?.validateSessionCookie ?? null
++    this.validateSessionCookie = opts?.validateSessionCookie
+     this.serverId = opts?.serverId ?? 'local'
+     this.serverVersion = opts?.serverVersion ?? ''
+     this.tlsOptions = opts?.tls ?? null
+@@ -265,6 +266,7 @@ export class WsRpcServer implements RpcServer {
+   // -------------------------------------------------------------------------
+ 
+   async listen(): Promise<void> {
++    this.closing = false
+     return new Promise((resolve, reject) => {
+       if (this.tlsOptions) {
+         // TLS mode: create HTTPS server, attach WebSocketServer to it.
+@@ -333,12 +335,13 @@ export class WsRpcServer implements RpcServer {
+       }
+ 
+       this.wss.on('connection', (ws, req) => {
+-        this.onConnection(ws, req.headers.cookie ?? null)
++        this.onConnection(ws, req)
+       })
+     })
+   }
+ 
+   close(): void {
++    this.closing = true
+     if (this.heartbeatTimer) {
+       clearInterval(this.heartbeatTimer)
+       this.heartbeatTimer = null
+@@ -360,6 +363,8 @@ export class WsRpcServer implements RpcServer {
+       clearTimeout(entry.timer)
+     }
+     this.disconnectedClients.clear()
++    // Includes unauthenticated and asynchronously validating handshakes.
++    for (const socket of this.wss?.clients ?? []) socket.terminate()
+     this.wss?.close()
+     this.wss = null
+     this.httpServer?.close()
+@@ -372,7 +377,8 @@ export class WsRpcServer implements RpcServer {
+   // Connection handling
+   // -------------------------------------------------------------------------
+ 
+-  private onConnection(ws: WebSocket, upgradeRequestCookie: string | null): void {
++  private onConnection(ws: WebSocket, upgradeRequest: import('node:http').IncomingMessage): void {
++    if (this.closing) { ws.terminate(); return }
+     // Reject if at capacity
+     if (this.maxClients > 0 && this.clients.size >= this.maxClients) {
+       transportLog.warn('Connection rejected: at capacity', {
+@@ -384,6 +390,7 @@ export class WsRpcServer implements RpcServer {
+     }
+ 
+     let handshakeCompleted = false
++    let cookieAuthenticated = false
+     let handshakeTimeout: ReturnType<typeof setTimeout> | null = null
+ 
+     // Give the client 5 seconds to send a handshake
+@@ -394,6 +401,7 @@ export class WsRpcServer implements RpcServer {
+     }, 5_000)
+ 
+     ws.on('message', async (raw) => {
++      if (this.closing) return
+       // M-9: hard message-size cap, enforced here in addition to the
+       // WebSocketServer `maxPayload` option. Under the real `ws` package the
+       // receiver closes the connection with 1009 before the message is ever
+@@ -458,8 +466,9 @@ export class WsRpcServer implements RpcServer {
+           }
+ 
+           // 2. Fallback: try session cookie from HTTP upgrade request (web UI path)
+-          if (!authenticated && this.validateSessionCookie && upgradeRequestCookie) {
+-            authenticated = await this.validateSessionCookie(upgradeRequestCookie)
++          if (!authenticated && this.validateSessionCookie && upgradeRequest.headers.cookie) {
++            authenticated = await this.validateSessionCookie(upgradeRequest.headers.cookie, upgradeRequest)
++            cookieAuthenticated = authenticated
+           }
+ 
+           if (!authenticated) {
+@@ -469,6 +478,7 @@ export class WsRpcServer implements RpcServer {
+             return
+           }
+         }
++        if (this.closing || ws.readyState !== WebSocket.OPEN) { ws.terminate(); return }
+ 
+         // ── Reconnect attempt ──
+         if (envelope.reconnectClientId && envelope.lastSeq != null) {
+@@ -623,6 +633,15 @@ export class WsRpcServer implements RpcServer {
+       }
+ 
+       // Post-handshake: find the client for this ws
++      if (cookieAuthenticated && this.validateSessionCookie) {
++        const valid = await this.validateSessionCookie(upgradeRequest.headers.cookie ?? null, upgradeRequest)
++        if (!valid) {
++          this.sendError(ws, envelope.id, 'AUTH_FAILED', 'Session expired or revoked')
++          ws.close(4005, 'Auth failed')
++          return
++        }
++        if (this.closing || ws.readyState !== WebSocket.OPEN) return
++      }
+       const client = this.findClientByWs(ws)
+       if (!client) {
+         ws.close(4006, 'Unknown client')
+diff --git a/packages/server-core/src/webui/__tests__/http-server.isolated.ts b/packages/server-core/src/webui/__tests__/http-server.isolated.ts
+index 0b024c5f..dfbfe21d 100644
+--- a/packages/server-core/src/webui/__tests__/http-server.isolated.ts
++++ b/packages/server-core/src/webui/__tests__/http-server.isolated.ts
+@@ -3,7 +3,6 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+ import { tmpdir } from 'node:os'
+ import { join } from 'node:path'
+ import { startWebuiHttpServer, createWebuiHandler, setRequestClientIp } from '../http-server'
+-import { initPasswordHash } from '../auth'
+ 
+ const SECRET = 'test-server-secret'
+ const PASSWORD = 'test-password'
+@@ -32,9 +31,11 @@ async function createServer(overrides?: {
+   wsPort?: number
+   trustedProxies?: string[]
+ }) {
++  const webuiDir = createTestWebuiDir()
+   const server = await startWebuiHttpServer({
+     port: 0,
+-    webuiDir: createTestWebuiDir(),
++    webuiDir,
++    revocationStorePath: join(webuiDir, 'auth.sqlite'),
+     secret: SECRET,
+     password: PASSWORD,
+     secureCookies: overrides?.secureCookies,
+@@ -81,14 +82,10 @@ afterEach(() => {
+ // from another file turns every request here into a 404. Restore the real
+ // fetch before each test so this suite is deterministic.
+ const realFetch = globalThis.fetch
+-beforeEach(async () => {
++beforeEach(() => {
+   // 1. Worker reuse: a leaked global fetch mock from another test file turns
+   // every request here into a 404. Restore the real fetch each time.
+   if (globalThis.fetch !== realFetch) globalThis.fetch = realFetch
+-  // 2. initPasswordHash is module-level: a sibling test file that hashes a
+-  // DIFFERENT password in the same worker overwrites it, breaking login.
+-  // Re-hash our password so this suite is deterministic.
+-  await initPasswordHash(PASSWORD)
+ })
+ 
+ describe('startWebuiHttpServer', () => {
+@@ -230,7 +227,7 @@ describe('startWebuiHttpServer', () => {
+   })
+ 
+   it('infers secure cookies from proxy https headers when no override is set', async () => {
+-    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100 })
++    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100, trustedProxies: ['127.0.0.1'] })
+ 
+     const res = await fetch(`${baseUrl}/api/auth`, {
+       method: 'POST',
+@@ -246,7 +243,7 @@ describe('startWebuiHttpServer', () => {
+   })
+ 
+   it('derives a browser-facing websocket URL from forwarded public host headers', async () => {
+-    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100 })
++    const { baseUrl } = await createServer({ wsProtocol: 'wss', wsPort: 9100, trustedProxies: ['127.0.0.1'] })
+ 
+     const authRes = await fetch(`${baseUrl}/api/auth`, {
+       method: 'POST',
+@@ -344,8 +341,10 @@ describe('startWebuiHttpServer', () => {
+   })
+ 
+   it('rate limits per client IP when no trusted proxies are configured', async () => {
++    const webuiDir = createTestWebuiDir()
+     const handler = createWebuiHandler({
+-      webuiDir: createTestWebuiDir(),
++      webuiDir,
++      revocationStorePath: join(webuiDir, 'auth.sqlite'),
+       secret: SECRET,
+       password: PASSWORD,
+       wsProtocol: 'ws',
+@@ -353,6 +352,7 @@ describe('startWebuiHttpServer', () => {
+       getHealthCheck: () => ({ status: 'ok' }),
+       logger,
+     })
++    SERVERS.push({ stop: handler.dispose })
+ 
+     const attempt = (ip: string) => {
+       const req = new Request('http://localhost/api/auth', {
+diff --git a/packages/server-core/src/webui/__tests__/oauth-callback.test.ts b/packages/server-core/src/webui/__tests__/oauth-callback.test.ts
+index 13f69397..bc89eff8 100644
+--- a/packages/server-core/src/webui/__tests__/oauth-callback.test.ts
++++ b/packages/server-core/src/webui/__tests__/oauth-callback.test.ts
+@@ -49,8 +49,10 @@ describe('WebUI /api/oauth/callback', () => {
+     };
+     const flows = new Map([[flow.state, flow]]);
+ 
++    const webuiDir = createTestWebuiDir();
+     const handler = createWebuiHandler({
+-      webuiDir: createTestWebuiDir(),
++      webuiDir,
++      revocationStorePath: join(webuiDir, 'auth.sqlite'),
+       secret: 'test-secret',
+       password: 'test-password',
+       wsProtocol: 'wss',
+@@ -94,8 +96,10 @@ describe('WebUI /api/oauth/callback', () => {
+     };
+     const flows = new Map([[flow.state, flow]]);
+ 
++    const webuiDir = createTestWebuiDir();
+     const handler = createWebuiHandler({
+-      webuiDir: createTestWebuiDir(),
++      webuiDir,
++      revocationStorePath: join(webuiDir, 'auth.sqlite'),
+       secret: 'test-secret',
+       password: 'test-password',
+       wsProtocol: 'wss',
+diff --git a/packages/server-core/src/webui/auth.ts b/packages/server-core/src/webui/auth.ts
+index 2ab7baca..a4e42fde 100644
+--- a/packages/server-core/src/webui/auth.ts
++++ b/packages/server-core/src/webui/auth.ts
+@@ -24,28 +24,6 @@ export interface JwtPayload {
+   jti?: string
+ }
+ 
+-// ---------------------------------------------------------------------------
+-// JWT revocation (in-memory, server-side)
+-// ---------------------------------------------------------------------------
+-
+-/** Revoked session token ids (jti → revocation timestamp ms). Pruned lazily. */
+-const revokedJtis = new Map<string, number>()
+-/** Retain revoked ids for at most one token lifetime — after that the token has expired anyway. */
+-const REVOCATION_RETENTION_MS = JWT_EXPIRY_SECONDS * 1000
+-
+-function pruneRevoked(): void {
+-  const cutoff = Date.now() - REVOCATION_RETENTION_MS
+-  for (const [jti, revokedAt] of revokedJtis) {
+-    if (revokedAt < cutoff) revokedJtis.delete(jti)
+-  }
+-}
+-
+-/** Revoke a session token id so every verifyJwt of that token fails until it expires. */
+-export function revokeJwt(jti: string): void {
+-  pruneRevoked()
+-  revokedJtis.set(jti, Date.now())
+-}
+-
+ export async function signJwt(payload: JwtPayload, secret: string): Promise<string> {
+   const key = new TextEncoder().encode(secret)
+   const builder = new SignJWT({ sub: payload.sub } as Record<string, unknown>)
+@@ -60,8 +38,8 @@ export async function verifyJwt(token: string, secret: string): Promise<JwtPaylo
+   try {
+     const key = new TextEncoder().encode(secret)
+     const { payload } = await jwtVerify(token, key, { algorithms: ['HS256'] })
+-    // A logged-out session must be rejected even if the cookie is replayed.
+-    if (typeof payload.jti === 'string' && revokedJtis.has(payload.jti)) return null
++    // Signature verification is not session authorization; the handler owns revocations.
++    if (payload.sub !== 'webui' || !Number.isFinite(payload.iat) || !Number.isFinite(payload.exp)) return null
+     return {
+       sub: payload.sub as string,
+       iat: payload.iat as number,
+@@ -123,29 +101,6 @@ export function extractSessionCookie(cookieHeader: string | null): string | null
+   return null
+ }
+ 
+-// ---------------------------------------------------------------------------
+-// Password verification (argon2id via Bun.password)
+-// ---------------------------------------------------------------------------
+-
+-let hashedPassword: string | null = null
+-
+-/**
+- * Hash the login password at startup. Must be called before any auth requests.
+- * The hash is stored in memory — the raw password is not retained.
+- */
+-export async function initPasswordHash(plaintext: string): Promise<void> {
+-  hashedPassword = await Bun.password.hash(plaintext, { algorithm: 'argon2id' })
+-}
+-
+-/**
+- * Verify a user-supplied password against the pre-hashed password.
+- * Uses Bun's built-in argon2id verification (constant-time).
+- */
+-export async function verifyPassword(input: string): Promise<boolean> {
+-  if (!hashedPassword) return false
+-  return Bun.password.verify(input, hashedPassword)
+-}
+-
+ // ---------------------------------------------------------------------------
+ // Rate limiter (per-IP + global, sliding window)
+ // ---------------------------------------------------------------------------
+@@ -229,16 +184,3 @@ export class RateLimiter {
+     }
+   }
+ }
+-
+-// ---------------------------------------------------------------------------
+-// Session validator (used by both HTTP and WebSocket)
+-// ---------------------------------------------------------------------------
+-
+-export async function validateSession(
+-  cookieHeader: string | null,
+-  secret: string,
+-): Promise<JwtPayload | null> {
+-  const token = extractSessionCookie(cookieHeader)
+-  if (!token) return null
+-  return verifyJwt(token, secret)
+-}
+diff --git a/packages/server-core/src/webui/http-server.ts b/packages/server-core/src/webui/http-server.ts
+index 69f09a31..6cb31d3b 100644
+--- a/packages/server-core/src/webui/http-server.ts
++++ b/packages/server-core/src/webui/http-server.ts
+@@ -11,16 +11,16 @@
+  */
+ 
+ import { join, extname } from 'node:path'
++import type { IncomingMessage } from 'node:http'
++import { CONFIG_DIR } from '@phaneris/shared/config/paths'
++import { SessionRevocations, AuthStorageFailure } from './session-revocations'
++import { cookieOriginAllowed, isTrustedProxy, parseWebuiOrigin } from './request-origin'
+ import {
+   RateLimiter,
+-  initPasswordHash,
+-  verifyPassword,
+   createSessionToken,
+-  validateSession,
+   buildSessionCookie,
+   buildLogoutCookie,
+   extractSessionCookie,
+-  revokeJwt,
+   verifyJwt,
+ } from './auth'
+ import { generateCallbackPage } from '@phaneris/shared/auth'
+@@ -135,7 +135,7 @@ export interface WebuiHandlerOptions {
+   /** RPC WebSocket protocol used when building a browser-facing fallback URL. */
+   wsProtocol: 'ws' | 'wss'
+   /** RPC WebSocket port used when building a browser-facing fallback URL. */
+-  wsPort: number
++  wsPort: number | (() => number)
+   /** Health check function (injected from existing server handler). */
+   getHealthCheck: () => { status: string }
+   /** Logger. */
+@@ -143,11 +143,15 @@ export interface WebuiHandlerOptions {
+   /** OAuth callback deps — when provided, enables /api/oauth/callback route. */
+   oauthCallbackDeps?: OAuthCallbackDeps
+   /**
+-   * Trusted proxy IPs/CIDRs. When set, proxy headers (x-forwarded-for, x-forwarded-proto)
++   * Exact trusted proxy IPs. When set, proxy headers (x-forwarded-for, x-forwarded-proto)
+    * are only trusted from these sources. When empty/unset, proxy headers are ignored and the
+    * transport socket address (see setRequestClientIp) is used as the rate-limit key.
+    */
+   trustedProxies?: string[]
++  /** Exact browser page origins allowed in addition to the request's own origin. */
++  allowedOrigins?: string[]
++  /** Isolated deployment/test storage; defaults to CONFIG_DIR/security/webui-auth.sqlite. */
++  revocationStorePath?: string
+ }
+ 
+ // ---------------------------------------------------------------------------
+@@ -159,6 +163,8 @@ export interface WebuiHandler {
+   fetch: (req: Request) => Promise<Response>
+   /** Call on shutdown to release timers. */
+   dispose: () => void
++  /** Shared cookie authority, including the Origin of the WS upgrade. */
++  validateSessionCookie: (cookie: string | null, request: IncomingMessage) => Promise<boolean>
+   /** Inject OAuth callback deps after bootstrap (lazy wiring). */
+   setOAuthCallbackDeps: (deps: OAuthCallbackDeps) => void
+ }
+@@ -195,14 +201,25 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+     trustedProxies,
+   } = options
+ 
++  const allowedOrigins = (options.allowedOrigins ?? []).map(parseWebuiOrigin)
++  const revocations = new SessionRevocations(options.revocationStorePath ?? join(CONFIG_DIR, 'security/webui-auth.sqlite'), secret)
+   const rateLimiter = new RateLimiter(5, 60_000)
+   const cleanupTimer = setInterval(() => rateLimiter.cleanup(), 120_000)
+ 
+   const loginPassword = password || secret
+-  const trustedProxySet = new Set(trustedProxies ?? [])
+ 
+   // Hash the login password at startup (async, but resolves before first auth attempt in practice)
+-  const passwordReady = initPasswordHash(loginPassword)
++  const passwordReady = Bun.password.hash(loginPassword, { algorithm: 'argon2id' })
++  // Keep initialization owned even if no login arrives before shutdown.
++  void passwordReady.catch(error => logger.error('[webui] Password initialization failed:', error))
++
++  async function validateCookie(cookie: string | null) {
++    revocations.checkAvailable()
++    const token = extractSessionCookie(cookie)
++    if (!token) return null
++    const payload = await verifyJwt(token, secret)
++    return payload && !revocations.isRevoked(token) ? payload : null
++  }
+ 
+   /**
+    * Extract client IP.
+@@ -213,7 +230,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+    */
+   function getClientIp(req: Request): string {
+     const socketIp = clientIpByRequest.get(req) ?? 'direct'
+-    if (trustedProxySet.size === 0 || !trustedProxySet.has(socketIp)) return socketIp
++    if (!isTrustedProxy(socketIp, trustedProxies)) return socketIp
+     return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+       ?? req.headers.get('x-real-ip')
+       ?? socketIp
+@@ -235,6 +252,14 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+   }
+ 
+   async function fetch(req: Request): Promise<Response> {
++    // Use a single peer decision for Secure cookies, public WS URL and IP budgets.
++    if (!isTrustedProxy(clientIpByRequest.get(req) ?? '', trustedProxies)) {
++      const headers = new Headers(req.headers)
++      for (const name of ['forwarded', 'x-forwarded-proto', 'x-forwarded-host', 'x-forwarded-for', 'x-real-ip']) headers.delete(name)
++      const peer = clientIpByRequest.get(req)
++      req = new Request(req, { headers })
++      if (peer) setRequestClientIp(req, peer)
++    }
+     const url = new URL(req.url)
+     const path = url.pathname
+     const useSecureCookies = shouldUseSecureCookies(req, secureCookies)
+@@ -271,7 +296,8 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+ 
+     // ── Auth endpoint ──
+     if (path === '/api/auth' && req.method === 'POST') {
+-      await passwordReady
++      revocations.checkAvailable()
++      const passwordHash = await passwordReady
+       const ip = getClientIp(req)
+ 
+       if (bodyTooLarge(req)) {
+@@ -300,7 +326,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+         return Response.json({ error: 'Password is required' }, { status: 400 })
+       }
+ 
+-      if (!await verifyPassword(body.password)) {
++      if (!await Bun.password.verify(body.password, passwordHash)) {
+         rateLimiter.recordFailure(ip)
+         logger.warn(`[webui] Failed auth attempt from ${ip}`)
+         return Response.json({ error: 'Invalid credentials' }, { status: 401 })
+@@ -309,6 +335,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+       // A correct password clears this client's failure record, so ordinary
+       // reconnects can never accumulate toward the limit.
+       rateLimiter.recordSuccess(ip)
++      revocations.checkAvailable()
+       const jwt = await createSessionToken(secret)
+       logger.info(`[webui] Successful auth from ${ip}`)
+ 
+@@ -327,7 +354,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+       const token = extractSessionCookie(req.headers.get('cookie'))
+       if (token) {
+         const payload = await verifyJwt(token, secret)
+-        if (payload?.jti) revokeJwt(payload.jti)
++        if (payload) revocations.revoke(token, payload)
+       }
+       return new Response(null, {
+         status: 204,
+@@ -400,18 +427,18 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+ 
+     // ── Config endpoint (requires session cookie) ──
+     if (path === '/api/config' && req.method === 'GET') {
+-      const configSession = await validateSession(req.headers.get('cookie'), secret)
++      const configSession = await validateCookie(req.headers.get('cookie'))
+       if (!configSession) {
+         return Response.json({ error: 'Unauthorized' }, { status: 401 })
+       }
+       return Response.json({
+-        wsUrl: resolveWebSocketUrl(req, { publicWsUrl, wsProtocol, wsPort }),
++        wsUrl: resolveWebSocketUrl(req, { publicWsUrl, wsProtocol, wsPort: typeof wsPort === 'function' ? wsPort() : wsPort }),
+       })
+     }
+ 
+     // Return the default workspace ID so the webui can include it in the WS handshake
+     if (path === '/api/config/workspaces' && req.method === 'GET') {
+-      const configSession = await validateSession(req.headers.get('cookie'), secret)
++      const configSession = await validateCookie(req.headers.get('cookie'))
+       if (!configSession) {
+         return Response.json({ error: 'Unauthorized' }, { status: 401 })
+       }
+@@ -424,7 +451,7 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+ 
+     // ── Everything below requires a valid session cookie ──
+     const cookieHeader = req.headers.get('cookie')
+-    const session = await validateSession(cookieHeader, secret)
++    const session = await validateCookie(cookieHeader)
+ 
+     if (!session) {
+       const accept = req.headers.get('accept') ?? ''
+@@ -456,8 +483,21 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
+   }
+ 
+   return {
+-    fetch,
+-    dispose: () => clearInterval(cleanupTimer),
++    fetch: async req => {
++      try { return await fetch(req) } catch (error) {
++        if (!(error instanceof AuthStorageFailure)) throw error
++        logger.error('[webui] Cookie authentication unavailable:', error)
++        return Response.json({ error: 'Authentication storage unavailable' }, { status: 503 })
++      }
++    },
++    validateSessionCookie: async (cookie, request) => {
++      if (!cookieOriginAllowed(request, allowedOrigins, trustedProxies ?? [])) return false
++      try { return await validateCookie(cookie) !== null } catch (error) {
++        logger.error('[webui] Cookie authentication unavailable:', error)
++        return false
++      }
++    },
++    dispose: () => { clearInterval(cleanupTimer); revocations.close() },
+     setOAuthCallbackDeps: (deps: OAuthCallbackDeps) => {
+       options.oauthCallbackDeps = deps
+     },
+diff --git a/packages/server-core/src/webui/index.ts b/packages/server-core/src/webui/index.ts
+index c5092f90..3928b5d6 100644
+--- a/packages/server-core/src/webui/index.ts
++++ b/packages/server-core/src/webui/index.ts
+@@ -1,3 +1,4 @@
+ export { startWebuiHttpServer, createWebuiHandler, type WebuiHttpServerOptions, type WebuiHandlerOptions, type WebuiHandler } from './http-server'
+ export { nodeHttpAdapter } from './node-adapter'
+-export { validateSession, extractSessionCookie } from './auth'
++export { extractSessionCookie } from './auth'
++export { parseWebuiOrigin } from './request-origin'
+diff --git a/packages/server-core/src/webui/node-adapter.ts b/packages/server-core/src/webui/node-adapter.ts
+index 282266bb..d23d9b34 100644
+--- a/packages/server-core/src/webui/node-adapter.ts
++++ b/packages/server-core/src/webui/node-adapter.ts
+@@ -58,20 +58,23 @@ async function handleRequest(
+ 
+   let body: Buffer | null = null
+   if (nodeReq.method !== 'GET' && nodeReq.method !== 'HEAD') {
++    const rejectOversizedBody = () => {
++      nodeReq.pause()
++      if (!nodeRes.headersSent) nodeRes.writeHead(413, { 'Content-Type': 'application/json', Connection: 'close' })
++      // Flush the response before closing the socket; destroying first hides the 413.
++      nodeRes.end(JSON.stringify({ error: 'Request body too large' }), () => nodeReq.destroy())
++    }
++    if (Number(nodeReq.headers['content-length']) > MAX_BUFFERED_BODY_BYTES) { rejectOversizedBody(); return }
+     const chunks: Buffer[] = []
+     let received = 0
+-    for await (const chunk of nodeReq) {
++    for await (const chunk of nodeReq.iterator({ destroyOnReturn: false })) {
+       const buffer = typeof chunk === 'string' ? Buffer.from(chunk) : chunk
+       received += buffer.byteLength
+       // Hard stop while reading, not after: a chunked request without a
+       // Content-Length would otherwise be buffered in full before anyone could
+       // reject it. See MAX_REQUEST_BODY_BYTES in http-server.ts.
+       if (received > MAX_BUFFERED_BODY_BYTES) {
+-        nodeReq.destroy()
+-        if (!nodeRes.headersSent) {
+-          nodeRes.writeHead(413, { 'Content-Type': 'application/json' })
+-        }
+-        nodeRes.end(JSON.stringify({ error: 'Request body too large' }))
++        rejectOversizedBody()
+         return
+       }
+       chunks.push(buffer)
+@@ -82,7 +85,7 @@ async function handleRequest(
+   const request = new Request(url, {
+     method: nodeReq.method,
+     headers,
+-    body,
++    body: body ? new Uint8Array(body) : null,
+   })
+ 
+   // Stamp the real socket address so the handler can key its rate limiter per client.
+diff --git a/packages/server/src/index.ts b/packages/server/src/index.ts
+index ea0087ab..6beed5b8 100755
+--- a/packages/server/src/index.ts
++++ b/packages/server/src/index.ts
+@@ -21,6 +21,8 @@
+  *   PHANERIS_WEBUI_PASSWORD       — optional shorter password for web login (falls back to PHANERIS_SERVER_TOKEN)
+  *   PHANERIS_WEBUI_SECURE_COOKIE  — optional true/false override for the session cookie Secure flag
+  *   PHANERIS_WEBUI_WS_URL         — optional browser-facing ws:// or wss:// URL returned by /api/config
++ *   PHANERIS_WEBUI_ALLOWED_ORIGINS — comma-separated exact HTTP(S) page origins for cookie WS
++ *   PHANERIS_TRUSTED_PROXIES      — comma-separated exact direct-peer proxy IPs (no CIDR)
+  *   PHANERIS_MESSAGING_WA_WORKER  — absolute path to worker.cjs (default: packages/messaging-whatsapp-worker/dist/worker.cjs)
+  *   PHANERIS_MESSAGING_NODE_BIN   — Node binary used to spawn the WhatsApp worker (default: node)
+  */
+@@ -31,8 +33,10 @@ import { version as packageVersion } from '../package.json'
+ import { enableDebug } from '@phaneris/shared/utils/debug'
+ import { workspaceDir } from '@phaneris/shared/config/paths'
+ import { bootstrapServer, startHealthHttpServer, generateServerToken } from '@phaneris/server-core/bootstrap'
+-import { validateSession, createWebuiHandler, nodeHttpAdapter } from '@phaneris/server-core/webui'
++import { createWebuiHandler, nodeHttpAdapter, parseWebuiOrigin } from '@phaneris/server-core/webui'
+ import type { WebuiHandler } from '@phaneris/server-core/webui'
++import { installProcessLifecycle } from '@phaneris/server-core/runtime'
++import { isIP } from 'node:net'
+ import { getCredentialManager, installCredentialKeyProviderFromEnv } from '@phaneris/shared/credentials'
+ import { getWorkspaces, hydrateRemoteServerTokenCache } from '@phaneris/shared/config'
+ import { createMessagingBootstrap, type MessagingBootstrapHandle } from '@phaneris/messaging-gateway'
+@@ -62,13 +66,12 @@ try {
+   process.exit(1)
+ }
+ 
+-// Prevent unhandled rejections from crashing the server.
+-// SDK subprocess abort can reject promises that propagate up unhandled;
+-// Bun (unlike Node) terminates the process on unhandled rejections by default.
+-process.on('unhandledRejection', (reason) => {
+-  const msg = reason instanceof Error ? reason.message : String(reason)
+-  console.error(`[server] Unhandled rejection (caught, not crashing): ${msg}`)
+-})
++// Set owner callbacks as resources become available; fatal startup also exits nonzero.
++let stopAccepting = () => {}
++let cleanupProcess: () => Promise<void> = async () => {}
++const lifecycle = installProcessLifecycle({ owner: 'server', stopAccepting: () => stopAccepting(),
++  cleanup: () => cleanupProcess(), report: (kind, detail) => console.error(`[server] ${kind}: ${detail}`),
++  exit: code => process.exit(code) })
+ 
+ if (process.env.PHANERIS_DEBUG === 'true' || process.env.PHANERIS_DEBUG === '1') {
+   enableDebug()
+@@ -128,6 +131,10 @@ const webuiEnabled = webuiDir && existsSync(webuiDir)
+ const webuiSecureCookies = parseOptionalBooleanEnv('PHANERIS_WEBUI_SECURE_COOKIE', process.env.PHANERIS_WEBUI_SECURE_COOKIE)
+ const webuiWsUrl = parseOptionalWebSocketUrl('PHANERIS_WEBUI_WS_URL', process.env.PHANERIS_WEBUI_WS_URL)
+ const serverToken = process.env.PHANERIS_SERVER_TOKEN
++const splitList = (value: string | undefined) => value?.split(',').map(entry => entry.trim()).filter(Boolean) ?? []
++const trustedProxies = splitList(process.env.PHANERIS_TRUSTED_PROXIES)
++if (trustedProxies.some(ip => !isIP(ip))) throw new Error('PHANERIS_TRUSTED_PROXIES requires exact IP addresses (no CIDR)')
++const allowedOrigins = splitList(process.env.PHANERIS_WEBUI_ALLOWED_ORIGINS).map(parseWebuiOrigin)
+ 
+ // ---------------------------------------------------------------------------
+ // Create WebUI handler early so it can be embedded in the WsRpcServer.
+@@ -141,9 +148,9 @@ let webuiNodeHandler: ReturnType<typeof nodeHttpAdapter> | undefined
+ // Health check is injected lazily — the session manager isn't ready until
+ // after bootstrap completes, but the handler captures the closure.
+ let healthCheckFn: (() => { status: string }) | null = null
++let boundRpcPort = parseInt(process.env.PHANERIS_RPC_PORT ?? '9100', 10)
+ 
+ if (webuiEnabled && serverToken) {
+-  const rpcPort = parseInt(process.env.PHANERIS_RPC_PORT ?? '9100', 10)
+   const rpcProtocol = tls ? 'wss' as const : 'ws' as const
+ 
+   webuiHandler = createWebuiHandler({
+@@ -152,9 +159,11 @@ if (webuiEnabled && serverToken) {
+     password: process.env.PHANERIS_WEBUI_PASSWORD || undefined,
+     secureCookies: webuiSecureCookies,
+     publicWsUrl: webuiWsUrl,
++    trustedProxies,
++    allowedOrigins,
+     wsProtocol: rpcProtocol,
+     // WebUI is served on the same port as WS — wsPort matches the RPC port
+-    wsPort: rpcPort,
++    wsPort: () => boundRpcPort,
+     getHealthCheck: () => healthCheckFn?.() ?? { status: 'starting' },
+     logger: { info: console.log, warn: console.warn, error: console.error } as any,
+   })
+@@ -181,12 +190,7 @@ const instance = await (async () => {
+       serverVersion: process.env.PHANERIS_VERSION ?? packageVersion,
+       tls,
+       // When web UI is enabled, accept JWT session cookies on WebSocket upgrade
+-      validateSessionCookie: webuiEnabled && serverToken
+-        ? async (cookieHeader) => {
+-            const session = await validateSession(cookieHeader, serverToken)
+-            return session !== null
+-          }
+-        : undefined,
++      validateSessionCookie: webuiHandler?.validateSessionCookie,
+       // Embed the WebUI HTTP handler on the WS server's port
+       httpHandler: webuiNodeHandler,
+       applyPlatformToSubsystems: (platform) => {
+@@ -267,6 +271,15 @@ const instance = await (async () => {
+     process.exit(1)
+   }
+ })()
++stopAccepting = instance.quiesce
++boundRpcPort = instance.port
++cleanupProcess = async () => {
++  const failures: unknown[] = []
++  try { webuiHandler?.dispose() } catch (error) { failures.push(error) }
++  try { await messagingHandle?.dispose() } catch (error) { failures.push(error) }
++  try { await instance.stop() } catch (error) { failures.push(error) }
++  if (failures.length) throw new AggregateError(failures, 'Server cleanup failed', { cause: failures[0] })
++}
+ 
+ // ---------------------------------------------------------------------------
+ // Messaging post-bootstrap: bind the WS publisher and initialize local
+@@ -363,19 +376,11 @@ if (!isLocalBind && instance.protocol === 'ws') {
+   }
+ }
+ 
+-const shutdown = async () => {
+-  webuiHandler?.dispose()
++const disposeServerResources = cleanupProcess
++cleanupProcess = async () => {
+   healthServer?.stop()
+-  if (messagingHandle) {
+-    try {
+-      await messagingHandle.dispose()
+-    } catch (error) {
+-      console.error('[messaging] dispose failed:', error)
+-    }
+-  }
+-  await instance.stop()
+-  process.exit(0)
++  await disposeServerResources()
+ }
+ 
+-process.on('SIGINT', shutdown)
+-process.on('SIGTERM', shutdown)
++process.on('SIGINT', lifecycle.shutdown)
++process.on('SIGTERM', lifecycle.shutdown)
+diff --git a/scripts/critical-scenarios.ts b/scripts/critical-scenarios.ts
+index bc064d02..3647425d 100644
+--- a/scripts/critical-scenarios.ts
++++ b/scripts/critical-scenarios.ts
+@@ -8,6 +8,7 @@ export const criticalTestGroups: [string, string[]][] = [
+     'src/sessions/idle-session-cache.test.ts',
+     'src/tasks/TaskRunner.test.ts',
+     'src/transport/__tests__/server-lifecycle.test.ts',
++    'src/webui/__tests__/http-server.isolated.ts',
+   ]],
+   ['packages/shared', [
+     'src/sessions/__tests__/persistence-queue.test.ts',
+@@ -40,4 +41,6 @@ export const criticalWorkflows = [
+     required: ['crash.json', ...['tool', 'model'].flatMap(kind => ['t1-failure', 'after-t1', 'after-effect', 'after-t2'].map(point => `crash-${kind}-${point}.db`))] },
+   { id: 'plugin-transaction', entry: 'scripts/verification/plugin-transaction-workflow.ts', minimum: 12, required: ['plugin-transaction.json'] },
+   { id: 'session-branch', entry: 'scripts/verification/session-branch-workflow.ts', minimum: 4, required: ['session-branch.json'] },
++  { id: 'webui-auth-lifecycle', entry: 'scripts/verification/webui-auth-lifecycle-workflow.ts', minimum: 14, required: ['webui-auth-lifecycle.json', 'session-revocations.sqlite'] },
++  { id: 'process-lifecycle', entry: 'scripts/verification/process-lifecycle-workflow.ts', minimum: 12, required: ['process-lifecycle.json', 'runtime-quiesce.log', 'bootstrap-stop.log'] },
+ ] as const
+diff --git a/scripts/performance/server.ts b/scripts/performance/server.ts
+index 9e7e4cce..11c0cf29 100644
+--- a/scripts/performance/server.ts
++++ b/scripts/performance/server.ts
+@@ -2,7 +2,7 @@
+ import { readdirSync, statSync } from 'node:fs'
+ import { join } from 'node:path'
+ import { bootstrapServer } from '@phaneris/server-core/bootstrap'
+-import { createWebuiHandler, nodeHttpAdapter, validateSession } from '@phaneris/server-core/webui'
++import { createWebuiHandler, nodeHttpAdapter } from '@phaneris/server-core/webui'
+ import { registerCoreRpcHandlers, cleanupSessionFileWatchForClient } from '@phaneris/server-core/handlers/rpc'
+ import { SessionManager, setSessionPlatform, setSessionRuntimeHooks } from '@phaneris/server-core/sessions'
+ import { setFetcherPlatform } from '@phaneris/server-core/model-fetchers'
+@@ -28,7 +28,7 @@ let route: ReturnType<typeof nodeHttpAdapter> | undefined
+ const handlerTimings: { channel: string; elapsedMs: number }[] = []
+ const instance = await bootstrapServer({
+   serverToken: token, rpcHost: '127.0.0.1', rpcPort: 0, bundledAssetsRoot: root,
+-  validateSessionCookie: async cookie => await validateSession(cookie, token) !== null,
++  validateSessionCookie: async (cookie, request) => await web?.validateSessionCookie(cookie, request) ?? false,
+   httpHandler: (req, res) => {
+     // Browser-enforced offline fixture, without pausing production asset reads
+     // in the automation driver. Intersects the application's own CSP.
+diff --git a/scripts/quality-coverage.json b/scripts/quality-coverage.json
+index 5ee09f24..4a44f287 100644
+--- a/scripts/quality-coverage.json
++++ b/scripts/quality-coverage.json
+@@ -4,8 +4,8 @@
+     "apps/cli": {
+       "typecheck": "tsconfig.json",
+       "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+-      "build": "Source Bun entry with typecheck; independent executable/CLI boot E2E remains a gap",
+-      "behavior": "existing workspace CLI tests; no independent CLI-to-server E2E gate yet",
++      "build": "Source Bun entry with typecheck; CLI spawner boot in test:critical; independent executable packaging remains a gap",
++      "behavior": "workspace CLI tests and test:critical real CLI-to-server bearer handshake; full command/user-flow coverage remains separate",
+       "owner": "apps/cli"
+     },
+     "apps/electron": {
+@@ -26,7 +26,7 @@
+       "typecheck": "tsconfig.json",
+       "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+       "build": "build:smoke: production Vite bundle",
+-      "behavior": "build:smoke production bundle; perf:smoke fixture browser path; native authentication/browser contract gaps remain",
++      "behavior": "build:smoke/perf fixture; test:critical real HTTP/WS authentication owner; native browser cookie/UI contract gaps remain",
+       "owner": "apps/webui"
+     },
+     "packages/core": {
+@@ -61,14 +61,14 @@
+       "typecheck": "tsconfig.json",
+       "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+       "build": "build:smoke: actual server assembly plus import/token generation in the assembled tree",
+-      "behavior": "build:smoke boots packaged imports; complete headless startup/provider E2E remains a gap",
++      "behavior": "test:critical real headless startup/auth/fatal shutdown; packaged imports in build:smoke; live-provider E2E remains a gap",
+       "owner": "packages/server"
+     },
+     "packages/server-core": {
+       "typecheck": "tsconfig.json",
+       "lint": "lint:workspace (existing React/platform rules for electron/ui; shared correctness rules for all members)",
+       "build": "Source package; production main and packaged server import smoke (build:smoke)",
+-      "behavior": "Runtime gate/workflow/crash and test:critical task/lifecycle; full WebUI auth regression remains separate",
++      "behavior": "test:critical Runtime gate/workflow/crash, task/lifecycle, auth restart/Origin/proxy/body failures and existing WebUI isolated regression",
+       "owner": "packages/server-core"
+     },
+     "packages/session-tools-core": {
+diff --git a/docs/architecture/authentication-process-lifecycle.md b/docs/architecture/authentication-process-lifecycle.md
+new file mode 100644
+index 00000000..690e7c24
+--- /dev/null
++++ b/docs/architecture/authentication-process-lifecycle.md
+@@ -0,0 +1,31 @@
++# 认证撤销与进程生命周期
++
++Status: accepted — 2026-10-11，实施与验收见[第二轮故障矩阵](../verification/governance-auth-lifecycle-failure-matrix.md)。
++
++## 认证作用域和持久化
++
++WebUI handler 是 cookie 认证所有者。HTTP 与 WS 调用它的同一校验入口；纯 JWT 验签不承担会话授权。密码哈希按 handler 隔离，避免同进程多个实例共享密码。
++
++撤销数据库默认位于 `PHANERIS_CONFIG_DIR/security/webui-auth.sqlite`（未设置时用项目既有配置目录）。撤销键为 secret 的 SHA-256 作用域和规范化完整 token 的 SHA-256；规范化 base64url 段防止等价签名拼写绕过。仅保存哈希及 JWT 过期时间，不保存 secret、cookie 或密码。按 token 摘要撤销也覆盖无 jti 的历史 JWT。SQLite 使用 FULL 同步提交，成功提交后才返回登出 204。过期撤销可删除；未登出 cookie 和历史 cookie 名继续可读。独立认证 handler 可共享数据库；完整 headless 应用仍遵守配置目录单实例锁。不同目录互相隔离。测试可显式提供数据库路径，产品不提供自动清空开关。
++
++打不开/损坏数据库使启动失败。运行中读取或写入失败使该 handler 的 cookie 认证不可用：返回 503、不发新 cookie、不清登出 cookie；进程内不自动恢复。bearer 凭据独立。写入失败的登出没有完成：修复存储并重启后须再次登出，或由部署方轮换 secret 使全部旧 cookie 失效。故障日志记录底层存储错误，不记录 token。
++
++已有未撤销 cookie 升级后继续有效。升级前仅驻留内存的撤销无法追溯；部署若需要消除该窗口，应显式轮换 secret。回退版本必须继续读撤销库，否则先停服并轮换 secret；不得无条件回退到只读 JWT 的版本。此轮不自动轮换 secret、不改 cookie 前缀。
++
++## 浏览器 Origin 和代理
++
++cookie WS 在认证握手处检查升级请求的 Origin：必须是合法的 HTTP(S) origin（禁止 null、路径、用户信息、片段）且等于实际 HTTP 请求的 origin，或精确列入 `PHANERIS_WEBUI_ALLOWED_ORIGINS`（逗号分隔）。缺失 Origin 的 cookie 不授权；携带合法 bearer 的非浏览器/CLI 连接不要求 Origin。拒绝发生在认证握手，连接未加入可执行 RPC 客户端集合。
++
++已经用 cookie 握手的连接在后续消息入场时复核会话；登出/过期/存储不可用后下一次消息拒绝并关闭连接。已开始的 effect 继续由 Runtime 所有者收敛，登出不会触发重试。bearer 握手的连接不继承 cookie 依赖。
++
++`PHANERIS_TRUSTED_PROXIES` 是逗号分隔的精确 socket IP 列表，暂不接受 CIDR；支持 IPv4-mapped IPv6 的等价地址。仅直连对端在此列表中时采信 Forwarded / X-Forwarded-Proto / X-Forwarded-Host / X-Forwarded-For。HTTP cookie Secure、返回的 WS URL、WS Origin 和限流键复用这一信任判定。直接 TLS 根据 socket 协议判定；远程 HTTPS 代理无需 blanket localhost 允许名单。显式 WS URL 仅指定连接地址，不隐式增加允许的页面 Origin。
++
++## 异常归属与退出
++
++已处理取消、SDK 运行错误、展示 observer 错误由既有 Runtime/产品所有者负责；不在全局 handler 用消息字符串猜测可恢复错误。RuntimeCommitFailure 保持 blocked 与 recovery evidence，禁止未知 effect 自动重试；本轮不创建另一套运行状态。
++
++真正逸出的 rejection/exception 意味着进程状态未经证明。Server/Electron 全局 handler 只记录原始 stack/cause、立即关闭外部 RPC 接入、调用既有资源所有者清理，并在 10 秒期限内非零退出。清理失败/超时/重复 fatal 均不重置期限或重启执行。Electron 保留 Sentry 捕获，使用 app.exit(1)。Pi 保留既有 JSONL error 和立即退出策略。正常信号退出也复用有界收口，清理失败不能退出 0。
++
++收口第一步调用现有 Runtime 的 `quiesce()`：同步设置已有的 draining/Host closing 标志，阻止内部任务与外部 RPC 新 admission；清理期间保留查询、recovery evidence 和已开始 effect 的结论提交能力，再由既有 close 结束资源。不新增另一份执行状态或自动恢复逻辑。
++
++验收限度：本地 macOS 的 Bun server/CLI/Pi 真实进程和 Runtime E2E；Electron lifecycle port 与生产 bundle 的检查不等同于原生 Electron UI/退出验收。Windows/Linux、真实远程 TLS 代理、签名安装包与在线 provider 另行验收。
+diff --git a/docs/process/governance-second-wave-2026-10-11.md b/docs/process/governance-second-wave-2026-10-11.md
+new file mode 100644
+index 00000000..d249b8ec
+--- /dev/null
++++ b/docs/process/governance-second-wave-2026-10-11.md
+@@ -0,0 +1,35 @@
++# 架构与代码治理第二轮实施台账
++
++日期：2026-10-11。范围：总计划 G2b/G2c；第一轮改动和证据保留。状态：**verified（本地，平台限度见 §3）**。HEAD 仍为 `8e5bf13b`，工作树未提交或推送。
++
++实施前写定[故障矩阵](../verification/governance-auth-lifecycle-failure-matrix.md)与[认证/lifecycle ADR](../architecture/authentication-process-lifecycle.md)，先运行进程 E2E，证据独立归入[第二轮验收目录](../verification/results/governance-second-wave-2026-10-11/README.md)。
++
++## 1. 已实施的边界
++
++| 工作包 | 所有者 | 实现与判据 | 状态 / 回退 |
++| --- | --- | --- | --- |
++| G2b cookie 撤销 | server-core/webui handler | SQLite FULL 提交；secret 作用域、规范化 token 摘要、过期时间；HTTP/WS 同一入口；多 handler 共享、目录隔离、无 jti/旧 cookie 名兼容 | 本地 14 个真实进程场景已通过；回退必须保留撤销库读兼容或停服轮换 secret |
++| G2b Origin/代理 | handler + transport upgrade request | cookie 必须同源/显式 origin；无 Origin bearer 兼容；代理的 proto/host/IP 同一 socket 信任判定；已登录 WS 消息复核撤销 | 本地验证通过；不增加 wildcard/localhost 宽泛白名单 |
++| G2b 存储故障 | handler | 写锁/损坏真实 SQLite：503 不清 cookie、不发 cookie；打开失败不监听，不清空 DB；运行中失败锁定 cookie auth 直到重启 | 不把失败登出当成功；操作方修复后须重试登出 |
++| G2c process 收口 | server / Electron adapters | 首故障诊断、10 秒 deadline、同步 quiesce、既有清理、有界非零退出；Pi 既有 JSONL error/exit 保留 | server/Pi/共享 lifecycle port 已验收；原生 Electron、Windows/Linux 待验收 |
++| G2c Runtime admission | 既有 Kernel/Host | quiesce 复用 draining/closing；关闭 foreground/auxiliary/new command/steer admission，保留结论提交与 recovery reads | 不新增运行状态/执行重试；复用既有 Runtime 故障 E2E |
++
++底层 SQLite runtime adapter 从 Runtime 私有目录移到 `server-core/runtime/sqlite.ts`，旧私有入口保留 re-export。认证只复用基础设施，不跨入 Runtime Kernel/Store；Runtime 解析图门禁仍执行。
++
++## 2. 修复前证据及伴随修复
++
++真实进程证明：logout→SIGKILL→restart 的 cookie 为 200；未处理 rejection 后服务仍响应；等价 JWT 签名拼写绕过首次摘要实现；已握手 cookie WS 在登出后仍接受 RPC；quiesce 后 steer 仍可送往 driver；重复 stop 在首个清理尚未完成时提前返回。这些失败均先于相应修复留存，未削弱成功/失败断言。bootstrap 与 Electron quit cleanup 现在均复用唯一进行中的 promise。
++
++同一 E2E 暴露的既有缺陷也已修复：端口 0 的 `/api/config` 返回 0；chunked body 超限先 destroy socket，客户端看到 ECONNRESET 而非 413。现在使用实际绑定端口、在响应刷出后关闭 socket，并在声明长度超限时不开始缓冲。
++
++密码哈希移到 handler 作用域，消除模块全局共享。两个既有 WebUI 回归 fixture 改为临时撤销库路径；代理测试增加明确的受信对端，原有断言保持。全部新增场景为 E2E/独立进程验证，没有新增单元测试。
++
++## 3. 门禁与验收
++
++`bun run test:auth-lifecycle` 单独复跑认证和生命周期；`test:critical` registry 纳入 14 个认证场景、12 个 lifecycle/Runtime quiesce/cleanup ownership 场景和既有 15 项 HTTP isolated 回归。workflow manifest 要求实际 SQLite 产物、非零场景数和 SHA-256；CI 复用既有关键验收和 artifact upload 接线。
++
++最终命令全部 exit 0：`validate:full`（workspace 6285 pass、14 既有 skip、0 fail；CI 子集 87 次 pass；文档工具 24 项）；`test:critical`（243 项既有 Bun 回归、7 workflow + 6 package group、13 个聚合项；认证 14、lifecycle 12）；独立 Pi 6 个场景；output canary 7、governance canary 4；生产五类 bundle 加真实 server assembly/import 共 6 项。
++
++lint 覆盖 2155 文件，120 条既有 warning 基线不变。main 为 21,444,207 B，距 21,500,000 B 上限仍有 55,793 B；renderer 初始 JS 为 4,279,927 B / 71 chunks，Pi 为 14,004,547 B。未放宽预算、警告基线、身份检查或 IPC 清单（仍为 425 项）。原始扫描 16 项和首轮归档 113 项校验和保持不变。
++
++真实浏览器 SameSite/Cookie 行为、原生 Electron app.exit、远程 TLS 代理、Windows/Linux 和线上 provider 没有由端口测试推断通过。G3–G8 继续按总计划串行推进，下一项为 G3 config/storage 责任表和迁移失败矩阵。
+diff --git a/docs/verification/governance-auth-lifecycle-failure-matrix.md b/docs/verification/governance-auth-lifecycle-failure-matrix.md
+new file mode 100644
+index 00000000..d1e1cedc
+--- /dev/null
++++ b/docs/verification/governance-auth-lifecycle-failure-matrix.md
+@@ -0,0 +1,31 @@
++# 治理第二轮：认证与进程生命周期故障矩阵
++
++状态：2026-10-11，故障方式在对应修复前写定；验证发现的附加场景随后补入，再修复。代码基线为 `8e5bf13b` 加第一轮未提交改动；不覆盖第一轮归档。已完成本地验收，逐项结果见[第二轮证据](./results/governance-second-wave-2026-10-11/README.md)。
++
++本轮限于实施计划 G2b/G2c。先执行下面的真实进程验证，再修改生产代码；结果另存独立目录和带 SHA-256 的 manifest。
++
++| ID | 失败方式 | 必须成立的行为 |
++| --- | --- | --- |
++| A01 | 登录、登出、SIGKILL、同配置目录同 secret 重启，重放旧 cookie | HTTP 和 WS 都拒绝；另一未登出的 cookie 仍有效 |
++| A02 | 两个服务进程共用目录与 secret，其中一个登出 | 另一个进程立即拒绝重放；无丢失更新 |
++| A03 | 相同 secret、不同配置目录 | 撤销记录隔离；不访问用户真实目录 |
++| A04 | 旧名 cookie、无 jti 的有效历史 JWT | 继续可读；登出撤销精确 token，重启不复活 |
++| A05 | SQLite 被另一个真实连接持有写锁 | 登出 503、不清 cookie、不假报成功；该进程暂停 cookie 登录/验证，bearer 独立；重启后未提交的登出必须重试 |
++| A06 | 撤销数据库损坏/不能打开 | 启动失败，不监听；不得删除/重建损坏文件来恢复登录 |
++| A07 | 同源、非法、缺失、null、畸形、带路径的 Origin | cookie WS 仅同源或精确配置允许；其他拒绝；bearer/CLI 无 Origin 仍正常 |
++| A08 | 显式远程 Origin、受信与不受信直连代理伪造转发头 | 允许精确远程配置；仅受信 socket 对端采信代理的 proto/host/IP；不把所有 localhost 或通配符放行 |
++| A09 | 多 IP 错误密码、成功密码、伪造 XFF、20 次全局失败 | per-IP 和全局仅计失败；正确密码不绕过已耗尽预算；实际 socket/受信代理决定键 |
++| A10 | 无 Content-Length 的分块超大请求 | 实际 node HTTP adapter 返回 413；下一次合法请求仍可登录 |
++| A11 | 实际 server/CLI spawner 启动 | token 默认不进 stdout/stderr；CLI 仍能用其持有的 bearer 完成握手 |
++| A12 | JWT 签名的等价 base64url 编码变体重放 | 按规范化的 token 摘要撤销；不能通过不改变签名字节的拼写变体绕过 |
++| A13 | 使用端口 0 启动，浏览器读取 /api/config | 返回实际绑定的 WS 端口，不能返回 0 |
++| A14 | 已通过 cookie 握手的 WS 在登出后继续发 RPC | 下一次 RPC 重新校验撤销、拒绝并关闭连接；已开始的 effect 仍由 Runtime 收敛，不因登出自动重试 |
++| L01 | server 未处理 rejection、uncaught exception | 原始 stack/cause 有诊断；立即关闭 RPC 接入；复用已有 stop/Runtime close；有界非零退出 |
++| L02 | 清理永久挂起、清理再抛异常、重复 fatal | 第一故障负责收口；退出期限不会重置；非零退出、没有第二次清理或重启 |
++| L03 | Electron 进程生命周期 adapter | 同一有界收口机制，Sentry 诊断保留；关闭本地 RPC、既有 quit cleanup、app.exit(1)；原生 Electron 验证单独记限度 |
++| L04 | Pi 子进程未处理 rejection、uncaught exception | 保持既有 error JSONL + 非零退出，原始原因可定位；父 Runtime 不自动重试未知 effect |
++| L05 | Runtime commit 写入失败、observer 异常、子进程退出、迟到回调 | 复用现有真实 Runtime 边界/崩溃/Pi E2E：commit_failed 持有恢复证据，observer 不能篡改结论，generation 拒绝迟到输入，无第二条执行路径 |
++| L06 | fatal 后清理尚未完成时内部任务继续申请执行 | 同步关闭现有 Runtime 的 Host 与 command admission；仍可读取恢复证据和提交已开始 effect 的结论 |
++| L07 | 正常退出与 fatal 同时调用已有资源清理入口 | 返回同一个进行中的清理 promise，不因“已开始”标记提前宣称完成；资源只清理一次 |
++
++判据和部署/回退语义见[认证与进程生命周期决策](../architecture/authentication-process-lifecycle.md)。验证脚本的控制口仅存在于测试 preload/fixture，不向产品加入故障注入路由。
+diff --git a/packages/server-core/src/runtime/process-lifecycle.ts b/packages/server-core/src/runtime/process-lifecycle.ts
+new file mode 100644
+index 00000000..b15fca52
+--- /dev/null
++++ b/packages/server-core/src/runtime/process-lifecycle.ts
+@@ -0,0 +1,61 @@
++/** Last-resort process boundary; recoverable errors belong to their resource owner. */
++export interface ProcessLifecycleOptions {
++  owner: string
++  stopAccepting: () => void
++  cleanup: () => void | Promise<void>
++  report: (kind: string, detail: string, reason: unknown) => void
++  exit: (code: number) => void
++  timeoutMs?: number
++}
++
++function errorDetail(reason: unknown): string {
++  const seen = new Set<unknown>(), parts: string[] = []
++  for (let current = reason; current !== undefined && !seen.has(current) && parts.length < 8;) {
++    seen.add(current)
++    parts.push(current instanceof Error ? current.stack ?? `${current.name}: ${current.message}` : String(current))
++    current = current instanceof Error ? current.cause : undefined
++  }
++  return parts.join('\nCaused by: ')
++}
++
++export function installProcessLifecycle(options: ProcessLifecycleOptions) {
++  let stopping = false, finished = false, exitCode = 0
++  let deadline: ReturnType<typeof setTimeout> | undefined
++  const report = (kind: string, reason: unknown) => {
++    try { options.report(kind, `[${options.owner}] ${errorDetail(reason)}`, reason) } catch {
++      // A broken diagnostic sink must never re-enter fatal handling.
++    }
++  }
++  const finish = () => {
++    if (finished) return
++    finished = true; clearTimeout(deadline)
++    options.exit(exitCode)
++  }
++  const start = () => {
++    if (stopping) return
++    stopping = true
++    // The timer stays referenced: a hung cleanup with no open sockets must still exit.
++    deadline = setTimeout(() => {
++      exitCode = 1; report('shutdown_deadline', new Error('Process cleanup deadline exceeded')); finish()
++    }, options.timeoutMs ?? 10_000)
++    try { options.stopAccepting() } catch (error) {
++      exitCode = 1; report('quiesce_failed', error); finish(); return
++    }
++    void Promise.resolve().then(options.cleanup).then(finish, error => {
++      exitCode = 1; report('cleanup_failed', error); finish()
++    })
++  }
++  const fail = (kind: string, reason: unknown) => {
++    if (finished) return
++    exitCode = 1
++    // Retain the first fatal diagnosis, and never restart cleanup or its deadline.
++    if (!stopping) report(kind, reason)
++    start()
++  }
++  const onException = (error: Error) => fail('uncaughtException', error)
++  const onRejection = (reason: unknown) => fail('unhandledRejection', reason)
++  process.on('uncaughtException', onException)
++  process.on('unhandledRejection', onRejection)
++  return { fail, shutdown: () => start(),
++    dispose: () => { process.off('uncaughtException', onException); process.off('unhandledRejection', onRejection) } }
++}
+diff --git a/packages/server-core/src/runtime/sqlite.ts b/packages/server-core/src/runtime/sqlite.ts
+new file mode 100644
+index 00000000..9ec71e46
+--- /dev/null
++++ b/packages/server-core/src/runtime/sqlite.ts
+@@ -0,0 +1,89 @@
++import { createRequire } from 'node:module'
++
++export interface SqliteRunResult {
++  changes: number
++  lastInsertRowid: number | bigint
++}
++export interface SqliteStatement {
++  run(...params: unknown[]): SqliteRunResult
++  get(...params: unknown[]): unknown
++  all(...params: unknown[]): unknown[]
++}
++
++export interface SqliteDatabase {
++  exec(sql: string): void
++  prepare(sql: string): SqliteStatement
++  transaction<TArgs extends unknown[], TResult>(fn: (...args: TArgs) => TResult): (...args: TArgs) => TResult
++  close(): void
++}
++
++interface NativeStatement {
++  run(...params: unknown[]): { changes: number; lastInsertRowid: number | bigint }
++  get(...params: unknown[]): unknown
++  all(...params: unknown[]): unknown[]
++}
++
++interface NativeDatabase {
++  exec(sql: string): void
++  prepare?(sql: string): NativeStatement
++  query?(sql: string): NativeStatement
++  close(): void
++}
++
++class RuntimeSqliteDatabase implements SqliteDatabase {
++  constructor(private readonly native: NativeDatabase, private readonly bunRuntime: boolean) {}
++
++  exec(sql: string): void {
++    this.native.exec(sql)
++  }
++
++  prepare(sql: string): SqliteStatement {
++    const statement = this.bunRuntime
++      ? this.native.query?.(sql)
++      : this.native.prepare?.(sql)
++    if (!statement) throw new Error('SQLite runtime did not provide a statement API')
++    return statement
++  }
++
++  transaction<TArgs extends unknown[], TResult>(fn: (...args: TArgs) => TResult): (...args: TArgs) => TResult {
++    return (...args: TArgs): TResult => {
++      this.native.exec('BEGIN IMMEDIATE')
++      try {
++        const result = fn(...args)
++        this.native.exec('COMMIT')
++        return result
++      } catch (error) {
++        try { this.native.exec('ROLLBACK') } catch { /* preserve original failure */ }
++        throw error
++      }
++    }
++  }
++
++  close(): void {
++    this.native.close()
++  }
++}
++
++/**
++ * Use the SQLite implementation shipped with the active runtime. This avoids an
++ * additional native ABI dependency while keeping the durable store available in
++ * both Bun headless builds and Electron/Node.
++ */
++export function openSqliteDatabase(path: string): SqliteDatabase {
++  // The Electron main bundle is CommonJS while the Pi subprocess bundle is
++  // ESM. `import.meta.url` is erased by the CJS build, so use the active
++  // runtime executable as a stable absolute base. Only built-in modules are
++  // loaded through this require, making its directory irrelevant.
++  const runtimeRequire = createRequire(process.execPath)
++  if (typeof process.versions.bun === 'string') {
++    const { Database } = runtimeRequire('bun:sqlite') as {
++      Database: new (filename: string, options?: { create?: boolean }) => NativeDatabase
++    }
++    return new RuntimeSqliteDatabase(new Database(path, { create: true }), true)
++  }
++
++  const { DatabaseSync } = runtimeRequire('node:sqlite') as {
++    DatabaseSync: new (filename: string) => NativeDatabase
++  }
++  return new RuntimeSqliteDatabase(new DatabaseSync(path), false)
++}
+diff --git a/packages/server-core/src/webui/request-origin.ts b/packages/server-core/src/webui/request-origin.ts
+new file mode 100644
+index 00000000..0c8cde60
+--- /dev/null
++++ b/packages/server-core/src/webui/request-origin.ts
+@@ -0,0 +1,36 @@
++import type { IncomingMessage } from 'node:http'
++
++const normalizeIp = (ip: string) => ip.startsWith('::ffff:') ? ip.slice(7) : ip
++export function isTrustedProxy(peer: string, proxies: readonly string[] = []): boolean {
++  return proxies.some(proxy => normalizeIp(proxy) === normalizeIp(peer))
++}
++
++/** Accept an origin, not a URL with a hidden path, credential or fragment. */
++export function parseWebuiOrigin(value: string): string {
++  const url = new URL(value)
++  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password
++    || url.pathname !== '/' || url.search || url.hash || !/^https?:\/\/[^/]+\/?$/.test(value)) {
++    throw new Error('Expected an HTTP(S) origin without a path, credentials, query or fragment')
++  }
++  return url.origin
++}
++
++export function cookieOriginAllowed(req: IncomingMessage, allowed: readonly string[], proxies: readonly string[]): boolean {
++  const origin = req.headers.origin
++  if (!origin) return false
++  try {
++    const canonical = parseWebuiOrigin(origin)
++    if (allowed.includes(canonical)) return true
++    const trusted = isTrustedProxy(req.socket.remoteAddress ?? '', proxies)
++    const first = (name: string) => {
++      const value = req.headers[name]
++      return typeof value === 'string' ? value.split(',')[0]?.trim() : undefined
++    }
++    const forwarded = trusted ? first('forwarded') : undefined
++    const field = (name: string) => forwarded?.match(new RegExp(`(?:^|;)\\s*${name}="?([^;,"]+)"?`, 'i'))?.[1]
++    const encrypted = 'encrypted' in req.socket && req.socket.encrypted
++    const proto = trusted ? first('x-forwarded-proto') ?? field('proto') ?? (encrypted ? 'https' : 'http') : encrypted ? 'https' : 'http'
++    const host = trusted ? first('x-forwarded-host') ?? field('host') ?? req.headers.host : req.headers.host
++    return !!host && canonical === parseWebuiOrigin(`${proto}://${host}`)
++  } catch { return false }
++}
+diff --git a/packages/server-core/src/webui/session-revocations.ts b/packages/server-core/src/webui/session-revocations.ts
+new file mode 100644
+index 00000000..f0e9edc8
+--- /dev/null
++++ b/packages/server-core/src/webui/session-revocations.ts
+@@ -0,0 +1,49 @@
++import { createHash } from 'node:crypto'
++import { chmodSync, mkdirSync } from 'node:fs'
++import { dirname } from 'node:path'
++import { openSqliteDatabase, type SqliteDatabase } from '../runtime/sqlite'
++import type { JwtPayload } from './auth'
++
++export class AuthStorageFailure extends Error {
++  constructor(cause: unknown) { super('WebUI authentication storage unavailable', { cause }); this.name = 'AuthStorageFailure' }
++}
++const digest = (value: string) => createHash('sha256').update(value).digest('hex')
++// JWS permits equivalent base64url signature spellings in some decoders.
++const tokenDigest = (token: string) => digest(token.split('.').map(part => Buffer.from(part, 'base64url').toString('base64url')).join('.'))
++
++/** Persistent authority shared by all HTTP/WS cookie checks for this handler. */
++export class SessionRevocations {
++  private readonly db: SqliteDatabase
++  private readonly scope: string
++  private failure?: AuthStorageFailure
++  constructor(path: string, secret: string) {
++    this.scope = digest(secret)
++    mkdirSync(dirname(path), { recursive: true, mode: 0o700 })
++    this.db = openSqliteDatabase(path)
++    try {
++      chmodSync(path, 0o600)
++      this.db.exec(`PRAGMA busy_timeout=250; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;
++        CREATE TABLE IF NOT EXISTS session_revocations (
++          scope TEXT NOT NULL, token_hash TEXT NOT NULL, expires_at INTEGER NOT NULL,
++          PRIMARY KEY (scope, token_hash)
++        );`)
++    } catch (error) { this.db.close(); throw new AuthStorageFailure(error) }
++  }
++  private access<T>(action: () => T): T {
++    if (this.failure) throw this.failure
++    try { return action() } catch (error) { this.failure = new AuthStorageFailure(error); throw this.failure }
++  }
++  checkAvailable(): void { this.access(() => this.db.prepare('SELECT 1').get()) }
++  isRevoked(token: string): boolean {
++    return this.access(() => !!this.db.prepare('SELECT 1 FROM session_revocations WHERE scope=? AND token_hash=?')
++      .get(this.scope, tokenDigest(token)))
++  }
++  revoke(token: string, payload: JwtPayload): void {
++    this.access(() => this.db.transaction(() => {
++      this.db.prepare('DELETE FROM session_revocations WHERE expires_at <= ?').run(Math.floor(Date.now() / 1000))
++      this.db.prepare('INSERT OR REPLACE INTO session_revocations (scope,token_hash,expires_at) VALUES (?,?,?)')
++        .run(this.scope, tokenDigest(token), payload.exp)
++    })())
++  }
++  close(): void { this.db.close() }
++}
+diff --git a/scripts/verification/fixtures/bootstrap-stop.ts b/scripts/verification/fixtures/bootstrap-stop.ts
+new file mode 100644
+index 00000000..5cee7e3f
+--- /dev/null
++++ b/scripts/verification/fixtures/bootstrap-stop.ts
+@@ -0,0 +1,27 @@
++import assert from 'node:assert/strict'
++import { bootstrapServer } from '../../../packages/server-core/src/bootstrap'
++import { SessionManager } from '../../../packages/server-core/src/sessions'
++let cleanups = 0
++const pending = Promise.withResolvers<void>()
++const entered = Promise.withResolvers<void>()
++const instance = await bootstrapServer({
++  serverToken: 'governance-stop-only-token', rpcHost: '127.0.0.1', rpcPort: 0,
++  bundledAssetsRoot: process.argv[2]!, createSessionManager: runtime => new SessionManager(runtime),
++  createHandlerDeps: deps => deps, registerAllRpcHandlers() {},
++  initializeSessionManager: sm => sm.initialize(), setSessionEventSink: (sm, sink) => sm.setEventSink(sink),
++  initModelRefreshService: () => ({ startAll() {}, stopAll() {} }),
++  cleanupSessionManager: async sm => { cleanups++; entered.resolve(); await pending.promise; await sm.cleanup() },
++})
++try {
++  const first = instance.stop()
++  await entered.promise
++  const second = instance.stop()
++  let finished = false
++  void second.then(() => { finished = true })
++  await new Promise(resolve => setTimeout(resolve, 20))
++  assert(!finished, 'Repeated stop must await the in-flight owner cleanup')
++  assert.strictEqual(first, second, 'Stop has one shared promise owner')
++  pending.resolve(); await Promise.all([first, second])
++  assert.equal(cleanups, 1)
++  console.log(JSON.stringify({ id: 'L07-bootstrap-stop-owner', passed: true, cleanups }))
++} finally { pending.resolve(); await instance.stop() }
+diff --git a/scripts/verification/fixtures/governance-process-faults.ts b/scripts/verification/fixtures/governance-process-faults.ts
+new file mode 100644
+index 00000000..e98ef707
+--- /dev/null
++++ b/scripts/verification/fixtures/governance-process-faults.ts
+@@ -0,0 +1,16 @@
++/** Test-only preload: no production routes or environment-triggered fatal branches. */
++import { createInterface } from 'node:readline'
++const input = createInterface({ input: process.stdin })
++input.on('line', async line => {
++  let command: { governanceFault?: string }
++  try { command = JSON.parse(line) } catch { return }
++  if (!command.governanceFault) return
++  const error = new Error(`governance-${command.governanceFault}`, { cause: new Error('governance-original-cause') })
++  if (command.governanceFault === 'hang-cleanup' || command.governanceFault === 'throw-cleanup') {
++    const { SessionManager } = await import('../../../packages/server-core/src/sessions/SessionManager')
++    SessionManager.prototype.cleanup = command.governanceFault === 'hang-cleanup'
++      ? () => new Promise(() => {}) : async () => { throw new Error('governance-cleanup-failed') }
++  }
++  if (command.governanceFault === 'uncaught') setImmediate(() => { throw error })
++  else void Promise.reject(error)
++})
+diff --git a/scripts/verification/fixtures/governance-process-support.ts b/scripts/verification/fixtures/governance-process-support.ts
+new file mode 100644
+index 00000000..0a5d4fd4
+--- /dev/null
++++ b/scripts/verification/fixtures/governance-process-support.ts
+@@ -0,0 +1,82 @@
++import assert from 'node:assert/strict'
++import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
++import { mkdirSync, writeFileSync } from 'node:fs'
++import { join, resolve } from 'node:path'
++import WebSocket from 'ws'
++import { PROTOCOL_VERSION } from '@phaneris/shared/protocol'
++
++export const repository = resolve(import.meta.dir, '../../..')
++export const testSecret = 'governance-only-server-secret-never-a-real-credential'
++export async function deadline<T>(promise: Promise<T>, ms = 20_000): Promise<T> {
++  let timer: ReturnType<typeof setTimeout> | undefined
++  try { return await Promise.race([promise, new Promise<never>((_, reject) => {
++    timer = setTimeout(() => reject(new Error(`Verification deadline exceeded (${ms}ms)`)), ms)
++  })]) } finally { clearTimeout(timer) }
++}
++export function seedServer(directory: string) {
++  const config = join(directory, 'config'), webui = join(directory, 'webui')
++  mkdirSync(config, { recursive: true }); mkdirSync(webui, { recursive: true })
++  writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [], activeWorkspaceId: null, activeSessionId: null }))
++  writeFileSync(join(webui, 'index.html'), '<!doctype html><title>Governance fixture</title>')
++  writeFileSync(join(webui, 'login.html'), '<!doctype html><title>Login fixture</title>')
++  return { config, webui }
++}
++export interface RunningProcess {
++  process: ChildProcessWithoutNullStreams; url: string; stdout: () => string; stderr: () => string
++  exited: Promise<number | null>; stop: (signal?: NodeJS.Signals) => Promise<number | null>
++}
++export async function startProcess(options: {
++  config: string; webui?: string; extra?: Record<string, string>; entry?: string; ready?: boolean
++}): Promise<RunningProcess> {
++  const child = spawn(process.execPath, ['--preload', join(import.meta.dir, 'governance-process-faults.ts'),
++    options.entry ?? join(repository, 'packages/server/src/index.ts')], {
++    cwd: repository, stdio: 'pipe', env: { ...process.env,
++      PHANERIS_CONFIG_DIR: options.config, PHANERIS_SERVER_TOKEN: testSecret,
++      PHANERIS_RPC_HOST: '127.0.0.1', PHANERIS_RPC_PORT: '0', PHANERIS_HEALTH_PORT: '0',
++      PHANERIS_DISABLE_MESSAGING: '1', PHANERIS_PRINT_SERVER_TOKEN: '0',
++      PHANERIS_BUNDLED_ASSETS_ROOT: join(repository, 'apps/electron'),
++      PHANERIS_WEBUI_DIR: options.webui ?? '', PHANERIS_WEBUI_PASSWORD: testSecret,
++      PHANERIS_TRUSTED_PROXIES: '', PHANERIS_WEBUI_ALLOWED_ORIGINS: '',
++      ...options.extra,
++    },
++  })
++  let stdout = '', stderr = '', url = ''
++  const ready = Promise.withResolvers<void>()
++  const exited = new Promise<number | null>((resolveExit, reject) => {
++    child.on('error', reject)
++    child.on('exit', code => { resolveExit(code); if (!url) ready.reject(new Error(`Child exited before ready (${code}): ${stderr.slice(-1500)}`)) })
++  })
++  // The exit promise is also used by intentionally failing startup scenarios.
++  void ready.promise.catch(() => {})
++  child.stdout.on('data', data => {
++    stdout += data.toString()
++    const match = stdout.match(/PHANERIS_SERVER_URL=(ws[s]?:\/\/[^\s]+)/)
++    if (match) { url = match[1]!; ready.resolve() }
++  })
++  child.stderr.on('data', data => { stderr += data.toString() })
++  const result: RunningProcess = { process: child, get url() { return url }, stdout: () => stdout, stderr: () => stderr, exited,
++    stop: async (signal = 'SIGTERM') => { if (child.exitCode === null) child.kill(signal); return deadline(exited, 15_000) } }
++  if (options.ready !== false) {
++    try { await deadline(ready.promise) } catch (error) { await result.stop('SIGKILL'); throw error }
++  }
++  return result
++}
++export async function handshake(url: string, headers: Record<string, string> = {}, token?: string) {
++  return deadline(new Promise<{ accepted: boolean; code: string | null }>((resolveResult, reject) => {
++    const ws = new WebSocket(url, { headers })
++    ws.on('error', reject)
++    ws.on('open', () => ws.send(JSON.stringify({ id: 'governance-handshake', type: 'handshake', protocolVersion: PROTOCOL_VERSION, token })))
++    let code: string | null = null
++    ws.on('message', data => {
++      const message = JSON.parse(data.toString()) as { type: string; error?: { code?: string } }
++      if (message.type === 'handshake_ack') { ws.close(); resolveResult({ accepted: true, code: null }) }
++      if (message.type === 'error') code = message.error?.code ?? null
++    })
++    ws.on('close', () => resolveResult({ accepted: false, code }))
++  }), 5000)
++}
++export function assertNoSecret(processes: RunningProcess[], secrets = [testSecret]) {
++  for (const child of processes) for (const secret of secrets) {
++    assert(!`${child.stdout()}${child.stderr()}`.includes(secret), 'Server diagnostics must not contain authentication secrets')
++  }
++}
+diff --git a/scripts/verification/fixtures/process-lifecycle-port.ts b/scripts/verification/fixtures/process-lifecycle-port.ts
+new file mode 100644
+index 00000000..d9e6b685
+--- /dev/null
++++ b/scripts/verification/fixtures/process-lifecycle-port.ts
+@@ -0,0 +1,20 @@
++/** Electron exit/Sentry ports exercised in an independent real process. */
++import { installProcessLifecycle } from '../../../packages/server-core/src/runtime/process-lifecycle'
++const scenario = process.argv[2]!
++let cleanups = 0, reports = 0
++const lifecycle = installProcessLifecycle({
++  owner: 'electron-ports', timeoutMs: 300,
++  stopAccepting() { console.log(JSON.stringify({ event: 'quiesced' })) },
++  async cleanup() {
++    console.log(JSON.stringify({ event: 'cleanup', count: ++cleanups }))
++    if (scenario === 'hang') await new Promise(() => {})
++    if (scenario === 'throw') throw new Error('port-cleanup-failure')
++  },
++  report(kind, detail) { console.error(JSON.stringify({ event: 'diagnostic', kind, detail, count: ++reports })) },
++  exit(code) { console.log(JSON.stringify({ event: 'exit', code, cleanups, reports })); process.exit(code) },
++})
++if (scenario === 'normal') lifecycle.shutdown()
++else {
++  lifecycle.fail('unhandledRejection', new Error('port-first-failure', { cause: new Error('port-original-cause') }))
++  if (scenario === 'hang') setInterval(() => lifecycle.fail('uncaughtException', new Error('port-second-failure')), 25)
++}
+diff --git a/scripts/verification/fixtures/runtime-quiesce.ts b/scripts/verification/fixtures/runtime-quiesce.ts
+new file mode 100644
+index 00000000..38421856
+--- /dev/null
++++ b/scripts/verification/fixtures/runtime-quiesce.ts
+@@ -0,0 +1,26 @@
++import assert from 'node:assert/strict'
++import { createDurableRuntime, durableToolOperationId } from '../../../packages/server-core/src/durable-runtime'
++const runtime = createDurableRuntime()
++const scope = { sessionId: 'quiesce-fixture', workspaceRootPath: process.argv[2]! }
++const operationId = 'quiesce-run'
++const handle = runtime.execution.begin(scope)
++runtime.execution.accept(handle, { operationId, turnId: 't1', userMessageId: 'm1', userMessage: 'Retain recovery evidence' })
++let steerAttempts = 0
++runtime.execution.installDriver(scope.sessionId, { stop() {}, dispose() {}, async *run() {},
++  async steer() { steerAttempts++; return { disposition: 'handled' } } })
++await runtime.effects.prepareTool(scope.workspaceRootPath, { sessionId: scope.sessionId, turnId: 't1', runOperationId: operationId,
++  providerToolCallId: 'quiesce-tool', toolName: 'Write', args: { path: 'evidence.txt' } })
++const toolId = durableToolOperationId(operationId, 'quiesce-tool')
++const recovery = runtime.evidence.getRecoveryEvidence(scope.workspaceRootPath, toolId)
++assert(recovery)
++const before = runtime.queries.events(scope.workspaceRootPath, { sessionId: scope.sessionId })
++runtime.quiesce()
++assert.throws(() => runtime.execution.begin(scope), /admission is closed/)
++assert.throws(() => runtime.commands.acceptRun({ ...scope, operationId: 'forbidden-run', turnId: 't2', userMessageId: 'm2', userMessage: 'Must not execute' }), /admission is closed/)
++assert.equal((await runtime.execution.steer(scope.sessionId, 'No late input', { messageId: 'late', content: 'No late input', createdAt: Date.now() })).disposition, 'rejected')
++assert.equal(steerAttempts, 0)
++assert.deepEqual(runtime.queries.events(scope.workspaceRootPath, { sessionId: scope.sessionId }), before)
++assert.deepEqual(runtime.evidence.getRecoveryEvidence(scope.workspaceRootPath, toolId), recovery)
++assert.equal(runtime.commands.completeRun(scope.workspaceRootPath, operationId, 'complete').kind, 'parked')
++await runtime.close()
++console.log(JSON.stringify({ id: 'L06-runtime-admission-quiesce', passed: true, retainedEvents: before.length }))
+diff --git a/scripts/verification/fixtures/webui-auth-peer.ts b/scripts/verification/fixtures/webui-auth-peer.ts
+new file mode 100644
+index 00000000..3a3f8ef6
+--- /dev/null
++++ b/scripts/verification/fixtures/webui-auth-peer.ts
+@@ -0,0 +1,15 @@
++/** Independent real HTTP/WS cookie owner, without the headless application's single-instance lock. */
++import { createWebuiHandler, nodeHttpAdapter } from '../../../packages/server-core/src/webui'
++import { WsRpcServer } from '../../../packages/server-core/src/transport'
++const handler = createWebuiHandler({
++  webuiDir: process.env.PHANERIS_WEBUI_DIR!, secret: process.env.PHANERIS_SERVER_TOKEN!,
++  revocationStorePath: process.env.GOVERNANCE_REVOCATIONS,
++  wsProtocol: 'ws', wsPort: 0, getHealthCheck: () => ({ status: 'ok' }),
++  logger: { info: console.log, warn: console.warn, error: console.error, debug: () => {} },
++})
++const rpc = new WsRpcServer({ port: 0, requireAuth: true,
++  validateToken: async token => token === process.env.PHANERIS_SERVER_TOKEN,
++  validateSessionCookie: handler.validateSessionCookie, httpHandler: nodeHttpAdapter(handler.fetch) })
++await rpc.listen()
++console.log(`PHANERIS_SERVER_URL=ws://127.0.0.1:${rpc.port}`)
++process.on('SIGTERM', () => { rpc.close(); handler.dispose(); process.exit(0) })
+diff --git a/scripts/verification/process-lifecycle-workflow.ts b/scripts/verification/process-lifecycle-workflow.ts
+new file mode 100644
+index 00000000..b7fbe941
+--- /dev/null
++++ b/scripts/verification/process-lifecycle-workflow.ts
+@@ -0,0 +1,85 @@
++/** L01–L04: real server/Pi exits plus the shared Electron lifecycle ports. */
++import assert from 'node:assert/strict'
++import { spawn } from 'node:child_process'
++import { mkdtempSync, writeFileSync } from 'node:fs'
++import { tmpdir } from 'node:os'
++import { join } from 'node:path'
++import { verificationWorkflow } from './verification-artifacts'
++import { assertNoSecret, deadline, repository, seedServer, startProcess, type RunningProcess } from './fixtures/governance-process-support'
++
++await verificationWorkflow('process-lifecycle', async evidence => {
++  const fixture = mkdtempSync(join(tmpdir(), 'phaneris-process-lifecycle-'))
++  const children: RunningProcess[] = [], checks: { id: string; passed: true; elapsedMs?: number }[] = []
++  try {
++    for (const fault of ['unhandled', 'uncaught', 'hang-cleanup', 'throw-cleanup']) {
++      const child = await startProcess(seedServer(join(fixture, fault))); children.push(child)
++      const started = performance.now()
++      child.process.stdin.write(`${JSON.stringify({ governanceFault: fault })}\n`)
++      // First observe the synchronous admission close before waiting for cleanup.
++      await new Promise(resolve => setTimeout(resolve, 200))
++      await assert.rejects(fetch(child.url.replace(/^ws/, 'http') + '/api/config'))
++      assert.equal(await deadline(child.exited, 13_000), 1, 'Unexpected global failure must cause bounded nonzero exit')
++      const detail = child.stderr()
++      assert(detail.includes(`governance-${fault}`))
++      assert(detail.includes('governance-original-cause'), 'Preserve original error cause')
++      if (fault === 'hang-cleanup') assert(detail.includes('deadline'))
++      checks.push({ id: `L01-server-${fault}`, passed: true, elapsedMs: Math.round(performance.now() - started) })
++    }
++    const normal = await startProcess(seedServer(join(fixture, 'normal'))); children.push(normal)
++    assert.equal(await normal.stop(), 0)
++    checks.push({ id: 'L01-normal-signal-shutdown', passed: true })
++    for (const scenario of ['hang', 'throw', 'normal']) {
++      const child = spawn(process.execPath, [join(import.meta.dir, 'fixtures/process-lifecycle-port.ts'), scenario], { cwd: repository, stdio: 'pipe' })
++      let stdout = '', stderr = ''
++      child.stdout.on('data', data => { stdout += data.toString() }); child.stderr.on('data', data => { stderr += data.toString() })
++      const exit = await deadline(new Promise<number | null>((resolveExit, reject) => { child.on('error', reject); child.on('close', resolveExit) }), 3000)
++      writeFileSync(join(evidence.directory, `electron-port-${scenario}.log`), `${stdout}\n${stderr}`)
++      assert.equal(exit, scenario === 'normal' ? 0 : 1)
++      const exitRecord = stdout.trim().split('\n').map(line => JSON.parse(line) as { event: string; cleanups?: number }).find(record => record.event === 'exit')
++      assert.equal(exitRecord?.cleanups, 1)
++      assert.equal((stdout.match(/quiesced/g) ?? []).length, 1)
++      if (scenario !== 'normal') assert(stderr.includes('port-first-failure') && stderr.includes('port-original-cause'))
++      if (scenario === 'hang') assert(stderr.includes('deadline'))
++      checks.push({ id: `L02-electron-port-${scenario}`, passed: true })
++    }
++    const quiesce = Bun.spawn([process.execPath, join(import.meta.dir, 'fixtures/runtime-quiesce.ts'), join(fixture, 'runtime-quiesce')], { stdout: 'pipe', stderr: 'pipe' })
++    const [quiesceOut, quiesceError, quiesceExit] = await Promise.all([
++      new Response(quiesce.stdout).text(), new Response(quiesce.stderr).text(), deadline(quiesce.exited),
++    ])
++    writeFileSync(join(evidence.directory, 'runtime-quiesce.log'), quiesceOut + quiesceError)
++    assert.equal(quiesceExit, 0, quiesceError)
++    const quiesceResult = JSON.parse(quiesceOut.trim()) as { id: string; passed: boolean }
++    assert(quiesceResult.passed)
++    checks.push({ id: quiesceResult.id, passed: true })
++    const stopFixture = seedServer(join(fixture, 'bootstrap-stop'))
++    const stop = Bun.spawn([process.execPath, join(import.meta.dir, 'fixtures/bootstrap-stop.ts'), join(repository, 'apps/electron')], {
++      env: { ...process.env, PHANERIS_CONFIG_DIR: stopFixture.config }, stdout: 'pipe', stderr: 'pipe',
++    })
++    const [stopOut, stopError, stopExit] = await Promise.all([
++      new Response(stop.stdout).text(), new Response(stop.stderr).text(), deadline(stop.exited),
++    ])
++    writeFileSync(join(evidence.directory, 'bootstrap-stop.log'), stopOut + stopError)
++    assert.equal(stopExit, 0, stopError)
++    assert(stopOut.includes('"id":"L07-bootstrap-stop-owner","passed":true,"cleanups":1'))
++    checks.push({ id: 'L07-bootstrap-stop-owner', passed: true })
++    for (const fault of ['unhandled', 'uncaught']) {
++      const config = seedServer(join(fixture, `pi-${fault}`))
++      const pi = await startProcess({ ...config, entry: join(repository, 'packages/pi-agent-server/dist/index.js'), ready: false,
++        extra: { PHANERIS_DEBUG: 'true' } }); children.push(pi)
++      await new Promise(resolve => setTimeout(resolve, 500))
++      pi.process.stdin.write(`${JSON.stringify({ governanceFault: fault })}\n`)
++      assert.equal(await deadline(pi.exited, 5000), 1)
++      const error = pi.stdout().trim().split('\n').map(line => JSON.parse(line) as { type: string; message?: string; code?: string }).find(message => message.type === 'error')
++      assert(error?.message?.includes(`governance-${fault}`))
++      assert(['uncaught', 'unhandled_rejection'].includes(error?.code ?? ''))
++      checks.push({ id: `L04-pi-${fault}`, passed: true })
++    }
++    assertNoSecret(children)
++    evidence.complete(checks.map(check => check.id), ['native Electron UI/exit integration', 'Windows/Linux native execution', 'live provider APIs'])
++  } finally {
++    await Promise.allSettled(children.map(child => child.stop('SIGKILL')))
++    assertNoSecret(children)
++    evidence.json('process-lifecycle.json', { fixture, checks })
++    children.forEach((child, index) => writeFileSync(join(evidence.directory, `process-${index}.log`), `${child.stdout()}\n${child.stderr()}`))
++  }
++})
+diff --git a/scripts/verification/webui-auth-lifecycle-workflow.ts b/scripts/verification/webui-auth-lifecycle-workflow.ts
+new file mode 100644
+index 00000000..35304ad3
+--- /dev/null
++++ b/scripts/verification/webui-auth-lifecycle-workflow.ts
+@@ -0,0 +1,183 @@
++/** A01–A11: actual standalone server processes, HTTP/WS and SQLite lock/restart. */
++import assert from 'node:assert/strict'
++import { Database } from 'bun:sqlite'
++import { copyFileSync, existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
++import { tmpdir } from 'node:os'
++import { join } from 'node:path'
++import { request } from 'node:http'
++import { SignJWT } from 'jose'
++import WebSocket from 'ws'
++import { PROTOCOL_VERSION } from '@phaneris/shared/protocol'
++import { spawnServer } from '../../apps/cli/src/server-spawner'
++import { verificationWorkflow } from './verification-artifacts'
++import { assertNoSecret, deadline, handshake, repository, seedServer, startProcess, testSecret, type RunningProcess } from './fixtures/governance-process-support'
++
++await verificationWorkflow('webui-auth-lifecycle', async evidence => {
++  const fixture = mkdtempSync(join(tmpdir(), 'phaneris-auth-lifecycle-'))
++  const alpha = seedServer(join(fixture, 'alpha')), beta = seedServer(join(fixture, 'beta'))
++  const children: RunningProcess[] = [], checks: { id: string; passed: true }[] = []
++  const cookies: string[] = []
++  const start = async (config = alpha, extra: Record<string, string> = {}) => {
++    const child = await startProcess({ ...config, extra }); children.push(child); return child
++  }
++  const record = (id: string) => { checks.push({ id, passed: true }) }
++  const http = (child: RunningProcess) => child.url.replace(/^ws/, 'http')
++  const login = async (child: RunningProcess, headers: Record<string, string> = {}) => {
++    const response = await fetch(`${http(child)}/api/auth`, { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify({ password: testSecret }) })
++    assert.equal(response.status, 200)
++    const cookie = response.headers.get('set-cookie')!.split(';')[0]!
++    cookies.push(cookie.split('=')[1]!); return cookie
++  }
++  const status = async (child: RunningProcess, cookie: string) => (await fetch(`${http(child)}/api/config`, { headers: { cookie } })).status
++  const logout = (child: RunningProcess, cookie: string) => fetch(`${http(child)}/api/auth/logout`, { method: 'POST', headers: { cookie } })
++  let lock: Database | undefined
++  try {
++    let server = await start()
++    const revoked = await login(server), live = await login(server)
++    assert.equal((await logout(server, revoked)).status, 204)
++    assert.equal(await status(server, revoked), 401)
++    await server.stop('SIGKILL')
++    server = await start()
++    assert.equal(await status(server, revoked), 401, 'Logout must survive a real process kill/restart')
++    assert.equal(await status(server, live), 200)
++    assert(!(await handshake(server.url, { cookie: revoked, origin: http(server) })).accepted)
++    record('A01-logout-kill-restart')
++    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
++    const last = revoked.at(-1)!
++    const variant = revoked.slice(0, -1) + alphabet[alphabet.indexOf(last) ^ 1]
++    assert.notEqual(variant, revoked)
++    assert.deepEqual(Buffer.from(variant.split('.').at(-1)!, 'base64url'), Buffer.from(revoked.split('.').at(-1)!, 'base64url'))
++    assert.equal(await status(server, variant), 401, 'Equivalent JWT signature spellings cannot bypass logout')
++    record('A12-canonical-token-replay')
++
++    const shared = await startProcess({ ...alpha, entry: join(import.meta.dir, 'fixtures/webui-auth-peer.ts'),
++      extra: { GOVERNANCE_REVOCATIONS: join(alpha.config, 'security/webui-auth.sqlite') } })
++    children.push(shared)
++    const sharedCookie = await login(shared)
++    assert.equal((await logout(server, sharedCookie)).status, 204)
++    assert.equal(await status(shared, sharedCookie), 401)
++    record('A02-shared-process-revocation')
++    const isolated = await start(beta)
++    assert.equal(await status(isolated, revoked), 200)
++    record('A03-config-directory-isolation')
++    const legacy = new SignJWT({ sub: 'webui' }).setProtectedHeader({ alg: 'HS256' }).setIssuedAt().setExpirationTime('1h')
++    const legacyCookie = `craft_session=${await legacy.sign(new TextEncoder().encode(testSecret))}`
++    cookies.push(legacyCookie.split('=')[1]!)
++    assert.equal(await status(server, legacyCookie), 200)
++    assert.equal((await logout(server, legacyCookie)).status, 204)
++    await server.stop('SIGKILL'); server = await start()
++    assert.equal(await status(server, legacyCookie), 401)
++    assert.equal(await status(server, live.replace('phaneris_session=', 'craft_session=')), 200)
++    record('A04-legacy-cookie-without-jti')
++
++    for (const origin of ['https://attacker.example', '', 'null', 'http://[invalid', `${http(server)}/path`]) {
++      assert(!(await handshake(server.url, { cookie: live, ...(origin ? { origin } : {}) })).accepted, `Invalid cookie origin accepted: ${origin}`)
++    }
++    assert((await handshake(server.url, { cookie: live, origin: http(server) })).accepted)
++    assert((await handshake(server.url, {}, testSecret)).accepted)
++    record('A07-cookie-origin-and-bearer')
++    const trusted = await start(seedServer(join(fixture, 'trusted')), { PHANERIS_TRUSTED_PROXIES: '127.0.0.1', PHANERIS_WEBUI_ALLOWED_ORIGINS: 'https://explicit.example:9443' })
++    const trustedCookie = await login(trusted)
++    const proxyHeaders = { cookie: trustedCookie, origin: 'https://proxy.example', 'x-forwarded-host': 'proxy.example', 'x-forwarded-proto': 'https' }
++    assert((await handshake(trusted.url, proxyHeaders)).accepted)
++    assert(!(await handshake(isolated.url, proxyHeaders)).accepted)
++    assert((await handshake(trusted.url, { cookie: trustedCookie, origin: 'https://explicit.example:9443' })).accepted)
++    assert(!(await handshake(trusted.url, { cookie: trustedCookie, origin: 'https://explicit.example:9444' })).accepted)
++    const proxyConfig = await fetch(`${http(trusted)}/api/config`, { headers: proxyHeaders })
++    assert.equal((await proxyConfig.json() as { wsUrl: string }).wsUrl, `ws://proxy.example:${new URL(trusted.url).port}`)
++    const directConfig = await fetch(`${http(isolated)}/api/config`, { headers: proxyHeaders })
++    assert.equal((await directConfig.json() as { wsUrl: string }).wsUrl, isolated.url)
++    const secureCookie = await fetch(`${http(trusted)}/api/auth`, { method: 'POST', headers: { 'content-type': 'application/json', ...proxyHeaders }, body: JSON.stringify({ password: testSecret }) })
++    assert(secureCookie.headers.get('set-cookie')?.includes('Secure'))
++    record('A08-explicit-origin-trusted-proxy')
++    record('A13-ephemeral-ws-address')
++    const socketCookie = await login(server)
++    const socket = new WebSocket(server.url, { headers: { cookie: socketCookie, origin: http(server) } })
++    const nextMessage = () => deadline(new Promise<{ type: string; error?: { code: string } }>((resolveMessage, reject) => {
++      socket.once('message', data => resolveMessage(JSON.parse(data.toString())))
++      socket.once('error', reject)
++    }), 5000)
++    try {
++      await deadline(new Promise<void>((resolveOpen, reject) => { socket.once('open', resolveOpen); socket.once('error', reject) }))
++      const ack = nextMessage()
++      socket.send(JSON.stringify({ id: 'existing-socket', type: 'handshake', protocolVersion: PROTOCOL_VERSION }))
++      assert.equal((await ack).type, 'handshake_ack')
++      assert.equal((await logout(server, socketCookie)).status, 204)
++      const response = nextMessage()
++      socket.send(JSON.stringify({ id: 'after-logout', type: 'request', channel: 'server:getStatus', args: [] }))
++      assert.equal((await response).error?.code, 'AUTH_FAILED')
++    } finally { socket.terminate() }
++    record('A14-existing-socket-revocation')
++
++    const bad = async (child: RunningProcess, ip: string) => (await fetch(`${http(child)}/api/auth`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': ip }, body: JSON.stringify({ password: 'incorrect' }) })).status
++    for (let i = 0; i < 5; i++) assert.equal(await bad(trusted, '192.0.2.10'), 401)
++    assert.equal(await bad(trusted, '192.0.2.10'), 429)
++    await login(trusted, { 'x-forwarded-for': '192.0.2.11' })
++    for (let i = 0; i < 15; i++) assert.equal(await bad(trusted, `192.0.2.${20 + i}`), 401)
++    assert.equal(await bad(trusted, '192.0.2.99'), 429)
++    for (let i = 0; i < 5; i++) assert.equal(await bad(isolated, `198.51.100.${i}`), 401)
++    assert.equal(await bad(isolated, '198.51.100.99'), 429)
++    record('A09-actual-proxy-failure-budgets')
++
++    const chunkedStatus = await deadline(new Promise<number>((resolveStatus, reject) => {
++      const req = request(`${http(server)}/api/auth`, { method: 'POST', headers: { 'content-type': 'application/json' } }, res => {
++        res.resume(); res.on('end', () => resolveStatus(res.statusCode ?? 0))
++      })
++      req.on('error', reject)
++      for (let i = 0; i < 20; i++) req.write(Buffer.alloc(16 * 1024, 32))
++      req.end()
++    }))
++    assert.equal(chunkedStatus, 413)
++    await login(server)
++    record('A10-chunked-request-ceiling')
++
++    const pending = await login(server)
++    lock = new Database(join(alpha.config, 'security/webui-auth.sqlite'))
++    lock.exec('BEGIN IMMEDIATE')
++    const failedLogout = await logout(server, pending)
++    assert.equal(failedLogout.status, 503)
++    assert.equal(failedLogout.headers.get('set-cookie'), null)
++    assert.equal(await status(server, live), 503)
++    assert((await handshake(server.url, {}, testSecret)).accepted)
++    lock.exec('ROLLBACK'); lock.close(); lock = undefined
++    await server.stop('SIGKILL'); server = await start()
++    assert.equal(await status(server, revoked), 401)
++    assert.equal(await status(server, pending), 200, 'Uncommitted logout must be explicitly retried')
++    assert.equal((await logout(server, pending)).status, 204)
++    record('A05-storage-failure-no-false-logout')
++    const corrupt = seedServer(join(fixture, 'corrupt'))
++    mkdirSync(join(corrupt.config, 'security'))
++    const corruptFile = join(corrupt.config, 'security/webui-auth.sqlite')
++    writeFileSync(corruptFile, 'corrupt-revocations-must-be-preserved')
++    const rejected = await startProcess({ ...corrupt, ready: false }); children.push(rejected)
++    assert.notEqual(await deadline(rejected.exited), 0)
++    assert(!rejected.url)
++    assert.equal(readFileSync(corruptFile, 'utf8'), 'corrupt-revocations-must-be-preserved')
++    record('A06-corrupt-store-startup-fails')
++
++    const cliConfig = seedServer(join(fixture, 'cli'))
++    const cli = await deadline(spawnServer({ quiet: true, env: {
++      PHANERIS_CONFIG_DIR: cliConfig.config, PHANERIS_DISABLE_MESSAGING: '1', PHANERIS_PRINT_SERVER_TOKEN: '0',
++      PHANERIS_BUNDLED_ASSETS_ROOT: join(repository, 'apps/electron'), PHANERIS_WEBUI_DIR: '',
++    } }))
++    try { assert((await handshake(cli.url, {}, cli.token)).accepted) } finally { await cli.stop() }
++    assertNoSecret(children, [testSecret, ...cookies])
++    record('A11-server-cli-token-private')
++    evidence.complete(checks.map(check => check.id), ['native Windows/Linux', 'real remote TLS proxy', 'signed installer', 'native browser cookie/SameSite policy'])
++  } finally {
++    if (lock) { lock.exec('ROLLBACK'); lock.close() }
++    await Promise.allSettled(children.map(child => child.stop('SIGKILL')))
++    assertNoSecret(children, [testSecret, ...cookies])
++    const dbPath = join(alpha.config, 'security/webui-auth.sqlite')
++    let rows: unknown[] = []
++    // A pre-storage implementation failure must retain its original assertion.
++    if (existsSync(dbPath)) {
++      const db = new Database(dbPath)
++      rows = db.query('SELECT scope,token_hash,expires_at FROM session_revocations').all()
++      db.exec('PRAGMA wal_checkpoint(TRUNCATE)'); db.close()
++      copyFileSync(dbPath, join(evidence.directory, 'session-revocations.sqlite'))
++    }
++    evidence.json('webui-auth-lifecycle.json', { fixture, checks, revocationRecords: rows, processes: children.map(child => ({ pid: child.process.pid, exitCode: child.process.exitCode, signal: child.process.signalCode })) })
++    children.forEach((child, index) => writeFileSync(join(evidence.directory, `server-${index}.log`), `${child.stdout()}\n${child.stderr()}`))
++  }
++})

@@ -1,0 +1,867 @@
+{
+  "StoredConfig": {
+    "domain": "persisted-types",
+    "public": true,
+    "line": 66
+  },
+  "CONFIG_FILE": {
+    "domain": "repository",
+    "public": false,
+    "line": 118
+  },
+  "CONFIG_DEFAULTS_FILE": {
+    "domain": "defaults",
+    "public": false,
+    "line": 119
+  },
+  "configDefaultsSynced": {
+    "domain": "defaults",
+    "public": false,
+    "line": 122
+  },
+  "FALLBACK_CONFIG_DEFAULTS": {
+    "domain": "defaults",
+    "public": true,
+    "line": 142
+  },
+  "syncConfigDefaults": {
+    "domain": "defaults",
+    "public": false,
+    "line": 166
+  },
+  "loadConfigDefaults": {
+    "domain": "defaults",
+    "public": true,
+    "line": 201
+  },
+  "ensureConfigDefaults": {
+    "domain": "defaults",
+    "public": true,
+    "line": 236
+  },
+  "configDirInitialized": {
+    "domain": "repository",
+    "public": false,
+    "line": 240
+  },
+  "MAX_CONFIG_BACKUPS": {
+    "domain": "repository",
+    "public": false,
+    "line": 242
+  },
+  "CONFIG_BACKUP_DATE_RE": {
+    "domain": "repository",
+    "public": false,
+    "line": 243
+  },
+  "backupConfigFile": {
+    "domain": "repository",
+    "public": true,
+    "line": 251
+  },
+  "ensureConfigDir": {
+    "domain": "repository",
+    "public": true,
+    "line": 274
+  },
+  "loadStoredConfig": {
+    "domain": "repository",
+    "public": true,
+    "line": 296
+  },
+  "saveConfig": {
+    "domain": "repository",
+    "public": true,
+    "line": 343
+  },
+  "getNotificationsEnabled": {
+    "domain": "appearance",
+    "public": true,
+    "line": 374
+  },
+  "setNotificationsEnabled": {
+    "domain": "appearance",
+    "public": true,
+    "line": 386
+  },
+  "getAutoCapitalisation": {
+    "domain": "appearance",
+    "public": true,
+    "line": 397
+  },
+  "setAutoCapitalisation": {
+    "domain": "appearance",
+    "public": true,
+    "line": 409
+  },
+  "getSendMessageKey": {
+    "domain": "appearance",
+    "public": true,
+    "line": 420
+  },
+  "setSendMessageKey": {
+    "domain": "appearance",
+    "public": true,
+    "line": 432
+  },
+  "getSpellCheck": {
+    "domain": "appearance",
+    "public": true,
+    "line": 442
+  },
+  "setSpellCheck": {
+    "domain": "appearance",
+    "public": true,
+    "line": 454
+  },
+  "getKeepAwakeWhileRunning": {
+    "domain": "appearance",
+    "public": true,
+    "line": 465
+  },
+  "setKeepAwakeWhileRunning": {
+    "domain": "appearance",
+    "public": true,
+    "line": 477
+  },
+  "getRichToolDescriptions": {
+    "domain": "appearance",
+    "public": true,
+    "line": 489
+  },
+  "setRichToolDescriptions": {
+    "domain": "appearance",
+    "public": true,
+    "line": 500
+  },
+  "getExtendedPromptCache": {
+    "domain": "appearance",
+    "public": true,
+    "line": 513
+  },
+  "setExtendedPromptCache": {
+    "domain": "appearance",
+    "public": true,
+    "line": 521
+  },
+  "getPromptCacheWarming": {
+    "domain": "appearance",
+    "public": true,
+    "line": 529
+  },
+  "setPromptCacheWarming": {
+    "domain": "appearance",
+    "public": true,
+    "line": 533
+  },
+  "getBrowserToolEnabled": {
+    "domain": "appearance",
+    "public": true,
+    "line": 545
+  },
+  "setBrowserToolEnabled": {
+    "domain": "appearance",
+    "public": true,
+    "line": 557
+  },
+  "getAllowRemoteEvaluate": {
+    "domain": "appearance",
+    "public": true,
+    "line": 572
+  },
+  "setAllowRemoteEvaluate": {
+    "domain": "appearance",
+    "public": true,
+    "line": 581
+  },
+  "getRtkEnabled": {
+    "domain": "appearance",
+    "public": true,
+    "line": 595
+  },
+  "getRtkExcludeCommands": {
+    "domain": "appearance",
+    "public": true,
+    "line": 601
+  },
+  "setRtkEnabled": {
+    "domain": "appearance",
+    "public": true,
+    "line": 610
+  },
+  "setDecisionLayerSettings": {
+    "domain": "appearance",
+    "public": true,
+    "line": 630
+  },
+  "getImageGenerationSettings": {
+    "domain": "appearance",
+    "public": true,
+    "line": 642
+  },
+  "setImageGenerationSettings": {
+    "domain": "appearance",
+    "public": true,
+    "line": 647
+  },
+  "getGitBashPath": {
+    "domain": "appearance",
+    "public": true,
+    "line": 659
+  },
+  "setGitBashPath": {
+    "domain": "appearance",
+    "public": true,
+    "line": 669
+  },
+  "clearGitBashPath": {
+    "domain": "appearance",
+    "public": true,
+    "line": 684
+  },
+  "getConfigPath": {
+    "domain": "repository",
+    "public": true,
+    "line": 696
+  },
+  "clearAllConfig": {
+    "domain": "repository",
+    "public": true,
+    "line": 704
+  },
+  "generateWorkspaceId": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 731
+  },
+  "findWorkspaceIcon": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 743
+  },
+  "getWorkspaces": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 747
+  },
+  "getActiveWorkspace": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 779
+  },
+  "getWorkspaceByNameOrId": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 791
+  },
+  "PersistedRemoteServer": {
+    "domain": "persisted-types",
+    "public": false,
+    "line": 800
+  },
+  "remoteServerTokenCache": {
+    "domain": "workspace-selection",
+    "public": false,
+    "line": 808
+  },
+  "stripRemoteServerToken": {
+    "domain": "persisted-normalize",
+    "public": false,
+    "line": 810
+  },
+  "getRemoteServerTokenSync": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 816
+  },
+  "getRemoteServerToken": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 820
+  },
+  "setRemoteServerToken": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 831
+  },
+  "deleteRemoteServerToken": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 836
+  },
+  "hydrateRemoteServerTokenCache": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 842
+  },
+  "migrateRemoteServerTokens": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 856
+  },
+  "updateWorkspaceRemoteServer": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 871
+  },
+  "setActiveWorkspace": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 888
+  },
+  "switchWorkspaceAtomic": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 906
+  },
+  "addWorkspace": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 928
+  },
+  "syncWorkspaces": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 981
+  },
+  "removeWorkspace": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1017
+  },
+  "WORKSPACES_DIR": {
+    "domain": "workspace-selection",
+    "public": false,
+    "line": 1059
+  },
+  "ensureWorkspaceDir": {
+    "domain": "workspace-selection",
+    "public": false,
+    "line": 1061
+  },
+  "WorkspaceConversation": {
+    "domain": "persisted-types",
+    "public": true,
+    "line": 1073
+  },
+  "saveWorkspaceConversation": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1088
+  },
+  "loadWorkspaceConversation": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1136
+  },
+  "getWorkspaceDataPath": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1150
+  },
+  "clearWorkspaceConversation": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1155
+  },
+  "saveWorkspacePlan": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1175
+  },
+  "loadWorkspacePlan": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1185
+  },
+  "clearWorkspacePlan": {
+    "domain": "workspace-selection",
+    "public": true,
+    "line": 1202
+  },
+  "DRAFTS_FILE": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1219
+  },
+  "DraftAttachmentContent": {
+    "domain": "persisted-types",
+    "public": true,
+    "line": 1221
+  },
+  "DraftAttachmentRef": {
+    "domain": "persisted-types",
+    "public": true,
+    "line": 1230
+  },
+  "SessionDraft": {
+    "domain": "persisted-types",
+    "public": true,
+    "line": 1238
+  },
+  "DraftsData": {
+    "domain": "persisted-types",
+    "public": false,
+    "line": 1243
+  },
+  "ATTACHMENT_CONTENT_TYPES": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1248
+  },
+  "isAbsoluteDraftPath": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1250
+  },
+  "isDraftAttachmentContent": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1257
+  },
+  "isDraftAttachmentRef": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1269
+  },
+  "isSessionDraft": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1281
+  },
+  "isEmptyDraft": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1292
+  },
+  "loadDraftsData": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1300
+  },
+  "saveDraftsData": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1318
+  },
+  "getSessionDraft": {
+    "domain": "drafts",
+    "public": true,
+    "line": 1327
+  },
+  "setSessionDraft": {
+    "domain": "drafts",
+    "public": true,
+    "line": 1336
+  },
+  "normalizeDraftAttachment": {
+    "domain": "drafts",
+    "public": false,
+    "line": 1351
+  },
+  "deleteSessionDraft": {
+    "domain": "drafts",
+    "public": true,
+    "line": 1367
+  },
+  "getAllSessionDrafts": {
+    "domain": "drafts",
+    "public": true,
+    "line": 1376
+  },
+  "APP_THEME_FILE": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1399
+  },
+  "APP_THEMES_DIR": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1400
+  },
+  "getAppThemePath": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1403
+  },
+  "LEGACY_THEME_MIGRATION_MARKER": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1407
+  },
+  "MAX_THEME_FILE_BYTES": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1408
+  },
+  "MAX_THEME_BACKGROUND_BYTES": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1409
+  },
+  "THEME_BACKGROUND_MIME_TYPES": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1410
+  },
+  "getAppThemesDir": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1422
+  },
+  "loadAppTheme": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1427
+  },
+  "saveAppTheme": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1438
+  },
+  "ensureUserThemesDir": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1449
+  },
+  "migrateLegacyAppTheme": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1459
+  },
+  "initializeThemeStorage": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1495
+  },
+  "isPathWithin": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1502
+  },
+  "readValidatedThemeFile": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1507
+  },
+  "ensurePresetThemes": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1526
+  },
+  "loadPresetThemes": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1533
+  },
+  "resolveThemeBackgroundImage": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1578
+  },
+  "loadPresetTheme": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1645
+  },
+  "getPresetThemesDir": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1674
+  },
+  "resetPresetTheme": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1681
+  },
+  "normalizeThemeSelectionId": {
+    "domain": "appearance",
+    "public": false,
+    "line": 1693
+  },
+  "getThemePreferences": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1700
+  },
+  "setThemePreferences": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1715
+  },
+  "getColorTheme": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1735
+  },
+  "setColorTheme": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1742
+  },
+  "getDismissedUpdateVersion": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1754
+  },
+  "setDismissedUpdateVersion": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1763
+  },
+  "clearDismissedUpdateVersion": {
+    "domain": "appearance",
+    "public": true,
+    "line": 1774
+  },
+  "migrateCodexCopilotToPi": {
+    "domain": "migrations",
+    "public": false,
+    "line": 1808
+  },
+  "shouldMigratePiOpenAiProvider": {
+    "domain": "migrations",
+    "public": true,
+    "line": 1867
+  },
+  "shouldRepairPiApiKeyCodexProvider": {
+    "domain": "migrations",
+    "public": true,
+    "line": 1881
+  },
+  "normalizeModelIds": {
+    "domain": "migrations",
+    "public": false,
+    "line": 1889
+  },
+  "modelSetEquals": {
+    "domain": "migrations",
+    "public": false,
+    "line": 1896
+  },
+  "inferModelSelectionMode": {
+    "domain": "migrations",
+    "public": true,
+    "line": 1906
+  },
+  "backfillAllConnectionModels": {
+    "domain": "migrations",
+    "public": false,
+    "line": 1917
+  },
+  "OPUS_DEFAULT_ID": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2033
+  },
+  "OPUS_FALLBACK_ID": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2034
+  },
+  "defaultModelIdsForConnection": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2036
+  },
+  "normalizeConnectionModelId": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2043
+  },
+  "displayNameForMigratedModel": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2087
+  },
+  "withUpdatedModelEntry": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2092
+  },
+  "modelEntryForDefault": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2108
+  },
+  "migrateLegacyOpusToDefaultOpus": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2116
+  },
+  "restoreOpus46ToAnthropicConnections": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2185
+  },
+  "migrateSonnet45ToSonnet46": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2258
+  },
+  "migrateWorkspaceSonnet45ToSonnet46": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2313
+  },
+  "migrateWorkspaceLegacyOpusToDefaultOpus": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2333
+  },
+  "migrateLegacyProviderTypes": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2362
+  },
+  "normalizePiBedrockId": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2448
+  },
+  "repairConnectionTransports": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2466
+  },
+  "migrateModelDefaultsToConnections": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2496
+  },
+  "migrateLegacyLlmConnectionsConfig": {
+    "domain": "migrations",
+    "public": true,
+    "line": 2546
+  },
+  "migrateOrphanedDefaultConnections": {
+    "domain": "migrations",
+    "public": true,
+    "line": 2816
+  },
+  "ensureDefaultLlmConnection": {
+    "domain": "migrations",
+    "public": false,
+    "line": 2857
+  },
+  "migrateLegacyCredentials": {
+    "domain": "migrations",
+    "public": true,
+    "line": 2885
+  },
+  "getLlmConnections": {
+    "domain": "connections",
+    "public": true,
+    "line": 2941
+  },
+  "getLlmConnection": {
+    "domain": "connections",
+    "public": true,
+    "line": 2954
+  },
+  "addLlmConnection": {
+    "domain": "connections",
+    "public": true,
+    "line": 2964
+  },
+  "updateLlmConnection": {
+    "domain": "connections",
+    "public": true,
+    "line": 2997
+  },
+  "deleteLlmConnection": {
+    "domain": "connections",
+    "public": true,
+    "line": 3095
+  },
+  "getDefaultLlmConnection": {
+    "domain": "connections",
+    "public": true,
+    "line": 3148
+  },
+  "setDefaultLlmConnection": {
+    "domain": "connections",
+    "public": true,
+    "line": 3165
+  },
+  "getDefaultThinkingLevel": {
+    "domain": "connections",
+    "public": true,
+    "line": 3188
+  },
+  "setDefaultThinkingLevel": {
+    "domain": "connections",
+    "public": true,
+    "line": 3202
+  },
+  "touchLlmConnection": {
+    "domain": "connections",
+    "public": true,
+    "line": 3215
+  },
+  "normalizeProxyString": {
+    "domain": "appearance",
+    "public": false,
+    "line": 3235
+  },
+  "normalizeNetworkProxySettings": {
+    "domain": "appearance",
+    "public": false,
+    "line": 3240
+  },
+  "getNetworkProxySettings": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3255
+  },
+  "setNetworkProxySettings": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3264
+  },
+  "isSetupDeferred": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3284
+  },
+  "setSetupDeferred": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3288
+  },
+  "TOOL_ICONS_DIR_NAME": {
+    "domain": "bundled-assets",
+    "public": false,
+    "line": 3305
+  },
+  "getToolIconsDir": {
+    "domain": "bundled-assets",
+    "public": true,
+    "line": 3310
+  },
+  "ensureToolIcons": {
+    "domain": "bundled-assets",
+    "public": true,
+    "line": 3320
+  },
+  "getServerConfig": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3361
+  },
+  "setServerConfig": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3370
+  },
+  "getContextPolicy": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3385
+  },
+  "setContextPolicy": {
+    "domain": "appearance",
+    "public": true,
+    "line": 3389
+  }
+}

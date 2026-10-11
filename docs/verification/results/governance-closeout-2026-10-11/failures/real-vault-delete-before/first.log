@@ -1,0 +1,13 @@
+AssertionError: Missing expected rejection.
+ generatedMessage: false,
+     actual: undefined,
+   expected: /credential unavailable/,
+   operator: "rejects",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at innerFail (node:assert:50:27)
+      at expectsError (node:assert:385:14)
+      at assert.rejects (node:assert:434:17)
+
+Bun v1.4.2 (macOS x64)

@@ -3,7 +3,7 @@ import { join } from 'path'
 import { homedir } from 'os'
 import { execSync } from 'child_process'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { getGitBashPath, setGitBashPath, clearGitBashPath } from '@phaneris/shared/config'
+import { getGitBashPath, setGitBashPath, clearGitBashPath } from '@phaneris/shared/config/appearance';
 import { classifyExternalUrl, formatBlockedUrlError } from '@phaneris/shared/utils/url-safety'
 import { isUsableGitBashPath, validateGitBashPath } from '@phaneris/server-core/services'
 import { validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'

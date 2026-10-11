@@ -1,8 +1,10 @@
 # Phaneris 分叉 B 阶段记录：品牌与代码身份
 
+> 2026-10-11 裁定：代码身份已完成。当前 `phaneris.identity.json` 的 services 均为 null、telemetry 为 false，已不指向上游；自有服务部署、签名、命名空间归属仍未完成公开发布验收。 [完整实施台账](../process/governance-completion-2026-10-11.md)。
+
 日期：2026-09-14。分支 `phaneris/fork-plan`。对应[实施方案](../process/phaneris-fork-plan.md)第 8 节的 B 阶段（品牌与代码身份）。A 阶段的身份冻结记录见 [Phaneris 分叉 A 阶段记录](./phaneris-phase-a-identity-freeze.md)。
 
-Status: accepted — B 阶段的代码身份、应用身份、数据路径与本地品牌表面已完成并验证可构建。**服务与发布渠道仍指向上游**（方案 D 阶段），因此本阶段不构成"可以对外发布"的结论。
+Status: accepted — B 阶段的代码身份、应用身份、数据路径与本地品牌表面已完成并验证可构建。服务端点已解除上游默认配置；自有服务与发布渠道尚未验收（方案 D 阶段），因此本阶段不构成"可以对外发布"的结论。
 
 ## 1. 本次落地的身份
 

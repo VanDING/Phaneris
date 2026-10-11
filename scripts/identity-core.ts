@@ -67,7 +67,7 @@ export interface Identity {
 
 class IdentityError extends Error {}
 
-const fail = (message: string): never => {
+const fail: (message: string) => never = (message) => {
   throw new IdentityError(message);
 };
 

@@ -1,0 +1,22 @@
+
+65 |     if (!allowance || entry.count > allowance.count) changes.push(`New warning: ${entry.file} ${entry.rule}: ${entry.message}`)
+66 |   }
+67 |   for (const [key, entry] of registered) {
+68 |     if ((current.get(key)?.count ?? 0) < entry.count) changes.push(`Retire stale warning allowance: ${entry.file} ${entry.rule}`)
+69 |   }
+70 |   assert.equal(changes.length, 0, changes.join('\n'))
+              ^
+AssertionError: New warning: apps/electron/src/main/browser-pane-manager.ts unused-eslint-disable: Unused eslint-disable directive (no problems were reported).
+
+1 !== 0
+
+ generatedMessage: false,
+     actual: 1,
+   expected: 0,
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/lint-workspace.ts:70:10
+
+Bun v1.4.2 (macOS x64)

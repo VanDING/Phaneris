@@ -1,0 +1,24 @@
+
+15 | const workflow = loadYaml(readFileSync(input('workflow', '.github/workflows/validate.yml'), 'utf8')) as { jobs: Record<string, { steps: Step[] }> }
+16 | for (const job of ['validate', 'full-validation']) {
+17 |   const steps = workflow.jobs[job]?.steps
+18 |   assert(steps, `Missing validation job: ${job}`)
+19 |   const uv = steps.find(step => step.uses?.startsWith('astral-sh/setup-uv@'))
+20 |   assert.equal(uv?.with?.version, UV_VERSION, `${job} must pin uv ${UV_VERSION}`)
+              ^
+AssertionError: full-validation must pin uv 0.12.22
++ actual - expected
+
++ undefined
+- '0.12.22'
+
+ generatedMessage: false,
+     actual: undefined,
+   expected: "0.12.22",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:20:10
+
+Bun v1.4.2 (macOS x64)

@@ -58,20 +58,23 @@ async function handleRequest(
 
   let body: Buffer | null = null
   if (nodeReq.method !== 'GET' && nodeReq.method !== 'HEAD') {
+    const rejectOversizedBody = () => {
+      nodeReq.pause()
+      if (!nodeRes.headersSent) nodeRes.writeHead(413, { 'Content-Type': 'application/json', Connection: 'close' })
+      // Flush the response before closing the socket; destroying first hides the 413.
+      nodeRes.end(JSON.stringify({ error: 'Request body too large' }), () => nodeReq.destroy())
+    }
+    if (Number(nodeReq.headers['content-length']) > MAX_BUFFERED_BODY_BYTES) { rejectOversizedBody(); return }
     const chunks: Buffer[] = []
     let received = 0
-    for await (const chunk of nodeReq) {
+    for await (const chunk of nodeReq.iterator({ destroyOnReturn: false })) {
       const buffer = typeof chunk === 'string' ? Buffer.from(chunk) : chunk
       received += buffer.byteLength
       // Hard stop while reading, not after: a chunked request without a
       // Content-Length would otherwise be buffered in full before anyone could
       // reject it. See MAX_REQUEST_BODY_BYTES in http-server.ts.
       if (received > MAX_BUFFERED_BODY_BYTES) {
-        nodeReq.destroy()
-        if (!nodeRes.headersSent) {
-          nodeRes.writeHead(413, { 'Content-Type': 'application/json' })
-        }
-        nodeRes.end(JSON.stringify({ error: 'Request body too large' }))
+        rejectOversizedBody()
         return
       }
       chunks.push(buffer)
@@ -82,7 +85,7 @@ async function handleRequest(
   const request = new Request(url, {
     method: nodeReq.method,
     headers,
-    body,
+    body: body ? new Uint8Array(body) : null,
   })
 
   // Stamp the real socket address so the handler can key its rate limiter per client.

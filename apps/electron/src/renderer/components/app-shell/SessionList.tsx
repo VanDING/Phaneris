@@ -192,20 +192,7 @@ export function SessionList({
   const [isSearchInputFocused, setIsSearchInputFocused] = useState(false)
 
   // Collapsed group keys (for collapsible group headers) — persisted per workspace/filter/grouping context
-  const collapseScopeSuffix = useMemo(() => {
-    return buildCollapsedGroupsScopeSuffix({
-      workspaceId,
-      currentFilter,
-      groupingMode,
-    })
-  }, [
-    workspaceId,
-    groupingMode,
-    currentFilter?.kind,
-    currentFilter && 'stateId' in currentFilter ? currentFilter.stateId : undefined,
-    currentFilter && 'labelId' in currentFilter ? currentFilter.labelId : undefined,
-    currentFilter && 'viewId' in currentFilter ? currentFilter.viewId : undefined,
-  ])
+  const collapseScopeSuffix = buildCollapsedGroupsScopeSuffix({ workspaceId, currentFilter, groupingMode })
 
   const readCollapsedGroupsForScope = useCallback((scopeSuffix: string): Set<string> => {
     const scopedRaw = storage.getRaw(KEYS.collapsedSessionGroups, scopeSuffix)
@@ -629,13 +616,12 @@ export function SessionList({
     selectedIdOverride: focusedSessionId,
   })
 
-  // Sync activeIndex when selection changes externally (e.g. from ChatDisplay)
+  const setActiveRowIndex = interactions.keyboard.setActiveIndex
+  // Sync only an external selection change; focusing a row must retain its index.
   useEffect(() => {
     const newIndex = flatRows.findIndex(row => row.item.id === selectionStore.state.selected)
-    if (newIndex >= 0 && newIndex !== interactions.keyboard.activeIndex) {
-      interactions.keyboard.setActiveIndex(newIndex)
-    }
-  }, [selectionStore.state.selected, flatRows, interactions.keyboard])
+    if (newIndex >= 0) setActiveRowIndex(newIndex)
+  }, [selectionStore.state.selected, flatRows, setActiveRowIndex])
 
   // Focus active item when zone gains keyboard focus
   useEffect(() => {

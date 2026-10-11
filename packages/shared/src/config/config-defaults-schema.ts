@@ -5,7 +5,7 @@
  * This file only defines types - the actual defaults come from the bundled JSON.
  */
 
-import type { PermissionMode } from '../agent/mode-manager.ts';
+import type { PermissionMode } from '../agent/mode-types.ts';
 import type { ThinkingLevel } from '../agent/thinking-levels.ts';
 
 export interface ConfigDefaults {

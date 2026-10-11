@@ -1,0 +1,417 @@
+{
+  "generatedAt": "2026-10-11T15:10:35.502Z",
+  "checks": [
+    {
+      "id": "skill-copy",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-skill-copy-bmRB0h",
+      "result": {
+        "scenario": "skill-copy",
+        "injected": true,
+        "passed": true,
+        "rolledBack": true,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "e54f2319aeebce088de9d3f5942064aaa90e28c03e175809f3da688d50146513",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": []
+      }
+    },
+    {
+      "id": "skill-rename",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-skill-rename-pKZGHn",
+      "result": {
+        "scenario": "skill-rename",
+        "injected": true,
+        "passed": true,
+        "rolledBack": true,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "feb501414afb5dab77a9f1008916652f0fa4b25ca0eeca1ce9aa8442de107b6f",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": []
+      }
+    },
+    {
+      "id": "source-backup-copy",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-source-backup-copy-3bRL7A",
+      "result": {
+        "scenario": "source-backup-copy",
+        "injected": true,
+        "passed": true,
+        "rolledBack": true,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "dc5ba7b33aa836e4282ca74b435b6b9d9122493fd703d31ba5acd2d7221da197",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": []
+      }
+    },
+    {
+      "id": "package-backup-copy",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-package-backup-copy-snykJl",
+      "result": {
+        "scenario": "package-backup-copy",
+        "injected": true,
+        "passed": true,
+        "rolledBack": true,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "37d32633351c329106018b533e07eba3b35ec2384e1baafdc82ed9c1c86efdd8",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": []
+      }
+    },
+    {
+      "id": "package-rename",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-package-rename-nlnnpT",
+      "result": {
+        "scenario": "package-rename",
+        "injected": true,
+        "passed": true,
+        "rolledBack": true,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "5ca3b81fee6928721a3bbc00c84379b971de1a1ec193d0c7f86f0f6f931ae672",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": []
+      }
+    },
+    {
+      "id": "backup-cleanup",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-backup-cleanup-Ur05mg",
+      "result": {
+        "scenario": "backup-cleanup",
+        "injected": true,
+        "passed": true,
+        "rolledBack": false,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "0da078e1b33214a41064a40608b07de805c0d097460e50b8c16096bdfe3391e3",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": false,
+        "credentialFileUnchanged": false,
+        "warnings": [
+          {
+            "path": "mcp.json#new-api",
+            "message": "PluginPathError: stdio command \"node\" is a bare executable name — plugins must use a plugin-relative path such as \"./bin/server\" or \"${PLUGIN_ROOT}/bin/server\"; skipped"
+          },
+          {
+            "path": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-backup-cleanup-Ur05mg/ws/sources/old-api.replaced-52d26365",
+            "message": "Post-commit backup cleanup failed: Injected backup-cleanup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "credentials-before-rollback",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-credentials-before-rollback-zRjXed",
+      "result": {
+        "scenario": "credentials-before-rollback",
+        "injected": true,
+        "passed": true,
+        "rolledBack": true,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "6b466e49b1599a9a69dfb5d9e77538bcd23f76969e1dc6f7ebe9a067f2f24c88",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": []
+      }
+    },
+    {
+      "id": "missing-backup",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-missing-backup-Qq30hl",
+      "result": {
+        "scenario": "missing-backup",
+        "injected": true,
+        "passed": true,
+        "rolledBack": false,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "a4c25f1ada9fc41f227a0a710f02b74454a48f695a147357132720166b4003ef",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": []
+      }
+    },
+    {
+      "id": "index-write",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-index-write-hxauTX",
+      "result": {
+        "scenario": "index-write",
+        "injected": true,
+        "passed": true,
+        "rolledBack": false,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "fd2f7e4a14c95aae4f2a9d1c62fb40657c90d80326cd3138603777b10df13a18",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": false,
+        "credentialFileUnchanged": false,
+        "warnings": [
+          {
+            "path": "mcp.json#new-api",
+            "message": "PluginPathError: stdio command \"node\" is a bare executable name — plugins must use a plugin-relative path such as \"./bin/server\" or \"${PLUGIN_ROOT}/bin/server\"; skipped"
+          },
+          {
+            "path": "plugins/_index.json",
+            "message": "Plugin index write failed: Injected index-write"
+          }
+        ]
+      }
+    },
+    {
+      "id": "index-invalidate",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-index-invalidate-f5mpTm",
+      "result": {
+        "scenario": "index-invalidate",
+        "injected": true,
+        "passed": true,
+        "rolledBack": false,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "7a819b38b4aa120bf1e282274842c6980b0e239cd050d7b631a871235f737771",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": false,
+        "credentialFileUnchanged": false,
+        "warnings": [
+          {
+            "path": "mcp.json#new-api",
+            "message": "PluginPathError: stdio command \"node\" is a bare executable name — plugins must use a plugin-relative path such as \"./bin/server\" or \"${PLUGIN_ROOT}/bin/server\"; skipped"
+          },
+          {
+            "path": "plugins/_index.json",
+            "message": "Plugin index write failed: Injected index write and invalidation failure"
+          },
+          {
+            "path": "plugins/_index.json",
+            "message": "Plugin index write failed: Injected index write and invalidation failure"
+          }
+        ]
+      }
+    },
+    {
+      "id": "audit-write",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-audit-write-lxKADi",
+      "result": {
+        "scenario": "audit-write",
+        "injected": true,
+        "passed": true,
+        "rolledBack": false,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "e00446e50dfe24db5000db2da74146dedad5ef13d3e4375d4956aa9a08f728aa",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": false,
+        "credentialFileUnchanged": false,
+        "warnings": [
+          {
+            "path": "mcp.json#new-api",
+            "message": "PluginPathError: stdio command \"node\" is a bare executable name — plugins must use a plugin-relative path such as \"./bin/server\" or \"${PLUGIN_ROOT}/bin/server\"; skipped"
+          },
+          {
+            "path": "audit",
+            "message": "Plugin audit write failed: Injected audit-write"
+          }
+        ]
+      }
+    },
+    {
+      "id": "credential-cleanup",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-credential-cleanup-Dgn70m",
+      "result": {
+        "scenario": "credential-cleanup",
+        "injected": true,
+        "passed": true,
+        "rolledBack": false,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "9fbfd69cb088c68ae681da57e687b0887d4a7198e605547dc222c6bd5a4f7c7e",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": true,
+        "credentialFileUnchanged": true,
+        "warnings": [
+          {
+            "path": "mcp.json#new-api",
+            "message": "PluginPathError: stdio command \"node\" is a bare executable name — plugins must use a plugin-relative path such as \"./bin/server\" or \"${PLUGIN_ROOT}/bin/server\"; skipped"
+          },
+          {
+            "path": "sources/old-api",
+            "message": "Post-commit credential cleanup failed: Injected credential-cleanup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "success",
+      "passed": true,
+      "exitCode": 0,
+      "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-plugin-success-cIk3Bp",
+      "result": {
+        "scenario": "success",
+        "injected": false,
+        "passed": true,
+        "rolledBack": false,
+        "before": {
+          "skills/shared/SKILL.md": "4fc50eaf2103f408f50976a91cf7394a35a8a3d86bb536875b134f0d5db7f12e",
+          "skills/shared/obsolete.txt": "44866519ecce15be809e246a36309fd6415625f17b887544c9127d4f491dac15",
+          "sources/old-api/config.json": "0acc15dc24ea4aca94bdf60c4f7684507afd9944b656601a406586fd7cf0f6c4",
+          "sources/old-api/guide.md": "0639f0ce8ca367027edf15693f787a9622e9acf910c16b481869479ba00770ef",
+          "plugins/demo/plugin.json": "e902c0bb9ff70e4042ee789bd55f175640d243fae8a804ae6a9f19870e7c16ab",
+          "plugins/demo/data/state.txt": "aabc504f8ba71435f44e740631123659de33c5dd261b00b86eac174bdc095a93"
+        },
+        "credentialPresent": false,
+        "credentialFileUnchanged": false,
+        "warnings": [
+          {
+            "path": "mcp.json#new-api",
+            "message": "PluginPathError: stdio command \"node\" is a bare executable name — plugins must use a plugin-relative path such as \"./bin/server\" or \"${PLUGIN_ROOT}/bin/server\"; skipped"
+          }
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "backup-cleanup.log",
+      "sha256": "ba88b24950f3e6e0c3223af09d0295dcb89f0f42094dc2b3362112fe47ec0ca6"
+    },
+    {
+      "path": "skill-copy.log",
+      "sha256": "d728b9b46bc5b04dc813cd585f4f759864554dcc6d1bcedd4112b9d981806556"
+    },
+    {
+      "path": "credentials-before-rollback.log",
+      "sha256": "e2f7093c1fa7f4e924fd0ed30581d1ded57c0a1ca348dd0391f0ee79b29e02a2"
+    },
+    {
+      "path": "package-rename.log",
+      "sha256": "d426cc979f037eb77e27fd232d821637cdafe2724b23206a090e2982f4104820"
+    },
+    {
+      "path": "index-write.log",
+      "sha256": "e0e71f3db3f18e29571cd86d7abd9a1b7c2d84d795510367f9adacdfee355fa9"
+    },
+    {
+      "path": "success.log",
+      "sha256": "cdd731d21b86bec7e6cd399d3b081a268fa767c0c23e7013501cb2c9dcdce7dc"
+    },
+    {
+      "path": "index-invalidate.log",
+      "sha256": "2a2e0316935c37869790868af64b58a788fe346f6147de63e6e3af05f3f3cd43"
+    },
+    {
+      "path": "skill-rename.log",
+      "sha256": "1ea75111d1cb429965a37d8a272ae80fca3705104a215296c6bcd63c8332e3e4"
+    },
+    {
+      "path": "package-backup-copy.log",
+      "sha256": "b5f85cc80318bfb09ecd9045c293e88ce0d0decdac63728f26e4c14258222ee4"
+    },
+    {
+      "path": "source-backup-copy.log",
+      "sha256": "61478ded43135144f12d8c3fd8c3a3cda1efa515094a855d232d15f3e9c6ec6d"
+    },
+    {
+      "path": "credential-cleanup.log",
+      "sha256": "278fa848fd293b88a9bd28537924a96b355266e7075ba4f87bbec860a0caaaba"
+    },
+    {
+      "path": "audit-write.log",
+      "sha256": "23612df4e2c1050d66253c532210c3695ddef2802d48154bfd914fac6b9dcc40"
+    },
+    {
+      "path": "missing-backup.log",
+      "sha256": "8790b727980a9b504d268c976981aee1b2c2fd8ec72c9f010babe89eabb656f9"
+    }
+  ],
+  "untested": [
+    "SIGKILL/power loss during installation",
+    "concurrent installation of the same plugin",
+    "Windows/Linux native filesystem"
+  ]
+}

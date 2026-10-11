@@ -11,8 +11,8 @@ Thank you for helping improve Phaneris (RE). Contributions should preserve the p
 - Credentials for any provider or external service involved in the change
 
 ```bash
-git clone git@github.com:VanDING/Phaneris.git
-cd phaneris
+git clone ssh://git@ssh.github.com:443/VanDING/Phaneris.git
+cd Phaneris
 bun install
 cp .env.example .env
 bun run electron:dev
@@ -32,9 +32,9 @@ Do not introduce a second provider-specific session lifecycle or treat compatibi
 
 ## Make a change
 
-1. Create a focused branch from `main`.
+1. Create a focused `codex/` branch from `origin/main`. This is a standalone repository: push only to `origin`; `upstream` is read-only provenance. See [AGENTS.md](AGENTS.md) for namespaced upstream tags and the pre-push gate.
 2. Follow the patterns and terminology already used in the affected package.
-3. Add or update focused tests for observable behavior and failure paths.
+3. Write failure scenarios and observable acceptance checks before implementation. Prefer E2E with a repeatable artifact; never add unit tests after writing code. Keep existing regression suites working.
 4. Update documentation when a public contract, setup step, or architecture boundary changes.
 5. Add a concise entry to `apps/electron/resources/release-notes/next.md` for user-visible behavior.
 6. Run the smallest validation that directly covers the change.
@@ -82,7 +82,7 @@ packages/
 ├── pi-agent-server/      Isolated Pi SDK subprocess
 ├── session-tools-core/   Canonical session tool definitions and handlers
 ├── ui/                   Shared React UI
-├── core/                 Core types and storage interfaces
+├── core/                 Shared types and pure utilities
 ├── server/               Headless server entry point
 ├── messaging-gateway/    Messaging adapters
 └── messaging-whatsapp-worker/  Node WhatsApp subprocess worker

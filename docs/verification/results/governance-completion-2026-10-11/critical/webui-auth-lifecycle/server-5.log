@@ -1,0 +1,36 @@
+2026-10-11T10:50:48.836Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T10:50:48.836Z INFO  [bootstrap] Global config found
+2026-10-11T10:50:48.838Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available
+2026-10-11T10:50:48.859Z INFO  [session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T10:50:48.903Z INFO  Phaneris server listening on ws://127.0.0.1:57249
+[messaging] Disabled via PHANERIS_DISABLE_MESSAGING — skipping workspace messaging init
+PHANERIS_SERVER_URL=ws://127.0.0.1:57249
+PHANERIS_WEBUI_URL=http://0.0.0.0:57249
+[webui] Successful auth from 127.0.0.1
+[webui] Successful auth from 127.0.0.1
+[webui] Successful auth from 192.0.2.11
+
+2026-10-11T10:50:48.859Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-10-11T10:50:48.859Z ERROR [session] No LLM connection found for slug: null
+[webui] Failed auth attempt from 192.0.2.10
+[webui] Failed auth attempt from 192.0.2.10
+[webui] Failed auth attempt from 192.0.2.10
+[webui] Failed auth attempt from 192.0.2.10
+[webui] Failed auth attempt from 192.0.2.10
+[webui] Rate limited auth attempt from 192.0.2.10
+[webui] Failed auth attempt from 192.0.2.20
+[webui] Failed auth attempt from 192.0.2.21
+[webui] Failed auth attempt from 192.0.2.22
+[webui] Failed auth attempt from 192.0.2.23
+[webui] Failed auth attempt from 192.0.2.24
+[webui] Failed auth attempt from 192.0.2.25
+[webui] Failed auth attempt from 192.0.2.26
+[webui] Failed auth attempt from 192.0.2.27
+[webui] Failed auth attempt from 192.0.2.28
+[webui] Failed auth attempt from 192.0.2.29
+[webui] Failed auth attempt from 192.0.2.30
+[webui] Failed auth attempt from 192.0.2.31
+[webui] Failed auth attempt from 192.0.2.32
+[webui] Failed auth attempt from 192.0.2.33
+[webui] Failed auth attempt from 192.0.2.34
+[webui] Rate limited auth attempt from 192.0.2.99

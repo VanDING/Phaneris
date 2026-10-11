@@ -60,7 +60,25 @@
     "shiki": "^4.5.0",
     "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.2.16",
+    "@tiptap/extension-file-handler": "^3.31.4",
+    "@tiptap/extension-image": "^3.31.4",
+    "@tiptap/extension-mathematics": "^3.31.4",
+    "@tiptap/extension-placeholder": "^3.31.4",
+    "@tiptap/extension-task-item": "^3.31.4",
+    "@tiptap/extension-task-list": "^3.31.4",
+    "@tiptap/markdown": "^3.31.4",
+    "@tiptap/react": "^3.31.4",
+    "@tiptap/starter-kit": "^3.31.4",
+    "@tiptap/suggestion": "^3.31.4",
+    "linkify-it": "6.1.0",
+    "rehype-sanitize": "^6.0.0",
+    "tiptap-extension-code-block-shiki": "^1.2.0",
+    "tiptap-markdown": "^0.9.0",
+    "@tiptap/core": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "pdfjs-dist": "6.3.289"
   },
   "peerDependenciesMeta": {
     "@radix-ui/react-context-menu": {

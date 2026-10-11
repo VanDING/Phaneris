@@ -54,7 +54,7 @@ import { generateMessageId, debug } from '@phaneris/core';
 - `MessageRole` - Message type enum
 - `ToolStatus` - Tool execution state
 - `TokenUsage` - Token counts and cost
-- `AgentEvent` - Events from CraftAgent
+- `AgentEvent` - Events from the Pi agent runtime
 - `TypedError` - Structured error info
 - `Question` - AskUserQuestion format
 
@@ -91,10 +91,10 @@ src/
 ## Peer Dependencies
 
 This package requires the following peer dependency:
-- `@modelcontextprotocol/sdk` >= 1.29.0
+- `@modelcontextprotocol/sdk` ^1.32.0 (see package.json for the authoritative range)
 
 This package has no AI SDK dependency; agent runtimes live in packages/shared and packages/pi-agent-server.
 
 ## License
 
-MIT
+Apache-2.0

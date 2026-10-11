@@ -8,21 +8,11 @@ describe('rollbackFailedBranchCreation', () => {
     let runtimeDeleted: string | null = null
     let storageDeleted: string | null = null
 
-    const managed = {
-      agent: {
-        destroy: () => {
-          destroyed = true
-        },
-      },
-      poolServer: {
-        stop: () => {
-          stopped = true
-        },
-      },
-    }
-
     await rollbackFailedBranchCreation({
-      managed,
+      disposeRuntime: async () => {
+        destroyed = true
+        stopped = true
+      },
       workspaceRootPath: '/tmp/ws',
       sessionId: 'child-1',
       deleteFromRuntimeSessions: (id) => {
@@ -37,29 +27,14 @@ describe('rollbackFailedBranchCreation', () => {
     expect(stopped).toBe(true)
     expect(runtimeDeleted as string | null).toBe('child-1')
     expect(storageDeleted as string | null).toBe('child-1')
-    expect(managed.agent).toBeNull()
-    expect(managed.poolServer).toBeUndefined()
   })
 
-  it('still deletes sessions when destroy/stop throw (best-effort)', async () => {
+  it('still deletes sessions when owner disposal throws (best-effort)', async () => {
     let runtimeDeleted = false
     let storageDeleted = false
 
-    const managed = {
-      agent: {
-        destroy: () => {
-          throw new Error('destroy failed')
-        },
-      },
-      poolServer: {
-        stop: () => {
-          throw new Error('stop failed')
-        },
-      },
-    }
-
     await rollbackFailedBranchCreation({
-      managed,
+      disposeRuntime: async () => { throw new Error('runtime disposal failed') },
       workspaceRootPath: '/tmp/ws',
       sessionId: 'child-2',
       deleteFromRuntimeSessions: () => {
@@ -72,20 +47,13 @@ describe('rollbackFailedBranchCreation', () => {
 
     expect(runtimeDeleted).toBe(true)
     expect(storageDeleted).toBe(true)
-    expect(managed.agent).toBeNull()
-    expect(managed.poolServer).toBeUndefined()
   })
 
   it('does not throw when storage deletion fails', async () => {
     let runtimeDeleted = false
 
-    const managed = {
-      agent: null,
-      poolServer: undefined,
-    }
-
     await rollbackFailedBranchCreation({
-      managed,
+      disposeRuntime: async () => {},
       workspaceRootPath: '/tmp/ws',
       sessionId: 'child-3',
       deleteFromRuntimeSessions: () => {

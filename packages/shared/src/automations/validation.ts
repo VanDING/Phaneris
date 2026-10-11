@@ -12,7 +12,7 @@ import { AUTOMATIONS_CONFIG_FILE } from './constants.ts';
 import { AutomationsConfigSchema, zodErrorToIssues, DEPRECATED_EVENT_ALIASES } from './schemas.ts';
 import { isValidLabelId } from '../labels/storage.ts';
 import { extractLabelId } from '../labels/values.ts';
-import { getLlmConnection } from '../config/storage.ts';
+import { getLlmConnection } from '../config/connections.ts';
 import { getDefaultModelsForConnection } from '../config/llm-connections.ts';
 import type { ModelDefinition } from '../config/models.ts';
 import { Cron } from 'croner';

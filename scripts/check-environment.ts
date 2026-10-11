@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-import { existsSync, readFileSync } from 'node:fs'
+import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 
@@ -38,14 +38,34 @@ export function checkEnvironment(): void {
 }
 
 /** Invoke scripts using the checked runtime, including nested "bun" commands. */
-export async function run(args: string[], cwd = root): Promise<void> {
+export async function run(args: string[], cwd = root, options: { logFile?: string; minimumTests?: number } = {}): Promise<void> {
   console.log(`\n> ${args.join(' ')}`)
   const child = Bun.spawn([process.execPath, ...args], {
-    cwd, stdout: 'inherit', stderr: 'inherit',
+    cwd, stdout: options.logFile ? 'pipe' : 'inherit', stderr: options.logFile ? 'pipe' : 'inherit',
     env: { ...process.env, PATH: `${dirname(process.execPath)}${process.platform === 'win32' ? ';' : ':'}${process.env.PATH ?? ''}` },
   })
+  let captured = ''
+  if (options.logFile) {
+    writeFileSync(options.logFile, '')
+    const copy = async (stream: ReadableStream<Uint8Array>, output: NodeJS.WriteStream) => {
+      const decoder = new TextDecoder()
+      for await (const chunk of stream) {
+        const text = decoder.decode(chunk, { stream: true })
+        captured += text
+        appendFileSync(options.logFile!, text)
+        output.write(text)
+      }
+    }
+    await Promise.all([copy(child.stdout as ReadableStream<Uint8Array>, process.stdout), copy(child.stderr as ReadableStream<Uint8Array>, process.stderr)])
+  }
   const code = await child.exited
   if (code !== 0) throw new Error(`${args.join(' ')} exited with ${code}`)
+  if (options.minimumTests !== undefined) {
+    const passes = [...captured.matchAll(/(\d+)\s+pass\b/g)].map(match => Number(match[1]))
+    if (!options.logFile || !passes.length || passes.at(-1)! < options.minimumTests) {
+      throw new Error(`${args.join(' ')} did not execute at least ${options.minimumTests} passing tests`)
+    }
+  }
 }
 
 if (import.meta.main) checkEnvironment()

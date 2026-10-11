@@ -1,0 +1,19 @@
+{"output":"/Users/van/projects/Phaneris/.cache/verification/plugin-transaction-xNBp52","passed":0,"total":11}
+136 |   }
+137 |   fs.writeFileSync(join(output, 'plugin-transaction.json'), JSON.stringify({ generatedAt: new Date().toISOString(), checks,
+138 |     artifacts: fs.readdirSync(output).map(path => ({ path: relative(output, join(output, path)), sha256: hash(join(output, path)) })),
+139 |     untested: ['SIGKILL/power loss during installation', 'concurrent installation of the same plugin', 'Windows/Linux native filesystem'] }, null, 2) + '\n')
+140 |   console.log(JSON.stringify({ output, passed: checks.filter((check) => (check as { passed: boolean }).passed).length, total: cases.length }))
+141 |   assert(checks.every(check => (check as { passed: boolean }).passed), `Plugin transaction verification failed; see ${output}`)
+        ^
+AssertionError: Plugin transaction verification failed; see /Users/van/projects/Phaneris/.cache/verification/plugin-transaction-xNBp52
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/plugin-transaction-workflow.ts:141:3
+
+Bun v1.4.2 (macOS x64)

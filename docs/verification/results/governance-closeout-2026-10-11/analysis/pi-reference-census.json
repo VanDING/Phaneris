@@ -1,0 +1,426 @@
+{
+  "baseline": [
+    {
+      "file": "packages/pi-agent-server/src/canonical-model-context.ts",
+      "line": 4,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/context-policy-stream.ts",
+      "line": 4,
+      "specifier": "../../shared/src/agent/context-policy.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/context-usage.ts",
+      "line": 11,
+      "specifier": "../../shared/src/agent/backend/pi/protocol.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/custom-endpoint-models.ts",
+      "line": 2,
+      "specifier": "../../shared/src/config/models.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/durable-model-stream.ts",
+      "line": 5,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/durable-tool-context.ts",
+      "line": 1,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 3,
+      "specifier": "../../shared/src/agent/context-policy.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 54,
+      "specifier": "../../shared/src/config/pi-provider-compat.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 156,
+      "specifier": "../../shared/src/utils/large-response.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 157,
+      "specifier": "../../shared/src/sessions/storage.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 158,
+      "specifier": "../../shared/src/agent/llm-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 159,
+      "specifier": "../../shared/src/agent/llm-tool.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 160,
+      "specifier": "../../shared/src/agent/backend/pi/constants.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 161,
+      "specifier": "../../shared/src/config/models.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 171,
+      "specifier": "../../shared/src/agent/backend/pi/protocol.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 175,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 368,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 434,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 1301,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-filter.ts",
+      "line": 2,
+      "specifier": "../../shared/src/utils/large-response.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-filter.ts",
+      "line": 3,
+      "specifier": "../../shared/src/agent/backend/pi/protocol.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-gate.ts",
+      "line": 8,
+      "specifier": "../../shared/src/utils/large-response.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-gate.ts",
+      "line": 9,
+      "specifier": "../../shared/src/agent/backend/pi/protocol.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-gate.ts",
+      "line": 10,
+      "specifier": "../../shared/src/decisions/types.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/mini-model-query.ts",
+      "line": 2,
+      "specifier": "../../shared/src/agent/llm-tool.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/mini-model-query.ts",
+      "line": 3,
+      "specifier": "../../shared/src/config/models.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/mini-model-query.ts",
+      "line": 4,
+      "specifier": "../../shared/src/config/llm-connections.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/model-resolution.ts",
+      "line": 2,
+      "specifier": "../../shared/src/config/pi-provider-compat.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/model-resolution.ts",
+      "line": 6,
+      "specifier": "../../shared/src/config/llm-connections.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/native-request-observation.ts",
+      "line": 3,
+      "specifier": "../../shared/src/durable-runtime/types.ts",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/pick-mini-model.ts",
+      "line": 3,
+      "specifier": "../../shared/src/config/llm-connections.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/session-settings.ts",
+      "line": 18,
+      "specifier": "../../shared/src/agent/llm-tool.ts",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/tools/search/providers/chatgpt.ts",
+      "line": 16,
+      "specifier": "../../../../../shared/src/config/llm-connections.ts",
+      "typeOnly": false
+    }
+  ],
+  "current": [
+    {
+      "file": "packages/pi-agent-server/src/messages.ts",
+      "line": 3,
+      "specifier": "@phaneris/shared/agent/context-policy",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/messages.ts",
+      "line": 7,
+      "specifier": "@phaneris/shared/agent/llm-tool",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/messages.ts",
+      "line": 8,
+      "specifier": "@phaneris/shared/agent/backend/pi/protocol",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/messages.ts",
+      "line": 9,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/messages.ts",
+      "line": 189,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/messages.ts",
+      "line": 266,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/canonical-model-context.ts",
+      "line": 4,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/context-policy-stream.ts",
+      "line": 4,
+      "specifier": "@phaneris/shared/agent/context-policy",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/context-usage.ts",
+      "line": 11,
+      "specifier": "@phaneris/shared/agent/backend/pi/protocol",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/custom-endpoint-models.ts",
+      "line": 2,
+      "specifier": "@phaneris/shared/config/models",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/durable-model-stream.ts",
+      "line": 5,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/durable-tool-context.ts",
+      "line": 1,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 10,
+      "specifier": "@phaneris/shared/agent/context-policy",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 59,
+      "specifier": "@phaneris/shared/config/pi-provider-compat",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 138,
+      "specifier": "@phaneris/shared/utils/large-response",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 139,
+      "specifier": "@phaneris/shared/sessions/paths",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 140,
+      "specifier": "@phaneris/shared/agent/llm-tool",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 141,
+      "specifier": "@phaneris/shared/agent/llm-tool",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 142,
+      "specifier": "@phaneris/shared/agent/backend/pi/constants",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 143,
+      "specifier": "@phaneris/shared/config/models",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 153,
+      "specifier": "@phaneris/shared/agent/backend/pi/protocol",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 157,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/index.ts",
+      "line": 977,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-filter.ts",
+      "line": 2,
+      "specifier": "@phaneris/shared/utils/large-response",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-filter.ts",
+      "line": 3,
+      "specifier": "@phaneris/shared/agent/backend/pi/protocol",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-gate.ts",
+      "line": 8,
+      "specifier": "@phaneris/shared/utils/large-response",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-gate.ts",
+      "line": 9,
+      "specifier": "@phaneris/shared/agent/backend/pi/protocol",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/large-result-gate.ts",
+      "line": 10,
+      "specifier": "@phaneris/shared/decisions/types",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/mini-model-query.ts",
+      "line": 2,
+      "specifier": "@phaneris/shared/agent/llm-tool",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/mini-model-query.ts",
+      "line": 3,
+      "specifier": "@phaneris/shared/config/models",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/mini-model-query.ts",
+      "line": 4,
+      "specifier": "@phaneris/shared/config/llm-connections",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/model-resolution.ts",
+      "line": 2,
+      "specifier": "@phaneris/shared/config/pi-provider-compat",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/model-resolution.ts",
+      "line": 6,
+      "specifier": "@phaneris/shared/config/llm-connections",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/native-request-observation.ts",
+      "line": 3,
+      "specifier": "@phaneris/shared/durable-runtime/types",
+      "typeOnly": true
+    },
+    {
+      "file": "packages/pi-agent-server/src/pick-mini-model.ts",
+      "line": 3,
+      "specifier": "@phaneris/shared/config/llm-connections",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/session-settings.ts",
+      "line": 18,
+      "specifier": "@phaneris/shared/agent/llm-tool",
+      "typeOnly": false
+    },
+    {
+      "file": "packages/pi-agent-server/src/tools/search/providers/chatgpt.ts",
+      "line": 16,
+      "specifier": "@phaneris/shared/config/llm-connections",
+      "typeOnly": false
+    }
+  ]
+}

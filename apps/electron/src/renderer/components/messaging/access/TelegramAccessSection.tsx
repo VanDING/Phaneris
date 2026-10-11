@@ -19,14 +19,10 @@ import { InlineExpand } from '@phaneris/ui'
 import { toast } from 'sonner'
 import { ChevronDown, ChevronRight, MessageSquare, Users } from 'lucide-react'
 import { messagingBindingsAtom } from '@/atoms/messaging'
-import {
-  AccessModeBanner,
-  OwnersListEditor,
-  PendingSendersList,
-  type PendingSender,
-  type PlatformAccessMode,
-  type PlatformOwner,
-} from './'
+import { AccessModeBanner } from './AccessModeBanner'
+import { OwnersListEditor } from './OwnersListEditor'
+import { PendingSendersList } from './PendingSendersList'
+import type { PendingSender, PlatformAccessMode, PlatformOwner } from './types'
 
 const ROW_ICON_SIZE = 22
 const SUB_ROW_ICON_SIZE = 16

@@ -14,7 +14,7 @@ for (const count of [100, 1000, 5000]) {
     groupImmutableMessagesByTurn(previous,{isSessionProcessing:true})
     for(let i=0;i<250;i++) {
       const elapsed = sample(()=>{
-        const next = previous.slice(); next[next.length-1]={...next.at(-1),content:`chunk ${i}`}
+        const next = previous.slice(); next[next.length-1]={...next.at(-1)!,content:`chunk ${i}`}
         if (incremental) { recordMessageTextUpdate(previous,next,next.length-1); groupImmutableMessagesByTurn(next,{isSessionProcessing:true}) }
         else groupMessagesByTurn(next,{isSessionProcessing:true})
         previous=next

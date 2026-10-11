@@ -6,15 +6,7 @@
  */
 
 import type { ModelDefinition } from '@phaneris/shared/config/models'
-import {
-  type LlmConnection,
-  type LlmProviderType,
-  type CustomEndpointApi,
-  type CustomEndpointConfig,
-  getDefaultModelsForConnection,
-  getDefaultModelForConnection,
-  defaultMidStreamBehavior,
-} from '@phaneris/shared/config'
+import { type LlmConnection, type LlmProviderType, type CustomEndpointApi, type CustomEndpointConfig, getDefaultModelsForConnection, getDefaultModelForConnection, defaultMidStreamBehavior } from '@phaneris/shared/config';
 
 // ============================================================
 // Error Parsing

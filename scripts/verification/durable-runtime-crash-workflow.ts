@@ -8,6 +8,7 @@ import { createHash } from 'node:crypto'
 import { Database } from 'bun:sqlite'
 import { createDurableRuntime, type RuntimeDriver } from '../../packages/server-core/src/durable-runtime'
 import { runtimeBoundaryEvidence } from './runtime-boundary-evidence'
+import { verificationWorkflow } from './verification-artifacts'
 
 const [mode, workspace, phase] = process.argv.slice(2)
 const sessionId = 'crash-session', runId = 'crash-run'
@@ -60,10 +61,11 @@ if (mode === '--execute') {
   await runtime.close()
   console.log(JSON.stringify(result))
 } else {
+  await verificationWorkflow('durable-runtime-crash', async run => {
   const fixture = mkdtempSync(join(tmpdir(), 'phaneris-runtime-crash-'))
-  const output = resolve(import.meta.dir, '../../docs/verification/results/durable-runtime-boundary')
-  mkdirSync(output, { recursive: true })
-  const cases: unknown[] = []
+  const output = run.directory
+  const cases: Array<{ phase: string; [key: string]: unknown }> = []
+  try {
   for (const kind of ['tool', 'model']) for (const point of ['t1-failure', 'after-t1', 'after-effect', 'after-t2']) {
     const phase = `${kind}-${point}`, workspace = join(fixture, phase)
     mkdirSync(workspace, { recursive: true })
@@ -98,9 +100,20 @@ if (mode === '--execute') {
       writeFileSync(database, readFileSync(backup)); await runtime.close()
       cases.push({ phase, barrier: JSON.parse(barrier), exitCode, externalCalls: markers.length, markers, recoveryResults,
         database: { path: database, sha256: createHash('sha256').update(readFileSync(database)).digest('hex') } })
+    } catch (error) {
+      const runtime = createDurableRuntime()
+      try {
+        const backup = runtime.admin.backupDatabase(workspace, join(output, `failed-${phase}.db`))
+        run.json('failed-case.json', { phase, workspace, barrier, database: backup })
+      } finally { await runtime.close() }
+      throw error
     } finally { clearTimeout(timeout); child.kill(); reader.releaseLock() }
   }
+  run.complete(cases.map(item => item.phase))
+  } finally {
   writeFileSync(join(output, 'crash.json'), JSON.stringify({ schemaVersion: 1, generatedAt: new Date().toISOString(),
     ...runtimeBoundaryEvidence('bun run scripts/verification/durable-runtime-crash-workflow.ts', fixture), cases }, null, 2) + '\n')
   console.log(JSON.stringify({ passed: cases.length, output: join(output, 'crash.json') }))
+  }
+  })
 }

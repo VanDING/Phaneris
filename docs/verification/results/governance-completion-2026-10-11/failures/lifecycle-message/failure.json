@@ -1,0 +1,4 @@
+{
+  "message": "false == true",
+  "stack": "AssertionError [ERR_ASSERTION]: false == true\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/process-lifecycle-workflow.ts:23:7)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

@@ -190,10 +190,18 @@ export class SecureStorageBackend {
     const key = credentialIdToAccount(id);
     if (!(key in store.credentials)) return false;
 
+    const previous = store.credentials[key]!;
+    const previousUpdatedAt = store.metadata.updatedAt;
     delete store.credentials[key];
     store.metadata.updatedAt = Date.now();
 
-    this.saveStoreSync(store);
+    try { this.saveStoreSync(store); }
+    catch (error) {
+      // A failed atomic write must leave the in-memory view retryable too.
+      store.credentials[key] = previous;
+      store.metadata.updatedAt = previousUpdatedAt;
+      throw error;
+    }
     return true;
   }
 

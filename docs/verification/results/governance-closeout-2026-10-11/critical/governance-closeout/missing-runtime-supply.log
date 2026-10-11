@@ -1,0 +1,18 @@
+34 | for (const [job, command] of [['validate', 'bun run validate:ci'], ['full-validation', 'bun run validate:full'],
+35 |   ['quality-windows', 'bun run runtime:check'], ['native-macos', 'bun run test:native-client']]) {
+36 |   const steps = workflow.jobs[job!]!.steps
+37 |   const supplied = steps.findIndex(step => step.run === 'bun run runtime:provision:validation')
+38 |   const validated = steps.findIndex(step => step.run?.includes(command!))
+39 |   assert(supplied >= 0 && validated > supplied, `${job} must provision the pinned bundled runtime before validation`)
+       ^
+AssertionError: validate must provision the pinned bundled runtime before validation
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/check-governance.ts:39:3
+
+Bun v1.4.2 (macOS x64)

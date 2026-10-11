@@ -2,14 +2,14 @@
  * Backend Abstraction Types
  *
  * Defines the core interface that all AI backends (Claude, OpenAI, etc.) must implement.
- * The CraftAgent facade delegates to these backends, enabling provider switching while
+ * The PiAgent facade delegates to these backends, enabling provider switching while
  * maintaining a consistent API surface.
  *
  * Key design decisions:
  * - Provider-agnostic events: All backends emit the same AgentEvent types
  * - Capabilities-driven UI: Model/thinking selectors read from capabilities()
  * - Callback pattern: Facade sets callbacks after creating backend
- * - AsyncGenerator for streaming: Consistent with existing CraftAgent API
+ * - AsyncGenerator for streaming: Consistent with existing PiAgent API
  */
 
 import type { AgentEvent } from '@phaneris/core/types';
@@ -358,7 +358,7 @@ export type AgentMcpServerConfig =
  *
  * The interface is designed to:
  * 1. Keep the host independent from the embedded backend implementation
- * 2. Enable the facade pattern in CraftAgent
+ * 2. Enable the facade pattern in PiAgent
  * 3. Support streaming via AsyncGenerator
  * 4. Allow capability-based UI adaptation
  */

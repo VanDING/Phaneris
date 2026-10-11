@@ -18,7 +18,7 @@ import {
   type CreateArtifactDraftInput,
   type RegisterCurrentArtifactInput,
 } from '@phaneris/shared/artifacts'
-import { getWorkspaceByNameOrId } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'

@@ -1,0 +1,4 @@
+{
+  "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   'Not connected (channel: drafts:set)'\n+ ]\n- []\n",
+  "stack": "Error: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   'Not connected (channel: drafts:set)'\n+ ]\n- []\n\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/client-platform-workflow.ts:133:12)\n    at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native)"
+}

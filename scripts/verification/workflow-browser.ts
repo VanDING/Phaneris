@@ -1,4 +1,14 @@
-import { chromium, type Browser } from 'playwright'
+import { chromium, type Browser, type Page } from 'playwright'
+
+/** Playwright's in-page polling treats a Promise as truthy. Await RPC conditions on the driver. */
+export async function waitForBrowserCondition<Argument = undefined>(page: Page,
+  predicate: (argument: Argument) => boolean | Promise<boolean>, argument?: Argument, timeoutMs = 30_000): Promise<void> {
+  const deadline = Date.now() + timeoutMs
+  while (!await page.evaluate<boolean>(predicate as () => boolean | Promise<boolean>, argument)) {
+    if (Date.now() >= deadline) throw new Error(`Browser condition did not become true within ${timeoutMs}ms`)
+    await Bun.sleep(50)
+  }
+}
 
 /** Bun on Windows cannot reliably hand Playwright's native pipes to Chromium. */
 export async function launchWorkflowBrowser(): Promise<{ browser: Browser; close: () => Promise<void> }> {

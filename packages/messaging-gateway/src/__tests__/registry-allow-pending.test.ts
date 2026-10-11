@@ -58,9 +58,7 @@ function makeRegistry() {
 // stable enough that a loose `any` for the gateway is acceptable here —
 // trying to spell out the full type pulls in BindingStore / PendingStore
 // transitively via ReturnType<...>, which TS rejects as circular.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getInternalState(registry: MessagingGatewayRegistry, workspaceId: string): any {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const r = registry as any
   return r.workspaces.get(workspaceId) ?? r.bootstrapWorkspace(workspaceId)
 }

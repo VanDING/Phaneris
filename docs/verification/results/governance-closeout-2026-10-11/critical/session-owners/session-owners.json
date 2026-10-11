@@ -1,0 +1,34 @@
+{
+  "checks": [
+    "finite product callbacks preserve branch and transfer state without Manager",
+    "session snapshot filters fork-only metadata without mutable execution state",
+    "lazy snapshot reads latest product state",
+    "concurrent flush serializes real JSONL",
+    "flushAll barrier persists accepted product changes",
+    "source pool is ready before independent SDK assembly",
+    "resource release is idempotent and closes actual HTTP listener",
+    "local source resource owner needs no HTTP server"
+  ],
+  "persisted": {
+    "id": "fixture",
+    "workspaceRootPath": "/Users/van/projects/Phaneris/.cache/verification/critical-jfhLnx/session-owners/workspace",
+    "createdAt": 1,
+    "lastUsedAt": 1791731483123,
+    "messages": [
+      {
+        "id": "user",
+        "content": "second persisted value",
+        "timestamp": 1,
+        "type": "user"
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "totalTokens": 0,
+      "contextTokens": 0,
+      "costUsd": 0
+    }
+  },
+  "bytes": 409
+}

@@ -8,7 +8,8 @@
  */
 
 import { getLastApiError } from '../interceptor-common.ts';
-import { type AuthType, getDefaultLlmConnection } from '../config/storage.ts';
+import { type AuthType } from '../config/storage.ts';
+import { getDefaultLlmConnection } from '../config/connections.ts';
 import { getCredentialManager } from '../credentials/index.ts';
 import type { LlmProviderType } from '../config/llm-connections.ts';
 

@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "id": "acyclic",
+      "output": "Runtime cycles OK: 2 modules; 0 exact reviewed compositions; new/changed/stale edges fail\n"
+    },
+    {
+      "id": "new-runtime-cycle",
+      "output": "48 |   else used.add(index)\n49 | }\n50 | baseline.allowed.forEach((allowance, index) => { if (!used.has(index)) failures.push(`Retire stale cycle allowance: ${allowance.members.join(', ')}`) })\n51 | const report = { scanned: scan.scannedFiles, cycles, failures }\n52 | if (arg('output')) writeFileSync(resolve(arg('output')!), JSON.stringify(report, null, 2) + '\\n')\n53 | assert.equal(failures.length, 0, failures.join('\\n'))\n            ^\nAssertionError: New runtime cycle or changed edges: packages/fixture/src/a.ts -> packages/fixture/src/b.ts\n\n1 !== 0\n\n generatedMessage: false,\n     actual: 1,\n   expected: 0,\n   operator: \"strictEqual\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/van/projects/Phaneris/scripts/check-cycles.ts:53:8\n\nBun v1.4.2 (macOS x64)\n"
+    },
+    {
+      "id": "reasoned-exact-cycle",
+      "output": "Runtime cycles OK: 2 modules; 1 exact reviewed compositions; new/changed/stale edges fail\n"
+    },
+    {
+      "id": "missing-reason",
+      "output": "38 |   return { members, edges }\n39 | }).sort((a, b) => JSON.stringify(a.members).localeCompare(JSON.stringify(b.members)))\n40 | interface Allowance { members: string[]; edges: { from: string; to: string }[]; owner: string; reason: string }\n41 | const baseline = JSON.parse(readFileSync(resolve(arg('baseline') ?? resolve(import.meta.dir, 'cycle-ownership.json')), 'utf8')) as { allowed: Allowance[] }\n42 | const used = new Set<number>(), failures: string[] = []\n43 | for (const allowance of baseline.allowed) assert(allowance.owner?.trim() && allowance.reason?.trim(), 'Cycle allowance needs owner and verified reason')\n                                               ^\nAssertionError: Cycle allowance needs owner and verified reason\n generatedMessage: false,\n     actual: \"\",\n   expected: true,\n   operator: \"==\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/van/projects/Phaneris/scripts/check-cycles.ts:43:43\n\nBun v1.4.2 (macOS x64)\n"
+    },
+    {
+      "id": "cycle-expansion",
+      "output": "48 |   else used.add(index)\n49 | }\n50 | baseline.allowed.forEach((allowance, index) => { if (!used.has(index)) failures.push(`Retire stale cycle allowance: ${allowance.members.join(', ')}`) })\n51 | const report = { scanned: scan.scannedFiles, cycles, failures }\n52 | if (arg('output')) writeFileSync(resolve(arg('output')!), JSON.stringify(report, null, 2) + '\\n')\n53 | assert.equal(failures.length, 0, failures.join('\\n'))\n            ^\nAssertionError: New runtime cycle or changed edges: packages/fixture/src/a.ts -> packages/fixture/src/b.ts -> packages/fixture/src/c.ts\nRetire stale cycle allowance: packages/fixture/src/a.ts, packages/fixture/src/b.ts\n\n2 !== 0\n\n generatedMessage: false,\n     actual: 2,\n   expected: 0,\n   operator: \"strictEqual\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/van/projects/Phaneris/scripts/check-cycles.ts:53:8\n\nBun v1.4.2 (macOS x64)\n"
+    },
+    {
+      "id": "stale-exception",
+      "output": "48 |   else used.add(index)\n49 | }\n50 | baseline.allowed.forEach((allowance, index) => { if (!used.has(index)) failures.push(`Retire stale cycle allowance: ${allowance.members.join(', ')}`) })\n51 | const report = { scanned: scan.scannedFiles, cycles, failures }\n52 | if (arg('output')) writeFileSync(resolve(arg('output')!), JSON.stringify(report, null, 2) + '\\n')\n53 | assert.equal(failures.length, 0, failures.join('\\n'))\n            ^\nAssertionError: Retire stale cycle allowance: packages/fixture/src/a.ts, packages/fixture/src/b.ts\n\n1 !== 0\n\n generatedMessage: false,\n     actual: 1,\n   expected: 0,\n   operator: \"strictEqual\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/van/projects/Phaneris/scripts/check-cycles.ts:53:8\n\nBun v1.4.2 (macOS x64)\n"
+    }
+  ]
+}

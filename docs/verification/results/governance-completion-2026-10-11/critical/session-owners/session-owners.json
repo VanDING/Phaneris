@@ -1,0 +1,32 @@
+{
+  "checks": [
+    "lazy snapshot reads latest product state",
+    "concurrent flush serializes real JSONL",
+    "flushAll barrier persists accepted product changes",
+    "source pool is ready before independent SDK assembly",
+    "resource release is idempotent and closes actual HTTP listener",
+    "local source resource owner needs no HTTP server"
+  ],
+  "persisted": {
+    "id": "fixture",
+    "workspaceRootPath": "/Users/van/projects/Phaneris/.cache/verification/critical-D9gqja/session-owners/workspace",
+    "createdAt": 1,
+    "lastUsedAt": 1791715892768,
+    "messages": [
+      {
+        "id": "user",
+        "content": "second persisted value",
+        "timestamp": 1,
+        "type": "user"
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "totalTokens": 0,
+      "contextTokens": 0,
+      "costUsd": 0
+    }
+  },
+  "bytes": 409
+}

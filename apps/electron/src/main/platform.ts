@@ -25,6 +25,7 @@ export function createElectronPlatform(opts: ElectronPlatformOptions): PlatformS
     appRootPath: app.isPackaged ? app.getAppPath() : process.cwd(),
     resourcesPath: process.resourcesPath,
     isPackaged: app.isPackaged,
+    nodeRuntimePath: getElectronNodeRuntimePath(app.isPackaged),
     appVersion: app.getVersion(),
     openExternal: (url) => shell.openExternal(url),
     openPath: (p) => shell.openPath(p).then(() => {}),
@@ -69,4 +70,9 @@ export function createElectronPlatform(opts: ElectronPlatformOptions): PlatformS
     getLogFilePath: opts.getLogFilePath,
     captureError: opts.captureError,
   }
+}
+
+/** The Pi bundle targets Bun. Packaged apps resolve their bundled Bun in the shared resolver. */
+export function getElectronNodeRuntimePath(isPackaged: boolean): string | undefined {
+  return isPackaged ? undefined : 'bun'
 }

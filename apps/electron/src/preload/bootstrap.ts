@@ -231,7 +231,7 @@ api.onConfirmDialogRequest = (callback) => {
 api.respondConfirmDialog = (id, response) =>
   ipcRenderer.invoke('__dialog:respondConfirm', { id, response }) as Promise<{ ok: boolean }>
 
-;(api as any).getRuntimeEnvironment = (): 'electron' | 'web' => 'electron'
+;(api as ElectronAPI).getRuntimeEnvironment = (): 'electron' | 'web' => 'electron'
 
 // ---------------------------------------------------------------------------
 // Transport connection state logging (for remote connections)
@@ -296,11 +296,11 @@ client.onConnectionStateChanged((state) => {
 // Transport state API (exposed to renderer)
 // ---------------------------------------------------------------------------
 
-;(api as any).getTransportConnectionState = async () => client.getConnectionState()
-;(api as any).onTransportConnectionStateChanged = (callback: (state: TransportConnectionState) => void) => {
+;(api as ElectronAPI).getTransportConnectionState = async () => client.getConnectionState()
+;(api as ElectronAPI).onTransportConnectionStateChanged = (callback: (state: TransportConnectionState) => void) => {
   return client.onConnectionStateChanged(callback)
 }
-;(api as any).reconnectTransport = async () => {
+;(api as ElectronAPI).reconnectTransport = async () => {
   client.reconnectNow()
 }
 
@@ -308,7 +308,7 @@ client.onConnectionStateChanged((state) => {
 // Multi-step orchestration: callback server (local) → oauth:start (server) →
 // open browser → wait for callback → oauth:complete (server).
 // Runs client-side because the callback server must receive the redirect.
-;(api as any).performOAuth = async (args: {
+;(api as ElectronAPI).performOAuth = async (args: {
   sourceSlug: string
   sessionId?: string
   authRequestId?: string
@@ -372,7 +372,7 @@ client.onConnectionStateChanged((state) => {
 // Override the channel-map stub: the server now returns authUrl without opening
 // the browser. We open it locally so it works in remote mode.
 // Claude OAuth is two-step: browser opens → user copies code → pastes in UI.
-;(api as any).startClaudeOAuth = async (): Promise<{
+;(api as ElectronAPI).startClaudeOAuth = async (): Promise<{
   success: boolean
   authUrl?: string
   error?: string
@@ -395,7 +395,7 @@ client.onConnectionStateChanged((state) => {
 // Same shape as performOAuth: callback server (port 1455) → chatgpt:startOAuth →
 // browser → callback → chatgpt:completeOAuth.
 // Overrides the startChatGptOAuth API method so the renderer call is unchanged.
-;(api as any).startChatGptOAuth = async (
+;(api as ElectronAPI).startChatGptOAuth = async (
   connectionSlug: string,
 ): Promise<{ success: boolean; error?: string }> => {
   let callbackServer: Awaited<ReturnType<typeof createCallbackServer>> | null = null
@@ -457,17 +457,17 @@ client.onConnectionStateChanged((state) => {
   url: string,
   token: string,
   channel: string,
-  args?: any[],
+  args?: unknown[],
   options?: { allowInsecureTls?: boolean },
 ) => ipcRenderer.invoke('server:invokeOnServer', url, token, channel, args ?? [], options)
 // H-15: remote token never crosses into the renderer — main resolves the
 // workspace's remoteServer url/token/remoteWorkspaceId from local config.
-;(api as ElectronAPI).sendResourcesToRemote = (workspaceId: string, channel: string, ...args: any[]) =>
+;(api as ElectronAPI).sendResourcesToRemote = (workspaceId: string, channel: string, ...args: unknown[]) =>
   ipcRenderer.invoke('server:sendResourcesToRemote', workspaceId, channel, ...args)
 ;(api as ElectronAPI).transferSessionToWorkspace = (sessionId: string, targetWorkspaceId: string, sessionIndex?: number, sessionCount?: number) =>
   ipcRenderer.invoke('session:transferToWorkspace', sessionId, targetWorkspaceId, sessionIndex, sessionCount)
 ;(api as ElectronAPI).onTransferProgress = (cb: (progress: { sessionIndex: number; sessionCount: number; chunkSent: number; chunkTotal: number }) => void) => {
-  const handler = (_e: any, progress: { sessionIndex: number; sessionCount: number; chunkSent: number; chunkTotal: number }) => cb(progress)
+  const handler = (_e: IpcRendererEvent, progress: { sessionIndex: number; sessionCount: number; chunkSent: number; chunkTotal: number }) => cb(progress)
   ipcRenderer.on('transfer:progress', handler)
   return () => { ipcRenderer.removeListener('transfer:progress', handler) }
 }

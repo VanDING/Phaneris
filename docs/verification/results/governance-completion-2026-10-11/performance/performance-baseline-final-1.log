@@ -1,0 +1,23 @@
+Environment OK: Bun 1.4.2, Node v24.16.0; local script entries exist.
+[performance] baseline: browser startup
+[performance] 100 messages: load and warm switches
+[performance] 1000 messages: load and warm switches
+[performance] 5000 messages: load and warm switches
+[performance] longest history: input, copy, search and quoted text
+[performance] failed: /Users/van/projects/Phaneris/.cache/governance-completion/performance-baseline-final-1.json
+57689 |       throw new Error("Serialized error must have either an error or a value");
+57690 |     return parseSerializedValue(error.value, void 0);
+57691 |   }
+57692 |   let e;
+57693 |   if (error.error.name === "TimeoutError")
+57694 |     e = new TimeoutError2(error.error.message);
+                    ^
+TimeoutError: fill: Timeout 60000ms exceeded.
+Call log:
+[2m  - waiting for getByPlaceholder('Search titles and content...')[22m
+
+  log: [ "  - waiting for getByPlaceholder('Search titles and content...')" ],
+
+      at /Users/van/projects/Phaneris/node_modules/playwright-core/lib/coreBundle.js:57694:13
+
+Bun v1.4.2 (macOS x64)

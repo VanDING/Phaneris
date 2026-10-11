@@ -62,7 +62,8 @@ import {
 } from "@phaneris/ui"
 import { MemoizedAuthRequestCard } from "@/components/chat/AuthRequestCard"
 import { NewSessionLanding } from "@/components/chat/NewSessionLanding"
-import { ChatInputZone, type StructuredInputState, type StructuredResponse, type PermissionResponse, type AdminApprovalResponse, type QuestionResponse } from "./input"
+import { ChatInputZone } from "./input/ChatInputZone"
+import type { StructuredInputState, StructuredResponse, PermissionResponse, AdminApprovalResponse, QuestionResponse } from "./input"
 import type { RichTextInputHandle } from "@/components/ui/rich-text-input"
 import { useBackgroundTasks } from "@/hooks/useBackgroundTasks"
 import { useTurnCardExpansion } from "@/hooks/useTurnCardExpansion"
@@ -421,11 +422,13 @@ function ScrollOnMount({
   onScroll?: () => void
   skip?: boolean
 }) {
+  const onScrollRef = React.useRef(onScroll)
+  onScrollRef.current = onScroll
   React.useLayoutEffect(() => {
     if (skip) return
     targetRef.current?.scrollIntoView({ behavior: 'instant' })
-    onScroll?.()
-  }, [skip])
+    onScrollRef.current?.()
+  }, [skip, targetRef])
   return null
 }
 
@@ -630,10 +633,10 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   // focus stealing when search is open but query is empty
   // Only the focused surface should auto-focus its textarea.
   useEffect(() => {
-    if (session && !isSearchModeActive && isFocused && isFocusedPanel) {
+    if (session?.id && !isSearchModeActive && isFocused && isFocusedPanel) {
       textareaRef.current?.focus()
     }
-  }, [session?.id, isFocused, isSearchModeActive, isFocusedPanel])
+  }, [session?.id, isFocused, isSearchModeActive, isFocusedPanel, textareaRef])
 
   useEffect(() => {
     let isMounted = true
@@ -686,10 +689,12 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   // Streaming text updates reuse completed turns. Structural selectors below
   // do not need to traverse history again when only unannotated pending text changes.
   const structuralMessages = session?.messages ? getMessageStructureSource(session.messages) : undefined
+  const turnMessages = session?.messages
+  const turnProcessing = session?.isProcessing
   const allTurns = React.useMemo(() => {
-    if (!session) return []
-    return groupImmutableMessagesByTurn(session.messages, { isSessionProcessing: session.isProcessing })
-  }, [session?.messages, session?.isProcessing])
+    if (!turnMessages) return []
+    return groupImmutableMessagesByTurn(turnMessages, { isSessionProcessing: turnProcessing })
+  }, [turnMessages, turnProcessing])
 
   // Find ALL individual match occurrences (not just turns)
   // Returns array with unique matchId for each occurrence
@@ -987,7 +992,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     matchCount: validMatches.length,
     currentMatchIndex,
     isHighlighting,
-  }), [goToNextMatch, goToPrevMatch, validMatches.length, currentMatchIndex])
+  }), [goToNextMatch, goToPrevMatch, validMatches.length, currentMatchIndex, isHighlighting])
 
   // Notify parent when match info (count, index, highlighting state) changes
   useEffect(() => {
@@ -1285,7 +1290,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
         detail: { sessionId: session.id },
       }))
     }, 0)
-  }, [session, isInputDisabled, disableSend, connectionUnavailable])
+  }, [session, isInputDisabled, disableSend, connectionUnavailable, t])
 
   // Handle stop request from InputContainer
   // silent=true when redirecting (sending new message), silent=false when user clicks Stop button

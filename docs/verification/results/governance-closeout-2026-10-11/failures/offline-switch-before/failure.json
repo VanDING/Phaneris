@@ -1,0 +1,4 @@
+{
+  "message": "waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-sonner-toast][data-type=\"error\"]').first() to be visible\u001b[22m\n",
+  "stack": "waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-sonner-toast][data-type=\"error\"]').first() to be visible\u001b[22m\n\n    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/client-platform-workflow.ts:125:74)\n    at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

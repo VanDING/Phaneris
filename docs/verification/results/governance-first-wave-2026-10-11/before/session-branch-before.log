@@ -1,0 +1,60 @@
+[session] Pi branch anchor missing: falling back to full-history fork for this branch {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-keen-beach",
+  branchFromMessageId: "m1",
+}
+[session] Branch validation succeeded {
+  workspaceId: "branch-fixture",
+  branchFromSessionId: "261011-keen-beach",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  branchFromSdkSessionId: true,
+  copiedMessageCount: 1,
+}
+[session] Lazy-loaded 1 messages for session 261011-calm-moor
+[session] Branch creation failed during backend preflight handshake {
+  workspaceId: "branch-fixture",
+  sessionId: "261011-calm-moor",
+  branchFromSessionId: "261011-keen-beach",
+  branchFromMessageId: "m1",
+  branchContextStrategy: "sdk-fork",
+  error: "null is not an object (evaluating 'managed.runtime.agent.ensureBranchReady')",
+}
+39 |       destroy: () => { disposed = true } }
+40 |     runtime.execution.installDriver(managed.id, new PiRuntimeDriver(backend as never))
+41 |     return backend
+42 |   }
+43 |   try {
+44 |     await assert.rejects(manager.createSession(workspace.id, { name: 'Failed branch', branchFromSessionId: parent.id, branchFromMessageId: 'm1' }), /fixture preflight failed/)
+                      ^
+AssertionError: The input did not match the regular expression /fixture preflight failed/. Input:
+
+"Error: Could not create branch: null is not an object (evaluating 'managed.runtime.agent.ensureBranchReady')"
+
+ generatedMessage: true,
+   expected: /fixture preflight failed/,
+   operator: "rejects",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at expectedException (node:assert:327:33)
+      at expectsError (node:assert:395:20)
+      at assert.rejects (node:assert:434:17)
+      at /Users/van/projects/Phaneris/scripts/verification/session-branch-workflow.ts:44:18
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+
+3551 |               this.sessions.delete(id)
+3552 |             },
+3553 |             deleteStoredSession,
+3554 |           })
+3555 | 
+3556 |           throw new Error(
+                           ^
+error: Could not create branch: null is not an object (evaluating 'managed.runtime.agent.ensureBranchReady')
+      at createSession (/Users/van/projects/Phaneris/packages/server-core/src/sessions/SessionManager.ts:3556:21)
+      at async waitForActual (node:assert:359:24)
+      at async assert.rejects (node:assert:434:77)
+      at async <anonymous> (/Users/van/projects/Phaneris/scripts/verification/session-branch-workflow.ts:44:18)
+      at async verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+
+Bun v1.4.2 (macOS x64)

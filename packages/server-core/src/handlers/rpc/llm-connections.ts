@@ -1,7 +1,8 @@
 import { RPC_CHANNELS, type LlmConnectionSetup } from '@phaneris/shared/protocol'
-import { getLlmConnections, getLlmConnection, addLlmConnection, updateLlmConnection, deleteLlmConnection, getDefaultLlmConnection, setDefaultLlmConnection, touchLlmConnection, isCompatProvider, getDefaultModelsForConnection, getDefaultModelForConnection, type LlmConnection, type LlmConnectionWithStatus, toBedrockNativeId, deriveBedrockRegionPrefix } from '@phaneris/shared/config'
+import { getLlmConnections, getLlmConnection, addLlmConnection, updateLlmConnection, deleteLlmConnection, getDefaultLlmConnection, setDefaultLlmConnection, touchLlmConnection } from '@phaneris/shared/config/connections';
+import { isCompatProvider, getDefaultModelsForConnection, getDefaultModelForConnection, type LlmConnection, type LlmConnectionWithStatus, toBedrockNativeId, deriveBedrockRegionPrefix } from '@phaneris/shared/config';
 import { getCredentialManager } from '@phaneris/shared/credentials'
-import { setSetupDeferred } from '@phaneris/shared/config/storage'
+import { setSetupDeferred } from '@phaneris/shared/config/appearance';
 import {
   resolveSetupTestConnectionHint,
   fetchBackendModels,

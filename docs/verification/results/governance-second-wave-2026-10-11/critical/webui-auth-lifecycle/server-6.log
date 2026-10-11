@@ -1,0 +1,12 @@
+2026-10-11T04:01:48.779Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T04:01:48.779Z INFO  [bootstrap] Global config found
+2026-10-11T04:01:48.780Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available
+2026-10-11T04:01:48.789Z INFO  [session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T04:01:48.792Z INFO  Phaneris server listening on ws://127.0.0.1:63299
+[messaging] Disabled via PHANERIS_DISABLE_MESSAGING — skipping workspace messaging init
+PHANERIS_SERVER_URL=ws://127.0.0.1:63299
+PHANERIS_WEBUI_URL=http://0.0.0.0:63299
+
+2026-10-11T04:01:48.779Z WARN  [bootstrap] Stale lock file found (PID 43588), overwriting
+2026-10-11T04:01:48.788Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-10-11T04:01:48.788Z ERROR [session] No LLM connection found for slug: null

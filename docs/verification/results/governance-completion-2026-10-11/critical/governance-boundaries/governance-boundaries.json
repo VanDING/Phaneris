@@ -1,0 +1,53 @@
+{
+  "scenes": [
+    "valid-boundaries",
+    "pure-io",
+    "protocol-relative",
+    "protocol-barrel",
+    "domain-compatibility-loop",
+    "second-writer",
+    "boundary-any",
+    "root-borrow"
+  ],
+  "results": [
+    {
+      "code": 0,
+      "log": "Governance boundaries OK: 8 modules; 1 references; 6 pure entries; one config writer\n"
+    },
+    {
+      "name": "pure-io",
+      "code": 1,
+      "log": "packages/shared/src/config/schemas.ts: pure closure reaches node:fs via packages/shared/src/config/schemas.ts\n"
+    },
+    {
+      "name": "protocol-relative",
+      "code": 1,
+      "log": "packages/shared/src/protocol/index.ts: pure contract reaches host implementation packages/shared/src/config/repository.ts\n"
+    },
+    {
+      "name": "protocol-barrel",
+      "code": 1,
+      "log": "packages/shared/src/protocol/index.ts: pure contract reaches host implementation packages/shared/src/config/repository.ts\n"
+    },
+    {
+      "name": "domain-compatibility-loop",
+      "code": 1,
+      "log": "packages/shared/src/config/appearance.ts: config domain imports compatibility facade packages/shared/src/config/storage.ts\n"
+    },
+    {
+      "name": "second-writer",
+      "code": 1,
+      "log": "Expected exactly one config.json writer, found 2\npackages/shared/src/config/appearance.ts: second config.json writer\n"
+    },
+    {
+      "name": "boundary-any",
+      "code": 1,
+      "log": "apps/cli/src/client.ts:1: boundary any must be unknown plus validation or a shared DTO\n"
+    },
+    {
+      "name": "root-borrow",
+      "code": 1,
+      "log": "packages/shared: undeclared direct dependency zod (packages/shared/src/config/appearance.ts)\n"
+    }
+  ]
+}

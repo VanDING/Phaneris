@@ -8,6 +8,7 @@
 import {
   PROTOCOL_VERSION,
   type MessageEnvelope,
+  type RpcResult,
 } from '@phaneris/shared/protocol'
 import {
   serializeEnvelope,
@@ -101,7 +102,7 @@ export class CliRpcClient {
         } else if (envelope.type === 'error') {
           clearTimeout(timer)
           const err = new Error(envelope.error?.message ?? 'Connection rejected')
-          ;(err as any).code = envelope.error?.code
+          ;(err as Error & { code?: string; data?: unknown }).code = envelope.error?.code
           reject(err)
         }
       }
@@ -129,19 +130,19 @@ export class CliRpcClient {
   }
 
   /** Send an RPC request and await the response. */
-  async invoke(channel: string, ...args: unknown[]): Promise<unknown> {
+  async invoke<Channel extends string>(channel: Channel, ...args: unknown[]): Promise<RpcResult<Channel>> {
     if (!this._connected || !this.ws) {
       throw new Error(`Not connected (channel: ${channel})`)
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<RpcResult<Channel>>((resolve, reject) => {
       const id = crypto.randomUUID()
       const timeout = setTimeout(() => {
         this.pending.delete(id)
         reject(new Error(`Request timeout: ${channel} (${this.requestTimeout}ms)`))
       }, this.requestTimeout)
 
-      this.pending.set(id, { resolve, reject, timeout })
+      this.pending.set(id, { resolve: value => resolve(value as RpcResult<Channel>), reject, timeout })
 
       const envelope: MessageEnvelope = {
         id,
@@ -209,8 +210,8 @@ export class CliRpcClient {
           clearTimeout(req.timeout)
           if (envelope.error) {
             const err = new Error(envelope.error.message)
-            ;(err as any).code = envelope.error.code
-            ;(err as any).data = envelope.error.data
+            ;(err as Error & { code?: string; data?: unknown }).code = envelope.error.code
+            ;(err as Error & { code?: string; data?: unknown }).data = envelope.error.data
             req.reject(err)
           } else {
             req.resolve(envelope.result)

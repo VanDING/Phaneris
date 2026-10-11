@@ -1,0 +1,513 @@
+{
+  "checks": [
+    "native main/preload initializes transport before business renderer",
+    "native RPC facade reads the same persisted domain fixture",
+    "native session switching preserves separate persisted drafts",
+    "native language change retains current input draft",
+    "native keyboard activation preserves draft ownership",
+    "native workspace switch updates the host binding",
+    "native rapid workspace switch flushes pending composer and persistence timers",
+    "native reconnect retains the second workspace binding",
+    "native returning workspace restores its draft",
+    "native reconnect preserves accepted workspace and session facts"
+  ],
+  "errors": [],
+  "consoleTrace": [
+    {
+      "type": "info",
+      "text": "18:16:04.005 (main) › [i18n] changeLanguage IPC applied {incoming: zh-Hans, previousResolved: en, newResolved: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.141 (perf) › Renderer performance tracking enabled"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.172 › 2026-10-11T10:16:04.172Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.173 › 2026-10-11T10:16:04.173Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.295 › AUTOMATIONS_GET: Loading automations for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.297 › SKILLS_GET: Loading skills for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.299 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.299 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.305 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.312 › AUTOMATIONS_GET: No automations.json found for workspace fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.318 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.585 › 2026-10-11T10:16:04.585Z [loadViewsConfig] No config found, seeding with default views"
+    },
+    {
+      "type": "debug",
+      "text": "18:16:04.591 › [session] Lazy-loaded 0 messages for session 261011-clear-gecko"
+    },
+    {
+      "type": "info",
+      "text": "18:16:04.803 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:06.771 (perf) › 261011-c... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:06.790 (perf) › 261011-c... panel.mounted: 18.9ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:06.790 (perf) › 261011-c... session.loaded: 19.1ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:06.790 (perf) › 261011-c... data.ready: 19.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:06.895 (perf) › Session switch complete: 123.8ms (panel.mounted:19ms → session.loaded:19ms → data.ready:19ms)"
+    },
+    {
+      "type": "debug",
+      "text": "18:16:06.837 › [session] Lazy-loaded 0 messages for session 261011-coral-horizon"
+    },
+    {
+      "type": "info",
+      "text": "18:16:07.783 (perf) › 261011-c... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:07.803 (perf) › 261011-c... panel.mounted: 20.3ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:07.804 (perf) › 261011-c... session.loaded: 20.5ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:07.804 (perf) › 261011-c... data.ready: 20.5ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:07.846 (perf) › Session switch complete: 63.3ms (panel.mounted:20ms → session.loaded:21ms → data.ready:21ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:16:08.750 (perf) › 261011-c... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:08.767 (perf) › 261011-c... panel.mounted: 16.9ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:08.767 (perf) › 261011-c... session.loaded: 17.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:08.767 (perf) › 261011-c... data.ready: 17.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:08.802 (perf) › Session switch complete: 51.8ms (panel.mounted:17ms → session.loaded:17ms → data.ready:17ms)"
+    },
+    {
+      "type": "info",
+      "text": "[i18n] Appearance dropdown change {from: zh-Hans, to: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.350 (main) › [i18n] changeLanguage IPC applied {incoming: zh-Hans, previousResolved: zh-Hans, newResolved: zh-Hans}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.551 (perf) › 261011-c... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.729 (perf) › 261011-c... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.745 (perf) › 261011-c... panel.mounted: 16.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.745 (perf) › 261011-c... session.loaded: 16.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.745 (perf) › 261011-c... data.ready: 16.3ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.771 (perf) › Session switch complete: 42.2ms (panel.mounted:16ms → session.loaded:16ms → data.ready:16ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.958 (window) › Updated window 1 from workspace fixture to second"
+    },
+    {
+      "type": "warning",
+      "text": "18:16:09.959 (window) › No windows for workspace 'fixture', have: [second]"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.983 › AUTOMATIONS_GET: Loading automations for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.984 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.984 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/second-workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.987 › SKILLS_GET: Loading skills for workspace: second"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.995 › [sessions:get] result {ctxWorkspaceId: second, webContentsId: 1, windowWorkspaceId: second, resolvedWorkspaceId: second, returnedCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.996 › 2026-10-11T10:16:09.996Z [loadViewsConfig] No config found, seeding with default views"
+    },
+    {
+      "type": "info",
+      "text": "18:16:09.997 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/second-workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.001 › AUTOMATIONS_GET: No automations.json found for workspace second"
+    },
+    {
+      "type": "debug",
+      "text": "18:16:10.076 › [session] Lazy-loaded 0 messages for session 261011-mild-grove"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.146 › 2026-10-11T10:16:10.146Z [ws-rpc-server] INFO  Client disconnected {\"clientId\":\"9e41cc6c-9a73-46d9-98cb-7405727cdc0a\"}"
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.149 › 2026-10-11T10:16:10.149Z [ws-rpc-server] INFO  Client reconnected with replay {\"clientId\":\"9e41cc6c-9a73-46d9-98cb-7405727cdc0a\",\"replayedCount\":0,\"lastSeq\":1}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.202 › [sessions:get] result {ctxWorkspaceId: second, webContentsId: 1, windowWorkspaceId: second, resolvedWorkspaceId: second, returnedCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.325 (window) › Updated window 1 from workspace second to fixture"
+    },
+    {
+      "type": "warning",
+      "text": "18:16:10.325 (window) › No windows for workspace 'second', have: [fixture]"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.366 › AUTOMATIONS_GET: Loading automations for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.366 › PLUGINS_LIST: 0 plugin(s), 0 load error(s) in /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.367 › AUTOMATIONS_GET: Reading config from: /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace/automations.json"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.370 › SKILLS_GET: Loading skills for workspace: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.373 › [sessions:get] result {ctxWorkspaceId: fixture, webContentsId: 1, windowWorkspaceId: fixture, resolvedWorkspaceId: fixture, returnedCount: 3}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.374 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.376 › AUTOMATIONS_GET: No automations.json found for workspace fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.493 (perf) › 261011-c... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.517 › 2026-10-11T10:16:10.517Z [ws-rpc-server] INFO  Client disconnected {\"clientId\":\"9e41cc6c-9a73-46d9-98cb-7405727cdc0a\"}"
+    },
+    {
+      "type": "info",
+      "text": "[App] Reconnected with event replay — no refresh needed"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.519 › 2026-10-11T10:16:10.519Z [ws-rpc-server] INFO  Client reconnected with replay {\"clientId\":\"9e41cc6c-9a73-46d9-98cb-7405727cdc0a\",\"replayedCount\":0,\"lastSeq\":1}"
+    },
+    {
+      "type": "info",
+      "text": "[i18n] Appearance dropdown change {from: zh-Hans, to: en}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.803 (main) › [i18n] changeLanguage IPC applied {incoming: en, previousResolved: zh-Hans, newResolved: en}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.964 (perf) › 261011-c... panel.mounted: 471.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.964 (perf) › 261011-c... session.loaded: 471.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.964 (perf) › 261011-c... data.ready: 471.4ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.009 (perf) › Session switch complete: 516.3ms (panel.mounted:471ms → session.loaded:471ms → data.ready:471ms)"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.942 › 2026-10-11T10:16:10.942Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:16:10.943 › 2026-10-11T10:16:10.943Z [ConfigWatcher] preferences.json changed"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.061 (perf) › 261011-g... session-list.tap: 0.0ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.076 (perf) › 261011-g... panel.mounted: 15.1ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.076 (perf) › 261011-g... session.loaded: 15.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.076 (perf) › 261011-g... data.ready: 15.2ms"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.112 (perf) › Session switch complete: 50.9ms (panel.mounted:15ms → session.loaded:15ms → data.ready:15ms)"
+    },
+    {
+      "type": "debug",
+      "text": "18:16:11.140 › [session] Lazy-loaded 0 messages for session 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.141 › SKILLS_GET: Loading skills for workspace: fixture, workingDirectory: /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.143 › SKILLS_GET: Loaded 2 skills from /Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.305 › 2026-10-11T10:16:11.305Z [PersistenceQueue] Session 261011-grand-quasar metadata mismatch detected (local preserved, previousSig=<none>)"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.311 › 2026-10-11T10:16:11.311Z [PersistenceQueue] Wrote session 261011-grand-quasar"
+    },
+    {
+      "type": "debug",
+      "text": "18:16:11.314 (main) › [power] Session started processing {activeSessionCount: 1}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.318 › [session] Locked session 261011-grand-quasar to connection \"fixture\""
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.318 › [session] Using LLM connection \"fixture\" (pi_compat) for session 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.322 › [session] Created pi agent for session 261011-grand-quasar (model: fixture)"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.322 › [session] [browser-pane] BPF gate check {sessionId: 261011-grand-quasar, hasLocalBpm: true, hasRpcServer: true}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.323 › [session] [browser-pane] BPF block resolved BPM {sessionId: 261011-grand-quasar, bpmKind: local}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.323 › [session] [browser-pane] BPF registering browserPaneFns {sessionId: 261011-grand-quasar}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.323 › 2026-10-11T10:16:11.323Z session-scoped-tools Merged callbacks for session 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.324 › 2026-10-11T10:16:11.324Z session-scoped-tools Merged callbacks for session 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.325 › [session] Applied permission mode to agent {sessionId: 261011-grand-quasar, permissionMode: ask, modeVersion: 0, changedBy: system, changedAt: 2026-10-11T10:16:03.253Z}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.325 › [session] Starting chat for session: 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.326 › [session] Workspace: {\n  \"id\": \"fixture\",\n  \"name\": \"Governance workspace\",\n  \"rootPath\": \"/Users/van/projects/Phaneris/.cache/verification/native-client-JNASFR/workspace\",\n  \"createdAt\": 1,\n  \"slug\": \"workspace\"\n}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.326 › [session] Message: GOVERNANCE_PERMISSION: write the fixture file after approval."
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.326 › [session] Agent model: fixture"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.327 › [session] process.cwd(): /Users/van/projects/Phaneris"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.327 › [session] Submitting turn to Runtime Host..."
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.330 › [session] [pi] [extractSkillPaths] Available skills: book-rework, officecli"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.330 › [session] [pi] [extractSkillPaths] Parsed skills: []"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.331 › [session] [pi] [extractSkillPaths] Clean message: \"GOVERNANCE_PERMISSION: write the fixture file after approval....\", skills: 0"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.331 › [session] [transfer-context] getTransferredSessionSummary for 261011-grand-quasar: applied=undefined, has_summary=false, returning=null"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.333 › 2026-10-11T10:16:11.333Z [pi-event] DEBUG Turn started {\"turnIndex\":1}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.334 › 2026-10-11T10:16:11.334Z session-scoped-tools Merged callbacks for session 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.335 › [session] [pi] Spawning Pi subprocess: /Users/van/projects/Phaneris/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron /Users/van/projects/Phaneris/packages/pi-agent-server/dist/index.js"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.335 › [session] [pi] Custom endpoint mode: no provider credential configured, sending empty API key"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.823 › 2026-10-11T10:16:11.823Z [PersistenceQueue] Wrote session 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.946 › [session] [pi] [subprocess stderr] App threw an error during load"
+    },
+    {
+      "type": "info",
+      "text": "18:16:11.947 › [session] [pi] [subprocess stderr] TypeError: _t is not a function\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:39:7442\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:2:601\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:39:8915\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:2:830\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:39:17994\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:2:830\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:238:32\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:2:830\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:2675:17965\n    at file:///Users/van/projects/Phaneris/packages/pi-agent-server/dist/bundle.js:2:830"
+    },
+    {
+      "type": "info",
+      "text": "18:16:41.340 › [session] [pi] Failed to spawn Pi subprocess: Pi subprocess startup timed out after 30s"
+    },
+    {
+      "type": "info",
+      "text": "18:16:41.341 › [session] Got event: error"
+    },
+    {
+      "type": "info",
+      "text": "18:16:41.343 › [session] Got event: complete"
+    },
+    {
+      "type": "info",
+      "text": "18:16:41.343 › [session] Chat completed via complete event"
+    },
+    {
+      "type": "warning",
+      "text": "18:16:41.344 › [session] Session 261011-grand-quasar completed without assistant response - possible context overflow or API issue"
+    },
+    {
+      "type": "debug",
+      "text": "18:16:41.345 (main) › [power] Session stopped processing {activeSessionCount: 0}"
+    },
+    {
+      "type": "info",
+      "text": "18:16:41.855 › 2026-10-11T10:16:41.855Z [PersistenceQueue] Wrote session 261011-grand-quasar"
+    },
+    {
+      "type": "info",
+      "text": "18:17:00.000 › 2026-10-11T10:17:00.000Z [event-bus] DEBUG [EventBus] Emitting: SchedulerTick"
+    },
+    {
+      "type": "info",
+      "text": "18:17:00.001 › 2026-10-11T10:17:00.001Z [event-log-handler] DEBUG [EventLogHandler] Logged: SchedulerTick"
+    },
+    {
+      "type": "info",
+      "text": "18:17:00.004 › 2026-10-11T10:17:00.004Z [event-bus] DEBUG [EventBus] Emitted: SchedulerTick (0 handlers, 4 any-handlers)"
+    },
+    {
+      "type": "info",
+      "text": "18:17:00.004 › 2026-10-11T10:17:00.004Z [event-bus] DEBUG [EventBus] Emitting: SchedulerTick"
+    },
+    {
+      "type": "info",
+      "text": "18:17:00.005 › 2026-10-11T10:17:00.005Z [event-log-handler] DEBUG [EventLogHandler] Logged: SchedulerTick"
+    },
+    {
+      "type": "info",
+      "text": "18:17:00.005 › 2026-10-11T10:17:00.005Z [event-bus] DEBUG [EventBus] Emitted: SchedulerTick (0 handlers, 4 any-handlers)"
+    }
+  ]
+}

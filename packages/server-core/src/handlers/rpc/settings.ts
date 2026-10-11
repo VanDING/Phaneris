@@ -1,7 +1,10 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname } from 'path'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
-import { getPreferencesPath, getSessionDraft, setSessionDraft, deleteSessionDraft, getAllSessionDrafts, getWorkspaceByNameOrId, getDefaultThinkingLevel, setDefaultThinkingLevel } from '@phaneris/shared/config'
+import { getPreferencesPath } from '@phaneris/shared/config';
+import { getSessionDraft, setSessionDraft, deleteSessionDraft, getAllSessionDrafts } from '@phaneris/shared/config/drafts';
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
+import { getDefaultThinkingLevel, setDefaultThinkingLevel } from '@phaneris/shared/config/connections';
 import { isValidThinkingLevel, normalizeThinkingLevel, THINKING_LEVEL_IDS } from '@phaneris/shared/agent/thinking-levels'
 
 const VALID_THINKING_LEVELS_LIST = THINKING_LEVEL_IDS.map(id => `'${id}'`).join(', ')

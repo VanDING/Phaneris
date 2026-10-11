@@ -55,7 +55,7 @@ export async function requestClientOpenExternal(
     await server.invokeClient(clientId, CLIENT_OPEN_EXTERNAL, url)
     return { opened: true }
   } catch (err) {
-    const code = (err as any)?.code
+    const code = err !== null && typeof err === 'object' && 'code' in err ? err.code : undefined
     const message = err instanceof Error ? err.message : String(err)
     return { opened: false, error: `${code ?? 'UNKNOWN'}: ${message}`, authUrl: url }
   }
@@ -131,7 +131,9 @@ export async function requestClientConfirmDialog(
   clientId: string,
   spec: ConfirmDialogSpec,
 ): Promise<{ response: number }> {
-  return await server.invokeClient(clientId, CLIENT_CONFIRM_DIALOG, spec)
+  const result = await server.invokeClient(clientId, CLIENT_CONFIRM_DIALOG, spec)
+  if (!result || typeof result !== 'object' || !('response' in result) || !Number.isInteger(result.response)) throw new Error('Invalid confirmation capability response')
+  return { response: result.response as number }
 }
 
 /** Spec for a file/folder picker dialog (maps to Electron's OpenDialogOptions). */
@@ -151,14 +153,17 @@ export async function requestClientOpenFileDialog(
   clientId: string,
   spec: FileDialogSpec,
 ): Promise<{ canceled: boolean; filePaths: string[] }> {
-  return await server.invokeClient(clientId, CLIENT_OPEN_FILE_DIALOG, spec)
+  const result = await server.invokeClient(clientId, CLIENT_OPEN_FILE_DIALOG, spec)
+  if (!result || typeof result !== 'object' || !('canceled' in result) || typeof result.canceled !== 'boolean'
+    || !('filePaths' in result) || !Array.isArray(result.filePaths) || !result.filePaths.every(path => typeof path === 'string')) throw new Error('Invalid file dialog capability response')
+  return { canceled: result.canceled, filePaths: result.filePaths as string[] }
 }
 
 /**
  * Ask the client to invoke a `BrowserPaneManager` method.
  *
  * Errors propagate with `.code` preserved (see transport error-code preservation
- * in `client.ts` / `server.ts`). Callers can branch on `(err as any).code`.
+ * in `client.ts` / `server.ts`). Callers can narrow the error's `code` field.
  */
 export async function requestClientBrowserInvoke<T>(
   server: RpcServer,

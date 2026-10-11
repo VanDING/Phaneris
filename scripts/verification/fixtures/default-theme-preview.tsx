@@ -115,7 +115,7 @@ function LogoPreview() {
     { name: 'ChatGPT', providerType: 'pi', piAuthProvider: 'openai-codex' },
     { name: 'Minimax', providerType: 'pi', piAuthProvider: 'minimax-cn' },
     { name: 'DeepSeek', providerType: 'pi', piAuthProvider: 'deepseek' },
-    { name: 'Claude', providerType: 'anthropic' },
+    { name: 'Claude', providerType: 'pi', piAuthProvider: 'anthropic' },
     { name: 'Manifest', providerType: 'pi_compat', baseUrl: 'https://app.manifest.build/v1' },
     { name: 'Custom', providerType: 'pi_compat', baseUrl: 'https://fixture.invalid/v1' },
   ] as const

@@ -278,9 +278,11 @@ export function EntityRow({
         <div className="absolute left-0 inset-y-0 w-[2px] bg-accent" />
       )}
 
-      {/* Main content button */}
-      <button
-        {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+      {/* Composite row can contain independent status/menu buttons. */}
+      <div
+        role="button"
+        tabIndex={0}
+        {...(buttonProps as React.HTMLAttributes<HTMLDivElement>)}
         className={cn(
           "craft-focus craft-row-focus entity-row-btn flex w-full items-start gap-2 pl-2 pr-4 py-[var(--theme-row-padding-y)] text-left text-sm rounded-lg",
           "motion-interactive transition-[background-color]",
@@ -298,6 +300,15 @@ export function EntityRow({
         onPointerCancel={useCompactMenu ? cancelLongPress : undefined}
         onPointerLeave={useCompactMenu ? cancelLongPress : undefined}
         onContextMenu={useCompactMenu ? onContextMenuCompact : undefined}
+        onKeyDown={event => {
+          const handle = buttonProps?.onKeyDown as React.KeyboardEventHandler<HTMLDivElement> | undefined
+          handle?.(event)
+          if (event.defaultPrevented || event.target !== event.currentTarget || !['Enter', ' '].includes(event.key)) return
+          event.preventDefault()
+          if (onMouseDown) event.currentTarget.dispatchEvent(new MouseEvent('mousedown', { bubbles: true,
+            ctrlKey: event.ctrlKey, metaKey: event.metaKey, shiftKey: event.shiftKey, altKey: event.altKey }))
+          else event.currentTarget.click()
+        }}
       >
         {/* Content column */}
         <div className="flex flex-col gap-1.5 min-w-0 flex-1">
@@ -381,7 +392,7 @@ export function EntityRow({
             </div>
           )}
         </div>
-      </button>
+      </div>
 
       {/* Children rendered below the button */}
       {children}

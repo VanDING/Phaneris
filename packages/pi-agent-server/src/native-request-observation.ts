@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { SimpleStreamOptions } from '@earendil-works/pi-ai';
-import type { NativeRequestObservation } from '../../shared/src/durable-runtime/types.ts';
+import type { NativeRequestObservation } from '@phaneris/shared/durable-runtime/types';
 
 /** SDK callback observations, not a count of network attempts or wire bytes. */
 export function observeNativeRequest(options: SimpleStreamOptions = {}): {

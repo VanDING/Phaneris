@@ -1,0 +1,53 @@
+{
+  "directory": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-clean-install-Cl3EVE",
+  "checkout": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-clean-install-Cl3EVE/repository",
+  "cache": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-clean-install-Cl3EVE/empty-cache",
+  "cacheInitiallyEmpty": true,
+  "before": {
+    "manifest": "6d407f9aa8ac35ec0fc0845425e47cf4a4fedef17782bcbe9988ff0df24867fb",
+    "lock": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "linker": "0bd425e641dda6373d493ee31a8895d8821253d42c43b849db7a0080f3103d72"
+  },
+  "commands": [
+    {
+      "args": [
+        "install",
+        "--frozen-lockfile"
+      ],
+      "exitCode": 1,
+      "elapsedMs": 28
+    },
+    {
+      "args": [
+        "install",
+        "--frozen-lockfile"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 25493
+    },
+    {
+      "args": [
+        "run",
+        "build:runtime"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 1984
+    }
+  ],
+  "resources": [
+    {
+      "path": "packages/pi-agent-server/dist/index.js",
+      "sha256": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e"
+    },
+    {
+      "path": "packages/pi-agent-server/dist/bundle.js",
+      "sha256": "dae982386e22d1146daf642501f165e68baf4d7936bfbc2ecccf8bf1da2a4d62"
+    },
+    {
+      "path": "packages/messaging-whatsapp-worker/dist/worker.cjs",
+      "sha256": "d737c391fe0d791600c3fd36bba872766d3838323906658a45cacb5accf6650b"
+    }
+  ],
+  "baseHead": "8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda",
+  "sourceFiles": 3520
+}

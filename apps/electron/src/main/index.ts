@@ -72,7 +72,7 @@ Sentry.init({
 // the main process silently stayed at English — breaking session title language,
 // the system prompt's "Preferred language" line, and the native menu.
 import { setupI18n, i18n, changeAppLanguage, SUPPORTED_LANGUAGE_CODES, type LanguageCode } from '@phaneris/shared/i18n'
-import { getPersistedUiLanguage, setPersistedUiLanguage } from '@phaneris/shared/config'
+import { getPersistedUiLanguage, setPersistedUiLanguage } from '@phaneris/shared/config';
 setupI18n()
 const persistedUiLanguage = getPersistedUiLanguage()
 if (persistedUiLanguage) {
@@ -89,11 +89,12 @@ import { delimiter } from 'path'
 import { existsSync, readFileSync } from 'fs'
 import { RPC_CHANNELS, REMOTE_ELIGIBLE_CHANNELS } from '@phaneris/shared/protocol'
 import { SessionManager, setSessionPlatform, setSessionRuntimeHooks } from '@phaneris/server-core/sessions'
+import { installProcessLifecycle } from '@phaneris/server-core/runtime'
 import { PageThumbnailer } from './page-thumbnailer'
 import { registerAllRpcHandlers } from './handlers/index'
 import { registerCoreRpcHandlers, cleanupSessionFileWatchForClient } from '@phaneris/server-core/handlers/rpc'
 import type { PlatformServices } from '../runtime/platform'
-import { createElectronPlatform } from './platform'
+import { createElectronPlatform, getElectronNodeRuntimePath } from './platform'
 import type { HandlerDeps } from './handlers/handler-deps'
 import { bootstrapServer, releaseServerLock } from '@phaneris/server-core/bootstrap'
 
@@ -102,15 +103,17 @@ import { createMessagingBootstrap, type MessagingBootstrapHandle } from '@phaner
 import { getCredentialManager } from '@phaneris/shared/credentials'
 import { initModelRefreshService, getModelRefreshService, setFetcherPlatform } from '@phaneris/server-core/model-fetchers'
 import { setSearchPlatform, setImageProcessor } from '@phaneris/server-core/services'
-import { createApplicationMenu } from './menu'
+import { createApplicationMenu, rebuildMenu } from './menu'
 import { WindowManager } from './window-manager'
 import { loadWindowState, saveWindowState } from './window-state'
-import { getWorkspaces, getWorkspaceByNameOrId, loadStoredConfig, addWorkspace, saveConfig, getRemoteServerTokenSync, hydrateRemoteServerTokenCache } from '@phaneris/shared/config'
+import { getWorkspaces, getWorkspaceByNameOrId, addWorkspace, getRemoteServerTokenSync, hydrateRemoteServerTokenCache } from '@phaneris/shared/config/workspace-selection';
+import { loadStoredConfig, saveConfig } from '@phaneris/shared/config/repository';
 import { getDefaultWorkspacesDir } from '@phaneris/shared/workspaces'
 import { initializeDocs } from '@phaneris/shared/docs'
 import { initializeReleaseNotes } from '@phaneris/shared/release-notes'
 import { ensureDefaultPermissions } from '@phaneris/shared/agent/permissions-config'
-import { ensureToolIcons, initializeThemeStorage } from '@phaneris/shared/config'
+import { ensureToolIcons } from '@phaneris/shared/config/bundled-assets';
+import { initializeThemeStorage } from '@phaneris/shared/config/appearance';
 import { setBundledAssetsRoot } from '@phaneris/shared/utils'
 import { initializeBackendHostRuntime } from '@phaneris/shared/agent/backend'
 import { setPowerShellValidatorRoot } from '@phaneris/shared/agent'
@@ -124,10 +127,10 @@ import type { PageDocumentInput } from '../shared/page-document'
 import log, { isDebugMode, mainLog, getLogFilePath, getMessagingGatewayLogFilePath, messagingGatewayLog, autoUpdateLog, lifecycleLog } from './logger'
 import { installElectronCredentialKeyProvider } from './credential-key-provider'
 import { setPerfEnabled, enableDebug } from '@phaneris/shared/utils'
-import { registerPiModelResolver } from '@phaneris/shared/config'
-import { getPiModelsForAuthProvider, getAllPiModels } from '@phaneris/shared/config'
+import { registerPiModelResolver } from '@phaneris/shared/config';
+import { getPiModelsForAuthProvider, getAllPiModels } from '@phaneris/shared/config';
 import { initNotificationService, initBadgeIcon, initInstanceBadge, updateBadgeCount } from './notifications'
-import { checkForUpdatesOnLaunch, setAutoUpdateEventSink, isUpdating, setBeforeUpdateQuitHook, setBeforeUpdateInstallHook, setInstallQuitFailedHook } from './auto-update'
+import { checkForUpdatesOnLaunch, setAutoUpdateEventSink, isUpdating, setBeforeUpdateQuitHook, setBeforeUpdateInstallHook, setInstallQuitFailedHook, setUpdateMenuRefreshHook } from './auto-update'
 import type { EventSink } from '@phaneris/server-core/transport'
 import type { ConfirmDialogSpec } from '@phaneris/server-core/transport'
 import { validateGitBashPath, checkVCRedistInstalled } from '@phaneris/server-core/services'
@@ -225,6 +228,7 @@ const DEEPLINK_SCHEME = RESOLVED_DEEPLINK_SCHEME
 
 let windowManager: WindowManager | null = null
 let sessionManager: SessionManager | null = null
+let stopLocalRpc: (() => void) | undefined
 let browserPaneManager: BrowserPaneManager | null = null
 let terminalManager: TerminalManager | null = null
 let oauthFlowStore: OAuthFlowStore | null = null
@@ -532,6 +536,7 @@ app.whenReady().then(async () => {
       appRootPath: app.isPackaged ? app.getAppPath() : process.cwd(),
       resourcesPath: process.resourcesPath,
       isPackaged: app.isPackaged,
+      nodeRuntimePath: getElectronNodeRuntimePath(app.isPackaged),
     },
   })
 
@@ -604,6 +609,7 @@ app.whenReady().then(async () => {
 
     // Create the application menu (needs windowManager for New Window action)
     createApplicationMenu(windowManager)
+    setUpdateMenuRefreshHook(rebuildMenu)
 
     // When PHANERIS_SERVER_URL is set, this Electron instance is a thin client —
     // it only creates windows whose preload connects to the remote server.
@@ -1011,6 +1017,7 @@ app.whenReady().then(async () => {
 
       // Capture module-level references for before-quit cleanup and deep-link handlers
       sessionManager = instance.sessionManager
+      stopLocalRpc = instance.quiesce
       oauthFlowStore = instance.oauthFlowStore
       moduleSink = instance.wsServer.push.bind(instance.wsServer)
       moduleClientResolver = resolveClientId
@@ -1575,15 +1582,15 @@ function captureAndSaveWindowState(reason: 'before-quit' | 'pre-update'): number
 // Flush sessions and release all quit-time resources. Shared by the normal quit
 // path (before-quit) and the update-install handoff (beforeUpdateInstallHook), so
 // the two cleanup sequences can't drift (#891).
-let quitCleanupRan = false
-async function performQuitCleanup(): Promise<void> {
+let quitCleanup: Promise<void> | undefined
+function performQuitCleanup(): Promise<void> {
   // Idempotent: a failed update install may retry, and the update path plus a
   // subsequent quit must not dispose already-disposed services.
-  if (quitCleanupRan) {
-    mainLog.info('Quit cleanup already ran, skipping')
-    return
+  if (quitCleanup) {
+    mainLog.info('Reusing quit cleanup owner')
+    return quitCleanup
   }
-  quitCleanupRan = true
+  return quitCleanup = (async () => {
 
   if (sessionManager) {
     try {
@@ -1625,6 +1632,7 @@ async function performQuitCleanup(): Promise<void> {
 
   // Release the server lock file so the next launch doesn't see a stale PID.
   releaseServerLock()
+  })()
 }
 
 // Save window state and clean up resources before quitting
@@ -1675,20 +1683,11 @@ app.on('before-quit', async (event) => {
   }
 })
 
-// Handle uncaught exceptions — forward to Sentry explicitly since registering
-// a custom handler can interfere with @sentry/electron's automatic capture.
-process.on('uncaughtException', (error) => {
-  mainLog.error('Uncaught exception:', error)
-  Sentry.captureException(error)
-})
-
-process.on('unhandledRejection', (reason, promise) => {
-  // Log the stack explicitly. electron-log's structured formatter serialises an
-  // Error to `{}`, so the obvious `mainLog.error(..., reason)` produced a log
-  // line reading "Unhandled rejection at: {} reason: {}" — an error report with
-  // no error in it, and a startup failure that took far longer to find than it
-  // should have.
-  const detail = reason instanceof Error ? (reason.stack ?? reason.message) : String(reason)
-  mainLog.error('Unhandled rejection at:', promise, 'reason:', detail)
-  Sentry.captureException(reason instanceof Error ? reason : new Error(String(reason)))
+// Unknown global failures close admission and reuse the existing quit resource owners.
+installProcessLifecycle({
+  owner: 'electron',
+  stopAccepting: () => { isQuitting = true; windowManager?.setAppQuitting(true); stopLocalRpc?.() },
+  cleanup: performQuitCleanup,
+  report: (kind, detail, reason) => { mainLog.error(`${kind}:`, detail); Sentry.captureException(reason instanceof Error ? reason : new Error(detail)) },
+  exit: code => app.exit(code),
 })

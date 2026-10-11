@@ -1,0 +1,15 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'Native session draft'
+- 'Native pending draft'
+          ^
+
+    at /Users/van/projects/Phaneris/scripts/verification/fixtures/native-client.cjs:71:12 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'Native session draft',
+  expected: 'Native pending draft',
+  operator: 'strictEqual',
+  diff: 'simple'
+}

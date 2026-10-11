@@ -1,0 +1,26 @@
+70 |     assert((await handshake(trusted.url, proxyHeaders)).accepted)
+71 |     assert(!(await handshake(isolated.url, proxyHeaders)).accepted)
+72 |     assert((await handshake(trusted.url, { cookie: trustedCookie, origin: 'https://explicit.example:9443' })).accepted)
+73 |     assert(!(await handshake(trusted.url, { cookie: trustedCookie, origin: 'https://explicit.example:9444' })).accepted)
+74 |     const proxyConfig = await fetch(`${http(trusted)}/api/config`, { headers: proxyHeaders })
+75 |     assert.equal((await proxyConfig.json() as { wsUrl: string }).wsUrl, `ws://proxy.example:${new URL(trusted.url).port}`)
+                ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ 'ws://proxy.example:0'
+- 'ws://proxy.example:62521'
+                      ^
+
+ generatedMessage: true,
+     actual: "ws://proxy.example:0",
+   expected: "ws://proxy.example:62521",
+   operator: "strictEqual",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/webui-auth-lifecycle-workflow.ts:75:12
+      at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:37)
+      at processTicksAndRejections (native:7:39)
+
+Bun v1.4.2 (macOS x64)

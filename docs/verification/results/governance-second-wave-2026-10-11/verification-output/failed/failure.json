@@ -1,0 +1,4 @@
+{
+  "message": "Unknown verification argument: --unknown",
+  "stack": "AssertionError [ERR_ASSERTION]: Unknown verification argument: --unknown\n    at checkArguments (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:57:12)\n    at verificationWorkflow (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:88:13)\n    at /Users/van/projects/Phaneris/scripts/verification/runtime-boundary-gate-workflow.ts:9:7"
+}

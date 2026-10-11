@@ -1,0 +1,41 @@
+{
+  "checks": [
+    "web permission waits before real file effect",
+    "web permission approval completes real Pi write",
+    "web preview reads the actual written file"
+  ],
+  "events": [
+    "user_message",
+    "connection_changed",
+    "session_metadata_changed",
+    "user_message",
+    "text_complete",
+    "usage_update",
+    "context_usage",
+    "usage_update",
+    "permission_request",
+    "tool_start",
+    "tool_result",
+    "context_usage",
+    "usage_update",
+    "text_delta",
+    "text_complete",
+    "usage_update",
+    "context_usage",
+    "usage_update",
+    "context_usage",
+    "usage_update",
+    "context_usage",
+    "usage_update",
+    "complete",
+    "user_message",
+    "user_message",
+    "text_complete",
+    "usage_update",
+    "context_usage",
+    "usage_update",
+    "tool_start",
+    "plan_submitted",
+    "complete"
+  ]
+}

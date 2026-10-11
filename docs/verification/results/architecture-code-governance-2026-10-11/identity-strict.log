@@ -1,0 +1,34 @@
+$ bun run scripts/check-identity.ts --strict
+identity: Phaneris (io.github.vanding.phaneris, phaneris://)
+
+drift check
+  OK — generated identity artifacts and packaging config are in sync
+
+residual upstream identifiers
+  152 unallowlisted hit(s) across 67 file(s); 328 allowlisted
+    package-scope                2  internal npm scope for workspace packages
+    kebab-slug                  38  kebab-case slug: data directory, package name, file and identifier names
+    display-name                 3  user-visible product name
+    scheme-or-domain            22  deep-link scheme and the upstream hosted domain
+    env-prefix                   1  environment variable prefix
+    code-identifier             54  PascalCase/camelCase code identifiers
+    upstream-owner              32  upstream app id namespace, copyright holder and site
+  worst files:
+       12  apps/electron/src/renderer/playground/recent-working-dirs.ts
+       11  packages/shared/src/auth/__tests__/oauth.isolated.ts
+        9  packages/shared/src/agent/backend/pi/event-adapter.ts
+        7  packages/shared/src/sources/__tests__/token-refresh-manager.isolated.ts
+        5  packages/shared/src/config/sync-cli-bash-patterns.ts
+        5  packages/shared/src/auth/__tests__/types.test.ts
+        5  packages/server-core/src/sessions/SessionManager.ts
+        4  packages/ui/src/components/markdown/__tests__/linkify.test.ts
+        4  apps/electron/src/renderer/playground/registry/chat.tsx
+        3  scripts/migrate-legacy-profile.ts
+        3  packages/ui/src/components/chat/SessionViewer.tsx
+        3  packages/ui/src/components/markdown/MarkdownJsonBlock.tsx
+        3  packages/ui/src/components/overlay/ActivityCardsOverlay.tsx
+        3  packages/ui/src/components/overlay/JSONPreviewOverlay.tsx
+        3  packages/shared/src/agent/backend/types.ts
+
+identity check failed (--strict): 152 unallowlisted upstream identifier(s) remain
+error: script "identity:check:strict" exited with code 1

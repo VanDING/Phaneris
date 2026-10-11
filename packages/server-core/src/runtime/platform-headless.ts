@@ -49,6 +49,7 @@ export function createHeadlessPlatform(options?: { appVersion?: string }): Platf
     appRootPath: process.env.PHANERIS_APP_ROOT || process.cwd(),
     resourcesPath: process.env.PHANERIS_RESOURCES_PATH || join(process.cwd(), 'resources'),
     isPackaged: process.env.PHANERIS_IS_PACKAGED === 'true',
+    nodeRuntimePath: process.execPath,
     appVersion: process.env.PHANERIS_VERSION || options?.appVersion || '0.0.0-dev',
 
     imageProcessor: {

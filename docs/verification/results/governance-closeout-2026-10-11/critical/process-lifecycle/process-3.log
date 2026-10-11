@@ -1,0 +1,53 @@
+2026-10-11T15:11:06.060Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T15:11:06.061Z INFO  [bootstrap] Global config found
+2026-10-11T15:11:06.062Z INFO  [session] [browser-pane] setRpcServer called — remote browser bridge is now available
+2026-10-11T15:11:06.070Z INFO  [session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T15:11:06.074Z INFO  Phaneris server listening on ws://127.0.0.1:53679
+[messaging] Disabled via PHANERIS_DISABLE_MESSAGING — skipping workspace messaging init
+PHANERIS_SERVER_URL=ws://127.0.0.1:53679
+PHANERIS_WEBUI_URL=http://0.0.0.0:53679
+2026-10-11T15:11:06.094Z INFO  Shutting down...
+
+2026-10-11T15:11:06.070Z WARN  [session] No LLM connection slug available for reinitializeAuth
+2026-10-11T15:11:06.070Z ERROR [session] No LLM connection found for slug: null
+[server] unhandledRejection: [server] Error: governance-throw-cleanup
+    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/fixtures/governance-process-faults.ts:8:21)
+    at emit (node:events:100:22)
+    at [_onLine] (internal:readline/interface:201:16)
+    at [_normalWrite] (internal:readline/interface:289:22)
+    at ondata (internal:readline/interface:66:23)
+    at emit (node:events:100:22)
+    at addChunk (internal:streams/readable:267:47)
+    at readableAddChunkPushByteMode (internal:streams/readable:245:18)
+    at internalRead (native:45:40)
+    at processTicksAndRejections (native:7:39)
+Caused by: Error: governance-original-cause
+    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/fixtures/governance-process-faults.ts:8:81)
+    at emit (node:events:100:22)
+    at [_onLine] (internal:readline/interface:201:16)
+    at [_normalWrite] (internal:readline/interface:289:22)
+    at ondata (internal:readline/interface:66:23)
+    at emit (node:events:100:22)
+    at addChunk (internal:streams/readable:267:47)
+    at readableAddChunkPushByteMode (internal:streams/readable:245:18)
+    at internalRead (native:45:40)
+    at processTicksAndRejections (native:7:39)
+2026-10-11T15:11:08.096Z ERROR [bootstrap] Failed to clean up session manager: {}
+[server] cleanup_failed: [server] AggregateError: Server cleanup failed
+    at <anonymous> (/Users/van/projects/Phaneris/packages/server/src/index.ts:287:34)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server/src/index.ts:388:9)
+    at processTicksAndRejections (native:7:39)
+Caused by: AggregateError: Server resource cleanup failed
+    at <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/bootstrap/headless-start.ts:480:38)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server/src/index.ts:286:24)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server/src/index.ts:388:9)
+    at processTicksAndRejections (native:7:39)
+Caused by: Error: governance-cleanup-failed
+    at <anonymous> (/Users/van/projects/Phaneris/scripts/verification/fixtures/governance-process-faults.ts:12:63)
+    at <anonymous> (/Users/van/projects/Phaneris/packages/server/src/index.ts:270:32)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/bootstrap/headless-start.ts:475:75)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/bootstrap/headless-start.ts:456:21)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server-core/src/bootstrap/headless-start.ts:475:13)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server/src/index.ts:286:24)
+    at async <anonymous> (/Users/van/projects/Phaneris/packages/server/src/index.ts:388:9)
+    at processTicksAndRejections (native:7:39)

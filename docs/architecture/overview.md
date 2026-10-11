@@ -30,7 +30,7 @@ Status: accepted — 当前实现基线
 │                                                                                │
 │  transport/    WsRpcServer · WsRpcClient · codec · push · 16 MiB 上限          │
 │  handlers/rpc/ 26 个 channel 模块（sessions·tasks·sources·artifacts·…）        │
-│  sessions/     SessionManager（11,322 行，产品逻辑与兼容入口）                  │
+│  sessions/     SessionManager + agent/source/product owners（产品兼容入口）      │
 │  tasks/        TaskRunner（Conductor DAG）                                      │
 │  durable-runtime/   Kernel（T1/T2·恢复·投影）+ execution/（Runtime Host）+ api/  │
 │  services/ domain/ model-fetchers/ webui/                                       │
@@ -61,13 +61,13 @@ Status: accepted — 当前实现基线
 
 ## 1. 仓库拓扑
 
-Bun workspace，14 个 `package.json`（根 + 13 个成员）。**依赖方向严格单向，无环。**
+Bun workspace，14 个 `package.json`（根 + 13 个成员）。**清单中 workspace 包依赖无环；包内源码仍有循环候选，见治理计划与扫描证据。**
 
 ```
 apps/                          packages/
 ├── electron/   桌面主程序      ├── core/                    类型 + 纯工具（叶子，16 文件）
 ├── webui/      浏览器薄壳      ├── shared/                  业务逻辑 + 磁盘存储（最重，526 文件）
-├── viewer/     只读分享页      ├── server-core/             无头服务器基础设施（189 文件）
+├── viewer/     只读分享页      ├── server-core/             Runtime Host + 产品编排（189 文件）
 └── cli/        终端客户端      ├── ui/                      共享 React 组件（212 文件）
                                ├── session-tools-core/      会话工具定义与处理器（67 文件）
                                ├── pi-agent-server/         Agent 子进程宿主（70 文件）
@@ -76,7 +76,9 @@ apps/                          packages/
                                └── messaging-whatsapp-worker/ WhatsApp 子进程（8 文件）
 ```
 
-### 内部依赖图（25 条 `workspace:*` 边）
+### 内部依赖图（27 条 `workspace:*` 边）
+
+以下图表达主要消费方向；完整清单边、源码依赖和循环候选见 [10-11 扫描证据](../verification/results/architecture-code-governance-2026-10-11/README.md)。
 
 ```
                     core  ← 7 个消费者
@@ -91,7 +93,7 @@ apps/                          packages/
                       │
               messaging-gateway ──► messaging-whatsapp-worker
               
-   session-tools-core ← shared（唯一消费者）
+   session-tools-core ← shared、server-core
    pi-agent-server    ← 无人依赖（被 spawn，不被 import）
 ```
 
@@ -384,14 +386,16 @@ bun run build:wa-worker            WhatsApp worker（--target=node）
 
 | 项 | 事实 | 影响 |
 | --- | --- | --- |
-| **webui 与 electron 无 API 边界** | webui 的 tsconfig `include` 了 `../electron/src/renderer/**`，vite 把 `@` 别名指向该源码树 | electron renderer 成了**未版本化、未发布**的库。renderer 里任何新增的 Electron/Node 专用 import 都会静默打断浏览器构建，直到有人补一个 shim。`import.meta.env.IS_WEBUI` 是唯一缝隙，且**没有测试门禁**断言 webui 产物不含 Electron/Node 代码 |
+| **renderer 源码仍由两个 app 共享** | WebUI 仍 include/alias Electron renderer；宿主访问已通过显式初始化的有限 platform ports/兼容 facade | 共享源码仍是**未版本化、未发布**的内部库。浏览器 3 条历史闭包例外已消除、46 个 alias/shim 收缩为 4 个；延迟 adapter、能力错误与两个宿主真实场景有证据。尚无独立发布消费者，不为拆目录新增 workspace |
 | **两套主题源头** | `packages/ui/src/styles/index.css`（585 行，仅 viewer 用）与 electron 自维护的 1717 行 `index.css`（electron 用，webui 靠 `@import` 继承）；字体栈单源于 `packages/ui/src/styles/typography.css` | **已有检查**：`packages/shared/src/config/__tests__/theme.test.ts` 逐 token 比对两者与 `themeToCSS(DEFAULT_THEME_FILE)`，并已进入 `test:shared:config`（`validate:ci` 与 pre-push）与 `test:critical`。2026-10-10 之前该检查是红的，见[清理计划 §2.1](../process/system-cleanup-optimization-plan-2026-10-10.md) |
-| **bootstrap 顺序是隐式契约** | renderer 模块假定 `window.electronAPI` 已存在，webui 必须**先赋值再** `import('@/App')` | 未来任何模块级调用会让浏览器端白屏，且**无编译错误** |
+| **客户端初始化为显式契约** | 两个宿主都等待 transport connected 和 `initializeClient(platform)`，再挂载业务 App；Electron 保留只读 contextBridge 原句柄 | bootstrap 延迟/断连/ready 由真实场景验证。旧 facade 为兼容保留，新 owner 引用有限 port；Web 原生能力明确失败，原生专用设置不发跨宿主 RPC |
 | **Pi SDK 版本已对齐（2026-10-11 核对）** | 当前四处声明与安装版本均为 **1.1.0**（`packages/shared`、`packages/pi-agent-server`、`packages/server-core`、根 `package.json`）；`docs/guides/pi-kernel.md` 与 `apps/electron/README.md` 同步 | 历史上曾出现三处不一致（1.0.0 / 0.86.1 / 实际 1.0.2），本行保留作为"文档版本会漂移"的证据 |
-| **`@phaneris/core` 描述失真** | `package.json` 写 "Core types, storage, and agent logic"，实际**只有类型与纯工具**（存储/agent 仍在 shared） | 误导分层判断 |
-| **`@earendil-works/pi-server` 声明未使用** | 全仓库零 import（唯一的 `[pi-server]` 是日志前缀） | 死声明，见依赖梳理 §7 |
+| **core 职责说明已校准（2026-10-11）** | 清单与 README 明确只有类型/纯工具；存储与 agent 在 shared | 保持叶子包职责，避免向 core 引入 I/O |
+| **依赖与 lock 归属已裁定** | 根借用候选归零；47 个消费对明确 runtime/peer/provider/tooling owner，Bun 用相同版本范围重算 lock | 冷缓存 frozen install 不改 lock；distinct package@version 从 1,756 降至 1,645，新增版本身份 0。不按 placement 重排误判升级，也不手写删除平台 optional 节点 |
 | **viewer 后端未配置** | `SERVICE_URLS.viewer = null`（`identity.generated.ts`） | 本 fork 不提供 viewer 服务端；`/s/{id}` 路由依赖外部部署 |
 | **陈旧 CSS glob** | electron 与 webui 的 `@source "../renderer/tabs/**"` 指向不存在的目录 | 无害但误导 |
+
+完整源码职责清单、真实缺陷修复和当前验证限度见[治理完整实施台账](../process/governance-completion-2026-10-11.md)。SessionManager 保留产品编排、三组值循环有逐边 owner、78 条既有警告继续受精确 ratchet；不把本轮完成解读为所有技术债归零。
 
 ---
 

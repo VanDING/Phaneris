@@ -1,0 +1,43 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-branch-workflow-7Pq1yu",
+  "checks": [
+    {
+      "id": "missing-parent-sdk",
+      "passed": true,
+      "childId": "",
+      "disposed": false,
+      "poolStopped": false,
+      "mcpDisconnected": false,
+      "hostGeneration": null
+    },
+    {
+      "id": "preflight-rollback",
+      "passed": true,
+      "childId": "261011-lucid-jasper",
+      "disposed": true,
+      "poolStopped": true,
+      "mcpDisconnected": true,
+      "hostGeneration": 1
+    },
+    {
+      "id": "successful-preflight",
+      "passed": true,
+      "childId": "261011-cool-frost",
+      "disposed": false,
+      "poolStopped": false,
+      "mcpDisconnected": false,
+      "hostGeneration": 0
+    },
+    {
+      "id": "successful-branch-delete",
+      "passed": true,
+      "childId": "261011-cool-frost",
+      "disposed": true,
+      "poolStopped": true,
+      "mcpDisconnected": true,
+      "hostGeneration": 1
+    }
+  ],
+  "parentUnchanged": true,
+  "parentSha256": "ee69d2a7f8d8eb879a0cf71423fc4735a68ceeb34a50f682999b7e227c410144"
+}

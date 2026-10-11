@@ -214,7 +214,7 @@ function patchElectronApi(): void {
   // ~/.phaneris/preferences.json, which only exists under Electron.
   api.readPreferences = async () => ({
     content: JSON.stringify({
-      // eslint-disable-next-line craft-agent/no-localstorage -- playground stands in for the Electron preferences file
+      // eslint-disable-next-line phaneris/no-localstorage -- playground stands in for the Electron preferences file
       diffViewer: JSON.parse(window.localStorage.getItem('playground-diff-viewer') ?? '{"diffStyle":"unified","disableBackground":false}'),
     }),
   })
@@ -222,7 +222,7 @@ function patchElectronApi(): void {
     try {
       const parsed = JSON.parse(content)
       if (parsed.diffViewer) {
-        // eslint-disable-next-line craft-agent/no-localstorage -- playground stands in for the Electron preferences file
+        // eslint-disable-next-line phaneris/no-localstorage -- playground stands in for the Electron preferences file
         window.localStorage.setItem('playground-diff-viewer', JSON.stringify(parsed.diffViewer))
       }
     } catch {

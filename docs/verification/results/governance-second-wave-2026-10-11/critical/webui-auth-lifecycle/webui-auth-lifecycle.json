@@ -1,0 +1,130 @@
+{
+  "fixture": "/var/folders/l3/pwd8_t3d5ygclcmh7p6nqynr0000gn/T/phaneris-auth-lifecycle-5DN6QE",
+  "checks": [
+    {
+      "id": "A01-logout-kill-restart",
+      "passed": true
+    },
+    {
+      "id": "A12-canonical-token-replay",
+      "passed": true
+    },
+    {
+      "id": "A02-shared-process-revocation",
+      "passed": true
+    },
+    {
+      "id": "A03-config-directory-isolation",
+      "passed": true
+    },
+    {
+      "id": "A04-legacy-cookie-without-jti",
+      "passed": true
+    },
+    {
+      "id": "A07-cookie-origin-and-bearer",
+      "passed": true
+    },
+    {
+      "id": "A08-explicit-origin-trusted-proxy",
+      "passed": true
+    },
+    {
+      "id": "A13-ephemeral-ws-address",
+      "passed": true
+    },
+    {
+      "id": "A14-existing-socket-revocation",
+      "passed": true
+    },
+    {
+      "id": "A09-actual-proxy-failure-budgets",
+      "passed": true
+    },
+    {
+      "id": "A10-chunked-request-ceiling",
+      "passed": true
+    },
+    {
+      "id": "A05-storage-failure-no-false-logout",
+      "passed": true
+    },
+    {
+      "id": "A06-corrupt-store-startup-fails",
+      "passed": true
+    },
+    {
+      "id": "A11-server-cli-token-private",
+      "passed": true
+    }
+  ],
+  "revocationRecords": [
+    {
+      "scope": "c5a4d47a88d4aa8cb1dd812a00dc98ad31f46d62c1e12c483e8cb7ca0c1eb04f",
+      "token_hash": "17f6736c9d3ebfa1429fc097173fdb74550bd794866b674b8e7a6c86c04dda99",
+      "expires_at": 1791777701
+    },
+    {
+      "scope": "c5a4d47a88d4aa8cb1dd812a00dc98ad31f46d62c1e12c483e8cb7ca0c1eb04f",
+      "token_hash": "8f6f9a15db84e8ecfe1a3b9e51199d6f9acc0c6e0cbcdfd71409b5c64639d781",
+      "expires_at": 1791777702
+    },
+    {
+      "scope": "c5a4d47a88d4aa8cb1dd812a00dc98ad31f46d62c1e12c483e8cb7ca0c1eb04f",
+      "token_hash": "6360b69d80f2ebdb7c19da323f3011977e440666ecdf2949100914d44873270b",
+      "expires_at": 1791694903
+    },
+    {
+      "scope": "c5a4d47a88d4aa8cb1dd812a00dc98ad31f46d62c1e12c483e8cb7ca0c1eb04f",
+      "token_hash": "f0b9e6d1d0034675c564d6eac705166dee25d0b506750dff25cba3ada3124dd0",
+      "expires_at": 1791777704
+    },
+    {
+      "scope": "c5a4d47a88d4aa8cb1dd812a00dc98ad31f46d62c1e12c483e8cb7ca0c1eb04f",
+      "token_hash": "fed142b654d81711f42b1ef12677caf10e0f8760f459a4edb268add3b8043c94",
+      "expires_at": 1791777707
+    }
+  ],
+  "processes": [
+    {
+      "pid": 43582,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 43583,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 43586,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 43587,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 43588,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 43589,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 43593,
+      "exitCode": null,
+      "signal": "SIGKILL"
+    },
+    {
+      "pid": 43597,
+      "exitCode": 1,
+      "signal": null
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 import { basename, dirname, isAbsolute, join, normalize, sep } from 'path'
 import { homedir, tmpdir } from 'os'
 import { realpath } from 'fs/promises'
-import { getWorkspaceByNameOrId, type Workspace } from '@phaneris/shared/config'
+import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
+import { type Workspace } from '@phaneris/shared/config';
 import { loadWorkspaceConfig } from '@phaneris/shared/workspaces'
 import { CONFIG_DIR } from '@phaneris/shared/config/paths'
 import { LEGACY_IDENTITY } from '@phaneris/shared'

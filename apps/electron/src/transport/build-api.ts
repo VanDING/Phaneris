@@ -6,7 +6,7 @@
  */
 
 import type { RpcClient } from '@phaneris/server-core/transport'
-import { readSessionSnapshot } from '@phaneris/server-core/transport'
+import { readSessionSnapshot } from '@phaneris/server-core/transport/session-read-client'
 import { RPC_CHANNELS } from '@phaneris/shared/protocol'
 import type { ElectronAPI } from '../shared/types'
 
@@ -15,7 +15,7 @@ import type { ElectronAPI } from '../shared/types'
 // ---------------------------------------------------------------------------
 
 export type ChannelMapEntry =
-  | { type: 'invoke'; channel: string; transform?: (result: any) => any }
+  | { type: 'invoke'; channel: string; transform?: (result: unknown) => unknown }
   | { type: 'listener'; channel: string }
 
 export type ChannelMap = Record<string, ChannelMapEntry>
@@ -29,20 +29,27 @@ export function buildClientApi(
   channelMap: ChannelMap,
   isChannelAvailable?: (channel: string) => boolean,
 ): ElectronAPI {
-  const api: Record<string, any> = {}
-  const nested: Record<string, Record<string, any>> = {}
+  const api: Record<string, unknown> = {}
+  const nested: Record<string, Record<string, unknown>> = {}
 
   for (const [key, entry] of Object.entries(channelMap)) {
-    let fn: (...a: any[]) => any
+    let fn: (...a: unknown[]) => unknown
     if (entry.type === 'listener') {
-      fn = (cb: (...args: any[]) => void) => client.on(entry.channel, cb)
+      fn = (...args: unknown[]) => {
+        const cb = args[0]
+        if (typeof cb !== 'function') throw new TypeError(`Listener ${key} requires a callback`)
+        return client.on(entry.channel, cb as import('@phaneris/server-core/transport').RpcCallback)
+      }
     } else if (entry.channel === RPC_CHANNELS.sessions.GET_MESSAGES) {
-      fn = (sessionId: string) => readSessionSnapshot(client, sessionId, isChannelAvailable)
+      fn = (...args: unknown[]) => {
+        if (typeof args[0] !== 'string') throw new TypeError('Session id must be a string')
+        return readSessionSnapshot(client, args[0], isChannelAvailable)
+      }
     } else if (entry.transform) {
       const t = entry.transform
-      fn = async (...args: any[]) => t(await client.invoke(entry.channel, ...args))
+      fn = async (...args: unknown[]) => t(await client.invoke(entry.channel, ...args))
     } else {
-      fn = (...args: any[]) => client.invoke(entry.channel, ...args)
+      fn = (...args: unknown[]) => client.invoke(entry.channel, ...args)
     }
 
     // Dotted keys like "browserPane.create" become nested: api.browserPane.create
@@ -65,5 +72,5 @@ export function buildClientApi(
   // Expose channel availability check for GUI-aware code
   api.isChannelAvailable = isChannelAvailable ?? (() => true)
 
-  return api as ElectronAPI
+  return api as unknown as ElectronAPI
 }

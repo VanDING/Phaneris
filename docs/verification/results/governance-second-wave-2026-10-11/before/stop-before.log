@@ -1,0 +1,27 @@
+2026-10-11T03:58:28.761Z INFO  [bootstrap] Config artifacts initialized
+2026-10-11T03:58:28.762Z INFO  [bootstrap] Initialized missing global config
+[session] No LLM connection slug available for reinitializeAuth
+[session] No LLM connection found for slug: null
+[session] Loaded 0 sessions from disk (metadata only)
+2026-10-11T03:58:28.774Z INFO  Phaneris server listening on ws://127.0.0.1:63042
+2026-10-11T03:58:28.774Z INFO  Shutting down...
+[session] Cleaning up resources...
+[session] Cleanup complete
+17 |   await entered.promise
+18 |   const second = instance.stop()
+19 |   let finished = false
+20 |   void second.then(() => { finished = true })
+21 |   await new Promise(resolve => setTimeout(resolve, 20))
+22 |   assert(!finished, 'Repeated stop must await the in-flight owner cleanup')
+       ^
+AssertionError: Repeated stop must await the in-flight owner cleanup
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at /Users/van/projects/Phaneris/scripts/verification/fixtures/bootstrap-stop.ts:22:3
+
+Bun v1.4.2 (macOS x64)

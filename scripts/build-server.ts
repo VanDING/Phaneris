@@ -30,7 +30,7 @@ process.on('unhandledRejection', (reason) => {
 });
 
 import { parseArgs } from 'util';
-import { dirname, join } from 'path';
+import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import {
   existsSync,
@@ -278,18 +278,28 @@ function copyDependencyTree(
   mkdirSync(dirname(dest), { recursive: true });
   cpSync(src, dest, { recursive: true, dereference: true });
 
-  // Recurse into dependencies
-  const pkgPath = join(src, 'package.json');
-  if (existsSync(pkgPath)) {
-    try {
-      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-      for (const childDep of Object.keys(pkg.dependencies || {})) {
+  // Copy keeps each package's installed nested versions. Their manifests must
+  // also contribute hoisted dependencies: root ajv v6 cannot describe the
+  // fast-uri dependency of the SDK's nested ajv v8.
+  const visitInstalledManifest = (directory: string): void => {
+    const manifest = join(directory, 'package.json');
+    if (existsSync(manifest)) {
+      const pkg = JSON.parse(readFileSync(manifest, 'utf-8'));
+      for (const childDep of Object.keys({ ...pkg.dependencies, ...pkg.optionalDependencies, ...pkg.peerDependencies })) {
         copyDependencyTree(childDep, srcModules, destModules, visited);
       }
-    } catch {
-      // Skip if package.json is malformed
     }
-  }
+    const nested = join(directory, 'node_modules');
+    if (!existsSync(nested)) return;
+    for (const entry of readdirSync(nested, { withFileTypes: true })) {
+      if (entry.name.startsWith('.')) continue;
+      const path = join(nested, entry.name);
+      if (entry.name.startsWith('@')) {
+        for (const scoped of readdirSync(path)) visitInstalledManifest(join(path, scoped));
+      } else visitInstalledManifest(path);
+    }
+  };
+  visitInstalledManifest(src);
 }
 
 /**
@@ -564,14 +574,14 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Set environment for resource resolution
-PHANERIS_BUNDLED_ASSETS_ROOT="$ROOT"
-PHANERIS_IS_PACKAGED=true
-PHANERIS_APP_ROOT="$ROOT"
-PHANERIS_RESOURCES_PATH="$ROOT/resources"
+export PHANERIS_BUNDLED_ASSETS_ROOT="$ROOT"
+export PHANERIS_IS_PACKAGED=true
+export PHANERIS_APP_ROOT="$ROOT"
+export PHANERIS_RESOURCES_PATH="$ROOT/resources"
 
 # CLI tools (doc tools use uv + Python scripts)
-PHANERIS_UV="$ROOT/resources/bin/uv"
-PHANERIS_SCRIPTS="$ROOT/resources/scripts"
+export PHANERIS_UV="$ROOT/resources/bin/uv"
+export PHANERIS_SCRIPTS="$ROOT/resources/scripts"
 
 # Prepend resource bin to PATH (makes doc tool wrappers available)
 export PATH="$ROOT/resources/bin:$ROOT/vendor/bun:$PATH"
@@ -698,7 +708,7 @@ echo ""
 function createDockerFiles(config: ServerBuildConfig): void {
   const { outputDir, version } = config;
 
-  const dockerfile = `FROM oven/bun:1.4-slim
+  const dockerfile = `FROM oven/bun:${BUN_VERSION.replace('bun-v', '')}-slim
 
 WORKDIR /app
 
@@ -797,7 +807,7 @@ async function main(): Promise<void> {
   const electronPkg = JSON.parse(readFileSync(join(electronDir, 'package.json'), 'utf-8'));
   const version: string = electronPkg.version;
 
-  const outputDir = join(rootDir, values.output!);
+  const outputDir = resolve(rootDir, values.output!);
 
   const config: ServerBuildConfig = {
     platform,
@@ -841,13 +851,8 @@ async function main(): Promise<void> {
   };
   buildMcpServers(buildConfig);
 
-  // Build the WhatsApp worker bundle. Must happen before copyWorkspacePackages
-  // so dist/worker.cjs exists when we copy the messaging-whatsapp-worker package.
-  // The bundle embeds Baileys + transitive deps; see scripts/build-wa-worker.ts.
-  console.log('  Building WhatsApp worker bundle...');
-  await $`bun run ${join(rootDir, 'scripts', 'build-wa-worker.ts')}`.cwd(rootDir);
-  console.log('  Building Pi subprocess and codemode runtime...');
-  await $`bun run build`.cwd(join(rootDir, 'packages', 'pi-agent-server'));
+  // Build both production subprocesses through the same command as Docker and development.
+  await $`bun run build:runtime`.cwd(rootDir);
 
   // Step 5: Assemble resources
   console.log('\n[5/8] Assembling resources...');

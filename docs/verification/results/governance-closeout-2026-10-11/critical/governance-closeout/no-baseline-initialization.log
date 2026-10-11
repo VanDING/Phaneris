@@ -1,0 +1,18 @@
+52 |     for (let index = 0; index < args.length; index++) {
+53 |       const argument = args[index]!
+54 |       if (argument === '--output-dir') {
+55 |         assert(args[++index] && !args[index]!.startsWith('--'), '--output-dir requires a directory')
+56 |       } else if (argument.startsWith('--output-dir=')) assert(argument.slice('--output-dir='.length), '--output-dir requires a directory')
+57 |       else assert(allowed.includes(argument), `Unknown verification argument: ${argument}`)
+                ^
+AssertionError: Unknown verification argument: --initialize-baseline
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       diff: "simple",
+       code: "ERR_ASSERTION"
+
+      at checkArguments (/Users/van/projects/Phaneris/scripts/verification/verification-artifacts.ts:57:12)
+
+Bun v1.4.2 (macOS x64)

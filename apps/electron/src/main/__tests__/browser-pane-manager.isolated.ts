@@ -841,7 +841,7 @@ describe('BrowserPaneManager', () => {
     manager.createInstance('toolbar-finish-load-replay')
     const instance = (manager as any).instances.get('toolbar-finish-load-replay')
 
-    instance.currentUrl = 'https://craft.do'
+    instance.currentUrl = 'https://example.test'
     instance.title = 'Craft'
     instance.isLoading = true
     instance.canGoBack = true
@@ -858,7 +858,7 @@ describe('BrowserPaneManager', () => {
     expect(sendCallsAfterFinishLoad).toContainEqual([
       'browser-toolbar:state-update',
       {
-        url: 'https://craft.do',
+        url: 'https://example.test',
         title: 'Craft',
         isLoading: true,
         canGoBack: true,

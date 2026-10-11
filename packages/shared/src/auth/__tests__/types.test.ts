@@ -46,9 +46,9 @@ describe('buildOAuthDeeplinkUrl', () => {
   it('uses custom deeplink scheme for multi-instance', () => {
     const ctx: OAuthSessionContext = {
       sessionId: 'test-session',
-      deeplinkScheme: 'craftagents1',
+      deeplinkScheme: 'fixtureapp1',
     };
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('craftagents1://allSessions/session/test-session');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe('fixtureapp1://allSessions/session/test-session');
   });
 
   // Edge cases for session IDs with special characters
@@ -96,8 +96,8 @@ describe('buildOAuthDeeplinkUrl', () => {
   it('constructs correct URL format for instance 2', () => {
     const ctx: OAuthSessionContext = {
       sessionId: '260111-bold-moon',
-      deeplinkScheme: 'craftagents2',
+      deeplinkScheme: 'fixtureapp2',
     };
-    expect(buildOAuthDeeplinkUrl(ctx)).toBe('craftagents2://allSessions/session/260111-bold-moon');
+    expect(buildOAuthDeeplinkUrl(ctx)).toBe('fixtureapp2://allSessions/session/260111-bold-moon');
   });
 });

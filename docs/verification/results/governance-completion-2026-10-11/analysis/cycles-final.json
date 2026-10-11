@@ -1,0 +1,69 @@
+{
+  "scanned": 1497,
+  "cycles": [
+    {
+      "members": [
+        "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+        "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx",
+        "apps/electron/src/renderer/components/ui/EditPopover.tsx"
+      ],
+      "edges": [
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+          "to": "apps/electron/src/renderer/components/ui/EditPopover.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/app-shell/input/InputContainer.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx"
+        },
+        {
+          "from": "apps/electron/src/renderer/components/ui/EditPopover.tsx",
+          "to": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx"
+        }
+      ]
+    },
+    {
+      "members": [
+        "packages/shared/src/sources/credential-manager.ts",
+        "packages/shared/src/sources/storage.ts"
+      ],
+      "edges": [
+        {
+          "from": "packages/shared/src/sources/credential-manager.ts",
+          "to": "packages/shared/src/sources/storage.ts"
+        },
+        {
+          "from": "packages/shared/src/sources/storage.ts",
+          "to": "packages/shared/src/sources/credential-manager.ts"
+        }
+      ]
+    },
+    {
+      "members": [
+        "packages/ui/src/components/markdown/Markdown.tsx",
+        "packages/ui/src/components/markdown/MarkdownDocBlock.tsx"
+      ],
+      "edges": [
+        {
+          "from": "packages/ui/src/components/markdown/Markdown.tsx",
+          "to": "packages/ui/src/components/markdown/MarkdownDocBlock.tsx"
+        },
+        {
+          "from": "packages/ui/src/components/markdown/MarkdownDocBlock.tsx",
+          "to": "packages/ui/src/components/markdown/Markdown.tsx"
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

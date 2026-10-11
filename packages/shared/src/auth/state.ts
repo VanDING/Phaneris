@@ -12,14 +12,10 @@
  */
 
 import { getCredentialManager } from '../credentials/index.ts';
-import {
-  loadStoredConfig,
-  getActiveWorkspace,
-  getDefaultLlmConnection,
-  getLlmConnection,
-  type AuthType,
-  type Workspace,
-} from '../config/storage.ts';
+import { loadStoredConfig } from '../config/repository.ts';
+import { getActiveWorkspace } from '../config/workspace-selection.ts';
+import { getDefaultLlmConnection, getLlmConnection } from '../config/connections.ts';
+import { type AuthType, type Workspace } from '../config/storage.ts';
 import { refreshClaudeToken, isTokenExpired } from './claude-token.ts';
 import { debug } from '../utils/debug.ts';
 

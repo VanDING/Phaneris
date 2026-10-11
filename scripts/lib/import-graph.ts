@@ -18,7 +18,17 @@ import { dirname, join, relative, resolve } from 'node:path'
 import { parse } from '@babel/parser'
 import type { Node } from '@babel/types'
 
-export interface ImportEdge { target: string; line: number }
+export interface ImportEdge { target: string; line: number; typeOnly: boolean }
+
+/** Type-only syntax is erased; keep its edge for public export checks, distinguish runtime closure. */
+export function isTypeOnlyReference(node: Node): boolean {
+  return node.type === 'TSImportType'
+    || node.type === 'ImportDeclaration' && (node.importKind === 'type'
+      || node.specifiers.length > 0 && node.specifiers.every(item => item.type === 'ImportSpecifier' && item.importKind === 'type'))
+    || node.type === 'ExportAllDeclaration' && node.exportKind === 'type'
+    || node.type === 'ExportNamedDeclaration' && (node.exportKind === 'type'
+      || !node.declaration && node.specifiers.length > 0 && node.specifiers.every(item => item.type === 'ExportSpecifier' && item.exportKind === 'type'))
+}
 
 export interface Violation { file: string; line: number; rule: string; detail: string }
 
@@ -77,7 +87,7 @@ export interface ScanResult {
 export function moduleSpecifier(node: Node): string | undefined {
   const source = node.type === 'ImportDeclaration' || node.type === 'ExportNamedDeclaration' || node.type === 'ExportAllDeclaration' ? node.source
     : node.type === 'ImportExpression' ? node.source
-    : node.type === 'TSImportType' ? node.argument
+    : node.type === 'TSImportType' ? node.source
     : node.type === 'CallExpression' && (node.callee.type === 'Import' || (node.callee.type === 'Identifier' && node.callee.name === 'require')) ? node.arguments[0]
     : undefined
   return source?.type === 'StringLiteral' ? source.value : undefined
@@ -164,7 +174,7 @@ export function scanImportGraph(root: string, hooks: ScanHooks = {}, options: Sc
       if (specifier !== undefined) {
         const target = resolveModule(file, specifier)
         if (target) {
-          edges.push({ target, line: node.loc?.start.line ?? 0 })
+          edges.push({ target, line: node.loc?.start.line ?? 0, typeOnly: isTypeOnlyReference(node) })
           if (!parsedFiles.has(target)) { parsedFiles.add(target); files.push(target) }
         }
         hooks.onImport?.(ctx, node, specifier, target)
