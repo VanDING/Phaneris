@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "workflow": "shell-visual",
+  "startedAt": "2026-10-12T16:31:54.280Z",
+  "finishedAt": "2026-10-12T16:32:42.580Z",
+  "command": [
+    "/Users/van/.bun/bin/bun",
+    "/Users/van/projects/Phaneris/scripts/verification/shell-visual-workflow.ts",
+    "--output-dir=/Users/van/projects/Phaneris/.cache/verification/shell-visual-tooltip-residue-after"
+  ],
+  "source": {
+    "headSha": "e27698d916df968bf594f1d6bb9ecd69b42950b9",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      " M docs/verification/results/packaged-client-smoke.json",
+      " M docs/verification/results/packaged-client-verification.json",
+      " M scripts/verification/fixtures/shell-visual.cjs",
+      "?? docs/verification/sidebar-tooltip-residue-failure-matrix-2026-10-13.md"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "sha256": "f0459dfc46fae7c8ca81d552ab84773b73e2888815f6374e5ca3659d4dfbf33e"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke.json",
+        "sha256": "2ef31b446564ac9e1a5ac188514e4de8029db562e7d4a86eef32f7d23b097af1"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification.json",
+        "sha256": "8c933623a17e7065cb21ac328888132b7c16f10c427b8b59551d3eba9db77668"
+      },
+      {
+        "path": "docs/verification/sidebar-tooltip-residue-failure-matrix-2026-10-13.md",
+        "sha256": "5f2bba02dd451a7143320145f014c8dc79a7ced566252499a300758f4addba63"
+      },
+      {
+        "path": "scripts/verification/fixtures/shell-visual.cjs",
+        "sha256": "949ff46b222ddd924e43a493853a3d99c3ec032024351a174088c9aa296b64fe"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "uv": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+    "platform": "darwin",
+    "architecture": "x64",
+    "osRelease": "25.6.0",
+    "executable": "/Users/van/.bun/bin/bun"
+  },
+  "sceneIds": [
+    "verified panel title centers align",
+    "verified new-session top aligns with panel top",
+    "verified new-session matches ordinary row height",
+    "verified new-session has breathing room before navigation",
+    "verified expanded default width 200",
+    "verified sidebar has no extra navigator seam",
+    "verified navigation rows 28",
+    "verified navigation icons 16",
+    "verified new session symmetric insets",
+    "verified navigation and first-row insets match",
+    "verified expanded footer retains bottom anchor",
+    "verified default light neutral border",
+    "verified default light visible soft panel shadow",
+    "verified native default panel radius",
+    "verified native default edge radius",
+    "verified sidebar drag follows pointer delta without seam jump",
+    "verified navigator drag follows pointer delta without seam jump",
+    "verified collapsed new-session keeps the panel top line",
+    "verified collapsed width 48 with breathing room",
+    "verified icons centered in the visible rail including its boundary",
+    "verified collapsed controls are 28px squares",
+    "verified state-specific icon alignment",
+    "verified both states share compact 2px navigation gaps",
+    "verified both states share one icon column",
+    "verified first navigation center stays at same height",
+    "verified collapse keeps original button nodes",
+    "verified collapse interpolates control width",
+    "verified collapse fades text",
+    "verified collapse keeps icon column steady",
+    "verified footer icons centered",
+    "verified collapsed footer retains bottom anchor",
+    "verified collapsed navigator drag uses same geometry",
+    "verified collapsed tooltip remains usable",
+    "verified expand keeps original button nodes",
+    "verified expand fades text",
+    "verified expanded navigation suppresses tooltip",
+    "verified keyboard collapse after expanded hover and focus leaves no tooltip",
+    "verified collapsed rail shows exactly the hovered tooltip",
+    "verified leaving the rail removes the tooltip",
+    "verified expanding after a rail tooltip leaves no residue",
+    "verified expanded context menu remains usable",
+    "verified rapid reverse occurs before closing finishes",
+    "verified rapid reverse finishes at latest expanded state",
+    "verified keyboard switch preserves focused navigation node",
+    "verified collapsed keyboard focus visible",
+    "collapsed profile opens",
+    "default dark retains own material",
+    "verified ink authored panel radius preserved",
+    "verified geek authored panel radius preserved",
+    "verified cyberpunk-2077 authored panel radius preserved",
+    "verified sidebar width slider keyboard adjusts and persists",
+    "verified width slider keyboard focus visible",
+    "verified sidebar width slider keyboard lower bound",
+    "verified sidebar width slider keyboard upper bound",
+    "verified navigator width slider keyboard adjusts and persists",
+    "verified navigator width slider keyboard lower bound",
+    "verified navigator width slider keyboard upper bound",
+    "verified saved width survives refresh",
+    "verified 200 percent native zoom reflows",
+    "verified large text rows expand together",
+    "verified large root text retains square rail",
+    "verified scrolling navigation retains symmetric insets",
+    "verified last navigation item reachable",
+    "verified touch rail and controls remain usable",
+    "verified reduced motion reaches final geometry immediately",
+    "verified startup reveals only the final persisted size",
+    "verified Windows default radius stays 6",
+    "no native renderer errors"
+  ],
+  "passed": 68,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "32df6af22bf8cebcf06b63a42b10fe6e7b3adb48adc4294813316cb0ad7cf1cb",
+      "bytes": 330
+    },
+    {
+      "path": "collapse-after-expanded-hover-focus-frames.json",
+      "sha256": "5280617728b58755d5936fe0191200de39fc8666a8a21c34c3412407c56a1670",
+      "bytes": 47372
+    },
+    {
+      "path": "collapse-frames.json",
+      "sha256": "802dcdfb052d6b4378c06b03efebe2c22283f5726d43b53afebb5a671c6a84d0",
+      "bytes": 50037
+    },
+    {
+      "path": "cyberpunk-2077-expanded.png",
+      "sha256": "441fd0c1ed842d2c56c8ed3ebd0cd4a5e0af312527a841c23c5148632974e78c",
+      "bytes": 272950
+    },
+    {
+      "path": "default-dark-expanded.png",
+      "sha256": "0eeb736125ee1fe1147c2cd5d6f008f3731e2b6808bdc653fdaf2856730350cc",
+      "bytes": 278168
+    },
+    {
+      "path": "default-light-collapsed.png",
+      "sha256": "311a25ebfd76c14b335089fc7d7584e0c631ca66eddfb6dc659de30ee69e9ed8",
+      "bytes": 184977
+    },
+    {
+      "path": "default-light-expanded.png",
+      "sha256": "21cba8518885bee9bad2aeb68efa401f23c10b009403e179354802a2ed3febf1",
+      "bytes": 244487
+    },
+    {
+      "path": "expand-after-rail-tooltip-frames.json",
+      "sha256": "fbed8a10363047bfb81f1d1c546db1c5df20fb2dac3e5d52e2c78441f2927438",
+      "bytes": 55520
+    },
+    {
+      "path": "expand-frames.json",
+      "sha256": "63b5955af95fc1b8fa54ea5bcb7b995f69cc68e7328c89aa72df997491e114bd",
+      "bytes": 49028
+    },
+    {
+      "path": "fixture.json",
+      "sha256": "d8a690b87027cad7da45421edd1bf77958353ea7853e18c76fa170b9851667dd",
+      "bytes": 277
+    },
+    {
+      "path": "geek-expanded.png",
+      "sha256": "5331468c62e7d3d21aa3786fa770ec6c46d9fb746c4cf06f3b8cc4a9d7f77863",
+      "bytes": 265452
+    },
+    {
+      "path": "ink-expanded.png",
+      "sha256": "f7a19060ff3335d73cd251c350d2fceaffd4774397e9a14473e7ab7de3e5d0a4",
+      "bytes": 266683
+    },
+    {
+      "path": "large-text-collapsed.png",
+      "sha256": "c1b7c6776985e8201bd37ab928bdfb589d9c984338c3ae99082981f4a7bc363c",
+      "bytes": 230643
+    },
+    {
+      "path": "large-text.png",
+      "sha256": "b4081c8956a2d73310a2086c0254acfc58992edd806abbde3ab4c8a5cad469b2",
+      "bytes": 292807
+    },
+    {
+      "path": "native-zoom-200.png",
+      "sha256": "eeb7828c8222fc3ff621f6a3b94880d3c21ae55a7d3f577ec8fcc3a741f8a690",
+      "bytes": 194146
+    },
+    {
+      "path": "process.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reduced-motion-collapsed.png",
+      "sha256": "fa79cd10f056e97559c6ca7bbe522afcd066c7625448e2fe506a3714654b246a",
+      "bytes": 184417
+    },
+    {
+      "path": "reduced-motion-frames.json",
+      "sha256": "182ec209e3fedc2e3db73e7adfd9a74e1e0a3d7d0d85c11ec32895b68f73bb0d",
+      "bytes": 28212
+    },
+    {
+      "path": "reverse-frames.json",
+      "sha256": "a23caafe5ccf2a0ea473976174025676e30e8b37f1e6b1bdd53da3f7f5f6a919",
+      "bytes": 63851
+    },
+    {
+      "path": "shell-recording.webm",
+      "sha256": "34915fe0a03fd8215b63e89d3e729dddfcbc549f46fdab1958faacacb1a7449f",
+      "bytes": 3943375
+    },
+    {
+      "path": "shell-visual.json",
+      "sha256": "1c91d9217dc975b5604c6b33d5aca53851829cc33fc58b81adcc48705cbfa4f2",
+      "bytes": 1127504
+    },
+    {
+      "path": "short-window.png",
+      "sha256": "2877c7ffe3b4f95c9d47a90425dd1a96798fd8321d51ca9eca84d50a40e56510",
+      "bytes": 193854
+    },
+    {
+      "path": "startup-frames.json",
+      "sha256": "d4c5330d10dbc3f4be1025c9a197809a6159481a4d72c6df07809c0c4e9865c1",
+      "bytes": 33571
+    },
+    {
+      "path": "startup-settled.png",
+      "sha256": "94f253926bf27ca0bcd6b5550fa61848c13ea0dffd2f1e12d83d1c997ea1ad45",
+      "bytes": 222519
+    },
+    {
+      "path": "touch-collapsed.png",
+      "sha256": "18b570ee68d989a0fad8fb363fb805f9f730c91e413f2964dc867af3ec82c1a4",
+      "bytes": 183445
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "d4cc252591350fe8aad9c57894005f3fc98381e85fce56e40156294c0f734c40",
+      "bytes": 66028040
+    },
+    {
+      "path": "windows-policy.png",
+      "sha256": "242b322a7588c0c8ef70ffe74dffeea0baadfa7f953d63d291d2db48fb1d21c6",
+      "bytes": 247011
+    }
+  ],
+  "untested": [
+    "Windows native compositor: platform policy simulated in the macOS renderer",
+    "Signed installer, native Linux, physical touch hardware"
+  ]
+}

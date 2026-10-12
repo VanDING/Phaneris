@@ -1,0 +1,2637 @@
+[
+  {
+    "time": 0,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 1.900000000372529,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 10.900000000372529,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 22.09999999962747,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 30.90000000037253,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 71.90000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 86.80000000074506,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 176.25,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 160.25,
+      "height": 28,
+      "centerX": 88.125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 160.25,
+      "height": 28,
+      "centerX": 88.125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 128.25,
+      "height": 28,
+      "centerX": 72.125,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 140.25,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 154.25,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 113.59999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 144.8515625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.0234375,
+      "y": 35.75,
+      "width": 127.5078125,
+      "height": 28,
+      "centerX": 71.77734375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.0234375,
+      "y": 0,
+      "width": 127.5078125,
+      "height": 28,
+      "centerX": 71.77734375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.504276,
+    "profile": {
+      "x": 8.0234375,
+      "y": 917.6015625,
+      "width": 95.9296875,
+      "height": 28,
+      "centerX": 55.98828125,
+      "centerY": 931.6015625
+    },
+    "settings": {
+      "x": 107.5390625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 121.5390625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 137.40000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 107.6875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.6484375,
+      "y": 35.75,
+      "width": 70.890625,
+      "height": 28,
+      "centerX": 44.09375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.6484375,
+      "y": 0,
+      "width": 70.890625,
+      "height": 28,
+      "centerX": 44.09375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.0596457,
+    "profile": {
+      "x": 8.6484375,
+      "y": 908.2109375,
+      "width": 49.3359375,
+      "height": 28,
+      "centerX": 33.31640625,
+      "centerY": 922.2109375
+    },
+    "settings": {
+      "x": 51.546875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 65.546875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 159.2000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 88.28125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.21875,
+      "y": 35.75,
+      "width": 45.265625,
+      "height": 28,
+      "centerX": 31.8515625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.21875,
+      "y": 0,
+      "width": 45.265625,
+      "height": 28,
+      "centerX": 31.8515625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.00410855,
+    "profile": {
+      "x": 9.21875,
+      "y": 899.703125,
+      "width": 32.78125,
+      "height": 28,
+      "centerX": 25.609375,
+      "centerY": 913.703125
+    },
+    "settings": {
+      "x": 26.4921875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 40.4921875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 178.09999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 76.09375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.4296875,
+      "y": 35.75,
+      "width": 37.0703125,
+      "height": 28,
+      "centerX": 27.96484375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.4296875,
+      "y": 0,
+      "width": 37.0703125,
+      "height": 28,
+      "centerX": 27.96484375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.000120251,
+    "profile": {
+      "x": 9.4296875,
+      "y": 896.4921875,
+      "width": 28.0234375,
+      "height": 28,
+      "centerX": 23.44140625,
+      "centerY": 910.4921875
+    },
+    "settings": {
+      "x": 18.515625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 32.515625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 203.59999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 68.296875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.5859375,
+      "y": 35.75,
+      "width": 32.9609375,
+      "height": 28,
+      "centerX": 26.06640625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.5859375,
+      "y": 0,
+      "width": 32.9609375,
+      "height": 28,
+      "centerX": 26.06640625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.5859375,
+      "y": 894.1328125,
+      "width": 26.421875,
+      "height": 28,
+      "centerX": 22.796875,
+      "centerY": 908.1328125
+    },
+    "settings": {
+      "x": 14.5546875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 28.5546875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 218.90000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 60.7265625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.703125,
+      "y": 35.75,
+      "width": 30.421875,
+      "height": 28,
+      "centerX": 24.9140625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.703125,
+      "y": 0,
+      "width": 30.421875,
+      "height": 28,
+      "centerX": 24.9140625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.703125,
+      "y": 892.3515625,
+      "width": 25.78125,
+      "height": 28,
+      "centerX": 22.59375,
+      "centerY": 906.3515625
+    },
+    "settings": {
+      "x": 12.140625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 26.140625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 232.30000000074506,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 57.25,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.75,
+      "y": 35.75,
+      "width": 29.609375,
+      "height": 28,
+      "centerX": 24.5546875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.75,
+      "y": 0,
+      "width": 29.609375,
+      "height": 28,
+      "centerX": 24.5546875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.75,
+      "y": 891.65625,
+      "width": 25.7109375,
+      "height": 28,
+      "centerX": 22.60546875,
+      "centerY": 905.65625
+    },
+    "settings": {
+      "x": 11.375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 25.375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 244.2000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 54.6484375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.828125,
+      "y": 35.75,
+      "width": 28.8828125,
+      "height": 28,
+      "centerX": 24.26953125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.828125,
+      "y": 0,
+      "width": 28.8828125,
+      "height": 28,
+      "centerX": 24.26953125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.828125,
+      "y": 890.5078125,
+      "width": 26.21875,
+      "height": 28,
+      "centerX": 22.9375,
+      "centerY": 904.5078125
+    },
+    "settings": {
+      "x": 10.7265625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.7265625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 256.90000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 52.859375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.859375,
+      "y": 35.75,
+      "width": 28.6015625,
+      "height": 28,
+      "centerX": 24.16015625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.859375,
+      "y": 0,
+      "width": 28.6015625,
+      "height": 28,
+      "centerX": 24.16015625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.859375,
+      "y": 890.0390625,
+      "width": 26.421875,
+      "height": 28,
+      "centerX": 23.0703125,
+      "centerY": 904.0390625
+    },
+    "settings": {
+      "x": 10.46875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.46875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 268.5,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 51.3671875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.890625,
+      "y": 35.75,
+      "width": 28.390625,
+      "height": 28,
+      "centerX": 24.0859375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.890625,
+      "y": 0,
+      "width": 28.390625,
+      "height": 28,
+      "centerX": 24.0859375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.890625,
+      "y": 889.6171875,
+      "width": 26.671875,
+      "height": 28,
+      "centerX": 23.2265625,
+      "centerY": 903.6171875
+    },
+    "settings": {
+      "x": 10.2890625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.2890625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 279.80000000074506,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 50.21875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.9140625,
+      "y": 35.75,
+      "width": 28.265625,
+      "height": 28,
+      "centerX": 24.046875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.9140625,
+      "y": 0,
+      "width": 28.265625,
+      "height": 28,
+      "centerX": 24.046875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.9140625,
+      "y": 889.2890625,
+      "width": 26.890625,
+      "height": 28,
+      "centerX": 23.359375,
+      "centerY": 903.2890625
+    },
+    "settings": {
+      "x": 10.1875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.1875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 291.2000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 49.3671875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.9296875,
+      "y": 35.75,
+      "width": 28.171875,
+      "height": 28,
+      "centerX": 24.015625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.9296875,
+      "y": 0,
+      "width": 28.171875,
+      "height": 28,
+      "centerX": 24.015625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.9296875,
+      "y": 888.9921875,
+      "width": 27.1171875,
+      "height": 28,
+      "centerX": 23.48828125,
+      "centerY": 902.9921875
+    },
+    "settings": {
+      "x": 10.1171875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.1171875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 301.80000000074506,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48.6953125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.9453125,
+      "y": 35.75,
+      "width": 28.109375,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.9453125,
+      "y": 0,
+      "width": 28.109375,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.9453125,
+      "y": 888.734375,
+      "width": 27.3359375,
+      "height": 28,
+      "centerX": 23.61328125,
+      "centerY": 902.734375
+    },
+    "settings": {
+      "x": 10.0703125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.0703125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 310.7000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48.328125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.9609375,
+      "y": 35.75,
+      "width": 28.0703125,
+      "height": 28,
+      "centerX": 23.99609375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.9609375,
+      "y": 0,
+      "width": 28.0703125,
+      "height": 28,
+      "centerX": 23.99609375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.9609375,
+      "y": 888.53125,
+      "width": 27.5078125,
+      "height": 28,
+      "centerX": 23.71484375,
+      "centerY": 902.53125
+    },
+    "settings": {
+      "x": 10.046875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.046875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 321.30000000074506,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48.109375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.96875,
+      "y": 35.75,
+      "width": 28.046875,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.96875,
+      "y": 0,
+      "width": 28.046875,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.96875,
+      "y": 888.359375,
+      "width": 27.6640625,
+      "height": 28,
+      "centerX": 23.80078125,
+      "centerY": 902.359375
+    },
+    "settings": {
+      "x": 10.03125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.03125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 331.2000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.984375,
+      "y": 35.75,
+      "width": 28.0234375,
+      "height": 28,
+      "centerX": 23.99609375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.984375,
+      "y": 0,
+      "width": 28.0234375,
+      "height": 28,
+      "centerX": 23.99609375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.984375,
+      "y": 888.2265625,
+      "width": 27.7890625,
+      "height": 28,
+      "centerX": 23.87890625,
+      "centerY": 902.2265625
+    },
+    "settings": {
+      "x": 10.015625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.015625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 338.90000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.984375,
+      "y": 35.75,
+      "width": 28.015625,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.984375,
+      "y": 0,
+      "width": 28.015625,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.984375,
+      "y": 888.125,
+      "width": 27.8828125,
+      "height": 28,
+      "centerX": 23.92578125,
+      "centerY": 902.125
+    },
+    "settings": {
+      "x": 10.015625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.015625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 347.80000000074506,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.9921875,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.9921875,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.9921875,
+      "y": 888.0546875,
+      "width": 27.9453125,
+      "height": 28,
+      "centerX": 23.96484375,
+      "centerY": 902.0546875
+    },
+    "settings": {
+      "x": 10.0078125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.0078125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 360.09999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.9921875,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.9921875,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.9921875,
+      "y": 888.015625,
+      "width": 27.984375,
+      "height": 28,
+      "centerX": 23.984375,
+      "centerY": 902.015625
+    },
+    "settings": {
+      "x": 10.0078125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24.0078125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 368.2000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 27.9921875,
+      "height": 28,
+      "centerX": 23.99609375,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 381.2000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 383.09999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 391.2000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 400.90000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 410.5,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 420.90000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 430.90000000037253,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 440.59999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 450.59999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 460.7000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 470.80000000074506,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 481.09999999962747,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 490.7000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 500.7000000011176,
+    "collapsed": true,
+    "tooltips": 5,
+    "tooltipTexts": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件"
+    ],
+    "focusLabel": "插件",
+    "sidebarWidth": 48,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 10,
+      "y": 35.75,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 10,
+      "y": 0,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 10,
+      "y": 888,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 902
+    },
+    "settings": {
+      "x": 10,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 24,
+      "centerY": 932
+    }
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "source": ".cache/verification/shell-visual-tooltip-residue-before",
+  "scope": "Failed pre-fix observations; the recorded run aborted on its first failing assertion, so scenes are incomplete and this selection is not an accepted result",
+  "artifacts": [
+    {
+      "path": "failure.json",
+      "sha256": "dafa83b94bf8382ee0086bfaf1c9060bfa1e0687aea1c3ed875bb5055b17420f",
+      "bytes": 14803
+    },
+    {
+      "path": "shell-visual.json",
+      "sha256": "a26ad751857dc90d8dd0dd95313d750b27d8fdbad6db78f271288433f69a1c7d",
+      "bytes": 627696
+    },
+    {
+      "path": "build-hashes.json",
+      "sha256": "dff8db217988477ef4f3030e54cb8c2268e0325c0e56ffae3b7100ef518f76b0",
+      "bytes": 330
+    },
+    {
+      "path": "fixture.json",
+      "sha256": "05dbca2d5d012ba44e2384460bc3ffd851166e31cd341def944b8961c9f0ceef",
+      "bytes": 278
+    },
+    {
+      "path": "process.log",
+      "sha256": "fe15e3bc72473878c228c8740d97d5b4b714b805996a55532331fad51e7e27d9",
+      "bytes": 30674
+    },
+    {
+      "path": "collapse-after-expanded-hover-focus-frames.json",
+      "sha256": "5596759064cd700177b48e33d7e82e4f1b9f706f6d0cbf2fbdedbefda400adf7",
+      "bytes": 48675
+    },
+    {
+      "path": "collapse-frames.json",
+      "sha256": "dd6099af1d46c7b00f1347f17712cf73ec5cd8b2ba9940d0442320ffa444fcc3",
+      "bytes": 47905
+    },
+    {
+      "path": "expand-frames.json",
+      "sha256": "38fc3a90c5636dc00ae9a08232d88f5c7c4cb0d55f2ad7f73ac6a021d14c7708",
+      "bytes": 51257
+    }
+  ]
+}

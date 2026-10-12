@@ -1,0 +1,26 @@
+{
+  "probe": {
+    "railLabels": [
+      "所有会话",
+      "标签",
+      "数据源",
+      "技能",
+      "插件",
+      "项目",
+      "页面",
+      "自动化"
+    ],
+    "collapsedAfterShortcut": true,
+    "maxTooltipsDuringCollapse": 0,
+    "settledResidue": [],
+    "hoverShowsTooltip": [
+      "标签"
+    ],
+    "afterLeavingRail": []
+  },
+  "release": {
+    "Phaneris-0.3.1-mac-x64.dmg": "b26f0149cf80c8ef6b8d944168951fcf79e75ad3a18b7a7b904cac3e9ffbd3ca",
+    "Phaneris-0.3.1-mac-x64.zip": "5dd7539c47edbe35146071d9fcf1d3f065a0345b92b8d3a0894810289c01eda9"
+  },
+  "note": "Probe ran against the packaged app bundle (release/mac/Phaneris.app), i.e. the same build as the DMG/ZIP hashes here."
+}

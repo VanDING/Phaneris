@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "workflow": "shell-visual",
+  "startedAt": "2026-10-12T16:31:02.111Z",
+  "finishedAt": "2026-10-12T16:31:17.708Z",
+  "command": [
+    "/Users/van/.bun/bin/bun",
+    "/Users/van/projects/Phaneris/scripts/verification/shell-visual-workflow.ts",
+    "--output-dir=/Users/van/projects/Phaneris/.cache/verification/shell-visual-tooltip-residue-before"
+  ],
+  "source": {
+    "headSha": "e27698d916df968bf594f1d6bb9ecd69b42950b9",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      " M docs/verification/results/packaged-client-smoke.json",
+      " M docs/verification/results/packaged-client-verification.json",
+      " M scripts/verification/fixtures/shell-visual.cjs",
+      "?? docs/verification/sidebar-tooltip-residue-failure-matrix-2026-10-13.md"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "sha256": "f0459dfc46fae7c8ca81d552ab84773b73e2888815f6374e5ca3659d4dfbf33e"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke.json",
+        "sha256": "2ef31b446564ac9e1a5ac188514e4de8029db562e7d4a86eef32f7d23b097af1"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification.json",
+        "sha256": "8c933623a17e7065cb21ac328888132b7c16f10c427b8b59551d3eba9db77668"
+      },
+      {
+        "path": "docs/verification/sidebar-tooltip-residue-failure-matrix-2026-10-13.md",
+        "sha256": "5f2bba02dd451a7143320145f014c8dc79a7ced566252499a300758f4addba63"
+      },
+      {
+        "path": "scripts/verification/fixtures/shell-visual.cjs",
+        "sha256": "949ff46b222ddd924e43a493853a3d99c3ec032024351a174088c9aa296b64fe"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "uv": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+    "platform": "darwin",
+    "architecture": "x64",
+    "osRelease": "25.6.0",
+    "executable": "/Users/van/.bun/bin/bun"
+  },
+  "sceneIds": [],
+  "passed": 0,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "dff8db217988477ef4f3030e54cb8c2268e0325c0e56ffae3b7100ef518f76b0",
+      "bytes": 330
+    },
+    {
+      "path": "collapse-after-expanded-hover-focus-frames.json",
+      "sha256": "5596759064cd700177b48e33d7e82e4f1b9f706f6d0cbf2fbdedbefda400adf7",
+      "bytes": 48675
+    },
+    {
+      "path": "collapse-frames.json",
+      "sha256": "dd6099af1d46c7b00f1347f17712cf73ec5cd8b2ba9940d0442320ffa444fcc3",
+      "bytes": 47905
+    },
+    {
+      "path": "default-light-collapsed.png",
+      "sha256": "1cc2c4f866087e77a74bd4e72d1ecd39f93e48b20ae36dc7bd98d6d5d4da3f6a",
+      "bytes": 186030
+    },
+    {
+      "path": "default-light-expanded.png",
+      "sha256": "b918eb0cace45293bea88de14bc3e69d6dd170b453fa41e51fa05b4bc7eb7143",
+      "bytes": 245753
+    },
+    {
+      "path": "expand-frames.json",
+      "sha256": "38fc3a90c5636dc00ae9a08232d88f5c7c4cb0d55f2ad7f73ac6a021d14c7708",
+      "bytes": 51257
+    },
+    {
+      "path": "failure.json",
+      "sha256": "dafa83b94bf8382ee0086bfaf1c9060bfa1e0687aea1c3ed875bb5055b17420f",
+      "bytes": 14803
+    },
+    {
+      "path": "fixture.json",
+      "sha256": "05dbca2d5d012ba44e2384460bc3ffd851166e31cd341def944b8961c9f0ceef",
+      "bytes": 278
+    },
+    {
+      "path": "process.log",
+      "sha256": "fe15e3bc72473878c228c8740d97d5b4b714b805996a55532331fad51e7e27d9",
+      "bytes": 30674
+    },
+    {
+      "path": "shell-recording.webm",
+      "sha256": "e4da68681fcc4311589ff9b68f5575b623fb65b07959fcf51d116a8faaa8fabd",
+      "bytes": 1105551
+    },
+    {
+      "path": "shell-visual.json",
+      "sha256": "a26ad751857dc90d8dd0dd95313d750b27d8fdbad6db78f271288433f69a1c7d",
+      "bytes": 627696
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "a9ddd11934fe47d16337144288fe9de7cee802da2383a28b8390ae358927a33c",
+      "bytes": 20448060
+    }
+  ],
+  "untested": [
+    "Windows/Linux native execution",
+    "live provider APIs",
+    "signed installer/release"
+  ]
+}

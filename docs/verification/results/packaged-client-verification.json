@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-12T14:45:59.146Z",
+  "date": "2026-10-12T16:45:24.216Z",
   "arch": "x64",
   "expected": {
     "version": "0.3.1",
@@ -91,7 +91,7 @@
   ],
   "dmg": {
     "path": "/Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.3.1-mac-x64.dmg",
-    "bytes": 219961672
+    "bytes": 219963694
   },
   "app": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
   "identity": {

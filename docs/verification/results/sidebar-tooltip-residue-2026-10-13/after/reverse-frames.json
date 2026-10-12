@@ -1,0 +1,3365 @@
+[
+  {
+    "time": 0.10000000149011612,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 3.200000001117587,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 13.300000000745058,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 23.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 50.5,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 58.100000001490116,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 196.3359375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 180.3359375,
+      "height": 28,
+      "centerX": 98.16796875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 180.3359375,
+      "height": 28,
+      "centerX": 98.16796875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 148.3359375,
+      "height": 28,
+      "centerX": 82.16796875,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 160.3359375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 174.3359375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 73.5,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 189.6953125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.0234375,
+      "y": 35.75,
+      "width": 171.8046875,
+      "height": 28,
+      "centerX": 93.92578125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.0234375,
+      "y": 0,
+      "width": 171.8046875,
+      "height": 28,
+      "centerX": 93.92578125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.50894,
+    "profile": {
+      "x": 8.0234375,
+      "y": 917.6171875,
+      "width": 140.21875,
+      "height": 28,
+      "centerX": 78.1328125,
+      "centerY": 931.6171875
+    },
+    "settings": {
+      "x": 151.8359375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 165.8359375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 84.60000000149012,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 159.015625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.125,
+      "y": 35.75,
+      "width": 135.4140625,
+      "height": 28,
+      "centerX": 75.83203125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.125,
+      "y": 0,
+      "width": 135.4140625,
+      "height": 28,
+      "centerX": 75.83203125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.25126,
+    "profile": {
+      "x": 8.125,
+      "y": 916.0234375,
+      "width": 105.53125,
+      "height": 28,
+      "centerX": 60.890625,
+      "centerY": 930.0234375
+    },
+    "settings": {
+      "x": 115.5546875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 129.5546875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 95.30000000074506,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 137.6796875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.359375,
+      "y": 35.75,
+      "width": 104.7109375,
+      "height": 28,
+      "centerX": 60.71484375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.359375,
+      "y": 0,
+      "width": 104.7109375,
+      "height": 28,
+      "centerX": 60.71484375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.124492,
+    "profile": {
+      "x": 8.359375,
+      "y": 912.5703125,
+      "width": 78.5078125,
+      "height": 28,
+      "centerX": 47.61328125,
+      "centerY": 926.5703125
+    },
+    "settings": {
+      "x": 85.0859375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 99.0859375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 105.70000000111759,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 121.3828125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.6484375,
+      "y": 35.75,
+      "width": 80.140625,
+      "height": 28,
+      "centerX": 48.71875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.6484375,
+      "y": 0,
+      "width": 80.140625,
+      "height": 28,
+      "centerX": 48.71875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.059772,
+    "profile": {
+      "x": 8.6484375,
+      "y": 908.21875,
+      "width": 58.578125,
+      "height": 28,
+      "centerX": 37.9375,
+      "centerY": 922.21875
+    },
+    "settings": {
+      "x": 60.796875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 74.796875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 119,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 109.765625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.0625,
+      "y": 35.75,
+      "width": 58.7421875,
+      "height": 28,
+      "centerX": 38.43359375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.0625,
+      "y": 0,
+      "width": 58.7421875,
+      "height": 28,
+      "centerX": 38.43359375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.0122494,
+    "profile": {
+      "x": 9.0625,
+      "y": 902.03125,
+      "width": 43.78125,
+      "height": 28,
+      "centerX": 30.953125,
+      "centerY": 916.03125
+    },
+    "settings": {
+      "x": 39.8125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 53.8125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 133.5,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 97.8203125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.2109375,
+      "y": 35.75,
+      "width": 49.203125,
+      "height": 28,
+      "centerX": 33.8125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.2109375,
+      "y": 0,
+      "width": 49.203125,
+      "height": 28,
+      "centerX": 33.8125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.00441838,
+    "profile": {
+      "x": 9.2109375,
+      "y": 899.828125,
+      "width": 36.59375,
+      "height": 28,
+      "centerX": 27.5078125,
+      "centerY": 913.828125
+    },
+    "settings": {
+      "x": 30.421875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 44.421875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 147.80000000074506,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 86.9921875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.4296875,
+      "y": 35.75,
+      "width": 40.1640625,
+      "height": 28,
+      "centerX": 29.51171875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.4296875,
+      "y": 0,
+      "width": 40.1640625,
+      "height": 28,
+      "centerX": 29.51171875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.000121348,
+    "profile": {
+      "x": 9.4296875,
+      "y": 896.4921875,
+      "width": 31.109375,
+      "height": 28,
+      "centerX": 24.984375,
+      "centerY": 910.4921875
+    },
+    "settings": {
+      "x": 21.6015625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 35.6015625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 166.80000000074506,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 79.078125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.5859375,
+      "y": 35.75,
+      "width": 35.171875,
+      "height": 28,
+      "centerX": 27.171875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.5859375,
+      "y": 0,
+      "width": 35.171875,
+      "height": 28,
+      "centerX": 27.171875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.5859375,
+      "y": 894.140625,
+      "width": 28.625,
+      "height": 28,
+      "centerX": 23.8984375,
+      "centerY": 908.140625
+    },
+    "settings": {
+      "x": 16.7734375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 30.7734375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 186,
+    "collapsed": true,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 70.546875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.703125,
+      "y": 35.75,
+      "width": 31.84375,
+      "height": 28,
+      "centerX": 25.625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.703125,
+      "y": 0,
+      "width": 31.84375,
+      "height": 28,
+      "centerX": 25.625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.703125,
+      "y": 892.3515625,
+      "width": 27.203125,
+      "height": 28,
+      "centerX": 23.3046875,
+      "centerY": 906.3515625
+    },
+    "settings": {
+      "x": 13.5546875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 27.5546875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 228.30000000074506,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 58.7734375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.703125,
+      "y": 35.75,
+      "width": 30.1328125,
+      "height": 28,
+      "centerX": 24.76953125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.703125,
+      "y": 0,
+      "width": 30.1328125,
+      "height": 28,
+      "centerX": 24.76953125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.703125,
+      "y": 892.3515625,
+      "width": 25.5,
+      "height": 28,
+      "centerX": 22.453125,
+      "centerY": 906.3515625
+    },
+    "settings": {
+      "x": 11.8515625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 25.8515625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 237.90000000037253,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 72.3515625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.703125,
+      "y": 35.75,
+      "width": 32.1015625,
+      "height": 28,
+      "centerX": 25.75390625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.703125,
+      "y": 0,
+      "width": 32.1015625,
+      "height": 28,
+      "centerX": 25.75390625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0,
+    "profile": {
+      "x": 9.703125,
+      "y": 892.3515625,
+      "width": 27.46875,
+      "height": 28,
+      "centerX": 23.4375,
+      "centerY": 906.3515625
+    },
+    "settings": {
+      "x": 13.8203125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 27.8203125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 254.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 88.765625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.671875,
+      "y": 35.75,
+      "width": 35.2109375,
+      "height": 28,
+      "centerX": 27.27734375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.671875,
+      "y": 0,
+      "width": 35.2109375,
+      "height": 28,
+      "centerX": 27.27734375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.497987,
+    "profile": {
+      "x": 9.671875,
+      "y": 892.84375,
+      "width": 30.0546875,
+      "height": 28,
+      "centerX": 24.69921875,
+      "centerY": 906.84375
+    },
+    "settings": {
+      "x": 16.8984375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 30.8984375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 270.2000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 119.7421875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.53125,
+      "y": 35.75,
+      "width": 45.53125,
+      "height": 28,
+      "centerX": 32.296875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.53125,
+      "y": 0,
+      "width": 45.53125,
+      "height": 28,
+      "centerX": 32.296875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.753871,
+    "profile": {
+      "x": 9.53125,
+      "y": 894.9453125,
+      "width": 38.125,
+      "height": 28,
+      "centerX": 28.59375,
+      "centerY": 908.9453125
+    },
+    "settings": {
+      "x": 27.078125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 41.078125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 282.6000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 139.6484375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 9.0078125,
+      "y": 35.75,
+      "width": 75.390625,
+      "height": 28,
+      "centerX": 46.703125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 9.0078125,
+      "y": 0,
+      "width": 75.390625,
+      "height": 28,
+      "centerX": 46.703125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.940628,
+    "profile": {
+      "x": 9.0078125,
+      "y": 902.8671875,
+      "width": 59.5390625,
+      "height": 28,
+      "centerX": 38.77734375,
+      "centerY": 916.8671875
+    },
+    "settings": {
+      "x": 56.4140625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 70.4140625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 292.90000000037253,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 150.65625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.8125,
+      "y": 35.75,
+      "width": 91.1796875,
+      "height": 28,
+      "centerX": 54.40234375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.8125,
+      "y": 0,
+      "width": 91.1796875,
+      "height": 28,
+      "centerX": 54.40234375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.972225,
+    "profile": {
+      "x": 8.8125,
+      "y": 905.7734375,
+      "width": 72.21875,
+      "height": 28,
+      "centerX": 44.921875,
+      "centerY": 919.7734375
+    },
+    "settings": {
+      "x": 72,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 86,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 307.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 158.71875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.546875,
+      "y": 35.75,
+      "width": 111.0234375,
+      "height": 28,
+      "centerX": 64.05859375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.546875,
+      "y": 0,
+      "width": 111.0234375,
+      "height": 28,
+      "centerX": 64.05859375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.995678,
+    "profile": {
+      "x": 8.546875,
+      "y": 909.71875,
+      "width": 87.859375,
+      "height": 28,
+      "centerX": 52.4765625,
+      "centerY": 923.71875
+    },
+    "settings": {
+      "x": 91.5859375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 105.5859375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 316.1000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 167.109375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.453125,
+      "y": 35.75,
+      "width": 122.9765625,
+      "height": 28,
+      "centerX": 69.94140625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.453125,
+      "y": 0,
+      "width": 122.9765625,
+      "height": 28,
+      "centerX": 69.94140625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.998891,
+    "profile": {
+      "x": 8.453125,
+      "y": 911.1484375,
+      "width": 98.2890625,
+      "height": 28,
+      "centerX": 57.59765625,
+      "centerY": 925.1484375
+    },
+    "settings": {
+      "x": 103.4375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 117.4375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 326.1000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 171.6328125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.375,
+      "y": 35.75,
+      "width": 131.5546875,
+      "height": 28,
+      "centerX": 74.15234375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.375,
+      "y": 0,
+      "width": 131.5546875,
+      "height": 28,
+      "centerX": 74.15234375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 0.999882,
+    "profile": {
+      "x": 8.375,
+      "y": 912.34375,
+      "width": 105.59375,
+      "height": 28,
+      "centerX": 61.171875,
+      "centerY": 926.34375
+    },
+    "settings": {
+      "x": 111.9453125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 125.9453125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 347.6000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 176,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.25,
+      "y": 35.75,
+      "width": 143.171875,
+      "height": 28,
+      "centerX": 79.8359375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.25,
+      "y": 0,
+      "width": 143.171875,
+      "height": 28,
+      "centerX": 79.8359375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.25,
+      "y": 914.1796875,
+      "width": 115.25,
+      "height": 28,
+      "centerX": 65.875,
+      "centerY": 928.1796875
+    },
+    "settings": {
+      "x": 123.4375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 137.4375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 362.1000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 183.34375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.203125,
+      "y": 35.75,
+      "width": 152.8671875,
+      "height": 28,
+      "centerX": 84.63671875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.203125,
+      "y": 0,
+      "width": 152.8671875,
+      "height": 28,
+      "centerX": 84.63671875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.203125,
+      "y": 914.890625,
+      "width": 124.1875,
+      "height": 28,
+      "centerX": 70.296875,
+      "centerY": 928.890625
+    },
+    "settings": {
+      "x": 133.078125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 147.078125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 381.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 187.4921875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.125,
+      "y": 35.75,
+      "width": 161.9921875,
+      "height": 28,
+      "centerX": 89.12109375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.125,
+      "y": 0,
+      "width": 161.9921875,
+      "height": 28,
+      "centerX": 89.12109375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.125,
+      "y": 916.015625,
+      "width": 132.109375,
+      "height": 28,
+      "centerX": 74.1796875,
+      "centerY": 930.015625
+    },
+    "settings": {
+      "x": 142.1328125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 156.1328125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 395.90000000037253,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 191.5625,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.078125,
+      "y": 35.75,
+      "width": 169.75,
+      "height": 28,
+      "centerX": 92.953125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.078125,
+      "y": 0,
+      "width": 169.75,
+      "height": 28,
+      "centerX": 92.953125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.078125,
+      "y": 916.8203125,
+      "width": 139.0078125,
+      "height": 28,
+      "centerX": 77.58203125,
+      "centerY": 930.8203125
+    },
+    "settings": {
+      "x": 149.8359375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 163.8359375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 407.80000000074506,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 194.0859375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.0546875,
+      "y": 35.75,
+      "width": 173.7578125,
+      "height": 28,
+      "centerX": 94.93359375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.0546875,
+      "y": 0,
+      "width": 173.7578125,
+      "height": 28,
+      "centerX": 94.93359375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.0546875,
+      "y": 917.140625,
+      "width": 142.6796875,
+      "height": 28,
+      "centerX": 79.39453125,
+      "centerY": 931.140625
+    },
+    "settings": {
+      "x": 153.8203125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 167.8203125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 419.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 195.59375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.0390625,
+      "y": 35.75,
+      "width": 176.46875,
+      "height": 28,
+      "centerX": 96.2734375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.0390625,
+      "y": 0,
+      "width": 176.46875,
+      "height": 28,
+      "centerX": 96.2734375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.0390625,
+      "y": 917.3828125,
+      "width": 145.125,
+      "height": 28,
+      "centerX": 80.6015625,
+      "centerY": 931.3828125
+    },
+    "settings": {
+      "x": 156.515625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 170.515625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 432.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 196.9609375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.0234375,
+      "y": 35.75,
+      "width": 178.84375,
+      "height": 28,
+      "centerX": 97.4453125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.0234375,
+      "y": 0,
+      "width": 178.84375,
+      "height": 28,
+      "centerX": 97.4453125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.0234375,
+      "y": 917.5859375,
+      "width": 147.2890625,
+      "height": 28,
+      "centerX": 81.66796875,
+      "centerY": 931.5859375
+    },
+    "settings": {
+      "x": 158.8828125,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 172.8828125,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 446.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 198.09375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8.0078125,
+      "y": 35.75,
+      "width": 181.375,
+      "height": 28,
+      "centerX": 98.6953125,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8.0078125,
+      "y": 0,
+      "width": 181.375,
+      "height": 28,
+      "centerX": 98.6953125,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8.0078125,
+      "y": 917.8671875,
+      "width": 149.5234375,
+      "height": 28,
+      "centerX": 82.76953125,
+      "centerY": 931.8671875
+    },
+    "settings": {
+      "x": 161.390625,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 175.390625,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 457,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 199.0078125,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 182.703125,
+      "height": 28,
+      "centerX": 99.3515625,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 182.703125,
+      "height": 28,
+      "centerX": 99.3515625,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 917.9453125,
+      "width": 150.765625,
+      "height": 28,
+      "centerX": 83.3828125,
+      "centerY": 931.9453125
+    },
+    "settings": {
+      "x": 162.7109375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 176.7109375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 469.2000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 199.4921875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 183.421875,
+      "height": 28,
+      "centerX": 99.7109375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 183.421875,
+      "height": 28,
+      "centerX": 99.7109375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 15.9921875,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 15.9921875,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 23.9921875,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 917.9921875,
+      "width": 151.4296875,
+      "height": 28,
+      "centerX": 83.71484375,
+      "centerY": 931.9921875
+    },
+    "settings": {
+      "x": 163.4296875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 177.4296875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 484.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 199.84375,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 183.84375,
+      "height": 28,
+      "centerX": 99.921875,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 183.84375,
+      "height": 28,
+      "centerX": 99.921875,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 151.84375,
+      "height": 28,
+      "centerX": 83.921875,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 163.84375,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 177.84375,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 493.30000000074506,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 199.9921875,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 183.9921875,
+      "height": 28,
+      "centerX": 99.99609375,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 183.9921875,
+      "height": 28,
+      "centerX": 99.99609375,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 151.9921875,
+      "height": 28,
+      "centerX": 83.99609375,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 163.9921875,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 177.9921875,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 506.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 518.5,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 529.2000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 539.1000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 542.8000000007451,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 552.8000000007451,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 562.6000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 572.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 582.8000000007451,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 592.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 602.8000000007451,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 612.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 622.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 632.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 642.6000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 652.6000000014901,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 662.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 672.8000000007451,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 682.8000000007451,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 692.9000000003725,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  },
+  {
+    "time": 702.7000000011176,
+    "collapsed": false,
+    "tooltips": 0,
+    "tooltipTexts": [],
+    "focusLabel": "所有会话",
+    "sidebarWidth": 200,
+    "rowStable": true,
+    "buttonStable": true,
+    "row": {
+      "x": 8,
+      "y": 35.75,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 49.75
+    },
+    "button": {
+      "x": 8,
+      "y": 0,
+      "width": 184,
+      "height": 28,
+      "centerX": 100,
+      "centerY": 14
+    },
+    "rowIcon": {
+      "x": 16,
+      "y": 41.75,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 49.75
+    },
+    "newIcon": {
+      "x": 16,
+      "y": 6,
+      "width": 16,
+      "height": 16,
+      "centerX": 24,
+      "centerY": 14
+    },
+    "labelOpacity": 1,
+    "profile": {
+      "x": 8,
+      "y": 918,
+      "width": 152,
+      "height": 28,
+      "centerX": 84,
+      "centerY": 932
+    },
+    "settings": {
+      "x": 164,
+      "y": 918,
+      "width": 28,
+      "height": 28,
+      "centerX": 178,
+      "centerY": 932
+    }
+  }
+]
