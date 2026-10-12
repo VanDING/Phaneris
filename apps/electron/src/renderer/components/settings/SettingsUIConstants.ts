@@ -6,13 +6,13 @@
 
 export const settingsUI = {
   /** Label style for setting titles */
-  label: 'text-sm font-medium',
+  label: 'craft-text-label font-medium text-text-primary',
 
   /** Description style for setting subtitles */
-  description: 'text-[13px] leading-relaxed text-muted-foreground',
+  description: 'craft-text-label leading-relaxed text-text-secondary',
 
   /** Smaller description for compact contexts (e.g., menu options) */
-  descriptionSmall: 'text-xs text-muted-foreground',
+  descriptionSmall: 'craft-text-caption text-text-secondary',
 
   /** Gap between label and description (applied to description as margin-top) */
   labelDescriptionGap: 'mt-1',

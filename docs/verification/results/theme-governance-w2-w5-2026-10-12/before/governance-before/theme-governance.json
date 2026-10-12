@@ -1,0 +1,409 @@
+{
+  "checks": [
+    {
+      "id": "TC16-apps/electron-jsx",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/electron must reject jsx"
+    },
+    {
+      "id": "TC16-apps/electron-cn",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/electron must reject cn"
+    },
+    {
+      "id": "TC16-apps/electron-cva",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/electron must reject cva"
+    },
+    {
+      "id": "TC16-apps/electron-template",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/electron must reject template"
+    },
+    {
+      "id": "TC16-apps/electron-a11y",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/electron must reject a11y"
+    },
+    {
+      "id": "TC16-apps/electron-shadow",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-motion",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-jsx",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: packages/ui must reject jsx"
+    },
+    {
+      "id": "TC16-packages/ui-cn",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: packages/ui must reject cn"
+    },
+    {
+      "id": "TC16-packages/ui-cva",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: packages/ui must reject cva"
+    },
+    {
+      "id": "TC16-packages/ui-template",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: packages/ui must reject template"
+    },
+    {
+      "id": "TC16-packages/ui-a11y",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: packages/ui must reject a11y"
+    },
+    {
+      "id": "TC16-packages/ui-shadow",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-motion",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-jsx",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/webui must reject jsx"
+    },
+    {
+      "id": "TC16-apps/webui-cn",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/webui must reject cn"
+    },
+    {
+      "id": "TC16-apps/webui-cva",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/webui must reject cva"
+    },
+    {
+      "id": "TC16-apps/webui-template",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/webui must reject template"
+    },
+    {
+      "id": "TC16-apps/webui-a11y",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/webui must reject a11y"
+    },
+    {
+      "id": "TC16-apps/webui-shadow",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/webui must reject shadow"
+    },
+    {
+      "id": "TC16-apps/webui-motion",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/webui must reject motion"
+    },
+    {
+      "id": "TC16-apps/webui-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-jsx",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/viewer must reject jsx"
+    },
+    {
+      "id": "TC16-apps/viewer-cn",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/viewer must reject cn"
+    },
+    {
+      "id": "TC16-apps/viewer-cva",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/viewer must reject cva"
+    },
+    {
+      "id": "TC16-apps/viewer-template",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/viewer must reject template"
+    },
+    {
+      "id": "TC16-apps/viewer-a11y",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/viewer must reject a11y"
+    },
+    {
+      "id": "TC16-apps/viewer-shadow",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/viewer must reject shadow"
+    },
+    {
+      "id": "TC16-apps/viewer-motion",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: apps/viewer must reject motion"
+    },
+    {
+      "id": "TC16-apps/viewer-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC15-css-semantic",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: error: Module not found \"scripts/check-visual-contracts.ts\"\n\n\nfalse !== true\n"
+    },
+    {
+      "id": "TC15-css-literal",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: error: Module not found \"scripts/check-visual-contracts.ts\"\n"
+    },
+    {
+      "id": "TC15-css-comment",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: error: Module not found \"scripts/check-visual-contracts.ts\"\n\n\nfalse !== true\n"
+    },
+    {
+      "id": "TC17-motion-parity",
+      "passed": true
+    },
+    {
+      "id": "TC17-motion-drift",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Theme contract verified: 39 fields, 4 built-ins, 65 Shiki themes.\n\n\ntrue !== false\n"
+    }
+  ],
+  "reports": [
+    {
+      "member": "apps/electron",
+      "kind": "jsx",
+      "messages": []
+    },
+    {
+      "member": "apps/electron",
+      "kind": "cn",
+      "messages": []
+    },
+    {
+      "member": "apps/electron",
+      "kind": "cva",
+      "messages": []
+    },
+    {
+      "member": "apps/electron",
+      "kind": "template",
+      "messages": []
+    },
+    {
+      "member": "apps/electron",
+      "kind": "a11y",
+      "messages": []
+    },
+    {
+      "member": "apps/electron",
+      "kind": "shadow",
+      "messages": [
+        {
+          "ruleId": "craft-styles/no-nonstandard-shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "motion",
+      "messages": [
+        {
+          "ruleId": "craft-styles/no-transition-all",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "jsx",
+      "messages": []
+    },
+    {
+      "member": "packages/ui",
+      "kind": "cn",
+      "messages": []
+    },
+    {
+      "member": "packages/ui",
+      "kind": "cva",
+      "messages": []
+    },
+    {
+      "member": "packages/ui",
+      "kind": "template",
+      "messages": []
+    },
+    {
+      "member": "packages/ui",
+      "kind": "a11y",
+      "messages": []
+    },
+    {
+      "member": "packages/ui",
+      "kind": "shadow",
+      "messages": [
+        {
+          "ruleId": "craft-styles/no-nonstandard-shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "motion",
+      "messages": [
+        {
+          "ruleId": "craft-styles/no-transition-all",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "jsx",
+      "messages": []
+    },
+    {
+      "member": "apps/webui",
+      "kind": "cn",
+      "messages": []
+    },
+    {
+      "member": "apps/webui",
+      "kind": "cva",
+      "messages": []
+    },
+    {
+      "member": "apps/webui",
+      "kind": "template",
+      "messages": []
+    },
+    {
+      "member": "apps/webui",
+      "kind": "a11y",
+      "messages": []
+    },
+    {
+      "member": "apps/webui",
+      "kind": "shadow",
+      "messages": []
+    },
+    {
+      "member": "apps/webui",
+      "kind": "motion",
+      "messages": []
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "jsx",
+      "messages": []
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "cn",
+      "messages": []
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "cva",
+      "messages": []
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "template",
+      "messages": []
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "a11y",
+      "messages": []
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "shadow",
+      "messages": []
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "motion",
+      "messages": []
+    },
+    {
+      "entry": "scripts/check-visual-contracts.ts",
+      "args": [
+        "--css-file=E:\\Phaneris\\.cache\\verification\\theme-governance-w5-before\\semantic.css"
+      ],
+      "code": 1,
+      "output": "error: Module not found \"scripts/check-visual-contracts.ts\"\n"
+    },
+    {
+      "entry": "scripts/check-visual-contracts.ts",
+      "args": [
+        "--css-file=E:\\Phaneris\\.cache\\verification\\theme-governance-w5-before\\literal.css"
+      ],
+      "code": 1,
+      "output": "error: Module not found \"scripts/check-visual-contracts.ts\"\n"
+    },
+    {
+      "entry": "scripts/check-visual-contracts.ts",
+      "args": [
+        "--css-file=E:\\Phaneris\\.cache\\verification\\theme-governance-w5-before\\comment.css"
+      ],
+      "code": 1,
+      "output": "error: Module not found \"scripts/check-visual-contracts.ts\"\n"
+    },
+    {
+      "entry": "scripts/generate-theme-contract.ts",
+      "args": [
+        "--check",
+        "--motion-css=E:\\Phaneris\\.cache\\verification\\theme-governance-w5-before\\motion-false.css"
+      ],
+      "code": 0,
+      "output": "Theme contract verified: 39 fields, 4 built-ins, 65 Shiki themes.\n"
+    },
+    {
+      "entry": "scripts/generate-theme-contract.ts",
+      "args": [
+        "--check",
+        "--motion-css=E:\\Phaneris\\.cache\\verification\\theme-governance-w5-before\\motion-true.css"
+      ],
+      "code": 0,
+      "output": "Theme contract verified: 39 fields, 4 built-ins, 65 Shiki themes.\n"
+    }
+  ],
+  "scope": "Real four-domain ESLint configurations and CLI gates, with isolated mutation inputs."
+}

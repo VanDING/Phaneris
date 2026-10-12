@@ -14,7 +14,7 @@
  * - Scenic mode (forces dark)
  */
 
-import { createContext, useContext, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from 'react'
 
 interface ShikiThemeContextValue {
   /**
@@ -22,6 +22,7 @@ interface ShikiThemeContextValue {
    * Examples: 'github-light', 'github-dark', 'vitesse-dark', 'one-dark-pro'
    */
   shikiTheme: string | null
+  revision?: string
 }
 
 const ShikiThemeContext = createContext<ShikiThemeContextValue>({ shikiTheme: null })
@@ -32,6 +33,7 @@ export interface ShikiThemeProviderProps {
    * The Shiki theme name from useTheme(). Pass null to use default DOM-based detection.
    */
   shikiTheme: string | null
+  revision?: string
 }
 
 /**
@@ -46,9 +48,10 @@ export interface ShikiThemeProviderProps {
  * </ShikiThemeProvider>
  * ```
  */
-export function ShikiThemeProvider({ children, shikiTheme }: ShikiThemeProviderProps) {
+export function ShikiThemeProvider({ children, shikiTheme, revision }: ShikiThemeProviderProps) {
+  const value = useMemo(() => ({ shikiTheme, revision }), [shikiTheme, revision])
   return (
-    <ShikiThemeContext.Provider value={{ shikiTheme }}>
+    <ShikiThemeContext.Provider value={value}>
       {children}
     </ShikiThemeContext.Provider>
   )
@@ -60,9 +63,28 @@ export function ShikiThemeProvider({ children, shikiTheme }: ShikiThemeProviderP
  * Returns null if no provider is present, allowing CodeBlock to fall back to
  * DOM-based detection for backwards compatibility.
  */
-export function useShikiTheme(): string | null {
-  const { shikiTheme } = useContext(ShikiThemeContext)
-  return shikiTheme
+const listeners = new Set<() => void>()
+let observer: MutationObserver | undefined
+const readDOM = () => typeof document === 'undefined' ? 'github-light|default'
+  : `${document.documentElement.classList.contains('dark') ? 'github-dark' : 'github-light'}|${document.documentElement.dataset.themeRevision ?? 'default'}`
+function subscribeDOM(listener: () => void) {
+  listeners.add(listener)
+  if (!observer) {
+    observer = new MutationObserver(() => listeners.forEach(callback => callback()))
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme-revision'] })
+  }
+  return () => { listeners.delete(listener); if (!listeners.size) { observer?.disconnect(); observer = undefined } }
+}
+const noSubscription = () => () => {}
+export function useShikiThemeState() {
+  const context = useContext(ShikiThemeContext)
+  const dom = useSyncExternalStore(context.shikiTheme ? noSubscription : subscribeDOM, readDOM, () => 'github-light|default')
+  const [theme, revision] = dom.split('|')
+  return { shikiTheme: context.shikiTheme ?? theme!, revision: context.revision ?? revision!, hasProvider: context.shikiTheme !== null }
+}
+/** Reactive DOM fallback also updates memoized standalone Markdown consumers. */
+export function useShikiTheme(): string {
+  return useShikiThemeState().shikiTheme
 }
 
 export default ShikiThemeContext

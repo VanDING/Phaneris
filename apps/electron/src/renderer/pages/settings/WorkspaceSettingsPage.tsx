@@ -333,7 +333,7 @@ export default function WorkspaceSettingsPage() {
       <div className="h-full flex flex-col">
         <PanelHeader title={t("settings.workspace.workspaceSettings")} actions={<HeaderMenu route={routes.view.settings('workspace')} helpFeature="workspaces" />} />
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-sm text-muted-foreground">{t("settings.workspace.noWorkspaceSelected")}</p>
+          <p className="text-sm text-text-secondary">{t("settings.workspace.noWorkspaceSelected")}</p>
         </div>
       </div>
     )
@@ -345,7 +345,7 @@ export default function WorkspaceSettingsPage() {
       <div className="h-full flex flex-col">
         <PanelHeader title={t("settings.workspace.workspaceSettings")} actions={<HeaderMenu route={routes.view.settings('workspace')} helpFeature="workspaces" />} />
         <div className="flex-1 flex items-center justify-center">
-          <Spinner className="text-muted-foreground" />
+          <Spinner className="text-text-secondary" />
         </div>
       </div>
     )
@@ -371,7 +371,7 @@ export default function WorkspaceSettingsPage() {
                         setWsNameEditing(wsName)
                         setRenameDialogOpen(true)
                       }}
-                      className="inline-flex items-center h-8 px-3 text-sm rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors"
+                      className="craft-control inline-flex items-center h-8 px-3 text-sm rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors"
                     >
                       {t("common.edit")}
                     </button>
@@ -401,11 +401,11 @@ export default function WorkspaceSettingsPage() {
                     )}
                   >
                     {isUploadingIcon ? (
-                      <Spinner className="text-muted-foreground text-[8px]" />
+                      <Spinner className="text-text-secondary text-[8px]" />
                     ) : wsIconUrl ? (
                       <img src={wsIconUrl} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-xs font-medium text-muted-foreground">
+                      <span className="text-xs font-medium text-text-secondary">
                         {wsName?.charAt(0)?.toUpperCase() || 'W'}
                       </span>
                     )}
@@ -480,7 +480,7 @@ export default function WorkspaceSettingsPage() {
                   )
                 })}
               </SettingsCard>
-              <InlineExpand isOpen={!!modeCyclingError} className="text-xs text-destructive mt-1">
+              <InlineExpand isOpen={!!modeCyclingError} className="text-xs text-destructive-text mt-1">
                 {modeCyclingError}
               </InlineExpand>
             </SettingsSection>
@@ -508,7 +508,7 @@ export default function WorkspaceSettingsPage() {
                   ))}
                 </SettingsCard>
               ) : (
-                <p className="text-sm text-muted-foreground">{t("settings.workspace.noSourcesConfigured")}</p>
+                <p className="text-sm text-text-secondary">{t("settings.workspace.noSourcesConfigured")}</p>
               )}
             </SettingsSection>
 
@@ -524,7 +524,7 @@ export default function WorkspaceSettingsPage() {
                         <button
                           type="button"
                           onClick={handleClearWorkingDirectory}
-                          className="inline-flex items-center h-8 px-3 text-sm rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors text-foreground/60 hover:text-foreground"
+                          className="craft-control inline-flex items-center h-8 px-3 text-sm rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors text-text-secondary hover:text-foreground"
                         >
                           {t("common.clear")}
                         </button>
@@ -532,7 +532,7 @@ export default function WorkspaceSettingsPage() {
                       <button
                         type="button"
                         onClick={handleChangeWorkingDirectory}
-                        className="inline-flex items-center h-8 px-3 text-sm rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors"
+                        className="craft-control inline-flex items-center h-8 px-3 text-sm rounded-lg bg-background shadow-minimal hover:bg-foreground/[0.02] transition-colors"
                       >
                         {t("common.change")}
                       </button>

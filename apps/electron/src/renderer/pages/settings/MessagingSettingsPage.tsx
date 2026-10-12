@@ -185,7 +185,7 @@ function SubRowIcon({
       style={{ width: ROW_ICON_SIZE, height: ROW_ICON_SIZE }}
     >
       <Icon
-        className="text-foreground/50"
+        className="text-text-secondary"
         strokeWidth={strokeWidth}
         style={{ width: size, height: size }}
       />
@@ -355,7 +355,7 @@ function PlatformRow({ platform, workspaceId }: { platform: Platform; workspaceI
           <MessagingPlatformIcon platform={platform} size={22} />
           <div className="min-w-0 flex-1">
             <div className="text-sm font-medium">{label}</div>
-            <div className="mt-0.5 truncate text-xs text-muted-foreground">
+            <div className="mt-0.5 truncate text-xs text-text-secondary">
               {t(`settings.messaging.${platform}.apiType`)} · {description}
             </div>
           </div>
@@ -364,11 +364,11 @@ function PlatformRow({ platform, workspaceId }: { platform: Platform; workspaceI
             <DropdownMenu modal={false} open={menuOpen} onOpenChange={setMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="rounded-md p-1.5 transition-colors hover:bg-foreground/[0.05] data-[state=open]:bg-foreground/[0.05]"
+                  className="craft-control rounded-md p-1.5 transition-colors hover:bg-foreground/[0.05] data-[state=open]:bg-foreground/[0.05]"
                   data-state={menuOpen ? 'open' : 'closed'}
                   aria-label={t('common.more')}
                 >
-                  <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                  <MoreHorizontal className="h-4 w-4 text-text-secondary" />
                 </button>
               </DropdownMenuTrigger>
               <StyledDropdownMenuContent align="end">
@@ -647,7 +647,7 @@ function DirectSessionRow({
             defaultValue: 'Direct message session',
           })}
         </div>
-        <div className="mt-0.5 truncate text-xs text-foreground/50">{sessionLabel}</div>
+        <div className="mt-0.5 truncate text-xs text-text-secondary">{sessionLabel}</div>
       </div>
       <BindingAllowListPopover
         access={bindingToAccess(binding)}
@@ -668,7 +668,7 @@ function UnpairedSupergroupRow({ onPair }: { onPair: () => void }) {
         <div className="text-sm">
           {t('settings.messaging.telegram.supergroup.label', { defaultValue: 'Supergroup' })}
         </div>
-        <div className="mt-0.5 truncate text-xs text-foreground/50">
+        <div className="mt-0.5 truncate text-xs text-text-secondary">
           {t('settings.messaging.telegram.supergroup.notConfigured', {
             defaultValue: 'Not configured',
           })}
@@ -720,27 +720,27 @@ function PairedSupergroupSection({
       <button
         type="button"
         onClick={() => setIsExpanded((v) => !v)}
-        className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-foreground/[0.02]"
+        className="craft-control flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-foreground/[0.02]"
       >
         <SubRowIcon icon={MessagesSquare} />
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
             <div className="truncate text-sm font-medium">{supergroup.title}</div>
-            <div className="truncate text-xs text-foreground/50">({supergroup.chatId})</div>
+            <div className="truncate text-xs text-text-secondary">({supergroup.chatId})</div>
           </div>
-          <div className="mt-0.5 truncate text-xs text-foreground/50">{subtitle}</div>
+          <div className="mt-0.5 truncate text-xs text-text-secondary">{subtitle}</div>
         </div>
         {isExpanded ? (
-          <ChevronDown className="h-4 w-4 shrink-0 text-foreground/50" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-text-secondary" />
         ) : (
-          <ChevronRight className="h-4 w-4 shrink-0 text-foreground/50" />
+          <ChevronRight className="h-4 w-4 shrink-0 text-text-secondary" />
         )}
       </button>
 
       <InlineExpand isOpen={isExpanded}>
         <div className="border-t border-border/50">
           {topicBindings.length === 0 ? (
-            <div className="flex items-start gap-3 px-4 py-3 text-xs text-foreground/50">
+            <div className="flex items-start gap-3 px-4 py-3 text-xs text-text-secondary">
               <IconSpacer />
               <span>
                 {t('settings.messaging.telegram.supergroup.noTopicsHint', {
@@ -769,7 +769,7 @@ function PairedSupergroupSection({
             <Button
               variant="ghost"
               size="sm"
-              className="text-destructive hover:text-destructive"
+              className="text-destructive-text hover:text-destructive-text"
               onClick={onUnpair}
             >
               {t('common.disconnect')}
@@ -804,7 +804,7 @@ function TopicBindingRow({
       <IconSpacer />
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm">{sessionLabel}</div>
-        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-foreground/50">
+        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-text-secondary">
           <Hash className="h-3 w-3" />
           <span className="truncate">
             {topicName} <span className="text-foreground/30">·</span> Topic #{binding.threadId}
@@ -855,7 +855,7 @@ function RowActions({ onOpen, onUnbind }: { onOpen: () => void; onUnbind: () => 
       <Button
         variant="ghost"
         size="sm"
-        className="text-destructive hover:text-destructive"
+        className="text-destructive-text hover:text-destructive-text"
         onClick={onUnbind}
       >
         {t('common.disconnect')}

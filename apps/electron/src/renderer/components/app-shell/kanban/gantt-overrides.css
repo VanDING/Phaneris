@@ -51,7 +51,7 @@
  * report an empty value, so every rule that paints with it resolves to nothing.
  *
  * The one that shows is the timescale — `.wx-scale` is `position: sticky; top: 0;
- * z-index: 5; background-color: var(--wx-background)`, i.e. the library intends the
+ * z-index: var(--z-component-sticky); background-color: var(--wx-background)`, i.e. the library intends the
  * date header to be a pinned, OPAQUE band. With the token empty it is pinned and
  * transparent instead, so rows scrolling under it stay visible and the date labels
  * share their band with task bars. It only shows once a plan has enough rows to
@@ -540,7 +540,7 @@
 .pg-bar--summary .pg-bar-label {
   left: 9px;
   right: 48px;
-  z-index: 1;
+  z-index: var(--z-component-overlay);
   padding: 0;
   background: transparent;
   font-weight: 600;
@@ -551,7 +551,7 @@
   position: absolute;
   top: 50%;
   right: 7px;
-  z-index: 1;
+  z-index: var(--z-component-overlay);
   min-height: 17px;
   display: inline-flex;
   align-items: center;

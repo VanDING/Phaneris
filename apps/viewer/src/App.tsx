@@ -9,7 +9,7 @@
  * - /s/{id} - View shared session
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useLayoutEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileText } from 'lucide-react'
 import type { StoredSession } from '@phaneris/core'
@@ -22,6 +22,7 @@ import {
   JSONPreviewOverlay,
   DocumentFormattedMarkdownOverlay,
   TooltipProvider,
+  ShikiThemeProvider,
   extractOverlayData,
   detectLanguage,
   openExternalUrl,
@@ -35,6 +36,10 @@ import { Header } from './components/Header'
 
 /** Default session ID for development */
 const DEV_SESSION_ID = 'tz5-13I84pwK_he'
+const MODE_KEY = 'phaneris.viewer.theme-mode'
+function readMode(): 'light' | 'dark' | 'system' {
+  try { const value = localStorage.getItem(MODE_KEY); return value === 'light' || value === 'dark' ? value : 'system' } catch { return 'system' }
+}
 
 /** Extract session ID from URL path /s/{id} */
 function getSessionIdFromUrl(): string | null {
@@ -57,10 +62,13 @@ export function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(() => getSessionIdFromUrl())
-  const [isDark, setIsDark] = useState(() => {
+  const [mode, setMode] = useState(readMode)
+  const [systemDark, setSystemDark] = useState(() => {
     // Check system preference on mount
     return window.matchMedia('(prefers-color-scheme: dark)').matches
   })
+  const isDark = mode === 'system' ? systemDark : mode === 'dark'
+  useEffect(() => { try { localStorage.setItem(MODE_KEY, mode) } catch {} }, [mode])
 
   // Fetch session from API when we have a session ID
   useEffect(() => {
@@ -110,14 +118,17 @@ export function App() {
   }, [])
 
   // Apply dark mode class to html element
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.classList.toggle('dark', isDark)
+    document.documentElement.dataset.themeRevision = `viewer-default-v1:${isDark ? 'dark' : 'light'}`
+    document.documentElement.dataset.themeHostPolicy = 'viewer-default'
+    document.documentElement.dataset.themeStatus = 'ready'
   }, [isDark])
 
   // Listen for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches)
+    const handler = (e: MediaQueryListEvent) => setSystemDark(e.matches)
     mediaQuery.addEventListener('change', handler)
     return () => mediaQuery.removeEventListener('change', handler)
   }, [])
@@ -135,8 +146,8 @@ export function App() {
   }, [])
 
   const toggleTheme = useCallback(() => {
-    setIsDark(prev => !prev)
-  }, [])
+    setMode(isDark ? 'light' : 'dark')
+  }, [isDark])
 
   // State for overlay
   const [overlayActivity, setOverlayActivity] = useState<ActivityItem | null>(null)
@@ -195,6 +206,7 @@ export function App() {
   const theme = isDark ? 'dark' : 'light'
 
   return (
+    <ShikiThemeProvider shikiTheme={isDark ? 'github-dark' : 'github-light'} revision={`viewer-default-v1:${theme}`}>
     <TooltipProvider>
     <div className="h-full flex flex-col bg-foreground-2 text-foreground">
       <Header
@@ -327,5 +339,6 @@ export function App() {
       )}
     </div>
     </TooltipProvider>
+    </ShikiThemeProvider>
   )
 }

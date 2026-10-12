@@ -33,6 +33,7 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { usePlatform } from '../../context/PlatformContext'
+import { PortalStackProvider, usePortalLayer } from '../../context/PortalStackContext'
 import { cn } from '../../lib/utils'
 import { getDismissibleLayerBridge } from '../../lib/dismissible-layer-bridge'
 import { FullscreenOverlayBaseHeader, type OverlayTypeBadge } from './FullscreenOverlayBaseHeader'
@@ -40,7 +41,6 @@ import { OverlayErrorBanner, type OverlayErrorBannerProps } from './OverlayError
 
 // Z-index for fullscreen overlays - must be above app chrome (z-overlay: 300)
 // Uses CSS variable when available, falls back to hardcoded value
-const Z_FULLSCREEN = 'var(--z-fullscreen, 350)'
 
 // HEADER_HEIGHT must match PreviewHeader's height prop (48px).
 // FADE_SIZE is the transition zone where content fades in/out at edges.
@@ -107,6 +107,7 @@ export function FullscreenOverlayBase({
   error,
 }: FullscreenOverlayBaseProps) {
   const { onSetTrafficLightsVisible } = usePlatform()
+  const layer = usePortalLayer('fullscreen', className)
 
   // Determine if we should render the structured header.
   // Any header-related prop triggers header rendering.
@@ -149,7 +150,7 @@ export function FullscreenOverlayBase({
             'bg-foreground-3 fullscreen-overlay-background',
             className
           )}
-          style={{ zIndex: Z_FULLSCREEN }}
+          style={{ zIndex: layer }}
           onOpenAutoFocus={(e) => e.preventDefault()}
           onEscapeKeyDown={(event) => {
             const handled = handleFullscreenEscapeWithStack()
@@ -159,6 +160,7 @@ export function FullscreenOverlayBase({
             event.stopPropagation()
           }}
         >
+          <PortalStackProvider layer={layer}>
           {/* Visually hidden title for accessibility - required by Radix Dialog */}
           <Dialog.Title className="sr-only">{accessibleTitle}</Dialog.Title>
 
@@ -191,7 +193,7 @@ export function FullscreenOverlayBase({
               Positioned absolutely at the top of the viewport, above the scroll content. */}
           {hasHeader && (
             <div
-              className="absolute top-0 left-0 right-0 z-10"
+              className="absolute top-0 left-0 right-0 z-component-header"
               // Reserve the Windows caption-button strip. The overlay covers the
               // whole window, so without this the header's close/action buttons
               // land underneath the system minimise/maximise/close buttons — the
@@ -212,6 +214,7 @@ export function FullscreenOverlayBase({
               />
             </div>
           )}
+          </PortalStackProvider>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

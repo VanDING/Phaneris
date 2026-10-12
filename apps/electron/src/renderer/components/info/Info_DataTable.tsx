@@ -131,7 +131,7 @@ export function Info_DataTable<TData extends RowData>({
           overflow-hidden which clips absolute elements. Sticky respects overflow containers.
           Height 0 ensures it doesn't add vertical space to the layout. */}
       {floatingAction && (
-        <div className="sticky top-2.5 float-right mr-1.5 z-20 h-0">
+        <div className="sticky top-2.5 float-right mr-1.5 z-component-scrim h-0">
           {floatingAction}
         </div>
       )}

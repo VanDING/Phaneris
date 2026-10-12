@@ -142,7 +142,7 @@ export function SurfaceContainer({
         } as React.CSSProperties}
       >
         {hasNavigator && (
-          <CompactPanelTransition role="navigator" isDetailActive={hasSelectedContent}>
+          <CompactPanelTransition panelRole="navigator" isDetailActive={hasSelectedContent}>
             <div
               data-panel-role="navigator"
               className={cn('relative h-full w-full overflow-hidden bg-paper shadow-middle')}
@@ -159,7 +159,7 @@ export function SurfaceContainer({
         )}
 
         {primaryEntry && (
-          <CompactPanelTransition role="detail" isDetailActive={hasSelectedContent}>
+          <CompactPanelTransition panelRole="detail" isDetailActive={hasSelectedContent}>
             <CompactWorkbenchTransition
               isWorkbenchActive={compactWorkbenchActive}
               workbenchKey={workbenchEntry?.id}
@@ -252,7 +252,7 @@ export function SurfaceContainer({
             opacity: hasNavigator ? 1 : 0,
           }}
           transition={transition}
-          className={cn('relative z-[2] h-full shrink-0 overflow-hidden bg-paper shadow-middle')}
+          className={cn('relative z-component-header h-full shrink-0 overflow-hidden bg-paper shadow-middle')}
           style={{
             borderTopLeftRadius: RADIUS_INNER,
             borderBottomLeftRadius: !hasSidebar ? RADIUS_EDGE : RADIUS_INNER,

@@ -1,4 +1,5 @@
 import { commonRules } from '../../scripts/eslint-common.mjs'
+import { visualConfig } from '../../scripts/eslint-visual.mjs'
 /**
  * ESLint Configuration for UI Package
  *
@@ -14,6 +15,7 @@ import noNonstandardShadows from './eslint-rules/no-nonstandard-shadows.cjs'
 import noTransitionAll from '../../scripts/eslint-rules/no-transition-all.cjs'
 
 export default [
+  visualConfig(['src/**/*.{ts,tsx}']),
   // Ignore patterns
   {
     ignores: [

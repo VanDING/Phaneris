@@ -16,13 +16,14 @@ import { mergeDecisionLayerSettings, normalizeDecisionLayerSettings, type Decisi
 
 import { normalizeImageGenerationSettings, type ImageGenerationSettings } from './image-generation.ts';
 
-import { BUILTIN_THEMES, isBuiltinThemeId, normalizeBuiltinThemeId, DEFAULT_THEME_PREFERENCES, isValidUserThemeId, resolveTheme, type ThemeOverrides, type ThemeFile, type PresetTheme, type ThemePreferences, type ThemeSummary } from './theme.ts';
+import { BUILTIN_THEMES, DEFAULT_THEME_FILE, isBuiltinThemeId, normalizeBuiltinThemeId, DEFAULT_THEME_PREFERENCES, isValidUserThemeId, resolveTheme, type ThemeOverrides, type ThemeFile, type PresetTheme, type ThemePreferences, type ThemeSummary } from './theme.ts';
+import type { ThemeDiagnostic } from './theme-manifest.ts';
 
 import { type NetworkProxySettings } from './types.ts';
 
 import { DEFAULT_SERVER_CONFIG, type ServerConfig } from './server-config.ts';
 
-import { randomUUID } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
 
 import { ensureConfigDir, loadStoredConfig, saveConfig } from './repository.ts';
 
@@ -466,20 +467,23 @@ function isPathWithin(parentDir: string, candidatePath: string): boolean {
   return child !== '' && child !== '..' && !child.startsWith('../') && !child.startsWith('..\\') && !isAbsolute(child);
 }
 
-function readValidatedThemeFile(path: string, id: string): ThemeFile | null {
+function readValidatedThemeFile(path: string, id: string, diagnostics?: ThemeDiagnostic[]): ThemeFile | null {
   try {
     if (statSync(path).size > MAX_THEME_FILE_BYTES) {
       debug(`[ThemeStorage] Ignoring theme "${id}" because its JSON exceeds 256 KiB`);
+      diagnostics?.push({ path: id, code: 'load', severity: 'error', message: 'Theme JSON exceeds 256 KiB' });
       return null;
     }
     const parsed = PresetThemeSchema.safeParse(safeJsonParse(readFileSync(path, 'utf-8')));
     if (!parsed.success) {
       debug(`[ThemeStorage] Ignoring invalid theme "${id}"`, parsed.error.issues);
+      diagnostics?.push(...parsed.error.issues.map(issue => ({ path: issue.path.join('.'), code: 'structure' as const, severity: 'error' as const, message: issue.message })));
       return null;
     }
     return parsed.data as ThemeFile;
   } catch (error) {
     debug(`[ThemeStorage] Failed to load theme "${id}"`, error);
+    diagnostics?.push({ path: id, code: 'load', severity: 'error', message: error instanceof Error ? error.message : String(error) });
     return null;
   }
 }
@@ -537,7 +541,11 @@ export function loadPresetThemes(): ThemeSummary[] {
  * @param theme - Theme object to process
  * @param themePath - Absolute path to the theme's JSON file
  */
-function resolveThemeBackgroundImage(theme: ThemeFile, themePath: string): ThemeFile {
+function resolveThemeBackgroundImage(theme: ThemeFile, themePath: string, diagnostics: ThemeDiagnostic[]): ThemeFile {
+  const fail = (message: string): ThemeFile => {
+    diagnostics.push({ path: 'backgroundImage', code: 'image', severity: 'error', message });
+    return { ...theme, backgroundImage: undefined };
+  };
   if (!theme.backgroundImage) {
     return theme;
   }
@@ -554,7 +562,7 @@ function resolveThemeBackgroundImage(theme: ThemeFile, themePath: string): Theme
       // Invalid URL falls through to the warning below.
     }
     console.warn(`Unsupported theme background URL: ${theme.backgroundImage}`);
-    return { ...theme, backgroundImage: undefined };
+    return fail('Unsupported theme background URL; use HTTP(S) or a confined local asset');
   }
 
   const themeDir = dirname(themePath);
@@ -565,25 +573,25 @@ function resolveThemeBackgroundImage(theme: ThemeFile, themePath: string): Theme
   try {
     if (!existsSync(absoluteImagePath)) {
       console.warn(`Theme background image not found: ${absoluteImagePath}`);
-      return { ...theme, backgroundImage: undefined };
+      return fail('Theme background image was not found');
     }
 
     const themesRoot = realpathSync(APP_THEMES_DIR);
     const realImagePath = realpathSync(absoluteImagePath);
     if (!isPathWithin(themesRoot, realImagePath)) {
       console.warn(`Theme background image must stay inside ${APP_THEMES_DIR}`);
-      return { ...theme, backgroundImage: undefined };
+      return fail('Theme background image must stay inside the themes directory');
     }
 
     const extension = realImagePath.toLowerCase().split('.').pop() ?? '';
     const mimeType = THEME_BACKGROUND_MIME_TYPES[extension];
     if (!mimeType) {
       console.warn(`Unsupported theme background image type: ${realImagePath}`);
-      return { ...theme, backgroundImage: undefined };
+      return fail('Unsupported theme background image type');
     }
     if (statSync(realImagePath).size > MAX_THEME_BACKGROUND_BYTES) {
       console.warn(`Theme background image exceeds 20 MiB: ${realImagePath}`);
-      return { ...theme, backgroundImage: undefined };
+      return fail('Theme background image exceeds 20 MiB');
     }
 
     const imageBuffer = readFileSync(realImagePath);
@@ -596,7 +604,7 @@ function resolveThemeBackgroundImage(theme: ThemeFile, themePath: string): Theme
     };
   } catch (error) {
     console.warn(`Failed to read theme background image: ${absoluteImagePath}`, error);
-    return { ...theme, backgroundImage: undefined };
+    return fail(`Failed to read theme background image: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -622,9 +630,12 @@ export function loadPresetTheme(id: string): PresetTheme | null {
     const themesRoot = realpathSync(APP_THEMES_DIR);
     const realThemePath = realpathSync(path);
     if (!isPathWithin(themesRoot, realThemePath)) return null;
-    const theme = readValidatedThemeFile(realThemePath, id);
-    if (!theme) return null;
-    return { id, path, theme: resolveThemeBackgroundImage(theme, realThemePath) };
+    const diagnostics: ThemeDiagnostic[] = [];
+    const theme = readValidatedThemeFile(realThemePath, id, diagnostics);
+    if (!theme) return { id, path, theme: DEFAULT_THEME_FILE, diagnostics };
+    const materialized = resolveThemeBackgroundImage(theme, realThemePath, diagnostics);
+    const revision = createHash('sha256').update(JSON.stringify(materialized)).digest('hex');
+    return { id, path, theme: materialized, revision, diagnostics };
   } catch {
     return null;
   }

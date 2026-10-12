@@ -5,22 +5,22 @@
 
 .trajectory-root {
   --dsw-font-family: var(--font-default, var(--font-sans, system-ui));
-  --dsw-font-xxxs-11: 11px/16px var(--dsw-font-family);
-  --dsw-font-xxs-12: 12px/18px var(--dsw-font-family);
-  --dsw-font-xs-13: 13px/20px var(--dsw-font-family);
-  --dsw-font-xs-strong-13: 600 13px/20px var(--dsw-font-family);
+  --dsw-font-xxxs-11: calc(.733333rem * var(--ui-scale))/1.5 var(--dsw-font-family);
+  --dsw-font-xxs-12: calc(.8rem * var(--ui-scale))/1.5 var(--dsw-font-family);
+  --dsw-font-xs-13: calc(var(--ui-label-size) * var(--ui-scale))/1.5 var(--dsw-font-family);
+  --dsw-font-xs-strong-13: 600 calc(var(--ui-label-size) * var(--ui-scale))/1.5 var(--dsw-font-family);
   --ds-ease-in-out: var(--motion-ease-enter);
   --ds-font-family-code: var(--font-mono, ui-monospace, monospace);
   --dsh-trajectory-toolbar-height: 36px;
 
-  --dsw-alias-label-primary: var(--foreground);
-  --dsw-alias-label-secondary: color-mix(in srgb, var(--foreground) 72%, var(--background));
-  --dsw-alias-label-tertiary: color-mix(in srgb, var(--foreground) 48%, var(--background));
-  --dsw-alias-label-caption: color-mix(in srgb, var(--foreground) 56%, var(--background));
-  --dsw-alias-label-dimmed: color-mix(in srgb, var(--foreground) 34%, var(--background));
+  --dsw-alias-label-primary: var(--text-primary);
+  --dsw-alias-label-secondary: var(--text-secondary);
+  --dsw-alias-label-tertiary: var(--text-tertiary);
+  --dsw-alias-label-caption: var(--text-secondary);
+  --dsw-alias-label-dimmed: var(--text-disabled);
 
-  --dsw-alias-bg-base: var(--background);
-  --dsw-alias-bg-layer-1: var(--background);
+  --dsw-alias-bg-base: var(--surface-canvas);
+  --dsw-alias-bg-layer-1: var(--surface-canvas);
   --dsw-alias-bg-layer-2: var(--foreground-2);
   --dsw-alias-bg-layer-3: var(--foreground-3);
   --dsw-specific-sidebar-fill: var(--background-elevated);
@@ -39,13 +39,13 @@
 
   --dsw-alias-brand-primary-new-colorprimary-new-color: var(--accent);
 
-  --dsw-alias-state-success-primary: var(--success);
+  --dsw-alias-state-success-primary: var(--success-text);
   --dsw-alias-state-success-tertiary: color-mix(in srgb, var(--success) 12%, var(--background));
-  --dsw-alias-state-error-primary: var(--destructive);
+  --dsw-alias-state-error-primary: var(--destructive-text);
   --dsw-alias-state-error-secondary: color-mix(in srgb, var(--destructive) 55%, var(--foreground));
-  --dsw-alias-state-warn-label: var(--info);
+  --dsw-alias-state-warn-label: var(--info-text);
   --dsw-alias-state-warn-tertiary: color-mix(in srgb, var(--info) 16%, var(--background));
-  --dsw-alias-state-business-primary: var(--accent);
+  --dsw-alias-state-business-primary: var(--accent-text);
   --dsw-alias-state-business-tertiary: color-mix(in srgb, var(--accent) 14%, var(--background));
 
   --dsw-alias-markdown-code-block: var(--foreground-5);

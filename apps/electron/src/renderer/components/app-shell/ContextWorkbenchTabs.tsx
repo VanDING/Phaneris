@@ -114,7 +114,7 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
               {active && (
                 <motion.div
                   layoutId="workbench-active-tab"
-                  className="pointer-events-none absolute inset-0 z-0 rounded-lg border border-border/50 bg-background/90"
+                  className="pointer-events-none absolute inset-0 z-component-content rounded-lg border border-border/50 bg-background/90"
                   transition={motionSpring(reduceMotion, 'responsive')}
                 />
               )}
@@ -126,7 +126,7 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
                 tabIndex={active ? 0 : -1}
                 onClick={() => activate(item.id)}
                 onKeyDown={(event) => handleTabKeyDown(event, index)}
-                className="craft-focus relative z-[1] flex min-w-0 flex-1 items-center gap-1.5 rounded-l-lg py-1 pl-2 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                className="craft-focus relative z-component-overlay flex min-w-0 flex-1 items-center gap-1.5 rounded-l-lg py-1 pl-2 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
                 <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={active ? 2.2 : 1.8} />
                 <span className="truncate">{label}</span>
@@ -135,10 +135,10 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
                 type="button"
                 aria-label={`${t('common.close')} ${label}`}
                 onClick={() => handleClose(item.id, index)}
-                className={cn(
-                  'craft-focus relative z-[1] mr-1 rounded-sm p-0.5 opacity-0 transition-opacity hover:bg-foreground/10 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100',
+                className={`craft-row-actions ${cn(
+                  'craft-focus relative z-component-overlay mr-1 rounded-sm p-0.5 opacity-0 transition-opacity hover:bg-foreground/10 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100',
                   active && 'opacity-60',
-                )}
+                )}`}
               >
                 <X className="h-3 w-3" />
               </button>

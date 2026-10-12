@@ -352,7 +352,7 @@ export function EntityRow({
 
           {/* Subtitle line */}
           {subtitle && (
-            <div className="flex items-start gap-[10px] w-full text-[12px] text-muted-foreground min-w-0 -mt-1">
+            <div className="flex items-start gap-[10px] w-full text-[12px] text-text-secondary min-w-0 -mt-1">
               {icon && (
                 <div className="shrink-0 flex items-center gap-[10px] [&>*]:w-3 [&>*]:h-3 invisible" aria-hidden="true">
                   {icon}
@@ -366,7 +366,7 @@ export function EntityRow({
 
           {/* Badges / metadata row */}
           {(badges || trailing) && (
-            <div className="flex items-center gap-[10px] text-xs text-foreground/70 w-full -mb-[2px] min-w-0">
+            <div className="flex items-center gap-[10px] text-xs text-text-secondary w-full -mb-[2px] min-w-0">
               {/* Invisible spacer matching icon container width */}
               {icon && (
                 <div className="shrink-0 flex items-center gap-[10px] [&>*]:w-3 [&>*]:h-3 invisible" aria-hidden="true">
@@ -400,7 +400,7 @@ export function EntityRow({
       {/* Overlay (e.g. match count badge) */}
       {overlay}
 
-      <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
+      <div className="absolute right-2 top-2 z-component-chrome flex items-center gap-1">
         {beforeMenu && (
           <div className="w-14 shrink-0" onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
             {beforeMenu}
@@ -426,18 +426,18 @@ export function EntityRow({
                 <button
                   type="button"
                   onClick={() => setCompactMenuOpen(true)}
-                  className="craft-icon-button inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer"
+                  className="craft-icon-button craft-row-actions inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer"
                   aria-label={t('common.moreActions')}
                   aria-haspopup="dialog"
                   aria-expanded={compactMenuOpen}
                 >
-                  <MoreHorizontal className="h-4 w-4 text-foreground/40" />
+                  <MoreHorizontal className="h-4 w-4 text-text-secondary" />
                 </button>
               ) : (
                 <DropdownMenu modal={true} open={menuOpen} onOpenChange={setMenuOpen}>
                   <DropdownMenuTrigger asChild>
-                    <button type="button" aria-label={t('common.moreActions')} className="craft-icon-button inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer">
-                      <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                    <button type="button" aria-label={t('common.moreActions')} className="craft-icon-button craft-row-actions inline-flex size-7 items-center justify-center hover:bg-foreground/10 data-[state=open]:bg-foreground/10 cursor-pointer">
+                      <MoreHorizontal className="h-4 w-4 text-text-secondary" />
                     </button>
                   </DropdownMenuTrigger>
                   <StyledDropdownMenuContent align="end">

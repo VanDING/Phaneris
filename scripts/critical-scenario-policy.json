@@ -1,6 +1,4 @@
 {
-  "schemaVersion": 1,
-  "policy": "Every required acceptance path and package group is explicit; edit with an ownership decision, never auto-update.",
   "workflows": [
     {
       "id": "verification-output",
@@ -192,7 +190,7 @@
     {
       "id": "theme-foundation",
       "entry": "scripts/verification/theme-foundation-workflow.ts",
-      "minimum": 101,
+      "minimum": 115,
       "required": [
         "theme-foundation.json",
         "source-hashes.json",
@@ -206,6 +204,97 @@
         "webui-390.png",
         "controls-trace.zip",
         "web-trace.zip"
+      ]
+    },
+    {
+      "id": "theme-contract",
+      "entry": "scripts/verification/theme-contract-workflow.ts",
+      "minimum": 90,
+      "required": [
+        "theme-contract.json",
+        "source-hashes.json",
+        "electron-ink-light.png",
+        "ui-ink-light.png",
+        "viewer-ink-light.png",
+        "webui-ink-light.png",
+        "viewer-code-light.png",
+        "viewer-code-dark.png",
+        "code-overlay-dark.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "theme-roles",
+      "entry": "scripts/verification/theme-roles-workflow.ts",
+      "minimum": 76,
+      "required": [
+        "theme-roles.json",
+        "source-hashes.json",
+        "electron-390.png",
+        "webui-320.png",
+        "viewer-1280.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "theme-domains",
+      "entry": "scripts/verification/theme-domains-workflow.ts",
+      "minimum": 56,
+      "required": [
+        "theme-domains.json",
+        "source-hashes.json",
+        "domains-320.png",
+        "domains-390.png",
+        "domains-1280.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "theme-browser-host",
+      "entry": "scripts/verification/theme-browser-host-workflow.ts",
+      "minimum": 23,
+      "required": [
+        "theme-browser-host.json",
+        "source-hashes.json",
+        "toolbar-light.png",
+        "toolbar-dark.png",
+        "empty-light.png",
+        "empty-dark.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "theme-login",
+      "entry": "scripts/verification/theme-login-workflow.ts",
+      "minimum": 5,
+      "required": [
+        "theme-login.json",
+        "source-hashes.json",
+        "login-light.png",
+        "login-dark.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "theme-design",
+      "entry": "scripts/verification/theme-design-workflow.ts",
+      "minimum": 36,
+      "required": [
+        "theme-design.json",
+        "source-hashes.json",
+        "index.html",
+        "rows-default-light-40-expanded.png",
+        "width-ink-light-768.png",
+        "text-200-default-light.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "theme-governance",
+      "entry": "scripts/verification/theme-governance-workflow.ts",
+      "minimum": 49,
+      "required": [
+        "theme-governance.json"
       ]
     },
     {

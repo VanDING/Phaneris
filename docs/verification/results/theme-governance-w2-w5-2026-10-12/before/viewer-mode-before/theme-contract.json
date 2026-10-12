@@ -1,0 +1,4684 @@
+{
+  "checks": [
+    {
+      "id": "TC01-electron-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-electron-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-electron-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-electron-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-electron-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-electron-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-electron-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-electron-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-ui-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-ui-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-viewer-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-viewer-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC01-webui-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC02-banana",
+      "passed": true
+    },
+    {
+      "id": "TC02-radius",
+      "passed": true
+    },
+    {
+      "id": "TC02-calculated",
+      "passed": true
+    },
+    {
+      "id": "TC02-dimension",
+      "passed": true
+    },
+    {
+      "id": "TC02-fontsize",
+      "passed": true
+    },
+    {
+      "id": "TC02-zero",
+      "passed": true
+    },
+    {
+      "id": "TC02-missing",
+      "passed": true
+    },
+    {
+      "id": "TC02-cycle",
+      "passed": true
+    },
+    {
+      "id": "TC02-transparent",
+      "passed": true
+    },
+    {
+      "id": "TC02-alpha",
+      "passed": true
+    },
+    {
+      "id": "TC02-near-opaque",
+      "passed": true
+    },
+    {
+      "id": "TC02-shiki",
+      "passed": true
+    },
+    {
+      "id": "TC02-scenic",
+      "passed": true
+    },
+    {
+      "id": "TC02-broken-image",
+      "passed": true
+    },
+    {
+      "id": "TC03-valid-0",
+      "passed": true
+    },
+    {
+      "id": "TC03-valid-1",
+      "passed": true
+    },
+    {
+      "id": "TC03-valid-2",
+      "passed": true
+    },
+    {
+      "id": "TC03-valid-3",
+      "passed": true
+    },
+    {
+      "id": "TC05-schema-scenic",
+      "passed": true
+    },
+    {
+      "id": "TC06-schema-shiki",
+      "passed": true
+    },
+    {
+      "id": "TC09-snapshot",
+      "passed": true
+    },
+    {
+      "id": "TC08-code-overlay",
+      "passed": true
+    },
+    {
+      "id": "TC08-standalone",
+      "passed": true
+    },
+    {
+      "id": "TC08-viewer",
+      "passed": true
+    },
+    {
+      "id": "TC14-viewer-explicit-mode",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: An explicit Viewer choice survives an OS theme change"
+    },
+    {
+      "id": "TC18-page-errors",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.562745 0.568627 0.586275)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.372532 0.0246903 -0.144044)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 10.909212842164543
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.395516 0.0193901 0.0398465)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.548673457311232
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.3797 -0.0436961 0.0050974)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.795835790038279
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.397225 0.0739814 0.0142329)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.725678011412755
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 7.297288523189019
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.511765 0.519608 0.541176)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(29, 32, 40)",
+          "ratio": 7.575195263230698
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.285357 0.0192433 268.043)",
+          "ratio": 12.595955094423998
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.790663 0.040975 -0.106814)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 8.88553030936576
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.878802 0.0119282 0.0437295)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.113408339160364
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.869903 -0.0422293 0.00990584)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.081056162497932
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.852852 0.0601273 0.00954619)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 10.951563249556537
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 5.39666400927259
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.552941 0.541176 0.521569)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 4.863679077923889
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.588614380341975
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 16.375854596347747
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.367547 0.0708255 0.0417206)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.064396527113077
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.377297 0.0068661 0.0463165)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 9.354436394646092
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.349625 -0.0223964 0.0249294)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.29908855485469
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.343521 0.0591884 0.0356536)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.95407835293343
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 6.6927476982543155
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.496078 0.480392 0.44902)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "oklch(0.274997 0.0122689 78.03)",
+          "ratio": 12.04595294994151
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.784857 0.0657746 0.0490385)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.531492790330823
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.828122 -0.00586455 -0.0130215)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.368295275853425
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.818572 -0.0306698 0.0295334)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.109056909451892
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.796005 0.0665614 0.0452521)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.864316546872569
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 5.847981444492066
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.562745 0.568627 0.586275)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.372532 0.0246903 -0.144044)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 10.909212842164543
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.395516 0.0193901 0.0398465)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.548673457311232
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.3797 -0.0436961 0.0050974)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.795835790038279
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.397225 0.0739814 0.0142329)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.725678011412755
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 7.297288523189019
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.511765 0.519608 0.541176)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(29, 32, 40)",
+          "ratio": 7.575195263230698
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.285357 0.0192433 268.043)",
+          "ratio": 12.595955094423998
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.790663 0.040975 -0.106814)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 8.88553030936576
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.878802 0.0119282 0.0437295)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.113408339160364
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.869903 -0.0422293 0.00990584)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.081056162497932
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.852852 0.0601273 0.00954619)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 10.951563249556537
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 5.39666400927259
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.552941 0.541176 0.521569)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 4.863679077923889
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.588614380341975
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 16.375854596347747
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.367547 0.0708255 0.0417206)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.064396527113077
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.377297 0.0068661 0.0463165)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 9.354436394646092
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.349625 -0.0223964 0.0249294)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.29908855485469
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.343521 0.0591884 0.0356536)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.95407835293343
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 6.6927476982543155
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.496078 0.480392 0.44902)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "oklch(0.274997 0.0122689 78.03)",
+          "ratio": 12.04595294994151
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.784857 0.0657746 0.0490385)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.531492790330823
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.828122 -0.00586455 -0.0130215)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.368295275853425
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.818572 -0.0306698 0.0295334)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.109056909451892
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.796005 0.0665614 0.0452521)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.864316546872569
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 5.847981444492066
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.562745 0.568627 0.586275)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.372532 0.0246903 -0.144044)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 10.909212842164543
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.395516 0.0193901 0.0398465)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.548673457311232
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.3797 -0.0436961 0.0050974)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.795835790038279
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.397225 0.0739814 0.0142329)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.725678011412755
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 7.297288523189019
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.511765 0.519608 0.541176)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(29, 32, 40)",
+          "ratio": 7.575195263230698
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.285357 0.0192433 268.043)",
+          "ratio": 12.595955094423998
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.790663 0.040975 -0.106814)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 8.88553030936576
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.878802 0.0119282 0.0437295)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.113408339160364
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.869903 -0.0422293 0.00990584)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.081056162497932
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.852852 0.0601273 0.00954619)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 10.951563249556537
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 5.39666400927259
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.552941 0.541176 0.521569)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 4.863679077923889
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.588614380341975
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 16.375854596347747
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.367547 0.0708255 0.0417206)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.064396527113077
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.377297 0.0068661 0.0463165)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 9.354436394646092
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.349625 -0.0223964 0.0249294)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.29908855485469
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.343521 0.0591884 0.0356536)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.95407835293343
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 6.6927476982543155
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.496078 0.480392 0.44902)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "oklch(0.274997 0.0122689 78.03)",
+          "ratio": 12.04595294994151
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.784857 0.0657746 0.0490385)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.531492790330823
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.828122 -0.00586455 -0.0130215)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.368295275853425
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.818572 -0.0306698 0.0295334)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.109056909451892
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.796005 0.0665614 0.0452521)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.864316546872569
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 5.847981444492066
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.562745 0.568627 0.586275)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.372532 0.0246903 -0.144044)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 10.909212842164543
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.395516 0.0193901 0.0398465)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.548673457311232
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.3797 -0.0436961 0.0050974)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.795835790038279
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.397225 0.0739814 0.0142329)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 9.725678011412755
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 7.297288523189019
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.511765 0.519608 0.541176)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(29, 32, 40)",
+          "ratio": 7.575195263230698
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.285357 0.0192433 268.043)",
+          "ratio": 12.595955094423998
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.790663 0.040975 -0.106814)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 8.88553030936576
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.878802 0.0119282 0.0437295)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.113408339160364
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.869903 -0.0422293 0.00990584)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 12.081056162497932
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.852852 0.0601273 0.00954619)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 10.951563249556537
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 5.39666400927259
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "oklch(0.261441 0.0276652 144.711)",
+          "ratio": 12.862640183995456
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.913418 -0.0912949 0.0316138)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 15.999886849414086
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.847337 -0.0323007 -0.0603445)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.592519078532838
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.827498 -0.0735067 0.0382967)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 12.125208654421913
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.801524 0.0981142 0.0490979)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 10.246883042165905
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 16.07167931809574
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "oklch(0.273266 0.0241438 253.717)",
+          "ratio": 11.749768911992046
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.772803 0.0519937 -0.00355433)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.296836322991147
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.805987 -0.109468 -0.0807017)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 11.1516827994957
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.884546 -0.190826 0.0707875)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 14.771875287543367
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.766101 0.0402254 0.0372616)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 9.11735727732248
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 5.558461213705896
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.552941 0.541176 0.521569)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 4.863679077923889
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 103, 92)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.588614380341975
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "oklch(0.999994 0.0000497986 23.7884)",
+          "ratio": 16.375854596347747
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.367547 0.0708255 0.0417206)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.064396527113077
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.377297 0.0068661 0.0463165)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 9.354436394646092
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.349625 -0.0223964 0.0249294)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.29908855485469
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.343521 0.0591884 0.0356536)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 10.95407835293343
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 6.6927476982543155
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.496078 0.480392 0.44902)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "oklch(0.274997 0.0122689 78.03)",
+          "ratio": 12.04595294994151
+        },
+        {
+          "role": "accent",
+          "color": "oklab(0.784857 0.0657746 0.0490385)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.531492790330823
+        },
+        {
+          "role": "info",
+          "color": "oklab(0.828122 -0.00586455 -0.0130215)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.368295275853425
+        },
+        {
+          "role": "success",
+          "color": "oklab(0.818572 -0.0306698 0.0295334)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 11.109056909451892
+        },
+        {
+          "role": "destructive",
+          "color": "oklab(0.796005 0.0665614 0.0452521)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 9.864316546872569
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 5.847981444492066
+        }
+      ]
+    },
+    {
+      "id": "banana",
+      "state": {
+        "requested": "invalid-banana",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-banana\": light.background: Unsupported color value: banana; dark.background: Unsupported color value: banana",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-banana",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.background",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported color value: banana"
+            },
+            {
+              "path": "dark.background",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported color value: banana"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "radius",
+      "state": {
+        "requested": "invalid-radius",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-radius\": light.radius: Unsupported border-radius value: -8px; dark.radius: Unsupported border-radius value: -8px",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-radius",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.radius",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported border-radius value: -8px"
+            },
+            {
+              "path": "dark.radius",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported border-radius value: -8px"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "calculated",
+      "state": {
+        "requested": "invalid-calculated",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-calculated\": light.radius: Computed length must be non-negative; dark.radius: Computed length must be non-negative",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-calculated",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.radius",
+              "code": "range",
+              "severity": "error",
+              "message": "Computed length must be non-negative"
+            },
+            {
+              "path": "dark.radius",
+              "code": "range",
+              "severity": "error",
+              "message": "Computed length must be non-negative"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "dimension",
+      "state": {
+        "requested": "invalid-dimension",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-dimension\": light.borderWidth: Unsupported border-width value: 2s; dark.borderWidth: Unsupported border-width value: 2s",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-dimension",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.borderWidth",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported border-width value: 2s"
+            },
+            {
+              "path": "dark.borderWidth",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported border-width value: 2s"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "fontsize",
+      "state": {
+        "requested": "invalid-fontsize",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-fontsize\": light.fontSize: Unsupported font-size value: banana; dark.fontSize: Unsupported font-size value: banana",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-fontsize",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.fontSize",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported font-size value: banana"
+            },
+            {
+              "path": "dark.fontSize",
+              "code": "css",
+              "severity": "error",
+              "message": "Unsupported font-size value: banana"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "zero",
+      "state": {
+        "requested": "invalid-zero",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-zero\": light.fontSize: Computed value must be positive; dark.fontSize: Computed value must be positive",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-zero",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.fontSize",
+              "code": "range",
+              "severity": "error",
+              "message": "Computed value must be positive"
+            },
+            {
+              "path": "dark.fontSize",
+              "code": "range",
+              "severity": "error",
+              "message": "Computed value must be positive"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "missing",
+      "state": {
+        "requested": "invalid-missing",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-missing\": light.background: Error: Unresolved variable --does-not-exist; supply a fallback; dark.background: Error: Unresolved variable --does-not-exist; supply a fallback",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-missing",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.background",
+              "code": "reference",
+              "severity": "error",
+              "message": "Error: Unresolved variable --does-not-exist; supply a fallback"
+            },
+            {
+              "path": "dark.background",
+              "code": "reference",
+              "severity": "error",
+              "message": "Error: Unresolved variable --does-not-exist; supply a fallback"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "cycle",
+      "state": {
+        "requested": "invalid-cycle",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-cycle\": light.background: Error: Cyclic variable reference: --foreground → --background → --foreground; light.foreground: Error: Cyclic variable reference: --background → --foreground → --background; dark.background: Error: Cyclic variable reference: --foreground → --background → --foreground; dark.foreground: Error: Cyclic variable reference: --background → --foreground → --background",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-cycle",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.background",
+              "code": "reference",
+              "severity": "error",
+              "message": "Error: Cyclic variable reference: --foreground → --background → --foreground"
+            },
+            {
+              "path": "light.foreground",
+              "code": "reference",
+              "severity": "error",
+              "message": "Error: Cyclic variable reference: --background → --foreground → --background"
+            },
+            {
+              "path": "dark.background",
+              "code": "reference",
+              "severity": "error",
+              "message": "Error: Cyclic variable reference: --foreground → --background → --foreground"
+            },
+            {
+              "path": "dark.foreground",
+              "code": "reference",
+              "severity": "error",
+              "message": "Error: Cyclic variable reference: --background → --foreground → --background"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "transparent",
+      "state": {
+        "requested": "invalid-transparent",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-transparent\": light.popoverSolid: popoverSolid must be fully opaque; dark.popoverSolid: popoverSolid must be fully opaque",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-transparent",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.popoverSolid",
+              "code": "opaque",
+              "severity": "error",
+              "message": "popoverSolid must be fully opaque"
+            },
+            {
+              "path": "dark.popoverSolid",
+              "code": "opaque",
+              "severity": "error",
+              "message": "popoverSolid must be fully opaque"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "alpha",
+      "state": {
+        "requested": "invalid-alpha",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-alpha\": dark.popoverSolid: popoverSolid must be fully opaque",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-alpha",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "dark.popoverSolid",
+              "code": "opaque",
+              "severity": "error",
+              "message": "popoverSolid must be fully opaque"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "near-opaque",
+      "state": {
+        "requested": "invalid-near-opaque",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-near-opaque\": light.popoverSolid: popoverSolid must be fully opaque; dark.popoverSolid: popoverSolid must be fully opaque",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-near-opaque",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "light.popoverSolid",
+              "code": "opaque",
+              "severity": "error",
+              "message": "popoverSolid must be fully opaque"
+            },
+            {
+              "path": "dark.popoverSolid",
+              "code": "opaque",
+              "severity": "error",
+              "message": "popoverSolid must be fully opaque"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "shiki",
+      "state": {
+        "requested": "invalid-shiki",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-shiki\": shikiTheme.light: Unknown bundled Shiki theme",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-shiki",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "shikiTheme.light",
+              "code": "structure",
+              "severity": "error",
+              "message": "Unknown bundled Shiki theme"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "scenic",
+      "state": {
+        "requested": "invalid-scenic",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-scenic\": backgroundImage: backgroundImage is required when mode is scenic",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-scenic",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "backgroundImage",
+              "code": "structure",
+              "severity": "error",
+              "message": "backgroundImage is required when mode is scenic"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "id": "broken-image",
+      "state": {
+        "requested": "invalid-broken-image",
+        "applied": "default",
+        "status": "error",
+        "mode": "dark",
+        "error": "Failed to load theme \"invalid-broken-image\": backgroundImage: Error: Scenic image could not be decoded",
+        "snapshot": {
+          "version": 1,
+          "requestedId": "invalid-broken-image",
+          "appliedId": "default",
+          "source": "fallback",
+          "requestedMode": "dark",
+          "actualMode": "dark",
+          "status": "error",
+          "revision": "builtin-default-v1:dark",
+          "diagnostics": [
+            {
+              "path": "backgroundImage",
+              "code": "image",
+              "severity": "error",
+              "message": "Error: Scenic image could not be decoded"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.15",
+            "--shadow-blur-opacity": "0.12",
+            "--user-message-bubble-dimmed": "#252525",
+            "--on-accent": "#000000",
+            "--accent-text": "color-mix(in oklab, var(--accent) 50%, var(--foreground))",
+            "--info-text": "color-mix(in oklab, var(--info) 50%, var(--foreground))",
+            "--success-text": "color-mix(in oklab, var(--success) 50%, var(--foreground))",
+            "--destructive-text": "color-mix(in oklab, var(--destructive) 50%, var(--foreground))",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#17191E",
+            "--foreground": "#EEF0F6",
+            "--accent": "oklch(0.626 0.221 291.7)",
+            "--info": "#E3B674",
+            "--success": "#83CBA7",
+            "--destructive": "#F18C98",
+            "--background-elevated": "#242832",
+            "--foreground-dimmed": "#AAB1C1",
+            "--secondary": "#282D38",
+            "--secondary-foreground": "#E0E4EE",
+            "--muted": "#222630",
+            "--muted-foreground": "#AAB1C1",
+            "--card": "#1C1F26",
+            "--card-foreground": "#EEF0F6",
+            "--popover-foreground": "#EEF0F6",
+            "--border": "#343946",
+            "--ring": "oklch(0.626 0.221 291.7)",
+            "--user-message-bubble": "#2B2B2B",
+            "--paper": "#1D2028",
+            "--input": "#20232C",
+            "--popover": "#262A34",
+            "--popover-solid": "#262A34",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "flat",
+            "--theme-shadow-color": "#08090C",
+            "--theme-shadow-strength": "0.22",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-dark"
+        }
+      }
+    },
+    {
+      "index": 0,
+      "state": {
+        "requested": "valid-0",
+        "applied": "valid-0",
+        "status": "ready",
+        "mode": "light",
+        "error": null,
+        "snapshot": {
+          "version": 1,
+          "requestedId": "valid-0",
+          "appliedId": "valid-0",
+          "source": "ipc",
+          "requestedMode": "light",
+          "actualMode": "light",
+          "status": "ready",
+          "revision": "212308210e612454e3024ebb8618cba4f9fcebbc7d2cecb73620e6a0b87d743c:light",
+          "diagnostics": [
+            {
+              "path": "dark.foreground",
+              "code": "contrast",
+              "severity": "warning",
+              "message": "Body contrast 1.05:1 is below 4.5:1"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.08",
+            "--shadow-blur-opacity": "0.06",
+            "--user-message-bubble-dimmed": "#F7F7F7",
+            "--on-accent": "#FFFFFF",
+            "--accent-text": "color-mix(in oklab, oklch(.48 .15 280) 50%, #20232C)",
+            "--info-text": "color-mix(in oklab, #94601C 50%, #20232C)",
+            "--success-text": "color-mix(in oklab, #267454 50%, #20232C)",
+            "--destructive-text": "color-mix(in oklab, #B63E4C 50%, #20232C)",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "color-mix(in oklab, white 97%, black)",
+            "--foreground": "#20232C",
+            "--accent": "oklch(.48 .15 280)",
+            "--info": "#94601C",
+            "--success": "#267454",
+            "--destructive": "#B63E4C",
+            "--background-elevated": "#FFFFFF",
+            "--foreground-dimmed": "#606775",
+            "--secondary": "#F2F3F8",
+            "--secondary-foreground": "#373D4B",
+            "--muted": "#F7F8FB",
+            "--muted-foreground": "#606775",
+            "--card": "#FFFFFF",
+            "--card-foreground": "#20232C",
+            "--popover-foreground": "#20232C",
+            "--border": "#E3E6ED",
+            "--ring": "oklch(0.488 0.275 280.3)",
+            "--user-message-bubble": "#F3F3F3",
+            "--paper": "#FFFFFF",
+            "--input": "#FFFFFF",
+            "--popover": "#FFFFFF",
+            "--popover-solid": "oklch(from #FFFFFF l c h / 1)",
+            "--theme-radius": "calc(2px + 4px)",
+            "--theme-panel-radius": "calc(2px + 4px)",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "elevated",
+            "--theme-shadow-color": "#20232C",
+            "--theme-shadow-strength": "0.04",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-light"
+        }
+      }
+    },
+    {
+      "index": 1,
+      "state": {
+        "requested": "valid-1",
+        "applied": "valid-1",
+        "status": "ready",
+        "mode": "light",
+        "error": null,
+        "snapshot": {
+          "version": 1,
+          "requestedId": "valid-1",
+          "appliedId": "valid-1",
+          "source": "ipc",
+          "requestedMode": "light",
+          "actualMode": "light",
+          "status": "ready",
+          "revision": "0ac11720fa6ebe4b8cd5790d0723172d3dfa8f95fc23673842a884c4d1238b81:light",
+          "diagnostics": [
+            {
+              "path": "dark.foreground",
+              "code": "contrast",
+              "severity": "warning",
+              "message": "Body contrast 1.04:1 is below 4.5:1"
+            }
+          ],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.08",
+            "--shadow-blur-opacity": "0.06",
+            "--user-message-bubble-dimmed": "#F7F7F7",
+            "--on-accent": "#FFFFFF",
+            "--accent-text": "color-mix(in oklab, #5438bb 50%, #20232c)",
+            "--info-text": "color-mix(in oklab, #94601C 50%, #20232c)",
+            "--success-text": "color-mix(in oklab, #267454 50%, #20232c)",
+            "--destructive-text": "color-mix(in oklab, #B63E4C 50%, #20232c)",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "var(--paper)",
+            "--foreground": "var(--missing, #20232c)",
+            "--accent": "#5438bb",
+            "--info": "#94601C",
+            "--success": "#267454",
+            "--destructive": "#B63E4C",
+            "--background-elevated": "#FFFFFF",
+            "--foreground-dimmed": "#606775",
+            "--secondary": "#F2F3F8",
+            "--secondary-foreground": "#373D4B",
+            "--muted": "#F7F8FB",
+            "--muted-foreground": "#606775",
+            "--card": "#FFFFFF",
+            "--card-foreground": "#20232C",
+            "--popover-foreground": "#20232C",
+            "--border": "#E3E6ED",
+            "--ring": "oklch(0.488 0.275 280.3)",
+            "--user-message-bubble": "#F3F3F3",
+            "--paper": "#FFFFFF",
+            "--input": "#FFFFFF",
+            "--popover": "#FFFFFF",
+            "--popover-solid": "oklch(from #FFFFFF l c h / 1)",
+            "--theme-radius": ".4rem",
+            "--theme-panel-radius": ".4rem",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "1rem",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "elevated",
+            "--theme-shadow-color": "#20232C",
+            "--theme-shadow-strength": "0.04",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-light"
+        }
+      }
+    },
+    {
+      "index": 2,
+      "state": {
+        "requested": "valid-2",
+        "applied": "valid-2",
+        "status": "ready",
+        "mode": "light",
+        "error": null,
+        "snapshot": {
+          "version": 1,
+          "requestedId": "valid-2",
+          "appliedId": "valid-2",
+          "source": "ipc",
+          "requestedMode": "light",
+          "actualMode": "light",
+          "status": "ready",
+          "revision": "abfa34205d5ed19f829e922780e3d7ec49262451c9b1e2e7b1cd7b49c246f421:light",
+          "diagnostics": [],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.08",
+            "--shadow-blur-opacity": "0.06",
+            "--user-message-bubble-dimmed": "#F7F7F7",
+            "--on-accent": "#FFFFFF",
+            "--accent-text": "color-mix(in oklab, rgb(90 40 170) 0%, #20232C)",
+            "--info-text": "color-mix(in oklab, #94601C 0%, #20232C)",
+            "--success-text": "color-mix(in oklab, #267454 0%, #20232C)",
+            "--destructive-text": "color-mix(in oklab, #B63E4C 0%, #20232C)",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#FFFFFF",
+            "--foreground": "#20232C",
+            "--accent": "rgb(90 40 170)",
+            "--info": "#94601C",
+            "--success": "#267454",
+            "--destructive": "#B63E4C",
+            "--background-elevated": "#FFFFFF",
+            "--foreground-dimmed": "#606775",
+            "--secondary": "#F2F3F8",
+            "--secondary-foreground": "#373D4B",
+            "--muted": "#F7F8FB",
+            "--muted-foreground": "#606775",
+            "--card": "#FFFFFF",
+            "--card-foreground": "#20232C",
+            "--popover-foreground": "#20232C",
+            "--border": "#E3E6ED",
+            "--ring": "oklch(0.488 0.275 280.3)",
+            "--user-message-bubble": "#F3F3F3",
+            "--paper": "#FFFFFF",
+            "--input": "#FFFFFF",
+            "--popover": "#FFFFFF",
+            "--popover-solid": "oklch(from hsl(240 10% 20%) l c h / 1)",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "-apple-system, BlinkMacSystemFont, \"Segoe UI Variable Text\", \"Inter Variable\", \"Segoe UI\", \"Noto Sans SC Variable\", \"PingFang SC\", \"HarmonyOS Sans SC\", \"MiSans\", \"Noto Sans SC\", \"Source Han Sans SC\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "-.01em",
+            "--line-height-base": "calc(1.2 + .3)",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "elevated",
+            "--theme-shadow-color": "#20232C",
+            "--theme-shadow-strength": "0.04",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-light"
+        }
+      }
+    },
+    {
+      "index": 3,
+      "state": {
+        "requested": "valid-3",
+        "applied": "valid-3",
+        "status": "ready",
+        "mode": "light",
+        "error": null,
+        "snapshot": {
+          "version": 1,
+          "requestedId": "valid-3",
+          "appliedId": "valid-3",
+          "source": "ipc",
+          "requestedMode": "light",
+          "actualMode": "light",
+          "status": "ready",
+          "revision": "0c0f76665d6d67559772bca8d4f4edcc4235fa1ee52617179a7aaf6eadef2c3d:light",
+          "diagnostics": [],
+          "tokens": {
+            "--navigator": "var(--background)",
+            "--radius": "var(--theme-radius)",
+            "--ring-width": "1px",
+            "--ring-offset": "0px",
+            "--spacing": "0.25rem",
+            "--md-bullets": "var(--foreground-50)",
+            "--md-counters": "var(--foreground-50)",
+            "--shadow-minimal-flat": "0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent)",
+            "--shadow-border-opacity": "0.08",
+            "--shadow-blur-opacity": "0.06",
+            "--user-message-bubble-dimmed": "#F7F7F7",
+            "--on-accent": "#FFFFFF",
+            "--accent-text": "color-mix(in oklab, #5438bb 50%, #20232C)",
+            "--info-text": "color-mix(in oklab, #94601C 50%, #20232C)",
+            "--success-text": "color-mix(in oklab, #267454 50%, #20232C)",
+            "--destructive-text": "color-mix(in oklab, #B63E4C 50%, #20232C)",
+            "--foreground-1.5": "color-mix(in srgb, var(--foreground) 1.5%, var(--background))",
+            "--foreground-2": "color-mix(in srgb, var(--foreground) 2%, var(--background))",
+            "--foreground-3": "color-mix(in srgb, var(--foreground) 3%, var(--background))",
+            "--foreground-5": "color-mix(in srgb, var(--foreground) 5%, var(--background))",
+            "--foreground-10": "color-mix(in srgb, var(--foreground) 10%, var(--background))",
+            "--foreground-20": "color-mix(in srgb, var(--foreground) 20%, var(--background))",
+            "--foreground-30": "color-mix(in srgb, var(--foreground) 30%, var(--background))",
+            "--foreground-40": "color-mix(in srgb, var(--foreground) 40%, var(--background))",
+            "--foreground-50": "color-mix(in srgb, var(--foreground) 50%, var(--background))",
+            "--foreground-60": "color-mix(in srgb, var(--foreground) 60%, var(--background))",
+            "--foreground-70": "color-mix(in srgb, var(--foreground) 70%, var(--background))",
+            "--foreground-80": "color-mix(in srgb, var(--foreground) 80%, var(--background))",
+            "--foreground-90": "color-mix(in srgb, var(--foreground) 90%, var(--background))",
+            "--foreground-95": "color-mix(in srgb, var(--foreground) 95%, var(--background))",
+            "--background": "#FFFFFF",
+            "--foreground": "#20232C",
+            "--accent": "var(--缺失, #5438bb)",
+            "--info": "#94601C",
+            "--success": "#267454",
+            "--destructive": "#B63E4C",
+            "--background-elevated": "#FFFFFF",
+            "--foreground-dimmed": "#606775",
+            "--secondary": "#F2F3F8",
+            "--secondary-foreground": "#373D4B",
+            "--muted": "#F7F8FB",
+            "--muted-foreground": "#606775",
+            "--card": "#FFFFFF",
+            "--card-foreground": "#20232C",
+            "--popover-foreground": "#20232C",
+            "--border": "#E3E6ED",
+            "--ring": "oklch(0.488 0.275 280.3)",
+            "--user-message-bubble": "#F3F3F3",
+            "--paper": "#FFFFFF",
+            "--input": "#FFFFFF",
+            "--popover": "#FFFFFF",
+            "--popover-solid": "oklch(from #FFFFFF l c h / 1)",
+            "--theme-radius": "6px",
+            "--theme-panel-radius": "6px",
+            "--theme-border-width": "1px",
+            "--theme-border-style": "solid",
+            "--font-sans": "\"var(--literal-font-name)\", sans-serif",
+            "--font-serif": "\"New York\", \"Sitka Text\", \"Songti SC\", \"SimSun\", Georgia, serif",
+            "--font-mono": "SFMono-Regular, \"Cascadia Mono\", \"JetBrains Mono Variable\", ui-monospace, Consolas, \"Noto Sans SC Variable\", \"Microsoft YaHei UI\", monospace",
+            "--font-size-base": "15px",
+            "--tracking-normal": "0em",
+            "--line-height-base": "1.5",
+            "--icon-stroke-width": "1.65",
+            "--icon-stroke-linecap": "round",
+            "--theme-density": "comfortable",
+            "--theme-density-scale": "1",
+            "--theme-row-padding-y": "0.75rem",
+            "--theme-menu-item-padding-y": "0.375rem",
+            "--theme-settings-row-padding-y": "0.875rem",
+            "--theme-activity-row-padding-y": "0.125rem",
+            "--theme-depth": "elevated",
+            "--theme-shadow-color": "#20232C",
+            "--theme-shadow-strength": "0.04",
+            "--theme-backdrop-blur": "0px",
+            "--shadow-minimal": "0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent)",
+            "--shadow-middle": "0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-strong": "0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--shadow-modal-small": "0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent)",
+            "--theme-mode": "solid"
+          },
+          "shiki": "github-light"
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.45",
+  "viewport": {
+    "width": 1280,
+    "height": 820
+  },
+  "scope": "Actual CSS/ThemeProvider/Viewer, synthetic bridge and HTTP session; no packaged/native/physical-device acceptance."
+}

@@ -80,7 +80,7 @@ export function ToolbarStatusSlot({
           exit={{ opacity: 0 }}
           transition={{ duration: MOTION_DURATION.standard, ease: MOTION_EASE.enter }}
           className={cn(
-            "absolute inset-0 z-10",
+            "absolute inset-0 z-component-chrome",
             "rounded-b-[12px]",
             "shadow-tinted",
             "flex items-center justify-center",
@@ -152,7 +152,7 @@ function BrowserStatusBar({
       exit={{ opacity: 0 }}
       transition={{ duration: MOTION_DURATION.standard, ease: MOTION_EASE.enter }}
       className={cn(
-        "absolute inset-0 z-10",
+        "absolute inset-0 z-component-chrome",
         "rounded-b-[12px]",
         "flex items-center justify-center gap-2",
         "pointer-events-auto cursor-pointer",
@@ -165,7 +165,7 @@ function BrowserStatusBar({
       onClick={onClick}
     >
       {/* Accent gradient loading line at top of banner */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] z-10 overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-[2px] z-component-chrome overflow-hidden">
         <div
           className="h-full w-full animate-shimmer-loading"
           style={{

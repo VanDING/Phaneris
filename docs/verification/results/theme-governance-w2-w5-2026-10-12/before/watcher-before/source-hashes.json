@@ -1,0 +1,22 @@
+{
+  "apps/webui/src/main.tsx": "6cd6b11bca0e72f2e834143d092fa654e1cdfc47976c7df2433b1914c30aad12",
+  "apps/webui/src/App.tsx": "b0b6e16773147a61d262ef06a374efe60a453b33e0d5c2e97bc715eb658ac360",
+  "apps/electron/src/renderer/context/ThemeContext.tsx": "d368e69215412e1b130c9d6db3af4031382b8bc686031f2c407bbecca62a707d",
+  "apps/electron/src/renderer/index.css": "562b9119715060f846a8cecffbb49a17b83ea7aa26442c0bb3011cdc52fd9b5e",
+  "packages/ui/src/styles/index.css": "8b9290ad3fc0dc186c90dac92d8f27d2bef586d7744ec4b7955338e5a765c18d",
+  "packages/ui/src/styles/controls.css": "02dcd138d3f8f2433ae5bec60512798ce02c2ed95813fa3e54474bd4ec0be9be",
+  "packages/ui/src/styles/shadow-aliases.css": "0744e68e837f742c2e9fa88778f84065106221e84cc8c34e9844f2d1b74580d4",
+  "packages/ui/src/styles/theme-tokens.css": "7b93463491144f2b8e458c5f232ea40f4abd803ebcc9a576938f034623e33801",
+  "packages/ui/src/styles/theme-adapter.css": "064b68b4803b3cd5a3ef411f6ca8e9388e1ded70b370a5bf57ec0a331a111a32",
+  "packages/shared/src/config/theme-browser.ts": "89bd97335197947233113bc1aa1f7576ebce56a57d2d69b97d343aa4737c6e2a",
+  "packages/shared/src/config/theme-manifest.ts": "acb39f4f09195afb6141bd2c53280cf915125a454038d9817016915e93777205",
+  "packages/shared/src/config/schemas.ts": "09259207f0dc11744b6b269985568c19dd1c460dc729a3728ebe5fa0097bd35c",
+  "packages/shared/src/config/appearance.ts": "0d7cd52904024284a87c9203adab65d5837d967506768281dd7dc325a1f98772",
+  "packages/shared/src/config/watcher.ts": "fb6e467e55b817309d46139f160d66d398cfcc5783583e29d7553f365e7824fe",
+  "apps/webui/src/index.css": "75867e25919e58311567aca28e44675d8ea0f7b77c9124a1a726bde37833bda9",
+  "apps/viewer/src/index.css": "bdadb172ffcd619f4e72b144976503743bbadf480240505c3fccc33670efd06c",
+  "packages/shared/src/config/theme.ts": "6f8050259239d96812827a76727f794b969ffad5ad8a5777b846daa784c53f74",
+  "scripts/verification/fixtures/theme-foundation.tsx": "0fa769781fe75ae2912f973b761ed18c8138448c43fffd02e10dab961abd6cf9",
+  "scripts/verification/fixtures/theme-preferences-lifecycle.tsx": "dcf4f0a06a189de9ed75f132e43dd2f25e2332a577ac8137e2e1aad5020dece1",
+  "scripts/verification/theme-foundation-workflow.ts": "4bef036328140d134ccdffeccd9c099d8ac45de48c490bb078d76f635c091b24"
+}

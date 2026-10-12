@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "workflow": "theme-contract",
+  "startedAt": "2026-10-12T02:46:10.233Z",
+  "finishedAt": "2026-10-12T02:50:56.132Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\theme-contract-workflow.ts",
+    "--output-dir",
+    ".cache/verification/theme-contract-w2-before"
+  ],
+  "source": {
+    "headSha": "8d53a7200af4521ec8228ba7865e51419b502090",
+    "dirtyPaths": [
+      "M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      "?? docs/verification/theme-contract-failure-matrix-2026-10-12.md",
+      "?? scripts/verification/fixtures/theme-contract.tsx",
+      "?? scripts/verification/theme-contract-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "7e5cc900ef84198dc7135f45c1b14fd3d529d6348d7a809806d449330496cf82"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "6aa976fac340b224a4abb7aeaefe9fb6dba3a410ec5e236b7c6adce419b35dad"
+      },
+      {
+        "path": "docs/verification/theme-contract-failure-matrix-2026-10-12.md",
+        "sha256": "0e7b04670bc7dcff869dcbfe6e602ec7e66c2522fb03212eec82a5307ce359f4"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract.tsx",
+        "sha256": "4f8ddcdfd35073b4831481c60d81de1361618331eb09c0271208b679fa9aa519"
+      },
+      {
+        "path": "scripts/verification/theme-contract-workflow.ts",
+        "sha256": "751ebe75af729c0e1596d737e747def1f44cf7e21c283ad9b4d5fef2121e0008"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "TC01-electron-default-light",
+    "TC01-electron-default-dark",
+    "TC01-electron-geek-light",
+    "TC01-electron-geek-dark",
+    "TC01-electron-cyberpunk-2077-light",
+    "TC01-electron-cyberpunk-2077-dark",
+    "TC01-electron-ink-light",
+    "TC01-electron-ink-dark",
+    "TC01-webui-default-light",
+    "TC01-webui-default-dark",
+    "TC01-webui-geek-light",
+    "TC01-webui-geek-dark",
+    "TC01-webui-cyberpunk-2077-light",
+    "TC01-webui-cyberpunk-2077-dark",
+    "TC01-webui-ink-light",
+    "TC01-webui-ink-dark",
+    "TC03-valid-0",
+    "TC03-valid-1",
+    "TC03-valid-2",
+    "TC18-page-errors"
+  ],
+  "passed": 20,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "electron-ink-light.png",
+      "sha256": "411f8c923008da1c5888e8c570dbc10e645ccabca42e2b789d4660f8724a6200",
+      "bytes": 51252
+    },
+    {
+      "path": "electron.css",
+      "sha256": "ec6acb764fcc13ccccb93c9dd1c29db3e5f63869c21338ea939cf07c0e4ccc38",
+      "bytes": 129
+    },
+    {
+      "path": "failure.json",
+      "sha256": "d37b81f70c09c9be6ab27f5ee96d1e952c2e54d99d788d1c407157707944389a",
+      "bytes": 41417
+    },
+    {
+      "path": "index.html",
+      "sha256": "4ff23e5fb197b2b4ce6f4d4cf8c01b3fe8a1756d9ca1cf0a9ef35c6623c5b677",
+      "bytes": 282
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "c65d97a467a67f3ec362919f5f6ce88972abfd94a7f1f2cf668c81e8f4096366",
+      "bytes": 1361
+    },
+    {
+      "path": "theme-contract.json",
+      "sha256": "cfb91e2954de435ca58574dcdf41e9967f39bbf3e4db872cba7445e4e37cc34b",
+      "bytes": 84169
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "33e6847f0f424b5557eb75f5163adc7decc76ddb953affb7d0d7a984526fe8eb",
+      "bytes": 4636534
+    },
+    {
+      "path": "ui-ink-light.png",
+      "sha256": "d2e1a728bd6769883c72592efe39b10eae87c94ddbbe265c2cae27715598c519",
+      "bytes": 51236
+    },
+    {
+      "path": "ui.css",
+      "sha256": "95b14dc2b76668098df77adfe97b6881906778fabcb537fc2c2df8a2f2448d37",
+      "bytes": 125
+    },
+    {
+      "path": "viewer-ink-light.png",
+      "sha256": "d2e1a728bd6769883c72592efe39b10eae87c94ddbbe265c2cae27715598c519",
+      "bytes": 51236
+    },
+    {
+      "path": "viewer.css",
+      "sha256": "44581933135edce84b0cf2171de72a7ecb30cf8f50f93dfd178c1613d5245dc6",
+      "bytes": 118
+    },
+    {
+      "path": "webui-ink-light.png",
+      "sha256": "411f8c923008da1c5888e8c570dbc10e645ccabca42e2b789d4660f8724a6200",
+      "bytes": 51252
+    },
+    {
+      "path": "webui.css",
+      "sha256": "52ed3bf7081b885e2b44627cc0a472bc19804ed14c597b5de8f226b0804f3e84",
+      "bytes": 117
+    }
+  ],
+  "untested": [
+    "Packaged clients and native views",
+    "macOS/Linux",
+    "Physical touch devices and soft keyboard"
+  ]
+}

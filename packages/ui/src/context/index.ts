@@ -14,3 +14,5 @@ export {
   useShikiTheme,
   type ShikiThemeProviderProps,
 } from './ShikiThemeContext'
+export { PortalStackProvider, usePortalLayer } from './PortalStackContext'
+export { HostThemeProvider, useHostTheme } from './HostThemeContext'

@@ -14,14 +14,8 @@
 
 /* Viewer-specific overrides */
 
-/* Override background to pure white (cards/buttons pop on the off-white page) */
-:root {
-  --background: white;
-}
-
-.dark {
-  --background: oklch(0.26 0.01 270);
-}
+/* Host canvas uses the shared background/foreground-2 policy. Semantic
+   backgrounds must stay paired with their text and emphasis colors. */
 
 html, body, #root {
   height: 100%;

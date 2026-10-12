@@ -298,3 +298,38 @@ jobs:
           path: .cache/verification/
           if-no-files-found: error
           retention-days: 14
+
+  native-theme:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: "1.4.2"
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Provision validation runtime
+        run: bun run runtime:provision:validation
+      - name: Native theme main preload renderer acceptance
+        if: runner.os != 'Linux'
+        run: bun run test:theme-native
+      - name: Native Linux theme acceptance under Xvfb
+        if: runner.os == 'Linux'
+        run: xvfb-run --auto-servernum bun run test:theme-native
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: verification-${{ github.job }}-${{ runner.os }}-${{ github.run_attempt }}
+          path: .cache/verification/
+          if-no-files-found: error
+          retention-days: 14

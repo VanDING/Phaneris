@@ -1,0 +1,278 @@
+{
+  "checks": [
+    "native authoritative preferences apply before acceptance",
+    "real main preload deliver initial theme to toolbar and empty state",
+    "native theme delivery default/light",
+    "native theme delivery default/dark",
+    "native theme delivery ink/light",
+    "native theme delivery ink/dark",
+    "native theme delivery geek/light",
+    "native theme delivery geek/dark",
+    "native theme delivery cyberpunk-2077/light",
+    "native theme delivery cyberpunk-2077/dark",
+    "real Chromium browser zoom 200 percent reflows",
+    "foreign page receives no private theme payload",
+    "native renderer has no unhandled errors"
+  ],
+  "samples": [
+    [
+      {
+        "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+        "value": {
+          "id": "ink",
+          "status": "ready",
+          "mode": "light",
+          "revision": "c8ae323406d88bf65f72e314f233bcf7f8d1c52538d00802fe15f3fe21c3f98c:light",
+          "color": "rgb(35, 31, 26)"
+        }
+      },
+      {
+        "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+        "value": {
+          "id": "ink",
+          "status": "ready",
+          "mode": "light",
+          "revision": "c8ae323406d88bf65f72e314f233bcf7f8d1c52538d00802fe15f3fe21c3f98c:light",
+          "color": "rgb(35, 31, 26)"
+        }
+      }
+    ],
+    {
+      "theme": "default",
+      "mode": "light",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "62fe853a0c51ad14ce2a0129a236ef44c3a676572a72f3dc7892f3b3e9953811:light",
+            "color": "rgb(32, 35, 44)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "light",
+            "revision": "62fe853a0c51ad14ce2a0129a236ef44c3a676572a72f3dc7892f3b3e9953811:light",
+            "color": "rgb(32, 35, 44)"
+          }
+        }
+      ]
+    },
+    {
+      "theme": "default",
+      "mode": "dark",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "62fe853a0c51ad14ce2a0129a236ef44c3a676572a72f3dc7892f3b3e9953811:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "default",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "62fe853a0c51ad14ce2a0129a236ef44c3a676572a72f3dc7892f3b3e9953811:dark",
+            "color": "rgb(238, 240, 246)"
+          }
+        }
+      ]
+    },
+    {
+      "theme": "ink",
+      "mode": "light",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "ink",
+            "status": "ready",
+            "mode": "light",
+            "revision": "c8ae323406d88bf65f72e314f233bcf7f8d1c52538d00802fe15f3fe21c3f98c:light",
+            "color": "rgb(35, 31, 26)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "ink",
+            "status": "ready",
+            "mode": "light",
+            "revision": "c8ae323406d88bf65f72e314f233bcf7f8d1c52538d00802fe15f3fe21c3f98c:light",
+            "color": "rgb(35, 31, 26)"
+          }
+        }
+      ]
+    },
+    {
+      "theme": "ink",
+      "mode": "dark",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "ink",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "c8ae323406d88bf65f72e314f233bcf7f8d1c52538d00802fe15f3fe21c3f98c:dark",
+            "color": "rgb(237, 231, 218)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "ink",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "c8ae323406d88bf65f72e314f233bcf7f8d1c52538d00802fe15f3fe21c3f98c:dark",
+            "color": "rgb(237, 231, 218)"
+          }
+        }
+      ]
+    },
+    {
+      "theme": "geek",
+      "mode": "light",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "geek",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "10091a160230b1a320a5781d923a3fd2251a45768ea90570018d7c5eaf3dd0db:dark",
+            "color": "rgb(232, 236, 234)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "geek",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "10091a160230b1a320a5781d923a3fd2251a45768ea90570018d7c5eaf3dd0db:dark",
+            "color": "rgb(232, 236, 234)"
+          }
+        }
+      ]
+    },
+    {
+      "theme": "geek",
+      "mode": "dark",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "geek",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "10091a160230b1a320a5781d923a3fd2251a45768ea90570018d7c5eaf3dd0db:dark",
+            "color": "rgb(232, 236, 234)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "geek",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "10091a160230b1a320a5781d923a3fd2251a45768ea90570018d7c5eaf3dd0db:dark",
+            "color": "rgb(232, 236, 234)"
+          }
+        }
+      ]
+    },
+    {
+      "theme": "cyberpunk-2077",
+      "mode": "light",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "cyberpunk-2077",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "31c28682bfdf523fab7b6bc878472bba33c8c0b3fee3113e783d5e3af0299a9f:dark",
+            "color": "rgb(0, 255, 240)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "cyberpunk-2077",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "31c28682bfdf523fab7b6bc878472bba33c8c0b3fee3113e783d5e3af0299a9f:dark",
+            "color": "rgb(0, 255, 240)"
+          }
+        }
+      ]
+    },
+    {
+      "theme": "cyberpunk-2077",
+      "mode": "dark",
+      "views": [
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-empty-state.html",
+          "value": {
+            "id": "cyberpunk-2077",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "31c28682bfdf523fab7b6bc878472bba33c8c0b3fee3113e783d5e3af0299a9f:dark",
+            "color": "rgb(0, 255, 240)"
+          }
+        },
+        {
+          "url": "file:///E:/Phaneris/apps/electron/dist/renderer/browser-toolbar.html?instanceId=browser-1",
+          "value": {
+            "id": "cyberpunk-2077",
+            "status": "ready",
+            "mode": "dark",
+            "revision": "31c28682bfdf523fab7b6bc878472bba33c8c0b3fee3113e783d5e3af0299a9f:dark",
+            "color": "rgb(0, 255, 240)"
+          }
+        }
+      ]
+    },
+    {
+      "zoom": 2,
+      "geometry": {
+        "width": 640,
+        "scroll": 640,
+        "viewport": 640,
+        "panels": [
+          {
+            "role": "sidebar",
+            "x": 0,
+            "width": 220
+          },
+          {
+            "role": "navigator",
+            "x": 226,
+            "width": 300
+          },
+          {
+            "role": "content",
+            "x": 532,
+            "width": 102
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "platform": "win32",
+  "electron": "44.5.1",
+  "scope": "Production bundles, real Electron main/preload and BrowserViews, disposable config, local RPC; no signed installer acceptance."
+}

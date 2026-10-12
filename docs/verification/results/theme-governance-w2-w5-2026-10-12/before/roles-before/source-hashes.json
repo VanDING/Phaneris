@@ -1,0 +1,12 @@
+{
+  "apps/electron/src/renderer/components/ui/button.tsx": "6d696133d22523c068663df756c784f51eeb8336bfb344ad6984ab320a351716",
+  "packages/ui/src/styles/controls.css": "02dcd138d3f8f2433ae5bec60512798ce02c2ed95813fa3e54474bd4ec0be9be",
+  "packages/ui/src/styles/typography.css": "c53d556c715884ce8ccfcd150fe7f1f6ff23b40d68fc83a8e983d4f629017a77",
+  "packages/ui/src/lib/layout.ts": "fa420b941afe5b373ea92b7a2a1d85c19b7eba8e97d0bd59b03cc97f1b78d4e4",
+  "packages/ui/src/components/markdown/CodeBlock.tsx": "a2b8463614c78f36c2d2a872b7a9534570a3d031f21424a53ce0c026a19345d6",
+  "apps/viewer/src/components/Header.tsx": "adc6913eca2e6f0751c28bfcd19ac9aac6a3be50d6410e6dcf336c1472e7e577",
+  "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx": "b8f0662d0a75d4461cbf0c131210be9448e70f7cb77ef5c10a7b827ff2d294e7",
+  "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx": "6f0f41092d3e54fc50b559136742e3d8694602a718fff3d12ba9258ae285547f",
+  "scripts/verification/fixtures/theme-roles.tsx": "4e999b4cce651607aca2ec45d22b30b6ca83a2f47e758fc500581fc9d6c3ac9a",
+  "scripts/verification/theme-roles-workflow.ts": "078b4d2832e9a16d726d8310f517cb406fcbe7f54f9cedac5b79b5eca645fee3"
+}

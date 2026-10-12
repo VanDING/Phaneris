@@ -177,8 +177,8 @@ export function SurfaceSlot({
         className={cn(
           'h-full overflow-hidden relative @container/panel',
           !isOnly && isFocusedPanel
-            ? cn('shadow-panel-focused z-[1]', isConversationGroup && 'ring-1 ring-inset ring-accent/30')
-            : 'shadow-middle z-0',
+            ? cn('shadow-panel-focused z-component-overlay', isConversationGroup && 'ring-1 ring-inset ring-accent/30')
+            : 'shadow-middle z-component-content',
           'bg-paper',
         )}
         style={{
@@ -221,13 +221,13 @@ export function SurfaceSlot({
         {isConversationGroup && !isFocusedPanel && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-[2] bg-foreground/[0.018]"
+            className="pointer-events-none absolute inset-0 z-component-header bg-foreground/[0.018]"
           />
         )}
         {isConversationGroup && isFocusedPanel && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-0 z-[3] h-0.5 w-7 -translate-x-1/2 rounded-b-full bg-accent/65"
+            className="pointer-events-none absolute left-1/2 top-0 z-component-controls h-0.5 w-7 -translate-x-1/2 rounded-b-full bg-accent/65"
           />
         )}
         <div className="h-full flex flex-col">

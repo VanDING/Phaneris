@@ -13,6 +13,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { codeToHtml, bundledLanguages, type BundledLanguage } from 'shiki'
 import { cn } from '../../lib/utils'
 import { LANGUAGE_MAP } from './language-map'
+import { useShikiThemeState } from '../../context/ShikiThemeContext'
 
 export interface ShikiCodeViewerProps {
   /** The code content to display */
@@ -72,7 +73,9 @@ export function ShikiCodeViewer({
   onReady,
   className,
 }: ShikiCodeViewerProps) {
-  const [highlighted, setHighlighted] = useState<string | null>(null)
+  const context = useShikiThemeState()
+  const resolvedShikiTheme = shikiTheme || (context.hasProvider ? context.shikiTheme : theme === 'dark' ? 'github-dark' : 'github-light')
+  const [highlight, setHighlight] = useState<{ key: string; html: string } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const hasCalledReady = useRef(false)
 
@@ -82,6 +85,8 @@ export function ShikiCodeViewer({
     const lowered = lang.toLowerCase()
     return LANGUAGE_ALIASES[lowered] || lowered
   }, [language, filePath])
+  const key = JSON.stringify([code, resolvedLang, resolvedShikiTheme, context.revision])
+  const highlighted = highlight?.key === key ? highlight.html : null
 
   // Split code into lines for line numbers
   const lines = useMemo(() => code.split('\n'), [code])
@@ -92,7 +97,6 @@ export function ShikiCodeViewer({
 
     async function highlight() {
       // Use provided shikiTheme or fall back to github theme based on mode
-      const resolvedShikiTheme = shikiTheme || (theme === 'dark' ? 'github-dark' : 'github-light')
       const lang = isValidLanguage(resolvedLang) ? resolvedLang : 'text'
 
       try {
@@ -102,7 +106,7 @@ export function ShikiCodeViewer({
         })
 
         if (!cancelled) {
-          setHighlighted(html)
+          setHighlight({ key, html })
           setIsLoading(false)
 
           // Call onReady once
@@ -114,7 +118,7 @@ export function ShikiCodeViewer({
       } catch (error) {
         console.warn(`Shiki highlighting failed for language "${resolvedLang}":`, error)
         if (!cancelled) {
-          setHighlighted(null)
+          setHighlight(null)
           setIsLoading(false)
 
           if (!hasCalledReady.current && onReady) {
@@ -130,7 +134,7 @@ export function ShikiCodeViewer({
     return () => {
       cancelled = true
     }
-  }, [code, resolvedLang, theme, shikiTheme, onReady])
+  }, [code, resolvedLang, resolvedShikiTheme, key, onReady])
 
   // Use CSS variables so custom themes are respected
   const backgroundColor = 'var(--background)'

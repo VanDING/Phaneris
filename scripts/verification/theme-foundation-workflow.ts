@@ -1,13 +1,16 @@
 /** W1 / TF01–TF18. Authored and executed against failing baseline before product edits. */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
 import type { Page } from 'playwright'
 import { createServer } from 'vite'
 import { verificationWorkflow } from './verification-artifacts'
 import { launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
 import { startProcess, testSecret, type RunningProcess } from './fixtures/governance-process-support'
+import { RPC_CHANNELS } from '../../packages/shared/src/protocol/channels'
+
+declare global { interface Window { themeWatchEvents: { themeId: string }[] } }
 
 await verificationWorkflow('theme-foundation', async run => {
   const root = resolve(import.meta.dir, '../..')
@@ -17,6 +20,9 @@ await verificationWorkflow('theme-foundation', async run => {
   const sources = ['apps/webui/src/main.tsx', 'apps/webui/src/App.tsx', 'apps/electron/src/renderer/context/ThemeContext.tsx',
     'apps/electron/src/renderer/index.css', 'packages/ui/src/styles/index.css', 'packages/ui/src/styles/controls.css',
     'packages/ui/src/styles/shadow-aliases.css',
+    'packages/ui/src/styles/theme-tokens.css', 'packages/ui/src/styles/theme-adapter.css',
+    'packages/ui/src/lib/theme-compiler.ts', 'packages/shared/src/config/theme-runtime.ts', 'packages/shared/src/config/theme-manifest.ts',
+    'packages/shared/src/config/schemas.ts', 'packages/shared/src/config/appearance.ts', 'packages/shared/src/config/watcher.ts',
     'apps/webui/src/index.css', 'apps/viewer/src/index.css', 'packages/shared/src/config/theme.ts',
     'scripts/verification/fixtures/theme-foundation.tsx', 'scripts/verification/fixtures/theme-preferences-lifecycle.tsx',
     'scripts/verification/theme-foundation-workflow.ts']
@@ -303,13 +309,82 @@ await verificationWorkflow('theme-foundation', async run => {
       await button.focus(); await retry.keyboard.press('Tab'); await retry.keyboard.press('Shift+Tab'); visibleFocus(await focus(retry, 'button:focus'))
       await retry.keyboard.press('Enter'); await ready(retry); await applied(retry, 'ink', 'light', 'system'); await retry.close()
     })
+    // Real user-file watcher → RPC broadcast → both production WebUI providers.
+    const themesDir = join(config, 'themes'), livePath = join(themesDir, 'watcher-theme.json')
+    const definition = JSON.stringify({ name: 'Watcher theme', accent: '#5438bb', background: '#fffafa' })
+    const revision = () => first.locator('html').getAttribute('data-theme-revision')
+    const errorState = async () => {
+      for (const target of [first, second]) await target.waitForFunction(() => document.documentElement.dataset.themeStatus === 'error'
+        && !document.documentElement.dataset.theme && !document.documentElement.dataset.scenic, null, { timeout: 15_000 })
+    }
+    await first.evaluate(() => { window.themeWatchEvents = []; window.electronAPI.onUserThemesChanged(value => window.themeWatchEvents.push(value)) })
+    await check('TC10-real-select', async () => {
+      writeFileSync(livePath, definition)
+      await second.evaluate(() => window.electronAPI.setThemePreferences({ mode: 'light', colorTheme: 'watcher-theme', font: 'system' }))
+      await applied(first, 'watcher-theme', 'light', 'system'); await applied(second, 'watcher-theme', 'light', 'system')
+    })
+    await check('TC10-real-unrelated', async () => {
+      const before = await revision(), calls = transport.filter((value: any) => value.client === 0 && value.direction === 'send' && value.channel === RPC_CHANNELS.theme.LOAD_PRESET).length
+      writeFileSync(join(themesDir, 'other-theme.json'), JSON.stringify({ name: 'Unrelated', accent: '#123456' }))
+      await first.waitForFunction(() => window.themeWatchEvents.some(value => value.themeId === 'other-theme'))
+      assert.equal(await revision(), before)
+      assert.equal(transport.filter((value: any) => value.client === 0 && value.direction === 'send' && value.channel === RPC_CHANNELS.theme.LOAD_PRESET).length, calls)
+    })
+    await check('TC10-real-partial-write', async () => { writeFileSync(livePath, '{"name":'); await errorState() })
+    await check('TC10-real-atomic-repair', async () => {
+      const temp = join(themesDir, 'replacement.tmp'); writeFileSync(temp, definition); renameSync(temp, livePath)
+      await applied(first, 'watcher-theme', 'light', 'system'); await applied(second, 'watcher-theme', 'light', 'system')
+    })
+    await check('TC10-real-delete', async () => { unlinkSync(livePath); await errorState() })
+    await check('TC10-real-restore', async () => { writeFileSync(livePath, definition); await applied(first, 'watcher-theme', 'light', 'system') })
+    const renamed = join(themesDir, 'renamed-theme.json')
+    await check('TC10-real-rename', async () => { renameSync(livePath, renamed); await errorState() })
+    await check('TC10-real-rename-back', async () => { renameSync(renamed, livePath); await applied(first, 'watcher-theme', 'light', 'system') })
+    await check('TC10-real-offline-file-event', async () => {
+      const before = await revision()
+      try {
+        await webContexts[0].setOffline(true); await first.evaluate(() => window.electronAPI.reconnectTransport())
+        await waitForBrowserCondition(first, async () => (await window.electronAPI.getTransportConnectionState()).status !== 'connected')
+        writeFileSync(livePath, JSON.stringify({ name: 'Watcher theme', accent: '#723f9e', background: '#fffafa' }))
+        await second.waitForFunction(before => document.documentElement.dataset.themeStatus === 'ready' && document.documentElement.dataset.themeRevision !== before, before)
+      } finally { await webContexts[0].setOffline(false); await first.evaluate(() => window.electronAPI.reconnectTransport()) }
+      await first.waitForFunction(before => document.documentElement.dataset.themeStatus === 'ready' && document.documentElement.dataset.themeRevision !== before, before)
+    })
+    const imageBytes = await first.evaluate(() => {
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 2; const ctx = canvas.getContext('2d')!
+      ctx.fillStyle = '#20232c'; ctx.fillRect(0, 0, 2, 2); const dark = canvas.toDataURL('image/png').split(',')[1]!
+      ctx.fillStyle = '#94601c'; ctx.fillRect(0, 0, 2, 2); return { dark, amber: canvas.toDataURL('image/png').split(',')[1]! }
+    })
+    const scenicPath = join(themesDir, 'watcher-scenic.json'), assetPath = join(themesDir, 'scene.png')
+    let imageRevision: string | null
+    await check('TC05-real-scenic', async () => {
+      writeFileSync(assetPath, Buffer.from(imageBytes.dark, 'base64'))
+      writeFileSync(scenicPath, JSON.stringify({ name: 'Watcher scenic', accent: '#5438bb', mode: 'scenic', backgroundImage: 'scene.png' }))
+      await second.evaluate(() => window.electronAPI.setThemePreferences({ mode: 'light', colorTheme: 'watcher-scenic', font: 'system' }))
+      await applied(first, 'watcher-scenic', 'dark', 'system'); await applied(second, 'watcher-scenic', 'dark', 'system')
+      assert.equal(await first.locator('html').getAttribute('data-scenic'), 'true'); imageRevision = await revision()
+    })
+    await check('TC05-real-image-update', async () => {
+      writeFileSync(assetPath, Buffer.from(imageBytes.amber, 'base64'))
+      await first.waitForFunction(before => document.documentElement.dataset.themeStatus === 'ready' && document.documentElement.dataset.themeRevision !== before, imageRevision!, { timeout: 5000 })
+    })
+    await check('TC05-real-image-corrupt', async () => { writeFileSync(assetPath, 'invalid pixels'); await errorState() })
+    await check('TC05-real-image-repair', async () => {
+      writeFileSync(assetPath, Buffer.from(imageBytes.dark, 'base64')); await applied(first, 'watcher-scenic', 'dark', 'system')
+    })
+    await check('TC05-real-path-escape', async () => {
+      writeFileSync(join(config, 'outside.png'), Buffer.from(imageBytes.dark, 'base64'))
+      writeFileSync(scenicPath, JSON.stringify({ name: 'Watcher scenic', accent: '#5438bb', mode: 'scenic', backgroundImage: '../outside.png' })); await errorState()
+      assert.equal(await first.locator('html').evaluate(element => (element as HTMLElement).style.getPropertyValue('--background-image')), '')
+    })
+    samples.push({ watcher: { events: await first.evaluate(() => window.themeWatchEvents), themeFileSha256: sha256(scenicPath) } })
     await webContexts[0].tracing.stop({ path: join(run.directory, 'web-trace.zip') })
     await Promise.all(webContexts.map(context => context.close()))
     await check('TF18-no-pageerror', async () => assert.deepEqual(pageErrors, []))
     run.complete(checks.filter(check => check.passed).map(check => check.id), [
       'Formal Electron packages and native material/caption/BrowserView', 'macOS/Linux execution',
-      'Physical touch devices, mobile Safari and soft keyboard', 'Workspace/file watcher missed events (W2/W4)',
-      'Contrast/token parity and Viewer Shiki (W2); visual parameter changes (W3)',
+      'Physical touch devices, mobile Safari and soft keyboard', 'Watcher process restart and events lost while a client is offline',
+      'Contrast/token parity and Viewer Shiki are in theme-contract; visual parameter changes (W3)',
     ])
     assert(checks.every(check => check.passed), JSON.stringify(checks.filter(check => !check.passed)))
   } finally {

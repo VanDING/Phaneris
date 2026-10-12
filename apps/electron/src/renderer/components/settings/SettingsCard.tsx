@@ -32,7 +32,7 @@ export function SettingsCard({ children, className, divided = true }: SettingsCa
   return (
     <div
       className={cn(
-        'craft-settings-card rounded-xl bg-card text-card-foreground shadow-minimal overflow-hidden',
+        'craft-settings-card rounded-xl bg-surface-raised text-card-foreground shadow-minimal overflow-hidden',
         className
       )}
     >

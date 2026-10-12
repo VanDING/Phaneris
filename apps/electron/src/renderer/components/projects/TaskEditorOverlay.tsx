@@ -33,7 +33,7 @@ export function TaskEditorOverlay() {
   if (!target || !activeWorkspaceId) return null
 
   return (
-    <div className="absolute inset-0 z-30 bg-background" data-task-editor-overlay>
+    <div className="absolute inset-0 z-component-panel bg-background" data-task-editor-overlay>
       <TaskEditor
         workspaceId={activeWorkspaceId}
         target={target}

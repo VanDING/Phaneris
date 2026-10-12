@@ -1,0 +1,150 @@
+{
+  "scope": "Local engineering acceptance; selected public excerpt of complete original runs.",
+  "planningCommit": "78915598226b27a2ad34363ccf00a03dc1324067",
+  "branch": "codex/theme-governance-w1",
+  "reports": [
+    {
+      "id": "theme-roles",
+      "run": ".cache/verification/theme-closeout-v4-theme-roles",
+      "manifest": "roles/manifest.json",
+      "passed": 76,
+      "total": 76,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Native packages",
+        "Physical touch devices and soft keyboard",
+        "200% browser zoom and design comparison are separate acceptance scenes"
+      ]
+    },
+    {
+      "id": "theme-domains",
+      "run": ".cache/verification/theme-closeout-v4-theme-domains",
+      "manifest": "domains/manifest.json",
+      "passed": 56,
+      "total": 56,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Live external provider and native materials",
+        "Physical mobile soft keyboard"
+      ]
+    },
+    {
+      "id": "theme-browser-host",
+      "run": ".cache/verification/theme-closeout-v4-theme-browser-host",
+      "manifest": "browser-host/manifest.json",
+      "passed": 23,
+      "total": 23,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Native IPC delivery and OS materials are separate acceptance scenes"
+      ]
+    },
+    {
+      "id": "theme-login",
+      "run": ".cache/verification/theme-closeout-v5-theme-login",
+      "manifest": "login/manifest.json",
+      "passed": 5,
+      "total": 5,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Real server auth lifecycle is covered by webui-auth-lifecycle"
+      ]
+    },
+    {
+      "id": "theme-contract",
+      "run": ".cache/verification/theme-closeout-v6-theme-contract",
+      "manifest": "contract/manifest.json",
+      "passed": 90,
+      "total": 90,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Packaged clients and native views",
+        "macOS/Linux",
+        "Physical touch devices and soft keyboard"
+      ]
+    },
+    {
+      "id": "theme-design",
+      "run": ".cache/verification/theme-closeout-v6-theme-design",
+      "manifest": "design/manifest.json",
+      "passed": 36,
+      "total": 36,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Real browser zoom is asserted by theme-native",
+        "OS materials and physical touch are separate runs"
+      ]
+    },
+    {
+      "id": "markdown-popout",
+      "run": ".cache/verification/theme-closeout-v8-markdown-popout",
+      "manifest": "popout/manifest.json",
+      "passed": 18,
+      "total": 18,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Real ChatDisplay/host boot and persisted session integration (call sites reviewed and typechecked)",
+        "Native Electron package, macOS material, Windows/Linux execution",
+        "Signed installer/release",
+        "Modal branch: current modalBreakpoint=99999; all tested viewports use fullscreen"
+      ]
+    },
+    {
+      "id": "theme-foundation",
+      "run": ".cache/verification/theme-closeout-v8-theme-foundation",
+      "manifest": "foundation/manifest.json",
+      "passed": 115,
+      "total": 115,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Formal Electron packages and native material/caption/BrowserView",
+        "macOS/Linux execution",
+        "Physical touch devices, mobile Safari and soft keyboard",
+        "Watcher process restart and events lost while a client is offline",
+        "Contrast/token parity and Viewer Shiki are in theme-contract; visual parameter changes (W3)"
+      ]
+    },
+    {
+      "id": "theme-governance",
+      "run": ".cache/verification/theme-governance-final",
+      "manifest": "governance/manifest.json",
+      "passed": 49,
+      "total": 49,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Runtime interactions are verified in theme browser workflows"
+      ]
+    },
+    {
+      "id": "theme-native",
+      "run": ".cache/verification/theme-native-win-v3",
+      "manifest": "native-win/manifest.json",
+      "passed": 13,
+      "total": 13,
+      "exitCode": 0,
+      "sourceHead": "8d53a7200af4521ec8228ba7865e51419b502090",
+      "untested": [
+        "Signed installer/release",
+        "Other OS runs are separate artifacts",
+        "Physical mobile keyboard"
+      ]
+    }
+  ],
+  "passed": 481,
+  "total": 481,
+  "remaining": [
+    "macOS/Linux execution evidence",
+    "Signed installers and three-platform release matrix",
+    "Physical mobile touch/soft keyboard/safe-area",
+    "Large-session and maximum-image performance"
+  ]
+}

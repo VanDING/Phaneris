@@ -34,7 +34,7 @@ export function AnnotationOverlayLayer({
   }
 
   return (
-    <div data-ca-annotation-overlay className="pointer-events-none absolute inset-0 z-[2]">
+    <div data-ca-annotation-overlay className="pointer-events-none absolute inset-0 z-component-header">
       {rects.map((rect, idx) => {
         const rectVisual = getAnnotationRectVisual(rect)
 

@@ -268,7 +268,7 @@ function BrowserMockPageSurface({
 }) {
   if (mode === 'empty-state') {
     return (
-      <div className={className ?? 'absolute inset-0 p-6 z-10'}>
+      <div className={className ?? 'absolute inset-0 p-6 z-component-chrome'}>
         <BrowserAgentEmptyState
           title={emptyStateTitle}
           description={emptyStateDescription}
@@ -280,7 +280,7 @@ function BrowserMockPageSurface({
   }
 
   return (
-    <div className={className ?? 'absolute inset-0 p-6 z-10'}>
+    <div className={className ?? 'absolute inset-0 p-6 z-component-chrome'}>
       <div className="h-10 rounded-lg border border-foreground/10 bg-background/80 backdrop-blur-sm" />
       <div className="mt-4 grid grid-cols-3 gap-3">
         <div className="h-24 rounded-lg bg-foreground/5" />
@@ -296,7 +296,7 @@ function BrowserMockPageSurface({
   )
 }
 
-function BrowserEdgeShaderFx({ className = 'absolute inset-0 pointer-events-none z-20', rounded = false }: { className?: string; rounded?: boolean }) {
+function BrowserEdgeShaderFx({ className = 'absolute inset-0 pointer-events-none z-component-scrim', rounded = false }: { className?: string; rounded?: boolean }) {
   return (
     <div
       className={className}
@@ -324,13 +324,13 @@ function BrowserTraceSidebarSample({ scenario, runState, sidebarWidth, hdrEffect
         <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900" />
 
         {/* Shared edge shader effect (same visual as Browser Frame overlay) */}
-        {hdrEffect && <BrowserEdgeShaderFx className="absolute inset-0 pointer-events-none z-20" />}
+        {hdrEffect && <BrowserEdgeShaderFx className="absolute inset-0 pointer-events-none z-component-scrim" />}
 
         {/* Cursor pulse simulation */}
         {cursorPulse && (
           <>
             <motion.div
-              className="absolute h-6 w-5 z-30 [will-change:transform]"
+              className="absolute h-6 w-5 z-component-panel [will-change:transform]"
               style={{ transform: 'translateZ(0)' }}
               initial={false}
               animate={{ x: [220, 300, 430, 330, 220], y: [180, 260, 240, 350, 180], rotate: [0, 2, -3, 1, 0] }}
@@ -346,7 +346,7 @@ function BrowserTraceSidebarSample({ scenario, runState, sidebarWidth, hdrEffect
               />
             </motion.div>
             <motion.div
-              className="absolute h-10 w-10 rounded-full border-2 border-cyan-400/65 z-30 [will-change:transform,opacity]"
+              className="absolute h-10 w-10 rounded-full border-2 border-cyan-400/65 z-component-panel [will-change:transform,opacity]"
               style={{ transform: 'translateZ(0)' }}
               initial={{ x: 213, y: 173, opacity: 0.75, scale: 0.55 }}
               animate={{ x: [213, 293, 423, 323, 213], y: [173, 253, 233, 343, 173], opacity: [0.68, 0.16, 0.68, 0.16, 0.68], scale: [0.6, 1.5, 0.6, 1.5, 0.6] }}
@@ -438,7 +438,7 @@ function BrowserFramePlayground({
             <AnimatePresence>
               {liveFx.active && (
                 <motion.div
-                  className="absolute inset-0 pointer-events-none z-20"
+                  className="absolute inset-0 pointer-events-none z-component-scrim"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}

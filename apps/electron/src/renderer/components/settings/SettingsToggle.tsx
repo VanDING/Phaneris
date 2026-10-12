@@ -67,7 +67,7 @@ export function SettingsToggle({
       className={cn(
         'craft-settings-row flex items-center justify-between',
         inCard ? 'craft-settings-padding' : 'craft-settings-plain',
-        disabled && 'text-muted-foreground',
+        disabled && 'text-text-secondary',
         className
       )}
     >
@@ -75,7 +75,7 @@ export function SettingsToggle({
         <div className={cn(settingsUI.label, tooltip && 'flex items-center gap-1.5')}>
           {label}
           {tooltip && <Tooltip><TooltipTrigger asChild>
-            <button type="button" aria-label={t('common.info')} className="inline-flex rounded-sm text-foreground/40 hover:text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            <button type="button" aria-label={t('common.info')} className="craft-control inline-flex rounded-sm text-text-secondary hover:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               onClick={event => event.preventDefault()}><Info className="size-3.5" aria-hidden /></button>
           </TooltipTrigger><TooltipContent className="max-w-xs">{tooltip}</TooltipContent></Tooltip>}
         </div>

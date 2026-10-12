@@ -1,0 +1,122 @@
+{
+  "checks": [
+    {
+      "id": "TC14-toolbar-default-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-default-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-ink-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-ink-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-geek-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-geek-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-cyberpunk-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-cyberpunk-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-invalid-fallback",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-scenic-failure",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-toolbar-repair",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-default-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-default-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-ink-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-ink-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-geek-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-geek-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-cyberpunk-light",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-cyberpunk-dark",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-invalid-fallback",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-scenic-failure",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC14-empty-repair",
+      "passed": false,
+      "error": "TimeoutError: waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TC18-browser-host-errors",
+      "passed": true
+    }
+  ],
+  "samples": [],
+  "errors": [],
+  "browser": "155.0.4283.45",
+  "scope": "Real standalone renderer entries; IPC payload delivery is synthetic. Native delivery is verified separately."
+}

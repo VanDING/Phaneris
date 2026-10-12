@@ -1,0 +1,8 @@
+{
+  "packages/ui/src/components/terminal/TerminalOutput.tsx": "87a2aaa972c31d39c38ed9072f807f31b53d46305b58ccf50f6530533773b793",
+  "packages/ui/src/components/trajectory/trajectory-theme.css": "6bc30485ba08ec97b75c0287717153754f6a355f4031beb289ce1a5c47908a2b",
+  "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionBoard.tsx": "faef9f47dc977d238031610ebb381dab003abda962e390d2e36e3ca136d1a37e",
+  "apps/electron/src/renderer/components/pages/PageFrame.tsx": "0fe494c14b1c481c5e3807928e115273e8354da5ecc7229021733b3464961787",
+  "apps/electron/src/renderer/components/content-panels/PdfFilePreview.tsx": "48f3d3908c59fb9ad1b011f66699b4a964d421c95917b6a46a3abe7f8bee9d66",
+  "scripts/verification/fixtures/theme-domains-content.tsx": "2fb8c6680946edadfddac51c262b3280ffba69dbf4a4174952a15fdc4c649456"
+}

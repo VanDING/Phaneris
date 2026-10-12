@@ -168,7 +168,7 @@ The Appearance font control has explicit precedence: **Theme** uses `fontSans` f
 2. Save it to `~/.phaneris/themes/{id}.json` using an ASCII letter/number ID with dots, underscores, or hyphens
 3. Select the theme in Settings → Appearance
 
-The ID `default` is reserved. A user file named `default.json` is ignored so the built-in fallback cannot be shadowed.
+The built-in IDs `default`, `ink`, `geek` and `cyberpunk-2077` are reserved; same-named user files cannot shadow them. Default and Ink support light/dark; Geek and Cyberpunk force dark mode.
 
 ## Scenic Mode
 
@@ -213,6 +213,14 @@ Scenic mode benefits from semi-transparent surface colors:
 ## Default Theme
 
 The built-in Default ships with the app under the stable `default` ID, so existing Default selections automatically receive the new design.
+
+Browser application also validates CSS target syntax, variable dependencies,
+computed ranges, fully opaque `popoverSolid`, scenic image decoding and the
+installed Shiki registry. Errors fall back to Default with structured diagnostics
+while preserving the author's file. Selected JSON/image edits update the resolved
+revision; code highlighting and standalone browser chrome follow that revision.
+The generated authoring manifest lives at `docs/design/theme-contract.generated.json`
+in the source repository. Old `fontSize` still changes the root size and rem geometry.
 
 - **Light:** pure white canvas, settings cards, inputs and menus (`#FFFFFF`), ink text (`#20232C`), neutral gray user messages (`#F3F3F3`), and the original Default purple (`oklch(0.488 0.275 280.3)`). Fine borders and light shadows define surfaces.
 - **Dark:** graphite canvas (`#17191E`), softened white text (`#EEF0F6`), neutral dark gray user messages (`#2B2B2B`), the original dark-mode purple (`oklch(0.626 0.221 291.7)`), and separate card, input and menu surfaces.

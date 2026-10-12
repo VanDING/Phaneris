@@ -1,18 +1,26 @@
 # Themes
 
-A theme is a JSON file that redefines the app's visual tokens. There is exactly
-one built-in theme — `default` — and it cannot be edited. Everything else is
-yours.
+A theme is a JSON file that redefines the app's visual tokens. The app ships
+four built-in themes: `default`, `ink`, `geek` and `cyberpunk-2077`. Their IDs
+are stable and take priority over same-named user files. Your own themes live
+in the user directory.
 
 ## How a theme is chosen
 
-Four layers, most specific wins:
+Selection priority, most specific wins:
 
-1. **App selection** — Settings → Appearance → Default Theme.
+1. **Temporary preview** — while previewing an appearance option.
 2. **Workspace selection** — Settings → Appearance → Workspace Themes. A
    workspace without a selection inherits the app's.
-3. **The built-in `default`** — the reserved baseline.
-4. **User theme files** — `~/.phaneris/themes/{id}.json`.
+3. **App selection** — Settings → Appearance → Default Theme.
+
+The selected ID loads from the built-in registry or
+`~/.phaneris/themes/{id}.json`; failures use `default` and show diagnostics.
+Geek and Cyberpunk force dark mode. Font size retains its root/rem behavior;
+reading scale and UI scale are independent internal roles. Invalid CSS values,
+transparent `popoverSolid`, missing scenic images and unknown Shiki names do
+not become a healthy applied theme. File edits and image edits refresh the
+selected revision, including after reconnect.
 
 A user theme file may be **partial**. Anything it does not define is inherited
 from `default`, which means a theme can be twenty lines long and still be

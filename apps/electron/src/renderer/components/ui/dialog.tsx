@@ -4,6 +4,7 @@ import { XIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
+import { PortalStackProvider, usePortalLayer } from '@phaneris/ui/context'
 
 function Dialog({
   ...props
@@ -31,11 +32,14 @@ function DialogClose({
 
 function DialogOverlay({
   className,
+  style,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+  const layer = usePortalLayer('modal', className)
   return (
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
+      style={{ zIndex: layer, ...style }}
       className={cn(
         "craft-float-motion motion-surface fixed inset-0 z-modal bg-black/50",
         className
@@ -48,17 +52,21 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
+  style,
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
 }) {
   const { t } = useTranslation()
+  const layer = usePortalLayer('modal', className)
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
+      <PortalStackProvider layer={String(style?.zIndex ?? layer)}>
       <DialogPrimitive.Content
         data-slot="dialog-content"
+        style={{ zIndex: layer, ...style }}
         className={cn(
           "craft-dialog popover-styled craft-float-motion motion-surface fixed top-[50%] left-[50%] z-modal grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 p-6 outline-none sm:max-w-lg",
           className
@@ -76,6 +84,7 @@ function DialogContent({
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
+      </PortalStackProvider>
     </DialogPortal>
   )
 }

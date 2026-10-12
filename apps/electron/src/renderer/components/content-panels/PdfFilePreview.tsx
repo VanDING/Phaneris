@@ -20,9 +20,9 @@ export default function PdfPreview({ bytes, onError }: { bytes: Uint8Array; onEr
   }, [])
   return <div ref={host} className="flex h-full min-h-0 flex-col">
     <div className="flex shrink-0 items-center justify-center gap-3 border-b p-2 text-sm">
-      <button type="button" disabled={page <= 1} onClick={() => setPage(value => value - 1)}>{t('filePreview.previous')}</button>
+      <button type="button" className="craft-control rounded-control px-2 text-text-secondary hover:bg-action-hover disabled:opacity-50" disabled={page <= 1} onClick={() => setPage(value => value - 1)}>{t('filePreview.previous')}</button>
       <span>{page} / {pages || '…'}</span>
-      <button type="button" disabled={page >= pages} onClick={() => setPage(value => value + 1)}>{t('filePreview.next')}</button>
+      <button type="button" className="craft-control rounded-control px-2 text-text-secondary hover:bg-action-hover disabled:opacity-50" disabled={page >= pages} onClick={() => setPage(value => value + 1)}>{t('filePreview.next')}</button>
     </div>
     <div className="min-h-0 flex-1 overflow-auto p-4">{/* react-pdf 11 defaults to Suspense; this panel owns its loading/error state. */}
       <Document suspense={false} file={file} onLoadSuccess={value => setPages(value.numPages)} onLoadError={cause => onError(cause.message)}>

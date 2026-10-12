@@ -26,7 +26,7 @@ export const NewSessionLanding = React.memo(function NewSessionLanding() {
 
   return (
     <div
-      className="pointer-events-none col-start-1 row-start-1 z-10 flex select-none flex-col items-center justify-center px-6"
+      className="pointer-events-none col-start-1 row-start-1 z-component-chrome flex select-none flex-col items-center justify-center px-6"
       data-testid="new-session-landing"
     >
       <div className="flex flex-col items-center">

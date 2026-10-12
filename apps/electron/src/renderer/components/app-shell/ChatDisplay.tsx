@@ -1541,7 +1541,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
       {session ? (
         <div className="flex flex-1 flex-col min-h-0 min-w-0 relative">
           {/* Content layer */}
-          <div className="flex flex-1 flex-col min-h-0 min-w-0 relative z-10">
+          <div className="flex flex-1 flex-col min-h-0 min-w-0 relative z-component-chrome">
           {/* Both the transcript and the landing occupy this same grid cell, so the
               landing is exactly the space above the composer and centres the mark
               against the room that is actually free — not against the full panel,
@@ -1563,7 +1563,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
               <div className={cn(
                 CHAT_LAYOUT.maxWidth,
                 "mx-auto min-w-0",
-                compactMode ? "px-3 py-4 space-y-2" : [CHAT_LAYOUT.containerPadding, CHAT_LAYOUT.messageSpacing]
+                compactMode ? [CHAT_LAYOUT.compactPaddingX, "py-4 space-y-2"] : [CHAT_LAYOUT.containerPadding, CHAT_LAYOUT.messageSpacing]
               )}>
                 {/* Ready sessions replace immediately; never queue behind the old exit. */}
                 <AnimatePresence mode="sync" initial={false}>
@@ -2246,7 +2246,7 @@ function MessageBubble({
             <button
               onClick={() => onPopOut(message)}
               data-touch-reveal="true"
-              className="absolute top-2 right-2 p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/5"
+              className="craft-row-actions absolute top-2 right-2 p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/5"
               title={t("sidebarMenu.openInNewWindow")}
             >
               <ExternalLink className="w-4 h-4 text-muted-foreground hover:text-foreground" />

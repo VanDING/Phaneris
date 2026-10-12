@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { EntityColorSchema } from '../colors/validate.ts';
 import { THINKING_LEVEL_IDS } from '../agent/thinking-levels.ts';
 import { SUPPORTED_LANGUAGE_CODES, type LanguageCode } from '../i18n/languages.ts';
+import shikiThemeNames from './shiki-themes.generated.json';
 // ============================================================
 // Validation Result Types
 // ============================================================
@@ -354,6 +355,8 @@ export const SafeCSSValueSchema = z.string().trim().min(1).refine(
 );
 
 export const CSSColorSchema = SafeCSSValueSchema;
+const shikiThemeRegistry = new Set<string>(shikiThemeNames);
+const ShikiThemeNameSchema = z.string().refine(value => shikiThemeRegistry.has(value), 'Unknown bundled Shiki theme');
 
 export const ThemeVisualTokenFields = {
   // Core and semantic colors
@@ -459,8 +462,8 @@ export const PresetThemeSchema = z.object({
   dark: ThemeDarkOverrideSchema.optional(),
   // Shiki theme for syntax highlighting
   shikiTheme: z.object({
-    light: z.string().optional(),
-    dark: z.string().optional(),
+    light: ShikiThemeNameSchema.optional(),
+    dark: ShikiThemeNameSchema.optional(),
   }).strict().optional(),
 }).strict().refine(
   (data) => {
@@ -468,6 +471,9 @@ export const PresetThemeSchema = z.object({
     return colorProps.some(prop => prop in data);
   },
   { message: 'Theme must have at least one color property (background, foreground, accent, info, success, or destructive)' }
+).refine(
+  data => data.mode !== 'scenic' || Boolean(data.backgroundImage?.trim()),
+  { message: 'backgroundImage is required when mode is scenic', path: ['backgroundImage'] }
 );
 
 /**

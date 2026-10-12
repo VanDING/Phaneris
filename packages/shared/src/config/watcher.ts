@@ -14,8 +14,8 @@
  *   - permissions.json
  */
 
-import { watch, existsSync, readdirSync, statSync, readFileSync, mkdirSync } from 'fs';
-import { join, dirname, basename, relative } from 'path';
+import { watch, existsSync, readdirSync, statSync, readFileSync, mkdirSync, realpathSync } from 'fs';
+import { join, dirname, basename, relative, resolve, isAbsolute } from 'path';
 import { platform } from 'os';
 import type { FSWatcher } from 'fs';
 import { CONFIG_DIR } from './paths.ts';
@@ -62,7 +62,7 @@ import { readSessionHeader } from '../sessions/jsonl.ts';
 import type { SessionHeader } from '../sessions/types.ts';
 import { AUTOMATIONS_CONFIG_FILE } from '../automations/constants.ts';
 import { ensureUserThemesDir, getAppThemesDir } from './appearance.ts';
-import { isValidUserThemeId } from './theme.ts';
+import { isBuiltinThemeId, isValidUserThemeId } from './theme.ts';
 
 // ============================================================
 // Active Watcher Registry (duplicate detection)
@@ -1176,29 +1176,98 @@ export interface UserThemeWatcherCallbacks {
 export class UserThemeWatcher {
   private watcher: FSWatcher | null = null;
   private debounceTimers = new Map<string, NodeJS.Timeout>();
+  private assetThemes = new Map<string, Set<string>>();
+  private nestedWatchers = new Map<string, FSWatcher>();
+  private recursive = true;
 
   constructor(private readonly callbacks: UserThemeWatcherCallbacks) {}
+
+  private pathKey(path: string): string {
+    const key = resolve(path).replaceAll('\\', '/');
+    return platform() === 'win32' ? key.toLowerCase() : key;
+  }
+
+  private refreshAssets(themesDir: string): void {
+    const next = new Map<string, Set<string>>();
+    for (const file of readdirSync(themesDir)) {
+      if (!file.endsWith('.json')) continue;
+      const id = file.slice(0, -5);
+      if (!isValidUserThemeId(id) || isBuiltinThemeId(id)) continue;
+      try {
+        const themePath = join(themesDir, file), actualThemePath = realpathSync(themePath);
+        if (this.pathKey(dirname(actualThemePath)) !== this.pathKey(themesDir) || statSync(actualThemePath).size > 256 * 1024) continue;
+        const source = readJsonFileSync<{ backgroundImage?: unknown }>(actualThemePath)?.backgroundImage;
+        if (typeof source !== 'string' || !source || !isAbsolute(source) && /^[a-z][a-z0-9+.-]*:/i.test(source)) continue;
+        const asset = resolve(themesDir, source), actualAsset = existsSync(asset) ? realpathSync(asset) : asset;
+        const child = relative(themesDir, actualAsset);
+        if (!child || child === '..' || child.startsWith('../') || child.startsWith('..\\') || isAbsolute(child)) continue;
+        const key = this.pathKey(actualAsset);
+        if (!next.has(key)) next.set(key, new Set());
+        next.get(key)!.add(id);
+      } catch { /* Partial/deleted JSON still emits its own theme event. */ }
+    }
+    this.assetThemes = next;
+    if (!this.recursive) this.refreshNestedWatchers(themesDir);
+  }
+
+  private refreshNestedWatchers(themesDir: string): void {
+    const directories = new Set<string>();
+    for (const asset of this.assetThemes.keys()) {
+      let directory = dirname(asset);
+      while (!existsSync(directory) && this.pathKey(directory) !== this.pathKey(themesDir)) directory = dirname(directory);
+      if (this.pathKey(directory) !== this.pathKey(themesDir)) directories.add(directory);
+    }
+    for (const [path, watcher] of this.nestedWatchers) if (!directories.has(path)) { watcher.close(); this.nestedWatchers.delete(path); }
+    for (const path of directories) if (!this.nestedWatchers.has(path)) {
+      try { this.nestedWatchers.set(path, watch(path, (_event, file) => this.handleChange(themesDir, file ? relative(themesDir, join(path, String(file))) : null))); }
+      catch (error) { debug('[UserThemeWatcher] Could not watch asset directory:', path, error); }
+    }
+  }
+
+  private emit(themeId: string): void {
+    const existing = this.debounceTimers.get(themeId);
+    if (existing) clearTimeout(existing);
+    this.debounceTimers.set(themeId, setTimeout(() => {
+      this.debounceTimers.delete(themeId);
+      this.callbacks.onThemeChange(themeId);
+    }, DEBOUNCE_MS));
+  }
+
+  private handleChange(themesDir: string, filename: string | Buffer | null): void {
+    if (!filename) {
+      this.refreshAssets(themesDir);
+      for (const file of readdirSync(themesDir)) if (file.endsWith('.json')) {
+        const id = file.slice(0, -5); if (isValidUserThemeId(id) && !isBuiltinThemeId(id)) this.emit(id);
+      }
+      return;
+    }
+    const path = resolve(themesDir, String(filename));
+    if (this.pathKey(dirname(path)) === this.pathKey(themesDir) && path.endsWith('.json')) {
+      const id = basename(path, '.json');
+      this.refreshAssets(themesDir);
+      if (isValidUserThemeId(id) && !isBuiltinThemeId(id)) this.emit(id);
+      return;
+    }
+    const affected = this.assetThemes.get(this.pathKey(path));
+    if (affected) for (const id of affected) this.emit(id);
+    else this.refreshAssets(themesDir); // A missing asset directory may have appeared.
+  }
 
   start(): void {
     if (this.watcher) return;
     ensureUserThemesDir();
-    const themesDir = getAppThemesDir();
+    const themesDir = realpathSync(getAppThemesDir());
+    this.recursive = true;
 
     try {
-      this.watcher = watch(themesDir, (_eventType, filename) => {
-        if (!filename) return;
-        const file = String(filename);
-        if (!file.endsWith('.json')) return;
-        const themeId = file.slice(0, -'.json'.length);
-        if (!isValidUserThemeId(themeId)) return;
-
-        const existing = this.debounceTimers.get(themeId);
-        if (existing) clearTimeout(existing);
-        this.debounceTimers.set(themeId, setTimeout(() => {
-          this.debounceTimers.delete(themeId);
-          this.callbacks.onThemeChange(themeId);
-        }, DEBOUNCE_MS));
-      });
+      this.refreshAssets(themesDir);
+      const changed = (_event: string, filename: string | Buffer | null) => this.handleChange(themesDir, filename);
+      try { this.watcher = watch(themesDir, { recursive: true }, changed); }
+      catch {
+        this.recursive = false;
+        this.watcher = watch(themesDir, changed);
+        this.refreshNestedWatchers(themesDir);
+      }
       debug('[UserThemeWatcher] Watching:', themesDir);
     } catch (error) {
       debug('[UserThemeWatcher] Failed to watch themes directory:', error);
@@ -1208,6 +1277,9 @@ export class UserThemeWatcher {
   stop(): void {
     this.watcher?.close();
     this.watcher = null;
+    for (const watcher of this.nestedWatchers.values()) watcher.close();
+    this.nestedWatchers.clear();
+    this.assetThemes.clear();
     for (const timer of this.debounceTimers.values()) clearTimeout(timer);
     this.debounceTimers.clear();
   }

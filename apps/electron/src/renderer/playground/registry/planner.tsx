@@ -1054,7 +1054,7 @@ function PlannerBoard() {
           }
         }}
         onMouseLeave={() => { if (isResizing !== 'sidebar') setSidebarHandleY(null) }}
-        className="absolute top-0 h-full cursor-col-resize z-10 flex justify-center"
+        className="absolute top-0 h-full cursor-col-resize z-component-chrome flex justify-center"
         style={{
           width: PANEL_SASH_HIT_WIDTH,
           left: sidebarWidth + (PANEL_GAP / 2) - PANEL_SASH_HALF_HIT_WIDTH,
@@ -1080,7 +1080,7 @@ function PlannerBoard() {
           }
         }}
         onMouseLeave={() => { if (isResizing !== 'navigator') setNavigatorHandleY(null) }}
-        className="absolute top-0 h-full cursor-col-resize z-10 flex justify-center"
+        className="absolute top-0 h-full cursor-col-resize z-component-chrome flex justify-center"
         style={{
           width: PANEL_SASH_HIT_WIDTH,
           left: sidebarWidth + PANEL_GAP + navigatorWidth + (PANEL_GAP / 2) - PANEL_SASH_HALF_HIT_WIDTH,

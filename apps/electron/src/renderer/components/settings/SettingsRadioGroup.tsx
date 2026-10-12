@@ -291,7 +291,7 @@ export function SettingsRadioOption({
       <div className="flex-1 min-w-0 flex items-center">
         <span className="text-sm">{label}</span>
         {description && (
-          <span className="text-sm text-muted-foreground ml-1.5">
+          <span className="text-sm text-text-secondary ml-1.5">
             · {description}
           </span>
         )}

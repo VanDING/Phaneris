@@ -20,6 +20,7 @@
     "./scroll-intent": "./src/lib/scroll-intent.ts",
     "./ui/drawer": "./src/components/ui/drawer.tsx",
     "./context": "./src/context/index.ts",
+    "./theme-compiler": "./src/lib/theme-compiler.ts",
     "./styles": "./src/styles/index.css",
     "./styles/motion": "./src/styles/motion.css"
   },

@@ -57,7 +57,7 @@ export function Info_Markdown({
           <button
             onClick={() => setIsFullscreen(true)}
             className={cn(
-              'motion-interactive absolute top-2 right-2 p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] z-10',
+              'craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-2 right-2 p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome',
               'opacity-0 group-hover:opacity-100',
               'bg-background shadow-minimal',
               'text-muted-foreground/50 hover:text-foreground',

@@ -1,0 +1,916 @@
+{
+  "scope": "Selected public excerpt, not a replacement for full VerificationRun artifacts. Original cache traces/profiles are excluded.",
+  "selections": [
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/manifest.json",
+      "to": "roles/manifest.json",
+      "sha256": "8855a9b911e3edce60bb1ba7790a0636c1028c2e3a0520a0436d7fe2cdc67f6f",
+      "bytes": 56545
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/theme-roles.json",
+      "to": "roles/theme-roles.json",
+      "sha256": "3a3695d5dc8deba6927b3c6c8d8dda4ea5e8e3c878a9dd8de916e63496d8e387",
+      "bytes": 67712
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/source-hashes.json",
+      "to": "roles/source-hashes.json",
+      "sha256": "434f7b96898e27500cb66b4c300d3fc8e2e1b4b1907989e07896fa98eae7803c",
+      "bytes": 1204
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/preparation.json",
+      "to": "roles/preparation.json",
+      "sha256": "ffa7514fccda1f40164621f3a3ac8e74612298d66b4beb1b1d5e8c113c3518fc",
+      "bytes": 305
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/electron-1280.png",
+      "to": "roles/electron-1280.png",
+      "sha256": "86df7689c817efb4f1f7f0a8fd59d46603a3bb87604d5a8fdfb3a1eee90628cd",
+      "bytes": 54713
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/electron-320.png",
+      "to": "roles/electron-320.png",
+      "sha256": "685cea46fe378118458c4b346024dce19b6231e20e38b89d70c1c0988d8eabab",
+      "bytes": 37841
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/electron-390.png",
+      "to": "roles/electron-390.png",
+      "sha256": "4f5b49855c19170b803104686c02d3ea34ea7b562f7c5349be4232af6f437708",
+      "bytes": 38957
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/viewer-1280.png",
+      "to": "roles/viewer-1280.png",
+      "sha256": "64ef3579ab842249c9d37058a556a3880f2023156ac25bdd2a79c5e3fc6a93a5",
+      "bytes": 53250
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/viewer-320.png",
+      "to": "roles/viewer-320.png",
+      "sha256": "8a7d0fbddffbc39c4f8dcacb52c414d128bae0d672a561a500711fbe4afa9729",
+      "bytes": 37625
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/viewer-390.png",
+      "to": "roles/viewer-390.png",
+      "sha256": "42bd133f35123e2e8ab3aafd4889bd39fc6f137c02ef28fde694bd16f109fa7b",
+      "bytes": 38747
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/webui-1280.png",
+      "to": "roles/webui-1280.png",
+      "sha256": "86df7689c817efb4f1f7f0a8fd59d46603a3bb87604d5a8fdfb3a1eee90628cd",
+      "bytes": 54713
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/webui-320.png",
+      "to": "roles/webui-320.png",
+      "sha256": "65c35abfddf2a4c3b6cab7f901d412842d42ad73d8bd902d1935ad8ada9a17bf",
+      "bytes": 27191
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-roles/webui-390.png",
+      "to": "roles/webui-390.png",
+      "sha256": "2db6100214cfa76e019c791d39795bf43b2a35ebe426b21d8ff23025d3c59bb6",
+      "bytes": 45117
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-domains/manifest.json",
+      "to": "domains/manifest.json",
+      "sha256": "6862d522349b61688fcf7dee1fe590f136ba611a06928702e36703cc4e5202cb",
+      "bytes": 53786
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-domains/theme-domains.json",
+      "to": "domains/theme-domains.json",
+      "sha256": "a39ba767fe21c5ec4a0393752654f90bb5f36d0f0a1f31da3682739b493e85bb",
+      "bytes": 24601
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-domains/source-hashes.json",
+      "to": "domains/source-hashes.json",
+      "sha256": "d8380c6be8ddfc4996c2558c47e00b4db6ea33e2ff8c61f000ed178cb4ad4dd3",
+      "bytes": 830
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-domains/preparation.json",
+      "to": "domains/preparation.json",
+      "sha256": "7453713c2bdbc7271edeb9699e59b632686a84c5eb4e8b9c778c799a687c699c",
+      "bytes": 318
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-domains/domains-1280.png",
+      "to": "domains/domains-1280.png",
+      "sha256": "581be8fa1df76f8be3b49721d2dd01d5b1c72ca45fb549067815cfe64b454ad1",
+      "bytes": 44540
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-domains/domains-320.png",
+      "to": "domains/domains-320.png",
+      "sha256": "e641495f19b86dc82623496f85c3fe694a51b0e4352e3ef2388fe5f27a74c14f",
+      "bytes": 33027
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-domains/domains-390.png",
+      "to": "domains/domains-390.png",
+      "sha256": "5a24669455d34353cd63c6a016deda6e7b334b49de98bb1632e0d6fb9dbae2a9",
+      "bytes": 38932
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/manifest.json",
+      "to": "browser-host/manifest.json",
+      "sha256": "b2e31b471c2461c858aa55149379759a806b61e9c997b032d9c5fb3f8934ded5",
+      "bytes": 52130
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/theme-browser-host.json",
+      "to": "browser-host/theme-browser-host.json",
+      "sha256": "c3d70496bb0a2776dcf734b6bbd64a803c0728eb849b4091d9f7c3baad1243b4",
+      "bytes": 6893
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/source-hashes.json",
+      "to": "browser-host/source-hashes.json",
+      "sha256": "c2791fecd89afe6e037d248e33dd55a9014d8ed5036d56e89a97e5c142e9f652",
+      "bytes": 485
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/preparation.json",
+      "to": "browser-host/preparation.json",
+      "sha256": "06f64ce1f83797ea9b48681116a4a512c00344bbfa3a6683dd8b31f25e7750e8",
+      "bytes": 249
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/empty-dark.png",
+      "to": "browser-host/empty-dark.png",
+      "sha256": "37afbf2e61bc83e9370400edde84a396bea2040b461275772e509a7605adb097",
+      "bytes": 37562
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/empty-light.png",
+      "to": "browser-host/empty-light.png",
+      "sha256": "5be0cd349df78afadfd4d135c46d53a19393ccbc581c66e34773365ae57311ed",
+      "bytes": 38060
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/toolbar-dark.png",
+      "to": "browser-host/toolbar-dark.png",
+      "sha256": "4e2b8e6268426d426c0f7dabc751765242ed5496bac0e7f7bf4c4295d2a75c69",
+      "bytes": 9200
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v4-theme-browser-host/toolbar-light.png",
+      "to": "browser-host/toolbar-light.png",
+      "sha256": "b71bb8943742ab3262c9a7b05d1b06af2965ed313b1fd27e4ac10f845f18180f",
+      "bytes": 9283
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v5-theme-login/manifest.json",
+      "to": "login/manifest.json",
+      "sha256": "cb761a9ece9970f338c268c6adaa7f8306742a5467e71e27c7a366cc3690defc",
+      "bytes": 50909
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v5-theme-login/theme-login.json",
+      "to": "login/theme-login.json",
+      "sha256": "2d6131e1b38d315f14472e12153a16845e6f1097fc133493b2a9134fcd876c91",
+      "bytes": 828
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v5-theme-login/source-hashes.json",
+      "to": "login/source-hashes.json",
+      "sha256": "6db2aa5c6ce87da5bd2cf11d456eacf54975114b7ecc5b2b643a1db524088751",
+      "bytes": 102
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v5-theme-login/login-dark.png",
+      "to": "login/login-dark.png",
+      "sha256": "d8e96fee76c58b144dde31d733f3493b4ac100dcc8ecbf1d0e3a315d60708d69",
+      "bytes": 132007
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v5-theme-login/login-light.png",
+      "to": "login/login-light.png",
+      "sha256": "fa564c8f0511d4ce2bbd4d1c931a5aa36312a9e843af7e5c6a7f3b4ccd4740b9",
+      "bytes": 125863
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/manifest.json",
+      "to": "contract/manifest.json",
+      "sha256": "babe4d1bcd8092a2a971a8db37ec5dbb5f134e2e3f51c8380fa368e76e3ff7e4",
+      "bytes": 55062
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/theme-contract.json",
+      "to": "contract/theme-contract.json",
+      "sha256": "36d9ec53337bef3cd800addb807c338dc80fc6695914749512f3adaa02d8587e",
+      "bytes": 183011
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/source-hashes.json",
+      "to": "contract/source-hashes.json",
+      "sha256": "3387c575f0cdf0919809c8f2f437d3ced4821a95334c889051561e579a2fd152",
+      "bytes": 2062
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/preparation.json",
+      "to": "contract/preparation.json",
+      "sha256": "3a67e3156a09a4f165bc2a422acbd4837c46c5e012bedfabb3096410ae11aca2",
+      "bytes": 311
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/code-overlay-dark.png",
+      "to": "contract/code-overlay-dark.png",
+      "sha256": "8c8a61a9240c59a9cf8fadbf796a2e246aadd89d8257ed649b440b1f82919f39",
+      "bytes": 15174
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/electron-ink-light.png",
+      "to": "contract/electron-ink-light.png",
+      "sha256": "32d84edb0c58b2ccdb1df27caf418de0ed8df96c257f7666a13f40dfb4d579e7",
+      "bytes": 52193
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/ui-ink-light.png",
+      "to": "contract/ui-ink-light.png",
+      "sha256": "32d84edb0c58b2ccdb1df27caf418de0ed8df96c257f7666a13f40dfb4d579e7",
+      "bytes": 52193
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/viewer-code-dark.png",
+      "to": "contract/viewer-code-dark.png",
+      "sha256": "69aab6bad5811d8ae3cd88fcb92f2f54e00c24ee982e10809b94497f346f6f7f",
+      "bytes": 18993
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/viewer-code-light.png",
+      "to": "contract/viewer-code-light.png",
+      "sha256": "40c4928f27387f196b7454aea0f07c20ae73c5d1bcfd590485928db72a1fafa0",
+      "bytes": 18754
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/viewer-ink-light.png",
+      "to": "contract/viewer-ink-light.png",
+      "sha256": "32d84edb0c58b2ccdb1df27caf418de0ed8df96c257f7666a13f40dfb4d579e7",
+      "bytes": 52193
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-contract/webui-ink-light.png",
+      "to": "contract/webui-ink-light.png",
+      "sha256": "32d84edb0c58b2ccdb1df27caf418de0ed8df96c257f7666a13f40dfb4d579e7",
+      "bytes": 52193
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/manifest.json",
+      "to": "design/manifest.json",
+      "sha256": "f1cb007e266e8c0a11ffef0cf57747dda89dec13e6baf97f5035c5620e5f8460",
+      "bytes": 58277
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/theme-design.json",
+      "to": "design/theme-design.json",
+      "sha256": "1a96dde14d5c092eeb8bc176a1378467d239f88edf47994ec6e13115ae1606d1",
+      "bytes": 20220
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/source-hashes.json",
+      "to": "design/source-hashes.json",
+      "sha256": "5ccad1d4207c071d4b7945104b85bb547a9995af3e712d781ec2aac458075eb7",
+      "bytes": 84
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/preparation.json",
+      "to": "design/preparation.json",
+      "sha256": "b1aa46cb7972c903c285f36b8a661037cf06992cedc86f1b24edf9032ef0acbe",
+      "bytes": 305
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/compact-default-dark.png",
+      "to": "design/compact-default-dark.png",
+      "sha256": "2fdd4a2b7b09e596c07b346f3bda6bff8c04c03fb4d5061d300108456a95c923",
+      "bytes": 42483
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/compact-default-light.png",
+      "to": "design/compact-default-light.png",
+      "sha256": "a989661c26fc11ca06d1f35d2de2aa0ff7a130ab34625984d5db655ec6cb1a4f",
+      "bytes": 42724
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/compact-ink-light.png",
+      "to": "design/compact-ink-light.png",
+      "sha256": "85607e58d86e9e3788b46985241c8e4add7fc6f8960760611fcc75878fd4cf6c",
+      "bytes": 44710
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/material-default-dark-current.png",
+      "to": "design/material-default-dark-current.png",
+      "sha256": "f798773fc050f372c9232e7453451db94e2d62a663dabdfb7b4b71f3a6643f43",
+      "bytes": 57339
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/material-default-dark-strong.png",
+      "to": "design/material-default-dark-strong.png",
+      "sha256": "32eb76df97acc01cfdb40938d490d64c2886d735a6fb11eed21e648dfb65c051",
+      "bytes": 60421
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/material-default-light-current.png",
+      "to": "design/material-default-light-current.png",
+      "sha256": "3d1267c8741c40802005147f0dba65742dbee511f06323155061cb4f07356970",
+      "bytes": 57613
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/material-default-light-strong.png",
+      "to": "design/material-default-light-strong.png",
+      "sha256": "750b938076735909daf54e64b3dbcaf908217dd99cc1ec02859042544b6487d3",
+      "bytes": 59025
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/material-ink-light-current.png",
+      "to": "design/material-ink-light-current.png",
+      "sha256": "90ec06f2d1dfc937036804b5e489bda92922d06e70c476c2b9f7dc13fced7189",
+      "bytes": 62702
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/material-ink-light-strong.png",
+      "to": "design/material-ink-light-strong.png",
+      "sha256": "47cbba13291b7f604892a9967b7a21f63d59798295e5eb17ca3c4995b36a3845",
+      "bytes": 67838
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-dark-32-collapsed.png",
+      "to": "design/rows-default-dark-32-collapsed.png",
+      "sha256": "80a77558dca847fd6f6ed2acda128096802ca1f96e67acd1a1014cc06aa092bc",
+      "bytes": 58567
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-dark-32-expanded.png",
+      "to": "design/rows-default-dark-32-expanded.png",
+      "sha256": "80a77558dca847fd6f6ed2acda128096802ca1f96e67acd1a1014cc06aa092bc",
+      "bytes": 58567
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-dark-34-collapsed.png",
+      "to": "design/rows-default-dark-34-collapsed.png",
+      "sha256": "faaf9e44f0a607df4258c6b4598cf17452ad33d2e7a6830dd87d28795037e521",
+      "bytes": 58563
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-dark-34-expanded.png",
+      "to": "design/rows-default-dark-34-expanded.png",
+      "sha256": "faaf9e44f0a607df4258c6b4598cf17452ad33d2e7a6830dd87d28795037e521",
+      "bytes": 58563
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-dark-40-collapsed.png",
+      "to": "design/rows-default-dark-40-collapsed.png",
+      "sha256": "f798773fc050f372c9232e7453451db94e2d62a663dabdfb7b4b71f3a6643f43",
+      "bytes": 57339
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-dark-40-expanded.png",
+      "to": "design/rows-default-dark-40-expanded.png",
+      "sha256": "f798773fc050f372c9232e7453451db94e2d62a663dabdfb7b4b71f3a6643f43",
+      "bytes": 57339
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-light-32-collapsed.png",
+      "to": "design/rows-default-light-32-collapsed.png",
+      "sha256": "8759d9cab198beef2e15cf51e4063118ae388a2f559a2733d762020bc15432e5",
+      "bytes": 58786
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-light-32-expanded.png",
+      "to": "design/rows-default-light-32-expanded.png",
+      "sha256": "8759d9cab198beef2e15cf51e4063118ae388a2f559a2733d762020bc15432e5",
+      "bytes": 58786
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-light-34-collapsed.png",
+      "to": "design/rows-default-light-34-collapsed.png",
+      "sha256": "6650cb5c25ef50cd27b70602139016438bcb45015acd32b73c7b4f9cd455b91a",
+      "bytes": 58779
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-light-34-expanded.png",
+      "to": "design/rows-default-light-34-expanded.png",
+      "sha256": "6650cb5c25ef50cd27b70602139016438bcb45015acd32b73c7b4f9cd455b91a",
+      "bytes": 58779
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-light-40-collapsed.png",
+      "to": "design/rows-default-light-40-collapsed.png",
+      "sha256": "3d1267c8741c40802005147f0dba65742dbee511f06323155061cb4f07356970",
+      "bytes": 57613
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-default-light-40-expanded.png",
+      "to": "design/rows-default-light-40-expanded.png",
+      "sha256": "3d1267c8741c40802005147f0dba65742dbee511f06323155061cb4f07356970",
+      "bytes": 57613
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-ink-light-32-collapsed.png",
+      "to": "design/rows-ink-light-32-collapsed.png",
+      "sha256": "199b6136bbf9b066a3525c4b15f5bd0f1637d8bffa8441d186b85fe3aab8c327",
+      "bytes": 64362
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-ink-light-32-expanded.png",
+      "to": "design/rows-ink-light-32-expanded.png",
+      "sha256": "199b6136bbf9b066a3525c4b15f5bd0f1637d8bffa8441d186b85fe3aab8c327",
+      "bytes": 64362
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-ink-light-34-collapsed.png",
+      "to": "design/rows-ink-light-34-collapsed.png",
+      "sha256": "bebd46f5f388f5ff1cf02fedf8f14acb0fc468c0ae3fbe76075e30c24c2224f2",
+      "bytes": 63745
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-ink-light-34-expanded.png",
+      "to": "design/rows-ink-light-34-expanded.png",
+      "sha256": "bebd46f5f388f5ff1cf02fedf8f14acb0fc468c0ae3fbe76075e30c24c2224f2",
+      "bytes": 63745
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-ink-light-40-collapsed.png",
+      "to": "design/rows-ink-light-40-collapsed.png",
+      "sha256": "90ec06f2d1dfc937036804b5e489bda92922d06e70c476c2b9f7dc13fced7189",
+      "bytes": 62702
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/rows-ink-light-40-expanded.png",
+      "to": "design/rows-ink-light-40-expanded.png",
+      "sha256": "90ec06f2d1dfc937036804b5e489bda92922d06e70c476c2b9f7dc13fced7189",
+      "bytes": 62702
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/text-200-default-dark.png",
+      "to": "design/text-200-default-dark.png",
+      "sha256": "b2ebd35119c70e60b3dc28ebfce7f99ffdb07ac845f5bf93201d6a99d88b0333",
+      "bytes": 72458
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/text-200-default-light.png",
+      "to": "design/text-200-default-light.png",
+      "sha256": "17797c895eb93f02ac89a3b6aca8c5747386db34ac8e7ea93ccc4fdae07779fa",
+      "bytes": 72633
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/text-200-ink-light.png",
+      "to": "design/text-200-ink-light.png",
+      "sha256": "2e747acd33ff5f61c88be8e4d833991df3c8baab41ee5b97b6534f6e7cb5e20d",
+      "bytes": 73298
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/width-default-dark-768.png",
+      "to": "design/width-default-dark-768.png",
+      "sha256": "4c8b45aea98ae73dbcc2694cbe03256e8d43e77a81e72a791c90b09642583570",
+      "bytes": 57740
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/width-default-dark-840.png",
+      "to": "design/width-default-dark-840.png",
+      "sha256": "f798773fc050f372c9232e7453451db94e2d62a663dabdfb7b4b71f3a6643f43",
+      "bytes": 57339
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/width-default-light-768.png",
+      "to": "design/width-default-light-768.png",
+      "sha256": "4392bab01ce29cb28f99ba61001033198914abcc9079353be5e849a5db247ea3",
+      "bytes": 57958
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/width-default-light-840.png",
+      "to": "design/width-default-light-840.png",
+      "sha256": "3d1267c8741c40802005147f0dba65742dbee511f06323155061cb4f07356970",
+      "bytes": 57613
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/width-ink-light-768.png",
+      "to": "design/width-ink-light-768.png",
+      "sha256": "aa3b3cdd08df0ee49c96e6fa0082325b44040a062c59b6f6bcd761423445b752",
+      "bytes": 62989
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/width-ink-light-840.png",
+      "to": "design/width-ink-light-840.png",
+      "sha256": "90ec06f2d1dfc937036804b5e489bda92922d06e70c476c2b9f7dc13fced7189",
+      "bytes": 62702
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v6-theme-design/index.html",
+      "to": "design/index.html",
+      "sha256": "2c23eb64f80a6859ddf0e6a11c226968ee990d74feb8d4d1cdf809f6de729f20",
+      "bytes": 7983
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/manifest.json",
+      "to": "foundation/manifest.json",
+      "sha256": "a328d655dbca26de1d6283402de168b8e4c229710c49fc4a9f015a19fca7ed17",
+      "bytes": 76185
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/theme-foundation.json",
+      "to": "foundation/theme-foundation.json",
+      "sha256": "931e12d282bfadc456ee4fe273336abff8e682fd6c7bc7ab13d8125b689e11cd",
+      "bytes": 250163
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/source-hashes.json",
+      "to": "foundation/source-hashes.json",
+      "sha256": "ad337e37ed747b08af1d3d0f40db6e68193e20a93a53448a0987e0b5ae01812b",
+      "bytes": 2358
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/build-hashes.json",
+      "to": "foundation/build-hashes.json",
+      "sha256": "3cafacb7f606f12198fae574a61b2545b0e6f07e539dab4adf792405062a5554",
+      "bytes": 90362
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/electron-390.png",
+      "to": "foundation/electron-390.png",
+      "sha256": "5f3cc28e0100a898775ce0c412d309e018d2975b468755e5dfd7c15e785a6fa7",
+      "bytes": 37079
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/ui-390.png",
+      "to": "foundation/ui-390.png",
+      "sha256": "5f3cc28e0100a898775ce0c412d309e018d2975b468755e5dfd7c15e785a6fa7",
+      "bytes": 37079
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/viewer-390.png",
+      "to": "foundation/viewer-390.png",
+      "sha256": "5f3cc28e0100a898775ce0c412d309e018d2975b468755e5dfd7c15e785a6fa7",
+      "bytes": 37079
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/web-cold.png",
+      "to": "foundation/web-cold.png",
+      "sha256": "211725e45e6e010c94cd8e0c5a4d3e889949f42a613fc463b0cfa6b8cbc9bca0",
+      "bytes": 61171
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/web-persisted.png",
+      "to": "foundation/web-persisted.png",
+      "sha256": "6db660b82e20ae8986ebf7676b976ffaf800f85b47104760e4407bc691524aee",
+      "bytes": 47010
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-theme-foundation/webui-390.png",
+      "to": "foundation/webui-390.png",
+      "sha256": "876112e550fbbd1b84edc690b1cacb57c5f293048b2f177f7dde08a3df6b9483",
+      "bytes": 32979
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-markdown-popout/manifest.json",
+      "to": "popout/manifest.json",
+      "sha256": "a31098ec7a74a4785ae0c2d16196bfde7bc1023333f9b43392f1af07f089bcee",
+      "bytes": 55194
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-markdown-popout/markdown-popout.json",
+      "to": "popout/markdown-popout.json",
+      "sha256": "e908f3141954628879cd6342d116c15b27027573679278e4d90bce96736a8bab",
+      "bytes": 10382
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-markdown-popout/preparation.json",
+      "to": "popout/preparation.json",
+      "sha256": "1d4fe2913ad04d7c8a1d845a7696744748c4d88503eee2e09547085019f5cfaa",
+      "bytes": 233
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-markdown-popout/message-390.png",
+      "to": "popout/message-390.png",
+      "sha256": "df23a0a4ea010fdfdce6eaba5ef52e11e5821fa4b64b05b05c8b25dfe1cd83f5",
+      "bytes": 13415
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-markdown-popout/source-390.png",
+      "to": "popout/source-390.png",
+      "sha256": "336c1bc43b570a6e5f178192f1e5f282b3385fd19163d5ed22d7261b94d7e311",
+      "bytes": 27736
+    },
+    {
+      "from": ".cache/verification/theme-closeout-v8-markdown-popout/source-dark.png",
+      "to": "popout/source-dark.png",
+      "sha256": "52a7a02fb2750c2da9b0f924a49b7ee03d2c15debce4ae620b27ff388b465303",
+      "bytes": 35462
+    },
+    {
+      "from": ".cache/verification/theme-governance-final/manifest.json",
+      "to": "governance/manifest.json",
+      "sha256": "cf56d3d641fe74213b941680581f8c7f2dac48dd0a1a15b29f8ab202ca5259c9",
+      "bytes": 53709
+    },
+    {
+      "from": ".cache/verification/theme-governance-final/theme-governance.json",
+      "to": "governance/theme-governance.json",
+      "sha256": "0239828f31c1cef305ea61cd44bdacdd00e3d75946889d0e22c65ba419863112",
+      "bytes": 33668
+    },
+    {
+      "from": ".cache/verification/theme-native-win-v3/manifest.json",
+      "to": "native-win/manifest.json",
+      "sha256": "a34d449a98c60422102fd6939fc6193c2b1f039148be114d0a08da0749ed711d",
+      "bytes": 93726
+    },
+    {
+      "from": ".cache/verification/theme-native-win-v3/theme-native.json",
+      "to": "native-win/theme-native.json",
+      "sha256": "4cc8c71633475820c9a130eaa8f6594787e5cd57483480cc20be79c6010560f3",
+      "bytes": 8861
+    },
+    {
+      "from": ".cache/verification/theme-native-win-v3/build-hashes.json",
+      "to": "native-win/build-hashes.json",
+      "sha256": "a549bf4a43508cbebafbb3b5aaf3f6ef9e02754c5337a19930b231d4e3daa2ae",
+      "bytes": 224
+    },
+    {
+      "from": ".cache/verification/theme-native-win-v3/native-theme.png",
+      "to": "native-win/native-theme.png",
+      "sha256": "e42c3395f49e5b6d3315b1f5a2a95be3ea126295ba3c4832605895a7e80662f4",
+      "bytes": 51059
+    },
+    {
+      "from": ".cache/verification/theme-native-win-v3/native-zoom-200.png",
+      "to": "native-win/native-zoom-200.png",
+      "sha256": "d37ad3329a2129dd4790ce5837e1c2ea80c653d6c2e3a5a24027739f98bd8d1a",
+      "bytes": 96342
+    },
+    {
+      "from": ".cache/verification/theme-contract-w2-before/manifest.json",
+      "to": "before/contract-before/manifest.json",
+      "sha256": "d21b874617e4a408754741c6d323d08a63bdb5b0b4756c78eac97f6e76b57ebb",
+      "bytes": 4789
+    },
+    {
+      "from": ".cache/verification/theme-contract-w2-before/theme-contract.json",
+      "to": "before/contract-before/theme-contract.json",
+      "sha256": "cfb91e2954de435ca58574dcdf41e9967f39bbf3e4db872cba7445e4e37cc34b",
+      "bytes": 84169
+    },
+    {
+      "from": ".cache/verification/theme-contract-w2-before/source-hashes.json",
+      "to": "before/contract-before/source-hashes.json",
+      "sha256": "c65d97a467a67f3ec362919f5f6ce88972abfd94a7f1f2cf668c81e8f4096366",
+      "bytes": 1361
+    },
+    {
+      "from": ".cache/verification/theme-watcher-before/manifest.json",
+      "to": "before/watcher-before/manifest.json",
+      "sha256": "72e482d00652bc81f5c2d6cbe359c0bc7000f29206019997c86bc868e90a8631",
+      "bytes": 32475
+    },
+    {
+      "from": ".cache/verification/theme-watcher-before/theme-foundation.json",
+      "to": "before/watcher-before/theme-foundation.json",
+      "sha256": "866c408b049886d1f31febae57a7a04e1ce2b780a68e7a5d411de28537f05bf1",
+      "bytes": 245265
+    },
+    {
+      "from": ".cache/verification/theme-watcher-before/source-hashes.json",
+      "to": "before/watcher-before/source-hashes.json",
+      "sha256": "57d7af511bc85211f3eee747519a3cde05082be3db59492e51195b897431ef49",
+      "bytes": 2247
+    },
+    {
+      "from": ".cache/verification/theme-roles-w3-before-connected/manifest.json",
+      "to": "before/roles-before/manifest.json",
+      "sha256": "ceca7c277ee52192462501709cd88773ca24aa7d83b2c1e8d4d74ed0e41aca97",
+      "bytes": 14171
+    },
+    {
+      "from": ".cache/verification/theme-roles-w3-before-connected/theme-roles.json",
+      "to": "before/roles-before/theme-roles.json",
+      "sha256": "223a47807e403f5dcdfeb89f10de500f23cbc37961c46196999a4c016bd0a378",
+      "bytes": 72783
+    },
+    {
+      "from": ".cache/verification/theme-roles-w3-before-connected/source-hashes.json",
+      "to": "before/roles-before/source-hashes.json",
+      "sha256": "91adb93553c637f57dd0b618d10d06c67d16472dde1951466997d479552ac900",
+      "bytes": 1204
+    },
+    {
+      "from": ".cache/verification/theme-portals-w4-before/manifest.json",
+      "to": "before/portals-before/manifest.json",
+      "sha256": "60a4a55fed760cbe20a9a181ecf8fbec9fa05947a5134645fa829d76efd741c5",
+      "bytes": 19117
+    },
+    {
+      "from": ".cache/verification/theme-portals-w4-before/theme-roles.json",
+      "to": "before/portals-before/theme-roles.json",
+      "sha256": "dbd126f6ca9d846d622f56ad2afa109d95ba9eef3a306f1871d8e37a45c94aef",
+      "bytes": 70741
+    },
+    {
+      "from": ".cache/verification/theme-portals-w4-before/source-hashes.json",
+      "to": "before/portals-before/source-hashes.json",
+      "sha256": "efab6fbe9bafb7918b31e2e26a5ff46a2532c96d7e3927593c6fc9bd3040ea05",
+      "bytes": 1204
+    },
+    {
+      "from": ".cache/verification/theme-browser-host-w4-before-ready/manifest.json",
+      "to": "before/browser-before/manifest.json",
+      "sha256": "fd74ffbd387fdedef1e384b0d53f96f2ca0be79f40d5212d422f0e66ff4067b9",
+      "bytes": 15934
+    },
+    {
+      "from": ".cache/verification/theme-browser-host-w4-before-ready/theme-browser-host.json",
+      "to": "before/browser-before/theme-browser-host.json",
+      "sha256": "b18b689de081b1239dae92df31c72a2966e50abcf9677c531fc59a59e2ce3541",
+      "bytes": 3547
+    },
+    {
+      "from": ".cache/verification/theme-browser-host-w4-before-ready/source-hashes.json",
+      "to": "before/browser-before/source-hashes.json",
+      "sha256": "5949d2d0b62dcaa89c11c11b03c0dfbe9358fdeff60029f1a9fe566e8a56ff23",
+      "bytes": 485
+    },
+    {
+      "from": ".cache/verification/theme-viewer-mode-w4-before-static/manifest.json",
+      "to": "before/viewer-mode-before/manifest.json",
+      "sha256": "14e37a2a93d5f3ebe77880868b27be2592fd010c87d4a880f14965cffa0a293c",
+      "bytes": 37998
+    },
+    {
+      "from": ".cache/verification/theme-viewer-mode-w4-before-static/theme-contract.json",
+      "to": "before/viewer-mode-before/theme-contract.json",
+      "sha256": "ab314bee08399a6b67f5c316d9e56216c84c74b8d3c568036283a70ca2217d4c",
+      "bytes": 183116
+    },
+    {
+      "from": ".cache/verification/theme-viewer-mode-w4-before-static/source-hashes.json",
+      "to": "before/viewer-mode-before/source-hashes.json",
+      "sha256": "cea7148821beaa2e60903729f10f837ea47c96bd51b1b3f1a5f548885d41b07f",
+      "bytes": 2062
+    },
+    {
+      "from": ".cache/verification/theme-login-w4-before/manifest.json",
+      "to": "before/login-before/manifest.json",
+      "sha256": "647a6451f051b5057beb5d03a9ca3614aa8f4f64163b43a24db09192de08e7e4",
+      "bytes": 45052
+    },
+    {
+      "from": ".cache/verification/theme-login-w4-before/theme-login.json",
+      "to": "before/login-before/theme-login.json",
+      "sha256": "616bb1ee8b84bae28ba7c0e74fa9ab9521f7a024f9a4f0a6a9b4a3758505f887",
+      "bytes": 1264
+    },
+    {
+      "from": ".cache/verification/theme-login-w4-before/source-hashes.json",
+      "to": "before/login-before/source-hashes.json",
+      "sha256": "ce1f89b66b96c320c7eda57bf240dcf72b65c2915ea34b557a1c9e98dc506ab8",
+      "bytes": 102
+    },
+    {
+      "from": ".cache/verification/theme-governance-w5-before/manifest.json",
+      "to": "before/governance-before/manifest.json",
+      "sha256": "10e38caf1ec70090151553ea7a20df26b72ea5ac87547beeebfe14e4677e2e38",
+      "bytes": 18582
+    },
+    {
+      "from": ".cache/verification/theme-governance-w5-before/theme-governance.json",
+      "to": "before/governance-before/theme-governance.json",
+      "sha256": "e9d340f664de2c05700686eae1db25a28d6efb4fc37861038fbdedb028910ad2",
+      "bytes": 11041
+    },
+    {
+      "from": ".cache/theme-closeout-lint-v2.log",
+      "to": "checks/theme-closeout-lint-v2.log.gz",
+      "sha256": "71cf42dbda92e9096b1e996fa6a3e4fcee13bc69f3ebf78b198bf48047fd3519",
+      "bytes": 11680,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-closeout-types-v2.log",
+      "to": "checks/theme-closeout-types-v2.log.gz",
+      "sha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308",
+      "bytes": 1093,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-closeout-fonts.log",
+      "to": "checks/theme-closeout-fonts.log.gz",
+      "sha256": "c276ab67ab9277c98149c9f91ba6032425d121a62b0ccfc2a52313c97f9b791c",
+      "bytes": 167,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-regression-existing.log",
+      "to": "checks/theme-regression-existing.log.gz",
+      "sha256": "aa9ad30eea09d0e8ca28bf3a0a3301a529b83af245c50fc3f706a190182a856d",
+      "bytes": 3268,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-i18n-gates.log",
+      "to": "checks/theme-i18n-gates.log.gz",
+      "sha256": "2621936ffd4b035c37bf862541cfbf2e5067fb66be10c167ee4714d7e674a6b7",
+      "bytes": 330,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-docs-gate.log",
+      "to": "checks/theme-docs-gate.log.gz",
+      "sha256": "6013d91e370892fbd1405c377dab8963a481bbf02badcbaffcbd002ad83769b2",
+      "bytes": 360,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-bundle-budget.log",
+      "to": "checks/theme-bundle-budget.log.gz",
+      "sha256": "3bf0cbb3ede73c451ab86bfe876cb2c21f8a4c34f82d747488a7b06df6fa3260",
+      "bytes": 230,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-identity-current.log",
+      "to": "checks/theme-identity-current.log.gz",
+      "sha256": "93e791aa80ae8c52c0b97acc7440181664ff655dc6a602679bf630010383035c",
+      "bytes": 283,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-version-current.log",
+      "to": "checks/theme-version-current.log.gz",
+      "sha256": "248460b0be2eed2ac46587ec9e81b9b2f998ab34591d203f07fcf616235b4ca4",
+      "bytes": 107,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-artifact-validation-v2.log",
+      "to": "checks/theme-artifact-validation-v2.log.gz",
+      "sha256": "d183024e2a4144bdac356ec99941a4e5c0ad52051ab63550b8a44c958aa67835",
+      "bytes": 172,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-impeccable-detect.json",
+      "to": "checks/theme-impeccable-detect.json",
+      "sha256": "e0e20ec9be3711e9de2e1d94001bf20d5ba0f520b18bb220690e6e387472d18a",
+      "bytes": 978
+    },
+    {
+      "from": ".cache/theme-artifact-validation-final.log",
+      "to": "checks/theme-artifact-validation-final.log.gz",
+      "sha256": "b8f9207a89fe28282c90136f673cf01c15f7337cfed7a40e0c2df6d90853f859",
+      "bytes": 792,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-final-types.log",
+      "to": "checks/theme-final-types.log.gz",
+      "sha256": "e283420265597eeadc420a3f3037106009b6ff2f5aec6db2ec0a80cf7362edc0",
+      "bytes": 185,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-final-lint.log",
+      "to": "checks/theme-final-lint.log.gz",
+      "sha256": "918948d9819c325e4cd6e9d5551d51b393fa84281dcc580396a08ab67af0e775",
+      "bytes": 11838,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-final-docs.log",
+      "to": "checks/theme-final-docs.log.gz",
+      "sha256": "372561f7b84c4ee865b1b26466ef28aeb767ff9d992ee0016192f7b058dc9182",
+      "bytes": 360,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-final-identity.log",
+      "to": "checks/theme-final-identity.log.gz",
+      "sha256": "93e791aa80ae8c52c0b97acc7440181664ff655dc6a602679bf630010383035c",
+      "bytes": 283,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-final-version.log",
+      "to": "checks/theme-final-version.log.gz",
+      "sha256": "248460b0be2eed2ac46587ec9e81b9b2f998ab34591d203f07fcf616235b4ca4",
+      "bytes": 107,
+      "encoding": "gzip; sha256 refers to original bytes"
+    },
+    {
+      "from": ".cache/theme-final-fonts.log",
+      "to": "checks/theme-final-fonts.log.gz",
+      "sha256": "c276ab67ab9277c98149c9f91ba6032425d121a62b0ccfc2a52313c97f9b791c",
+      "bytes": 167,
+      "encoding": "gzip; sha256 refers to original bytes"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as ReactDOM from 'react-dom'
 import { cn } from '../../lib/utils'
+import { PortalStackProvider, usePortalLayer } from '../../context/PortalStackContext'
 
 /**
  * SimpleDropdown - A lightweight dropdown menu without external dependencies
@@ -122,6 +123,7 @@ export function SimpleDropdown({
   onOpenChange,
   keyboardNavigation = true,
 }: SimpleDropdownProps) {
+  const layer = usePortalLayer('dropdown', className)
   const [isOpen, setIsOpen] = useState(false)
   const [highlightedId, setHighlightedId] = useState<string | null>(null)
 
@@ -317,14 +319,14 @@ export function SimpleDropdown({
           <div
             ref={menuRef}
             className={cn(
-              'fixed z-50 min-w-[140px] p-1',
-              'bg-background rounded-[8px] shadow-strong border border-border/50',
+              'fixed z-dropdown min-w-[140px] p-1',
+              'bg-surface-floating rounded-card shadow-strong border border-border/50',
               'motion-interactive animate-in fade-in-0 zoom-in-95',
               className
             )}
-            style={{ top: position.top, left: position.left }}
+            style={{ top: position.top, left: position.left, zIndex: layer }}
           >
-            {children}
+            <PortalStackProvider layer={layer}>{children}</PortalStackProvider>
           </div>
         </SimpleDropdownContext.Provider>,
         document.body

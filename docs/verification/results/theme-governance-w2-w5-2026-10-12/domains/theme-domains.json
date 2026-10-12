@@ -1,0 +1,641 @@
+{
+  "checks": [
+    {
+      "id": "TC14-domains-default-light-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-default-light-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-default-light-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-default-light-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-default-dark-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-default-dark-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-default-dark-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-default-dark-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-light-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-light-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-light-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-light-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-dark-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-dark-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-dark-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-ink-dark-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-light-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-light-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-light-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-light-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-dark-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-dark-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-dark-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-geek-dark-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-light-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-light-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-light-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-light-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-dark-ready",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-dark-empty",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-dark-loading",
+      "passed": true
+    },
+    {
+      "id": "TC14-domains-cyberpunk-2077-dark-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-terminal-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC14-owned-content-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC11-domain-keyboard-row",
+      "passed": true
+    },
+    {
+      "id": "TC11-domain-touch-copy",
+      "passed": true
+    },
+    {
+      "id": "TC12-domain-reflow-320",
+      "passed": true
+    },
+    {
+      "id": "TC12-domain-reflow-390",
+      "passed": true
+    },
+    {
+      "id": "TC12-domain-reflow-768",
+      "passed": true
+    },
+    {
+      "id": "TC12-domain-reflow-769",
+      "passed": true
+    },
+    {
+      "id": "TC12-domain-reflow-1280",
+      "passed": true
+    },
+    {
+      "id": "TC18-domain-errors",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "id": "default",
+      "mode": "light",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(32, 35, 44)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "light",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(32, 35, 44)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "light",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(32, 35, 44)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "light",
+      "state": "error",
+      "decision": {
+        "color": "rgb(32, 35, 44)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "light",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "dark",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(238, 240, 246)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "dark",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(238, 240, 246)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "dark",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(238, 240, 246)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "dark",
+      "state": "error",
+      "decision": {
+        "color": "rgb(238, 240, 246)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "default",
+      "mode": "dark",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "light",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(35, 31, 26)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "light",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(35, 31, 26)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "light",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(35, 31, 26)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "light",
+      "state": "error",
+      "decision": {
+        "color": "rgb(35, 31, 26)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "light",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "dark",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(237, 231, 218)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "dark",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(237, 231, 218)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "dark",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(237, 231, 218)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "dark",
+      "state": "error",
+      "decision": {
+        "color": "rgb(237, 231, 218)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "ink",
+      "mode": "dark",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "light",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "light",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "light",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "light",
+      "state": "error",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "light",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "dark",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "dark",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "dark",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "dark",
+      "state": "error",
+      "decision": {
+        "color": "rgb(232, 236, 234)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "geek",
+      "mode": "dark",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "state": "error",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "state": "ready",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录1全部状态已改变已回退待确认失败已取消1 / 1 条时间功能动作执行状态决策费用1/1 08:00会话级智"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "state": "empty",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策1 项功能 · 1 次请求配置决策辅助决策事项1实际改变0回退1决策费用$0.00001 次请求 · 0 项待确认 · 1 次失败 · 0 次取消 · 输入 20 / 输出 5 Token 已计入会话费用；辅助 Token 不占用主模型上下文。当前会话的全部已记录历史；分支与子任务分别统计。已使用功能1收起功能决策事项实际改变回退失败占比决策费用智能体工具 (decide)1011$0.0000合计1011$0.0000仅统计已知费用；+n? 表示有 n 次请求未报告费用。决策记录0全部状态已改变已回退待确认失败已取消0 / 1 条此会话尚无决策记录。启用的功能被触发后才会产生记录；打"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "state": "loading",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "state": "error",
+      "decision": {
+        "color": "rgb(0, 255, 240)",
+        "text": "会话决策0 项功能 · 0 次请求配置决策辅助会话决策加载失败。重试只重新读取记录，不会调用决策模型。重试"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "pdf": {
+        "width": 898,
+        "height": 598,
+        "corner": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "filter": "none"
+      }
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.45",
+  "scope": "Real row, settings, kanban, decisions, trajectory, terminal, Mermaid, PDF and PageFrame; synthetic data; PDF/Pages content ownership is asserted."
+}

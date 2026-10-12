@@ -296,7 +296,7 @@ export function WorkspaceSwitcher({
                   {activeWorkspaceId !== workspace.id && (
                     <button
                       data-touch-reveal="true"
-                      className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-destructive/20 hover:text-destructive transition-opacity"
+                      className="craft-row-actions opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-destructive/20 hover:text-destructive transition-opacity"
                       onClick={(e) => {
                         e.stopPropagation()
                         handleRemoveWorkspace(workspace)
@@ -309,7 +309,7 @@ export function WorkspaceSwitcher({
                   {activeWorkspaceId !== workspace.id && !disconnected && (
                     <button
                       data-touch-reveal="true"
-                      className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-foreground/10 transition-opacity"
+                      className="craft-row-actions opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-foreground/10 transition-opacity"
                       onClick={(e) => {
                         e.stopPropagation()
                         onSelect(workspace.id, true)

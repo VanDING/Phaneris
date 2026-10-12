@@ -23,12 +23,12 @@ import {
 } from './decision-view'
 
 const ATTEMPT_TONE: Record<SessionDecisionAttempt['status'], string> = {
-  succeeded: 'bg-foreground/5 text-muted-foreground',
-  pending: 'bg-accent/[0.14] text-accent',
-  failed: 'bg-destructive/[0.12] text-destructive',
-  timeout: 'bg-destructive/[0.12] text-destructive',
-  cancelled: 'bg-foreground/5 text-muted-foreground',
-  unknown: 'bg-foreground/5 text-muted-foreground',
+  succeeded: 'bg-foreground/5 text-text-secondary',
+  pending: 'bg-accent/[0.14] text-accent-text',
+  failed: 'bg-destructive/[0.12] text-destructive-text',
+  timeout: 'bg-destructive/[0.12] text-destructive-text',
+  cancelled: 'bg-foreground/5 text-text-secondary',
+  unknown: 'bg-foreground/5 text-text-secondary',
 }
 
 /** Actions carry an optional `:value` payload (e.g. `status:needs-review`). */
@@ -83,7 +83,7 @@ export function DecisionDetail({ item, onOpenChat, className }: {
         <h4 className="mb-2 text-[12px] font-semibold">{t('trajectory.decisions.trigger')}</h4>
         {sourceRows.length > 0
           ? <DecisionKv rows={sourceRows} />
-          : <p className="text-[11.5px] leading-5 text-muted-foreground">{t('trajectory.decisions.triggerUnknown')}</p>}
+          : <p className="text-[11.5px] leading-5 text-text-secondary">{t('trajectory.decisions.triggerUnknown')}</p>}
         {item.unavailableReason && (
           <div className="mt-2">
             <DecisionNotice tone="info">
@@ -105,7 +105,7 @@ export function DecisionDetail({ item, onOpenChat, className }: {
               </p>
               {Object.keys(recommendation.detail ?? {}).length > 0 && (
                 <details className="mt-1.5">
-                  <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-[11px] text-muted-foreground hover:text-foreground">
+                  <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-[11px] text-text-secondary hover:text-foreground">
                     <span aria-hidden className="size-0 border-y-[3.5px] border-l-4 border-y-transparent border-l-current" />
                     {t('trajectory.decisions.structuredEvidence')}
                   </summary>
@@ -116,7 +116,7 @@ export function DecisionDetail({ item, onOpenChat, className }: {
               )}
             </>
           )
-          : <p className="text-[12px] text-muted-foreground">{t('trajectory.decisions.noRecommendation')}</p>}
+          : <p className="text-[12px] text-text-secondary">{t('trajectory.decisions.noRecommendation')}</p>}
       </section>
 
       <section className="flex min-w-0 flex-col">
@@ -160,19 +160,19 @@ export function DecisionDetail({ item, onOpenChat, className }: {
                   key={`${observation.result}-${index}`}
                   className="flex min-h-8 items-center gap-2 border-b border-border/45 px-3 text-[11.5px] last:border-b-0"
                 >
-                  <CornerDownRight aria-hidden className="size-3 flex-none text-muted-foreground" />
+                  <CornerDownRight aria-hidden className="size-3 flex-none text-text-secondary" />
                   <span className="min-w-0">{observationLabel(observation.result, t)}</span>
                 </div>
               ))}
             </div>
           )
-          : <p className="text-[11.5px] leading-5 text-muted-foreground">{t('trajectory.decisions.noObservations')}</p>}
+          : <p className="text-[11.5px] leading-5 text-text-secondary">{t('trajectory.decisions.noObservations')}</p>}
       </section>
 
       <section className="flex min-w-0 flex-col">
         <h4 className="mb-2 flex items-center gap-2 text-[12px] font-semibold">
           {t('trajectory.decisions.requests')}
-          <span className="text-[11px] font-normal tabular-nums text-muted-foreground">
+          <span className="text-[11px] font-normal tabular-nums text-text-secondary">
             {t('trajectory.decisions.attemptCount', { count: item.attempts.length })}
           </span>
         </h4>
@@ -188,8 +188,8 @@ export function DecisionDetail({ item, onOpenChat, className }: {
                   )}>
                     {t(`trajectory.decisions.attempt.${attempt.status}`)}
                   </span>
-                  <span className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">{attempt.model}</span>
-                  <span className="ml-auto flex flex-none items-center gap-2.5 font-mono text-[10px] tabular-nums text-muted-foreground">
+                  <span className="min-w-0 truncate font-mono text-[11px] text-text-secondary">{attempt.model}</span>
+                  <span className="ml-auto flex flex-none items-center gap-2.5 font-mono text-[10px] tabular-nums text-text-secondary">
                     {attempt.record?.latencyMs !== undefined && <span>{attempt.record.latencyMs} ms</span>}
                     <span className={cn(cost === null && 'text-[color:var(--info-text)]')}>{cost ?? t('common.unknown')}</span>
                   </span>
@@ -204,14 +204,14 @@ export function DecisionDetail({ item, onOpenChat, className }: {
             )
           })}
         </div>
-        <p className="mt-2 text-[11px] leading-5 text-muted-foreground">{t('trajectory.decisions.privacy')}</p>
+        <p className="mt-2 text-[11px] leading-5 text-text-secondary">{t('trajectory.decisions.privacy')}</p>
         <details className="mt-1.5">
-          <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-[11px] text-muted-foreground hover:text-foreground">
+          <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-[11px] text-text-secondary hover:text-foreground">
             <span aria-hidden className="size-0 border-y-[3.5px] border-l-4 border-y-transparent border-l-current" />
             {t('trajectory.decisions.rawRecord')}
           </summary>
           <div className="mt-1.5 rounded-lg bg-foreground/5 p-2">
-            <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-all font-mono text-[10.5px] leading-5 text-muted-foreground">
+            <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-all font-mono text-[10.5px] leading-5 text-text-secondary">
               {JSON.stringify({
                 id: item.id,
                 feature: item.feature,

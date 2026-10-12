@@ -1,11 +1,15 @@
 import React, { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, initReactI18next } from 'react-i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import { setupI18n } from '@phaneris/shared/i18n'
+import { BrowserThemeHost } from './context/BrowserThemeHost'
 import ReactDOM from 'react-dom/client'
 import { MotionConfig } from 'motion/react'
 import { BrowserEmptyStateCard } from '@phaneris/ui'
 import { routes } from '../shared/routes'
 import { EMPTY_STATE_PROMPT_SAMPLES } from './components/browser/empty-state-prompts'
 import './index.css'
+setupI18n([LanguageDetector, initReactI18next])
 
 function BrowserEmptyStateApp() {
   const { t } = useTranslation()
@@ -47,7 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     {/* Same reduced-motion contract as the main window: this is a separate
         renderer entry, so it does not inherit the app's MotionConfig. */}
     <MotionConfig reducedMotion="user">
-      <BrowserEmptyStateApp />
+      <BrowserThemeHost><BrowserEmptyStateApp /></BrowserThemeHost>
     </MotionConfig>
   </React.StrictMode>,
 )

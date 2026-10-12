@@ -8,6 +8,7 @@
 
 import { join, parse as parsePath } from 'path'
 import { existsSync, mkdirSync } from 'fs'
+import { pathToFileURL } from 'node:url'
 import { validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import { BrowserView, BrowserWindow, app, ipcMain, nativeTheme, session, shell, type Session as ElectronSession } from 'electron'
 import { mainLog } from './logger'
@@ -18,7 +19,8 @@ import {
   type BrowserEmptyStateLaunchResult,
   type BrowserInstanceInfo,
 } from '../shared/types'
-import { DEFAULT_THEME, resolveTheme, resolveThemeMode } from '@phaneris/shared/config';
+import { DEFAULT_THEME } from '@phaneris/shared/config';
+import type { HostThemeInput } from '@phaneris/shared/config/theme-runtime'
 import { getAllowRemoteEvaluate, getThemePreferences, loadPresetTheme } from '@phaneris/shared/config/appearance';
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { getWorkspaceColorTheme } from '@phaneris/shared/workspaces'
@@ -125,6 +127,9 @@ const TOOLBAR_CHANNELS = {
   DESTROY: 'browser-toolbar:destroy',
   STATE_UPDATE: 'browser-toolbar:state-update',
   THEME_COLOR: 'browser-toolbar:theme-color',
+  GET_HOST_THEME: 'browser-toolbar:get-host-theme',
+  HOST_THEME: 'browser-toolbar:host-theme',
+  REPORT_HOST_THEME: 'browser-toolbar:report-host-theme',
 } as const
 export const BROWSER_PANE_SESSION_PARTITION = 'persist:browser-pane'
 const SESSION_PARTITION = BROWSER_PANE_SESSION_PARTITION
@@ -186,6 +191,9 @@ interface BrowserInstance {
   lockState: AgentControlLockState
   nativeOverlayReady: boolean
   themeColor: string | null
+  hostTheme?: HostThemeInput
+  resolvedHostAccent?: string
+  resolvedHostOnAccent?: string
   inPageThemeTimer: ReturnType<typeof setTimeout> | null
   themeObserverToken: string | null
   consoleLogs: BrowserConsoleEntry[]
@@ -338,6 +346,7 @@ let instanceCounter = 0
 
 export class BrowserPaneManager implements IBrowserPaneManager {
   private instances: Map<string, BrowserInstance> = new Map()
+  private themeSequence = 0
   private destroyingIds: Set<string> = new Set()
   private stateChangeCallback: ((info: BrowserInstanceInfo) => void) | null = null
   private removedCallback: ((id: string) => void) | null = null
@@ -1763,6 +1772,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
       // workspace's UI sees them and others don't.
       if (options?.workspaceId !== undefined) {
         instance.workspaceId = options.workspaceId
+        this.publishHostTheme(instance)
       }
       this.emitStateChange(instance)
     }
@@ -1936,25 +1946,44 @@ export class BrowserPaneManager implements IBrowserPaneManager {
   /** Refresh live native browser overlays after a preference or theme-file change. */
   refreshThemeVisuals(): void {
     for (const instance of this.instances.values()) {
+      this.publishHostTheme(instance)
       this.updateNativeOverlayState(instance)
     }
   }
 
-  /** Resolve the app's current accent color as a concrete CSS value (not a var reference). */
-  private getResolvedAccentColor(instance: BrowserInstance): string {
+  private loadHostTheme(instance: BrowserInstance): HostThemeInput {
     const preferences = getThemePreferences()
     const workspace = instance.workspaceId ? getWorkspaceByNameOrId(instance.workspaceId) : null
     const workspaceTheme = workspace ? getWorkspaceColorTheme(workspace.rootPath) : undefined
-    const themeId = workspaceTheme ?? preferences.colorTheme
-    const preset = loadPresetTheme(themeId) ?? loadPresetTheme('default')!
-    const requestedMode = preferences.mode === 'system'
-      ? (nativeTheme.shouldUseDarkColors ? 'dark' : 'light')
-      : preferences.mode
-    const mode = resolveThemeMode(preset.theme, requestedMode)
-    const resolved = resolveTheme(preset.theme)
-    return mode === 'dark'
-      ? (resolved.dark?.accent ?? resolved.accent ?? DEFAULT_THEME.dark!.accent!)
-      : (resolved.accent ?? DEFAULT_THEME.accent!)
+    const requestedId = workspaceTheme ?? preferences.colorTheme
+    return { sequence: ++this.themeSequence, requestedId, preferences, preset: loadPresetTheme(requestedId) }
+  }
+
+  /** Only our trusted documents may receive config/theme material, never a website. */
+  private isTrustedBrowserDocument(url: string, page: string): boolean {
+    try {
+      const expected = new URL(VITE_DEV_SERVER_URL ? `${VITE_DEV_SERVER_URL}/${page}` : pathToFileURL(join(__dirname, `renderer/${page}`)).href)
+      const actual = new URL(url)
+      return actual.protocol === expected.protocol && actual.host === expected.host && actual.pathname === expected.pathname
+    } catch { return false }
+  }
+
+  private publishHostTheme(instance: BrowserInstance, reload = true): void {
+    if (instance.window.isDestroyed()) return
+    const input = reload || !instance.hostTheme ? this.loadHostTheme(instance) : instance.hostTheme
+    instance.hostTheme = input
+    if (!instance.toolbarView.webContents.isDestroyed() && this.isTrustedBrowserDocument(instance.toolbarView.webContents.getURL(), 'browser-toolbar.html')) {
+      instance.toolbarView.webContents.send(TOOLBAR_CHANNELS.HOST_THEME, input)
+    }
+    const page = instance.pageView.webContents
+    if (!page.isDestroyed() && this.isTrustedBrowserDocument(page.getURL(), BROWSER_EMPTY_STATE_PAGE)) {
+      void page.executeJavaScript(`window.__phanerisBrowserTheme = ${JSON.stringify(input)}; window.dispatchEvent(new CustomEvent('craft-browser-theme', {detail: window.__phanerisBrowserTheme}));`).catch(() => {})
+    }
+  }
+
+  /** Renderer reports the compiled, concrete accent; no author var leaks into foreign DOM. */
+  private getResolvedAccentColor(instance: BrowserInstance): string {
+    return instance.resolvedHostAccent ?? (nativeTheme.shouldUseDarkColors ? DEFAULT_THEME.dark!.accent! : DEFAULT_THEME.accent!)
   }
 
   private async loadNativeOverlayPage(instance: BrowserInstance): Promise<void> {
@@ -2081,6 +2110,8 @@ export class BrowserPaneManager implements IBrowserPaneManager {
         overlay.style.boxShadow = 'inset 0 0 0 1px color-mix(in oklab, ' + ${JSON.stringify(accent)} + ' 45%, transparent), inset 0 0 24px color-mix(in oklab, ' + ${JSON.stringify(accent)} + ' 28%, transparent)';
         chip.textContent = ${JSON.stringify(label)};
         chip.style.display = 'inline-flex';
+        chip.style.background = ${JSON.stringify(accent)};
+        chip.style.color = ${JSON.stringify(instance.resolvedHostOnAccent ?? '#ffffff')};
         shield.style.pointerEvents = 'auto';
         shield.style.cursor = 'not-allowed';
         shield.style.background = 'rgba(2, 6, 23, 0.03)';
@@ -2373,6 +2404,28 @@ export class BrowserPaneManager implements IBrowserPaneManager {
     const findInstance = (instanceId: string): BrowserInstance | undefined => {
       return this.instances.get(instanceId)
     }
+    const trustedToolbar = (event: Electron.IpcMainInvokeEvent, instanceId: string) => {
+      const instance = findInstance(instanceId)
+      if (!instance || event.sender !== instance.toolbarView.webContents
+        || event.senderFrame !== event.sender.mainFrame
+        || !this.isTrustedBrowserDocument(event.sender.getURL(), 'browser-toolbar.html')) throw new Error('Untrusted browser theme request')
+      return instance
+    }
+    ipcMain.handle(TOOLBAR_CHANNELS.GET_HOST_THEME, async (event, instanceId: string) => {
+      const instance = trustedToolbar(event, instanceId)
+      instance.hostTheme ??= this.loadHostTheme(instance)
+      return instance.hostTheme
+    })
+    ipcMain.handle(TOOLBAR_CHANNELS.REPORT_HOST_THEME, async (event, instanceId: string, value: unknown) => {
+      const instance = trustedToolbar(event, instanceId)
+      if (!value || typeof value !== 'object') return
+      const report = value as { sequence?: unknown; accent?: unknown; revision?: unknown; onAccent?: unknown }
+      if (report.sequence !== instance.hostTheme?.sequence || typeof report.revision !== 'string' || report.revision.length > 128
+        || typeof report.accent !== 'string' || !/^#[\da-f]{6}$/i.test(report.accent) || !['#000000', '#ffffff'].includes(String(report.onAccent))) return
+      instance.resolvedHostAccent = report.accent
+      instance.resolvedHostOnAccent = String(report.onAccent)
+      this.updateNativeOverlayState(instance)
+    })
 
     ipcMain.handle(TOOLBAR_CHANNELS.NAVIGATE, async (_event, instanceId: string, url: string) => {
       const inst = findInstance(instanceId)
@@ -3386,6 +3439,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
 
       this.markToolbarReady(instance, 'did-finish-load')
       this.pushToolbarState(instance)
+      this.publishHostTheme(instance, false)
     })
 
     toolbarWc.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL, isMainFrame) => {
@@ -3528,6 +3582,7 @@ export class BrowserPaneManager implements IBrowserPaneManager {
 
     pageWc.on('did-finish-load', () => {
       instance.loadError = null
+      this.publishHostTheme(instance, false)
     })
 
     pageWc.on('render-process-gone', (_event, details) => {

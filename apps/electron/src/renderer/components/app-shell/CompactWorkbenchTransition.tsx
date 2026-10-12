@@ -55,7 +55,7 @@ function WorkbenchLayer({ isTop, layerRef, children }: LayerProps) {
   return (
     <motion.div
       ref={layerRef}
-      className="absolute inset-0 z-[1] bg-paper"
+      className="absolute inset-0 z-component-overlay bg-paper"
       initial={{ x: '100%' }}
       animate={{ x: '0%' }}
       exit={{ x: '100%' }}

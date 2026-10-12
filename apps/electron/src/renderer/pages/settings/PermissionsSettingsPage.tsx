@@ -212,14 +212,14 @@ export default function PermissionsSettingsPage() {
             <div className="space-y-8">
               {isLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                  <Loader2 className="w-5 h-5 animate-spin text-text-secondary" />
                 </div>
               ) : (
                 <>
                   {/* About Section */}
                   <SettingsSection title={t("settings.permissions.aboutPermissions")}>
                     <SettingsCard className="px-4 py-3.5">
-                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1.5">
+                      <div className="text-sm text-text-secondary leading-relaxed space-y-1.5">
                         <p>
                           {t("settings.permissions.aboutText1")}
                         </p>
@@ -230,7 +230,7 @@ export default function PermissionsSettingsPage() {
                           <button
                             type="button"
                             onClick={() => openDocs(getDocSlug('permissions'))}
-                            className="text-foreground/70 hover:text-foreground underline underline-offset-2"
+                            className="craft-control text-text-secondary hover:text-foreground underline underline-offset-2"
                           >
                             {t("common.learnMore")}
                           </button>
@@ -267,9 +267,9 @@ export default function PermissionsSettingsPage() {
                           fullscreenTitle={t("settings.permissions.defaultPermissions")}
                         />
                       ) : (
-                        <div className="p-8 text-center text-muted-foreground">
+                        <div className="p-8 text-center text-text-secondary">
                           <p className="text-sm">{t("settings.permissions.noDefaultPermissions")}</p>
-                          <p className="text-xs mt-1 text-foreground/40">
+                          <p className="text-xs mt-1 text-text-secondary">
                             {t("settings.permissions.noDefaultPermissionsDesc")}
                           </p>
                         </div>
@@ -310,9 +310,9 @@ export default function PermissionsSettingsPage() {
                           fullscreenTitle={t("settings.permissions.workspaceCustomizations")}
                         />
                       ) : (
-                        <div className="p-8 text-center text-muted-foreground">
+                        <div className="p-8 text-center text-text-secondary">
                           <p className="text-sm">{t("settings.permissions.noCustomPermissions")}</p>
-                          <p className="text-xs mt-1 text-foreground/40">
+                          <p className="text-xs mt-1 text-text-secondary">
                             {t("settings.permissions.noCustomPermissionsDesc")}
                           </p>
                         </div>

@@ -495,7 +495,7 @@ export default function App() {
     setSplashHidden(true)
   }, [])
 
-  const { shikiTheme, isDark } = useTheme()
+  const { shikiTheme, isDark, snapshot: themeSnapshot } = useTheme()
 
   // Ref for sessionOptions to access current value in event handlers without re-registering
   const sessionOptionsRef = useRef(sessionOptions)
@@ -2258,7 +2258,7 @@ export default function App() {
   // Ready state - main app with splash overlay during data loading
   return (
     <PlatformProvider actions={platformActions}>
-    <ShikiThemeProvider shikiTheme={shikiTheme}>
+    <ShikiThemeProvider shikiTheme={shikiTheme} revision={themeSnapshot.revision}>
       <ActionRegistryProvider>
       <FocusProvider>
         <DismissibleLayerProvider>

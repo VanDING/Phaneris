@@ -117,7 +117,7 @@ export function BackgroundFinishedChip({ sessionId }: BackgroundFinishedChipProp
       {entry && !exiting && (
         <motion.div
           key={entry.sessionId}
-          className="absolute right-2 top-2 z-20"
+          className="absolute right-2 top-2 z-component-scrim"
           initial={{ opacity: 0, scale: 0.9, y: -4 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: -4 }}

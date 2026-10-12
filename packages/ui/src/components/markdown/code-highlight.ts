@@ -18,8 +18,8 @@ let active: Job | undefined
 let worker: Worker | undefined
 let workerUnavailable = false
 
-export function codeHighlightKey(code: string, language: string, theme: string): string {
-  return JSON.stringify([theme, language, code])
+export function codeHighlightKey(code: string, language: string, theme: string, revision = ''): string {
+  return JSON.stringify([theme, revision, language, code])
 }
 
 function finish(job: Job, html: string | null) {
@@ -91,8 +91,8 @@ function pump() {
 /** Shared, deduplicated worker queue. Unmounted/offscreen revisions are removed
  * before execution; completed results are bounded by both entry count and bytes.
  */
-export function requestCodeHighlight(code: string, language: string, theme: string, listener: Listener): () => void {
-  const key = codeHighlightKey(code, language, theme)
+export function requestCodeHighlight(code: string, language: string, theme: string, listener: Listener, revision = ''): () => void {
+  const key = codeHighlightKey(code, language, theme, revision)
   const cached = cache.get(key)
   if (cached !== undefined) {
     cache.delete(key)

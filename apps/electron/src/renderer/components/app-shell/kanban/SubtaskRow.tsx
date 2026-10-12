@@ -81,7 +81,7 @@ export function SubtaskRow({ subtask, className, onClick }: SubtaskRowProps) {
       )}
     >
       <RunStateIcon runState={subtask.runState} />
-      <span className={cn('flex-1 truncate text-xs', isDone ? 'text-foreground/45 line-through' : 'text-foreground/80')}>
+      <span className={cn('flex-1 truncate text-xs', isDone ? 'text-text-secondary line-through' : 'text-text-secondary')}>
         {subtask.title}
       </span>
       <ModelChip model={subtask.model} short className="w-20 shrink-0" />

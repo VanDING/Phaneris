@@ -76,6 +76,8 @@ Documentation is filed by **what kind of document it is**, not by how finished t
 | [Plugin bundles design](design/plugin-bundles-design.md) | Implemented | Aggregating skills, sources, and a prompt fragment into an Agent Plugins 1.0.0 package. |
 | [Plugin bundles decision register](design/plugin-bundles-decisions.md) | 0 open / 0 REC | The decisions the plugin-bundle implementation rests on, with the alternative each rejected. |
 | [Theme engine design](design/theme-engine-design.md) | Implemented | Semantic theme engine decisions and implementation history. Current fields live in [`theme.ts`](../packages/shared/src/config/theme.ts). |
+| [Generated theme contract](design/theme-contract.generated.md) | Accepted / generated | Current fields, four built-ins, runtime validation and motion parity. |
+| [Theme hosts and rollout](design/theme-hosts-and-rollout.md) | Accepted | Host/content ownership, visual debt and rollback boundaries. |
 | [New-session hero design](design/new-session-hero-design.md) | Implemented | Design record for the empty-session landing. |
 | [Profile and preferences](design/profile-preferences-plan.md) | Baseline implemented | Local profile and preferences. Summary copy, image/Markdown export, and private/public links are **not** implemented. |
 
@@ -86,6 +88,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | Document | Status | Scope |
 | --- | --- | --- |
 | [Theme and frontend visual audit failure matrix](verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md) | Written before audit probes; audit evidence recorded | Independent theme/CSS/interaction checks and remaining real-host E2E. [Reproduction evidence](verification/results/frontend-theme-visual-audit-2026-10-12/README.md). |
+| [Theme contract failure matrix](verification/theme-contract-failure-matrix-2026-10-12.md) | Written before W2–W5 implementation | Validation, roles, domains, adapters and governance mutation gates. |
 | [Governance completion failure matrix](verification/governance-completion-failure-matrix.md) | Written before implementation | G3–G8 failure cases and actual workflow acceptance. |
 | [Verification index](verification/README.md) | Maintained | Commands, platform notes, and result locations. |
 | [Governance first wave failure matrix](verification/governance-first-wave-failure-matrix.md) | Written before implementation; locally verified | G1 evidence isolation, CI/coverage/warning canaries, Babel type-import detection, plugin transactions and Runtime branch lifecycle. [Evidence](verification/results/governance-first-wave-2026-10-11/README.md). |
@@ -215,4 +218,4 @@ These preserve decisions and evidence. Their paths, line numbers, versions, and 
 - an architecture document without a rule-2 `Status:` line;
 - a document not reachable from this index (directly, or through a subdirectory README).
 
-Fix the documents, not the gate.
+Fix current documents. A missing frozen artifact may only use an [exact source/target SHA exception](../scripts/doc-artifact-exceptions.json) with owner and recovery condition; the warning remains visible and does not certify the missing evidence. Newly broken links still fail.

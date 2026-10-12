@@ -1,6 +1,7 @@
 # 主题生成提示词（Theme Authoring Prompt）
 
-- 适用引擎：Phaneris / Craft 主题引擎（`packages/shared/src/config/theme.ts` + `validators.ts` + `storage.ts`）
+- 适用引擎：Phaneris / Craft（`packages/shared/src/config/theme.ts`、`schemas.ts`、`appearance.ts` 与 `packages/ui/src/lib/theme-compiler.ts`）
+- 当前字段、四套内置主题、实际 Shiki registry 和验证责任以[生成契约](../design/theme-contract.generated.md)为准；本提示词不替代浏览器计算值、opaque 与图片解码验收。
 - 用途：把下面代码块里的内容**原样**作为提示词发给一个新 AI，它即可产出能通过严格校验、且视觉正确的主题 JSON 文件
 - 状态：本文所有约束均从源码逐条核对，非推测
 
@@ -330,13 +331,13 @@ dark（44 个）：
 | 提示词中的约束 | 源码位置 |
 |---|---|
 | ID 正则、`default` 保留 | `packages/shared/src/config/theme.ts:45-50` |
-| 严格模式、未知键拒绝 | `validators.ts:1592`（dark）、`1634-1658`（顶层 `.strict()`） |
-| CSS 值禁止 `;` `{}` | `validators.ts:1541-1544` |
-| 数值范围 | `validators.ts:1576`、`1586-1589` |
-| 枚举取值 | `validators.ts:1574`、`1580`、`1588-1589`、`1613`、`1643` |
-| 至少一个核心色 | `validators.ts:1652-1658` |
-| `backgroundImage` 1–4096、禁空字节、scenic 必需 | `validators.ts:1593-1598`、`1625-1628` |
-| `dark` 键集 = 视觉 token 全集 | `validators.ts:1592` + `1547-1590` |
+| 严格模式、未知键拒绝 | `packages/shared/src/config/schemas.ts` 的 `PresetThemeSchema` / `ThemeOverridesSchema` |
+| CSS 值禁止 `;` `{}` | `schemas.ts` 的 CSS 值结构约束；合法性另由浏览器 compiler 检查 |
+| 数值范围 | `theme-manifest.ts` 的目标属性与范围，`theme-compiler.ts` 检查计算值 |
+| 枚举取值 | `schemas.ts` 的 visual enums |
+| 至少一个核心色 | `schemas.ts` 的 PresetThemeSchema refine |
+| `backgroundImage` 长度、禁空字节、scenic 必需 | `schemas.ts`；运行时物化数据由 `appearance.ts` 与 compiler 处理 |
+| `dark` 键集 = 视觉 token 全集 | `schemas.ts` 的 `ThemeOverridesSchema` 与生成 manifest |
 | dark 四层继承（顶层即 dark 基准） | `theme.ts:227-241` |
 | 未声明 token 继承 Default | `theme.ts:250-254` `resolveTheme` → `mergeThemes` |
 | `navigator` 显式 opt-in / 缺省随 `--background` | `theme.ts:399-402`、`index.css:159` |
@@ -345,10 +346,10 @@ dark（44 个）：
 | `soft`/`faint` 百分比算式、五档阴影 | `theme.ts:288-354` |
 | `radius` 兼作面板圆角 | `theme.ts:408-414` |
 | `glassBlur` 仅 `depth:glass` 生效 | `theme.ts:304` |
-| `popoverSolid` 恒不透明 | `theme.ts:405`、`index.css:747` |
-| `lineHeight` 接受数字或字符串 | `validators.ts:1586` |
-| 文件 ≤ 256 KiB | `storage.ts:1330`、`1431-1434` |
-| Shiki 白名单（21 light / 44 dark） | `@pierre/theming` → `dist/collections/shiki.js`；经 `ThemeContext.tsx:443-444` |
+| `popoverSolid` 完全不透明 | 浏览器 compiler 验 alpha；无效则 Default 回退，保留原文件和诊断 |
+| `lineHeight` 接受数字或字符串 | `schemas.ts`；计算正值由 compiler 检查 |
+| 文件 ≤ 256 KiB | `appearance.ts` 的 user-theme JSON 读取限制 |
+| Shiki 白名单 | `packages/shared/src/config/shiki-themes.generated.json`，由当前安装 registry 生成 |
 | scenic 强制 dark | `theme.ts:611` |
-| 本地背景图 ≤ 20 MiB、仅 PNG/JPEG/GIF/WebP、限 http(s) | `storage.ts:1331-1338`、`1501-1543` |
-| 保存路径 | `storage.ts:1322` `APP_THEMES_DIR`（`~/.phaneris/themes/`） |
+| 本地背景图 ≤ 20 MiB、类型与路径边界、http(s) | `appearance.ts` 的图片加载；compiler 验解码、超时与取消 |
+| 保存路径 | `appearance.ts` 的主题目录（`~/.phaneris/themes/`） |

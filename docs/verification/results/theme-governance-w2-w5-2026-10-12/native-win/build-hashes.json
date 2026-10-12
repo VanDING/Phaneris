@@ -1,0 +1,4 @@
+{
+  "apps/electron/dist/main.cjs": "d6ad6124f29c3bbb65d93cb6706b06207710a52223822ce7d78d03c86ae79a79",
+  "apps/electron/dist/browser-toolbar-preload.cjs": "ccfedd7278f5bc21c210072dde6e858ed0c40f56a3b3f048d2786abb2b5e0521"
+}

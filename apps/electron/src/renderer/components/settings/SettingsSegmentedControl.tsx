@@ -88,7 +88,7 @@ export function SettingsSegmentedControl<T extends string = string>({
               <span
                 className={cn(
                   'w-4 h-4',
-                  isSelected ? 'text-secondary-foreground' : 'text-muted-foreground'
+                  isSelected ? 'text-secondary-foreground' : 'text-text-secondary'
                 )}
               >
                 {option.icon}
@@ -96,7 +96,7 @@ export function SettingsSegmentedControl<T extends string = string>({
             )}
             <span
               className={cn(
-                isSelected ? 'text-secondary-foreground' : 'text-muted-foreground'
+                isSelected ? 'text-secondary-foreground' : 'text-text-secondary'
               )}
             >
               {option.label}

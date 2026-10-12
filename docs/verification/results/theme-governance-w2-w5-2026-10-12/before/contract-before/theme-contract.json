@@ -1,0 +1,2871 @@
+{
+  "checks": [
+    {
+      "id": "TC01-electron-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-default-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"popover\",\"color\":\"rgb(32, 35, 44)\",\"background\":\"rgba(0, 0, 0, 0)\",\"ratio\":1.3381977510417968},{\"role\":\"emphasized\",\"color\":\"rgb(32, 35, 44)\",\"background\":\"oklch(0.488 0.275 280.3)\",\"ratio\":2.150490266268704}]"
+    },
+    {
+      "id": "TC01-electron-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-default-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(238, 240, 246)\",\"background\":\"oklch(0.626 0.221 291.7)\",\"ratio\":3.415114969462855}]"
+    },
+    {
+      "id": "TC01-electron-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-geek-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-electron-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-geek-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-electron-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-cyberpunk-2077-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-electron-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-cyberpunk-2077-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-electron-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-ink-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"muted\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgb(242, 239, 231)\",\"ratio\":3.442506527366107},{\"role\":\"muted-paper\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgb(255, 255, 255)\",\"ratio\":3.955614911062684},{\"role\":\"popover\",\"color\":\"rgb(35, 31, 26)\",\"background\":\"rgba(0, 0, 0, 0)\",\"ratio\":1.28237582206449},{\"role\":\"emphasized\",\"color\":\"rgb(35, 31, 26)\",\"background\":\"rgb(168, 49, 42)\",\"ratio\":2.4468059061331564}]"
+    },
+    {
+      "id": "TC01-electron-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-electron-ink-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(237, 231, 218)\",\"background\":\"rgb(217, 99, 79)\",\"ratio\":2.914452078664142}]"
+    },
+    {
+      "id": "TC01-ui-default-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.628529 0.00878557 none)',\n+   stroke: '2px'\n-   radius: '4.5px',\n-   step: 'color(srgb 0.562745 0.568627 0.586275)',\n-   stroke: '1.65px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-default-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(32, 35, 44)\",\"background\":\"oklch(0.488 0.275 280.3)\",\"ratio\":2.150490266268704}]"
+    },
+    {
+      "id": "TC01-ui-default-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.584413 0.00930369 none)',\n+   stroke: '2px'\n-   radius: '4.5px',\n-   step: 'color(srgb 0.511765 0.519608 0.541176)',\n-   stroke: '1.65px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-default-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(238, 240, 246)\",\"background\":\"oklch(0.626 0.221 291.7)\",\"ratio\":3.415114969462855}]"
+    },
+    {
+      "id": "TC01-ui-geek-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.538594 0.00875322 none)',\n+   stroke: '2px'\n-   radius: '3px',\n-   step: 'color(srgb 0.466667 0.482353 0.470588)',\n-   stroke: '1.5px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-geek-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-ui-geek-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.538594 0.00875322 none)',\n+   stroke: '2px'\n-   radius: '3px',\n-   step: 'color(srgb 0.466667 0.482353 0.470588)',\n-   stroke: '1.5px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-geek-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-ui-cyberpunk-2077-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.527831 0.0828694 187.227)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.0215686 0.523529 0.501961)',\n-   stroke: '1.6px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-cyberpunk-2077-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-ui-cyberpunk-2077-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.527831 0.0828694 187.227)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.0215686 0.523529 0.501961)',\n-   stroke: '1.6px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-cyberpunk-2077-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-ui-ink-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.606156 0.00904696 none)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.552941 0.541176 0.521569)',\n-   stroke: '1.4px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-ink-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"muted\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgb(242, 239, 231)\",\"ratio\":3.442506527366107},{\"role\":\"muted-paper\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgba(0, 0, 0, 0)\",\"ratio\":3.6305101932966806},{\"role\":\"emphasized\",\"color\":\"rgb(35, 31, 26)\",\"background\":\"rgb(168, 49, 42)\",\"ratio\":2.4468059061331564}]"
+    },
+    {
+      "id": "TC01-ui-ink-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.547075 0.0127596 none)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.496078 0.480392 0.44902)',\n-   stroke: '1.4px'\n  }\n"
+    },
+    {
+      "id": "TC07-ui-ink-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(237, 231, 218)\",\"background\":\"rgb(217, 99, 79)\",\"ratio\":2.914452078664142}]"
+    },
+    {
+      "id": "TC01-viewer-default-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.628529 0.00878557 none)',\n+   stroke: '2px'\n-   radius: '4.5px',\n-   step: 'color(srgb 0.562745 0.568627 0.586275)',\n-   stroke: '1.65px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-default-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(32, 35, 44)\",\"background\":\"oklch(0.488 0.275 280.3)\",\"ratio\":2.150490266268704}]"
+    },
+    {
+      "id": "TC01-viewer-default-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.607663 0.00914632 270)',\n+   stroke: '2px'\n-   radius: '4.5px',\n-   step: 'color(srgb 0.511765 0.519608 0.541176)',\n-   stroke: '1.65px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-default-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(238, 240, 246)\",\"background\":\"oklch(0.626 0.221 291.7)\",\"ratio\":3.415114969462855}]"
+    },
+    {
+      "id": "TC01-viewer-geek-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.538594 0.00875322 none)',\n+   stroke: '2px'\n-   radius: '3px',\n-   step: 'color(srgb 0.466667 0.482353 0.470588)',\n-   stroke: '1.5px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-geek-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-viewer-geek-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.538594 0.00875322 none)',\n+   stroke: '2px'\n-   radius: '3px',\n-   step: 'color(srgb 0.466667 0.482353 0.470588)',\n-   stroke: '1.5px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-geek-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-viewer-cyberpunk-2077-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.527831 0.0828694 187.227)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.0215686 0.523529 0.501961)',\n-   stroke: '1.6px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-cyberpunk-2077-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-viewer-cyberpunk-2077-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.527831 0.0828694 187.227)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.0215686 0.523529 0.501961)',\n-   stroke: '1.6px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-cyberpunk-2077-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-viewer-ink-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.606156 0.00904696 none)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.552941 0.541176 0.521569)',\n-   stroke: '1.4px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-ink-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"muted\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgb(242, 239, 231)\",\"ratio\":3.442506527366107},{\"role\":\"muted-paper\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgba(0, 0, 0, 0)\",\"ratio\":3.6305101932966806},{\"role\":\"emphasized\",\"color\":\"rgb(35, 31, 26)\",\"background\":\"rgb(168, 49, 42)\",\"ratio\":2.4468059061331564}]"
+    },
+    {
+      "id": "TC01-viewer-ink-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   radius: '5.625px',\n+   step: 'oklch(0.547075 0.0127596 none)',\n+   stroke: '2px'\n-   radius: '1.5px',\n-   step: 'color(srgb 0.496078 0.480392 0.44902)',\n-   stroke: '1.4px'\n  }\n"
+    },
+    {
+      "id": "TC07-viewer-ink-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(237, 231, 218)\",\"background\":\"rgb(217, 99, 79)\",\"ratio\":2.914452078664142}]"
+    },
+    {
+      "id": "TC01-webui-default-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-default-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"popover\",\"color\":\"rgb(32, 35, 44)\",\"background\":\"rgba(0, 0, 0, 0)\",\"ratio\":1.3381977510417968},{\"role\":\"emphasized\",\"color\":\"rgb(32, 35, 44)\",\"background\":\"oklch(0.488 0.275 280.3)\",\"ratio\":2.150490266268704}]"
+    },
+    {
+      "id": "TC01-webui-default-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-default-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(238, 240, 246)\",\"background\":\"oklch(0.626 0.221 291.7)\",\"ratio\":3.415114969462855}]"
+    },
+    {
+      "id": "TC01-webui-geek-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-geek-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-webui-geek-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-geek-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(232, 236, 234)\",\"background\":\"rgb(51, 255, 176)\",\"ratio\":1.0961794560610263}]"
+    },
+    {
+      "id": "TC01-webui-cyberpunk-2077-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-cyberpunk-2077-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-webui-cyberpunk-2077-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-cyberpunk-2077-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(0, 255, 240)\",\"background\":\"rgb(255, 0, 127)\",\"ratio\":2.979647331042686}]"
+    },
+    {
+      "id": "TC01-webui-ink-light",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-ink-light",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"muted\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgb(242, 239, 231)\",\"ratio\":3.442506527366107},{\"role\":\"muted-paper\",\"color\":\"rgb(135, 127, 114)\",\"background\":\"rgb(255, 255, 255)\",\"ratio\":3.955614911062684},{\"role\":\"popover\",\"color\":\"rgb(35, 31, 26)\",\"background\":\"rgba(0, 0, 0, 0)\",\"ratio\":1.28237582206449},{\"role\":\"emphasized\",\"color\":\"rgb(35, 31, 26)\",\"background\":\"rgb(168, 49, 42)\",\"ratio\":2.4468059061331564}]"
+    },
+    {
+      "id": "TC01-webui-ink-dark",
+      "passed": true
+    },
+    {
+      "id": "TC07-webui-ink-dark",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: [{\"role\":\"emphasized\",\"color\":\"rgb(237, 231, 218)\",\"background\":\"rgb(217, 99, 79)\",\"ratio\":2.914452078664142}]"
+    },
+    {
+      "id": "TC02-banana",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-radius",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-calculated",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-dimension",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-fontsize",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-zero",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-missing",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-cycle",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-transparent",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-alpha",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-shiki",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-scenic",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC02-broken-image",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ready' !== 'error'\n"
+    },
+    {
+      "id": "TC03-valid-0",
+      "passed": true
+    },
+    {
+      "id": "TC03-valid-1",
+      "passed": true
+    },
+    {
+      "id": "TC03-valid-2",
+      "passed": true
+    },
+    {
+      "id": "TC05-schema-scenic",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: false == true"
+    },
+    {
+      "id": "TC06-schema-shiki",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: false == true"
+    },
+    {
+      "id": "TC09-snapshot",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: null == true"
+    },
+    {
+      "id": "TC08-standalone",
+      "passed": false,
+      "error": "TimeoutError: waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('pre.shiki.github-dark') to be visible\u001b[22m\n"
+    },
+    {
+      "id": "TC08-viewer",
+      "passed": false,
+      "error": "TimeoutError: waitFor: Timeout 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('pre.shiki.github-light') to be visible\u001b[22m\n"
+    },
+    {
+      "id": "TC18-page-errors",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.562745 0.568627 0.586275)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 1.3381977510417968
+        },
+        {
+          "role": "accent",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "info",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "success",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 2.150490266268704
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.511765 0.519608 0.541176)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(29, 32, 40)",
+          "ratio": 7.575195263230698
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 18.430228043228247
+        },
+        {
+          "role": "accent",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "info",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "success",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 3.415114969462855
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 17.617444692897433
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 17.617444692897433
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.56225412012306
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.56225412012306
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.552941 0.541176 0.521569)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 3.442506527366107
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 3.955614911062684
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 1.28237582206449
+        },
+        {
+          "role": "accent",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "info",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "success",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 2.4468059061331564
+        }
+      ]
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.496078 0.480392 0.44902)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "electron",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 17.043661676889233
+        },
+        {
+          "role": "accent",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "info",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "success",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 2.914452078664142
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.628529 0.00878557 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "accent",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "info",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "success",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 2.150490266268704
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.584413 0.00930369 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 8.179416786240331
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "accent",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "info",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "success",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 3.415114969462855
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.538594 0.00875322 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.463477946715959
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.538594 0.00875322 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.463477946715959
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.527831 0.0828694 187.227)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 6.293751124735733
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.527831 0.0828694 187.227)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 6.293751124735733
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.606156 0.00904696 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 3.442506527366107
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 3.6305101932966806
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "accent",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "info",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "success",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 2.4468059061331564
+        }
+      ]
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.547075 0.0127596 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.654885734435946
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "accent",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "info",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "success",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 2.914452078664142
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.628529 0.00878557 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "accent",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "info",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "success",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 2.150490266268704
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.607663 0.00914632 270)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.26 0.01 270)",
+          "ratio": 13.62793621160817
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 7.222877177032478
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 13.62793621160817
+        },
+        {
+          "role": "accent",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.26 0.01 270)",
+          "ratio": 13.62793621160817
+        },
+        {
+          "role": "info",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.26 0.01 270)",
+          "ratio": 13.62793621160817
+        },
+        {
+          "role": "success",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.26 0.01 270)",
+          "ratio": 13.62793621160817
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.26 0.01 270)",
+          "ratio": 13.62793621160817
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 3.415114969462855
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.538594 0.00875322 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.463477946715959
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.538594 0.00875322 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.463477946715959
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.527831 0.0828694 187.227)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 6.293751124735733
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.527831 0.0828694 187.227)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 6.293751124735733
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "oklch(0.606156 0.00904696 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 3.442506527366107
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 3.6305101932966806
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "accent",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "info",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "success",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 2.4468059061331564
+        }
+      ]
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "oklch(0.547075 0.0127596 none)",
+        "radius": "5.625px",
+        "stroke": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 5.654885734435946
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "accent",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "info",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "success",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 2.914452078664142
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.562745 0.568627 0.586275)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "muted",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(247, 248, 251)",
+          "ratio": 5.352743994685323
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(96, 103, 117)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 5.684387692114481
+        },
+        {
+          "role": "popover",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 1.3381977510417968
+        },
+        {
+          "role": "accent",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "info",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "success",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(32, 35, 44)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 15.692747939272312
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(32, 35, 44)",
+          "background": "oklch(0.488 0.275 280.3)",
+          "ratio": 2.150490266268704
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.511765 0.519608 0.541176)",
+        "radius": "4.5px",
+        "stroke": "1.65px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "default",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "muted",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(34, 38, 48)",
+          "ratio": 7.037844290966319
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(170, 177, 193)",
+          "background": "rgb(29, 32, 40)",
+          "ratio": 7.575195263230698
+        },
+        {
+          "role": "popover",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 18.430228043228247
+        },
+        {
+          "role": "accent",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "info",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "success",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(238, 240, 246)",
+          "background": "rgb(23, 25, 30)",
+          "ratio": 15.432710189990694
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(238, 240, 246)",
+          "background": "oklch(0.626 0.221 291.7)",
+          "ratio": 3.415114969462855
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 17.617444692897433
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.466667 0.482353 0.470588)",
+        "radius": "3px",
+        "stroke": "1.5px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "geek",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "muted",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(17, 26, 17)",
+          "ratio": 4.880414835193551
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(110, 142, 110)",
+          "background": "rgb(18, 26, 34)",
+          "ratio": 4.8115265412984725
+        },
+        {
+          "role": "popover",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 17.617444692897433
+        },
+        {
+          "role": "accent",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "info",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "success",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(6, 10, 6)",
+          "ratio": 16.718176679069366
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(232, 236, 234)",
+          "background": "rgb(51, 255, 176)",
+          "ratio": 1.0961794560610263
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.56225412012306
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.0215686 0.523529 0.501961)",
+        "radius": "1.5px",
+        "stroke": "1.6px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "cyberpunk-2077",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "muted",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(139, 148, 148)",
+          "background": "rgb(22, 28, 36)",
+          "ratio": 5.516380662132405
+        },
+        {
+          "role": "popover",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 16.56225412012306
+        },
+        {
+          "role": "accent",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "info",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "success",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(11, 12, 16)",
+          "ratio": 15.416781963864587
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(0, 255, 240)",
+          "background": "rgb(255, 0, 127)",
+          "ratio": 2.979647331042686
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "light",
+      "parity": {
+        "step": "color(srgb 0.552941 0.541176 0.521569)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "light",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "muted",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgb(242, 239, 231)",
+          "ratio": 3.442506527366107
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(135, 127, 114)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 3.955614911062684
+        },
+        {
+          "role": "popover",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 1.28237582206449
+        },
+        {
+          "role": "accent",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "info",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "success",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(247, 245, 240)",
+          "ratio": 15.029953211500233
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(35, 31, 26)",
+          "background": "rgb(168, 49, 42)",
+          "ratio": 2.4468059061331564
+        }
+      ]
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "dark",
+      "parity": {
+        "step": "color(srgb 0.496078 0.480392 0.44902)",
+        "radius": "1.5px",
+        "stroke": "1.4px"
+      }
+    },
+    {
+      "host": "webui",
+      "id": "ink",
+      "mode": "dark",
+      "contrasts": [
+        {
+          "role": "body",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "muted",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "muted-paper",
+          "color": "rgb(147, 138, 123)",
+          "background": "rgb(29, 26, 22)",
+          "ratio": 5.085908361464974
+        },
+        {
+          "role": "popover",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgba(0, 0, 0, 0)",
+          "ratio": 17.043661676889233
+        },
+        {
+          "role": "accent",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "info",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "success",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "destructive",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(16, 14, 11)",
+          "ratio": 15.640987411110405
+        },
+        {
+          "role": "emphasized",
+          "color": "rgb(237, 231, 218)",
+          "background": "rgb(217, 99, 79)",
+          "ratio": 2.914452078664142
+        }
+      ]
+    },
+    {
+      "id": "banana",
+      "state": {
+        "requested": "invalid-banana",
+        "applied": "invalid-banana",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "radius",
+      "state": {
+        "requested": "invalid-radius",
+        "applied": "invalid-radius",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "calculated",
+      "state": {
+        "requested": "invalid-calculated",
+        "applied": "invalid-calculated",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "dimension",
+      "state": {
+        "requested": "invalid-dimension",
+        "applied": "invalid-dimension",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "fontsize",
+      "state": {
+        "requested": "invalid-fontsize",
+        "applied": "invalid-fontsize",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "zero",
+      "state": {
+        "requested": "invalid-zero",
+        "applied": "invalid-zero",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "missing",
+      "state": {
+        "requested": "invalid-missing",
+        "applied": "invalid-missing",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "cycle",
+      "state": {
+        "requested": "invalid-cycle",
+        "applied": "invalid-cycle",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "transparent",
+      "state": {
+        "requested": "invalid-transparent",
+        "applied": "invalid-transparent",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "alpha",
+      "state": {
+        "requested": "invalid-alpha",
+        "applied": "invalid-alpha",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "shiki",
+      "state": {
+        "requested": "invalid-shiki",
+        "applied": "invalid-shiki",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "scenic",
+      "state": {
+        "requested": "invalid-scenic",
+        "applied": "invalid-scenic",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "id": "broken-image",
+      "state": {
+        "requested": "invalid-broken-image",
+        "applied": "invalid-broken-image",
+        "status": "ready",
+        "mode": "dark",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "index": 0,
+      "state": {
+        "requested": "valid-0",
+        "applied": "valid-0",
+        "status": "ready",
+        "mode": "light",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "index": 1,
+      "state": {
+        "requested": "valid-1",
+        "applied": "valid-1",
+        "status": "ready",
+        "mode": "light",
+        "error": null,
+        "snapshot": null
+      }
+    },
+    {
+      "index": 2,
+      "state": {
+        "requested": "valid-2",
+        "applied": "valid-2",
+        "status": "ready",
+        "mode": "light",
+        "error": null,
+        "snapshot": null
+      }
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.45",
+  "viewport": {
+    "width": 1280,
+    "height": 820
+  },
+  "scope": "Actual CSS/ThemeProvider/Viewer, synthetic bridge and HTTP session; no packaged/native/physical-device acceptance."
+}

@@ -13,7 +13,7 @@ function input(flag: string, fallback: string) {
   return explicit ? resolve(explicit) : join(root, fallback)
 }
 interface Step { name?: string; uses?: string; if?: unknown; run?: string; with?: Record<string, unknown>; 'continue-on-error'?: unknown }
-interface Job { steps: Step[]; if?: unknown; 'continue-on-error'?: unknown }
+interface Job { steps: Step[]; if?: unknown; 'continue-on-error'?: unknown; strategy?: { matrix?: { os?: string[] } } }
 const workflow = loadYaml(readFileSync(input('workflow', '.github/workflows/validate.yml'), 'utf8')) as { on?: Record<string, unknown>; jobs: Record<string, Job> }
 assert(workflow.on && Object.hasOwn(workflow.on, 'pull_request'), 'PR validation trigger is required')
 assert(workflow.on && Object.hasOwn(workflow.on, 'push') && Object.hasOwn(workflow.on, 'workflow_dispatch'), 'Push and manual validation triggers are required')
@@ -56,6 +56,9 @@ assert(workflow.jobs.validate?.steps.some(step => step.run === 'bun run build:sm
 assert(workflow.jobs.validate?.steps.some(step => step.run === 'bun run test:critical'), 'Critical scenarios must run in CI')
 assert(workflow.jobs.validate.steps.some(step => step.run === 'bunx playwright install --with-deps chromium'), 'Production renderer workflows require a real browser in CI')
 assert(workflow.jobs['native-macos']?.steps.some(step => step.run === 'bun run test:native-client'), 'Native main/preload renderer acceptance must run in macOS CI')
+assert.deepEqual(workflow.jobs['native-theme']?.strategy?.matrix?.os, ['windows-latest', 'macos-latest', 'ubuntu-latest'], 'Native theme CI must retain all three OS targets')
+assert(workflow.jobs['native-theme']?.steps.some(step => step.run === 'bun run test:theme-native'), 'Native theme delivery and real zoom acceptance must run in CI')
+assert(workflow.jobs['native-theme']?.steps.some(step => step.run === 'xvfb-run --auto-servernum bun run test:theme-native'), 'Linux native theme acceptance needs a display')
 assert(workflow.jobs['production-container']?.steps.some(step => step.run === 'bun run test:container'), 'Production container acceptance must run in Linux CI')
 assert(workflow.jobs['full-validation'].steps.some(step => step.run === 'bun run test:clean-install'), 'Independent frozen install must run in CI')
 const metadata = JSON.parse(readFileSync(input('manifest', 'package.json'), 'utf8')) as { scripts: Record<string, string> }

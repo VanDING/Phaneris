@@ -12,7 +12,7 @@ const docker = readFileSync(join(root, 'Dockerfile.server'), 'utf8')
 const bun = metadata.packageManager.replace(/^bun@/, '')
 const failures: string[] = []
 const members = metadata.workspaces.flatMap(pattern => [...new Bun.Glob(`${pattern}/package.json`).scanSync({ cwd: root })]
-  .map(path => path.slice(0, -'/package.json'.length))).sort()
+  .map(path => path.replaceAll('\\', '/').slice(0, -'/package.json'.length))).sort()
 if (members.length === 0) failures.push('Distribution workspace scan is empty')
 if (!docker.includes(`FROM oven/bun:${bun}-slim`)) failures.push(`Docker Bun must match packageManager ${bun}`)
 const install = docker.indexOf('RUN bun install --frozen-lockfile'), patches = docker.indexOf('COPY patches/ patches/')

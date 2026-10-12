@@ -70,18 +70,18 @@ function FeatureMatrix({ features, totals, query, onChange }: {
     <table data-decision-matrix="table" className="w-full table-fixed border-collapse bg-background text-[12px] leading-[18px]">
       <thead>
         <tr>
-          <th scope="col" className="h-[26px] border-b border-border/55 px-2 text-left text-[11px] font-medium text-muted-foreground">
+          <th scope="col" className="h-[26px] border-b border-border/55 px-2 text-left text-[11px] font-medium text-text-secondary">
             {t('trajectory.decisions.feature')}
           </th>
           {columns.map(([key, label]) => (
-            <th key={key} scope="col" className="h-[26px] border-b border-border/55 px-2 text-right text-[11px] font-medium text-muted-foreground">
+            <th key={key} scope="col" className="h-[26px] border-b border-border/55 px-2 text-right text-[11px] font-medium text-text-secondary">
               {label}
             </th>
           ))}
-          <th scope="col" className="h-[26px] w-24 border-b border-border/55 px-2 text-left text-[11px] font-medium text-muted-foreground">
+          <th scope="col" className="h-[26px] w-24 border-b border-border/55 px-2 text-left text-[11px] font-medium text-text-secondary">
             {t('trajectory.decisions.share')}
           </th>
-          <th scope="col" className="h-[26px] border-b border-border/55 px-2 text-right text-[11px] font-medium text-muted-foreground">
+          <th scope="col" className="h-[26px] border-b border-border/55 px-2 text-right text-[11px] font-medium text-text-secondary">
             {t('trajectory.decisions.cost')}
           </th>
         </tr>
@@ -110,7 +110,7 @@ function FeatureMatrix({ features, totals, query, onChange }: {
                 selected && 'bg-accent/10',
               )}
             >
-              <th scope="row" className={cn('h-[30px] min-w-0 truncate border-b border-border/55 px-2 text-left text-[12px] font-normal', selected && 'text-accent')}>
+              <th scope="row" className={cn('h-[30px] min-w-0 truncate border-b border-border/55 px-2 text-left text-[12px] font-normal', selected && 'text-accent-text')}>
                 {t(featureLabelKey(entry.feature))}
               </th>
               {columns.map(([key, , field]) => (
@@ -118,7 +118,7 @@ function FeatureMatrix({ features, totals, query, onChange }: {
                   key={key}
                   className={cn(
                     'h-[30px] border-b border-border/55 px-2 text-right tabular-nums',
-                    !entry.totals[field] && 'text-muted-foreground/60',
+                    !entry.totals[field] && 'text-text-secondary',
                   )}
                 >
                   {entry.totals[field].toLocaleString()}
@@ -151,7 +151,7 @@ function FeatureMatrix({ features, totals, query, onChange }: {
         })}
       </tbody>
       <tfoot>
-        <tr className="text-[11px] text-muted-foreground">
+        <tr className="text-[11px] text-text-secondary">
           <th scope="row" className="h-[30px] border-t border-border/55 px-2 text-left font-normal">{t('trajectory.decisions.total')}</th>
           <td className="h-[30px] border-t border-border/55 px-2 text-right tabular-nums">{totals.points.toLocaleString()}</td>
           <td className="h-[30px] border-t border-border/55 px-2 text-right tabular-nums">{totals.changed.toLocaleString()}</td>
@@ -189,18 +189,18 @@ function FeatureList({ features, query, onChange }: {
             aria-pressed={selected}
             onClick={() => onChange({ feature: selected ? undefined : entry.feature })}
             className={cn(
-              'flex w-full items-center gap-2 border-b border-border/45 px-3 py-2 text-left transition-colors last:border-b-0 hover:bg-foreground/[0.025]',
+              'craft-control flex w-full items-center gap-2 border-b border-border/45 px-3 py-2 text-left transition-colors last:border-b-0 hover:bg-foreground/[0.025]',
               selected && 'bg-accent/10',
             )}
           >
-            <span className={cn('min-w-0 flex-1 truncate text-[12px]', selected && 'text-accent')}>
+            <span className={cn('min-w-0 flex-1 truncate text-[12px]', selected && 'text-accent-text')}>
               {t(featureLabelKey(entry.feature))}
             </span>
-            <span className="flex-none text-[11px] tabular-nums text-muted-foreground">
+            <span className="flex-none text-[11px] tabular-nums text-text-secondary">
               {t('trajectory.decisions.featureCounts', { count: entry.totals.points, changed: entry.totals.changed })}
             </span>
             <span className={cn(
-              'flex-none font-mono text-[10px] tabular-nums text-muted-foreground',
+              'flex-none font-mono text-[10px] tabular-nums text-text-secondary',
               costUnknown && 'text-[color:var(--info-text)]',
             )}>
               {costUnknown ? t('common.unknown') : cost}
@@ -248,7 +248,7 @@ function RecordTable({ items, selectedId, locale, onSelect }: {
               key={key}
               scope="col"
               className={cn(
-                'sticky top-9 z-10 h-[26px] overflow-hidden border-b border-border/55 bg-background/95 px-2 text-[11px] font-medium whitespace-nowrap text-ellipsis text-muted-foreground backdrop-blur',
+                'sticky top-9 z-component-chrome h-[26px] overflow-hidden border-b border-border/55 bg-background/95 px-2 text-[11px] font-medium whitespace-nowrap text-ellipsis text-text-secondary backdrop-blur',
                 width, align,
               )}
             >
@@ -281,7 +281,7 @@ function RecordTable({ items, selectedId, locale, onSelect }: {
                 selected && 'bg-accent/10',
               )}
             >
-              <th scope="row" className="relative h-[30px] truncate border-b border-border/55 px-2 text-left font-mono text-[10px] font-normal tabular-nums text-muted-foreground">
+              <th scope="row" className="relative h-[30px] truncate border-b border-border/55 px-2 text-left font-mono text-[10px] font-normal tabular-nums text-text-secondary">
                 {(selected || failed) && (
                   <span aria-hidden className={cn('absolute inset-y-0 left-0 w-[3px]', failed ? 'bg-destructive' : 'bg-accent')} />
                 )}
@@ -289,7 +289,7 @@ function RecordTable({ items, selectedId, locale, onSelect }: {
               </th>
               <td className="h-[30px] border-b border-border/55 px-2">
                 <span className="flex min-w-0 items-center gap-1.5">
-                  <span className="max-w-[64px] flex-none truncate rounded-[3px] bg-foreground/5 px-1 font-mono text-[9px] tabular-nums text-muted-foreground">
+                  <span className="max-w-[64px] flex-none truncate rounded-[3px] bg-foreground/5 px-1 font-mono text-[9px] tabular-nums text-text-secondary">
                     {item.source?.turnId ?? t('trajectory.decisions.sessionLevel')}
                   </span>
                   <span className="min-w-0 truncate">{t(featureLabelKey(item.feature))}</span>
@@ -331,7 +331,7 @@ function RecordRow({ item, selected, locale, onSelect }: {
       data-decision-status={status}
       data-decision-failed={failed || undefined}
       className={cn(
-        'relative flex w-full items-center gap-2.5 border-b border-border/45 px-3 py-2 text-left transition-colors last:border-b-0',
+        'craft-control relative flex w-full items-center gap-2.5 border-b border-border/45 px-3 py-2 text-left transition-colors last:border-b-0',
         'hover:bg-foreground/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
         selected && 'bg-accent/10',
       )}
@@ -341,7 +341,7 @@ function RecordRow({ item, selected, locale, onSelect }: {
       )}
       <span className="min-w-0 flex-1">
         <span className="block truncate text-[12px] leading-[18px]">{actionText(action, t)}</span>
-        <span className="mt-px flex items-center gap-1.5 overflow-hidden text-[11px] leading-4 text-muted-foreground">
+        <span className="mt-px flex items-center gap-1.5 overflow-hidden text-[11px] leading-4 text-text-secondary">
           {item.source?.turnId
             ? <span className="max-w-[64px] flex-none truncate rounded-[3px] bg-foreground/5 px-1 font-mono text-[9px] tabular-nums">{item.source.turnId}</span>
             : <span className="flex-none">{t('trajectory.decisions.sessionLevel')}</span>}
@@ -353,7 +353,7 @@ function RecordRow({ item, selected, locale, onSelect }: {
       </span>
       <DecisionTag status={status} />
       <span className={cn(
-        'flex-none font-mono text-[10px] tabular-nums text-muted-foreground',
+        'flex-none font-mono text-[10px] tabular-nums text-text-secondary',
         cost === undefined && 'text-[color:var(--info-text)]',
       )}>
         {cost === undefined ? t('common.unknown') : formatDecisionCost(cost)}
@@ -380,14 +380,14 @@ function DecisionDrawer({ item, modal, locale, onClose, onOpenChat }: {
   useEffect(() => { closeRef.current?.focus() }, [item.id])
   return (
     <>
-      {modal && <div className="absolute inset-0 z-20 bg-black/20" onClick={onClose} aria-hidden />}
+      {modal && <div className="absolute inset-0 z-component-scrim bg-black/20" onClick={onClose} aria-hidden />}
       <aside
         role="dialog"
         aria-modal={modal}
         aria-label={t('trajectory.decisions.recordDetail')}
         data-decision-detail={item.id}
         className={cn(
-          'absolute z-30 flex flex-col overflow-hidden bg-background',
+          'absolute z-component-panel flex flex-col overflow-hidden bg-background',
           modal
             ? 'inset-x-0 bottom-0 max-h-[88%] rounded-t-xl border-t border-border/55'
             : 'inset-y-0 right-0 w-[min(420px,62%)] border-l border-border/55',
@@ -397,7 +397,7 @@ function DecisionDrawer({ item, modal, locale, onClose, onOpenChat }: {
         <header className="flex flex-none items-center gap-2 border-b border-border/55 px-3 py-2.5">
           <span className="min-w-0 flex-1">
             <span className="block truncate text-[12px] font-semibold">{actionText(action, t)}</span>
-            <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
+            <span className="mt-0.5 block truncate text-[11px] text-text-secondary">
               {t(featureLabelKey(item.feature))} · {formatDecisionTimestamp(item.startedAt, locale)}
             </span>
           </span>
@@ -407,7 +407,7 @@ function DecisionDrawer({ item, modal, locale, onClose, onOpenChat }: {
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="grid size-6 flex-none place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="craft-control grid size-6 flex-none place-items-center rounded-lg text-text-secondary transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <X className="size-3.5" />
           </button>
@@ -487,7 +487,7 @@ export function DecisionBoard({ sessionId, workspaceId, serverScope, data, onOpe
               <button
                 type="button"
                 onClick={onConfigure}
-                className="flex-none rounded-sm text-[11px] font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="craft-control flex-none rounded-sm text-[11px] font-medium text-accent-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {t('trajectory.decisions.configure')}
               </button>
@@ -512,7 +512,7 @@ export function DecisionBoard({ sessionId, workspaceId, serverScope, data, onOpe
                     <>
                       <div className="flex flex-col gap-1.5">
                         <DecisionTiles totals={report.totals} />
-                        <p className="text-[11px] leading-5 text-muted-foreground">
+                        <p className="text-[11px] leading-5 text-text-secondary">
                           {t('trajectory.decisions.accounting', {
                             requests: report.totals.requests.toLocaleString(),
                             unconfirmed: report.totals.unconfirmed.toLocaleString(),
@@ -526,7 +526,7 @@ export function DecisionBoard({ sessionId, workspaceId, serverScope, data, onOpe
                         </p>
                         {/* Caveats share one line so four sentences do not become four rows. */}
                         {(report.coverage === 'partial' || report.totals.legacyCalls > 0 || (base && !base.enabled)) && (
-                          <p className="text-[11px] leading-5 text-muted-foreground">
+                          <p className="text-[11px] leading-5 text-text-secondary">
                             {[
                               report.coverage === 'partial' ? t('trajectory.decisions.partial') : null,
                               report.totals.legacyCalls > 0
@@ -542,12 +542,12 @@ export function DecisionBoard({ sessionId, workspaceId, serverScope, data, onOpe
                         <section className="flex min-w-0 flex-col">
                           <div className="mb-2 flex min-w-0 items-center gap-2">
                             <h3 className="text-[12px] font-semibold">{t('trajectory.decisions.features')}</h3>
-                            <span className="text-[11px] tabular-nums text-muted-foreground">{report.features.length}</span>
+                            <span className="text-[11px] tabular-nums text-text-secondary">{report.features.length}</span>
                             <button
                               type="button"
                               aria-expanded={open}
                               onClick={() => setMatrixOpen(!open)}
-                              className="ml-auto inline-flex flex-none items-center gap-1 rounded-sm text-[11px] font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                              className="craft-control ml-auto inline-flex flex-none items-center gap-1 rounded-sm text-[11px] font-medium text-accent-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                             >
                               {open ? t('trajectory.decisions.matrixCollapse') : t('trajectory.decisions.matrixExpand')}
                               {open ? <ChevronDown className="size-3" /> : <ChevronRight className="size-3" />}
@@ -557,7 +557,7 @@ export function DecisionBoard({ sessionId, workspaceId, serverScope, data, onOpe
                             ? (
                               <>
                                 <FeatureMatrix features={report.features} totals={report.totals} query={query} onChange={patchQuery} />
-                                <p className="pt-1.5 text-[10px] leading-4 text-muted-foreground/70">
+                                <p className="pt-1.5 text-[10px] leading-4 text-text-secondary">
                                   {t('trajectory.decisions.costLegend')}
                                 </p>
                               </>
@@ -569,7 +569,7 @@ export function DecisionBoard({ sessionId, workspaceId, serverScope, data, onOpe
                       <section className="flex min-w-0 flex-col">
                         <div className="mb-2 flex min-w-0 items-center gap-2">
                           <h3 className="text-[12px] font-semibold">{t('trajectory.decisions.records')}</h3>
-                          <span className="text-[11px] tabular-nums text-muted-foreground">
+                          <span className="text-[11px] tabular-nums text-text-secondary">
                             {report.items.length.toLocaleString()}
                           </span>
                           {scoped && <span className="ml-auto"><DecisionClearFilters onClick={clearQuery} /></span>}

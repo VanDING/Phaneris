@@ -27,7 +27,7 @@ function AssistantMessage({ content }: { content: string }) {
     <div className="flex justify-start group">
       <div className="relative max-w-[80%] bg-white shadow-minimal rounded-[8px] pl-6 pr-4 py-3 break-words min-w-0">
         <button
-          className="absolute top-2 right-2 p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/5"
+          className="craft-row-actions absolute top-2 right-2 p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/5"
           title="Open in new window"
         >
           <ExternalLink className="w-4 h-4 text-muted-foreground hover:text-foreground" />

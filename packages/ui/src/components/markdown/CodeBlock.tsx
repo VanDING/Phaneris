@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { codeHighlightKey, requestCodeHighlight } from './code-highlight'
 import { cn } from '../../lib/utils'
-import { useShikiTheme } from '../../context/ShikiThemeContext'
+import { useShikiThemeState } from '../../context/ShikiThemeContext'
 
 export interface CodeBlockProps {
   code: string
@@ -51,15 +51,14 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
 
   // Get shiki theme from context (set by ShikiThemeProvider in the app).
   // This correctly handles edge cases like dark-only themes in light system mode.
-  const contextShikiTheme = useShikiTheme()
+  const context = useShikiThemeState()
 
   // Resolve language alias - keep as string to allow 'text' fallback
   const langLower = language.toLowerCase()
   const resolvedLang: string = LANGUAGE_ALIASES[langLower] || langLower
-  const theme = contextShikiTheme ?? (forcedTheme
-    ? forcedTheme === 'dark' ? 'github-dark' : 'github-light'
-    : typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? 'github-dark' : 'github-light')
-  const key = codeHighlightKey(code, resolvedLang, theme)
+  const theme = forcedTheme ? forcedTheme === 'dark' ? 'github-dark' : 'github-light' : context.shikiTheme
+  const revision = forcedTheme ? forcedTheme : context.revision
+  const key = codeHighlightKey(code, resolvedLang, theme, revision)
   // Never display a previous code revision while its replacement is queued.
   const highlighted = highlight?.key === key ? highlight.html : null
   const isLoading = !highlighted
@@ -67,7 +66,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
   React.useEffect(() => {
     if (mode === 'terminal') return
     let cancel: (() => void) | undefined
-    const start = () => { cancel = requestCodeHighlight(code, resolvedLang, theme, html => setHighlight({ key, html })) }
+    const start = () => { cancel = requestCodeHighlight(code, resolvedLang, theme, html => setHighlight({ key, html }), revision) }
     // Text is readable immediately. Expensive work begins only near the viewport,
     // including nested response panes and panels temporarily hidden with CSS.
     if (typeof IntersectionObserver === 'undefined' || !elementRef.current) {
@@ -82,7 +81,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
     }, { rootMargin: '200px' })
     observer.observe(elementRef.current)
     return () => { observer.disconnect(); cancel?.() }
-  }, [code, resolvedLang, theme, key, mode])
+  }, [code, resolvedLang, theme, revision, key, mode])
 
   const handleCopy = React.useCallback(async () => {
     try {
@@ -124,7 +123,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
 
   // Full mode: rich styling with header and copy button
   return (
-    <div ref={bindElement} className={cn('relative group rounded-[8px] overflow-hidden border bg-muted/30', className)}>
+    <div ref={bindElement} className={cn('relative group rounded-card overflow-hidden border bg-muted/30', className)}>
       {/* Language label + copy button */}
       <div className="flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b text-xs">
         <span className="text-muted-foreground font-medium uppercase tracking-wide">
@@ -132,7 +131,7 @@ export function CodeBlock({ code, language = 'text', className, mode = 'full', f
         </span>
         <button
           onClick={handleCopy}
-          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
+          className="craft-icon-button craft-row-actions inline-flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
           aria-label={t('common.copyCode')}
         >
           {copied ? (

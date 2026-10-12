@@ -25,7 +25,7 @@ import { motionSpring } from '@phaneris/ui/motion'
 export type CompactPanelRole = 'navigator' | 'detail'
 
 interface CompactPanelTransitionProps {
-  role: CompactPanelRole
+  panelRole: CompactPanelRole
   /** True when the detail panel should be the active foreground. */
   isDetailActive: boolean
   children: React.ReactNode
@@ -39,17 +39,17 @@ interface CompactPanelTransitionProps {
  * trap taps or screen-reader focus.
  */
 export function CompactPanelTransition({
-  role,
+  panelRole,
   isDetailActive,
   children,
 }: CompactPanelTransitionProps) {
   const reduceMotion = useReducedMotionConfig()
   const transition = motionSpring(reduceMotion, 'spatial')
 
-  const isOffscreen = role === 'navigator' ? isDetailActive : !isDetailActive
+  const isOffscreen = panelRole === 'navigator' ? isDetailActive : !isDetailActive
   // Navigator parallaxes (-30%) to feel layered behind the incoming detail panel.
   // Detail slides fully off (100%) so it never bleeds in over the navigator.
-  const offscreenX = role === 'navigator' ? '-30%' : '100%'
+  const offscreenX = panelRole === 'navigator' ? '-30%' : '100%'
 
   return (
     <motion.div
@@ -57,7 +57,7 @@ export function CompactPanelTransition({
       style={{
         top: 'var(--compact-panel-stack-top, 0px)',
         // Detail layers above navigator during the transition.
-        zIndex: role === 'detail' ? 10 : 0,
+        zIndex: panelRole === 'detail' ? 'var(--z-component-chrome)' : 'var(--z-component-content)',
         // Hint the compositor; cheap on GPU and prevents jank on first frame.
         willChange: 'transform',
         // Off-screen slot must not capture taps or accept focus.

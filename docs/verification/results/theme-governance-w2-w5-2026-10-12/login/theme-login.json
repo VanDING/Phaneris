@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "id": "TC14-login-light",
+      "passed": true
+    },
+    {
+      "id": "TC11-login-light-focus-error",
+      "passed": true
+    },
+    {
+      "id": "TC14-login-dark",
+      "passed": true
+    },
+    {
+      "id": "TC11-login-dark-focus-error",
+      "passed": true
+    },
+    {
+      "id": "TC18-login-errors-and-fonts",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "mode": "light",
+      "focus": {
+        "visible": true,
+        "outline": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "mode": "dark",
+      "focus": {
+        "visible": true,
+        "outline": "solid",
+        "width": "2px"
+      }
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.45",
+  "scope": "Real login HTML/CSS; auth rejection is synthetic; credentials are isolated fixture strings."
+}

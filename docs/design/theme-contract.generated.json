@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "compatibility": "Legacy fontSize changes root font-size and rem geometry; each of the 39 authoring fields is optional, while presets require a name and at least one base color.",
+  "tokens": {
+    "background": {
+      "css": "--background",
+      "property": "color"
+    },
+    "foreground": {
+      "css": "--foreground",
+      "property": "color"
+    },
+    "accent": {
+      "css": "--accent",
+      "property": "color"
+    },
+    "info": {
+      "css": "--info",
+      "property": "color"
+    },
+    "success": {
+      "css": "--success",
+      "property": "color"
+    },
+    "destructive": {
+      "css": "--destructive",
+      "property": "color"
+    },
+    "backgroundElevated": {
+      "css": "--background-elevated",
+      "property": "color"
+    },
+    "foregroundDimmed": {
+      "css": "--foreground-dimmed",
+      "property": "color"
+    },
+    "secondary": {
+      "css": "--secondary",
+      "property": "color"
+    },
+    "secondaryForeground": {
+      "css": "--secondary-foreground",
+      "property": "color"
+    },
+    "muted": {
+      "css": "--muted",
+      "property": "color"
+    },
+    "mutedForeground": {
+      "css": "--muted-foreground",
+      "property": "color"
+    },
+    "card": {
+      "css": "--card",
+      "property": "color"
+    },
+    "cardForeground": {
+      "css": "--card-foreground",
+      "property": "color"
+    },
+    "popoverForeground": {
+      "css": "--popover-foreground",
+      "property": "color"
+    },
+    "border": {
+      "css": "--border",
+      "property": "color"
+    },
+    "ring": {
+      "css": "--ring",
+      "property": "color"
+    },
+    "userMessageBubble": {
+      "css": "--user-message-bubble",
+      "property": "color"
+    },
+    "paper": {
+      "css": "--paper",
+      "property": "color"
+    },
+    "navigator": {
+      "css": "--navigator",
+      "property": "color"
+    },
+    "input": {
+      "css": "--input",
+      "property": "color"
+    },
+    "popover": {
+      "css": "--popover",
+      "property": "color"
+    },
+    "popoverSolid": {
+      "css": "--popover-solid",
+      "property": "color",
+      "opaque": true
+    },
+    "depth": {
+      "css": "--theme-depth",
+      "property": null
+    },
+    "shadowColor": {
+      "css": "--theme-shadow-color",
+      "property": "color"
+    },
+    "shadowStrength": {
+      "css": "--theme-shadow-strength",
+      "property": null
+    },
+    "glassBlur": {
+      "css": "--theme-backdrop-blur",
+      "property": "margin-left",
+      "minimum": 0
+    },
+    "radius": {
+      "css": "--theme-radius",
+      "property": "border-radius",
+      "minimum": 0
+    },
+    "borderWidth": {
+      "css": "--theme-border-width",
+      "property": "border-width",
+      "minimum": 0
+    },
+    "borderStyle": {
+      "css": "--theme-border-style",
+      "property": "border-style"
+    },
+    "fontSans": {
+      "css": "--font-sans",
+      "property": "font-family"
+    },
+    "fontSerif": {
+      "css": "--font-serif",
+      "property": "font-family"
+    },
+    "fontMono": {
+      "css": "--font-mono",
+      "property": "font-family"
+    },
+    "fontSize": {
+      "css": "--font-size-base",
+      "property": "font-size",
+      "positive": true
+    },
+    "lineHeight": {
+      "css": "--line-height-base",
+      "property": "line-height",
+      "positive": true
+    },
+    "letterSpacing": {
+      "css": "--tracking-normal",
+      "property": "letter-spacing"
+    },
+    "iconStrokeWidth": {
+      "css": "--icon-stroke-width",
+      "property": "stroke-width",
+      "positive": true
+    },
+    "iconStrokeLinecap": {
+      "css": "--icon-stroke-linecap",
+      "property": "stroke-linecap"
+    },
+    "density": {
+      "css": "--theme-density",
+      "property": null
+    }
+  },
+  "roles": {
+    "--surface-canvas": "var(--background)",
+    "--surface-navigator": "var(--navigator)",
+    "--surface-paper": "var(--paper)",
+    "--surface-raised": "var(--card)",
+    "--surface-sunken": "var(--muted)",
+    "--surface-floating": "var(--popover-solid)",
+    "--text-primary": "var(--foreground)",
+    "--text-secondary": "var(--muted-foreground)",
+    "--text-tertiary": "var(--muted-foreground)",
+    "--text-disabled": "color-mix(in srgb, var(--foreground) 40%, transparent)",
+    "--action-hover": "color-mix(in srgb, var(--foreground) 3%, transparent)",
+    "--action-selected": "var(--secondary)",
+    "--action-pressed": "color-mix(in srgb, var(--foreground) 6%, transparent)",
+    "--action-focus": "var(--ring)",
+    "--action-invalid": "var(--destructive)",
+    "--shape-window": "var(--theme-panel-radius)",
+    "--shape-panel": "var(--theme-panel-radius)",
+    "--shape-inner": "var(--theme-panel-radius)",
+    "--shape-card": "calc(var(--theme-radius) * 1.333333)",
+    "--shape-control": "calc(var(--theme-radius) * .75)",
+    "--shape-chip": "var(--theme-radius)",
+    "--shape-round": "9999px",
+    "--ui-scale": "1",
+    "--reading-scale": "1",
+    "--ui-caption-size": ".75rem",
+    "--ui-label-size": ".866667rem",
+    "--ui-body-size": ".875rem",
+    "--ui-title-size": "1rem",
+    "--ui-heading-size": "1.2rem",
+    "--ui-line-height": "1.5",
+    "--reading-size": ".93334rem",
+    "--reading-line-height": "1.7",
+    "--code-size": ".866667rem",
+    "--reading-width": "840px",
+    "--reading-gutter": "1.25rem",
+    "--reading-gutter-compact": ".75rem",
+    "--panel-gutter": "1rem",
+    "--row-inset": ".75rem",
+    "--card-padding": "1rem",
+    "--sidebar-row-height": "40px",
+    "--touch-target": "44px",
+    "--z-component-behind": "-1",
+    "--z-component-content": "0",
+    "--z-component-overlay": "1",
+    "--z-component-header": "2",
+    "--z-component-controls": "3",
+    "--z-component-background": "-2",
+    "--z-component-recess": "-10",
+    "--z-component-floating": "4",
+    "--z-component-sticky": "5",
+    "--z-component-chrome": "10",
+    "--z-component-scrim": "20",
+    "--z-component-panel": "30",
+    "--z-component-backdrop": "40",
+    "--z-component-handles": "50",
+    "--z-component-calendar": "60"
+  },
+  "builtins": [
+    {
+      "id": "default",
+      "name": "Default",
+      "supportedModes": [
+        "light",
+        "dark"
+      ],
+      "shikiTheme": {
+        "light": "github-light",
+        "dark": "github-dark"
+      }
+    },
+    {
+      "id": "geek",
+      "name": "Geek",
+      "supportedModes": [
+        "dark"
+      ],
+      "shikiTheme": {
+        "light": "github-light",
+        "dark": "vesper"
+      }
+    },
+    {
+      "id": "cyberpunk-2077",
+      "name": "Cyberpunk 2077",
+      "supportedModes": [
+        "dark"
+      ],
+      "shikiTheme": {
+        "light": "github-light",
+        "dark": "vesper"
+      }
+    },
+    {
+      "id": "ink",
+      "name": "Ink",
+      "supportedModes": [
+        "light",
+        "dark"
+      ],
+      "shikiTheme": {
+        "light": "rose-pine-dawn",
+        "dark": "vesper"
+      }
+    }
+  ],
+  "validation": {
+    "structure": "shared schema",
+    "runtime": "browser CSS target syntax, references, computed ranges, opaque popovers, image decode",
+    "shiki": "installed bundled registry"
+  }
+}

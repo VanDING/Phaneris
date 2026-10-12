@@ -12,6 +12,7 @@
 import geekTheme from './themes/geek.json';
 import cyberpunkTheme from './themes/cyberpunk-2077.json';
 import inkTheme from './themes/ink.json';
+import type { ThemeDiagnostic } from './theme-manifest';
 
 /**
  * CSS color string - any valid CSS color format:
@@ -464,6 +465,28 @@ export function themeToCSS(theme: ThemeOverrides, isDark: boolean = false): stri
   return vars.join('\n  ');
 }
 
+/** Shared derived values: static generation and every runtime host use this recipe. */
+export function themeDerivedCSS(isDark: boolean): string {
+  const vars = [
+    '--navigator: var(--background);', '--radius: var(--theme-radius);',
+    '--ring-width: 1px;', '--ring-offset: 0px;', '--spacing: 0.25rem;',
+    '--md-bullets: var(--foreground-50);', '--md-counters: var(--foreground-50);',
+    '--shadow-minimal-flat: 0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent);',
+    `--shadow-border-opacity: ${isDark ? '0.15' : '0.08'};`,
+    `--shadow-blur-opacity: ${isDark ? '0.12' : '0.06'};`,
+    `--user-message-bubble-dimmed: ${isDark ? '#252525' : '#F7F7F7'};`,
+    `--on-accent: ${isDark ? '#000000' : '#FFFFFF'};`,
+    '--accent-text: color-mix(in oklab, var(--accent) 50%, var(--foreground));',
+    '--info-text: color-mix(in oklab, var(--info) 50%, var(--foreground));',
+    '--success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));',
+    '--destructive-text: color-mix(in oklab, var(--destructive) 50%, var(--foreground));',
+  ];
+  for (const step of [1.5, 2, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95]) {
+    vars.push(`--foreground-${String(step).replace('.', '\\.')}: color-mix(in srgb, var(--foreground) ${step}%, var(--background));`);
+  }
+  return vars.join('\n  ');
+}
+
 /**
  * Background colors for Electron BrowserWindow, which requires hex values.
  * Keep these aligned with the canonical Default palette.
@@ -597,6 +620,9 @@ export interface PresetTheme {
   id: string; // filename without .json (e.g., 'dracula')
   path: string; // full path to the user theme file, or builtin:<id>
   theme: ThemeFile; // parsed theme data
+  /** Digest includes the selected local image; authoring JSON remains untouched. */
+  revision?: string;
+  diagnostics?: readonly ThemeDiagnostic[];
 }
 
 /** Lightweight metadata returned when listing built-in and user themes. */

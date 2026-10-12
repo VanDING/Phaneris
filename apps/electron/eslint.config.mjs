@@ -10,7 +10,7 @@ import { commonRules } from '../../scripts/eslint-common.mjs'
 import babelParser from '@babel/eslint-parser'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
+import { visualConfig, visualA11yPlugin as jsxA11yPlugin } from '../../scripts/eslint-visual.mjs'
 import noDirectNavigationState from './eslint-rules/no-direct-navigation-state.cjs'
 import noLocalStorage from './eslint-rules/no-localstorage.cjs'
 import noDirectPlatformCheck from './eslint-rules/no-direct-platform-check.cjs'
@@ -22,6 +22,8 @@ import noNonstandardShadows from './eslint-rules/no-nonstandard-shadows.cjs'
 import noTransitionAll from '../../scripts/eslint-rules/no-transition-all.cjs'
 
 export default [
+  // Shared visual checks apply to every production renderer surface.
+  visualConfig(['src/renderer/**/*.{ts,tsx}']),
   // Ignore patterns
   {
     ignores: [

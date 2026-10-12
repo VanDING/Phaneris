@@ -9,7 +9,7 @@
 | 命令 | 实际验证 | 结果口径 |
 | --- | --- | --- |
 | `bun run validate:full` | 13 workspace 类型/全库 lint、配置/文档工具、身份/i18n/Runtime/资源与完整既有回归 | workspace 6,285 pass、14 skip；CI 子集 87 次执行另计，Python 文档工具 24 项另计 |
-| `bun run test:critical` | 六组既有关键回归及当前 23 个生产/故障/门禁工作流 | 原收口为21工作流及243项既有测试；新增markdown-popout与theme-foundation分别通过18/101场景，本轮未重跑整链。每个manifest要求非零场景、必要产物与SHA；聚合项数不是测试数 |
+| `bun run test:critical` | 六组既有关键回归及当前 registry 的生产/故障/门禁工作流 | 原收口为21工作流及243项既有测试；本轮受影响的主题专项、Windows 原生和 markdown-popout 共481场景通过，未重跑整条聚合链。每个manifest要求非零场景、必要产物与SHA；聚合项数不是测试数 |
 | `bun run test:native-client` | 共同 Pi/worker 构建、真实 Electron main/preload/renderer、与 Web 同场景 loopback provider | 权限前后真实写入、SubmitPlan/继续、取消、草稿/语言/workspace/重连/预览/截图；主进程 fatal/cause/有界退出；SQLite 事实 |
 | `bun run build:smoke` | 五个生产 bundler + 移出源码树的 server/必要资源缺失/离线 boot/RPC/生产 Pi | 14 项聚合检查；独立 Pi 子工作流 6 场景，完整 SHA；不代替签名安装器 |
 | `bun run test:clean-install` | 独立 checkout、空缓存、必要 patch 移除失败、frozen install、共同 runtime 构建 | 4 个真实场景；负例后删除部分安装，正例仍从空缓存/无 node_modules 起步 |
@@ -23,9 +23,9 @@
 
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |
-| 主题治理 W1 | `bun run test:theme-foundation` · [事先失败矩阵](theme-foundation-failure-matrix-2026-10-12.md) · [实施与前后证据](results/theme-foundation-w1-2026-10-12/README.md) | F01/F02/F03 与重连补读已实施；101/101 场景通过，真实 WebUI 主界面与四 CSS 入口；正式包及后续工作包仍 open。 |
+| 主题治理 W1 | `bun run test:theme-foundation` · [事先失败矩阵](theme-foundation-failure-matrix-2026-10-12.md) · [首批前后证据](results/theme-foundation-w1-2026-10-12/README.md) · [当前验收](results/theme-governance-w2-w5-2026-10-12/README.md) | 首批101场景保持冻结；当前扩展为115/115，覆盖真实 WebUI/WS/watcher 与图片故障恢复。 |
 | 对话 / 行为预览卡片 | `bun run test:markdown-popout` · [失败矩阵](markdown-popout-card-failure-matrix-2026-10-12.md) · [前后证据](results/markdown-popout-card-2026-10-12/README.md) | 恢复卡片和Markdown源码路径；18个浏览器场景通过，接入critical registry；正式包未验收。 |
-| 主题引擎 / 前端视觉 | [独立治理方案](../process/theme-engine-frontend-governance-plan-2026-10-12.md) · [事先失败矩阵](frontend-theme-visual-audit-failure-matrix-2026-10-12.md) · [结果与复现](results/frontend-theme-visual-audit-2026-10-12/README.md) | 当前源码的主题、CSS、控件、门禁审计；浏览器证据已建立，产品治理与真实宿主矩阵尚未完成。 |
+| 主题引擎 / 前端视觉 | [治理方案与当前台账](../process/theme-engine-frontend-governance-plan-2026-10-12.md) · [原始审计](results/frontend-theme-visual-audit-2026-10-12/README.md) · [W2–W5 验收](results/theme-governance-w2-w5-2026-10-12/README.md) | W1–W5 工程实现、本机481场景通过；三平台正式包、实机及长会话性能仍 open。 |
 | 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](./results)。 |
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
 | 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](./results)。 |
@@ -35,7 +35,7 @@
 
 ## 逐项验收记录
 
-每个特性成对出现：先在产品代码修改**前**写下失败场景（failure matrix），再记录实测验收。`check:docs` 不校验结果文件是否存在，因此"[流程已写、结果未归档]"一类状态需要人工判读。
+每个特性成对出现：先在产品代码修改**前**写下失败场景（failure matrix），再记录实测验收。`check:docs` 校验已链接文件存在；它不判断场景是否执行，因此“流程已写、结果未归档”一类状态仍需按 manifest 判读。
 
 | 特性 | 失败场景（先写） | 验收记录 | 状态 |
 | --- | --- | --- | --- |
@@ -151,3 +151,13 @@ bun run scripts/verification/files-panel-packaged-workflow.ts \
 ## 会话决策专项
 
 [实施与验收](session-decisions.md) 记录配置页统计移除、Run → Decisions、会话归属、实际应用与账本口径，以及可重复的会话／浏览器／隔离 Electron 客户端流程。对应 [实现前失败矩阵](decision-run-failure-matrix.md) 与 [结果证据](results/session-decisions/)；不覆盖或安装既有发布产物。
+
+## 主题系统治理
+
+规划为[主题引擎与前端治理](../process/theme-engine-frontend-governance-plan-2026-10-12.md)，实施前[失败矩阵](theme-contract-failure-matrix-2026-10-12.md)，当前[生成契约](../design/theme-contract.generated.md)与[宿主/回滚](../design/theme-hosts-and-rollout.md)。
+
+当前[481 场景验收与选取证据](results/theme-governance-w2-w5-2026-10-12/README.md)，[交互设计对照](results/theme-governance-w2-w5-2026-10-12/design/index.html)。三平台正式包、实机和长会话性能保持 open。
+
+`test:theme-foundation` 验真实 WebUI/WS、偏好、watcher、图片、焦点和阴影；`test:theme-contract` 验四入口、值与高亮；`test:theme-roles` / `test:theme-domains` 验真实控件和功能面；`test:theme-browser-host` / `test:theme-login` 验外围入口；`test:theme-design` 产出参数对照；`test:theme-governance` 验真实门禁 mutation。上述工作流接入 critical registry。`test:theme-native` 另外构建并启动真实 Electron 主进程、preload、BrowserViews 和 renderer，验证实际 Chromium 200% zoom 与私有主题投递边界；三平台 CI 分别保存产物。
+
+复跑默认写入独立 `.cache/verification/`，不覆盖历史档案或打包客户端结果。历史缺失日志的[精确例外](../../scripts/doc-artifact-exceptions.json)只保留缺口，不能代替该次验收证据。

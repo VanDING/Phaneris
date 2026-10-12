@@ -121,6 +121,7 @@ export default function AppearanceSettingsPage() {
     setWorkspaceColorTheme,
     themeLoadError,
     themePreferenceError,
+    snapshot,
   } = useTheme()
   const { workspaces, sessionStatuses } = useAppShellContext()
 
@@ -372,14 +373,21 @@ export default function AppearanceSettingsPage() {
                   </SettingsRow>
                 </SettingsCard>
                 {themeLoadError && (
-                  <p className="mt-2 text-xs text-info">
+                  <p className="mt-2 text-xs text-info-text">
                     {t("settings.appearance.themeWarning")} {themeLoadError} ({t("settings.appearance.usingDefaultTheme")})
                   </p>
                 )}
                 {themePreferenceError && (
-                  <p className="mt-2 text-xs text-destructive">
+                  <p className="mt-2 text-xs text-destructive-text">
                     {themePreferenceError}
                   </p>
+                )}
+                {!themeLoadError && snapshot.diagnostics.some(item => item.severity === 'warning') && (
+                  <ul role="status" className="mt-2 craft-text-caption text-text-secondary space-y-1">
+                    {snapshot.diagnostics.filter(item => item.severity === 'warning').map((item, index) => <li key={`${item.path}:${index}`}>
+                      {t('settings.appearance.themeWarning')} {item.path}: {item.message}
+                    </li>)}
+                  </ul>
                 )}
               </SettingsSection>
 
@@ -408,7 +416,7 @@ export default function AppearanceSettingsPage() {
                                 trigger={
                                   <button
                                     type="button"
-                                    className="cursor-pointer rounded hover:ring-2 hover:ring-foreground/20 transition-shadow"
+                                    className="craft-control cursor-pointer rounded hover:ring-2 hover:ring-foreground/20 transition-shadow"
                                     aria-label={t("settings.appearance.workspaceAvatarColor")}
                                   >
                                     <WorkspaceAvatar

@@ -15,7 +15,7 @@ export function TrajectoryPromptView({ prompts }: TrajectoryPromptViewProps) {
   const previous = previousSeq === undefined ? undefined : prompts.get(previousSeq)
 
   if (effectiveSeq === null || current === undefined) {
-    return <div className="flex h-full items-center justify-center text-[12px] text-muted-foreground">{t('trajectory.prompt.empty')}</div>
+    return <div className="flex h-full items-center justify-center text-[12px] text-text-secondary">{t('trajectory.prompt.empty')}</div>
   }
 
   const unchanged = previous !== undefined && previous === current
@@ -29,7 +29,7 @@ export function TrajectoryPromptView({ prompts }: TrajectoryPromptViewProps) {
             type="button"
             aria-pressed={seq === effectiveSeq}
             onClick={() => setSelectedSeq(seq)}
-            className={`h-7 shrink-0 rounded-md px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring ${seq === effectiveSeq ? 'border border-border/60 bg-background text-foreground shadow-minimal' : 'text-muted-foreground hover:bg-foreground/[0.035]'}`}
+            className={`craft-control h-7 shrink-0 rounded-md px-2 text-[11px] outline-none focus-visible:ring-2 focus-visible:ring-ring ${seq === effectiveSeq ? 'border border-border/60 bg-background text-foreground shadow-minimal' : 'text-text-secondary hover:bg-foreground/[0.035]'}`}
           >
             {t('trajectory.prompt.request', { seq })}
           </button>
@@ -51,11 +51,11 @@ export function TrajectoryPromptView({ prompts }: TrajectoryPromptViewProps) {
                 : t('trajectory.prompt.previous', { seq: previousSeq, chars: previous.length })}
           </div>
           {previous === undefined ? (
-            <div className="px-3 py-6 text-center text-[12px] text-muted-foreground">{t('trajectory.prompt.initialRequest')}</div>
+            <div className="px-3 py-6 text-center text-[12px] text-text-secondary">{t('trajectory.prompt.initialRequest')}</div>
           ) : unchanged ? (
-            <div className="px-3 py-6 text-center text-[12px] text-muted-foreground">{t('trajectory.prompt.unchangedHint')}</div>
+            <div className="px-3 py-6 text-center text-[12px] text-text-secondary">{t('trajectory.prompt.unchangedHint')}</div>
           ) : (
-            <pre className="whitespace-pre-wrap break-words px-3 py-3 text-[11px] leading-5 text-muted-foreground">{previous}</pre>
+            <pre className="whitespace-pre-wrap break-words px-3 py-3 text-[11px] leading-5 text-text-secondary">{previous}</pre>
           )}
         </section>
       </div>

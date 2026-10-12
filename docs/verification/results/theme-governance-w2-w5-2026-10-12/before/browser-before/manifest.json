@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "workflow": "theme-browser-host",
+  "startedAt": "2026-10-12T04:36:43.493Z",
+  "finishedAt": "2026-10-12T04:40:21.281Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\theme-browser-host-workflow.ts",
+    "--output-dir",
+    ".cache/verification/theme-browser-host-w4-before-ready"
+  ],
+  "source": {
+    "headSha": "8d53a7200af4521ec8228ba7865e51419b502090",
+    "dirtyPaths": [
+      "M apps/electron/resources/themes/ink.json",
+      " M apps/electron/src/renderer/App.tsx",
+      " M apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+      " M apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+      " M apps/electron/src/renderer/components/ui/button.tsx",
+      " M apps/electron/src/renderer/components/ui/dialog.tsx",
+      " M apps/electron/src/renderer/components/ui/dropdown-menu.tsx",
+      " M apps/electron/src/renderer/components/ui/popover.tsx",
+      " M apps/electron/src/renderer/components/ui/select.tsx",
+      " M apps/electron/src/renderer/context/ThemeContext.tsx",
+      " M apps/electron/src/renderer/index.css",
+      " M apps/viewer/src/App.tsx",
+      " M apps/viewer/src/components/Header.tsx",
+      " M apps/viewer/src/index.css",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M package.json",
+      " M packages/shared/package.json",
+      " M packages/shared/src/config/__tests__/theme.test.ts",
+      " M packages/shared/src/config/appearance.ts",
+      " M packages/shared/src/config/schemas.ts",
+      " M packages/shared/src/config/theme.ts",
+      " M packages/shared/src/config/themes/ink.json",
+      " M packages/shared/src/config/watcher.ts",
+      " M packages/ui/package.json",
+      " M packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx",
+      " M packages/ui/src/components/markdown/CodeBlock.tsx",
+      " M packages/ui/src/components/markdown/code-highlight.ts",
+      " M packages/ui/src/components/overlay/FullscreenOverlayBase.tsx",
+      " M packages/ui/src/components/overlay/PreviewOverlay.tsx",
+      " M packages/ui/src/components/tooltip.tsx",
+      " M packages/ui/src/components/ui/SimpleDropdown.tsx",
+      " M packages/ui/src/components/ui/StyledDropdown.tsx",
+      " M packages/ui/src/components/ui/drawer.tsx",
+      " M packages/ui/src/context/ShikiThemeContext.tsx",
+      " M packages/ui/src/context/index.ts",
+      " M packages/ui/src/lib/layout.ts",
+      " M packages/ui/src/styles/controls.css",
+      " M packages/ui/src/styles/index.css",
+      " M packages/ui/src/styles/typography.css",
+      " M scripts/check-distribution.ts",
+      " M scripts/critical-scenario-policy.json",
+      " M scripts/critical-scenarios.ts",
+      " M scripts/verification/theme-foundation-workflow.ts",
+      "?? docs/design/theme-contract.generated.json",
+      "?? docs/verification/theme-contract-failure-matrix-2026-10-12.md",
+      "?? packages/shared/src/config/shiki-themes.generated.json",
+      "?? packages/shared/src/config/theme-manifest.ts",
+      "?? packages/shared/src/config/theme-runtime.ts",
+      "?? packages/ui/src/context/PortalStackContext.tsx",
+      "?? packages/ui/src/lib/theme-compiler.ts",
+      "?? packages/ui/src/lib/visual-roles.ts",
+      "?? packages/ui/src/styles/role-tokens.css",
+      "?? packages/ui/src/styles/roles.css",
+      "?? packages/ui/src/styles/theme-adapter.css",
+      "?? packages/ui/src/styles/theme-tokens.css",
+      "?? scripts/generate-theme-contract.ts",
+      "?? scripts/verification/fixtures/theme-browser-host.ts",
+      "?? scripts/verification/fixtures/theme-contract.tsx",
+      "?? scripts/verification/fixtures/theme-roles.tsx",
+      "?? scripts/verification/theme-browser-host-workflow.ts",
+      "?? scripts/verification/theme-contract-workflow.ts",
+      "?? scripts/verification/theme-roles-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/resources/themes/ink.json",
+        "sha256": "5f2ae7917df7e191b4795be6e329d2acdf27cdbf5cc72a726c4794afd63c52a9"
+      },
+      {
+        "path": "apps/electron/src/renderer/App.tsx",
+        "sha256": "c169d53769e2b326805da5547ffdab06da7acc184b707a2f762bd8c6a955c6e6"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+        "sha256": "30d956cb59bb42bc872fa8e00dbf0bcc837d53c9d301cee3e4b8876333c8cb1c"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "sha256": "5891da92c1fb296dd2d7ba58573e1b05665242f1464ab81800b035825a85bada"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/ChatInputZone.tsx",
+        "sha256": "69017908cabff9181f7a68a2c8619dfc9bce21d834ec983670731d3742a7d189"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/button.tsx",
+        "sha256": "a183d31610b61ce8744b414134ddec538b61800ae022965520127211900ef8a7"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/dialog.tsx",
+        "sha256": "760c368f8923dab89a1907c4c9352c88a56ca163ca97ad8d521d76178538ce90"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/dropdown-menu.tsx",
+        "sha256": "ef5384e04d83502f36e1591b9bd07625776006c0bf3acaedc3a0b9e796dbb896"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/popover.tsx",
+        "sha256": "aa204301583f6bd83003d22467e23ef015f8d59f1e99a5560a2d0e26c9c7a26b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/ui/select.tsx",
+        "sha256": "cf1b0917441f77b0c4daba6c38d60b169fd0d913903f046fee93a178c401d4f3"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/ThemeContext.tsx",
+        "sha256": "2608b99795f900b5db043653b912aea1b07ce94b1c5e0b3a7e1f1b5b834bf439"
+      },
+      {
+        "path": "apps/electron/src/renderer/index.css",
+        "sha256": "b47f739a8b13fb4794b27eed6a66c0ec7482c433e4183794b85bb1c8a0eaf122"
+      },
+      {
+        "path": "apps/viewer/src/App.tsx",
+        "sha256": "fedc24edcdcee7744dd8635dbaaa45068ee902c7902c9b601b54d0aa53d5c388"
+      },
+      {
+        "path": "apps/viewer/src/components/Header.tsx",
+        "sha256": "eff189c6f45dcc5d3a41706bb5de9691154076329d44299a08dd559979e8375f"
+      },
+      {
+        "path": "apps/viewer/src/index.css",
+        "sha256": "bdadb172ffcd619f4e72b144976503743bbadf480240505c3fccc33670efd06c"
+      },
+      {
+        "path": "docs/design/theme-contract.generated.json",
+        "sha256": "0e5d49e6db705fc7717204f1f10dae3f33168c2da4fa30c3ccfcb36c733290e4"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "7e5cc900ef84198dc7135f45c1b14fd3d529d6348d7a809806d449330496cf82"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "6aa976fac340b224a4abb7aeaefe9fb6dba3a410ec5e236b7c6adce419b35dad"
+      },
+      {
+        "path": "docs/verification/theme-contract-failure-matrix-2026-10-12.md",
+        "sha256": "0e7b04670bc7dcff869dcbfe6e602ec7e66c2522fb03212eec82a5307ce359f4"
+      },
+      {
+        "path": "package.json",
+        "sha256": "9bfdec62b1d841d9bec8f7bf0fe1d543d6f79d7705cc598a35e5b474c588cebb"
+      },
+      {
+        "path": "packages/shared/package.json",
+        "sha256": "01e01fa8d89fc9673b8d259f93eccbc23dfa419bf9023b7a5267230cd98b0335"
+      },
+      {
+        "path": "packages/shared/src/config/__tests__/theme.test.ts",
+        "sha256": "cce95a8dc70be20534e34ca2b3e8af1a8a459d681ae2787b6a8f403374fa8d68"
+      },
+      {
+        "path": "packages/shared/src/config/appearance.ts",
+        "sha256": "df8b0be958ffb95ff77c9fda722fb2fcd935be7883e64cde0492c4914d194ee1"
+      },
+      {
+        "path": "packages/shared/src/config/schemas.ts",
+        "sha256": "09259207f0dc11744b6b269985568c19dd1c460dc729a3728ebe5fa0097bd35c"
+      },
+      {
+        "path": "packages/shared/src/config/shiki-themes.generated.json",
+        "sha256": "9fa4122e4f6f4cc622afd566c3e1cd0ff6cd27ef4bb8ebb2b9170095de11ed55"
+      },
+      {
+        "path": "packages/shared/src/config/theme-manifest.ts",
+        "sha256": "acb39f4f09195afb6141bd2c53280cf915125a454038d9817016915e93777205"
+      },
+      {
+        "path": "packages/shared/src/config/theme-runtime.ts",
+        "sha256": "f4e8d15e96e4005c07dcfb817183b288717775adaa0543e34fe9011953e2a547"
+      },
+      {
+        "path": "packages/shared/src/config/theme.ts",
+        "sha256": "39de1e3984468ec6b693fba46c8da0f2b5133d71e5678132a8f02eb30325ef14"
+      },
+      {
+        "path": "packages/shared/src/config/themes/ink.json",
+        "sha256": "5f2ae7917df7e191b4795be6e329d2acdf27cdbf5cc72a726c4794afd63c52a9"
+      },
+      {
+        "path": "packages/shared/src/config/watcher.ts",
+        "sha256": "2e1f2d9158774b1b2d3d73c6bdc1d52c6e26f6a346518987510f9224113afb7e"
+      },
+      {
+        "path": "packages/ui/package.json",
+        "sha256": "b2ac8a001ca5bcf00c5a69573b012b625e9ff0c89aca6571e6d5439bf4361e1c"
+      },
+      {
+        "path": "packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx",
+        "sha256": "6b041c20fde6244e1bc78bc1eef2e311e0575dbad2f22154c112f48f48bfc586"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/CodeBlock.tsx",
+        "sha256": "12acc87192506032dadc7ffb91c257786714a6401f0baa04914c05fef0709b95"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/code-highlight.ts",
+        "sha256": "f52686c8eede41ac0d333603d0c8a2dfbd46b4c296c597480c9940710662adff"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/FullscreenOverlayBase.tsx",
+        "sha256": "7afac28b1efb63380075e9a1551e7ba8b9686745a4f4dacdbb1a80f79e756c35"
+      },
+      {
+        "path": "packages/ui/src/components/overlay/PreviewOverlay.tsx",
+        "sha256": "5f04f1c72589f2f2d90249fcff71005603f0ef0c41e46f16bc6e1413b607e216"
+      },
+      {
+        "path": "packages/ui/src/components/tooltip.tsx",
+        "sha256": "6c290208e5ec9a843656c18154319224797bb91b6d9f217731d47f2520c6c3b8"
+      },
+      {
+        "path": "packages/ui/src/components/ui/SimpleDropdown.tsx",
+        "sha256": "c486b541bccccbce89746e0ed63e1f05a11dc6c215d31d10b0bcdc725f0ec94e"
+      },
+      {
+        "path": "packages/ui/src/components/ui/StyledDropdown.tsx",
+        "sha256": "0f59ebcdc78a5d398ed3aefbe6105c340c89e6ccfa62566058087ac1e04dd89c"
+      },
+      {
+        "path": "packages/ui/src/components/ui/drawer.tsx",
+        "sha256": "ae49db3f9cad6aadd0cb72bc12147f9d5799daf01d418e1aa13f7301d939451d"
+      },
+      {
+        "path": "packages/ui/src/context/PortalStackContext.tsx",
+        "sha256": "6d093e123ef32e7159596cf40e7f910a2990eebda7b86fef672feb545a69741d"
+      },
+      {
+        "path": "packages/ui/src/context/ShikiThemeContext.tsx",
+        "sha256": "12df56f5e561748be5ef843bbb96cf6de787c106c7da6648c7ed811f84990344"
+      },
+      {
+        "path": "packages/ui/src/context/index.ts",
+        "sha256": "050ca58407664685374966d9483f558bfe2b91e9569fc3a3cc8cab1acde22882"
+      },
+      {
+        "path": "packages/ui/src/lib/layout.ts",
+        "sha256": "abb3b3234ec1600fde98b30f212232c87471ade300a9b1346a30007b27cdea60"
+      },
+      {
+        "path": "packages/ui/src/lib/theme-compiler.ts",
+        "sha256": "5006679294d809fdee7b74ff04dff1fd1ac9b9c3d1fbbe699fb7a7fdc5523a32"
+      },
+      {
+        "path": "packages/ui/src/lib/visual-roles.ts",
+        "sha256": "c69fbec32b684a2d0d553c14560e3343882c6c105edfdef0063aa9d7add58cf4"
+      },
+      {
+        "path": "packages/ui/src/styles/controls.css",
+        "sha256": "f6ed2e40e9cd3c777c40cddfa52646437ea9f7b93370c39c23f48129e28017b8"
+      },
+      {
+        "path": "packages/ui/src/styles/index.css",
+        "sha256": "2c0a45b65a7371fff745645154d5206cc482e97514a4b9be489e2a88a7080b89"
+      },
+      {
+        "path": "packages/ui/src/styles/role-tokens.css",
+        "sha256": "7e63337964a9423e8b571b78663bcb16ff58c0597a58fb3c4eaa8f4544cdf216"
+      },
+      {
+        "path": "packages/ui/src/styles/roles.css",
+        "sha256": "c0e2d78cc4e9c857a9dbad65640f583022859007db6de54af718c2e28389fff0"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-adapter.css",
+        "sha256": "064b68b4803b3cd5a3ef411f6ca8e9388e1ded70b370a5bf57ec0a331a111a32"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-tokens.css",
+        "sha256": "7b93463491144f2b8e458c5f232ea40f4abd803ebcc9a576938f034623e33801"
+      },
+      {
+        "path": "packages/ui/src/styles/typography.css",
+        "sha256": "64304a4f6c85d434c109482b4a83a7a65e092368cf6527c8ffee90a83a0aca9b"
+      },
+      {
+        "path": "scripts/check-distribution.ts",
+        "sha256": "1e46ca829ef6181c23ab3bf04e3cf508f72cab236ff072347f8b466c9190e756"
+      },
+      {
+        "path": "scripts/critical-scenario-policy.json",
+        "sha256": "2238e8dd31cbad53ccace2998eede43d187a1cf6bd83d328dcd1fc8fd318c452"
+      },
+      {
+        "path": "scripts/critical-scenarios.ts",
+        "sha256": "280d79442048ce54dd512b730fd7436d7bb985afc862bce93658e1100a1e0d8c"
+      },
+      {
+        "path": "scripts/generate-theme-contract.ts",
+        "sha256": "b52f28ae093487e168a0c9b729e34a8dd2a777b2aaa9a623ebf16940975a3343"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-browser-host.ts",
+        "sha256": "f264bf25dfad1b6e16353cad33b561595f4afd1aba88f68f41a2c5e17edc7d1e"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract.tsx",
+        "sha256": "bc7c3c3e569c031a192ea5195f1a3b68d800b2c032b6de230463bdca3b94eed5"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-roles.tsx",
+        "sha256": "5659543055908543eed5ff8d60fb21bc782a30ecb1def91a043ce42b2794528d"
+      },
+      {
+        "path": "scripts/verification/theme-browser-host-workflow.ts",
+        "sha256": "dc7a732e1d10fbcbf273198b6f932ffca5242909665427b2ad5b10dadd15a2b8"
+      },
+      {
+        "path": "scripts/verification/theme-contract-workflow.ts",
+        "sha256": "7a883e6ed60698149ec9ff4f1092403ff8987b0264ea5002e36634a8a0ae8137"
+      },
+      {
+        "path": "scripts/verification/theme-foundation-workflow.ts",
+        "sha256": "10dbaaa78c7cad2527ecebca34c97f54f1749d0d3213e0173823d9c5a1dff87e"
+      },
+      {
+        "path": "scripts/verification/theme-roles-workflow.ts",
+        "sha256": "819b5e9bcb78866dc6e13156eaa6f9523095aa905c5c9f1592ecd10382c20970"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "TC18-browser-host-errors"
+  ],
+  "passed": 1,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "failure.json",
+      "sha256": "8d48d1c7406ebbf592399e9ecd3d6ef20c91e896d477695f649dbc76f09ad84c",
+      "bytes": 6976
+    },
+    {
+      "path": "index.html",
+      "sha256": "d961915c2aa6dad5e31bd65d31c15c3724033fc570f21399cbe5529be2371f70",
+      "bytes": 246
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "5949d2d0b62dcaa89c11c11b03c0dfbe9358fdeff60029f1a9fe566e8a56ff23",
+      "bytes": 485
+    },
+    {
+      "path": "theme-browser-host.json",
+      "sha256": "b18b689de081b1239dae92df31c72a2966e50abcf9677c531fc59a59e2ce3541",
+      "bytes": 3547
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "97c8116a2dae7edd98dd640e038db1315f27cdb3d90ac40f0f481779f9073a18",
+      "bytes": 284182
+    }
+  ],
+  "untested": [
+    "Native IPC delivery and OS materials are separate acceptance scenes"
+  ]
+}

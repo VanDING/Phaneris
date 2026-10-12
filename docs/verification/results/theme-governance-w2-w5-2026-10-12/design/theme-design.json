@@ -1,0 +1,945 @@
+{
+  "checks": [
+    "rows-default-light-40-expanded",
+    "rows-default-light-34-expanded",
+    "rows-default-light-32-expanded",
+    "rows-default-light-40-collapsed",
+    "rows-default-light-34-collapsed",
+    "rows-default-light-32-collapsed",
+    "width-default-light-840",
+    "width-default-light-768",
+    "material-default-light-current",
+    "material-default-light-strong",
+    "text-200-default-light",
+    "compact-default-light",
+    "rows-default-dark-40-expanded",
+    "rows-default-dark-34-expanded",
+    "rows-default-dark-32-expanded",
+    "rows-default-dark-40-collapsed",
+    "rows-default-dark-34-collapsed",
+    "rows-default-dark-32-collapsed",
+    "width-default-dark-840",
+    "width-default-dark-768",
+    "material-default-dark-current",
+    "material-default-dark-strong",
+    "text-200-default-dark",
+    "compact-default-dark",
+    "rows-ink-light-40-expanded",
+    "rows-ink-light-34-expanded",
+    "rows-ink-light-32-expanded",
+    "rows-ink-light-40-collapsed",
+    "rows-ink-light-34-collapsed",
+    "rows-ink-light-32-collapsed",
+    "width-ink-light-840",
+    "width-ink-light-768",
+    "material-ink-light-current",
+    "material-ink-light-strong",
+    "text-200-ink-light",
+    "compact-ink-light"
+  ],
+  "samples": [
+    {
+      "id": "rows-default-light-40-expanded",
+      "file": "rows-default-light-40-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-light-34-expanded",
+      "file": "rows-default-light-34-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-light-32-expanded",
+      "file": "rows-default-light-32-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-light-40-collapsed",
+      "file": "rows-default-light-40-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-light-34-collapsed",
+      "file": "rows-default-light-34-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-light-32-collapsed",
+      "file": "rows-default-light-32-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "width-default-light-840",
+      "file": "width-default-light-840.png",
+      "group": "阅读列",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "width-default-light-768",
+      "file": "width-default-light-768.png",
+      "group": "阅读列",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 768,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "material-default-light-current",
+      "file": "material-default-light-current.png",
+      "group": "材质与高程",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "material-default-light-strong",
+      "file": "material-default-light-strong.png",
+      "group": "材质与高程",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "text-200-default-light",
+      "file": "text-200-default-light.png",
+      "group": "200% 文字与窄屏",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 49,
+            "title": null
+          },
+          {
+            "height": 49,
+            "title": null
+          },
+          {
+            "height": 49,
+            "title": null
+          }
+        ],
+        "column": 580,
+        "ui": "26px",
+        "reading": "28.0002px"
+      }
+    },
+    {
+      "id": "compact-default-light",
+      "file": "compact-default-light.png",
+      "group": "紧凑输入",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 360,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-dark-40-expanded",
+      "file": "rows-default-dark-40-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-dark-34-expanded",
+      "file": "rows-default-dark-34-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-dark-32-expanded",
+      "file": "rows-default-dark-32-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-dark-40-collapsed",
+      "file": "rows-default-dark-40-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-dark-34-collapsed",
+      "file": "rows-default-dark-34-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-default-dark-32-collapsed",
+      "file": "rows-default-dark-32-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "width-default-dark-840",
+      "file": "width-default-dark-840.png",
+      "group": "阅读列",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "width-default-dark-768",
+      "file": "width-default-dark-768.png",
+      "group": "阅读列",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 768,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "material-default-dark-current",
+      "file": "material-default-dark-current.png",
+      "group": "材质与高程",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "material-default-dark-strong",
+      "file": "material-default-dark-strong.png",
+      "group": "材质与高程",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "text-200-default-dark",
+      "file": "text-200-default-dark.png",
+      "group": "200% 文字与窄屏",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 49,
+            "title": null
+          },
+          {
+            "height": 49,
+            "title": null
+          },
+          {
+            "height": 49,
+            "title": null
+          }
+        ],
+        "column": 580,
+        "ui": "26px",
+        "reading": "28.0002px"
+      }
+    },
+    {
+      "id": "compact-default-dark",
+      "file": "compact-default-dark.png",
+      "group": "紧凑输入",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 360,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-ink-light-40-expanded",
+      "file": "rows-ink-light-40-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-ink-light-34-expanded",
+      "file": "rows-ink-light-34-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-ink-light-32-expanded",
+      "file": "rows-ink-light-32-expanded.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-ink-light-40-collapsed",
+      "file": "rows-ink-light-40-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-ink-light-34-collapsed",
+      "file": "rows-ink-light-34-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          },
+          {
+            "height": 34,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "rows-ink-light-32-collapsed",
+      "file": "rows-ink-light-32-collapsed.png",
+      "group": "导航密度",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          },
+          {
+            "height": 32,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "width-ink-light-840",
+      "file": "width-ink-light-840.png",
+      "group": "阅读列",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "width-ink-light-768",
+      "file": "width-ink-light-768.png",
+      "group": "阅读列",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 768,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "material-ink-light-current",
+      "file": "material-ink-light-current.png",
+      "group": "材质与高程",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "material-ink-light-strong",
+      "file": "material-ink-light-strong.png",
+      "group": "材质与高程",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 840,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    },
+    {
+      "id": "text-200-ink-light",
+      "file": "text-200-ink-light.png",
+      "group": "200% 文字与窄屏",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 49,
+            "title": null
+          },
+          {
+            "height": 49,
+            "title": null
+          },
+          {
+            "height": 49,
+            "title": null
+          }
+        ],
+        "column": 580,
+        "ui": "26px",
+        "reading": "28.0002px"
+      }
+    },
+    {
+      "id": "compact-ink-light",
+      "file": "compact-ink-light.png",
+      "group": "紧凑输入",
+      "geometry": {
+        "overflow": 0,
+        "rows": [
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          },
+          {
+            "height": 40,
+            "title": null
+          }
+        ],
+        "column": 360,
+        "ui": "13px",
+        "reading": "14.0001px"
+      }
+    }
+  ],
+  "errors": [],
+  "browser": "155.0.4283.45",
+  "decision": "Preserve 40px navigation, 840px reading width and current material. Alternatives are reviewable evidence; physical/native materials remain separately scoped."
+}

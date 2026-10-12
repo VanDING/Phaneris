@@ -164,7 +164,7 @@
 
 .collapse {
   position: absolute;
-  z-index: 2;
+  z-index: var(--z-component-header);
   top: 9px;
   right: 9px;
   display: flex;
@@ -377,5 +377,5 @@
   .toolbar { flex-wrap: wrap; gap: 4px; padding-block: 5px; }
 }
 @container trajectory (max-width: 760px) {
-  .inspector { position: absolute; inset: 0; z-index: 3; width: auto; border-left: 0; }
+  .inspector { position: absolute; inset: 0; z-index: var(--z-component-controls); width: auto; border-left: 0; }
 }

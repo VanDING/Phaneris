@@ -28,16 +28,17 @@ export const OVERLAY_LAYOUT = {
  */
 export const CHAT_LAYOUT = {
   /** Max width for chat content area */
-  maxWidth: 'max-w-[840px]',
+  maxWidth: 'craft-chat-column',
 
   /** Horizontal padding for main container */
-  containerPaddingX: 'px-5',
+  containerPaddingX: 'craft-chat-gutter',
+  compactPaddingX: 'craft-chat-gutter-compact',
 
   /** Vertical padding for main container */
   containerPaddingY: 'py-8',
 
   /** Combined container padding */
-  containerPadding: 'px-5 py-8',
+  containerPadding: 'craft-chat-gutter py-8',
 
   /** Vertical spacing between messages/turns */
   messageSpacing: 'space-y-2.5',

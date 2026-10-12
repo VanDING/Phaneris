@@ -20,6 +20,9 @@ const CHANNELS = {
   DESTROY: 'browser-toolbar:destroy',
   STATE_UPDATE: 'browser-toolbar:state-update',
   THEME_COLOR: 'browser-toolbar:theme-color',
+  GET_HOST_THEME: 'browser-toolbar:get-host-theme',
+  HOST_THEME: 'browser-toolbar:host-theme',
+  REPORT_HOST_THEME: 'browser-toolbar:report-host-theme',
 } as const
 
 // Instance ID is passed via query parameter by BrowserPaneManager
@@ -27,6 +30,13 @@ const instanceId = new URLSearchParams(location.search).get('instanceId') || ''
 
 contextBridge.exposeInMainWorld('browserToolbar', {
   instanceId,
+  getHostTheme: () => ipcRenderer.invoke(CHANNELS.GET_HOST_THEME, instanceId),
+  reportHostTheme: (value: unknown) => ipcRenderer.invoke(CHANNELS.REPORT_HOST_THEME, instanceId, value),
+  onHostTheme: (callback: (value: unknown) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, value: unknown) => callback(value)
+    ipcRenderer.on(CHANNELS.HOST_THEME, handler)
+    return () => { ipcRenderer.removeListener(CHANNELS.HOST_THEME, handler) }
+  },
   navigate: (url: string) => ipcRenderer.invoke(CHANNELS.NAVIGATE, instanceId, url),
   goBack: () => ipcRenderer.invoke(CHANNELS.GO_BACK, instanceId),
   goForward: () => ipcRenderer.invoke(CHANNELS.GO_FORWARD, instanceId),

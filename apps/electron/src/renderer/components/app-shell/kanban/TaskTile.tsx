@@ -142,7 +142,7 @@ export function TaskTile({
         }
       }}
       className={cn(
-        'group relative overflow-hidden rounded-lg border border-border/60 bg-card shadow-minimal',
+        'group relative overflow-hidden rounded-lg border border-border/60 bg-surface-raised shadow-minimal',
         isLive && 'shadow-tinted',
         'cursor-pointer transition-colors hover:border-border focus-visible:outline-none',
         'focus-visible:ring-2 focus-visible:ring-ring/50'
@@ -182,7 +182,7 @@ export function TaskTile({
           onKeyDown={e => e.stopPropagation()}
           title={t('kanban.editTask')}
           aria-label={t('kanban.editTask')}
-          className="craft-focus absolute right-2 top-2 z-10 grid h-6 w-6 place-items-center rounded-md border border-border/60 bg-card text-foreground/50 opacity-0 shadow-minimal transition-opacity hover:bg-foreground/[0.05] hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="craft-icon-button craft-row-actions craft-focus absolute right-2 top-2 z-component-chrome grid h-6 w-6 place-items-center rounded-md border border-border/60 bg-surface-raised text-text-secondary opacity-0 shadow-minimal transition-opacity hover:bg-foreground/[0.05] hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-ring/50"
         >
           <Pencil className="h-3.5 w-3.5" strokeWidth={2} />
         </button>
@@ -193,7 +193,7 @@ export function TaskTile({
           // Right padding keeps the flag clear of the hover-revealed corner pencil.
           <div className={cn('mb-1.5 flex items-center justify-between gap-2', onEdit && task.isFlagged && 'pr-7')}>
             {project ? (
-              <span className="inline-flex min-w-0 items-center gap-1 text-[11px] font-medium text-foreground/55">
+              <span className="inline-flex min-w-0 items-center gap-1 text-[11px] font-medium text-text-secondary">
                 <span
                   className="h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{ backgroundColor: project.color }}
@@ -214,7 +214,7 @@ export function TaskTile({
           className={cn(
             'text-sm font-medium leading-snug line-clamp-2',
             // Strike done/cancelled by *status* (not column — placement ≠ status).
-            status?.category === 'closed' ? 'text-foreground/55 line-through' : 'text-foreground'
+            status?.category === 'closed' ? 'text-text-secondary line-through' : 'text-foreground'
           )}
         >
           {task.title}
@@ -246,7 +246,7 @@ export function TaskTile({
                     e.stopPropagation()
                     onToggleSubtasks?.()
                   }}
-                  className="craft-focus flex min-w-0 flex-1 items-center gap-1.5 text-foreground/55 transition-colors hover:text-foreground/80"
+                  className="craft-control craft-focus flex min-w-0 flex-1 items-center gap-1.5 text-text-secondary transition-colors hover:text-text-secondary"
                   aria-expanded={expanded}
                   aria-label={t('kanban.subtasks')}
                 >
@@ -270,7 +270,7 @@ export function TaskTile({
                     // No `disabled:pointer-events-none`: it would let clicks pass THROUGH the
                     // disabled button to the card underneath (which opens the session list).
                     // A disabled button that keeps pointer events swallows the click instead.
-                    className="craft-focus grid h-5 w-5 shrink-0 place-items-center rounded text-foreground/50 transition-colors hover:bg-foreground/10 hover:text-foreground/80 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-foreground/50"
+                    className="craft-control craft-focus grid h-5 w-5 shrink-0 place-items-center rounded text-text-secondary transition-colors hover:bg-foreground/10 hover:text-text-secondary disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-text-secondary"
                   >
                     <Play className="h-3 w-3" strokeWidth={2} />
                   </button>
@@ -306,7 +306,7 @@ export function TaskTile({
         <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-border/40 pt-2">
           {task.model ? <ModelChip model={task.model} /> : <span />}
           {(relativeTime || hasMessages) && (
-            <div className="flex shrink-0 items-center gap-2 text-[11px] text-foreground/45">
+            <div className="flex shrink-0 items-center gap-2 text-[11px] text-text-secondary">
               {relativeTime && (
                 <span className="inline-flex items-center gap-0.5 tabular-nums">
                   <Clock className="h-3 w-3" strokeWidth={2} />
@@ -370,7 +370,7 @@ function StatusPicker({
           onClick={e => e.stopPropagation()}
           onKeyDown={e => e.stopPropagation()}
           aria-label={t('kanban.changeStatus')}
-          className="craft-focus rounded-full transition-shadow hover:ring-2 hover:ring-foreground/15 focus-visible:ring-2 focus-visible:ring-ring/50 data-[state=open]:ring-2 data-[state=open]:ring-foreground/20"
+          className="craft-control craft-focus rounded-full transition-shadow hover:ring-2 hover:ring-foreground/15 focus-visible:ring-2 focus-visible:ring-ring/50 data-[state=open]:ring-2 data-[state=open]:ring-foreground/20"
         >
           <StatusBadge status={status} live={live} />
         </button>
@@ -452,7 +452,7 @@ function AddSubtask({
           e.stopPropagation()
           setComposing(true)
         }}
-        className="craft-focus mt-1 flex w-full items-center gap-1 text-[11px] font-medium text-foreground/45 transition-colors hover:text-foreground/70"
+        className="craft-control craft-focus mt-1 flex w-full items-center gap-1 text-[11px] font-medium text-text-secondary transition-colors hover:text-text-secondary"
       >
         <Plus className="h-3 w-3" strokeWidth={2} />
         {t('kanban.addSubtask')}
@@ -489,7 +489,7 @@ function AddSubtask({
         }}
         rows={1}
         placeholder={t('kanban.describeSubtask')}
-        className="w-full resize-none rounded-md border border-border/60 bg-background px-2 py-1 text-xs text-foreground outline-none field-sizing-content max-h-40 focus:border-border"
+        className="craft-field-input w-full resize-none rounded-md border border-border/60 bg-background px-2 py-1 text-xs text-foreground outline-none field-sizing-content max-h-40 focus:border-border"
       />
       <div className="flex items-center justify-between gap-1.5">
         {modelGroups && modelGroups.length > 0 ? (
@@ -497,7 +497,7 @@ function AddSubtask({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="craft-focus inline-flex min-w-0 items-center gap-1 rounded-md border border-border/60 bg-background px-1.5 py-1 text-[11px] font-medium text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground"
+                className="craft-control craft-focus inline-flex min-w-0 items-center gap-1 rounded-md border border-border/60 bg-background px-1.5 py-1 text-[11px] font-medium text-text-secondary transition-colors hover:bg-foreground/5 hover:text-foreground"
               >
                 {selectedIcon ? (
                   <img src={selectedIcon} alt="" className={cn('h-3 w-3 shrink-0 rounded-[2px]', isMonochromeProviderIcon(selectedIcon) && 'provider-icon-monochrome')} aria-hidden />
@@ -505,14 +505,14 @@ function AddSubtask({
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" aria-hidden />
                 )}
                 <span className="truncate">{selectedName}</span>
-                <ChevronDown className="h-3 w-3 shrink-0 text-foreground/40" strokeWidth={2} />
+                <ChevronDown className="h-3 w-3 shrink-0 text-text-secondary" strokeWidth={2} />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="max-w-[240px]">
               {modelGroups.map((group, gi) => (
                 <React.Fragment key={group.provider}>
                   {gi > 0 && <DropdownMenuSeparator />}
-                  <DropdownMenuLabel className="flex items-center gap-1.5 text-[11px] text-foreground/50">
+                  <DropdownMenuLabel className="flex items-center gap-1.5 text-[11px] text-text-secondary">
                     {resolveProviderIcon(group.provider) && (
                       <img
                         src={resolveProviderIcon(group.provider)!}
@@ -540,7 +540,7 @@ function AddSubtask({
           type="button"
           onClick={submit}
           disabled={!draft.trim() || !model}
-          className="craft-focus shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-opacity disabled:opacity-40"
+          className="craft-control craft-focus shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-opacity disabled:opacity-40"
         >
           {t('kanban.add')}
         </button>

@@ -18,6 +18,7 @@
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const ROOT = resolve(import.meta.dir, '..');
 const DOCS = join(ROOT, 'docs');
@@ -68,6 +69,9 @@ const docs: DocFile[] = walk(DOCS)
 
 const failures: string[] = [];
 const warnings: string[] = [];
+interface ArtifactException { source: string; sourceSha256: string; target: string; targetSha256: string; owner: string; reason: string; exit: string }
+const artifactExceptions = (JSON.parse(readFileSync(join(ROOT, 'scripts/doc-artifact-exceptions.json'), 'utf8')) as { entries: ArtifactException[] }).entries;
+const usedArtifactExceptions = new Set<string>();
 
 // ---------------------------------------------------------------------------
 // 1. links resolve
@@ -95,10 +99,18 @@ for (const doc of docs) {
 
     const target = resolve(dirname(doc.abs), decodeURIComponent(withoutHash));
     if (!existsSync(target)) {
-      failures.push(`${doc.rel}: broken link -> ${raw}`);
+      const exception = artifactExceptions.find(value => value.source === doc.rel && value.target === posix(relative(ROOT, target)));
+      const digest = createHash('sha256').update(readFileSync(doc.abs)).digest('hex');
+      if (exception && doc.rel.startsWith('docs/verification/results/') && exception.sourceSha256 === digest
+        && exception.owner && exception.reason && exception.exit && /^[a-f0-9]{64}$/.test(exception.targetSha256)
+        && readFileSync(join(dirname(doc.abs), 'SHA256SUMS'), 'utf8').includes(`${exception.targetSha256}  ${posix(relative(dirname(doc.abs), target))}`)) {
+        usedArtifactExceptions.add(exception.target);
+        warnings.push(`${doc.rel}: registered unavailable historical artifact -> ${raw}; expected SHA256 ${exception.targetSha256}`);
+      } else failures.push(`${doc.rel}: broken link -> ${raw}`);
     }
   }
 }
+for (const exception of artifactExceptions) if (!usedArtifactExceptions.has(exception.target)) failures.push(`Retire or review stale artifact exception: ${exception.target}`);
 
 // ---------------------------------------------------------------------------
 // 2. architecture documents declare rule-2 vocabulary

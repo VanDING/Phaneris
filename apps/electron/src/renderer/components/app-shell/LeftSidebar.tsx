@@ -495,8 +495,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         aria-label={link.title}
         title={undefined}
         className={cn(
-          "sidebar-nav-button group flex w-full items-center gap-2 rounded-md text-[13px] select-none outline-none",
-          "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring",
+          "sidebar-nav-button craft-control craft-row-focus craft-text-label group flex w-full items-center gap-2 rounded-control select-none",
           // Compact mode: 4px less total height (py-[3px] vs py-[5px])
           link.compact ? "py-[3px]" : "py-[5px]",
           "px-2",

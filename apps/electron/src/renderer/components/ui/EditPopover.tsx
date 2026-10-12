@@ -1061,7 +1061,7 @@ export function EditPopover({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: MOTION_DURATION.standard, ease: MOTION_EASE.enter }}
-            className="fixed inset-0 bg-black/5 z-40"
+            className="fixed inset-0 bg-black/5 z-component-backdrop"
           />
         )}
       </AnimatePresence>
@@ -1098,7 +1098,7 @@ export function EditPopover({
               <div
                 onMouseDown={handleDragStart}
                 className={cn(
-                  "absolute top-0 left-1/2 -translate-x-1/2 z-50 px-4 py-2 cursor-grab rounded pointer-events-auto titlebar-no-drag",
+                  "absolute top-0 left-1/2 -translate-x-1/2 z-component-handles px-4 py-2 cursor-grab rounded pointer-events-auto titlebar-no-drag",
                   isDragging && "cursor-grabbing"
                 )}
               >
@@ -1130,7 +1130,7 @@ export function EditPopover({
             {/* Bottom-right resize handle - outside overflow-hidden container */}
             <div
               onMouseDown={handleResizeStart}
-              className="absolute -bottom-2 -right-2 w-6 h-6 cursor-nwse-resize pointer-events-auto z-50"
+              className="absolute -bottom-2 -right-2 w-6 h-6 cursor-nwse-resize pointer-events-auto z-component-handles"
               style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
             />
           </PopoverContent>

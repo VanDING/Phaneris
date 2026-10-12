@@ -199,7 +199,7 @@ export default function PreferencesPage() {
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <Spinner className="text-lg text-muted-foreground" />
+        <Spinner className="text-lg text-text-secondary" />
       </div>
     )
   }
@@ -235,7 +235,7 @@ export default function PreferencesPage() {
                     type="button"
                     onClick={chooseAvatar}
                     title={t('common.change')}
-                    className="absolute inset-0 flex items-center justify-center rounded-full bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                    className="craft-row-actions craft-control absolute inset-0 flex items-center justify-center rounded-full bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                   >
                     <Camera className="h-5 w-5" />
                   </button>
@@ -244,15 +244,15 @@ export default function PreferencesPage() {
                       type="button"
                       onClick={() => updateField('avatarDataUrl', '')}
                       title={t('common.remove')}
-                      className="absolute -right-1 -top-1 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background text-muted-foreground opacity-0 shadow-minimal transition-[opacity,color] hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100"
+                      className="craft-row-actions craft-control absolute -right-1 -top-1 z-component-chrome flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background text-text-secondary opacity-0 shadow-minimal transition-[opacity,color] hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
                   )}
                 </div>
                 <h2 className="mt-4 text-2xl font-semibold tracking-tight">{displayName}</h2>
-                {profileMeta && <p className="mt-1 text-sm text-muted-foreground">{profileMeta}</p>}
-                <div className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                {profileMeta && <p className="mt-1 text-sm text-text-secondary">{profileMeta}</p>}
+                <div className="mt-2 inline-flex items-center gap-1.5 text-xs text-text-secondary">
                   <LockKeyhole className="w-3 h-3" />
                   <span>{t('settings.preferences.localOnly')}</span>
                 </div>
@@ -269,7 +269,7 @@ export default function PreferencesPage() {
                         <div className={`${index === 2 ? 'hidden sm:block' : ''} absolute left-0 top-3 bottom-3 w-px bg-border/50`} />
                       )}
                       <div className="text-base font-semibold tabular-nums">{value}</div>
-                      <div className="mt-1 text-xs text-muted-foreground">{label}</div>
+                      <div className="mt-1 text-xs text-text-secondary">{label}</div>
                     </div>
                   ))}
                 </div>

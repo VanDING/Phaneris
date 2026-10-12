@@ -23,6 +23,7 @@ import { FullscreenOverlayBase } from './FullscreenOverlayBase'
 import { FullscreenOverlayBaseHeader } from './FullscreenOverlayBaseHeader'
 import { OverlayErrorBanner } from './OverlayErrorBanner'
 import type { PreviewBadgeVariant } from '../ui/PreviewHeader'
+import { PortalStackProvider, usePortalLayer } from '../../context/PortalStackContext'
 
 /** Badge color variants - re-export for backwards compatibility */
 export type BadgeVariant = PreviewBadgeVariant
@@ -88,6 +89,7 @@ export function PreviewOverlay({
   embedded = false,
   className,
 }: PreviewOverlayProps) {
+  const layer = usePortalLayer('modal', className)
   // Use custom className if provided, otherwise fall back to default bg
   const bgClass = className || OVERLAY_BG
   const responsiveMode = useOverlayMode()
@@ -187,22 +189,24 @@ export function PreviewOverlay({
   // Modal mode - uses its own portal with backdrop click to close
   return ReactDOM.createPortal(
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${OVERLAY_LAYOUT.modalBackdropClass}`}
+      className={`fixed inset-0 z-modal flex items-center justify-center ${OVERLAY_LAYOUT.modalBackdropClass}`}
+      style={{ zIndex: layer }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
     >
       <div
-        className={`flex flex-col ${bgClass} shadow-3xl overflow-hidden smooth-corners`}
+        className={`flex flex-col ${bgClass} shadow-modal-small overflow-hidden smooth-corners`}
         style={{
           width: '90vw',
           maxWidth: OVERLAY_LAYOUT.modalMaxWidth,
           height: `${OVERLAY_LAYOUT.modalMaxHeightPercent}vh`,
-          borderRadius: 16,
+          borderRadius: 'var(--shape-panel)',
         }}
       >
-        {header}
+        <PortalStackProvider layer={layer}>{header}
         {contentArea}
+        </PortalStackProvider>
       </div>
     </div>,
     document.body

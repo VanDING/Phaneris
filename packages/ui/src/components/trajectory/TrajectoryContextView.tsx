@@ -67,7 +67,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
   const delta = current ? requestContextDelta(current, previous) : undefined
 
   if (!current) {
-    return <div className="flex h-full items-center justify-center px-4 text-center text-[12px] text-muted-foreground">{t('trajectory.context.empty')}</div>
+    return <div className="flex h-full items-center justify-center px-4 text-center text-[12px] text-text-secondary">{t('trajectory.context.empty')}</div>
   }
 
   const currentTotal = current.inputTokens ?? current.estimatedTokens
@@ -88,45 +88,45 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
   return (
     <div className="flex h-full min-h-0 flex-col bg-foreground/[0.012]">
       <div className="flex h-11 shrink-0 items-center gap-1.5 border-b border-border/50 bg-background/75 px-2.5">
-        <button type="button" disabled={selectedIndex <= 0} onClick={() => selectRequest(contexts[selectedIndex - 1]!.requestSeq)} aria-label={t('trajectory.context.previousRequest')} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">
+        <button type="button" disabled={selectedIndex <= 0} onClick={() => selectRequest(contexts[selectedIndex - 1]!.requestSeq)} aria-label={t('trajectory.context.previousRequest')} className="craft-control flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-secondary outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">
           <ChevronLeft className="h-3.5 w-3.5" />
         </button>
         <div ref={requestMenuRef} className="relative">
-          <button type="button" aria-haspopup="listbox" aria-expanded={requestMenuOpen} onClick={() => { setRequestFilter(''); setRequestMenuOpen(open => !open) }} className="flex h-7 min-w-36 items-center justify-between gap-2 rounded-md border border-border/60 bg-background px-2.5 text-[12px] font-medium shadow-minimal outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-ring">
+          <button type="button" aria-haspopup="listbox" aria-expanded={requestMenuOpen} onClick={() => { setRequestFilter(''); setRequestMenuOpen(open => !open) }} className="craft-control flex h-7 min-w-36 items-center justify-between gap-2 rounded-md border border-border/60 bg-background px-2.5 text-[12px] font-medium shadow-minimal outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-ring">
             <span>{t('trajectory.context.requestPosition', { seq: current.requestSeq, total: contexts.length })}</span>
-            <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+            <ChevronsUpDown className="h-3.5 w-3.5 text-text-secondary" />
           </button>
           {requestMenuOpen && (
-            <div className="absolute left-0 top-9 z-30 w-72 overflow-hidden rounded-lg border border-border/60 bg-background shadow-modal-small">
+            <div className="absolute left-0 top-9 z-component-panel w-72 overflow-hidden rounded-lg border border-border/60 bg-background shadow-modal-small">
               <div className="border-b border-border/50 p-2">
-                <input autoFocus value={requestFilter} onChange={event => setRequestFilter(event.target.value)} onKeyDown={event => { if (event.key === 'Escape') setRequestMenuOpen(false) }} placeholder={t('trajectory.context.searchRequests')} className="h-7 w-full rounded-md bg-foreground/[0.035] px-2 text-[12px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring" />
+                <input autoFocus value={requestFilter} onChange={event => setRequestFilter(event.target.value)} onKeyDown={event => { if (event.key === 'Escape') setRequestMenuOpen(false) }} placeholder={t('trajectory.context.searchRequests')} className="craft-field-input h-7 w-full rounded-md bg-foreground/[0.035] px-2 text-[12px] outline-none placeholder:text-text-secondary focus:ring-2 focus:ring-ring" />
               </div>
               <div className="max-h-64 overflow-y-auto p-1" role="listbox">
                 {filteredContexts.map((context) => {
                   const contextIndex = contexts.indexOf(context)
                   const requestDelta = requestContextDelta(context, contextIndex > 0 ? contexts[contextIndex - 1] : undefined)
                   return (
-                    <button key={context.id} type="button" role="option" aria-selected={context.id === current.id} onClick={() => selectRequest(context.requestSeq)} className={`grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 rounded-md px-2.5 py-2 text-left outline-none hover:bg-foreground/[0.04] focus-visible:bg-foreground/[0.04] ${context.id === current.id ? 'bg-accent/8' : ''}`}>
+                    <button key={context.id} type="button" role="option" aria-selected={context.id === current.id} onClick={() => selectRequest(context.requestSeq)} className={`craft-control grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 rounded-md px-2.5 py-2 text-left outline-none hover:bg-foreground/[0.04] focus-visible:bg-foreground/[0.04] ${context.id === current.id ? 'bg-accent/8' : ''}`}>
                       <span className="text-[12px] font-medium">{t('trajectory.context.request', { seq: context.requestSeq })}</span>
-                      <span className="text-[11px] tabular-nums text-muted-foreground">{formatNumber(context.inputTokens ?? context.estimatedTokens)}</span>
-                      <span className="text-[11px] text-muted-foreground">{context.captured ? t('trajectory.context.captured') : t('trajectory.context.estimated')}</span>
-                      <span className={`text-[11px] tabular-nums ${requestDelta && requestDelta > 0 ? 'text-[color:var(--info-text)]' : 'text-muted-foreground'}`}>{requestDelta === undefined ? '—' : `${requestDelta > 0 ? '+' : ''}${formatNumber(requestDelta)}`}</span>
+                      <span className="text-[11px] tabular-nums text-text-secondary">{formatNumber(context.inputTokens ?? context.estimatedTokens)}</span>
+                      <span className="text-[11px] text-text-secondary">{context.captured ? t('trajectory.context.captured') : t('trajectory.context.estimated')}</span>
+                      <span className={`text-[11px] tabular-nums ${requestDelta && requestDelta > 0 ? 'text-[color:var(--info-text)]' : 'text-text-secondary'}`}>{requestDelta === undefined ? '—' : `${requestDelta > 0 ? '+' : ''}${formatNumber(requestDelta)}`}</span>
                     </button>
                   )
                 })}
-                {filteredContexts.length === 0 && <div className="px-3 py-5 text-center text-[12px] text-muted-foreground">{t('trajectory.context.noMatchingRequests')}</div>}
+                {filteredContexts.length === 0 && <div className="px-3 py-5 text-center text-[12px] text-text-secondary">{t('trajectory.context.noMatchingRequests')}</div>}
               </div>
             </div>
           )}
         </div>
-        <button type="button" disabled={selectedIndex >= contexts.length - 1} onClick={() => selectRequest(contexts[selectedIndex + 1]!.requestSeq)} aria-label={t('trajectory.context.nextRequest')} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">
+        <button type="button" disabled={selectedIndex >= contexts.length - 1} onClick={() => selectRequest(contexts[selectedIndex + 1]!.requestSeq)} aria-label={t('trajectory.context.nextRequest')} className="craft-control flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-secondary outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">
           <ChevronRight className="h-3.5 w-3.5" />
         </button>
-        <button type="button" disabled={selectedIndex === contexts.length - 1} onClick={() => selectRequest(contexts.at(-1)!.requestSeq)} className="h-7 shrink-0 rounded-md px-2 text-[11px] font-medium text-muted-foreground outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">{t('trajectory.context.latest')}</button>
+        <button type="button" disabled={selectedIndex === contexts.length - 1} onClick={() => selectRequest(contexts.at(-1)!.requestSeq)} className="craft-control h-7 shrink-0 rounded-md px-2 text-[11px] font-medium text-text-secondary outline-none hover:bg-foreground/[0.04] disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-ring">{t('trajectory.context.latest')}</button>
         <div className="ml-auto hidden h-7 min-w-28 max-w-72 flex-1 items-end gap-px rounded-md bg-foreground/[0.025] px-1.5 py-1 @min-[620px]/trajectory:flex" aria-label={t('trajectory.context.requestTrend')}>
           {contexts.map(context => {
             const tokens = context.inputTokens ?? context.estimatedTokens
-            return <button key={context.id} type="button" onClick={() => selectRequest(context.requestSeq)} title={`${t('trajectory.context.request', { seq: context.requestSeq })} · ${formatNumber(tokens)}`} className={`min-w-px flex-1 rounded-[1px] outline-none transition-colors focus-visible:ring-1 focus-visible:ring-ring ${context.id === current.id ? 'bg-accent' : 'bg-accent/30 hover:bg-accent/55'}`} style={{ height: `${Math.max(14, (tokens / maxRequestTokens) * 100)}%` }} />
+            return <button key={context.id} type="button" onClick={() => selectRequest(context.requestSeq)} title={`${t('trajectory.context.request', { seq: context.requestSeq })} · ${formatNumber(tokens)}`} className={`craft-control min-w-px flex-1 rounded-[1px] outline-none transition-colors focus-visible:ring-1 focus-visible:ring-ring ${context.id === current.id ? 'bg-accent' : 'bg-accent/30 hover:bg-accent/55'}`} style={{ height: `${Math.max(14, (tokens / maxRequestTokens) * 100)}%` }} />
           })}
         </div>
       </div>
@@ -142,14 +142,14 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
                     {current.captured ? t('trajectory.context.captured') : t('trajectory.context.estimated')}
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-muted-foreground">{t('trajectory.context.subtitle')}</p>
+                <p className="mt-1 text-[11px] text-text-secondary">{t('trajectory.context.subtitle')}</p>
               </div>
               <div className="text-right">
                 <div className="text-[17px] font-semibold tabular-nums">{formatNumber(currentTotal)}</div>
-                <div className="text-[11px] text-muted-foreground">{exactTotal ? t('trajectory.context.tokens') : t('trajectory.context.estimatedTokens')}</div>
+                <div className="text-[11px] text-text-secondary">{exactTotal ? t('trajectory.context.tokens') : t('trajectory.context.estimatedTokens')}</div>
               </div>
               {delta !== undefined && (
-                <div className={`rounded-md px-2 py-1 text-[11px] font-medium tabular-nums ${delta > 0 ? 'bg-info/10 text-[color:var(--info-text)]' : delta < 0 ? 'bg-success/10 text-[color:var(--success-text)]' : 'bg-muted text-muted-foreground'}`}>
+                <div className={`rounded-md px-2 py-1 text-[11px] font-medium tabular-nums ${delta > 0 ? 'bg-info/10 text-[color:var(--info-text)]' : delta < 0 ? 'bg-success/10 text-[color:var(--success-text)]' : 'bg-muted text-text-secondary'}`}>
                   {delta > 0 ? '+' : ''}{formatNumber(delta)} {t('trajectory.context.fromPrevious')}
                 </div>
               )}
@@ -167,7 +167,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
             </div>
             <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
               {current.groups.map(group => (
-                <span key={group.category} className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                <span key={group.category} className="flex items-center gap-1 text-[11px] text-text-secondary">
                   <span className={`h-1.5 w-1.5 rounded-full ${CATEGORY_TONE[group.category]}`} />
                   {t(`trajectory.context.category.${group.category}`)} {formatNumber(group.estimatedTokens)}
                 </span>
@@ -190,12 +190,12 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
                       else next.add(group.category)
                       return next
                     })}
-                    className="grid min-h-11 w-full grid-cols-[18px_minmax(0,1fr)_auto_16px] items-center gap-2 px-3 text-left outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                    className="craft-control grid min-h-11 w-full grid-cols-[18px_minmax(0,1fr)_auto_16px] items-center gap-2 px-3 text-left outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                   >
-                    <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                    <Icon className="h-3.5 w-3.5 text-text-secondary" />
                     <span className="text-[12px] font-semibold">{t(`trajectory.context.category.${group.category}`)}</span>
-                    <span className="text-[11px] tabular-nums text-muted-foreground">{group.items.length} · ~{formatNumber(group.estimatedTokens)}</span>
-                    <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                    <span className="text-[11px] tabular-nums text-text-secondary">{group.items.length} · ~{formatNumber(group.estimatedTokens)}</span>
+                    <ChevronDown className={`h-3.5 w-3.5 text-text-secondary transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                   </button>
                   <AnimatePresence initial={false}>
                     {isExpanded && (
@@ -204,15 +204,15 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
                           <article key={entry.id} className="border-b border-border/35 px-3 py-2.5 last:border-b-0">
                             <div className="flex min-w-0 items-center gap-2">
                               <span className="truncate text-[11px] font-medium">{entry.label}</span>
-                              <span className="ml-auto shrink-0 text-[11px] tabular-nums text-muted-foreground">{formatNumber(entry.chars)} {t('trajectory.context.characters')}</span>
+                              <span className="ml-auto shrink-0 text-[11px] tabular-nums text-text-secondary">{formatNumber(entry.chars)} {t('trajectory.context.characters')}</span>
                               {entry.messageId && onOpenChat && (
-                                <button type="button" onClick={() => onOpenChat(entry.messageId!)} className="shrink-0 text-[11px] font-medium text-accent hover:underline">{t('trajectory.context.openChat')}</button>
+                                <button type="button" onClick={() => onOpenChat(entry.messageId!)} className="craft-control shrink-0 text-[11px] font-medium text-accent-text hover:underline">{t('trajectory.context.openChat')}</button>
                               )}
                               {entry.filePath && onOpenFile && (
-                                <button type="button" onClick={() => onOpenFile(entry.filePath!)} className="shrink-0 text-[11px] font-medium text-accent hover:underline">{t('trajectory.context.openFile')}</button>
+                                <button type="button" onClick={() => onOpenFile(entry.filePath!)} className="craft-control shrink-0 text-[11px] font-medium text-accent-text hover:underline">{t('trajectory.context.openFile')}</button>
                               )}
                             </div>
-                            {entry.content ? <pre className="mt-1.5 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-md bg-foreground/[0.025] px-2 py-1.5 text-[12px] leading-5 text-foreground/80">{entry.content}</pre> : null}
+                            {entry.content ? <pre className="mt-1.5 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-md bg-foreground/[0.025] px-2 py-1.5 text-[12px] leading-5 text-text-secondary">{entry.content}</pre> : null}
                           </article>
                         ))}
                       </motion.div>
@@ -222,7 +222,7 @@ export function TrajectoryContextView({ snapshot, focusedRequestSeq, onRequestFo
               )
             })}
           </div>
-          <p className="px-1 text-[11px] leading-4 text-muted-foreground">{t(current.captured ? 'trajectory.context.capturedNote' : 'trajectory.context.estimateNote')}</p>
+          <p className="px-1 text-[11px] leading-4 text-text-secondary">{t(current.captured ? 'trajectory.context.capturedNote' : 'trajectory.context.estimateNote')}</p>
         </div>
       </div>
     </div>

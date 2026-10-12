@@ -29,7 +29,7 @@ export interface SettingsInputProps extends React.AriaAttributes {
 
 function SecretToggle({ visible, onToggle, disabled }: { visible: boolean; onToggle: () => void; disabled?: boolean }) {
   const { t } = useTranslation()
-  return <button type="button" className="craft-icon-button craft-focus absolute right-1 top-1/2 -translate-y-1/2 inline-flex size-7 items-center justify-center text-muted-foreground hover:text-foreground disabled:opacity-50"
+  return <button type="button" className="craft-icon-button craft-focus absolute right-1 top-1/2 -translate-y-1/2 inline-flex size-7 items-center justify-center text-text-secondary hover:text-foreground disabled:opacity-50"
     onClick={onToggle} disabled={disabled} aria-label={t(visible ? 'common.hideSecret' : 'common.showSecret')}>
     {visible ? <EyeOff aria-hidden="true" className="size-4" /> : <Eye aria-hidden="true" className="size-4" />}
   </button>

@@ -315,7 +315,7 @@ export default function AppSettingsPage() {
                   {(isProxyDirty || proxyError) && (
                     <SettingsCardFooter>
                       {proxyError && (
-                        <span className="text-destructive text-sm mr-auto">{proxyError === 'proxyErrorProtocol' ? t("settings.network.proxyErrorProtocol") : proxyError === 'proxyErrorFormat' ? t("settings.network.proxyErrorFormat") : proxyError}</span>
+                        <span className="text-destructive-text text-sm mr-auto">{proxyError === 'proxyErrorProtocol' ? t("settings.network.proxyErrorProtocol") : proxyError === 'proxyErrorFormat' ? t("settings.network.proxyErrorFormat") : proxyError}</span>
                       )}
                       <Button
                         variant="ghost"
@@ -350,11 +350,11 @@ export default function AppSettingsPage() {
                 <SettingsCard>
                   <SettingsRow label={t("settings.about.version")}>
                     <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground">
+                      <span className="text-text-secondary">
                         {updateChecker.updateInfo?.currentVersion ?? t("common.loading")}
                       </span>
                       {isElectron && updateChecker.isDownloading && updateChecker.updateInfo?.latestVersion && (
-                        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <div className="flex items-center gap-2 text-text-secondary text-sm">
                           <Spinner className="w-3 h-3" />
                           <span>{t("settings.about.downloading", { version: updateChecker.updateInfo.latestVersion, percent: updateChecker.downloadProgress })}</span>
                         </div>
@@ -397,7 +397,7 @@ export default function AppSettingsPage() {
                       cannot do anything, and instead of reporting success. */}
                   {isElectron && !updateChecker.selfUpdateEnabled && (
                     <SettingsRow label={t("settings.about.checkForUpdates")}>
-                      <span className="text-xs text-foreground/50">
+                      <span className="text-xs text-text-secondary">
                         {t("settings.about.updatesUnavailable")}
                       </span>
                     </SettingsRow>

@@ -541,8 +541,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className={cn(
-            'motion-interactive p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] select-none',
+          className={cn('craft-row-actions motion-interactive p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] select-none',
             'bg-background shadow-minimal',
             'data-[state=open]:opacity-100',
             hasActiveControls
@@ -666,7 +665,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
     <DatatableErrorBoundary fallback={fallback}>
       <div className={cn('relative group rounded-[8px] overflow-hidden border bg-muted/10', className)}>
         {/* Control button */}
-        <div className="absolute top-[7px] right-10 z-10">
+        <div className="absolute top-[7px] right-10 z-component-chrome">
           {renderControlsDropdown()}
         </div>
 
@@ -674,7 +673,7 @@ export function MarkdownDatatableBlock({ code, className }: MarkdownDatatableBlo
         <button
           onClick={() => setIsFullscreen(true)}
           className={cn(
-            "motion-interactive absolute top-[7px] right-2 p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] z-10 select-none",
+            "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-[7px] right-2 p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
             "bg-background shadow-minimal",
             hasActiveControls ? "opacity-100" : "opacity-0 group-hover:opacity-100",
             "text-muted-foreground/50 hover:text-foreground",

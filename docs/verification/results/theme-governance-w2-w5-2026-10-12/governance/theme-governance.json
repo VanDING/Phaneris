@@ -1,0 +1,1121 @@
+{
+  "checks": [
+    {
+      "id": "TC16-apps/electron-jsx",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-cn",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-cva",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-template",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-a11y",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-shadow",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-motion",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-literal",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-role",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-reveal",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/electron-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-jsx",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-cn",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-cva",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-template",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-a11y",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-shadow",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-motion",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-literal",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-role",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-reveal",
+      "passed": true
+    },
+    {
+      "id": "TC16-packages/ui-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-jsx",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-cn",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-cva",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-template",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-a11y",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-shadow",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-motion",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-literal",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-role",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-reveal",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/webui-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-jsx",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-cn",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-cva",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-template",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-a11y",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-shadow",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-motion",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-literal",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-role",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-reveal",
+      "passed": true
+    },
+    {
+      "id": "TC16-apps/viewer-semantic-positive",
+      "passed": true
+    },
+    {
+      "id": "TC15-css-semantic",
+      "passed": true
+    },
+    {
+      "id": "TC15-css-literal",
+      "passed": true
+    },
+    {
+      "id": "TC15-css-comment",
+      "passed": true
+    },
+    {
+      "id": "TC17-motion-parity",
+      "passed": true
+    },
+    {
+      "id": "TC17-motion-drift",
+      "passed": true
+    }
+  ],
+  "reports": [
+    {
+      "member": "apps/electron",
+      "kind": "jsx",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 110
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 110
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "cn",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 111
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "cva",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 93,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 100
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 93,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 100
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "template",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 105,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 105,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 128,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 128,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 138,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 143
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 138,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 143
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "a11y",
+      "messages": [
+        {
+          "ruleId": "jsx-a11y/alt-text",
+          "severity": 2,
+          "message": "img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.",
+          "line": 1,
+          "column": 89,
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "shadow",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        },
+        {
+          "ruleId": "craft-styles/no-nonstandard-shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "motion",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/motion",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        },
+        {
+          "ruleId": "craft-styles/no-transition-all",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "literal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Use an existing visual role for UI color, text size or shape; register an owned primitive when a literal is required.",
+          "line": 1,
+          "column": 104,
+          "messageId": "literal",
+          "endLine": 1,
+          "endColumn": 118
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "role",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Native interactive controls need a craft control/field/row role for focus, scale and touch behavior.",
+          "line": 1,
+          "column": 89,
+          "messageId": "control",
+          "endLine": 1,
+          "endColumn": 128
+        }
+      ]
+    },
+    {
+      "member": "apps/electron",
+      "kind": "reveal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Hover actions need focus and coarse-pointer reveal; use craft-row-actions or an explicit equivalent.",
+          "line": 1,
+          "column": 89,
+          "messageId": "reveal",
+          "endLine": 1,
+          "endColumn": 175
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "jsx",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 110
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 110
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "cn",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 111
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "cva",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 93,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 100
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 93,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 100
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "template",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 105,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 105,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 128,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 128,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 138,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 143
+        },
+        {
+          "ruleId": "craft-styles/no-hardcoded-z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 138,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 143
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "a11y",
+      "messages": [
+        {
+          "ruleId": "jsx-a11y/alt-text",
+          "severity": 2,
+          "message": "img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.",
+          "line": 1,
+          "column": 89,
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "shadow",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        },
+        {
+          "ruleId": "craft-styles/no-nonstandard-shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "motion",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/motion",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        },
+        {
+          "ruleId": "craft-styles/no-transition-all",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "literal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Use an existing visual role for UI color, text size or shape; register an owned primitive when a literal is required.",
+          "line": 1,
+          "column": 104,
+          "messageId": "literal",
+          "endLine": 1,
+          "endColumn": 118
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "role",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Native interactive controls need a craft control/field/row role for focus, scale and touch behavior.",
+          "line": 1,
+          "column": 89,
+          "messageId": "control",
+          "endLine": 1,
+          "endColumn": 128
+        }
+      ]
+    },
+    {
+      "member": "packages/ui",
+      "kind": "reveal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Hover actions need focus and coarse-pointer reveal; use craft-row-actions or an explicit equivalent.",
+          "line": 1,
+          "column": 89,
+          "messageId": "reveal",
+          "endLine": 1,
+          "endColumn": 175
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "jsx",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 110
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "cn",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "cva",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 93,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 100
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "template",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 105,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 128,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 138,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 143
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "a11y",
+      "messages": [
+        {
+          "ruleId": "jsx-a11y/alt-text",
+          "severity": 2,
+          "message": "img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.",
+          "line": 1,
+          "column": 89,
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "shadow",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "motion",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/motion",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "literal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Use an existing visual role for UI color, text size or shape; register an owned primitive when a literal is required.",
+          "line": 1,
+          "column": 104,
+          "messageId": "literal",
+          "endLine": 1,
+          "endColumn": 118
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "role",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Native interactive controls need a craft control/field/row role for focus, scale and touch behavior.",
+          "line": 1,
+          "column": 89,
+          "messageId": "control",
+          "endLine": 1,
+          "endColumn": 128
+        }
+      ]
+    },
+    {
+      "member": "apps/webui",
+      "kind": "reveal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Hover actions need focus and coarse-pointer reveal; use craft-row-actions or an explicit equivalent.",
+          "line": 1,
+          "column": 89,
+          "messageId": "reveal",
+          "endLine": 1,
+          "endColumn": 175
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "jsx",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 110
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "cn",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "cva",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 93,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 100
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "template",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 105,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 145
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 128,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 135
+        },
+        {
+          "ruleId": "theme-contracts/z-index",
+          "severity": 2,
+          "message": "Avoid hardcoded zIndex values. Use a named global portal or local component token.",
+          "line": 1,
+          "column": 138,
+          "messageId": "noHardcodedZIndex",
+          "endLine": 1,
+          "endColumn": 143
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "a11y",
+      "messages": [
+        {
+          "ruleId": "jsx-a11y/alt-text",
+          "severity": 2,
+          "message": "img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.",
+          "line": 1,
+          "column": 89,
+          "endLine": 1,
+          "endColumn": 111
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "shadow",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/shadows",
+          "severity": 2,
+          "message": "Disallowed shadow class \"shadow-3xl\". Use approved shadow classes only: shadow-bottom-border, shadow-bottom-border-thin, shadow-middle, shadow-minimal, shadow-modal-small, shadow-none, shadow-panel-focused, shadow-strong, shadow-thin, shadow-tinted, shadow-xs.",
+          "line": 1,
+          "column": 104,
+          "messageId": "disallowedClass",
+          "endLine": 1,
+          "endColumn": 116
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "motion",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/motion",
+          "severity": 2,
+          "message": "Avoid transition-all. Use an explicit transition-[property,...] list and a semantic motion duration.",
+          "line": 1,
+          "column": 104,
+          "messageId": "noTransitionAll",
+          "endLine": 1,
+          "endColumn": 120
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "literal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Use an existing visual role for UI color, text size or shape; register an owned primitive when a literal is required.",
+          "line": 1,
+          "column": 104,
+          "messageId": "literal",
+          "endLine": 1,
+          "endColumn": 118
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "role",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Native interactive controls need a craft control/field/row role for focus, scale and touch behavior.",
+          "line": 1,
+          "column": 89,
+          "messageId": "control",
+          "endLine": 1,
+          "endColumn": 128
+        }
+      ]
+    },
+    {
+      "member": "apps/viewer",
+      "kind": "reveal",
+      "messages": [
+        {
+          "ruleId": "theme-contracts/roles",
+          "severity": 2,
+          "message": "Hover actions need focus and coarse-pointer reveal; use craft-row-actions or an explicit equivalent.",
+          "line": 1,
+          "column": 89,
+          "messageId": "reveal",
+          "endLine": 1,
+          "endColumn": 175
+        }
+      ]
+    },
+    {
+      "entry": "scripts/check-visual-contracts.ts",
+      "args": [
+        "--css-file=E:\\Phaneris\\.cache\\verification\\theme-governance-final\\semantic.css"
+      ],
+      "code": 0,
+      "output": "Visual contracts OK: four domains, 0 explicit legacy findings, no new debt.\n"
+    },
+    {
+      "entry": "scripts/check-visual-contracts.ts",
+      "args": [
+        "--css-file=E:\\Phaneris\\.cache\\verification\\theme-governance-final\\literal.css"
+      ],
+      "code": 1,
+      "output": "50 | } else {\n51 |   if (!cssOnly) for (const allowance of ledger.entries) {\n52 |     assert(allowance.owner && allowance.reason && allowance.exit && allowance.count > 0, `Incomplete visual allowance: ${allowance.file}`)\n53 |     if ((grouped.get(allowance.fingerprint)?.count ?? 0) !== allowance.count) failures.push(`Retire or review stale visual allowance: ${allowance.file} ${allowance.rule}`)\n54 |   }\n55 |   assert.equal(failures.length, 0, failures.join('\\n'))\n              ^\nAssertionError: .cache/verification/theme-governance-final/literal.css:1 unregistered z-index: 10\n\n1 !== 0\n\n generatedMessage: false,\n     actual: 1,\n   expected: 0,\n   operator: \"strictEqual\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at E:\\Phaneris\\scripts\\check-visual-contracts.ts:55:10\n\nBun v1.4.2 (Windows x64)\n"
+    },
+    {
+      "entry": "scripts/check-visual-contracts.ts",
+      "args": [
+        "--css-file=E:\\Phaneris\\.cache\\verification\\theme-governance-final\\comment.css"
+      ],
+      "code": 0,
+      "output": "Visual contracts OK: four domains, 0 explicit legacy findings, no new debt.\n"
+    },
+    {
+      "entry": "scripts/generate-theme-contract.ts",
+      "args": [
+        "--check",
+        "--motion-css=E:\\Phaneris\\.cache\\verification\\theme-governance-final\\motion-false.css"
+      ],
+      "code": 0,
+      "output": "Theme contract verified: 39 fields, 4 built-ins, 65 Shiki themes.\n"
+    },
+    {
+      "entry": "scripts/generate-theme-contract.ts",
+      "args": [
+        "--check",
+        "--motion-css=E:\\Phaneris\\.cache\\verification\\theme-governance-final\\motion-true.css"
+      ],
+      "code": 1,
+      "output": "15 | const motionValue = (key: string) => {\n16 |   const value = motionCSS.match(new RegExp(`--motion-${key}\\\\s*:\\\\s*([^;]+);`))?.[1]?.trim()\n17 |   assert(value, `Missing motion token ${key}`); return value\n18 | }\n19 | for (const [key, seconds] of Object.entries(MOTION_DURATION)) {\n20 |   const css = motionValue(`duration-${key}`); assert.equal(parseFloat(css) * (css.endsWith('ms') ? 1 : 1000), seconds * 1000, `Motion duration drift: ${key}`)\n                                                          ^\nAssertionError: Motion duration drift: fast\n\n101 !== 100\n\n generatedMessage: false,\n     actual: 101,\n   expected: 100,\n   operator: \"strictEqual\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at E:\\Phaneris\\scripts\\generate-theme-contract.ts:20:54\n\nBun v1.4.2 (Windows x64)\n"
+    }
+  ],
+  "scope": "Real four-domain ESLint configurations and CLI gates, with isolated mutation inputs."
+}

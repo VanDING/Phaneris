@@ -215,7 +215,7 @@ function ColumnHeader({
         data-no-dnd="true"
         onPointerDown={e => e.stopPropagation()}
         title={editable ? t('kanban.column.edit') : t('kanban.column.setDropStatus')}
-        className="craft-focus inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-shadow hover:ring-2 hover:ring-foreground/15 focus-visible:ring-2 focus-visible:ring-ring/50 data-[state=open]:ring-2 data-[state=open]:ring-foreground/20"
+        className="craft-control craft-focus inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-shadow hover:ring-2 hover:ring-foreground/15 focus-visible:ring-2 focus-visible:ring-ring/50 data-[state=open]:ring-2 data-[state=open]:ring-foreground/20"
         style={pillStyle}
       >
         {inner}
@@ -265,7 +265,7 @@ function ColumnHeader({
       >
         {onRename && (
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-foreground/50">{t('kanban.column.name')}</label>
+            <label className="text-[11px] font-medium text-text-secondary">{t('kanban.column.name')}</label>
             <input
               type="text"
               defaultValue={label}
@@ -288,14 +288,14 @@ function ColumnHeader({
                   setOpen(false)
                 }
               }}
-              className="w-full rounded-md border border-border/60 bg-background px-2 py-1 text-xs text-foreground outline-none focus:border-border"
+              className="craft-field-input w-full rounded-md border border-border/60 bg-background px-2 py-1 text-xs text-foreground outline-none focus:border-border"
             />
           </div>
         )}
 
         {onSetColor && (
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-foreground/50">{t('kanban.column.color')}</label>
+            <label className="text-[11px] font-medium text-text-secondary">{t('kanban.column.color')}</label>
             <div className="flex flex-wrap gap-1.5">
               {PROJECT_COLOR_PALETTE.map(hex => (
                 <button
@@ -303,7 +303,7 @@ function ColumnHeader({
                   type="button"
                   onClick={() => onSetColor(hex)}
                   title={hex}
-                  className="craft-focus grid h-5 w-5 place-items-center rounded-full ring-1 ring-border/40 transition-transform hover:scale-110"
+                  className="craft-control craft-focus grid h-5 w-5 place-items-center rounded-full ring-1 ring-border/40 transition-transform hover:scale-110"
                   style={{ backgroundColor: hex }}
                 >
                   {color?.solid === hex && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
@@ -315,7 +315,7 @@ function ColumnHeader({
 
         {onSelectDropStatus && statuses && statuses.length > 0 && (
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-foreground/50">{t('kanban.column.setDropStatus')}</label>
+            <label className="text-[11px] font-medium text-text-secondary">{t('kanban.column.setDropStatus')}</label>
             <SessionStatusMenu
               states={statuses}
               activeState={dropStatus?.id ?? ''}
@@ -333,7 +333,7 @@ function ColumnHeader({
               onRemove()
               setOpen(false)
             }}
-            className="craft-focus flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10"
+            className="craft-control craft-focus flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-destructive-text transition-colors hover:bg-destructive/10"
           >
             <Trash2 className="h-3.5 w-3.5" />
             {t('kanban.column.remove')}

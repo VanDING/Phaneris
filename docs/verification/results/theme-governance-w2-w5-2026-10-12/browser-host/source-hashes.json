@@ -1,0 +1,6 @@
+{
+  "apps/electron/src/renderer/browser-toolbar.tsx": "471e7fbcb0c980a0fdcaa4ae7ed1c6360c59e39e2aee0b4b177ff8d353b7ce06",
+  "apps/electron/src/renderer/browser-empty-state.tsx": "284c0e57d704950a1d57b0e9fa30ae444580ecc84f42a37fd7899a3128361bef",
+  "apps/electron/src/preload/browser-toolbar.ts": "b954b5d88e687439dba31eaf4995570d5001f535d99cce475886d3d00bccff6c",
+  "apps/electron/src/main/browser-pane-manager.ts": "e9ca6c4d96134ca7e97bbc9576aedd1d2c27ba509f789932a186e7d0b614ef9a"
+}

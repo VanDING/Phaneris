@@ -172,11 +172,11 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
         {viewerSettings.diffStyle === style && (
           <motion.span
             layoutId="changed-files-diff-style"
-            className="pointer-events-none absolute inset-0 z-0 rounded-md border border-border/55 bg-background shadow-minimal"
+            className="pointer-events-none absolute inset-0 z-component-content rounded-md border border-border/55 bg-background shadow-minimal"
             transition={motionSpring(reduceMotion, 'responsive')}
           />
         )}
-        <span className="relative z-[1]">{style === 'unified' ? t('contentPanel.diff.styleUnified') : t('contentPanel.diff.styleSplit')}</span>
+        <span className="relative z-component-overlay">{style === 'unified' ? t('contentPanel.diff.styleUnified') : t('contentPanel.diff.styleSplit')}</span>
       </button>
     ))
     return (

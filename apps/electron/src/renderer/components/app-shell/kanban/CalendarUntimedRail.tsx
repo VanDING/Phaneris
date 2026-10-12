@@ -255,7 +255,7 @@ export function CalendarUntimedRail({
               }}
               placeholder={t('schedule.untimedAddTitle')}
               aria-label={t('schedule.untimedAddTitle')}
-              className="pg-rail__input"
+              className="craft-field-input pg-rail__input"
             />
             <div className="pg-rail__row">
               <input
@@ -263,27 +263,27 @@ export function CalendarUntimedRail({
                 value={date}
                 onChange={(event) => setDate(event.target.value)}
                 aria-label={t('schedule.entryDate')}
-                className="pg-rail__input"
+                className="craft-field-input pg-rail__input"
               />
               <button
                 type="button"
                 onClick={commit}
                 disabled={!title.trim()}
-                className="pg-rail__button pg-rail__button--primary"
+                className="craft-control pg-rail__button pg-rail__button--primary"
               >
                 {t('common.create')}
               </button>
               <button
                 type="button"
                 onClick={() => { setComposing(false); setTitle('') }}
-                className="pg-rail__button"
+                className="craft-control pg-rail__button"
               >
                 {t('common.cancel')}
               </button>
             </div>
           </div>
         ) : (
-          <button type="button" onClick={() => { setComposing(true); setDate(todayKey) }} className="pg-rail__add">
+          <button type="button" onClick={() => { setComposing(true); setDate(todayKey) }} className="craft-control pg-rail__add">
             <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
             {t('schedule.untimedQuickAdd')}
           </button>

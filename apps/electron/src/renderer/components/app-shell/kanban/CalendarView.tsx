@@ -535,7 +535,7 @@ export function CalendarView() {
                 <button
                   type="button"
                   data-calendar-untimed-trigger
-                  className="craft-control hidden h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground @max-[900px]/panel:inline-flex"
+                  className="craft-control hidden h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-text-secondary transition-colors hover:text-foreground @max-[900px]/panel:inline-flex"
                 >
                   <CalendarOff className="h-3.5 w-3.5" />
                   {t('schedule.untimedCount', { count: untimedEntries.length })}
@@ -544,7 +544,7 @@ export function CalendarView() {
               <PopoverContent align="start" className="w-80 p-0">
                 <div className="border-b border-border/60 px-3 py-2">
                   <div className="text-xs font-semibold">{t('schedule.untimedTitle')}</div>
-                  <p className="pt-1 text-[11px] leading-snug text-foreground/55">{t('schedule.untimedHint')}</p>
+                  <p className="pt-1 text-[11px] leading-snug text-text-secondary">{t('schedule.untimedHint')}</p>
                 </div>
                 <ScrollArea className="max-h-80">
                   <UntimedEntryList
@@ -564,7 +564,7 @@ export function CalendarView() {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t('kanban.workItemSearch')}
-              className="h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-xs outline-none focus:border-ring/60"
+              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-xs outline-none focus:border-ring/60"
             />
           </label>
         </div>
@@ -573,7 +573,7 @@ export function CalendarView() {
             type="button"
             onClick={() => controller.prev()}
             aria-label={t('schedule.prevMonth')}
-            className="craft-control inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/15 text-foreground/55 transition-colors hover:text-foreground"
+            className="craft-control inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/15 text-text-secondary transition-colors hover:text-foreground"
           >
             ‹
           </button>
@@ -582,14 +582,14 @@ export function CalendarView() {
             type="button"
             onClick={() => controller.next()}
             aria-label={t('schedule.nextMonth')}
-            className="craft-control inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/15 text-foreground/55 transition-colors hover:text-foreground"
+            className="craft-control inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/15 text-text-secondary transition-colors hover:text-foreground"
           >
             ›
           </button>
           <button
             type="button"
             onClick={() => controller.today()}
-            className="craft-control h-8 rounded-md border border-foreground/15 px-3 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground @max-[560px]/panel:hidden"
+            className="craft-control h-8 rounded-md border border-foreground/15 px-3 text-xs font-medium text-text-secondary transition-colors hover:text-foreground @max-[560px]/panel:hidden"
           >
             {t('common.today')}
           </button>

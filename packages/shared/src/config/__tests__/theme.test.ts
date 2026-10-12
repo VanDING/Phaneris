@@ -196,14 +196,13 @@ describe('theme resolution', () => {
       return match[1]!;
     };
 
-    // Font stacks are owned by typography.css, which both app stylesheets import;
-    // every other token is declared in each app's own `:root`. Asserting the font
-    // tokens against those two files would demand a second static source of truth
-    // (and did, until this assertion was corrected).
+    // Palette generation is shared; host entrypoints must consume the artifact.
+    const generatedCSS = readFileSync(resolve(import.meta.dir, '../../../../ui/src/styles/theme-tokens.css'), 'utf-8');
     const fontTokens = new Set(['--font-sans', '--font-serif', '--font-mono']);
     for (const css of [electronCSS, sharedUICSS]) {
-      const light = declarations(rootBlock(css));
-      const dark = new Map([...light, ...declarations(css.match(/\.dark \{([\s\S]*?)\n\}/)![1]!)]);
+      expect(css).toContain('theme-tokens.css');
+      const light = declarations(rootBlock(generatedCSS));
+      const dark = new Map([...light, ...declarations(generatedCSS.match(/\.dark \{([\s\S]*?)\n\}/)![1]!)]);
       for (const token of fontTokens) {
         expect(light.has(token)).toBe(false);
       }
@@ -245,7 +244,7 @@ describe('theme resolution', () => {
     };
     for (const font of ['inter', 'system']) {
       const selector = `html[data-font="${font}"]`;
-      const owners = [electronCSS, sharedUICSS].filter(css => css.includes(`${selector} {`));
+      const owners = [electronCSS, sharedUICSS, typographyCSS].filter(css => css.includes(`${selector} {`));
       expect(owners.length).toBeGreaterThan(0);
       for (const owner of owners) {
         const block = blockFor(owner, selector)!;

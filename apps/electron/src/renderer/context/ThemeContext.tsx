@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -23,7 +24,12 @@ import {
   type ThemeOverrides,
   type ThemePreferenceMode,
   type ThemePreferences,
+  type PresetTheme,
 } from '@config/theme'
+import { compileThemeInBrowser } from '@phaneris/ui/theme-compiler'
+import { ThemeCompilationError, themeCSSDeclarations, type CompiledTheme, type ResolvedThemeSnapshot } from '@config/theme-runtime'
+import { themeDerivedCSS } from '@config/theme'
+import type { ThemeDiagnostic } from '@config/theme-manifest'
 
 export type ThemeMode = ThemePreferenceMode
 export type FontFamily = ThemeFontPreference
@@ -61,6 +67,7 @@ interface ThemeContextType {
   isScenic: boolean
   shikiTheme: string
   shikiConfig: ShikiThemeConfig
+  snapshot: ResolvedThemeSnapshot
 }
 
 interface StoredThemeCache extends ThemePreferences {
@@ -96,6 +103,8 @@ interface LoadedThemeState {
   status: ThemeLoadStatus
   source: ThemeResolvedFrom
   error: string | null
+  compiled?: CompiledTheme
+  diagnostics?: readonly ThemeDiagnostic[]
 }
 
 interface ThemeProviderProps {
@@ -293,6 +302,8 @@ export function ThemeProvider({
       void api.getThemePreferences().then((persisted) => {
         if (!cancelled && generation === preferenceGeneration.current) {
           applyAuthoritativePreferences(persisted)
+          // A selected file may have changed without changing preferences.
+          setUserThemeRevision(revision => revision + 1)
         }
       }).catch((error) => {
         if (!cancelled && generation === preferenceGeneration.current) {
@@ -392,8 +403,10 @@ export function ThemeProvider({
   useEffect(() => {
     const subscribe = window.electronAPI?.onUserThemesChanged
     if (!subscribe) return
-    return subscribe(() => setUserThemeRevision((revision) => revision + 1))
-  }, [])
+    return subscribe(({ themeId }) => {
+      if (themeId === effectiveColorTheme) setUserThemeRevision((revision) => revision + 1)
+    })
+  }, [effectiveColorTheme])
 
   // Keep the last-good snapshot only during loading. A terminal failure applies
   // Default atomically, preventing stale CSS from masquerading as another theme.
@@ -401,27 +414,17 @@ export function ThemeProvider({
     const requestedId = effectiveColorTheme || 'default'
     const generation = ++themeRequestGeneration.current
     let cancelled = false
-
-    if (requestedId === 'default') {
-      setLoadedTheme({
-        requestedId,
-        appliedId: 'default',
-        theme: DEFAULT_THEME_FILE,
-        status: 'ready',
-        source: 'builtin',
-        error: null,
-      })
-      return
-    }
+    const controller = new AbortController()
 
     setLoadedTheme((previous) => ({
       ...previous,
       requestedId,
       status: 'loading',
       error: null,
+      diagnostics: [],
     }))
 
-    const failToDefault = (reason: string) => {
+    const failToDefault = (reason: string, diagnostics?: readonly ThemeDiagnostic[]) => {
       if (cancelled || generation !== themeRequestGeneration.current) return
       setLoadedTheme({
         requestedId,
@@ -430,37 +433,52 @@ export function ThemeProvider({
         status: 'error',
         source: 'fallback',
         error: reason,
+        diagnostics: diagnostics ?? [{ path: requestedId, code: 'load', severity: 'error', message: reason }],
       })
     }
 
     const loadPresetTheme = window.electronAPI?.loadPresetTheme
-    if (!loadPresetTheme) {
+    if (!loadPresetTheme && requestedId !== 'default') {
       failToDefault(`Theme loader is unavailable for "${requestedId}".`)
       return () => {
         cancelled = true
+        controller.abort()
       }
     }
 
-    void loadPresetTheme(requestedId).then((preset) => {
+    const load: Promise<PresetTheme | null> = requestedId === 'default'
+      ? Promise.resolve({ id: 'default', path: 'builtin:default', theme: DEFAULT_THEME_FILE })
+      : loadPresetTheme!(requestedId)
+    void load.then(async (preset) => {
       if (cancelled || generation !== themeRequestGeneration.current) return
       if (!preset?.theme) {
         failToDefault(`Theme "${requestedId}" was not found or is invalid.`)
         return
       }
+      if (preset.diagnostics?.some(value => value.severity === 'error')) {
+        failToDefault(preset.diagnostics.map(value => `${value.path}: ${value.message}`).join('; '), preset.diagnostics)
+        return
+      }
+      const compiled = await compileThemeInBrowser(preset.theme, controller.signal, preset.revision ?? '')
+      if (cancelled || generation !== themeRequestGeneration.current) return
       setLoadedTheme({
         requestedId,
         appliedId: requestedId,
         theme: preset.theme,
         status: 'ready',
-        source: 'ipc',
+        source: preset.path.startsWith('builtin:') ? 'builtin' : 'ipc',
         error: null,
+        compiled,
+        diagnostics: compiled.diagnostics,
       })
     }).catch((error) => {
-      failToDefault(`Failed to load theme "${requestedId}": ${error instanceof Error ? error.message : String(error)}`)
+      failToDefault(`Failed to load theme "${requestedId}": ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof ThemeCompilationError ? error.diagnostics : undefined)
     })
 
     return () => {
       cancelled = true
+      controller.abort()
     }
   }, [effectiveColorTheme, userThemeRevision])
 
@@ -474,6 +492,15 @@ export function ThemeProvider({
   const isDark = actualMode === 'dark'
   const shikiConfig = loadedTheme.theme.shikiTheme || DEFAULT_SHIKI_THEME
   const shikiTheme = getShikiTheme(shikiConfig, isDark)
+  const snapshot = useMemo<ResolvedThemeSnapshot>(() => Object.freeze({
+    version: 1, requestedId: effectiveColorTheme, appliedId: loadedTheme.appliedId, source: loadedTheme.source,
+    requestedMode: mode, actualMode, status: loadedTheme.status,
+    revision: `${loadedTheme.compiled?.revision ?? 'builtin-default-v1'}:${actualMode}`,
+    diagnostics: Object.freeze((loadedTheme.diagnostics ?? []).map(value => Object.freeze({ ...value }))),
+    tokens: loadedTheme.compiled?.tokens[actualMode]
+      ?? Object.freeze(themeCSSDeclarations(themeDerivedCSS(isDark) + '\n' + themeToCSS(resolvedTheme, isDark))),
+    shiki: shikiTheme,
+  }), [actualMode, effectiveColorTheme, isDark, loadedTheme, mode, resolvedTheme, shikiTheme])
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -495,7 +522,7 @@ export function ThemeProvider({
     }
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement
     const effectiveThemeFont = isDark
       ? (resolvedTheme.dark?.fontSans ?? resolvedTheme.fontSans)
@@ -509,10 +536,7 @@ export function ThemeProvider({
     else delete root.dataset.theme
     root.dataset.themeStatus = loadedTheme.status
     root.dataset.themeOverride = 'true'
-  }, [font, isDark, loadedTheme.appliedId, loadedTheme.status, resolvedTheme.dark?.fontSans, resolvedTheme.fontSans])
-
-  useEffect(() => {
-    const root = document.documentElement
+    root.dataset.themeRevision = snapshot.revision
     root.classList.remove('light', 'dark')
     root.classList.add(actualMode)
 
@@ -535,9 +559,6 @@ export function ThemeProvider({
       : resolvedTheme
     root.dataset.themeDepth = effectiveVisualTheme.depth ?? 'elevated'
     root.dataset.themeDensity = effectiveVisualTheme.density ?? 'comfortable'
-  }, [actualMode, isDark, isScenic, loadedTheme.theme, resolvedMode, resolvedTheme, systemPreference])
-
-  useEffect(() => {
     const styleId = 'craft-theme-overrides'
     let styleElement = document.getElementById(styleId) as HTMLStyleElement | null
     if (!styleElement) {
@@ -546,24 +567,20 @@ export function ThemeProvider({
       document.head.appendChild(styleElement)
     }
 
-    styleElement.textContent = loadedTheme.appliedId === 'default'
-      ? ''
-      : `:root {\n  ${themeToCSS(loadedTheme.theme, isDark)}\n}`
+    styleElement.textContent = `:root {\n  ${loadedTheme.compiled?.css[actualMode]
+      ?? themeDerivedCSS(isDark) + '\n' + themeToCSS(resolvedTheme, isDark)}\n}`
 
     window.dispatchEvent(new CustomEvent('craft-theme-change', {
-      detail: { id: loadedTheme.appliedId, mode: actualMode },
+      detail: { ...snapshot, id: snapshot.appliedId, mode: snapshot.actualMode },
     }))
-  }, [actualMode, isDark, loadedTheme.appliedId, loadedTheme.theme])
+  }, [actualMode, font, isDark, isScenic, loadedTheme, resolvedMode, resolvedTheme, snapshot, systemPreference])
 
   useEffect(() => {
     const setTitleBarOverlay = window.electronAPI?.setTitleBarOverlay
     if (!setTitleBarOverlay) return
-    const effectiveVisualTheme = isDark && resolvedTheme.dark
-      ? { ...resolvedTheme, ...resolvedTheme.dark }
-      : resolvedTheme
     const fallbackForeground = isDark ? '#f5f5f7' : '#1a1625'
     const symbolColor = toNativeOverlayColor(
-      effectiveVisualTheme.foreground ?? fallbackForeground,
+      getComputedStyle(document.documentElement).getPropertyValue('--foreground').trim() || fallbackForeground,
       fallbackForeground,
       1
     )
@@ -572,7 +589,7 @@ export function ThemeProvider({
       symbolColor,
       height: 48,
     }).catch(() => {})
-  }, [isDark, resolvedTheme])
+  }, [isDark, snapshot.revision])
 
   const value = useMemo<ThemeContextType>(() => ({
     mode,
@@ -601,6 +618,7 @@ export function ThemeProvider({
     isScenic,
     shikiTheme,
     shikiConfig,
+    snapshot,
   }), [
     activeWorkspaceId,
     colorTheme,
@@ -624,6 +642,7 @@ export function ThemeProvider({
     setWorkspaceColorTheme,
     shikiConfig,
     shikiTheme,
+    snapshot,
     systemPreference,
     themePreferenceError,
     workspaceColorTheme,

@@ -1,7 +1,7 @@
 # Phaneris 主题引擎与前端视觉：独立审计及治理方案
 
 - 日期：2026-10-12（Asia/Shanghai）。
-- 状态：**In progress — W1 的 F01/F02/F03 和重连补读已实施，101 场景本机浏览器验收通过（§12）；W2–W4、W5 全面收口及发布宿主矩阵仍 open。独立审计原始证据保留；预览卡片回归已局部修复（F20、§11）。**
+- 状态：**W1–W5 工程实现及本机验收完成：481/481 场景通过（§13），含 Windows 原生 Electron、真实 WebUI/WS/watcher 和四个 CSS 入口。W5 发布验收仍 open：macOS/Linux、三平台正式包、实机软键盘和长会话性能尚缺本轮证据。原始审计及历史档案保持冻结。**
 - 独立审计基线：`e39f60cb2bfafe30476ca35774aec87ffa9629aa`，修复前工作树源码；逐文件摘要见 [audit-data.json](../verification/results/frontend-theme-visual-audit-2026-10-12/audit-data.json)。追加修复使用独立的前后manifest，不改写本次审计基线。
 - 输入之一：[2026-10-11 视觉审计](frontend-visual-audit-2026-10-11.html)。本方案重新审查实现与浏览器行为；原文数值和路线不直接作为验收要求。
 - 证据：[结果与复现说明](../verification/results/frontend-theme-visual-audit-2026-10-12/README.md) · [事先失败矩阵](../verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md)。
@@ -43,6 +43,8 @@
 复现环境：Bun 1.4.2、Chromium 153.0.8010.12、macOS x64；普通样本 1280×820、DPR 1，产品页和移动样本分别记录 viewport。本轮扫描前先用 `rg` 定位文件，再用 AST 排除 TS/TSX 注释；CSS 排除注释。源码摘要在浏览器运行前后保持一致。
 
 ### 2.2 尚未验证的内容
+
+本节至 §9 记录独立审计时的基线与要求；实施后的证据和剩余边界见 §13。
 
 本轮浏览器样本由当前源码和真实控件组成，但 bridge 为合成数据，不能代替真实 WebSocket、文件 watcher、多窗口或正式包。**没有重新测量原文那张 macOS Retina 截图，也没有完成 Windows/Linux 原生材质、移动 Safari 软键盘、Pages 用户内容、PDF 全链路和大型会话性能验收。** 这些范围已有源码审查，执行要求见失败矩阵 H01–H11。
 
@@ -257,7 +259,7 @@ ResolvedTheme 建议成为一个有版本的不可变快照，至少含 `request
 
 独立审计阶段新增本方案、结果目录和失败矩阵，文档索引已登记；原审计与历史验收保留原值，该阶段产品源码未修改，源码hash前后相同。22项既有theme/storage检查、字体gate通过，9文件定向lint为0 errors、2个既有warnings。浏览器的发现用于安排修复，**不代表全面产品验收已经通过**。用户随后追加的明确卡片回归已在§11单独修复与归档。
 
-当前实施入口是W1，[专用失败矩阵](../verification/theme-foundation-failure-matrix-2026-10-12.md)和 `scripts/verification/theme-foundation-workflow.ts` 已在产品修复前建立。每个已确认问题先转成阻挡断言，再修改实现并归档前后结果；设计参数在W3之前形成真实内容对照。全面治理尚未完成。
+W1 与 W2–W5 已按事先失败矩阵实施，当前裁定见 §13。[本机验收归档](../verification/results/theme-governance-w2-w5-2026-10-12/README.md)保留各次运行的原 manifest、源码/构建摘要与选取映射；发布宿主与实机范围按证据继续保持 open。
 
 ## 11. 用户追加：全屏对话与行为卡片回归
 
@@ -272,7 +274,7 @@ ResolvedTheme 建议成为一个有版本的不可变快照，至少含 `request
 
 完整[失败矩阵](../verification/markdown-popout-card-failure-matrix-2026-10-12.md)和[前后证据](../verification/results/markdown-popout-card-2026-10-12/README.md)保留原manifest、SHA与截图。F01–F19和W1–W5仍按前述范围推进；此局部恢复不等于全面主题治理完成。
 
-## 12. W1 实施：ready、焦点与阴影
+## 12. W1 首批实施记录：ready、焦点与阴影
 
 分支 `codex/theme-governance-w1` 从包含审计提交的 `main`（`cc5401c83`）开始。先写[专用失败矩阵](../verification/theme-foundation-failure-matrix-2026-10-12.md)和浏览器工作流，再改产品实现。[实施与证据](../verification/results/theme-foundation-w1-2026-10-12/README.md)包含冻结前后记录、源码/构建摘要、归档选取清单与 SHA；旧审计不改写。
 
@@ -286,3 +288,59 @@ ResolvedTheme 建议成为一个有版本的不可变快照，至少含 `request
 | 验收边界 | 101/101 本机浏览器场景、22/22 既有主题/存储检查、全仓类型与 workspace lint 通过。完整 lint 被既有 Windows 分发路径门禁阻挡；docs 被既有归档日志断链阻挡；完整 critical 与正式包三平台仍未重跑 |
 
 本批没有决定 sidebar32、column768、navigator 锁色等视觉参数，也没有改变旧 fontSize/density/radius 的含义。下一工作包为 W2：F04 的 token/utility 来源、F05/F06 的加载诊断与 opaque/scenic/Shiki 契约、F07 对比度、F11 Viewer 的 reactive 高亮。正式包、物理触摸和其他宿主边界继续按 H01–H11 验收。
+
+## 13. W2–W5 实施与当前裁定
+
+接续规划 commit `7891559`，实施分支为 `codex/theme-governance-w1`。W1 首批 commit 为 `8d53a7200`；后续实现、验证脚本与当前文档同批提交。以下取代 §10–§12 中当时的“下一工作包”状态，历史失败和原始审计不改写。
+
+### 13.1 工程实现
+
+| 工作包 / 发现 | 已落地的行为 | 验收依据 |
+| --- | --- | --- |
+| W2 / F04 | Default、派生变量、形状与 utility adapter 单一来源；39 字段 manifest 生成 CSS、角色、四套打包主题和当前指南；motion TS/CSS 检查漂移 | 四入口 computed-style parity、生成物 canary |
+| W2 / F05–F07 | 浏览器 compiler 验目标 CSS 语法、var 依赖、计算范围及完整 alpha；scenic 的路径/体积/解码/超时诊断；失败回退 Default，保留作者文件。修正 Ink 次要文字，分离 raw/text/on-accent 语义 | 有效与无效主题、背景清理、内置有效/强制模式、可读性场景 |
+| W2 / F11、F17 | 不可变 snapshot 和 revision 原子发布 DOM/模式/字体/Shiki；只重载受影响主题 ID；图片变化、非原子编辑、删除/恢复及重连重新读取；Viewer 手动模式不被 OS 覆盖 | 真实 WebUI/WS、两个认证客户端、文件 watcher；实际 Viewer 转录与 overlay |
+| W3 / F08、F12–F15 | 表面/文字/动作/形状角色、独立 UI/阅读尺度、共享 gutter/840px 阅读列；icon 自动角色、触摸两维 44px、键盘/coarse row actions；局部堆叠保留原顺序，portal 按父层级接续 | 真实控件六态及扩展状态、窄屏/中文/旧根字号、嵌套点击/Esc/焦点恢复 |
+| W4 / F16 | 列表/设置、看板/决策/轨迹迁移；Browser toolbar/empty 的有序 host adapter，严格限制私有投递与回报来源；未认证登录用 Default+OS；Terminal/PDF/Mermaid/Pages 保留内容所有权 | 功能面 56 场景、独立 browser host 23、登录 5、Windows 原生 13；PDF 纸面和 ANSI 内容检查 |
+| W5 / F09、F10、F18 | 四域共享 AST/a11y/视觉规则；JSX、cn/cva、模板、style、CSS 堆叠检查；新增指纹/数量增长/失效例外失败；主题工作流接 critical registry，原生三平台 CI 保存产物 | 49 个真实门禁 mutation；静态接线检查；完整 lint |
+| W5 / F19 | 当前字段表/内置清单由 manifest 生成；制作指南、产品主题帮助、宿主责任、回滚步骤、文档索引与待发布说明更新 | `check:themes`、`check:docs`、身份/版本/字体/i18n 门禁 |
+| F20 回归 | 共享卡片、源码模式、行号与窄屏限制保留，迁移后重跑 | markdown-popout 18/18 |
+
+设计对照包含 36 个场景，可在[交互对照页](../verification/results/theme-governance-w2-w5-2026-10-12/design/index.html)并排评审。当前默认仍为 40px 侧栏、840px 阅读列及现有材质；32/34px、768px 和增强高程保留为候选。没有以正确性修复为名推广未决定的视觉参数。
+
+### 13.2 已执行的验收
+
+| 工作流 | 通过场景 |
+| --- | ---: |
+| theme-foundation（真实 WebUI/WS/watcher） | 115 |
+| theme-contract（四入口/compiler/Viewer） | 90 |
+| theme-roles（真实控件/portal/外壳） | 76 |
+| theme-domains（真实功能组件、合成业务数据） | 56 |
+| theme-browser-host | 23 |
+| theme-login | 5 |
+| theme-design（参数与阅读对照） | 36 |
+| theme-governance（门禁失败注入） | 49 |
+| theme-native（Windows 生产 bundles/真实 Electron） | 13 |
+| markdown-popout 回归 | 18 |
+| **合计** | **481/481** |
+
+运行于 Windows x64（10.0.26300）、Bun 1.4.2、Node 24.15.0、Edge 155.0.4283.45、Electron 44.5.1。原生使用生产 main/preload/renderer/BrowserViews 和临时配置；200% 缩放使用真实 Chromium zoom，并用 `webContents.capturePage` 留存完整原生帧。浏览器窗口/媒体模拟和合成业务数据的范围在每个 manifest 的 `untested` 中公开。
+
+全仓类型检查、完整 lint、字体/i18n、严格身份、版本、生成物、分发和文档门禁通过；既有主题/存储与堆叠规则检查 30/30。既有 lint 的 72 条 warning 基线未放宽。上述受影响工作流逐个执行，并按 registry 的必要产物/场景/SHA 合约校验；本轮没有宣称重新执行整个 `test:critical` 聚合或所有既有测试。
+
+[公开归档](../verification/results/theme-governance-w2-w5-2026-10-12/README.md)为字节保持的选取副本，不代替完整 `.cache/verification/`。原 manifest 保留执行时的 HEAD、dirty paths、场景、环境、源码/构建摘要；公开 `selection.json` 记录原文件 SHA，`SHA256SUMS` 校验公开副本。浏览器 profile、临时认证配置、执行文件和完整 trace 保留在本机缓存，不公开。
+
+### 13.3 剩余验收与例外
+
+| 范围 | 当前裁定 / 退出条件 |
+| --- | --- |
+| H01、H05 正式包与三平台 | Windows 生产 bundles/原生视图通过；macOS/Linux matrix 已接 CI，本机未执行。签名安装器、正式包重启逐帧、OS 材质与 caption 交叉矩阵仍 open |
+| H02–H04 配置与图片 | 真实双 Web 客户端、重连、watcher、离线编辑和故障恢复已通过；不以这些结果代替所有平台多窗口与最大图片负载成本 |
+| H06、H08 实机与阅读 | 320/375/390/768/769、媒体模拟、中文/路径/表格、文字放大和 Windows 原生 200% 缩放有证据；物理触摸、移动 Safari 横屏/软键盘/safe-area 仍 open |
+| H07、H09 内容与遮挡 | 实际组件的内容所有权和嵌套 portal 操作通过；真实用户 Pages 内容、任意第三方文档与三平台原生遮挡不作全覆盖承诺 |
+| H10 性能与兼容 | 旧字段、旧根字号和回退契约有检查，回滚步骤已写；长会话切换 trace、滚动与最大图片解码性能仍 open |
+| H11 门禁 | 当前 E2E/失败产物合约与 CI 接线完成；尚未产生的远端 CI 运行不记为已通过 |
+| 存量视觉债务 | 1,213 个具名条目登记于 `visual-debt-ledger.json`，具有 owner/reason/exit 与节点指纹；新增债务被阻挡。登记不等于全项目可达性或存量债务已清零 |
+| 历史缺失证据 | 2026-10-11 second-wave 的一份冻结日志不可用；精确文档例外保存原 SHA 与退出条件，文档 gate 明示 warning。没有补造日志或改写冻结 README |
+
+工程实现和本机验收已完成；满足上述平台、实机与性能退出条件后，才能宣布规划要求的完整发布验收完成。

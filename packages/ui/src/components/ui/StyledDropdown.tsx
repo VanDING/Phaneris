@@ -15,6 +15,7 @@ import * as React from 'react'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { ChevronRightIcon } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { PortalStackProvider, usePortalLayer } from '../../context/PortalStackContext'
 
 const SUPPORTED_HOVER_PREFIXES = ['bg-', 'text-', 'border-', 'ring-', 'opacity-']
 
@@ -106,11 +107,14 @@ interface StyledDropdownMenuContentProps
 export const StyledDropdownMenuContent = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.Content>,
   StyledDropdownMenuContentProps
->(({ className, minWidth = 'min-w-40', light = false, sideOffset = 4, ...props }, ref) => (
+>(({ className, minWidth = 'min-w-40', light = false, sideOffset = 4, style, children, ...props }, ref) => {
+  const layer = usePortalLayer('dropdown', className)
+  return (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
+      style={{ zIndex: layer, ...style }}
       className={cn(
         // shadcn base layer
         'craft-popover popover-styled motion-surface overflow-x-hidden overflow-y-auto p-1 z-dropdown',
@@ -127,9 +131,10 @@ export const StyledDropdownMenuContent = React.forwardRef<
         className,
       )}
       {...props}
-    />
+    ><PortalStackProvider layer={String(style?.zIndex ?? layer)}>{children}</PortalStackProvider></DropdownMenuPrimitive.Content>
   </DropdownMenuPrimitive.Portal>
-))
+  )
+})
 StyledDropdownMenuContent.displayName = 'StyledDropdownMenuContent'
 
 // ── Item ─────────────────────────────────────────────────────────────────────
@@ -208,11 +213,14 @@ interface StyledDropdownMenuSubContentProps
 export const StyledDropdownMenuSubContent = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.SubContent>,
   StyledDropdownMenuSubContentProps
->(({ className, minWidth = 'min-w-36', sideOffset = -4, ...props }, ref) => (
+>(({ className, minWidth = 'min-w-36', sideOffset = -4, style, children, ...props }, ref) => {
+  const layer = usePortalLayer('dropdown', className)
+  return (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.SubContent
       ref={ref}
       sideOffset={sideOffset}
+      style={{ zIndex: layer, ...style }}
       className={cn(
         'craft-popover popover-styled motion-surface w-fit font-sans whitespace-nowrap text-xs flex flex-col gap-0.5 z-dropdown overflow-x-hidden overflow-y-auto p-1',
         'max-h-(--radix-dropdown-menu-content-available-height)',
@@ -223,9 +231,10 @@ export const StyledDropdownMenuSubContent = React.forwardRef<
         className,
       )}
       {...props}
-    />
+    ><PortalStackProvider layer={String(style?.zIndex ?? layer)}>{children}</PortalStackProvider></DropdownMenuPrimitive.SubContent>
   </DropdownMenuPrimitive.Portal>
-))
+  )
+})
 StyledDropdownMenuSubContent.displayName = 'StyledDropdownMenuSubContent'
 
 // ── Shortcut ─────────────────────────────────────────────────────────────────

@@ -26,7 +26,7 @@ export function ModelChip({ model, short = false, className }: ModelChipProps) {
     <span
       className={cn(
         'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium',
-        'bg-foreground/[0.04] text-foreground/70 ring-1 ring-foreground/[0.06]',
+        'bg-foreground/[0.04] text-text-secondary ring-1 ring-foreground/[0.06]',
         className
       )}
     >

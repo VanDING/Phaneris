@@ -1,0 +1,54 @@
+/* Semantic presentation. Theme palette, host materials and content remain owned separately. */
+@theme inline {
+  --color-surface-canvas: var(--surface-canvas);
+  --color-surface-navigator: var(--surface-navigator);
+  --color-surface-paper: var(--surface-paper);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-floating: var(--surface-floating);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-action-hover: var(--action-hover);
+  --color-action-selected: var(--action-selected);
+  --color-action-pressed: var(--action-pressed);
+  --radius-panel: var(--shape-panel);
+  --radius-inner: var(--shape-inner);
+  --radius-card: var(--shape-card);
+  --radius-control: var(--shape-control);
+  --radius-chip: var(--shape-chip);
+  --z-index-component-behind: var(--z-component-behind);
+  --z-index-component-content: var(--z-component-content);
+  --z-index-component-overlay: var(--z-component-overlay);
+  --z-index-component-header: var(--z-component-header);
+  --z-index-component-controls: var(--z-component-controls);
+  --z-index-component-background: var(--z-component-background);
+  --z-index-component-recess: var(--z-component-recess);
+  --z-index-component-floating: var(--z-component-floating);
+  --z-index-component-sticky: var(--z-component-sticky);
+  --z-index-component-chrome: var(--z-component-chrome);
+  --z-index-component-scrim: var(--z-component-scrim);
+  --z-index-component-panel: var(--z-component-panel);
+  --z-index-component-backdrop: var(--z-component-backdrop);
+  --z-index-component-handles: var(--z-component-handles);
+  --z-index-component-calendar: var(--z-component-calendar);
+}
+@layer components {
+  .craft-text-caption { font-size: calc(var(--ui-caption-size) * var(--ui-scale)); line-height: var(--ui-line-height); }
+  .craft-text-label { font-size: calc(var(--ui-label-size) * var(--ui-scale)); line-height: var(--ui-line-height); }
+  .craft-text-body { font-size: calc(var(--ui-body-size) * var(--ui-scale)); line-height: var(--ui-line-height); }
+  .craft-text-title { font-size: calc(var(--ui-title-size) * var(--ui-scale)); line-height: var(--ui-line-height); font-weight: 600; }
+  .craft-text-heading { font-size: calc(var(--ui-heading-size) * var(--ui-scale)); line-height: 1.4; font-weight: 600; }
+  .craft-text-code { font: calc(var(--code-size) * var(--reading-scale))/var(--reading-line-height) var(--font-mono); }
+  .craft-control[data-slot="button"] { min-height: calc(var(--craft-control-height, 2.25rem) * var(--ui-scale)); }
+  .craft-control[data-control-size="sm"] { --craft-control-height: 2rem; }
+  .craft-control[data-control-size="lg"] { --craft-control-height: 2.5rem; }
+  .craft-icon-button[data-slot="button"] { min-width: calc(var(--craft-control-height, 2.25rem) * var(--ui-scale)); }
+  .craft-chat-column { max-width: var(--reading-width); width: 100%; }
+  .craft-chat-gutter { padding-inline: var(--reading-gutter); }
+  .craft-chat-gutter-compact { padding-inline: var(--reading-gutter-compact); }
+}
+@layer base {
+  ::selection { color: var(--foreground); background: color-mix(in srgb, var(--accent) 20%, var(--background)); }
+  input, textarea, [contenteditable="true"] { caret-color: var(--accent-text); }
+}

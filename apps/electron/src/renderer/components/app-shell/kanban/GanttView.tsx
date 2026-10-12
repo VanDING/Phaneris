@@ -258,7 +258,7 @@ function GanttTaskTitleCell({ row }: ICellProps) {
             event.stopPropagation()
             toggleCollapsed(id)
           }}
-          className="pg-task-toggle craft-focus"
+          className="craft-control pg-task-toggle craft-focus"
         >
           <ChevronRight className={`h-3.5 w-3.5 transition-transform duration-150${isCollapsed ? '' : ' rotate-90'}`} />
         </button>
@@ -301,7 +301,7 @@ function GanttTaskHeaderCell({ cell }: IHeaderCellProps) {
             <button
               type="button"
               aria-label={t('gantt.taskListOptions')}
-              className="pg-task-header-menu craft-focus"
+              className="craft-control pg-task-header-menu craft-focus"
             >
               <MoreHorizontal className="h-4 w-4" />
             </button>
@@ -894,10 +894,10 @@ export function GanttView() {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t('kanban.workItemSearch')}
-              className="h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-xs outline-none focus:border-ring/60"
+              className="craft-field-input h-8 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-xs outline-none focus:border-ring/60"
             />
           </label>
-          <span className="truncate text-xs font-medium text-foreground/55">
+          <span className="truncate text-xs font-medium text-text-secondary">
             {t('gantt.itemCount', { count: scheduledCount })}
           </span>
           {/*
@@ -910,7 +910,7 @@ export function GanttView() {
               <PopoverTrigger asChild>
                 <button
                   type="button"
-                  className="craft-control inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground"
+                  className="craft-control inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-text-secondary transition-colors hover:text-foreground"
                 >
                   <CalendarOff className="h-3.5 w-3.5" />
                   {t('gantt.unscheduledCount', { count: unscheduledItems.length })}
@@ -919,7 +919,7 @@ export function GanttView() {
               <PopoverContent align="start" className="w-80 p-0">
                 <div className="border-b border-border/60 px-3 py-2">
                   <div className="text-xs font-semibold">{t('gantt.unscheduledTitle')}</div>
-                  <p className="pt-1 text-[11px] leading-snug text-foreground/55">
+                  <p className="pt-1 text-[11px] leading-snug text-text-secondary">
                     {t('gantt.unscheduledHint')}
                   </p>
                 </div>
@@ -930,7 +930,7 @@ export function GanttView() {
                         key={item.id}
                         type="button"
                         onClick={() => navigateToSession(item.id)}
-                        className="flex min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs hover:bg-foreground/[0.06]"
+                        className="craft-control flex min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs hover:bg-foreground/[0.06]"
                       >
                         <span
                           className="h-2 w-2 flex-none rounded-full"
@@ -940,7 +940,7 @@ export function GanttView() {
                         <span className="min-w-0 flex-1 truncate font-medium">
                           {item.title?.trim() || t('chat.titlePlaceholder')}
                         </span>
-                        <span className="flex-none text-[10px] text-foreground/55">
+                        <span className="flex-none text-[10px] text-text-secondary">
                           {statusLabelById.get(item.statusId) ?? item.statusId}
                         </span>
                       </button>
@@ -955,7 +955,7 @@ export function GanttView() {
           <button
             type="button"
             onClick={goToToday}
-            className="craft-control h-8 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-foreground/70 transition-colors hover:text-foreground"
+            className="craft-control h-8 rounded-md border border-foreground/15 px-2.5 text-xs font-medium text-text-secondary transition-colors hover:text-foreground"
           >
             {t('common.today')}
           </button>
@@ -987,7 +987,7 @@ export function GanttView() {
               initialProjectId: projectIds.length === 1 ? projectIds[0] : undefined,
             })}
             disabled={!activeWorkspaceId}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12.5px] font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
+            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-[12.5px] font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
             <span className="@max-[1100px]/panel:hidden">{t('kanban.newTask')}</span>
@@ -1001,7 +1001,7 @@ export function GanttView() {
         {isLoading ? (
           /* The projection arrives asynchronously; without this the view claims
              "nothing scheduled" for however long the fetch takes. */
-          <div className="grid h-full place-items-center text-sm text-foreground/45">
+          <div className="grid h-full place-items-center text-sm text-text-secondary">
             {t('common.loading')}
           </div>
         ) : (

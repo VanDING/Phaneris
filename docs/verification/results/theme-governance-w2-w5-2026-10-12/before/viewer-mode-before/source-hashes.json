@@ -1,0 +1,20 @@
+{
+  "packages/shared/src/config/theme.ts": "39de1e3984468ec6b693fba46c8da0f2b5133d71e5678132a8f02eb30325ef14",
+  "packages/shared/src/config/schemas.ts": "09259207f0dc11744b6b269985568c19dd1c460dc729a3728ebe5fa0097bd35c",
+  "packages/shared/src/config/themes/ink.json": "5f2ae7917df7e191b4795be6e329d2acdf27cdbf5cc72a726c4794afd63c52a9",
+  "packages/ui/src/styles/index.css": "2c0a45b65a7371fff745645154d5206cc482e97514a4b9be489e2a88a7080b89",
+  "apps/electron/src/renderer/index.css": "6f6a413f7a9fa44374c638842972b3532314ccdedc8c89887a681bf211a4cffe",
+  "apps/viewer/src/index.css": "bdadb172ffcd619f4e72b144976503743bbadf480240505c3fccc33670efd06c",
+  "apps/viewer/src/App.tsx": "fedc24edcdcee7744dd8635dbaaa45068ee902c7902c9b601b54d0aa53d5c388",
+  "apps/electron/src/renderer/context/ThemeContext.tsx": "2608b99795f900b5db043653b912aea1b07ce94b1c5e0b3a7e1f1b5b834bf439",
+  "packages/ui/src/context/ShikiThemeContext.tsx": "12df56f5e561748be5ef843bbb96cf6de787c106c7da6648c7ed811f84990344",
+  "packages/ui/src/components/markdown/CodeBlock.tsx": "12acc87192506032dadc7ffb91c257786714a6401f0baa04914c05fef0709b95",
+  "packages/ui/src/lib/theme-compiler.ts": "5006679294d809fdee7b74ff04dff1fd1ac9b9c3d1fbbe699fb7a7fdc5523a32",
+  "packages/shared/src/config/theme-runtime.ts": "3e7e9a66cd6599d591e26683b41cc7c052b6e0b2f0859816cdba5e80a4476b8f",
+  "packages/ui/src/styles/theme-tokens.css": "7b93463491144f2b8e458c5f232ea40f4abd803ebcc9a576938f034623e33801",
+  "packages/ui/src/styles/theme-adapter.css": "064b68b4803b3cd5a3ef411f6ca8e9388e1ded70b370a5bf57ec0a331a111a32",
+  "packages/shared/src/config/theme-manifest.ts": "acb39f4f09195afb6141bd2c53280cf915125a454038d9817016915e93777205",
+  "packages/shared/src/config/shiki-themes.generated.json": "9fa4122e4f6f4cc622afd566c3e1cd0ff6cd27ef4bb8ebb2b9170095de11ed55",
+  "scripts/verification/fixtures/theme-contract.tsx": "aa2ad79432d21a48bbac2a3d6e29198de6b8c269b290ed42b7e98edf1b4b3058",
+  "scripts/verification/theme-contract-workflow.ts": "73a8c6f7b6d74a5858a513b73600ba489ec452e40eaeea0de2d36e0f1bc4fd97"
+}

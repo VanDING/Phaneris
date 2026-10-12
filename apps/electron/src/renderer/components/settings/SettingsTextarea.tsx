@@ -31,7 +31,7 @@ export function SettingsTextarea({ label, description, value, onChange, placehol
     </div>
     <div className="flex justify-between gap-2">
       <FieldError id={field.errorId}>{error}</FieldError>
-      {maxLength !== undefined && <span id={countId} className={cn('ml-auto text-xs tabular-nums', overLimit ? 'text-destructive' : 'text-muted-foreground')}>{value.length}/{maxLength}</span>}
+      {maxLength !== undefined && <span id={countId} className={cn('ml-auto text-xs tabular-nums', overLimit ? 'text-destructive-text' : 'text-text-secondary')}>{value.length}/{maxLength}</span>}
     </div>
   </div>
 }

@@ -2,6 +2,7 @@ import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "../../lib/utils"
+import { PortalStackProvider, usePortalLayer } from '../../context/PortalStackContext'
 
 function Drawer({
   ...props
@@ -29,11 +30,14 @@ function DrawerClose({
 
 function DrawerOverlay({
   className,
+  style,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Overlay>) {
+  const layer = usePortalLayer('modal', className)
   return (
     <DrawerPrimitive.Overlay
       data-slot="drawer-overlay"
+      style={{ zIndex: layer, ...style }}
       className={cn(
         "motion-surface data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-modal bg-black/50",
         className
@@ -47,15 +51,18 @@ function DrawerContent({
   className,
   children,
   overlay,
+  style,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
   overlay?: React.ReactNode
 }) {
+  const layer = usePortalLayer('modal', className)
   return (
     <DrawerPortal data-slot="drawer-portal">
       {overlay !== undefined ? overlay : <DrawerOverlay />}
       <DrawerPrimitive.Content
         data-slot="drawer-content"
+        style={{ zIndex: layer, ...style }}
         className={cn(
           "group/drawer-content bg-background fixed z-modal flex h-auto flex-col",
           "data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:border-b",
@@ -66,8 +73,10 @@ function DrawerContent({
         )}
         {...props}
       >
+        <PortalStackProvider layer={String(style?.zIndex ?? layer)}>
         <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
         {children}
+        </PortalStackProvider>
       </DrawerPrimitive.Content>
     </DrawerPortal>
   )

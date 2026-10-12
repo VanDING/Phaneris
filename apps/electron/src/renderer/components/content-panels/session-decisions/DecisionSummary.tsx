@@ -33,8 +33,8 @@ function SummaryCells({ totals }: { totals: SessionDecisionTotals }) {
     <>
       {cells.map(cell => (
         <span key={cell.key} className="flex min-w-0 flex-none items-baseline gap-1.5">
-          <span className="text-muted-foreground">{cell.icon}</span>
-          <span className="text-[11px] text-muted-foreground">{t(`trajectory.decisions.${cell.key}`)}</span>
+          <span className="text-text-secondary">{cell.icon}</span>
+          <span className="text-[11px] text-text-secondary">{t(`trajectory.decisions.${cell.key}`)}</span>
           <span className="text-[13px] font-semibold tabular-nums">{cell.value}</span>
         </span>
       ))}
@@ -58,7 +58,7 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
       <div className="mb-2 flex min-w-0 items-center gap-2">
         <h3 className="text-[12px] font-semibold">{t('trajectory.decisions.title')}</h3>
         {report && (
-          <span className="text-[11px] tabular-nums text-muted-foreground">
+          <span className="text-[11px] tabular-nums text-text-secondary">
             {t('trajectory.decisions.scopeMeta', {
               features: report.features.length,
               requests: report.totals.requests,
@@ -68,7 +68,7 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
         <button
           type="button"
           onClick={onOpen}
-          className="ml-auto flex-none rounded-sm text-[11px] font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="craft-control ml-auto flex-none rounded-sm text-[11px] font-medium text-accent-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {t('trajectory.decisions.viewRecords')}
         </button>
@@ -78,16 +78,16 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
           <button
             type="button"
             onClick={onOpen}
-            className="flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-border/55 bg-background/70 px-3 py-3 text-left transition-colors hover:bg-foreground/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="craft-control flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-border/55 bg-background/70 px-3 py-3 text-left transition-colors hover:bg-foreground/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <SummaryCells totals={report.totals} />
-            <span className="ml-auto flex-none text-[11px] text-muted-foreground">
+            <span className="ml-auto flex-none text-[11px] text-text-secondary">
               {t('trajectory.decisions.includedCost')}
             </span>
           </button>
         )
         : (
-          <p className="text-[12px] text-muted-foreground">
+          <p className="text-[12px] text-text-secondary">
             {t(data.state === 'error'
               ? 'trajectory.decisions.loadFailed'
               : data.state === 'unsupported' ? 'trajectory.decisions.unsupported' : 'common.loading')}

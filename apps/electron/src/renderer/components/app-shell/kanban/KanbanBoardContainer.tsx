@@ -566,11 +566,11 @@ export function KanbanBoardContainer() {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={t('kanban.workItemSearch')}
-              className="h-8 w-44 rounded-lg border border-border bg-background pl-7 pr-2 text-xs outline-none focus:border-ring/60"
+              className="craft-field-input h-8 w-44 rounded-lg border border-border bg-background pl-7 pr-2 text-xs outline-none focus:border-ring/60"
             />
           </label>
           {usingProjectColumns && editingProject && (
-            <span className="truncate text-[11px] text-foreground/45">
+            <span className="truncate text-[11px] text-text-secondary">
               {t('kanban.column.columnsFrom', { project: editingProject.config.name })}
             </span>
           )}
@@ -585,7 +585,7 @@ export function KanbanBoardContainer() {
               initialProjectId: projectFilter.length === 1 ? projectFilter[0] : undefined,
             })}
             disabled={!activeWorkspaceId}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12.5px] font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
+            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-[12.5px] font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={2.5} /> {t('kanban.newTask')}
           </button>

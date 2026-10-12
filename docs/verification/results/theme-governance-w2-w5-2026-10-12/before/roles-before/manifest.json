@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "workflow": "theme-roles",
+  "startedAt": "2026-10-12T03:50:23.077Z",
+  "finishedAt": "2026-10-12T03:51:54.143Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\theme-roles-workflow.ts",
+    "--output-dir",
+    ".cache/verification/theme-roles-w3-before-connected"
+  ],
+  "source": {
+    "headSha": "8d53a7200af4521ec8228ba7865e51419b502090",
+    "dirtyPaths": [
+      "M apps/electron/resources/themes/ink.json",
+      " M apps/electron/src/renderer/App.tsx",
+      " M apps/electron/src/renderer/context/ThemeContext.tsx",
+      " M apps/electron/src/renderer/index.css",
+      " M apps/viewer/src/App.tsx",
+      " M apps/viewer/src/index.css",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M package.json",
+      " M packages/shared/package.json",
+      " M packages/shared/src/config/__tests__/theme.test.ts",
+      " M packages/shared/src/config/appearance.ts",
+      " M packages/shared/src/config/schemas.ts",
+      " M packages/shared/src/config/theme.ts",
+      " M packages/shared/src/config/themes/ink.json",
+      " M packages/shared/src/config/watcher.ts",
+      " M packages/ui/package.json",
+      " M packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx",
+      " M packages/ui/src/components/markdown/CodeBlock.tsx",
+      " M packages/ui/src/components/markdown/code-highlight.ts",
+      " M packages/ui/src/context/ShikiThemeContext.tsx",
+      " M packages/ui/src/styles/index.css",
+      " M packages/ui/src/styles/typography.css",
+      " M scripts/check-distribution.ts",
+      " M scripts/critical-scenario-policy.json",
+      " M scripts/critical-scenarios.ts",
+      " M scripts/verification/theme-foundation-workflow.ts",
+      "?? docs/design/theme-contract.generated.json",
+      "?? docs/verification/theme-contract-failure-matrix-2026-10-12.md",
+      "?? packages/shared/src/config/shiki-themes.generated.json",
+      "?? packages/shared/src/config/theme-manifest.ts",
+      "?? packages/shared/src/config/theme-runtime.ts",
+      "?? packages/ui/src/lib/theme-compiler.ts",
+      "?? packages/ui/src/styles/theme-adapter.css",
+      "?? packages/ui/src/styles/theme-tokens.css",
+      "?? scripts/generate-theme-contract.ts",
+      "?? scripts/verification/fixtures/theme-contract.tsx",
+      "?? scripts/verification/fixtures/theme-roles.tsx",
+      "?? scripts/verification/theme-contract-workflow.ts",
+      "?? scripts/verification/theme-roles-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/resources/themes/ink.json",
+        "sha256": "5f2ae7917df7e191b4795be6e329d2acdf27cdbf5cc72a726c4794afd63c52a9"
+      },
+      {
+        "path": "apps/electron/src/renderer/App.tsx",
+        "sha256": "c169d53769e2b326805da5547ffdab06da7acc184b707a2f762bd8c6a955c6e6"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/ThemeContext.tsx",
+        "sha256": "2608b99795f900b5db043653b912aea1b07ce94b1c5e0b3a7e1f1b5b834bf439"
+      },
+      {
+        "path": "apps/electron/src/renderer/index.css",
+        "sha256": "562b9119715060f846a8cecffbb49a17b83ea7aa26442c0bb3011cdc52fd9b5e"
+      },
+      {
+        "path": "apps/viewer/src/App.tsx",
+        "sha256": "fedc24edcdcee7744dd8635dbaaa45068ee902c7902c9b601b54d0aa53d5c388"
+      },
+      {
+        "path": "apps/viewer/src/index.css",
+        "sha256": "bdadb172ffcd619f4e72b144976503743bbadf480240505c3fccc33670efd06c"
+      },
+      {
+        "path": "docs/design/theme-contract.generated.json",
+        "sha256": "909ae94bce46ffd5dfc066bc758a35a50c68d33eba8d0b61571da6d4708b3a89"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "7e5cc900ef84198dc7135f45c1b14fd3d529d6348d7a809806d449330496cf82"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "6aa976fac340b224a4abb7aeaefe9fb6dba3a410ec5e236b7c6adce419b35dad"
+      },
+      {
+        "path": "docs/verification/theme-contract-failure-matrix-2026-10-12.md",
+        "sha256": "0e7b04670bc7dcff869dcbfe6e602ec7e66c2522fb03212eec82a5307ce359f4"
+      },
+      {
+        "path": "package.json",
+        "sha256": "9bfdec62b1d841d9bec8f7bf0fe1d543d6f79d7705cc598a35e5b474c588cebb"
+      },
+      {
+        "path": "packages/shared/package.json",
+        "sha256": "01e01fa8d89fc9673b8d259f93eccbc23dfa419bf9023b7a5267230cd98b0335"
+      },
+      {
+        "path": "packages/shared/src/config/__tests__/theme.test.ts",
+        "sha256": "cce95a8dc70be20534e34ca2b3e8af1a8a459d681ae2787b6a8f403374fa8d68"
+      },
+      {
+        "path": "packages/shared/src/config/appearance.ts",
+        "sha256": "df8b0be958ffb95ff77c9fda722fb2fcd935be7883e64cde0492c4914d194ee1"
+      },
+      {
+        "path": "packages/shared/src/config/schemas.ts",
+        "sha256": "09259207f0dc11744b6b269985568c19dd1c460dc729a3728ebe5fa0097bd35c"
+      },
+      {
+        "path": "packages/shared/src/config/shiki-themes.generated.json",
+        "sha256": "9fa4122e4f6f4cc622afd566c3e1cd0ff6cd27ef4bb8ebb2b9170095de11ed55"
+      },
+      {
+        "path": "packages/shared/src/config/theme-manifest.ts",
+        "sha256": "acb39f4f09195afb6141bd2c53280cf915125a454038d9817016915e93777205"
+      },
+      {
+        "path": "packages/shared/src/config/theme-runtime.ts",
+        "sha256": "f4e8d15e96e4005c07dcfb817183b288717775adaa0543e34fe9011953e2a547"
+      },
+      {
+        "path": "packages/shared/src/config/theme.ts",
+        "sha256": "39de1e3984468ec6b693fba46c8da0f2b5133d71e5678132a8f02eb30325ef14"
+      },
+      {
+        "path": "packages/shared/src/config/themes/ink.json",
+        "sha256": "5f2ae7917df7e191b4795be6e329d2acdf27cdbf5cc72a726c4794afd63c52a9"
+      },
+      {
+        "path": "packages/shared/src/config/watcher.ts",
+        "sha256": "2e1f2d9158774b1b2d3d73c6bdc1d52c6e26f6a346518987510f9224113afb7e"
+      },
+      {
+        "path": "packages/ui/package.json",
+        "sha256": "b2ac8a001ca5bcf00c5a69573b012b625e9ff0c89aca6571e6d5439bf4361e1c"
+      },
+      {
+        "path": "packages/ui/src/components/code-viewer/ShikiCodeViewer.tsx",
+        "sha256": "6b041c20fde6244e1bc78bc1eef2e311e0575dbad2f22154c112f48f48bfc586"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/CodeBlock.tsx",
+        "sha256": "a2b8463614c78f36c2d2a872b7a9534570a3d031f21424a53ce0c026a19345d6"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/code-highlight.ts",
+        "sha256": "f52686c8eede41ac0d333603d0c8a2dfbd46b4c296c597480c9940710662adff"
+      },
+      {
+        "path": "packages/ui/src/context/ShikiThemeContext.tsx",
+        "sha256": "12df56f5e561748be5ef843bbb96cf6de787c106c7da6648c7ed811f84990344"
+      },
+      {
+        "path": "packages/ui/src/lib/theme-compiler.ts",
+        "sha256": "b546a4ca417a3903a445155cbec5c4194e3926196b2b95d13bbc3d8b192be0a4"
+      },
+      {
+        "path": "packages/ui/src/styles/index.css",
+        "sha256": "8b9290ad3fc0dc186c90dac92d8f27d2bef586d7744ec4b7955338e5a765c18d"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-adapter.css",
+        "sha256": "064b68b4803b3cd5a3ef411f6ca8e9388e1ded70b370a5bf57ec0a331a111a32"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-tokens.css",
+        "sha256": "7b93463491144f2b8e458c5f232ea40f4abd803ebcc9a576938f034623e33801"
+      },
+      {
+        "path": "packages/ui/src/styles/typography.css",
+        "sha256": "c53d556c715884ce8ccfcd150fe7f1f6ff23b40d68fc83a8e983d4f629017a77"
+      },
+      {
+        "path": "scripts/check-distribution.ts",
+        "sha256": "1e46ca829ef6181c23ab3bf04e3cf508f72cab236ff072347f8b466c9190e756"
+      },
+      {
+        "path": "scripts/critical-scenario-policy.json",
+        "sha256": "2238e8dd31cbad53ccace2998eede43d187a1cf6bd83d328dcd1fc8fd318c452"
+      },
+      {
+        "path": "scripts/critical-scenarios.ts",
+        "sha256": "280d79442048ce54dd512b730fd7436d7bb985afc862bce93658e1100a1e0d8c"
+      },
+      {
+        "path": "scripts/generate-theme-contract.ts",
+        "sha256": "026bd5ee88a6e18aeeb25dd4c70ee96d8ab579e49bc186f00ec37dff7a3f20b5"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-contract.tsx",
+        "sha256": "bc7c3c3e569c031a192ea5195f1a3b68d800b2c032b6de230463bdca3b94eed5"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-roles.tsx",
+        "sha256": "4e999b4cce651607aca2ec45d22b30b6ca83a2f47e758fc500581fc9d6c3ac9a"
+      },
+      {
+        "path": "scripts/verification/theme-contract-workflow.ts",
+        "sha256": "7a883e6ed60698149ec9ff4f1092403ff8987b0264ea5002e36634a8a0ae8137"
+      },
+      {
+        "path": "scripts/verification/theme-foundation-workflow.ts",
+        "sha256": "10dbaaa78c7cad2527ecebca34c97f54f1749d0d3213e0173823d9c5a1dff87e"
+      },
+      {
+        "path": "scripts/verification/theme-roles-workflow.ts",
+        "sha256": "078b4d2832e9a16d726d8310f517cb406fcbe7f54f9cedac5b79b5eca645fee3"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "TC12-electron-reflow-320",
+    "TC12-electron-reflow-375",
+    "TC12-electron-reflow-390",
+    "TC12-electron-reflow-768",
+    "TC12-electron-reflow-769",
+    "TC12-electron-reflow-1280",
+    "TC12-viewer-reflow-320",
+    "TC12-viewer-reflow-375",
+    "TC12-viewer-reflow-390",
+    "TC12-viewer-reflow-768",
+    "TC12-viewer-reflow-769",
+    "TC12-viewer-reflow-1280",
+    "TC12-webui-reflow-320",
+    "TC12-webui-reflow-375",
+    "TC12-webui-reflow-390",
+    "TC12-webui-reflow-768",
+    "TC12-webui-reflow-769",
+    "TC12-webui-reflow-1280",
+    "TC18-role-page-errors"
+  ],
+  "passed": 19,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "electron-1280.png",
+      "sha256": "367f417876370ba74423e5adcd6a05b2ae113d6acf37d6be498db36ab6010419",
+      "bytes": 54324
+    },
+    {
+      "path": "electron-320.png",
+      "sha256": "433be51d88bc4e9c081ca70e86233d95cf5fddc6aadac8ed9c4ccd928f493114",
+      "bytes": 39693
+    },
+    {
+      "path": "electron-375.png",
+      "sha256": "319ee523cec2cb1b4873e16ed050d0274b127474ab1d74b2d4d7baab65acafd4",
+      "bytes": 40588
+    },
+    {
+      "path": "electron-390.png",
+      "sha256": "9020ee84a9d1ace561609da658d9905c055538e3d17639e58cb8bfac2b743c10",
+      "bytes": 40901
+    },
+    {
+      "path": "electron-768.png",
+      "sha256": "a1bae4b07dd31efbcdd773a97c3fc77765dabb4778fee7b5c78a88e989af131f",
+      "bytes": 51649
+    },
+    {
+      "path": "electron-769.png",
+      "sha256": "07cb5376b5a3f4a8a83e05c3e05857388f7321166c3b3867685ea569affbb547",
+      "bytes": 51568
+    },
+    {
+      "path": "electron.css",
+      "sha256": "63f175f4ce3e3f85dc78db62b09050c62b4f929804ad46f54cf4bc29d9afe4d9",
+      "bytes": 179
+    },
+    {
+      "path": "failure.json",
+      "sha256": "ba0a9abed8333f7221ee494aa9683d9a02b457c4bf8e776593ecae69e1501de1",
+      "bytes": 21159
+    },
+    {
+      "path": "index.html",
+      "sha256": "83651542798fd6fbe516b083e65e41118231f39fe3981a5ef6cef7c909f1cbfc",
+      "bytes": 279
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "91adb93553c637f57dd0b618d10d06c67d16472dde1951466997d479552ac900",
+      "bytes": 1204
+    },
+    {
+      "path": "theme-roles.json",
+      "sha256": "223a47807e403f5dcdfeb89f10de500f23cbc37961c46196999a4c016bd0a378",
+      "bytes": 72783
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "c06138381bfb2c8d5c97ea2eb5741cdcda91e1a6378afd8ab7f80b444f8fd9d5",
+      "bytes": 7786958
+    },
+    {
+      "path": "viewer-1280.png",
+      "sha256": "5252c127f626a9ac3d294262b85e53969b18ac7fa7fbe6de50c723475aa05c33",
+      "bytes": 55877
+    },
+    {
+      "path": "viewer-320.png",
+      "sha256": "5bc46c7dfccfd5de380c186dacaf1d3221ae757cd00ba1e4215f2a0b00a94487",
+      "bytes": 39574
+    },
+    {
+      "path": "viewer-375.png",
+      "sha256": "c8c386d6323c371deb0ccd414cb820c563a1242595f828905548ed17a4949d80",
+      "bytes": 40434
+    },
+    {
+      "path": "viewer-390.png",
+      "sha256": "9c30a0c635ddf5a43321ffa6ddd5cb75b80fe6c7fbb8d8bfd2855ae67c785909",
+      "bytes": 40766
+    },
+    {
+      "path": "viewer-768.png",
+      "sha256": "621581c6f479c19c08d3b75a08f7081e6f2e71f75898c78bf483d8a59cc4ce5a",
+      "bytes": 53323
+    },
+    {
+      "path": "viewer-769.png",
+      "sha256": "c57b7aee8cd1e79ac42a2b4fe0298885483f6b326038e3777a01d4ee6816014c",
+      "bytes": 53247
+    },
+    {
+      "path": "viewer.css",
+      "sha256": "c5b4cc8866be2300b618c14ff331f648e9df0e247eeb47aa76e86af38f30668e",
+      "bytes": 168
+    },
+    {
+      "path": "webui-1280.png",
+      "sha256": "367f417876370ba74423e5adcd6a05b2ae113d6acf37d6be498db36ab6010419",
+      "bytes": 54324
+    },
+    {
+      "path": "webui-320.png",
+      "sha256": "3a057d88c690159f71df94a2c3db68a5f0d93f2f75763ced2515d4ddf4b2e548",
+      "bytes": 43553
+    },
+    {
+      "path": "webui-375.png",
+      "sha256": "56809e157a33f54a7a6899b803242019678c8d8f9d1029e600702ef83200a49e",
+      "bytes": 44442
+    },
+    {
+      "path": "webui-390.png",
+      "sha256": "daff64d6b1b1fbd4f4e99b9f3d8554c281d44cd1d1f6fdecba326d50c8cf296e",
+      "bytes": 44750
+    },
+    {
+      "path": "webui-768.png",
+      "sha256": "82a80233b476f4e9eab3e4f29bdc99235992d2d980241dfdb003e3018cec8cf1",
+      "bytes": 55671
+    },
+    {
+      "path": "webui-769.png",
+      "sha256": "07cb5376b5a3f4a8a83e05c3e05857388f7321166c3b3867685ea569affbb547",
+      "bytes": 51568
+    },
+    {
+      "path": "webui.css",
+      "sha256": "99096ec4b15ff343a28bd4015f89f644b7c519d99ae067c5aeba790ad4c0cda3",
+      "bytes": 167
+    }
+  ],
+  "untested": [
+    "Native packages",
+    "Physical touch devices and soft keyboard",
+    "200% browser zoom and design comparison are separate acceptance scenes"
+  ]
+}

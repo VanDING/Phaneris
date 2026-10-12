@@ -13,3 +13,27 @@
  */
 @import "@fontsource-variable/inter/opsz.css";
 @import "@fontsource-variable/jetbrains-mono/wght.css";
+@import "../../../packages/ui/src/styles/theme-tokens.css";
+@import "../../../packages/ui/src/styles/role-tokens.css";
+
+/* Authentication chrome follows canonical Default + OS; private theme files are
+   loaded only after authentication and adapter readiness. */
+:root {
+  --page-bg: var(--surface-canvas);
+  --page-fg: var(--text-primary);
+  --card-bg: var(--surface-floating);
+  --card-border: var(--border);
+  --subtitle: var(--text-secondary);
+  --input-bg: var(--surface-sunken);
+  --input-border: var(--border);
+  --placeholder: var(--text-secondary);
+  --error-fg: var(--destructive-text);
+  --error-bg: color-mix(in srgb, var(--destructive) 8%, var(--background));
+  --error-border: color-mix(in srgb, var(--destructive) 30%, var(--background));
+}
+.card { border-radius: var(--shape-panel); }
+input, button { min-height: var(--touch-target); }
+button { background: var(--accent); color: var(--on-accent); }
+button:hover { background: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (forced-colors: active) { :focus-visible { outline-color: Highlight; } }

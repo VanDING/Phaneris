@@ -22,6 +22,8 @@ import {
   StyledDropdownMenuItem,
 } from '@/components/ui/styled-dropdown'
 import './index.css'
+import { BrowserThemeHost } from './context/BrowserThemeHost'
+import type { HostThemeInput } from '@phaneris/shared/config/theme-runtime'
 
 // This is a standalone entry (browser-toolbar.html) — i18n must be initialized
 // here or BrowserControls and the menu below render raw translation keys.
@@ -56,6 +58,9 @@ declare global {
       onStateUpdate: (callback: (state: ToolbarState) => void) => () => void
       onThemeColor: (callback: (color: string | null) => void) => () => void
       onForceCloseMenu: (callback: (payload: { reason?: string }) => void) => () => void
+      getHostTheme: () => Promise<HostThemeInput>
+      onHostTheme: (callback: (input: HostThemeInput) => void) => () => void
+      reportHostTheme: (value: { sequence: number; revision: string; accent: string; onAccent: string }) => Promise<void>
     }
   }
 }
@@ -174,7 +179,7 @@ function BrowserToolbarApp() {
       */}
       {windowMenuOpen && (
         <div
-          className="fixed inset-0 z-[90] titlebar-no-drag bg-black/[0.0039215686]"
+          className="fixed inset-0 z-local titlebar-no-drag bg-black/[0.0039215686]"
           onPointerDown={(event) => {
             event.preventDefault()
             setWindowMenuOpen(false)
@@ -211,7 +216,7 @@ function BrowserToolbarApp() {
                 side="bottom"
                 sideOffset={6}
                 minWidth="min-w-44"
-                className="titlebar-no-drag z-[110] max-h-none overflow-visible"
+                className="titlebar-no-drag z-dropdown max-h-none overflow-visible"
               >
                 <StyledDropdownMenuItem onSelect={handleHideWindow}>
                   <EyeOff className="h-3.5 w-3.5" />
@@ -242,7 +247,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     {/* Same reduced-motion contract as the main window: this is a separate
         renderer entry, so it does not inherit the app's MotionConfig. */}
     <MotionConfig reducedMotion="user">
-      <BrowserToolbarApp />
+      <BrowserThemeHost toolbar><BrowserToolbarApp /></BrowserThemeHost>
     </MotionConfig>
   </React.StrictMode>,
 )

@@ -99,7 +99,7 @@ function SlashCommandDemo() {
               Commands
             </Button>
             {buttonMenuOpen && (
-              <div className="absolute top-full left-0 mt-2 z-10">
+              <div className="absolute top-full left-0 mt-2 z-component-chrome">
                 <SlashCommandMenu
                   commands={DEFAULT_SLASH_COMMANDS}
                   activeCommands={activeCommands}

@@ -227,28 +227,28 @@ export function PanelHeader({
   const content = isCompactMode ? (
     <>
       {leadingAction && (
-        <div className="titlebar-no-drag shrink-0 z-[1]">
+        <div className="titlebar-no-drag shrink-0 z-component-overlay">
           {leadingAction}
         </div>
       )}
       <div className="flex-1" />
       {centerButton && (
-        <div className="titlebar-no-drag shrink-0 z-[1]">
+        <div className="titlebar-no-drag shrink-0 z-component-overlay">
           {centerButton}
         </div>
       )}
       {actions && (
-        <div className="titlebar-no-drag shrink-0 z-[1]">
+        <div className="titlebar-no-drag shrink-0 z-component-overlay">
           {actions}
         </div>
       )}
       {resolvedExpandButton && (
-        <div className="titlebar-no-drag shrink-0 z-[1]">
+        <div className="titlebar-no-drag shrink-0 z-component-overlay">
           {resolvedExpandButton}
         </div>
       )}
       {resolvedTrailingAction && (
-        <div className="titlebar-no-drag shrink-0 z-[1]">
+        <div className="titlebar-no-drag shrink-0 z-component-overlay">
           {resolvedTrailingAction}
         </div>
       )}
@@ -263,12 +263,12 @@ export function PanelHeader({
     </>
   ) : centerTitleInPanel ? (
     <>
-      {leadingAction && <div className="titlebar-no-drag shrink-0 z-[1]">{leadingAction}</div>}
+      {leadingAction && <div className="titlebar-no-drag shrink-0 z-component-overlay">{leadingAction}</div>}
       <div className="flex-1" />
-      {centerButton && <div className="titlebar-no-drag shrink-0 z-[1]">{centerButton}</div>}
-      {actions && <div className="titlebar-no-drag shrink-0 z-[1]">{actions}</div>}
-      {resolvedExpandButton && <div className="titlebar-no-drag shrink-0 z-[1]">{resolvedExpandButton}</div>}
-      {resolvedTrailingAction && <div className="titlebar-no-drag shrink-0 z-[1]">{resolvedTrailingAction}</div>}
+      {centerButton && <div className="titlebar-no-drag shrink-0 z-component-overlay">{centerButton}</div>}
+      {actions && <div className="titlebar-no-drag shrink-0 z-component-overlay">{actions}</div>}
+      {resolvedExpandButton && <div className="titlebar-no-drag shrink-0 z-component-overlay">{resolvedExpandButton}</div>}
+      {resolvedTrailingAction && <div className="titlebar-no-drag shrink-0 z-component-overlay">{resolvedTrailingAction}</div>}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="pointer-events-auto max-w-[45%] overflow-hidden">{titleNode}</div>
       </div>

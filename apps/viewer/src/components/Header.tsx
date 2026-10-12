@@ -51,7 +51,8 @@ export function Header({ hasSession, sessionTitle, isDark, onToggleTheme, onClea
         {hasSession && (
           <button
             onClick={onClear}
-            className="p-1.5 rounded-md bg-background shadow-minimal text-foreground/40 hover:text-foreground/70 transition-colors"
+            className="craft-icon-button p-1.5 bg-background shadow-minimal text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={t('viewer.clearSession')}
             title={t('viewer.clearSession')}
           >
             <X className="w-4 h-4" />
@@ -61,7 +62,8 @@ export function Header({ hasSession, sessionTitle, isDark, onToggleTheme, onClea
         {/* Theme toggle */}
         <button
           onClick={onToggleTheme}
-          className="p-1.5 rounded-md bg-background shadow-minimal text-foreground/40 hover:text-foreground/70 transition-colors"
+          className="craft-icon-button p-1.5 bg-background shadow-minimal text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

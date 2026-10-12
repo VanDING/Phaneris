@@ -45,6 +45,7 @@ const IGNORED_SEGMENTS = new Set([
   'release',
   'coverage',
   '.cache',
+  '.verify', // disposable native/packaged verification profiles (also gitignored)
   '.codegraph',
   '.craft-agent',
   '.ui-refinement',

@@ -195,13 +195,13 @@ export function PermissionsDataTable({
   const fullscreenButton = fullscreen ? (
     <button
       onClick={() => setIsFullscreen(true)}
-      className={cn(
+      className={`craft-row-actions ${cn(
         'motion-interactive p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform]',
         'opacity-0 group-hover:opacity-100',
         'bg-background/80 backdrop-blur-sm shadow-minimal',
         'text-muted-foreground/50 hover:text-foreground',
         'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100'
-      )}
+      )}`}
       title={t("table.viewFullscreen")}
     >
       <Maximize2 className="w-3.5 h-3.5" />

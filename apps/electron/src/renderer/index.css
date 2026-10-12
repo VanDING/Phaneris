@@ -1,4 +1,8 @@
 @import "tailwindcss" source(none);
+@import "../../../../packages/ui/src/styles/theme-tokens.css";
+@import "../../../../packages/ui/src/styles/theme-adapter.css";
+@import "../../../../packages/ui/src/styles/role-tokens.css";
+@import "../../../../packages/ui/src/styles/roles.css";
 @import "../../../../packages/ui/src/styles/typography.css";
 @import "../../../../packages/ui/src/styles/motion.css";
 @import "../../../../packages/ui/src/styles/controls.css";
@@ -30,41 +34,8 @@
    Chromium/Electron has full support for @property.
 ============================================================================= */
 
-@property --background {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #FFFFFF;
-}
+/* Animatable palette is generated in shared theme-tokens.css. */
 
-@property --foreground {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #20232C;
-}
-
-@property --accent {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: oklch(0.488 0.275 280.3);
-}
-
-@property --info {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #94601C;
-}
-
-@property --success {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #267454;
-}
-
-@property --destructive {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #B63E4C;
-}
 
 /* =============================================================================
    CRAFT AGENT THEME - 6 Color System
@@ -91,92 +62,12 @@
 
 /* Light Mode */
 :root {
-  /* === 6 BASE COLORS === */
-  --background: #FFFFFF;
-  --background-elevated: #FFFFFF;
-  --foreground: #20232C;
-  --foreground-dimmed: #606775; /* unfocused panel text */
-  --user-message-bubble: #F3F3F3;
-  --user-message-bubble-dimmed: #F7F7F7;
-  --accent: oklch(0.488 0.275 280.3);           /* purple - brand, Auto mode */
-  --info: #94601C;              /* amber - warnings, Ask mode */
-  --success: #267454;          /* green - connected, checkmarks */
-  --destructive: #B63E4C;       /* red - errors, failed */
-
-  /* === SHADOW OPACITY (light mode = subtle, dark mode = stronger) === */
-  --shadow-border-opacity: 0.08;            /* Border ring opacity */
-  --shadow-blur-opacity: 0.06;              /* Blur/spread shadow opacity */
-
-  /* === SHADOW VALUES (reusable across utility classes and component overrides) === */
-  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent);
-
-  /* Minimal shadow without blur layers — just the border ring */
-  --shadow-minimal-flat:
-    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
-    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
-    color-mix(in srgb, var(--foreground) 6%, transparent) 0px 0px 0px 1px;
-
-  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
-
-  /* Drag-lift elevation — a card genuinely peeled off the surface. Shared by the
-     Planner's in-place sortable (`--sortable-shadow-active`) and the Kanban's
-     DragOverlay clone (`.shadow-dragging`). Keeps the two leading transparent
-     layers so it matches `--shadow-minimal`'s 5-layer count and the Planner's
-     selected→grabbed `box-shadow` transition stays interpolatable. The ring uses
-     `--foreground`, which flips per theme, so light/dark are covered for free. */
   --shadow-dragging:
     rgba(0, 0, 0, 0) 0px 0px 0px 0px,
     rgba(0, 0, 0, 0) 0px 0px 0px 0px,
     color-mix(in srgb, var(--foreground) 13%, transparent) 0px 0px 0px 1px,
     rgba(0, 0, 0, 0.18) 0px 8px 10px -2px,
     rgba(0, 0, 0, 0.24) 0px 18px 24px -10px;
-
-  /* === MIX VARIANTS (solid interpolation toward background) === */
-  /* Use -2, -3, -5, -10, -20, ..., -90, -95 for solid colors (e.g., separators, Explore mode) */
-  --foreground-1\.5: color-mix(in srgb, var(--foreground) 1.5%, var(--background));
-  --foreground-2: color-mix(in srgb, var(--foreground) 2%, var(--background));
-  --foreground-3: color-mix(in srgb, var(--foreground) 3%, var(--background));
-  --foreground-5: color-mix(in srgb, var(--foreground) 5%, var(--background));
-  --foreground-10: color-mix(in srgb, var(--foreground) 10%, var(--background));
-  --foreground-20: color-mix(in srgb, var(--foreground) 20%, var(--background));
-  --foreground-30: color-mix(in srgb, var(--foreground) 30%, var(--background));
-  --foreground-40: color-mix(in srgb, var(--foreground) 40%, var(--background));
-  --foreground-50: color-mix(in srgb, var(--foreground) 50%, var(--background));
-  --foreground-60: color-mix(in srgb, var(--foreground) 60%, var(--background));
-  --foreground-70: color-mix(in srgb, var(--foreground) 70%, var(--background));
-  --foreground-80: color-mix(in srgb, var(--foreground) 80%, var(--background));
-  --foreground-90: color-mix(in srgb, var(--foreground) 90%, var(--background));
-  --foreground-95: color-mix(in srgb, var(--foreground) 95%, var(--background));
-
-  /* Success/destructive/info interpolated toward foreground (for tinted text) */
-  /* Using oklab for perceptually uniform mixing without hue shifts */
-  --success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));
-  --destructive-text: color-mix(in oklab, var(--destructive) 50%, var(--foreground));
-  --info-text: color-mix(in oklab, var(--info) 50%, var(--foreground));
-
-  /* === SHADCN COMPATIBILITY (Default semantic palette) === */
-  /* These variables exist for shadcn/ui component updates */
-  --secondary: #F2F3F8;
-  --secondary-foreground: #373D4B;
-  --muted: #F7F8FB;
-  --muted-foreground: #606775;
-  --card: #FFFFFF;
-  --card-foreground: #20232C;
-  --paper: #FFFFFF;
-  --navigator: var(--background);
-  --popover: #FFFFFF;
-  --popover-foreground: #20232C;
-  --border: #E3E6ED;
-  --input: #FFFFFF;
-  --ring: oklch(0.488 0.275 280.3);
-  --ring-width: 1px;
-  --ring-offset: 0px;
-
-  /* Markdown list markers */
-  --md-bullets: var(--foreground-50);
-  --md-counters: var(--foreground-50);
-
-  /* Onboarding step styling */
   --step-icon-size: 4rem;
   --step-icon-inner-size: 2rem;
   --step-icon-radius: 1rem;
@@ -185,163 +76,10 @@
   --step-actions-gap: 0.75rem;
   --step-content-gap: 1.5rem;
   --step-actions-margin: 2rem;
-
-  /* Typography (font stacks, reading size) comes from
-     packages/ui/src/styles/typography.css — see the import at the top. */
-
-  /* Layout */
-  --font-size-base: 15px;
-  --line-height-base: 1.5;
-  --theme-radius: 6px;
-  --radius: var(--theme-radius);
-  --theme-border-width: 1px;
-  --theme-border-style: solid;
-  --theme-depth: elevated;
-  --theme-shadow-color: #20232C;
-  --theme-shadow-strength: 0.04;
-  --theme-backdrop-blur: 0px;
-  --theme-density: comfortable;
-  --theme-density-scale: 1;
-  --theme-row-padding-y: 0.75rem;
-  --theme-menu-item-padding-y: 0.375rem;
-  --theme-settings-row-padding-y: 0.875rem;
-  --theme-activity-row-padding-y: 0.125rem;
-  --icon-stroke-width: 1.65;
-  --icon-stroke-linecap: round;
-  --spacing: 0.25rem;
-  --tracking-normal: 0em;
-
-  /* === Z-INDEX SCALE ===
-     Centralized z-index registry for consistent stacking order.
-     Use semantic names (z-panel, z-modal) instead of magic numbers.
-
-     Layer              Value   Use Case
-     ─────────────────────────────────────────────────────
-     base               0       Default content
-     local              10      Local stacking (sticky headers, icons)
-     sticky             20      Sticky section headers
-     titlebar           40      Window titlebar drag region
-     panel              50      App panels (sidebar, chat, detail)
-     dropdown           100     Dropdowns, popovers, select menus
-     tooltip            150     Tooltips (above dropdowns)
-     modal              200     Dialogs, drawers
-     overlay            300     Full-screen overlays (settings, app chrome)
-     fullscreen         350     Fullscreen content viewers (above app chrome)
-     floating-backdrop  390     Backdrop for floating menus
-     floating-menu      400     Floating menus above modals
-     island-overlay     390     Backdrop for annotation island interactions
-     island             400     Annotation island menu surface
-     island-popover     410     Popovers/dropdowns opened from island content
-     splash             600     Splash screen, workspace creation
-  */
-  --z-base: 0;
-  --z-local: 10;
-  --z-sticky: 20;
-  --z-titlebar: 40;
-  --z-panel: 50;
-  --z-dropdown: 100;
-  --z-tooltip: 150;
-  --z-modal: 200;
-  --z-overlay: 300;
-  --z-fullscreen: 350;
-  --z-floating-backdrop: 390;
-  --z-floating-menu: 400;
-  --z-island-overlay: 390;
-  --z-island: 400;
-  --z-island-popover: 410;
-  --z-splash: 600;
-
-  --popover-solid: #FFFFFF;
-  --theme-panel-radius: 6px;
-  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
-  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
-  --theme-mode: solid;
 }
 
 /* Dark Mode */
-.dark {
-  /* === 6 BASE COLORS (must match DEFAULT_THEME.dark in theme.ts) === */
-  --background: #17191E;
-  --background-elevated: #242832;
-  --foreground: #EEF0F6;
-  --foreground-dimmed: #AAB1C1; /* unfocused panel text */
-  --user-message-bubble: #2B2B2B;
-  --user-message-bubble-dimmed: #252525;
-  --accent: oklch(0.626 0.221 291.7);            /* brighter purple in dark */
-  --info: #E3B674;               /* amber */
-  --success: #83CBA7;           /* green */
-  --destructive: #F18C98;        /* brighter red in dark */
-
-  /* === SHADOW OPACITY (stronger in dark mode for visibility) === */
-  --shadow-border-opacity: 0.15;
-  --shadow-blur-opacity: 0.12;
-
-  /* === MIX VARIANTS === */
-  --foreground-1\.5: color-mix(in srgb, var(--foreground) 1.5%, var(--background));
-  --foreground-2: color-mix(in srgb, var(--foreground) 2%, var(--background));
-  --foreground-3: color-mix(in srgb, var(--foreground) 3%, var(--background));
-  --foreground-5: color-mix(in srgb, var(--foreground) 5%, var(--background));
-  --foreground-10: color-mix(in srgb, var(--foreground) 10%, var(--background));
-  --foreground-20: color-mix(in srgb, var(--foreground) 20%, var(--background));
-  --foreground-30: color-mix(in srgb, var(--foreground) 30%, var(--background));
-  --foreground-40: color-mix(in srgb, var(--foreground) 40%, var(--background));
-  --foreground-50: color-mix(in srgb, var(--foreground) 50%, var(--background));
-  --foreground-60: color-mix(in srgb, var(--foreground) 60%, var(--background));
-  --foreground-70: color-mix(in srgb, var(--foreground) 70%, var(--background));
-  --foreground-80: color-mix(in srgb, var(--foreground) 80%, var(--background));
-  --foreground-90: color-mix(in srgb, var(--foreground) 90%, var(--background));
-  --foreground-95: color-mix(in srgb, var(--foreground) 95%, var(--background));
-
-  /* Success/destructive/info interpolated toward foreground (for tinted text) */
-  /* Using oklab for perceptually uniform mixing without hue shifts */
-  --success-text: color-mix(in oklab, var(--success) 50%, var(--foreground));
-  --destructive-text: color-mix(in oklab, var(--destructive) 50%, var(--foreground));
-  --info-text: color-mix(in oklab, var(--info) 50%, var(--foreground));
-
-  /* === SHADCN COMPATIBILITY (Default semantic palette) === */
-  --secondary: #282D38;
-  --secondary-foreground: #E0E4EE;
-  --muted: #222630;
-  --muted-foreground: #AAB1C1;
-  --card: #1C1F26;
-  --card-foreground: #EEF0F6;
-  --paper: #1D2028;
-  --navigator: var(--background);
-  --popover: #262A34;
-  --popover-foreground: #EEF0F6;
-  --border: #343946;
-  --input: #20232C;
-  --ring: oklch(0.626 0.221 291.7);
-
-  /* Markdown list markers */
-  --md-bullets: var(--foreground-50);
-  --md-counters: var(--foreground-50);
-  --popover-solid: #262A34;
-  --theme-shadow-color: #08090C;
-  --theme-shadow-strength: 0.22;
-  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border);
-  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent);
-  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
-  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
-  --theme-radius: 6px;
-  --theme-panel-radius: 6px;
-  --theme-border-width: 1px;
-  --theme-border-style: solid;
-  --font-size-base: 15px;
-  --tracking-normal: 0em;
-  --line-height-base: 1.5;
-  --icon-stroke-width: 1.65;
-  --icon-stroke-linecap: round;
-  --theme-density: comfortable;
-  --theme-density-scale: 1;
-  --theme-row-padding-y: 0.75rem;
-  --theme-menu-item-padding-y: 0.375rem;
-  --theme-settings-row-padding-y: 0.875rem;
-  --theme-activity-row-padding-y: 0.125rem;
-  --theme-depth: flat;
-  --theme-backdrop-blur: 0px;
-  --theme-mode: solid;
-}
+/* Shared dark palette is generated from DEFAULT_THEME. */
 
 /* Theme Override - Semi-transparent background to allow vibrancy through */
 html[data-theme-override]::before {
@@ -349,7 +87,7 @@ html[data-theme-override]::before {
   position: fixed;
   inset: 0;
   background: color-mix(in srgb, var(--background) 50%, transparent);
-  z-index: -1;
+  z-index: var(--z-component-behind);
   pointer-events: none;
 }
 
@@ -360,7 +98,7 @@ html[data-theme-mismatch]::before {
   position: fixed;
   inset: 0;
   background: var(--foreground-10);
-  z-index: -1;
+  z-index: var(--z-component-behind);
   pointer-events: none;
 }
 
@@ -385,7 +123,7 @@ html[data-scenic]::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: -2;
+  z-index: var(--z-component-background);
   pointer-events: none;
 }
 
@@ -396,7 +134,7 @@ html.dark[data-scenic]::after {
   position: fixed;
   inset: 0;
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
-  z-index: -1;
+  z-index: var(--z-component-behind);
   pointer-events: none;
 }
 
@@ -421,119 +159,16 @@ html[data-scenic] {
    size axis, so `font-optical-sizing: auto` below is meaningful.
    `--font-cjk` keeps Han on the bundled CJK face — Inter has no Han glyphs, so
    without it the Chinese would drop to the generic `sans-serif` default. */
-html[data-font="inter"] {
-  --font-sans: "Inter Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, var(--font-cjk), sans-serif;
-  --font-default: var(--font-sans);
-  font-optical-sizing: auto;
-  font-feature-settings: "cv01", "cv02", "cv03", "cv04", "case";
-}
+/* Font preference adapters live in shared typography.css. */
 
 /* Explicit user override. The selector outranks dynamically injected :root
    theme tokens, so choosing System always wins over a theme-authored font.
    This variant is deliberately native end to end: Han falls to the OS CJK face
    (Microsoft YaHei on Windows, PingFang on macOS) rather than the bundled one. */
-html[data-font="system"] {
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-default: var(--font-sans);
-  font-optical-sizing: auto;
-  font-feature-settings: normal;
-}
+
 
 /* Theme integration for Tailwind v4 */
-@theme inline {
-  /* === 6 BASE COLORS === */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  /* Compatibility for controls using shadcn primary names. */
-  --color-primary: var(--foreground);
-  --color-primary-foreground: var(--background);
-  --color-border-strong: color-mix(in srgb, var(--foreground) 15%, transparent);
-  --color-info: var(--info);
-  --color-success: var(--success);
-  --color-destructive: var(--destructive);
-
-  /* === MIX VARIANTS (solid interpolation) === */
-  --color-foreground-1\.5: var(--foreground-1\.5);
-  --color-foreground-2: var(--foreground-2);
-  --color-foreground-3: var(--foreground-3);
-  --color-foreground-5: var(--foreground-5);
-  --color-foreground-10: var(--foreground-10);
-  --color-foreground-20: var(--foreground-20);
-  --color-foreground-30: var(--foreground-30);
-  --color-foreground-40: var(--foreground-40);
-  --color-foreground-50: var(--foreground-50);
-  --color-foreground-60: var(--foreground-60);
-  --color-foreground-70: var(--foreground-70);
-  --color-foreground-80: var(--foreground-80);
-  --color-foreground-90: var(--foreground-90);
-  --color-foreground-95: var(--foreground-95);
-
-  /* === SEMANTIC SURFACE COLORS === */
-  /* Subtle hover background for sidebar list items (2% foreground opacity) */
-  --color-sidebar-hover: oklch(from var(--foreground) l c h / 0.02);
-  /* User message bubble background (overridden on unfocused panels) */
-  --color-user-message-bubble: var(--user-message-bubble);
-
-  /* === LEGACY COMPATIBILITY === */
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-paper: var(--paper);
-  --color-navigator: var(--navigator);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-destructive-foreground: var(--background);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-md-bullets: var(--md-bullets);
-  --color-md-counters: var(--md-counters);
-
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
-
-  /* Theme-driven Tailwind shape scale. Arbitrary radii remain intentionally
-     untouched; semantic rounded-* utilities follow the selected theme. */
-  --radius-sm: calc(var(--theme-radius) * 0.5);
-  --radius-md: calc(var(--theme-radius) * 0.75);
-  --radius-lg: var(--theme-radius);
-  --radius-xl: calc(var(--theme-radius) * 1.5);
-  --radius-2xl: calc(var(--theme-radius) * 2);
-  --radius-3xl: calc(var(--theme-radius) * 3);
-  --radius-4xl: calc(var(--theme-radius) * 4);
-  --default-border-width: var(--theme-border-width);
-
-  /* === Z-INDEX SCALE === */
-  --z-index-base: var(--z-base);
-  --z-index-local: var(--z-local);
-  --z-index-sticky: var(--z-sticky);
-  --z-index-titlebar: var(--z-titlebar);
-  --z-index-panel: var(--z-panel);
-  --z-index-dropdown: var(--z-dropdown);
-  --z-index-tooltip: var(--z-tooltip);
-  --z-index-modal: var(--z-modal);
-  --z-index-overlay: var(--z-overlay);
-  --z-index-fullscreen: var(--z-fullscreen);
-  --z-index-floating-backdrop: var(--z-floating-backdrop);
-  --z-index-floating-menu: var(--z-floating-menu);
-  --z-index-island-overlay: var(--z-island-overlay);
-  --z-index-island: var(--z-island);
-  --z-index-island-popover: var(--z-island-popover);
-  --z-index-splash: var(--z-splash);
-
-  /* === CONTAINER QUERY BREAKPOINTS === */
-  /* Custom breakpoints for responsive panel layouts.
-   * Generates @panel-compact:, @panel-medium:, @mobile: Tailwind utility prefixes. */
-  --container-3xs: 16rem;           /* 256px */
-  --container-panel-compact: 28rem; /* 448px — PANEL_MIN_WIDTH */
-  --container-panel-medium: 40rem;  /* 640px */
-  --container-mobile: 48rem;        /* 768px — mobile breakpoint */
-}
+/* Shared utilities and shape mapping live in theme-adapter.css. */
 
 /* Global styles - MUST be in @layer base so utilities can override */
 @layer base {
@@ -723,13 +358,13 @@ html[data-font="system"] {
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
-    z-index: 1;
+    z-index: var(--z-component-overlay);
   }
 
   /* Ensure content sits above the ::before pseudo-element */
   .shadow-panel-focused > * {
     position: relative;
-    z-index: 2;
+    z-index: var(--z-component-header);
   }
 
   /* Non-default material depths provide their own border/shadow language. */
@@ -819,7 +454,7 @@ html[data-scenic] .shadow-strong::before {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-  z-index: 1;
+  z-index: var(--z-component-overlay);
   mix-blend-mode: soft-light;
 }
 
@@ -830,7 +465,7 @@ html[data-scenic] .shadow-strong::before {
 html[data-scenic] .shadow-middle > *,
 html[data-scenic] .shadow-strong > * {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-component-header);
 }
 
 
@@ -1654,7 +1289,7 @@ html.dark[data-scenic] .fullscreen-overlay-background {
 
 /* Keep one icon column throughout the desktop sidebar width transition. */
 .sidebar-navigation .sidebar-nav-button,
-.sidebar-navigation .sidebar-new-session { min-height: 40px; position: relative; padding-inline: 11px; overflow: hidden; }
+.sidebar-navigation .sidebar-new-session { min-height: var(--sidebar-row-height); position: relative; padding-inline: 11px; overflow: hidden; }
 .sidebar-navigation .sidebar-new-session:hover { box-shadow: var(--shadow-middle, var(--shadow-minimal)); }
 .sidebar-navigation .sidebar-nav-button > span:first-child,
 .sidebar-navigation .sidebar-new-session > svg { width: 18px; height: 18px; flex-shrink: 0; }

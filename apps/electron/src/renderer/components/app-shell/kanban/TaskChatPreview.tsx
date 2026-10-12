@@ -65,7 +65,7 @@ export function TaskChatPreview({
           </div>
 
           {/* Task-mode orchestrator tag */}
-          <div className="flex items-center gap-2 text-[11px] text-foreground/55">
+          <div className="flex items-center gap-2 text-[11px] text-text-secondary">
             <Workflow className="h-3.5 w-3.5 shrink-0" strokeWidth={1.5} />
             <span className="font-medium">Task mode · orchestrator</span>
             <ModelChip model={model} />
@@ -76,8 +76,8 @@ export function TaskChatPreview({
 
           {/* Spawned subtasks panel */}
           {subtasks.length > 0 && (
-            <div className="rounded-lg border border-border/60 bg-card p-3">
-              <div className="mb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <div className="rounded-lg border border-border/60 bg-surface-raised p-3">
+              <div className="mb-1 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
                 Spawned subtasks
               </div>
               <div className="divide-y divide-border/40">
@@ -97,9 +97,9 @@ export function TaskChatPreview({
 
       {/* Input bar (presentational) */}
       <div className="border-t border-border/50 px-4 py-3">
-        <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-xl border border-border/60 bg-card px-3 py-2">
+        <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-xl border border-border/60 bg-surface-raised px-3 py-2">
           <ModelChip model={model} className="shrink-0" />
-          <span className="flex-1 truncate text-sm text-foreground/40">Reply to this task…</span>
+          <span className="flex-1 truncate text-sm text-text-secondary">Reply to this task…</span>
           <span
             className={cn(
               'grid h-7 w-7 shrink-0 place-items-center rounded-full',

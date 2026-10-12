@@ -130,9 +130,10 @@
 
   @media (pointer: coarse) {
     .craft-control:not([data-slot="switch"]):not(textarea),
-    .craft-touch-target { min-height: 44px; }
-    .craft-icon-button { min-width: 44px; min-height: 44px; }
-    .craft-row-actions { opacity: 1; }
+    .craft-touch-target { min-height: max(var(--touch-target, 44px), calc(var(--craft-control-height, 0px) * var(--ui-scale, 1))); }
+    .craft-icon-button { min-width: var(--touch-target, 44px); min-height: var(--touch-target, 44px); }
+    .craft-icon-button[data-slot="button"] { min-width: max(var(--touch-target, 44px), calc(var(--craft-control-height, 2.25rem) * var(--ui-scale, 1))); }
+    .craft-row-actions { opacity: 1; min-width: var(--touch-target, 44px); min-height: var(--touch-target, 44px); }
     .craft-row-timestamp { visibility: hidden; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -149,6 +150,13 @@
 
 /* Responsive structure must override each control's desktop utility layout. */
 @layer utilities {
+  /* Utility opacity classes must not outrank the role's keyboard/touch state. */
+  .group:focus-within .craft-row-actions,
+  .craft-row-actions:focus-visible { opacity: 1; }
+  @media (pointer: coarse) {
+    .craft-row-actions:not([hidden]):not(:disabled) { opacity: 1; }
+    .craft-row-actions:disabled { opacity: .5; }
+  }
   @container (max-width: 440px) {
     .craft-settings-row:not(:has([data-slot="switch"])) { flex-direction: column; align-items: stretch; }
     .craft-settings-row:not(:has([data-slot="switch"])) > [data-layout="settings-control"] { width: 100%; }

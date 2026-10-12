@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Phaneris — Login</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   <link rel="icon" type="image/x-icon" href="./favicon.ico" />
@@ -13,24 +13,12 @@
   <style>
     :root {
       color-scheme: light dark;
-      --page-bg: #f8f8fa;
-      --page-fg: #1a1a2e;
-      --card-bg: rgba(255, 255, 255, 0.86);
-      --card-border: rgba(228, 228, 232, 0.9);
       --card-shadow: 0 32px 96px rgba(41, 25, 63, 0.14), 0 16px 40px rgba(41, 25, 63, 0.08);
-      --subtitle: rgba(26, 26, 46, 0.56);
-      --input-bg: rgba(255, 255, 255, 0.72);
-      --input-border: rgba(212, 212, 216, 0.95);
-      --placeholder: rgba(26, 26, 46, 0.34);
-      --accent: #6d5dfc;
       --accent-hover: #5a4be0;
       --ambient-strong: rgba(104, 78, 133, 0.18);
       --ambient-soft: rgba(104, 78, 133, 0.1);
       --grain-1: rgba(104, 78, 133, 0.055);
       --grain-2: rgba(104, 78, 133, 0.03);
-      --error-bg: #fef2f2;
-      --error-border: #fecaca;
-      --error-fg: #b91c1c;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,8 +29,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      overflow: hidden;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
       isolation: isolate;
       background: var(--page-bg);
@@ -53,7 +42,7 @@
     body::before,
     body::after {
       content: '';
-      position: absolute;
+      position: fixed;
       inset: 0;
       pointer-events: none;
     }
@@ -82,7 +71,7 @@
 
     .card {
       position: relative;
-      z-index: 1;
+      z-index: var(--z-component-overlay);
       width: 100%;
       max-width: 28rem;
       padding: 32px;
@@ -146,8 +135,8 @@
       font-size: 14px;
       font-weight: 500;
       font-family: 'Inter Variable', sans-serif;
-      color: white;
-      background: linear-gradient(180deg, #7b6dff 0%, var(--accent) 100%);
+      color: var(--on-accent);
+      background: var(--accent);
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -156,7 +145,7 @@
     }
 
     button:hover {
-      background: linear-gradient(180deg, #705fff 0%, var(--accent-hover) 100%);
+      background: var(--accent);
       transform: translateY(-1px);
       filter: brightness(1.02);
     }
@@ -203,25 +192,22 @@
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --page-bg: #0f0f14;
-        --page-fg: #e0e0e8;
-        --card-bg: rgba(26, 26, 34, 0.82);
-        --card-border: rgba(42, 42, 53, 0.95);
         --card-shadow: 0 32px 96px rgba(0, 0, 0, 0.42), 0 16px 40px rgba(0, 0, 0, 0.24);
-        --subtitle: rgba(224, 224, 232, 0.64);
-        --input-bg: rgba(15, 15, 20, 0.72);
-        --input-border: rgba(42, 42, 53, 0.95);
-        --placeholder: rgba(224, 224, 232, 0.32);
         --ambient-strong: rgba(155, 123, 184, 0.22);
         --ambient-soft: rgba(155, 123, 184, 0.12);
         --grain-1: rgba(155, 123, 184, 0.06);
         --grain-2: rgba(155, 123, 184, 0.035);
-        --error-bg: #2d1a1a;
-        --error-border: #5a2020;
-        --error-fg: #f5a0a0;
       }
     }
   </style>
+  <script>
+    const loginTheme = matchMedia('(prefers-color-scheme: dark)');
+    const applyLoginTheme = () => {
+      document.documentElement.classList.toggle('dark', loginTheme.matches);
+      document.documentElement.dataset.themeHostPolicy = 'unauth-default-system';
+    };
+    applyLoginTheme(); loginTheme.addEventListener('change', applyLoginTheme);
+  </script>
 </head>
 <body>
   <div class="card">
@@ -242,7 +228,7 @@
       <button type="submit" id="submit-btn">Sign In</button>
     </form>
 
-    <div id="error" class="error"></div>
+    <div id="error" class="error" role="alert"></div>
   </div>
 
   <script>

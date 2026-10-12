@@ -1,0 +1,126 @@
+/* Shared Tailwind adapter. Host policies belong in each host entrypoint. */
+:root {
+  --z-base: 0;
+  --z-local: 10;
+  --z-sticky: 20;
+  --z-titlebar: 40;
+  --z-panel: 50;
+  --z-dropdown: 100;
+  --z-tooltip: 150;
+  --z-modal: 200;
+  --z-overlay: 300;
+  --z-fullscreen: 350;
+  --z-floating-backdrop: 390;
+  --z-floating-menu: 400;
+  --z-island-overlay: 390;
+  --z-island: 400;
+  --z-island-popover: 410;
+  --z-splash: 600;
+}
+
+@theme inline {
+  /* === 6 BASE COLORS === */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
+  --color-popover-solid: var(--popover-solid);
+  --color-info-text: var(--info-text);
+  --color-success-text: var(--success-text);
+  --color-destructive-text: var(--destructive-text);
+  /* Compatibility for controls using shadcn primary names. */
+  --color-primary: var(--foreground);
+  --color-primary-foreground: var(--background);
+  --color-border-strong: color-mix(in srgb, var(--foreground) 15%, transparent);
+  --color-info: var(--info);
+  --color-success: var(--success);
+  --color-destructive: var(--destructive);
+
+  /* === MIX VARIANTS (solid interpolation) === */
+  --color-foreground-1\.5: var(--foreground-1\.5);
+  --color-foreground-2: var(--foreground-2);
+  --color-foreground-3: var(--foreground-3);
+  --color-foreground-5: var(--foreground-5);
+  --color-foreground-10: var(--foreground-10);
+  --color-foreground-20: var(--foreground-20);
+  --color-foreground-30: var(--foreground-30);
+  --color-foreground-40: var(--foreground-40);
+  --color-foreground-50: var(--foreground-50);
+  --color-foreground-60: var(--foreground-60);
+  --color-foreground-70: var(--foreground-70);
+  --color-foreground-80: var(--foreground-80);
+  --color-foreground-90: var(--foreground-90);
+  --color-foreground-95: var(--foreground-95);
+
+  /* === SEMANTIC SURFACE COLORS === */
+  /* Subtle hover background for sidebar list items (2% foreground opacity) */
+  --color-sidebar-hover: oklch(from var(--foreground) l c h / 0.02);
+  /* User message bubble background (overridden on unfocused panels) */
+  --color-user-message-bubble: var(--user-message-bubble);
+
+  /* === LEGACY COMPATIBILITY === */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-paper: var(--paper);
+  --color-navigator: var(--navigator);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive-foreground: var(--background);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-md-bullets: var(--md-bullets);
+  --color-md-counters: var(--md-counters);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  /* Theme-driven Tailwind shape scale. Arbitrary radii remain intentionally
+     untouched; semantic rounded-* utilities follow the selected theme. */
+  --radius-sm: calc(var(--theme-radius) * 0.5);
+  --radius-md: calc(var(--theme-radius) * 0.75);
+  --radius-lg: var(--theme-radius);
+  --radius-xl: calc(var(--theme-radius) * 1.5);
+  --radius-2xl: calc(var(--theme-radius) * 2);
+  --radius-3xl: calc(var(--theme-radius) * 3);
+  --radius-4xl: calc(var(--theme-radius) * 4);
+  --default-border-width: var(--theme-border-width);
+
+  /* === Z-INDEX SCALE === */
+  --z-index-base: var(--z-base);
+  --z-index-local: var(--z-local);
+  --z-index-sticky: var(--z-sticky);
+  --z-index-titlebar: var(--z-titlebar);
+  --z-index-panel: var(--z-panel);
+  --z-index-dropdown: var(--z-dropdown);
+  --z-index-tooltip: var(--z-tooltip);
+  --z-index-modal: var(--z-modal);
+  --z-index-overlay: var(--z-overlay);
+  --z-index-fullscreen: var(--z-fullscreen);
+  --z-index-floating-backdrop: var(--z-floating-backdrop);
+  --z-index-floating-menu: var(--z-floating-menu);
+  --z-index-island-overlay: var(--z-island-overlay);
+  --z-index-island: var(--z-island);
+  --z-index-island-popover: var(--z-island-popover);
+  --z-index-splash: var(--z-splash);
+
+  /* === CONTAINER QUERY BREAKPOINTS === */
+  /* Custom breakpoints for responsive panel layouts.
+   * Generates @panel-compact:, @panel-medium:, @mobile: Tailwind utility prefixes. */
+  --container-3xs: 16rem;           /* 256px */
+  --container-panel-compact: 28rem; /* 448px — PANEL_MIN_WIDTH */
+  --container-panel-medium: 40rem;  /* 640px */
+  --container-mobile: 48rem;        /* 768px — mobile breakpoint */
+}
+
+@layer base {
+  * { border-style: var(--theme-border-style); }
+  .lucide { stroke-width: var(--icon-stroke-width); stroke-linecap: var(--icon-stroke-linecap); }
+  body { line-height: var(--line-height-base); letter-spacing: var(--tracking-normal); }
+}

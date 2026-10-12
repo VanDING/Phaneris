@@ -146,7 +146,7 @@ export function SettingsMenuSelect({
       >
         {showSearch && (
           <div className="relative mb-1.5">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-text-secondary" />
             <input
               ref={searchInputRef}
               type="text"
@@ -157,7 +157,7 @@ export function SettingsMenuSelect({
               className={cn(
                 'craft-control w-full h-8 pl-8 pr-3 text-sm rounded-md',
                 'bg-foreground/5 border-0',
-                'placeholder:text-muted-foreground',
+                'placeholder:text-text-secondary',
                 'focus-visible:ring-0'
               )}
             />
@@ -165,7 +165,7 @@ export function SettingsMenuSelect({
         )}
         <div className="space-y-0.5 max-h-64 overflow-auto">
           {filteredOptions.length === 0 ? (
-            <div className="px-2.5 py-3 text-sm text-muted-foreground text-center">
+            <div className="px-2.5 py-3 text-sm text-text-secondary text-center">
               {t('chat.noResults')}
             </div>
           ) : (

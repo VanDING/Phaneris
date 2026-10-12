@@ -132,7 +132,7 @@ export function SearchableModelInput({
             {fetchError && <p role="status" className="craft-field-error px-2 py-2">{t("common.errorLoadingContent")}</p>}
             {/* Search input */}
             <div className="relative mb-1.5">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-text-secondary" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -143,7 +143,7 @@ export function SearchableModelInput({
                 className={cn(
                   'craft-control w-full h-8 pl-8 pr-3 text-sm rounded-md',
                   'bg-foreground/5 border-0',
-                  'placeholder:text-muted-foreground',
+                  'placeholder:text-text-secondary',
                   'focus-visible:ring-0'
                 )}
               />
@@ -151,7 +151,7 @@ export function SearchableModelInput({
             {/* Model list */}
             <div className="max-h-64 overflow-auto space-y-0.5">
               {filteredModels.length === 0 ? (
-                <div className="px-2.5 py-3 text-sm text-muted-foreground text-center">
+                <div className="px-2.5 py-3 text-sm text-text-secondary text-center">
                   {t('chat.noResults')}
                 </div>
               ) : (

@@ -34,7 +34,7 @@ export function SessionProjectColorWrapper({
       style={showTint ? { backgroundColor: `color-mix(in srgb, ${color} 6%, transparent)` } : undefined}
     >
       <div
-        className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-sm z-10 pointer-events-none"
+        className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-sm z-component-chrome pointer-events-none"
         style={{ backgroundColor: color }}
         aria-hidden
       />

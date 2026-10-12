@@ -12,7 +12,7 @@ import { HelpCircle, Plus } from 'lucide-react'
 /** Mock TopBar strip — just the right-side buttons that caused the overlap. */
 function MockTopBar() {
   return (
-    <div className="absolute top-0 left-0 right-0 h-[48px] z-[50] flex items-center justify-between px-3 border-b border-border/30 bg-background/80 backdrop-blur-sm">
+    <div className="absolute top-0 left-0 right-0 h-[48px] z-component-handles flex items-center justify-between px-3 border-b border-border/30 bg-background/80 backdrop-blur-sm">
       <span className="text-xs text-muted-foreground">Mock TopBar</span>
       <div className="flex items-center gap-1" style={{ paddingRight: 12 }}>
         <button className="h-[26px] w-[26px] flex items-center justify-center rounded-lg hover:bg-foreground/5">

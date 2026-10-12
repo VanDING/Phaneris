@@ -5,6 +5,7 @@ import { join, relative, resolve } from 'node:path'
 import { createServer } from 'vite'
 import { verificationWorkflow } from './verification-artifacts'
 import { launchWorkflowBrowser } from './workflow-browser'
+import { warmThemePage } from './fixtures/warm-theme-page'
 
 await verificationWorkflow('markdown-popout', async run => {
   const root = resolve(import.meta.dir, '../..')
@@ -15,7 +16,9 @@ await verificationWorkflow('markdown-popout', async run => {
   const port = (server.httpServer!.address() as { port: number }).port
   const base = `http://127.0.0.1:${port}/${relative(root, run.directory).replaceAll('\\', '/')}/index.html`
   const launched = await launchWorkflowBrowser()
-  const page = await launched.browser.newPage({ viewport: { width: 1440, height: 900 } })
+  const context = await launched.browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const page = await context.newPage()
+  run.json('preparation.json', await warmThemePage(context, base, '[data-testid="open-message"]'))
   const errors: string[] = [], consoleErrors: string[] = []
   const checks: { id: string; passed: boolean; error?: string }[] = [], geometry: unknown[] = []
   page.on('pageerror', error => errors.push(error.message))

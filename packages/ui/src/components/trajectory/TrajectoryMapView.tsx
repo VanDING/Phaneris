@@ -198,18 +198,18 @@ export function TrajectoryMapView({ snapshot, turns, sessionMap, isProcessing = 
         </select>
         <label className={styles.weightControl}>
           <span>{t('trajectory.execution.weight')}</span>
-          <select value={weight} onChange={event => setWeight(event.target.value as 'duration' | 'tokens')}>
+          <select className="craft-field-input" value={weight} onChange={event => setWeight(event.target.value as 'duration' | 'tokens')}>
             <option value="duration">{t('trajectory.execution.measuredTime')}</option>
             <option value="tokens">{t('trajectory.execution.tokens')}</option>
           </select>
         </label>
         <div className={styles.actions}>
-          <button type="button" onClick={() => { setAnimateViewport(true); zoom(0.84) }} aria-label={t('trajectory.map.zoomOut')}><Minus /></button>
+          <button className="craft-control" type="button" onClick={() => { setAnimateViewport(true); zoom(0.84) }} aria-label={t('trajectory.map.zoomOut')}><Minus /></button>
           <span className={styles.scale}>{Math.round(transform.scale * 100)}%</span>
-          <button type="button" onClick={() => { setAnimateViewport(true); zoom(1.19) }} aria-label={t('trajectory.map.zoomIn')}><Plus /></button>
-          <button type="button" onClick={() => { setAnimateViewport(true); locate() }} aria-label={t('trajectory.execution.locate')}><LocateFixed /></button>
-          <button type="button" onClick={() => { setAnimateViewport(true); fit() }} aria-label={t('trajectory.map.fit')}><Maximize2 /></button>
-          <button type="button" aria-expanded={inspectorOpen} onClick={event => inspectorOpen ? closeInspector() : openInspector(event.currentTarget)} aria-label={t('trajectory.execution.details')}><PanelRight /></button>
+          <button className="craft-control" type="button" onClick={() => { setAnimateViewport(true); zoom(1.19) }} aria-label={t('trajectory.map.zoomIn')}><Plus /></button>
+          <button className="craft-control" type="button" onClick={() => { setAnimateViewport(true); locate() }} aria-label={t('trajectory.execution.locate')}><LocateFixed /></button>
+          <button className="craft-control" type="button" onClick={() => { setAnimateViewport(true); fit() }} aria-label={t('trajectory.map.fit')}><Maximize2 /></button>
+          <button className="craft-control" type="button" aria-expanded={inspectorOpen} onClick={event => inspectorOpen ? closeInspector() : openInspector(event.currentTarget)} aria-label={t('trajectory.execution.details')}><PanelRight /></button>
         </div>
       </div>
       <div className={styles.executionLegend} aria-label={t('trajectory.execution.legend')}>
@@ -282,7 +282,7 @@ export function TrajectoryMapView({ snapshot, turns, sessionMap, isProcessing = 
           <div className={styles.inspectorHeader}>
             <div className={styles.inspectorTop}>
               <span className={styles.cardEyebrow}>{t(`trajectory.execution.kind.${selectedNode.kind}`)}</span>
-              <div className={styles.actions}><button ref={inspectorCloseRef} type="button" onClick={closeInspector} aria-label={t('common.close')}><X /></button></div>
+              <div className={styles.actions}><button className="craft-control" ref={inspectorCloseRef} type="button" onClick={closeInspector} aria-label={t('common.close')}><X /></button></div>
             </div>
             <h3>{title(selectedNode)}</h3>
             <p>{selectedNode.preview}</p>
@@ -301,8 +301,8 @@ export function TrajectoryMapView({ snapshot, turns, sessionMap, isProcessing = 
             {selectedNode.kind === 'session' && selectedNode.id !== graph.rootId && <p>{t('trajectory.execution.sessionHint')}</p>}
           </div>
           <div className={styles.inspectorActions}>
-            {recordIndex(selectedNode) !== undefined && <button type="button" onClick={() => onSelectRecord?.(recordIndex(selectedNode)!)} disabled={!onSelectRecord}>{t('trajectory.execution.viewRecord')}</button>}
-            {selectedNode.kind === 'session' && selectedNode.sessionId !== sessionMap.currentSessionId && <button type="button" onClick={() => onOpenSession?.(selectedNode.sessionId)} disabled={!onOpenSession}>{t('common.open')}</button>}
+            {recordIndex(selectedNode) !== undefined && <button className="craft-control" type="button" onClick={() => onSelectRecord?.(recordIndex(selectedNode)!)} disabled={!onSelectRecord}>{t('trajectory.execution.viewRecord')}</button>}
+            {selectedNode.kind === 'session' && selectedNode.sessionId !== sessionMap.currentSessionId && <button className="craft-control" type="button" onClick={() => onOpenSession?.(selectedNode.sessionId)} disabled={!onOpenSession}>{t('common.open')}</button>}
           </div>
           <div className={styles.turnList}>
             {selectedNode.children.map(id => allNodes.get(id)!).map(child => <button type="button" key={child.id} className={styles.turnRow}
