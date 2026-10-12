@@ -1,0 +1,43 @@
+# 侧栏按钮与状态过渡：验收
+
+状态：本机验收通过。基于 `main` / `da2cebb3d` 的本轮未提交修改，精确源码与构建哈希见 manifest。
+
+[截图和录屏对照](index.html) · [实施前失败矩阵](../../sidebar-style-transition-failure-matrix-2026-10-12.md)
+
+新建会话默认由 36px 缩至 28px，与普通导航行一致。展开/收起都使用 28px 行和 2px 间距；收起按钮为 28px 正方形，48px 栏宽内左右各留 10px。图标列在两态之间保持同一位置。
+
+新建会话和导航列表作为一组，上移首行原来的居中内距，默认值为 4px。新建按钮顶边与列表/内容面板上沿齐平，按钮与下一条导航仍留约 8px。负上边距由弹性滚动区补回，头像和设置的底部锚点保持原位。较大字号/密度下，偏移量由首行与导航行的高度计算。
+
+原先 Tooltip 只包住收起按钮，切换时会替换整个按钮 DOM，无法保持 CSS 插值和键盘焦点。现在 Tooltip 结构固定，两态保留原按钮；宽度、内距、文字透明度和底部控件按既有 motion tokens 过渡。主导航行槽保留较大字号/密度的中心，收起的隐藏文字按钮仍是正方形。系统减少动态偏好关闭空间过渡。
+
+## 实测
+
+| 观察 | 修改前 | 修改后 |
+| --- | --- | --- |
+| 首条导航图标横坐标，相对侧栏 | 20px → 24px | 23.992–24px（浏览器像素量化） |
+| 首条导航图标纵坐标，相对侧栏 | 53.75px → 48px | 恒为 49.75px |
+| 按钮 DOM | 切换后被替换 | 所有帧保留同一节点 |
+| 收起按钮宽度中间值 | 0 帧 | 13 帧 |
+| 标签透明度 | 仅 1 与 0 | 连续淡出，展开连续淡入 |
+
+修改前数据来自实施前的 49 帧收起观察；修改后来自 46 帧收起观察。采样数量由显示刷新率与驱动时机决定，不作为性能预算。[原始几何汇总](review.json)保留实际数值。
+
+| 工作流 | 通过 | 证据 |
+| --- | --- | --- |
+| 真实 Electron 外壳 | 64/64 | [JSON](after/shell-visual.json) · [manifest](after/manifest.json) · [完整录屏](after/shell-recording.webm) · [trace](after/trace.zip) |
+| 跨入口角色与操作回归 | 76/76 | [JSON](roles/theme-roles.json) · [manifest](roles/manifest.json) · [trace](roles/trace.zip) |
+
+原生检查覆盖顶线、间距、两态与快速反向的逐帧几何、原按钮与焦点保持、Tooltip、上下文菜单、底部锚点、真实 200% Chromium 缩放、30px 根字号、触摸目标、减弱动态、启动缓存与 Windows 圆角规则。快速反向使用真实键盘事件，确认第二次切换发生在第一段过渡结束前；鼠标驱动会等待目标停止移动，不能代表该场景。截图和动作采样均等到启动层揭开后开始，避免将覆盖层下的等待误认为没有过渡。
+
+Windows 圆角为本机 renderer 平台模拟；触摸为 Chromium coarse pointer 模拟。原生 Windows/Linux、实物触摸设备和签名安装器未验收。类型检查与完整 lint 通过，视觉债务仍为 1206 项，没有新豁免。没有新增单元测试。
+
+原 132 项档案保持原 SHA。`before/` 只归档选取的原始观察产物，[选取映射](before/selection.json)与[原 manifest](before/source-manifest.json)提供出处；它不是新的通过验收。`after/` 和 `roles/` 保留全部 manifest 登记产物。
+
+复现：
+
+```sh
+bun run test:shell-visual
+bun run test:theme-roles
+bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/sidebar-style-transition-2026-10-12/after
+bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/sidebar-style-transition-2026-10-12/roles
+```

@@ -1297,64 +1297,103 @@ html:not([data-theme]) [data-shell-platform="macos"] {
   --shape-inner: var(--shape-panel);
 }
 
-/* Shared first-row height; each state positions its own stable icon column. */
+/* A shared row rhythm and icon column; only control width/text change state. */
+.sidebar-navigation {
+  --sidebar-content-rise: max(0px, calc((var(--panel-header-height) - var(--sidebar-row-height)) / 2));
+}
+/* Raise the whole navigation group by the first row's former centering inset.
+   Its negative margin gives the flexible scroll area the same space back, so
+   the footer keeps its bottom anchor. Both states use the same group offset. */
+.sidebar-top { margin-top: calc(-1 * var(--sidebar-content-rise)); }
 .sidebar-first-row {
   display: flex;
   align-items: center;
   height: var(--panel-header-height);
   padding-inline: var(--sidebar-inline-inset);
 }
-.sidebar-first-row > div { display: flex; align-items: center; width: 100%; height: 100%; }
+.sidebar-first-row > div { display: flex; align-items: flex-start; width: 100%; height: var(--sidebar-row-height); }
 .sidebar-footer,
 .sidebar-nav-inset { padding-inline: var(--sidebar-inline-inset); }
 /* Reserve the 8px scrollbar on both sides. These gutters are the navigation
    inset, including when the short window scrolls; do not add a second inset. */
 .sidebar-scroll { scrollbar-gutter: stable both-edges; }
 .sidebar-scroll .sidebar-nav-inset { padding-inline: 0; }
+.sidebar-navigation nav[aria-label="Main navigation"] { row-gap: var(--sidebar-rail-gap); }
+.sidebar-navigation nav[aria-label="Main navigation"] > .sidebar-section {
+  padding-block: 0;
+  transition: padding-block var(--motion-duration-spatial) var(--motion-ease-move);
+}
 .sidebar-navigation .sidebar-nav-button,
-.sidebar-navigation .sidebar-new-session { min-height: var(--sidebar-row-height); position: relative; padding-inline: var(--sidebar-item-inset); overflow: hidden; }
-.sidebar-navigation .sidebar-new-session { height: var(--panel-header-height); min-height: var(--panel-header-height); padding-block: 0; }
+.sidebar-navigation .sidebar-new-session {
+  height: var(--sidebar-row-height);
+  min-height: var(--sidebar-row-height);
+  position: relative;
+  margin-left: 0;
+  padding-block: 0;
+  padding-inline: var(--sidebar-item-inset);
+  overflow: hidden;
+  transition:
+    width var(--motion-duration-spatial) var(--motion-ease-move),
+    height var(--motion-duration-spatial) var(--motion-ease-move),
+    min-height var(--motion-duration-spatial) var(--motion-ease-move),
+    margin-left var(--motion-duration-spatial) var(--motion-ease-move),
+    padding-inline var(--motion-duration-spatial) var(--motion-ease-move),
+    gap var(--motion-duration-spatial) var(--motion-ease-move),
+    background-color var(--motion-duration-fast) var(--motion-ease-enter),
+    color var(--motion-duration-fast) var(--motion-ease-enter),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-enter),
+    transform var(--motion-duration-fast) var(--motion-ease-enter);
+}
+.sidebar-navigation .sidebar-new-session { padding-block: 0; }
 .sidebar-navigation[data-collapsed] {
-  --sidebar-row-height: var(--sidebar-rail-control-size);
   --sidebar-item-inset: var(--sidebar-rail-item-inset);
 }
 .sidebar-navigation[data-collapsed] .sidebar-nav-button,
 .sidebar-navigation[data-collapsed] .sidebar-new-session {
   width: var(--sidebar-rail-control-size);
+  height: var(--sidebar-rail-control-size);
+  min-height: var(--sidebar-rail-control-size);
   margin-left: var(--sidebar-rail-inline-offset);
   padding-block: 0;
 }
-.sidebar-navigation[data-collapsed] .sidebar-new-session { height: var(--sidebar-rail-control-size); min-height: var(--sidebar-rail-control-size); }
-.sidebar-navigation[data-collapsed] .sidebar-scroll > div { padding-block: 0; }
-.sidebar-navigation[data-collapsed] nav[aria-label="Main navigation"] { row-gap: var(--sidebar-rail-gap); }
-.sidebar-navigation[data-collapsed] nav[aria-label="Main navigation"] > div[aria-hidden] { padding-block: 0; }
+/* Larger type/density keeps its row centers while the hidden-text control
+   stays square. The default 28px row needs no extra slot padding. */
+.sidebar-navigation[data-collapsed] nav[aria-label="Main navigation"] > .sidebar-section {
+  padding-block: max(0px, calc((var(--sidebar-row-height) - var(--sidebar-rail-control-size)) / 2));
+}
 .sidebar-navigation .sidebar-new-session:hover { box-shadow: var(--shadow-middle, var(--shadow-minimal)); }
 .sidebar-navigation .sidebar-nav-button > span:first-child,
 .sidebar-navigation .sidebar-new-session > svg { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); flex-shrink: 0; }
 .sidebar-navigation .sidebar-nav-button > span:first-child svg,
 .sidebar-navigation .sidebar-nav-button > span:first-child > span { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); }
-.sidebar-navigation .sidebar-label { white-space: nowrap; transition: opacity 100ms ease; }
-.sidebar-navigation[data-collapsed] .sidebar-label { position: absolute; left: 40px; opacity: 0; pointer-events: none; }
+.sidebar-navigation .sidebar-label { min-width: 0; white-space: nowrap; transition: opacity var(--motion-duration-fast) var(--motion-ease-enter); }
+.sidebar-navigation[data-collapsed] .sidebar-label { opacity: 0; pointer-events: none; }
+.sidebar-navigation[data-collapsed] .sidebar-nav-button > span:first-child > span:first-child { opacity: 1; }
 .sidebar-navigation[data-collapsed] .sidebar-nav-button,
 .sidebar-navigation[data-collapsed] .sidebar-new-session { gap: 0; }
-/* Animate numeric geometry instead of switching flex-direction: the avatar
-   rises by one row while Settings follows the sidebar's animated right edge. */
+/* Numeric width/offsets interpolate while the same footer buttons stay mounted. */
 .sidebar-profile {
   height: var(--sidebar-row-height);
-  transition: height var(--motion-duration-spatial) var(--motion-ease-move), background-color 100ms ease;
+  transition: height var(--motion-duration-spatial) var(--motion-ease-move), background-color var(--motion-duration-fast) var(--motion-ease-enter);
 }
-.sidebar-profile[data-collapsed] { height: calc(var(--sidebar-row-height) * 2 + var(--sidebar-rail-gap)); }
+.sidebar-profile[data-collapsed] { height: calc(var(--sidebar-rail-control-size) * 2 + var(--sidebar-rail-gap)); }
 .sidebar-profile-trigger {
   position: absolute;
   top: 0;
   left: 0;
-  right: calc(var(--sidebar-row-height) + 4px);
+  right: auto;
+  width: calc(100% - var(--sidebar-row-height) - 4px);
   height: var(--sidebar-row-height);
   padding: 0 var(--sidebar-item-inset);
   overflow: hidden;
-  transition: right var(--motion-duration-spatial) var(--motion-ease-move);
+  transition:
+    left var(--motion-duration-spatial) var(--motion-ease-move),
+    width var(--motion-duration-spatial) var(--motion-ease-move),
+    height var(--motion-duration-spatial) var(--motion-ease-move),
+    padding-inline var(--motion-duration-spatial) var(--motion-ease-move),
+    gap var(--motion-duration-spatial) var(--motion-ease-move);
 }
-.sidebar-profile[data-collapsed] .sidebar-profile-trigger { left: var(--sidebar-rail-inline-offset); right: auto; width: var(--sidebar-rail-control-size); }
+.sidebar-profile[data-collapsed] .sidebar-profile-trigger { left: var(--sidebar-rail-inline-offset); width: var(--sidebar-rail-control-size); height: var(--sidebar-rail-control-size); gap: 0; }
 .sidebar-profile-avatar { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); font-size: 9px; }
 .sidebar-settings-trigger {
   position: absolute;
@@ -1362,13 +1401,21 @@ html:not([data-theme]) [data-shell-platform="macos"] {
   bottom: 0;
   width: var(--sidebar-row-height);
   height: var(--sidebar-row-height);
-  transition: right var(--motion-duration-spatial) var(--motion-ease-move), background-color 100ms ease, color 100ms ease;
+  transition:
+    right var(--motion-duration-spatial) var(--motion-ease-move),
+    width var(--motion-duration-spatial) var(--motion-ease-move),
+    height var(--motion-duration-spatial) var(--motion-ease-move),
+    background-color var(--motion-duration-fast) var(--motion-ease-enter),
+    color var(--motion-duration-fast) var(--motion-ease-enter);
 }
-.sidebar-profile[data-collapsed] .sidebar-settings-trigger { right: calc(100% - var(--sidebar-rail-inline-offset) - var(--sidebar-rail-control-size)); }
+.sidebar-profile[data-collapsed] .sidebar-settings-trigger { right: calc(100% - var(--sidebar-rail-inline-offset) - var(--sidebar-rail-control-size)); width: var(--sidebar-rail-control-size); height: var(--sidebar-rail-control-size); }
 .sidebar-settings-trigger > svg { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); }
-.sidebar-profile .sidebar-label { white-space: nowrap; transition: opacity 100ms ease; }
+.sidebar-profile .sidebar-label { min-width: 0; white-space: nowrap; transition: opacity var(--motion-duration-fast) var(--motion-ease-enter); }
 .sidebar-profile[data-collapsed] .sidebar-label { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
+  .sidebar-navigation .sidebar-nav-button,
+  .sidebar-navigation .sidebar-new-session,
+  .sidebar-navigation .sidebar-section,
   .sidebar-navigation .sidebar-label,
   .sidebar-profile,
   .sidebar-profile-trigger,

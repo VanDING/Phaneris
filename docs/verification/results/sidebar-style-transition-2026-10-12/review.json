@@ -1,0 +1,46 @@
+{
+  "native": 64,
+  "roles": 76,
+  "before": {
+    "count": 49,
+    "stableNodes": false,
+    "iconXRange": [
+      20,
+      24
+    ],
+    "iconYRange": [
+      48,
+      53.75
+    ],
+    "labelOpacitySamples": [
+      1,
+      0
+    ],
+    "intermediateWidths": 0
+  },
+  "after": {
+    "count": 46,
+    "stableNodes": true,
+    "iconXRange": [
+      23.9921875,
+      24
+    ],
+    "iconYRange": [
+      49.75,
+      49.75
+    ],
+    "labelOpacitySamples": [
+      1,
+      0.510541,
+      0.248505,
+      0.123137,
+      0.0283018,
+      0.012075,
+      0.0043901,
+      0.000123026,
+      0
+    ],
+    "intermediateWidths": 13
+  },
+  "scope": "Real production Electron shell on macOS; Windows radius policy simulated and coarse pointer emulated. Before selection records observations with the original probe revision."
+}

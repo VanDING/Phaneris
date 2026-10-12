@@ -229,7 +229,7 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
           // ContextMenuTrigger with asChild sets data-state="open" on the button
           // so only the clicked item highlights, not the entire section.
           const content = (
-            <div className="group/section">
+            <div className="group/section sidebar-section">
               {link.contextMenu ? (
                 <ContextMenu modal={true}>
                   <ContextMenuTrigger asChild>
@@ -475,6 +475,7 @@ interface SidebarButtonProps {
 // and pass props like data-state="open" directly onto this button element.
 const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>>(
   ({ link, itemProps, isOverlay, isCollapsed = false, className: extraClassName, ...radixProps }, forwardedRef) => {
+    const [tooltipOpen, setTooltipOpen] = React.useState(false)
     const button = (
       <button
         {...(isOverlay ? {} : (() => {
@@ -508,14 +509,14 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
       >
         {/* Icon container with hover toggle for expandable items */}
         <span className="relative h-3.5 w-3.5 shrink-0 flex items-center justify-center">
-          {link.expandable && !isOverlay && !isCollapsed ? (
+          {link.expandable && !isOverlay ? (
             <>
               {/* Main icon - hidden on hover */}
               <span className="absolute inset-0 flex items-center justify-center group-hover:opacity-0 transition-opacity duration-150">
                 {renderIcon(link)}
               </span>
               {/* Toggle chevron - shown on hover. data-no-dnd prevents drag activation on click. */}
-              <span
+              {!isCollapsed && <span
                 className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-pointer"
                 data-no-dnd="true"
                 data-touch-reveal="true"
@@ -530,7 +531,7 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
                     link.expanded && "rotate-90"
                   )}
                 />
-              </span>
+              </span>}
             </>
           ) : (
             renderIcon(link)
@@ -551,9 +552,14 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         )}
       </button>
     )
-    return isCollapsed ? (
-      <Tooltip><TooltipTrigger asChild>{button}</TooltipTrigger><TooltipContent side="right">{link.title}</TooltipContent></Tooltip>
-    ) : button
+    // Keep the trigger and its native button mounted while the sidebar changes
+    // style. Conditional wrapping replaced the button and lost focus/tweens.
+    return (
+      <Tooltip open={isCollapsed && tooltipOpen} onOpenChange={setTooltipOpen}>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent side="right">{link.title}</TooltipContent>
+      </Tooltip>
+    )
   }
 )
 

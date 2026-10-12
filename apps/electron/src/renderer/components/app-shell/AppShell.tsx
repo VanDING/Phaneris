@@ -2678,7 +2678,7 @@ function AppShellContent({
             >
             <div className="flex h-full flex-col select-none">
               {/* Sidebar Top Section */}
-              <div className="flex-1 flex flex-col min-h-0">
+              <div className="sidebar-top flex-1 flex flex-col min-h-0">
                 {/* New Session Button - Gmail-style, with context menu for "Open in New Window" */}
                 <div className="sidebar-first-row shrink-0">
                   <Tooltip>

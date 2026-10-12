@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "workflow": "theme-roles",
+  "startedAt": "2026-10-12T15:23:08.266Z",
+  "finishedAt": "2026-10-12T15:24:10.027Z",
+  "command": [
+    "/Users/van/.bun/bin/bun",
+    "/Users/van/projects/Phaneris/scripts/verification/theme-roles-workflow.ts",
+    "--output-dir=.cache/verification/sidebar-style-roles"
+  ],
+  "source": {
+    "headSha": "da2cebb3d3f6603b5b32b71839795feec8f06d04",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      " M apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      " M apps/electron/src/renderer/components/app-shell/panel-constants.ts",
+      " M apps/electron/src/renderer/index.css",
+      " M docs/design/theme-contract.generated.json",
+      " M docs/verification/results/packaged-client-smoke.json",
+      " M docs/verification/results/packaged-client-verification.json",
+      " M packages/ui/src/lib/visual-roles.ts",
+      " M packages/ui/src/styles/role-tokens.css",
+      " M scripts/verification/fixtures/shell-visual.cjs",
+      "?? docs/verification/sidebar-style-transition-failure-matrix-2026-10-12.md"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+        "sha256": "d775494a11fc07e25c5f0b49202927eca50654c38af820967ba1ed452e90f728"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "sha256": "4f24ccc2e5ddda91b23abb139808bf2d86b636708d057d5c740151d79a8df5bb"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/panel-constants.ts",
+        "sha256": "5dbcf2f8a1fd2f7fd76bd12166615649ca5bd42968134d1ac495a183d3542fa8"
+      },
+      {
+        "path": "apps/electron/src/renderer/index.css",
+        "sha256": "55ede325256c6be68c9d1db9027fba50014900f11553dc8614b9af249c4cf620"
+      },
+      {
+        "path": "docs/design/theme-contract.generated.json",
+        "sha256": "959385a3d2afd4a200cd9d1aa5a40aa501a4ee67f4cfcfa22ac3132913a65f66"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke.json",
+        "sha256": "2ee65a20e3255f4f0922a4ac5e7324c4290df577e85e124196e0021800cdc49a"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification.json",
+        "sha256": "53c0dfbd81a0eb10d11402e7c9d1b8dee571b9150a0ba814c0b91ef6bb44ba5c"
+      },
+      {
+        "path": "docs/verification/sidebar-style-transition-failure-matrix-2026-10-12.md",
+        "sha256": "e4cae9a2f1a26f9c2795f07e47d59d409083f3261808d9ab903428eec6ec1f5d"
+      },
+      {
+        "path": "packages/ui/src/lib/visual-roles.ts",
+        "sha256": "d866c9ee138df8b0a33973553658e97f27a0e4f1f21613302e8e34387e9b4efb"
+      },
+      {
+        "path": "packages/ui/src/styles/role-tokens.css",
+        "sha256": "5c9d33a6196c91c6cac1969b72216dfcb48bcaa96a85b3506431381b6cad2d1e"
+      },
+      {
+        "path": "scripts/verification/fixtures/shell-visual.cjs",
+        "sha256": "c76f5ada7c941b7fa430fa5fd970342cffc99683854d7ee9085b4952cfaba3ee"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "uv": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+    "platform": "darwin",
+    "architecture": "x64",
+    "osRelease": "25.6.0",
+    "executable": "/Users/van/.bun/bin/bun"
+  },
+  "sceneIds": [
+    "TC11-electron-15-compact-light",
+    "TC11-electron-15-compact-dark",
+    "TC11-electron-15-comfortable-light",
+    "TC11-electron-15-comfortable-dark",
+    "TC11-electron-15-cozy-light",
+    "TC11-electron-15-cozy-dark",
+    "TC11-electron-18-compact-light",
+    "TC11-electron-18-compact-dark",
+    "TC11-electron-18-comfortable-light",
+    "TC11-electron-18-comfortable-dark",
+    "TC11-electron-18-cozy-light",
+    "TC11-electron-18-cozy-dark",
+    "TC13-electron-edges",
+    "TC12-electron-independent-scale",
+    "TC12-electron-reflow-320",
+    "TC12-electron-reflow-375",
+    "TC12-electron-reflow-390",
+    "TC12-electron-reflow-768",
+    "TC12-electron-reflow-769",
+    "TC12-electron-reflow-1280",
+    "TC11-electron-code-action",
+    "TC15-electron-popover-portal",
+    "TC15-electron-menu-portal",
+    "TC15-electron-fullscreen-portal",
+    "TC15-electron-nested-portal",
+    "TC11-viewer-15-compact-light",
+    "TC11-viewer-15-compact-dark",
+    "TC11-viewer-15-comfortable-light",
+    "TC11-viewer-15-comfortable-dark",
+    "TC11-viewer-15-cozy-light",
+    "TC11-viewer-15-cozy-dark",
+    "TC11-viewer-18-compact-light",
+    "TC11-viewer-18-compact-dark",
+    "TC11-viewer-18-comfortable-light",
+    "TC11-viewer-18-comfortable-dark",
+    "TC11-viewer-18-cozy-light",
+    "TC11-viewer-18-cozy-dark",
+    "TC13-viewer-edges",
+    "TC12-viewer-independent-scale",
+    "TC12-viewer-reflow-320",
+    "TC12-viewer-reflow-375",
+    "TC12-viewer-reflow-390",
+    "TC12-viewer-reflow-768",
+    "TC12-viewer-reflow-769",
+    "TC12-viewer-reflow-1280",
+    "TC11-viewer-code-action",
+    "TC15-viewer-popover-portal",
+    "TC15-viewer-menu-portal",
+    "TC15-viewer-fullscreen-portal",
+    "TC15-viewer-nested-portal",
+    "TC11-webui-15-compact-light",
+    "TC11-webui-15-compact-dark",
+    "TC11-webui-15-comfortable-light",
+    "TC11-webui-15-comfortable-dark",
+    "TC11-webui-15-cozy-light",
+    "TC11-webui-15-cozy-dark",
+    "TC11-webui-18-compact-light",
+    "TC11-webui-18-compact-dark",
+    "TC11-webui-18-comfortable-light",
+    "TC11-webui-18-comfortable-dark",
+    "TC11-webui-18-cozy-light",
+    "TC11-webui-18-cozy-dark",
+    "TC13-webui-edges",
+    "TC12-webui-independent-scale",
+    "TC12-webui-reflow-320",
+    "TC12-webui-reflow-375",
+    "TC12-webui-reflow-390",
+    "TC12-webui-reflow-768",
+    "TC12-webui-reflow-769",
+    "TC12-webui-reflow-1280",
+    "TC11-webui-code-action",
+    "TC15-webui-popover-portal",
+    "TC15-webui-menu-portal",
+    "TC15-webui-fullscreen-portal",
+    "TC15-webui-nested-portal",
+    "TC18-role-page-errors"
+  ],
+  "passed": 76,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "electron-1280.png",
+      "sha256": "e4c65e32aaec161ff000c9da66a09b4ae4de95feb7569ffb05a7548248b57cb7",
+      "bytes": 86591
+    },
+    {
+      "path": "electron-320.png",
+      "sha256": "635dac28fbadb3c1a50767b46e2b41ef49ba5074723e76333f796981e04aca09",
+      "bytes": 61287
+    },
+    {
+      "path": "electron-375.png",
+      "sha256": "d8d0de96d3f59b55206484cb2f5ad4eb1833b32e719819b64fef68f8323e96c8",
+      "bytes": 62062
+    },
+    {
+      "path": "electron-390.png",
+      "sha256": "f0de43065b58436d5df78f199ef5f0132db47e8f809ee6cc6cae590d47880d5d",
+      "bytes": 62331
+    },
+    {
+      "path": "electron-768.png",
+      "sha256": "9af0e2a77e631ec34d55fedb8b888d10b8155fc8d70c6f06bee7b58451bea40a",
+      "bytes": 82502
+    },
+    {
+      "path": "electron-769.png",
+      "sha256": "05f261ec174f2526c119ad1494da4a7f31b6b147056676c4b6b8b3e9ad2d661a",
+      "bytes": 82462
+    },
+    {
+      "path": "electron.css",
+      "sha256": "bc9ad053faeea68e025c11230fe398307de137b6527240312bc4c15fbdebcc86",
+      "bytes": 213
+    },
+    {
+      "path": "index.html",
+      "sha256": "83651542798fd6fbe516b083e65e41118231f39fe3981a5ef6cef7c909f1cbfc",
+      "bytes": 279
+    },
+    {
+      "path": "preparation.json",
+      "sha256": "86095893879819a40b84b25079612fae66b70bea8496e423ba8af31cc7a968dd",
+      "bytes": 483
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "d95fd44ef6d5f37a1eed945c469545961c4210cc734003bdccfe611c88be6bac",
+      "bytes": 1204
+    },
+    {
+      "path": "theme-roles.json",
+      "sha256": "0249ad4abdf2a1117e1070b0efad27f845dcf95cd776ca74a49fa2546b454907",
+      "bytes": 67712
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "6f2a50570855adc66418ad636abc2888dfc57740868141b99a05d5003cd951ce",
+      "bytes": 10760816
+    },
+    {
+      "path": "viewer-1280.png",
+      "sha256": "eb14ed668c942ac43061bb126e569284a0b709368ff2f59de11c5ea61012becf",
+      "bytes": 85890
+    },
+    {
+      "path": "viewer-320.png",
+      "sha256": "739ec26d45b1c2093406b51046e9172e55f52e5cb211d84a19a71633980cdebd",
+      "bytes": 60831
+    },
+    {
+      "path": "viewer-375.png",
+      "sha256": "4ab42bb5ed455f805b2a5f564fcdabed39ae1f0d48701de75fa2075d9503bf9d",
+      "bytes": 61646
+    },
+    {
+      "path": "viewer-390.png",
+      "sha256": "52118cb4efe97c51775ac6bd3c3389f72842232769d7f9bf6e5cb2652e0babf0",
+      "bytes": 61929
+    },
+    {
+      "path": "viewer-768.png",
+      "sha256": "4de5cbe86fe1c27e9aebd9d2f357c7aabd79e36906b1b68904c23b415a3fa55d",
+      "bytes": 81847
+    },
+    {
+      "path": "viewer-769.png",
+      "sha256": "d9e1ac630e73dbfc5803d58990b7119766f798f3cd834adbff72b7278a13d476",
+      "bytes": 81802
+    },
+    {
+      "path": "viewer.css",
+      "sha256": "cc66bb9225fc399b78108643d6dc9511ca7eaf5eae88c35d8edb91592b858871",
+      "bytes": 202
+    },
+    {
+      "path": "webui-1280.png",
+      "sha256": "b8839a47344f315b8cbaecaa2886a670b70c452443a4d57abb3feaabbbc65136",
+      "bytes": 86590
+    },
+    {
+      "path": "webui-320.png",
+      "sha256": "c4f6575eee65d006a980dce9d7a61fb67e36ae5d08496e43ea090a48bc7f1886",
+      "bytes": 43474
+    },
+    {
+      "path": "webui-375.png",
+      "sha256": "c60c68ee72869e1e61caf75ab90cb93e50a199035b3e3e2ffcabaaab8a927320",
+      "bytes": 73513
+    },
+    {
+      "path": "webui-390.png",
+      "sha256": "0c5121013b01bf24eed959d4b25b7a1e006894280dbc0a9af41604d0521e2ab4",
+      "bytes": 74022
+    },
+    {
+      "path": "webui-768.png",
+      "sha256": "98016670e177ed0be133a62c740a379f1a6b798fe2167813ad5925e4b46b1bda",
+      "bytes": 89209
+    },
+    {
+      "path": "webui-769.png",
+      "sha256": "b2d74b07ba0ce3493b87b62bfcd5d7f69ac97533ad699fc2de19736bfa14a921",
+      "bytes": 82465
+    },
+    {
+      "path": "webui.css",
+      "sha256": "2ec934bbc68fcc32e491eed0c071ff517dbbe6e2ee9f4d48fd7d020ccbcc94db",
+      "bytes": 201
+    }
+  ],
+  "untested": [
+    "Native packages",
+    "Physical touch devices and soft keyboard",
+    "200% browser zoom and design comparison are separate acceptance scenes"
+  ]
+}

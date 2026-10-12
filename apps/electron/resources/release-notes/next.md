@@ -8,8 +8,9 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Improvements
 
+- New Chat matches the navigation row height and shares the panel's top edge. Expanded and collapsed navigation now share compact spacing and a steady icon column; controls retain focus and smoothly change width and text visibility between states.
 - Desktop navigation uses a tighter row and icon scale, a narrower default sidebar and collapsed rail, and a shared first-row alignment with panel headers. Default light gains neutral borders and clearer soft shadows; macOS panel corners adapt to the native window while Windows and authored theme shapes retain their own geometry.
-- Collapsed navigation keeps small square controls with more space around them; expanded navigation uses tighter text rows. Startup waits for persisted theme geometry and fonts before revealing the shell, so a cached size does not flash before the final layout.
+- Startup waits for persisted theme geometry and fonts before revealing the shell, so a cached size does not flash before the final layout.
 - Theme values, derived colors, shape and icon rules now share one source across desktop, WebUI and Viewer. Controls and feature surfaces use explicit roles, with separate UI/reading scales, aligned transcript/composer edges and complete touch targets.
 - Standalone browser toolbar and empty state follow persisted workspace themes; Viewer keeps an explicit light/dark choice when the OS theme changes. Theme file and scenic image edits update only affected selections, including after reconnect.
 

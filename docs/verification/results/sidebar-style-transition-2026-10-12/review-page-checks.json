@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "both screenshot states load",
+    "native detail scale",
+    "both recordings decode",
+    "390px report reflows",
+    "no page errors"
+  ],
+  "movies": [
+    {
+      "duration": 33.96,
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "duration": 39.76,
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "errors": []
+}

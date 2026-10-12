@@ -39,7 +39,7 @@ export const PANEL_SASH_HALF_HIT_WIDTH = PANEL_SASH_HIT_WIDTH / 2
 
 /** Default expanded width; a user's saved resize remains authoritative. */
 export const SIDEBAR_DEFAULT_WIDTH = 200
-/** Room for centered 24px squares with 12px on either side. */
+/** Room for centered 28px squares with 10px on either side. */
 export const SIDEBAR_RAIL_WIDTH = 48
 /** 44px touch control plus the same 8px inset on either side. */
 export const SIDEBAR_TOUCH_RAIL_WIDTH = 60

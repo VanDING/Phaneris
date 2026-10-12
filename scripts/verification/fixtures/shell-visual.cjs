@@ -8,9 +8,11 @@ const { _electron } = require('playwright')
   const fixture = JSON.parse(readFileSync(process.argv[2], 'utf8'))
   const env = { ...process.env, PHANERIS_CONFIG_DIR: fixture.config, PHANERIS_RPC_PORT: '0', PHANERIS_DISABLE_MESSAGING: '1', PHANERIS_TELEMETRY_ENABLED: '0', NODE_ENV: 'production' }
   delete env.ELECTRON_RUN_AS_NODE; delete env.VITE_DEV_SERVER_URL
-  const app = await _electron.launch({ args: [join(fixture.root, 'apps/electron')], cwd: fixture.root, env, timeout: 60_000 })
+  const app = await _electron.launch({ args: [join(fixture.root, 'apps/electron')], cwd: fixture.root, env, timeout: 60_000,
+    recordVideo: { dir: fixture.output, size: { width: 1440, height: 1000 } } })
   const checks = [], targets = [], samples = [], errors = []
   const page = await app.firstWindow({ timeout: 60_000 })
+  const video = page.video()
   const nativeWindow = await app.browserWindow(page)
   page.on('pageerror', error => errors.push(error.message))
   await page.context().tracing.start({ screenshots: true, snapshots: true })
@@ -41,12 +43,14 @@ const { _electron } = require('playwright')
       row: box('.sidebar-nav-button'), rowIcon: box('.sidebar-nav-button > span:first-child'),
       navigator: box('[data-panel-role="navigator"]'), content: box('[data-panel-role="content"]'),
       profile: box('.sidebar-profile-trigger'), settings: box('.sidebar-settings-trigger'),
+      navGap: document.querySelector('nav[aria-label="Main navigation"]') ? parseFloat(getComputedStyle(document.querySelector('nav[aria-label="Main navigation"]')).rowGap) : null,
       border: getComputedStyle(document.documentElement).getPropertyValue('--border').trim(),
       density: getComputedStyle(document.documentElement).getPropertyValue('--theme-density').trim(),
       focus: { element: document.activeElement?.outerHTML.slice(0, 700), visible: document.activeElement?.matches(':focus-visible'),
         outline: document.activeElement ? getComputedStyle(document.activeElement).outline : null } }
   })
   const snapshot = async id => {
+    await page.locator('[data-testid="app-splash"]').waitFor({ state: 'detached' })
     await settle(); const sample = await measure(); samples.push({ id, ...sample })
     await page.mouse.move(0, 0)
     if (id === 'native-zoom-200') {
@@ -56,6 +60,36 @@ const { _electron } = require('playwright')
     return sample
   }
   const toggleSidebar = () => page.getByRole('button', { name: /^(Toggle Sidebar|切换侧栏)$/ }).first().click()
+  const captureSwitch = async (id, action, duration = 500) => {
+    await page.locator('[data-testid="app-splash"]').waitFor({ state: 'detached' })
+    await page.evaluate(duration => {
+      const row = document.querySelector('.sidebar-nav-button'), button = document.querySelector('.sidebar-new-session')
+      const start = performance.now(), frames = []
+      window.__sidebarStyleCapture = { frames, done: false }
+      const sample = () => {
+        const sidebar = document.querySelector('[data-panel-role="sidebar"]').getBoundingClientRect()
+        const currentRow = document.querySelector('.sidebar-nav-button'), currentButton = document.querySelector('.sidebar-new-session')
+        const box = element => {
+          const rect = element.getBoundingClientRect()
+          return { x: rect.x - sidebar.x, y: rect.y - sidebar.y, width: rect.width, height: rect.height,
+            centerX: rect.x - sidebar.x + rect.width / 2, centerY: rect.y - sidebar.y + rect.height / 2 }
+        }
+        frames.push({ time: performance.now() - start, collapsed: document.querySelector('.sidebar-navigation').hasAttribute('data-collapsed'),
+          sidebarWidth: sidebar.width, rowStable: currentRow === row, buttonStable: currentButton === button,
+          row: box(currentRow), button: box(currentButton), rowIcon: box(currentRow.firstElementChild), newIcon: box(currentButton.querySelector('svg')),
+          labelOpacity: Number(getComputedStyle(currentRow.querySelector('.sidebar-label')).opacity),
+          profile: box(document.querySelector('.sidebar-profile-trigger')), settings: box(document.querySelector('.sidebar-settings-trigger')) })
+        if (performance.now() - start < duration) requestAnimationFrame(sample)
+        else window.__sidebarStyleCapture.done = true
+      }
+      sample()
+    }, duration)
+    await action()
+    await page.waitForFunction(() => window.__sidebarStyleCapture.done)
+    const frames = await page.evaluate(() => window.__sidebarStyleCapture.frames)
+    writeFileSync(join(fixture.output, `${id}-frames.json`), JSON.stringify(frames, null, 2))
+    return frames
+  }
   try {
     await page.waitForFunction(() => document.documentElement.dataset.clientPlatform === 'electron', null, { timeout: 90_000 })
     await nativeWindow.evaluate(window => window.setContentSize(1440, 1000))
@@ -63,14 +97,17 @@ const { _electron } = require('playwright')
     await page.locator('[data-panel-role="content"] h1').waitFor()
     await choose('default')
     const initial = await snapshot('default-light-expanded')
-    target('three first-row centers align', Math.abs(initial.button.centerY - initial.navTitle.centerY) <= 1 && Math.abs(initial.button.centerY - initial.contentTitle.centerY) <= 1, initial)
-    target('new-session top aligns with panels', Math.abs(initial.button.y - initial.navigator.y) <= 1, initial)
+    target('panel title centers align', Math.abs(initial.navTitle.centerY - initial.contentTitle.centerY) <= 1, initial)
+    target('new-session top aligns with panel top', Math.abs(initial.button.y - initial.navigator.y) < .1, initial)
+    target('new-session matches ordinary row height', Math.abs(initial.button.height - initial.row.height) < .1, initial)
+    target('new-session has breathing room before navigation', initial.row.y - initial.button.y - initial.button.height >= 7, initial)
     target('expanded default width 200', Math.abs(initial.sidebar.width - 200) <= 1, initial.sidebar)
     target('sidebar has no extra navigator seam', Math.abs(initial.navigator.x - initial.sidebar.x - initial.sidebar.width) < .1, initial)
     target('navigation rows 28', Math.abs(initial.row.height - 28) <= 1, initial.row)
     target('navigation icons 16', Math.abs(initial.rowIcon.width - 16) <= .1, initial.rowIcon)
     target('new session symmetric insets', Math.abs(initial.button.x - initial.sidebar.x - (initial.sidebar.x + initial.sidebar.width - initial.button.x - initial.button.width)) <= 1, initial)
     target('navigation and first-row insets match', Math.abs(initial.row.x - initial.button.x) <= 1 && Math.abs(initial.row.width - initial.button.width) <= 1, initial)
+    target('expanded footer retains bottom anchor', Math.abs(initial.settings.y + initial.settings.height - initial.sidebar.y - initial.sidebar.height) < .1, initial)
     const borderRGB = await page.evaluate(() => {
       const canvas = document.createElement('canvas'), context = canvas.getContext('2d')
       context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--border').trim(); context.fillRect(0, 0, 1, 1)
@@ -95,26 +132,59 @@ const { _electron } = require('playwright')
     await dragSash('调整导航列表宽度', 32)
     target('navigator drag follows pointer delta without seam jump', Math.abs((await measure()).navigator.width - 332) < 1, await measure())
     await dragSash('调整导航列表宽度', -32)
-    await toggleSidebar()
-    await page.waitForFunction(() => document.querySelector('.sidebar-navigation').hasAttribute('data-collapsed'))
-    await page.waitForTimeout(350)
+    const collapseFrames = await captureSwitch('collapse', toggleSidebar)
     const rail = await snapshot('default-light-collapsed')
+    target('collapsed new-session keeps the panel top line', Math.abs(rail.button.y - rail.navigator.y) < .1, rail)
     target('collapsed width 48 with breathing room', Math.abs(rail.sidebar.width - 48) <= 1, rail.sidebar)
     const visibleRailCenter = (Math.max(0, rail.sidebar.x) + rail.navigator.x - 1) / 2
     target('icons centered in the visible rail including its boundary', Math.abs(rail.rowIcon.centerX - visibleRailCenter) <= .6 && Math.abs(rail.newIcon.centerX - visibleRailCenter) <= .6, { visibleRailCenter, rail })
-    target('collapsed controls are 24px squares', [rail.row, rail.button, rail.profile, rail.settings].every(box => Math.abs(box.width - 24) < .1 && Math.abs(box.height - 24) < .1), rail)
+    target('collapsed controls are 28px squares', [rail.row, rail.button, rail.profile, rail.settings].every(box => Math.abs(box.width - 28) < .1 && Math.abs(box.height - 28) < .1), rail)
     target('state-specific icon alignment', Math.abs(rail.rowIcon.centerX - rail.sidebar.centerX) <= .1 && Math.abs(initial.rowIcon.centerX - initial.newIcon.centerX) <= .1, { initial: initial.rowIcon, rail: rail.rowIcon, sidebar: rail.sidebar })
     const rowGap = await page.locator('nav[aria-label="Main navigation"]').evaluate(element => parseFloat(getComputedStyle(element).rowGap))
-    target('collapsed navigation has 8px gaps', Math.abs(rowGap - 8) < .1, rowGap)
+    target('both states share compact 2px navigation gaps', Math.abs(rowGap - 2) < .1 && Math.abs(initial.navGap - rowGap) < .1, { rowGap, initial })
+    target('both states share one icon column', Math.abs(initial.rowIcon.centerX - initial.sidebar.x - (rail.rowIcon.centerX - rail.sidebar.x)) < .1, { initial, rail })
+    target('first navigation center stays at same height', Math.abs(initial.rowIcon.centerY - initial.sidebar.y - (rail.rowIcon.centerY - rail.sidebar.y)) < .1, { initial, rail })
+    target('collapse keeps original button nodes', collapseFrames.every(frame => frame.rowStable && frame.buttonStable), collapseFrames)
+    target('collapse interpolates control width', collapseFrames.some(frame => frame.collapsed && frame.row.width > 29 && frame.row.width < initial.row.width - 1), collapseFrames)
+    target('collapse fades text', collapseFrames.some(frame => frame.labelOpacity > .01 && frame.labelOpacity < .99), collapseFrames)
+    target('collapse keeps icon column steady', Math.max(...collapseFrames.map(frame => frame.rowIcon.centerX)) - Math.min(...collapseFrames.map(frame => frame.rowIcon.centerX)) < .5 && Math.max(...collapseFrames.map(frame => frame.newIcon.centerX)) - Math.min(...collapseFrames.map(frame => frame.newIcon.centerX)) < .5, collapseFrames)
     target('footer icons centered', Math.abs(rail.settings.centerX - rail.sidebar.centerX) <= .1 && Math.abs(rail.profile.centerX - rail.sidebar.centerX) <= .1, rail)
+    target('collapsed footer retains bottom anchor', Math.abs(rail.settings.y + rail.settings.height - rail.sidebar.y - rail.sidebar.height) < .1, rail)
     await dragSash('调整导航列表宽度', 32)
     target('collapsed navigator drag uses same geometry', Math.abs((await measure()).navigator.width - 332) < 1, await measure())
     await dragSash('调整导航列表宽度', -32)
+    await page.locator('.sidebar-nav-button').first().hover()
+    await page.getByRole('tooltip').waitFor({ timeout: 3000 })
+    target('collapsed tooltip remains usable', (await page.getByRole('tooltip').textContent()).includes(await page.locator('.sidebar-nav-button').first().getAttribute('aria-label')), await page.getByRole('tooltip').textContent())
+    await page.mouse.move(0, 0)
+    const expandFrames = await captureSwitch('expand', toggleSidebar)
+    target('expand keeps original button nodes', expandFrames.every(frame => frame.rowStable && frame.buttonStable), expandFrames)
+    target('expand fades text', expandFrames.some(frame => frame.labelOpacity > .01 && frame.labelOpacity < .99), expandFrames)
+    await page.locator('.sidebar-nav-button').first().hover(); await page.waitForTimeout(400)
+    target('expanded navigation suppresses tooltip', await page.getByRole('tooltip').count() === 0, await measure())
+    await page.locator('.sidebar-nav-button').first().click({ button: 'right' }); await page.getByRole('menu').waitFor()
+    target('expanded context menu remains usable', await page.locator('.sidebar-nav-button').first().getAttribute('data-state') === 'open', await measure())
+    await page.keyboard.press('Escape'); await page.getByRole('menu').waitFor({ state: 'detached' })
+    // Keyboard events avoid the mouse driver's "wait for a stable target"
+    // check, which can otherwise finish the first transition before reversing.
+    const reverseModifier = process.platform === 'darwin' ? 'Meta' : 'Control'
+    const reverseFrames = await captureSwitch('reverse', async () => {
+      await page.keyboard.press(`${reverseModifier}+b`)
+      await page.waitForTimeout(80)
+      await page.keyboard.press(`${reverseModifier}+b`)
+    }, 700)
+    const reversePoint = reverseFrames.findIndex((frame, index) => index > 0 && reverseFrames[index - 1].collapsed && !frame.collapsed)
+    target('rapid reverse occurs before closing finishes', reversePoint > 0 && reverseFrames[reversePoint].sidebarWidth > 49 && reverseFrames[reversePoint].sidebarWidth < 199, reverseFrames)
+    target('rapid reverse finishes at latest expanded state', !reverseFrames.at(-1).collapsed && Math.abs(reverseFrames.at(-1).sidebarWidth - 200) < .1 && reverseFrames.every(frame => frame.rowStable && frame.buttonStable), reverseFrames)
+    await toggleSidebar(); await page.waitForTimeout(350)
     // The app uses explicit focus zones; a driver .focus() does not enter one.
     // Exercise the actual focus and fold shortcuts before arrow navigation.
     const modifier = process.platform === 'darwin' ? 'Meta' : 'Control'
     await page.keyboard.press(`${modifier}+1`); await settle()
+    await page.locator('.sidebar-nav-button').first().focus()
+    await page.evaluate(() => { window.__sidebarFocusedNode = document.activeElement })
     await page.keyboard.press(`${modifier}+b`); await page.waitForTimeout(350)
+    target('keyboard switch preserves focused navigation node', await page.evaluate(() => document.activeElement === window.__sidebarFocusedNode && window.__sidebarFocusedNode.isConnected), await measure())
     await page.keyboard.press('ArrowDown')
     await settle()
     const focused = await page.evaluate(() => ({ inSidebar: Boolean(document.activeElement?.closest('.sidebar-navigation')),
@@ -157,13 +227,15 @@ const { _electron } = require('playwright')
     target('200 percent native zoom reflows', zoom.overflow <= 1 && zoom.width <= 721, zoom)
     await nativeWindow.evaluate(window => window.webContents.setZoomFactor(1))
     await page.evaluate(() => document.documentElement.style.setProperty('font-size', '30px'))
+    await page.waitForTimeout(350)
     await settle(); const text = await snapshot('large-text')
-    target('large text rows expand', text.row.height >= 44 && text.overflow <= 1 && text.button.height >= 50, text)
+    target('large text rows expand together', text.row.height >= 44 && text.overflow <= 1 && Math.abs(text.button.height - text.row.height) < .1, text)
     await toggleSidebar(); await page.waitForTimeout(350)
     const largeRail = await snapshot('large-text-collapsed')
     target('large root text retains square rail', [largeRail.row, largeRail.button, largeRail.profile, largeRail.settings].every(box => Math.abs(box.width - box.height) < .1), largeRail)
     await toggleSidebar(); await page.waitForTimeout(350)
     await page.evaluate(() => document.documentElement.style.removeProperty('font-size'))
+    await page.waitForTimeout(350)
     await nativeWindow.evaluate(window => window.setContentSize(1440, 600))
     await settle(); const short = await snapshot('short-window')
     target('scrolling navigation retains symmetric insets', Math.abs(short.row.x - short.button.x) <= 1 && Math.abs(short.row.width - short.button.width) <= 1, short)
@@ -178,6 +250,15 @@ const { _electron } = require('playwright')
     target('touch rail and controls remain usable', Math.abs(touch.sidebar.width - 60) <= 1 && touch.row.height >= 44 && touch.row.width >= 44 && touch.settings.width >= 44 && touch.profile.height >= 44, touch)
     await toggleSidebar(); await page.waitForTimeout(350)
     await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: false }); await cdp.detach()
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.reload(); await page.locator('.sidebar-new-session').waitFor(); await settle()
+    const reducedFrames = await captureSwitch('reduced-motion', toggleSidebar, 250)
+    const reducedSettled = reducedFrames.filter(frame => frame.collapsed && frame.time >= 100)
+    target('reduced motion reaches final geometry immediately', reducedSettled.length > 0 && reducedSettled.every(frame => Math.abs(frame.sidebarWidth - 48) < .1 && Math.abs(frame.row.width - 28) < .1), reducedFrames)
+    await snapshot('reduced-motion-collapsed')
+    await toggleSidebar(); await page.waitForTimeout(100)
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await page.reload(); await page.locator('.sidebar-new-session').waitFor(); await settle()
     await choose('startup-small')
     await page.evaluate(() => localStorage.setItem('craft-theme', JSON.stringify({ version: 3, mode: 'light', colorTheme: 'default', font: 'inter' })))
     await page.context().addInitScript(() => {
@@ -211,5 +292,6 @@ const { _electron } = require('playwright')
       scope: 'Real production Electron main/preload/renderer, seeded local conversation. Windows policy simulated; native Windows compositor untested.' }, null, 2))
     await page.context().tracing.stop({ path: join(fixture.output, 'trace.zip') })
     await app.close()
+    if (video) { await video.saveAs(join(fixture.output, 'shell-recording.webm')); await video.delete() }
   }
 })().catch(error => { console.error(error); process.exitCode = 1 })

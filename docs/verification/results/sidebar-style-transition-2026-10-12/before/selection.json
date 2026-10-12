@@ -1,0 +1,41 @@
+{
+  "source": ".cache/verification/sidebar-style-before",
+  "scope": "Selected baseline observations; not accepted assertions",
+  "artifacts": [
+    {
+      "path": "default-light-expanded.png",
+      "sha256": "6a409193438d93b0ba4f8593e20ccfd53f96baaffba8654961f886e7ef28234f",
+      "bytes": 243715
+    },
+    {
+      "path": "default-light-collapsed.png",
+      "sha256": "a78886ca835a916efebc4839b52dc9e064cff347a938f59f8c25c06085a2310b",
+      "bytes": 184725
+    },
+    {
+      "path": "collapse-frames.json",
+      "sha256": "db78b99f35b1b7ce247edc062362393be0be9f8a009a1c9a2bee008a6ab10361",
+      "bytes": 48138
+    },
+    {
+      "path": "expand-frames.json",
+      "sha256": "31daeef1233668e0e415cc7e523fa3f3cd75d1d52f085694084b78c4a83d5b47",
+      "bytes": 48676
+    },
+    {
+      "path": "shell-recording.webm",
+      "sha256": "ba70efefe0a0dc25284f12b0e0b98734dff7ea70a35d6d429757cfd5b02ef94a",
+      "bytes": 3076137
+    },
+    {
+      "path": "shell-visual.json",
+      "sha256": "8dce5ef0c49fcfae04236819ff7e32c4a84d4c1cd56b6c0a4ca9347410f01946",
+      "bytes": 857770
+    },
+    {
+      "path": "build-hashes.json",
+      "sha256": "cd36e817871f5ee6a9dc1596563d9ebafd6c1da1b6c4a07cc4c3c1281e5be653",
+      "bytes": 330
+    }
+  ]
+}

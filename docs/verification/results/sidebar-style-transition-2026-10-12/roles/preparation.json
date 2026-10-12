@@ -1,0 +1,8 @@
+{
+  "url": "http://127.0.0.1:58394/.cache/verification/sidebar-style-roles/index.html?css=%2F.cache%2Fverification%2Fsidebar-style-roles%2Felectron.css",
+  "errors": [
+    "Failed to load resource: the server responded with a status of 504 (Outdated Optimize Dep)",
+    "Failed to load resource: the server responded with a status of 504 (Outdated Optimize Dep)"
+  ],
+  "scope": "Vite dependency preparation only; acceptance runs in a separate page with an unfiltered error gate."
+}
