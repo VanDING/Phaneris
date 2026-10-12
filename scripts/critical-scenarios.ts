@@ -56,6 +56,9 @@ export const criticalWorkflows = [
   { id: 'session-owners', entry: 'scripts/verification/session-owners-workflow.ts', minimum: 8, required: ['session-owners.json'] },
   { id: 'client-platform', entry: 'scripts/verification/client-platform-workflow.ts', minimum: 24, required: ['client-platform.json', 'webui-420.png', 'webui-1280.png', 'web-conversation.json', 'web-file-preview.png', 'web-plan.png', 'conversation-provider.json', 'web-conversation-runtime.json', 'web-conversation.db'] },
   { id: 'markdown-popout', entry: 'scripts/verification/markdown-popout-workflow.ts', minimum: 18, required: ['markdown-popout.json', 'message-light.png', 'source-light.png', 'source-dark.png', 'source-390.png', 'trace.zip'] },
+  { id: 'theme-foundation', entry: 'scripts/verification/theme-foundation-workflow.ts', minimum: 101,
+    required: ['theme-foundation.json', 'source-hashes.json', 'build-hashes.json', 'web-cold.png', 'web-persisted.png',
+      'electron-light.png', 'electron-dark.png', 'ui-light.png', 'viewer-dark.png', 'webui-390.png', 'controls-trace.zip', 'web-trace.zip'] },
   { id: 'distribution-inputs', entry: 'scripts/verification/distribution-inputs-workflow.ts', minimum: 10, required: ['distribution-inputs.json'] },
   { id: 'identity-gate', entry: 'scripts/verification/identity-gate-workflow.ts', minimum: 6, required: ['identity-gate.json'] },
 ] as const

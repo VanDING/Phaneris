@@ -274,6 +274,38 @@ export function ThemeProvider({
     })
   }, [applyAuthoritativePreferences])
 
+  // Push events received while disconnected cannot be replayed. Re-read the
+  // authoritative preferences after an interrupted transport reconnects; the
+  // startup-only legacy migration must never run again on this path.
+  useEffect(() => {
+    const api = window.electronAPI
+    if (!api?.onTransportConnectionStateChanged || !api.getThemePreferences) return
+    let cancelled = false
+    let interrupted = false
+    const unsubscribe = api.onTransportConnectionStateChanged(({ status }) => {
+      if (status !== 'connected') {
+        interrupted = true
+        return
+      }
+      if (!interrupted) return
+      interrupted = false
+      const generation = ++preferenceGeneration.current
+      void api.getThemePreferences().then((persisted) => {
+        if (!cancelled && generation === preferenceGeneration.current) {
+          applyAuthoritativePreferences(persisted)
+        }
+      }).catch((error) => {
+        if (!cancelled && generation === preferenceGeneration.current) {
+          setThemePreferenceError(`Failed to reload theme preferences: ${error instanceof Error ? error.message : String(error)}`)
+        }
+      })
+    })
+    return () => {
+      cancelled = true
+      unsubscribe()
+    }
+  }, [applyAuthoritativePreferences])
+
   const persistPreferences = useCallback((patch: Partial<ThemePreferences>) => {
     const previous = preferencesRef.current
     const next: ThemePreferences = { ...previous, ...patch }

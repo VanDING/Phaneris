@@ -8,7 +8,7 @@ import { launchWorkflowBrowser } from './workflow-browser'
 
 await verificationWorkflow('markdown-popout', async run => {
   const root = resolve(import.meta.dir, '../..')
-  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/markdown-popout.tsx"></script></body></html>')
+  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/markdown-popout.tsx"></script></body></html>')
   const server = await createServer({ configFile: resolve(root, 'apps/electron/vite.config.ts'), root,
     server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**', `${run.directory}/**`] } } })
   await server.listen()

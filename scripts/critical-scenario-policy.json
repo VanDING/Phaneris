@@ -190,6 +190,25 @@
       ]
     },
     {
+      "id": "theme-foundation",
+      "entry": "scripts/verification/theme-foundation-workflow.ts",
+      "minimum": 101,
+      "required": [
+        "theme-foundation.json",
+        "source-hashes.json",
+        "build-hashes.json",
+        "web-cold.png",
+        "web-persisted.png",
+        "electron-light.png",
+        "electron-dark.png",
+        "ui-light.png",
+        "viewer-dark.png",
+        "webui-390.png",
+        "controls-trace.zip",
+        "web-trace.zip"
+      ]
+    },
+    {
       "id": "distribution-inputs",
       "entry": "scripts/verification/distribution-inputs-workflow.ts",
       "minimum": 10,

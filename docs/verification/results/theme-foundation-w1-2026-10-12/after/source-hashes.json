@@ -1,0 +1,15 @@
+{
+  "apps/webui/src/main.tsx": "6cd6b11bca0e72f2e834143d092fa654e1cdfc47976c7df2433b1914c30aad12",
+  "apps/webui/src/App.tsx": "b0b6e16773147a61d262ef06a374efe60a453b33e0d5c2e97bc715eb658ac360",
+  "apps/electron/src/renderer/context/ThemeContext.tsx": "471e2f26f6aeafc0b864f783a873b43c3478928dabe0c68a5302876f4e1f0a89",
+  "apps/electron/src/renderer/index.css": "6caa21aba86607d85c24bf333134ec865ddac8f047bda99ecaa8d167b29f0117",
+  "packages/ui/src/styles/index.css": "5a620c88a9bde7eed9c9df02b720038f4ff64c86cbe84462340720dfbfcfbeec",
+  "packages/ui/src/styles/controls.css": "02dcd138d3f8f2433ae5bec60512798ce02c2ed95813fa3e54474bd4ec0be9be",
+  "packages/ui/src/styles/shadow-aliases.css": "0744e68e837f742c2e9fa88778f84065106221e84cc8c34e9844f2d1b74580d4",
+  "apps/webui/src/index.css": "75867e25919e58311567aca28e44675d8ea0f7b77c9124a1a726bde37833bda9",
+  "apps/viewer/src/index.css": "0adfa5961585f166a5b23a9327f671725655e419a56dae4e296b9fade913c4bc",
+  "packages/shared/src/config/theme.ts": "86870f4c4060c9887aee60fdc80d29b1fc765875eb72679eff440eda06503565",
+  "scripts/verification/fixtures/theme-foundation.tsx": "0fa769781fe75ae2912f973b761ed18c8138448c43fffd02e10dab961abd6cf9",
+  "scripts/verification/fixtures/theme-preferences-lifecycle.tsx": "dcf4f0a06a189de9ed75f132e43dd2f25e2332a577ac8137e2e1aad5020dece1",
+  "scripts/verification/theme-foundation-workflow.ts": "b1a75d20d928aeea29843c73818254051072f509b8fe5be8e102b145a5b6619b"
+}

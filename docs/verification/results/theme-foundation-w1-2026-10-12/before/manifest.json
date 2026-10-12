@@ -1,0 +1,685 @@
+{
+  "schemaVersion": 1,
+  "workflow": "theme-foundation",
+  "startedAt": "2026-10-12T01:45:17.262Z",
+  "finishedAt": "2026-10-12T01:48:49.406Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\theme-foundation-workflow.ts",
+    "--output-dir=.cache/verification/theme-foundation-w1-before-final"
+  ],
+  "source": {
+    "headSha": "cc5401c8376b45db60971f9c4065ddafb8904db6",
+    "dirtyPaths": [
+      "M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      "?? docs/verification/theme-foundation-failure-matrix-2026-10-12.md",
+      "?? scripts/verification/fixtures/theme-foundation.tsx",
+      "?? scripts/verification/fixtures/theme-preferences-lifecycle.tsx",
+      "?? scripts/verification/theme-foundation-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "7e5cc900ef84198dc7135f45c1b14fd3d529d6348d7a809806d449330496cf82"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "6aa976fac340b224a4abb7aeaefe9fb6dba3a410ec5e236b7c6adce419b35dad"
+      },
+      {
+        "path": "docs/verification/theme-foundation-failure-matrix-2026-10-12.md",
+        "sha256": "0d3a6f828608fc5de1998232f552840c4de77c108e0cd69d061a9d20ce7f855b"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-foundation.tsx",
+        "sha256": "d1f25e24f606231fba78cee48362cc2dc4701c2058da8bf6e133c0f298435a4a"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-preferences-lifecycle.tsx",
+        "sha256": "dcf4f0a06a189de9ed75f132e43dd2f25e2332a577ac8137e2e1aad5020dece1"
+      },
+      {
+        "path": "scripts/verification/theme-foundation-workflow.ts",
+        "sha256": "ca7d7ee94e8de30e253b91ec863d7809c9a1b603a4ba835f48a6b64c41f5b180"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "TF10-electron-light",
+    "TF11-electron-light",
+    "TF12-electron-light",
+    "TF10-electron-dark",
+    "TF11-electron-dark",
+    "TF12-electron-dark",
+    "TF10-ui-light",
+    "TF11-ui-light",
+    "TF12-ui-light",
+    "TF10-ui-dark",
+    "TF12-ui-dark",
+    "TF10-viewer-light",
+    "TF11-viewer-light",
+    "TF12-viewer-light",
+    "TF10-viewer-dark",
+    "TF11-viewer-dark",
+    "TF12-viewer-dark",
+    "TF10-webui-light",
+    "TF12-webui-light",
+    "TF10-webui-dark",
+    "TF11-webui-dark",
+    "TF12-webui-dark",
+    "TF18-no-pageerror"
+  ],
+  "passed": 23,
+  "exitCode": 1,
+  "artifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "adca67626817c1f44b4c42c3da8e4e4a85ad16e98edf6a1665b100981b906df5",
+      "bytes": 90220
+    },
+    {
+      "path": "config/.server.lock",
+      "sha256": "65a766785a11e9d2f7569abaf66a23a546663a3759a75135d8aeea4892fa9567",
+      "bytes": 60
+    },
+    {
+      "path": "config/config-defaults.json",
+      "sha256": "648a9a8cf3a1c157a2ac3bc0330fcb05c11ddc02dce8c94e78491e45127c220e",
+      "bytes": 656
+    },
+    {
+      "path": "config/config.json",
+      "sha256": "2878ee150692599366f7b9390d094f1d231d21ec4dc9ed09522d0201b09f111a",
+      "bytes": 382
+    },
+    {
+      "path": "config/config.json.bak-2026-10-12",
+      "sha256": "d623da806abe2784859afab9d917ea6e7a07183bb7f399f4a980addd4e6c7f11",
+      "bytes": 288
+    },
+    {
+      "path": "config/docs/artifacts.md",
+      "sha256": "2e40acad8e739dc04be0d441f5f653f2677118eeaa653af8edea91ce1e525cf8",
+      "bytes": 5630
+    },
+    {
+      "path": "config/docs/automations.md",
+      "sha256": "06768824c9d3756c24b37163f3c9362a36660e7127e4a2bff9eeb6092af2e80e",
+      "bytes": 33161
+    },
+    {
+      "path": "config/docs/browser-tools.md",
+      "sha256": "b627aba6435749149c5a8dc5f7cfe7df65ffbea495e7ce2cca3785c0279845e6",
+      "bytes": 12937
+    },
+    {
+      "path": "config/docs/data-tables.md",
+      "sha256": "62cb11fb6398269e13abf0033073e431b7c7e03e3968aa43a59a4e4ef3808acb",
+      "bytes": 15678
+    },
+    {
+      "path": "config/docs/decisions.md",
+      "sha256": "1cbc3d877cf4b9fe84f4b4971e1943f6956267d77586ef6c49c0221b49d542d6",
+      "bytes": 11099
+    },
+    {
+      "path": "config/docs/html-preview.md",
+      "sha256": "83073f07005691f185fe97a004d7f2545f40f36e7a74889c31b689f74aaee9ec",
+      "bytes": 15955
+    },
+    {
+      "path": "config/docs/image-preview.md",
+      "sha256": "a0b74277818a46e972e3c08bed43ff8321352b8edbce80084ff19c44183b7a13",
+      "bytes": 3912
+    },
+    {
+      "path": "config/docs/labels.md",
+      "sha256": "6458555e29422c571a2cbd65d2131f4331db6a365c21e1f08613edd1ced99e20",
+      "bytes": 15884
+    },
+    {
+      "path": "config/docs/llm-tool.md",
+      "sha256": "d57199c0d105fa12c308bf8acd35bc23878dbeeac84c3e25a2c9768fbed4721f",
+      "bytes": 6009
+    },
+    {
+      "path": "config/docs/markdown-preview.md",
+      "sha256": "a4e1489060dce22f7266692c92c099d6f775581da751aead61c7ff2d8b1dc2ee",
+      "bytes": 6811
+    },
+    {
+      "path": "config/docs/mermaid.md",
+      "sha256": "3a85defcc5f4b015f0d9450d6ca13c0d04e4c4508a96f4fca16c18eddda8e003",
+      "bytes": 11471
+    },
+    {
+      "path": "config/docs/pages-scaffold.mjs",
+      "sha256": "6111c1c8af2779483ac0ada57c5254284f3a347b3081e93a29b694c175b6e123",
+      "bytes": 12947
+    },
+    {
+      "path": "config/docs/pages.md",
+      "sha256": "499a9afd1fe39db08a63f5469f21ff53fdfde81c3f45d6e4320c2bb7cb9df085",
+      "bytes": 21467
+    },
+    {
+      "path": "config/docs/pdf-preview.md",
+      "sha256": "7c6845666ef84fa70db3267f102efcd8e82d54dcdf2c39d6e55faf3e6642bef2",
+      "bytes": 8411
+    },
+    {
+      "path": "config/docs/permissions.md",
+      "sha256": "4c6950b24e6efb341a0978e34245c0f9826e0171d6d4c1b51cee2a1fa9bb910c",
+      "bytes": 12594
+    },
+    {
+      "path": "config/docs/phaneris-cli.md",
+      "sha256": "362229678191cbf28e05eb9420ae308f56b64d1b3dec56ff35f4afb3456af913",
+      "bytes": 15319
+    },
+    {
+      "path": "config/docs/plugins.md",
+      "sha256": "e923a9957d917365f98190c04bf7c32f48d687abe965151a34c63bbc15b44cdf",
+      "bytes": 13531
+    },
+    {
+      "path": "config/docs/skills.md",
+      "sha256": "4aed49be3a1430c5e22ada26cf6663f3b9bc6a09416a4f5112034b6b84c7bab4",
+      "bytes": 11168
+    },
+    {
+      "path": "config/docs/sources.md",
+      "sha256": "2e1a6f228b2460abbb5327bcb4eda73b7f91321926d1d25dbce5ef70427540c5",
+      "bytes": 30870
+    },
+    {
+      "path": "config/docs/statuses.md",
+      "sha256": "523094d7c5ffac7f5be59bbc2def808d0fcba9565902982bdae49b1809db73f4",
+      "bytes": 6145
+    },
+    {
+      "path": "config/docs/themes.md",
+      "sha256": "32939c3e9b26a9f40799c404958fc9f80feac2194a02029e9702f971f107720b",
+      "bytes": 12067
+    },
+    {
+      "path": "config/docs/tool-icons.md",
+      "sha256": "f20a4b363d5c4383f0bd96a5a3f2f2c1906124c028dd26cd4524ce0706aefcf2",
+      "bytes": 2676
+    },
+    {
+      "path": "config/security/webui-auth.sqlite",
+      "sha256": "da63a52bdf62b3fc863995d79f497584be3ba97c1de4c55d1d301afbafab6cfc",
+      "bytes": 4096
+    },
+    {
+      "path": "config/security/webui-auth.sqlite-shm",
+      "sha256": "4312190a12b4469d0a2704543fe7871e322eea0c21782e171230d0debf5564e7",
+      "bytes": 32768
+    },
+    {
+      "path": "config/security/webui-auth.sqlite-wal",
+      "sha256": "596441b09edc1c38bbd9dc3bc953ee183503e19fb5cec83ca0905d100d750b49",
+      "bytes": 12392
+    },
+    {
+      "path": "config/tool-icons/1password.png",
+      "sha256": "7fa32d128a53272afbce2d855ea79359aaaed485266bebfb614d3d2e810ca533",
+      "bytes": 1205
+    },
+    {
+      "path": "config/tool-icons/amazonaws.png",
+      "sha256": "f80d3ec6c5b2adee55267ecfcf2fc4131aa8551a546b7a1971b5e465c05c2403",
+      "bytes": 3061
+    },
+    {
+      "path": "config/tool-icons/bun.png",
+      "sha256": "dc58648fa3076af1608cdc0a512541e2dcd398aa2ced930a3846ae0f6ec9200c",
+      "bytes": 4994
+    },
+    {
+      "path": "config/tool-icons/chrome.svg",
+      "sha256": "19462b5b1e0c059e3e7eac105381b8f658aa76bd6a6068188fbcec1643ec5b9c",
+      "bytes": 1661
+    },
+    {
+      "path": "config/tool-icons/cloudflare.png",
+      "sha256": "0f84307ad691800e391fccb42b4ba290a87febf001abedfbe03b34767d45e441",
+      "bytes": 2485
+    },
+    {
+      "path": "config/tool-icons/cmake.ico",
+      "sha256": "7056b969eaf9826ad668aee81affd50f55f654777a0ef79cf9932356b64ff5db",
+      "bytes": 15086
+    },
+    {
+      "path": "config/tool-icons/cocoapods.png",
+      "sha256": "85f4490beb42d4e5d5617fdc9f954e048fa72424530b070eb594bd6a8546b01a",
+      "bytes": 10244
+    },
+    {
+      "path": "config/tool-icons/craft-agent.svg",
+      "sha256": "e8f58b578d2d9c08032c7321ae6880b7651b0c4542e5cf50569617c247da03e7",
+      "bytes": 478
+    },
+    {
+      "path": "config/tool-icons/curl.svg",
+      "sha256": "6f73b713d6540004a0991f51854936a15bface91ca161fcf665e39e6289a422b",
+      "bytes": 523
+    },
+    {
+      "path": "config/tool-icons/deno.png",
+      "sha256": "a9624bdff91a7b7de07249102639d44d646f9801e9e59d3aa3e6ee99e784bfce",
+      "bytes": 4559
+    },
+    {
+      "path": "config/tool-icons/docker.png",
+      "sha256": "5cb5caeeef34a0979a0b21640ea6bbbfb8345a9fff0d0e910c345ce4d0b65718",
+      "bytes": 2900
+    },
+    {
+      "path": "config/tool-icons/esbuild.svg",
+      "sha256": "d3d5e75b71dbfa833d8d354a0e06c1fce7987b3c6c11b9c7621ecef7a169b513",
+      "bytes": 245
+    },
+    {
+      "path": "config/tool-icons/eslint.png",
+      "sha256": "1d319ee9fa6f8338003cce9714e5229f1c93ff747eef26397ae394c78175d4dd",
+      "bytes": 1673
+    },
+    {
+      "path": "config/tool-icons/firebase.png",
+      "sha256": "f7d596ba99b42959b41076af51a73edae82cb366d8199ae465d42fcad144a70b",
+      "bytes": 2763
+    },
+    {
+      "path": "config/tool-icons/flydotio.png",
+      "sha256": "50ced2a240deee800188f0aa51af8e3151509fa86bdd4455bc90c73e50f9571b",
+      "bytes": 1361
+    },
+    {
+      "path": "config/tool-icons/git.ico",
+      "sha256": "833cdb9802075297de2daed735378355c351da9575e11bf76a79b703c4d87c6e",
+      "bytes": 6518
+    },
+    {
+      "path": "config/tool-icons/github.png",
+      "sha256": "1bedd6a1948971f07970414717012503805309f25af0b2c542dbc3524b5880e9",
+      "bytes": 33270
+    },
+    {
+      "path": "config/tool-icons/gnumake.png",
+      "sha256": "a402f4b396836770e24ab283cd3b32398474e3160f27aacd327e6c0593422284",
+      "bytes": 1708
+    },
+    {
+      "path": "config/tool-icons/go.png",
+      "sha256": "8bf938ca7a737e0478cd119c920e93943f6fb8562e21461aa5030cf0597fc107",
+      "bytes": 12840
+    },
+    {
+      "path": "config/tool-icons/googlecloud.png",
+      "sha256": "9d6cba870cebc57aca0226cbba7e0f5a08a2e1fb65883b40b4546358400aaf10",
+      "bytes": 4166
+    },
+    {
+      "path": "config/tool-icons/heroku.png",
+      "sha256": "0c41ed3cbb142bacb0bd437644519566ec3056d7eb11851316ec15d32ea3c215",
+      "bytes": 5655
+    },
+    {
+      "path": "config/tool-icons/homebrew.png",
+      "sha256": "0b8d060003012b7748527e9ec23839b1a1eab89d145096dc289558c181efd1e1",
+      "bytes": 2075
+    },
+    {
+      "path": "config/tool-icons/jest.png",
+      "sha256": "a006ea3b0aa2540fe4284d4834e9edcf5fe3f7ad009bb9c7372ba63a28ffdb4f",
+      "bytes": 22916
+    },
+    {
+      "path": "config/tool-icons/jq.png",
+      "sha256": "50897a977f14b874994101cc096da4155e599a8e31e0a0be12c065c5aa519fcb",
+      "bytes": 2163
+    },
+    {
+      "path": "config/tool-icons/kubernetes.png",
+      "sha256": "8450c523e0332662197cb25cdf158b24aae33c2819d6e3f10928bf31795cd618",
+      "bytes": 21559
+    },
+    {
+      "path": "config/tool-icons/microsoftazure.ico",
+      "sha256": "90cdaf487716184e4034000935c605d1633926d348116d198f355a98b8c6cd21",
+      "bytes": 17174
+    },
+    {
+      "path": "config/tool-icons/mongodb.ico",
+      "sha256": "1143ff8a5619ad9d016e3d94462f44ae9047ab4ac4c39722d265c88961591a1a",
+      "bytes": 32988
+    },
+    {
+      "path": "config/tool-icons/mysql.png",
+      "sha256": "b2f0c9c426e0c7b842734af8d601829b441d1be9a928ff67c0a542afa47d7007",
+      "bytes": 3753
+    },
+    {
+      "path": "config/tool-icons/netlify.png",
+      "sha256": "e067b3637d9dfc54630b17d77f28284699f029ef2b3a42dd37f673229f5cea90",
+      "bytes": 1391
+    },
+    {
+      "path": "config/tool-icons/ngrok.svg",
+      "sha256": "c70262c22ae481b44d9b6db7aef8a74eda8aa06064eb0192aa8c880f0545b672",
+      "bytes": 1312
+    },
+    {
+      "path": "config/tool-icons/nodedotjs.png",
+      "sha256": "3113d214c0396e4783a0baf0afa3b33317bfa075775efa39f6b708d41acb25f3",
+      "bytes": 1130
+    },
+    {
+      "path": "config/tool-icons/npm.png",
+      "sha256": "c3c90ef0a31451f152896fefe381ea1b4a90e9d84b63defe2045dbe7b6388864",
+      "bytes": 730
+    },
+    {
+      "path": "config/tool-icons/nx.png",
+      "sha256": "a78f2ed84661cdeff63a1f1a09ce44200510c4ce0942da994f020ae41ec7e74c",
+      "bytes": 3959
+    },
+    {
+      "path": "config/tool-icons/openssh.png",
+      "sha256": "9d72aadc532c77dcf5b6fa3d7005ebbdf37e6bb19d35acb7bcfc2d33c9c787cb",
+      "bytes": 62740
+    },
+    {
+      "path": "config/tool-icons/pnpm.png",
+      "sha256": "97c0104f190345be07d001af229891c6d1e7884507258191304e0967c4a7a67a",
+      "bytes": 241
+    },
+    {
+      "path": "config/tool-icons/postgresql.png",
+      "sha256": "50d3e0cb73ca3490192ede8b225fda20837b716d8f7f856538027a699b471e5e",
+      "bytes": 6990
+    },
+    {
+      "path": "config/tool-icons/prettier.png",
+      "sha256": "f6893e5cafb2cd2c9249e3ce16d40851dd6fca1387af1b5ed42c390c87912063",
+      "bytes": 1419
+    },
+    {
+      "path": "config/tool-icons/pypi.png",
+      "sha256": "4644e64f1a07b1a6eebfdcac5ef47ab4f0a2f51f3dc2aeb1e9cd18d147b9a5a2",
+      "bytes": 3726
+    },
+    {
+      "path": "config/tool-icons/pytest.png",
+      "sha256": "27055a4e52d49c7593a3cd70624fce09836d5327639f4e67f2da1fd0a65201aa",
+      "bytes": 723
+    },
+    {
+      "path": "config/tool-icons/python.ico",
+      "sha256": "39a32ed052ec937b46c40afcc3b87b98ecf2526cf8b6e2cd1698a8b4cd9a6e39",
+      "bytes": 15086
+    },
+    {
+      "path": "config/tool-icons/redis.png",
+      "sha256": "5bb7f4d969ab288e637d327e6446ac94dbc6ab245ed317355b1edf16e46637d1",
+      "bytes": 3659
+    },
+    {
+      "path": "config/tool-icons/ruby.ico",
+      "sha256": "b14aaa419c6a8da7950211343ca36045d3d78b250f1ab44ad46cd946aac2b873",
+      "bytes": 5430
+    },
+    {
+      "path": "config/tool-icons/rust.png",
+      "sha256": "b81fc3ff9bfd1f375337c8767e3aaf3a534e42e45d5f74207e82a99941d0e191",
+      "bytes": 6126
+    },
+    {
+      "path": "config/tool-icons/sentry.png",
+      "sha256": "34860979d391b4091ac1ae4d01b26f89861a0d64be28e9980343673b621fac5b",
+      "bytes": 3902
+    },
+    {
+      "path": "config/tool-icons/sqlite.jpg",
+      "sha256": "2590ba4953009ddb3e1d0fa92e30d7b999ab6d8c15d1513fd2dee418f10dd19e",
+      "bytes": 4655
+    },
+    {
+      "path": "config/tool-icons/stripe.png",
+      "sha256": "af3bacdcd1badb3b4a7bb90428042e77f4169e075bceee8b3e8a8f3db4e181dd",
+      "bytes": 1487
+    },
+    {
+      "path": "config/tool-icons/supabase.png",
+      "sha256": "ad48e4348178a3eee479d5d0a9c40c078ab1b34b52f1c676ef24cd5972fe05ca",
+      "bytes": 1966
+    },
+    {
+      "path": "config/tool-icons/swift.ico",
+      "sha256": "5047233430e980eb5040fc2cb031d034dd814d046683d6be4f82d9a7448780a4",
+      "bytes": 16958
+    },
+    {
+      "path": "config/tool-icons/terraform.png",
+      "sha256": "d70e3ce054838063c12091c1106ec6b0c209b84fa1f2a12d587a60e84ebcc1a8",
+      "bytes": 595
+    },
+    {
+      "path": "config/tool-icons/tool-icons.json",
+      "sha256": "30632e8fe0d760986766f0d1b47c1cc6ec865336016e7ea706f0ad3f7ddd45b4",
+      "bytes": 5427
+    },
+    {
+      "path": "config/tool-icons/turborepo.png",
+      "sha256": "6e3433e62b844b7d0c9245145ede7d08ccb493cb714879619cb7c8400e0a8fc7",
+      "bytes": 1353
+    },
+    {
+      "path": "config/tool-icons/vercel.png",
+      "sha256": "527984385aaadb1ee0cebafc3d2c3873fbea854bb41817982d24f0e31b0f931e",
+      "bytes": 534
+    },
+    {
+      "path": "config/tool-icons/vite.svg",
+      "sha256": "30b592e46c4f65305e3ed920d55f028ff4b69113e5cf1ec4d4b414ed25381a90",
+      "bytes": 11559
+    },
+    {
+      "path": "config/tool-icons/vitest.png",
+      "sha256": "01b9c25cdb144de530cb310a5ee82f852610319c7dd8879b586b3b4f1b8ffbe4",
+      "bytes": 1754
+    },
+    {
+      "path": "config/tool-icons/webpack.png",
+      "sha256": "b75c4e8155a5f414b520bfeb066d3533f3a8bf62cf1b38914b452b552a8ee854",
+      "bytes": 11341
+    },
+    {
+      "path": "config/tool-icons/xcode.png",
+      "sha256": "6789a941c19bc9b69db66f6d6988a6c4d92946b598c701644cf993426ac1ab7c",
+      "bytes": 5700
+    },
+    {
+      "path": "config/tool-icons/yarn.svg",
+      "sha256": "5ed0e60d8912296eaf1110322890bfc91cca1541b03587bb58156ccb5e6b7cff",
+      "bytes": 4682
+    },
+    {
+      "path": "controls-trace.zip",
+      "sha256": "ebbc6e5df7e42edeb4648c0277b71f6823ab6043bda113d7ae39fbb78fe0f5e9",
+      "bytes": 7015058
+    },
+    {
+      "path": "electron-dark.png",
+      "sha256": "6e01397f513a1911337e7bfbbba2574964eada4fb2d1209b04ee42108e64d7c0",
+      "bytes": 35758
+    },
+    {
+      "path": "electron-light.png",
+      "sha256": "11a6f8b3c424060ef70eb4b52277998e8f1f88022b9263f78a4fa649143aeb9a",
+      "bytes": 34596
+    },
+    {
+      "path": "failure.json",
+      "sha256": "4e95564382f3178e9486d0db6ee1b9843c7e7bda4190165dcf47126d0349deb7",
+      "bytes": 14709
+    },
+    {
+      "path": "index.html",
+      "sha256": "b8600cba7673be4c7ab866a92742489402ccfcc734795edc570593c0596d6bf9",
+      "bytes": 253
+    },
+    {
+      "path": "production-web-build.log",
+      "sha256": "64743a1e1be0b72eb861f0c7b5fef17fe499155500e5ef481a51d66d638f129d",
+      "bytes": 79199
+    },
+    {
+      "path": "server-output.json",
+      "sha256": "2325aa647b2ebfa214a3e2517458cfca4bd9b5d9c664d8869b5eebc8b0f1b275",
+      "bytes": 4308
+    },
+    {
+      "path": "source-hashes.json",
+      "sha256": "218268e629a287cac19693ae5124f2b5c89169f2cc7b0dbfd59afb6efc82585d",
+      "bytes": 1334
+    },
+    {
+      "path": "theme-foundation.json",
+      "sha256": "a5a58d3e537a520b880895272955da5e33409183969f6e9003f5dfeb9ae10352",
+      "bytes": 66238
+    },
+    {
+      "path": "ui-dark.png",
+      "sha256": "2a1308716fe3722e07972277ba608c57b81570132d94c255f23832ef7f0c5b71",
+      "bytes": 35068
+    },
+    {
+      "path": "ui-light.png",
+      "sha256": "2bd41e0bc924918b461a7999b9f324ce47514dac7c67e48d60fb4d0a709adf29",
+      "bytes": 34105
+    },
+    {
+      "path": "viewer-dark.png",
+      "sha256": "9ffe63d1db3ee813476f26f1c48f161c2e15f11df780066dac4fab1f8df688d8",
+      "bytes": 35691
+    },
+    {
+      "path": "viewer-light.png",
+      "sha256": "eaa06c41b87aa3025e5bcf117d503bc1237837068b14fa1925d2229210c20d10",
+      "bytes": 34422
+    },
+    {
+      "path": "web-trace.zip",
+      "sha256": "15212a254a64bbb799d20ec97163b91909403124af7462c57d87eed0cb7da838",
+      "bytes": 572076
+    },
+    {
+      "path": "webui-dark.png",
+      "sha256": "ec52d0b3ec059e652664253e21ba6cc1705a0f5aa94aaca0747c33a964755bd2",
+      "bytes": 36014
+    },
+    {
+      "path": "webui-light.png",
+      "sha256": "11a6f8b3c424060ef70eb4b52277998e8f1f88022b9263f78a4fa649143aeb9a",
+      "bytes": 34596
+    },
+    {
+      "path": "workspace/.claude-plugin/plugin.json",
+      "sha256": "8dc1f49deb8ad5109cb40139ed2001b0044a03a8b8facbbc631bef4d40ec2482",
+      "bytes": 69
+    },
+    {
+      "path": "workspace/config.json",
+      "sha256": "9ce6cb6320ab967f11fee0e2767e819f999d33a24bee16ef15a538bda6a42bbe",
+      "bytes": 343
+    },
+    {
+      "path": "workspace/labels/config.json",
+      "sha256": "0fce7f82bc29918788f41810f87af7ddce17f09e1303b7f74b68b5ec808655e1",
+      "bytes": 1696
+    },
+    {
+      "path": "workspace/runtime/backups/runtime-2026-10-12.db",
+      "sha256": "5bf6ad4a8c478a63f2f7c43bc9be20c7a306341387a35d3e2ae34845ee9547af",
+      "bytes": 110592
+    },
+    {
+      "path": "workspace/runtime/runtime.db",
+      "sha256": "90df67198c0007a6804e9cbb69627657566ef07972cf6df5678cca72c1223b80",
+      "bytes": 110592
+    },
+    {
+      "path": "workspace/runtime/runtime.db-shm",
+      "sha256": "6d66424e4ada0c785d446a2e9f6cbe5ab76ecbf0a2582f74ae43b9273e082683",
+      "bytes": 32768
+    },
+    {
+      "path": "workspace/runtime/runtime.db-wal",
+      "sha256": "e33affffbb9aa0f2cc15d9f5dee7c02b207eb0bea089209abd66dddf255b2c75",
+      "bytes": 148352
+    },
+    {
+      "path": "workspace/statuses/config.json",
+      "sha256": "b7d277356093957497c93ba57f68995adbae39045d2a0362948d967285337785",
+      "bytes": 843
+    },
+    {
+      "path": "workspace/statuses/icons/backlog.svg",
+      "sha256": "c691b6d22e9457d376b5c6485567629fba53969e021b756414622cd03db1a461",
+      "bytes": 246
+    },
+    {
+      "path": "workspace/statuses/icons/cancelled.svg",
+      "sha256": "c7e004e0f0d70912f5e03d85a5fccb0358a93d26541d7467a452decd69f97099",
+      "bytes": 285
+    },
+    {
+      "path": "workspace/statuses/icons/done.svg",
+      "sha256": "fe3ab26d993d189c79a6dbc1e4ef4d3f00a7eec1fe22b6898d26f39a51468515",
+      "bytes": 280
+    },
+    {
+      "path": "workspace/statuses/icons/in-progress.svg",
+      "sha256": "e3c7809615a7b0dbfc001fdc8f8cd77176f80c08970334cef26b4deef642e99e",
+      "bytes": 293
+    },
+    {
+      "path": "workspace/statuses/icons/needs-review.svg",
+      "sha256": "1cf4690b289a45cd04c7d5e445f991d4f511f7a86463283d3e1ad86b2815c69a",
+      "bytes": 292
+    },
+    {
+      "path": "workspace/statuses/icons/todo.svg",
+      "sha256": "4d5ee09d3056fbfd37d8aa8b169a9390bd8737760a98dae75ccbcf492b095b40",
+      "bytes": 223
+    },
+    {
+      "path": "workspace/views.json",
+      "sha256": "96c71478b67a4cb321ebd61dc934ba207ee05d9a54a7d8b4a5543f6e3c195feb",
+      "bytes": 830
+    }
+  ],
+  "untested": [
+    "Formal Electron packages and native material/caption/BrowserView",
+    "macOS/Linux execution",
+    "Physical touch devices, mobile Safari and soft keyboard",
+    "Workspace/file watcher missed events (W2/W4)",
+    "Contrast/token parity and Viewer Shiki (W2); visual parameter changes (W3)"
+  ]
+}

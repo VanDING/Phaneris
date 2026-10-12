@@ -1,4 +1,20 @@
 /* Shared control roles. Theme values remain owned by themeToCSS and the host. */
+@layer base {
+  /* Every keyboard target has a default. Components can explicitly transfer
+     focus to a wrapper, use an inset outline, or supply their own ring. */
+  :focus-visible {
+    outline: 2px solid var(--craft-focus-color, var(--accent));
+    outline-offset: 2px;
+    --tw-ring-offset-width: var(--ring-offset);
+    --tw-ring-width: var(--ring-width);
+    --tw-ring-color: var(--ring);
+  }
+
+  @media (forced-colors: active) {
+    :focus-visible { outline-color: Highlight; }
+  }
+}
+
 @layer components {
   .craft-control,
   .craft-focus,

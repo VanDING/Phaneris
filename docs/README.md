@@ -116,7 +116,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | What remains |
 | --- | --- | --- |
-| [Theme engine and frontend visual governance plan](process/theme-engine-frontend-governance-plan-2026-10-12.md) | **Proposed; independent audit completed** | Confirmed issues, corrected earlier claims, five-layer contract and W1–W5 acceptance. Full governance remains open; the user-reported popout-card regression is restored and browser verified (F20). |
+| [Theme engine and frontend visual governance plan](process/theme-engine-frontend-governance-plan-2026-10-12.md) | **In progress; W1 browser verified** | F01/F02/F03 and reconnect recovery implemented with 101 browser scenes. [W1 evidence](verification/results/theme-foundation-w1-2026-10-12/README.md). W2–W5 closeout and native release matrices remain open; popout-card restoration is retained (F20). |
 | [Pi SDK 1.1.0 and upstream 0.14.1 plan](process/pi-sdk-1.1.0-upstream-0.14.1-plan.md) | **Implemented and verified on Windows** | Approved scope, frozen baselines, adoption decisions and deliberate deferrals. |
 | [Pi 1.1.0 / Craft 0.14.1 implementation](process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) | Complete; performance scope is limited | B0–B5 results, 6,289 passing tests, final package evidence, same-drive smoke, earlier failures and reproduction commands. |
 | [Pi 1.1.0 implementation failure matrix](process/pi-110-implementation-failure-matrix.md) | Written before implementation | Failure conditions and acceptance boundaries for B0–B5. |

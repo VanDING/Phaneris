@@ -1,0 +1,1808 @@
+{
+  "selected": [
+    {
+      "path": "before/build-hashes.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "adca67626817c1f44b4c42c3da8e4e4a85ad16e98edf6a1665b100981b906df5"
+    },
+    {
+      "path": "before/electron-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "6e01397f513a1911337e7bfbbba2574964eada4fb2d1209b04ee42108e64d7c0"
+    },
+    {
+      "path": "before/electron-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "11a6f8b3c424060ef70eb4b52277998e8f1f88022b9263f78a4fa649143aeb9a"
+    },
+    {
+      "path": "before/failure.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "4e95564382f3178e9486d0db6ee1b9843c7e7bda4190165dcf47126d0349deb7"
+    },
+    {
+      "path": "before/manifest.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "141ff6fc3462a2d6dd014e03ca5558da36cf7a0377f56b6d767d45966b6248e0"
+    },
+    {
+      "path": "before/production-web-build.log.gz",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "2ef52d3b6a5e6c212324aff68d58e085d7420f9044728372045c4ce8e710d973",
+      "sourcePath": "production-web-build.log",
+      "originalSha256": "64743a1e1be0b72eb861f0c7b5fef17fe499155500e5ef481a51d66d638f129d",
+      "representation": "gzip, original bytes preserved"
+    },
+    {
+      "path": "before/server-output.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "2325aa647b2ebfa214a3e2517458cfca4bd9b5d9c664d8869b5eebc8b0f1b275"
+    },
+    {
+      "path": "before/source-hashes.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "218268e629a287cac19693ae5124f2b5c89169f2cc7b0dbfd59afb6efc82585d"
+    },
+    {
+      "path": "before/theme-foundation.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "a5a58d3e537a520b880895272955da5e33409183969f6e9003f5dfeb9ae10352"
+    },
+    {
+      "path": "before/ui-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "2a1308716fe3722e07972277ba608c57b81570132d94c255f23832ef7f0c5b71"
+    },
+    {
+      "path": "before/ui-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "2bd41e0bc924918b461a7999b9f324ce47514dac7c67e48d60fb4d0a709adf29"
+    },
+    {
+      "path": "before/viewer-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "9ffe63d1db3ee813476f26f1c48f161c2e15f11df780066dac4fab1f8df688d8"
+    },
+    {
+      "path": "before/viewer-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "eaa06c41b87aa3025e5bcf117d503bc1237837068b14fa1925d2229210c20d10"
+    },
+    {
+      "path": "before/webui-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "ec52d0b3ec059e652664253e21ba6cc1705a0f5aa94aaca0747c33a964755bd2"
+    },
+    {
+      "path": "before/webui-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-before-final",
+      "sha256": "11a6f8b3c424060ef70eb4b52277998e8f1f88022b9263f78a4fa649143aeb9a"
+    },
+    {
+      "path": "after/build-hashes.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "3fc1de84e1705835cd1bfed1abec31e943bf8aefb89c8a83352899818f98b85f"
+    },
+    {
+      "path": "after/electron-390.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "5f3cc28e0100a898775ce0c412d309e018d2975b468755e5dfd7c15e785a6fa7"
+    },
+    {
+      "path": "after/electron-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "5338222d416c5ecbe1e64ebf8367fe3a2dbab1074fa9e6e1d3ff84712f54d867"
+    },
+    {
+      "path": "after/electron-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "b4c63e846a3f609d8c10b8513fda39412dc5fd380be7823ac9c31da4bf882959"
+    },
+    {
+      "path": "after/manifest.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "16de39531282a5026b3823d589982fefbec92ed08f09ede2ab5962d9e78954e5"
+    },
+    {
+      "path": "after/production-web-build.log.gz",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "b184dd262c36e3e264a9b586a4fa25d9878d6ba004202e8e106f3208b1f28d03",
+      "sourcePath": "production-web-build.log",
+      "originalSha256": "d6deb4278be804ee9297b01b99d5de95ee98dfeab88448bee03a5a74f8fd22b6",
+      "representation": "gzip, original bytes preserved"
+    },
+    {
+      "path": "after/server-output.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "3596157220648acde3fdc6d4eefed60588526303c0f15856f86232e440de2dec"
+    },
+    {
+      "path": "after/source-hashes.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "d370e77ca943b9395399a68de898a2c2e189a01fcfe66d942b8225a436ac417c"
+    },
+    {
+      "path": "after/theme-foundation.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "fe4ce1e88d183b04a820df8c55413ad8a56131481efbda16de8f7b632042780a"
+    },
+    {
+      "path": "after/ui-390.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "2fb1e9f006c56655f1c96e7d349bb6c44a7c132a45922d04a06353e4b31d53db"
+    },
+    {
+      "path": "after/ui-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "be65b7e31547553ce4e99585bc85b6d333c46a88dd6a264b30b563e2032874b0"
+    },
+    {
+      "path": "after/ui-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "60f78b84accc4b98970767175b1be14fe048e7ae2c2f907de18115d35fb53b8b"
+    },
+    {
+      "path": "after/viewer-390.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "2fb1e9f006c56655f1c96e7d349bb6c44a7c132a45922d04a06353e4b31d53db"
+    },
+    {
+      "path": "after/viewer-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "d5482763d1bd7f153c3d26ce6ba3c1fddaa03644a25b7d349fb69a19ac6aa7b2"
+    },
+    {
+      "path": "after/viewer-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "e67a058608560b16d5f17ba069549792a114c44558554d8fbe503504543772de"
+    },
+    {
+      "path": "after/web-cold.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "f747a8fc087183ee64723f7a5328c4158f2780e776936dc517dafd3e89483893"
+    },
+    {
+      "path": "after/web-persisted.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "105facae9b528d73e31405d9e09ba2fd2ea8f5f728428fec5f0210c316efc933"
+    },
+    {
+      "path": "after/webui-390.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "876112e550fbbd1b84edc690b1cacb57c5f293048b2f177f7dde08a3df6b9483"
+    },
+    {
+      "path": "after/webui-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "5338222d416c5ecbe1e64ebf8367fe3a2dbab1074fa9e6e1d3ff84712f54d867"
+    },
+    {
+      "path": "after/webui-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-ready",
+      "sha256": "b4c63e846a3f609d8c10b8513fda39412dc5fd380be7823ac9c31da4bf882959"
+    },
+    {
+      "path": "popout-regression/manifest.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-popout-final",
+      "sha256": "e7326de4544127650956a4171b328ca50535fbc1fe8a6d628cfe0b56fc385930"
+    },
+    {
+      "path": "popout-regression/markdown-popout.json",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-popout-final",
+      "sha256": "e908f3141954628879cd6342d116c15b27027573679278e4d90bce96736a8bab"
+    },
+    {
+      "path": "popout-regression/message-light.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-popout-final",
+      "sha256": "ced6517887870bd5a8104da1f7c2ac29b847c3bfc09383723a880eb2c63de37b"
+    },
+    {
+      "path": "popout-regression/source-dark.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-popout-final",
+      "sha256": "52a7a02fb2750c2da9b0f924a49b7ee03d2c15debce4ae620b27ff388b465303"
+    },
+    {
+      "path": "popout-regression/source-390.png",
+      "originalDirectory": ".cache/verification/theme-foundation-w1-popout-final",
+      "sha256": "336c1bc43b570a6e5f178192f1e5f282b3385fd19163d5ed22d7261b94d7e311"
+    }
+  ],
+  "excluded": [
+    {
+      "run": "before",
+      "path": "config/.server.lock",
+      "sha256": "65a766785a11e9d2f7569abaf66a23a546663a3759a75135d8aeea4892fa9567",
+      "bytes": 60,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/config-defaults.json",
+      "sha256": "648a9a8cf3a1c157a2ac3bc0330fcb05c11ddc02dce8c94e78491e45127c220e",
+      "bytes": 656,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/config.json",
+      "sha256": "2878ee150692599366f7b9390d094f1d231d21ec4dc9ed09522d0201b09f111a",
+      "bytes": 382,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/config.json.bak-2026-10-12",
+      "sha256": "d623da806abe2784859afab9d917ea6e7a07183bb7f399f4a980addd4e6c7f11",
+      "bytes": 288,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/artifacts.md",
+      "sha256": "2e40acad8e739dc04be0d441f5f653f2677118eeaa653af8edea91ce1e525cf8",
+      "bytes": 5630,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/automations.md",
+      "sha256": "06768824c9d3756c24b37163f3c9362a36660e7127e4a2bff9eeb6092af2e80e",
+      "bytes": 33161,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/browser-tools.md",
+      "sha256": "b627aba6435749149c5a8dc5f7cfe7df65ffbea495e7ce2cca3785c0279845e6",
+      "bytes": 12937,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/data-tables.md",
+      "sha256": "62cb11fb6398269e13abf0033073e431b7c7e03e3968aa43a59a4e4ef3808acb",
+      "bytes": 15678,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/decisions.md",
+      "sha256": "1cbc3d877cf4b9fe84f4b4971e1943f6956267d77586ef6c49c0221b49d542d6",
+      "bytes": 11099,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/html-preview.md",
+      "sha256": "83073f07005691f185fe97a004d7f2545f40f36e7a74889c31b689f74aaee9ec",
+      "bytes": 15955,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/image-preview.md",
+      "sha256": "a0b74277818a46e972e3c08bed43ff8321352b8edbce80084ff19c44183b7a13",
+      "bytes": 3912,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/labels.md",
+      "sha256": "6458555e29422c571a2cbd65d2131f4331db6a365c21e1f08613edd1ced99e20",
+      "bytes": 15884,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/llm-tool.md",
+      "sha256": "d57199c0d105fa12c308bf8acd35bc23878dbeeac84c3e25a2c9768fbed4721f",
+      "bytes": 6009,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/markdown-preview.md",
+      "sha256": "a4e1489060dce22f7266692c92c099d6f775581da751aead61c7ff2d8b1dc2ee",
+      "bytes": 6811,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/mermaid.md",
+      "sha256": "3a85defcc5f4b015f0d9450d6ca13c0d04e4c4508a96f4fca16c18eddda8e003",
+      "bytes": 11471,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/pages-scaffold.mjs",
+      "sha256": "6111c1c8af2779483ac0ada57c5254284f3a347b3081e93a29b694c175b6e123",
+      "bytes": 12947,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/pages.md",
+      "sha256": "499a9afd1fe39db08a63f5469f21ff53fdfde81c3f45d6e4320c2bb7cb9df085",
+      "bytes": 21467,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/pdf-preview.md",
+      "sha256": "7c6845666ef84fa70db3267f102efcd8e82d54dcdf2c39d6e55faf3e6642bef2",
+      "bytes": 8411,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/permissions.md",
+      "sha256": "4c6950b24e6efb341a0978e34245c0f9826e0171d6d4c1b51cee2a1fa9bb910c",
+      "bytes": 12594,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/phaneris-cli.md",
+      "sha256": "362229678191cbf28e05eb9420ae308f56b64d1b3dec56ff35f4afb3456af913",
+      "bytes": 15319,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/plugins.md",
+      "sha256": "e923a9957d917365f98190c04bf7c32f48d687abe965151a34c63bbc15b44cdf",
+      "bytes": 13531,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/skills.md",
+      "sha256": "4aed49be3a1430c5e22ada26cf6663f3b9bc6a09416a4f5112034b6b84c7bab4",
+      "bytes": 11168,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/sources.md",
+      "sha256": "2e1a6f228b2460abbb5327bcb4eda73b7f91321926d1d25dbce5ef70427540c5",
+      "bytes": 30870,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/statuses.md",
+      "sha256": "523094d7c5ffac7f5be59bbc2def808d0fcba9565902982bdae49b1809db73f4",
+      "bytes": 6145,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/themes.md",
+      "sha256": "32939c3e9b26a9f40799c404958fc9f80feac2194a02029e9702f971f107720b",
+      "bytes": 12067,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/docs/tool-icons.md",
+      "sha256": "f20a4b363d5c4383f0bd96a5a3f2f2c1906124c028dd26cd4524ce0706aefcf2",
+      "bytes": 2676,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/security/webui-auth.sqlite",
+      "sha256": "da63a52bdf62b3fc863995d79f497584be3ba97c1de4c55d1d301afbafab6cfc",
+      "bytes": 4096,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/security/webui-auth.sqlite-shm",
+      "sha256": "4312190a12b4469d0a2704543fe7871e322eea0c21782e171230d0debf5564e7",
+      "bytes": 32768,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/security/webui-auth.sqlite-wal",
+      "sha256": "596441b09edc1c38bbd9dc3bc953ee183503e19fb5cec83ca0905d100d750b49",
+      "bytes": 12392,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/1password.png",
+      "sha256": "7fa32d128a53272afbce2d855ea79359aaaed485266bebfb614d3d2e810ca533",
+      "bytes": 1205,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/amazonaws.png",
+      "sha256": "f80d3ec6c5b2adee55267ecfcf2fc4131aa8551a546b7a1971b5e465c05c2403",
+      "bytes": 3061,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/bun.png",
+      "sha256": "dc58648fa3076af1608cdc0a512541e2dcd398aa2ced930a3846ae0f6ec9200c",
+      "bytes": 4994,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/chrome.svg",
+      "sha256": "19462b5b1e0c059e3e7eac105381b8f658aa76bd6a6068188fbcec1643ec5b9c",
+      "bytes": 1661,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/cloudflare.png",
+      "sha256": "0f84307ad691800e391fccb42b4ba290a87febf001abedfbe03b34767d45e441",
+      "bytes": 2485,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/cmake.ico",
+      "sha256": "7056b969eaf9826ad668aee81affd50f55f654777a0ef79cf9932356b64ff5db",
+      "bytes": 15086,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/cocoapods.png",
+      "sha256": "85f4490beb42d4e5d5617fdc9f954e048fa72424530b070eb594bd6a8546b01a",
+      "bytes": 10244,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/craft-agent.svg",
+      "sha256": "e8f58b578d2d9c08032c7321ae6880b7651b0c4542e5cf50569617c247da03e7",
+      "bytes": 478,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/curl.svg",
+      "sha256": "6f73b713d6540004a0991f51854936a15bface91ca161fcf665e39e6289a422b",
+      "bytes": 523,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/deno.png",
+      "sha256": "a9624bdff91a7b7de07249102639d44d646f9801e9e59d3aa3e6ee99e784bfce",
+      "bytes": 4559,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/docker.png",
+      "sha256": "5cb5caeeef34a0979a0b21640ea6bbbfb8345a9fff0d0e910c345ce4d0b65718",
+      "bytes": 2900,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/esbuild.svg",
+      "sha256": "d3d5e75b71dbfa833d8d354a0e06c1fce7987b3c6c11b9c7621ecef7a169b513",
+      "bytes": 245,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/eslint.png",
+      "sha256": "1d319ee9fa6f8338003cce9714e5229f1c93ff747eef26397ae394c78175d4dd",
+      "bytes": 1673,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/firebase.png",
+      "sha256": "f7d596ba99b42959b41076af51a73edae82cb366d8199ae465d42fcad144a70b",
+      "bytes": 2763,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/flydotio.png",
+      "sha256": "50ced2a240deee800188f0aa51af8e3151509fa86bdd4455bc90c73e50f9571b",
+      "bytes": 1361,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/git.ico",
+      "sha256": "833cdb9802075297de2daed735378355c351da9575e11bf76a79b703c4d87c6e",
+      "bytes": 6518,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/github.png",
+      "sha256": "1bedd6a1948971f07970414717012503805309f25af0b2c542dbc3524b5880e9",
+      "bytes": 33270,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/gnumake.png",
+      "sha256": "a402f4b396836770e24ab283cd3b32398474e3160f27aacd327e6c0593422284",
+      "bytes": 1708,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/go.png",
+      "sha256": "8bf938ca7a737e0478cd119c920e93943f6fb8562e21461aa5030cf0597fc107",
+      "bytes": 12840,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/googlecloud.png",
+      "sha256": "9d6cba870cebc57aca0226cbba7e0f5a08a2e1fb65883b40b4546358400aaf10",
+      "bytes": 4166,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/heroku.png",
+      "sha256": "0c41ed3cbb142bacb0bd437644519566ec3056d7eb11851316ec15d32ea3c215",
+      "bytes": 5655,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/homebrew.png",
+      "sha256": "0b8d060003012b7748527e9ec23839b1a1eab89d145096dc289558c181efd1e1",
+      "bytes": 2075,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/jest.png",
+      "sha256": "a006ea3b0aa2540fe4284d4834e9edcf5fe3f7ad009bb9c7372ba63a28ffdb4f",
+      "bytes": 22916,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/jq.png",
+      "sha256": "50897a977f14b874994101cc096da4155e599a8e31e0a0be12c065c5aa519fcb",
+      "bytes": 2163,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/kubernetes.png",
+      "sha256": "8450c523e0332662197cb25cdf158b24aae33c2819d6e3f10928bf31795cd618",
+      "bytes": 21559,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/microsoftazure.ico",
+      "sha256": "90cdaf487716184e4034000935c605d1633926d348116d198f355a98b8c6cd21",
+      "bytes": 17174,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/mongodb.ico",
+      "sha256": "1143ff8a5619ad9d016e3d94462f44ae9047ab4ac4c39722d265c88961591a1a",
+      "bytes": 32988,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/mysql.png",
+      "sha256": "b2f0c9c426e0c7b842734af8d601829b441d1be9a928ff67c0a542afa47d7007",
+      "bytes": 3753,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/netlify.png",
+      "sha256": "e067b3637d9dfc54630b17d77f28284699f029ef2b3a42dd37f673229f5cea90",
+      "bytes": 1391,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/ngrok.svg",
+      "sha256": "c70262c22ae481b44d9b6db7aef8a74eda8aa06064eb0192aa8c880f0545b672",
+      "bytes": 1312,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/nodedotjs.png",
+      "sha256": "3113d214c0396e4783a0baf0afa3b33317bfa075775efa39f6b708d41acb25f3",
+      "bytes": 1130,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/npm.png",
+      "sha256": "c3c90ef0a31451f152896fefe381ea1b4a90e9d84b63defe2045dbe7b6388864",
+      "bytes": 730,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/nx.png",
+      "sha256": "a78f2ed84661cdeff63a1f1a09ce44200510c4ce0942da994f020ae41ec7e74c",
+      "bytes": 3959,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/openssh.png",
+      "sha256": "9d72aadc532c77dcf5b6fa3d7005ebbdf37e6bb19d35acb7bcfc2d33c9c787cb",
+      "bytes": 62740,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/pnpm.png",
+      "sha256": "97c0104f190345be07d001af229891c6d1e7884507258191304e0967c4a7a67a",
+      "bytes": 241,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/postgresql.png",
+      "sha256": "50d3e0cb73ca3490192ede8b225fda20837b716d8f7f856538027a699b471e5e",
+      "bytes": 6990,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/prettier.png",
+      "sha256": "f6893e5cafb2cd2c9249e3ce16d40851dd6fca1387af1b5ed42c390c87912063",
+      "bytes": 1419,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/pypi.png",
+      "sha256": "4644e64f1a07b1a6eebfdcac5ef47ab4f0a2f51f3dc2aeb1e9cd18d147b9a5a2",
+      "bytes": 3726,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/pytest.png",
+      "sha256": "27055a4e52d49c7593a3cd70624fce09836d5327639f4e67f2da1fd0a65201aa",
+      "bytes": 723,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/python.ico",
+      "sha256": "39a32ed052ec937b46c40afcc3b87b98ecf2526cf8b6e2cd1698a8b4cd9a6e39",
+      "bytes": 15086,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/redis.png",
+      "sha256": "5bb7f4d969ab288e637d327e6446ac94dbc6ab245ed317355b1edf16e46637d1",
+      "bytes": 3659,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/ruby.ico",
+      "sha256": "b14aaa419c6a8da7950211343ca36045d3d78b250f1ab44ad46cd946aac2b873",
+      "bytes": 5430,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/rust.png",
+      "sha256": "b81fc3ff9bfd1f375337c8767e3aaf3a534e42e45d5f74207e82a99941d0e191",
+      "bytes": 6126,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/sentry.png",
+      "sha256": "34860979d391b4091ac1ae4d01b26f89861a0d64be28e9980343673b621fac5b",
+      "bytes": 3902,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/sqlite.jpg",
+      "sha256": "2590ba4953009ddb3e1d0fa92e30d7b999ab6d8c15d1513fd2dee418f10dd19e",
+      "bytes": 4655,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/stripe.png",
+      "sha256": "af3bacdcd1badb3b4a7bb90428042e77f4169e075bceee8b3e8a8f3db4e181dd",
+      "bytes": 1487,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/supabase.png",
+      "sha256": "ad48e4348178a3eee479d5d0a9c40c078ab1b34b52f1c676ef24cd5972fe05ca",
+      "bytes": 1966,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/swift.ico",
+      "sha256": "5047233430e980eb5040fc2cb031d034dd814d046683d6be4f82d9a7448780a4",
+      "bytes": 16958,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/terraform.png",
+      "sha256": "d70e3ce054838063c12091c1106ec6b0c209b84fa1f2a12d587a60e84ebcc1a8",
+      "bytes": 595,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/tool-icons.json",
+      "sha256": "30632e8fe0d760986766f0d1b47c1cc6ec865336016e7ea706f0ad3f7ddd45b4",
+      "bytes": 5427,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/turborepo.png",
+      "sha256": "6e3433e62b844b7d0c9245145ede7d08ccb493cb714879619cb7c8400e0a8fc7",
+      "bytes": 1353,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/vercel.png",
+      "sha256": "527984385aaadb1ee0cebafc3d2c3873fbea854bb41817982d24f0e31b0f931e",
+      "bytes": 534,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/vite.svg",
+      "sha256": "30b592e46c4f65305e3ed920d55f028ff4b69113e5cf1ec4d4b414ed25381a90",
+      "bytes": 11559,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/vitest.png",
+      "sha256": "01b9c25cdb144de530cb310a5ee82f852610319c7dd8879b586b3b4f1b8ffbe4",
+      "bytes": 1754,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/webpack.png",
+      "sha256": "b75c4e8155a5f414b520bfeb066d3533f3a8bf62cf1b38914b452b552a8ee854",
+      "bytes": 11341,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/xcode.png",
+      "sha256": "6789a941c19bc9b69db66f6d6988a6c4d92946b598c701644cf993426ac1ab7c",
+      "bytes": 5700,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "config/tool-icons/yarn.svg",
+      "sha256": "5ed0e60d8912296eaf1110322890bfc91cca1541b03587bb58156ccb5e6b7cff",
+      "bytes": 4682,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "controls-trace.zip",
+      "sha256": "ebbc6e5df7e42edeb4648c0277b71f6823ab6043bda113d7ae39fbb78fe0f5e9",
+      "bytes": 7015058,
+      "reason": "Browser trace retained locally"
+    },
+    {
+      "run": "before",
+      "path": "index.html",
+      "sha256": "b8600cba7673be4c7ab866a92742489402ccfcc734795edc570593c0596d6bf9",
+      "bytes": 253,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "web-trace.zip",
+      "sha256": "15212a254a64bbb799d20ec97163b91909403124af7462c57d87eed0cb7da838",
+      "bytes": 572076,
+      "reason": "Browser trace retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/.claude-plugin/plugin.json",
+      "sha256": "8dc1f49deb8ad5109cb40139ed2001b0044a03a8b8facbbc631bef4d40ec2482",
+      "bytes": 69,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/config.json",
+      "sha256": "9ce6cb6320ab967f11fee0e2767e819f999d33a24bee16ef15a538bda6a42bbe",
+      "bytes": 343,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/labels/config.json",
+      "sha256": "0fce7f82bc29918788f41810f87af7ddce17f09e1303b7f74b68b5ec808655e1",
+      "bytes": 1696,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/runtime/backups/runtime-2026-10-12.db",
+      "sha256": "5bf6ad4a8c478a63f2f7c43bc9be20c7a306341387a35d3e2ae34845ee9547af",
+      "bytes": 110592,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/runtime/runtime.db",
+      "sha256": "90df67198c0007a6804e9cbb69627657566ef07972cf6df5678cca72c1223b80",
+      "bytes": 110592,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/runtime/runtime.db-shm",
+      "sha256": "6d66424e4ada0c785d446a2e9f6cbe5ab76ecbf0a2582f74ae43b9273e082683",
+      "bytes": 32768,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/runtime/runtime.db-wal",
+      "sha256": "e33affffbb9aa0f2cc15d9f5dee7c02b207eb0bea089209abd66dddf255b2c75",
+      "bytes": 148352,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/statuses/config.json",
+      "sha256": "b7d277356093957497c93ba57f68995adbae39045d2a0362948d967285337785",
+      "bytes": 843,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/statuses/icons/backlog.svg",
+      "sha256": "c691b6d22e9457d376b5c6485567629fba53969e021b756414622cd03db1a461",
+      "bytes": 246,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/statuses/icons/cancelled.svg",
+      "sha256": "c7e004e0f0d70912f5e03d85a5fccb0358a93d26541d7467a452decd69f97099",
+      "bytes": 285,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/statuses/icons/done.svg",
+      "sha256": "fe3ab26d993d189c79a6dbc1e4ef4d3f00a7eec1fe22b6898d26f39a51468515",
+      "bytes": 280,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/statuses/icons/in-progress.svg",
+      "sha256": "e3c7809615a7b0dbfc001fdc8f8cd77176f80c08970334cef26b4deef642e99e",
+      "bytes": 293,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/statuses/icons/needs-review.svg",
+      "sha256": "1cf4690b289a45cd04c7d5e445f991d4f511f7a86463283d3e1ad86b2815c69a",
+      "bytes": 292,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/statuses/icons/todo.svg",
+      "sha256": "4d5ee09d3056fbfd37d8aa8b169a9390bd8737760a98dae75ccbcf492b095b40",
+      "bytes": 223,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "before",
+      "path": "workspace/views.json",
+      "sha256": "96c71478b67a4cb321ebd61dc934ba207ee05d9a54a7d8b4a5543f6e3c195feb",
+      "bytes": 830,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/.server.lock",
+      "sha256": "4f5a0213440bb167633ba1afd13318644ed7904a21fd9385243885f28530c3c4",
+      "bytes": 60,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/config-defaults.json",
+      "sha256": "648a9a8cf3a1c157a2ac3bc0330fcb05c11ddc02dce8c94e78491e45127c220e",
+      "bytes": 656,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/config.json",
+      "sha256": "3c33b2cccfdea1bfcc0312b337390c6794c4acc7fad7f9ef44a0cf021fbaf6b0",
+      "bytes": 375,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/config.json.bak-2026-10-12",
+      "sha256": "4c4e0b2fe8a976f85588c2b9612762f7c1b56b058f13e55f3a1c4c8db45580c5",
+      "bytes": 281,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/artifacts.md",
+      "sha256": "2e40acad8e739dc04be0d441f5f653f2677118eeaa653af8edea91ce1e525cf8",
+      "bytes": 5630,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/automations.md",
+      "sha256": "06768824c9d3756c24b37163f3c9362a36660e7127e4a2bff9eeb6092af2e80e",
+      "bytes": 33161,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/browser-tools.md",
+      "sha256": "b627aba6435749149c5a8dc5f7cfe7df65ffbea495e7ce2cca3785c0279845e6",
+      "bytes": 12937,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/data-tables.md",
+      "sha256": "62cb11fb6398269e13abf0033073e431b7c7e03e3968aa43a59a4e4ef3808acb",
+      "bytes": 15678,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/decisions.md",
+      "sha256": "1cbc3d877cf4b9fe84f4b4971e1943f6956267d77586ef6c49c0221b49d542d6",
+      "bytes": 11099,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/html-preview.md",
+      "sha256": "83073f07005691f185fe97a004d7f2545f40f36e7a74889c31b689f74aaee9ec",
+      "bytes": 15955,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/image-preview.md",
+      "sha256": "a0b74277818a46e972e3c08bed43ff8321352b8edbce80084ff19c44183b7a13",
+      "bytes": 3912,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/labels.md",
+      "sha256": "6458555e29422c571a2cbd65d2131f4331db6a365c21e1f08613edd1ced99e20",
+      "bytes": 15884,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/llm-tool.md",
+      "sha256": "d57199c0d105fa12c308bf8acd35bc23878dbeeac84c3e25a2c9768fbed4721f",
+      "bytes": 6009,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/markdown-preview.md",
+      "sha256": "a4e1489060dce22f7266692c92c099d6f775581da751aead61c7ff2d8b1dc2ee",
+      "bytes": 6811,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/mermaid.md",
+      "sha256": "3a85defcc5f4b015f0d9450d6ca13c0d04e4c4508a96f4fca16c18eddda8e003",
+      "bytes": 11471,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/pages-scaffold.mjs",
+      "sha256": "6111c1c8af2779483ac0ada57c5254284f3a347b3081e93a29b694c175b6e123",
+      "bytes": 12947,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/pages.md",
+      "sha256": "499a9afd1fe39db08a63f5469f21ff53fdfde81c3f45d6e4320c2bb7cb9df085",
+      "bytes": 21467,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/pdf-preview.md",
+      "sha256": "7c6845666ef84fa70db3267f102efcd8e82d54dcdf2c39d6e55faf3e6642bef2",
+      "bytes": 8411,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/permissions.md",
+      "sha256": "4c6950b24e6efb341a0978e34245c0f9826e0171d6d4c1b51cee2a1fa9bb910c",
+      "bytes": 12594,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/phaneris-cli.md",
+      "sha256": "362229678191cbf28e05eb9420ae308f56b64d1b3dec56ff35f4afb3456af913",
+      "bytes": 15319,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/plugins.md",
+      "sha256": "e923a9957d917365f98190c04bf7c32f48d687abe965151a34c63bbc15b44cdf",
+      "bytes": 13531,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/skills.md",
+      "sha256": "4aed49be3a1430c5e22ada26cf6663f3b9bc6a09416a4f5112034b6b84c7bab4",
+      "bytes": 11168,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/sources.md",
+      "sha256": "2e1a6f228b2460abbb5327bcb4eda73b7f91321926d1d25dbce5ef70427540c5",
+      "bytes": 30870,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/statuses.md",
+      "sha256": "523094d7c5ffac7f5be59bbc2def808d0fcba9565902982bdae49b1809db73f4",
+      "bytes": 6145,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/themes.md",
+      "sha256": "32939c3e9b26a9f40799c404958fc9f80feac2194a02029e9702f971f107720b",
+      "bytes": 12067,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/docs/tool-icons.md",
+      "sha256": "f20a4b363d5c4383f0bd96a5a3f2f2c1906124c028dd26cd4524ce0706aefcf2",
+      "bytes": 2676,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/security/webui-auth.sqlite",
+      "sha256": "da63a52bdf62b3fc863995d79f497584be3ba97c1de4c55d1d301afbafab6cfc",
+      "bytes": 4096,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/security/webui-auth.sqlite-shm",
+      "sha256": "168cf64f88b470ff71f75b133ae6e8c8632c3701939302da186be648034b6cca",
+      "bytes": 32768,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/security/webui-auth.sqlite-wal",
+      "sha256": "98f66e4e7956dc2e33cf56aa8e584f077417ed0793fb661e30edf7e1bcac989c",
+      "bytes": 12392,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/1password.png",
+      "sha256": "7fa32d128a53272afbce2d855ea79359aaaed485266bebfb614d3d2e810ca533",
+      "bytes": 1205,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/amazonaws.png",
+      "sha256": "f80d3ec6c5b2adee55267ecfcf2fc4131aa8551a546b7a1971b5e465c05c2403",
+      "bytes": 3061,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/bun.png",
+      "sha256": "dc58648fa3076af1608cdc0a512541e2dcd398aa2ced930a3846ae0f6ec9200c",
+      "bytes": 4994,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/chrome.svg",
+      "sha256": "19462b5b1e0c059e3e7eac105381b8f658aa76bd6a6068188fbcec1643ec5b9c",
+      "bytes": 1661,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/cloudflare.png",
+      "sha256": "0f84307ad691800e391fccb42b4ba290a87febf001abedfbe03b34767d45e441",
+      "bytes": 2485,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/cmake.ico",
+      "sha256": "7056b969eaf9826ad668aee81affd50f55f654777a0ef79cf9932356b64ff5db",
+      "bytes": 15086,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/cocoapods.png",
+      "sha256": "85f4490beb42d4e5d5617fdc9f954e048fa72424530b070eb594bd6a8546b01a",
+      "bytes": 10244,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/craft-agent.svg",
+      "sha256": "e8f58b578d2d9c08032c7321ae6880b7651b0c4542e5cf50569617c247da03e7",
+      "bytes": 478,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/curl.svg",
+      "sha256": "6f73b713d6540004a0991f51854936a15bface91ca161fcf665e39e6289a422b",
+      "bytes": 523,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/deno.png",
+      "sha256": "a9624bdff91a7b7de07249102639d44d646f9801e9e59d3aa3e6ee99e784bfce",
+      "bytes": 4559,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/docker.png",
+      "sha256": "5cb5caeeef34a0979a0b21640ea6bbbfb8345a9fff0d0e910c345ce4d0b65718",
+      "bytes": 2900,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/esbuild.svg",
+      "sha256": "d3d5e75b71dbfa833d8d354a0e06c1fce7987b3c6c11b9c7621ecef7a169b513",
+      "bytes": 245,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/eslint.png",
+      "sha256": "1d319ee9fa6f8338003cce9714e5229f1c93ff747eef26397ae394c78175d4dd",
+      "bytes": 1673,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/firebase.png",
+      "sha256": "f7d596ba99b42959b41076af51a73edae82cb366d8199ae465d42fcad144a70b",
+      "bytes": 2763,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/flydotio.png",
+      "sha256": "50ced2a240deee800188f0aa51af8e3151509fa86bdd4455bc90c73e50f9571b",
+      "bytes": 1361,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/git.ico",
+      "sha256": "833cdb9802075297de2daed735378355c351da9575e11bf76a79b703c4d87c6e",
+      "bytes": 6518,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/github.png",
+      "sha256": "1bedd6a1948971f07970414717012503805309f25af0b2c542dbc3524b5880e9",
+      "bytes": 33270,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/gnumake.png",
+      "sha256": "a402f4b396836770e24ab283cd3b32398474e3160f27aacd327e6c0593422284",
+      "bytes": 1708,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/go.png",
+      "sha256": "8bf938ca7a737e0478cd119c920e93943f6fb8562e21461aa5030cf0597fc107",
+      "bytes": 12840,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/googlecloud.png",
+      "sha256": "9d6cba870cebc57aca0226cbba7e0f5a08a2e1fb65883b40b4546358400aaf10",
+      "bytes": 4166,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/heroku.png",
+      "sha256": "0c41ed3cbb142bacb0bd437644519566ec3056d7eb11851316ec15d32ea3c215",
+      "bytes": 5655,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/homebrew.png",
+      "sha256": "0b8d060003012b7748527e9ec23839b1a1eab89d145096dc289558c181efd1e1",
+      "bytes": 2075,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/jest.png",
+      "sha256": "a006ea3b0aa2540fe4284d4834e9edcf5fe3f7ad009bb9c7372ba63a28ffdb4f",
+      "bytes": 22916,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/jq.png",
+      "sha256": "50897a977f14b874994101cc096da4155e599a8e31e0a0be12c065c5aa519fcb",
+      "bytes": 2163,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/kubernetes.png",
+      "sha256": "8450c523e0332662197cb25cdf158b24aae33c2819d6e3f10928bf31795cd618",
+      "bytes": 21559,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/microsoftazure.ico",
+      "sha256": "90cdaf487716184e4034000935c605d1633926d348116d198f355a98b8c6cd21",
+      "bytes": 17174,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/mongodb.ico",
+      "sha256": "1143ff8a5619ad9d016e3d94462f44ae9047ab4ac4c39722d265c88961591a1a",
+      "bytes": 32988,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/mysql.png",
+      "sha256": "b2f0c9c426e0c7b842734af8d601829b441d1be9a928ff67c0a542afa47d7007",
+      "bytes": 3753,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/netlify.png",
+      "sha256": "e067b3637d9dfc54630b17d77f28284699f029ef2b3a42dd37f673229f5cea90",
+      "bytes": 1391,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/ngrok.svg",
+      "sha256": "c70262c22ae481b44d9b6db7aef8a74eda8aa06064eb0192aa8c880f0545b672",
+      "bytes": 1312,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/nodedotjs.png",
+      "sha256": "3113d214c0396e4783a0baf0afa3b33317bfa075775efa39f6b708d41acb25f3",
+      "bytes": 1130,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/npm.png",
+      "sha256": "c3c90ef0a31451f152896fefe381ea1b4a90e9d84b63defe2045dbe7b6388864",
+      "bytes": 730,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/nx.png",
+      "sha256": "a78f2ed84661cdeff63a1f1a09ce44200510c4ce0942da994f020ae41ec7e74c",
+      "bytes": 3959,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/openssh.png",
+      "sha256": "9d72aadc532c77dcf5b6fa3d7005ebbdf37e6bb19d35acb7bcfc2d33c9c787cb",
+      "bytes": 62740,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/pnpm.png",
+      "sha256": "97c0104f190345be07d001af229891c6d1e7884507258191304e0967c4a7a67a",
+      "bytes": 241,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/postgresql.png",
+      "sha256": "50d3e0cb73ca3490192ede8b225fda20837b716d8f7f856538027a699b471e5e",
+      "bytes": 6990,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/prettier.png",
+      "sha256": "f6893e5cafb2cd2c9249e3ce16d40851dd6fca1387af1b5ed42c390c87912063",
+      "bytes": 1419,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/pypi.png",
+      "sha256": "4644e64f1a07b1a6eebfdcac5ef47ab4f0a2f51f3dc2aeb1e9cd18d147b9a5a2",
+      "bytes": 3726,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/pytest.png",
+      "sha256": "27055a4e52d49c7593a3cd70624fce09836d5327639f4e67f2da1fd0a65201aa",
+      "bytes": 723,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/python.ico",
+      "sha256": "39a32ed052ec937b46c40afcc3b87b98ecf2526cf8b6e2cd1698a8b4cd9a6e39",
+      "bytes": 15086,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/redis.png",
+      "sha256": "5bb7f4d969ab288e637d327e6446ac94dbc6ab245ed317355b1edf16e46637d1",
+      "bytes": 3659,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/ruby.ico",
+      "sha256": "b14aaa419c6a8da7950211343ca36045d3d78b250f1ab44ad46cd946aac2b873",
+      "bytes": 5430,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/rust.png",
+      "sha256": "b81fc3ff9bfd1f375337c8767e3aaf3a534e42e45d5f74207e82a99941d0e191",
+      "bytes": 6126,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/sentry.png",
+      "sha256": "34860979d391b4091ac1ae4d01b26f89861a0d64be28e9980343673b621fac5b",
+      "bytes": 3902,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/sqlite.jpg",
+      "sha256": "2590ba4953009ddb3e1d0fa92e30d7b999ab6d8c15d1513fd2dee418f10dd19e",
+      "bytes": 4655,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/stripe.png",
+      "sha256": "af3bacdcd1badb3b4a7bb90428042e77f4169e075bceee8b3e8a8f3db4e181dd",
+      "bytes": 1487,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/supabase.png",
+      "sha256": "ad48e4348178a3eee479d5d0a9c40c078ab1b34b52f1c676ef24cd5972fe05ca",
+      "bytes": 1966,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/swift.ico",
+      "sha256": "5047233430e980eb5040fc2cb031d034dd814d046683d6be4f82d9a7448780a4",
+      "bytes": 16958,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/terraform.png",
+      "sha256": "d70e3ce054838063c12091c1106ec6b0c209b84fa1f2a12d587a60e84ebcc1a8",
+      "bytes": 595,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/tool-icons.json",
+      "sha256": "30632e8fe0d760986766f0d1b47c1cc6ec865336016e7ea706f0ad3f7ddd45b4",
+      "bytes": 5427,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/turborepo.png",
+      "sha256": "6e3433e62b844b7d0c9245145ede7d08ccb493cb714879619cb7c8400e0a8fc7",
+      "bytes": 1353,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/vercel.png",
+      "sha256": "527984385aaadb1ee0cebafc3d2c3873fbea854bb41817982d24f0e31b0f931e",
+      "bytes": 534,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/vite.svg",
+      "sha256": "30b592e46c4f65305e3ed920d55f028ff4b69113e5cf1ec4d4b414ed25381a90",
+      "bytes": 11559,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/vitest.png",
+      "sha256": "01b9c25cdb144de530cb310a5ee82f852610319c7dd8879b586b3b4f1b8ffbe4",
+      "bytes": 1754,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/webpack.png",
+      "sha256": "b75c4e8155a5f414b520bfeb066d3533f3a8bf62cf1b38914b452b552a8ee854",
+      "bytes": 11341,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/xcode.png",
+      "sha256": "6789a941c19bc9b69db66f6d6988a6c4d92946b598c701644cf993426ac1ab7c",
+      "bytes": 5700,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "config/tool-icons/yarn.svg",
+      "sha256": "5ed0e60d8912296eaf1110322890bfc91cca1541b03587bb58156ccb5e6b7cff",
+      "bytes": 4682,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "controls-trace.zip",
+      "sha256": "cedb135aa93bdbe1497266ef5b6200ae501320f50d5c5b383e14b3d17ba4fdf5",
+      "bytes": 13971045,
+      "reason": "Browser trace retained locally"
+    },
+    {
+      "run": "after",
+      "path": "electron.css",
+      "sha256": "0c7ddfa273a037f3f6c4a80b0c54dd38b50ecc3c0292d119c87f827286bb274b",
+      "bytes": 131,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "index.html",
+      "sha256": "b8600cba7673be4c7ab866a92742489402ccfcc734795edc570593c0596d6bf9",
+      "bytes": 253,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "ui.css",
+      "sha256": "1257219192d6c08517f368cc85acda6fd6c20effc1f8d49e24952cfc89bda3d2",
+      "bytes": 127,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "viewer.css",
+      "sha256": "43cea0d113ffdb829bfd5b80307c868934efe3e442de041a28fcc04888e95ae8",
+      "bytes": 120,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "web-trace.zip",
+      "sha256": "e34d0c2fcfce3e7b02054eafdf09a29102c14d302c613c81ed9a31474066abe3",
+      "bytes": 892715,
+      "reason": "Browser trace retained locally"
+    },
+    {
+      "run": "after",
+      "path": "webui.css",
+      "sha256": "77f42b4c5966c873b9317eaedbebe257fc86c470ad3c3b9b13a64266a76f8dd6",
+      "bytes": 119,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/.claude-plugin/plugin.json",
+      "sha256": "8dc1f49deb8ad5109cb40139ed2001b0044a03a8b8facbbc631bef4d40ec2482",
+      "bytes": 69,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/config.json",
+      "sha256": "c42aaa792070146c330c004a0fcbf0da82045f688bc151d05064d14fd65f6544",
+      "bytes": 343,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/labels/config.json",
+      "sha256": "0fce7f82bc29918788f41810f87af7ddce17f09e1303b7f74b68b5ec808655e1",
+      "bytes": 1696,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/runtime/backups/runtime-2026-10-12.db",
+      "sha256": "5bf6ad4a8c478a63f2f7c43bc9be20c7a306341387a35d3e2ae34845ee9547af",
+      "bytes": 110592,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/runtime/runtime.db",
+      "sha256": "90df67198c0007a6804e9cbb69627657566ef07972cf6df5678cca72c1223b80",
+      "bytes": 110592,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/runtime/runtime.db-shm",
+      "sha256": "f5b1cce35bcfe1999633582850f3d020bf76b22915efd776ae45181119a15183",
+      "bytes": 32768,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/runtime/runtime.db-wal",
+      "sha256": "885a97070526c5854a12726740daac608f737b8abbe7773b9295fc017b13ba2b",
+      "bytes": 148352,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/statuses/config.json",
+      "sha256": "b7d277356093957497c93ba57f68995adbae39045d2a0362948d967285337785",
+      "bytes": 843,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/statuses/icons/backlog.svg",
+      "sha256": "c691b6d22e9457d376b5c6485567629fba53969e021b756414622cd03db1a461",
+      "bytes": 246,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/statuses/icons/cancelled.svg",
+      "sha256": "c7e004e0f0d70912f5e03d85a5fccb0358a93d26541d7467a452decd69f97099",
+      "bytes": 285,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/statuses/icons/done.svg",
+      "sha256": "fe3ab26d993d189c79a6dbc1e4ef4d3f00a7eec1fe22b6898d26f39a51468515",
+      "bytes": 280,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/statuses/icons/in-progress.svg",
+      "sha256": "e3c7809615a7b0dbfc001fdc8f8cd77176f80c08970334cef26b4deef642e99e",
+      "bytes": 293,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/statuses/icons/needs-review.svg",
+      "sha256": "1cf4690b289a45cd04c7d5e445f991d4f511f7a86463283d3e1ad86b2815c69a",
+      "bytes": 292,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/statuses/icons/todo.svg",
+      "sha256": "4d5ee09d3056fbfd37d8aa8b169a9390bd8737760a98dae75ccbcf492b095b40",
+      "bytes": 223,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "after",
+      "path": "workspace/views.json",
+      "sha256": "96c71478b67a4cb321ebd61dc934ba207ee05d9a54a7d8b4a5543f6e3c195feb",
+      "bytes": 830,
+      "reason": "Temporary config/workspace/fixture retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "activity-dark.png",
+      "sha256": "92cb53b92de7ae6974d18a6349872e6f15d91a84c9aa518fd011707d7db41acd",
+      "bytes": 21102,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "activity-light.png",
+      "sha256": "dbe2da2fd6f2ab596e3cab5401e70724e2f285995497afe98541a668c9a13ec5",
+      "bytes": 19085,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "index.html",
+      "sha256": "d018a6da732486fbdfadacf446a37f2993c000b9c44a1b67336066a827be8a1f",
+      "bytes": 283,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "long-end.png",
+      "sha256": "b2d080d063a6437e62da3c92d7313c09b9342822f952541398ebc5f689ad3427",
+      "bytes": 107509,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "long-source-end.png",
+      "sha256": "c42d6f86c0478969bb28cc3a9a446780fbae8bd1513fd8a4b8aff857c740d670",
+      "bytes": 196340,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "long-source.png",
+      "sha256": "e893cb6487b48ea1c88d3b616e633ce492b46a749a3897d7c3bfe81957e89fcf",
+      "bytes": 168487,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "long.png",
+      "sha256": "ae115fa9760f926e5300474642f1db6c83f363b88c9d2541f1e87ecaba7e5aa7",
+      "bytes": 92403,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "message-1100.png",
+      "sha256": "785bef0ffc0d503c92478ada49dc7d1f3f6b03fbe3636c4e4c554ee0942d7b79",
+      "bytes": 16003,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "message-390.png",
+      "sha256": "df23a0a4ea010fdfdce6eaba5ef52e11e5821fa4b64b05b05c8b25dfe1cd83f5",
+      "bytes": 13415,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "message-dark.png",
+      "sha256": "cf49051935898214de46d5256c02c93557fd84e32cfde3eebf6f7d6db5a382b6",
+      "bytes": 19076,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "response-dark.png",
+      "sha256": "59597d739b4c5ddbd4932f6998b78ad86006b899669ec540e7a3a6af54a649b4",
+      "bytes": 19336,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "response-light.png",
+      "sha256": "1c4e8d3a5d5edf81a63241046f1bf8da03de64a18b9d72f18505e46b9a149ad6",
+      "bytes": 17430,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "source-light.png",
+      "sha256": "e7846d9592aaf63b614c8a73f88a57c55774d165660a8ad50c839d318b0862d7",
+      "bytes": 33728,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "trace.zip",
+      "sha256": "784819ef9ea930b3f1c0e14d88e401b6c9a7aa041763f9365b6bf14499a9be70",
+      "bytes": 4810116,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "turn-dark.png",
+      "sha256": "7b52aeda5bae5c6bf13652d426d5ea6f7bb576fde5cc14a92af2e803cff1bbed",
+      "bytes": 20042,
+      "reason": "Complete regression output retained locally"
+    },
+    {
+      "run": "popout-regression",
+      "path": "turn-light.png",
+      "sha256": "a48a7634aee699a9730981cf7adce5e1522417c81f7457d7066aa9eb0221df00",
+      "bytes": 18172,
+      "reason": "Complete regression output retained locally"
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 @import "../../../../packages/ui/src/styles/typography.css";
 @import "../../../../packages/ui/src/styles/motion.css";
 @import "../../../../packages/ui/src/styles/controls.css";
+@import "../../../../packages/ui/src/styles/shadow-aliases.css";
 @plugin "@tailwindcss/typography";
 
 /* Tell Tailwind where to scan for utility classes */
@@ -525,15 +526,6 @@ html[data-font="system"] {
   --z-index-island-popover: var(--z-island-popover);
   --z-index-splash: var(--z-splash);
 
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
-
   /* === CONTAINER QUERY BREAKPOINTS === */
   /* Custom breakpoints for responsive panel layouts.
    * Generates @panel-compact:, @panel-medium:, @mobile: Tailwind utility prefixes. */
@@ -595,13 +587,6 @@ html[data-font="system"] {
     background: var(--muted-foreground);
   }
 
-  /* Focus ring styles - override Tailwind ring utilities */
-  *:focus-visible {
-    outline: none;
-    --tw-ring-offset-width: var(--ring-offset);
-    --tw-ring-width: var(--ring-width);
-    --tw-ring-color: var(--ring);
-  }
 }
 
 /* Override Tailwind ring width utilities to use theme variable */

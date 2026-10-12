@@ -10,9 +10,13 @@
 
 import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAtomValue } from 'jotai'
 import { createWebApi } from './adapter/web-api'
 import type { WsRpcClient } from '../../electron/src/transport/client'
 import { createClientPlatform, initializeClient } from '@/platform/client'
+import { ThemeProvider } from '@/context/ThemeContext'
+import { windowWorkspaceIdAtom } from '@/atoms/sessions'
+import { Toaster } from '@/components/ui/sonner'
 
 // Lazy-load the Electron App after window.electronAPI is set up.
 // This prevents any Electron component from accessing window.electronAPI
@@ -20,6 +24,19 @@ import { createClientPlatform, initializeClient } from '@/platform/client'
 const ElectronApp = lazy(() => import('@/App'))
 
 type Phase = 'loading' | 'error' | 'ready'
+
+/** Theme effects read and subscribe only after initializeClient installs the API. */
+function ConnectedApp() {
+  const workspaceId = useAtomValue(windowWorkspaceIdAtom)
+  return (
+    <ThemeProvider activeWorkspaceId={workspaceId}>
+      <Suspense fallback={<LoadingScreen />}>
+        <ElectronApp />
+      </Suspense>
+      <Toaster />
+    </ThemeProvider>
+  )
+}
 
 function LoadingScreen() {
   const { t } = useTranslation()
@@ -142,9 +159,5 @@ export default function App() {
   if (phase === 'loading') return <LoadingScreen />
   if (phase === 'error') return <ErrorScreen message={error} onRetry={initialize} />
 
-  return (
-    <Suspense fallback={<LoadingScreen />}>
-      <ElectronApp />
-    </Suspense>
-  )
+  return <ConnectedApp />
 }

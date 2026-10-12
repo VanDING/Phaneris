@@ -1,11 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { Provider as JotaiProvider, useAtomValue, getDefaultStore } from 'jotai'
+import { Provider as JotaiProvider, getDefaultStore } from 'jotai'
 import { MotionConfig } from 'motion/react'
 import App from './App'
-import { ThemeProvider } from '@/context/ThemeContext'
-import { windowWorkspaceIdAtom } from '@/atoms/sessions'
-import { Toaster } from '@/components/ui/sonner'
 import { setupI18n } from '@phaneris/shared/i18n'
 import { initReactI18next } from 'react-i18next'
 import { useTranslation } from 'react-i18next'
@@ -39,17 +36,6 @@ function ErrorBoundary({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Root() {
-  const workspaceId = useAtomValue(windowWorkspaceIdAtom)
-
-  return (
-    <ThemeProvider activeWorkspaceId={workspaceId}>
-      <App />
-      <Toaster />
-    </ThemeProvider>
-  )
-}
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
@@ -59,7 +45,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           apps/electron/src/renderer/main.tsx. */}
       <JotaiProvider store={getDefaultStore()}>
         <MotionConfig reducedMotion="user">
-          <Root />
+          <App />
         </MotionConfig>
       </JotaiProvider>
     </ErrorBoundary>

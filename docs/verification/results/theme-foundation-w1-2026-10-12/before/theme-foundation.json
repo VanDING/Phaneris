@@ -1,0 +1,1915 @@
+{
+  "checks": [
+    {
+      "id": "TF09-electron-light",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-electron-light",
+      "passed": true
+    },
+    {
+      "id": "TF11-electron-light",
+      "passed": true
+    },
+    {
+      "id": "TF12-electron-light",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-electron-light-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-light-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-light-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-light-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-light-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-light-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF09-electron-dark",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-electron-dark",
+      "passed": true
+    },
+    {
+      "id": "TF11-electron-dark",
+      "passed": true
+    },
+    {
+      "id": "TF12-electron-dark",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-electron-dark-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-dark-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-dark-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-dark-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-dark-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-electron-dark-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF15-electron",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF16-electron",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF09-ui-light",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-ui-light",
+      "passed": true
+    },
+    {
+      "id": "TF11-ui-light",
+      "passed": true
+    },
+    {
+      "id": "TF12-ui-light",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-ui-light-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-light-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-light-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-light-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-light-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-light-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF09-ui-dark",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-ui-dark",
+      "passed": true
+    },
+    {
+      "id": "TF11-ui-dark",
+      "passed": false,
+      "error": "false == true"
+    },
+    {
+      "id": "TF12-ui-dark",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-ui-dark-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-dark-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-dark-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-dark-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-dark-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-ui-dark-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF15-ui",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF16-ui",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF09-viewer-light",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-viewer-light",
+      "passed": true
+    },
+    {
+      "id": "TF11-viewer-light",
+      "passed": true
+    },
+    {
+      "id": "TF12-viewer-light",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-viewer-light-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-light-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-light-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-light-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-light-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-light-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF09-viewer-dark",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-viewer-dark",
+      "passed": true
+    },
+    {
+      "id": "TF11-viewer-dark",
+      "passed": true
+    },
+    {
+      "id": "TF12-viewer-dark",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-viewer-dark-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-dark-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-dark-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-dark-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-dark-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-viewer-dark-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF15-viewer",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF16-viewer",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF09-webui-light",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-webui-light",
+      "passed": true
+    },
+    {
+      "id": "TF11-webui-light",
+      "passed": false,
+      "error": "false == true"
+    },
+    {
+      "id": "TF12-webui-light",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-webui-light-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-light-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-light-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-light-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-light-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-light-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF09-webui-dark",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF10-webui-dark",
+      "passed": true
+    },
+    {
+      "id": "TF11-webui-dark",
+      "passed": true
+    },
+    {
+      "id": "TF12-webui-dark",
+      "passed": true
+    },
+    {
+      "id": "TF13-TF14-webui-dark-static",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-dark-flat",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-dark-elevated",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-dark-neon",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-dark-glass",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF13-TF14-webui-dark-raised",
+      "passed": false,
+      "error": "2xs must resolve"
+    },
+    {
+      "id": "TF15-webui",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF16-webui",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF17-legacy-not-replayed",
+      "passed": false,
+      "error": "waitForFunction: Timeout 3000ms exceeded."
+    },
+    {
+      "id": "TF17-late-read-event",
+      "passed": false,
+      "error": "Reconnect must start one read\n\n0 !== 1\n"
+    },
+    {
+      "id": "TF17-late-read-local",
+      "passed": false,
+      "error": "Reconnect must start one read\n\n0 !== 1\n"
+    },
+    {
+      "id": "TF17-subscription-cleanup",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "id": "TF01-delayed-ready",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ready'\n- undefined\n"
+    },
+    {
+      "id": "TF02-cold-start",
+      "passed": false,
+      "error": "waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TF03-stale-cache",
+      "passed": false,
+      "error": "waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TF04-cross-client",
+      "passed": false,
+      "error": "waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TF05-reconnect-missed-event",
+      "passed": false,
+      "error": "waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TF06-post-reconnect-events",
+      "passed": false,
+      "error": "waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TF07-reload-persisted",
+      "passed": false,
+      "error": "waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "id": "TF08-initialization-retry",
+      "passed": false,
+      "error": "Keyboard outline must be visible"
+    },
+    {
+      "id": "TF18-no-pageerror",
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "host": "electron",
+      "mode": "light",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(32, 35, 44)",
+        "x": 30,
+        "y": 78.75,
+        "w": 92.296875,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "light",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(32, 35, 44)",
+        "x": 486.28125,
+        "y": 80.625,
+        "w": 161.5,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "light",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 1px 2px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 3px 6px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "light",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "light",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "light",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 1px 2px 0px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 3px 6px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 12px 32px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "light",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 0px 10px 0px",
+        "middle": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 18px 0px",
+        "strong": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "light",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 0px 10px 0px",
+        "middle": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 18px 0px",
+        "strong": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(238, 240, 246)",
+        "x": 30,
+        "y": 78.75,
+        "w": 94.703125,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(238, 240, 246)",
+        "x": 488.6875,
+        "y": 80.625,
+        "w": 161.5,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 0px 10px 0px",
+        "middle": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 18px 0px",
+        "strong": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "electron",
+      "mode": "dark",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.491339 -0.000297412 -0.0173082) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 8px 24px 0px",
+        "middle": "oklab(0.519232 -0.00026527 -0.0162022) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 12px 32px 0px",
+        "strong": "oklab(0.546762 -0.000236332 -0.0151393) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 20px 48px 0px",
+        "modal-small": "oklab(0.546762 -0.000236332 -0.0151393) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 24px 64px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(32, 35, 44)",
+        "x": 30,
+        "y": 78.75,
+        "w": 92.296875,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(32, 35, 44)",
+        "x": 504.78125,
+        "y": 80.625,
+        "w": 180,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 1px 2px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 3px 6px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 0px 10px 0px",
+        "middle": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 18px 0px",
+        "strong": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "light",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.939837 -0.00032267 -0.00793523) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 8px 24px 0px",
+        "middle": "oklab(0.942865 -0.000303447 -0.00753039) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 12px 32px 0px",
+        "strong": "oklab(0.945891 -0.000284493 -0.00712633) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 20px 48px 0px",
+        "modal-small": "oklab(0.945891 -0.000284493 -0.00712633) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 24px 64px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(238, 240, 246)",
+        "x": 30,
+        "y": 78.75,
+        "w": 94.703125,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(238, 240, 246)",
+        "x": 507.1875,
+        "y": 80.625,
+        "w": 180,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 1px 2px 0px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 3px 6px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 12px 32px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 1px 2px 0px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 3px 6px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 12px 32px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 0px 10px 0px",
+        "middle": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 18px 0px",
+        "strong": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "ui",
+      "mode": "dark",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.491339 -0.000297412 -0.0173082) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 8px 24px 0px",
+        "middle": "oklab(0.519232 -0.00026527 -0.0162022) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 12px 32px 0px",
+        "strong": "oklab(0.546762 -0.000236332 -0.0151393) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 20px 48px 0px",
+        "modal-small": "oklab(0.546762 -0.000236332 -0.0151393) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 24px 64px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(32, 35, 44)",
+        "x": 30,
+        "y": 78.75,
+        "w": 92.296875,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(32, 35, 44)",
+        "x": 504.78125,
+        "y": 80.625,
+        "w": 180,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 1px 2px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 3px 6px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 1px 2px 0px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 3px 6px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 12px 32px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 1px 2px 0px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 3px 6px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 12px 32px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 0px 10px 0px",
+        "middle": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 18px 0px",
+        "strong": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "light",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.939837 -0.00032267 -0.00793523) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 8px 24px 0px",
+        "middle": "oklab(0.942865 -0.000303447 -0.00753039) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 12px 32px 0px",
+        "strong": "oklab(0.945891 -0.000284493 -0.00712633) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 20px 48px 0px",
+        "modal-small": "oklab(0.945891 -0.000284493 -0.00712633) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 24px 64px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(238, 240, 246)",
+        "x": 30,
+        "y": 78.75,
+        "w": 94.703125,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(238, 240, 246)",
+        "x": 507.1875,
+        "y": 80.625,
+        "w": 180,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 0px 10px 0px",
+        "middle": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 18px 0px",
+        "strong": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "viewer",
+      "mode": "dark",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 0px 10px 0px",
+        "middle": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 18px 0px",
+        "strong": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(32, 35, 44)",
+        "x": 30,
+        "y": 78.75,
+        "w": 92.296875,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(32, 35, 44)",
+        "x": 486.28125,
+        "y": 80.625,
+        "w": 161.5,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 1px 2px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 3px 6px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 12px 32px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0 0 0 / 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 4px 12px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 16px 48px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.02) 0px 0px 10px 0px",
+        "middle": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 0px 18px 0px",
+        "strong": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 0px 30px 0px",
+        "modal-small": "rgb(227, 230, 237) 0px 0px 0px 1px, color(srgb 0.12549 0.137255 0.172549 / 0.04) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 0px 10px 0px",
+        "middle": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 18px 0px",
+        "strong": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.924661 -0.000419497 -0.00997096) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "light",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.12549 0.137255 0.172549 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.939837 -0.00032267 -0.00793523) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.02) 0px 8px 24px 0px",
+        "middle": "oklab(0.942865 -0.000303447 -0.00753039) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 12px 32px 0px",
+        "strong": "oklab(0.945891 -0.000284493 -0.00712633) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 20px 48px 0px",
+        "modal-small": "oklab(0.945891 -0.000284493 -0.00712633) 0px 0px 0px 1px, oklab(0.257064 0.000210181 -0.0175201 / 0.04) 0px 24px 64px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "native": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 0,
+        "color": "rgb(238, 240, 246)",
+        "x": 30,
+        "y": 78.75,
+        "w": 94.703125,
+        "h": 37.5,
+        "shadow": "none"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "wrapped": {
+        "focused": true,
+        "visible": true,
+        "outline": "none",
+        "width": 3,
+        "offset": 2,
+        "color": "rgb(238, 240, 246)",
+        "x": 488.6875,
+        "y": 80.625,
+        "w": 161.5,
+        "h": 33.75,
+        "shadow": "none"
+      },
+      "outline": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "depth": "static",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "depth": "flat",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 16px 48px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 8px 24px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "depth": "elevated",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 1px 2px 0px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.12) 0px 3px 6px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 12px 32px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, color(srgb 0.0313726 0.0352941 0.0470588 / 0.22) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "depth": "neon",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 1px 2px 0px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 3px 6px 0px",
+        "middle": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 4px 12px 0px",
+        "strong": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 12px 32px 0px",
+        "modal-small": "rgb(52, 57, 70) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 18px 48px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "depth": "glass",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 0px 10px 0px",
+        "middle": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 18px 0px",
+        "strong": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "host": "webui",
+      "mode": "dark",
+      "depth": "raised",
+      "shadows": {
+        "2xs": "none",
+        "xs": "none",
+        "sm": "none",
+        "md": "none",
+        "lg": "none",
+        "xl": "none",
+        "2xl": "none",
+        "minimal-flat": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, color(srgb 0.933333 0.941176 0.964706 / 0.06) 0px 0px 0px 1px",
+        "minimal": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.12) 0px 0px 10px 0px",
+        "middle": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 18px 0px",
+        "strong": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 30px 0px",
+        "modal-small": "oklab(0.345205 -0.000568375 -0.0237673) 0px 0px 0px 1px, oklab(0.139976 -0.0000353158 -0.00688917 / 0.22) 0px 0px 36px 0px"
+      }
+    },
+    {
+      "delayedReady": {
+        "themeStatus": "ready",
+        "cache": null
+      }
+    }
+  ],
+  "pageErrors": [],
+  "transport": [
+    {
+      "client": 0,
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "client": 0,
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getWorkspaceColorTheme",
+      "args": [
+        "theme-fixture"
+      ]
+    },
+    {
+      "client": 0,
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "client": 1,
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "client": 1,
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getWorkspaceColorTheme",
+      "args": [
+        "theme-fixture"
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getWorkspaceColorTheme"
+    },
+    {
+      "client": 1,
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:setPreferences",
+      "args": [
+        {
+          "mode": "dark",
+          "colorTheme": "ink",
+          "font": "system"
+        }
+      ]
+    },
+    {
+      "client": 0,
+      "direction": "receive",
+      "type": "event",
+      "channel": "theme:preferencesChanged",
+      "args": [
+        {
+          "mode": "dark",
+          "colorTheme": "ink",
+          "font": "system"
+        }
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "receive",
+      "type": "event",
+      "channel": "theme:preferencesChanged",
+      "args": [
+        {
+          "mode": "dark",
+          "colorTheme": "ink",
+          "font": "system"
+        }
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:setPreferences"
+    },
+    {
+      "client": 1,
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:setPreferences",
+      "args": [
+        {
+          "mode": "light",
+          "colorTheme": "default",
+          "font": "inter"
+        }
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "receive",
+      "type": "event",
+      "channel": "theme:preferencesChanged",
+      "args": [
+        {
+          "mode": "light",
+          "colorTheme": "default",
+          "font": "inter"
+        }
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:setPreferences"
+    },
+    {
+      "client": 0,
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "client": 0,
+      "direction": "receive",
+      "type": "event",
+      "channel": "theme:preferencesChanged",
+      "args": [
+        {
+          "mode": "light",
+          "colorTheme": "default",
+          "font": "inter"
+        }
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:setPreferences",
+      "args": [
+        {
+          "mode": "light",
+          "colorTheme": "ink",
+          "font": "system"
+        }
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "receive",
+      "type": "event",
+      "channel": "theme:preferencesChanged",
+      "args": [
+        {
+          "mode": "light",
+          "colorTheme": "ink",
+          "font": "system"
+        }
+      ]
+    },
+    {
+      "client": 1,
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:setPreferences"
+    },
+    {
+      "client": 0,
+      "direction": "receive",
+      "type": "event",
+      "channel": "theme:preferencesChanged",
+      "args": [
+        {
+          "mode": "light",
+          "colorTheme": "ink",
+          "font": "system"
+        }
+      ]
+    },
+    {
+      "client": 0,
+      "direction": "send",
+      "type": "handshake"
+    },
+    {
+      "client": 0,
+      "direction": "send",
+      "type": "request",
+      "channel": "theme:getWorkspaceColorTheme",
+      "args": [
+        "theme-fixture"
+      ]
+    },
+    {
+      "client": 0,
+      "direction": "receive",
+      "type": "response",
+      "channel": "theme:getWorkspaceColorTheme"
+    }
+  ],
+  "browser": "155.0.4283.45",
+  "boundary": "Four real CSS entries + production controls/resolver; real authenticated WebUI bundle/server with isolated config. Test plugin only registers fixture class sources."
+}

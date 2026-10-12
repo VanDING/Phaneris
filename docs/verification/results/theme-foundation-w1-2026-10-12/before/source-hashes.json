@@ -1,0 +1,14 @@
+{
+  "apps/webui/src/main.tsx": "f41b6aa4b529e8d2a47666a0fe1ed5fefe7c23c1171a84d2d1eaab49ba8825ad",
+  "apps/webui/src/App.tsx": "61b130bff66543ee556c9399b87b0e888f595017f1cb3a5d7cc9375a86cd377e",
+  "apps/electron/src/renderer/context/ThemeContext.tsx": "5ea9adaa65228365d389462f9c8e6784622d18bc0ca232c5533d356aa9455a4a",
+  "apps/electron/src/renderer/index.css": "1ea9fc76c2061bfab7fe8ab16d085c4349d095deca4ea4df5b65108fd96f2b63",
+  "packages/ui/src/styles/index.css": "dae88a3c5abd5c6cbf4ffae5a9ab989686c49d720a1e702de0a9c23b811a8243",
+  "packages/ui/src/styles/controls.css": "b4e51c71cd5d0d2a20592f91410cf93695b703f4dda1a4945e2a9d0dd099f4d5",
+  "apps/webui/src/index.css": "75867e25919e58311567aca28e44675d8ea0f7b77c9124a1a726bde37833bda9",
+  "apps/viewer/src/index.css": "0adfa5961585f166a5b23a9327f671725655e419a56dae4e296b9fade913c4bc",
+  "packages/shared/src/config/theme.ts": "86870f4c4060c9887aee60fdc80d29b1fc765875eb72679eff440eda06503565",
+  "scripts/verification/fixtures/theme-foundation.tsx": "d1f25e24f606231fba78cee48362cc2dc4701c2058da8bf6e133c0f298435a4a",
+  "scripts/verification/fixtures/theme-preferences-lifecycle.tsx": "dcf4f0a06a189de9ed75f132e43dd2f25e2332a577ac8137e2e1aad5020dece1",
+  "scripts/verification/theme-foundation-workflow.ts": "ca7d7ee94e8de30e253b91ec863d7809c9a1b603a4ba835f48a6b64c41f5b180"
+}

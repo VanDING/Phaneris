@@ -1,7 +1,7 @@
 # Phaneris 主题引擎与前端视觉：独立审计及治理方案
 
 - 日期：2026-10-12（Asia/Shanghai）。
-- 状态：**Proposed — 独立审计与复现证据已建立；全面治理尚未实施。用户追加的预览卡片回归已局部修复并通过浏览器验证（F20、§11）。**
+- 状态：**In progress — W1 的 F01/F02/F03 和重连补读已实施，101 场景本机浏览器验收通过（§12）；W2–W4、W5 全面收口及发布宿主矩阵仍 open。独立审计原始证据保留；预览卡片回归已局部修复（F20、§11）。**
 - 独立审计基线：`e39f60cb2bfafe30476ca35774aec87ffa9629aa`，修复前工作树源码；逐文件摘要见 [audit-data.json](../verification/results/frontend-theme-visual-audit-2026-10-12/audit-data.json)。追加修复使用独立的前后manifest，不改写本次审计基线。
 - 输入之一：[2026-10-11 视觉审计](frontend-visual-audit-2026-10-11.html)。本方案重新审查实现与浏览器行为；原文数值和路线不直接作为验收要求。
 - 证据：[结果与复现说明](../verification/results/frontend-theme-visual-audit-2026-10-12/README.md) · [事先失败矩阵](../verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md)。
@@ -257,7 +257,7 @@ ResolvedTheme 建议成为一个有版本的不可变快照，至少含 `request
 
 独立审计阶段新增本方案、结果目录和失败矩阵，文档索引已登记；原审计与历史验收保留原值，该阶段产品源码未修改，源码hash前后相同。22项既有theme/storage检查、字体gate通过，9文件定向lint为0 errors、2个既有warnings。浏览器的发现用于安排修复，**不代表全面产品验收已经通过**。用户随后追加的明确卡片回归已在§11单独修复与归档。
 
-接下来的实施入口是W1。每个已确认问题先转成前述失败场景中的阻挡断言，再修改实现并归档前后结果；设计参数在W3之前形成真实内容对照。治理后的文档更新要以实现和产物为准，不提前把Proposed改成Implemented。
+当前实施入口是W1，[专用失败矩阵](../verification/theme-foundation-failure-matrix-2026-10-12.md)和 `scripts/verification/theme-foundation-workflow.ts` 已在产品修复前建立。每个已确认问题先转成阻挡断言，再修改实现并归档前后结果；设计参数在W3之前形成真实内容对照。全面治理尚未完成。
 
 ## 11. 用户追加：全屏对话与行为卡片回归
 
@@ -271,3 +271,18 @@ ResolvedTheme 建议成为一个有版本的不可变快照，至少含 `request
 - 新增`test:markdown-popout`，接入现有critical registry并同步锁定policy，要求18个场景及JSON/关键截图/trace。Electron/UI/scripts类型检查及修改文件lint通过；本轮未重跑全量critical，也未重新打包客户端。
 
 完整[失败矩阵](../verification/markdown-popout-card-failure-matrix-2026-10-12.md)和[前后证据](../verification/results/markdown-popout-card-2026-10-12/README.md)保留原manifest、SHA与截图。F01–F19和W1–W5仍按前述范围推进；此局部恢复不等于全面主题治理完成。
+
+## 12. W1 实施：ready、焦点与阴影
+
+分支 `codex/theme-governance-w1` 从包含审计提交的 `main`（`cc5401c83`）开始。先写[专用失败矩阵](../verification/theme-foundation-failure-matrix-2026-10-12.md)和浏览器工作流，再改产品实现。[实施与证据](../verification/results/theme-foundation-w1-2026-10-12/README.md)包含冻结前后记录、源码/构建摘要、归档选取清单与 SHA；旧审计不改写。
+
+| 项目 | 当前状态 |
+| --- | --- |
+| F01 | Provider/Toaster 移入 WebUI ConnectedApp；initializeClient 安装 API 后挂载。真实生产 bundle + HTTP/WS + 临时磁盘配置的 cold start、stale cache、跨客户端偏好、失败重试通过 |
+| 重连 | 断线恢复后补读 authoritative preferences，generation 防迟到覆盖；旧缓存迁移仍只在启动执行；监听清理通过 |
+| F02 | 共享 base 默认 outline、forced-colors；原生/共享/包装输入/inset 列表/Select 的键盘、Esc、恢复与窄屏检查通过 |
+| F03 | 单份 legacy shadow 别名映射；四入口、明暗、static 与五种 depth、hover 的实际绘制层通过；既有语义强度未改 |
+| W5 增量 | `test:theme-foundation` 接入 critical registry 与锁定 policy，minimum=101；现有 CI critical 链会执行并验证必要产物 |
+| 验收边界 | 101/101 本机浏览器场景、22/22 既有主题/存储检查、全仓类型与 workspace lint 通过。完整 lint 被既有 Windows 分发路径门禁阻挡；docs 被既有归档日志断链阻挡；完整 critical 与正式包三平台仍未重跑 |
+
+本批没有决定 sidebar32、column768、navigator 锁色等视觉参数，也没有改变旧 fontSize/density/radius 的含义。下一工作包为 W2：F04 的 token/utility 来源、F05/F06 的加载诊断与 opaque/scenic/Shiki 契约、F07 对比度、F11 Viewer 的 reactive 高亮。正式包、物理触摸和其他宿主边界继续按 H01–H11 验收。

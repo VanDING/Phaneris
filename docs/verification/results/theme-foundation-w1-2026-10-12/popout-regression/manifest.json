@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "workflow": "markdown-popout",
+  "startedAt": "2026-10-12T02:25:13.479Z",
+  "finishedAt": "2026-10-12T02:28:06.459Z",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\markdown-popout-workflow.ts",
+    "--output-dir=.cache/verification/theme-foundation-w1-popout-final"
+  ],
+  "source": {
+    "headSha": "cc5401c8376b45db60971f9c4065ddafb8904db6",
+    "dirtyPaths": [
+      "M apps/electron/src/renderer/context/ThemeContext.tsx",
+      " M apps/electron/src/renderer/index.css",
+      " M apps/webui/src/App.tsx",
+      " M apps/webui/src/main.tsx",
+      " M docs/README.md",
+      " M docs/process/theme-engine-frontend-governance-plan-2026-10-12.md",
+      " M docs/verification/README.md",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M package.json",
+      " M packages/ui/src/styles/controls.css",
+      " M packages/ui/src/styles/index.css",
+      " M scripts/critical-scenario-policy.json",
+      " M scripts/critical-scenarios.ts",
+      " M scripts/verification/markdown-popout-workflow.ts",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/README.md",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/SHA256SUMS",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/build-hashes.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/electron-390.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/electron-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/electron-light.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/manifest.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/production-web-build.log",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/server-output.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/source-hashes.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/theme-foundation.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/ui-390.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/ui-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/ui-light.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/viewer-390.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/viewer-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/viewer-light.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/web-cold.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/web-persisted.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/webui-390.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/webui-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/after/webui-light.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/archive-selection.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/build-hashes.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/electron-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/electron-light.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/failure.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/manifest.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/production-web-build.log",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/server-output.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/source-hashes.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/theme-foundation.json",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/ui-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/ui-light.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/viewer-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/viewer-light.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/webui-dark.png",
+      "?? docs/verification/results/theme-foundation-w1-2026-10-12/before/webui-light.png",
+      "?? docs/verification/theme-foundation-failure-matrix-2026-10-12.md",
+      "?? packages/ui/src/styles/shadow-aliases.css",
+      "?? scripts/verification/fixtures/theme-foundation.tsx",
+      "?? scripts/verification/fixtures/theme-preferences-lifecycle.tsx",
+      "?? scripts/verification/theme-foundation-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/src/renderer/context/ThemeContext.tsx",
+        "sha256": "471e2f26f6aeafc0b864f783a873b43c3478928dabe0c68a5302876f4e1f0a89"
+      },
+      {
+        "path": "apps/electron/src/renderer/index.css",
+        "sha256": "6caa21aba86607d85c24bf333134ec865ddac8f047bda99ecaa8d167b29f0117"
+      },
+      {
+        "path": "apps/webui/src/App.tsx",
+        "sha256": "b0b6e16773147a61d262ef06a374efe60a453b33e0d5c2e97bc715eb658ac360"
+      },
+      {
+        "path": "apps/webui/src/main.tsx",
+        "sha256": "6cd6b11bca0e72f2e834143d092fa654e1cdfc47976c7df2433b1914c30aad12"
+      },
+      {
+        "path": "docs/README.md",
+        "sha256": "963edde3487bf15b4be3db50a1131a9d6297cf180a7c181474777cd76b7f8130"
+      },
+      {
+        "path": "docs/process/theme-engine-frontend-governance-plan-2026-10-12.md",
+        "sha256": "23e6d4b1b0ecd2af40e4266bdfb153835dd6237c8e457224b2195204429bfd12"
+      },
+      {
+        "path": "docs/verification/README.md",
+        "sha256": "20c3f9d9453278b6d8503e5e6c589e52ca0e1842f96002f99d53e3e2efebd667"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "7e5cc900ef84198dc7135f45c1b14fd3d529d6348d7a809806d449330496cf82"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "6aa976fac340b224a4abb7aeaefe9fb6dba3a410ec5e236b7c6adce419b35dad"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/README.md",
+        "sha256": "a5568657a95977705935e9139753c1cff4cb258adeea1390fa701098b81d57c1"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/SHA256SUMS",
+        "sha256": "d8f821363cbc43ffa0cc2de96d1a4a403575670206a563af22a47a0ee38ed5e7"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/build-hashes.json",
+        "sha256": "3fc1de84e1705835cd1bfed1abec31e943bf8aefb89c8a83352899818f98b85f"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/electron-390.png",
+        "sha256": "5f3cc28e0100a898775ce0c412d309e018d2975b468755e5dfd7c15e785a6fa7"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/electron-dark.png",
+        "sha256": "5338222d416c5ecbe1e64ebf8367fe3a2dbab1074fa9e6e1d3ff84712f54d867"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/electron-light.png",
+        "sha256": "b4c63e846a3f609d8c10b8513fda39412dc5fd380be7823ac9c31da4bf882959"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/manifest.json",
+        "sha256": "16de39531282a5026b3823d589982fefbec92ed08f09ede2ab5962d9e78954e5"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/production-web-build.log",
+        "sha256": "d6deb4278be804ee9297b01b99d5de95ee98dfeab88448bee03a5a74f8fd22b6"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/server-output.json",
+        "sha256": "3596157220648acde3fdc6d4eefed60588526303c0f15856f86232e440de2dec"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/source-hashes.json",
+        "sha256": "d370e77ca943b9395399a68de898a2c2e189a01fcfe66d942b8225a436ac417c"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/theme-foundation.json",
+        "sha256": "fe4ce1e88d183b04a820df8c55413ad8a56131481efbda16de8f7b632042780a"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/ui-390.png",
+        "sha256": "2fb1e9f006c56655f1c96e7d349bb6c44a7c132a45922d04a06353e4b31d53db"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/ui-dark.png",
+        "sha256": "be65b7e31547553ce4e99585bc85b6d333c46a88dd6a264b30b563e2032874b0"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/ui-light.png",
+        "sha256": "60f78b84accc4b98970767175b1be14fe048e7ae2c2f907de18115d35fb53b8b"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/viewer-390.png",
+        "sha256": "2fb1e9f006c56655f1c96e7d349bb6c44a7c132a45922d04a06353e4b31d53db"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/viewer-dark.png",
+        "sha256": "d5482763d1bd7f153c3d26ce6ba3c1fddaa03644a25b7d349fb69a19ac6aa7b2"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/viewer-light.png",
+        "sha256": "e67a058608560b16d5f17ba069549792a114c44558554d8fbe503504543772de"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/web-cold.png",
+        "sha256": "f747a8fc087183ee64723f7a5328c4158f2780e776936dc517dafd3e89483893"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/web-persisted.png",
+        "sha256": "105facae9b528d73e31405d9e09ba2fd2ea8f5f728428fec5f0210c316efc933"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/webui-390.png",
+        "sha256": "876112e550fbbd1b84edc690b1cacb57c5f293048b2f177f7dde08a3df6b9483"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/webui-dark.png",
+        "sha256": "5338222d416c5ecbe1e64ebf8367fe3a2dbab1074fa9e6e1d3ff84712f54d867"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/after/webui-light.png",
+        "sha256": "b4c63e846a3f609d8c10b8513fda39412dc5fd380be7823ac9c31da4bf882959"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/archive-selection.json",
+        "sha256": "8eb56344f0f8d75ef0c14d3fdb0b98201585a0906b432028f2375949fa2178d2"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/build-hashes.json",
+        "sha256": "adca67626817c1f44b4c42c3da8e4e4a85ad16e98edf6a1665b100981b906df5"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/electron-dark.png",
+        "sha256": "6e01397f513a1911337e7bfbbba2574964eada4fb2d1209b04ee42108e64d7c0"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/electron-light.png",
+        "sha256": "11a6f8b3c424060ef70eb4b52277998e8f1f88022b9263f78a4fa649143aeb9a"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/failure.json",
+        "sha256": "4e95564382f3178e9486d0db6ee1b9843c7e7bda4190165dcf47126d0349deb7"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/manifest.json",
+        "sha256": "141ff6fc3462a2d6dd014e03ca5558da36cf7a0377f56b6d767d45966b6248e0"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/production-web-build.log",
+        "sha256": "64743a1e1be0b72eb861f0c7b5fef17fe499155500e5ef481a51d66d638f129d"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/server-output.json",
+        "sha256": "2325aa647b2ebfa214a3e2517458cfca4bd9b5d9c664d8869b5eebc8b0f1b275"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/source-hashes.json",
+        "sha256": "218268e629a287cac19693ae5124f2b5c89169f2cc7b0dbfd59afb6efc82585d"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/theme-foundation.json",
+        "sha256": "a5a58d3e537a520b880895272955da5e33409183969f6e9003f5dfeb9ae10352"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/ui-dark.png",
+        "sha256": "2a1308716fe3722e07972277ba608c57b81570132d94c255f23832ef7f0c5b71"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/ui-light.png",
+        "sha256": "2bd41e0bc924918b461a7999b9f324ce47514dac7c67e48d60fb4d0a709adf29"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/viewer-dark.png",
+        "sha256": "9ffe63d1db3ee813476f26f1c48f161c2e15f11df780066dac4fab1f8df688d8"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/viewer-light.png",
+        "sha256": "eaa06c41b87aa3025e5bcf117d503bc1237837068b14fa1925d2229210c20d10"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/webui-dark.png",
+        "sha256": "ec52d0b3ec059e652664253e21ba6cc1705a0f5aa94aaca0747c33a964755bd2"
+      },
+      {
+        "path": "docs/verification/results/theme-foundation-w1-2026-10-12/before/webui-light.png",
+        "sha256": "11a6f8b3c424060ef70eb4b52277998e8f1f88022b9263f78a4fa649143aeb9a"
+      },
+      {
+        "path": "docs/verification/theme-foundation-failure-matrix-2026-10-12.md",
+        "sha256": "c5a15806218c6804f827cc15709534e463c0857ef0f63ffff9cfc3d30d2941d6"
+      },
+      {
+        "path": "package.json",
+        "sha256": "0547f39ddf83c345bef4728a741b1408a17d7e6719847528cf7d9a50bbf16f50"
+      },
+      {
+        "path": "packages/ui/src/styles/controls.css",
+        "sha256": "02dcd138d3f8f2433ae5bec60512798ce02c2ed95813fa3e54474bd4ec0be9be"
+      },
+      {
+        "path": "packages/ui/src/styles/index.css",
+        "sha256": "5a620c88a9bde7eed9c9df02b720038f4ff64c86cbe84462340720dfbfcfbeec"
+      },
+      {
+        "path": "packages/ui/src/styles/shadow-aliases.css",
+        "sha256": "0744e68e837f742c2e9fa88778f84065106221e84cc8c34e9844f2d1b74580d4"
+      },
+      {
+        "path": "scripts/critical-scenario-policy.json",
+        "sha256": "6b2c844047118519e2d7c80e7c65ffcb114928ba9aa91e2dd0f954c6175446cf"
+      },
+      {
+        "path": "scripts/critical-scenarios.ts",
+        "sha256": "4ab9b9cc846df57fb22333601493e8da31a535aa8168ac6c87e4f58eb1e53e47"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-foundation.tsx",
+        "sha256": "0fa769781fe75ae2912f973b761ed18c8138448c43fffd02e10dab961abd6cf9"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-preferences-lifecycle.tsx",
+        "sha256": "dcf4f0a06a189de9ed75f132e43dd2f25e2332a577ac8137e2e1aad5020dece1"
+      },
+      {
+        "path": "scripts/verification/markdown-popout-workflow.ts",
+        "sha256": "225e876e8085296eb58f336cbb075ddc9aee55ffd4a7dfd7a3cc4474cd9b5437"
+      },
+      {
+        "path": "scripts/verification/theme-foundation-workflow.ts",
+        "sha256": "b1a75d20d928aeea29843c73818254051072f509b8fe5be8e102b145a5b6619b"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "sceneIds": [
+    "MP01-light-message",
+    "MP01-light-response",
+    "MP01-light-turn",
+    "MP01-light-activity",
+    "MP01-dark-message",
+    "MP01-dark-response",
+    "MP01-dark-turn",
+    "MP01-dark-activity",
+    "MP02-MP03-source",
+    "MP03-formatted",
+    "MP04-desktop-pane",
+    "MP05-open-source-theme-switch",
+    "MP06-mobile-message",
+    "MP06-mobile-source",
+    "MP07-long",
+    "MP07-long-source",
+    "MP08-close-escape-replace",
+    "MP09-link-callbacks"
+  ],
+  "passed": 18,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "activity-dark.png",
+      "sha256": "92cb53b92de7ae6974d18a6349872e6f15d91a84c9aa518fd011707d7db41acd",
+      "bytes": 21102
+    },
+    {
+      "path": "activity-light.png",
+      "sha256": "dbe2da2fd6f2ab596e3cab5401e70724e2f285995497afe98541a668c9a13ec5",
+      "bytes": 19085
+    },
+    {
+      "path": "index.html",
+      "sha256": "d018a6da732486fbdfadacf446a37f2993c000b9c44a1b67336066a827be8a1f",
+      "bytes": 283
+    },
+    {
+      "path": "long-end.png",
+      "sha256": "b2d080d063a6437e62da3c92d7313c09b9342822f952541398ebc5f689ad3427",
+      "bytes": 107509
+    },
+    {
+      "path": "long-source-end.png",
+      "sha256": "c42d6f86c0478969bb28cc3a9a446780fbae8bd1513fd8a4b8aff857c740d670",
+      "bytes": 196340
+    },
+    {
+      "path": "long-source.png",
+      "sha256": "e893cb6487b48ea1c88d3b616e633ce492b46a749a3897d7c3bfe81957e89fcf",
+      "bytes": 168487
+    },
+    {
+      "path": "long.png",
+      "sha256": "ae115fa9760f926e5300474642f1db6c83f363b88c9d2541f1e87ecaba7e5aa7",
+      "bytes": 92403
+    },
+    {
+      "path": "markdown-popout.json",
+      "sha256": "e908f3141954628879cd6342d116c15b27027573679278e4d90bce96736a8bab",
+      "bytes": 10382
+    },
+    {
+      "path": "message-1100.png",
+      "sha256": "785bef0ffc0d503c92478ada49dc7d1f3f6b03fbe3636c4e4c554ee0942d7b79",
+      "bytes": 16003
+    },
+    {
+      "path": "message-390.png",
+      "sha256": "df23a0a4ea010fdfdce6eaba5ef52e11e5821fa4b64b05b05c8b25dfe1cd83f5",
+      "bytes": 13415
+    },
+    {
+      "path": "message-dark.png",
+      "sha256": "cf49051935898214de46d5256c02c93557fd84e32cfde3eebf6f7d6db5a382b6",
+      "bytes": 19076
+    },
+    {
+      "path": "message-light.png",
+      "sha256": "ced6517887870bd5a8104da1f7c2ac29b847c3bfc09383723a880eb2c63de37b",
+      "bytes": 17136
+    },
+    {
+      "path": "response-dark.png",
+      "sha256": "59597d739b4c5ddbd4932f6998b78ad86006b899669ec540e7a3a6af54a649b4",
+      "bytes": 19336
+    },
+    {
+      "path": "response-light.png",
+      "sha256": "1c4e8d3a5d5edf81a63241046f1bf8da03de64a18b9d72f18505e46b9a149ad6",
+      "bytes": 17430
+    },
+    {
+      "path": "source-390.png",
+      "sha256": "336c1bc43b570a6e5f178192f1e5f282b3385fd19163d5ed22d7261b94d7e311",
+      "bytes": 27736
+    },
+    {
+      "path": "source-dark.png",
+      "sha256": "52a7a02fb2750c2da9b0f924a49b7ee03d2c15debce4ae620b27ff388b465303",
+      "bytes": 35462
+    },
+    {
+      "path": "source-light.png",
+      "sha256": "e7846d9592aaf63b614c8a73f88a57c55774d165660a8ad50c839d318b0862d7",
+      "bytes": 33728
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "784819ef9ea930b3f1c0e14d88e401b6c9a7aa041763f9365b6bf14499a9be70",
+      "bytes": 4810116
+    },
+    {
+      "path": "turn-dark.png",
+      "sha256": "7b52aeda5bae5c6bf13652d426d5ea6f7bb576fde5cc14a92af2e803cff1bbed",
+      "bytes": 20042
+    },
+    {
+      "path": "turn-light.png",
+      "sha256": "a48a7634aee699a9730981cf7adce5e1522417c81f7457d7066aa9eb0221df00",
+      "bytes": 18172
+    }
+  ],
+  "untested": [
+    "Real ChatDisplay/host boot and persisted session integration (call sites reviewed and typechecked)",
+    "Native Electron package, macOS material, Windows/Linux execution",
+    "Signed installer/release",
+    "Modal branch: current modalBreakpoint=99999; all tested viewports use fullscreen"
+  ]
+}

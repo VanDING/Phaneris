@@ -1,0 +1,12 @@
+/* Legacy Tailwind names resolve one-way to the existing theme elevations.
+   Keep the semantic recipes (including depth and dark strength) authoritative. */
+@theme inline {
+  --shadow-2xs: var(--shadow-minimal-flat);
+  --shadow-xs: var(--shadow-minimal);
+  --shadow-sm: var(--shadow-minimal);
+  --shadow: var(--shadow-middle);
+  --shadow-md: var(--shadow-middle);
+  --shadow-lg: var(--shadow-strong);
+  --shadow-xl: var(--shadow-modal-small);
+  --shadow-2xl: var(--shadow-modal-small);
+}
