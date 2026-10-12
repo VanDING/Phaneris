@@ -1618,6 +1618,30 @@
       "lines": ["\"path\": \"config/tool-icons/craft-agent.svg\","],
       "category": "verification-evidence",
       "reason": "Exact immutable run manifest line names the historical compatibility icon. Preserve source evidence bytes; new occurrences still fail."
+    },
+    {
+      "glob": "docs/verification/results/governance-first-wave-2026-10-11/logs/validate-full.log",
+      "tokens": [
+        "scheme-or-domain"
+      ],
+      "category": "historical-evidence",
+      "reason": "Recovered immutable verification log matches its original SHA256SUMS (09e33f211e5b22bf83f899242564ba6063e563b74408333eeb0f11bee16043e5); only these two recorded compatibility-test result lines are historical evidence. New lines and changed bytes are not covered.",
+      "lines": [
+        "(pass) registerSystemCoreHandlers OPEN_URL > routes craftagents action links internally via deeplink:navigate [0.62ms]",
+        "(pass) registerSystemCoreHandlers OPEN_URL > falls back to client openExternal for craftagents window-mode links [0.18ms]"
+      ]
+    },
+    {
+      "glob": "docs/verification/results/governance-second-wave-2026-10-11/logs/second-validate-full-final.log",
+      "tokens": [
+        "scheme-or-domain"
+      ],
+      "category": "historical-evidence",
+      "reason": "Recovered immutable verification log matches its original SHA256SUMS (72e24105c1d511aca5286d06e9c9173db81d6657f8cd3e2be9d0384bf536d89d); only these two recorded compatibility-test result lines are historical evidence. New lines and changed bytes are not covered.",
+      "lines": [
+        "(pass) registerSystemCoreHandlers OPEN_URL > routes craftagents action links internally via deeplink:navigate [0.65ms]",
+        "(pass) registerSystemCoreHandlers OPEN_URL > falls back to client openExternal for craftagents window-mode links [0.17ms]"
+      ]
     }
   ]
 }

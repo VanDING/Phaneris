@@ -27,6 +27,7 @@
 | 对话 / 行为预览卡片 | `bun run test:markdown-popout` · [失败矩阵](markdown-popout-card-failure-matrix-2026-10-12.md) · [前后证据](results/markdown-popout-card-2026-10-12/README.md) | 恢复卡片和Markdown源码路径；18个浏览器场景通过，接入critical registry；正式包未验收。 |
 | 主题引擎 / 前端视觉 | [治理方案与当前台账](../process/theme-engine-frontend-governance-plan-2026-10-12.md) · [原始审计](results/frontend-theme-visual-audit-2026-10-12/README.md) · [W2–W5 验收](results/theme-governance-w2-w5-2026-10-12/README.md) | W1–W5 工程实现、本机481场景通过；三平台正式包、实机及长会话性能仍 open。 |
 | 桌面外壳视觉微调 | `bun run test:shell-visual` · `bun run test:theme-startup` · [事先失败矩阵](frontend-shell-polish-failure-matrix-2026-10-12.md) · [前后对照与验收](results/frontend-shell-polish-2026-10-12/README.md) | 真实 Electron 44、启动故障 12、跨入口角色回归 76 项通过；Windows 原生圆角合成仍待实机。 |
+| main 集成前门禁 | [历史日志恢复与验收](main-integration-2026-10-12.md) | 原 SHA 匹配的两份日志纳入 Git，撤销缺失例外；docs / identity 和 6 项扫描器场景通过。 |
 | 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](./results)。 |
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
 | 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](./results)。 |

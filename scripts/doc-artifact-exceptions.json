@@ -1,14 +1,4 @@
 {
   "version": 1,
-  "entries": [
-    {
-      "source": "docs/verification/results/governance-second-wave-2026-10-11/README.md",
-      "sourceSha256": "4a3e3ab436f1b50c5500200ff13b11bb7827220f9fb95443b54b2bc4e61a7e43",
-      "target": "docs/verification/results/governance-second-wave-2026-10-11/logs/second-validate-full-final.log",
-      "targetSha256": "72e24105c1d511aca5286d06e9c9173db81d6657f8cd3e2be9d0384bf536d89d",
-      "owner": "verification / frozen archive maintenance",
-      "reason": "Historical log is absent from Git and the local verification cache; the frozen README and original SHA256SUMS remain unchanged. Other archived artifacts remain independently verifiable.",
-      "exit": "Recover exact bytes matching targetSha256 from an authoritative archive, then retire this entry. A new run cannot replace the historical log."
-    }
-  ]
+  "entries": []
 }
