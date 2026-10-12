@@ -68,9 +68,9 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
               type="button"
               title={displayName}
               aria-label={displayName}
-              className="sidebar-profile-trigger flex min-w-0 items-center gap-2 rounded-md text-left text-[13px] font-normal outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
+              className="sidebar-profile-trigger craft-control craft-row-focus craft-text-label flex min-w-0 items-center gap-2 rounded-control text-left font-normal"
             >
-              {avatar('size-[18px] shrink-0 rounded-full text-[9px]')}
+              {avatar('sidebar-profile-avatar shrink-0 rounded-full')}
               <span className="sidebar-label truncate">{displayName}</span>
             </button>
           </PopoverTrigger>
@@ -125,7 +125,7 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
                 type="button"
                 aria-label={t('sidebar.settings')}
                 onClick={() => { onOpenChange(false); onOpenSettings() }}
-                className="sidebar-settings-trigger flex size-10 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
+                className="sidebar-settings-trigger craft-icon-button craft-row-focus flex shrink-0 items-center justify-center rounded-control text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
               >
                 <Settings aria-hidden="true" className="size-[18px]" strokeWidth={1.5} />
               </button>

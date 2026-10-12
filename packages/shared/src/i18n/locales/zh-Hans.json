@@ -1857,6 +1857,8 @@
   "sidebar.profile.setup": "设置个人资料",
   "sidebar.profile.view": "查看个人资料",
   "sidebar.projects": "项目",
+  "sidebar.resize": "调整侧栏宽度",
+  "sidebar.resizeNavigator": "调整导航列表宽度",
   "sidebar.scheduled": "定时任务",
   "sidebar.search": "搜索",
   "sidebar.searchStatusesLabels": "搜索状态和标签...",

@@ -44,7 +44,7 @@ import { TopBar } from "./TopBar"
 import { SquarePenRounded } from "../icons/SquarePenRounded"
 import { McpIcon } from "../icons/McpIcon"
 import { cn } from "@/lib/utils"
-import { isMac } from "@/lib/platform"
+import { isMac, isWindows, isWebUI } from "@/lib/platform"
 import { Button } from "@/components/ui/button"
 import { HeaderIconButton } from "@/components/ui/HeaderIconButton"
 import { resolveInheritedFilterParams, type FilterMode } from "./inherited-filter-params"
@@ -119,6 +119,7 @@ import { useStatuses } from "@/hooks/useStatuses"
 import { useLabels } from "@/hooks/useLabels"
 import { useViews } from "@/hooks/useViews"
 import { useContainerWidth } from "@/hooks/useContainerWidth"
+import { useCoarsePointer } from "@/hooks/useCoarsePointer"
 import { LabelIcon, LabelValueTypeIcon } from "@/components/ui/label-icon"
 import { filterSessionStatuses as filterLabelMenuStates } from "@/components/ui/label-menu"
 import { createLabelMenuItems, filterItems as filterLabelMenuItems, type LabelMenuItem } from "@/components/ui/label-menu-utils"
@@ -162,7 +163,10 @@ import { SidebarProfile } from './SidebarProfile'
 import SettingsNavigator from "@/pages/settings/SettingsNavigator"
 import {
   PANEL_GAP,
+  SIDEBAR_GAP,
+  SIDEBAR_DEFAULT_WIDTH,
   SIDEBAR_RAIL_WIDTH,
+  SIDEBAR_TOUCH_RAIL_WIDTH,
   PANEL_EDGE_INSET,
   PANEL_SASH_HALF_HIT_WIDTH,
   PANEL_SASH_HIT_WIDTH,
@@ -572,7 +576,7 @@ function AppShellContent({
   })
   const [isManagementNavigatorVisible, setIsManagementNavigatorVisible] = useState(true)
   const [sidebarWidth, setSidebarWidth] = React.useState(() => {
-    return storage.get(storage.KEYS.sidebarWidth, 220)
+    return storage.get(storage.KEYS.sidebarWidth, SIDEBAR_DEFAULT_WIDTH)
   })
   // Session list width in pixels (min 240, max 480)
   const [sessionListWidth, setSessionListWidth] = React.useState(() => {
@@ -594,7 +598,9 @@ function AppShellContent({
   const isAutoCompact = shellWidth > 0 && shellWidth < MOBILE_THRESHOLD
 
   const effectiveSidebarAndNavigatorHidden = isSidebarAndNavigatorHidden || isAutoCompact
-  const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible ? sidebarWidth : SIDEBAR_RAIL_WIDTH)
+  const coarsePointer = useCoarsePointer()
+  const sidebarRailWidth = coarsePointer ? SIDEBAR_TOUCH_RAIL_WIDTH : SIDEBAR_RAIL_WIDTH
+  const effectiveSidebarWidth = effectiveSidebarAndNavigatorHidden ? 0 : (isSidebarVisible ? sidebarWidth : sidebarRailWidth)
   const reduceSidebarMotion = useReducedMotionConfig()
   const sidebarSashTransition = reduceSidebarMotion ? undefined : 'left 280ms cubic-bezier(0.2, 0, 0, 1)'
 
@@ -603,6 +609,7 @@ function AppShellContent({
   const [sessionListHandleY, setSessionListHandleY] = React.useState<number | null>(null)
   const resizeHandleRef = React.useRef<HTMLDivElement>(null)
   const sessionListHandleRef = React.useRef<HTMLDivElement>(null)
+  const resizeStartRef = React.useRef({ x: 0, width: 0 })
   const [session, setSession] = useSession()
   const { resolvedMode, isDark, setMode, presetTheme } = useTheme()
   const hasThemedNavigatorSurface = presetTheme !== null && (
@@ -1487,15 +1494,14 @@ function AppShellContent({
 
     const handleMouseMove = (e: MouseEvent) => {
       if (isResizing === 'sidebar') {
-        const newWidth = Math.min(Math.max(e.clientX, 180), 320)
+        const newWidth = Math.min(Math.max(resizeStartRef.current.width + e.clientX - resizeStartRef.current.x, 180), 320)
         setSidebarWidth(newWidth)
         if (resizeHandleRef.current) {
           const rect = resizeHandleRef.current.getBoundingClientRect()
           setSidebarHandleY(e.clientY - rect.top)
         }
       } else if (isResizing === 'session-list') {
-        const offset = effectiveSidebarWidth + PANEL_GAP
-        const newWidth = Math.min(Math.max(e.clientX - offset, 240), 480)
+        const newWidth = Math.min(Math.max(resizeStartRef.current.width + e.clientX - resizeStartRef.current.x, 240), 480)
         setSessionListWidth(newWidth)
         if (sessionListHandleRef.current) {
           const rect = sessionListHandleRef.current.getBoundingClientRect()
@@ -1526,8 +1532,35 @@ function AppShellContent({
     isResizing,
     sidebarWidth,
     sessionListWidth,
-    effectiveSidebarWidth,
   ])
+
+  const beginResize = (event: React.MouseEvent, target: 'sidebar' | 'session-list') => {
+    event.preventDefault()
+    resizeStartRef.current = { x: event.clientX, width: target === 'sidebar' ? sidebarWidth : sessionListWidth }
+    setIsResizing(target)
+  }
+
+  const resizeWithKeyboard = (event: React.KeyboardEvent, target: 'sidebar' | 'session-list') => {
+    const width = target === 'sidebar' ? sidebarWidth : sessionListWidth
+    const minimum = target === 'sidebar' ? 180 : 240
+    const maximum = target === 'sidebar' ? 320 : 480
+    let requested: number
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') requested = width - 16
+    else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') requested = width + 16
+    else if (event.key === 'Home') requested = minimum
+    else if (event.key === 'End') requested = maximum
+    else return
+    event.preventDefault()
+    event.stopPropagation()
+    const next = Math.min(Math.max(requested, minimum), maximum)
+    if (target === 'sidebar') {
+      setSidebarWidth(next)
+      storage.set(storage.KEYS.sidebarWidth, next)
+    } else {
+      setSessionListWidth(next)
+      storage.set(storage.KEYS.sessionListWidth, next)
+    }
+  }
 
   // Spring transition config - shared between sidebar and header
   // Critical damping (no bounce): damping = 2 * sqrt(stiffness * mass)
@@ -2619,6 +2652,7 @@ function AppShellContent({
       {/* === OUTER LAYOUT: Unified Panel Stack | Right Sidebar === */}
       <div
         ref={shellRef}
+        data-shell-platform={isWebUI ? 'browser' : isMac ? 'macos' : isWindows ? 'windows' : 'linux'}
         className="flex items-stretch relative"
         style={{
           height: '100%',
@@ -2646,10 +2680,7 @@ function AppShellContent({
               {/* Sidebar Top Section */}
               <div className="flex-1 flex flex-col min-h-0">
                 {/* New Session Button - Gmail-style, with context menu for "Open in New Window" */}
-                <div
-                  className="px-2 pb-2 shrink-0"
-                  style={{ paddingTop: PANEL_EDGE_INSET }}
-                >
+                <div className="sidebar-first-row shrink-0">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div>
@@ -2659,7 +2690,7 @@ function AppShellContent({
                               variant="ghost"
                               onClick={() => handleNewChat()}
                               aria-label={t("session.newSession")}
-                              className="sidebar-new-session w-full justify-start gap-2 py-[7px] px-2 text-[13px] font-normal rounded-md shadow-minimal bg-card text-card-foreground hover:bg-card"
+                              className="sidebar-new-session craft-text-label w-full justify-start gap-2 font-normal rounded-control shadow-minimal bg-card text-card-foreground hover:bg-card"
                               data-tutorial="new-chat-button"
                             >
                               <SquarePenRounded className="h-3.5 w-3.5 shrink-0" />
@@ -2679,7 +2710,7 @@ function AppShellContent({
                 </div>
                 {/* Primary Nav: All Sessions (▸ Statuses, Flagged, Archived), Labels | Sources, Skills */}
                 {/* pb-4 provides clearance so the last item scrolls above the mask-fade-bottom gradient */}
-                <div className="flex-1 overflow-y-auto min-h-0 mask-fade-bottom pb-4">
+                <div className="sidebar-scroll flex-1 overflow-y-auto min-h-0 mask-fade-bottom pb-4">
                 <LeftSidebar
                   isCollapsed={!isSidebarVisible}
                   getItemProps={getSidebarItemProps}
@@ -2951,7 +2982,7 @@ function AppShellContent({
               </div>
 
               {/* Personal identity and settings, pinned to the sidebar footer. */}
-              <div className="shrink-0 px-2 pt-2">
+              <div className="sidebar-footer shrink-0 pt-2">
                 <SidebarProfile
                   isCollapsed={!isSidebarVisible}
                   open={profileCardOpen}
@@ -3884,7 +3915,15 @@ function AppShellContent({
         {!effectiveSidebarAndNavigatorHidden && isSidebarVisible && (
         <div
           ref={resizeHandleRef}
-          onMouseDown={(e) => { e.preventDefault(); setIsResizing('sidebar') }}
+          role="slider"
+          aria-orientation="horizontal"
+          aria-label={t('sidebar.resize')}
+          aria-valuemin={180}
+          aria-valuemax={320}
+          aria-valuenow={sidebarWidth}
+          tabIndex={0}
+          onKeyDown={(event) => resizeWithKeyboard(event, 'sidebar')}
+          onMouseDown={(event) => beginResize(event, 'sidebar')}
           onMouseMove={(e) => {
             if (resizeHandleRef.current) {
               const rect = resizeHandleRef.current.getBoundingClientRect()
@@ -3892,13 +3931,13 @@ function AppShellContent({
             }
           }}
           onMouseLeave={() => { if (!isResizing) setSidebarHandleY(null) }}
-          className="absolute cursor-col-resize z-panel flex justify-center"
+          className="craft-row-focus absolute cursor-col-resize z-panel flex justify-center"
           style={{
             width: PANEL_SASH_HIT_WIDTH,
             top: PANEL_STACK_VERTICAL_OVERFLOW,
             bottom: PANEL_STACK_VERTICAL_OVERFLOW,
             left: isSidebarVisible
-              ? sidebarWidth + (PANEL_GAP / 2) - PANEL_SASH_HALF_HIT_WIDTH
+              ? sidebarWidth + (SIDEBAR_GAP / 2) - PANEL_SASH_HALF_HIT_WIDTH
               : -PANEL_GAP,
             transition: isResizing ? undefined : sidebarSashTransition,
           }}
@@ -3917,7 +3956,15 @@ function AppShellContent({
         {!effectiveSidebarAndNavigatorHidden && !isFullWidthView && !isPagesView && !isWorkbenchFullWidth && isCurrentNavigatorVisible && (
         <div
           ref={sessionListHandleRef}
-          onMouseDown={(e) => { e.preventDefault(); setIsResizing('session-list') }}
+          role="slider"
+          aria-orientation="horizontal"
+          aria-label={t('sidebar.resizeNavigator')}
+          aria-valuemin={240}
+          aria-valuemax={480}
+          aria-valuenow={sessionListWidth}
+          tabIndex={0}
+          onKeyDown={(event) => resizeWithKeyboard(event, 'session-list')}
+          onMouseDown={(event) => beginResize(event, 'session-list')}
           onMouseMove={(e) => {
             if (sessionListHandleRef.current) {
               const rect = sessionListHandleRef.current.getBoundingClientRect()
@@ -3925,13 +3972,13 @@ function AppShellContent({
             }
           }}
           onMouseLeave={() => { if (isResizing !== 'session-list') setSessionListHandleY(null) }}
-          className="absolute cursor-col-resize z-panel flex justify-center"
+          className="craft-row-focus absolute cursor-col-resize z-panel flex justify-center"
           style={{
             width: PANEL_SASH_HIT_WIDTH,
             top: PANEL_STACK_VERTICAL_OVERFLOW,
             bottom: PANEL_STACK_VERTICAL_OVERFLOW,
             left:
-              (effectiveSidebarWidth > 0 ? effectiveSidebarWidth + PANEL_GAP : PANEL_EDGE_INSET) +
+              (effectiveSidebarWidth > 0 ? effectiveSidebarWidth + SIDEBAR_GAP : PANEL_EDGE_INSET) +
               sessionListWidth +
               (PANEL_GAP / 2) -
               PANEL_SASH_HALF_HIT_WIDTH,

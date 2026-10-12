@@ -60,6 +60,8 @@ interface ThemeContextType {
   themeLoadStatus: ThemeLoadStatus
   themeLoadError: string | null
   themePreferenceError: string | null
+  /** Authoritative preferences, workspace selection and its applied snapshot have settled. */
+  startupReady: boolean
 
   presetTheme: ThemeFile | null
   resolvedTheme: ThemeOverrides
@@ -204,11 +206,13 @@ export function ThemeProvider({
   const preferencesRef = useRef(preferences)
   const preferenceGeneration = useRef(0)
   const [themePreferenceError, setThemePreferenceError] = useState<string | null>(null)
+  const [preferencesLoaded, setPreferencesLoaded] = useState(() => !window.electronAPI?.getThemePreferences)
 
   const [systemPreference, setSystemPreference] = useState<'light' | 'dark'>(getSystemPreference)
   const [previewColorTheme, setPreviewColorTheme] = useState<string | null>(null)
   const [workspaceColorTheme, setWorkspaceColorThemeState] = useState<string | null>(null)
   const workspaceRequestGeneration = useRef(0)
+  const [loadedWorkspaceSelection, setLoadedWorkspaceSelection] = useState<string | null | undefined>(undefined)
 
   const [loadedTheme, setLoadedTheme] = useState<LoadedThemeState>({
     requestedId: 'default',
@@ -232,6 +236,7 @@ export function ThemeProvider({
     setPreferencesState(next)
     saveThemeCache(next)
     setThemePreferenceError(null)
+    setPreferencesLoaded(true)
   }, [])
 
   // config.json is authoritative; localStorage is only an immediate startup
@@ -266,6 +271,7 @@ export function ThemeProvider({
       } catch (error) {
         if (cancelled || generation !== preferenceGeneration.current) return
         setThemePreferenceError(`Failed to load theme preferences: ${error instanceof Error ? error.message : String(error)}`)
+        setPreferencesLoaded(true)
       }
     })()
 
@@ -358,16 +364,23 @@ export function ThemeProvider({
   useEffect(() => {
     const generation = ++workspaceRequestGeneration.current
     setWorkspaceColorThemeState(null)
-    if (!activeWorkspaceId) return
+    setLoadedWorkspaceSelection(undefined)
+    const readWorkspaceTheme = window.electronAPI?.getWorkspaceColorTheme
+    if (!activeWorkspaceId || !readWorkspaceTheme) {
+      setLoadedWorkspaceSelection(activeWorkspaceId)
+      return
+    }
 
     let cancelled = false
-    void window.electronAPI?.getWorkspaceColorTheme?.(activeWorkspaceId).then((theme) => {
+    void readWorkspaceTheme(activeWorkspaceId).then((theme) => {
       if (!cancelled && generation === workspaceRequestGeneration.current) {
         setWorkspaceColorThemeState(theme)
+        setLoadedWorkspaceSelection(activeWorkspaceId)
       }
     }).catch(() => {
       if (!cancelled && generation === workspaceRequestGeneration.current) {
         setWorkspaceColorThemeState(null)
+        setLoadedWorkspaceSelection(activeWorkspaceId)
       }
     })
     return () => {
@@ -396,6 +409,7 @@ export function ThemeProvider({
       if (workspaceId === activeWorkspaceId) {
         workspaceRequestGeneration.current += 1
         setWorkspaceColorThemeState(themeId)
+        setLoadedWorkspaceSelection(workspaceId)
       }
     })
   }, [activeWorkspaceId])
@@ -483,6 +497,8 @@ export function ThemeProvider({
   }, [effectiveColorTheme, userThemeRevision])
 
   const presetTheme = loadedTheme.appliedId === 'default' ? null : loadedTheme.theme
+  const startupReady = preferencesLoaded && loadedWorkspaceSelection === activeWorkspaceId
+    && loadedTheme.requestedId === effectiveColorTheme && loadedTheme.status !== 'loading'
   const resolvedTheme = useMemo(() => resolveTheme(loadedTheme.theme), [loadedTheme.theme])
   const isScenic = resolvedTheme.mode === 'scenic' && Boolean(resolvedTheme.backgroundImage)
   const actualMode = resolveThemeMode({
@@ -612,6 +628,7 @@ export function ThemeProvider({
     themeLoadStatus: loadedTheme.status,
     themeLoadError: loadedTheme.error,
     themePreferenceError,
+    startupReady,
     presetTheme,
     resolvedTheme,
     isDark,
@@ -645,6 +662,7 @@ export function ThemeProvider({
     snapshot,
     systemPreference,
     themePreferenceError,
+    startupReady,
     workspaceColorTheme,
   ])
 

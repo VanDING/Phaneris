@@ -80,7 +80,7 @@
   --card: #FFFFFF;
   --card-foreground: #20232C;
   --popover-foreground: #20232C;
-  --border: #E3E6ED;
+  --border: #E5E5E6;
   --ring: oklch(0.488 0.275 280.3);
   --user-message-bubble: #F3F3F3;
   --paper: #FFFFFF;
@@ -103,13 +103,13 @@
   --theme-settings-row-padding-y: 0.875rem;
   --theme-activity-row-padding-y: 0.125rem;
   --theme-depth: elevated;
-  --theme-shadow-color: #20232C;
-  --theme-shadow-strength: 0.04;
+  --theme-shadow-color: #18181B;
+  --theme-shadow-strength: 0.1;
   --theme-backdrop-blur: 0px;
-  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 2%, transparent);
-  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
-  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
-  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent);
+  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent);
+  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
+  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
+  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
   --theme-mode: solid;
 }
 

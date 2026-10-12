@@ -1,0 +1,74 @@
+{
+  "checks": [
+    "preferences: cached Default is not reveal-ready",
+    "preferences: final or fallback snapshot can reveal",
+    "workspace: cached Default is not reveal-ready",
+    "workspace: final or fallback snapshot can reveal",
+    "workspace-event: cached Default is not reveal-ready",
+    "workspace-event: final or fallback snapshot can reveal",
+    "preferences-error: cached Default is not reveal-ready",
+    "preferences-error: final or fallback snapshot can reveal",
+    "theme-error: cached Default is not reveal-ready",
+    "theme-error: final or fallback snapshot can reveal",
+    "preview: final or fallback snapshot can reveal",
+    "startup compiler has no page errors"
+  ],
+  "samples": [
+    {
+      "scenario": "preferences",
+      "actual": {
+        "font": "13px",
+        "state": "{\"ready\":true,\"preferencesError\":null,\"themeError\":null}",
+        "applied": "small",
+        "status": "ready"
+      }
+    },
+    {
+      "scenario": "workspace",
+      "actual": {
+        "font": "14px",
+        "state": "{\"ready\":true,\"preferencesError\":null,\"themeError\":null}",
+        "applied": "workspace-small",
+        "status": "ready"
+      }
+    },
+    {
+      "scenario": "workspace-event",
+      "actual": {
+        "font": "14px",
+        "state": "{\"ready\":true,\"preferencesError\":null,\"themeError\":null}",
+        "applied": "workspace-small",
+        "status": "ready"
+      }
+    },
+    {
+      "scenario": "preferences-error",
+      "actual": {
+        "font": "15px",
+        "state": "{\"ready\":true,\"preferencesError\":\"Failed to load theme preferences: Startup read failed\",\"themeError\":null}",
+        "applied": "default",
+        "status": "ready"
+      }
+    },
+    {
+      "scenario": "theme-error",
+      "actual": {
+        "font": "15px",
+        "state": "{\"ready\":true,\"preferencesError\":null,\"themeError\":\"Theme \\\"missing\\\" was not found or is invalid.\"}",
+        "applied": "default",
+        "status": "error"
+      }
+    },
+    {
+      "scenario": "preview",
+      "actual": {
+        "font": "15px",
+        "state": "{\"ready\":true,\"preferencesError\":null,\"themeError\":null}",
+        "applied": "default",
+        "status": "ready"
+      }
+    }
+  ],
+  "errors": [],
+  "scope": "Production ThemeProvider/compiler/CSS with synthetic delayed API; native App visibility is separately verified by shell-visual."
+}

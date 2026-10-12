@@ -414,9 +414,8 @@ export function themeToCSS(theme: ThemeOverrides, isDark: boolean = false): stri
   // L2/L4/L5/L6 direct tokens
   if (colors.radius) {
     vars.push(`--theme-radius: ${colors.radius};`);
-    // App shell panels historically use platform-specific fixed radii. This
-    // custom-only variable lets preset themes own those corners while the
-    // default theme keeps its existing platform fallback.
+    // Theme shape is the shared baseline. Native shell roles may adapt Default
+    // to the host's corners; authored themes retain this radius on every host.
     vars.push(`--theme-panel-radius: ${colors.radius};`);
   }
   if (colors.borderWidth) vars.push(`--theme-border-width: ${colors.borderWidth};`);
@@ -520,7 +519,7 @@ export const DEFAULT_THEME: ThemeOverrides = {
   "secondaryForeground": "#373D4B",
   "muted": "#F7F8FB",
   "mutedForeground": "#606775",
-  "border": "#E3E6ED",
+  "border": "#E5E5E6",
   "userMessageBubble": "#F3F3F3",
   "accent": "oklch(0.488 0.275 280.3)",
   "ring": "oklch(0.488 0.275 280.3)",
@@ -532,8 +531,8 @@ export const DEFAULT_THEME: ThemeOverrides = {
   "popover": "#FFFFFF",
   "popoverSolid": "#FFFFFF",
   "depth": "elevated",
-  "shadowColor": "#20232C",
-  "shadowStrength": 0.04,
+  "shadowColor": "#18181B",
+  "shadowStrength": 0.1,
   "radius": "6px",
   "borderWidth": "1px",
   "borderStyle": "solid",

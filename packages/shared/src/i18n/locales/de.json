@@ -1857,6 +1857,8 @@
   "sidebar.profile.setup": "Profil einrichten",
   "sidebar.profile.view": "Profil anzeigen",
   "sidebar.projects": "Projekte",
+  "sidebar.resize": "Seitenleiste skalieren",
+  "sidebar.resizeNavigator": "Navigationsliste skalieren",
   "sidebar.scheduled": "Geplant",
   "sidebar.search": "Suchen",
   "sidebar.searchStatusesLabels": "Status & Labels suchen...",

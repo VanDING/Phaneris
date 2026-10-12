@@ -34,6 +34,7 @@ import { CompactPanelTransition } from './CompactPanelTransition'
 import { CompactWorkbenchTransition } from './CompactWorkbenchTransition'
 import {
   PANEL_GAP,
+  SIDEBAR_GAP,
   PANEL_EDGE_INSET,
   PANEL_STACK_VERTICAL_OVERFLOW,
   RADIUS_EDGE,
@@ -231,7 +232,7 @@ export function SurfaceContainer({
           initial={false}
           animate={{
             width: hasSidebar ? sidebarWidth : 0,
-            marginRight: hasSidebar ? 0 : -PANEL_GAP,
+            marginRight: hasSidebar ? SIDEBAR_GAP - PANEL_GAP : -PANEL_GAP,
             opacity: hasSidebar ? 1 : 0,
           }}
           transition={isResizing ? { duration: 0 } : motionTween(reduceMotion, 'spatial', 'move')}

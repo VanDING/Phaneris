@@ -66,6 +66,8 @@
     "test:theme-governance": "bun run scripts/verification/theme-governance-workflow.ts",
     "check:visual-contracts": "bun run scripts/check-visual-contracts.ts",
     "test:theme-native": "bun run build:runtime && bun run electron:build:main && bun run electron:build:preload && bun run electron:build:renderer && bun run electron:build:assets && bun run scripts/verification/theme-native-workflow.ts",
+    "test:shell-visual": "bun run build:runtime && bun run electron:build:main && bun run electron:build:preload && bun run electron:build:renderer && bun run electron:build:assets && bun run scripts/verification/shell-visual-workflow.ts",
+    "test:theme-startup": "bun run scripts/verification/theme-startup-workflow.ts",
     "theme:generate": "bun run scripts/generate-theme-contract.ts",
     "check:themes": "bun run scripts/generate-theme-contract.ts --check",
     "test:doc-tools": "bun run scripts/test-doc-tools.ts",

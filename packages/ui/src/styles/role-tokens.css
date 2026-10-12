@@ -39,7 +39,15 @@
   --panel-gutter: 1rem;
   --row-inset: .75rem;
   --card-padding: 1rem;
-  --sidebar-row-height: 40px;
+  --panel-header-height: max(36px, calc(2rem * var(--ui-scale) + 6px));
+  --sidebar-row-height: max(28px, calc(28px * var(--theme-density-scale)), calc(var(--ui-label-size) * var(--ui-scale) * var(--ui-line-height) + 6px));
+  --sidebar-inline-inset: 8px;
+  --sidebar-item-inset: 4px;
+  --sidebar-icon-size: 16px;
+  --sidebar-rail-control-size: 24px;
+  --sidebar-rail-item-inset: 4px;
+  --sidebar-rail-gap: 8px;
+  --sidebar-rail-inline-offset: 4px;
   --touch-target: 44px;
   --z-component-behind: -1;
   --z-component-content: 0;

@@ -47,6 +47,20 @@
   .craft-chat-column { max-width: var(--reading-width); width: 100%; }
   .craft-chat-gutter { padding-inline: var(--reading-gutter); }
   .craft-chat-gutter-compact { padding-inline: var(--reading-gutter-compact); }
+  .craft-panel-header { height: var(--panel-header-height); }
+  .craft-panel-header-subtitle { height: calc(var(--panel-header-height) + 16px); }
+  .craft-panel-header-compact { height: max(56px, var(--panel-header-height)); }
+}
+/* Compact mouse navigation must not shrink touch targets or clip their icons. */
+@media (pointer: coarse) {
+  :root {
+    --panel-header-height: max(52px, calc(2rem * var(--ui-scale) + 6px));
+    --sidebar-row-height: max(var(--touch-target), calc(var(--ui-label-size) * var(--ui-scale) * var(--ui-line-height) + 10px));
+    --sidebar-item-inset: 14px;
+    --sidebar-rail-control-size: var(--touch-target);
+    --sidebar-rail-item-inset: 14px;
+    --sidebar-rail-inline-offset: 0px;
+  }
 }
 @layer base {
   ::selection { color: var(--foreground); background: color-mix(in srgb, var(--accent) 20%, var(--background)); }

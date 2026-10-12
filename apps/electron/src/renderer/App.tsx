@@ -466,9 +466,24 @@ export default function App() {
   // Sources and skills for badge extraction
   const sources = useAtomValue(sourcesAtom)
   const skills = useAtomValue(skillsAtom)
+  const { shikiTheme, isDark, snapshot: themeSnapshot, startupReady: themeStartupReady, font: themeFont } = useTheme()
+  const [themeFontsReady, setThemeFontsReady] = useState(false)
+  useEffect(() => {
+    setThemeFontsReady(false)
+    if (!themeStartupReady) return
+    let cancelled = false
+    void (async () => {
+      // Let the committed font family request its faces before waiting for them.
+      await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+      await document.fonts.ready
+      if (!cancelled) setThemeFontsReady(true)
+    })()
+    return () => { cancelled = true }
+  }, [themeStartupReady, themeSnapshot.revision, themeFont])
 
-  // Compute if app is fully ready (all data loaded)
-  const isFullyReady = appState === 'ready' && sessionsLoaded
+  // Reveal only after final theme geometry and its fonts have settled. The
+  // startup cache can differ from config.json or the workspace's theme.
+  const isFullyReady = appState === 'ready' && sessionsLoaded && themeStartupReady && themeFontsReady
 
   // Trigger splash exit animation when fully ready.
   //
@@ -494,8 +509,6 @@ export default function App() {
   const handleSplashExitComplete = useCallback(() => {
     setSplashHidden(true)
   }, [])
-
-  const { shikiTheme, isDark, snapshot: themeSnapshot } = useTheme()
 
   // Ref for sessionOptions to access current value in event handlers without re-registering
   const sessionOptionsRef = useRef(sessionOptions)

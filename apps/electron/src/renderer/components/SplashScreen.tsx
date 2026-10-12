@@ -20,6 +20,7 @@ interface SplashScreenProps {
 export function SplashScreen({ isExiting, onExitComplete }: SplashScreenProps) {
   return (
     <motion.div
+      data-testid="app-splash"
       className="fixed inset-0 z-splash flex items-center justify-center bg-background"
       initial={{ opacity: 1 }}
       animate={{ opacity: isExiting ? 0 : 1 }}

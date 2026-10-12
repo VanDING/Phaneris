@@ -2,7 +2,7 @@
  * PanelHeader - Standardized header component for panels
  *
  * Provides consistent header styling with:
- * - Fixed 50px height
+ * - Shared first-row height, with room for subtitles and touch controls
  * - Title with optional badge
  * - Optional action buttons
  * - Optional title dropdown menu (renders chevron and makes title interactive)
@@ -312,8 +312,9 @@ export function PanelHeader({
   const basePadding = leadingAction ? 8 : 16
 
   const baseClassName = cn(
-    'flex shrink-0 items-center pr-2 min-w-0 gap-1.5 relative z-panel',
-    subtitle ? 'h-[58px]' : 'h-[42px]',
+    'craft-panel-header flex shrink-0 items-center pr-2 min-w-0 gap-1.5 relative z-panel',
+    subtitle && 'craft-panel-header-subtitle',
+    isCompactMode && 'craft-panel-header-compact',
     // Only use static paddingLeft class when not animating
     !shouldCompensate && (paddingLeft || (leadingAction ? 'pl-2' : 'pl-4')),
     className

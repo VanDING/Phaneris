@@ -25,9 +25,11 @@
 
 ## 设计决定
 
-保留 40px 侧栏、840px 阅读列与当前材质；触摸目标仍为两维 44px。32/34px、768px 和增强高程进入可交互对照包，未作为正确性修复直接推广。阅读 scale、UI scale、旧根字号与实际 Chromium zoom 分别验证。
+W1–W5 治理阶段保留 40px 侧栏和原材质，另提供参数对照。2026-10-12 按用户提出的可见 UI 微调，展开导航改为 28px 行、2px 间距、默认宽 200px；收起栏为 48px，按钮为 24px 正方形、8px 间距、居中并留出两侧各 12px。两态分别定位图标，三列共享可扩展的 36px 首行中心。Default 浅色改用中性边框和轻阴影。触摸导航保留两维 44px，图标栏为 60px。macOS Default 的内部面板角为 10px、贴窗口底角为 8px；Windows Default 保持 6px，自定义主题使用作者的 radius。阅读列仍为 840px。启动层等待持久偏好、工作区选择、主题快照及字体就绪，避免先露出缓存尺寸再缩小；读取或编译失败仍允许可用快照/Default 回退。失败场景见[外壳微调矩阵](../verification/frontend-shell-polish-failure-matrix-2026-10-12.md)。
 
 ## 发布与回滚
+
+侧栏与 navigator 共用画布边缘，额外间隙为 0；navigator 与内容面板之间保留 6px。收起栏的可见宽度因此与声明宽度一致，图标按整条可见栏居中。两类 resize sash 的位置使用对应间隙，拖拽按起始宽度与鼠标增量计算，避免接缝宽度引起跳位。
 
 1. 执行 theme-foundation、theme-contract、theme-roles、theme-domains、theme-browser-host、theme-login、theme-design、theme-governance；原生入口和正式包另跑宿主矩阵。VerificationRun 使用独立目录，不覆盖冻结证据。
 2. definition、resolver、生成 CSS、role/utility adapter、host adapter 与 registry 同版本提交。builtin ID 和旧 `fontSize` / density 保持兼容；本轮无存储 schema 迁移，也不重写作者文件。

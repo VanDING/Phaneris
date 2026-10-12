@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phaneris 外壳视觉调整 · 前后对照</title>
+  <style>
+    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; color: #232326; background: #f3f3f4; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px clamp(16px, 3vw, 52px); }
+    main { max-width: 1680px; margin: auto; }
+    h1 { margin: 8px 0 12px; font-size: clamp(24px, 3vw, 34px); letter-spacing: -.03em; }
+    p { margin: 0; line-height: 1.7; }
+    .eyebrow { color: #747478; font-size: 13px; }
+    .intro { max-width: 900px; color: #5b5b61; }
+    .metrics { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+    .metrics span { padding: 7px 12px; background: white; border: 1px solid #e4e4e6; border-radius: 8px; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 24px 0 14px; }
+    button, select { font: inherit; font-size: 13px; padding: 9px 12px; color: inherit; border: 1px solid #d9d9de; background: white; border-radius: 7px; }
+    button { cursor: pointer; }
+    button:hover { background: #eceaf5; }
+    button[aria-pressed="true"] { color: #5832b8; border-color: #bca9e6; background: #ede7fb; }
+    :focus-visible { outline: 2px solid #7045c8; outline-offset: 3px; }
+    .detail { margin-left: auto; font-size: 13px; white-space: nowrap; display: flex; align-items: center; gap: 7px; }
+    .images { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    figure { margin: 0; min-width: 0; border: 1px solid #dcdcdf; background: white; border-radius: 12px; overflow: hidden; }
+    figcaption { padding: 14px; border-bottom: 1px solid #e8e8eb; display: flex; gap: 12px; align-items: center; }
+    figcaption label { flex: 1; min-width: 0; }
+    figcaption select { width: 100%; }
+    .viewport { overflow: auto; background: #e9e9eb; }
+    .viewport img { display: block; width: 100%; height: auto; }
+    .images[data-detail="true"] .viewport { height: min(75vh, 1000px); }
+    .images[data-detail="true"] img { width: 1440px; max-width: none; }
+    .note { padding: 12px 14px; color: #66666d; font-size: 12px; min-height: 62px; }
+    .evidence { margin-top: 20px; padding: 20px; border: 1px solid #e0e0e3; background: #fff; border-radius: 12px; }
+    .evidence p + p { margin-top: 8px; }
+    a { color: #6038b8; text-decoration: underline; text-underline-offset: 3px; }
+    .limits { font-size: 13px; color: #747478; }
+    @media(max-width: 900px) { .images { grid-template-columns: 1fr; } .detail { margin-left: 0; } }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Phaneris · 2026-10-12 · 当前治理分支的真实窗口证据</p>
+  <h1>收起更宽松，展开更紧凑</h1>
+  <p class="intro">侧栏与会话列表之间多出的 6px 接缝已移除。收起时用 48px 宽的图标栏，24px 正方形按钮居中、两侧各留 12px、行间隔 8px；展开时回到 200px 宽的文字导航。下面可切换原始截图，检查顶部、边界、圆角和间距。</p>
+  <div class="metrics" aria-label="最终参数">
+    <span>展开：200px · 行高 28px</span><span>收起：48px · 按钮 24px</span><span>侧栏接缝：0px</span><span>列表与内容间距：6px</span><span>首行：36px</span><span>macOS：10px / 8px · Windows：6px</span>
+  </div>
+  <div class="toolbar" aria-label="对照场景">
+    <button type="button" data-pair="seam" aria-pressed="true">收起接缝前后</button>
+    <button type="button" data-pair="expanded" aria-pressed="false">展开调整前后</button>
+    <button type="button" data-pair="states" aria-pressed="false">当前展开与收起</button>
+    <label class="detail"><input id="detail" type="checkbox">按实际尺寸细看侧栏</label>
+  </div>
+  <div class="images" id="images" data-detail="false">
+    <figure>
+      <figcaption><label for="left">左图<select id="left" aria-label="左图场景"></select></label><a id="left-open" target="_blank" rel="noopener">原图</a></figcaption>
+      <div class="viewport"><img id="left-image" alt="左侧对照截图"></div>
+      <p class="note" id="left-note"></p>
+    </figure>
+    <figure>
+      <figcaption><label for="right">右图<select id="right" aria-label="右图场景"></select></label><a id="right-open" target="_blank" rel="noopener">原图</a></figcaption>
+      <div class="viewport"><img id="right-image" alt="右侧对照截图"></div>
+      <p class="note" id="right-note"></p>
+    </figure>
+  </div>
+  <div class="evidence">
+    <p><strong>132 项检查通过：</strong>真实 Electron 外壳 44 项，延迟与失败启动 12 项，跨入口角色与键盘回归 76 项。</p>
+    <p>启动录得 259 帧，其中 89 帧开始可见；可见帧全部使用持久主题的 13px 字号。缓存曾设置成 15px 的 Default。</p>
+    <p><a href="README.md">范围与复现命令</a> · <a href="native/shell-visual.json">窗口实测</a> · <a href="native/startup-frames.json">启动逐帧数据</a> · <a href="startup/theme-startup.json">启动故障场景</a> · <a href="roles/theme-roles.json">角色回归</a> · <a href="SHA256SUMS">证据校验表</a></p>
+    <p class="limits">macOS 使用实际 main/preload/renderer；Windows 图仅验证渲染层平台规则，未验证原生窗口合成器。触摸为 Chromium 模拟。签名安装器未验收。全库 identity 与 docs 检查仍受既有历史日志问题阻挡，范围见验收记录。</p>
+  </div>
+</main>
+<script>
+  const scenes = [
+    { id: 'old-seam', label: '收起 · 仍有 6px 额外接缝', src: 'before/collapsed-with-6px-seam.png', note: '同为 48px 图标栏，但额外接缝使可见灰带更宽，图标看起来偏左。此图仅作视觉对照。' },
+    { id: 'old-expanded', label: '实施前 · 展开', src: 'before/default-light-expanded.png', note: '本轮修改前的真实窗口截图：较宽侧栏、较高导航行和首行顶边距。仅为基线观察，不是通过验收。' },
+    { id: 'collapsed', label: '当前 · 收起', src: 'native/default-light-collapsed.png', note: '48px 栏宽，24px 正方形按钮，8px 行间距。侧栏与列表的额外间距已为 0。' },
+    { id: 'expanded', label: '当前 · 展开', src: 'native/default-light-expanded.png', note: '200px 默认宽度，28px 导航行。三列首行居中对齐，中性细边与柔和阴影已生效。' },
+    { id: 'dark', label: '当前 · Default 深色', src: 'native/default-dark-expanded.png', note: 'Default 深色保持其自身材质。' },
+    { id: 'ink', label: '当前 · Ink', src: 'native/ink-expanded.png', note: 'Ink 的 2px 圆角继续由主题决定。' },
+    { id: 'geek', label: '当前 · Geek', src: 'native/geek-expanded.png', note: 'Geek 的 4px 圆角继续由主题决定。' },
+    { id: 'cyberpunk', label: '当前 · Cyberpunk 2077', src: 'native/cyberpunk-2077-expanded.png', note: 'Cyberpunk 的 2px 圆角继续由主题决定。' },
+    { id: 'windows', label: 'Windows 默认圆角规则（模拟）', src: 'native/windows-policy.png', note: '在本机渲染层模拟 Win32 平台。Default 内外角仍为 6px，未宣称 Windows 原生窗口已验收。' },
+    { id: 'touch', label: '触摸指针 · 收起（模拟）', src: 'native/touch-collapsed.png', note: '60px 图标栏，44px 正方形操作目标；由 Chromium coarse pointer 模拟。' },
+    { id: 'zoom', label: '原生 Chromium · 200% 缩放', src: 'native/native-zoom-200.png', note: '实际 webContents.setZoomFactor(2)，触发紧凑布局，无横向溢出。' },
+    { id: 'large', label: '根字号 30px · 展开', src: 'native/large-text.png', note: '文字放大时，导航和首行随内容增长，保持可读。' },
+    { id: 'large-rail', label: '根字号 30px · 收起', src: 'native/large-text-collapsed.png', note: '根字号变化不会把图标按钮拉成长方形。' },
+    { id: 'short', label: '短窗口 · 展开', src: 'native/short-window.png', note: '1000px 高度缩至 600px；导航可滚动，左右内距一致。' },
+    { id: 'startup', label: '持久主题 · 启动稳定后', src: 'native/startup-settled.png', note: '旧缓存 Default 15px，持久主题 13px。启动层揭开前等待实际主题和字体就绪。' },
+  ];
+  const pairs = { seam: ['old-seam', 'collapsed'], expanded: ['old-expanded', 'expanded'], states: ['expanded', 'collapsed'] };
+  function render(side) {
+    const scene = scenes.find(scene => scene.id === document.getElementById(side).value);
+    const image = document.getElementById(`${side}-image`);
+    image.src = scene.src; image.alt = scene.label;
+    document.getElementById(`${side}-open`).href = scene.src;
+    document.getElementById(`${side}-note`).textContent = scene.note;
+  }
+  for (const side of ['left', 'right']) {
+    const select = document.getElementById(side);
+    for (const scene of scenes) { const option = document.createElement('option'); option.value = scene.id; option.textContent = scene.label; select.append(option); }
+    select.addEventListener('change', () => { render(side); document.querySelectorAll('[data-pair]').forEach(button => button.setAttribute('aria-pressed', 'false')); });
+  }
+  function pair(id) {
+    document.querySelectorAll('[data-pair]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.pair === id)));
+    ['left', 'right'].forEach((side, index) => { document.getElementById(side).value = pairs[id][index]; render(side); });
+  }
+  document.querySelectorAll('[data-pair]').forEach(button => button.addEventListener('click', () => pair(button.dataset.pair)));
+  document.getElementById('detail').addEventListener('change', event => { document.getElementById('images').dataset.detail = String(event.target.checked); });
+  pair('seam');
+</script>
+</body>
+</html>

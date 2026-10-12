@@ -1,4 +1,4 @@
-/** TC12 / TC13: identical real content, explicit candidates; production defaults stay 40/840. */
+/** TC12 / TC13: identical real content, explicit candidates; current defaults are 28/840. */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -25,7 +25,7 @@ await verificationWorkflow('theme-design', async run => {
     await page.goto(`${base}${prefix}/fixture.html?css=${encodeURIComponent(`${prefix}/host.css`)}&compact=${compact}&collapsed=${collapsed}`, { waitUntil: 'networkidle', timeout: 120_000 })
     await page.locator('[data-roles-ready]').waitFor()
   }
-  async function scene(id: string, group: string, theme: string, mode: 'light' | 'dark', row = 40, width = 840, material = 'current', fontSize = '15px') {
+  async function scene(id: string, group: string, theme: string, mode: 'light' | 'dark', row = 28, width = 840, material = 'current', fontSize = '15px') {
     await page.evaluate(({ id, theme, mode, fontSize }) => window.themeRoles.choose(id, mode, { ...theme, fontSize }), { id, theme: BUILTIN_THEMES[theme]!, mode, fontSize })
     await page.waitForFunction(id => document.documentElement.dataset.theme === id && document.documentElement.dataset.themeStatus === 'ready', id)
     await page.evaluate(({ row, width, material }) => {
@@ -46,17 +46,17 @@ await verificationWorkflow('theme-design', async run => {
   try {
     run.json('preparation.json', await warmThemePage(context, `${base}${prefix}/fixture.html?css=${encodeURIComponent(`${prefix}/host.css`)}`, '[data-roles-ready]'))
     for (const { theme, mode } of scenes) {
-      for (const collapsed of [false, true]) { await open(false, collapsed); for (const row of [40, 34, 32]) await scene(`rows-${theme}-${mode}-${row}-${collapsed ? 'collapsed' : 'expanded'}`, '导航密度', theme, mode, row) }
-      await open(); for (const width of [840, 768]) await scene(`width-${theme}-${mode}-${width}`, '阅读列', theme, mode, 40, width)
-      for (const material of ['current', 'strong']) await scene(`material-${theme}-${mode}-${material}`, '材质与高程', theme, mode, 40, 840, material)
-      await page.setViewportSize({ width: 640, height: 1000 }); await scene(`text-200-${theme}-${mode}`, '200% 文字与窄屏', theme, mode, 40, 840, 'current', '30px')
+      for (const collapsed of [false, true]) { await open(false, collapsed); for (const row of [40, 34, 32, 28]) await scene(`rows-${theme}-${mode}-${row}-${collapsed ? 'collapsed' : 'expanded'}`, '导航密度', theme, mode, row) }
+      await open(); for (const width of [840, 768]) await scene(`width-${theme}-${mode}-${width}`, '阅读列', theme, mode, 28, width)
+      for (const material of ['current', 'strong']) await scene(`material-${theme}-${mode}-${material}`, '材质与高程', theme, mode, 28, 840, material)
+      await page.setViewportSize({ width: 640, height: 1000 }); await scene(`text-200-${theme}-${mode}`, '200% 文字与窄屏', theme, mode, 28, 840, 'current', '30px')
       await page.setViewportSize({ width: 390, height: 1000 }); await open(true); await scene(`compact-${theme}-${mode}`, '紧凑输入', theme, mode)
       await page.setViewportSize({ width: 1280, height: 1000 })
     }
     assert.deepEqual(errors, [])
-    run.json('theme-design.json', { checks, samples, errors, browser: launched.browser.version(), decision: 'Preserve 40px navigation, 840px reading width and current material. Alternatives are reviewable evidence; physical/native materials remain separately scoped.' })
+    run.json('theme-design.json', { checks, samples, errors, browser: launched.browser.version(), decision: 'Default navigation is now 28px and the reading width remains 840px. Default light uses neutral borders and soft elevation; shell-visual verifies the real native shell, while these candidates remain comparison evidence.' })
     const options = samples.map(value => `<option value="${value.file}">${value.group} · ${value.id}</option>`).join('')
-    writeFileSync(join(run.directory, 'index.html'), `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>主题参数对照</title><style>body{font:14px system-ui;margin:24px;color:#20232c;background:#fafafa}select{padding:8px;max-width:100%}.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}img{width:100%;border:1px solid #ddd}@media(max-width:768px){.pair{grid-template-columns:1fr}}</style><h1>主题参数对照</h1><p>真实组件、相同中文内容。保留当前 40px / 840px 与材质；候选供审阅。200% 文字缩放与 Chromium 浏览器缩放分别验收。</p><div class="pair"><div><select>${options}</select><img alt="左侧对照"></div><div><select>${options}</select><img alt="右侧对照"></div></div><script>document.querySelectorAll('select').forEach((s,i)=>{s.selectedIndex=i?2:0;const update=()=>s.nextElementSibling.src=s.value;s.onchange=update;update()})</script>`)
+    writeFileSync(join(run.directory, 'index.html'), `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>主题参数对照</title><style>body{font:14px system-ui;margin:24px;color:#20232c;background:#fafafa}select{padding:8px;max-width:100%}.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}img{width:100%;border:1px solid #ddd}@media(max-width:768px){.pair{grid-template-columns:1fr}}</style><h1>主题参数对照</h1><p>真实组件、相同中文内容。当前默认导航 28px、阅读列 840px，浅色边界与高程已微调；其他候选供审阅。200% 文字缩放与 Chromium 浏览器缩放分别验收。</p><div class="pair"><div><select>${options}</select><img alt="左侧对照"></div><div><select>${options}</select><img alt="右侧对照"></div></div><script>document.querySelectorAll('select').forEach((s,i)=>{s.selectedIndex=i?2:0;const update=()=>s.nextElementSibling.src=s.value;s.onchange=update;update()})</script>`)
     run.complete(checks, ['Real browser zoom is asserted by theme-native', 'OS materials and physical touch are separate runs'])
   } finally { await context.tracing.stop({ path: join(run.directory, 'trace.zip') }); await context.close(); await server.close(); await launched.close() }
 })

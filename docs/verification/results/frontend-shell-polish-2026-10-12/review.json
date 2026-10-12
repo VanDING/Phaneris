@@ -1,0 +1,105 @@
+{
+  "native": {
+    "passed": 44,
+    "exitCode": 0,
+    "startedAt": "2026-10-12T14:06:02.438Z",
+    "sourceHead": "971180c62f07cca7d6b415dde78d4bf2c6cfb7ff",
+    "manifest": "native/manifest.json"
+  },
+  "startup": {
+    "passed": 12,
+    "exitCode": 0,
+    "startedAt": "2026-10-12T13:29:15.719Z",
+    "sourceHead": "971180c62f07cca7d6b415dde78d4bf2c6cfb7ff",
+    "manifest": "startup/manifest.json"
+  },
+  "roles": {
+    "passed": 76,
+    "exitCode": 0,
+    "startedAt": "2026-10-12T13:23:27.117Z",
+    "sourceHead": "971180c62f07cca7d6b415dde78d4bf2c6cfb7ff",
+    "manifest": "roles/manifest.json"
+  },
+  "startupFrames": {
+    "recorded": 259,
+    "visible": 89,
+    "visibleFontSizes": [
+      "13px"
+    ],
+    "visibleThemes": [
+      "startup-small"
+    ]
+  },
+  "scope": {
+    "native": "Production Electron main/preload/renderer on macOS x64 with a disposable local workspace",
+    "startup": "Production ThemeProvider/compiler/CSS with synthetic delayed/failing API",
+    "roles": "Production controls across Electron/WebUI/viewer CSS. Shared roles/CSS behavior unchanged after this run; final shell and startup workflows validate subsequent shell and startup changes.",
+    "windows": "Renderer platform policy simulated on macOS; Windows compositor untested",
+    "signedPackage": false
+  },
+  "parameters": {
+    "expandedWidth": 200,
+    "expandedRow": 28,
+    "collapsedWidth": 48,
+    "collapsedControl": 24,
+    "collapsedHorizontalInset": 12,
+    "collapsedRowGap": 8,
+    "sidebarNavigatorGap": 0,
+    "panelGap": 6,
+    "headerHeight": 36,
+    "macosDefault": {
+      "innerRadius": 10,
+      "edgeRadius": 8
+    },
+    "windowsDefault": {
+      "radius": 6
+    },
+    "coarsePointer": {
+      "railWidth": 60,
+      "control": 44
+    }
+  },
+  "gates": {
+    "typecheckAll": "passed",
+    "lint": "passed",
+    "i18n": "passed",
+    "version": "passed",
+    "existingThemeTests": {
+      "passed": 22
+    },
+    "identity": {
+      "status": "blocked by existing historical logs",
+      "hits": 4
+    },
+    "docs": {
+      "status": "blocked by stale missing-artifact exception for an existing ignored historical log"
+    }
+  },
+  "finalSourceSha256": {
+    "apps/electron/resources/release-notes/next.md": "55c0e3b2fb1606b20e4d84d9daf3ba0dba93e77898858e2d38ceccddcd6133dc",
+    "apps/electron/resources/themes/default.json": "ccd06fc0d4f8280f0ec11fb3dc5f17780d837745026abcfc5f84f6f0460faada",
+    "apps/electron/src/renderer/App.tsx": "8d3ee1d1f27133e10e29c44daec77c0279d265e85d4d106d2a0bdcacefe83416",
+    "apps/electron/src/renderer/components/SplashScreen.tsx": "8640b8bebc0f8560633516e3f0ee8561fbbc71a221843b9fd59cb0bcfa716780",
+    "apps/electron/src/renderer/components/app-shell/AppShell.tsx": "cd17acec5e09057438d15d2a9ee5ca51a63423bcf9dc1a1b0371934fb15b1527",
+    "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx": "0d49cfec6125e2e725625f1792e0068ecd81cca79b2973908ee5d98e021799e7",
+    "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx": "3ace5dd119e2bf2080fccbfb9cd2ed157e586b52430eeb53f29cdeb7bc049ae3",
+    "apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx": "3a8fc757c057ffbd8e9c122b664f9b99a62b13d70697989a02b8e1aebb6e01da",
+    "apps/electron/src/renderer/components/app-shell/SurfaceContainer.tsx": "0b370052364f9e1bdba8769bd3f46f7f82bf5cd47fad3c336697ce749702cbed",
+    "apps/electron/src/renderer/components/app-shell/panel-constants.ts": "88ab73198bc8a301db557964114eeb924b2e24a27447be44d5a335edb98690f7",
+    "apps/electron/src/renderer/context/ThemeContext.tsx": "b28257542c04d06653dce16016fde0ad55313b0ee78154355bbb6ce725a737a9",
+    "apps/electron/src/renderer/hooks/useCoarsePointer.ts": "6b8455f34071141328ace02dba90ddf0054d3519837391db2936f56fedacf8b9",
+    "apps/electron/src/renderer/index.css": "7514f1c27cf0cfed2d12ca3ec853bc11ba06f27fdb4ef5a97d90732ee25dceb9",
+    "packages/shared/src/config/theme.ts": "d761bec34e36e6cbd02a4b149ba76bda61913092cf68efa0625037daaff20600",
+    "packages/shared/src/i18n/locales/de.json": "0f51f371dfa2085b6ae2629c5a02a4a5b697e9bea5b40056d8a950d9aa445f38",
+    "packages/shared/src/i18n/locales/en.json": "87eeb59db8563066bbc6a046ad859ae4297f254d54afd11cd16b1152734687a3",
+    "packages/shared/src/i18n/locales/es.json": "bca0244510f9cbdb2c8f95277b3e2c4cca8b2676c41844def9dc3602579a617b",
+    "packages/shared/src/i18n/locales/hu.json": "682bb57314cc22f9ecabad91cf8676eeb8ae535aa10f4842ec8b517f3c793727",
+    "packages/shared/src/i18n/locales/ja.json": "1ed6aafffabf9f1caf42f7b7d00c93a3b320106d7e24d52acde4ded2512002de",
+    "packages/shared/src/i18n/locales/pl.json": "09885ed3f9f8de1f6cbf45845ce4e388f4259f42c1199ae2abd804df7fc74cc0",
+    "packages/shared/src/i18n/locales/zh-Hans.json": "a26420ba89c9947f9c3b8698f9e16647bda45624b7de7ce89b5610b8a8fa237b",
+    "packages/ui/src/lib/visual-roles.ts": "ef7d70c15b322dc8c7c01cf604e2991efb0bc00c9e02aa0124f5d6d86c3a0848",
+    "packages/ui/src/styles/role-tokens.css": "f8aa3f95a5b871593b8d365f5828c22772179cbb0e43f7af9e109f097e479941",
+    "packages/ui/src/styles/roles.css": "666f704a266dba3a446ee5528fb7f9a7bb58647d5d8a119dd9fa2c5670a2d18c",
+    "packages/ui/src/styles/theme-tokens.css": "3cf53774b7a82ccdd6f83531b96ece970fefda8ea70c91973744fe8800794b6c"
+  }
+}

@@ -90,7 +90,7 @@ await verificationWorkflow('theme-roles', async run => {
           const action = page.getByTestId(kind === 'popover' ? 'popover-action' : `${kind === 'menu' ? 'nested' : 'fullscreen'}-action`)
           await action.waitFor(); await choose(`portal-${kind}`, 'dark')
           assert(await action.evaluate(element => { const rect = element.getBoundingClientRect(); return element.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2)) }), `${kind} must receive hits above its parent dialog`)
-          await page.keyboard.press('Escape'); assert(await parent.isVisible())
+          await page.keyboard.press('Escape'); await action.waitFor({ state: 'detached' }); assert(await parent.isVisible())
           await page.keyboard.press('Escape'); await parent.waitFor({ state: 'detached' })
         } finally { await page.keyboard.press('Escape'); await page.keyboard.press('Escape') }
       })
@@ -102,9 +102,13 @@ await verificationWorkflow('theme-roles', async run => {
         assert(await option.evaluate(element => { const box = element.getBoundingClientRect(); return element.contains(document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2)) }), 'Nested option must receive pointer hits above the dialog')
         await option.click()
         assert.equal(await page.getByTestId('nested-select').innerText(), '第二项')
+        await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'nested-select')
         await page.keyboard.press('Space'); await page.getByRole('listbox').waitFor(); await page.keyboard.press('Escape')
+        await page.getByRole('listbox').waitFor({ state: 'detached' })
+        await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'nested-select')
         assert(await page.getByRole('dialog').isVisible()); assert(await page.getByTestId('nested-select').evaluate(element => document.activeElement === element))
         await page.keyboard.press('Escape'); await page.getByRole('dialog').waitFor({ state: 'detached' })
+        await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'dialog')
         assert(await page.getByTestId('dialog').evaluate(element => document.activeElement === element))
       })
     }

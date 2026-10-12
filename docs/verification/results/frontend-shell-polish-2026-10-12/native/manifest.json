@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "workflow": "shell-visual",
+  "startedAt": "2026-10-12T14:06:02.438Z",
+  "finishedAt": "2026-10-12T14:06:32.274Z",
+  "command": [
+    "/Users/van/.bun/bin/bun",
+    "/Users/van/projects/Phaneris/scripts/verification/shell-visual-workflow.ts",
+    "--output-dir=.cache/verification/shell-polish-final-accepted"
+  ],
+  "source": {
+    "headSha": "971180c62f07cca7d6b415dde78d4bf2c6cfb7ff",
+    "dirtyPaths": [
+      "M apps/electron/resources/release-notes/next.md",
+      " M apps/electron/resources/themes/default.json",
+      " M apps/electron/src/renderer/App.tsx",
+      " M apps/electron/src/renderer/components/SplashScreen.tsx",
+      " M apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      " M apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      " M apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx",
+      " M apps/electron/src/renderer/components/app-shell/SurfaceContainer.tsx",
+      " M apps/electron/src/renderer/components/app-shell/panel-constants.ts",
+      " M apps/electron/src/renderer/context/ThemeContext.tsx",
+      " M apps/electron/src/renderer/index.css",
+      " M docs/design/theme-contract.generated.json",
+      " M docs/design/theme-hosts-and-rollout.md",
+      " M docs/verification/results/packaged-client-smoke.json",
+      " M docs/verification/results/packaged-client-verification.json",
+      " M package.json",
+      " M packages/shared/src/config/theme.ts",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M packages/ui/src/lib/visual-roles.ts",
+      " M packages/ui/src/styles/role-tokens.css",
+      " M packages/ui/src/styles/roles.css",
+      " M packages/ui/src/styles/theme-tokens.css",
+      " M scripts/verification/theme-design-workflow.ts",
+      " M scripts/verification/theme-roles-workflow.ts",
+      " M scripts/visual-debt-ledger.json",
+      "?? apps/electron/src/renderer/hooks/useCoarsePointer.ts",
+      "?? docs/verification/frontend-shell-polish-failure-matrix-2026-10-12.md",
+      "?? scripts/verification/fixtures/shell-visual.cjs",
+      "?? scripts/verification/fixtures/theme-startup.tsx",
+      "?? scripts/verification/shell-visual-workflow.ts",
+      "?? scripts/verification/theme-startup-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/resources/release-notes/next.md",
+        "sha256": "55c0e3b2fb1606b20e4d84d9daf3ba0dba93e77898858e2d38ceccddcd6133dc"
+      },
+      {
+        "path": "apps/electron/resources/themes/default.json",
+        "sha256": "ccd06fc0d4f8280f0ec11fb3dc5f17780d837745026abcfc5f84f6f0460faada"
+      },
+      {
+        "path": "apps/electron/src/renderer/App.tsx",
+        "sha256": "8d3ee1d1f27133e10e29c44daec77c0279d265e85d4d106d2a0bdcacefe83416"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/SplashScreen.tsx",
+        "sha256": "8640b8bebc0f8560633516e3f0ee8561fbbc71a221843b9fd59cb0bcfa716780"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+        "sha256": "cd17acec5e09057438d15d2a9ee5ca51a63423bcf9dc1a1b0371934fb15b1527"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+        "sha256": "0d49cfec6125e2e725625f1792e0068ecd81cca79b2973908ee5d98e021799e7"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+        "sha256": "3ace5dd119e2bf2080fccbfb9cd2ed157e586b52430eeb53f29cdeb7bc049ae3"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx",
+        "sha256": "3a8fc757c057ffbd8e9c122b664f9b99a62b13d70697989a02b8e1aebb6e01da"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/SurfaceContainer.tsx",
+        "sha256": "0b370052364f9e1bdba8769bd3f46f7f82bf5cd47fad3c336697ce749702cbed"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/panel-constants.ts",
+        "sha256": "dee8e8be5a7f207f1e12963991a4598ac18d92321925ee05584711b297363f5b"
+      },
+      {
+        "path": "apps/electron/src/renderer/context/ThemeContext.tsx",
+        "sha256": "b28257542c04d06653dce16016fde0ad55313b0ee78154355bbb6ce725a737a9"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/useCoarsePointer.ts",
+        "sha256": "6b8455f34071141328ace02dba90ddf0054d3519837391db2936f56fedacf8b9"
+      },
+      {
+        "path": "apps/electron/src/renderer/index.css",
+        "sha256": "0a78062c6ef6f98872da521f4589565d9efd996f2d9c9946906466588384982e"
+      },
+      {
+        "path": "docs/design/theme-contract.generated.json",
+        "sha256": "64f918d877494099a4d7ea0b4a90f34e6a0f07704054f27d6f1b1d6296893472"
+      },
+      {
+        "path": "docs/design/theme-hosts-and-rollout.md",
+        "sha256": "5ddefd580959ebfc790ad7e4b1d684f615c8867526b1fae22fd6953df9032d95"
+      },
+      {
+        "path": "docs/verification/frontend-shell-polish-failure-matrix-2026-10-12.md",
+        "sha256": "7350ce0969f729d301f7ea061b0e33b52908d5b8f87eaebefced2025d358ebc8"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke.json",
+        "sha256": "df1f01e85c5b3a44dcdb58545547416f92374eff40cda9d162dafa597e9e5c36"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification.json",
+        "sha256": "22816df543958dea9196bd1dfc04cb38476dcbfd3572e90746a524f1700e976a"
+      },
+      {
+        "path": "package.json",
+        "sha256": "e34b7a0d8d5a4e35fde2088227718effb41dc8995e19f7b1a12f0fa79939e791"
+      },
+      {
+        "path": "packages/shared/src/config/theme.ts",
+        "sha256": "d761bec34e36e6cbd02a4b149ba76bda61913092cf68efa0625037daaff20600"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "0f51f371dfa2085b6ae2629c5a02a4a5b697e9bea5b40056d8a950d9aa445f38"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "87eeb59db8563066bbc6a046ad859ae4297f254d54afd11cd16b1152734687a3"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "bca0244510f9cbdb2c8f95277b3e2c4cca8b2676c41844def9dc3602579a617b"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "682bb57314cc22f9ecabad91cf8676eeb8ae535aa10f4842ec8b517f3c793727"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "1ed6aafffabf9f1caf42f7b7d00c93a3b320106d7e24d52acde4ded2512002de"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "09885ed3f9f8de1f6cbf45845ce4e388f4259f42c1199ae2abd804df7fc74cc0"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "a26420ba89c9947f9c3b8698f9e16647bda45624b7de7ce89b5610b8a8fa237b"
+      },
+      {
+        "path": "packages/ui/src/lib/visual-roles.ts",
+        "sha256": "ef7d70c15b322dc8c7c01cf604e2991efb0bc00c9e02aa0124f5d6d86c3a0848"
+      },
+      {
+        "path": "packages/ui/src/styles/role-tokens.css",
+        "sha256": "f8aa3f95a5b871593b8d365f5828c22772179cbb0e43f7af9e109f097e479941"
+      },
+      {
+        "path": "packages/ui/src/styles/roles.css",
+        "sha256": "666f704a266dba3a446ee5528fb7f9a7bb58647d5d8a119dd9fa2c5670a2d18c"
+      },
+      {
+        "path": "packages/ui/src/styles/theme-tokens.css",
+        "sha256": "3cf53774b7a82ccdd6f83531b96ece970fefda8ea70c91973744fe8800794b6c"
+      },
+      {
+        "path": "scripts/verification/fixtures/shell-visual.cjs",
+        "sha256": "6d25861e7c8bf5c1dc278ab5f930a1ccce1ead78c3ab02e6b85109c154567e56"
+      },
+      {
+        "path": "scripts/verification/fixtures/theme-startup.tsx",
+        "sha256": "8e3ace9f8b941e45349980498236b5a2a64ebaad967516886585bb351e007af9"
+      },
+      {
+        "path": "scripts/verification/shell-visual-workflow.ts",
+        "sha256": "3e0b160d3cbe564bdf8200248041fb04fa1b1b206e8dc425ecd9f0c0bc791a4b"
+      },
+      {
+        "path": "scripts/verification/theme-design-workflow.ts",
+        "sha256": "2ba76f4bd6ad264824159b3453c12f185fcbe2fa8e82c9ae660fc5803f012f29"
+      },
+      {
+        "path": "scripts/verification/theme-roles-workflow.ts",
+        "sha256": "4bd34ffda3245c76e0cbdc8a60ae4a2e9372fb117314675546fc8d3e2299e6ee"
+      },
+      {
+        "path": "scripts/verification/theme-startup-workflow.ts",
+        "sha256": "763cc8ffc85f5683255593d9419fa19d243236f5c9cf3baea73d1c314a2f1a2e"
+      },
+      {
+        "path": "scripts/visual-debt-ledger.json",
+        "sha256": "91101a217eac43bd39459bfe1859e807158d1c00683402b2a143739cf75576f4"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.16.0",
+    "uv": "uv 0.11.28 (Homebrew 2026-07-07 x86_64-apple-darwin)",
+    "platform": "darwin",
+    "architecture": "x64",
+    "osRelease": "25.6.0",
+    "executable": "/Users/van/.bun/bin/bun"
+  },
+  "sceneIds": [
+    "verified three first-row centers align",
+    "verified new-session top aligns with panels",
+    "verified expanded default width 200",
+    "verified sidebar has no extra navigator seam",
+    "verified navigation rows 28",
+    "verified navigation icons 16",
+    "verified new session symmetric insets",
+    "verified navigation and first-row insets match",
+    "verified default light neutral border",
+    "verified default light visible soft panel shadow",
+    "verified native default panel radius",
+    "verified native default edge radius",
+    "verified sidebar drag follows pointer delta without seam jump",
+    "verified navigator drag follows pointer delta without seam jump",
+    "verified collapsed width 48 with breathing room",
+    "verified icons centered in the visible rail including its boundary",
+    "verified collapsed controls are 24px squares",
+    "verified state-specific icon alignment",
+    "verified collapsed navigation has 8px gaps",
+    "verified footer icons centered",
+    "verified collapsed navigator drag uses same geometry",
+    "verified collapsed keyboard focus visible",
+    "collapsed profile opens",
+    "default dark retains own material",
+    "verified ink authored panel radius preserved",
+    "verified geek authored panel radius preserved",
+    "verified cyberpunk-2077 authored panel radius preserved",
+    "verified sidebar width slider keyboard adjusts and persists",
+    "verified width slider keyboard focus visible",
+    "verified sidebar width slider keyboard lower bound",
+    "verified sidebar width slider keyboard upper bound",
+    "verified navigator width slider keyboard adjusts and persists",
+    "verified navigator width slider keyboard lower bound",
+    "verified navigator width slider keyboard upper bound",
+    "verified saved width survives refresh",
+    "verified 200 percent native zoom reflows",
+    "verified large text rows expand",
+    "verified large root text retains square rail",
+    "verified scrolling navigation retains symmetric insets",
+    "verified last navigation item reachable",
+    "verified touch rail and controls remain usable",
+    "verified startup reveals only the final persisted size",
+    "verified Windows default radius stays 6",
+    "no native renderer errors"
+  ],
+  "passed": 44,
+  "exitCode": 0,
+  "artifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "cd36e817871f5ee6a9dc1596563d9ebafd6c1da1b6c4a07cc4c3c1281e5be653",
+      "bytes": 330
+    },
+    {
+      "path": "cyberpunk-2077-expanded.png",
+      "sha256": "1cf85906eca6239b0592fc7443f671849cd16d6bbab4e9bda8bc3e61cd865ea2",
+      "bytes": 267361
+    },
+    {
+      "path": "default-dark-expanded.png",
+      "sha256": "5904928dd096e7b676167ac0e823f397e71b2dca8e2b9263855207edefcef1cc",
+      "bytes": 269544
+    },
+    {
+      "path": "default-light-collapsed.png",
+      "sha256": "3289b3fb789c381b9ad238a16b5576bbe4a52e94b187121be6f5eeef634b6d56",
+      "bytes": 182556
+    },
+    {
+      "path": "default-light-expanded.png",
+      "sha256": "2656a52f373abbfac5fbd08d4bfc62e6a202a490d54ec21a00503dde3a15ad73",
+      "bytes": 241541
+    },
+    {
+      "path": "fixture.json",
+      "sha256": "91eb425b33f5de4b4b73afb84f71757a0cc0becfb773c65b556790c89123a598",
+      "bytes": 270
+    },
+    {
+      "path": "geek-expanded.png",
+      "sha256": "e6b2ae5eba998795de15fb57526442eb22b228e24bd5cc6b3035c30319255029",
+      "bytes": 257858
+    },
+    {
+      "path": "ink-expanded.png",
+      "sha256": "67a889266cacff5002e6759841557763620b8ad863881bebb81da7dc64d9a7ed",
+      "bytes": 258224
+    },
+    {
+      "path": "large-text-collapsed.png",
+      "sha256": "494b6054fd6878ac0b4b7ecc6e9c7781a6f4f76d70d255ac22262b1460670423",
+      "bytes": 240147
+    },
+    {
+      "path": "large-text.png",
+      "sha256": "e82c5cd3b5bd42f0c53b54d084c843603b141328d3ad10eb04e75d04774d248f",
+      "bytes": 88336
+    },
+    {
+      "path": "native-zoom-200.png",
+      "sha256": "48fe876dc004848bff5f186a31947c891bbcc93a39c55a7713ca4e162463bb9e",
+      "bytes": 30897
+    },
+    {
+      "path": "process.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "shell-visual.json",
+      "sha256": "9753319ea2f27f033f8b1bc99ca9a2bbc9e501bc0d6645d571dafdbe41dd1abe",
+      "bytes": 282684
+    },
+    {
+      "path": "short-window.png",
+      "sha256": "5c92bcd87e649b9ed026a78a6ecd8774e0bd5d340c5784f6779c4ddced4cc9d0",
+      "bytes": 198559
+    },
+    {
+      "path": "startup-frames.json",
+      "sha256": "58c7dc00b8c3e0ff65b4be269515491ec5599bfe3ea8261b95b76bb6ce65e5ee",
+      "bytes": 33590
+    },
+    {
+      "path": "startup-settled.png",
+      "sha256": "90c48fbdbe96e32e34e05dc1478b26ea996c7173560e1a3327a91f6f71d43df3",
+      "bytes": 227130
+    },
+    {
+      "path": "touch-collapsed.png",
+      "sha256": "2bc43ae628c21ae921067f21730687f7fcd7b313c67d7e63061a675d9199ed7a",
+      "bytes": 189121
+    },
+    {
+      "path": "trace.zip",
+      "sha256": "6791b422ff1ea05454f13f8aea33a0e6ac7d7df6cb466143460aea388138639f",
+      "bytes": 21815435
+    },
+    {
+      "path": "windows-policy.png",
+      "sha256": "6c95960d67b4522b00ab107360f98102b40d99b52067aaeadea9fa8cffb19d61",
+      "bytes": 26089
+    }
+  ],
+  "untested": [
+    "Windows native compositor: platform policy simulated in the macOS renderer",
+    "Signed installer, native Linux, physical touch hardware"
+  ]
+}

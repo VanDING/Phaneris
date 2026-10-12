@@ -1857,6 +1857,8 @@
   "sidebar.profile.setup": "プロフィールを設定",
   "sidebar.profile.view": "プロフィールを表示",
   "sidebar.projects": "プロジェクト",
+  "sidebar.resize": "サイドバーの幅を変更",
+  "sidebar.resizeNavigator": "ナビゲーションリストの幅を変更",
   "sidebar.scheduled": "スケジュール済み",
   "sidebar.search": "検索",
   "sidebar.searchStatusesLabels": "ステータスとラベルを検索...",

@@ -1,0 +1,13 @@
+{
+  "checks": [
+    "initial seam comparison images load",
+    "all 15 original scene images load",
+    "expanded comparison selects correct scenes",
+    "current states compare correctly",
+    "detail preserves logical native scale",
+    "390px report reflows without horizontal overflow",
+    "no report page errors"
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12"
+}

@@ -1857,6 +1857,8 @@
   "sidebar.profile.setup": "Configurar tu perfil",
   "sidebar.profile.view": "Ver perfil",
   "sidebar.projects": "Proyectos",
+  "sidebar.resize": "Cambiar el tamaño de la barra lateral",
+  "sidebar.resizeNavigator": "Cambiar el tamaño de la lista de navegación",
   "sidebar.scheduled": "Programadas",
   "sidebar.search": "Buscar",
   "sidebar.searchStatusesLabels": "Buscar estados y etiquetas...",

@@ -184,7 +184,7 @@ export function LeftSidebar({ links, isCollapsed, getItemProps, focusedItemId, i
       <NavWrapper
         className={cn(
           "grid grid-cols-1 gap-0.5",
-          isNested ? "pl-5 pr-0 relative" : "px-2"
+          isNested ? "pl-5 pr-0 relative" : "sidebar-nav-inset"
         )}
         role="navigation"
         aria-label={isNested ? "Sub navigation" : "Main navigation"}
@@ -496,8 +496,8 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
         title={undefined}
         className={cn(
           "sidebar-nav-button craft-control craft-row-focus craft-text-label group flex w-full items-center gap-2 rounded-control select-none",
-          // Compact mode: 4px less total height (py-[3px] vs py-[5px])
-          link.compact ? "py-[3px]" : "py-[5px]",
+          // Named row height supplies the floor; content can expand with text.
+          link.compact ? "py-0.5" : "py-1",
           "px-2",
           link.variant === "default"
             ? "bg-foreground/[0.07]"
