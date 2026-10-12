@@ -554,10 +554,17 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
     )
     // Keep the trigger and its native button mounted while the sidebar changes
     // style. Conditional wrapping replaced the button and lost focus/tweens.
+    //
+    // The label is a rail affordance and may only latch while collapsed. Radix
+    // reports a close only when the controlled value actually changes, so an
+    // expanded row that armed "open" never received the matching close, and the
+    // next collapse surfaced one stray label per hovered or focused row.
+    // Refusing off-rail opens makes that latch impossible; mounting the content
+    // only on the rail keeps the expanded sidebar free of label nodes entirely.
     return (
-      <Tooltip open={isCollapsed && tooltipOpen} onOpenChange={setTooltipOpen}>
+      <Tooltip open={isCollapsed && tooltipOpen} onOpenChange={next => setTooltipOpen(next && isCollapsed)}>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent side="right">{link.title}</TooltipContent>
+        {isCollapsed && <TooltipContent side="right">{link.title}</TooltipContent>}
       </Tooltip>
     )
   }

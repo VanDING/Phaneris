@@ -29,6 +29,7 @@
 | 桌面外壳视觉微调 | `bun run test:shell-visual` · `bun run test:theme-startup` · [事先失败矩阵](frontend-shell-polish-failure-matrix-2026-10-12.md) · [前后对照与验收](results/frontend-shell-polish-2026-10-12/README.md) | 真实 Electron 44、启动故障 12、跨入口角色回归 76 项通过；Windows 原生圆角合成仍待实机。 |
 | main 集成前门禁 | [历史日志恢复与验收](main-integration-2026-10-12.md) | 原 SHA 匹配的两份日志纳入 Git，撤销缺失例外；docs / identity 和 6 项扫描器场景通过。 |
 | 侧栏按钮与样式过渡 | `bun run test:shell-visual` · [事先失败矩阵](sidebar-style-transition-failure-matrix-2026-10-12.md) · [截图/录屏与验收](results/sidebar-style-transition-2026-10-12/README.md) | 原生 64、角色回归 76 项通过；两态共享紧凑间距，整组上移恢复顶线，保留原按钮与焦点。 |
+| 侧栏提示标签残留 | `bun run test:shell-visual` · [事先失败矩阵](sidebar-tooltip-residue-failure-matrix-2026-10-13.md) · [前后证据与验收](results/sidebar-tooltip-residue-2026-10-13/README.md) | 收起瞬间不再挂载提示：修复前 5 个残留标签、修复后逐帧 0；68/68 场景通过。 |
 | 日历 / Gantt | [实现验证脚本](../../scripts/verification/calendar-gantt-verification.mjs) · [诊断探针](../../scripts/verification/calendar-gantt-probe.mjs) | 在开发服务器中检查生产视图，诊断缺少的 mock API；结果位于 [`results/`](./results)。 |
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
 | 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](./results)。 |
@@ -46,6 +47,7 @@
 | AI 设置与脚本运行时 | [失败矩阵](./ai-settings-runtime-failure-matrix.md) | [验收](./ai-settings-runtime-refinement.md) | 已实施 |
 | 内置 Default 主题替换 | [失败矩阵](./default-theme-application-failure-matrix.md) | [验收](./default-theme-application.md) | 已实施（macOS x64，未签名本地构建） |
 | Default 紫色与 New Session 表面 | [失败矩阵](./default-purple-sidebar-failure-matrix.md) | [验收](./default-purple-sidebar.md) | 已实施 |
+| 侧栏提示标签残留 | [失败矩阵](./sidebar-tooltip-residue-failure-matrix-2026-10-13.md) | [验收](./results/sidebar-tooltip-residue-2026-10-13/README.md) | 已实施（真实 Electron，68/68 场景） |
 | Twilight / Gantt / 安装器细化 | [失败矩阵](./ui-refinement-failure-matrix.md) | [结果目录](./results/ui-refinement/)（25 个文件：Gantt 四主题截图、安装器六态帧、`browser.json`） | 已记录；无单独验收文档 |
 | Windows 安装器皮肤 | — | [验收清单](./installer-skin-refinement.md) | **流程已写；`results/` 中无对应结果文件** |
 

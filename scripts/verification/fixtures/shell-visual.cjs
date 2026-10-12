@@ -75,6 +75,9 @@ const { _electron } = require('playwright')
             centerX: rect.x - sidebar.x + rect.width / 2, centerY: rect.y - sidebar.y + rect.height / 2 }
         }
         frames.push({ time: performance.now() - start, collapsed: document.querySelector('.sidebar-navigation').hasAttribute('data-collapsed'),
+          tooltips: document.querySelectorAll('[data-slot="tooltip-content"]').length,
+          tooltipTexts: [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(node => node.textContent),
+          focusLabel: document.activeElement?.getAttribute?.('aria-label') ?? document.activeElement?.tagName ?? null,
           sidebarWidth: sidebar.width, rowStable: currentRow === row, buttonStable: currentButton === button,
           row: box(currentRow), button: box(currentButton), rowIcon: box(currentRow.firstElementChild), newIcon: box(currentButton.querySelector('svg')),
           labelOpacity: Number(getComputedStyle(currentRow.querySelector('.sidebar-label')).opacity),
@@ -162,6 +165,34 @@ const { _electron } = require('playwright')
     target('expand fades text', expandFrames.some(frame => frame.labelOpacity > .01 && frame.labelOpacity < .99), expandFrames)
     await page.locator('.sidebar-nav-button').first().hover(); await page.waitForTimeout(400)
     target('expanded navigation suppresses tooltip', await page.getByRole('tooltip').count() === 0, await measure())
+    // Regression (786bf6d08): a controlled tooltip only reports a close when the
+    // controlled value actually changes, so hovering or focusing the expanded
+    // sidebar latched "open" on those rows forever. Collapsing then mounted one
+    // stray label per visited row. The pointer is parked in the content area and
+    // the collapse is keyboard-driven, so no pointer position can account for a
+    // label appearing; then prove the rail tooltip still works and closes.
+    const sidebarModifier = process.platform === 'darwin' ? 'Meta' : 'Control'
+    // Only the top-level rail rows carry the collapsed flag; nested status rows
+    // render with isCollapsed={false} and can never surface a label.
+    const railRows = page.locator('nav[aria-label="Main navigation"] > .sidebar-section > .sidebar-nav-button')
+    for (const index of [0, 1, 2, 3]) {
+      await page.mouse.move(900, 700)
+      await railRows.nth(index).hover()
+      await page.waitForTimeout(400)
+    }
+    await page.mouse.move(900, 700)
+    await railRows.nth(4).focus()
+    await page.mouse.move(900, 700)
+    const armedCollapse = await captureSwitch('collapse-after-expanded-hover-focus', () => page.keyboard.press(`${sidebarModifier}+b`))
+    target('keyboard collapse after expanded hover and focus leaves no tooltip', armedCollapse.every(frame => frame.tooltips === 0), armedCollapse)
+    await page.locator('.sidebar-nav-button').nth(1).hover()
+    await page.getByRole('tooltip').waitFor({ timeout: 3000 })
+    const railTooltipCount = await page.getByRole('tooltip').count()
+    target('collapsed rail shows exactly the hovered tooltip', railTooltipCount === 1 && (await page.getByRole('tooltip').textContent()).includes(await page.locator('.sidebar-nav-button').nth(1).getAttribute('aria-label')), { railTooltipCount })
+    await page.mouse.move(900, 700); await page.waitForTimeout(200)
+    target('leaving the rail removes the tooltip', await page.getByRole('tooltip').count() === 0, await measure())
+    const restoredFrames = await captureSwitch('expand-after-rail-tooltip', () => page.keyboard.press(`${sidebarModifier}+b`))
+    target('expanding after a rail tooltip leaves no residue', restoredFrames.every(frame => frame.tooltips === 0), restoredFrames)
     await page.locator('.sidebar-nav-button').first().click({ button: 'right' }); await page.getByRole('menu').waitFor()
     target('expanded context menu remains usable', await page.locator('.sidebar-nav-button').first().getAttribute('data-state') === 'open', await measure())
     await page.keyboard.press('Escape'); await page.getByRole('menu').waitFor({ state: 'detached' })
