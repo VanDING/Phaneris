@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-12T12:33:29.482Z",
+  "date": "2026-10-12T14:45:59.146Z",
   "arch": "x64",
   "expected": {
     "version": "0.3.1",
@@ -29,8 +29,8 @@
     {
       "name": "DMG exists with the expected versioned name",
       "observation": "Phaneris-0.3.1-mac-x64.dmg",
-      "status": "fail",
-      "detail": "missing /Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.3.1-mac-x64.dmg"
+      "status": "pass",
+      "detail": null
     },
     {
       "name": "unpacked .app exists",
@@ -81,7 +81,7 @@
       "detail": null
     }
   ],
-  "scope": "unpacked resources and runtime; installer not verified",
+  "scope": "full packaged artifacts",
   "legacyBridgeBundle": "absent",
   "themes": [
     "cyberpunk-2077.json",
@@ -89,6 +89,10 @@
     "geek.json",
     "ink.json"
   ],
+  "dmg": {
+    "path": "/Users/van/projects/Phaneris/apps/electron/release/Phaneris-0.3.1-mac-x64.dmg",
+    "bytes": 219961672
+  },
   "app": "/Users/van/projects/Phaneris/apps/electron/release/mac/Phaneris.app",
   "identity": {
     "bundleId": "io.github.vanding.phaneris",
