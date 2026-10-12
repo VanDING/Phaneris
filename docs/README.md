@@ -2,7 +2,7 @@
 
 This index is the only entry point to `docs/`. Everything here is reachable from this page; `bun run check:docs` enforces that, along with link validity and the status rules below.
 
-Documentation is filed by **what kind of document it is**, not by how finished the work is — a completed plan stays where it is and changes its status (maintenance rule 3).
+Documents are filed by **kind and lifecycle**: `process/` holds open plans and current references, `archive/` holds landed one-off records, dated assessments and retired material. A plan that lands moves to `archive/` in the same change that records its outcome (maintenance rule 3).
 
 | Directory | Holds |
 | --- | --- |
@@ -11,9 +11,9 @@ Documentation is filed by **what kind of document it is**, not by how finished t
 | [`dependencies/`](dependencies/) | Dependency audits, upgrade records, and the dependency graph |
 | [`design/`](design/) | Product and feature design records |
 | [`verification/`](verification/) | Pre-implementation failure matrices, acceptance procedures, and recorded results |
-| [`process/`](process/) | Plans, implementation records, and dated assessments of how the project was built |
+| [`process/`](process/) | Open plans and current references (landed records are archived) |
 | [`research/`](research/) | Exploration and feasibility research |
-| [`archive/`](archive/) | Superseded or retired material, kept as evidence |
+| [`archive/`](archive/) | Landed one-off records, dated assessments and retired material; bulky media was pruned on 2026-10-13 (see the [verification index](verification/README.md#档案裁剪)) |
 
 ---
 
@@ -120,15 +120,6 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | Document | Status | What remains |
 | --- | --- | --- |
 | [Theme engine and frontend visual governance plan](process/theme-engine-frontend-governance-plan-2026-10-12.md) | **In progress; W1 browser verified** | F01/F02/F03 and reconnect recovery implemented with 101 browser scenes. [W1 evidence](verification/results/theme-foundation-w1-2026-10-12/README.md). W2–W5 closeout and native release matrices remain open; popout-card restoration is retained (F20). |
-| [Pi SDK 1.1.0 and upstream 0.14.1 plan](process/pi-sdk-1.1.0-upstream-0.14.1-plan.md) | **Implemented and verified on Windows** | Approved scope, frozen baselines, adoption decisions and deliberate deferrals. |
-| [Pi 1.1.0 / Craft 0.14.1 implementation](process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) | Complete; performance scope is limited | B0–B5 results, 6,289 passing tests, final package evidence, same-drive smoke, earlier failures and reproduction commands. |
-| [Pi 1.1.0 implementation failure matrix](process/pi-110-implementation-failure-matrix.md) | Written before implementation | Failure conditions and acceptance boundaries for B0–B5. |
-| [Pi 1.1.0 / Craft 0.14.1 handoff](process/pi-sdk-1.1.0-upstream-0.14.1-handoff.md) | Historical checkpoint | B0–B3 completed; B4/B5 continuation details recorded before work resumed. |
-| [Governance first wave ledger](process/governance-first-wave-2026-10-11.md) | Historical G0/G1/G2a acceptance snapshot | Original source adjudication and evidence; current execution results are in the completion ledger. |
-| [Governance second wave ledger](process/governance-second-wave-2026-10-11.md) | Historical G2b/G2c acceptance snapshot | Cookie/Origin/cleanup evidence at that wave; later native acceptance is in the completion ledger. |
-| [System cleanup and optimization plan](process/system-cleanup-optimization-plan-2026-10-10.md) | Batches **A–H implemented**; G continued through governance G3/G5 | The landed cleanup and its corrected findings are recorded in §7–8. Batch G's config/storage and Pi entry boundaries were implemented through G3/G5 in the governance completion; the existing automation vocabulary and deliberately deferred security/rendering work remain explicitly limited. |
-| [Workstream sequencing](process/workstream-sequencing-2026-10-06.md) | Dated sequencing record; step 5 superseded by implemented boundary; step 1 since landed | Original six-step plan and decisions. The Runtime boundary implementation replaces its nine-service / pure-move approach; its step 1 race is fixed (see the system cleanup plan §2.6), its remaining ownership cuts were continued in governance G3–G7, with deliberate deferrals recorded in the completion ledger. |
-| [Project assessment and roadmap](process/project-assessment-and-roadmap-2026-08-31.md) | Historical roadmap; governance continued through G0–G8 | Feature ideas retain their original deferrals; current architecture and code ownership adjudication is in the completion ledger. |
 | [Product development directions](process/product-development-directions-2026-09-19.md) | Discussion draft; partial | Removing the allow-all fallback and the completion-rate metric are outstanding; other directions not started. |
 | [Agentic interception design](process/agentic-interception-design.md) | Design settled; **implementation not started** | First slice is `tool_call` blocking. Records three live defects: agentic automations execute no action, docs advertise a no-op, and 8 of 13 events have no emitter. |
 | [Calendar and Gantt optimization plan](process/calendar-gantt-optimization-plan.md) | Phase 0 done; phases 1–3 open | Roughly 10–16 person-days. `GanttView` is still read-only. |
@@ -143,30 +134,13 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | [Architecture and code governance completion](process/governance-completion-2026-10-11.md) | **Implemented; local acceptance and explicit external limits**. Config/protocol/dependency/Pi/Session/client/distribution owners, real fault fixes, regression and evidence. |
 | [Governance G3–G8 evidence](verification/results/governance-completion-2026-10-11/README.md) | **Pre-audit snapshot**. Original manifests, explicit archive selection and standalone SHA verification; preserved as historical evidence. |
 | [Governance audit closeout evidence](verification/results/governance-closeout-2026-10-11/README.md) | **Locally verified**. Audit fixes, 235 workflow scenes, full regression, three unchanged-budget performance runs and standalone archive/source verification. |
-| [Upstream 0.13.4 absorption](process/upstream-0.13.4-absorption.md) | Implemented; item 6 deliberately not adopted |
-| [Upstream 0.13.5–0.13.6 absorption](process/upstream-0.13.5-0.13.6-absorption.md) | Implemented (batches B0–B5) |
-| [Upstream 0.14.0 absorption](process/upstream-0.14.0-absorption.md) | Implemented; delivery is now in `main` (verified 2026-10-06) |
-| [Upstream 0.14.0 B4–B5](process/upstream-0.14.0-b4-b5.md) | Implemented; delivery is now in `main` (verified 2026-10-06) |
-| [Upstream 0.14.0 bridge cleanup](process/upstream-0.14.0-bridge-cleanup.md) | Applied |
-| [Capability integration](process/capability-integration-2026-10-03.md) | First mechanism batch; superseded by the completion record |
-| [Capability completion](process/capability-completion-2026-10-04.md) | Seven work packages closed; full migration deliberately deferred |
-| [Calendar and Gantt implementation status](process/calendar-gantt-implementation-status.md) | Implemented; §4 records that two of three P3 gate items have since landed |
-| [Performance optimization plan](process/performance-optimization-plan-2026-09-01.md) | Implemented (first round) |
-| [Performance implementation](process/performance-implementation-2026-09-10.md) | Implemented; `main.cjs` remains above the 15 MB target |
-| [Repository cleanup](process/repository-cleanup-2026-09-27.md) | Executed |
 | [Bundled in-app docs build record](process/phaneris-local-docs.md) | T2 pipeline and T3 content (46/46 pages) done |
 | [Artifact files and native image generation](process/artifact-files-native-image-generation-plan.md) | Current implementation baseline |
-| [Durable runtime implementation handoff](process/craftagent-durable-runtime-handoff.md) | Historical handoff; superseded operationally by the accepted ADR |
-| [Native file preview implementation](process/native-file-preview-implementation.md) | Implemented on `codex/native-file-preview` |
 
 ## Process — dated assessments
 
 | Document | Date | Scope |
 | --- | --- | --- |
-| [Project deep analysis](process/Phaneris_Project_Deep_Analysis.md) | 2026-10-04 | Whole-project assessment and roadmap (§21). Not an owned plan; some findings have since been fixed. |
-| [Upstream 0.14.0 assessment](process/upstream-0.14.0-assessment.md) | 2026-10-03 | Pre-approval snapshot; batches B1–B5 have since landed. |
-| [Calendar/Gantt library replacement](process/calendar-gantt-library-replacement-assessment.md) | 2026-09 | Calendar replaced (FullCalendar); Gantt deferred with stated triggers. |
-| [Pi SDK 1.0.0 upgrade assessment](process/pi-sdk-1.0.0-upgrade-assessment.md) | 2026-09-21 | Upgrade snapshot. P1 items are now in code; P2/P3 remain open. |
 | [Pi SDK 1.0.2 upgrade and convergence](process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md) | 2026-10-04 | Three default paths are **not** switched (native MCP, native classifier, virtual-model routing); the first-nav budget (3,119 ms vs 3,000 ms) is still open. |
 | [Pi SDK native capabilities gap analysis](process/pi-sdk-native-capabilities-gap-analysis.md) | 2026-09-20 | Capability gaps for Pi 0.86.0; revalidate against current code. |
 | [System prompt per-turn analysis](process/system-prompt-per-turn-analysis.md) | 2026-09 | S/A recommendations; the opposite choice was later made deliberately. Treat as revisitable, not backlog. |
@@ -175,7 +149,6 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | Scope |
 | --- | --- | --- |
-| [GPUIX / gpui-kit migration assessment](research/native-frontend-migration-gpuix-assessment.md) | Exploratory; no route adopted | ProseMirror/Tiptap is an isolated lazy chunk and the dev-only playground production input has been removed. A language-neutral RPC schema remains deferred to contract governance. See the [system cleanup plan](process/system-cleanup-optimization-plan-2026-10-10.md) §2.3. |
 | [GPUIX profile](research/gpuix-profile.md) | Research annex (2026-09-11) | Source-level evidence for the migration assessment. |
 | [gpui-kit profile](research/gpui-kit-profile.md) | Research annex (2026-09-12) | Source-level evidence. |
 | [GPUI ecosystem and gaps](research/gpui-ecosystem-and-gaps.md) | Research annex (2026-09-12) | Six conditional spikes, none run. |
@@ -195,6 +168,33 @@ These preserve decisions and evidence. Their paths, line numbers, versions, and 
 | [Trajectory vs VanDSH comparison](archive/trajectory-vs-vandsh-comparison.md) | Superseded by the current Overview / Trajectory / Context / Map Run workspace. One item remains open: `pi-agent-server` has no `text_start` marker, so TTFT and decode-time metrics are missing. |
 | [Univer and Workbench integration plan](archive/univer-native-workbench-integration-plan.md) | Univer was retired on 2026-08-30 with no migrator. The Artifact/Workbench foundation it describes is still valid; only the Univer chapters are dead. |
 | [Native Design Layer](archive/native-design-layer-architecture-plan.md) | Deferred archive (96–148 engineering weeks estimated); not an implementation baseline. |
+| [Pi SDK 1.1.0 and upstream 0.14.1 plan](archive/pi-sdk-1.1.0-upstream-0.14.1-plan.md) | 已归档（2026-10-13）：**Implemented and verified on Windows** — Approved scope, frozen baselines, adoption decisions and deliberate deferrals. |
+| [Pi 1.1.0 / Craft 0.14.1 implementation](archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) | 已归档（2026-10-13）：Complete; performance scope is limited — B0–B5 results, 6,289 passing tests, final package evidence, same-drive smoke, earlier failures and reproduction commands. |
+| [Pi 1.1.0 implementation failure matrix](archive/pi-110-implementation-failure-matrix.md) | 已归档（2026-10-13）：Written before implementation — Failure conditions and acceptance boundaries for B0–B5. |
+| [Pi 1.1.0 / Craft 0.14.1 handoff](archive/pi-sdk-1.1.0-upstream-0.14.1-handoff.md) | 已归档（2026-10-13）：Historical checkpoint — B0–B3 completed; B4/B5 continuation details recorded before work resumed. |
+| [Governance first wave ledger](archive/governance-first-wave-2026-10-11.md) | 已归档（2026-10-13）：Historical G0/G1/G2a acceptance snapshot — Original source adjudication and evidence; current execution results are in the completion ledger. |
+| [Governance second wave ledger](archive/governance-second-wave-2026-10-11.md) | 已归档（2026-10-13）：Historical G2b/G2c acceptance snapshot — Cookie/Origin/cleanup evidence at that wave; later native acceptance is in the completion ledger. |
+| [System cleanup and optimization plan](archive/system-cleanup-optimization-plan-2026-10-10.md) | 已归档（2026-10-13）：Batches **A–H implemented**; G continued through governance G3/G5 — The landed cleanup and its corrected findings are recorded in §7–8. Batch G's config/storage and Pi entry boundaries were implemented through G3/G5 in the governance completion; the existing automation vocabulary and deliberately deferred security/rendering work remain explicitly limited. |
+| [Workstream sequencing](archive/workstream-sequencing-2026-10-06.md) | 已归档（2026-10-13）：Dated sequencing record; step 5 superseded by implemented boundary; step 1 since landed — Original six-step plan and decisions. The Runtime boundary implementation replaces its nine-service / pure-move approach; its step 1 race is fixed (see the system cleanup plan §2.6), its remaining ownership cuts were continued in governance G3–G7, with deliberate deferrals recorded in the completion ledger. |
+| [Project assessment and roadmap](archive/project-assessment-and-roadmap-2026-08-31.md) | 已归档（2026-10-13）：Historical roadmap; governance continued through G0–G8 — Feature ideas retain their original deferrals; current architecture and code ownership adjudication is in the completion ledger. |
+| [Upstream 0.13.4 absorption](archive/upstream-0.13.4-absorption.md) | 已归档（2026-10-13）：Implemented; item 6 deliberately not adopted |
+| [Upstream 0.13.5–0.13.6 absorption](archive/upstream-0.13.5-0.13.6-absorption.md) | 已归档（2026-10-13）：Implemented (batches B0–B5) |
+| [Upstream 0.14.0 absorption](archive/upstream-0.14.0-absorption.md) | 已归档（2026-10-13）：Implemented; delivery is now in `main` (verified 2026-10-06) |
+| [Upstream 0.14.0 B4–B5](archive/upstream-0.14.0-b4-b5.md) | 已归档（2026-10-13）：Implemented; delivery is now in `main` (verified 2026-10-06) |
+| [Upstream 0.14.0 bridge cleanup](archive/upstream-0.14.0-bridge-cleanup.md) | 已归档（2026-10-13）：Applied |
+| [Capability integration](archive/capability-integration-2026-10-03.md) | 已归档（2026-10-13）：First mechanism batch; superseded by the completion record |
+| [Capability completion](archive/capability-completion-2026-10-04.md) | 已归档（2026-10-13）：Seven work packages closed; full migration deliberately deferred |
+| [Calendar and Gantt implementation status](archive/calendar-gantt-implementation-status.md) | 已归档（2026-10-13）：Implemented; §4 records that two of three P3 gate items have since landed |
+| [Performance optimization plan](archive/performance-optimization-plan-2026-09-01.md) | 已归档（2026-10-13）：Implemented (first round) |
+| [Performance implementation](archive/performance-implementation-2026-09-10.md) | 已归档（2026-10-13）：Implemented; `main.cjs` remains above the 15 MB target |
+| [Repository cleanup](archive/repository-cleanup-2026-09-27.md) | 已归档（2026-10-13）：Executed |
+| [Durable runtime implementation handoff](archive/craftagent-durable-runtime-handoff.md) | 已归档（2026-10-13）：Historical handoff; superseded operationally by the accepted ADR |
+| [Native file preview implementation](archive/native-file-preview-implementation.md) | 已归档（2026-10-13）：Implemented on `codex/native-file-preview` |
+| [Project deep analysis](archive/Phaneris_Project_Deep_Analysis.md) | 已归档（2026-10-13）：2026-10-04 — Whole-project assessment and roadmap (§21). Not an owned plan; some findings have since been fixed. |
+| [Upstream 0.14.0 assessment](archive/upstream-0.14.0-assessment.md) | 已归档（2026-10-13）：2026-10-03 — Pre-approval snapshot; batches B1–B5 have since landed. |
+| [Calendar/Gantt library replacement](archive/calendar-gantt-library-replacement-assessment.md) | 已归档（2026-10-13）：2026-09 — Calendar replaced (FullCalendar); Gantt deferred with stated triggers. |
+| [Pi SDK 1.0.0 upgrade assessment](archive/pi-sdk-1.0.0-upgrade-assessment.md) | 已归档（2026-10-13）：2026-09-21 — Upgrade snapshot. P1 items are now in code; P2/P3 remain open. |
+| [GPUIX / gpui-kit migration assessment](research/native-frontend-migration-gpuix-assessment.md) | 已归档（2026-10-13）：Exploratory; no route adopted — ProseMirror/Tiptap is an isolated lazy chunk and the dev-only playground production input has been removed. A language-neutral RPC schema remains deferred to contract governance. See the [system cleanup plan](archive/system-cleanup-optimization-plan-2026-10-10.md) §2.3. |
 
 ## Release history
 
@@ -206,7 +206,7 @@ These preserve decisions and evidence. Their paths, line numbers, versions, and 
 
 1. Current guides describe observable behavior, not the development story that produced it.
 2. Architecture documents must declare one of: `proposed`, `accepted`, `deferred`, `superseded`, or `historical` — on an explicit `Status:` line. `bun run check:docs` enforces this.
-3. A completed plan may remain as a decision record, but its status must point to the current source of truth. **Documents are filed by kind, not by how finished the work is** — a plan that lands changes its status, not its directory.
+3. A completed plan is a decision record: it moves to `archive/` with an archival note and a status that points to the current source of truth. **Documents are filed by kind and lifecycle** — `process/` keeps open plans and living references; `archive/` keeps landed one-off records, dated assessments and retired material. Media inside archived evidence is pruned rather than kept as galleries (see the [verification index](verification/README.md#档案裁剪)).
 4. User-visible changes update `release-notes/next.md` in the same change.
 5. README screenshots live in `docs/assets/readme/`; use descriptive filenames and remove superseded assets rather than accumulating galleries.
 

@@ -54,7 +54,7 @@ if (process.argv.includes('--check')) {
   // not been made, so the old 25 MB ceiling let main.cjs reach 20.27 MiB
   // (21,253,281 bytes) unnoticed. This ceiling sits just above today's size, so
   // any real growth fails and lowering it is how the 15 MB goal gets approached.
-  // See docs/process/performance-implementation-2026-09-10.md.
+  // See docs/archive/performance-implementation-2026-09-10.md.
   const maxMainRaw = Number(process.env.PHANERIS_MAX_MAIN_BYTES ?? 21_500_000);
   const failures: string[] = [];
   for (const limit of [maxRendererRaw, maxMainRaw]) {

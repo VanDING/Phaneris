@@ -4,7 +4,7 @@
 
 源码基线：`61970997`（工作树另有 2 个未提交的 `docs/verification/results/packaged-client-*.json`）。
 
-范围依据：[系统清理与优化计划](../process/system-cleanup-optimization-plan-2026-10-10.md) 批次 A、B。
+范围依据：[系统清理与优化计划](../archive/system-cleanup-optimization-plan-2026-10-10.md) 批次 A、B。
 
 关联：[Durable Runtime 边界故障矩阵](./durable-runtime-boundary-failure-matrix.md)（批次 B 复用其门禁机制与 mutation 证据格式）。
 

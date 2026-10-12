@@ -28,15 +28,7 @@
 `typecheck:all`、`lint`、四项 i18n 门禁、身份与版本检查、Python/Electron 运行时版本检查、完整 Electron 构建和 macOS x64 目录打包通过。
 Lint 与身份检查仍报告仓库已有警告。完整结果索引：[checks.json](./results/ai-settings-refinement/checks.json)。
 
-基础文字 token（正文、辅助文字、警告文字）对页面及卡片底色的抽查，明暗模式最低对比度为 **5.55:1**；记录在 `settings.json`。截图覆盖英文、中文 480px 窄窗口、菜单、弹窗及完整应用。
-
-![真实打包应用中的上下文管理](./results/ai-settings-refinement/packaged-context-card.png)
-
-- [完整应用 AI 页面](./results/ai-settings-refinement/packaged-ai-context.png)
-- [真实 Guarded 配置入口](./results/ai-settings-refinement/packaged-guarded-setup.png)
-- [Default 浅色](./results/ai-settings-refinement/settings-light-en-1040-top.png) / [深色](./results/ai-settings-refinement/settings-dark-en-1040-top.png)
-- [中文窄窗口与上下文菜单](./results/ai-settings-refinement/settings-light-zh-Hans-480-context-menu.png)
-- [连接菜单](./results/ai-settings-refinement/settings-connection-menu.png) / [弹窗](./results/ai-settings-refinement/settings-rename-dialog.png)
+基础文字 token（正文、辅助文字、警告文字）对页面及卡片底色的抽查，明暗模式最低对比度为 **5.55:1**；记录在 `settings.json`。当时截图覆盖英文、中文 480px 窄窗口、菜单、弹窗及完整应用；这些截图已于 2026-10-13 按仓库瘦身移除（见[档案裁剪](./README.md#档案裁剪)），数值与清单仍保留在 `checks.json` 与 `settings.json`。
 
 ## 复现
 

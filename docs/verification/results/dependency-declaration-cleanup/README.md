@@ -4,7 +4,7 @@ Baseline commit: `61970997` (with batches A and B uncommitted on top).
 Date: 2026-10-10.
 
 Requirements: [dependency and declaration cleanup failure matrix](../../dependency-declaration-cleanup-failure-matrix.md).
-Plan: [system cleanup and optimization plan](../../../process/system-cleanup-optimization-plan-2026-10-10.md) batch C.
+Plan: [system cleanup and optimization plan](../../../archive/system-cleanup-optimization-plan-2026-10-10.md) batch C.
 
 ## What changed
 

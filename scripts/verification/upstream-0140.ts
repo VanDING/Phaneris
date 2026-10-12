@@ -1,7 +1,7 @@
 /**
  * Repeatable host integration verification for the first v0.14.0 absorption.
  * Failure scenarios were recorded before this script and before product edits in
- * docs/process/upstream-0.14.0-absorption.md. Shell examples are never executed.
+ * docs/archive/upstream-0.14.0-absorption.md. Shell examples are never executed.
  * Runs real permission/host/storage/source code with isolated transport callbacks
  * and a loopback API. This is not a packaged GUI or live-model E2E.
  * Usage: bun scripts/verification/upstream-0140.ts [--baseline]

@@ -1,6 +1,6 @@
 # Release readiness checklist
 
-Status: proposed release gate; external ownership/signing entries require maintainer decisions and credentials.
+Status: proposed release gate; artifact facts reviewed 2026-10-13. External ownership/signing entries require maintainer decisions and credentials.
 
 This checklist tracks the trust chain that must be complete before binaries are distributed outside the development team. Code-verifiable items should run in CI; the remaining items are manual release-owner decisions.
 
@@ -28,8 +28,8 @@ Code identity and publisher metadata are independent. All optional service URLs 
 
 ## Artifact verification
 
-- [x] electron-builder file filters verified with `--dir`: one Pi bundle copy, no node-pty debug symbols; unpacked dropped from 840 MB to 607 MB and `resources/app` from 426 MB to 206 MB.
-- [ ] `bun run electron:dist:<platform>` completes on a clean machine and the NSIS/DMG/AppImage installer size is recorded. (The audit sandbox could run `--dir` only; NSIS archive creation was blocked by child-process policy.)
+- [x] electron-builder file filters verified with `--dir` and by full local packages: one Pi bundle copy, no node-pty debug symbols; unpacked 581 MB, `resources/app` 206 MB.
+- [ ] `bun run electron:dist:<platform>` completes on a **clean** machine and the NSIS/DMG/AppImage installer size is recorded. Local packaging already completes and the sizes are recorded — macOS x64 DMG 219,963,694 B / ZIP 213,469,327 B (2026-10-13, unsigned) and Windows x64 NSIS 193,813,199 B (2026-10-12, unsigned) — but both ran on a development machine, not a clean one.
 - [ ] `bun run release:checksums` writes `SHA256SUMS` and `release-manifest.json`.
 - [ ] Installer signature verifies with the platform tool (`signtool verify`, `codesign --verify`, `gpg --verify`).
 - [ ] Checksum manifest is published next to the installer.

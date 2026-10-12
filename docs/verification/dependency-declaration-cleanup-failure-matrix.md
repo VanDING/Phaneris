@@ -4,7 +4,7 @@
 
 源码基线：`61970997`（工作树另有批次 A、B 的改动未提交）。
 
-范围依据：[系统清理与优化计划](../process/system-cleanup-optimization-plan-2026-10-10.md) 批次 C；清理清单来自 [dependency-graph-2026-10-06.md](../dependencies/dependency-graph-2026-10-06.md) §7/§8。
+范围依据：[系统清理与优化计划](../archive/system-cleanup-optimization-plan-2026-10-10.md) 批次 C；清理清单来自 [dependency-graph-2026-10-06.md](../dependencies/dependency-graph-2026-10-06.md) §7/§8。
 
 ## 1. 实施前核实的事实
 

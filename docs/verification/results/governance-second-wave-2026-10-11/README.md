@@ -2,7 +2,7 @@
 
 日期：2026-10-11。状态：**verified（本地）**；本目录为独立冻结快照，正常复跑不回写。HEAD 为 `8e5bf13b`，第一、第二轮实现仍在工作树，未提交或推送。
 
-范围和部署/回退：[实施台账](../../../process/governance-second-wave-2026-10-11.md)；[失败矩阵](../../governance-auth-lifecycle-failure-matrix.md)；[ADR](../../../architecture/authentication-process-lifecycle.md)。第一轮与原始扫描的归档不回写。
+范围和部署/回退：[实施台账](../../../archive/governance-second-wave-2026-10-11.md)；[失败矩阵](../../governance-auth-lifecycle-failure-matrix.md)；[ADR](../../../architecture/authentication-process-lifecycle.md)。第一轮与原始扫描的归档不回写。
 
 复跑：`bun run test:auth-lifecycle`、`bun run test:critical`、`bun run validate:full`、`bun run build:smoke`。新运行默认位于 `.cache/verification/`，不会覆盖本目录。
 
@@ -12,7 +12,7 @@
 | --- | --- |
 | 整体校验 | [完整日志](logs/second-validate-full-final.log)：typecheck/lint/i18n/docs/identity/version/runtime 均通过；workspace 6285 pass、14 既有 skip、0 fail；另执行 CI 子集 87 次 pass、Python 文档工具 24 项 |
 | 关键路径 | [聚合结果](critical/critical.json)：7 workflow + 6 package group = 13 项；243 个既有 Bun 回归，0 fail；认证 14 和 lifecycle 12 场景已接入 registry，必需产物缺失会失败 |
-| cookie 认证 | [当前脚本独立复跑](auth/webui-auth-lifecycle.json)：14 场景；真实 kill/restart、共享认证进程、隔离配置目录、旧 cookie/无 jti、等价签名重放、Origin、真实代理限流、分块 body、写锁与损坏 DB、CLI、已握手 WS；[撤销库](auth/session-revocations.sqlite)只含哈希与过期时间 |
+| cookie 认证 | [当前脚本独立复跑](auth/webui-auth-lifecycle.json)：14 场景；真实 kill/restart、共享认证进程、隔离配置目录、旧 cookie/无 jti、等价签名重放、Origin、真实代理限流、分块 body、写锁与损坏 DB、CLI、已握手 WS；撤销库（`auth/session-revocations.sqlite`，只含哈希与过期时间）已于 2026-10-13 按仓库瘦身移除，见[档案裁剪](../../README.md#档案裁剪) |
 | 生命周期 | [真实进程结果](critical/process-lifecycle/process-lifecycle.json)：12 场景；server fatal/挂起清理/再抛异常/正常 signal、共享 Electron lifecycle ports、Pi fatal、Runtime admission/steer 与 recovery、bootstrap 重复 stop 所有权 |
 | 独立 Pi | [结果](runtime-pi/independent-pi.json)：6 场景，真实 Bun 子进程 + SQLite + loopback provider，未使用 SessionManager 或 mock Pi 后端 |
 | 构建 | [结果](build-smoke/build-smoke.json)：5 类生产 bundle + 真实 server assembly/import 共 6 项；不重新下载原生 runtime |

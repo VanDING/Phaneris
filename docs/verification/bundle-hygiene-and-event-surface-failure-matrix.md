@@ -4,7 +4,7 @@
 
 源码基线：`61970997`（工作树另有批次 A–C 的改动未提交）。
 
-范围依据：[系统清理与优化计划](../process/system-cleanup-optimization-plan-2026-10-10.md) 批次 D、E。
+范围依据：[系统清理与优化计划](../archive/system-cleanup-optimization-plan-2026-10-10.md) 批次 D、E。
 
 ## 1. 实施前核实的事实
 

@@ -76,9 +76,9 @@ Native image generation follows the same path: one tool call produces a validate
 
 Markdown drafts support visual editing when serialization preserves the source, with a source editor for richer syntax. Image generation supports OpenAI's Images API and Pi's OpenRouter image models. Model-specific input limits resize request copies while preserving original files; image-history recovery creates a linked text-only session explicitly.
 
-Connected MCP tools retain output schemas and structured results. `tool_search` discovers deferred tools, and sandboxed `codemode` calls each tool through the host permission and durable execution boundary. Its model access is disabled. See the [capability adoption guide](docs/architecture/capability-adoption-2026-10.md) for configuration, accounting, and migration decisions, and the [completion record](docs/process/capability-completion-2026-10-04.md) for measured benefits and verification scope.
+Connected MCP tools retain output schemas and structured results. `tool_search` discovers deferred tools, and sandboxed `codemode` calls each tool through the host permission and durable execution boundary. Its model access is disabled. See the [capability adoption guide](docs/architecture/capability-adoption-2026-10.md) for configuration, accounting, and migration decisions, and the [completion record](docs/archive/capability-completion-2026-10-04.md) for measured benefits and verification scope.
 
-Pi SDK 1.1.0 is pinned across the runtime. The [upgrade implementation record](docs/process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) records verification, selected Craft 0.14.1 changes, and the remaining requirements for native MCP, classifiers, and model routing.
+Pi SDK 1.1.0 is pinned across the runtime. The [upgrade implementation record](docs/archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md) records verification, selected Craft 0.14.1 changes, and the remaining requirements for native MCP, classifiers, and model routing.
 
 ## Personal by design
 

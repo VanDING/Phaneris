@@ -39,12 +39,7 @@ bun run scripts/verification/ai-settings-structure-workflow.ts
 
 - [逐项结果 JSON](./results/ai-settings-structure/results.json)
 - [源文件与截图 SHA-256 清单](./results/ai-settings-structure/manifest.json)
-- [中文窄窗口：页面首屏](./results/ai-settings-structure/light-zh-Hans-480-top.png)
-- [中文窄窗口：图像生成](./results/ai-settings-structure/light-zh-Hans-480-images.png)
-- [中文窄窗口：决策辅助](./results/ai-settings-structure/light-zh-Hans-480-decisions.png)
-- [中文窄窗口：缓存与运行优化](./results/ai-settings-structure/light-zh-Hans-480-performance.png)
-- [深色：工作区模型设置](./results/ai-settings-structure/dark-en-1040-workspace.png)
 
-另有对应的浅色英文、深色英文和中文工作区截图，均保存在同一目录。图片展示当前内置主题；新 Default 候选仍在 `docs/design/default-redesign/default-preview.json`，本轮未应用，等待用户测试确认。
+对应的浅色英文、深色英文与中文工作区截图（中文窄窗口首屏／图像生成／决策辅助／缓存与运行优化、深色工作区模型设置）已于 2026-10-13 按仓库瘦身移除，见[档案裁剪](./README.md#档案裁剪)；`manifest.json` 保留这些文件的路径与 SHA-256。当时图片展示当前内置主题；新 Default 候选仍在 `docs/design/default-redesign/default-preview.json`，本轮未应用，等待用户测试确认。
 
 本轮完成源码实现及验收，未重新打包客户端。实际图像服务的密钥权限、额度与生成结果不属于内存 E2E 的验证范围；原有图像调用链和显式账号不回退规则保持。

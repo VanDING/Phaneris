@@ -51,18 +51,18 @@
 
 ## 截图入口
 
-共28张PNG，具体文件及摘要见SHA256SUMS。关键对照：
+共28张PNG，具体文件及摘要见[SHA256SUMS](SHA256SUMS)。这些截图已于 2026-10-13 裁剪，SHA256SUMS 仍记录其路径与 SHA-256（见[档案裁剪](../../README.md#档案裁剪)）。关键对照：
 
 | 用途 | 截图 |
 | --- | --- |
-| 原生与共享控件焦点 | [native](keyboard-native.png) / [Button](keyboard-role-button.png) |
-| Electron与共享UI | [Electron light](electron-default-light.png) / [UI light](ui-default-light.png) |
-| 内置Ink辅助文字 | [Ink light](electron-ink-light.png) / [Ink dark](electron-ink-dark.png) |
-| 实际中文AI设置 | [light](product-ai-light.png) / [dark](product-ai-dark.png) |
-| 实际消息组件 | [light](product-chat-light.png) / [dark](product-chat-dark.png) |
-| 公共控件与菜单 | [light](product-controls-light.png) / [dark](product-controls-dark.png) / [打开期间切主题](open-menu-theme-change.png) |
-| WebUI窄屏与媒体 | [390px touch](webui-touch-390.png) / [reduce + forced colors](reduce-forced.png) |
-| 代码切换 | [standalone dark](viewer-code-dark-toggle.png) / [Viewer App light](viewer-app-code-light.png) / [Viewer App dark](viewer-app-code-dark.png) |
+| 原生与共享控件焦点 | 已裁剪（2026-10-13） |
+| Electron与共享UI | 已裁剪（2026-10-13） |
+| 内置Ink辅助文字 | 已裁剪（2026-10-13） |
+| 实际中文AI设置 | 已裁剪（2026-10-13） |
+| 实际消息组件 | 已裁剪（2026-10-13） |
+| 公共控件与菜单 | 已裁剪（2026-10-13） |
+| WebUI窄屏与媒体 | 已裁剪（2026-10-13） |
+| 代码切换 | 已裁剪（2026-10-13） |
 
 ## 复现
 
@@ -79,7 +79,7 @@ bunx eslint --config eslint.config.mjs docs/verification/results/frontend-theme-
 
 默认新结果写入`.cache/frontend-theme-visual-audit-rerun/`。显式`--output=<新目录>`可指定另一个归档位置；不要把未来运行写回本次冻结目录。复现时默认端口0，不占用已有dev server。若当前机器只有特定Playwright channel，可设置`PHANERIS_TEST_BROWSER_CHANNEL`；比较时须记录实际浏览器和字体环境。
 
-校验本次归档：
+本次归档的截图已于 2026-10-13 裁剪；[SHA256SUMS](SHA256SUMS) 仍记录当时全部产物的路径与 SHA-256，已裁剪条目与本轮修订的 README 会报告不匹配，未改动的文件照常校验：
 
 ```sh
 cd docs/verification/results/frontend-theme-visual-audit-2026-10-12

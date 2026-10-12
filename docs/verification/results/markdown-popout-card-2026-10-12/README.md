@@ -13,7 +13,7 @@
 | 阶段 | 场景与结果 | 证据 |
 | --- | --- | --- |
 | 修复前 | 18场景：2 pass、16 fail；16项均为缺少独立卡片。无pageerror/console error | [JSON](before/markdown-popout.json) / [失败manifest](before/manifest.json) / [日志](markdown-popout-before.log) |
-| 修复后 | 18场景全部通过；无pageerror/console error | [JSON](after/markdown-popout.json) / [manifest](after/manifest.json) / [日志](markdown-popout-after.log) / [trace](after/trace.zip) |
+| 修复后 | 18场景全部通过；无pageerror/console error | [JSON](after/markdown-popout.json) / [manifest](after/manifest.json) / [日志](markdown-popout-after.log) · trace 已裁剪（2026-10-13） |
 | 类型与lint | Electron/UI/scripts类型检查通过；修改文件的专用/通用lint为0 errors、0 warnings | 本目录`markdown-popout-*-typecheck.log`与`markdown-popout-*-lint.json` |
 | 验证接入 | `test:markdown-popout`独立入口；critical registry要求18个非零场景及JSON、截图、trace | [工作流](../../../../scripts/verification/markdown-popout-workflow.ts) / [fixture](../../../../scripts/verification/fixtures/markdown-popout.tsx) / [registry](../../../../scripts/critical-scenarios.ts) |
 
@@ -25,11 +25,11 @@
 
 | 对照 | 截图 |
 | --- | --- |
-| 单个消息 | [修复前](before/message-light.png) / [修复后](after/message-light.png) / [dark](after/message-dark.png) |
-| Markdown源码 | [修复前](before/source-light.png) / [修复后](after/source-light.png) / [dark](after/source-dark.png) |
-| 回合与行为 | [turn](after/turn-light.png) / [activity](after/activity-light.png) |
-| 窄屏 | [message](after/message-390.png) / [source](after/source-390.png) |
-| 长文/长代码尾部 | [document](after/long-end.png) / [source](after/long-source-end.png) |
+| 单个消息 | 已裁剪（2026-10-13） |
+| Markdown源码 | 已裁剪（2026-10-13） |
+| 回合与行为 | 已裁剪（2026-10-13） |
+| 窄屏 | 已裁剪（2026-10-13） |
+| 长文/长代码尾部 | 已裁剪（2026-10-13） |
 
 长内容保留单层外部paper scrolling；点击链接/文件仍调用原回调；Escape/close关闭，焦点恢复；替换popout不残留前文。源码入口在真实ChatDisplay传递`renderMode:'source'`，已源码审查及类型检查；浏览器范围是fixture→实际状态→生产overlay，未冒充完整ChatDisplay/真实会话或正式包验收。
 
@@ -40,9 +40,10 @@
 ```sh
 bun run test:markdown-popout
 bun run scripts/test-critical.ts --preflight
-bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/markdown-popout-card-2026-10-12/after
 ```
+
+该归档已于 2026-10-13 裁剪媒体，`--verify` 不再适用；重跑对应工作流可再生成完整运行（见[档案裁剪](../../README.md#档案裁剪)）。
 
 工作流默认生成唯一`.cache/verification/markdown-popout-*/`，错误运行同样保留manifest、JSON、截图和trace。`--output-dir=<尚不存在的目录>`可指定新位置，拒绝覆盖历史目录。完整`test:critical`本轮未重跑；该registry已接入现有CI的关键工作流链。
 
-`before/manifest.json`的exitCode=1是预期回归失败；`after/manifest.json`的exitCode=0。归档保留原manifest与产物SHA；本目录另外提供[SHA256SUMS](SHA256SUMS)，可在此目录执行`shasum -a 256 -c SHA256SUMS`。真实正式包、原生材质、三平台和自定义主题矩阵继续按整体治理的H场景闭环。
+`before/manifest.json`的exitCode=1是预期回归失败；`after/manifest.json`的exitCode=0。归档保留原manifest与JSON结果，截图、录屏和trace已于2026-10-13裁剪；[SHA256SUMS](SHA256SUMS)仍记录当时全部产物的路径与 SHA-256（见[档案裁剪](../../README.md#档案裁剪)），已裁剪条目与本轮修订的 README 在`shasum -a 256 -c SHA256SUMS`下会报告不匹配。真实正式包、原生材质、三平台和自定义主题矩阵继续按整体治理的H场景闭环。

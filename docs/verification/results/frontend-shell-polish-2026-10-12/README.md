@@ -2,7 +2,7 @@
 
 状态：本机验收通过。源码基于 `971180c62` / `codex/theme-governance-w1`，包含未提交的本轮修改，精确文件哈希见各次 manifest。W1–W5 的历史验收保持冻结。
 
-[前后对照页](index.html)默认对比收起栏的 6px 接缝移除前后，也可查看实施前后展开状态、四个主题、触摸和放大文字。先定义的[失败矩阵](../../frontend-shell-polish-failure-matrix-2026-10-12.md)覆盖几何、操作和启动故障。
+前后对照页（原 `index.html`）默认对比收起栏的 6px 接缝移除前后，也可查看实施前后展开状态、四个主题、触摸和放大文字。该画廊及其截图已于 2026-10-13 随归档裁剪删除，本节表格与 [review.json](review.json) 仍保留结论与参数（见[档案裁剪](../../README.md#档案裁剪)）。先定义的[失败矩阵](../../frontend-shell-polish-failure-matrix-2026-10-12.md)覆盖几何、操作和启动故障。
 
 ## 实际变化
 
@@ -24,15 +24,15 @@
 
 | 工作流 | 通过 | 证据 |
 | --- | --- | --- |
-| 真实 macOS Electron | 44/44 | [实测 JSON](native/shell-visual.json) · [manifest](native/manifest.json) · [trace](native/trace.zip) |
-| 启动故障与延迟 | 12/12 | [实测 JSON](startup/theme-startup.json) · [manifest](startup/manifest.json) · [trace](startup/trace.zip) |
-| 跨入口角色回归 | 76/76 | [实测 JSON](roles/theme-roles.json) · [manifest](roles/manifest.json) · [trace](roles/trace.zip) |
+| 真实 macOS Electron | 44/44 | [实测 JSON](native/shell-visual.json) · [manifest](native/manifest.json) · trace 与截图已裁剪（2026-10-13） |
+| 启动故障与延迟 | 12/12 | [实测 JSON](startup/theme-startup.json) · [manifest](startup/manifest.json) · trace 与截图已裁剪（2026-10-13） |
+| 跨入口角色回归 | 76/76 | [实测 JSON](roles/theme-roles.json) · [manifest](roles/manifest.json) · trace 与截图已裁剪（2026-10-13） |
 
 Electron 使用真实生产 main/preload/renderer、临时配置和两条本地会话。验证首行、可见灰带居中、正方形、滚动、展开/收起拖拽、键盘焦点与宽度限值、已保存宽度、四主题、实际 Chromium 200% zoom 和较大根字号。临时配置清理后，不触及用户会话或用户主题目录。
 
 原生启动故意让 15px Default 缓存与持久的 13px 主题不一致。[逐帧证据](native/startup-frames.json)记录 259 帧，89 帧开始可见，可见帧全部为持久主题的 13px。另用生产 ThemeProvider/compiler/CSS 配合延迟和失败 API 检查 workspace 主题、事件使旧请求失效、偏好失败、主题失败和无 API 预览；此部分不是完整 App 的原生 API 故障注入。
 
-角色回归覆盖 Electron/WebUI/viewer 的生产控件、CSS、字号/密度、窄屏、浮层与键盘操作。该次回归之后，shell 接缝与 sash、启动事件就绪标志、文案及证据脚本继续调整；最终原生和启动工作流分别验证这些变化。共享角色/CSS 行为保持该次回归版本。三个子目录保留原 manifest 和全部登记产物，复制后校验仍通过。
+角色回归覆盖 Electron/WebUI/viewer 的生产控件、CSS、字号/密度、窄屏、浮层与键盘操作。该次回归之后，shell 接缝与 sash、启动事件就绪标志、文案及证据脚本继续调整；最终原生和启动工作流分别验证这些变化。共享角色/CSS 行为保持该次回归版本。三个子目录保留原 manifest 与 JSON 结果；trace、截图及录屏已于 2026-10-13 裁剪，顶层 SHA256SUMS 仍记录其路径与 SHA-256，可核对“当时存在过什么”（见[档案裁剪](../../README.md#档案裁剪)）。
 
 Windows 截图是在 macOS renderer 中模拟平台标识，证明圆角规则选择正确；Windows 原生窗口合成器尚未验证。触摸由 Chromium 模拟。签名安装器、原生 Linux 和实物触摸设备未验收。
 
@@ -52,14 +52,11 @@ bun run test:theme-startup
 bun run test:theme-roles
 ```
 
-每次写入唯一 `.cache/verification/`；如需指定输出，使用尚不存在的 `--output-dir=<path>`。校验本档案：
+每次写入唯一 `.cache/verification/`；如需指定输出，使用尚不存在的 `--output-dir=<path>`。该归档已于 2026-10-13 裁剪媒体，`--verify` 不再适用；重跑对应工作流可再生成完整运行（见[档案裁剪](../../README.md#档案裁剪)）。[SHA256SUMS](SHA256SUMS) 仍记录当时全部产物的路径与 SHA-256：已裁剪条目和本轮修订过的 README 会报告不匹配，未改动的文件照常校验。
 
 ```sh
-bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/frontend-shell-polish-2026-10-12/native
-bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/frontend-shell-polish-2026-10-12/startup
-bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/frontend-shell-polish-2026-10-12/roles
 cd docs/verification/results/frontend-shell-polish-2026-10-12
 shasum -a 256 -c SHA256SUMS
 ```
 
-`before/` 是视觉对照素材：实施前展开图只记录观察，当时基线脚本在后续切换按钮的语言匹配上停止；收起接缝图来自移除间隙前的本轮迭代。二者不计入 132 项验收。[汇总数据](review.json)和[校验表](SHA256SUMS)提供出处与参数。
+`before/` 是视觉对照素材：实施前展开图只记录观察，当时基线脚本在后续切换按钮的语言匹配上停止；收起接缝图来自移除间隙前的本轮迭代；这些 PNG 已于 2026-10-13 裁剪，清单与 SHA-256 见 SHA256SUMS。二者不计入 132 项验收。[汇总数据](review.json)和[校验表](SHA256SUMS)提供出处与参数。

@@ -4,7 +4,7 @@
 
 内置文件：[`default.json`](../../../apps/electron/resources/themes/default.json)。[`default-preview.json`](./default-preview.json) 保留为独立设计参考，在用户主题列表里显示 **Default Preview**；正式内置主题名称为 **Default**。
 
-预览：[对照与明暗效果](./preview.html)、[浅色对话](../../verification/results/default-purple-sidebar/chat-light.png)、[深色对话](../../verification/results/default-purple-sidebar/chat-dark.png)、[浅色设置页](../../verification/results/default-purple-sidebar/ai-light.png)、[深色设置页](../../verification/results/default-purple-sidebar/ai-dark.png)。使用真实组件与示例数据；对照页保留修改前的 Default 截图。
+预览：原对照页与浅色／深色对话、浅色／深色设置页截图已于 2026-10-13 按仓库瘦身移除（见[档案裁剪](../../verification/README.md#档案裁剪)）。当时使用真实组件与示例数据，对照页保留修改前的 Default 截图；可对照的设计数据仍保留在 [`default-preview.json`](./default-preview.json)。
 
 ## 设计方向
 

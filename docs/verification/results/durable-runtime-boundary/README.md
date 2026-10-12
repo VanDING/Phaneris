@@ -20,23 +20,25 @@ bun run scripts/verification/session-decisions-workflow.ts
 
 ## 已归档证据
 
+本归档的运行数据库与浏览器截图已于 2026-10-13 裁剪，保留的 JSON、日志及下列结论不变；需要可校验的完整运行请从「可重复入口」重跑再生成（见[档案裁剪](../../README.md#档案裁剪)）。
+
 | 产物 | 可核验内容 |
 | --- | --- |
-| [baseline-reproduced.json](./baseline-reproduced.json)、[DB](./baseline-reproduced.db) | 在基线源码实际复现 F06/F07/F09/F13；四项 conforms 均为 false，不是新代码通过报告 |
+| [baseline-reproduced.json](./baseline-reproduced.json)（原 DB 已裁剪，2026-10-13） | 在基线源码实际复现 F06/F07/F09/F13；四项 conforms 均为 false，不是新代码通过报告 |
 | [dependencies-before.json](./dependencies-before.json)、[dependencies-after.json](./dependencies-after.json) | 用同一解析门禁比较旧、新生产依赖图，包括 type、dynamic、barrel、JS、package exports 和闭包 |
 | [gate-mutations.json](./gate-mutations.json) | 故意绕过边界的独立图谱被拒绝；非绿色生产扫描冒充门禁有效性 |
-| [workflow.json](./workflow.json)、[DB](./workflow.db) | 15 组真实 Kernel/Host/SQLite 行为；提交失败、输入歧义、逆序工具、reentry、shutdown 和恢复 |
-| [independent-pi.json](./independent-pi.json)、[DB](./independent-pi.db) | 无 SessionManager 的真实 Pi 子进程；两轮模型输入、一次真实 Read、T1/T2、usage、首轮工具一致及 canonical context |
-| [crash.json](./crash.json) 及 `crash-*.db` | 8 组真实执行/恢复进程；可观测屏障后强杀、effect marker、两次恢复轨迹和各自 DB 哈希；T1 失败零调用，未知状态不重放 |
+| [workflow.json](./workflow.json)（原 DB 已裁剪，2026-10-13） | 15 组真实 Kernel/Host/SQLite 行为；提交失败、输入歧义、逆序工具、reentry、shutdown 和恢复 |
+| [independent-pi.json](./independent-pi.json)（原 DB 已裁剪，2026-10-13） | 无 SessionManager 的真实 Pi 子进程；两轮模型输入、一次真实 Read、T1/T2、usage、首轮工具一致及 canonical context |
+| [crash.json](./crash.json)（`crash-*.db` 已裁剪，2026-10-13） | 8 组真实执行/恢复进程；可观测屏障后强杀、effect marker、两次恢复轨迹和各自 DB 哈希；T1 失败零调用，未知状态不重放 |
 | [product-workflows.json](./product-workflows.json) | 20 项 Session/Task/Decision/权限/utility 产品工作流 |
 | [upstream-0140.json](./upstream-0140.json) | 61 项权限/source/产品兼容验证；夹具通过 Runtime Host 安装及复用 driver |
 | [decisions-0141.json](./decisions-0141.json) | 8 项决策/取消/预算/远端认证回归 |
 | [session-decisions.json](./session-decisions.json)、[事实证据](./session-decisions-evidence.json) | 20 项真实 RPC/Run 面板验收；重载、范围拒绝、应用通知、分页和迟到结果 |
-| [英文宽屏](./session-decisions-en.png)、[中文窄屏](./session-decisions-zh.png) | 浏览器工作流实际截图；宽度与 overflow 断言在结果中 |
+| [session-decisions.json](./session-decisions.json) · 截图已裁剪（2026-10-13） | 浏览器工作流实测；宽度与 overflow 断言在结果 JSON 中 |
 | [images.json](./images.json)、[decision-governance.json](./decision-governance.json) | 5 项图像与 3 项决策/自动化治理验证 |
 | [validation.json](./validation.json)、[原始日志](./logs/) | 19 个入口/基线结果、日志哈希、源码身份及 11 个数据库的 schema v4 / integrity_check / SHA-256 |
 
-独立验收报告包含 Bun、Pi SDK、平台、实际命令、隔离目录、HEAD/dirty 状态、源码文件哈希清单及 `sourceFingerprint`；三个独立报告的指纹已核对与交付源码一致。基线导出源码逐文件核对了原 Git blob，另有自己的哈希清单。DB 已通过 SQLite backup 导出，不能只把正在写入的主文件复制后当完整快照。历史 `baseline.json` 是 B0 首次探针，完整基线结论以 `baseline-reproduced.json` 为准。
+独立验收报告包含 Bun、Pi SDK、平台、实际命令、隔离目录、HEAD/dirty 状态、源码文件哈希清单及 `sourceFingerprint`；三个独立报告的指纹已核对与交付源码一致。基线导出源码逐文件核对了原 Git blob，另有自己的哈希清单。DB 曾通过 SQLite backup 导出，不能只把正在写入的主文件复制后当完整快照；DB 文件本身已于 2026-10-13 裁剪，其 schema v4、integrity_check 与 SHA-256 仍记录在 [validation.json](./validation.json)。历史 `baseline.json` 是 B0 首次探针，完整基线结论以 `baseline-reproduced.json` 为准。
 
 ## 仓库门禁结果
 

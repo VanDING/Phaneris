@@ -2,7 +2,7 @@
 
 状态：本机验收通过。基于 `main` / `da2cebb3d` 的本轮未提交修改，精确源码与构建哈希见 manifest。
 
-[截图和录屏对照](index.html) · [实施前失败矩阵](../../sidebar-style-transition-failure-matrix-2026-10-12.md)
+原截图和录屏对照页（`index.html`）及其媒体已于 2026-10-13 随归档裁剪删除，结论与实测数值仍保留在下方表格和 [review.json](review.json) 中；先写的[实施前失败矩阵](../../sidebar-style-transition-failure-matrix-2026-10-12.md)保持原字节（见[档案裁剪](../../README.md#档案裁剪)）。
 
 新建会话默认由 36px 缩至 28px，与普通导航行一致。展开/收起都使用 28px 行和 2px 间距；收起按钮为 28px 正方形，48px 栏宽内左右各留 10px。图标列在两态之间保持同一位置。
 
@@ -24,20 +24,20 @@
 
 | 工作流 | 通过 | 证据 |
 | --- | --- | --- |
-| 真实 Electron 外壳 | 64/64 | [JSON](after/shell-visual.json) · [manifest](after/manifest.json) · [完整录屏](after/shell-recording.webm) · [trace](after/trace.zip) |
-| 跨入口角色与操作回归 | 76/76 | [JSON](roles/theme-roles.json) · [manifest](roles/manifest.json) · [trace](roles/trace.zip) |
+| 真实 Electron 外壳 | 64/64 | [JSON](after/shell-visual.json) · [manifest](after/manifest.json) · 录屏与 trace 已裁剪（2026-10-13） |
+| 跨入口角色与操作回归 | 76/76 | [JSON](roles/theme-roles.json) · [manifest](roles/manifest.json) · trace 已裁剪（2026-10-13） |
 
 原生检查覆盖顶线、间距、两态与快速反向的逐帧几何、原按钮与焦点保持、Tooltip、上下文菜单、底部锚点、真实 200% Chromium 缩放、30px 根字号、触摸目标、减弱动态、启动缓存与 Windows 圆角规则。快速反向使用真实键盘事件，确认第二次切换发生在第一段过渡结束前；鼠标驱动会等待目标停止移动，不能代表该场景。截图和动作采样均等到启动层揭开后开始，避免将覆盖层下的等待误认为没有过渡。
 
 Windows 圆角为本机 renderer 平台模拟；触摸为 Chromium coarse pointer 模拟。原生 Windows/Linux、实物触摸设备和签名安装器未验收。类型检查与完整 lint 通过，视觉债务仍为 1206 项，没有新豁免。没有新增单元测试。
 
-原 132 项档案保持原 SHA。`before/` 只归档选取的原始观察产物，[选取映射](before/selection.json)与[原 manifest](before/source-manifest.json)提供出处；它不是新的通过验收。`after/` 和 `roles/` 保留全部 manifest 登记产物。
+原 132 项档案的路径与 SHA-256 仍记录在 manifest 与 SHA256SUMS 中，其截图、录屏与 trace 已于 2026-10-13 裁剪。`before/` 只归档选取的原始观察产物，[选取映射](before/selection.json)与[原 manifest](before/source-manifest.json)提供出处；它不是新的通过验收。`after/` 和 `roles/` 保留原 manifest、JSON 结果与 SHA 登记（见[档案裁剪](../../README.md#档案裁剪)）。
 
 复现：
 
 ```sh
 bun run test:shell-visual
 bun run test:theme-roles
-bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/sidebar-style-transition-2026-10-12/after
-bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/sidebar-style-transition-2026-10-12/roles
 ```
+
+该归档已于 2026-10-13 裁剪媒体，`--verify` 不再适用；重跑对应工作流可再生成完整运行（见[档案裁剪](../../README.md#档案裁剪)）。

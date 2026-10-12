@@ -44,14 +44,15 @@ const [tooltipOpen, setTooltipOpen] = React.useState(false)
 | 修复前 | 失败：1/37 断言 | [failure.json](before/failure.json) · [逐帧与文本](before/collapse-after-expanded-hover-focus-frames.json) · [选取说明](before/selection.json) · [原始 manifest](before/source-manifest.json) |
 | 修复后 | 通过：68/68 | [manifest](after/manifest.json) · [逐帧与文本](after/collapse-after-expanded-hover-focus-frames.json) · [全部断言](after/shell-visual.json) |
 
-`before/` 只归档选取的失败观察（该次运行在首个失败断言处中止，场景不完整），因此不构成通过验收；`after/` 为完整运行，可用下方命令复核。
+`before/` 只归档选取的失败观察（该次运行在首个失败断言处中止，场景不完整），因此不构成通过验收；`after/` 为完整运行，重跑下方工作流可再生成完整产物复核。
 
 复现（仓库根目录）：
 
 ```sh
 bun run test:shell-visual
-bun run scripts/verification/verification-artifacts.ts --verify=docs/verification/results/sidebar-tooltip-residue-2026-10-13/after
 ```
+
+该归档已于 2026-10-13 裁剪媒体，`--verify` 不再适用；重跑对应工作流可再生成完整运行（见[档案裁剪](../../README.md#档案裁剪)）。
 
 ## 打包产物复核
 
@@ -65,8 +66,8 @@ bun run scripts/verification/verification-artifacts.ts --verify=docs/verificatio
 | 收起态悬停第 1 行 | 恰好 1 个，文本「标签」 |
 | 指针离开轨道 | 0 |
 
-[探针输出](packaged/probe.json) · [收起后的轨道截图](packaged/rail-after-collapse.png)
+[探针输出](packaged/probe.json)；收起后的轨道截图已裁剪（2026-10-13，见[档案裁剪](../../README.md#档案裁剪)）。
 
 产物（macOS x64、未签名）：`Phaneris-0.3.1-mac-x64.dmg` 219,963,694 B，SHA-256 `b26f0149cf80c8ef6b8d944168951fcf79e75ad3a18b7a7b904cac3e9ffbd3ca`；`Phaneris-0.3.1-mac-x64.zip` 213,469,327 B，SHA-256 `5dd7539c47edbe35146071d9fcf1d3f065a0345b92b8d3a0894810289c01eda9`。结构 11/11、启动 smoke 5/5、安装件 4/4 通过，结果见 [packaged-client-verification.json](../packaged-client-verification.json) 与 [packaged-client-smoke.json](../packaged-client-smoke.json)。
 
-范围：macOS 本机、真实 Electron 主进程/预加载/渲染进程，含未签名本地包；未覆盖 Windows/Linux 原生执行、签名安装器与实物触摸设备。视觉债务未新增，原 132 项档案保持原 SHA，本轮证据写独立目录。
+范围：macOS 本机、真实 Electron 主进程/预加载/渲染进程，含未签名本地包；未覆盖 Windows/Linux 原生执行、签名安装器与实物触摸设备。视觉债务未新增，本轮证据写独立目录；原 132 项档案的路径与 SHA-256 仍记录在 manifest 与 SHA256SUMS 中，其媒体已于 2026-10-13 裁剪（见[档案裁剪](../../README.md#档案裁剪)）。

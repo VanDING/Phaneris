@@ -34,18 +34,20 @@
 
 前后夹具经历了修正：补齐 Tailwind 编译前的 fixture source 注册、正确处理透明占位层与 OKLab 字符串、等待过渡终态、独立清理媒体/viewport/菜单状态；末轮还等待真实业务外壳加载后截图。原始记录未改写，因此场景总数不能作为同口径改善 KPI。
 
-公开归档保留选取的原始 manifest、JSON、构建/源码摘要和截图；[archive-selection.json](archive-selection.json)记录原 SHA 与排除清单，[SHA256SUMS](SHA256SUMS)校验归档文件。完整本机输出及 trace 在 `.cache/verification/theme-foundation-w1-ready/`，每次重跑使用独占目录。浏览器 trace、临时 config、认证数据库、workspace 和较早环境/夹具调试轮留在本地，避免把临时认证信息与缓存加入仓库。这里的原始 manifest 含排除项，不能把公开摘录当成完整 VerificationRun 目录。
+公开归档保留选取的原始 manifest、JSON 与构建/源码摘要；截图和 `.log.gz` 已于 2026-10-13 裁剪，[archive-selection.json](archive-selection.json) 与 [SHA256SUMS](SHA256SUMS) 仍记录其路径与 SHA-256，可核对“当时存在过什么”（见[档案裁剪](../../README.md#档案裁剪)）。完整本机输出及 trace 在 `.cache/verification/theme-foundation-w1-ready/`，每次重跑使用独占目录。浏览器 trace、临时 config、认证数据库、workspace 和较早环境/夹具调试轮留在本地，避免把临时认证信息与缓存加入仓库。这里的原始 manifest 含排除项，不能把公开摘录当成完整 VerificationRun 目录。
 
-原始构建日志包含构建器自己的尾空格与空行，以无损 `.log.gz` 归档；选取清单同时记录压缩文件 SHA 和解压后原始字节 SHA，未清洗或改写原日志。
+原始构建日志包含构建器自己的尾空格与空行，当时以无损 `.log.gz` 归档；该 gz 已于 2026-10-13 裁剪，选取清单与 SHA256SUMS 仍记录压缩文件 SHA 和解压后原始字节 SHA，未清洗或改写原日志。
 
 ## 截图
 
+本节截图已于 2026-10-13 裁剪；[SHA256SUMS](SHA256SUMS) 仍记录其路径与 SHA-256（见[档案裁剪](../../README.md#档案裁剪)）。
+
 | 场景 | 入口 |
 | --- | --- |
-| 真实 WebUI Geek cold start / Ink reload | [cold](after/web-cold.png) / [persisted](after/web-persisted.png) |
-| Electron 样式 light/dark | [light](after/electron-light.png) / [dark](after/electron-dark.png) |
-| 共享 UI / Viewer / WebUI | [UI](after/ui-light.png) / [Viewer](after/viewer-dark.png) / [WebUI](after/webui-dark.png) |
-| 窄屏 inset 焦点 | [Electron 390](after/electron-390.png) / [WebUI 390](after/webui-390.png) |
+| 真实 WebUI Geek cold start / Ink reload | 已裁剪（2026-10-13） |
+| Electron 样式 light/dark | 已裁剪（2026-10-13） |
+| 共享 UI / Viewer / WebUI | 已裁剪（2026-10-13） |
+| 窄屏 inset 焦点 | 已裁剪（2026-10-13） |
 
 ## 重跑
 

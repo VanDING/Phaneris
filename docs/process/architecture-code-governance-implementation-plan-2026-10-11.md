@@ -1,7 +1,7 @@
 # Phaneris 架构与代码治理实施计划
 
 状态：**implemented — G0–G8 的仓库内治理已实施；最终本地验收与外部平台限度见完整台账**。
-当前执行结果：[完整实施台账](./governance-completion-2026-10-11.md)。历史裁定：[首轮](./governance-first-wave-2026-10-11.md)、[第二轮](./governance-second-wave-2026-10-11.md)；本轮[先行失败矩阵](../verification/governance-completion-failure-matrix.md)。
+当前执行结果：[完整实施台账](./governance-completion-2026-10-11.md)。历史裁定：[首轮](../archive/governance-first-wave-2026-10-11.md)、[第二轮](../archive/governance-second-wave-2026-10-11.md)；本轮[先行失败矩阵](../verification/governance-completion-failure-matrix.md)。
 日期：2026-10-11（Asia/Shanghai）。
 核实于：`8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda`，扫描开始时工作区干净。
 范围：已有功能的架构边界、状态所有权、代码质量、数据安全、验证、构建和文档治理。
@@ -80,15 +80,15 @@
 
 | 历史材料 | 本次裁定 | 接入方式 |
 | --- | --- | --- |
-| [2026-10-10 系统清理](./system-cleanup-optimization-plan-2026-10-10.md) | A/B/C/D/E/F/H 已实施；G 未实施 | G 的 storage/Pi 切口纳入 G3/G5；不重做 A–F |
-| [2026-10-06 排序规划](./workstream-sequencing-2026-10-06.md) | 正文仍写「尚无代码改动」；初始化竞态和 Runtime 边界已有后续实现 | 修正状态；九服务方案保留职责分析价值，不能当作当前实施指令 |
-| [项目深度分析](./Phaneris_Project_Deep_Analysis.md) | 部分安全项已修；SessionManager/shared 膨胀、异常策略、撤销持久化仍值得治理 | 已实现项关闭；仅将源码再次核实的项转入 G2/G3/G6 |
-| [2026-08-31 路线图](./project-assessment-and-roadmap-2026-08-31.md) | 类型检查、CI、身份等多个描述已经变化；总状态仍为未开始 | 作为治理来源；逐条映射为完成/残余/待复核/延后，停止维护第二套执行路线 |
+| [2026-10-10 系统清理](../archive/system-cleanup-optimization-plan-2026-10-10.md) | A/B/C/D/E/F/H 已实施；G 未实施 | G 的 storage/Pi 切口纳入 G3/G5；不重做 A–F |
+| [2026-10-06 排序规划](../archive/workstream-sequencing-2026-10-06.md) | 正文仍写「尚无代码改动」；初始化竞态和 Runtime 边界已有后续实现 | 修正状态；九服务方案保留职责分析价值，不能当作当前实施指令 |
+| [项目深度分析](../archive/Phaneris_Project_Deep_Analysis.md) | 部分安全项已修；SessionManager/shared 膨胀、异常策略、撤销持久化仍值得治理 | 已实现项关闭；仅将源码再次核实的项转入 G2/G3/G6 |
+| [2026-08-31 路线图](../archive/project-assessment-and-roadmap-2026-08-31.md) | 类型检查、CI、身份等多个描述已经变化；总状态仍为未开始 | 作为治理来源；逐条映射为完成/残余/待复核/延后，停止维护第二套执行路线 |
 | [依赖关系分析](../dependencies/dependency-graph-2026-10-06.md) | 死声明/子路径/两处内部边已处理；hoisting 归属和 lock 孤儿未完全处理 | G4 接剩余归属，G8 接构建/锁文件；不能重复删除 peer 提供者 |
 | [插件计划](./plugin-system-review-and-roadmap.md) | 三个原 P0 的主修复已落地；备份清理回滚和凭据清理仍在原控制流中 | G2a 只接数据完整性残余；新的安装产品流程继续延后 |
 | [Durable ADR](../architecture/durable-agent-runtime.md) / [boundary](../architecture/durable-runtime-boundary.md) | 边界已实现，ADR 中仍残留「not implemented」段落 | 修正文档矛盾；现有 T1/T2 与 Host 所有权作为硬约束 |
 | [目标 Runtime 架构](../architecture/durable-agent-runtime-target-architecture.md) | Deferred；激活条件没有因本次扫描自动成立 | 继续延后分布式 lease、通用 admission、自动 continuation、filesystem transaction |
-| [性能实施记录](./performance-implementation-2026-09-10.md) | 第一轮优化已实施；旧失败/测量属于历史；main 15 MB 是目标而非现行门禁 | 保留预算，复测后决定结构优化，不再次盲拆 chunk |
+| [性能实施记录](../archive/performance-implementation-2026-09-10.md) | 第一轮优化已实施；旧失败/测量属于历史；main 15 MB 是目标而非现行门禁 | 保留预算，复测后决定结构优化，不再次盲拆 chunk |
 | [原始代码审计](../archive/code-audit-2026-08-01.md) | OPEN/PARTIAL、优先级和威胁模型均需重新核实 | 每个旧项建立裁定；只有复现或明确源码证据才能进入当前缺陷队列 |
 | [发布检查表](../release-readiness.md) / [品牌 B 阶段](../architecture/phaneris-phase-b-brand-identity.md) | 部分正文仍称身份未改或服务指向上游；现行身份为 Phaneris，服务端点为 null，telemetry 关闭 | G0 刷新事实；G8 区分可构建、可安装、可签名和可发布 |
 | 功能设计与研究：日历/Gantt、Memory、GPUIX、Run 扩展、agentic interception | 存在开放设想，但不是治理的自动待办 | 保留原设计与触发条件，不进入本轮功能开发 |
@@ -400,6 +400,6 @@ PR04→05 是设计/实现先后关系；同一提交也可以包含先写出的
 
 已完成：文档盘点、全库文件/AST 扫描、关键路径核对、指定现有检查复跑、本计划与可复跑证据归档、docs 索引接入。
 
-G0/G1/G2a 的底座、插件事务与 Runtime 资源释放由[首轮](./governance-first-wave-2026-10-11.md)完成；G2b/G2c 的认证与有界故障收口由[第二轮](./governance-second-wave-2026-10-11.md)完成。G3–G8 已接续实施：配置唯一 writer 与纯入口、RPC 高风险契约、依赖/公开路径/值循环门禁、Pi 与 Session 产品 owner、客户端显式初始化和交互资源所有权、共同构建/clean install/离树分发及严格身份裁定。逐项关闭理由、实测缺陷、回退及残余由[完整台账](./governance-completion-2026-10-11.md)记录。
+G0/G1/G2a 的底座、插件事务与 Runtime 资源释放由[首轮](../archive/governance-first-wave-2026-10-11.md)完成；G2b/G2c 的认证与有界故障收口由[第二轮](../archive/governance-second-wave-2026-10-11.md)完成。G3–G8 已接续实施：配置唯一 writer 与纯入口、RPC 高风险契约、依赖/公开路径/值循环门禁、Pi 与 Session 产品 owner、客户端显式初始化和交互资源所有权、共同构建/clean install/离树分发及严格身份裁定。逐项关闭理由、实测缺陷、回退及残余由[完整台账](./governance-completion-2026-10-11.md)记录。
 
 原有预算与失败断言保留；历史 SHA/结果不被重跑覆盖。Docker 虚拟机在本机受硬件限制未能启动，Linux CI 接线已实现；Windows/Linux 原生、签名/安装更新、远端 CI/代理/线上账户仍是对应公开分发前置条件。共享 renderer 源码、保留的三组循环和其他已分类 lint 债务并未被宣称消失。§2–4 的历史问题表不再作为未执行队列。

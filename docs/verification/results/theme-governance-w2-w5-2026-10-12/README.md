@@ -2,7 +2,7 @@
 
 状态：accepted（工程实现与本机验收）；三平台正式包、实机和长会话性能仍 open。日期：2026-10-12，Asia/Shanghai。
 
-规划来源：commit `7891559`，分支 `codex/theme-governance-w1`，W1 commit `8d53a7200`。当前裁定在[规划 §13](../../../process/theme-engine-frontend-governance-plan-2026-10-12.md)，实施前要求见[TC01–TC18](../../theme-contract-failure-matrix-2026-10-12.md)。[原始审计](../frontend-theme-visual-audit-2026-10-12/README.md)与[首批 W1](../theme-foundation-w1-2026-10-12/README.md)保留原字节。
+规划来源：commit `7891559`，分支 `codex/theme-governance-w1`，W1 commit `8d53a7200`。当前裁定在[规划 §13](../../../process/theme-engine-frontend-governance-plan-2026-10-12.md)，实施前要求见[TC01–TC18](../../theme-contract-failure-matrix-2026-10-12.md)。[原始审计](../frontend-theme-visual-audit-2026-10-12/README.md)与[首批 W1](../theme-foundation-w1-2026-10-12/README.md)保留原字节（其截图与 gz 媒体同样已于 2026-10-13 裁剪）。
 
 ## 实测范围
 
@@ -18,7 +18,7 @@
 | theme-governance | 49 | [manifest](governance/manifest.json) | [真实门禁 mutation](governance/theme-governance.json) |
 | theme-native（Windows） | 13 | [manifest](native-win/manifest.json) | [生产 bundles/真实 Electron](native-win/theme-native.json) |
 | markdown-popout 回归 | 18 | [manifest](popout/manifest.json) | [卡片/源码模式](popout/markdown-popout.json) |
-| **合计** | **481/481** | [汇总](summary.json) | [产物合约校验日志](checks/theme-artifact-validation-final.log.gz) |
+| **合计** | **481/481** | [汇总](summary.json) | 已裁剪（2026-10-13） |
 
 环境：Windows x64 10.0.26300、Bun 1.4.2、Node 24.15.0、Edge 155.0.4283.45、Electron 44.5.1。源码/构建摘要、执行时 HEAD 与 dirty paths、场景 ID、环境及 `untested` 保留于各份原 manifest；配套 `source-hashes.json`、`build-hashes.json` 按实际存在归档。场景数包含设计样本与门禁失败注入，不解释为全项目功能测试数。
 
@@ -28,17 +28,17 @@
 
 ## 设计选择与回归
 
-[交互对照页](design/index.html)包含 36 张截图，可并排比较 40/34/32px 导航、840/768px 阅读列、现有/增强高程、窄屏与文字放大。当前保留 40px、840px 和现有材质；候选方案未自动成为产品默认。Default/Ink/Geek/Cyberpunk 的身份、旧根字号与 density 语义保持；Ink 次要文字修正对比度，语义 text/on-accent 与作者原色分工。
+设计对照页（原 `design/index.html`）包含 36 张截图，可并排比较 40/34/32px 导航、840/768px 阅读列、现有/增强高程、窄屏与文字放大；该画廊及其截图已于 2026-10-13 随归档裁剪删除，[design/theme-design.json](design/theme-design.json) 仍保留参数对照结论，[selection.json](selection.json) 与 [SHA256SUMS](SHA256SUMS) 仍记录其路径与 SHA-256（见[档案裁剪](../../README.md#档案裁剪)）。当前保留 40px、840px 和现有材质；候选方案未自动成为产品默认。Default/Ink/Geek/Cyberpunk 的身份、旧根字号与 density 语义保持；Ink 次要文字修正对比度，语义 text/on-accent 与作者原色分工。
 
 修复前失败保存在 [before/](before/)：compiler、watcher、控件角色、portal、browser host、Viewer 手动模式、登录和门禁分别使用独立运行目录。报告可能包含因前置失败未达到的后续场景，应按各自 manifest 判断；不使用修复前数量拼凑通过率。先前调试失败仍留存于本机缓存，不改写为成功。
 
-全仓类型、完整 lint、字体/i18n、严格身份、版本、生成物、分发与文档门禁通过。既有主题/存储/堆叠规则检查 30/30；既有 lint 72 条 warning 基线未放宽。当前相关专项按 registry 场景数、必要文件、manifest 和 SHA 合约验证，本轮未重跑整个 `test:critical` 聚合或所有既有测试。最终静态检查的原日志压缩保存于 [checks/](checks/)。
+全仓类型、完整 lint、字体/i18n、严格身份、版本、生成物、分发与文档门禁通过。既有主题/存储/堆叠规则检查 30/30；既有 lint 72 条 warning 基线未放宽。当前相关专项按 registry 场景数、必要文件、manifest 和 SHA 合约验证，本轮未重跑整个 `test:critical` 聚合或所有既有测试。最终静态检查的原日志 gz 已于 2026-10-13 裁剪，[checks/](checks/) 保留 JSON 结果，其路径与 SHA-256 仍记录在 [selection.json](selection.json) 与 [SHA256SUMS](SHA256SUMS)（见[档案裁剪](../../README.md#档案裁剪)）。
 
 ## 归档合约
 
-这是完整 VerificationRun 的**公开选取副本**。原始运行目录为 `.cache/verification/<run-id>/`，映射见 [selection.json](selection.json)。公开文件保留原字节；日志用 gzip 保存，映射中的 SHA 指向解压后的原字节。[SHA256SUMS](SHA256SUMS)校验本目录公开文件；不把它冒充完整运行目录的 artifact 集合。
+这是完整 VerificationRun 的**公开选取副本**。原始运行目录为 `.cache/verification/<run-id>/`，映射见 [selection.json](selection.json)。公开的 JSON 与 manifest 保留原字节；日志当时用 gzip 保存，映射中的 SHA 指向解压后的原字节。截图与 gz 日志已于 2026-10-13 裁剪，[SHA256SUMS](SHA256SUMS) 与 selection.json 仍记录其路径与 SHA-256，不把它冒充完整运行目录的 artifact 集合（见[档案裁剪](../../README.md#档案裁剪)）。
 
-原 manifest 仍列出未公开的完整 trace、临时 profile/认证配置和执行文件，这是刻意保留的原始事实。完整原目录已经通过必要产物合约，身份/用户数据目录未公开。公开截图包含必要窄屏、宿主和 native 样本，设计对照保存全部 36 张。新 README/summary 为归档说明，另列入公开 SHA，不伪装成当时运行输出。
+原 manifest 仍列出未公开的完整 trace、临时 profile/认证配置和执行文件，这是刻意保留的原始事实。完整原目录已经通过必要产物合约，身份/用户数据目录未公开。公开截图曾包含必要窄屏、宿主和 native 样本，设计对照保存全部 36 张，这些媒体已于 2026-10-13 裁剪。新 README/summary 为归档说明，另列入公开 SHA，不伪装成当时运行输出。
 
 复跑（Windows PowerShell，仓库根目录）使用已安装 Edge：
 

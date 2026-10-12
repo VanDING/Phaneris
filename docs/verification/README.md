@@ -2,6 +2,18 @@
 
 本页汇总架构治理与产品验证入口。治理工作流默认生成唯一 `.cache/verification/<run-id>/`，成功/失败均保留 manifest、SHA、日志及数据库；历史 `results/` 只由明确归档操作写入。部分历史产品脚本仍写固定结果，其范围见各行说明。
 
+## 档案裁剪
+
+2026-10-13 对所有 `results/` 归档做了一次体积裁剪：删除 trace.zip、录屏（webm）、截图（png）、运行数据库（db/sqlite）与 gz，并删除依赖这些图片的 5 个 HTML 画廊。`docs/assets/**` 是根 README 的主视觉素材，不在此列。裁剪后 `docs/` 由约 297 MB 降到约 73 MB。
+
+保留下来的是每份归档的**结论层**：`manifest.json`、`SHA256SUMS`、JSON/日志结果与 README。因此：
+
+- `manifest.json` 与 `SHA256SUMS` 仍记录被删产物的路径与 SHA-256，可核对“当时存在过什么”；
+- `scripts/verification/verification-artifacts.ts --verify=<目录>` **对已裁剪的归档不再适用**（它会断言全部登记产物存在）。需要可校验的完整运行请重跑对应工作流，它会把全部产物写入新的 `.cache/verification/<run-id>/`；
+- 之后的归档同样只保留结论层：媒体默认留在 `.cache/`（已被忽略），需要长期留存时再显式归档。
+
+被删除的媒体都可以重跑再生：trace/录屏/截图来自各验证工作流自身（`test:shell-visual`、`test:theme-*`、`test:markdown-popout`、各 `scripts/verification/*-workflow.ts`），`db/gz` 是工作流运行时数据库与压缩中间产物。
+
 ## 架构与代码治理
 
 当前证据：[审计收口归档](results/governance-closeout-2026-10-11/README.md)，[初次 G3–G8 快照](results/governance-completion-2026-10-11/README.md)。当前裁定：[完整实施台账](../process/governance-completion-2026-10-11.md)；先写的[失败矩阵](governance-completion-failure-matrix.md)；基线与前两轮冻结证据保持原 SHA。
@@ -34,7 +46,7 @@
 | 动效 | [动效实施验证](../../scripts/verification/motion-verification.mjs) · [审计探针](../../scripts/verification/motion-audit-probes.mjs) · [扫描清单生成器](../../scripts/verification/motion-audit-inventory.mjs) | 覆盖真实 Playground 组件、启动页和滚动行为。 |
 | 对话框页脚 | [间距验证脚本](../../scripts/verification/dialog-footer-spacing.mjs) | 用真实弹窗测量取消/确认按钮的像素间距，并扫描全部 `DialogFooter` 调用点；结果位于 [`results/`](./results)。 |
 | 打包客户端 | [结构验证](../../scripts/verification/packaged-client-verification.mjs) · [启动 smoke](../../scripts/verification/packaged-client-smoke.mjs) · [Files 面板（打包产物）](../../scripts/verification/files-panel-packaged-workflow.ts) | 验证平台包内容与启动行为；macOS 和 Windows 各自保存结果。 |
-| Pi SDK 1.0.0 升级 | [评估与复现](../process/pi-sdk-1.0.0-upgrade-assessment.md) · [验证证据](./results/pi-sdk-1.0.0-upgrade.json) | 依赖版本、真实 SDK/bundle smoke、全仓检查与生产构建；保留首次两项超时及完整工作区复测。日志位于 `.cache/pi-sdk-v1.0.0/`。 |
+| Pi SDK 1.0.0 升级 | [评估与复现](../archive/pi-sdk-1.0.0-upgrade-assessment.md) · [验证证据](./results/pi-sdk-1.0.0-upgrade.json) | 依赖版本、真实 SDK/bundle smoke、全仓检查与生产构建；保留首次两项超时及完整工作区复测。日志位于 `.cache/pi-sdk-v1.0.0/`。 |
 | 日历原型 | [交互检查](../../scripts/verification/calendar-placement-demo-check.mjs) · [原型页面](../prototypes/calendar-untimed-placement-demo.html) | 检查独立的侧栏原型行为。 |
 
 ## 逐项验收记录
@@ -115,7 +127,7 @@ node scripts/verification/dialog-footer-spacing.mjs --static-only
 
 脚本经开发服务器加载[探针模块](../../apps/electron/src/renderer/playground/probes/dialog-footer-probe.tsx)（只被该脚本加载，不进入任何构建入口），逐个挂载真实弹窗：删除会话（重放主进程转发的 `auth:showDeleteSessionConfirmation` 载荷）、退出登录、删除页面、重置确认、新建项目、发送资源。每个弹窗在 1280px 与 420px 两个宽度下测量相邻按钮的盒间距（期望值取自页面根字号：`gap-2` = 0.5rem，本应用根字号 15px 时为 7.5px）、断言页脚方向（行 / 列反向）、并校验“删除”按钮仍向主进程返回索引 1。截图与 JSON 结果写入 `results/`。
 
-最近一次运行（2026-10-03，Edge + Playwright）：修复前 10/17 通过——六个弹窗在桌面宽度全部测得 0.00px（手机宽度不受 `sm:` 覆盖影响，因此通过），另有 5 个调用点被静态扫描命中；修复后 [17/17 通过](./results/dialog-footer-spacing-after.json)，每个按钮对均为 7.50px。`-before` 结果是在同一棵代码树上把 `className="gap-2 sm:gap-0"` 临时加回五个调用点后录制的，用来证明这套检查确实能发现该缺陷；`-after` 即当前代码。[对比图](./results/dialog-footer-delete-session-comparison.png)由这两组“删除会话”截图裁剪放大合成。
+最近一次运行（2026-10-03，Edge + Playwright）：修复前 10/17 通过——六个弹窗在桌面宽度全部测得 0.00px（手机宽度不受 `sm:` 覆盖影响，因此通过），另有 5 个调用点被静态扫描命中；修复后 [17/17 通过](./results/dialog-footer-spacing-after.json)，每个按钮对均为 7.50px。`-before` 结果是在同一棵代码树上把 `className="gap-2 sm:gap-0"` 临时加回五个调用点后录制的，用来证明这套检查确实能发现该缺陷；`-after` 即当前代码。当时的“删除会话”对比图与逐张截图已于 2026-10-13 裁剪（见[档案裁剪](#档案裁剪)），两组 `dialog-footer-spacing-before.json` / `-after.json` 仍保留全部测量值。
 
 ## 打包客户端校验
 
@@ -161,7 +173,7 @@ bun run scripts/verification/files-panel-packaged-workflow.ts \
 
 规划为[主题引擎与前端治理](../process/theme-engine-frontend-governance-plan-2026-10-12.md)，实施前[失败矩阵](theme-contract-failure-matrix-2026-10-12.md)，当前[生成契约](../design/theme-contract.generated.md)与[宿主/回滚](../design/theme-hosts-and-rollout.md)。
 
-当前[481 场景验收与选取证据](results/theme-governance-w2-w5-2026-10-12/README.md)，[交互设计对照](results/theme-governance-w2-w5-2026-10-12/design/index.html)。三平台正式包、实机和长会话性能保持 open。
+当前[481 场景验收与选取证据](results/theme-governance-w2-w5-2026-10-12/README.md)；同一目录下的交互设计对照画廊及其截图已于 2026-10-13 裁剪（见[档案裁剪](#档案裁剪)）。三平台正式包、实机和长会话性能保持 open。
 
 `test:theme-foundation` 验真实 WebUI/WS、偏好、watcher、图片、焦点和阴影；`test:theme-contract` 验四入口、值与高亮；`test:theme-roles` / `test:theme-domains` 验真实控件和功能面；`test:theme-browser-host` / `test:theme-login` 验外围入口；`test:theme-design` 产出参数对照；`test:theme-governance` 验真实门禁 mutation。上述工作流接入 critical registry。`test:theme-native` 另外构建并启动真实 Electron 主进程、preload、BrowserViews 和 renderer，验证实际 Chromium 200% zoom 与私有主题投递边界；三平台 CI 分别保存产物。
 

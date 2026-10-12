@@ -4,7 +4,7 @@ Baseline commit: `61970997` (with batches A–C uncommitted on top).
 Date: 2026-10-11.
 
 Requirements: [bundle hygiene and event surface failure matrix](../../bundle-hygiene-and-event-surface-failure-matrix.md).
-Plan: [system cleanup and optimization plan](../../../process/system-cleanup-optimization-plan-2026-10-10.md) batches D and E.
+Plan: [system cleanup and optimization plan](../../../archive/system-cleanup-optimization-plan-2026-10-10.md) batches D and E.
 
 ## Batch D — bundle hygiene
 
@@ -12,7 +12,7 @@ Plan: [system cleanup and optimization plan](../../../process/system-cleanup-opt
 | --- | --- |
 | `playground.html` is no longer a packaging input | `apps/electron/vite.config.ts` |
 | `main.cjs` budget 25 MB → **21.5 MB ratchet** | `scripts/bundle-report.ts` |
-| The 15 MB goal is recorded as unmet, not achieved | `docs/process/performance-implementation-2026-09-10.md` |
+| The 15 MB goal is recorded as unmet, not achieved | `docs/archive/performance-implementation-2026-09-10.md` |
 
 Measured effect of removing the playground entry:
 

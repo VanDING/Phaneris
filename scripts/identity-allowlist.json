@@ -411,7 +411,7 @@
       ]
     },
     {
-      "glob": "docs/process/calendar-gantt-implementation-status.md",
+      "glob": "docs/archive/calendar-gantt-implementation-status.md",
       "tokens": [
         "kebab-slug",
         "scheme-or-domain"
@@ -426,7 +426,7 @@
       ]
     },
     {
-      "glob": "docs/process/craftagent-durable-runtime-handoff.md",
+      "glob": "docs/archive/craftagent-durable-runtime-handoff.md",
       "tokens": [
         "code-identifier"
       ],
@@ -488,7 +488,7 @@
       ]
     },
     {
-      "glob": "docs/process/project-assessment-and-roadmap-2026-08-31.md",
+      "glob": "docs/archive/project-assessment-and-roadmap-2026-08-31.md",
       "tokens": [
         "kebab-slug",
         "upstream-owner"
@@ -501,7 +501,7 @@
       ]
     },
     {
-      "glob": "docs/process/repository-cleanup-2026-09-27.md",
+      "glob": "docs/archive/repository-cleanup-2026-09-27.md",
       "tokens": [
         "kebab-slug"
       ],
@@ -523,7 +523,7 @@
       ]
     },
     {
-      "glob": "docs/process/upstream-0.13.5-0.13.6-absorption.md",
+      "glob": "docs/archive/upstream-0.13.5-0.13.6-absorption.md",
       "tokens": [
         "code-identifier",
         "display-name",
@@ -574,7 +574,7 @@
       ]
     },
     {
-      "glob": "docs/process/upstream-0.14.0-assessment.md",
+      "glob": "docs/archive/upstream-0.14.0-assessment.md",
       "tokens": [
         "kebab-slug",
         "package-scope"
@@ -1600,22 +1600,34 @@
     },
     {
       "glob": "docs/verification/results/theme-governance-w2-w5-2026-10-12/before/watcher-before/manifest.json",
-      "tokens": ["kebab-slug"],
-      "lines": ["\"path\": \"config/tool-icons/craft-agent.svg\","],
+      "tokens": [
+        "kebab-slug"
+      ],
+      "lines": [
+        "\"path\": \"config/tool-icons/craft-agent.svg\","
+      ],
       "category": "verification-evidence",
       "reason": "Exact immutable run manifest line names the historical compatibility icon. Preserve source evidence bytes; new occurrences still fail."
     },
     {
       "glob": "docs/verification/results/theme-governance-w2-w5-2026-10-12/foundation/manifest.json",
-      "tokens": ["kebab-slug"],
-      "lines": ["\"path\": \"config/tool-icons/craft-agent.svg\","],
+      "tokens": [
+        "kebab-slug"
+      ],
+      "lines": [
+        "\"path\": \"config/tool-icons/craft-agent.svg\","
+      ],
       "category": "verification-evidence",
       "reason": "Exact immutable run manifest line names the historical compatibility icon. Preserve source evidence bytes; new occurrences still fail."
     },
     {
       "glob": "docs/verification/results/theme-governance-w2-w5-2026-10-12/native-win/manifest.json",
-      "tokens": ["kebab-slug"],
-      "lines": ["\"path\": \"config/tool-icons/craft-agent.svg\","],
+      "tokens": [
+        "kebab-slug"
+      ],
+      "lines": [
+        "\"path\": \"config/tool-icons/craft-agent.svg\","
+      ],
       "category": "verification-evidence",
       "reason": "Exact immutable run manifest line names the historical compatibility icon. Preserve source evidence bytes; new occurrences still fail."
     },

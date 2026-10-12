@@ -1,7 +1,7 @@
 # 架构与代码治理首轮验收证据
 
 日期：2026-10-11，macOS x64；起始 HEAD `8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda`，工作树有本轮未提交修改。
-对应[实施台账](../../../process/governance-first-wave-2026-10-11.md)、[失败矩阵](../../governance-first-wave-failure-matrix.md)及[实施前扫描](../architecture-code-governance-2026-10-11/README.md)。
+对应[实施台账](../../../archive/governance-first-wave-2026-10-11.md)、[失败矩阵](../../governance-first-wave-failure-matrix.md)及[实施前扫描](../architecture-code-governance-2026-10-11/README.md)。
 
 此目录是维护者显式选择的本轮归档；日常验证默认写独占 `.cache/verification/`，不会更新此处或既有证据。验收状态与计数见 `summary.json`；运行的命令、环境、源状态和产物身份见各 `manifest.json`。
 

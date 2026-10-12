@@ -4,7 +4,7 @@ Baseline commit: `61970997` (with batches A–D uncommitted on top).
 Date: 2026-10-11.
 
 Requirements: [server security hardening failure matrix](../../server-security-hardening-failure-matrix.md).
-Plan: [system cleanup and optimization plan](../../../process/system-cleanup-optimization-plan-2026-10-10.md) batch F.
+Plan: [system cleanup and optimization plan](../../../archive/system-cleanup-optimization-plan-2026-10-10.md) batch F.
 
 ## What changed
 

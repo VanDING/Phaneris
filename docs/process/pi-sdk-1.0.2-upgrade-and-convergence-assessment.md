@@ -118,7 +118,7 @@ SDK 提供 `createMcpExtension({ loadConfig, credentials, createTransport, updat
 | Windows 当前产物 | 解包 8/8、隔离启动 5/5、随包 Bun 的仓库外 SDK 工作流 8/8；三个位置的 bundle / worker / WASM SHA-256 一致 |
 | 前轮整合的未闭合项 | 完整基线首次导航 3,119.07 ms，后一次 2,527.57 ms；smoke 首次 3,570.14 ms，均保留 3,000 ms 门限并记失败。其余六类性能预算与交互通过；不据此宣称原整合计划已全部验收 |
 
-复核命令：`bun install --frozen-lockfile`、`bun run scripts/verification/pi-1.0.2-upgrade-workflow.ts`、`bun run verify:capabilities`、`bun run validate:ci`、`bun run test`。完整整合与外部发布边界见 [2026-10-04 完整性复核](./capability-completion-2026-10-04.md)。
+复核命令：`bun install --frozen-lockfile`、`bun run scripts/verification/pi-1.0.2-upgrade-workflow.ts`、`bun run verify:capabilities`、`bun run validate:ci`、`bun run test`。完整整合与外部发布边界见 [2026-10-04 完整性复核](../archive/capability-completion-2026-10-04.md)。
 
 可版本控制的升级证据：[pi-sdk-1.0.2-upgrade.json](../verification/results/pi-sdk-1.0.2-upgrade.json)。SDK 升级的类型、业务工作流、构建及本机分发验证已通过；此前扩展性能门限仍为单独未闭合项，没有把汇总失败改成通过。未提交、推送、签名或发布。
 

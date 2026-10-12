@@ -1,5 +1,5 @@
 /** End-to-end JSONL + installed Pi SDK + loopback provider.
- * Failure paths were specified in docs/process/capability-integration-2026-10-03.md before implementation.
+ * Failure paths were specified in docs/archive/capability-integration-2026-10-03.md before implementation.
  * Only fixture credentials and inert tools are used. No live provider access.
  */
 import { strict as assert } from 'node:assert'

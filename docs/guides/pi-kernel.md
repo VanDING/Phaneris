@@ -24,7 +24,7 @@ packages/pi-agent-server (Pi 1.1.0)
 
 Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sources、浏览器与 UI 事件；子进程负责 Pi 会话、模型运行时、内置工具和 provider 请求。
 
-资源加载器禁用自动发现扩展，主会话显式注册受管 `tool_search` / `codemode`，辅助查询不注册编排工具；`codemode` 的 `models` 全局关闭。Source 连接仍由宿主连接池与工具代理唯一持有。升级边界及验证记录见 [Pi 1.1.0 / Craft 0.14.1 实施记录](../process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
+资源加载器禁用自动发现扩展，主会话显式注册受管 `tool_search` / `codemode`，辅助查询不注册编排工具；`codemode` 的 `models` 全局关闭。Source 连接仍由宿主连接池与工具代理唯一持有。升级边界及验证记录见 [Pi 1.1.0 / Craft 0.14.1 实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
 
 ## 生命周期约束
 

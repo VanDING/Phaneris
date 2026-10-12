@@ -76,9 +76,9 @@ Artifact revision 带有校验结果和来源信息；支持的格式可以安�
 
 Markdown 草稿在能够无损往返时提供可视化编辑，复杂语法保留源码编辑入口。生图支持 OpenAI Images API 和 Pi 的 OpenRouter 图像模型。模型图像限制只调整请求副本，原始文件保持完整；历史图像恢复由用户明确发起，并创建关联的纯文本会话。
 
-MCP 工具保留输出 Schema 和结构化结果；`tool_search` 按需发现工具，沙箱 `codemode` 的每次嵌套调用都经过宿主权限与持久执行边界，模型访问关闭。配置、记账及条件式迁移结论见[能力采用指南](docs/architecture/capability-adoption-2026-10.md)，实测收益与验收范围见[闭合记录](docs/process/capability-completion-2026-10-04.md)。
+MCP 工具保留输出 Schema 和结构化结果；`tool_search` 按需发现工具，沙箱 `codemode` 的每次嵌套调用都经过宿主权限与持久执行边界，模型访问关闭。配置、记账及条件式迁移结论见[能力采用指南](docs/architecture/capability-adoption-2026-10.md)，实测收益与验收范围见[闭合记录](docs/archive/capability-completion-2026-10-04.md)。
 
-Pi SDK 运行时已统一固定为 1.1.0；升级验证、Craft 0.14.1 的选择性吸收，以及原生 MCP、classifier、模型路由的全面替换条件见[升级实施记录](docs/process/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
+Pi SDK 运行时已统一固定为 1.1.0；升级验证、Craft 0.14.1 的选择性吸收，以及原生 MCP、classifier、模型路由的全面替换条件见[升级实施记录](docs/archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
 
 ## 真正属于个人的工作空间
 

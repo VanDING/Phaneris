@@ -2,7 +2,7 @@
 
 日期：2026-10-11（Asia/Shanghai）。源码基线：`8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda`，实施在当前工作树，未提交或推送。范围：既有功能的架构、所有权、契约、构建与验证治理；没有启动新功能或版本升级。
 
-状态：仓库内实施及列明的本地验收完成；独立审计收口证据已归档。本文接续 [首轮](governance-first-wave-2026-10-11.md)、[第二轮](governance-second-wave-2026-10-11.md)，不改写其历史证据。依据：[总计划](architecture-code-governance-implementation-plan-2026-10-11.md)、[先行失败矩阵](../verification/governance-completion-failure-matrix.md)、[逐项职责清单](governance-ownership-inventory-2026-10-11.md)、[领域裁定](../architecture/governance-domain-ownership.md)。
+状态：仓库内实施及列明的本地验收完成；独立审计收口证据已归档。本文接续 [首轮](../archive/governance-first-wave-2026-10-11.md)、[第二轮](../archive/governance-second-wave-2026-10-11.md)，不改写其历史证据。依据：[总计划](architecture-code-governance-implementation-plan-2026-10-11.md)、[先行失败矩阵](../verification/governance-completion-failure-matrix.md)、[逐项职责清单](governance-ownership-inventory-2026-10-11.md)、[领域裁定](../architecture/governance-domain-ownership.md)。
 
 ## 1. 已实施的工作包
 

@@ -46,4 +46,4 @@
 
 ## 验收记录
 
-实施与证据见 [首轮实施台账](../process/governance-first-wave-2026-10-11.md)。CI 远端运行、Windows/Linux 实机和签名验收必须单列，不能由本地检查推断完成。
+实施与证据见 [首轮实施台账](../archive/governance-first-wave-2026-10-11.md)。CI 远端运行、Windows/Linux 实机和签名验收必须单列，不能由本地检查推断完成。

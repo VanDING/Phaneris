@@ -4,7 +4,7 @@ Baseline commit: `61970997` (plus the two uncommitted `packaged-client-*.json` f
 Date: 2026-10-10.
 
 Requirements: [theme and architecture gate failure matrix](../../theme-and-architecture-gate-failure-matrix.md).
-Plan: [system cleanup and optimization plan](../../../process/system-cleanup-optimization-plan-2026-10-10.md) batches A and B.
+Plan: [system cleanup and optimization plan](../../../archive/system-cleanup-optimization-plan-2026-10-10.md) batches A and B.
 
 ## What was wrong
 

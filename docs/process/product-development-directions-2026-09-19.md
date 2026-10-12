@@ -5,7 +5,7 @@
 > **定位**：能力方向规划（与 2026-08-31 收敛路线图互补）
 > **依据**：
 > - 当前源码快照（v0.2.0 / Bun 1.4.2 / Pi SDK 0.85.1）
-> - [项目综合评估与发展路线图](./project-assessment-and-roadmap-2026-08-31.md)
+> - [项目综合评估与发展路线图](../archive/project-assessment-and-roadmap-2026-08-31.md)
 > - [Pi SDK 原生能力接入缺口分析](./pi-sdk-native-capabilities-gap-analysis.md)（2026-09-19）
 > - [Durable Agent Runtime ADR](../architecture/durable-agent-runtime.md) 与[目标架构文档](../architecture/durable-agent-runtime-target-architecture.md)
 > - 五个标杆产品源码拆解（2026-09-19 对比研究：MiniMax Code、OpenAI Codex、PI-Desktop、Apache Maka、MonoCode）
@@ -306,7 +306,7 @@ graph LR
 - `packages/shared/src/agent/core/pre-tool-use.ts`（六步权限管线）
 - `packages/session-tools-core/src/tool-defs.ts`（43 个会话工具枚举）
 - [`architecture/durable-agent-runtime.md`](../architecture/durable-agent-runtime.md)（T1/T2、恢复模式与裁决、8 条不变量）
-- [`project-assessment-and-roadmap-2026-08-31.md`](./project-assessment-and-roadmap-2026-08-31.md)（§4.7 无人值守权限；§6 北极星；§7 阶段）
+- [`project-assessment-and-roadmap-2026-08-31.md`](../archive/project-assessment-and-roadmap-2026-08-31.md)（§4.7 无人值守权限；§6 北极星；§7 阶段）
 - [`pi-sdk-native-capabilities-gap-analysis.md`](./pi-sdk-native-capabilities-gap-analysis.md)（钩子 1/13；P0–P6 清单）
 - [`plugin-bundles-design.md`](../design/plugin-bundles-design.md)
 
