@@ -1,11 +1,13 @@
 import { Activity, AlertTriangle, Braces, Clock3, Coins, Wrench } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import type { TrajectorySnapshot } from './trajectory-contract'
 import type { TrajectoryContextSummary } from './TrajectoryView'
 import { formatDurationMillis, type TrajectoryRenderRecord, type TrajectoryTurnModel } from './trajectory-layout'
 import { recordDisplayText } from './trajectory-search-index'
 import { bucketRequestContexts, deriveRequestContexts } from './trajectory-context'
+import { deriveTrajectoryPerformance } from './trajectory-performance'
+import { TrajectoryPerformance } from './TrajectoryPerformance'
 
 interface TrajectoryOverviewProps {
   snapshot: TrajectorySnapshot
@@ -18,9 +20,9 @@ interface TrajectoryOverviewProps {
   onOpenContext: (requestSeq?: number) => void
 }
 
-function formatTokens(value: number | undefined): string {
+function formatTokens(value: number | undefined, locale: string): string {
   if (value === undefined) return '—'
-  return new Intl.NumberFormat(undefined, { notation: value >= 10_000 ? 'compact' : 'standard', maximumFractionDigits: 1 }).format(value)
+  return new Intl.NumberFormat(locale, { notation: value >= 10_000 ? 'compact' : 'standard', maximumFractionDigits: 1 }).format(value)
 }
 
 function formatCost(value: number | undefined): string {
@@ -38,7 +40,8 @@ export function TrajectoryOverview({
   onOpenTrajectory,
   onOpenContext,
 }: TrajectoryOverviewProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language ?? 'en'
   const cost = formatCost(contextSummary?.costUsd ?? snapshot.totalUsage?.cost.total)
   const costLabel = contextSummary?.unknownCostRequests ? `${cost} + ${t('common.unknown')}`
     : contextSummary?.estimatedCostRequests ? `≈${cost}` : cost
@@ -55,11 +58,16 @@ export function TrajectoryOverview({
     if (slowest?.cell.timeSeconds === null || slowest === null) return record
     return record.cell.timeSeconds > slowest.cell.timeSeconds ? record : slowest
   }, null)
-  const firstAssistant = contentRecords.find(record => record.cell.kind === 'message' && record.cell.assistantMetrics)
-  const firstMetrics = firstAssistant?.cell.assistantMetrics
-  const ttftMs = firstMetrics?.stepStartTime != null && firstMetrics.firstTokenTime != null
-    ? firstMetrics.firstTokenTime - firstMetrics.stepStartTime
-    : null
+  const performance = useMemo(() => deriveTrajectoryPerformance(snapshot, records), [snapshot, records])
+  const ttftMs = performance.p50
+  const shapeBuckets = Array.from({ length: Math.min(18, contentRecords.length) }, (_, index) => {
+    const count = Math.min(18, contentRecords.length)
+    const entries = contentRecords.slice(Math.floor(index * contentRecords.length / count), Math.floor((index + 1) * contentRecords.length / count))
+    const errors = entries.filter(record => record.cell.isError)
+    const tools = entries.filter(record => record.cell.kind === 'tool' || record.cell.kind === 'subtool')
+    return { first: entries[0]!.cell.index, last: entries.at(-1)!.cell.index,
+      kind: errors.length ? 'error' : tools.length > entries.length / 2 ? 'tool' : 'model' }
+  })
   const durationMs = snapshot.timeRange
     ? Math.max(0, snapshot.timeRange.end - snapshot.timeRange.start)
     : null
@@ -107,13 +115,14 @@ export function TrajectoryOverview({
         <div className="grid grid-cols-2 gap-2 @min-[760px]/trajectory:grid-cols-4">
           {[
             [Activity, t('trajectory.overview.duration'), formatDurationMillis(durationMs)],
-            [Clock3, t('trajectory.overview.ttft'), formatDurationMillis(ttftMs)],
-            [Coins, t('trajectory.overview.tokens'), formatTokens(snapshot.totalUsage?.totalTokens)],
+            [Clock3, t('trajectory.performance.ttftP50'), formatDurationMillis(ttftMs)],
+            [Coins, t('trajectory.overview.tokens'), formatTokens(snapshot.totalUsage?.totalTokens, locale)],
             [Wrench, t('trajectory.overview.toolCalls'), `${toolRecords.length}${failedToolRecords.length ? ` · ${t('trajectory.overview.failedCount', { count: failedToolRecords.length })}` : ''}`],
           ].map(([Icon, label, value]) => {
             const StatIcon = Icon as typeof Activity
             return (
-              <div key={String(label)} className="min-w-0 rounded-lg bg-foreground/[0.025] px-3 py-2.5">
+              <div key={String(label)} className="min-w-0 rounded-lg bg-foreground/[0.025] px-3 py-2.5"
+                title={Icon === Clock3 ? t('trajectory.performance.ttftSummary', { p50: formatDurationMillis(performance.p50), p95: formatDurationMillis(performance.p95), valid: performance.ttftCount, total: performance.requests.length }) : undefined}>
                 <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-secondary">
                   <StatIcon className="h-3.5 w-3.5" />{String(label)}
                 </div>
@@ -165,18 +174,22 @@ export function TrajectoryOverview({
             onClick={() => onOpenTrajectory()}
             className="craft-control flex h-12 w-full items-center gap-1 rounded-xl border border-border/55 bg-background/70 px-3 outline-none transition-colors hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={t('trajectory.overview.openTrajectory')}
+            title={t('trajectory.performance.shapeCoverage', { events: contentRecords.length, buckets: shapeBuckets.length })}
+            data-run-shape
           >
-            {contentRecords.slice(0, 18).map((record, index) => (
+            {shapeBuckets.map((bucket, index) => (
               <span
-                key={`${record.cell.index}-${index}`}
-                className={`h-2 min-w-1 flex-1 rounded-sm ${record.cell.isError ? 'bg-destructive' : record.cell.kind === 'tool' || record.cell.kind === 'subtool' ? 'bg-info/65' : 'bg-accent/65'}`}
+                key={`${bucket.first}-${index}`}
+                title={t('trajectory.performance.shapeRange', { start: bucket.first, end: bucket.last })}
+                data-shape-kind={bucket.kind}
+                className={`h-2 min-w-1 flex-1 rounded-sm ${bucket.kind === 'error' ? 'bg-destructive' : bucket.kind === 'tool' ? 'bg-info/65' : 'bg-accent/65'}`}
               />
             ))}
           </button>
         </section>
 
         {requestContexts.length > 0 && (
-          <section>
+          <section data-run-context-growth>
             <div className="mb-2 flex items-center gap-2">
               <h3 className="text-[12px] font-semibold">{t('trajectory.overview.contextGrowth')}</h3>
               <span className="text-[11px] text-text-secondary">{t('trajectory.overview.contextGrowthHint')}</span>
@@ -198,7 +211,7 @@ export function TrajectoryOverview({
                     className="craft-control group relative flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     title={t('trajectory.overview.contextRequestTitle', { seq: sequence, tokens: context.value })}
                   >
-                    <span className="pointer-events-none absolute left-1/2 top-0 z-component-chrome -translate-x-1/2 whitespace-nowrap rounded bg-popover px-1 text-[8px] tabular-nums text-popover-foreground opacity-0 shadow-xs transition-opacity group-hover:opacity-100">{formatTokens(context.value)}</span>
+                    <span className="pointer-events-none absolute left-1/2 top-0 z-component-chrome -translate-x-1/2 whitespace-nowrap rounded bg-popover px-1 text-[8px] tabular-nums text-popover-foreground opacity-0 shadow-xs transition-opacity group-hover:opacity-100">{formatTokens(context.value, locale)}</span>
                     <span className="w-full max-w-8 rounded-t-sm bg-accent/65 transition-colors group-hover:bg-accent" style={{ height: `${Math.max(4, (context.value / maxContextTokens) * 70)}%` }} />
                     <span className="h-3 whitespace-nowrap text-[8px] tabular-nums text-text-secondary">{showLabel ? context.endSeq : ''}</span>
                   </button>
@@ -207,6 +220,9 @@ export function TrajectoryOverview({
             </div>
           </section>
         )}
+
+        {performance.requests.length > 0 && <TrajectoryPerformance summary={performance} isProcessing={isProcessing}
+          onOpenTrajectory={onOpenTrajectory} onOpenContext={onOpenContext} />}
 
         <section>
           <h3 className="mb-2 text-[12px] font-semibold">{t('trajectory.overview.runBrief')}</h3>

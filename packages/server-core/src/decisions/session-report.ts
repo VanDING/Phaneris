@@ -64,7 +64,7 @@ export function buildSessionDecisionReport(input: {
     const time = Date.parse(record.t)
     if (!Number.isFinite(time)) continue
     points.set(id, { id, feature, legacy: true, startedAt: time, updatedAt: time, attempts: [{ id: legacyId,
-      provider: record.provider, model: record.model, sent: false, status: record.ok ? 'succeeded' : record.error?.kind === 'cancelled' ? 'cancelled' : 'failed', record }], observations: [] })
+      provider: record.provider, model: record.model, sent: false, status: record.ok ? 'succeeded' : record.error?.kind === 'cancelled' ? 'cancelled' : record.error?.kind === 'timeout' ? 'timeout' : 'failed', record }], observations: [] })
   }
   const usage = input.usage.filter(row => (row.payload as { kind?: string } | undefined)?.kind === 'decision')
   for (const item of points.values()) for (const attempt of item.attempts) {
@@ -72,12 +72,34 @@ export function buildSessionDecisionReport(input: {
   }
   const usageByAttempt = new Map(usage.map(row => [(row.payload as { attemptId?: string }).attemptId, row]))
   for (const item of points.values()) for (const attempt of item.attempts) {
+    const record = attempt.record
+    attempt.costSource = record?.usage?.costSource
+    attempt.costField = record?.usage?.costField
+    attempt.costUnavailableReason = record?.usage?.costUnavailableReason
+    attempt.responseId = record?.responseId
+    attempt.deadlineMs = record?.deadlineMs
+    attempt.latencyMs = record?.latencyMs
+    attempt.latencyScope = record?.latencyScope
+    if (item.legacy) {
+      attempt.inputTokens = record?.usage?.inputTokens
+      attempt.outputTokens = record?.usage?.outputTokens
+      attempt.costUsd = record?.usage?.costUsd
+      attempt.costUnavailableReason ??= 'legacy_not_recorded'
+    }
     const row = usageByAttempt.get(attempt.id)
     if (!row) continue
     attempt.inputTokens = row.inputTokens
     attempt.outputTokens = row.outputTokens
     attempt.costUsd = row.costUsd
     attempt.accountingOperationId = (row.payload as { accountingOperationId?: string }).accountingOperationId
+    const metadata = row.payload as Pick<typeof attempt, 'costSource' | 'costField' | 'costUnavailableReason' | 'responseId' | 'deadlineMs' | 'latencyMs' | 'latencyScope'>
+    attempt.costSource = metadata.costSource ?? attempt.costSource
+    attempt.costField = metadata.costField ?? attempt.costField
+    attempt.costUnavailableReason = metadata.costUnavailableReason ?? attempt.costUnavailableReason
+    attempt.responseId = metadata.responseId ?? attempt.responseId
+    attempt.deadlineMs = metadata.deadlineMs ?? attempt.deadlineMs
+    attempt.latencyMs = metadata.latencyMs ?? attempt.latencyMs
+    attempt.latencyScope = metadata.latencyScope ?? attempt.latencyScope
   }
   const items = [...points.values()].filter(item => {
     if (query.feature && item.feature !== query.feature) return false

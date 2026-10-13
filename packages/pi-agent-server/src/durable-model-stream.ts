@@ -3,6 +3,7 @@ import type { AssistantMessage, CacheRetention } from '@earendil-works/pi-ai';
 import { createAssistantMessageEventStream } from '@earendil-works/pi-ai';
 import { observeNativeRequest } from './native-request-observation.ts';
 import type { NativeRequestObservation } from '@phaneris/shared/durable-runtime/types';
+import { createAssistantTiming } from './assistant-timing.ts';
 
 /** Wrap the session's actual stream, preserving SDK authentication and retry options. */
 export function wrapDurableModelStream(
@@ -25,7 +26,8 @@ export function wrapDurableModelStream(
     const target = createAssistantMessageEventStream();
     void (async () => {
       try {
-        const observed = observeNativeRequest(effectiveOptions);
+        const timing = createAssistantTiming();
+        const observed = observeNativeRequest(effectiveOptions, () => timing.dispatched());
         const commit = await prepare(model, context, observed.observation);
         if (effectiveOptions?.signal?.aborted) {
           // T1 may wait for the host while warming is disabled or the run ends.
@@ -36,15 +38,19 @@ export function wrapDurableModelStream(
               cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } },
             stopReason: 'aborted', timestamp: Date.now(),
           };
+          Object.assign(aborted, { assistantMetrics: timing.completed(aborted, observed.observation) });
           await commit(aborted);
           target.push({ type: 'error', reason: 'aborted', error: aborted });
           return;
         }
         const source = await stream(model, context, observed.options);
         for await (const event of source) {
+          timing.observe(event);
           if (event.type === 'done' || event.type === 'error') {
             // Commit metered partial/error responses as well as successful ones.
-            await commit(event.type === 'done' ? event.message : event.error);
+            const message = event.type === 'done' ? event.message : event.error;
+            Object.assign(message, { assistantMetrics: timing.completed(message, observed.observation) });
+            await commit(message);
           }
           target.push(event);
         }

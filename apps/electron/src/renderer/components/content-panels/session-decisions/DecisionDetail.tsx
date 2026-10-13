@@ -179,6 +179,10 @@ export function DecisionDetail({ item, onOpenChat, className }: {
         <div className="flex flex-col gap-2">
           {item.attempts.map(attempt => {
             const cost = formatDecisionCost(attempt.costUsd)
+            const latency = attempt.latencyMs ?? attempt.record?.latencyMs
+            const deadline = attempt.deadlineMs ?? attempt.record?.meta?.deadlineMs
+            const costSource = attempt.costSource ?? (cost === null ? 'unknown' : 'not_recorded')
+            const missingCost = attempt.costUnavailableReason ?? (attempt.record?.error ? 'request_failed' : item.legacy ? 'legacy_not_recorded' : 'not_reported')
             return (
               <div key={attempt.id} className="rounded-xl border border-border/55 bg-background/70 p-3">
                 <div className="flex min-w-0 items-center gap-2">
@@ -190,7 +194,8 @@ export function DecisionDetail({ item, onOpenChat, className }: {
                   </span>
                   <span className="min-w-0 truncate font-mono text-[11px] text-text-secondary">{attempt.model}</span>
                   <span className="ml-auto flex flex-none items-center gap-2.5 font-mono text-[10px] tabular-nums text-text-secondary">
-                    {attempt.record?.latencyMs !== undefined && <span>{attempt.record.latencyMs} ms</span>}
+                    {latency !== undefined && <span title={t(attempt.latencyScope === 'response_body' ? 'trajectory.decisions.fullResponseLatency'
+                      : attempt.latencyScope === 'request_failure' ? 'trajectory.decisions.failedRequestLatency' : 'trajectory.decisions.legacyLatency')}>{latency} ms</span>}
                     <span className={cn(cost === null && 'text-[color:var(--info-text)]')}>{cost ?? t('common.unknown')}</span>
                   </span>
                 </div>
@@ -198,6 +203,11 @@ export function DecisionDetail({ item, onOpenChat, className }: {
                   <DecisionKv rows={[
                     [t('trajectory.decisions.tokens'), `${attempt.inputTokens ?? '—'} / ${attempt.outputTokens ?? '—'}`],
                     [t('trajectory.decisions.provider'), attempt.provider, true],
+                    [t('trajectory.decisions.costOrigin'), t(`trajectory.decisions.costSource.${costSource}`)],
+                    cost === null ? [t('trajectory.decisions.costMissing'), t(`trajectory.decisions.costReason.${missingCost}`)] : null,
+                    attempt.responseId ? [t('trajectory.decisions.responseId'), attempt.responseId, true] : null,
+                    typeof deadline === 'number' && Number.isFinite(deadline) ? [t('trajectory.decisions.deadline'), `${deadline} ms`] : null,
+                    attempt.record?.error ? [t('trajectory.decisions.requestFailure'), attempt.record.error.message] : null,
                   ]} />
                 </div>
               </div>
@@ -219,6 +229,10 @@ export function DecisionDetail({ item, onOpenChat, className }: {
                 legacy: item.legacy ?? false,
                 source: item.source ?? null,
                 unavailableReason: item.unavailableReason ?? null,
+                requests: item.attempts.map(attempt => ({ id: attempt.id, responseId: attempt.responseId ?? null,
+                  costSource: attempt.costSource ?? null, costField: attempt.costField ?? null,
+                  costUnavailableReason: attempt.costUnavailableReason ?? null, deadlineMs: attempt.deadlineMs ?? null,
+                  latencyScope: attempt.latencyScope ?? null })),
               }, null, 2)}
             </pre>
           </div>

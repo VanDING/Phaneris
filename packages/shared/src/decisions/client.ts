@@ -38,12 +38,15 @@ import {
   type DecisionState,
   type DecisionStateDigest,
   type DecisionUsage,
+  type DecisionProviderId,
+  isDecisionError,
   type NoulAnswer,
   type ScoreAnswer,
 } from './types.ts';
 
 export interface SystemOneClientOptions {
   accounting?: DecisionAccounting;
+  provider?: DecisionProviderId;
   /** Provider base URL; `/v1/systemone` is appended. */
   baseUrl: string;
   /** Bearer token. Optional only for self-hosted servers without auth. */
@@ -234,9 +237,26 @@ const EnvelopeSchema = z.object({
       output_tokens: z.number().optional(),
       // Optional extension for gateways that report an actual charge; never estimate it here.
       cost_usd: z.unknown().optional(),
+      cost: z.unknown().optional(),
     })
     .optional(),
 });
+
+function readCost(usage: Record<string, unknown> | undefined, provider: DecisionProviderId) {
+  const field = provider === 'openrouter' && usage && 'cost' in usage ? 'cost' : 'cost_usd';
+  const value = usage?.[field];
+  if (typeof value === 'number' && Number.isFinite(value) && value >= 0) {
+    return { costUsd: value, costSource: 'provider_reported' as const,
+      costField: `usage.${field}` as 'usage.cost' | 'usage.cost_usd' };
+  }
+  return { costSource: 'unknown' as const,
+    costUnavailableReason: value === undefined ? 'not_reported' as const : 'invalid_amount' as const };
+}
+
+/** IDs are opaque diagnostics, never arbitrary response content. */
+function responseIdentifier(value: unknown): string | undefined {
+  return typeof value === 'string' && /^[\w.:/\-]{1,256}$/.test(value) ? value : undefined;
+}
 
 function malformed(message: string, state?: DecisionStateDigest, detail?: string): DecisionError {
   return new DecisionError('unavailable', `Decision model returned an unexpected response: ${message}`, {
@@ -250,6 +270,7 @@ export function parseSystemOneResponse(
   json: unknown,
   questions: Record<string, DecisionQuestion>,
   state?: DecisionStateDigest,
+  provider: DecisionProviderId = 'custom',
 ): { model?: string; answers: Record<string, DecisionAnswer>; usage: DecisionUsage } {
   const envelope = EnvelopeSchema.safeParse(json);
   if (!envelope.success) throw malformed('missing answers object', state);
@@ -288,14 +309,14 @@ export function parseSystemOneResponse(
     }
   }
 
+  const charge = readCost(envelope.data.usage, provider);
   return {
     model: envelope.data.model,
     answers,
     usage: {
       inputTokens: envelope.data.usage?.input_tokens ?? 0,
       outputTokens: envelope.data.usage?.output_tokens ?? 0,
-      ...(typeof envelope.data.usage?.cost_usd === 'number' && Number.isFinite(envelope.data.usage.cost_usd) && envelope.data.usage.cost_usd >= 0
-        ? { costUsd: envelope.data.usage.cost_usd } : {}),
+      ...(charge.costUsd !== undefined ? { costUsd: charge.costUsd } : {}),
     },
   };
 }
@@ -306,6 +327,7 @@ export function parseSystemOneResponse(
 
 export class SystemOneClient {
   private readonly accounting?: DecisionAccounting;
+  private readonly provider: DecisionProviderId;
   readonly endpoint: string;
   readonly model: string;
   private readonly apiKey?: string;
@@ -316,6 +338,7 @@ export class SystemOneClient {
 
   constructor(options: SystemOneClientOptions) {
     this.accounting = options.accounting;
+    this.provider = options.provider ?? 'custom';
     this.endpoint = buildSystemOneEndpoint(options.baseUrl);
     this.model = options.model;
     this.apiKey = options.apiKey?.trim() || undefined;
@@ -354,39 +377,43 @@ export class SystemOneClient {
     const combinedSignal = signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal;
 
     const startedAt = performance.now();
-    let response: Response;
+    let responseId: string | undefined;
     try {
       if (request.observation) {
         const { decisionObservation } = await import('./observation.ts');
         decisionObservation(request.observation, { kind: 'sent' });
       }
-      response = await this.fetchImpl(this.endpoint, { method: 'POST', headers, body, signal: combinedSignal });
+      const response = await this.fetchImpl(this.endpoint, { method: 'POST', headers, body, signal: combinedSignal });
+      responseId = responseIdentifier(response.headers.get('x-request-id'));
+      combinedSignal.throwIfAborted();
+      if (!response.ok) {
+        const failure = await this.httpError(response, prepared.digest);
+        combinedSignal.throwIfAborted();
+        throw failure;
+      }
+      let json: unknown;
+      try { json = await response.json(); }
+      catch (error) {
+        if (combinedSignal.aborted) throw this.networkError(error, deadlineMs, signal, prepared.digest);
+        throw new DecisionError('unavailable', 'Decision model returned a non-JSON body', { cause: error, state: prepared.digest });
+      }
+      combinedSignal.throwIfAborted();
+      const parsed = parseSystemOneResponse(json, request.questions, prepared.digest, this.provider);
+      const raw = json as { id?: unknown; usage?: Record<string, unknown> };
+      responseId = responseIdentifier(raw.id) ?? responseId;
+      return {
+        model: parsed.model || model, modelReported: Boolean(parsed.model), requestedModel: model,
+        answers: parsed.answers, usage: { ...parsed.usage, ...readCost(raw.usage, this.provider) },
+        latencyMs: Math.max(0, Math.round(performance.now() - startedAt)), latencyScope: 'response_body',
+        responseId, deadlineMs, state: prepared.digest,
+      };
     } catch (error) {
-      throw this.networkError(error, deadlineMs, signal, prepared.digest);
+      const failure = isDecisionError(error) ? error : this.networkError(error, deadlineMs, signal, prepared.digest);
+      failure.latencyMs = Math.max(0, Math.round(performance.now() - startedAt));
+      failure.deadlineMs = deadlineMs;
+      failure.responseId = responseId;
+      throw failure;
     }
-    const latencyMs = Math.max(0, Math.round(performance.now() - startedAt));
-
-    if (!response.ok) {
-      throw await this.httpError(response, prepared.digest);
-    }
-
-    let json: unknown;
-    try {
-      json = await response.json();
-    } catch (error) {
-      throw new DecisionError('unavailable', 'Decision model returned a non-JSON body', { cause: error, state: prepared.digest });
-    }
-
-    const parsed = parseSystemOneResponse(json, request.questions, prepared.digest);
-    return {
-      model: parsed.model || model,
-      modelReported: Boolean(parsed.model),
-      requestedModel: model,
-      answers: parsed.answers,
-      usage: parsed.usage,
-      latencyMs,
-      state: prepared.digest,
-    };
   }
 
   private networkError(error: unknown, deadlineMs: number, callerSignal: AbortSignal | undefined, state: DecisionStateDigest): DecisionError {

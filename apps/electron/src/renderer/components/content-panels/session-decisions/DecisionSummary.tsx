@@ -23,10 +23,11 @@ function SummaryCells({ totals }: { totals: SessionDecisionTotals }) {
   const { t } = useTranslation()
   const cost = formatDecisionCost(totals.knownCostUsd)
   const costIsUnknown = !totals.knownCostRequests && (totals.unknownCostRequests > 0 || totals.legacyCalls > 0)
+  const historicalOnly = totals.points === 0 && totals.legacyCalls > 0
   const cells = [
-    { key: 'points', icon: <CornerDownRight className="size-3.5" />, value: totals.points.toLocaleString() },
-    { key: 'changed', icon: <ArrowRight className="size-3.5" />, value: totals.changed.toLocaleString() },
-    { key: 'fallback', icon: <Ban className="size-3.5" />, value: totals.fallback.toLocaleString() },
+    { key: historicalOnly ? 'historicalCalls' : 'points', icon: <CornerDownRight className="size-3.5" />, value: (historicalOnly ? totals.legacyCalls : totals.points).toLocaleString() },
+    { key: 'changed', icon: <ArrowRight className="size-3.5" />, value: historicalOnly ? '—' : totals.changed.toLocaleString() },
+    { key: 'fallback', icon: <Ban className="size-3.5" />, value: historicalOnly ? '—' : totals.fallback.toLocaleString() },
     { key: 'cost', icon: <Clock3 className="size-3.5" />, value: costIsUnknown ? t('common.unknown') : cost ?? t('common.unknown') },
   ]
   return (
@@ -59,9 +60,10 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
         <h3 className="text-[12px] font-semibold">{t('trajectory.decisions.title')}</h3>
         {report && (
           <span className="text-[11px] tabular-nums text-text-secondary">
-            {t('trajectory.decisions.scopeMeta', {
+            {t(report.totals.legacyCalls > 0 ? report.totals.points === 0 ? 'trajectory.decisions.scopeHistoricalMeta' : 'trajectory.decisions.scopeLegacyMeta' : 'trajectory.decisions.scopeMeta', {
               features: report.features.length,
               requests: report.totals.requests,
+              legacy: report.totals.legacyCalls,
             })}
           </span>
         )}
@@ -81,7 +83,8 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
             className="craft-control flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-border/55 bg-background/70 px-3 py-3 text-left transition-colors hover:bg-foreground/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <SummaryCells totals={report.totals} />
-            <span className="ml-auto flex-none text-[11px] text-text-secondary">
+            <span className="craft-text-caption w-full min-w-0 text-text-secondary">
+              {report.totals.legacyCalls > 0 && <>{t('trajectory.decisions.historicalSummary', { count: report.totals.legacyCalls })} </>}
               {t('trajectory.decisions.includedCost')}
             </span>
           </button>

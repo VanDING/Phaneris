@@ -73,6 +73,9 @@ export interface DecisionRecord {
   ok: boolean;
   coldStart?: boolean;
   latencyMs?: number;
+  latencyScope?: 'response_body' | 'request_failure';
+  responseId?: string;
+  deadlineMs?: number;
   /** Question key → type. */
   questions: Record<string, DecisionQuestionType>;
   /** Digest only. `null` when the call failed before the state was prepared. */
@@ -192,6 +195,9 @@ export function buildDecisionRecord(input: DecisionRecordInput): DecisionRecord 
     record.attemptId = input.result.attemptId;
     if (input.result.modelReported) record.responseModel = input.result.model;
     record.latencyMs = input.result.latencyMs;
+    record.latencyScope = input.result.latencyScope;
+    record.responseId = input.result.responseId;
+    record.deadlineMs = input.result.deadlineMs;
     record.state = input.result.state;
     record.answers = summarizeDecisionAnswers(input.result.answers);
     record.usage = input.result.usage;
@@ -200,6 +206,13 @@ export function buildDecisionRecord(input: DecisionRecordInput): DecisionRecord 
     record.error = toDecisionFailure(input.error, { includeDetail: false });
     const digest = (input.error as { state?: DecisionStateDigest } | null)?.state;
     if (digest && !record.state) record.state = digest;
+    const diagnostics = input.error as { latencyMs?: number; deadlineMs?: number; responseId?: string } | null;
+    if (diagnostics?.latencyMs !== undefined) {
+      record.latencyMs = diagnostics.latencyMs;
+      record.latencyScope = 'request_failure';
+    }
+    record.deadlineMs = diagnostics?.deadlineMs;
+    record.responseId = diagnostics?.responseId;
   }
   if (input.latencyMs !== undefined && record.latencyMs === undefined) record.latencyMs = input.latencyMs;
   if (input.sessionId) record.sessionId = input.sessionId;

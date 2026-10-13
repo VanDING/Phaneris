@@ -13,6 +13,7 @@ import { LayoutGroup, motion, useReducedMotionConfig } from 'motion/react'
 import { FolderOpen, GitCompareArrows, MessageSquare, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '../../lib/utils'
+import { readAssistantTiming } from '@phaneris/core/utils'
 import { Markdown } from '../markdown'
 import type { AssistantMetricDetail, TrajectoryCellProps, TrajectorySourceBlock } from './trajectory-layout'
 import { formatDurationMillis } from './trajectory-layout'
@@ -106,53 +107,30 @@ function SourceBlocksView({ blocks }: { blocks: readonly TrajectorySourceBlock[]
 // TTFT / decoding / throughput (DSH AssistantTimingPanel)
 // ============================================================
 
-function totalTime(metrics: AssistantMetricDetail): string {
-  const start = metrics.stepStartTime
-  const completed = metrics.completedTime
-  if (typeof start !== 'number' || typeof completed !== 'number') return '—'
-  return formatMs(completed - start)
-}
-
-function ttft(metrics: AssistantMetricDetail): string {
-  const start = metrics.stepStartTime
-  const first = metrics.firstTokenTime
-  if (typeof start !== 'number' || typeof first !== 'number') return '—'
-  return formatMs(first - start)
-}
-
-function generationTime(metrics: AssistantMetricDetail): string {
-  const first = metrics.firstTokenTime
-  const completed = metrics.completedTime
-  if (typeof first !== 'number' || typeof completed !== 'number') return '—'
-  return formatMs(completed - first)
-}
-
-function throughput(metrics: AssistantMetricDetail): string {
-  const tokens = metrics.outputTokens
-  const first = metrics.firstTokenTime
-  const completed = metrics.completedTime
-  if (typeof tokens !== 'number' || typeof first !== 'number' || typeof completed !== 'number') return '—'
-  const seconds = (completed - first) / 1000
-  if (seconds <= 0) return '—'
-  return `${(tokens / seconds).toFixed(1)} tok/s`
-}
-
 function AssistantTimingPanel({ metrics }: { metrics: AssistantMetricDetail }) {
+  const { t, i18n } = useTranslation()
+  const values = readAssistantTiming(metrics)
+  const number = new Intl.NumberFormat(i18n.resolvedLanguage ?? i18n.language, { maximumFractionDigits: 1 })
   const items: Array<[string, string]> = [
-    ['Total', totalTime(metrics)],
-    ['TTFT', ttft(metrics)],
-    ['Generation', generationTime(metrics)],
-    ['Throughput', throughput(metrics)],
+    [t('trajectory.timing.total'), formatMs(values.totalMs)],
+    ['TTFT', formatMs(values.ttftMs)],
+    [t('trajectory.timing.generation'), formatMs(values.generationMs)],
+    [t('trajectory.timing.throughput'), values.tokensPerSecond === null ? '—' : `${number.format(values.tokensPerSecond)} tok/s`],
   ]
   return (
-    <Section title="Timing">
-      {metrics.timingRecorded
-        ? items.map(([k, v]) => <KeyValue key={k} k={k} v={v} />)
-        : <p className="text-text-secondary">No wall-clock timing recorded for this record (historical session).</p>}
+    <Section title={t('trajectory.timing.title')}>
+      {items.map(([k, v]) => <KeyValue key={k} k={k} v={v} />)}
+      <KeyValue k={t('trajectory.timing.firstText')} v={formatMs(values.firstTextMs)} />
+      <KeyValue k={t('trajectory.timing.source')} v={t(metrics.timingVersion === 2 ? 'trajectory.timing.providerSource' : 'trajectory.timing.legacySource')} />
+      {values.legacyFirstTextMs !== null && <KeyValue k={t('trajectory.timing.legacyFirstText')} v={formatMs(values.legacyFirstTextMs)} />}
+      {values.ttftMs !== null && values.firstTextMs === null && <p className="mt-1 text-text-secondary">{t('trajectory.timing.noText')}</p>}
+      {values.unavailableReason && <p className="mt-1 text-text-secondary">{t(`trajectory.timing.reason.${values.unavailableReason}`)}</p>}
+      {values.rateUnavailableReason && values.rateUnavailableReason !== values.unavailableReason
+        && <p className="mt-1 text-text-secondary">{t(`trajectory.timing.reason.${values.rateUnavailableReason}`)}</p>}
       {metrics.stepStartTime !== null && metrics.completedTime !== null ? (
         <div className="mt-1 border-t border-border/50 pt-1">
-          <KeyValue k="Started" v={new Date(metrics.stepStartTime).toLocaleTimeString()} />
-          <KeyValue k="Completed" v={new Date(metrics.completedTime).toLocaleTimeString()} />
+          <KeyValue k={t('trajectory.timing.started')} v={new Date(metrics.stepStartTime).toLocaleTimeString(i18n.resolvedLanguage ?? i18n.language)} />
+          <KeyValue k={t('trajectory.timing.completed')} v={new Date(metrics.completedTime).toLocaleTimeString(i18n.resolvedLanguage ?? i18n.language)} />
         </div>
       ) : null}
     </Section>

@@ -731,17 +731,30 @@ export interface TrajectorySourceBlock {
 }
 
 /**
- * Wall-clock assistant step metrics for trajectory TTFT / decoding / throughput.
- * Recorded by the Pi event adapter from message_start → first text_delta →
- * message_end; missing (null fields) for historical messages or when the
- * stream did not deliver a text delta.
+ * Client-observed assistant request timing and output usage.
+ * v2 uses one subprocess monotonic clock from provider dispatch through first
+ * nonempty output to the terminal stream event, before persistence/transport.
+ * Legacy host-side timestamps remain readable but are not comparable v2 data.
  */
 export interface AssistantMetrics {
-  /** True when stepStartTime and firstTokenTime were both recorded. */
+  /** v2 observes provider dispatch and all output kinds in the subprocess. */
+  timingVersion?: 2;
+  timingSource?: 'pi_provider_callbacks';
+  /** Reason this request cannot supply comparable v2 timings. */
+  timingUnavailableReason?: 'start_unobserved' | 'multiple_attempts' | 'no_output' | 'invalid_interval' | 'aborted' | 'failed';
+  /** True when request start and first output were both observed. */
   timingRecorded: boolean;
   stepStartTime: number | null;
+  /** Kept for compatibility: first visible text, not reasoning/tool output. */
   firstTokenTime: number | null;
+  firstOutputTime?: number | null;
+  firstTextTime?: number | null;
   completedTime: number | null;
+  /** Durations use one monotonic clock; epoch timestamps are for display only. */
+  requestDurationMs?: number | null;
+  firstOutputLatencyMs?: number | null;
+  firstTextLatencyMs?: number | null;
+  generationDurationMs?: number | null;
   usageProvided: boolean;
   outputTokens: number | null;
 }

@@ -162,7 +162,7 @@ export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly Tr
       const allItems = [systemItem, ...registeredTools, ...accumulated]
       const groups = CATEGORY_ORDER.map(category => {
         const items = allItems.filter(entry => entry.category === category)
-        const manifestMessageChars = manifest?.messages.reduce((sum, entry) => {
+        const manifestMessageChars = manifest?.messages?.reduce((sum, entry) => {
           const manifestCategory: TrajectoryContextCategory = entry.role === 'user'
             ? 'user'
             : entry.role === 'assistant'
@@ -175,9 +175,9 @@ export function deriveRequestContexts(snapshot: TrajectorySnapshot): readonly Tr
         const manifestChars = !manifest || category === 'attachments'
           ? undefined
           : category === 'system'
-            ? manifest.system.chars
+            ? manifest.system?.chars
             : category === 'tools'
-              ? (manifestMessageChars ?? 0) + manifest.tools.reduce((sum, tool) => sum + tool.schemaChars + (tool.description?.length ?? 0), 0)
+              ? (manifestMessageChars ?? 0) + (manifest.tools ?? []).reduce((sum, tool) => sum + tool.schemaChars + (tool.description?.length ?? 0), 0)
               : manifestMessageChars
         const chars = manifestChars ?? items.reduce((sum, entry) => sum + entry.chars, 0)
         return {

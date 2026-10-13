@@ -1,6 +1,7 @@
 /** Browser-safe contract for session decision evidence. */
 import type { DecisionLayerFeature } from './settings.ts';
 import type { DecisionRecord, DecisionOutcome, DecisionFollowUp } from './records.ts';
+import type { DecisionUsage } from './types.ts';
 
 export interface DecisionSource {
   messageId?: string;
@@ -48,6 +49,13 @@ export interface SessionDecisionAttempt {
   inputTokens?: number;
   outputTokens?: number;
   costUsd?: number;
+  costSource?: DecisionUsage['costSource'];
+  costField?: DecisionUsage['costField'];
+  costUnavailableReason?: DecisionUsage['costUnavailableReason'];
+  responseId?: string;
+  deadlineMs?: number;
+  latencyMs?: number;
+  latencyScope?: 'response_body' | 'request_failure';
   accountingOperationId?: string;
 }
 export interface SessionDecisionItem {

@@ -178,6 +178,7 @@ export async function resolveDecisionClient(options: ResolveDecisionClientOption
   }
 
   const client = new SystemOneClient({
+    provider,
     accounting: resolveDecisionAccounting({ sessionId: options.sessionId, feature: options.feature, provider, model: endpoint.model }),
     baseUrl: endpoint.baseUrl,
     apiKey,

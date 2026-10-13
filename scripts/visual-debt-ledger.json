@@ -4417,16 +4417,6 @@
       "file": "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionSummary.tsx",
       "rule": "theme-contracts/roles",
       "message": "literal",
-      "fingerprint": "c048b1154deb8f008691c256632e533e1f4a3c43809b662689771b29264a6fe8",
-      "count": 1,
-      "owner": "UI / run and decisions",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionSummary.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
       "fingerprint": "1c58dcc1d17f59c9b333ececf217fd45ceba69890975c45009e93fa807b4bda3",
       "count": 1,
       "owner": "UI / run and decisions",

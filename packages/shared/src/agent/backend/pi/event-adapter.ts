@@ -12,6 +12,7 @@
 import { sumTokenUsage } from '@phaneris/core/utils';
 import type {
   AgentEvent as ProductAgentEvent,
+  AssistantMetrics,
   ContextUsageSnapshot,
   PiUsage,
   RequestContextSnapshot,
@@ -689,8 +690,11 @@ export class PiEventAdapter extends BaseEventAdapter {
           // Wall-clock step metrics for TTFT / decoding / throughput.
           const stepStartTime = this.pendingStepStart;
           const firstTokenTime = this.pendingFirstToken;
-          const completedTime = this.extractMessageTimestamp(event.message) ?? Date.now();
-          const assistantMetrics = {
+          const completedTime = this.serverTimestamp(event) ?? Date.now();
+          // Authoritative v2 timings were measured on the provider stream,
+          // before commit/IPC work. A direct/older SDK event remains legacy.
+          const providerMetrics = (event.message as { assistantMetrics?: AssistantMetrics }).assistantMetrics;
+          const assistantMetrics: AssistantMetrics = providerMetrics?.timingVersion === 2 ? providerMetrics : {
             timingRecorded: stepStartTime !== null && firstTokenTime !== null,
             stepStartTime,
             firstTokenTime,

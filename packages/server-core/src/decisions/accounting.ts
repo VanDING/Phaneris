@@ -21,13 +21,19 @@ export function createDecisionAccounting(runtime: DurableRuntime, workspaceRoot:
     catch (error) { failure = error; throw error }
     finally {
       const safeFailure = failure ? toDecisionFailure(failure, { includeDetail: false }) : undefined
+      const diagnostics = (result ?? failure) as { responseId?: string; deadlineMs?: number; latencyMs?: number } | undefined
       await runtime.effects.commitModelOutcome(workspaceRoot, { ...identity, operationId: prepared.operationId,
         stopReason: safeFailure?.kind === 'cancelled' ? 'aborted' : safeFailure ? 'error' : 'stop',
+        responseId: diagnostics?.responseId,
         content: result ? { answers: result.answers, state: digest } : { error: safeFailure?.kind ?? 'unknown', state: digest },
         usage: { inputTokens: result?.usage.inputTokens, outputTokens: result?.usage.outputTokens, costUsd: result?.usage.costUsd,
           payload: { kind: 'decision', feature: scope.feature, decisionPointId: request.observation?.decisionPointId,
             attemptId: request.observation?.attemptId, accountingOperationId: prepared.operationId,
-            costSource: result?.usage.costUsd === undefined ? 'unknown' : 'provider_reported', failure: safeFailure?.kind } } })
+            costSource: result?.usage.costSource ?? (result?.usage.costUsd === undefined ? 'unknown' : 'provider_reported'),
+            costField: result?.usage.costField,
+            costUnavailableReason: result?.usage.costUnavailableReason ?? (safeFailure ? 'request_failed' : undefined),
+            responseId: diagnostics?.responseId, deadlineMs: diagnostics?.deadlineMs, latencyMs: diagnostics?.latencyMs,
+            latencyScope: diagnostics?.latencyMs !== undefined ? safeFailure ? 'request_failure' : 'response_body' : undefined, failure: safeFailure?.kind } } })
       runtime.commands.completeRun(workspaceRoot, operationId, safeFailure?.kind === 'timeout' ? 'timeout' : safeFailure?.kind === 'cancelled' ? 'interrupted' : safeFailure ? 'error' : 'complete')
       try { settled() } catch { /* Product observers cannot change a paid effect's committed result. */ }
     }

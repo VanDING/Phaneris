@@ -1010,6 +1010,7 @@ async function requestDurableModelOutcome(input: {
       costUsd: input.message.usage.cost.total,
       payload: {
         kind: input.purpose ?? 'model_attempt', requestSeq: Number(input.providerRequestId), usage: input.message.usage,
+        assistantMetrics: (input.message as AssistantMessage & { assistantMetrics?: import('@phaneris/core/types').AssistantMetrics }).assistantMetrics,
         costSource: 'pi_sdk_estimate', responseModel: input.message.responseModel,
         providerThinkingLevel: input.message.providerThinkingLevel,
       },

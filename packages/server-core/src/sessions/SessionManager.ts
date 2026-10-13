@@ -9370,6 +9370,7 @@ initialSources: {
                     requestSeq: event.requestSeq,
                     sdkMessageId: event.sdkMessageId,
                     usage: event.usage,
+                    assistantMetrics: event.assistantMetrics,
                   },
                 } : undefined,
                 createdAt: assistantMessage.timestamp,

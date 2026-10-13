@@ -132,6 +132,9 @@ export interface DecisionUsage {
   outputTokens: number;
   costUsd?: number;
   costStatus?: 'known' | 'unknown';
+  costSource?: 'provider_reported' | 'catalog_zero' | 'estimated' | 'unknown';
+  costField?: 'usage.cost' | 'usage.cost_usd';
+  costUnavailableReason?: 'not_reported' | 'invalid_amount' | 'request_failed' | 'legacy_not_recorded';
 }
 
 /** What the client knows about the state it sent — never the state itself. */
@@ -158,6 +161,9 @@ export interface DecisionResult {
   answers: Record<string, DecisionAnswer>;
   usage: DecisionUsage;
   latencyMs: number;
+  latencyScope?: 'response_body';
+  responseId?: string;
+  deadlineMs?: number;
   state: DecisionStateDigest;
 }
 
@@ -193,6 +199,10 @@ export class DecisionError extends Error {
   readonly detail?: string;
   /** Digest of the state that was (about to be) sent, when known. */
   state?: DecisionStateDigest;
+  /** Client-measured failure diagnostics; no provider body is retained. */
+  latencyMs?: number;
+  deadlineMs?: number;
+  responseId?: string;
 
   constructor(
     kind: DecisionFailureKind,

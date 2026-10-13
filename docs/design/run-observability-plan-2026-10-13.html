@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run 观测方案 · Phaneris</title>
+<style>
+
+  :root{color-scheme:light;--canvas:#f5f6f8;--surface:#fff;--subtle:#f8f9fb;--hover:#f0eef8;--ink:#262833;--muted:#616777;--border:#e4e6ec;--accent:#7446df;--accent-text:#6635ce;--accent-soft:#f1ebfd;--ok:#257157;--ok-soft:#eaf6f0;--warn:#966327;--warn-soft:#fbf2e6;--error:#b9344a;--error-soft:#fbeef0;--tool:#a88452;--radius:10px;--font:Inter,"Segoe UI","Microsoft YaHei",sans-serif}
+  [data-theme="dark"]{color-scheme:dark;--canvas:#191a20;--surface:#22232b;--subtle:#282a33;--hover:#343041;--ink:#ececf2;--muted:#b1b3c2;--border:#3b3c47;--accent:#b390ff;--accent-text:#c1a4ff;--accent-soft:#352b49;--ok:#82cfb0;--ok-soft:#243c34;--warn:#e2ba80;--warn-soft:#3b3229;--error:#f194a4;--error-soft:#432b34;--tool:#c5a171}
+  *{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--ink);font:14px/1.55 var(--font)}button,input,select{font:inherit}button,select{color:inherit}button{cursor:pointer}a{color:var(--accent-text);text-underline-offset:3px}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}button:disabled{cursor:default;opacity:.5}::selection{background:var(--accent-soft);color:var(--ink)}[hidden]{display:none!important}h1,h2,h3,p{margin:0}h1{font-size:19px;line-height:1.4;letter-spacing:-.02em;font-weight:650}h2{font-size:19px;font-weight:650;letter-spacing:-.015em}h3{font-size:14px;font-weight:650}code{font-family:"Cascadia Code",Consolas,monospace;font-size:.88em;overflow-wrap:anywhere}svg{display:block}svg.icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}.muted{color:var(--muted)}.num{font-variant-numeric:tabular-nums}.small{font-size:12px}.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 6px;font-size:11px;line-height:1.5;border-radius:4px;white-space:nowrap;background:var(--subtle);color:var(--muted)}.badge.ok{background:var(--ok-soft);color:var(--ok)}.badge.warn{background:var(--warn-soft);color:var(--warn)}.badge.error{background:var(--error-soft);color:var(--error)}.badge.accent{background:var(--accent-soft);color:var(--accent-text)}.dot{width:6px;height:6px;border-radius:50%;display:inline-block;background:currentColor;flex:none}.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;min-height:32px}.btn:hover{background:var(--hover)}.btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-text)}.text-btn{display:inline-flex;gap:5px;align-items:center;background:none;border:0;color:var(--accent-text);font-size:12px;padding:4px 0;text-align:left}.text-btn:hover{text-decoration:underline;text-underline-offset:3px}.segmented{display:flex;gap:2px;padding:3px;background:var(--subtle);border:1px solid var(--border);border-radius:7px}.segmented button{border:0;border-radius:4px;background:transparent;padding:5px 9px;font-size:12px;color:var(--muted)}.segmented button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px #0000000a}.row{display:flex;gap:10px;align-items:center;min-width:0}.spread{justify-content:space-between}.wrap{flex-wrap:wrap}.stack{display:grid;gap:12px}.surface{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}.notice{padding:12px 16px;background:var(--subtle);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:13px;line-height:1.7}.notice strong{color:var(--ink);font-weight:600}.rule{border-top:1px solid var(--border)}
+.run-table{width:100%;border-collapse:collapse;font-size:11px}.table-scroll{overflow:auto;border:1px solid var(--border);border-radius:8px}.run-table th{font-weight:500;color:var(--muted);text-align:left;background:var(--subtle);font-size:10px;white-space:nowrap}.run-table td,.run-table th{padding:9px 10px;border-bottom:1px solid var(--border);white-space:nowrap}.run-table tr:last-child td{border-bottom:0}.run-table tbody tr[data-request],.run-table tbody tr[data-decision]{cursor:pointer}.run-table tr[data-request]:hover,.run-table tr[data-decision]:hover{background:var(--subtle)}.run-table tr.selected{background:var(--accent-soft)}.run-table .r{text-align:right}.run-table .turn-group td{font-size:11px;font-weight:600;background:var(--subtle);padding-top:12px}.inline-detail{background:var(--subtle);border:1px solid var(--border);border-radius:8px;padding:13px;margin-top:14px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:9px}.detail-grid>div{display:flex;justify-content:space-between;gap:14px;font-size:11px}.detail-grid span{color:var(--muted)}.mini-summary{display:flex;gap:20px;flex-wrap:wrap;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:14px;font-size:11px;color:var(--muted)}.mini-summary strong{font-size:17px;color:var(--ink);margin-right:4px;font-weight:600}.request-picker{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}.request-picker button{border:1px solid var(--border);border-radius:4px;padding:3px 6px;background:var(--surface);font-size:10px;color:var(--muted)}.request-picker button[aria-pressed="true"]{color:var(--accent-text);border-color:var(--accent);background:var(--accent-soft)}.context-chart{display:flex;gap:4px;align-items:end;height:130px;padding:12px 10px 0;border-bottom:1px solid var(--border)}.context-bar{flex:1;min-width:0;border:0;background:var(--accent);opacity:.55;border-radius:3px 3px 0 0;padding:0;position:relative}.context-bar[aria-pressed="true"]{opacity:1}.context-bar:after{content:attr(data-label);position:absolute;bottom:-20px;left:0;right:0;text-align:center;color:var(--muted);font-size:9px}.context-breakdown{display:flex;height:10px;gap:2px;margin:12px 0 10px}.context-breakdown span{background:var(--accent);border-radius:2px}.breakdown-list{display:grid;gap:7px;font-size:11px}.breakdown-list div{display:flex;justify-content:space-between;gap:12px}.breakdown-list .swatch{width:7px;height:7px;display:inline-block;background:var(--accent);border-radius:2px;margin-right:5px}.map-frame{padding:18px;border:1px solid var(--border);border-radius:8px;overflow:auto}.map-tree{display:grid;gap:12px;min-width:320px}.map-root{max-width:350px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:7px;padding:12px;text-align:left;font-size:12px}.map-root small,.map-node small{display:block;margin-top:3px;font-size:10px;color:var(--muted)}.map-children{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-left:18px;border-left:1px solid var(--border);margin-left:15px}.map-node{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:11px;text-align:left;font-size:11px}.map-node[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+  .plan{max-width:1240px;margin:auto}.plan-lead{max-width:82ch;margin:7px 0 24px;color:var(--muted);font-size:14px;line-height:1.8}.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:23px 0}.plan-block{padding:21px 23px}.plan-block h3{font-size:15px;margin-bottom:10px}.plan-block p,.plan-block li{font-size:13px;line-height:1.85;color:var(--muted)}.plan-block ol,.plan-block ul{margin:10px 0 0;padding-left:19px}.plan-block strong{color:var(--ink)}.evidence-rail{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:20px 0;background:var(--surface);border:1px solid var(--border);border-radius:8px}.evidence-cell{padding:16px 19px;border-right:1px solid var(--border)}.evidence-cell:last-child{border:0}.evidence-cell strong{display:block;font-size:22px;line-height:1.4;font-weight:600;font-variant-numeric:tabular-nums}.evidence-cell span{color:var(--muted);font-size:12px}.plan-table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}.plan-table th{background:var(--subtle);color:var(--muted);text-align:left;font-weight:500;font-size:12px}.plan-table td,.plan-table th{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top}.plan-table tr:last-child td{border-bottom:0}.plan-table td:first-child{width:17%;font-weight:600}.plan-table td:nth-child(2){width:26%;color:var(--muted)}.plan-table td:nth-child(3){width:36%}.plan-table td:last-child{width:21%;color:var(--muted)}.plan-section{margin-top:32px}.plan-section>h2{margin-bottom:12px}.formula{padding:12px 15px;margin:12px 0;background:var(--subtle);border-radius:6px;color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums}.source-list{list-style:none;padding:0;margin:0;display:grid;gap:11px}.source-list li{display:grid;grid-template-columns:140px 1fr;gap:15px;font-size:12px;line-height:1.8;padding-bottom:10px;border-bottom:1px solid var(--border)}.source-list li:last-child{border:0}.source-list code{color:var(--muted)}details{margin-top:15px}summary{font-size:13px;color:var(--accent-text);cursor:pointer}.timeline-plan{display:grid;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden}.phase{display:grid;grid-template-columns:145px 1fr 220px;gap:22px;padding:19px 22px;border-bottom:1px solid var(--border);background:var(--surface)}.phase:last-child{border:0}.phase h3{font-size:14px}.phase p{font-size:13px;line-height:1.85;color:var(--muted)}.phase .deliver{font-size:12px;color:var(--muted);line-height:1.8}.decision-list{list-style:none;display:grid;gap:0;margin:0;padding:0}.decision-list li{padding:12px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted)}.decision-list li:last-child{border:0}.decision-list strong{color:var(--ink)}.footer{margin-top:32px;padding-top:15px;border-top:1px solid var(--border);color:var(--muted);font-size:11px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+
+  .topbar-inner{max-width:1120px;margin:auto;min-height:52px;padding:9px 18px;display:flex;align-items:center;gap:14px}
+  .topbar{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:center;gap:8px}.brand h1{font-size:16px;font-weight:600;letter-spacing:0}.brand-mark{color:var(--accent);width:18px!important;height:18px!important}
+  .global-nav{display:flex;gap:3px;margin-left:auto}.global-nav button{font-size:12px;color:var(--muted);border:0;background:none;border-radius:5px;padding:6px 10px}
+  .global-nav button[aria-selected="true"]{color:var(--accent-text);background:var(--accent-soft);font-weight:550}
+  .top-actions{display:flex;gap:5px}.top-actions .btn{min-height:28px;padding:4px 8px;font-size:11px}
+  .main{max-width:1120px;margin:auto;padding:16px 18px 32px}
+  .intro{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .intro p{color:var(--muted);font-size:12px}.scenario-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.scenario-controls label{font-size:11px;color:var(--muted)}
+  select{background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--ink);font-size:11px;min-height:28px;padding:3px 24px 3px 7px;max-width:100%}
+  .scenario-controls .btn{font-size:11px;min-height:28px;padding:3px 8px}
+  .demo-layout{display:block}.demo-column{min-width:0}.demo-column.is-narrow .run-panel{max-width:530px;margin:auto}
+  .run-panel{font-size:12px;line-height:1.5;background:var(--run-canvas);border:1px solid var(--border);border-radius:9px;overflow:hidden;container-type:inline-size;box-shadow:none}
+  .run-chrome{height:38px;display:flex;align-items:center;gap:6px;padding:8px 13px;background:var(--surface);border-bottom:1px solid var(--border);font-size:12px}
+  .run-chrome .icon{width:14px;height:14px}.run-chrome .session{margin-left:auto;border:1px solid var(--border);border-radius:5px;padding:1px 7px;font-size:11px;color:var(--muted)}
+  .run-tabs{display:flex;gap:20px;padding:0 14px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto}
+  .run-tabs button{padding:9px 1px 8px;border:0;border-bottom:2px solid transparent;color:var(--muted);font-size:12px;background:none;white-space:nowrap}
+  .run-tabs button[aria-selected="true"]{color:var(--ink);font-weight:550;border-bottom-color:var(--accent)}
+  .run-tabs button:disabled{opacity:1}
+  #proposal-inventory{table-layout:fixed;min-width:980px}
+  #proposal-inventory th:nth-child(1),#proposal-inventory td:nth-child(1){width:11%}
+  #proposal-inventory th:nth-child(2),#proposal-inventory td:nth-child(2){width:16%}
+  #proposal-inventory th:nth-child(3),#proposal-inventory td:nth-child(3){width:24%}
+  #proposal-inventory th:nth-child(4),#proposal-inventory td:nth-child(4){width:29%}
+  #proposal-inventory th:nth-child(5),#proposal-inventory td:nth-child(5){width:20%}
+  .run-scope{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}
+  .run-scope .scope-quality{margin-left:4px;font-size:11px}.run-scope .badge{background:transparent;padding:0}
+  .run-body{padding:12px 13px 22px;background:var(--run-canvas)}.run-body h3{font-size:12px;font-weight:600}
+  .status-line{display:flex;align-items:center;gap:7px;padding-bottom:12px;border-bottom:1px solid var(--border);font-size:13px;min-height:30px}
+  .status-line strong{font-weight:550}.status-line .counts{margin-left:auto;color:var(--muted);font-size:11px}
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0 0;border:0}
+  .stat{padding:10px 12px;background:var(--metric-surface);border-radius:6px;min-width:0}
+  .stat-label{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:11px}.stat-label .icon{width:14px;height:14px}
+  .stat-value{margin-top:5px;line-height:1.35;font-size:16px;font-weight:600;letter-spacing:0;white-space:nowrap}.stat-value small{font-size:11px;margin-left:3px}
+  .section{margin-top:19px}.section-head{display:flex;align-items:center;gap:8px;min-height:18px;margin-bottom:8px}
+  .section-head p{font-size:11px;color:var(--muted)}.section-head .end{margin-left:auto}
+  .text-btn{font-size:11px;padding:0;gap:4px}.text-btn .icon{display:none}
+  .decision-strip{border:1px solid var(--border);border-radius:9px;background:var(--surface);padding:11px 12px;font-size:11px}
+  .decision-cells{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.decision-cells>span{color:var(--muted)}.decision-cells strong{margin-left:5px;font-size:12px;color:var(--ink);font-weight:600}
+  .decision-note{display:block;margin-top:7px;width:100%;color:var(--muted);font-size:11px;line-height:1.6;text-align:left}
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0;font-size:12px}
+  .fact{display:flex;align-items:baseline;gap:12px;min-width:0}.fact dt{color:var(--muted);flex:none}.fact dd{margin:0 0 0 auto;max-width:72%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;text-align:right}
+  .shape-shell{border:1px solid var(--border);background:var(--surface);border-radius:9px;padding:12px;height:45px}
+  .shape{display:flex;gap:4px;align-items:center;height:18px}.shape button{padding:0;flex:1;height:8px;border:0;border-radius:3px;background:var(--accent);opacity:.75;min-width:2px}
+  .shape .tool{background:var(--tool)}.shape .error{background:var(--error)}.shape button:hover{opacity:1}
+  .growth-shell{padding:12px 12px 8px;border:1px solid var(--border);background:var(--surface);border-radius:9px;height:108px}
+  .growth-track{display:flex;gap:2px;align-items:flex-end;height:72px}.growth-column{position:relative;height:100%;flex:1;min-width:0;display:flex;align-items:flex-end;justify-content:center;border:0;background:transparent;padding:0}
+  .growth-bar{display:block;width:100%;max-width:32px;background:var(--accent);opacity:.74;border-radius:3px 3px 0 0}
+  .growth-column:hover .growth-bar,.growth-column:focus-visible .growth-bar{opacity:1}.growth-column.missing .growth-bar{background:var(--border)}
+  .growth-tip{position:absolute;z-index:2;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;color:var(--ink);background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 5px #00000010;border-radius:4px;padding:1px 4px;font-size:11px;visibility:hidden;pointer-events:none}
+  .growth-column:hover .growth-tip,.growth-column:focus-visible .growth-tip{visibility:visible}
+  .growth-axis{display:flex;gap:2px;margin-top:5px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}.growth-axis span{flex:1;min-width:0;text-align:center;white-space:nowrap}
+  .rate-actions{display:flex;gap:15px;align-items:center}.metric-switch{display:flex;gap:9px}.metric-switch button{border:0;background:none;color:var(--muted);font-size:11px;padding:0}
+  .metric-switch button[aria-pressed="true"]{color:var(--ink);font-weight:550;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--accent)}
+  .rate-shell{border:1px solid var(--border);background:var(--surface);border-radius:9px;padding:9px 11px 7px}
+  .plot{width:100%;height:auto;overflow:visible}.plot text{font:11px var(--font);fill:var(--muted)}.plot .gridline{stroke:var(--border);stroke-width:1;stroke-dasharray:3 5}
+  .plot .line{stroke:var(--rate-line);stroke-width:1.5;fill:none;stroke-linejoin:round;stroke-linecap:round}.plot .selected{fill:var(--rate-line);stroke:var(--surface);stroke-width:1.5}
+  #rate-plot{cursor:crosshair}.sample-readout{display:flex;align-items:center;gap:12px;min-height:25px;padding-top:5px;color:var(--muted);font-size:11px}
+  .sample-readout select{border:0;background:transparent;padding:0 17px 0 0;min-height:22px;color:var(--ink);border-radius:3px}
+  .sample-readout .text-btn{margin-left:auto}.rate-empty,.native-empty{border:1px solid var(--border);border-radius:9px;padding:12px;background:var(--surface);color:var(--muted);font-size:11px;display:flex;align-items:center;gap:12px}
+  .brief{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:0}.brief>div{border-left:1px solid var(--border);padding:1px 12px;min-width:0}.brief dt{font-size:11px;color:var(--muted);margin-bottom:4px}.brief dd{font-size:11px;line-height:1.6;margin:0}
+  .issue-list{border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--surface)}.issue-row{display:flex;align-items:center;gap:8px;border:0;border-bottom:1px solid var(--border);padding:9px 12px;min-height:38px;width:100%;text-align:left;background:none;font-size:12px}
+  .issue-row:last-child{border-bottom:0}.issue-row:hover{background:var(--subtle)}.issue-row .icon{width:14px;height:14px;color:var(--error)}.issue-row>span:not(.meta){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.issue-row .meta{margin-left:auto;flex:none;color:var(--muted);font-size:11px}
+  .demo-note{font-size:11px;color:var(--muted);line-height:1.8;margin-top:11px}
+  .chart-footnote{font-size:11px;color:var(--muted);line-height:1.7;margin-top:8px}
+  .legend{font-size:11px;color:var(--muted);display:flex;gap:12px}.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--accent)}
+  .run-body .table-scroll{max-height:490px}.run-table th,.run-table td{font-size:11px}.detail-grid{font-size:11px}
+  @container(max-width:620px){
+    .stats{grid-template-columns:repeat(2,minmax(0,1fr))}.facts{grid-template-columns:1fr;gap:8px}
+    .status-line{flex-wrap:wrap}.status-line .counts{width:100%;margin-left:13px}
+    .section-head{flex-wrap:wrap}.secondary-section .section-head .end{margin-left:auto}
+    .brief{grid-template-columns:1fr;gap:9px}.brief>div{padding-block:2px}
+    .decision-cells{gap:8px 15px}.sample-readout{gap:9px;flex-wrap:wrap}
+    .sample-readout .text-btn{margin-left:auto}.growth-track,.growth-axis{gap:1px}
+  }
+  @media(max-width:850px){
+    .topbar-inner{flex-wrap:wrap;gap:8px}.global-nav{order:3;width:100%;margin-left:0}.top-actions{margin-left:auto}.date{display:none}
+    .main{padding:12px}.intro{gap:9px}.scenario-controls{width:100%}
+    .plan-grid{grid-template-columns:1fr;gap:16px}.evidence-rail{grid-template-columns:1fr 1fr}.evidence-cell:nth-child(2){border-right:0}.evidence-cell:nth-child(-n+2){border-bottom:1px solid var(--border)}
+    .phase{grid-template-columns:130px 1fr}.phase .deliver{grid-column:2}.source-list li{grid-template-columns:1fr;gap:3px}
+  }
+  @media(max-width:520px){
+    .topbar-inner{padding:9px 12px}.global-nav button{flex:1}.brand h1{font-size:15px}
+    .scenario-controls{gap:6px}.run-scope{width:100%;flex-wrap:wrap}.scope-quality{margin-left:auto!important}.run-body{padding-inline:12px}
+    .plan-block{padding:17px}.phase{grid-template-columns:1fr;gap:8px;padding:17px}.phase .deliver{grid-column:1}.evidence-cell{padding:13px}.plan-lead{font-size:13px}
+    .rate-actions{gap:9px}.section-head p{font-size:11px}.secondary-section .section-head .end{width:100%;margin-left:0}.rate-actions{justify-content:space-between}
+    .stat-value{font-size:16px}.run-tabs{gap:17px}.growth-shell{padding-inline:9px}
+  }
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  @media print{.topbar{position:static}.top-actions,.scenario-controls{display:none}.main{max-width:none;padding:12px}.surface,.phase{break-inside:avoid}.global-nav{display:none}.plan-table{min-width:0;font-size:11px}.plan-table td,.plan-table th{padding:7px}.page[hidden]{display:block!important;margin-top:28px}}
+
+:root{--run-canvas:#fafbfc;--metric-surface:#f4f4f7;--rate-line:#9179c7}
+[data-theme="dark"]{--run-canvas:#23242c;--metric-surface:#2b2c35;--rate-line:#af94dc}
+</style>
+</head>
+<body>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5m0 3h.01"/></symbol>
+  <symbol id="i-token" viewBox="0 0 24 24"><ellipse cx="9" cy="7" rx="6" ry="4"/><path d="M3 7v5c0 2.2 2.7 4 6 4m0-5v5"/><path d="M15 10c3.3 0 6 1.8 6 4s-2.7 4-6 4-6-1.8-6-4 2.7-4 6-4Zm-6 4v3c0 2.2 2.7 4 6 4s6-1.8 6-4v-3"/></symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14 6a5 5 0 0 0-6 6l-5 5a2.1 2.1 0 0 0 3 3l5-5a5 5 0 0 0 6-6l-3 3-3-3 3-3Z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14A9 9 0 0 1 10 4a9 9 0 1 0 10 10Z"/></symbol>
+  <symbol id="i-cost" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 8h-5a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H9m3-10v12"/></symbol>
+</defs></svg>
+<header class="topbar"><div class="topbar-inner">
+  <div class="brand"><svg class="icon brand-mark"><use href="#i-activity"/></svg><h1>Run 布局规划</h1><span class="badge ok">首轮已实施</span></div>
+  <span class="muted small date">2026-10-14</span>
+  <nav class="global-nav" aria-label="方案导航" role="tablist">
+    <button id="page-tab-demo" role="tab" aria-controls="page-demo" aria-selected="true" data-page="demo">界面演示</button>
+    <button id="page-tab-data" role="tab" aria-controls="page-data" aria-selected="false" data-page="data" tabindex="-1">数据与口径</button>
+    <button id="page-tab-plan" role="tab" aria-controls="page-plan" aria-selected="false" data-page="plan" tabindex="-1">实施方案</button>
+  </nav>
+  <div class="top-actions"><button class="btn" id="language" aria-label="切换演示界面的语言">中 / EN</button><button class="btn" id="theme" aria-label="切换深色主题" aria-pressed="false"><svg class="icon"><use href="#i-moon"/></svg><span>深色</span></button></div>
+</div></header>
+<main class="main">
+  <section class="page" id="page-demo" role="tabpanel" aria-labelledby="page-tab-demo">
+<div class="intro"><p>仅演示已认可的 Overview；其余四页沿用应用现有界面。</p><div class="scenario-controls"><label for="scenario">演示数据</label><select id="scenario"><option value="complete">新采集 · 已结束</option><option value="historical">Javis · 历史记录</option><option value="live">新采集 · 正在执行</option></select><button class="btn" id="width" aria-pressed="false">窄面板</button><div class="run-scope"><label for="scope" id="scope-label">范围</label><select id="scope"><option value="session">整个会话</option><option value="turn">第 4 轮</option></select><span class="scope-quality" id="scope-quality"></span></div></div></div>
+    <div class="demo-layout"><div class="demo-column" id="demo-column">
+      <div class="run-panel" id="run-panel">
+        <div class="run-chrome"><svg class="icon"><use href="#i-activity"/></svg><span id="run-title">运行</span><span class="session" id="session-name">Demo session</span></div>
+        <div class="run-tabs" role="tablist" aria-label="Run views" id="run-tabs"></div>
+        <div class="run-body" id="run-body" role="tabpanel" tabindex="-1"></div>
+      </div>
+      <p class="demo-note" id="retained-view-note" role="status" hidden></p>
+      <p class="demo-note" id="demo-note">首轮已按批准范围实施，验收记录见「实施方案」。本页仍为规划演示：新增采集场景使用模拟请求；活跃时长与轮次切换属于后续候选。Javis 历史柱图使用已记录的 85 条输入用量，速率不补全。其他四页沿用应用原版。</p>
+    </div></div>
+  </section>
+  <section class="page plan" id="page-data" role="tabpanel" aria-labelledby="page-tab-data" hidden>
+    <h2>先让数字可信，再把它们放到界面上</h2>
+    <p class="plan-lead">2026-10-13 已只读核对截图会话的持久化记录与实施前源码。下面保留核查依据和规划口径；首轮实施状态见「实施方案」。演示中的速度曲线不来自你的历史会话。</p>
+    <div class="evidence-rail">
+      <div class="evidence-cell"><strong>85 / 379</strong><span>助手消息带有计时对象</span></div>
+      <div class="evidence-cell"><strong>61</strong><span>可计算旧口径首文字间隔</span></div>
+      <div class="evidence-cell"><strong>0 / 61</strong><span>完成时间有效的生成区间</span></div>
+      <div class="evidence-cell"><strong>4 / 23</strong><span>Decision 成功 / 历史请求</span></div>
+    </div>
+    <div class="plan-grid">
+      <article class="surface plan-block"><h3>TTFT 空值：展示选择与采集口径同时有问题</h3>
+        <p><strong>观察：</strong>第一条带计时对象的记录，<code>firstTokenTime = null</code>；后面有 61 条非空记录。Overview 的 <code>find()</code> 停在第一条，因此显示「—」。</p>
+        <p style="margin-top:9px"><strong>代码判断：</strong>只接收 <code>text_delta</code>，纯思考或纯工具调用不会记录首输出；<code>message_start</code> 也不保证是请求真正发出的时刻。</p>
+        <p style="margin-top:9px"><strong>另一个实证：</strong>61 条记录的完成时间全部早于首 token 时间。SDK 的消息 <code>timestamp</code> 在请求构造时赋值，当前适配器却用它作为完成时刻。</p>
+        <p style="margin-top:9px"><strong>建议：</strong>升级计时口径并展示有效样本覆盖率。历史的 61 条只保留为「旧口径首文字间隔」，不混入新版 TTFT，也不反推速度。</p>
+      </article>
+      <article class="surface plan-block"><h3>免费 Decision：零费用需要来源，缺失需要原因</h3>
+        <p><strong>观察：</strong>实际模型为 <code>inception/mercury-decide:free</code>，23 次历史调用中 4 次成功、19 次超时；23 条费用均未保存。4 次成功记录合计输入 7,591、输出 6 tokens。</p>
+        <p style="margin-top:9px"><strong>代码判断：</strong>解析器只读取 <code>usage.cost_usd</code>；OpenRouter 的官方 Decisions 示例使用 <code>usage.cost</code>，可解释为何成功请求仍计为未知。当前没有保留原始响应，不能断言这 4 次响应都包含了该字段。</p>
+        <p style="margin-top:9px"><strong>建议：</strong>按 provider 解析金额并保留 <code>0</code>，保存响应 ID 与费用来源。供应商回报为零、目录零价、估算、未知四类分开；超时不等于未扣费。</p>
+        <p style="margin-top:9px"><a href="https://openrouter.ai/inception/mercury-decide:free" target="_blank" rel="noreferrer">Mercury Decide 免费模型页</a>确认当前输入和输出均为零价；<a href="https://openrouter.ai/blog/insights/what-is-jev/" target="_blank" rel="noreferrer">OpenRouter Decisions 示例</a>提供 <code>usage.cost</code>。价格核对日期：2026-10-13。</p>
+      </article>
+    </div>
+    <div class="notice"><strong>历史请求数不能冒充行为证据。</strong>截图中的「0 decision points · 0 requests」与「Unknown ×23」并存，来自旧请求记录与新版行为记录的覆盖差异。建议显示「历史请求 23 · 行为结果未记录」，而不是暗示从未调用或从未改变行为。19 次超时应成为可定位的诊断事实，不能仅隐藏在费用未知标签中。</div>
+    <section class="plan-section"><h2>建议的指标与取数边界</h2>
+      <div class="table-scroll"><table class="plan-table"><thead><tr><th>指标</th><th>现有证据</th><th>拟定口径 / 采集要求</th><th>呈现与优先级</th></tr></thead><tbody>
+        <tr><td>首输出延迟 / TTFT</td><td><code>AssistantMetrics</code> 已传到存储和前端；历史记录口径有缺陷。</td><td>实际请求发出 → 第一个非空文字、思考或工具参数输出；统一进程时钟。首文字时间另存，不与首输出混用。每次重试单独计时。</td><td>保留 Overview 现有 TTFT 卡片，拟改用有效请求 P50；P95 与覆盖率放摘要说明。单请求仍在现有 Timing 详情查看。<span class="badge accent">先修采集</span></td></tr>
+        <tr><td>平均输出速率</td><td>已有输出 tokens；历史生成区间无效。详情中已有 throughput 公式。</td><td>有效已结束请求的 <code>outputTokens / generationWindowSeconds</code>。窗口为首输出至流结束；包括供应商计入 output 的思考及工具参数，排除输入、缓存、Decision 和工具执行时间。</td><td>Overview 上下文增长下方的补充折线；平均值放在小标题旁。<span class="badge accent">建议增加</span></td></tr>
+        <tr><td>请求总耗时</td><td>运行账本已有请求身份与 outcome；消息时间不能代表请求结束。</td><td>实际请求发出 → 流结束。同一计时源，包含首输出等待；重试次数、退避时长分开。</td><td>复用 Trajectory 已有 Timing 详情，修复 Total / Generation；不增加时间轴列。</td></tr>
+        <tr><td>运行活跃时长</td><td>run 生命周期、模型 / 工具操作时间可提供边界；历史覆盖需评估。</td><td>选定 run 内有证据的模型及工具活跃区间取并集，排除轮次间闲置。并行时不相加；未覆盖部分明确标注。</td><td>后续候选：有可靠区间覆盖后再考虑。首轮保留现有时长语义，不将会话跨度直接替换为活跃时长。<span class="badge warn">覆盖决定可用性</span></td></tr>
+        <tr><td>输入 / 输出 / 总量</td><td><code>PiUsage</code> 和持久化 usage ledger。</td><td>按请求或 usage ID 去重。会话总量包含辅助调用时显式拆分；当前上下文占用与累计输入不同。</td><td>原版已有：Overview 与请求 Usage 详情复用；首轮不扩充 Context。</td></tr>
+        <tr><td>缓存读写 / 缓存占比</td><td><code>input / cacheRead / cacheWrite</code> 已有；旧数据可能缺失。</td><td>缓存读取 / 完整请求输入，明确输入口径含缓存。未上报时为未知，不能记作 0；不从缓存比例推算省下的费用。</td><td>原版 Usage 已有缓存读写；缓存占比属于后续派生指标，不列入首轮。<span class="badge ok">可复用</span></td></tr>
+        <tr><td>工具调用 / 失败 / 耗时</td><td>tool start / end、<code>toolDurationMs</code>、<code>isError</code>、调用 ID。</td><td>按唯一工具调用 ID 去重；区分进行中、失败、中断和未测量。按总耗时 / 最慢调用排序，保留父子关系。</td><td>原版调用、失败、耗时与工具详情复用；按耗时分布汇总属于后续候选。<span class="badge ok">可复用</span></td></tr>
+        <tr><td>重试 / 中断 / 退避</td><td>SDK retry 事件、durable attempt / recovery 事实。消息投影不一定完整。</td><td>保留请求与 attempt 身份，关联到原请求和轮次。自动重试不算新的用户轮次；重试 token 和费用都需计入账本。</td><td>后续候选：先核验 durable 事实的完整关联，再在原有请求详情补充；不重做时间轴。</td></tr>
+        <tr><td>决策事项 / 实际改变 / 回退</td><td><code>SessionDecisionReport</code> 已区分 points、attempts、recommendation、application、observations。</td><td>事项数与 HTTP 请求数分开；只有 application 确认的改变算生效。推荐、置信度和实际权限动作分开，旧数据缺失不补零。</td><td>Overview 摘要；Decisions 完整证据链。<span class="badge ok">可复用</span></td></tr>
+        <tr><td>Decision 延迟 / 失败原因</td><td>记录已有 <code>latencyMs</code>、错误种类、供应商及模型。</td><td>当前延迟在收到 HTTP 响应头后结束，需改成完整响应解析结束；失败也记录时长。分开成功延迟与超时，记录当时的 deadline。</td><td>修复现有请求详情里的 latency；失败时长与 deadline 按现有键值行补充。P50 / P95 与分布汇总留作后续候选。<span class="badge accent">需校正语义</span></td></tr>
+        <tr><td>费用与完整性</td><td>usage ledger 已有金额、purpose；成本汇总区分 known、unknown、estimated。</td><td>供应商实际金额优先；目录零价须有调用时的模型和价格快照且确认路由身份；估算明确带「≈」。保留缺失原因、未知请求数及响应 ID。</td><td>修复已有费用字段；费用来源与缺失原因在现有请求详情补充。按主模型 / 辅助目的的费用拆分属于后续候选。<span class="badge accent">先修解析</span></td></tr>
+        <tr><td>模型 / 供应商 / finish reason</td><td>durable model identity 与 outcome 已存在；当前 Environment 只有当前模型。</td><td>展示每次请求真正使用的模型与供应商，区分 requested / reported；终止原因以 outcome 为准。未上报则不把当前设置当作历史事实。</td><td>后续候选：复用原有 Summary / 请求详情，补充真实身份与终止原因；不增加时间轴列。</td></tr>
+        <tr><td>上下文增长 / 压缩</td><td>request context snapshot、prompt snapshot、compaction 事件。</td><td>输入曲线用供应商 usage；分区内容体积属于重建估算。展示压缩边界和前后变化，记录有效上下文上限。</td><td>原版上下文增长与 Context 分类、变化保持；压缩事件保留原有呈现，不做新页面。<span class="badge ok">可复用</span></td></tr>
+        <tr><td>思考 tokens</td><td><code>PiUsage.reasoning</code> 可选；并非每个 provider 上报。</td><td>思考 tokens 可能是 output 的子集，不再相加到总量。没有供应商数字时不按字符估算精确思考量。</td><td>请求详情，条件展示。<span class="badge warn">供应商可选</span></td></tr>
+        <tr><td>权限 / 改动 / 子任务</td><td>auth-request、tool ID、durable source、分支 / 父会话关系及文件改动关联。</td><td>回链到真实事件和文件证据；当前会话与子会话消耗分别展示，关联关系不等于费用已经合并。</td><td>Trajectory 事件；Map 路径；Review 跳转。</td></tr>
+      </tbody></table></div>
+    </section>
+    <section class="plan-section"><h2>tokens/s 与折线图的具体规则</h2><div class="plan-grid">
+      <article class="surface plan-block"><h3>推荐按请求展示平均速率</h3><p>一个点代表一次模型请求的观测平均输出速率。横轴是稳定请求序号，纵轴是 <code>tok/s</code>；选点可回到对应轮次、工具和上下文。这能回答「哪一次变慢」，并与行为记录对齐。</p><div class="formula">单请求 = 输出 tokens ÷（流结束 − 首输出）秒<br>范围摘要 = Σ 有效请求输出 tokens ÷ Σ 有效请求生成窗口秒</div><p>摘要是按生成时长加权的速率，不取各请求速率的简单平均。并行请求不把吞吐量相加成「模型速度」。主模型与不同辅助模型也不合成一条可比较曲线。</p><p style="margin-top:9px">这衡量的是客户端观测窗口，包含网络与流式间歇，不能命名为纯 GPU 解码速度。输出 tokens 需覆盖同一窗口；若供应商不提供可匹配的用量，保留缺失。</p></article>
+      <article class="surface plan-block"><h3>缺失、实时与大数据</h3><ul><li>无时间、无用量、非正区间和未结束请求不进统计；显示有效 / 总请求覆盖率。</li><li>缺失样本留断点；慢请求可选中，不自动平滑或插值。</li><li>TTFT 与速度用指标切换，避免双 Y 轴。范围切换后所有摘要与图表采用同一范围。</li><li>运行中显示当前状态和最近已结束请求的统计；不按字符数模拟精确 tokens/s。</li><li>如未来需要 1 秒实时速率，需要供应商 token 增量或可验证分词；列为后续增强，不在首轮承诺。</li><li>超过 200 点后做保留异常与缺口的分桶，标签注明粒度；点击桶先缩小范围再定位请求。</li></ul></article>
+    </div></section>
+    <section class="plan-section"><h2>实施前数据核查与源码索引</h2><div class="surface plan-block"><ul class="source-list">
+      <li><strong>截图会话 · 只读聚合</strong><div>1,052 条消息；379 条助手消息；85 个计时对象；61 条旧口径首文字间隔；61 条完成时间早于首文字；23 条 Decision 调用（4 成功、19 超时），全部费用未知。会话总 tokens 89,167,311；缓存读 83,046,144；已知费用 $0.11348574，另有 23 条费用未知。<br><code>C:/Users/dotty/.phaneris/workspaces/Work/sessions/260909-gentle-copper/session.jsonl</code> 和 <code>logs/decisions.jsonl</code>。未复制对话原文或凭据。</div></li>
+      <li><strong>Overview 展示</strong><code>packages/ui/src/components/trajectory/TrajectoryOverview.tsx<br>formatTokens；firstAssistant / firstMetrics；snapshot.timeRange；contentRecords.slice(0, 18)</code></li>
+      <li><strong>计时采集与传递</strong><code>packages/shared/src/agent/backend/pi/event-adapter.ts:539–715<br>packages/pi-agent-server/src/transport-delta.ts:1–12<br>packages/pi-agent-server/src/session-event-adapter.ts:41–51<br>packages/server-core/src/sessions/SessionManager.ts:9342<br>apps/electron/src/renderer/event-processor/handlers/text.ts:154–179</code></li>
+      <li><strong>SDK 时间语义</strong><code>node_modules/@earendil-works/pi-ai/dist/types.d.ts · AssistantMessage<br>node_modules/@earendil-works/pi-ai/dist/utils/event-stream.js · AssistantMessageEventStream<br>当前安装的 Pi SDK 1.1.0。</code><div>SDK 提供输出用量和原生 durationMs（整个响应的单调时钟耗时），没有统一的 TTFT 或 tokens/s 结果字段。durationMs 从 SDK 流创建开始，包含首输出前的等待，不能直接当生成窗口。首轮通过原生 payload 回调和输出事件观测请求发出、首输出及结束，在持久化之前计算区间。</div></li>
+      <li><strong>Decision 与账本</strong><code>packages/shared/src/decisions/client.ts:231–299, 359–386<br>packages/shared/src/decisions/session.ts<br>packages/server-core/src/decisions/accounting.ts<br>packages/server-core/src/decisions/session-report.ts<br>packages/server-core/src/durable-runtime/store.ts · usage_ledger</code></li>
+      <li><strong>供应商原文</strong><div><a href="https://openrouter.ai/inception/mercury-decide:free" target="_blank" rel="noreferrer">Mercury Decide (free)：免费价格与模型身份</a><br><a href="https://openrouter.ai/blog/insights/what-is-jev/" target="_blank" rel="noreferrer">OpenRouter Decisions：响应 usage.cost 示例</a><br><a href="https://openrouter.ai/docs/api_reference/overview" target="_blank" rel="noreferrer">OpenRouter API：响应 ID 与 generation 费用查询</a>。generation 查询是否支持该 System One 返回 ID 仍需验收，不能直接沿用 chat completion 假设。</div></li>
+    </ul></div></section>
+  </section>
+  <section class="page plan" id="page-plan" role="tabpanel" aria-labelledby="page-tab-plan" hidden>
+    <h2>只调整 Overview 布局，其余四页保持原版</h2>
+    <p class="plan-lead">首轮已按用户批准的范围实施。Overview 保留上下文增长柱图，速率折线紧接其下。Trajectory、Decisions、Context、Map 保留现有样式、结构和交互；新解释字段嵌入现有详情，不增加标签页。实际活跃时长、轮次筛选、重试摘要等后续候选仍未纳入本轮。</p>
+    <section class="plan-section"><h2>与原版相比，究竟增加什么</h2>
+      <p class="plan-lead">区分新的汇总视角、原有功能的取数修复和新的诊断字段。已有功能不能算成新增；候选内容不等于首轮实施承诺。</p>
+      <div class="table-scroll"><table class="plan-table" id="proposal-inventory"><thead><tr><th>性质</th><th>可查阅内容</th><th>原版已经有什么</th><th>本次拟增加 / 修复</th><th>位置与价值</th></tr></thead><tbody>
+        <tr data-kind="aggregate"><td>新增汇总</td><td>输出速率汇总与趋势</td><td>单条助手记录的 Timing 已有 Throughput（tok/s）。</td><td>按请求速率折线、选定范围的加权平均；显示有效请求数，缺失样本留断点；选点回到原有请求详情。</td><td>Overview 的上下文增长下方。回答哪次变慢，复用原有单请求详情。</td></tr>
+        <tr data-kind="repair-aggregate"><td>修复取数 + 新增汇总</td><td>TTFT 分布与计时覆盖</td><td>Overview 有 TTFT；Timing 有 Total、TTFT、Generation、Throughput。Overview 当前只取第一条计时对象。</td><td>校正开始与结束采集；Overview 改为有效请求 P50，补充 P95、有效 / 总样本数；区分首输出和首文字。</td><td>保留现有 TTFT 卡片与 Timing 详情。判断通常等待多久，以及统计是否可靠。</td></tr>
+        <tr data-kind="diagnostic"><td>新增诊断字段</td><td>计时来源、版本与缺失原因</td><td>详情有 Timing 与历史无计时提示，但缺少足够的有效性解释。</td><td>标明新 / 旧口径、时间是否完整；说明未采集、流未结束、用量缺失或区间异常。保存首输出与首文字事实。</td><td>现有 Timing 键值行。解释为什么是「—」，避免把缺失当零或把历史伪装成新数据。</td></tr>
+        <tr data-kind="repair"><td>修复取数</td><td>Decision 的已有费用与延迟</td><td>原版已有金额、输入 / 输出 tokens、provider、模型、延迟、请求状态与未知费用计数。</td><td>兼容 OpenRouter usage.cost，明确 0 不丢失；延迟测到完整响应结束，失败也保留时长。旧金额缺失仍未知。</td><td>原版 Decisions 请求卡片。让已有字段可用；这些数值本身不算新增。</td></tr>
+        <tr data-kind="explanation"><td>新增解释字段</td><td>费用来源与可核查依据</td><td>已有金额及 known / unknown / estimated 汇总，无法充分解释未知或零价的来源。</td><td>本轮保存供应商回报 / 未知的来源、原始金额字段、缺失原因、响应 ID 和实际 deadline。目录零价及估算不用于补写历史费用。</td><td>原版请求详情 / 诊断折叠区。说明零费用的依据，以及费用为何无法取得。</td></tr>
+        <tr data-kind="repair-coverage"><td>完善已有提示</td><td>历史 Decision 的记录覆盖</td><td>报告已经区分事项、请求尝试、推荐、应用与观察；截图旧请求数与行为记录的覆盖不一致。</td><td>Overview 明确「历史请求 23 / 行为结果未记录」，提供原有 Decisions 定位入口；保留报告已有的 legacy 信息。</td><td>原版会话决策摘要。避免旧行为记录缺失被读成从未调用或没有影响。</td></tr>
+        <tr data-kind="existing"><td>原版已有</td><td>轨迹、用量、决策证据链、上下文、关系结构</td><td>轮次折叠、工具输入 / 输出 / 耗时、Usage 与缓存读写；决策建议 → 应用 → 观察；Context 分类 / 差异；Map 结构与定位。</td><td>复用全部现有页面；不把这些能力计入新增清单。</td><td>其余四页保持原版。Context / Map 本轮不增加内容。</td></tr>
+        <tr data-kind="coverage"><td>修正摘要范围</td><td>Run shape 的覆盖说明</td><td>已有运行形态条，当前实现仅取前 18 条内容记录。</td><td>拟覆盖完整选定范围并注明汇总粒度，保留现有形态条的呈现。</td><td>Overview。避免把运行开头的一段误读成整个运行。</td></tr>
+        <tr data-kind="later"><td>后续候选</td><td>实际执行时长、逐请求身份与重试原因</td><td>已有会话跨度、环境模型；durable 层已有部分模型身份、attempt 与 outcome 事实。</td><td>先验证覆盖再评估活跃区间并集、实际模型 / provider / finish reason、重试次数与退避时长。保留原版详情形态。</td><td>首轮暂缓。帮助解释耗时、模型切换与恢复行为，不能凭当前设置回填历史。</td></tr>
+        <tr data-kind="later-derived"><td>后续候选</td><td>缓存占比、费用分项、工具与 Decision 延迟分布</td><td>用量、金额 purpose、工具耗时与 Decision 延迟已有部分来源。</td><td>可派生范围汇总；先验证去重、缺失和范围一致性，再决定是否值得显示。</td><td>首轮暂缓；不为增加内容重复建设 Context / Map 或新标签页。</td></tr>
+      </tbody></table></div>
+    </section>
+    <section class="plan-section"><h2>各页面的改动边界</h2><div class="table-scroll"><table class="plan-table"><thead><tr><th>页面</th><th>本轮规划</th><th>保持现有实现</th></tr></thead><tbody>
+      <tr><td>Overview</td><td>保留已认可布局；原上下文增长下增加低权重速率折线；TTFT 汇总、计时覆盖与历史决策说明。</td><td>四项摘要、会话决策、运行环境、运行形态、上下文增长、运行简报、需要关注的阅读顺序。</td></tr>
+      <tr><td>Trajectory</td><td>修复已有 Timing 取数；仅在原详情补充计时来源 / 缺失原因，曲线定位复用已有请求选择。</td><td>原事件时间轴、两列结构、轮次折叠、虚拟滚动、详情面板与原有详情标签。</td></tr>
+      <tr><td>Decisions</td><td>修复费用与延迟；请求卡片或原诊断区补充费用来源、响应 ID 和缺失原因。</td><td>原功能筛选、事项列表、行为证据链、请求卡片和原始记录的结构、样式与交互。</td></tr>
+      <tr><td>Context</td><td>本轮不增加内容，也不提供替代演示。</td><td>原请求选择、分类、上下文变化与内容展开。</td></tr>
+      <tr><td>Map</td><td>本轮不增加内容，也不提供替代演示。</td><td>原执行 / 关联会话结构、节点呈现与定位交互。</td></tr>
+    </tbody></table></div></section>
+    <section class="plan-section"><h2>实施顺序与当前状态</h2><div class="timeline-plan">
+      <article class="phase"><div><h3>两处显示修复</h3><span class="badge ok">已实施并验证</span></div><p>Overview 数字缩写跟随应用语言；Session decisions 说明单独一行靠左。已通过中英文真实组件验证。</p></article>
+      <article class="phase"><div><h3>计时与费用取数</h3><span class="badge ok">已实施并验证</span></div><p>在原请求生命周期中保存请求发出、首输出、首文字、流结束及有效性；使用同一计时源。按 provider 解析费用并保留零值、响应 ID、来源和 deadline。沿用 durable outcome / usage 与会话存储。</p><div class="deliver">本地可控响应通过实际 SDK、存储重载、RPC 和前端验证；未知费用不补零，旧计时不混入新口径。</div></article>
+      <article class="phase"><div><h3>Overview 汇总与定位</h3><span class="badge ok">已实施并验证</span></div><p>增加按请求速率趋势、加权摘要与 TTFT P50 / P95、独立有效样本统计。请求按唯一 ID 去重；选点定位原版轨迹或上下文。Run shape 覆盖完整记录范围并说明汇总粒度。</p><div class="deliver">缺失留断点、进行中不进入完成统计；超过 200 请求保留缺口及最小 / 最大范围，可选择精确请求。活跃时长与会话 / 轮次切换仍为后续候选。</div></article>
+      <article class="phase"><div><h3>原版详情中的解释信息</h3><span class="badge ok">已实施并验证</span></div><p>复用 Trajectory 的现有 Timing 行与 Decisions 的请求卡片 / 诊断折叠区补充来源、缺失原因、响应 ID 和 deadline。成功延迟统计至完整响应校验，失败延迟统计至失败或中断；Context / Map 不增加内容。</p><div class="deliver">实际 Run 组件与原有四页交互已验证；其他四页的替代演示保持撤回。</div></article>
+    </div></section>
+    <div class="plan-grid"><article class="surface plan-block"><h3>已批准的首轮范围</h3><ul class="decision-list">
+      <li>计时与 OpenRouter 费用修复；计时、费用的来源与缺失原因。</li>
+      <li>Overview 的速率折线与加权平均、TTFT P50 / P95 与覆盖率；原有请求定位；历史决策与运行形态覆盖说明。</li>
+      <li>实际活跃时长、逐请求身份 / 重试摘要、缓存占比、费用分项、各类分布图放入后续候选。</li>
+      <li>精确每秒实时速率需要可验证 token 增量；本轮不承诺。历史缺失留空，不按当前价格或新口径回填。</li>
+    </ul></article><article class="surface plan-block"><h3>样式边界</h3><ul>
+      <li>只以已认可 Overview 为视觉方案，保留现有上下文增长柱图；速率放其下。</li>
+      <li>其余四页的原版就是最终样式依据；补充信息采用现有键值行、请求卡片或诊断折叠区。</li>
+      <li>顶部四项摘要、现有紫色选中态、紧凑字号、轻分隔线、浅深主题和中英文表达保持一致。</li>
+      <li>会话跨度、执行时长、当前上下文占用、累计输入各自保留明确口径。</li>
+      <li>行为事实与任务目标完成分开；建议不能冒充实际应用，旧数据缺失不能冒充没有发生。</li>
+    </ul></article></div>
+    <section class="plan-section"><h2>验收要验证的失败路径</h2><div class="table-scroll"><table class="plan-table"><thead><tr><th>场景</th><th>必须满足的行为</th><th>可复核证据</th><th>范围</th></tr></thead><tbody>
+      <tr><td>纯思考 / 纯工具 / 无文字</td><td>首输出可测；首文字明确为缺失；无文本不导致整条请求计时消失。</td><td>受控 provider 流经真实服务端事件、IPC / RPC、保存、重载到 Run 的 E2E。</td><td>计时 v2</td></tr>
+      <tr><td>消息 timestamp 是请求开始</td><td>完成时刻来自流结束；不得产生负生成时间，异常时显示原因。</td><td>保存时间序列与区间断言。</td><td>计时 v2</td></tr>
+      <tr><td>usage.cost = 0 / 缺失</td><td>零保留；缺失为未知；非数字、负数、NaN 不参与金额汇总。</td><td>同样的 HTTP schema → durable ledger → Decisions UI；精确金额对账。</td><td>费用解析</td></tr>
+      <tr><td>免费模型 / 超时 / 改价</td><td>回报零与目录零价分开；超时仍未知；不会用当前价格改写历史。</td><td>模型身份、价格快照、deadline、失败种类及费用来源。</td><td>Decision</td></tr>
+      <tr><td>重试 / 重连 / 崩溃恢复</td><td>每个请求 / attempt 独立；同一 usage 不重复计数；进行中不冒充已完成。</td><td>重启后同一 ID、usage ledger 一致，图表摘要一致。</td><td>统一投影</td></tr>
+      <tr><td>并行工具 / 闲置数日</td><td>活跃区间取并集；会话跨度独立；缺失区间不计为真实闲置。</td><td>区间事实、并集计算与标明覆盖的时间轴。</td><td>后续候选：时长与范围</td></tr>
+      <tr><td>历史不全 / 首样本缺失</td><td>旧口径隔离；缺失原因可读；行为未记录不显示为实际改变 0。</td><td>含历史、混合新旧与 0 有效样本的 E2E 截图和 JSON。</td><td>Overview 与原版详情</td></tr>
+      <tr><td>窄面板 / 中英文 / 深浅色</td><td>文字不被挤掉；数字单位跟随应用；键盘可切换标签和选择图表样本。</td><td>固定尺寸截图、交互断言与可重复 workflow。</td><td>前端呈现</td></tr>
+    </tbody></table></div></section>
+    <div class="notice" style="margin-top:24px"><strong>首轮源码实施完成，端到端验证 28/28 通过。</strong>本页保留规划演示，实际组件截图及可重复验收记录见 <a href="../verification/run-observability-implementation-2026-10-14.md">实施记录</a>；历史缺失计时和费用无法补回。全局视觉检查还存在输入框 CompactModelSelector 的既有过期豁免，详见记录。此页面仍离线可用，不调用供应商，不修改会话或应用设置。</div>
+  </section>
+  <footer class="footer">Phaneris · Run 观测规划。演示离线可用，无外部脚本、字体或数据请求。数据核查只导出了计数与指标，未包含对话原文。</footer>
+</main>
+<script>
+  const $ = selector => document.querySelector(selector);
+  const state = { language: 'zh', theme: 'light', scenario: 'complete', scope: 'session', tab: 'overview', metric: 'speed', request: 12, filter: 'all', decision: 2, map: 'execution', node: 'root' };
+  const translations = {
+    en:{ overview:'Overview',trajectory:'Trajectory',decisions:'Decisions',context:'Context',map:'Map',scope:'Scope',entire:'Entire session',turn:'Turn 4',samples:'timing coverage',partial:'Historical · partial coverage',ended:'Ended · issues recorded',live:'Running · request R100',duration:'Active duration',durationMeta:'Union of measured activity',speed:'Output rate',speedMeta:'Weighted · completed requests',ttft:'TTFT · P50',ttftMeta:'Time to first model output',tokens:'Tokens',tokensMeta:'Input + output · main model',tools:'Tool calls',toolsMeta:'2 failed · 22 total',cost:'Session cost',costMeta:'Known subtotal · 2 unknown',trend:'Response performance',byRequest:'by model request',speedTab:'Output rate',ttftTab:'TTFT',openRequest:'View request',missing:'Timing unavailable',waiting:'No comparable timing',historyTiming:'61 legacy text intervals; completion timestamps are invalid.',historySpeed:'Historical throughput cannot be reconstructed.',unknown:'Unknown',sample:'Request',decisionTitle:'Session decisions',records:'View records',decisionPoints:'Decision points',changed:'Actual changes',fallbacks:'Fallbacks',decisionCost:'Decision cost',included:'Already included in session cost. Auxiliary tokens do not occupy the main model’s context.',legacyNote:'23 legacy requests · behavior outcomes were not recorded.',attention:'Needs attention',openTrajectory:'Open trajectory',shape:'Run shape',shapeNote:'entire selected range',modelRequests:'Model requests',toolEvents:'Tool events',failed:'Failed',brief:'Recorded work',goal:'Instruction',work:'Recorded actions',outcome:'Execution state',goalText:'Inspect the session’s responses and tool results.',workText:'Read source files, compare data contracts, verify UI.',outcomeText:'Execution ended; one tool error and one request timeout remain.',environment:'Environment',model:'Current model',name:'Name',input:'Input tokens',output:'Output tokens',contextTokens:'Current context',span:'Session span',permissions:'Permission mode',known:'provider reported',unavailable:'Not recorded',historicCost:'Known subtotal · 23 unknown',historicActive:'Activity boundaries incomplete',historyStatus:'Ended · historical coverage',historyTools:'29 failed · 595 total',historyCounts:'390 turns · 1,137 events',newCounts:'4 turns · 16 requests',liveCounts:'4 turns · 17 requests',inspect:'Request evidence',totalTime:'Request duration',generation:'Generation window',status:'Status',latency:'TTFT',rate:'tok/s',all:'All requests',issues:'Issues only',request:'Request',turnColumn:'Turn',result:'Result',usage:'Tokens',detail:'Details',reason:'Finish reason',provider:'Provider',source:'Cost source',timing:'Timing source',timingV2:'Measured · timing v2',contextGrowth:'Input context by request',contextHelp:'Provider tokens; category sizes are estimates.',cache:'Cache read',window:'Effective limit',occupancy:'Occupancy',system:'System + tool definitions',history:'Conversation history',toolResults:'Tool results',user:'Current user input',estimated:'Estimated categories',compaction:'Compaction',contextNotes:'Category sizes are reconstructed from evidence; provider input usage is the authoritative total.',scopeNote:'Current session only · related sessions are not summed',execution:'Execution',sessions:'Related sessions',nodeDetails:'Node evidence',openChat:'Open chat',zero:'$0.0000',legacyRequests:'Legacy requests',success:'Succeeded',timeouts:'Timeouts',behavior:'Behavior outcome',notObserved:'Not recorded',response:'Full response latency',confidence:'Confidence',recommendation:'Recommendation',application:'Actual application',followUp:'Follow-up evidence',time:'Time',feature:'Feature',action:'Actual action',liveNote:'R100 is still streaming. Only completed, measured requests enter speed and latency summaries.',noIssues:'No request issues in the selected turn.',range:'Selected scope',priceZero:'Confirmed zero',usageMissing:'Provider usage missing',schemaNote:'Request rows are illustrative; historical aggregate counts are real.'},
+    zh:{overview:'概览',trajectory:'轨迹',decisions:'决策',context:'上下文',map:'关系图',scope:'范围',entire:'整个会话',turn:'第 4 轮',samples:'计时覆盖',partial:'历史记录 · 部分覆盖',ended:'已结束 · 有异常记录',live:'正在执行 · 请求 R100',duration:'活跃时长',durationMeta:'有记录的活跃区间并集',speed:'输出速率',speedMeta:'生成时长加权 · 已结束请求',ttft:'TTFT · P50',ttftMeta:'请求发出到首个模型输出',tokens:'Tokens',tokensMeta:'输入 + 输出 · 主模型',tools:'工具调用',toolsMeta:'22 次调用 · 2 次失败',cost:'会话费用',costMeta:'已知小计 · 2 笔未知',trend:'响应表现',byRequest:'按模型请求',speedTab:'输出速率',ttftTab:'TTFT',openRequest:'查看请求',missing:'计时缺失',waiting:'没有可比较的计时',historyTiming:'61 条旧口径首文字间隔；完成时间无效。',historySpeed:'历史生成速率无法还原。',unknown:'未知',sample:'请求',decisionTitle:'会话决策',records:'查看记录',decisionPoints:'决策事项',changed:'实际改变',fallbacks:'回退',decisionCost:'决策费用',included:'已包含在会话费用中。辅助 tokens 不占用主模型上下文。',legacyNote:'23 次历史请求 · 行为结果尚未记录。',attention:'需要关注',openTrajectory:'打开轨迹',shape:'执行形态',shapeNote:'完整选择范围',modelRequests:'模型请求',toolEvents:'工具事件',failed:'失败',brief:'工作记录',goal:'用户指令',work:'已记录动作',outcome:'执行状态',goalText:'检查会话中的响应与工具执行结果。',workText:'读取源码，核对数据契约，验证界面。',outcomeText:'执行已结束；仍有一次工具失败和一次请求超时。',environment:'环境',model:'当前模型',name:'名称',input:'输入 tokens',output:'输出 tokens',contextTokens:'当前上下文',span:'会话跨度',permissions:'权限模式',known:'供应商回报',unavailable:'未记录',historicCost:'已知小计 · 23 笔未知',historicActive:'活跃边界不完整',historyStatus:'已结束 · 历史覆盖',historyTools:'595 次调用 · 29 次失败',historyCounts:'390 轮 · 1,137 个事件',newCounts:'4 轮 · 16 次请求',liveCounts:'4 轮 · 17 次请求',inspect:'请求证据',totalTime:'请求总耗时',generation:'生成窗口',status:'状态',latency:'TTFT',rate:'tok/s',all:'全部请求',issues:'仅异常',request:'请求',turnColumn:'轮次',result:'结果',usage:'Tokens',detail:'详情',reason:'终止原因',provider:'供应商',source:'费用来源',timing:'计时来源',timingV2:'实测 · 计时 v2',contextGrowth:'逐请求输入上下文',contextHelp:'总量来自供应商；分类体积是估算。',cache:'缓存读取',window:'有效上限',occupancy:'占用',system:'系统指令与工具定义',history:'会话历史',toolResults:'工具结果',user:'当前用户输入',estimated:'分类估算',compaction:'上下文压缩',contextNotes:'分类体积由记录重建；精确输入总量以供应商用量为准。',scopeNote:'仅当前会话 · 关联会话费用不自动合并',execution:'执行结构',sessions:'关联会话',nodeDetails:'节点证据',openChat:'打开对话',zero:'$0.0000',legacyRequests:'历史请求',success:'成功',timeouts:'超时',behavior:'行为结果',notObserved:'未记录',response:'完整响应延迟',confidence:'置信度',recommendation:'建议',application:'实际动作',followUp:'后续证据',time:'时间',feature:'功能',action:'实际动作',liveNote:'R100 正在输出。速度与延迟摘要只纳入已结束且实测有效的请求。',noIssues:'当前轮次没有请求异常。',range:'选择范围',priceZero:'回报零费用',usageMissing:'供应商未返回用量',schemaNote:'请求行是布局示意；历史聚合计数是真实核查值。'}
+  };
+  Object.assign(translations.en,{duration:"Duration",ttft:"TTFT",trend:"Response rate",contextGrowth:"Context growth",environment:"Environment",brief:"Run brief",openContext:"Open context",newCounts:"4 turns · 99 requests",liveCounts:"4 turns · 100 requests"});
+  Object.assign(translations.zh,{duration:"运行时长",ttft:"首输出延迟",trend:"响应速率",contextGrowth:"上下文增长",environment:"运行环境",brief:"运行简报",openContext:"打开上下文",goal:"目标",work:"执行工作",outcome:"结果",ended:"运行完成，但存在问题",historyStatus:"运行完成 · 历史记录",live:"正在执行 · 请求 R100",shape:"运行形态",newCounts:"4 轮 · 99 次请求",liveCounts:"4 轮 · 100 次请求"});
+  const t = key => translations[state.language][key] ?? key;
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+  const full = value => new Intl.NumberFormat(state.language==='en'?'en-US':'zh-CN').format(value);
+  const compact = value => new Intl.NumberFormat(state.language==='en'?'en-US':'zh-CN',{notation:value>=10000?'compact':'standard',maximumFractionDigits:1}).format(value);
+  const seconds = ms => ms==null?'—':`${(ms/1000).toFixed(ms>=10000?1:2)} s`;
+  const dollars = amount => amount==null?t('unknown'):amount===0?'$0.0000':amount<.0001?'<$0.0001':`$${amount.toFixed(4)}`;
+  const badge = (text, tone='') => `<span class="badge ${tone}">${esc(text)}</span>`;
+  const requests = (function mockRequestDataset() {
+  const speeds=[46,51,48,55,46,44,36,24,42,49,56,53,46,39,47,52];
+  const delays=[840,950,1010,780,1050,1180,1370,2460,1440,1280,880,820,1250,1710,1220,940];
+  return Array.from({length:99},(_,index)=>{
+    const missingTiming=index===4||index===12;
+    const input=index===12?null:Math.round(12000+448295*Math.pow(index/98,.85));
+    const rate=missingTiming?null:speeds[index%speeds.length]+Math.sin(index*.55)*2.2;
+    const output=index===12?null:1200+(index*173)%1300;
+    const tools=index===12||index===15||index===98?0:index%3===0?3:index===7?1:0;
+    return {id:index+1,turn:Math.min(4,Math.floor(index/4)+1),rate,input,output,
+      ttft:missingTiming?null:delays[index%delays.length],cost:index===12?null:.00012+index*.000018,
+      cache:input==null?null:Math.floor(input*.88),status:index===12?'timeout':index===4?'timing_missing':'complete',
+      stop:index===12?'timeout':tools?'tool_calls':'stop',tools};
+  });
+})();
+  const historicalContexts=[{"id":1,"input":34509},{"id":2,"input":37093},{"id":3,"input":39242},{"id":4,"input":49493},{"id":5,"input":53006},{"id":6,"input":56190},{"id":7,"input":72792},{"id":8,"input":75311},{"id":9,"input":78425},{"id":10,"input":79769},{"id":11,"input":81523},{"id":12,"input":83461},{"id":13,"input":86100},{"id":14,"input":101874},{"id":15,"input":112353},{"id":16,"input":113437},{"id":17,"input":113847},{"id":18,"input":118831},{"id":19,"input":131051},{"id":20,"input":135294},{"id":21,"input":142298},{"id":22,"input":145740},{"id":23,"input":148882},{"id":24,"input":157528},{"id":25,"input":163149},{"id":26,"input":163652},{"id":27,"input":163875},{"id":28,"input":174016},{"id":29,"input":176206},{"id":30,"input":181110},{"id":31,"input":187019},{"id":32,"input":187153},{"id":33,"input":192958},{"id":34,"input":195181},{"id":35,"input":198031},{"id":36,"input":210818},{"id":37,"input":216397},{"id":38,"input":221247},{"id":39,"input":223877},{"id":40,"input":231926},{"id":41,"input":237909},{"id":42,"input":239632},{"id":43,"input":240373},{"id":44,"input":246311},{"id":45,"input":249566},{"id":46,"input":251369},{"id":47,"input":257408},{"id":48,"input":259608},{"id":49,"input":265678},{"id":50,"input":268102},{"id":51,"input":274500},{"id":52,"input":278561},{"id":53,"input":282798},{"id":54,"input":285241},{"id":55,"input":286818},{"id":56,"input":289189},{"id":57,"input":293030},{"id":58,"input":294475},{"id":59,"input":298276},{"id":60,"input":302323},{"id":61,"input":302796},{"id":62,"input":308297},{"id":63,"input":314625},{"id":64,"input":317701},{"id":65,"input":321781},{"id":66,"input":322089},{"id":67,"input":324614},{"id":68,"input":327532},{"id":69,"input":332469},{"id":70,"input":335441},{"id":71,"input":339697},{"id":72,"input":341280},{"id":73,"input":343568},{"id":74,"input":348206},{"id":75,"input":351179},{"id":76,"input":352740},{"id":77,"input":356734},{"id":78,"input":360837},{"id":79,"input":364257},{"id":80,"input":367119},{"id":81,"input":369143},{"id":82,"input":373121},{"id":83,"input":377599},{"id":84,"input":379373},{"id":85,"input":384178}];
+  requests.forEach(r=>{r.generation=r.rate==null?null:r.output/r.rate*1000;r.duration=r.generation==null?null:r.generation+r.ttft});
+  const activeRequests = () => state.scope==='turn'?requests.filter(r=>r.turn===4):requests;
+  const isHistory = () => state.scenario==='historical';
+  const selected = () => activeRequests().find(r=>r.id===state.request) ?? activeRequests()[0];
+  function summary(){const range=activeRequests(),valid=range.filter(r=>r.rate!=null),ttfts=valid.map(r=>r.ttft).sort((a,b)=>a-b);return{range,valid,rate:valid.reduce((s,r)=>s+r.output,0)/(valid.reduce((s,r)=>s+r.generation,0)/1000),median:ttfts[Math.ceil(ttfts.length/2)-1],input:range.reduce((s,r)=>s+(r.input??0),0),output:range.reduce((s,r)=>s+(r.output??0),0),cost:range.reduce((s,r)=>s+(r.cost??0),0),tools:range.reduce((s,r)=>s+r.tools,0)}}
+  function heading(title,meta='',action=''){return `<div class="section-head"><h3>${t(title)}</h3>${meta?`<p>${meta}</p>`:''}${action?`<div class="end">${action}</div>`:''}</div>`}
+  function openButton(key,tab){return `<button class="text-btn" data-tab="${tab}">${t(key)}${icon('arrow')}</button>`}
+  function decisionData() {
+  const rows = state.scope === 'turn' ? decisionRecords.filter(r => r.id === 5) : decisionRecords;
+  const known = rows.filter(r => r.id !== 5).reduce((count, r) => count + (r.id === 1 ? 2 : 1), 0);
+  return { rows, points: rows.length, requests: rows.reduce((count,r)=>count+(r.id===1?2:1),0), changed: rows.filter(r=>r.status==='applied').length, fallback: rows.filter(r=>r.status==='fallback').length, known, unknown: rows.filter(r=>r.id===5).length, features: new Set(rows.map(r=>r.feature)).size };
+}
+  function renderStats() {
+  const s=summary(),h=isHistory();
+  const activeMs=s.range.reduce((sum,r)=>sum+(r.duration??(r.id===13?6000:18000))+r.tools*2400+(r.id===8?1800:0),0);
+  const duration=`${Math.floor(activeMs/60000)}m ${Math.floor(activeMs%60000/1000)}s`;
+  const items=[
+    ['activity','duration',h?'—':duration,h?t('historicActive'):t('durationMeta')],
+    ['clock','ttft',h?'—':seconds(s.median),h?t('unavailable'):`${t('ttftMeta')} · ${s.valid.length}/${s.range.length}`],
+    ['token','tokens',compact(h?89167311:s.input+s.output),h?`${t('input')} ${full(88456837)} · ${t('output')} ${full(710474)}`:`${t('input')} ${full(s.input)} · ${t('output')} ${full(s.output)} · ${s.range.filter(r=>r.input!=null).length}/${s.range.length}`],
+    ['tool','tools',h?'595':`${s.tools}${s.range.some(r=>r.id===8)?` · ${state.language==='en'?'1 failed':'1 次失败'}`:''}`,h?t('historyTools'):t('tools')],
+  ];
+  return `<div class="stats" aria-label="${state.language==='en'?'Run summary':'运行摘要'}">${items.map(([i,key,value,note])=>`<div class="stat" title="${esc(note)}"><div class="stat-label">${icon(i)}${t(key)}</div><div class="stat-value num">${value}</div></div>`).join('')}</div>`;
+}
+  function contextGrowth() {
+  const data=isHistory()?historicalContexts:activeRequests().map(r=>({id:r.id,input:r.input}));
+  const maximum=Math.max(1,...data.map(r=>r.input??0)),stride=Math.max(1,Math.ceil(data.length/13));
+  return `<div class="growth-shell" data-context-growth><div class="growth-track">${data.map((r,index)=>`<button class="growth-column${r.input==null?' missing':''}" type="button" data-open-context="${r.id}" aria-label="${t('request')} ${r.id}: ${r.input==null?t('usageMissing'):full(r.input)+' tokens'}" title="${t('request')} ${r.id}: ${r.input==null?t('usageMissing'):full(r.input)+' tokens'}"><span class="growth-tip" role="tooltip">${r.input==null?'—':compact(r.input)}</span><span class="growth-bar" style="height:${r.input==null?4:Math.max(4,r.input/maximum*72)}%"></span></button>`).join('')}</div><div class="growth-axis" aria-hidden="true">${data.map((r,index)=>`<span>${index===0||index===data.length-1||(index%stride===0&&index<data.length-4)?r.id:''}</span>`).join('')}</div></div>`;
+}
+  function renderEnvironment() {
+  const h=isHistory(),s=summary(),d=decisionData();
+  const activeMs=s.range.reduce((sum,r)=>sum+(r.duration??(r.id===13?6000:18000))+r.tools*2400+(r.id===8?1800:0),0),spanMs=activeMs+120000;
+  const created=new Date('2026-10-13T01:20:00+08:00'),last=new Date(created.getTime()+spanMs);
+  const dateFormat=new Intl.DateTimeFormat(state.language==='en'?'en-GB':'zh-CN',{year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'Asia/Shanghai'});
+  const pairs=[
+    [t('model'),'deepseek-flash'],[t('name'),h?'Javis':state.language==='en'?'Layout demo':'布局演示'],
+    [t('status'),h?'done':state.scenario==='live'?'running':'needs-review'],[t('permissions'),'allow-all'],
+    [state.language==='en'?'Messages':'消息数',full(h?1052:s.range.length+s.tools+4)],[state.language==='en'?'Created':'创建时间',h?(state.language==='en'?'Not loaded':'未载入'):dateFormat.format(created)],
+    [state.language==='en'?'Last activity':'最后活动',h?(state.language==='en'?'Not loaded':'未载入'):dateFormat.format(last)],[t('input'),full(h?88456837:s.input)],
+    [t('output'),full(h?710474:s.output)],[state.language==='en'?'Total tokens':'总 tokens',full(h?89167311:s.input+s.output)],
+    [t('contextTokens'),full(h?385281:s.range.filter(r=>r.input!=null).at(-1).input)],[t('cost'),`${dollars(h ? 0.11348574 : s.cost)} + ${t('unknown')}`],
+  ];
+  return `<section class="section" data-section="environment">${heading('environment')}<dl class="facts">${pairs.map(([label,value])=>`<div class="fact"><dt>${label}</dt><dd class="num" title="${esc(value)}">${value}</dd></div>`).join('')}</dl></section>`;
+}
+  function chart() {
+  const s=summary(),h=isHistory(),data=s.range;
+  if(h)return `<div class="rate-empty">${state.language==='en'?'No valid generation window recorded; historical output rate is unavailable.':'历史生成时间无效，暂不能还原响应速率。'}<button class="text-btn" data-page="data">${state.language==='en'?'View evidence':'查看依据'}</button></div>`;
+  const W=Math.max(280,Math.floor($('#run-panel').clientWidth-58)),H=98,left=35,right=12,top=22,bottom=21;
+  const max=state.metric==='speed'?70:3000,x=i=>left+i*(W-left-right)/(data.length-1||1),y=v=>H-bottom-v/max*(H-bottom-top);
+  let paths=[],segment=[];
+  data.forEach((r,index)=>{
+    const value=state.metric==='speed'?r.rate:r.ttft;
+    if(value==null){if(segment.length)paths.push(segment.join(' '));segment=[];return}
+    segment.push(`${segment.length?'L':'M'}${x(index).toFixed(1)},${y(value).toFixed(1)}`);
+  });
+  if(segment.length)paths.push(segment.join(' '));
+  const stride=Math.max(1,Math.ceil(data.length/12));
+  const grid=[0,.5,1].map(part=>`<line class="gridline" x1="${left}" x2="${W-right}" y1="${y(part*max)}" y2="${y(part*max)}"/><text x="${left-9}" y="${y(part*max)+4}" text-anchor="end">${state.metric==='speed'?Math.round(part*max):(part*max/1000).toFixed(1)}</text>`).join('');
+  const labels=data.map((r,index)=>index===0||index===data.length-1||(index%stride===0&&index<data.length-5)?`<text x="${x(index)}" y="${H-3}" text-anchor="middle">${r.id}</text>`:'').join('');
+  const currentIndex=data.findIndex(r=>r.id===selected().id),current=data[currentIndex],value=state.metric==='speed'?current.rate:current.ttft;
+  const point=value==null?'':`<circle class="selected" cx="${x(currentIndex)}" cy="${y(value)}" r="3"/>`;
+  return `<div class="rate-shell"><svg id="rate-plot" class="plot" viewBox="0 0 ${W} ${H}" data-left="${left}" data-right="${right}" data-width="${W}" role="img" aria-label="${t('trend')}; ${s.valid.length}/${data.length} ${t('samples')}"><text x="0" y="10">${state.metric==='speed'?'tok/s':'s'}</text>${grid}${paths.map(path=>`<path class="line" d="${path}"/>`).join('')}${point}${labels}</svg><div class="sample-readout" id="sample-readout">${readout()}</div></div>`;
+}
+  function readout() {
+  const r=selected();
+  return `<label class="sr-only" for="sample-select">${t('request')}</label><select id="sample-select" aria-label="${t('request')}">${activeRequests().map(item=>`<option value="${item.id}"${item.id===r.id?' selected':''}>R${item.id}</option>`).join('')}</select><span class="num">${r.rate==null?t('missing'):r.rate.toFixed(1)+' tok/s'}</span><span class="muted">TTFT ${seconds(r.ttft)}</span><button class="text-btn" data-open-request="${r.id}">${t('openRequest')}</button>`;
+}
+  function decisionStrip() {
+  const h=isHistory(),d=decisionData();
+  return `<div class="decision-strip"><div class="decision-cells"><span>${t(h?'legacyRequests':'decisionPoints')}<strong>${h?23:d.points}</strong></span><span>${t('changed')}<strong>${h?'—':d.changed}</strong></span><span>${t('fallbacks')}<strong>${h?'—':d.fallback}</strong></span><span>${t('decisionCost')}<strong>${h||!d.known?t('unknown'):'$0.0000'}</strong></span>${h?badge(`${t('unknown')} ×23`,'warn'):`${d.known?badge(`${t('priceZero')} · ${d.known}/${d.requests}`,'ok'):''}${d.unknown?badge(`${t('unknown')} ×${d.unknown}`,'warn'):''}`}</div><span class="decision-note">${h?t('legacyNote')+' ':''}${t('included')}</span></div>`;
+}
+  function renderOverview() {
+  const h=isHistory(),s=summary(),d=decisionData();
+  const counts=h?t('historyCounts'):`${state.scope==='turn'?t('turn'):'4 '+(state.language==='en'?'turns':'轮')} · ${s.range.length+(state.scenario==='live'&&state.scope==='session'?1:0)} ${state.language==='en'?'requests':'次请求'}`;
+  const decisionMeta=h?`23 ${t('legacyRequests')}`:`${d.features} ${state.language==='en'?'features':'项功能'} · ${d.requests} ${state.language==='en'?'requests':'次请求'}`;
+  const events=s.range.flatMap(r=>[{id:r.id,kind:r.status==='timeout'?'error':'model'},...Array.from({length:r.tools},(_,index)=>({id:r.id,kind:r.id===8&&index===0?'error':'tool'}))]);
+  const buckets=Array.from({length:Math.min(20,events.length)},(_,index)=>{
+    const group=events.slice(Math.floor(index*events.length/20),Math.floor((index+1)*events.length/20));
+    const error=group.find(event=>event.kind==='error'),kind=error?'error':group.filter(event=>event.kind==='tool').length>group.length/2?'tool':'model';
+    return {id:error?.id??group[0]?.id,kind,start:group[0]?.id,end:group.at(-1)?.id};
+  }).filter(bucket=>bucket.id);
+  const shape=h?`<div class="native-empty">${state.language==='en'?'Full historical event stream is not loaded in this preview.':'本演示未载入完整历史轨迹。'}</div>`:`<div class="shape-shell"><div class="shape">${buckets.map(bucket=>`<button class="${bucket.kind==='model'?'':bucket.kind}" data-open-request="${bucket.id}" title="R${bucket.start}–R${bucket.end}" aria-label="R${bucket.start}–R${bucket.end}"></button>`).join('')}</div></div>`;
+  let issues='';
+  if(h)issues=`<button class="issue-row" data-tab="decisions">${icon('alert')}<span>${state.language==='en'?'19 decision requests timed out; cost is unknown.':'19 次 Decision 请求超时；费用未知。'}</span><span class="meta">23 ${t('legacyRequests')}</span></button>`;
+  else {
+    if(s.range.some(r=>r.id===13))issues+=`<button class="issue-row" data-open-request="13">${icon('alert')}<span>R13 · ${state.language==='en'?'Request timeout; usage not returned.':'请求超时，未返回用量。'}</span><span class="meta">—</span></button>`;
+    if(s.range.some(r=>r.id===8))issues+=`<button class="issue-row" data-open-request="8">${icon('alert')}<span>R8 · Read File · ${state.language==='en'?'Tool failed.':'工具执行失败。'}</span><span class="meta">4.2 s</span></button>`;
+  }
+  if(!issues)issues=`<div class="issue-row muted">${t('noIssues')}</div>`;
+  const rateSummary=h?'—':state.metric==='ttft'?`P50 ${seconds(s.median)}`:`${state.language==='en'?'Average':'平均'} ${s.rate.toFixed(1)} tok/s`;
+  const rateAction=`<div class="rate-actions"><div class="metric-switch"><button data-metric="speed" aria-pressed="${state.metric==='speed'}">${t('speedTab')}</button><button data-metric="ttft" aria-pressed="${state.metric==='ttft'}">TTFT</button></div>${openButton('openTrajectory','trajectory')}</div>`;
+  return `<div class="status-line"><span class="dot" style="color:var(--${state.scenario==='live'?'accent':'error'})"></span><strong>${t(h?'historyStatus':state.scenario==='live'?'live':'ended')}</strong><span class="counts num">${counts}</span></div>${renderStats()}
+    <section class="section" data-section="decisions">${heading('decisionTitle',decisionMeta,openButton('records','decisions'))}${decisionStrip()}</section>
+    ${renderEnvironment()}
+    <section class="section" data-section="shape">${heading('shape','',openButton('openTrajectory','trajectory'))}${shape}</section>
+    <section class="section" data-section="context">${heading('contextGrowth',state.language==='en'?'input by request':'按请求输入量',openButton('openContext','context'))}${contextGrowth()}</section>
+    <section class="section secondary-section" data-section="rate">${heading(state.metric==='ttft'?'ttft':'trend',`<span title="${t('speedMeta')}" class="num">${rateSummary}</span>`,rateAction)}${chart()}</section>
+    <section class="section" data-section="brief">${heading('brief')}<dl class="brief"><div><dt>${t('goal')}</dt><dd>${h?t('unavailable'):t('goalText')}</dd></div><div><dt>${t('work')}</dt><dd>${h?(state.language==='en'?'595 tool calls; open the source trajectory.':'595 次工具调用；实际内容查看原轨迹。'):t('workText')}</dd></div><div><dt>${t('outcome')}</dt><dd>${h?(state.language==='en'?'29 failed tools recorded.':'29 次工具失败。'):t('outcomeText')}</dd></div></dl></section>
+    <section class="section" data-section="attention">${heading('attention','',openButton('openTrajectory','trajectory'))}<div class="issue-list">${issues}</div></section>`;
+}
+  const decisionRecords = [
+    {id:1,feature:'Adaptive thinking',zh:'自适应思考',action:'thinking → medium',zhAction:'思考级别改为 medium',status:'applied',confidence:.94,latency:420},
+    {id:2,feature:'Source suggestion',zh:'信息源建议',action:'source selected',zhAction:'选择建议的信息源',status:'applied',confidence:.91,latency:530},
+    {id:3,feature:'Source suggestion',zh:'信息源建议',action:'kept existing source',zhAction:'保持原信息源',status:'unchanged',confidence:.58,latency:690},
+    {id:4,feature:'Risk notice',zh:'风险提示',action:'human confirmation',zhAction:'提示人工确认',status:'applied',confidence:.97,latency:380},
+    {id:5,feature:'Source suggestion',zh:'信息源建议',action:'timeout → fallback',zhAction:'超时后回退处理',status:'fallback',confidence:null,latency:1500},
+  ];
+  function retainedView(tab,requestSeq){
+    const name=t(tab),request=requestSeq?' · R'+requestSeq:'';
+    $('#retained-view-note').textContent=state.language==='en'
+      ? name+request+': the application’s current view is retained. This standalone prototype previews Overview only; implementation will open the existing record.'
+      : name+request+'：沿用应用现有界面。本文件只演示 Overview；实施后定位现有记录，不重做此页样式。';
+    $('#retained-view-note').hidden=false;
+  }
+  function render(){state.tab='overview';$('#retained-view-note').hidden=true;const h=isHistory();$('#run-title').textContent=state.language==='en'?'Run':'运行';$('#session-name').textContent=h?'Javis':state.language==='en'?'Layout demo':'布局演示';$('#scope-label').textContent=t('scope');$('#scope option[value="session"]').textContent=t('entire');$('#scope option[value="turn"]').textContent=t('turn');$('#scope').disabled=h;$('#scope').value=state.scope;$('#scope-quality').innerHTML=h?badge(t('partial'),'warn'):badge(`${t('samples')} ${summary().valid.length}/${summary().range.length}${state.scenario==='live'?' · R100 '+t('live').split(' · ')[0]:''}`);
+    $('#run-tabs').innerHTML=['overview','trajectory','decisions','context','map'].map(tab=>`<button id="run-tab-${tab}" role="tab" data-tab="${tab}" aria-controls="run-body" aria-selected="${tab===state.tab}" tabindex="${tab===state.tab?0:-1}"${tab==='overview'?'':` disabled aria-disabled="true" title="${state.language==='en'?'Existing application view retained; only Overview is previewed here.':'沿用应用现有界面；本文件仅演示 Overview。'}"`}>${t(tab)}</button>`).join('');
+    $('#run-body').setAttribute('aria-labelledby',`run-tab-${state.tab}`);$('#run-panel').lang=state.language==='en'?'en':'zh-CN';$('#run-body').innerHTML=renderOverview();}
+  function switchPage(page,focus=false){document.querySelectorAll('.page').forEach(el=>el.hidden=el.id!==`page-${page}`);document.querySelectorAll('[role="tab"][data-page]').forEach(el=>{const active=el.dataset.page===page;el.setAttribute('aria-selected',active);el.tabIndex=active?0:-1});if(page==='demo')render();if(focus)$(`#page-tab-${page}`).focus();}
+  document.addEventListener('click',event=>{const button=event.target.closest('button, tr[data-request], tr[data-decision]');if(!button)return;
+    if(button.dataset.page){switchPage(button.dataset.page);return}
+    if(button.dataset.tab){if(button.dataset.tab!=='overview'){retainedView(button.dataset.tab);return}render();$('#run-tab-overview').focus();return}
+    if(button.dataset.metric){state.metric=button.dataset.metric;render();$(`[data-metric="${state.metric}"]`).focus();return}
+    if(button.dataset.sample){state.request=Number(button.dataset.sample);render();$(`[data-sample="${state.request}"]`).focus();return}
+    if(button.dataset.openRequest){retainedView('trajectory',Number(button.dataset.openRequest));return}
+    if(button.dataset.request){state.request=Number(button.dataset.request);render();$(`button[data-request="${state.request}"]`)?.focus();return}
+    if(button.dataset.filter){state.filter=button.dataset.filter;render();$(`[data-filter="${state.filter}"]`).focus();return}
+    if(button.dataset.decision){state.decision=Number(button.dataset.decision);render();$(`button[data-decision="${state.decision}"]`).focus();return}
+    if(button.dataset.openContext){retainedView('context',Number(button.dataset.openContext));return}
+    if(button.dataset.context){state.request=Number(button.dataset.context);render();$(`[data-context="${state.request}"]`)?.focus();return}
+    if(button.dataset.map){state.map=button.dataset.map;state.node='root';render();$(`[data-map="${state.map}"]`).focus();return}
+    if(button.dataset.node){state.node=button.dataset.node;render();$(`[data-node="${state.node}"]`).focus();return}
+  });
+  document.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;const current=event.target.closest('[role="tab"]');if(!current)return;const list=[...current.parentElement.querySelectorAll('[role="tab"]:not([disabled])')];let i=list.indexOf(current);i=event.key==='Home'?0:event.key==='End'?list.length-1:(i+(event.key==='ArrowRight'?1:-1)+list.length)%list.length;event.preventDefault();const target=list[i];if(target.dataset.page){switchPage(target.dataset.page,true)}else{state.tab=target.dataset.tab;render();$(`#run-tab-${state.tab}`).focus()}});
+  $('#language').addEventListener('click',()=>{state.language=state.language==='en'?'zh':'en';$('#language').textContent=state.language==='en'?'EN / 中':'中 / EN';render()});
+  $('#theme').addEventListener('click',()=>{state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;$('#theme').setAttribute('aria-pressed',String(state.theme==='dark'));$('#theme span').textContent=state.theme==='dark'?'浅色':'深色';$('#theme').setAttribute('aria-label',state.theme==='dark'?'切换浅色主题':'切换深色主题')});
+  $('#width').addEventListener('click',()=>{const narrow=$('#demo-column').classList.toggle('is-narrow');$('#width').setAttribute('aria-pressed',String(narrow));$('#width').textContent=narrow?'恢复宽度':'窄面板';render()});
+  $('#scenario').addEventListener('change',event=>{state.scenario=event.target.value;state.scope='session';state.request=12;render()});
+  $('#scope').addEventListener('change',event=>{state.scope=event.target.value;state.request=state.scope==='turn'?99:12;state.decision=state.scope==='turn'?5:2;state.node='root';render()});
+  document.addEventListener('change',event=>{if(event.target.id==='sample-select'){state.request=Number(event.target.value);render();$('#sample-select')?.focus();}});
+  document.addEventListener('click',event=>{const plot=event.target.closest('#rate-plot');if(!plot)return;const box=plot.getBoundingClientRect(),W=Number(plot.dataset.width),left=Number(plot.dataset.left),right=Number(plot.dataset.right),relative=(event.clientX-box.left)/box.width*W;const data=activeRequests(),index=Math.max(0,Math.min(data.length-1,Math.round((relative-left)/(W-left-right)*(data.length-1))));state.request=data[index].id;render();});
+  let resizeFrame;
+  window.addEventListener('resize',()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>render())});
+  render();
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@ import type { SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { NativeRequestObservation } from '@phaneris/shared/durable-runtime/types';
 
 /** SDK callback observations, not a count of network attempts or wire bytes. */
-export function observeNativeRequest(options: SimpleStreamOptions = {}): {
+export function observeNativeRequest(options: SimpleStreamOptions = {}, onDispatch?: () => void): {
   options: SimpleStreamOptions;
   observation: NativeRequestObservation;
 } {
@@ -48,6 +48,7 @@ export function observeNativeRequest(options: SimpleStreamOptions = {}): {
             });
           } else observation.droppedObservations++;
         } catch { observation.observationErrors++; }
+        onDispatch?.();
         return replacement;
       },
       onResponse: async (response, model) => {
