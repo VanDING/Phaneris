@@ -1,0 +1,1431 @@
+{
+  "runDirectory": "E:\\Phaneris\\.cache\\verification\\planning-performance-gQ5jcK",
+  "rawManifestSha256": "17b2a873f8a8f09a30f58fdff779a429cd04251f708db41baf8aa503d241aced",
+  "command": [
+    "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+    "E:\\Phaneris\\scripts\\verification\\planning-performance-workflow.ts"
+  ],
+  "source": {
+    "headSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+    "dirtyPaths": [
+      "M apps/electron/electron-builder.yml",
+      " M apps/electron/installer/assets/brand-2x.bmp",
+      " M apps/electron/installer/assets/brand-dark-2x.bmp",
+      " M apps/electron/installer/assets/brand-dark.bmp",
+      " M apps/electron/installer/assets/brand-dark.png",
+      " M apps/electron/installer/assets/brand-dark@2x.png",
+      " M apps/electron/installer/assets/brand.bmp",
+      " M apps/electron/installer/assets/brand.png",
+      " M apps/electron/installer/assets/brand@2x.png",
+      " M apps/electron/installer/installer-pages.nsh",
+      " M apps/electron/installer/progress.h",
+      " M apps/electron/installer/window-frame.cpp",
+      " M apps/electron/resources/release-notes/next.md",
+      " M apps/electron/scripts/capture-installer-states.ps1",
+      " M apps/electron/scripts/installer.nsh",
+      " M apps/electron/scripts/prepare-windows-installer.cjs",
+      " M apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      " M apps/electron/src/renderer/components/app-shell/PluginsListPanel.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+      " M apps/electron/src/renderer/components/app-shell/input/__tests__/picker-mode.test.ts",
+      " M apps/electron/src/renderer/components/app-shell/input/picker-mode.ts",
+      " M apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+      " M apps/electron/src/renderer/components/app-shell/kanban/gantt-overrides.css",
+      " M apps/electron/src/renderer/components/content-panels/session-decisions/DecisionSummary.tsx",
+      " M apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
+      " M apps/electron/src/renderer/docs/__tests__/manifest.test.ts",
+      " M apps/electron/src/renderer/docs/guide/en/core-concepts/conversations.md",
+      " M apps/electron/src/renderer/docs/guide/en/core-concepts/permissions.md",
+      " M apps/electron/src/renderer/docs/guide/en/core-concepts/working-directory.md",
+      " M apps/electron/src/renderer/docs/guide/en/getting-started/introduction.md",
+      " M apps/electron/src/renderer/docs/guide/en/go-further/document-tools.md",
+      " M apps/electron/src/renderer/docs/guide/en/go-further/kanban.md",
+      " M apps/electron/src/renderer/docs/guide/en/go-further/rich-output.md",
+      " M apps/electron/src/renderer/docs/guide/en/go-further/tasks.md",
+      " M apps/electron/src/renderer/docs/guide/en/go-further/workspaces.md",
+      " M apps/electron/src/renderer/docs/guide/en/plugins/overview.md",
+      " M apps/electron/src/renderer/docs/guide/en/reference/credentials.md",
+      " M apps/electron/src/renderer/docs/manifest.ts",
+      " M apps/electron/src/renderer/hooks/useCalendarEntries.ts",
+      " M apps/electron/src/renderer/hooks/useWorkItems.ts",
+      " M apps/electron/src/renderer/index.css",
+      " M apps/electron/src/renderer/pages/PluginInfoPage.tsx",
+      " M apps/electron/src/shared/types.ts",
+      " M docs/README.md",
+      " M docs/architecture/capability-adoption-2026-10.md",
+      " D docs/architecture/durable-agent-runtime-target-architecture.md",
+      " M docs/architecture/durable-agent-runtime.md",
+      " M docs/architecture/durable-runtime-boundary.md",
+      " M docs/architecture/governance-domain-ownership.md",
+      " M docs/architecture/phaneris-phase-a-identity-freeze.md",
+      " M docs/architecture/phaneris-phase-b-brand-identity.md",
+      " M docs/archive/capability-completion-2026-10-04.md",
+      " M docs/archive/governance-first-wave-2026-10-11.md",
+      " M docs/archive/pi-sdk-1.0.0-upgrade-assessment.md",
+      " M docs/archive/pi-sdk-1.1.0-upstream-0.14.1-plan.md",
+      " M docs/archive/project-assessment-and-roadmap-2026-08-31.md",
+      " M docs/archive/system-cleanup-optimization-plan-2026-10-10.md",
+      " M docs/design/plugin-bundles-design.md",
+      " D docs/design/profile-preferences-plan.md",
+      " M docs/guides/pi-kernel.md",
+      " D docs/process/agentic-interception-design.md",
+      " M docs/process/architecture-code-governance-implementation-plan-2026-10-11.md",
+      " D docs/process/artifact-files-native-image-generation-plan.md",
+      " D docs/process/calendar-gantt-optimization-plan.md",
+      " M docs/process/governance-completion-2026-10-11.md",
+      " M docs/process/governance-ownership-inventory-2026-10-11.md",
+      " D docs/process/phaneris-fork-plan.md",
+      " D docs/process/phaneris-local-docs.md",
+      " D docs/process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md",
+      " D docs/process/pi-sdk-native-capabilities-gap-analysis.md",
+      " D docs/process/plugin-system-review-and-roadmap.md",
+      " D docs/process/product-development-directions-2026-09-19.md",
+      " D docs/process/system-prompt-per-turn-analysis.md",
+      " M docs/process/theme-engine-frontend-governance-plan-2026-10-12.md",
+      " D docs/release-readiness.md",
+      " D docs/research/craft-renderer-inventory.md",
+      " D docs/research/cross-ecosystem-plugin-porting-assessment.md",
+      " D docs/research/gpui-ecosystem-and-gaps.md",
+      " D docs/research/gpui-kit-profile.md",
+      " D docs/research/gpuix-profile.md",
+      " D docs/research/memory-system-design.md",
+      " D docs/research/native-frontend-migration-gpuix-assessment.md",
+      " D docs/research/unreal-agent-design-analysis.md",
+      " M docs/verification/README.md",
+      " M docs/verification/governance-first-wave-failure-matrix.md",
+      " M docs/verification/installer-skin-refinement.md",
+      " M docs/verification/motion-implementation-status.md",
+      " M docs/verification/results/packaged-client-smoke-win.json",
+      " M docs/verification/results/packaged-client-verification-win.json",
+      " M package.json",
+      " M packages/server-core/src/handlers/rpc/calendar.ts",
+      " M packages/server-core/src/handlers/rpc/plugins.ts",
+      " M packages/server-core/src/handlers/rpc/work-items.isolated.ts",
+      " M packages/server-core/src/handlers/rpc/work-items.ts",
+      " M packages/server-core/src/services/workspace-backup.ts",
+      " M packages/server-core/src/sessions/SessionManager.ts",
+      " M packages/server-core/src/tasks/TaskRunner.test.ts",
+      " M packages/server-core/src/tasks/TaskRunner.ts",
+      " M packages/shared/src/config/watcher.ts",
+      " M packages/shared/src/decisions/session.ts",
+      " M packages/shared/src/durable-runtime/index.ts",
+      " M packages/shared/src/i18n/locales/de.json",
+      " M packages/shared/src/i18n/locales/en.json",
+      " M packages/shared/src/i18n/locales/es.json",
+      " M packages/shared/src/i18n/locales/hu.json",
+      " M packages/shared/src/i18n/locales/ja.json",
+      " M packages/shared/src/i18n/locales/pl.json",
+      " M packages/shared/src/i18n/locales/zh-Hans.json",
+      " M packages/shared/src/plugins/__tests__/plugin-context.isolated.ts",
+      " M packages/shared/src/plugins/__tests__/plugin-install.isolated.ts",
+      " M packages/shared/src/plugins/dto.ts",
+      " M packages/shared/src/plugins/index.ts",
+      " M packages/shared/src/plugins/install.ts",
+      " M packages/shared/src/plugins/plugin-context.ts",
+      " M packages/shared/src/plugins/resolve.ts",
+      " M packages/shared/src/tasks/generator-prompt.ts",
+      " M packages/shared/src/tasks/schema.ts",
+      " M packages/shared/src/tasks/storage.ts",
+      " M packages/shared/src/work-items/browser.ts",
+      " M packages/shared/src/work-items/index.ts",
+      " M packages/shared/src/work-items/timeline.ts",
+      " M packages/ui/src/components/markdown/Markdown.tsx",
+      " M packages/ui/src/components/markdown/link-target.ts",
+      " M packages/ui/src/components/markdown/linkify.ts",
+      " M packages/ui/src/components/ui/LoadingIndicator.tsx",
+      " M packages/ui/src/styles/index.css",
+      " M scripts/critical-scenario-policy.json",
+      " M scripts/critical-scenarios.ts",
+      " M scripts/generate-installer-brand.ts",
+      " M scripts/identity-allowlist.json",
+      " M scripts/rpc-contract-inventory.json",
+      " M scripts/verification/fixtures/conversation-client.cjs",
+      " M scripts/verification/fixtures/conversation-model.ts",
+      " M scripts/verification/fixtures/native-client.cjs",
+      " M scripts/verification/installer-frame-workflow.ps1",
+      " M scripts/verification/native-client-workflow.ts",
+      " M scripts/verification/task-governance-workflow.ts",
+      " M scripts/visual-debt-ledger.json",
+      "?? apps/electron/installer/layout.generated.h",
+      "?? apps/electron/installer/layout.generated.nsh",
+      "?? apps/electron/installer/layout.json",
+      "?? apps/electron/scripts/generate-installer-layout.cjs",
+      "?? apps/electron/scripts/generate-installer-layout.d.cts",
+      "?? apps/electron/src/renderer/components/app-shell/kanban/gantt-rescheduling.ts",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/automations/overview.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/browser/api-discovery.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/browser/examples.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/browser/overview.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/conversations.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/interactions.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/permissions.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/projects.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/working-directory.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/customisation/colors.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/customisation/icons.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/customisation/themes.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/getting-started/installation.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/getting-started/introduction.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/connect-to-anything.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/deep-links.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/document-tools.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/kanban.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/pages.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/performance.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/rich-output.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/tasks.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/go-further/workspaces.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/labels/auto-rules.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/labels/overview.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/messaging/lark.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/messaging/overview.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/messaging/telegram.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/messaging/wechat-wecom.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/messaging/whatsapp.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/plugins/overview.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/cli-reference.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/config-file.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/credentials.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/custom-endpoint.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/environment-variables.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/llm-connections.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/network-proxy.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/reference/preferences.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/server/remote-server.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/skills/overview.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/sources/apis.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/sources/local-filesystems.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/sources/mcp-servers.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/sources/overview.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/statuses/customizing.md",
+      "?? apps/electron/src/renderer/docs/guide/zh-Hans/statuses/overview.md",
+      "?? apps/electron/src/renderer/hooks/work-items-collection.ts",
+      "?? docs/architecture/openui-intelligent-ui.md",
+      "?? docs/archive/agentic-interception-design.md",
+      "?? docs/archive/architecture-code-governance-implementation-plan-2026-10-11.md",
+      "?? docs/archive/artifact-files-native-image-generation-plan.md",
+      "?? docs/archive/calendar-gantt-optimization-plan.md",
+      "?? docs/archive/craft-renderer-inventory.md",
+      "?? docs/archive/cross-ecosystem-plugin-porting-assessment.md",
+      "?? docs/archive/durable-agent-runtime-target-architecture.md",
+      "?? docs/archive/gpui-ecosystem-and-gaps.md",
+      "?? docs/archive/gpui-kit-profile.md",
+      "?? docs/archive/gpuix-profile.md",
+      "?? docs/archive/memory-system-design.md",
+      "?? docs/archive/native-frontend-migration-gpuix-assessment.md",
+      "?? docs/archive/phaneris-fork-plan.md",
+      "?? docs/archive/phaneris-local-docs.md",
+      "?? docs/archive/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md",
+      "?? docs/archive/pi-sdk-native-capabilities-gap-analysis.md",
+      "?? docs/archive/plugin-system-review-and-roadmap.md",
+      "?? docs/archive/product-development-directions-2026-09-19.md",
+      "?? docs/archive/profile-preferences-plan.md",
+      "?? docs/archive/release-readiness-2026-10-13.md",
+      "?? docs/archive/system-prompt-per-turn-analysis.md",
+      "?? docs/archive/theme-engine-frontend-governance-plan-2026-10-12.md",
+      "?? docs/archive/unreal-agent-design-analysis.md",
+      "?? docs/design/openui-reply-presentation-plan-2026-10-13.md",
+      "?? docs/process/implementation-value-register-2026-10-13.md",
+      "?? docs/verification/c02-planning-performance-failure-matrix-2026-10-14.md",
+      "?? docs/verification/implementation-r01-r07-failure-matrix-2026-10-14.md",
+      "?? docs/verification/openui-adoption-evidence-2026-10-14.md",
+      "?? docs/verification/results/c02-planning-performance-2026-10-14/README.md",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/README.md",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/SHA256SUMS",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/docs-locale/docs-locale.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/durable-runtime-crash/crash.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/gantt-reschedule/gantt-reschedule.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/markdown-file-links/markdown-file-links.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/native-client/build-hashes.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/native-client/electron-conversation-runtime.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-client.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-fatal.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-layouts.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-reliability-export.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/plugin-consistency/plugin-consistency.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/plugin-transaction/plugin-transaction.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/runtime-reliability/reliability-after-restart.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/runtime-reliability/reliability-before-restart.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/static-checks.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/summary.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/task-file-scope/task-file-scope.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/task-permission/scenes.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/workspace-recovery/restored-runtime.json",
+      "?? docs/verification/results/implementation-r01-r07-2026-10-14/workspace-recovery/workspace-recovery.json",
+      "?? packages/server-core/src/observability/reliability-report.ts",
+      "?? packages/server-core/src/tasks/file-scopes.ts",
+      "?? packages/shared/src/durable-runtime/reliability.ts",
+      "?? packages/shared/src/plugins/confirmation.ts",
+      "?? packages/shared/src/work-items/calendar.ts",
+      "?? packages/ui/src/components/markdown/remark-file-links.ts",
+      "?? packages/ui/src/styles/loading-indicator.css",
+      "?? scripts/verification/deleted-provider-recovery-workflow.ts",
+      "?? scripts/verification/docs-locale-workflow.ts",
+      "?? scripts/verification/fixtures/docs-locale.tsx",
+      "?? scripts/verification/fixtures/gantt-reschedule.tsx",
+      "?? scripts/verification/fixtures/markdown-file-links.tsx",
+      "?? scripts/verification/fixtures/planning-collection.tsx",
+      "?? scripts/verification/fixtures/planning-performance-server.ts",
+      "?? scripts/verification/fixtures/ui-indicators.tsx",
+      "?? scripts/verification/gantt-reschedule-workflow.ts",
+      "?? scripts/verification/markdown-file-links-workflow.ts",
+      "?? scripts/verification/planning-collection-workflow.ts",
+      "?? scripts/verification/planning-performance-workflow.ts",
+      "?? scripts/verification/plugin-consistency-workflow.ts",
+      "?? scripts/verification/runtime-reliability-workflow.ts",
+      "?? scripts/verification/task-file-scope-workflow.ts",
+      "?? scripts/verification/task-permission-workflow.ts",
+      "?? scripts/verification/ui-indicators-workflow.ts",
+      "?? scripts/verification/workspace-recovery-workflow.ts"
+    ],
+    "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+    "changedFiles": [
+      {
+        "path": "apps/electron/electron-builder.yml",
+        "sha256": "0e4ffa7758d01fe60b9750b8b0b7c618e184e5f65bddee5dd9fcc31525d44203"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand-2x.bmp",
+        "sha256": "aba2e9063077fe42e3a6097421bce47d8e4bcae4f46963f557a02b44f14b520c"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand-dark-2x.bmp",
+        "sha256": "5d2f4d4a43e32327f5698167bdc8023d2e5a9cf3bc83348edda57456208e6143"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand-dark.bmp",
+        "sha256": "99735a8d1cfb88b9425ecc576389fa4e94de426a6a5944e4a9a54ef59e68814c"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand-dark.png",
+        "sha256": "69273393dd6bb47257e28fa33ee73763e17170bf86efeaf93859e09e0ad763cd"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand-dark@2x.png",
+        "sha256": "911a28c7bb6acb161b47f8d02d7e66e71634c3ab3b15e1c9424e1094232a73bc"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand.bmp",
+        "sha256": "e2a0da3a5f2e37270b8d0534444c98d462443fb83f082230d5fac0984febbe92"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand.png",
+        "sha256": "69273393dd6bb47257e28fa33ee73763e17170bf86efeaf93859e09e0ad763cd"
+      },
+      {
+        "path": "apps/electron/installer/assets/brand@2x.png",
+        "sha256": "911a28c7bb6acb161b47f8d02d7e66e71634c3ab3b15e1c9424e1094232a73bc"
+      },
+      {
+        "path": "apps/electron/installer/installer-pages.nsh",
+        "sha256": "603e0bfcc3f2edece42ec8dcc0414a0a4dd40bf69ef647b11f2b6848e824f644"
+      },
+      {
+        "path": "apps/electron/installer/layout.generated.h",
+        "sha256": "bbf94edd58f274090668b95fe2293c17819e803fd07ff9639b5369e7293fca8a"
+      },
+      {
+        "path": "apps/electron/installer/layout.generated.nsh",
+        "sha256": "d42a5c996b583556b54ad3635399dab7043eb7c2b94979547b657fd41c983713"
+      },
+      {
+        "path": "apps/electron/installer/layout.json",
+        "sha256": "0161c50dedf76e5389f4365072aa35ebf4b6d2f338acf63ec0b250f6c985b85d"
+      },
+      {
+        "path": "apps/electron/installer/progress.h",
+        "sha256": "4a436b2e5aaefd52c55bcbd85b227afd4049caae32bd07b4415bb263d2aa1b71"
+      },
+      {
+        "path": "apps/electron/installer/window-frame.cpp",
+        "sha256": "441d7d5f36c78bd6f4df03df9f1bb514f734bf363c667f25328761f88ff488b0"
+      },
+      {
+        "path": "apps/electron/resources/release-notes/next.md",
+        "sha256": "99b8a179446b672f1409c93c4123139bbe036f70fe0bb10e39599b526788eca7"
+      },
+      {
+        "path": "apps/electron/scripts/capture-installer-states.ps1",
+        "sha256": "6d1d6596efa12ffacdaf04ebf2dc3bdc6fd26a9e00b646f57cb7b251e45919bf"
+      },
+      {
+        "path": "apps/electron/scripts/generate-installer-layout.cjs",
+        "sha256": "b68c98a8a6312ba3e5838866671804642f9502c6e7e9109850dc5fa39fd5f851"
+      },
+      {
+        "path": "apps/electron/scripts/generate-installer-layout.d.cts",
+        "sha256": "211e2f15fcd696e4940032c2779d0a2ea543ce1dd9d240d971c02875a72d5dee"
+      },
+      {
+        "path": "apps/electron/scripts/installer.nsh",
+        "sha256": "787dbfe174bd8d8e2ce67d3e6b0f94ec735d4e88e60db3e7b2cca98d3583aeb9"
+      },
+      {
+        "path": "apps/electron/scripts/prepare-windows-installer.cjs",
+        "sha256": "e4ea9f2a844479a724953aaa4e814a53c007af687a57e11a101065bfae889a85"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+        "sha256": "b66b1869f603bc9283283c845a13847acf97df83e42ec28cba475eea19011a55"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/PluginsListPanel.tsx",
+        "sha256": "4d5fe6223065b1701ad4a9016a77cfacb19b2afb6c539726cbd7164d5284ef85"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
+        "sha256": "dd433593479e8cf5a4a19a68900b5689c8234a2b6996ec68317efe4b38b22d72"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+        "sha256": "fd360943688d536871609718a7bd9c99b0aa6aab0b0918d33a3b25b73f77ba65"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/__tests__/picker-mode.test.ts",
+        "sha256": "78e945ef7df82ac026b2e8eab4f83285513487cddcb7c4b52151d435e3028070"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/input/picker-mode.ts",
+        "sha256": "c416176ab465e738615d8a7525ac6af7b123079144dffc96eabec219b1658712"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+        "sha256": "c691371a4522dc3b97cd3d823be52ecd99836ffa19ab8950317af2b7e4f90e48"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/gantt-overrides.css",
+        "sha256": "77a5d89147a1c35611b2b8a20458816a47ed9b642d0afc68586c39531a5f208b"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/app-shell/kanban/gantt-rescheduling.ts",
+        "sha256": "e1eca3742dfee3bac0d29592f77f8121ae0b107eb306169613fc291868fcef42"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionSummary.tsx",
+        "sha256": "60df4221155af4490e10edba6cf4f34217da54b8d7cdae8ffb91adad7973fea0"
+      },
+      {
+        "path": "apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
+        "sha256": "4b687bb2eaa84d4e4b18ad5b05ad1799f1fa2428d4d6c9aa14c142ded73850e9"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/__tests__/manifest.test.ts",
+        "sha256": "4e260aed25c4597468b55a6e10b38de5599fd57c0593cb60a909f6d52c5a49fd"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/core-concepts/conversations.md",
+        "sha256": "7dc445e0dca6948ef555ce3fa487d26c2b035b11b56440bde97b7c5ed49be622"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/core-concepts/permissions.md",
+        "sha256": "6051aec493ccfe79277a15efd57d0b2db201db577fd2f25efa1447a4bc561da0"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/core-concepts/working-directory.md",
+        "sha256": "bc852e8b41991caca5f810f5908162d6fc5b80be73bbed963f8d8b87adac0670"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/getting-started/introduction.md",
+        "sha256": "26583575807ede656d7b9a55a89c36cbb68692ee20955e8dc4ff17306d78680f"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/go-further/document-tools.md",
+        "sha256": "d9cb84453a28f091232c952efb44e757e3f70367d4b38269edcee18fb6c99096"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/go-further/kanban.md",
+        "sha256": "5d229d62828d0c15c02521de59d1e2d0f8fbe08f45d77ec2a6a78d317fa50e88"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/go-further/rich-output.md",
+        "sha256": "505488f902a324cb7f8713ade65d020afae8f58cd930bc220120d3598968bb07"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/go-further/tasks.md",
+        "sha256": "86278af31dd549c3a2da693c4488a0a39aaea2c2f9a5dd6a6d04048135f99b4f"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/go-further/workspaces.md",
+        "sha256": "55b1abecf5aa1d5a8c524170f1e5e463f2767caaaf852988f988212e1fb30818"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/plugins/overview.md",
+        "sha256": "949f85fa80514c1878755ba8e8ca65f052c83f9ce65637770740f80586fc65d9"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/en/reference/credentials.md",
+        "sha256": "588c5f0496cd7c9e255c00a1e0c9a901f8400ac0ad1760b3c42f5c1ab1891cf6"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/automations/overview.md",
+        "sha256": "8e86171eb0df3b7308f4b1617debb00eb6734b9e9eaaf0cb48a4b5e8f5f002d1"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/browser/api-discovery.md",
+        "sha256": "18215280bd67993286344414f9761efd3e9140337d8e57731db7cf037883b9a6"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/browser/examples.md",
+        "sha256": "ccbac0312e3e9c1082d59e8c2228b56eec9df550f3ea534b87329f1b0b7d839e"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/browser/overview.md",
+        "sha256": "87a03d058354d3e6cba406214752949b916a6f054ed79009f0cbdec06037f8da"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/conversations.md",
+        "sha256": "4e4f845056a4c8746dff49f8818cf76cd3ee77bd0a9b4f64bc2a1de95c7a9332"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/interactions.md",
+        "sha256": "0429e89616437caf116af61c1623e80e227f915e486c9a6de8d1196887c1b085"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/permissions.md",
+        "sha256": "0b1cc69b62e8a855853e86d0ef091de2002289586e17676bff6f42af696030b0"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/projects.md",
+        "sha256": "b1a9df102034fcaf50acbf7271aed56b758faa300ad8edb1969202880f08815d"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/core-concepts/working-directory.md",
+        "sha256": "cb42f809b60c159bf424f785c9d4b1807ff5075b9f256e9373990b69c1154903"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/customisation/colors.md",
+        "sha256": "0f99b8fbc4f9c65d7423909acb5e0d61f6cb97e37665c8b09593d9553e53b5af"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/customisation/icons.md",
+        "sha256": "0c89912de7e136bfe0770953ed9294e83c24f72809803b5ca725715c7d29b023"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/customisation/themes.md",
+        "sha256": "0963d5ed21bbfb8f9e14013726160114266cf42b065933fc41a44a036d003ba6"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/getting-started/installation.md",
+        "sha256": "6c95b6a7777704e01f449b8a8e2e681ab743e69656406762a0ea9e5c33f18611"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/getting-started/introduction.md",
+        "sha256": "0dae6ead9a428862668461c07b7fd876899e212b27ecb333c618a4d7974840e7"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/connect-to-anything.md",
+        "sha256": "e6e86e14a454bd9339866268ae58d632c0a62b912fb59b271233650b503f9e98"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/deep-links.md",
+        "sha256": "6313c8860a55ed88ece974da3bfd3a13b65a605a69fcbd9ba3b238b748cddb76"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/document-tools.md",
+        "sha256": "cd26098650357e975d25c5f0a3d5f0932f860fe9e7d2f6c7cdf7afc7306f834c"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/kanban.md",
+        "sha256": "99093751a8eefda15d4ffa2426b243acec804be91277c9acf0e07a980b9c1a78"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/pages.md",
+        "sha256": "4c17661688ff19f42a21edc99be4fe3abd0c2c4d569a8ae8efbcdb839e0d2e9a"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/performance.md",
+        "sha256": "e77d3db53a61f03fe0471b709967b04a836afb6e10c148c6d835b08ba0f21020"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/rich-output.md",
+        "sha256": "77439915a63ccd5c903560a46c77d06a4be235eed2cd45050506abf50e3c326a"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/tasks.md",
+        "sha256": "1c3c3deb8d413a1dd3ca88692e62f4a22b0c4fdd58f053162dc1a01edd30a090"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/go-further/workspaces.md",
+        "sha256": "093b183115e5d5f1aea0dba186aef75a9e89d0de86dd82aa4a26081e281405e5"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/labels/auto-rules.md",
+        "sha256": "a022540b1ad2c31a76bad3062a50c87bd5aebe171cb03dc8877a0078def20f34"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/labels/overview.md",
+        "sha256": "212d10e3a3147f1581d9ff5b976e0302e8d989dfc9a442e57653cb9fe0e8e33e"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/messaging/lark.md",
+        "sha256": "90548a2672e9b637078fce2a89e32d61d74ad85fa3c16dc7f5d54a3f658ccb26"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/messaging/overview.md",
+        "sha256": "19e742a4fc32ad4dfc3efa7907b1af4204d7c012f07f4bb6bb0406deb24abf79"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/messaging/telegram.md",
+        "sha256": "545638c8df9a8871f06fff5e89e6ef7e14998063392be5e0eee5579cbbc104bb"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/messaging/wechat-wecom.md",
+        "sha256": "52baebc191766a442cb293fa4e00d6bb31daa08a6d8b254c8f7469d2127922a7"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/messaging/whatsapp.md",
+        "sha256": "255160c5b15094b3ed6e39549e4e3712507ea9ef1843c4555fc07119be7746c2"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/plugins/overview.md",
+        "sha256": "52a608537a8a7ece362e0b39558da05a5c7425206df2c285e149812dd1a164ad"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/cli-reference.md",
+        "sha256": "d1ad98b989eaa6b5c927d36ed5a0b99d46d2bf2288ce2596e571d74a5d73c394"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/config-file.md",
+        "sha256": "f58b12c118cca64313a11b9b2a86e7f12d91183c9bb9489fbf2da02ed7c02890"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/credentials.md",
+        "sha256": "c42a6f22f74e333dcef0f8dbfd77180bbe41abee94916d031cd2b70e64cd391b"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/custom-endpoint.md",
+        "sha256": "4181c3081c64caa7c66c484b4d36ac41a197d0af03bd3de2bede142e62f49841"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/environment-variables.md",
+        "sha256": "346766d60d86408280356d1c0003a23dc87abc9e380bdd370fa1f3f9540b9aa9"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/llm-connections.md",
+        "sha256": "c6087db2adb9ca8c6be333bd80752b40813abf55f6aab6f8ead5ffaf5bb78671"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/network-proxy.md",
+        "sha256": "460c0a9edd47cf3d930d54b2f1c6e2016a552e1436f5a76a6bb52282636bf2f9"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/preferences.md",
+        "sha256": "2c53dbe277816fff03a1d0e473162557cbadf375ee4c155d805690cce0d031f4"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/server/remote-server.md",
+        "sha256": "3692e10649b2f46dc7a3271f8c8c6abadb6b04149c626333cb0cf1d6769c833a"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/skills/overview.md",
+        "sha256": "97ec43a014b148cb3ebb4493ce90a1028912060f05b751bb2fe7fad7372a89b8"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/sources/apis.md",
+        "sha256": "537c57abe7825b8ebd3a46dfd82395f01eb73e752f516c36c0df078a7e6ee613"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/sources/local-filesystems.md",
+        "sha256": "2fadaf13976fc6a9a0871e3c6e66e71707289b13a1a4a35c160f4527daf71026"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/sources/mcp-servers.md",
+        "sha256": "0ab56f4a4d73fa83d6b51ccdb29bdd5d8fb3ed1860e19dc693bbdbe77d156b10"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/sources/overview.md",
+        "sha256": "0e4d29672a9e9d8c0581fa0168276d2484643e74fab057af36b1be0ce0ed92ad"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/statuses/customizing.md",
+        "sha256": "31f12b62b07ce972646e2e672aee27b5f9e0f3aa9aa6f4d978d961f000810e70"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/guide/zh-Hans/statuses/overview.md",
+        "sha256": "373b6686578673285de91e8ff85e0e06a31d8fdfe09d5fc01f622f4f649015a6"
+      },
+      {
+        "path": "apps/electron/src/renderer/docs/manifest.ts",
+        "sha256": "8ad21a60b6a20419185a0e56e72727ca869371353292bd2960706fa8b7d2b6be"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/useCalendarEntries.ts",
+        "sha256": "12014f1010cc24ef7098de651fd2c720f0ae709955da69ffaf3bca442a5edf1d"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/useWorkItems.ts",
+        "sha256": "6dfdbf81237a6722ee87671a62e47ed4de4638c5229da5dae47565ad8d8f2853"
+      },
+      {
+        "path": "apps/electron/src/renderer/hooks/work-items-collection.ts",
+        "sha256": "8f7d78eaab00dd3d6ae6be879040923a302f03fc974a15c7c140b0a3fc7e52f2"
+      },
+      {
+        "path": "apps/electron/src/renderer/index.css",
+        "sha256": "7c8754d5208a04d0d4a85e9c14f6a4cf2ebc29512ada3ccbe65cc04c4987104f"
+      },
+      {
+        "path": "apps/electron/src/renderer/pages/PluginInfoPage.tsx",
+        "sha256": "11dc544638e83381e37534adb14921fc8b3faffae6cf8e809b62b150ba7c0f27"
+      },
+      {
+        "path": "apps/electron/src/shared/types.ts",
+        "sha256": "fa81d30174a061f67eeda4c0d6e660b09b397af909144768f2edcaaa083c7a64"
+      },
+      {
+        "path": "docs/README.md",
+        "sha256": "043e14121e823bedb075137e76acd3576e8cf1e1e1c7b58b0cb00a1af5cbc5da"
+      },
+      {
+        "path": "docs/architecture/capability-adoption-2026-10.md",
+        "sha256": "40036b98c8a2708a76272178273bd79e2227fb47cdd8bbb02a831f2bf8c1106a"
+      },
+      {
+        "path": "docs/architecture/durable-agent-runtime-target-architecture.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/architecture/durable-agent-runtime.md",
+        "sha256": "43ce73a4a4cc8d621b9022b2802c41dc63a842ae87573e1cbcb481cfd7c9e4b3"
+      },
+      {
+        "path": "docs/architecture/durable-runtime-boundary.md",
+        "sha256": "e8fd5e6afe1f5fac353d03b7ea9f06a71d8bacd3449e7ec6124603bf5cf2a3e5"
+      },
+      {
+        "path": "docs/architecture/governance-domain-ownership.md",
+        "sha256": "f95185c4501f9cf6a8de3d7b57235f05d84346dfa83546268016baed7a9646cb"
+      },
+      {
+        "path": "docs/architecture/openui-intelligent-ui.md",
+        "sha256": "28e1087ab756fc13c7349d0511edf61c2945041217a89fc5e5da3f69f2ad208d"
+      },
+      {
+        "path": "docs/architecture/phaneris-phase-a-identity-freeze.md",
+        "sha256": "05bb573f4ab77342853fe69e753b5a9148e5bf30b322044e2d89178944d45967"
+      },
+      {
+        "path": "docs/architecture/phaneris-phase-b-brand-identity.md",
+        "sha256": "6a895c6fe84ce57206469bdc9fb86caabfc321d8114a0bd5365e081bd8c99416"
+      },
+      {
+        "path": "docs/archive/agentic-interception-design.md",
+        "sha256": "4e5c5053739c281a853458d857717eb472231f88151b1dcff1496e5d2d87b0d2"
+      },
+      {
+        "path": "docs/archive/architecture-code-governance-implementation-plan-2026-10-11.md",
+        "sha256": "45f12815a302ba4d9184dba3908b560798fab283e011276cb5aae7c1d8dbcc93"
+      },
+      {
+        "path": "docs/archive/artifact-files-native-image-generation-plan.md",
+        "sha256": "f6ba965a1fc8f82c712ba2e62b8323bead3430e84826294265471fcf6117026a"
+      },
+      {
+        "path": "docs/archive/calendar-gantt-optimization-plan.md",
+        "sha256": "b9db19afcca4c5a95aee26fc760244690ee762a8796e19e42b426e6aab5cb880"
+      },
+      {
+        "path": "docs/archive/capability-completion-2026-10-04.md",
+        "sha256": "a281c119e907dc68f8a4eecb13af9571fddeca85bbba09dfe4f3761f47dd5dc1"
+      },
+      {
+        "path": "docs/archive/craft-renderer-inventory.md",
+        "sha256": "116b9dac88385daa2e49b20b4e73bf14cead7489566e8798cd4475dedc208938"
+      },
+      {
+        "path": "docs/archive/cross-ecosystem-plugin-porting-assessment.md",
+        "sha256": "98504fd15e7ece3db58d703ea280cd990057de1d9e293ecd58ba7dfd26e1895f"
+      },
+      {
+        "path": "docs/archive/durable-agent-runtime-target-architecture.md",
+        "sha256": "f39f8f54099a92b3b8c1263093635bc0cad15d133e12b6cf94b6eca7bc33814e"
+      },
+      {
+        "path": "docs/archive/governance-first-wave-2026-10-11.md",
+        "sha256": "ca4ec9a83e81bcffab80f887b442a2bb61419e83461e10329c1b67f38966026d"
+      },
+      {
+        "path": "docs/archive/gpui-ecosystem-and-gaps.md",
+        "sha256": "330cc20663b09c6928bbe1182d214d301c0c53c52cd86c7aa246421e6b68e580"
+      },
+      {
+        "path": "docs/archive/gpui-kit-profile.md",
+        "sha256": "5deee139c160f4dafc9dae4fa423de596ce32d9e0f3fe510556c3e5be2697a53"
+      },
+      {
+        "path": "docs/archive/gpuix-profile.md",
+        "sha256": "86418be558d1ba67a69286a63291446a973271ea855a974fadbd88b2b722e954"
+      },
+      {
+        "path": "docs/archive/memory-system-design.md",
+        "sha256": "f5809ea463e64cfd78603d614fbd01ee718769f8aa996bbc020f4e973f2b88da"
+      },
+      {
+        "path": "docs/archive/native-frontend-migration-gpuix-assessment.md",
+        "sha256": "ae6b2088f93078b532886636f7253289ba297133af216646a9c0f2c50e69687d"
+      },
+      {
+        "path": "docs/archive/phaneris-fork-plan.md",
+        "sha256": "6fec850b4742424c52a18dcc33b3227eb16f38fdba0f3e473150d6711d0d708f"
+      },
+      {
+        "path": "docs/archive/phaneris-local-docs.md",
+        "sha256": "1d359292f4a975fe888ad24c3a2e98b0bcf70726cbacd010f0cae7f05d075856"
+      },
+      {
+        "path": "docs/archive/pi-sdk-1.0.0-upgrade-assessment.md",
+        "sha256": "0d9f9df2deffc6971bdc9b0254b59e43139079ea47dd25f8d0bf967467a109b6"
+      },
+      {
+        "path": "docs/archive/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md",
+        "sha256": "e4ec67aa782ae962a73d788e7be34c5d8284e0cddfdcd24e5dfbd72448842881"
+      },
+      {
+        "path": "docs/archive/pi-sdk-1.1.0-upstream-0.14.1-plan.md",
+        "sha256": "52368f2fa48c80d06c9456ddbd3619e3e30aa339d83335cc027b811cd21ca03d"
+      },
+      {
+        "path": "docs/archive/pi-sdk-native-capabilities-gap-analysis.md",
+        "sha256": "8c34d401ba4987d1dc14d1dd1392260dc45f3dd1e101ee376e5cbf913958db77"
+      },
+      {
+        "path": "docs/archive/plugin-system-review-and-roadmap.md",
+        "sha256": "5104df339bcdff10e8c8ad269364fc94c70b22b06252e903d97e0b28ce0682e4"
+      },
+      {
+        "path": "docs/archive/product-development-directions-2026-09-19.md",
+        "sha256": "b5fb5d1d9fbcf85dfcfc617de78d828d6a1810a57d8366202039cf0192d912e6"
+      },
+      {
+        "path": "docs/archive/profile-preferences-plan.md",
+        "sha256": "8351c49ce2618a108ee8bf98682ff3f3c5fe665fa3eaae2277235d9c9bd27d44"
+      },
+      {
+        "path": "docs/archive/project-assessment-and-roadmap-2026-08-31.md",
+        "sha256": "1ee9ad4744f18b9a440b11df7fcabdc54e6dc8014e527647fdd1799073a0ce54"
+      },
+      {
+        "path": "docs/archive/release-readiness-2026-10-13.md",
+        "sha256": "db3b010c35d0738b154392bcc57c08c57487561c594b2c2525508dbd1de14124"
+      },
+      {
+        "path": "docs/archive/system-cleanup-optimization-plan-2026-10-10.md",
+        "sha256": "daaa6e2f85c6ae2995e48e5a9c664eb8132d96d8e729690e412078828f2edc63"
+      },
+      {
+        "path": "docs/archive/system-prompt-per-turn-analysis.md",
+        "sha256": "22ca60944efd02334b937b2ec052d64da023dbe42ed5c1e1544835a914eb5947"
+      },
+      {
+        "path": "docs/archive/theme-engine-frontend-governance-plan-2026-10-12.md",
+        "sha256": "f56da11b8702775c869ea80e09ba0479e7613327cce16184ec70b55131bf25a3"
+      },
+      {
+        "path": "docs/archive/unreal-agent-design-analysis.md",
+        "sha256": "616b7476278efc7ddb4fd83c46581c7c4ac53e43ea42a55d96d3a07e4bf0943f"
+      },
+      {
+        "path": "docs/design/openui-reply-presentation-plan-2026-10-13.md",
+        "sha256": "0558fcdd77fd221423e3d9b024ece9722e0c28f8f0a9ab47f05d7de2c7e171e8"
+      },
+      {
+        "path": "docs/design/plugin-bundles-design.md",
+        "sha256": "77f2da91928ac17186638c025e40cd497a187ba38f6d9baa6ed4481a6946a486"
+      },
+      {
+        "path": "docs/design/profile-preferences-plan.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/guides/pi-kernel.md",
+        "sha256": "97d821225ac9f7063457d5381dff05d6a383de88d829ee7be1947dc8e1f2eb64"
+      },
+      {
+        "path": "docs/process/agentic-interception-design.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/architecture-code-governance-implementation-plan-2026-10-11.md",
+        "sha256": "0b4561699cd1fb91f2d6b8c9870815cd8a2c21b4f229a3a102e9051963538171"
+      },
+      {
+        "path": "docs/process/artifact-files-native-image-generation-plan.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/calendar-gantt-optimization-plan.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/governance-completion-2026-10-11.md",
+        "sha256": "e547b673663d0dfcd43f5c100f52138524288792ee7f444f3951f67c572770b3"
+      },
+      {
+        "path": "docs/process/governance-ownership-inventory-2026-10-11.md",
+        "sha256": "9907adb5a5a8929a6e7d05bce0b9c5f21abad207d9c078f40ac2da5921cdbd16"
+      },
+      {
+        "path": "docs/process/implementation-value-register-2026-10-13.md",
+        "sha256": "aa8d268f2fd66ecb4e8a1dd5772fc49421ef3eecbe3afd5be3308ef95d4cd10f"
+      },
+      {
+        "path": "docs/process/phaneris-fork-plan.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/phaneris-local-docs.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/pi-sdk-native-capabilities-gap-analysis.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/plugin-system-review-and-roadmap.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/product-development-directions-2026-09-19.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/system-prompt-per-turn-analysis.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/process/theme-engine-frontend-governance-plan-2026-10-12.md",
+        "sha256": "ac236d3ae566201a115769451748fbe42dde15ea7386767ac6051b1c9e0acd55"
+      },
+      {
+        "path": "docs/release-readiness.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/craft-renderer-inventory.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/cross-ecosystem-plugin-porting-assessment.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/gpui-ecosystem-and-gaps.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/gpui-kit-profile.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/gpuix-profile.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/memory-system-design.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/native-frontend-migration-gpuix-assessment.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/research/unreal-agent-design-analysis.md",
+        "sha256": null
+      },
+      {
+        "path": "docs/verification/README.md",
+        "sha256": "751d3d1576042e1e11e13144f2fd5909f4f37f4d4d6bb0d4d43565164effde41"
+      },
+      {
+        "path": "docs/verification/c02-planning-performance-failure-matrix-2026-10-14.md",
+        "sha256": "73466a81561be0bd2b0b408aec53d367bce47f515baeefe27ac4792334fae885"
+      },
+      {
+        "path": "docs/verification/governance-first-wave-failure-matrix.md",
+        "sha256": "e990cc2726c16033b3c01715cdb7e492e18028935831deea6e75533bdeefa60d"
+      },
+      {
+        "path": "docs/verification/implementation-r01-r07-failure-matrix-2026-10-14.md",
+        "sha256": "05dc751be05dcdb5e10a12b761131ef3e55550c77cf4618032cd9b440b3c5f3c"
+      },
+      {
+        "path": "docs/verification/installer-skin-refinement.md",
+        "sha256": "df0992424ff2154bf571f60a4a8a10fac5e1792a36469df47fed98588b6f6634"
+      },
+      {
+        "path": "docs/verification/motion-implementation-status.md",
+        "sha256": "738c15bf154c6928aad5c638d910af177a6782eff780e89b5d0807f3cdc35c57"
+      },
+      {
+        "path": "docs/verification/openui-adoption-evidence-2026-10-14.md",
+        "sha256": "e2c5f0d47a8a4d13a41ba1a73547df8e3a9fd8d3387633028e37a09a2a548b55"
+      },
+      {
+        "path": "docs/verification/results/c02-planning-performance-2026-10-14/README.md",
+        "sha256": "bddb4ed2279161499bfa7f3c395df9bb5712d6c36a69927309a2780d3a93e0b1"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/README.md",
+        "sha256": "06153e9d8ad80bd86b87405587536d498d8b771837df7a8597232a5b6eabb299"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/SHA256SUMS",
+        "sha256": "a73af0fd06bdc791835197b7d1e7455784016551200fb967680b3cbfefd9b11a"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/docs-locale/docs-locale.json",
+        "sha256": "b6a92848b78f78e3a71e93166b1ef23b916a6259a080aca8f06c2e35fc212a0e"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/durable-runtime-crash/crash.json",
+        "sha256": "0ea8ce3794cc7c748110b6068cc61890731ec2d29768b96c894f2f32cbc7770e"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/gantt-reschedule/gantt-reschedule.json",
+        "sha256": "e58dd3e7423b6cac6b9749e0b0b816f4e130d37904696eebd8b12dd3b7ecc3d1"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/markdown-file-links/markdown-file-links.json",
+        "sha256": "7ea6b1b127a1297ab79c998846dabe1160744e73dbd2ca44898c0bad9eb7e577"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/native-client/build-hashes.json",
+        "sha256": "033c3ad112a90768f831f2f2cd1056003d7f1b88cb0b85867c1e27e1c69a2667"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/native-client/electron-conversation-runtime.json",
+        "sha256": "4002378de29fd83316943f43403b8751f2e50542a343ad3362a905a7eaadced3"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-client.json",
+        "sha256": "d89f73b7bb19643c56a8669088a7b84019ec19808ddbaf8eb6121323c154af41"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-fatal.json",
+        "sha256": "aa55a6470b6131b39052f41c53d10fb07813f10962d4fb607bc7f774ba0805cf"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-layouts.json",
+        "sha256": "50e42d14aca2a69c3d5efbbb4f8b2a22939847f3a36be331fd8b4af1d4c6a04e"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/native-client/native-reliability-export.json",
+        "sha256": "e781a6b7c69aa221ff6c41ba713ac97b6773ff40d7b219b15de2183d22bd2a21"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/plugin-consistency/plugin-consistency.json",
+        "sha256": "d2adaeb61014193269cae0d0b9855e96365c156840991ab0b5ce2e5389a9fd3a"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/plugin-transaction/plugin-transaction.json",
+        "sha256": "8cd16f55b05a92a0708f87f1f6e2a275669a56c5d9a7bbb98b7a20b58f075a51"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/runtime-reliability/reliability-after-restart.json",
+        "sha256": "169a110cfdd0b29b185c21390282988f76f8eb78b9216ee878fcf05529ded67a"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/runtime-reliability/reliability-before-restart.json",
+        "sha256": "787f03194d3d6beb206a267509fb467f1024a55ed3daca1dcae19189b0a7c0c0"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/static-checks.json",
+        "sha256": "436f28d5702ae71bb8ad50239265be624aa464cfaf5c81ec0a27d47e00c70824"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/summary.json",
+        "sha256": "ac033876926cb5f8936722f97c52fdd0e4a0283d0ebd1c61936edd8573ee8ad9"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/task-file-scope/task-file-scope.json",
+        "sha256": "d4d6e79f344eceb92c948acd07053612846eabdf115b597d7dc911c891b0204b"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/task-permission/scenes.json",
+        "sha256": "4e2c1b6cb4ad30ac192cf15847399244d9f740bf044e75f979376cccbc3eda4e"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/workspace-recovery/restored-runtime.json",
+        "sha256": "60dbeb57ce0c4e60d9726478d19eec7da7f422612f5bb2f9f5c032fe6a9a9811"
+      },
+      {
+        "path": "docs/verification/results/implementation-r01-r07-2026-10-14/workspace-recovery/workspace-recovery.json",
+        "sha256": "9beba0950f03925b803121e30f3d02929c201e3eaee787eab46589763e16828a"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "8495f05c9804ca5eb6d860583569bfdab2c19cfcb85ea8fbf774d211fb624bcd"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "bb7051b922db5fae62161d3f0951ea599f4c2b6494fd033058c4d07b7a094fe5"
+      },
+      {
+        "path": "package.json",
+        "sha256": "f893d2039243c8eae50defc33f94e5b1491ccb800cad6096dc3610614240acff"
+      },
+      {
+        "path": "packages/server-core/src/handlers/rpc/calendar.ts",
+        "sha256": "906c04f9b4c66478d3b1bfb72f0f6d991cd02706b1207de45a478fcf45b20b36"
+      },
+      {
+        "path": "packages/server-core/src/handlers/rpc/plugins.ts",
+        "sha256": "1f0ef1c442478be64854be63d442187ce757b076faf4d3c15edf12f24b7b5e5b"
+      },
+      {
+        "path": "packages/server-core/src/handlers/rpc/work-items.isolated.ts",
+        "sha256": "8478e7932266931856752c24f55d9423ec6a18060880eee95a471fa236310cd2"
+      },
+      {
+        "path": "packages/server-core/src/handlers/rpc/work-items.ts",
+        "sha256": "935f55734217bf4de953be4964c1ac5dfd51bd6dd04a53d61573c4de51be6480"
+      },
+      {
+        "path": "packages/server-core/src/observability/reliability-report.ts",
+        "sha256": "74c9028b9d0aef4e5eb00e712b5e0d5954da1a53eca89c8924f6fde2e89528fa"
+      },
+      {
+        "path": "packages/server-core/src/services/workspace-backup.ts",
+        "sha256": "e3a7ab03489cd70dd76191899d857c2be99b0a652239e6085fc977dfcfe39623"
+      },
+      {
+        "path": "packages/server-core/src/sessions/SessionManager.ts",
+        "sha256": "ce681afaf66338907119667b07fd8c334101e2d41e88f38207701bdb3d5a517e"
+      },
+      {
+        "path": "packages/server-core/src/tasks/TaskRunner.test.ts",
+        "sha256": "128fe20473e52dfe8de7272f2577706bcf4771b629c2ec30bce849fb945821d6"
+      },
+      {
+        "path": "packages/server-core/src/tasks/TaskRunner.ts",
+        "sha256": "57139dfd3b70a6b7d6102fa10c575d9020664e028fa53d4bfe35ad58cf6d0d43"
+      },
+      {
+        "path": "packages/server-core/src/tasks/file-scopes.ts",
+        "sha256": "8c222aa4219296d8f0fde3f10eb08fce3cdcc1fbcd464c5ec89932e57a91d4e5"
+      },
+      {
+        "path": "packages/shared/src/config/watcher.ts",
+        "sha256": "354ce72a9c224eb2448e6c475176649f532a20d4a51948880acfb3989b751429"
+      },
+      {
+        "path": "packages/shared/src/decisions/session.ts",
+        "sha256": "823e9235cb60f3f905e2ad0671ee4d3a111f26ce83eaeff7e957642f11f94205"
+      },
+      {
+        "path": "packages/shared/src/durable-runtime/index.ts",
+        "sha256": "570329b42a85d5745083979c222f9fb507b39477343d3475acdc614971ed3058"
+      },
+      {
+        "path": "packages/shared/src/durable-runtime/reliability.ts",
+        "sha256": "2e8c455ab08a4397aad6792c481f524ab0eac838a74f7ae1a07b5c1c8391a930"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/de.json",
+        "sha256": "8069f4a62b7ad3afa6075ba9c283d91c99c1d596a4e734787a0ff54957f65b2c"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/en.json",
+        "sha256": "c1ce6aa465d1d93036b798cd592b040992b69d8736739d54a887048cfcf886d5"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/es.json",
+        "sha256": "353f23e8faa139b3baff57d6a4eeecb670ebee9cbd1bdf8e2afaf8effcda3f62"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/hu.json",
+        "sha256": "8d7d35391936f80be397468bcaba186562006a92139a97015ba1abe2ca5a5ae2"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/ja.json",
+        "sha256": "d57997cf9fb5bf54e9b4147e361252d610ec972ed62f597c05647667251138f9"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/pl.json",
+        "sha256": "2ad034b97cef95b749a4ac1aa5cda5d555df767d193bcbc59acabf41ae5dd5ad"
+      },
+      {
+        "path": "packages/shared/src/i18n/locales/zh-Hans.json",
+        "sha256": "73ce92e491517cd2578c738e5972750966a09de509aff4328532a7f10ad052e5"
+      },
+      {
+        "path": "packages/shared/src/plugins/__tests__/plugin-context.isolated.ts",
+        "sha256": "3ece3e88e9df60751a7e6a7ae3c5e1631fceb06f469cf868738b489fdf65f983"
+      },
+      {
+        "path": "packages/shared/src/plugins/__tests__/plugin-install.isolated.ts",
+        "sha256": "2641037f5398f893092346c8b8bd70ef290d34ad22ed715b77c7eccd0bf2338a"
+      },
+      {
+        "path": "packages/shared/src/plugins/confirmation.ts",
+        "sha256": "edde9f6f6c22f196ac21dffeba2b6a6e5feb2a5024316e4576524cf3f8d853ac"
+      },
+      {
+        "path": "packages/shared/src/plugins/dto.ts",
+        "sha256": "8d2f1d77695b07247d6e9d25b7844b7697397e09dc5f013dec43be6fb9883410"
+      },
+      {
+        "path": "packages/shared/src/plugins/index.ts",
+        "sha256": "ae015ad2a028877bdc5b30c5869aa6f7f6e86a684f585854c163a66e0f3a229d"
+      },
+      {
+        "path": "packages/shared/src/plugins/install.ts",
+        "sha256": "6d781256d47ac50ce4b7b7c6d5c9f41c9dfdd0b613cb6ba9b8c536d915035b87"
+      },
+      {
+        "path": "packages/shared/src/plugins/plugin-context.ts",
+        "sha256": "bd1f2760a0ffd06d5b6040ba0171aa0fe1e912aafc70375c4d9cc4541a8515ab"
+      },
+      {
+        "path": "packages/shared/src/plugins/resolve.ts",
+        "sha256": "5516c7bddfe59cc81f71d9bfbdef09dda443ec063e0692fd4bdf22a247cef609"
+      },
+      {
+        "path": "packages/shared/src/tasks/generator-prompt.ts",
+        "sha256": "3ac47a9e92b99987fb09d737f505ba94e3932a319e27ab6ff4c71d44a7deebe1"
+      },
+      {
+        "path": "packages/shared/src/tasks/schema.ts",
+        "sha256": "408277bbcbb937e8d7c95e99907d2ffe67b85f151f8bd453b6003af740e93307"
+      },
+      {
+        "path": "packages/shared/src/tasks/storage.ts",
+        "sha256": "3896089a8cdbc4e68c2482f1dbeb85de29ab0942e50307e3f0dd13b069d6b9ac"
+      },
+      {
+        "path": "packages/shared/src/work-items/browser.ts",
+        "sha256": "546b7c297cd2634e1564b6bb40640f8f41322b83c81601759ebd05b434b869f8"
+      },
+      {
+        "path": "packages/shared/src/work-items/calendar.ts",
+        "sha256": "a62d5a782f4a50c2c9c0a516477b12fb348029d8b78c2db8a43127f8cc260c37"
+      },
+      {
+        "path": "packages/shared/src/work-items/index.ts",
+        "sha256": "00e10e8487585b2ab9591f96b8d3694e45aae114f0ab8a39d2c94f13949a8759"
+      },
+      {
+        "path": "packages/shared/src/work-items/timeline.ts",
+        "sha256": "1d635137275df865d6e992843c3a82d1fee75045fb4e6a407d326b3bcec30b29"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/Markdown.tsx",
+        "sha256": "8d38ed6f369c06e21357708b21bc84e702a654ba2289b66a0c105b4678129983"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/link-target.ts",
+        "sha256": "87654e25f2a706d45e73af764af309757060cc23193b70c5018b80e22144001d"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/linkify.ts",
+        "sha256": "4e854eaebe9a94df31dd7096e6d091292eebb623514e6af526eaa7b6a3568051"
+      },
+      {
+        "path": "packages/ui/src/components/markdown/remark-file-links.ts",
+        "sha256": "418a56c4f3a90deab6e3317889abab29791055601aa853542d44228557b54d0c"
+      },
+      {
+        "path": "packages/ui/src/components/ui/LoadingIndicator.tsx",
+        "sha256": "0728a00b7526e0725ebf62f24d37030a5e998af687fc01c7cdd7c03325e4c731"
+      },
+      {
+        "path": "packages/ui/src/styles/index.css",
+        "sha256": "3ae6c42c9d422f08891bd796ba8c20d0d1668f251405f96c0418c8448a0eb887"
+      },
+      {
+        "path": "packages/ui/src/styles/loading-indicator.css",
+        "sha256": "70c61aa74493da85d605a4ee4193dec24b5076d9d0193b12a2097b7d6510f10c"
+      },
+      {
+        "path": "scripts/critical-scenario-policy.json",
+        "sha256": "90682e31ce9bcc3093b976bbb3bf5ef81cd7d4a73a801bae99bc3039f45b1a70"
+      },
+      {
+        "path": "scripts/critical-scenarios.ts",
+        "sha256": "0cbfe7b9e62c304dbe3451f87e6b08de8f10f63e570c3f9943a90cfe0af25a93"
+      },
+      {
+        "path": "scripts/generate-installer-brand.ts",
+        "sha256": "74078d80a338c128eb30aee77eeb204885b4b28e5962af01c7004ceec116a0ef"
+      },
+      {
+        "path": "scripts/identity-allowlist.json",
+        "sha256": "0a2d53c8421f213435c1991dacad77c42c8d113a65431e794c43966ab5dc20cb"
+      },
+      {
+        "path": "scripts/rpc-contract-inventory.json",
+        "sha256": "0bb0acb049e0c3eb47a4e2b2bca7f2809f5f5d1e551d6027d76eb4439942d67f"
+      },
+      {
+        "path": "scripts/verification/deleted-provider-recovery-workflow.ts",
+        "sha256": "2fb55a0f7d2e96c1d68977c8c5803c01901f9d8e1663ca335ced8c2488219f0d"
+      },
+      {
+        "path": "scripts/verification/docs-locale-workflow.ts",
+        "sha256": "bd3fb5ab9ce783b6c70c6ff521738629b8ace03b31501ac5d0bb37ba307eadd2"
+      },
+      {
+        "path": "scripts/verification/fixtures/conversation-client.cjs",
+        "sha256": "03a33b2edc3bf7815b7b0545391ed9f6ae6ee0d7be4139fdf65c16493da791e9"
+      },
+      {
+        "path": "scripts/verification/fixtures/conversation-model.ts",
+        "sha256": "1e88dc4549aba8c057683edd5dad63aafa2dbec1a2482ea4b90456c94b282369"
+      },
+      {
+        "path": "scripts/verification/fixtures/docs-locale.tsx",
+        "sha256": "3a896b4da067387840ea9bde8627c5c26a84b8045201653c30b0e92cc5cbd7c2"
+      },
+      {
+        "path": "scripts/verification/fixtures/gantt-reschedule.tsx",
+        "sha256": "ba69ba3f9316e7b77ebd9eaef29f981ccc956f8360686a2570f84a2ec12e916f"
+      },
+      {
+        "path": "scripts/verification/fixtures/markdown-file-links.tsx",
+        "sha256": "7031c08d7ddf2fa46717fbf15c9a0e41a5b735f331b01e3c877098dc5732a4c1"
+      },
+      {
+        "path": "scripts/verification/fixtures/native-client.cjs",
+        "sha256": "18cb2a4f239504b5647aedb1ef29974bce37a4ef85295fab855a03acf7fdcb03"
+      },
+      {
+        "path": "scripts/verification/fixtures/planning-collection.tsx",
+        "sha256": "9ce2256ddbb398b8cefd8b71a492ec7bb1f6826d441296422df7187f1ffb6180"
+      },
+      {
+        "path": "scripts/verification/fixtures/planning-performance-server.ts",
+        "sha256": "c25d53e0625d5fac252197ea1c9487215fec40052ff33a5b142103375c20e5ac"
+      },
+      {
+        "path": "scripts/verification/fixtures/ui-indicators.tsx",
+        "sha256": "d65335c902e3f4444da151d6fb980277c0f8dda8ea091266e53302f4b3de33be"
+      },
+      {
+        "path": "scripts/verification/gantt-reschedule-workflow.ts",
+        "sha256": "bfeb0dd7026e015478998275f8e55f7db2a66edd1b2c908249c058e48e92d298"
+      },
+      {
+        "path": "scripts/verification/installer-frame-workflow.ps1",
+        "sha256": "e3d95d3e76814593c4bf90074cd1f414c366ee2ca5ae1ff2f05f714c32dc2a17"
+      },
+      {
+        "path": "scripts/verification/markdown-file-links-workflow.ts",
+        "sha256": "18db0f29d61cc3c0fce070d99e2dfc852185665e561ba01115f1f11d58d4a7f8"
+      },
+      {
+        "path": "scripts/verification/native-client-workflow.ts",
+        "sha256": "f9580c407a8480fede6f389c5bc5433fe3c90a12d62da9e38c02e6aaf4d117fd"
+      },
+      {
+        "path": "scripts/verification/planning-collection-workflow.ts",
+        "sha256": "2b74aaa14a1e8b0a547c9dc6e10fbb8599ca08aab3bbc0cc659e6616ccb5944a"
+      },
+      {
+        "path": "scripts/verification/planning-performance-workflow.ts",
+        "sha256": "7426fda7999bff4daf0e2c507a0754f9aea48fd87445f082f4966fe4b8ba89ea"
+      },
+      {
+        "path": "scripts/verification/plugin-consistency-workflow.ts",
+        "sha256": "a10069520b553d4de1a1192bda8158563f11fe617dea432cb630b2b332590aa4"
+      },
+      {
+        "path": "scripts/verification/runtime-reliability-workflow.ts",
+        "sha256": "6a8732427b1f496ac16c160a0704fdff2ef9b6f88c5be36d327931e0ed787b07"
+      },
+      {
+        "path": "scripts/verification/task-file-scope-workflow.ts",
+        "sha256": "3f20968c6ff86cdcbb0e756fc79a0a3c5797f2471a0ba101657d8dbb974aee0f"
+      },
+      {
+        "path": "scripts/verification/task-governance-workflow.ts",
+        "sha256": "71e4dd19e5102a93e46484520e6456280d488fa4180202b7fc391597b69936fb"
+      },
+      {
+        "path": "scripts/verification/task-permission-workflow.ts",
+        "sha256": "72d467e6b847edafcaccc42ff3a48fab3e0a51eab9d0960f5678dfcf8568377e"
+      },
+      {
+        "path": "scripts/verification/ui-indicators-workflow.ts",
+        "sha256": "7ecd0a699f3d179aa2d6f877b02acf605210673ee4e0f81783c43595029aa7d0"
+      },
+      {
+        "path": "scripts/verification/workspace-recovery-workflow.ts",
+        "sha256": "1c385f008fa32f021bb465e20ffd5766a22faad74fd0de5048aebd52a9cd0dfa"
+      },
+      {
+        "path": "scripts/visual-debt-ledger.json",
+        "sha256": "0d032b31c856dc36704837dde7ecb483db874828f769fd88d401207315d612bb"
+      }
+    ],
+    "dirty": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": null,
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.26300",
+    "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+  },
+  "startedAt": "2026-10-14T14:44:08.440Z",
+  "finishedAt": "2026-10-14T14:45:32.733Z",
+  "sceneIds": [
+    "calendar-three-samples-one-shared-projection",
+    "single-write-three-samples-one-broadcast-owner",
+    "single-invalidation-three-samples-one-read",
+    "all-warm-planning-samples-within-existing-budget",
+    "hidden-archived-draft-excluded-unscheduled-retained",
+    "two-real-clients-converge-from-native-session-edit",
+    "ten-writes-and-two-workspaces-coalesce-without-losing-notifications",
+    "native-archive-and-unarchive-converge-in-both-windows",
+    "external-session-header-edit-invalidates-both-projections",
+    "in-flight-invalidations-collapse-to-one-follow-up",
+    "rejected-read-keeps-last-snapshot-and-recovers-on-invalidation",
+    "real-calendar-drag-rejection-shows-error-and-keeps-persisted-dates",
+    "reconnect-revalidates-shared-projection-once",
+    "no-read-after-last-consumer-unsubscribes",
+    "remount-revalidates-inactive-cache",
+    "legacy-calendar-create-update-notifies-modern-shared-projection",
+    "legacy-calendar-delete-clears-dates-and-retains-backing-session",
+    "native-session-delete-invalidates-planning-projection",
+    "planning-input-two-frames-within-existing-budget",
+    "sampled-renderer-and-host-memory-within-existing-budgets"
+  ],
+  "passed": 20,
+  "exitCode": 0,
+  "selectedArtifacts": [
+    {
+      "path": "build-hashes.json",
+      "sha256": "3e6bdad2d09cb698fcc5fd1878462b45258b2afbbd520cd0e023ddb259c2d210",
+      "bytes": 48082
+    },
+    {
+      "path": "control-final.json",
+      "sha256": "0028c7054d8faff5f98be80b504dffc6e6e1e25f4dccde717311731de778bca9",
+      "bytes": 1230
+    },
+    {
+      "path": "memory-sample.json",
+      "sha256": "06ea7491ab6755c9b2d7918e7d93514f1ac7e4726cb08903c498b3c35296a320",
+      "bytes": 2909
+    },
+    {
+      "path": "planning-performance.json",
+      "sha256": "7d84aefbbbebf8feb6cc6094c8f3dac8c4e3ae8e913df6a7a96350422d735409",
+      "bytes": 12792
+    },
+    {
+      "path": "session-facts.json",
+      "sha256": "d0e42c3fb7fc1d7b503eba64d9be9c87eae70ade9633ff340a131788ede0f238",
+      "bytes": 160
+    }
+  ],
+  "excludedArtifacts": 1128,
+  "exclusion": "Full configuration, databases, trace and screenshots remain in the original ignored run directory."
+}

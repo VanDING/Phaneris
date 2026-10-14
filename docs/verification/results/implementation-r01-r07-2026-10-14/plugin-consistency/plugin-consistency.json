@@ -1,0 +1,70 @@
+[
+  {
+    "id": "native-roster-same-bytes",
+    "pass": true
+  },
+  {
+    "id": "invalid-source-before-resource-write",
+    "pass": true
+  },
+  {
+    "id": "header-is-not-bearer-auth",
+    "pass": true
+  },
+  {
+    "id": "duplicate-source-rejected",
+    "pass": true
+  },
+  {
+    "id": "extension-without-configuration-visible",
+    "pass": true
+  },
+  {
+    "id": "native-source-readiness-is-not-live-connectivity",
+    "pass": true
+  },
+  {
+    "id": "stdio-readiness-requires-an-executable-file",
+    "pass": true
+  },
+  {
+    "id": "windows-opaque-arguments",
+    "pass": true
+  },
+  {
+    "id": "watcher-healthy-content-refresh",
+    "pass": true
+  },
+  {
+    "id": "install-confirmation-package",
+    "pass": true
+  },
+  {
+    "id": "install-confirmation-target",
+    "pass": true
+  },
+  {
+    "id": "install-confirmation-workspace",
+    "pass": true
+  },
+  {
+    "id": "install-confirmation-reuse",
+    "pass": true
+  },
+  {
+    "id": "install-confirmation-expiry",
+    "pass": true
+  },
+  {
+    "id": "install-confirmation-competing",
+    "pass": true
+  },
+  {
+    "id": "install-and-uninstall-one-use-plan",
+    "pass": true
+  },
+  {
+    "id": "uninstall-stale-target-kept",
+    "pass": true
+  }
+]

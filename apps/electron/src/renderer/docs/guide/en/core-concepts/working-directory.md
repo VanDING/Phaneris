@@ -55,10 +55,7 @@ honest answer.
 
 ## Windows
 
-The Claude-backed SDK shells out through a bash implementation. On Windows, the
-path to Git's bash is configurable in Settings; without it, the SDK falls back to
-searching the default install location, which fails on machines where Git is
-installed elsewhere. Set it once if commands fail with a shell-not-found error.
+Check the shell, executable paths and runtime required by the current Pi-backed executor. Do not use settings for a retired backend to diagnose the current one. Task children resolve the orchestrator cwd, task cwd, workspace default, then workspace root; their run freezes that directory and its scheduling scopes.
 
 ## Next steps
 

@@ -2,6 +2,12 @@
 
 本页汇总架构治理与产品验证入口。治理工作流默认生成唯一 `.cache/verification/<run-id>/`，成功/失败均保留 manifest、SHA、日志及数据库；历史 `results/` 只由明确归档操作写入。部分历史产品脚本仍写固定结果，其范围见各行说明。
 
+2026-10-13 规划收敛：本页维护验证方法与历史覆盖，不承担独立待办。当前关键路径验收为[价值裁定与执行队列](../process/implementation-value-register-2026-10-13.md)的 R03，发布与实机范围由 C01/L01–L15 约束；历史未测事实继续保留。
+
+2026-10-14 R01–R07 实施使用[事先失败矩阵](implementation-r01-r07-failure-matrix-2026-10-14.md)，[本地验收与结论产物](results/implementation-r01-r07-2026-10-14/README.md)已收口。七个工作包及文件链接浏览器回归通过，生产 Windows 桌面 27 项通过；当前状态统一维护在价值裁定台账。签名、其他平台和外部账号范围继续保留 NOT RUN。
+
+2026-10-14 C02 已按[日历/工作项性能失败矩阵](c02-planning-performance-failure-matrix-2026-10-14.md)收口：共享投影 17、生产 WebUI 20、甘特回归 14 项浏览器场景通过。同机样本的单改读取 4→1，范围查询未引入；[前后测量与验收证据](results/c02-planning-performance-2026-10-14/README.md)单独保存，原 R01–R07 结果保持历史摘要。
+
 ## 档案裁剪
 
 2026-10-13 对所有 `results/` 归档做了一次体积裁剪：删除 trace.zip、录屏（webm）、截图（png）、运行数据库（db/sqlite）与 gz，并删除依赖这些图片的 5 个 HTML 画廊。`docs/assets/**` 是根 README 的主视觉素材，不在此列。裁剪后 `docs/` 由约 297 MB 降到约 73 MB。
@@ -15,6 +21,8 @@
 被删除的媒体都可以重跑再生：trace/录屏/截图来自各验证工作流自身（`test:shell-visual`、`test:theme-*`、`test:markdown-popout`、各 `scripts/verification/*-workflow.ts`），`db/gz` 是工作流运行时数据库与压缩中间产物。
 
 ## 架构与代码治理
+
+Run 观测的当前记录：[首轮实施与口径](run-observability-implementation-2026-10-14.md)、[先行失败矩阵](run-observability-failure-matrix.md)。R01–R07 的实现与验收按下方专项入口维护。
 
 当前证据：[审计收口归档](results/governance-closeout-2026-10-11/README.md)，[初次 G3–G8 快照](results/governance-completion-2026-10-11/README.md)。当前裁定：[完整实施台账](../process/governance-completion-2026-10-11.md)；先写的[失败矩阵](governance-completion-failure-matrix.md)；基线与前两轮冻结证据保持原 SHA。
 
@@ -35,9 +43,10 @@
 
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |
+| 日历 / 工作项共享投影 | `bun run test:planning-collection` · `bun run test:planning-performance` · [失败矩阵](c02-planning-performance-failure-matrix-2026-10-14.md) | React 竞态、跨工作区、重连、退订与日历语义；生产 WebUI + 真实 WS 的重复读取/广播计数及现行预算。 |
 | 主题治理 W1 | `bun run test:theme-foundation` · [事先失败矩阵](theme-foundation-failure-matrix-2026-10-12.md) · [首批前后证据](results/theme-foundation-w1-2026-10-12/README.md) · [当前验收](results/theme-governance-w2-w5-2026-10-12/README.md) | 首批101场景保持冻结；当前扩展为115/115，覆盖真实 WebUI/WS/watcher 与图片故障恢复。 |
 | 对话 / 行为预览卡片 | `bun run test:markdown-popout` · [失败矩阵](markdown-popout-card-failure-matrix-2026-10-12.md) · [前后证据](results/markdown-popout-card-2026-10-12/README.md) | 恢复卡片和Markdown源码路径；18个浏览器场景通过，接入critical registry；正式包未验收。 |
-| 主题引擎 / 前端视觉 | [治理方案与当前台账](../process/theme-engine-frontend-governance-plan-2026-10-12.md) · [原始审计](results/frontend-theme-visual-audit-2026-10-12/README.md) · [W2–W5 验收](results/theme-governance-w2-w5-2026-10-12/README.md) | W1–W5 工程实现、本机481场景通过；三平台正式包、实机及长会话性能仍 open。 |
+| 主题引擎 / 前端视觉 | [治理方案与当前台账](../archive/theme-engine-frontend-governance-plan-2026-10-12.md) · [原始审计](results/frontend-theme-visual-audit-2026-10-12/README.md) · [W2–W5 验收](results/theme-governance-w2-w5-2026-10-12/README.md) | W1–W5 工程实现、本机481场景通过；三平台正式包、实机及长会话性能仍 open。 |
 | 桌面外壳视觉微调 | `bun run test:shell-visual` · `bun run test:theme-startup` · [事先失败矩阵](frontend-shell-polish-failure-matrix-2026-10-12.md) · [前后对照与验收](results/frontend-shell-polish-2026-10-12/README.md) | 真实 Electron 44、启动故障 12、跨入口角色回归 76 项通过；Windows 原生圆角合成仍待实机。 |
 | main 集成前门禁 | [历史日志恢复与验收](main-integration-2026-10-12.md) | 原 SHA 匹配的两份日志纳入 Git，撤销缺失例外；docs / identity 和 6 项扫描器场景通过。 |
 | 侧栏按钮与样式过渡 | `bun run test:shell-visual` · [事先失败矩阵](sidebar-style-transition-failure-matrix-2026-10-12.md) · [截图/录屏与验收](results/sidebar-style-transition-2026-10-12/README.md) | 原生 64、角色回归 76 项通过；两态共享紧凑间距，整组上移恢复顶线，保留原按钮与焦点。 |
@@ -171,7 +180,7 @@ bun run scripts/verification/files-panel-packaged-workflow.ts \
 
 ## 主题系统治理
 
-规划为[主题引擎与前端治理](../process/theme-engine-frontend-governance-plan-2026-10-12.md)，实施前[失败矩阵](theme-contract-failure-matrix-2026-10-12.md)，当前[生成契约](../design/theme-contract.generated.md)与[宿主/回滚](../design/theme-hosts-and-rollout.md)。
+规划为[主题引擎与前端治理](../archive/theme-engine-frontend-governance-plan-2026-10-12.md)，实施前[失败矩阵](theme-contract-failure-matrix-2026-10-12.md)，当前[生成契约](../design/theme-contract.generated.md)与[宿主/回滚](../design/theme-hosts-and-rollout.md)。
 
 当前[481 场景验收与选取证据](results/theme-governance-w2-w5-2026-10-12/README.md)；同一目录下的交互设计对照画廊及其截图已于 2026-10-13 裁剪（见[档案裁剪](#档案裁剪)）。三平台正式包、实机和长会话性能保持 open。
 

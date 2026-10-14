@@ -1,0 +1,113 @@
+{
+  "operations": [
+    {
+      "createdAt": 1791941702535,
+      "data": {
+        "modelVisible": true,
+        "stopReason": "process_restart",
+        "unsettledToolOperationIds": [
+          "toolop_a0d69ad3df53728de2fb737d093b26c2"
+        ],
+        "userMessageId": "m1"
+      },
+      "kind": "agent_turn",
+      "operationId": "recover-run",
+      "phase": "recovery_parked",
+      "sessionId": "261014-fit-rainbow",
+      "stateVersion": 3,
+      "turnId": "m1",
+      "updatedAt": 1791941703582
+    }
+  ],
+  "events": [
+    {
+      "eventId": "recover-run:accepted",
+      "seq": 1,
+      "sessionId": "261014-fit-rainbow",
+      "turnId": "m1",
+      "operationId": "recover-run",
+      "type": "operation_accepted",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "kind": "agent_turn",
+        "userMessageId": "m1"
+      },
+      "createdAt": 1791941702535
+    },
+    {
+      "eventId": "recover-run:user",
+      "seq": 2,
+      "sessionId": "261014-fit-rainbow",
+      "turnId": "m1",
+      "operationId": "recover-run",
+      "type": "user_message_committed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "content": "synthetic recovery",
+        "messageId": "m1"
+      },
+      "createdAt": 1791941702535
+    },
+    {
+      "eventId": "toolop_a0d69ad3df53728de2fb737d093b26c2:call",
+      "seq": 3,
+      "sessionId": "261014-fit-rainbow",
+      "operationId": "recover-run",
+      "type": "tool_call_observed",
+      "schemaVersion": 1,
+      "modelVisible": true,
+      "partial": false,
+      "payload": {
+        "args": {
+          "path": "external-effect"
+        },
+        "providerToolCallId": "unknown-write",
+        "toolName": "Write",
+        "toolOperationId": "toolop_a0d69ad3df53728de2fb737d093b26c2"
+      },
+      "createdAt": 1791941702544
+    },
+    {
+      "eventId": "toolop_a0d69ad3df53728de2fb737d093b26c2:dispatch",
+      "seq": 4,
+      "sessionId": "261014-fit-rainbow",
+      "operationId": "recover-run",
+      "type": "tool_dispatch_committed",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "canonicalArgsHash": "b56f4f577a03ebf1ea81d73dd349376c843ee433bdbfe9d7f969b6491fd2f5cd",
+        "idempotencyKey": "toolop_a0d69ad3df53728de2fb737d093b26c2",
+        "operationId": "toolop_a0d69ad3df53728de2fb737d093b26c2",
+        "protocol": "t1_after_preflight_v1",
+        "providerToolCallId": "unknown-write",
+        "recoveryMode": "never_auto_retry",
+        "runOperationId": "recover-run",
+        "toolName": "Write"
+      },
+      "createdAt": 1791941702544
+    },
+    {
+      "eventId": "recover-run:restart-recovery",
+      "seq": 5,
+      "sessionId": "261014-fit-rainbow",
+      "turnId": "m1",
+      "operationId": "recover-run",
+      "type": "tool_recovery_decided",
+      "schemaVersion": 1,
+      "modelVisible": false,
+      "partial": false,
+      "payload": {
+        "decidedAt": 1791941703582,
+        "reason": "Process restarted after T1 without a durable T2 outcome",
+        "verdict": "reconcile_required"
+      },
+      "createdAt": 1791941703582
+    }
+  ]
+}

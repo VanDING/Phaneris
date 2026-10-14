@@ -218,6 +218,20 @@
       ]
     },
     {
+      "glob": "apps/electron/src/renderer/docs/guide/zh-Hans/getting-started/introduction.md",
+      "tokens": ["display-name"],
+      "category": "upstream-provenance",
+      "reason": "Chinese guide preserves the same explicit open-source attribution as the English introduction.",
+      "lines": ["本项目由 [Craft Agents 开源代码](https://github.com/craft-ai-agents/craft-agents-oss)发展而来，独立命名和构建。帮助内容随应用打包，离线可读。"]
+    },
+    {
+      "glob": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/environment-variables.md",
+      "tokens": ["env-prefix"],
+      "category": "read-compatibility",
+      "reason": "Chinese guide explains that the old config override is deliberately not consumed.",
+      "lines": ["本项目不使用上游 `CRAFT_CONFIG_DIR` 作为自己的目录覆盖。需要指定位置时使用 Phaneris 变量，避免误读另一应用的数据。"]
+    },
+    {
       "glob": "apps/electron/src/renderer/docs/guide/en/reference/environment-variables.md",
       "tokens": [
         "env-prefix"
@@ -400,7 +414,7 @@
       ]
     },
     {
-      "glob": "docs/process/artifact-files-native-image-generation-plan.md",
+      "glob": "docs/archive/artifact-files-native-image-generation-plan.md",
       "tokens": [
         "code-identifier"
       ],
@@ -443,7 +457,7 @@
       ]
     },
     {
-      "glob": "docs/process/phaneris-fork-plan.md",
+      "glob": "docs/archive/phaneris-fork-plan.md",
       "tokens": [
         "display-name",
         "env-prefix",
@@ -471,7 +485,7 @@
       ]
     },
     {
-      "glob": "docs/process/phaneris-local-docs.md",
+      "glob": "docs/archive/phaneris-local-docs.md",
       "tokens": [
         "kebab-slug",
         "scheme-or-domain",
@@ -512,7 +526,7 @@
       ]
     },
     {
-      "glob": "docs/process/system-prompt-per-turn-analysis.md",
+      "glob": "docs/archive/system-prompt-per-turn-analysis.md",
       "tokens": [
         "kebab-slug"
       ],
@@ -586,7 +600,7 @@
       ]
     },
     {
-      "glob": "docs/research/craft-renderer-inventory.md",
+      "glob": "docs/archive/craft-renderer-inventory.md",
       "tokens": [
         "kebab-slug"
       ],
@@ -599,7 +613,7 @@
       ]
     },
     {
-      "glob": "docs/research/native-frontend-migration-gpuix-assessment.md",
+      "glob": "docs/archive/native-frontend-migration-gpuix-assessment.md",
       "tokens": [
         "kebab-slug"
       ],

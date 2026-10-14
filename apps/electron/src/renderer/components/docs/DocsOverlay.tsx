@@ -21,16 +21,21 @@ import { DEEPLINK_SCHEME_PREFIX } from '@phaneris/shared'
 import { docsViewAtom, showDocsPage } from '@/atoms/docs'
 import {
   DOCS_HOME_SLUG,
-  DOCS_SECTIONS,
+  getDocsSections,
+  resolveDocsLocale,
   findDocsPage,
   findDocsSection,
   type DocsPage,
+  type DocsLocale,
 } from '@/docs/manifest'
 import { getDocsContent } from '@/docs/content'
 import { cn } from '@/lib/utils'
 
 /** Internal links are written as `phaneris://docs/<slug>` — see `docsLink()`. */
 const DOCS_LINK_PREFIX = `${DEEPLINK_SCHEME_PREFIX}docs/`
+// Keep the shared untrusted-Markdown protocol sanitizer intact. Only bundled
+// docs links become safe local anchors, intercepted by this reader.
+const DOCS_ANCHOR_PREFIX = '#phaneris-docs/'
 
 /** The markdown link form for a page, used by the guide content itself. */
 export function docsLink(slug: string): string {
@@ -50,14 +55,14 @@ interface SearchHit {
 }
 
 /** Case-insensitive substring match over page titles and bodies. */
-function searchPages(query: string): SearchHit[] {
+function searchPages(query: string, locale: DocsLocale): SearchHit[] {
   const needle = query.trim().toLowerCase()
   if (needle.length === 0) return []
 
   const hits: SearchHit[] = []
-  for (const section of DOCS_SECTIONS) {
+  for (const section of getDocsSections(locale)) {
     for (const page of section.pages) {
-      const body = getDocsContent(page.slug) ?? ''
+      const body = getDocsContent(page.slug, locale) ?? ''
       if (page.title.toLowerCase().includes(needle) || body.toLowerCase().includes(needle)) {
         hits.push({ page, sectionTitle: section.title })
       }
@@ -67,15 +72,24 @@ function searchPages(query: string): SearchHit[] {
 }
 
 export function DocsOverlay() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const locale = resolveDocsLocale(i18n.resolvedLanguage ?? i18n.language)
+  const sections = React.useMemo(() => getDocsSections(locale), [locale])
   const [state, setState] = useAtom(docsViewAtom)
   const [query, setQuery] = React.useState('')
+  const contentRef = React.useRef<HTMLDivElement>(null)
+  React.useLayoutEffect(() => {
+    if (!state.open) return
+    for (let parent = contentRef.current?.parentElement; parent; parent = parent.parentElement) {
+      if (/auto|scroll/.test(getComputedStyle(parent).overflowY)) { parent.scrollTop = 0; break }
+    }
+  }, [state.open, state.slug])
 
-  const page = findDocsPage(state.slug) ?? findDocsPage(DOCS_HOME_SLUG)
-  const section = page ? findDocsSection(page.slug) : undefined
-  const content = page ? getDocsContent(page.slug) : null
+  const page = findDocsPage(state.slug, locale) ?? findDocsPage(DOCS_HOME_SLUG, locale)
+  const section = page ? findDocsSection(page.slug, locale) : undefined
+  const content = page ? getDocsContent(page.slug, locale) : null
 
-  const hits = React.useMemo(() => searchPages(query), [query])
+  const hits = React.useMemo(() => searchPages(query, locale), [query, locale])
   const searching = query.trim().length > 0
 
   const goTo = React.useCallback((slug: string) => {
@@ -84,7 +98,7 @@ export function DocsOverlay() {
   }, [])
 
   const handleUrlClick = React.useCallback((url: string) => {
-    const slug = parseDocsLink(url)
+    const slug = parseDocsLink(url.startsWith(DOCS_ANCHOR_PREFIX) ? DOCS_LINK_PREFIX + url.slice(DOCS_ANCHOR_PREFIX.length) : url)
     if (slug) {
       goTo(slug)
       return
@@ -111,12 +125,12 @@ export function DocsOverlay() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('docs.searchPlaceholder')}
             aria-label={t('docs.searchPlaceholder')}
-            className="h-7 w-40 rounded-md border border-border/60 bg-background/60 pl-7 pr-2 text-xs outline-none placeholder:text-foreground/40 focus:w-56 sm:w-56 sm:focus:w-72"
+            className="craft-field-input h-7 w-24 rounded-md border border-border/60 bg-background/60 pl-7 pr-2 text-xs outline-none placeholder:text-foreground/40 sm:w-56 sm:focus:w-72"
           />
         </div>
       }
     >
-      <div className="flex w-full flex-1 items-start gap-8 px-6 pb-16">
+      <div ref={contentRef} className="flex w-full flex-1 items-start gap-8 px-6 pb-16">
         {/* Nav — sticky within FullscreenOverlayBase's scroll container, with
             top padding so its content clears the floating 48px header. */}
         <nav
@@ -141,7 +155,7 @@ export function DocsOverlay() {
             </ul>
           ) : (
             <div className="flex flex-col gap-4 pb-8">
-              {DOCS_SECTIONS.map((docsSection) => (
+              {sections.map((docsSection) => (
                 <div key={docsSection.id}>
                   {/* A single-page section whose name matches its page needs no
                       group label — "Skills" over "Skills" is noise. */}
@@ -168,7 +182,13 @@ export function DocsOverlay() {
         </nav>
 
         <article className="mx-auto min-w-0 w-full max-w-[760px]">
-          <div className="rounded-[16px] bg-background px-8 py-8 shadow-strong sm:px-10">
+          <div className="space-y-2 pb-3 pt-14 md:hidden">
+            <select aria-label={t('docs.title')} value={page?.slug ?? DOCS_HOME_SLUG} onChange={event => goTo(event.target.value)} className="craft-field-input w-full rounded-md border border-border bg-background p-2 text-sm">
+              {sections.map(group => <optgroup key={group.id} label={group.title}>{group.pages.map(entry => <option key={entry.slug} value={entry.slug}>{entry.title}</option>)}</optgroup>)}
+            </select>
+            {searching && <ul>{hits.map(hit => <li key={hit.page.slug}><NavButton active={hit.page.slug === page?.slug} label={hit.page.title} hint={hit.sectionTitle} onClick={() => goTo(hit.page.slug)} /></li>)}{hits.length === 0 && <li className="text-sm text-text-secondary">{t('docs.noResults')}</li>}</ul>}
+          </div>
+          <div className="rounded-card bg-background px-4 py-8 shadow-strong sm:px-10">
             {section && page && (
               <div className="flex items-center gap-1.5 pb-2 text-[11px] text-foreground/40">
                 <BookOpen className="h-3 w-3" />
@@ -180,7 +200,7 @@ export function DocsOverlay() {
             ) : (
               <div className="text-sm">
                 <Markdown mode="minimal" onUrlClick={handleUrlClick}>
-                  {content}
+                  {content.replaceAll(`](${DOCS_LINK_PREFIX}`, `](${DOCS_ANCHOR_PREFIX}`)}
                 </Markdown>
               </div>
             )}

@@ -1,7 +1,7 @@
 # 架构与代码治理首轮失败矩阵
 
 编写日期：2026-10-11；在本轮脚本、CI 和插件生产代码修改之前建立。
-范围：[实施计划](../process/architecture-code-governance-implementation-plan-2026-10-11.md) 的 G0、G1、G2a。验收入口复用 `test:critical`，新增工作流提供进程隔离、临时工作区及 JSON/哈希证据，不新增单元测试。
+范围：[实施计划](../archive/architecture-code-governance-implementation-plan-2026-10-11.md) 的 G0、G1、G2a。验收入口复用 `test:critical`，新增工作流提供进程隔离、临时工作区及 JSON/哈希证据，不新增单元测试。
 
 ## G1：验证与门禁
 

@@ -146,7 +146,7 @@ codemode 的图片路径目前指向 OS 临时目录，不能自动等同 Phaner
 | virtual model / Radius 默认路由 | 目录和 provider 修复可随 SDK 获得 | 多连接账户映射、辅助请求记账、实际模型事实和恢复还需专门设计；不改变用户当前指定模型 |
 | Pi TUI/CLI 特性 | OSC 7501、终端排版、键位、managed install 清理等 | 不把终端能力当作 Electron 产品收益；本仓自有分发与 UI 继续按自身契约工作 |
 
-上述结论复核了[1.0.2 收敛评估](../process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)的硬差异；不是把旧结论原样沿用。原生能力证据见 [1.1.0 classifier 文档](https://github.com/earendil-works/pi/blob/v1.1.0/packages/coding-agent/docs/models.md#use-classifier-models)、[llama.cpp 分类](https://github.com/earendil-works/pi/blob/v1.1.0/packages/coding-agent/docs/llama-cpp.md#classification)、[MCP transport 边界](https://github.com/earendil-works/pi/blob/v1.1.0/packages/coding-agent/docs/mcp.md)。
+上述结论复核了[1.0.2 收敛评估](pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)的硬差异；不是把旧结论原样沿用。原生能力证据见 [1.1.0 classifier 文档](https://github.com/earendil-works/pi/blob/v1.1.0/packages/coding-agent/docs/models.md#use-classifier-models)、[llama.cpp 分类](https://github.com/earendil-works/pi/blob/v1.1.0/packages/coding-agent/docs/llama-cpp.md#classification)、[MCP transport 边界](https://github.com/earendil-works/pi/blob/v1.1.0/packages/coding-agent/docs/mcp.md)。
 
 ## 8. 回退约束
 

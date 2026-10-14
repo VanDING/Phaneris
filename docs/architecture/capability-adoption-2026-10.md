@@ -2,7 +2,9 @@
 
 Status: accepted — 采用约定；四个条件式延后项的再评估证据见「条件式迁移结论」
 
-原记录基线：Craft 上游 0.14.0 的既有吸收结果、Pi SDK 1.0.2、Phaneris 0.2.4。当前 Pi 1.1.0 / Phaneris 0.3.0 与 Craft 0.14.1 增量见 [升级实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。下文的既有实测数据保留原版本范围。机制实施见 [批次记录](../archive/capability-integration-2026-10-03.md)，原计划完整性、真实模型与补齐验收见 [闭合记录](../archive/capability-completion-2026-10-04.md)，全面替换的历史条件见 [1.0.2 评估](../process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。这里区分产品实现、实测收益与条件式采用。
+2026-10-13 规划收敛：本文的已采用能力与运行边界继续有效；原条件式迁移表保留技术理由，不再承载独立实施排期。当前保留、条件触发与关闭事项统一见[价值裁定与执行队列](../process/implementation-value-register-2026-10-13.md)。
+
+原记录基线：Craft 上游 0.14.0 的既有吸收结果、Pi SDK 1.0.2、Phaneris 0.2.4。当前 Pi 1.1.0 / Phaneris 0.3.0 与 Craft 0.14.1 增量见 [升级实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。下文的既有实测数据保留原版本范围。机制实施见 [批次记录](../archive/capability-integration-2026-10-03.md)，原计划完整性、真实模型与补齐验收见 [闭合记录](../archive/capability-completion-2026-10-04.md)，全面替换的历史条件见 [1.0.2 评估](../archive/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。这里区分产品实现、实测收益与条件式采用。
 
 ## 能力采用表
 
@@ -128,6 +130,8 @@ Markdown 可视化编辑只有在初次序列化保持源码时才解锁。源�
 | Sonner 2.0.8 / 七种语言 | 复用通知宿主与恢复 / 冲突反馈 | 现有 Toaster、i18n gates 与实际 UI 工作流 | 回退新增反馈文案 / 入口；保留原通知宿主 |
 
 首屏基线 4,967,600 B，本轮为 4,267,991 B，减少 14.08%。长会话预算是本机合成工作负载的回归门限：导航与冷打开 3,000 ms、暖切换 2,000 ms、输入至两个动画帧 250 ms、首个实时增量 1,500 ms、renderer heap 256 MiB、backend RSS 1,024 MiB。原始单次数据、搜索 / 引用 / 复制 / 实时合并与日历 / 表格截图保留在 performance 报告；这些不等同于所有硬件的承诺或 Electron 原生启动测量。
+
+2026-10-14 的 [C02 验收](../verification/results/c02-planning-performance-2026-10-14/README.md)收敛日历/工作项投影与广播：renderer 共用工作区投影，SessionManager 为兼容通道的统一通知入口；原生归档/取消归档也触发失效。1,000 条 Session 元数据样本的单改读取由四次降为一次，现行预算不变。该样本与上述长会话消息样本不同，不合并统计；范围查询与日期索引保持关闭。
 
 ## 保留兼容层与退出条件
 

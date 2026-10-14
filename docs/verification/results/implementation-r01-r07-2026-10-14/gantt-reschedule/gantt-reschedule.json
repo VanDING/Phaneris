@@ -1,0 +1,100 @@
+{
+  "checks": [
+    "keyboard-opens-date-controls",
+    "inclusive-end-saved-through-real-session-planning",
+    "keyboard-cancel-does-not-write",
+    "pointer-drag-commits-once",
+    "resize-preserves-start-and-inclusive-end",
+    "escape-cancels-pointer-reschedule",
+    "pointer-cancellation-does-not-write",
+    "save-failure-rolls-back-and-reports",
+    "broadcast-and-remount-preserve-inflight-reschedule",
+    "summaries-and-milestones-are-readonly",
+    "dst-clock-seconds-and-untouched-end-preserved",
+    "single-day-inclusive-range-preserved",
+    "filtered-out-children-do-not-make-summary-editable",
+    "nonexistent-dst-clock-refused-without-write"
+  ],
+  "writes": [
+    [
+      "261014-calm-spray",
+      {
+        "startAt": "2026-10-31",
+        "dueAt": "2026-11-04"
+      }
+    ],
+    [
+      "261014-calm-spray",
+      {
+        "startAt": "2026-11-01",
+        "dueAt": "2026-11-05"
+      }
+    ],
+    [
+      "261014-calm-spray",
+      {
+        "startAt": "2026-11-01",
+        "dueAt": "2026-11-06"
+      }
+    ],
+    [
+      "261014-calm-spray",
+      {
+        "startAt": "2026-11-01",
+        "dueAt": "2026-11-20"
+      }
+    ],
+    [
+      "261014-calm-spray",
+      {
+        "startAt": "2026-11-01",
+        "dueAt": "2026-11-10"
+      }
+    ],
+    [
+      "261014-spry-dune",
+      {
+        "startAt": "2026-11-02T15:30:45.000Z",
+        "dueAt": "2026-11-03T21:15:20Z"
+      }
+    ],
+    [
+      "261014-calm-spray",
+      {
+        "startAt": "2026-11-30",
+        "dueAt": "2026-11-30"
+      }
+    ]
+  ],
+  "leaf": "261014-calm-spray",
+  "timed": "261014-spry-dune",
+  "summary": "261014-smart-vista",
+  "milestone": "261014-quick-dusk",
+  "projection": [
+    {
+      "id": "261014-ready-ridge",
+      "startAt": "2027-03-13T07:30:45Z",
+      "dueAt": "2027-03-15T12:00:00Z"
+    },
+    {
+      "id": "261014-quick-dusk",
+      "startAt": "2026-11-02",
+      "dueAt": "2026-11-02"
+    },
+    {
+      "id": "261014-spry-dune",
+      "startAt": "2026-11-02T15:30:45.000Z",
+      "dueAt": "2026-11-03T21:15:20Z"
+    },
+    {
+      "id": "261014-calm-spray",
+      "startAt": "2026-11-30",
+      "dueAt": "2026-11-30"
+    },
+    {
+      "id": "261014-smart-vista",
+      "startAt": "2026-10-28",
+      "dueAt": "2026-11-07"
+    }
+  ]
+}

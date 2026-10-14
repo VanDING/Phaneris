@@ -1,0 +1,74 @@
+{
+  "checks": [
+    "session-and-owned-paths-restored",
+    "attachment-bytes-preserved",
+    "artifact-revisions-checkout-accept-only-restored-copy",
+    "restored-runtime-start-parks-unknown-effect-without-replay",
+    "existing-target-refused",
+    "refuse-checksum",
+    "refuse-path-escape",
+    "refuse-duplicate",
+    "process-termination-before-swap-preserves-target",
+    "original-workspace-unchanged"
+  ],
+  "fixture": "synthetic desktop-native session + attachment + artifact revisions/checkout + config + persisted T1",
+  "manifest": {
+    "manifestVersion": 1,
+    "createdAt": "2026-10-14T01:35:02.985Z",
+    "workspaceRootPath": "E:\\Phaneris\\.cache\\verification\\workspace-recovery-JAQk4J\\original",
+    "fileCount": 8,
+    "totalBytes": 113593,
+    "files": [
+      {
+        "path": "artifacts/checkouts/ddb0698f-b836-466c-b73c-fbcdfcbf226e/report.txt",
+        "size": 26,
+        "sha256": "f875e1d644a68c21983b6894d0646b9ad71a08fe261ba0f5269858e354f04703"
+      },
+      {
+        "path": "artifacts/manifest.json",
+        "size": 2126,
+        "sha256": "3e379574c7d81929f52233421ed8b4d845702d2ce09b6dc94385c59cf40172ab"
+      },
+      {
+        "path": "artifacts/revisions/ddb0698f-b836-466c-b73c-fbcdfcbf226e/15dbe4d894b6c97d35151fe88dca58bd46b4bd15da335ed7d05d71b631d90f31.txt",
+        "size": 9,
+        "sha256": "15dbe4d894b6c97d35151fe88dca58bd46b4bd15da335ed7d05d71b631d90f31"
+      },
+      {
+        "path": "artifacts/revisions/ddb0698f-b836-466c-b73c-fbcdfcbf226e/e99ab6cec58f6eada054b8b9a7396011196732e19eba44307d3ccf7fa232c88b.txt",
+        "size": 9,
+        "sha256": "e99ab6cec58f6eada054b8b9a7396011196732e19eba44307d3ccf7fa232c88b"
+      },
+      {
+        "path": "config.json",
+        "size": 118,
+        "sha256": "48823a65ee92cb807ccf14402ce10414101541c7479b6e82ccbadedec96d007f"
+      },
+      {
+        "path": "runtime/runtime.db",
+        "size": 110592,
+        "sha256": "6172a07ff12862c1f187b6eb7e3ed6a2acf2380368587cb7b495e2d47d724d24"
+      },
+      {
+        "path": "sessions/261014-fit-rainbow/attachments/evidence.txt",
+        "size": 21,
+        "sha256": "7366ec9fe294278dc7b4f639bcffb855e74bd068dc383545f53c8da90e89ab45"
+      },
+      {
+        "path": "sessions/261014-fit-rainbow/session.jsonl",
+        "size": 692,
+        "sha256": "b7591840091d0576d61ee26914c400169a56c7a2f69222347839c2f5651ad8c8"
+      }
+    ]
+  },
+  "originalHashes": {
+    "artifacts/checkouts/ddb0698f-b836-466c-b73c-fbcdfcbf226e/report.txt": "f875e1d644a68c21983b6894d0646b9ad71a08fe261ba0f5269858e354f04703",
+    "artifacts/manifest.json": "3e379574c7d81929f52233421ed8b4d845702d2ce09b6dc94385c59cf40172ab",
+    "artifacts/revisions/ddb0698f-b836-466c-b73c-fbcdfcbf226e/15dbe4d894b6c97d35151fe88dca58bd46b4bd15da335ed7d05d71b631d90f31.txt": "15dbe4d894b6c97d35151fe88dca58bd46b4bd15da335ed7d05d71b631d90f31",
+    "artifacts/revisions/ddb0698f-b836-466c-b73c-fbcdfcbf226e/e99ab6cec58f6eada054b8b9a7396011196732e19eba44307d3ccf7fa232c88b.txt": "e99ab6cec58f6eada054b8b9a7396011196732e19eba44307d3ccf7fa232c88b",
+    "config.json": "48823a65ee92cb807ccf14402ce10414101541c7479b6e82ccbadedec96d007f",
+    "runtime/runtime.db": "20fe50f5a3240f883786e91cb5383469ffe4980dbdb84099b1b082e8ca997252",
+    "sessions/261014-fit-rainbow/attachments/evidence.txt": "7366ec9fe294278dc7b4f639bcffb855e74bd068dc383545f53c8da90e89ab45",
+    "sessions/261014-fit-rainbow/session.jsonl": "b7591840091d0576d61ee26914c400169a56c7a2f69222347839c2f5651ad8c8"
+  }
+}

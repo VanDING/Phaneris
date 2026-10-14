@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "state": "available",
+  "sessionId": "261014-azure-dawn",
+  "scope": "retained-session-runtime-facts",
+  "asOf": 1791958830374,
+  "lastSeq": 5,
+  "terminal": {},
+  "unsettled": {
+    "count": 1,
+    "toolCount": 1,
+    "modelCount": 0,
+    "oldestAgeMs": 33055,
+    "operationIds": [
+      "toolop_7a2ab2b14b86afd661d5fd23fb185a66"
+    ]
+  },
+  "knownCostUsd": null,
+  "unknownCostRequests": 0,
+  "userAcceptance": "unknown",
+  "taskBudgets": [],
+  "observations": {
+    "pollingCandidates": 0,
+    "sdkRetries": 0,
+    "compactions": 0,
+    "recoveries": 1
+  },
+  "signals": []
+}

@@ -6,7 +6,7 @@
 
 本次范围包括同步依赖、验证现有接入和评估优化方向。下文提议的新功能尚未实施。评估覆盖 0.99.0、0.99.1、0.99.2 和 1.0.0，不能只看最后一个版本的发布说明。
 
-此文保存升级时评估快照。随后批准的能力整合、实测与迁移结论见 [能力采用指南](../architecture/capability-adoption-2026-10.md)及[完整性复核](./capability-completion-2026-10-04.md)。最新版本和全面替换条件见 [1.0.2 评估](../process/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。
+此文保存升级时评估快照。随后批准的能力整合、实测与迁移结论见 [能力采用指南](../architecture/capability-adoption-2026-10.md)及[完整性复核](./capability-completion-2026-10-04.md)。最新版本和全面替换条件见 [1.0.2 评估](pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。
 
 ## 结论
 

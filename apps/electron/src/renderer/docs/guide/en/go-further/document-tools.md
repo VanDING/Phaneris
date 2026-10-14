@@ -3,7 +3,7 @@
 Alongside editing text, the agent can read and produce real document formats —
 PDF, Word, PowerPoint, Excel, and calendar files. That capability runs through a
 set of Python tools bundled with the app, not through a cloud service, so
-documents never leave your machine to be converted.
+format conversion runs locally. Content included in a model request can still be sent to the configured provider.
 
 ## What is supported
 

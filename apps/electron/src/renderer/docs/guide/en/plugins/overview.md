@@ -21,6 +21,8 @@ from that point on, on every turn, without you repeating yourself:
 - its standing instruction is added to the conversation's context
 - the agent is told which skills it brought, and reads one when it needs it
 
+Activation selects sources but does not prove materialization, valid configuration, authentication, executable availability or a live connection. The detail page separates those states. Deactivation removes plugin context but keeps already selected sources resident; remove them in the session Sources selector when needed.
+
 Only one plugin is active at a time. Invoking another replaces the first
 silently — the badge next to the permission mode always shows which one is
 current, and its **×** turns it off.
@@ -43,7 +45,7 @@ manifest is not a plugin.
 ## Installing one
 
 **You do not need a special install screen — ask the agent.** Point it at the
-package directory (or hand it a `.tar` / `.tar.gz` archive) and say what you
+local package directory and say what you
 want. Before writing anything it shows you:
 
 - **what will be replaced.** Plugins overwrite rather than merge, so if an
@@ -52,6 +54,8 @@ want. Before writing anything it shows you:
 - **the exact command any bundled server will run.** A plugin's `mcp.json` can
   start a local process; that command is shown verbatim, as the package author
   wrote it, so you are approving the real thing rather than a summary.
+
+Analysis creates a workspace-bound, short-lived, single-use plan. It binds a staged package snapshot and target resource state; changed packages or targets, expired plans, replay and cross-workspace consumption require analysis again. Invalid sources are skipped with visible diagnostics before formal resource writes; duplicate source slugs are refused. A fixed HTTP header does not imply bearer authentication. External imports, a marketplace and automatic updates are outside the current shipped flow.
 
 Nothing is written until you agree. Once installed, the plugin's skills live in
 your workspace's `skills/` and its sources in `sources/` — ordinary resources
@@ -62,8 +66,7 @@ from then on, editable and disable-able like anything you made by hand.
 Plugins are files, and the agent edits them conversationally: "give the
 investment-analyst plugin a new skill for comparable-company analysis", or
 "change the prompt so it always cites sources". The `PROMPT.md` text, a skill's
-`SKILL.md`, and the manifest are all fair game. Changes take effect on the next
-message — no restart, no reinstall.
+`SKILL.md`, and the manifest are all fair game. The resident PROMPT fragment is refreshed for the next message. Skills use the materialized native workspace copy: its current name, description and SKILL.md path supply the roster. Editing only the package copy requires reinstalling; missing or invalid native skills are reported unavailable without package fallback.
 
 Reinstalling over an existing plugin replaces its files but **keeps its `data/`
 directory**, so anything the plugin has stored survives an upgrade.

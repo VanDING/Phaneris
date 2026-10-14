@@ -1,68 +1,61 @@
 # Credentials
 
-Every secret Phaneris stores — provider keys, source tokens, OAuth tokens,
-messaging bot credentials — lives in one encrypted vault:
+Provider keys, source tokens, OAuth tokens and messaging bot credentials managed
+by Phaneris use its encrypted vault under the configured profile directory:
 
 ```
 ~/.phaneris/
   credentials.enc     the encrypted vault
-  credentials.key     the key that unlocks it
+  credentials.key     a protected key, when the configured provider uses one
 ```
 
-Neither file is human-readable, and neither is meant to be edited. They are
-written only through the app's credential paths, which is why there is no
-"import a key file" flow.
+Use the app's credential prompts and connection settings to manage these files.
+Do not edit or publish them. Plugins, external tools and providers can maintain
+their own credentials outside this vault.
 
 ## Why there are two files
 
-`credentials.enc` is encrypted with a key in `credentials.key`, and that key is
-itself protected by the operating system — DPAPI on Windows, Keychain on macOS,
-libsecret on Linux. The app asks the OS to unwrap it at startup and keeps the
-plaintext in memory for the session.
+The desktop can install an Electron `safeStorage` key provider: the vault key
+is then protected by the available operating-system backend. The exact
+protection depends on that backend and host identity; safeStorage does not
+imply Chromium app-bound encryption on every installation.
 
-The important consequence: **the key is protected on behalf of the application
-that created it, not on behalf of your user account alone.** On Windows the blob
-is bound to the writing executable through Chromium's app-bound encryption, so a
-different binary cannot unwrap it even on the same machine and the same account.
+Headless deployments can supply a high-entropy `PHANERIS_CREDENTIAL_KEY`
+(16–64 bytes, hex or base64). Compatibility environments without an installed
+provider can use machine-id derivation, with different recovery and protection
+properties. A protected key that cannot be unlocked is preserved and the error
+is reported; it must not be silently replaced.
 
 ## What that means for moving a profile
 
-Copying `~/.phaneris/` to another machine, or carrying it across a rename or a
-re-signing of the app, **does not carry the credentials across**. The vault comes
-along; the ability to open it does not.
+Copying the encrypted files alone does not guarantee access on a new machine,
+account or installation. Recovery depends on the original key provider and
+whether it can still unlock that vault.
 
-Phaneris does not try to hide this or work around it:
-
-- The migration tooling **deliberately excludes** both files. Copying them would
-  guarantee that the new app can never unwrap the key — and, worse, can never
-  create a fresh one, because the failing file is already there. That exact
-  failure is what made a renamed build start with no window at all before it was
-  understood.
-- On first launch with no key, a new one is created and the vault starts empty.
-  Every connection and source is still configured; each one needs its secret
-  re-entered once.
-
-Budget for re-authorizing once after a move. It is not a bug, and there is no
-supported way around it short of not moving.
+The workspace backup command does not include global credentials or the key
+provider. Profile migration tools can intentionally omit these files. Plan to
+re-authorize connections after a move, or use the deployment's supported key
+recovery procedure. Keep the original profile until recovery is verified.
 
 ## How secrets are used
 
 - **Credential prompts** in a conversation write straight into the vault. The
   value never enters the transcript — the agent can tell you *which* credential it
-  needs, and cannot read it back.
+  needs. A secret entered into an ordinary chat message instead can become part
+  of its transcript, so use the dedicated credential prompt.
 - **Sources** reference a credential by name; the secret is attached at request
-  time. Source `config.json` files are safe to read, copy, and inspect because
-  they contain no secrets.
+  time. Prefer credential references over literal secrets in configuration.
+  Inspect source configs, plugin environment values and headers before sharing:
+  manually entered values can still contain sensitive data.
 - **OAuth tokens** are refreshed automatically where the provider supports it, and
-  the refreshed token is written back to the vault. A source that worked last
-  month and fails today is usually a token that was revoked upstream rather than
-  a storage problem.
+  the refreshed token is written back to the vault. Authentication failures can
+  also require renewed consent or repair of the host's key provider.
 
 ## Rotating and revoking
 
-Removing a connection or a source removes its credential from the vault. Deleting
-the vault files outright is the blunt version: everything needs re-authorizing,
-including things you had forgotten were configured.
+Use the relevant connection or source controls to remove stored credentials.
+Do not delete vault files as a troubleshooting shortcut: losing the vault or its
+key can require re-authorizing every stored connection.
 
 If you believe a secret has leaked, revoke it at the provider first — that is the
 only step that actually invalidates it. Deleting it locally changes what this app

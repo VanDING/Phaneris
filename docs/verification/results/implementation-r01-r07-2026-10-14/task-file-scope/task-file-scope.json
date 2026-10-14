@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "undeclared-serializes",
+    "same-path-serializes",
+    "ancestor-path-serializes",
+    "read-write-serializes",
+    "case-alias-serializes",
+    "junction-alias-serializes",
+    "readers-parallel",
+    "disjoint-writes-parallel",
+    "cross-run-failed-releases",
+    "cross-run-cancelled-releases",
+    "restart-cannot-change-declarations"
+  ]
+}

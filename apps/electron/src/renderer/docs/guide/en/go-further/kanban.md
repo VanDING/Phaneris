@@ -1,12 +1,10 @@
 # Kanban Board
 
-The board is where work that is not a conversation lives. A **work item** is a
+The board is a planning projection of Sessions, which remain the single source of truth. A **work item** is a
 card: something to be done, with a place on the board, optionally a date, and
 optionally the sessions that are doing it.
 
-Conversations are where work happens. The board is where it is tracked. A card
-can exist before any session does, and collecting the sessions onto it afterwards
-is what keeps "what am I doing about this" answerable.
+Conversations are where work happens. The board is where it is tracked. A planning card can exist before any agent turn runs; its Session planning fields still back the projection.
 
 ## Columns
 
@@ -27,7 +25,9 @@ A project with no custom columns gets the default three.
 
 ## Views
 
-The same items, three ways:
+The same Session planning fields also have a Gantt projection. Ordinary editable leaves can be moved or resized, or rescheduled with the keyboard date button. End dates are inclusive and existing endpoint clocks are retained. Derived summaries and milestones are read-only here. Saves use the native WorkItem write path with feedback and rollback; dependencies and progress stay in the existing task editor.
+
+The other projections:
 
 | View | For |
 |---|---|

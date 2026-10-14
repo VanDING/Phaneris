@@ -1,0 +1,16 @@
+bun test v1.4.2 (744846f84)
+
+packages\server-core\src\handlers\rpc\work-items.isolated.ts:
+(pass) work item RPC handlers > projects every visible Session and nothing else [6.79ms]
+(pass) work item RPC handlers > projects continuously without writing anything to disk [3.96ms]
+(pass) work item RPC handlers > keeps a Session with no messages of its own (planning without chat) [2.35ms]
+(pass) work item RPC handlers > falls back to a trimmed preview for an unnamed Session [1.92ms]
+(pass) work item RPC handlers > creates a Session instead of a standalone record [2.55ms]
+(pass) work item RPC handlers > mirrors only explicitly updated fields in deterministic order [2.98ms]
+(pass) work item RPC handlers > rejects an update for a Session that does not exist [2.42ms]
+(pass) work item RPC handlers > deletes the backing Session and leaves projection notifications to SessionManager [2.03ms]
+
+ 8 pass
+ 0 fail
+ 14 expect() calls
+Ran 8 tests across 1 file. [225.00ms]

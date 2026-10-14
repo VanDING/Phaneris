@@ -4,8 +4,7 @@ A **workspace** is a fully isolated configuration. It has its own sources,
 skills, statuses, labels, automations, projects, pages, and sessions — and its own
 directory on disk.
 
-Use one workspace for work and another for personal projects, and neither can see
-the other's credentials, sessions, or files. That isolation is the whole point:
+Use separate workspaces for distinct resource and credential contexts. This is application-level organization, not an OS sandbox; explicitly authorized external files or global model connections may still be shared. That isolation is the whole point:
 it is the difference between "the agent has access to my GitHub" and "the agent
 has access to my work GitHub while I am doing personal work".
 
@@ -69,6 +68,12 @@ needed.
 
 **Two is a fine number.** Most people need a work one and a personal one, and
 nothing else. Adding a third is worth doing when you can say what it isolates.
+
+## Backup and recovery
+
+Stop writers before using `bun run workspace:backup create --workspace <dir> --output <new-dir>`, verify with `bun run workspace:verify verify --backup <dir>`, and restore to a separate empty target with `bun run workspace:restore restore --backup <dir> --workspace <target>`. Manifests bind file SHA-256 values; Runtime SQLite uses a consistent snapshot. Non-empty targets refuse by default; explicit force keeps a pre-restore safety copy. Corruption, invalid paths and unsupported links refuse before replacement.
+
+Restoring elsewhere rebases owned live Session, Artifact, workspace-default and local-source paths inside the original workspace. Historical messages, revision bytes and Runtime facts remain unchanged. External content directories and global credentials/keys are outside a workspace backup. Inspect sessions, attachments, Artifact revisions/checkouts and parked effects after startup; do not replay an unknown T1 automatically.
 
 ## Next steps
 

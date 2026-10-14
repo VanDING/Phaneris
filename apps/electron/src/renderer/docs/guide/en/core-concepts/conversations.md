@@ -48,9 +48,7 @@ and a long task can keep running while you work elsewhere. A session that is
 working shows it in the list; one that has finished and needs your attention
 shows that instead.
 
-Nothing is lost by leaving a session: the transcript is written to disk as it
-happens, so closing the window or restarting the app resumes exactly where it
-stopped.
+Committed transcripts and Runtime facts survive leaving a session. After a restart, a dispatched external effect without a durable outcome is parked for reconciliation; reopening a session does not automatically replay unknown effects. Run → Overview exposes retained-session reliability facts and an export. Repetition is evidence, not a no-progress verdict; completion does not establish user acceptance, and missing cost remains unknown.
 
 ## Resuming, branching, and moving
 

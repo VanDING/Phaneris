@@ -2,7 +2,7 @@
 
 Status: accepted
 
-本表对应 [实施计划](architecture-code-governance-implementation-plan-2026-10-11.md) 的 G3–G7；基线为 `8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda`，保留历史口径，逐项给出当前 owner。完整调用文件、行号和输入 SHA 在收口证据的 `ownership-inventory.json` 中。与 [领域裁定](../architecture/governance-domain-ownership.md) 配合使用。
+本表对应 [实施计划](../archive/architecture-code-governance-implementation-plan-2026-10-11.md) 的 G3–G7；基线为 `8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda`，保留历史口径，逐项给出当前 owner。完整调用文件、行号和输入 SHA 在收口证据的 `ownership-inventory.json` 中。与 [领域裁定](../architecture/governance-domain-ownership.md) 配合使用。
 
 ## 配置入口
 

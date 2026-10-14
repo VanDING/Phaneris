@@ -2,7 +2,7 @@
 
 Status: accepted
 
-本裁定配合 [实施计划](../process/architecture-code-governance-implementation-plan-2026-10-11.md) 和 [先行失败矩阵](../verification/governance-completion-failure-matrix.md)。旧入口保留兼容；新领域模块引用具体 owner。
+本裁定配合 [实施计划](../archive/architecture-code-governance-implementation-plan-2026-10-11.md) 和 [先行失败矩阵](../verification/governance-completion-failure-matrix.md)。旧入口保留兼容；新领域模块引用具体 owner。
 
 | 配置职责 | 唯一 owner | 兼容策略 |
 | --- | --- | --- |

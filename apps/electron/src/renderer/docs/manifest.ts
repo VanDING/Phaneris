@@ -17,7 +17,7 @@
  */
 
 /** Locales with a `guide/<locale>/` directory. English is authored first. */
-export const DOCS_LOCALES = ['en'] as const
+export const DOCS_LOCALES = ['en', 'zh-Hans'] as const
 
 export type DocsLocale = (typeof DOCS_LOCALES)[number]
 
@@ -33,11 +33,13 @@ export interface DocsPage {
   slug: string
   /** Navigation label and the overlay's header title. */
   title: string
+  titleZh?: string
 }
 
 export interface DocsSection {
   id: string
   title: string
+  titleZh?: string
   pages: DocsPage[]
 }
 
@@ -47,133 +49,133 @@ export const DOCS_HOME_SLUG = 'getting-started/introduction'
 export const DOCS_SECTIONS: DocsSection[] = [
   {
     id: 'getting-started',
-    title: 'Getting Started',
+    title: 'Getting Started', titleZh: '开始使用',
     pages: [
-      { slug: 'getting-started/introduction', title: 'Introduction' },
-      { slug: 'getting-started/installation', title: 'Installation' },
+      { slug: 'getting-started/introduction', title: 'Introduction', titleZh: '简介' },
+      { slug: 'getting-started/installation', title: 'Installation', titleZh: '安装' },
     ],
   },
   {
     id: 'core-concepts',
-    title: 'Core Concepts',
+    title: 'Core Concepts', titleZh: '核心概念',
     pages: [
-      { slug: 'core-concepts/conversations', title: 'Conversations' },
-      { slug: 'core-concepts/projects', title: 'Projects' },
-      { slug: 'core-concepts/working-directory', title: 'Working Directory' },
-      { slug: 'core-concepts/permissions', title: 'Permissions' },
-      { slug: 'core-concepts/interactions', title: 'Interactions' },
+      { slug: 'core-concepts/conversations', title: 'Conversations', titleZh: '会话' },
+      { slug: 'core-concepts/projects', title: 'Projects', titleZh: '项目' },
+      { slug: 'core-concepts/working-directory', title: 'Working Directory', titleZh: '工作目录' },
+      { slug: 'core-concepts/permissions', title: 'Permissions', titleZh: '权限' },
+      { slug: 'core-concepts/interactions', title: 'Interactions', titleZh: '交互请求' },
     ],
   },
   {
     id: 'sources',
-    title: 'Sources',
+    title: 'Sources', titleZh: '来源',
     pages: [
-      { slug: 'sources/overview', title: 'Sources' },
-      { slug: 'sources/mcp-servers', title: 'MCP Servers' },
-      { slug: 'sources/apis', title: 'APIs' },
-      { slug: 'sources/local-filesystems', title: 'Local Folders' },
+      { slug: 'sources/overview', title: 'Sources', titleZh: '来源' },
+      { slug: 'sources/mcp-servers', title: 'MCP Servers', titleZh: 'MCP 服务器' },
+      { slug: 'sources/apis', title: 'APIs', titleZh: 'API 接口' },
+      { slug: 'sources/local-filesystems', title: 'Local Folders', titleZh: '本地文件夹' },
     ],
   },
   {
     id: 'skills',
-    title: 'Skills',
+    title: 'Skills', titleZh: '技能',
     pages: [
-      { slug: 'skills/overview', title: 'Skills' },
+      { slug: 'skills/overview', title: 'Skills', titleZh: '技能' },
     ],
   },
   {
     id: 'plugins',
-    title: 'Plugins',
+    title: 'Plugins', titleZh: '插件',
     pages: [
-      { slug: 'plugins/overview', title: 'Plugins' },
+      { slug: 'plugins/overview', title: 'Plugins', titleZh: '插件' },
     ],
   },
   {
     id: 'statuses',
-    title: 'Statuses',
+    title: 'Statuses', titleZh: '状态',
     pages: [
-      { slug: 'statuses/overview', title: 'Statuses' },
-      { slug: 'statuses/customizing', title: 'Customizing Statuses' },
+      { slug: 'statuses/overview', title: 'Statuses', titleZh: '状态' },
+      { slug: 'statuses/customizing', title: 'Customizing Statuses', titleZh: '自定义状态' },
     ],
   },
   {
     id: 'labels',
-    title: 'Labels',
+    title: 'Labels', titleZh: '标签',
     pages: [
-      { slug: 'labels/overview', title: 'Labels' },
-      { slug: 'labels/auto-rules', title: 'Auto-Apply Rules' },
+      { slug: 'labels/overview', title: 'Labels', titleZh: '标签' },
+      { slug: 'labels/auto-rules', title: 'Auto-Apply Rules', titleZh: '自动应用规则' },
     ],
   },
   {
     id: 'automations',
-    title: 'Automations',
+    title: 'Automations', titleZh: '自动化',
     pages: [
-      { slug: 'automations/overview', title: 'Automations' },
+      { slug: 'automations/overview', title: 'Automations', titleZh: '自动化' },
     ],
   },
   {
     id: 'messaging',
-    title: 'Messaging',
+    title: 'Messaging', titleZh: '消息平台',
     pages: [
-      { slug: 'messaging/overview', title: 'Messaging' },
-      { slug: 'messaging/telegram', title: 'Telegram' },
-      { slug: 'messaging/whatsapp', title: 'WhatsApp' },
-      { slug: 'messaging/lark', title: 'Lark / Feishu' },
-      { slug: 'messaging/wechat-wecom', title: 'WeChat and WeCom' },
+      { slug: 'messaging/overview', title: 'Messaging', titleZh: '消息平台' },
+      { slug: 'messaging/telegram', title: 'Telegram', titleZh: 'Telegram 消息' },
+      { slug: 'messaging/whatsapp', title: 'WhatsApp', titleZh: 'WhatsApp 消息' },
+      { slug: 'messaging/lark', title: 'Lark / Feishu', titleZh: 'Lark / 飞书' },
+      { slug: 'messaging/wechat-wecom', title: 'WeChat and WeCom', titleZh: '微信与企业微信' },
     ],
   },
   {
     id: 'browser',
-    title: 'Browser',
+    title: 'Browser', titleZh: '浏览器',
     pages: [
-      { slug: 'browser/overview', title: 'Browser' },
-      { slug: 'browser/examples', title: 'Examples and Recipes' },
-      { slug: 'browser/api-discovery', title: 'API Discovery' },
+      { slug: 'browser/overview', title: 'Browser', titleZh: '浏览器' },
+      { slug: 'browser/examples', title: 'Examples and Recipes', titleZh: '示例与操作方法' },
+      { slug: 'browser/api-discovery', title: 'API Discovery', titleZh: 'API 发现' },
     ],
   },
   {
     id: 'customisation',
-    title: 'Customisation',
+    title: 'Customisation', titleZh: '个性化',
     pages: [
-      { slug: 'customisation/themes', title: 'Themes' },
-      { slug: 'customisation/colors', title: 'Colors' },
-      { slug: 'customisation/icons', title: 'Icons' },
+      { slug: 'customisation/themes', title: 'Themes', titleZh: '主题' },
+      { slug: 'customisation/colors', title: 'Colors', titleZh: '颜色' },
+      { slug: 'customisation/icons', title: 'Icons', titleZh: '图标' },
     ],
   },
   {
     id: 'go-further',
-    title: 'Go Further',
+    title: 'Go Further', titleZh: '进阶',
     pages: [
-      { slug: 'go-further/workspaces', title: 'Workspaces' },
-      { slug: 'go-further/pages', title: 'Pages' },
-      { slug: 'go-further/kanban', title: 'Kanban Board' },
-      { slug: 'go-further/tasks', title: 'Tasks' },
-      { slug: 'go-further/rich-output', title: 'Rich Output' },
-      { slug: 'go-further/document-tools', title: 'Document Tools' },
-      { slug: 'go-further/connect-to-anything', title: 'Connect to Anything' },
-      { slug: 'go-further/deep-links', title: 'Deep Links' },
-      { slug: 'go-further/performance', title: 'Performance' },
+      { slug: 'go-further/workspaces', title: 'Workspaces', titleZh: '工作区' },
+      { slug: 'go-further/pages', title: 'Pages', titleZh: '页面' },
+      { slug: 'go-further/kanban', title: 'Kanban Board', titleZh: '看板' },
+      { slug: 'go-further/tasks', title: 'Tasks', titleZh: '任务' },
+      { slug: 'go-further/rich-output', title: 'Rich Output', titleZh: '丰富输出' },
+      { slug: 'go-further/document-tools', title: 'Document Tools', titleZh: '文档工具' },
+      { slug: 'go-further/connect-to-anything', title: 'Connect to Anything', titleZh: '连接外部系统' },
+      { slug: 'go-further/deep-links', title: 'Deep Links', titleZh: '深层链接' },
+      { slug: 'go-further/performance', title: 'Performance', titleZh: '性能' },
     ],
   },
   {
     id: 'server',
-    title: 'Server',
+    title: 'Server', titleZh: '服务端',
     pages: [
-      { slug: 'server/remote-server', title: 'Remote Server' },
+      { slug: 'server/remote-server', title: 'Remote Server', titleZh: '远程服务端' },
     ],
   },
   {
     id: 'reference',
-    title: 'Reference',
+    title: 'Reference', titleZh: '参考',
     pages: [
-      { slug: 'reference/config-file', title: 'App Settings' },
-      { slug: 'reference/preferences', title: 'Preferences' },
-      { slug: 'reference/llm-connections', title: 'LLM Connections' },
-      { slug: 'reference/custom-endpoint', title: 'Custom Endpoints' },
-      { slug: 'reference/credentials', title: 'Credentials' },
-      { slug: 'reference/network-proxy', title: 'Network Proxy' },
-      { slug: 'reference/environment-variables', title: 'Environment Variables' },
-      { slug: 'reference/cli-reference', title: 'CLI Reference' },
+      { slug: 'reference/config-file', title: 'App Settings', titleZh: '应用设置' },
+      { slug: 'reference/preferences', title: 'Preferences', titleZh: '偏好设置' },
+      { slug: 'reference/llm-connections', title: 'LLM Connections', titleZh: '模型连接' },
+      { slug: 'reference/custom-endpoint', title: 'Custom Endpoints', titleZh: '自定义端点' },
+      { slug: 'reference/credentials', title: 'Credentials', titleZh: '凭据' },
+      { slug: 'reference/network-proxy', title: 'Network Proxy', titleZh: '网络代理' },
+      { slug: 'reference/environment-variables', title: 'Environment Variables', titleZh: '环境变量' },
+      { slug: 'reference/cli-reference', title: 'CLI Reference', titleZh: '命令行参考' },
     ],
   },
 ]
@@ -183,11 +185,19 @@ export const DOCS_PAGES: DocsPage[] = DOCS_SECTIONS.flatMap((section) => section
 
 const PAGE_BY_SLUG = new Map(DOCS_PAGES.map((page) => [page.slug, page]))
 
-export function findDocsPage(slug: string | null | undefined): DocsPage | undefined {
-  return slug ? PAGE_BY_SLUG.get(slug) : undefined
+export function resolveDocsLocale(language: string | null | undefined): DocsLocale {
+  return language?.toLowerCase().startsWith('zh') ? 'zh-Hans' : DEFAULT_DOCS_LOCALE
+}
+const localize = <T extends { title: string; titleZh?: string }>(entry: T, locale: DocsLocale): T => ({ ...entry, title: locale === 'zh-Hans' ? entry.titleZh ?? entry.title : entry.title })
+export function getDocsSections(locale: DocsLocale): DocsSection[] {
+  return DOCS_SECTIONS.map(section => ({ ...localize(section, locale), pages: section.pages.map(page => localize(page, locale)) }))
+}
+export function findDocsPage(slug: string | null | undefined, locale: DocsLocale = DEFAULT_DOCS_LOCALE): DocsPage | undefined {
+  const page = slug ? PAGE_BY_SLUG.get(slug) : undefined
+  return page ? localize(page, locale) : undefined
 }
 
 /** The section a page belongs to — used for the overlay's breadcrumb. */
-export function findDocsSection(slug: string): DocsSection | undefined {
-  return DOCS_SECTIONS.find((section) => section.pages.some((page) => page.slug === slug))
+export function findDocsSection(slug: string, locale: DocsLocale = DEFAULT_DOCS_LOCALE): DocsSection | undefined {
+  return getDocsSections(locale).find((section) => section.pages.some((page) => page.slug === slug))
 }

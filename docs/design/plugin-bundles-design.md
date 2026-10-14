@@ -2,8 +2,8 @@
 
 - 性质：**implemented**（设计已落地；实施前的决策清单见 [`plugin-bundles-decisions.md`](./plugin-bundles-decisions.md)，61 项已全部关闭）
 - 日期：2026-09-17
-- 关联：[`cross-ecosystem-plugin-porting-assessment.md`](../research/cross-ecosystem-plugin-porting-assessment.md)（探索性研究）、
-  [`system-prompt-per-turn-analysis.md`](../process/system-prompt-per-turn-analysis.md)（缓存前缀约束的唯一依据）
+- 关联：[`cross-ecosystem-plugin-porting-assessment.md`](../archive/cross-ecosystem-plugin-porting-assessment.md)（探索性研究）、
+  [`system-prompt-per-turn-analysis.md`](../archive/system-prompt-per-turn-analysis.md)（缓存前缀约束的唯一依据）
 
 ---
 

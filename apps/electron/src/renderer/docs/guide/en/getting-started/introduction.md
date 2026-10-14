@@ -16,9 +16,9 @@ than on a website, so it always describes the version you are running.
 If you have used upstream Craft Agents, three things are deliberately not the
 same here:
 
-- **Nothing is published to a third-party service.** Sharing a conversation to a
+- **Public hosted sharing is disabled.** Sharing a conversation to a
   hosted viewer and publishing a Page to a Cloudflare worker are both disabled,
-  and no code path uploads your conversations. There is currently no replacement
+  while model and source requests still send the data needed by those services. There is currently no replacement
   for "send this conversation to someone" — see
   [Pages](phaneris://docs/go-further/pages) for what does stay local.
 - **The app does not send you to upstream documentation.** Every help link in
@@ -41,13 +41,13 @@ is a **session** with a status, labels, and a durable transcript.
 | **Status** | A workflow state (Backlog, Todo, Needs Review, Done…). |
 | **Label** | A colored tag, optionally hierarchical and typed. |
 | **Automation** | Something that runs on a schedule or in response to an event. |
-| **Workspace** | A fully isolated configuration: its own sources, skills, statuses, sessions. |
+| **Workspace** | Its own sources, skills, statuses and sessions; execution is still subject to host permissions. |
 | **Page** | A persistent mini-app stored in a workspace. |
 | **Permission mode** | How much the agent may do without asking. |
 
 ## Where your data lives
 
-Everything Phaneris owns lives under a single directory — `~/.phaneris/` on
+The default Phaneris profile lives under `~/.phaneris/` on
 macOS and Linux, `%USERPROFILE%\.phaneris\` on Windows:
 
 ```
@@ -61,18 +61,22 @@ macOS and Linux, `%USERPROFILE%\.phaneris\` on Windows:
   logs/                runtime logs
 ```
 
-You can move, back up, or delete this directory. Nothing important is stored
-anywhere else.
+Workspace roots and working directories can live elsewhere. External files,
+OS-protected keys, tool data and provider accounts need their own recovery
+planning. Verify a backup and its restored copy before replacing the original.
 
 ## Reading the agent's work
 
-The agent is not a black box. Before it changes anything you get to see the
-plan; while it works you get every tool call and its output in the transcript;
-and each turn is kept as a reviewable record you can come back to.
+While it works, supported tool calls and results appear in the conversation.
+Whether an action needs confirmation depends on its permission mode and tool
+policy. Persisted transcripts and Run facts provide a record you can inspect.
 
-- In **Explore** mode it can read but never write.
-- In **Ask to Edit** it proposes each change and waits.
-- In **Execute** it works without interruption.
+- In **Explore**, tool policy blocks recognized write operations.
+- In **Ask to Edit**, actions that require approval wait for confirmation.
+- In **Execute**, actions can proceed without individual tool confirmations.
+
+These modes govern supported tool execution; they are not an operating-system
+sandbox. Task runs must declare their permission modes explicitly.
 
 Start in Explore. Escalate when you have seen enough to trust the plan. See
 [Permissions](phaneris://docs/core-concepts/permissions).

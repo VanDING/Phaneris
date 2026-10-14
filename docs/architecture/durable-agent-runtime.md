@@ -2,6 +2,8 @@
 
 Status: Accepted for incremental implementation
 
+Planning adjudication (2026-10-13): the implemented Phase 0–5 guarantees remain accepted. Target expansion and compatibility-storage retirement are outside the current execution queue; bounded continuation/reconciliation requires the concrete triggers in the [implementation value register](../process/implementation-value-register-2026-10-13.md). The invariants and migration safety rules below remain in force.
+
 The Kernel/Host module ownership and the production SessionManager cutover are implemented in
 [Durable Runtime boundary](./durable-runtime-boundary.md). Its independent Pi, crash and dependency
 evidence supplements the protocol guarantees below; it does not retire compatibility storage.
@@ -23,7 +25,7 @@ parity. Existing pre-runtime sessions remain legacy inputs and are never assigne
 evidence.
 
 The deliberately deferred end-state is described in
-[durable-agent-runtime-target-architecture.md](./durable-agent-runtime-target-architecture.md).
+[durable-agent-runtime-target-architecture.md](../archive/durable-agent-runtime-target-architecture.md).
 
 The [Runtime boundary redesign](./durable-runtime-boundary.md) (2026-10-10) is implemented through
 B0–B5 and addresses execution ownership and dependencies between the Runtime and SessionManager.

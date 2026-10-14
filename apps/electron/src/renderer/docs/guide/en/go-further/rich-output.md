@@ -13,7 +13,7 @@ check the agent's work or skim it.
 | Output | What you get |
 |---|---|
 | **Tables** | Aligned, sortable, and expandable — including large ones that would be unreadable in a chat bubble |
-| **Spreadsheets** | An editable grid, for tabular data you want to actually work with |
+| **Spreadsheets** | File artifacts and supported previews; the retired Office grid engine is not promised |
 | **Diagrams** | Mermaid rendered as a diagram, so the agent can draw an architecture or a flow instead of describing it |
 | **Documents** | Markdown documents opened full-screen, for anything long enough to need its own space |
 | **Previews** | HTML, PDF, images, and Markdown files shown inline rather than as a path you have to go open |
@@ -30,6 +30,8 @@ review them next to the conversation that produced them.
 The distinction is not cosmetic. "The agent changed a file in my repository" and
 "the agent produced a deliverable" want different review behaviour: the first is
 a diff to read, the second is a document to open.
+
+Artifact drafts keep immutable revisions and a managed checkout. Submit makes the reviewed revision ready; Accept writes the deliverable only after conflict checks. An externally changed source can produce a conflict without destroying the draft. A completed run is not the same as accepting its Artifact.
 
 ## Why it previews rather than just naming
 

@@ -1,6 +1,6 @@
 # Permissions
 
-Every session runs in one of three permission modes. The mode decides what the
+Sessions use Explore, Ask to Edit, Execute, or the optional Guarded mode. The mode decides what the
 agent may do without stopping to ask you, and it is the main safety control in
 the app.
 
@@ -13,6 +13,10 @@ the app.
 The mode is per session, shown in the input toolbar, and switchable at any time
 mid-conversation. Changing it is itself recorded, and the agent is told when the
 mode changed so it does not assume a permission it no longer has.
+
+Guarded runs like Execute, except calls flagged as risky by the decision model ask for permission. If the model returns no answer, the call follows Execute behavior. It is available when the guarded-mode feature is enabled, and is not a fail-closed substitute for Ask.
+
+Task runs require an explicit `defaults.permissionMode` or a mode on every node, including when resuming. Missing declarations refuse the entire run before any child is dispatched. Explicit `allow-all` remains a user choice; restrictive tool-call rules still apply.
 
 ## The modes in practice
 

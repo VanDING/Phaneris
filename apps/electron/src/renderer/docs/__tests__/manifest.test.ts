@@ -3,13 +3,13 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { DEEPLINK_SCHEME_PREFIX } from '@phaneris/shared'
 import {
-  DEFAULT_DOCS_LOCALE,
   DOCS_HOME_SLUG,
   DOCS_LOCALES,
   DOCS_PAGES,
   DOCS_SECTIONS,
   findDocsPage,
   findDocsSection,
+  resolveDocsLocale,
 } from '../manifest'
 
 const guideDir = resolve(import.meta.dir, '..', 'guide')
@@ -53,6 +53,10 @@ function linksIn(markdown: string): string[] {
 }
 
 describe('docs manifest', () => {
+  it('ships complete Simplified Chinese navigation with the same slugs', () => {
+    expect(DOCS_LOCALES).toContain('zh-Hans'); expect(resolveDocsLocale('zh-CN')).toBe('zh-Hans'); expect(resolveDocsLocale('en-US')).toBe('en')
+    for (const page of DOCS_PAGES) expect(findDocsPage(page.slug, 'zh-Hans')?.title).toMatch(/[\u4e00-\u9fff]/)
+  })
   it('has unique slugs', () => {
     const slugs = DOCS_PAGES.map((page) => page.slug)
     expect(new Set(slugs).size).toBe(slugs.length)
@@ -90,8 +94,8 @@ describe('docs manifest', () => {
 
   it('starts every page with a level-1 heading matching its title', () => {
     const mismatched: string[] = []
-    for (const page of DOCS_PAGES) {
-      const file = join(guideDir, DEFAULT_DOCS_LOCALE, `${page.slug}.md`)
+    for (const locale of DOCS_LOCALES) for (const page of DOCS_PAGES) {
+      const file = join(guideDir, locale, `${page.slug}.md`)
       if (!existsSync(file)) continue
       // Split on either EOL: `.gitattributes` stores these as LF, but a working
       // copy from before that policy is CRLF, and a heading compared with a
@@ -99,7 +103,7 @@ describe('docs manifest', () => {
       const firstHeading = readFileSync(file, 'utf8')
         .split(/\r?\n/)
         .find((line) => line.startsWith('# '))
-      if (firstHeading !== `# ${page.title}`) {
+      if (firstHeading !== `# ${findDocsPage(page.slug, locale)?.title}`) {
         mismatched.push(`${page.slug}: ${firstHeading ?? '(no heading)'}`)
       }
     }
@@ -117,8 +121,8 @@ describe('docs manifest', () => {
     const prefix = `${DEEPLINK_SCHEME_PREFIX}docs/`
     const problems: string[] = []
 
-    for (const page of DOCS_PAGES) {
-      const file = join(guideDir, DEFAULT_DOCS_LOCALE, `${page.slug}.md`)
+    for (const locale of DOCS_LOCALES) for (const page of DOCS_PAGES) {
+      const file = join(guideDir, locale, `${page.slug}.md`)
       if (!existsSync(file)) continue
 
       for (const target of linksIn(readFileSync(file, 'utf8'))) {

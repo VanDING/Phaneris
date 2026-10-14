@@ -61,7 +61,7 @@ Host 只负责驱动和监督现有 backend。Pi SDK 继续承担自己的模型
 | [Durable Agent Runtime ADR](./durable-agent-runtime.md) | Runtime 的执行权威、T1/T2、不确定副作用、确定性投影、兼容迁移原则 | 本提案补充模块所有权，不放宽任何持久化不变量 |
 | [项目深度分析 §10](../archive/Phaneris_Project_Deep_Analysis.md#10-最大架构债sessionmanager) | “让 Durable Runtime 独立于 SessionManager 演进” | 九服务列表保留为职责盘点，不再作为必须创建的九个实现单元 |
 | [工作流排序 §1 / 第 5 步](../archive/workstream-sequencing-2026-10-06.md) | 串行迁移、首轮工具回归保护、避免同时改依赖和构建 | 将“只拆两个文件、纯移动”改为按执行边界设计；必要改动会涉及 bootstrap、task/decision adapters 和接口 |
-| [Target architecture](./durable-agent-runtime-target-architecture.md) | 各项复杂能力的激活条件 | 本次不自动激活 batch 表、资源调度器、自动 reconciler、工作区事务、分布式 lease 或 length continuation supervisor |
+| [Target architecture](../archive/durable-agent-runtime-target-architecture.md) | 各项复杂能力的激活条件 | 本次不自动激活 batch 表、资源调度器、自动 reconciler、工作区事务、分布式 lease 或 length continuation supervisor |
 | [历史实施交接](../archive/craftagent-durable-runtime-handoff.md) | 兼容数据、失败模型及原始设计依据 | 当前行为以源码和已接受 ADR 为准，不沿用历史中间状态 |
 
 旧排序规划中的“尚无代码改动”是当时的状态声明。当前已有 [Pi 1.1.0 实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)和[会话决策实施记录](../verification/session-decisions.md)，不能据旧表断定前置事项全部未做，也不能据后续记录默认本次基线已通过全部门禁。

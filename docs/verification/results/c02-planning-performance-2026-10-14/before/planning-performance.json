@@ -1,0 +1,441 @@
+{
+  "budget": {
+    "warmPlanningMs": 2000,
+    "inputTwoFramesMs": 250,
+    "rendererHeapBytes": 268435456,
+    "backendRssBytes": 1073741824
+  },
+  "samples": [
+    {
+      "repeat": 0,
+      "elapsedMs": 383.12899999998626,
+      "mount": {
+        "reads": [
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 11.565000000002328,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986638448
+          },
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 9.409500000001572,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986638464
+          }
+        ],
+        "pushes": [],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 5.893500000005588
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 7.070299999999406
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 153563136,
+          "heapTotal": 28078080,
+          "heapUsed": 32630628,
+          "external": 11630516,
+          "arrayBuffers": 1237519
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      },
+      "write": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 5.6137999999991735,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986639487
+          },
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 5.8166999999957625,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986639498
+          },
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 5.403299999998126,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986639688
+          },
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 7.324300000000221,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986639699
+          }
+        ],
+        "pushes": [
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791986639445
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791986639445
+          },
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791986639686
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791986639686
+          }
+        ],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 4.25959999999759
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 9.254800000002433
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 5.150399999998626
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 3.8729000000021188
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 5.073199999998906
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 5.564100000003236
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 147513344,
+          "heapTotal": 28144640,
+          "heapUsed": 32805474,
+          "external": 11768226,
+          "arrayBuffers": 1247624
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      }
+    },
+    {
+      "repeat": 1,
+      "elapsedMs": 300.729800000001,
+      "mount": {
+        "reads": [
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 9.986100000009174,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986641094
+          },
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 10.57829999999376,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986641113
+          }
+        ],
+        "pushes": [],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 8.14560000000347
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 9.854599999991478
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 147525632,
+          "heapTotal": 28128256,
+          "heapUsed": 32916889,
+          "external": 11855705,
+          "arrayBuffers": 1262812
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      },
+      "write": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 3.073099999994156,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986642094
+          },
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 7.180299999992712,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986642102
+          },
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 9.912299999996321,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986642308
+          },
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 11.686399999991409,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986642333
+          }
+        ],
+        "pushes": [
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791986642062
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791986642063
+          },
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791986642304
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791986642305
+          }
+        ],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 9.718599999992875
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 8.258700000005774
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 2.84419999999227
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 4.667799999995623
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 9.343900000007125
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 9.607799999997951
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 155054080,
+          "heapTotal": 30965760,
+          "heapUsed": 32938435,
+          "external": 11877704,
+          "arrayBuffers": 1274327
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      }
+    },
+    {
+      "repeat": 2,
+      "elapsedMs": 380.2158000000054,
+      "mount": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 7.214399999997113,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986643674
+          },
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 10.168699999994715,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986643689
+          }
+        ],
+        "pushes": [],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 6.945099999997183
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 9.12619999999879
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 151302144,
+          "heapTotal": 28129280,
+          "heapUsed": 32965340,
+          "external": 11896140,
+          "arrayBuffers": 1289513
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      },
+      "write": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 4.743400000006659,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986644778
+          },
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 7.693499999993946,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986644790
+          },
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 8.720300000000861,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791986644975
+          },
+          {
+            "channel": "calendar:list",
+            "workspaceId": "planning",
+            "elapsedMs": 13.02039999999397,
+            "bytes": 570817,
+            "rows": 507,
+            "startedAt": 1791986645001
+          }
+        ],
+        "pushes": [
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791986644733
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791986644734
+          },
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791986644972
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791986644973
+          }
+        ],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 10.320999999996275
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 11.734899999995832
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 4.427499999990687
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 5.443399999989197
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 8.105200000005425
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 10.598600000012084
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 158076928,
+          "heapTotal": 28179456,
+          "heapUsed": 32991959,
+          "external": 11919303,
+          "arrayBuffers": 1299617
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      }
+    }
+  ],
+  "checks": [],
+  "errors": []
+}

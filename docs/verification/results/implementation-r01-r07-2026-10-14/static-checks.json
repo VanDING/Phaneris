@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-14T06:29:38.934Z",
+  "checks": [
+    {
+      "name": "typecheck:all",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/typecheck-completion.log",
+      "sha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/lint-final-7.log",
+      "sha256": "5456b5d2f52829d76cabe1f10b4c5e3e097e2a3bc7f84e8e590535badd4064cc"
+    },
+    {
+      "name": "i18n parity/sorted/coverage/dead-keys",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/i18n-completion.log",
+      "sha256": "c1a9e0f079fcb2e99cc4b68b73d8aa3c6f43c49ddb883b8254d6be29a7406213"
+    },
+    {
+      "name": "identity:check",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/identity-completion.log",
+      "sha256": "93e791aa80ae8c52c0b97acc7440181664ff655dc6a602679bf630010383035c"
+    },
+    {
+      "name": "version:check",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/version-completion.log",
+      "sha256": "248460b0be2eed2ac46587ec9e81b9b2f998ab34591d203f07fcf616235b4ca4"
+    },
+    {
+      "name": "production renderer build",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/renderer-links-confirmed-build.log",
+      "sha256": "93466f65f13a2cabeba08384b51ceef2aae73351d088c6ca99656d60c96b8a96"
+    },
+    {
+      "name": "git diff --check",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/diff-check-completion.log",
+      "sha256": "e0fb60f6cf0747ed167b46ef63388b3aea4092cd2c9f630921a89791de0ba334"
+    },
+    {
+      "name": "TaskRunner existing tests (52)",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/taskrunner-isolated-completion.log",
+      "sha256": "50015aa82071654245550e241de8a61cc1c91cc422673dcd36d43f3a5635b375"
+    },
+    {
+      "name": "backup/context existing tests (16)",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/backup-context-completion.log",
+      "sha256": "33c88e03f5707c2475f1de63c5879cc067f3ad4622b554a317d4c81af64e92d5"
+    },
+    {
+      "name": "Markdown/linkify existing tests (78)",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/markdown-all-regression.log",
+      "sha256": "126b8d3b0a645cb10a06aa552c88636b4484a8c3ce7c119b301e101e7b299611"
+    },
+    {
+      "name": "check:docs",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/docs-sealed-completion.log",
+      "sha256": "1bbe966cb14c1e4df0fa6c2c8eda453b66bf31c8625f466c59fb03674a50d6d7"
+    },
+    {
+      "name": "critical registry preflight (38/6)",
+      "exitCode": 0,
+      "log": ".cache/implement-r01-r07/critical-preflight-completion.log",
+      "sha256": "3ae5a310ac942fa77cac302318fecd7fcd76b0b7b0c889c6ff1cc72b84b4f3c3"
+    }
+  ],
+  "nativeExpectedFault": "The single console error is the intentionally injected governance-native-fatal with its first cause.",
+  "limitation": "Scoped E2E and existing targeted tests; full test:critical/validate:full aggregates were not run."
+}

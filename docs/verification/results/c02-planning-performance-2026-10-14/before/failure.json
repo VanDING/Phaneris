@@ -1,0 +1,4 @@
+{
+  "message": "Calendar must load one shared WorkItem projection; preserve baseline metrics on failure",
+  "stack": "AssertionError [ERR_ASSERTION]: Calendar must load one shared WorkItem projection; preserve baseline metrics on failure\n    at <anonymous> (E:\\Phaneris\\scripts\\verification\\planning-performance-workflow.ts:70:5)\n    at async verificationWorkflow (E:\\Phaneris\\scripts\\verification\\verification-artifacts.ts:88:37)\n    at processTicksAndRejections (native:7:39)"
+}

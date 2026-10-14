@@ -1,0 +1,154 @@
+{
+  "checks": [
+    "windows-backslash",
+    "windows-dot-directory",
+    "windows-punctuation-directory",
+    "windows-reference",
+    "windows-encoded-backslash",
+    "windows-forward-slash",
+    "windows-unicode-space",
+    "file-url",
+    "literal-percent",
+    "relative-unicode",
+    "source-location",
+    "unix-root",
+    "raw-html-file",
+    "keyboard",
+    "middle-click",
+    "web-links-preserved",
+    "dangerous-html-and-spoofed-target-sanitized",
+    "safe-html-formatting-preserved"
+  ],
+  "details": [
+    {
+      "id": "windows-backslash",
+      "expected": "E:\\Phaneris\\docs\\report.md",
+      "actual": {
+        "files": [
+          "E:\\Phaneris\\docs\\report.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "windows-dot-directory",
+      "expected": "E:\\Phaneris\\.cache\\report.md",
+      "actual": {
+        "files": [
+          "E:\\Phaneris\\.cache\\report.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "windows-punctuation-directory",
+      "expected": "E:\\Phaneris\\_notes\\report.md",
+      "actual": {
+        "files": [
+          "E:\\Phaneris\\_notes\\report.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "windows-reference",
+      "expected": "E:\\Phaneris\\.cache\\report.md",
+      "actual": {
+        "files": [
+          "E:\\Phaneris\\.cache\\report.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "windows-encoded-backslash",
+      "expected": "E:\\Phaneris\\docs\\report.md",
+      "actual": {
+        "files": [
+          "E:\\Phaneris\\docs\\report.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "windows-forward-slash",
+      "expected": "E:/Phaneris/docs/report.md",
+      "actual": {
+        "files": [
+          "E:/Phaneris/docs/report.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "windows-unicode-space",
+      "expected": "E:\\项目\\季度 报告.txt",
+      "actual": {
+        "files": [
+          "E:\\项目\\季度 报告.txt"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "file-url",
+      "expected": "E:/项目/报告 final.pdf",
+      "actual": {
+        "files": [
+          "E:/项目/报告 final.pdf"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "literal-percent",
+      "expected": "E:/report%20literal.txt",
+      "actual": {
+        "files": [
+          "E:/report%20literal.txt"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "relative-unicode",
+      "expected": "./输出/报告.md",
+      "actual": {
+        "files": [
+          "./输出/报告.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "source-location",
+      "expected": "E:/Phaneris/src/main.ts",
+      "actual": {
+        "files": [
+          "E:/Phaneris/src/main.ts"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "unix-root",
+      "expected": "/tmp/report.md",
+      "actual": {
+        "files": [
+          "/tmp/report.md"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "id": "raw-html-file",
+      "expected": "E:/report.txt",
+      "actual": {
+        "files": [
+          "E:/report.txt"
+        ],
+        "urls": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-14",
+  "recordedAt": "2026-10-14T06:29:38.050Z",
+  "headSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+  "dirtyWorkingTree": true,
+  "retention": "Repository retains conclusions and selected JSON facts. Complete hashed media, databases and logs remain in the recorded cache directories; this directory is not a complete VerificationRun archive.",
+  "workflows": [
+    {
+      "id": "task-permission",
+      "passed": 9,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T01:59:01.220Z",
+      "finishedAt": "2026-10-14T01:59:04.154Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\task-permission-i4O1uK",
+      "manifestSha256": "1f65a8ea698a7d28e0e4f66ac06c0ddb068f53572af179ff78f0498436b4c215",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "R01-omitted-refuses-before-dispatch",
+        "R01-partial-refuses-entire-task",
+        "R01-explicit-safe",
+        "R01-explicit-ask",
+        "R01-explicit-guarded",
+        "R01-explicit-allow-all",
+        "R01-node-overrides-default",
+        "R01-every-node-can-declare-without-default",
+        "R01-legacy-resume-refuses-without-rewrite"
+      ],
+      "productSources": [
+        {
+          "path": "packages/server-core/src/tasks/TaskRunner.ts",
+          "sha256": "57139dfd3b70a6b7d6102fa10c575d9020664e028fa53d4bfe35ad58cf6d0d43"
+        },
+        {
+          "path": "packages/shared/src/tasks/schema.ts",
+          "sha256": "408277bbcbb937e8d7c95e99907d2ffe67b85f151f8bd453b6003af740e93307"
+        }
+      ],
+      "untested": [
+        "Actual provider/native policy checks are covered by the separate managed Pi capability workflows",
+        "Signing, physical devices and other operating systems"
+      ]
+    },
+    {
+      "id": "plugin-consistency",
+      "passed": 17,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T01:48:40.893Z",
+      "finishedAt": "2026-10-14T01:48:46.328Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\plugin-consistency-smgwb9",
+      "manifestSha256": "3fd8ef007b19a30a0c4657197ac683115f58a86f727b5a4815920d922bbe5292",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "native-roster-same-bytes",
+        "invalid-source-before-resource-write",
+        "header-is-not-bearer-auth",
+        "duplicate-source-rejected",
+        "extension-without-configuration-visible",
+        "native-source-readiness-is-not-live-connectivity",
+        "stdio-readiness-requires-an-executable-file",
+        "windows-opaque-arguments",
+        "watcher-healthy-content-refresh",
+        "install-confirmation-package",
+        "install-confirmation-target",
+        "install-confirmation-workspace",
+        "install-confirmation-reuse",
+        "install-confirmation-expiry",
+        "install-confirmation-competing",
+        "install-and-uninstall-one-use-plan",
+        "uninstall-stale-target-kept"
+      ],
+      "productSources": [
+        {
+          "path": "packages/shared/src/plugins/confirmation.ts",
+          "sha256": "edde9f6f6c22f196ac21dffeba2b6a6e5feb2a5024316e4576524cf3f8d853ac"
+        },
+        {
+          "path": "packages/shared/src/plugins/install.ts",
+          "sha256": "6d781256d47ac50ce4b7b7c6d5c9f41c9dfdd0b613cb6ba9b8c536d915035b87"
+        },
+        {
+          "path": "packages/shared/src/plugins/dto.ts",
+          "sha256": "8d2f1d77695b07247d6e9d25b7844b7697397e09dc5f013dec43be6fb9883410"
+        },
+        {
+          "path": "packages/shared/src/plugins/plugin-context.ts",
+          "sha256": "bd1f2760a0ffd06d5b6040ba0171aa0fe1e912aafc70375c4d9cc4541a8515ab"
+        },
+        {
+          "path": "packages/shared/src/plugins/resolve.ts",
+          "sha256": "5516c7bddfe59cc81f71d9bfbdef09dda443ec063e0692fd4bdf22a247cef609"
+        },
+        {
+          "path": "packages/shared/src/config/watcher.ts",
+          "sha256": "354ce72a9c224eb2448e6c475176649f532a20d4a51948880acfb3989b751429"
+        }
+      ],
+      "untested": [
+        "No real provider or credentials; live connection/authentication remains session-owned. Existing transaction/crash workflows cover rollback separately."
+      ]
+    },
+    {
+      "id": "workspace-recovery",
+      "passed": 10,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T01:35:00.594Z",
+      "finishedAt": "2026-10-14T01:35:05.225Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\workspace-recovery-JAQk4J",
+      "manifestSha256": "a4bd9d0d5eeb3621d7ba4fe2225067c67a389dabca5c76397efbc5011314d50e",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "session-and-owned-paths-restored",
+        "attachment-bytes-preserved",
+        "artifact-revisions-checkout-accept-only-restored-copy",
+        "restored-runtime-start-parks-unknown-effect-without-replay",
+        "existing-target-refused",
+        "refuse-checksum",
+        "refuse-path-escape",
+        "refuse-duplicate",
+        "process-termination-before-swap-preserves-target",
+        "original-workspace-unchanged"
+      ],
+      "productSources": [
+        {
+          "path": "packages/server-core/src/services/workspace-backup.ts",
+          "sha256": "e3a7ab03489cd70dd76191899d857c2be99b0a652239e6085fc977dfcfe39623"
+        }
+      ],
+      "untested": [
+        "External content roots and global credential/config stores are outside a workspace backup. Historical Runtime payload paths remain historical facts. Native UI acceptance is a separate production-build workflow."
+      ]
+    },
+    {
+      "id": "runtime-reliability",
+      "passed": 10,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T05:43:57.063Z",
+      "finishedAt": "2026-10-14T05:44:17.464Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\runtime-reliability-F3Iqk9",
+      "manifestSha256": "be6952e5e0f7f6b88b5b8c37389d37200c321a66749656ccca13e0aeaee5c052",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "persisted-repeated-action",
+        "persisted-repeated-error",
+        "polling-separated",
+        "unsettled-age",
+        "terminal-count",
+        "unknown-cost-and-acceptance",
+        "order-and-duplicate-invariant",
+        "observer-failure-isolated",
+        "fresh-process-deterministic-rebuild",
+        "retained-facts-beyond-first-page"
+      ],
+      "productSources": [
+        {
+          "path": "packages/server-core/src/observability/reliability-report.ts",
+          "sha256": "74c9028b9d0aef4e5eb00e712b5e0d5954da1a53eca89c8924f6fde2e89528fa"
+        }
+      ],
+      "untested": [
+        "Signals establish repetition only; they do not infer user progress or trigger intervention. SDK retry/compaction observations are classified separately when recorded."
+      ]
+    },
+    {
+      "id": "task-file-scope",
+      "passed": 11,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T01:58:57.380Z",
+      "finishedAt": "2026-10-14T01:59:00.026Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\task-file-scope-qBcxjg",
+      "manifestSha256": "aa883ba2fe459d10d4c18c78ee9cc1f7cd63d46a26ff94df587a33dd7a69fddf",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "undeclared-serializes",
+        "same-path-serializes",
+        "ancestor-path-serializes",
+        "read-write-serializes",
+        "case-alias-serializes",
+        "junction-alias-serializes",
+        "readers-parallel",
+        "disjoint-writes-parallel",
+        "cross-run-failed-releases",
+        "cross-run-cancelled-releases",
+        "restart-cannot-change-declarations"
+      ],
+      "productSources": [
+        {
+          "path": "packages/server-core/src/tasks/TaskRunner.ts",
+          "sha256": "57139dfd3b70a6b7d6102fa10c575d9020664e028fa53d4bfe35ad58cf6d0d43"
+        },
+        {
+          "path": "packages/server-core/src/tasks/file-scopes.ts",
+          "sha256": "8c222aa4219296d8f0fde3f10eb08fce3cdcc1fbcd464c5ec89932e57a91d4e5"
+        },
+        {
+          "path": "packages/shared/src/tasks/schema.ts",
+          "sha256": "408277bbcbb937e8d7c95e99907d2ffe67b85f151f8bd453b6003af740e93307"
+        }
+      ],
+      "untested": [
+        "Scope declarations coordinate TaskRunner nodes; they are not an OS sandbox and cannot constrain an agent that violates its declaration."
+      ]
+    },
+    {
+      "id": "gantt-reschedule",
+      "passed": 14,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T05:43:54.628Z",
+      "finishedAt": "2026-10-14T05:46:54.780Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\gantt-reschedule-jPoH0q",
+      "manifestSha256": "945560a51d660d3b874d24daff0cb76ea07f65fc5604febc4b0710da6b026edc",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "keyboard-opens-date-controls",
+        "inclusive-end-saved-through-real-session-planning",
+        "keyboard-cancel-does-not-write",
+        "pointer-drag-commits-once",
+        "resize-preserves-start-and-inclusive-end",
+        "escape-cancels-pointer-reschedule",
+        "pointer-cancellation-does-not-write",
+        "save-failure-rolls-back-and-reports",
+        "broadcast-and-remount-preserve-inflight-reschedule",
+        "summaries-and-milestones-are-readonly",
+        "dst-clock-seconds-and-untouched-end-preserved",
+        "single-day-inclusive-range-preserved",
+        "filtered-out-children-do-not-make-summary-editable",
+        "nonexistent-dst-clock-refused-without-write"
+      ],
+      "productSources": [
+        {
+          "path": "apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+          "sha256": "c691371a4522dc3b97cd3d823be52ecd99836ffa19ab8950317af2b7e4f90e48"
+        },
+        {
+          "path": "apps/electron/src/renderer/components/app-shell/kanban/gantt-rescheduling.ts",
+          "sha256": "e1eca3742dfee3bac0d29592f77f8121ae0b107eb306169613fc291868fcef42"
+        },
+        {
+          "path": "apps/electron/src/renderer/components/app-shell/kanban/gantt-overrides.css",
+          "sha256": "77a5d89147a1c35611b2b8a20458816a47ed9b642d0afc68586c39531a5f208b"
+        },
+        {
+          "path": "packages/shared/src/work-items/timeline.ts",
+          "sha256": "1d635137275df865d6e992843c3a82d1fee75045fb4e6a407d326b3bcec30b29"
+        }
+      ],
+      "untested": [
+        "Browser over real Gantt and real WorkItem handler/SessionManager; loopback bridge replaces transport only. Physical touch and signed builds are separate."
+      ]
+    },
+    {
+      "id": "docs-locale",
+      "passed": 52,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T06:18:27.546Z",
+      "finishedAt": "2026-10-14T06:20:03.712Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\docs-locale-97NfKK",
+      "manifestSha256": "0f74f3bf72533cecf22dda0dc395d5abb38d05c7292607a6becbfdc99f98e0bd",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "zh-page:getting-started/introduction",
+        "zh-page:getting-started/installation",
+        "zh-page:core-concepts/conversations",
+        "zh-page:core-concepts/projects",
+        "zh-page:core-concepts/working-directory",
+        "zh-page:core-concepts/permissions",
+        "zh-page:core-concepts/interactions",
+        "zh-page:sources/overview",
+        "zh-page:sources/mcp-servers",
+        "zh-page:sources/apis",
+        "zh-page:sources/local-filesystems",
+        "zh-page:skills/overview",
+        "zh-page:plugins/overview",
+        "zh-page:statuses/overview",
+        "zh-page:statuses/customizing",
+        "zh-page:labels/overview",
+        "zh-page:labels/auto-rules",
+        "zh-page:automations/overview",
+        "zh-page:messaging/overview",
+        "zh-page:messaging/telegram",
+        "zh-page:messaging/whatsapp",
+        "zh-page:messaging/lark",
+        "zh-page:messaging/wechat-wecom",
+        "zh-page:browser/overview",
+        "zh-page:browser/examples",
+        "zh-page:browser/api-discovery",
+        "zh-page:customisation/themes",
+        "zh-page:customisation/colors",
+        "zh-page:customisation/icons",
+        "zh-page:go-further/workspaces",
+        "zh-page:go-further/pages",
+        "zh-page:go-further/kanban",
+        "zh-page:go-further/tasks",
+        "zh-page:go-further/rich-output",
+        "zh-page:go-further/document-tools",
+        "zh-page:go-further/connect-to-anything",
+        "zh-page:go-further/deep-links",
+        "zh-page:go-further/performance",
+        "zh-page:server/remote-server",
+        "zh-page:reference/config-file",
+        "zh-page:reference/preferences",
+        "zh-page:reference/llm-connections",
+        "zh-page:reference/custom-endpoint",
+        "zh-page:reference/credentials",
+        "zh-page:reference/network-proxy",
+        "zh-page:reference/environment-variables",
+        "zh-page:reference/cli-reference",
+        "chinese-search-and-navigation",
+        "internal-deep-link-retains-locale",
+        "english-switch-preserves-slug",
+        "narrow-keyboard-navigation",
+        "escape-closes-reader"
+      ],
+      "productSources": [
+        {
+          "path": "apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
+          "sha256": "4b687bb2eaa84d4e4b18ad5b05ad1799f1fa2428d4d6c9aa14c142ded73850e9"
+        },
+        {
+          "path": "apps/electron/src/renderer/docs/manifest.ts",
+          "sha256": "8ad21a60b6a20419185a0e56e72727ca869371353292bd2960706fa8b7d2b6be"
+        }
+      ],
+      "untested": [
+        "Browser reader and compiled content; external support sites and other locales were not added."
+      ]
+    },
+    {
+      "id": "markdown-file-links",
+      "passed": 18,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T06:16:48.589Z",
+      "finishedAt": "2026-10-14T06:17:37.121Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\markdown-file-links-yF0hhD",
+      "manifestSha256": "2b17e68a14bdfc308d17a5eaca3cc5faee621e71f6090008b02a052d9b265369",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "windows-backslash",
+        "windows-dot-directory",
+        "windows-punctuation-directory",
+        "windows-reference",
+        "windows-encoded-backslash",
+        "windows-forward-slash",
+        "windows-unicode-space",
+        "file-url",
+        "literal-percent",
+        "relative-unicode",
+        "source-location",
+        "unix-root",
+        "raw-html-file",
+        "keyboard",
+        "middle-click",
+        "web-links-preserved",
+        "dangerous-html-and-spoofed-target-sanitized",
+        "safe-html-formatting-preserved"
+      ],
+      "productSources": [
+        {
+          "path": "packages/ui/src/components/markdown/Markdown.tsx",
+          "sha256": "8d38ed6f369c06e21357708b21bc84e702a654ba2289b66a0c105b4678129983"
+        },
+        {
+          "path": "packages/ui/src/components/markdown/link-target.ts",
+          "sha256": "87654e25f2a706d45e73af764af309757060cc23193b70c5018b80e22144001d"
+        },
+        {
+          "path": "packages/ui/src/components/markdown/linkify.ts",
+          "sha256": "4e854eaebe9a94df31dd7096e6d091292eebb623514e6af526eaa7b6a3568051"
+        },
+        {
+          "path": "packages/ui/src/components/markdown/remark-file-links.ts",
+          "sha256": "418a56c4f3a90deab6e3317889abab29791055601aa853542d44228557b54d0c"
+        }
+      ],
+      "untested": [
+        "Callback routing uses the actual shared Markdown component. Native production workflow separately verifies real file loading."
+      ]
+    },
+    {
+      "id": "native-client",
+      "passed": 27,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T06:19:53.542Z",
+      "finishedAt": "2026-10-14T06:21:38.443Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\native-client-JDiMTy",
+      "manifestSha256": "d19f66052c44a5400532f60ed32fb0b5185b9596c7d798a1482970156ac01dc5",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "native main/preload initializes transport before business renderer",
+        "native RPC facade reads the same persisted domain fixture",
+        "native session switching preserves separate persisted drafts",
+        "native language change retains current input draft",
+        "native keyboard activation preserves draft ownership",
+        "native workspace switch updates the host binding",
+        "native rapid workspace switch flushes pending composer and persistence timers",
+        "native reconnect retains the second workspace binding",
+        "native returning workspace restores its draft",
+        "native reconnect preserves accepted workspace and session facts",
+        "restored production desktop parks T1 without T2 and shows Run facts",
+        "long-session theme switching preserves the restored Artifact editor",
+        "restored Artifact checkout saves submits and accepts through production UI",
+        "production plugin details distinguish materialized skills and unready sources",
+        "production RPC installs the workspace-bound confirmation snapshot",
+        "electron permission waits before real file effect",
+        "electron permission approval completes real Pi write",
+        "electron preview reads the actual written file",
+        "electron answer links open Unicode spaced files through all six path forms",
+        "electron real SubmitPlan card accepts and continues once",
+        "electron actual response cancellation returns the session to idle",
+        "electron reconnect preserves and persists the latest queued draft",
+        "electron reconnect and history merge preserve single user and plan facts",
+        "native 1280px reduced-motion layout",
+        "native 420px reduced-motion layout",
+        "native main fatal rejection preserves its cause and exits nonzero within the original deadline",
+        "original-workspace-remains-unchanged-after-native-recovery"
+      ],
+      "productSources": [
+        {
+          "path": "packages/server-core/src/services/workspace-backup.ts",
+          "sha256": "e3a7ab03489cd70dd76191899d857c2be99b0a652239e6085fc977dfcfe39623"
+        },
+        {
+          "path": "packages/server-core/src/observability/reliability-report.ts",
+          "sha256": "74c9028b9d0aef4e5eb00e712b5e0d5954da1a53eca89c8924f6fde2e89528fa"
+        },
+        {
+          "path": "packages/ui/src/components/markdown/Markdown.tsx",
+          "sha256": "8d38ed6f369c06e21357708b21bc84e702a654ba2289b66a0c105b4678129983"
+        },
+        {
+          "path": "packages/ui/src/components/markdown/link-target.ts",
+          "sha256": "87654e25f2a706d45e73af764af309757060cc23193b70c5018b80e22144001d"
+        },
+        {
+          "path": "packages/ui/src/components/markdown/linkify.ts",
+          "sha256": "4e854eaebe9a94df31dd7096e6d091292eebb623514e6af526eaa7b6a3568051"
+        },
+        {
+          "path": "packages/ui/src/components/markdown/remark-file-links.ts",
+          "sha256": "418a56c4f3a90deab6e3317889abab29791055601aa853542d44228557b54d0c"
+        }
+      ],
+      "untested": [
+        "signed installers and other operating systems",
+        "live external provider/OAuth",
+        "physical mobile touch"
+      ]
+    },
+    {
+      "id": "plugin-transaction",
+      "passed": 13,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T01:44:28.378Z",
+      "finishedAt": "2026-10-14T01:45:34.245Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\plugin-transaction-sJ4imC",
+      "manifestSha256": "2e98c831ebffa23a8b4c0257f1a02e85c5a555789dfd894068bc3073196f2547",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "skill-copy",
+        "skill-rename",
+        "source-backup-copy",
+        "package-backup-copy",
+        "package-rename",
+        "backup-cleanup",
+        "credentials-before-rollback",
+        "missing-backup",
+        "index-write",
+        "index-invalidate",
+        "audit-write",
+        "credential-cleanup",
+        "success"
+      ],
+      "productSources": [],
+      "untested": [
+        "SIGKILL/power loss during installation",
+        "concurrent installation of the same plugin",
+        "Windows/Linux native filesystem"
+      ]
+    },
+    {
+      "id": "durable-runtime-crash",
+      "passed": 8,
+      "exitCode": 0,
+      "startedAt": "2026-10-14T01:40:18.311Z",
+      "finishedAt": "2026-10-14T01:40:26.867Z",
+      "directory": "E:\\Phaneris\\.cache\\verification\\durable-runtime-crash-p2CbyZ",
+      "manifestSha256": "154ae1a8e25fae3ee9fbe84742ba5aeebd3d08dbdd1471794d5415ab397ef52c",
+      "sourceHeadSha": "19e730ffe29ab9c99c6b2705a3fedef147240777",
+      "lockfileSha256": "79a3e94a006dfa9e68416e3c43e007d92dcdd9d9b1d1f0eb9fe966de1cae6a40",
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      },
+      "sceneIds": [
+        "tool-t1-failure",
+        "tool-after-t1",
+        "tool-after-effect",
+        "tool-after-t2",
+        "model-t1-failure",
+        "model-after-t1",
+        "model-after-effect",
+        "model-after-t2"
+      ],
+      "productSources": [],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ]
+    }
+  ]
+}

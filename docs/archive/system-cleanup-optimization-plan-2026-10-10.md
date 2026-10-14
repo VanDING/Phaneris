@@ -2,7 +2,7 @@
 
 > 归档说明（2026-10-13）：本文是当时的实施／评估记录，已移入 `docs/archive/`，不再更新；正文与结论保留原样，其中的「当前」「下一步」等表述以文首日期为准。
 
-2026-10-11 完整裁定：原 A–F/H 验收保持；G 的配置/Pi 切口已由[治理总计划](../process/architecture-code-governance-implementation-plan-2026-10-11.md) G3/G5 实施，当前结果见[完整台账](../process/governance-completion-2026-10-11.md)。以下规划正文保留历史基线，不再作为当前待批队列。
+2026-10-11 完整裁定：原 A–F/H 验收保持；G 的配置/Pi 切口已由[治理总计划](architecture-code-governance-implementation-plan-2026-10-11.md) G3/G5 实施，当前结果见[完整台账](../process/governance-completion-2026-10-11.md)。以下规划正文保留历史基线，不再作为当前待批队列。
 
 计划日期：2026-10-10（Asia/Shanghai）
 源码基线：`61970997`；工作树另有 2 个未提交文件（`docs/verification/results/packaged-client-smoke.json`、`packaged-client-verification.json`）
@@ -139,7 +139,7 @@ Durable Runtime 独立改变的是**所有权层**，并留下仓库里复用价
 
 `packages/shared/src/automations/types.ts:40` 起：`AGENT_EVENTS` 声明 13 个生命周期钩子，其中约 7 个（`Notification`、`SessionEnd`、`SubagentStart`、`SubagentStop`、`PreCompact`、`PermissionRequest`、`Setup`）在词汇表与匹配器之外**没有任何 emitter**。
 
-用户据此可以配出永远不会运行的自动化，而文档在宣传这个能力（[agentic-interception-design.md](../process/agentic-interception-design.md) 已把"8/13 事件无 emitter""文档宣传 no-op"记为 live defect）。
+用户据此可以配出永远不会运行的自动化，而文档在宣传这个能力（[agentic-interception-design.md](agentic-interception-design.md) 已把"8/13 事件无 emitter""文档宣传 no-op"记为 live defect）。
 
 **仓库已有可复制的模式**：`packages/shared/src/protocol/routing.ts` 的穷尽性测试——新增 channel 未分类即 CI 失败。给 `AutomationEvent` 加同样的门禁即可永久关掉这类问题。
 
@@ -149,7 +149,7 @@ Durable Runtime 独立改变的是**所有权层**，并留下仓库里复用价
 
 | 文档 | 实际 |
 |---|---|
-| [plugin-system-review-and-roadmap.md](../process/plugin-system-review-and-roadmap.md)：3 个 P0 记为 open | 已在 `c89614a5` 修好（`install.ts` 的 stage-then-swap、`paths.ts:5-9,34-37` 的 slug 校验、`install.ts:780-789` 的卸载阻断）。**但留了 2 个真 residual**：`install.ts:477-484` 的备份清理在 `try` 内，`rmSync` 失败会回滚一次成功安装，且 `:498-499` 在备份已删的情况下直接删 `targetDir` 而不恢复；凭据清理没有延后（`packages/shared/src/sources/storage.ts:151-152,160-177`）。另外 P0-3 的新抛错无测试覆盖 |
+| [plugin-system-review-and-roadmap.md](plugin-system-review-and-roadmap.md)：3 个 P0 记为 open | 已在 `c89614a5` 修好（`install.ts` 的 stage-then-swap、`paths.ts:5-9,34-37` 的 slug 校验、`install.ts:780-789` 的卸载阻断）。**但留了 2 个真 residual**：`install.ts:477-484` 的备份清理在 `try` 内，`rmSync` 失败会回滚一次成功安装，且 `:498-499` 在备份已删的情况下直接删 `targetDir` 而不恢复；凭据清理没有延后（`packages/shared/src/sources/storage.ts:151-152,160-177`）。另外 P0-3 的新抛错无测试覆盖 |
 | [workstream-sequencing-2026-10-06.md](./workstream-sequencing-2026-10-06.md) §1.1：`ensureSubprocess` 竞态是"最强约束" | 已由 `722a2c0f` 修好；`packages/shared/src/agent/pi-agent.ts:532-542` 现在 `await` 完整的 `subprocessStartup`（即该文档 §2 第 1 步的"方向 A"），门禁为 `scripts/verification/pi-110-startup-workflow.ts` |
 | [overview.md](../architecture/overview.md) §10 第 4 行：Pi SDK 实际 1.0.2 | 全部已是 **1.1.0**（`packages/shared/package.json:93-95`、`packages/pi-agent-server/package.json:17-21`、`packages/server-core/package.json:31`、根 `package.json:171-172`；`docs/guides/pi-kernel.md:7,21` 与 `apps/electron/README.md:26` 均已更新）。只剩 §10 自己这一格还写着 1.0.2 |
 
@@ -159,7 +159,7 @@ Durable Runtime 独立改变的是**所有权层**，并留下仓库里复用价
 |---|---|
 | workstream-sequencing 第 2 步（Guarded 低争议修正） | 4 项**全部仍 open**：`mode-manager.ts:471-472` 注释仍与 fail-closed 实现矛盾（实现见 `packages/server-core/src/decisions/guarded-mode.ts:219-227,233,235-243`）；`risks` 徽章通道仍在（UI `PermissionRequest.tsx:34,70-72`）而 Guarded 仍不填 `risks`（`guarded-mode.ts:238-244`），独立填充路径被默认关闭的 `riskBadges` 门住（`SessionManager.ts:4961,4964-4971`、`packages/shared/src/decisions/settings.ts:122`）；`Execute:` 前缀仍与 `allow-all` 的 `displayName` 撞名（`guarded-mode.ts:135`、`packages/shared/src/agent/core/pre-tool-use.ts:1102`、`packages/shared/src/agent/mode-types.ts:400-401`） |
 | workstream-sequencing 第 3 步（Guarded 判定夹具） | **不存在**：`guarded-refinement-workflow.ts:11-15` 仍用固定 `.01`/`.99` 应答驱动，`scripts/verification/` 内无 risk-level 夹具、无 `$(` 用例、无 `expectedRisk` 符号。`GUARDED_MODE_RISK_THRESHOLD` 仍为 0.8（`guarded-mode.ts:18`） |
-| [product-development-directions-2026-09-19.md](../process/product-development-directions-2026-09-19.md) 两项遗留 | 均 open：`TaskRunner.ts:203` 的 `AUTONOMOUS_DEFAULT_MODE = 'allow-all'` 兜底仍在（应用于 `:572`，被 `TaskRunner.test.ts:249-260` 钉住；`packages/shared/src/config/storage.ts:161` 也把它列入默认可循环模式）；completion-rate 指标不存在（全仓无 `completionRate`/`verifiedCompletion` 符号） |
+| [product-development-directions-2026-09-19.md](product-development-directions-2026-09-19.md) 两项遗留 | 均 open：`TaskRunner.ts:203` 的 `AUTONOMOUS_DEFAULT_MODE = 'allow-all'` 兜底仍在（应用于 `:572`，被 `TaskRunner.test.ts:249-260` 钉住；`packages/shared/src/config/storage.ts:161` 也把它列入默认可循环模式）；completion-rate 指标不存在（全仓无 `completionRate`/`verifiedCompletion` 符号） |
 
 **C. overview.md 自身在边界工程后已过期**（该文档标注"最后核对 2026-10-06"）
 
@@ -265,13 +265,13 @@ playground 从生产构建入口移除（`apps/electron/vite.config.ts:71`）；
 
 ## 5. 明确不做
 
-沿用 [durable-runtime-boundary.md](../architecture/durable-runtime-boundary.md) §11 与 [target architecture](../architecture/durable-agent-runtime-target-architecture.md) 的激活条件：
+沿用 [durable-runtime-boundary.md](../architecture/durable-runtime-boundary.md) §11 与 [target architecture](durable-agent-runtime-target-architecture.md) 的激活条件：
 
 - 九服务重拆、`shared` 包拆分；
 - 第二个 agent 后端、分布式执行 / lease / fencing；
 - 自动 length 续跑（continuation supervisor）；
 - 未测 parity 的读模型切换；
-- GPUIX 原生前端迁移（[研究结论](../research/native-frontend-migration-gpuix-assessment.md) 未采用任何路线）；
+- GPUIX 原生前端迁移（[研究结论](native-frontend-migration-gpuix-assessment.md) 未采用任何路线）；
 - 把 SessionManager 的剩余行数当作验收指标。
 
 ---

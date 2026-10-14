@@ -1,0 +1,60 @@
+{
+  "reads": [
+    {
+      "channel": "workItems:list",
+      "workspaceId": "planning",
+      "elapsedMs": 9.792900000000373,
+      "bytes": 1216216,
+      "rows": 1000,
+      "startedAt": 1791989118224
+    },
+    {
+      "channel": "workItems:list",
+      "workspaceId": "planning",
+      "elapsedMs": 10.611900000003516,
+      "bytes": 1216216,
+      "rows": 1000,
+      "startedAt": 1791989118741
+    }
+  ],
+  "failedReads": 0,
+  "failedWrites": 0,
+  "pushes": [
+    {
+      "channel": "workItems:changed",
+      "workspaceId": "planning",
+      "at": 1791989118213
+    },
+    {
+      "channel": "calendar:changed",
+      "workspaceId": "planning",
+      "at": 1791989118214
+    }
+  ],
+  "projections": [
+    {
+      "rows": 1005,
+      "elapsedMs": 5.579200000007404
+    },
+    {
+      "rows": 1003,
+      "elapsedMs": 9.239900000000489
+    },
+    {
+      "rows": 1003,
+      "elapsedMs": 10.026799999992363
+    }
+  ],
+  "inFlight": 0,
+  "maxInFlight": 1,
+  "held": false,
+  "memory": {
+    "rss": 152711168,
+    "heapTotal": 29004800,
+    "heapUsed": 32174071,
+    "external": 10920173,
+    "arrayBuffers": 395269
+  },
+  "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+  "count": 1000
+}

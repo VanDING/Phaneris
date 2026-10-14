@@ -1,0 +1,62 @@
+bun test v1.4.2 (744846f84)
+
+packages\shared\src\work-items\__tests__\plan-date.test.ts:
+(pass) planDateKey — accepted forms > treats a date-only value as date-only (never shifts across time zones) [21.32ms]
+(pass) planDateKey — accepted forms > reads a local date-time without an offset as that local day [0.36ms]
+(pass) planDateKey — accepted forms > accepts a space separator between date and time [0.06ms]
+(pass) planDateKey — accepted forms > resolves an offset-bearing value to the LOCAL day of that instant [0.37ms]
+(pass) planDateKey — accepted forms > does not return the naive UTC slice for an offset-bearing value [0.12ms]
+(pass) planDateKey — rejected forms > rejects a non-zero-padded date instead of passing it through [0.09ms]
+(pass) planDateKey — rejected forms > rejects calendar-impossible dates [0.07ms]
+(pass) planDateKey — rejected forms > rejects out-of-range clock components [0.04ms]
+(pass) planDateKey — rejected forms > rejects free-form and compact values [3.23ms]
+(pass) planTimeOfDay > returns undefined for date-only values (all-day) [0.28ms]
+(pass) planTimeOfDay > reads the clock from every accepted timed form [0.18ms]
+(pass) planTimeOfDay > keeps midnight as a real time rather than collapsing it to all-day [0.05ms]
+(pass) planTimeOfDay > converts an offset-bearing value to the LOCAL clock [0.10ms]
+(pass) planTimeOfDay > returns undefined for malformed values [0.04ms]
+(pass) isValidPlanValue > accepts absent and every valid form [0.12ms]
+(pass) isValidPlanValue > rejects every malformed form the server used to accept [0.07ms]
+(pass) planDayKeyFromDate > zero-pads every component [0.09ms]
+(pass) isoWeekNumber > matches independently derived ISO-8601 week numbers [2.08ms]
+(pass) isoWeekNumber > never returns a week outside 1..53 [10.31ms]
+(pass) isoWeekNumber > is stable across every day of a single ISO week and steps at the boundary [0.25ms]
+(pass) planRangeError > accepts an absent or one-sided range [0.59ms]
+(pass) planRangeError > accepts a well-ordered range, including a single day [0.35ms]
+(pass) planRangeError > refuses an end before the start [0.31ms]
+(pass) planRangeError > refuses a value the projections could not interpret [0.18ms]
+
+packages\shared\src\work-items\__tests__\query.test.ts:
+(pass) queryWorkItems > shares project, search, schedule and archive filtering [0.87ms]
+(pass) queryWorkItems > matches tasks that intersect an inclusive calendar-day range [0.40ms]
+(pass) queryWorkItems > sorts stably [0.45ms]
+(pass) WorkItem query helpers > reconciles selection without reordering it [0.23ms]
+
+packages\shared\src\work-items\__tests__\timeline.test.ts:
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > returns undefined when the item carries no planning date [0.17ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > spans exactly one day when only a due date is known [0.89ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > spans exactly one day when only a start date is known [0.15ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > spans exactly one day for a zero-length task (start === due) [0.09ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > includes the due day: a 5-day task is 5 days, not 4 [0.08ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > includes the due day at every length [0.35ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > spans the plan-mentioned 161-day case as 161 days [0.31ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > crosses month and year boundaries as calendar days [0.18ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > includes 29 February of a leap year [0.30ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > never produces a negative or zero span when start is after due [0.17ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > ignores malformed values instead of producing NaN [0.09ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > falls back to the parseable side when only one value is malformed [0.12ms]
+(pass) toTimelineRange — inclusive due date becomes an exclusive boundary > normalizes a timed value to whole days [0.15ms]
+(pass) timelineDayCount — calendar arithmetic, not milliseconds > lands endExclusive exactly on local midnight across both DST directions [1.59ms]
+(pass) timelineDayCount — calendar arithmetic, not milliseconds > counts a multi-day span across the spring-forward day without losing one [0.60ms]
+(pass) timelineDayCount — calendar arithmetic, not milliseconds > covers every consecutive day exactly once across a DST boundary [4.09ms]
+(pass) timelineDayCount — calendar arithmetic, not milliseconds > agrees with the calendar difference for every length 1..40 through the real path [2.96ms]
+(pass) fromTimelineRange — write path > converts an exclusive boundary back to an inclusive due date [0.24ms]
+(pass) fromTimelineRange — write path > round-trips every range produced by toTimelineRange [0.64ms]
+(pass) fromTimelineRange — write path > round-trips across the DST boundary without drifting [0.37ms]
+(pass) fromTimelineRange — write path > clamps a zero or inverted span to a single day [0.15ms]
+(pass) fromTimelineRange — write path > zero-pads every component [0.08ms]
+
+ 50 pass
+ 0 fail
+ 3293 expect() calls
+Ran 50 tests across 3 files. [319.00ms]

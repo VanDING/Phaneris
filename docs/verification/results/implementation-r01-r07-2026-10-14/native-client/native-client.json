@@ -1,0 +1,40 @@
+{
+  "passed": 27,
+  "checks": [
+    "native main/preload initializes transport before business renderer",
+    "native RPC facade reads the same persisted domain fixture",
+    "native session switching preserves separate persisted drafts",
+    "native language change retains current input draft",
+    "native keyboard activation preserves draft ownership",
+    "native workspace switch updates the host binding",
+    "native rapid workspace switch flushes pending composer and persistence timers",
+    "native reconnect retains the second workspace binding",
+    "native returning workspace restores its draft",
+    "native reconnect preserves accepted workspace and session facts",
+    "restored production desktop parks T1 without T2 and shows Run facts",
+    "long-session theme switching preserves the restored Artifact editor",
+    "restored Artifact checkout saves submits and accepts through production UI",
+    "production plugin details distinguish materialized skills and unready sources",
+    "production RPC installs the workspace-bound confirmation snapshot",
+    "electron permission waits before real file effect",
+    "electron permission approval completes real Pi write",
+    "electron preview reads the actual written file",
+    "electron answer links open Unicode spaced files through all six path forms",
+    "electron real SubmitPlan card accepts and continues once",
+    "electron actual response cancellation returns the session to idle",
+    "electron reconnect preserves and persists the latest queued draft",
+    "electron reconnect and history merge preserve single user and plan facts",
+    "native 1280px reduced-motion layout",
+    "native 420px reduced-motion layout",
+    "native main fatal rejection preserves its cause and exits nonzero within the original deadline",
+    "original-workspace-remains-unchanged-after-native-recovery"
+  ],
+  "uiCheckCount": 26,
+  "errors": [],
+  "consoleErrors": [
+    {
+      "type": "error",
+      "text": "14:21:34.984 (main) › unhandledRejection: [electron] Error: governance-native-fatal\n    at Timeout.eval [as _onTimeout] (eval at evaluate (:311:30), <anonymous>:2:46)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)\nCaused by: Error: governance-native-first-cause\n    at Timeout.eval [as _onTimeout] (eval at evaluate (:311:30), <anonymous>:2:92)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+    }
+  ]
+}

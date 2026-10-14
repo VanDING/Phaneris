@@ -1,0 +1,38 @@
+[
+  {
+    "id": "R01-omitted-refuses-before-dispatch",
+    "pass": true
+  },
+  {
+    "id": "R01-partial-refuses-entire-task",
+    "pass": true
+  },
+  {
+    "id": "R01-explicit-safe",
+    "pass": true
+  },
+  {
+    "id": "R01-explicit-ask",
+    "pass": true
+  },
+  {
+    "id": "R01-explicit-guarded",
+    "pass": true
+  },
+  {
+    "id": "R01-explicit-allow-all",
+    "pass": true
+  },
+  {
+    "id": "R01-node-overrides-default",
+    "pass": true
+  },
+  {
+    "id": "R01-every-node-can-declare-without-default",
+    "pass": true
+  },
+  {
+    "id": "R01-legacy-resume-refuses-without-rewrite",
+    "pass": true
+  }
+]

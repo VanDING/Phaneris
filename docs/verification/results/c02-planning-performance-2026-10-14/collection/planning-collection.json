@@ -1,0 +1,147 @@
+{
+  "checks": [
+    "strict-mode-two-hooks-one-read-and-subscription",
+    "late-read-keeps-successful-write-and-unmodified-rows",
+    "late-read-preserves-create-and-delete-tombstone",
+    "ten-invalidations-one-follow-up-no-overlapping-reads",
+    "late-old-workspace-read-cannot-pollute-new-scope",
+    "late-old-workspace-write-cannot-pollute-new-scope",
+    "read-failure-retains-items-and-explicit-retry-recovers",
+    "calendar-rejected-write-throws-and-keeps-snapshot",
+    "invalid-calendar-range-rejected-before-writing",
+    "calendar-create-retains-local-times-inclusive-end-note-project",
+    "calendar-update-all-day-and-clears-omitted-optional-fields",
+    "clear-schedule-keeps-work-item-and-session-identity",
+    "connection-transition-revalidates-once",
+    "last-unsubscribe-releases-both-listeners-and-stops-reads",
+    "remount-revalidates-retained-cache-once",
+    "initial-read-merges-successful-write-with-all-other-rows",
+    "null-workspace-has-no-stale-projection"
+  ],
+  "metrics": {
+    "reads": [
+      "one",
+      "one",
+      "one",
+      "one",
+      "one",
+      "one",
+      "two",
+      "one",
+      "two",
+      "one",
+      "one",
+      "one",
+      "one",
+      "one",
+      "initial"
+    ],
+    "activeReads": 0,
+    "maxActiveReads": 2,
+    "writes": 9,
+    "holdRead": false,
+    "holdWrite": false,
+    "failRead": false,
+    "failWrite": false,
+    "listeners": 0,
+    "transportListeners": 0,
+    "heldRead": false,
+    "heldWrite": false
+  },
+  "facts": [
+    [
+      "one",
+      [
+        {
+          "id": "a",
+          "title": "Changed while inactive",
+          "statusId": "todo",
+          "dependencyIds": [],
+          "sessionIds": [
+            "a"
+          ],
+          "createdAt": 1,
+          "updatedAt": 1
+        },
+        {
+          "id": "created",
+          "title": "Changed while inactive",
+          "statusId": "todo",
+          "startAt": "2026-10-14",
+          "dueAt": "2026-10-15",
+          "dependencyIds": [],
+          "sessionIds": [
+            "created"
+          ],
+          "createdAt": 1,
+          "updatedAt": 1
+        },
+        {
+          "id": "created-6",
+          "title": "Changed while inactive",
+          "statusId": "backlog",
+          "startAt": "2026-11-01T01:30",
+          "dueAt": "2026-11-02T03:45",
+          "dependencyIds": [],
+          "sessionIds": [
+            "created-6"
+          ],
+          "createdAt": 1,
+          "updatedAt": 1,
+          "projectId": "project-a",
+          "description": "Calendar note"
+        }
+      ]
+    ],
+    [
+      "two",
+      [
+        {
+          "id": "z",
+          "title": "Other workspace",
+          "statusId": "todo",
+          "startAt": "2026-10-14",
+          "dueAt": "2026-10-15",
+          "dependencyIds": [],
+          "sessionIds": [
+            "z"
+          ],
+          "createdAt": 1,
+          "updatedAt": 1
+        }
+      ]
+    ],
+    [
+      "initial",
+      [
+        {
+          "id": "a",
+          "title": "Accepted local write",
+          "statusId": "todo",
+          "startAt": "2026-10-14",
+          "dueAt": "2026-10-15",
+          "dependencyIds": [],
+          "sessionIds": [
+            "a"
+          ],
+          "createdAt": 1,
+          "updatedAt": 1
+        },
+        {
+          "id": "b",
+          "title": "Initial Beta",
+          "statusId": "todo",
+          "startAt": "2026-10-14",
+          "dueAt": "2026-10-15",
+          "dependencyIds": [],
+          "sessionIds": [
+            "b"
+          ],
+          "createdAt": 1,
+          "updatedAt": 1
+        }
+      ]
+    ]
+  ],
+  "errors": []
+}

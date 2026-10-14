@@ -1,0 +1,111 @@
+{
+  "gates": [
+    {
+      "name": "typecheck-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/typecheck-final.log",
+      "logSha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308"
+    },
+    {
+      "name": "scripts-check-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/scripts-check-final.log",
+      "logSha256": "e283420265597eeadc420a3f3037106009b6ff2f5aec6db2ec0a80cf7362edc0"
+    },
+    {
+      "name": "lint-1",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/lint-1.log",
+      "logSha256": "d49ea81e2c329fa34e3d8fd8619e8e962cf7ddd8f5a3ff69992e7d9c2e299d8e"
+    },
+    {
+      "name": "lint-renderer-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/lint-renderer-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-shared-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/lint-shared-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-host-tooling-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/lint-host-tooling-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "i18n-parity",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/i18n-parity.log",
+      "logSha256": "f1e79e5ed60a21055fc387dd2de9057d6d9bfcf1702a92ff116f972c0ca30149"
+    },
+    {
+      "name": "i18n-coverage",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/i18n-coverage.log",
+      "logSha256": "f298219d3871b8e68ff720b45dc35e053dfbe80e8dde841f8eae4fed0483942e"
+    },
+    {
+      "name": "i18n-sorted",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/i18n-sorted.log",
+      "logSha256": "a385f7ad93d74caa977cc79adc9d67c665deb37126057e0e0db7e7da7f372059"
+    },
+    {
+      "name": "i18n-dead",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/i18n-dead.log",
+      "logSha256": "b20d0d55e7adeba55df06ff97b2c8f45be4eb84c7541be6a08457e0abf0295af"
+    },
+    {
+      "name": "identity",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/identity.log",
+      "logSha256": "93e791aa80ae8c52c0b97acc7440181664ff655dc6a602679bf630010383035c"
+    },
+    {
+      "name": "version",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/version.log",
+      "logSha256": "248460b0be2eed2ac46587ec9e81b9b2f998ab34591d203f07fcf616235b4ca4"
+    },
+    {
+      "name": "rpc-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/rpc-final.log",
+      "logSha256": "da53c9a7e16b3a13ba7841059ffe76fed3c56890e3cae0c14487e56a0f870ff3"
+    },
+    {
+      "name": "critical-preflight",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/critical-preflight.log",
+      "logSha256": "24c945970b109c58875f9f7b19b62161bfca922979c3d72b69ef46c62e172388"
+    },
+    {
+      "name": "docs-check-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/docs-check-final.log",
+      "logSha256": "4feab30b93eb782614eb22bab2fa0adc7f5601528d37aa8f4a1a2c66b648235a"
+    },
+    {
+      "name": "diff-check-final",
+      "exitCode": 0,
+      "log": ".cache/implement-c02/diff-check-final.log",
+      "logSha256": "22cfa0a14e217d1ad3aae03204c05d92a269ecce6503016e1622ef9a908f6549"
+    }
+  ],
+  "currentSourceHashes": {
+    "apps/electron/src/renderer/hooks/work-items-collection.ts": "8f7d78eaab00dd3d6ae6be879040923a302f03fc974a15c7c140b0a3fc7e52f2",
+    "apps/electron/src/renderer/hooks/useWorkItems.ts": "6dfdbf81237a6722ee87671a62e47ed4de4638c5229da5dae47565ad8d8f2853",
+    "apps/electron/src/renderer/hooks/useCalendarEntries.ts": "12014f1010cc24ef7098de651fd2c720f0ae709955da69ffaf3bca442a5edf1d",
+    "packages/shared/src/work-items/calendar.ts": "a62d5a782f4a50c2c9c0a516477b12fb348029d8b78c2db8a43127f8cc260c37",
+    "packages/shared/src/work-items/browser.ts": "546b7c297cd2634e1564b6bb40640f8f41322b83c81601759ebd05b434b869f8",
+    "packages/shared/src/work-items/index.ts": "00e10e8487585b2ab9591f96b8d3694e45aae114f0ab8a39d2c94f13949a8759",
+    "packages/server-core/src/handlers/rpc/work-items.ts": "935f55734217bf4de953be4964c1ac5dfd51bd6dd04a53d61573c4de51be6480",
+    "packages/server-core/src/handlers/rpc/calendar.ts": "906c04f9b4c66478d3b1bfb72f0f6d991cd02706b1207de45a478fcf45b20b36",
+    "packages/server-core/src/sessions/SessionManager.ts": "ce681afaf66338907119667b07fd8c334101e2d41e88f38207701bdb3d5a517e"
+  }
+}

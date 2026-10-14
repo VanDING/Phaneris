@@ -1,0 +1,496 @@
+{
+  "budget": {
+    "warmPlanningMs": 2000,
+    "inputTwoFramesMs": 250,
+    "rendererHeapBytes": 268435456,
+    "backendRssBytes": 1073741824
+  },
+  "samples": [
+    {
+      "repeat": 0,
+      "elapsedMs": 436.13150000000314,
+      "mount": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 9.754700000001321,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791989078736
+          }
+        ],
+        "failedReads": 0,
+        "failedWrites": 0,
+        "pushes": [],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 7.369999999998981
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 178733056,
+          "heapTotal": 49761280,
+          "heapUsed": 60694035,
+          "external": 23942531,
+          "arrayBuffers": 8084978
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      },
+      "write": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 8.66070000000036,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791989080129
+          }
+        ],
+        "failedReads": 0,
+        "failedWrites": 0,
+        "pushes": [
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791989080113
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791989080113
+          }
+        ],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 8.264600000002247
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 14.910800000001473
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 8.053899999998976
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 184188928,
+          "heapTotal": 51471360,
+          "heapUsed": 60694035,
+          "external": 23948201,
+          "arrayBuffers": 8090648
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      }
+    },
+    {
+      "repeat": 1,
+      "elapsedMs": 395.30029999999533,
+      "mount": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 9.462599999998929,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791989081558
+          }
+        ],
+        "failedReads": 0,
+        "failedWrites": 0,
+        "pushes": [],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 8.497200000001612
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 178692096,
+          "heapTotal": 49778688,
+          "heapUsed": 60847418,
+          "external": 24062426,
+          "arrayBuffers": 8103769
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      },
+      "write": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 7.516199999998207,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791989082862
+          }
+        ],
+        "failedReads": 0,
+        "failedWrites": 0,
+        "pushes": [
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791989082849
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791989082849
+          }
+        ],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 7.654300000001967
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 11.093800000002375
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 7.112999999997555
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 182874112,
+          "heapTotal": 50435072,
+          "heapUsed": 60859444,
+          "external": 24072709,
+          "arrayBuffers": 8109439
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      }
+    },
+    {
+      "repeat": 2,
+      "elapsedMs": 206.11030000000028,
+      "mount": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 6.79210000000603,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791989084206
+          }
+        ],
+        "failedReads": 0,
+        "failedWrites": 0,
+        "pushes": [],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 6.54139999999461
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 179474432,
+          "heapTotal": 49795072,
+          "heapUsed": 60881224,
+          "external": 24089784,
+          "arrayBuffers": 8123972
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      },
+      "write": {
+        "reads": [
+          {
+            "channel": "workItems:list",
+            "workspaceId": "planning",
+            "elapsedMs": 5.105099999993399,
+            "bytes": 1216199,
+            "rows": 1000,
+            "startedAt": 1791989085316
+          }
+        ],
+        "failedReads": 0,
+        "failedWrites": 0,
+        "pushes": [
+          {
+            "channel": "workItems:changed",
+            "workspaceId": "planning",
+            "at": 1791989085307
+          },
+          {
+            "channel": "calendar:changed",
+            "workspaceId": "planning",
+            "at": 1791989085307
+          }
+        ],
+        "projections": [
+          {
+            "rows": 1003,
+            "elapsedMs": 5.211199999997916
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 5.469000000004598
+          },
+          {
+            "rows": 1003,
+            "elapsedMs": 4.766799999997602
+          }
+        ],
+        "inFlight": 0,
+        "maxInFlight": 1,
+        "held": false,
+        "memory": {
+          "rss": 183078912,
+          "heapTotal": 51480576,
+          "heapUsed": 31857240,
+          "external": 10860296,
+          "arrayBuffers": 319987
+        },
+        "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+        "count": 1000
+      }
+    },
+    {
+      "inputMs": 36
+    }
+  ],
+  "checks": [
+    "calendar-three-samples-one-shared-projection",
+    "single-write-three-samples-one-broadcast-owner",
+    "single-invalidation-three-samples-one-read",
+    "all-warm-planning-samples-within-existing-budget",
+    "hidden-archived-draft-excluded-unscheduled-retained",
+    "two-real-clients-converge-from-native-session-edit",
+    "ten-writes-and-two-workspaces-coalesce-without-losing-notifications",
+    "native-archive-and-unarchive-converge-in-both-windows",
+    "external-session-header-edit-invalidates-both-projections",
+    "in-flight-invalidations-collapse-to-one-follow-up",
+    "rejected-read-keeps-last-snapshot-and-recovers-on-invalidation",
+    "real-calendar-drag-rejection-shows-error-and-keeps-persisted-dates",
+    "reconnect-revalidates-shared-projection-once",
+    "no-read-after-last-consumer-unsubscribes",
+    "remount-revalidates-inactive-cache",
+    "legacy-calendar-create-update-notifies-modern-shared-projection",
+    "legacy-calendar-delete-clears-dates-and-retains-backing-session",
+    "native-session-delete-invalidates-planning-projection",
+    "planning-input-two-frames-within-existing-budget",
+    "sampled-renderer-and-host-memory-within-existing-budgets"
+  ],
+  "errors": [],
+  "crossWindow": {
+    "reads": [
+      {
+        "channel": "workItems:list",
+        "workspaceId": "planning",
+        "elapsedMs": 9.3579000000027,
+        "bytes": 1216214,
+        "rows": 1000,
+        "startedAt": 1791989096658
+      },
+      {
+        "channel": "workItems:list",
+        "workspaceId": "planning",
+        "elapsedMs": 9.635699999998906,
+        "bytes": 1216214,
+        "rows": 1000,
+        "startedAt": 1791989096677
+      }
+    ],
+    "failedReads": 0,
+    "failedWrites": 0,
+    "pushes": [
+      {
+        "channel": "workItems:changed",
+        "workspaceId": "planning",
+        "at": 1791989096647
+      },
+      {
+        "channel": "calendar:changed",
+        "workspaceId": "planning",
+        "at": 1791989096647
+      }
+    ],
+    "projections": [
+      {
+        "rows": 1003,
+        "elapsedMs": 8.691299999998591
+      },
+      {
+        "rows": 1003,
+        "elapsedMs": 8.94829999999638
+      }
+    ],
+    "inFlight": 0,
+    "maxInFlight": 1,
+    "held": false,
+    "memory": {
+      "rss": 160927744,
+      "heapTotal": 32410624,
+      "heapUsed": 32115549,
+      "external": 11092579,
+      "arrayBuffers": 325145
+    },
+    "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+    "count": 1000
+  },
+  "burst": {
+    "reads": [
+      {
+        "channel": "workItems:list",
+        "workspaceId": "planning",
+        "elapsedMs": 8.959799999996903,
+        "bytes": 1216201,
+        "rows": 1000,
+        "startedAt": 1791989097450
+      },
+      {
+        "channel": "workItems:list",
+        "workspaceId": "planning",
+        "elapsedMs": 6.797200000000885,
+        "bytes": 1216201,
+        "rows": 1000,
+        "startedAt": 1791989097468
+      }
+    ],
+    "failedReads": 0,
+    "failedWrites": 0,
+    "pushes": [
+      {
+        "channel": "workItems:changed",
+        "workspaceId": "planning",
+        "at": 1791989097441
+      },
+      {
+        "channel": "calendar:changed",
+        "workspaceId": "planning",
+        "at": 1791989097441
+      },
+      {
+        "channel": "workItems:changed",
+        "workspaceId": "other",
+        "at": 1791989097441
+      },
+      {
+        "channel": "calendar:changed",
+        "workspaceId": "other",
+        "at": 1791989097441
+      }
+    ],
+    "projections": [
+      {
+        "rows": 1003,
+        "elapsedMs": 8.388599999998405
+      },
+      {
+        "rows": 1003,
+        "elapsedMs": 6.4375
+      }
+    ],
+    "inFlight": 0,
+    "maxInFlight": 1,
+    "held": false,
+    "memory": {
+      "rss": 161062912,
+      "heapTotal": 32406528,
+      "heapUsed": 32156284,
+      "external": 11118517,
+      "arrayBuffers": 334366
+    },
+    "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+    "count": 1000
+  },
+  "raced": {
+    "reads": [
+      {
+        "channel": "workItems:list",
+        "workspaceId": "planning",
+        "elapsedMs": 10.826700000005076,
+        "bytes": 1216220,
+        "rows": 1000,
+        "startedAt": 1791989107725
+      },
+      {
+        "channel": "workItems:list",
+        "workspaceId": "planning",
+        "elapsedMs": 5.257200000000012,
+        "bytes": 1216213,
+        "rows": 1000,
+        "startedAt": 1791989108563
+      }
+    ],
+    "failedReads": 0,
+    "failedWrites": 0,
+    "pushes": [
+      {
+        "channel": "workItems:changed",
+        "workspaceId": "planning",
+        "at": 1791989107706
+      },
+      {
+        "channel": "calendar:changed",
+        "workspaceId": "planning",
+        "at": 1791989107706
+      },
+      {
+        "channel": "workItems:changed",
+        "workspaceId": "planning",
+        "at": 1791989108027
+      },
+      {
+        "channel": "calendar:changed",
+        "workspaceId": "planning",
+        "at": 1791989108027
+      }
+    ],
+    "projections": [
+      {
+        "rows": 1003,
+        "elapsedMs": 10.193700000003446
+      },
+      {
+        "rows": 1003,
+        "elapsedMs": 4.975700000002689
+      }
+    ],
+    "inFlight": 0,
+    "maxInFlight": 1,
+    "held": false,
+    "memory": {
+      "rss": 158384128,
+      "heapTotal": 31406080,
+      "heapUsed": 31727905,
+      "external": 10593297,
+      "arrayBuffers": 336425
+    },
+    "fixtureSha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b",
+    "count": 1000
+  },
+  "memory": 37936012,
+  "fixture": {
+    "count": 1000,
+    "sha256": "36f22980e2d8a08d4ce48a284abfb4e2ffc38230721a916d514142322dbe271b"
+  }
+}

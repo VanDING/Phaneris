@@ -1,98 +1,87 @@
 # Tasks
 
-A **task** decomposes a goal into a graph of subtasks and runs them. It is the
-machinery for work that is too big for one conversation and too structured to
-leave to improvisation: a migration, a survey across many repositories, a
-generation job with a review gate.
+A Task describes a goal as a DAG of child sessions in `task.yaml`. Ask the
+orchestrator to author a draft, or edit the YAML yourself. Creating a definition
+does not start a run: review the goal, permissions, inputs, scope and acceptance
+criteria first.
 
-A task is not a long prompt. It is a specification — a small DAG of nodes, each
-with its own prompt, model, permissions, inputs, and outputs — that can be read,
-edited, validated, and run more than once.
-
-## What a task is made of
-
-```
-~/.phaneris/workspaces/{workspaceId}/tasks/{slug}/
-  task.yaml                  the editable specification
-  runs/{runId}/
-    run-log.jsonl            append-only record of what happened
-    nodes/{id}.json          each node's output
+```text
+<workspace>/tasks/<slug>/
+  task.yaml
+  runs/<runId>/
+    run-log.jsonl
+    nodes/<id>.json
 ```
 
-The task also owns an **orchestrator session** — a conversation that authored the
-specification and that you use to talk about the task as a whole. Its subtask
-sessions are grouped with it under a reserved label, so the whole family can be
-found together.
+For new runs, Runtime facts are authoritative. The JSONL log and node files are
+compatibility/export projections, not a second execution authority.
 
-## Creating one
+## What executes today
 
-Two ways, and they differ in what you get:
+The runner executes `kind: session` nodes with dependencies, input references,
+model/connection overrides, explicit permissions, existing Token budgets and
+bounded error retries. An orchestrator can grade the result and drive a bounded
+repair cycle.
 
-**Ask for it.** Describe the goal and let the orchestrator author the
-specification. It writes a `task.yaml`, which is validated immediately; if it
-fails validation the agent is told exactly what was wrong and asked to correct
-it. This is the fast path, and the result is a draft you should read.
+Historical YAML can retain other fields for readability, but parsing is not
+execution support. Approval nodes, general loops, routes, maps, replicas and
+other unsupported control semantics are refused before dispatch. In particular,
+`approval: true` cannot serve as an implemented approval gate.
 
-**Write it.** Edit the YAML directly in the task editor. This is the path when
-the structure matters more than the speed — a fan-out over twenty known inputs,
-say, where describing it to an agent is more work than typing it.
+## Permissions and file scopes
 
-**Creating a task does not run it.** It lands in the to-do state and waits. That
-separation is deliberate: the specification is the thing worth reviewing, and
-reviewing it is much cheaper than interrupting a run.
+Every node needs an explicit `permissionMode`, either on the node or inherited
+from `defaults.permissionMode`. A node overrides the default. If any node has no
+declared mode, the whole task refuses before creating children, including on
+resume. Explicit `allow-all` remains a user choice; omitted values never grant it.
 
-## What a node can express
+```yaml
+id: report
+title: Prepare report
+goal: Inspect the material and draft a report
+defaults:
+  permissionMode: safe
+cwd: /absolute/path/to/material
+max_parallel: 2
+nodes:
+  - id: inspect
+    prompt: Read the inputs and summarize the findings
+    file_scope:
+      read: [inputs]
+      write: []
+  - id: draft
+    permissionMode: ask
+    prompt: Draft the report using ${nodes.inspect.output}
+    depends_on: [inspect]
+    file_scope:
+      read: [inputs]
+      write: [report.md]
+```
 
-Each node in the graph is one session, and it can specify:
+Scopes use literal file/directory paths relative to the task cwd, not globs.
+Overlapping writes and readers serialize; explicit read-only or disjoint scopes
+may run in parallel. Omitted scopes conservatively claim writable cwd. Path
+comparison accounts for ancestors, Windows case and resolvable link aliases.
 
-| | |
-|---|---|
-| **What** | A prompt, a title, and a model or connection of its own |
-| **Permissions** | A permission mode for this node — a read-only survey node and a writing node can coexist in one task |
-| **Inputs** | Values passed from earlier nodes, or from the task's own parameters |
-| **Outputs** | Named results declared up front, so later nodes can reference them |
-| **Conditions** | `when` for gating, and a trigger rule for how the node fires |
-| **Fan-out** | `replicas` to run a node over many inputs, and an aggregation mode to combine the results |
-| **Iteration** | `loop` with an `until` condition and a maximum |
-| **Resilience** | `retry` with backoff, and a `timeout` |
-| **Caching** | Whether a node's result may be reused across runs |
-| **Approval** | Whether the node pauses for you before proceeding |
+This coordinates TaskRunner nodes within one Host; it is not an OS sandbox,
+cross-process lock, or a guarantee against agents violating their declarations.
+The ordinary tool permission rules still apply. A run freezes its declarations
+and resolved cwd; changing them requires a new run rather than resuming around
+a conflict.
 
-That last one is where tasks earn their keep on anything sensitive: a survey
-node can run unattended, and the single node that writes to production can
-require your approval.
+## Budgets, review and recovery
 
-## Running and resuming
+Run exposes outputs, terminal facts, unsettled T1 effects and available task
+Token budget observations. `max_no_progress` bounds failed acceptance cycles;
+it does not establish general tool-loop detection.
 
-Starting a run executes the graph, respecting dependencies. You watch it in the
-trajectory view — which node is running, what each has produced so far, and where
-it stopped.
-
-A run is durable. If the app closes mid-run, the run resumes rather than
-restarting, and the run log is written as it goes so the record survives.
-Resuming a finished or failed run continues from the state it reached.
-
-**The specification can change; a run's history does not.** Editing `task.yaml`
-changes what the next run does. A completed run keeps the spec it actually ran
-against, because a run log that silently rewrites itself to match a later edit is
-not a record of anything.
-
-## Writing a good one
-
-**Make each node independently checkable.** A node whose output you cannot judge
-in isolation will produce a run you cannot review.
-
-**Use permissions per node, not per task.** The most restrictive mode that lets
-each node do its job is the whole benefit of having a graph.
-
-**Gate the irreversible step.** A node that deletes, publishes, or deploys should
-have `approval: true`. Everything before it can then run unattended.
-
-**Keep it small.** A dozen nodes is a large task. If it needs forty, it is
-probably two tasks, and splitting them makes each one reviewable.
+After restart, known completed nodes with available outputs can be reused.
+In-flight nodes and unknown external outcomes require reconciliation, never
+blind replay. Editing a task affects future runs without rewriting history.
+Runtime completion is distinct from user acceptance of its deliverables.
 
 ## Next steps
 
-- [Kanban board](phaneris://docs/go-further/kanban) — where task cards live.
-- [Permissions](phaneris://docs/core-concepts/permissions) — the modes a node can be given.
-- [Automations](phaneris://docs/automations/overview) — starting a run on a schedule.
+- [Permissions](phaneris://docs/core-concepts/permissions)
+- [Kanban Board](phaneris://docs/go-further/kanban)
+- [Conversations](phaneris://docs/core-concepts/conversations)

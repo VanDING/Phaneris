@@ -5,7 +5,7 @@
 后续裁定：[完整实施台账](../process/governance-completion-2026-10-11.md)。以下正文保留本轮当时的快照与未覆盖项；当前治理状态不再由其中的后续队列判断。
 
 日期：2026-10-11；起始 HEAD：`8e5bf13b3f393dc776f6c17057eb5d0fb05f2dda`。
-状态：**verified（本地）**。范围为 [总计划](../process/architecture-code-governance-implementation-plan-2026-10-11.md) 的 G0、G1、G2a，另关闭完整回归发现的 Runtime 分支/删除资源释放遗漏，沿用 [失败矩阵](../verification/governance-first-wave-failure-matrix.md)。[本轮验收证据](../verification/results/governance-first-wave-2026-10-11/README.md)独立归档；原始扫描和历史验收结果保持原样。实现仍在工作树中，未提交或推送；每次 manifest 保存开始时 HEAD、dirty 路径和修改文件哈希。
+状态：**verified（本地）**。范围为 [总计划](architecture-code-governance-implementation-plan-2026-10-11.md) 的 G0、G1、G2a，另关闭完整回归发现的 Runtime 分支/删除资源释放遗漏，沿用 [失败矩阵](../verification/governance-first-wave-failure-matrix.md)。[本轮验收证据](../verification/results/governance-first-wave-2026-10-11/README.md)独立归档；原始扫描和历史验收结果保持原样。实现仍在工作树中，未提交或推送；每次 manifest 保存开始时 HEAD、dirty 路径和修改文件哈希。
 
 ## 1. 唯一执行队列
 
@@ -29,14 +29,14 @@
 | 来源 | 裁定 | 当前事实、位置及后续队列 |
 | --- | --- | --- |
 | [Durable Runtime ADR](../architecture/durable-agent-runtime.md) 与 [boundary](../architecture/durable-runtime-boundary.md) | 接受且已实现 | Kernel/Host B0–B5；ADR 的持久化保证不变，删除“边界未实现”矛盾；G6 只治理产品装配 |
-| [Runtime target](../architecture/durable-agent-runtime-target-architecture.md) | deferred，保留启动条件 | 分布式/多 workspace/execution admission 的目标设计尚未激活；本轮不把它当作正在实施的 Runtime 规范 |
+| [Runtime target](durable-agent-runtime-target-architecture.md) | deferred，保留启动条件 | 分布式/多 workspace/execution admission 的目标设计尚未激活；本轮不把它当作正在实施的 Runtime 规范 |
 | [10-10 系统清理](./system-cleanup-optimization-plan-2026-10-10.md) | 已实施批次保留，结构切口转入本队列 | A/B/C/D/E/F/H 已实施；G 的配置/Pi 切口纳入 G3/G5，旧建议不再形成另一条执行队列 |
 | [架构总览](../architecture/overview.md) | 当前维护入口，已校准 | 清单 27 workspace 边；WebUI 有 AST 依赖门禁、仍缺显式平台 port；core 仅类型/工具；G3/G4/G7 |
-| [B 阶段身份](../architecture/phaneris-phase-b-brand-identity.md)、[fork plan](../process/phaneris-fork-plan.md)、[release gate](../release-readiness.md) | 代码身份已实现；外部发布仍未验收 | identity 中 appId 已独立、services 全 null、telemetry false；自有域名、签名、命名空间归属仍未核实；G8 |
+| [B 阶段身份](../architecture/phaneris-phase-b-brand-identity.md)、[fork plan](phaneris-fork-plan.md)、[release gate](release-readiness-2026-10-13.md) | 代码身份已实现；外部发布仍未验收 | identity 中 appId 已独立、services 全 null、telemetry false；自有域名、签名、命名空间归属仍未核实；G8 |
 | [四工作流排序](./workstream-sequencing-2026-10-06.md) | 旧执行顺序被本队列接替 | 首轮工具竞态、Runtime 边界、部分 decide 调整已有实现；九服务拆分不再执行；本轮不扩展 decide/Guarded 功能 |
 | [8-31 路线图](./project-assessment-and-roadmap-2026-08-31.md) | 历史评估，拆为已实现与残余 | 独立身份、全 workspace typecheck、关键路径验证已有实现；发布链、可重复证据、深层模块归属仍需治理；G1/G8 |
 | [深度分析](./Phaneris_Project_Deep_Analysis.md) | 历史分析，问题需按新基线重验 | Runtime 旧拆分已接替；限流/请求体/可信代理已修；JWT 重启失效、Origin、Pi/Session/client 装配仍开放；G2b/G5/G6/G7 |
-| [Plugin review](../process/plugin-system-review-and-roadmap.md) F01 | 原主修复保留，本轮事务残余 verified | 只从完整备份恢复；提交后的备份/凭据清理失败仅报告 warning；索引写入和失效都失败时，读取仍从已安装 package 派生；12 场景已通过 |
+| [Plugin review](plugin-system-review-and-roadmap.md) F01 | 原主修复保留，本轮事务残余 verified | 只从完整备份恢复；提交后的备份/凭据清理失败仅报告 warning；索引写入和失效都失败时，读取仍从已安装 package 派生；12 场景已通过 |
 | Plugin review F02、F03 | 已有保护，保留回归 | `plugins/paths.ts` slug 限界；`analyzePluginUninstall` shared-provider 执行路径保护；本轮不解除 |
 | Plugin review F04、F06、F07、F10 | 尚未关闭 | 双执行路径、确认绑定、校验/可用状态属后续插件治理；G2a 只修已配置 API 替换合法 baseUrl 被清空这一具体 F07 缺陷 |
 | Plugin review F05、F09 | 待针对性复核 | 路径与 watcher 已有后续修改，不凭旧标题断言全修/全未修；需原场景 E2E |
@@ -44,8 +44,8 @@
 | [10-06 依赖关系](../dependencies/dependency-graph-2026-10-06.md) | 历史图已过期，保留来源 | 新清单 27 边；26 undeclared subpath 已有门禁；dead declaration 已删，peer/根借用/lock orphan 另议；G3/G4/G8 |
 | [8-01 审计](../archive/code-audit-2026-08-01.md) | 历史证据 | OPEN 不等于当前缺陷；来源、兼容 wire、上游责任需重验，不能拿历史漏洞数字作本轮结论 |
 | [性能实施](./performance-implementation-2026-09-10.md) | 首轮已实现，历史测量保留 | 本地 validate:ci 与 bundle gate 通过；main 当前硬预算 21,500,000 B，10-11 扫描仅余 58,509 B；G5–G8 必须复测，不沿用旧红灯/旧理想预算 |
-| [GPUIX 研究](../research/native-frontend-migration-gpuix-assessment.md) | 研究保留，迁移延后 | Playground 打包入口已清理；本轮不迁移前端栈； profiling 和边界治理先行 |
-| [Memory 设计](../research/memory-system-design.md) 等功能设计及研究附件 | 领域参考，功能设想延后 | 仅用于核对现有契约；不由此启动新功能、插件市场、memory 或前端迁移 |
+| [GPUIX 研究](native-frontend-migration-gpuix-assessment.md) | 研究保留，迁移延后 | Playground 打包入口已清理；本轮不迁移前端栈； profiling 和边界治理先行 |
+| [Memory 设计](memory-system-design.md) 等功能设计及研究附件 | 领域参考，功能设想延后 | 仅用于核对现有契约；不由此启动新功能、插件市场、memory 或前端迁移 |
 | shared/CLAUDE、core/server-core README、CONTRIBUTING | 现行维护约定，已校准 | Guarded 属既有权限模式；单 Pi 路径；server-core 拥有 SessionManager/领域 handlers；SSH443、origin/main、codex 分支、测试先行 |
 
 ## 3. 实施与验证记录
