@@ -53,11 +53,28 @@ exports.verifyConversation = async function verifyConversation(page, fixture, ou
     await idle()
     assert.equal(readFileSync(fixture.filePath, 'utf8'), 'GOVERNANCE_WRITE_EVIDENCE\n')
     checks.push(`${host} permission approval completes real Pi write`)
-    await page.getByText('Preview governance file', { exact: true }).click()
-    await page.getByText('GOVERNANCE_WRITE_EVIDENCE', { exact: true }).first().waitFor()
+    const closeFileViews = async () => {
+      for (const name of ['Close Artifact', 'Close Preview']) {
+        const close = page.getByRole('button', { name, exact: true })
+        while (await close.count()) await close.first().click()
+      }
+      await page.getByTestId('artifact-workbench').waitFor({ state: 'hidden' })
+    }
+    const verifyFileView = async label => {
+      await closeFileViews()
+      await page.getByRole('link', { name: label, exact: true }).click()
+      await page.getByTestId('artifact-workbench').getByText('GOVERNANCE_WRITE_EVIDENCE', { exact: true }).first().waitFor()
+      assert.equal(await page.getByText('Failed to open file', { exact: true }).count(), 0, `${label} must not report an open failure`)
+    }
+    await verifyFileView('Preview governance file')
     await page.screenshot({ path: join(output, `${host}-file-preview.png`), fullPage: true })
     await page.keyboard.press('Escape')
     checks.push(`${host} preview reads the actual written file`)
+    for (const label of ['Preview with slashes', 'Preview file URL', 'Preview encoded path', 'Preview relative file', 'Preview source location']) {
+      await verifyFileView(label)
+    }
+    await closeFileViews()
+    checks.push(`${host} answer links open Unicode spaced files through all six path forms`)
     await send('GOVERNANCE_PLAN_REQUEST: submit the prepared fixture plan.')
     await page.getByText('GOVERNANCE_PLAN_BODY', { exact: true }).first().waitFor({ timeout: 60000 })
     await idle()

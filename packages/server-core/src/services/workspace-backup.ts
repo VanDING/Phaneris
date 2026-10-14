@@ -23,7 +23,7 @@ import {
 } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { randomBytes } from 'node:crypto';
-import { tmpdir } from 'node:os';
+import { tmpdir, homedir } from 'node:os';
 import { basename, dirname, join, relative, resolve, isAbsolute } from 'node:path';
 import { backupRuntimeDatabase } from '../durable-runtime/index.js';
 
@@ -248,6 +248,7 @@ export function restoreWorkspaceBackup(
         throw new Error(`Backup changed during restore: ${file.path}`);
       }
     }
+    rebaseRestoredWorkspace(staging, verification.manifest, target);
     // Replace the entire offline workspace, never overlay old WAL or stale files.
     if (existsSync(target)) {
       safety = `${target}.pre-restore-${Date.now()}-${randomBytes(4).toString('hex')}`;
@@ -260,4 +261,44 @@ export function restoreWorkspaceBackup(
     }
     return verification.manifest;
   } finally { rmSync(staging, { recursive: true, force: true }); }
+}
+
+/** Rebase owned live metadata only. Transcripts, revisions and Runtime facts are immutable history. */
+function rebaseRestoredWorkspace(staging: string, manifest: WorkspaceBackupManifest, target: string): void {
+  if (typeof manifest.workspaceRootPath !== 'string' || !isAbsolute(manifest.workspaceRootPath)) return;
+  const original = resolve(manifest.workspaceRootPath);
+  if (original === target) return;
+  const rebase = (value: unknown): unknown => {
+    if (typeof value !== 'string') return value;
+    const expanded = value === '~' ? homedir() : /^~[/\\]/.test(value) ? join(homedir(), value.slice(2)) : value;
+    if (!isAbsolute(expanded) || !contains(original, resolve(expanded))) return value;
+    return join(target, relative(original, resolve(expanded)));
+  };
+  for (const file of manifest.files) {
+    const path = join(staging, file.path);
+    if (/^sessions\/[^/]+\/session\.jsonl$/.test(file.path)) {
+      const text = readFileSync(path, 'utf8'), end = text.indexOf('\n');
+      const header = JSON.parse(end < 0 ? text : text.slice(0, end));
+      let changed = false;
+      for (const key of ['workspaceRootPath', 'workingDirectory', 'sdkCwd', 'branchFromSessionPath', 'branchFromSdkCwd']) {
+        const next = rebase(header[key]); if (next !== header[key]) { header[key] = next; changed = true; }
+      }
+      if (changed) writeFileSync(path, JSON.stringify(header) + (end < 0 ? '' : text.slice(end)));
+    } else if (file.path === 'artifacts/manifest.json') {
+      const store = JSON.parse(readFileSync(path, 'utf8'));
+      if (store.version !== 1 || !Array.isArray(store.artifacts)) throw new Error('Invalid Artifact manifest during restore');
+      for (const artifact of store.artifacts) {
+        artifact.sourcePath = rebase(artifact.sourcePath);
+        for (const deliverable of artifact.deliverables ?? []) deliverable.path = rebase(deliverable.path);
+      }
+      writeFileSync(path, JSON.stringify(store, null, 2) + '\n');
+    } else if (file.path === 'config.json' || /^sources\/[^/]+\/config\.json$/.test(file.path)) {
+      const config = JSON.parse(readFileSync(path, 'utf8'));
+      let changed = false;
+      for (const [container, key] of [[config.defaults, 'workingDirectory'], [config.local, 'path']] as const) {
+        if (container && typeof container === 'object') { const next = rebase(container[key]); if (next !== container[key]) { container[key] = next; changed = true; } }
+      }
+      if (changed) writeFileSync(path, JSON.stringify(config, null, 2) + '\n');
+    }
+  }
 }

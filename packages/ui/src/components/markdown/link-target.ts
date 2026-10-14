@@ -37,21 +37,23 @@ function stripSourceLocation(target: string): string {
  * literal spaces, and clickable `:line[:column]` source references.
  */
 function resolveBareFilePath(target: string): string | null {
-  const withoutLocation = stripSourceLocation(target)
+  // Markdown URI normalization percent-encodes Windows backslashes. Decode
+  // before checking the drive, otherwise E:%5C... looks like a URL scheme.
+  const withoutLocation = stripSourceLocation(decodeFilePath(target))
   const windowsDrivePath = /^[A-Za-z]:[\\/]/.test(withoutLocation)
 
   // Explicit filesystem roots are independent of language and extension.
   if (windowsDrivePath || /^(?:\/|~\/|\.\.?\/|\\\\)/.test(withoutLocation)) {
-    return decodeFilePath(withoutLocation)
+    return withoutLocation
   }
   if (/^[A-Za-z][A-Za-z0-9+.-]*:/.test(withoutLocation)) return null
 
-  const classificationTarget = decodeFilePath(withoutLocation)
+  const classificationTarget = withoutLocation
     .replace(/\\/g, '/')
     .replace(/ /g, '%20')
 
   if (!isFilePathTarget(classificationTarget)) return null
-  return decodeFilePath(withoutLocation)
+  return withoutLocation
 }
 
 function resolveFileUrlPath(target: string): string | null {

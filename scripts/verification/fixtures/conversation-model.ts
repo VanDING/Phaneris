@@ -1,17 +1,20 @@
 /** Shared fixture for actual WebUI/Electron + Pi, not a substitute execution owner. */
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { basename, dirname, join, relative } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 export async function verifyConversationDurability(workspace: string, session: string, output: string, host: 'web' | 'electron') {
-  const { Database } = await import('bun:sqlite')
+  const { Database, constants } = await import('bun:sqlite')
   const databasePath = join(workspace, 'runtime', 'runtime.db')
   // Electron has exited and checkpointed its WAL. Immutable read avoids asking
   // a read-only connection to create a new WAL/shm pair for that closed database.
   if (host === 'electron') assert(!existsSync(databasePath + '-wal') || statSync(databasePath + '-wal').size === 0,
     'Native shutdown must checkpoint the WAL before immutable snapshot inspection')
-  const db = new Database(host === 'electron' ? pathToFileURL(databasePath).href + '?immutable=1' : databasePath, { readonly: true })
+  // SQLite URI parameters require the explicit URI flag (including on Windows).
+  const db = host === 'electron'
+    ? new Database(pathToFileURL(databasePath).href + '?immutable=1', constants.SQLITE_OPEN_READONLY | constants.SQLITE_OPEN_URI)
+    : new Database(databasePath, { readonly: true })
   try {
     db.exec('BEGIN')
     const events = db.query(`SELECT seq, operation_id, event_type, payload_json FROM runtime_events
@@ -41,7 +44,7 @@ export async function seedConversationFixture(config: string, workspace: string)
   const { createSession } = await import('../../../packages/shared/src/sessions/storage')
   const session = await createSession(workspace, { name: 'Governance conversation', workingDirectory: workspace,
     permissionMode: 'ask', model: 'pi/fixture', llmConnection: 'fixture' })
-  const filePath = join(workspace, 'governance-write.txt'), planPath = join(workspace, 'sessions', session.id, 'plans', 'governance.md')
+  let filePath = join(workspace, 'governance 报告.txt'), planPath = join(workspace, 'sessions', session.id, 'plans', 'governance.md')
   mkdirSync(dirname(planPath), { recursive: true })
   writeFileSync(planPath, '# Governance fixture plan\n\nGOVERNANCE_PLAN_BODY\n\n1. Verify a finite platform port.\n')
   const requests: { mode: string; tools: string[]; toolResult: boolean }[] = []
@@ -80,7 +83,15 @@ export async function seedConversationFixture(config: string, workspace: string)
       const args = mode === 'permission' ? { path: filePath, content: 'GOVERNANCE_WRITE_EVIDENCE\n' } : { planPath }
       reply = chunk({ tool_calls: [{ index: 0, id: `ui-${mode}`, type: 'function', function: { name: tool, arguments: JSON.stringify(args) } }] }, 'tool_calls')
     } else {
-      const content = mode === 'permission' ? `GOVERNANCE_PERMISSION_DONE\n\n[Preview governance file](${filePath})`
+      const content = mode === 'permission' ? [
+        'GOVERNANCE_PERMISSION_DONE',
+        `[Preview governance file](<${filePath}>)`,
+        `[Preview with slashes](<${filePath.replaceAll('\\', '/')}>)`,
+        `[Preview file URL](${pathToFileURL(filePath).href})`,
+        `[Preview encoded path](${encodeURI(filePath)})`,
+        `[Preview relative file](<./${basename(filePath)}>)`,
+        `[Preview source location](<${filePath.replaceAll('\\', '/')}:1>)`,
+      ].join('\n\n')
         : mode === 'utility' ? 'Governance conversation' : 'GOVERNANCE_CONTINUATION_DONE'
       reply = chunk({ content }) + chunk({}, 'stop')
     }
@@ -91,7 +102,8 @@ export async function seedConversationFixture(config: string, workspace: string)
   const connection = { slug: 'fixture', name: 'Governance local model', providerType: 'pi_compat', authType: 'api_key', createdAt: 1,
     baseUrl: new URL('v1', api.url).href, customEndpoint: { api: 'openai-completions' }, defaultModel: 'pi/fixture',
     models: [{ id: 'fixture', name: 'Fixture', shortName: 'Fixture', description: 'Deterministic loopback model', provider: 'pi', contextWindow: 128000, maxTokens: 4096 }] }
-  return { session: session.id, name: session.name!, filePath, planPath, connection,
+  return { session: session.id, name: session.name!, get filePath() { return filePath }, get planPath() { return planPath }, connection,
+    relocate(restored: string) { filePath = join(restored, relative(workspace, filePath)); planPath = join(restored, relative(workspace, planPath)) },
     report: () => ({ requests, openStreams: streams.size }),
     stop: () => { for (const timer of streams) clearInterval(timer); streams.clear(); api.stop(true) },
   }

@@ -94,6 +94,14 @@ function isInsideCode(pos: number, ranges: CodeRange[]): boolean {
 function findMarkdownLinkRanges(text: string): CodeRange[] {
   const ranges: CodeRange[] = []
 
+  // Reference definitions contain destinations too. Wrapping a path inside
+  // one would invalidate the definition before remark can resolve the link.
+  const definitionRegex = /^ {0,3}\[[^\n\]]+\]:[^\n]*(?:\n[ \t]+[^\n]+)*/gm
+  let definition
+  while ((definition = definitionRegex.exec(text)) !== null) {
+    ranges.push({ start: definition.index, end: definition.index + definition[0].length })
+  }
+
   // Match [text](url) — inline links
   const inlineLinkRegex = /\[(?:[^\[\]]|\\\[|\\\])*\]\([^)]*\)/g
   let match

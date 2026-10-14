@@ -22,12 +22,14 @@ import { MarkdownPdfBlock } from './MarkdownPdfBlock'
 import { MarkdownDocBlock } from './MarkdownDocBlock'
 import { preprocessLinks } from './linkify'
 import { resolveMarkdownLinkTarget } from './link-target'
+import { remarkFileLinks } from './remark-file-links'
 import remarkCollapsibleSections from './remarkCollapsibleSections'
 import { CollapsibleSection } from './CollapsibleSection'
 import { useCollapsibleMarkdown } from './CollapsibleMarkdownContext'
 import { wrapWithSafeProxy } from './safe-components'
 import { MARKDOWN_MATH_OPTIONS } from './math-options'
 import { markdownUrlTransform } from './url-transform'
+import { visit } from 'unist-util-visit'
 
 /**
  * Names of preview-block code-fence types that recursive `Markdown` callers
@@ -72,10 +74,31 @@ const markdownSanitizeSchema = {
   ],
   attributes: {
     ...defaultSchema.attributes,
+    a: [...(defaultSchema.attributes?.a ?? []), 'dataPhanerisFilePath'],
     // Keep styling hooks on raw HTML (the default schema's legacy list has
     // no className/class).
     '*': [...(defaultSchema.attributes?.['*'] ?? []), 'className', 'class'],
   },
+}
+
+/**
+ * Keep recognized file targets available to the explicit preview callback.
+ * rehype-sanitize otherwise removes Windows drive/file: hrefs before the
+ * custom anchor sees them. The browser receives only a harmless local anchor.
+ */
+function rehypeFileLinks() {
+  return (tree: ReturnType<ReturnType<typeof rehypeRaw>>) => visit(tree, 'element', node => {
+    if (node.tagName !== 'a') return
+    // Only this transform may supply a file target; raw HTML cannot forge it.
+    delete node.properties.dataPhanerisFilePath
+    delete node.properties['data-phaneris-file-path']
+    if (typeof node.properties.href !== 'string') return
+    const target = resolveMarkdownLinkTarget(node.properties.href)
+    if (target.kind === 'file') {
+      node.properties.dataPhanerisFilePath = target.path
+      node.properties.href = '#'
+    }
+  })
 }
 
 export interface MarkdownProps {
@@ -224,14 +247,21 @@ function createComponents(
     //   through `resolveMarkdownLinkTarget` so file URLs land in `onFileClick`
     //   and blocked URLs surface a meaningful error via `onUrlClick` →
     //   `classifyExternalUrl`.
-    a: ({ href, children }) => {
-      const trimmedHref = href?.trim() ?? ''
+    a: ({ href, children, node }) => {
+      const fileTarget = node?.properties.dataPhanerisFilePath
+      const routedFilePath = typeof fileTarget === 'string' ? fileTarget : undefined
+      const trimmedHref = routedFilePath ?? href?.trim() ?? ''
       const sanitized = trimmedHref ? defaultUrlTransform(trimmedHref) : ''
-      const isFileLink = resolveMarkdownLinkTarget(trimmedHref).kind === 'file'
+      const isFileLink = routedFilePath !== undefined || resolveMarkdownLinkTarget(trimmedHref).kind === 'file'
       const safeHref = isFileLink ? '#' : sanitized || undefined
 
       const handleClick = (e: React.MouseEvent) => {
         e.preventDefault()
+        // The pre-sanitization transform already resolved and decoded this path.
+        if (routedFilePath !== undefined && onFileClick) {
+          onFileClick(routedFilePath)
+          return
+        }
 
         // Some AI outputs include raw HTML anchors with empty href but path text content.
         // Fallback to the anchor text when href is missing/empty.
@@ -643,8 +673,8 @@ export function Markdown({
         MARKDOWN_MATH_OPTIONS
       ]
       return collapsible
-        ? [remarkGfm, mathPlugin, remarkCollapsibleSections]
-        : [remarkGfm, mathPlugin]
+        ? [remarkGfm, mathPlugin, remarkFileLinks, remarkCollapsibleSections]
+        : [remarkGfm, mathPlugin, remarkFileLinks]
     },
     [collapsible]
   )
@@ -654,7 +684,7 @@ export function Markdown({
   const renderedContent = React.useMemo(() => (
       <ReactMarkdown
         remarkPlugins={remarkPlugins}
-        rehypePlugins={[rehypeKatex, rehypeRaw, [rehypeSanitize, { schema: markdownSanitizeSchema }]]}
+        rehypePlugins={[rehypeKatex, rehypeRaw, rehypeFileLinks, [rehypeSanitize, markdownSanitizeSchema]]}
         components={components}
         urlTransform={markdownUrlTransform}
       >
