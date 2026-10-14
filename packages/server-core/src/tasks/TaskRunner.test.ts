@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { mkdtempSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import type { TokenUsage } from '@phaneris/core/types';
 import type { CreateSessionOptions } from '@phaneris/shared/protocol';
 import { parseTaskSpec, saveTaskSpec, readRunLog, readNodeOutput, type RunLogEntry, type TaskSpec } from '@phaneris/shared/tasks';
@@ -16,7 +16,8 @@ function tu(inputTokens: number, outputTokens: number): TokenUsage {
 }
 
 function specOf(raw: unknown): TaskSpec {
-  const r = parseTaskSpec(raw);
+  const fixture = raw as Record<string, unknown> & { defaults?: TaskSpec['defaults'] };
+  const r = parseTaskSpec({ ...fixture, defaults: { permissionMode: 'safe', ...fixture.defaults }, nodes: (fixture.nodes as Record<string, unknown>[]).map(node => ({ file_scope: { read: ['.'], write: [] }, ...node })) });
   if (!r.success) throw new Error('bad fixture: ' + JSON.stringify(r.error.issues));
   return r.data;
 }
@@ -77,7 +78,7 @@ class MockHost implements ConductorSessionHost {
     return `sess-${nodeId}`;
   }
   promptFor(nodeId: string): string | undefined {
-    return this.sent.find((s) => s.sessionId === this.sessionIdFor(nodeId))?.message;
+    return this.sent.find((s) => s.sessionId === this.sessionIdFor(nodeId))?.message.replace(/^Task file scope \(scheduling contract\):\n[\s\S]*?\n\n/, '');
   }
   dispatchedNames(): string[] {
     return this.created.map((c) => c.options.name!).filter(Boolean);
@@ -246,18 +247,14 @@ describe('TaskRunner (Conductor)', () => {
     expect(host.created.find((c) => c.options.name === 'b')?.options.permissionMode).toBe('ask')
   })
 
-  it('defaults an omitted permission mode to allow-all (unattended-safe), not undefined/ask', async () => {
-    // A hand-authored spec that sets no permission mode must NOT fall through to the workspace default
-    // (which could be `ask` → the unattended child would hang). The runner supplies an explicit default.
-    saveTaskSpec(
-      root,
-      specOf({ id: 'perm2', title: 'Perm2', goal: 'g', nodes: [{ id: 'c', prompt: 'c' }] }),
-    )
+  it('rejects an omitted permission mode before creating any child', async () => {
+    const spec = specOf({ id: 'perm2', title: 'Perm2', goal: 'g', nodes: [{ id: 'c', prompt: 'c' }] })
+    delete spec.defaults
+    saveTaskSpec(root, spec)
     const runner = makeRunner()
-    runner.run('perm2', { runId: 'r1' })
+    expect(() => runner.run('perm2', { runId: 'r1' })).toThrow(/permissionMode/)
     await tick()
-
-    expect(host.created.find((c) => c.options.name === 'c')?.options.permissionMode).toBe('allow-all')
+    expect(host.created).toHaveLength(0)
   })
 
   it('stamps task/run/node linkage on each dispatched child session', async () => {
@@ -300,7 +297,7 @@ describe('TaskRunner (Conductor)', () => {
     runner.run('cwd', { runId: 'r1', orchestratorSessionId: 'orch' })
     await tick()
     // Orchestrator cwd wins over the spec default.
-    expect(host.created.find((c) => c.options.name === 'a')?.options.workingDirectory).toBe('/parent/dir')
+    expect(host.created.find((c) => c.options.name === 'a')?.options.workingDirectory).toBe(resolve('/parent/dir'))
 
     // With no orchestrator cwd, the spec's declared cwd is used.
     host.created.length = 0
@@ -308,7 +305,7 @@ describe('TaskRunner (Conductor)', () => {
     const runner2 = makeRunner()
     runner2.run('cwd', { runId: 'r2', orchestratorSessionId: 'orch' })
     await tick()
-    expect(host.created.find((c) => c.options.name === 'a')?.options.workingDirectory).toBe('/spec/dir')
+    expect(host.created.find((c) => c.options.name === 'a')?.options.workingDirectory).toBe(resolve('/spec/dir'))
   })
 
   it('moves the orchestrator tile to in-progress on start and done on completion', async () => {
@@ -539,8 +536,8 @@ describe('TaskRunner (Conductor)', () => {
       title: 'Canonical resume',
       goal: 'resume from runtime facts',
       nodes: [
-        { id: 'first', prompt: 'first' },
-        { id: 'second', depends_on: ['first'], prompt: 'use ${nodes.first.output}' },
+        { id: 'first', prompt: 'first', file_scope: undefined },
+        { id: 'second', depends_on: ['first'], prompt: 'use ${nodes.first.output}', file_scope: undefined },
       ],
     }));
     const facts: RunLogEntry[] = [

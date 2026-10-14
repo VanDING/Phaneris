@@ -94,6 +94,7 @@ export interface SessionDecisionQuery {
   limit?: number;
 }
 export interface SessionDecisionReport {
+  reliability?: import('../durable-runtime/reliability').ReliabilityObservation;
   schemaVersion: 1;
   sessionId: string;
   workspaceId: string;

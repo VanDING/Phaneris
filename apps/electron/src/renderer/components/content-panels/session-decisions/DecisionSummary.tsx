@@ -55,6 +55,25 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
   const { t } = useTranslation()
   const report = data.report
   return (
+    <div className="space-y-4">
+    {report?.reliability && <details data-runtime-reliability className="rounded-xl border border-border/55 px-3 py-2 text-xs">
+      <summary className="cursor-pointer font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{t('trajectory.reliability.title')}</summary>
+      {report.reliability.state === 'unavailable' ? <p className="mt-2 text-text-secondary">{t('trajectory.reliability.unavailable')}</p> : <div className="mt-2 space-y-2">
+        <p className="text-text-secondary">{t('trajectory.reliability.scope')}</p>
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 tabular-nums">
+          <dt>{t('trajectory.reliability.terminals')}</dt><dd>{Object.entries(report.reliability.terminal).map(([reason, count]) => `${reason}: ${count}`).join(' · ') || '0'}</dd>
+          <dt>{t('trajectory.reliability.unsettled')}</dt><dd>{report.reliability.unsettled.count}</dd>
+          <dt>{t('trajectory.reliability.oldestSeconds')}</dt><dd>{report.reliability.unsettled.oldestAgeMs === null ? '—' : Math.floor(report.reliability.unsettled.oldestAgeMs / 1000).toLocaleString()}</dd>
+        </dl>
+        {report.reliability.taskBudgets.map(budget => <p key={`${budget.taskSlug}:${budget.runId}`} className="tabular-nums">{t('trajectory.reliability.tokenBudget')}: {budget.taskSlug}/{budget.runId} · {budget.used ?? t('common.unknown')} / {budget.limit ?? t('common.unknown')}</p>)}
+        {report.reliability.signals.length > 0 && <ul className="list-disc space-y-1 pl-4">{report.reliability.signals.map(signal => <li key={`${signal.kind}:${signal.firstSeq}`} title={signal.operationIds.join('\n')}>{t(signal.kind === 'repeated-action' ? 'trajectory.reliability.repeatedAction' : 'trajectory.reliability.repeatedError')}: {signal.toolName} × {signal.count} · seq {signal.firstSeq}–{signal.lastSeq}</li>)}</ul>}
+        <p className="text-text-secondary">{t('trajectory.reliability.interpretation')}</p>
+        <button type="button" className="craft-control rounded-sm text-accent-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => {
+          const url = URL.createObjectURL(new Blob([JSON.stringify(report.reliability, null, 2)], { type: 'application/json' }))
+          const link = document.createElement('a'); link.href = url; link.download = `run-reliability-${report.sessionId}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)
+        }}>{t('trajectory.reliability.export')}</button>
+      </div>}
+    </details>}
     <section data-decision-summary>
       <div className="mb-2 flex min-w-0 items-center gap-2">
         <h3 className="text-[12px] font-semibold">{t('trajectory.decisions.title')}</h3>
@@ -97,5 +116,6 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
           </p>
         )}
     </section>
+    </div>
   )
 }

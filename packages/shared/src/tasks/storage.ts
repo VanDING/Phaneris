@@ -31,9 +31,14 @@ const NODES_DIR = 'nodes';
 /** Per-node lifecycle state recorded in the run log. Richer than the board's SubtaskRunState. */
 export type NodeRunState = 'pending' | 'running' | 'done' | 'failed' | 'cancelled' | 'skipped';
 
+export interface TaskFileScopeSnapshot {
+  cwd: string;
+  nodes: Record<string, { declared?: TaskSpec['nodes'][number]['file_scope']; read: string[]; write: string[] }>;
+}
+
 /** Append-only run-log event. `t` is an ISO-8601 timestamp. */
 export type RunLogEntry =
-  | { t: string; kind: 'run-started'; taskId: string; runId: string; orchestratorSessionId?: string }
+  | { t: string; kind: 'run-started'; taskId: string; runId: string; orchestratorSessionId?: string; tokenBudget?: number; fileScopes?: TaskFileScopeSnapshot }
   | { t: string; kind: 'node-scheduled'; nodeId: string }
   | { t: string; kind: 'node-spawned'; nodeId: string; sessionId: string }
   | { t: string; kind: 'node-finished'; nodeId: string; sessionId: string; state: NodeRunState; reason?: string; output?: NodeOutput }

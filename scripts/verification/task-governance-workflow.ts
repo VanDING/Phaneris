@@ -14,7 +14,7 @@ const tick = () => new Promise(resolve => setTimeout(resolve, 25))
 const complete = async (sessionId: string, finalText: string) => { for (const listener of [...listeners]) listener({ sessionId, workspaceId: 'fixture', reason: 'complete', finalText, tokenUsage: usage.get(sessionId) }); await tick() }
 async function check(id: string, fn: () => any) { try { records.push({ id, pass: true, observation: await fn() }) } catch (e) { records.push({ id, pass: false, error: String(e) }) } }
 await check('Repeated failed verification with identical outputs stops the configured no-progress loop', async () => {
-  const parsed = parseTaskSpec({ id: 'stalled', title: 'Stalled', goal: 'fixture', max_iterations: 8, max_no_progress: 2, nodes: [{ id: 'a', prompt: 'fixture' }] }); assert(parsed.success)
+  const parsed = parseTaskSpec({ id: 'stalled', title: 'Stalled', goal: 'fixture', defaults: { permissionMode: 'safe' }, max_iterations: 8, max_no_progress: 2, nodes: [{ id: 'a', prompt: 'fixture' }] }); assert(parsed.success)
   saveTaskSpec(fixture, parsed.data)
   const runner = new TaskRunner({ host, workspaceId: 'fixture', workspaceRoot: fixture })
   runner.run('stalled', { runId: 'r1', orchestratorSessionId: 'orchestrator' })
@@ -26,7 +26,7 @@ await check('Repeated failed verification with identical outputs stops the confi
 })
 await check('Auxiliary decision tokens are added once to the owning task session budget', async () => {
   sent.length = 0
-  const parsed = parseTaskSpec({ id: 'budgeted', title: 'Budget', goal: 'fixture', token_budget: 15, nodes: [{ id: 'b', prompt: 'fixture' }, { id: 'c', prompt: 'fixture', depends_on: ['b'] }] }); assert(parsed.success)
+  const parsed = parseTaskSpec({ id: 'budgeted', title: 'Budget', goal: 'fixture', defaults: { permissionMode: 'safe' }, token_budget: 15, nodes: [{ id: 'b', prompt: 'fixture' }, { id: 'c', prompt: 'fixture', depends_on: ['b'] }] }); assert(parsed.success)
   saveTaskSpec(fixture, parsed.data)
   const runner = new TaskRunner({ host, workspaceId: 'fixture', workspaceRoot: fixture, classifyNodeOutcome: async (_text, context) => {
     assert.equal(context.sessionId, 'session-b'); usage.set(context.sessionId!, { totalTokens: 20 }); return 'finished'
@@ -39,7 +39,7 @@ await check('Auxiliary decision tokens are added once to the owning task session
 })
 await check('Run budget survives restart and excludes pre-run orchestrator history', async () => {
   sent.length = 0
-  const parsed = parseTaskSpec({ id: 'resumed', title: 'Resume', goal: 'fixture', token_budget: 25, nodes: [{ id: 'd', prompt: 'fixture' }, { id: 'e', prompt: 'fixture', depends_on: ['d'] }] }); assert(parsed.success)
+  const parsed = parseTaskSpec({ id: 'resumed', title: 'Resume', goal: 'fixture', defaults: { permissionMode: 'safe' }, token_budget: 25, nodes: [{ id: 'd', prompt: 'fixture' }, { id: 'e', prompt: 'fixture', depends_on: ['d'] }] }); assert(parsed.success)
   saveTaskSpec(fixture, parsed.data); usage.set('old-orchestrator', { totalTokens: 1000 }); usage.set('session-d', { totalTokens: 10 })
   const first = new TaskRunner({ host, workspaceId: 'fixture', workspaceRoot: fixture })
   first.run('resumed', { runId: 'r3', orchestratorSessionId: 'old-orchestrator' }); await tick()

@@ -145,6 +145,11 @@ const TaskNodeObject = z.object({
   llmConnection: z.string().min(1).optional(),
   permissionMode: z.enum(PERMISSION_MODES).optional(),
   labels: z.array(z.string()).optional(),
+  /** Literal paths relative to the inherited task cwd. This is a scheduling contract, not a sandbox. */
+  file_scope: z.object({
+    read: z.array(z.string().min(1).refine(path => !/[\x00*?{}\[\]]/.test(path), 'Use literal file/directory paths, not globs')).default([]),
+    write: z.array(z.string().min(1).refine(path => !/[\x00*?{}\[\]]/.test(path), 'Use literal file/directory paths, not globs')),
+  }).optional(),
   status: z.string().optional(),
 
   // Edges + data flow.

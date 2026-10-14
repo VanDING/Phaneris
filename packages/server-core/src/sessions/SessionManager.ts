@@ -90,6 +90,7 @@ import {
 } from '@phaneris/shared/sessions'
 import { loadWorkspaceSources, loadAllSources, getSourcesBySlugs, isSourceUsable, type LoadedSource, type McpServerConfig, getSourcesNeedingAuth, getSourceCredentialManager, TokenRefreshManager, serializeHeaderCredential } from '@phaneris/shared/sources'
 import { listTaskSlugs, parseTaskSpec, uniqueTaskSlug } from '@phaneris/shared/tasks'
+import { readSessionReliabilityReport, safelyBuildReliabilityReport } from '../observability/reliability-report'
 import {
   acquireArtifactLease,
   applyArtifactDraft,
@@ -1422,6 +1423,7 @@ export class SessionManager implements ISessionManager {
   private eventSink: EventSink | null = null
   /** Workspaces with a planning-changed broadcast waiting on the coalescing timer. */
   private pendingPlanningChanged: Set<string> | null = null
+  private planningChangedTimer: ReturnType<typeof setTimeout> | undefined
 
   setEventSink(sink: EventSink): void {
     this.eventSink = sink
@@ -1933,13 +1935,12 @@ export class SessionManager implements ISessionManager {
    * collapsing a burst into one emit is lossless and cannot drop an update.
    */
   private broadcastPlanningChanged(workspaceId: string): void {
-    if (!this.eventSink) return
-    const pending = this.pendingPlanningChanged
-    if (pending?.has(workspaceId)) return
-    const workspaces = pending ?? new Set<string>()
-    if (!pending) this.pendingPlanningChanged = workspaces
-    workspaces.add(workspaceId)
-    setTimeout(() => {
+    if (!this.eventSink || this.shuttingDown) return
+    this.pendingPlanningChanged ??= new Set<string>()
+    this.pendingPlanningChanged.add(workspaceId)
+    if (this.planningChangedTimer) return
+    this.planningChangedTimer = setTimeout(() => {
+      this.planningChangedTimer = undefined
       const flush = this.pendingPlanningChanged
       if (!flush) return
       this.pendingPlanningChanged = null
@@ -2910,9 +2911,11 @@ export class SessionManager implements ISessionManager {
       .catch(error => { sessionLog.warn('Legacy decision evidence unavailable', error); this.decisionLegacy = undefined; return [] })
     const legacy = await this.decisionLegacy
     if (this.sessions.get(sessionId) !== managed) throw new Error('Session no longer exists')
-    return buildSessionDecisionReport({ sessionId, workspaceId: managed.workspace.id,
+    const report = buildSessionDecisionReport({ sessionId, workspaceId: managed.workspace.id,
       enabled: readDecisionLayerSettings().enabled, completeSince: this.durableRuntime.evidence.decisionRecordingSince(workspaceRoot, this.decisionRecordingSince), activeSince: this.decisionRecordingSince, sessionCreatedAt: managed.createdAt ?? 0,
       events: this.durableRuntime.queries.decisionEvents(workspaceRoot, sessionId), usage: this.durableRuntime.queries.usage(workspaceRoot, { sessionId }), legacy, query })
+    report.reliability = safelyBuildReliabilityReport(() => readSessionReliabilityReport(this.durableRuntime, workspaceRoot, sessionId))
+    return report
   }
 
   getRecoveryEvidence(
@@ -5792,6 +5795,7 @@ initialSources: {
       await this.flushSession(managed.id)
       // Notify all windows for this workspace
       this.sendEvent({ type: 'session_archived', sessionId }, managed.workspace.id)
+      this.broadcastPlanningChanged(managed.workspace.id)
       this.emitUnreadSummaryChanged()
     }
   }
@@ -5809,6 +5813,7 @@ initialSources: {
       await this.flushSession(managed.id)
       // Notify all windows for this workspace
       this.sendEvent({ type: 'session_unarchived', sessionId }, managed.workspace.id)
+      this.broadcastPlanningChanged(managed.workspace.id)
       this.emitUnreadSummaryChanged()
     }
   }
@@ -10817,6 +10822,9 @@ resources: {
    */
   async cleanup(): Promise<void> {
     this.shuttingDown = true
+    if (this.planningChangedTimer) clearTimeout(this.planningChangedTimer)
+    this.planningChangedTimer = undefined
+    this.pendingPlanningChanged = null
     this.unregisterDecisionAccounting()
     this.unregisterDecisionObservation()
     for (const managed of this.sessions.values()) {

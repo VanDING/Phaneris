@@ -43,6 +43,10 @@ import { DecisionCapture } from '../decisions/decision-point';
 import { createHash } from 'node:crypto';
 import type { TokenUsage } from '@phaneris/core/types';
 import { classifyVerdictWithDecision } from './verdict-decision';
+import { acquireFileScopes, releaseFileScopes, onFileScopesReleased, snapshotFileScopes } from './file-scopes';
+import { loadWorkspaceConfig } from '@phaneris/shared/workspaces';
+import { expandPath } from '@phaneris/shared/utils';
+import { resolve } from 'node:path';
 
 // ---------------------------------------------------------------------------
 // Host interface (SessionManager satisfies this structurally)
@@ -195,12 +199,8 @@ function resolveRunTimeoutMs(): number {
   }
   return DEFAULT_RUN_TIMEOUT_MS;
 }
-// Explicit, unattended-safe default for a subtask's permission mode when neither the node nor the task
-// defaults set one. Conductor children run with no human to answer an `ask` prompt, so we must NOT fall
-// through to the workspace default (which may be `ask` → the child hangs, or read-only `safe` → it
-// silently produces nothing). The task editor now persists an explicit `defaults.permissionMode`, so
-// this constant only governs hand-authored specs that omit it — and it is never `ask`.
-const AUTONOMOUS_DEFAULT_MODE = 'allow-all' as const;
+// Every child must receive a mode explicitly declared by its node or task defaults.
+// Omission is rejected before any scheduling/T1, including when restoring old run logs.
 const RUNNING_STATUS = 'in-progress';
 const DONE_STATUS = 'done';
 // There is no 'failed' session status (the fixed set is todo|in-progress|needs-review|done|cancelled).
@@ -248,6 +248,10 @@ function assertExecutableTask(spec: TaskSpec): void {
   if (unsupported.length) {
     throw new Error(`Task uses unsupported execution settings: ${unsupported.join(', ')}`);
   }
+  const missing = spec.nodes.filter(node => node.permissionMode === undefined && spec.defaults?.permissionMode === undefined);
+  if (missing.length) {
+    throw new Error(`Task requires an explicit permissionMode for nodes: ${missing.map(node => node.id).join(', ')}. Set defaults.permissionMode or each nodes.<id>.permissionMode in task.yaml before running or resuming.`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -285,6 +289,10 @@ class ActiveRun {
   /** Wall-clock deadline timer for this run (see DEFAULT_RUN_TIMEOUT_MS). */
   private timeoutTimer?: NodeJS.Timeout;
   private factOrdinal = 0;
+  private readonly workingDirectory: string;
+  private readonly fileScopes: ReturnType<typeof snapshotFileScopes>;
+  private readonly scopeTokens = new Map<string, object>();
+  private scopeOff?: () => void;
 
   constructor(
     private readonly spec: TaskSpec,
@@ -294,6 +302,10 @@ class ActiveRun {
     private readonly deps: TaskRunnerDeps,
   ) {
     this.edges = materializeDeps(spec);
+    this.workingDirectory = resolve(expandPath((opts.orchestratorSessionId ? deps.host.getSessionWorkingDirectory(opts.orchestratorSessionId) : undefined)
+      ?? spec.cwd ?? loadWorkspaceConfig(deps.workspaceRoot)?.defaults?.workingDirectory ?? deps.workspaceRoot));
+    this.fileScopes = snapshotFileScopes(spec, this.workingDirectory);
+    for (const node of spec.nodes) this.scopeTokens.set(node.id, {});
     this.maxParallel = spec.max_parallel ?? deps.defaultMaxParallel ?? DEFAULT_MAX_PARALLEL;
     // Runner-side clamp (belt-and-suspenders: the schema already caps `max_iterations` at the same
     // bound, so a parsed spec can't exceed it — but a programmatically built spec might).
@@ -304,6 +316,7 @@ class ActiveRun {
   // --- lifecycle ---
 
   start(): void {
+    this.scopeOff = onFileScopesReleased(() => this.scheduleReady());
     this.unsubscribe = this.deps.host.onSessionComplete((evt) => this.onSessionComplete(evt));
     // Snapshot the spec for this run so the Results view labels nodes by run-time titles even after
     // the live task.yaml is edited. Best-effort: a snapshot failure must not abort the run.
@@ -312,7 +325,7 @@ class ActiveRun {
     } catch {
       // ignore — Results falls back to run-log node ids when no snapshot exists
     }
-    this.log({ kind: 'run-started', taskId: this.spec.id, runId: this.runId, orchestratorSessionId: this.opts.orchestratorSessionId });
+    this.log({ kind: 'run-started', taskId: this.spec.id, runId: this.runId, orchestratorSessionId: this.opts.orchestratorSessionId, tokenBudget: this.spec.token_budget, fileScopes: this.fileScopes });
     if (this.opts.orchestratorSessionId) {
       const sessionId = this.opts.orchestratorSessionId;
       const baseline = this.deps.host.getSessionTokenUsage?.(sessionId)?.totalTokens ?? 0;
@@ -355,6 +368,11 @@ class ActiveRun {
    * and block automatic resume. A done node whose output file is missing falls back to pending.
    */
   hydrate(log: RunLogEntry[], loadOutput: (nodeId: string) => NodeOutput | null): string[] {
+    const started = log.find(entry => entry.kind === 'run-started');
+    if (started?.kind === 'run-started') {
+      if (started.fileScopes && JSON.stringify(started.fileScopes) !== JSON.stringify(this.fileScopes)) throw new Error('Cannot resume: task file scope declarations, paths or cwd changed; start a new run');
+      if (!started.fileScopes && this.spec.nodes.some(node => node.file_scope)) throw new Error('Cannot resume legacy run with new file scope declarations; start a new run');
+    }
     for (const e of log) {
       if (e.kind === 'node-spawned') {
         const st = this.state.get(e.nodeId);
@@ -406,6 +424,7 @@ class ActiveRun {
   resumeFromHydrated(): void {
     if (this.unsubscribe) return;
     this.runStatus = 'running';
+    this.scopeOff = onFileScopesReleased(() => this.scheduleReady());
     this.unsubscribe = this.deps.host.onSessionComplete((evt) => this.onSessionComplete(evt));
     this.log({ kind: 'run-resumed' });
     // A restarted process gets a fresh wall-clock budget for the resumed run.
@@ -422,7 +441,7 @@ class ActiveRun {
         st.state = 'cancelled';
         this.log({ kind: 'node-finished', nodeId, sessionId: st.sessionId ?? '', state: 'cancelled', reason: 'stopped' });
         if (st.sessionId) {
-          void this.deps.host.cancelProcessing(st.sessionId, true);
+          void this.cancelNodeScope(nodeId).catch(error => console.error('[conductor] Cancellation unconfirmed; file scope retained', error));
           void this.deps.host.setKanbanColumn(st.sessionId, 'todo');
         }
       }
@@ -459,7 +478,7 @@ class ActiveRun {
         st.state = 'cancelled';
         this.log({ kind: 'node-finished', nodeId, sessionId: st.sessionId ?? '', state: 'cancelled', reason: 'timed out' });
         if (st.sessionId) {
-          void this.deps.host.cancelProcessing(st.sessionId, true);
+          void this.cancelNodeScope(nodeId).catch(error => console.error('[conductor] Cancellation unconfirmed; file scope retained', error));
           void this.deps.host.setKanbanColumn(st.sessionId, 'todo');
         }
       }
@@ -499,7 +518,13 @@ class ActiveRun {
     for (const node of this.spec.nodes) {
       if (this.inFlight >= this.maxParallel) break;
       if (!this.isReady(node)) continue;
+      if (JSON.stringify(snapshotFileScopes(this.spec, this.workingDirectory)) !== JSON.stringify(this.fileScopes)) {
+        this.failNode(node.id, 'file scope path changed after scheduling');
+        return;
+      }
+      if (!acquireFileScopes(this.scopeTokens.get(node.id)!, this.fileScopes.nodes[node.id]!)) continue;
       if (this.isOverBudget()) {
+        this.releaseNodeScope(node.id);
         this.pauseForBudget();
         return;
       }
@@ -547,14 +572,14 @@ class ActiveRun {
       }
       // Task-level skills ride as [skill:slug] mentions on every child prompt — the agent
       // pipeline resolves each SKILL.md and blocks tools until it is read (skills-as-context).
-      const prompt = skillsPreamble(this.spec.skills) + (await this.buildPrompt(node));
+      const scope = this.fileScopes.nodes[node.id]!;
+      const contract = `Task file scope (scheduling contract):\nRead: ${JSON.stringify(scope.read)}\nWrite: ${JSON.stringify(scope.write)}\nKeep all file access within these declared paths. This declaration does not bypass permission checks.\n\n`;
+      const prompt = contract + skillsPreamble(this.spec.skills) + (await this.buildPrompt(node));
+      if (this.runStatus !== 'running') { this.releaseNodeScope(node.id); return; }
       // Children run where the parent runs: inherit the orchestrator's resolved working directory,
       // falling back to the spec's declared `cwd`. Without this they default to the workspace cwd
       // rather than the parent session's (project) directory.
-      const cwd =
-        (this.opts.orchestratorSessionId
-          ? this.deps.host.getSessionWorkingDirectory(this.opts.orchestratorSessionId)
-          : undefined) ?? this.spec.cwd;
+      const cwd = this.workingDirectory;
       const options: CreateSessionOptions = {
         parentSessionId: this.opts.orchestratorSessionId,
         // Link the child back to the task / run / node so the manual subtask composer can
@@ -567,9 +592,8 @@ class ActiveRun {
         // Required for non-default (e.g. pi/*) models to resolve a backend — without it the
         // child session completes instantly with no output.
         llmConnection: node.llmConnection ?? this.spec.defaults?.llmConnection,
-        // Node override → task default (persisted by the editor, visible to the user) → explicit
-        // unattended-safe fallback. Never the workspace default (which could be `ask` → hang).
-        permissionMode: node.permissionMode ?? this.spec.defaults?.permissionMode ?? AUTONOMOUS_DEFAULT_MODE,
+        // Validated before any node is scheduled; never inherit an implicit workspace/fallback mode.
+        permissionMode: node.permissionMode ?? this.spec.defaults?.permissionMode,
         labels: node.labels,
         // Inherit the orchestrator's task number (task::N) so the whole run filters as one task.
         applyTaskLabel: true,
@@ -586,6 +610,7 @@ class ActiveRun {
       st.sessionId = child.id;
       this.sessionToNode.set(child.id, node.id);
       this.log({ kind: 'node-spawned', nodeId: node.id, sessionId: child.id });
+      if (this.runStatus !== 'running' || st.state !== 'running') { await this.cancelNodeScope(node.id); return; }
       await this.deps.host.setKanbanColumn(child.id, 'in-progress');
       await this.deps.host.sendMessage(child.id, prompt);
       if (durableDispatch && commitDurableDispatch) {
@@ -601,11 +626,14 @@ class ActiveRun {
         durableCommitted = true;
       }
     } catch (err) {
+      let cancelled = false;
+      try { await this.cancelNodeScope(node.id); cancelled = true; } catch { /* retain the lease while execution is unknown */ }
       this.failNode(
         node.id,
         `dispatch failed: ${(err as Error).message}`,
         undefined,
         !(durableDispatch && !durableCommitted),
+        cancelled,
       );
     }
   }
@@ -666,6 +694,7 @@ class ActiveRun {
       }
       this.markNodeDone(nodeId, evt.sessionId, text);
     } else if (evt.reason === 'interrupted') {
+      this.releaseNodeScope(nodeId);
       // Externally aborted while running → cancelled (re-dispatched on resume). We do not
       // auto-retry here to avoid a stop/retry loop.
       st.state = 'cancelled';
@@ -680,6 +709,7 @@ class ActiveRun {
   }
 
   private markNodeDone(nodeId: string, sessionId: string, text: string): void {
+    this.releaseNodeScope(nodeId);
     const st = this.state.get(nodeId)!;
     const output: NodeOutput = { text };
     this.outputs[nodeId] = output;
@@ -698,7 +728,8 @@ class ActiveRun {
     writeNodeOutput(this.deps.workspaceRoot, this.slug, this.runId, '__verdict__', { text });
   }
 
-  private failNode(nodeId: string, reason: string, sessionId?: string, allowRetry = true): void {
+  private failNode(nodeId: string, reason: string, sessionId?: string, allowRetry = true, releaseScope = true): void {
+    if (releaseScope) this.releaseNodeScope(nodeId);
     const st = this.state.get(nodeId)!;
     const wasRunning = st.state === 'running';
     if (wasRunning) this.inFlight = Math.max(0, this.inFlight - 1);
@@ -771,6 +802,7 @@ class ActiveRun {
   }
 
   private finalize(): void {
+    this.scopeOff?.(); this.scopeOff = undefined;
     this.clearTimeout();
     this.unsubscribe?.();
     this.unsubscribe = undefined;
@@ -781,6 +813,13 @@ class ActiveRun {
     const snap = this.snapshot();
     for (const resolve of this.settleResolvers) resolve(snap);
     this.settleResolvers = [];
+  }
+
+  private releaseNodeScope(nodeId: string): void { releaseFileScopes(this.scopeTokens.get(nodeId)!); }
+  private async cancelNodeScope(nodeId: string): Promise<void> {
+    const sessionId = this.state.get(nodeId)?.sessionId;
+    if (sessionId) await this.deps.host.cancelProcessing(sessionId, true);
+    this.releaseNodeScope(nodeId);
   }
 
   private async sendVerification(): Promise<void> {
