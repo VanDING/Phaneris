@@ -41,7 +41,7 @@
 //      "msctls_progress32" -- and feeds the number to ProgressModel. Nothing
 //      about the install engine changes and the bar still tells the truth.
 //
-//   3. PAINTING ONLY WHEN THE NUMBER MOVES. The overlay is a 600x600 GDI+
+//   3. PAINTING ONLY WHEN THE NUMBER MOVES. The overlay is a 520x480 GDI+
 //      surface repainted from a timer, and the first version of this file
 //      invalidated it on every tick: 0.47 of a core, measured, for a frame that
 //      was byte-identical to the last one. The tick therefore formats the
@@ -58,6 +58,7 @@
 // Exported ABI (see the note on names below):
 //
 //   HRESULT InstallerApplyFrame(HWND window);
+//   HFONT   InstallerCreateFont(UINT dpi, int pixels, int weight, BOOL cjk);
 //   HWND    InstallerShowProgress(HWND parent, HWND source, BOOL dark, UINT dpi, LPCWSTR brand,
 //                                 LPCWSTR preparing, LPCWSTR extracting, LPCWSTR copying,
 //                                 LPCWSTR registering, LPCWSTR cleaning);
@@ -131,10 +132,10 @@ constexpr UINT_PTR kHiddenPageSubclass = 1;
 // anything is subclassed a second time.
 constexpr wchar_t kPropFramed[] = L"Phaneris.Internal.Framed";
 constexpr wchar_t kPropPageHidden[] = L"Phaneris.Internal.PageHidden";
-// Which step of InstallerApplyFrame gave up, for the script to print. Three
-// distinct failures all leave the frame property unset, and "the frame did not
-// happen" is not a diagnosis: 1 = the handle was not a window, 2 = the module
-// could not be pinned, 3 = SetWindowSubclass was refused.
+// Which step of InstallerApplyFrame gave up, for the script to print. Four
+// diagnostics distinguish why treatment failed: 1 = the handle was not a window,
+// 2 = the module
+// could not be pinned, 3 = SetWindowSubclass was refused, 4 = DWM frame extension.
 constexpr wchar_t kPropFrameError[] = L"Phaneris.Internal.FrameError";
 
 // The product's UI faces. Segoe UI for Latin copy; Microsoft YaHei UI as soon as
@@ -142,8 +143,6 @@ constexpr wchar_t kPropFrameError[] = L"Phaneris.Internal.FrameError";
 // and Simplified Chinese and a CJK caption must not depend on GDI+ font linking
 // to render at all. The chosen family is verified before use, with the other as
 // the fallback.
-constexpr wchar_t kUiFace[] = L"Segoe UI";
-constexpr wchar_t kCaptionFace[] = L"Microsoft YaHei UI";
 
 // Stock chrome hidden by InstallerApplyFrame: 1/2/3 are the outer dialog's
 // Next/Cancel/Back buttons, 1256 is its branding text, and the rest are MUI's
@@ -212,6 +211,16 @@ UINT ResolveDpi(UINT dpi) {
 
 int DesignPixels(int design, UINT dpi) {
     return MulDiv(design, static_cast<int>(dpi), 96);
+}
+
+// Native controls and the progress wordmark share the same GDI font factory.
+// Face names and sizes come from the generated layout; the caller owns HFONT.
+HFONT CreateUiFont(UINT dpi, int pixels, int weight, bool cjk) {
+    if (pixels <= 0 || weight < 0 || weight > 1000) return nullptr;
+    return CreateFontW(-DesignPixels(pixels, ResolveDpi(dpi)), 0, 0, 0, weight,
+                       FALSE, FALSE, FALSE, cjk ? GB2312_CHARSET : ANSI_CHARSET,
+                       OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+                       VARIABLE_PITCH | FF_SWISS, cjk ? kCaptionFace : kUiFace);
 }
 
 // ---------------------------------------------------------------------------
@@ -360,43 +369,22 @@ LRESULT CALLBACK HiddenPageProc(HWND window, UINT message, WPARAM wparam, LPARAM
 }
 
 // ---------------------------------------------------------------------------
-// The frame: no non-client area, and nothing drawn inside it
+// Native DWM window treatment with a full-size, fixed client layout
 // ---------------------------------------------------------------------------
 //
 // WM_NCCALCSIZE returning 0 gives the client area the whole window rect, which
-// is what lets a 600x600 page exist inside a dialog whose template is smaller.
-// The rest of this procedure, and the DWM calls in InstallerApplyFrame, exist to
-// make sure the frame that a window with WS_THICKFRAME implies is never drawn
-// INTO that client area. Three things used to be:
-//
-//   * DwmExtendFrameIntoClientArea({1,1,1,1}) -- the real defect. Extending the
-//     frame puts the DWM's frame band on top of pixels the page had already
-//     painted: a light grey strip down every edge of the branded surface.
-//   * the Windows 11 corner preference was requested as ROUND (2), which cut an
-//     8 px arc out of each corner. That is the "grey block" in the top-left:
-//     outside the rounded corner there is no window, so the shadow and the
-//     desktop behind it showed through.
-//   * the 1 px border Windows 11 draws around a framed window, which is a
-//     separate attribute from the frame band and has to be turned off by name.
-//
-// WS_THICKFRAME itself is kept deliberately, and NOT for the shadow: with the
-// frame no longer extended, a BitBlt of the desktop just outside the window edge
-// shows no shadow gradient at all on this build of Windows (measured, not
-// assumed -- see the note in InstallerApplyFrame). It is kept because it is what
-// makes DefWindowProc start a move loop for the HTCAPTION the script sends for
-// the caption drag; dropping it would cost the only way to move a window that has
-// no caption bar. The frame it implies is neutralised here and by the DWM
-// attributes below, and the hit test turns every resize edge into client area, so
-// the thick frame is never an invitation to resize a window whose layout is
-// fixed. A visible frame is the defect; the shadow was only ever a nicety.
+// is what lets a 520x480 page exist inside a dialog whose template is smaller.
+// DWM owns the thin outline, corner mask and external shadow. The NSIS dialog
+// must not draw its classic bevel over that composited frame.
+// Resize hits remain client hits; the page's caption uses the native move loop.
 LRESULT CALLBACK FrameProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam,
                            UINT_PTR id, DWORD_PTR) {
     // Both forms describe the proposed client rectangle. Leaving FALSE to the
     // default procedure reintroduces the native sizing border during redraws.
     if (message == WM_NCCALCSIZE) return 0;
-    // NSIS's dialog procedure can repaint its classic bevel even when the
-    // default window procedure's -1 paint suppression is requested. Approve
-    // activation here; only a minimized window needs the native icon handling.
+    // The legacy dialog can repaint a sizing bevel even with the documented
+    // -1 paint suppression. DWM still owns the composited outline and shadow;
+    // only an iconic window needs the default icon activation handling.
     if (message == WM_NCACTIVATE) {
         return IsIconic(window) ? DefWindowProcW(window, message, wparam, -1) : TRUE;
     }
@@ -497,10 +485,11 @@ void TickProgress(HWND window, ProgressPage* page) {
 }
 
 void PaintProgress(HWND window, ProgressPage* page, HDC dc) {
-    const int size = DesignPixels(kDesignSize, page->dpi);
+    const int width = DesignPixels(kDesignWidth, page->dpi);
+    const int height = DesignPixels(kDesignHeight, page->dpi);
     const Palette palette = PaletteFor(page->dark);
 
-    Bitmap buffer(size, size, PixelFormat32bppPARGB);
+    Bitmap buffer(width, height, PixelFormat32bppRGB);
     Graphics graphics(&buffer);
     graphics.ScaleTransform(page->dpi / 96.0f, page->dpi / 96.0f);
     graphics.Clear(Color(palette.background));
@@ -531,7 +520,7 @@ void PaintProgress(HWND window, ProgressPage* page, HDC dc) {
     StringFormat trailing;
     MakeCentered(trailing);
     trailing.SetAlignment(StringAlignmentFar);
-    graphics.SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
+    graphics.SetTextRenderingHint(TextRenderingHintClearTypeGridFit);
     DrawRun(graphics, stage, kStatusPixels, FontStyleRegular, BoxRect(kStatusBox), leading, muted);
     DrawRun(graphics, percent, kStatusPixels, FontStyleRegular, BoxRect(kPercentBox), trailing, ink);
 
@@ -540,8 +529,27 @@ void PaintProgress(HWND window, ProgressPage* page, HDC dc) {
     DrawRun(graphics, L"\x2212", kGlyphPixels, FontStyleRegular, BoxRect(kMinimizeBox), centered, ink);
     DrawRun(graphics, L"\x00d7", kGlyphPixels, FontStyleRegular, BoxRect(kCloseBox), centered, ink);
 
+    // Match the native static label's font, weight, top alignment and device
+    // pixels exactly; GDI+ DrawString otherwise shifts the brand between pages.
+    HDC brandDc = graphics.GetHDC();
+    HFONT brandFont = CreateUiFont(page->dpi, kBrandTitlePixels, kBrandTitleWeight, false);
+    if (brandDc && brandFont) {
+        HGDIOBJ previous = SelectObject(brandDc, brandFont);
+        SetBkMode(brandDc, TRANSPARENT);
+        Color textColor(palette.ink);
+        SetTextColor(brandDc, RGB(textColor.GetR(), textColor.GetG(), textColor.GetB()));
+        RECT rect = {DesignPixels(static_cast<int>(kBrandTitleBox.left), page->dpi),
+                     DesignPixels(static_cast<int>(kBrandTitleBox.top), page->dpi),
+                     DesignPixels(static_cast<int>(kBrandTitleBox.left + kBrandTitleBox.width), page->dpi),
+                     DesignPixels(static_cast<int>(kBrandTitleBox.top + kBrandTitleBox.height), page->dpi)};
+        DrawTextW(brandDc, L"Phaneris", -1, &rect, DT_CENTER | DT_NOPREFIX | DT_SINGLELINE);
+        SelectObject(brandDc, previous);
+    }
+    if (brandFont) DeleteObject(brandFont);
+    if (brandDc) graphics.ReleaseHDC(brandDc);
+
     Graphics screen(dc);
-    screen.DrawImage(&buffer, 0, 0);
+    screen.DrawImage(&buffer, 0, 0, width, height);
 }
 
 LRESULT CALLBACK ProgressProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
@@ -649,44 +657,34 @@ extern "C" __declspec(dllexport) HRESULT __cdecl InstallerApplyFrame(HWND window
         ShowWindow(child, SW_HIDE);
     }
 
-    // The window keeps a thick frame so the caption drag keeps working, and the
-    // frame it implies is then switched off piece by piece: the DWM renders the
-    // non-client area (the default, kept so this stays a composited window), the
-    // corners are asked to stay square, the Windows 11 border is set to none, and
-    // -- the one that matters most -- the frame is NOT extended into the client
-    // area. Extending it is what put a grey strip down every edge of the branded
-    // page, and the requested ROUND corners are what put a grey wedge in the
-    // corner, where the desktop showed through the arc cut out of the window.
-    //
-    // No shadow comes back from this, and that was measured rather than assumed:
-    // a screen capture of a rect padded 40 px around the window shows the desktop
-    // immediately outside the edge with no gradient at all. An installer with no
-    // shadow and no frame is the trade this file deliberately makes -- a frame
-    // drawn over the page is a defect a user sees, a missing shadow is not.
-    //
-    // Idempotent: styles and attributes are set, not toggled, so the second call
-    // from the InstFiles page's SHOW callback is harmless.
+    // Retain the DWM frame and shadow, as in the DSH native installer. The page
+    // owns the client layout; Windows owns its thin outline and corner mask.
+    // Applying these attributes again when the progress page opens is safe.
     SetWindowLongW(window, GWL_STYLE,
                    (GetWindowLongW(window, GWL_STYLE) & ~WS_CAPTION) | WS_THICKFRAME);
     SetWindowLongW(window, GWL_EXSTYLE, GetWindowLongW(window, GWL_EXSTYLE)
                    & ~(WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_DLGMODALFRAME | WS_EX_STATICEDGE));
     const DWMNCRENDERINGPOLICY policy = DWMNCRP_ENABLED;
     DwmSetWindowAttribute(window, DWMWA_NCRENDERING_POLICY, &policy, sizeof(policy));
-    // Both Windows 11 attributes are best effort and deliberately unchecked:
-    // neither exists before build 22000, where the call fails with E_INVALIDARG
-    // and square, borderless geometry is already the right answer. They must not
-    // be able to fail InstallerApplyFrame, because the script reads success from
-    // its own marker property and a returned failure here would be a whole
-    // installer refusing to start over a corner radius.
-    const DWORD corners = DWMWCP_DONOTROUND;
+    // Windows 10 keeps the system appearance it supports; Windows 11 can round
+    // this non-layered window without an application-owned clipping region.
+    const DWORD corners = DWMWCP_ROUND;
     DwmSetWindowAttribute(window, DWMWA_WINDOW_CORNER_PREFERENCE, &corners, sizeof(corners));
-    const COLORREF noBorder = DWMWA_COLOR_NONE;
-    DwmSetWindowAttribute(window, DWMWA_BORDER_COLOR, &noBorder, sizeof(noBorder));
-    // Deliberately absent: DwmExtendFrameIntoClientArea. The comment above says
-    // why. Nothing here may draw inside a client area the pages own completely.
+    const COLORREF border = DWMWA_COLOR_DEFAULT;
+    DwmSetWindowAttribute(window, DWMWA_BORDER_COLOR, &border, sizeof(border));
+    const MARGINS margins = {kFrameMargin, kFrameMargin, kFrameMargin, kFrameMargin};
+    const HRESULT frame = DwmExtendFrameIntoClientArea(window, &margins);
+    if (FAILED(frame)) {
+        SetIntProp(window, kPropFrameError, 4);
+        return frame;
+    }
     SetWindowPos(window, nullptr, 0, 0, 0, 0,
                  SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
     return S_OK;
+}
+
+extern "C" __declspec(dllexport) HFONT __cdecl InstallerCreateFont(UINT dpi, int pixels, int weight, BOOL cjk) {
+    return CreateUiFont(dpi, pixels, weight, cjk != FALSE);
 }
 
 // Runs on the NSIS UI thread, from the InstFiles page's SHOW callback, while the
@@ -734,8 +732,9 @@ extern "C" __declspec(dllexport) HWND __cdecl InstallerShowProgress(
             ShowWindow(stockPage, SW_HIDE);
         }
 
-        const int size = DesignPixels(kDesignSize, surface->dpi);
-        HWND window = CreateWindowExW(0, kProgressClass, L"", WS_CHILD | WS_VISIBLE, 0, 0, size, size,
+        const int width = DesignPixels(kDesignWidth, surface->dpi);
+        const int height = DesignPixels(kDesignHeight, surface->dpi);
+        HWND window = CreateWindowExW(0, kProgressClass, L"", WS_CHILD | WS_VISIBLE, 0, 0, width, height,
                                       parent, nullptr, GetModuleHandleW(nullptr), surface);
         if (!window) {
             delete surface->brand;

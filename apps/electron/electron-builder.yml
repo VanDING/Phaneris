@@ -64,7 +64,7 @@ files:
 asar: false
 
 
-# Windows installer: a fully owner-drawn 600x600 surface, not NSIS's stock
+# Windows installer: a fully owner-drawn 520x480 surface, not NSIS's stock
 # dialog. `oneClick: false` is required to have pages at all, but the product
 # decision is still one click to the default per-user location — the install
 # mode page is suppressed in scripts/installer.nsh (`customInstallMode` forces

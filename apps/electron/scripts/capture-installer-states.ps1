@@ -55,6 +55,10 @@ must not be allowed to install anywhere.
 Force English (1033) or Simplified Chinese (2052) in the --preview syntax probe.
 The release installer continues to select the system language.
 
+.PARAMETER WithoutPointer
+Do not move or restore the user's cursor. Hover captures are omitted; other
+states and page transitions still use real native controls.
+
 .EXAMPLE
 pwsh -File apps/electron/scripts/capture-installer-states.ps1 -Theme light
 #>
@@ -64,6 +68,8 @@ param(
     [ValidateSet('light', 'dark')] [string]$Theme = 'light',
     [string]$OutDir,
     [ValidateSet('', '1033', '2052')] [string]$PreviewLanguage = '',
+    [ValidateSet('', '96', '120', '144', '192')] [string]$PreviewDpi = '',
+    [switch]$WithoutPointer,
     [switch]$WelcomeOnly,
     [int]$TimeoutSeconds = 240
 )
@@ -81,9 +87,10 @@ if (-not $InstallerPath) {
 }
 if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
 
-# The installer locks release/ while it runs, so refuse to start on top of one.
-$stale = Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.ProcessName -like 'Phaneris*' }
-if ($stale) { throw "A previous installer or app is still running (PID $($stale.Id -join ', ')). Kill it first." }
+# Refuse a second copy of this installer; a preview can coexist with the app.
+$resolvedInstaller = (Resolve-Path -LiteralPath $InstallerPath).Path
+$stale = Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $resolvedInstaller }
+if ($stale) { throw "This installer is already running (PID $($stale.Id -join ', '))." }
 
 if (-not ('PhanerisStateProbe' -as [type])) {
     Add-Type -Language CSharp -TypeDefinition @'
@@ -101,6 +108,11 @@ public sealed class StateWindow {
     public bool Visible;
     public bool Enabled;
     public int Style;
+    public string FontFace = "";
+    public string RequestedFontFace = "";
+    public int FontHeight;
+    public int TextHeight;
+    public byte FontQuality;
     public int Left, Top, Right, Bottom;
     public int Width { get { return Right - Left; } }
     public int Height { get { return Bottom - Top; } }
@@ -125,6 +137,7 @@ public static class PhanerisStateProbe {
     [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint pid);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetClassNameW(IntPtr hwnd, StringBuilder s, int n);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetWindowTextW(IntPtr hwnd, StringBuilder s, int n);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int DrawTextW(IntPtr dc, string text, int count, ref RECT rect, uint flags);
     [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr hwnd);
     [DllImport("user32.dll")] private static extern bool IsWindowEnabled(IntPtr hwnd);
     [DllImport("user32.dll")] private static extern bool IsWindow(IntPtr hwnd);
@@ -132,6 +145,7 @@ public static class PhanerisStateProbe {
     [DllImport("user32.dll")] private static extern int GetWindowLongW(IntPtr hwnd, int index);
     [DllImport("user32.dll")] private static extern bool GetWindowRect(IntPtr hwnd, out RECT r);
     [DllImport("user32.dll")] private static extern bool GetClientRect(IntPtr hwnd, out RECT r);
+    [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr hwnd);
     [DllImport("user32.dll")] private static extern IntPtr SendMessageW(IntPtr hwnd, uint msg, IntPtr wp, IntPtr lp);
     [DllImport("user32.dll")] private static extern bool PostMessageW(IntPtr hwnd, uint msg, IntPtr wp, IntPtr lp);
     [DllImport("user32.dll")] private static extern bool SetWindowPos(IntPtr hwnd, IntPtr after, int x, int y, int cx, int cy, uint flags);
@@ -145,6 +159,9 @@ public static class PhanerisStateProbe {
     [DllImport("gdi32.dll")] private static extern bool DeleteDC(IntPtr dc);
     [DllImport("gdi32.dll")] private static extern IntPtr CreateCompatibleBitmap(IntPtr dc, int w, int h);
     [DllImport("gdi32.dll")] private static extern IntPtr SelectObject(IntPtr dc, IntPtr obj);
+    [DllImport("gdi32.dll", CharSet = CharSet.Unicode)] private static extern int GetTextFaceW(IntPtr dc, int count, StringBuilder face);
+    [DllImport("gdi32.dll", CharSet = CharSet.Unicode)] private static extern int GetObjectW(IntPtr obj, int size, out LOGFONT font);
+    [DllImport("gdi32.dll", CharSet = CharSet.Unicode)] private static extern IntPtr CreateFontIndirectW(ref LOGFONT font);
     [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr hwnd, int command);
     [DllImport("gdi32.dll")] private static extern bool DeleteObject(IntPtr obj);
     [DllImport("gdi32.dll")] private static extern bool BitBlt(IntPtr dst, int x, int y, int w, int h, IntPtr src, int sx, int sy, uint rop);
@@ -154,6 +171,12 @@ public static class PhanerisStateProbe {
 
     [StructLayout(LayoutKind.Sequential)] private struct RECT { public int Left, Top, Right, Bottom; }
     [StructLayout(LayoutKind.Sequential)] private struct POINT { public int X, Y; }
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    private struct LOGFONT {
+        public int Height, Width, Escapement, Orientation, Weight;
+        public byte Italic, Underline, StrikeOut, CharacterSet, OutPrecision, ClipPrecision, Quality, PitchAndFamily;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string Face;
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     private struct BITMAPINFOHEADER {
@@ -183,7 +206,7 @@ public static class PhanerisStateProbe {
     private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
     private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
 
-    private static StateWindow Describe(IntPtr hwnd) {
+    public static StateWindow Describe(IntPtr hwnd) {
         var info = new StateWindow();
         info.Handle = hwnd;
         var cls = new StringBuilder(256);
@@ -198,6 +221,32 @@ public static class PhanerisStateProbe {
         info.Style = GetWindowLongW(hwnd, GWL_STYLE);
         RECT r;
         if (GetWindowRect(hwnd, out r)) { info.Left = r.Left; info.Top = r.Top; info.Right = r.Right; info.Bottom = r.Bottom; }
+        IntPtr font = SendMessageW(hwnd, 0x0031, IntPtr.Zero, IntPtr.Zero); // WM_GETFONT
+        if (font != IntPtr.Zero) {
+            LOGFONT description;
+            if (GetObjectW(font, Marshal.SizeOf<LOGFONT>(), out description) != 0) {
+                info.RequestedFontFace = description.Face;
+                info.FontHeight = description.Height;
+                info.FontQuality = description.Quality;
+                // Foreign-process HFONTs cannot be selected into this process's
+                // DC. Resolve the captured LOGFONT through a local clone.
+                IntPtr localFont = CreateFontIndirectW(ref description);
+                IntPtr dc = GetDC(hwnd);
+                if (localFont != IntPtr.Zero && dc != IntPtr.Zero) {
+                    IntPtr previous = SelectObject(dc, localFont);
+                    var face = new StringBuilder(64);
+                    GetTextFaceW(dc, face.Capacity, face);
+                    info.FontFace = face.ToString();
+                    RECT textBounds = new RECT { Right = info.Width };
+                    uint flags = 0x400 | 0x800 | (info.Class == "Static" ? 0x10u : 0x20u); // CALCRECT, NOPREFIX, wrap/single line
+                    DrawTextW(dc, info.Text, -1, ref textBounds, flags);
+                    info.TextHeight = textBounds.Bottom - textBounds.Top;
+                    SelectObject(dc, previous);
+                }
+                if (dc != IntPtr.Zero) ReleaseDC(hwnd, dc);
+                if (localFont != IntPtr.Zero) DeleteObject(localFont);
+            }
+        }
         return info;
     }
 
@@ -227,7 +276,7 @@ public static class PhanerisStateProbe {
     /// pixels visible, and the user's foreground window must not change.
     public static bool Present(IntPtr hwnd) {
         ShowWindow(hwnd, 4); // SW_SHOWNOACTIVATE, including a hidden launch.
-        return SetWindowPos(hwnd, HWND_TOPMOST, 8, 8, 0, 0, 0x0001 | 0x0002 | 0x0010);
+        return SetWindowPos(hwnd, HWND_TOPMOST, 8, 8, 0, 0, 0x0001 | 0x0002 | 0x0010 | 0x0040);
     }
 
     public static bool Drop(IntPtr hwnd) {
@@ -246,10 +295,19 @@ public static class PhanerisStateProbe {
     /// nothing else -- a posted WM_MOUSEMOVE leaves the state at 0.
     public static string Hover(IntPtr hwnd) {
         int[] to = ScreenCentre(hwnd);
-        SetCursorPos(to[0] - 24, to[1]);
-        System.Threading.Thread.Sleep(80);
-        SetCursorPos(to[0], to[1]);
-        return string.Format("SetCursorPos({0},{1})", to[0], to[1]);
+        RECT bounds; GetWindowRect(hwnd, out bounds);
+        // Enter from outside the control and wait for the real hot bit. The
+        // first move can be consumed while a newly shown dialog settles.
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            SetCursorPos(bounds.Left - 8, to[1]);
+            System.Threading.Thread.Sleep(80);
+            SetCursorPos(to[0], to[1]);
+            System.Threading.Thread.Sleep(120);
+            if (((long)SendMessageW(hwnd, BM_GETSTATE, IntPtr.Zero, IntPtr.Zero) & 0x200) != 0)
+                return string.Format("SetCursorPos({0},{1}); hot after attempt {2}", to[0], to[1], attempt);
+        }
+        POINT cursor; GetCursorPos(out cursor);
+        throw new InvalidOperationException(string.Format("Hover was not delivered at {0},{1}; actual cursor={2},{3}", to[0], to[1], cursor.X, cursor.Y));
     }
 
     public static string Unhover(IntPtr hwnd) {
@@ -425,6 +483,7 @@ public static class PhanerisStateProbe {
 }
 
 $script:log = New-Object System.Collections.Generic.List[string]
+$script:measurements = New-Object System.Collections.Generic.List[object]
 function Note([string]$line) {
     $stamp = (Get-Date).ToString('HH:mm:ss.fff')
     $script:log.Add("$stamp  $line")
@@ -448,11 +507,13 @@ function Save-State {
     $bmp = Join-Path $OutDir "$Theme-$Name.bmp"
     $png = Join-Path $OutDir "$Theme-$Name.png"
     # Up to three attempts: a screen capture can land on a frame the window has
-    # not painted yet, which comes back as a uniform 600x600 fill and compresses
+    # not painted yet, which comes back as a uniform page fill and compresses
     # to a couple of kilobytes. The first dark progress-early capture did exactly
     # that and shipped a blank white PNG as evidence.
     $ok = $false
     for ($attempt = 1; $attempt -le 3; $attempt++) {
+        [void][PhanerisStateProbe]::Present($Dialog)
+        Start-Sleep -Milliseconds 100
         if ($attempt -gt 1) { Start-Sleep -Milliseconds 250 }
         $ok = [PhanerisStateProbe]::Capture($Dialog, $bmp)
         if ($ok) {
@@ -467,6 +528,31 @@ function Save-State {
     $bytes = if ($ok -and (Test-Path $png)) { (Get-Item $png).Length } else { 0 }
     Note ("shot {0,-26} {1} ({2} bytes) {3}" -f $Name, $(if ($ok) { $png } else { '(capture failed)' }), $bytes, $Detail)
     if (-not $ok -or $bytes -lt 6000) { throw "No usable screenshot for $Name" }
+    $bounds = [PhanerisStateProbe]::Describe($Dialog)
+    $controls = @([PhanerisStateProbe]::Descendants($Dialog) | Where-Object { $_.Visible })
+    $controls |
+        Select-Object Class, Text, Left, Top, Right, Bottom, RequestedFontFace, FontFace, FontHeight, FontQuality, TextHeight |
+        ConvertTo-Json -Depth 4 |
+        Set-Content -LiteralPath (Join-Path $OutDir "$Theme-$Name-controls.json") -Encoding utf8
+    $dpi = if ($PreviewDpi) { [int]$PreviewDpi } else { [int][PhanerisStateProbe]::GetDpiForWindow($Dialog) }
+    $expected = @([int][Math]::Round(520 * $dpi / 96), [int][Math]::Round(480 * $dpi / 96))
+    if ($bounds.Width -ne $expected[0] -or $bounds.Height -ne $expected[1]) {
+        throw "Window size $($bounds.Width)x$($bounds.Height) differs from $($expected -join 'x') at layout DPI $dpi"
+    }
+    foreach ($control in $controls) {
+        if ($control.Left -lt $bounds.Left -or $control.Top -lt $bounds.Top -or $control.Right -gt $bounds.Right -or $control.Bottom -gt $bounds.Bottom) {
+            throw "Visible control escapes the window: $control"
+        }
+        if ($control.Text -and $control.Class -in @('Button', 'Static', 'Edit')) {
+            if ($control.FontQuality -ne 5 -or $control.FontFace -ne $control.RequestedFontFace) {
+                throw "Font quality/fallback mismatch: $($control.Text), $($control.RequestedFontFace) -> $($control.FontFace), quality=$($control.FontQuality)"
+            }
+            if ($control.TextHeight -gt $control.Height) {
+                throw "Text is vertically clipped: $($control.Text), measured=$($control.TextHeight), available=$($control.Height)"
+            }
+        }
+    }
+    $script:measurements.Add(@{ state = $Name; layoutDpi = $dpi; actualDpi = [PhanerisStateProbe]::GetDpiForWindow($Dialog); width = $bounds.Width; height = $bounds.Height; visibleControls = $controls.Count; pointerMovement = -not $WithoutPointer; pass = $true })
 }
 
 function Get-Control {
@@ -489,6 +575,7 @@ Note "theme:     $Theme"
 $cursorBefore = [PhanerisStateProbe]::Cursor()
 $launchArgs = "/THEME=$Theme"
 if ($PreviewLanguage) { $launchArgs += " /LANGUAGE=$PreviewLanguage" }
+if ($PreviewDpi) { $launchArgs += " /DPI=$PreviewDpi" }
 $proc = Start-Process -FilePath $InstallerPath -ArgumentList $launchArgs -WindowStyle Hidden -PassThru
 Note "launched pid=$($proc.Id) /THEME=$Theme (cursor was $($cursorBefore[0]),$($cursorBefore[1]))"
 
@@ -511,8 +598,28 @@ try {
         $dialog = [PhanerisStateProbe]::OuterDialog([uint32]$proc.Id)
     }
     if ($dialog -eq [IntPtr]::Zero) { throw 'the outer dialog never appeared' }
+    # The outer dialog exists while NSIS is still loading high-DPI assets.
+    # Wait for the production page to show its action before presenting it.
+    $readyDeadline = (Get-Date).AddSeconds(30)
+    while ((Get-Date) -lt $readyDeadline -and -not $primary) {
+        $primary = Get-Control $dialog '安装|完成|Install|Finish'
+        if (-not $primary) { Start-Sleep -Milliseconds 120 }
+    }
+    if (-not $primary) {
+        foreach ($control in [PhanerisStateProbe]::Descendants($dialog)) { Note "  control: $control" }
+        throw 'no primary button on the welcome page'
+    }
     [void][PhanerisStateProbe]::Present($dialog)
-    Start-Sleep -Milliseconds 700
+    # Creating visible child controls does not mean NSIS has finished showing
+    # the page. Its later show call can also undo our initial z-order. Wait for
+    # the actual action surface before capturing, especially at scaled DPI.
+    $paintDeadline = (Get-Date).AddSeconds(10)
+    do {
+        [void][PhanerisStateProbe]::Present($dialog)
+        Start-Sleep -Milliseconds 200
+        $renderedFill = [PhanerisStateProbe]::Fill($primary.Handle)
+    } while ($renderedFill -notin @('#733DF4', '#6932E6') -and (Get-Date) -lt $paintDeadline)
+    if ($renderedFill -notin @('#733DF4', '#6932E6')) { throw "Welcome action was not rendered: $renderedFill" }
 
     $primary = Get-Control $dialog '安装|完成|Install|Finish'
     $secondary = Get-Control $dialog '选择安装位置|Choose location'
@@ -527,10 +634,12 @@ try {
     Save-State $dialog 'welcome-idle' "fill $idlePixel  $([PhanerisStateProbe]::State($primary.Handle))"
 
     # --- hover --------------------------------------------------------------
-    Note ([PhanerisStateProbe]::Hover($primary.Handle))
-    Start-Sleep -Milliseconds 350
-    $hoverPixel = [PhanerisStateProbe]::Fill($primary.Handle)
-    Save-State $dialog 'welcome-hover-primary' "fill $hoverPixel  $([PhanerisStateProbe]::State($primary.Handle))"
+    if (-not $WithoutPointer) {
+        Note ([PhanerisStateProbe]::Hover($primary.Handle))
+        Start-Sleep -Milliseconds 350
+        $hoverPixel = [PhanerisStateProbe]::Fill($primary.Handle)
+        Save-State $dialog 'welcome-hover-primary' "fill $hoverPixel  $([PhanerisStateProbe]::State($primary.Handle))"
+    }
 
     # --- pressed ------------------------------------------------------------
     Note ([PhanerisStateProbe]::Press($primary.Handle, $shape[0], $shape[1]))
@@ -538,7 +647,7 @@ try {
     $pressedPixel = [PhanerisStateProbe]::Fill($primary.Handle)
     Save-State $dialog 'welcome-pressed-primary' "fill $pressedPixel  $([PhanerisStateProbe]::State($primary.Handle))"
     Note ([PhanerisStateProbe]::Release($primary.Handle))
-    Note ([PhanerisStateProbe]::Unhover($primary.Handle))
+    if (-not $WithoutPointer) { Note ([PhanerisStateProbe]::Unhover($primary.Handle)) }
     Start-Sleep -Milliseconds 300
 
     # --- keyboard focus -----------------------------------------------------
@@ -549,11 +658,13 @@ try {
     # --- the secondary control ---------------------------------------------
     if ($secondary) {
         $secondaryIdle = [PhanerisStateProbe]::Fill($secondary.Handle)
-        Note ([PhanerisStateProbe]::Hover($secondary.Handle))
-        Start-Sleep -Milliseconds 350
-        $secondaryHover = [PhanerisStateProbe]::Fill($secondary.Handle)
-        Save-State $dialog 'welcome-hover-secondary' "fill $secondaryIdle -> $secondaryHover  $([PhanerisStateProbe]::State($secondary.Handle))"
-        Note ([PhanerisStateProbe]::Unhover($secondary.Handle))
+        if (-not $WithoutPointer) {
+            Note ([PhanerisStateProbe]::Hover($secondary.Handle))
+            Start-Sleep -Milliseconds 350
+            $secondaryHover = [PhanerisStateProbe]::Fill($secondary.Handle)
+            Save-State $dialog 'welcome-hover-secondary' "fill $secondaryIdle -> $secondaryHover  $([PhanerisStateProbe]::State($secondary.Handle))"
+            Note ([PhanerisStateProbe]::Unhover($secondary.Handle))
+        }
         Start-Sleep -Milliseconds 250
         Note ([PhanerisStateProbe]::Focus($dialog, $secondary.Handle))
         Start-Sleep -Milliseconds 300
@@ -566,7 +677,9 @@ try {
     $disabledPixel = [PhanerisStateProbe]::Fill($primary.Handle)
     Save-State $dialog 'welcome-disabled-primary' "fill $disabledPixel  enabled=$([PhanerisStateProbe]::Enabled($primary.Handle))"
     if ([PhanerisStateProbe]::Enabled($primary.Handle)) { throw 'The disabled action is still enabled' }
-    if (@($idlePixel, $hoverPixel, $pressedPixel, $disabledPixel | Select-Object -Unique).Count -ne 4) {
+    $actionFills = @($idlePixel, $pressedPixel, $disabledPixel)
+    if (-not $WithoutPointer) { $actionFills += $hoverPixel }
+    if (@($actionFills | Select-Object -Unique).Count -ne $actionFills.Count) {
         throw 'Primary button states do not have distinct fills'
     }
     Note ([PhanerisStateProbe]::Enable($primary.Handle, $true))
@@ -581,9 +694,9 @@ try {
         if ($edit) {
             Note "edit:      $edit"
             $browse = Get-Control $dialog '更改|Change'
-            if ($browse) { Note ([PhanerisStateProbe]::Hover($browse.Handle)); Start-Sleep -Milliseconds 300 }
+            if ($browse -and -not $WithoutPointer) { Note ([PhanerisStateProbe]::Hover($browse.Handle)); Start-Sleep -Milliseconds 300 }
             Save-State $dialog 'welcome-expanded' "path `"$($edit.Text)`" ($($edit.Text.Length) chars)"
-            if ($browse) { Note ([PhanerisStateProbe]::Unhover($browse.Handle)) }
+            if ($browse -and -not $WithoutPointer) { Note ([PhanerisStateProbe]::Unhover($browse.Handle)) }
 
             $long = "$env:LOCALAPPDATA\Programs\Phaneris-Enterprise-Preview-Channel-2026\app"
             Note ([PhanerisStateProbe]::SetText($edit.Handle, $long))
@@ -691,7 +804,7 @@ try {
         }
     }
 } finally {
-    [PhanerisStateProbe]::Cursor($cursorBefore[0], $cursorBefore[1])
+    if (-not $WithoutPointer) { [PhanerisStateProbe]::Cursor($cursorBefore[0], $cursorBefore[1]) }
     if ($dialog -ne [IntPtr]::Zero) { [void][PhanerisStateProbe]::Drop($dialog) }
     $proc.Refresh()
     if (-not $proc.HasExited) {
@@ -705,5 +818,6 @@ try {
         Note "progress:     early `"$earlyText`"   late `"$lateText`""
     }
     $script:log | Set-Content -Path (Join-Path $OutDir "$Theme-capture-log.txt") -Encoding utf8
+    $script:measurements | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $OutDir "$Theme-typography-layout.json") -Encoding utf8
     Note "log: $OutDir\$Theme-capture-log.txt"
 }

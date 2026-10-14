@@ -13,9 +13,9 @@
  * electron-builder while it resolves its config, so neither can be produced by a
  * late build hook the way `installer-ui/windowframe.dll` is.
  *
- *   brand.png / brand@2x.png            light lockup, transparent background
- *   brand-dark.png / brand-dark@2x.png  dark lockup, transparent background
- *   brand.bmp / brand-2x.bmp            600x176 and 1200x352, opaque white
+ *   brand.png / brand@2x.png            mark strip, transparent background
+ *   brand-dark.png / brand-dark@2x.png  the same mark for the dark page
+ *   brand.bmp / brand-2x.bmp            520x116 and 1040x232, opaque white
  *   brand-dark.bmp / brand-dark-2x.bmp  the same two sizes on the dark page
  *   uninstaller-sidebar.bmp             164x314, NSIS MUI welcome/finish bitmap
  *   installerHeader.bmp                 150x57,  NSIS MUI header bitmap
@@ -44,22 +44,21 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import sharp from 'sharp'
+import { generateInstallerLayout } from '../apps/electron/scripts/generate-installer-layout.cjs'
 
 const ROOT = resolve(import.meta.dir, '..')
 const RES = join(ROOT, 'apps/electron/resources')
 const OUT = join(ROOT, 'apps/electron/installer/assets')
 
-const STRIP_W = 600
-const STRIP_H = 176
-const MARK_TOP = 16
-const MARK_H = 88
-const WORDMARK_PX = 28
-const WORDMARK_BASELINE = 144
+const layout = generateInstallerLayout()
+const STRIP_W = layout.brand.image[2]
+const STRIP_H = layout.brand.image[3]
+const MARK_TOP = layout.brand.markTop
+const MARK_H = layout.brand.markHeight
 
 // Palette. Must match progress.h's constants; that file is authoritative for
 // what the plugin paints behind these images.
 const LIGHT_INK = '#0F1115'
-const DARK_INK = '#FFFFFF'
 const LIGHT_PAGE = '#FFFFFF'
 const DARK_PAGE = '#151517'
 
@@ -76,13 +75,12 @@ const markInner = svg
 
 const log = (message: string) => console.log(`  • installer brand: ${message}`)
 
-/** The lockup: mark above, wordmark below, no background. */
-function stripSvg(ink: string): string {
+/** The mark only; native page text renders the name sharply at every DPI. */
+function stripSvg(): string {
   const markW = (MARK_H * MARK_ASPECT).toFixed(2)
   const markX = ((STRIP_W - MARK_H * MARK_ASPECT) / 2).toFixed(2)
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${STRIP_W}" height="${STRIP_H}" viewBox="0 0 ${STRIP_W} ${STRIP_H}">
 <svg x="${markX}" y="${MARK_TOP}" width="${markW}" height="${MARK_H}" viewBox="${MARK_VIEWBOX}">${markInner}</svg>
-<text x="${STRIP_W / 2}" y="${WORDMARK_BASELINE}" font-family="Segoe UI" font-size="${WORDMARK_PX}" font-weight="600" text-anchor="middle" fill="${ink}">Phaneris</text>
 </svg>`
 }
 
@@ -151,11 +149,11 @@ async function writeBmp(
 }
 
 log('brand strips (vector mark from resources/icon.svg)')
-for (const [suffix, ink] of [['', LIGHT_INK], ['-dark', DARK_INK]] as const) {
+for (const suffix of ['', '-dark'] as const) {
   for (const scale of [1, 2]) {
     const name = `brand${suffix}${scale === 2 ? '@2x' : ''}.png`
     const path = join(OUT, name)
-    await sharp(Buffer.from(stripSvg(ink)))
+    await sharp(Buffer.from(stripSvg()))
       .resize(STRIP_W * scale, STRIP_H * scale)
       .png()
       .toFile(path)
@@ -167,13 +165,13 @@ for (const [suffix, ink] of [['', LIGHT_INK], ['-dark', DARK_INK]] as const) {
 // PNG. apps/electron/installer/installer-pages.nsh picks the 2x file above
 // 96 dpi.
 log('brand strips for the nsDialogs pages')
-for (const [suffix, ink, page] of [
-  ['', LIGHT_INK, LIGHT_PAGE],
-  ['-dark', DARK_INK, DARK_PAGE],
+for (const [suffix, page] of [
+  ['', LIGHT_PAGE],
+  ['-dark', DARK_PAGE],
 ] as const) {
   for (const scale of [1, 2]) {
     const name = `brand${suffix}${scale === 2 ? '-2x' : ''}.bmp`
-    await writeBmp(name, stripSvg(ink), STRIP_W * scale, STRIP_H * scale, page)
+    await writeBmp(name, stripSvg(), STRIP_W * scale, STRIP_H * scale, page)
   }
 }
 

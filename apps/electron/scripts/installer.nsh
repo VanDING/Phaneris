@@ -75,7 +75,7 @@
 !include "nsDialogs.nsh"
 
 ; Without this the installer process is DPI-unaware and Windows bitmap-stretches
-; the whole window on a scaled display, blurring the 600x600 surface.
+; the whole window on a scaled display, blurring the branded surface.
 ManifestDPIAware true
 
 ; MUI reads this when it builds the interface, which happens where the first

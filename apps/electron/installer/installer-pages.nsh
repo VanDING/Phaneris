@@ -98,22 +98,10 @@
 ; ---------------------------------------------------------------------------
 ;
 ; Every coordinate is a 96-dpi logical pixel. InstallerPlace converts them with
-; MulDiv at call time, so nothing here has to know the display scale. The
-; overlay half of the same grid lives in progress.h, which is the authority for
-; the 600x600 window itself and for the brand box.
+; MulDiv at call time, so nothing here has to know the display scale. layout.json
+; generates this include and the progress renderer's grid from one definition.
 
-!define INSTALLER_WINDOW_SIZE 600
-!define INSTALLER_BRAND_Y 148
-!define INSTALLER_BRAND_HEIGHT 176
-!define INSTALLER_FONT "Microsoft YaHei UI"
-!define INSTALLER_LATIN_FONT "Segoe UI"
-!define INSTALLER_BUTTON_FONT_SIZE 16
-!define INSTALLER_STATUS_FONT_SIZE 15
-!define INSTALLER_BUTTON_DIAMETER 20
-!define INSTALLER_STATUS_Y 524
-!define INSTALLER_STATUS_HEIGHT 22
-!define INSTALLER_LOCATION_Y 398
-!define INSTALLER_LOCATION_HEIGHT 40
+!include "${__FILEDIR__}\layout.generated.nsh"
 
 ; The primary button is the brand accent, in both themes: it is the one element
 ; on the page that is always the same object, and the accent reads as an action
@@ -129,7 +117,8 @@
 Var InstallerDialog
 Var InstallerPhase
 Var InstallerDpi
-Var InstallerSize
+Var InstallerWidth
+Var InstallerHeight
 Var InstallerImage
 Var InstallerButton
 Var InstallerStatus
@@ -137,7 +126,8 @@ Var InstallerTitle
 Var InstallerFont
 Var InstallerSmallFont
 Var InstallerTitleFont
-Var InstallerFontFace
+Var InstallerBrandFont
+Var InstallerFontIsCjk
 Var InstallerChoose
 Var InstallerEdit
 Var InstallerEditFrame
@@ -285,13 +275,17 @@ FunctionEnd
 !macroend
 
 ; A GDI font sized in logical pixels, so the copy scales with the display the
-; same way the layout does. Grayscale antialiasing (4) avoids colored fringes
-; on small Chinese glyphs, including text over the violet action.
+; same way the layout does. The native helper shares font creation with the
+; progress page and requests TrueType, ClearType and the correct charset.
 !macro InstallerPixelFont HANDLE SIZE WEIGHT
-    System::Call 'kernel32::MulDiv(i -${SIZE}, i $InstallerDpi, i 96) i.s'
-    Pop $0
-    System::Call 'gdi32::CreateFontW(i r0, i 0, i 0, i 0, i ${WEIGHT}, i 0, i 0, i 0, i 1, i 0, i 0, i 4, i 0, w "$InstallerFontFace") p.s'
+    System::Call '$PLUGINSDIR\${PHANERIS_PLUGIN_NAME}::InstallerCreateFont(i $InstallerDpi, i ${SIZE}, i ${WEIGHT}, i $InstallerFontIsCjk) p.s ?c'
     Pop ${HANDLE}
+    ${If} ${HANDLE} == ""
+    ${OrIf} ${HANDLE} == 0
+        MessageBox MB_OK|MB_ICONSTOP "$(INSTALLER_UI_ERROR)"
+        SetErrorLevel 2
+        Quit
+    ${EndIf}
 !macroend
 
 ; Produces a closed rounded rectangle. Inputs and output must not use $0/$1.
@@ -314,9 +308,9 @@ FunctionEnd
 ; frame, because an edit control cannot draw its own rounded border. The frame is
 ; a bitmap static painted once, here, at the measured DPI.
 Function InstallerDrawEditFrame
-    System::Call 'kernel32::MulDiv(i 384, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_PATH_WIDTH}, i $InstallerDpi, i 96) i.s'
     Pop $R7
-    System::Call 'kernel32::MulDiv(i ${INSTALLER_LOCATION_HEIGHT}, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_PATH_HEIGHT}, i $InstallerDpi, i 96) i.s'
     Pop $R8
     System::Call 'kernel32::MulDiv(i 16, i $InstallerDpi, i 96) i.s'
     Pop $R3
@@ -351,16 +345,17 @@ Function InstallerCreate
     ${If} $InstallerDialog == error
         Abort
     ${EndIf}
-    !insertmacro InstallerPlace $InstallerDialog 0 0 ${INSTALLER_WINDOW_SIZE} ${INSTALLER_WINDOW_SIZE}
+    !insertmacro InstallerPlace $InstallerDialog 0 0 ${INSTALLER_WINDOW_WIDTH} ${INSTALLER_WINDOW_HEIGHT}
     !insertmacro InstallerControlColors $HWNDPARENT
     !insertmacro InstallerControlColors $InstallerDialog
-    StrCpy $InstallerFontFace "${INSTALLER_LATIN_FONT}"
+    StrCpy $InstallerFontIsCjk 0
+    !insertmacro InstallerPixelFont $InstallerBrandFont ${INSTALLER_BRAND_FONT_SIZE} ${INSTALLER_BRAND_FONT_WEIGHT}
     ${If} $LANGUAGE == ${LANG_SIMPCHINESE}
-        StrCpy $InstallerFontFace "${INSTALLER_FONT}"
+        StrCpy $InstallerFontIsCjk 1
     ${EndIf}
-    !insertmacro InstallerPixelFont $InstallerFont ${INSTALLER_BUTTON_FONT_SIZE} 500
-    !insertmacro InstallerPixelFont $InstallerSmallFont ${INSTALLER_STATUS_FONT_SIZE} 400
-    !insertmacro InstallerPixelFont $InstallerTitleFont 20 500
+    !insertmacro InstallerPixelFont $InstallerFont ${INSTALLER_BUTTON_FONT_SIZE} ${INSTALLER_BUTTON_FONT_WEIGHT}
+    !insertmacro InstallerPixelFont $InstallerSmallFont ${INSTALLER_BODY_FONT_SIZE} ${INSTALLER_BODY_FONT_WEIGHT}
+    !insertmacro InstallerPixelFont $InstallerTitleFont ${INSTALLER_TITLE_FONT_SIZE} ${INSTALLER_TITLE_FONT_WEIGHT}
 
     ; GdiplusStartupInput is {GdiplusVersion=1, DebugEventCallback=NULL,
     ; SuppressBackgroundThread=FALSE, SuppressExternalCodecs=FALSE}, allocated on
@@ -382,28 +377,28 @@ Function InstallerCreate
     ; the buttons in the z-order and must not swallow their clicks.
     ${NSD_CreateLabel} 0 0 0 0 ""
     Pop $4
-    !insertmacro InstallerPlace $4 0 0 504 48
+    !insertmacro InstallerPlace $4 ${INSTALLER_DRAG_X} ${INSTALLER_DRAG_Y} ${INSTALLER_DRAG_WIDTH} ${INSTALLER_DRAG_HEIGHT}
     ${NSD_AddStyle} $4 ${SS_NOTIFY}
     ${NSD_OnClick} $4 InstallerDrag
     !insertmacro InstallerControlColors $4
 
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_MINIMIZE)"
     Pop $4
-    !insertmacro InstallerPlace $4 504 8 40 32
+    !insertmacro InstallerPlace $4 ${INSTALLER_MINIMIZE_X} ${INSTALLER_MINIMIZE_Y} ${INSTALLER_MINIMIZE_WIDTH} ${INSTALLER_MINIMIZE_HEIGHT}
     SendMessage $4 ${WM_SETFONT} $InstallerSmallFont 1
     ${NSD_OnClick} $4 InstallerMinimize
     ${NSD_OnNotify} $4 InstallerPaintButton
 
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_CLOSE_GLYPH)"
     Pop $4
-    !insertmacro InstallerPlace $4 548 8 40 32
+    !insertmacro InstallerPlace $4 ${INSTALLER_CLOSE_X} ${INSTALLER_CLOSE_Y} ${INSTALLER_CLOSE_WIDTH} ${INSTALLER_CLOSE_HEIGHT}
     SendMessage $4 ${WM_SETFONT} $InstallerSmallFont 1
     ${NSD_OnClick} $4 InstallerClose
     ${NSD_OnNotify} $4 InstallerPaintButton
 
     ${NSD_CreateBitmap} 0 0 0 0 ""
     Pop $4
-    !insertmacro InstallerPlace $4 0 ${INSTALLER_BRAND_Y} ${INSTALLER_WINDOW_SIZE} ${INSTALLER_BRAND_HEIGHT}
+    !insertmacro InstallerPlace $4 ${INSTALLER_BRAND_X} ${INSTALLER_BRAND_Y} ${INSTALLER_BRAND_WIDTH} ${INSTALLER_BRAND_HEIGHT}
     StrCpy $5 "brand"
     ${If} $InstallerTheme == "dark"
         StrCpy $5 "brand-dark"
@@ -414,10 +409,19 @@ Function InstallerCreate
         ${NSD_SetStretchedImage} $4 "$PLUGINSDIR\$5-2x.bmp" $InstallerImage
     ${EndIf}
 
+    ; Raster assets contain only the mark. Draw the name with a native font at
+    ; the actual display DPI so intermediate scales never stretch text pixels.
+    ${NSD_CreateLabel} 0 0 0 0 "Phaneris"
+    Pop $4
+    !insertmacro InstallerPlace $4 ${INSTALLER_BRAND_TITLE_X} ${INSTALLER_BRAND_TITLE_Y} ${INSTALLER_BRAND_TITLE_WIDTH} ${INSTALLER_BRAND_TITLE_HEIGHT}
+    ${NSD_AddStyle} $4 ${SS_CENTER}
+    SendMessage $4 ${WM_SETFONT} $InstallerBrandFont 1
+    !insertmacro InstallerControlColors $4
+
     ; Completion title and supporting copy have independent type hierarchy.
     ${NSD_CreateLabel} 0 0 0 0 "$(INSTALLER_FINISH_TITLE)"
     Pop $InstallerTitle
-    !insertmacro InstallerPlace $InstallerTitle 48 336 504 28
+    !insertmacro InstallerPlace $InstallerTitle ${INSTALLER_FINISH_TITLE_X} ${INSTALLER_FINISH_TITLE_Y} ${INSTALLER_FINISH_TITLE_WIDTH} ${INSTALLER_FINISH_TITLE_HEIGHT}
     ${NSD_AddStyle} $InstallerTitle ${SS_CENTER}
     SendMessage $InstallerTitle ${WM_SETFONT} $InstallerTitleFont 1
     !insertmacro InstallerControlColors $InstallerTitle
@@ -425,7 +429,7 @@ Function InstallerCreate
     ; Supporting copy also serves as the inline path error on welcome.
     ${NSD_CreateLabel} 0 0 0 0 ""
     Pop $InstallerStatus
-    !insertmacro InstallerPlace $InstallerStatus 48 ${INSTALLER_STATUS_Y} 504 ${INSTALLER_STATUS_HEIGHT}
+    !insertmacro InstallerPlace $InstallerStatus ${INSTALLER_ERROR_X} ${INSTALLER_ERROR_Y} ${INSTALLER_ERROR_WIDTH} ${INSTALLER_ERROR_HEIGHT}
     ${NSD_AddStyle} $InstallerStatus ${SS_CENTER}
     ; Keep wrapping for longer path validation messages.
     SendMessage $InstallerStatus ${WM_SETFONT} $InstallerSmallFont 1
@@ -434,7 +438,7 @@ Function InstallerCreate
     ; Collapsed state: one secondary button that reveals the path row.
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_CHOOSE_PATH)"
     Pop $InstallerChoose
-    !insertmacro InstallerPlace $InstallerChoose 212 400 176 36
+    !insertmacro InstallerPlace $InstallerChoose ${INSTALLER_CHOOSE_X} ${INSTALLER_CHOOSE_Y} ${INSTALLER_CHOOSE_WIDTH} ${INSTALLER_CHOOSE_HEIGHT}
     ; The font the CONTROL carries and the font InstallerPaintButton selects have
     ; to be the same one, or the caption the paint draws is not the caption the
     ; control would have drawn -- a mismatch that only shows up as text sitting
@@ -446,7 +450,7 @@ Function InstallerCreate
     ; Expanded state: the frame, the edit, and Browse.
     ${NSD_CreateBitmap} 0 0 0 0 ""
     Pop $InstallerEditFrame
-    !insertmacro InstallerPlace $InstallerEditFrame 64 ${INSTALLER_LOCATION_Y} 384 ${INSTALLER_LOCATION_HEIGHT}
+    !insertmacro InstallerPlace $InstallerEditFrame ${INSTALLER_PATH_X} ${INSTALLER_PATH_Y} ${INSTALLER_PATH_WIDTH} ${INSTALLER_PATH_HEIGHT}
     Call InstallerDrawEditFrame
     ${NSD_CreateText} 0 0 0 0 "$InstallerPath"
     Pop $InstallerEdit
@@ -474,13 +478,16 @@ Function InstallerCreate
     System::Free $6
     System::Call 'gdi32::SelectObject(p r4, p r5)'
     System::Call 'user32::ReleaseDC(p $InstallerEdit, p r4)'
-    System::Call 'kernel32::MulDiv(i 76, i $InstallerDpi, i 96) i.s'
+    IntOp $0 ${INSTALLER_PATH_X} + ${INSTALLER_PATH_INSET}
+    System::Call 'kernel32::MulDiv(i r0, i $InstallerDpi, i 96) i.s'
     Pop $0
-    System::Call 'kernel32::MulDiv(i ${INSTALLER_LOCATION_Y}, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_PATH_Y}, i $InstallerDpi, i 96) i.s'
     Pop $1
-    System::Call 'kernel32::MulDiv(i 360, i $InstallerDpi, i 96) i.s'
+    IntOp $2 ${INSTALLER_PATH_INSET} * 2
+    IntOp $2 ${INSTALLER_PATH_WIDTH} - $2
+    System::Call 'kernel32::MulDiv(i r2, i $InstallerDpi, i 96) i.s'
     Pop $2
-    System::Call 'kernel32::MulDiv(i ${INSTALLER_LOCATION_HEIGHT}, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_PATH_HEIGHT}, i $InstallerDpi, i 96) i.s'
     Pop $3
     IntOp $3 $3 - $7
     IntOp $3 $3 / 2
@@ -493,7 +500,7 @@ Function InstallerCreate
 
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_BROWSE)"
     Pop $InstallerBrowse
-    !insertmacro InstallerPlace $InstallerBrowse 456 ${INSTALLER_LOCATION_Y} 80 ${INSTALLER_LOCATION_HEIGHT}
+    !insertmacro InstallerPlace $InstallerBrowse ${INSTALLER_BROWSE_X} ${INSTALLER_BROWSE_Y} ${INSTALLER_BROWSE_WIDTH} ${INSTALLER_BROWSE_HEIGHT}
     SendMessage $InstallerBrowse ${WM_SETFONT} $InstallerSmallFont 1
     ${NSD_OnClick} $InstallerBrowse InstallerBrowsePath
     ${NSD_OnNotify} $InstallerBrowse InstallerPaintButton
@@ -517,14 +524,14 @@ Function InstallerCreate
     System::Free $6
     System::Call 'gdi32::SelectObject(p r4, p r5)'
     System::Call 'user32::ReleaseDC(p $InstallerLaunch, p r4)'
-    System::Call 'kernel32::MulDiv(i 42, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_LAUNCH_EXTRA_WIDTH}, i $InstallerDpi, i 96) i.s'
     Pop $2
     IntOp $2 $2 + $7
-    IntOp $0 $InstallerSize - $2
+    IntOp $0 $InstallerWidth - $2
     IntOp $0 $0 / 2
-    System::Call 'kernel32::MulDiv(i 400, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_LAUNCH_Y}, i $InstallerDpi, i 96) i.s'
     Pop $1
-    System::Call 'kernel32::MulDiv(i 32, i $InstallerDpi, i 96) i.s'
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_LAUNCH_HEIGHT}, i $InstallerDpi, i 96) i.s'
     Pop $3
     System::Call 'user32::MoveWindow(p $InstallerLaunch, i r0, i r1, i r2, i r3, i 1)'
     !insertmacro InstallerControlColors $InstallerLaunch
@@ -536,7 +543,7 @@ Function InstallerCreate
 
     ${NSD_CreateButton} 0 0 0 0 "$(INSTALLER_INSTALL)"
     Pop $InstallerButton
-    !insertmacro InstallerPlace $InstallerButton 188 456 224 48
+    !insertmacro InstallerPlace $InstallerButton ${INSTALLER_PRIMARY_X} ${INSTALLER_PRIMARY_Y} ${INSTALLER_PRIMARY_WIDTH} ${INSTALLER_PRIMARY_HEIGHT}
     SendMessage $InstallerButton ${WM_SETFONT} $InstallerFont 1
     ${NSD_OnClick} $InstallerButton InstallerStart
     ${NSD_OnNotify} $InstallerButton InstallerPaintButton
@@ -556,6 +563,7 @@ Function InstallerCreate
     System::Call 'gdi32::DeleteObject(p $InstallerFont)'
     System::Call 'gdi32::DeleteObject(p $InstallerSmallFont)'
     System::Call 'gdi32::DeleteObject(p $InstallerTitleFont)'
+    System::Call 'gdi32::DeleteObject(p $InstallerBrandFont)'
 FunctionEnd
 
 ; Everything phase-dependent happens here, so a control can never be left in the
@@ -571,7 +579,7 @@ Function InstallerRender
     ${If} $InstallerPhase == "success"
         ${NSD_SetText} $InstallerButton "$(INSTALLER_FINISH)"
         ${NSD_SetText} $InstallerStatus "$(INSTALLER_FINISH_BODY)"
-        !insertmacro InstallerPlace $InstallerStatus 48 372 504 22
+        !insertmacro InstallerPlace $InstallerStatus ${INSTALLER_FINISH_BODY_X} ${INSTALLER_FINISH_BODY_Y} ${INSTALLER_FINISH_BODY_WIDTH} ${INSTALLER_FINISH_BODY_HEIGHT}
         !insertmacro InstallerMutedColors $InstallerStatus
         ShowWindow $InstallerTitle 5
         ShowWindow $InstallerStatus 5
@@ -638,7 +646,7 @@ Function InstallerValidateEditedPath
     ; the only thing this page ever shows down there now, so it gets the whole
     ; width and two lines rather than being tucked beside a link.
     ${NSD_SetText} $InstallerStatus "$InstallerError"
-    !insertmacro InstallerPlace $InstallerStatus 64 ${INSTALLER_STATUS_Y} 472 44
+    !insertmacro InstallerPlace $InstallerStatus ${INSTALLER_ERROR_X} ${INSTALLER_ERROR_Y} ${INSTALLER_ERROR_WIDTH} ${INSTALLER_ERROR_HEIGHT}
     ${If} $InstallerTheme == "dark"
         SetCtlColors $InstallerStatus F6A6AE 151517
     ${Else}
@@ -1394,23 +1402,45 @@ Function InstallerGuiInit
     System::Call 'gdi32::GetDeviceCaps(p r0, i 88) i.s'
     Pop $InstallerDpi
     System::Call 'user32::ReleaseDC(p $HWNDPARENT, p r0)'
-    System::Call 'kernel32::MulDiv(i 600, i $InstallerDpi, i 96) i.s'
-    Pop $InstallerSize
+    !ifdef PHANERIS_UI_PREVIEW
+        ; Exercise the production layout/font scaling without changing the
+        ; user's monitor settings. This override is absent from release builds.
+        ${GetParameters} $0
+        ${GetOptions} $0 "/DPI=" $1
+        ${IfNot} ${Errors}
+            ${If} $1 == 96
+            ${OrIf} $1 == 120
+            ${OrIf} $1 == 144
+            ${OrIf} $1 == 192
+                StrCpy $InstallerDpi $1
+            ${EndIf}
+        ${EndIf}
+    !endif
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_WINDOW_WIDTH}, i $InstallerDpi, i 96) i.s'
+    Pop $InstallerWidth
+    System::Call 'kernel32::MulDiv(i ${INSTALLER_WINDOW_HEIGHT}, i $InstallerDpi, i 96) i.s'
+    Pop $InstallerHeight
     System::Call 'user32::GetSystemMetrics(i 0) i.s'
     Pop $0
     System::Call 'user32::GetSystemMetrics(i 1) i.s'
     Pop $1
-    IntOp $0 $0 - $InstallerSize
+    IntOp $0 $0 - $InstallerWidth
     IntOp $0 $0 / 2
-    IntOp $1 $1 - $InstallerSize
+    IntOp $1 $1 - $InstallerHeight
     IntOp $1 $1 / 2
     ; SWP_NOZORDER|SWP_NOACTIVATE|SWP_FRAMECHANGED
-    System::Call 'user32::SetWindowPos(p $HWNDPARENT, p 0, i r0, i r1, i $InstallerSize, i $InstallerSize, i 0x34)'
+    System::Call 'user32::SetWindowPos(p $HWNDPARENT, p 0, i r0, i r1, i $InstallerWidth, i $InstallerHeight, i 0x34)'
     System::Call '$PLUGINSDIR\${PHANERIS_PLUGIN_NAME}::InstallerApplyFrame(p $HWNDPARENT) i.s ?c'
     Pop $0
     ; Not `$0 < 0`. A failed call leaves $0 empty, and an empty string compares
     ; as 0 here, so the old test let a plugin that never loaded through.
     Call PhanerisRequireFrame
+    ; Keep Windows' native outline in the same light/dark mode as the page.
+    StrCpy $1 0
+    ${If} $InstallerTheme == "dark"
+        StrCpy $1 1
+    ${EndIf}
+    System::Call 'dwmapi::DwmSetWindowAttribute(p $HWNDPARENT, i 20, *i r1, i 4)'
     ; The stock button strip and branding. The plugin hides the same ids, but it
     ; runs before the pages exist and this is the script's own contract with
     ; MUI; doing both costs nothing and means neither has to be the only guard.
@@ -1507,7 +1537,7 @@ FunctionEnd
 ; The finish page's create callback. The order here is the whole fix:
 ;
 ;   1. run the overlay's final animation and let it paint 100%;
-;   2. DESTROY IT. Nothing else in the installer does, and a live 600x600 child
+;   2. DESTROY IT. Nothing else in the installer does, and a live 520x480 child
 ;      of $HWNDPARENT is exactly what used to sit on top of the finish page,
 ;      showing "cleaning temporary files" forever;
 ;   3. build the finish page, which now owns the whole client area.

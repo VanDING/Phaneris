@@ -63,6 +63,7 @@ function findVisualStudio() {
  *   is noise when someone is iterating on the C++ by hand.
  */
 function buildInstallerPlugin(options = {}) {
+  require('./generate-installer-layout.cjs').generateInstallerLayout()
   if (process.platform !== 'win32') {
     throw new Error(
       'The installer skin needs MSVC to compile installer/window-frame.cpp, ' +

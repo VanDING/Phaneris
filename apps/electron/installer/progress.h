@@ -85,13 +85,11 @@ constexpr wchar_t kStockProgressClass[] = L"msctls_progress32";
 // 2. Layout grid — 96 dpi design units
 // ---------------------------------------------------------------------------
 //
-// Every number below is a literal from the visual specification, in the 600x600
+// Every number below is a literal from the visual specification, in the 520x480
 // client area. The plugin scales the whole canvas with
 // `graphics.ScaleTransform(dpi / 96.0f, dpi / 96.0f)` and makes the window's
-// client area exactly MulDiv(600, dpi, 96) square, so these stay readable and
+// client area at the display DPI, so these stay readable and
 // nothing is pre-multiplied by hand.
-
-constexpr int kDesignSize = 600;
 
 // A plain box, converted to Gdiplus::RectF at the drawing site. Kept separate
 // from RectF so this header does not have to pull in GDI+.
@@ -102,21 +100,8 @@ struct Box {
     float height;
 };
 
-// The brand lockup. The committed asset is 600x176 (and a 1200x352 @2x variant);
-// DrawImage scales either into this box.
-constexpr Box kBrandBox = {0.0f, 148.0f, 600.0f, 176.0f};
-
-constexpr Box kTrackBox = {144.0f, 452.0f, 312.0f, 4.0f};
-constexpr float kTrackCorner = 4.0f;               // px of rounded end on the track
-constexpr Box kStatusBox = {144.0f, 420.0f, 252.0f, 22.0f};
-constexpr Box kPercentBox = {404.0f, 420.0f, 52.0f, 22.0f};
-constexpr float kStatusPixels = 15.0f;
-
-// Caption buttons: glyphs, not bitmaps, centred in their boxes.
-constexpr Box kMinimizeBox = {504.0f, 8.0f, 40.0f, 32.0f};
-constexpr Box kCloseBox = {548.0f, 8.0f, 40.0f, 32.0f};
-constexpr float kGlyphPixels = 16.0f;
-constexpr float kCaptionBandHeight = 48.0f;        // y < 48 is chrome; below is content
+// One design definition also generates NSIS coordinates and bitmap geometry.
+#include "layout.generated.h"
 
 // Is a design-unit point inside a design-unit box? Used for every hit test, so
 // the hit region cannot drift from the painted one.

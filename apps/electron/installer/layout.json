@@ -1,0 +1,44 @@
+{
+  "window": { "width": 520, "height": 480, "frameMargin": 1 },
+  "fonts": {
+    "latin": "Segoe UI",
+    "cjk": "Microsoft YaHei UI",
+    "brand": { "size": 28, "weight": 600 },
+    "title": { "size": 20, "weight": 500 },
+    "body": { "size": 14, "weight": 400 },
+    "button": { "size": 16, "weight": 500 }
+  },
+  "brand": {
+    "image": [0, 56, 520, 116],
+    "title": [48, 172, 424, 40],
+    "markTop": 16,
+    "markHeight": 88
+  },
+  "caption": {
+    "drag": [0, 0, 424, 48],
+    "minimize": [424, 8, 40, 32],
+    "close": [468, 8, 40, 32],
+    "glyphSize": 16
+  },
+  "primary": { "box": [180, 368, 160, 44], "diameter": 16 },
+  "welcome": {
+    "choose": [192, 312, 136, 32],
+    "path": [48, 308, 320, 40],
+    "pathInset": 12,
+    "browse": [376, 308, 96, 40],
+    "error": [48, 420, 424, 48]
+  },
+  "finish": {
+    "title": [48, 248, 424, 30],
+    "description": [48, 284, 424, 22],
+    "launchY": 312,
+    "launchHeight": 32,
+    "launchExtraWidth": 42
+  },
+  "progress": {
+    "track": [104, 368, 312, 4],
+    "status": [104, 332, 252, 22],
+    "percent": [364, 332, 52, 22],
+    "trackCorner": 4
+  }
+}
