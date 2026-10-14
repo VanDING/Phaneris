@@ -69,11 +69,11 @@ export type { LoadedSkill, SkillMetadata };
 // Plugin bundle types (workspace-owned capability bundles)
 import type { PluginLoadError, PluginLoadWarning } from '@phaneris/shared/plugins/types';
 import type {
-  PluginInstallPlan,
+  PluginInstallConfirmation as PluginInstallPlan,
   PluginInstallResult,
   PluginOverwriteEntry,
   PluginStdioCommand,
-  PluginUninstallPlan,
+  PluginUninstallConfirmation as PluginUninstallPlan,
   PluginUninstallResult,
 } from '@phaneris/shared/plugins';
 export type {
@@ -288,8 +288,8 @@ export interface PluginSummary {
   path: string
   /** Workspace-relative plugin root, e.g. `plugins/my-plugin`. */
   workspaceRelativePath: string
-  skills: Array<{ slug: string; name: string; description: string }>
-  sources: Array<{ slug: string; type: 'mcp' | 'api' | 'local' }>
+  skills: import('@phaneris/shared/plugins').PluginSummaryDto['skills']
+  sources: import('@phaneris/shared/plugins').PluginSummaryDto['sources']
   hasPromptFragment: boolean
   promptFragment?: string
   warnings: PluginLoadWarning[]
@@ -656,11 +656,11 @@ export interface ElectronAPI {
    */
   analyzePluginInstall(workspaceId: string, packageRoot: string): Promise<PluginInstallPlan>
   /** D9 phase 2 — perform the install the user approved. */
-  installPlugin(workspaceId: string, packageRoot: string): Promise<PluginInstallResult>
+  installPlugin(workspaceId: string, planId: string): Promise<PluginInstallResult>
   /** D10 phase 1 — what an uninstall removes and what it must retain. */
   analyzePluginUninstall(workspaceId: string, pluginName: string): Promise<PluginUninstallPlan>
   /** D10 phase 2 — remove the plugin and the resources nobody else claims. */
-  uninstallPlugin(workspaceId: string, pluginName: string): Promise<PluginUninstallResult>
+  uninstallPlugin(workspaceId: string, planId: string): Promise<PluginUninstallResult>
 
   // Plugins change listener (live updates when bundles are installed/removed/edited)
   onPluginsChanged(callback: (workspaceId: string, payload: PluginsListResult) => void): () => void

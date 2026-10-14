@@ -92,6 +92,9 @@ export type {
 } from './install.ts';
 
 // Import from archive / URL (design section 5.1.1)
+export { preparePluginInstall, executePluginInstall, preparePluginUninstall, executePluginUninstall } from './confirmation.ts';
+export type { PluginInstallConfirmation, PluginUninstallConfirmation } from './confirmation.ts';
+
 export {
   extractPluginArchive,
   downloadPluginArchive,

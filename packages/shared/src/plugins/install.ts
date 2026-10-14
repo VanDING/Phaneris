@@ -34,6 +34,7 @@ import { getWorkspacePluginsPath, getWorkspaceSkillsPath, getWorkspaceSourcesPat
 import { cleanupSourceApiKeyCredential, loadSourceConfig, saveSourceConfig } from '../sources/storage.ts';
 import type { FolderSourceConfig, McpSourceConfig } from '../sources/types.ts';
 import { debug } from '../utils/debug.ts';
+import { validateSourceConfig } from '../config/source-validation.ts';
 import { appendPluginAuditEntry } from './audit.ts';
 import { pluginResourcePath } from './paths.ts';
 import { normalizePluginCommand } from './resolve.ts';
@@ -76,6 +77,14 @@ export interface PluginInstallPlan {
   packageRoot: string;
   /** Absolute destination for the package inside the workspace. */
   targetRoot: string;
+  /** Validated once before any resource write; also used by the confirmation DTO. */
+  sources: CompiledPluginSource[];
+}
+
+export interface CompiledPluginSource {
+  slug: string;
+  type: 'mcp' | 'api' | 'local';
+  mcp?: McpSourceConfig;
 }
 
 /** Result of a completed install. */
@@ -149,6 +158,12 @@ function buildMcpSourceConfig(
   warn: (message: string) => void,
 ): { config: McpSourceConfig } | { skip: string } {
   const type = entry.type;
+  if (entry.authType !== undefined && !['none', 'bearer', 'oauth'].includes(entry.authType as string)) return { skip: 'authType must be none, bearer or oauth' };
+  if (entry.args !== undefined && (!Array.isArray(entry.args) || entry.args.some(value => typeof value !== 'string'))) return { skip: 'args must be an array of strings' };
+  for (const field of ['env', 'headers'] as const) {
+    const value = entry[field];
+    if (value !== undefined && (!value || typeof value !== 'object' || Array.isArray(value) || Object.values(value).some(item => typeof item !== 'string'))) return { skip: `${field} must contain string values` };
+  }
 
   if (type === 'stdio') {
     const command = entry.command;
@@ -206,19 +221,50 @@ function buildMcpSourceConfig(
 
     // Credentials are client-managed: the spec forbids embedding secrets in
     // headers (section 7.2.1). A package that ships fixed non-secret headers is
-    // treated as header-authenticated so the user can supply the value through
-    // the credential store after install; otherwise the source is public.
+    // kept as request metadata. Only an explicit authType requests credentials;
+    // the mere existence of a header is not evidence of bearer authentication.
     return {
       config: {
         transport: type === 'sse' ? 'sse' : 'http',
         url,
         headers,
-        authType: headers ? 'bearer' : 'none',
+        authType: (entry.authType ?? 'none') as McpSourceConfig['authType'],
       },
     };
   }
 
   return { skip: `unsupported transport ${JSON.stringify(type)}` };
+}
+
+/** The same contribution compilation feeds preview, materialization and health. */
+export function compilePluginSources(plugin: LoadedPlugin): { sources: CompiledPluginSource[]; warnings: PluginLoadWarning[] } {
+  const sources: CompiledPluginSource[] = [];
+  const warnings: PluginLoadWarning[] = [];
+  const seen = new Set<string>();
+  const raw = readRawMcpEntries(plugin.path);
+  const add = (source: CompiledPluginSource) => {
+    const config = makeSourceConfig(plugin.workspaceRootPath, plugin.path, source.slug, source.slug, plugin.name, source);
+    const validation = validateSourceConfig(config);
+    if (!validation.valid) {
+      warnings.push({ path: source.slug, message: `Invalid source config: ${validation.errors.map(error => `${error.path}: ${error.message}`).join('; ')}; skipped (requires configuration)` });
+      return;
+    }
+    sources.push(source);
+  };
+  for (const declared of [...plugin.resources.mcpServers, ...plugin.resources.extensionSources]) {
+    pluginResourcePath(getWorkspaceSourcesPath(plugin.workspaceRootPath), declared.slug);
+    if (seen.has(declared.slug)) throw new PluginInstallError(`Duplicate source slug "${declared.slug}"`);
+    seen.add(declared.slug);
+  }
+  for (const server of plugin.resources.mcpServers) {
+    const entry = raw.entries[server.slug];
+    if (!entry) continue;
+    const built = buildMcpSourceConfig(server.slug, entry, plugin.name, plugin.path, message => warnings.push({ path: server.slug, message }));
+    if ('skip' in built) warnings.push({ path: server.slug, message: `${built.skip}; skipped` });
+    else add({ slug: server.slug, type: 'mcp', mcp: built.config });
+  }
+  for (const source of plugin.resources.extensionSources) add(source);
+  return { sources, warnings };
 }
 
 // ============================================================================
@@ -269,6 +315,9 @@ export function analyzePluginInstall(
   const overwrites: PluginOverwriteEntry[] = [];
   const creates: PluginOverwriteEntry[] = [];
   const stdioCommands: PluginStdioCommand[] = [];
+  const compiled = compilePluginSources(plugin);
+  warnings.push(...compiled.warnings);
+  if (plugin.resources.skills.length === 0 && compiled.sources.length === 0) throw new PluginInstallError(`Plugin "${pluginName}" has no materializable contributions`, warnings.map(warning => warning.message).join('\n'));
 
   // --- skills ---
   for (const skill of plugin.resources.skills) {
@@ -283,27 +332,13 @@ export function analyzePluginInstall(
   }
 
   // --- MCP servers ---
-  const rawMcp = readRawMcpEntries(plugin.path);
-  warnings.push(...rawMcp.warnings);
-
-  for (const server of plugin.resources.mcpServers) {
-    const entry = rawMcp.entries[server.slug];
-    if (!entry) continue;
-
-    const built = buildMcpSourceConfig(server.slug, entry, pluginName, plugin.path, (message) =>
-      warnings.push({ path: `${PLUGIN_MCP_FILE}#${server.slug}`, message }),
-    );
-    if ('skip' in built) {
-      warnings.push({ path: `${PLUGIN_MCP_FILE}#${server.slug}`, message: `${built.skip}; skipped` });
-      continue;
-    }
-
-    if (server.transport === 'stdio') {
+  for (const server of compiled.sources) {
+    if (server.mcp?.transport === 'stdio') {
       // Shown verbatim so the user sees exactly what will execute (P5-5).
       stdioCommands.push({
         slug: server.slug,
-        command: String(entry.command),
-        args: Array.isArray(entry.args) ? (entry.args as string[]) : [],
+        command: server.mcp.command!,
+        args: server.mcp.args ?? [],
       });
     }
 
@@ -317,18 +352,6 @@ export function analyzePluginInstall(
     else creates.push(overwriteEntry);
   }
 
-  // --- extension sources (api / local) ---
-  for (const source of plugin.resources.extensionSources) {
-    const target = pluginResourcePath(getWorkspaceSourcesPath(workspaceRootPath), source.slug);
-    const entry: PluginOverwriteEntry = {
-      kind: 'source',
-      slug: source.slug,
-      existing: target,
-    };
-    if (existsSync(target)) overwrites.push(entry);
-    else creates.push(entry);
-  }
-
   return {
     plugin,
     overwrites,
@@ -337,6 +360,7 @@ export function analyzePluginInstall(
     warnings,
     packageRoot,
     targetRoot: pluginResourcePath(getWorkspacePluginsPath(workspaceRootPath), pluginName),
+    sources: compiled.sources,
   };
 }
 
@@ -422,35 +446,10 @@ export function installPlugin(
       installedSkillSlugs.push(record.slug);
     }
 
-    // --- materialize MCP servers ---
-    const rawMcp = readRawMcpEntries(plugin.path);
-    for (const server of plugin.resources.mcpServers) {
-      const rawEntry = rawMcp.entries[server.slug];
-      if (!rawEntry) continue;
-
-      const built = buildMcpSourceConfig(server.slug, rawEntry, plugin.name, plugin.path, () => {});
-      if ('skip' in built) {
-        // Already reported during analyze; the entry stays out of the install.
-        continue;
-      }
-
-      const backup = backupSource(server.slug);
-      backup.touched = true;
-      writeSourceConfig(workspaceRootPath, plan.targetRoot, server.slug, server.slug, plugin.name, {
-        type: 'mcp',
-        mcp: built.config,
-      });
-      createdSourceSlugs.push(server.slug);
-    }
-
-    // --- materialize extension sources (api / local) ---
-    const extension = readPluginExtensionSources(plugin.path);
-    for (const source of extension.sources) {
+    for (const source of plan.sources) {
       const backup = backupSource(source.slug);
       backup.touched = true;
-      writeSourceConfig(workspaceRootPath, plan.targetRoot, source.slug, source.slug, plugin.name, {
-        type: source.type,
-      });
+      writeSourceConfig(workspaceRootPath, plan.targetRoot, source.slug, source.slug, plugin.name, source);
       createdSourceSlugs.push(source.slug);
     }
 
@@ -572,6 +571,13 @@ function writeSourceConfig(
   pluginName: string,
   body: { type: 'mcp' | 'api' | 'local'; mcp?: McpSourceConfig },
 ): void {
+  saveSourceConfig(workspaceRootPath, makeSourceConfig(workspaceRootPath, targetRoot, slug, displayName, pluginName, body), { deferCredentialCleanup: true });
+}
+
+function makeSourceConfig(
+  workspaceRootPath: string, targetRoot: string, slug: string, displayName: string,
+  pluginName: string, body: { type: 'mcp' | 'api' | 'local'; mcp?: McpSourceConfig },
+): FolderSourceConfig {
   const existing = loadSourceConfig(workspaceRootPath, slug);
   const now = Date.now();
 
@@ -599,10 +605,10 @@ function writeSourceConfig(
     // install, because credentials are client-managed (P6-5).
     config.api = { baseUrl: existing?.type === 'api' ? existing.api?.baseUrl ?? '' : '', authType: 'none' };
   } else if (body.type === 'local') {
-    config.local = { path: '', format: 'filesystem' };
+    config.local = existing?.type === 'local' ? existing.local : { path: '', format: 'filesystem' };
   }
 
-  saveSourceConfig(workspaceRootPath, config, { deferCredentialCleanup: true });
+  return config;
 }
 
 /** Move a package into the workspace plugins directory (directory-level replace). */

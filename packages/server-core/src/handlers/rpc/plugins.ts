@@ -69,36 +69,18 @@ export function registerPluginsHandlers(server: RpcServer, deps: HandlerDeps): v
         throw new Error(`Package path is not a directory: ${packageRoot}`)
       }
 
-      const { analyzePluginInstall } = await import('@phaneris/shared/plugins')
-      const plan = analyzePluginInstall(workspace.rootPath, packageRoot)
-
-      return {
-        name: plan.plugin.name,
-        description: plan.plugin.manifest.description,
-        overwrites: plan.overwrites,
-        creates: plan.creates,
-        // Verbatim, placeholders unexpanded: the user is approving the command
-        // as the package author wrote it, not our interpretation of it (P5-5).
-        stdioCommands: plan.stdioCommands,
-        warnings: plan.warnings,
-        packageRoot: plan.packageRoot,
-        targetRoot: plan.targetRoot,
-        skills: plan.plugin.resources.skills.map((skill) => skill.slug),
-        sources: [
-          ...plan.plugin.resources.mcpServers.map((server) => server.slug),
-          ...plan.plugin.resources.extensionSources.map((source) => source.slug),
-        ],
-      }
+      const { preparePluginInstall } = await import('@phaneris/shared/plugins')
+      return preparePluginInstall(workspace.rootPath, packageRoot)
     },
   )
 
   /** D9 phase 2 — perform the install the user approved. */
   server.handle(
     RPC_CHANNELS.plugins.INSTALL,
-    async (_ctx, workspaceId: string, packageRoot: string) => {
+    async (_ctx, workspaceId: string, planId: string) => {
       const workspace = requireWorkspace(workspaceId)
-      const { installPluginFrom } = await import('@phaneris/shared/plugins')
-      const result = installPluginFrom(workspace.rootPath, packageRoot)
+      const { executePluginInstall } = await import('@phaneris/shared/plugins')
+      const result = executePluginInstall(workspace.rootPath, planId)
 
       deps.platform.logger?.info(
         `PLUGINS_INSTALL: "${result.name}" — ${result.skills.length} skill(s), ` +
@@ -114,18 +96,18 @@ export function registerPluginsHandlers(server: RpcServer, deps: HandlerDeps): v
     RPC_CHANNELS.plugins.ANALYZE_UNINSTALL,
     async (_ctx, workspaceId: string, pluginName: string) => {
       const workspace = requireWorkspace(workspaceId)
-      const { analyzePluginUninstall } = await import('@phaneris/shared/plugins')
-      return analyzePluginUninstall(workspace.rootPath, pluginName)
+      const { preparePluginUninstall } = await import('@phaneris/shared/plugins')
+      return preparePluginUninstall(workspace.rootPath, pluginName)
     },
   )
 
   /** D10 phase 2 — remove the plugin and the resources nobody else claims. */
   server.handle(
     RPC_CHANNELS.plugins.UNINSTALL,
-    async (_ctx, workspaceId: string, pluginName: string) => {
+    async (_ctx, workspaceId: string, planId: string) => {
       const workspace = requireWorkspace(workspaceId)
-      const { uninstallPlugin } = await import('@phaneris/shared/plugins')
-      const result = uninstallPlugin(workspace.rootPath, pluginName)
+      const { executePluginUninstall } = await import('@phaneris/shared/plugins')
+      const result = executePluginUninstall(workspace.rootPath, planId)
 
       deps.platform.logger?.info(
         `PLUGINS_UNINSTALL: "${result.name}" — removed ${result.removedSkills.length} skill(s), ` +

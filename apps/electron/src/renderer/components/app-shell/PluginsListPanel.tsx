@@ -129,13 +129,14 @@ export function PluginsListPanel({
     const pluginName = uninstallPlan.name
     setUninstallBusy(true)
     try {
-      await window.electronAPI.uninstallPlugin(workspaceId, pluginName)
+      await window.electronAPI.uninstallPlugin(workspaceId, uninstallPlan.planId)
       toast.success(t('pluginsList.uninstalled', { name: pluginName }))
       setUninstallPlan(null)
       // The backend also pushes `plugins:changed`; this just makes the row go
       // away immediately instead of after a round trip.
       await onReload?.()
     } catch (error) {
+      setUninstallPlan(null)
       toast.error(t('pluginsList.uninstallFailed'), { description: errorMessage(error) })
     } finally {
       setUninstallBusy(false)

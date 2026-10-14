@@ -11,8 +11,10 @@
  *    text is untrusted input. Unescaped, a body could close the block early and
  *    have the remainder read as instructions rather than as content.
  */
-import { describe, it, expect } from 'bun:test';
+import { describe, it, expect, afterAll } from 'bun:test';
 import { join } from 'node:path';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import {
   buildPluginRoster,
   defangPluginContextTag,
@@ -21,12 +23,14 @@ import {
 } from '../plugin-context.ts';
 import type { LoadedPlugin } from '../types.ts';
 
+const workspace = mkdtempSync(join(tmpdir(), 'plugin-context-'));
+afterAll(() => rmSync(workspace, { recursive: true, force: true }));
 function makePlugin(overrides: Partial<LoadedPlugin> = {}): LoadedPlugin {
   return {
     name: 'demo',
     manifest: { $schema: 'x', name: 'demo' },
     path: '/ws/plugins/demo',
-    workspaceRootPath: '/ws',
+    workspaceRootPath: workspace,
     workspaceRelativePath: 'plugins/demo',
     promptFragment: null,
     warnings: [],
@@ -36,6 +40,9 @@ function makePlugin(overrides: Partial<LoadedPlugin> = {}): LoadedPlugin {
 }
 
 function makeSkill(slug: string, description: string) {
+  const native = join(workspace, 'skills', slug);
+  mkdirSync(native, { recursive: true });
+  writeFileSync(join(native, 'SKILL.md'), `---\nname: ${slug}\ndescription: '${description}'\n---\nbody`);
   return {
     slug,
     name: slug,
@@ -93,7 +100,7 @@ describe('formatPluginContextBlock', () => {
     expect(block).toContain('Always cite primary sources.');
     expect(block).toContain('Equity research framework');
     // The path is what makes "read it when you need it" actionable.
-    expect(block).toContain(join('/ws/plugins/demo', 'skills', 'equity-research', 'SKILL.md'));
+    expect(block).toContain(join(workspace, 'skills', 'equity-research', 'SKILL.md'));
     // Progressive disclosure: the model must not read everything up front.
     expect(block).toContain('do not read them all up front');
   });
@@ -182,7 +189,7 @@ describe('buildPluginRoster', () => {
 
     expect(roster.map((entry) => entry.slug)).toEqual(['alpha', 'beta']);
     expect(roster[0]!.skillMdPath).toBe(
-      join('/ws/plugins/demo', 'skills', 'alpha', 'SKILL.md'),
+      join(workspace, 'skills', 'alpha', 'SKILL.md'),
     );
   });
 });

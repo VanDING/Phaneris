@@ -19,7 +19,7 @@
  *     ignored, so the package author is told instead of being misled.
  */
 
-import { isAbsolute, join } from 'node:path';
+import { isAbsolute, join, resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import { isPathWithin } from '../utils/paths.ts';
 import { PLUGIN_DATA_DIR_NAME } from './types.ts';
@@ -55,8 +55,8 @@ export class PluginPathError extends Error {
  * argument (`args: ["--data", "${PLUGIN_DATA}"]`) rather than relying on a
  * working directory — which is what lets `cwd` stay unsupported (§5.4.2).
  *
- * The result is separator-normalized so a template's literal `/` and the
- * platform's `\` cannot mix in one path.
+ * Only placeholder path fragments use native separators. All other bytes are
+ * opaque: URLs, JSON and mixed literal arguments retain their original value.
  */
 export function expandPluginPlaceholders(value: string, context: PluginPathContext): string {
   const dataRoot = join(context.pluginRoot, PLUGIN_DATA_DIR_NAME);
@@ -73,9 +73,7 @@ export function expandPluginPlaceholders(value: string, context: PluginPathConte
 function replacePathPlaceholder(value: string, token: string, replacement: string): string {
   const parts = value.split(token);
   if (parts.length === 1) return value;
-  return parts
-    .map((part, index) => index === 0 || process.platform !== 'win32' ? part : part.replace(/\//g, '\\'))
-    .join(replacement);
+  return parts.join(replacement);
 }
 
 /** Expand placeholders across a list of opaque arguments. */
@@ -143,7 +141,7 @@ export function normalizePluginCommand(rawCommand: string, context: PluginPathCo
     );
   }
 
-  return absolute;
+  return resolve(absolute);
 }
 
 /**

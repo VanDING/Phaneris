@@ -27,7 +27,9 @@
 
 import { join } from 'node:path';
 import { defangPromptClosingTags, sanitizePromptBody } from '../prompts/prompt-sanitize.ts';
-import type { LoadedPlugin, PluginSkillEntry } from './types.ts';
+import type { LoadedPlugin } from './types.ts';
+import { loadSkill } from '../skills/storage.ts';
+import { pluginResourcePath, assertPluginPath } from './paths.ts';
 
 /** Opening tag of the block, with the plugin name as an attribute (P3-5). */
 export const PLUGIN_CONTEXT_TAG = 'plugin_context';
@@ -68,12 +70,14 @@ export interface PluginRosterEntry {
  * and a relative path would make it guess against the working directory.
  */
 export function buildPluginRoster(plugin: LoadedPlugin): PluginRosterEntry[] {
-  return plugin.resources.skills.map((skill: PluginSkillEntry) => ({
-    slug: skill.slug,
-    name: skill.name,
-    description: skill.description,
-    skillMdPath: join(skill.path, 'SKILL.md'),
-  }));
+  return plugin.resources.skills.flatMap(skill => {
+    try {
+      const nativePath = pluginResourcePath(join(plugin.workspaceRootPath, 'skills'), skill.slug);
+      assertPluginPath(nativePath, join(nativePath, 'SKILL.md'));
+      const native = loadSkill(plugin.workspaceRootPath, skill.slug);
+      return native && typeof native.metadata.name === 'string' && typeof native.metadata.description === 'string' ? [{ slug: native.slug, name: native.metadata.name, description: native.metadata.description, skillMdPath: join(native.path, 'SKILL.md') }] : [];
+    } catch { return []; }
+  });
 }
 
 /**
@@ -87,9 +91,11 @@ export function formatPluginContextBlock(plugin: LoadedPlugin): string {
   const roster = buildPluginRoster(plugin);
   const fragment = plugin.promptFragment?.trim();
 
-  if (!fragment && roster.length === 0) return '';
+  const missing = plugin.resources.skills.filter(skill => !roster.some(entry => entry.slug === skill.slug));
+  if (!fragment && roster.length === 0 && missing.length === 0) return '';
 
   const parts: string[] = [];
+  if (missing.length) parts.push(`Unavailable native skills (missing or invalid; reinstall or repair before use): ${missing.map(skill => skill.slug).join(', ')}`);
 
   if (fragment) {
     parts.push(sanitizePluginPromptText(fragment).trim());

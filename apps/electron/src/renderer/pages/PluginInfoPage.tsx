@@ -81,7 +81,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
     if (!uninstallPlan) return
     setUninstallBusy(true)
     try {
-      await window.electronAPI.uninstallPlugin(workspaceId, uninstallPlan.name)
+      await window.electronAPI.uninstallPlugin(workspaceId, uninstallPlan.planId)
       // Deactivating first would leave the slot pointing at a bundle that is
       // about to stop existing; clearing after the removal is the same outcome
       // either way, so it is not ordered here.
@@ -89,6 +89,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
       setUninstallPlan(null)
       navigate(routes.view.plugins())
     } catch (error) {
+      setUninstallPlan(null)
       toast.error(t('pluginsList.uninstallFailed'), {
         description: error instanceof Error ? error.message : String(error),
       })
@@ -182,6 +183,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                     >
                       <div className="text-sm font-medium">{skill.name}</div>
                       <div className="text-xs text-muted-foreground">{skill.description}</div>
+                      {skill.availability && <div className="text-xs text-muted-foreground">{t(`pluginsList.availability.${skill.availability}`)}</div>}
                     </button>
                   ))}
                 </div>
@@ -190,7 +192,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
 
             <Info_Section
               title={t('pluginsList.sourcesTitle')}
-              description={t('pluginsList.sourcesDescription')}
+              description={`${t('pluginsList.sourcesDescription')} ${t('pluginsList.availability.notice')}`}
             >
               {plugin.sources.length === 0 ? (
                 <p className="px-1 text-sm text-muted-foreground">{t('pluginsList.noContributedSources')}</p>
@@ -203,7 +205,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
                       className="w-full text-left px-3 py-2 hover:bg-foreground/[0.03] transition-colors flex items-center justify-between gap-3"
                     >
                       <span className="text-sm font-medium">{source.slug}</span>
-                      <span className="text-xs text-muted-foreground uppercase">{source.type}</span>
+                      <span className="text-xs text-muted-foreground text-right">{source.type.toUpperCase()} · {t(`pluginsList.availability.${source.availability ?? 'configured'}`)}</span>
                     </button>
                   ))}
                 </div>

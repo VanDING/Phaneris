@@ -91,13 +91,13 @@ describe('plugin placeholder resolution', () => {
 
   it('expands PLUGIN_ROOT and PLUGIN_DATA as plain string substitutions', () => {
     expect(expandPluginPlaceholders('${PLUGIN_ROOT}/bin/server', context)).toBe(
-      under('bin', 'server'),
+      `${PLUGIN_ROOT}/bin/server`,
     );
     // PLUGIN_DATA is <pluginRoot>/data, so a server takes its data dir as an
     // argument rather than needing a working directory.
     expect(expandPluginPlaceholders('${PLUGIN_DATA}', context)).toBe(under('data'));
     expect(expandPluginPlaceholders('${PLUGIN_ROOT}/data/cache.json', context)).toBe(
-      under('data', 'cache.json'),
+      `${PLUGIN_ROOT}/data/cache.json`,
     );
   });
 
@@ -117,8 +117,8 @@ describe('plugin placeholder resolution', () => {
     );
 
     expect(resolved.command).toBe(under('bin', 'server'));
-    expect(resolved.args).toEqual(['--data', under('data'), '--config', under('c.json')]);
-    expect(resolved.env).toEqual({ CONFIG: under('config.json'), PLAIN: 'x' });
+    expect(resolved.args).toEqual(['--data', under('data'), '--config', `${PLUGIN_ROOT}/c.json`]);
+    expect(resolved.env).toEqual({ CONFIG: `${PLUGIN_ROOT}/config.json`, PLAIN: 'x' });
   });
 
   it('normalizes a plugin-relative command to an absolute path', () => {
@@ -267,9 +267,11 @@ describe('installPlugin', () => {
       JSON.stringify({ mcpServers: { good: { type: 'stdio', command: './bin/server', args: [123] } } }),
     );
     const plan = analyzePluginInstall(workspaceRoot, packageRoot);
-    expect(() => installPlugin(workspaceRoot, plan)).toThrow(/Invalid source config/);
+    expect(plan.warnings.some(warning => /args|Invalid source config/i.test(warning.message))).toBe(true);
+    expect(plan.creates.some(entry => entry.slug === 'good')).toBe(false);
+    installPlugin(workspaceRoot, plan);
     expect(readFileSync(join(workspaceRoot, 'sources', 'good', 'config.json'), 'utf-8')).toBe(oldSource);
-    expect(existsSync(join(workspaceRoot, 'skills', 'new'))).toBe(false);
+    expect(existsSync(join(workspaceRoot, 'skills', 'new'))).toBe(true);
   });
 
   it('materializes skills into <ws>/skills and MCP servers into <ws>/sources', () => {
@@ -627,7 +629,7 @@ describe('plugin stdio resolution for the source_test path', () => {
 
     expect(fields.command).toBe(join(pluginRoot, 'bin', 'node'));
     expect(fields.args).toEqual([
-      join(pluginRoot, 'server.js'),
+      `${pluginRoot}/server.js`,
       '--data',
       join(pluginRoot, PLUGIN_DATA_DIR_NAME),
     ]);

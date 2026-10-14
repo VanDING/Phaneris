@@ -229,12 +229,6 @@ export class ConfigWatcher {
   // Track known items for detecting adds/removes
   private knownSources: Set<string> = new Set();
   private knownSkills: Set<string> = new Set();
-  private knownPlugins: Set<string> = new Set();
-  /**
-   * Per-plugin load health, so editing a bundle into a broken state (or back)
-   * notifies even though the plugin directory set did not move.
-   */
-  private knownPluginHealth: Map<string, boolean> = new Map();
   // Track LLM connections for change detection (JSON string for deep comparison)
   private lastLlmConnectionsHash: string = '';
 
@@ -314,7 +308,6 @@ export class ConfigWatcher {
     span.mark('scanSkills');
 
     // Initial scan to populate known plugins (no callback: nothing has changed yet)
-    this.knownPlugins = new Set(listPluginNames(this.workspaceDir));
     span.mark('scanPlugins');
 
     // Initialize LLM connections hash for change detection
@@ -450,6 +443,7 @@ export class ConfigWatcher {
     if (parts[0] === 'sources' && parts.length >= 2) {
       const slug = parts[1]!;  // Safe: checked parts.length >= 2
       const file = parts[2];
+      if (parts.length === 2 || file === 'config.json') this.debounce('plugins-dir', () => this.handlePluginsChange());
 
       // Directory-level changes (new/removed source folders)
       if (parts.length === 2) {
@@ -472,6 +466,7 @@ export class ConfigWatcher {
     if (parts[0] === 'skills' && parts.length >= 2) {
       const slug = parts[1]!;  // Safe: checked parts.length >= 2
       const file = parts[2];
+      if (parts.length === 2 || file === 'SKILL.md') this.debounce('plugins-dir', () => this.handlePluginsChange());
 
       // Directory-level changes (new/removed skill folders)
       if (parts.length === 2) {
@@ -850,7 +845,6 @@ export class ConfigWatcher {
 
     const pluginsDir = getWorkspacePluginsPath(this.workspaceDir);
     if (!existsSync(pluginsDir)) {
-      this.knownPlugins.clear();
       invalidateSkillsCache();
       this.callbacks.onPluginsChange?.({ plugins: [], errors: [] });
       return;
@@ -859,48 +853,10 @@ export class ConfigWatcher {
     try {
       const currentFolders = new Set(listPluginNames(this.workspaceDir));
 
-      let changed = currentFolders.size !== this.knownPlugins.size;
-      if (!changed) {
-        for (const name of currentFolders) {
-          if (!this.knownPlugins.has(name)) {
-            changed = true;
-            break;
-          }
-        }
-      }
-
-      this.knownPlugins = currentFolders;
-
-      // There are two distinct reasons to notify, and they are not the same
-      // condition:
-      //  - the plugin *set* changed (a directory appeared or disappeared)
-      //  - a plugin's load *result* changed (an edit broke or fixed one)
-      // A bundle can go from loading to failing — or the reverse — without the
-      // folder set moving at all, so a pure set comparison would swallow exactly
-      // the case the sidebar needs to show ("this plugin is broken now").
       const { plugins, errors } = loadAllPlugins(this.workspaceDir);
 
-      const healthByPlugin = new Map<string, boolean>();
-      for (const plugin of plugins) healthByPlugin.set(plugin.name, true);
-      for (const error of errors) {
-        // `PluginLoadError.path` is the plugin directory, so its basename is the
-        // plugin name (P2-2: directory name === manifest name).
-        const name = error.pluginName ?? basename(error.path);
-        if (name) healthByPlugin.set(name, false);
-      }
-
-      let healthChanged = healthByPlugin.size !== this.knownPluginHealth.size;
-      if (!healthChanged) {
-        for (const [name, healthy] of healthByPlugin) {
-          if (this.knownPluginHealth.get(name) !== healthy) {
-            healthChanged = true;
-            break;
-          }
-        }
-      }
-      this.knownPluginHealth = healthByPlugin;
-
-      if (!changed && !healthChanged) return;
+      // This handler only runs for relevant package events. A healthy package
+      // may change version, instructions or contributions without changing sets.
 
       // Reinstalling or editing a plugin rewrites its skills/, so the skill
       // cache is stale either way (P2-5).
