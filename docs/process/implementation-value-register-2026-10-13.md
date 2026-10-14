@@ -30,7 +30,7 @@
 | R06 | 第二批 / Project Management | 甘特图普通任务拖拽改期与键盘替代 | 在时间轴就地调整排期，减少反复打开任务编辑器 | 已实施；[GanttView](../../apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx) 允许普通叶任务移动、缩放及键盘改期；[14 项浏览器场景通过](../verification/results/implementation-r01-r07-2026-10-14/gantt-reschedule/gantt-reschedule.json)。汇总/里程碑与高级字段边界保留 |
 | R07 | 第三批 / 应用内帮助与 i18n | 中文应用内帮助 | 让中文界面中的权限、任务、恢复和文件操作有一致的说明，减少依赖英文或口头解释 | 已实施；[manifest](../../apps/electron/src/renderer/docs/manifest.ts) 注册 `en` / `zh-Hans`，完整 47 页中文及导航/搜索；[52 项浏览器场景通过](../verification/results/implementation-r01-r07-2026-10-14/docs-locale/docs-locale.json)。英文和原 slug 继续可用 |
 
-以下退出条件为本轮的验收约束；具体运行目录、源码/构建 SHA、断言与未测范围见[统一证据](../verification/results/implementation-r01-r07-2026-10-14/README.md)。代码尚未提交或发布。
+以下退出条件为本轮的验收约束；具体运行目录、源码/构建 SHA、断言与未测范围见[统一证据](../verification/results/implementation-r01-r07-2026-10-14/README.md)。相关实现已纳入 v0.3.2；历史验收记录继续保留当时的源码与构建摘要。
 
 ### R01：显式无人值守权限
 
@@ -97,7 +97,7 @@
 
 除已明确授权并收口的 C02，其余条件项没有满足触发条件时保持关闭；重新评估须带具体场景和可核查证据。旧文档中的条件或“远期可做”不能绕过本表。
 
-2026-10-14 C02 已按[实施前失败矩阵](../verification/c02-planning-performance-failure-matrix-2026-10-14.md)完成：日历从共享 WorkItem 投影派生，同工作区消费者合并读取，迟到响应保留成功写入；SessionManager 合并广播并补齐原生归档/取消归档通知。51 项浏览器场景通过，现行预算保持；单改响应字节由 3,574,032 降为 1,216,199（约减少 66%）。三次暖切换均在原 2,000ms 预算内，不宣称普遍延迟下降；没有依据继续投入范围查询或日期索引。Session 仍是唯一持久事实来源。源码、构建、原始样本与未测范围见同一验收记录；代码尚未提交或发布。
+2026-10-14 C02 已按[实施前失败矩阵](../verification/c02-planning-performance-failure-matrix-2026-10-14.md)完成：日历从共享 WorkItem 投影派生，同工作区消费者合并读取，迟到响应保留成功写入；SessionManager 合并广播并补齐原生归档/取消归档通知。51 项浏览器场景通过，现行预算保持；单改响应字节由 3,574,032 降为 1,216,199（约减少 66%）。三次暖切换均在原 2,000ms 预算内，不宣称普遍延迟下降；没有依据继续投入范围查询或日期索引。Session 仍是唯一持久事实来源。源码、构建、原始样本与未测范围见同一验收记录；相关实现已纳入 v0.3.2；历史验收记录继续保留当时的源码与构建摘要。
 
 ## 4. 对外发布的 15 项前置门槛
 
