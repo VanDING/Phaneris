@@ -153,7 +153,17 @@
     "check:distribution": "bun run scripts/check-distribution.ts",
     "test:clean-install": "bun run scripts/verification/clean-install-workflow.ts",
     "test:container": "bun run scripts/verification/container-workflow.ts",
-    "test:native-client": "bun run build:runtime && bun run electron:build:main && bun run electron:build:preload && bun run electron:build:renderer && bun run electron:build:assets && bun run scripts/verification/native-client-workflow.ts"
+    "test:native-client": "bun run build:runtime && bun run electron:build:main && bun run electron:build:preload && bun run electron:build:renderer && bun run electron:build:assets && bun run scripts/verification/native-client-workflow.ts",
+    "test:task-permission": "bun run scripts/verification/task-permission-workflow.ts",
+    "test:plugin-consistency": "bun run scripts/verification/plugin-consistency-workflow.ts",
+    "test:workspace-recovery": "bun run scripts/verification/workspace-recovery-workflow.ts",
+    "test:runtime-reliability": "bun run scripts/verification/runtime-reliability-workflow.ts",
+    "test:task-file-scope": "bun run scripts/verification/task-file-scope-workflow.ts",
+    "test:gantt-reschedule": "bun run scripts/verification/gantt-reschedule-workflow.ts",
+    "test:docs-locale": "bun run scripts/verification/docs-locale-workflow.ts",
+    "test:markdown-file-links": "bun run scripts/verification/markdown-file-links-workflow.ts",
+    "test:planning-collection": "bun run scripts/verification/planning-collection-workflow.ts",
+    "test:planning-performance": "bun run scripts/verification/planning-performance-workflow.ts"
   },
   "devDependencies": {
     "@babel/core": "^8.0.6",

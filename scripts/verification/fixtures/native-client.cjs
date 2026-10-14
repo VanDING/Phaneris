@@ -28,8 +28,10 @@ async function waitForCondition(page, predicate, argument) {
     try { draftWrites.push({ time: Date.now(), value: JSON.parse(readFileSync(join(fixture.config, 'drafts.json'), 'utf8')) }) } catch {}
   })
   let page
+  let tracing = false
   try {
     page = await app.firstWindow({ timeout: 30_000 })
+    await page.context().tracing.start({ screenshots: true, snapshots: true }); tracing = true
     page.on('pageerror', error => errors.push(error.message))
     page.on('console', message => consoleTrace.push({ type: message.type(), text: message.text().slice(0, 2000) }))
     await page.waitForFunction(() => document.documentElement.dataset.clientPlatform === 'electron', null, { timeout: 60_000 })
@@ -84,6 +86,65 @@ async function waitForCondition(page, predicate, argument) {
     await page.evaluate(() => window.electronAPI.reconnectTransport())
     await waitForCondition(page, async () => (await window.electronAPI.getTransportConnectionState()).status === 'connected')
     checks.push('native reconnect preserves accepted workspace and session facts')
+    await changeLanguageAndReturn(page, 'English', 'Governance session')
+    const recovery = await page.evaluate(({ session, operation }) => window.electronAPI.getRecoveryEvidence(session, operation), { session: fixture.session, operation: fixture.recovery.toolOperationId })
+    assert.equal(recovery.verdict.kind, 'reconcile_required')
+    assert(!require('node:fs').existsSync(join(fixture.recovery.workspace, 'must-not-replay.txt')))
+    // Use the production renderer navigation contract. Bound Workbench routes
+    // are internal surfaces, not OS-level phaneris:// entry points.
+    const openRoute = route => page.evaluate(route => window.dispatchEvent(new CustomEvent('phaneris-navigate', { detail: { route } })), route)
+    await page.getByRole('button', { name: 'Run', exact: true }).click()
+    await page.locator('[data-runtime-reliability]').waitFor()
+    await page.locator('[data-runtime-reliability] summary').click()
+    assert((await page.locator('[data-runtime-reliability]').innerText()).includes('Unsettled T1 effects'))
+    const reportPath = join(fixture.output, 'native-reliability-export.json')
+    // Electron owns native downloads; its session event is independent from a
+    // Playwright browser context's download event. Choose only this fixture path.
+    await app.evaluate(({ BrowserWindow }, path) => {
+      globalThis.__nativeExport = null
+      BrowserWindow.getAllWindows()[0].webContents.session.once('will-download', (_event, item) => {
+        item.setSavePath(path)
+        item.once('done', (_doneEvent, state) => { globalThis.__nativeExport = state })
+      })
+    }, reportPath)
+    await page.getByRole('button', { name: 'Export facts', exact: true }).click()
+    const exportDeadline = Date.now() + 30_000
+    while (!await app.evaluate(() => globalThis.__nativeExport)) {
+      if (Date.now() >= exportDeadline) throw new Error('Native reliability export did not complete')
+      await new Promise(resolve => setTimeout(resolve, 50))
+    }
+    assert.equal(await app.evaluate(() => globalThis.__nativeExport), 'completed')
+    const reliability = JSON.parse(readFileSync(reportPath, 'utf8'))
+    assert.deepEqual(reliability.unsettled.operationIds, [fixture.recovery.toolOperationId]); assert.equal(reliability.userAcceptance, 'unknown')
+    await page.screenshot({ path: join(fixture.output, 'native-recovery-run.png') })
+    checks.push('restored production desktop parks T1 without T2 and shows Run facts')
+    await openRoute(`artifact/${fixture.recovery.artifactId}`)
+    const workbench = page.getByTestId('artifact-workbench')
+    await workbench.waitFor(); await page.getByTestId('artifact-edit').click()
+    const artifactInput = workbench.locator('textarea'); await artifactInput.fill('NATIVE_RESTORED_ARTIFACT_ACCEPTED')
+    const retainedHistory = await page.evaluate(id => window.electronAPI.getSessionMessages(id), fixture.session)
+    assert(retainedHistory.messages.length >= 160, 'The theme acceptance must retain the long-session fixture')
+    for (const mode of ['dark', 'light']) {
+      await page.evaluate(mode => window.electronAPI.setThemePreferences({ mode }), mode)
+      await page.waitForFunction(mode => document.documentElement.classList.contains('dark') === (mode === 'dark'), mode)
+      assert.equal(await artifactInput.inputValue(), 'NATIVE_RESTORED_ARTIFACT_ACCEPTED')
+    }
+    checks.push('long-session theme switching preserves the restored Artifact editor')
+    await page.getByTestId('artifact-save').click(); await page.getByTestId('artifact-submit').click(); await page.getByTestId('artifact-accept').click()
+    await waitForCondition(page, async id => (await window.electronAPI.getArtifact('fixture', id)).artifact.status === 'accepted', fixture.recovery.artifactId)
+    assert.equal(readFileSync(join(fixture.recovery.workspace, 'restored-report.txt'), 'utf8'), 'NATIVE_RESTORED_ARTIFACT_ACCEPTED')
+    await page.screenshot({ path: join(fixture.output, 'native-restored-artifact.png') })
+    checks.push('restored Artifact checkout saves submits and accepts through production UI')
+    await openRoute('plugins/plugin/native-readiness')
+    await page.getByText('Executable missing', { exact: false }).first().waitFor()
+    await page.getByText('Connection not verified', { exact: false }).first().waitFor()
+    await page.getByText('native-guide', { exact: true }).waitFor()
+    await page.screenshot({ path: join(fixture.output, 'native-plugin-readiness.png') })
+    checks.push('production plugin details distinguish materialized skills and unready sources')
+    const confirmation = await page.evaluate(root => window.electronAPI.analyzePluginInstall('fixture', root), join(fixture.output, 'incoming', 'native-readiness'))
+    assert.equal(typeof confirmation.planId, 'string')
+    await page.evaluate(planId => window.electronAPI.installPlugin('fixture', planId), confirmation.planId)
+    checks.push('production RPC installs the workspace-bound confirmation snapshot')
     checks.push(...await verifyConversation(page, fixture.conversation, fixture.output, 'electron'))
     await page.emulateMedia({ reducedMotion: 'reduce' })
     const layouts = []
@@ -102,6 +163,7 @@ async function waitForCondition(page, predicate, argument) {
     assert.deepEqual(errors, [])
     assert.deepEqual(consoleTrace.filter(message => message.type === 'error'), [])
     await page.screenshot({ path: join(fixture.output, 'native-final.png'), fullPage: true })
+    await page.context().tracing.stop({ path: join(fixture.output, 'native-trace.zip') }); tracing = false
     const started = Date.now()
     const closed = new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error('Native fatal shutdown exceeded 13000ms')), 13000)
@@ -117,6 +179,7 @@ async function waitForCondition(page, predicate, argument) {
     writeFileSync(join(fixture.output, 'native-fatal.json'), JSON.stringify({ exitCode, elapsedMs: Date.now() - started, diagnostics: mainDiagnostics }, null, 2))
     checks.push('native main fatal rejection preserves its cause and exits nonzero within the original deadline')
   } finally {
+    if (page && tracing) await page.context().tracing.stop({ path: join(fixture.output, 'native-trace.zip') }).catch(() => {})
     if (page) await page.screenshot({ path: join(fixture.output, 'native-final.png'), fullPage: true }).catch(() => {})
     draftWatcher.close(); writeFileSync(join(fixture.output, 'native-draft-writes.json'), JSON.stringify(draftWrites, null, 2))
     if (page) writeFileSync(join(fixture.output, 'native-state.json'), JSON.stringify(await page.evaluate(async () => ({ url: location.href, inputs: [...document.querySelectorAll('[contenteditable=\"true\"]')].map(element => element.textContent), drafts: await window.electronAPI.getAllDrafts() })).catch(error => ({ error: error.message })), null, 2) + '\n')

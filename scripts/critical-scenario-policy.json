@@ -1,6 +1,92 @@
 {
   "workflows": [
     {
+      "id": "task-permission",
+      "entry": "scripts/verification/task-permission-workflow.ts",
+      "minimum": 9,
+      "required": [
+        "scenes.json"
+      ]
+    },
+    {
+      "id": "plugin-consistency",
+      "entry": "scripts/verification/plugin-consistency-workflow.ts",
+      "minimum": 17,
+      "required": [
+        "plugin-consistency.json"
+      ]
+    },
+    {
+      "id": "workspace-recovery",
+      "entry": "scripts/verification/workspace-recovery-workflow.ts",
+      "minimum": 10,
+      "required": [
+        "workspace-recovery.json",
+        "restored-runtime.json"
+      ]
+    },
+    {
+      "id": "runtime-reliability",
+      "entry": "scripts/verification/runtime-reliability-workflow.ts",
+      "minimum": 10,
+      "required": [
+        "reliability-before-restart.json",
+        "reliability-after-restart.json"
+      ]
+    },
+    {
+      "id": "task-file-scope",
+      "entry": "scripts/verification/task-file-scope-workflow.ts",
+      "minimum": 11,
+      "required": [
+        "task-file-scope.json"
+      ]
+    },
+    {
+      "id": "gantt-reschedule",
+      "entry": "scripts/verification/gantt-reschedule-workflow.ts",
+      "minimum": 14,
+      "required": [
+        "gantt-reschedule.json",
+        "gantt-desktop.png",
+        "gantt-760.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "planning-collection",
+      "entry": "scripts/verification/planning-collection-workflow.ts",
+      "minimum": 17,
+      "required": ["planning-collection.json", "collection-final.png", "trace.zip"]
+    },
+    {
+      "id": "planning-performance",
+      "entry": "scripts/verification/planning-performance-workflow.ts",
+      "minimum": 20,
+      "required": ["planning-performance.json", "session-facts.json", "memory-sample.json", "build-hashes.json", "calendar-final.png", "calendar-second-window.png", "trace.zip", "second-trace.zip"]
+    },
+    {
+      "id": "docs-locale",
+      "entry": "scripts/verification/docs-locale-workflow.ts",
+      "minimum": 52,
+      "required": [
+        "docs-locale.json",
+        "docs-zh-desktop.png",
+        "docs-zh-390.png",
+        "trace.zip"
+      ]
+    },
+    {
+      "id": "markdown-file-links",
+      "entry": "scripts/verification/markdown-file-links-workflow.ts",
+      "minimum": 18,
+      "required": [
+        "markdown-file-links.json",
+        "file-links.png",
+        "trace.zip"
+      ]
+    },
+    {
       "id": "verification-output",
       "entry": "scripts/verification/verification-output-workflow.ts",
       "minimum": 7,
