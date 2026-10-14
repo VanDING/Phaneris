@@ -87,3 +87,24 @@ export function fromTimelineRange(start: Date, endExclusive: Date): { startAt: s
   const dueDay = span >= 1 ? addDays(endDay, -1) : startDay;
   return { startAt: planDayKeyFromDate(startDay), dueAt: planDayKeyFromDate(dueDay) };
 }
+
+/** Change calendar days while retaining each original endpoint's clock and seconds. */
+export function rescheduleTimelineRange(original: TimelineSource, start: Date, endExclusive: Date): { startAt: string; dueAt: string } {
+  const days = fromTimelineRange(start, endExclusive);
+  const move = (value: string | undefined, day: string): string => {
+    const prior = planDateKey(value);
+    if (!value || !prior || value.trim().length === 10) return day;
+    if (prior === day) return value;
+    if (/(Z|[+-]\d{2}:\d{2})$/.test(value.trim())) {
+      const instant = new Date(value), nextDay = dateFromDayKey(day), oldDay = dateFromDayKey(prior);
+      const clock = [instant.getHours(), instant.getMinutes(), instant.getSeconds(), instant.getMilliseconds()];
+      instant.setDate(instant.getDate() + differenceInCalendarDays(nextDay, oldDay));
+      if ([instant.getHours(), instant.getMinutes(), instant.getSeconds(), instant.getMilliseconds()].some((part, index) => part !== clock[index])) {
+        throw new Error('The requested local clock does not exist on this calendar day');
+      }
+      return instant.toISOString();
+    }
+    return day + value.trim().slice(10);
+  };
+  return { startAt: move(original.startAt, days.startAt), dueAt: move(original.dueAt, days.dueAt) };
+}

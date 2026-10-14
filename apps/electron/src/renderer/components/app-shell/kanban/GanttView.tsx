@@ -1,15 +1,21 @@
 import * as React from 'react'
-import { Gantt, Material, type ILink, type ITask, type IZoomConfig } from '@svar-ui/react-gantt'
+import { Gantt, Material, type IApi, type ILink, type ITask, type IZoomConfig } from '@svar-ui/react-gantt'
 import {
   isoWeekNumber,
   timelineDayCount,
   toTimelineRange,
+  rescheduleTimelineRange,
+  planDayKeyFromDate,
   type TimelineRange,
 } from '@phaneris/shared/work-items/browser'
 import type { ICellProps, IHeaderCellProps } from '@svar-ui/react-grid'
 import '@svar-ui/react-gantt/style.css'
 import './gantt-overrides.css'
-import { CalendarOff, ChevronRight, Diamond, MoreHorizontal, Plus } from 'lucide-react'
+import { CalendarDays, CalendarOff, ChevronRight, Diamond, MoreHorizontal, Plus } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { acknowledgeGanttChanges, ganttChange, ganttChangesSnapshot, saveGanttChange, subscribeGanttChanges } from './gantt-rescheduling'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { projectsAtom } from '@/atoms/projects'
@@ -209,6 +215,8 @@ interface GanttTaskCellContextValue {
   collapseAll: () => void
   expandAll: () => void
   setHoveredId: (id: string | null) => void
+  reschedule: (id: string, start: Date, end: Date) => Promise<boolean>
+  openTask: (id: string) => void
 }
 
 const GanttTaskCellContext = React.createContext<GanttTaskCellContextValue>({
@@ -221,11 +229,39 @@ const GanttTaskCellContext = React.createContext<GanttTaskCellContextValue>({
   collapseAll: () => undefined,
   expandAll: () => undefined,
   setHoveredId: () => undefined,
+  reschedule: async () => false,
+  openTask: () => undefined,
 })
+
+function GanttDateControl({ row }: { row: ITask }) {
+  const { t } = useTranslation(), { reschedule } = React.useContext(GanttTaskCellContext)
+  const [open, setOpen] = React.useState(false), [start, setStart] = React.useState(''), [end, setEnd] = React.useState(''), [error, setError] = React.useState(false)
+  if (!row.editable) return null
+  return <Popover open={open} onOpenChange={value => {
+    setOpen(value); setError(false)
+    if (value) { setStart(planDayKeyFromDate(row.start!)); setEnd(planDayKeyFromDate(addDays(row.end!, -1))) }
+  }}>
+    <PopoverTrigger asChild><button type="button" disabled={row.saving} aria-label={t('gantt.rescheduleTask', { title: row.text })} className="craft-control craft-focus shrink-0 rounded-md p-1 text-text-secondary hover:text-foreground" onClick={event => event.stopPropagation()}><CalendarDays className="size-3.5" /></button></PopoverTrigger>
+    <PopoverContent className="w-72 space-y-3" onClick={event => event.stopPropagation()}>
+      <form className="space-y-3" onSubmit={async event => {
+        event.preventDefault(); if (!start || !end || end < start || row.saving) { setError(true); return }
+        const date = (value: string) => { const [y, m, d] = value.split('-').map(Number); return new Date(y!, m! - 1, d!) }
+        if (await reschedule(String(row.id), date(start), addDays(date(end), 1))) setOpen(false)
+        else setError(true)
+      }}>
+        <p className="text-sm font-medium">{t('gantt.rescheduleTask', { title: row.text })}</p>
+        <label className="block space-y-1 text-xs">{t('gantt.startDate')}<Input type="date" required value={start} onChange={event => setStart(event.target.value)} disabled={row.saving} /></label>
+        <label className="block space-y-1 text-xs">{t('gantt.endDate')}<Input type="date" required min={start} value={end} onChange={event => setEnd(event.target.value)} disabled={row.saving} /></label>
+        {error && <p role="alert" className="text-xs text-destructive">{t('gantt.saveFailed')}</p>}
+        <div className="flex justify-end gap-2"><Button type="button" variant="ghost" size="sm" disabled={row.saving} onClick={() => setOpen(false)}>{t('common.cancel')}</Button><Button type="submit" size="sm" disabled={row.saving}>{t(row.saving ? 'gantt.saving' : 'common.save')}</Button></div>
+      </form>
+    </PopoverContent>
+  </Popover>
+}
 
 function GanttTaskTitleCell({ row }: ICellProps) {
   const { t, i18n } = useTranslation()
-  const { collapsed, hoveredId, toggleCollapsed, setHoveredId } = React.useContext(GanttTaskCellContext)
+  const { collapsed, hoveredId, toggleCollapsed, setHoveredId, openTask } = React.useContext(GanttTaskCellContext)
   const id = String(row.id ?? '')
   const title = typeof row.title === 'string' ? row.title : String(row.text ?? '')
   const color = typeof row.barColor === 'string' ? row.barColor : 'var(--accent)'
@@ -274,7 +310,7 @@ function GanttTaskTitleCell({ row }: ICellProps) {
           aria-hidden="true"
         />
       )}
-      <span className="pg-task-copy" title={title}>
+      <button type="button" className="craft-control craft-focus pg-task-copy text-left" title={title} onClick={event => { event.stopPropagation(); openTask(id) }}>
         <span className={`pg-task-title${row.type === 'summary' ? ' pg-task-title--summary' : ''}`}>
           <span className="pg-task-title-text">{title}</span>
           {childCount > 0 && <span className="pg-task-count">{childCount}</span>}
@@ -283,7 +319,8 @@ function GanttTaskTitleCell({ row }: ICellProps) {
           {dateRange && <span className="pg-task-meta__date">{dateRange}</span>}
           {statusLabel && <span className="pg-task-meta__status">{statusLabel}</span>}
         </span>
-      </span>
+      </button>
+      <GanttDateControl row={row} />
     </div>
   )
 }
@@ -385,7 +422,7 @@ function TimelineBar({ data }: { data: ITask }) {
 }
 
 /**
- * Read-only timeline projection of work item planning fields.
+ * Timeline projection with native date writes for ordinary leaf tasks.
  *
  * The projection is bounded on three axes, because SVAR renders every task it is
  * handed and builds its scale for the whole requested range: archived items are
@@ -396,7 +433,48 @@ export function GanttView() {
   const { t, i18n } = useTranslation()
   const { activeWorkspaceId, sessionStatuses, trailingAction, expandButton } = useAppShellContext()
   const { navigate, navigateToSession } = useNavigation()
-  const { items, isLoading } = useWorkItems(activeWorkspaceId ?? null)
+  const { items: loadedItems, isLoading: collectionLoading, update } = useWorkItems(activeWorkspaceId ?? null)
+  const pendingChanges = React.useSyncExternalStore(subscribeGanttChanges, ganttChangesSnapshot)
+  const items = React.useMemo(() => loadedItems.map(item => {
+    const change = ganttChange(activeWorkspaceId ?? '', item.id, pendingChanges)
+    return change ? { ...item, ...change.patch } : item
+  }), [loadedItems, activeWorkspaceId, pendingChanges])
+  const isLoading = collectionLoading && loadedItems.length === 0
+  React.useEffect(() => { if (activeWorkspaceId) acknowledgeGanttChanges(activeWorkspaceId, loadedItems) }, [activeWorkspaceId, loadedItems, pendingChanges])
+  const [ganttEpoch, setGanttEpoch] = React.useState(0)
+  const [gesture, setGesture] = React.useState<{ tasks: ITask[]; links: ILink[]; start: Date; end: Date } | null>(null)
+  const gestureRef = React.useRef(false)
+  const actionsRef = React.useRef<{ canEdit: (id: string) => boolean; save: (id: string, start: Date, end: Date) => Promise<boolean>; freeze: () => void } | null>(null)
+  const cancelGesture = React.useCallback(() => {
+    if (!gestureRef.current) return
+    gestureRef.current = false; setGesture(null); setGanttEpoch(value => value + 1)
+  }, [])
+  React.useEffect(() => {
+    const cancel = (event: KeyboardEvent) => { if (event.key === 'Escape' && gestureRef.current) { event.preventDefault(); event.stopPropagation(); cancelGesture() } }
+    window.addEventListener('keydown', cancel, true)
+    return () => window.removeEventListener('keydown', cancel, true)
+  }, [cancelGesture])
+  const initGantt = React.useCallback((api: IApi) => {
+    const config = { tag: 'phaneris-reschedule' }
+    for (const action of ['add-task', 'delete-task', 'copy-task', 'move-task', 'indent-task', 'add-link', 'update-link', 'delete-link']) api.intercept(action, () => false, config)
+    api.intercept('drag-task', event => {
+      if (!actionsRef.current?.canEdit(String(event.id))) return false
+      if (event.inProgress) { if (!gestureRef.current) { gestureRef.current = true; actionsRef.current.freeze() } }
+      else { gestureRef.current = false; setGesture(null) }
+    }, config)
+    api.intercept('update-task', event => {
+      gestureRef.current = false; setGesture(null)
+      if (!actionsRef.current?.canEdit(String(event.id)) || event.inProgress || event.segmentIndex !== undefined || Object.keys(event.task).some(key => key !== 'start' && key !== 'end')) return false
+      const current = api.getTask(event.id)
+      // SVAR supplies the pre-drag dates plus a calendar-day diff. Its reducer
+      // normally applies that diff; this native write adapter intercepts first.
+      const diff = Number.isFinite(event.diff) ? event.diff! : 0
+      const start = event.task.start ? addDays(event.task.start, diff) : current.start
+      const end = event.task.end ? addDays(event.task.end, diff) : current.end
+      if (start instanceof Date && end instanceof Date && Number.isFinite(start.getTime()) && Number.isFinite(end.getTime())) void actionsRef.current.save(String(event.id), start, end)
+      return false // All durable writes go through the native WorkItem path.
+    }, config)
+  }, [])
   const projects = useAtomValue(projectsAtom)
   const setEditorTarget = useSetAtom(kanbanEditorTargetAtom)
   const compensateForStoplight = useCompensateForStoplight()
@@ -526,7 +604,7 @@ export function GanttView() {
     return () => {
       api.detach?.(GRID_WIDTH_TAG)
     }
-  }, [commitGridWidth, isLoading])
+  }, [commitGridWidth, isLoading, ganttEpoch])
 
   /*
    * A drag that is still settling when the view unmounts must not be lost —
@@ -764,6 +842,8 @@ export function GanttView() {
         depth,
         progress: item.progress ?? 0,
         type,
+        editable: !item.isMilestone && !items.some(candidate => candidate.parentId === item.id),
+        saving: ganttChange(activeWorkspaceId ?? '', item.id)?.saving ?? false,
         parent: item.parentId && included.has(item.parentId) ? item.parentId : 0,
         ...(isParent ? { open: !collapsed.has(item.id) } : {}),
         ...(childCount ? { childCount } : {}),
@@ -792,7 +872,25 @@ export function GanttView() {
      */
     const unscheduledItems = filtered.filter((item) => rangeOf(item) === undefined)
     return { tasks, links, scheduledCount, unscheduledItems, parentIds }
-  }, [collapsed, filtered, statusColorById, statusLabelById, t, windowStart, windowEnd])
+  }, [collapsed, filtered, items, activeWorkspaceId, statusColorById, statusLabelById, t, windowStart, windowEnd])
+
+  const reschedule = React.useCallback(async (id: string, start: Date, end: Date) => {
+    const item = items.find(candidate => candidate.id === id)
+    if (!activeWorkspaceId || !item || item.isMilestone || items.some(candidate => candidate.parentId === id) || ganttChange(activeWorkspaceId, id)?.saving) return false
+    let patch: ReturnType<typeof rescheduleTimelineRange>
+    try { patch = rescheduleTimelineRange(item, start, end) }
+    catch { setGanttEpoch(value => value + 1); toast.error(t('gantt.saveFailed')); return false }
+    if (patch.startAt === item.startAt && patch.dueAt === item.dueAt) return true
+    const saved = await saveGanttChange(activeWorkspaceId, id, patch, () => update(id, patch))
+    if (saved) toast.success(t('gantt.saved'))
+    else { setGanttEpoch(value => value + 1); toast.error(t('gantt.saveFailed')) }
+    return saved
+  }, [activeWorkspaceId, items, update, t])
+  actionsRef.current = {
+    canEdit: id => tasks.some(task => String(task.id) === id && task.editable && !task.saving),
+    save: reschedule,
+    freeze: () => setGesture({ tasks, links, start: windowStart, end: windowEnd }),
+  }
 
   const toggleCollapsed = React.useCallback((id: string) => {
     setCollapseState((previous) => {
@@ -823,6 +921,8 @@ export function GanttView() {
     collapseAll,
     expandAll,
     setHoveredId,
+    reschedule,
+    openTask: navigateToSession,
   }), [
     allCollapsed,
     allExpanded,
@@ -832,6 +932,8 @@ export function GanttView() {
     hoveredId,
     parentIds,
     toggleCollapsed,
+    reschedule,
+    navigateToSession,
   ])
 
   /**
@@ -1015,23 +1117,24 @@ export function GanttView() {
             the definite height `.wx-gantt` needs to virtualise its rows, and that
             re-skins the chart in the app's own tokens; see gantt-overrides.css.
           */
-          <div ref={ganttHostRef} className="phaneris-gantt relative h-full rounded-xl border border-border bg-background">
+          <div ref={ganttHostRef} className="phaneris-gantt relative h-full rounded-xl border border-border bg-background" onPointerCancel={cancelGesture} onTouchCancel={cancelGesture}>
             <ThemeProvider fonts={false}>
               {() => (
                 <GanttTaskCellContext.Provider value={taskCellContext}>
                   <div className="h-full min-h-0 overflow-hidden">
                     <Gantt
+                      key={ganttEpoch}
+                      init={initGantt}
                       ref={ganttRef as never}
-                      tasks={tasks}
-                      links={links}
-                      readonly
+                      tasks={gesture?.tasks ?? tasks}
+                      links={gesture?.links ?? links}
                       cellBorders="column"
                       cellHeight={CELL_HEIGHT}
                       lengthUnit="day"
                       durationUnit="day"
                       gridWidth={effectiveGridWidth}
-                      start={windowStart}
-                      end={windowEnd}
+                      start={gesture?.start ?? windowStart}
+                      end={gesture?.end ?? windowEnd}
                       zoom={{ level: ZOOM_LEVEL_FOR[scale], levels: zoomLevels }}
                       taskTemplate={TimelineBar}
                       columns={[
@@ -1042,7 +1145,6 @@ export function GanttView() {
                           cell: GanttTaskTitleCell,
                         },
                       ]}
-                      onselecttask={(event) => event?.id && navigateToSession(String(event.id))}
                     />
                   </div>
                 </GanttTaskCellContext.Provider>

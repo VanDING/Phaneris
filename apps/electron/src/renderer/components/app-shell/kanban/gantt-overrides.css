@@ -11,6 +11,13 @@
  * widget.
  */
 
+/* Date editing is the only timeline mutation. Existing dependency lines and
+   progress displays remain visible, while unsupported edit handles do not. */
+.phaneris-gantt .wx-link.wx-target,
+.phaneris-gantt .wx-progress-marker {
+  display: none;
+}
+
 /* ---------------------------------------------------------------------------
  * 1. Height chain
  *

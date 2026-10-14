@@ -1,6 +1,6 @@
 import { RPC_CHANNELS, type CalendarEntry, type CalendarEntryInput, type Session } from '@phaneris/shared/protocol'
 import { isValidPlanValue, planDateKey, planTimeOfDay } from '@phaneris/shared/work-items'
-import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
+import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 
 export const HANDLED_CHANNELS = [
@@ -48,11 +48,6 @@ function temporal(date: string, clock?: string): string {
   return clock ? `${date}T${clock}` : date
 }
 
-function broadcastChanged(server: RpcServer, workspaceId: string): void {
-  pushTyped(server, RPC_CHANNELS.calendar.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
-  pushTyped(server, RPC_CHANNELS.workItems.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
-}
-
 /**
  * Calendar projection: every visible Session carrying a date.
  *
@@ -85,7 +80,6 @@ export function registerCalendarHandlers(server: RpcServer, deps: HandlerDeps): 
       startAt: temporal(input.date, input.allDay ? undefined : input.time),
       dueAt: temporal(endDate, input.allDay ? undefined : input.endTime),
     })
-    broadcastChanged(server, workspaceId)
     return sessionToEntry(session)!
   })
 
@@ -103,13 +97,11 @@ export function registerCalendarHandlers(server: RpcServer, deps: HandlerDeps): 
       startAt: temporal(input.date, input.allDay ? undefined : input.time),
       dueAt: temporal(endDate, input.allDay ? undefined : input.endTime),
     })
-    broadcastChanged(server, workspaceId)
     return sessionToEntry(deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === entryId)!)!
   })
 
   server.handle(RPC_CHANNELS.calendar.DELETE, async (_ctx, workspaceId: string, entryId: string) => {
     const exists = deps.sessionManager.getSessions(workspaceId).some(({ id }) => id === entryId)
     if (exists) await deps.sessionManager.updateSessionPlanning(entryId, { startAt: null, dueAt: null })
-    broadcastChanged(server, workspaceId)
   })
 }

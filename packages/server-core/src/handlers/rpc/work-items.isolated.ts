@@ -217,13 +217,13 @@ describe('work item RPC handlers', () => {
     )
   })
 
-  it('deletes the backing Session and broadcasts a change', async () => {
+  it('deletes the backing Session and leaves projection notifications to SessionManager', async () => {
     const harness = createHarness({ sessions: [{ id: 'session-1', name: 'Doomed' }] })
     const remove = harness.handler(RPC_CHANNELS.workItems.DELETE)
 
     await remove(context, workspaceFixture.id, 'session-1')
 
     expect(harness.calls).toContain('delete:session-1')
-    expect(harness.pushes.some(({ channel }) => channel === RPC_CHANNELS.workItems.CHANGED)).toBe(true)
+    expect(harness.pushes).toHaveLength(0)
   })
 })

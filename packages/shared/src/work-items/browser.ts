@@ -1,4 +1,5 @@
 /** Browser-safe WorkItem contract and pure projection helpers. */
+export { workItemToCalendarEntry, calendarPlanningFields } from './calendar.ts';
 export type {
   CreateWorkItemInput,
   UpdateWorkItemInput,
@@ -28,6 +29,7 @@ export {
 
 export {
   fromTimelineRange,
+  rescheduleTimelineRange,
   timelineDayCount,
   toTimelineRange,
   type TimelineRange,

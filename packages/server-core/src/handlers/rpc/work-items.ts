@@ -4,7 +4,7 @@ import {
   type UpdateWorkItemInput,
   type WorkItem,
 } from '@phaneris/shared/work-items'
-import { pushTyped, type RpcServer } from '@phaneris/server-core/transport'
+import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
 
 export const HANDLED_CHANNELS = [
@@ -25,11 +25,6 @@ function projectPreview(session: Session): string | undefined {
   const preview = session.preview?.trim()
   if (!preview) return undefined
   return preview.length > PREVIEW_LIMIT ? preview.slice(0, PREVIEW_LIMIT) : preview
-}
-
-function broadcastChanged(server: RpcServer, workspaceId: string): void {
-  pushTyped(server, RPC_CHANNELS.workItems.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
-  pushTyped(server, RPC_CHANNELS.calendar.CHANGED, { to: 'workspace', workspaceId }, workspaceId)
 }
 
 function sessionToWorkItem(session: Session): WorkItem {
@@ -124,20 +119,17 @@ export function registerWorkItemHandlers(server: RpcServer, deps: HandlerDeps): 
       isMilestone: input.isMilestone,
     })
     if (input.columnId) await deps.sessionManager.setKanbanColumn(session.id, input.columnId)
-    broadcastChanged(server, workspaceId)
     const created = deps.sessionManager.getSessions(workspaceId).find(({ id }) => id === session.id) ?? session
     return sessionToWorkItem(created)
   })
 
   server.handle(RPC_CHANNELS.workItems.UPDATE, async (_ctx, workspaceId: string, itemId: string, patch: UpdateWorkItemInput) => {
     const item = await updateSessionFromWorkItem(deps, workspaceId, itemId, patch)
-    broadcastChanged(server, workspaceId)
     return item
   })
 
   server.handle(RPC_CHANNELS.workItems.DELETE, async (_ctx, workspaceId: string, itemId: string) => {
     const exists = deps.sessionManager.getSessions(workspaceId).some(({ id }) => id === itemId)
     if (exists) await deps.sessionManager.deleteSession(itemId)
-    broadcastChanged(server, workspaceId)
   })
 }

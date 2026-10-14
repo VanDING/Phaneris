@@ -6,6 +6,8 @@
  * on-disk store, its event log and its one-shot Session migration have all been
  * removed, so nothing here touches the filesystem.
  */
+export { workItemToCalendarEntry, calendarPlanningFields } from './calendar.ts';
+
 export type {
   CreateWorkItemInput,
   UpdateWorkItemInput,
@@ -35,6 +37,7 @@ export {
 
 export {
   fromTimelineRange,
+  rescheduleTimelineRange,
   timelineDayCount,
   toTimelineRange,
   type TimelineRange,

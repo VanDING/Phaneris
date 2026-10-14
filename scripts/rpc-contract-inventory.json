@@ -1180,7 +1180,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 75,
+          "line": 70,
           "args": [
             "workspaceId: string",
             "input: CalendarEntryInput"
@@ -1202,7 +1202,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 110,
+          "line": 103,
           "args": [
             "workspaceId: string",
             "entryId: string"
@@ -1224,7 +1224,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 65,
+          "line": 60,
           "args": [
             "workspaceId: string"
           ],
@@ -1245,7 +1245,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/calendar.ts",
-          "line": 92,
+          "line": 86,
           "args": [
             "workspaceId: string",
             "entryId: string",
@@ -4832,7 +4832,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/plugins.ts",
-          "line": 113,
+          "line": 95,
           "args": [
             "workspaceId: string",
             "pluginName: string"
@@ -4865,10 +4865,10 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/plugins.ts",
-          "line": 96,
+          "line": 78,
           "args": [
             "workspaceId: string",
-            "packageRoot: string"
+            "planId: string"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "explicit destination workspace"
@@ -4908,10 +4908,10 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/plugins.ts",
-          "line": 123,
+          "line": 105,
           "args": [
             "workspaceId: string",
-            "pluginName: string"
+            "planId: string"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "explicit destination workspace"
@@ -8313,7 +8313,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 112,
+          "line": 107,
           "args": [
             "workspaceId: string",
             "input: CreateWorkItemInput"
@@ -8335,7 +8335,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 138,
+          "line": 131,
           "args": [
             "workspaceId: string",
             "itemId: string"
@@ -8357,7 +8357,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 107,
+          "line": 102,
           "args": [
             "workspaceId: string"
           ],
@@ -8378,7 +8378,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/work-items.ts",
-          "line": 132,
+          "line": 126,
           "args": [
             "workspaceId: string",
             "itemId: string",

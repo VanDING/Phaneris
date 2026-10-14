@@ -1,21 +1,8 @@
-/**
- * useCalendarEntries — load and manage workspace calendar entries.
- *
- * Entries are a **projection of Session planning fields** (`calendar:list` maps
- * every visible Session carrying a date), not a standalone store — creating one
- * creates a Session, and deleting one clears its dates. The previous header here
- * claimed the opposite, which is what led feature work to assume an independent
- * store existed.
- *
- * Mutations THROW on failure. They previously logged and returned `null`, which
- * made a rejected write indistinguishable from a no-op: the editor closed as if
- * it had saved, and a failed drag left the old data on screen with no
- * explanation. Callers now own the failure path, so every one of them has to
- * decide what the user sees.
- */
-
-import { useState, useEffect, useCallback } from 'react'
+/** Calendar entries share the workspace WorkItem projection; writes still persist Sessions. */
+import { useCallback, useMemo } from 'react'
 import type { CalendarEntry, CalendarEntryInput } from '@phaneris/shared/protocol'
+import { calendarPlanningFields, workItemToCalendarEntry } from '@phaneris/shared/work-items/browser'
+import { useWorkItemsCollection } from './work-items-collection'
 
 export interface UseCalendarEntriesResult {
   entries: CalendarEntry[]
@@ -28,12 +15,9 @@ export interface UseCalendarEntriesResult {
   remove: (entryId: string) => Promise<void>
 }
 
-/** A readable message for an unknown thrown value, with a caller-supplied fallback. */
 export function calendarErrorMessage(err: unknown, fallback: string): string {
   if (err instanceof Error) {
     const message = err.message.trim()
-    // Electron IPC wraps handler failures; the wrapper text is noise, the
-    // server's own sentence is the useful part.
     if (message && message !== 'Error') return message
   }
   if (typeof err === 'string' && err.trim()) return err.trim()
@@ -41,85 +25,40 @@ export function calendarErrorMessage(err: unknown, fallback: string): string {
 }
 
 export function useCalendarEntries(workspaceId: string | null): UseCalendarEntriesResult {
-  const [entries, setEntries] = useState<CalendarEntry[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const refresh = useCallback(async () => {
-    if (!workspaceId) {
-      setEntries([])
-      setIsLoading(false)
-      return
-    }
+  const { items, isLoading, error, collection } = useWorkItemsCollection(workspaceId)
+  const entries = useMemo(() => items.flatMap(item => {
+    const entry = workItemToCalendarEntry(item)
+    return entry ? [entry] : []
+  }), [items])
+  const refresh = useCallback(async () => { await collection?.refresh() }, [collection])
+  const create = useCallback(async (input: CalendarEntryInput) => {
+    if (!collection) throw new Error('No workspace is active')
     try {
-      setIsLoading(true)
-      const list = await window.electronAPI.listCalendarEntries(workspaceId)
-      setEntries(list)
-      setError(null)
-    } catch (err) {
-      console.error('[useCalendarEntries] Failed to load calendar entries:', err)
-      setError(calendarErrorMessage(err, 'Failed to load calendar entries'))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [workspaceId])
-
-  useEffect(() => {
-    refresh()
-  }, [refresh])
-
-  // Live updates: any window creating/editing/deleting entries refreshes all views.
-  useEffect(() => {
-    if (!workspaceId) return
-    const cleanup = window.electronAPI.onCalendarEntriesChanged((changedWorkspaceId) => {
-      if (changedWorkspaceId === workspaceId) refresh()
-    })
-    return cleanup
-  }, [workspaceId, refresh])
-
-  const create = useCallback(
-    async (input: CalendarEntryInput) => {
-      if (!workspaceId) throw new Error('No workspace is active')
-      try {
-        const entry = await window.electronAPI.createCalendarEntry(workspaceId, input)
-        setEntries((prev) => [...prev, entry])
-        return entry
-      } catch (err) {
-        console.error('[useCalendarEntries] Failed to create entry:', err)
-        throw new Error(calendarErrorMessage(err, 'Failed to create the schedule entry'))
-      }
-    },
-    [workspaceId],
-  )
-
-  const update = useCallback(
-    async (entryId: string, input: CalendarEntryInput) => {
-      if (!workspaceId) throw new Error('No workspace is active')
-      try {
-        const entry = await window.electronAPI.updateCalendarEntry(workspaceId, entryId, input)
-        setEntries((prev) => prev.map((e) => (e.id === entryId ? entry : e)))
-        return entry
-      } catch (err) {
-        console.error('[useCalendarEntries] Failed to update entry:', err)
-        throw new Error(calendarErrorMessage(err, 'Failed to update the schedule entry'))
-      }
-    },
-    [workspaceId],
-  )
-
-  const remove = useCallback(
-    async (entryId: string) => {
-      if (!workspaceId) throw new Error('No workspace is active')
-      try {
-        await window.electronAPI.deleteCalendarEntry(workspaceId, entryId)
-        setEntries((prev) => prev.filter((e) => e.id !== entryId))
-      } catch (err) {
-        console.error('[useCalendarEntries] Failed to delete entry:', err)
-        throw new Error(calendarErrorMessage(err, 'Failed to remove the schedule entry'))
-      }
-    },
-    [workspaceId],
-  )
-
+      const item = await collection.create({
+        ...calendarPlanningFields(input), title: input.title.trim(), projectId: input.projectId,
+        description: input.note, statusId: 'backlog',
+      })
+      const entry = workItemToCalendarEntry(item)
+      if (!entry) throw new Error('The schedule entry has no valid date')
+      return entry
+    } catch (cause) { throw new Error(calendarErrorMessage(cause, 'Failed to create the schedule entry')) }
+  }, [collection])
+  const update = useCallback(async (id: string, input: CalendarEntryInput) => {
+    if (!collection) throw new Error('No workspace is active')
+    try {
+      const item = await collection.update(id, {
+        ...calendarPlanningFields(input), title: input.title.trim(),
+        projectId: input.projectId ?? null, description: input.note ?? null,
+      })
+      const entry = workItemToCalendarEntry(item)
+      if (!entry) throw new Error('The schedule entry has no valid date')
+      return entry
+    } catch (cause) { throw new Error(calendarErrorMessage(cause, 'Failed to update the schedule entry')) }
+  }, [collection])
+  const remove = useCallback(async (id: string) => {
+    if (!collection) throw new Error('No workspace is active')
+    try { await collection.update(id, { startAt: null, dueAt: null }) }
+    catch (cause) { throw new Error(calendarErrorMessage(cause, 'Failed to remove the schedule entry')) }
+  }, [collection])
   return { entries, isLoading, error, refresh, create, update, remove }
 }
