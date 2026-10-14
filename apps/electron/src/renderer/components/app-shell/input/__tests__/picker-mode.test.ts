@@ -20,10 +20,12 @@ function input(overrides: Partial<PickerModeInput> = {}): PickerModeInput {
 
 describe('derivePickerMode', () => {
   // -------------------------------------------------------------------------
-  // Precedence: unavailable wins
+  // Deleted connections must retain an explicit path to every remaining provider.
+  // Failures: hiding a sole replacement, locking its single model, treating the
+  // missing connection as selected, or presenting models when none remain.
   // -------------------------------------------------------------------------
 
-  test('connectionUnavailable beats every other flag', () => {
+  test('deleted connection with alternatives opens the switcher', () => {
     expect(
       derivePickerMode(
         input({
@@ -33,7 +35,20 @@ describe('derivePickerMode', () => {
           connectionCount: 5,
         }),
       ),
-    ).toBe('unavailable')
+    ).toBe('switcher')
+  })
+
+  test.each([true, false])('deleted connection with one single-model replacement → switcher (empty=%s)', isEmptySession => {
+    expect(derivePickerMode(input({
+      connectionUnavailable: true,
+      connectionDefaultModel: 'replacement-model',
+      connectionCount: 1,
+      isEmptySession,
+    }))).toBe('switcher')
+  })
+
+  test('deleted connection with no replacements → unavailable', () => {
+    expect(derivePickerMode(input({ connectionUnavailable: true, connectionCount: 0 }))).toBe('unavailable')
   })
 
   // -------------------------------------------------------------------------

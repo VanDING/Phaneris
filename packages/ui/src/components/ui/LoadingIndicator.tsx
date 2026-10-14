@@ -21,12 +21,13 @@ export interface SpinnerProps {
 }
 
 /**
- * Spinner - 3x3 grid spinner based on SpinKit Grid
+ * Spinner - compact rotating arc with a quiet circular track
  *
  * Features:
  * - Uses currentColor (inherits text color from parent)
  * - Uses em sizing (scales with font-size)
- * - 3x3 grid of cubes with staggered scale animation
+ * - Stable geometry, including at small tool-row sizes
+ * - Remains visible without animation for reduced motion
  * - Pure CSS animation (no JS state)
  *
  * Usage:
@@ -48,15 +49,10 @@ export function Spinner({ className }: SpinnerProps) {
       role="status"
       aria-label={t("common.loading")}
     >
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
-      <span className="spinner-cube" />
+      <svg className="spinner-ring" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.75" opacity="0.2" />
+        <path d="M8 2a6 6 0 0 1 6 6" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+      </svg>
     </span>
   )
 }
@@ -80,7 +76,7 @@ export interface LoadingIndicatorProps {
  * Inherits text color and size from parent element.
  *
  * Features:
- * - Animated 3x3 dot grid spinner (CSS-only)
+ * - Animated circular spinner (CSS-only)
  * - Optional label text
  * - Optional elapsed time display
  */

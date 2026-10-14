@@ -221,10 +221,10 @@ export function CompactModelSelector({
                 <ConnectionIcon connection={effectiveConnectionDetails} size={14} />
               )}
               <span className="truncate min-w-0">{currentModelDisplayName}</span>
-              {pickerMode !== 'locked-single' && (
-                <ChevronDown className="h-3 w-3 opacity-50 shrink-0" />
-              )}
             </>
+          )}
+          {pickerMode !== 'locked-single' && (
+            <ChevronDown className="h-3 w-3 opacity-50 shrink-0" />
           )}
         </button>
       </DrawerTrigger>
@@ -236,7 +236,7 @@ export function CompactModelSelector({
 
         <div className="px-2 pb-4 flex flex-col gap-0.5 max-h-[55vh] overflow-y-auto">
           {/* === Models section === */}
-          {pickerMode === 'unavailable' ? (
+          {connectionUnavailable && (
             <div className="flex flex-col items-center justify-center py-6 px-4 text-center">
               <AlertCircle className="h-8 w-8 text-destructive mb-2" />
               <div className="font-medium text-sm mb-1">
@@ -245,17 +245,19 @@ export function CompactModelSelector({
               <div className="text-xs text-muted-foreground mb-3">
                 {t('chat.connectionUnavailableDescription')}
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false)
-                  navigate(routes.view.settings('ai'))
-                }}
-                className="text-xs underline text-foreground/70 hover:text-foreground"
-              >
-                {t('chat.modelPicker.openAiSettings')}
-              </button>
             </div>
+          )}
+          {pickerMode === 'unavailable' ? (
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false)
+                navigate(routes.view.settings('ai'))
+              }}
+              className="craft-control self-center text-xs underline text-foreground/70 hover:text-foreground"
+            >
+              {t('chat.modelPicker.openAiSettings')}
+            </button>
           ) : pickerMode === 'locked-single' && connectionDefaultModel ? (
             <LockedSingleRow
               modelId={connectionDefaultModel}

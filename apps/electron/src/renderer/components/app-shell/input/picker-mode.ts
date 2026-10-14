@@ -6,7 +6,8 @@
  * branch in agreement, and makes the rule trivially unit-testable.
  *
  * Precedence (highest first):
- *   1. unavailable     — current connection is gone / error state
+ *   1. missing connection — show the switcher if any replacement exists,
+ *                           otherwise show the unavailable state
  *   2. switcher        — multiple connections configured; idle sessions may
  *                        switch connection before or after messages exist
  *   3. locked-single   — `pi_compat` connection with ≤1 model and only one
@@ -32,7 +33,9 @@ export interface PickerModeInput {
 }
 
 export function derivePickerMode(input: PickerModeInput): PickerMode {
-  if (input.connectionUnavailable) return 'unavailable'
+  if (input.connectionUnavailable) {
+    return input.connectionCount > 0 ? 'switcher' : 'unavailable'
+  }
   if (input.connectionCount > 1) return 'switcher'
   if (input.connectionDefaultModel != null) return 'locked-single'
   return 'flat'

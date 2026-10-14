@@ -55,6 +55,7 @@ import {
 import { cn } from '@/lib/utils'
 import { coerceInputText } from '@/lib/input-text'
 import { isMac } from '@/lib/platform'
+import { navigate, routes } from '@/lib/navigate'
 import { applySmartTypography } from '@/lib/smart-typography'
 import { AttachmentPreview } from '../AttachmentPreview'
 import { ImageSupportWarningBanner } from './ImageSupportWarningBanner'
@@ -2071,9 +2072,9 @@ export function FreeFormInput({
                       <>
                         {effectiveConnectionDetails && llmConnections.length > 1 && storage.get(storage.KEYS.showConnectionIcons, true) && <ConnectionIcon connection={effectiveConnectionDetails} size={14} showTooltip />}
                         {currentModelDisplayName}
-                        {pickerMode !== 'locked-single' && <ChevronDown className="h-3 w-3 opacity-50 shrink-0" />}
                       </>
                     )}
+                    {pickerMode !== 'locked-single' && <ChevronDown className="h-3 w-3 opacity-50 shrink-0" />}
                   </button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
@@ -2084,7 +2085,7 @@ export function FreeFormInput({
             <StyledDropdownMenuContent side="top" align="end" sideOffset={8} className="min-w-[260px]">
               <div className="max-h-[min(360px,45vh)] overflow-y-auto overscroll-contain">
               {/* Connection unavailable message */}
-              {pickerMode === 'unavailable' ? (
+              {connectionUnavailable && (
                 <div className="flex flex-col items-center justify-center py-6 px-4 text-center">
                   <AlertCircle className="h-8 w-8 text-destructive mb-2" />
                   <div className="font-medium text-sm mb-1">{t('chat.connectionUnavailable')}</div>
@@ -2092,6 +2093,11 @@ export function FreeFormInput({
                     {t('chat.connectionUnavailableDescription')}
                   </div>
                 </div>
+              )}
+              {pickerMode === 'unavailable' ? (
+                <StyledDropdownMenuItem onSelect={() => navigate(routes.view.settings('ai'))}>
+                  {t('chat.modelPicker.openAiSettings')}
+                </StyledDropdownMenuItem>
               ) : pickerMode === 'locked-single' && connectionDefaultModel ? (
                 (() => {
                   // Single-model pi_compat connection on a non-empty session (or

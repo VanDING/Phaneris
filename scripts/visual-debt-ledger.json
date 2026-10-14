@@ -1037,16 +1037,6 @@
       "file": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
       "rule": "theme-contracts/roles",
       "message": "control",
-      "fingerprint": "10c76eea6b9ffdb4be4498cfb3b9e47cfff2c6735066d781eecbaea4fd9d4f7f",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "control",
       "fingerprint": "7aad5d92b39a7f74df4e7d2b74514405947483cd7ab6013af89b009290877bf1",
       "count": 1,
       "owner": "Electron / feature owner",
@@ -4426,28 +4416,8 @@
     {
       "file": "apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
       "rule": "theme-contracts/roles",
-      "message": "control",
-      "fingerprint": "1a60e6405384e638e6c61664a6a1e8430d7e9275e9da678255b5140abdd6900f",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing native target uses component/wrapper styling. Its role cannot be established statically; migrate this exact target with keyboard and coarse-pointer E2E.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
-      "rule": "theme-contracts/roles",
       "message": "literal",
       "fingerprint": "94c693bab29e94715e8c9da8129ddabafdd01fa15c29637d4bad69ee7f9e1bc3",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "527e37a5893d15ea01f7187449b730b968872d501109da38c07ad1f38b5ef7df",
       "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
