@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useTranslation } from "react-i18next"
 import { Check, Globe, Copy, RefreshCw, Link2Off } from 'lucide-react'
 import type { MenuComponents } from '@/components/ui/menu-context'
+import { MenuIcon } from '@/components/ui/MenuIcon'
 import { getStatusIconStyle, type SessionStatusId, type SessionStatus } from '@/config/session-status-config'
 import { sortLabelsForDisplay, type LabelConfig } from '@phaneris/shared/labels'
 import { LabelIcon } from '@/components/ui/label-icon'
@@ -37,20 +38,20 @@ export function ShareMenuItems({
   return (
     <>
       <MenuItem onClick={onOpenInBrowser}>
-        <Globe className="h-3.5 w-3.5" />
+        <MenuIcon><Globe /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.openInBrowser")}</span>
       </MenuItem>
       <MenuItem onClick={onCopyLink}>
-        <Copy className="h-3.5 w-3.5" />
+        <MenuIcon><Copy /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.copyLink")}</span>
       </MenuItem>
       <MenuItem onClick={onUpdateShare}>
-        <RefreshCw className="h-3.5 w-3.5" />
+        <MenuIcon><RefreshCw /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.updateShare")}</span>
       </MenuItem>
       <Separator />
       <MenuItem onClick={onRevokeShare} variant="destructive">
-        <Link2Off className="h-3.5 w-3.5" />
+        <MenuIcon><Link2Off /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.stopSharing")}</span>
       </MenuItem>
     </>
@@ -84,9 +85,9 @@ export function StatusMenuItems({
             onClick={() => onSelect(state.id)}
             className={activeStateId === state.id ? 'bg-foreground/5' : ''}
           >
-            <span style={getStatusIconStyle(state)}>
+            <MenuIcon style={getStatusIconStyle(state)}>
               {bareIcon}
-            </span>
+            </MenuIcon>
             <span className="flex-1">{state.label}</span>
           </MenuItem>
         )
@@ -146,7 +147,7 @@ export function LabelMenuItems({
           return (
             <Sub key={label.id}>
               <SubTrigger className="pr-2">
-                <LabelIcon label={label} size="sm" hasChildren />
+                <MenuIcon><LabelIcon label={label} size="sm" hasChildren /></MenuIcon>
                 <span className="flex-1">{label.name}</span>
                 {subtreeCount > 0 && (
                   <span className="text-[10px] text-foreground/50 tabular-nums -mr-2.5">
@@ -161,7 +162,7 @@ export function LabelMenuItems({
                     onToggle(label.id)
                   }}
                 >
-                  <LabelIcon label={label} size="sm" hasChildren />
+                  <MenuIcon><LabelIcon label={label} size="sm" hasChildren /></MenuIcon>
                   <span className="flex-1">{label.name}</span>
                   <span className="w-3.5 ml-4">
                     {isApplied && <Check className="h-3.5 w-3.5 text-foreground" />}
@@ -182,7 +183,7 @@ export function LabelMenuItems({
               onToggle(label.id)
             }}
           >
-            <LabelIcon label={label} size="sm" />
+            <MenuIcon><LabelIcon label={label} size="sm" /></MenuIcon>
             <span className="flex-1">{label.name}</span>
             <span className="w-3.5 ml-4">
               {isApplied && <Check className="h-3.5 w-3.5 text-foreground" />}

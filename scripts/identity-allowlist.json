@@ -184,17 +184,6 @@
       ]
     },
     {
-      "glob": "apps/electron/resources/tool-icons/tool-icons.json",
-      "tokens": [
-        "kebab-slug"
-      ],
-      "category": "read-compatibility",
-      "reason": "Recognize the existing command/icon id in historical tool records; the displayed name is current and the icon id is not the product identity.",
-      "lines": [
-        "{ \"id\": \"craft-agent\", \"displayName\": \"Phaneris\", \"icon\": \"craft-agent.svg\", \"commands\": [\"craft-agent\"] },"
-      ]
-    },
-    {
       "glob": "apps/electron/src/main/auto-update.ts",
       "tokens": [
         "scheme-or-domain"
@@ -219,17 +208,25 @@
     },
     {
       "glob": "apps/electron/src/renderer/docs/guide/zh-Hans/getting-started/introduction.md",
-      "tokens": ["display-name"],
+      "tokens": [
+        "display-name"
+      ],
       "category": "upstream-provenance",
       "reason": "Chinese guide preserves the same explicit open-source attribution as the English introduction.",
-      "lines": ["本项目由 [Craft Agents 开源代码](https://github.com/craft-ai-agents/craft-agents-oss)发展而来，独立命名和构建。帮助内容随应用打包，离线可读。"]
+      "lines": [
+        "本项目由 [Craft Agents 开源代码](https://github.com/craft-ai-agents/craft-agents-oss)发展而来，独立命名和构建。帮助内容随应用打包，离线可读。"
+      ]
     },
     {
       "glob": "apps/electron/src/renderer/docs/guide/zh-Hans/reference/environment-variables.md",
-      "tokens": ["env-prefix"],
+      "tokens": [
+        "env-prefix"
+      ],
       "category": "read-compatibility",
       "reason": "Chinese guide explains that the old config override is deliberately not consumed.",
-      "lines": ["本项目不使用上游 `CRAFT_CONFIG_DIR` 作为自己的目录覆盖。需要指定位置时使用 Phaneris 变量，避免误读另一应用的数据。"]
+      "lines": [
+        "本项目不使用上游 `CRAFT_CONFIG_DIR` 作为自己的目录覆盖。需要指定位置时使用 Phaneris 变量，避免误读另一应用的数据。"
+      ]
     },
     {
       "glob": "apps/electron/src/renderer/docs/guide/en/reference/environment-variables.md",
@@ -1667,6 +1664,39 @@
       "lines": [
         "(pass) registerSystemCoreHandlers OPEN_URL > routes craftagents action links internally via deeplink:navigate [0.65ms]",
         "(pass) registerSystemCoreHandlers OPEN_URL > falls back to client openExternal for craftagents window-mode links [0.17ms]"
+      ]
+    },
+    {
+      "glob": "packages/shared/src/config/bundled-assets.ts",
+      "tokens": [
+        "kebab-slug",
+        "display-name-singular"
+      ],
+      "category": "read-compatibility",
+      "reason": "Exact legacy default recognition and regression fixtures for the reversible tool-icon migration; new entries use Phaneris.",
+      "lines": [
+        "const legacy = config.tools?.find(tool => tool.id === 'craft-agent'",
+        "&& (tool.displayName === 'Craft Agent' || tool.displayName === 'Phaneris')",
+        "&& tool.icon === 'craft-agent.svg'",
+        "&& tool.commands.length === 1 && tool.commands[0] === 'craft-agent');",
+        "const legacyArtworkPath = join(toolIconsDir, 'craft-agent.svg');",
+        "const bundledLegacyPath = join(bundledToolIconsDir, 'craft-agent.svg');"
+      ]
+    },
+    {
+      "glob": "scripts/verification/tool-icons-upgrade-workflow.ts",
+      "tokens": [
+        "kebab-slug",
+        "display-name-singular"
+      ],
+      "category": "read-compatibility",
+      "reason": "Exact legacy default recognition and regression fixtures for the reversible tool-icon migration; new entries use Phaneris.",
+      "lines": [
+        "const legacy = { id: 'craft-agent', displayName: 'Craft Agent', icon: 'craft-agent.svg', commands: ['craft-agent'] }",
+        "const originalArtwork = readFileSync(resolve(import.meta.dir, '../../apps/electron/resources/tool-icons/craft-agent.svg'), 'utf8')",
+        "writeFileSync(join(folder, 'craft-agent.svg'), originalArtwork)",
+        "assert.equal(readFileSync(join(folder, 'craft-agent.svg'), 'utf8'), originalArtwork)",
+        "writeFileSync(join(folder, 'craft-agent.svg'), '<svg>my custom artwork</svg>')"
       ]
     }
   ]

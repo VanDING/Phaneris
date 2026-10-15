@@ -1,7 +1,7 @@
 {
   "version": 1,
   "tools": [
-    { "id": "craft-agent", "displayName": "Phaneris", "icon": "craft-agent.svg", "commands": ["craft-agent"] },
+    { "id": "phaneris", "displayName": "Phaneris", "icon": "phaneris.svg", "commands": ["phaneris"] },
     { "id": "git", "displayName": "Git", "icon": "git.ico", "commands": ["git"] },
     { "id": "github", "displayName": "GitHub", "icon": "github.png", "commands": ["gh"] },
     { "id": "npm", "displayName": "npm", "icon": "npm.png", "commands": ["npm", "npx"] },

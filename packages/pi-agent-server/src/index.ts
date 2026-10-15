@@ -1401,11 +1401,8 @@ async function queryLlm(
     try {
       // Pi SDK ignores options.model for ephemeral sessions (same issue as options.tools).
       // Explicitly set the model after creation to ensure the mini model is used.
-      try {
-        await ephemeralSession.setModel(piModel);
-      } catch {
-        debugLog(`[queryLlm] Failed to set model on ephemeral session, proceeding with default`);
-      }
+      // A failed selection must never execute the SDK's unrelated default model.
+      await ephemeralSession.setModel(piModel);
       lifecycle.throwIfCancelled();
 
       debugLog(`[queryLlm] Created ephemeral session: ${ephemeralSession.sessionId}`);

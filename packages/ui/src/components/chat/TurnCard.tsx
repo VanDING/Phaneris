@@ -30,7 +30,7 @@ import { MOTION_DURATION, MOTION_EASE, motionRowEnter, motionStaggerDelay, motio
 import { useScrollBehavior } from '../../lib/scroll-intent'
 import { useExitIsolation } from '../../lib/presence'
 import { Markdown } from '../markdown'
-import { Spinner } from '../ui/LoadingIndicator'
+import { ThinkingIndicator } from '../ui/LoadingIndicator'
 import { type IslandTransitionConfig } from '../ui'
 import { AnnotationIslandMenu } from '../annotations/AnnotationIslandMenu'
 import {
@@ -205,10 +205,10 @@ export const SIZE_CONFIG = {
   fontSize: 'text-[13px]',
   /** Icon size class (width and height) */
   iconSize: 'w-3 h-3',
-  /** Spinner text size class */
-  spinnerSize: 'text-[10px]',
+  /** Agent activity indicator box */
+  spinnerSize: 'size-3',
   /** Small spinner for header */
-  spinnerSizeSmall: 'text-[8px]',
+  spinnerSizeSmall: 'size-2.5',
   /** Activity row height in pixels (approx for calculation) */
   activityRowHeight: 24,
   /** Max visible activities before scrolling (show ~15 items) */
@@ -848,13 +848,13 @@ export function ActivityStatusIcon({
       case 'running':
         return (
           <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
-            <Spinner className={SIZE_CONFIG.spinnerSize} />
+            <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
           </div>
         )
       case 'backgrounded':
         return (
           <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
-            <Spinner className={cn(SIZE_CONFIG.spinnerSize, "text-accent")} />
+            <ThinkingIndicator className={cn(SIZE_CONFIG.spinnerSize, "text-accent")} />
           </div>
         )
       case 'completed':
@@ -967,7 +967,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
         >
           {isThinking ? (
             <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
-              <Spinner className={SIZE_CONFIG.spinnerSize} />
+              <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
             </div>
           ) : (
             <MessageCircleDashed className={cn(SIZE_CONFIG.iconSize, "shrink-0")} />
@@ -1015,7 +1015,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
         >
           <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
             {isRunning ? (
-              <Spinner className={SIZE_CONFIG.spinnerSizeSmall} />
+              <ThinkingIndicator className={SIZE_CONFIG.spinnerSizeSmall} />
             ) : (
               <CheckCircle2 className={cn(SIZE_CONFIG.iconSize, "text-success")} />
             )}
@@ -2722,7 +2722,7 @@ export function ResponseCard({
         {!compactMode && (
           <div className={cn("px-4 py-2 border-t border-border/30 flex items-center bg-muted/20", SIZE_CONFIG.fontSize)}>
             <div className="flex items-center gap-2 text-muted-foreground">
-              <Spinner className={SIZE_CONFIG.spinnerSize} />
+              <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
               <span>Streaming...</span>
             </div>
           </div>
@@ -2745,7 +2745,7 @@ function TodoStatusIcon({ status }: { status: TodoStatus }) {
     case 'in_progress':
       return (
         <div className={cn(SIZE_CONFIG.iconSize, "flex items-center justify-center shrink-0")}>
-          <Spinner className={SIZE_CONFIG.spinnerSize} />
+          <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
         </div>
       )
     case 'completed':
@@ -3276,7 +3276,7 @@ export const TurnCard = React.memo(function TurnCard({
                       transition={motionRowEnter(reduceMotion)}
                       className={cn("flex items-center gap-2 py-[var(--theme-activity-row-padding-y)] text-muted-foreground/70", SIZE_CONFIG.fontSize)}
                     >
-                      <Spinner className={SIZE_CONFIG.spinnerSize} />
+                      <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
                       <span>{isBuffering ? 'Preparing response...' : 'Thinking...'}</span>
                     </motion.div>
                   )}
@@ -3295,7 +3295,7 @@ export const TurnCard = React.memo(function TurnCard({
       {/* Standalone thinking indicator - when no activities but still working */}
       {!hasActivities && isThinking && !animateResponse && (
         <div className={cn("flex items-center gap-2 px-3 py-1.5 text-muted-foreground", SIZE_CONFIG.fontSize)}>
-          <Spinner className={SIZE_CONFIG.spinnerSize} />
+          <ThinkingIndicator className={SIZE_CONFIG.spinnerSize} />
           <span>{isBuffering ? 'Preparing response...' : 'Thinking...'}</span>
         </div>
       )}

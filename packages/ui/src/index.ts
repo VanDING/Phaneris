@@ -160,6 +160,7 @@ export {
 // UI primitives
 export {
   Spinner,
+  ThinkingIndicator,
   LoadingIndicator,
   SimpleDropdown,
   SimpleDropdownItem,

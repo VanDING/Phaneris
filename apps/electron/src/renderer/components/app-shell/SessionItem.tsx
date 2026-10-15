@@ -6,7 +6,7 @@ import { ChevronRight, Flag, ShieldAlert, CornerDownRight } from "lucide-react"
 import { useActionLabel } from "@/actions"
 import { cn } from "@/lib/utils"
 import { rendererPerf } from "@/lib/perf"
-import { Spinner } from "@phaneris/ui"
+import { Spinner, ThinkingIndicator } from "@phaneris/ui"
 import { EntityRow } from "@/components/ui/entity-row"
 import { EntityListBadge } from "@/components/ui/entity-list-badge"
 import { SessionMenu } from "./SessionMenu"
@@ -181,7 +181,7 @@ export function SessionItem({
               onClick={onToggleSubtasks}
               className={cn('craft-icon-button flex h-7 w-full items-center justify-center gap-1 rounded-md text-[11px] tabular-nums hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-ring', containsActiveSubtask ? 'bg-accent/10 text-accent-text' : 'text-text-secondary')}
             >
-              {subtaskRunningCount > 0 ? <Spinner className="text-[9px]" /> : subtaskNeedsAttention ? <ShieldAlert className="size-3 text-info-text" /> : null}
+              {subtaskRunningCount > 0 ? <ThinkingIndicator className="size-3" /> : subtaskNeedsAttention ? <ShieldAlert className="size-3 text-info-text" /> : null}
               <span>{subtaskCount}</span>
               <ChevronRight className={cn('size-3 transition-transform duration-160 motion-reduce:transition-none', subtasksExpanded && 'rotate-90')} />
             </button>
@@ -252,7 +252,7 @@ export function SessionItem({
               ? "opacity-100 ml-0"
               : "!w-0 opacity-0 -ml-[10px]"
           )}>
-            {item.isProcessing && <Spinner className="text-[10px]" />}
+            {item.isProcessing && <ThinkingIndicator className="size-3" />}
             {hasUnreadMeta(item) && (
               <svg className="text-accent-text h-3.5 w-3.5" viewBox="0 0 25 24" fill="currentColor">
                 <g transform="translate(1.748, 0.7832)">

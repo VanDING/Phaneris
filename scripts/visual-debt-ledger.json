@@ -537,16 +537,6 @@
       "file": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
       "rule": "theme-contracts/roles",
       "message": "literal",
-      "fingerprint": "ea56b1a24f6e4628f795d585a16d70cf13e68b703352bf6a0dd9bbf3b3789a4c",
-      "count": 2,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
       "fingerprint": "c617703ef5c8ea7242a1a80ff49a76e2e7facea8d9ddeca6562c376d7165a4ca",
       "count": 1,
       "owner": "Electron / feature owner",
@@ -2597,18 +2587,8 @@
       "file": "apps/electron/src/renderer/components/app-shell/SessionItem.tsx",
       "rule": "theme-contracts/roles",
       "message": "literal",
-      "fingerprint": "1e91bb43faa0ec3fea0860416750978bc6b61b1398a86d942db7dcbe5e03ca17",
-      "count": 1,
-      "owner": "Electron / feature owner",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/components/app-shell/SessionItem.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
       "fingerprint": "9309ece9667574b15732f4c408943666900f5b58ecb4197ddbbc3c1534f863d1",
-      "count": 2,
+      "count": 1,
       "owner": "Electron / feature owner",
       "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
@@ -6674,36 +6654,6 @@
       "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
     },
     {
-      "file": "apps/electron/src/renderer/pages/settings/ProfileActivityHeatmap.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "0c9f9568d63084df36aadf9066d52a1d4db349e1349d3d89657d61b6bfe32a52",
-      "count": 1,
-      "owner": "Electron / settings",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/settings/ProfileActivityHeatmap.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "1f28e73760934d10cdf14470f38066623e97d5ba993e5a5a63a70aec453b6f7a",
-      "count": 1,
-      "owner": "Electron / settings",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "apps/electron/src/renderer/pages/settings/ProfileActivityHeatmap.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "e3147d163c9634b1930140ca946d69c515d55a7a48c5cd8811759376b31697a0",
-      "count": 1,
-      "owner": "Electron / settings",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
       "file": "apps/electron/src/renderer/pages/settings/ServerSettingsPage.tsx",
       "rule": "theme-contracts/roles",
       "message": "literal",
@@ -9208,26 +9158,6 @@
       "rule": "theme-contracts/roles",
       "message": "literal",
       "fingerprint": "a3fbefa3bbe8c6f5dff059d05fcc75004a3c0832596a02cb0f1aeb364d54e84b",
-      "count": 1,
-      "owner": "shared UI",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "packages/ui/src/components/chat/TurnCard.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "c2e8bdeec030e224e8383e523f7f5400d60b6534894b0138f9563335816dd8c3",
-      "count": 1,
-      "owner": "shared UI",
-      "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",
-      "exit": "When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint."
-    },
-    {
-      "file": "packages/ui/src/components/chat/TurnCard.tsx",
-      "rule": "theme-contracts/roles",
-      "message": "literal",
-      "fingerprint": "f9e442b537f2c2a06d10bc550fe5a577c27f0885f9588aa997f594a64f2bb411",
       "count": 1,
       "owner": "shared UI",
       "reason": "Existing component type/shape or owned drawing/color primitive. Geometry and content identity are preserved; new literals require an explicit reviewed entry.",

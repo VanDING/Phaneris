@@ -26,6 +26,7 @@ import type { TFunction } from 'i18next'
 import { navigate, routes } from '@/lib/navigate'
 import { useMenuComponents } from '@/components/ui/menu-context'
 import { messagingDialogAtom } from '@/atoms/messaging'
+import { MenuIcon } from '@/components/ui/MenuIcon'
 
 export type MessagingPlatform = 'telegram' | 'whatsapp' | 'lark' | 'wechat' | 'wecom'
 
@@ -125,7 +126,7 @@ export function MessagingSessionMenuItem(props: MessagingSessionMenuItemProps) {
   return (
     <Sub>
       <SubTrigger className="pr-2">
-        <MessageSquare className="h-3.5 w-3.5" />
+        <MenuIcon><MessageSquare /></MenuIcon>
         <span className="flex-1">{t('sessionMenu.connectMessaging')}</span>
       </SubTrigger>
       <SubContent>

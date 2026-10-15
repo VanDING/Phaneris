@@ -57,6 +57,21 @@ export function Spinner({ className }: SpinnerProps) {
   )
 }
 
+/** svg-spinners:blocks-wave (MIT, Utkarsh Verma), scoped to agent activity. */
+export function ThinkingIndicator({ className }: SpinnerProps) {
+  const { t } = useTranslation()
+  return (
+    <span className={cn("spinner", className)} role="status" aria-label={t("common.loading")}>
+      <svg className="thinking-blocks" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        {[0, 1, 2].flatMap(row => [0, 1, 2].map(column => (
+          <rect key={`${row}-${column}`} x={1 + column * 7.33} y={1 + row * 7.33} width="7.33" height="7.33"
+            style={{ animationDelay: `${(row + column) * 0.1}s` }} />
+        )))}
+      </svg>
+    </span>
+  )
+}
+
 export interface LoadingIndicatorProps {
   /** Optional label to show next to spinner */
   label?: string

@@ -16,7 +16,7 @@ interface MiniModelQueryOptions {
 }
 
 /**
- * Run a utility query, retrying only model rejections within the authenticated provider.
+ * Run a utility query, retrying model/catalog or endpoint-protocol rejections within the connection.
  * A catalog entry can resolve locally yet be unavailable to a ChatGPT account (notably
  * gpt-5.4-mini). Keep cheap fallbacks first, then the selected session model and provider
  * defaults; never assume the first locally resolvable model is accepted by the account.
@@ -36,21 +36,35 @@ export async function queryMiniModel(
 
   const triedModels = new Set<string>();
   let currentModel = options.model;
+  const resolveCandidate = (candidate: string) => {
+    const resolved = resolvePiModel(options.modelRegistry, candidate, options.authProvider, options.preferCustomEndpoint);
+    if (!resolved) return undefined;
+    // A compatible API authenticates its own catalog, not similarly named models
+    // in the SDK's global catalog. Never leave that endpoint during a utility retry.
+    if (options.preferCustomEndpoint && resolved.provider !== 'custom-endpoint') return undefined;
+    if (options.authProvider && resolved.provider !== options.authProvider && resolved.provider !== 'custom-endpoint') return undefined;
+    return resolved;
+  };
 
   while (true) {
     triedModels.add(stripPiPrefix(currentModel));
     try {
+      if (!resolveCandidate(currentModel)) {
+        throw new Error(`model_not_found: Could not resolve mini model "${currentModel}" within the configured connection`);
+      }
       const text = await runQuery(currentModel);
       return { text, model: currentModel };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      if (!isModelRejectionError(message, stripPiPrefix(currentModel))) throw error;
+      // A compatible gateway can list a model that only accepts another wire
+      // protocol. Its explicit model-level code is safe to retry; generic tool,
+      // parameter, authentication and rate-limit failures must still propagate.
+      const incompatibleProtocol = options.preferCustomEndpoint && /\bModelProtocolUnsupported\b/.test(message);
+      if (!incompatibleProtocol && !isModelRejectionError(message, stripPiPrefix(currentModel))) throw error;
 
       const retryModel = fallbackCandidates.find(candidate => {
         if (triedModels.has(stripPiPrefix(candidate))) return false;
-        const resolved = resolvePiModel(options.modelRegistry, candidate, options.authProvider, options.preferCustomEndpoint);
-        if (!resolved) return false;
-        return !options.authProvider || resolved.provider === options.authProvider || resolved.provider === 'custom-endpoint';
+        return !!resolveCandidate(candidate);
       });
       if (!retryModel) throw error;
 

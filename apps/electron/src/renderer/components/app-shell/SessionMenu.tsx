@@ -45,6 +45,7 @@ import type { SessionMeta } from '@/atoms/sessions'
 import { getSessionStatus, hasUnreadMeta, hasMessagesMeta } from '@/utils/session'
 import { MessagingSessionMenuItem } from '@/components/messaging/MessagingSessionMenuItem'
 import { useSessionMenuActions } from '@/hooks/useSessionMenuActions'
+import { MenuIcon } from '@/components/ui/MenuIcon'
 
 export interface SessionMenuProjectOption {
   id: string
@@ -130,7 +131,7 @@ export function SessionMenu({
       {sharedUrl && (
         <Sub>
           <SubTrigger className="pr-2">
-            <CloudUpload className="h-3.5 w-3.5" />
+            <MenuIcon><CloudUpload /></MenuIcon>
             <span className="flex-1">{t("sessionMenu.shared")}</span>
           </SubTrigger>
           <SubContent>
@@ -148,7 +149,7 @@ export function SessionMenu({
       {/* Send to Workspace — visible when at least one other workspace exists */}
       {hasTransferTargets && onSendToWorkspace && (
         <MenuItem onClick={onSendToWorkspace}>
-          <Send className="h-3.5 w-3.5" />
+          <MenuIcon><Send /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.sendToWorkspace")}</span>
         </MenuItem>
       )}
@@ -161,14 +162,14 @@ export function SessionMenu({
       {/* Status submenu - includes all statuses plus Flag/Unflag at the bottom */}
       <Sub>
         <SubTrigger className="pr-2">
-          <span style={{ color: getStateColor(currentSessionStatus, sessionStatuses) ?? 'var(--foreground)' }}>
+          <MenuIcon style={{ color: getStateColor(currentSessionStatus, sessionStatuses) ?? 'var(--foreground)' }}>
             {(() => {
               const icon = getStateIcon(currentSessionStatus, sessionStatuses)
               return React.isValidElement(icon)
                 ? React.cloneElement(icon as React.ReactElement<{ bare?: boolean }>, { bare: true })
                 : icon
             })()}
-          </span>
+          </MenuIcon>
           <span className="flex-1">{t("sessionMenu.status")}</span>
         </SubTrigger>
         <SubContent>
@@ -185,7 +186,7 @@ export function SessionMenu({
       {labels.length > 0 && (
         <Sub>
           <SubTrigger className="pr-2">
-            <Tag className="h-3.5 w-3.5" />
+            <MenuIcon><Tag /></MenuIcon>
             <span className="flex-1">{t("sessionMenu.labels")}</span>
             {sessionLabels.length > 0 && (
               <span className="text-[10px] text-muted-foreground tabular-nums -mr-2.5">
@@ -208,13 +209,13 @@ export function SessionMenu({
       {projects.length > 0 && onSetProjectId && (
         <Sub>
           <SubTrigger className="pr-2">
-            <FolderKanban className="h-3.5 w-3.5" />
+            <MenuIcon><FolderKanban /></MenuIcon>
             <span className="flex-1">{t("sessionMenu.projects")}</span>
           </SubTrigger>
           <SubContent>
             <MenuItem onClick={() => onSetProjectId(null)}>
-              {!item.projectId && <Check className="h-3.5 w-3.5" />}
-              <span className={item.projectId ? 'flex-1 ml-[18px]' : 'flex-1'}>
+              {!item.projectId && <MenuIcon><Check /></MenuIcon>}
+              <span className={item.projectId ? 'flex-1 ml-6' : 'flex-1'}>
                 {t("sessionMenu.noProject")}
               </span>
             </MenuItem>
@@ -223,8 +224,8 @@ export function SessionMenu({
               const isBound = item.projectId === p.id
               return (
                 <MenuItem key={p.id} onClick={() => onSetProjectId(p.id)}>
-                  {isBound && <Check className="h-3.5 w-3.5" />}
-                  <span className={isBound ? 'flex-1' : 'flex-1 ml-[18px]'}>{p.name}</span>
+                  {isBound && <MenuIcon><Check /></MenuIcon>}
+                  <span className={isBound ? 'flex-1' : 'flex-1 ml-6'}>{p.name}</span>
                 </MenuItem>
               )
             })}
@@ -235,7 +236,7 @@ export function SessionMenu({
       {/* Context strategy submenu - one exclusive strategy; the app default is inherited. */}
       <Sub>
         <SubTrigger className="pr-2">
-          <Layers className="h-3.5 w-3.5" />
+          <MenuIcon><Layers /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.contextStrategy")}</span>
         </SubTrigger>
         <SubContent>
@@ -247,11 +248,11 @@ export function SessionMenu({
           ] as const).map(([policy, label]) => (
             <MenuItem key={label} onClick={() => actions.setContextPolicy(policy)}>
               {item.contextPolicy === policy || (!item.contextPolicy && policy === null)
-                ? <Check className="h-3.5 w-3.5" />
+                ? <MenuIcon><Check /></MenuIcon>
                 : null}
               <span className={
                 item.contextPolicy === policy || (!item.contextPolicy && policy === null)
-                  ? 'flex-1' : 'flex-1 ml-[18px]'
+                  ? 'flex-1' : 'flex-1 ml-6'
               }>{label}</span>
             </MenuItem>
           ))}
@@ -263,13 +264,13 @@ export function SessionMenu({
         <>
           {item.contextHandoff.childSessionId && (
             <MenuItem onClick={actions.openHandoffSuccessor}>
-              <CornerDownRight className="h-3.5 w-3.5" />
+              <MenuIcon><CornerDownRight /></MenuIcon>
               <span className="flex-1">{t("sessionMenu.openHandoffSuccessor")}</span>
             </MenuItem>
           )}
           {(item.contextHandoff.phase === 'failed' || item.contextHandoff.phase === 'cancelled') && (
             <MenuItem onClick={actions.retryHandoff}>
-              <RefreshCw className="h-3.5 w-3.5" />
+              <MenuIcon><RefreshCw /></MenuIcon>
               <span className="flex-1">{t("sessionMenu.handoffRetry")}</span>
             </MenuItem>
           )}
@@ -279,12 +280,12 @@ export function SessionMenu({
       {/* Flag/Unflag */}
       {!isFlagged ? (
         <MenuItem onClick={onFlag}>
-          <Flag className="h-3.5 w-3.5 text-info" />
+          <MenuIcon><Flag className="text-info" /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.flag")}</span>
         </MenuItem>
       ) : (
         <MenuItem onClick={onUnflag}>
-          <FlagOff className="h-3.5 w-3.5" />
+          <MenuIcon><FlagOff /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.unflag")}</span>
         </MenuItem>
       )}
@@ -292,12 +293,12 @@ export function SessionMenu({
       {/* Archive/Unarchive */}
       {!isArchived ? (
         <MenuItem onClick={onArchive}>
-          <Archive className="h-3.5 w-3.5" />
+          <MenuIcon><Archive /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.archive")}</span>
         </MenuItem>
       ) : (
         <MenuItem onClick={onUnarchive}>
-          <ArchiveRestore className="h-3.5 w-3.5" />
+          <MenuIcon><ArchiveRestore /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.unarchive")}</span>
         </MenuItem>
       )}
@@ -305,7 +306,7 @@ export function SessionMenu({
       {/* Mark as Unread - only show if session has been read */}
       {!_hasUnread && _hasMessages && (
         <MenuItem onClick={onMarkUnread}>
-          <MailOpen className="h-3.5 w-3.5" />
+          <MenuIcon><MailOpen /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.markAsUnread")}</span>
         </MenuItem>
       )}
@@ -314,13 +315,13 @@ export function SessionMenu({
 
       {/* Rename */}
       <MenuItem onClick={onRename}>
-        <Pencil className="h-3.5 w-3.5" />
+        <MenuIcon><Pencil /></MenuIcon>
         <span className="flex-1">{t("common.rename")}</span>
       </MenuItem>
 
       {/* Regenerate Title - AI-generate based on recent messages */}
       <MenuItem onClick={actions.refreshTitle}>
-        <RefreshCw className="h-3.5 w-3.5" />
+        <MenuIcon><RefreshCw /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.regenerateTitle")}</span>
       </MenuItem>
 
@@ -329,24 +330,24 @@ export function SessionMenu({
       {/* Open in New Window */}
       {onOpenSideBySide && (
         <MenuItem onClick={onOpenSideBySide}>
-          <Columns2 className="h-3.5 w-3.5" />
+          <MenuIcon><Columns2 /></MenuIcon>
           <span className="flex-1">{t("sessionMenu.openSideBySide")}</span>
         </MenuItem>
       )}
       <MenuItem onClick={onOpenInNewWindow}>
-        <AppWindow className="h-3.5 w-3.5" />
+        <MenuIcon><AppWindow /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.openInNewWindow")}</span>
       </MenuItem>
 
       {/* Show in file manager */}
       <MenuItem onClick={actions.showInFinder}>
-        <FolderOpen className="h-3.5 w-3.5" />
+        <MenuIcon><FolderOpen /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.showInFileManager", { fileManager: getFileManagerName() })}</span>
       </MenuItem>
 
       {/* Copy Path */}
       <MenuItem onClick={actions.copyPath}>
-        <Copy className="h-3.5 w-3.5" />
+        <MenuIcon><Copy /></MenuIcon>
         <span className="flex-1">{t("sessionMenu.copyPath")}</span>
       </MenuItem>
 
@@ -354,7 +355,7 @@ export function SessionMenu({
 
       {/* Delete */}
       <MenuItem onClick={onDelete} variant="destructive">
-        <Trash2 className="h-3.5 w-3.5" />
+        <MenuIcon><Trash2 /></MenuIcon>
         <span className="flex-1">{t("common.delete")}</span>
       </MenuItem>
     </>

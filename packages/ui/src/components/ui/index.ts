@@ -2,7 +2,7 @@
  * UI primitives for @phaneris/ui
  */
 
-export { Spinner, type SpinnerProps, LoadingIndicator, type LoadingIndicatorProps } from './LoadingIndicator'
+export { Spinner, ThinkingIndicator, type SpinnerProps, LoadingIndicator, type LoadingIndicatorProps } from './LoadingIndicator'
 export {
   SimpleDropdown,
   SimpleDropdownItem,

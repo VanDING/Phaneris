@@ -22,6 +22,7 @@ import { join, basename } from 'path';
 import { parse as shellParse } from 'shell-quote';
 import { encodeIconToDataUrl } from './icon-encoder.ts';
 import { readJsonFileSync } from './files.ts';
+import { LEGACY_IDENTITY, PRODUCT_SLUG } from '../identity.generated.ts';
 
 // ============================================
 // Types
@@ -309,6 +310,13 @@ function buildCommandMap(config: ToolIconConfig): Map<string, ToolIconEntry> {
         map.set(cmd, tool);
       }
     }
+  }
+  // Historical commands keep their icon without adding an obsolete executable
+  // to today's editable/default command list. Explicit custom mappings win.
+  const applicationTool = map.get(PRODUCT_SLUG);
+  const legacyCommand = LEGACY_IDENTITY.dataDirName.slice(1);
+  if (applicationTool?.id === PRODUCT_SLUG && !map.has(legacyCommand)) {
+    map.set(legacyCommand, applicationTool);
   }
   return map;
 }

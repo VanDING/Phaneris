@@ -22,7 +22,6 @@ import { routes } from '@/lib/navigate'
 import {
   SettingsSection,
   SettingsCard,
-  SettingsCardContent,
   SettingsInput,
   SettingsTextarea,
   SettingsRow,
@@ -279,11 +278,7 @@ export default function PreferencesPage() {
                 title={t('settings.preferences.activity')}
                 description={t('settings.preferences.activityDesc')}
               >
-                <SettingsCard divided={false}>
-                  <SettingsCardContent>
-                    <ProfileActivityHeatmap calendar={profile.calendar} locale={locale} />
-                  </SettingsCardContent>
-                </SettingsCard>
+                <ProfileActivityHeatmap calendar={profile.calendar} locale={locale} />
               </SettingsSection>
 
               <SettingsSection

@@ -31,6 +31,7 @@ import { ContentSwap } from "@/components/ui/content-swap"
 import {
   InlineExpand,
   Spinner,
+  ThinkingIndicator,
   parseReadResult,
   parseBashResult,
   parseGrepResult,
@@ -392,7 +393,7 @@ function ProcessingIndicator({ startTime, statusMessage }: ProcessingIndicatorPr
     <div className="flex items-center gap-2 px-3 py-1 -mb-1 text-[13px] text-muted-foreground">
       {/* Spinner in same location as TurnCard chevron */}
       <div className="w-3 h-3 flex items-center justify-center shrink-0">
-        <Spinner className="text-[10px]" />
+        <ThinkingIndicator className="size-3" />
       </div>
       {/* Label with crossfade animation on content change only */}
       <span className="relative h-5 flex items-center">
@@ -2294,7 +2295,7 @@ function MessageBubble({
       <div className="flex items-center gap-2 px-3 py-1 -mb-1 text-[13px] text-muted-foreground">
         {/* Spinner in same location as TurnCard chevron */}
         <div className="w-3 h-3 flex items-center justify-center shrink-0">
-          <Spinner className="text-[10px]" />
+          <ThinkingIndicator className="size-3" />
         </div>
         <span>{message.content}</span>
       </div>

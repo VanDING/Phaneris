@@ -21,3 +21,9 @@ no request to any font CDN at runtime.
 
 The full licence text for each is in apps/electron/resources/licenses/ and is
 copied into the packaged app's resources/licenses/ directory.
+
+File browser icons: Material Icon Theme (MIT), Material Extensions.
+https://github.com/material-extensions/vscode-material-icon-theme
+Thinking indicator: SVG Spinners, blocks-wave (MIT), Utkarsh Verma.
+https://github.com/n3r4zzurr0/svg-spinners
+Full license texts are bundled in resources/licenses/.

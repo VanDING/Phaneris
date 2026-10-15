@@ -10,7 +10,8 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion, useReducedMotionConfig, type Variants } from 'motion/react'
-import { File, Folder, FolderOpen, FileText, Image, FileCode, ChevronRight, ExternalLink, Copy } from 'lucide-react'
+import { ChevronRight, ExternalLink, Copy, FolderOpen } from 'lucide-react'
+import { FileTypeIcon } from '@/components/icons/FileTypeIcon'
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -147,32 +148,10 @@ export function normalizeTreePath(path: string): string {
 }
 
 /**
- * Get icon for file based on name/type (14x14px matching sidebar)
+ * Resolve bundled, color-coded language/document and folder icons.
  */
 export function getFileIcon(file: SessionFile, isExpanded?: boolean) {
-  const iconClass = "h-3.5 w-3.5 text-muted-foreground"
-
-  if (file.type === 'directory') {
-    return isExpanded
-      ? <FolderOpen className={iconClass} />
-      : <Folder className={iconClass} />
-  }
-
-  const ext = file.name.split('.').pop()?.toLowerCase()
-
-  if (ext === 'md' || ext === 'markdown') {
-    return <FileText className={iconClass} />
-  }
-
-  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'ico'].includes(ext || '')) {
-    return <Image className={iconClass} />
-  }
-
-  if (['ts', 'tsx', 'js', 'jsx', 'json', 'yaml', 'yml', 'py', 'rb', 'go', 'rs'].includes(ext || '')) {
-    return <FileCode className={iconClass} />
-  }
-
-  return <File className={iconClass} />
+  return <FileTypeIcon name={file.name} directory={file.type === 'directory'} expanded={isExpanded} />
 }
 
 export interface SessionFilesSectionProps {
@@ -290,7 +269,7 @@ export function FileTreeNode({
       )}
       {/* Icon row — persistent chevron for expandable items, alignment slot
           for plain files so every row lines up. */}
-      <span className="flex h-3.5 shrink-0 items-center gap-0.5">
+      <span className="flex h-4 shrink-0 items-center gap-0.5">
         {hasChildren ? (
           <span
             className="flex h-3 w-3 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
@@ -306,7 +285,7 @@ export function FileTreeNode({
         ) : (
           <span className="h-3 w-3 shrink-0" />
         )}
-        <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center">
+        <span className="flex size-4 shrink-0 items-center justify-center">
           {iconForPath?.(file.path)
             ?? icon
             ?? (isRoot ? getFileIcon({ ...file, type: 'directory' }, isExpanded) : getFileIcon(file, isExpanded))}
