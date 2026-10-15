@@ -9,6 +9,8 @@ const fixture = JSON.parse(process.argv[2])
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 const checks = [], observations = []
 const profiles = []
+const verificationScheme = 'phaneris-verification-' + fixture.output.split(/[\\/]/).at(-1).toLowerCase()
+assert(/^phaneris-verification-[a-z0-9-]+$/.test(verificationScheme))
 async function until(action, label, timeout = 30_000) {
   const end = Date.now() + timeout
   let last
@@ -23,7 +25,7 @@ function seed(name) {
   mkdirSync(workspace, { recursive: true })
   writeFileSync(join(config, 'config.json'), JSON.stringify({ setupDeferred: true, workspaces: [{ id: 'reopen', name: 'Reopen verification', rootPath: workspace, createdAt: 1 }],
     activeWorkspaceId: 'reopen', activeSessionId: null, llmConnections: [], themeMode: 'light', colorTheme: 'default' }))
-  const env = { ...process.env, PHANERIS_CONFIG_DIR: config, PHANERIS_RPC_PORT: '0', PHANERIS_DISABLE_MESSAGING: '1', PHANERIS_TELEMETRY_ENABLED: '0', NODE_ENV: 'production' }
+  const env = { ...process.env, PHANERIS_CONFIG_DIR: config, PHANERIS_RPC_PORT: '0', PHANERIS_DISABLE_MESSAGING: '1', PHANERIS_TELEMETRY_ENABLED: '0', PHANERIS_DEEPLINK_SCHEME: verificationScheme, NODE_ENV: 'production' }
   delete env.ELECTRON_RUN_AS_NODE; delete env.VITE_DEV_SERVER_URL; delete env.NODE_OPTIONS
   const args = [...(fixture.executable ? [] : [join(fixture.root, 'apps/electron')]), `--user-data-dir=${join(config, 'user-data')}`]
   profiles.push(config)
@@ -194,6 +196,8 @@ function cleanupProfile(profile) {
   } finally {
     if (active) await Promise.race([active.app.close().catch(() => {}), sleep(2500)])
     profiles.forEach(cleanupProfile)
+    const protocolKey = `HKCU:\\Software\\Classes\\${verificationScheme}`
+    spawnSync('powershell', ['-NoProfile', '-NonInteractive', '-Command', `Remove-Item -LiteralPath '${protocolKey}' -Recurse -Force -ErrorAction SilentlyContinue`], { windowsHide: true, timeout: 20_000 })
     writeFileSync(join(fixture.output, 'windows-reopen.json'), JSON.stringify({ checks, observations }, null, 2))
   }
   console.log(JSON.stringify({ passed: checks.length, output: fixture.output }))
