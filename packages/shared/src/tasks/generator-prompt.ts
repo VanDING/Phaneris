@@ -12,6 +12,7 @@ export function buildGeneratorPrompt(goal: string, title?: string): string {
     'Each node becomes a child AI session; a `depends_on` edge passes the upstream node\'s output to the dependent.',
     '',
     'Rules:',
+    '- Do not use tools: write the YAML from the goal and existing context. The child steps do the investigation.',
     '- Use session nodes only. Do not add approval, loop, conditional, or other control-flow settings; the runner rejects unsupported execution settings.',
     '- Output ONLY the YAML — no prose, no code fences, no explanation.',
     '- Declare defaults.permissionMode or a permissionMode on EVERY node. Start with safe for inspection; do not silently choose allow-all. Missing modes refuse the whole run.',

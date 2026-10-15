@@ -164,6 +164,8 @@ export interface ValidatorInterface {
  * - Codex: createCodexContext() with callback IPC and limited capabilities
  */
 export interface SessionToolContext {
+  /** Scoped to one tool call; never shared between concurrent executions. */
+  signal?: AbortSignal;
   // ============================================================
   // Session Info
   // ============================================================
@@ -368,6 +370,8 @@ export interface SessionToolContext {
    * it (e.g. the Codex MCP subprocess) — the handler degrades gracefully.
    */
   createTask?(input: CreateTaskInput): Promise<CreateTaskResult>;
+  appendProjectMemory?(input: ProjectMemoryAppendInput): Promise<ProjectMemoryAppendResult>;
+  mcpSources?: McpSourceToolCallbacks;
 
   // ============================================================
   // Artifact Drafts
@@ -1046,4 +1050,68 @@ export function createNodeFileSystem(): FileSystemInterface {
       };
     },
   };
+}
+
+export interface ProjectMemoryAppendInput {
+  /** Markdown note; the backend adds a dated heading naming the session. */
+  note: string;
+}
+
+export interface ProjectMemoryAppendResult {
+  path: string;
+  heading: string;
+  bytesAppended: number;
+}
+
+export interface McpSourceResource {
+  uri: string;
+  name: string;
+  title?: string;
+  description?: string;
+  mimeType?: string;
+  /** Size in bytes, when the server reports it */
+  size?: number;
+}
+
+export interface McpSourceResourceTemplate {
+  uriTemplate: string;
+  name: string;
+  title?: string;
+  description?: string;
+  mimeType?: string;
+}
+
+export interface McpSourceResourceList {
+  resources: McpSourceResource[];
+  resourceTemplates: McpSourceResourceTemplate[];
+  /** The listing stopped at the backend's page cap while the server still had pages */
+  truncated?: boolean;
+}
+
+export interface McpSourcePromptArgument {
+  name: string;
+  description?: string;
+  required?: boolean;
+}
+
+export interface McpSourcePrompt {
+  name: string;
+  title?: string;
+  description?: string;
+  arguments?: McpSourcePromptArgument[];
+}
+
+export interface McpSourcePromptList {
+  prompts: McpSourcePrompt[];
+  /** The listing stopped at the backend's page cap while the server still had pages */
+  truncated?: boolean;
+}
+
+export interface McpSourceToolCallbacks {
+  listResources(sourceSlug: string, options?: { signal?: AbortSignal }): Promise<McpSourceResourceList>;
+  /** Resource contents as text; binary contents are saved to files, large results saved with a summary. */
+  readResource(sourceSlug: string, uri: string, options?: { signal?: AbortSignal }): Promise<string>;
+  listPrompts(sourceSlug: string, options?: { signal?: AbortSignal }): Promise<McpSourcePromptList>;
+  /** The prompt's messages, with the arguments filled in, rendered as text (role + content). */
+  getPrompt(sourceSlug: string, name: string, args?: Record<string, string>, options?: { signal?: AbortSignal }): Promise<string>;
 }

@@ -24,5 +24,8 @@ export * from './resolve.ts';
 // Label filter matching (the single list/AppShell filter predicate)
 export * from './filter.ts';
 
+// Canonical stored form of session label entries (+ the value-case rule)
+export * from './canonical.ts';
+
 // Auto-labels: import directly from '@phaneris/shared/labels/auto' to keep
 // regex evaluation code out of the renderer bundle (backend-only concern).

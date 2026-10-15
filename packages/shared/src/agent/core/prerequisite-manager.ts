@@ -11,7 +11,8 @@
  */
 
 import { existsSync } from 'node:fs';
-import { resolve, join } from 'node:path';
+import { basename, isAbsolute, resolve, join } from 'node:path';
+import bashParser from 'bash-parser';
 import { DOCS_DIR } from '../../config/paths.ts';
 import { expandPath } from './path-processor.ts';
 import { getBrowserToolEnabled } from '../../config/appearance.ts';
@@ -79,7 +80,7 @@ const RULES: PrerequisiteRule[] = [
       return existsSync(guidePath) ? guidePath : null;
     },
     blockMessage:
-      'You must read the source guide before using this tool. Please read the file at {filePath} first, then retry.',
+      'You must read the source guide before using this tool. Read {filePath} first (Read tool or `cat` in Bash), then retry.',
   },
 
   // API source tools: api_{slug} format
@@ -132,7 +133,7 @@ export class PrerequisiteManager {
 
   /**
    * Register skill SKILL.md paths as prerequisites.
-   * All tool calls (except Read targeting these paths) are blocked
+   * All tool calls (except Read, and Bash reading one of these files) are blocked
    * until the files have been read.
    */
   registerSkillPrerequisites(paths: string[]): void {
@@ -277,4 +278,179 @@ export class PrerequisiteManager {
   hasRead(filePath: string): boolean {
     return this.readFiles.has(expandPath(filePath));
   }
+
+  checkBashPrerequisites(command: string): PrerequisiteCheckResult {
+    const paths = getBashReadPaths(command);
+    if (!paths.some((path) => this.pendingSkillPaths.has(path))) {
+      const result = this.checkPrerequisites('Bash');
+      if (!result.allowed) return result; // held at the skill gate, so nothing was read
+    }
+    return { allowed: true };
+  }
+
+  trackSuccessfulBashRead(command: string): void {
+    for (const path of getBashReadPaths(command)) this.markRead(path, 'Bash');
+  }
+
+  private markRead(path: string, via: 'Read' | 'Bash'): void {
+    this.readFiles.add(path);
+    if (this.pendingSkillPaths.delete(path)) {
+      this.onDebug?.(`Prerequisite: cleared skill prerequisite via ${via}: ${path}`);
+    }
+    this.onDebug?.(`Prerequisite: tracked read of ${path} (${via})`);
+  }
+}
+
+const FILE_READERS = new Set(['cat', 'bat', 'less', 'more', 'nl', 'head', 'tail', 'sed']);
+
+const MENTIONS_FILE_READER = new RegExp(`\\b(?:${[...FILE_READERS].join('|')})\\b`);
+
+const HOME_PREFIX = /^(?:~|\$HOME|\$\{HOME\})(?=\/|$)/;
+
+interface ShellWord {
+  type: 'Word';
+  text: string;
+  expansion?: Array<{ type: string; parameter?: string }>;
+}
+
+interface ShellRedirect {
+  type: 'Redirect';
+  op: { text: string };
+  file: ShellWord;
+  numberIo?: { text: string };
+}
+
+interface ShellNode {
+  type: string;
+  /** Script, CompoundList, Pipeline */
+  commands?: ShellNode[];
+  /** Subshell */
+  list?: ShellNode;
+  /** LogicalExpression */
+  left?: ShellNode;
+  right?: ShellNode;
+  /** Command */
+  name?: ShellWord;
+  prefix?: Array<{ type: string }>;
+  suffix?: Array<{ type: string }>;
+  async?: boolean;
+}
+
+function getBashReadPaths(command: string): string[] {
+  // bash-parser parses heredoc bodies as commands, so their lines would look like reads.
+  if (!MENTIONS_FILE_READER.test(command) || command.includes('<<')) return [];
+  const paths: string[] = [];
+  try {
+    collectReads(bashParser(command) as ShellNode, paths);
+  } catch {
+    return []; // unparseable: count nothing
+  }
+  return paths;
+}
+
+function collectReads(node: ShellNode, paths: string[]): void {
+  switch (node.type) {
+    case 'Script':
+    case 'CompoundList':
+      // A shell's exit code proves only its final command succeeded.
+      if (node.commands?.length === 1) collectReads(node.commands[0]!, paths);
+      break;
+    case 'Subshell':
+      if (node.list) collectReads(node.list, paths);
+      break;
+    case 'LogicalExpression':
+      // A successful shell result cannot tell which conditional branch ran.
+      break;
+    case 'Pipeline': {
+      // The output reaches the model only if every later command is a reader too (`| head -50`).
+      const commands = node.commands ?? [];
+      commands.forEach((child, i) => {
+        if (commands.slice(i + 1).every((next) => readerFiles(next) !== null)) collectReads(child, paths);
+      });
+      break;
+    }
+    case 'Command':
+      paths.push(...(readerFiles(node) ?? []));
+      break;
+  }
+}
+
+function readerFiles(node: ShellNode): string[] | null {
+  if (node.type !== 'Command' || !node.name || node.async) return null;
+  const redirects = [...(node.prefix ?? []), ...(node.suffix ?? [])].filter(
+    (item): item is ShellRedirect => item.type === 'Redirect',
+  );
+  if (redirects.some(sendsStdoutToFile)) return null;
+
+  const words = (node.suffix ?? []).filter((item): item is ShellWord => item.type === 'Word');
+  let argv = [node.name, ...words].map(shellWordText);
+  // `command cat` runs cat; `command -v cat` only looks it up (and is no reader below).
+  if (argv[0] === 'command') argv = argv.slice(argv[1] === '-p' ? 2 : 1);
+  const name = argv[0] ? basename(argv[0]) : null; // also /bin/cat, /usr/bin/sed
+  if (!name || !FILE_READERS.has(name)) return null;
+
+  const operands = name === 'sed' ? sedInputFiles(argv.slice(1)) : readerOperands(argv.slice(1));
+  if (!operands) return null;
+  for (const redirect of redirects) {
+    if (redirect.op.text === '<') operands.push(shellWordText(redirect.file));
+  }
+  return operands.flatMap((operand) => {
+    const path = operand === null ? null : toReadPath(operand);
+    return path ? [path] : [];
+  });
+}
+
+function sendsStdoutToFile(redirect: ShellRedirect): boolean {
+  if ((redirect.numberIo?.text ?? '1') !== '1') return false;
+  if (redirect.op.text === '>&') return !/^\d+$/.test(redirect.file.text);
+  return redirect.op.text === '>' || redirect.op.text === '>>' || redirect.op.text === '>|';
+}
+
+function shellWordText(word: ShellWord): string | null {
+  if (!word.expansion) return word.text;
+  if (word.expansion.some((part) => part.type !== 'ParameterExpansion' || part.parameter !== 'HOME')) return null;
+  return word.text.replace(/["']/g, '');
+}
+
+function readerOperands(args: Array<string | null>): Array<string | null> {
+  const end = args.indexOf('--');
+  const options = end === -1 ? args : args.slice(0, end);
+  const rest = end === -1 ? [] : args.slice(end + 1);
+  return [...options.filter((arg) => !arg?.startsWith('-')), ...rest];
+}
+
+function sedInputFiles(args: Array<string | null>): Array<string | null> | null {
+  const operands: Array<string | null> = [];
+  let scriptFromOption = false;
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i] ?? null;
+    if (arg === '--') {
+      operands.push(...args.slice(i + 1));
+      break;
+    }
+    if (arg?.startsWith('--')) {
+      const option = arg.split('=', 1)[0];
+      if (option === '--in-place') return null;
+      if (option === '--expression' || option === '--file') {
+        scriptFromOption = true;
+        if (!arg.includes('=')) i++;
+      }
+    } else if (arg?.startsWith('-') && arg.length > 1) {
+      for (let j = 1; j < arg.length; j++) {
+        if (arg[j] === 'i' || arg[j] === 'I') return null;
+        if (arg[j] === 'e' || arg[j] === 'f') {
+          scriptFromOption = true;
+          if (j === arg.length - 1) i++; // the script is the next argument
+          break;
+        }
+      }
+    } else {
+      operands.push(arg);
+    }
+  }
+  return scriptFromOption ? operands : operands.slice(1);
+}
+
+function toReadPath(operand: string): string | null {
+  return isAbsolute(operand) || HOME_PREFIX.test(operand) ? expandPath(operand) : null;
 }

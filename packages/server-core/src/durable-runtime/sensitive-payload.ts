@@ -1,3 +1,5 @@
+import { redactBrowserHistory } from '@phaneris/shared/utils/browser-input-privacy'
+
 const SENSITIVE_KEY = /(?:^|[_-])(authorization|api[_-]?key|access[_-]?token|refresh[_-]?token|password|passwd|secret|cookie|set[_-]?cookie|private[_-]?key)(?:$|[_-])/i
 const MAX_DEPTH = 32
 const REDACTED = '[REDACTED]'
@@ -8,6 +10,7 @@ const REDACTED = '[REDACTED]'
  * idempotency and identity checks remain exact without persisting secrets.
  */
 export function redactDurablePayload(value: unknown, depth = 0, seen = new WeakSet<object>()): unknown {
+  if (depth === 0) value = redactBrowserHistory(value);
   if (depth > MAX_DEPTH) return '[TRUNCATED]'
   if (value === null || typeof value !== 'object') return value
   if (seen.has(value)) return '[CIRCULAR]'

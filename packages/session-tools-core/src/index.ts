@@ -357,3 +357,9 @@ export {
   isPathWithinDirectory,
   isPathWithinDirectoryForCreation,
 } from './runtime/path-security.ts';
+
+export type {
+  ProjectMemoryAppendInput, ProjectMemoryAppendResult,
+  McpSourceResource, McpSourceResourceTemplate, McpSourceResourceList,
+  McpSourcePrompt, McpSourcePromptArgument, McpSourcePromptList, McpSourceToolCallbacks,
+} from './context.ts';

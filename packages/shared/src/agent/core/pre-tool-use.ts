@@ -660,7 +660,10 @@ export interface PermissionManagerLike {
  */
 export interface PrerequisiteManagerLike {
   checkPrerequisites(toolName: string): PrerequisiteCheckResult;
-  trackBashSkillRead(input: Record<string, unknown>): boolean;
+  /** Bash's check: files the command prints (cat, head, sed -n …) count as read. */
+  checkBashPrerequisites?(command: string): PrerequisiteCheckResult;
+  /** Compatibility for older embedders; the production manager uses the structured check. */
+  trackBashSkillRead?(input: Record<string, unknown>): boolean;
 }
 
 /** Built-in MCP servers that are always available (not user sources) */
@@ -778,14 +781,15 @@ export function runPreToolUseChecks(ctx: PreToolUseInput): PreToolUseCheckResult
   // 3. PREREQUISITE CHECK (guide.md before source tools)
   // ============================================================
   if (prerequisiteManager) {
-    // Allow Bash through if it's reading a pending skill file (clears the prerequisite)
-    if (toolName === 'Bash' && prerequisiteManager.trackBashSkillRead(input)) {
-      // Prerequisite cleared — fall through to remaining pipeline steps
-    } else {
-      const prereqResult = prerequisiteManager.checkPrerequisites(toolName);
-      if (!prereqResult.allowed) {
-        return { type: 'block', reason: prereqResult.blockReason!, source: 'prerequisite' };
-      }
+    // A shell read of a guide or skill file (cat, head, sed -n) counts like the Read tool.
+    // Pi's `bash` tool arrives here as "Bash" too (PI_TOOL_NAME_MAP).
+    const prereqResult = toolName === 'Bash' && prerequisiteManager.checkBashPrerequisites
+      ? prerequisiteManager.checkBashPrerequisites(typeof input.command === 'string' ? input.command : '')
+      : toolName === 'Bash' && prerequisiteManager.trackBashSkillRead?.(input)
+        ? { allowed: true }
+        : prerequisiteManager.checkPrerequisites(toolName);
+    if (!prereqResult.allowed) {
+      return { type: 'block', reason: prereqResult.blockReason!, source: 'prerequisite' };
     }
   }
 

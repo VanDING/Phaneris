@@ -114,7 +114,9 @@ export default function App() {
       // so we can include it in the WebSocket handshake
       if (!workspaceId) {
         try {
-          const wsRes = await fetch('/api/config/workspaces', { credentials: 'same-origin', signal: controller.signal })
+          const linkedSlug = params.get('ws')
+          const query = linkedSlug ? `?ws=${encodeURIComponent(linkedSlug)}` : ''
+          const wsRes = await fetch(`/api/config/workspaces${query}`, { credentials: 'same-origin', signal: controller.signal })
           if (wsRes.ok) {
             const { defaultWorkspaceId } = await wsRes.json() as { defaultWorkspaceId?: string }
             if (defaultWorkspaceId) workspaceId = defaultWorkspaceId

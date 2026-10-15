@@ -106,6 +106,8 @@ import {
 import { createTaskFromSpec, resolveCreateTaskProjectId } from '../tasks'
 import { ConfigWatcher, UserThemeWatcher, type ConfigWatcherCallbacks } from '@phaneris/shared/config';
 import { buildPagesToolCallbacks } from '../pages/tool-callbacks'
+import { buildMcpSourceToolCallbacks } from '../sources/mcp-source-tool-callbacks'
+import { redactBrowserToolArguments } from '@phaneris/shared/utils/browser-input-privacy'
 import { buildDecisionToolCallbacks } from '../decisions/tool-callbacks'
 import { buildServersFromSources as buildServersFromSourcesShared } from '../sources/build-servers'
 import { toolMetadataStore, getLastApiError } from '@phaneris/shared/interceptor'
@@ -124,8 +126,8 @@ import { getMiniModel } from '@phaneris/shared/config';
 import { getDefaultSummarizationModel } from '@phaneris/shared/config/models'
 import type { SummarizeCallback } from '@phaneris/shared/sources'
 import { type ThinkingLevel, THINKING_LEVEL_IDS, DEFAULT_THINKING_LEVEL, normalizeThinkingLevel } from '@phaneris/shared/agent/thinking-levels'
-import { evaluateAutoLabels, autoLabelMatchToEntry, type AutoLabelMatch } from '@phaneris/shared/labels/auto'
-import type { LabelConfig } from '@phaneris/shared/labels'
+import { evaluateAutoLabels, autoLabelMatchToEntry, newAutoLabelEntries, type AutoLabelMatch } from '@phaneris/shared/labels/auto'
+import { canonicalizeSessionLabels, LabelEntrySet, foldsValueCase, type LabelConfig } from '@phaneris/shared/labels'
 import { isDecisionFeatureActive, type DecisionLayerFeature, type DecisionResult } from '@phaneris/shared/decisions'
 import { evaluateSemanticLabelsForMessage } from '../decisions/semantic-labels'
 import { classifyTurnOutcome, TURN_OUTCOME_ATTENTION_STATUS } from '../decisions/turn-outcome'
@@ -1637,12 +1639,13 @@ export class SessionManager implements ISessionManager {
     const sessionId = managed.id
     let changed = false
 
-    // Labels
+    // Labels (canonical form: a stale writer's `bug::Bug` must not resurface)
+    const headerLabels = this.canonicalLabels(managed.workspace.rootPath, header.labels)
     const oldLabels = JSON.stringify(managed.labels ?? [])
-    const newLabels = JSON.stringify(header.labels ?? [])
+    const newLabels = JSON.stringify(headerLabels ?? [])
     if (oldLabels !== newLabels) {
-      managed.labels = header.labels
-      this.sendEvent({ type: 'labels_changed', sessionId, labels: header.labels ?? [] }, managed.workspace.id)
+      managed.labels = headerLabels
+      this.sendEvent({ type: 'labels_changed', sessionId, labels: headerLabels ?? [] }, managed.workspace.id)
       changed = true
     }
 
@@ -1842,7 +1845,7 @@ export class SessionManager implements ISessionManager {
         if (automationSystem) {
           automationSystem.updateSessionMetadata(sessionId, {
             permissionMode: header.permissionMode,
-            labels: header.labels,
+            labels: this.canonicalLabels(managed.workspace.rootPath, header.labels),
             isFlagged: header.isFlagged,
             sessionStatus: header.sessionStatus,
             sessionName: header.name,
@@ -2167,6 +2170,9 @@ export class SessionManager implements ISessionManager {
         // Load workspace config once per workspace for default working directory
         const wsConfig = loadWorkspaceConfig(workspaceRootPath)
         const wsDefaultWorkingDir = wsConfig?.defaults?.workingDirectory
+        // Label tree once per workspace: stored labels are read in canonical form (canonicalLabels)
+        let labelTree: LabelConfig[] | undefined
+        try { labelTree = listLabels(workspaceRootPath) } catch (e) { sessionLog.warn(`Could not read labels for ${workspaceRootPath}:`, e) }
 
         for (const meta of sessionMetadata) {
           // Create managed session from metadata only (messages lazy-loaded on demand)
@@ -2182,6 +2188,7 @@ export class SessionManager implements ISessionManager {
           })
 
           // List/profile statistics must use the ledger before messages are opened.
+          if (labelTree) managed.labels = this.canonicalLabels(workspaceRootPath, managed.labels, labelTree)
           this.applyDurableUsageProjection(managed)
 
           // Migration: clear orphaned llmConnection references (e.g., after connection was deleted)
@@ -2208,7 +2215,7 @@ export class SessionManager implements ISessionManager {
           if (automationSystem) {
             automationSystem.setInitialSessionMetadata(meta.id, {
               permissionMode: meta.permissionMode,
-              labels: meta.labels,
+              labels: managed.labels,
               isFlagged: meta.isFlagged,
               sessionStatus: meta.sessionStatus,
               sessionName: managed.name,
@@ -2222,6 +2229,22 @@ export class SessionManager implements ISessionManager {
       sessionLog.info(`Loaded ${totalSessions} sessions from disk (metadata only)`)
     } catch (error) {
       sessionLog.error('Failed to load sessions from disk:', error)
+    }
+  }
+
+  /**
+   * A session's labels in canonical form for its workspace's label tree (canonicalizeSessionLabels):
+   * how every label list read from disk or handed in by a writer is stored, so older auto-labelling's
+   * `bug::bug` / `bug::Bug` / `trip::` read as `bug` / `trip` and duplicates never reach the UI,
+   * automations or agents. Unchanged when the label config can't be read.
+   */
+  private canonicalLabels(workspaceRootPath: string, labels: string[] | undefined, labelTree?: LabelConfig[]): string[] | undefined {
+    if (!labels?.length) return labels
+    try {
+      return canonicalizeSessionLabels(labels, labelTree ?? listLabels(workspaceRootPath))
+    } catch (e) {
+      sessionLog.warn('Could not canonicalize session labels:', e)
+      return labels
     }
   }
 
@@ -3394,7 +3417,8 @@ export class SessionManager implements ISessionManager {
       workingDirectory: resolvedWorkingDir,
       hidden: options?.hidden,
       sessionStatus: options?.sessionStatus,
-      labels: options?.labels,
+      // Automations, spawn_session and task flows hand in labels unvalidated: store them canonical
+      labels: this.canonicalLabels(workspaceRootPath, options?.labels),
       isFlagged: options?.isFlagged,
       projectId: resolvedProjectId,
       parentSessionId: options?.parentSessionId,
@@ -5427,6 +5451,15 @@ initialSources: {
         // pages RPC handlers; after each mutation we poke the watcher (Linux
         // atomic-rename workaround) and broadcast pages:changed, exactly like
         // those handlers do.
+        appendProjectMemoryFn: async ({ note }) => {
+          if (!managed.projectId) throw new Error('This session is not bound to a project.')
+          const { loadProjectById, appendProjectMemoryEntry } = await import('@phaneris/shared/projects')
+          const project = loadProjectById(managed.workspace.rootPath, managed.projectId)
+          if (!project) throw new Error('The session project no longer exists.')
+          const who = (managed.name || managed.id).replace(/\s+/g, ' ').trim()
+          return appendProjectMemoryEntry(managed.workspace.rootPath, project.config.slug, `${new Date().toISOString()} — ${who}`, note)
+        },
+        mcpSources: buildMcpSourceToolCallbacks({ getPool: () => managed.mcpPool, getEnabledSourceSlugs: () => managed.enabledSourceSlugs }),
         pages: buildPagesToolCallbacks({
           workspaceId: managed.workspace.id,
           workspaceRootPath: managed.workspace.rootPath,
@@ -5488,7 +5521,8 @@ initialSources: {
             sessions = sessions.filter(s => s.sessionStatus === options.status)
           }
           if (options?.label) {
-            sessions = sessions.filter(s => s.labels?.includes(options.label!))
+            // By label id: valued entries (`priority::3`) carry the id before the separator
+            sessions = sessions.filter(s => s.labels?.some(entry => entry === options.label || extractLabelId(entry) === options.label))
           }
           if (options?.search) {
             const needle = options.search.toLowerCase()
@@ -7246,9 +7280,9 @@ initialSources: {
     // then merges any new matches into the session's label array.
     try {
       const labelTree = listLabels(managed.workspace.rootPath)
-      const autoMatches = evaluateAutoLabels(message, labelTree)
+      const autoMatches = evaluateAutoLabels(message, labelTree, managed.labels ?? [])
 
-      this.applyAutoLabelMatches(managed, autoMatches)
+      this.applyAutoLabelMatches(managed, autoMatches, labelTree)
       if (!options?.hidden && !activationRetry && this.decisionFeatureActive('semanticLabels')) {
         void this.applySemanticAutoLabels(managed, message, labelTree, userMessage.id)
       }
@@ -7822,6 +7856,7 @@ initialSources: {
    * Used by the Tasks Conductor; empty until something subscribes, so zero overhead otherwise.
    */
   private sessionCompletionListeners = new Set<(evt: SessionCompletionEvent) => void>()
+  private sessionActivityListeners = new Map<string, Set<() => void>>()
 
   /**
    * Subscribe to in-process session completion (Tasks Conductor seam).
@@ -7850,7 +7885,8 @@ initialSources: {
     const managed = this.sessions.get(event.handle.sessionId)
     if (!managed || (!event.drained && event.result.kind !== 'parked')) return
     try { this.applyDurableUsageProjection(managed) } catch (error) { sessionLog.warn('Completion usage projection failed:', error) }
-    const finalMessageId = this.getLastFinalAssistantMessageId(managed.messages)
+    const latestFinalMessageId = this.getLastFinalAssistantMessageId(managed.messages)
+    const finalMessageId = latestFinalMessageId !== managed.turnStartFinalMessageId ? latestFinalMessageId : undefined
     this.emitSessionComplete({
       sessionId: managed.handoffRootSessionId ?? managed.id, workspaceId: managed.workspace.id,
       reason: event.reason, finalMessageId,
@@ -9303,6 +9339,7 @@ initialSources: {
   private async processEvent(managed: ManagedSession, event: AgentEvent): Promise<void> {
     const sessionId = managed.id
     const workspaceId = managed.workspace.id
+    this.notifySessionActivity(sessionId)
 
     switch (event.type) {
       case 'text_delta':
@@ -9449,7 +9486,7 @@ initialSources: {
         // Relativize against the session's working directory only: a session
         // without one must keep absolute paths rather than gain a `./` prefix
         // from the app's process directory (craft-agents-oss#1056).
-        const formattedToolInput = formatToolInputPaths(event.input, managed.workingDirectory)
+        const formattedToolInput = formatToolInputPaths(redactBrowserToolArguments(event.toolName, event.input) as Record<string, unknown>, managed.workingDirectory)
 
         // Resolve call_llm model for TurnCard badge display.
         // Resolve call_llm model short names to full IDs for display.
@@ -10671,7 +10708,7 @@ resources: {
       permissionMode: header.permissionMode,
       previousPermissionMode: header.previousPermissionMode,
       sessionStatus: header.sessionStatus,
-      labels: header.labels,
+      labels: this.canonicalLabels(workspaceRootPath, header.labels),
       enabledSourceSlugs: header.enabledSourceSlugs,
       workingDirectory: header.workingDirectory,
       model: header.model,
@@ -10906,12 +10943,16 @@ resources: {
     const generation = managed.runtime.processingGeneration
     const current = () => this.sessions.get(managed.id) === managed && managed.runtime.processingGeneration === generation && managed.runtime.isProcessing && !managed.runtime.stopRequested
     const interactive = isAttendedSession(managed) && !options?.hidden
+    const explicitThinking = options?.thinkingLevel ?? null
     // Slash commands are instructions to the app, not requests to rate.
-    const rateThinking = interactive && !managed.taskRunId && !managed.taskSlug && !message.trim().startsWith('/') && this.decisionFeatureActive('adaptiveThinking')
+    const rateThinking = !explicitThinking && interactive && !managed.taskRunId && !managed.taskSlug && !message.trim().startsWith('/') && this.decisionFeatureActive('adaptiveThinking')
     const suggest = interactive && !managed.taskRunId && !managed.taskSlug
       && this.decisionFeatureActive('suggestions') && wantsSuggestion(message, options)
     // Nothing to ask: the caller skips the await entirely.
-    if (!rateThinking && !suggest) return null
+    if (!rateThinking && !suggest) {
+      managed.turnThinkingOverride = explicitThinking
+      return explicitThinking ? Promise.resolve({ thinkingOverride: explicitThinking, suggestionHint: null }) : null
+    }
 
     const abort = new AbortController()
     managed.preTurnDecisionAbort = abort
@@ -10938,7 +10979,7 @@ resources: {
             sessionLog.warn(`[adaptive-thinking] Check failed for session ${managed.id}:`, e)
             return null
           })
-      : Promise.resolve(null)
+      : Promise.resolve(explicitThinking)
 
     // Suggestions: point the agent at a skill or usable inactive source the message plainly needs.
     const suggestion = suggest
@@ -10967,7 +11008,7 @@ resources: {
         return { thinkingOverride: null, suggestionHint: null }
       }
       const currentLevel = managed.thinkingLevel ?? DEFAULT_THINKING_LEVEL
-      if (thinkingOverride && THINKING_LEVEL_IDS.indexOf(thinkingOverride) >= THINKING_LEVEL_IDS.indexOf(currentLevel)) thinkingOverride = null
+      if (!explicitThinking && thinkingOverride && THINKING_LEVEL_IDS.indexOf(thinkingOverride) >= THINKING_LEVEL_IDS.indexOf(currentLevel)) thinkingOverride = null
       managed.turnThinkingOverride = thinkingOverride
       managed.turnSuggestionHint = suggestionHint
       return { thinkingOverride, suggestionHint,
@@ -11131,13 +11172,13 @@ resources: {
   private async applySemanticAutoLabels(managed: ManagedSession, message: string, labelTree: LabelConfig[], messageId?: string): Promise<void> {
     const capture = new DecisionCapture({ messageId, turnId: messageId })
     const revision = managed.manualLabelsRevision ?? 0
-    const labelsAtDispatch = new Set(managed.labels ?? [])
+    const labelsAtDispatch = new LabelEntrySet(managed.labels ?? [], foldsValueCase(labelTree))
     try {
       await Promise.resolve()
       const matches = await evaluateSemanticLabelsForMessage(message, labelTree, {
         ...capture.deps,
         sessionId: managed.id,
-        existingEntries: [...labelsAtDispatch],
+        existingEntries: [...(managed.labels ?? [])],
         log: (line) => sessionLog.info(line),
       })
       if (this.sessions.get(managed.id) !== managed || (managed.manualLabelsRevision ?? 0) !== revision) { capture.discard('manual_labels_or_obsolete'); return }
@@ -11145,7 +11186,7 @@ resources: {
       // Present at dispatch → either still present (dedupe) or removed by the user since (respect it).
       const fresh = matches.filter(m => !labelsAtDispatch.has(autoLabelMatchToEntry(m)))
       const before = new Set(managed.labels ?? [])
-      this.applyAutoLabelMatches(managed, fresh)
+      this.applyAutoLabelMatches(managed, fresh, labelTree)
       const added = (managed.labels ?? []).filter(label => !before.has(label)).length
       capture.resolve(added ? 'labels' : 'none', added > 0, { added })
     } catch (e) {
@@ -11153,12 +11194,10 @@ resources: {
     }
   }
 
-  private applyAutoLabelMatches(managed: ManagedSession, matches: AutoLabelMatch[]): void {
+  private applyAutoLabelMatches(managed: ManagedSession, matches: AutoLabelMatch[], labelTree: LabelConfig[]): void {
     if (matches.length === 0) return
     const existingLabels = managed.labels ?? []
-    const newEntries = matches
-      .map(autoLabelMatchToEntry)
-      .filter((entry, index, all) => !existingLabels.includes(entry) && all.indexOf(entry) === index)
+    const newEntries = newAutoLabelEntries(existingLabels, matches, labelTree)
     if (newEntries.length === 0) return
     managed.labels = [...existingLabels, ...newEntries]
     this.persistSession(managed)
@@ -11230,6 +11269,66 @@ resources: {
       else capture.discard('queue_changed_or_obsolete')
     } catch (e) {
       sessionLog.warn(`[mid-turn] Continuation check failed for session ${managed.id}:`, e)
+    }
+  }
+
+  completeAuthRequestsForSource(
+    workspaceId: string,
+    sourceSlug: string,
+    result: { email?: string; workspace?: string },
+    boundRequests: Array<{ sessionId: string; authRequestId: string }> = [],
+  ): string[] {
+    const bound = new Map(boundRequests.map(r => [r.sessionId, r.authRequestId]))
+    const resumed: string[] = []
+    for (const managed of this.sessions.values()) {
+      if (managed.workspace.id !== workspaceId) continue
+      // The fresh tokens void any refresh-failure cooldown, whether or not the session was waiting
+      managed.tokenRefreshManager.clearCooldown(sourceSlug)
+
+      let requestId: string | undefined
+      const pending = managed.pendingAuthRequest
+      if (pending) {
+        // A session holds one request at a time; answer it only if it is this source's sign-in
+        if (pending.type !== 'credential' && pending.sourceSlug === sourceSlug) requestId = pending.requestId
+      } else {
+        const boundId = bound.get(managed.id)
+        if (boundId && managed.messages.some(m =>
+          m.role === 'auth-request' && m.authRequestId === boundId && m.authStatus === 'pending')) {
+          requestId = boundId
+        }
+      }
+      if (!requestId) continue
+
+      resumed.push(managed.id)
+      this.completeAuthRequest(managed.id, { requestId, sourceSlug, success: true, ...result })
+        .catch(error => sessionLog.error(`Failed to resume session ${managed.id} after ${sourceSlug} sign-in:`, error))
+    }
+    return resumed
+  }
+
+  onSessionActivity(sessionId: string, listener: () => void): () => void {
+    let listeners = this.sessionActivityListeners.get(sessionId)
+    if (!listeners) {
+      listeners = new Set()
+      this.sessionActivityListeners.set(sessionId, listeners)
+    }
+    listeners.add(listener)
+    return () => {
+      const current = this.sessionActivityListeners.get(sessionId)
+      current?.delete(listener)
+      if (current?.size === 0) this.sessionActivityListeners.delete(sessionId)
+    }
+  }
+
+  private notifySessionActivity(sessionId: string): void {
+    const listeners = this.sessionActivityListeners?.get(sessionId)
+    if (!listeners) return
+    for (const listener of [...listeners]) {
+      try {
+        listener()
+      } catch (err) {
+        sessionLog.error(`onSessionActivity listener threw for session ${sessionId}:`, err)
+      }
     }
   }
 }

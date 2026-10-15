@@ -1,6 +1,7 @@
 import { DurableToolAccounting } from './durable-tool-accounting';
 import { PiModelRuntimeOwner } from './model-runtime-owner';
 import { createSessionEventAdapter } from './session-event-adapter';
+import { protectBrowserJournal } from './browser-history-privacy.ts';
 import type { PromptSnapshot, PiCredential, CustomEndpointApi, InitMessage, RuntimeConfigUpdateMessage, InboundMessage, ProxyToolDef, ToolExecutionMetadata, EnrichedToolExecutionStartEvent, TrajectoryEventAttachments, OutboundAgentEvent, OutboundReady, OutboundEvent, OutboundPreToolUseReq, OutboundToolExecReq, OutboundToolExecCancel, OutboundDurableToolPrepareReq, OutboundDurableToolOutcomeReq, OutboundDurableModelPrepareReq, OutboundDurableModelOutcomeReq, OutboundSessionToolCompleted, OutboundMiniResult, OutboundLlmQueryResult, OutboundEnsureSessionReadyResult, OutboundCompactResult, OutboundSetAutoCompactionResult, OutboundRuntimeConfigUpdateResult, OutboundSetModelResult, OutboundThinkingLevelState, OutboundSessionIdUpdate, OutboundError, OutboundMessage } from './messages.ts';
 import { SessionLifecycle } from './session-lifecycle.ts';
 import { PendingReplies } from './pending-replies.ts';
@@ -151,7 +152,7 @@ import { readContextUsage, deferContextUsage } from './context-usage.ts';
 import { waitForCompaction, MANUAL_COMPACT_WAIT_MS, PROMPT_COMPACT_WAIT_MS } from './compaction-wait.ts';
 import { createLargeResultFilterClient } from './large-result-filter.ts';
 import type { PiCompactResult, PiContextUsagePayload, PiLargeResultFilterRequest, PiLargeResultFilterResponse, PiLargeResultFilterCancel, PiInputReception, PiProxyToolDefinition, PiProxyToolResult } from '@phaneris/shared/agent/backend/pi/protocol';
-import { mcpStructuredContentSchema } from '@earendil-works/pi-codemode/declarations';
+import { createProxyMcpResultSchema } from './proxy-mcp-result-schema.ts';
 import { guardCallbackToken } from './callback-auth.ts';
 import { proxyToolDefinitionsChanged } from './proxy-tool-sync.ts';
 import type { DurableCanonicalModelContext, DurableToolExecutionIdentity, ToolRecoveryMode } from '@phaneris/shared/durable-runtime/types';
@@ -689,16 +690,17 @@ async function createSession(): Promise<AgentSession> {
   // settingsManager: explicit in-memory settings (retry policy, compaction)
   // instead of the SDK default that merges `<cwd>/.pi/settings.json` from the
   // user's working directory and writes to `<agentDir>/settings.json`.
+  const mainSettings = createPhanerisSettingsManager('main');
   const sessionOptions: CreateAgentSessionOptions = {
     cwd,
     modelRuntime,
     customTools: [...catalog.customTools],
     tools: [...catalog.allowlist],
     excludeTools: initConfig.browserToolEnabled === false ? ['mcp__session__browser_tool'] : undefined,
-    resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), observeLifecycle: observeSdkLifecycle,
+    resourceLoader: await createPhanerisResourceLoader({ cwd, agentDir: resolveIsolatedAgentDir(), settingsManager: mainSettings, observeLifecycle: observeSdkLifecycle,
       wrapOrchestrationTool: wrapSingleTool,
       gateToolCall: async (toolName, input, toolCallId) => { await requestPreToolUseApproval(PI_TOOL_NAME_MAP[toolName] || toolName, input, toolCallId, true); } }),
-    settingsManager: createPhanerisSettingsManager('main'),
+    settingsManager: mainSettings,
   };
 
   // Extension isolation: set agentDir to a temp directory under session path
@@ -737,9 +739,9 @@ async function createSession(): Promise<AgentSession> {
         debugLog(`Applied Pi branch cutoff at entry: ${anchorId}`);
       }
 
-      sessionOptions.sessionManager = forkedSessionManager;
+      sessionOptions.sessionManager = protectBrowserJournal(forkedSessionManager);
     } else {
-      sessionOptions.sessionManager = PiSessionManager.continueRecent(cwd, sessionDir);
+      sessionOptions.sessionManager = protectBrowserJournal(PiSessionManager.continueRecent(cwd, sessionDir));
     }
 
   }
@@ -1200,7 +1202,7 @@ function buildProxyTools(): ToolDefinition<any, any>[] {
     exposure: def.exposure,
     namespace: def.namespace,
     annotations: def.annotations,
-    ...(def.namespace ? { outputSchema: mcpStructuredContentSchema(def.outputSchema) ?? { type: 'object' } } : def.outputSchema ? { outputSchema: def.outputSchema } : {}),
+    ...(def.namespace ? { outputSchema: createProxyMcpResultSchema(def.outputSchema) } : def.outputSchema ? { outputSchema: def.outputSchema } : {}),
     execute: async (
       toolCallId: string,
       params: any,
@@ -1263,13 +1265,13 @@ function proxyResultToSdk(def: ProxyToolDef, result: PiProxyToolResult): AgentTo
   const structured = def.namespace ? {
     content: result.contentBlocks ?? [{ type: 'text', text: result.content }],
     isError: result.isError,
-    ...(result.structuredContent ? { structuredContent: result.structuredContent } : {}),
+    ...(result.structuredContent !== undefined ? { structuredContent: result.structuredContent } : {}),
   } : result.structuredContent;
   return {
     content: [{ type: 'text', text: result.content }],
     details: undefined,
     // The JSONL transport has already validated JSON serializability.
-    ...(structured ? { structuredContent: structured as NonNullable<AgentToolResult<any>['structuredContent']> } : {}),
+    ...(structured !== undefined ? { structuredContent: structured as AgentToolResult<any>['structuredContent'] } : {}),
   };
 }
 
@@ -1369,16 +1371,19 @@ async function queryLlm(
       request.systemPrompt ?? 'Reply with ONLY the requested text. No explanation.';
 
     // Create minimal ephemeral session
+    const ephemeralSettings = createPhanerisSettingsManager('ephemeral');
     const ephemeralOptions: CreateAgentSessionOptions = {
       cwd: resolvedCwd(),
+      agentDir: resolveIsolatedAgentDir(),
       modelRuntime,
       tools: [],
       sessionManager: PiSessionManager.inMemory(),
-      settingsManager: createPhanerisSettingsManager('ephemeral'),
+      settingsManager: ephemeralSettings,
       model: piModel,
       resourceLoader: await createPhanerisResourceLoader({
         cwd: resolvedCwd(),
         agentDir: resolveIsolatedAgentDir(),
+        settingsManager: ephemeralSettings,
         getPrompt: () => promptForSession,
         observeLifecycle: observeSdkLifecycle,
       }),
@@ -1572,9 +1577,9 @@ async function handleInit(msg: Extract<InboundMessage, { type: 'init' }>): Promi
 
   // Azure OpenAI requires a tenant-specific endpoint URL.
   // The Pi SDK (via Vercel AI SDK) reads AZURE_OPENAI_BASE_URL from env.
-  if (initConfig.piAuth?.provider === 'azure' && initConfig.baseUrl) {
-    process.env.AZURE_OPENAI_BASE_URL = initConfig.baseUrl;
-    debugLog(`Set AZURE_OPENAI_BASE_URL=${initConfig.baseUrl}`);
+  if (initConfig.piAuth?.provider === 'azure') {
+    if (initConfig.baseUrl) process.env.AZURE_OPENAI_BASE_URL = initConfig.baseUrl;
+    else delete process.env.AZURE_OPENAI_BASE_URL;
   }
 
   // Start callback server for call_llm (idempotent — skips if already running)
@@ -1936,6 +1941,11 @@ async function handleUpdateRuntimeConfig(msg: RuntimeConfigUpdateMessage): Promi
       customEndpoint: msg.customEndpoint,
       customModels: msg.customModels,
     };
+
+    if (initConfig.piAuth?.provider === 'azure') {
+      if (initConfig.baseUrl) process.env.AZURE_OPENAI_BASE_URL = initConfig.baseUrl;
+      else delete process.env.AZURE_OPENAI_BASE_URL;
+    }
 
     if (modelOwner.activeRegistry && shouldPreferCustomEndpoint()) {
       const modelEntries: CustomEndpointModelEntry[] = (initConfig.customModels?.length

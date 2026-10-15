@@ -8,6 +8,7 @@
 
 import { join } from 'path'
 import type { PlatformServices, Logger } from './platform'
+import { resolveInheritedAppEnv, sourceCheckoutRoot } from './inherited-app-env'
 
 /**
  * Simple console-based logger matching the Logger interface.
@@ -43,12 +44,21 @@ function createConsoleLogger(): Logger {
  */
 export function createHeadlessPlatform(options?: { appVersion?: string }): PlatformServices {
   const logger = createConsoleLogger()
-  const isDebugMode = process.env.PHANERIS_DEBUG === 'true' || process.env.PHANERIS_IS_PACKAGED !== 'true'
+  const sourceRoot = sourceCheckoutRoot()
+  const inherited = resolveInheritedAppEnv(process.env, sourceRoot, process.cwd())
+  if (inherited.ignoredAppRoot) {
+    for (const key of inherited.dropKeys) delete process.env[key]
+    logger.warn(`Ignoring runtime paths inherited from another checkout: ${inherited.ignoredAppRoot}`)
+  }
+  process.env.PHANERIS_APP_ROOT = inherited.appRootPath
+  if (sourceRoot) process.env.PHANERIS_IS_PACKAGED = 'false'
+  const isPackaged = !sourceRoot && process.env.PHANERIS_IS_PACKAGED === 'true'
+  const isDebugMode = process.env.PHANERIS_DEBUG === 'true' || !isPackaged
 
   return {
-    appRootPath: process.env.PHANERIS_APP_ROOT || process.cwd(),
+    appRootPath: inherited.appRootPath,
     resourcesPath: process.env.PHANERIS_RESOURCES_PATH || join(process.cwd(), 'resources'),
-    isPackaged: process.env.PHANERIS_IS_PACKAGED === 'true',
+    isPackaged,
     nodeRuntimePath: process.execPath,
     appVersion: process.env.PHANERIS_VERSION || options?.appVersion || '0.0.0-dev',
 

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { RPC_CHANNELS as c } from './channels'
 import type { SendMessageOptions, FileAttachment, CredentialResponse } from './dto'
 import { LlmConnectionSchema } from '../config/schemas'
+import { THINKING_LEVEL_IDS } from '../agent/thinking-levels'
 
 const text = z.string()
 const id = text.min(1)
@@ -15,6 +16,7 @@ const attachment: z.ZodType<FileAttachment> = z.object({
 }).passthrough()
 const sendOptions: z.ZodType<SendMessageOptions> = z.object({
   skillSlugs: strings.optional(), optimisticMessageId: text.optional(), hidden: z.boolean().optional(),
+  thinkingLevel: z.enum(THINKING_LEVEL_IDS).optional(),
 }).passthrough()
 const credential: z.ZodType<CredentialResponse> = z.object({
   type: z.literal('credential'), cancelled: z.boolean(), value: text.optional(), username: text.optional(),
@@ -75,6 +77,7 @@ export const RPC_INPUT_CONTRACTS: Readonly<Record<string, z.ZodType<unknown[]>>>
   [c.transfer.ABORT]: tuple(z.object({ transferId: id }).passthrough()),
   [c.sources.SAVE_CREDENTIALS]: tuple(id, id, text),
   [c.sources.START_OAUTH]: tuple(),
+  [c.oauth.STATUS]: tuple(z.object({flowId:id}).passthrough()),
   [c.llmConnections.SAVE]: tuple(LlmConnectionSchema),
   [c.llmConnections.GET_API_KEY]: tuple(id),
   [c.llmConnections.DELETE]: tuple(id),

@@ -37,6 +37,14 @@ export function attachSessionSelfManagementBindings(
 ): void {
   // Direct pass-through bindings — signatures match, no wrapping needed.
   // Each getter resolves fresh from the registry on every access.
+  Object.defineProperty(context, 'appendProjectMemory', {
+    get: () => getSessionScopedToolCallbacks(sessionId)?.appendProjectMemoryFn,
+    configurable: true, enumerable: true,
+  });
+  Object.defineProperty(context, 'mcpSources', {
+    get: () => getSessionScopedToolCallbacks(sessionId)?.mcpSources,
+    configurable: true, enumerable: true,
+  });
 
   Object.defineProperty(context, 'setSessionLabels', {
     get() {

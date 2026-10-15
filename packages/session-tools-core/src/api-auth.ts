@@ -48,6 +48,9 @@ export function isMultiHeaderCredential(cred: ApiCredential): cred is MultiHeade
   return typeof cred === 'object' && cred !== null && !('username' in cred && 'password' in cred);
 }
 
+const HEADER_NAME = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+const HEADER_VALUE = /^[^\x00-\x08\x0a-\x1f\x7f]*$/;
+
 /**
  * Parse a JSON object whose values are all strings, the shape the multi-header
  * credential prompt writes. Returns null for anything else, including empty
@@ -64,7 +67,8 @@ export function parseJsonHeaderMap(raw: string): MultiHeaderCredential | null {
   }
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
   const entries = Object.entries(parsed as Record<string, unknown>);
-  if (entries.length === 0 || !entries.every(([, value]) => typeof value === 'string')) return null;
+  if (entries.length === 0 || !entries.every(([name, value]) =>
+    HEADER_NAME.test(name) && typeof value === 'string' && HEADER_VALUE.test(value))) return null;
   return parsed as MultiHeaderCredential;
 }
 

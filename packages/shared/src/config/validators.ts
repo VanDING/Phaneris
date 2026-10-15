@@ -1000,7 +1000,7 @@ export function validateLabelsContent(jsonString: string): ValidationResult {
         for (let j = 0; j < label.autoRules.length; j++) {
           const rule = label.autoRules[j];
           if (rule && typeof rule.semantic === 'string' && rule.pattern === undefined) {
-            const ruleResult = validateSemanticAutoLabelRule(rule);
+            const ruleResult = validateSemanticAutoLabelRule(rule, { valueType: label.valueType });
             for (const err of ruleResult.errors) {
               errors.push({
                 file,
@@ -1019,7 +1019,7 @@ export function validateLabelsContent(jsonString: string): ValidationResult {
               });
             }
           } else if (rule && rule.pattern) {
-            const ruleResult = validateAutoLabelRule(rule.pattern, rule.flags);
+            const ruleResult = validateAutoLabelRule(rule.pattern, rule.flags, { valueType: label.valueType, valueTemplate: rule.valueTemplate });
             for (const err of ruleResult.errors) {
               errors.push({
                 file,

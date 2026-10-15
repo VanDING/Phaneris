@@ -115,9 +115,9 @@ export function resolveWebSocketUrl(
 
 /** Dependencies for the /api/oauth/callback HTTP route (server-side OAuth completion). */
 export interface OAuthCallbackDeps {
-  flowStore: { getByState: (state: string) => any; remove: (state: string) => void }
+  flowStore: { getByState: (state: string) => any; remove: (state: string, result?: { success: boolean; error?: string; email?: string }) => unknown }
   credManager: { exchangeAndStore: (...args: any[]) => Promise<any> }
-  sessionManager: { completeAuthRequest: (...args: any[]) => Promise<void> }
+  sessionManager: { completeAuthRequest: (...args: any[]) => Promise<void>; completeAuthRequestsForSource?: import('../handlers/session-manager-interface').ISessionManager['completeAuthRequestsForSource'] }
   pushSourcesChanged: (workspaceId: string) => void
 }
 
@@ -442,8 +442,10 @@ export function createWebuiHandler(options: WebuiHandlerOptions): WebuiHandler {
       if (!configSession) {
         return Response.json({ error: 'Unauthorized' }, { status: 401 })
       }
-      const { getActiveWorkspace } = await import('@phaneris/shared/config/storage')
-      const active = getActiveWorkspace()
+      const { getActiveWorkspace, getWorkspaces } = await import('@phaneris/shared/config/storage')
+      const linkedSlug = url.searchParams.get('ws')
+      const linked = linkedSlug ? getWorkspaces().find(workspace => workspace.slug === linkedSlug) : undefined
+      const active = linked ?? getActiveWorkspace()
       return Response.json({
         defaultWorkspaceId: active?.id ?? null,
       })

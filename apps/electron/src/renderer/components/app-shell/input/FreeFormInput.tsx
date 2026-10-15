@@ -1,6 +1,8 @@
 import { useInputDraft } from './use-input-draft'
 import { useAvailablePermissionModes } from '@/hooks/useAvailablePermissionModes'
 import * as React from 'react'
+import { toast } from 'sonner'
+import { checkAttachmentSizes, checkAttachmentPayload, formatAttachmentBytes, type AttachmentSizeProblem } from '@phaneris/shared/protocol'
 import { useTranslation } from "react-i18next"
 import { AnimatePresence, motion } from 'motion/react'
 import {
@@ -1056,8 +1058,21 @@ export function FreeFormInput({
     e.stopPropagation()
   }
 
+  const showAttachmentSizeProblem = React.useCallback((problem: AttachmentSizeProblem) => {
+    const values = { size: formatAttachmentBytes(problem.size), limit: formatAttachmentBytes(problem.limit) }
+    if (problem.kind === 'file') {
+      toast.error(t('toast.attachmentTooLarge', { name: problem.name }), {
+        description: t('toast.attachmentTooLargeDescription', values),
+      })
+    } else {
+      toast.error(t('toast.attachmentsTooLarge'), { description: t('toast.attachmentsTooLargeDescription', values) })
+    }
+  }, [t])
+
   // Helper to read a File using FileReader API
   const readFileAsAttachment = React.useCallback(async (file: File, overrideName?: string): Promise<FileAttachment | null> => {
+    const problem = checkAttachmentSizes([{ name: overrideName || file.name, size: file.size }])
+    if (problem) { showAttachmentSizeProblem(problem); return null }
     // Capture the absolute OS path at attach time. Works for <input type="file"> and
     // OS drag-drop; returns null for clipboard paste and web-drag (no disk origin).
     // When null, the draft layer falls back to persisting content inline (Track C).
@@ -1116,7 +1131,7 @@ export function FreeFormInput({
       reader.onerror = () => resolve(null)
       reader.readAsArrayBuffer(file)
     })
-  }, [hasElectronAPI])
+  }, [hasElectronAPI, showAttachmentSizeProblem])
 
   React.useEffect(() => {
     const handlePasteFiles = async (e: CustomEvent<{ files: File[]; sessionId?: string }>) => {
@@ -1201,10 +1216,12 @@ export function FreeFormInput({
       text: text,
       size: new Blob([text]).size,
     }
+    const problem = checkAttachmentSizes([attachment])
+    if (problem) { showAttachmentSizeProblem(problem); return }
     setAttachments(prev => [...prev, attachment])
     // Focus input after adding attachment
     richInputRef.current?.focus()
-  }, [richInputRef]) // Uses the current attachment ref
+  }, [richInputRef, showAttachmentSizeProblem]) // Uses the current attachment ref
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault()
@@ -1228,6 +1245,9 @@ export function FreeFormInput({
 
     // Tutorial may disable sending to guide user through specific steps
     if (disableSend) return false
+
+    const problem = checkAttachmentSizes(attachments) ?? checkAttachmentPayload(attachments, input)
+    if (problem) { showAttachmentSizeProblem(problem); return false }
 
     // Parse all @mentions (skills, sources, folders)
     const skillSlugs = skills.map(s => s.slug)
@@ -1264,7 +1284,7 @@ export function FreeFormInput({
     })
 
     return true
-  }, [input, attachments, followUpItems, disabled, disableSend, onInputChange, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, richInputRef, setInput, prevInputValueRef, syncTimeoutRef])
+  }, [input, attachments, followUpItems, disabled, disableSend, showAttachmentSizeProblem, onInputChange, onAttachmentsChange, onSubmit, skills, sources, optimisticSourceSlugs, onSourcesChange, richInputRef, setInput, prevInputValueRef, syncTimeoutRef])
 
   // Listen for craft:submit-input events (simulate pressing the Send button)
   React.useEffect(() => {

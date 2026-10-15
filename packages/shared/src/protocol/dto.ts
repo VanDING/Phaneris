@@ -514,6 +514,8 @@ export type SessionEvent =
   | { type: 'working_directory_error'; sessionId: string; error: string }
 
 export interface SendMessageOptions {
+  /** Explicit turn-level choice; does not rewrite the session's saved preference. */
+  thinkingLevel?: ThinkingLevel
   skillSlugs?: string[]
   badges?: ContentBadge[]
   optimisticMessageId?: string
@@ -1062,4 +1064,15 @@ export interface ResolvedFileTarget {
   type: 'file' | 'directory'
   size: number
   mimeType: string
+}
+
+export interface BrowserSecurityChallenge {
+  /** A blocking challenge from a known provider: the user has to solve it. */
+  detected: boolean
+  /** Provider behind the evidence ('cloudflare', 'google', 'hcaptcha', …), or 'none'. */
+  provider: string
+  /** Evidence seen, including context that never decides a verdict. */
+  signals: string[]
+  /** Evidence too weak for a hand-off, e.g. a visible Turnstile widget: worth a note only. */
+  suspected?: boolean
 }

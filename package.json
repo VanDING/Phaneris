@@ -163,7 +163,8 @@
     "test:docs-locale": "bun run scripts/verification/docs-locale-workflow.ts",
     "test:markdown-file-links": "bun run scripts/verification/markdown-file-links-workflow.ts",
     "test:planning-collection": "bun run scripts/verification/planning-collection-workflow.ts",
-    "test:planning-performance": "bun run scripts/verification/planning-performance-workflow.ts"
+    "test:planning-performance": "bun run scripts/verification/planning-performance-workflow.ts",
+    "test:upstream-015": "bun run scripts/verification/upstream-015-core-workflow.ts && bun run scripts/verification/upstream-015-orchestration-workflow.ts && bun run scripts/verification/upstream-015-browser-workflow.ts && bun run scripts/verification/upstream-015-renderer-workflow.ts"
   },
   "devDependencies": {
     "@babel/core": "^8.0.6",
@@ -200,8 +201,8 @@
     "@dnd-kit/dom": "0.5.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@earendil-works/pi-ai": "1.1.0",
-    "@earendil-works/pi-coding-agent": "1.1.0",
+    "@earendil-works/pi-ai": "1.2.0",
+    "@earendil-works/pi-coding-agent": "1.2.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/noto-sans-sc": "^5.3.0",

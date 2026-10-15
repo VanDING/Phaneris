@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "channels": 425,
-  "centrallyValidatedMethods": 51,
-  "typedResultPorts": 41,
+  "channels": 426,
+  "centrallyValidatedMethods": 52,
+  "typedResultPorts": 42,
   "rows": [
     {
       "key": "appearance.GET_RICH_TOOL_DESCRIPTIONS",
@@ -3869,9 +3869,9 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/oauth.ts",
-          "line": 164,
+          "line": 273,
           "args": [
-            "args: {\n    flowId: string\n    state: string\n  }"
+            "args: {\n    flowId: string\n    state: string\n    /** Why the owner gave up (provider error, timeout) — reported to clients that joined */\n    error?: string\n  }"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -3890,7 +3890,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/oauth.ts",
-          "line": 134,
+          "line": 243,
           "args": [
             "args: {\n    flowId: string\n    code: string\n    state: string\n  }"
           ],
@@ -3911,7 +3911,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/oauth.ts",
-          "line": 177,
+          "line": 297,
           "args": [
             "args: {\n    sourceSlug: string\n  }"
           ],
@@ -3927,17 +3927,38 @@
       "routing": "remote-eligible",
       "kind": "method",
       "runtimeValidation": "existing handler/capability checks; no centralized schema",
-      "resultContract": "{ flowId: string; state: string; authUrl: string }",
+      "resultContract": "| { joined: true; flowId: string; expiresInMs?: number }",
       "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/oauth.ts",
-          "line": 85,
+          "line": 214,
           "args": [
-            "args: {\n    sourceSlug: string\n    callbackPort?: number\n    callbackUrl?: string\n    sessionId?: string\n    authRequestId?: string\n  }"
+            "args: {\n    sourceSlug: string\n    callbackPort?: number\n    callbackUrl?: string\n    sessionId?: string\n    authRequestId?: string\n    joinLive?: boolean\n    restart?: boolean\n  }"
           ],
           "result": "inferred by TypeScript; see handler return",
           "owner": "explicit destination workspace"
+        }
+      ]
+    },
+    {
+      "key": "oauth.STATUS",
+      "channel": "oauth:status",
+      "domain": "oauth",
+      "routing": "remote-eligible",
+      "kind": "method",
+      "runtimeValidation": "protocol input contract + existing domain checks",
+      "resultContract": "import('../auth/oauth-flow-store').OAuthFlowStatus",
+      "compatibility": "stable wire string; unknown fields preserved; timeout abandons response without effect retry",
+      "sites": [
+        {
+          "file": "packages/server-core/src/handlers/rpc/oauth.ts",
+          "line": 289,
+          "args": [
+            "args: { flowId: string }"
+          ],
+          "result": "inferred by TypeScript; see handler return",
+          "owner": "authenticated host or handler-specific policy"
         }
       ]
     },
@@ -7023,7 +7044,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 164,
+          "line": 222,
           "args": [
             "workspaceId: string",
             "req: TaskCreateRequest"
@@ -7045,7 +7066,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 242,
+          "line": 300,
           "args": [
             "workspaceId: string",
             "req: TaskGenerateRequest"
@@ -7078,7 +7099,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 381,
+          "line": 419,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7122,7 +7143,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 403,
+          "line": 441,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7145,7 +7166,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 396,
+          "line": 434,
           "args": [
             "workspaceId: string"
           ],
@@ -7166,7 +7187,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 368,
+          "line": 406,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7189,7 +7210,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 372,
+          "line": 410,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7212,7 +7233,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 360,
+          "line": 398,
           "args": [
             "workspaceId: string",
             "req: TaskRunRequest"
@@ -7234,7 +7255,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 376,
+          "line": 414,
           "args": [
             "workspaceId: string",
             "slug: string",
@@ -7257,7 +7278,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/tasks.ts",
-          "line": 122,
+          "line": 180,
           "args": [
             "_workspaceId: string",
             "yaml: string"

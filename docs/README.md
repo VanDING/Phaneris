@@ -31,6 +31,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Architecture
 
+Current upstream work: [0.15.0 / 0.15.1 non-UI implementation](verification/upstream-0.15-non-ui-implementation-2026-10-15.md), with the [pre-implementation failure matrix](verification/upstream-0.15-non-ui-failure-matrix-2026-10-15.md). Authorized on 2026-10-15; the existing Pi 1.2.0 upgrade and visual design remain the baseline.
+
 | Document | Status | Scope |
 | --- | --- | --- |
 | [Chat popout card failure matrix](verification/markdown-popout-card-failure-matrix-2026-10-12.md) | Written before implementation; browser verified | Restore centered cards and Markdown source mode; 18 browser scenes and archived before/after evidence. [Results](verification/results/markdown-popout-card-2026-10-12/README.md). |
@@ -84,6 +86,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 
 | Document | Status | Scope |
 | --- | --- | --- |
+| [Pi SDK 1.2.0 upgrade](verification/pi-sdk-1.2.0-upgrade.md) | Implemented; Windows kernel verification passed; full-suite baseline exceptions recorded | Exact SDK graph, codemode result compatibility, real 1.1.0 history recovery, bundled runtime hashes and verification limits. |
 | [Theme and frontend visual audit failure matrix](verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md) | Written before audit probes; audit evidence recorded | Independent theme/CSS/interaction checks and remaining real-host E2E. [Reproduction evidence](verification/results/frontend-theme-visual-audit-2026-10-12/README.md). |
 | [Theme contract failure matrix](verification/theme-contract-failure-matrix-2026-10-12.md) | Written before W2–W5 implementation | Validation, roles, domains, adapters and governance mutation gates. |
 | [Governance completion failure matrix](verification/governance-completion-failure-matrix.md) | Written before implementation | G3–G8 failure cases and actual workflow acceptance. |

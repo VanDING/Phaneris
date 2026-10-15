@@ -4,7 +4,7 @@
 
 ## 当前基线
 
-- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` 及其 Pi 家族依赖统一固定 **1.1.0**。
+- 内核：`@earendil-works/pi-ai`、`pi-agent-core`、`pi-coding-agent` 及其 Pi 家族依赖统一固定 **1.2.0**。
 - 包管理器与打包运行时：Bun **1.4.2**；版本由 `package.json`、CI 和打包脚本共同固定。
 - 后台：只有 `PiAgent`。仓库不直接依赖 Claude Agent SDK，也不打包 Claude 原生二进制。
 - Anthropic/Claude 模型、OAuth 连接名以及 `CLAUDE.md` 项目上下文属于提供商或文件格式兼容，不代表存在第二套 agent 后台。
@@ -18,13 +18,13 @@ packages/server-core (SessionManager)
           │ AgentBackend + JSONL
 packages/shared (PiAgent + event adapter + permissions)
           │ stdio
-packages/pi-agent-server (Pi 1.1.0)
+packages/pi-agent-server (Pi 1.2.0)
           │ provider API / local tools / proxied session tools
 ```
 
 Pi SDK 被隔离在子进程中。主进程负责会话持久化、权限、sources、浏览器与 UI 事件；子进程负责 Pi 会话、模型运行时、内置工具和 provider 请求。
 
-资源加载器禁用自动发现扩展，主会话显式注册受管 `tool_search` / `codemode`，辅助查询不注册编排工具；`codemode` 的 `models` 全局关闭。Source 连接仍由宿主连接池与工具代理唯一持有。升级边界及验证记录见 [Pi 1.1.0 / Craft 0.14.1 实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
+资源加载器禁用自动发现扩展，主会话显式注册受管 `tool_search` / `codemode`，辅助查询不注册编排工具；`codemode` 的 `models` 全局关闭。Source 连接仍由宿主连接池与工具代理唯一持有。当前升级边界及验证记录见 [Pi SDK 1.2.0 升级与验证](../verification/pi-sdk-1.2.0-upgrade.md)；先前接入行为见 [Pi 1.1.0 / Craft 0.14.1 实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。
 
 ## 生命周期约束
 

@@ -1,6 +1,6 @@
 import type { ModelRegistry as PiModelRegistry } from '@earendil-works/pi-coding-agent';
 import { resolvePiModel, isDeniedMiniModelId } from './model-resolution.ts';
-import { PI_PREFERRED_DEFAULTS } from '@phaneris/shared/config/llm-connections';
+import { PI_PREFERRED_DEFAULTS, PI_PREFERRED_MINI_MODELS } from '@phaneris/shared/config/llm-connections';
 
 /**
  * Pick an auth-provider-appropriate default mini model.
@@ -24,8 +24,9 @@ export function pickProviderAppropriateMiniModel(
   modelRegistry: PiModelRegistry,
   preferCustomEndpoint: boolean,
 ): string | undefined {
-  const preferred = PI_PREFERRED_DEFAULTS[authProvider];
-  if (!preferred || preferred.length === 0) return undefined;
+  // Anthropic callers retain their existing Haiku fallback; this selector serves other providers.
+  const utilityTier = authProvider === 'anthropic' ? [] : PI_PREFERRED_MINI_MODELS[authProvider] ?? [];
+  const preferred = [...utilityTier, ...(PI_PREFERRED_DEFAULTS[authProvider] ?? [])];
   for (const candidate of preferred) {
     if (isDeniedMiniModelId(candidate, authProvider)) continue;
     const resolved = resolvePiModel(modelRegistry, candidate, authProvider, preferCustomEndpoint);

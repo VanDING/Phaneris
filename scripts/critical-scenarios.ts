@@ -35,6 +35,10 @@ export const criticalTestGroups: [string, string[]][] = [
 
 
 export const criticalWorkflows = [
+  { id: 'upstream-015-core', entry: 'scripts/verification/upstream-015-core-workflow.ts', minimum: 11, required: ['upstream-015-core.json', 'mcp-protocol.json', 'project-memory.json', 'guide-reading.json'] },
+  { id: 'upstream-015-orchestration', entry: 'scripts/verification/upstream-015-orchestration-workflow.ts', minimum: 5, required: ['upstream-015-orchestration.json', 'oauth-flows.json', 'task-stopped.json'] },
+  { id: 'upstream-015-browser', entry: 'scripts/verification/upstream-015-browser-workflow.ts', minimum: 11, required: ['upstream-015-browser.json', 'native-browser.json', 'hidden-current-frame.png', 'privacy-facts.json'] },
+  { id: 'upstream-015-renderer', entry: 'scripts/verification/upstream-015-renderer-workflow.ts', minimum: 6, required: ['upstream-015-renderer.json', 'forms.png', 'renderer-process.log'] },
   { id: 'task-permission', entry: 'scripts/verification/task-permission-workflow.ts', minimum: 9, required: ['scenes.json'] },
   { id: 'plugin-consistency', entry: 'scripts/verification/plugin-consistency-workflow.ts', minimum: 17, required: ['plugin-consistency.json'] },
   { id: 'workspace-recovery', entry: 'scripts/verification/workspace-recovery-workflow.ts', minimum: 10, required: ['workspace-recovery.json', 'restored-runtime.json'] },

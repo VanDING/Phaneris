@@ -1,6 +1,48 @@
 {
   "workflows": [
     {
+      "id": "upstream-015-core",
+      "entry": "scripts/verification/upstream-015-core-workflow.ts",
+      "minimum": 11,
+      "required": [
+        "upstream-015-core.json",
+        "mcp-protocol.json",
+        "project-memory.json",
+        "guide-reading.json"
+      ]
+    },
+    {
+      "id": "upstream-015-orchestration",
+      "entry": "scripts/verification/upstream-015-orchestration-workflow.ts",
+      "minimum": 5,
+      "required": [
+        "upstream-015-orchestration.json",
+        "oauth-flows.json",
+        "task-stopped.json"
+      ]
+    },
+    {
+      "id": "upstream-015-browser",
+      "entry": "scripts/verification/upstream-015-browser-workflow.ts",
+      "minimum": 11,
+      "required": [
+        "upstream-015-browser.json",
+        "native-browser.json",
+        "hidden-current-frame.png",
+        "privacy-facts.json"
+      ]
+    },
+    {
+      "id": "upstream-015-renderer",
+      "entry": "scripts/verification/upstream-015-renderer-workflow.ts",
+      "minimum": 6,
+      "required": [
+        "upstream-015-renderer.json",
+        "forms.png",
+        "renderer-process.log"
+      ]
+    },
+    {
       "id": "task-permission",
       "entry": "scripts/verification/task-permission-workflow.ts",
       "minimum": 9,
@@ -57,13 +99,26 @@
       "id": "planning-collection",
       "entry": "scripts/verification/planning-collection-workflow.ts",
       "minimum": 17,
-      "required": ["planning-collection.json", "collection-final.png", "trace.zip"]
+      "required": [
+        "planning-collection.json",
+        "collection-final.png",
+        "trace.zip"
+      ]
     },
     {
       "id": "planning-performance",
       "entry": "scripts/verification/planning-performance-workflow.ts",
       "minimum": 20,
-      "required": ["planning-performance.json", "session-facts.json", "memory-sample.json", "build-hashes.json", "calendar-final.png", "calendar-second-window.png", "trace.zip", "second-trace.zip"]
+      "required": [
+        "planning-performance.json",
+        "session-facts.json",
+        "memory-sample.json",
+        "build-hashes.json",
+        "calendar-final.png",
+        "calendar-second-window.png",
+        "trace.zip",
+        "second-trace.zip"
+      ]
     },
     {
       "id": "docs-locale",

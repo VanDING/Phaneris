@@ -25,7 +25,10 @@ export interface RpcMethodResults {
   [c.decisions.GET_SESSION]: SessionDecisionReport
   [c.decisions.GET_USAGE]: DecisionUsageReport
   [c.decisions.GET_SETTINGS]: DecisionLayerSettings
-  [c.oauth.START]: { flowId: string; state: string; authUrl: string }
+  [c.oauth.START]:
+    | { joined: true; flowId: string; expiresInMs?: number }
+    | { joined?: undefined; flowId: string; state: string; authUrl: string; expiresInMs?: number }
+  [c.oauth.STATUS]: import('../auth/oauth-flow-store').OAuthFlowStatus
   [c.oauth.COMPLETE]: { success: boolean; error?: string; email?: string }
   [c.chatgpt.START_OAUTH]: { flowId: string; state: string; authUrl: string }
   [c.chatgpt.COMPLETE_OAUTH]: { success: boolean; error?: string }

@@ -9,6 +9,7 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import type { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { GetPromptResult, ListPromptsResult, ListResourcesResult, ListResourceTemplatesResult, ReadResourceResult, ServerCapabilities } from '@modelcontextprotocol/sdk/types.js';
 import type { DurableToolExecutionIdentity } from '../durable-runtime/types.ts';
 import { durableToolMeta } from './durable-tool-meta.ts';
 
@@ -93,7 +94,17 @@ export interface PoolClient {
   listTools(): Promise<Tool[]>;
   callTool(name: string, args: Record<string, unknown>, options?: PoolCallToolOptions): Promise<unknown>;
   close(): Promise<void>;
+  getServerCapabilities?(): ServerCapabilities | undefined;
+  getInstructions?(): string | undefined;
+  listResources?(cursor?: string, options?: PoolRequestOptions): Promise<ListResourcesResult>;
+  listResourceTemplates?(cursor?: string, options?: PoolRequestOptions): Promise<ListResourceTemplatesResult>;
+  readResource?(uri: string, options?: PoolRequestOptions): Promise<ReadResourceResult>;
+  listPrompts?(cursor?: string, options?: PoolRequestOptions): Promise<ListPromptsResult>;
+  getPrompt?(name: string, args?: Record<string, string>, options?: PoolRequestOptions): Promise<GetPromptResult>;
 }
+
+export type PoolRequestOptions = Pick<PoolCallToolOptions, 'signal' | 'timeoutMs'>;
+const requestOptions = (options?: PoolRequestOptions) => ({ signal: options?.signal, ...(options?.timeoutMs !== undefined ? { timeout: options.timeoutMs } : {}) });
 
 export class CraftMcpClient {
   private client: Client;
@@ -145,7 +156,7 @@ export class CraftMcpClient {
 
     // Verify connection works by listing tools
     try {
-      await this.client.listTools();
+      if (this.client.getServerCapabilities()?.tools) await this.client.listTools();
     } catch (error) {
       await this.client.close();
       throw new Error(
@@ -161,6 +172,7 @@ export class CraftMcpClient {
       await this.connect();
     }
 
+    if (!this.client.getServerCapabilities()?.tools) return [];
     const result = await this.client.listTools();
     return result.tools;
   }
@@ -169,6 +181,29 @@ export class CraftMcpClient {
    * Returns server name/version reported during the MCP handshake.
    * Available after `connect()` resolves; undefined otherwise.
    */
+  getServerCapabilities(): ServerCapabilities | undefined { return this.client.getServerCapabilities(); }
+  getInstructions(): string | undefined { return this.client.getInstructions(); }
+  async listResources(cursor?: string, options?: PoolRequestOptions): Promise<ListResourcesResult> {
+    if (!this.connected) await this.connect();
+    return this.client.listResources(cursor ? { cursor } : undefined, requestOptions(options));
+  }
+  async listResourceTemplates(cursor?: string, options?: PoolRequestOptions): Promise<ListResourceTemplatesResult> {
+    if (!this.connected) await this.connect();
+    return this.client.listResourceTemplates(cursor ? { cursor } : undefined, requestOptions(options));
+  }
+  async readResource(uri: string, options?: PoolRequestOptions): Promise<ReadResourceResult> {
+    if (!this.connected) await this.connect();
+    return this.client.readResource({ uri }, requestOptions(options));
+  }
+  async listPrompts(cursor?: string, options?: PoolRequestOptions): Promise<ListPromptsResult> {
+    if (!this.connected) await this.connect();
+    return this.client.listPrompts(cursor ? { cursor } : undefined, requestOptions(options));
+  }
+  async getPrompt(name: string, args?: Record<string, string>, options?: PoolRequestOptions): Promise<GetPromptResult> {
+    if (!this.connected) await this.connect();
+    return this.client.getPrompt({ name, arguments: args }, requestOptions(options));
+  }
+
   getServerInfo(): { name: string; version: string } | undefined {
     const info = this.client.getServerVersion();
     if (!info) return undefined;

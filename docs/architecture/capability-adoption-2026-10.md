@@ -4,7 +4,7 @@ Status: accepted — 采用约定；四个条件式延后项的再评估证据�
 
 2026-10-13 规划收敛：本文的已采用能力与运行边界继续有效；原条件式迁移表保留技术理由，不再承载独立实施排期。当前保留、条件触发与关闭事项统一见[价值裁定与执行队列](../process/implementation-value-register-2026-10-13.md)。
 
-原记录基线：Craft 上游 0.14.0 的既有吸收结果、Pi SDK 1.0.2、Phaneris 0.2.4。当前 Pi 1.1.0 / Phaneris 0.3.0 与 Craft 0.14.1 增量见 [升级实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)。下文的既有实测数据保留原版本范围。机制实施见 [批次记录](../archive/capability-integration-2026-10-03.md)，原计划完整性、真实模型与补齐验收见 [闭合记录](../archive/capability-completion-2026-10-04.md)，全面替换的历史条件见 [1.0.2 评估](../archive/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。这里区分产品实现、实测收益与条件式采用。
+原记录基线：Craft 上游 0.14.0 的既有吸收结果、Pi SDK 1.0.2、Phaneris 0.2.4。此前 Pi 1.1.0 / Phaneris 0.3.0 与 Craft 0.14.1 增量见 [升级实施记录](../archive/pi-sdk-1.1.0-upstream-0.14.1-implementation.md)；当前内核版本与验证见 [Pi SDK 1.2.0 升级](../verification/pi-sdk-1.2.0-upgrade.md)。下文的既有实测数据保留原版本范围。机制实施见 [批次记录](../archive/capability-integration-2026-10-03.md)，原计划完整性、真实模型与补齐验收见 [闭合记录](../archive/capability-completion-2026-10-04.md)，全面替换的历史条件见 [1.0.2 评估](../archive/pi-sdk-1.0.2-upgrade-and-convergence-assessment.md)。这里区分产品实现、实测收益与条件式采用。
 
 ## 能力采用表
 

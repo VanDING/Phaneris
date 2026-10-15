@@ -193,6 +193,10 @@ export function readRunSpecSnapshot(workspaceRoot: string, slug: string, runId: 
 // Per-node output
 // ---------------------------------------------------------------------------
 
+export function nodeOutputPath(workspaceRoot: string, slug: string, runId: string, nodeId: string): string {
+  return join(runDir(workspaceRoot, slug, runId), NODES_DIR, `${nodeId}.json`);
+}
+
 export function writeNodeOutput(
   workspaceRoot: string,
   slug: string,
@@ -200,9 +204,8 @@ export function writeNodeOutput(
   nodeId: string,
   output: NodeOutput,
 ): void {
-  const dir = join(runDir(workspaceRoot, slug, runId), NODES_DIR);
-  ensureDir(dir);
-  atomicWriteFileSync(join(dir, `${nodeId}.json`), JSON.stringify(output, null, 2));
+  ensureDir(join(runDir(workspaceRoot, slug, runId), NODES_DIR));
+  atomicWriteFileSync(nodeOutputPath(workspaceRoot, slug, runId, nodeId), JSON.stringify(output, null, 2));
 }
 
 export function readNodeOutput(
@@ -211,7 +214,7 @@ export function readNodeOutput(
   runId: string,
   nodeId: string,
 ): NodeOutput | null {
-  const path = join(runDir(workspaceRoot, slug, runId), NODES_DIR, `${nodeId}.json`);
+  const path = nodeOutputPath(workspaceRoot, slug, runId, nodeId);
   if (!existsSync(path)) return null;
   try {
     return JSON.parse(readFileSync(path, 'utf-8')) as NodeOutput;

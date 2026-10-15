@@ -29,6 +29,7 @@ import type { SessionPlanningFields } from '@phaneris/shared/sessions'
 import type { EventSink } from '../transport'
 
 export interface ISessionManager {
+  completeAuthRequestsForSource(workspaceId: string, sourceSlug: string, result: { email?: string; workspace?: string }, boundRequests?: Array<{ sessionId: string; authRequestId: string }>): string[];
   // ---------------------------------------------------------------------------
   // Lifecycle
   // ---------------------------------------------------------------------------
@@ -179,6 +180,7 @@ export interface ISessionManager {
   onSessionComplete(
     listener: (evt: import('../sessions/SessionManager').SessionCompletionEvent) => void,
   ): () => void
+  onSessionActivity(sessionId: string, listener: () => void): () => void
   /** Read a session's final assistant message text (Conductor output reader). */
   getSessionFinalText(sessionId: string): string | undefined
   addMessageAnnotation(sessionId: string, messageId: string, annotation: AnnotationV1): void

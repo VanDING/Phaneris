@@ -115,6 +115,7 @@ function AuthCardActions({ primary, secondary, hint }: AuthCardActionsProps) {
       </Button>
       {secondary && (
         <Button
+          type="button"
           size="sm"
           variant="ghost"
           className="h-7 gap-1.5 text-muted-foreground hover:text-foreground"

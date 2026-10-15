@@ -1,0 +1,761 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-14T15:51:31.529Z",
+  "localDate": "2026-10-14",
+  "timezone": "Asia/Shanghai",
+  "upgradeStatus": "kernel-upgrade-and-compatibility-verification-complete",
+  "overallGateStatus": "baseline-exceptions-recorded",
+  "productVersion": "0.3.2",
+  "source": {
+    "headSha": "323fa0296d0e8b11cd004e60bb80977e46d544dd",
+    "dirty": true,
+    "lockfileSha256": "8f07f50020f6497aa3e38708415435e21102934ea2d193dbc85709e6d26ea020",
+    "changedSourceFiles": [
+      {
+        "path": "bun.lock",
+        "sha256": "8f07f50020f6497aa3e38708415435e21102934ea2d193dbc85709e6d26ea020"
+      },
+      {
+        "path": "package.json",
+        "sha256": "cc8d1eda25d56a3f27b55745fbc39be4a12bfb7409cc74cd245eda2f0fc79d16"
+      },
+      {
+        "path": "packages/pi-agent-server/package.json",
+        "sha256": "a753dac0492de35c7706fadb8ba0565afb73d89d282e78e005caa7c79f4e37ad"
+      },
+      {
+        "path": "packages/pi-agent-server/src/index.ts",
+        "sha256": "4ec80af0286d079a8993ab7ed260030d31b72f2762c6dc4c76d583fac2239620"
+      },
+      {
+        "path": "packages/pi-agent-server/src/proxy-mcp-result-schema.ts",
+        "sha256": "785681903a447b3a8102a2fc76b750e922ec39958248865e696a5f16fef7d09c"
+      },
+      {
+        "path": "packages/server-core/package.json",
+        "sha256": "c7df918c24440a90379cb9028987a5c8e7373fc5ac27b38dccd3af657da310f9"
+      },
+      {
+        "path": "packages/shared/package.json",
+        "sha256": "b42078166db9282b8dabf46ff6884e9f4f0c80c53850677e48d1b92044d6962a"
+      },
+      {
+        "path": "packages/shared/src/agent/backend/pi/protocol.ts",
+        "sha256": "7ad0763f8d1135ed2106df7694cfad40d0225732f85379ecbfb3eec34202b4b2"
+      },
+      {
+        "path": "packages/shared/src/mcp/mcp-pool.ts",
+        "sha256": "6c2db504b68cf3e528f196bd970e76026f6043895ac3d57ed3d841ea48837065"
+      },
+      {
+        "path": "packages/shared/src/mcp/pool-server.ts",
+        "sha256": "c6ecae8706056921c798736d9c71ddac2b57deefb94fe2d3582bb9d114730042"
+      },
+      {
+        "path": "scripts/verification/capability-integration-workflows.ts",
+        "sha256": "1f00cae79b6ba84be982b15691cd0bc85629cc54a8a91fbe9feeae1777df111c"
+      },
+      {
+        "path": "scripts/verification/pi-120-upgrade-workflow.ts",
+        "sha256": "52f0c05319b4226e8be6da55046425aacf068602e66514f50297a420676f4a1d"
+      }
+    ]
+  },
+  "baseline": {
+    "sdkVersions": {
+      "pi-agent-core": "1.1.0",
+      "pi-ai": "1.1.0",
+      "pi-coding-agent": "1.1.0",
+      "pi-codemode": "1.1.0",
+      "pi-mcp": "1.1.0",
+      "pi-telemetry": "1.1.0",
+      "pi-tui": "1.1.0"
+    },
+    "sourceHead": "323fa0296d0e8b11cd004e60bb80977e46d544dd",
+    "lockfileSha256": "33a132f224ff8c35266ced3c148ebbcdca954ac3b5ddbf107f3c206a92cbebb0",
+    "artifacts": {
+      "index.js": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e",
+      "bundle.js": "37f00707686374ef67067fe6d1b3e6405c40fd7e5fbc52a2b6be646d87be1f13",
+      "worker.js": "0db015780cd7480d1221f0e93d16a45af5e1ab51824d23dad10bd4ee9f798040",
+      "node_modules/quickjs-wasi/quickjs.wasm": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+    }
+  },
+  "upgradedSdk": {
+    "versions": {
+      "pi-agent-core": "1.2.0",
+      "pi-ai": "1.2.0",
+      "pi-coding-agent": "1.2.0",
+      "pi-codemode": "1.2.0",
+      "pi-mcp": "1.2.0",
+      "pi-telemetry": "1.2.0",
+      "pi-tui": "1.2.0"
+    },
+    "declarations": {
+      "package.json": {
+        "@earendil-works/pi-ai": "1.2.0",
+        "@earendil-works/pi-coding-agent": "1.2.0"
+      },
+      "packages/shared/package.json": {
+        "@earendil-works/pi-agent-core": "1.2.0",
+        "@earendil-works/pi-ai": "1.2.0",
+        "@earendil-works/pi-coding-agent": "1.2.0"
+      },
+      "packages/server-core/package.json": {
+        "@earendil-works/pi-ai": "1.2.0"
+      },
+      "packages/pi-agent-server/package.json": {
+        "@earendil-works/pi-agent-core": "1.2.0",
+        "@earendil-works/pi-ai": "1.2.0",
+        "@earendil-works/pi-coding-agent": "1.2.0",
+        "@earendil-works/pi-codemode": "1.2.0"
+      }
+    },
+    "locked": {
+      "@earendil-works/pi-agent-core": "@earendil-works/pi-agent-core@1.2.0",
+      "@earendil-works/pi-ai": "@earendil-works/pi-ai@1.2.0",
+      "@earendil-works/pi-codemode": "@earendil-works/pi-codemode@1.2.0",
+      "@earendil-works/pi-coding-agent": "@earendil-works/pi-coding-agent@1.2.0",
+      "@earendil-works/pi-mcp": "@earendil-works/pi-mcp@1.2.0",
+      "@earendil-works/pi-telemetry": "@earendil-works/pi-telemetry@1.2.0",
+      "@earendil-works/pi-tui": "@earendil-works/pi-tui@1.2.0"
+    },
+    "artifacts": {
+      "index.js": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e",
+      "bundle.js": "ff7236f6b400fa9a8f03b980cbb08809bc2057f1c7d9ca5cfef767a979715f11",
+      "worker.js": "8e517fc35bd6492827722e68872cf79fd2da664b2e0edf738d982eda1062c61f",
+      "node_modules/quickjs-wasi/quickjs.wasm": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+    },
+    "published": [
+      {
+        "name": "@earendil-works/pi-agent-core",
+        "version": "1.2.0",
+        "officialNpmIntegrity": "sha512-pUR0vYmGhHkBQGeCeWjwVIA+l1+MrDu6m6VGuysjh6KBzBpovTV/MlcVrEIOaM8jv/slpAyUmuCEQl1jOBqHJQ==",
+        "lockfileIntegrityMatches": true
+      },
+      {
+        "name": "@earendil-works/pi-ai",
+        "version": "1.2.0",
+        "officialNpmIntegrity": "sha512-U5/1zXqfV1on7/9sbez03tT4Ru49Lvfb4+zXSDK3DBKF5cRk6KxvAOTOY3HJ4jimlZth+rs7vbJqN6iBQAoNuQ==",
+        "lockfileIntegrityMatches": true
+      },
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.2.0",
+        "officialNpmIntegrity": "sha512-h/4WaVWv1VlCaY8x8qEN5U+7jbF/e7+Ck6moPeEOFn5juMTWwNAXjwgYM7gRgbBYh8Zppwt6qWvJDzNTf4GNEQ==",
+        "lockfileIntegrityMatches": true
+      },
+      {
+        "name": "@earendil-works/pi-codemode",
+        "version": "1.2.0",
+        "officialNpmIntegrity": "sha512-UZF7IN0IIrf3bop2wTxrwoAakGctH6d3zdPwhPN+QHMECfoI5E6B6l6I17YGFZPj8cmGex6xX7mLCNJXRf7wsw==",
+        "lockfileIntegrityMatches": true
+      },
+      {
+        "name": "@earendil-works/pi-mcp",
+        "version": "1.2.0",
+        "officialNpmIntegrity": "sha512-ertUv40rUBgssTzw2lIPlejjIBdhvdg4uw+whWCDJYKYHU+ldp1ezhbB0BzwpBfnwef6/YN+m6eKLscj+r3p7w==",
+        "lockfileIntegrityMatches": true
+      },
+      {
+        "name": "@earendil-works/pi-telemetry",
+        "version": "1.2.0",
+        "officialNpmIntegrity": "sha512-NZ3aJE6dr7aTgzzXDe53OW7BsAsF8ZUKHPJTtnjaQcxtlagkUT0Ew8Qas0EvYQsZqR/KpF1lB+z209XBzIC7xg==",
+        "lockfileIntegrityMatches": true
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.2.0",
+        "officialNpmIntegrity": "sha512-OdJCiYklkL3TqmdmGKUflHoLy9zw18GBYO0DPASZvGlP4RkDXAZzLLDt7cidJ6wUR7DBrKb13rrekDsXgMF60g==",
+        "lockfileIntegrityMatches": true
+      }
+    ],
+    "stagedSdk": [
+      {
+        "directory": "apps/electron/resources/pi-agent-server",
+        "artifacts": {
+          "index.js": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e",
+          "bundle.js": "ff7236f6b400fa9a8f03b980cbb08809bc2057f1c7d9ca5cfef767a979715f11",
+          "worker.js": "8e517fc35bd6492827722e68872cf79fd2da664b2e0edf738d982eda1062c61f",
+          "node_modules/quickjs-wasi/quickjs.wasm": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+        },
+        "matchesTestedRuntime": true
+      },
+      {
+        "directory": "apps/electron/dist/resources/pi-agent-server",
+        "artifacts": {
+          "index.js": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e",
+          "bundle.js": "ff7236f6b400fa9a8f03b980cbb08809bc2057f1c7d9ca5cfef767a979715f11",
+          "worker.js": "8e517fc35bd6492827722e68872cf79fd2da664b2e0edf738d982eda1062c61f",
+          "node_modules/quickjs-wasi/quickjs.wasm": "d4c9375f2b1ca4dc95f72c8aa2982a7a9951ac8011490d79c6582df732b4bbd9"
+        },
+        "matchesTestedRuntime": true
+      }
+    ],
+    "finalArtifactsMatchTestedRuntime": true
+  },
+  "runtime": {
+    "bun": "1.4.2",
+    "node": "v24.15.0",
+    "uv": "uv 0.12.22 (70fe1196a 2026-10-01 x86_64-pc-windows-msvc)",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "sdkWorkflowScenes": 36,
+  "workflows": [
+    {
+      "directory": "history",
+      "workflow": "pi-120-upgrade",
+      "passed": 6,
+      "exitCode": 0,
+      "sceneIds": [
+        "verified-1.1.0-baseline",
+        "uniform-1.2.0-sdk-graph",
+        "1.1.0-journal-resumes-in-1.2.0",
+        "branch-cutoff-and-parent-integrity",
+        "manual-compaction-survives-restart",
+        "host-prompt-and-model-boundary-parity"
+      ],
+      "manifestSha256": "09e7c749a11fa6f7a60e7ad43d65c921af37216838016f545b7c071481bc67c1",
+      "artifacts": [
+        {
+          "path": "baseline-identity.json",
+          "sha256": "58db21a30575a8a7c64dbba09595c032f3067653edd4fb5a17a61555f4e62dcb",
+          "bytes": 750
+        },
+        {
+          "path": "history.json",
+          "sha256": "c2b448228163490f1323d6ad6b36caa8722ad9dcc39a1e5e6f1f0f14960229f2",
+          "bytes": 1837
+        },
+        {
+          "path": "sdk-identity.json",
+          "sha256": "cd86b92c2318a1e74773aebc96c3f9f50c46c26cfbdb158974f0f2a7becb1f24",
+          "bytes": 1753
+        },
+        {
+          "path": "upgrade.json",
+          "sha256": "748fe71be4ae1cf3b841661ca740623dde7bc72ae38c259c6bb3df350032f12a",
+          "bytes": 250
+        }
+      ],
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      }
+    },
+    {
+      "directory": "control",
+      "workflow": "pi-control",
+      "passed": 9,
+      "exitCode": 0,
+      "sceneIds": [
+        "batched-init-before-dependent-commands",
+        "concurrent-ready-single-session",
+        "active-model-registry-refresh",
+        "late-response-does-not-create-session",
+        "abort-and-steer-control",
+        "reinitialize-ready",
+        "batched-init-and-real-prompt",
+        "abort-during-real-stream",
+        "parent-pipe-close-shutdown"
+      ],
+      "manifestSha256": "ce228cdfc8aa76200cbc39dfc5e8dfb8d5a08b5756cfa07171e6b02fbb6fd23d",
+      "artifacts": [
+        {
+          "path": ".bun/install/cache/@t@/4df21f10c640e54a.pile",
+          "sha256": "b3fcf9ce66e67067298afbc460ddf250232e2755b9d0ff1ded039c222f1b509e",
+          "bytes": 1963
+        },
+        {
+          "path": ".bun/install/cache/@t@/adea3bccf437ef46.pile",
+          "sha256": "fa4270b40f96e9ffd229a97856962285e21221de79911d34067dd80b66847402",
+          "bytes": 14386
+        },
+        {
+          "path": ".bun/install/cache/@t@/bb1fb40838375850.pile",
+          "sha256": "dd409b4a0ee6aba0357955295ed1a92ff965539836c6573a0716ae790cda1544",
+          "bytes": 2742
+        },
+        {
+          "path": ".bun/install/cache/@t@/c57490798fe2cf66.pile",
+          "sha256": "b30d44c9f27c5d73b47008bcd281140a0bbfc2100ee6092ef405404b0863d7a0",
+          "bytes": 64866
+        },
+        {
+          "path": ".pi/agent/models-store.json",
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "bytes": 2
+        },
+        {
+          "path": "pi-control.json",
+          "sha256": "0d7e199e196d1a0bc3d184bc270f9d622028d43f8f350ddb22883755e9f5d771",
+          "bytes": 113104
+        },
+        {
+          "path": "pi-stderr.log",
+          "sha256": "234bafae527a446974bf1bd2187931c09cb7a07d124fd05a8735cdde1d18378c",
+          "bytes": 2129
+        },
+        {
+          "path": "pi-stdout-types.json",
+          "sha256": "5d5e82c555e6a2877db44649d5f33540fad0efea8ff87857139cc6e79605e948",
+          "bytes": 575
+        },
+        {
+          "path": "workspace/sessions/control/.pi-sessions/2026-10-14T15-33-51-582Z_01a13b0c-695e-7297-b80c-ea68a41eaa62.jsonl",
+          "sha256": "59d3685e1993014df4465d2156622e47a5254fffab57ea5de540ffc3bfa037cd",
+          "bytes": 19338
+        }
+      ],
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      }
+    },
+    {
+      "directory": "durable",
+      "workflow": "durable-runtime-pi",
+      "passed": 6,
+      "exitCode": 0,
+      "sceneIds": [
+        "independent execution",
+        "real read effect T1/T2",
+        "usage",
+        "two terminal turns",
+        "first-turn tool parity",
+        "canonical tool context"
+      ],
+      "manifestSha256": "17e7c7def0fbe4d8fa7d0930d5bfbba253b407b94c68e2a773a4531c966579db",
+      "artifacts": [
+        {
+          "path": "independent-pi.db",
+          "sha256": "4d7d36f38c28444991c27e72c1c1a5dce1ed2504eec18b01a8be116e1addceab",
+          "bytes": 131072
+        },
+        {
+          "path": "independent-pi.json",
+          "sha256": "fc9a847acfab4bce069118d401058584f318f38140004bb57127038c2ed6a5ef",
+          "bytes": 54139
+        }
+      ],
+      "runtime": {
+        "bun": "1.4.2",
+        "node": "v24.15.0",
+        "uv": null,
+        "platform": "win32",
+        "architecture": "x64",
+        "osRelease": "10.0.26300",
+        "executable": "C:\\Users\\dotty\\.bun\\bin\\bun.exe"
+      }
+    }
+  ],
+  "capabilities": {
+    "pass": 10,
+    "records": [
+      {
+        "id": "A missing SDK session explicitly rejects a correlated steer",
+        "pass": true
+      },
+      {
+        "id": "SDK confirms prompt before provider completion and confirms steer independently",
+        "pass": true
+      },
+      {
+        "id": "Deferred discovery and codemode preserve structured MCP data and nested durability",
+        "pass": true
+      },
+      {
+        "id": "MCP result declarations inline the envelope and resolve nested local schema references",
+        "pass": true
+      },
+      {
+        "id": "Schema-free MCP structured results preserve arrays and all JSON scalar values",
+        "pass": true
+      },
+      {
+        "id": "Pinned catalog exposes native limits/cache/cost without an injected DeepSeek entry",
+        "pass": true
+      },
+      {
+        "id": "Nested permission denial prevents execution and does not trust readOnlyHint",
+        "pass": true
+      },
+      {
+        "id": "Withdrawing a deferred source removes its executable tool immediately",
+        "pass": true
+      },
+      {
+        "id": "An interrupted nested effect is parked after restart and cannot authorize whole-script replay",
+        "pass": true
+      },
+      {
+        "id": "Cancelling a nested call settles the SDK while its unknown external effect remains pending",
+        "pass": true
+      }
+    ],
+    "copiedOutsideRepository": true,
+    "sourceEntry": "E:\\Phaneris\\packages\\pi-agent-server\\dist\\index.js"
+  },
+  "startup": {
+    "pass": 4,
+    "records": [
+      {
+        "id": "first and subsequent provider tools are identical",
+        "pass": true
+      },
+      {
+        "id": "concurrent startup waits for policy and sync_tools",
+        "pass": true
+      },
+      {
+        "id": "concurrent credential lookup owns a single child",
+        "pass": true
+      },
+      {
+        "id": "destroy during credential lookup rejects startup",
+        "pass": true
+      }
+    ]
+  },
+  "askUser": {
+    "pass": 1,
+    "records": [
+      {
+        "id": "Stop returns the question dismissal, drains host/child waits and settles once as aborted",
+        "pass": true,
+        "observation": {
+          "requests": 1,
+          "toolResponses": 1,
+          "settled": true
+        }
+      }
+    ]
+  },
+  "sdkPackageRegression": {
+    "pass": 202,
+    "fail": 0
+  },
+  "history": {
+    "scope": "Real Pi 1.1.0 journal, Pi 1.2.0 Host/child, loopback inference",
+    "checks": [
+      {
+        "id": "1.1.0-journal-resumes-in-1.2.0",
+        "oldSessionId": "01a13b0a-ef15-76ad-813f-6776ddfe693e",
+        "restoredSessionId": "01a13b0a-ef15-76ad-813f-6776ddfe693e",
+        "originalSha256": "de9d2ff1099537602531ece27c03375e1a8f463ffda3b2b4c0ad20fd3c20789f",
+        "anchor": "4bc6aa85"
+      },
+      {
+        "id": "branch-cutoff-and-parent-integrity",
+        "parentSha256": "69e9398551b646549f857c0fc9973031a788a3ef1b03d94372c37f7a7758d160",
+        "branchSessionId": "01a13b0b-09f6-754b-9e37-935765351ba6"
+      },
+      {
+        "id": "manual-compaction-survives-restart",
+        "sessionId": "01a13b0a-ef15-76ad-813f-6776ddfe693e",
+        "tokensBefore": 48966,
+        "estimatedTokensAfter": 45196
+      }
+    ],
+    "requests": [
+      {
+        "before": true,
+        "after": false,
+        "compacted": false,
+        "systemPrompt": true
+      },
+      {
+        "before": true,
+        "after": true,
+        "compacted": false,
+        "systemPrompt": true
+      },
+      {
+        "before": true,
+        "after": true,
+        "compacted": false,
+        "systemPrompt": true
+      },
+      {
+        "before": true,
+        "after": false,
+        "compacted": false,
+        "systemPrompt": true
+      },
+      {
+        "before": true,
+        "after": false,
+        "compacted": false,
+        "systemPrompt": false
+      },
+      {
+        "before": false,
+        "after": true,
+        "compacted": true,
+        "systemPrompt": true
+      }
+    ],
+    "modelPreparations": 6,
+    "modelOutcomes": 6,
+    "journals": [
+      {
+        "id": "parent",
+        "sha256": "4d6afc870bdc13cff3cd3afd10239e738e46ee13b7b6909726ffaaf9d8e708d4",
+        "bytes": 384399
+      },
+      {
+        "id": "branch",
+        "sha256": "1118c4fb45585b4239885acd7d9307e87285a5bf1f571e7de9a8ec647b5cb6bd",
+        "bytes": 292890
+      }
+    ]
+  },
+  "checks": [
+    {
+      "command": "bun run typecheck:all",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/typecheck-all-adapted.log",
+      "logSha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308"
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "registeredWarnings": 72,
+      "log": ".cache/pi-120-upgrade/lint.log",
+      "logSha256": "6043c399ec6b1437e302f1b423428eeec0954391bbe08f7916a8a29a96f57798"
+    },
+    {
+      "command": "bun run test",
+      "exitCode": 1,
+      "pass": 6299,
+      "fail": 2,
+      "skip": 7,
+      "errors": 1,
+      "log": ".cache/pi-120-upgrade/workspace-tests.log",
+      "logSha256": "1b00b160eb1450ff641302b0e760570d56f704e714118a285561c16511c19555"
+    },
+    {
+      "command": "bun test packages/shared/src/decisions/client.test.ts",
+      "exitCode": 1,
+      "pass": 16,
+      "fail": 1,
+      "skip": 0,
+      "log": ".cache/pi-120-upgrade/decision-client-recheck.log",
+      "logSha256": "544ead269b611c6f2d45dce37b2302ed16d8c1c652612f93f6f1d2488108b816"
+    },
+    {
+      "command": "bun test --timeout 15000 packages/server-core/src/webui/__tests__/http-server.isolated.ts",
+      "exitCode": 0,
+      "pass": 15,
+      "fail": 0,
+      "skip": 0,
+      "log": ".cache/pi-120-upgrade/http-recheck-15s.log",
+      "logSha256": "78f91289f4afa8e150b6c930330bf46fc13ab3933a16ac281c20ab1e25621b41"
+    },
+    {
+      "command": "bun run test:doc-tools",
+      "exitCode": 0,
+      "pass": 24,
+      "log": ".cache/pi-120-upgrade/doc-tools-with-runtime.log",
+      "logSha256": "36608fe38cb1dd3da7ad46d151d64d8eb6b87116766d259f9d85011a619a09f7"
+    },
+    {
+      "command": "bun run test:ui:table",
+      "exitCode": 0,
+      "pass": 4,
+      "log": ".cache/pi-120-upgrade/ui-table.log",
+      "logSha256": "43c6c438173ece9ad7b1e1a9c466339f28732dc71084c9bfdf50922f741234fc"
+    },
+    {
+      "command": "bun run electron:build:assets",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/electron-assets.log",
+      "logSha256": "30a93ff336ae4a25b29baf7194039985130218c0afa2b0339c095ad77b9b74fe"
+    },
+    {
+      "command": "bun run electron:build:validate",
+      "exitCode": 0,
+      "artifacts": 13,
+      "log": ".cache/pi-120-upgrade/electron-validate.log",
+      "logSha256": "5057535add5f569c874ae940521cefdac775f21b5ab468d071ea7c9e53f60354"
+    },
+    {
+      "command": "bun run check:docs (final records)",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/check-docs-final.log",
+      "logSha256": "3e576e0aecc12482db69a382eaa5c42e36b41b4bd5d191361163fa694ef8988e"
+    },
+    {
+      "command": "bun run identity:check (final records)",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/identity-final.log",
+      "logSha256": "93e791aa80ae8c52c0b97acc7440181664ff655dc6a602679bf630010383035c"
+    },
+    {
+      "command": "bun run build:smoke",
+      "exitCode": 1,
+      "reason": "After five successful production builds, server distribution assembly rejected win32; only darwin/linux are supported.",
+      "log": ".cache/pi-120-upgrade/build-smoke.log",
+      "logSha256": "46b1b12e66e7a378405078dbf5812814aa01cc906d6fa6b570e9e35422d25ff3"
+    },
+    {
+      "command": "bun run lint:i18n:parity",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/lint-i18n-parity.log",
+      "logSha256": "f1e79e5ed60a21055fc387dd2de9057d6d9bfcf1702a92ff116f972c0ca30149"
+    },
+    {
+      "command": "bun run lint:i18n:sorted",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/lint-i18n-sorted.log",
+      "logSha256": "a385f7ad93d74caa977cc79adc9d67c665deb37126057e0e0db7e7da7f372059"
+    },
+    {
+      "command": "bun run lint:i18n:coverage",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/lint-i18n-coverage.log",
+      "logSha256": "f298219d3871b8e68ff720b45dc35e053dfbe80e8dde841f8eae4fed0483942e"
+    },
+    {
+      "command": "bun run lint:i18n:dead-keys",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/lint-i18n-dead-keys.log",
+      "logSha256": "b20d0d55e7adeba55df06ff97b2c8f45be4eb84c7541be6a08457e0abf0295af"
+    },
+    {
+      "command": "bun run check:docs",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/check-docs.log",
+      "logSha256": "3f14db429d59d2de18f2d68beb9f191e9cabfa9fa4f00a75733cb5da10b6a5ee"
+    },
+    {
+      "command": "bun run check:fonts",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/check-fonts.log",
+      "logSha256": "c276ab67ab9277c98149c9f91ba6032425d121a62b0ccfc2a52313c97f9b791c"
+    },
+    {
+      "command": "bun run identity:check",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/identity-check.log",
+      "logSha256": "93e791aa80ae8c52c0b97acc7440181664ff655dc6a602679bf630010383035c"
+    },
+    {
+      "command": "bun run version:check",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/version-check.log",
+      "logSha256": "e1282d98b4de778428bfc23fde7ee90fd02e8b1707b75c0261d706d7be0e3aec"
+    },
+    {
+      "command": "bun run runtime:check",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/runtime-check.log",
+      "logSha256": "3cdce5881fd42227db334dcf246d888e905f376002e1924da363bf682081f7b2"
+    },
+    {
+      "command": "bun run electron-pin:check",
+      "exitCode": 0,
+      "log": ".cache/pi-120-upgrade/electron-pin-check.log",
+      "logSha256": "4e25c9e9fe02cd5e0b34ee9eefa2aa8c74128aa610d93f4371bf043593e078dd"
+    }
+  ],
+  "productionBuilds": [
+    {
+      "command": "bun run electron:build:main",
+      "exitCode": 0,
+      "logSha256": "6b9129b97a8234c7a7ca1006d4f433b1c93c5d6268937846b0accad40d6dd876"
+    },
+    {
+      "command": "bun run electron:build:preload",
+      "exitCode": 0,
+      "logSha256": "e35192c46831a6a33b1bd63e672d642105f9889487a2bab316cc6abdbef0bf54"
+    },
+    {
+      "command": "bun run electron:build:renderer",
+      "exitCode": 0,
+      "logSha256": "1a90611868f73733f2ff36cd3fc7d4c4fb146f169c3ecd770cd418dc2507a86f"
+    },
+    {
+      "command": "bun run webui:build",
+      "exitCode": 0,
+      "logSha256": "551a03bebc37506c6959832986bd614707ac90ac1b1813b18951f68467377e40"
+    },
+    {
+      "command": "bun run viewer:build",
+      "exitCode": 0,
+      "logSha256": "6981226f3f8889670aace0cd7b5f7a1777194095645a31e717f3474a5bc6e58d"
+    }
+  ],
+  "baselineFailure": {
+    "baselineHead": "323fa0296d0e8b11cd004e60bb80977e46d544dd",
+    "failure": "SystemOneClient.decide > posts the System One wire format and returns typed answers",
+    "reason": "The existing exact usage assertion omits costSource=unknown and costUnavailableReason=not_reported emitted by unchanged readCost().",
+    "identities": [
+      {
+        "path": "packages/shared/src/decisions/client.ts",
+        "baselineSha256": "343c6961ac8c927b693d0785343946913687c727b50f203242a6618133a92126",
+        "currentSha256": "343c6961ac8c927b693d0785343946913687c727b50f203242a6618133a92126",
+        "unchanged": true
+      },
+      {
+        "path": "packages/shared/src/decisions/client.test.ts",
+        "baselineSha256": "35bd6bd61531a39c5775e520290ac603aa34ed582b96fa7c4949e01817a01bf6",
+        "currentSha256": "35bd6bd61531a39c5775e520290ac603aa34ed582b96fa7c4949e01817a01bf6",
+        "unchanged": true
+      },
+      {
+        "path": "packages/shared/src/decisions/types.ts",
+        "baselineSha256": "5b4604b0337a19efbcdc01169de752d1265454c659a73008b2b7f3abb46aaa6c",
+        "currentSha256": "5b4604b0337a19efbcdc01169de752d1265454c659a73008b2b7f3abb46aaa6c",
+        "unchanged": true
+      },
+      {
+        "path": "packages/shared/src/decisions/providers.ts",
+        "baselineSha256": "dd6da340e1d1fe67bf109d3b289b17be5975437813bf1de2dd1e2a5c9dbd88fc",
+        "currentSha256": "dd6da340e1d1fe67bf109d3b289b17be5975437813bf1de2dd1e2a5c9dbd88fc",
+        "unchanged": true
+      },
+      {
+        "path": "packages/shared/src/identity.generated.ts",
+        "baselineSha256": "97dd7d512b5cadb571ebbe403d811833267f561fa62a63107e3f974bb3eca158",
+        "currentSha256": "97dd7d512b5cadb571ebbe403d811833267f561fa62a63107e3f974bb3eca158",
+        "unchanged": true
+      }
+    ]
+  },
+  "recovery": [
+    {
+      "step": "Initial SDK typecheck/build",
+      "result": "Failed on removed mcpStructuredContentSchema export; adapted the host-owned result schema and reran successfully."
+    },
+    {
+      "step": "Document tools environment",
+      "result": "uv was initially absent from PATH; reused the existing pinned repository uv and reran 24 tests successfully."
+    },
+    {
+      "step": "HTTP regression",
+      "result": "Default 5000ms timeout reproduced; unchanged assertions passed 15/15 with the verification invocation timeout set to 15000ms. The affected scene took 5993ms."
+    }
+  ],
+  "unverified": [
+    "Live provider APIs",
+    "Live OAuth network refresh",
+    "Linux/macOS execution",
+    "External MCP protocol-stack migration",
+    "Signed installers, installation and publishing"
+  ],
+  "gitActions": {
+    "committed": false,
+    "pushed": false
+  }
+}

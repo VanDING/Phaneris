@@ -40,7 +40,7 @@ import type { LoadedSource, LoadedSkill } from '../../../../shared/types'
 
 // Client-side fallback for async generate: a touch longer than the server's GENERATE_TIMEOUT_MS
 // (180s) so the orchestrator's own timeout + result push can land before we give up locally.
-const GENERATE_CLIENT_TIMEOUT_MS = 200_000
+const GENERATE_CLIENT_TIMEOUT_MS = 660_000
 
 /**
  * TaskEditor — full-pane authoring surface for a Tasks DAG (graduated from the

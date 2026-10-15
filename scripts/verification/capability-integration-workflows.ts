@@ -15,6 +15,7 @@ const output = resolve(process.argv[2] ?? join(root, '.cache/capability-integrat
 const records: object[] = [], requests: any[] = [], wire: any[] = [], effects: any[] = []
 let release!: () => void
 let orchestration = false, denyNested = false, blockExecution = false
+let structuredContent: unknown = { value: 42 }
 let code = 'const r = await tools.mcp__fixture__read({}); store("read", r); return r.structuredContent.value;'
 const gate = new Promise<void>(r => { release = r })
 const api = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(req) {
@@ -68,7 +69,7 @@ lines.on('line', line => {
     if (blockExecution) return
     send({ type: 'tool_execute_response', requestId: m.requestId, result: { content: 'preview', isError: false,
       contentBlocks: [{ type: 'text', text: 'full text' }, { type: 'resource_link', name: 'fixture', uri: 'https://invalid.test/fixture' }],
-      structuredContent: { value: 42 } } })
+      structuredContent } })
   }
   if (m.type === 'durable_tool_outcome_request' || m.type === 'durable_model_outcome_request') {
     effects.push({ phase: 'T2', ...m })
@@ -120,7 +121,8 @@ try {
   await check('Deferred discovery and codemode preserve structured MCP data and nested durability', async () => {
     orchestration = true
     send({ type: 'sync_tools', tools: [{ name: 'mcp__fixture__read', description: 'Read fixture', inputSchema: { type: 'object', properties: {} },
-      outputSchema: { type: 'object', properties: { value: { type: 'number' } }, required: ['value'] }, namespace: { name: 'fixture' },
+      outputSchema: { type: 'object', properties: { value: { $ref: '#/$defs/Value' } },
+        $defs: { Value: { type: 'number' } }, required: ['value'] }, namespace: { name: 'fixture' },
       exposure: 'deferred', annotations: { readOnlyHint: true } }] })
     const before = wire.length
     send({ type: 'prompt', id: 'orchestrate', message: 'orchestrate', systemPrompt: 'Fixture system', durableRunOperationId: 'run-orchestrate' })
@@ -135,6 +137,32 @@ try {
     assert(req?.tools.some((t: any) => t.function.name === 'tool_search'))
     assert(req.messages.some((m: any) => m.role === 'system' && JSON.stringify(m.content).includes('codemode')))
     return { nested, effects: effects.length }
+  })
+  await check('MCP result declarations inline the envelope and resolve nested local schema references', async () => {
+    code = 'const d = await describeTool("mcp__fixture__read"); if (!d.includes("content:") || !d.includes("structuredContent") || !d.includes("value: number") || d.includes("CallToolResult<")) throw Error("Invalid MCP result declaration: " + d); text(d);'
+    const before = wire.length
+    send({ type: 'prompt', id: 'declarations', message: 'declarations', systemPrompt: 'Fixture system', durableRunOperationId: 'run-declarations' })
+    await until(() => wire.slice(before).some(m => m.type === 'event' && m.event?.type === 'agent_settled'))
+    const result = requests.at(-1).messages.findLast((m: any) => m.role === 'tool')
+    assert(JSON.stringify(result).includes('value: number'), 'Local output-schema reference did not reach the provider declaration')
+    assert(!JSON.stringify(result).includes('Invalid MCP result declaration'))
+  })
+  await check('Schema-free MCP structured results preserve arrays and all JSON scalar values', async () => {
+    send({ type: 'sync_tools', tools: [{ name: 'mcp__fixture__read', description: 'Read fixture',
+      inputSchema: { type: 'object', properties: {} }, namespace: { name: 'fixture' }, exposure: 'deferred' }] })
+    const values = [[1, 'two'], null, false, 0, '', 'scalar']
+    for (const [index, value] of values.entries()) {
+      structuredContent = value
+      code = `const r = await tools.mcp__fixture__read({}); if (!Object.prototype.hasOwnProperty.call(r, "structuredContent") || JSON.stringify(r.structuredContent) !== ${JSON.stringify(JSON.stringify(value))}) throw Error("Structured content was changed or dropped"); text("STRUCTURED_VALUE_${index}_PRESERVED");`
+      const before = wire.length
+      send({ type: 'prompt', id: `structured-${index}`, message: `structured-${index}`, systemPrompt: 'Fixture system', durableRunOperationId: `run-structured-${index}` })
+      await until(() => wire.slice(before).some(m => m.type === 'event' && m.event?.type === 'agent_settled'))
+      const result = requests.at(-1).messages.findLast((m: any) => m.role === 'tool')
+      assert(JSON.stringify(result).includes(`STRUCTURED_VALUE_${index}_PRESERVED`), `Structured JSON value was lost: ${JSON.stringify(value)}`)
+    }
+    structuredContent = { value: 42 }
+    code = 'const r = await tools.mcp__fixture__read({}); store("read", r); return r.structuredContent.value;'
+    return { values: values.length }
   })
   await check('Pinned catalog exposes native limits/cache/cost without an injected DeepSeek entry', async () => {
     const { getPiModelsForAuthProvider } = await import('../../packages/shared/src/config/models-pi.ts')

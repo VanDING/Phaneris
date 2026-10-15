@@ -25,6 +25,7 @@ import {
 } from '@phaneris/shared/durable-runtime'
 import { canonicalToolArgsHash, durableToolOperationId } from './tool-identity.js'
 import { redactDurablePayload } from './sensitive-payload.js'
+import { redactBrowserToolArguments } from '@phaneris/shared/utils/browser-input-privacy'
 import { auditModelUsage } from './model-usage-audit.js'
 import { createHash } from 'node:crypto'
 import { copyFileSync, existsSync, renameSync } from 'node:fs'
@@ -866,7 +867,7 @@ export class DurableRuntimeCoordinator {
       schemaVersion: 1,
       modelVisible: false,
       partial: false,
-      payload: request,
+      payload: redactDurablePayload(request),
       createdAt: now,
     }, ...(!warming && request.text ? [{
       eventId: `${request.operationId}:assistant`,
@@ -957,7 +958,7 @@ export class DurableRuntimeCoordinator {
             toolBatchId: request.toolBatchId,
             toolBatchOrdinal: request.toolBatchOrdinal,
             toolName: request.toolName,
-            args: redactDurablePayload(request.args),
+            args: redactDurablePayload(redactBrowserToolArguments(request.toolName, request.args)),
           },
           createdAt: now,
         },

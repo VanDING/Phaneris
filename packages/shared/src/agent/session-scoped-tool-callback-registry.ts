@@ -113,6 +113,8 @@ export interface SessionScopedToolCallbacks {
    * SessionManager to the invoking session's workspace.
    */
   pages?: import('@phaneris/session-tools-core').PagesToolCallbacks;
+  mcpSources?: import('@phaneris/session-tools-core').McpSourceToolCallbacks;
+  appendProjectMemoryFn?: (input: import('@phaneris/session-tools-core').ProjectMemoryAppendInput) => Promise<import('@phaneris/session-tools-core').ProjectMemoryAppendResult>;
   /**
    * Decision-layer callback for the `decide` tool (Jev / System One). Wired by
    * SessionManager from `@phaneris/shared/decisions`; gating (Settings switch,

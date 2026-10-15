@@ -1,6 +1,8 @@
 import { mkdirSync } from 'node:fs';
 import { DefaultResourceLoader, createCodemodeExtension, createToolSearchExtension, type ToolDefinition } from '@earendil-works/pi-coding-agent';
 import { registerNativeLifecycle, type ObserveLifecycle } from './native-lifecycle-observation.ts';
+import { createPhanerisSettingsManager } from './session-settings.ts';
+import type { SettingsManager } from '@earendil-works/pi-coding-agent';
 
 /**
  * Current Phaneris system prompt for the active session.
@@ -44,6 +46,7 @@ export function getPhanerisSystemPrompt(): string {
 export async function createPhanerisResourceLoader(options: {
   cwd: string;
   agentDir: string;
+  settingsManager?: SettingsManager;
   /** Prompt source for this loader; defaults to the module-level current Phaneris prompt. */
   getPrompt?: () => string;
   observeLifecycle?: ObserveLifecycle;
@@ -56,6 +59,7 @@ export async function createPhanerisResourceLoader(options: {
   const loader = new DefaultResourceLoader({
     cwd: options.cwd,
     agentDir: options.agentDir,
+    settingsManager: options.settingsManager ?? createPhanerisSettingsManager('ephemeral'),
     noExtensions: true,
     noSkills: true,
     noPromptTemplates: true,

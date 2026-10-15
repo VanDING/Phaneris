@@ -315,6 +315,12 @@ function findSmallModel(
     if (explicit && isAllowedModel(explicit)) return connection.utilityModel
   }
 
+  const preferred = connection.piAuthProvider ? PI_PREFERRED_MINI_MODELS[connection.piAuthProvider] ?? [] : [];
+  for (const candidate of preferred) {
+    const match = connection.models.find(model => isAllowedModel(model) && preferredModelRank(toId(model), [candidate]) === 0);
+    if (match) return toId(match);
+  }
+
   const keywords: string[] = ['mini', 'flash', 'haiku'];
 
   // Word-boundary matching: "mini" must be a standalone token, not a prefix
@@ -600,11 +606,11 @@ export const PI_PREFERRED_DEFAULTS: Record<string, string[]> = {
   // It is deliberately NOT the new-connection default: existing and new
   // connections keep resolving to Opus 4.8 unless the user picks 5.5, matching
   // the storage migrations that target 4.8 on purpose.
-  anthropic: ['claude-opus-4-8', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-fable-5-1', 'claude-fable-5', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
+  anthropic: ['claude-opus-4-8', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-fable-5-1', 'claude-fable-5', 'claude-sonnet-5-5', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-5-5', 'claude-haiku-4-5'],
   // GPT-6 Astra entered the Pi catalog in SDK 0.85.1 for both the API-key and
   // the ChatGPT-account (openai-codex) flows; new connections default to it.
-  openai: ['gpt-6-astra', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5', 'gpt-5.2', 'gpt-5.1', 'gpt-5', 'o4-mini', 'o3', 'gpt-4o'],
-  'openai-codex': ['gpt-6-astra', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5', 'gpt-5.2', 'gpt-5.1', 'gpt-5', 'o4-mini', 'o3', 'gpt-4o'],
+  openai: ['gpt-6-astra', 'gpt-6.1-sol', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5', 'gpt-5.2', 'gpt-5.1', 'gpt-5', 'o4-mini', 'o3', 'gpt-4o'],
+  'openai-codex': ['gpt-6-astra', 'gpt-6.1-sol', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5', 'gpt-5.2', 'gpt-5.1', 'gpt-5', 'o4-mini', 'o3', 'gpt-4o'],
   // Stable models first so the connection-setup test (which uses
   // getDefaultModelForConnection) lands on a reliable model.
   // gemini-3-pro-preview and gemini-3.1-pro-preview are intermittently
@@ -623,8 +629,27 @@ export const PI_PREFERRED_DEFAULTS: Record<string, string[]> = {
   'github-copilot': ['claude-sonnet-4-6', 'gpt-5', 'o4-mini', 'claude-haiku-4-5'],
   'opencode': ['claude-opus-4-6', 'claude-haiku-4-5', 'deepseek-flash', 'deepseek-v4-pro'],
   'opencode-go': ['deepseek-flash', 'deepseek-v4-pro', 'kimi-k2.7-code', 'glm-5.2'],
-  'amazon-bedrock': ['claude-opus-4-8', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-4-5'],
+  'amazon-bedrock': ['claude-opus-4-8', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-7', 'claude-opus-4-6', 'claude-sonnet-5-5', 'claude-sonnet-5', 'claude-sonnet-4-6', 'claude-haiku-5-5', 'claude-haiku-4-5'],
 };
+
+/** Provider utility tiers are independent of the user's main model. */
+export const PI_PREFERRED_MINI_MODELS: Record<string, string[]> = {
+  openai: ['gpt-6-luna', 'gpt-5.6-luna', 'gpt-5.4-nano', 'gpt-5.4-mini'],
+  'openai-codex': ['gpt-6-luna', 'gpt-5.6-luna'],
+  anthropic: ['claude-haiku-5-5', 'claude-haiku-4-5'],
+  'amazon-bedrock': ['claude-haiku-5-5', 'claude-haiku-4-5'],
+  google: ['gemini-2.5-flash', 'gemini-3-flash-preview', 'gemini-3.1-flash-lite-preview'],
+  moonshotai: ['kimi-k2.6'],
+  'moonshotai-cn': ['kimi-k2.6'],
+};
+
+export function preferredModelRank(id: string, preferred: readonly string[]): number {
+  const bare = id.startsWith('pi/') ? id.slice(3) : id;
+  if (normalizeDeprecatedModelId(bare) !== bare) return -1;
+  const rank = (candidate: string) => preferred.findIndex(value => candidate === value || candidate.startsWith(`${value}-`));
+  const direct = rank(bare);
+  return direct >= 0 ? direct : rank(fromBedrockNativeId(bare));
+}
 
 export function getDefaultModelsForConnection(providerType: LlmProviderType, piAuthProvider?: string): Array<ModelDefinition | string> {
   if (providerType === 'pi') {
@@ -769,6 +794,8 @@ const BEDROCK_MODEL_MAP: Record<string, string> = {
   'claude-opus-4-7': 'us.anthropic.claude-opus-4-7',
   'claude-fable-5-1': 'us.anthropic.claude-fable-5-1',
   'claude-fable-5': 'us.anthropic.claude-fable-5',
+  'claude-sonnet-5-5': 'us.anthropic.claude-sonnet-5-5',
+  'claude-haiku-5-5': 'us.anthropic.claude-haiku-5-5',
   'claude-sonnet-5': 'us.anthropic.claude-sonnet-5',
   'claude-sonnet-4-6': 'us.anthropic.claude-sonnet-4-6',
   'claude-haiku-4-5-20251001': 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
@@ -784,6 +811,8 @@ const BEDROCK_MODEL_MAP: Record<string, string> = {
   'anthropic.claude-opus-4-6-v1': 'us.anthropic.claude-opus-4-6-v1',
   'anthropic.claude-fable-5-1': 'us.anthropic.claude-fable-5-1',
   'anthropic.claude-fable-5': 'us.anthropic.claude-fable-5',
+  'anthropic.claude-sonnet-5-5': 'us.anthropic.claude-sonnet-5-5',
+  'anthropic.claude-haiku-5-5': 'us.anthropic.claude-haiku-5-5',
   'anthropic.claude-sonnet-5': 'us.anthropic.claude-sonnet-5',
   'anthropic.claude-sonnet-4-6': 'us.anthropic.claude-sonnet-4-6',
   'anthropic.claude-haiku-4-5-20251001-v1:0': 'us.anthropic.claude-haiku-4-5-20251001-v1:0',

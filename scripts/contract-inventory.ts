@@ -60,7 +60,7 @@ const rows = channels.map(row => ({ ...row,
   compatibility: 'stable wire string; unknown fields preserved; timeout abandons response without effect retry',
   sites: (sites.get(row.channel) ?? []).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line),
 })).sort((a, b) => a.channel.localeCompare(b.channel))
-if (rows.length !== 425 || rows.some(row => row.routing === 'UNCLASSIFIED')) throw new Error('Incomplete RPC channel routing census')
+if (rows.length !== 426 || rows.some(row => row.routing === 'UNCLASSIFIED')) throw new Error('Incomplete RPC channel routing census')
 if (!sites.size) throw new Error('RPC handler census is empty')
 if (rows.some(row => row.kind === 'UNCLASSIFIED')) throw new Error('RPC surface without a handler, event producer or explicit reservation')
 for (const channel of reservedByChannel.keys()) {

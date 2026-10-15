@@ -8,6 +8,8 @@
 
 2026-10-14 C02 已按[日历/工作项性能失败矩阵](c02-planning-performance-failure-matrix-2026-10-14.md)收口：共享投影 17、生产 WebUI 20、甘特回归 14 项浏览器场景通过。同机样本的单改读取 4→1，范围查询未引入；[前后测量与验收证据](results/c02-planning-performance-2026-10-14/README.md)单独保存，原 R01–R07 结果保持历史摘要。
 
+2026-10-15 Craft 0.15.0 / 0.15.1 非 UI 吸收已完成：新增 33 项核心、编排、Windows 原生浏览器及实际组件流程通过，静态门禁和 Electron/WebUI/Viewer 构建通过；全量旧测试仍有失败，逐项复核与未测范围见[实施记录](upstream-0.15-non-ui-implementation-2026-10-15.md)及[机器结果](results/upstream-0.15-non-ui-2026-10-15.json)。现有视觉体系和 Pi 1.2.0 保留。
+
 ## 档案裁剪
 
 2026-10-13 对所有 `results/` 归档做了一次体积裁剪：删除 trace.zip、录屏（webm）、截图（png）、运行数据库（db/sqlite）与 gz，并删除依赖这些图片的 5 个 HTML 画廊。`docs/assets/**` 是根 README 的主视觉素材，不在此列。裁剪后 `docs/` 由约 297 MB 降到约 73 MB。
@@ -43,6 +45,7 @@ Run 观测的当前记录：[首轮实施与口径](run-observability-implementa
 
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |
+| Craft 0.15 非 UI 吸收 | `bun run test:upstream-015` · [事先失败矩阵](upstream-0.15-non-ui-failure-matrix-2026-10-15.md) · [实施与验收](upstream-0.15-non-ui-implementation-2026-10-15.md) | 33 项流程，覆盖项目记忆/MCP、凭据/OAuth、Task、隐藏浏览器与持久化隐私、附件与取消；静态门禁和构建通过，保留旧测试失败限制。 |
 | 日历 / 工作项共享投影 | `bun run test:planning-collection` · `bun run test:planning-performance` · [失败矩阵](c02-planning-performance-failure-matrix-2026-10-14.md) | React 竞态、跨工作区、重连、退订与日历语义；生产 WebUI + 真实 WS 的重复读取/广播计数及现行预算。 |
 | 主题治理 W1 | `bun run test:theme-foundation` · [事先失败矩阵](theme-foundation-failure-matrix-2026-10-12.md) · [首批前后证据](results/theme-foundation-w1-2026-10-12/README.md) · [当前验收](results/theme-governance-w2-w5-2026-10-12/README.md) | 首批101场景保持冻结；当前扩展为115/115，覆盖真实 WebUI/WS/watcher 与图片故障恢复。 |
 | 对话 / 行为预览卡片 | `bun run test:markdown-popout` · [失败矩阵](markdown-popout-card-failure-matrix-2026-10-12.md) · [前后证据](results/markdown-popout-card-2026-10-12/README.md) | 恢复卡片和Markdown源码路径；18个浏览器场景通过，接入critical registry；正式包未验收。 |

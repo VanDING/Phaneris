@@ -29,7 +29,7 @@ export interface PiProxyToolResult {
   isError: boolean;
   /** The unabridged MCP blocks; preview text is independently bounded. */
   contentBlocks?: Array<Record<string, unknown>>;
-  structuredContent?: Record<string, unknown>;
+  structuredContent?: unknown;
 }
 
 /** Current occupancy plus the SDK's own compaction reserve, as reported by `AgentSession`. */

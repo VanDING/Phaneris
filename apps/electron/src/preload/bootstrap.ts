@@ -23,6 +23,8 @@ import { WsRpcClient, type TransportConnectionState } from '../transport/client'
 import { RoutedClient } from '../transport/routed-client'
 import { buildClientApi } from '../transport/build-api'
 import { CHANNEL_MAP } from '../transport/channel-map'
+import { createSignInRunner, waitForJoinedOAuthFlow, raceDeadline, DEFAULT_OAUTH_FLOW_TTL_MS,
+  SIGN_IN_RESTARTED, SIGN_IN_TIMED_OUT, type OAuthStartResult } from '../transport/source-oauth'
 import { classifyExternalUrl, formatBlockedUrlError } from '@phaneris/shared/utils/url-safety'
 import { createCallbackServer } from '@phaneris/shared/auth/callback-server'
 import { CHATGPT_OAUTH_CONFIG } from '@phaneris/shared/auth/chatgpt-oauth-config'
@@ -308,11 +310,7 @@ client.onConnectionStateChanged((state) => {
 // Multi-step orchestration: callback server (local) → oauth:start (server) →
 // open browser → wait for callback → oauth:complete (server).
 // Runs client-side because the callback server must receive the redirect.
-;(api as ElectronAPI).performOAuth = async (args: {
-  sourceSlug: string
-  sessionId?: string
-  authRequestId?: string
-}): Promise<{ success: boolean; error?: string; email?: string }> => {
+;(api as ElectronAPI).performOAuth = createSignInRunner(async (args, signal) => {
   let callbackServer: Awaited<ReturnType<typeof createCallbackServer>> | null = null
   let flowId: string | undefined
   let state: string | undefined
@@ -322,51 +320,72 @@ client.onConnectionStateChanged((state) => {
     callbackServer = await createCallbackServer({ appType: 'electron' })
     const callbackUrl = `${callbackServer.url}/callback`
 
-    // 2. Ask server to prepare the flow (PKCE, auth URL, store in flow store)
-    const startResult = await client.invoke('oauth:start', {
+    // 2. Ask server to prepare the flow (PKCE, auth URL, store in flow store), or join the live one
+    const startResult: OAuthStartResult = await client.invoke('oauth:start', {
       sourceSlug: args.sourceSlug,
       callbackUrl,
       sessionId: args.sessionId,
       authRequestId: args.authRequestId,
+      joinLive: true,
+      restart: args.restart,
     })
+    const timeoutMs = startResult.expiresInMs ?? DEFAULT_OAUTH_FLOW_TTL_MS
+    if (startResult.joined) {
+      callbackServer.close()
+      callbackServer = null
+      if (signal.aborted) return SIGN_IN_RESTARTED
+      return await waitForJoinedOAuthFlow((channel, ...rest) => client.invoke(channel, ...rest), startResult.flowId, { timeoutMs, signal })
+    }
     flowId = startResult.flowId
     state = startResult.state
+    // Restarted: end this flow (a no-op if the restart already replaced it) so nothing waits on
+    // a flow whose callback server is gone
+    const abandon = () => {
+      client.invoke('oauth:cancel', { flowId, state, error: SIGN_IN_RESTARTED.error }).catch(() => {})
+      return SIGN_IN_RESTARTED
+    }
+    if (signal.aborted) return abandon()
 
     // 3. Open browser for user consent (local — must open on the user's machine, not remote server)
     await shell.openExternal(startResult.authUrl)
 
-    // 4. Wait for OAuth provider to redirect to our callback server
-    const callback = await callbackServer.promise
+    // 4. Wait for OAuth provider to redirect to our callback server, but not past the flow's
+    //    lifetime (the server forgets it then) or a restart
+    const callback = await raceDeadline(callbackServer.promise, timeoutMs, signal)
+    if (!callback) {
+      if (signal.aborted) return abandon()
+      await client.invoke('oauth:cancel', { flowId, state, error: SIGN_IN_TIMED_OUT.error })
+      return SIGN_IN_TIMED_OUT
+    }
 
-    // 5. Check for errors from the provider
+    // 5. Check for errors from the provider (the reason reaches clients that joined the flow)
     if (callback.query.error) {
       const error = callback.query.error_description || callback.query.error
-      await client.invoke('oauth:cancel', { flowId, state })
+      await client.invoke('oauth:cancel', { flowId, state, error })
       return { success: false, error }
     }
 
     const code = callback.query.code
     if (!code) {
-      await client.invoke('oauth:cancel', { flowId, state })
-      return { success: false, error: 'No authorization code received' }
+      const error = 'No authorization code received'
+      await client.invoke('oauth:cancel', { flowId, state, error })
+      return { success: false, error }
     }
 
     // 6. Send code to server for token exchange + credential storage
     const result = await client.invoke('oauth:complete', { flowId, code, state })
     return { success: result.success, error: result.error, email: result.email }
   } catch (err) {
+    const error = err instanceof Error ? err.message : 'OAuth flow failed'
     // Clean up server-side flow on error
     if (flowId && state) {
-      client.invoke('oauth:cancel', { flowId, state }).catch(() => {})
+      client.invoke('oauth:cancel', { flowId, state, error }).catch(() => {})
     }
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : 'OAuth flow failed',
-    }
+    return { success: false, error }
   } finally {
     callbackServer?.close()
   }
-}
+})
 
 // ── startClaudeOAuth ─────────────────────────────────────────────────────
 // Override the channel-map stub: the server now returns authUrl without opening

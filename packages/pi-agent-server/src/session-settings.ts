@@ -117,5 +117,5 @@ export function buildPhanerisPiSettings(purpose: PhanerisPiSessionPurpose = 'mai
 export function createPhanerisSettingsManager(
   purpose: PhanerisPiSessionPurpose = 'main',
 ): SettingsManager {
-  return SettingsManager.inMemory(buildPhanerisPiSettings(purpose));
+  return SettingsManager.inMemory(buildPhanerisPiSettings(purpose), { projectTrusted: false });
 }

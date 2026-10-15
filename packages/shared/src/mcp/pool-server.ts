@@ -151,7 +151,7 @@ export class McpPoolServer {
 
       return {
         content: result.contentBlocks?.length ? result.contentBlocks as CallToolResult['content'] : [{ type: 'text' as const, text: result.content }],
-        ...(result.structuredContent ? { structuredContent: result.structuredContent } : {}),
+        ...(result.structuredContent !== undefined ? { structuredContent: result.structuredContent } : {}),
         ...(result.isError ? { isError: true } : {}),
       };
     });

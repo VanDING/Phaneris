@@ -12,6 +12,7 @@
     "sync:cli-bash-patterns": "bun run src/config/sync-cli-bash-patterns.ts"
   },
   "exports": {
+    "./utils/browser-input-privacy": "./src/utils/browser-input-privacy.ts",
     ".": "./src/index.ts",
     "./agent": "./src/agent/index.ts",
     "./agent/backend": "./src/agent/backend/index.ts",
@@ -141,9 +142,9 @@
   "dependencies": {
     "@phaneris/core": "workspace:*",
     "@phaneris/session-tools-core": "workspace:*",
-    "@earendil-works/pi-agent-core": "1.1.0",
-    "@earendil-works/pi-ai": "1.1.0",
-    "@earendil-works/pi-coding-agent": "1.1.0",
+    "@earendil-works/pi-agent-core": "1.2.0",
+    "@earendil-works/pi-ai": "1.2.0",
+    "@earendil-works/pi-coding-agent": "1.2.0",
     "@leeoniya/ufuzzy": "^1.0.19",
     "bash-parser": "^0.5.0",
     "croner": "^10.0.1",
