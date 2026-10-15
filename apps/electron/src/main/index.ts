@@ -244,6 +244,9 @@ let messagingHandle: MessagingBootstrapHandle | null = null
 
 // Store pending deep link if app not ready yet (cold start)
 let pendingDeepLink: string | null = null
+let isQuitting = false
+let relaunchQueued = false
+let startupWindowsReady = false
 
 // Set app name early (before app.whenReady) to ensure correct macOS menu bar title
 // Supports multi-instance dev: PHANERIS_APP_NAME env var (e.g., "Phaneris [1]")
@@ -424,6 +427,17 @@ if (!gotTheLock) {
     // front: restored if minimised, shown, focused. On Windows/Linux a deeplink
     // arrives in commandLine.
     const url = commandLine.find(arg => arg.startsWith(`${DEEPLINK_SCHEME}://`))
+    // Closing the final Windows window starts asynchronous cleanup while the
+    // process still owns the single-instance lock. A launch handed to that
+    // owner must survive its exit instead of being focused into a dying window.
+    if (isQuitting) {
+      if (!isUpdating() && !relaunchQueued) {
+        app.relaunch(url ? { args: [...process.argv.slice(1).filter(arg => !arg.startsWith(`${DEEPLINK_SCHEME}://`)), url] } : undefined)
+        relaunchQueued = true
+        lifecycleLog.info('Reopen requested during shutdown; relaunch queued after exit')
+      }
+      return
+    }
     if (url && windowManager) {
       mainLog.info('Received deeplink from second instance:', url)
       handleDeepLink(url, windowManager, moduleSink ?? undefined, moduleClientResolver ?? undefined).catch(err => {
@@ -434,7 +448,8 @@ if (!gotTheLock) {
     // navigates leaves the user looking at whatever window they were already
     // looking at, and the app they just asked for stays behind it.
     if (windowManager) {
-      const target = windowManager.getLastActiveWindow()
+      const existing = windowManager.getLastActiveWindow()
+      const target = existing ?? (startupWindowsReady ? restoreApplicationWindow() : null)
       if (target) {
         windowManager.focusWindow(target)
         lifecycleLog.info('Second instance detected; existing window brought to the front', {
@@ -443,13 +458,25 @@ if (!gotTheLock) {
           deeplink: url ?? null,
         })
       } else {
-        lifecycleLog.warn('Second instance detected but there was no window to raise', {
+        lifecycleLog.info('Second instance received while initial windows are loading', {
           pid: process.pid,
           deeplink: url ?? null,
         })
       }
     }
   })
+}
+
+/** Recover a live windowless owner without starting another backend. */
+function restoreApplicationWindow(): BrowserWindow | null {
+  if (!windowManager || process.env.PHANERIS_HEADLESS) return null
+  const workspaces = getWorkspaces()
+  const preferredId = loadWindowState()?.lastFocusedWorkspaceId ?? loadStoredConfig()?.activeWorkspaceId
+  const workspace = workspaces.find(item => item.id === preferredId) ?? workspaces[0]
+  if (!workspace) return null
+  const window = windowManager.focusOrCreateWindow(workspace.id)
+  lifecycleLog.info('Restored application window for a running instance', { windowId: window.webContents.id })
+  return window
 }
 
 // Helper to create initial windows on startup
@@ -1415,6 +1442,7 @@ app.whenReady().then(async () => {
     // In headless mode the server runs without any UI — skip window creation.
     if (!isHeadless) {
       await createInitialWindows()
+      startupWindowsReady = true
     }
 
     // Run credential health check at startup to detect issues early
@@ -1513,25 +1541,14 @@ app.whenReady().then(async () => {
     mainLog.info('Messaging gateway log path:', getMessagingGatewayLogFilePath())
   } catch (error) {
     mainLog.error('Failed to initialize app:', error instanceof Error ? error.message : error, (error as any)?.stack)
-    // Continue anyway - the app will show errors in the UI
+    // With no window there is no UI to show the failure. Do not keep the
+    // single-instance lock forever behind an invisible failed startup.
+    if (!windowManager?.hasWindows()) throw error
   }
 
   // macOS: Re-create window when dock icon is clicked
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0 && windowManager) {
-      // Open first workspace or last focused
-      const workspaces = getWorkspaces()
-      if (workspaces.length > 0) {
-        const savedState = loadWindowState()
-        const wsId = savedState?.lastFocusedWorkspaceId || workspaces[0].id
-        // Verify workspace still exists
-        if (workspaces.some(ws => ws.id === wsId)) {
-          windowManager.createWindow({ workspaceId: wsId })
-        } else {
-          windowManager.createWindow({ workspaceId: workspaces[0].id })
-        }
-      }
-    }
+    if (!isQuitting && startupWindowsReady && !windowManager?.hasWindows()) restoreApplicationWindow()
   })
 }).catch((error) => {
   // Startup is one long async chain. Without this, a throw anywhere inside it
@@ -1539,11 +1556,12 @@ app.whenReady().then(async () => {
   // process with no UI and no explanation. Surface it instead of hanging.
   const detail = error instanceof Error ? (error.stack ?? error.message) : String(error)
   mainLog.error('Startup failed:', detail)
-  Sentry.captureException(error instanceof Error ? error : new Error(String(error)))
+  lifecycleLog.error('Startup failed before a window was available', { detail })
   dialog.showErrorBox(
     `${PRODUCT_NAME} could not start`,
     `Startup failed before any window could open.\n\n${detail}`,
   )
+  electronLifecycle.fail('startup_failed', error)
 })
 
 app.on('window-all-closed', () => {
@@ -1553,9 +1571,6 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-// Track if we're in the process of quitting (to avoid re-entry)
-let isQuitting = false
 
 /**
  * Capture the current multi-window state and persist it to disk.
@@ -1591,55 +1606,67 @@ function performQuitCleanup(): Promise<void> {
     return quitCleanup
   }
   return quitCleanup = (async () => {
-
-  if (sessionManager) {
+  const failures: unknown[] = []
+  const clean = async (step: string, action: () => void | Promise<void>) => {
+    const startedAt = Date.now()
+    lifecycleLog.info('Shutdown step started', { step })
     try {
-      await sessionManager.flushAllSessions()
-      mainLog.info('Flushed all pending session writes')
+      await action()
+      lifecycleLog.info('Shutdown step finished', { step, elapsedMs: Date.now() - startedAt })
     } catch (error) {
-      mainLog.error('Failed to flush sessions:', error)
+      failures.push(error)
+      lifecycleLog.error('Shutdown step failed', { step, elapsedMs: Date.now() - startedAt, error })
     }
+  }
+
+  const manager = sessionManager
+  if (manager) {
+    await clean('flush sessions', async () => {
+      await manager.flushAllSessions()
+    })
     // Clean up SessionManager resources (file watchers, timers, etc.)
-    await sessionManager.cleanup()
+    await clean('session manager', () => manager.cleanup())
   }
 
   // Clean up browser pane instances
-  if (browserPaneManager) {
-    browserPaneManager.destroyAll()
-  }
-  terminalManager?.destroyAll()
+  await clean('browser panes', () => browserPaneManager?.destroyAll())
+  await clean('terminals', () => terminalManager?.destroyAll())
 
   // Clean up OAuth flow store (stop periodic cleanup timer)
-  if (oauthFlowStore) {
-    oauthFlowStore.dispose()
-  }
+  await clean('OAuth flows', () => oauthFlowStore?.dispose())
 
   // Stop all model refresh timers
-  getModelRefreshService().stopAll()
+  await clean('model refresh', () => getModelRefreshService().stopAll())
 
   // Stop messaging gateways so the WhatsApp worker subprocess exits cleanly.
-  if (messagingHandle) {
-    try {
-      await messagingHandle.dispose()
-    } catch (err) {
-      mainLog.error('[messaging] dispose failed:', err)
-    }
+  const messaging = messagingHandle
+  if (messaging) {
+    await clean('messaging', () => messaging.dispose())
   }
 
   // Clean up power manager (release power blocker)
-  const { cleanup: cleanupPowerManager } = await import('./power-manager')
-  cleanupPowerManager()
+  await clean('power manager', async () => {
+    const { cleanup: cleanupPowerManager } = await import('./power-manager')
+    cleanupPowerManager()
+  })
 
   // Release the server lock file so the next launch doesn't see a stale PID.
   releaseServerLock()
+  if (failures.length) throw new AggregateError(failures, 'Application cleanup failed', { cause: failures[0] })
   })()
 }
 
 // Save window state and clean up resources before quitting
-app.on('before-quit', async (event) => {
-  // Avoid re-entry when we call app.exit()
-  if (isQuitting) return
+app.on('before-quit', (event) => {
+  // Further quit requests must not bypass an in-flight flush. The updater has
+  // already awaited cleanup and must be allowed to perform its native handoff.
+  if (isQuitting) {
+    if (!isUpdating()) event.preventDefault()
+    return
+  }
+  event.preventDefault()
   isQuitting = true
+  lifecycleLog.info('Application shutdown requested', { windowCount: windowManager?.getWindowStates().length ?? 0 })
 
   // Ensure Cmd+Q/app quit bypasses layered window close interception (Cmd+W behavior).
   windowManager?.setAppQuitting(true)
@@ -1676,18 +1703,22 @@ app.on('before-quit', async (event) => {
   // reach here — installUpdate's beforeUpdateInstallHook already ran
   // performQuitCleanup and set isQuitting, so the guard at the top returns early
   // and Squirrel.Mac's quit proceeds uninterrupted so the update installs (#891).
-  if (sessionManager) {
-    event.preventDefault()
-    await performQuitCleanup()
-    app.exit(0)
-  }
+  electronLifecycle.shutdown()
 })
 
 // Unknown global failures close admission and reuse the existing quit resource owners.
-installProcessLifecycle({
+const electronLifecycle = installProcessLifecycle({
   owner: 'electron',
   stopAccepting: () => { isQuitting = true; windowManager?.setAppQuitting(true); stopLocalRpc?.() },
   cleanup: performQuitCleanup,
-  report: (kind, detail, reason) => { mainLog.error(`${kind}:`, detail); Sentry.captureException(reason instanceof Error ? reason : new Error(detail)) },
-  exit: code => app.exit(code),
+  report: (kind, detail, reason) => {
+    lifecycleLog.error('Application lifecycle failure', { kind, detail })
+    mainLog.error(`${kind}:`, detail)
+    Sentry.captureException(reason instanceof Error ? reason : new Error(detail))
+  },
+  exit: code => {
+    releaseServerLock()
+    lifecycleLog.info('Application exiting', { code, relaunchQueued })
+    app.exit(code)
+  },
 })

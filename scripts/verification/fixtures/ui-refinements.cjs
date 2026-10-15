@@ -116,7 +116,8 @@ async function inspectFileIconPaint(page, run) {
         const sidebarIcons = await page.locator(".sidebar-nav-button .navigation-icon svg").evaluateAll((nodes) => nodes.map((node) => ({
           width: node.getBoundingClientRect().width,
           height: node.getBoundingClientRect().height,
-          stroke: getComputedStyle(node).strokeWidth
+          stroke: getComputedStyle(node).strokeWidth,
+          color: getComputedStyle(node).color
         })));
         assert.equal(sidebarIcons.length, 8);
         assert(sidebarIcons.every((icon) => icon.width === 16 && icon.height === 16 && icon.stroke === sidebarIcons[0].stroke));
@@ -128,11 +129,15 @@ async function inspectFileIconPaint(page, run) {
           label: node.closest('[role="menuitem"]')?.textContent?.trim(),
           width: node.getBoundingClientRect().width,
           height: node.getBoundingClientRect().height,
-          stroke: getComputedStyle(node).strokeWidth
+          stroke: getComputedStyle(node).strokeWidth,
+          color: getComputedStyle(node).color
         })));
         run.json(`${scale}-icon-parity.json`, { sidebarIcons, menuIcons });
         assert(menuIcons.length > 10);
         assert(menuIcons.every((icon) => Math.abs(icon.width - 16) < 0.01 && Math.abs(icon.height - 16) < 0.01 && icon.stroke === sidebarIcons[0].stroke));
+        const neutralMenuIcon = menuIcons.find(icon => icon.label === "Rename");
+        assert(neutralMenuIcon);
+        assert(sidebarIcons.every(icon => icon.color === neutralMenuIcon.color), "Sidebar icon contrast should match the accepted session menu");
         await page.screenshot({ path: join(run.directory, `${scale}-light.png`) });
         await page.getByRole("menuitem", { name: "Rename", exact: true }).click();
         await page.locator("output").filter({ hasText: "Rename selected" }).waitFor();

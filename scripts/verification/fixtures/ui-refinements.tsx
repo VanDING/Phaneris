@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { createInstance } from 'i18next'
 import { I18nextProvider } from 'react-i18next'
 import { Provider } from 'jotai'
-import { Inbox, Tag, DatabaseZap, Zap, Shapes, FolderKanban, PanelTop, ListTodo } from 'lucide-react'
+import { Inbox, Tag, DatabaseZap, Zap, Shapes, FolderKanban, PanelsTopLeft, ListTodo } from 'lucide-react'
 import { ThinkingIndicator, TooltipProvider } from '@phaneris/ui'
 import { LeftSidebar } from '@/components/app-shell/LeftSidebar'
 import { SessionMenu } from '@/components/app-shell/SessionMenu'
@@ -61,7 +61,7 @@ function Fixture() {
         <div className="sidebar-navigation" data-collapsed={collapsed || undefined} style={{ width: collapsed ? 48 : 200 }}>
           <LeftSidebar isCollapsed={collapsed} links={[
             ['Sessions', Inbox], ['Labels', Tag], ['Sources', DatabaseZap], ['Automations', Zap],
-            ['Skills', Shapes], ['Projects', FolderKanban], ['Pages', PanelTop], ['Tasks', ListTodo],
+            ['Skills', Shapes], ['Projects', FolderKanban], ['Pages', PanelsTopLeft], ['Tasks', ListTodo],
           ].map(([title, icon]) => ({ id: String(title), title: String(title), icon, variant: 'ghost', onClick: () => setAction(`${title} selected`) }))} />
         </div>
         <div className="mt-8 flex items-center gap-2 text-sm"><ThinkingIndicator className="text-[14px]" />Thinking…</div>

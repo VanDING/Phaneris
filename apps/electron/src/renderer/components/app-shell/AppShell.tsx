@@ -35,7 +35,7 @@ import {
   Info,
   MailOpen,
   FolderKanban,
-  PanelTop,
+  PanelsTopLeft,
   Shapes,
 } from "lucide-react"
 // SessionStatusIcons no longer used - icons come from dynamic sessionStatuses
@@ -2915,7 +2915,7 @@ function AppShellContent({
                       id: "nav:pages",
                       title: t("sidebar.pages"),
                       label: String(pages.length),
-                      icon: PanelTop,
+                      icon: PanelsTopLeft,
                       // Highlight on the library grid only, not when a page is open (mirrors Projects)
                       variant: (isPagesNavigation(navState) && !navState.details) ? "default" : "ghost",
                       onClick: handlePagesClick,
@@ -2925,7 +2925,7 @@ function AppShellContent({
                       items: pages.map(p => ({
                         id: `nav:pages:${p.config.id}`,
                         title: p.config.name,
-                        icon: PanelTop,
+                        icon: PanelsTopLeft,
                         variant: (isPagesNavigation(navState) && navState.details?.pageSlug === p.config.slug) ? "default" as const : "ghost" as const,
                         onClick: () => navigate(routes.view.pages(p.config.slug)),
                       })),

@@ -1117,7 +1117,7 @@ export function GanttView() {
             the definite height `.wx-gantt` needs to virtualise its rows, and that
             re-skins the chart in the app's own tokens; see gantt-overrides.css.
           */
-          <div ref={ganttHostRef} className="phaneris-gantt relative h-full rounded-xl border border-border bg-background" onPointerCancel={cancelGesture} onTouchCancel={cancelGesture}>
+          <div ref={ganttHostRef} className="phaneris-gantt relative h-full overflow-hidden rounded-xl border border-border bg-background" onPointerCancel={cancelGesture} onTouchCancel={cancelGesture}>
             <ThemeProvider fonts={false}>
               {() => (
                 <GanttTaskCellContext.Provider value={taskCellContext}>

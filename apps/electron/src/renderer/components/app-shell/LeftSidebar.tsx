@@ -153,7 +153,7 @@ const itemVariants: Variants = {
  *
  * Styling matches agent items in the sidebar for consistency:
  * - py-[7px] px-2 text-[13px] rounded-md
- * - Icon: h-3.5 w-3.5
+ * - Icon: 16px with the same foreground contrast as session menus
  *
  * Link variants:
  * - "default": Highlighted style (used for active/selected items)
@@ -577,8 +577,9 @@ const SidebarButton = React.forwardRef<HTMLButtonElement, SidebarButtonProps & R
 function renderIcon(link: LinkItem) {
   const isComponent = typeof link.icon === 'function' ||
     (typeof link.icon === 'object' && link.icon !== null && 'render' in link.icon)
-  // Default color for items without explicit iconColor (foreground at 60% opacity)
-  const defaultColor = 'color-mix(in oklch, var(--foreground) 60%, transparent)'
+  // Navigation is a primary control, like the session menu. Fading its small
+  // strokes independently made complex glyphs appear softer than their peers.
+  const defaultColor = 'var(--foreground)'
 
   // Lucide components are always colorable; ReactNode icons check iconColorable
   // Default to true for backwards compatibility (most icons are colorable)
