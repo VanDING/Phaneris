@@ -72,7 +72,7 @@ describe('loadProjectMemory', () => {
     expect(loadProjectMemory(workspaceRoot, slug)).toBe(content);
   });
 
-  it('head-truncates and appends a marker when over the cap, staying within budget', () => {
+  it('keeps the head and tail with an omission marker within the token cap', () => {
     const slug = makeProjectSlug();
     const maxTokens = 50;
     // ~2000 chars of plain text => ~500 tokens, well over the 50-token cap.
@@ -83,12 +83,12 @@ describe('loadProjectMemory', () => {
     expect(result).not.toBeNull();
     const text = result as string;
 
-    // Head kept (newest-first authoring), tail dropped.
+    // Old and recent notes both survive, while the middle is omitted.
     expect(text).toContain('TOP-OF-MEMORY');
-    expect(text).not.toContain('BOTTOM-OF-MEMORY');
+    expect(text).toContain('BOTTOM-OF-MEMORY');
 
     // Marker present and budget respected (marker included).
-    expect(text).toContain(`truncated at ${maxTokens}-token cap`);
+    expect(text).toContain(`over the ${maxTokens}-token cap; its middle is omitted`);
     expect(estimateTokensDensityAware(text)).toBeLessThanOrEqual(maxTokens);
   });
 });

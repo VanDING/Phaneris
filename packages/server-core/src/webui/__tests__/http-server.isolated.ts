@@ -144,7 +144,7 @@ describe('startWebuiHttpServer', () => {
       })
       expect(res.status).toBe(200)
     }
-  })
+  }, 20000) // Thirty real Argon2 verifications can exceed Bun's 5 s default on this host.
 
   it('FF09: a cookie under the pre-rename name still authenticates', async () => {
     const { baseUrl } = await createServer()

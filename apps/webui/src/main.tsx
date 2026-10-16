@@ -28,12 +28,17 @@ function CrashFallback() {
   )
 }
 
-function ErrorBoundary({ children }: { children: React.ReactNode }) {
-  return (
-    <React.Suspense fallback={<CrashFallback />}>
-      {children}
-    </React.Suspense>
-  )
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) return <CrashFallback />
+    return <React.Suspense fallback={null}>{this.props.children}</React.Suspense>
+  }
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

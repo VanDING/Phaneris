@@ -70,6 +70,19 @@ export interface RuntimeUsageRow {
   createdAt: number
 }
 
+interface UsageLedgerRow {
+  usage_id: string
+  operation_id: string
+  session_id: string
+  provider: string | null
+  model: string | null
+  input_tokens: number | null
+  output_tokens: number | null
+  cost_usd: number | null
+  payload_json: string | null
+  created_at: number
+}
+
 export interface CommitToolPreparedInput {
   events: RuntimeEvent[]
   intent: ToolDispatchIntent
@@ -574,19 +587,12 @@ export class DurableRuntimeStore {
       SELECT * FROM usage_ledger
       ${where.length > 0 ? `WHERE ${where.join(' AND ')}` : ''}
       ORDER BY created_at ASC, usage_id ASC
-    `).all(...params) as Array<{
-      usage_id: string
-      operation_id: string
-      session_id: string
-      provider: string | null
-      model: string | null
-      input_tokens: number | null
-      output_tokens: number | null
-      cost_usd: number | null
-      payload_json: string | null
-      created_at: number
-    }>
-    return rows.map(row => ({
+    `).all(...params) as UsageLedgerRow[]
+    return rows.map(row => this.decodeUsage(row))
+  }
+
+  private decodeUsage(row: UsageLedgerRow): RuntimeUsageRow {
+    return {
       usageId: row.usage_id,
       operationId: row.operation_id,
       sessionId: row.session_id,
@@ -597,7 +603,7 @@ export class DurableRuntimeStore {
       costUsd: row.cost_usd ?? undefined,
       payload: row.payload_json ? JSON.parse(row.payload_json) : undefined,
       createdAt: row.created_at,
-    }))
+    }
   }
 
   recordProjectionParity(observation: ProjectionParityObservation): void {
@@ -988,8 +994,9 @@ export class DurableRuntimeStore {
   }
 
   private appendUsage(usage: RuntimeUsageRow): void {
-    const existing = this.listUsage().find(item => item.usageId === usage.usageId)
-    if (existing) {
+    const row = this.db.prepare('SELECT * FROM usage_ledger WHERE usage_id = ?').get(usage.usageId) as UsageLedgerRow | undefined
+    if (row) {
+      const existing = this.decodeUsage(row)
       if (canonicalJson(existing) !== canonicalJson(usage)) {
         throw new Error(`Usage identity ${usage.usageId} already exists with different content`)
       }

@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "id": "short",
+      "headerBytes": 357,
+      "fullLoad": true,
+      "syncHeader": true,
+      "asyncHeader": true
+    },
+    {
+      "id": "long-description",
+      "headerBytes": 9359,
+      "fullLoad": true,
+      "syncHeader": false,
+      "asyncHeader": false
+    },
+    {
+      "id": "transfer-summary",
+      "headerBytes": 9373,
+      "fullLoad": true,
+      "syncHeader": false,
+      "asyncHeader": false
+    }
+  ],
+  "listed": [
+    "short"
+  ],
+  "note": "Real saveSession and sync/async JSONL readers; existing metadata fields, 3,000 Chinese characters, synthetic workspace only."
+}

@@ -72,14 +72,19 @@ export function App() {
 
   // Fetch session from API when we have a session ID
   useEffect(() => {
-    if (!sessionId) return
+    if (!sessionId) {
+      setIsLoading(false)
+      return
+    }
+    const controller = new AbortController()
 
     const fetchSession = async () => {
       setIsLoading(true)
       setError(null)
 
       try {
-        const response = await fetch(`/s/api/${sessionId}`)
+        const response = await fetch(`/s/api/${sessionId}`, { signal: controller.signal })
+        if (controller.signal.aborted) return
         if (!response.ok) {
           if (response.status === 404) {
             setError(t('errors.sessionNotFound'))
@@ -90,16 +95,18 @@ export function App() {
         }
 
         const data = await response.json()
-        setSession(data)
+        if (!controller.signal.aborted) setSession(data)
       } catch (err) {
+        if (controller.signal.aborted) return
         console.error('Failed to fetch session:', err)
         setError(t('errors.failedToLoadSession'))
       } finally {
-        setIsLoading(false)
+        if (!controller.signal.aborted) setIsLoading(false)
       }
     }
 
     fetchSession()
+    return () => controller.abort()
   }, [sessionId])
 
   // Handle browser navigation

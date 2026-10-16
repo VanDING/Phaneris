@@ -444,7 +444,8 @@ describe('createBrowserTools', () => {
         'fill:@e1:a;b;c',
         'click:@e2',
       ])
-      expect(result.content[0].text).toContain('Filled element @e1 with "a;b;c"')
+      expect(result.content[0].text).toContain('Filled element @e1 (5 characters)')
+      expect(result.content[0].text).not.toContain('a;b;c')
       expect(result.content[0].text).toContain('Clicked element @e2')
     })
 

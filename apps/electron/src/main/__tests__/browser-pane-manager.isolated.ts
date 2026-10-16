@@ -52,6 +52,7 @@ function createMockWebContents() {
     stop: mock(() => {}),
     setUserAgent: mock(() => {}),
     setBackgroundColor: mock(() => {}),
+    setBackgroundThrottling: mock(() => {}),
     capturePage: mock(async () => {
       const img = {
         isEmpty: () => false,
@@ -62,7 +63,7 @@ function createMockWebContents() {
       }
       return img
     }),
-    executeJavaScript: mock(async (expr: string) => eval(expr)),
+    executeJavaScript: mock(async (expr: string) => expr.includes('requestAnimationFrame') ? true : eval(expr)),
     focus: mock(() => {}),
     setWindowOpenHandler: mock((_handler: any) => {}),
     send: mock((_channel: string, _payload?: unknown) => {}),
@@ -95,6 +96,8 @@ function createMockWindow(opts?: { width?: number; height?: number; minWidth?: n
   let contentHeight = opts?.height ?? 900
   const minWidth = opts?.minWidth ?? 0
   const minHeight = opts?.minHeight ?? 0
+  let opacity = 1
+  let alwaysOnTop = false
 
   const win = {
     webContents,
@@ -118,6 +121,11 @@ function createMockWindow(opts?: { width?: number; height?: number; minWidth?: n
     restore: mock(() => {}),
     show: mock(() => {}),
     showInactive: mock(() => {}),
+    getOpacity: mock(() => opacity),
+    setOpacity: mock((value: number) => { opacity = value }),
+    isAlwaysOnTop: mock(() => alwaysOnTop),
+    setAlwaysOnTop: mock((value: boolean) => { alwaysOnTop = value }),
+    setIgnoreMouseEvents: mock(() => {}),
     setWindowButtonVisibility: mock((_visible: boolean) => {}),
     hide: mock(() => {
       win._emit('hide')
@@ -746,6 +754,7 @@ describe('BrowserPaneManager', () => {
   it('captures and filters console entries', () => {
     manager.createInstance('console-1')
     const instance = (manager as any).instances.get('console-1')
+    instance.onInternalPage = false
 
     instance.pageView.webContents._emit('console-message', 2, 'warn message')
     instance.pageView.webContents._emit('console-message', 3, 'error message')
@@ -997,7 +1006,10 @@ describe('BrowserPaneManager', () => {
     expect(instance.window.showInactive).toHaveBeenCalledTimes(1)
     expect(instance.window.focus).not.toHaveBeenCalled()
     expect(instance.window.hide).toHaveBeenCalled()
-    expect(result.metadata?.warnings?.some((w: string) => w.includes('temporary inactive reveal'))).toBe(true)
+    expect(result.metadata?.warnings?.some((w: string) => w.includes('shown invisibly'))).toBe(true)
+    expect(instance.window.getOpacity()).toBe(1)
+    expect(instance.window.isAlwaysOnTop()).toBe(false)
+    expect(instance.window.setIgnoreMouseEvents).toHaveBeenLastCalledWith(false)
   })
 
   it('throws when region screenshot capture returns empty NativeImage', async () => {

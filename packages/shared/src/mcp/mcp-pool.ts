@@ -71,23 +71,28 @@ function agentMcpConfigToClientConfig(config: AgentMcpServerConfig): McpClientCo
 
 /**
  * Check if an MCP source's config has changed in a way that requires reconnection.
- * Compares auth headers (token refresh) and URL changes.
- * Ignores stdio sources since they don't use OAuth tokens.
+ * Compare the fields actually passed to the connection transport.
  */
 function mcpConfigChanged(oldConfig: AgentMcpServerConfig, newConfig: AgentMcpServerConfig): boolean {
-  if (oldConfig.type !== newConfig.type) return true;
+  return connectionSignature(oldConfig) !== connectionSignature(newConfig);
+}
 
-  if (
-    (oldConfig.type === 'http' || oldConfig.type === 'sse') &&
-    (newConfig.type === 'http' || newConfig.type === 'sse')
-  ) {
-    if (oldConfig.url !== newConfig.url) return true;
-    const oldAuth = oldConfig.headers?.['Authorization'];
-    const newAuth = newConfig.headers?.['Authorization'];
-    if (oldAuth !== newAuth) return true;
+function connectionSignature(config: AgentMcpServerConfig): string {
+  if (config.type === 'stdio') {
+    return JSON.stringify({ type: config.type, command: config.command, args: config.args ?? [],
+      env: Object.entries(config.env ?? {}).sort(([a], [b]) => a.localeCompare(b)), cwd: config.cwd });
   }
+  // HTTP header names are case-insensitive; record insertion order is irrelevant.
+  const headers = [...new Headers(config.headers).entries()];
+  return JSON.stringify({ type: config.type, url: config.url, headers });
+}
 
-  return false;
+function snapshotMcpConfig(config: AgentMcpServerConfig): AgentMcpServerConfig {
+  if (config.type === 'stdio') {
+    return { ...config, args: config.args ? [...config.args] : undefined,
+      env: config.env ? { ...config.env } : undefined, envVars: config.envVars ? [...config.envVars] : undefined };
+  }
+  return { ...config, headers: config.headers ? { ...config.headers } : undefined };
 }
 
 export class McpClientPool {
@@ -182,13 +187,14 @@ export class McpClientPool {
    */
   async connect(slug: string, config: AgentMcpServerConfig): Promise<void> {
     if (this.clients.has(slug)) return;
-    const clientConfig = agentMcpConfigToClientConfig(config);
+    const snapshot = snapshotMcpConfig(config);
+    const clientConfig = agentMcpConfigToClientConfig(snapshot);
     if (!clientConfig) {
       this.debug(`Unknown MCP server type for ${slug}: ${(config as { type: string }).type}`);
       return;
     }
     await this.registerClient(slug, new CraftMcpClient(clientConfig));
-    this.activeConfigs.set(slug, config);
+    this.activeConfigs.set(slug, snapshot);
   }
 
   /**

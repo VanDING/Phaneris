@@ -21,8 +21,16 @@ export class SearchUnavailableError extends Error {
   }
 }
 
-// Track current search process to cancel on new search
-let currentSearchProcess: ChildProcess | null = null;
+// Only a newer query from the same client and workspace supersedes a search.
+const activeSearches = new Map<string, { clientId: string; process: ChildProcess }>();
+
+export function cancelSessionSearchesForClient(clientId: string): void {
+  for (const [key, search] of activeSearches) {
+    if (search.clientId !== clientId) continue;
+    search.process.kill();
+    activeSearches.delete(key);
+  }
+}
 
 // Module-level platform ref — set once during init via setSearchPlatform()
 let _platform: PlatformServices | null = null;
@@ -76,6 +84,8 @@ export interface SearchOptions {
   ignoreCase?: boolean;
   /** Search ID for correlating logs across stages */
   searchId?: string;
+  /** Internal transport owner; callers without an owner run independently. */
+  clientId?: string;
 }
 
 /**
@@ -197,6 +207,12 @@ export async function searchSessions(
     searchId = Date.now().toString(36),
   } = options;
 
+  const searchKey = options.clientId ? JSON.stringify([options.clientId, sessionsDir]) : undefined;
+  if (searchKey) {
+    activeSearches.get(searchKey)?.process.kill();
+    activeSearches.delete(searchKey);
+  }
+
   if (!query.trim()) {
     return [];
   }
@@ -243,22 +259,14 @@ export async function searchSessions(
     args.push('-e', `"type":"(user|assistant)".*${escapedQuery}|${escapedQuery}.*"type":"(user|assistant)"`);
     args.push(sessionsDir);
 
-    // Cancel previous search if still running (user typed new query)
-    if (currentSearchProcess) {
-      // Platform-aware termination (SIGTERM doesn't exist on Windows)
-      if (process.platform === 'win32') {
-        currentSearchProcess.kill();
-      } else {
-        currentSearchProcess.kill('SIGTERM');
-      }
-      currentSearchProcess = null;
-    }
-
     const rg = spawn(rgPath, args, {
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout,
     });
-    currentSearchProcess = rg;
+    if (searchKey) activeSearches.set(searchKey, { clientId: options.clientId!, process: rg });
+    const clearSearchReference = () => {
+      if (searchKey && activeSearches.get(searchKey)?.process === rg) activeSearches.delete(searchKey);
+    };
 
     // Set up timeout
     const timeoutHandle = setTimeout(() => {
@@ -310,10 +318,22 @@ export async function searchSessions(
           // This is much faster than parsing the entire message JSON
           if (rawLine.includes('"isIntermediate":true')) continue;
 
-          // Skip messages with base64-encoded content (images, attachments)
-          // The query can match inside base64 noise, producing false positives.
-          // Covers both content blocks ("type":"base64") and attachment thumbnails.
-          if (rawLine.includes('base64')) continue;
+          let matchCount = data.submatches?.length || 1;
+          let matchText = data.submatches?.[0]?.match?.text || query;
+          let snippetLine = rawLine;
+          if (/base64/i.test(rawLine)) {
+            // A message can contain visible text and encoded attachments. Search
+            // only its text, without dropping ordinary uses of the word base64.
+            // Keep the normal text-only path free of a full message parse.
+            const message = JSON.parse(rawLine) as { content?: string | Array<{ type?: string; text?: string }> };
+            const text = typeof message.content === 'string' ? message.content
+              : Array.isArray(message.content) ? message.content.filter(block => block.type === 'text' && typeof block.text === 'string').map(block => block.text).join('\n') : '';
+            const matches = text.match(new RegExp(escapedQuery, ignoreCase ? 'gi' : 'g'));
+            if (!matches) continue;
+            matchCount = matches.length;
+            matchText = matches[0];
+            snippetLine = JSON.stringify({ content: text });
+          }
 
           // Get or create session result
           let sessionResult = results.get(sessionId);
@@ -326,18 +346,16 @@ export async function searchSessions(
             results.set(sessionId, sessionResult);
           }
 
-          sessionResult.matchCount += data.submatches?.length || 1;
+          sessionResult.matchCount += matchCount;
 
           // Only extract snippets for first maxSessions (skip expensive work for the rest)
           // ripgrep continues to count total sessions for "showing X of Y" display
           if (results.size <= maxSessions && sessionResult.matches.length < maxMatchesPerSession) {
-            const matchText = data.submatches?.[0]?.match?.text || query;
-
             // Use fast snippet extraction (no JSON.parse)
             sessionResult.matches.push({
               sessionId,
               lineNumber,
-              snippet: extractSnippetFast(rawLine, matchText),
+              snippet: extractSnippetFast(snippetLine, matchText),
               matchText,
             });
           }
@@ -357,10 +375,7 @@ export async function searchSessions(
 
     rg.on('close', (code) => {
       clearTimeout(timeoutHandle);
-      // Clear reference if this is still the current search
-      if (currentSearchProcess === rg) {
-        currentSearchProcess = null;
-      }
+      clearSearchReference();
 
       if (code !== 0 && code !== 1) {
         // Exit code 1 means no matches found (not an error)
@@ -383,6 +398,7 @@ export async function searchSessions(
 
     rg.on('error', (error) => {
       clearTimeout(timeoutHandle);
+      clearSearchReference();
       handlerLog.error('[search] ripgrep error:', error);
       resolve([]);
     });

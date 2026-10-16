@@ -1,0 +1,337 @@
+{
+  "status": "audit-complete-plan-proposed-no-product-code-changes",
+  "recordedAt": "2026-10-16T00:23:26.889Z",
+  "source": {
+    "head": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+    "branch": "main",
+    "lockfileSha256": "8f07f50020f6497aa3e38708415435e21102934ea2d193dbc85709e6d26ea020",
+    "originalGitStatus": [
+      "?? docs/design/icon-family-demo/",
+      "?? docs/design/icon-replan-review/",
+      "?? docs/design/iconify-requested-review/",
+      "?? docs/design/iconify-set-review/",
+      "?? docs/design/lucide-icon-revision/",
+      "?? docs/design/phosphor-icon-review/",
+      "?? docs/design/remix-icon-review/"
+    ],
+    "trackedProductChanges": ""
+  },
+  "environment": {
+    "platform": "win32",
+    "release": "10.0.26300",
+    "arch": "x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i5-1340P",
+    "logicalCpus": 16,
+    "totalMemoryBytes": 16836734976,
+    "bun": "1.4.2",
+    "bunExecutableArch": "x64",
+    "node": "v24.15.0"
+  },
+  "checks": {
+    "typecheck": {
+      "elapsedSeconds": 130.5714899,
+      "command": "bun run typecheck:all",
+      "exitCode": 0
+    },
+    "lint": {
+      "elapsedSeconds": 237.2806184,
+      "command": "bun run lint",
+      "exitCode": 0,
+      "registeredWarnings": 72
+    },
+    "tests": {
+      "exitCode": 1,
+      "elapsedSeconds": 514.4481689,
+      "command": "bun run test",
+      "counts": {
+        "pass": 6275,
+        "fail": 26,
+        "skip": 7
+      },
+      "counting": "Sum final per-process pass/fail/skip totals; do not count repeated failure listings.",
+      "failureNames": [
+        "Pages React single-file build > bundles React, component dependencies, Tailwind and imported assets with safe HTML delimiters",
+        "SystemOneClient.decide > posts the System One wire format and returns typed answers",
+        "createBrowserTools > browser_tool > does not split batch on semicolons inside quoted text",
+        "loadProjectMemory > head-truncates and appends a marker when over the cap, staying within budget",
+        "BrowserCDP > getAccessibilitySnapshot > keeps fallback nodes clickable through ref mapping",
+        "BrowserCDP > clickElement > resolves node and dispatches mouse events",
+        "BrowserCDP > selectOption > sets value and dispatches events",
+        "BrowserPaneManager > workspaceId stamping > setAgentControl backfills workspaceId when previously null",
+        "BrowserPaneManager > captures and filters console entries",
+        "BrowserPaneManager > throws when screenshot capture returns empty NativeImage",
+        "BrowserPaneManager > throws when screenshot capture returns empty PNG buffer",
+        "BrowserPaneManager > recovers screenshot via non-disruptive inactive reveal and restores hidden state",
+        "BrowserPaneManager > throws when region screenshot capture returns empty NativeImage",
+        "BrowserPaneManager > throws when region screenshot capture returns empty PNG buffer",
+        "BrowserPaneManager > captures screenshot region from ref target",
+        "BrowserPaneManager > captures screenshot region from selector target",
+        "BrowserPaneManager > agent control overlay > setAgentControl activates native overlay on bound instance",
+        "BrowserPaneManager > agent control overlay > keeps native overlay visible for active session control",
+        "BrowserPaneManager > agent control overlay > emits state change when agent control is set and cleared",
+        "BrowserPaneManager > agent control overlay > reapplies native overlay after did-stop-loading while control is active",
+        "BrowserPaneManager > agent control overlay > reapplies native overlay after hide/show while control is active",
+        "BrowserPaneManager > agent control overlay > setAgentControl uses fallback label when no intent",
+        "BrowserPaneManager > agent control overlay > setAgentControl uses default label when no metadata",
+        "BrowserPaneManager > agent control overlay > clearAgentControl dismisses native overlay",
+        "BrowserPaneManager > agent control overlay > clearVisualsForSession resets agent control state",
+        "startWebuiHttpServer > FF02: repeated successful logins never consume the budget"
+      ]
+    },
+    "builds": {
+      "elapsedSeconds": 139.7031661,
+      "exitCode": 1,
+      "command": "bun run build:smoke",
+      "successfulSteps": [
+        "Electron main",
+        "Electron preload",
+        "Electron renderer",
+        "WebUI",
+        "Viewer"
+      ],
+      "blockedStep": "build-server.ts rejects win32; only darwin/linux are supported"
+    },
+    "runtimeBuild": {
+      "command": "bun run build:runtime",
+      "exitCode": 0
+    },
+    "supplemental": [
+      {
+        "exitCode": 0,
+        "command": "bun run lint:i18n:parity"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run lint:i18n:sorted"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run lint:i18n:coverage"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run lint:i18n:dead-keys"
+      },
+      {
+        "exitCode": 1,
+        "command": "bun run check:docs"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run check:fonts"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run identity:check"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run version:check"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run runtime:check"
+      },
+      {
+        "exitCode": 0,
+        "command": "bun run electron-pin:check"
+      },
+      {
+        "exitCode": 1,
+        "command": "bun run test:doc-tools"
+      }
+    ],
+    "docToolsWithBundledUv": {
+      "exitCode": 0,
+      "environment": "Bundled uv prepended to process PATH; UV_OFFLINE=1",
+      "command": "bun run test:doc-tools",
+      "tests": 24,
+      "seconds": 137.876
+    },
+    "upstream015": {
+      "command": "bun run test:upstream-015",
+      "exitCode": 0,
+      "workflows": [
+        {
+          "workflow": "upstream-015-core",
+          "exitCode": 0,
+          "passed": 11,
+          "sceneIds": [
+            "U15-02-http-header-map",
+            "U15-01-refresh-workspace-isolation-and-deduplication",
+            "U15-05-explicit-utility-and-provider-tier",
+            "U15-04-label-contract-and-legacy-canonicalization",
+            "U15-06-pi-resource-settings-isolation",
+            "U15-08-project-memory-tool-concurrent-append",
+            "U15-09-project-memory-retains-old-and-new",
+            "U15-10-13-http-mcp-resources-prompts-without-tools",
+            "U15-20-real-shell-guide-read-success-only",
+            "U15-07-headless-checkout-path-isolation",
+            "U15-26-timezone-and-source-error-status"
+          ],
+          "untested": [
+            "Live OAuth/provider APIs",
+            "Native browser and frontend behaviours are verified in separate workflows",
+            "Signed release"
+          ],
+          "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+          "startedAt": "2026-10-16T00:09:00.764Z",
+          "finishedAt": "2026-10-16T00:10:44.126Z",
+          "manifest": ".cache/verification/upstream-015-core-1FYtGS/manifest.json",
+          "manifestSha256": "0ce18dff7715a141fe5a73594b1157824b7fa276b2b2b2c7177dd39e2aaf0d3a"
+        },
+        {
+          "workflow": "upstream-015-orchestration",
+          "exitCode": 0,
+          "passed": 5,
+          "sceneIds": [
+            "U15-14-oauth-one-preparation-and-workspace-isolation",
+            "U15-16-empty-turn-does-not-reuse-history",
+            "U15-18-interrupted-step-retains-explicit-recovery",
+            "U15-17-dependency-replies-and-explicit-reference-once",
+            "U15-19-active-generation-and-idle-timeout"
+          ],
+          "untested": [
+            "Live OAuth accounts",
+            "Native browser",
+            "Provider-backed Task reasoning",
+            "Signed release"
+          ],
+          "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+          "startedAt": "2026-10-16T00:10:44.824Z",
+          "finishedAt": "2026-10-16T00:10:58.066Z",
+          "manifest": ".cache/verification/upstream-015-orchestration-i4hJGp/manifest.json",
+          "manifestSha256": "b9e95fdd468e60a3e2b044d71b8b9bf02225df157478d5ebad34ad0fefd29d76"
+        },
+        {
+          "workflow": "upstream-015-browser",
+          "exitCode": 0,
+          "passed": 11,
+          "sceneIds": [
+            "U15-21-hidden-trusted-click-and-react-controlled-fill",
+            "U15-21-native-and-custom-select-update-state",
+            "U15-24-password-fill-type-paste-no-output-or-snapshot-leak",
+            "U15-21-all-input-completes-without-focusing-window",
+            "U15-25-apostrophe-command-parser",
+            "U15-23-normal-page-and-open-menu-not-challenges",
+            "U15-23-strong-challenge-confirmed-after-second-look",
+            "U15-22-hidden-screenshot-current-pixels-and-window-restoration",
+            "U15-22-recovery-preserves-pre-existing-topmost-state",
+            "U15-24-durable-tool-and-model-facts-hide-text-before-write",
+            "U15-24-sdk-journal-hides-text-with-exact-live-input-and-hash"
+          ],
+          "untested": [
+            "Live CAPTCHA/OAuth accounts",
+            "Other operating systems",
+            "Signed release"
+          ],
+          "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+          "startedAt": "2026-10-16T00:10:58.935Z",
+          "finishedAt": "2026-10-16T00:11:49.513Z",
+          "manifest": ".cache/verification/upstream-015-browser-uzYO2h/manifest.json",
+          "manifestSha256": "27225fe426157f717fe8fba12db3f841502b7c0192e592ab486b6c8ad33f2873"
+        },
+        {
+          "workflow": "upstream-015-renderer",
+          "exitCode": 0,
+          "passed": 6,
+          "sceneIds": [
+            "U15-03-real-credential-cancel-never-submits-valid-form",
+            "U15-03-single-file-preflight-retains-draft",
+            "U15-03-total-preflight-keeps-text-and-all-attachments",
+            "U15-03-serialized-text-plus-base64-cannot-exceed-message",
+            "U15-03-valid-message-still-submits-and-clears-draft",
+            "U15-27-real-production-components-have-no-page-errors"
+          ],
+          "untested": [
+            "Native IME/touch",
+            "Live provider or OAuth accounts"
+          ],
+          "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+          "startedAt": "2026-10-16T00:11:57.437Z",
+          "finishedAt": "2026-10-16T00:15:33.939Z",
+          "manifest": ".cache/verification/upstream-015-renderer-9Z9clD/manifest.json",
+          "manifestSha256": "2bea2f2f513676ae140c7f66e9fe90a470ca64a3470b06df1330e5757a64965b"
+        }
+      ]
+    },
+    "performance": {
+      "command": "bun run scripts/performance/run.ts --skip-build",
+      "elapsedSeconds": 105.6668743,
+      "exitCode": 1,
+      "failedBudgets": [
+        "navigation"
+      ]
+    },
+    "documentationAfterPlan": {
+      "command": "bun run check:docs",
+      "exitCode": 1,
+      "note": "After plan creation; expected only the same six pre-existing untracked design-document reachability failures",
+      "details": {
+        "documents": 156,
+        "links": 1159,
+        "failures": [
+          "docs/design/icon-family-demo/README.md: not reachable from docs/README.md",
+          "docs/design/icon-replan-review/重新规划.md: not reachable from docs/README.md",
+          "docs/design/iconify-set-review/选型说明.md: not reachable from docs/README.md",
+          "docs/design/lucide-icon-revision/README.md: not reachable from docs/README.md",
+          "docs/design/phosphor-icon-review/选型说明.md: not reachable from docs/README.md",
+          "docs/design/remix-icon-review/分析说明.md: not reachable from docs/README.md"
+        ],
+        "warnings": []
+      }
+    }
+  },
+  "retests": {
+    "firstSerial": [
+      {
+        "exitCode": 0,
+        "elapsedSeconds": 3.3008908,
+        "file": "./apps/electron/src/main/__tests__/pages-react-build.test.js"
+      },
+      {
+        "exitCode": 0,
+        "elapsedSeconds": 11.8986309,
+        "file": "./packages/server-core/src/webui/__tests__/http-server.isolated.ts"
+      }
+    ],
+    "firstSerialLimitation": "Pages raw log overwritten by HTTP log due to audit log-path error; exit codes retained. Not treated as a complete verification artifact.",
+    "duringOtherValidation": [
+      {
+        "log": "E:\\Phaneris\\.cache\\governance-audit-2026-10-16-9ad6eeaa\\recheck-pages-react-build.test.js.log",
+        "file": "./apps/electron/src/main/__tests__/pages-react-build.test.js",
+        "exitCode": 1
+      },
+      {
+        "log": "E:\\Phaneris\\.cache\\governance-audit-2026-10-16-9ad6eeaa\\recheck-http-server.isolated.ts.log",
+        "file": "./packages/server-core/src/webui/__tests__/http-server.isolated.ts",
+        "exitCode": 1
+      }
+    ],
+    "finalSerial": [
+      {
+        "file": "./apps/electron/src/main/__tests__/pages-react-build.test.js",
+        "exitCode": 0,
+        "elapsedSeconds": 4.1659942,
+        "log": "serial-final-pages-react-build.test.js.log"
+      },
+      {
+        "file": "./packages/server-core/src/webui/__tests__/http-server.isolated.ts",
+        "exitCode": 1,
+        "elapsedSeconds": 17.0206568,
+        "log": "serial-final-http-server.isolated.ts.log"
+      }
+    ],
+    "loginBudgetDiagnostic": {
+      "exitCode": 0,
+      "command": "bun test ./packages/server-core/src/webui/__tests__/http-server.isolated.ts --test-name-pattern 'FF02: repeated successful logins never consume the budget' --timeout 20000",
+      "note": "Diagnostic runtime override only, no test or production source change; original 5s suite remains failed"
+    },
+    "fullSuiteRerunAfterRetests": false
+  },
+  "limitations": [
+    "No implementation performed; all after metrics unmeasured.",
+    "No real user session or production service was modified.",
+    "No complete critical/clean-install/container/signed-release/cross-platform/live-provider matrix."
+  ]
+}

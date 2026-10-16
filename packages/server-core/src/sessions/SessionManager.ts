@@ -6896,25 +6896,6 @@ initialSources: {
     try { await this.execution.releaseSession(sessionId) }
     finally { await this.disposeManagedAgentResources(managed, 'session deletion') }
 
-    // Revoke share if session was shared (prevent orphaned viewer copies)
-    if (managed.sharedId) {
-      try {
-        const { VIEWER_URL } = await import('@phaneris/shared/branding')
-        if (!VIEWER_URL) throw new Error('Phaneris viewer service is not configured; remote share was not revoked.')
-        const response = await fetch(
-          `${VIEWER_URL}/s/api/${managed.sharedId}`,
-          { method: 'DELETE', signal: AbortSignal.timeout(5000) }
-        )
-        if (!response.ok) {
-          sessionLog.warn(`Failed to revoke share for ${sessionId}: HTTP ${response.status}`)
-        } else {
-          sessionLog.info(`Revoked share for deleted session ${sessionId}`)
-        }
-      } catch (error) {
-        sessionLog.warn(`Failed to revoke share for ${sessionId}:`, error)
-      }
-    }
-
     // Clean up delta flush timers to prevent orphaned timers
     const timer = this.deltaFlushTimers.get(sessionId)
     if (timer) {
@@ -6926,8 +6907,13 @@ initialSources: {
     this.clearPendingPermissionRequestsForSession(sessionId)
     this.clearPendingAskUserRequestsForSession(sessionId)
 
-    // Cancel any pending persistence write (session is being deleted, no need to save)
-    this.productRepository.cancel(sessionId)
+    // Cancel queued snapshots and let an already-started atomic write finish
+    // before removing its directory.
+    await this.productRepository.cancelAndWait(sessionId)
+
+    if (!deleteStoredSession(workspaceRootPath, sessionId)) {
+      throw new Error(`Failed to delete session ${sessionId} from disk`)
+    }
 
     // Clean up session-scoped tool callbacks to prevent memory accumulation
     unregisterSessionScopedToolCallbacks(sessionId)
@@ -6956,10 +6942,27 @@ initialSources: {
       automationSystem.removeSessionMetadata(sessionId)
     }
 
-    // Delete from disk too
     this.durableRuntime.evidence.deleteDecisionEvidence(workspaceRootPath, sessionId)
-    deleteStoredSession(workspaceRootPath, sessionId)
     this.detachSessionWorkItems(managed)
+
+    // Revoke the remote copy only after local deletion has succeeded.
+    if (managed.sharedId) {
+      try {
+        const { VIEWER_URL } = await import('@phaneris/shared/branding')
+        if (!VIEWER_URL) throw new Error('Phaneris viewer service is not configured; remote share was not revoked.')
+        const response = await fetch(
+          `${VIEWER_URL}/s/api/${managed.sharedId}`,
+          { method: 'DELETE', signal: AbortSignal.timeout(5000) }
+        )
+        if (!response.ok) {
+          sessionLog.warn(`Failed to revoke share for ${sessionId}: HTTP ${response.status}`)
+        } else {
+          sessionLog.info(`Revoked share for deleted session ${sessionId}`)
+        }
+      } catch (error) {
+        sessionLog.warn(`Failed to revoke share for ${sessionId}:`, error)
+      }
+    }
 
     // Notify all windows for this workspace that the session was deleted
     this.sendEvent({ type: 'session_deleted', sessionId }, managed.workspace.id)

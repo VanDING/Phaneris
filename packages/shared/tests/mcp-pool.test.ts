@@ -108,9 +108,8 @@ describe('McpClientPool.sync — config change detection', () => {
     expect(pool.connectCalls).toHaveLength(1);
   });
 
-  it('does not reconnect when only non-auth headers change', async () => {
-    // Only Authorization and URL should trigger reconnect — other header
-    // changes (tracing, versioning) should not cause connection churn.
+  it('reconnects when a custom HTTP header changes', async () => {
+    // Custom headers also affect server behaviour and must reach the transport.
     const config1: AgentMcpServerConfig = {
       type: 'http',
       url: 'https://mcp.example.com',
@@ -127,8 +126,8 @@ describe('McpClientPool.sync — config change detection', () => {
 
     await pool.sync({ craft: config2 });
 
-    expect(pool.connectCalls).toHaveLength(0);
-    expect(pool.disconnectCalls).toHaveLength(0);
+    expect(pool.connectCalls).toHaveLength(1);
+    expect(pool.disconnectCalls).toEqual(['craft']);
   });
 
   it('disconnects sources removed from config', async () => {

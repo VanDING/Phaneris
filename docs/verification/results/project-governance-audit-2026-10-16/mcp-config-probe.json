@@ -1,0 +1,36 @@
+{
+  "before": "old-synthetic-key",
+  "afterSync": "old-synthetic-key",
+  "afterEnsure": "old-synthetic-key",
+  "requests": [
+    {
+      "method": "initialize",
+      "key": "old-synthetic-key"
+    },
+    {
+      "method": "notifications/initialized",
+      "key": "old-synthetic-key"
+    },
+    {
+      "method": "resources/list",
+      "key": "old-synthetic-key"
+    },
+    {
+      "method": "resources/templates/list",
+      "key": "old-synthetic-key"
+    },
+    {
+      "method": "resources/read",
+      "key": "old-synthetic-key"
+    },
+    {
+      "method": "resources/read",
+      "key": "old-synthetic-key"
+    },
+    {
+      "method": "resources/read",
+      "key": "old-synthetic-key"
+    }
+  ],
+  "note": "Real HTTP MCP transport and production pool. All keys are synthetic local fixture values."
+}

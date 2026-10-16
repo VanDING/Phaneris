@@ -1,0 +1,26 @@
+{
+  "revision": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+  "serial": {
+    "a": 200,
+    "b": 200
+  },
+  "concurrent": [
+    {
+      "a": 0,
+      "b": 200
+    },
+    {
+      "a": 0,
+      "b": 200
+    },
+    {
+      "a": 0,
+      "b": 200
+    }
+  ],
+  "ordinaryBase64": {
+    "expectedSessions": 1,
+    "actualSessions": 0
+  },
+  "note": "Real production search service and bundled ripgrep; separate synthetic workspace directories. No source patches."
+}

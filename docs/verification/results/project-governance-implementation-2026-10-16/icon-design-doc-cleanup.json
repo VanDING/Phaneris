@@ -1,0 +1,58 @@
+{
+  "performedAt": "2026-10-16T05:04:05.7995678Z",
+  "authorization": "用户明确要求：图标的设计文档可以删除了，已经不需要了",
+  "scope": "Six obsolete Markdown design notes only; demos, assets and license files retained",
+  "deletedDocuments": [
+    {
+      "path": "docs/design/icon-family-demo/README.md",
+      "bytes": 5572,
+      "sha256": "92a6ca2349a78338bc751f4164ef91117c18dbc0364d337356bab127eb0b61ec"
+    },
+    {
+      "path": "docs/design/icon-replan-review/重新规划.md",
+      "bytes": 11208,
+      "sha256": "2fa92212623c500b7c1c9071e0826ead672128fd1b19f5f81af05c1c924eab45"
+    },
+    {
+      "path": "docs/design/iconify-set-review/选型说明.md",
+      "bytes": 6328,
+      "sha256": "48bbd3cdead480ecd2083a547b97db879061fb354b9b7674172f0cb3af70eaeb"
+    },
+    {
+      "path": "docs/design/lucide-icon-revision/README.md",
+      "bytes": 7017,
+      "sha256": "c3c30708f3ce88dc3a2d4325b32d151cac3dd09dae9fed6961e79cad125b8f9c"
+    },
+    {
+      "path": "docs/design/phosphor-icon-review/选型说明.md",
+      "bytes": 4457,
+      "sha256": "d09e03b7867ad120c42f20cb68d8ea7ccd0a6923264207586364931a420f9ee6"
+    },
+    {
+      "path": "docs/design/remix-icon-review/分析说明.md",
+      "bytes": 9915,
+      "sha256": "18dc94d950de989f056b1930fcf8c44156300219097dcac14585cc41aac11e27"
+    }
+  ],
+  "preservation": {
+    "originalFiles": 246,
+    "remainingFiles": 240,
+    "remainingFileHashesMatch": true
+  },
+  "verification": {
+    "docs": {
+      "command": "bun run check:docs",
+      "exitCode": 0,
+      "elapsedSeconds": 0.2672065,
+      "log": ".cache/icon-design-doc-cleanup-2026-10-16/docs-final.log"
+    },
+    "diff": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "productCodeChanged": false,
+    "fullTestsRerun": false,
+    "reason": "Documentation-only cleanup; existing source-code regression results are unchanged"
+  },
+  "historicalEvidence": "Prior audit/implementation summary and evidence manifest are frozen before this authorized cleanup; their documentation failures remain historical records."
+}

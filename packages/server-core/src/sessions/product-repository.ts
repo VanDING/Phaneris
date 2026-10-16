@@ -21,6 +21,11 @@ export class SessionProductRepository {
   flush(sessionId: string): Promise<void> { return sessionPersistenceQueue.flush(sessionId) }
   flushAll(): Promise<void> { return sessionPersistenceQueue.flushAll() }
   cancel(sessionId: string): void { sessionPersistenceQueue.cancel(sessionId) }
+  async cancelAndWait(sessionId: string): Promise<void> {
+    sessionPersistenceQueue.cancel(sessionId)
+    try { await sessionPersistenceQueue.flush(sessionId) }
+    finally { sessionPersistenceQueue.cancel(sessionId) }
+  }
   hasPending(sessionId: string): boolean { return sessionPersistenceQueue.hasPending(sessionId) }
   getLastWrittenSignature(sessionId: string): string | undefined { return sessionPersistenceQueue.getLastWrittenSignature(sessionId) }
 }

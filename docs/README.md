@@ -2,7 +2,7 @@
 
 This index is the only entry point to `docs/`. Everything here is reachable from this page; `bun run check:docs` enforces that, along with link validity and the status rules below.
 
-Documents are filed by **kind and lifecycle**. The [implementation value register](process/implementation-value-register-2026-10-13.md) is the sole current record of implementation decisions and status: R01–R07 are implemented and locally verified, with five evidence-triggered conditions and fifteen public-release gates retained. L01/L02 have local Windows evidence; other release targets remain unverified. `process/` also holds current ownership/implementation references; `archive/` preserves completed, closed, and superseded plans plus dated research. Historical OPEN labels do not create current tasks.
+Documents are filed by **kind and lifecycle**. The [implementation value register](process/implementation-value-register-2026-10-13.md) is the sole current record of implementation decisions and status: R01–R07 and the approved G01–G08 project governance are implemented and locally verified, with explicit verification limits, five evidence-triggered conditions and fifteen public-release gates retained. L01/L02 have local Windows evidence; other release targets remain unverified. `process/` also holds current ownership/implementation references; `archive/` preserves completed, closed, and superseded plans plus dated research. Historical OPEN labels do not create current tasks.
 
 | Directory | Holds |
 | --- | --- |
@@ -128,6 +128,7 @@ Twenty-three former plans, placeholders and dated research documents were moved 
 
 | Document | Status | Scope |
 | --- | --- | --- |
+| [Project governance audit and plan](process/project-governance-audit-plan-2026-10-16.md) / [implementation results](verification/project-governance-implementation-2026-10-16.md) | Implemented — local verification, 2026-10-16 | Eight bounded fixes, 19 targeted scenes, 33 existing scenes and full workspace tests passing; cold navigation and Windows server distribution limits remain. Obsolete icon design notes were removed at the user's request; documentation checks now pass. |
 | [Governance ownership inventory](process/governance-ownership-inventory-2026-10-11.md) | Accepted reference | Configuration ports, SessionManager ownership, dependencies, cycles and presentation-storage decisions. |
 | [Governance completion ledger](process/governance-completion-2026-10-11.md) | Implemented; maintained reference | G0–G8 source adjudication, local acceptance and external verification limits; no separate open implementation queue. |
 | [Governance G3–G8 evidence](verification/results/governance-completion-2026-10-11/README.md) | Pre-audit snapshot | Frozen manifests, archive selection and independent SHA verification. |

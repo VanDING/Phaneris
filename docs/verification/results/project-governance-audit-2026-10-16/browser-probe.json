@@ -1,0 +1,17 @@
+{
+  "viewer": {
+    "path": "/s/B",
+    "displayedTitle": "AUDIT_SESSION_A",
+    "pageErrors": [],
+    "note": "Fresh production Viewer build; delayed HTTP A response released only after B visibly loaded."
+  },
+  "webui": {
+    "failedChunk": "/assets/App-B3iRMNLW.js",
+    "pageErrors": [
+      "Failed to fetch dynamically imported module: http://127.0.0.1:64313/assets/App-B3iRMNLW.js"
+    ],
+    "rootChildren": 0,
+    "rootText": "",
+    "note": "Fresh production WebUI, real fixture SessionManager/WS, only lazy App chunk forced to HTTP 503."
+  }
+}

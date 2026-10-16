@@ -1,0 +1,538 @@
+{
+  "status": "implemented-and-locally-verified-with-known-performance-platform-and-workspace-limitations",
+  "generatedAt": "2026-10-16T04:57:49.607Z",
+  "source": {
+    "head": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+    "branch": "main",
+    "committed": false,
+    "lockfileSha256": "8f07f50020f6497aa3e38708415435e21102934ea2d193dbc85709e6d26ea020",
+    "files": [
+      {
+        "path": "apps/electron/src/main/__tests__/browser-cdp.isolated.ts",
+        "sha256": "2b12bd849be8e40e40c363772fe37f7b4b49eb92c1bad6e46f8e974f8a874fb5"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/browser-pane-manager.isolated.ts",
+        "sha256": "68988f0407dcde075b5eb86252e2c5d740669faaa462d389d9691be0205c9adb"
+      },
+      {
+        "path": "apps/viewer/src/App.tsx",
+        "sha256": "6204963fb9d322b06a70e393be64b56ef32202eedaee2bb7fff206f85edb1008"
+      },
+      {
+        "path": "apps/webui/src/main.tsx",
+        "sha256": "3288c6923f66693a66c05dedc98ce0d4392a8e515165e79f27998edbd9c2b438"
+      },
+      {
+        "path": "packages/server-core/src/durable-runtime/store.ts",
+        "sha256": "4dda3cc6fd4eeb9156a050cc6aebbf9cf04872310cb5ece7d769f3e0f5b044b1"
+      },
+      {
+        "path": "packages/server-core/src/handlers/rpc/sessions.ts",
+        "sha256": "cb518feefc6e796956dea9492ce61d77be31814d2121f6e7a5dcffadfd8289d6"
+      },
+      {
+        "path": "packages/server-core/src/services/search.ts",
+        "sha256": "1b4dcb02e77e320e4aa93cda80687521f8b57be27fa3b0a7ab4327758b3f78f8"
+      },
+      {
+        "path": "packages/server-core/src/sessions/SessionManager.ts",
+        "sha256": "674f2af462edc943dc04eaf673aba881e149091ecf0381f24b97ec842a216636"
+      },
+      {
+        "path": "packages/server-core/src/sessions/product-repository.ts",
+        "sha256": "8b9d399237b1f22701e6c9a5782e685e708d1cc2950071455846c1717a6b29bd"
+      },
+      {
+        "path": "packages/server-core/src/webui/__tests__/http-server.isolated.ts",
+        "sha256": "583114a10d93a6e3a4fec41dece9231da886a4ea24f9b931f0719fc6a6ab46e6"
+      },
+      {
+        "path": "packages/shared/src/agent/__tests__/browser-tools.test.ts",
+        "sha256": "2897601940a9ea928666c41f5a5e531d28d0e974d2c254b09a3bf18681682106"
+      },
+      {
+        "path": "packages/shared/src/decisions/client.test.ts",
+        "sha256": "be589ab9c83f690ea09699b7f6ed12d69874288559f9bf3a886c193e4635cbb3"
+      },
+      {
+        "path": "packages/shared/src/mcp/mcp-pool.ts",
+        "sha256": "4220f6c5789c88432499e1523655cd7d72f2433472e484166d65c6bed7b2fb2f"
+      },
+      {
+        "path": "packages/shared/src/projects/__tests__/storage.test.ts",
+        "sha256": "d33d58f7f8f19be7471e7d2e5f38d182c9ec69957e310535d0fa2eb2d33d3f72"
+      },
+      {
+        "path": "packages/shared/src/sessions/jsonl.ts",
+        "sha256": "b75b1e7cc68e0d3869769b117320cc40db7bab7ac6e984d5818df1e364ee162a"
+      },
+      {
+        "path": "packages/shared/tests/mcp-pool.test.ts",
+        "sha256": "8f6857f624a2cab1e37d30069c5db75a0d4ab93af3a52909a5b9872649f39669"
+      },
+      {
+        "path": "scripts/rpc-contract-inventory.json",
+        "sha256": "65659bde7e6c343cf29ce4017369735e70500e8a7604c6622518dbdbaf92439c"
+      },
+      {
+        "path": "scripts/test-doc-tools.ts",
+        "sha256": "633e8f1d2e50cda3c5394087c8da23540a31986bb1d22ee928a715d90737f5bc"
+      },
+      {
+        "path": "scripts/verification/fixtures/governance-mcp-stdio.ts",
+        "sha256": "f8b56fb4fc5aef3d2156566ea1c2e70235264fc47296a4b5ff1510fcd1c1bfc2"
+      },
+      {
+        "path": "scripts/verification/project-governance-browser-workflow.ts",
+        "sha256": "171e0bc746d626d6d9a2a8df1462c33bc5af3076ad1321813f7d8dde5c43f814"
+      },
+      {
+        "path": "scripts/verification/project-governance-services-workflow.ts",
+        "sha256": "90604c8a6f1a2e706b1d7e4f340fd4e75079b3e00f00249dd24849a8c29376b8"
+      },
+      {
+        "path": "scripts/verification/project-governance-storage-workflow.ts",
+        "sha256": "a4efc831314f091b21780c9a91cb692e1b95c2e5f35110fbf8993b388e7bee7e"
+      },
+      {
+        "path": "scripts/verification/project-governance-usage-benchmark.ts",
+        "sha256": "8e78a731f7db5b70001bc4cf5c6a706c83770d673bc5723249e9183ffd7c2d30"
+      }
+    ]
+  },
+  "baseline": {
+    "head": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+    "tests": {
+      "pass": 6275,
+      "fail": 26,
+      "skip": 7
+    }
+  },
+  "checks": {
+    "tests": {
+      "command": "bun run test",
+      "elapsedSeconds": 462.9268725,
+      "exitCode": 0,
+      "counts": {
+        "pass": 6301,
+        "fail": 0,
+        "skip": 7
+      }
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "command": "bun run typecheck:all"
+    },
+    "toolingTypes": {
+      "command": "bun run typecheck:scripts",
+      "elapsedSeconds": 50.2774552,
+      "exitCode": 0
+    },
+    "lint": {
+      "command": "bun run lint",
+      "elapsedSeconds": 491.1893431,
+      "exitCode": 0
+    },
+    "docTools": {
+      "exitCode": 0,
+      "environment": "UV_OFFLINE=1; no PATH prepend",
+      "command": "bun run test:doc-tools",
+      "pass": 24,
+      "fail": 0
+    },
+    "runtimeBuild": {
+      "command": "bun run build:runtime",
+      "elapsedSeconds": 104.5869124,
+      "exitCode": 0
+    },
+    "buildSmoke": {
+      "command": "bun run build:smoke",
+      "elapsedSeconds": 359.9247936,
+      "exitCode": 1,
+      "applicationBuildsPassed": [
+        "electron:build:main",
+        "electron:build:preload",
+        "electron:build:renderer",
+        "webui:build",
+        "viewer:build"
+      ],
+      "failure": "Existing headless server distribution does not support win32",
+      "evidenceManifest": ".cache/verification/build-smoke-0Hoeie/manifest.json",
+      "evidenceManifestSha256": "162122c20be9a7bde0a1b9d9cff17460be398b087dc09260f59293a6a6aa5c9b"
+    },
+    "upstream015": {
+      "command": "bun run test:upstream-015",
+      "elapsedSeconds": 205.9133532,
+      "exitCode": 0,
+      "workflows": [
+        {
+          "directory": ".cache/verification/upstream-015-browser-OVd1Ll",
+          "workflow": "upstream-015-browser",
+          "passed": 11,
+          "exitCode": 0,
+          "sceneIds": [
+            "U15-21-hidden-trusted-click-and-react-controlled-fill",
+            "U15-21-native-and-custom-select-update-state",
+            "U15-24-password-fill-type-paste-no-output-or-snapshot-leak",
+            "U15-21-all-input-completes-without-focusing-window",
+            "U15-25-apostrophe-command-parser",
+            "U15-23-normal-page-and-open-menu-not-challenges",
+            "U15-23-strong-challenge-confirmed-after-second-look",
+            "U15-22-hidden-screenshot-current-pixels-and-window-restoration",
+            "U15-22-recovery-preserves-pre-existing-topmost-state",
+            "U15-24-durable-tool-and-model-facts-hide-text-before-write",
+            "U15-24-sdk-journal-hides-text-with-exact-live-input-and-hash"
+          ],
+          "manifestSha256": "2f5e1e8523add43bde72bcb39dc03901b733cc3d676819b7e0a136eaa66171d2"
+        },
+        {
+          "directory": ".cache/verification/upstream-015-core-jZgffO",
+          "workflow": "upstream-015-core",
+          "passed": 11,
+          "exitCode": 0,
+          "sceneIds": [
+            "U15-02-http-header-map",
+            "U15-01-refresh-workspace-isolation-and-deduplication",
+            "U15-05-explicit-utility-and-provider-tier",
+            "U15-04-label-contract-and-legacy-canonicalization",
+            "U15-06-pi-resource-settings-isolation",
+            "U15-08-project-memory-tool-concurrent-append",
+            "U15-09-project-memory-retains-old-and-new",
+            "U15-10-13-http-mcp-resources-prompts-without-tools",
+            "U15-20-real-shell-guide-read-success-only",
+            "U15-07-headless-checkout-path-isolation",
+            "U15-26-timezone-and-source-error-status"
+          ],
+          "manifestSha256": "4116cd1074d84a1327380ed4bff2c00a2a7b8843dffc9629e4f9646073362601"
+        },
+        {
+          "directory": ".cache/verification/upstream-015-orchestration-G3cHqA",
+          "workflow": "upstream-015-orchestration",
+          "passed": 5,
+          "exitCode": 0,
+          "sceneIds": [
+            "U15-14-oauth-one-preparation-and-workspace-isolation",
+            "U15-16-empty-turn-does-not-reuse-history",
+            "U15-18-interrupted-step-retains-explicit-recovery",
+            "U15-17-dependency-replies-and-explicit-reference-once",
+            "U15-19-active-generation-and-idle-timeout"
+          ],
+          "manifestSha256": "a34b1e11a3a865ccc6fc6c8a7fb0d4545ef8c8f6e1fd285daf648a1b1e6b78da"
+        },
+        {
+          "directory": ".cache/verification/upstream-015-renderer-XFf6xA",
+          "workflow": "upstream-015-renderer",
+          "passed": 6,
+          "exitCode": 0,
+          "sceneIds": [
+            "U15-03-real-credential-cancel-never-submits-valid-form",
+            "U15-03-single-file-preflight-retains-draft",
+            "U15-03-total-preflight-keeps-text-and-all-attachments",
+            "U15-03-serialized-text-plus-base64-cannot-exceed-message",
+            "U15-03-valid-message-still-submits-and-clears-draft",
+            "U15-27-real-production-components-have-no-page-errors"
+          ],
+          "manifestSha256": "7943eb180cedf76e995305fd9a5cb84525468c1682ff5c74295298d4fc42978d"
+        }
+      ]
+    },
+    "supplemental": [
+      {
+        "command": "bun run lint:i18n:parity",
+        "elapsedSeconds": 1.9894727,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-parity.log"
+      },
+      {
+        "command": "bun run lint:i18n:sorted",
+        "elapsedSeconds": 0.4019009,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-sorted.log"
+      },
+      {
+        "command": "bun run lint:i18n:coverage",
+        "elapsedSeconds": 90.3226012,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-coverage.log"
+      },
+      {
+        "command": "bun run lint:i18n:dead-keys",
+        "elapsedSeconds": 13.4731806,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-dead-keys.log"
+      },
+      {
+        "command": "bun run check:fonts",
+        "elapsedSeconds": 78.8922559,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-check-fonts.log"
+      },
+      {
+        "command": "bun run identity:check",
+        "elapsedSeconds": 228.6312507,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-identity-check.log"
+      },
+      {
+        "command": "bun run version:check",
+        "elapsedSeconds": 0.4643915,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-version-check.log"
+      },
+      {
+        "command": "bun run runtime:check",
+        "elapsedSeconds": 0.414148,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-runtime-check.log"
+      },
+      {
+        "command": "bun run electron-pin:check",
+        "elapsedSeconds": 0.4119146,
+        "exitCode": 0,
+        "log": ".cache/governance-implementation-2026-10-16/supplemental-electron-pin-check.log"
+      },
+      {
+        "command": "bun run check:docs",
+        "elapsedSeconds": 0.8687734,
+        "exitCode": 1,
+        "log": ".cache/governance-implementation-2026-10-16/docs-final.log",
+        "knownPreexistingFailures": 6,
+        "unchangedFromAudit": true,
+        "paths": [
+          "docs/design/icon-family-demo/README.md",
+          "docs/design/icon-replan-review/重新规划.md",
+          "docs/design/iconify-set-review/选型说明.md",
+          "docs/design/lucide-icon-revision/README.md",
+          "docs/design/phosphor-icon-review/选型说明.md",
+          "docs/design/remix-icon-review/分析说明.md"
+        ]
+      }
+    ],
+    "rpcCompatibility": {
+      "comparison": "Only source line numbers ignored; all channels, arguments, routing, validation and result contracts unchanged",
+      "pass": true
+    },
+    "performance": {
+      "command": "bun run scripts/performance/run.ts --skip-build --output=.cache/governance-implementation-2026-10-16/performance-final.json",
+      "environment": "PHANERIS_TEST_BROWSER_CHANNEL=msedge; no concurrent verification/build job",
+      "elapsedSeconds": 114.4993931,
+      "exitCode": 1
+    },
+    "artifactIntegrity": [
+      {
+        "directory": "project-governance-storage-final-20261016",
+        "exitCode": 0,
+        "output": "{\"passed\":8,\"workflow\":\"project-governance-storage\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\project-governance-storage-final-20261016\"}"
+      },
+      {
+        "directory": "project-governance-services-complete-20261016",
+        "exitCode": 0,
+        "output": "{\"passed\":6,\"workflow\":\"project-governance-services\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\project-governance-services-complete-20261016\"}"
+      },
+      {
+        "directory": "project-governance-browser-after-20261016",
+        "exitCode": 0,
+        "output": "{\"passed\":5,\"workflow\":\"project-governance-browser\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\project-governance-browser-after-20261016\"}"
+      },
+      {
+        "directory": "project-governance-usage-after-20261016",
+        "exitCode": 0,
+        "output": "{\"passed\":8,\"workflow\":\"project-governance-usage\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\project-governance-usage-after-20261016\"}"
+      },
+      {
+        "directory": ".cache/verification/upstream-015-browser-OVd1Ll",
+        "exitCode": 0,
+        "output": "{\"passed\":11,\"workflow\":\"upstream-015-browser\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upstream-015-browser-OVd1Ll\"}"
+      },
+      {
+        "directory": ".cache/verification/upstream-015-core-jZgffO",
+        "exitCode": 0,
+        "output": "{\"passed\":11,\"workflow\":\"upstream-015-core\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upstream-015-core-jZgffO\"}"
+      },
+      {
+        "directory": ".cache/verification/upstream-015-orchestration-G3cHqA",
+        "exitCode": 0,
+        "output": "{\"passed\":5,\"workflow\":\"upstream-015-orchestration\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upstream-015-orchestration-G3cHqA\"}"
+      },
+      {
+        "directory": ".cache/verification/upstream-015-renderer-XFf6xA",
+        "exitCode": 0,
+        "output": "{\"passed\":6,\"workflow\":\"upstream-015-renderer\",\"output\":\"E:\\\\Phaneris\\\\.cache\\\\verification\\\\upstream-015-renderer-XFf6xA\"}"
+      }
+    ],
+    "userFilesPreserved": {
+      "pass": true,
+      "reference": ".cache/verification/project-governance-storage-before-20261016/manifest.json",
+      "directories": 7,
+      "filesCompared": 246,
+      "changedPaths": []
+    },
+    "diff": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "finalReview": {
+      "documentationFailuresUnchanged": true,
+      "governanceExitCode": 0,
+      "diffExitCode": 0
+    }
+  },
+  "performanceBudgetFailures": [
+    {
+      "id": "navigation",
+      "pass": false,
+      "samples": [
+        4991.847299999999,
+        1959.1628000000019
+      ],
+      "limit": 3000
+    }
+  ],
+  "verifications": [
+    {
+      "name": "storage",
+      "directory": ".cache/verification/project-governance-storage-final-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-storage-workflow.ts",
+        "--output-dir=.cache/verification/project-governance-storage-final-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 8,
+      "sceneIds": [
+        "H01-long-description-and-transfer-remain-listed",
+        "H02-boundaries-utf8-and-no-newline",
+        "H03-invalid-and-missing-header-keep-null-contract",
+        "D01-locked-delete-rejects-without-success-and-retries",
+        "D02-inflight-and-pending-writes-settle-before-delete",
+        "D03-repeat-delete-notifies-once",
+        "U01-file-sqlite-replay-conflict-and-rollback",
+        "U02-new-usage-never-enumerates-history"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "07ba836ae12477ab63ad83864b639f3a3955731762c4578c2e69beaaf0230af0",
+      "untested": [
+        "Other operating systems",
+        "Live user sessions",
+        "Signed release"
+      ]
+    },
+    {
+      "name": "services",
+      "directory": ".cache/verification/project-governance-services-complete-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-services-workflow.ts",
+        "--output-dir=.cache/verification/project-governance-services-complete-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 6,
+      "sceneIds": [
+        "S01-two-rpc-clients-independent-workspaces-and-shared-workspace",
+        "S02-plain-base64-and-text-with-encoded-attachments",
+        "S03-same-owner-cancels-old-search-and-blank-query",
+        "M01-http-header-sync-ensure-and-url-updates",
+        "M02-mutating-caller-config-does-not-mutate-active-config",
+        "M03-stdio-argument-environment-and-cwd-updates"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "2e173acdffcb0e0e034418bb7c99f5f9f16d1ef43c3de054b9fed74ebc3ab9ef",
+      "untested": [
+        "Live external MCP services",
+        "Other operating systems",
+        "Long-running resource stress"
+      ]
+    },
+    {
+      "name": "browser",
+      "directory": ".cache/verification/project-governance-browser-after-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-browser-workflow.ts",
+        "--output-dir=.cache/verification/project-governance-browser-after-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 5,
+      "sceneIds": [
+        "V01-older-success-cannot-overwrite-new-session",
+        "V01-older-not-found-cannot-overwrite-new-session",
+        "V02-clear-cancels-old-request-and-shows-upload",
+        "W01-chunk-error-fallback-and-reload-recovery",
+        "W01-render-error-fallback-and-reload-recovery"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "d43ac4679d3c32d60719f1ab533fe5c862eabebe9acd0818aaecf806f82efda3",
+      "untested": [
+        "Native IME/touch",
+        "Other browsers/operating systems",
+        "Live provider APIs"
+      ]
+    },
+    {
+      "name": "usage",
+      "directory": ".cache/verification/project-governance-usage-after-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-usage-benchmark.ts",
+        "--output-dir=.cache/verification/project-governance-usage-after-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 8,
+      "sceneIds": [
+        "memory-0",
+        "memory-1000",
+        "memory-10000",
+        "memory-50000",
+        "file-wal-0",
+        "file-wal-1000",
+        "file-wal-10000",
+        "file-wal-50000"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "b9d4c5a8a1028ede58bda49453031854b84cdc5d73a6f9c169eb2445016c38a1",
+      "untested": [
+        "Live provider inference",
+        "Other hardware or operating systems"
+      ]
+    }
+  ],
+  "usageBeforeAfter": [
+    {
+      "historyRows": 0,
+      "beforeMemoryMedianMs": 0.06210000000000093,
+      "afterMemoryMedianMs": 0.028199999999969805,
+      "afterFileWalMedianMs": 0.8088000000000193,
+      "beforeFileWalMedianMs": null
+    },
+    {
+      "historyRows": 1000,
+      "beforeMemoryMedianMs": 2.853499999999997,
+      "afterMemoryMedianMs": 0.04290000000003147,
+      "afterFileWalMedianMs": 0.6190999999998894,
+      "beforeFileWalMedianMs": null
+    },
+    {
+      "historyRows": 10000,
+      "beforeMemoryMedianMs": 15.377999999999986,
+      "afterMemoryMedianMs": 0.024999999999977263,
+      "afterFileWalMedianMs": 1.2464000000002216,
+      "beforeFileWalMedianMs": null
+    },
+    {
+      "historyRows": 50000,
+      "beforeMemoryMedianMs": 114.03610000000003,
+      "afterMemoryMedianMs": 0.018799999999828287,
+      "afterFileWalMedianMs": 1.17029999999977,
+      "beforeFileWalMedianMs": null
+    }
+  ],
+  "limitations": [
+    "Windows headless server distribution is unsupported; build:smoke remains nonzero after five successful application builds.",
+    "Six pre-existing untracked design-document reachability failures remain; user design files preserved.",
+    "First navigation remains above the existing 3000 ms budget (4991.85 ms; second window 1959.16 ms); no cold-start optimization is claimed.",
+    "Edge changed automatically from 155.0.4283.45 at audit to 155.0.4283.60 at retest; full frontend timings are observations, not controlled causal comparisons.",
+    "No signed release, macOS/Linux native, live external accounts, full critical/clean-install/container matrix.",
+    "Recursive file deletion is not a filesystem/database transaction; partial filesystem deletion cannot be rolled back."
+  ]
+}

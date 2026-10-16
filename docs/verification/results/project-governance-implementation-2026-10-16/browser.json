@@ -1,0 +1,22 @@
+[
+  {
+    "id": "V01-older-success-cannot-overwrite-new-session",
+    "pass": true
+  },
+  {
+    "id": "V01-older-not-found-cannot-overwrite-new-session",
+    "pass": true
+  },
+  {
+    "id": "V02-clear-cancels-old-request-and-shows-upload",
+    "pass": true
+  },
+  {
+    "id": "W01-chunk-error-fallback-and-reload-recovery",
+    "pass": true
+  },
+  {
+    "id": "W01-render-error-fallback-and-reload-recovery",
+    "pass": true
+  }
+]

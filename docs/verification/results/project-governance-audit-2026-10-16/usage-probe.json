@@ -1,0 +1,217 @@
+{
+  "revision": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+  "runtime": "1.4.2",
+  "cpu": "13th Gen Intel(R) Core(TM) i5-1340P",
+  "platform": "win32",
+  "conditions": "Production commitFactsAndUsage, in-memory SQLite, 3 warmups + 9 samples per size. Fixture seeded directly outside timing. listUsage instrumented only to count decoded rows. No product code changes; no claimed after data.",
+  "samples": [
+    {
+      "historyRows": 0,
+      "medianMs": 0.06210000000000093,
+      "runs": [
+        {
+          "elapsedMs": 0.04240000000000066,
+          "rowsDecoded": 3
+        },
+        {
+          "elapsedMs": 0.03880000000000905,
+          "rowsDecoded": 4
+        },
+        {
+          "elapsedMs": 0.24920000000000186,
+          "rowsDecoded": 5
+        },
+        {
+          "elapsedMs": 0.1518999999999977,
+          "rowsDecoded": 6
+        },
+        {
+          "elapsedMs": 0.04919999999999902,
+          "rowsDecoded": 7
+        },
+        {
+          "elapsedMs": 0.7227999999999923,
+          "rowsDecoded": 8
+        },
+        {
+          "elapsedMs": 0.1938999999999993,
+          "rowsDecoded": 9
+        },
+        {
+          "elapsedMs": 0.06210000000000093,
+          "rowsDecoded": 10
+        },
+        {
+          "elapsedMs": 0.052099999999995816,
+          "rowsDecoded": 11
+        }
+      ],
+      "identicalReplayCount": 12,
+      "conflictingReplayRejected": true,
+      "indexedQueryPlan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 39,
+          "detail": "SEARCH usage_ledger USING INDEX sqlite_autoindex_usage_ledger_1 (usage_id=?)"
+        }
+      ]
+    },
+    {
+      "historyRows": 1000,
+      "medianMs": 2.853499999999997,
+      "runs": [
+        {
+          "elapsedMs": 2.5564000000000107,
+          "rowsDecoded": 1003
+        },
+        {
+          "elapsedMs": 2.853499999999997,
+          "rowsDecoded": 1004
+        },
+        {
+          "elapsedMs": 2.705600000000004,
+          "rowsDecoded": 1005
+        },
+        {
+          "elapsedMs": 2.740300000000005,
+          "rowsDecoded": 1006
+        },
+        {
+          "elapsedMs": 3.1952,
+          "rowsDecoded": 1007
+        },
+        {
+          "elapsedMs": 4.036100000000005,
+          "rowsDecoded": 1008
+        },
+        {
+          "elapsedMs": 3.672399999999996,
+          "rowsDecoded": 1009
+        },
+        {
+          "elapsedMs": 3.0476000000000028,
+          "rowsDecoded": 1010
+        },
+        {
+          "elapsedMs": 2.5382999999999925,
+          "rowsDecoded": 1011
+        }
+      ],
+      "identicalReplayCount": 12,
+      "conflictingReplayRejected": true,
+      "indexedQueryPlan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 39,
+          "detail": "SEARCH usage_ledger USING INDEX sqlite_autoindex_usage_ledger_1 (usage_id=?)"
+        }
+      ]
+    },
+    {
+      "historyRows": 10000,
+      "medianMs": 15.377999999999986,
+      "runs": [
+        {
+          "elapsedMs": 18.04910000000001,
+          "rowsDecoded": 10003
+        },
+        {
+          "elapsedMs": 11.999500000000012,
+          "rowsDecoded": 10004
+        },
+        {
+          "elapsedMs": 15.373800000000017,
+          "rowsDecoded": 10005
+        },
+        {
+          "elapsedMs": 15.377999999999986,
+          "rowsDecoded": 10006
+        },
+        {
+          "elapsedMs": 12.307499999999948,
+          "rowsDecoded": 10007
+        },
+        {
+          "elapsedMs": 13.165200000000027,
+          "rowsDecoded": 10008
+        },
+        {
+          "elapsedMs": 25.110600000000034,
+          "rowsDecoded": 10009
+        },
+        {
+          "elapsedMs": 24.44720000000001,
+          "rowsDecoded": 10010
+        },
+        {
+          "elapsedMs": 17.40530000000001,
+          "rowsDecoded": 10011
+        }
+      ],
+      "identicalReplayCount": 12,
+      "conflictingReplayRejected": true,
+      "indexedQueryPlan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 39,
+          "detail": "SEARCH usage_ledger USING INDEX sqlite_autoindex_usage_ledger_1 (usage_id=?)"
+        }
+      ]
+    },
+    {
+      "historyRows": 50000,
+      "medianMs": 114.03610000000003,
+      "runs": [
+        {
+          "elapsedMs": 113.42730000000006,
+          "rowsDecoded": 50003
+        },
+        {
+          "elapsedMs": 99.54689999999982,
+          "rowsDecoded": 50004
+        },
+        {
+          "elapsedMs": 118.06100000000015,
+          "rowsDecoded": 50005
+        },
+        {
+          "elapsedMs": 128.69100000000003,
+          "rowsDecoded": 50006
+        },
+        {
+          "elapsedMs": 114.03610000000003,
+          "rowsDecoded": 50007
+        },
+        {
+          "elapsedMs": 133.66280000000006,
+          "rowsDecoded": 50008
+        },
+        {
+          "elapsedMs": 112.39239999999995,
+          "rowsDecoded": 50009
+        },
+        {
+          "elapsedMs": 143.81870000000004,
+          "rowsDecoded": 50010
+        },
+        {
+          "elapsedMs": 111.48109999999997,
+          "rowsDecoded": 50011
+        }
+      ],
+      "identicalReplayCount": 12,
+      "conflictingReplayRejected": true,
+      "indexedQueryPlan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 39,
+          "detail": "SEARCH usage_ledger USING INDEX sqlite_autoindex_usage_ledger_1 (usage_id=?)"
+        }
+      ]
+    }
+  ]
+}

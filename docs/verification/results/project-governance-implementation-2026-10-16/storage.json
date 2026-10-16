@@ -1,0 +1,34 @@
+[
+  {
+    "id": "H01-long-description-and-transfer-remain-listed",
+    "pass": true
+  },
+  {
+    "id": "H02-boundaries-utf8-and-no-newline",
+    "pass": true
+  },
+  {
+    "id": "H03-invalid-and-missing-header-keep-null-contract",
+    "pass": true
+  },
+  {
+    "id": "D01-locked-delete-rejects-without-success-and-retries",
+    "pass": true
+  },
+  {
+    "id": "D02-inflight-and-pending-writes-settle-before-delete",
+    "pass": true
+  },
+  {
+    "id": "D03-repeat-delete-notifies-once",
+    "pass": true
+  },
+  {
+    "id": "U01-file-sqlite-replay-conflict-and-rollback",
+    "pass": true
+  },
+  {
+    "id": "U02-new-usage-never-enumerates-history",
+    "pass": true
+  }
+]

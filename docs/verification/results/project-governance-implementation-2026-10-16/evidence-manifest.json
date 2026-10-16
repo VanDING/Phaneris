@@ -1,0 +1,480 @@
+{
+  "rawDirectory": ".cache/governance-implementation-2026-10-16",
+  "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+  "retention": "Conclusions and source digests are committed-ready; full logs/fixtures/traces/screenshots remain in ignored local cache and can be regenerated using the tracked workflows.",
+  "rawFiles": [
+    {
+      "path": ".cache/governance-implementation-2026-10-16/artifact-integrity-final.json",
+      "bytes": 2134,
+      "sha256": "0e232150e5009d7075b5ffef8157ed43b331db6ad6632d7eae0b9faee431e554"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/browser-after.log",
+      "bytes": 717,
+      "sha256": "59c1a211ebd1d2aad5b2be394d01d59580ea36ac0c0000bd60847bf80ed39f10"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/browser-before.log",
+      "bytes": 2331,
+      "sha256": "dbcf757b3cf1804d9566f3b78a77748d3a20890cbcf16af6d0facf0bc332430d"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/browser-cdp-test.log",
+      "bytes": 1890,
+      "sha256": "b81f9d1a082ebdb145b4c8bbe294b8ccbf76793677b0d0ffcc0e6cc44bfa205a"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/browser-pane-test.log",
+      "bytes": 9497,
+      "sha256": "eb36b689ce21eab7e3ab8f1a3b8bda3e1f6e71f28ef63089f90660a6d70287d4"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/build-smoke-final.log",
+      "bytes": 247565,
+      "sha256": "1f6181f6065cc8e8f37602ebb3091ac7ddbcbd76e57236a2a657b5f3c8d907ef"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/build-smoke-final.result.json",
+      "bytes": 517,
+      "sha256": "5fbb78508521e48de262534735242341b50884ad00ca496d64d8625d379946e6"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/collect-results.ts",
+      "bytes": 8997,
+      "sha256": "84dabc83a236bde34e1709ed3bc2cb0278642e98f9af3704e0d39adbd18c95d6"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/diff-check-final.log",
+      "bytes": 849,
+      "sha256": "fbe179e78cddc7f63d1185b68bc8902bbef34c6e1274982780202876dc03a355"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/diff-check-final.result.json",
+      "bytes": 57,
+      "sha256": "5288e9ba47a469d07fd043fbfe622484140fc403be0f762398a69ca41ecce83e"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/doc-tools-after.log",
+      "bytes": 227,
+      "sha256": "7dfcb9621305664a4cb7f0fbaf047f7eaf156e97ba843e4a75edc49923539107"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/doc-tools-after.result.json",
+      "bytes": 114,
+      "sha256": "031d772368b28ec94308be20bf114fd91da785d3a4169179ec2444b243e66067"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/docs-final.log",
+      "bytes": 719,
+      "sha256": "297807920265991d7525823d5013c1e8dfbc50e6fdd1a7136c5ed269e54fc595"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/final-review.result.json",
+      "bytes": 98,
+      "sha256": "723ffe579d22f32a3fce86dea15ff32c18866cff332d015c51c81cd82908c419"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/governance-final.log",
+      "bytes": 123,
+      "sha256": "d141d86fe98e3225386a16935427feabd84a4f3de709fbcdd7cf250933426465"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/lint-final-2.log",
+      "bytes": 3471,
+      "sha256": "ecbf33a7f2747cbdfd55ef47ed9e8f4bd95615ad698ce4bbc2b3e87319ac05d7"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/lint-final-2.result.json",
+      "bytes": 87,
+      "sha256": "a8a5976f5017b82aafd54f3ece71ccf02c901e6d3a6c64eebf46b7c445456a51"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/lint-final.log",
+      "bytes": 4265,
+      "sha256": "29862eac7c079c70c476445f937ffc31e44b819a212107431fdcecaff16c623a"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/lint-final.result.json",
+      "bytes": 53,
+      "sha256": "03d197cc4eeeac93df70136d0e21e373cdd738355c7692b42afb191207402d68"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.calendar.png",
+      "bytes": 15522,
+      "sha256": "f5d4288172a107d113a83af06ff0289847ede4070b165a069647f068dec35725"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.failure.png",
+      "bytes": 15563,
+      "sha256": "c1e3941e47ec808891a5a572cfa2f30c7017ccb3896757362b519793f318b290"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.history.png",
+      "bytes": 173684,
+      "sha256": "7e4abbc5b800956771e5e1e31931031c430f06602e062b90c66072216ebb568f"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.json",
+      "bytes": 189923,
+      "sha256": "7a07f930c8eb15a348d30abc16b7f904f56848272d5ad1405c59f046940d3495"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.log",
+      "bytes": 1543,
+      "sha256": "95e0db091dbd90236ddee56304aa1d44de7e004a6c71a441a030839944d136ce"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.result.json",
+      "bytes": 294,
+      "sha256": "03b34ac98f665a8787efeff3766275246ae4d21b1b2b7e7b69a648d3901f1be3"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.server.log",
+      "bytes": 15368,
+      "sha256": "43260d96a6b4e2fbff0af3044befbf619bcc47de3df53bd0e0b0fdecf4eab88a"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/performance-final.table.png",
+      "bytes": 15563,
+      "sha256": "c1e3941e47ec808891a5a572cfa2f30c7017ccb3896757362b519793f318b290"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/rpc-compatibility.json",
+      "bytes": 152,
+      "sha256": "6f0163f39d8aed1c6a6ae4e2d3c7c9fa81c521f9b96af0c6744d62c42bd43490"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/runtime-final.log",
+      "bytes": 690,
+      "sha256": "85e92d2b2d2b47964d912fcea03bb3a3c26fa747a646aa50e5f726bdf13c8afb"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/runtime-final.result.json",
+      "bytes": 96,
+      "sha256": "0e45ef29d27e9da43980757d107e99971cd4ae5978d28587b7b206d8eafa1373"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/services-after.log",
+      "bytes": 781,
+      "sha256": "c80f77820deb36cf18be855b73f2bb8ce3c9ffb873c6f4706d7662a6dc4eea52"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/services-before.log",
+      "bytes": 2471,
+      "sha256": "aa46c75a6c0cf169f33a8c9db947c9b8d4ae7b9883b9c59a0a02c8c0298e47c6"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/services-complete.log",
+      "bytes": 913,
+      "sha256": "eb2c2eeec7003f5e1ec7539d405d808ace660d95b77ca8ecd1294e7c2da31647"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/services-final.log",
+      "bytes": 913,
+      "sha256": "eb2c2eeec7003f5e1ec7539d405d808ace660d95b77ca8ecd1294e7c2da31647"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/shared-contract-tests.log",
+      "bytes": 10959,
+      "sha256": "ae0d8daef3d328e0162c2d9146d16110cfc6ff0a77152eddce474f75ce310619"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/startup-comparison.json",
+      "bytes": 1670,
+      "sha256": "5492465596eab21c6da1c909cf547232d3e759b3993f9d38343f4a45131141e0"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/storage-after.log",
+      "bytes": 834,
+      "sha256": "67bd17a1bef5ffba0c93d2ebb287d053086d920c08eb89d2126d1c4a7af506f1"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/storage-b1.log",
+      "bytes": 1830,
+      "sha256": "9f66dd3846280adf4ee810992522e24b5164c1f3ae42863e766f13c91fd1127d"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/storage-before.log",
+      "bytes": 11646,
+      "sha256": "40007ed8bcd24709a5eacfe2723ef73d1f5a87cf623d3e64ab551372eadf08fa"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/storage-final.log",
+      "bytes": 1103,
+      "sha256": "fd8e5f6282f958163110460372ace3a9d70560f3d82b830ded727f132c03a2f9"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/storage-mcp-existing-tests.log",
+      "bytes": 6203,
+      "sha256": "07485aa38391094c059f2597481e15d719a4228d7262505482a50b314873a609"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-check-fonts.log",
+      "bytes": 167,
+      "sha256": "c276ab67ab9277c98149c9f91ba6032425d121a62b0ccfc2a52313c97f9b791c"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-electron-pin-check.log",
+      "bytes": 125,
+      "sha256": "4e25c9e9fe02cd5e0b34ee9eefa2aa8c74128aa610d93f4371bf043593e078dd"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-final.result.json",
+      "bytes": 2405,
+      "sha256": "4e1906b6e0d70d0f65779cfa4cc66c87838ab8fa54a4f2bbdba0038b1fbd9887"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-identity-check.log",
+      "bytes": 283,
+      "sha256": "93e791aa80ae8c52c0b97acc7440181664ff655dc6a602679bf630010383035c"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-coverage.log",
+      "bytes": 110,
+      "sha256": "5e1b4de7176d512692caf48689f4c30ec484f2919901446b3800b1ebb9f738a7"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-dead-keys.log",
+      "bytes": 93,
+      "sha256": "2b9391a0b91ffbdfc7e29607eeaa1814c66e9d09b94acd29b62cbfe8707847e7"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-parity.log",
+      "bytes": 84,
+      "sha256": "3a01d07789c36dcd5055c4e309eb5a132b593daed72fcc26011ba14661f5dce7"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-lint-i18n-sorted.log",
+      "bytes": 43,
+      "sha256": "a385f7ad93d74caa977cc79adc9d67c665deb37126057e0e0db7e7da7f372059"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-runtime-check.log",
+      "bytes": 167,
+      "sha256": "3cdce5881fd42227db334dcf246d888e905f376002e1924da363bf682081f7b2"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/supplemental-version-check.log",
+      "bytes": 107,
+      "sha256": "e1282d98b4de778428bfc23fde7ee90fd02e8b1707b75c0261d706d7be0e3aec"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/tests-final.log",
+      "bytes": 759260,
+      "sha256": "d0de3791e53ea983b1ffd21338c4bbf8b4d0e031b664c8d02cb0d8f9702dc163"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/tests-final.result.json",
+      "bytes": 87,
+      "sha256": "9c3d8eebd31ee860f4b42bbe0573b0f5618918a985e3d8816b22fdd58e172020"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-final-2.log",
+      "bytes": 1093,
+      "sha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-final-2.result.json",
+      "bytes": 62,
+      "sha256": "27fac35c68a3d4a1e2ee2493e417ce593731f14e0b45948f0a1c6a6ed144f280"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-final.log",
+      "bytes": 2776,
+      "sha256": "d1b16a173a2562e0f9c686a89c93eafd58c5b6c0b5c0a7ad388efdf0401267f5"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-final.result.json",
+      "bytes": 62,
+      "sha256": "d4095368a632af5ce82ba587396b5229b97670d6af287efbdbfd947cc48dd18c"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-progress.log",
+      "bytes": 3749,
+      "sha256": "94d1f8b2f75995834cdbaca6843a983d4865fc7e28f2931de4c46877a299cbd5"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-progress.result.json",
+      "bytes": 62,
+      "sha256": "3a95a6b9acaff7d0eec22b32bdd6c375a9c93c452ddbfa07413ecb7c9a423b12"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-scripts-final.log",
+      "bytes": 185,
+      "sha256": "e283420265597eeadc420a3f3037106009b6ff2f5aec6db2ec0a80cf7362edc0"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/typecheck-scripts-final.result.json",
+      "bytes": 99,
+      "sha256": "1ae7ec8957f705ba2ed4ea310be41cc58c6d8f6b112956cac607bdacd7d4a1b3"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/upstream-final.log",
+      "bytes": 76077,
+      "sha256": "8f1d9d168a9008a816df9569297282e1aea8b4114fe6ee8479acc1182f39f490"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/upstream-final.result.json",
+      "bytes": 3300,
+      "sha256": "76b7fb6b28085e58936fe5570b38c9d8d26e1993b776105a21aea68ca77f8aed"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/usage-after.log",
+      "bytes": 1258,
+      "sha256": "2f38941628a326965147a9478c1d2f070a21cd50829e26803a44c683ef3e865e"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/user-files-preserved.json",
+      "bytes": 187,
+      "sha256": "84a063fcaf9e5f7915b03a585c1972ed6acada767c71de56749962c385de1c69"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/viewer-build.log",
+      "bytes": 62183,
+      "sha256": "a5c1a903a04f2c1f0e9708783525e3133a0a80750f0159c23f06c065917655b4"
+    },
+    {
+      "path": ".cache/governance-implementation-2026-10-16/webui-build.log",
+      "bytes": 80131,
+      "sha256": "c379e1b09f127fa531ca692a9528f705720bce417d263c7a64eb0de02612b7b4"
+    }
+  ],
+  "verifications": [
+    {
+      "name": "storage",
+      "directory": ".cache/verification/project-governance-storage-final-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-storage-workflow.ts",
+        "--output-dir=.cache/verification/project-governance-storage-final-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 8,
+      "sceneIds": [
+        "H01-long-description-and-transfer-remain-listed",
+        "H02-boundaries-utf8-and-no-newline",
+        "H03-invalid-and-missing-header-keep-null-contract",
+        "D01-locked-delete-rejects-without-success-and-retries",
+        "D02-inflight-and-pending-writes-settle-before-delete",
+        "D03-repeat-delete-notifies-once",
+        "U01-file-sqlite-replay-conflict-and-rollback",
+        "U02-new-usage-never-enumerates-history"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "07ba836ae12477ab63ad83864b639f3a3955731762c4578c2e69beaaf0230af0",
+      "untested": [
+        "Other operating systems",
+        "Live user sessions",
+        "Signed release"
+      ]
+    },
+    {
+      "name": "services",
+      "directory": ".cache/verification/project-governance-services-complete-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-services-workflow.ts",
+        "--output-dir=.cache/verification/project-governance-services-complete-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 6,
+      "sceneIds": [
+        "S01-two-rpc-clients-independent-workspaces-and-shared-workspace",
+        "S02-plain-base64-and-text-with-encoded-attachments",
+        "S03-same-owner-cancels-old-search-and-blank-query",
+        "M01-http-header-sync-ensure-and-url-updates",
+        "M02-mutating-caller-config-does-not-mutate-active-config",
+        "M03-stdio-argument-environment-and-cwd-updates"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "2e173acdffcb0e0e034418bb7c99f5f9f16d1ef43c3de054b9fed74ebc3ab9ef",
+      "untested": [
+        "Live external MCP services",
+        "Other operating systems",
+        "Long-running resource stress"
+      ]
+    },
+    {
+      "name": "browser",
+      "directory": ".cache/verification/project-governance-browser-after-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-browser-workflow.ts",
+        "--output-dir=.cache/verification/project-governance-browser-after-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 5,
+      "sceneIds": [
+        "V01-older-success-cannot-overwrite-new-session",
+        "V01-older-not-found-cannot-overwrite-new-session",
+        "V02-clear-cancels-old-request-and-shows-upload",
+        "W01-chunk-error-fallback-and-reload-recovery",
+        "W01-render-error-fallback-and-reload-recovery"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "d43ac4679d3c32d60719f1ab533fe5c862eabebe9acd0818aaecf806f82efda3",
+      "untested": [
+        "Native IME/touch",
+        "Other browsers/operating systems",
+        "Live provider APIs"
+      ]
+    },
+    {
+      "name": "usage",
+      "directory": ".cache/verification/project-governance-usage-after-20261016",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "E:\\Phaneris\\scripts\\verification\\project-governance-usage-benchmark.ts",
+        "--output-dir=.cache/verification/project-governance-usage-after-20261016"
+      ],
+      "exitCode": 0,
+      "passed": 8,
+      "sceneIds": [
+        "memory-0",
+        "memory-1000",
+        "memory-10000",
+        "memory-50000",
+        "file-wal-0",
+        "file-wal-1000",
+        "file-wal-10000",
+        "file-wal-50000"
+      ],
+      "sourceHead": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+      "manifestSha256": "b9d4c5a8a1028ede58bda49453031854b84cdc5d73a6f9c169eb2445016c38a1",
+      "untested": [
+        "Live provider inference",
+        "Other hardware or operating systems"
+      ]
+    }
+  ],
+  "copiedConclusions": [
+    {
+      "path": "browser.json",
+      "sha256": "b9f0bca38cccb448995e00c30410eed2bee6819dbb1c9166a6ee3066d9ee6593"
+    },
+    {
+      "path": "performance-summary.json",
+      "sha256": "b6737a034d70556897bdcc0d034d754846968af2bc09165ab850706804bbf831"
+    },
+    {
+      "path": "services.json",
+      "sha256": "287af9f512091652b61bbbf8d7ba27b2ed3afe09b8d084dd47a52a1fdd0e6e47"
+    },
+    {
+      "path": "startup-comparison.json",
+      "sha256": "d3cc247404ae2145002078d0ff75959b3ead7d506ff5aa3f71b4e78b8fd4feab"
+    },
+    {
+      "path": "storage.json",
+      "sha256": "fb611babad2d2dc8d0c18d4eaefb8211e82295baff0fc119f5704cadb781b7eb"
+    },
+    {
+      "path": "summary.json",
+      "sha256": "da6429e9f7d1813a2f20036b33cf1ff0b56e472bc3e1e74a8c7cf6ec40fce68e"
+    },
+    {
+      "path": "usage.json",
+      "sha256": "5b58fb9fe53dd94e560fdff7329993cd846ab7fec8e97be6d7ed89c089dc7148"
+    }
+  ]
+}

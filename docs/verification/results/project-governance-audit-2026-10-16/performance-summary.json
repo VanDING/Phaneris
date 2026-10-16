@@ -1,0 +1,125 @@
+{
+  "revision": "e08b0413d9d737d2b4914cb46e244ebfcc3d753c",
+  "createdAt": "2026-10-15T19:47:00.956Z",
+  "machine": {
+    "platform": "win32",
+    "release": "10.0.26300",
+    "arch": "x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i5-1340P",
+    "logicalCpus": 16,
+    "totalMemoryBytes": 16836734976,
+    "bun": "1.4.2",
+    "bunExecutableArch": "x64",
+    "node": "v24.15.0"
+  },
+  "scope": "Production Web UI + real WebSocket RPC + SessionManager, synthetic offline workload. No Electron main/native startup or provider inference. Idle eviction uses an advanced clock; soak uses real time. Frame proxy = marker present plus two requestAnimationFrame callbacks, not hardware presentation. RSS is sampled, not peak or retained heap.",
+  "options": {
+    "sizes": [
+      100,
+      1000,
+      5000
+    ],
+    "sessions": 24,
+    "repeats": 5,
+    "deltas": 200,
+    "soakSeconds": 60,
+    "writes": 10
+  },
+  "builds": {
+    "reused": true,
+    "bundles": [
+      {
+        "path": "apps/webui/dist/index.html",
+        "bytes": 4035,
+        "modifiedAt": "2026-10-15T19:40:03.479Z"
+      },
+      {
+        "path": "packages/pi-agent-server/dist/index.js",
+        "bytes": 22,
+        "modifiedAt": "2026-10-15T19:46:27.306Z"
+      }
+    ]
+  },
+  "budgetStatus": "failed",
+  "budgetChecks": [
+    {
+      "id": "navigation",
+      "pass": false,
+      "samples": [
+        3447.1282999999994,
+        2498.3709
+      ],
+      "limit": 3000
+    },
+    {
+      "id": "firstVisit",
+      "pass": true,
+      "samples": [
+        228.16849999999977,
+        495.72730000000047,
+        935.4696000000004
+      ],
+      "limit": 3000
+    },
+    {
+      "id": "warmSwitch",
+      "pass": true,
+      "samples": [
+        281.8749000000007,
+        317.6273000000001,
+        265.41499999999905,
+        366.1202000000012,
+        216.97289999999884,
+        218.1892000000007,
+        230.95140000000174,
+        234.424500000001,
+        216.54309999999896,
+        200.33650000000125,
+        183.54230000000098,
+        234.0773999999983,
+        233.7616999999991,
+        214.80479999999807,
+        234.17289999999775
+      ],
+      "limit": 2000
+    },
+    {
+      "id": "inputTwoFrames",
+      "pass": true,
+      "samples": [
+        71.2381000000023,
+        31.88590000000113,
+        33.48779999999897
+      ],
+      "limit": 250
+    },
+    {
+      "id": "firstStreamTwoFrames",
+      "pass": true,
+      "samples": [
+        229.1929999999993
+      ],
+      "limit": 1500
+    },
+    {
+      "id": "rendererHeapBytes",
+      "pass": true,
+      "samples": [
+        62317048
+      ],
+      "limit": 268435456
+    },
+    {
+      "id": "backendRssBytes",
+      "pass": true,
+      "samples": [
+        201895936
+      ],
+      "limit": 1073741824
+    }
+  ],
+  "browserErrors": [],
+  "blockedExternalRequestCount": 0,
+  "after": null,
+  "afterStatus": "Not measured: implementation has not been authorized or started."
+}

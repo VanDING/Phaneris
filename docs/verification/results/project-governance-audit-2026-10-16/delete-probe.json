@@ -1,0 +1,34 @@
+{
+  "fileStillExists": true,
+  "managerStillHasSession": false,
+  "deletionRejected": null,
+  "events": [
+    {
+      "channel": "session:event",
+      "target": {
+        "to": "workspace",
+        "workspaceId": "audit-delete"
+      },
+      "args": [
+        {
+          "type": "session_deleted",
+          "sessionId": "locked-session"
+        }
+      ]
+    },
+    {
+      "channel": "sessions:unreadSummaryChanged",
+      "target": {
+        "to": "all"
+      },
+      "args": [
+        {
+          "totalUnreadSessions": 0,
+          "byWorkspace": {},
+          "hasUnreadByWorkspace": {}
+        }
+      ]
+    }
+  ],
+  "note": "Production SessionManager.deleteSession and real Windows non-delete-sharing handle on a synthetic transcript."
+}

@@ -34,7 +34,20 @@ function createMockWebContents(sendCommandImpl?: (method: string, params?: any) 
     debugger: {
       attach: mock((_version: string) => {}),
       detach: mock(() => {}),
-      sendCommand: mock(sendCommandImpl ?? (async () => ({ nodes: [] }))),
+      sendCommand: mock(async (method: string, params?: any) => {
+        const response = await sendCommandImpl?.(method, params)
+        if (response && Object.keys(response).length > 0) return response
+        // A visible, unobstructed element with a delivered trusted click.
+        if (method === 'DOM.getContentQuads') return { quads: [[10, 10, 50, 10, 50, 50, 10, 50]] }
+        if (method === 'Page.getLayoutMetrics') return { cssLayoutViewport: { clientWidth: 1200, clientHeight: 900 } }
+        if (method === 'Runtime.callFunctionOn' && params?.functionDeclaration?.includes('craft:hit-test')) {
+          return { result: { value: { ok: true } } }
+        }
+        if (method === 'Runtime.callFunctionOn' && params?.functionDeclaration?.includes('craft:read-click-probe')) {
+          return { result: { value: { down: true, click: true } } }
+        }
+        return response ?? { nodes: [] }
+      }),
       on: mock((event: string, cb: Function) => {
         if (!listeners[event]) listeners[event] = []
         listeners[event].push(cb)
@@ -380,7 +393,7 @@ describe('BrowserCDP', () => {
   describe('selectOption', () => {
     it('sets value and dispatches events', async () => {
       const sentCommands: string[] = []
-      const wc = createMockWebContents(async (method) => {
+      const wc = createMockWebContents(async (method, params) => {
         sentCommands.push(method)
         if (method === 'Accessibility.getFullAXTree') {
           return {
@@ -394,6 +407,10 @@ describe('BrowserCDP', () => {
         }
         if (method === 'DOM.getBoxModel') {
           return { model: { content: [10, 10, 50, 10, 50, 50, 10, 50] } }
+        }
+        if (method === 'Runtime.callFunctionOn' && params?.functionDeclaration?.includes('craft:select-native')) {
+          expect(params.arguments).toEqual([{ value: 'US' }])
+          return { result: { value: { ok: true } } }
         }
         return {}
       })

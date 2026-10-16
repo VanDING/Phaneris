@@ -5622,7 +5622,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 399,
+          "line": 401,
           "args": [
             "sessionId: string",
             "silent?: boolean"
@@ -5644,7 +5644,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 266,
+          "line": 268,
           "args": [
             "sessionId: string",
             "readId: string"
@@ -5666,7 +5666,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 447,
+          "line": 449,
           "args": [
             "sessionId: string",
             "command: import('@phaneris/shared/protocol').SessionCommand"
@@ -5688,7 +5688,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 323,
+          "line": 325,
           "args": [
             "workspaceId: string",
             "options?: import('@phaneris/shared/protocol').CreateSessionOptions"
@@ -5710,7 +5710,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 333,
+          "line": 335,
           "args": [
             "sessionId: string"
           ],
@@ -5731,7 +5731,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 744,
+          "line": 747,
           "args": [
             "sessionId: string"
           ],
@@ -5752,7 +5752,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 770,
+          "line": 773,
           "args": [
             "sessionId: string"
           ],
@@ -5784,7 +5784,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 210,
+          "line": 212,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5803,7 +5803,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 630,
+          "line": 633,
           "args": [
             "sessionId: string",
             "scope: SessionFileScope = 'session'"
@@ -5825,7 +5825,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 252,
+          "line": 254,
           "args": [
             "sessionId: string"
           ],
@@ -5846,7 +5846,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 707,
+          "line": 710,
           "args": [
             "sessionId: string"
           ],
@@ -5867,7 +5867,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 549,
+          "line": 551,
           "args": [
             "sessionId: string"
           ],
@@ -5888,7 +5888,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 558,
+          "line": 560,
           "args": [
             "sessionId: string"
           ],
@@ -5909,7 +5909,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 272,
+          "line": 274,
           "args": [
             "sessionId: string",
             "toolOperationId: string"
@@ -5931,7 +5931,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 238,
+          "line": 240,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -5950,7 +5950,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 765,
+          "line": 768,
           "args": [
             "named handler; see source"
           ],
@@ -5971,7 +5971,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 782,
+          "line": 785,
           "args": [
             "targetWorkspaceId: string",
             "payload: import('@phaneris/shared/protocol').RemoteSessionTransferPayload"
@@ -5993,7 +5993,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 405,
+          "line": 407,
           "args": [
             "sessionId: string",
             "shellId: string"
@@ -6015,7 +6015,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 247,
+          "line": 249,
           "args": [
             "workspaceId: string"
           ],
@@ -6036,7 +6036,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 295,
+          "line": 297,
           "args": [
             "sessionId: string",
             "toolOperationId: string"
@@ -6058,7 +6058,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 260,
+          "line": 262,
           "args": [
             "sessionId: string",
             "cursor?: SessionReadCursor"
@@ -6080,7 +6080,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 309,
+          "line": 311,
           "args": [
             "sessionId: string",
             "request: Omit<import('@phaneris/shared/durable-runtime').ModelReconciliationRequest, 'sessionId' | 'actor'>"
@@ -6102,7 +6102,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 281,
+          "line": 283,
           "args": [
             "sessionId: string",
             "request: Omit<import('@phaneris/shared/durable-runtime').ToolReconciliationRequest, 'sessionId' | 'actor'>"
@@ -6124,7 +6124,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 437,
+          "line": 439,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6147,7 +6147,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 430,
+          "line": 432,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6170,7 +6170,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 423,
+          "line": 425,
           "args": [
             "sessionId: string",
             "requestId: string",
@@ -6194,7 +6194,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 571,
+          "line": 573,
           "args": [
             "workspaceId: string",
             "query: string",
@@ -6217,7 +6217,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 351,
+          "line": 353,
           "args": [
             "sessionId: string",
             "message: string",
@@ -6242,7 +6242,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 723,
+          "line": 726,
           "args": [
             "sessionId: string",
             "content: string"
@@ -6275,7 +6275,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 699,
+          "line": 702,
           "args": [
             "scope: SessionFileScope = 'session'"
           ],
@@ -6296,7 +6296,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 649,
+          "line": 652,
           "args": [
             "sessionId: string",
             "scope: SessionFileScope = 'session'"
@@ -7122,7 +7122,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/sessions.ts",
-          "line": 411,
+          "line": 413,
           "args": [
             "taskId: string"
           ],

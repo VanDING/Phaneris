@@ -14,6 +14,7 @@ import type { ISessionManager } from '../session-manager-interface'
 import { setTransferableHandler } from './transfer'
 import { SessionReadStore } from './session-read-store'
 import type { SessionReadCursor } from '@phaneris/shared/protocol'
+import { cancelSessionSearchesForClient } from '../../services/search'
 
 const sessionReads = new SessionReadStore()
 
@@ -58,6 +59,7 @@ function sessionWorkspaceDistribution(sessions: Array<{ workspaceId?: string }>)
  * Called from main process disconnect hooks to prevent watcher leaks.
  */
 export function cleanupSessionFileWatchForClient(clientId: string): void {
+  cancelSessionSearchesForClient(clientId)
   void sessionReads.closeForClient(clientId)
   for (const [key, state] of clientSessionWatches) {
     if (!key.startsWith(`${clientId}:`)) continue
@@ -568,7 +570,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
   // ============================================================
 
   // Search session content using ripgrep
-  server.handle(RPC_CHANNELS.sessions.SEARCH_CONTENT, async (_ctx, workspaceId: string, query: string, searchId?: string) => {
+  server.handle(RPC_CHANNELS.sessions.SEARCH_CONTENT, async (ctx, workspaceId: string, query: string, searchId?: string) => {
     const id = searchId || Date.now().toString(36)
     log.info('[search]','ipc:request', { searchId: id, query })
 
@@ -589,6 +591,7 @@ export function registerSessionsHandlers(server: RpcServer, deps: HandlerDeps): 
       maxMatchesPerSession: 3,
       maxSessions: 50,
       searchId: id,
+      clientId: ctx.clientId,
     })
 
     // Filter out hidden sessions (e.g., mini edit sessions)

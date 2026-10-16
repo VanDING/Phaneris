@@ -1,0 +1,60 @@
+[
+  {
+    "source": ".cache/governance-audit-2026-10-16-9ad6eeaa/performance-baseline.json",
+    "chromium": "155.0.4283.45",
+    "firstNavigationMs": 3447.1282999999994,
+    "secondNavigationMs": 2498.3709,
+    "htmlResponseEndMs": 118.8999999910593,
+    "domContentLoadedMs": 626.5999999940395,
+    "resourceCount": 97,
+    "resourceEncodedBytes": 4900772,
+    "lastResourceEndMs": 3005.7999999970198,
+    "slowestStartupHandlers": [
+      {
+        "channel": "automations:get",
+        "elapsedMs": 578.5210999999999
+      },
+      {
+        "channel": "pages:get",
+        "elapsedMs": 576.8878000000004
+      },
+      {
+        "channel": "projects:get",
+        "elapsedMs": 572.6457
+      },
+      {
+        "channel": "rtk:getStatus",
+        "elapsedMs": 332.70799999999963
+      }
+    ]
+  },
+  {
+    "source": ".cache/governance-implementation-2026-10-16/performance-final.json",
+    "chromium": "155.0.4283.60",
+    "firstNavigationMs": 4991.847299999999,
+    "secondNavigationMs": 1959.1628000000019,
+    "htmlResponseEndMs": 110.1000000089407,
+    "domContentLoadedMs": 622.1000000089407,
+    "resourceCount": 97,
+    "resourceEncodedBytes": 4900909,
+    "lastResourceEndMs": 4292.5,
+    "slowestStartupHandlers": [
+      {
+        "channel": "pages:get",
+        "elapsedMs": 1909.922199999999
+      },
+      {
+        "channel": "automations:get",
+        "elapsedMs": 1845.4550999999992
+      },
+      {
+        "channel": "projects:get",
+        "elapsedMs": 1841.7201999999997
+      },
+      {
+        "channel": "skills:get",
+        "elapsedMs": 1528.2170999999998
+      }
+    ]
+  }
+]

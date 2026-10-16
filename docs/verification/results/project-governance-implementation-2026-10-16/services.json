@@ -1,0 +1,26 @@
+[
+  {
+    "id": "S01-two-rpc-clients-independent-workspaces-and-shared-workspace",
+    "pass": true
+  },
+  {
+    "id": "S02-plain-base64-and-text-with-encoded-attachments",
+    "pass": true
+  },
+  {
+    "id": "S03-same-owner-cancels-old-search-and-blank-query",
+    "pass": true
+  },
+  {
+    "id": "M01-http-header-sync-ensure-and-url-updates",
+    "pass": true
+  },
+  {
+    "id": "M02-mutating-caller-config-does-not-mutate-active-config",
+    "pass": true
+  },
+  {
+    "id": "M03-stdio-argument-environment-and-cwd-updates",
+    "pass": true
+  }
+]

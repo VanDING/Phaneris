@@ -86,7 +86,7 @@ describe('SystemOneClient.decide', () => {
     expect(result.model).toBe('jev-1.13.0');
     expect(result.modelReported).toBe(true);
     expect(result.requestedModel).toBe('jev-1.13.0');
-    expect(result.usage).toEqual({ inputTokens: 328, outputTokens: 34 });
+    expect(result.usage).toEqual({ inputTokens: 328, outputTokens: 34, costSource: 'unknown', costUnavailableReason: 'not_reported' });
     expect(result.answers.department).toEqual({ type: 'choice', choice: 'returns', confidence: 0.9, probabilities: { returns: 0.93, shipping: 0.05, billing: 0.02 } });
     expect(result.answers.severity).toMatchObject({ type: 'score', score: 1.24, confidence: 0.64, probabilities: { '0': 0, '1': 0.76, '2': 0.24 } });
     expect(result.answers.wants_human).toEqual({ type: 'noul', noul: 0.07 });
