@@ -1,0 +1,46 @@
+bun audit v1.4.2 (744846f84)
+
+http-cache-semantics@4.2.0
+  workspace:@phaneris/electron > electron > @electron/get > got > cacheable-request > http-cache-semantics
+  electron-builder > dmg-builder > app-builder-lib > @electron/get > got > cacheable-request > http-cache-semantics
+  high: http-cache-semantics max-stale handling can disclose cross-user cached responses (<=4.2.0) - https://github.com/advisories/GHSA-ch52-4w7c-c8xp
+
+katex@0.18.10, 0.16.47
+  (direct dependency)
+  workspace:@phaneris/ui > katex
+  workspace:@phaneris/ui > @tiptap/extension-mathematics > katex
+  workspace:@phaneris/ui > rehype-katex > katex
+  workspace:@phaneris/electron > @open-file-viewer/core > mermaid > katex
+  workspace:@phaneris/ui > remark-math > micromark-extension-math > katex
+  low: KaTeX: Existing prototype pollution can bypass trust restrictions (>=0.11.0 <0.18.2) - https://github.com/advisories/GHSA-238p-pmpm-9mq7
+
+node-tesseract-ocr@2.2.1
+  workspace:@phaneris/server-core > markitdown-js > node-tesseract-ocr
+  critical: node-tesseract-ocr is vulnerable to OS Command Injection through unsanitized recognize() function parameter (<=2.2.1) - https://github.com/advisories/GHSA-8j44-735h-w4w2
+
+postcss-selector-parser@6.0.10
+  workspace:@phaneris/viewer > @tailwindcss/typography > postcss-selector-parser
+  moderate: PostCSS: Quadratic complexity in flat selector parsing allows CPU exhaustion (<7.1.6) - https://github.com/advisories/GHSA-rj75-hqrm-r3gf
+
+proxy-addr@2.0.7
+  workspace:@phaneris/core > @modelcontextprotocol/sdk > express > proxy-addr
+  critical: proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet (>=1.1.0 <2.0.8) - https://github.com/advisories/GHSA-jqcg-44mw-7w3h
+
+source-map-js@1.2.1
+  workspace:@phaneris/viewer > @tailwindcss/vite > @tailwindcss/node > source-map-js
+  workspace:@phaneris/viewer > vite > postcss > source-map-js
+  high: source-map-js allows event-loop denial of service through indexed source-map section offsets (>=1.0.0 <1.2.2) - https://github.com/advisories/GHSA-68fv-2mgg-jv7q
+
+sprintf-js@1.0.3, 1.1.3
+  js-yaml > argparse > sprintf-js
+  workspace:@phaneris/electron > @open-file-viewer/core > mammoth > argparse > sprintf-js
+  workspace:@phaneris/server-core > markitdown-js > mammoth > argparse > sprintf-js
+  workspace:@phaneris/ui > tiptap-markdown > prosemirror-markdown > markdown-it > argparse > sprintf-js
+  workspace:@phaneris/electron > electron > @electron/get > global-agent > roarr > sprintf-js
+  electron-builder > dmg-builder > app-builder-lib > @electron/get > global-agent > roarr > sprintf-js
+  moderate: sprintf-js vulnerable to denial of service through unbounded precision specifiers (<=1.1.3) - https://github.com/advisories/GHSA-hp3w-g68c-fv3c
+
+7 vulnerabilities (2 critical, 2 high, 2 moderate, 1 low)
+
+  bun audit fix           upgrade the vulnerable packages within their ranges
+  bun audit fix --latest  also cross major versions

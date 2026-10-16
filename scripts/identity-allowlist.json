@@ -3,6 +3,16 @@
   "description": "Strict identity exceptions: immutable generated/legal/scan machinery or exact reviewed compatibility, provider, provenance and historical lines. No directory-wide maintainer-doc allowance. New occurrences in approved files still fail.",
   "rules": [
     {
+      "glob": "docs/dependencies/dependency-audit-2026-10-16/npm-metadata.json",
+      "tokens": ["upstream-owner"],
+      "category": "provenance",
+      "reason": "Official registry metadata records the original beautiful-mermaid repository and homepage; audit evidence must retain the publisher's actual URLs.",
+      "lines": [
+        "\"url\": \"git+https://github.com/lukilabs/beautiful-mermaid.git\"",
+        "\"homepage\": \"https://github.com/lukilabs/beautiful-mermaid\","
+      ]
+    },
+    {
       "glob": "phaneris.identity.json",
       "tokens": [
         "*"

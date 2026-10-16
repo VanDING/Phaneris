@@ -2,8 +2,9 @@
 import { createInterface } from 'node:readline'
 const input = createInterface({ input: process.stdin })
 input.on('line', async line => {
-  let command: { governanceFault?: string }
+  let command: { governanceFault?: string; governanceStop?: boolean }
   try { command = JSON.parse(line) } catch { return }
+  if (command.governanceStop) { process.emit('SIGTERM'); return }
   if (!command.governanceFault) return
   const error = new Error(`governance-${command.governanceFault}`, { cause: new Error('governance-original-cause') })
   if (command.governanceFault === 'hang-cleanup' || command.governanceFault === 'throw-cleanup') {

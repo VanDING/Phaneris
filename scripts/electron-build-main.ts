@@ -274,7 +274,9 @@ async function main(): Promise<void> {
       // ~55% smaller to parse at every app start. Source maps remain disabled.
       minify: true,
       outfile: "apps/electron/dist/main.cjs",
-      external: ["electron"],
+      // unzipper loads this optional peer only from Open.s3_v3(). Local archive
+      // extraction never uses it; keep the inactive adapter out of our bundle.
+      external: ["electron", "@aws-sdk/client-s3"],
       // Replace grammY's bundled polyfills (node-fetch@2 + abort-controller@3)
       // with native Node globals. esbuild otherwise renames the polyfill's
       // `class AbortSignal` to `_AbortSignal` to dodge collision with the

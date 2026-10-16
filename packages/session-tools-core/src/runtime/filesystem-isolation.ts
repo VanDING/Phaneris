@@ -159,9 +159,6 @@ export function applyFilesystemIsolation(
         command: 'bwrap',
         args: [
           '--die-with-parent',
-          '--ro-bind', sessionRoot, sessionRoot,
-          ...(options?.readablePaths ?? []).flatMap(path => ['--ro-bind', resolve(path), resolve(path)]),
-          ...(options?.writablePaths ?? []).flatMap((writablePath) => ['--bind', resolve(writablePath), resolve(writablePath)]),
           // Essential runtime dirs (interpreters, shared libs, certs/locale).
           // --ro-bind-try tolerates dirs absent on some distros (e.g. /opt).
           '--ro-bind-try', '/usr', '/usr',
@@ -175,6 +172,11 @@ export function applyFilesystemIsolation(
           '--tmpfs', '/tmp',
           '--proc', '/proc',
           '--dev', '/dev',
+          // Bind session assets after /tmp: a later tmpfs would hide every
+          // session/script under /tmp, including CI's temporary fixtures.
+          '--ro-bind', sessionRoot, sessionRoot,
+          ...(options?.readablePaths ?? []).flatMap(path => ['--ro-bind', resolve(path), resolve(path)]),
+          ...(options?.writablePaths ?? []).flatMap((writablePath) => ['--bind', resolve(writablePath), resolve(writablePath)]),
           '--',
           command,
           ...args,

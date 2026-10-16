@@ -66,7 +66,12 @@ await verificationWorkflow('process-lifecycle', async evidence => {
       const config = seedServer(join(fixture, `pi-${fault}`))
       const pi = await startProcess({ ...config, entry: join(repository, 'packages/pi-agent-server/dist/index.js'), ready: false,
         extra: { PHANERIS_DEBUG: 'true' } }); children.push(pi)
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await deadline((async () => {
+        while (!pi.stderr().includes('[pi-server] Pi agent server starting')) {
+          if (pi.process.exitCode !== null) throw new Error(`Pi exited before lifecycle handlers were ready: ${pi.stderr()}`)
+          await new Promise(resolve => setTimeout(resolve, 20))
+        }
+      })(), 5000)
       pi.process.stdin.write(`${JSON.stringify({ type: 'abort', governanceFault: fault })}\n`)
       assert.equal(await deadline(pi.exited, 5000), 1)
       const error = pi.stdout().trim().split('\n').map(line => JSON.parse(line) as { type: string; message?: string; code?: string }).find(message => message.type === 'error')

@@ -20,6 +20,7 @@ await verificationWorkflow('upstream-015-browser', async run => {
   try {
     const [stdout,stderr,code] = await Promise.all([new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited])
     writeFileSync(join(run.directory, 'native-process.log'), stdout+stderr)
+    assert.equal(code, 0, `Native browser process failed before reporting: ${(stdout + stderr).slice(-4000)}`)
     const report = JSON.parse(readFileSync(join(run.directory, 'native-browser.json'),'utf8'))
     assert.equal(code,0,JSON.stringify(report)); checks = report.checks
   } finally { clearTimeout(timer) }

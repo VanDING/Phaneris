@@ -15,6 +15,7 @@ const members = metadata.workspaces.flatMap(pattern => [...new Bun.Glob(`${patte
   .map(path => path.replaceAll('\\', '/').slice(0, -'/package.json'.length))).sort()
 if (members.length === 0) failures.push('Distribution workspace scan is empty')
 if (!docker.includes(`FROM oven/bun:${bun}-slim`)) failures.push(`Docker Bun must match packageManager ${bun}`)
+if (!docker.includes('python3 make g++') || docker.indexOf('python3 make g++') > docker.indexOf('RUN bun install --frozen-lockfile')) failures.push('Native node-pty builds require Python, make and a C++ compiler before install')
 const install = docker.indexOf('RUN bun install --frozen-lockfile'), patches = docker.indexOf('COPY patches/ patches/')
 if (install < 0 || patches < 0 || patches > install) failures.push('All patches must be copied before frozen install')
 for (const member of members) {

@@ -18,6 +18,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
+本轮维护：[2026-10-16 全量依赖升级评估](dependencies/dependency-audit-2026-10-16.md)；[CI 修复失败矩阵](verification/ci-repair-failure-matrix-2026-10-16.md)；[CI 修复验证记录](verification/ci-repair-2026-10-16.md)。
+
 | Document | Status | Purpose |
 | --- | --- | --- |
 | [Project README](../README.md) / [中文](../README.zh-CN.md) | Current | Product introduction, capabilities, screenshots, setup, and positioning. |

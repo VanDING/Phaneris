@@ -1,0 +1,163 @@
+{
+  "node": "v24.15.0",
+  "results": [
+    {
+      "check": "http-cache",
+      "scenario": "private",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "private",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "no-store",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "no-store",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "response-no-cache",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "response-no-cache",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "shared-set-cookie",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "shared-set-cookie",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "authenticated-not-public",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "authenticated-not-public",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "proxy-revalidate",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "proxy-revalidate",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "zero-age-with-stale-while-revalidate",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "zero-age-with-stale-while-revalidate",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "vary-star",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "vary-star",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "must-revalidate",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "must-revalidate",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "miss"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "public-fresh-control",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "hit"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "public-fresh-control",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "hit"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "public-stale-control",
+      "directive": "max-stale=999999",
+      "passed": true,
+      "observed": "hit"
+    },
+    {
+      "check": "http-cache",
+      "scenario": "public-stale-control",
+      "directive": "max-stale",
+      "passed": true,
+      "observed": "hit"
+    },
+    {
+      "check": "ocr-execFile-literal-arguments",
+      "passed": true
+    }
+  ]
+}

@@ -11,6 +11,7 @@ await verificationWorkflow('distribution-inputs', async run => {
   const manifests = metadata.workspaces.flatMap(pattern => [...new Bun.Glob(`${pattern}/package.json`).scanSync({ cwd: process.cwd() })])
   const cases = [
     ['complete', docker, undefined, true],
+    ['missing-native-toolchain', docker.replace('python3 make g++', ''), undefined, false],
     ['floating-bun', docker.replace(/FROM oven\/bun:[^\s]+/, 'FROM oven/bun:1.4-slim'), undefined, false],
     ['missing-patch-copy', docker.replace(/^COPY patches\/ patches\/\s*$/m, ''), undefined, false],
     ['missing-patch-file', docker, Object.values(metadata.patchedDependencies)[0], false],

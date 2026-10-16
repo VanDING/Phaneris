@@ -1,0 +1,25 @@
+bun test v1.4.2 (744846f84)
+
+packages\session-tools-core\src\runtime\filesystem-isolation.test.ts:
+(pass) buildDarwinSandboxProfile > includes session subpath write allow [12.14ms]
+(pass) buildDarwinSandboxProfile > includes deny network when requested [5.48ms]
+(pass) buildDarwinSandboxProfile > canonicalizes a symlinked session path so the kernel can match it [7.79ms]
+(pass) buildDarwinSandboxProfile > canonicalizes symlinked writable paths too [5.67ms]
+(pass) buildDarwinSandboxProfile > canonicalizes through the deepest existing ancestor when the leaf does not exist yet [4.43ms]
+(pass) buildDarwinSandboxProfile > escapes a crafted quote in a not-yet-existing path so it cannot break out of the profile [4.32ms]
+(pass) buildDarwinSandboxProfile > escapes backslashes, which are the profile format's own escape character [0.13ms]
+
+packages\session-tools-core\src\handlers\transform-data.test.ts:
+(pass) transform_data path containment > rejects output path in sibling directory with shared prefix [13.88ms]
+(pass) transform_data path containment > rejects input path in sibling directory with shared prefix [14.31ms]
+(pass) transform_data path containment > rejects output path that escapes via symlink [13.08ms]
+(pass) transform_data path containment > allows valid descendant paths only with platform isolation [20.13ms]
+(pass) transform_data path containment > allows skills input only with platform isolation [18.42ms]
+(pass) transform_data path containment > still rejects input files outside both session and skills directories [23.55ms]
+(pass) transform_data path containment > rejects input path in skills dir that escapes via symlink [16.57ms]
+(pass) transform_data path containment > rejects skills path when skillsPath is not available in context [21.11ms]
+
+ 15 pass
+ 0 fail
+ 31 expect() calls
+Ran 15 tests across 2 files. [254.00ms]

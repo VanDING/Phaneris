@@ -56,7 +56,15 @@ export async function startProcess(options: {
   })
   child.stderr.on('data', data => { stderr += data.toString() })
   const result: RunningProcess = { process: child, get url() { return url }, stdout: () => stdout, stderr: () => stderr, exited,
-    stop: async (signal = 'SIGTERM') => { if (child.exitCode === null) child.kill(signal); return deadline(exited, 15_000) } }
+    stop: async (signal = 'SIGTERM') => {
+      if (child.exitCode === null && child.signalCode === null) {
+        // Windows kill(SIGTERM) terminates immediately instead of delivering a
+        // signal. The test-only preload dispatches the same shutdown handler.
+        if (process.platform === 'win32' && signal === 'SIGTERM') child.stdin.write('{"governanceStop":true}\n')
+        else child.kill(signal)
+      }
+      return deadline(exited, 15_000)
+    } }
   if (options.ready !== false) {
     try { await deadline(ready.promise) } catch (error) { await result.stop('SIGKILL'); throw error }
   }
