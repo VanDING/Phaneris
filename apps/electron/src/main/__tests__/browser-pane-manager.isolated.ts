@@ -98,6 +98,7 @@ function createMockWindow(opts?: { width?: number; height?: number; minWidth?: n
   const minHeight = opts?.minHeight ?? 0
   let opacity = 1
   let alwaysOnTop = false
+  let bounds = { x: 0, y: 0, width: contentWidth, height: contentHeight }
 
   const win = {
     webContents,
@@ -126,6 +127,10 @@ function createMockWindow(opts?: { width?: number; height?: number; minWidth?: n
     isAlwaysOnTop: mock(() => alwaysOnTop),
     setAlwaysOnTop: mock((value: boolean) => { alwaysOnTop = value }),
     setIgnoreMouseEvents: mock(() => {}),
+    getBounds: mock(() => ({ ...bounds })),
+    setBounds: mock((value: typeof bounds) => { bounds = { ...value } }),
+    setPosition: mock((x: number, y: number) => { bounds = { ...bounds, x, y } }),
+    setSkipTaskbar: mock(() => {}),
     setWindowButtonVisibility: mock((_visible: boolean) => {}),
     hide: mock(() => {
       win._emit('hide')
@@ -149,6 +154,7 @@ function createMockWindow(opts?: { width?: number; height?: number; minWidth?: n
 }
 
 mock.module('electron', () => ({
+  screen: { getAllDisplays: mock(() => [{ bounds: { x: 0, y: 0, width: 1920, height: 1080 } }]) },
   app: {
     getPath: mock((name: string) => name === 'downloads' ? '/tmp/mock-downloads' : `/tmp/mock-${name}`),
   },

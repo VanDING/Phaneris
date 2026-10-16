@@ -159,6 +159,7 @@ export function applyFilesystemIsolation(
         command: 'bwrap',
         args: [
           '--die-with-parent',
+          ...(options?.includeNetworkDeny ? ['--unshare-user', '--unshare-net'] : []),
           // Essential runtime dirs (interpreters, shared libs, certs/locale).
           // --ro-bind-try tolerates dirs absent on some distros (e.g. /opt).
           '--ro-bind-try', '/usr', '/usr',

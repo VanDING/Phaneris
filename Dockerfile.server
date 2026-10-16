@@ -112,4 +112,5 @@ ENV PHANERIS_MESSAGING_NODE_BIN=node
 
 EXPOSE 9100
 
-ENTRYPOINT ["bun", "run", "packages/server/src/index.ts"]
+# Run the service as PID 1 so SIGTERM reaches its lifecycle handler directly.
+ENTRYPOINT ["bun", "packages/server/src/index.ts"]

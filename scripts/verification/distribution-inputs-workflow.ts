@@ -12,6 +12,7 @@ await verificationWorkflow('distribution-inputs', async run => {
   const cases = [
     ['complete', docker, undefined, true],
     ['missing-native-toolchain', docker.replace('python3 make g++', ''), undefined, false],
+    ['wrapped-server-entrypoint', docker.replace('ENTRYPOINT ["bun", "packages/server/src/index.ts"]', 'ENTRYPOINT ["bun", "run", "packages/server/src/index.ts"]'), undefined, false],
     ['floating-bun', docker.replace(/FROM oven\/bun:[^\s]+/, 'FROM oven/bun:1.4-slim'), undefined, false],
     ['missing-patch-copy', docker.replace(/^COPY patches\/ patches\/\s*$/m, ''), undefined, false],
     ['missing-patch-file', docker, Object.values(metadata.patchedDependencies)[0], false],

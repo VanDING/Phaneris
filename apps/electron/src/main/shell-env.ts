@@ -38,6 +38,7 @@ export function loadShellEnv(): void {
   }
 
   const shell = process.env.SHELL || '/bin/zsh'
+  const inheritedPath = process.env.PATH
   mainLog.info(`[shell-env] Loading environment from ${shell}`)
 
   try {
@@ -71,7 +72,11 @@ export function loadShellEnv(): void {
         const key = line.substring(0, eq)
         if (shouldSkipEnvVar(key)) continue
         const value = line.substring(eq + 1)
-        process.env[key] = value
+        // Login shells may reset PATH. Keep launch-time tools (including
+        // setup-bun in CI) after the user's configured shell paths.
+        process.env[key] = key === 'PATH'
+          ? [...new Set([value, inheritedPath ?? ''].flatMap(path => path.split(':')).filter(Boolean))].join(':')
+          : value
         count++
       }
     }

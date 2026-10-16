@@ -16,7 +16,9 @@ if (existsSync(rendererDir)) {
 }
 
 const proc = spawn({
-  cmd: ["bun", "run", "vite", "build", "--config", "apps/electron/vite.config.ts"],
+  // Vite's native build plugins run under Node on every OS, including when
+  // this script is launched by Bun through a Git Bash logging pipeline.
+  cmd: ["node", join(ROOT_DIR, "node_modules/vite/bin/vite.js"), "build", "--config", "apps/electron/vite.config.ts"],
   cwd: ROOT_DIR,
   stdout: "inherit",
   stderr: "inherit",

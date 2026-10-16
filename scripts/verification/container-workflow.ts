@@ -84,14 +84,15 @@ await verificationWorkflow('container', async run => {
     client.destroy()
     await command(['stop', '--time', '15', name], 'container-stop')
     const state = JSON.parse(await command(['inspect', '--format', '{{json .State}}', name], 'container-state')) as { ExitCode: number }
-    assert.equal(state.ExitCode, 0)
-    checks.push('production-image-bounded-clean-shutdown')
     const logs = await command(['logs', name], 'container-output')
+    assert.equal(state.ExitCode, 0, logs.slice(-5000))
+    checks.push('production-image-bounded-clean-shutdown')
     assert(!logs.includes(testSecret))
     run.json('container.json', { checks, commands, versions, state })
     run.complete(checks, ['signed native installers', 'live external providers'])
   } finally {
     client?.destroy()
+    if (started) try { await command(['logs', name], 'container-output') } catch (error) { cleanup.push(error) }
     if (started) try { await command(['rm', '-f', name], 'container-remove') } catch (error) { cleanup.push(error) }
     if (built) try { await command(['image', 'rm', image], 'image-remove') } catch (error) { cleanup.push(error) }
     if (cleanup.length) {

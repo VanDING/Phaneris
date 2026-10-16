@@ -32,11 +32,14 @@ export async function prepareIsolatedScript(language: ScriptRuntimeLanguage, scr
   const runtime = await prepareScriptRuntime(language);
   const args = [...runtime.argsPrefix, ...scriptArgs];
   const options = { writablePaths: [dataDir], readablePaths: [...(runtime.readablePaths ?? []), ...readablePaths] };
-  const network = process.platform === 'darwin'
-    ? { status: 'enforced' as const, backend: 'sandbox-exec', command: runtime.command, args }
+  // A single bwrap invocation can create the user and network namespaces
+  // together. Plain unshare -n needs privileges unavailable to desktop users.
+  const combinedIsolation = process.platform === 'darwin' || probe.backend === 'bwrap';
+  const network = combinedIsolation
+    ? { status: 'enforced' as const, backend: probe.backend, command: runtime.command, args }
     : applyNetworkIsolation(runtime.command, args);
   if (network.status !== 'enforced') throw new Error('Script execution requires network isolation in all permission modes; no supported backend is available on this platform.');
-  const filesystem = applyFilesystemIsolation(network.command, network.args, sessionDir, { ...options, includeNetworkDeny: process.platform === 'darwin' });
+  const filesystem = applyFilesystemIsolation(network.command, network.args, sessionDir, { ...options, includeNetworkDeny: combinedIsolation });
   if (filesystem.status !== 'enforced') throw new Error('Script execution requires filesystem isolation; no usable backend is available.');
   const env = { ...createScriptRuntimeEnv({ language, dataDir }), ...runtime.envPatch };
   const diagnostics = [
