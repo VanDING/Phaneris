@@ -102,6 +102,11 @@ export class McpClientPool {
   /** Configs used for active MCP connections (for change detection during sync) */
   protected activeConfigs = new Map<string, AgentMcpServerConfig>();
 
+  private connecting = new Map<string, {
+    config?: AgentMcpServerConfig; server?: McpServer; client?: PoolClient; promise: Promise<void>;
+  }>();
+  private closing = new Map<string, Promise<void>>();
+
   /** Cached tool lists keyed by source slug */
   private toolCache = new Map<string, Tool[]>();
   private features = new Map<string, McpSourceFeatures>();
@@ -147,13 +152,18 @@ export class McpClientPool {
   // Connection Lifecycle
   // ============================================================
 
+  protected createRemoteClient(_slug: string, config: McpClientConfig): PoolClient {
+    return new CraftMcpClient(config);
+  }
+
   /**
    * Register a client: connect, cache tools, build proxy mappings.
    * Shared logic for both remote MCP and in-process API sources.
    */
-  protected async registerClient(slug: string, client: PoolClient): Promise<void> {
+  protected async registerClient(slug: string, client: PoolClient, isCurrent: () => boolean = () => true): Promise<void> {
     // listTools() triggers connect() internally for both CraftMcpClient and ApiSourcePoolClient
     const tools = await client.listTools();
+    if (!isCurrent()) throw new Error(`MCP connection cancelled: ${slug}`);
     this.clients.set(slug, client);
     this.toolCache.set(slug, tools);
 
@@ -193,8 +203,7 @@ export class McpClientPool {
       this.debug(`Unknown MCP server type for ${slug}: ${(config as { type: string }).type}`);
       return;
     }
-    await this.registerClient(slug, new CraftMcpClient(clientConfig));
-    this.activeConfigs.set(slug, snapshot);
+    await this.connectClient(slug, () => this.createRemoteClient(slug, clientConfig), snapshot);
   }
 
   /**
@@ -202,7 +211,37 @@ export class McpClientPool {
    */
   async connectInProcess(slug: string, mcpServer: McpServer): Promise<void> {
     if (this.clients.has(slug)) return;
-    await this.registerClient(slug, new ApiSourcePoolClient(mcpServer));
+    await this.connectClient(slug, () => new ApiSourcePoolClient(mcpServer), undefined, mcpServer);
+  }
+
+  private connectClient(slug: string, createClient: () => PoolClient, config?: AgentMcpServerConfig, server?: McpServer): Promise<void> {
+    const existing = this.connecting.get(slug);
+    if (existing && (config ? !!existing.config && !mcpConfigChanged(existing.config, config) : !existing.config && server === existing.server)) {
+      return existing.promise;
+    }
+
+    const previous = this.disconnect(slug);
+    const attempt = { config, server, client: undefined as PoolClient | undefined, promise: Promise.resolve() };
+    this.connecting.set(slug, attempt);
+    const isCurrent = () => this.connecting.get(slug) === attempt;
+    attempt.promise = (async () => {
+      try {
+        await previous;
+        if (!isCurrent()) throw new Error(`MCP connection cancelled: ${slug}`);
+        const client = attempt.client = createClient();
+        try {
+          await this.registerClient(slug, client, isCurrent);
+          if (!isCurrent()) throw new Error(`MCP connection cancelled: ${slug}`);
+          if (config) this.activeConfigs.set(slug, config);
+        } catch (error) {
+          await client.close().catch(() => {});
+          throw error;
+        }
+      } finally {
+        if (isCurrent()) this.connecting.delete(slug);
+      }
+    })();
+    return attempt.promise;
   }
 
   /**
@@ -220,11 +259,21 @@ export class McpClientPool {
       throw new Error(`Local MCP is disabled for this workspace — cannot connect stdio source "${slug}"`);
     }
 
+    const pending = this.connecting.get(slug);
+    if (pending) {
+      const snapshot = snapshotMcpConfig(config);
+      const clientConfig = agentMcpConfigToClientConfig(snapshot);
+      if (clientConfig) await this.connectClient(slug, () => this.createRemoteClient(slug, clientConfig), snapshot);
+      return;
+    }
     if (this.clients.has(slug)) {
       const oldConfig = this.activeConfigs.get(slug);
       if (!oldConfig || !mcpConfigChanged(oldConfig, config)) return;
       this.debug(`Config changed for ${slug}, reconnecting with fresh credentials`);
-      await this.disconnect(slug);
+      const snapshot = snapshotMcpConfig(config);
+      const clientConfig = agentMcpConfigToClientConfig(snapshot);
+      if (clientConfig) await this.connectClient(slug, () => this.createRemoteClient(slug, clientConfig), snapshot);
+      return;
     }
 
     await this.connect(slug, config);
@@ -234,11 +283,10 @@ export class McpClientPool {
    * Disconnect a source and remove its tools from the pool.
    */
   async disconnect(slug: string): Promise<void> {
+    const pending = this.connecting.get(slug);
+    this.connecting.delete(slug);
     const client = this.clients.get(slug);
-    if (client) {
-      await client.close().catch(() => {});
-      this.clients.delete(slug);
-    }
+    this.clients.delete(slug);
 
     // Remove proxy tool entries for this slug
     for (const [proxyName, info] of this.proxyTools) {
@@ -248,6 +296,14 @@ export class McpClientPool {
     this.features.delete(slug);
     this.featureProbes.delete(slug);
     this.activeConfigs.delete(slug);
+    const previous = this.closing.get(slug);
+    const clients = new Set([client, pending?.client].filter((value): value is PoolClient => !!value));
+    const closing = Promise.allSettled([
+      previous, pending?.promise, ...[...clients].map(value => value.close()),
+    ]).then(() => {});
+    this.closing.set(slug, closing);
+    try { await closing }
+    finally { if (this.closing.get(slug) === closing) this.closing.delete(slug) }
     this.debug(`Disconnected source: ${slug}`);
   }
 
@@ -255,14 +311,8 @@ export class McpClientPool {
    * Disconnect all sources and clear all state.
    */
   async disconnectAll(): Promise<void> {
-    const closePromises = Array.from(this.clients.values()).map(c => c.close().catch(() => {}));
-    await Promise.all(closePromises);
-    this.clients.clear();
-    this.toolCache.clear();
-    this.features.clear();
-    this.featureProbes.clear();
-    this.proxyTools.clear();
-    this.activeConfigs.clear();
+    const slugs = new Set([...this.clients.keys(), ...this.connecting.keys(), ...this.closing.keys()]);
+    await Promise.all([...slugs].map(slug => this.disconnect(slug)));
     this.debug('Disconnected all MCP clients');
   }
 
@@ -297,7 +347,7 @@ export class McpClientPool {
     const apiSlugs = new Map<string, McpServer>(Object.entries(apiServers));
 
     const desiredSlugs = new Set([...Object.keys(filteredMcp), ...apiSlugs.keys()]);
-    const currentSlugs = new Set(this.clients.keys());
+    const currentSlugs = new Set([...this.clients.keys(), ...this.connecting.keys()]);
     const failures: string[] = [];
 
     // Disconnect sources no longer desired — run in parallel, failures are non-fatal.
@@ -312,21 +362,12 @@ export class McpClientPool {
 
     // Connect new MCP sources + reconnect existing ones whose config changed (e.g. refreshed token)
     for (const [slug, config] of Object.entries(filteredMcp)) {
-      if (!currentSlugs.has(slug)) {
-        toConnect.push({ slug, connectFn: () => this.connect(slug, config) });
-      } else {
-        const oldConfig = this.activeConfigs.get(slug);
-        if (oldConfig && mcpConfigChanged(oldConfig, config)) {
-          this.debug(`Config changed for ${slug}, reconnecting with fresh credentials`);
-          await this.disconnect(slug);
-          toConnect.push({ slug, connectFn: () => this.connect(slug, config) });
-        }
-      }
+      toConnect.push({ slug, connectFn: () => this.ensureConnected(slug, config) });
     }
 
     // Connect new API sources (in-process McpServer instances keyed by slug)
     for (const [slug, server] of apiSlugs) {
-      if (!currentSlugs.has(slug)) {
+      if (!this.clients.has(slug)) {
         toConnect.push({ slug, connectFn: () => this.connectInProcess(slug, server) });
       }
     }

@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach } from 'bun:test';
 import { McpClientPool } from '../src/mcp/mcp-pool.ts';
 import { createInProcessMcpServer } from '../src/mcp/sdk-mcp-server-factory.ts';
 import type { AgentMcpServerConfig } from '../src/agent/backend/types.ts';
-import type { PoolClient } from '../src/mcp/client.ts';
+import type { McpClientConfig, PoolClient } from '../src/mcp/client.ts';
 import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 
 // ============================================================
@@ -38,17 +38,15 @@ function httpConfig(token: string, url = 'https://mcp.example.com'): AgentMcpSer
 }
 
 /**
- * Subclass that intercepts connect/disconnect to avoid real MCP connections
- * while letting sync()'s config-change detection logic run against real state.
+ * Replace only the transport client; run connection ownership and sync normally.
  */
 class TestablePool extends McpClientPool {
-  public connectCalls: Array<{ slug: string; config: AgentMcpServerConfig }> = [];
+  public connectCalls: Array<{ slug: string; config: McpClientConfig & { headers?: Record<string, string> } }> = [];
   public disconnectCalls: string[] = [];
 
-  async connect(slug: string, config: AgentMcpServerConfig): Promise<void> {
+  override createRemoteClient(slug: string, config: McpClientConfig): PoolClient {
     this.connectCalls.push({ slug, config });
-    await this.registerClient(slug, makeMockClient());
-    this.activeConfigs.set(slug, config);
+    return makeMockClient();
   }
 
   async disconnect(slug: string): Promise<void> {
@@ -167,8 +165,8 @@ describe('McpClientPool.sync — config change detection', () => {
   it('reports failure when reconnect fails after token refresh', async () => {
     let connectAttempts = 0;
     const failPool = new TestablePool();
-    const origConnect = failPool.connect.bind(failPool);
-    failPool.connect = async (slug: string, config: AgentMcpServerConfig) => {
+    const origConnect = failPool.createRemoteClient.bind(failPool);
+    failPool.createRemoteClient = (slug: string, config: McpClientConfig) => {
       connectAttempts++;
       if (connectAttempts > 1) throw new Error('Server unavailable');
       return origConnect(slug, config);

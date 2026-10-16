@@ -9,7 +9,7 @@
  * - Syncing automations to Jotai atom for cross-component access
  */
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSetAtom } from 'jotai'
 import { toast } from 'sonner'
@@ -44,6 +44,7 @@ export function useAutomations(
   const [automations, setAutomations] = useState<AutomationListItem[]>([])
   const [automationTestResults, setAutomationTestResults] = useState<Record<string, TestResult>>({})
   const [automationPendingDelete, setAutomationPendingDelete] = useState<string | null>(null)
+  const requestVersion = useRef(0)
 
   // Sync automations to Jotai atom for cross-component access (MainContentPanel)
   const setAutomationsAtom = useSetAtom(automationsAtom)
@@ -55,24 +56,30 @@ export function useAutomations(
   // This avoids the race where a config reload wipes timestamps before the
   // history effect can re-merge them.
   const loadAndHydrate = useCallback(async () => {
-    if (!activeWorkspaceId) return
+    const version = ++requestVersion.current
+    if (!activeWorkspaceId) {
+      setAutomations([])
+      return
+    }
     try {
       const items = await loadAutomationsFromServer(activeWorkspaceId)
+      if (version !== requestVersion.current) return
       try {
         const map = await window.electronAPI.getAutomationLastExecuted(activeWorkspaceId)
         for (const item of items) {
           item.lastExecutedAt = map[item.id] ?? item.lastExecutedAt
         }
       } catch { /* history unavailable — timestamps stay undefined */ }
-      setAutomations(items)
+      if (version === requestVersion.current) setAutomations(items)
     } catch {
-      setAutomations([])
+      if (version === requestVersion.current) setAutomations([])
     }
   }, [activeWorkspaceId])
 
   // Initial load
   useEffect(() => {
-    loadAndHydrate()
+    void loadAndHydrate()
+    return () => { requestVersion.current += 1 }
   }, [loadAndHydrate])
 
   // Subscribe to live automations updates (when automations.json changes on disk)

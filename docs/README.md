@@ -128,6 +128,7 @@ Twenty-three former plans, placeholders and dated research documents were moved 
 
 | Document | Status | Scope |
 | --- | --- | --- |
+| [Second project governance audit and plan](process/project-governance-round2-plan-2026-10-16.md) / [implementation results](verification/project-governance-round2-implementation-2026-10-16.md) | Implemented — local verification, 2026-10-16 | Four bounded fixes; 24 new and 52 existing scenes, full workspace tests, typecheck, lint and current performance budgets pass. Startup/compiler intermittency and the Windows server distribution limit remain explicitly recorded. |
 | [Project governance audit and plan](process/project-governance-audit-plan-2026-10-16.md) / [implementation results](verification/project-governance-implementation-2026-10-16.md) | Implemented — local verification, 2026-10-16 | Eight bounded fixes, 19 targeted scenes, 33 existing scenes and full workspace tests passing; cold navigation and Windows server distribution limits remain. Obsolete icon design notes were removed at the user's request; documentation checks now pass. |
 | [Governance ownership inventory](process/governance-ownership-inventory-2026-10-11.md) | Accepted reference | Configuration ports, SessionManager ownership, dependencies, cycles and presentation-storage decisions. |
 | [Governance completion ledger](process/governance-completion-2026-10-11.md) | Implemented; maintained reference | G0–G8 source adjudication, local acceptance and external verification limits; no separate open implementation queue. |

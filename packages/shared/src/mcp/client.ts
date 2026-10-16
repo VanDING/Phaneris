@@ -110,6 +110,10 @@ export class CraftMcpClient {
   private client: Client;
   private transport: Transport;
   private connected = false;
+  private connecting?: Promise<void>;
+  private closing?: Promise<void>;
+  private generation = 0;
+  private initialTools?: Tool[];
 
   constructor(config: McpClientConfig) {
     this.client = new Client({
@@ -150,28 +154,38 @@ export class CraftMcpClient {
   }
 
   async connect(): Promise<void> {
+    if (this.closing) await this.closing;
     if (this.connected) return;
-
-    await this.client.connect(this.transport);
-
-    // Verify connection works by listing tools
-    try {
-      if (this.client.getServerCapabilities()?.tools) await this.client.listTools();
-    } catch (error) {
-      await this.client.close();
-      throw new Error(
-        `MCP connection failed health check: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
-
-    this.connected = true;
+    if (this.connecting) return this.connecting;
+    const generation = this.generation;
+    const connecting = (async () => {
+      try {
+        await this.client.connect(this.transport);
+        try {
+          if (this.client.getServerCapabilities()?.tools) this.initialTools = (await this.client.listTools()).tools;
+        } catch (error) {
+          throw new Error(`MCP connection failed health check: ${error instanceof Error ? error.message : String(error)}`);
+        }
+        if (generation !== this.generation) throw new Error('MCP connection cancelled');
+        this.connected = true;
+      } catch (error) {
+        await this.client.close().catch(() => {});
+        throw error;
+      }
+    })();
+    this.connecting = connecting;
+    try { await connecting }
+    finally { if (this.connecting === connecting) this.connecting = undefined }
   }
 
   async listTools(): Promise<Tool[]> {
     if (!this.connected) {
       await this.connect();
+      const tools = this.initialTools;
+      this.initialTools = undefined;
+      if (tools) return tools;
     }
-
+    this.initialTools = undefined;
     if (!this.client.getServerCapabilities()?.tools) return [];
     const result = await this.client.listTools();
     return result.tools;
@@ -229,9 +243,17 @@ export class CraftMcpClient {
   }
 
   async close(): Promise<void> {
-    if (this.connected) {
+    if (this.closing) return this.closing;
+    this.generation++;
+    this.connected = false;
+    this.initialTools = undefined;
+    const connecting = this.connecting;
+    const closing = (async () => {
       await this.client.close();
-      this.connected = false;
-    }
+      await connecting?.catch(() => {});
+    })();
+    this.closing = closing;
+    try { await closing }
+    finally { if (this.closing === closing) this.closing = undefined }
   }
 }

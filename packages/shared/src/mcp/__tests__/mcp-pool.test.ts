@@ -6,14 +6,14 @@
 
 import { describe, test, expect } from 'bun:test';
 import { McpClientPool } from '../mcp-pool.ts';
-import type { PoolClient } from '../client.ts';
+import type { McpClientConfig, PoolClient } from '../client.ts';
 import type { AgentMcpServerConfig } from '../../agent/backend/types.ts';
 
 class TestPool extends McpClientPool {
-  connectCalls: Array<{ slug: string; config: AgentMcpServerConfig }> = [];
+  connectCalls: Array<{ slug: string; config: McpClientConfig }> = [];
   closedSlugs: string[] = [];
 
-  override async connect(slug: string, config: AgentMcpServerConfig): Promise<void> {
+  protected override createRemoteClient(slug: string, config: McpClientConfig): PoolClient {
     this.connectCalls.push({ slug, config });
     const self = this;
     const fake: PoolClient = {
@@ -21,8 +21,7 @@ class TestPool extends McpClientPool {
       callTool: async () => ({ content: [] }),
       close: async () => { self.closedSlugs.push(slug); },
     };
-    await this.registerClient(slug, fake);
-    this.activeConfigs.set(slug, config);
+    return fake;
   }
 }
 

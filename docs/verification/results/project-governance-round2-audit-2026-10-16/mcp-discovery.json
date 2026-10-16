@@ -1,0 +1,36 @@
+{
+  "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+  "scope": "Real loopback HTTP MCP, no injected network latency; timings are local only.",
+  "results": [
+    {
+      "sample": 0,
+      "elapsedMs": 81.13810000000001,
+      "methods": [
+        "initialize",
+        "notifications/initialized",
+        "tools/list",
+        "tools/list"
+      ]
+    },
+    {
+      "sample": 1,
+      "elapsedMs": 7.664200000000051,
+      "methods": [
+        "initialize",
+        "notifications/initialized",
+        "tools/list",
+        "tools/list"
+      ]
+    },
+    {
+      "sample": 2,
+      "elapsedMs": 8.540300000000002,
+      "methods": [
+        "initialize",
+        "notifications/initialized",
+        "tools/list",
+        "tools/list"
+      ]
+    }
+  ]
+}

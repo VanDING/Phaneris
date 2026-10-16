@@ -86,11 +86,18 @@ function driveBundle(messages: object[], done: (output: string) => boolean): Pro
       stdio: ['pipe', 'pipe', 'pipe'],
     });
     let output = '';
+    let finishing = false;
+    let finalError: Error | undefined;
+    let killTimer: ReturnType<typeof setTimeout> | undefined;
     const finish = (error?: Error) => {
+      if (finishing) return;
+      finishing = true;
+      finalError = error;
       clearTimeout(timer);
       child.kill();
-      if (error) reject(error);
-      else resolve(output);
+      killTimer = setTimeout(() => {
+        if (child.exitCode === null) child.kill('SIGKILL');
+      }, 2000);
     };
     const timer = setTimeout(
       () => finish(new Error(`timed out waiting for terminal marker; output so far:\n${output.slice(-2000)}`)),
@@ -103,8 +110,14 @@ function driveBundle(messages: object[], done: (output: string) => boolean): Pro
     child.stdout.on('data', onData);
     child.stderr.on('data', onData);
     child.on('error', (err) => finish(err));
-    child.on('exit', () => {
-      if (!done(output)) finish(new Error(`bundle exited early; output:\n${output.slice(-2000)}`));
+    child.stdin.on('error', (err) => finish(err));
+    child.on('close', () => {
+      clearTimeout(timer);
+      clearTimeout(killTimer);
+      // The cwd is safe to remove only after the child and its pipes close.
+      if (finalError) reject(finalError);
+      else if (done(output)) resolve(output);
+      else reject(new Error(`bundle exited early; output:\n${output.slice(-2000)}`));
     });
     for (const msg of messages) {
       child.stdin.write(`${JSON.stringify(msg)}\n`);

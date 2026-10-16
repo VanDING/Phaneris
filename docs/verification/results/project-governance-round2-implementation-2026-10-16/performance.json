@@ -1,0 +1,136 @@
+{
+  "status": "passed",
+  "browser": "155.0.4283.60",
+  "scope": "Production Web UI + real WebSocket RPC + SessionManager, synthetic offline workload. No Electron main/native startup or provider inference. Idle eviction uses an advanced clock; soak uses real time. Frame proxy = marker present plus two requestAnimationFrame callbacks, not hardware presentation. RSS is sampled, not peak or retained heap.",
+  "budgets": {
+    "navigationMs": 3000,
+    "coldSessionMs": 3000,
+    "warmSwitchMs": 2000,
+    "inputToTwoFramesMs": 250,
+    "firstStreamMs": 1500,
+    "rendererHeapBytes": 268435456,
+    "backendRssBytes": 1073741824
+  },
+  "budgetChecks": [
+    {
+      "id": "navigation",
+      "pass": true,
+      "samples": [
+        2712.5073999999995,
+        1681.0104000000001
+      ],
+      "limit": 3000
+    },
+    {
+      "id": "firstVisit",
+      "pass": true,
+      "samples": [
+        338.1273999999994,
+        1094.7505,
+        1099.933000000001
+      ],
+      "limit": 3000
+    },
+    {
+      "id": "warmSwitch",
+      "pass": true,
+      "samples": [
+        192.5643999999993,
+        256.1909999999989,
+        312.851200000001,
+        197.0643,
+        636.7564999999995,
+        424.436099999999,
+        453.0709999999999,
+        365.1746999999996,
+        233.14000000000306,
+        462.35599999999977,
+        459.3960999999981,
+        221.96480000000156,
+        204.45160000000033,
+        444.16649999999936,
+        300.64760000000024
+      ],
+      "limit": 2000
+    },
+    {
+      "id": "inputTwoFrames",
+      "pass": true,
+      "samples": [
+        89.16549999999916,
+        45.876899999999296,
+        53.17380000000048
+      ],
+      "limit": 250
+    },
+    {
+      "id": "firstStreamTwoFrames",
+      "pass": true,
+      "samples": [
+        385.12409999999727
+      ],
+      "limit": 1500
+    },
+    {
+      "id": "rendererHeapBytes",
+      "pass": true,
+      "samples": [
+        57366656
+      ],
+      "limit": 268435456
+    },
+    {
+      "id": "backendRssBytes",
+      "pass": true,
+      "samples": [
+        184565760
+      ],
+      "limit": 1073741824
+    }
+  ],
+  "budgetStatus": "passed",
+  "browserErrors": [],
+  "navigationStartup": {
+    "firstNavigationMs": 2712.5073999999995,
+    "secondNavigationMs": 1681.0104000000001
+  },
+  "sessionLoads": [
+    {
+      "messageCount": 100,
+      "firstVisitMs": 338.1273999999994,
+      "warmSwitchMs": [
+        192.5643999999993,
+        256.1909999999989,
+        312.851200000001,
+        197.0643,
+        636.7564999999995
+      ]
+    },
+    {
+      "messageCount": 1000,
+      "firstVisitMs": 1094.7505,
+      "warmSwitchMs": [
+        424.436099999999,
+        453.0709999999999,
+        365.1746999999996,
+        233.14000000000306,
+        462.35599999999977
+      ]
+    },
+    {
+      "messageCount": 5000,
+      "firstVisitMs": 1099.933000000001,
+      "warmSwitchMs": [
+        459.3960999999981,
+        221.96480000000156,
+        204.45160000000033,
+        444.16649999999936,
+        300.64760000000024
+      ]
+    }
+  ],
+  "streaming": {
+    "firstFrameMs": 385.12409999999727,
+    "completeFrameMs": 5455.1361
+  }
+}

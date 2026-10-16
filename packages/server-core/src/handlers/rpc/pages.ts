@@ -39,7 +39,7 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
 
   // One broker per workspace: render leases and in-flight actions are
   // in-memory state scoped to the hosting process.
-  const brokers = new Map<string, PageActionBroker>()
+  const brokers = new Map<string, Promise<PageActionBroker>>()
 
   // One MCP client pool per workspace, shared by all of its pages and
   // independent of session pools. Clients live until the process exits
@@ -128,10 +128,19 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
     }
   }
 
-  async function getBroker(workspaceId: string, workspaceRootPath: string): Promise<PageActionBroker> {
+  function getBroker(workspaceId: string, workspaceRootPath: string): Promise<PageActionBroker> {
     const existing = brokers.get(workspaceRootPath)
     if (existing) return existing
 
+    const creating = createBroker(workspaceId, workspaceRootPath)
+    brokers.set(workspaceRootPath, creating)
+    void creating.catch(() => {
+      if (brokers.get(workspaceRootPath) === creating) brokers.delete(workspaceRootPath)
+    })
+    return creating
+  }
+
+  async function createBroker(workspaceId: string, workspaceRootPath: string): Promise<PageActionBroker> {
     const { PageActionBroker } = await import('@phaneris/shared/pages')
     const { loadWorkspaceSources } = await import('@phaneris/shared/sources')
 
@@ -162,7 +171,6 @@ export function registerPagesHandlers(server: RpcServer, deps: HandlerDeps): voi
       },
       permissionsContext: { workspaceRootPath, activeSourceSlugs },
     })
-    brokers.set(workspaceRootPath, broker)
     log.info(`Created page action broker for workspace ${workspaceId}`)
     return broker
   }

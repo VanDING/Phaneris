@@ -1,0 +1,213 @@
+{
+  "checks": [
+    {
+      "id": "F01-old-workspace-success",
+      "pass": true,
+      "state": {
+        "workspace": "B",
+        "pages": [
+          "B-current"
+        ],
+        "projects": [
+          "B-current"
+        ],
+        "automations": [
+          "B-current"
+        ],
+        "atoms": {
+          "pages": [
+            "B-current"
+          ],
+          "projects": [
+            "B-current"
+          ],
+          "automations": [
+            "B-current"
+          ]
+        }
+      }
+    },
+    {
+      "id": "F02-old-workspace-error",
+      "pass": true,
+      "state": {
+        "workspace": "B",
+        "pages": [
+          "B-current"
+        ],
+        "projects": [
+          "B-current"
+        ],
+        "automations": [
+          "B-current"
+        ],
+        "atoms": {
+          "pages": [
+            "B-current"
+          ],
+          "projects": [
+            "B-current"
+          ],
+          "automations": [
+            "B-current"
+          ]
+        }
+      }
+    },
+    {
+      "id": "F03-same-workspace-newest-refresh",
+      "pass": true,
+      "state": {
+        "workspace": "A",
+        "pages": [
+          "newest"
+        ],
+        "projects": [
+          "newest"
+        ],
+        "automations": [
+          "newest"
+        ],
+        "atoms": {
+          "pages": [
+            "newest"
+          ],
+          "projects": [
+            "newest"
+          ],
+          "automations": [
+            "newest"
+          ]
+        }
+      }
+    },
+    {
+      "id": "F04-push-invalidates-old-read",
+      "pass": true,
+      "state": {
+        "workspace": "A",
+        "pages": [
+          "push-new"
+        ],
+        "projects": [
+          "push-new"
+        ],
+        "automations": [
+          "read-old"
+        ],
+        "atoms": {
+          "pages": [
+            "push-new"
+          ],
+          "projects": [
+            "push-new"
+          ],
+          "automations": [
+            "read-old"
+          ]
+        }
+      }
+    },
+    {
+      "id": "F05-clear-workspace",
+      "pass": true,
+      "state": {
+        "workspace": null,
+        "pages": [],
+        "projects": [],
+        "automations": [],
+        "atoms": {
+          "pages": [],
+          "projects": [],
+          "automations": []
+        }
+      }
+    },
+    {
+      "id": "F06-unmount-old-request-cannot-pollute-shared-atoms",
+      "pass": true,
+      "state": {
+        "workspace": "B",
+        "pages": [
+          "B-current"
+        ],
+        "projects": [
+          "B-current"
+        ],
+        "automations": [
+          "B-current"
+        ],
+        "atoms": {
+          "pages": [
+            "B-current"
+          ],
+          "projects": [
+            "B-current"
+          ],
+          "automations": [
+            "B-current"
+          ]
+        }
+      }
+    },
+    {
+      "id": "F07-pages-id-slug-notification-refetch",
+      "pass": true,
+      "state": {
+        "workspace": "A",
+        "pages": [
+          "refetched"
+        ],
+        "projects": [
+          "loaded"
+        ],
+        "automations": [
+          "loaded"
+        ],
+        "atoms": {
+          "pages": [
+            "refetched"
+          ],
+          "projects": [
+            "loaded"
+          ],
+          "automations": [
+            "loaded"
+          ]
+        }
+      }
+    },
+    {
+      "id": "F08-production-hooks-real-rpc-read-and-push",
+      "pass": true,
+      "state": {
+        "workspace": "b",
+        "pages": [
+          "b"
+        ],
+        "projects": [
+          "b"
+        ],
+        "automations": [
+          "b"
+        ],
+        "atoms": {
+          "pages": [
+            "b"
+          ],
+          "projects": [
+            "b"
+          ],
+          "automations": [
+            "b"
+          ]
+        }
+      }
+    }
+  ],
+  "browser": {
+    "version": "155.0.4283.60",
+    "productionReact": true,
+    "realRpc": true
+  }
+}

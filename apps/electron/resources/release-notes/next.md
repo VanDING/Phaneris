@@ -17,6 +17,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
+- **Workspace and source lifecycle** — Keep Pages, projects and automations on the current workspace when older requests finish late. Share concurrent Page initialization and MCP connections, close connections that are still starting during disconnect, and reuse the first MCP tool catalog response during connection setup.
 - **Source activation** — Wait for the current request to settle before automatically continuing with newly activated tools. Recover from late settlement without restarting the app, and show an error if automatic continuation fails.
 - **Windows reopening** — Preserve launch requests received while the previous instance is shutting down, recover a running instance with no window, and apply bounded cleanup with persistent lifecycle diagnostics to ordinary quits.
 - **Session titles** — Retry unavailable or protocol-incompatible utility models within the configured connection so initial and regenerated titles can use the selected session model without switching to another provider.

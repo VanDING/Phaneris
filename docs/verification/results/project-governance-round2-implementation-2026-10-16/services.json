@@ -1,0 +1,166 @@
+{
+  "checks": [
+    {
+      "id": "M01-single-source-concurrent-stdio-and-release",
+      "pass": true
+    },
+    {
+      "id": "M02-one-disconnect-during-connect",
+      "pass": true
+    },
+    {
+      "id": "M02-all-disconnect-during-connect",
+      "pass": true
+    },
+    {
+      "id": "M03-independent-source-concurrency",
+      "pass": true
+    },
+    {
+      "id": "M04-config-change-during-connect",
+      "pass": true
+    },
+    {
+      "id": "M05-failed-discovery-closes-and-retries",
+      "pass": true
+    },
+    {
+      "id": "M06-initial-catalog-once-and-explicit-refresh",
+      "pass": true
+    },
+    {
+      "id": "M08-in-process-concurrent-and-release",
+      "pass": true
+    },
+    {
+      "id": "M08-in-process-disconnect-during-initialization",
+      "pass": true
+    },
+    {
+      "id": "P01-eight-first-leases-execute-approved-api",
+      "pass": true
+    },
+    {
+      "id": "P02-workspace-isolation-release-nonce-replay",
+      "pass": true
+    },
+    {
+      "id": "P03-failed-initialization-retries",
+      "pass": true
+    }
+  ],
+  "observations": {
+    "M01": {
+      "spawned": [
+        33400
+      ]
+    },
+    "M02one": {
+      "outcome": "Error: Not connected",
+      "alive": [],
+      "connected": false
+    },
+    "M02all": {
+      "outcome": "Error: Not connected",
+      "alive": [],
+      "connected": false
+    },
+    "M04": {
+      "identity": {
+        "pid": 3080,
+        "marker": "new"
+      },
+      "spawned": [
+        32092,
+        3080
+      ],
+      "alive": [
+        3080
+      ]
+    },
+    "M06": {
+      "initialRequests": [
+        "initialize",
+        "notifications/initialized",
+        "tools/list"
+      ]
+    },
+    "P01": {
+      "brokerCreations": 1,
+      "results": [
+        {
+          "requestId": "d5b6b1ed-bd8d-429d-9235-81dd52713053",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 78
+        },
+        {
+          "requestId": "470bc55b-d109-4193-bcbd-30d3a3f69d1d",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 55
+        },
+        {
+          "requestId": "70122de2-6cbd-45fc-a5d6-11a665b32bf3",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 74
+        },
+        {
+          "requestId": "4b8be226-bd9f-498b-84e4-b2b2ea22ec7d",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 124
+        },
+        {
+          "requestId": "c4bd07a6-742b-4354-ab26-9876c37adc38",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 63
+        },
+        {
+          "requestId": "99cdbcae-047b-42b2-90cc-a2f7e3914d6b",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 122
+        },
+        {
+          "requestId": "96c66367-842c-4530-84e6-d07f0573d21d",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 57
+        },
+        {
+          "requestId": "e2b60be5-3aa2-41b7-b844-d4f9dfcfcd85",
+          "ok": true,
+          "status": 200,
+          "body": {
+            "marker": "approved-fixture"
+          },
+          "durationMs": 118
+        }
+      ]
+    }
+  }
+}

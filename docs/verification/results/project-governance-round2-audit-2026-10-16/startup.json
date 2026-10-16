@@ -1,0 +1,687 @@
+{
+  "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+  "conditions": "Fresh WebUI build; real WS/RPC; same Edge binary; baseline synthetic 24 sessions. Sequential diagnostics with renderer CPU profiler enabled, no other audit build/test jobs during measurements. Not uninstrumented performance budgets or before/after evidence. File/browser/OS caches are not reset.",
+  "samples": [
+    {
+      "sample": 1,
+      "status": "diagnostic",
+      "browser": "155.0.4283.60",
+      "firstNavigationMs": 12948.432,
+      "secondNavigationMs": 4625.997500000005,
+      "slowestHandlers": [
+        {
+          "channel": "automations:get",
+          "elapsedMs": 1762.9294999999984
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 1432.8856000000014
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 1398.5705000000016
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 532.6117999999988
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 449.86270000000513
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 345.0420000000013
+        }
+      ],
+      "resources": [
+        {
+          "count": 97,
+          "encodedBytes": 4901245,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:64992/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 2878.100000023842,
+              "navigationId": 7668,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 12.700000017881393,
+              "domainLookupStart": 12.700000017881393,
+              "domainLookupEnd": 12.700000017881393,
+              "connectStart": 12.700000017881393,
+              "secureConnectionStart": 0,
+              "connectEnd": 12.700000017881393,
+              "requestStart": 17.30000001192093,
+              "responseStart": 95.30000001192093,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 95.30000001192093,
+              "responseEnd": 96.2000000178814,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 0,
+              "unloadEventEnd": 0,
+              "domInteractive": 162.30000001192093,
+              "domContentLoadedEventStart": 2869.300000011921,
+              "domContentLoadedEventEnd": 2869.4000000059605,
+              "domComplete": 2875.5,
+              "loadEventStart": 2878.100000023842,
+              "loadEventEnd": 2878.100000023842,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        },
+        {
+          "count": 97,
+          "encodedBytes": 4901245,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:64992/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 1085.800000011921,
+              "navigationId": 9313,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 5.4000000059604645,
+              "domainLookupStart": 10.200000017881393,
+              "domainLookupEnd": 11.5,
+              "connectStart": 11.5,
+              "secureConnectionStart": 0,
+              "connectEnd": 14.200000017881393,
+              "requestStart": 14.400000005960464,
+              "responseStart": 19.900000005960464,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 19.900000005960464,
+              "responseEnd": 21.599999994039536,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 606.5,
+              "unloadEventEnd": 606.5,
+              "domInteractive": 672.8000000119209,
+              "domContentLoadedEventStart": 1076.2000000178814,
+              "domContentLoadedEventEnd": 1076.300000011921,
+              "domComplete": 1085,
+              "loadEventStart": 1085.800000011921,
+              "loadEventEnd": 1085.800000011921,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        }
+      ],
+      "topSelfSamples": [
+        {
+          "name": "(program)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 1051.693
+        },
+        {
+          "name": "(idle)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 464.53
+        },
+        {
+          "name": "",
+          "url": "/assets/dist-BdQKmjOr.js",
+          "line": 0,
+          "selfSampleMs": 190.901
+        },
+        {
+          "name": "getBoundingClientRect",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 136.226
+        },
+        {
+          "name": "(garbage collector)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 122.942
+        },
+        {
+          "name": "py",
+          "url": "/assets/App-DG-A9-43.js",
+          "line": 498,
+          "selfSampleMs": 111.683
+        },
+        {
+          "name": "is",
+          "url": "/assets/main-DNGg2XUe.js",
+          "line": 8,
+          "selfSampleMs": 83.645
+        },
+        {
+          "name": "appendChild",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 56.984
+        },
+        {
+          "name": "ze",
+          "url": "/assets/dist-BdQKmjOr.js",
+          "line": 0,
+          "selfSampleMs": 50.434
+        },
+        {
+          "name": "R",
+          "url": "/assets/main-DNGg2XUe.js",
+          "line": 8,
+          "selfSampleMs": 44.314
+        },
+        {
+          "name": "getResource",
+          "url": "/assets/sparkles-Da5k1RD2.js",
+          "line": 0,
+          "selfSampleMs": 41.491
+        },
+        {
+          "name": "",
+          "url": "/assets/sparkles-Da5k1RD2.js",
+          "line": 0,
+          "selfSampleMs": 38.564
+        }
+      ]
+    },
+    {
+      "sample": 2,
+      "status": "diagnostic",
+      "browser": "155.0.4283.60",
+      "firstNavigationMs": 5206.8077,
+      "secondNavigationMs": 4344.2425,
+      "slowestHandlers": [
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 365.72849999999926
+        },
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 333.91070000000036
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 246.97830000000067
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 240.59449999999924
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 224.0653000000002
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 176.1181000000006
+        }
+      ],
+      "resources": [
+        {
+          "count": 97,
+          "encodedBytes": 4901245,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:53866/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 563.5,
+              "navigationId": 8229,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 10.300000011920929,
+              "domainLookupStart": 10.300000011920929,
+              "domainLookupEnd": 10.300000011920929,
+              "connectStart": 10.300000011920929,
+              "secureConnectionStart": 0,
+              "connectEnd": 10.300000011920929,
+              "requestStart": 14.599999994039536,
+              "responseStart": 29.700000017881393,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 29.700000017881393,
+              "responseEnd": 32,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 0,
+              "unloadEventEnd": 0,
+              "domInteractive": 74.30000001192093,
+              "domContentLoadedEventStart": 555.0999999940395,
+              "domContentLoadedEventEnd": 555.2000000178814,
+              "domComplete": 561,
+              "loadEventStart": 563.4000000059605,
+              "loadEventEnd": 563.5,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        },
+        {
+          "count": 97,
+          "encodedBytes": 4901245,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:53866/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 593.2000000178814,
+              "navigationId": 2923,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 4.200000017881393,
+              "domainLookupStart": 4.200000017881393,
+              "domainLookupEnd": 4.200000017881393,
+              "connectStart": 4.200000017881393,
+              "secureConnectionStart": 0,
+              "connectEnd": 4.200000017881393,
+              "requestStart": 6.300000011920929,
+              "responseStart": 11.900000005960464,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 11.900000005960464,
+              "responseEnd": 13.5,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 278.5,
+              "unloadEventEnd": 278.5,
+              "domInteractive": 347.40000000596046,
+              "domContentLoadedEventStart": 589.7000000178814,
+              "domContentLoadedEventEnd": 589.8000000119209,
+              "domComplete": 592.9000000059605,
+              "loadEventStart": 593.2000000178814,
+              "loadEventEnd": 593.2000000178814,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        }
+      ],
+      "topSelfSamples": [
+        {
+          "name": "(program)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 771.451
+        },
+        {
+          "name": "(idle)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 436.099
+        },
+        {
+          "name": "",
+          "url": "/assets/dist-BdQKmjOr.js",
+          "line": 0,
+          "selfSampleMs": 194.182
+        },
+        {
+          "name": "getBoundingClientRect",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 187.113
+        },
+        {
+          "name": "is",
+          "url": "/assets/main-DNGg2XUe.js",
+          "line": 8,
+          "selfSampleMs": 117.915
+        },
+        {
+          "name": "py",
+          "url": "/assets/App-DG-A9-43.js",
+          "line": 498,
+          "selfSampleMs": 112.25
+        },
+        {
+          "name": "(garbage collector)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 81.379
+        },
+        {
+          "name": "",
+          "url": "/assets/rolldown-runtime-C0FnF6B9.js",
+          "line": 0,
+          "selfSampleMs": 45.79
+        },
+        {
+          "name": "",
+          "url": "/assets/sparkles-Da5k1RD2.js",
+          "line": 0,
+          "selfSampleMs": 44.395
+        },
+        {
+          "name": "ip",
+          "url": "/assets/main-DNGg2XUe.js",
+          "line": 9,
+          "selfSampleMs": 41.72
+        },
+        {
+          "name": "Rc",
+          "url": "/assets/main-DNGg2XUe.js",
+          "line": 8,
+          "selfSampleMs": 39.063
+        },
+        {
+          "name": "R",
+          "url": "/assets/main-DNGg2XUe.js",
+          "line": 8,
+          "selfSampleMs": 38.24
+        }
+      ]
+    },
+    {
+      "sample": 3,
+      "status": "diagnostic",
+      "browser": "155.0.4283.60",
+      "firstNavigationMs": 4922.4027,
+      "secondNavigationMs": 4246.2654,
+      "slowestHandlers": [
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 605.9297000000006
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 471.84310000000005
+        },
+        {
+          "channel": "automations:get",
+          "elapsedMs": 401.5590000000002
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 401.3759
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 332.9908000000005
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 301.616
+        }
+      ],
+      "resources": [
+        {
+          "count": 98,
+          "encodedBytes": 14984952,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:52937/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 492.60000002384186,
+              "navigationId": 2759,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 12.600000023841858,
+              "domainLookupStart": 12.600000023841858,
+              "domainLookupEnd": 12.600000023841858,
+              "connectStart": 12.600000023841858,
+              "secureConnectionStart": 0,
+              "connectEnd": 12.600000023841858,
+              "requestStart": 15.200000017881393,
+              "responseStart": 29.5,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 29.5,
+              "responseEnd": 30.400000005960464,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 0,
+              "unloadEventEnd": 0,
+              "domInteractive": 60.5,
+              "domContentLoadedEventStart": 482.2000000178814,
+              "domContentLoadedEventEnd": 482.40000000596046,
+              "domComplete": 488.7000000178814,
+              "loadEventStart": 492.60000002384186,
+              "loadEventEnd": 492.60000002384186,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        },
+        {
+          "count": 98,
+          "encodedBytes": 14984952,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:52937/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 896.4000000059605,
+              "navigationId": 4922,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 5.299999982118607,
+              "domainLookupStart": 5.299999982118607,
+              "domainLookupEnd": 5.299999982118607,
+              "connectStart": 5.299999982118607,
+              "secureConnectionStart": 0,
+              "connectEnd": 5.299999982118607,
+              "requestStart": 9.699999988079071,
+              "responseStart": 20.299999982118607,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 20.299999982118607,
+              "responseEnd": 22.900000005960464,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 486.2999999821186,
+              "unloadEventEnd": 486.2999999821186,
+              "domInteractive": 557.9000000059605,
+              "domContentLoadedEventStart": 889.7999999821186,
+              "domContentLoadedEventEnd": 889.9000000059605,
+              "domComplete": 895.9000000059605,
+              "loadEventStart": 896.4000000059605,
+              "loadEventEnd": 896.4000000059605,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        }
+      ],
+      "topSelfSamples": [
+        {
+          "name": "(program)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 983.96
+        },
+        {
+          "name": "(idle)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 538.172
+        },
+        {
+          "name": "getBoundingClientRect",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 165.89
+        },
+        {
+          "name": "",
+          "url": "/assets/dist-BdQKmjOr.js",
+          "line": 0,
+          "selfSampleMs": 138.016
+        },
+        {
+          "name": "py",
+          "url": "/assets/App-DG-A9-43.js",
+          "line": 498,
+          "selfSampleMs": 118.968
+        },
+        {
+          "name": "(garbage collector)",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 81.727
+        },
+        {
+          "name": "appendChild",
+          "url": "",
+          "line": -1,
+          "selfSampleMs": 69.592
+        },
+        {
+          "name": "is",
+          "url": "/assets/main-DNGg2XUe.js",
+          "line": 8,
+          "selfSampleMs": 68.801
+        },
+        {
+          "name": "e.createElement",
+          "url": "/assets/react-kHW2V6fO.js",
+          "line": 0,
+          "selfSampleMs": 40.084
+        },
+        {
+          "name": "ze",
+          "url": "/assets/dist-BdQKmjOr.js",
+          "line": 0,
+          "selfSampleMs": 39.032
+        },
+        {
+          "name": "",
+          "url": "/assets/sparkles-Da5k1RD2.js",
+          "line": 0,
+          "selfSampleMs": 37.263
+        },
+        {
+          "name": "",
+          "url": "/assets/rolldown-runtime-C0FnF6B9.js",
+          "line": 0,
+          "selfSampleMs": 37.177
+        }
+      ]
+    }
+  ]
+}

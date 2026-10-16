@@ -1,0 +1,111 @@
+{
+  "status": "audit-only-awaiting-plan-approval",
+  "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+  "version": "0.3.2",
+  "productCodeModified": false,
+  "machine": {
+    "platform": "win32",
+    "arch": "x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i5-1340P",
+    "logicalCpus": 16,
+    "memoryBytes": 16836734976,
+    "bun": "1.4.2",
+    "node": "v24.15.0"
+  },
+  "checks": {
+    "test": {
+      "command": "bun run test",
+      "exitCode": 1,
+      "durationSeconds": 383.2751121,
+      "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+      "pass": 6299,
+      "fail": 3,
+      "skip": 7,
+      "errors": "Pages timeout also emitted one unhandled assertion error; not another product defect."
+    },
+    "typecheck": {
+      "command": "bun run typecheck:all",
+      "exitCode": 0,
+      "durationSeconds": 71.4409665,
+      "head": "02ecdea220195d0af4a1f2882fee7f20286b6260"
+    },
+    "lint": {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "durationSeconds": 315.5049094,
+      "head": "02ecdea220195d0af4a1f2882fee7f20286b6260"
+    },
+    "build": {
+      "command": "bun run build:smoke --output-dir=.cache/verification/governance-round2-build-baseline-20261016",
+      "exitCode": 1,
+      "durationSeconds": 191.3106541,
+      "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+      "passed": [
+        "electron:build:main",
+        "electron:build:preload",
+        "electron:build:renderer",
+        "webui:build",
+        "viewer:build"
+      ],
+      "failure": "Existing server distribution rejects win32; not a complete build pass."
+    },
+    "focused": [
+      {
+        "name": "pages-build",
+        "command": "bun test ./apps/electron/src/main/__tests__/pages-react-build.test.js",
+        "exitCode": 1,
+        "durationSeconds": 36.1942665
+      },
+      {
+        "name": "bundle",
+        "command": "bun test ./packages/pi-agent-server/src/bundle-smoke.test.ts",
+        "exitCode": 0,
+        "durationSeconds": 33.2746354
+      },
+      {
+        "name": "http",
+        "command": "bun test ./packages/server-core/src/webui/__tests__/http-server.isolated.ts",
+        "exitCode": 0,
+        "durationSeconds": 29.5383552
+      }
+    ],
+    "docs": {
+      "command": "bun run check:docs",
+      "exitCode": 0,
+      "durationSeconds": 1.2918548
+    }
+  },
+  "failureClassification": [
+    {
+      "item": "Pages React compile",
+      "full": "timeout 30000ms",
+      "focused": "same timeout; 2 pass, 1 fail, 1 error",
+      "rootCause": "not yet established; bounded investigation, no automatic budget increase"
+    },
+    {
+      "item": "Pi bundle fixture cleanup",
+      "full": "EBUSY after passing test",
+      "focused": "1 pass",
+      "rootCause": "driveBundle resolves immediately after child.kill(), before close/working-directory release"
+    },
+    {
+      "item": "HTTP FF10",
+      "full": "timeout 5000ms",
+      "focused": "15 pass",
+      "rootCause": "not yet established; no product/auth change planned"
+    }
+  ],
+  "boundaries": [
+    "No product source edits",
+    "No dependency/security gate/API changes",
+    "No push/commit/production-data operation",
+    "Seven pre-existing untracked design asset directories preserved",
+    "Two independently changed packaged-client JSON reports excluded"
+  ],
+  "verificationLimits": [
+    "Full test was concurrent with typecheck and some short audit probes; not a timing benchmark.",
+    "Hooks probe uses real production React hooks with a synthetic host API, not full AppShell.",
+    "Startup diagnostics use CPU profiling, not uninstrumented budget evidence.",
+    "Other OS, external OAuth/provider/MCP services, production accounts and signed installations not tested."
+  ]
+}

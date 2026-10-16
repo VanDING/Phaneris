@@ -1,0 +1,2688 @@
+{
+  "samples": [
+    {
+      "sample": 1,
+      "status": "diagnostic",
+      "chromium": "155.0.4283.60",
+      "instrumentation": {
+        "rendererCpu": false,
+        "hostCpu": false,
+        "modifiedProductionCode": false
+      },
+      "firstNavigationMs": 1697.1987999999997,
+      "secondNavigationMs": 1577.4942999999994,
+      "serverStartup": {
+        "processToFixtureReadyMs": 1241.5407,
+        "bootstrapMs": 208.34710000000007,
+        "initial": {
+          "memory": {
+            "rss": 164757504,
+            "heapTotal": 32519168,
+            "heapUsed": 25193949,
+            "external": 6955477,
+            "arrayBuffers": 474
+          },
+          "cpu": {
+            "user": 875000,
+            "system": 921000
+          },
+          "loadedSessions": 0,
+          "loadedMessages": 0,
+          "pid": 19880
+        }
+      },
+      "startupHandlerTimings": [
+        {
+          "channel": "theme:getPreferences",
+          "elapsedMs": 2.8290000000001783
+        },
+        {
+          "channel": "onboarding:getAuthState",
+          "elapsedMs": 7.983400000000074
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 3.536200000000008
+        },
+        {
+          "channel": "theme:getWorkspaceColorTheme",
+          "elapsedMs": 6.7280000000000655
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.5157000000003791
+        },
+        {
+          "channel": "plugins:list",
+          "elapsedMs": 2.8281999999999243
+        },
+        {
+          "channel": "drafts:getAll",
+          "elapsedMs": 0.4088000000001557
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 0.9213999999997213
+        },
+        {
+          "channel": "sessions:get",
+          "elapsedMs": 1.1362999999996646
+        },
+        {
+          "channel": "workspaces:get",
+          "elapsedMs": 0.9915000000000873
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 7.263899999999921
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.2240999999999076
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 150.96140000000014
+        },
+        {
+          "channel": "rtk:getEnabled",
+          "elapsedMs": 0.8136999999996988
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.4787000000001171
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 39.698599999999715
+        },
+        {
+          "channel": "sources:get",
+          "elapsedMs": 2.534700000000157
+        },
+        {
+          "channel": "decisions:getStatus",
+          "elapsedMs": 3.527799999999843
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 2.8399999999996908
+        },
+        {
+          "channel": "automations:get",
+          "elapsedMs": 225.65369999999984
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 225.4052999999999
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 240.54259999999977
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 2.4039999999999964
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 1.008100000000013
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.4060999999996966
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2891999999997097
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2547999999997046
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.166700000000219
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.18100000000004002
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1507000000001426
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.21959999999990032
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.16879999999991924
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 6.192700000000059
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2262999999998101
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.17000000000007276
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1410000000000764
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.13340000000016516
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1311000000000604
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.15159999999968932
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.11409999999978027
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.10850000000027649
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1271999999999025
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.12840000000005602
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.11169999999992797
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.10390000000006694
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1149000000000342
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1289000000001579
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 2.7975000000001273
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.521099999999933
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.11340000000018335
+        },
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 130.8675000000003
+        },
+        {
+          "channel": "input:getAutoCapitalisation",
+          "elapsedMs": 1.0895000000000437
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 0.6979999999998654
+        },
+        {
+          "channel": "input:getSpellCheck",
+          "elapsedMs": 0.6531999999997424
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.01669999999967331
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 0.5453999999999724
+        },
+        {
+          "channel": "artifacts:list",
+          "elapsedMs": 1.3364999999998872
+        },
+        {
+          "channel": "sessions:command",
+          "elapsedMs": 0.5752999999999702
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 32.09680000000026
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.303599999999733
+        },
+        {
+          "channel": "views:list",
+          "elapsedMs": 188.0889000000002
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.3079999999999927
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.4702000000002045
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.5376000000001113
+        },
+        {
+          "channel": "automations:getLastExecuted",
+          "elapsedMs": 6.32510000000002
+        },
+        {
+          "channel": "statuses:list",
+          "elapsedMs": 211.37570000000005
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 68.64779999999973
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.3263999999999214
+        },
+        {
+          "channel": "sessions:closeMessagesRead",
+          "elapsedMs": 1.9052000000001499
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.133299999999963
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.0979999999999563
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6297999999997046
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6145000000001346
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.4148000000000138
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7044999999998254
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5410999999999149
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5923000000002503
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.265200000000277
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.9396999999999025
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.9441000000001623
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.2813000000001011
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7109000000000378
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.365400000000136
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5718000000001666
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.36830000000009
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.884900000000016
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.1514000000001943
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.1799999999998363
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8151000000002568
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.8701999999998407
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.4756999999999607
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.4369999999998981
+        },
+        {
+          "channel": "theme:getPreferences",
+          "elapsedMs": 1.2584999999999127
+        },
+        {
+          "channel": "onboarding:getAuthState",
+          "elapsedMs": 6.204200000000128
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 2.9365000000007058
+        },
+        {
+          "channel": "theme:getWorkspaceColorTheme",
+          "elapsedMs": 5.112100000000282
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.3482000000003609
+        },
+        {
+          "channel": "plugins:list",
+          "elapsedMs": 2.0648000000001048
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 2.6161999999994805
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 2.094100000000253
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 1.3717999999998938
+        },
+        {
+          "channel": "decisions:getStatus",
+          "elapsedMs": 1.1601000000000568
+        },
+        {
+          "channel": "sources:get",
+          "elapsedMs": 1.1032999999997628
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 0.9370999999991909
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 2.079099999999926
+        },
+        {
+          "channel": "rtk:getEnabled",
+          "elapsedMs": 0.777299999999741
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 0.09470000000055734
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.16479999999955908
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 2.1277000000000044
+        },
+        {
+          "channel": "workspaces:get",
+          "elapsedMs": 1.7656999999999243
+        },
+        {
+          "channel": "automations:get",
+          "elapsedMs": 23.96689999999944
+        },
+        {
+          "channel": "sessions:get",
+          "elapsedMs": 0.5061000000005151
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 1.4052000000001499
+        },
+        {
+          "channel": "drafts:getAll",
+          "elapsedMs": 0.18659999999999854
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 1.9248999999999796
+        },
+        {
+          "channel": "automations:getLastExecuted",
+          "elapsedMs": 3.544499999999971
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.21979999999985012
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.18500000000040018
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1853000000000975
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.15049999999973807
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.15490000000045256
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.16859999999996944
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14760000000023865
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1437999999998283
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.15009999999983847
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.20929999999952997
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1797999999998865
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.19580000000041764
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14580000000023574
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.13060000000041327
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14130000000022847
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14249999999992724
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.13020000000051368
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.13720000000012078
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.12880000000041036
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.13240000000041618
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14350000000013097
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1359999999995125
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.13169999999990978
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.13060000000041327
+        },
+        {
+          "channel": "statuses:list",
+          "elapsedMs": 2.5009999999992942
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 2.024899999999434
+        },
+        {
+          "channel": "views:list",
+          "elapsedMs": 1.5263000000004467
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.4867000000003827
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.02580000000034488
+        },
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 117.53719999999976
+        },
+        {
+          "channel": "input:getAutoCapitalisation",
+          "elapsedMs": 1.1093999999993684
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 0.9648999999999432
+        },
+        {
+          "channel": "input:getSpellCheck",
+          "elapsedMs": 1.1415999999999258
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.016499999999723514
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 0.943199999999706
+        },
+        {
+          "channel": "artifacts:list",
+          "elapsedMs": 1.5430999999998676
+        },
+        {
+          "channel": "sessions:command",
+          "elapsedMs": 0.17249999999967258
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 2.1122000000004846
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.29529999999977
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.2192999999997483
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.230999999999767
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7898999999997613
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6571999999996478
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6869999999998981
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.727100000000064
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.6239999999997963
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7359000000005835
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6811999999999898
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.948099999999613
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.1575999999995474
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.1906999999991967
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.2390999999997803
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5245999999997366
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.497400000000198
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.4674999999997453
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8127999999996973
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.432600000000093
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.274899999999434
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5715000000000146
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.3949000000002343
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.9829999999992651
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.8591000000005806
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 68.6302999999998
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.5599999999994907
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.4349999999994907
+        },
+        {
+          "channel": "sessions:closeMessagesRead",
+          "elapsedMs": 2.488199999999779
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.1259000000000015
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.4650000000001455
+        }
+      ],
+      "resources": [
+        {
+          "count": 97,
+          "encodedBytes": 4901605,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:60864/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 219,
+              "navigationId": 6377,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 5.9000000059604645,
+              "domainLookupStart": 5.9000000059604645,
+              "domainLookupEnd": 5.9000000059604645,
+              "connectStart": 5.9000000059604645,
+              "secureConnectionStart": 0,
+              "connectEnd": 5.9000000059604645,
+              "requestStart": 7.800000011920929,
+              "responseStart": 11.800000011920929,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 11.800000011920929,
+              "responseEnd": 12.800000011920929,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 0,
+              "unloadEventEnd": 0,
+              "domInteractive": 26.099999994039536,
+              "domContentLoadedEventStart": 215.90000000596046,
+              "domContentLoadedEventEnd": 215.90000000596046,
+              "domComplete": 219,
+              "loadEventStart": 219,
+              "loadEventEnd": 219,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        },
+        {
+          "count": 98,
+          "encodedBytes": 14985312,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:60864/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 162.69999998807907,
+              "navigationId": 893,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 1.399999976158142,
+              "domainLookupStart": 1.399999976158142,
+              "domainLookupEnd": 1.399999976158142,
+              "connectStart": 1.399999976158142,
+              "secureConnectionStart": 0,
+              "connectEnd": 1.399999976158142,
+              "requestStart": 2.699999988079071,
+              "responseStart": 4.799999982118607,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 4.799999982118607,
+              "responseEnd": 5.399999976158142,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 11.699999988079071,
+              "unloadEventEnd": 11.699999988079071,
+              "domInteractive": 33.79999998211861,
+              "domContentLoadedEventStart": 159.89999997615814,
+              "domContentLoadedEventEnd": 159.89999997615814,
+              "domComplete": 162.39999997615814,
+              "loadEventStart": 162.69999998807907,
+              "loadEventEnd": 162.69999998807907,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sample": 2,
+      "status": "diagnostic",
+      "chromium": "155.0.4283.60",
+      "instrumentation": {
+        "rendererCpu": false,
+        "hostCpu": false,
+        "modifiedProductionCode": false
+      },
+      "firstNavigationMs": 1989.3573999999999,
+      "secondNavigationMs": 1885.4101999999993,
+      "serverStartup": {
+        "processToFixtureReadyMs": 1716.7838000000002,
+        "bootstrapMs": 239.96710000000007,
+        "initial": {
+          "memory": {
+            "rss": 159899648,
+            "heapTotal": 27937792,
+            "heapUsed": 44350358,
+            "external": 25181710,
+            "arrayBuffers": 15587951
+          },
+          "cpu": {
+            "user": 1312000,
+            "system": 984000
+          },
+          "loadedSessions": 0,
+          "loadedMessages": 0,
+          "pid": 6368
+        }
+      },
+      "startupHandlerTimings": [
+        {
+          "channel": "theme:getPreferences",
+          "elapsedMs": 2.3551000000002205
+        },
+        {
+          "channel": "onboarding:getAuthState",
+          "elapsedMs": 8.70069999999987
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 4.274999999999636
+        },
+        {
+          "channel": "theme:getWorkspaceColorTheme",
+          "elapsedMs": 5.708599999999933
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.5143000000002758
+        },
+        {
+          "channel": "plugins:list",
+          "elapsedMs": 2.5623999999997977
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 2.344500000000153
+        },
+        {
+          "channel": "decisions:getStatus",
+          "elapsedMs": 3.6176000000000386
+        },
+        {
+          "channel": "sources:get",
+          "elapsedMs": 2.4773999999997613
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 61.379199999999855
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.9450999999999112
+        },
+        {
+          "channel": "rtk:getEnabled",
+          "elapsedMs": 0.5589999999997417
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 132.68529999999964
+        },
+        {
+          "channel": "automations:get",
+          "elapsedMs": 216.07190000000037
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 216.21280000000024
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 230.45640000000003
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.5494000000003325
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 4.963400000000092
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 12.076199999999972
+        },
+        {
+          "channel": "drafts:getAll",
+          "elapsedMs": 0.46050000000013824
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 0.9127999999996064
+        },
+        {
+          "channel": "sessions:get",
+          "elapsedMs": 1.4212999999999738
+        },
+        {
+          "channel": "workspaces:get",
+          "elapsedMs": 2.3843000000001666
+        },
+        {
+          "channel": "automations:getLastExecuted",
+          "elapsedMs": 23.710700000000088
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.8110000000001492
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.25860000000011496
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.19900000000006912
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.23090000000001965
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.12809999999990396
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2187999999996464
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.15380000000004657
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14729999999963184
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.10829999999987194
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.0917000000004009
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.0911999999998443
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.08719999999993888
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.10599999999976717
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.07389999999986685
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.07130000000006476
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.06829999999990832
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.06750000000010914
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.0771999999997206
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14490000000023429
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1447000000002845
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.10179999999991196
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.0826999999999316
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1835000000000946
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1392000000000735
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 2.5936000000001513
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.1114000000002306
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.13229999999975917
+        },
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 143.07829999999967
+        },
+        {
+          "channel": "input:getAutoCapitalisation",
+          "elapsedMs": 1.1659999999997126
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 1.2312000000001717
+        },
+        {
+          "channel": "input:getSpellCheck",
+          "elapsedMs": 1.1118999999998778
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.02529999999978827
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 1.0072999999997592
+        },
+        {
+          "channel": "artifacts:list",
+          "elapsedMs": 2.570900000000165
+        },
+        {
+          "channel": "sessions:command",
+          "elapsedMs": 0.6159999999999854
+        },
+        {
+          "channel": "views:list",
+          "elapsedMs": 169.7905999999998
+        },
+        {
+          "channel": "statuses:list",
+          "elapsedMs": 176.5540000000001
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 43.92930000000024
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.4796999999998661
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.9331999999999425
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.113800000000083
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.3528000000001157
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 85.10489999999982
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.5930999999995947
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5988999999999578
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.0073999999999614
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6885000000002037
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.164299999999912
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6028000000005704
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5435999999999694
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8265000000001237
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.172899999999572
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.136800000000221
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5741000000007261
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.1679000000003725
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.9768999999996595
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.33600000000024
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.2699000000002343
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8353000000006432
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5709999999999127
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.628500000000713
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.001100000000406
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.1736000000000786
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.9966000000003987
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.9868999999998778
+        },
+        {
+          "channel": "sessions:closeMessagesRead",
+          "elapsedMs": 1.270499999999629
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.2210000000004584
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.8406000000004497
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 4.682999999999993
+        },
+        {
+          "channel": "theme:getPreferences",
+          "elapsedMs": 1.2777999999998428
+        },
+        {
+          "channel": "onboarding:getAuthState",
+          "elapsedMs": 7.485599999999977
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 3.371700000000601
+        },
+        {
+          "channel": "theme:getWorkspaceColorTheme",
+          "elapsedMs": 6.53400000000056
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.5155000000004293
+        },
+        {
+          "channel": "plugins:list",
+          "elapsedMs": 2.7140999999992346
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 2.5033000000003085
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 1.4798000000000684
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 2.5658999999996013
+        },
+        {
+          "channel": "decisions:getStatus",
+          "elapsedMs": 2.7656999999999243
+        },
+        {
+          "channel": "sources:get",
+          "elapsedMs": 2.8689000000003944
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 2.9111999999995533
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 2.1840999999994892
+        },
+        {
+          "channel": "rtk:getEnabled",
+          "elapsedMs": 0.945400000000518
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 0.1022000000002663
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.22639999999955762
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 2.1872999999995955
+        },
+        {
+          "channel": "automations:get",
+          "elapsedMs": 27.784700000000157
+        },
+        {
+          "channel": "workspaces:get",
+          "elapsedMs": 1.9960999999993874
+        },
+        {
+          "channel": "sessions:get",
+          "elapsedMs": 0.3760000000002037
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 1.2656999999999243
+        },
+        {
+          "channel": "drafts:getAll",
+          "elapsedMs": 0.13889999999992142
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 1.4364000000005035
+        },
+        {
+          "channel": "automations:getLastExecuted",
+          "elapsedMs": 6.611599999999271
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.5120000000006257
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2794999999996435
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.25099999999929423
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.24330000000009022
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2481999999999971
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.39509999999972933
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.24899999999979627
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.30420000000049185
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.21789999999964493
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.289400000000569
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.25859999999920547
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2737999999999374
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.30349999999998545
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.24060000000008586
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.23409999999967113
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.21969999999964784
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2271999999993568
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.3852000000006228
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.22860000000036962
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.30099999999947613
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2139999999999418
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.22050000000035652
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.3561999999992622
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.3397000000004482
+        },
+        {
+          "channel": "statuses:list",
+          "elapsedMs": 5.245299999999588
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 3.457900000000336
+        },
+        {
+          "channel": "views:list",
+          "elapsedMs": 4.44130000000041
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 3.1322999999993044
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.03900000000066939
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 1.9598000000005413
+        },
+        {
+          "channel": "input:getAutoCapitalisation",
+          "elapsedMs": 2.1257000000005064
+        },
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 183.22579999999925
+        },
+        {
+          "channel": "input:getSpellCheck",
+          "elapsedMs": 1.07090000000062
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.01870000000053551
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 0.8629000000000815
+        },
+        {
+          "channel": "artifacts:list",
+          "elapsedMs": 1.554599999999482
+        },
+        {
+          "channel": "sessions:command",
+          "elapsedMs": 0.1566000000002532
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 1.681800000000294
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.0405000000000655
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.8218999999999141
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.4971000000005006
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.4683999999997468
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8081999999994878
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 6.244599999999991
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.231999999999971
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.292199999999866
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6112000000002809
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.173000000000684
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.8851999999997133
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.334200000000237
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.9916000000002896
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.584100000000035
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.6306000000004133
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7100000000000364
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.707999999999629
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.8398999999999432
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.3999000000003434
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.521099999999933
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.6743999999998778
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 4.583000000000538
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.7209000000002561
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.636700000000019
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 91.4338000000007
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.786000000000058
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 37.03510000000006
+        },
+        {
+          "channel": "sessions:closeMessagesRead",
+          "elapsedMs": 41.443199999999706
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.1634000000003653
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.196899999999914
+        }
+      ],
+      "resources": [
+        {
+          "count": 98,
+          "encodedBytes": 14985312,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:55058/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 212.2000000178814,
+              "navigationId": 3654,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 4.300000011920929,
+              "domainLookupStart": 4.300000011920929,
+              "domainLookupEnd": 4.300000011920929,
+              "connectStart": 4.300000011920929,
+              "secureConnectionStart": 0,
+              "connectEnd": 4.300000011920929,
+              "requestStart": 5.800000011920929,
+              "responseStart": 9.5,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 9.5,
+              "responseEnd": 10.400000005960464,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 0,
+              "unloadEventEnd": 0,
+              "domInteractive": 24,
+              "domContentLoadedEventStart": 202.80000001192093,
+              "domContentLoadedEventEnd": 202.80000001192093,
+              "domComplete": 211,
+              "loadEventStart": 212.2000000178814,
+              "loadEventEnd": 212.2000000178814,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "high"
+              }
+            }
+          ]
+        },
+        {
+          "count": 97,
+          "encodedBytes": 4901605,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:55058/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 176.09999999403954,
+              "navigationId": 7745,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 1.2999999821186066,
+              "domainLookupStart": 1.2999999821186066,
+              "domainLookupEnd": 1.2999999821186066,
+              "connectStart": 1.2999999821186066,
+              "secureConnectionStart": 0,
+              "connectEnd": 1.2999999821186066,
+              "requestStart": 2.5999999940395355,
+              "responseStart": 5,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 5,
+              "responseEnd": 5.4000000059604645,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 13.799999982118607,
+              "unloadEventEnd": 13.799999982118607,
+              "domInteractive": 38.099999994039536,
+              "domContentLoadedEventStart": 172.7999999821186,
+              "domContentLoadedEventEnd": 172.7999999821186,
+              "domComplete": 175.90000000596046,
+              "loadEventStart": 176.09999999403954,
+              "loadEventEnd": 176.09999999403954,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sample": 3,
+      "status": "diagnostic",
+      "chromium": "155.0.4283.60",
+      "instrumentation": {
+        "rendererCpu": true,
+        "hostCpu": true,
+        "modifiedProductionCode": false
+      },
+      "firstNavigationMs": 1915.8491999999997,
+      "secondNavigationMs": 1650.5101000000004,
+      "serverStartup": {
+        "processToFixtureReadyMs": 1969.0546,
+        "bootstrapMs": 224.70450000000005,
+        "initial": {
+          "memory": {
+            "rss": 177184768,
+            "heapTotal": 31946752,
+            "heapUsed": 49063291,
+            "external": 26427267,
+            "arrayBuffers": 7011343
+          },
+          "cpu": {
+            "user": 1734000,
+            "system": 1312000
+          },
+          "loadedSessions": 0,
+          "loadedMessages": 0,
+          "pid": 25076
+        }
+      },
+      "startupHandlerTimings": [
+        {
+          "channel": "theme:getPreferences",
+          "elapsedMs": 2.102600000000166
+        },
+        {
+          "channel": "onboarding:getAuthState",
+          "elapsedMs": 5.436900000000151
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 1.1272000000003572
+        },
+        {
+          "channel": "theme:getWorkspaceColorTheme",
+          "elapsedMs": 1.5333000000000538
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.2130000000001928
+        },
+        {
+          "channel": "plugins:list",
+          "elapsedMs": 1.9245999999998276
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 3.0986000000002605
+        },
+        {
+          "channel": "decisions:getStatus",
+          "elapsedMs": 2.8512000000000626
+        },
+        {
+          "channel": "sources:get",
+          "elapsedMs": 2.546100000000024
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 51.90729999999985
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 3.665899999999965
+        },
+        {
+          "channel": "rtk:getEnabled",
+          "elapsedMs": 0.9861000000000786
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 149.19460000000026
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.3348000000000866
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 3.020300000000134
+        },
+        {
+          "channel": "workspaces:get",
+          "elapsedMs": 1.8470000000002074
+        },
+        {
+          "channel": "sessions:get",
+          "elapsedMs": 1.1554000000000997
+        },
+        {
+          "channel": "drafts:getAll",
+          "elapsedMs": 0.5374000000001615
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 1.2096000000001368
+        },
+        {
+          "channel": "automations:get",
+          "elapsedMs": 236.6821
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 234.96590000000015
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 239.62540000000035
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 1.9940000000001419
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 2.1395999999995183
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.6829999999999927
+        },
+        {
+          "channel": "views:list",
+          "elapsedMs": 10.617999999999483
+        },
+        {
+          "channel": "statuses:list",
+          "elapsedMs": 17.557200000000194
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 1.0064000000002125
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.3323999999993248
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2539999999999054
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.27009999999972933
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.2519000000002052
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.21019999999953143
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.23130000000037398
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.16190000000005966
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.16769999999996799
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.10950000000048021
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1007000000008702
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1103000000002794
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.0919000000003507
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.15830000000005384
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1639999999997599
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1463000000003376
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14940000000024156
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.15599999999994907
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14899999999943248
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1922999999997046
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.17029999999977008
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.11229999999977736
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.1235000000006039
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.11620000000038999
+        },
+        {
+          "channel": "automations:getLastExecuted",
+          "elapsedMs": 6.895199999999932
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.14840000000003783
+        },
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 123.10530000000017
+        },
+        {
+          "channel": "input:getAutoCapitalisation",
+          "elapsedMs": 1.2299000000002707
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 1.2053999999998268
+        },
+        {
+          "channel": "input:getSpellCheck",
+          "elapsedMs": 1.1644999999998618
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.02109999999993306
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 1.1001999999998588
+        },
+        {
+          "channel": "artifacts:list",
+          "elapsedMs": 2.256100000000515
+        },
+        {
+          "channel": "sessions:command",
+          "elapsedMs": 0.6102000000000771
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 36.38670000000002
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.6569999999992433
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.21979999999985
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 3.3892000000005282
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7861000000002605
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.7632000000003245
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.990299999999479
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.298700000000281
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.072900000000118
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.089600000000246
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.3125
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.623700000000099
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.3740999999999985
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.076000000000022
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.2168000000001484
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.2597999999998137
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.187199999999393
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.720100000000457
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.9570999999996275
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8710999999993874
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.71310000000085
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.848599999999351
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.274000000000342
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.3743999999996959
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.3750999999992928
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 124.96119999999974
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.003700000000208
+        },
+        {
+          "channel": "sessions:closeMessagesRead",
+          "elapsedMs": 1.5740000000005239
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.2597999999998137
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 3.084700000000339
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 2.1853000000000975
+        },
+        {
+          "channel": "theme:getPreferences",
+          "elapsedMs": 2.210900000000038
+        },
+        {
+          "channel": "onboarding:getAuthState",
+          "elapsedMs": 7.628700000000208
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 4.335699999999633
+        },
+        {
+          "channel": "theme:getWorkspaceColorTheme",
+          "elapsedMs": 8.633299999999508
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.4286000000001877
+        },
+        {
+          "channel": "drafts:getAll",
+          "elapsedMs": 0.2717000000002372
+        },
+        {
+          "channel": "LLM_Connection:listWithStatus",
+          "elapsedMs": 1.1464000000005399
+        },
+        {
+          "channel": "sessions:get",
+          "elapsedMs": 0.39279999999962456
+        },
+        {
+          "channel": "workspaces:get",
+          "elapsedMs": 1.8072000000001935
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 2.2298000000000684
+        },
+        {
+          "channel": "preferences:read",
+          "elapsedMs": 0.18959999999970023
+        },
+        {
+          "channel": "rtk:getStatus",
+          "elapsedMs": 0.1069999999999709
+        },
+        {
+          "channel": "rtk:getEnabled",
+          "elapsedMs": 0.6602999999995518
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.2781000000004497
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 1.0823999999993248
+        },
+        {
+          "channel": "sources:get",
+          "elapsedMs": 1.379399999999805
+        },
+        {
+          "channel": "decisions:getStatus",
+          "elapsedMs": 1.1155999999991764
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 2.108200000000579
+        },
+        {
+          "channel": "pages:get",
+          "elapsedMs": 1.8822000000000116
+        },
+        {
+          "channel": "projects:get",
+          "elapsedMs": 1.3331000000007407
+        },
+        {
+          "channel": "plugins:list",
+          "elapsedMs": 1.363299999999981
+        },
+        {
+          "channel": "automations:get",
+          "elapsedMs": 2.6851999999998952
+        },
+        {
+          "channel": "workspaceSettings:get",
+          "elapsedMs": 1.2678999999998268
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.14060000000063155
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.08190000000013242
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.06490000000030705
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.060099999999692955
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.060199999999895226
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.06479999999919528
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.05379999999968277
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.059500000000298314
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.060199999999895226
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.07909999999992579
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.09569999999985157
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.09719999999924767
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.06669999999940046
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.06050000000050204
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.059500000000298314
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.06760000000031141
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.05929999999989377
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.053399999999783176
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.05820000000039727
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.054799999999886495
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.05640000000039436
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.05779999999958818
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.050900000000183354
+        },
+        {
+          "channel": "sessions:getPermissionModeState",
+          "elapsedMs": 0.122799999999188
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.03210000000035507
+        },
+        {
+          "channel": "git:getBranch",
+          "elapsedMs": 128.8737999999994
+        },
+        {
+          "channel": "input:getSpellCheck",
+          "elapsedMs": 0.860700000000179
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 0.6554999999998472
+        },
+        {
+          "channel": "input:getAutoCapitalisation",
+          "elapsedMs": 0.7264999999997599
+        },
+        {
+          "channel": "system:homeDir",
+          "elapsedMs": 0.016599999999925785
+        },
+        {
+          "channel": "input:getSendMessageKey",
+          "elapsedMs": 0.6967000000004191
+        },
+        {
+          "channel": "artifacts:list",
+          "elapsedMs": 1.990099999999984
+        },
+        {
+          "channel": "sessions:command",
+          "elapsedMs": 0.2175999999999476
+        },
+        {
+          "channel": "skills:get",
+          "elapsedMs": 1.676300000000083
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.2268000000003667
+        },
+        {
+          "channel": "statuses:list",
+          "elapsedMs": 2.5307000000002517
+        },
+        {
+          "channel": "labels:list",
+          "elapsedMs": 1.7069000000001324
+        },
+        {
+          "channel": "views:list",
+          "elapsedMs": 1.545600000000377
+        },
+        {
+          "channel": "sessions:getUnreadSummary",
+          "elapsedMs": 1.770499999999629
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.6976999999997133
+        },
+        {
+          "channel": "automations:getLastExecuted",
+          "elapsedMs": 1.141899999999623
+        },
+        {
+          "channel": "sessions:readMessages",
+          "elapsedMs": 22.61959999999999
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.9970999999995911
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 0.9433000000008178
+        },
+        {
+          "channel": "sessions:closeMessagesRead",
+          "elapsedMs": 0.7776000000003478
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.2466999999996915
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.0764999999992142
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6655999999993583
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6195999999999913
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.267399999999725
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.3258999999998196
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.9338999999999942
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7988000000004831
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.957100000000537
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.050799999999981
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6306000000004133
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.6917999999996027
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8114000000005035
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 2.014299999999821
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5557000000007974
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.3342000000002372
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.9272000000000844
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.5931000000000495
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.8740999999999985
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.6472999999996318
+        },
+        {
+          "channel": "workspace:readImage",
+          "elapsedMs": 1.7205999999996493
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.3170000000000073
+        },
+        {
+          "channel": "sessions:getPendingPlanExecution",
+          "elapsedMs": 1.2709999999997308
+        }
+      ],
+      "resources": [
+        {
+          "count": 98,
+          "encodedBytes": 14985312,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:61736/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 245.2000000178814,
+              "navigationId": 815,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 7.700000017881393,
+              "domainLookupStart": 7.700000017881393,
+              "domainLookupEnd": 7.700000017881393,
+              "connectStart": 7.700000017881393,
+              "secureConnectionStart": 0,
+              "connectEnd": 7.700000017881393,
+              "requestStart": 9.600000023841858,
+              "responseStart": 13.900000005960464,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 13.900000005960464,
+              "responseEnd": 14.700000017881393,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 0,
+              "unloadEventEnd": 0,
+              "domInteractive": 32.70000001788139,
+              "domContentLoadedEventStart": 240.10000002384186,
+              "domContentLoadedEventEnd": 240.10000002384186,
+              "domComplete": 243.5,
+              "loadEventStart": 245.2000000178814,
+              "loadEventEnd": 245.2000000178814,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "high"
+              }
+            }
+          ]
+        },
+        {
+          "count": 98,
+          "encodedBytes": 14985312,
+          "navigation": [
+            {
+              "name": "http://127.0.0.1:61736/?route=allSessions/session/perf-000",
+              "entryType": "navigation",
+              "startTime": 0,
+              "duration": 204.30000001192093,
+              "navigationId": 5098,
+              "initiatorType": "navigation",
+              "deliveryType": "",
+              "nextHopProtocol": "http/1.1",
+              "renderBlockingStatus": "non-blocking",
+              "contentType": "text/html",
+              "contentEncoding": "",
+              "workerStart": 0,
+              "workerRouterEvaluationStart": 0,
+              "workerCacheLookupStart": 0,
+              "workerMatchedSourceType": "",
+              "workerFinalSourceType": "",
+              "redirectStart": 0,
+              "redirectEnd": 0,
+              "fetchStart": 2.4000000059604645,
+              "domainLookupStart": 2.4000000059604645,
+              "domainLookupEnd": 2.4000000059604645,
+              "connectStart": 2.4000000059604645,
+              "secureConnectionStart": 0,
+              "connectEnd": 2.4000000059604645,
+              "requestStart": 4,
+              "responseStart": 6.600000023841858,
+              "firstInterimResponseStart": 0,
+              "finalResponseHeadersStart": 6.600000023841858,
+              "responseEnd": 7.5,
+              "transferSize": 4335,
+              "encodedBodySize": 4035,
+              "decodedBodySize": 4035,
+              "responseStatus": 200,
+              "serverTiming": [],
+              "unloadEventStart": 94.30000001192093,
+              "unloadEventEnd": 94.30000001192093,
+              "domInteractive": 109.7000000178814,
+              "domContentLoadedEventStart": 201.5,
+              "domContentLoadedEventEnd": 201.5,
+              "domComplete": 204,
+              "loadEventStart": 204.30000001192093,
+              "loadEventEnd": 204.30000001192093,
+              "type": "navigate",
+              "redirectCount": 0,
+              "activationStart": 0,
+              "criticalCHRestart": 0,
+              "notRestoredReasons": null,
+              "confidence": {
+                "randomizedTriggerRate": 0.4994798,
+                "value": "low"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fixedBuild": {
+    "unchanged": true
+  },
+  "hostCpuProfileWritten": false,
+  "limits": [
+    "Only samples 1 and 2 are unprofiled; sample 3 has CPU profiling/preload overhead.",
+    "Fresh browser contexts; OS file caches/GC/other desktop activity not controlled.",
+    "No before/after causal claim; no startup product optimization was applied."
+  ],
+  "diagnosticSource": {
+    "originalSha256": "3638bfdc9f2934e6623920abf36ddd07a0fa248d472773b108de046d3d7cb7e6",
+    "diagnosticSha256": "6cbd4e49085fecffd899d1b355c8cc09b2ce103c0a1292fdea563dd6cf6e8c80",
+    "modifications": "Relative imports and opt-in profiling only; workloads, UI markers, RPC, assets and budgets are unchanged."
+  }
+}

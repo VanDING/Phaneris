@@ -1,0 +1,89 @@
+{
+  "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+  "directory": "E:\\Phaneris\\.cache\\governance-round2-audit-2026-10-16\\backend-1792128830654",
+  "scenarios": {},
+  "pages": {
+    "brokerCreations": 8,
+    "issuedLeases": 8,
+    "results": [
+      {
+        "requestId": "a3360276-c714-43ac-a439-eeafe81a9695",
+        "ok": false,
+        "error": "lease-not-found: No render lease for this request — re-mount the page",
+        "durationMs": 0
+      },
+      {
+        "requestId": "439c2458-8e68-464c-a818-252d511444a3",
+        "ok": false,
+        "error": "lease-not-found: No render lease for this request — re-mount the page",
+        "durationMs": 0
+      },
+      {
+        "requestId": "a3e9a6cd-5995-4c54-bc09-94074072a299",
+        "ok": false,
+        "error": "grant-not-found: No grant deliberately-absent on this page",
+        "durationMs": 0
+      },
+      {
+        "requestId": "a099202e-9af3-4b96-870e-b8f93ede2538",
+        "ok": false,
+        "error": "lease-not-found: No render lease for this request — re-mount the page",
+        "durationMs": 0
+      },
+      {
+        "requestId": "856d5218-a5d1-45b5-9bd1-04cd8e023fc9",
+        "ok": false,
+        "error": "lease-not-found: No render lease for this request — re-mount the page",
+        "durationMs": 0
+      },
+      {
+        "requestId": "80e8cb1d-7ee9-473e-81cd-098787002fad",
+        "ok": false,
+        "error": "lease-not-found: No render lease for this request — re-mount the page",
+        "durationMs": 0
+      },
+      {
+        "requestId": "7a7cfa1b-7733-475d-8ade-e31edfd9ce1f",
+        "ok": false,
+        "error": "lease-not-found: No render lease for this request — re-mount the page",
+        "durationMs": 0
+      },
+      {
+        "requestId": "b999e05f-0a25-4554-b85a-992b906b53df",
+        "ok": false,
+        "error": "lease-not-found: No render lease for this request — re-mount the page",
+        "durationMs": 0
+      }
+    ],
+    "sequentialControl": {
+      "requestId": "504918eb-5e92-4286-8f8c-e6c4b8ef583b",
+      "ok": false,
+      "error": "grant-not-found: No grant deliberately-absent on this page",
+      "durationMs": 0
+    },
+    "expected": "All fresh leases reach grant-not-found, not lease-not-found; only one broker per workspace."
+  },
+  "concurrent": {
+    "spawnedPids": [
+      31596,
+      17292
+    ],
+    "observedPid": 17292,
+    "aliveAfterDisconnect": [
+      31596
+    ],
+    "connectedAfterDisconnect": false
+  },
+  "disconnect-during-connect": {
+    "immediatelyConnected": false,
+    "connectResult": "resolved",
+    "connectedAfterConnectSettled": true,
+    "spawnedPids": [
+      31424
+    ],
+    "aliveAfterDisconnect": [
+      31424
+    ]
+  },
+  "fixtureCleanup": "All owned children killed and local WS server closed."
+}

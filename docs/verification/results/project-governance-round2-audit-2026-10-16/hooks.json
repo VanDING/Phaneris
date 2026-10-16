@@ -1,0 +1,95 @@
+{
+  "chromium": "155.0.4283.60",
+  "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+  "scope": "Production React hooks in a real browser; deterministic host-API deferred responses, no full AppShell/real RPC.",
+  "cases": [
+    {
+      "mode": "old-success",
+      "state": {
+        "workspace": "B",
+        "pages": [
+          "A-old"
+        ],
+        "projects": [
+          "A-old"
+        ],
+        "automations": [
+          "A-old"
+        ],
+        "atoms": {
+          "pages": [
+            "A-old"
+          ],
+          "projects": [
+            "A-old"
+          ],
+          "automations": [
+            "A-old"
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "mode": "old-rejection",
+      "state": {
+        "workspace": "B",
+        "pages": [],
+        "projects": [],
+        "automations": [],
+        "atoms": {
+          "pages": [],
+          "projects": [],
+          "automations": []
+        }
+      },
+      "errors": []
+    },
+    {
+      "mode": "push-before-read",
+      "state": {
+        "workspace": "A",
+        "pages": [
+          "A-read-old"
+        ],
+        "projects": [
+          "A-read-old"
+        ],
+        "automations": [
+          "A-read-old"
+        ],
+        "atoms": {
+          "pages": [
+            "A-read-old"
+          ],
+          "projects": [
+            "A-read-old"
+          ],
+          "automations": [
+            "A-read-old"
+          ]
+        }
+      },
+      "errors": []
+    },
+    {
+      "mode": "clear-workspace",
+      "state": {
+        "workspace": null,
+        "pages": [],
+        "projects": [],
+        "automations": [
+          "A-existing"
+        ],
+        "atoms": {
+          "pages": [],
+          "projects": [],
+          "automations": [
+            "A-existing"
+          ]
+        }
+      },
+      "errors": []
+    }
+  ]
+}

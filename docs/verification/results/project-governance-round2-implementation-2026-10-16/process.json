@@ -1,0 +1,38 @@
+[
+  {
+    "mode": "success",
+    "result": "resolved",
+    "error": "",
+    "output": "TERMINAL\nTERMINAL\n",
+    "pid": 7336,
+    "aliveAtSettlement": false,
+    "cwdRemoved": true
+  },
+  {
+    "mode": "early-exit",
+    "result": "rejected",
+    "error": "Error: bundle exited early; output:\n",
+    "output": "",
+    "pid": 25820,
+    "aliveAtSettlement": false,
+    "cwdRemoved": true
+  },
+  {
+    "mode": "timeout",
+    "result": "rejected",
+    "error": "Error: timed out waiting for terminal marker; output so far:\n",
+    "output": "",
+    "pid": 31168,
+    "aliveAtSettlement": false,
+    "cwdRemoved": true
+  },
+  {
+    "mode": "spawn-error",
+    "result": "rejected",
+    "error": "Error: ENOENT: no such file or directory, uv_spawn 'E:\\Phaneris\\.cache\\verification\\governance-r2-process-final\\missing-bun.exe'",
+    "output": "",
+    "pid": null,
+    "aliveAtSettlement": false,
+    "cwdRemoved": true
+  }
+]

@@ -4200,7 +4200,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 356,
+          "line": 364,
           "args": [
             "workspaceId: string",
             "requestId: string"
@@ -4233,7 +4233,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 191,
+          "line": 199,
           "args": [
             "workspaceId: string",
             "input: import('@phaneris/shared/pages').CreatePageInput"
@@ -4255,7 +4255,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 320,
+          "line": 328,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4277,7 +4277,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 233,
+          "line": 241,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4299,7 +4299,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 343,
+          "line": 351,
           "args": [
             "workspaceId: string",
             "request: PageActionRequest"
@@ -4321,7 +4321,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 171,
+          "line": 179,
           "args": [
             "workspaceId: string"
           ],
@@ -4342,7 +4342,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 247,
+          "line": 255,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4364,7 +4364,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 270,
+          "line": 278,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4386,7 +4386,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 182,
+          "line": 190,
           "args": [
             "workspaceId: string",
             "pageIdOrSlug: string"
@@ -4408,7 +4408,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 378,
+          "line": 386,
           "args": [],
           "result": "inferred by TypeScript; see handler return",
           "owner": "authenticated host or handler-specific policy"
@@ -4427,7 +4427,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 385,
+          "line": 393,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4449,7 +4449,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 447,
+          "line": 455,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4471,7 +4471,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 286,
+          "line": 294,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4494,7 +4494,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 278,
+          "line": 286,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4516,7 +4516,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 393,
+          "line": 401,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4539,7 +4539,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 465,
+          "line": 473,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4561,7 +4561,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 334,
+          "line": 342,
           "args": [
             "workspaceId: string",
             "leaseId: string"
@@ -4583,7 +4583,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 304,
+          "line": 312,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4606,7 +4606,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 258,
+          "line": 266,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4629,7 +4629,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 413,
+          "line": 421,
           "args": [
             "workspaceId: string",
             "pageSlug: string",
@@ -4652,7 +4652,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 429,
+          "line": 437,
           "args": [
             "workspaceId: string",
             "pageSlug: string"
@@ -4674,7 +4674,7 @@
       "sites": [
         {
           "file": "packages/server-core/src/handlers/rpc/pages.ts",
-          "line": 214,
+          "line": 222,
           "args": [
             "workspaceId: string",
             "pageSlug: string",

@@ -10,7 +10,7 @@
  * list to drift.
  */
 
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { pagesAtom } from '@/atoms/pages'
 import type { LoadedPage } from '@phaneris/shared/pages/types'
@@ -23,23 +23,28 @@ export interface UsePagesResult {
 export function usePages(activeWorkspaceId: string | null | undefined): UsePagesResult {
   const pages = useAtomValue(pagesAtom)
   const setPages = useSetAtom(pagesAtom)
+  const requestVersion = useRef(0)
 
   const refresh = useCallback(async () => {
+    const version = ++requestVersion.current
     if (!activeWorkspaceId) {
       setPages([])
       return
     }
     try {
       const result = await window.electronAPI.getPages(activeWorkspaceId)
+      if (version !== requestVersion.current) return
       setPages(Array.isArray(result) ? result : [])
     } catch (err) {
+      if (version !== requestVersion.current) return
       console.error('[usePages] Failed to load pages:', err)
       setPages([])
     }
   }, [activeWorkspaceId, setPages])
 
   useEffect(() => {
-    refresh()
+    void refresh()
+    return () => { requestVersion.current += 1 }
   }, [refresh])
 
   useEffect(() => {
@@ -50,6 +55,7 @@ export function usePages(activeWorkspaceId: string | null | undefined): UsePages
       // client (routing is handshake-based), so on an id-form mismatch we
       // re-read instead of dropping (mirrors useAutomations' refetch shape).
       if (wsId === activeWorkspaceId) {
+        requestVersion.current++
         setPages(Array.isArray(list) ? list : [])
       } else {
         void refresh()

@@ -1,0 +1,1418 @@
+{
+  "head": "02ecdea220195d0af4a1f2882fee7f20286b6260",
+  "dirtyImplementation": true,
+  "productTasks": [
+    "R2-01",
+    "R2-02",
+    "R2-03",
+    "R2-04"
+  ],
+  "tests": {
+    "id": "test-final-complete",
+    "command": [
+      "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+      "run",
+      "test"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 200495.4296,
+    "timedOut": false,
+    "pass": 6301,
+    "fail": 0,
+    "skip": 7
+  },
+  "typecheck": {
+    "command": "bun run typecheck:all",
+    "exitCode": 0,
+    "seconds": 120.0810963
+  },
+  "lint": {
+    "command": "bun run lint",
+    "exitCode": 0,
+    "seconds": 121.7282347
+  },
+  "sharedTypecheckAfterTestAdapterChange": {
+    "command": "bun run typecheck:shared",
+    "exitCode": 0
+  },
+  "build": {
+    "runtimeExitCode": 0,
+    "buildExitCode": 1,
+    "seconds": 265.5456905
+  },
+  "sequence": [
+    {
+      "id": "electron-renderer-final",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "electron:build:renderer"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 16386.6836,
+      "timedOut": false
+    },
+    {
+      "id": "webui-final",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "webui:build"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 21098.618000000002,
+      "timedOut": false
+    },
+    {
+      "id": "round1-storage",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "scripts/verification/project-governance-storage-workflow.ts",
+        "--output-dir=.cache/verification/governance-r2-round1-storage"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 8660.231400000004,
+      "timedOut": false
+    },
+    {
+      "id": "round1-browser",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "scripts/verification/project-governance-browser-workflow.ts",
+        "--output-dir=.cache/verification/governance-r2-round1-browser"
+      ],
+      "exitCode": 1,
+      "elapsedMs": 2721.1468000000023,
+      "timedOut": false
+    },
+    {
+      "id": "round1-browser-edge",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "scripts/verification/project-governance-browser-workflow.ts",
+        "--output-dir=.cache/verification/governance-r2-round1-browser-edge"
+      ],
+      "exitCode": 1,
+      "elapsedMs": 61154.439999999995,
+      "timedOut": false
+    },
+    {
+      "id": "upstream-repeat",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "test:upstream-015"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 185703.3964,
+      "timedOut": false
+    },
+    {
+      "id": "test-final",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "test"
+      ],
+      "exitCode": 1,
+      "elapsedMs": 296849.59739999997,
+      "timedOut": false
+    },
+    {
+      "id": "test-final-complete",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "test"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 200495.4296,
+      "timedOut": false
+    },
+    {
+      "id": "startup-r2-1",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "E:\\Phaneris\\.cache\\governance-round2-implementation-2026-10-16\\startup-diagnostic.ts",
+        "--skip-build",
+        "--startup-only",
+        "--output=E:\\Phaneris\\.cache\\governance-round2-implementation-2026-10-16\\startup-r2-1.json"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 11807.517200000002,
+      "timedOut": false
+    },
+    {
+      "id": "startup-r2-2",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "E:\\Phaneris\\.cache\\governance-round2-implementation-2026-10-16\\startup-diagnostic.ts",
+        "--skip-build",
+        "--startup-only",
+        "--output=E:\\Phaneris\\.cache\\governance-round2-implementation-2026-10-16\\startup-r2-2.json"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 12996.437800000014,
+      "timedOut": false
+    },
+    {
+      "id": "startup-r2-3",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "E:\\Phaneris\\.cache\\governance-round2-implementation-2026-10-16\\startup-diagnostic.ts",
+        "--skip-build",
+        "--startup-only",
+        "--output=E:\\Phaneris\\.cache\\governance-round2-implementation-2026-10-16\\startup-r2-3.json"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 13283.149199999985,
+      "timedOut": false
+    },
+    {
+      "id": "performance-full",
+      "command": [
+        "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
+        "run",
+        "scripts/performance/run.ts",
+        "--skip-build",
+        "--output=E:\\Phaneris\\.cache\\governance-round2-implementation-2026-10-16\\performance-full.json"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 155865.9226,
+      "timedOut": false
+    }
+  ],
+  "gates": [
+    {
+      "command": "bun run lint:i18n:parity",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run lint:i18n:sorted",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run lint:i18n:coverage",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run lint:i18n:dead-keys",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run check:fonts",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run identity:check",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run version:check",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run runtime:check",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run electron-pin:check",
+      "exitCode": 0
+    }
+  ],
+  "docs": {
+    "command": "bun run check:docs",
+    "exitCode": 0,
+    "seconds": 0.5294018
+  },
+  "verified": [
+    {
+      "directory": ".cache/verification/governance-r2-services-final",
+      "workflow": "project-governance-round2-services",
+      "passed": 12,
+      "sceneIds": [
+        "M01-single-source-concurrent-stdio-and-release",
+        "M02-one-disconnect-during-connect",
+        "M02-all-disconnect-during-connect",
+        "M03-independent-source-concurrency",
+        "M04-config-change-during-connect",
+        "M05-failed-discovery-closes-and-retries",
+        "M06-initial-catalog-once-and-explicit-refresh",
+        "M08-in-process-concurrent-and-release",
+        "M08-in-process-disconnect-during-initialization",
+        "P01-eight-first-leases-execute-approved-api",
+        "P02-workspace-isolation-release-nonce-replay",
+        "P03-failed-initialization-retries"
+      ],
+      "exitCode": 0,
+      "artifacts": 50
+    },
+    {
+      "directory": ".cache/verification/governance-r2-renderer-final",
+      "workflow": "project-governance-round2-renderer",
+      "passed": 8,
+      "sceneIds": [
+        "F01-old-workspace-success",
+        "F02-old-workspace-error",
+        "F03-same-workspace-newest-refresh",
+        "F04-push-invalidates-old-read",
+        "F05-clear-workspace",
+        "F06-unmount-old-request-cannot-pollute-shared-atoms",
+        "F07-pages-id-slug-notification-refetch",
+        "F08-production-hooks-real-rpc-read-and-push"
+      ],
+      "exitCode": 0,
+      "artifacts": 40
+    },
+    {
+      "directory": ".cache/verification/governance-r2-process-final",
+      "workflow": "project-governance-round2-process",
+      "passed": 4,
+      "sceneIds": [
+        "success",
+        "early-exit",
+        "timeout",
+        "spawn-error"
+      ],
+      "exitCode": 0,
+      "artifacts": 15
+    },
+    {
+      "directory": ".cache/verification/governance-r2-round1-storage",
+      "workflow": "project-governance-storage",
+      "passed": 8,
+      "sceneIds": [
+        "H01-long-description-and-transfer-remain-listed",
+        "H02-boundaries-utf8-and-no-newline",
+        "H03-invalid-and-missing-header-keep-null-contract",
+        "D01-locked-delete-rejects-without-success-and-retries",
+        "D02-inflight-and-pending-writes-settle-before-delete",
+        "D03-repeat-delete-notifies-once",
+        "U01-file-sqlite-replay-conflict-and-rollback",
+        "U02-new-usage-never-enumerates-history"
+      ],
+      "exitCode": 0,
+      "artifacts": 10
+    },
+    {
+      "directory": ".cache/verification/governance-r2-round1-services",
+      "workflow": "project-governance-services",
+      "passed": 6,
+      "sceneIds": [
+        "S01-two-rpc-clients-independent-workspaces-and-shared-workspace",
+        "S02-plain-base64-and-text-with-encoded-attachments",
+        "S03-same-owner-cancels-old-search-and-blank-query",
+        "M01-http-header-sync-ensure-and-url-updates",
+        "M02-mutating-caller-config-does-not-mutate-active-config",
+        "M03-stdio-argument-environment-and-cwd-updates"
+      ],
+      "exitCode": 0,
+      "artifacts": 427
+    },
+    {
+      "directory": ".cache/verification/upstream-015-core-HCf4bJ",
+      "workflow": "upstream-015-core",
+      "passed": 11,
+      "sceneIds": [
+        "U15-02-http-header-map",
+        "U15-01-refresh-workspace-isolation-and-deduplication",
+        "U15-05-explicit-utility-and-provider-tier",
+        "U15-04-label-contract-and-legacy-canonicalization",
+        "U15-06-pi-resource-settings-isolation",
+        "U15-08-project-memory-tool-concurrent-append",
+        "U15-09-project-memory-retains-old-and-new",
+        "U15-10-13-http-mcp-resources-prompts-without-tools",
+        "U15-20-real-shell-guide-read-success-only",
+        "U15-07-headless-checkout-path-isolation",
+        "U15-26-timezone-and-source-error-status"
+      ],
+      "exitCode": 0,
+      "artifacts": 12
+    },
+    {
+      "directory": ".cache/verification/upstream-015-orchestration-3gspgw",
+      "workflow": "upstream-015-orchestration",
+      "passed": 5,
+      "sceneIds": [
+        "U15-14-oauth-one-preparation-and-workspace-isolation",
+        "U15-16-empty-turn-does-not-reuse-history",
+        "U15-18-interrupted-step-retains-explicit-recovery",
+        "U15-17-dependency-replies-and-explicit-reference-once",
+        "U15-19-active-generation-and-idle-timeout"
+      ],
+      "exitCode": 0,
+      "artifacts": 14
+    },
+    {
+      "directory": ".cache/verification/upstream-015-browser-joQHOl",
+      "workflow": "upstream-015-browser",
+      "passed": 11,
+      "sceneIds": [
+        "U15-21-hidden-trusted-click-and-react-controlled-fill",
+        "U15-21-native-and-custom-select-update-state",
+        "U15-24-password-fill-type-paste-no-output-or-snapshot-leak",
+        "U15-21-all-input-completes-without-focusing-window",
+        "U15-25-apostrophe-command-parser",
+        "U15-23-normal-page-and-open-menu-not-challenges",
+        "U15-23-strong-challenge-confirmed-after-second-look",
+        "U15-22-hidden-screenshot-current-pixels-and-window-restoration",
+        "U15-22-recovery-preserves-pre-existing-topmost-state",
+        "U15-24-durable-tool-and-model-facts-hide-text-before-write",
+        "U15-24-sdk-journal-hides-text-with-exact-live-input-and-hash"
+      ],
+      "exitCode": 0,
+      "artifacts": 79
+    },
+    {
+      "directory": ".cache/verification/upstream-015-renderer-wKaOzM",
+      "workflow": "upstream-015-renderer",
+      "passed": 6,
+      "sceneIds": [
+        "U15-03-real-credential-cancel-never-submits-valid-form",
+        "U15-03-single-file-preflight-retains-draft",
+        "U15-03-total-preflight-keeps-text-and-all-attachments",
+        "U15-03-serialized-text-plus-base64-cannot-exceed-message",
+        "U15-03-valid-message-still-submits-and-clears-draft",
+        "U15-27-real-production-components-have-no-page-errors"
+      ],
+      "exitCode": 0,
+      "artifacts": 593
+    },
+    {
+      "directory": ".cache/verification/governance-r2-round1-browser-confirmation",
+      "workflow": "project-governance-browser",
+      "passed": 5,
+      "sceneIds": [
+        "V01-older-success-cannot-overwrite-new-session",
+        "V01-older-not-found-cannot-overwrite-new-session",
+        "V02-clear-cancels-old-request-and-shows-upload",
+        "W01-chunk-error-fallback-and-reload-recovery",
+        "W01-render-error-fallback-and-reload-recovery"
+      ],
+      "exitCode": 0,
+      "artifacts": 41
+    }
+  ],
+  "ownership": {
+    "baseline": ".cache/verification/governance-r2-services-before/manifest.json",
+    "files": 242,
+    "designFiles": 240,
+    "independentReports": 2,
+    "changed": [],
+    "designFileSetUnchanged": true,
+    "entries": [
+      {
+        "path": "docs/design/icon-family-demo/index.html",
+        "sha256": "ab19906a31dd71c36a48c599377db09fc2d1723c0591bf64a73d8a2696954cfc"
+      },
+      {
+        "path": "docs/design/icon-family-demo/src/app.js",
+        "sha256": "da864bbd81bad63b9e19df0d431e398b0fcefc92e49c80fd8fd122391d706187"
+      },
+      {
+        "path": "docs/design/icon-family-demo/src/styles.css",
+        "sha256": "04c816e99b2e9df872cb1153fd23e07b48090edb3e76fa661cc4a755d736c7b5"
+      },
+      {
+        "path": "docs/design/icon-family-demo/src/template.html",
+        "sha256": "f449bba6c7b1f17fd60a8cf9ca00681443650802ad1828709ba1e57725e115e1"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/collection-ci.json",
+        "sha256": "109c1d9050b96166b7389e63522b2808cb567df8085a04bfdc5148fe9d9d43c7"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/collection-line-md.json",
+        "sha256": "80e145c210af056ec489a6734247cddd8ed713ba58ec885127415406b81b4ff4"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/collection-material-icon-theme.json",
+        "sha256": "9afd2d26cd0ea885475703115319fba1c207b829be48e9ce22f7c739e847e447"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/collection-mi.json",
+        "sha256": "79ad278f3b52fcf0cb71d20860a89c11564e87e8cf3f5c2b581f4212a7466eef"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/collection-svg-spinners.json",
+        "sha256": "56ea9d3492cc2197e71a2749f053e7131cc387f91e1f3a7759b9b2fd79d603fe"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/collection-vscode-icons.json",
+        "sha256": "763f1d50e6da0877720a6653afa0bf05a9550b389f759d5d8bc7b616721d5b33"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/fetch-summary.json",
+        "sha256": "2cc5ae67eaca1ea77ef98d9a5fde762f851cc6fdfd19543fb6acc812f163ad4c"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/icons-ci.json",
+        "sha256": "9ab8c907d220b54e47af25a36c09b008fe894c2eee491f10a9ceebb0d231386e"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/icons-line-md.json",
+        "sha256": "2df59569bac4b9e6a21fa9dbd383c305c184e6993d8517fd3168fa1d4d42f539"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/icons-lucide.json",
+        "sha256": "6e54fcbf47a86608b041ba13bedef4155fa1572b4ad5ce9d5d5c9f903952baa0"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/icons-material-icon-theme.json",
+        "sha256": "2e68712834ef28c43dbd8351a283aaa26ce91ea6dd8cdadd79a425322a3eaecc"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/icons-mi.json",
+        "sha256": "a61fda8f501cac89d4c465fa9745e558a528825594227929d0afe2b8ef1794db"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/icons-svg-spinners.json",
+        "sha256": "d4ad597d519c9d80197e87e2c7769af24623087fba2cecd0c69ebaf80a3358f9"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/icons-vscode-icons.json",
+        "sha256": "82c1fcf1bd0936e1ed966dfcf6d6d9ab17d717e344baaddcb9a09ec28f9125a1"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/lucide-usage.json",
+        "sha256": "dcf7863172a55c59449893ab8c5b0eba268d8a2a587de891d81b47101f1fa58b"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/name-index.txt",
+        "sha256": "a8ff801d462bf802199f57b85cae0f7e4269b756e33012fb837b44ac3e7950a8"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-ci-base.txt",
+        "sha256": "586cac447be91a8d2c1d9c2b54179c728b1ec9b54ec796e5e9fe4b4b2f926684"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-ci-variant.txt",
+        "sha256": "25bcf515acc577cea50e006fc6e7ea79a8974cf9936b5aeb16d034536597d356"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-line-md-base.txt",
+        "sha256": "1b76a42b9fee645f4ba069ccd35ea31a25974b1f4342ba2f143cd1fb1cff6dd5"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-line-md-variant.txt",
+        "sha256": "27db8bcce1b5b98ba9e1f281d1a0d8920e7ed021f4cd99f653ef49701d6eb482"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-material-icon-theme-base.txt",
+        "sha256": "c9503f6f854d02c41d81ccfcc6fd05401bc1f263080b901da6d4bef1d4d91a79"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-material-icon-theme-variant.txt",
+        "sha256": "49f00d7a26f720a5f54d610f68675c79b769caa15ebf1c92c76e3c07f574326f"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-mi-base.txt",
+        "sha256": "26957da58a73242027131f62cb08433c9530acf38334afce177e2d0c43fe18dd"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-mi-variant.txt",
+        "sha256": "76a8c04513b441a66cd91e2d0086270d9aec07ae953d53c259fb81c1b8140652"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-svg-spinners-base.txt",
+        "sha256": "02b7a7bbe85734b01e712b0071b5824baac4165bc4a1d7a41cda83a368268e47"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-svg-spinners-variant.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-vscode-icons-base.txt",
+        "sha256": "1451982a6a7f63848dbb7c8ddf500c70221017b27ce1180336c4b247c3ed7069"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/names-vscode-icons-variant.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/assets/set-licenses.json",
+        "sha256": "25cb6e3437e2d64fa251917ebe9da53ab50ddb2e263cac6fa7ba49e5005d02a1"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/build.mjs",
+        "sha256": "fe2705e8a763a9f819604e8d5174ae2b8cc7bf18d23c13d22b6a4b8be127786f"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/debug.mjs",
+        "sha256": "0dc9670fce65328e3eb1b3411dda68fd9a137572d92485f51ca527e531a8998d"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/extract-lucide.mjs",
+        "sha256": "a37c76c31939fb3be8a995db7fb5e6bdf668aa99b801656908fe0b0d069669ec"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/fetch-licenses.mjs",
+        "sha256": "464267ed1cf01106ae123c41426eccfe662aef8bd87111beef1b3fa25a3acf28"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/fetch.mjs",
+        "sha256": "760ecbeb3a444a4f2dfefb8583cbcf1d310adbfc05666f007b90df2d1fc72b65"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/fetch2.mjs",
+        "sha256": "52a4d54d41b851748ddf8dcd39bebf0213a234b094ad8e0eba1131d3448e7d49"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/files.mjs",
+        "sha256": "df32c30d7bbbc0c4803ac0f972df1e1ea602eedbf48ecc4571d01f53eff513f9"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/index-names.mjs",
+        "sha256": "500bfddbe951b2fa1157d743a92f53f480284b45f301cf994e5b2be1364f905a"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/inspect.mjs",
+        "sha256": "f4c27bcb7c3f8b63692e8ceb9404233ea5f012788d9c4fd3b8c03ef3dc2ceb7b"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/mapping.mjs",
+        "sha256": "2bdc1024b77ca7d7f8faa8578b4ff3b6ee7840844938ab9825de2056450d3575"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/shot.mjs",
+        "sha256": "dfbdb13796c0b7bf4d5820a82b8a6c91a74b7e8e3997642eb55fc0a7708cf353"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/survey-lucide.mjs",
+        "sha256": "c73a1d2bd2bc25c4b2758aeeeac70cc0afbfeeeaa4fb617a4280d8f157f61006"
+      },
+      {
+        "path": "docs/design/icon-family-demo/tools/validate.mjs",
+        "sha256": "3a8b6dfc0e54e261c859279e52ea83f25496ff78b1b2a0f8e184404864257280"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/dark-app-frame.png",
+        "sha256": "ccbe55f59320c806d0af5de315ffdc7fb2b08d5c83691e24b43b1f478bce2209"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/dark-file-vscode.png",
+        "sha256": "abab169ab2c8a03efd5761355e8a0af7b68ce522cb5174f2567f6914afb26499"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/dark-overview.png",
+        "sha256": "0bd79da303682ca8664f6dfba528c6a97a04edc1e7da76893eef1cc31ab1ef95"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/dark-spinner-compare.png",
+        "sha256": "dfaaa7ada2ec7ac3fef8d0785be3efad225fe84ac87e01253143ef217b37b7ad"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-app-frame.png",
+        "sha256": "ea29adec2f065acf0796ecc1bfe3b986d38866add24b64be18333ab3b9a38114"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-family-cards.png",
+        "sha256": "139a76a66a7a841f3f824742abfd0e6ce1b41693949821fc399ecab68e1d3756"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-file-current.png",
+        "sha256": "49fe21508a08354534af911097d74ba6ecbf78426ff603c651821e57cd609617"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-file-layout.png",
+        "sha256": "dd3f87aff85a1ffaa1516884dbc5fad42ac0b9ef0f38310c33f438d0f8c54264"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-file-material.png",
+        "sha256": "8d458dd71a6df5b86285458f86fb2f890494114e529f321070bb0006b023c46a"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-file-vscode.png",
+        "sha256": "73fc71744cee77fd6fec801cf53455e0c23403ff5a2279e7e06d40c875097efd"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-gallery-b.png",
+        "sha256": "0de47480eaa2efa9cbc0de917ddeaae50b47e4e831ae541d4528fe0649943011"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-gallery.png",
+        "sha256": "1c653960cc0ff4e100b5459fc6588dcb916049d1902a9b825787c9fb790dc2c7"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-matrix-head.png",
+        "sha256": "ddcc897a2d56e69cc7a89c5219de94557555e428c7011c8ce24a8093a11746ab"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-matrix.png",
+        "sha256": "4972953a4070044548d7f899dfa23a97ce4e2ef22c5fff6a194b60e284e01fb8"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-spinner-compare.png",
+        "sha256": "f65302c6bc754a385e0e4960e150851172b9c90a6e1e20ed412936050ec83108"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-spinner-context.png",
+        "sha256": "a1b5ab061d0dc2b424f2c147ecc3ae27b54371fe69075eeb43619ba6e7ca1880"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-verify.png",
+        "sha256": "a219edbc5eb2f2a81ed841a260fee68e381bed2b873c32ca0183fc26f783847e"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-workbench-a.png",
+        "sha256": "18f3b141ffe9e4a91663075070df3cda8cb2a594c40c5f69bc1ec28db76c8c8b"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/detail-workbench-c.png",
+        "sha256": "e362f8de26150d127ecd5b1b0d15e474322b583ebb8a5d90289e61f397594389"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/mobile-files.png",
+        "sha256": "fd70629b23e05ee93496485ff3065838dd5b1e034d84d200f165ac3c85cff041"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/mobile-workspace.png",
+        "sha256": "a97fce6dfca7be1557ef264783dc13f27c232f29f0534da4002328fff6546b22"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/tab-files.png",
+        "sha256": "7419f7015874b79d74cc91c4ef98da2245cc5bf89c29597feb3cbea890fb1d41"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/tab-gallery.png",
+        "sha256": "eb6d48099c03362e8854364d89a582ef09870d6b501fc77990cae3228a4041e1"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/tab-overview.png",
+        "sha256": "fb605fef42016eba5f901cabd264ff9d79847b56b8cbf966a04935c1d9048412"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/tab-plan.png",
+        "sha256": "69cefa5bfd8b3d3894ef4d6844815146eb4a0cf6adbcbb79b4f2cb2d51e873c3"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/tab-thinking.png",
+        "sha256": "0e6269c6a99ad9c9f22a6d47952cdd9478c191b79643fc87916c4390d242e6d4"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/tab-workspace.png",
+        "sha256": "577f53be9d5b9ec6c2f7ef4b710a63f15d53534935637fbd195d2ed89698e49b"
+      },
+      {
+        "path": "docs/design/icon-family-demo/verification/verification.json",
+        "sha256": "0934b97f188552d23a05ba5c1d2234cc39d2491e7c1b108670986134e455bd4f"
+      },
+      {
+        "path": "docs/design/icon-replan-review/PHOSPHOR-LICENSE.txt",
+        "sha256": "ddbe6082ec3cf979db47e5af549d2849c5d6182b3e005ef91ce1dbb9eb122f11"
+      },
+      {
+        "path": "docs/design/icon-replan-review/SETI-LICENSE.txt",
+        "sha256": "d4d2d888c6a0a220a7b0e2d6013cf37539b0e05ef937002b3b33bdb364575b88"
+      },
+      {
+        "path": "docs/design/icon-replan-review/app.js",
+        "sha256": "3330ce4f58eb58ba4004ef63abad2d7c93caecf56e6ef6a480f98da285dd1761"
+      },
+      {
+        "path": "docs/design/icon-replan-review/build.mjs",
+        "sha256": "bc49aba9533f75098883e62001cbe240d1604a7de3b6c750d381efdffc2ba7c7"
+      },
+      {
+        "path": "docs/design/icon-replan-review/index.html",
+        "sha256": "56139b90f66f8b09b905e576c8661a77ef49f97bf35ba0a6b62b1e39e796c857"
+      },
+      {
+        "path": "docs/design/icon-replan-review/manifest.json",
+        "sha256": "629f9779dde84850982b444164a6cc0b8201ae084b79b78094afa3b6e6c36875"
+      },
+      {
+        "path": "docs/design/icon-replan-review/review.css",
+        "sha256": "a8485f4b242e0806d72ae846f60c3dd7f3810abb98571ab6f3c8c2588759b721"
+      },
+      {
+        "path": "docs/design/icon-replan-review/styles.css",
+        "sha256": "83c2a00fbaacc67c6c0e269e4297cf00202e208b7ff2ce92ff5ce1164ec4757e"
+      },
+      {
+        "path": "docs/design/icon-replan-review/template.html",
+        "sha256": "b0f906668ef2285456c4a5651ca5f1ce3ce6d6931291cb1ffc063131063c435b"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/a-workspace.png",
+        "sha256": "ba1205cc821815f3634f4fadfabc31aa365e767c222994293cd0d2b2d6fae118"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/b-workspace.png",
+        "sha256": "d33bf4193d7e81e2118b7ce812f5b617cd6d7f63c36d2537c08e8fd1c005b602"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/c-workspace.png",
+        "sha256": "8b93e6de479e35e18ead0d75f49779689fd64777abc93a61ec0849b6385c71c2"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/colored-files-dark.png",
+        "sha256": "27298a6b818a048aeb91883b1f072a34d50eac1353a741a846a4bae2282d95da"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/colored-files-light.png",
+        "sha256": "33ef0e51c9b072780db4e95656f031918af0b9615755df3f33c28e7fc51a3cd5"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/current-workspace.png",
+        "sha256": "a59b90ba55cd4e687289dbd4076f9104dac0d43a74ea62d21a4c289545525f30"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/help-menu.png",
+        "sha256": "85d8062357c0fc96370c3d1f0118a7b5752646357934d73cb93cb970a2c2fe9f"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/main-icon-choices.png",
+        "sha256": "f2815d0f4df5c1412cad44fd1fcbd93205f78d67c9ecb60c038af37c84c959e1"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/mobile-colored-files.png",
+        "sha256": "382510b057f37fc7e251800a107ec3b469140b2616c276fd91d103214bb36ed4"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/mobile-workspace.png",
+        "sha256": "1f96850415c9bd73a8817cf3a26eb7206218c3b0845c6bfd4509067a2ece354c"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/monochrome-files.png",
+        "sha256": "6f71da2cd1d155136bcff2b2c91a2a204550310d1dd24a02bb6d11ca8a92c96a"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/p1-workspace-dark.png",
+        "sha256": "5a4c5cc3b2faf7096b5c2fea02d6869db45249ae5121ea2323c2bc59d73385f1"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/toolbar-all-features.png",
+        "sha256": "0ff1d1132166f3802a6877421a02f38900463260df6f070b6f7a3f26a3b28d01"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verification/verification.json",
+        "sha256": "e6019b48cd69b5c9d919e5f707323b528ba61c5c8eb2f9a6d04316d0e7178a92"
+      },
+      {
+        "path": "docs/design/icon-replan-review/verify.mjs",
+        "sha256": "4f003d7a8cada64008244af3e69b81f5aba845b357ace65d05f6c700a81281bd"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/COOLICONS-ATTRIBUTION.txt",
+        "sha256": "17fb46a00beef782f48f3596c3ad472632e042908f840f338763d24aafb8129b"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/LINE-MD-LICENSE.txt",
+        "sha256": "2b88bafca347c6a12c33612fa51c5efbdd00c2753ed67fc474d7a6af9c61e430"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/LUCIDE-LICENSE.txt",
+        "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/MONO-LICENSE.txt",
+        "sha256": "e334b3c64b09ec92f52f5cb397515fd536f703a852ccdbd1435e00eb099592f9"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/PHOSPHOR-LICENSE.txt",
+        "sha256": "ddbe6082ec3cf979db47e5af549d2849c5d6182b3e005ef91ce1dbb9eb122f11"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/SETI-LICENSE.txt",
+        "sha256": "d4d2d888c6a0a220a7b0e2d6013cf37539b0e05ef937002b3b33bdb364575b88"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/SPINNERS-LICENSE.txt",
+        "sha256": "712f8f614e9a23cc754a21d72ea443f1166077e4ee0e6c3b6f9fa576a6d37254"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/THIRD-PARTY-NOTICES.txt",
+        "sha256": "b930cb825002e1967395f306236ce865ee78088465c5ae1b40e0a0756a5dad93"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/app.js",
+        "sha256": "8bbacd66c0a5e66d8ab8a2af3b511ca2c460b1713e123d18be31d3e9082bd757"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/assets/base-data.json",
+        "sha256": "877737a6bc8e0432d91362a3ebcbc214062a5c82476dd56f33cb32df0b598522"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/assets/baseline.svg",
+        "sha256": "a7c4a4f8e3efe804640652234466205771b3f1a192aa633b78b32a0779dbea8e"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/assets/current-spinner.css",
+        "sha256": "70c61aa74493da85d605a4ee4193dec24b5076d9d0193b12a2097b7d6510f10c"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/assets/current-spinner.svg",
+        "sha256": "00faa138c86f1837035596e32db40e56251c029a976a22d1c8b99b513ba6bb5d"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/assets/selected-icons.json",
+        "sha256": "e9d9859f8b53d0a7475810a5a3226a373a898f71f6e982a885e4202b40903e75"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/review.css",
+        "sha256": "dcc492b1b1806c4d3900c5ab262677cf9ce70d206f7c22c65ef95ec9fc514ed3"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/selection.mjs",
+        "sha256": "f53225aded33021b7a604cd9ab7b55bee553ff8806f77f1660eb904478e61e49"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/styles.css",
+        "sha256": "37214f2a46f3ed69ebe8c5621493c83e8334d5f8496b6dddf207dbcd179939ee"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/template.html",
+        "sha256": "b1fb79b302f3fce09feff7108b70fd083e317965d2c391cf7c9175474abe7851"
+      },
+      {
+        "path": "docs/design/iconify-requested-review/verify.mjs",
+        "sha256": "d83da74e7929ba71cab9d2bdbf5a8a9982d2dd95e191ecc290c3d4b037d0b9d6"
+      },
+      {
+        "path": "docs/design/iconify-set-review/FLUENT-LICENSE.txt",
+        "sha256": "69bc45dc42b9acb96a69823adbc6ae538374e3c0bde169b855b32c48eaaef52f"
+      },
+      {
+        "path": "docs/design/iconify-set-review/ICONPARK-LICENSE.txt",
+        "sha256": "81268f00802b1a9cffae4df43f78c3a0809845e03fef3da68f26ad2e4c49681e"
+      },
+      {
+        "path": "docs/design/iconify-set-review/LUCIDE-LICENSE.txt",
+        "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+      },
+      {
+        "path": "docs/design/iconify-set-review/PHOSPHOR-LICENSE.txt",
+        "sha256": "ddbe6082ec3cf979db47e5af549d2849c5d6182b3e005ef91ce1dbb9eb122f11"
+      },
+      {
+        "path": "docs/design/iconify-set-review/SETI-LICENSE.txt",
+        "sha256": "d4d2d888c6a0a220a7b0e2d6013cf37539b0e05ef937002b3b33bdb364575b88"
+      },
+      {
+        "path": "docs/design/iconify-set-review/SOLAR-ATTRIBUTION.txt",
+        "sha256": "312b625b00e72d56fb83bc870dcb901610cf443177258cf4c66dbdf9c47c8a2a"
+      },
+      {
+        "path": "docs/design/iconify-set-review/THIRD-PARTY-NOTICES.txt",
+        "sha256": "7466f3ec395314eade1c689b4d5c7c75235df449702654986ebbaaa585cb95b5"
+      },
+      {
+        "path": "docs/design/iconify-set-review/app.js",
+        "sha256": "8bbacd66c0a5e66d8ab8a2af3b511ca2c460b1713e123d18be31d3e9082bd757"
+      },
+      {
+        "path": "docs/design/iconify-set-review/assets/base-data.json",
+        "sha256": "877737a6bc8e0432d91362a3ebcbc214062a5c82476dd56f33cb32df0b598522"
+      },
+      {
+        "path": "docs/design/iconify-set-review/assets/baseline.svg",
+        "sha256": "a7c4a4f8e3efe804640652234466205771b3f1a192aa633b78b32a0779dbea8e"
+      },
+      {
+        "path": "docs/design/iconify-set-review/assets/selected-icons.json",
+        "sha256": "05314d9133b2b3adadea8987084185b2c36fc3ccfa53dc22acbf69db4ca8f815"
+      },
+      {
+        "path": "docs/design/iconify-set-review/build.mjs",
+        "sha256": "00fd9d4eea6348534b34162a4283fc7f58320d8e59281d6e976a306ad7b7c980"
+      },
+      {
+        "path": "docs/design/iconify-set-review/index.html",
+        "sha256": "6735f063b6863bf01e106b40e09058c3af142c7f5dc7035d01935fe5c9abfcfe"
+      },
+      {
+        "path": "docs/design/iconify-set-review/manifest.json",
+        "sha256": "b68dbb2d8d76f8e1b49b49635504f0d8a7464c7de8cdacc60c23524a9096fe5c"
+      },
+      {
+        "path": "docs/design/iconify-set-review/review.css",
+        "sha256": "dcc492b1b1806c4d3900c5ab262677cf9ce70d206f7c22c65ef95ec9fc514ed3"
+      },
+      {
+        "path": "docs/design/iconify-set-review/selection.mjs",
+        "sha256": "3140b21f52902774ba6173a1514ce8141efa9aa3d0550ac7c1c9ed20f8d8a0d6"
+      },
+      {
+        "path": "docs/design/iconify-set-review/styles.css",
+        "sha256": "37214f2a46f3ed69ebe8c5621493c83e8334d5f8496b6dddf207dbcd179939ee"
+      },
+      {
+        "path": "docs/design/iconify-set-review/template.html",
+        "sha256": "b1fb79b302f3fce09feff7108b70fd083e317965d2c391cf7c9175474abe7851"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/a-workspace-dark.png",
+        "sha256": "597a82c9d7c318c33012e8ca755415bf7cf5ffb0f0f5620f574d95bc230d5108"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/a-workspace.png",
+        "sha256": "6600356d9f78544a7774ebff4ac1b91ae989f09607d2deae729ff3a134843ddb"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/b-workspace-dark.png",
+        "sha256": "c6ddf166c8aacbce4d2aab5e3a4d74a29cff6ec3b5d444755d33c370cbe36869"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/b-workspace.png",
+        "sha256": "0c3ce20845d98053732a5fd5caf94bc35cf6e0dc572e14c55651483025d765f2"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/c-workspace-dark.png",
+        "sha256": "7b3af889d7cad338cd7e18e9696085ccedcb960795028103d2887f6867468e8b"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/c-workspace.png",
+        "sha256": "f94a1fd2192ee97b9e5205a34b430b37ef81a3a19ae449cbb41b60bc43ec831b"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/colored-files-dark.png",
+        "sha256": "b8e88b3d068fb875d133f6ed12d3fc8e72ef9716d109a59e00d9f0f4335b3b39"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/colored-files-light.png",
+        "sha256": "e95b3bbceaf380c79fe50b4e4af4f9106b10fd5e2c65bb274c406fc5eebf406c"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/help-menu.png",
+        "sha256": "add1d29b0d4e4fcd0389c21d739e844506588d56bbcaa20f74f95d9187b5645c"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/main-icon-choices.png",
+        "sha256": "109521b6e4fa5de99d4c83a437a5dbb72571aebd907f44a9e006ef162658724a"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/mobile-colored-files.png",
+        "sha256": "0d85c4972089df2a87d419d74b0855f978a2237434de3f66faa6089cb9be9156"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/mobile-workspace.png",
+        "sha256": "f9aceac216ebf5b724b772b635c7cc083e692caa0c450dfecbdc1d1840c9554c"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/monochrome-files.png",
+        "sha256": "44a9f3ec955c81aa74fa8e29eaad8cd9be3752ca7c0ac5120349e739b54fbe51"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/toolbar-all-features.png",
+        "sha256": "3b1e49ec26f2d8bed0750137fcfe33398d35b0d8825c53722f58d765f0948104"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verification/verification.json",
+        "sha256": "4b1d553afb390fde0418f116eb9d6708e71866356d0b3b00daba58c9e235681d"
+      },
+      {
+        "path": "docs/design/iconify-set-review/verify.mjs",
+        "sha256": "d83da74e7929ba71cab9d2bdbf5a8a9982d2dd95e191ecc290c3d4b037d0b9d6"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/audit.json",
+        "sha256": "bf5a2e2ce9202494fff6a2cb795dead28946f748c530cc29adfe675721f12222"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/collection-vscode-icons.json",
+        "sha256": "763f1d50e6da0877720a6653afa0bf05a9550b389f759d5d8bc7b616721d5b33"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/icons-svg-spinners.json",
+        "sha256": "d4ad597d519c9d80197e87e2c7769af24623087fba2cecd0c69ebaf80a3358f9"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/icons-vscode-icons.json",
+        "sha256": "82c1fcf1bd0936e1ed966dfcf6d6d9ab17d717e344baaddcb9a09ec28f9125a1"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/lucide-catalog.json",
+        "sha256": "73b85737f65bcd392b318baf3de952fa0088b69d873888d8f4cac24fe11bc918"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/lucide-usage.json",
+        "sha256": "dcf7863172a55c59449893ab8c5b0eba268d8a2a587de891d81b47101f1fa58b"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/plan.json",
+        "sha256": "bbe198b6b586fc0f4527a570e3ebb332894ce125708fd4ab5abd103a29fd9853"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/set-licenses.json",
+        "sha256": "25cb6e3437e2d64fa251917ebe9da53ab50ddb2e263cac6fa7ba49e5005d02a1"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/usage-annotated.json",
+        "sha256": "01639b16b46754508e4741becd4f2e41c750ea1a53cdebd59e25ce716d6db4ec"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/usage-classified.json",
+        "sha256": "cb13b4b263c1d63d3d2cacfbc387df890997c4d08369aee753e9287ec454667b"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/assets/usage-sites.json",
+        "sha256": "183bac46e377c900bc4bae2612b3cc97f888e4625247cbea0eb034bfd590a14f"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/index.html",
+        "sha256": "249cf9cfdc6ee1cbdf206464f6bba2d872aeca8a57d0cfb1d1f9035ff270f733"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/src/app.js",
+        "sha256": "e9ad682d8daa8dcc18d0da6f839803e053b68a9b3b1cced7cb5c464cecfd4647"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/src/styles.css",
+        "sha256": "36f62d8fea1d080db6dfbb7d2670b281ab76f9e67a6dae893ecb186ddde09e64"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/src/template.html",
+        "sha256": "54a2286c25e00d5d365090a649f7802c55db9a5ed8330e64c35db3cdb08f479e"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/audit.mjs",
+        "sha256": "3125869efd9027e410a32060cc9ac0f7a5206e80b224d2973ea4a360870af484"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/build.mjs",
+        "sha256": "c09292b60336e2979fd09a2465c6586aa56ae7371aab66c1f73fc93374c6419b"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/classify.mjs",
+        "sha256": "84ca24d32cc0fd01e4ad9b3c9c2483f4450b72691f91e34f3429d57633b87034"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/debug.mjs",
+        "sha256": "1c3336866b32ff9bb422524e3e2737b085083e8cd9c86f7183c6322cd1520216"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/extract-catalog.mjs",
+        "sha256": "ea26e4db4983626f3527a703e57b5e70c61e80856ddf2e32fa8d675dc6f366ca"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/fetch-icons.mjs",
+        "sha256": "52a4d54d41b851748ddf8dcd39bebf0213a234b094ad8e0eba1131d3448e7d49"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/fetch-licenses.mjs",
+        "sha256": "464267ed1cf01106ae123c41426eccfe662aef8bd87111beef1b3fa25a3acf28"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/files.mjs",
+        "sha256": "df32c30d7bbbc0c4803ac0f972df1e1ea602eedbf48ecc4571d01f53eff513f9"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/find-icons.mjs",
+        "sha256": "c4733b141dda944473d986735167a6d000a9b69bc5f072f047e7408981580fd7"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/make-purposes.mjs",
+        "sha256": "47b20aa95e4a744cfeb4388f4333c2511c09cf9a0c031a3c5e065ddf287eb3ac"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/plan.mjs",
+        "sha256": "a1f21b581b9173b7159328219e5f283c4227c93baa127f65ed045edc274e662b"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/purposes.mjs",
+        "sha256": "1ccdb4e474dd8ce628ae94a8aa9a4240014f835648bf9f605f9664cf569f09a0"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/resolve-plan.mjs",
+        "sha256": "983b111b93a0f3ccda6550436a5348eeceafdb01e819a0201888a00cdc9f704b"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/review.mjs",
+        "sha256": "46b7a14a0f53da0a017ca09a2e07dea3d7610c6e989137631c59a4f313c2cbca"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/shot.mjs",
+        "sha256": "53611f1945552d776863339127fc950aa2ba8e5616b2b1387dba3db24df997c5"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/survey-lucide.mjs",
+        "sha256": "c73a1d2bd2bc25c4b2758aeeeac70cc0afbfeeeaa4fb617a4280d8f157f61006"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/trace-usage.mjs",
+        "sha256": "43d8d5fed162ab5fac1ac0910dece2597a91b536c0c3603da7bd82b3dc4c88df"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/tools/verdicts.mjs",
+        "sha256": "74b544d2c8fb942143e3a13f17802a1e5fa5ed22ced1ad499535ba52967f4103"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/dark-compare-apps.png",
+        "sha256": "d9d53ac6c6f91de35c7e6ee725146efe260d953943659ed0c3e3f8b37024e3ff"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/dark-plan.png",
+        "sha256": "612b492f58eb72ef881580d7bd969df5d2e6ff5cb34b4d169700fe48def1a6a1"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-audit-alias.png",
+        "sha256": "9c9410893c960af9ec72973876a198c79f75e6380d54e85cc95f7b56ff28c92a"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-audit-conflicts.png",
+        "sha256": "5c8e91c9b52c648955e6266e1a2920c207fe7b59636cc0b0a85fcb02d6ef4311"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-audit-stats.png",
+        "sha256": "5e4413ad8009acc7808ac48fd7e4ddda19bf05b5e886c835b6564feb1abca4d9"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-audit-verdicts.png",
+        "sha256": "a3ba04ebc03c4b4e1cc67842513c8baf1bb0ce3bce80ecd6684813ef8b1a13dc"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-compare-18.png",
+        "sha256": "6c9db1e59622729d0e606d60fab52170433347e13a0763e9f514881279565be4"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-compare-apps.png",
+        "sha256": "5aae3b0d2e9b5f933160afcf70823da01de08622bdec9b6dcf8177eaa6ac6d6e"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-file-current.png",
+        "sha256": "656029f043cc146a0ae737cc4ae65d6bc54915242c381df23897be08f28c2807"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-file-vscode.png",
+        "sha256": "d159e9f7905059ff9e1f7da32be8b88dd41288bc2f9ea4f7fc4bfd3496fc2b08"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-picker-after.png",
+        "sha256": "d734bb8b22e2e3042fb6835202ad057f6f6d804bb23f8615fcff916adc763638"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-picker.png",
+        "sha256": "238760b48f418355a4e9e8287b752ceda3281375a7bcfd84a23f2aeee9ebd8da"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-plan-changed.png",
+        "sha256": "45beda43f7b12f988ced19ed422f1f866d484d06e5d748785338d847fd442df3"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-plan-head.png",
+        "sha256": "9fbcffae5c1bed49029cbb8435e157f6bbdbedea24c6236da4206cd8895441cd"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-plan-redundant.png",
+        "sha256": "001da54caf7e8b4c981deea9533095bd919529bf85994b6f28cf912ad99be510"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-ship-code.png",
+        "sha256": "b094b0919288652ea0957019df8ad0d118ae5de3df9fa872ead9d053b162727c"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-ship-stats.png",
+        "sha256": "97c35932eaac66e1de611dc1f73b040a97ae008ae92e9d397f3c448836a9944f"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-spinner-compare.png",
+        "sha256": "101ed52201309a422fbf1d8b12ce233017e510a51155f3a8d33e115f931b5fec"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/detail-spinner-context.png",
+        "sha256": "9f4f6071743c76a8421fe5394981200101d5549f492788be683d6c1120475978"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/mobile-audit.png",
+        "sha256": "626c22c68b91fd863cc314c11609a013972b71ab8e7da4906d2249b6ac17e852"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/tab-audit.png",
+        "sha256": "e9a8ef6e16880002e07c072036c2e3f0b806b7f75083354aaa9b77e86799fd95"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/tab-files.png",
+        "sha256": "ab716e7bdca6c331dc29ff0a835e3497a768b816daef3e6a024af757586c80ec"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/tab-plan.png",
+        "sha256": "de769c65bec01e7d09d8d3b2a5c2aef6743dcf9e0bc925617675a7120aed9384"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/tab-ship.png",
+        "sha256": "bd24533849ef083b898314d0a6e8feabce5d7be3f4e3864c429887ccc41871e9"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/tab-thinking.png",
+        "sha256": "0d7ae57ed6c97a992306775772a31da8b87453afc5543efc330dee0a078febc6"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/tab-workspace.png",
+        "sha256": "562f6d1c61e189e07d76530dac61d978bf752bc7a6bcb8973284c58f362da6d5"
+      },
+      {
+        "path": "docs/design/lucide-icon-revision/verification/verification.json",
+        "sha256": "bf47cf45a7682ac4e46f30ff4aa2738fc28b9bb353cb256b71c9cc7374cefe27"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/PHOSPHOR-LICENSE.txt",
+        "sha256": "ddbe6082ec3cf979db47e5af549d2849c5d6182b3e005ef91ce1dbb9eb122f11"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/build.mjs",
+        "sha256": "5da878a78acafc66f0f773df0183e6665dd11d912644d23a575dc3e6e8a4459c"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/index.html",
+        "sha256": "7b80b88b3fd66cb3df3b63c2d1b1709c04322891dcf1d1c688eaf4f0cb59aa38"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/inventory.json",
+        "sha256": "14d87c01928452c51e009726a8d5e5cdd32a89f7e770b191291e8213ffbe7f7f"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/prepare-template.mjs",
+        "sha256": "a75aa6b238b5d3190e569460f32cfe68fa14530ebb62031fa425c98a7504242c"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/template.html",
+        "sha256": "a9dd832d19a85d06d085323df27304c4b8a22662ecf2357b8aa66375b2faa77a"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/a-light.png",
+        "sha256": "08c65c1278311098364e00efa32480503e59a2b02ff196a25d879674cc606fbe"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/b-dark.png",
+        "sha256": "091923f6eff3e7f6ec23031edaf5ed3033cdda93ffbf1b426d23ecab2db080dc"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/b-light.png",
+        "sha256": "d326ea967dffbd8a6bc8c2fd61a622b339ceec3675671e65610aad4cb4d3e1ff"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/b-mobile.png",
+        "sha256": "119bc46e16cc7a78118acc902e304ac2c0ac8d62d6fbcc286fd03315d15cf448"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/c-dark.png",
+        "sha256": "a821a056f351488bdfdc8e6d378baba951a91581570a6abab15b32da7829f237"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/c-light.png",
+        "sha256": "e978f6794a81e059f208cc2c3372d30f5c3df16f296d7b6d12c9f351847e32b4"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/current-light.png",
+        "sha256": "9874b46e421b8b9303a508ad58fb1ec2355ffb122c2f44ecf9dd4844c2048f6c"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/navigation-matrix.png",
+        "sha256": "c8039a3f9b1d5017a2b8a6bc3b40f6323ee57c225e863e0e8174a10459ad4a8b"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verification/verification.json",
+        "sha256": "31cb4f8d7f709d19d76fb716fc8e1af4d1cb6a2dbe67cac0d3d9884a575c47ad"
+      },
+      {
+        "path": "docs/design/phosphor-icon-review/verify.mjs",
+        "sha256": "5ae9f99fac44878f81bc3a71242ec857dfdee7e2f5f2433a58d3cc88b6c976fa"
+      },
+      {
+        "path": "docs/design/remix-icon-review/build.mjs",
+        "sha256": "eff819998ad3baf21407fe0ab62ba2978dcddc5cba59cdf3b983060d92960fa4"
+      },
+      {
+        "path": "docs/design/remix-icon-review/index.html",
+        "sha256": "e19459d3428adf6ccc8e1c242e337a063f7e4e91b6dde09f16955632ce605748"
+      },
+      {
+        "path": "docs/design/remix-icon-review/inventory.json",
+        "sha256": "72e41fb82203de96ad9fce54ab6dc117c8a2a57670169d31c3491a8f3ebc2b01"
+      },
+      {
+        "path": "docs/design/remix-icon-review/template.html",
+        "sha256": "3624dc52b4392fd45c0a6771a15e9f212eef2fde02fd5b3e521d2fecf6a97ea2"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/a-light.png",
+        "sha256": "6ae53dc315b3969f7a5bcc3ecc9e38812ffd6b7ad483c7c006b08125228b4d95"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/b-dark.png",
+        "sha256": "73d2e7926ac68de7c92865b8a1cf44974381b3d011bb6bed2cdd5462075150e2"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/b-light.png",
+        "sha256": "f1dd270b3a756092ab1f12b8999d159fd08cabcb8663e4772d858a31cd607304"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/b-mobile.png",
+        "sha256": "0c7403c3a7838b68a81b896bd2eedb8d651636cadf29f4b011c23d02d2c7c13b"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/c-light.png",
+        "sha256": "27e39eb7238a57a8ff9843aa624b04b20bebe7512b22cda77d96c549deefe7c6"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/current-light.png",
+        "sha256": "c637387a1383fd72687fc4166e77d75d258a45ee058b3fa4edcea7d32a2c5a1a"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/navigation-matrix.png",
+        "sha256": "13e09e1e6f666810ac36aeb2458263d375a58b78709b5b8a4cc7dad8b81abd3d"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verification/verification.json",
+        "sha256": "e753210eee9facf2faa90b4ed6114e0186518e9400a39a0d823dd6e97603f78d"
+      },
+      {
+        "path": "docs/design/remix-icon-review/verify.mjs",
+        "sha256": "2b87905edf5bfedc625fd97505fa34f4fa0b5a3255ae03fcbda8c34c20199296"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-smoke-win.json",
+        "sha256": "b10f6e66ea96fb76ed1716a5a68102724f6ca58ba94e3f5182e55be75d6b9e63"
+      },
+      {
+        "path": "docs/verification/results/packaged-client-verification-win.json",
+        "sha256": "8588a30bc52d727698fc45bd609b9432fcb3ef2da786bfd4a6674b7c385b3e2a"
+      }
+    ]
+  },
+  "compileInvestigation": {
+    "directory": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-r2-pages-4wkYXF",
+    "project": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-r2-pages-4wkYXF\\project",
+    "exitCode": 0,
+    "elapsedMs": 1755.8309000000002,
+    "events": [
+      {
+        "ms": 619.7892,
+        "text": "vite v8.3.2 building client environment for production...\n"
+      },
+      {
+        "ms": 758.1221,
+        "text": "transforming...\n"
+      },
+      {
+        "ms": 1518.5152,
+        "text": "✓ 1903 modules transformed.\n"
+      },
+      {
+        "ms": 1558.8144,
+        "text": "rendering chunks...\n"
+      },
+      {
+        "ms": 1706.5659,
+        "text": "✓ built in 1.08s\n"
+      },
+      {
+        "ms": 1711.3897,
+        "text": "Built C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-r2-pages-4wkYXF\\project\\dist\\index.html (269269 bytes). Import with contentFile; use kind interactive or live.\n"
+      }
+    ]
+  },
+  "baselineLimitations": [
+    "Windows headless server distribution unsupported",
+    "Intermittent Pages compile timeout not attributed or changed",
+    "Startup issue receives bounded investigation only"
+  ],
+  "documentation": "Frozen audit files are unchanged. These results describe the uncommitted implementation; documentation is finalized after executable checks."
+}
