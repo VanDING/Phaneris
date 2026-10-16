@@ -20,6 +20,7 @@ import { createInterface, type Interface as ReadlineInterface } from 'node:readl
 import type { AgentEvent } from '@phaneris/core/types';
 import type { FileAttachment } from '../utils/files.ts';
 import { getProxyEnvVars } from '../config/proxy-env.ts';
+import { i18n } from '../i18n/index.ts';
 
 import type {
   BackendConfig,
@@ -56,6 +57,13 @@ import type { PiCompactResult, PiLargeResultGateRequest, PiLargeResultGateRespon
 import { askLargeResultSummaryGate, askLargeResultFilter } from '../utils/large-response.ts';
 import { applyGuardedModeCheck, needsGuardedModeCheck } from './core/guarded-mode.ts';
 import { EventQueue } from './backend/event-queue.ts';
+
+class SourceActivationSettlementError extends Error {
+  constructor() {
+    super(i18n.t('errors.sourceActivationStopFailed'));
+    this.name = 'SourceActivationSettlementError';
+  }
+}
 
 // System prompt for Phaneris context
 import { getSystemPrompt } from '../prompts/system.ts';
@@ -413,6 +421,14 @@ export class PiAgent extends BaseAgent {
     resolve: (result: PiCompactResult) => void;
     reject: (error: Error) => void;
   }> = new Map();
+
+  // Source activation may cancel a request whose T1 is already committed.
+  // Closing the product event queue does not settle that request in the SDK.
+  private sourceActivationStopTimeoutMs = 5_000;
+  private pendingSourceActivationStops = new Map<string, {
+    resolve: () => void;
+    reject: (error: Error) => void;
+  }>();
 
   private handoffGenerating = false;
 
@@ -1234,6 +1250,17 @@ export class PiAgent extends BaseAgent {
         // Response to a compact request
         this.handleCompactResult(msg);
         break;
+
+      case 'abort_result': {
+        const pending = this.pendingSourceActivationStops.get(msg.id as string);
+        if (!pending) break;
+        if (msg.success === true) pending.resolve();
+        else {
+          this.debug(`Source activation SDK stop failed: ${msg.errorMessage ?? 'unknown error'}`);
+          pending.reject(new SourceActivationSettlementError());
+        }
+        break;
+      }
 
       case 'context_handoff': {
         const signal = msg.signal as { phase: 'generating' | 'ready' | 'failed'; document?: string; error?: string };
@@ -2219,6 +2246,7 @@ export class PiAgent extends BaseAgent {
   }
 
   private handleSubprocessExit(code: number | null, signal: string | null): void {
+    this.rejectPendingSourceActivationStops();
     this.debug(`Pi subprocess exited: code=${code}, signal=${signal}`);
     this.settlePendingInputReceptions('SDK exited before acknowledgement');
     this.subprocessReadyReject?.(new Error('Pi subprocess exited during startup'));
@@ -2686,7 +2714,7 @@ export class PiAgent extends BaseAgent {
       // Yield events as they arrive. The source-activation drain controller
       // captures a pending restart on the first triggering tool_result and
       // drains sibling tool_results from the same parallel-tool batch before
-      // firing `source_activated` + `forceAbort` — Pi's subprocess only picks
+      // stopping the SDK and then firing `source_activated` — Pi's subprocess only picks
       // up new proxy tools on the next handlePrompt, so the restart is needed
       // here too. Without the drain, sibling tool_results from parallel
       // source_test calls are lost (#790).
@@ -2699,8 +2727,7 @@ export class PiAgent extends BaseAgent {
         const preFire = sourceActivationDrain.shouldFireBeforeEvent(event);
         if (preFire) {
           this.debug(`source_test activated "${preFire.sourceSlug}", drained sibling tool_results, restarting turn`);
-          yield preFire;
-          this.forceAbort(AbortReason.SourceActivated);
+          if (await this.stopForSourceActivation()) yield preFire;
           return;
         }
 
@@ -2717,11 +2744,17 @@ export class PiAgent extends BaseAgent {
       const sourceActivationFireAtEnd = sourceActivationDrain.shouldFireAtBoundary();
       if (sourceActivationFireAtEnd) {
         this.debug(`source_test activated "${sourceActivationFireAtEnd.sourceSlug}", stream ended with pending restart, restarting turn`);
-        yield sourceActivationFireAtEnd;
-        this.forceAbort(AbortReason.SourceActivated);
+        if (await this.stopForSourceActivation()) yield sourceActivationFireAtEnd;
         return;
       }
     } catch (error) {
+      if (error instanceof SourceActivationSettlementError) {
+        if (this.abortReason === AbortReason.SourceActivated) {
+          yield { type: 'error', message: error.message };
+          yield { type: 'complete' };
+        }
+        return;
+      }
       if (error instanceof Error && error.message.includes('abort')) {
         // A stop that cancels a manual compact must still terminate the turn.
         if (compactMatch) yield { type: 'complete' };
@@ -2987,7 +3020,35 @@ export class PiAgent extends BaseAgent {
     this.abortReason = reason;
   }
 
-  forceAbort(reason: AbortReason): void {
+  private async stopForSourceActivation(): Promise<boolean> {
+    // A user stop/redirect that won while draining must not be overwritten.
+    if (this.abortReason && this.abortReason !== AbortReason.SourceActivated) return false;
+    const id = `source-stop-${++this.rpcIdCounter}`;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await new Promise<void>((resolve, reject) => {
+        this.pendingSourceActivationStops.set(id, { resolve, reject });
+        timeout = setTimeout(() => {
+          this.debug('Source activation SDK stop acknowledgement timed out');
+          reject(new SourceActivationSettlementError());
+        }, this.sourceActivationStopTimeoutMs);
+        this.forceAbort(AbortReason.SourceActivated, id);
+      });
+      return this.abortReason === AbortReason.SourceActivated;
+    } finally {
+      if (timeout) clearTimeout(timeout);
+      this.pendingSourceActivationStops.delete(id);
+    }
+  }
+
+  private rejectPendingSourceActivationStops(): void {
+    for (const pending of this.pendingSourceActivationStops.values()) {
+      pending.reject(new SourceActivationSettlementError());
+    }
+    this.pendingSourceActivationStops.clear();
+  }
+
+  forceAbort(reason: AbortReason, acknowledgementId?: string): void {
     this.guardedCheckAbort?.abort();
     this.permissionEpoch = (this.permissionEpoch ?? 0) + 1;
     this.cancelPendingCompactions();
@@ -3034,7 +3095,7 @@ export class PiAgent extends BaseAgent {
     }
 
     // For other reasons, send abort to subprocess
-    this.send({ type: 'abort' });
+    this.send({ type: 'abort', ...(acknowledgementId ? { id: acknowledgementId } : {}) });
   }
 
   /**
@@ -3143,6 +3204,7 @@ export class PiAgent extends BaseAgent {
       && this.pendingLlmQueries.size === 0
       && this.pendingEnsureSessionReady.size === 0
       && this.pendingCompactions.size === 0
+      && this.pendingSourceActivationStops.size === 0
       && this.pendingAutoCompactionToggles.size === 0
       && this.pendingRuntimeConfigUpdates.size === 0
       && this.bufferedDurableToolStarts.size === 0;
@@ -3175,6 +3237,7 @@ export class PiAgent extends BaseAgent {
    * Used before an idle runtime restart so we don't leave transient children behind.
    */
   private async killSubprocessGracefully(timeoutMs = 2_000): Promise<void> {
+    this.rejectPendingSourceActivationStops();
     this.cancelPendingCompactions();
     this.rejectAllPendingEphemeral(new Error('Pi subprocess stopped'));
 
@@ -3255,6 +3318,7 @@ export class PiAgent extends BaseAgent {
    * Kill the subprocess and clean up resources.
    */
   private killSubprocess(): void {
+    this.rejectPendingSourceActivationStops();
     this.subprocessEpoch++;
     this.subprocessStartup = null;
     this.subprocessReadyReject?.(new Error('Pi subprocess startup cancelled'));

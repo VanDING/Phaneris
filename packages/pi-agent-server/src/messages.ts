@@ -67,7 +67,7 @@ export type InboundMessage =
   | { type: 'durable_model_prepare_response'; requestId: string; ok: boolean; prepared?: { operationId: string; idempotencyKey: string; created: boolean; status: string; committedSeq: number }; reason?: string }
   | { type: 'durable_model_outcome_response'; requestId: string; ok: boolean; committedSeq?: number; reason?: string }
   | PiLargeResultFilterResponse
-  | { type: 'abort' }
+  | { type: 'abort'; id?: string }
   | { type: 'mini_completion'; id: string; prompt: string; durableRunOperationId?: string; durableTurnId?: string }
   | { type: 'llm_query'; id: string; request: LLMQueryRequest; durableRunOperationId?: string; durableTurnId?: string }
   | { type: 'cancel_ephemeral_query'; id: string }
@@ -252,6 +252,7 @@ export interface OutboundSessionIdUpdate { type: 'session_id_update'; sessionId:
 export interface OutboundError { type: 'error'; message: string; code?: string; id?: string }
 
 export type OutboundMessage =
+  | { type: 'abort_result'; id: string; success: boolean; errorMessage?: string }
   | { type: 'oauth_credential_update_request'; requestId: string; provider: string; credential: OAuthCredential }
   | PiInputReception
   | { type: 'context_handoff'; signal: HandoffSignal }

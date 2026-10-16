@@ -39,6 +39,7 @@ const SCAN_DIRS = [
   'apps/viewer/src',
   'apps/webui/src',
   'packages/shared/src',
+  'packages/server-core/src',
   'packages/ui/src',
 ]
 

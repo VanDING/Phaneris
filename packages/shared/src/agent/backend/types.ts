@@ -581,8 +581,9 @@ export interface AgentBackend {
 
   /**
    * Schedule a source-activation auto-restart. Consumed by the backend's
-   * event loop after the next tool_result, which yields `source_activated`
-   * and `forceAbort`s the turn. SessionManager's `source_activated` handler
+   * event loop after the tool results, which stops the SDK and awaits its
+   * settlement acknowledgement before yielding `source_activated`.
+   * SessionManager's `source_activated` handler
    * then schedules the server-side resend with a "[{slug} activated]" suffix
    * (craft-agents-oss#804). Set by SessionManager after a successful mid-turn
    * activation (source_test auto-enable).

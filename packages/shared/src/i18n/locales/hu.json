@@ -615,6 +615,8 @@
   "errors.pleaseReload": "Kérjük, töltsd újra az oldalt. A hiba jelentve lett.",
   "errors.retryLoadingSessions": "Munkamenetek újratöltése",
   "errors.sessionNotFound": "A munkamenet nem található",
+  "errors.sourceActivationRetryFailed": "A(z) „{{source}}” forrás aktiválva lett, de a feladat nem folytatódott automatikusan: {{error}}",
+  "errors.sourceActivationStopFailed": "A forrás aktiválva lett, de az aktuális feladat leállását nem sikerült megerősíteni. Az automatikus folytatás szünetel. Újrapróbálás előtt ellenőrizze a munkamenet helyreállítási állapotát.",
   "errors.surfaceFailedDescription": "Az alkalmazás többi része továbbra is működik – válts nézetet vagy próbáld újra.",
   "errors.surfaceFailedTitle": "Ez a nézet nem jeleníthető meg",
   "filePreview.binary": "Ez a bináris fájl nem jeleníthető meg forráskódként.",

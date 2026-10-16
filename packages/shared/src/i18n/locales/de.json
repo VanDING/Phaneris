@@ -615,6 +615,8 @@
   "errors.pleaseReload": "Bitte lade die Seite neu. Der Fehler wurde gemeldet.",
   "errors.retryLoadingSessions": "Sitzungen erneut laden",
   "errors.sessionNotFound": "Sitzung nicht gefunden",
+  "errors.sourceActivationRetryFailed": "Die Quelle „{{source}}“ wurde aktiviert, aber die Aufgabe konnte nicht automatisch fortgesetzt werden: {{error}}",
+  "errors.sourceActivationStopFailed": "Die Quelle wurde aktiviert, aber das Ende der aktuellen Aufgabe konnte nicht bestätigt werden. Die automatische Fortsetzung wurde angehalten. Prüfen Sie vor einem erneuten Versuch den Wiederherstellungsstatus der Sitzung.",
   "errors.surfaceFailedDescription": "Der Rest der App funktioniert weiterhin – wechsle die Ansicht oder versuche es erneut.",
   "errors.surfaceFailedTitle": "Diese Ansicht konnte nicht angezeigt werden",
   "filePreview.binary": "Diese Binärdatei kann nicht als Quelltext angezeigt werden.",

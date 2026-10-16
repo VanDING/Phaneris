@@ -5649,7 +5649,7 @@ initialSources: {
           // up new proxy tool defs on the next handlePrompt (`toolsChanged` flag
           // in pi-agent-server).
           // Mark a pending restart on the agent — PiAgent consumes it after
-          // the next tool_result, yield source_activated, and forceAbort. The
+          // the tool results, await SDK stop settlement, then yield source_activated. The
           // `source_activated` handler in this class then schedules a server-side
           // resend of the original user message with a "[{slug} activated]" suffix —
           // landing in a fresh turn with tools live (craft-agents-oss#804).
@@ -7048,10 +7048,6 @@ initialSources: {
     const activationRetry = managed.autoRetryPending && Date.now() < managed.autoRetryPending.deadlineMs
       && (message === managed.autoRetryPending.content || message === managed.autoRetryPending.retryContent)
       ? managed.autoRetryPending : undefined
-    if (claimAutoRetryPending(managed, message) === 'drop') {
-      sessionLog.info(`sendMessage: dropped duplicate source-activation retry for ${sessionId}`)
-      return
-    }
     if (activationRetry) {
       // A legacy renderer may win the dispatch race: it receives the same hidden payload.
       message = activationRetry.retryContent ?? activationRetry.content
@@ -7068,7 +7064,18 @@ initialSources: {
     // Ensure messages are loaded before we try to add new ones
     await this.ensureMessagesLoaded(managed)
 
+    // A real late T2 can restore the durable checkpoint after a stop parked the
+    // foreground slot. Refresh from committed facts before consulting its cache.
+    // completeRun still refuses any unsettled model request or tool effect.
+    this.execution.refreshRecovery(sessionId)
     if (this.execution.view(sessionId).blocked) throw new Error('This session requires Runtime reconciliation before accepting another turn')
+
+    // Claim only after admission succeeds, so a rejected attempt cannot consume
+    // the dedup slot and silently discard a subsequent automatic resend.
+    if (claimAutoRetryPending(managed, message) === 'drop') {
+      sessionLog.info(`sendMessage: dropped duplicate source-activation retry for ${sessionId}`)
+      return
+    }
 
     // If currently processing, behavior depends on the connection's
     // `midStreamBehavior` (resolved via {@link resolveMidStreamBehavior},
@@ -10157,6 +10164,7 @@ initialSources: {
           deadlineMs: Date.now() + 2000,
           committed: false,
         }
+        const pendingRetry = managed.autoRetryPending
 
         if (managed.autoRetryTimer) clearTimeout(managed.autoRetryTimer)
         managed.autoRetryTimer = setTimeout(() => {
@@ -10177,6 +10185,17 @@ initialSources: {
           // next matching sendMessage that drops as a duplicate, or by session deletion.
           this.sendMessage(sessionId, retryMessage, retryAttachments, retryStoredAttachments, retryOptions).catch(err => {
             sessionLog.error(`Auto-retry sendMessage failed for ${sessionId}:`, err)
+            if (this.sessions.get(sessionId) !== current) return
+            if (current.autoRetryPending === pendingRetry) current.autoRetryPending = undefined
+            const errorMessage: Message = {
+              id: generateMessageId(), role: 'error', timestamp: this.monotonic(),
+              content: i18n.t('errors.sourceActivationRetryFailed', {
+                source: event.sourceSlug, error: err instanceof Error ? err.message : String(err),
+              }),
+            }
+            current.messages.push(errorMessage)
+            this.persistSession(current)
+            this.sendEvent({ type: 'error', sessionId, error: errorMessage.content, timestamp: errorMessage.timestamp }, workspaceId)
           })
         }, 100)
         break

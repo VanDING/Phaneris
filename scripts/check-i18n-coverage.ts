@@ -8,7 +8,7 @@
  *   - manual en.json edits that miss a referenced key
  *   - renamed keys with stragglers in source code
  *
- * Scans `apps/{electron,viewer,webui}/src` and `packages/{shared,ui}/src` for
+ * Scans `apps/{electron,viewer,webui}/src` and `packages/{shared,server-core,ui}/src` for
  * literal-string i18n key references and asserts each exists in en.json.
  * Plural-aware: a reference to `foo.bar` is satisfied when either `foo.bar`
  * or both `foo.bar_one` + `foo.bar_other` exist (i18next selects at runtime).
@@ -32,6 +32,7 @@ const SCAN_DIRS = [
   'apps/viewer/src',
   'apps/webui/src',
   'packages/shared/src',
+  'packages/server-core/src',
   'packages/ui/src',
 ]
 

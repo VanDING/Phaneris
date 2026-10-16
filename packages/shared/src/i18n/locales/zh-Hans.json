@@ -615,6 +615,8 @@
   "errors.pleaseReload": "请重新加载页面。错误已被报告。",
   "errors.retryLoadingSessions": "重试加载会话",
   "errors.sessionNotFound": "未找到会话",
+  "errors.sourceActivationRetryFailed": "数据源“{{source}}”已激活，但任务未能自动继续：{{error}}",
+  "errors.sourceActivationStopFailed": "数据源已激活，但无法确认当前任务已停止，自动续接已暂停。请检查会话的运行恢复状态后重试。",
   "errors.surfaceFailedDescription": "应用的其他部分仍可正常使用——可以切换视图或重试。",
   "errors.surfaceFailedTitle": "该视图无法显示",
   "filePreview.binary": "二进制文件无法作为源码显示。",

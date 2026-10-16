@@ -615,6 +615,8 @@
   "errors.pleaseReload": "Please reload the page. The error has been reported.",
   "errors.retryLoadingSessions": "Retry loading sessions",
   "errors.sessionNotFound": "Session not found",
+  "errors.sourceActivationRetryFailed": "Source \"{{source}}\" was activated, but the task could not resume automatically: {{error}}",
+  "errors.sourceActivationStopFailed": "The source was activated, but the current task could not be confirmed as stopped. Automatic continuation was paused. Review the session recovery status before retrying.",
   "errors.surfaceFailedDescription": "The rest of the app still works — switch views or retry.",
   "errors.surfaceFailedTitle": "This view could not be displayed",
   "filePreview.binary": "This binary file cannot be shown as source.",

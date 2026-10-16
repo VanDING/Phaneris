@@ -615,6 +615,8 @@
   "errors.pleaseReload": "Odśwież stronę. Błąd został zgłoszony.",
   "errors.retryLoadingSessions": "Spróbuj ponownie załadować sesje",
   "errors.sessionNotFound": "Sesja nie została znaleziona",
+  "errors.sourceActivationRetryFailed": "Źródło „{{source}}” zostało aktywowane, ale nie udało się automatycznie wznowić zadania: {{error}}",
+  "errors.sourceActivationStopFailed": "Źródło zostało aktywowane, ale nie udało się potwierdzić zatrzymania bieżącego zadania. Automatyczna kontynuacja została wstrzymana. Przed ponowną próbą sprawdź stan odzyskiwania sesji.",
   "errors.surfaceFailedDescription": "Reszta aplikacji nadal działa — przełącz widok lub spróbuj ponownie.",
   "errors.surfaceFailedTitle": "Nie udało się wyświetlić tego widoku",
   "filePreview.binary": "Tego pliku binarnego nie można wyświetlić jako kodu źródłowego.",

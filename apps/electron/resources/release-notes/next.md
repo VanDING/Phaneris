@@ -17,6 +17,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
+- **Source activation** — Wait for the current request to settle before automatically continuing with newly activated tools. Recover from late settlement without restarting the app, and show an error if automatic continuation fails.
 - **Windows reopening** — Preserve launch requests received while the previous instance is shutting down, recover a running instance with no window, and apply bounded cleanup with persistent lifecycle diagnostics to ordinary quits.
 - **Session titles** — Retry unavailable or protocol-incompatible utility models within the configured connection so initial and regenerated titles can use the selected session model without switching to another provider.
 - **Source authentication** — Scope credential refresh to each workspace and source; validate HTTP credential headers and reuse refreshable tokens before requesting another sign-in.

@@ -1779,16 +1779,12 @@ async function handleAbort(): Promise<void> {
   compactionEpoch++;
   // Release permission waits before awaiting the SDK, which drains active tools.
   pendingPreToolUse.cancelAll({ action: 'block', reason: 'Aborted' });
-  if (sessionLifecycle.current) {
-    try {
-      await sessionLifecycle.current.abort();
-    } catch (error) {
-      debugLog(`Abort failed: ${error instanceof Error ? error.message : String(error)}`);
-    }
+  try {
+    if (sessionLifecycle.current) await sessionLifecycle.current.abort();
+  } finally {
+    // Clear speculative prefetch even when the SDK could not confirm its stop.
+    prefetchCache.clear();
   }
-
-  // Clear speculative prefetch cache — in-flight prefetches will resolve but never be consumed
-  prefetchCache.clear();
 }
 
 function runWithDurableUtilityContext<T>(
@@ -2133,7 +2129,16 @@ async function processMessage(msg: InboundMessage): Promise<void> {
       break;
 
     case 'abort':
-      await handleAbort();
+      try {
+        // session.abort() drains the SDK, including each durable T2/ACK, before
+        // resolving. A restart must await this boundary, not a host queue close.
+        await handleAbort();
+        if (msg.id) send({ type: 'abort_result', id: msg.id, success: true });
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        debugLog(`Abort failed: ${errorMessage}`);
+        if (msg.id) send({ type: 'abort_result', id: msg.id, success: false, errorMessage });
+      }
       break;
 
     case 'mini_completion':

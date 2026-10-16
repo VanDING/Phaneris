@@ -615,6 +615,8 @@
   "errors.pleaseReload": "ページを再読み込みしてください。エラーは報告されました。",
   "errors.retryLoadingSessions": "セッション一覧を再読み込み",
   "errors.sessionNotFound": "セッションが見つかりません",
+  "errors.sourceActivationRetryFailed": "ソース「{{source}}」は有効になりましたが、タスクを自動的に再開できませんでした：{{error}}",
+  "errors.sourceActivationStopFailed": "ソースは有効になりましたが、現在のタスクの停止を確認できませんでした。自動継続を一時停止しました。再試行する前にセッションの復旧状態を確認してください。",
   "errors.surfaceFailedDescription": "アプリの他の部分はそのまま使えます。ビューを切り替えるか再試行してください。",
   "errors.surfaceFailedTitle": "このビューを表示できませんでした",
   "filePreview.binary": "このバイナリファイルはソースとして表示できません。",

@@ -615,6 +615,8 @@
   "errors.pleaseReload": "Por favor recarga la página. El error ha sido reportado.",
   "errors.retryLoadingSessions": "Reintentar cargar sesiones",
   "errors.sessionNotFound": "Sesión no encontrada",
+  "errors.sourceActivationRetryFailed": "La fuente «{{source}}» se activó, pero la tarea no pudo reanudarse automáticamente: {{error}}",
+  "errors.sourceActivationStopFailed": "La fuente se activó, pero no se pudo confirmar la detención de la tarea actual. La continuación automática se ha pausado. Revisa el estado de recuperación de la sesión antes de reintentar.",
   "errors.surfaceFailedDescription": "El resto de la aplicación sigue funcionando: cambia de vista o reinténtalo.",
   "errors.surfaceFailedTitle": "No se pudo mostrar esta vista",
   "filePreview.binary": "Este archivo binario no se puede mostrar como código fuente.",
