@@ -317,8 +317,8 @@ export default function AppearanceSettingsPage() {
         title={t("settings.appearance.title")}
         actions={<HeaderMenu route={routes.view.settings('appearance')} helpFeature="themes" />}
       />
-      <div className="flex-1 min-h-0 mask-fade-y">
-        <ScrollArea className="h-full">
+      <div className="flex-1 min-h-0">
+        <ScrollArea className="h-full" viewportClassName="mask-fade-y">
           <div className="px-5 py-7 max-w-3xl mx-auto">
             <div className="space-y-8">
 

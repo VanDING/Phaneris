@@ -95,6 +95,7 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | [Scale & theme consistency failure matrix](verification/scale-theme-consistency-failure-matrix.md) | Written before implementation; evidence status per row | 20 failure modes for scale tiers, theme radius/density, hairlines, masks, motion collapse, IME and sash guards. |
 | [State matrix](verification/state-matrix.md) | Maintained | Five states × ten surfaces; recovery path required for every cell. |
 | [Scale & theme system implementation](verification/frontend-scale-contract-implementation-2026-10-17.md) | Implemented; contract and real-app evidence recorded | Four-wave delivery: baseline, DESIGN.md/PRODUCT.md constitution, ESLint scale gate, primitive convergence, optical and motion upgrades. [Screenshots](verification/results/scale-contract-2026-10-17/). |
+| [Frontend P2 fixes](verification/frontend-p2-fixes-2026-10-17.md) | Implementation and browser verification | Copy feedback with reduced motion, scroll viewport masks, and runtime high-DPI hairlines. |
 | [Theme contract failure matrix](verification/theme-contract-failure-matrix-2026-10-12.md) | Written before W2–W5 implementation | Validation, roles, domains, adapters and governance mutation gates. |
 | [Governance completion failure matrix](verification/governance-completion-failure-matrix.md) | Written before implementation | G3–G8 failure cases and actual workflow acceptance. |
 | [Verification index](verification/README.md) | Maintained | Commands, platform notes, and result locations. |

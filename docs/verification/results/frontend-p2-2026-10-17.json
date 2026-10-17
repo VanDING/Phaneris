@@ -1,0 +1,135 @@
+{
+  "date": "2026-10-17",
+  "base": "23850cade515ad6bf060a966af8447a43e01421f",
+  "before": {
+    "failed": 17,
+    "passed": 12
+  },
+  "final": {
+    "failed": 0,
+    "checks": [
+      {
+        "id": "P2-hairline-1x-light-1px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-1x-light-2px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-1x-dark-1px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-1x-dark-2px",
+        "passed": true
+      },
+      {
+        "id": "P2-copy-normal",
+        "passed": true
+      },
+      {
+        "id": "P2-copy-os",
+        "passed": true
+      },
+      {
+        "id": "P2-copy-app",
+        "passed": true
+      },
+      {
+        "id": "P2-copy-toggle-and-repeat",
+        "passed": true
+      },
+      {
+        "id": "P2-scroll-settings-normal",
+        "passed": true
+      },
+      {
+        "id": "P2-scroll-list-normal",
+        "passed": true
+      },
+      {
+        "id": "P2-scroll-sidebar-normal",
+        "passed": true
+      },
+      {
+        "id": "P2-short-settings-normal",
+        "passed": true
+      },
+      {
+        "id": "P2-short-list-normal",
+        "passed": true
+      },
+      {
+        "id": "P2-short-sidebar-normal",
+        "passed": true
+      },
+      {
+        "id": "P2-scroll-settings-reduced",
+        "passed": true
+      },
+      {
+        "id": "P2-scroll-list-reduced",
+        "passed": true
+      },
+      {
+        "id": "P2-scroll-sidebar-reduced",
+        "passed": true
+      },
+      {
+        "id": "P2-short-settings-reduced",
+        "passed": true
+      },
+      {
+        "id": "P2-short-list-reduced",
+        "passed": true
+      },
+      {
+        "id": "P2-short-sidebar-reduced",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-2x-light-1px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-2x-light-2px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-2x-dark-1px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-2x-dark-2px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-3x-light-1px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-3x-light-2px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-3x-dark-1px",
+        "passed": true
+      },
+      {
+        "id": "P2-hairline-3x-dark-2px",
+        "passed": true
+      },
+      {
+        "id": "P2-page-errors",
+        "passed": true
+      }
+    ],
+    "passed": 29
+  },
+  "scope": "Production-built actual components and host CSS in Chromium; Node Vite preview; Bun and Playwright driver; DPR 1/2/3; not packaged/native/physical devices",
+  "artifacts": {
+    "localDirectory": ".cache/frontend-p2-fixes/final-production",
+    "manifestSha256": "1ed01e9caed359d068048c311520e44588252b06b80951ecd2c3b346766d6fe2"
+  }
+}

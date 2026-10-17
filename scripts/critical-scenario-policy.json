@@ -350,7 +350,7 @@
     {
       "id": "theme-contract",
       "entry": "scripts/verification/theme-contract-workflow.ts",
-      "minimum": 90,
+      "minimum": 119,
       "required": [
         "theme-contract.json",
         "source-hashes.json",
@@ -361,7 +361,12 @@
         "viewer-code-light.png",
         "viewer-code-dark.png",
         "code-overlay-dark.png",
-        "trace.zip"
+        "trace.zip",
+        "p2-reduced-light.png",
+        "p2-reduced-dark-390.png",
+        "p2-1x-trace.zip",
+        "p2-2x-trace.zip",
+        "p2-3x-trace.zip"
       ]
     },
     {

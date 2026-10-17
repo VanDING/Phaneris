@@ -5,14 +5,36 @@ import { cn } from "@/lib/utils"
 interface ScrollAreaProps extends React.ComponentProps<typeof ScrollAreaPrimitive.Root> {
   /** Ref to the scrollable viewport element */
   viewportRef?: React.RefObject<HTMLDivElement | null>
+  /** Classes for the element that actually scrolls (e.g. scroll-driven masks). */
+  viewportClassName?: string
 }
 
 function ScrollArea({
   className,
   children,
   viewportRef,
+  viewportClassName,
   ...props
 }: ScrollAreaProps) {
+  const fallbackViewportRef = React.useRef<HTMLDivElement>(null)
+  const resolvedViewportRef = viewportRef ?? fallbackViewportRef
+
+  React.useLayoutEffect(() => {
+    const viewport = resolvedViewportRef.current
+    if (!viewport || !viewportClassName) return
+
+    // Radix keeps overflow: scroll on its viewport. When content shrinks, its
+    // scroll timeline can retain the previous filled frame at a zero range.
+    const updateOverflow = () => {
+      viewport.dataset.scrollableY = String(viewport.scrollHeight > viewport.clientHeight)
+    }
+    const observer = new ResizeObserver(updateOverflow)
+    observer.observe(viewport)
+    if (viewport.firstElementChild) observer.observe(viewport.firstElementChild)
+    updateOverflow()
+    return () => { observer.disconnect() }
+  }, [resolvedViewportRef, viewportClassName])
+
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
@@ -20,8 +42,8 @@ function ScrollArea({
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
-        ref={viewportRef}
-        className="h-full w-full rounded-[inherit]"
+        ref={resolvedViewportRef}
+        className={cn("h-full w-full rounded-[inherit]", viewportClassName)}
       >
         {children}
       </ScrollAreaPrimitive.Viewport>

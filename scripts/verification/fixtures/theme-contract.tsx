@@ -13,6 +13,7 @@ import { TooltipProvider } from '../../../packages/ui/src/components/tooltip'
 import { BUILTIN_THEMES, type ThemeFile, type ThemePreferences } from '@config/theme'
 import type { ElectronAPI } from '../../../apps/electron/src/shared/types'
 import { App as ViewerApp } from '../../../apps/viewer/src/App'
+import { FrontendP2Surface } from './frontend-p2'
 
 const params = new URLSearchParams(location.search)
 const style = document.createElement('link'); style.rel = 'stylesheet'; style.href = params.get('css')!; document.head.append(style)
@@ -66,6 +67,7 @@ function Surface() {
 }
 let content = params.get('standalone') === 'true' ? <CodeBlock code="const answer = 42" language="typescript" />
   : <ThemeProvider><Surface /></ThemeProvider>
+if (params.get('frontend-p2') === 'true') content = <ThemeProvider><FrontendP2Surface /></ThemeProvider>
 if (params.get('viewer') === 'true') {
   window.history.replaceState({}, '', '/s/theme-contract')
   content = <ViewerApp />

@@ -37,7 +37,7 @@
 :root {
   --navigator: var(--background);
   --radius: var(--theme-radius);
-  --edge-hairline: var(--theme-border-width);
+  --edge-hairline: calc(var(--theme-border-width) / var(--edge-pixel-ratio, 1));
   --ring-width: 1px;
   --ring-offset: 0px;
   --spacing: 0.25rem;
@@ -117,7 +117,7 @@
 .dark {
   --navigator: var(--background);
   --radius: var(--theme-radius);
-  --edge-hairline: var(--theme-border-width);
+  --edge-hairline: calc(var(--theme-border-width) / var(--edge-pixel-ratio, 1));
   --ring-width: 1px;
   --ring-offset: 0px;
   --spacing: 0.25rem;

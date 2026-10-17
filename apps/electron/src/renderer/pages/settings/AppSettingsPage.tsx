@@ -237,8 +237,8 @@ export default function AppSettingsPage() {
   return (
     <div className="h-full flex flex-col">
       <PanelHeader title={t("settings.app.title")} actions={<HeaderMenu route={routes.view.settings('app')} helpFeature="app-settings" />} />
-      <div className="flex-1 min-h-0 mask-fade-y">
-        <ScrollArea className="h-full">
+      <div className="flex-1 min-h-0">
+        <ScrollArea className="h-full" viewportClassName="mask-fade-y">
           <div className="px-5 py-7 max-w-3xl mx-auto">
             <div className="space-y-8">
               {isElectron && <>

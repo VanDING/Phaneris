@@ -63,6 +63,8 @@ export interface EntityListProps<T> {
   viewportRef?: React.RefObject<HTMLDivElement | null>
   /** Additional ScrollArea class */
   scrollAreaClassName?: string
+  /** Additional classes on the scrolling viewport rather than the outer root. */
+  scrollViewportClassName?: string
   className?: string
   /** Set of collapsed group keys (for collapsible groups) */
   collapsedGroups?: Set<string>
@@ -155,6 +157,7 @@ export function EntityList<T>({
   containerProps,
   viewportRef,
   scrollAreaClassName,
+  scrollViewportClassName,
   className,
   collapsedGroups,
   onToggleCollapse,
@@ -179,7 +182,7 @@ export function EntityList<T>({
   return (
     <div className={cn('flex flex-col flex-1 min-h-0', className)}>
       {header}
-      <ScrollArea className={cn('flex-1', scrollAreaClassName)} viewportRef={viewportRef}>
+      <ScrollArea className={cn('flex-1', scrollAreaClassName)} viewportRef={viewportRef} viewportClassName={scrollViewportClassName}>
         <div
           ref={containerRef}
           className="flex flex-col pb-2"

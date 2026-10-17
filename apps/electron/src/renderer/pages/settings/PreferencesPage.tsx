@@ -216,8 +216,8 @@ export default function PreferencesPage() {
         title={t('settings.preferences.title')}
         actions={<HeaderMenu route={routes.view.settings('preferences')} helpFeature="preferences" />}
       />
-      <div className="flex-1 min-h-0 mask-fade-y">
-        <ScrollArea className="h-full">
+      <div className="flex-1 min-h-0">
+        <ScrollArea className="h-full" viewportClassName="mask-fade-y">
           <div className="px-5 py-8 max-w-3xl mx-auto">
             <div className="space-y-8">
               <section className="flex flex-col items-center text-center pt-2 pb-1">

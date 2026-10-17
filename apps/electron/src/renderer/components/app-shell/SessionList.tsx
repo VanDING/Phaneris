@@ -907,7 +907,8 @@ export function SessionList({
           role: 'listbox',
           'aria-label': 'Sessions',
         }}
-        scrollAreaClassName="select-none mask-fade-top-short"
+        scrollAreaClassName="select-none"
+        scrollViewportClassName="mask-fade-top-short"
         collapsedGroups={collapsedGroups}
         onToggleCollapse={toggleGroupCollapse}
         onCollapseAll={collapseAllGroups}

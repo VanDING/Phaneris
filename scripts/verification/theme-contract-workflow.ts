@@ -9,6 +9,7 @@ import { PresetThemeSchema } from '../../packages/shared/src/config/schemas'
 import { verificationWorkflow } from './verification-artifacts'
 import { launchWorkflowBrowser } from './workflow-browser'
 import { warmThemePage } from './fixtures/warm-theme-page'
+import { verifyFrontendP2 } from './frontend-p2-checks'
 
 await verificationWorkflow('theme-contract', async run => {
   const root = resolve(import.meta.dir, '../..'), fixture = join(root, 'scripts/verification/fixtures/theme-contract.tsx')
@@ -17,7 +18,9 @@ await verificationWorkflow('theme-contract', async run => {
     'packages/ui/src/styles/index.css', 'apps/electron/src/renderer/index.css', 'apps/viewer/src/index.css', 'apps/viewer/src/App.tsx',
     'apps/electron/src/renderer/context/ThemeContext.tsx', 'packages/ui/src/context/ShikiThemeContext.tsx',
     'packages/ui/src/components/markdown/CodeBlock.tsx', 'packages/ui/src/lib/theme-compiler.ts', 'packages/shared/src/config/theme-runtime.ts',
-    'packages/ui/src/styles/theme-tokens.css', 'packages/ui/src/styles/theme-adapter.css', 'packages/shared/src/config/theme-manifest.ts',
+    'packages/ui/src/styles/theme-tokens.css', 'packages/ui/src/styles/theme-adapter.css', 'packages/ui/src/styles/motion.css', 'packages/shared/src/config/theme-manifest.ts',
+    'packages/ui/src/components/overlay/CopyButton.tsx', 'apps/electron/src/renderer/components/ui/scroll-area.tsx',
+    'apps/electron/src/renderer/components/ui/entity-list.tsx', 'scripts/verification/frontend-p2-checks.ts', 'scripts/verification/fixtures/frontend-p2.tsx',
     'packages/shared/src/config/shiki-themes.generated.json', 'scripts/verification/fixtures/theme-contract.tsx', 'scripts/verification/theme-contract-workflow.ts']
   run.json('source-hashes.json', Object.fromEntries(sources.map(path => [path, createHash('sha256').update(readFileSync(join(root, path))).digest('hex')])))
   async function check(id: string, fn: () => Promise<void> | void) {
@@ -28,7 +31,7 @@ await verificationWorkflow('theme-contract', async run => {
   const prefix = `/${relative(root, run.directory).replaceAll('\\', '/')}`
   writeFileSync(join(run.directory, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/theme-contract.tsx"></script></body></html>')
   for (const [host, path] of Object.entries(hosts)) writeFileSync(join(run.directory, `${host}.css`),
-    `@import "${relative(run.directory, join(root, path)).replaceAll('\\', '/')}";\n@source "${fixture.replaceAll('\\', '/')}";\n`)
+    `@import "${relative(run.directory, join(root, path)).replaceAll('\\', '/')}";\n@source "${fixture.replaceAll('\\', '/')}";\n@source "${join(root, 'scripts/verification/fixtures/frontend-p2.tsx').replaceAll('\\', '/')}";\n`)
   const launched = await launchWorkflowBrowser()
   const server = await createServer({ configFile: join(root, 'apps/electron/vite.config.ts'), root,
     optimizeDeps: { entries: [fixture, join(root, 'apps/viewer/src/App.tsx')], include: ['react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'], exclude: ['pdfjs-dist/build/pdf.worker.min.mjs?url'] },
@@ -146,6 +149,8 @@ await verificationWorkflow('theme-contract', async run => {
       await page.locator('pre.shiki.github-dark').waitFor({ timeout: 20_000 })
     })
     await check('TC18-page-errors', () => assert.deepEqual(errors, []))
+    await verifyFrontendP2({ browser: launched.browser, directory: run.directory, check, samples,
+      url: `${base}${prefix}/index.html?frontend-p2=true&css=${encodeURIComponent(`${prefix}/electron.css`)}` })
   } finally {
     await context.tracing.stop({ path: join(run.directory, 'trace.zip') })
     run.json('theme-contract.json', { checks, samples, errors, browser: launched.browser.version(), viewport: { width: 1280, height: 820 },

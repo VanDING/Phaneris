@@ -1,6 +1,7 @@
 /* Shared Tailwind adapter. Host policies belong in each host entrypoint. */
 :root {
-  --edge-hairline: var(--theme-border-width, 1px);
+  --edge-pixel-ratio: 1;
+  --edge-hairline: calc(var(--theme-border-width, 1px) / var(--edge-pixel-ratio));
   --z-base: 0;
   --z-local: 10;
   --z-sticky: 20;
@@ -126,11 +127,11 @@
   body { line-height: var(--line-height-base); letter-spacing: var(--tracking-normal); }
 }
 
-/* Retina hairline: 1px at 1x, half a physical pixel at 2x, a third at 3x.
-   Ring shadows consume --edge-hairline so outlines never sit in layout. */
+/* One physical pixel for a 1px theme border at 1x/2x/3x. Keep the screen
+   factor separate so runtime theme declarations cannot reset it. */
 @media (min-resolution: 2dppx) {
-  :root { --edge-hairline: calc(var(--theme-border-width, 1px) / 2); }
+  :root { --edge-pixel-ratio: 2; }
 }
 @media (min-resolution: 3dppx) {
-  :root { --edge-hairline: calc(var(--theme-border-width, 1px) / 3); }
+  :root { --edge-pixel-ratio: 3; }
 }

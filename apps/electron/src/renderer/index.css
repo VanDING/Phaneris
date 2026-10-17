@@ -325,7 +325,24 @@ html[data-scenic] {
   .mask-fade-bottom { --scroll-fade-top: 0px; }
   .mask-fade-top-short { --scroll-fade-size: 16px; --scroll-fade-bottom: 0px; }
 
+  .mask-fade-y[data-scrollable-y="false"],
+  .mask-fade-bottom[data-scrollable-y="false"],
+  .mask-fade-top-short[data-scrollable-y="false"] {
+    animation: none;
+    --scroll-fade-top: 0px;
+    --scroll-fade-bottom: 0px;
+  }
+
   @supports (animation-timeline: scroll()) {
+    /* A viewport with no scroll range has an inactive timeline. Its fallback
+       must leave all content visible, including when a list shrinks. */
+    .mask-fade-y,
+    .mask-fade-bottom,
+    .mask-fade-top-short {
+      --scroll-fade-top: 0px;
+      --scroll-fade-bottom: 0px;
+    }
+
     .mask-fade-y {
       animation: scroll-fade-top linear both, scroll-fade-bottom linear both;
       animation-timeline: scroll(self), scroll(self);

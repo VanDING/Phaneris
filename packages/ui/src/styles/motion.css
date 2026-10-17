@@ -139,7 +139,8 @@
  * stop. The tiny non-zero duration preserves animationend-driven libraries.
  */
 @media (prefers-reduced-motion: reduce) {
-  .motion-browser-progress { animation: none !important; }
+  .motion-browser-progress,
+  .animate-check-decay { animation: none !important; }
 
   :root {
     --motion-duration-instant: 1ms;
@@ -186,7 +187,8 @@
   --motion-duration-slow: 1ms;
 }
 
-:root[data-reduce-motion='true'] .motion-browser-progress {
+:root[data-reduce-motion='true'] .motion-browser-progress,
+:root[data-reduce-motion='true'] .animate-check-decay {
   animation: none !important;
 }
 

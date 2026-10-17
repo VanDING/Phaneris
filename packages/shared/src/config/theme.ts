@@ -467,7 +467,8 @@ export function themeToCSS(theme: ThemeOverrides, isDark: boolean = false): stri
 /** Shared derived values: static generation and every runtime host use this recipe. */
 export function themeDerivedCSS(isDark: boolean): string {
   const vars = [
-    '--navigator: var(--background);', '--radius: var(--theme-radius);', '--edge-hairline: var(--theme-border-width);',
+    '--navigator: var(--background);', '--radius: var(--theme-radius);',
+    '--edge-hairline: calc(var(--theme-border-width) / var(--edge-pixel-ratio, 1));',
     '--ring-width: 1px;', '--ring-offset: 0px;', '--spacing: 0.25rem;',
     '--md-bullets: var(--foreground-50);', '--md-counters: var(--foreground-50);',
     '--shadow-minimal-flat: 0 0 0 var(--edge-hairline) color-mix(in srgb, var(--foreground) 6%, transparent);',
