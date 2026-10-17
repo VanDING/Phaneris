@@ -28,6 +28,7 @@ import { serializeEnvelope, deserializeEnvelope } from './codec'
 // ---------------------------------------------------------------------------
 
 interface PendingRequest {
+  channel: string
   resolve: (value: unknown) => void
   reject: (error: Error) => void
   timeout: ReturnType<typeof setTimeout>
@@ -192,7 +193,7 @@ export class WsRpcClient implements RpcClient {
         reject(new Error(`Request timeout: ${channel} (${this.requestTimeout}ms)`))
       }, this.requestTimeout)
 
-      this.pending.set(id, { resolve, reject, timeout })
+      this.pending.set(id, { channel, resolve, reject, timeout })
 
       const envelope: MessageEnvelope = {
         id,
@@ -784,7 +785,9 @@ export class WsRpcClient implements RpcClient {
     if (wasConnected) {
       for (const [id, req] of this.pending) {
         clearTimeout(req.timeout)
-        req.reject(new Error('Connection lost'))
+        const error = new Error('Connection lost')
+        error.stack += `\nRPC channel: ${req.channel}`
+        req.reject(error)
       }
       this.pending.clear()
 

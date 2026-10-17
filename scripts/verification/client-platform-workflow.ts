@@ -2,7 +2,7 @@
 /** U01-U03: actual WebUI/business renderer, real authenticated server and persisted fixture. */
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { basename, join, resolve } from 'node:path'
 import { launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
 import { verificationWorkflow } from './verification-artifacts'
 import { startProcess, testSecret } from './fixtures/governance-process-support'
@@ -142,7 +142,7 @@ await verificationWorkflow('client-platform', async run => {
     checks.push('real browser offline edits persist after reconnection without an unhandled rejection')
     checks.push(...await verifyConversation(page, conversation, run.directory, 'web'))
     await page.getByRole('button', { name: 'Files', exact: true }).last().click()
-    const writtenFile = page.getByText(conversation.filePath.split('/').at(-1)!, { exact: true }).last()
+    const writtenFile = page.getByText(basename(conversation.filePath), { exact: true }).last()
     await writtenFile.waitFor()
     await writtenFile.click({ button: 'right' })
     assert.equal(await page.getByRole('menuitem', { name: /Show in Finder|Show in.*manager/ }).count(), 0)

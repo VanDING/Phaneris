@@ -32,3 +32,9 @@
 | macOS 原生会话 | 截图显示 spawn bun ENOENT；登录 shell 的 PATH 覆盖继承的 setup-bun 路径 | 保留启动环境的工具路径；真实 main/preload/renderer/Pi 完整会话验收 |
 | 容器停机 | RPC、Web UI、Pi 均通过，停止后 ExitCode=1；待排查 bun run 包装层及清理错误 | PID 1 直接运行 Bun 服务，保留原退出码 0 要求；失败时仍采集完整容器日志 |
 | Windows 构建 | 输出 chunk 清单后无构建完成标记，40 分钟超时；待核实运行器与管道 | 显式 Node 执行 Vite，实际构建与原生主题验收；不以延长超时或忽略失败解决 |
+| Windows WebUI 文件验收 | 完整会话已通过，但以 split('/') 从本地路径取文件名，导致 Windows 等待完整路径文本而超时 | 使用平台路径 basename；复跑真实 WebUI、Pi 写文件与文件树打开验收 |
+| 重连在途请求 | WebUI 完整复验偶现未捕获 Connection lost，原错误栈只指向传输层 | 保留拒绝行为和错误断言；在错误栈标识 RPC channel，定位具体调用方并复验 |
+| 容器绑定策略 | 完整日志确认默认 0.0.0.0 无 TLS 被产品策略拒绝；PID 1 调整不是本次退出 1 的根因 | 仅在回环端口映射的验收启动中显式 --allow-insecure-bind，不修改生产默认策略 |
+| macOS 窄窗口 | 完整会话现已通过；420px 阶段仍保留 800px 的原生下限 | 对 Playwright page 对应的 BrowserWindow 设置非零最小尺寸，记录每次原生尺寸与视口，仍要求实际 420px |
+| Linux 私有临时目录 | bwrap 为会话创建的 /tmp 父目录仍可写，越界脚本写入私有影子目录后返回成功 | 挂载完成后将 /tmp 设为只读；会话 data/.tmp 保持可写，原有越界与成功执行用例均须通过 |
+| Select 连续键盘验收 | TF12 在菜单卸载后立即按 Space，Radix 的异步焦点恢复尚未完成，暗色模式二次打开超时 | 等待焦点实际返回触发器后再按键；仍检查键盘打开、选择、主题门户和 Escape 恢复 |
