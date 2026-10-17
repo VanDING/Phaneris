@@ -56,6 +56,7 @@ assert(workflow.jobs.validate?.steps.some(step => step.run === 'bun run build:sm
 for (const [name, job] of Object.entries(workflow.jobs)) {
   for (const step of job.steps) {
     if (step.run?.includes('| tee ')) assert.equal(step.shell, 'bash', `${name}/${step.name} must use explicit Bash to propagate pipeline failures`)
+    if (step.run?.includes('| Tee-Object ')) assert(step.run.includes('if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }'), `${name}/${step.name} must propagate the native command exit code`)
     if (name === 'quality-windows' && ['i18n checks', 'Pin checks', 'Cross-platform regression tests'].includes(step.name ?? '')) {
       assert.equal(step.shell, 'bash', `${name}/${step.name} must stop on the first failed command`)
     }
@@ -66,6 +67,7 @@ assert(workflow.jobs.validate.steps.some(step => step.run === 'bunx playwright i
 assert(workflow.jobs['native-macos']?.steps.some(step => step.run?.startsWith('bun run test:native-client ')), 'Native main/preload renderer acceptance must run in macOS CI')
 assert.deepEqual(workflow.jobs['native-theme']?.strategy?.matrix?.os, ['windows-latest', 'macos-latest', 'ubuntu-latest'], 'Native theme CI must retain all three OS targets')
 assert(workflow.jobs['native-theme']?.steps.some(step => step.run?.startsWith('bun run test:theme-native ')), 'Native theme delivery and real zoom acceptance must run in CI')
+assert(workflow.jobs['native-theme']?.steps.some(step => step.if === "runner.os == 'Windows'" && step.shell === 'pwsh'), 'Windows native builds must use the native PowerShell logging pipeline')
 assert(workflow.jobs['native-theme']?.steps.some(step => step.run?.startsWith('xvfb-run --auto-servernum bun run test:theme-native ')), 'Linux native theme acceptance needs a display')
 assert(workflow.jobs['production-container']?.steps.some(step => step.run === 'bun run test:container'), 'Production container acceptance must run in Linux CI')
 assert(workflow.jobs['full-validation'].steps.some(step => step.run === 'bun run test:clean-install'), 'Independent frozen install must run in CI')

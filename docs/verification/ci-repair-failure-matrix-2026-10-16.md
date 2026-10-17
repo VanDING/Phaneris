@@ -38,3 +38,4 @@
 | macOS 窄窗口 | 完整会话现已通过；420px 阶段仍保留 800px 的原生下限 | 对 Playwright page 对应的 BrowserWindow 设置非零最小尺寸，记录每次原生尺寸与视口，仍要求实际 420px |
 | Linux 私有临时目录 | bwrap 为会话创建的 /tmp 父目录仍可写，越界脚本写入私有影子目录后返回成功 | 挂载完成后将 /tmp 设为只读；会话 data/.tmp 保持可写，原有越界与成功执行用例均须通过 |
 | Select 连续键盘验收 | TF12 在菜单卸载后立即按 Space，Radix 的异步焦点恢复尚未完成，暗色模式二次打开超时 | 等待焦点实际返回触发器后再按键；仍检查键盘打开、选择、主题门户和 Escape 恢复 |
+| Windows 原生日志管道 | 1f87d6d73 同样停在 renderer chunk 输出后，22 分钟未结束；本机 PowerShell 完整原生验收通过 | Windows 使用原生 PowerShell Tee-Object 并显式传播 LASTEXITCODE；macOS/Linux 保持 Bash pipefail；真实 Windows Actions 确认 |

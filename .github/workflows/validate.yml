@@ -383,9 +383,15 @@ jobs:
       - name: Provision validation runtime
         run: bun run runtime:provision:validation
       - name: Native theme main preload renderer acceptance
-        if: runner.os != 'Linux'
+        if: runner.os == 'macOS'
         shell: bash
         run: bun run test:theme-native 2>&1 | tee .cache/verification/theme-native.log
+      - name: Native Windows theme acceptance
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          bun run test:theme-native 2>&1 | Tee-Object -FilePath .cache/verification/theme-native.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Native Linux theme acceptance under Xvfb
         if: runner.os == 'Linux'
         shell: bash
