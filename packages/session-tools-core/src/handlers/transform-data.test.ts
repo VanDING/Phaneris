@@ -133,6 +133,7 @@ afterAll(() => {
       expect(existsSync(join(dataDir, 'out.json'))).toBe(false);
       return;
     }
+    if (result.isError) throw new Error(JSON.stringify(result));
     expect(result.isError).toBe(false);
     expect(existsSync(join(dataDir, 'out.json'))).toBe(true);
   });
@@ -152,6 +153,7 @@ afterAll(() => {
       expect(existsSync(join(dataDir, 'out.json'))).toBe(false);
       return;
     }
+    if (result.isError) throw new Error(JSON.stringify(result));
     expect(result.isError).toBe(false);
     expect(existsSync(join(dataDir, 'out.json'))).toBe(true);
   });

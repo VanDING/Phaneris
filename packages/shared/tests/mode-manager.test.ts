@@ -2071,7 +2071,7 @@ describe('PowerShell plans folder exception', () => {
   });
 
   describe('case-insensitive path matching on Windows', () => {
-    it('allows write when path case differs from plansFolderPath', () => {
+    it.skipIf(process.platform !== 'win32')('allows write when path case differs from plansFolderPath', () => {
       if (!psAvailable) return;
 
       // plansFolderPath uses lowercase 'test', command uses 'Test'

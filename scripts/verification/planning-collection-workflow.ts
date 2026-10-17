@@ -16,6 +16,13 @@ await verificationWorkflow('planning-collection', async run => {
   const control = (action: string, ...args: unknown[]) => page.evaluate(({ action, args }) => (window as any).planningFixture[action](...args), { action, args })
   const snapshot = async () => JSON.parse(await page.locator('#snapshot').innerText())
   const settled = () => waitForBrowserCondition(page, () => { const element = document.querySelector('#snapshot'); return Boolean(element) && !JSON.parse(element!.textContent!).loading })
+  const scope = async (workspace: string | null) => {
+    await control('scope', workspace)
+    await waitForBrowserCondition(page, expected => {
+      const element = document.querySelector('#snapshot'), value = element && JSON.parse(element.textContent!)
+      return value && value.workspace === expected && !value.loading
+    }, workspace)
+  }
   const held = () => waitForBrowserCondition(page, () => (window as any).planningFixture.metrics().heldRead)
   await context.tracing.start({ screenshots: true, snapshots: true })
   try {
@@ -38,14 +45,14 @@ await verificationWorkflow('planning-collection', async run => {
     assert.equal((await control('metrics')).reads.length, readsBefore + 1); assert.equal((await control('metrics')).maxActiveReads, 1)
     assert.equal((await snapshot()).items[0].title, 'Last external value'); checks.push('ten-invalidations-one-follow-up-no-overlapping-reads')
     await control('configure', { holdRead: true }); await page.getByRole('button', { name: 'Refresh', exact: true }).click(); await held()
-    await control('scope', 'two'); await settled(); assert.equal((await snapshot()).items[0].id, 'z')
+    await scope('two'); assert.equal((await snapshot()).items[0].id, 'z')
     await control('releaseRead'); await settled(); assert.equal((await snapshot()).workspace, 'two'); assert.equal((await snapshot()).items[0].id, 'z')
     checks.push('late-old-workspace-read-cannot-pollute-new-scope')
-    await control('scope', 'one'); await settled(); await control('configure', { holdWrite: true }); await page.getByRole('button', { name: 'Update', exact: true }).click()
+    await scope('one'); await control('configure', { holdWrite: true }); await page.getByRole('button', { name: 'Update', exact: true }).click()
     await waitForBrowserCondition(page, () => (window as any).planningFixture.metrics().heldWrite)
-    await control('scope', 'two'); await settled(); await control('releaseWrite'); await page.waitForTimeout(30)
+    await scope('two'); await control('releaseWrite'); await page.waitForTimeout(30)
     assert.equal((await snapshot()).items[0].id, 'z'); checks.push('late-old-workspace-write-cannot-pollute-new-scope')
-    await control('scope', 'one'); await settled(); await control('configure', { failRead: true }); await page.getByRole('button', { name: 'Refresh', exact: true }).click()
+    await scope('one'); await control('configure', { failRead: true }); await page.getByRole('button', { name: 'Refresh', exact: true }).click()
     await waitForBrowserCondition(page, () => Boolean(JSON.parse(document.querySelector('#snapshot')!.textContent!).error)); assert.equal((await snapshot()).loading, false)
     await page.getByRole('button', { name: 'Refresh', exact: true }).click(); await settled(); assert.equal((await snapshot()).error, null); checks.push('read-failure-retains-items-and-explicit-retry-recovers')
     await control('configure', { failWrite: true }); const before = (await snapshot()).entries
@@ -84,7 +91,7 @@ await verificationWorkflow('planning-collection', async run => {
     await control('releaseRead'); await settled()
     assert.equal((await snapshot()).items.length, 2); assert.equal((await snapshot()).items.find((item: any) => item.id === 'a').title, 'Accepted local write')
     checks.push('initial-read-merges-successful-write-with-all-other-rows')
-    await control('scope', null); await settled(); assert.deepEqual((await snapshot()).items, []); assert.deepEqual((await snapshot()).entries, []); checks.push('null-workspace-has-no-stale-projection')
+    await scope(null); assert.deepEqual((await snapshot()).items, []); assert.deepEqual((await snapshot()).entries, []); checks.push('null-workspace-has-no-stale-projection')
     run.json('planning-collection.json', { checks, metrics: await control('metrics'), facts: await control('facts'), errors }); await page.screenshot({ path: join(run.directory, 'collection-final.png') })
     assert.deepEqual(errors, []); run.complete(checks, ['Deterministic browser hook race harness uses an explicit in-memory API; real host, transport, and performance are covered separately by planning-performance.'])
   } finally {

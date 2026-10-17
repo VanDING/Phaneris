@@ -1,7 +1,7 @@
 /** D01/D02: fresh production image, authenticated RPC and real Pi subprocess in Linux. */
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
-import { writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { WsRpcClient } from '../../packages/server-core/src/transport/client'
 import { verificationWorkflow } from './verification-artifacts'
@@ -31,7 +31,9 @@ await verificationWorkflow('container', async run => {
     built = true
     checks.push('fresh-image-frozen-patched-install-and-common-runtime-build')
     await command(['run', '-d', '--name', name, '-p', '127.0.0.1::9100', '-e', `PHANERIS_SERVER_TOKEN=${testSecret}`,
-      '-e', 'PHANERIS_DISABLE_MESSAGING=1', '-e', 'PHANERIS_CONFIG_DIR=/tmp/governance-config', image], 'container-start')
+      // The published host port is loopback-only. The service still binds the
+      // container interface, so explicitly opt into this trusted test network.
+      '-e', 'PHANERIS_DISABLE_MESSAGING=1', '-e', 'PHANERIS_CONFIG_DIR=/tmp/governance-config', image, '--allow-insecure-bind'], 'container-start')
     started = true
     const mapping = await command(['port', name, '9100/tcp'], 'port')
     const url = `ws://${mapping.split('\n')[0]}`
@@ -84,14 +86,16 @@ await verificationWorkflow('container', async run => {
     client.destroy()
     await command(['stop', '--time', '15', name], 'container-stop')
     const state = JSON.parse(await command(['inspect', '--format', '{{json .State}}', name], 'container-state')) as { ExitCode: number }
-    assert.equal(state.ExitCode, 0)
+    await command(['logs', name], 'container-output')
+    const logs = readFileSync(join(run.directory, 'container-output.log'), 'utf8')
+    assert.equal(state.ExitCode, 0, logs.slice(-5000))
     checks.push('production-image-bounded-clean-shutdown')
-    const logs = await command(['logs', name], 'container-output')
     assert(!logs.includes(testSecret))
     run.json('container.json', { checks, commands, versions, state })
     run.complete(checks, ['signed native installers', 'live external providers'])
   } finally {
     client?.destroy()
+    if (started) try { await command(['logs', name], 'container-output') } catch (error) { cleanup.push(error) }
     if (started) try { await command(['rm', '-f', name], 'container-remove') } catch (error) { cleanup.push(error) }
     if (built) try { await command(['image', 'rm', image], 'image-remove') } catch (error) { cleanup.push(error) }
     if (cleanup.length) {

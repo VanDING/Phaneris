@@ -1,0 +1,1137 @@
+{
+  "total_count": 9,
+  "jobs": [
+    {
+      "id": 116235305213,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoA_Q",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305213",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305213",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:20Z",
+      "completed_at": "2026-10-15T03:47:17Z",
+      "name": "validate",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:21Z",
+          "completed_at": "2026-10-15T03:44:22Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:23Z",
+          "completed_at": "2026-10-15T03:44:25Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:25Z",
+          "completed_at": "2026-10-15T03:44:27Z"
+        },
+        {
+          "name": "Install uv",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:27Z",
+          "completed_at": "2026-10-15T03:44:31Z"
+        },
+        {
+          "name": "Reject Windows-illegal filenames",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T03:44:31Z",
+          "completed_at": "2026-10-15T03:44:31Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T03:44:31Z",
+          "completed_at": "2026-10-15T03:44:50Z"
+        },
+        {
+          "name": "Provision validation runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-15T03:44:50Z",
+          "completed_at": "2026-10-15T03:44:51Z"
+        },
+        {
+          "name": "Run validation suite",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-15T03:44:51Z",
+          "completed_at": "2026-10-15T03:46:41Z"
+        },
+        {
+          "name": "Install browser for production renderer workflows",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-15T03:46:41Z",
+          "completed_at": "2026-10-15T03:47:01Z"
+        },
+        {
+          "name": "Critical path tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-10-15T03:47:01Z",
+          "completed_at": "2026-10-15T03:47:13Z"
+        },
+        {
+          "name": "Production bundle and server distribution smoke",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-15T03:47:13Z",
+          "completed_at": "2026-10-15T03:47:13Z"
+        },
+        {
+          "name": "Remote credential vault regression",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-15T03:47:13Z",
+          "completed_at": "2026-10-15T03:47:13Z"
+        },
+        {
+          "name": "Recovery regression tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-15T03:47:13Z",
+          "completed_at": "2026-10-15T03:47:13Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-15T03:47:13Z",
+          "completed_at": "2026-10-15T03:47:15Z"
+        },
+        {
+          "name": "Post Install uv",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26,
+          "started_at": "2026-10-15T03:47:15Z",
+          "completed_at": "2026-10-15T03:47:15Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27,
+          "started_at": "2026-10-15T03:47:15Z",
+          "completed_at": "2026-10-15T03:47:15Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-10-15T03:47:15Z",
+          "completed_at": "2026-10-15T03:47:15Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29,
+          "started_at": "2026-10-15T03:47:15Z",
+          "completed_at": "2026-10-15T03:47:15Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305213",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000956,
+      "runner_name": "GitHub Actions 1000000956",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305386,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoBqg",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305386",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305386",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:21Z",
+      "completed_at": "2026-10-15T03:44:57Z",
+      "name": "native-theme (ubuntu-latest)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:22Z",
+          "completed_at": "2026-10-15T03:44:23Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:23Z",
+          "completed_at": "2026-10-15T03:44:27Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:27Z",
+          "completed_at": "2026-10-15T03:44:30Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:30Z",
+          "completed_at": "2026-10-15T03:44:49Z"
+        },
+        {
+          "name": "Provision validation runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T03:44:49Z",
+          "completed_at": "2026-10-15T03:44:50Z"
+        },
+        {
+          "name": "Native theme main preload renderer acceptance",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-10-15T03:44:50Z",
+          "completed_at": "2026-10-15T03:44:50Z"
+        },
+        {
+          "name": "Native Linux theme acceptance under Xvfb",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-10-15T03:44:50Z",
+          "completed_at": "2026-10-15T03:44:54Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8,
+          "started_at": "2026-10-15T03:44:54Z",
+          "completed_at": "2026-10-15T03:44:54Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-15T03:44:54Z",
+          "completed_at": "2026-10-15T03:44:54Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-15T03:44:54Z",
+          "completed_at": "2026-10-15T03:44:55Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-15T03:44:55Z",
+          "completed_at": "2026-10-15T03:44:55Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305386",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000957,
+      "runner_name": "GitHub Actions 1000000957",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305421,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoBzQ",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305421",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305421",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:20Z",
+      "completed_at": "2026-10-15T03:49:18Z",
+      "name": "full-validation",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:21Z",
+          "completed_at": "2026-10-15T03:44:24Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:24Z",
+          "completed_at": "2026-10-15T03:44:26Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:26Z",
+          "completed_at": "2026-10-15T03:44:27Z"
+        },
+        {
+          "name": "Install uv",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:27Z",
+          "completed_at": "2026-10-15T03:44:32Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T03:44:32Z",
+          "completed_at": "2026-10-15T03:44:51Z"
+        },
+        {
+          "name": "Provision validation runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T03:44:51Z",
+          "completed_at": "2026-10-15T03:44:52Z"
+        },
+        {
+          "name": "Full workspace validation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-15T03:44:52Z",
+          "completed_at": "2026-10-15T03:49:11Z"
+        },
+        {
+          "name": "Production bundle and server distribution smoke",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8,
+          "started_at": "2026-10-15T03:49:11Z",
+          "completed_at": "2026-10-15T03:49:14Z"
+        },
+        {
+          "name": "Bundle size report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-15T03:49:14Z",
+          "completed_at": "2026-10-15T03:49:14Z"
+        },
+        {
+          "name": "Frozen install from an independent checkout and empty cache",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-10-15T03:49:14Z",
+          "completed_at": "2026-10-15T03:49:14Z"
+        },
+        {
+          "name": "Pi and worker runtime builds",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-15T03:49:14Z",
+          "completed_at": "2026-10-15T03:49:14Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-15T03:49:14Z",
+          "completed_at": "2026-10-15T03:49:15Z"
+        },
+        {
+          "name": "Post Install uv",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-10-15T03:49:15Z",
+          "completed_at": "2026-10-15T03:49:15Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-10-15T03:49:15Z",
+          "completed_at": "2026-10-15T03:49:15Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24,
+          "started_at": "2026-10-15T03:49:15Z",
+          "completed_at": "2026-10-15T03:49:15Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25,
+          "started_at": "2026-10-15T03:49:15Z",
+          "completed_at": "2026-10-15T03:49:15Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305421",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000958,
+      "runner_name": "GitHub Actions 1000000958",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305423,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoBzw",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305423",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305423",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:21Z",
+      "completed_at": "2026-10-15T03:50:31Z",
+      "name": "quality-windows",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:22Z",
+          "completed_at": "2026-10-15T03:44:23Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:23Z",
+          "completed_at": "2026-10-15T03:44:30Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:30Z",
+          "completed_at": "2026-10-15T03:44:32Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:32Z",
+          "completed_at": "2026-10-15T03:48:12Z"
+        },
+        {
+          "name": "Type checks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T03:48:12Z",
+          "completed_at": "2026-10-15T03:48:57Z"
+        },
+        {
+          "name": "Lint",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T03:48:57Z",
+          "completed_at": "2026-10-15T03:50:01Z"
+        },
+        {
+          "name": "i18n checks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-15T03:50:01Z",
+          "completed_at": "2026-10-15T03:50:01Z"
+        },
+        {
+          "name": "Provision validation runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-15T03:50:01Z",
+          "completed_at": "2026-10-15T03:50:06Z"
+        },
+        {
+          "name": "Pin checks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-15T03:50:06Z",
+          "completed_at": "2026-10-15T03:50:07Z"
+        },
+        {
+          "name": "Cross-platform regression tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-15T03:50:07Z",
+          "completed_at": "2026-10-15T03:50:21Z"
+        },
+        {
+          "name": "Cross-platform configuration and resource owner workflows",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-15T03:50:21Z",
+          "completed_at": "2026-10-15T03:50:23Z"
+        },
+        {
+          "name": "Recovery regression tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-15T03:50:23Z",
+          "completed_at": "2026-10-15T03:50:26Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-15T03:50:26Z",
+          "completed_at": "2026-10-15T03:50:27Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25,
+          "started_at": "2026-10-15T03:50:27Z",
+          "completed_at": "2026-10-15T03:50:27Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-10-15T03:50:27Z",
+          "completed_at": "2026-10-15T03:50:30Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-10-15T03:50:30Z",
+          "completed_at": "2026-10-15T03:50:30Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305423",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000955,
+      "runner_name": "GitHub Actions 1000000955",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305427,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoB0w",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305427",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305427",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:20Z",
+      "completed_at": "2026-10-15T03:47:04Z",
+      "name": "native-theme (windows-latest)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:22Z",
+          "completed_at": "2026-10-15T03:44:23Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:23Z",
+          "completed_at": "2026-10-15T03:44:41Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:41Z",
+          "completed_at": "2026-10-15T03:44:44Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:44Z",
+          "completed_at": "2026-10-15T03:46:41Z"
+        },
+        {
+          "name": "Provision validation runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T03:46:41Z",
+          "completed_at": "2026-10-15T03:46:54Z"
+        },
+        {
+          "name": "Native theme main preload renderer acceptance",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-10-15T03:46:54Z",
+          "completed_at": "2026-10-15T03:46:59Z"
+        },
+        {
+          "name": "Native Linux theme acceptance under Xvfb",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-10-15T03:46:59Z",
+          "completed_at": "2026-10-15T03:46:59Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8,
+          "started_at": "2026-10-15T03:46:59Z",
+          "completed_at": "2026-10-15T03:47:00Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-15T03:47:00Z",
+          "completed_at": "2026-10-15T03:47:00Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-15T03:47:00Z",
+          "completed_at": "2026-10-15T03:47:02Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-15T03:47:02Z",
+          "completed_at": "2026-10-15T03:47:02Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305427",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000954,
+      "runner_name": "GitHub Actions 1000000954",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305486,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoCDg",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305486",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305486",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:25Z",
+      "completed_at": "2026-10-15T03:45:04Z",
+      "name": "native-macos",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:25Z",
+          "completed_at": "2026-10-15T03:44:26Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:26Z",
+          "completed_at": "2026-10-15T03:44:32Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:32Z",
+          "completed_at": "2026-10-15T03:44:34Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:34Z",
+          "completed_at": "2026-10-15T03:44:52Z"
+        },
+        {
+          "name": "Provision validation runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T03:44:52Z",
+          "completed_at": "2026-10-15T03:44:54Z"
+        },
+        {
+          "name": "Actual native main preload renderer acceptance",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-10-15T03:44:54Z",
+          "completed_at": "2026-10-15T03:45:00Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-10-15T03:45:00Z",
+          "completed_at": "2026-10-15T03:45:01Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-15T03:45:01Z",
+          "completed_at": "2026-10-15T03:45:01Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-15T03:45:01Z",
+          "completed_at": "2026-10-15T03:45:01Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-15T03:45:01Z",
+          "completed_at": "2026-10-15T03:45:01Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305486",
+      "labels": [
+        "macos-latest"
+      ],
+      "runner_id": 1000000961,
+      "runner_name": "GitHub Actions 1000000961",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305503,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoCHw",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305503",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305503",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:20Z",
+      "completed_at": "2026-10-15T03:45:25Z",
+      "name": "production-container",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:21Z",
+          "completed_at": "2026-10-15T03:44:22Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:22Z",
+          "completed_at": "2026-10-15T03:44:24Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:24Z",
+          "completed_at": "2026-10-15T03:44:25Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:25Z",
+          "completed_at": "2026-10-15T03:44:41Z"
+        },
+        {
+          "name": "Production Linux image and runtime acceptance",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-10-15T03:44:41Z",
+          "completed_at": "2026-10-15T03:45:22Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T03:45:22Z",
+          "completed_at": "2026-10-15T03:45:23Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-15T03:45:23Z",
+          "completed_at": "2026-10-15T03:45:23Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-15T03:45:23Z",
+          "completed_at": "2026-10-15T03:45:23Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-15T03:45:23Z",
+          "completed_at": "2026-10-15T03:45:23Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305503",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000959,
+      "runner_name": "GitHub Actions 1000000959",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305513,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoCKQ",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305513",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305513",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:28Z",
+      "completed_at": "2026-10-15T03:45:10Z",
+      "name": "native-theme (macos-latest)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:29Z",
+          "completed_at": "2026-10-15T03:44:31Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:31Z",
+          "completed_at": "2026-10-15T03:44:36Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:36Z",
+          "completed_at": "2026-10-15T03:44:38Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:38Z",
+          "completed_at": "2026-10-15T03:45:00Z"
+        },
+        {
+          "name": "Provision validation runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T03:45:00Z",
+          "completed_at": "2026-10-15T03:45:02Z"
+        },
+        {
+          "name": "Native theme main preload renderer acceptance",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-10-15T03:45:02Z",
+          "completed_at": "2026-10-15T03:45:07Z"
+        },
+        {
+          "name": "Native Linux theme acceptance under Xvfb",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-10-15T03:45:07Z",
+          "completed_at": "2026-10-15T03:45:07Z"
+        },
+        {
+          "name": "Upload verification evidence",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8,
+          "started_at": "2026-10-15T03:45:07Z",
+          "completed_at": "2026-10-15T03:45:08Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-15T03:45:08Z",
+          "completed_at": "2026-10-15T03:45:08Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-15T03:45:08Z",
+          "completed_at": "2026-10-15T03:45:08Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-15T03:45:08Z",
+          "completed_at": "2026-10-15T03:45:08Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305513",
+      "labels": [
+        "macos-latest"
+      ],
+      "runner_id": 1000000960,
+      "runner_name": "GitHub Actions 1000000960",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116235305698,
+      "run_id": 38677812473,
+      "workflow_name": "Validate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/VanDING/Phaneris/actions/runs/38677812473",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUblm3s8AAAAbECoC4g",
+      "head_sha": "5781218ce7204436de7351b6d94105ee4d0538c4",
+      "url": "https://api.github.com/repos/VanDING/Phaneris/actions/jobs/116235305698",
+      "html_url": "https://github.com/VanDING/Phaneris/actions/runs/38677812473/job/116235305698",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-15T03:44:18Z",
+      "started_at": "2026-10-15T03:44:20Z",
+      "completed_at": "2026-10-15T03:44:50Z",
+      "name": "dependency-audit",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T03:44:22Z",
+          "completed_at": "2026-10-15T03:44:23Z"
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T03:44:23Z",
+          "completed_at": "2026-10-15T03:44:26Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T03:44:26Z",
+          "completed_at": "2026-10-15T03:44:27Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T03:44:27Z",
+          "completed_at": "2026-10-15T03:44:47Z"
+        },
+        {
+          "name": "Dependency audit",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-10-15T03:44:47Z",
+          "completed_at": "2026-10-15T03:44:47Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-15T03:44:47Z",
+          "completed_at": "2026-10-15T03:44:47Z"
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-15T03:44:47Z",
+          "completed_at": "2026-10-15T03:44:47Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-15T03:44:47Z",
+          "completed_at": "2026-10-15T03:44:47Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/VanDING/Phaneris/check-runs/116235305698",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000962,
+      "runner_name": "GitHub Actions 1000000962",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

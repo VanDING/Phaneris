@@ -1,0 +1,43 @@
+{
+  "checks": [
+    {
+      "id": "V08-uv",
+      "passed": true
+    },
+    {
+      "id": "V08-upload",
+      "passed": true
+    },
+    {
+      "id": "CI-pipeline-exit",
+      "passed": true
+    },
+    {
+      "id": "V09-coverage",
+      "passed": true
+    },
+    {
+      "id": "V09-warning",
+      "passed": true
+    },
+    {
+      "id": "G04-unwired-boundary",
+      "passed": true
+    },
+    {
+      "id": "G08-advisory-identity",
+      "passed": true
+    },
+    {
+      "id": "G08-no-production-container",
+      "passed": true
+    },
+    {
+      "id": "G07-no-browser-runtime",
+      "passed": true
+    }
+  ],
+  "untested": [
+    "GitHub Actions remote execution"
+  ]
+}

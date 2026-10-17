@@ -55,15 +55,30 @@ await verificationWorkflow('gantt-reschedule', async run => {
   const fixture = '/scripts/verification/fixtures/gantt-reschedule.tsx', html = join(run.directory, 'index.html'), prefix = '/' + run.directory.slice(root.length + 1).replaceAll('\\', '/')
   writeFileSync(html, `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="${fixture}"></script></body></html>`)
   const viteConfig = rendererConfig as UserConfig
-  // This fixture has no HMR. Avoid running the atom-debug Babel transform over
-  // megabytes of prebundled dependencies, and never watch generated workspaces.
+  // This fixture does not edit source files. Avoid atom-debug transforms over
+  // prebundled dependencies and filesystem watchers over the whole workspace.
+  // Dependency optimizer reloads remain available through Vite's HMR channel.
   const plugins = await fixturePlugins(viteConfig.plugins ?? [])
-  const vite = await createServer({ ...viteConfig, configFile: false, plugins, root, cacheDir: join(root, '.cache/vite-gantt-reschedule'), server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/.cache/**'] } }, optimizeDeps: { ...viteConfig.optimizeDeps, entries: [join(root, fixture.slice(1))] } })
+  const vite = await createServer({ ...viteConfig, configFile: false, plugins, root, cacheDir: join(root, '.cache/vite-gantt-reschedule'), server: { host: '127.0.0.1', port: 0, open: false, watch: null }, optimizeDeps: { ...viteConfig.optimizeDeps, entries: [join(root, fixture.slice(1))] } })
   await vite.listen(); const browser = await launchWorkflowBrowser(), context = await browser.browser.newContext({ viewport: { width: 1400, height: 900 }, timezoneId: 'America/New_York' }), page = await context.newPage()
   let tracing = false
   const checks: string[] = [], errors: string[] = []; page.on('pageerror', error => { errors.push(error.message); console.error(error.message) })
   const invoke = (action: string, args: unknown[] = []) => page.evaluate(({ action, args }) => (window as any).ganttFixture.invoke(action, args), { action, args })
   const dateValues = () => page.getByRole('dialog').locator('input[type=date]').evaluateAll(elements => elements.map(element => (element as HTMLInputElement).value))
+  const waitForClosedDates = () => page.getByRole('dialog').waitFor({ state: 'detached' })
+  const cancelDates = async (title = 'Editable leaf') => {
+    // Radix keeps the closing popover mounted for its exit animation, then
+    // restores trigger focus asynchronously. A new task can otherwise lose
+    // focus and close immediately when the previous scope finishes cleanup.
+    const trigger = await page.getByRole('button', { name: `Reschedule ${title}`, exact: true }).elementHandle(); assert(trigger)
+    try {
+      const wasOpen = await trigger.getAttribute('aria-expanded') === 'true'
+      await page.keyboard.press('Escape'); await waitForClosedDates()
+      // A save/rollback can replace the row and its trigger entirely. Only a
+      // surviving open trigger has a pending focus restoration to await.
+      if (wasOpen) await page.waitForFunction(element => !element.isConnected || document.activeElement === element, trigger)
+    } finally { await trigger.dispose() }
+  }
   try {
     const url = `http://127.0.0.1:${(vite.httpServer!.address() as any).port}${prefix}/index.html?api=${encodeURIComponent(host.url.origin)}`
     run.json('preparation.json', await warmThemePage(context, url, '.wx-bar'))
@@ -74,10 +89,10 @@ await verificationWorkflow('gantt-reschedule', async run => {
     const edit = page.getByRole('button', { name: 'Reschedule Editable leaf', exact: true })
     await edit.focus(); await page.keyboard.press('Enter'); await page.getByRole('dialog').waitFor(); checks.push('keyboard-opens-date-controls')
     await page.getByRole('dialog').locator('input[type=date]').nth(0).fill('2026-10-31'); await page.getByRole('dialog').locator('input[type=date]').nth(1).fill('2026-11-04')
-    await page.getByRole('button', { name: 'Save', exact: true }).click(); await page.getByRole('dialog').waitFor({ state: 'hidden' })
+    await page.getByRole('button', { name: 'Save', exact: true }).click(); await waitForClosedDates()
     assert.equal((manager.getSessions('fixture').find(item => item.id === leaf))?.dueAt, '2026-11-04'); checks.push('inclusive-end-saved-through-real-session-planning')
     const before = (await invoke('writes')).length
-    await edit.click(); await page.getByRole('dialog').locator('input[type=date]').nth(1).fill('2026-11-08'); await page.keyboard.press('Escape'); assert.equal((await invoke('writes')).length, before); checks.push('keyboard-cancel-does-not-write')
+    await edit.click(); await page.getByRole('dialog').locator('input[type=date]').nth(1).fill('2026-11-08'); await cancelDates(); assert.equal((await invoke('writes')).length, before); checks.push('keyboard-cancel-does-not-write')
     const bar = page.locator('.wx-bar').filter({ hasText: 'Editable leaf' }).first(), box = await bar.boundingBox(); assert(box)
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.mouse.down(); await page.mouse.move(box.x + box.width / 2 + 44, box.y + box.height / 2, { steps: 8 }); await page.mouse.up()
     await waitForBrowserCondition(page, async expected => (await (window as any).ganttFixture.invoke('writes')).length >= expected, before + 1)
@@ -107,17 +122,17 @@ await verificationWorkflow('gantt-reschedule', async run => {
     await page.mouse.move(pointerBox.x + pointerBox.width / 2, pointerBox.y + pointerBox.height / 2); await page.mouse.down(); await page.mouse.move(pointerBox.x + pointerBox.width / 2 + 44, pointerBox.y + pointerBox.height / 2, { steps: 8 }); await bar.dispatchEvent('pointercancel'); await page.mouse.up(); assert.equal(writes.length, resizeCount); checks.push('pointer-cancellation-does-not-write')
     await invoke('control', [{ fail: true }]); await edit.click(); const old = await dateValues()
     await page.getByRole('dialog').locator('input[type=date]').nth(1).fill('2026-11-20'); await page.getByRole('button', { name: 'Save', exact: true }).click()
-    await page.getByText('Could not save the schedule. Check the date range and try again.', { exact: true }).first().waitFor(); await page.keyboard.press('Escape'); await edit.click(); assert.deepEqual(await dateValues(), old); await page.keyboard.press('Escape'); checks.push('save-failure-rolls-back-and-reports')
+    await page.getByText('Could not save the schedule. Check the date range and try again.', { exact: true }).first().waitFor(); await cancelDates(); await edit.click(); assert.deepEqual(await dateValues(), old); await cancelDates(); checks.push('save-failure-rolls-back-and-reports')
     await invoke('control', [{ delay: 800 }]); await edit.click(); await page.getByRole('dialog').locator('input[type=date]').nth(1).fill('2026-11-10'); await page.getByRole('button', { name: 'Save', exact: true }).click()
     await page.evaluate(() => { (window as any).ganttFixture.broadcast(); (window as any).ganttFixture.remount() })
-    await edit.waitFor(); await page.waitForTimeout(1000); await edit.click(); assert.equal((await dateValues())[1], '2026-11-10'); await page.keyboard.press('Escape'); checks.push('broadcast-and-remount-preserve-inflight-reschedule')
+    await edit.waitFor(); await page.waitForTimeout(1000); await edit.click(); assert.equal((await dateValues())[1], '2026-11-10'); await cancelDates(); checks.push('broadcast-and-remount-preserve-inflight-reschedule')
     assert.equal(await page.getByRole('button', { name: 'Reschedule Summary', exact: true }).count(), 0)
     assert.equal(await page.getByRole('button', { name: 'Reschedule Milestone', exact: true }).count(), 0); checks.push('summaries-and-milestones-are-readonly')
     await invoke('control', [{}]); await page.getByRole('button', { name: 'Reschedule Timed DST leaf', exact: true }).click()
-    await page.getByRole('dialog').locator('input[type=date]').nth(0).fill('2026-11-02'); await page.getByRole('button', { name: 'Save', exact: true }).click(); await page.getByRole('dialog').waitFor({ state: 'hidden' })
+    await page.getByRole('dialog').locator('input[type=date]').nth(0).fill('2026-11-02'); await page.getByRole('button', { name: 'Save', exact: true }).click(); await waitForClosedDates()
     const result = manager.getSessions('fixture').find(item => item.id === timed)!
     assert.equal(result.startAt, '2026-11-02T15:30:45.000Z'); assert.equal(result.dueAt, '2026-11-03T21:15:20Z'); checks.push('dst-clock-seconds-and-untouched-end-preserved')
-    await edit.click(); await page.getByRole('dialog').locator('input[type=date]').nth(1).fill('2026-11-30'); await page.getByRole('dialog').locator('input[type=date]').nth(0).fill('2026-11-30'); await page.getByRole('button', { name: 'Save', exact: true }).click(); await page.getByRole('dialog').waitFor({ state: 'hidden' })
+    await edit.click(); await page.getByRole('dialog').locator('input[type=date]').nth(1).fill('2026-11-30'); await page.getByRole('dialog').locator('input[type=date]').nth(0).fill('2026-11-30'); await page.getByRole('button', { name: 'Save', exact: true }).click(); await waitForClosedDates()
     assert.equal(manager.getSessions('fixture').find(item => item.id === leaf)?.startAt, '2026-11-30'); assert.equal(manager.getSessions('fixture').find(item => item.id === leaf)?.dueAt, '2026-11-30'); checks.push('single-day-inclusive-range-preserved')
     const search = page.getByPlaceholder('Search tasks…'); await search.fill('Summary')
     await page.getByRole('button', { name: /^Summary/ }).first().waitFor(); assert.equal(await page.getByRole('button', { name: 'Reschedule Summary', exact: true }).count(), 0)
@@ -126,7 +141,7 @@ await verificationWorkflow('gantt-reschedule', async run => {
     await page.getByRole('button', { name: 'Reschedule Spring gap leaf', exact: true }).click(); await page.getByRole('dialog').locator('input[type=date]').nth(0).fill('2027-03-14')
     const gapWrites = writes.length; await page.getByRole('button', { name: 'Save', exact: true }).click()
     await page.getByText('Could not save the schedule. Check the date range and try again.', { exact: true }).first().waitFor(); assert.equal(writes.length, gapWrites); assert.equal(manager.getSessions('fixture').find(item => item.id === gap)?.startAt, '2027-03-13T07:30:45Z'); checks.push('nonexistent-dst-clock-refused-without-write')
-    await page.keyboard.press('Escape')
+    await cancelDates('Spring gap leaf')
     await page.screenshot({ path: join(run.directory, 'gantt-desktop.png') }); await page.setViewportSize({ width: 760, height: 800 }); await page.screenshot({ path: join(run.directory, 'gantt-760.png') })
     assert.deepEqual(errors, []); run.json('gantt-reschedule.json', { checks, writes, leaf, timed, summary, milestone, projection: manager.getSessions('fixture').map(item => ({ id: item.id, startAt: item.startAt, dueAt: item.dueAt })) })
     run.complete(checks, ['Browser over real Gantt and real WorkItem handler/SessionManager; loopback bridge replaces transport only. Physical touch and signed builds are separate.'])

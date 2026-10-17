@@ -1,0 +1,6 @@
+$ bun run scripts/bundle-report.ts --check
+Bundle report
+  renderer initial: 0.80 MB raw, 0.24 MB gzip (12 chunks)
+  main.cjs:         19.58 MB raw, 5.17 MB gzip
+  pi bundle:        10.14 MB raw
+Bundle regression budgets OK

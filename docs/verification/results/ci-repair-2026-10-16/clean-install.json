@@ -1,0 +1,65 @@
+{
+  "directory": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-clean-install-o7tmw2",
+  "checkout": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-clean-install-o7tmw2\\repository",
+  "cache": "C:\\Users\\dotty\\AppData\\Local\\Temp\\phaneris-clean-install-o7tmw2\\empty-cache",
+  "cacheInitiallyEmpty": true,
+  "before": {
+    "manifest": "4a6f7932e7e24d79cec7bbbbf34d0b7595bc9d1361f5a6a94e69b83c92cb8859",
+    "lock": "6affbc16264692bd0fe6c31686e745b0632b5e6c0f4a3d7d10af1d297467b54a",
+    "linker": "28c7fef69ff7ec5dc4c2497d50bdd8c96709de7834d4e64bc772a1275b955043"
+  },
+  "commands": [
+    {
+      "args": [
+        "install",
+        "--frozen-lockfile"
+      ],
+      "exitCode": 1,
+      "elapsedMs": 135
+    },
+    {
+      "args": [
+        "install",
+        "--frozen-lockfile"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 639869
+    },
+    {
+      "args": [
+        "run",
+        "build:runtime"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 51261
+    },
+    {
+      "args": [
+        "run",
+        "electron:build:main"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 45443
+    }
+  ],
+  "resources": [
+    {
+      "path": "packages/pi-agent-server/dist/index.js",
+      "sha256": "1c6352ba99fd9ccfc803baa7fcf95a01f3e9767349c9168bc3b7c866ec73ec6e"
+    },
+    {
+      "path": "packages/pi-agent-server/dist/bundle.js",
+      "sha256": "117add519a1c0b0a1f909f3273719eb65286c8e1854dde2856b8c73ca2c4beee"
+    },
+    {
+      "path": "packages/messaging-whatsapp-worker/dist/worker.cjs",
+      "sha256": "5915487ec7add2be589645641e011d018111187b9c78b0bc8403273bd2a25213"
+    },
+    {
+      "path": "apps/electron/dist/main.cjs",
+      "sha256": "bc48a8415d959f07c1e76cf3cdfb12c032bb6b6899c7c3901e9aca189befa5c4"
+    }
+  ],
+  "baseHead": "231a7942be2640a04dd0ea6199c85558e75873a5",
+  "sourceFiles": 4621
+}

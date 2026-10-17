@@ -120,6 +120,9 @@ await verificationWorkflow('theme-foundation', async run => {
             await page.keyboard.press('ArrowDown'); await page.keyboard.press('Enter')
             await page.getByRole('listbox').waitFor({ state: 'detached' })
             assert.equal(await page.getByTestId('select').innerText(), '第二项')
+            // Portal unmount precedes FocusScope's asynchronous focus restore.
+            // Send the next key only once the real trigger owns keyboard focus.
+            await waitForBrowserCondition(page, () => document.activeElement === document.querySelector('[data-testid="select"]'))
             await page.keyboard.press('Space'); await page.getByRole('listbox').waitFor()
             await page.keyboard.press('Escape'); await page.getByRole('listbox').waitFor({ state: 'detached' })
             visibleFocus(await focus(page, '[data-testid="select"]'))

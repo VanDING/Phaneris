@@ -22,6 +22,12 @@ await verificationWorkflow('governance-gates', async run => {
   const missingUpload = join(run.directory, 'missing-upload.yml')
   writeFileSync(missingUpload, workflow.replaceAll('if: always()', 'if: success()'))
   await reject('V08-upload', 'scripts/check-governance.ts', [`--workflow=${missingUpload}`])
+  const missingPipefail = join(run.directory, 'missing-pipefail.yml')
+  writeFileSync(missingPipefail, workflow.replaceAll('shell: bash', 'shell: bash -e {0}'))
+  await reject('CI-pipeline-exit', 'scripts/check-governance.ts', [`--workflow=${missingPipefail}`])
+  const missingPowerShellExit = join(run.directory, 'missing-powershell-exit.yml')
+  writeFileSync(missingPowerShellExit, workflow.replaceAll('if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }', 'Write-Output "exit check removed"'))
+  await reject('CI-powershell-exit', 'scripts/check-governance.ts', [`--workflow=${missingPowerShellExit}`])
   const coverage = JSON.parse(readFileSync(join(root, 'scripts/quality-coverage.json'), 'utf8'))
   delete coverage.members['packages/server-core']
   const missingMember = join(run.directory, 'missing-member.json')

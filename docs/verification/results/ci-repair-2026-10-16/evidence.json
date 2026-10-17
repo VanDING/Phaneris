@@ -1,0 +1,594 @@
+{
+  "generatedAt": "2026-10-16T16:22:18.656Z",
+  "head": "231a7942be2640a04dd0ea6199c85558e75873a5",
+  "remoteHead": "5781218ce7204436de7351b6d94105ee4d0538c4",
+  "lockSha256": "6affbc16264692bd0fe6c31686e745b0632b5e6c0f4a3d7d10af1d297467b54a",
+  "baselineLocalCommits": 6,
+  "platform": "win32",
+  "checks": {
+    "workspaceTests": {
+      "passed": 6301,
+      "failed": 0,
+      "success": true,
+      "logSha256": "99249bac1c538af09c2061036eba68a30536a724e7377a314e44498e79fd4fa2"
+    },
+    "sandboxRegression": {
+      "success": true
+    },
+    "securityGate": {
+      "success": true
+    },
+    "securityE2E": {
+      "node": "v24.15.0",
+      "results": [
+        {
+          "check": "http-cache",
+          "scenario": "private",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "private",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "no-store",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "no-store",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "response-no-cache",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "response-no-cache",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "shared-set-cookie",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "shared-set-cookie",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "authenticated-not-public",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "authenticated-not-public",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "proxy-revalidate",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "proxy-revalidate",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "zero-age-with-stale-while-revalidate",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "zero-age-with-stale-while-revalidate",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "vary-star",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "vary-star",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "must-revalidate",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "must-revalidate",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "miss"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "public-fresh-control",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "hit"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "public-fresh-control",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "hit"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "public-stale-control",
+          "directive": "max-stale=999999",
+          "passed": true,
+          "observed": "hit"
+        },
+        {
+          "check": "http-cache",
+          "scenario": "public-stale-control",
+          "directive": "max-stale",
+          "passed": true,
+          "observed": "hit"
+        },
+        {
+          "check": "ocr-execFile-literal-arguments",
+          "passed": true
+        }
+      ]
+    },
+    "mainBuild": {
+      "success": true
+    },
+    "bundleBudget": {
+      "success": true
+    },
+    "toolingTypecheck": {
+      "command": "bun run typecheck:scripts",
+      "exitCode": 0,
+      "log": "tooling-typecheck-final.log"
+    },
+    "recovery": {
+      "success": true
+    },
+    "critical": {
+      "status": "partial; initial Windows fixture failure repaired and independently reverified",
+      "initialCommandExitCode": 1,
+      "completedBeforeFailure": 23,
+      "scenesBeforeFailure": 313,
+      "completed": [
+        {
+          "workflow": "upstream-015-core",
+          "exitCode": 0,
+          "passed": 11
+        },
+        {
+          "workflow": "upstream-015-orchestration",
+          "exitCode": 0,
+          "passed": 5
+        },
+        {
+          "workflow": "upstream-015-browser",
+          "exitCode": 0,
+          "passed": 11
+        },
+        {
+          "workflow": "upstream-015-renderer",
+          "exitCode": 0,
+          "passed": 6
+        },
+        {
+          "workflow": "task-permission",
+          "exitCode": 0,
+          "passed": 9
+        },
+        {
+          "workflow": "plugin-consistency",
+          "exitCode": 0,
+          "passed": 17
+        },
+        {
+          "workflow": "workspace-recovery",
+          "exitCode": 0,
+          "passed": 10
+        },
+        {
+          "workflow": "runtime-reliability",
+          "exitCode": 0,
+          "passed": 10
+        },
+        {
+          "workflow": "task-file-scope",
+          "exitCode": 0,
+          "passed": 11
+        },
+        {
+          "workflow": "gantt-reschedule",
+          "exitCode": 0,
+          "passed": 14
+        },
+        {
+          "workflow": "planning-collection",
+          "exitCode": 0,
+          "passed": 17
+        },
+        {
+          "workflow": "planning-performance",
+          "exitCode": 0,
+          "passed": 20
+        },
+        {
+          "workflow": "docs-locale",
+          "exitCode": 0,
+          "passed": 52
+        },
+        {
+          "workflow": "markdown-file-links",
+          "exitCode": 0,
+          "passed": 18
+        },
+        {
+          "workflow": "verification-output",
+          "exitCode": 0,
+          "passed": 7
+        },
+        {
+          "workflow": "governance-gates",
+          "exitCode": 0,
+          "passed": 9
+        },
+        {
+          "workflow": "governance-closeout",
+          "exitCode": 0,
+          "passed": 22
+        },
+        {
+          "workflow": "runtime-boundary-gate",
+          "exitCode": 0,
+          "passed": 10
+        },
+        {
+          "workflow": "durable-runtime-boundary",
+          "exitCode": 0,
+          "passed": 15
+        },
+        {
+          "workflow": "durable-runtime-crash",
+          "exitCode": 0,
+          "passed": 8
+        },
+        {
+          "workflow": "plugin-transaction",
+          "exitCode": 0,
+          "passed": 13
+        },
+        {
+          "workflow": "session-branch",
+          "exitCode": 0,
+          "passed": 4
+        },
+        {
+          "workflow": "webui-auth-lifecycle",
+          "exitCode": 0,
+          "passed": 14
+        }
+      ],
+      "repairedWorkflow": {
+        "workflow": "process-lifecycle",
+        "run": "process-lifecycle-k92KIg",
+        "exitCode": 0,
+        "passed": 12
+      },
+      "notExecuted": [
+        "config-domains",
+        "rpc-contracts",
+        "governance-boundaries",
+        "import-graph",
+        "cycle-gate",
+        "pi-control",
+        "durable-runtime-pi",
+        "session-owners",
+        "client-platform",
+        "markdown-popout",
+        "theme-foundation",
+        "theme-contract",
+        "theme-roles",
+        "theme-domains",
+        "theme-browser-host",
+        "theme-login",
+        "theme-design",
+        "theme-governance",
+        "distribution-inputs",
+        "identity-gate"
+      ],
+      "limitations": [
+        "The full critical command was not rerun to completion after the fixture repair; remote Linux CI is still required"
+      ]
+    },
+    "validateCi": {
+      "status": "passed",
+      "logSha256": "36717d9548f2cd6bc0a9d8edeac0addf82a6a76472052a420efb9a5e06b55bb5"
+    }
+  },
+  "workflows": [
+    {
+      "workflow": "clean-install",
+      "run": "clean-install-FZFWI2",
+      "exitCode": 0,
+      "passed": 5,
+      "sceneIds": [
+        "real frozen install rejects an absent patch",
+        "independent checkout and empty cache",
+        "frozen install preserves lock",
+        "real Pi and worker build from clean dependencies",
+        "desktop main builds without undeclared optional S3 SDK"
+      ],
+      "startedAt": "2026-10-16T15:54:37.965Z",
+      "finishedAt": "2026-10-16T16:08:43.066Z",
+      "source": {
+        "headSha": "231a7942be2640a04dd0ea6199c85558e75873a5",
+        "lockfileSha256": "6affbc16264692bd0fe6c31686e745b0632b5e6c0f4a3d7d10af1d297467b54a",
+        "dirty": true,
+        "dirtyPathCount": 255
+      },
+      "originalManifestSha256": "24d2bb7d203f2beb0a20d98a4e51caed0d4750c8aad4893e63e32d8173c6cc87",
+      "originalArtifactCount": 5,
+      "untested": [
+        "container Linux runtime",
+        "signed native installers"
+      ]
+    },
+    {
+      "workflow": "theme-native",
+      "run": "theme-native-jA89Ys",
+      "exitCode": 0,
+      "passed": 13,
+      "sceneIds": [
+        "native authoritative preferences apply before acceptance",
+        "real main preload deliver initial theme to toolbar and empty state",
+        "native theme delivery default/light",
+        "native theme delivery default/dark",
+        "native theme delivery ink/light",
+        "native theme delivery ink/dark",
+        "native theme delivery geek/light",
+        "native theme delivery geek/dark",
+        "native theme delivery cyberpunk-2077/light",
+        "native theme delivery cyberpunk-2077/dark",
+        "real Chromium browser zoom 200 percent reflows",
+        "foreign page receives no private theme payload",
+        "native renderer has no unhandled errors"
+      ],
+      "startedAt": "2026-10-16T15:52:10.157Z",
+      "finishedAt": "2026-10-16T15:52:21.475Z",
+      "source": {
+        "headSha": "231a7942be2640a04dd0ea6199c85558e75873a5",
+        "lockfileSha256": "6affbc16264692bd0fe6c31686e745b0632b5e6c0f4a3d7d10af1d297467b54a",
+        "dirty": true,
+        "dirtyPathCount": 254
+      },
+      "originalManifestSha256": "8c297a394f4fea1fcae5258aa9e9d2e7ffea01a137d70ef76b7cb77449868b31",
+      "originalArtifactCount": 246,
+      "untested": [
+        "Signed installer/release",
+        "Other OS runs are separate artifacts",
+        "Physical mobile keyboard"
+      ]
+    },
+    {
+      "workflow": "governance-gates",
+      "run": "governance-gates-n27DqY",
+      "exitCode": 0,
+      "passed": 9,
+      "sceneIds": [
+        "V08-uv",
+        "V08-upload",
+        "CI-pipeline-exit",
+        "V09-coverage",
+        "V09-warning",
+        "G04-unwired-boundary",
+        "G08-advisory-identity",
+        "G08-no-production-container",
+        "G07-no-browser-runtime"
+      ],
+      "startedAt": "2026-10-16T15:49:26.281Z",
+      "finishedAt": "2026-10-16T15:50:58.200Z",
+      "source": {
+        "headSha": "231a7942be2640a04dd0ea6199c85558e75873a5",
+        "lockfileSha256": "6affbc16264692bd0fe6c31686e745b0632b5e6c0f4a3d7d10af1d297467b54a",
+        "dirty": true,
+        "dirtyPathCount": 254
+      },
+      "originalManifestSha256": "331feafd9789da097c40c260730cbc9055ec26464547419c2d8ee3226dee37f8",
+      "originalArtifactCount": 19,
+      "untested": [
+        "GitHub Actions remote execution"
+      ]
+    },
+    {
+      "workflow": "distribution-inputs",
+      "run": "distribution-inputs-LRv8qb",
+      "exitCode": 0,
+      "passed": 11,
+      "sceneIds": [
+        "complete",
+        "missing-native-toolchain",
+        "floating-bun",
+        "missing-patch-copy",
+        "missing-patch-file",
+        "missing-pi-command",
+        "missing-workspace-manifest",
+        "disabled-production-mode",
+        "missing-pi-staging",
+        "floating-standalone-bun",
+        "desktop-worker-fork"
+      ],
+      "startedAt": "2026-10-16T15:50:58.401Z",
+      "finishedAt": "2026-10-16T15:51:12.378Z",
+      "source": {
+        "headSha": "231a7942be2640a04dd0ea6199c85558e75873a5",
+        "lockfileSha256": "6affbc16264692bd0fe6c31686e745b0632b5e6c0f4a3d7d10af1d297467b54a",
+        "dirty": true,
+        "dirtyPathCount": 254
+      },
+      "originalManifestSha256": "671da66598532298bd22786ad9d7f83fe7205cad2bf302bf3830074925f88c03",
+      "originalArtifactCount": 264,
+      "untested": []
+    },
+    {
+      "workflow": "process-lifecycle",
+      "run": "process-lifecycle-k92KIg",
+      "exitCode": 0,
+      "passed": 12,
+      "sceneIds": [
+        "L01-server-unhandled",
+        "L01-server-uncaught",
+        "L01-server-hang-cleanup",
+        "L01-server-throw-cleanup",
+        "L01-normal-signal-shutdown",
+        "L02-electron-port-hang",
+        "L02-electron-port-throw",
+        "L02-electron-port-normal",
+        "L06-runtime-admission-quiesce",
+        "L07-bootstrap-stop-owner",
+        "L04-pi-unhandled",
+        "L04-pi-uncaught"
+      ],
+      "startedAt": "2026-10-16T16:16:25.031Z",
+      "finishedAt": "2026-10-16T16:16:53.984Z",
+      "source": {
+        "headSha": "231a7942be2640a04dd0ea6199c85558e75873a5",
+        "lockfileSha256": "6affbc16264692bd0fe6c31686e745b0632b5e6c0f4a3d7d10af1d297467b54a",
+        "dirty": true,
+        "dirtyPathCount": 291
+      },
+      "originalManifestSha256": "50bd50b69aea6cac14dc8f48544b0d50be3b8ca2f77499101dbb40335e570293",
+      "originalArtifactCount": 13,
+      "untested": [
+        "native Electron UI/exit integration",
+        "Windows/Linux native execution",
+        "live provider APIs"
+      ]
+    }
+  ],
+  "limitations": [
+    "Remote Actions has not run a repair commit",
+    "Native Linux/macOS and production image have not been executed on this Windows host",
+    "Windows build:smoke completes the five production bundlers, then explicitly rejects unsupported standalone win32 assembly"
+  ],
+  "artifacts": [
+    {
+      "path": "bundle-report.log",
+      "sha256": "4563e0f06adc538c8da401cc6847164f599c5c590c2bbef3fc048e61043d42c1",
+      "bytes": 230
+    },
+    {
+      "path": "clean-install.json",
+      "sha256": "62624ddc96a00e5354adb93755bccb36a181defab5b3d262f4d4d1e6861b3556",
+      "bytes": 1827
+    },
+    {
+      "path": "critical-initial.json",
+      "sha256": "3aa6d34cee21b8598c85b880add5139928876cdd410697e5289fefae14c76ec1",
+      "bytes": 13636
+    },
+    {
+      "path": "dependency-data-qa.json",
+      "sha256": "d8acd55c9e021930e40ce3907b9aee3f54a68ef2a89f4446c2ec3afa6f186112",
+      "bytes": 126
+    },
+    {
+      "path": "distribution-inputs.json",
+      "sha256": "953583d60f7dd4d7cc0ea03e0151bf804053caf0c142b5317a0cb503b7f82fbc",
+      "bytes": 1643
+    },
+    {
+      "path": "governance-gates.json",
+      "sha256": "df0a92eab7d6dae1137b85662e33f16585a695688bdd850db3a752dbd3db1b44",
+      "bytes": 675
+    },
+    {
+      "path": "main-build.log",
+      "sha256": "cccb123ad7a0ed087723a1af72b0173dc223b4f48e8847d0ddca35685e8e39f6",
+      "bytes": 1185
+    },
+    {
+      "path": "process-lifecycle.json",
+      "sha256": "fa30917d9a60209366165fbe8b5889bd692d754ea5d54aab5716cb0e142f3209",
+      "bytes": 1077
+    },
+    {
+      "path": "recovery.log",
+      "sha256": "adfb656c4168fb67c19f6c4d6d3cd9fd2fc9bbf19104dcea4d6ac198607129b0",
+      "bytes": 2701
+    },
+    {
+      "path": "remote-jobs-before.json",
+      "sha256": "30ee357f7925a50099b2859ac01ba39a214b9f34a0a2627d83122dc1ffeca8b3",
+      "bytes": 38665
+    },
+    {
+      "path": "sandbox-regression.log",
+      "sha256": "7a1c56085b2d3ce073a83fb4c557f39a464dec0c3205043bd7dcad37c28256a9",
+      "bytes": 1878
+    },
+    {
+      "path": "security-e2e.json",
+      "sha256": "5760b085208b970efed019f2ac215f3e2892e0be226d857a8788c1636b2de46b",
+      "bytes": 3724
+    },
+    {
+      "path": "security-gate.log",
+      "sha256": "d576a7105a9ce91bb7b3fd7746df522db233c22f2416b6158c7539fb195b3a7e",
+      "bytes": 276
+    },
+    {
+      "path": "theme-native.json",
+      "sha256": "29a7ac805561a017f4c42c88999a3d68b1c90792c61ee83b85515e4a8580d168",
+      "bytes": 8861
+    }
+  ]
+}

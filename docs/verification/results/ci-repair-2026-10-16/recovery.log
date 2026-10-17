@@ -1,0 +1,63 @@
+bun test v1.4.2 (744846f84)
+
+packages\server-core\src\services\workspace-backup.test.ts:
+(pass) workspace backup > creates a verifiable backup and restores it to a new directory [143.71ms]
+(pass) workspace backup > fails verification when a backed-up file is modified [54.16ms]
+(pass) workspace backup recovery boundaries > backs up a live SQLite store once without WAL and restores over stale files [182.94ms]
+(pass) workspace backup recovery boundaries > rejects traversal, duplicate entries, malformed manifests and symlink sources before restore [245.90ms]
+(pass) workspace backup recovery boundaries > rejects nested backup destinations before creating them [6.51ms]
+
+ 5 pass
+ 0 fail
+ 44 expect() calls
+Ran 5 tests across 1 file. [735.00ms]
+bun test v1.4.2 (744846f84)
+
+packages\shared\src\credentials\backends\secure-storage-key-provider.isolated.ts:
+(pass) SecureStorageBackend OS key provider > round-trips credentials through the injected provider and reports its id [57.95ms]
+(pass) SecureStorageBackend OS key provider > migrates a machine-key store to the provider on the next load [246.98ms]
+(pass) credential key provider from env > accepts a hex key and rejects short material [1.03ms]
+(pass) preserves provider-encrypted stores when the key is absent or wrong, including pre-flag stores [722.09ms]
+
+ 4 pass
+ 0 fail
+ 25 expect() calls
+Ran 4 tests across 1 file. [1068.00ms]
+bun test v1.4.2 (744846f84)
+
+packages\shared\src\config\__tests__\remote-token-vault.isolated.ts:
+(pass) remote-server token vault > migrates a plaintext config token into the vault and strips config.json [118.68ms]
+(pass) remote-server token vault > keeps the stored token when reconnect metadata omits it, then replaces it when provided [84.65ms]
+(pass) remote-server token vault > deletes the vault entry when the workspace is removed [10.95ms]
+
+ 3 pass
+ 0 fail
+ 10 expect() calls
+Ran 3 tests across 1 file. [359.00ms]
+bun test v1.4.2 (744846f84)
+
+packages\shared\src\i18n\__tests__\startup-language.isolated.ts:
+(pass) loads detected Chinese before startup language synchronization [18.04ms]
+
+ 1 pass
+ 0 fail
+ 4 expect() calls
+Ran 1 test across 1 file. [53.00ms]
+bun test v1.4.2 (744846f84)
+
+apps\electron\src\main\credential-key-provider.isolated.ts:
+(pass) never replaces an existing protected key when the keychain is unavailable [20.43ms]
+
+ 1 pass
+ 0 fail
+ 3 expect() calls
+Ran 1 test across 1 file. [38.00ms]
+bun test v1.4.2 (744846f84)
+
+scripts\bundle-report.test.ts:
+(pass) bundle budgets reject absent, unrecognized and missing assets and invalid limits [944.40ms]
+
+ 1 pass
+ 0 fail
+ 6 expect() calls
+Ran 1 test across 1 file. [962.00ms]

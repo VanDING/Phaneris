@@ -1,0 +1,111 @@
+{
+  "runId": 38933656894,
+  "headSha": "38389be15a125701e5caa709e370427df679c1bf",
+  "url": "https://github.com/VanDING/Phaneris/actions/runs/38933656894",
+  "jobs": [
+    {
+      "id": 117083628916,
+      "name": "native-macos",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Actual native main preload renderer acceptance"
+      ]
+    },
+    {
+      "id": 117083628968,
+      "name": "validate",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Critical path tests"
+      ]
+    },
+    {
+      "id": 117083628991,
+      "name": "dependency-audit",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "id": 117083629079,
+      "name": "quality-windows",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "id": 117083629212,
+      "name": "native-theme (macos-latest)",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "id": 117083629236,
+      "name": "native-theme (ubuntu-latest)",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "id": 117083629254,
+      "name": "production-container",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Production Linux image and runtime acceptance"
+      ]
+    },
+    {
+      "id": 117083629343,
+      "name": "full-validation",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Full workspace validation"
+      ]
+    },
+    {
+      "id": 117083629600,
+      "name": "native-theme (windows-latest)",
+      "conclusion": "cancelled",
+      "failedSteps": []
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12062161852,
+      "name": "verification-native-theme-Windows-1",
+      "digest": "sha256:2396e307d2f0ab9116b263b96cf1c775f612c6e1d1974510f21f978366b9541e"
+    },
+    {
+      "id": 12060705369,
+      "name": "verification-full-validation-Linux-1",
+      "digest": "sha256:880ca7c86c7dbd8ab19f3579daf922460c08d0cf11f70058f4e9798d6da891dc"
+    },
+    {
+      "id": 12060520494,
+      "name": "verification-validate-Linux-1",
+      "digest": "sha256:8d1d8c3a2e96c3bc0d2ed63d36dd44f3b36fd67c0e852dfa799a24e3d6cc185a"
+    },
+    {
+      "id": 12060092327,
+      "name": "verification-native-theme-Linux-1",
+      "digest": "sha256:105970e8bed9f37c9257926f3d479698e9ec8072f56ee84d4226a1bd22c883c3"
+    },
+    {
+      "id": 12060072584,
+      "name": "verification-production-container-Linux-1",
+      "digest": "sha256:de751ef3a2af866d594fd271e309c8f685de4e5df7784f6097f85d28b618d0ec"
+    },
+    {
+      "id": 12059928669,
+      "name": "verification-native-theme-macOS-1",
+      "digest": "sha256:8554b542d0689021b0053de43e1d5843ad0475ed59b17949571cc07e50fe78ab"
+    },
+    {
+      "id": 12059548275,
+      "name": "verification-native-macos-macOS-1",
+      "digest": "sha256:e60e14d7974b5ee136a0f20d9ad688bf9f0c2009be1dcde9f3602f1aaa152157"
+    },
+    {
+      "id": 12059099499,
+      "name": "verification-quality-windows-Windows-1",
+      "digest": "sha256:b65a9498444c154eb28c8268746df2e31ee9d9e0385c7b9d9be701a0af9e8fbd"
+    }
+  ]
+}

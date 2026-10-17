@@ -1,0 +1,4269 @@
+{
+  "python-docx": {
+    "source": "https://pypi.org/pypi/python-docx/json",
+    "checkedAt": "2026-10-16T15:47:34.091Z",
+    "latest": "1.2.0",
+    "requiresPython": ">=3.9",
+    "requiresDist": [
+      "lxml>=3.1.0",
+      "typing_extensions>=4.9.0"
+    ],
+    "projectUrls": {
+      "Changelog": "https://github.com/python-openxml/python-docx/blob/master/HISTORY.rst",
+      "Documentation": "https://python-docx.readthedocs.org/en/latest/",
+      "Homepage": "https://github.com/python-openxml/python-docx",
+      "Repository": "https://github.com/python-openxml/python-docx"
+    },
+    "publishedAt": "2025-06-16T20:46:22.506016Z",
+    "vulnerabilities": [],
+    "releases": {
+      "0.3.0a1": {
+        "publishedAt": "2014-01-05T17:49:34.851313Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0a2": {
+        "publishedAt": "2014-01-06T09:31:07.498298Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0a3": {
+        "publishedAt": "2014-01-06T15:47:41.780528Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0a4": {
+        "publishedAt": "2014-01-07T16:16:01.412944Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0a5": {
+        "publishedAt": "2014-01-10T23:35:07.164337Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0dev1": {
+        "yanked": true
+      },
+      "0.4.0": {
+        "publishedAt": "2014-03-01T09:45:58.602621Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.0": {
+        "publishedAt": "2014-03-02T18:32:29.413717Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.1": {
+        "publishedAt": "2014-04-03T04:01:55.258781Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.2": {
+        "publishedAt": "2014-05-07T06:48:16.198717Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.3": {
+        "publishedAt": "2014-05-10T21:58:41.274372Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.0": {
+        "publishedAt": "2014-06-22T22:12:37.206395Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7.0": {
+        "publishedAt": "2014-06-27T09:05:36.409399Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7.1": {
+        "publishedAt": "2014-07-12T04:32:19.494172Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7.2": {
+        "publishedAt": "2014-07-13T08:44:46.534604Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7.3": {
+        "publishedAt": "2014-07-14T21:10:09.656495Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7.4": {
+        "publishedAt": "2014-07-18T07:56:28.741764Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7.5": {
+        "publishedAt": "2014-11-29T05:21:00.432522Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7.6": {
+        "publishedAt": "2014-12-14T08:21:21.556743Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.0": {
+        "publishedAt": "2015-02-09T02:44:06.001138Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.1": {
+        "publishedAt": "2015-02-11T07:56:52.748895Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.10": {
+        "publishedAt": "2019-01-09T07:16:21.299873Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.11": {
+        "publishedAt": "2021-05-15T22:18:24.824934Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.2": {
+        "publishedAt": "2015-02-16T22:53:10.342424Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.3": {
+        "publishedAt": "2015-02-20T05:46:21.815342Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.4": {
+        "publishedAt": "2015-02-21T04:02:44.666570Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.5": {
+        "publishedAt": "2015-02-22T01:19:33.867539Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.6": {
+        "publishedAt": "2016-06-22T23:03:01.282776Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.7": {
+        "publishedAt": "2018-08-19T00:00:23.231837Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.8": {
+        "publishedAt": "2019-01-08T19:18:40.718860Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.8.9": {
+        "publishedAt": "2019-01-08T23:50:59.035994Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.0.0": {
+        "publishedAt": "2023-10-10T23:42:56.985696Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "1.0.0rc1": {
+        "publishedAt": "2023-10-02T03:23:07.660376Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "1.0.1": {
+        "publishedAt": "2023-10-12T23:23:17.126441Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "1.1.0": {
+        "publishedAt": "2023-11-04T00:21:17.894757Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "1.1.1": {
+        "publishedAt": "2024-04-30T02:58:06.032906Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "1.1.2": {
+        "publishedAt": "2024-05-01T19:41:47.006988Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "1.2.0": {
+        "publishedAt": "2025-06-16T20:46:22.506016Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      }
+    }
+  },
+  "diff-match-patch": {
+    "source": "https://pypi.org/pypi/diff-match-patch/json",
+    "checkedAt": "2026-10-16T15:47:34.127Z",
+    "latest": "20241021",
+    "requiresPython": ">=3.7",
+    "requiresDist": [
+      "attribution==1.8.0; extra == \"dev\"",
+      "build>=1; extra == \"dev\"",
+      "black==24.8.0; extra == \"dev\"",
+      "flit==3.9.0; extra == \"dev\"",
+      "mypy==1.12.1; extra == \"dev\"",
+      "ufmt==2.7.3; extra == \"dev\"",
+      "usort==1.0.8.post1; extra == \"dev\""
+    ],
+    "projectUrls": {
+      "Changelog": "https://github.com/diff-match-patch-python/diff-match-patch/blob/main/CHANGELOG.md",
+      "Github": "https://github.com/diff-match-patch-python/diff-match-patch"
+    },
+    "publishedAt": "2024-10-21T19:41:19.914867Z",
+    "vulnerabilities": [],
+    "releases": {
+      "20110725": {
+        "publishedAt": "2011-09-08T18:20:05.884857Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "20120106": {
+        "publishedAt": "2012-04-07T22:40:53.019974Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "20121119": {
+        "publishedAt": "2013-12-17T11:30:28.892434Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "20181111": {
+        "publishedAt": "2018-11-12T02:41:57.664578Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "20200713": {
+        "publishedAt": "2020-07-13T18:12:09.961792Z",
+        "requiresPython": ">=2.7",
+        "yanked": false
+      },
+      "20230430": {
+        "publishedAt": "2023-04-30T21:53:58.193779Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "20241021": {
+        "publishedAt": "2024-10-21T19:41:19.914867Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "20110725.1": {
+        "publishedAt": "2011-09-08T19:09:19.523495Z",
+        "requiresPython": null,
+        "yanked": false
+      }
+    }
+  },
+  "click": {
+    "source": "https://pypi.org/pypi/click/json",
+    "checkedAt": "2026-10-16T15:47:34.271Z",
+    "latest": "8.5.0",
+    "requiresPython": ">=3.10",
+    "requiresDist": null,
+    "projectUrls": {
+      "Changes": "https://click.palletsprojects.com/page/changes/",
+      "Chat": "https://discord.gg/pallets",
+      "Documentation": "https://click.palletsprojects.com/",
+      "Donate": "https://palletsprojects.com/donate",
+      "Source": "https://github.com/pallets/click/"
+    },
+    "publishedAt": "2026-08-26T13:33:12.928043Z",
+    "vulnerabilities": [],
+    "releases": {
+      "0.1": {
+        "publishedAt": "2014-04-28T11:24:09.792414Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2": {
+        "publishedAt": "2014-05-05T23:57:14.320532Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3": {
+        "publishedAt": "2014-05-06T11:15:52.931725Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4": {
+        "publishedAt": "2014-05-06T14:33:53.431025Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5": {
+        "publishedAt": "2014-05-06T22:04:10.364137Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.1": {
+        "publishedAt": "2014-05-06T22:09:17.548915Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6": {
+        "publishedAt": "2014-05-07T19:18:38.778148Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.7": {
+        "publishedAt": "2014-05-11T23:45:31.668762Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.0": {
+        "publishedAt": "2014-05-21T23:30:15.736180Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.1": {
+        "publishedAt": "2014-05-23T18:31:44.188172Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0": {
+        "publishedAt": "2014-06-06T14:20:30.860307Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1": {
+        "publishedAt": "2014-06-14T09:40:45.177263Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2": {
+        "publishedAt": "2014-06-26T11:30:19.246777Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3": {
+        "publishedAt": "2014-07-03T09:38:17.093499Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4": {
+        "publishedAt": "2014-07-04T13:07:17.422124Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5": {
+        "publishedAt": "2014-07-27T22:09:34.267498Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.6": {
+        "publishedAt": "2014-08-11T11:49:19.788816Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.0": {
+        "publishedAt": "2014-08-12T21:24:45.033841Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1": {
+        "publishedAt": "2014-08-13T07:19:47.323241Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.2": {
+        "publishedAt": "2014-08-22T20:49:59.964696Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.3": {
+        "publishedAt": "2014-09-07T21:40:44.913438Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.0": {
+        "publishedAt": "2015-03-31T16:02:02.885956Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.1": {
+        "publishedAt": "2015-07-14T17:48:16.772882Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "5.0": {
+        "publishedAt": "2015-08-16T17:28:01.336092Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "5.1": {
+        "publishedAt": "2015-08-17T11:24:23.126679Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.0": {
+        "publishedAt": "2015-11-24T21:53:55.853422Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.1": {
+        "publishedAt": "2015-11-27T11:30:24.763623Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.2": {
+        "publishedAt": "2015-11-27T17:43:12.026809Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.3": {
+        "publishedAt": "2016-02-22T21:55:20.539304Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.4": {
+        "publishedAt": "2016-03-23T23:58:50.999056Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.5": {
+        "publishedAt": "2016-04-04T16:48:55.960324Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.6": {
+        "publishedAt": "2016-11-21T13:29:30.109023Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.7": {
+        "publishedAt": "2017-01-06T22:41:15.466251Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "6.7.dev0": {
+        "publishedAt": "2017-01-06T22:40:24.448283Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "7.0": {
+        "publishedAt": "2018-09-25T20:57:05.462110Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "7.1": {
+        "publishedAt": "2020-03-09T15:15:59.334927Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "7.1.1": {
+        "publishedAt": "2020-03-09T18:50:57.426819Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "7.1.2": {
+        "publishedAt": "2020-04-27T20:22:42.629571Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "8.0.0": {
+        "publishedAt": "2021-05-11T20:45:59.718195Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.0.0a1": {
+        "publishedAt": "2020-11-25T18:19:38.433373Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.0.0rc1": {
+        "publishedAt": "2021-04-16T14:09:35.604974Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.0.1": {
+        "publishedAt": "2021-05-19T21:00:32.276722Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.0.2": {
+        "publishedAt": "2021-10-08T22:33:16.753720Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.0.3": {
+        "publishedAt": "2021-10-10T18:07:30.752051Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.0.4": {
+        "publishedAt": "2022-02-18T20:31:27.733169Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.1.0": {
+        "publishedAt": "2022-03-28T17:37:48.879644Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.1": {
+        "publishedAt": "2022-03-30T20:14:15.051088Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.2": {
+        "publishedAt": "2022-03-31T20:52:50.525645Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.3": {
+        "publishedAt": "2022-04-28T17:36:06.952869Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.4": {
+        "publishedAt": "2023-07-06T18:27:14.435157Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.5": {
+        "publishedAt": "2023-07-13T15:07:09.915971Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.6": {
+        "publishedAt": "2023-07-18T20:05:12.481540Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.7": {
+        "publishedAt": "2023-08-17T17:29:10.080169Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.1.8": {
+        "publishedAt": "2024-12-21T18:38:41.666429Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "8.2.0": {
+        "publishedAt": "2025-05-10T22:21:01.352121Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.2.1": {
+        "publishedAt": "2025-05-20T23:19:47.796919Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.2.2": {
+        "publishedAt": "2025-08-02T02:23:39.299515Z",
+        "requiresPython": ">=3.10",
+        "yanked": true
+      },
+      "8.3.0": {
+        "publishedAt": "2025-09-18T17:32:22.420001Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.3.1": {
+        "publishedAt": "2025-11-15T20:45:41.139301Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.3.2": {
+        "publishedAt": "2026-04-03T19:14:43.505844Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.3.3": {
+        "publishedAt": "2026-04-22T15:11:25.044919Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.4.0": {
+        "publishedAt": "2026-05-17T00:47:56.842423Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.4.1": {
+        "publishedAt": "2026-05-22T04:08:35.260922Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.4.2": {
+        "publishedAt": "2026-06-24T17:45:13.730054Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "8.5.0": {
+        "publishedAt": "2026-08-26T13:33:12.928043Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      }
+    }
+  },
+  "markitdown": {
+    "source": "https://pypi.org/pypi/markitdown/json",
+    "checkedAt": "2026-10-16T15:47:34.351Z",
+    "latest": "0.1.8",
+    "requiresPython": "<3.15,>=3.10",
+    "requiresDist": [
+      "beautifulsoup4",
+      "charset-normalizer",
+      "defusedxml",
+      "magika~=0.6.1",
+      "markdownify",
+      "requests",
+      "azure-ai-contentunderstanding>=1.2.0b1; extra == \"all\"",
+      "azure-ai-documentintelligence; extra == \"all\"",
+      "azure-identity; extra == \"all\"",
+      "lxml; extra == \"all\"",
+      "mammoth~=1.11.0; extra == \"all\"",
+      "olefile; extra == \"all\"",
+      "openpyxl; extra == \"all\"",
+      "pandas; extra == \"all\"",
+      "pdfminer-six>=20251230; extra == \"all\"",
+      "pdfplumber>=0.11.9; extra == \"all\"",
+      "pydub; extra == \"all\"",
+      "python-pptx; extra == \"all\"",
+      "speechrecognition; extra == \"all\"",
+      "xlrd; extra == \"all\"",
+      "youtube-transcript-api~=1.2.3; extra == \"all\"",
+      "pydub; extra == \"audio-transcription\"",
+      "speechrecognition; extra == \"audio-transcription\"",
+      "azure-ai-contentunderstanding>=1.2.0b1; extra == \"az-content-understanding\"",
+      "azure-identity; extra == \"az-content-understanding\"",
+      "azure-ai-documentintelligence; extra == \"az-doc-intel\"",
+      "azure-identity; extra == \"az-doc-intel\"",
+      "lxml; extra == \"docx\"",
+      "mammoth~=1.11.0; extra == \"docx\"",
+      "olefile; extra == \"outlook\"",
+      "pdfminer-six>=20251230; extra == \"pdf\"",
+      "pdfplumber>=0.11.9; extra == \"pdf\"",
+      "python-pptx; extra == \"pptx\"",
+      "pandas; extra == \"xls\"",
+      "xlrd; extra == \"xls\"",
+      "openpyxl; extra == \"xlsx\"",
+      "pandas; extra == \"xlsx\"",
+      "youtube-transcript-api~=1.2.3; extra == \"youtube-transcription\""
+    ],
+    "projectUrls": {
+      "Documentation": "https://github.com/microsoft/markitdown#readme",
+      "Issues": "https://github.com/microsoft/markitdown/issues",
+      "Source": "https://github.com/microsoft/markitdown"
+    },
+    "publishedAt": "2026-09-21T21:14:35.654197Z",
+    "vulnerabilities": [],
+    "releases": {
+      "0.0.1": {
+        "publishedAt": "2025-03-06T05:31:54.438448Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.0.1a1": {
+        "publishedAt": "2024-11-13T19:46:02.441118Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "0.0.1a2": {
+        "publishedAt": "2024-12-02T21:45:34.688082Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.0.1a3": {
+        "publishedAt": "2024-12-17T21:55:52.708302Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.0.1a4": {
+        "publishedAt": "2025-02-11T00:05:15.221932Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.0.1a5": {
+        "publishedAt": "2025-02-28T15:38:30.584415Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.0.2": {
+        "publishedAt": "2025-03-08T00:21:56.851004Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.0": {
+        "publishedAt": "2025-03-22T18:34:03.135045Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.0a1": {
+        "publishedAt": "2025-03-06T06:41:42.312691Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.0a2": {
+        "publishedAt": "2025-03-12T18:46:48.159881Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.0a3": {
+        "publishedAt": "2025-03-13T02:15:54.239488Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.0a4": {
+        "publishedAt": "2025-03-17T14:51:36.792369Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.0a5": {
+        "publishedAt": "2025-03-20T05:12:47.497490Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.0a6": {
+        "publishedAt": "2025-03-21T16:27:54.898326Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.1": {
+        "publishedAt": "2025-03-25T06:22:19.773787Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.2": {
+        "publishedAt": "2025-05-28T17:06:08.722825Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.2a1": {
+        "publishedAt": "2025-05-21T22:26:38.671934Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.3": {
+        "publishedAt": "2025-08-26T22:37:02.924730Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.4": {
+        "publishedAt": "2025-12-01T18:20:32.345646Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.5": {
+        "publishedAt": "2026-02-20T19:45:27.195293Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.5b1": {
+        "publishedAt": "2026-01-08T23:20:10.672791Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.6": {
+        "publishedAt": "2026-05-26T22:44:03.209003Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.7": {
+        "publishedAt": "2026-07-29T18:20:30.226447Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.8": {
+        "publishedAt": "2026-09-21T21:14:35.654197Z",
+        "requiresPython": "<3.15,>=3.10",
+        "yanked": false
+      },
+      "0.1.8b1": {
+        "publishedAt": "2026-09-04T03:37:52.604768Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "0.1.8b2": {
+        "publishedAt": "2026-09-14T16:49:55.087644Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      }
+    }
+  },
+  "python-dateutil": {
+    "source": "https://pypi.org/pypi/python-dateutil/json",
+    "checkedAt": "2026-10-16T15:47:34.397Z",
+    "latest": "2.9.0.post0",
+    "requiresPython": "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7",
+    "requiresDist": [
+      "six >=1.5"
+    ],
+    "projectUrls": {
+      "Documentation": "https://dateutil.readthedocs.io/en/stable/",
+      "Homepage": "https://github.com/dateutil/dateutil",
+      "Source": "https://github.com/dateutil/dateutil"
+    },
+    "publishedAt": "2024-03-01T18:36:18.570437Z",
+    "vulnerabilities": [],
+    "releases": {
+      "0.1": {
+        "yanked": true
+      },
+      "0.3": {
+        "yanked": true
+      },
+      "0.4": {
+        "yanked": true
+      },
+      "0.5": {
+        "yanked": true
+      },
+      "1.0": {
+        "yanked": true
+      },
+      "1.1": {
+        "yanked": true
+      },
+      "1.2": {
+        "yanked": true
+      },
+      "1.4": {
+        "publishedAt": "2008-08-06T19:11:48Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.4.1": {
+        "publishedAt": "2008-08-06T23:49:27Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5": {
+        "publishedAt": "2010-11-08T17:10:36.749661Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0": {
+        "yanked": true
+      },
+      "2.1": {
+        "publishedAt": "2012-03-28T18:03:09.506738Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2": {
+        "publishedAt": "2013-11-01T08:34:21.223464Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3": {
+        "publishedAt": "2014-12-01T20:20:17.613865Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.0": {
+        "publishedAt": "2015-01-05T17:53:12.637600Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.1": {
+        "publishedAt": "2015-03-29T18:40:53.130071Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.2": {
+        "publishedAt": "2015-03-31T19:41:17.629565Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.0": {
+        "publishedAt": "2016-02-28T21:36:22.736902Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.1": {
+        "publishedAt": "2016-03-17T18:14:00.621369Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.2": {
+        "publishedAt": "2016-03-27T17:02:18.605996Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.3": {
+        "publishedAt": "2016-04-21T00:54:11.985557Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.6.0": {
+        "publishedAt": "2016-11-08T15:33:42.787049Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.6.1": {
+        "publishedAt": "2017-07-10T18:37:07.583601Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.7.0": {
+        "publishedAt": "2018-03-11T23:34:17.867960Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*",
+        "yanked": false
+      },
+      "2.7.1": {
+        "publishedAt": "2018-03-24T19:08:08.004486Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*",
+        "yanked": false
+      },
+      "2.7.2": {
+        "publishedAt": "2018-03-26T15:04:57.512396Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*",
+        "yanked": false
+      },
+      "2.7.3": {
+        "publishedAt": "2018-05-10T12:02:16.089349Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*",
+        "yanked": false
+      },
+      "2.7.4": {
+        "publishedAt": "2018-10-25T16:45:49.860869Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*",
+        "yanked": false
+      },
+      "2.7.5": {
+        "publishedAt": "2018-10-27T18:14:34.218008Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*",
+        "yanked": false
+      },
+      "2.8.0": {
+        "publishedAt": "2019-02-05T14:12:35.322871Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*",
+        "yanked": false
+      },
+      "2.8.1": {
+        "publishedAt": "2019-11-03T05:42:01.643152Z",
+        "requiresPython": "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7",
+        "yanked": false
+      },
+      "2.8.2": {
+        "publishedAt": "2021-07-14T08:19:18.161589Z",
+        "requiresPython": "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7",
+        "yanked": false
+      },
+      "2.9.0": {
+        "publishedAt": "2024-03-01T03:52:51.479771Z",
+        "requiresPython": "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7",
+        "yanked": false
+      },
+      "2.9.0.post0": {
+        "publishedAt": "2024-03-01T18:36:18.570437Z",
+        "requiresPython": "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7",
+        "yanked": false
+      }
+    }
+  },
+  "icalendar": {
+    "source": "https://pypi.org/pypi/icalendar/json",
+    "checkedAt": "2026-10-16T15:47:34.499Z",
+    "latest": "7.3.0",
+    "requiresPython": ">=3.10",
+    "requiresDist": [
+      "python-dateutil",
+      "typing-extensions~=4.10; python_version < \"3.13\"",
+      "tzdata>=2025.3"
+    ],
+    "projectUrls": {
+      "Changelog": "https://icalendar.readthedocs.io/en/stable/changelog.html",
+      "Documentation": "https://icalendar.readthedocs.io/en/stable/",
+      "Funding": "https://opencollective.com/python-icalendar",
+      "Homepage": "https://icalendar.readthedocs.io/en/stable/",
+      "Issues": "https://github.com/collective/icalendar/issues",
+      "Repository": "https://github.com/collective/icalendar"
+    },
+    "publishedAt": "2026-08-19T15:10:19.525917Z",
+    "vulnerabilities": [],
+    "releases": {
+      "1.1": {
+        "publishedAt": "2006-11-23T13:40:29Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.2": {
+        "publishedAt": "2006-11-25T13:02:48Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0": {
+        "publishedAt": "2008-07-11T18:06:26Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0.1": {
+        "publishedAt": "2008-07-11T19:59:51Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1": {
+        "publishedAt": "2009-12-14T14:45:13.144704Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2": {
+        "publishedAt": "2011-08-24T23:24:56.638626Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.0": {
+        "yanked": true
+      },
+      "3.0.1b1": {
+        "publishedAt": "2012-02-24T15:52:48.691142Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.0.1b2": {
+        "publishedAt": "2012-03-01T23:27:06.254387Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1": {
+        "publishedAt": "2012-09-05T19:09:30.125364Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.10": {
+        "publishedAt": "2016-05-26T09:23:34.741445Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11": {
+        "publishedAt": "2016-11-18T19:13:42.811864Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11.1": {
+        "publishedAt": "2016-12-19T17:03:10.553293Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11.2": {
+        "publishedAt": "2017-01-12T16:33:33.548078Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11.3": {
+        "publishedAt": "2017-02-15T11:37:27.119511Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11.4": {
+        "publishedAt": "2017-05-10T12:52:09.153505Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11.5": {
+        "publishedAt": "2017-07-03T11:44:51.222385Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11.6": {
+        "publishedAt": "2017-08-04T18:45:10.725076Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.11.7": {
+        "publishedAt": "2017-08-27T22:41:35.837148Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.12": {
+        "publishedAt": "2017-11-07T09:12:17.384228Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.2": {
+        "publishedAt": "2012-11-26T23:16:26.070506Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.3": {
+        "publishedAt": "2013-02-08T15:17:44.665915Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.4": {
+        "publishedAt": "2013-04-24T10:20:49.667328Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.5": {
+        "publishedAt": "2013-07-03T12:34:29.608467Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.6": {
+        "publishedAt": "2014-01-06T15:23:20.902725Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.6.1": {
+        "publishedAt": "2014-01-13T12:41:06.706002Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.6.2": {
+        "publishedAt": "2014-04-05T17:34:13.846402Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.7": {
+        "publishedAt": "2014-06-02T21:39:14.110489Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.8": {
+        "publishedAt": "2014-07-17T00:43:23.105967Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.8.1": {
+        "publishedAt": "2014-07-17T14:35:28.637977Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.8.2": {
+        "publishedAt": "2014-07-22T10:12:33.242454Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.8.3": {
+        "publishedAt": "2014-08-26T09:35:52.594475Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.8.4": {
+        "publishedAt": "2014-11-01T10:50:08.964867Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.9.0": {
+        "publishedAt": "2015-03-24T12:00:37.404410Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.9.1": {
+        "publishedAt": "2015-09-08T14:08:13.964931Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.9.2": {
+        "publishedAt": "2016-02-05T12:19:29.432778Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.0.0": {
+        "publishedAt": "2017-11-08T13:24:09.919704Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.0.1": {
+        "publishedAt": "2018-02-12T02:33:27.254493Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.2": {
+        "publishedAt": "2018-06-20T12:52:59.784698Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.3": {
+        "publishedAt": "2018-10-10T07:41:23.207971Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.4": {
+        "publishedAt": "2019-11-25T21:32:05.746328Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.5": {
+        "publishedAt": "2020-03-21T00:56:38.968246Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.6": {
+        "publishedAt": "2020-05-06T21:01:27.505283Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.7": {
+        "publishedAt": "2020-09-07T11:08:48.477290Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.8": {
+        "publishedAt": "2021-10-07T13:34:11.389257Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.0.9": {
+        "publishedAt": "2021-10-16T13:24:11.696885Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.1.0": {
+        "publishedAt": "2022-07-11T11:39:06.796248Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.1.1": {
+        "publishedAt": "2023-09-06T15:52:23.000411Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "4.1.2": {
+        "publishedAt": "2025-11-05T12:28:13.182762Z",
+        "requiresPython": "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7",
+        "yanked": false
+      },
+      "5.0.0": {
+        "publishedAt": "2022-10-17T09:30:13.617481Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.0a1": {
+        "publishedAt": "2022-07-11T11:40:25.060758Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "5.0.1": {
+        "publishedAt": "2022-10-23T07:26:40.836797Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.10": {
+        "publishedAt": "2023-09-26T18:36:13.229536Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.11": {
+        "publishedAt": "2023-11-03T17:22:43.280833Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.12": {
+        "publishedAt": "2024-03-19T22:10:42.890895Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.13": {
+        "publishedAt": "2024-06-20T13:14:43.775619Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.14": {
+        "publishedAt": "2025-11-05T12:57:06.909631Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.2": {
+        "publishedAt": "2022-11-04T10:55:27.484193Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.3": {
+        "publishedAt": "2022-11-23T18:19:36.524872Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.4": {
+        "publishedAt": "2022-12-29T21:55:53.274748Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.5": {
+        "publishedAt": "2023-04-13T11:56:11.458707Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.6": {
+        "publishedAt": "2023-05-26T18:59:09.258504Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.7": {
+        "publishedAt": "2023-05-29T16:21:16.836401Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.8": {
+        "publishedAt": "2023-09-18T08:59:15.827555Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "5.0.9": {
+        "publishedAt": "2023-09-24T10:00:59.499362Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "6.0.0": {
+        "publishedAt": "2024-09-28T16:03:34.011102Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.0.0a0": {
+        "publishedAt": "2024-07-03T14:59:30.316470Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.0.1": {
+        "publishedAt": "2024-10-13T16:42:43.224251Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.1.0": {
+        "publishedAt": "2024-11-22T18:57:16.058530Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.1.1": {
+        "publishedAt": "2025-01-18T19:08:28.563466Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.1.2": {
+        "publishedAt": "2025-03-19T11:29:08.260334Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.1.3": {
+        "publishedAt": "2025-03-28T10:08:37.128545Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.2.0": {
+        "publishedAt": "2025-05-07T13:57:39.030282Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.3.0": {
+        "publishedAt": "2025-05-15T09:16:32.524605Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.3.1": {
+        "publishedAt": "2025-05-20T07:42:48.589115Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.3.2": {
+        "publishedAt": "2025-11-05T12:49:30.691549Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "7.0.0": {
+        "publishedAt": "2026-02-11T11:19:14.025442Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.0.0a1": {
+        "publishedAt": "2025-10-28T16:11:20.643064Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "7.0.0a2": {
+        "publishedAt": "2025-11-29T21:57:56.170925Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "7.0.0a3": {
+        "publishedAt": "2025-12-19T22:59:53.988856Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "7.0.1": {
+        "publishedAt": "2026-02-17T21:43:25.238281Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.0.2": {
+        "publishedAt": "2026-02-24T16:13:40.631153Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.0.3": {
+        "publishedAt": "2026-03-03T12:00:09.228919Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.1.0": {
+        "publishedAt": "2026-04-30T23:25:18.584822Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.1.1": {
+        "publishedAt": "2026-05-18T11:11:23.904336Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.1.2": {
+        "publishedAt": "2026-05-22T10:42:28.308142Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.1.3": {
+        "publishedAt": "2026-06-15T14:06:11.605444Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.2.0": {
+        "publishedAt": "2026-06-23T06:48:14.861211Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.2.2": {
+        "publishedAt": "2026-07-20T12:04:03.796894Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "7.3.0": {
+        "publishedAt": "2026-08-19T15:10:19.525917Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      }
+    }
+  },
+  "img2pdf": {
+    "source": "https://pypi.org/pypi/img2pdf/json",
+    "checkedAt": "2026-10-16T15:47:34.703Z",
+    "latest": "0.6.3",
+    "requiresPython": ">=3.5",
+    "requiresDist": [
+      "Pillow",
+      "pikepdf"
+    ],
+    "projectUrls": {
+      "Home": "https://gitlab.mister-muffin.de/josch/img2pdf"
+    },
+    "publishedAt": "2025-11-05T20:51:55.469044Z",
+    "vulnerabilities": [],
+    "releases": {
+      "0.1.2": {
+        "publishedAt": "2014-09-07T06:01:29.293899Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.1.3": {
+        "publishedAt": "2014-11-10T09:17:27.563663Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.1.4": {
+        "publishedAt": "2015-01-21T10:09:10.842791Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.1.5": {
+        "publishedAt": "2015-02-16T18:40:49.281405Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2": {
+        "publishedAt": "2016-02-02T18:52:37.482705Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.1": {
+        "publishedAt": "2016-07-12T04:29:14.291554Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.3": {
+        "publishedAt": "2017-01-20T04:47:25.987782Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.4": {
+        "publishedAt": "2017-05-23T15:56:32.801705Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0": {
+        "publishedAt": "2018-07-18T09:37:23.381436Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.1": {
+        "publishedAt": "2018-08-04T13:45:23.175033Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.2": {
+        "publishedAt": "2018-11-20T15:40:53.804928Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.3": {
+        "publishedAt": "2019-01-07T09:45:05.422790Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.4": {
+        "publishedAt": "2020-04-05T13:11:43.905179Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.5": {
+        "publishedAt": "2020-04-28T11:40:17.393870Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.6": {
+        "publishedAt": "2020-04-30T20:19:24.795357Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.0": {
+        "publishedAt": "2020-08-07T06:05:56.895491Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.1": {
+        "publishedAt": "2021-05-09T16:58:09.161298Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.2": {
+        "publishedAt": "2021-10-11T15:16:48.948389Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.3": {
+        "publishedAt": "2021-10-24T14:51:38.586365Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.4": {
+        "publishedAt": "2022-04-07T20:48:25.621273Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.0": {
+        "publishedAt": "2023-10-28T06:46:26.539966Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.1": {
+        "publishedAt": "2023-11-26T05:34:11.854237Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.0": {
+        "publishedAt": "2025-02-15T14:09:53.432721Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.1": {
+        "publishedAt": "2025-04-27T16:55:10.039482Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.2": {
+        "publishedAt": "2025-11-05T09:52:21.032880Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "0.6.3": {
+        "publishedAt": "2025-11-05T20:51:55.469044Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      }
+    }
+  },
+  "pypdf": {
+    "source": "https://pypi.org/pypi/pypdf/json",
+    "checkedAt": "2026-10-16T15:47:34.769Z",
+    "latest": "6.21.0",
+    "requiresPython": ">=3.9",
+    "requiresDist": [
+      "typing_extensions>=4.0; python_version < \"3.11\"",
+      "brotli>=1.2.0; extra == \"brotli\"",
+      "cryptography>3.0; extra == \"crypto\"",
+      "PyCryptodome; extra == \"cryptodome\"",
+      "flit; extra == \"dev\"",
+      "pip-tools; extra == \"dev\"",
+      "pre-commit; extra == \"dev\"",
+      "pytest-cov; extra == \"dev\"",
+      "pytest-socket; extra == \"dev\"",
+      "pytest-timeout; extra == \"dev\"",
+      "pytest-xdist; extra == \"dev\"",
+      "wheel; extra == \"dev\"",
+      "myst_parser; extra == \"docs\"",
+      "sphinx; extra == \"docs\"",
+      "sphinx_rtd_theme; extra == \"docs\"",
+      "fonttools; extra == \"fonts\"",
+      "arabic-reshaper; extra == \"full\"",
+      "brotli>=1.2.0; extra == \"full\"",
+      "cryptography>3.0; extra == \"full\"",
+      "fonttools; extra == \"full\"",
+      "Pillow>=8.0.0; extra == \"full\"",
+      "python-bidi; extra == \"full\"",
+      "Pillow>=8.0.0; extra == \"image\"",
+      "arabic-reshaper; extra == \"rtl-text\"",
+      "python-bidi; extra == \"rtl-text\""
+    ],
+    "projectUrls": {
+      "Bug Reports": "https://github.com/py-pdf/pypdf/issues",
+      "Changelog": "https://pypdf.readthedocs.io/en/latest/meta/CHANGELOG.html",
+      "Documentation": "https://pypdf.readthedocs.io/en/latest/",
+      "Source": "https://github.com/py-pdf/pypdf"
+    },
+    "publishedAt": "2026-10-16T10:23:16.380921Z",
+    "vulnerabilities": [],
+    "releases": {
+      "1.0": {
+        "yanked": true
+      },
+      "1.1": {
+        "yanked": true
+      },
+      "1.10": {
+        "publishedAt": "2014-05-17T22:40:49.200819Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.11": {
+        "publishedAt": "2014-05-17T22:40:51.038804Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.12": {
+        "publishedAt": "2014-05-17T22:40:53.519636Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.13": {
+        "publishedAt": "2014-05-17T22:40:56.286166Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.2": {
+        "yanked": true
+      },
+      "1.3": {
+        "yanked": true
+      },
+      "1.4": {
+        "publishedAt": "2014-05-17T22:40:57.997114Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5": {
+        "publishedAt": "2014-05-17T22:41:00.498931Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.6": {
+        "publishedAt": "2014-05-17T22:41:02.970396Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7": {
+        "publishedAt": "2014-05-17T22:41:05.865271Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8": {
+        "publishedAt": "2014-05-17T22:41:07.908155Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.9": {
+        "publishedAt": "2014-05-17T22:41:09.973888Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1.0": {
+        "publishedAt": "2022-12-23T17:26:58.087448Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.10.0": {
+        "publishedAt": "2023-06-18T07:30:41.595954Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.11.0": {
+        "publishedAt": "2023-06-23T06:23:17.637077Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.11.1": {
+        "publishedAt": "2023-06-27T20:38:37.498176Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.12.0": {
+        "publishedAt": "2023-07-02T21:28:55.324734Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.12.1": {
+        "publishedAt": "2023-07-09T14:25:02.103209Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.12.2": {
+        "publishedAt": "2023-07-16T21:01:29.231928Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.13.0": {
+        "publishedAt": "2023-07-23T20:25:18.937566Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.14.0": {
+        "publishedAt": "2023-07-29T10:24:08.505819Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.15.0": {
+        "publishedAt": "2023-08-06T07:36:07.862733Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.15.1": {
+        "publishedAt": "2023-08-13T11:40:42.752952Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.15.2": {
+        "publishedAt": "2023-08-20T19:29:16.937923Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.15.3": {
+        "publishedAt": "2023-08-26T07:24:08.954949Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.15.4": {
+        "publishedAt": "2023-08-27T08:40:31.542991Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.15.5": {
+        "publishedAt": "2023-09-03T21:21:57.652981Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.16.0": {
+        "publishedAt": "2023-09-10T13:28:36.227038Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.16.1": {
+        "publishedAt": "2023-09-17T13:42:57.780367Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.16.2": {
+        "publishedAt": "2023-09-24T19:30:58.039150Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.16.3": {
+        "publishedAt": "2023-10-08T10:12:05.478823Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.16.4": {
+        "publishedAt": "2023-10-10T18:50:02.240033Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.17.0": {
+        "publishedAt": "2023-10-29T04:51:30.041812Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.17.1": {
+        "publishedAt": "2023-11-14T08:21:53.087457Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.17.2": {
+        "publishedAt": "2023-12-10T11:52:11.521300Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.17.3": {
+        "publishedAt": "2023-12-17T21:06:07.063138Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.17.4": {
+        "publishedAt": "2023-12-24T10:41:06.790154Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.2.0": {
+        "publishedAt": "2022-12-31T10:27:00.951028Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.2.1": {
+        "publishedAt": "2023-01-08T17:44:56.281536Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.3.0": {
+        "publishedAt": "2023-01-22T16:14:09.609348Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.4.0": {
+        "publishedAt": "2023-02-05T20:45:38.358741Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.4.1": {
+        "publishedAt": "2023-02-12T21:04:04.795955Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.5.0": {
+        "publishedAt": "2023-02-26T18:07:29.810528Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.5.1": {
+        "publishedAt": "2023-03-05T15:05:58.066847Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.5.2": {
+        "publishedAt": "2023-03-12T09:45:33.913272Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.6.0": {
+        "publishedAt": "2023-03-18T15:56:12.126222Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.7.0": {
+        "publishedAt": "2023-03-26T14:11:20.088929Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.7.1": {
+        "publishedAt": "2023-04-09T20:24:58.061541Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.8.0": {
+        "publishedAt": "2023-04-16T19:18:31.672389Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.8.1": {
+        "publishedAt": "2023-04-23T13:16:28.896788Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.9.0": {
+        "publishedAt": "2023-05-21T14:57:01.930169Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.9.1": {
+        "publishedAt": "2023-06-04T18:57:13.352011Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.0.0": {
+        "publishedAt": "2024-01-19T13:28:40.033359Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.0.1": {
+        "publishedAt": "2024-01-28T15:08:49.932580Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.0.2": {
+        "publishedAt": "2024-02-18T15:45:07.857541Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.1.0": {
+        "publishedAt": "2024-03-03T11:49:57.822326Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.2.0": {
+        "publishedAt": "2024-04-07T14:31:03.593521Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.3.0": {
+        "publishedAt": "2024-07-14T19:51:15.853339Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.3.1": {
+        "publishedAt": "2024-07-21T19:35:18.126672Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.0.0": {
+        "publishedAt": "2024-09-17T17:29:21.734392Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.0.1": {
+        "publishedAt": "2024-09-29T09:56:04.620710Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.1.0": {
+        "publishedAt": "2024-10-27T19:46:44.439477Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.2.0": {
+        "publishedAt": "2025-01-26T11:48:40.113004Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.3.0": {
+        "publishedAt": "2025-02-09T14:15:18.692808Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.3.1": {
+        "publishedAt": "2025-03-02T09:03:36.679708Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.4.0": {
+        "publishedAt": "2025-03-16T09:44:09.757184Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.5.0": {
+        "publishedAt": "2025-05-11T14:00:40.064275Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.6.0": {
+        "publishedAt": "2025-06-01T12:19:38.003115Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.6.1": {
+        "publishedAt": "2025-06-22T11:05:24.285977Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.7.0": {
+        "publishedAt": "2025-06-29T08:49:46.160007Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.8.0": {
+        "publishedAt": "2025-07-13T12:51:33.159363Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "5.9.0": {
+        "publishedAt": "2025-07-27T14:04:50.530148Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "6.0.0": {
+        "publishedAt": "2025-08-11T14:22:00.481638Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.1.0": {
+        "publishedAt": "2025-09-21T13:38:37.467582Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.1.1": {
+        "publishedAt": "2025-09-28T13:29:14.392787Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.1.2": {
+        "publishedAt": "2025-10-19T13:45:45.275590Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.1.3": {
+        "publishedAt": "2025-10-22T16:13:44.174620Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.10.0": {
+        "publishedAt": "2026-04-10T09:34:54.966441Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.10.1": {
+        "publishedAt": "2026-04-14T12:55:18.941920Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.10.2": {
+        "publishedAt": "2026-04-15T16:37:34.851378Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.11.0": {
+        "publishedAt": "2026-05-09T13:26:46.904705Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.12.0": {
+        "publishedAt": "2026-05-21T09:21:40.852597Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.12.1": {
+        "publishedAt": "2026-05-22T10:07:57.801527Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.12.2": {
+        "publishedAt": "2026-05-26T13:31:25.068133Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.13.0": {
+        "publishedAt": "2026-06-05T10:12:03.453468Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.13.1": {
+        "publishedAt": "2026-06-08T11:01:47.741562Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.13.2": {
+        "publishedAt": "2026-06-10T16:42:32.370389Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.13.3": {
+        "publishedAt": "2026-06-17T15:21:59.512922Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.14.0": {
+        "publishedAt": "2026-06-22T14:45:53.179414Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.14.1": {
+        "publishedAt": "2026-06-23T11:52:01.661662Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.14.2": {
+        "publishedAt": "2026-06-23T14:18:28.867545Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.15.0": {
+        "publishedAt": "2026-08-06T13:06:47.709049Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.16.0": {
+        "publishedAt": "2026-08-13T14:54:39.734411Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.16.1": {
+        "publishedAt": "2026-08-14T12:24:02.854425Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.16.2": {
+        "publishedAt": "2026-08-23T13:50:05.349099Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.17.0": {
+        "publishedAt": "2026-09-04T11:30:42.681909Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.18.0": {
+        "publishedAt": "2026-09-07T16:48:14.254723Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.18.1": {
+        "publishedAt": "2026-09-11T10:10:06.103628Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.19.0": {
+        "publishedAt": "2026-09-16T09:32:04.087160Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.2.0": {
+        "publishedAt": "2025-11-09T11:10:39.941719Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.20.0": {
+        "publishedAt": "2026-10-09T10:49:36.882910Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.20.1": {
+        "publishedAt": "2026-10-12T16:14:22.556068Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.21.0": {
+        "publishedAt": "2026-10-16T10:23:16.380921Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.3.0": {
+        "publishedAt": "2025-11-16T14:05:14.574982Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.4.0": {
+        "publishedAt": "2025-11-23T14:04:41.448052Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.4.1": {
+        "publishedAt": "2025-12-07T14:19:26.286678Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.4.2": {
+        "publishedAt": "2025-12-14T14:30:56.701550Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.5.0": {
+        "publishedAt": "2025-12-21T11:07:18.173083Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.6.0": {
+        "publishedAt": "2026-01-09T11:20:09.278054Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.6.1": {
+        "publishedAt": "2026-01-25T14:13:34.901106Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.6.2": {
+        "publishedAt": "2026-01-26T11:57:54.099881Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.7.0": {
+        "publishedAt": "2026-02-08T14:47:10.111091Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.7.1": {
+        "publishedAt": "2026-02-17T17:00:46.991184Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.7.2": {
+        "publishedAt": "2026-02-22T11:33:29.204839Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.7.3": {
+        "publishedAt": "2026-02-24T17:23:09.932232Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.7.4": {
+        "publishedAt": "2026-02-27T10:44:37.527052Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.7.5": {
+        "publishedAt": "2026-03-02T09:05:19.722852Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.8.0": {
+        "publishedAt": "2026-03-09T13:37:38.774931Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.9.0": {
+        "publishedAt": "2026-03-15T15:28:24.667679Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.9.1": {
+        "publishedAt": "2026-03-17T10:46:06.286774Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "6.9.2": {
+        "publishedAt": "2026-03-23T14:53:26.573986Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      }
+    }
+  },
+  "python-pptx": {
+    "source": "https://pypi.org/pypi/python-pptx/json",
+    "checkedAt": "2026-10-16T15:47:34.787Z",
+    "latest": "1.0.2",
+    "requiresPython": ">=3.8",
+    "requiresDist": [
+      "Pillow>=3.3.2",
+      "XlsxWriter>=0.5.7",
+      "lxml>=3.1.0",
+      "typing-extensions>=4.9.0"
+    ],
+    "projectUrls": {
+      "Changelog": "https://github.com/scanny/python-pptx/blob/master/HISTORY.rst",
+      "Documentation": "https://python-pptx.readthedocs.io/en/latest/",
+      "Homepage": "https://github.com/scanny/python-pptx",
+      "Repository": "https://github.com/scanny/python-pptx"
+    },
+    "publishedAt": "2024-08-07T17:33:28.192160Z",
+    "vulnerabilities": [],
+    "releases": {
+      "0.1.0a1": {
+        "publishedAt": "2013-01-26T05:44:46.554717Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.0": {
+        "publishedAt": "2013-02-11T01:19:32.058465Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.1": {
+        "publishedAt": "2013-02-25T10:38:04.269873Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.2": {
+        "publishedAt": "2013-03-26T01:29:03.702839Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.3": {
+        "publishedAt": "2013-05-06T04:26:08.396295Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.4": {
+        "publishedAt": "2013-05-17T04:42:50.631380Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.5": {
+        "publishedAt": "2013-06-12T05:31:07.698100Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.2.6": {
+        "publishedAt": "2013-06-22T19:18:13.677113Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0": {
+        "publishedAt": "2013-12-13T06:37:14.739784Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.0rc1": {
+        "publishedAt": "2013-12-13T06:29:30.555388Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.1": {
+        "publishedAt": "2014-01-10T23:02:34.780332Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.3.2": {
+        "publishedAt": "2014-02-07T20:03:07.417753Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.0": {
+        "publishedAt": "2014-04-30T04:51:19.785180Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.1": {
+        "publishedAt": "2014-04-30T04:58:56.567745Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.4.2": {
+        "publishedAt": "2014-04-30T06:51:11.663960Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.0": {
+        "publishedAt": "2014-09-14T05:59:33.136235Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.1": {
+        "publishedAt": "2014-09-22T08:39:21.440792Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.2": {
+        "publishedAt": "2014-10-27T05:43:19.148284Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.3": {
+        "publishedAt": "2014-11-10T04:11:40.178095Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.4": {
+        "publishedAt": "2014-11-16T07:29:27.103342Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.5": {
+        "publishedAt": "2014-11-18T06:52:34.599028Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.6": {
+        "publishedAt": "2014-12-07T06:30:13.431207Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.7": {
+        "publishedAt": "2015-01-18T01:49:42.336461Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.5.8": {
+        "publishedAt": "2015-11-28T06:16:23.590411Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.0": {
+        "publishedAt": "2016-08-18T18:25:20.900340Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.1": {
+        "publishedAt": "2016-10-09T20:46:38.241563Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.10": {
+        "publishedAt": "2018-06-11T19:36:15.831759Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.11": {
+        "publishedAt": "2018-07-25T16:38:49.390644Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.12": {
+        "publishedAt": "2018-08-12T05:44:38.363539Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.13": {
+        "publishedAt": "2018-09-10T23:50:27.272342Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.14": {
+        "publishedAt": "2018-09-24T18:21:54.491472Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.15": {
+        "publishedAt": "2018-09-24T18:47:09.740216Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.16": {
+        "publishedAt": "2018-11-10T02:18:18.510293Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.17": {
+        "publishedAt": "2018-12-16T20:21:14.116078Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.18": {
+        "publishedAt": "2019-05-03T00:31:36.903680Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.19": {
+        "publishedAt": "2021-05-17T22:35:44.017769Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.2": {
+        "publishedAt": "2017-01-03T22:34:49.435271Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.20": {
+        "publishedAt": "2021-09-14T20:25:17.337065Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.21": {
+        "publishedAt": "2021-09-20T23:50:08.260425Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.22": {
+        "publishedAt": "2023-08-29T03:38:45.270839Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.23": {
+        "publishedAt": "2023-11-02T21:35:21.747157Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.3": {
+        "publishedAt": "2017-02-28T20:04:42.531453Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.4": {
+        "publishedAt": "2017-03-17T21:28:46.416507Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.5": {
+        "publishedAt": "2017-03-22T00:36:05.190849Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.6": {
+        "publishedAt": "2017-06-18T00:11:23.760822Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.7": {
+        "publishedAt": "2017-10-30T21:47:26.235099Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.8": {
+        "publishedAt": "2018-04-18T22:01:28.370412Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "0.6.9": {
+        "publishedAt": "2018-05-09T19:50:55.989110Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.0.0": {
+        "publishedAt": "2024-08-03T21:26:39.331675Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "1.0.1": {
+        "publishedAt": "2024-08-05T17:43:45.225640Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "1.0.2": {
+        "publishedAt": "2024-08-07T17:33:28.192160Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      }
+    }
+  },
+  "openpyxl": {
+    "source": "https://pypi.org/pypi/openpyxl/json",
+    "checkedAt": "2026-10-16T15:47:35.029Z",
+    "latest": "3.1.5",
+    "requiresPython": ">=3.8",
+    "requiresDist": [
+      "et-xmlfile"
+    ],
+    "projectUrls": {
+      "Documentation": "https://openpyxl.readthedocs.io/en/stable/",
+      "Homepage": "https://openpyxl.readthedocs.io",
+      "Source": "https://foss.heptapod.net/openpyxl/openpyxl",
+      "Tracker": "https://foss.heptapod.net/openpyxl/openpyxl/-/issues"
+    },
+    "publishedAt": "2024-06-28T14:03:41.161372Z",
+    "vulnerabilities": [],
+    "releases": {
+      "1.1.0": {
+        "publishedAt": "2010-08-11T18:19:43.554462Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.1.5": {
+        "publishedAt": "2010-09-03T17:24:02.687692Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.1.6": {
+        "publishedAt": "2010-09-10T18:30:20.604444Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.1.7": {
+        "publishedAt": "2010-09-11T14:37:56.502085Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.2.3": {
+        "publishedAt": "2010-12-07T13:19:48.776649Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.0": {
+        "publishedAt": "2011-03-15T14:25:24.813140Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.1": {
+        "publishedAt": "2011-04-07T11:08:06.138202Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.2": {
+        "publishedAt": "2011-04-07T16:31:35.955909Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.3": {
+        "publishedAt": "2011-09-05T13:48:06.296983Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.4": {
+        "publishedAt": "2011-09-05T13:49:09.447276Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.5": {
+        "publishedAt": "2011-10-11T23:53:49.055290Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.6": {
+        "publishedAt": "2011-10-31T11:48:12.472731Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.7": {
+        "publishedAt": "2012-01-22T21:00:06.921626Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5.8": {
+        "publishedAt": "2012-03-03T11:06:20.251042Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.6.1": {
+        "publishedAt": "2012-10-28T19:03:54.478502Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.6.2": {
+        "publishedAt": "2013-04-18T22:15:22.719906Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.0": {
+        "publishedAt": "2013-11-17T23:00:37.678512Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8.0": {
+        "publishedAt": "2014-01-08T21:42:04.283629Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8.1": {
+        "publishedAt": "2014-01-14T13:46:51.498945Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8.2": {
+        "publishedAt": "2014-01-21T13:21:29.910764Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8.3": {
+        "publishedAt": "2014-02-09T22:03:25.584043Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8.4": {
+        "publishedAt": "2014-02-25T10:59:12.689158Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8.5": {
+        "publishedAt": "2014-03-25T09:47:43.418716Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.8.6": {
+        "publishedAt": "2014-05-05T16:23:15.661740Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0.2": {
+        "publishedAt": "2014-05-13T11:05:22.801502Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0.3": {
+        "publishedAt": "2014-05-22T12:31:41.785984Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0.4": {
+        "publishedAt": "2014-06-25T21:24:42.233773Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.0.5": {
+        "publishedAt": "2014-08-08T08:30:40.485794Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1.0": {
+        "publishedAt": "2014-09-21T17:28:40.318262Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1.1": {
+        "publishedAt": "2014-10-08T13:32:07.801407Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1.2": {
+        "publishedAt": "2014-10-23T15:17:05.932589Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1.3": {
+        "publishedAt": "2014-12-09T15:15:33.433139Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1.4": {
+        "publishedAt": "2014-12-16T10:52:22.927415Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1.5": {
+        "publishedAt": "2015-02-18T18:34:36.175037Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.0": {
+        "publishedAt": "2015-03-11T16:14:45.504541Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.1": {
+        "publishedAt": "2015-03-31T09:14:55.012308Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.2": {
+        "publishedAt": "2015-04-28T17:11:10.991141Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.3": {
+        "publishedAt": "2015-05-26T12:28:55.189265Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.4": {
+        "publishedAt": "2015-06-17T20:52:23.135097Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.5": {
+        "publishedAt": "2015-06-29T20:39:32.760185Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.6": {
+        "publishedAt": "2015-09-04T08:44:04.756093Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.0": {
+        "publishedAt": "2015-10-20T16:26:11.223864Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.1": {
+        "publishedAt": "2015-11-20T08:49:43.194195Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.2": {
+        "publishedAt": "2015-12-06T23:54:25.214331Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.3": {
+        "publishedAt": "2016-01-18T17:51:49.620488Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.4": {
+        "publishedAt": "2016-03-16T09:40:05.315321Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.5": {
+        "publishedAt": "2016-04-11T18:46:11.677517Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.0": {
+        "publishedAt": "2016-09-15T08:25:09.863330Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.1": {
+        "publishedAt": "2016-11-23T14:16:29.583880Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.10": {
+        "publishedAt": "2018-01-19T18:44:21.944950Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.11": {
+        "publishedAt": "2018-01-24T10:13:19.242726Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.2": {
+        "publishedAt": "2017-01-31T11:13:58.159720Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.3": {
+        "yanked": true
+      },
+      "2.4.4": {
+        "publishedAt": "2017-02-23T19:51:50.755964Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.5": {
+        "publishedAt": "2017-03-07T12:53:04.615995Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.7": {
+        "publishedAt": "2017-04-24T06:57:10.166382Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.8": {
+        "publishedAt": "2017-05-30T17:33:11.411141Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.9": {
+        "publishedAt": "2017-10-19T12:24:48.569217Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.0": {
+        "publishedAt": "2018-01-24T10:35:15.459164Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.1": {
+        "publishedAt": "2018-03-12T08:06:55.806869Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.10": {
+        "publishedAt": "2018-11-13T17:03:46.256473Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "2.5.11": {
+        "publishedAt": "2018-11-21T17:01:14.160644Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "2.5.12": {
+        "publishedAt": "2018-11-29T11:29:14.739796Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "2.5.14": {
+        "publishedAt": "2019-01-23T18:50:22.617105Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "2.5.2": {
+        "publishedAt": "2018-04-06T08:45:35.369264Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.3": {
+        "publishedAt": "2018-04-18T13:07:57.739718Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.4": {
+        "publishedAt": "2018-06-07T12:03:33.714384Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.5": {
+        "publishedAt": "2018-08-04T15:46:25.090260Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.6": {
+        "publishedAt": "2018-08-30T08:56:16.859835Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.7": {
+        "publishedAt": "2018-09-13T14:07:42.674159Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.8": {
+        "publishedAt": "2018-09-25T16:59:34.073486Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.9": {
+        "publishedAt": "2018-10-19T12:15:35.821434Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "2.6.0": {
+        "publishedAt": "2019-02-06T18:26:03.030797Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "2.6.0a1": {
+        "publishedAt": "2018-11-21T17:07:22.022925Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "2.6.0b1": {
+        "publishedAt": "2019-01-08T18:42:19.968371Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "2.6.1": {
+        "publishedAt": "2019-03-04T12:13:12.401711Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "2.6.2": {
+        "publishedAt": "2019-03-29T14:40:55.658123Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "2.6.3": {
+        "publishedAt": "2019-08-19T18:17:36.267250Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "2.6.4": {
+        "publishedAt": "2019-09-25T14:19:06.526551Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "3.0.0": {
+        "publishedAt": "2019-09-25T15:17:48.248302Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.1": {
+        "publishedAt": "2019-11-14T13:30:27.282023Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.10": {
+        "publishedAt": "2022-05-19T15:43:03.065931Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.0.2": {
+        "publishedAt": "2019-11-25T17:52:39.943621Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.3": {
+        "publishedAt": "2020-01-10T16:45:28.303287Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.4": {
+        "publishedAt": "2020-06-24T17:20:45.431346Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.5": {
+        "publishedAt": "2020-08-21T14:32:56.895844Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.6": {
+        "publishedAt": "2021-01-14T19:00:13.341621Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.7": {
+        "publishedAt": "2021-03-09T19:13:10.231398Z",
+        "requiresPython": ">=3.6,",
+        "yanked": false
+      },
+      "3.0.9": {
+        "publishedAt": "2021-09-22T12:55:01.296449Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.1.0": {
+        "publishedAt": "2023-01-31T14:40:28.586058Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.1.1": {
+        "publishedAt": "2023-02-13T16:51:26.215109Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.1.2": {
+        "publishedAt": "2023-03-11T16:58:36.257231Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.1.3": {
+        "publishedAt": "2024-05-29T18:12:12.671784Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "3.1.4": {
+        "publishedAt": "2024-06-12T17:38:13.584096Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "3.1.5": {
+        "publishedAt": "2024-06-28T14:03:41.161372Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "3.2.0b1": {
+        "publishedAt": "2022-05-19T15:36:19.037217Z",
+        "requiresPython": ">=3.7",
+        "yanked": true
+      }
+    }
+  },
+  "pypdfium2": {
+    "source": "https://pypi.org/pypi/pypdfium2/json",
+    "checkedAt": "2026-10-16T15:47:35.391Z",
+    "latest": "5.14.0",
+    "requiresPython": ">=3.6",
+    "requiresDist": null,
+    "projectUrls": {
+      "Changelog": "https://pypdfium2.readthedocs.io/en/stable/changelog.html",
+      "Documentation": "https://pypdfium2.readthedocs.io",
+      "Homepage": "https://github.com/pypdfium2-team/pypdfium2",
+      "Source": "https://github.com/pypdfium2-team/pypdfium2",
+      "Tracker": "https://github.com/pypdfium2-team/pypdfium2/issues"
+    },
+    "publishedAt": "2026-10-04T15:18:40.790754Z",
+    "vulnerabilities": [],
+    "releases": {
+      "0.1.0": {
+        "publishedAt": "2021-12-03T15:13:36.426443Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.10.0": {
+        "publishedAt": "2022-01-24T13:28:36.120066Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "0.11.0": {
+        "publishedAt": "2022-01-31T17:21:24.694049Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "0.12.0": {
+        "publishedAt": "2022-02-07T18:13:23.305855Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "0.13.0": {
+        "publishedAt": "2022-02-14T16:22:50.229498Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "0.13.1": {
+        "publishedAt": "2022-02-15T12:21:27.710886Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "0.14.0": {
+        "publishedAt": "2022-02-21T10:24:09.323391Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "0.15.0": {
+        "publishedAt": "2022-02-28T12:14:26.548130Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "0.2.0": {
+        "publishedAt": "2021-12-06T10:36:26.436163Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.3.0": {
+        "publishedAt": "2021-12-07T14:59:41.124958Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.4.0": {
+        "publishedAt": "2021-12-13T15:45:54.577663Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.4.1": {
+        "publishedAt": "2021-12-14T10:48:50.221082Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.5.0": {
+        "publishedAt": "2021-12-20T16:43:08.706225Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.6.0": {
+        "publishedAt": "2021-12-21T20:12:38.560266Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.7.0": {
+        "publishedAt": "2022-01-03T11:57:50.881808Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.8.0": {
+        "publishedAt": "2022-01-10T16:41:48.694289Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.8.1": {
+        "publishedAt": "2022-01-11T13:10:35.595542Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "0.9.0": {
+        "publishedAt": "2022-01-17T11:33:45.670662Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "1.0.0": {
+        "publishedAt": "2022-03-14T16:09:20.679214Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.1.0": {
+        "publishedAt": "2022-03-21T16:09:18.434848Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.10.0": {
+        "publishedAt": "2022-05-25T16:20:07.515378Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.11.0": {
+        "publishedAt": "2022-06-01T08:29:41.993113Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.2.0": {
+        "publishedAt": "2022-03-28T13:40:15.583693Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.3.0": {
+        "publishedAt": "2022-04-04T10:48:37.152983Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.4.0": {
+        "publishedAt": "2022-04-11T12:05:21.801471Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.4.1": {
+        "publishedAt": "2022-04-18T13:02:12.801646Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.5.0": {
+        "publishedAt": "2022-04-18T17:57:11.067411Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.6.0": {
+        "publishedAt": "2022-04-25T10:24:59.372387Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.7.0": {
+        "publishedAt": "2022-05-02T07:55:41.020255Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.8.0": {
+        "publishedAt": "2022-05-09T18:44:25.457489Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.8.0b1": {
+        "publishedAt": "2022-05-09T18:39:39.878090Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.9.0": {
+        "publishedAt": "2022-05-16T11:34:50.435841Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "1.9.1": {
+        "publishedAt": "2022-05-16T12:00:59.786590Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.0.0": {
+        "publishedAt": "2022-06-09T12:38:32.829144Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.0.0b1": {
+        "publishedAt": "2022-06-07T20:36:53.662950Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.0.0b2": {
+        "publishedAt": "2022-06-08T16:36:12.503324Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.0.0b3": {
+        "publishedAt": "2022-06-09T12:24:50.133415Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.1.0": {
+        "publishedAt": "2022-06-13T12:19:24.645542Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.10.0": {
+        "publishedAt": "2022-08-15T10:19:32.373577Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.11.0": {
+        "publishedAt": "2022-08-22T10:20:02.826802Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.2.0": {
+        "publishedAt": "2022-06-20T09:36:12.298098Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.3.0": {
+        "publishedAt": "2022-06-27T09:42:42.063941Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.3.1": {
+        "publishedAt": "2022-06-27T17:21:21.306480Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.4.0": {
+        "publishedAt": "2022-07-04T12:31:26.519278Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.4.1": {
+        "publishedAt": "2022-07-04T15:21:40.307876Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.5.0": {
+        "publishedAt": "2022-07-11T10:31:13.172122Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.6.0": {
+        "publishedAt": "2022-07-18T10:27:42.852459Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.7.1": {
+        "publishedAt": "2022-07-25T10:22:38.491846Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.7.2": {
+        "publishedAt": "2022-08-01T10:23:16.806553Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.8.0": {
+        "publishedAt": "2022-08-02T16:37:43.825198Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "2.9.0": {
+        "publishedAt": "2022-08-08T10:19:02.379153Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.0.0": {
+        "publishedAt": "2022-09-24T16:40:58.309985Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.0.0b1": {
+        "publishedAt": "2022-09-24T16:27:42.095245Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.1.0": {
+        "publishedAt": "2022-09-26T14:53:21.429242Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.10.0": {
+        "publishedAt": "2022-11-28T10:41:49.716222Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.11.0": {
+        "publishedAt": "2022-12-05T10:38:32.092701Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.12.0": {
+        "publishedAt": "2022-12-09T13:08:57.077134Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.13.0": {
+        "publishedAt": "2022-12-12T10:40:19.634939Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.14.0": {
+        "publishedAt": "2022-12-19T10:38:17.499216Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.15.0": {
+        "publishedAt": "2022-12-26T10:37:13.614457Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.16.0": {
+        "publishedAt": "2023-01-02T10:38:51.826311Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.17.0": {
+        "publishedAt": "2023-01-09T13:22:29.364908Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.18.0": {
+        "publishedAt": "2023-01-16T10:37:00.654757Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.19.0": {
+        "publishedAt": "2023-01-23T10:35:04.103470Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.2.0": {
+        "publishedAt": "2022-10-03T10:15:46.068044Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.20.0": {
+        "publishedAt": "2023-01-30T12:31:27.048957Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.20.1": {
+        "publishedAt": "2023-02-06T10:27:15.888575Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.21.0": {
+        "publishedAt": "2023-02-13T10:26:04.629752Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.21.1": {
+        "publishedAt": "2023-02-20T10:27:33.259054Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.3.0": {
+        "publishedAt": "2022-10-10T10:17:24.480640Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.4.0": {
+        "publishedAt": "2022-10-17T10:22:41.808101Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.5.0": {
+        "publishedAt": "2022-10-24T10:22:41.110838Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.6.0": {
+        "publishedAt": "2022-10-31T10:17:09.922942Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.7.0": {
+        "publishedAt": "2022-11-07T10:16:27.935094Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.8.0": {
+        "publishedAt": "2022-11-14T13:24:14.137633Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "3.9.0": {
+        "publishedAt": "2022-11-21T10:45:13.317255Z",
+        "requiresPython": "!=3.7.6,!=3.8.1,>=3.5",
+        "yanked": false
+      },
+      "4.0.0": {
+        "publishedAt": "2023-02-28T04:07:50.956438Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.0.0b2": {
+        "publishedAt": "2023-02-23T15:17:34.794175Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.1.0": {
+        "publishedAt": "2023-03-07T04:06:08.755088Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.10.0": {
+        "publishedAt": "2023-05-09T04:07:35.796463Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.11.0": {
+        "publishedAt": "2023-05-16T11:33:06.470787Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.12.0": {
+        "publishedAt": "2023-05-23T04:04:45.985030Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.13.0": {
+        "publishedAt": "2023-05-30T04:06:09.093883Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.14.0": {
+        "publishedAt": "2023-06-06T04:05:12.868427Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.15.0": {
+        "publishedAt": "2023-06-13T04:05:22.983884Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.16.0": {
+        "publishedAt": "2023-06-20T04:12:06.472103Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.17.0": {
+        "publishedAt": "2023-06-27T04:06:25.788508Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.18.0": {
+        "publishedAt": "2023-07-04T04:05:22.767942Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.19.0": {
+        "publishedAt": "2023-08-28T14:55:33.804278Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.2.0": {
+        "publishedAt": "2023-03-14T04:06:59.012364Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.20.0": {
+        "publishedAt": "2023-09-10T04:20:54.637237Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.21.0": {
+        "publishedAt": "2023-10-11T13:47:50.262311Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.21.0b1": {
+        "publishedAt": "2023-09-14T23:01:03.740988Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.22.0": {
+        "publishedAt": "2023-10-19T15:27:46.401880Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.23.1": {
+        "publishedAt": "2023-10-31T20:19:12.367099Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.24.0": {
+        "publishedAt": "2023-11-10T18:18:30.783524Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.25.0": {
+        "publishedAt": "2023-12-10T04:22:29.491413Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.26.0": {
+        "publishedAt": "2024-01-10T16:57:23.190486Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.27.0": {
+        "publishedAt": "2024-02-10T04:22:11.035696Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.28.0": {
+        "publishedAt": "2024-03-10T04:23:49.898930Z",
+        "requiresPython": ">= 3.6",
+        "yanked": false
+      },
+      "4.29.0": {
+        "publishedAt": "2024-04-10T04:21:22.803465Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.3.0": {
+        "publishedAt": "2023-03-21T04:05:45.668712Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.30.0": {
+        "publishedAt": "2024-05-09T18:32:48.653959Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.30.1": {
+        "publishedAt": "2024-12-19T19:27:39.531021Z",
+        "requiresPython": ">=3.6",
+        "yanked": true
+      },
+      "4.4.0": {
+        "publishedAt": "2023-03-28T04:07:49.512883Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.5.0": {
+        "publishedAt": "2023-04-04T04:04:43.449584Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.6.0": {
+        "publishedAt": "2023-04-11T04:03:52.494690Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.7.0": {
+        "publishedAt": "2023-04-18T04:05:49.851325Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.8.0": {
+        "publishedAt": "2023-04-25T04:06:22.708006Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "4.9.0": {
+        "publishedAt": "2023-05-02T04:05:31.790169Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.0.0": {
+        "publishedAt": "2025-10-26T13:31:19.499257Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.0.0b1": {
+        "publishedAt": "2025-02-03T21:34:55.476360Z",
+        "requiresPython": ">=3.6",
+        "yanked": true
+      },
+      "5.0.0b2": {
+        "publishedAt": "2025-07-31T18:03:07.325773Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.1.0": {
+        "publishedAt": "2025-11-23T13:36:31.423135Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.10.1": {
+        "publishedAt": "2026-06-15T10:08:36.017057Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.11.0": {
+        "publishedAt": "2026-06-29T11:11:00.183258Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.12.0": {
+        "publishedAt": "2026-07-15T18:56:58.596898Z",
+        "requiresPython": ">=3.6",
+        "yanked": true
+      },
+      "5.12.1": {
+        "publishedAt": "2026-07-17T10:00:47.376799Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.13.0": {
+        "publishedAt": "2026-08-13T10:57:40.522164Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.14.0": {
+        "publishedAt": "2026-10-04T15:18:40.790754Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.14.0b1": {
+        "publishedAt": "2026-10-02T12:46:15.623840Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.2.0": {
+        "publishedAt": "2025-12-12T13:19:37.354693Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.2.0b1": {
+        "publishedAt": "2025-12-02T14:10:01.263727Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.3.0": {
+        "publishedAt": "2026-01-05T16:28:24.210541Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.4.0": {
+        "publishedAt": "2026-02-08T16:53:32.985075Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.5.0": {
+        "publishedAt": "2026-02-18T23:21:56.668556Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.6.0": {
+        "publishedAt": "2026-03-08T01:04:21.370076Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.7.0": {
+        "publishedAt": "2026-04-08T19:57:40.293990Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.7.1": {
+        "publishedAt": "2026-04-20T15:00:22.847708Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.8.0": {
+        "publishedAt": "2026-05-04T17:39:05.552955Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "5.9.0": {
+        "publishedAt": "2026-06-01T15:42:58.426402Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      }
+    }
+  },
+  "pillow": {
+    "source": "https://pypi.org/pypi/pillow/json",
+    "checkedAt": "2026-10-16T15:47:35.890Z",
+    "latest": "12.3.0",
+    "requiresPython": ">=3.10",
+    "requiresDist": [
+      "furo; extra == \"docs\"",
+      "olefile; extra == \"docs\"",
+      "sphinx>=8.2; extra == \"docs\"",
+      "sphinx-autobuild; extra == \"docs\"",
+      "sphinx-copybutton; extra == \"docs\"",
+      "sphinx-inline-tabs; extra == \"docs\"",
+      "sphinxext-opengraph; extra == \"docs\"",
+      "olefile; extra == \"fpx\"",
+      "olefile; extra == \"mic\"",
+      "arro3-compute; extra == \"test-arrow\"",
+      "arro3-core; extra == \"test-arrow\"",
+      "nanoarrow; extra == \"test-arrow\"",
+      "pyarrow; extra == \"test-arrow\"",
+      "coverage>=7.4.2; extra == \"tests\"",
+      "defusedxml; extra == \"tests\"",
+      "markdown2; extra == \"tests\"",
+      "olefile; extra == \"tests\"",
+      "packaging; extra == \"tests\"",
+      "pytest; extra == \"tests\"",
+      "pytest-cov; extra == \"tests\"",
+      "pytest-timeout; extra == \"tests\"",
+      "pytest-xdist; extra == \"tests\"",
+      "setuptools; extra == \"tests\"",
+      "trove-classifiers>=2024.10.12; extra == \"tests\"",
+      "defusedxml; extra == \"xmp\""
+    ],
+    "projectUrls": {
+      "Changelog": "https://github.com/python-pillow/Pillow/releases",
+      "Documentation": "https://pillow.readthedocs.io",
+      "Funding": "https://tidelift.com/subscription/pkg/pypi-pillow?utm_source=pypi-pillow&utm_medium=pypi",
+      "Homepage": "https://python-pillow.github.io",
+      "Mastodon": "https://fosstodon.org/@pillow",
+      "Release notes": "https://pillow.readthedocs.io/en/stable/releasenotes/index.html",
+      "Source": "https://github.com/python-pillow/Pillow"
+    },
+    "publishedAt": "2026-07-01T11:53:27.808291Z",
+    "vulnerabilities": [],
+    "releases": {
+      "1.0": {
+        "publishedAt": "2010-07-31T06:23:55.860541Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.1": {
+        "publishedAt": "2010-08-01T02:14:29.452556Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.2": {
+        "publishedAt": "2010-08-02T17:58:47.663769Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.3": {
+        "publishedAt": "2010-11-28T21:32:39.813794Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.4": {
+        "publishedAt": "2010-11-28T21:45:56.880843Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.5": {
+        "publishedAt": "2010-11-28T22:05:47.089839Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.6": {
+        "publishedAt": "2010-12-01T20:50:38.025701Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.0": {
+        "publishedAt": "2011-05-28T04:44:56.539766Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.1": {
+        "publishedAt": "2011-05-31T18:00:11.302386Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.2": {
+        "publishedAt": "2011-06-02T19:14:17.875169Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.3": {
+        "publishedAt": "2011-07-21T05:47:42.019879Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.4": {
+        "publishedAt": "2011-07-21T17:34:28.095042Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.5": {
+        "publishedAt": "2011-09-08T03:43:42.243359Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.6": {
+        "publishedAt": "2012-01-21T06:27:37.429094Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.7": {
+        "publishedAt": "2012-04-09T10:18:39.874245Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "1.7.8": {
+        "publishedAt": "2012-11-01T22:16:20.185864Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "10.0.0": {
+        "publishedAt": "2023-07-01T14:56:18.752509Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "10.0.1": {
+        "publishedAt": "2023-09-15T13:56:57.712378Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "10.1.0": {
+        "publishedAt": "2023-10-15T13:01:25.469085Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "10.2.0": {
+        "publishedAt": "2024-01-02T09:15:01.151558Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "10.3.0": {
+        "publishedAt": "2024-04-01T12:17:01.553945Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "10.4.0": {
+        "publishedAt": "2024-07-01T09:45:22.070396Z",
+        "requiresPython": ">=3.8",
+        "yanked": false
+      },
+      "11.0.0": {
+        "publishedAt": "2024-10-15T14:21:49.832722Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "11.1.0": {
+        "publishedAt": "2025-01-02T08:10:16.008834Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "11.2.1": {
+        "publishedAt": "2025-04-12T17:47:10.666813Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "11.3.0": {
+        "publishedAt": "2025-07-01T09:13:39.342120Z",
+        "requiresPython": ">=3.9",
+        "yanked": false
+      },
+      "12.0.0": {
+        "publishedAt": "2025-10-15T18:21:27.791040Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "12.1.0": {
+        "publishedAt": "2026-01-02T09:10:24.953078Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "12.1.1": {
+        "publishedAt": "2026-02-11T04:20:06.130758Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "12.2.0": {
+        "publishedAt": "2026-04-01T14:42:15.402392Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "12.3.0": {
+        "publishedAt": "2026-07-01T11:53:27.808291Z",
+        "requiresPython": ">=3.10",
+        "yanked": false
+      },
+      "2.0.0": {
+        "publishedAt": "2013-03-15T23:13:04.287105Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.1.0": {
+        "publishedAt": "2013-07-03T00:50:29.201476Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.0": {
+        "publishedAt": "2013-10-02T11:20:48.109711Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.1": {
+        "publishedAt": "2013-10-03T11:40:17.132252Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.2.2": {
+        "publishedAt": "2013-12-19T20:23:41.005916Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.0": {
+        "publishedAt": "2014-01-03T00:03:28.737281Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.1": {
+        "publishedAt": "2014-03-15T12:31:13.627759Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.3.2": {
+        "publishedAt": "2014-08-13T16:35:26.377313Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.4.0": {
+        "publishedAt": "2014-04-02T17:54:32.303020Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.0": {
+        "publishedAt": "2014-07-02T19:06:08.031993Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.1": {
+        "publishedAt": "2014-07-11T17:41:58.409544Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.2": {
+        "publishedAt": "2014-08-13T17:44:45.386912Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.5.3": {
+        "publishedAt": "2014-08-18T20:01:59.604108Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.6.0": {
+        "publishedAt": "2014-10-01T18:29:36.601858Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.6.1": {
+        "publishedAt": "2014-10-13T18:17:24.271910Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.6.2": {
+        "publishedAt": "2015-01-01T22:15:00.353273Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.7.0": {
+        "publishedAt": "2015-01-01T22:11:54.460917Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.8.0": {
+        "publishedAt": "2015-04-01T21:05:10.029291Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.8.1": {
+        "publishedAt": "2015-04-02T18:07:11.695325Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.8.2": {
+        "publishedAt": "2015-06-08T00:37:16.839737Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "2.9.0": {
+        "publishedAt": "2015-07-01T22:04:01.814196Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.0.0": {
+        "publishedAt": "2015-10-01T22:08:33.276613Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1.0": {
+        "publishedAt": "2016-01-04T19:36:01.426603Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1.0.rc1": {
+        "publishedAt": "2016-01-01T16:21:35.377013Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1.0rc1": {
+        "publishedAt": "2016-01-02T09:54:16.709665Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1.1": {
+        "publishedAt": "2016-02-04T17:34:47.162231Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.1.2": {
+        "publishedAt": "2016-04-01T13:09:48.265302Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.2.0": {
+        "publishedAt": "2016-04-01T18:52:24.755059Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.3.0": {
+        "publishedAt": "2016-07-01T16:14:49.258192Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.3.1": {
+        "publishedAt": "2016-08-18T16:40:16.103130Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.3.2": {
+        "publishedAt": "2016-10-03T15:07:42.534967Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.3.3": {
+        "publishedAt": "2016-10-04T14:55:45.672846Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.4.0": {
+        "publishedAt": "2016-10-03T16:29:02.513941Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.4.1": {
+        "publishedAt": "2016-10-04T15:42:24.610495Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "3.4.2": {
+        "publishedAt": "2016-10-18T21:04:28.868380Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.0.0": {
+        "publishedAt": "2017-01-02T12:33:11.933474Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.1.0": {
+        "publishedAt": "2017-04-04T20:24:52.861409Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.1.1": {
+        "publishedAt": "2017-04-28T16:51:03.941644Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.2.0": {
+        "publishedAt": "2017-07-01T16:01:07.164768Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.2.1": {
+        "publishedAt": "2017-07-06T20:52:27.397784Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "4.3.0": {
+        "publishedAt": "2017-10-02T15:28:50.221711Z",
+        "requiresPython": null,
+        "yanked": false
+      },
+      "5.0.0": {
+        "publishedAt": "2018-01-01T21:09:34.020243Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "5.1.0": {
+        "publishedAt": "2018-04-02T19:49:59.203077Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "5.2.0": {
+        "publishedAt": "2018-07-01T21:13:47.520642Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "5.3.0": {
+        "publishedAt": "2018-10-01T08:27:19.458322Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "5.4.0": {
+        "publishedAt": "2019-01-01T18:15:43.333470Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "5.4.0.dev0": {
+        "publishedAt": "2019-01-01T18:17:39.358467Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "5.4.1": {
+        "publishedAt": "2019-01-06T18:37:54.222804Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+        "yanked": false
+      },
+      "6.0.0": {
+        "publishedAt": "2019-04-02T04:29:30.390645Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "6.1.0": {
+        "publishedAt": "2019-07-03T05:28:37.706770Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "6.2.0": {
+        "publishedAt": "2019-10-01T20:35:18.934548Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "6.2.1": {
+        "publishedAt": "2019-10-21T17:53:27.234779Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "6.2.2": {
+        "publishedAt": "2020-01-02T09:36:39.844289Z",
+        "requiresPython": ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        "yanked": false
+      },
+      "7.0.0": {
+        "publishedAt": "2020-01-02T09:44:12.497214Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "7.1.0": {
+        "publishedAt": "2020-04-01T15:49:42.482303Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "7.1.1": {
+        "publishedAt": "2020-04-02T18:07:09.118898Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "7.1.2": {
+        "publishedAt": "2020-04-25T18:34:51.410374Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "7.2.0": {
+        "publishedAt": "2020-06-30T10:43:17.228801Z",
+        "requiresPython": ">=3.5",
+        "yanked": false
+      },
+      "8.0.0": {
+        "publishedAt": "2020-10-14T18:16:50.796385Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.0.1": {
+        "publishedAt": "2020-10-22T19:17:46.712926Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.1.0": {
+        "publishedAt": "2021-01-02T20:11:59.134832Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.1.1": {
+        "publishedAt": "2021-03-02T00:42:40.168872Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.1.2": {
+        "publishedAt": "2021-03-06T05:22:31.567677Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.2.0": {
+        "publishedAt": "2021-04-01T20:53:21.924105Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.3.0": {
+        "publishedAt": "2021-07-01T06:49:15.521928Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.3.1": {
+        "publishedAt": "2021-07-11T22:07:07.153791Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.3.2": {
+        "publishedAt": "2021-09-02T18:11:36.698786Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "8.4.0": {
+        "publishedAt": "2021-10-15T08:10:15.834471Z",
+        "requiresPython": ">=3.6",
+        "yanked": false
+      },
+      "9.0.0": {
+        "publishedAt": "2022-01-02T22:13:51.146060Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "9.0.1": {
+        "publishedAt": "2022-02-04T06:37:36.729538Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "9.1.0": {
+        "publishedAt": "2022-04-01T14:37:06.263613Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "9.1.1": {
+        "publishedAt": "2022-05-17T16:34:46.065514Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "9.2.0": {
+        "publishedAt": "2022-07-01T18:28:52.815507Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "9.3.0": {
+        "publishedAt": "2022-11-05T03:57:50.453474Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "9.4.0": {
+        "publishedAt": "2023-01-06T02:13:24.296547Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      },
+      "9.5.0": {
+        "publishedAt": "2023-04-01T09:28:03.251098Z",
+        "requiresPython": ">=3.7",
+        "yanked": false
+      }
+    }
+  }
+}

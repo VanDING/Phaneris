@@ -40,10 +40,19 @@ const { createServer } = require('node:http')
       samples.push({ theme, mode, views: await waitViews(theme, actual) }); checks.push(`native theme delivery ${theme}/${mode}`)
     }
     await mainWindow.evaluate(window => { window.setContentSize(1280, 900); window.webContents.setZoomFactor(2) })
-    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
-    const geometry = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth,
-      panels: [...document.querySelectorAll('[data-panel-role]')].map(element => ({ role: element.getAttribute('data-panel-role'), x: element.getBoundingClientRect().x, width: element.getBoundingClientRect().width })) }))
-    assert(geometry.width <= 641); assert(geometry.scroll <= geometry.viewport + 1); samples.push({ zoom: 2, geometry })
+    // Native resize and Chromium zoom reach the renderer asynchronously; two
+    // animation frames can still observe the old viewport on a busy runner.
+    let geometry, native
+    try {
+      await page.waitForFunction(() => Math.abs(innerWidth - 640) <= 1, null, { timeout: 30_000 })
+    } finally {
+      geometry = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth,
+        panels: [...document.querySelectorAll('[data-panel-role]')].map(element => ({ role: element.getAttribute('data-panel-role'), x: element.getBoundingClientRect().x, width: element.getBoundingClientRect().width })) }))
+      native = await mainWindow.evaluate(window => ({ contentSize: window.getContentSize(), zoomFactor: window.webContents.getZoomFactor() }))
+      samples.push({ zoom: 2, native, geometry })
+    }
+    assert.equal(native.contentSize[0], 1280); assert.equal(native.zoomFactor, 2)
+    assert(Math.abs(geometry.width - 640) <= 1); assert(geometry.scroll <= geometry.viewport + 1)
     // capturePage records the full native framebuffer; Page.screenshot can crop
     // Electron's zoomed physical window to its CSS viewport.
     const zoomImage = await mainWindow.evaluate(async window => (await window.webContents.capturePage()).toPNG().toString('base64'))

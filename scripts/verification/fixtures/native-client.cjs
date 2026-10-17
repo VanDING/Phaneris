@@ -148,12 +148,16 @@ async function waitForCondition(page, predicate, argument) {
     checks.push(...await verifyConversation(page, fixture.conversation, fixture.output, 'electron'))
     await page.emulateMedia({ reducedMotion: 'reduce' })
     const layouts = []
-    const originalMinimum = await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].getMinimumSize())
+    const nativeWindow = await app.browserWindow(page)
+    const originalMinimum = await nativeWindow.evaluate(window => window.getMinimumSize())
     // The desktop window normally enforces a minimum width. Override only the
     // disposable fixture window so the 420px diagnostic measures that width.
-    await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setMinimumSize(0, 0))
+    await nativeWindow.evaluate(window => window.setMinimumSize(1, 1))
     for (const width of [1280, 420]) {
-      await app.evaluate(({ BrowserWindow }, size) => BrowserWindow.getAllWindows()[0].setContentSize(size, 900), width)
+      await nativeWindow.evaluate((window, size) => window.setContentSize(size, 900), width)
+      writeFileSync(join(fixture.output, `native-layout-request-${width}.json`), JSON.stringify({ requestedWidth: width,
+        native: await nativeWindow.evaluate(window => ({ minimum: window.getMinimumSize(), bounds: window.getBounds(), content: window.getContentSize() })),
+        viewport: await page.evaluate(() => ({ width: innerWidth, height: innerHeight, devicePixelRatio })) }, null, 2))
       await waitForCondition(page, expected => window.innerWidth === expected, width)
       layouts.push(await page.evaluate(() => ({ viewportWidth: innerWidth, viewportHeight: innerHeight, contentWidth: document.documentElement.scrollWidth, devicePixelRatio })))
       await page.screenshot({ path: join(fixture.output, `electron-${width}.png`), fullPage: false })

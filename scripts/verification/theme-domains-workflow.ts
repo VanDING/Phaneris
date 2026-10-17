@@ -22,7 +22,10 @@ await verificationWorkflow('theme-domains', async run => {
   const context = await launched.browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce', hasTouch: true }), page = await context.newPage()
   const checks: { id: string; passed: boolean; error?: string }[] = [], samples: unknown[] = [], errors: string[] = []
   page.on('pageerror', error => errors.push(error.message)); page.on('console', message => { if (message.type() === 'error') errors.push(message.text()) })
-  await context.tracing.start({ screenshots: true, snapshots: true })
+  // Playwright's DOM snapshotter injects a script into every frame, including
+  // static PageFrame's script-disabled srcdoc. Keep screenshot tracing without
+  // that injection so Chromium's sandbox denial cannot pollute the error gate.
+  await context.tracing.start({ screenshots: true, snapshots: false })
   async function check(id: string, fn: () => Promise<void>) { try { await fn(); checks.push({ id, passed: true }) } catch (error) { checks.push({ id, passed: false, error: String(error) }) } }
   const choose = async (id: string, mode: 'light' | 'dark') => {
     await page.evaluate(({ id, mode }) => window.themeRoles.choose(id, mode), { id, mode })
@@ -58,7 +61,7 @@ await verificationWorkflow('theme-domains', async run => {
       })
       await check(`TC14-owned-content-${id}-${mode}`, async () => {
         assert.equal(await frame.locator('body').evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(44, 83, 100)')
-        assert(!(await page.getByTestId('domain-pages').locator('iframe').getAttribute('sandbox'))?.includes('allow-same-origin'))
+        assert.equal(await page.getByTestId('domain-pages').locator('iframe').getAttribute('sandbox'), '', 'Static authored content must not allow scripts or same-origin access')
         const bitmap = await pdf.evaluate(canvas => {
           const element = canvas as HTMLCanvasElement, context = element.getContext('2d')!
           return { width: element.width, height: element.height, corner: Array.from(context.getImageData(0, 0, 1, 1).data), filter: getComputedStyle(element).filter }
@@ -82,7 +85,7 @@ await verificationWorkflow('theme-domains', async run => {
     })
     await check('TC18-domain-errors', async () => assert.deepEqual(errors, []))
   } finally {
-    run.json('theme-domains.json', { checks, samples, errors, browser: launched.browser.version(), scope: 'Real row, settings, kanban, decisions, trajectory, terminal, Mermaid, PDF and PageFrame; synthetic data; PDF/Pages content ownership is asserted.' })
+    run.json('theme-domains.json', { checks, samples, errors, browser: launched.browser.version(), trace: { screenshots: true, snapshots: false, reason: 'DOM snapshot injection is denied by the static PageFrame sandbox; all application console errors remain fatal.' }, scope: 'Real row, settings, kanban, decisions, trajectory, terminal, Mermaid, PDF and PageFrame; synthetic data; PDF/Pages content ownership is asserted.' })
     await context.tracing.stop({ path: join(run.directory, 'trace.zip') }); await context.close(); await server.close(); await launched.close()
   }
   run.complete(checks.filter(value => value.passed).map(value => value.id), ['Live external provider and native materials', 'Physical mobile soft keyboard'])

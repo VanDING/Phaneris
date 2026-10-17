@@ -12,7 +12,7 @@ function input(flag: string, fallback: string) {
   const explicit = process.argv.slice(2).find(argument => argument.startsWith(`--${flag}=`))?.slice(flag.length + 3)
   return explicit ? resolve(explicit) : join(root, fallback)
 }
-interface Step { name?: string; uses?: string; if?: unknown; run?: string; with?: Record<string, unknown>; 'continue-on-error'?: unknown }
+interface Step { name?: string; uses?: string; if?: unknown; run?: string; shell?: string; with?: Record<string, unknown>; 'continue-on-error'?: unknown }
 interface Job { steps: Step[]; if?: unknown; 'continue-on-error'?: unknown; strategy?: { matrix?: { os?: string[] } } }
 const workflow = loadYaml(readFileSync(input('workflow', '.github/workflows/validate.yml'), 'utf8')) as { on?: Record<string, unknown>; jobs: Record<string, Job> }
 assert(workflow.on && Object.hasOwn(workflow.on, 'pull_request'), 'PR validation trigger is required')
@@ -53,12 +53,22 @@ for (const job of ['validate', 'quality-windows', 'full-validation', 'production
   assert.equal(upload.with?.['if-no-files-found'], 'error', `${job} must reject missing evidence`)
 }
 assert(workflow.jobs.validate?.steps.some(step => step.run === 'bun run build:smoke' && step.if === "github.event_name == 'pull_request'"), 'PRs must build the production paths')
-assert(workflow.jobs.validate?.steps.some(step => step.run === 'bun run test:critical'), 'Critical scenarios must run in CI')
+for (const [name, job] of Object.entries(workflow.jobs)) {
+  for (const step of job.steps) {
+    if (step.run?.includes('| tee ')) assert.equal(step.shell, 'bash', `${name}/${step.name} must use explicit Bash to propagate pipeline failures`)
+    if (step.run?.includes('| Tee-Object ')) assert(step.run.includes('if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }'), `${name}/${step.name} must propagate the native command exit code`)
+    if (name === 'quality-windows' && ['i18n checks', 'Pin checks', 'Cross-platform regression tests'].includes(step.name ?? '')) {
+      assert.equal(step.shell, 'bash', `${name}/${step.name} must stop on the first failed command`)
+    }
+  }
+}
+assert(workflow.jobs.validate?.steps.some(step => step.run === 'xvfb-run --auto-servernum bun run test:critical'), 'Critical native browser scenarios require Xvfb in Linux CI')
 assert(workflow.jobs.validate.steps.some(step => step.run === 'bunx playwright install --with-deps chromium'), 'Production renderer workflows require a real browser in CI')
-assert(workflow.jobs['native-macos']?.steps.some(step => step.run === 'bun run test:native-client'), 'Native main/preload renderer acceptance must run in macOS CI')
+assert(workflow.jobs['native-macos']?.steps.some(step => step.run?.startsWith('bun run test:native-client ')), 'Native main/preload renderer acceptance must run in macOS CI')
 assert.deepEqual(workflow.jobs['native-theme']?.strategy?.matrix?.os, ['windows-latest', 'macos-latest', 'ubuntu-latest'], 'Native theme CI must retain all three OS targets')
-assert(workflow.jobs['native-theme']?.steps.some(step => step.run === 'bun run test:theme-native'), 'Native theme delivery and real zoom acceptance must run in CI')
-assert(workflow.jobs['native-theme']?.steps.some(step => step.run === 'xvfb-run --auto-servernum bun run test:theme-native'), 'Linux native theme acceptance needs a display')
+assert(workflow.jobs['native-theme']?.steps.some(step => step.run?.startsWith('bun run test:theme-native ')), 'Native theme delivery and real zoom acceptance must run in CI')
+assert(workflow.jobs['native-theme']?.steps.some(step => step.if === "runner.os == 'Windows'" && step.shell === 'pwsh'), 'Windows native builds must use the native PowerShell logging pipeline')
+assert(workflow.jobs['native-theme']?.steps.some(step => step.run?.startsWith('xvfb-run --auto-servernum bun run test:theme-native ')), 'Linux native theme acceptance needs a display')
 assert(workflow.jobs['production-container']?.steps.some(step => step.run === 'bun run test:container'), 'Production container acceptance must run in Linux CI')
 assert(workflow.jobs['full-validation'].steps.some(step => step.run === 'bun run test:clean-install'), 'Independent frozen install must run in CI')
 const metadata = JSON.parse(readFileSync(input('manifest', 'package.json'), 'utf8')) as { scripts: Record<string, string> }

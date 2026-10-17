@@ -1,0 +1,6 @@
+$ bun run scripts/audit-dependencies.ts
+New advisories (3):
+Dependency audit OK with 5 known advisories (1 low, 1 critical, 1 high, 2 moderate); no new high/critical findings.
+  - LOW GHSA-238p-pmpm-9mq7
+  - MODERATE GHSA-hp3w-g68c-fv3c
+  - MODERATE GHSA-rj75-hqrm-r3gf

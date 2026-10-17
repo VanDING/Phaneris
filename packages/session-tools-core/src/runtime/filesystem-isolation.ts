@@ -159,9 +159,7 @@ export function applyFilesystemIsolation(
         command: 'bwrap',
         args: [
           '--die-with-parent',
-          '--ro-bind', sessionRoot, sessionRoot,
-          ...(options?.readablePaths ?? []).flatMap(path => ['--ro-bind', resolve(path), resolve(path)]),
-          ...(options?.writablePaths ?? []).flatMap((writablePath) => ['--bind', resolve(writablePath), resolve(writablePath)]),
+          ...(options?.includeNetworkDeny ? ['--unshare-user', '--unshare-net'] : []),
           // Essential runtime dirs (interpreters, shared libs, certs/locale).
           // --ro-bind-try tolerates dirs absent on some distros (e.g. /opt).
           '--ro-bind-try', '/usr', '/usr',
@@ -171,10 +169,18 @@ export function applyFilesystemIsolation(
           '--ro-bind-try', '/sbin', '/sbin',
           '--ro-bind-try', '/etc', '/etc',
           '--ro-bind-try', '/opt', '/opt',
-          // Empty writable tmp for interpreter scratch space.
+          // Empty host temp view; runtime scratch uses the writable session data.
           '--tmpfs', '/tmp',
           '--proc', '/proc',
           '--dev', '/dev',
+          // Bind session assets after /tmp: a later tmpfs would hide every
+          // session/script under /tmp, including CI's temporary fixtures.
+          '--ro-bind', sessionRoot, sessionRoot,
+          ...(options?.readablePaths ?? []).flatMap(path => ['--ro-bind', resolve(path), resolve(path)]),
+          ...(options?.writablePaths ?? []).flatMap((writablePath) => ['--bind', resolve(writablePath), resolve(writablePath)]),
+          // bwrap creates ancestor directories for the mounts above. Do not let
+          // scripts write into those private shadow parents outside the session.
+          '--remount-ro', '/tmp',
           '--',
           command,
           ...args,
