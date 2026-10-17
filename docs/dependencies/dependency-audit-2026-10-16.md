@@ -41,7 +41,7 @@
 | 内部包 | 13 个，按 workspace 发布策略处理 |
 | 全部逐项结果 | **1,558 行**，各行包含版本、目标、判断、理由、风险、来源、查询时间 |
 
-**边界明确保留：** 本机没有 Docker/可用 WSL，因此 8 个 apt 包没有“已装版本 vs 候选版本”的实测结论，逐项标为未知；不会把“源码未固定”误写为“已是最新”。Python 解析不代表 macOS/Linux 各自的最终依赖树。
+**边界明确保留：** 10-16 原始快照在无 Docker/可用 WSL 的本机生成，CSV 的 8 个 apt 包标为未实测。10-17 已通过真实 Linux CI 构建产物补齐这 8 项及容器 Node 补丁版本，见第 7 节；原始快照按日期保留。Python 解析不代表 macOS/Linux 各自的最终依赖树。
 
 逐项表的 latestStable 指非预发行、未被发布者弃用的最高稳定版本；latestTag 单独保留。boolean、fluent-ffmpeg、inflight、lodash.isequal、node-domexception 的稳定版本已全部弃用，应随父包替换；glob 和 rimraf 仍有旧弃用副本。共 7 个包名的弃用信息保留在 deprecatedLockedVersions 列。postject 仅有预发行版本，继续由父包固定。
 
@@ -144,7 +144,7 @@ http-cache-semantics 的正式 4.3.0 在父范围内；须先执行现有 [安�
 | VS Build Tools | 本机 17.14.33，官方维护版 17.14.42；建议维护更新，非仓库依赖改动 |
 | Windows SDK | 本机目录 26100 系列，servicing 未实测；官方 26100.9457 / 28000.2957，优先现系列维护，不因数字更大切目标 SDK |
 | builder 专用 NSIS / signing 工具 | 随 builder 控制；不把独立安装包替入构建链 |
-| 8 个 apt 包 | 已逐项纳入清单，实际版本未知；真实 Linux image 构建后检查 dpkg / apt candidate |
+| 8 个 apt 包 | 原始 CSV 标为未实测；10-17 已补齐真实 Linux 构建选中的发行版候选版本，见第 7 节 |
 
 ## 6. 执行顺序与验证边界
 
@@ -158,3 +158,25 @@ http-cache-semantics 的正式 4.3.0 在父范围内；须先执行现有 [安�
 本次的两个 P0 更新只改变两条锁实例，没有增加依赖或放宽安全允许基线。所有其余目标均是未来实施建议，不代表已验证兼容。
 
 [CI 修复与本地证据](../verification/ci-repair-2026-10-16.md)单独记录了通过项、环境限制及远端验证状态。原始查询时间、来源链接、约束与 SHA-256 保留在逐项文件中。部分 GitHub 发行说明 API 遇到匿名限流，重点项目使用官方网页核对；npm 版本元数据全量查询无缺失。
+
+## 7. 2026-10-17 容器系统依赖补证
+
+真实生产容器在 [运行 38986448218](https://github.com/VanDING/Phaneris/actions/runs/38986448218) 成功完成无缓存构建、认证 RPC、WebUI、Pi 与正常停机。基础镜像实际为 Debian 13 trixie；`oven/bun:1.4.2-slim` digest 为 `sha256:cb3bbbb08e13a4a2ff400f24c7a2a1d5efa83f6ef8544d52d95a519631e2fc61`。
+
+以下为同次 `apt-get update` 后安装选中的候选版本，不等同于各项目上游最高版本：
+
+| 显式系统依赖 | 镜像安装版本 / 构建时发行版候选 |
+| --- | --- |
+| ca-certificates | 20250419；APT 明确报告已是最新候选 |
+| git | 1:2.47.3-0+deb13u1 |
+| ripgrep | 14.1.1-1+b4 |
+| curl | 8.14.1-2+deb13u7 |
+| gnupg | 2.4.7-21+deb13u1 |
+| python3 | 3.13.5-1；构建工具，不是产品固定的 Python 3.12.15 |
+| make | 4.4.1-2 |
+| g++ | 4:14.2.0-1 |
+| nodejs | 24.22.0-1nodesource1；容器已达到建议的 Node 24 LTS 补丁，本机开发版本仍待更新 |
+
+这 8 项显式 apt 依赖在构建时已选用配置仓库的候选版本，当前无需在源码内跨发行版替换；后续价值主要在定期重建以吸收发行版安全维护。APT 另报告 13 个基础镜像包未升级，本次未生成全量 OS SBOM 或执行镜像漏洞扫描，因此不声称整个操作系统包树均为最新。
+
+[安装原始日志](dependency-audit-2026-10-16/container-image-build-2026-10-17.log)与[逐项补充证据](dependency-audit-2026-10-16/container-observed-2026-10-17.json)保留版本行、来源、构建时间、源码及产物身份，并加入 SHA-256 清单。RPC 的 `system:versions.node` 是 Bun 进程的兼容元数据，不能替代系统 Node 安装版本。

@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-10-17T00:31:00.413Z",
+  "sourceHead": "a68d4d1aee0f9b8c48669dcd18ad3682fc46026d",
+  "run": "https://github.com/VanDING/Phaneris/actions/runs/38986448218",
+  "artifact": {
+    "id": 12083497111,
+    "sha256": "b5f41b7394753c18acc311e2ee341d278069cb4e07dcf084ca29b5febd92d9d9"
+  },
+  "log": {
+    "file": "container-image-build-2026-10-17.log",
+    "sha256": "c2a9b048e694cb801d7fc87f56d73101896112ae0cbf79dc0e2c8df88b116c80"
+  },
+  "baseImage": "docker.io/oven/bun:1.4.2-slim@sha256:cb3bbbb08e13a4a2ff400f24c7a2a1d5efa83f6ef8544d52d95a519631e2fc61",
+  "sources": [
+    "Debian trixie/main",
+    "trixie-updates/main",
+    "trixie-security/main",
+    "NodeSource node_24.x nodistro/main"
+  ],
+  "packages": [
+    {
+      "name": "ca-certificates",
+      "installed": "20250419",
+      "candidateAtBuild": "20250419",
+      "evidence": "#7 2.146 ca-certificates is already the newest version (20250419).",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "git",
+      "installed": "1:2.47.3-0+deb13u1",
+      "candidateAtBuild": "1:2.47.3-0+deb13u1",
+      "evidence": "#7 14.81 Setting up git (1:2.47.3-0+deb13u1) ...\r",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "ripgrep",
+      "installed": "14.1.1-1+b4",
+      "candidateAtBuild": "14.1.1-1+b4",
+      "evidence": "#7 13.20 Setting up ripgrep (14.1.1-1+b4) ...\r",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "curl",
+      "installed": "8.14.1-2+deb13u7",
+      "candidateAtBuild": "8.14.1-2+deb13u7",
+      "evidence": "#7 14.82 Setting up curl (8.14.1-2+deb13u7) ...\r",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "gnupg",
+      "installed": "2.4.7-21+deb13u1",
+      "candidateAtBuild": "2.4.7-21+deb13u1",
+      "evidence": "#7 14.80 Setting up gnupg (2.4.7-21+deb13u1) ...\r",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "python3",
+      "installed": "3.13.5-1",
+      "candidateAtBuild": "3.13.5-1",
+      "evidence": "#7 14.56 Setting up python3 (3.13.5-1) ...\r",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "make",
+      "installed": "4.4.1-2",
+      "candidateAtBuild": "4.4.1-2",
+      "evidence": "#7 13.17 Setting up make (4.4.1-2) ...\r",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "g++",
+      "installed": "4:14.2.0-1",
+      "candidateAtBuild": "4:14.2.0-1",
+      "evidence": "#7 14.83 Setting up g++ (4:14.2.0-1) ...\r",
+      "decision": "Fresh apt-get update/install selected this distribution candidate. Refresh the image for security maintenance; do not replace Debian packages with upstream-major binaries."
+    },
+    {
+      "name": "nodejs",
+      "installed": "24.22.0-1nodesource1",
+      "candidateAtBuild": "24.22.0-1nodesource1",
+      "evidence": "#7 21.20 Setting up nodejs (24.22.0-1nodesource1) ...\r",
+      "decision": "Container already installs the recommended Node 24.22.0 LTS; local development remains 24.15.0."
+    }
+  ],
+  "limitations": [
+    "These are distribution candidates selected at the build time, not each upstream project latest release.",
+    "APT reported 13 other base-image packages not upgraded; no complete OS SBOM or vulnerability scan was performed.",
+    "The RPC system:versions Node value is Bun process.versions.node compatibility metadata; installed Node.js is established by the nodejs package installation log.",
+    "The original 2026-10-16 CSV/metadata snapshot is preserved. This supplement supersedes its unmeasured container-package and Node patch observations."
+  ]
+}

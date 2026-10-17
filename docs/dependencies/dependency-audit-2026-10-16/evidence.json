@@ -62,7 +62,9 @@
     "python-resolution.txt": "81e83244ca8068765599b06bc8ce37eaa003adbbf55457bd602b4e353a8e1ca6",
     "python-transitive-metadata.json": "99cfb11b97fcc418be37ff2c360368fd5ea35b6257b0337b39f1bad3d6e12af6",
     "runtime-metadata.json": "e598473cad956a1843ed3622ccccf499be6c74cc3df854d444138c1a5cee5197",
-    "summary.json": "dd0ad85f6685081fb883a35e53ca72bfe40f9ed07240ecfaf184ae0000bb2636"
+    "summary.json": "dd0ad85f6685081fb883a35e53ca72bfe40f9ed07240ecfaf184ae0000bb2636",
+    "container-image-build-2026-10-17.log": "c2a9b048e694cb801d7fc87f56d73101896112ae0cbf79dc0e2c8df88b116c80",
+    "container-observed-2026-10-17.json": "ddf55a48a9fab7142810689ed0a38ce72b4088ad03c5ca777032231fe5ec4d9b"
   },
   "sourceInputs": {
     "package.json": "4a6f7932e7e24d79cec7bbbbf34d0b7595bc9d1361f5a6a94e69b83c92cb8859",
@@ -88,5 +90,12 @@
     "Python union resolution represents Windows x64 and Python 3.12.15 only",
     "Container OS packages not installed or sampled on this Windows host",
     "GitHub unauthenticated API rate limited some optional release note calls; official web pages used for key missing metadata"
+  ],
+  "supplements": [
+    {
+      "date": "2026-10-17",
+      "file": "container-observed-2026-10-17.json",
+      "reason": "Production Linux CI made previously unmeasured container dependency versions observable."
+    }
   ]
 }

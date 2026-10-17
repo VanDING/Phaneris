@@ -40,3 +40,4 @@
 | Select 连续键盘验收 | TF12 在菜单卸载后立即按 Space，Radix 的异步焦点恢复尚未完成，暗色模式二次打开超时 | 等待焦点实际返回触发器后再按键；仍检查键盘打开、选择、主题门户和 Escape 恢复 |
 | Windows 原生日志管道 | 1f87d6d73 同样停在 renderer chunk 输出后，22 分钟未结束；本机 PowerShell 完整原生验收通过 | Windows 使用原生 PowerShell Tee-Object 并显式传播 LASTEXITCODE；macOS/Linux 保持 Bash pipefail；真实 Windows Actions 确认 |
 | 静态 Pages 沙箱诊断 | ab0f152b5 的 theme-domains 预热把 about:srcdoc 的禁止脚本诊断视作应用错误；夹具自身没有脚本，需核实追踪器注入 | 先用真实 Chromium 对比启停 Playwright snapshots；仅处理已证实的追踪器影响，仍断言空 sandbox、内容配色及未捕获异常；禁止通过 allow-scripts 或 allow-same-origin 放宽生产隔离 |
+| 原生缩放异步提交 | 1f6de84a0 的 Linux 主题验收在 setContentSize/setZoomFactor 后双帧仍读到旧视口；此前同一断言通过 | 在有限超时内等待真实 CSS 视口到达 640px，再检查溢出；失败也记录原生 contentSize/zoomFactor 和渲染器几何，不放宽缩放或尺寸要求 |

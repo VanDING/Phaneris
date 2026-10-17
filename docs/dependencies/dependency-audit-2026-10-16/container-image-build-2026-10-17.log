@@ -1,0 +1,1667 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.server
+#1 transferring dockerfile: 5.41kB 0.0s done
+#1 DONE 0.0s
+
+#2 [auth] oven/bun:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/oven/bun:1.4.2-slim
+#3 DONE 0.3s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 1.18kB done
+#4 DONE 0.0s
+
+#5 [ 1/25] FROM docker.io/oven/bun:1.4.2-slim@sha256:cb3bbbb08e13a4a2ff400f24c7a2a1d5efa83f6ef8544d52d95a519631e2fc61
+#5 resolve docker.io/oven/bun:1.4.2-slim@sha256:cb3bbbb08e13a4a2ff400f24c7a2a1d5efa83f6ef8544d52d95a519631e2fc61 done
+#5 sha256:cb3bbbb08e13a4a2ff400f24c7a2a1d5efa83f6ef8544d52d95a519631e2fc61 1.61kB / 1.61kB done
+#5 sha256:68118f7307e010844e88d59ee86e6990ae73a396844d67da97ef3627f7495d71 4.19MB / 4.19MB 0.1s done
+#5 sha256:15b06cb96287ed866730cfff572ae8a9a01c7e33389206e7752b08dc5883d099 4.19MB / 37.46MB 0.1s
+#5 sha256:05d1665ddfbafecceb6ba59648b7b82c8c85be12ba83da09240d05938b6a4039 0B / 184B 0.1s
+#5 sha256:debbe76858f2e398d2937c1eceeb82c571ac1fcd78aadf00e9634578ac2b5ef7 1.62kB / 1.62kB done
+#5 sha256:808ae5d87c721a0c738c37d17ae4837367baa0c9c4353f5ea1762802b0fb6392 4.28kB / 4.28kB done
+#5 sha256:6310eb16bf4251731feab01e8f633bf5e2d75a657ccad97f420b1f83cce457be 13.63MB / 29.79MB 0.1s
+#5 sha256:16e7fb4da3c26d8c4d5f89c329dd3f390b6444c27f60be3885c26293bce7c5e2 296B / 296B 0.1s done
+#5 sha256:15b06cb96287ed866730cfff572ae8a9a01c7e33389206e7752b08dc5883d099 37.46MB / 37.46MB 0.2s done
+#5 sha256:05d1665ddfbafecceb6ba59648b7b82c8c85be12ba83da09240d05938b6a4039 184B / 184B 0.1s done
+#5 sha256:6310eb16bf4251731feab01e8f633bf5e2d75a657ccad97f420b1f83cce457be 29.79MB / 29.79MB 0.2s done
+#5 sha256:47ce961b691020289f5cb2621ee6938c0b92b9b90c863131639c2c6178dc3374 3.40kB / 3.40kB 0.1s done
+#5 sha256:b47b60e8766aff7bd7624aa35f6931c6be5fb2094c0ad3a6691f3cef0e1267b7 138B / 138B 0.2s done
+#5 extracting sha256:6310eb16bf4251731feab01e8f633bf5e2d75a657ccad97f420b1f83cce457be
+#5 ...
+
+#6 [internal] load build context
+#6 transferring context: 39.16MB 0.5s done
+#6 DONE 0.6s
+
+#5 [ 1/25] FROM docker.io/oven/bun:1.4.2-slim@sha256:cb3bbbb08e13a4a2ff400f24c7a2a1d5efa83f6ef8544d52d95a519631e2fc61
+#5 extracting sha256:6310eb16bf4251731feab01e8f633bf5e2d75a657ccad97f420b1f83cce457be 1.1s done
+#5 extracting sha256:68118f7307e010844e88d59ee86e6990ae73a396844d67da97ef3627f7495d71
+#5 extracting sha256:68118f7307e010844e88d59ee86e6990ae73a396844d67da97ef3627f7495d71 0.1s done
+#5 extracting sha256:16e7fb4da3c26d8c4d5f89c329dd3f390b6444c27f60be3885c26293bce7c5e2
+#5 extracting sha256:16e7fb4da3c26d8c4d5f89c329dd3f390b6444c27f60be3885c26293bce7c5e2 done
+#5 extracting sha256:15b06cb96287ed866730cfff572ae8a9a01c7e33389206e7752b08dc5883d099 0.1s
+#5 extracting sha256:15b06cb96287ed866730cfff572ae8a9a01c7e33389206e7752b08dc5883d099 0.4s done
+#5 extracting sha256:05d1665ddfbafecceb6ba59648b7b82c8c85be12ba83da09240d05938b6a4039 done
+#5 extracting sha256:47ce961b691020289f5cb2621ee6938c0b92b9b90c863131639c2c6178dc3374
+#5 extracting sha256:47ce961b691020289f5cb2621ee6938c0b92b9b90c863131639c2c6178dc3374 done
+#5 extracting sha256:b47b60e8766aff7bd7624aa35f6931c6be5fb2094c0ad3a6691f3cef0e1267b7 done
+#5 DONE 2.2s
+
+#7 [ 2/25] RUN apt-get update &&     apt-get install -y --no-install-recommends ca-certificates git ripgrep curl gnupg python3 make g++ &&     curl -fsSL https://deb.nodesource.com/setup_24.x | bash - &&     apt-get install -y --no-install-recommends nodejs &&     rm -rf /var/lib/apt/lists/*
+#7 0.181 Get:1 http://deb.debian.org/debian trixie InRelease [140 kB]
+#7 0.193 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+#7 0.194 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+#7 0.210 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9678 kB]
+#7 0.263 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [4412 B]
+#7 0.264 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [269 kB]
+#7 0.908 Fetched 10.2 MB in 1s (13.8 MB/s)
+#7 0.908 Reading package lists...
+#7 1.392 Reading package lists...
+#7 1.873 Building dependency tree...
+#7 2.000 Reading state information...
+#7 2.146 ca-certificates is already the newest version (20250419).
+#7 2.146 The following additional packages will be installed:
+#7 2.146   adduser binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+#7 2.147   cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu dirmngr g++-14
+#7 2.147   g++-14-x86-64-linux-gnu g++-x86-64-linux-gnu gcc gcc-14
+#7 2.147   gcc-14-x86-64-linux-gnu gcc-x86-64-linux-gnu git-man gnupg-l10n gpg
+#7 2.147   gpg-agent gpgconf gpgsm libasan8 libassuan9 libatomic1 libbinutils
+#7 2.147   libbrotli1 libc-bin libc-dev-bin libc6 libc6-dev libcc1-0 libcom-err2
+#7 2.147   libcrypt-dev libctf-nobfd0 libctf0 libcurl3t64-gnutls libcurl4t64
+#7 2.147   liberror-perl libexpat1 libffi8 libgcc-14-dev libgcrypt20 libgdbm-compat4t64
+#7 2.147   libgdbm6t64 libgnutls30t64 libgomp1 libgpg-error0 libgprofng0
+#7 2.147   libgssapi-krb5-2 libhwasan0 libidn2-0 libisl23 libitm1 libjansson4
+#7 2.147   libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libksba8 libldap2
+#7 2.147   liblsan0 libmpc3 libmpfr6 libncursesw6 libnghttp2-14 libnghttp3-9
+#7 2.147   libngtcp2-16 libngtcp2-crypto-gnutls8 libnpth0t64 libp11-kit0 libperl5.40
+#7 2.147   libpsl5t64 libpython3-stdlib libpython3.13-minimal libpython3.13-stdlib
+#7 2.147   libquadmath0 libreadline8t64 librtmp1 libsasl2-2 libsasl2-modules-db
+#7 2.147   libsframe1 libssh2-1t64 libstdc++-14-dev libtasn1-6 libtsan2 libubsan1
+#7 2.148   libunistring5 linux-libc-dev media-types netbase perl perl-base
+#7 2.148   perl-modules-5.40 pinentry-curses python3-minimal python3.13
+#7 2.148   python3.13-minimal readline-common rpcsvc-proto
+#7 2.149 Suggested packages:
+#7 2.149   liblocale-gettext-perl cron quota binutils-doc gprofng-gui binutils-gold
+#7 2.149   cpp-doc gcc-14-locales cpp-14-doc dbus-user-session libpam-systemd
+#7 2.149   pinentry-gnome3 tor g++-multilib g++-14-multilib gcc-14-doc gcc-multilib
+#7 2.149   manpages-dev autoconf automake libtool flex bison gdb gcc-doc
+#7 2.149   gcc-14-multilib gdb-x86-64-linux-gnu gettext-base git-doc git-email git-gui
+#7 2.149   gitk gitweb git-cvs git-mediawiki git-svn gpg-wks-server parcimonie
+#7 2.149   xloadimage scdaemon tpm2daemon libc-devtools glibc-doc rng-tools gdbm-l10n
+#7 2.149   gnutls-bin krb5-doc krb5-user sensible-utils libstdc++-14-doc make-doc
+#7 2.149   perl-doc libterm-readline-gnu-perl | libterm-readline-perl-perl
+#7 2.149   libtap-harness-archive-perl pinentry-doc python3-doc python3-tk python3-venv
+#7 2.149   python3.13-venv python3.13-doc binfmt-support readline-doc
+#7 2.149 Recommended packages:
+#7 2.149   bash-completion patch less ssh-client gnupg-utils gpg-wks-client gpgv
+#7 2.149   manpages manpages-dev libgpg-error-l10n krb5-locales libldap-common libgpm2
+#7 2.149   publicsuffix libsasl2-modules
+#7 2.583 The following NEW packages will be installed:
+#7 2.583   adduser binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+#7 2.583   cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu curl dirmngr g++ g++-14
+#7 2.583   g++-14-x86-64-linux-gnu g++-x86-64-linux-gnu gcc gcc-14
+#7 2.583   gcc-14-x86-64-linux-gnu gcc-x86-64-linux-gnu git git-man gnupg gnupg-l10n
+#7 2.583   gpg gpg-agent gpgconf gpgsm libasan8 libassuan9 libatomic1 libbinutils
+#7 2.584   libbrotli1 libc-dev-bin libc6-dev libcc1-0 libcom-err2 libcrypt-dev
+#7 2.584   libctf-nobfd0 libctf0 libcurl3t64-gnutls libcurl4t64 liberror-perl libexpat1
+#7 2.584   libffi8 libgcc-14-dev libgcrypt20 libgdbm-compat4t64 libgdbm6t64
+#7 2.584   libgnutls30t64 libgomp1 libgpg-error0 libgprofng0 libgssapi-krb5-2
+#7 2.584   libhwasan0 libidn2-0 libisl23 libitm1 libjansson4 libk5crypto3 libkeyutils1
+#7 2.584   libkrb5-3 libkrb5support0 libksba8 libldap2 liblsan0 libmpc3 libmpfr6
+#7 2.584   libncursesw6 libnghttp2-14 libnghttp3-9 libngtcp2-16
+#7 2.584   libngtcp2-crypto-gnutls8 libnpth0t64 libp11-kit0 libperl5.40 libpsl5t64
+#7 2.584   libpython3-stdlib libpython3.13-minimal libpython3.13-stdlib libquadmath0
+#7 2.584   libreadline8t64 librtmp1 libsasl2-2 libsasl2-modules-db libsframe1
+#7 2.584   libssh2-1t64 libstdc++-14-dev libtasn1-6 libtsan2 libubsan1 libunistring5
+#7 2.584   linux-libc-dev make media-types netbase perl perl-modules-5.40
+#7 2.584   pinentry-curses python3 python3-minimal python3.13 python3.13-minimal
+#7 2.585   readline-common ripgrep rpcsvc-proto
+#7 2.585 The following packages will be upgraded:
+#7 2.586   libc-bin libc6 perl-base
+#7 2.671 3 upgraded, 104 newly installed, 0 to remove and 13 not upgraded.
+#7 2.671 Need to get 114 MB of archives.
+#7 2.671 After this operation, 443 MB of additional disk space will be used.
+#7 2.671 Get:1 http://deb.debian.org/debian trixie/main amd64 perl-base amd64 5.40.1-6+deb13u1 [1666 kB]
+#7 2.815 Get:2 http://deb.debian.org/debian trixie/main amd64 libc6 amd64 2.41-12+deb13u4 [2847 kB]
+#7 2.853 Get:3 http://deb.debian.org/debian trixie/main amd64 libc-bin amd64 2.41-12+deb13u4 [638 kB]
+#7 2.864 Get:4 http://deb.debian.org/debian-security trixie-security/main amd64 libexpat1 amd64 2.9.0-1~deb13u1 [126 kB]
+#7 2.865 Get:5 http://deb.debian.org/debian trixie/main amd64 libpython3.13-minimal amd64 3.13.5-2+deb13u5 [863 kB]
+#7 2.868 Get:6 http://deb.debian.org/debian trixie/main amd64 python3.13-minimal amd64 3.13.5-2+deb13u5 [2225 kB]
+#7 2.885 Get:7 http://deb.debian.org/debian trixie/main amd64 python3-minimal amd64 3.13.5-1 [27.2 kB]
+#7 2.885 Get:8 http://deb.debian.org/debian trixie/main amd64 media-types all 13.0.0 [29.3 kB]
+#7 2.886 Get:9 http://deb.debian.org/debian trixie/main amd64 netbase all 6.5 [12.4 kB]
+#7 2.886 Get:10 http://deb.debian.org/debian trixie/main amd64 libffi8 amd64 3.4.8-2 [24.1 kB]
+#7 2.886 Get:11 http://deb.debian.org/debian trixie/main amd64 libncursesw6 amd64 6.5+20250216-2 [135 kB]
+#7 2.887 Get:12 http://deb.debian.org/debian trixie/main amd64 readline-common all 8.2-6 [69.4 kB]
+#7 2.888 Get:13 http://deb.debian.org/debian trixie/main amd64 libreadline8t64 amd64 8.2-6 [169 kB]
+#7 2.889 Get:14 http://deb.debian.org/debian trixie/main amd64 libpython3.13-stdlib amd64 3.13.5-2+deb13u5 [1959 kB]
+#7 2.898 Get:15 http://deb.debian.org/debian trixie/main amd64 python3.13 amd64 3.13.5-2+deb13u5 [757 kB]
+#7 2.909 Get:16 http://deb.debian.org/debian trixie/main amd64 libpython3-stdlib amd64 3.13.5-1 [10.2 kB]
+#7 2.919 Get:17 http://deb.debian.org/debian trixie/main amd64 python3 amd64 3.13.5-1 [28.2 kB]
+#7 2.920 Get:18 http://deb.debian.org/debian trixie/main amd64 adduser all 3.152 [191 kB]
+#7 2.932 Get:19 http://deb.debian.org/debian trixie/main amd64 perl-modules-5.40 all 5.40.1-6+deb13u1 [3014 kB]
+#7 2.945 Get:20 http://deb.debian.org/debian trixie/main amd64 libgdbm6t64 amd64 1.24-2 [75.2 kB]
+#7 2.946 Get:21 http://deb.debian.org/debian trixie/main amd64 libgdbm-compat4t64 amd64 1.24-2 [50.3 kB]
+#7 2.946 Get:22 http://deb.debian.org/debian trixie/main amd64 libperl5.40 amd64 5.40.1-6+deb13u1 [4326 kB]
+#7 2.974 Get:23 http://deb.debian.org/debian trixie/main amd64 perl amd64 5.40.1-6+deb13u1 [268 kB]
+#7 2.975 Get:24 http://deb.debian.org/debian trixie/main amd64 libsframe1 amd64 2.44-3 [78.4 kB]
+#7 2.976 Get:25 http://deb.debian.org/debian trixie/main amd64 binutils-common amd64 2.44-3 [2509 kB]
+#7 2.985 Get:26 http://deb.debian.org/debian trixie/main amd64 libbinutils amd64 2.44-3 [534 kB]
+#7 2.987 Get:27 http://deb.debian.org/debian trixie/main amd64 libgprofng0 amd64 2.44-3 [808 kB]
+#7 2.989 Get:28 http://deb.debian.org/debian trixie/main amd64 libctf-nobfd0 amd64 2.44-3 [156 kB]
+#7 2.990 Get:29 http://deb.debian.org/debian trixie/main amd64 libctf0 amd64 2.44-3 [88.6 kB]
+#7 2.991 Get:30 http://deb.debian.org/debian trixie/main amd64 libjansson4 amd64 2.14-2+b3 [39.8 kB]
+#7 2.993 Get:31 http://deb.debian.org/debian trixie/main amd64 binutils-x86-64-linux-gnu amd64 2.44-3 [1014 kB]
+#7 2.995 Get:32 http://deb.debian.org/debian trixie/main amd64 binutils amd64 2.44-3 [265 kB]
+#7 2.997 Get:33 http://deb.debian.org/debian trixie/main amd64 libisl23 amd64 0.27-1 [659 kB]
+#7 3.000 Get:34 http://deb.debian.org/debian trixie/main amd64 libmpfr6 amd64 4.2.2-1 [729 kB]
+#7 3.014 Get:35 http://deb.debian.org/debian trixie/main amd64 libmpc3 amd64 1.3.1-1+b3 [52.2 kB]
+#7 3.031 Get:36 http://deb.debian.org/debian trixie/main amd64 cpp-14-x86-64-linux-gnu amd64 14.2.0-19 [11.0 MB]
+#7 3.066 Get:37 http://deb.debian.org/debian trixie/main amd64 cpp-14 amd64 14.2.0-19 [1280 B]
+#7 3.067 Get:38 http://deb.debian.org/debian trixie/main amd64 cpp-x86-64-linux-gnu amd64 4:14.2.0-1 [4840 B]
+#7 3.067 Get:39 http://deb.debian.org/debian trixie/main amd64 cpp amd64 4:14.2.0-1 [1568 B]
+#7 3.067 Get:40 http://deb.debian.org/debian trixie/main amd64 libbrotli1 amd64 1.1.0-2+b7 [307 kB]
+#7 3.068 Get:41 http://deb.debian.org/debian trixie/main amd64 libkrb5support0 amd64 1.21.3-5+deb13u1 [33.1 kB]
+#7 3.069 Get:42 http://deb.debian.org/debian trixie/main amd64 libcom-err2 amd64 1.47.2-3+b12 [25.0 kB]
+#7 3.069 Get:43 http://deb.debian.org/debian trixie/main amd64 libk5crypto3 amd64 1.21.3-5+deb13u1 [81.2 kB]
+#7 3.071 Get:44 http://deb.debian.org/debian trixie/main amd64 libkeyutils1 amd64 1.6.3-6 [9456 B]
+#7 3.071 Get:45 http://deb.debian.org/debian trixie/main amd64 libkrb5-3 amd64 1.21.3-5+deb13u1 [326 kB]
+#7 3.087 Get:46 http://deb.debian.org/debian trixie/main amd64 libgssapi-krb5-2 amd64 1.21.3-5+deb13u1 [138 kB]
+#7 3.088 Get:47 http://deb.debian.org/debian trixie/main amd64 libunistring5 amd64 1.3-2 [477 kB]
+#7 3.103 Get:48 http://deb.debian.org/debian trixie/main amd64 libidn2-0 amd64 2.3.8-2 [109 kB]
+#7 3.104 Get:49 http://deb.debian.org/debian trixie/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg1-9 [19.8 kB]
+#7 3.105 Get:50 http://deb.debian.org/debian trixie/main amd64 libsasl2-2 amd64 2.1.28+dfsg1-9 [57.5 kB]
+#7 3.123 Get:51 http://deb.debian.org/debian trixie/main amd64 libldap2 amd64 2.6.10+dfsg-1 [194 kB]
+#7 3.124 Get:52 http://deb.debian.org/debian trixie/main amd64 libnghttp2-14 amd64 1.64.0-1.1+deb13u1 [76.2 kB]
+#7 3.125 Get:53 http://deb.debian.org/debian trixie/main amd64 libnghttp3-9 amd64 1.8.0-1 [67.7 kB]
+#7 3.128 Get:54 http://deb.debian.org/debian trixie/main amd64 libpsl5t64 amd64 0.21.2-1.1+b1 [57.2 kB]
+#7 3.130 Get:55 http://deb.debian.org/debian trixie/main amd64 libp11-kit0 amd64 0.25.5-3 [425 kB]
+#7 3.132 Get:56 http://deb.debian.org/debian trixie/main amd64 libtasn1-6 amd64 4.20.0-2+deb13u1 [50.1 kB]
+#7 3.133 Get:57 http://deb.debian.org/debian trixie/main amd64 libgnutls30t64 amd64 3.8.9-3+deb13u4 [1469 kB]
+#7 3.138 Get:58 http://deb.debian.org/debian trixie/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b5 [58.8 kB]
+#7 3.138 Get:59 http://deb.debian.org/debian trixie/main amd64 libssh2-1t64 amd64 1.11.1-1+deb13u2 [245 kB]
+#7 3.139 Get:60 http://deb.debian.org/debian-security trixie-security/main amd64 libcurl4t64 amd64 8.14.1-2+deb13u7 [392 kB]
+#7 3.151 Get:61 http://deb.debian.org/debian-security trixie-security/main amd64 curl amd64 8.14.1-2+deb13u7 [270 kB]
+#7 3.153 Get:62 http://deb.debian.org/debian trixie/main amd64 libgpg-error0 amd64 1.51-4 [82.1 kB]
+#7 3.153 Get:63 http://deb.debian.org/debian trixie/main amd64 libassuan9 amd64 3.0.2-2 [61.5 kB]
+#7 3.210 Get:64 http://deb.debian.org/debian trixie/main amd64 libgcrypt20 amd64 1.11.0-7+deb13u1 [843 kB]
+#7 3.219 Get:65 http://deb.debian.org/debian trixie/main amd64 gpgconf amd64 2.4.7-21+deb13u1+b5 [129 kB]
+#7 3.221 Get:66 http://deb.debian.org/debian trixie/main amd64 libksba8 amd64 1.6.7-2+b1 [136 kB]
+#7 3.224 Get:67 http://deb.debian.org/debian trixie/main amd64 libnpth0t64 amd64 1.8-3 [23.2 kB]
+#7 3.226 Get:68 http://deb.debian.org/debian trixie/main amd64 dirmngr amd64 2.4.7-21+deb13u1+b5 [384 kB]
+#7 3.227 Get:69 http://deb.debian.org/debian trixie/main amd64 libcc1-0 amd64 14.2.0-19 [42.8 kB]
+#7 3.286 Get:70 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
+#7 3.287 Get:71 http://deb.debian.org/debian trixie/main amd64 libitm1 amd64 14.2.0-19 [26.0 kB]
+#7 3.287 Get:72 http://deb.debian.org/debian trixie/main amd64 libatomic1 amd64 14.2.0-19 [9308 B]
+#7 3.308 Get:73 http://deb.debian.org/debian trixie/main amd64 libasan8 amd64 14.2.0-19 [2725 kB]
+#7 3.318 Get:74 http://deb.debian.org/debian trixie/main amd64 liblsan0 amd64 14.2.0-19 [1204 kB]
+#7 3.322 Get:75 http://deb.debian.org/debian trixie/main amd64 libtsan2 amd64 14.2.0-19 [2460 kB]
+#7 3.341 Get:76 http://deb.debian.org/debian trixie/main amd64 libubsan1 amd64 14.2.0-19 [1074 kB]
+#7 3.345 Get:77 http://deb.debian.org/debian trixie/main amd64 libhwasan0 amd64 14.2.0-19 [1488 kB]
+#7 3.352 Get:78 http://deb.debian.org/debian trixie/main amd64 libquadmath0 amd64 14.2.0-19 [145 kB]
+#7 3.353 Get:79 http://deb.debian.org/debian trixie/main amd64 libgcc-14-dev amd64 14.2.0-19 [2672 kB]
+#7 3.363 Get:80 http://deb.debian.org/debian trixie/main amd64 gcc-14-x86-64-linux-gnu amd64 14.2.0-19 [21.4 MB]
+#7 3.436 Get:81 http://deb.debian.org/debian trixie/main amd64 gcc-14 amd64 14.2.0-19 [540 kB]
+#7 3.438 Get:82 http://deb.debian.org/debian trixie/main amd64 gcc-x86-64-linux-gnu amd64 4:14.2.0-1 [1436 B]
+#7 3.438 Get:83 http://deb.debian.org/debian trixie/main amd64 gcc amd64 4:14.2.0-1 [5136 B]
+#7 3.440 Get:84 http://deb.debian.org/debian trixie/main amd64 libc-dev-bin amd64 2.41-12+deb13u4 [60.0 kB]
+#7 3.440 Get:85 http://deb.debian.org/debian-security trixie-security/main amd64 linux-libc-dev all 6.12.113-1 [3021 kB]
+#7 3.451 Get:86 http://deb.debian.org/debian trixie/main amd64 libcrypt-dev amd64 1:4.4.38-1 [119 kB]
+#7 3.453 Get:87 http://deb.debian.org/debian trixie/main amd64 rpcsvc-proto amd64 1.4.3-1 [63.3 kB]
+#7 3.487 Get:88 http://deb.debian.org/debian trixie/main amd64 libc6-dev amd64 2.41-12+deb13u4 [1995 kB]
+#7 3.496 Get:89 http://deb.debian.org/debian trixie/main amd64 libstdc++-14-dev amd64 14.2.0-19 [2376 kB]
+#7 3.504 Get:90 http://deb.debian.org/debian trixie/main amd64 g++-14-x86-64-linux-gnu amd64 14.2.0-19 [12.1 MB]
+#7 3.544 Get:91 http://deb.debian.org/debian trixie/main amd64 g++-14 amd64 14.2.0-19 [22.5 kB]
+#7 3.545 Get:92 http://deb.debian.org/debian trixie/main amd64 g++-x86-64-linux-gnu amd64 4:14.2.0-1 [1200 B]
+#7 3.545 Get:93 http://deb.debian.org/debian trixie/main amd64 g++ amd64 4:14.2.0-1 [1344 B]
+#7 3.546 Get:94 http://deb.debian.org/debian trixie/main amd64 libngtcp2-16 amd64 1.11.0-1+deb13u1 [132 kB]
+#7 3.546 Get:95 http://deb.debian.org/debian trixie/main amd64 libngtcp2-crypto-gnutls8 amd64 1.11.0-1+deb13u1 [29.5 kB]
+#7 3.550 Get:96 http://deb.debian.org/debian-security trixie-security/main amd64 libcurl3t64-gnutls amd64 8.14.1-2+deb13u7 [385 kB]
+#7 3.552 Get:97 http://deb.debian.org/debian trixie/main amd64 liberror-perl all 0.17030-1 [26.9 kB]
+#7 3.554 Get:98 http://deb.debian.org/debian trixie/main amd64 git-man all 1:2.47.3-0+deb13u1 [2205 kB]
+#7 3.567 Get:99 http://deb.debian.org/debian trixie/main amd64 git amd64 1:2.47.3-0+deb13u1 [8862 kB]
+#7 3.601 Get:100 http://deb.debian.org/debian trixie/main amd64 gnupg-l10n all 2.4.7-21+deb13u1 [749 kB]
+#7 3.604 Get:101 http://deb.debian.org/debian trixie/main amd64 gpg amd64 2.4.7-21+deb13u1+b5 [636 kB]
+#7 3.606 Get:102 http://deb.debian.org/debian trixie/main amd64 pinentry-curses amd64 1.3.1-2 [86.4 kB]
+#7 3.607 Get:103 http://deb.debian.org/debian trixie/main amd64 gpg-agent amd64 2.4.7-21+deb13u1+b5 [271 kB]
+#7 3.608 Get:104 http://deb.debian.org/debian trixie/main amd64 gpgsm amd64 2.4.7-21+deb13u1+b5 [276 kB]
+#7 3.611 Get:105 http://deb.debian.org/debian trixie/main amd64 gnupg all 2.4.7-21+deb13u1 [417 kB]
+#7 3.614 Get:106 http://deb.debian.org/debian trixie/main amd64 make amd64 4.4.1-2 [463 kB]
+#7 3.621 Get:107 http://deb.debian.org/debian trixie/main amd64 ripgrep amd64 14.1.1-1+b4 [1434 kB]
+#7 3.749 debconf: unable to initialize frontend: Dialog
+#7 3.749 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#7 3.749 debconf: falling back to frontend: Readline
+#7 3.750 debconf: unable to initialize frontend: Readline
+#7 3.750 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 107.)
+#7 3.750 debconf: falling back to frontend: Teletype
+#7 3.754 debconf: unable to initialize frontend: Teletype
+#7 3.754 debconf: (This frontend requires a controlling tty.)
+#7 3.754 debconf: falling back to frontend: Noninteractive
+#7 5.689 Preconfiguring packages ...
+#7 5.732 Fetched 114 MB in 1s (110 MB/s)
+#7 5.741 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5507 files and directories currently installed.)
+#7 5.746 Preparing to unpack .../perl-base_5.40.1-6+deb13u1_amd64.deb ...
+#7 5.748 Unpacking perl-base (5.40.1-6+deb13u1) over (5.40.1-6) ...
+#7 6.276 Setting up perl-base (5.40.1-6+deb13u1) ...
+#7 6.292 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5507 files and directories currently installed.)
+#7 6.298 Preparing to unpack .../libc6_2.41-12+deb13u4_amd64.deb ...
+#7 6.362 debconf: unable to initialize frontend: Dialog
+#7 6.362 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#7 6.362 debconf: falling back to frontend: Readline
+#7 6.362 debconf: unable to initialize frontend: Readline
+#7 6.362 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+#7 6.362 debconf: falling back to frontend: Teletype
+#7 6.366 debconf: unable to initialize frontend: Teletype
+#7 6.366 debconf: (This frontend requires a controlling tty.)
+#7 6.366 debconf: falling back to frontend: Noninteractive
+#7 6.402 Unpacking libc6:amd64 (2.41-12+deb13u4) over (2.41-12+deb13u3) ...
+#7 6.676 Setting up libc6:amd64 (2.41-12+deb13u4) ...
+#7 6.738 debconf: unable to initialize frontend: Dialog
+#7 6.738 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#7 6.738 debconf: falling back to frontend: Readline
+#7 6.739 debconf: unable to initialize frontend: Readline
+#7 6.739 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+#7 6.739 debconf: falling back to frontend: Teletype
+#7 6.743 debconf: unable to initialize frontend: Teletype
+#7 6.743 debconf: (This frontend requires a controlling tty.)
+#7 6.743 debconf: falling back to frontend: Noninteractive
+#7 6.775 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5507 files and directories currently installed.)
+#7 6.781 Preparing to unpack .../libc-bin_2.41-12+deb13u4_amd64.deb ...
+#7 6.783 Unpacking libc-bin (2.41-12+deb13u4) over (2.41-12+deb13u3) ...
+#7 6.833 Setting up libc-bin (2.41-12+deb13u4) ...
+#7 6.857 Selecting previously unselected package libexpat1:amd64.
+#7 6.857 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5507 files and directories currently installed.)
+#7 6.861 Preparing to unpack .../libexpat1_2.9.0-1~deb13u1_amd64.deb ...
+#7 6.862 Unpacking libexpat1:amd64 (2.9.0-1~deb13u1) ...
+#7 6.880 Selecting previously unselected package libpython3.13-minimal:amd64.
+#7 6.880 Preparing to unpack .../libpython3.13-minimal_3.13.5-2+deb13u5_amd64.deb ...
+#7 6.881 Unpacking libpython3.13-minimal:amd64 (3.13.5-2+deb13u5) ...
+#7 6.950 Selecting previously unselected package python3.13-minimal.
+#7 6.951 Preparing to unpack .../python3.13-minimal_3.13.5-2+deb13u5_amd64.deb ...
+#7 6.955 Unpacking python3.13-minimal (3.13.5-2+deb13u5) ...
+#7 7.052 Setting up libpython3.13-minimal:amd64 (3.13.5-2+deb13u5) ...
+#7 7.055 Setting up libexpat1:amd64 (2.9.0-1~deb13u1) ...
+#7 7.057 Setting up python3.13-minimal (3.13.5-2+deb13u5) ...
+#7 7.708 Selecting previously unselected package python3-minimal.
+#7 7.708 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5841 files and directories currently installed.)
+#7 7.714 Preparing to unpack .../0-python3-minimal_3.13.5-1_amd64.deb ...
+#7 7.714 Unpacking python3-minimal (3.13.5-1) ...
+#7 7.727 Selecting previously unselected package media-types.
+#7 7.728 Preparing to unpack .../1-media-types_13.0.0_all.deb ...
+#7 7.728 Unpacking media-types (13.0.0) ...
+#7 7.740 Selecting previously unselected package netbase.
+#7 7.741 Preparing to unpack .../2-netbase_6.5_all.deb ...
+#7 7.742 Unpacking netbase (6.5) ...
+#7 7.754 Selecting previously unselected package libffi8:amd64.
+#7 7.755 Preparing to unpack .../3-libffi8_3.4.8-2_amd64.deb ...
+#7 7.755 Unpacking libffi8:amd64 (3.4.8-2) ...
+#7 7.767 Selecting previously unselected package libncursesw6:amd64.
+#7 7.768 Preparing to unpack .../4-libncursesw6_6.5+20250216-2_amd64.deb ...
+#7 7.769 Unpacking libncursesw6:amd64 (6.5+20250216-2) ...
+#7 7.786 Selecting previously unselected package readline-common.
+#7 7.787 Preparing to unpack .../5-readline-common_8.2-6_all.deb ...
+#7 7.788 Unpacking readline-common (8.2-6) ...
+#7 7.801 Selecting previously unselected package libreadline8t64:amd64.
+#7 7.802 Preparing to unpack .../6-libreadline8t64_8.2-6_amd64.deb ...
+#7 7.806 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
+#7 7.809 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
+#7 7.813 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
+#7 7.816 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
+#7 7.817 Unpacking libreadline8t64:amd64 (8.2-6) ...
+#7 7.835 Selecting previously unselected package libpython3.13-stdlib:amd64.
+#7 7.836 Preparing to unpack .../7-libpython3.13-stdlib_3.13.5-2+deb13u5_amd64.deb ...
+#7 7.837 Unpacking libpython3.13-stdlib:amd64 (3.13.5-2+deb13u5) ...
+#7 7.939 Selecting previously unselected package python3.13.
+#7 7.940 Preparing to unpack .../8-python3.13_3.13.5-2+deb13u5_amd64.deb ...
+#7 7.941 Unpacking python3.13 (3.13.5-2+deb13u5) ...
+#7 7.957 Selecting previously unselected package libpython3-stdlib:amd64.
+#7 7.958 Preparing to unpack .../9-libpython3-stdlib_3.13.5-1_amd64.deb ...
+#7 7.973 Unpacking libpython3-stdlib:amd64 (3.13.5-1) ...
+#7 7.988 Setting up python3-minimal (3.13.5-1) ...
+#7 8.100 Selecting previously unselected package python3.
+#7 8.100 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6349 files and directories currently installed.)
+#7 8.105 Preparing to unpack .../python3_3.13.5-1_amd64.deb ...
+#7 8.108 Unpacking python3 (3.13.5-1) ...
+#7 8.122 Selecting previously unselected package adduser.
+#7 8.124 Preparing to unpack .../archives/adduser_3.152_all.deb ...
+#7 8.125 Unpacking adduser (3.152) ...
+#7 8.146 Setting up adduser (3.152) ...
+#7 8.165 Selecting previously unselected package perl-modules-5.40.
+#7 8.165 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6455 files and directories currently installed.)
+#7 8.170 Preparing to unpack .../00-perl-modules-5.40_5.40.1-6+deb13u1_all.deb ...
+#7 8.171 Unpacking perl-modules-5.40 (5.40.1-6+deb13u1) ...
+#7 8.423 Selecting previously unselected package libgdbm6t64:amd64.
+#7 8.424 Preparing to unpack .../01-libgdbm6t64_1.24-2_amd64.deb ...
+#7 8.425 Unpacking libgdbm6t64:amd64 (1.24-2) ...
+#7 8.438 Selecting previously unselected package libgdbm-compat4t64:amd64.
+#7 8.440 Preparing to unpack .../02-libgdbm-compat4t64_1.24-2_amd64.deb ...
+#7 8.440 Unpacking libgdbm-compat4t64:amd64 (1.24-2) ...
+#7 8.453 Selecting previously unselected package libperl5.40:amd64.
+#7 8.454 Preparing to unpack .../03-libperl5.40_5.40.1-6+deb13u1_amd64.deb ...
+#7 8.455 Unpacking libperl5.40:amd64 (5.40.1-6+deb13u1) ...
+#7 8.668 Selecting previously unselected package perl.
+#7 8.669 Preparing to unpack .../04-perl_5.40.1-6+deb13u1_amd64.deb ...
+#7 8.670 Unpacking perl (5.40.1-6+deb13u1) ...
+#7 8.692 Selecting previously unselected package libsframe1:amd64.
+#7 8.693 Preparing to unpack .../05-libsframe1_2.44-3_amd64.deb ...
+#7 8.694 Unpacking libsframe1:amd64 (2.44-3) ...
+#7 8.708 Selecting previously unselected package binutils-common:amd64.
+#7 8.710 Preparing to unpack .../06-binutils-common_2.44-3_amd64.deb ...
+#7 8.710 Unpacking binutils-common:amd64 (2.44-3) ...
+#7 8.815 Selecting previously unselected package libbinutils:amd64.
+#7 8.816 Preparing to unpack .../07-libbinutils_2.44-3_amd64.deb ...
+#7 8.817 Unpacking libbinutils:amd64 (2.44-3) ...
+#7 8.852 Selecting previously unselected package libgprofng0:amd64.
+#7 8.854 Preparing to unpack .../08-libgprofng0_2.44-3_amd64.deb ...
+#7 8.855 Unpacking libgprofng0:amd64 (2.44-3) ...
+#7 8.899 Selecting previously unselected package libctf-nobfd0:amd64.
+#7 8.901 Preparing to unpack .../09-libctf-nobfd0_2.44-3_amd64.deb ...
+#7 8.902 Unpacking libctf-nobfd0:amd64 (2.44-3) ...
+#7 8.918 Selecting previously unselected package libctf0:amd64.
+#7 8.919 Preparing to unpack .../10-libctf0_2.44-3_amd64.deb ...
+#7 8.921 Unpacking libctf0:amd64 (2.44-3) ...
+#7 8.935 Selecting previously unselected package libjansson4:amd64.
+#7 8.937 Preparing to unpack .../11-libjansson4_2.14-2+b3_amd64.deb ...
+#7 8.937 Unpacking libjansson4:amd64 (2.14-2+b3) ...
+#7 8.949 Selecting previously unselected package binutils-x86-64-linux-gnu.
+#7 8.950 Preparing to unpack .../12-binutils-x86-64-linux-gnu_2.44-3_amd64.deb ...
+#7 8.954 Unpacking binutils-x86-64-linux-gnu (2.44-3) ...
+#7 9.026 Selecting previously unselected package binutils.
+#7 9.027 Preparing to unpack .../13-binutils_2.44-3_amd64.deb ...
+#7 9.029 Unpacking binutils (2.44-3) ...
+#7 9.052 Selecting previously unselected package libisl23:amd64.
+#7 9.054 Preparing to unpack .../14-libisl23_0.27-1_amd64.deb ...
+#7 9.054 Unpacking libisl23:amd64 (0.27-1) ...
+#7 9.093 Selecting previously unselected package libmpfr6:amd64.
+#7 9.095 Preparing to unpack .../15-libmpfr6_4.2.2-1_amd64.deb ...
+#7 9.095 Unpacking libmpfr6:amd64 (4.2.2-1) ...
+#7 9.122 Selecting previously unselected package libmpc3:amd64.
+#7 9.123 Preparing to unpack .../16-libmpc3_1.3.1-1+b3_amd64.deb ...
+#7 9.125 Unpacking libmpc3:amd64 (1.3.1-1+b3) ...
+#7 9.137 Selecting previously unselected package cpp-14-x86-64-linux-gnu.
+#7 9.138 Preparing to unpack .../17-cpp-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+#7 9.139 Unpacking cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 9.503 Selecting previously unselected package cpp-14.
+#7 9.504 Preparing to unpack .../18-cpp-14_14.2.0-19_amd64.deb ...
+#7 9.505 Unpacking cpp-14 (14.2.0-19) ...
+#7 9.515 Selecting previously unselected package cpp-x86-64-linux-gnu.
+#7 9.516 Preparing to unpack .../19-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+#7 9.517 Unpacking cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 9.528 Selecting previously unselected package cpp.
+#7 9.529 Preparing to unpack .../20-cpp_4%3a14.2.0-1_amd64.deb ...
+#7 9.534 Unpacking cpp (4:14.2.0-1) ...
+#7 9.545 Selecting previously unselected package libbrotli1:amd64.
+#7 9.546 Preparing to unpack .../21-libbrotli1_1.1.0-2+b7_amd64.deb ...
+#7 9.547 Unpacking libbrotli1:amd64 (1.1.0-2+b7) ...
+#7 9.575 Selecting previously unselected package libkrb5support0:amd64.
+#7 9.576 Preparing to unpack .../22-libkrb5support0_1.21.3-5+deb13u1_amd64.deb ...
+#7 9.577 Unpacking libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
+#7 9.590 Selecting previously unselected package libcom-err2:amd64.
+#7 9.591 Preparing to unpack .../23-libcom-err2_1.47.2-3+b12_amd64.deb ...
+#7 9.592 Unpacking libcom-err2:amd64 (1.47.2-3+b12) ...
+#7 9.604 Selecting previously unselected package libk5crypto3:amd64.
+#7 9.605 Preparing to unpack .../24-libk5crypto3_1.21.3-5+deb13u1_amd64.deb ...
+#7 9.606 Unpacking libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
+#7 9.621 Selecting previously unselected package libkeyutils1:amd64.
+#7 9.622 Preparing to unpack .../25-libkeyutils1_1.6.3-6_amd64.deb ...
+#7 9.623 Unpacking libkeyutils1:amd64 (1.6.3-6) ...
+#7 9.635 Selecting previously unselected package libkrb5-3:amd64.
+#7 9.636 Preparing to unpack .../26-libkrb5-3_1.21.3-5+deb13u1_amd64.deb ...
+#7 9.637 Unpacking libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
+#7 9.664 Selecting previously unselected package libgssapi-krb5-2:amd64.
+#7 9.666 Preparing to unpack .../27-libgssapi-krb5-2_1.21.3-5+deb13u1_amd64.deb ...
+#7 9.666 Unpacking libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
+#7 9.684 Selecting previously unselected package libunistring5:amd64.
+#7 9.685 Preparing to unpack .../28-libunistring5_1.3-2_amd64.deb ...
+#7 9.686 Unpacking libunistring5:amd64 (1.3-2) ...
+#7 9.722 Selecting previously unselected package libidn2-0:amd64.
+#7 9.723 Preparing to unpack .../29-libidn2-0_2.3.8-2_amd64.deb ...
+#7 9.724 Unpacking libidn2-0:amd64 (2.3.8-2) ...
+#7 9.740 Selecting previously unselected package libsasl2-modules-db:amd64.
+#7 9.742 Preparing to unpack .../30-libsasl2-modules-db_2.1.28+dfsg1-9_amd64.deb ...
+#7 9.743 Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+#7 9.755 Selecting previously unselected package libsasl2-2:amd64.
+#7 9.756 Preparing to unpack .../31-libsasl2-2_2.1.28+dfsg1-9_amd64.deb ...
+#7 9.757 Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+#7 9.770 Selecting previously unselected package libldap2:amd64.
+#7 9.772 Preparing to unpack .../32-libldap2_2.6.10+dfsg-1_amd64.deb ...
+#7 9.772 Unpacking libldap2:amd64 (2.6.10+dfsg-1) ...
+#7 9.792 Selecting previously unselected package libnghttp2-14:amd64.
+#7 9.794 Preparing to unpack .../33-libnghttp2-14_1.64.0-1.1+deb13u1_amd64.deb ...
+#7 9.795 Unpacking libnghttp2-14:amd64 (1.64.0-1.1+deb13u1) ...
+#7 9.809 Selecting previously unselected package libnghttp3-9:amd64.
+#7 9.810 Preparing to unpack .../34-libnghttp3-9_1.8.0-1_amd64.deb ...
+#7 9.811 Unpacking libnghttp3-9:amd64 (1.8.0-1) ...
+#7 9.826 Selecting previously unselected package libpsl5t64:amd64.
+#7 9.827 Preparing to unpack .../35-libpsl5t64_0.21.2-1.1+b1_amd64.deb ...
+#7 9.828 Unpacking libpsl5t64:amd64 (0.21.2-1.1+b1) ...
+#7 9.841 Selecting previously unselected package libp11-kit0:amd64.
+#7 9.842 Preparing to unpack .../36-libp11-kit0_0.25.5-3_amd64.deb ...
+#7 9.843 Unpacking libp11-kit0:amd64 (0.25.5-3) ...
+#7 9.870 Selecting previously unselected package libtasn1-6:amd64.
+#7 9.871 Preparing to unpack .../37-libtasn1-6_4.20.0-2+deb13u1_amd64.deb ...
+#7 9.872 Unpacking libtasn1-6:amd64 (4.20.0-2+deb13u1) ...
+#7 9.886 Selecting previously unselected package libgnutls30t64:amd64.
+#7 9.887 Preparing to unpack .../38-libgnutls30t64_3.8.9-3+deb13u4_amd64.deb ...
+#7 9.888 Unpacking libgnutls30t64:amd64 (3.8.9-3+deb13u4) ...
+#7 9.938 Selecting previously unselected package librtmp1:amd64.
+#7 9.939 Preparing to unpack .../39-librtmp1_2.4+20151223.gitfa8646d.1-2+b5_amd64.deb ...
+#7 9.940 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b5) ...
+#7 9.953 Selecting previously unselected package libssh2-1t64:amd64.
+#7 9.955 Preparing to unpack .../40-libssh2-1t64_1.11.1-1+deb13u2_amd64.deb ...
+#7 9.956 Unpacking libssh2-1t64:amd64 (1.11.1-1+deb13u2) ...
+#7 9.973 Selecting previously unselected package libcurl4t64:amd64.
+#7 9.975 Preparing to unpack .../41-libcurl4t64_8.14.1-2+deb13u7_amd64.deb ...
+#7 9.976 Unpacking libcurl4t64:amd64 (8.14.1-2+deb13u7) ...
+#7 10.00 Selecting previously unselected package curl.
+#7 10.00 Preparing to unpack .../42-curl_8.14.1-2+deb13u7_amd64.deb ...
+#7 10.00 Unpacking curl (8.14.1-2+deb13u7) ...
+#7 10.02 Selecting previously unselected package libgpg-error0:amd64.
+#7 10.03 Preparing to unpack .../43-libgpg-error0_1.51-4_amd64.deb ...
+#7 10.03 Unpacking libgpg-error0:amd64 (1.51-4) ...
+#7 10.04 Selecting previously unselected package libassuan9:amd64.
+#7 10.04 Preparing to unpack .../44-libassuan9_3.0.2-2_amd64.deb ...
+#7 10.04 Unpacking libassuan9:amd64 (3.0.2-2) ...
+#7 10.06 Selecting previously unselected package libgcrypt20:amd64.
+#7 10.06 Preparing to unpack .../45-libgcrypt20_1.11.0-7+deb13u1_amd64.deb ...
+#7 10.06 Unpacking libgcrypt20:amd64 (1.11.0-7+deb13u1) ...
+#7 10.10 Selecting previously unselected package gpgconf.
+#7 10.10 Preparing to unpack .../46-gpgconf_2.4.7-21+deb13u1+b5_amd64.deb ...
+#7 10.10 Unpacking gpgconf (2.4.7-21+deb13u1+b5) ...
+#7 10.11 Selecting previously unselected package libksba8:amd64.
+#7 10.12 Preparing to unpack .../47-libksba8_1.6.7-2+b1_amd64.deb ...
+#7 10.12 Unpacking libksba8:amd64 (1.6.7-2+b1) ...
+#7 10.13 Selecting previously unselected package libnpth0t64:amd64.
+#7 10.13 Preparing to unpack .../48-libnpth0t64_1.8-3_amd64.deb ...
+#7 10.13 Unpacking libnpth0t64:amd64 (1.8-3) ...
+#7 10.15 Selecting previously unselected package dirmngr.
+#7 10.15 Preparing to unpack .../49-dirmngr_2.4.7-21+deb13u1+b5_amd64.deb ...
+#7 10.16 Unpacking dirmngr (2.4.7-21+deb13u1+b5) ...
+#7 10.19 Selecting previously unselected package libcc1-0:amd64.
+#7 10.19 Preparing to unpack .../50-libcc1-0_14.2.0-19_amd64.deb ...
+#7 10.19 Unpacking libcc1-0:amd64 (14.2.0-19) ...
+#7 10.21 Selecting previously unselected package libgomp1:amd64.
+#7 10.21 Preparing to unpack .../51-libgomp1_14.2.0-19_amd64.deb ...
+#7 10.21 Unpacking libgomp1:amd64 (14.2.0-19) ...
+#7 10.23 Selecting previously unselected package libitm1:amd64.
+#7 10.23 Preparing to unpack .../52-libitm1_14.2.0-19_amd64.deb ...
+#7 10.23 Unpacking libitm1:amd64 (14.2.0-19) ...
+#7 10.24 Selecting previously unselected package libatomic1:amd64.
+#7 10.24 Preparing to unpack .../53-libatomic1_14.2.0-19_amd64.deb ...
+#7 10.24 Unpacking libatomic1:amd64 (14.2.0-19) ...
+#7 10.25 Selecting previously unselected package libasan8:amd64.
+#7 10.26 Preparing to unpack .../54-libasan8_14.2.0-19_amd64.deb ...
+#7 10.26 Unpacking libasan8:amd64 (14.2.0-19) ...
+#7 10.38 Selecting previously unselected package liblsan0:amd64.
+#7 10.38 Preparing to unpack .../55-liblsan0_14.2.0-19_amd64.deb ...
+#7 10.38 Unpacking liblsan0:amd64 (14.2.0-19) ...
+#7 10.44 Selecting previously unselected package libtsan2:amd64.
+#7 10.45 Preparing to unpack .../56-libtsan2_14.2.0-19_amd64.deb ...
+#7 10.45 Unpacking libtsan2:amd64 (14.2.0-19) ...
+#7 10.56 Selecting previously unselected package libubsan1:amd64.
+#7 10.56 Preparing to unpack .../57-libubsan1_14.2.0-19_amd64.deb ...
+#7 10.56 Unpacking libubsan1:amd64 (14.2.0-19) ...
+#7 10.62 Selecting previously unselected package libhwasan0:amd64.
+#7 10.62 Preparing to unpack .../58-libhwasan0_14.2.0-19_amd64.deb ...
+#7 10.62 Unpacking libhwasan0:amd64 (14.2.0-19) ...
+#7 10.70 Selecting previously unselected package libquadmath0:amd64.
+#7 10.70 Preparing to unpack .../59-libquadmath0_14.2.0-19_amd64.deb ...
+#7 10.70 Unpacking libquadmath0:amd64 (14.2.0-19) ...
+#7 10.71 Selecting previously unselected package libgcc-14-dev:amd64.
+#7 10.72 Preparing to unpack .../60-libgcc-14-dev_14.2.0-19_amd64.deb ...
+#7 10.72 Unpacking libgcc-14-dev:amd64 (14.2.0-19) ...
+#7 10.84 Selecting previously unselected package gcc-14-x86-64-linux-gnu.
+#7 10.84 Preparing to unpack .../61-gcc-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+#7 10.84 Unpacking gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 11.32 Selecting previously unselected package gcc-14.
+#7 11.32 Preparing to unpack .../62-gcc-14_14.2.0-19_amd64.deb ...
+#7 11.32 Unpacking gcc-14 (14.2.0-19) ...
+#7 11.34 Selecting previously unselected package gcc-x86-64-linux-gnu.
+#7 11.34 Preparing to unpack .../63-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+#7 11.34 Unpacking gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 11.36 Selecting previously unselected package gcc.
+#7 11.36 Preparing to unpack .../64-gcc_4%3a14.2.0-1_amd64.deb ...
+#7 11.36 Unpacking gcc (4:14.2.0-1) ...
+#7 11.37 Selecting previously unselected package libc-dev-bin.
+#7 11.37 Preparing to unpack .../65-libc-dev-bin_2.41-12+deb13u4_amd64.deb ...
+#7 11.37 Unpacking libc-dev-bin (2.41-12+deb13u4) ...
+#7 11.39 Selecting previously unselected package linux-libc-dev.
+#7 11.39 Preparing to unpack .../66-linux-libc-dev_6.12.113-1_all.deb ...
+#7 11.39 Unpacking linux-libc-dev (6.12.113-1) ...
+#7 11.68 Selecting previously unselected package libcrypt-dev:amd64.
+#7 11.69 Preparing to unpack .../67-libcrypt-dev_1%3a4.4.38-1_amd64.deb ...
+#7 11.69 Unpacking libcrypt-dev:amd64 (1:4.4.38-1) ...
+#7 11.71 Selecting previously unselected package rpcsvc-proto.
+#7 11.71 Preparing to unpack .../68-rpcsvc-proto_1.4.3-1_amd64.deb ...
+#7 11.71 Unpacking rpcsvc-proto (1.4.3-1) ...
+#7 11.72 Selecting previously unselected package libc6-dev:amd64.
+#7 11.73 Preparing to unpack .../69-libc6-dev_2.41-12+deb13u4_amd64.deb ...
+#7 11.73 Unpacking libc6-dev:amd64 (2.41-12+deb13u4) ...
+#7 11.84 Selecting previously unselected package libstdc++-14-dev:amd64.
+#7 11.84 Preparing to unpack .../70-libstdc++-14-dev_14.2.0-19_amd64.deb ...
+#7 11.84 Unpacking libstdc++-14-dev:amd64 (14.2.0-19) ...
+#7 12.01 Selecting previously unselected package g++-14-x86-64-linux-gnu.
+#7 12.01 Preparing to unpack .../71-g++-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+#7 12.01 Unpacking g++-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 12.38 Selecting previously unselected package g++-14.
+#7 12.38 Preparing to unpack .../72-g++-14_14.2.0-19_amd64.deb ...
+#7 12.38 Unpacking g++-14 (14.2.0-19) ...
+#7 12.39 Selecting previously unselected package g++-x86-64-linux-gnu.
+#7 12.40 Preparing to unpack .../73-g++-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+#7 12.40 Unpacking g++-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 12.41 Selecting previously unselected package g++.
+#7 12.41 Preparing to unpack .../74-g++_4%3a14.2.0-1_amd64.deb ...
+#7 12.41 Unpacking g++ (4:14.2.0-1) ...
+#7 12.42 Selecting previously unselected package libngtcp2-16:amd64.
+#7 12.42 Preparing to unpack .../75-libngtcp2-16_1.11.0-1+deb13u1_amd64.deb ...
+#7 12.42 Unpacking libngtcp2-16:amd64 (1.11.0-1+deb13u1) ...
+#7 12.44 Selecting previously unselected package libngtcp2-crypto-gnutls8:amd64.
+#7 12.44 Preparing to unpack .../76-libngtcp2-crypto-gnutls8_1.11.0-1+deb13u1_amd64.deb ...
+#7 12.44 Unpacking libngtcp2-crypto-gnutls8:amd64 (1.11.0-1+deb13u1) ...
+#7 12.46 Selecting previously unselected package libcurl3t64-gnutls:amd64.
+#7 12.46 Preparing to unpack .../77-libcurl3t64-gnutls_8.14.1-2+deb13u7_amd64.deb ...
+#7 12.46 Unpacking libcurl3t64-gnutls:amd64 (8.14.1-2+deb13u7) ...
+#7 12.49 Selecting previously unselected package liberror-perl.
+#7 12.49 Preparing to unpack .../78-liberror-perl_0.17030-1_all.deb ...
+#7 12.49 Unpacking liberror-perl (0.17030-1) ...
+#7 12.51 Selecting previously unselected package git-man.
+#7 12.51 Preparing to unpack .../79-git-man_1%3a2.47.3-0+deb13u1_all.deb ...
+#7 12.51 Unpacking git-man (1:2.47.3-0+deb13u1) ...
+#7 12.56 Selecting previously unselected package git.
+#7 12.56 Preparing to unpack .../80-git_1%3a2.47.3-0+deb13u1_amd64.deb ...
+#7 12.57 Unpacking git (1:2.47.3-0+deb13u1) ...
+#7 12.81 Selecting previously unselected package gnupg-l10n.
+#7 12.81 Preparing to unpack .../81-gnupg-l10n_2.4.7-21+deb13u1_all.deb ...
+#7 12.81 Unpacking gnupg-l10n (2.4.7-21+deb13u1) ...
+#7 12.86 Selecting previously unselected package gpg.
+#7 12.86 Preparing to unpack .../82-gpg_2.4.7-21+deb13u1+b5_amd64.deb ...
+#7 12.86 Unpacking gpg (2.4.7-21+deb13u1+b5) ...
+#7 12.90 Selecting previously unselected package pinentry-curses.
+#7 12.90 Preparing to unpack .../83-pinentry-curses_1.3.1-2_amd64.deb ...
+#7 12.90 Unpacking pinentry-curses (1.3.1-2) ...
+#7 12.94 Selecting previously unselected package gpg-agent.
+#7 12.95 Preparing to unpack .../84-gpg-agent_2.4.7-21+deb13u1+b5_amd64.deb ...
+#7 12.95 Unpacking gpg-agent (2.4.7-21+deb13u1+b5) ...
+#7 12.97 Selecting previously unselected package gpgsm.
+#7 12.97 Preparing to unpack .../85-gpgsm_2.4.7-21+deb13u1+b5_amd64.deb ...
+#7 12.97 Unpacking gpgsm (2.4.7-21+deb13u1+b5) ...
+#7 12.99 Selecting previously unselected package gnupg.
+#7 13.00 Preparing to unpack .../86-gnupg_2.4.7-21+deb13u1_all.deb ...
+#7 13.00 Unpacking gnupg (2.4.7-21+deb13u1) ...
+#7 13.02 Selecting previously unselected package make.
+#7 13.02 Preparing to unpack .../87-make_4.4.1-2_amd64.deb ...
+#7 13.02 Unpacking make (4.4.1-2) ...
+#7 13.05 Selecting previously unselected package ripgrep.
+#7 13.05 Preparing to unpack .../88-ripgrep_14.1.1-1+b4_amd64.deb ...
+#7 13.05 Unpacking ripgrep (14.1.1-1+b4) ...
+#7 13.13 Setting up media-types (13.0.0) ...
+#7 13.13 Setting up libnpth0t64:amd64 (1.8-3) ...
+#7 13.13 Setting up libkeyutils1:amd64 (1.6.3-6) ...
+#7 13.13 Setting up libgdbm6t64:amd64 (1.24-2) ...
+#7 13.14 Setting up libgpg-error0:amd64 (1.51-4) ...
+#7 13.14 Setting up libgdbm-compat4t64:amd64 (1.24-2) ...
+#7 13.14 Setting up libbrotli1:amd64 (1.1.0-2+b7) ...
+#7 13.14 Setting up binutils-common:amd64 (2.44-3) ...
+#7 13.14 Setting up libnghttp2-14:amd64 (1.64.0-1.1+deb13u1) ...
+#7 13.14 Setting up linux-libc-dev (6.12.113-1) ...
+#7 13.15 Setting up libctf-nobfd0:amd64 (2.44-3) ...
+#7 13.15 Setting up libgcrypt20:amd64 (1.11.0-7+deb13u1) ...
+#7 13.15 Setting up libcom-err2:amd64 (1.47.2-3+b12) ...
+#7 13.15 Setting up libgomp1:amd64 (14.2.0-19) ...
+#7 13.16 Setting up libsframe1:amd64 (2.44-3) ...
+#7 13.16 Setting up libjansson4:amd64 (2.14-2+b3) ...
+#7 13.16 Setting up libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
+#7 13.16 Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+#7 13.16 Setting up rpcsvc-proto (1.4.3-1) ...
+#7 13.17 Setting up make (4.4.1-2) ...
+#7 13.17 Setting up libmpfr6:amd64 (4.2.2-1) ...
+#7 13.17 Setting up gnupg-l10n (2.4.7-21+deb13u1) ...
+#7 13.17 Setting up libquadmath0:amd64 (14.2.0-19) ...
+#7 13.17 Setting up libunistring5:amd64 (1.3-2) ...
+#7 13.18 Setting up libmpc3:amd64 (1.3.1-1+b3) ...
+#7 13.18 Setting up libatomic1:amd64 (14.2.0-19) ...
+#7 13.18 Setting up libncursesw6:amd64 (6.5+20250216-2) ...
+#7 13.18 Setting up libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
+#7 13.18 Setting up libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+#7 13.19 Setting up libnghttp3-9:amd64 (1.8.0-1) ...
+#7 13.19 Setting up libubsan1:amd64 (14.2.0-19) ...
+#7 13.19 Setting up libffi8:amd64 (3.4.8-2) ...
+#7 13.19 Setting up perl-modules-5.40 (5.40.1-6+deb13u1) ...
+#7 13.20 Setting up ripgrep (14.1.1-1+b4) ...
+#7 13.20 Setting up libhwasan0:amd64 (14.2.0-19) ...
+#7 13.20 Setting up libcrypt-dev:amd64 (1:4.4.38-1) ...
+#7 13.22 Setting up libasan8:amd64 (14.2.0-19) ...
+#7 13.22 Setting up libassuan9:amd64 (3.0.2-2) ...
+#7 13.22 Setting up libtasn1-6:amd64 (4.20.0-2+deb13u1) ...
+#7 13.22 Setting up git-man (1:2.47.3-0+deb13u1) ...
+#7 13.23 Setting up netbase (6.5) ...
+#7 13.23 Setting up libngtcp2-16:amd64 (1.11.0-1+deb13u1) ...
+#7 13.24 Setting up libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
+#7 13.24 Setting up libssh2-1t64:amd64 (1.11.1-1+deb13u2) ...
+#7 13.24 Setting up libtsan2:amd64 (14.2.0-19) ...
+#7 13.24 Setting up libbinutils:amd64 (2.44-3) ...
+#7 13.24 Setting up libisl23:amd64 (0.27-1) ...
+#7 13.25 Setting up libc-dev-bin (2.41-12+deb13u4) ...
+#7 13.25 Setting up readline-common (8.2-6) ...
+#7 13.25 Setting up libcc1-0:amd64 (14.2.0-19) ...
+#7 13.25 Setting up libldap2:amd64 (2.6.10+dfsg-1) ...
+#7 13.26 Setting up liblsan0:amd64 (14.2.0-19) ...
+#7 13.26 Setting up libitm1:amd64 (14.2.0-19) ...
+#7 13.26 Setting up libctf0:amd64 (2.44-3) ...
+#7 13.26 Setting up libksba8:amd64 (1.6.7-2+b1) ...
+#7 13.26 Setting up pinentry-curses (1.3.1-2) ...
+#7 13.27 Setting up libidn2-0:amd64 (2.3.8-2) ...
+#7 13.27 Setting up libperl5.40:amd64 (5.40.1-6+deb13u1) ...
+#7 13.27 Setting up perl (5.40.1-6+deb13u1) ...
+#7 13.28 Setting up libgprofng0:amd64 (2.44-3) ...
+#7 13.28 Setting up libp11-kit0:amd64 (0.25.5-3) ...
+#7 13.28 Setting up libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
+#7 13.29 Setting up cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 13.29 Setting up cpp-14 (14.2.0-19) ...
+#7 13.29 Setting up libreadline8t64:amd64 (8.2-6) ...
+#7 13.29 Setting up gpgconf (2.4.7-21+deb13u1+b5) ...
+#7 13.29 Setting up libc6-dev:amd64 (2.41-12+deb13u4) ...
+#7 13.30 Setting up libgcc-14-dev:amd64 (14.2.0-19) ...
+#7 13.30 Setting up libstdc++-14-dev:amd64 (14.2.0-19) ...
+#7 13.30 Setting up libpython3.13-stdlib:amd64 (3.13.5-2+deb13u5) ...
+#7 13.30 Setting up gpg (2.4.7-21+deb13u1+b5) ...
+#7 13.41 Setting up libpython3-stdlib:amd64 (3.13.5-1) ...
+#7 13.41 Setting up binutils-x86-64-linux-gnu (2.44-3) ...
+#7 13.42 Setting up cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 13.42 Setting up libgnutls30t64:amd64 (3.8.9-3+deb13u4) ...
+#7 13.42 Setting up gpg-agent (2.4.7-21+deb13u1+b5) ...
+#7 13.85 Setting up python3.13 (3.13.5-2+deb13u5) ...
+#7 14.56 Setting up gpgsm (2.4.7-21+deb13u1+b5) ...
+#7 14.56 Setting up libpsl5t64:amd64 (0.21.2-1.1+b1) ...
+#7 14.56 Setting up python3 (3.13.5-1) ...
+#7 14.57 running python rtupdate hooks for python3.13...
+#7 14.57 running python post-rtupdate hooks for python3.13...
+#7 14.64 Setting up binutils (2.44-3) ...
+#7 14.67 Setting up liberror-perl (0.17030-1) ...
+#7 14.67 Setting up dirmngr (2.4.7-21+deb13u1+b5) ...
+#7 14.79 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b5) ...
+#7 14.79 Setting up cpp (4:14.2.0-1) ...
+#7 14.80 Setting up gnupg (2.4.7-21+deb13u1) ...
+#7 14.80 Setting up gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 14.80 Setting up libngtcp2-crypto-gnutls8:amd64 (1.11.0-1+deb13u1) ...
+#7 14.80 Setting up gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 14.81 Setting up libcurl4t64:amd64 (8.14.1-2+deb13u7) ...
+#7 14.81 Setting up libcurl3t64-gnutls:amd64 (8.14.1-2+deb13u7) ...
+#7 14.81 Setting up gcc-14 (14.2.0-19) ...
+#7 14.81 Setting up git (1:2.47.3-0+deb13u1) ...
+#7 14.82 Setting up g++-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 14.82 Setting up g++-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 14.82 Setting up curl (8.14.1-2+deb13u7) ...
+#7 14.82 Setting up g++-14 (14.2.0-19) ...
+#7 14.83 Setting up gcc (4:14.2.0-1) ...
+#7 14.83 Setting up g++ (4:14.2.0-1) ...
+#7 14.84 update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+#7 14.84 Processing triggers for libc-bin (2.41-12+deb13u4) ...
+#7 14.92 [38;5;79m2026-10-17 00:29:36 - Installing pre-requisites[0m
+#7 14.93 
+#7 14.93 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+#7 14.93 
+#7 14.97 Hit:1 http://deb.debian.org/debian trixie InRelease
+#7 14.97 Hit:2 http://deb.debian.org/debian trixie-updates InRelease
+#7 14.97 Hit:3 http://deb.debian.org/debian-security trixie-security InRelease
+#7 14.99 Reading package lists...
+#7 15.47 Building dependency tree...
+#7 15.58 Reading state information...
+#7 15.59 13 packages can be upgraded. Run 'apt list --upgradable' to see them.
+#7 15.60 
+#7 15.60 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+#7 15.60 
+#7 15.60 Reading package lists...
+#7 16.09 Building dependency tree...
+#7 16.21 Reading state information...
+#7 16.34 ca-certificates is already the newest version (20250419).
+#7 16.34 curl is already the newest version (8.14.1-2+deb13u7).
+#7 16.34 gnupg is already the newest version (2.4.7-21+deb13u1).
+#7 16.34 Installing:
+#7 16.34   apt-transport-https
+#7 16.34 
+#7 16.36 Summary:
+#7 16.36   Upgrading: 0, Installing: 1, Removing: 0, Not Upgrading: 13
+#7 16.36   Download size: 38.6 kB
+#7 16.36   Space needed: 49.2 kB / 89.2 GB available
+#7 16.36 
+#7 16.36 Get:1 http://deb.debian.org/debian trixie/main amd64 apt-transport-https all 3.0.3 [38.6 kB]
+#7 16.46 debconf: unable to initialize frontend: Dialog
+#7 16.46 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#7 16.46 debconf: falling back to frontend: Readline
+#7 16.47 debconf: unable to initialize frontend: Readline
+#7 16.47 debconf: (This frontend requires a controlling tty.)
+#7 16.47 debconf: falling back to frontend: Teletype
+#7 16.47 debconf: unable to initialize frontend: Teletype
+#7 16.47 debconf: (This frontend requires a controlling tty.)
+#7 16.47 debconf: falling back to frontend: Noninteractive
+#7 16.97 Fetched 38.6 kB in 0s (2268 kB/s)
+#7 16.98 Selecting previously unselected package apt-transport-https.
+#7 16.98 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 15253 files and directories currently installed.)
+#7 16.99 Preparing to unpack .../apt-transport-https_3.0.3_all.deb ...
+#7 16.99 Unpacking apt-transport-https (3.0.3) ...
+#7 17.00 Setting up apt-transport-https (3.0.3) ...
+#7 17.08 
+#7 17.08 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+#7 17.08 
+#7 17.15 Hit:1 http://deb.debian.org/debian trixie InRelease
+#7 17.16 Hit:2 http://deb.debian.org/debian trixie-updates InRelease
+#7 17.18 Get:3 https://deb.nodesource.com/node_24.x nodistro InRelease [12.1 kB]
+#7 17.18 Hit:4 http://deb.debian.org/debian-security trixie-security InRelease
+#7 17.19 Get:5 https://deb.nodesource.com/node_24.x nodistro/main amd64 Packages [9613 B]
+#7 17.21 Fetched 21.8 kB in 0s (186 kB/s)
+#7 17.21 Reading package lists...
+#7 17.69 Building dependency tree...
+#7 17.80 Reading state information...
+#7 17.82 13 packages can be upgraded. Run 'apt list --upgradable' to see them.
+#7 17.82 [1;34m2026-10-17 00:29:38 - Repository configured successfully.[0m
+#7 17.82 [38;5;79m2026-10-17 00:29:38 - To install Node.js, run: apt install nodejs -y[0m
+#7 17.82 [38;5;79m2026-10-17 00:29:38 - You can use N|solid Runtime as a node.js alternative[0m
+#7 17.82 [1;32m2026-10-17 00:29:38 - To install N|solid Runtime, run: apt install nsolid -y 
+#7 17.82 [0m
+#7 17.83 Reading package lists...
+#7 18.30 Building dependency tree...
+#7 18.43 Reading state information...
+#7 18.57 The following NEW packages will be installed:
+#7 18.57   nodejs
+#7 18.67 0 upgraded, 1 newly installed, 0 to remove and 13 not upgraded.
+#7 18.67 Need to get 39.5 MB of archives.
+#7 18.67 After this operation, 246 MB of additional disk space will be used.
+#7 18.67 Get:1 https://deb.nodesource.com/node_24.x nodistro/main amd64 nodejs amd64 24.22.0-1nodesource1 [39.5 MB]
+#7 19.19 debconf: unable to initialize frontend: Dialog
+#7 19.19 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#7 19.19 debconf: falling back to frontend: Readline
+#7 19.20 debconf: unable to initialize frontend: Readline
+#7 19.20 debconf: (This frontend requires a controlling tty.)
+#7 19.20 debconf: falling back to frontend: Teletype
+#7 19.20 debconf: unable to initialize frontend: Teletype
+#7 19.20 debconf: (This frontend requires a controlling tty.)
+#7 19.20 debconf: falling back to frontend: Noninteractive
+#7 19.70 Fetched 39.5 MB in 1s (77.6 MB/s)
+#7 19.72 Selecting previously unselected package nodejs.
+#7 19.72 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 15257 files and directories currently installed.)
+#7 19.73 Preparing to unpack .../nodejs_24.22.0-1nodesource1_amd64.deb ...
+#7 19.73 Unpacking nodejs (24.22.0-1nodesource1) ...
+#7 21.20 Setting up nodejs (24.22.0-1nodesource1) ...
+#7 DONE 22.6s
+
+#8 [ 3/25] RUN groupadd -r phaneris &&     useradd -r -g phaneris -m -d /home/phaneris -s /bin/bash phaneris
+#8 DONE 0.1s
+
+#9 [ 4/25] WORKDIR /app
+#9 DONE 0.0s
+
+#10 [ 5/25] COPY package.json bun.lock bunfig.toml ./
+#10 DONE 0.0s
+
+#11 [ 6/25] COPY packages/server/package.json packages/server/
+#11 DONE 0.0s
+
+#12 [ 7/25] COPY packages/server-core/package.json packages/server-core/
+#12 DONE 0.0s
+
+#13 [ 8/25] COPY packages/shared/package.json packages/shared/
+#13 DONE 0.0s
+
+#14 [ 9/25] COPY packages/core/package.json packages/core/
+#14 DONE 0.0s
+
+#15 [10/25] COPY packages/session-tools-core/package.json packages/session-tools-core/
+#15 DONE 0.0s
+
+#16 [11/25] COPY packages/pi-agent-server/package.json packages/pi-agent-server/
+#16 DONE 0.0s
+
+#17 [12/25] COPY packages/ui/package.json packages/ui/
+#17 DONE 0.0s
+
+#18 [13/25] COPY packages/messaging-gateway/package.json packages/messaging-gateway/
+#18 DONE 0.0s
+
+#19 [14/25] COPY packages/messaging-whatsapp-worker/package.json packages/messaging-whatsapp-worker/
+#19 DONE 0.0s
+
+#20 [15/25] COPY apps/electron/package.json apps/electron/
+#20 DONE 0.0s
+
+#21 [16/25] COPY apps/cli/package.json apps/cli/
+#21 DONE 0.0s
+
+#22 [17/25] COPY apps/viewer/package.json apps/viewer/
+#22 DONE 0.0s
+
+#23 [18/25] COPY apps/webui/package.json apps/webui/
+#23 DONE 0.0s
+
+#24 [19/25] COPY patches/ patches/
+#24 DONE 0.0s
+
+#25 [20/25] RUN bun install --frozen-lockfile
+#25 0.114 bun install v1.4.2 (744846f84)
+#25 0.129 Resolving dependencies
+#25 0.130 Resolved, downloaded and extracted [3]
+#25 14.69 
+#25 14.69 $ bun run husky
+#25 14.73 .git can't be found
+#25 14.73 + @babel/core@8.0.6
+#25 14.73 + @babel/eslint-parser@8.0.6
+#25 14.73 + @babel/preset-react@8.0.1
+#25 14.73 + @babel/preset-typescript@8.0.1
+#25 14.73 + @rolldown/plugin-babel@0.2.4
+#25 14.73 + @sentry/vite-plugin@5.4.0
+#25 14.73 + @tailwindcss/vite@4.3.3
+#25 14.73 + @types/bun@1.4.2
+#25 14.73 + @types/js-yaml@4.0.9
+#25 14.73 + @types/katex@0.16.8
+#25 14.73 + @types/linkify-it@5.0.0
+#25 14.73 + @types/node@24.19.1
+#25 14.73 + @types/react@19.3.0
+#25 14.73 + @types/react-dom@19.3.0
+#25 14.73 + @types/semver@7.8.0
+#25 14.73 + @types/shell-quote@1.7.5
+#25 14.73 + @vitejs/plugin-react@6.1.1
+#25 14.73 + electron@44.5.1
+#25 14.73 + electron-builder@26.17.0
+#25 14.73 + esbuild@0.28.2
+#25 14.73 + eslint@10.12.0
+#25 14.73 + eslint-plugin-react@7.37.5
+#25 14.73 + eslint-plugin-react-hooks@7.1.1
+#25 14.73 + husky@9.1.7
+#25 14.73 + openai@7.27.0
+#25 14.73 + tailwindcss@4.3.3
+#25 14.73 + tar@7.5.22
+#25 14.73 + typescript@7.0.2
+#25 14.73 + vite@8.3.2
+#25 14.73 + @img/sharp-libvips-linux-x64@1.3.4
+#25 14.73 + @img/sharp-linux-x64@0.35.5
+#25 14.73 + @dnd-kit/dom@0.5.0
+#25 14.73 + @dnd-kit/sortable@10.0.0
+#25 14.73 + @dnd-kit/utilities@3.2.2
+#25 14.73 + @earendil-works/pi-ai@1.2.0
+#25 14.73 + @earendil-works/pi-coding-agent@1.2.0
+#25 14.73 + @fontsource-variable/inter@5.3.0
+#25 14.73 + @fontsource-variable/jetbrains-mono@5.3.0
+#25 14.73 + @fontsource-variable/noto-sans-sc@5.3.0
+#25 14.73 + @modelcontextprotocol/sdk@1.32.0
+#25 14.73 + @paper-design/shaders-react@0.0.81
+#25 14.73 + @radix-ui/react-avatar@1.2.6
+#25 14.73 + @radix-ui/react-context-menu@2.3.7
+#25 14.73 + @radix-ui/react-dialog@1.1.23
+#25 14.73 + @radix-ui/react-dropdown-menu@2.1.24
+#25 14.73 + @radix-ui/react-label@2.1.15
+#25 14.73 + @radix-ui/react-popover@1.1.23
+#25 14.73 + @radix-ui/react-scroll-area@1.2.18
+#25 14.73 + @radix-ui/react-select@2.3.7
+#25 14.73 + @radix-ui/react-separator@1.1.15
+#25 14.73 + @radix-ui/react-slot@1.3.3
+#25 14.73 + @radix-ui/react-switch@1.3.7
+#25 14.73 + @radix-ui/react-tabs@1.1.21
+#25 14.73 + @radix-ui/react-tooltip@1.2.16
+#25 14.73 + @sentry/electron@7.20.0
+#25 14.73 + @sentry/react@10.75.0
+#25 14.73 + @tailwindcss/typography@0.5.20
+#25 14.73 + @tiptap/extension-file-handler@3.31.4
+#25 14.73 + @tiptap/extension-image@3.31.4
+#25 14.73 + @tiptap/extension-mathematics@3.31.4
+#25 14.73 + @tiptap/extension-placeholder@3.31.4
+#25 14.73 + @tiptap/extension-task-item@3.31.4
+#25 14.73 + @tiptap/extension-task-list@3.31.4
+#25 14.73 + @tiptap/extension-text-style@3.31.4
+#25 14.73 + @tiptap/markdown@3.31.4
+#25 14.73 + @tiptap/react@3.31.4
+#25 14.73 + @tiptap/starter-kit@3.31.4
+#25 14.73 + @tiptap/suggestion@3.31.4
+#25 14.73 + @types/ws@8.18.2
+#25 14.73 + @vscode/ripgrep@1.18.0
+#25 14.73 + beautiful-mermaid@1.1.3
+#25 14.73 + class-variance-authority@0.7.1
+#25 14.73 + clsx@2.1.1
+#25 14.73 + cmdk@1.1.1
+#25 14.73 + date-fns@4.4.0
+#25 14.73 + gray-matter@4.0.3
+#25 14.73 + jose@6.2.12
+#25 14.73 + jotai@3.0.1
+#25 14.73 + js-yaml@5.4.2
+#25 14.73 + katex@0.18.10
+#25 14.73 + linkify-it@6.1.0
+#25 14.73 + lucide-react@1.51.0
+#25 14.73 + marked@18.0.14
+#25 14.73 + markitdown-js@0.0.14
+#25 14.73 + motion@14.0.0
+#25 14.73 + open@11.0.4
+#25 14.73 + playwright@1.63.0
+#25 14.73 + prosemirror-highlight@0.16.0
+#25 14.73 + prosemirror-model@1.25.12
+#25 14.73 + prosemirror-state@1.4.4
+#25 14.73 + prosemirror-transform@1.12.2
+#25 14.73 + prosemirror-view@1.42.6
+#25 14.73 + react@19.3.0
+#25 14.73 + react-colorful@5.8.1
+#25 14.73 + react-day-picker@10.0.2
+#25 14.73 + react-dom@19.3.0
+#25 14.73 + react-i18next@17.0.15
+#25 14.73 + react-markdown@10.1.0
+#25 14.73 + react-pdf@11.0.0
+#25 14.73 + react-resizable-panels@4.14.2
+#25 14.73 + react-simple-code-editor@0.14.1
+#25 14.73 + rehype-katex@7.0.1
+#25 14.73 + rehype-raw@7.0.0
+#25 14.73 + rehype-sanitize@6.0.0
+#25 14.73 + remark-gfm@4.0.1
+#25 14.73 + remark-math@6.0.0
+#25 14.73 + semver@7.8.5
+#25 14.73 + sharp@0.35.5
+#25 14.73 + shiki@4.5.0
+#25 14.73 + sonner@2.0.8
+#25 14.73 + tailwind-merge@3.7.0
+#25 14.73 + tiptap-extension-code-block-shiki@1.2.0
+#25 14.73 + tiptap-markdown@0.9.0
+#25 14.73 + vaul@1.1.2
+#25 14.73 + ws@8.22.0
+#25 14.73 + zod@4.6.5
+#25 14.73 
+#25 14.73 1503 packages installed [14.62s]
+#25 DONE 16.8s
+
+#26 [21/25] COPY . .
+#26 DONE 0.3s
+
+#27 [22/25] RUN bun run build:runtime && mkdir -p apps/electron/resources/pi-agent-server &&     cp -R packages/pi-agent-server/dist/. apps/electron/resources/pi-agent-server/
+#27 0.142 $ bun run server:build:subprocess && bun run build:wa-worker
+#27 0.146 $ cd packages/pi-agent-server && bun run build
+#27 0.150 $ bun build src/index.ts --outfile=dist/bundle.js --target=bun --format=esm --external koffi --minify && bun run scripts/write-launcher.ts
+#27 0.506 Bundled 2649 modules in 353ms
+#27 0.506 
+#27 0.508   bundle.js  9.79 MB  (entry point)
+#27 0.508 
+#27 0.557 $ bun run scripts/build-wa-worker.ts
+#27 0.583 fatal: not a git repository (or any of the parent directories): .git
+#27 0.583 📨 Building WhatsApp worker (bundling Baileys) — build 2026-10-17T00:30:01.780Z (unknown)...
+#27 0.852 
+#27 0.852   packages/messaging-whatsapp-worker/dist/worker.cjs  7.2mb ⚠️
+#27 0.852 
+#27 0.852 ⚡ Done in 262ms
+#27 0.853 🔍 Verifying worker output...
+#27 0.961 ✅ WhatsApp worker built (7.16 MB) → /app/packages/messaging-whatsapp-worker/dist/worker.cjs
+#27 DONE 1.0s
+
+#28 [23/25] RUN NODE_OPTIONS="--max-old-space-size=4096" bunx vite build --config apps/webui/vite.config.ts
+#28 0.790 vite v8.3.2 building client environment for production...
+#28 0.800 transforming...
+#28 5.555 [plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "/app/node_modules/ag-psd/dist/abr.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+#28 5.555 [plugin rolldown:vite-resolve] Module "util" has been externalized for browser compatibility, imported by "/app/node_modules/ag-psd/dist/additionalInfo.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+#28 5.556 [plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "/app/node_modules/safer-buffer/safer.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+#28 5.556 [plugin rolldown:vite-resolve] Module "buffer" has been externalized for browser compatibility, imported by "/app/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+#28 6.765 ✓ 8957 modules transformed.
+#28 7.520 rendering chunks...
+#28 10.13 computing gzip size...
+#28 10.28 apps/webui/dist/index.html                                                        4.03 kB │ gzip:   1.30 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size3-Regular-CTq5MqoE.woff                          4.42 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2                         4.92 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2                         5.20 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2                         5.46 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size4-Regular-BF-4gkZK.woff                          5.98 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size2-Regular-oD1tc_U0.woff                          6.18 kB
+#28 10.28 apps/webui/dist/login.html                                                        6.25 kB │ gzip:   2.51 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size1-Regular-C195tn64.woff                          6.49 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2                   6.90 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2                      6.91 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-88-wght-normal-ClNDOCGW.woff2                 7.33 kB
+#28 10.28 apps/webui/dist/assets/jetbrains-mono-vietnamese-wght-normal-Bt-aOZkq.woff2       7.50 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size3-Regular-DgpXs0kz.ttf                           7.58 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff                    7.65 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff                       7.71 kB
+#28 10.28 apps/webui/dist/assets/ollama-D1dqFtP2.svg                                        7.84 kB │ gzip:   3.32 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-87-wght-normal-DYfJ-vGE.woff2                 8.01 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-latin-ext-wght-normal-CqPqLCfe.woff2          8.24 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-91-wght-normal-CGekvDdH.woff2                 8.70 kB
+#28 10.28 apps/webui/dist/assets/jetbrains-mono-greek-wght-normal-Bw9x6K1M.woff2            9.00 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-vietnamese-wght-normal-y5SU35Rl.woff2         9.09 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-90-wght-normal-BWcrRNoG.woff2                 9.34 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Script-Regular-D3wIWfF6.woff2                        9.64 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-99-wght-normal-Q_IptJM5.woff2                 9.70 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-cyrillic-wght-normal-CRA5_Pf1.woff2          10.00 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2                    10.34 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size4-Regular-DWFBv043.ttf                          10.36 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Script-Regular-D5yQViql.woff                        10.58 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-89-wght-normal-IQU_KQA8.woff2                10.98 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2                      11.31 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2                         11.34 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-21-wght-normal-DIu_1ZBI.woff2                11.35 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-6-wght-normal-ozUCEY9O.woff2                 11.46 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf                          11.50 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2                     12.02 kB
+#28 10.28 apps/webui/dist/assets/jetbrains-mono-cyrillic-wght-normal-D73BlboJ.woff2        12.10 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2                       12.21 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf                          12.22 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff                     12.31 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf                    12.34 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf                       12.36 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff                       13.20 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff                          13.29 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2                   13.56 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff                      14.11 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff                        14.40 kB
+#28 10.28 apps/webui/dist/assets/jetbrains-mono-latin-ext-wght-normal-DBQx-q_a.woff2       15.19 kB
+#28 10.28 apps/webui/dist/assets/inter-vietnamese-opsz-normal-Ci9T9ieq.woff2               15.26 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff                    16.02 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2                      16.40 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Math-Italic-t53AETM-.woff2                          16.44 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Script-Regular-C5JkGWo-.ttf                         16.64 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2                      16.78 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2                          16.98 kB
+#28 10.28 apps/webui/dist/assets/inter-greek-ext-opsz-normal-BmPQvyvo.woff2                17.37 kB
+#28 10.28 apps/webui/dist/assets/openrouter-PqWzhx9M.svg                                   17.50 kB │ gzip:  12.16 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff                       18.66 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Math-Italic-DA0__PXp.woff                           18.74 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff                       19.41 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf                      19.43 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Fraktur-Regular-CB_wures.ttf                        19.57 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf                           19.58 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Italic-BMLOBm91.woff                           19.67 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-5-wght-normal-DI846rD9.woff2                 20.17 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf                       22.36 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf                         24.50 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-latin-wght-normal-DYAKOyvl.woff2             25.24 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Bold-Cx986IdX.woff2                            25.32 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Regular-B22Nviop.woff2                         26.27 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-85-wght-normal-DBcDBu1n.woff2                26.90 kB
+#28 10.28 apps/webui/dist/assets/wecom-CGo71XvF.png                                        27.05 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf                     27.55 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2                          28.07 kB
+#28 10.28 apps/webui/dist/assets/inter-cyrillic-opsz-normal-BFQXbQ-f.woff2                 29.63 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Bold-Jm3AIy58.woff                             29.91 kB
+#28 10.28 apps/webui/dist/assets/inter-greek-opsz-normal-BM0NlUE_.woff2                    30.20 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Regular-Dr94JaBh.woff                          30.77 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf                        31.19 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Math-Italic-flOr_0UB.ttf                            31.30 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-84-wght-normal-C7NxT478.woff2                32.61 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-80-wght-normal-BEFypWOO.woff2                32.63 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf                        32.96 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_AMS-Regular-DMm9YOAa.woff                           33.51 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-86-wght-normal-CLJIoPpl.woff2                33.57 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Italic-3WenGoN9.ttf                            33.58 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-41-wght-normal-CZqajZnl.woff2                36.41 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-77-wght-normal-Dkbi3pye.woff2                36.78 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-73-wght-normal-DwSJRYPJ.woff2                39.31 kB
+#28 10.28 apps/webui/dist/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2           40.40 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-79-wght-normal-DoJG4UTB.woff2                41.23 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-60-wght-normal-C1lngC61.woff2                41.43 kB
+#28 10.28 apps/webui/dist/assets/inter-cyrillic-ext-opsz-normal-CfYZpDVp.woff2             41.52 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-64-wght-normal-CbIuD2Eg.woff2                41.54 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-68-wght-normal-c0FjfUaj.woff2                41.56 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-65-wght-normal-BGqvKda2.woff2                41.60 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-51-wght-normal-C2bq6hC8.woff2                41.61 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-36-wght-normal-CtU9CyKw.woff2                41.83 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-70-wght-normal-ColEcmtJ.woff2                42.23 kB
+#28 10.28 apps/webui/dist/assets/manifest-B3ojFefP.svg                                     43.36 kB │ gzip:  15.84 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-83-wght-normal-C9UjAcMM.woff2                43.50 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-53-wght-normal-Bgkuo2tF.woff2                43.52 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-75-wght-normal-B0qL41rF.woff2                43.94 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-61-wght-normal-BxWkGF5M.woff2                45.27 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-42-wght-normal-CQ4lY28u.woff2                45.54 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-50-wght-normal-C5KfAmFp.woff2                45.87 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-82-wght-normal-DcxfR5OJ.woff2                46.17 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-118-wght-normal-BPEb0gM9.woff2               46.19 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-43-wght-normal-psppu0d8.woff2                46.62 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-40-wght-normal-BVn4-kgX.woff2                46.62 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-34-wght-normal-BF1rqDSt.woff2                46.88 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-72-wght-normal-D1VyfEG3.woff2                47.03 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-31-wght-normal-DW0t445S.woff2                47.22 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-33-wght-normal-BOTZYTjM.woff2                47.45 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-27-wght-normal-BP2pEGQH.woff2                47.48 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-81-wght-normal-ed_TZlfo.woff2                47.54 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-59-wght-normal-Azv2Ku9_.woff2                47.67 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-71-wght-normal-ChZfXpdg.woff2                47.90 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-55-wght-normal-BV_Oy6IF.woff2                48.13 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-76-wght-normal-BPLMO_2x.woff2                48.42 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-78-wght-normal-BFUXeSw6.woff2                49.15 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-63-wght-normal-4La5uKvS.woff2                49.18 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-28-wght-normal-BWPKDbtH.woff2                50.20 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-35-wght-normal-Bosspiyr.woff2                50.68 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-48-wght-normal-DFMjDDY6.woff2                50.76 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-26-wght-normal-YNOygvr_.woff2                50.88 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Bold-waoOVXN0.ttf                              51.33 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-39-wght-normal-Ddtm1XVC.woff2                51.78 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-52-wght-normal-P18e_Y0j.woff2                51.84 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-54-wght-normal-DL5lmlUd.woff2                52.00 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-117-wght-normal-Dsz3vkzU.woff2               52.46 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-32-wght-normal-ShbWPcei.woff2                52.54 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-67-wght-normal-CC-WRBV-.woff2                52.58 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-49-wght-normal-B7l_3BZr.woff2                52.84 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-66-wght-normal-BvNozWOY.woff2                52.86 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-116-wght-normal-vdFVzbO2.woff2               52.98 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-56-wght-normal-B4L7Hj8f.woff2                53.50 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-37-wght-normal-ghDiyiuv.woff2                53.52 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_Main-Regular-ypZvNtVU.ttf                           53.58 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-29-wght-normal-45aVmHn_.woff2                54.00 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-44-wght-normal-cbKJlTUe.woff2                54.24 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-38-wght-normal-4Nz8k_dt.woff2                54.59 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-30-wght-normal-B8_s30jZ.woff2                54.65 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-57-wght-normal-DU8YBsDj.woff2                55.49 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-69-wght-normal-D596Jjl2.woff2                55.60 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-47-wght-normal-C5Kgg1_m.woff2                56.15 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-74-wght-normal-Cte7o1QG.woff2                56.42 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-115-wght-normal-BN__2iBG.woff2               56.50 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-23-wght-normal-4HrHKhpL.woff2                56.79 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-112-wght-normal-CiZxJMyY.woff2               57.64 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-58-wght-normal-CE0BKS9u.woff2                57.64 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-46-wght-normal-CErGc6Mt.woff2                57.66 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-114-wght-normal-CRH9SDZu.woff2               57.96 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-101-wght-normal-c94LAl5p.woff2               58.20 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-25-wght-normal-C3Jm6l7O.woff2                58.32 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-113-wght-normal-OgQXOX6x.woff2               58.64 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-62-wght-normal-CXXMAq-5.woff2                59.11 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-109-wght-normal-CnjNbNmw.woff2               60.37 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-102-wght-normal-C1RtbCZr.woff2               60.70 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-107-wght-normal-kFQzJDLH.woff2               61.07 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-110-wght-normal-D2JBr045.woff2               61.47 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-104-wght-normal-CJT2ioDJ.woff2               61.58 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-105-wght-normal-BFoiJwz2.woff2               61.82 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-24-wght-normal-B58DWgHS.woff2                62.58 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-106-wght-normal-D6uUHw3w.woff2               62.63 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-111-wght-normal-ClFr5QXM.woff2               62.66 kB
+#28 10.28 apps/webui/dist/assets/KaTeX_AMS-Regular-DRggAlZN.ttf                            63.63 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-103-wght-normal-DGHo20nu.woff2               63.86 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-100-wght-normal-DrqXJETY.woff2               64.54 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-108-wght-normal-7aXvqIa2.woff2               64.55 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-22-wght-normal-VXjdYcT-.woff2                65.38 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-45-wght-normal-MKIEVRIC.woff2                67.62 kB
+#28 10.28 apps/webui/dist/assets/inter-latin-opsz-normal-BwkfbSeq.woff2                    72.92 kB
+#28 10.28 apps/webui/dist/assets/noto-sans-sc-119-wght-normal-BfzSEbFz.woff2               76.80 kB
+#28 10.28 apps/webui/dist/assets/inter-latin-ext-opsz-normal-DpK-iCPk.woff2               133.33 kB
+#28 10.28 apps/webui/dist/assets/pdf.worker.min-Dswkl-cV.mjs                            1,265.41 kB
+#28 10.28 apps/webui/dist/assets/syntax-highlight.worker-DoAgfpDr.js                   10,083.62 kB
+#28 10.28 apps/webui/dist/assets/TerminalPanel-CfxV5nr_.css                                 4.09 kB │ gzip:   1.05 kB
+#28 10.28 apps/webui/dist/assets/TextLayer-DXuroF4_.css                                    10.36 kB │ gzip:   2.25 kB
+#28 10.28 apps/webui/dist/assets/TiptapMarkdownEditor-CRLC_Bgs.css                         16.01 kB │ gzip:   3.15 kB
+#28 10.28 apps/webui/dist/assets/login-BcAIipiD.css                                        16.35 kB │ gzip:   4.94 kB
+#28 10.28 apps/webui/dist/assets/SimpleDropdown-DFBh95Kb.css                               29.44 kB │ gzip:   7.96 kB
+#28 10.28 apps/webui/dist/assets/src-CSPhbFFu.css                                          30.45 kB │ gzip:   5.96 kB
+#28 10.28 apps/webui/dist/assets/ProjectManagementSurface-aIDjVxpr.css                     69.65 kB │ gzip:  11.75 kB
+#28 10.28 apps/webui/dist/assets/main-CdNYtzhz.css                                        358.37 kB │ gzip:  86.00 kB
+#28 10.28 apps/webui/dist/assets/arrow-left-DmASwJGt.js                                     0.24 kB │ gzip:   0.22 kB │ map:     1.01 kB
+#28 10.28 apps/webui/dist/assets/loader-circle-XMh-6-jI.js                                  0.24 kB │ gzip:   0.22 kB │ map:     0.98 kB
+#28 10.28 apps/webui/dist/assets/circle-slash-DWJiet87.js                                   0.26 kB │ gzip:   0.23 kB │ map:     1.12 kB
+#28 10.28 apps/webui/dist/assets/lock-Bx1k_JsG.js                                           0.27 kB │ gzip:   0.24 kB │ map:     1.09 kB
+#28 10.28 apps/webui/dist/assets/utils-C2VDmFUD.js                                          0.31 kB │ gzip:   0.23 kB │ map:     0.54 kB
+#28 10.28 apps/webui/dist/assets/getTimezoneOffsetInMilliseconds-C-P8mx-m.js                0.32 kB │ gzip:   0.23 kB │ map:     1.57 kB
+#28 10.28 apps/webui/dist/assets/plus-CHA9NdAA.js                                           0.32 kB │ gzip:   0.25 kB │ map:     1.75 kB
+#28 10.28 apps/webui/dist/assets/settings-2-DFCOW4Gk.js                                     0.32 kB │ gzip:   0.25 kB │ map:     1.28 kB
+#28 10.28 apps/webui/dist/assets/monitor-C7mNcy8L.js                                        0.33 kB │ gzip:   0.26 kB │ map:     1.29 kB
+#28 10.28 apps/webui/dist/assets/app-window-DiC_URmY.js                                     0.33 kB │ gzip:   0.25 kB │ map:     1.29 kB
+#28 10.28 apps/webui/dist/assets/power-off-BxkKMkx8.js                                      0.35 kB │ gzip:   0.26 kB │ map:     1.25 kB
+#28 10.28 apps/webui/dist/assets/hash-CLATNyAC.js                                           0.36 kB │ gzip:   0.24 kB │ map:     1.40 kB
+#28 10.28 apps/webui/dist/assets/refresh-ccw-BVYJMWaz.js                                    0.39 kB │ gzip:   0.28 kB │ map:     1.30 kB
+#28 10.28 apps/webui/dist/assets/clsx-DB0hHKMi.js                                           0.41 kB │ gzip:   0.27 kB │ map:     1.12 kB
+#28 10.28 apps/webui/dist/assets/shield-alert-COg2QhpW.js                                   0.43 kB │ gzip:   0.31 kB │ map:     1.32 kB
+#28 10.28 apps/webui/dist/assets/file-text-D4VhNQOV.js                                      0.46 kB │ gzip:   0.30 kB │ map:     1.46 kB
+#28 10.28 apps/webui/dist/assets/permission-modes-Clv_At_1.js                               0.47 kB │ gzip:   0.30 kB │ map:     1.02 kB
+#28 10.28 apps/webui/dist/assets/play-Bxjr4ciB.js                                           0.48 kB │ gzip:   0.33 kB │ map:     1.92 kB
+#28 10.28 apps/webui/dist/assets/useAvailablePermissionModes-eJMWEiRS.js                    0.49 kB │ gzip:   0.33 kB │ map:     1.27 kB
+#28 10.28 apps/webui/dist/assets/pages-DN921_zV.js                                          0.55 kB │ gzip:   0.30 kB │ map:     1.43 kB
+#28 10.28 apps/webui/dist/assets/codeowners-C8r90Shi.js                                     0.58 kB │ gzip:   0.34 kB │ map:     1.05 kB
+#28 10.28 apps/webui/dist/assets/platform-DtquDxPg.js                                       0.59 kB │ gzip:   0.32 kB │ map:     2.72 kB
+#28 10.28 apps/webui/dist/assets/trash-BYEBvU2W.js                                          0.65 kB │ gzip:   0.41 kB │ map:     2.30 kB
+#28 10.28 apps/webui/dist/assets/shellsession-DYrWla-w.js                                   0.76 kB │ gzip:   0.46 kB │ map:     1.33 kB
+#28 10.28 apps/webui/dist/assets/tsv-sltzmVWM.js                                            0.77 kB │ gzip:   0.37 kB │ map:     1.34 kB
+#28 10.28 apps/webui/dist/assets/ai-model-options-Ccg_rkCX.js                               0.85 kB │ gzip:   0.45 kB │ map:     2.61 kB
+#28 10.28 apps/webui/dist/assets/MarkdownLatexBlock-b3UBKliC.js                             0.86 kB │ gzip:   0.54 kB │ map:     1.93 kB
+#28 10.28 apps/webui/dist/assets/html-derivative-PnFQL2pC.js                                0.89 kB │ gzip:   0.49 kB │ map:     1.42 kB
+#28 10.28 apps/webui/dist/assets/menu-context-BWoAno-r.js                                   0.91 kB │ gzip:   0.48 kB │ map:     4.58 kB
+#28 10.28 apps/webui/dist/assets/with-selector-GPu3JYML.js                                  1.00 kB │ gzip:   0.58 kB │ map:     5.15 kB
+#28 10.28 apps/webui/dist/assets/useProjects-DNd9JDj3.js                                    1.03 kB │ gzip:   0.56 kB │ map:     3.56 kB
+#28 10.28 apps/webui/dist/assets/git-rebase-CuqI2PUc.js                                     1.03 kB │ gzip:   0.47 kB │ map:     1.68 kB
+#28 10.28 apps/webui/dist/assets/qmldir-DCQb3MpD.js                                         1.03 kB │ gzip:   0.48 kB │ map:     1.70 kB
+#28 10.28 apps/webui/dist/assets/HeaderIconButton-PeRLhLKM.js                               1.16 kB │ gzip:   0.65 kB │ map:     2.65 kB
+#28 10.28 apps/webui/dist/assets/csv-Dx-8-gkx.js                                            1.17 kB │ gzip:   0.40 kB │ map:     1.95 kB
+#28 10.28 apps/webui/dist/assets/ShikiThemeContext-TJLA_Stk.js                              1.22 kB │ gzip:   0.66 kB │ map:     5.16 kB
+#28 10.28 apps/webui/dist/assets/git-commit-BSykSTBG.js                                     1.27 kB │ gzip:   0.56 kB │ map:     2.02 kB
+#28 10.28 apps/webui/dist/assets/rolldown-runtime-C0FnF6B9.js                               1.29 kB │ gzip:   0.71 kB
+#28 10.28 apps/webui/dist/assets/PDFPreviewOverlay-BpZXLrez.js                              1.30 kB │ gzip:   0.76 kB │ map:     1.13 kB
+#28 10.28 apps/webui/dist/assets/i18n-DNWC0bw2.js                                           1.32 kB │ gzip:   0.62 kB │ map:     5.10 kB
+#28 10.28 apps/webui/dist/assets/xsl-Ci-Eh2uW.js                                            1.40 kB │ gzip:   0.53 kB │ map:     2.17 kB
+#28 10.28 apps/webui/dist/assets/rename-dialog-j58Oscx9.js                                  1.41 kB │ gzip:   0.78 kB │ map:     4.08 kB
+#28 10.28 apps/webui/dist/assets/personal-profile-D2HBCdq1.js                               1.44 kB │ gzip:   0.63 kB │ map:     3.74 kB
+#28 10.28 apps/webui/dist/assets/SourceMenu-AVbocDGe.js                                     1.48 kB │ gzip:   0.65 kB │ map:     4.14 kB
+#28 10.28 apps/webui/dist/assets/sparql-D_iOobhT.js                                         1.52 kB │ gzip:   0.84 kB │ map:     2.10 kB
+#28 10.28 apps/webui/dist/assets/preload-helper-Dm0RifCr.js                                 1.54 kB │ gzip:   0.81 kB
+#28 10.28 apps/webui/dist/assets/ini-B5eOa1yu.js                                            1.55 kB │ gzip:   0.52 kB │ map:     2.43 kB
+#28 10.28 apps/webui/dist/assets/SkillMenu-Fixoz-09.js                                      1.56 kB │ gzip:   0.70 kB │ map:     4.50 kB
+#28 10.28 apps/webui/dist/assets/HeaderMenu-DqQujJ5Q.js                                     1.57 kB │ gzip:   0.80 kB │ map:     4.39 kB
+#28 10.28 apps/webui/dist/assets/AppShellContext-DAHMIQys.js                                1.64 kB │ gzip:   0.73 kB │ map:    17.52 kB
+#28 10.28 apps/webui/dist/assets/fortran-fixed-form-DEKoE2YW.js                             1.71 kB │ gzip:   0.72 kB │ map:     2.72 kB
+#28 10.28 apps/webui/dist/assets/PdfFilePreview-Dvai6utu.js                                 1.74 kB │ gzip:   0.89 kB │ map:     3.98 kB
+#28 10.28 apps/webui/dist/assets/docker-IyjqRm3v.js                                         1.77 kB │ gzip:   0.63 kB │ map:     2.61 kB
+#28 10.28 apps/webui/dist/assets/dotenv-CuH5my32.js                                         1.78 kB │ gzip:   0.64 kB │ map:     2.75 kB
+#28 10.28 apps/webui/dist/assets/local-storage-B82WpaCT.js                                  1.79 kB │ gzip:   0.85 kB │ map:     6.08 kB
+#28 10.28 apps/webui/dist/assets/desktop-Dlh5hvp9.js                                        1.87 kB │ gzip:   0.78 kB │ map:     2.72 kB
+#28 10.28 apps/webui/dist/assets/plugin-avatar-C0854ry0.js                                  1.89 kB │ gzip:   0.84 kB │ map:     5.34 kB
+#28 10.28 apps/webui/dist/assets/hxml-Dcm88srW.js                                           1.93 kB │ gzip:   0.93 kB │ map:     2.68 kB
+#28 10.28 apps/webui/dist/assets/projects-MKX_8jzp.js                                       1.94 kB │ gzip:   1.02 kB │ map:    16.38 kB
+#28 10.28 apps/webui/dist/assets/keybinding-context-BINK_-4j.js                             2.01 kB │ gzip:   0.86 kB │ map:    10.87 kB
+#28 10.28 apps/webui/dist/assets/erb-Dgt8dYs0.js                                            2.17 kB │ gzip:   0.65 kB │ map:     3.30 kB
+#28 10.28 apps/webui/dist/assets/wenyan-C8pVoKbM.js                                         2.19 kB │ gzip:   1.13 kB │ map:     3.15 kB
+#28 10.28 apps/webui/dist/assets/jssm-DXw9l8Rf.js                                           2.27 kB │ gzip:   0.64 kB │ map:     3.35 kB
+#28 10.28 apps/webui/dist/assets/PDFPreviewOverlay.impl-gyaRLsfH.js                         2.28 kB │ gzip:   1.18 kB │ map:     8.46 kB
+#28 10.28 apps/webui/dist/assets/useUpdateChecker-DtDYWXWZ.js                               2.28 kB │ gzip:   0.97 kB │ map:     8.55 kB
+#28 10.28 apps/webui/dist/assets/client-DYWoGJJs.js                                         2.33 kB │ gzip:   1.10 kB │ map:     7.39 kB
+#28 10.28 apps/webui/dist/assets/edge-ElHk8bR_.js                                           2.34 kB │ gzip:   0.71 kB │ map:     3.59 kB
+#28 10.28 apps/webui/dist/assets/session-loufWfD5.js                                        2.36 kB │ gzip:   1.11 kB │ map:    12.95 kB
+#28 10.28 apps/webui/dist/assets/reg-CRGYupPL.js                                            2.37 kB │ gzip:   0.72 kB │ map:     3.47 kB
+#28 10.28 apps/webui/dist/assets/ProjectMultiSelectFilter-Dk__Sv8f.js                       2.41 kB │ gzip:   1.04 kB │ map:     7.04 kB
+#28 10.28 apps/webui/dist/assets/SettingsSegmentedControl-DE0FP9UJ.js                       2.46 kB │ gzip:   1.16 kB │ map:    10.36 kB
+#28 10.28 apps/webui/dist/assets/ItemNavigator-DL8YxcyX.js                                  2.54 kB │ gzip:   1.13 kB │ map:     7.00 kB
+#28 10.28 apps/webui/dist/assets/dialog-DQD9oIuF.js                                         2.56 kB │ gzip:   1.10 kB │ map:     7.28 kB
+#28 10.28 apps/webui/dist/assets/diff-woXpYk--.js                                           2.60 kB │ gzip:   0.72 kB │ map:     3.82 kB
+#28 10.28 apps/webui/dist/assets/gleam-CSRkHgEL.js                                          2.61 kB │ gzip:   0.85 kB │ map:     3.95 kB
+#28 10.28 apps/webui/dist/assets/useWorkspaceIcon-CuIuA6r5.js                               2.61 kB │ gzip:   1.14 kB │ map:    12.26 kB
+#28 10.28 apps/webui/dist/assets/InputSettingsPage-CQQBxAGG.js                              2.64 kB │ gzip:   1.04 kB │ map:     7.89 kB
+#28 10.28 apps/webui/dist/assets/button-CX_K557g.js                                         2.67 kB │ gzip:   1.32 kB │ map:     8.45 kB
+#28 10.28 apps/webui/dist/assets/hy-CZbG8q4J.js                                             2.68 kB │ gzip:   1.21 kB │ map:     3.65 kB
+#28 10.28 apps/webui/dist/assets/openscad-BUDT5pXO.js                                       2.86 kB │ gzip:   1.04 kB │ map:     4.19 kB
+#28 10.28 apps/webui/dist/assets/log-BNLmms1o.js                                            2.88 kB │ gzip:   0.93 kB │ map:     4.31 kB
+#28 10.28 apps/webui/dist/assets/entity-list-empty-D-eS1iOl.js                              2.90 kB │ gzip:   1.19 kB │ map:     7.78 kB
+#28 10.28 apps/webui/dist/assets/json-DYyUca0x.js                                           2.93 kB │ gzip:   0.86 kB │ map:     4.31 kB
+#28 10.28 apps/webui/dist/assets/cairo-DLTphjLi.js                                          2.97 kB │ gzip:   0.83 kB │ map:     4.52 kB
+#28 10.28 apps/webui/dist/assets/berry-DKpUyyne.js                                          3.04 kB │ gzip:   0.84 kB │ map:     4.81 kB
+#28 10.28 apps/webui/dist/assets/jsonl-CmCQp5Yx.js                                          3.04 kB │ gzip:   0.82 kB │ map:     4.47 kB
+#28 10.28 apps/webui/dist/assets/jsonc-CYpm1nAK.js                                          3.14 kB │ gzip:   0.82 kB │ map:     4.57 kB
+#28 10.28 apps/webui/dist/assets/logo-Cluzi2Zq.js                                           3.16 kB │ gzip:   1.50 kB │ map:     3.78 kB
+#28 10.28 apps/webui/dist/assets/kanban-3IpZQpLO.js                                         3.20 kB │ gzip:   0.95 kB │ map:     7.27 kB
+#28 10.28 apps/webui/dist/assets/DeletePageDialog-Dii0p8QP.js                               3.26 kB │ gzip:   1.52 kB │ map:     9.42 kB
+#28 10.28 apps/webui/dist/assets/po-BiJDBrnU.js                                             3.27 kB │ gzip:   0.94 kB │ map:     5.05 kB
+#28 10.28 apps/webui/dist/assets/json5-BR5RXkoi.js                                          3.29 kB │ gzip:   0.86 kB │ map:     4.91 kB
+#28 10.28 apps/webui/dist/assets/mipsasm-BMqwQI7S.js                                        3.29 kB │ gzip:   1.21 kB │ map:     4.64 kB
+#28 10.28 apps/webui/dist/assets/tasl-DMoTqEGO.js                                           3.32 kB │ gzip:   0.88 kB │ map:     5.09 kB
+#28 10.28 apps/webui/dist/assets/rbs-C0MpOrj4.js                                            3.34 kB │ gzip:   0.76 kB │ map:     5.07 kB
+#28 10.28 apps/webui/dist/assets/genie-CV2tkWYe.js                                          3.39 kB │ gzip:   1.24 kB │ map:     4.83 kB
+#28 10.28 apps/webui/dist/assets/rel-BtDbiS_P.js                                            3.40 kB │ gzip:   1.14 kB │ map:     4.84 kB
+#28 10.28 apps/webui/dist/assets/vala-zf12oZj6.js                                           3.40 kB │ gzip:   1.22 kB │ map:     4.85 kB
+#28 10.28 apps/webui/dist/assets/splunk-BC2Px7Mm.js                                         3.47 kB │ gzip:   1.55 kB │ map:     4.40 kB
+#28 10.28 apps/webui/dist/assets/LabelsSettingsPage-CoDS2kEJ.js                             3.51 kB │ gzip:   1.32 kB │ map:    10.53 kB
+#28 10.28 apps/webui/dist/assets/doc-links-By5nI1Ld.js                                      3.53 kB │ gzip:   1.58 kB │ map:     6.81 kB
+#28 10.28 apps/webui/dist/assets/hurl-Cb5XgwOM.js                                           3.55 kB │ gzip:   1.13 kB │ map:     5.44 kB
+#28 10.28 apps/webui/dist/assets/fluent-C03EYrpw.js                                         3.64 kB │ gzip:   0.93 kB │ map:     5.17 kB
+#28 10.28 apps/webui/dist/assets/jsonnet-CJTPZ8u_.js                                        3.65 kB │ gzip:   1.07 kB │ map:     5.38 kB
+#28 10.28 apps/webui/dist/assets/ssh-config-BgfXC-Er.js                                     3.65 kB │ gzip:   1.63 kB │ map:     4.46 kB
+#28 10.28 apps/webui/dist/assets/kdl-CsD5j6eV.js                                            3.66 kB │ gzip:   1.07 kB │ map:     5.47 kB
+#28 10.28 apps/webui/dist/assets/narrat-_X_XdTYD.js                                         3.70 kB │ gzip:   1.13 kB │ map:     5.39 kB
+#28 10.28 apps/webui/dist/assets/turtle-ByJddavk.js                                         3.73 kB │ gzip:   1.00 kB │ map:     5.45 kB
+#28 10.28 apps/webui/dist/assets/glsl-C3yOxx6A.js                                           3.74 kB │ gzip:   1.49 kB │ map:     4.39 kB
+#28 10.28 apps/webui/dist/assets/ShortcutsPage-e4VBgiGG.js                                  3.93 kB │ gzip:   1.43 kB │ map:     9.80 kB
+#28 10.28 apps/webui/dist/assets/ron-VUp2lXgN.js                                            3.94 kB │ gzip:   1.01 kB │ map:     5.99 kB
+#28 10.28 apps/webui/dist/assets/zenscript-BnlCZFoB.js                                      3.95 kB │ gzip:   1.31 kB │ map:     5.72 kB
+#28 10.28 apps/webui/dist/assets/gn-CAXYAgV-.js                                             4.05 kB │ gzip:   1.53 kB │ map:     5.25 kB
+#28 10.28 apps/webui/dist/assets/pascal-4ZHwLPI5.js                                         4.18 kB │ gzip:   1.71 kB │ map:     5.50 kB
+#28 10.28 apps/webui/dist/assets/MarkdownPdfBlock.impl-BbhYDfAt.js                          4.29 kB │ gzip:   1.95 kB │ map:    14.93 kB
+#28 10.28 apps/webui/dist/assets/StyledDropdown-DxpuiOIj.js                                 4.40 kB │ gzip:   1.63 kB │ map:    14.82 kB
+#28 10.28 apps/webui/dist/assets/dropdown-menu-BtRxWBLA.js                                  4.43 kB │ gzip:   1.63 kB │ map:    15.49 kB
+#28 10.28 apps/webui/dist/assets/http-Dy2ncae7.js                                           4.45 kB │ gzip:   1.09 kB │ map:     6.73 kB
+#28 10.28 apps/webui/dist/assets/tcl-CZd0xW_V.js                                            4.46 kB │ gzip:   1.54 kB │ map:     6.44 kB
+#28 10.28 apps/webui/dist/assets/nextflow-CSgcYZcx.js                                       4.55 kB │ gzip:   1.20 kB │ map:     6.83 kB
+#28 10.28 apps/webui/dist/assets/rosmsg-CAekHB0j.js                                         4.56 kB │ gzip:   1.09 kB │ map:     6.72 kB
+#28 10.28 apps/webui/dist/assets/switch-B4j0_47C.js                                         4.64 kB │ gzip:   1.98 kB │ map:    16.63 kB
+#28 10.28 apps/webui/dist/assets/polar-C7UOKdEL.js                                          4.70 kB │ gzip:   1.16 kB │ map:     7.22 kB
+#28 10.28 apps/webui/dist/assets/sdbl-bTVj8UrX.js                                           4.73 kB │ gzip:   2.04 kB │ map:     5.86 kB
+#28 10.28 apps/webui/dist/assets/fennel-DQxkIbk2.js                                         4.80 kB │ gzip:   1.57 kB │ map:     6.38 kB
+#28 10.28 apps/webui/dist/assets/bibtex-Ci_nEsc7.js                                         4.83 kB │ gzip:   0.86 kB │ map:     6.99 kB
+#28 10.28 apps/webui/dist/assets/llvm-DqHOMS-s.js                                           5.07 kB │ gzip:   2.04 kB │ map:     6.62 kB
+#28 10.28 apps/webui/dist/assets/wgsl-BsKzXJz4.js                                           5.17 kB │ gzip:   1.42 kB │ map:     7.46 kB
+#28 10.28 apps/webui/dist/assets/gdresource-xMC7jr7x.js                                     5.33 kB │ gzip:   1.36 kB │ map:     7.76 kB
+#28 10.28 apps/webui/dist/assets/zig-CMLA9XwU.js                                            5.37 kB │ gzip:   1.59 kB │ map:     7.83 kB
+#28 10.28 apps/webui/dist/assets/qml-DaaPxMrD.js                                            5.37 kB │ gzip:   1.41 kB │ map:     8.12 kB
+#28 10.28 apps/webui/dist/assets/dax-BkyTk9wS.js                                            5.39 kB │ gzip:   2.25 kB │ map:     6.73 kB
+#28 10.28 apps/webui/dist/assets/bicep-CUHmPFLl.js                                          5.41 kB │ gzip:   1.18 kB │ map:     7.88 kB
+#28 10.28 apps/webui/dist/assets/SendResourceToWorkspaceDialog-DwKRjGIW.js                  5.42 kB │ gzip:   2.50 kB │ map:    19.96 kB
+#28 10.28 apps/webui/dist/assets/xml-BgwO9svv.js                                            5.49 kB │ gzip:   1.28 kB │ map:     7.86 kB
+#28 10.28 apps/webui/dist/assets/awk-BWXHIvNe.js                                            5.49 kB │ gzip:   1.41 kB │ map:     7.96 kB
+#28 10.28 apps/webui/dist/assets/jinja-TI5biEzb.js                                          5.67 kB │ gzip:   1.39 kB │ map:     8.49 kB
+#28 10.28 apps/webui/dist/assets/styled-context-menu-ChvEHUCU.js                            5.73 kB │ gzip:   1.90 kB │ map:    20.57 kB
+#28 10.28 apps/webui/dist/assets/CodeBlock-BvBeBzBR.js                                      5.74 kB │ gzip:   2.50 kB │ map:    17.64 kB
+#28 10.28 apps/webui/dist/assets/layout-CKzUHnn0.js                                         5.76 kB │ gzip:   2.15 kB │ map:    33.15 kB
+#28 10.28 apps/webui/dist/assets/lean-CewbzKMR.js                                           5.81 kB │ gzip:   1.95 kB │ map:     7.83 kB
+#28 10.28 apps/webui/dist/assets/useTranslation-RafYWE-u.js                                 5.88 kB │ gzip:   2.85 kB │ map:    23.91 kB
+#28 10.28 apps/webui/dist/assets/powerquery-DNMTfnFr.js                                     5.94 kB │ gzip:   1.54 kB │ map:     8.48 kB
+#28 10.28 apps/webui/dist/assets/shaderlab-TOUzSsQk.js                                      5.96 kB │ gzip:   2.11 kB │ map:     7.69 kB
+#28 10.28 apps/webui/dist/assets/cypher-ClKdZ_lG.js                                         5.99 kB │ gzip:   1.75 kB │ map:     8.40 kB
+#28 10.28 apps/webui/dist/assets/textarea-BDuC6VZY.js                                       6.00 kB │ gzip:   2.21 kB │ map:    23.53 kB
+#28 10.28 apps/webui/dist/assets/browser-aYsrqzFa.js                                        6.07 kB │ gzip:   1.89 kB │ map:    22.37 kB
+#28 10.28 apps/webui/dist/assets/coq-CGaSfhwR.js                                            6.08 kB │ gzip:   1.99 kB │ map:     8.19 kB
+#28 10.28 apps/webui/dist/assets/vb-DOwzaHZ0.js                                             6.10 kB │ gzip:   2.35 kB │ map:     7.98 kB
+#28 10.28 apps/webui/dist/assets/moonbit-D9W784E_.js                                        6.11 kB │ gzip:   1.74 kB │ map:     8.90 kB
+#28 10.28 apps/webui/dist/assets/min-dark-BSWPekZh.js                                       6.33 kB │ gzip:   1.74 kB │ map:     8.59 kB
+#28 10.28 apps/webui/dist/assets/gdshader-CBce3t8t.js                                       6.36 kB │ gzip:   1.75 kB │ map:     9.15 kB
+#28 10.28 apps/webui/dist/assets/ara-4CJ0cIlV.js                                            6.39 kB │ gzip:   1.84 kB │ map:     9.22 kB
+#28 10.28 apps/webui/dist/assets/verilog-B2gwz-sJ.js                                        6.44 kB │ gzip:   1.96 kB │ map:     8.52 kB
+#28 10.28 apps/webui/dist/assets/clojure-DqKBuwfJ.js                                        6.45 kB │ gzip:   1.45 kB │ map:     9.25 kB
+#28 10.28 apps/webui/dist/assets/PermissionsSettingsPage-Dc5E1VG2.js                        6.45 kB │ gzip:   1.94 kB │ map:    21.30 kB
+#28 10.28 apps/webui/dist/assets/postcss-BXeXVLqQ.js                                        6.45 kB │ gzip:   1.94 kB │ map:     9.07 kB
+#28 10.28 apps/webui/dist/assets/toml-CcmNWLt0.js                                           6.46 kB │ gzip:   1.31 kB │ map:     9.44 kB
+#28 10.28 apps/webui/dist/assets/SkillInfoPage-BUDMVR0q.js                                  6.55 kB │ gzip:   2.20 kB │ map:    19.18 kB
+#28 10.28 apps/webui/dist/assets/ServerSettingsPage-DyKpWxu7.js                             6.56 kB │ gzip:   2.22 kB │ map:    19.06 kB
+#28 10.28 apps/webui/dist/assets/proto-DB4EqR-F.js                                          6.58 kB │ gzip:   1.45 kB │ map:     9.87 kB
+#28 10.28 apps/webui/dist/assets/chapel-BG8u2Rih.js                                         6.66 kB │ gzip:   1.89 kB │ map:     9.40 kB
+#28 10.28 apps/webui/dist/assets/red-CYlAq2b0.js                                            6.77 kB │ gzip:   1.74 kB │ map:     9.47 kB
+#28 10.28 apps/webui/dist/assets/talonscript-CohzipZa.js                                    6.79 kB │ gzip:   1.52 kB │ map:    10.04 kB
+#28 10.28 apps/webui/dist/assets/r-CrJekUTE.js                                              6.84 kB │ gzip:   1.92 kB │ map:    10.38 kB
+#28 10.28 apps/webui/dist/assets/PluginInfoPage-Cxw9G3DB.js                                 6.89 kB │ gzip:   2.27 kB │ map:    20.98 kB
+#28 10.28 apps/webui/dist/assets/riscv-Ckw8ddFX.js                                          6.95 kB │ gzip:   2.01 kB │ map:     9.56 kB
+#28 10.28 apps/webui/dist/assets/soy-B7Bf2FPI.js                                            6.96 kB │ gzip:   1.66 kB │ map:    10.70 kB
+#28 10.28 apps/webui/dist/assets/solarized-light-DFPxpIYQ.js                                6.98 kB │ gzip:   1.83 kB │ map:     9.81 kB
+#28 10.28 apps/webui/dist/assets/min-light-DDpmG2fV.js                                      7.01 kB │ gzip:   1.92 kB │ map:     9.51 kB
+#28 10.28 apps/webui/dist/assets/ServerDirectoryBrowser-BrkmFU7O.js                         7.20 kB │ gzip:   2.70 kB │ map:    25.81 kB
+#28 10.28 apps/webui/dist/assets/scheme-DQCgrYNe.js                                         7.20 kB │ gzip:   2.08 kB │ map:     9.75 kB
+#28 10.28 apps/webui/dist/assets/ConnectionIcon-Bae_k2RL.js                                 7.25 kB │ gzip:   2.89 kB │ map:    26.85 kB
+#28 10.28 apps/webui/dist/assets/hlsl-Cvrh5tZx.js                                           7.29 kB │ gzip:   2.21 kB │ map:     9.20 kB
+#28 10.28 apps/webui/dist/assets/solarized-dark-b97czJOk.js                                 7.44 kB │ gzip:   1.93 kB │ map:    10.38 kB
+#28 10.28 apps/webui/dist/assets/qss-Fe1Jh2GI.js                                            7.50 kB │ gzip:   2.60 kB │ map:     9.37 kB
+#28 10.28 apps/webui/dist/assets/icon-cache-BevHqqbk.js                                     7.54 kB │ gzip:   2.90 kB │ map:    46.34 kB
+#28 10.28 apps/webui/dist/assets/AppSettingsPage-9iY8DVw_.js                                7.56 kB │ gzip:   2.46 kB │ map:    26.92 kB
+#28 10.28 apps/webui/dist/assets/source-avatar-B2JTfc5J.js                                  7.70 kB │ gzip:   2.96 kB │ map:    33.49 kB
+#28 10.28 apps/webui/dist/assets/prisma-DMgNhnYS.js                                         7.78 kB │ gzip:   1.51 kB │ map:    11.21 kB
+#28 10.28 apps/webui/dist/assets/systemd-BxMlprV5.js                                        7.90 kB │ gzip:   2.57 kB │ map:    10.60 kB
+#28 10.28 apps/webui/dist/assets/regexp-723CALth.js                                         8.09 kB │ gzip:   1.50 kB │ map:    11.18 kB
+#28 10.28 apps/webui/dist/assets/actions-B6rZjnKt.js                                        8.13 kB │ gzip:   2.48 kB │ map:    25.01 kB
+#28 10.28 apps/webui/dist/assets/docs-BcMYSDL5.js                                           8.18 kB │ gzip:   2.86 kB │ map:    29.64 kB
+#28 10.28 apps/webui/dist/assets/SourceInfoPage-CjJdklz5.js                                 8.19 kB │ gzip:   2.76 kB │ map:    29.19 kB
+#28 10.28 apps/webui/dist/assets/react-kHW2V6fO.js                                          8.28 kB │ gzip:   3.15 kB │ map:    32.64 kB
+#28 10.28 apps/webui/dist/assets/monokai-BscAjiQZ.js                                        8.29 kB │ gzip:   2.01 kB │ map:    11.56 kB
+#28 10.28 apps/webui/dist/assets/haml-CDrYgwc6.js                                           8.38 kB │ gzip:   1.89 kB │ map:    12.40 kB
+#28 10.28 apps/webui/dist/assets/vue-html-d0F-gcUX.js                                       8.52 kB │ gzip:   1.71 kB │ map:    11.98 kB
+#28 10.28 apps/webui/dist/assets/plsql-DGHpHOYJ.js                                          8.54 kB │ gzip:   3.03 kB │ map:    10.86 kB
+#28 10.28 apps/webui/dist/assets/dart-CHZY9Xhz.js                                           8.65 kB │ gzip:   2.03 kB │ map:    12.60 kB
+#28 10.28 apps/webui/dist/assets/horizon-CE9ld1lL.js                                        8.82 kB │ gzip:   1.98 kB │ map:    12.05 kB
+#28 10.28 apps/webui/dist/assets/kotlin-DhhofPvG.js                                         8.82 kB │ gzip:   2.16 kB │ map:    12.75 kB
+#28 10.28 apps/webui/dist/assets/horizon-bright-DSNQnXHK.js                                 8.83 kB │ gzip:   1.99 kB │ map:    12.10 kB
+#28 10.28 apps/webui/dist/assets/make-Dixweg8N.js                                           8.99 kB │ gzip:   1.79 kB │ map:    12.83 kB
+#28 10.28 apps/webui/dist/assets/dist-Br_XKetD.js                                           9.02 kB │ gzip:   2.88 kB │ map:    42.36 kB
+#28 10.28 apps/webui/dist/assets/PagesHome-bPCq_O6P.js                                      9.05 kB │ gzip:   3.24 kB │ map:    26.91 kB
+#28 10.28 apps/webui/dist/assets/andromeeda-vGVdxbeo.js                                     9.06 kB │ gzip:   2.39 kB │ map:    11.93 kB
+#28 10.28 apps/webui/dist/assets/sas-BMQYX8JZ.js                                            9.10 kB │ gzip:   3.85 kB │ map:    11.10 kB
+#28 10.28 apps/webui/dist/assets/dark-plus-Cs2F2srj.js                                      9.14 kB │ gzip:   2.13 kB │ map:    12.40 kB
+#28 10.28 apps/webui/dist/assets/slack-dark-DnToyrRv.js                                     9.16 kB │ gzip:   1.99 kB │ map:    12.49 kB
+#28 10.28 apps/webui/dist/assets/smithy-Dgaz7aur.js                                         9.17 kB │ gzip:   1.55 kB │ map:    13.04 kB
+#28 10.28 apps/webui/dist/assets/ThemeContext-BkbEbb0p.js                                   9.19 kB │ gzip:   3.55 kB │ map:    38.17 kB
+#28 10.28 apps/webui/dist/assets/sass-DXrisJhu.js                                           9.32 kB │ gzip:   2.52 kB │ map:    13.38 kB
+#28 10.28 apps/webui/dist/assets/plastic-DQwYfKfQ.js                                        9.33 kB │ gzip:   2.00 kB │ map:    12.46 kB
+#28 10.28 apps/webui/dist/assets/slack-ochin-B2OO5cIa.js                                    9.47 kB │ gzip:   2.12 kB │ map:    13.09 kB
+#28 10.28 apps/webui/dist/assets/jison-C7uQeUlv.js                                          9.73 kB │ gzip:   1.90 kB │ map:    14.10 kB
+#28 10.28 apps/webui/dist/assets/tex-nulmLfzO.js                                            9.77 kB │ gzip:   3.14 kB │ map:    12.43 kB
+#28 10.28 apps/webui/dist/assets/llm-connections-Ch3pkpDJ.js                                9.86 kB │ gzip:   2.50 kB │ map:    66.84 kB
+#28 10.28 apps/webui/dist/assets/cmake-Bj61d0ZC.js                                          9.89 kB │ gzip:   3.41 kB │ map:    11.23 kB
+#28 10.28 apps/webui/dist/assets/light-plus-DVQuIRkW.js                                     9.98 kB │ gzip:   2.31 kB │ map:    13.39 kB
+#28 10.28 apps/webui/dist/assets/hcl-Dh228itO.js                                           10.08 kB │ gzip:   1.96 kB │ map:    14.76 kB
+#28 10.28 apps/webui/dist/assets/rst-CXCpXMDR.js                                           10.35 kB │ gzip:   2.28 kB │ map:    15.69 kB
+#28 10.28 apps/webui/dist/assets/pkl-ot-7Btpt.js                                           10.40 kB │ gzip:   1.41 kB │ map:    15.44 kB
+#28 10.28 apps/webui/dist/assets/raku-B3gFvitq.js                                          10.50 kB │ gzip:   2.97 kB │ map:    12.88 kB
+#28 10.28 apps/webui/dist/assets/dream-maker-DW3nJb8Q.js                                   10.51 kB │ gzip:   2.29 kB │ map:    15.08 kB
+#28 10.28 apps/webui/dist/assets/nextflow-groovy-D7IRt6Pp.js                               10.57 kB │ gzip:   2.20 kB │ map:    15.35 kB
+#28 10.28 apps/webui/dist/assets/yaml-BnkSoqfe.js                                          10.61 kB │ gzip:   2.35 kB │ map:    14.89 kB
+#28 10.28 apps/webui/dist/assets/Trans-D7oicFz6.js                                         10.78 kB │ gzip:   4.58 kB │ map:    49.55 kB
+#28 10.28 apps/webui/dist/assets/just-vMcXd_8j.js                                          10.88 kB │ gzip:   2.65 kB │ map:    15.44 kB
+#28 10.28 apps/webui/dist/assets/elm-D_TZK0Oc.js                                           10.98 kB │ gzip:   2.13 kB │ map:    16.02 kB
+#28 10.28 apps/webui/dist/assets/AppearanceSettingsPage-Cn3fBDTg.js                        11.16 kB │ gzip:   3.72 kB │ map:    41.01 kB
+#28 10.28 apps/webui/dist/assets/github-light-EUqPIrTm.js                                  11.23 kB │ gzip:   2.53 kB │ map:    15.40 kB
+#28 10.28 apps/webui/dist/assets/prolog-iXnhIJG7.js                                        11.39 kB │ gzip:   3.88 kB │ map:    13.27 kB
+#28 10.28 apps/webui/dist/assets/terraform-DswuEJGm.js                                     11.42 kB │ gzip:   2.54 kB │ map:    16.19 kB
+#28 10.28 apps/webui/dist/assets/github-dark-C-LZuMrd.js                                   11.45 kB │ gzip:   2.56 kB │ map:    15.66 kB
+#28 10.28 apps/webui/dist/assets/puppet-CDv2pdJW.js                                        11.47 kB │ gzip:   2.14 kB │ map:    16.28 kB
+#28 10.28 apps/webui/dist/assets/laserwave-C_8bwKvT.js                                     11.54 kB │ gzip:   2.61 kB │ map:    14.68 kB
+#28 10.28 apps/webui/dist/assets/gherkin-DExj1W_8.js                                       11.98 kB │ gzip:   5.08 kB │ map:    13.09 kB
+#28 10.28 apps/webui/dist/assets/wasm-ByWQv1Qj.js                                          12.04 kB │ gzip:   2.21 kB │ map:    16.81 kB
+#28 10.28 apps/webui/dist/assets/hjson-CxZEssPk.js                                         12.08 kB │ gzip:   1.67 kB │ map:    17.25 kB
+#28 10.28 apps/webui/dist/assets/surrealql-7gu956ad.js                                     12.10 kB │ gzip:   3.33 kB │ map:    17.19 kB
+#28 10.28 apps/webui/dist/assets/apache-U0d_L8uA.js                                        12.49 kB │ gzip:   3.74 kB │ map:    15.92 kB
+#28 10.28 apps/webui/dist/assets/handlebars-f2VetpdR.js                                    12.53 kB │ gzip:   2.46 kB │ map:    17.90 kB
+#28 10.28 apps/webui/dist/assets/kanban-colors-Bp1-OjDT.js                                 12.57 kB │ gzip:   4.93 kB │ map:    36.60 kB
+#28 10.28 apps/webui/dist/assets/CopyButton-BfmO-EYp.js                                    12.67 kB │ gzip:   4.17 kB │ map:    53.73 kB
+#28 10.28 apps/webui/dist/assets/vesper-DdrHHSXu.js                                        12.77 kB │ gzip:   2.03 kB │ map:    16.19 kB
+#28 10.28 apps/webui/dist/assets/beancount-C2IN4Vk8.js                                     12.89 kB │ gzip:   2.25 kB │ map:    18.22 kB
+#28 10.28 apps/webui/dist/assets/bat-qdxAdBWQ.js                                           12.92 kB │ gzip:   3.26 kB │ map:    17.37 kB
+#28 10.28 apps/webui/dist/assets/fish-BJitypiv.js                                          13.07 kB │ gzip:   1.76 kB │ map:    16.82 kB
+#28 10.28 apps/webui/dist/assets/nsis-CjNLYCLg.js                                          13.16 kB │ gzip:   4.10 kB │ map:    16.00 kB
+#28 10.28 apps/webui/dist/assets/v-DBj4K9d_.js                                             13.36 kB │ gzip:   2.79 kB │ map:    19.39 kB
+#28 10.28 apps/webui/dist/assets/vitesse-light-VbXTXTou.js                                 13.66 kB │ gzip:   3.06 kB │ map:    18.53 kB
+#28 10.28 apps/webui/dist/assets/aurora-x-CDeNXAV0.js                                      13.70 kB │ gzip:   2.32 kB │ map:    17.55 kB
+#28 10.28 apps/webui/dist/assets/vitesse-black-fwtXNY1n.js                                 13.72 kB │ gzip:   3.09 kB │ map:    18.61 kB
+#28 10.28 apps/webui/dist/assets/vitesse-dark-BZCL-v6S.js                                  13.80 kB │ gzip:   3.10 kB │ map:    18.69 kB
+#28 10.28 apps/webui/dist/assets/pug-IfRh_sAf.js                                           13.89 kB │ gzip:   2.61 kB │ map:    20.53 kB
+#28 10.28 apps/webui/dist/assets/PreferencesPage-WFRYaxC8.js                               13.97 kB │ gzip:   5.02 kB │ map:    43.39 kB
+#28 10.28 apps/webui/dist/assets/synthwave-84-nFMaYfgc.js                                  14.08 kB │ gzip:   2.88 kB │ map:    19.08 kB
+#28 10.28 apps/webui/dist/assets/smalltalk-BHpQb5nM.js                                     14.16 kB │ gzip:   2.18 kB │ map:    19.30 kB
+#28 10.28 apps/webui/dist/assets/github-light-default-BXViO-2h.js                          14.21 kB │ gzip:   3.05 kB │ map:    19.26 kB
+#28 10.28 apps/webui/dist/assets/WorkspaceSettingsPage-B_8OfYbM.js                         14.31 kB │ gzip:   4.47 kB │ map:    47.97 kB
+#28 10.28 apps/webui/dist/assets/github-light-high-contrast-B68TUdTA.js                    14.33 kB │ gzip:   3.03 kB │ map:    19.44 kB
+#28 10.28 apps/webui/dist/assets/clarity-CtfBBspg.js                                       14.40 kB │ gzip:   2.54 kB │ map:    20.00 kB
+#28 10.28 apps/webui/dist/assets/settings-DqtCo4Q4.js                                      14.48 kB │ gzip:   4.05 kB │ map:    59.90 kB
+#28 10.28 apps/webui/dist/assets/github-dark-dimmed-Bx1FflLF.js                            14.48 kB │ gzip:   3.15 kB │ map:    19.63 kB
+#28 10.28 apps/webui/dist/assets/github-dark-default-DXG-b-1a.js                           14.48 kB │ gzip:   3.15 kB │ map:    19.63 kB
+#28 10.28 apps/webui/dist/assets/github-dark-high-contrast-B_tTalzw.js                     14.65 kB │ gzip:   3.11 kB │ map:    19.87 kB
+#28 10.28 apps/webui/dist/assets/gnuplot-7GGW24-e.js                                       14.82 kB │ gzip:   3.31 kB │ map:    20.78 kB
+#28 10.28 apps/webui/dist/assets/rust-DpiIf5JO.js                                          15.20 kB │ gzip:   2.76 kB │ map:    21.57 kB
+#28 10.28 apps/webui/dist/assets/kusto-C7mF5XQf.js                                         15.20 kB │ gzip:   3.96 kB │ map:    19.58 kB
+#28 10.28 apps/webui/dist/assets/nix-IvuFDN5E.js                                           15.54 kB │ gzip:   2.51 kB │ map:    22.85 kB
+#28 10.28 apps/webui/dist/assets/actionscript-3-Cs6JJXT5.js                                15.58 kB │ gzip:   2.74 kB │ map:    21.91 kB
+#28 10.28 apps/webui/dist/assets/lua-tuq8Rev2.js                                           15.64 kB │ gzip:   3.23 kB │ map:    22.13 kB
+#28 10.28 apps/webui/dist/assets/abap-CLvhMVsD.js                                          15.88 kB │ gzip:   5.96 kB │ map:    18.81 kB
+#28 10.28 apps/webui/dist/assets/matlab-D7qyCx1q.js                                        16.12 kB │ gzip:   3.10 kB │ map:    23.33 kB
+#28 10.28 apps/webui/dist/assets/cue-CE9AQfxI.js                                           16.23 kB │ gzip:   2.08 kB │ map:    23.76 kB
+#28 10.28 apps/webui/dist/assets/elixir-CnPE2eGA.js                                        16.30 kB │ gzip:   2.79 kB │ map:    23.13 kB
+#28 10.28 apps/webui/dist/assets/luau-VGWVLoqX.js                                          16.33 kB │ gzip:   3.60 kB │ map:    22.62 kB
+#28 10.28 apps/webui/dist/assets/solidity-Bj7E1mRn.js                                      16.44 kB │ gzip:   3.18 kB │ map:    23.90 kB
+#28 10.28 apps/webui/dist/assets/odin-B1RWQWA5.js                                          16.54 kB │ gzip:   2.96 kB │ map:    23.76 kB
+#28 10.28 apps/webui/dist/assets/ts-tags-DkeNAmvs.js                                       16.59 kB │ gzip:   2.08 kB │ map:    24.70 kB
+#28 10.28 apps/webui/dist/assets/AutomationInfoPage-Cc6fgUkt.js                            16.59 kB │ gzip:   4.86 kB │ map:    48.57 kB
+#28 10.28 apps/webui/dist/assets/kanagawa-wave-BML5mF2J.js                                 17.16 kB │ gzip:   2.94 kB │ map:    22.25 kB
+#28 10.28 apps/webui/dist/assets/kanagawa-lotus-BmuOG9ZW.js                                17.17 kB │ gzip:   2.94 kB │ map:    22.26 kB
+#28 10.28 apps/webui/dist/assets/kanagawa-dragon-Bozd7klA.js                               17.17 kB │ gzip:   2.96 kB │ map:    22.26 kB
+#28 10.28 apps/webui/dist/assets/move-BYnGhZoM.js                                          17.69 kB │ gzip:   3.10 kB │ map:    26.46 kB
+#28 10.28 apps/webui/dist/assets/graphql-DlruBr94.js                                       18.13 kB │ gzip:   2.57 kB │ map:    25.54 kB
+#28 10.28 apps/webui/dist/assets/liquid-iV652G51.js                                        18.14 kB │ gzip:   3.18 kB │ map:    25.27 kB
+#28 10.28 apps/webui/dist/assets/svelte-CAHOf6am.js                                        18.30 kB │ gzip:   3.18 kB │ map:    25.79 kB
+#28 10.28 apps/webui/dist/assets/SimpleDropdown-C4LQl8YN.js                                18.38 kB │ gzip:   6.30 kB │ map:    67.72 kB
+#28 10.28 apps/webui/dist/assets/material-theme-Bm3Qr25_.js                                18.66 kB │ gzip:   3.14 kB │ map:    24.10 kB
+#28 10.28 apps/webui/dist/assets/material-theme-ocean-CHQ94UKr.js                          18.68 kB │ gzip:   3.16 kB │ map:    24.13 kB
+#28 10.28 apps/webui/dist/assets/material-theme-darker-2IIEA8gg.js                         18.68 kB │ gzip:   3.13 kB │ map:    24.14 kB
+#28 10.28 apps/webui/dist/assets/material-theme-lighter-uhdI0v04.js                        18.69 kB │ gzip:   3.14 kB │ map:    24.15 kB
+#28 10.28 apps/webui/dist/assets/material-theme-palenight-B5W6OYN7.js                      18.69 kB │ gzip:   3.15 kB │ map:    24.16 kB
+#28 10.28 apps/webui/dist/assets/gdscript-DYvRD3hg.js                                      19.12 kB │ gzip:   3.80 kB │ map:    26.35 kB
+#28 10.28 apps/webui/dist/assets/groovy-CacY0gHj.js                                        19.21 kB │ gzip:   3.63 kB │ map:    27.49 kB
+#28 10.28 apps/webui/dist/assets/PanelHeader-T4XsUGC-.js                                   19.36 kB │ gzip:   5.81 kB │ map:    77.47 kB
+#28 10.28 apps/webui/dist/assets/ayu-dark-DluEY0Gj.js                                      20.12 kB │ gzip:   3.96 kB │ map:    27.02 kB
+#28 10.28 apps/webui/dist/assets/mdc-Db8_QLh7.js                                           20.12 kB │ gzip:   6.84 kB │ map:    23.93 kB
+#28 10.28 apps/webui/dist/assets/ayu-mirage-Bqwy1Gya.js                                    20.13 kB │ gzip:   3.95 kB │ map:    27.03 kB
+#28 10.28 apps/webui/dist/assets/glimmer-js-BWpsb5k_.js                                    20.13 kB │ gzip:   2.97 kB │ map:    28.65 kB
+#28 10.28 apps/webui/dist/assets/glimmer-ts-B2mVF2r6.js                                    20.13 kB │ gzip:   2.97 kB │ map:    28.65 kB
+#28 10.28 apps/webui/dist/assets/powershell-QtSnmXcu.js                                    20.19 kB │ gzip:   4.09 kB │ map:    26.57 kB
+#28 10.28 apps/webui/dist/assets/ayu-light-C3h-C4tm.js                                     20.19 kB │ gzip:   3.93 kB │ map:    27.10 kB
+#28 10.28 apps/webui/dist/assets/viml-DvXPmvsu.js                                          20.40 kB │ gzip:   6.77 kB │ map:    23.46 kB
+#28 10.28 apps/webui/dist/assets/snazzy-light-4G7pJPwS.js                                  20.82 kB │ gzip:   3.84 kB │ map:    27.99 kB
+#28 10.28 apps/webui/dist/assets/dracula-BHWKrbxM.js                                       21.10 kB │ gzip:   4.03 kB │ map:    27.47 kB
+#28 10.28 apps/webui/dist/assets/dracula-soft-5eyTD99u.js                                  21.12 kB │ gzip:   4.06 kB │ map:    27.50 kB
+#28 10.28 apps/webui/dist/assets/info-DKeA2L4O.js                                          21.39 kB │ gzip:   4.69 kB │ map:    67.13 kB
+#28 10.28 apps/webui/dist/assets/wit-DdvCle-K.js                                           21.50 kB │ gzip:   2.91 kB │ map:    30.06 kB
+#28 10.28 apps/webui/dist/assets/rose-pine-aMsaMD1D.js                                     21.78 kB │ gzip:   3.91 kB │ map:    28.74 kB
+#28 10.28 apps/webui/dist/assets/rose-pine-moon-DO-qXg-I.js                                21.80 kB │ gzip:   3.93 kB │ map:    28.77 kB
+#28 10.28 apps/webui/dist/assets/rose-pine-dawn-8PwUyIlP.js                                21.80 kB │ gzip:   3.92 kB │ map:    28.77 kB
+#28 10.28 apps/webui/dist/assets/nushell--0fT3PI1.js                                       21.80 kB │ gzip:   5.48 kB │ map:    29.41 kB
+#28 10.28 apps/webui/dist/assets/nim-Dqn02CMk.js                                           22.49 kB │ gzip:   3.19 kB │ map:    32.83 kB
+#28 10.28 apps/webui/dist/assets/common-lisp-Cv5bFMCO.js                                   22.62 kB │ gzip:   6.11 kB │ map:    26.65 kB
+#28 10.28 apps/webui/dist/assets/select-DD0pz2Au.js                                        22.67 kB │ gzip:   7.87 kB │ map:    97.78 kB
+#28 10.28 apps/webui/dist/assets/gruvbox-dark-hard-C820rvS2.js                             22.68 kB │ gzip:   4.19 kB │ map:    30.54 kB
+#28 10.28 apps/webui/dist/assets/gruvbox-dark-soft-MrdJrrXF.js                             22.68 kB │ gzip:   4.19 kB │ map:    30.54 kB
+#28 10.28 apps/webui/dist/assets/gruvbox-light-hard-BC_s9l72.js                            22.68 kB │ gzip:   4.19 kB │ map:    30.55 kB
+#28 10.28 apps/webui/dist/assets/gruvbox-light-soft-BSMLrYjP.js                            22.68 kB │ gzip:   4.19 kB │ map:    30.55 kB
+#28 10.28 apps/webui/dist/assets/gruvbox-dark-medium-BPjhmG05.js                           22.69 kB │ gzip:   4.19 kB │ map:    30.56 kB
+#28 10.28 apps/webui/dist/assets/gruvbox-light-medium-BAWPOn9u.js                          22.69 kB │ gzip:   4.20 kB │ map:    30.56 kB
+#28 10.28 apps/webui/dist/assets/WeChatConnectDialog-DsG_UEeS.js                           23.07 kB │ gzip:   7.90 kB │ map:    92.77 kB
+#28 10.28 apps/webui/dist/assets/cadence-CQ2zXKGN.js                                       23.70 kB │ gzip:   3.69 kB │ map:    33.55 kB
+#28 10.28 apps/webui/dist/assets/sql-CdusftUB.js                                           23.77 kB │ gzip:   7.61 kB │ map:    28.26 kB
+#28 10.28 apps/webui/dist/assets/astro-D6yAtRaF.js                                         24.06 kB │ gzip:   7.63 kB │ map:    29.22 kB
+#28 10.28 apps/webui/dist/assets/apl-D8UTrxw0.js                                           24.07 kB │ gzip:   4.20 kB │ map:    33.38 kB
+#28 10.28 apps/webui/dist/assets/templ-C60WSTq_.js                                         24.10 kB │ gzip:   5.45 kB │ map:    30.91 kB
+#28 10.28 apps/webui/dist/assets/angular-html-Dn-5jmeL.js                                  24.29 kB │ gzip:   4.02 kB │ map:    35.68 kB
+#28 10.28 apps/webui/dist/assets/vhdl-BroJfC0k.js                                          24.29 kB │ gzip:   3.90 kB │ map:    33.34 kB
+#28 10.28 apps/webui/dist/assets/purescript-9MfHhQsQ.js                                    24.72 kB │ gzip:   3.27 kB │ map:    34.85 kB
+#28 10.28 apps/webui/dist/assets/twig-qr9vFjFf.js                                          24.89 kB │ gzip:   4.04 kB │ map:    34.76 kB
+#28 10.28 apps/webui/dist/assets/vue-JBqVDD9L.js                                           25.00 kB │ gzip:   3.06 kB │ map:    37.44 kB
+#28 10.28 apps/webui/dist/assets/one-light-D7Lr4KcI.js                                     25.34 kB │ gzip:   3.67 kB │ map:    33.77 kB
+#28 10.28 apps/webui/dist/assets/fsharp-D13ZGOAj.js                                        25.34 kB │ gzip:   4.16 kB │ map:    35.86 kB
+#28 10.28 apps/webui/dist/assets/marko-ZKOJ2oKt.js                                         25.76 kB │ gzip:   3.69 kB │ map:    36.18 kB
+#28 10.28 apps/webui/dist/assets/night-owl-light-eJ-hLW7d.js                               25.95 kB │ gzip:   4.27 kB │ map:    35.13 kB
+#28 10.28 apps/webui/dist/assets/NavigationContext-BAZKuUWK.js                             25.99 kB │ gzip:   8.15 kB │ map:   153.74 kB
+#28 10.28 apps/webui/dist/assets/c3-D0apG41V.js                                            26.41 kB │ gzip:   4.01 kB │ map:    38.16 kB
+#28 10.28 apps/webui/dist/assets/system-verilog-Dh5ihWbf.js                                26.60 kB │ gzip:   4.89 kB │ map:    36.45 kB
+#28 10.28 apps/webui/dist/assets/nord-Cb4Vim4T.js                                          26.76 kB │ gzip:   4.39 kB │ map:    35.31 kB
+#28 10.28 apps/webui/dist/assets/codeql-oeQT6MSM.js                                        26.92 kB │ gzip:   3.83 kB │ map:    35.97 kB
+#28 10.28 apps/webui/dist/assets/typespec-BGhR2SqG.js                                      27.03 kB │ gzip:   2.79 kB │ map:    37.55 kB
+#28 10.28 apps/webui/dist/assets/bundle-mjs-BtkjxxEO.js                                    27.27 kB │ gzip:   8.64 kB │ map:   148.75 kB
+#28 10.28 apps/webui/dist/assets/scss-DTxSD2jW.js                                          27.31 kB │ gzip:   4.27 kB │ map:    38.34 kB
+#28 10.28 apps/webui/dist/assets/java-CCLYh7Ws.js                                          27.32 kB │ gzip:   4.35 kB │ map:    38.62 kB
+#28 10.28 apps/webui/dist/assets/coffee-C17FjuDx.js                                        27.46 kB │ gzip:   6.38 kB │ map:    36.07 kB
+#28 10.28 apps/webui/dist/assets/razor-2VQKZ7iM.js                                         27.49 kB │ gzip:   3.58 kB │ map:    38.31 kB
+#28 10.28 apps/webui/dist/assets/scala-BiFt_7mu.js                                         28.92 kB │ gzip:   3.96 kB │ map:    40.08 kB
+#28 10.28 apps/webui/dist/assets/night-owl-DhmEMT88.js                                     28.95 kB │ gzip:   5.18 kB │ map:    39.02 kB
+#28 10.28 apps/webui/dist/assets/crystal-CoUSe2As.js                                       29.45 kB │ gzip:   4.47 kB │ map:    41.25 kB
+#28 10.28 apps/webui/dist/assets/applescript-CCn79oCD.js                                   29.61 kB │ gzip:   5.98 kB │ map:    39.31 kB
+#28 10.28 apps/webui/dist/assets/pierre-dark-CpLgRqie.js                                   30.59 kB │ gzip:   4.77 kB │ map:    34.20 kB
+#28 10.28 apps/webui/dist/assets/pierre-light-CoaEpmwp.js                                  30.59 kB │ gzip:   4.77 kB │ map:    34.21 kB
+#28 10.28 apps/webui/dist/assets/pierre-dark-soft-kZQmAZld.js                              30.61 kB │ gzip:   4.81 kB │ map:    34.23 kB
+#28 10.28 apps/webui/dist/assets/pierre-light-soft-lWLdNTOI.js                             30.61 kB │ gzip:   4.77 kB │ map:    34.23 kB
+#28 10.28 apps/webui/dist/assets/pierre-dark-tritanopia-CpjhbsIL.js                        30.62 kB │ gzip:   4.72 kB │ map:    34.26 kB
+#28 10.28 apps/webui/dist/assets/pierre-light-tritanopia-CEbqgOJL.js                       30.63 kB │ gzip:   4.73 kB │ map:    34.26 kB
+#28 10.28 apps/webui/dist/assets/pierre-dark-protanopia-deuteranopia-B35FxJx-.js           30.66 kB │ gzip:   4.80 kB │ map:    34.32 kB
+#28 10.28 apps/webui/dist/assets/pierre-light-protanopia-deuteranopia-0fSaH845.js          30.67 kB │ gzip:   4.76 kB │ map:    34.33 kB
+#28 10.28 apps/webui/dist/assets/stylus-B6D30XZt.js                                        31.11 kB │ gzip:   8.05 kB │ map:    38.84 kB
+#28 10.28 apps/webui/dist/assets/julia-px4_H0ze.js                                         31.26 kB │ gzip:   4.37 kB │ map:    40.93 kB
+#28 10.28 apps/webui/dist/assets/ahk-DwADkxyd.js                                           31.48 kB │ gzip:   7.86 kB │ map:    38.93 kB
+#28 10.28 apps/webui/dist/assets/poimandres-DRFjx7u4.js                                    33.53 kB │ gzip:   5.53 kB │ map:    43.03 kB
+#28 10.28 apps/webui/dist/assets/dist-BaazTQS7.js                                          33.62 kB │ gzip:   9.40 kB │ map:    95.76 kB
+#28 10.28 apps/webui/dist/assets/bsl-_VjlB9mv.js                                           33.99 kB │ gzip:   8.39 kB │ map:    37.71 kB
+#28 10.28 apps/webui/dist/assets/nginx-nAXs0UmH.js                                         35.39 kB │ gzip:   4.49 kB │ map:    48.46 kB
+#28 10.28 apps/webui/dist/assets/houston-CsvMBhTu.js                                       35.46 kB │ gzip:   5.80 kB │ map:    46.36 kB
+#28 10.28 apps/webui/dist/assets/tokyo-night-oM2G3aXe.js                                   35.71 kB │ gzip:   6.26 kB │ map:    45.31 kB
+#28 10.28 apps/webui/dist/assets/haxe-C8oCnwJJ.js                                          35.98 kB │ gzip:   6.04 kB │ map:    50.63 kB
+#28 10.28 apps/webui/dist/assets/org-DrQwSvLH.js                                           36.30 kB │ gzip:   3.70 kB │ map:    53.32 kB
+#28 10.28 apps/webui/dist/assets/one-dark-pro-C6YyR8OD.js                                  37.10 kB │ gzip:   6.14 kB │ map:    48.69 kB
+#28 10.28 apps/webui/dist/assets/erlang-Cphh6RMH.js                                        37.52 kB │ gzip:   4.39 kB │ map:    51.54 kB
+#28 10.28 apps/webui/dist/assets/PageView-BevURirI.js                                      38.10 kB │ gzip:  10.20 kB │ map:   146.28 kB
+#28 10.28 apps/webui/dist/assets/AutomationAvatar-pqCILYZz.js                              38.12 kB │ gzip:  12.02 kB │ map:   101.07 kB
+#28 10.28 apps/webui/dist/assets/bird2-CYIUgYqB.js                                         38.71 kB │ gzip:   8.53 kB │ map:    50.75 kB
+#28 10.28 apps/webui/dist/assets/cobol-DpzlyaQV.js                                         39.11 kB │ gzip:  10.92 kB │ map:    47.34 kB
+#28 10.28 apps/webui/dist/assets/AiSettingsPage-DQXm1lwH.js                                40.51 kB │ gzip:  10.99 kB │ map:   130.72 kB
+#28 10.28 apps/webui/dist/assets/asm-Cmm7eHzH.js                                           40.75 kB │ gzip:   8.20 kB │ map:    52.96 kB
+#28 10.28 apps/webui/dist/assets/haskell-D8IpX4py.js                                       41.52 kB │ gzip:   6.44 kB │ map:    57.81 kB
+#28 10.28 apps/webui/dist/assets/shellscript-DoDh9O3W.js                                   41.59 kB │ gzip:   6.17 kB │ map:    56.52 kB
+#28 10.28 apps/webui/dist/assets/perl-Dlyx3JO6.js                                          43.18 kB │ gzip:   4.68 kB │ map:    60.80 kB
+#28 10.28 apps/webui/dist/assets/d-qD-0Kul2.js                                             43.82 kB │ gzip:   8.46 kB │ map:    62.65 kB
+#28 10.28 apps/webui/dist/assets/provider-icons-C1i17qYg.js                                44.34 kB │ gzip:  16.90 kB │ map:    75.15 kB
+#28 10.28 apps/webui/dist/assets/pierre-dark-vibrant-CpQYzh95.js                           44.81 kB │ gzip:   5.33 kB │ map:    48.44 kB
+#28 10.28 apps/webui/dist/assets/pierre-light-vibrant-D80Fkn33.js                          44.81 kB │ gzip:   5.31 kB │ map:    48.44 kB
+#28 10.28 apps/webui/dist/assets/ahk2-_6rzW9BS.js                                          45.10 kB │ gzip:   9.90 kB │ map:    59.48 kB
+#28 10.28 apps/webui/dist/assets/MessagingSettingsPage-B5Sb3eLp.js                         45.52 kB │ gzip:  10.43 kB │ map:   139.42 kB
+#28 10.28 apps/webui/dist/assets/ruby-BfbbXWBR.js                                          46.68 kB │ gzip:   5.74 kB │ map:    66.38 kB
+#28 10.28 apps/webui/dist/assets/go-rLFTqkRN.js                                            46.85 kB │ gzip:   5.18 kB │ map:    66.57 kB
+#28 10.28 apps/webui/dist/assets/apex-KFGFyKwG.js                                          47.92 kB │ gzip:   6.89 kB │ map:    66.88 kB
+#28 10.28 apps/webui/dist/assets/ada-X3Y2mlq2.js                                           48.11 kB │ gzip:   6.00 kB │ map:    70.92 kB
+#28 10.28 apps/webui/dist/assets/imba-DsUTQ-LC.js                                          49.96 kB │ gzip:   9.51 kB │ map:    68.04 kB
+#28 10.28 apps/webui/dist/assets/useStatuses-Ozoc6wIi.js                                   50.33 kB │ gzip:  16.65 kB │ map:   231.26 kB
+#28 10.28 apps/webui/dist/assets/catppuccin-mocha-DjuaAJKi.js                              50.90 kB │ gzip:   8.51 kB │ map:    66.67 kB
+#28 10.28 apps/webui/dist/assets/catppuccin-latte-CtsyrtPq.js                              50.90 kB │ gzip:   8.52 kB │ map:    66.67 kB
+#28 10.28 apps/webui/dist/assets/catppuccin-frappe-C9Q5zVZY.js                             50.90 kB │ gzip:   8.53 kB │ map:    66.67 kB
+#28 10.28 apps/webui/dist/assets/catppuccin-macchiato-R8nAf1vR.js                          50.91 kB │ gzip:   8.52 kB │ map:    66.69 kB
+#28 10.28 apps/webui/dist/assets/css-DOF-lnNg.js                                           53.47 kB │ gzip:  12.57 kB │ map:    66.42 kB
+#28 10.28 apps/webui/dist/assets/everforest-dark-sB-x3p7T.js                               53.79 kB │ gzip:   8.41 kB │ map:    68.24 kB
+#28 10.28 apps/webui/dist/assets/everforest-light-Df2xbC6M.js                              53.79 kB │ gzip:   8.41 kB │ map:    68.24 kB
+#28 10.28 apps/webui/dist/assets/mermaid-BxpfTIzt.js                                       54.85 kB │ gzip:   4.83 kB │ map:    79.97 kB
+#28 10.28 apps/webui/dist/assets/wikitext-ClFFjSW2.js                                      55.92 kB │ gzip:   4.85 kB │ map:    77.60 kB
+#28 10.28 apps/webui/dist/assets/stata-CGBdPs6I.js                                         57.03 kB │ gzip:  12.43 kB │ map:    74.16 kB
+#28 10.28 apps/webui/dist/assets/html-B2zDfId-.js                                          57.36 kB │ gzip:  11.82 kB │ map:    73.03 kB
+#28 10.28 apps/webui/dist/assets/ballerina-B7ZEbQpA.js                                     58.73 kB │ gzip:   8.14 kB │ map:    81.49 kB
+#28 10.28 apps/webui/dist/assets/markdown-BYOwaDjH.js                                      59.37 kB │ gzip:   5.70 kB │ map:    82.29 kB
+#28 10.28 apps/webui/dist/assets/ocaml-O90oeIOV.js                                         62.48 kB │ gzip:   5.08 kB │ map:    81.06 kB
+#28 10.28 apps/webui/dist/assets/useOnboarding-Dkma7w_K.js                                 63.69 kB │ gzip:  14.40 kB │ map:   225.40 kB
+#28 10.28 apps/webui/dist/assets/sparkles-DM0UHL-H.js                                      63.90 kB │ gzip:  20.60 kB │ map:   213.77 kB
+#28 10.28 apps/webui/dist/assets/mojo-fg40_ntQ.js                                          69.55 kB │ gzip:   9.24 kB │ map:    94.47 kB
+#28 10.28 apps/webui/dist/assets/python-gzcpVVnB.js                                        69.98 kB │ gzip:   9.13 kB │ map:    95.20 kB
+#28 10.28 apps/webui/dist/assets/c-mSN2GbH4.js                                             72.21 kB │ gzip:  10.59 kB │ map:    95.36 kB
+#28 10.28 apps/webui/dist/assets/latex-QGS9LWCU.js                                         73.29 kB │ gzip:   6.82 kB │ map:   101.42 kB
+#28 10.28 apps/webui/dist/assets/vyper-CgoNMtux.js                                         74.68 kB │ gzip:  10.73 kB │ map:   100.67 kB
+#28 10.28 apps/webui/dist/assets/Info_Badge-C5IdRGxz.js                                    77.58 kB │ gzip:  21.58 kB │ map:   470.78 kB
+#28 10.28 apps/webui/dist/assets/hack-CLw4KPdG.js                                          81.11 kB │ gzip:  26.49 kB │ map:    98.61 kB
+#28 10.28 apps/webui/dist/assets/model-picker-helpers-BiWHzvwg.js                          81.25 kB │ gzip:  24.61 kB │ map:   495.59 kB
+#28 10.28 apps/webui/dist/assets/UTIF-9StoZ7Vu.js                                          83.59 kB │ gzip:  29.36 kB │ map:   429.95 kB
+#28 10.28 apps/webui/dist/assets/swift-CyEgAFGc.js                                         87.26 kB │ gzip:  14.82 kB │ map:   115.24 kB
+#28 10.28 apps/webui/dist/assets/fortran-free-form-CYNrtFtB.js                             89.01 kB │ gzip:  11.23 kB │ map:   124.02 kB
+#28 10.28 apps/webui/dist/assets/csharp-dmMxLVLW.js                                        91.47 kB │ gzip:  10.84 kB │ map:   128.11 kB
+#28 10.28 apps/webui/dist/assets/racket-DcIDlBhZ.js                                        92.42 kB │ gzip:  15.11 kB │ map:   106.15 kB
+#28 10.28 apps/webui/dist/assets/jszip.min-BW_dJfab.js                                     95.85 kB │ gzip:  28.48 kB │ map:   220.41 kB
+#28 10.28 apps/webui/dist/assets/less-DVTAwKKz.js                                          97.66 kB │ gzip:  14.88 kB │ map:   131.81 kB
+#28 10.28 apps/webui/dist/assets/dist-BdQKmjOr.js                                          98.14 kB │ gzip:  32.88 kB │ map:   497.54 kB
+#28 10.28 apps/webui/dist/assets/blade-B7ge092p.js                                        105.01 kB │ gzip:  28.34 kB │ map:   131.04 kB
+#28 10.28 apps/webui/dist/assets/objective-c-D1A_Heim.js                                  105.45 kB │ gzip:  23.67 kB │ map:   129.61 kB
+#28 10.28 apps/webui/dist/assets/php-qA0VCL3I.js                                          113.16 kB │ gzip:  28.88 kB │ map:   142.17 kB
+#28 10.28 apps/webui/dist/assets/asciidoc-SCjQUq34.js                                     136.09 kB │ gzip:   9.49 kB │ map:   195.18 kB
+#28 10.28 apps/webui/dist/assets/mdx-DQZ5AkYe.js                                          136.14 kB │ gzip:  23.57 kB │ map:   176.68 kB
+#28 10.28 apps/webui/dist/assets/dist-DMFPrbqJ.js                                         155.96 kB │ gzip:  47.43 kB │ map:   529.10 kB
+#28 10.28 apps/webui/dist/assets/zh-Hans-Comtj-jr.js                                      156.37 kB │ gzip:  47.12 kB │ map:   180.47 kB
+#28 10.28 apps/webui/dist/assets/typst-cvW-L6Cf.js                                        163.53 kB │ gzip:  10.99 kB │ map:   234.09 kB
+#28 10.28 apps/webui/dist/assets/pl-DWQmvc74.js                                           171.82 kB │ gzip:  49.15 kB │ map:   195.92 kB
+#28 10.28 apps/webui/dist/assets/objective-cpp-BsSzOQcm.js                                172.01 kB │ gzip:  31.02 kB │ map:   218.50 kB
+#28 10.28 apps/webui/dist/assets/es-Ck3Sb2E2.js                                           172.72 kB │ gzip:  47.59 kB │ map:   196.80 kB
+#28 10.28 apps/webui/dist/assets/de-BSN-aJGU.js                                           174.55 kB │ gzip:  48.14 kB │ map:   198.59 kB
+#28 10.28 apps/webui/dist/assets/javascript-B3ZoUvGD.js                                   174.94 kB │ gzip:  16.73 kB │ map:   236.06 kB
+#28 10.28 apps/webui/dist/assets/tsx-D0-aSICp.js                                          175.64 kB │ gzip:  16.72 kB │ map:   236.72 kB
+#28 10.28 apps/webui/dist/assets/jsx-Cb6Vub3Y.js                                          177.89 kB │ gzip:  16.81 kB │ map:   238.97 kB
+#28 10.28 apps/webui/dist/assets/hu-C_h0ysmf.js                                           179.56 kB │ gzip:  50.33 kB │ map:   203.59 kB
+#28 10.28 apps/webui/dist/assets/typescript-ITQieXu3.js                                   181.19 kB │ gzip:  16.33 kB │ map:   244.40 kB
+#28 10.28 apps/webui/dist/assets/angular-ts-Cv8RQXHe.js                                   183.77 kB │ gzip:  16.82 kB │ map:   249.57 kB
+#28 10.28 apps/webui/dist/assets/vue-vine-D1l--V5f.js                                     190.10 kB │ gzip:  18.11 kB │ map:   255.22 kB
+#28 10.28 apps/webui/dist/assets/ja-B9vJiPxA.js                                           192.04 kB │ gzip:  50.19 kB │ map:   216.06 kB
+#28 10.28 apps/webui/dist/assets/TextLayer-CAg8t9bT.js                                    199.66 kB │ gzip:  61.83 kB │ map:   656.81 kB
+#28 10.28 apps/webui/dist/assets/katex-D5ZBl1ym.js                                        262.15 kB │ gzip:  77.32 kB │ map:   993.32 kB
+#28 10.28 apps/webui/dist/assets/wolfram-DLL8P-h_.js                                      262.42 kB │ gzip:  77.67 kB │ map:   279.62 kB
+#28 10.28 apps/webui/dist/assets/main-rQJynlBw.js                                         268.06 kB │ gzip:  83.86 kB │ map: 1,178.93 kB
+#28 10.28 apps/webui/dist/assets/TerminalPanel-nqXwL_cn.js                                335.76 kB │ gzip:  84.92 kB │ map:   705.63 kB
+#28 10.28 apps/webui/dist/assets/dist-gK6jUkV5.js                                         391.77 kB │ gzip: 137.64 kB │ map: 1,640.09 kB
+#28 10.28 apps/webui/dist/assets/sessions-D7nf6qFO.js                                     400.04 kB │ gzip: 108.86 kB │ map: 1,156.81 kB
+#28 10.28 apps/webui/dist/assets/lib-DFWTmV3G.js                                          403.24 kB │ gzip:  97.63 kB │ map: 1,317.90 kB
+#28 10.28 apps/webui/dist/assets/pdf-CP0v7958.js                                          431.16 kB │ gzip: 129.31 kB │ map: 1,464.35 kB
+#28 10.28 apps/webui/dist/assets/ChatDisplay-B-L94Yei.js                                  432.80 kB │ gzip: 115.19 kB │ map: 1,522.99 kB
+#28 10.28 apps/webui/dist/assets/pdf-ZtDP64_h.js                                          488.01 kB │ gzip: 148.31 kB │ map: 1,769.36 kB
+#28 10.28 apps/webui/dist/assets/xlsx-DC6Wu1yd.js                                         494.44 kB │ gzip: 161.30 kB │ map: 1,889.25 kB
+#28 10.28 apps/webui/dist/assets/OfficeFilePreview-BnbIu3uu.js                            555.25 kB │ gzip: 158.42 kB │ map: 2,342.36 kB
+#28 10.28 apps/webui/dist/assets/wasm-BnjxR4X6.js                                         622.36 kB │ gzip: 232.13 kB │ map:   622.85 kB
+#28 10.28 apps/webui/dist/assets/ProjectManagementSurface-BHXW7mt2.js                     701.02 kB │ gzip: 202.42 kB │ map: 3,051.46 kB
+#28 10.28 apps/webui/dist/assets/TiptapMarkdownEditor-DF1cURca.js                         702.88 kB │ gzip: 230.07 kB │ map: 2,985.71 kB
+#28 10.28 apps/webui/dist/assets/cpp-svqsdV-V.js                                          785.58 kB │ gzip:  58.30 kB │ map: 1,019.15 kB
+#28 10.28 apps/webui/dist/assets/emacs-lisp-DR2vtWaj.js                                   790.05 kB │ gzip: 200.35 kB │ map:   800.01 kB
+#28 10.28 apps/webui/dist/assets/App-BetN8h3w.js                                          853.67 kB │ gzip: 257.12 kB │ map: 2,220.67 kB
+#28 10.28 apps/webui/dist/assets/aiden0z-pptx-renderer.es-BXQyuVOg.js                     979.30 kB │ gzip: 311.14 kB │ map: 4,792.32 kB
+#28 10.28 apps/webui/dist/assets/src-BWoPWw_L.js                                        1,262.66 kB │ gzip: 364.38 kB │ map: 5,371.33 kB
+#28 10.28 apps/webui/dist/assets/dist-Ds1VV966.js                                       1,522.92 kB │ gzip: 469.49 kB │ map: 5,022.87 kB
+#28 10.28 
+#28 10.28 [plugin builtin:vite-reporter] 
+#28 10.28 (!) Some chunks are larger than 500 kB after minification. Consider:
+#28 10.28 - Using dynamic import() to code-split the application
+#28 10.28 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+#28 10.28 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#28 10.30 ✓ built in 9.51s
+#28 DONE 10.5s
+
+#29 [24/25] RUN mkdir -p /home/phaneris/.phaneris
+#29 DONE 0.2s
+
+#30 [25/25] RUN find /app -not -perm -o=r -exec chmod o+r {} + &&     find /app -type d -not -perm -o=x -exec chmod o+x {} + &&     chmod -R 777 /home/phaneris
+#30 DONE 1.9s
+
+#31 exporting to image
+#31 exporting layers
+#31 exporting layers 41.7s done
+#31 writing image sha256:90157679b17ec08d4165a5d1d3de7baf6a8f94b2bba54661455e9854c74f141a done
+#31 naming to docker.io/library/phaneris-verification-1792196958087:local done
+#31 DONE 41.7s
