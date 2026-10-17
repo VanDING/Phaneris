@@ -1,5 +1,6 @@
 import i18n from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { ErrorBanner } from '@phaneris/ui'
 import { Button } from '@/components/ui/button'
 import type { TransportConnectionState } from '../../../shared/types'
 
@@ -89,25 +90,17 @@ export function TransportConnectionBanner({
   const { t } = useTranslation()
   const copy = getTransportBannerCopy(state)
 
-  const toneClasses = copy.tone === 'error'
-    ? 'border-destructive/30 bg-destructive/10 text-destructive'
-    : copy.tone === 'warning'
-      ? 'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300'
-      : 'border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300'
-
   return (
-    <div className={`shrink-0 border-b px-4 py-2 ${toneClasses}`}>
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-sm font-medium truncate">{copy.title}</p>
-          <p className="text-xs opacity-90 truncate">{copy.description}</p>
-        </div>
-        {copy.showRetry && (
-          <Button size="sm" variant="outline" onClick={onRetry} className="shrink-0 h-7">
-            {t('common.retry')}
-          </Button>
-        )}
-      </div>
-    </div>
+    <ErrorBanner
+      tone={copy.tone}
+      title={copy.title}
+      description={copy.description}
+      className="shrink-0 rounded-none px-4 py-2"
+      action={copy.showRetry ? (
+        <Button size="sm" variant="outline" onClick={onRetry} className="shrink-0 h-7">
+          {t('common.retry')}
+        </Button>
+      ) : undefined}
+    />
   )
 }

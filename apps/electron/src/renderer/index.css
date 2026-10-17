@@ -216,7 +216,7 @@ html[data-scenic] {
 
   ::-webkit-scrollbar-thumb {
     background: var(--border);
-    border-radius: 4px;
+    border-radius: var(--shape-sm);
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -256,7 +256,7 @@ html[data-scenic] {
   }
   .scrollbar-hover::-webkit-scrollbar-thumb {
     background: transparent;
-    border-radius: 4px;
+    border-radius: var(--shape-sm);
   }
   .group:hover .scrollbar-hover::-webkit-scrollbar-thumb {
     background: var(--border);
@@ -265,15 +265,95 @@ html[data-scenic] {
     background: var(--muted-foreground);
   }
 
-  /* Mask fade utilities - for fading content at edges over transparent/image backgrounds */
-  .mask-fade-y {
-    mask-image: linear-gradient(to bottom, transparent 0%, black 32px, black calc(100% - 32px), transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 32px, black calc(100% - 32px), transparent 100%);
+  /* Mask fade utilities. The 7-stop alpha ramp follows a perceptual power curve
+     (y ≈ x^1.5) so retina screens do not show colour banding at the edge. The
+     scroll-driven variant zeroes the fade when the list is already at that edge;
+     hosts without scroll timelines keep the static fade. */
+  @property --scroll-fade-top {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
+  }
+  @property --scroll-fade-bottom {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
   }
 
-  .mask-fade-bottom {
-    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 32px), transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 32px), transparent 100%);
+  .mask-fade-y,
+  .mask-fade-bottom,
+  .mask-fade-top-short {
+    --scroll-fade-size: 28px;
+    --scroll-fade-top: var(--scroll-fade-size);
+    --scroll-fade-bottom: var(--scroll-fade-size);
+    mask-image: linear-gradient(to bottom,
+      transparent,
+      #0000000d calc(var(--scroll-fade-top) * .15),
+      #00000026 calc(var(--scroll-fade-top) * .3),
+      #0000004d calc(var(--scroll-fade-top) * .45),
+      #00000080 calc(var(--scroll-fade-top) * .6),
+      #000000b3 calc(var(--scroll-fade-top) * .75),
+      #000000d9 calc(var(--scroll-fade-top) * .87),
+      #000 var(--scroll-fade-top),
+      #000 calc(100% - var(--scroll-fade-bottom)),
+      #000000d9 calc(100% - var(--scroll-fade-bottom) * .87),
+      #000000b3 calc(100% - var(--scroll-fade-bottom) * .75),
+      #00000080 calc(100% - var(--scroll-fade-bottom) * .6),
+      #0000004d calc(100% - var(--scroll-fade-bottom) * .45),
+      #00000026 calc(100% - var(--scroll-fade-bottom) * .3),
+      #0000000d calc(100% - var(--scroll-fade-bottom) * .15),
+      transparent);
+    -webkit-mask-image: linear-gradient(to bottom,
+      transparent,
+      #0000000d calc(var(--scroll-fade-top) * .15),
+      #00000026 calc(var(--scroll-fade-top) * .3),
+      #0000004d calc(var(--scroll-fade-top) * .45),
+      #00000080 calc(var(--scroll-fade-top) * .6),
+      #000000b3 calc(var(--scroll-fade-top) * .75),
+      #000000d9 calc(var(--scroll-fade-top) * .87),
+      #000 var(--scroll-fade-top),
+      #000 calc(100% - var(--scroll-fade-bottom)),
+      #000000d9 calc(100% - var(--scroll-fade-bottom) * .87),
+      #000000b3 calc(100% - var(--scroll-fade-bottom) * .75),
+      #00000080 calc(100% - var(--scroll-fade-bottom) * .6),
+      #0000004d calc(100% - var(--scroll-fade-bottom) * .45),
+      #00000026 calc(100% - var(--scroll-fade-bottom) * .3),
+      #0000000d calc(100% - var(--scroll-fade-bottom) * .15),
+      transparent);
+  }
+
+  .mask-fade-bottom { --scroll-fade-top: 0px; }
+  .mask-fade-top-short { --scroll-fade-size: 16px; --scroll-fade-bottom: 0px; }
+
+  @supports (animation-timeline: scroll()) {
+    .mask-fade-y {
+      animation: scroll-fade-top linear both, scroll-fade-bottom linear both;
+      animation-timeline: scroll(self), scroll(self);
+      animation-range: 0 28px, calc(100% - 28px) 100%;
+    }
+    .mask-fade-bottom {
+      animation: scroll-fade-bottom linear both;
+      animation-timeline: scroll(self);
+      animation-range: calc(100% - 28px) 100%;
+    }
+    .mask-fade-top-short {
+      animation: scroll-fade-top-short linear both;
+      animation-timeline: scroll(self);
+      animation-range: 0 16px;
+    }
+  }
+
+  @keyframes scroll-fade-top {
+    from { --scroll-fade-top: 0px; }
+    to { --scroll-fade-top: 28px; }
+  }
+  @keyframes scroll-fade-bottom {
+    from { --scroll-fade-bottom: 28px; }
+    to { --scroll-fade-bottom: 0px; }
+  }
+  @keyframes scroll-fade-top-short {
+    from { --scroll-fade-top: 0px; }
+    to { --scroll-fade-top: 16px; }
   }
 
   /* Custom shadow utilities
@@ -397,6 +477,17 @@ html[data-scenic] {
     border: none;
     box-shadow: var(--shadow-modal-small);
   }
+
+  /* Dark surfaces simulate a chamfer catching top light: an inset 1px highlight
+     instead of a fluorescent outer white border. */
+  .dark .popover-styled {
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.10), var(--shadow-modal-small);
+  }
+}
+
+/* While a pane sash is dragging, iframes must not swallow pointer events. */
+body[data-pane-dragging="true"] iframe {
+  pointer-events: none;
 }
 
 /* Draggable title bar region for transparent window */
@@ -487,6 +578,63 @@ html[data-scenic] .fullscreen-overlay-background {
 /* The built-in and user themes share the dedicated composer input surface. */
 .theme-composer-surface {
   background-color: var(--input);
+  box-shadow:
+    0 4px 20px color-mix(in srgb, var(--theme-shadow-color) 4%, transparent),
+    inset 0 0 0 var(--edge-hairline) var(--border);
+  transition: box-shadow var(--motion-duration-standard) var(--motion-ease-enter);
+}
+
+/* Three optical states: resting ring, hovered stronger ring, focus-within dual
+   ring. Shadows stay out of layout, so the composer never reflows on focus. */
+.theme-composer-surface:hover {
+  box-shadow:
+    0 4px 24px color-mix(in srgb, var(--theme-shadow-color) 7%, transparent),
+    inset 0 0 0 var(--edge-hairline) color-mix(in srgb, var(--foreground) 20%, transparent);
+}
+
+.theme-composer-surface:focus-within {
+  box-shadow:
+    0 4px 24px color-mix(in srgb, var(--theme-shadow-color) 9%, transparent),
+    inset 0 0 0 var(--edge-hairline) var(--ring),
+    0 0 0 1.5px var(--ring),
+    0 0 6px 1px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.dark .theme-composer-surface:focus-within {
+  box-shadow:
+    0 4px 24px color-mix(in srgb, var(--theme-shadow-color) 45%, transparent),
+    inset 0 0 0 1px rgb(255 255 255 / 0.10),
+    0 0 0 1.5px var(--ring),
+    0 0 6px 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* File drag target: inset accent glow, not another border. */
+.composer-drag-glow {
+  background-color: color-mix(in srgb, var(--accent) 4%, var(--input));
+  box-shadow:
+    inset 0 0 0 2px var(--accent),
+    inset 0 0 24px -2px color-mix(in srgb, var(--accent) 20%, transparent),
+    0 4px 24px color-mix(in srgb, var(--theme-shadow-color) 9%, transparent);
+}
+
+/* Container-responsive composer: labels drop before anything is clipped.
+   4-step ladder: ≥576 full → <480 icon badges → <384 icon model → <320 icons only. */
+.theme-composer-surface,
+.composer-standalone {
+  container-type: inline-size;
+}
+
+@container (max-width: 480px) {
+  .composer-toolbar { gap: 2px; }
+  .composer-badge-label { display: none; }
+}
+
+@container (max-width: 384px) {
+  .composer-model-label { display: none; }
+}
+
+@container (max-width: 320px) {
+  .composer-source-badge { display: none; }
 }
 
 html[data-scenic] .input-container.theme-composer-surface {
@@ -1109,7 +1257,7 @@ html.dark[data-scenic] .fullscreen-overlay-background {
      even if internal padding alone wouldn't reach it. */
   .panel-header-btn {
     padding: 10px;
-    border-radius: 10px;
+    border-radius: var(--shape-xl);
     min-width: 44px;
     min-height: 44px;
   }
@@ -1201,7 +1349,7 @@ html.dark[data-scenic] .fullscreen-overlay-background {
   .header-icon-btn {
     width: 36px;
     height: 36px;
-    border-radius: 8px;
+    border-radius: var(--shape-lg);
   }
 
   [data-workspace-switcher="topbar"] [data-slot="chevron"] {
@@ -1357,7 +1505,7 @@ html:not([data-theme]) [data-shell-platform="macos"] {
     gap var(--motion-duration-spatial) var(--motion-ease-move);
 }
 .sidebar-profile[data-collapsed] .sidebar-profile-trigger { left: var(--sidebar-rail-inline-offset); width: var(--sidebar-rail-control-size); height: var(--sidebar-rail-control-size); gap: 0; }
-.sidebar-profile-avatar { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); font-size: 9px; }
+.sidebar-profile-avatar { width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); font-size: var(--type-micro-size); }
 .sidebar-settings-trigger {
   position: absolute;
   right: 0;

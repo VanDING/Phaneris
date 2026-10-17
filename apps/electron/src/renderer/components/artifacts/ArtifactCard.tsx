@@ -58,15 +58,15 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-semibold">{event.title}</span>
-            <span className="block truncate text-[11px] text-muted-foreground">{event.sourcePath}</span>
+            <span className="block truncate text-meta text-muted-foreground">{event.sourcePath}</span>
             {event.provenance?.model && (
-              <span className="block truncate text-[10px] text-muted-foreground" title={event.provenance.prompt}>
+              <span className="block truncate text-micro text-muted-foreground" title={event.provenance.prompt}>
                 {[event.provenance.provider, event.provenance.model].filter(Boolean).join(' · ')}
               </span>
             )}
           </span>
           <span className={cn(
-            'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+            'rounded-full px-2 py-0.5 text-micro font-semibold uppercase tracking-wide',
             status === 'ready' && 'bg-amber-500/12 text-amber-700 dark:text-amber-300',
             status === 'accepted' && 'bg-emerald-500/12 text-emerald-700 dark:text-emerald-300',
             status === 'conflict' && 'bg-destructive/10 text-destructive',
@@ -113,7 +113,7 @@ export function ArtifactCard({ event, live, onOpen, onAccept, onDiscard, onRevis
       )}
 
       {expanded && (validation || ['draft', 'ready', 'conflict'].includes(status)) && (
-        <div className="mt-2 flex flex-wrap items-center gap-2 px-1 py-1 text-[11px] text-muted-foreground">
+        <div className="mt-2 flex flex-wrap items-center gap-2 px-1 py-1 text-meta text-muted-foreground">
           {validation && (
             <span className="inline-flex items-center gap-1">
               {validation.valid

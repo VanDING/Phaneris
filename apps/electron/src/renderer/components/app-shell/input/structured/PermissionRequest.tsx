@@ -51,7 +51,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
         'overflow-hidden h-full flex flex-col bg-info/5',
         unstyled
           ? 'border-0'
-          : 'border border-info/30 rounded-[8px] shadow-middle'
+          : 'border border-info/30 rounded-shape-lg shadow-middle'
       )}
       data-tutorial="permission-banner"
     >
@@ -70,7 +70,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
           {risks.length > 0 && (
             <div className="flex flex-wrap gap-1" title={t('chat.permissionRiskHint')}>
               {risks.map((risk) => (
-                <span key={risk} className="rounded-[4px] bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive">
+                <span key={risk} className="rounded-shape-sm bg-destructive/10 px-1.5 py-0.5 text-micro font-medium text-destructive">
                   {riskLabels[risk]}
                 </span>
               ))}
@@ -120,7 +120,7 @@ export function PermissionRequest({ request, onResponse, unstyled = false }: Per
         </Button>
 
         {/* Tip text */}
-        {canRemember && <span className="min-w-0 flex-1 basis-full text-[10px] text-muted-foreground sm:basis-auto sm:text-right">
+        {canRemember && <span className="min-w-0 flex-1 basis-full text-micro text-muted-foreground sm:basis-auto sm:text-right">
           {request.type === 'bash' ? t('chat.permissionAlwaysAllowHint') : t('chat.permissionAlwaysAllowTip')}
         </span>}
       </div>

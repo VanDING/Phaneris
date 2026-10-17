@@ -182,7 +182,7 @@ export function CompactWorkspaceSwitcher({
           <button
             type="button"
             data-workspace-switcher="topbar"
-            className="titlebar-no-drag ml-1 h-9 flex-1 min-w-0 flex items-center justify-start gap-1 px-3 rounded-[8px] border border-foreground/6 text-sm text-foreground/55 hover:bg-foreground/5 hover:text-foreground transition-colors cursor-pointer data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
+            className="titlebar-no-drag ml-1 h-9 flex-1 min-w-0 flex items-center justify-start gap-1 px-3 rounded-shape-lg border border-foreground/6 text-sm text-foreground/55 hover:bg-foreground/5 hover:text-foreground transition-colors cursor-pointer data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
             aria-label={t('workspace.selectWorkspace')}
           >
             <WorkspaceAvatar
@@ -190,7 +190,7 @@ export function CompactWorkspaceSwitcher({
               workspaceName={selectedWorkspace?.name}
               src={selectedWorkspace ? workspaceIconMap.get(selectedWorkspace.id) : undefined}
               className="h-5 w-5 mr-1.5 rounded-full ring-1 ring-border/50"
-              fallbackClassName="rounded-full text-[11px]"
+              fallbackClassName="rounded-full text-meta"
             />
             <span className="truncate min-w-0 flex-1 text-left">{selectedWorkspace?.name || 'Workspace'}</span>
             {selectedWorkspace?.remoteServer && (
@@ -228,7 +228,7 @@ export function CompactWorkspaceSwitcher({
                 <div
                   key={workspace.id}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-3 rounded-[10px] transition-colors",
+                    "flex items-center gap-3 px-3 py-3 rounded-shape-xl transition-colors",
                     isActive ? "bg-foreground/5" : "hover:bg-foreground/5",
                     disconnected && "opacity-60",
                   )}
@@ -264,7 +264,7 @@ export function CompactWorkspaceSwitcher({
                     <button
                       type="button"
                       onClick={() => handleRemoveWorkspace(workspace)}
-                      className="shrink-0 h-9 w-9 rounded-[8px] flex items-center justify-center text-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      className="shrink-0 h-9 w-9 rounded-shape-lg flex items-center justify-center text-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
                       aria-label={t("workspace.removeWorkspace")}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -274,7 +274,7 @@ export function CompactWorkspaceSwitcher({
                     <button
                       type="button"
                       onClick={() => { onSelect(workspace.id, true); setOpen(false) }}
-                      className="shrink-0 h-9 w-9 rounded-[8px] flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-foreground/10 transition-colors"
+                      className="shrink-0 h-9 w-9 rounded-shape-lg flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-foreground/10 transition-colors"
                       aria-label={t("sidebarMenu.openInNewWindow")}
                     >
                       <ExternalLink className="h-4 w-4" />
@@ -291,7 +291,7 @@ export function CompactWorkspaceSwitcher({
               <button
                 type="button"
                 onClick={handleNewWorkspace}
-                className="mt-1 flex items-center gap-3 px-3 py-3 rounded-[10px] hover:bg-foreground/5 transition-colors text-left"
+                className="mt-1 flex items-center gap-3 px-3 py-3 rounded-shape-xl hover:bg-foreground/5 transition-colors text-left"
               >
                 <div className="h-7 w-7 rounded-full bg-foreground/5 flex items-center justify-center shrink-0">
                   <FolderPlus className="h-4 w-4 text-foreground/60" />

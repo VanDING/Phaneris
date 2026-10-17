@@ -80,10 +80,10 @@ export function DecisionDetail({ item, onOpenChat, className }: {
   return (
     <div className={cn('flex flex-col gap-4', className)}>
       <section className="flex min-w-0 flex-col">
-        <h4 className="mb-2 text-[12px] font-semibold">{t('trajectory.decisions.trigger')}</h4>
+        <h4 className="mb-2 text-label font-semibold">{t('trajectory.decisions.trigger')}</h4>
         {sourceRows.length > 0
           ? <DecisionKv rows={sourceRows} />
-          : <p className="text-[11.5px] leading-5 text-text-secondary">{t('trajectory.decisions.triggerUnknown')}</p>}
+          : <p className="text-meta leading-5 text-text-secondary">{t('trajectory.decisions.triggerUnknown')}</p>}
         {item.unavailableReason && (
           <div className="mt-2">
             <DecisionNotice tone="info">
@@ -96,16 +96,16 @@ export function DecisionDetail({ item, onOpenChat, className }: {
       </section>
 
       <section className="flex min-w-0 flex-col">
-        <h4 className="mb-2 text-[12px] font-semibold">{t('trajectory.decisions.recommendation')}</h4>
+        <h4 className="mb-2 text-label font-semibold">{t('trajectory.decisions.recommendation')}</h4>
         {recommendation
           ? (
             <>
-              <p className="text-[12px] font-medium">
+              <p className="text-label font-medium">
                 {actionLabel(recommendation.action, t) ?? recommendation.action}
               </p>
               {Object.keys(recommendation.detail ?? {}).length > 0 && (
                 <details className="mt-1.5">
-                  <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-[11px] text-text-secondary hover:text-foreground">
+                  <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-meta text-text-secondary hover:text-foreground">
                     <span aria-hidden className="size-0 border-y-[3.5px] border-l-4 border-y-transparent border-l-current" />
                     {t('trajectory.decisions.structuredEvidence')}
                   </summary>
@@ -116,18 +116,18 @@ export function DecisionDetail({ item, onOpenChat, className }: {
               )}
             </>
           )
-          : <p className="text-[12px] text-text-secondary">{t('trajectory.decisions.noRecommendation')}</p>}
+          : <p className="text-label text-text-secondary">{t('trajectory.decisions.noRecommendation')}</p>}
       </section>
 
       <section className="flex min-w-0 flex-col">
-        <h4 className="mb-2 flex items-center gap-2 text-[12px] font-semibold">
+        <h4 className="mb-2 flex items-center gap-2 text-label font-semibold">
           {t('trajectory.decisions.application')}
           <DecisionTag status={status} />
         </h4>
         {application
           ? (
             <>
-              <p className="text-[12px] font-medium">
+              <p className="text-label font-medium">
                 {actionLabel(application.action, t) ?? application.action}
               </p>
               <div className="mt-2">
@@ -151,14 +151,14 @@ export function DecisionDetail({ item, onOpenChat, className }: {
       </section>
 
       <section className="flex min-w-0 flex-col">
-        <h4 className="mb-2 text-[12px] font-semibold">{t('trajectory.decisions.observations')}</h4>
+        <h4 className="mb-2 text-label font-semibold">{t('trajectory.decisions.observations')}</h4>
         {item.observations.length > 0
           ? (
             <div className="overflow-hidden rounded-lg border border-border/55 bg-background/70">
               {item.observations.map((observation, index) => (
                 <div
                   key={`${observation.result}-${index}`}
-                  className="flex min-h-8 items-center gap-2 border-b border-border/45 px-3 text-[11.5px] last:border-b-0"
+                  className="flex min-h-8 items-center gap-2 border-b border-border/45 px-3 text-meta last:border-b-0"
                 >
                   <CornerDownRight aria-hidden className="size-3 flex-none text-text-secondary" />
                   <span className="min-w-0">{observationLabel(observation.result, t)}</span>
@@ -166,13 +166,13 @@ export function DecisionDetail({ item, onOpenChat, className }: {
               ))}
             </div>
           )
-          : <p className="text-[11.5px] leading-5 text-text-secondary">{t('trajectory.decisions.noObservations')}</p>}
+          : <p className="text-meta leading-5 text-text-secondary">{t('trajectory.decisions.noObservations')}</p>}
       </section>
 
       <section className="flex min-w-0 flex-col">
-        <h4 className="mb-2 flex items-center gap-2 text-[12px] font-semibold">
+        <h4 className="mb-2 flex items-center gap-2 text-label font-semibold">
           {t('trajectory.decisions.requests')}
-          <span className="text-[11px] font-normal tabular-nums text-text-secondary">
+          <span className="text-meta font-normal tabular-nums text-text-secondary">
             {t('trajectory.decisions.attemptCount', { count: item.attempts.length })}
           </span>
         </h4>
@@ -187,13 +187,13 @@ export function DecisionDetail({ item, onOpenChat, className }: {
               <div key={attempt.id} className="rounded-xl border border-border/55 bg-background/70 p-3">
                 <div className="flex min-w-0 items-center gap-2">
                   <span className={cn(
-                    'inline-flex h-[18px] flex-none items-center rounded-[4px] px-[5px] text-[10px] font-semibold tracking-[0.035em]',
+                    'inline-flex h-control-2xs flex-none items-center rounded-shape-sm px-[5px] text-micro font-semibold tracking-[0.035em]',
                     ATTEMPT_TONE[attempt.status],
                   )}>
                     {t(`trajectory.decisions.attempt.${attempt.status}`)}
                   </span>
-                  <span className="min-w-0 truncate font-mono text-[11px] text-text-secondary">{attempt.model}</span>
-                  <span className="ml-auto flex flex-none items-center gap-2.5 font-mono text-[10px] tabular-nums text-text-secondary">
+                  <span className="min-w-0 truncate font-mono text-meta text-text-secondary">{attempt.model}</span>
+                  <span className="ml-auto flex flex-none items-center gap-2.5 font-mono text-micro tabular-nums text-text-secondary">
                     {latency !== undefined && <span title={t(attempt.latencyScope === 'response_body' ? 'trajectory.decisions.fullResponseLatency'
                       : attempt.latencyScope === 'request_failure' ? 'trajectory.decisions.failedRequestLatency' : 'trajectory.decisions.legacyLatency')}>{latency} ms</span>}
                     <span className={cn(cost === null && 'text-[color:var(--info-text)]')}>{cost ?? t('common.unknown')}</span>
@@ -214,14 +214,14 @@ export function DecisionDetail({ item, onOpenChat, className }: {
             )
           })}
         </div>
-        <p className="mt-2 text-[11px] leading-5 text-text-secondary">{t('trajectory.decisions.privacy')}</p>
+        <p className="mt-2 text-meta leading-5 text-text-secondary">{t('trajectory.decisions.privacy')}</p>
         <details className="mt-1.5">
-          <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-[11px] text-text-secondary hover:text-foreground">
+          <summary className="inline-flex cursor-pointer list-none items-center gap-1 py-0.5 text-meta text-text-secondary hover:text-foreground">
             <span aria-hidden className="size-0 border-y-[3.5px] border-l-4 border-y-transparent border-l-current" />
             {t('trajectory.decisions.rawRecord')}
           </summary>
           <div className="mt-1.5 rounded-lg bg-foreground/5 p-2">
-            <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-all font-mono text-[10.5px] leading-5 text-text-secondary">
+            <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-all font-mono text-meta leading-5 text-text-secondary">
               {JSON.stringify({
                 id: item.id,
                 feature: item.feature,

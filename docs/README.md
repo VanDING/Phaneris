@@ -18,6 +18,8 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 ## Start here
 
+本次专项：[防御逻辑与测试精简治理](process/defensive-code-test-cleanup-2026-10-17.md)。
+
 本轮维护：[2026-10-16 全量依赖升级评估](dependencies/dependency-audit-2026-10-16.md)；[CI 修复失败矩阵](verification/ci-repair-failure-matrix-2026-10-16.md)；[CI 修复验证记录](verification/ci-repair-2026-10-16.md)。
 
 | Document | Status | Purpose |
@@ -90,6 +92,9 @@ Reproducible browser and packaged-client checks live in [`scripts/verification/`
 | --- | --- | --- |
 | [Pi SDK 1.2.0 upgrade](verification/pi-sdk-1.2.0-upgrade.md) | Implemented; Windows kernel verification passed; full-suite baseline exceptions recorded | Exact SDK graph, codemode result compatibility, real 1.1.0 history recovery, bundled runtime hashes and verification limits. |
 | [Theme and frontend visual audit failure matrix](verification/frontend-theme-visual-audit-failure-matrix-2026-10-12.md) | Written before audit probes; audit evidence recorded | Independent theme/CSS/interaction checks and remaining real-host E2E. [Reproduction evidence](verification/results/frontend-theme-visual-audit-2026-10-12/README.md). |
+| [Scale & theme consistency failure matrix](verification/scale-theme-consistency-failure-matrix.md) | Written before implementation; evidence status per row | 20 failure modes for scale tiers, theme radius/density, hairlines, masks, motion collapse, IME and sash guards. |
+| [State matrix](verification/state-matrix.md) | Maintained | Five states × ten surfaces; recovery path required for every cell. |
+| [Scale & theme system implementation](verification/frontend-scale-contract-implementation-2026-10-17.md) | Implemented; contract and real-app evidence recorded | Four-wave delivery: baseline, DESIGN.md/PRODUCT.md constitution, ESLint scale gate, primitive convergence, optical and motion upgrades. [Screenshots](verification/results/scale-contract-2026-10-17/). |
 | [Theme contract failure matrix](verification/theme-contract-failure-matrix-2026-10-12.md) | Written before W2–W5 implementation | Validation, roles, domains, adapters and governance mutation gates. |
 | [Governance completion failure matrix](verification/governance-completion-failure-matrix.md) | Written before implementation | G3–G8 failure cases and actual workflow acceptance. |
 | [Verification index](verification/README.md) | Maintained | Commands, platform notes, and result locations. |

@@ -17,7 +17,7 @@ function runRule(code: string) {
   )
 }
 
-describe('no-hardcoded-z-index (electron)', () => {
+describe('shared no-hardcoded-z-index rule', () => {
   it('flags hardcoded default in destructured props', () => {
     const messages = runRule('function Comp({ zIndex = 50 }) { return zIndex }')
     expect(messages.length).toBe(1)

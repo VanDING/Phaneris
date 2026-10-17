@@ -103,7 +103,7 @@ function OptionRow({
       ) : (
         <span
           className={cn(
-            'mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border text-[10px] font-medium',
+            'mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border text-micro font-medium',
             selected ? 'border-info bg-info text-background' : 'border-foreground/25 text-muted-foreground',
           )}
         >
@@ -114,13 +114,13 @@ function OptionRow({
         <span className="flex flex-wrap items-center gap-1.5">
           <span className="text-xs font-medium text-foreground">{text}</span>
           {recommended && (
-            <span className="rounded-sm bg-info/15 px-1.5 py-px text-[10px] font-medium text-info">
+            <span className="rounded-sm bg-info/15 px-1.5 py-px text-micro font-medium text-info">
               {t('chat.question.recommended')}
             </span>
           )}
         </span>
         {description && (
-          <span className="mt-0.5 block text-[11px] leading-4 text-muted-foreground">{description}</span>
+          <span className="mt-0.5 block text-meta leading-4 text-muted-foreground">{description}</span>
         )}
       </span>
     </button>
@@ -236,7 +236,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
       <div
         className={cn(
           'overflow-hidden h-full flex flex-col bg-info/5',
-          unstyled ? 'border-0' : 'border border-info/30 rounded-[8px] shadow-middle',
+          unstyled ? 'border-0' : 'border border-info/30 rounded-shape-lg shadow-middle',
         )}
       >
         <div className="flex items-center gap-1.5 px-4 pt-3 text-xs font-medium text-info">
@@ -293,7 +293,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
     <div
       className={cn(
         'overflow-hidden h-full flex flex-col bg-info/5',
-        unstyled ? 'border-0' : 'border border-info/30 rounded-[8px] shadow-middle',
+        unstyled ? 'border-0' : 'border border-info/30 rounded-shape-lg shadow-middle',
       )}
     >
       <div className="p-4 space-y-3 flex-1 min-h-0 flex flex-col overflow-y-auto">
@@ -302,14 +302,14 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
             <MessageCircleQuestion className="mt-0.5 h-3.5 w-3.5 shrink-0 text-info" />
             <div className="min-w-0 flex-1">
               {question.header && (
-                <div className="text-[10px] font-medium uppercase tracking-wide text-info">
+                <div className="text-micro font-medium uppercase tracking-wide text-info">
                   {question.header}
                 </div>
               )}
               <div className="text-sm font-medium text-foreground">{question.question}</div>
             </div>
             {total > 1 && (
-              <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
+              <span className="shrink-0 text-micro tabular-nums text-muted-foreground">
                 {index + 1} / {total}
               </span>
             )}
@@ -379,7 +379,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
         </div>
 
         {showError && (
-          <div role="status" className="text-[11px] text-destructive">
+          <div role="status" className="text-meta text-destructive">
             {t('chat.question.answerRequired')}
           </div>
         )}
@@ -423,7 +423,7 @@ export function QuestionPanel({ request, onResponse, unstyled = false }: Questio
           {isLast ? t('chat.question.submit') : t('chat.question.next')}
         </Button>
 
-        <span className="min-w-0 flex-1 basis-full text-[10px] text-muted-foreground sm:basis-auto sm:text-right">
+        <span className="min-w-0 flex-1 basis-full text-micro text-muted-foreground sm:basis-auto sm:text-right">
           {t('chat.question.footerHint')}
         </span>
       </div>

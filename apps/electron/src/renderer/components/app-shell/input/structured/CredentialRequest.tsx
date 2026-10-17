@@ -108,7 +108,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
   return (
     <div className={cn(
       'bg-background overflow-hidden h-full flex flex-col',
-      unstyled ? 'border-0' : 'border border-border rounded-[8px] shadow-middle'
+      unstyled ? 'border-0' : 'border border-border rounded-shape-lg shadow-middle'
     )}>
       {/* Form wraps the entire card so password managers (1Password) can detect fields.
           action points to the source URL for domain-based credential matching. */}
@@ -270,7 +270,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
 
             {/* Hint */}
             {request.hint && (
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-meta text-muted-foreground">
                 {request.hint}
               </p>
             )}
@@ -300,7 +300,7 @@ export function CredentialRequest({ request, onResponse, unstyled = false }: Cre
             Cancel
           </Button>
 
-          <span className="min-w-0 flex-1 basis-full text-[10px] text-muted-foreground sm:basis-auto sm:text-right">
+          <span className="min-w-0 flex-1 basis-full text-micro text-muted-foreground sm:basis-auto sm:text-right">
             Credentials are encrypted at rest
           </span>
         </div>

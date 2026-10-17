@@ -18,6 +18,7 @@ import { entityListComponents } from './entity-lists'
 import { browserUiComponents } from './browser-ui'
 import { plannerComponents } from './planner'
 import { customShadowsComponents } from './custom-shadows'
+import { scaleDriftComponents } from './scale-drift'
 import { transportBannerComponents } from './transport-banner'
 import { containerTransitionsComponents } from './container-transitions'
 import { apiKeyInputComponents } from './api-key-input'
@@ -64,6 +65,7 @@ export const componentRegistry: ComponentEntry[] = [
   ...browserUiComponents,
   ...plannerComponents,
   ...customShadowsComponents,
+  ...scaleDriftComponents,
   ...transportBannerComponents,
   ...containerTransitionsComponents,
   ...messagingComponents,
@@ -71,7 +73,7 @@ export const componentRegistry: ComponentEntry[] = [
 ]
 
 export function getCategories(): CategoryGroup[] {
-  const categoryOrder: Category[] = ['Mobile WebUI', 'Automations', 'Onboarding', 'Agent Setup', 'Chat', 'Island', 'Browser', 'Planner', 'Custom Shadows', 'Session List', 'Project Management', 'Kanban', 'Artifacts', 'Entity Lists', 'Edit Popover', 'Turn Cards', 'TurnCard Modes', 'Fullscreen', 'Chat Messages', 'Chat Inputs', 'Toast Messages', 'Markdown', 'Icons', 'OAuth', 'Messaging']
+  const categoryOrder: Category[] = ['Mobile WebUI', 'Automations', 'Onboarding', 'Agent Setup', 'Chat', 'Island', 'Browser', 'Planner', 'Custom Shadows', 'Scale Drift', 'Session List', 'Project Management', 'Kanban', 'Artifacts', 'Entity Lists', 'Edit Popover', 'Turn Cards', 'TurnCard Modes', 'Fullscreen', 'Chat Messages', 'Chat Inputs', 'Toast Messages', 'Markdown', 'Icons', 'OAuth', 'Messaging']
   const categoryMap = new Map<Category, ComponentEntry[]>()
 
   for (const entry of componentRegistry) {

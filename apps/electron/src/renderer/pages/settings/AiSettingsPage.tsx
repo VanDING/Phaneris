@@ -196,11 +196,11 @@ function ConnectionRow({ connection, usedForImages, isLastConnection, onRenameCl
             <span>{connection.name}</span>
             <span className="text-xs font-normal text-text-secondary">{connection.authType === 'oauth' ? t("settings.ai.authSubscription") : t("settings.ai.authApiKey")}</span>
             {connection.isDefault && (
-              <span className="inline-flex items-center h-5 px-2 text-[11px] font-medium rounded-[4px] bg-background shadow-minimal text-text-secondary">
+              <span className="inline-flex items-center h-5 px-2 text-meta font-medium rounded-shape-sm bg-background shadow-minimal text-text-secondary">
                 {t("settings.ai.defaultConversationUse")}
               </span>
             )}
-            {usedForImages && <span className="inline-flex items-center h-5 px-2 text-[11px] font-medium rounded-[4px] bg-background shadow-minimal text-text-secondary">{t("settings.ai.imageGenerationUse")}</span>}
+            {usedForImages && <span className="inline-flex items-center h-5 px-2 text-meta font-medium rounded-shape-sm bg-background shadow-minimal text-text-secondary">{t("settings.ai.imageGenerationUse")}</span>}
             {isDuplicateAccount && (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -1254,7 +1254,7 @@ export default function AiSettingsPage() {
                     {decisionUsesLocalProvider && decisionPreset?.installHint && decisionProbe && !decisionProbe.reachable && (
                       <p className="px-4 pb-3 -mt-1 text-xs text-text-secondary">
                         {t("settings.ai.decisions.localServerInstallHint")}{' '}
-                        <code className="font-mono text-[11px] text-text-secondary select-all">{decisionPreset.installHint}</code>
+                        <code className="font-mono text-meta text-text-secondary select-all">{decisionPreset.installHint}</code>
                       </p>
                     )}
                     {!decisionUsesConnection && decisionPreset?.requiresKey !== false && (
@@ -1327,7 +1327,7 @@ export default function AiSettingsPage() {
                             </div>
                             {decisionReportedGroups.map((group, index) => (
                               <div key={group.id} className={cn(index > 0 && 'mt-1 border-t border-border/30')}>
-                                <div className="px-4 pt-3 pb-0.5 text-[11px] font-semibold uppercase tracking-wide text-text-secondary">
+                                <div className="px-4 pt-3 pb-0.5 text-meta font-semibold uppercase tracking-wide text-text-secondary">
                                   {group.title}
                                 </div>
                                 {group.toggles.map(({ feature, label, description, tooltip }) => (
@@ -1405,8 +1405,8 @@ export default function AiSettingsPage() {
                           </div>
                           <div className="mt-2 h-1.5 rounded-full bg-foreground/10 overflow-hidden">
                             <div
-                              className="motion-content h-full bg-foreground/60 transition-[width]"
-                              style={{ width: `${Math.min(100, Math.max(0, rtkGain.avgSavingsPct))}%` }}
+                              className="motion-content h-full origin-left bg-foreground/60 transition-transform"
+                              style={{ transform: `scaleX(${Math.min(100, Math.max(0, rtkGain.avgSavingsPct)) / 100})` }}
                             />
                           </div>
                         </div>
@@ -1470,7 +1470,7 @@ export default function AiSettingsPage() {
                   <button
                     data-onboarding-close
                     onClick={handleCloseApiSetup}
-                    className="craft-control motion-interactive p-1.5 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] bg-background shadow-minimal text-text-secondary hover:text-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    className="craft-control motion-interactive p-1.5 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] bg-background shadow-minimal text-text-secondary hover:text-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     title={t("common.closeEsc")}
                   >
                     <X className="w-3.5 h-3.5" />

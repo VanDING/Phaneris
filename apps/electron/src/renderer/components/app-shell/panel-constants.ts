@@ -27,6 +27,9 @@ export const PANEL_STACK_VERTICAL_OVERFLOW = 8
 export const PANEL_SASH_HIT_WIDTH = 8
 export const PANEL_SASH_LINE_WIDTH = 2
 
+/** Pointer travel below this ignores accidental micro-drags. */
+export const PANEL_SASH_DEAD_ZONE = 4
+
 /**
  * When the sash is inserted between two flex items, flex gap would apply twice
  * (item↔sash and sash↔item). Pull it back by half the gap on both sides so

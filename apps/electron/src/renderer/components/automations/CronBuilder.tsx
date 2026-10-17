@@ -96,7 +96,7 @@ interface CronFieldProps {
 function CronField({ field, value, onChange }: CronFieldProps) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+      <label className="text-micro font-medium text-muted-foreground uppercase tracking-wider">
         {field.label}
       </label>
       <input
@@ -242,7 +242,7 @@ export function CronBuilder({
       </div>
 
       {/* Summary */}
-      <div className="bg-background shadow-minimal rounded-[8px] p-4 space-y-3">
+      <div className="bg-background shadow-minimal rounded-shape-lg p-4 space-y-3">
         {/* Human-readable description */}
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-muted-foreground" />

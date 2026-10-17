@@ -32,15 +32,15 @@ export function BrowserEmptyStateCard({
       onClick={() => onPromptSelect?.(sample)}
       className="motion-interactive flex min-h-8 w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left transition-colors hover:bg-foreground/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <span className="w-4 shrink-0 text-[11px] text-muted-foreground tabular-nums">{index + 1}.</span>
-      <span className="text-[12px] text-foreground/80">{sample.short}</span>
+      <span className="w-4 shrink-0 text-meta text-muted-foreground tabular-nums">{index + 1}.</span>
+      <span className="text-label text-foreground/80">{sample.short}</span>
     </button>
   )
   return (
     <div className="w-full h-full flex items-center justify-center p-8">
-      <div className="w-full max-w-[700px] bg-background shadow-minimal rounded-[8px] overflow-hidden border border-border/30">
+      <div className="w-full max-w-[700px] bg-background shadow-minimal rounded-shape-lg overflow-hidden border border-border/30">
         <div className="px-4 py-3 border-b border-border/30 flex items-center bg-muted/20 select-none">
-          <h3 className="text-[13px] font-medium text-foreground tracking-tight">
+          <h3 className="text-body font-medium text-foreground tracking-tight">
             {title}
           </h3>
         </div>
@@ -55,7 +55,7 @@ export function BrowserEmptyStateCard({
               {prompts.slice(0, 3).map(renderPrompt)}
               {prompts.length > 3 && (
                 <details>
-                  <summary className="cursor-pointer rounded-md px-2.5 py-2 text-[12px] text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{t('common.more')}</summary>
+                  <summary className="cursor-pointer rounded-md px-2.5 py-2 text-label text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{t('common.more')}</summary>
                   <div className="motion-view-enter">{prompts.slice(3).map((sample, index) => renderPrompt(sample, index + 3))}</div>
                 </details>
               )}
@@ -64,7 +64,7 @@ export function BrowserEmptyStateCard({
         </div>
 
         {showSafetyHint && (
-          <div className="px-4 py-2.5 border-t border-border/30 flex items-center gap-2 bg-muted/20 text-[13px] text-foreground/55">
+          <div className="px-4 py-2.5 border-t border-border/30 flex items-center gap-2 bg-muted/20 text-body text-foreground/55">
             <p>
               {t('browser.safetyHint')}
             </p>

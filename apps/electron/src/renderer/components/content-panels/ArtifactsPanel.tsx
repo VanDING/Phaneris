@@ -81,12 +81,12 @@ function ArtifactRow({
           className="flex min-w-0 flex-1 items-center gap-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         >
           <FilePenLine className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-          <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{artifact.title}</span>
-          <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold', badge)}>
+          <span className="min-w-0 flex-1 truncate text-body font-medium">{artifact.title}</span>
+          <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-micro font-semibold', badge)}>
             {t(`artifact.status.${artifact.status}`)}
           </span>
         </button>
-        <span className="hidden shrink-0 truncate text-[11px] text-muted-foreground @min-[560px]/files:block @min-[560px]/files:max-w-[16rem]">
+        <span className="hidden shrink-0 truncate text-meta text-muted-foreground @min-[560px]/files:block @min-[560px]/files:max-w-[16rem]">
           {getPathBasename(artifact.sourcePath) || artifact.sourcePath}
         </span>
         {ACTIONABLE_STATUSES.has(artifact.status) && (
@@ -120,7 +120,7 @@ function ArtifactRow({
                 onClick={onAccept}
                 aria-label={t('artifact.accept')}
                 title={t('artifact.accept')}
-                className="flex h-6 items-center gap-1 rounded-md bg-primary px-2 text-[11px] font-semibold text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+                className="flex h-6 items-center gap-1 rounded-md bg-primary px-2 text-meta font-semibold text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
               >
                 <Check className="h-3 w-3" />
                 {t('artifact.accept')}
@@ -200,7 +200,7 @@ export function ArtifactsPanel({ sessionId }: { sessionId: string }) {
             aria-pressed={statusFilter === filter.id}
             onClick={() => setStatusFilter(filter.id)}
             className={cn(
-              'h-6 rounded-md px-2 text-[11px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              'h-6 rounded-md px-2 text-meta font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring',
               statusFilter === filter.id ? 'bg-accent/10 text-accent' : 'text-muted-foreground hover:bg-foreground/[0.035]',
             )}
           >
@@ -208,7 +208,7 @@ export function ArtifactsPanel({ sessionId }: { sessionId: string }) {
             {filter.id === 'current' && currentCount > 0 ? ` (${currentCount})` : ''}
           </button>
         ))}
-        <span className="ml-auto shrink-0 text-[11px] tabular-nums text-muted-foreground" data-testid="artifacts-count">
+        <span className="ml-auto shrink-0 text-meta tabular-nums text-muted-foreground" data-testid="artifacts-count">
           {visible.length}
         </span>
       </div>

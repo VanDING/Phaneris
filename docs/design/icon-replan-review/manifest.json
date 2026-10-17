@@ -1,0 +1,2208 @@
+{
+  "date": "2026-10-15",
+  "mode": "Demonstration only",
+  "summary": {
+    "files": 237,
+    "imports": 877,
+    "exportedNames": 208,
+    "distinctComponents": 197,
+    "playgroundFiles": 24,
+    "byScope": {
+      "desktop": {
+        "files": 186,
+        "imports": 727
+      },
+      "shared": {
+        "files": 48,
+        "imports": 143
+      },
+      "viewer": {
+        "files": 3,
+        "imports": 7
+      },
+      "webui": {
+        "files": 0,
+        "imports": 0
+      }
+    }
+  },
+  "candidates": {
+    "a": "P1 softened · Phosphor Light",
+    "b": "L1 · curated Lucide 1.51.0",
+    "c": "R1 · curated Remix Icon 4.9.1 line"
+  },
+  "mapping": {
+    "sessions": {
+      "key": "sessions",
+      "label": "所有对话",
+      "group": "导航",
+      "current": "Inbox",
+      "p1": "chat-circle",
+      "lucide": "MessageCircle",
+      "remix": "chat-3",
+      "note": "收件箱改为圆气泡，减少方角并直接表达对话。",
+      "ids": {
+        "current": "lc-Inbox",
+        "a": "ph-chat-circle",
+        "b": "lc-MessageCircle",
+        "c": "ri-chat-3-line"
+      },
+      "names": {
+        "current": "Inbox",
+        "a": "chat-circle · Light",
+        "b": "MessageCircle",
+        "c": "chat-3-line"
+      }
+    },
+    "labels": {
+      "key": "labels",
+      "label": "标签",
+      "group": "导航",
+      "current": "Tag",
+      "p1": "tag",
+      "lucide": "Tag",
+      "remix": "price-tag-3",
+      "note": "保留标签隐喻，放弃原 P1 的明显箭头尖头。",
+      "ids": {
+        "current": "lc-Tag",
+        "a": "ph-tag",
+        "b": "lc-Tag",
+        "c": "ri-price-tag-3-line"
+      },
+      "names": {
+        "current": "Tag",
+        "a": "tag · Light",
+        "b": "Tag",
+        "c": "price-tag-3-line"
+      }
+    },
+    "sources": {
+      "key": "sources",
+      "label": "数据源",
+      "group": "导航",
+      "current": "DatabaseZap",
+      "p1": "database",
+      "lucide": "Database",
+      "remix": "database-2",
+      "note": "去掉当前数据库旁的闪电，保留圆柱轮廓。",
+      "ids": {
+        "current": "lc-DatabaseZap",
+        "a": "ph-database",
+        "b": "lc-Database",
+        "c": "ri-database-2-line"
+      },
+      "names": {
+        "current": "DatabaseZap",
+        "a": "database · Light",
+        "b": "Database",
+        "c": "database-2-line"
+      }
+    },
+    "skills": {
+      "key": "skills",
+      "label": "技能",
+      "group": "导航",
+      "current": "Zap",
+      "p1": "lightbulb",
+      "lucide": "Lightbulb",
+      "remix": "lightbulb",
+      "note": "用灯泡替代锐角闪电；强调能力和想法，弱化速度含义。",
+      "ids": {
+        "current": "lc-Zap",
+        "a": "ph-lightbulb",
+        "b": "lc-Lightbulb",
+        "c": "ri-lightbulb-line"
+      },
+      "names": {
+        "current": "Zap",
+        "a": "lightbulb · Light",
+        "b": "Lightbulb",
+        "c": "lightbulb-line"
+      }
+    },
+    "plugins": {
+      "key": "plugins",
+      "label": "插件",
+      "group": "导航",
+      "current": "Shapes",
+      "p1": "puzzle-piece",
+      "lucide": "Puzzle",
+      "remix": "puzzle-2",
+      "note": "选择圆形拼接轮廓，替代当前的三角等几何形状。",
+      "ids": {
+        "current": "lc-Shapes",
+        "a": "ph-puzzle-piece",
+        "b": "lc-Puzzle",
+        "c": "ri-puzzle-2-line"
+      },
+      "names": {
+        "current": "Shapes",
+        "a": "puzzle-piece · Light",
+        "b": "Puzzle",
+        "c": "puzzle-2-line"
+      }
+    },
+    "projects": {
+      "key": "projects",
+      "label": "项目",
+      "group": "导航",
+      "current": "FolderKanban",
+      "p1": "folder-simple",
+      "lucide": "FolderClosed",
+      "remix": "folder-3",
+      "note": "减少内部折线，保留项目文件夹的连续语义。",
+      "ids": {
+        "current": "lc-FolderKanban",
+        "a": "ph-folder-simple",
+        "b": "lc-FolderClosed",
+        "c": "ri-folder-3-line"
+      },
+      "names": {
+        "current": "FolderKanban",
+        "a": "folder-simple · Light",
+        "b": "FolderClosed",
+        "c": "folder-3-line"
+      }
+    },
+    "pages": {
+      "key": "pages",
+      "label": "页面",
+      "group": "导航",
+      "current": "PanelTop",
+      "p1": "browser",
+      "lucide": "PanelTop",
+      "remix": "window-2",
+      "note": "保留窗口外形，减少交叉分割；Lucide 沿用现有 PanelTop。",
+      "ids": {
+        "current": "lc-PanelTop",
+        "a": "ph-browser",
+        "b": "lc-PanelTop",
+        "c": "ri-window-2-line"
+      },
+      "names": {
+        "current": "PanelTop",
+        "a": "browser · Light",
+        "b": "PanelTop",
+        "c": "window-2-line"
+      }
+    },
+    "automations": {
+      "key": "automations",
+      "label": "自动化",
+      "group": "导航",
+      "current": "ListTodo",
+      "p1": "arrows-clockwise",
+      "lucide": "Repeat2",
+      "remix": "loop-right",
+      "note": "用循环弧线替代尖锐流程箭头；提醒：循环不覆盖全部事件触发语义。",
+      "ids": {
+        "current": "lc-ListTodo",
+        "a": "ph-arrows-clockwise",
+        "b": "lc-Repeat2",
+        "c": "ri-loop-right-line"
+      },
+      "names": {
+        "current": "ListTodo",
+        "a": "arrows-clockwise · Light",
+        "b": "Repeat2",
+        "c": "loop-right-line"
+      }
+    },
+    "settings": {
+      "key": "settings",
+      "label": "设置",
+      "group": "导航",
+      "current": "Settings",
+      "p1": "sliders-horizontal",
+      "lucide": "Settings2",
+      "remix": "equalizer",
+      "note": "用圆形滑杆替代齿轮尖齿。",
+      "ids": {
+        "current": "lc-Settings",
+        "a": "ph-sliders-horizontal",
+        "b": "lc-Settings2",
+        "c": "ri-equalizer-line"
+      },
+      "names": {
+        "current": "Settings",
+        "a": "sliders-horizontal · Light",
+        "b": "Settings2",
+        "c": "equalizer-line"
+      }
+    },
+    "new": {
+      "key": "new",
+      "label": "新建对话",
+      "group": "操作",
+      "current": "SquarePenRounded",
+      "p1": "note-pencil",
+      "lucide": "SquarePenRounded",
+      "remix": "edit-box",
+      "action": "newSession",
+      "ids": {
+        "current": "lc-SquarePenRounded",
+        "a": "ph-note-pencil",
+        "b": "lc-SquarePenRounded",
+        "c": "ri-edit-box-line"
+      },
+      "names": {
+        "current": "SquarePenRounded",
+        "a": "note-pencil · Light",
+        "b": "SquarePenRounded",
+        "c": "edit-box-line"
+      }
+    },
+    "sidebar": {
+      "key": "sidebar",
+      "label": "侧栏",
+      "group": "操作",
+      "current": "PanelLeftRounded",
+      "p1": "sidebar-simple",
+      "lucide": "PanelLeftRounded",
+      "remix": "side-bar",
+      "ids": {
+        "current": "lc-PanelLeftRounded",
+        "a": "ph-sidebar-simple",
+        "b": "lc-PanelLeftRounded",
+        "c": "ri-side-bar-line"
+      },
+      "names": {
+        "current": "PanelLeftRounded",
+        "a": "sidebar-simple · Light",
+        "b": "PanelLeftRounded",
+        "c": "side-bar-line"
+      }
+    },
+    "search": {
+      "key": "search",
+      "label": "搜索",
+      "group": "操作",
+      "current": "Search",
+      "p1": "magnifying-glass",
+      "lucide": "Search",
+      "remix": "search",
+      "ids": {
+        "current": "lc-Search",
+        "a": "ph-magnifying-glass",
+        "b": "lc-Search",
+        "c": "ri-search-line"
+      },
+      "names": {
+        "current": "Search",
+        "a": "magnifying-glass · Light",
+        "b": "Search",
+        "c": "search-line"
+      }
+    },
+    "filter": {
+      "key": "filter",
+      "label": "筛选",
+      "group": "操作",
+      "current": "ListFilter",
+      "p1": "funnel-simple",
+      "lucide": "ListFilter",
+      "remix": "filter-3",
+      "ids": {
+        "current": "lc-ListFilter",
+        "a": "ph-funnel-simple",
+        "b": "lc-ListFilter",
+        "c": "ri-filter-3-line"
+      },
+      "names": {
+        "current": "ListFilter",
+        "a": "funnel-simple · Light",
+        "b": "ListFilter",
+        "c": "filter-3-line"
+      }
+    },
+    "more": {
+      "key": "more",
+      "label": "更多",
+      "group": "操作",
+      "current": "MoreHorizontal",
+      "p1": "dots-three",
+      "lucide": "MoreHorizontal",
+      "remix": "more",
+      "ids": {
+        "current": "lc-MoreHorizontal",
+        "a": "ph-dots-three",
+        "b": "lc-MoreHorizontal",
+        "c": "ri-more-line"
+      },
+      "names": {
+        "current": "MoreHorizontal",
+        "a": "dots-three · Light",
+        "b": "MoreHorizontal",
+        "c": "more-line"
+      }
+    },
+    "add": {
+      "key": "add",
+      "label": "添加",
+      "group": "操作",
+      "current": "Plus",
+      "p1": "plus",
+      "lucide": "Plus",
+      "remix": "add",
+      "ids": {
+        "current": "lc-Plus",
+        "a": "ph-plus",
+        "b": "lc-Plus",
+        "c": "ri-add-line"
+      },
+      "names": {
+        "current": "Plus",
+        "a": "plus · Light",
+        "b": "Plus",
+        "c": "add-line"
+      }
+    },
+    "close": {
+      "key": "close",
+      "label": "关闭",
+      "group": "操作",
+      "current": "X",
+      "p1": "x",
+      "lucide": "X",
+      "remix": "close",
+      "ids": {
+        "current": "lc-X",
+        "a": "ph-x",
+        "b": "lc-X",
+        "c": "ri-close-line"
+      },
+      "names": {
+        "current": "X",
+        "a": "x · Light",
+        "b": "X",
+        "c": "close-line"
+      }
+    },
+    "left": {
+      "key": "left",
+      "label": "后退",
+      "group": "操作",
+      "current": "ChevronLeft",
+      "p1": "caret-left",
+      "lucide": "ChevronLeft",
+      "remix": "arrow-left-s",
+      "ids": {
+        "current": "lc-ChevronLeft",
+        "a": "ph-caret-left",
+        "b": "lc-ChevronLeft",
+        "c": "ri-arrow-left-s-line"
+      },
+      "names": {
+        "current": "ChevronLeft",
+        "a": "caret-left · Light",
+        "b": "ChevronLeft",
+        "c": "arrow-left-s-line"
+      }
+    },
+    "right": {
+      "key": "right",
+      "label": "展开",
+      "group": "操作",
+      "current": "ChevronRight",
+      "p1": "caret-right",
+      "lucide": "ChevronRight",
+      "remix": "arrow-right-s",
+      "ids": {
+        "current": "lc-ChevronRight",
+        "a": "ph-caret-right",
+        "b": "lc-ChevronRight",
+        "c": "ri-arrow-right-s-line"
+      },
+      "names": {
+        "current": "ChevronRight",
+        "a": "caret-right · Light",
+        "b": "ChevronRight",
+        "c": "arrow-right-s-line"
+      }
+    },
+    "down": {
+      "key": "down",
+      "label": "下拉",
+      "group": "操作",
+      "current": "ChevronDown",
+      "p1": "caret-down",
+      "lucide": "ChevronDown",
+      "remix": "arrow-down-s",
+      "ids": {
+        "current": "lc-ChevronDown",
+        "a": "ph-caret-down",
+        "b": "lc-ChevronDown",
+        "c": "ri-arrow-down-s-line"
+      },
+      "names": {
+        "current": "ChevronDown",
+        "a": "caret-down · Light",
+        "b": "ChevronDown",
+        "c": "arrow-down-s-line"
+      }
+    },
+    "copy": {
+      "key": "copy",
+      "label": "复制",
+      "group": "操作",
+      "current": "Copy",
+      "p1": "copy-simple",
+      "lucide": "Copy",
+      "remix": "file-copy",
+      "ids": {
+        "current": "lc-Copy",
+        "a": "ph-copy-simple",
+        "b": "lc-Copy",
+        "c": "ri-file-copy-line"
+      },
+      "names": {
+        "current": "Copy",
+        "a": "copy-simple · Light",
+        "b": "Copy",
+        "c": "file-copy-line"
+      }
+    },
+    "edit": {
+      "key": "edit",
+      "label": "编辑",
+      "group": "操作",
+      "current": "Pencil",
+      "p1": "pencil-simple",
+      "lucide": "Pencil",
+      "remix": "edit",
+      "ids": {
+        "current": "lc-Pencil",
+        "a": "ph-pencil-simple",
+        "b": "lc-Pencil",
+        "c": "ri-edit-line"
+      },
+      "names": {
+        "current": "Pencil",
+        "a": "pencil-simple · Light",
+        "b": "Pencil",
+        "c": "edit-line"
+      }
+    },
+    "delete": {
+      "key": "delete",
+      "label": "删除",
+      "group": "操作",
+      "current": "Trash2",
+      "p1": "trash-simple",
+      "lucide": "Trash2",
+      "remix": "delete-bin",
+      "ids": {
+        "current": "lc-Trash2",
+        "a": "ph-trash-simple",
+        "b": "lc-Trash2",
+        "c": "ri-delete-bin-line"
+      },
+      "names": {
+        "current": "Trash2",
+        "a": "trash-simple · Light",
+        "b": "Trash2",
+        "c": "delete-bin-line"
+      }
+    },
+    "external": {
+      "key": "external",
+      "label": "外部打开",
+      "group": "操作",
+      "current": "ExternalLink",
+      "p1": "arrow-square-out",
+      "lucide": "ExternalLink",
+      "remix": "external-link",
+      "ids": {
+        "current": "lc-ExternalLink",
+        "a": "ph-arrow-square-out",
+        "b": "lc-ExternalLink",
+        "c": "ri-external-link-line"
+      },
+      "names": {
+        "current": "ExternalLink",
+        "a": "arrow-square-out · Light",
+        "b": "ExternalLink",
+        "c": "external-link-line"
+      }
+    },
+    "download": {
+      "key": "download",
+      "label": "下载",
+      "group": "操作",
+      "current": "Download",
+      "p1": "download-simple",
+      "lucide": "Download",
+      "remix": "download-2",
+      "ids": {
+        "current": "lc-Download",
+        "a": "ph-download-simple",
+        "b": "lc-Download",
+        "c": "ri-download-2-line"
+      },
+      "names": {
+        "current": "Download",
+        "a": "download-simple · Light",
+        "b": "Download",
+        "c": "download-2-line"
+      }
+    },
+    "refresh": {
+      "key": "refresh",
+      "label": "刷新",
+      "group": "操作",
+      "current": "RefreshCw",
+      "p1": "arrows-clockwise",
+      "lucide": "RefreshCw",
+      "remix": "refresh",
+      "ids": {
+        "current": "lc-RefreshCw",
+        "a": "ph-arrows-clockwise",
+        "b": "lc-RefreshCw",
+        "c": "ri-refresh-line"
+      },
+      "names": {
+        "current": "RefreshCw",
+        "a": "arrows-clockwise · Light",
+        "b": "RefreshCw",
+        "c": "refresh-line"
+      }
+    },
+    "pin": {
+      "key": "pin",
+      "label": "固定",
+      "group": "操作",
+      "current": "Pin",
+      "p1": "push-pin-simple",
+      "lucide": "Pin",
+      "remix": "pushpin",
+      "ids": {
+        "current": "lc-Pin",
+        "a": "ph-push-pin-simple",
+        "b": "lc-Pin",
+        "c": "ri-pushpin-line"
+      },
+      "names": {
+        "current": "Pin",
+        "a": "push-pin-simple · Light",
+        "b": "Pin",
+        "c": "pushpin-line"
+      }
+    },
+    "archive": {
+      "key": "archive",
+      "label": "归档",
+      "group": "操作",
+      "current": "Archive",
+      "p1": "archive",
+      "lucide": "Archive",
+      "remix": "archive",
+      "ids": {
+        "current": "lc-Archive",
+        "a": "ph-archive",
+        "b": "lc-Archive",
+        "c": "ri-archive-line"
+      },
+      "names": {
+        "current": "Archive",
+        "a": "archive · Light",
+        "b": "Archive",
+        "c": "archive-line"
+      }
+    },
+    "attach": {
+      "key": "attach",
+      "label": "附件",
+      "group": "对话",
+      "current": "Paperclip",
+      "p1": "paperclip",
+      "lucide": "Paperclip",
+      "remix": "attachment-2",
+      "ids": {
+        "current": "lc-Paperclip",
+        "a": "ph-paperclip",
+        "b": "lc-Paperclip",
+        "c": "ri-attachment-2"
+      },
+      "names": {
+        "current": "Paperclip",
+        "a": "paperclip · Light",
+        "b": "Paperclip",
+        "c": "attachment-2"
+      }
+    },
+    "send": {
+      "key": "send",
+      "label": "发送",
+      "group": "对话",
+      "current": "ArrowUp",
+      "p1": "arrow-up",
+      "lucide": "ArrowUp",
+      "remix": "arrow-up",
+      "ids": {
+        "current": "lc-ArrowUp",
+        "a": "ph-arrow-up",
+        "b": "lc-ArrowUp",
+        "c": "ri-arrow-up-line"
+      },
+      "names": {
+        "current": "ArrowUp",
+        "a": "arrow-up · Light",
+        "b": "ArrowUp",
+        "c": "arrow-up-line"
+      }
+    },
+    "message": {
+      "key": "message",
+      "label": "消息",
+      "group": "对话",
+      "current": "MessageSquare",
+      "p1": "chat",
+      "lucide": "MessageSquare",
+      "remix": "chat-1",
+      "ids": {
+        "current": "lc-MessageSquare",
+        "a": "ph-chat",
+        "b": "lc-MessageSquare",
+        "c": "ri-chat-1-line"
+      },
+      "names": {
+        "current": "MessageSquare",
+        "a": "chat · Light",
+        "b": "MessageSquare",
+        "c": "chat-1-line"
+      }
+    },
+    "ai": {
+      "key": "ai",
+      "label": "AI 设置",
+      "group": "设置",
+      "current": "Sparkles",
+      "p1": "sparkle",
+      "lucide": "Sparkles",
+      "remix": "sparkling-2",
+      "ids": {
+        "current": "lc-Sparkles",
+        "a": "ph-sparkle",
+        "b": "lc-Sparkles",
+        "c": "ri-sparkling-2-line"
+      },
+      "names": {
+        "current": "Sparkles",
+        "a": "sparkle · Light",
+        "b": "Sparkles",
+        "c": "sparkling-2-line"
+      }
+    },
+    "bot": {
+      "key": "bot",
+      "label": "智能体",
+      "group": "对话",
+      "current": "Bot",
+      "p1": "robot",
+      "lucide": "Bot",
+      "remix": "robot-2",
+      "ids": {
+        "current": "lc-Bot",
+        "a": "ph-robot",
+        "b": "lc-Bot",
+        "c": "ri-robot-2-line"
+      },
+      "names": {
+        "current": "Bot",
+        "a": "robot · Light",
+        "b": "Bot",
+        "c": "robot-2-line"
+      }
+    },
+    "terminal": {
+      "key": "terminal",
+      "label": "终端",
+      "group": "文件与工具",
+      "current": "TerminalSquare",
+      "p1": "terminal-window",
+      "lucide": "TerminalSquare",
+      "remix": "terminal-box",
+      "action": "terminal",
+      "ids": {
+        "current": "lc-TerminalSquare",
+        "a": "ph-terminal-window",
+        "b": "lc-TerminalSquare",
+        "c": "ri-terminal-box-line"
+      },
+      "names": {
+        "current": "TerminalSquare",
+        "a": "terminal-window · Light",
+        "b": "TerminalSquare",
+        "c": "terminal-box-line"
+      }
+    },
+    "code": {
+      "key": "code",
+      "label": "代码",
+      "group": "文件与工具",
+      "current": "Code",
+      "p1": "code-simple",
+      "lucide": "Code",
+      "remix": "code-s-slash",
+      "ids": {
+        "current": "lc-Code",
+        "a": "ph-code-simple",
+        "b": "lc-Code",
+        "c": "ri-code-s-slash-line"
+      },
+      "names": {
+        "current": "Code",
+        "a": "code-simple · Light",
+        "b": "Code",
+        "c": "code-s-slash-line"
+      }
+    },
+    "file": {
+      "key": "file",
+      "label": "文件",
+      "group": "文件与工具",
+      "current": "File",
+      "p1": "file",
+      "lucide": "File",
+      "remix": "file",
+      "ids": {
+        "current": "lc-File",
+        "a": "ph-file",
+        "b": "lc-File",
+        "c": "ri-file-line"
+      },
+      "names": {
+        "current": "File",
+        "a": "file · Light",
+        "b": "File",
+        "c": "file-line"
+      }
+    },
+    "document": {
+      "key": "document",
+      "label": "文档",
+      "group": "文件与工具",
+      "current": "FileText",
+      "p1": "file-text",
+      "lucide": "FileText",
+      "remix": "file-text",
+      "ids": {
+        "current": "lc-FileText",
+        "a": "ph-file-text",
+        "b": "lc-FileText",
+        "c": "ri-file-text-line"
+      },
+      "names": {
+        "current": "FileText",
+        "a": "file-text · Light",
+        "b": "FileText",
+        "c": "file-text-line"
+      }
+    },
+    "folder": {
+      "key": "folder",
+      "label": "文件夹",
+      "group": "文件与工具",
+      "current": "FolderOpen",
+      "p1": "folder-simple",
+      "lucide": "FolderOpen",
+      "remix": "folder-open",
+      "ids": {
+        "current": "lc-FolderOpen",
+        "a": "ph-folder-simple",
+        "b": "lc-FolderOpen",
+        "c": "ri-folder-open-line"
+      },
+      "names": {
+        "current": "FolderOpen",
+        "a": "folder-simple · Light",
+        "b": "FolderOpen",
+        "c": "folder-open-line"
+      }
+    },
+    "image": {
+      "key": "image",
+      "label": "图片",
+      "group": "文件与工具",
+      "current": "Image",
+      "p1": "image",
+      "lucide": "Image",
+      "remix": "image",
+      "ids": {
+        "current": "lc-Image",
+        "a": "ph-image",
+        "b": "lc-Image",
+        "c": "ri-image-line"
+      },
+      "names": {
+        "current": "Image",
+        "a": "image · Light",
+        "b": "Image",
+        "c": "image-line"
+      }
+    },
+    "table": {
+      "key": "table",
+      "label": "表格",
+      "group": "文件与工具",
+      "current": "Table2",
+      "p1": "table",
+      "lucide": "Table2",
+      "remix": "table",
+      "ids": {
+        "current": "lc-Table2",
+        "a": "ph-table",
+        "b": "lc-Table2",
+        "c": "ri-table-line"
+      },
+      "names": {
+        "current": "Table2",
+        "a": "table · Light",
+        "b": "Table2",
+        "c": "table-line"
+      }
+    },
+    "json": {
+      "key": "json",
+      "label": "结构数据",
+      "group": "文件与工具",
+      "current": "Braces",
+      "p1": "brackets-curly",
+      "lucide": "Braces",
+      "remix": "braces",
+      "ids": {
+        "current": "lc-Braces",
+        "a": "ph-brackets-curly",
+        "b": "lc-Braces",
+        "c": "ri-braces-line"
+      },
+      "names": {
+        "current": "Braces",
+        "a": "brackets-curly · Light",
+        "b": "Braces",
+        "c": "braces-line"
+      }
+    },
+    "branch": {
+      "key": "branch",
+      "label": "分支",
+      "group": "文件与工具",
+      "current": "GitBranch",
+      "p1": "git-branch",
+      "lucide": "GitBranch",
+      "remix": "git-branch",
+      "ids": {
+        "current": "lc-GitBranch",
+        "a": "ph-git-branch",
+        "b": "lc-GitBranch",
+        "c": "ri-git-branch-line"
+      },
+      "names": {
+        "current": "GitBranch",
+        "a": "git-branch · Light",
+        "b": "GitBranch",
+        "c": "git-branch-line"
+      }
+    },
+    "diff": {
+      "key": "diff",
+      "label": "文件变更",
+      "group": "文件与工具",
+      "current": "FileDiff",
+      "p1": "git-diff",
+      "lucide": "FileDiff",
+      "remix": "file-code",
+      "ids": {
+        "current": "lc-FileDiff",
+        "a": "ph-git-diff",
+        "b": "lc-FileDiff",
+        "c": "ri-file-code-line"
+      },
+      "names": {
+        "current": "FileDiff",
+        "a": "git-diff · Light",
+        "b": "FileDiff",
+        "c": "file-code-line"
+      }
+    },
+    "globe": {
+      "key": "globe",
+      "label": "浏览器",
+      "group": "文件与工具",
+      "current": "Globe",
+      "p1": "globe-simple",
+      "lucide": "Globe",
+      "remix": "global",
+      "action": "browser",
+      "ids": {
+        "current": "lc-Globe",
+        "a": "ph-globe-simple",
+        "b": "lc-Globe",
+        "c": "ri-global-line"
+      },
+      "names": {
+        "current": "Globe",
+        "a": "globe-simple · Light",
+        "b": "Globe",
+        "c": "global-line"
+      }
+    },
+    "maximize": {
+      "key": "maximize",
+      "label": "放大",
+      "group": "操作",
+      "current": "Maximize2",
+      "p1": "arrows-out-simple",
+      "lucide": "Maximize2",
+      "remix": "expand-diagonal",
+      "ids": {
+        "current": "lc-Maximize2",
+        "a": "ph-arrows-out-simple",
+        "b": "lc-Maximize2",
+        "c": "ri-expand-diagonal-line"
+      },
+      "names": {
+        "current": "Maximize2",
+        "a": "arrows-out-simple · Light",
+        "b": "Maximize2",
+        "c": "expand-diagonal-line"
+      }
+    },
+    "appearance": {
+      "key": "appearance",
+      "label": "外观",
+      "group": "设置",
+      "current": "Palette",
+      "p1": "palette",
+      "lucide": "Palette",
+      "remix": "palette",
+      "ids": {
+        "current": "lc-Palette",
+        "a": "ph-palette",
+        "b": "lc-Palette",
+        "c": "ri-palette-line"
+      },
+      "names": {
+        "current": "Palette",
+        "a": "palette · Light",
+        "b": "Palette",
+        "c": "palette-line"
+      }
+    },
+    "input": {
+      "key": "input",
+      "label": "输入",
+      "group": "设置",
+      "current": "Keyboard",
+      "p1": "keyboard",
+      "lucide": "Keyboard",
+      "remix": "keyboard-box",
+      "ids": {
+        "current": "lc-Keyboard",
+        "a": "ph-keyboard",
+        "b": "lc-Keyboard",
+        "c": "ri-keyboard-box-line"
+      },
+      "names": {
+        "current": "Keyboard",
+        "a": "keyboard · Light",
+        "b": "Keyboard",
+        "c": "keyboard-box-line"
+      }
+    },
+    "workspace": {
+      "key": "workspace",
+      "label": "工作区",
+      "group": "设置",
+      "current": "Building2",
+      "p1": "buildings",
+      "lucide": "Building2",
+      "remix": "building-2",
+      "ids": {
+        "current": "lc-Building2",
+        "a": "ph-buildings",
+        "b": "lc-Building2",
+        "c": "ri-building-2-line"
+      },
+      "names": {
+        "current": "Building2",
+        "a": "buildings · Light",
+        "b": "Building2",
+        "c": "building-2-line"
+      }
+    },
+    "permissions": {
+      "key": "permissions",
+      "label": "权限",
+      "group": "设置",
+      "current": "ShieldCheck",
+      "p1": "shield-check",
+      "lucide": "ShieldCheck",
+      "remix": "shield-check",
+      "ids": {
+        "current": "lc-ShieldCheck",
+        "a": "ph-shield-check",
+        "b": "lc-ShieldCheck",
+        "c": "ri-shield-check-line"
+      },
+      "names": {
+        "current": "ShieldCheck",
+        "a": "shield-check · Light",
+        "b": "ShieldCheck",
+        "c": "shield-check-line"
+      }
+    },
+    "server": {
+      "key": "server",
+      "label": "服务器",
+      "group": "设置",
+      "current": "Server",
+      "p1": "hard-drives",
+      "lucide": "Server",
+      "remix": "server",
+      "ids": {
+        "current": "lc-Server",
+        "a": "ph-hard-drives",
+        "b": "lc-Server",
+        "c": "ri-server-line"
+      },
+      "names": {
+        "current": "Server",
+        "a": "hard-drives · Light",
+        "b": "Server",
+        "c": "server-line"
+      }
+    },
+    "account": {
+      "key": "account",
+      "label": "个人偏好",
+      "group": "设置",
+      "current": "UserCircle",
+      "p1": "user-circle",
+      "lucide": "UserCircle",
+      "remix": "account-circle",
+      "ids": {
+        "current": "lc-UserCircle",
+        "a": "ph-user-circle",
+        "b": "lc-UserCircle",
+        "c": "ri-account-circle-line"
+      },
+      "names": {
+        "current": "UserCircle",
+        "a": "user-circle · Light",
+        "b": "UserCircle",
+        "c": "account-circle-line"
+      }
+    },
+    "general": {
+      "key": "general",
+      "label": "通用",
+      "group": "设置",
+      "current": "ToggleRight",
+      "p1": "toggle-right",
+      "lucide": "ToggleRight",
+      "remix": "toggle",
+      "ids": {
+        "current": "lc-ToggleRight",
+        "a": "ph-toggle-right",
+        "b": "lc-ToggleRight",
+        "c": "ri-toggle-line"
+      },
+      "names": {
+        "current": "ToggleRight",
+        "a": "toggle-right · Light",
+        "b": "ToggleRight",
+        "c": "toggle-line"
+      }
+    },
+    "key": {
+      "key": "key",
+      "label": "凭证",
+      "group": "设置",
+      "current": "Key",
+      "p1": "key",
+      "lucide": "Key",
+      "remix": "key-2",
+      "ids": {
+        "current": "lc-Key",
+        "a": "ph-key",
+        "b": "lc-Key",
+        "c": "ri-key-2-line"
+      },
+      "names": {
+        "current": "Key",
+        "a": "key · Light",
+        "b": "Key",
+        "c": "key-2-line"
+      }
+    },
+    "eye": {
+      "key": "eye",
+      "label": "显示",
+      "group": "设置",
+      "current": "Eye",
+      "p1": "eye",
+      "lucide": "Eye",
+      "remix": "eye",
+      "ids": {
+        "current": "lc-Eye",
+        "a": "ph-eye",
+        "b": "lc-Eye",
+        "c": "ri-eye-line"
+      },
+      "names": {
+        "current": "Eye",
+        "a": "eye · Light",
+        "b": "Eye",
+        "c": "eye-line"
+      }
+    },
+    "sun": {
+      "key": "sun",
+      "label": "浅色",
+      "group": "设置",
+      "current": "Sun",
+      "p1": "sun",
+      "lucide": "Sun",
+      "remix": "sun",
+      "ids": {
+        "current": "lc-Sun",
+        "a": "ph-sun",
+        "b": "lc-Sun",
+        "c": "ri-sun-line"
+      },
+      "names": {
+        "current": "Sun",
+        "a": "sun · Light",
+        "b": "Sun",
+        "c": "sun-line"
+      }
+    },
+    "moon": {
+      "key": "moon",
+      "label": "深色",
+      "group": "设置",
+      "current": "Moon",
+      "p1": "moon",
+      "lucide": "Moon",
+      "remix": "moon",
+      "ids": {
+        "current": "lc-Moon",
+        "a": "ph-moon",
+        "b": "lc-Moon",
+        "c": "ri-moon-line"
+      },
+      "names": {
+        "current": "Moon",
+        "a": "moon · Light",
+        "b": "Moon",
+        "c": "moon-line"
+      }
+    },
+    "monitor": {
+      "key": "monitor",
+      "label": "跟随系统",
+      "group": "设置",
+      "current": "Monitor",
+      "p1": "desktop",
+      "lucide": "Monitor",
+      "remix": "computer",
+      "ids": {
+        "current": "lc-Monitor",
+        "a": "ph-desktop",
+        "b": "lc-Monitor",
+        "c": "ri-computer-line"
+      },
+      "names": {
+        "current": "Monitor",
+        "a": "desktop · Light",
+        "b": "Monitor",
+        "c": "computer-line"
+      }
+    },
+    "clock": {
+      "key": "clock",
+      "label": "定时任务",
+      "group": "状态",
+      "current": "Clock",
+      "p1": "clock",
+      "lucide": "Clock",
+      "remix": "time",
+      "ids": {
+        "current": "lc-Clock",
+        "a": "ph-clock",
+        "b": "lc-Clock",
+        "c": "ri-time-line"
+      },
+      "names": {
+        "current": "Clock",
+        "a": "clock · Light",
+        "b": "Clock",
+        "c": "time-line"
+      }
+    },
+    "success": {
+      "key": "success",
+      "label": "成功",
+      "group": "状态",
+      "current": "CheckCircle2",
+      "p1": "check-circle",
+      "lucide": "CheckCircle2",
+      "remix": "checkbox-circle",
+      "ids": {
+        "current": "lc-CheckCircle2",
+        "a": "ph-check-circle",
+        "b": "lc-CheckCircle2",
+        "c": "ri-checkbox-circle-line"
+      },
+      "names": {
+        "current": "CheckCircle2",
+        "a": "check-circle · Light",
+        "b": "CheckCircle2",
+        "c": "checkbox-circle-line"
+      }
+    },
+    "warning": {
+      "key": "warning",
+      "label": "警告",
+      "group": "状态",
+      "current": "AlertTriangle",
+      "p1": "warning",
+      "lucide": "AlertTriangle",
+      "remix": "error-warning",
+      "ids": {
+        "current": "lc-AlertTriangle",
+        "a": "ph-warning",
+        "b": "lc-AlertTriangle",
+        "c": "ri-error-warning-line"
+      },
+      "names": {
+        "current": "AlertTriangle",
+        "a": "warning · Light",
+        "b": "AlertTriangle",
+        "c": "error-warning-line"
+      }
+    },
+    "error": {
+      "key": "error",
+      "label": "失败",
+      "group": "状态",
+      "current": "XCircle",
+      "p1": "x-circle",
+      "lucide": "XCircle",
+      "remix": "close-circle",
+      "ids": {
+        "current": "lc-XCircle",
+        "a": "ph-x-circle",
+        "b": "lc-XCircle",
+        "c": "ri-close-circle-line"
+      },
+      "names": {
+        "current": "XCircle",
+        "a": "x-circle · Light",
+        "b": "XCircle",
+        "c": "close-circle-line"
+      }
+    },
+    "info": {
+      "key": "info",
+      "label": "信息",
+      "group": "状态",
+      "current": "Info",
+      "p1": "info",
+      "lucide": "Info",
+      "remix": "information",
+      "ids": {
+        "current": "lc-Info",
+        "a": "ph-info",
+        "b": "lc-Info",
+        "c": "ri-information-line"
+      },
+      "names": {
+        "current": "Info",
+        "a": "info · Light",
+        "b": "Info",
+        "c": "information-line"
+      }
+    },
+    "check": {
+      "key": "check",
+      "label": "完成勾选",
+      "group": "状态",
+      "current": "Check",
+      "p1": "check",
+      "lucide": "Check",
+      "remix": "check",
+      "ids": {
+        "current": "lc-Check",
+        "a": "ph-check",
+        "b": "lc-Check",
+        "c": "ri-check-line"
+      },
+      "names": {
+        "current": "Check",
+        "a": "check · Light",
+        "b": "Check",
+        "c": "check-line"
+      }
+    },
+    "loading": {
+      "key": "loading",
+      "label": "载入中",
+      "group": "状态",
+      "current": "Loader2",
+      "p1": "spinner-gap",
+      "lucide": "Loader2",
+      "remix": "loader-4",
+      "ids": {
+        "current": "lc-Loader2",
+        "a": "ph-spinner-gap",
+        "b": "lc-Loader2",
+        "c": "ri-loader-4-line"
+      },
+      "names": {
+        "current": "Loader2",
+        "a": "spinner-gap · Light",
+        "b": "Loader2",
+        "c": "loader-4-line"
+      }
+    },
+    "switchSessions": {
+      "key": "switchSessions",
+      "label": "对话",
+      "group": "右上角",
+      "current": "MessageSquare",
+      "p1": "chat-circle",
+      "lucide": "MessageCircle",
+      "remix": "chat-3",
+      "action": "sessions",
+      "ids": {
+        "current": "lc-MessageSquare",
+        "a": "ph-chat-circle",
+        "b": "lc-MessageCircle",
+        "c": "ri-chat-3-line"
+      },
+      "names": {
+        "current": "MessageSquare",
+        "a": "chat-circle · Light",
+        "b": "MessageCircle",
+        "c": "chat-3-line"
+      }
+    },
+    "kanban": {
+      "key": "kanban",
+      "label": "看板",
+      "group": "右上角",
+      "current": "Columns3",
+      "p1": "kanban",
+      "lucide": "Columns3",
+      "remix": "layout-column",
+      "action": "kanban",
+      "ids": {
+        "current": "lc-Columns3",
+        "a": "ph-kanban",
+        "b": "lc-Columns3",
+        "c": "ri-layout-column-line"
+      },
+      "names": {
+        "current": "Columns3",
+        "a": "kanban · Light",
+        "b": "Columns3",
+        "c": "layout-column-line"
+      }
+    },
+    "calendar": {
+      "key": "calendar",
+      "label": "日历",
+      "group": "右上角",
+      "current": "CalendarDays",
+      "p1": "calendar-blank",
+      "lucide": "CalendarDays",
+      "remix": "calendar-2",
+      "action": "calendar",
+      "ids": {
+        "current": "lc-CalendarDays",
+        "a": "ph-calendar-blank",
+        "b": "lc-CalendarDays",
+        "c": "ri-calendar-2-line"
+      },
+      "names": {
+        "current": "CalendarDays",
+        "a": "calendar-blank · Light",
+        "b": "CalendarDays",
+        "c": "calendar-2-line"
+      }
+    },
+    "gantt": {
+      "key": "gantt",
+      "label": "甘特图",
+      "group": "右上角",
+      "current": "GanttChartSquare",
+      "p1": "chart-bar-horizontal",
+      "lucide": "GanttChartSquare",
+      "remix": "bar-chart-horizontal",
+      "action": "gantt",
+      "ids": {
+        "current": "lc-GanttChartSquare",
+        "a": "ph-chart-bar-horizontal",
+        "b": "lc-GanttChartSquare",
+        "c": "ri-bar-chart-horizontal-line"
+      },
+      "names": {
+        "current": "GanttChartSquare",
+        "a": "chart-bar-horizontal · Light",
+        "b": "GanttChartSquare",
+        "c": "bar-chart-horizontal-line"
+      }
+    },
+    "filesPanel": {
+      "key": "filesPanel",
+      "label": "文件",
+      "group": "右上角",
+      "current": "FolderTree",
+      "p1": "folder",
+      "lucide": "FolderTree",
+      "remix": "folder-open",
+      "action": "files",
+      "ids": {
+        "current": "lc-FolderTree",
+        "a": "ph-folder",
+        "b": "lc-FolderTree",
+        "c": "ri-folder-open-line"
+      },
+      "names": {
+        "current": "FolderTree",
+        "a": "folder · Light",
+        "b": "FolderTree",
+        "c": "folder-open-line"
+      }
+    },
+    "trajectory": {
+      "key": "trajectory",
+      "label": "运行轨迹",
+      "group": "右上角",
+      "current": "Activity",
+      "p1": "chart-line",
+      "lucide": "ChartSpline",
+      "remix": "pulse",
+      "action": "trajectory",
+      "ids": {
+        "current": "lc-Activity",
+        "a": "ph-chart-line",
+        "b": "lc-ChartSpline",
+        "c": "ri-pulse-line"
+      },
+      "names": {
+        "current": "Activity",
+        "a": "chart-line · Light",
+        "b": "ChartSpline",
+        "c": "pulse-line"
+      }
+    },
+    "help": {
+      "key": "help",
+      "label": "帮助",
+      "group": "右上角",
+      "current": "HelpCircle",
+      "p1": "question",
+      "lucide": "HelpCircle",
+      "remix": "question",
+      "action": "help",
+      "ids": {
+        "current": "lc-HelpCircle",
+        "a": "ph-question",
+        "b": "lc-HelpCircle",
+        "c": "ri-question-line"
+      },
+      "names": {
+        "current": "HelpCircle",
+        "a": "question · Light",
+        "b": "HelpCircle",
+        "c": "question-line"
+      }
+    },
+    "unpin": {
+      "key": "unpin",
+      "label": "取消固定",
+      "group": "操作",
+      "current": "PinOff",
+      "p1": "push-pin-slash",
+      "lucide": "PinOff",
+      "remix": "unpin",
+      "ids": {
+        "current": "lc-PinOff",
+        "a": "ph-push-pin-slash",
+        "b": "lc-PinOff",
+        "c": "ri-unpin-line"
+      },
+      "names": {
+        "current": "PinOff",
+        "a": "push-pin-slash · Light",
+        "b": "PinOff",
+        "c": "unpin-line"
+      }
+    },
+    "restore": {
+      "key": "restore",
+      "label": "还原面板",
+      "group": "操作",
+      "current": "Minimize2",
+      "p1": "arrows-in-simple",
+      "lucide": "Minimize2",
+      "remix": "collapse-diagonal",
+      "ids": {
+        "current": "lc-Minimize2",
+        "a": "ph-arrows-in-simple",
+        "b": "lc-Minimize2",
+        "c": "ri-collapse-diagonal-line"
+      },
+      "names": {
+        "current": "Minimize2",
+        "a": "arrows-in-simple · Light",
+        "b": "Minimize2",
+        "c": "collapse-diagonal-line"
+      }
+    }
+  },
+  "oldP1": {
+    "sessions": {
+      "name": "tray",
+      "id": "ph-tray"
+    },
+    "labels": {
+      "name": "tag-simple",
+      "id": "ph-tag-simple"
+    },
+    "sources": {
+      "name": "database",
+      "id": "ph-database"
+    },
+    "skills": {
+      "name": "lightning",
+      "id": "ph-lightning"
+    },
+    "plugins": {
+      "name": "puzzle-piece",
+      "id": "ph-puzzle-piece"
+    },
+    "projects": {
+      "name": "folder-simple",
+      "id": "ph-folder-simple"
+    },
+    "pages": {
+      "name": "layout",
+      "id": "ph-layout"
+    },
+    "automations": {
+      "name": "flow-arrow",
+      "id": "ph-flow-arrow"
+    },
+    "settings": {
+      "name": "gear-six",
+      "id": "ph-gear-six"
+    }
+  },
+  "toolbar": [
+    {
+      "key": "new",
+      "label": "新建对话",
+      "action": "newSession"
+    },
+    {
+      "key": "switchSessions",
+      "label": "对话",
+      "action": "sessions"
+    },
+    {
+      "key": "kanban",
+      "label": "看板",
+      "action": "kanban"
+    },
+    {
+      "key": "calendar",
+      "label": "日历",
+      "action": "calendar"
+    },
+    {
+      "key": "gantt",
+      "label": "甘特图",
+      "action": "gantt"
+    },
+    {
+      "key": "filesPanel",
+      "label": "文件",
+      "action": "files"
+    },
+    {
+      "key": "trajectory",
+      "label": "运行轨迹",
+      "action": "trajectory"
+    },
+    {
+      "key": "terminal",
+      "label": "终端",
+      "action": "terminal"
+    },
+    {
+      "key": "globe",
+      "label": "浏览器",
+      "action": "browser"
+    },
+    {
+      "key": "help",
+      "label": "帮助",
+      "action": "help"
+    }
+  ],
+  "sources": {
+    "phosphor": "https://github.com/phosphor-icons/core",
+    "remix": {
+      "version": "4.9.1",
+      "source": "https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.symbol.svg",
+      "sha256": "405df873841c8dc3505212125c687dae50c04fa2e321ada1c4804d2f0a31a857",
+      "includedGlyphs": 91,
+      "recipes": 63
+    },
+    "seti": {
+      "theme": "https://raw.githubusercontent.com/microsoft/vscode/1.105.0/extensions/theme-seti/icons/vs-seti-icon-theme.json",
+      "font": "https://raw.githubusercontent.com/microsoft/vscode/1.105.0/extensions/theme-seti/icons/seti.woff",
+      "themeSha256": "0f74f106e69439514f0263a6603ea96fdc4a81c2b9f60101d2ce289cd94105d8",
+      "fontSha256": "123d8d2edd154fb59eda9973cd14b1d8f8ef2081047bc00b19e44d7ae260d870"
+    }
+  },
+  "included": [
+    {
+      "id": "ph-chat-circle",
+      "library": "Phosphor core 2.1.1",
+      "name": "chat-circle",
+      "weight": "light",
+      "sha256": "3c0ba1cd74a9bc4b9d2f04558934ff05a944a1f7b6b91bc76e959dbb269e4d97"
+    },
+    {
+      "id": "ph-tag",
+      "library": "Phosphor core 2.1.1",
+      "name": "tag",
+      "weight": "light",
+      "sha256": "962e8da3ffb037103d6e613d8b160eb12c1402730994d4154106f1d39854c32f"
+    },
+    {
+      "id": "ph-database",
+      "library": "Phosphor core 2.1.1",
+      "name": "database",
+      "weight": "light",
+      "sha256": "832bb56d3e53ee5809641f5dc95050b7a1d5be7eb98660752774ec6d62e4579a"
+    },
+    {
+      "id": "ph-lightbulb",
+      "library": "Phosphor core 2.1.1",
+      "name": "lightbulb",
+      "weight": "light",
+      "sha256": "284a7401bb102c5697651ce5c99eb21d61ccb529e86d2e018541edf871e5a09e"
+    },
+    {
+      "id": "ph-puzzle-piece",
+      "library": "Phosphor core 2.1.1",
+      "name": "puzzle-piece",
+      "weight": "light",
+      "sha256": "06fc78f4bbc1a49effc63bfb361cf73235bae0b02f160e31fdafe01c3b472781"
+    },
+    {
+      "id": "ph-folder-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "folder-simple",
+      "weight": "light",
+      "sha256": "94a31a36d39c5fda00738a36bd1a586022f931191e7655b8295b14ed74a4859b"
+    },
+    {
+      "id": "ph-browser",
+      "library": "Phosphor core 2.1.1",
+      "name": "browser",
+      "weight": "light",
+      "sha256": "5576fdfc6680ee3d2630d3a1e17208345d22057cb222cc7f87360c0225a4b51f"
+    },
+    {
+      "id": "ph-arrows-clockwise",
+      "library": "Phosphor core 2.1.1",
+      "name": "arrows-clockwise",
+      "weight": "light",
+      "sha256": "46a045b04fdd2948cd0c16309ce2f50278e581b8747ee86ce9d87dc2b5fc02ce"
+    },
+    {
+      "id": "ph-sliders-horizontal",
+      "library": "Phosphor core 2.1.1",
+      "name": "sliders-horizontal",
+      "weight": "light",
+      "sha256": "fc2bcb8ac38ce3a38f0dabe03e2e6dd19dbd40e978b86797e498e8ac80cedd18"
+    },
+    {
+      "id": "ph-note-pencil",
+      "library": "Phosphor core 2.1.1",
+      "name": "note-pencil",
+      "weight": "light",
+      "sha256": "6468eaab944d70e2457031d16f1e56c201f98ac1bef1019326e6a23caa1187d6"
+    },
+    {
+      "id": "ph-sidebar-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "sidebar-simple",
+      "weight": "light",
+      "sha256": "eb4694ef6ab380723715d77e54958003efd10974ad765989b8ffdf899d03fbcd"
+    },
+    {
+      "id": "ph-magnifying-glass",
+      "library": "Phosphor core 2.1.1",
+      "name": "magnifying-glass",
+      "weight": "light",
+      "sha256": "e24a8c8778901b20b37d025f49c72ebfaa28c5f46d68c6c4fea82fa8f8bf1ee3"
+    },
+    {
+      "id": "ph-funnel-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "funnel-simple",
+      "weight": "light",
+      "sha256": "6728d9faf990b62ded96d9c6d296454770cae4871287ac25cbad22ab26dc8e82"
+    },
+    {
+      "id": "ph-dots-three",
+      "library": "Phosphor core 2.1.1",
+      "name": "dots-three",
+      "weight": "light",
+      "sha256": "00df0c4beb1d8eaea39da61c32749aeebec8da89e4a5feb1253897e57620275b"
+    },
+    {
+      "id": "ph-plus",
+      "library": "Phosphor core 2.1.1",
+      "name": "plus",
+      "weight": "light",
+      "sha256": "d924e999d110e1f84c3197dba33206d46fb94cb28a2b53f6ca35217466e3c92e"
+    },
+    {
+      "id": "ph-x",
+      "library": "Phosphor core 2.1.1",
+      "name": "x",
+      "weight": "light",
+      "sha256": "7f3f44f5e9fdc40d7d8ecaf49c9b2cca95a6f7b944f81f7ae5d8d8bb674d8d91"
+    },
+    {
+      "id": "ph-caret-left",
+      "library": "Phosphor core 2.1.1",
+      "name": "caret-left",
+      "weight": "light",
+      "sha256": "bb62f6e4bbe3839b94d03f02c6fc82ae9e87bfb2f4ed76530fc51172a2c00709"
+    },
+    {
+      "id": "ph-caret-right",
+      "library": "Phosphor core 2.1.1",
+      "name": "caret-right",
+      "weight": "light",
+      "sha256": "9a98fc23239b7a368f52eca8c1dd400808f1812a3ec1b6b7234c74f48e8ba428"
+    },
+    {
+      "id": "ph-caret-down",
+      "library": "Phosphor core 2.1.1",
+      "name": "caret-down",
+      "weight": "light",
+      "sha256": "f90a5ae97d000696a67c5a7787a78620bb3744648a63b0fe9cdbdc10476fecab"
+    },
+    {
+      "id": "ph-copy-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "copy-simple",
+      "weight": "light",
+      "sha256": "68b75003e324e56895bd3094f20d8f78bcbeceb82a689d7959df81325bfdbd6e"
+    },
+    {
+      "id": "ph-pencil-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "pencil-simple",
+      "weight": "light",
+      "sha256": "c6e700d0430923f8496c51813b81d63623bcb714777461d2914396d35ffa7790"
+    },
+    {
+      "id": "ph-trash-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "trash-simple",
+      "weight": "light",
+      "sha256": "fbd3f5124e4ca9caccaa8a43f4621af7a61c5b37d5c8bb3657861c58cd7cd815"
+    },
+    {
+      "id": "ph-arrow-square-out",
+      "library": "Phosphor core 2.1.1",
+      "name": "arrow-square-out",
+      "weight": "light",
+      "sha256": "8d689243a98e594e6c9a88f3dc42cfb9fe4b1342a4d936e6dfc6005e589a3769"
+    },
+    {
+      "id": "ph-download-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "download-simple",
+      "weight": "light",
+      "sha256": "dea5e244ee9cc9f78a9832b690f124d86cf71bc33b7a3ec809d53ecc3ba6b4a2"
+    },
+    {
+      "id": "ph-push-pin-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "push-pin-simple",
+      "weight": "light",
+      "sha256": "552814afeb546baf6c0c69f1675c05323e452d6028691bda979c5d224fa8d6ff"
+    },
+    {
+      "id": "ph-archive",
+      "library": "Phosphor core 2.1.1",
+      "name": "archive",
+      "weight": "light",
+      "sha256": "4d200d0bb04c9805c9e9673409ce4904320b7fc695de983468449027fcf6564f"
+    },
+    {
+      "id": "ph-paperclip",
+      "library": "Phosphor core 2.1.1",
+      "name": "paperclip",
+      "weight": "light",
+      "sha256": "e3ed3c96e8e75a641ecf6d97b6a2bcc0cd56ae67ac373425186d6e8b2c87c578"
+    },
+    {
+      "id": "ph-arrow-up",
+      "library": "Phosphor core 2.1.1",
+      "name": "arrow-up",
+      "weight": "light",
+      "sha256": "c06d325e0f16034a32df2b60379dfa65598b0d2572ff5e7652eb2d1f498ee39f"
+    },
+    {
+      "id": "ph-chat",
+      "library": "Phosphor core 2.1.1",
+      "name": "chat",
+      "weight": "light",
+      "sha256": "1e46c795ad129ef08ecb417ac425802db86cf66307f1a037877fd625d672ffea"
+    },
+    {
+      "id": "ph-sparkle",
+      "library": "Phosphor core 2.1.1",
+      "name": "sparkle",
+      "weight": "light",
+      "sha256": "027e2e3b652bb25cce0e0f1ae706720cd684f05ddce4c25497a6133aa2548da5"
+    },
+    {
+      "id": "ph-robot",
+      "library": "Phosphor core 2.1.1",
+      "name": "robot",
+      "weight": "light",
+      "sha256": "2973239961fe2bba6d780c732cdaf326c1abdc5d42633c5dcfc098760c017117"
+    },
+    {
+      "id": "ph-terminal-window",
+      "library": "Phosphor core 2.1.1",
+      "name": "terminal-window",
+      "weight": "light",
+      "sha256": "3d308dd89d8caad7c34f93a434fabc209604b4052e33f9428e6f677d101ca352"
+    },
+    {
+      "id": "ph-code-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "code-simple",
+      "weight": "light",
+      "sha256": "35f24d1ab8e12356439afdf8b5c269343ae8235b7636ff4f89086d43d9181135"
+    },
+    {
+      "id": "ph-file",
+      "library": "Phosphor core 2.1.1",
+      "name": "file",
+      "weight": "light",
+      "sha256": "cb5a5a6cc4696f43c6e40755b338842d009735140f5ef20560c824e5feb990f9"
+    },
+    {
+      "id": "ph-file-text",
+      "library": "Phosphor core 2.1.1",
+      "name": "file-text",
+      "weight": "light",
+      "sha256": "4579a0026554224ce339d52b4bf468f246e010f58bec025f5019f63e3ab67530"
+    },
+    {
+      "id": "ph-image",
+      "library": "Phosphor core 2.1.1",
+      "name": "image",
+      "weight": "light",
+      "sha256": "148e506672999a455eb0f735e7730eee308d0140a8efab228b937025134b4a20"
+    },
+    {
+      "id": "ph-table",
+      "library": "Phosphor core 2.1.1",
+      "name": "table",
+      "weight": "light",
+      "sha256": "129aab7f1da85d4e3f355ed12bdc7b8ff848c7b9bd28c71fe650b40714a83ce7"
+    },
+    {
+      "id": "ph-brackets-curly",
+      "library": "Phosphor core 2.1.1",
+      "name": "brackets-curly",
+      "weight": "light",
+      "sha256": "0b1773451fb8bc5ee29a3e40e8274856a2b677b9234d01d8472ecea6bccadc35"
+    },
+    {
+      "id": "ph-git-branch",
+      "library": "Phosphor core 2.1.1",
+      "name": "git-branch",
+      "weight": "light",
+      "sha256": "3ee88ddb0e3723b239ba49986bfe299bf0fdf95151d36388e08bf66ce7a936f6"
+    },
+    {
+      "id": "ph-git-diff",
+      "library": "Phosphor core 2.1.1",
+      "name": "git-diff",
+      "weight": "light",
+      "sha256": "ffef4f4ff712df3c83cd41b8f40f4076ed65137175d2045fbbf6d50168bd8ab0"
+    },
+    {
+      "id": "ph-globe-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "globe-simple",
+      "weight": "light",
+      "sha256": "6542ad11b49f36769cf7f7567743485750c2d0a1423164c82a336cf67f917dba"
+    },
+    {
+      "id": "ph-arrows-out-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "arrows-out-simple",
+      "weight": "light",
+      "sha256": "0ab3d8006f5f2d907c5e4fd5aa8bbb3a8c92d05ef5ee8329ba6a27961cfef6ce"
+    },
+    {
+      "id": "ph-palette",
+      "library": "Phosphor core 2.1.1",
+      "name": "palette",
+      "weight": "light",
+      "sha256": "6f4a7e1e8dbb120dc2bb69e2a23925cf0120277171e9ce26a1738a0c90ab7efb"
+    },
+    {
+      "id": "ph-keyboard",
+      "library": "Phosphor core 2.1.1",
+      "name": "keyboard",
+      "weight": "light",
+      "sha256": "e0c6a27568a57dbc3ec2a5d08c8412ded8fe73a431d113c8040b9e5755db2894"
+    },
+    {
+      "id": "ph-buildings",
+      "library": "Phosphor core 2.1.1",
+      "name": "buildings",
+      "weight": "light",
+      "sha256": "a0c5e2f9e8a16b3204b4d9967622064984550b01d9f374593fa60e4155496505"
+    },
+    {
+      "id": "ph-shield-check",
+      "library": "Phosphor core 2.1.1",
+      "name": "shield-check",
+      "weight": "light",
+      "sha256": "3976993805ad3b2fc3f7f56fc8d64329142441788a20fcf9d647e9ceaf29a8d4"
+    },
+    {
+      "id": "ph-hard-drives",
+      "library": "Phosphor core 2.1.1",
+      "name": "hard-drives",
+      "weight": "light",
+      "sha256": "818439ad939f824e4569b0f44355502e3310cc24070d1e3a40e9e66e2573b65e"
+    },
+    {
+      "id": "ph-user-circle",
+      "library": "Phosphor core 2.1.1",
+      "name": "user-circle",
+      "weight": "light",
+      "sha256": "7c76336ccc54e7f32418cd7d8ed49e2887d02d9371998a2dfb804f8967e89d62"
+    },
+    {
+      "id": "ph-toggle-right",
+      "library": "Phosphor core 2.1.1",
+      "name": "toggle-right",
+      "weight": "light",
+      "sha256": "b3a07ec4396d829ce035c3c1b70c2082da88a1594ce8b341b39f252e9c937ba2"
+    },
+    {
+      "id": "ph-key",
+      "library": "Phosphor core 2.1.1",
+      "name": "key",
+      "weight": "light",
+      "sha256": "d14ac6d7e9fd0da23806350a1477393f1e8866b10947830c2efd155f6d59894b"
+    },
+    {
+      "id": "ph-eye",
+      "library": "Phosphor core 2.1.1",
+      "name": "eye",
+      "weight": "light",
+      "sha256": "d7caa325711784ed9cda49b32da9ee49705fce80825b40c0ba43b82e14d216cf"
+    },
+    {
+      "id": "ph-sun",
+      "library": "Phosphor core 2.1.1",
+      "name": "sun",
+      "weight": "light",
+      "sha256": "bc3557822da55c4ebe6f80d68a0a7992b13060c0754a0ad7953d2321530777f6"
+    },
+    {
+      "id": "ph-moon",
+      "library": "Phosphor core 2.1.1",
+      "name": "moon",
+      "weight": "light",
+      "sha256": "949a1ab1483df14e4d25db4839d6430baed5adca66f50cd58026f3c7fa7c64c6"
+    },
+    {
+      "id": "ph-desktop",
+      "library": "Phosphor core 2.1.1",
+      "name": "desktop",
+      "weight": "light",
+      "sha256": "3763419a03d6cec7d1c926c575e2e3e593fcdf273446e7bc040f14a8d7b2f29f"
+    },
+    {
+      "id": "ph-clock",
+      "library": "Phosphor core 2.1.1",
+      "name": "clock",
+      "weight": "light",
+      "sha256": "54651e7a959c0fff191dbd0c00f7cfb1bd81b9bebc7b5acb494cb94063f017ed"
+    },
+    {
+      "id": "ph-check-circle",
+      "library": "Phosphor core 2.1.1",
+      "name": "check-circle",
+      "weight": "light",
+      "sha256": "6bc3ef79a187b218b3bb925cf09bcb8ac8da687611fec45de24dd5c86d20b3f9"
+    },
+    {
+      "id": "ph-warning",
+      "library": "Phosphor core 2.1.1",
+      "name": "warning",
+      "weight": "light",
+      "sha256": "62ed0d3ff4272a0e975a617a2af99d3e93c6dc0e314c4cb2d82e0a5bae652598"
+    },
+    {
+      "id": "ph-x-circle",
+      "library": "Phosphor core 2.1.1",
+      "name": "x-circle",
+      "weight": "light",
+      "sha256": "76073e849fc66f057683732bd5426361b5f2ce9de3a6b26c81ee12ad35343e09"
+    },
+    {
+      "id": "ph-info",
+      "library": "Phosphor core 2.1.1",
+      "name": "info",
+      "weight": "light",
+      "sha256": "c57885e282dd796185bd330356a96cd2090313b3bedafaf41f97dd304df9c87c"
+    },
+    {
+      "id": "ph-check",
+      "library": "Phosphor core 2.1.1",
+      "name": "check",
+      "weight": "light",
+      "sha256": "f9669722a39144a637ee4a1dcfe52e655384baab1b32245b7b0d196727cfa04b"
+    },
+    {
+      "id": "ph-spinner-gap",
+      "library": "Phosphor core 2.1.1",
+      "name": "spinner-gap",
+      "weight": "light",
+      "sha256": "79fa7992c3714f848a4eb1f9bc9f6eda3d4cb080850e396abdd8148afb3e1e4f"
+    },
+    {
+      "id": "ph-kanban",
+      "library": "Phosphor core 2.1.1",
+      "name": "kanban",
+      "weight": "light",
+      "sha256": "2f357e9fd7175c146a283a081625cbcdd1a381a1ef404d4056b48f86f8b3ceae"
+    },
+    {
+      "id": "ph-calendar-blank",
+      "library": "Phosphor core 2.1.1",
+      "name": "calendar-blank",
+      "weight": "light",
+      "sha256": "dc88216f4609e3f8fdd18f0de6b3643aefef412ac3ea5606c7e1f303ff2f16a2"
+    },
+    {
+      "id": "ph-chart-bar-horizontal",
+      "library": "Phosphor core 2.1.1",
+      "name": "chart-bar-horizontal",
+      "weight": "light",
+      "sha256": "543b8dda6f2358f96b3bc2836a35c7485a76c0188c06c5b774a02fa048987f4a"
+    },
+    {
+      "id": "ph-folder",
+      "library": "Phosphor core 2.1.1",
+      "name": "folder",
+      "weight": "light",
+      "sha256": "d616c4b88c133d3569fa40e5488bc2ff17a0c8cc0bfcca61caeba5a5f498efe1"
+    },
+    {
+      "id": "ph-chart-line",
+      "library": "Phosphor core 2.1.1",
+      "name": "chart-line",
+      "weight": "light",
+      "sha256": "c7f841a96a18508019428c4860b9f3bd7b7a81eb2e948421c9b037fc083ce726"
+    },
+    {
+      "id": "ph-question",
+      "library": "Phosphor core 2.1.1",
+      "name": "question",
+      "weight": "light",
+      "sha256": "c122a1cc393313d1e969e6ae873cf72353198590e50195826a265b65afb38dc0"
+    },
+    {
+      "id": "ph-push-pin-slash",
+      "library": "Phosphor core 2.1.1",
+      "name": "push-pin-slash",
+      "weight": "light",
+      "sha256": "4eac0ccf6aaf125d892b277d0468cfff5510166bee355a1c6fcf41dfd9f330bb"
+    },
+    {
+      "id": "ph-arrows-in-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "arrows-in-simple",
+      "weight": "light",
+      "sha256": "be901d0e3c1f626634e6c67e5e5d3faa81f9b5c628d21aee954709dce263e6c4"
+    },
+    {
+      "id": "ph-tray",
+      "library": "Phosphor core 2.1.1",
+      "name": "tray",
+      "weight": "light",
+      "sha256": "b2c175b4c2c66f6de1590b2474bbd0ff3731f8800fc3a62624b46ef16730bfd7"
+    },
+    {
+      "id": "ph-tag-simple",
+      "library": "Phosphor core 2.1.1",
+      "name": "tag-simple",
+      "weight": "light",
+      "sha256": "9ed0b1eff2669236cfbdcd326c98012f98b3f78eeb4a2cb1bcf3d6b0b31249fd"
+    },
+    {
+      "id": "ph-lightning",
+      "library": "Phosphor core 2.1.1",
+      "name": "lightning",
+      "weight": "light",
+      "sha256": "fd7d6084635ba1ba9143e053aae3117a89a9e37505e453068e471a1bde11c0de"
+    },
+    {
+      "id": "ph-layout",
+      "library": "Phosphor core 2.1.1",
+      "name": "layout",
+      "weight": "light",
+      "sha256": "9915faa711237b29f3b7a0012ca1a53beb57f928df6bda9a50b383fa042f96db"
+    },
+    {
+      "id": "ph-flow-arrow",
+      "library": "Phosphor core 2.1.1",
+      "name": "flow-arrow",
+      "weight": "light",
+      "sha256": "c6c91882026d6b912fafde680076a6613465d1aeb1f9b865964e6176cddb784f"
+    },
+    {
+      "id": "ph-gear-six",
+      "library": "Phosphor core 2.1.1",
+      "name": "gear-six",
+      "weight": "light",
+      "sha256": "23a1df75f6dbf685274f0f1f3752562d16039ff6363a2136c503cd4f54f219f5"
+    },
+    {
+      "id": "file-markdown",
+      "library": "Phosphor core 2.1.1",
+      "name": "markdown-logo",
+      "weight": "fill",
+      "purpose": "File type mark",
+      "sha256": "236d7d4cb97b97cf8579313b79ef745a160cb88fd1dfbc89c024be8ee6a86df9"
+    }
+  ]
+}

@@ -349,7 +349,7 @@ export function TrajectoryView({ snapshot, sessionTotal, isProcessing, contextSu
                 document.getElementById(`${viewId}-tab-${target}`)?.focus()
               }}
               onClick={() => selectRunView(view)}
-              className={`craft-control relative h-10 shrink-0 px-0.5 text-[12px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${runView === view ? 'text-foreground' : 'text-text-secondary hover:text-foreground'}`}
+              className={`craft-control relative h-10 shrink-0 px-0.5 text-label font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${runView === view ? 'text-foreground' : 'text-text-secondary hover:text-foreground'}`}
             >
               {t(`trajectory.views.${view}`)}
               {runView === view && <motion.span layoutId="run-active-view" className="absolute inset-x-0 bottom-0 h-0.5 rounded-t bg-accent" transition={motionTween(reduceMotion, 'standard', 'move')} />}

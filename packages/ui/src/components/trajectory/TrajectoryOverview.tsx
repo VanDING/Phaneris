@@ -100,14 +100,14 @@ export function TrajectoryOverview({
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
         <div className="flex min-w-0 items-center gap-2 border-b border-border/50 pb-3">
           <span className={`h-2 w-2 shrink-0 rounded-full ${isProcessing ? 'animate-pulse bg-accent' : errorRecords.length > 0 ? 'bg-destructive' : 'bg-success'}`} />
-          <span className="text-[13px] font-semibold">
+          <span className="text-body font-semibold">
             {contentRecords.length === 0 ? t('contentPanel.trajectory.noRecords') : isProcessing
               ? t('trajectory.overview.processing')
               : errorRecords.length > 0
                 ? t('trajectory.overview.completedWithIssues')
                 : t('trajectory.overview.completed')}
           </span>
-          <span className="ml-auto text-[11px] tabular-nums text-text-secondary">
+          <span className="ml-auto text-meta tabular-nums text-text-secondary">
             {t('trajectory.overview.turnsEvents', { turns: turns.filter(turn => turn.turn !== null).length, events: contentRecords.length })}
           </span>
         </div>
@@ -123,10 +123,10 @@ export function TrajectoryOverview({
             return (
               <div key={String(label)} className="min-w-0 rounded-lg bg-foreground/[0.025] px-3 py-2.5"
                 title={Icon === Clock3 ? t('trajectory.performance.ttftSummary', { p50: formatDurationMillis(performance.p50), p95: formatDurationMillis(performance.p95), valid: performance.ttftCount, total: performance.requests.length }) : undefined}>
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-secondary">
+                <div className="flex items-center gap-1.5 text-meta font-medium text-text-secondary">
                   <StatIcon className="h-3.5 w-3.5" />{String(label)}
                 </div>
-                <div className="mt-1 truncate text-[16px] font-semibold tabular-nums">{String(value)}</div>
+                <div className="mt-1 truncate text-title font-semibold tabular-nums">{String(value)}</div>
               </div>
             )
           })}
@@ -135,8 +135,8 @@ export function TrajectoryOverview({
         {decisionSummary}
         {contextSummary && (
           <section>
-            <h3 className="mb-2 text-[12px] font-semibold">{t('trajectory.overview.environment')}</h3>
-            <div className="grid gap-x-5 gap-y-2 border-y border-border/50 py-3 text-[12px] @min-[620px]/trajectory:grid-cols-2">
+            <h3 className="mb-2 text-label font-semibold">{t('trajectory.overview.environment')}</h3>
+            <div className="grid gap-x-5 gap-y-2 border-y border-border/50 py-3 text-label @min-[620px]/trajectory:grid-cols-2">
               {[
                 [t('trajectory.overview.model'), contextSummary.model],
                 [t('contentPanel.context.name'), contextSummary.name],
@@ -164,8 +164,8 @@ export function TrajectoryOverview({
 
         <section>
           <div className="mb-2 flex items-center gap-2">
-            <h3 className="text-[12px] font-semibold">{t('trajectory.overview.runShape')}</h3>
-            <button type="button" className="craft-control ml-auto text-[11px] font-medium text-accent-text hover:underline" onClick={() => onOpenTrajectory()}>
+            <h3 className="text-label font-semibold">{t('trajectory.overview.runShape')}</h3>
+            <button type="button" className="craft-control ml-auto text-meta font-medium text-accent-text hover:underline" onClick={() => onOpenTrajectory()}>
               {t('trajectory.overview.openTrajectory')}
             </button>
           </div>
@@ -191,9 +191,9 @@ export function TrajectoryOverview({
         {requestContexts.length > 0 && (
           <section data-run-context-growth>
             <div className="mb-2 flex items-center gap-2">
-              <h3 className="text-[12px] font-semibold">{t('trajectory.overview.contextGrowth')}</h3>
-              <span className="text-[11px] text-text-secondary">{t('trajectory.overview.contextGrowthHint')}</span>
-              <button type="button" className="craft-control ml-auto text-[11px] font-medium text-accent-text hover:underline" onClick={() => onOpenContext()}>
+              <h3 className="text-label font-semibold">{t('trajectory.overview.contextGrowth')}</h3>
+              <span className="text-meta text-text-secondary">{t('trajectory.overview.contextGrowthHint')}</span>
+              <button type="button" className="craft-control ml-auto text-meta font-medium text-accent-text hover:underline" onClick={() => onOpenContext()}>
                 {t('trajectory.overview.openContext')}
               </button>
             </div>
@@ -211,9 +211,9 @@ export function TrajectoryOverview({
                     className="craft-control group relative flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     title={t('trajectory.overview.contextRequestTitle', { seq: sequence, tokens: context.value })}
                   >
-                    <span className="pointer-events-none absolute left-1/2 top-0 z-component-chrome -translate-x-1/2 whitespace-nowrap rounded bg-popover px-1 text-[8px] tabular-nums text-popover-foreground opacity-0 shadow-xs transition-opacity group-hover:opacity-100">{formatTokens(context.value, locale)}</span>
+                    <span className="pointer-events-none absolute left-1/2 top-0 z-component-chrome -translate-x-1/2 whitespace-nowrap rounded bg-popover px-1 text-micro tabular-nums text-popover-foreground opacity-0 shadow-xs transition-opacity group-hover:opacity-100">{formatTokens(context.value, locale)}</span>
                     <span className="w-full max-w-8 rounded-t-sm bg-accent/65 transition-colors group-hover:bg-accent" style={{ height: `${Math.max(4, (context.value / maxContextTokens) * 70)}%` }} />
-                    <span className="h-3 whitespace-nowrap text-[8px] tabular-nums text-text-secondary">{showLabel ? context.endSeq : ''}</span>
+                    <span className="h-3 whitespace-nowrap text-micro tabular-nums text-text-secondary">{showLabel ? context.endSeq : ''}</span>
                   </button>
                 )
               })}
@@ -225,7 +225,7 @@ export function TrajectoryOverview({
           onOpenTrajectory={onOpenTrajectory} onOpenContext={onOpenContext} />}
 
         <section>
-          <h3 className="mb-2 text-[12px] font-semibold">{t('trajectory.overview.runBrief')}</h3>
+          <h3 className="mb-2 text-label font-semibold">{t('trajectory.overview.runBrief')}</h3>
           <div className="grid gap-2 @min-[620px]/trajectory:grid-cols-3">
             {[
               [t('trajectory.overview.goal'), latestUserGoal || t('trajectory.overview.notRecorded')],
@@ -233,8 +233,8 @@ export function TrajectoryOverview({
               [t('trajectory.overview.outcome'), errorRecords.length ? t('trajectory.overview.issueSummary', { count: errorRecords.length }) : t('trajectory.overview.noIssues')],
             ].map(([label, value]) => (
               <div key={label} className="min-w-0 border-l border-border px-3 py-1">
-                <div className="text-[11px] font-medium text-text-secondary">{label}</div>
-                <div className="mt-1 line-clamp-3 text-[11px] leading-4">{value}</div>
+                <div className="text-meta font-medium text-text-secondary">{label}</div>
+                <div className="mt-1 line-clamp-3 text-meta leading-4">{value}</div>
               </div>
             ))}
           </div>
@@ -242,8 +242,8 @@ export function TrajectoryOverview({
 
         <section>
           <div className="mb-2 flex items-center gap-2">
-            <h3 className="text-[12px] font-semibold">{t('trajectory.overview.needsAttention')}</h3>
-            <button type="button" className="craft-control ml-auto text-[11px] font-medium text-accent-text hover:underline" onClick={() => onOpenTrajectory()}>
+            <h3 className="text-label font-semibold">{t('trajectory.overview.needsAttention')}</h3>
+            <button type="button" className="craft-control ml-auto text-meta font-medium text-accent-text hover:underline" onClick={() => onOpenTrajectory()}>
               {t('trajectory.overview.viewTrajectory')}
             </button>
           </div>
@@ -253,14 +253,14 @@ export function TrajectoryOverview({
                 key={`${index}-${label}`}
                 type="button"
                 onClick={() => onOpenTrajectory(index)}
-                className="craft-control grid min-h-10 w-full grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-2 border-b border-border/45 px-3 text-left text-[12px] outline-none last:border-b-0 hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                className="craft-control grid min-h-10 w-full grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-2 border-b border-border/45 px-3 text-left text-label outline-none last:border-b-0 hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
                 <Icon className={`h-3.5 w-3.5 ${tone}`} />
                 <span className="truncate">{label}</span>
                 <span className="tabular-nums text-text-secondary">{meta}</span>
               </button>
             )) : (
-              <div className="px-3 py-2.5 text-[12px] text-text-secondary">{t('trajectory.overview.noIssues')}</div>
+              <div className="px-3 py-2.5 text-label text-text-secondary">{t('trajectory.overview.noIssues')}</div>
             )}
           </div>
         </section>
@@ -269,15 +269,15 @@ export function TrajectoryOverview({
           <button type="button" onClick={() => onOpenContext()} className="craft-control flex items-center gap-3 rounded-xl border border-border/55 bg-background/70 px-3 py-3 text-left outline-none hover:bg-foreground/[0.025] focus-visible:ring-2 focus-visible:ring-ring">
             <Braces className="h-4 w-4 text-text-secondary" />
             <span className="min-w-0 flex-1">
-              <span className="block text-[12px] font-semibold">{t('trajectory.overview.promptChanges')}</span>
-              <span className="block truncate text-[11px] text-text-secondary">{t('trajectory.overview.promptChangesMeta', { requests: snapshot.prompts.size, changes: promptChanges })}</span>
+              <span className="block text-label font-semibold">{t('trajectory.overview.promptChanges')}</span>
+              <span className="block truncate text-meta text-text-secondary">{t('trajectory.overview.promptChangesMeta', { requests: snapshot.prompts.size, changes: promptChanges })}</span>
             </span>
           </button>
           <div className="flex items-center gap-3 rounded-xl border border-border/55 bg-background/70 px-3 py-3">
             <Coins className="h-4 w-4 text-text-secondary" />
             <span className="min-w-0 flex-1">
-              <span className="block text-[12px] font-semibold">{t('trajectory.overview.costAndCompaction')}</span>
-              <span className="block truncate text-[11px] text-text-secondary">{costLabel} · {t('trajectory.overview.compactions', { count: compactions })}</span>
+              <span className="block text-label font-semibold">{t('trajectory.overview.costAndCompaction')}</span>
+              <span className="block truncate text-meta text-text-secondary">{costLabel} · {t('trajectory.overview.compactions', { count: compactions })}</span>
             </span>
           </div>
         </div>

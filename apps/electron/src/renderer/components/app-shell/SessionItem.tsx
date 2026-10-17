@@ -179,7 +179,7 @@ export function SessionItem({
               aria-controls={subtasksExpanded ? `session-children-${item.id}` : undefined}
               aria-label={t(subtasksExpanded ? 'trajectory.map.collapse' : 'trajectory.map.expand') + ` (${subtaskCount})`}
               onClick={onToggleSubtasks}
-              className={cn('craft-icon-button flex h-7 w-full items-center justify-center gap-1 rounded-md text-[11px] tabular-nums hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-ring', containsActiveSubtask ? 'bg-accent/10 text-accent-text' : 'text-text-secondary')}
+              className={cn('craft-icon-button flex h-7 w-full items-center justify-center gap-1 rounded-md text-meta tabular-nums hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-ring', containsActiveSubtask ? 'bg-accent/10 text-accent-text' : 'text-text-secondary')}
             >
               {subtaskRunningCount > 0 ? <ThinkingIndicator className="size-3" /> : subtaskNeedsAttention ? <ShieldAlert className="size-3 text-info-text" /> : null}
               <span>{subtaskCount}</span>
@@ -247,7 +247,7 @@ export function SessionItem({
           <SessionStatusIcon item={item} />
           <div className={cn(
             "flex items-center justify-center overflow-hidden gap-1",
-            "motion-content transition-[width,margin,opacity]",
+            "motion-content transition-opacity",
             (item.isProcessing || hasUnreadMeta(item) || item.lastMessageRole === 'plan' || hasPendingPrompt)
               ? "opacity-100 ml-0"
               : "!w-0 opacity-0 -ml-[10px]"
@@ -270,7 +270,7 @@ export function SessionItem({
         </>
       }
       title={ctx.searchQuery ? highlightMatch(title, ctx.searchQuery) : title}
-      titleClassName={cn("text-[13px]", item.isAsyncOperationOngoing && "animate-shimmer-text")}
+      titleClassName={cn("text-body", item.isAsyncOperationOngoing && "animate-shimmer-text")}
       subtitle={previewText}
       titleSuffix={
         (projectName || hasMessagingBinding || handoffContinues) ? (
@@ -287,7 +287,7 @@ export function SessionItem({
             )}
             {projectName && (
               <span
-                className="text-[11px] text-text-secondary whitespace-nowrap truncate max-w-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                className="text-meta text-text-secondary whitespace-nowrap truncate max-w-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                 style={projectColor ? { color: projectColor } : undefined}
                 title={projectName}
               >
@@ -314,7 +314,7 @@ export function SessionItem({
       titleTrailing={subtaskCount > 0 ? <span /> : hasMatch ? (
         <span
           className={cn(
-            "inline-flex items-center justify-center min-w-[24px] px-1 py-0.5 rounded-[6px] text-[10px] font-medium tabular-nums leading-tight whitespace-nowrap shadow-tinted",
+            "inline-flex items-center justify-center min-w-[24px] px-1 py-0.5 rounded-shape-md text-micro font-medium tabular-nums leading-tight whitespace-nowrap shadow-tinted",
             isSelected
               ? "bg-yellow-300/50 border border-yellow-500 text-yellow-900"
               : "bg-yellow-300/10 border border-yellow-600/20 text-yellow-800"
@@ -331,7 +331,7 @@ export function SessionItem({
           <TooltipTrigger asChild>
             <div className="p-1 flex items-center justify-center">
               {handoffActive
-                ? <Spinner className="text-[10px]" />
+                ? <Spinner className="text-micro" />
                 : <ShieldAlert className="h-3.5 w-3.5 text-warning" />}
             </div>
           </TooltipTrigger>
@@ -342,7 +342,7 @@ export function SessionItem({
           <Flag className="h-3.5 w-3.5 text-info-text" />
         </div>
       ) : item.lastMessageAt ? (
-        <span className="text-[11px] text-text-secondary whitespace-nowrap">
+        <span className="text-meta text-text-secondary whitespace-nowrap">
           {formatDistanceToNowStrict(new Date(item.lastMessageAt), { locale: shortTimeLocale as Locale, roundingMethod: 'floor' })}
         </span>
       ) : undefined}

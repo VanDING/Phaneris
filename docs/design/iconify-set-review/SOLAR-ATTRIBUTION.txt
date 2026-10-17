@@ -1,0 +1,6 @@
+Solar icons by 480 Design
+Source: https://www.figma.com/community/file/1166831539721848736
+Catalog: https://icon-sets.iconify.design/solar/
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+Changes: original Iconify paths preserved; display size and theme color set by this demonstration.

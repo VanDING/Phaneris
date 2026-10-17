@@ -79,7 +79,7 @@ export function SimpleDropdownItem({
       onMouseEnter={handleMouseEnter}
       onFocus={() => dropdownCtx?.setHighlightedId(itemId)}
       className={cn(
-        'craft-control craft-menu-item flex items-center gap-2 w-full px-2.5 py-[var(--theme-menu-item-padding-y)] text-left text-[13px] rounded-sm',
+        'craft-control craft-menu-item flex items-center gap-2 w-full px-2.5 py-[var(--theme-menu-item-padding-y)] text-left text-body rounded-sm',
         'hover:bg-foreground/[0.05] focus:bg-foreground/[0.05]',
         'transition-colors',
         isHighlighted && 'bg-foreground/[0.05]',

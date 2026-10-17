@@ -314,45 +314,45 @@ function depthToCSS(
       // Cards remain flat; menus and dialogs gain only enough depth to
       // separate them from the page beneath them.
       vars.push(
-        `--shadow-minimal: 0 0 0 var(--theme-border-width) ${border};`,
-        `--shadow-middle: 0 0 0 var(--theme-border-width) ${border}, 0 4px 12px color-mix(in srgb, ${color} ${faint}%, transparent);`,
-        `--shadow-strong: 0 0 0 var(--theme-border-width) ${border}, 0 16px 48px color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-modal-small: 0 0 0 var(--theme-border-width) ${border}, 0 8px 24px color-mix(in srgb, ${color} ${soft}%, transparent);`
+        `--shadow-minimal: 0 0 0 var(--edge-hairline) ${border};`,
+        `--shadow-middle: 0 0 0 var(--edge-hairline) ${border}, 0 4px 12px color-mix(in srgb, ${color} ${faint}%, transparent);`,
+        `--shadow-strong: 0 0 0 var(--edge-hairline) ${border}, 0 16px 48px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-modal-small: 0 0 0 var(--edge-hairline) ${border}, 0 8px 24px color-mix(in srgb, ${color} ${soft}%, transparent);`
       );
       break;
     case 'neon':
       vars.push(
-        `--shadow-minimal: 0 0 0 var(--theme-border-width) ${border}, 0 0 10px color-mix(in srgb, ${color} ${faint}%, transparent);`,
-        `--shadow-middle: 0 0 0 var(--theme-border-width) ${border}, 0 0 18px color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-strong: 0 0 0 var(--theme-border-width) ${border}, 0 0 30px color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-modal-small: 0 0 0 var(--theme-border-width) ${border}, 0 0 36px color-mix(in srgb, ${color} ${soft}%, transparent);`
+        `--shadow-minimal: 0 0 0 var(--edge-hairline) ${border}, 0 0 10px color-mix(in srgb, ${color} ${faint}%, transparent);`,
+        `--shadow-middle: 0 0 0 var(--edge-hairline) ${border}, 0 0 18px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-strong: 0 0 0 var(--edge-hairline) ${border}, 0 0 30px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-modal-small: 0 0 0 var(--edge-hairline) ${border}, 0 0 36px color-mix(in srgb, ${color} ${soft}%, transparent);`
       );
       break;
     case 'glass':
       vars.push(
-        `--shadow-minimal: 0 0 0 var(--theme-border-width) color-mix(in srgb, white 20%, ${border}), 0 8px 24px color-mix(in srgb, ${color} ${faint}%, transparent);`,
-        `--shadow-middle: 0 0 0 var(--theme-border-width) color-mix(in srgb, white 24%, ${border}), 0 12px 32px color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-strong: 0 0 0 var(--theme-border-width) color-mix(in srgb, white 28%, ${border}), 0 20px 48px color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-modal-small: 0 0 0 var(--theme-border-width) color-mix(in srgb, white 28%, ${border}), 0 24px 64px color-mix(in srgb, ${color} ${soft}%, transparent);`
+        `--shadow-minimal: 0 0 0 var(--edge-hairline) color-mix(in srgb, white 20%, ${border}), 0 8px 24px color-mix(in srgb, ${color} ${faint}%, transparent);`,
+        `--shadow-middle: 0 0 0 var(--edge-hairline) color-mix(in srgb, white 24%, ${border}), 0 12px 32px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-strong: 0 0 0 var(--edge-hairline) color-mix(in srgb, white 28%, ${border}), 0 20px 48px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-modal-small: 0 0 0 var(--edge-hairline) color-mix(in srgb, white 28%, ${border}), 0 24px 64px color-mix(in srgb, ${color} ${soft}%, transparent);`
       );
       break;
     case 'raised':
       // Raised themes use a hard-edged shadow, but still honor the declared
       // strength instead of turning the shadow color fully opaque.
       vars.push(
-        `--shadow-minimal: 0 0 0 var(--theme-border-width) ${border}, 3px 3px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-middle: 0 0 0 var(--theme-border-width) ${border}, 4px 4px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-strong: 0 0 0 var(--theme-border-width) ${border}, 6px 6px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-modal-small: 0 0 0 var(--theme-border-width) ${border}, 8px 8px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`
+        `--shadow-minimal: 0 0 0 var(--edge-hairline) ${border}, 3px 3px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-middle: 0 0 0 var(--edge-hairline) ${border}, 4px 4px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-strong: 0 0 0 var(--edge-hairline) ${border}, 6px 6px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-modal-small: 0 0 0 var(--edge-hairline) ${border}, 8px 8px 0 color-mix(in srgb, ${color} ${soft}%, transparent);`
       );
       break;
     case 'elevated':
     default:
       vars.push(
-        `--shadow-minimal: 0 0 0 var(--theme-border-width) ${border}, 0 1px 2px color-mix(in srgb, ${color} ${faint}%, transparent), 0 3px 6px color-mix(in srgb, ${color} ${faint}%, transparent);`,
-        `--shadow-middle: 0 0 0 var(--theme-border-width) ${border}, 0 4px 12px color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-strong: 0 0 0 var(--theme-border-width) ${border}, 0 12px 32px color-mix(in srgb, ${color} ${soft}%, transparent);`,
-        `--shadow-modal-small: 0 0 0 var(--theme-border-width) ${border}, 0 18px 48px color-mix(in srgb, ${color} ${soft}%, transparent);`
+        `--shadow-minimal: 0 0 0 var(--edge-hairline) ${border}, 0 1px 2px color-mix(in srgb, ${color} ${faint}%, transparent), 0 3px 6px color-mix(in srgb, ${color} ${faint}%, transparent);`,
+        `--shadow-middle: 0 0 0 var(--edge-hairline) ${border}, 0 4px 12px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-strong: 0 0 0 var(--edge-hairline) ${border}, 0 12px 32px color-mix(in srgb, ${color} ${soft}%, transparent);`,
+        `--shadow-modal-small: 0 0 0 var(--edge-hairline) ${border}, 0 18px 48px color-mix(in srgb, ${color} ${soft}%, transparent);`
       );
       break;
   }
@@ -467,10 +467,10 @@ export function themeToCSS(theme: ThemeOverrides, isDark: boolean = false): stri
 /** Shared derived values: static generation and every runtime host use this recipe. */
 export function themeDerivedCSS(isDark: boolean): string {
   const vars = [
-    '--navigator: var(--background);', '--radius: var(--theme-radius);',
+    '--navigator: var(--background);', '--radius: var(--theme-radius);', '--edge-hairline: var(--theme-border-width);',
     '--ring-width: 1px;', '--ring-offset: 0px;', '--spacing: 0.25rem;',
     '--md-bullets: var(--foreground-50);', '--md-counters: var(--foreground-50);',
-    '--shadow-minimal-flat: 0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent);',
+    '--shadow-minimal-flat: 0 0 0 var(--edge-hairline) color-mix(in srgb, var(--foreground) 6%, transparent);',
     `--shadow-border-opacity: ${isDark ? '0.15' : '0.08'};`,
     `--shadow-blur-opacity: ${isDark ? '0.12' : '0.06'};`,
     `--user-message-bubble-dimmed: ${isDark ? '#252525' : '#F7F7F7'};`,
@@ -559,15 +559,15 @@ export const DEFAULT_THEME: ThemeOverrides = {
   "density": "comfortable",
   "dark": {
     "background": "#17191E",
-    "backgroundElevated": "#242832",
+    "backgroundElevated": "#22262E",
     "foreground": "#EEF0F6",
     "foregroundDimmed": "#AAB1C1",
     "card": "#1C1F26",
     "cardForeground": "#EEF0F6",
     "popoverForeground": "#EEF0F6",
-    "secondary": "#282D38",
+    "secondary": "#2A2F38",
     "secondaryForeground": "#E0E4EE",
-    "muted": "#222630",
+    "muted": "#20242B",
     "mutedForeground": "#AAB1C1",
     "border": "#343946",
     "userMessageBubble": "#2B2B2B",
@@ -576,10 +576,10 @@ export const DEFAULT_THEME: ThemeOverrides = {
     "info": "#E3B674",
     "success": "#83CBA7",
     "destructive": "#F18C98",
-    "paper": "#1D2028",
-    "input": "#20232C",
-    "popover": "#262A34",
-    "popoverSolid": "#262A34",
+    "paper": "#1C1F26",
+    "input": "#191C21",
+    "popover": "#262A32",
+    "popoverSolid": "#262A32",
     "depth": "flat",
     "shadowColor": "#08090C",
     "shadowStrength": 0.22

@@ -17,6 +17,14 @@
   --radius-card: var(--shape-card);
   --radius-control: var(--shape-control);
   --radius-chip: var(--shape-chip);
+  /* Fixed contract tiers. Role shapes above remain theme-derived. */
+  --radius-shape-xs: var(--shape-xs);
+  --radius-shape-sm: var(--shape-sm);
+  --radius-shape-md: var(--shape-md);
+  --radius-shape-lg: var(--shape-lg);
+  --radius-shape-xl: var(--shape-xl);
+  --radius-bubble: var(--shape-bubble);
+  --radius-composer: var(--shape-composer);
   --z-index-component-behind: var(--z-component-behind);
   --z-index-component-content: var(--z-component-content);
   --z-index-component-overlay: var(--z-component-overlay);
@@ -40,6 +48,30 @@
   .craft-text-title { font-size: calc(var(--ui-title-size) * var(--ui-scale)); line-height: var(--ui-line-height); font-weight: 600; }
   .craft-text-heading { font-size: calc(var(--ui-heading-size) * var(--ui-scale)); line-height: 1.4; font-weight: 600; }
   .craft-text-code { font: calc(var(--code-size) * var(--reading-scale))/var(--reading-line-height) var(--font-mono); }
+  /* Contract type tiers. Weights stay explicit at the call site: migrating a
+     size literal must never change how heavy the text looks. */
+  .text-micro { font-size: calc(var(--type-micro-size) * var(--ui-scale)); line-height: 1.4; }
+  .text-meta { font-size: calc(var(--type-meta-size) * var(--ui-scale)); line-height: 1.45; }
+  .text-label { font-size: calc(var(--type-label-size) * var(--ui-scale)); line-height: 1.5; }
+  .text-body { font-size: calc(var(--type-body-size) * var(--ui-scale)); line-height: 1.5; }
+  .text-reading { font-size: calc(var(--type-reading-size) * var(--ui-scale)); line-height: 1.7; }
+  .text-title { font-size: calc(var(--type-title-size) * var(--ui-scale)); line-height: 1.45; }
+  /* Display is the single headline tier: landing and empty-state invitations. */
+  .text-display { font-size: calc(var(--type-display-size) * var(--ui-scale)); line-height: 1.3; }
+  /* Contract control heights. Layout heights above the control band are not
+     governed: they describe space, not hit targets. */
+  .h-control-2xs { height: var(--control-height-2xs); }
+  .h-control-xs { height: var(--control-height-xs); }
+  .h-control-sm { height: var(--control-height-sm); }
+  .h-control-md { height: var(--control-height-md); }
+  .h-control-lg { height: var(--control-height-lg); }
+  .h-control-xl { height: var(--control-height-xl); }
+  .size-control-2xs { width: var(--control-height-2xs); height: var(--control-height-2xs); }
+  .size-control-xs { width: var(--control-height-xs); height: var(--control-height-xs); }
+  .size-control-sm { width: var(--control-height-sm); height: var(--control-height-sm); }
+  .size-control-md { width: var(--control-height-md); height: var(--control-height-md); }
+  .size-control-lg { width: var(--control-height-lg); height: var(--control-height-lg); }
+  .size-control-xl { width: var(--control-height-xl); height: var(--control-height-xl); }
   .craft-control[data-slot="button"] { min-height: calc(var(--craft-control-height, 2.25rem) * var(--ui-scale)); }
   .craft-control[data-control-size="sm"] { --craft-control-height: 2rem; }
   .craft-control[data-control-size="lg"] { --craft-control-height: 2.5rem; }
@@ -65,4 +97,12 @@
 @layer base {
   ::selection { color: var(--foreground); background: color-mix(in srgb, var(--accent) 20%, var(--background)); }
   input, textarea, [contenteditable="true"] { caret-color: var(--accent-text); }
+}
+
+@layer utilities {
+  /* Inline icons share the text's optical centre instead of floating on the
+     baseline. Sized for 13–16px body text. */
+  .align-icon {
+    vertical-align: -0.125em;
+  }
 }

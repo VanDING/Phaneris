@@ -2,7 +2,7 @@
  * Run → Overview · the decision summary strip.
  *
  * One line of scope, four numbers, and a link into the Decisions tab. It
- * borrows the Overview's own section and card shapes (`h3 text-[12px]
+ * borrows the Overview's own section and card shapes (`h3` label tier,
  * font-semibold` + `mb-2` header, `rounded-xl border border-border/55
  * bg-background/70` card) so it reads as one more Overview block rather than a
  * widget bolted onto it.
@@ -35,14 +35,14 @@ function SummaryCells({ totals }: { totals: SessionDecisionTotals }) {
       {cells.map(cell => (
         <span key={cell.key} className="flex min-w-0 flex-none items-baseline gap-1.5">
           <span className="text-text-secondary">{cell.icon}</span>
-          <span className="text-[11px] text-text-secondary">{t(`trajectory.decisions.${cell.key}`)}</span>
-          <span className="text-[13px] font-semibold tabular-nums">{cell.value}</span>
+          <span className="text-meta text-text-secondary">{t(`trajectory.decisions.${cell.key}`)}</span>
+          <span className="text-body font-semibold tabular-nums">{cell.value}</span>
         </span>
       ))}
       {totals.unknownCostRequests > 0 && (
         <span
           title={t('trajectory.decisions.unknownCostNote', { count: totals.unknownCostRequests })}
-          className="inline-flex h-[18px] flex-none items-center rounded-[4px] bg-[color:var(--info)]/[0.16] px-[5px] text-[10px] font-semibold tracking-[0.035em] text-[color:var(--info-text)]"
+          className="inline-flex h-control-2xs flex-none items-center rounded-shape-sm bg-[color:var(--info)]/[0.16] px-[5px] text-micro font-semibold tracking-[0.035em] text-[color:var(--info-text)]"
         >
           {t('trajectory.decisions.unknownCost', { count: totals.unknownCostRequests })}
         </span>
@@ -76,9 +76,9 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
     </details>}
     <section data-decision-summary>
       <div className="mb-2 flex min-w-0 items-center gap-2">
-        <h3 className="text-[12px] font-semibold">{t('trajectory.decisions.title')}</h3>
+        <h3 className="text-label font-semibold">{t('trajectory.decisions.title')}</h3>
         {report && (
-          <span className="text-[11px] tabular-nums text-text-secondary">
+          <span className="text-meta tabular-nums text-text-secondary">
             {t(report.totals.legacyCalls > 0 ? report.totals.points === 0 ? 'trajectory.decisions.scopeHistoricalMeta' : 'trajectory.decisions.scopeLegacyMeta' : 'trajectory.decisions.scopeMeta', {
               features: report.features.length,
               requests: report.totals.requests,
@@ -89,7 +89,7 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
         <button
           type="button"
           onClick={onOpen}
-          className="craft-control ml-auto flex-none rounded-sm text-[11px] font-medium text-accent-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="craft-control ml-auto flex-none rounded-sm text-meta font-medium text-accent-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {t('trajectory.decisions.viewRecords')}
         </button>
@@ -109,7 +109,7 @@ export function DecisionSummary({ data, onOpen }: { data: Data; onOpen: () => vo
           </button>
         )
         : (
-          <p className="text-[12px] text-text-secondary">
+          <p className="text-label text-text-secondary">
             {t(data.state === 'error'
               ? 'trajectory.decisions.loadFailed'
               : data.state === 'unsupported' ? 'trajectory.decisions.unsupported' : 'common.loading')}

@@ -249,7 +249,7 @@ export function FileTreeNode({
       className={cn(
         // Base styles matching LeftSidebar exactly
         // min-w-0 and overflow-hidden required for truncation to work in grid context
-        "group relative flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-lg py-1.5 text-left text-[13px] select-none outline-none",
+        "group relative flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-lg py-1.5 text-left text-body select-none outline-none",
         "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring",
         "transition-[background-color,color,transform] hover:bg-sidebar-hover active:scale-[0.995]",
         isSelected && "bg-accent/10 text-foreground ring-1 ring-inset ring-accent/15",
@@ -295,7 +295,7 @@ export function FileTreeNode({
       {/* File/folder name - min-w-0 required for truncate to work in flex container */}
       <span className="flex-1 min-w-0 truncate">{file.name}</span>
       {file.type === 'file' && file.size !== undefined && (
-        <span className={cn('shrink-0 text-[10px] tabular-nums text-muted-foreground/45 transition-opacity', !isSelected && 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100')}>
+        <span className={cn('shrink-0 text-micro tabular-nums text-muted-foreground/45 transition-opacity', !isSelected && 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100')}>
           {formatFileSize(file.size)}
         </span>
       )}

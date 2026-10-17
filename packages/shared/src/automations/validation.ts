@@ -17,7 +17,7 @@ import { getDefaultModelsForConnection } from '../config/llm-connections.ts';
 import type { ModelDefinition } from '../config/models.ts';
 import { Cron } from 'croner';
 import type { ValidationResult, ValidationIssue } from '../config/validators.ts';
-import type { AutomationsConfig, AutomationsValidationResult } from './types.ts';
+import type { AutomationsValidationResult } from './types.ts';
 import { AGENT_EVENTS } from './types.ts';
 import { UNEMITTED_AGENT_EVENTS } from './emitted-events.ts';
 import { MAX_CONDITION_DEPTH_EXCLUSIVE, CONDITION_DEPTH_WARNING_THRESHOLD } from './conditions-constants.ts';
@@ -36,7 +36,7 @@ export function validateAutomationsConfig(content: unknown): AutomationsValidati
     return { valid: false, errors, config: null };
   }
 
-  const schemaConfig = result.data as AutomationsConfig;
+  const schemaConfig = result.data;
   const semanticErrors: ValidationIssue[] = [];
   runMatcherSemanticValidations(schemaConfig, AUTOMATIONS_CONFIG_FILE, semanticErrors, []);
 
@@ -53,13 +53,12 @@ export function validateAutomationsConfig(content: unknown): AutomationsValidati
  * Shared by both object-based runtime validation and JSON-content validation.
  */
 function runMatcherSemanticValidations(
-  config: AutomationsConfig,
+  config: ReturnType<typeof AutomationsConfigSchema.parse>,
   file: string,
   errors: ValidationIssue[],
   warnings: ValidationIssue[],
 ): void {
   for (const [event, matchers] of Object.entries(config.automations)) {
-    if (!matchers) continue;
     if (AGENT_EVENTS.includes(event as typeof AGENT_EVENTS[number]) && matchers.length) warnings.push(
       UNEMITTED_AGENT_EVENTS.includes(event as typeof UNEMITTED_AGENT_EVENTS[number])
         ? {
@@ -71,8 +70,7 @@ function runMatcherSemanticValidations(
           message: 'Agent-event automations currently match conditions only; prompt actions do not execute. Use tool-call-rules.json for deterministic blocking.',
         });
     for (let i = 0; i < matchers.length; i++) {
-      const matcher = matchers[i];
-      if (!matcher) continue;
+      const matcher = matchers[i]!;
       // Warn about allow-all permission mode
       if (matcher.permissionMode === 'allow-all') {
         warnings.push({
@@ -157,18 +155,16 @@ function runMatcherSemanticValidations(
       }
 
       // Warn about webhook URLs with $VAR templates (can't validate until runtime)
-      if (matcher.actions) {
-        for (let j = 0; j < matcher.actions.length; j++) {
-          const action = matcher.actions[j];
-          if (action && typeof action === 'object' && 'type' in action && action.type === 'webhook' && 'url' in action && typeof action.url === 'string' && action.url.includes('$')) {
-            warnings.push({
-              file,
-              path: `automations.${event}[${i}].actions[${j}].url`,
-              message: 'Webhook URL contains variable templates — will be validated at runtime after expansion',
-              severity: 'warning',
-              suggestion: 'Ensure the referenced PHANERIS_WH_* variables are set in your shell profile',
-            });
-          }
+      for (let j = 0; j < matcher.actions.length; j++) {
+        const action = matcher.actions[j]!;
+        if (action.type === 'webhook' && action.url.includes('$')) {
+          warnings.push({
+            file,
+            path: `automations.${event}[${i}].actions[${j}].url`,
+            message: 'Webhook URL contains variable templates — will be validated at runtime after expansion',
+            severity: 'warning',
+            suggestion: 'Ensure the referenced PHANERIS_WH_* variables are set in your shell profile',
+          });
         }
       }
 
@@ -184,7 +180,7 @@ function runMatcherSemanticValidations(
       }
 
       // Validate conditions
-      if (matcher.conditions && Array.isArray(matcher.conditions)) {
+      if (matcher.conditions) {
         validateConditionsArray(matcher.conditions, `automations.${event}[${i}].conditions`, event, file, errors, warnings, 0);
       }
     }
@@ -198,8 +194,6 @@ function runMatcherSemanticValidations(
  */
 export function validateAutomationsContent(jsonString: string, fileName?: string): ValidationResult {
   const file = fileName ?? AUTOMATIONS_CONFIG_FILE;
-  const errors: ValidationIssue[] = [];
-  const warnings: ValidationIssue[] = [];
 
   // Parse JSON
   let content: unknown;
@@ -218,6 +212,14 @@ export function validateAutomationsContent(jsonString: string, fileName?: string
     };
   }
 
+  return validateParsedAutomations(content, file);
+}
+
+/** Share schema/semantic validation without parsing disk input a second time. */
+function validateParsedAutomations(content: unknown, file: string): ValidationResult {
+  const errors: ValidationIssue[] = [];
+  const warnings: ValidationIssue[] = [];
+
   // Validate schema
   const result = AutomationsConfigSchema.safeParse(content);
   if (!result.success) {
@@ -230,7 +232,7 @@ export function validateAutomationsContent(jsonString: string, fileName?: string
 
   // Check for empty automations
   const matcherCount = Object.values(config.automations).reduce(
-    (sum, matchers) => sum + (matchers?.length ?? 0),
+    (sum, matchers) => sum + matchers.length,
     0
   );
   if (matcherCount === 0) {
@@ -244,24 +246,20 @@ export function validateAutomationsContent(jsonString: string, fileName?: string
   }
 
   // Check for deprecated event aliases in the raw JSON (before transform rewrites them)
-  try {
-    const rawConfig = JSON.parse(jsonString) as { automations?: Record<string, unknown> };
-    if (rawConfig.automations) {
-      for (const event of Object.keys(rawConfig.automations)) {
-        const canonical = DEPRECATED_EVENT_ALIASES[event];
-        if (canonical) {
-          warnings.push({
-            file,
-            path: `automations.${event}`,
-            message: `Event '${event}' has been renamed to '${canonical}'. The old name still works but is deprecated.`,
-            severity: 'warning',
-            suggestion: `Rename '${event}' to '${canonical}' in your config`,
-          });
-        }
+  const rawConfig = content as { automations?: Record<string, unknown> };
+  if (rawConfig.automations) {
+    for (const event of Object.keys(rawConfig.automations)) {
+      const canonical = DEPRECATED_EVENT_ALIASES[event];
+      if (canonical) {
+        warnings.push({
+          file,
+          path: `automations.${event}`,
+          message: `Event '${event}' has been renamed to '${canonical}'. The old name still works but is deprecated.`,
+          severity: 'warning',
+          suggestion: `Rename '${event}' to '${canonical}' in your config`,
+        });
       }
     }
-  } catch {
-    // JSON already validated above, this shouldn't happen
   }
 
   runMatcherSemanticValidations(config, file, errors, warnings);
@@ -311,8 +309,7 @@ export function validateAutomations(workspaceRoot: string): ValidationResult {
     };
   }
 
-  // Parse JSON once — validateAutomationsContent also parses, but we need the
-  // parsed object for workspace-aware validations below
+  // Keep the raw event names for workspace-aware diagnostic paths below.
   let content: unknown;
   try {
     content = JSON.parse(raw);
@@ -330,7 +327,7 @@ export function validateAutomations(workspaceRoot: string): ValidationResult {
   }
 
   // Validate content (schema + semantic checks)
-  const contentResult = validateAutomationsContent(raw);
+  const contentResult = validateParsedAutomations(content, file);
   if (!contentResult.valid) {
     return contentResult;
   }

@@ -192,11 +192,11 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
   if (spec?.src && fileLoading) {
     const loadingLabel = [spec.filename, spec.sheetName].filter(Boolean).join(' — ') || t('spreadsheet.defaultTitle')
     return (
-      <div className={cn('rounded-[8px] overflow-hidden border bg-muted/10', className)}>
+      <div className={cn('rounded-shape-lg overflow-hidden border bg-muted/10', className)}>
         <div className="px-3 py-2 bg-muted/50 border-b">
-          <span className="text-[12px] text-muted-foreground font-medium">{loadingLabel}</span>
+          <span className="text-label text-muted-foreground font-medium">{loadingLabel}</span>
         </div>
-        <div className="py-8 text-center text-muted-foreground text-[13px]">{t('datatable.loadingData')}</div>
+        <div className="py-8 text-center text-muted-foreground text-body">{t('datatable.loadingData')}</div>
       </div>
     )
   }
@@ -205,11 +205,11 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
   if (spec?.src && fileError) {
     const errorLabel = [spec.filename, spec.sheetName].filter(Boolean).join(' — ') || t('spreadsheet.defaultTitle')
     return (
-      <div className={cn('rounded-[8px] overflow-hidden border bg-muted/10', className)}>
+      <div className={cn('rounded-shape-lg overflow-hidden border bg-muted/10', className)}>
         <div className="px-3 py-2 bg-muted/50 border-b">
-          <span className="text-[12px] text-muted-foreground font-medium">{errorLabel}</span>
+          <span className="text-label text-muted-foreground font-medium">{errorLabel}</span>
         </div>
-        <div className="py-6 text-center text-destructive/70 text-[13px]">{fileError}</div>
+        <div className="py-6 text-center text-destructive/70 text-body">{fileError}</div>
       </div>
     )
   }
@@ -232,18 +232,18 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
         WebkitMaskImage: maskImage,
       } : { overflowX: 'auto' }}
     >
-      <table className="w-max min-w-full text-[13px]">
+      <table className="w-max min-w-full text-body">
         {/* Column letter headers */}
         <thead>
           <tr className="border-b border-foreground/[0.08] bg-foreground/[0.03]">
-            <th className="text-center py-1 px-2 font-normal text-muted-foreground/40 w-10 border-r border-foreground/[0.06] text-[11px]" />
+            <th className="text-center py-1 px-2 font-normal text-muted-foreground/40 w-10 border-r border-foreground/[0.06] text-meta" />
             {colLetters.map((letter) => (
-              <th key={letter} className="text-center py-1 px-3 font-normal text-muted-foreground/40 border-r border-foreground/[0.06] last:border-0 text-[11px]">{letter}</th>
+              <th key={letter} className="text-center py-1 px-3 font-normal text-muted-foreground/40 border-r border-foreground/[0.06] last:border-0 text-meta">{letter}</th>
             ))}
           </tr>
           {/* Row 1: column labels */}
           <tr className="border-b border-foreground/[0.06] bg-foreground/[0.02]">
-            <td className="text-center py-1.5 px-2 text-muted-foreground/40 border-r border-foreground/[0.06] text-[11px] font-mono">1</td>
+            <td className="text-center py-1.5 px-2 text-muted-foreground/40 border-r border-foreground/[0.06] text-meta font-mono">1</td>
             {parsed.columns.map((col) => (
               <td key={col.key} className="py-1.5 px-3 font-semibold text-foreground border-r border-foreground/[0.06] last:border-0">{col.label}</td>
             ))}
@@ -252,7 +252,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
         <tbody>
           {parsed.rows.map((row, i) => (
             <tr key={i} className="border-b border-foreground/[0.03] last:border-0 hover:bg-foreground/[0.015] transition-colors">
-              <td className="text-center py-1.5 px-2 text-muted-foreground/40 border-r border-foreground/[0.06] text-[11px] font-mono">{i + 2}</td>
+              <td className="text-center py-1.5 px-2 text-muted-foreground/40 border-r border-foreground/[0.06] text-meta font-mono">{i + 2}</td>
               {parsed.columns.map((col) => {
                 const val = row[col.key]
                 const numeric = isNumericType(col.type) || isNumericValue(val)
@@ -275,12 +275,12 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
 
   return (
     <SpreadsheetErrorBoundary fallback={fallback}>
-      <div className={cn('relative group rounded-[8px] overflow-hidden border bg-muted/10', className)}>
+      <div className={cn('relative group rounded-shape-lg overflow-hidden border bg-muted/10', className)}>
         {/* Expand button */}
         <button
           onClick={() => setIsFullscreen(true)}
           className={cn(
-            "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-[7px] right-2 p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
+            "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-[7px] right-2 p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
             "opacity-0 group-hover:opacity-100",
             "bg-background shadow-minimal",
             "text-muted-foreground/50 hover:text-foreground",
@@ -293,7 +293,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
 
         {/* Header */}
         <div className="px-3 py-2 bg-muted/50 border-b">
-          <span className="text-[12px] text-muted-foreground font-medium">{label}</span>
+          <span className="text-label text-muted-foreground font-medium">{label}</span>
         </div>
 
         {/* Table with max height and scroll fade */}
@@ -309,7 +309,7 @@ export function MarkdownSpreadsheetBlock({ code, className }: MarkdownSpreadshee
         headerActions={<TableExportDropdown columns={parsed.columns} rows={parsed.rows} filename={parsed.filename || parsed.sheetName || t('spreadsheet.defaultTitle')} />}
       >
         <div className="px-6">
-          <div className="bg-background shadow-minimal rounded-[12px] overflow-hidden">
+          <div className="bg-background shadow-minimal rounded-shape-xl overflow-hidden">
             {tableContent(false)}
           </div>
         </div>

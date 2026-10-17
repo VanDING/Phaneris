@@ -25,9 +25,20 @@ export {
   StyledDropdownMenuContent,
   StyledDropdownMenuItem,
   StyledDropdownMenuSeparator,
+  StyledDropdownMenuLabel,
   StyledDropdownMenuSubTrigger,
   StyledDropdownMenuSubContent,
 } from './StyledDropdown'
+export {
+  Menu,
+  renderMenuEntries,
+  type MenuProps,
+  type MenuEntry,
+  type MenuItemEntry,
+  type MenuSeparatorEntry,
+  type MenuLabelEntry,
+  type MenuSubmenuEntry,
+} from './Menu'
 export { BrowserShader, type BrowserShaderProps } from './BrowserShader'
 export { InlineExpand, type InlineExpandProps } from './inline-expand'
 export { BrowserControls, type BrowserControlsProps } from './BrowserControls'

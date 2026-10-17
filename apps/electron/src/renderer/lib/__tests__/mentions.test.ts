@@ -9,7 +9,7 @@
  * - Dots (.)
  */
 import { describe, it, expect } from 'bun:test'
-import { parseMentions, findMentionMatches, removeMention, stripAllMentions, resolveSkillMentions, resolveSourceMentions, extractBadges } from '../mentions'
+import { parseMentions, findMentionMatches, removeMention, stripAllMentions, extractBadges } from '../mentions'
 
 // ============================================================================
 // parseMentions - Skill Pattern Tests
@@ -203,73 +203,6 @@ describe('stripAllMentions - replaces skill mentions with slugs', () => {
   it('replaces source mentions with slug', () => {
     const result = stripAllMentions('[source:github] check this')
     expect(result).toBe('github check this')
-  })
-})
-
-// ============================================================================
-// resolveSkillMentions - Semantic marker tests
-// ============================================================================
-
-describe('resolveSkillMentions', () => {
-  const skillNames = new Map([
-    ['commit', 'Git Commit'],
-    ['review-pr', 'Review PR'],
-  ])
-
-  it('resolves simple skill mention with display name', () => {
-    const result = resolveSkillMentions('[skill:commit] do this', skillNames)
-    expect(result).toBe('[Mentioned skill: Git Commit (slug: commit)] do this')
-  })
-
-  it('resolves skill with workspace ID', () => {
-    const result = resolveSkillMentions('[skill:My Workspace:commit] do this', skillNames)
-    expect(result).toBe('[Mentioned skill: Git Commit (slug: commit)] do this')
-  })
-
-  it('falls back to slug when not in map', () => {
-    const result = resolveSkillMentions('[skill:unknown-skill] do this', skillNames)
-    expect(result).toBe('[Mentioned skill: unknown-skill (slug: unknown-skill)] do this')
-  })
-
-  it('preserves sentence structure', () => {
-    const result = resolveSkillMentions('find the root cause in [skill:review-pr]', skillNames)
-    expect(result).toBe('find the root cause in [Mentioned skill: Review PR (slug: review-pr)]')
-  })
-
-  it('resolves multiple skill mentions', () => {
-    const result = resolveSkillMentions('[skill:commit] and [skill:review-pr]', skillNames)
-    expect(result).toBe('[Mentioned skill: Git Commit (slug: commit)] and [Mentioned skill: Review PR (slug: review-pr)]')
-  })
-
-  it('leaves text without mentions unchanged', () => {
-    const result = resolveSkillMentions('no mentions here', skillNames)
-    expect(result).toBe('no mentions here')
-  })
-})
-
-// ============================================================================
-// resolveSourceMentions - Semantic marker tests
-// ============================================================================
-
-describe('resolveSourceMentions', () => {
-  it('resolves source mention to semantic marker', () => {
-    const result = resolveSourceMentions('[source:github] check this')
-    expect(result).toBe('[Mentioned source: github] check this')
-  })
-
-  it('preserves sentence structure', () => {
-    const result = resolveSourceMentions('check my emails in [source:gmail]')
-    expect(result).toBe('check my emails in [Mentioned source: gmail]')
-  })
-
-  it('resolves multiple source mentions', () => {
-    const result = resolveSourceMentions('[source:github] and [source:linear]')
-    expect(result).toBe('[Mentioned source: github] and [Mentioned source: linear]')
-  })
-
-  it('leaves text without mentions unchanged', () => {
-    const result = resolveSourceMentions('no mentions here')
-    expect(result).toBe('no mentions here')
   })
 })
 

@@ -95,7 +95,7 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
             role="tab"
             aria-selected={view === item.id}
             onClick={() => setView(item.id)}
-            className={`relative h-10 shrink-0 px-0.5 text-[12px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${view === item.id ? 'text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t after:bg-accent' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`relative h-10 shrink-0 px-0.5 text-label font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring ${view === item.id ? 'text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t after:bg-accent' : 'text-muted-foreground hover:text-foreground'}`}
           >
             {t(item.key)}
           </button>
@@ -119,7 +119,7 @@ export function FilesPanel({ sessionId }: { sessionId?: string }) {
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder={t('contentPanel.files.filterPlaceholder')}
-                  className="h-8 rounded-lg border-border/60 bg-foreground/[0.02] pl-8 text-[13px] shadow-none focus-visible:bg-background"
+                  className="h-8 rounded-lg border-border/60 bg-foreground/[0.02] pl-8 text-body shadow-none focus-visible:bg-background"
                   aria-label={t('contentPanel.files.filterPlaceholder')}
                 />
               </div>

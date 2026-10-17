@@ -110,7 +110,7 @@ export interface TaskPlanPanelProps {
 }
 
 const field =
-  'h-8 w-full rounded-lg border border-border bg-background px-2.5 text-[12.5px] text-foreground outline-none transition-colors focus:border-ring/60'
+  'h-8 w-full rounded-lg border border-border bg-background px-2.5 text-label text-foreground outline-none transition-colors focus:border-ring/60'
 
 export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, disabled }: TaskPlanPanelProps) {
   const { t } = useTranslation()
@@ -121,9 +121,9 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
 
   return (
     <div className="rounded-xl border border-border/70 bg-foreground/[0.015] p-3">
-      <div className="mb-2 text-[12px] font-semibold text-text-secondary">{t('tasks.planSection')}</div>
+      <div className="mb-2 text-label font-semibold text-text-secondary">{t('tasks.planSection')}</div>
       <div className="grid gap-2.5 sm:grid-cols-2">
-        <label className="flex flex-col gap-1 text-[11.5px] font-medium text-text-secondary">
+        <label className="flex flex-col gap-1 text-meta font-medium text-text-secondary">
           {t('kanban.workItemStatus')}
           <ProjectSelectMenu
             value={value.statusId}
@@ -133,7 +133,7 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
             className="h-8 w-full justify-between"
           />
         </label>
-        <label className="flex flex-col gap-1 text-[11.5px] font-medium text-text-secondary">
+        <label className="flex flex-col gap-1 text-meta font-medium text-text-secondary">
           {t('kanban.workItemProgress')}
           <input
             type="number"
@@ -152,7 +152,7 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
           work all-day: leaving it empty writes a bare date, which is exactly the
           shape the calendar's rail reads back as "no time set".
         */}
-        <div className="flex flex-col gap-1 text-[11.5px] font-medium text-text-secondary">
+        <div className="flex flex-col gap-1 text-meta font-medium text-text-secondary">
           {t('kanban.workItemStart')}
           <div className="flex items-center gap-1.5">
             <DateField
@@ -170,7 +170,7 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
             />
           </div>
         </div>
-        <div className="flex flex-col gap-1 text-[11.5px] font-medium text-text-secondary">
+        <div className="flex flex-col gap-1 text-meta font-medium text-text-secondary">
           {t('kanban.workItemDue')}
           <div className="flex items-center gap-1.5">
             <DateField
@@ -190,7 +190,7 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
           </div>
         </div>
 
-        <label className="flex h-8 items-center gap-2 self-end rounded-lg border border-border px-2.5 text-[12px] font-medium text-text-secondary">
+        <label className="flex h-8 items-center gap-2 self-end rounded-lg border border-border px-2.5 text-label font-medium text-text-secondary">
           <input
             type="checkbox"
             disabled={disabled}
@@ -200,7 +200,7 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
           {t('kanban.workItemMilestone')}
         </label>
         {candidates.length > 0 && (
-          <label className="flex flex-col gap-1 text-[11.5px] font-medium text-text-secondary">
+          <label className="flex flex-col gap-1 text-meta font-medium text-text-secondary">
             {t('kanban.workItemParent')}
             <ProjectSelectMenu
               value={value.parentId}
@@ -218,10 +218,10 @@ export function TaskPlanPanel({ value, onChange, statuses, workItems, selfId, di
 
       {candidates.length > 0 && (
         <div className="mt-2.5">
-          <div className="text-[11.5px] font-medium text-text-secondary">{t('kanban.workItemDependencies')}</div>
+          <div className="text-meta font-medium text-text-secondary">{t('kanban.workItemDependencies')}</div>
           <div className="mt-1 max-h-28 space-y-0.5 overflow-y-auto">
             {candidates.map((item) => (
-              <label key={item.id} className="flex items-center gap-2 rounded-md px-1 py-1 text-[12px] hover:bg-foreground/[0.04]">
+              <label key={item.id} className="flex items-center gap-2 rounded-md px-1 py-1 text-label hover:bg-foreground/[0.04]">
                 <input
                   type="checkbox"
                   disabled={disabled}

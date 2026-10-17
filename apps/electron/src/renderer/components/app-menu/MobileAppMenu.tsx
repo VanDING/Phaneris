@@ -221,7 +221,7 @@ export function MobileAppMenu(props: AppMenuProps) {
         }}
         aria-label={t('menu.appMenu')}
         data-state={state.isOpen ? 'open' : 'closed'}
-        className="rounded-[8px]"
+        className="rounded-shape-lg"
       >
         <PhanerisSymbol className="!h-5 !w-auto text-accent" />
       </TopBarButton>

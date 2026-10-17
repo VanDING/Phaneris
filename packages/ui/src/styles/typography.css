@@ -85,3 +85,30 @@ html[data-font="system"] {
   font-optical-sizing: auto;
   font-feature-settings: normal;
 }
+
+/* Dark-mode retinal compensation. White text on a dark ground blooms; reducing
+   the variable-font weight keeps the perceived stroke equal to light mode. Only
+   the explicit Inter preference is affected, and font-weight (not
+   font-variation-settings) keeps <strong>, headings and explicit weights intact. */
+html[data-font="inter"].dark {
+  font-weight: 360;
+}
+html[data-font="inter"].dark .font-medium {
+  font-weight: 460;
+}
+html[data-font="inter"].dark .font-semibold {
+  font-weight: 550;
+}
+html[data-font="inter"].dark .font-bold {
+  font-weight: 660;
+}
+
+/* Typographic defaults: balance headings, avoid runts in prose. */
+@layer base {
+  :is(h1, h2, h3, h4) {
+    text-wrap: balance;
+  }
+  :is(p, li, dd, blockquote) {
+    text-wrap: pretty;
+  }
+}

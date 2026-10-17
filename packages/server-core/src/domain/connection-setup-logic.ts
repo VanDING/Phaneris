@@ -422,11 +422,9 @@ export function validateModelList(
   }
 
   if (!defaultModel) {
-    const firstModel = models[0]
-    const firstModelId = typeof firstModel === 'string' ? firstModel : firstModel!.id
     return {
       valid: true,
-      resolvedDefaultModel: firstModelId,
+      resolvedDefaultModel: modelIds[0],
     }
   }
 

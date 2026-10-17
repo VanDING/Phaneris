@@ -127,16 +127,16 @@ export function MarkdownDocBlock({ code, className, onUrlClick, onFileClick }: M
 
   return (
     <MarkdownDocBlockErrorBoundary fallback={fallback}>
-      <div className={cn('relative group rounded-[8px] overflow-hidden border bg-muted/10', className)}>
+      <div className={cn('relative group rounded-shape-lg overflow-hidden border bg-muted/10', className)}>
         <div className="px-3 py-2 bg-muted/50 border-b flex items-center gap-2">
           <FileText className="w-3.5 h-3.5 text-muted-foreground/50" />
-          <span className="text-[12px] text-muted-foreground font-medium flex-1">{headerTitle}</span>
+          <span className="text-label text-muted-foreground font-medium flex-1">{headerTitle}</span>
           <div className="flex items-center gap-1">
             <ItemNavigator items={items} activeIndex={activeIndex} onSelect={setActiveIndex} />
             <button
               onClick={() => setIsFullscreen((v) => !v)}
               className={`craft-row-actions ${cn(
-                "motion-interactive p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] select-none",
+                "motion-interactive p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] select-none",
                 "bg-background shadow-minimal",
                 "text-muted-foreground/50 hover:text-foreground",
                 "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100",
@@ -167,11 +167,11 @@ export function MarkdownDocBlock({ code, className, onUrlClick, onFileClick }: M
           )}
 
           {activeContent === undefined && loading && (
-            <div className="py-8 text-center text-muted-foreground text-[13px]">{t('common.loading')}</div>
+            <div className="py-8 text-center text-muted-foreground text-body">{t('common.loading')}</div>
           )}
 
           {activeContent === undefined && !loading && error && (
-            <div className="py-6 text-center text-destructive/70 text-[13px]">{error}</div>
+            <div className="py-6 text-center text-destructive/70 text-body">{error}</div>
           )}
 
           {!isFullscreen && activeContent !== undefined && (

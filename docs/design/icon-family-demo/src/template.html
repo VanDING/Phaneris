@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Phaneris · 图标体系选型演示（Line MD / Coolicons / Mono Icons）</title>
+<style>/* @@STYLES@@ */</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="brand-name">Phaneris</span>
+      <span class="brand-sub">图标体系选型演示</span>
+    </div>
+    <div class="masthead-actions">
+      <span class="badge badge-quiet">仅演示 · 未改动应用代码</span>
+      <button class="btn" id="theme-toggle" type="button">切换深色</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>三套图标体系，一套彩色文件主题，一个思考动效。</h1>
+      <p class="lede">
+        用应用真实的图标用途做对照：<strong id="hero-purposes">92</strong> 个语义用途覆盖扫描到的全部
+        <strong id="hero-components">217</strong> 个 Lucide 图标组件（外加 1 个类型导入），
+        <strong id="hero-files">70</strong> 类文件类型取自仓库真实扩展名与工作区常见文件。
+        三套候选各自保留原生网格、线宽与动画，不做二次改造。
+      </p>
+    </div>
+    <dl class="hero-stats" id="hero-stats"></dl>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="演示分区">
+    <button class="tab" role="tab" data-panel="overview" aria-selected="true">整套对照</button>
+    <button class="tab" role="tab" data-panel="gallery" aria-selected="false">整套浏览</button>
+    <button class="tab" role="tab" data-panel="workspace" aria-selected="false">工作台实景</button>
+    <button class="tab" role="tab" data-panel="files" aria-selected="false">彩色文件浏览器</button>
+    <button class="tab" role="tab" data-panel="thinking" aria-selected="false">思考中动效</button>
+    <button class="tab" role="tab" data-panel="plan" aria-selected="false">结论与实施</button>
+  </nav>
+
+  <main>
+    <!-- ------------------------------------------------------ 整套对照 -->
+    <section class="panel" id="panel-overview" role="tabpanel">
+      <div class="family-cards" id="family-cards"></div>
+
+      <div class="section-head">
+        <div>
+          <h2>用途对照矩阵</h2>
+          <p>每行一个语义用途，列出当前基线与三套候选。标注为“近似”的格子表示该套没有对应图形，需要一个语义折中。</p>
+        </div>
+        <div class="controls">
+          <label class="field">
+            <span>搜索</span>
+            <input id="matrix-search" type="search" placeholder="用途 / 图标名 / Lucide 组件">
+          </label>
+          <label class="field">
+            <span>区域</span>
+            <select id="matrix-group"></select>
+          </label>
+          <label class="field">
+            <span>筛选</span>
+            <select id="matrix-quality">
+              <option value="all">全部</option>
+              <option value="approx">只看含近似的用途</option>
+              <option value="a">只看 A 近似</option>
+              <option value="b">只看 B 近似</option>
+              <option value="c">只看 C 近似</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>尺寸</span>
+            <select id="matrix-size">
+              <option value="16">16 px</option>
+              <option value="20" selected>20 px</option>
+              <option value="24">24 px</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <p class="result-line" id="matrix-count"></p>
+      <div class="table-scroll">
+        <table class="matrix">
+          <thead id="matrix-head"></thead>
+          <tbody id="matrix-body"></tbody>
+        </table>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h2>覆盖核验</h2>
+          <p>下面这组数字由构建脚本在生成演示页时重新计算：任何图标名、语义归属缺失都会让构建失败。</p>
+        </div>
+      </div>
+      <div class="verify-grid" id="verify-grid"></div>
+    </section>
+
+    <!-- ------------------------------------------------------ 整套浏览 -->
+    <section class="panel" id="panel-gallery" role="tabpanel" hidden>
+      <div class="section-head">
+        <div>
+          <h2>整套浏览</h2>
+          <p>完整图标集，不是挑选过的样本。可以搜索名称、按原生分类过滤；A 套的描线动画在鼠标悬停时重放。</p>
+        </div>
+        <div class="controls">
+          <div class="segmented" id="gallery-family" role="group" aria-label="图标体系"></div>
+          <label class="field">
+            <span>搜索</span>
+            <input id="gallery-search" type="search" placeholder="图标名，例如 folder / chat / arrow">
+          </label>
+          <label class="field" id="gallery-category-wrap">
+            <span>分类</span>
+            <select id="gallery-category"></select>
+          </label>
+          <label class="field">
+            <span>尺寸</span>
+            <select id="gallery-size">
+              <option value="24">24 px</option>
+              <option value="32" selected>32 px</option>
+              <option value="48">48 px</option>
+            </select>
+          </label>
+          <label class="check"><input type="checkbox" id="gallery-animate" checked> 悬停重放动画</label>
+        </div>
+      </div>
+      <p class="result-line" id="gallery-count"></p>
+      <div class="icon-grid" id="gallery-grid"></div>
+      <div class="pager" id="gallery-pager"></div>
+    </section>
+
+    <!-- ------------------------------------------------------ 工作台实景 -->
+    <section class="panel" id="panel-workspace" role="tabpanel" hidden>
+      <div class="section-head">
+        <div>
+          <h2>工作台实景</h2>
+          <p>左栏导航、顶栏入口、对话流、右侧文件面板全部换成所选体系。切换体系与小尺寸，判断真实界面里的协调度。</p>
+        </div>
+        <div class="controls">
+          <div class="segmented" id="workbench-family" role="group" aria-label="图标体系"></div>
+          <label class="field">
+            <span>界面尺寸</span>
+            <select id="workbench-size">
+              <option value="14">14 px</option>
+              <option value="16" selected>16 px</option>
+              <option value="18">18 px</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>右侧面板</span>
+            <select id="workbench-panel">
+              <option value="files">文件</option>
+              <option value="trajectory">运行</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="app-frame" id="app-frame"></div>
+      <p class="hint" id="workbench-note"></p>
+    </section>
+
+    <!-- ------------------------------------------------------ 彩色文件 -->
+    <section class="panel" id="panel-files" role="tabpanel" hidden>
+      <div class="section-head">
+        <div>
+          <h2>彩色文件浏览器</h2>
+          <p>文件图标是独立的一层，可以脱离界面图标单独替换。这里是同一棵树在三种主题下的实际表现。</p>
+        </div>
+        <div class="controls">
+          <div class="segmented" id="file-theme" role="group" aria-label="文件图标主题"></div>
+          <label class="field">
+            <span>尺寸</span>
+            <select id="file-size">
+              <option value="16">16 px</option>
+              <option value="18" selected>18 px</option>
+              <option value="22">22 px</option>
+            </select>
+          </label>
+          <button class="btn" id="file-collapse" type="button">全部折叠</button>
+        </div>
+      </div>
+      <div class="file-layout">
+        <div class="file-tree-wrap">
+          <div class="file-tree-head">
+            <span class="file-tree-title">工作区文件</span>
+            <span class="badge badge-quiet" id="file-theme-badge"></span>
+          </div>
+          <div class="file-tree" id="file-tree"></div>
+        </div>
+        <div class="file-side">
+          <div class="note-card" id="file-note"></div>
+          <div class="type-table-wrap">
+            <table class="type-table">
+              <thead><tr><th>类型</th><th>VSCode Icons</th><th>Material</th><th>说明</th></tr></thead>
+              <tbody id="type-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------ 思考中 -->
+    <section class="panel" id="panel-thinking" role="tabpanel" hidden>
+      <div class="section-head">
+        <div>
+          <h2>思考中：换用 svg-spinners 的 blocks-wave</h2>
+          <p>当前实现是自绘的旋转弧线 <code>Spinner</code>（16×16 圆环 + 四分之一弧）。新方案改用 <code>svg-spinners:blocks-wave</code>。</p>
+        </div>
+      </div>
+      <div class="compare-row" id="spinner-compare"></div>
+      <div class="section-head">
+        <div>
+          <h2>放进真实位置</h2>
+          <p>思考中出现在三处：对话流的状态行、工作台标签、工具执行行。下面是同一动效在三处的实际尺寸。</p>
+        </div>
+      </div>
+      <div class="context-grid" id="spinner-context"></div>
+      <div class="section-head">
+        <div>
+          <h2>规格与取舍</h2>
+        </div>
+      </div>
+      <div class="spec-grid" id="spinner-spec"></div>
+    </section>
+
+    <!-- ------------------------------------------------------ 结论 -->
+    <section class="panel" id="panel-plan" role="tabpanel" hidden>
+      <div class="section-head">
+        <div>
+          <h2>建议</h2>
+          <p>结论只依据本页能核验的数据：用途覆盖率、整套规模、动画机制、小尺寸表现、许可。</p>
+        </div>
+      </div>
+      <div class="recommend" id="recommend"></div>
+      <div class="section-head"><div><h2>三套对比一览</h2></div></div>
+      <div class="table-scroll"><table class="plan-table"><tbody id="plan-table"></tbody></table></div>
+      <div class="section-head"><div><h2>实施范围与风险</h2></div></div>
+      <div class="scope-grid" id="scope-grid"></div>
+      <div class="section-head"><div><h2>许可与署名</h2></div></div>
+      <div class="license-grid" id="license-grid"></div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    <p>
+      图标数据来自 <a href="https://icon-sets.iconify.design/">Iconify</a> 公开 API，构建时一次性抓取并内联，页面可离线打开。
+      应用现状数据来自本仓库源码扫描（apps、packages 下的 <code>lucide-react</code> 命名导入）。
+    </p>
+    <p class="muted" id="built-at"></p>
+  </footer>
+</div>
+<script>/* @@DATA@@ */
+/* @@APP@@ */</script>
+</body>
+</html>

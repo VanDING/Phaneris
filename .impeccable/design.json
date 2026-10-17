@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T00:00:00.000Z",
+  "title": "Design System: Phaneris",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "#20232C",
+        "tonalRamp": ["#E9EAEE", "#D3D5DC", "#B9BCC7", "#9DA1AF", "#828896", "#686F7F", "#515869", "#3A4150", "#20232C"]
+      },
+      "cool-paper": {
+        "role": "neutral",
+        "displayName": "Cool Paper",
+        "canonical": "#FFFFFF",
+        "tonalRamp": ["#F7F8FB", "#F2F3F8", "#EBEDF2", "#E5E5E6", "#D9DADF", "#C4C6CE", "#AAADB8", "#8B8F9C", "#606775"]
+      },
+      "accent-violet": {
+        "role": "accent",
+        "displayName": "Focus Violet",
+        "canonical": "oklch(0.488 0.275 280.3)",
+        "tonalRamp": [
+          "oklch(0.22 0.09 280)",
+          "oklch(0.31 0.14 280)",
+          "oklch(0.39 0.20 280)",
+          "oklch(0.488 0.275 280.3)",
+          "oklch(0.58 0.22 283)",
+          "oklch(0.68 0.17 286)",
+          "oklch(0.78 0.11 288)",
+          "oklch(0.88 0.055 290)",
+          "oklch(0.96 0.02 292)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite (dark canvas)",
+        "canonical": "#17191E",
+        "tonalRamp": ["#0F1115", "#14161B", "#17191E", "#1A1D23", "#1C1F26", "#20232C", "#242832", "#2B2F3A", "#343946"]
+      }
+    },
+    "typographyMeta": {
+      "micro": { "displayName": "Micro", "purpose": "Timestamps, badges, keycaps." },
+      "meta": { "displayName": "Meta", "purpose": "Counts and tertiary labels." },
+      "label": { "displayName": "Label", "purpose": "Buttons, menu rows, tabs." },
+      "body": { "displayName": "Body", "purpose": "Conversation and settings text." },
+      "reading": { "displayName": "Reading", "purpose": "Markdown prose and documents." },
+      "title": { "displayName": "Title", "purpose": "Panel titles and dialog headers." }
+    },
+    "shadows": [
+      { "name": "minimal", "value": "0 0 0 1px var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent)", "purpose": "Resting panels and cards." },
+      { "name": "middle", "value": "0 0 0 1px var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent)", "purpose": "Hover and raised surfaces." },
+      { "name": "strong", "value": "0 0 0 1px var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent)", "purpose": "Modals and full-height overlays." },
+      { "name": "modal-small", "value": "0 0 0 1px var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent)", "purpose": "Popovers and dropdowns." },
+      { "name": "focus-ring", "value": "inset 0 0 0 1px var(--background), 0 0 0 1.5px var(--ring), 0 0 6px 1px color-mix(in srgb, var(--accent) 25%, transparent)", "purpose": "Keyboard focus; the 1px surface spacer keeps the ring off the control edge." }
+    ],
+    "motion": [
+      { "name": "duration-instant", "value": "60ms", "purpose": "Focus ring and micro state." },
+      { "name": "duration-fast", "value": "100ms", "purpose": "Magnetic toggles and micro-labels." },
+      { "name": "duration-standard", "value": "160ms", "purpose": "Standard control hover and background." },
+      { "name": "duration-emphasis", "value": "220ms", "purpose": "Crossfades and emphasized state changes." },
+      { "name": "duration-spatial", "value": "280ms", "purpose": "Drawers and spatial rearrangement." },
+      { "name": "ease-enter", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Entering surfaces; swift arrival, no overshoot." },
+      { "name": "ease-move", "value": "cubic-bezier(0.2, 0, 0, 1)", "purpose": "Moving an existing element." },
+      { "name": "ease-exit", "value": "cubic-bezier(0.4, 0, 1, 1)", "purpose": "Leaving surfaces; accelerates away." },
+      { "name": "spring-responsive", "value": "stiffness 500, damping 42, mass 0.8", "purpose": "Buttons, switches, icon presses." },
+      { "name": "spring-spatial", "value": "stiffness 400, damping 36, mass 0.8", "purpose": "Cards, popovers, bubbles." }
+    ],
+    "breakpoints": [
+      { "name": "panel-compact", "value": "448px", "purpose": "Navigator compresses to compact rows." },
+      { "name": "panel-medium", "value": "640px", "purpose": "Two-column panel layouts." },
+      { "name": "mobile", "value": "768px", "purpose": "Single-column shell and mobile menu page." },
+      { "name": "reading", "value": "840px", "purpose": "Maximum conversation reading width." }
+    ],
+    "scale": {
+      "note": "Contract tiers are machine-checked in DESIGN.md frontmatter and scripts/scale-contract.ts.",
+      "fontSize": { "micro": "10px", "meta": "11px", "label": "12px", "body": "13px", "reading": "14px", "title": "16px" },
+      "radius": { "xs": "2px", "sm": "4px", "md": "6px", "lg": "8px", "xl": "12px" },
+      "controlHeight": { "2xs": "18px", "xs": "22px", "sm": "26px", "md": "30px", "lg": "34px", "xl": "38px" },
+      "roleShapes": { "card": "calc(var(--theme-radius) * 1.333333)", "control": "calc(var(--theme-radius) * .75)", "bubble": "16px", "composer": "calc(var(--theme-radius) * 1.5)" }
+    },
+    "narrative": {
+      "northStar": "An operator's console: a cool, quiet workspace where agent sessions, files and tools share one continuous surface.",
+      "overview": "Phaneris is ink on paper, not chrome on glass. Backgrounds are white or blue-graphite; the only saturated color is the violet accent, reserved for focus and selection. Space, surface luminance and a single hairline separate things. Motion describes causality, never decoration.",
+      "keyCharacteristics": [
+        "Cool neutrality with one saturated accent",
+        "Micro-contrast over nested borders",
+        "Small radii and physical, causal motion",
+        "Text scale and control geometry governed by a checked contract"
+      ],
+      "rules": [
+        { "name": "The Accent-Is-For-Intent Rule", "section": "Colors", "body": "The accent marks focus, selection and the active control. It never fills large surfaces or decorates text." },
+        { "name": "The Scale-Is-Spoken Rule", "section": "Typography", "body": "Any font size, control height or radius comes from the contract tiers (or a semantic role token). Adding a value starts in DESIGN.md and scale-contract.ts, never in a component." },
+        { "name": "The Single-Border Rule", "section": "Elevation & Depth", "body": "Along any sight line into a surface, at most one closed border. Controls inside a bordered container drop to ghost/filled." },
+        { "name": "The Quiet-Stream Rule", "section": "Do's and Don'ts", "body": "Streamed text appears directly; the reading position stays stable. No per-character or blur streaming effects." }
+      ],
+      "dos": [
+        "Route every visual value through a token or a contract tier.",
+        "Keep the accent for intent; use neutral surfaces for content.",
+        "Verify both modes and all three hosts (Electron, WebUI, Viewer)."
+      ],
+      "donts": [
+        "Don't nest bordered containers.",
+        "Don't introduce per-character or blur streaming effects.",
+        "Don't write text-[13px], rounded-[8px], h-[30px] or inline colors.",
+        "Don't add a second implementation of a menu, empty state or roving-focus protocol.",
+        "Don't change the settled identity: white paper and ink, violet accent, neutral user bubble, 6px base radius."
+      ]
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "description": "Main action; foreground fill with background text.",
+      "html": "<button class=\"ds-btn\">Save changes</button>",
+      "css": ".ds-btn { height: var(--control-height-md); padding: 0 12px; border: 0; border-radius: var(--shape-control); background: var(--foreground); color: var(--background); font: 500 var(--type-label-size)/1.5 var(--font-sans); transition: opacity var(--motion-duration-standard) var(--motion-ease-enter); } .ds-btn:hover { opacity: .9; } .ds-btn:active { transform: scale(.98); } .ds-btn:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--background), 0 0 0 1.5px var(--ring); }"
+    },
+    {
+      "name": "Ghost Toolbar Button",
+      "kind": "button",
+      "description": "Inside a bordered container; transparent until hover.",
+      "html": "<button class=\"ds-ghost\" aria-label=\"Copy\">⧉</button>",
+      "css": ".ds-ghost { height: var(--control-height-xs); border: 0; border-radius: var(--shape-sm); background: transparent; color: var(--text-secondary); transition: background var(--motion-duration-fast) var(--motion-ease-enter), color var(--motion-duration-fast) var(--motion-ease-enter); } .ds-ghost:hover { background: var(--action-hover); color: var(--text-primary); } .ds-ghost:active { background: var(--action-pressed); }"
+    },
+    {
+      "name": "Composer",
+      "kind": "input",
+      "description": "The conversation input; one closed border, role radius, three shadow states.",
+      "html": "<div class=\"ds-composer\"><span>Type a message…</span></div>",
+      "css": ".ds-composer { min-height: 44px; padding: 10px 12px; border-radius: var(--shape-composer); background: var(--input); color: var(--text-primary); box-shadow: 0 4px 20px rgb(0 0 0 / .035), inset 0 0 0 1px var(--border); font: 400 var(--type-body-size)/1.5 var(--font-sans); } .ds-composer:hover { box-shadow: 0 4px 24px rgb(0 0 0 / .06), inset 0 0 0 1px color-mix(in srgb, var(--foreground) 20%, transparent); } .ds-composer:focus-within { box-shadow: 0 4px 24px rgb(0 0 0 / .08), inset 0 0 0 1px var(--ring), 0 0 0 1.5px var(--ring); }"
+    },
+    {
+      "name": "User Message",
+      "kind": "card",
+      "description": "Neutral bubble, no border, reading rhythm.",
+      "html": "<div class=\"ds-bubble\">Can you summarize the changes?</div>",
+      "css": ".ds-bubble { max-width: 80%; padding: 14px 20px; border-radius: var(--shape-bubble); background: var(--user-message-bubble); color: var(--text-primary); font: 400 var(--type-reading-size)/1.7 var(--font-sans); }"
+    },
+    {
+      "name": "Activity Row",
+      "kind": "custom",
+      "description": "One tool step inside a turn; no closed border.",
+      "html": "<div class=\"ds-activity\"><span class=\"ds-dot\"></span><span>Read src/app.tsx</span><span class=\"ds-meta\">0.4s</span></div>",
+      "css": ".ds-activity { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: var(--shape-sm); color: var(--text-secondary); font: 400 var(--type-label-size)/1.5 var(--font-sans); } .ds-activity:hover { background: var(--action-hover); } .ds-dot { width: 6px; height: 6px; border-radius: 9999px; background: var(--success); } .ds-meta { margin-left: auto; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Dialog",
+      "kind": "card",
+      "description": "Modal with one border ring and strong elevation.",
+      "html": "<div class=\"ds-dialog\"><h2>Confirm</h2><p>This action cannot be undone.</p></div>",
+      "css": ".ds-dialog { max-width: 420px; padding: 20px; border-radius: var(--radius-card); background: var(--popover-solid); color: var(--text-primary); box-shadow: var(--shadow-strong); } .ds-dialog h2 { margin: 0 0 8px; font: 600 var(--type-title-size)/1.45 var(--font-sans); } .ds-dialog p { margin: 0; color: var(--text-secondary); font: 400 var(--type-body-size)/1.5 var(--font-sans); }"
+    }
+  ]
+}

@@ -445,9 +445,9 @@ function createComponents(
         <td className="py-2 px-3 border-b border-border/50">{children}</td>
       ),
       // Headings - H1/H2 same size, differentiated by weight
-      h1: ({ children }) => <h1 className="font-sans text-[16px] font-bold mt-5 mb-3">{children}</h1>,
-      h2: ({ children }) => <h2 className="font-sans text-[16px] font-semibold mt-4 mb-3">{children}</h2>,
-      h3: ({ children }) => <h3 className="font-sans text-[15px] font-semibold mt-4 mb-2">{children}</h3>,
+      h1: ({ children }) => <h1 className="font-sans text-title font-bold mt-5 mb-3">{children}</h1>,
+      h2: ({ children }) => <h2 className="font-sans text-title font-semibold mt-4 mb-3">{children}</h2>,
+      h3: ({ children }) => <h3 className="font-sans text-title font-semibold mt-4 mb-2">{children}</h3>,
       // Blockquotes
       blockquote: ({ children }) => (
         <blockquote className="border-l-2 border-muted-foreground/30 pl-3 my-2 text-muted-foreground italic">
@@ -572,16 +572,16 @@ function createComponents(
     ),
     // Rich headings - H1/H2 same size, differentiated by weight
     h1: ({ children }) => (
-      <h1 className="font-sans text-[16px] font-bold mt-7 mb-4">{children}</h1>
+      <h1 className="font-sans text-title font-bold mt-7 mb-4">{children}</h1>
     ),
     h2: ({ children }) => (
-      <h2 className="font-sans text-[16px] font-semibold mt-6 mb-3">{children}</h2>
+      <h2 className="font-sans text-title font-semibold mt-6 mb-3">{children}</h2>
     ),
     h3: ({ children }) => (
-      <h3 className="font-sans text-[15px] font-semibold mt-5 mb-3">{children}</h3>
+      <h3 className="font-sans text-title font-semibold mt-5 mb-3">{children}</h3>
     ),
     h4: ({ children }) => (
-      <h4 className="text-[14px] font-semibold mt-3 mb-1">{children}</h4>
+      <h4 className="text-reading font-semibold mt-3 mb-1">{children}</h4>
     ),
     // Styled blockquotes
     blockquote: ({ children }) => (

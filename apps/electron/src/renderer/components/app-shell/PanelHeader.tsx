@@ -172,7 +172,7 @@ export function PanelHeader({
         {badge}
       </div>
       {subtitle && (
-        <div className="flex min-w-0 max-w-full items-center justify-center text-[11px] leading-tight text-muted-foreground">
+        <div className="flex min-w-0 max-w-full items-center justify-center text-meta leading-tight text-muted-foreground">
           {subtitle}
         </div>
       )}

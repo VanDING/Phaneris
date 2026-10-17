@@ -299,7 +299,7 @@ function SessionLoadErrorScreen({
         <button
           type="button"
           onClick={onRetry}
-          className="mt-4 inline-flex h-8 items-center justify-center rounded-[8px] bg-foreground text-background px-3 text-sm font-medium hover:opacity-90 transition-opacity"
+          className="mt-4 inline-flex h-8 items-center justify-center rounded-shape-lg bg-foreground text-background px-3 text-sm font-medium hover:opacity-90 transition-opacity"
         >
           {t("errors.retryLoadingSessions")}
         </button>

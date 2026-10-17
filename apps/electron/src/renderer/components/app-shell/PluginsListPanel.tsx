@@ -172,7 +172,7 @@ export function PluginsListPanel({
             title: <span className="text-destructive">{t('pluginsList.brokenPlugin')}</span>,
             subtitle: row.error.message,
             badges: (
-              <span className="truncate font-mono text-[11px] text-muted-foreground">
+              <span className="truncate font-mono text-meta text-muted-foreground">
                 {row.error.pluginName ?? row.error.path}
               </span>
             ),
@@ -199,14 +199,14 @@ export function PluginsListPanel({
           ) : undefined,
           badges: (
             <span className="flex items-center gap-1.5 min-w-0">
-              <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-foreground/5 text-muted-foreground">
+              <span className="shrink-0 text-micro px-1.5 py-0.5 rounded-full bg-foreground/5 text-muted-foreground">
                 {t('pluginsList.pluginBadge')}
               </span>
               <span className="truncate">{plugin.description}</span>
             </span>
           ),
           trailing: plugin.version ? (
-            <span className="text-[10px] text-muted-foreground">{plugin.version}</span>
+            <span className="text-micro text-muted-foreground">{plugin.version}</span>
           ) : undefined,
           menu: (
             <PluginMenu

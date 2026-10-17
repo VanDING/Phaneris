@@ -7,13 +7,20 @@
 :root {
   --motion-duration-instant: 60ms;
   --motion-duration-fast: 100ms;
+  --motion-duration-snap: 120ms;
   --motion-duration-standard: 160ms;
   --motion-duration-emphasis: 220ms;
   --motion-duration-spatial: 280ms;
+  --motion-duration-sheet: 300ms;
+  --motion-duration-slow: 450ms;
 
   --motion-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-ease-move: cubic-bezier(0.2, 0, 0, 1);
   --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-ease-overshoot: cubic-bezier(0.34, 1.3, 0.64, 1);
+  --motion-ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-ease-expand: cubic-bezier(0.19, 1, 0.22, 1);
+  --motion-ease-pulse: cubic-bezier(0.165, 0.84, 0.44, 1);
 
   --motion-distance-micro: 2px;
   --motion-distance-floating: 6px;
@@ -59,6 +66,56 @@
     background-position: 50% 50%;
     animation: craft-progress-sweep 1.6s var(--motion-ease-move) infinite;
   }
+
+  /* Product entrances. Reduced motion collapses them through the global
+     duration/iteration contract above. */
+  .animate-message-enter {
+    animation: craft-message-enter var(--motion-duration-emphasis) var(--motion-ease-enter);
+  }
+
+  .animate-bubble-enter {
+    animation: craft-bubble-enter var(--motion-duration-emphasis) var(--motion-ease-overshoot);
+  }
+
+  .animate-check-decay {
+    animation: craft-check-decay 2.5s var(--motion-ease-enter) forwards;
+  }
+
+  .animate-skeleton-sweep {
+    animation: craft-skeleton-sweep 2s linear infinite;
+  }
+
+  /* Thinking dots: each dot delays by index at the call site (0/160/320ms). */
+  .animate-thinking-dot {
+    animation: craft-thinking-dot 1.9s var(--motion-ease-pulse) infinite;
+  }
+}
+
+@keyframes craft-message-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes craft-bubble-enter {
+  from { opacity: 0; transform: scale(0.92) translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes craft-thinking-dot {
+  0%, 8% { opacity: 0; transform: translateY(2px); }
+  22% { opacity: 1; transform: translateY(-2.5px); }
+  36%, 70% { opacity: 1; transform: translateY(0); }
+  90%, 100% { opacity: 0; transform: translateY(0); }
+}
+
+@keyframes craft-check-decay {
+  0%, 75% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.92); }
+}
+
+@keyframes craft-skeleton-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
 }
 
 @keyframes craft-progress-sweep {
@@ -87,9 +144,12 @@
   :root {
     --motion-duration-instant: 1ms;
     --motion-duration-fast: 1ms;
+    --motion-duration-snap: 1ms;
     --motion-duration-standard: 1ms;
     --motion-duration-emphasis: 1ms;
     --motion-duration-spatial: 1ms;
+    --motion-duration-sheet: 1ms;
+    --motion-duration-slow: 1ms;
   }
 
   html:focus-within {
@@ -118,9 +178,12 @@
 :root[data-reduce-motion='true'] {
   --motion-duration-instant: 1ms;
   --motion-duration-fast: 1ms;
+  --motion-duration-snap: 1ms;
   --motion-duration-standard: 1ms;
   --motion-duration-emphasis: 1ms;
   --motion-duration-spatial: 1ms;
+  --motion-duration-sheet: 1ms;
+  --motion-duration-slow: 1ms;
 }
 
 :root[data-reduce-motion='true'] .motion-browser-progress {

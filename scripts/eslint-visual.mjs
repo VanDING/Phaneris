@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import zIndex from './eslint-rules/no-hardcoded-z-index.cjs'
 import shadows from '../packages/ui/eslint-rules/no-nonstandard-shadows.cjs'
+import scale from '../packages/ui/eslint-rules/no-arbitrary-scale.cjs'
 import transition from './eslint-rules/no-transition-all.cjs'
 import roles from './eslint-rules/visual-roles.cjs'
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
@@ -38,10 +39,10 @@ function counted(ruleId, rule) {
   } }
 }
 export const visualA11yPlugin = { ...jsxA11y, rules: Object.fromEntries(Object.entries(jsxA11y.rules).map(([name, rule]) => [name, counted(`jsx-a11y/${name}`, rule)])) }
-const plugin = { rules: { 'z-index': counted('theme-contracts/z-index', zIndex), shadows: counted('theme-contracts/shadows', shadows), motion: counted('theme-contracts/motion', transition), roles: counted('theme-contracts/roles', roles) } }
+const plugin = { rules: { 'z-index': counted('theme-contracts/z-index', zIndex), shadows: counted('theme-contracts/shadows', shadows), motion: counted('theme-contracts/motion', transition), roles: counted('theme-contracts/roles', roles), scale: counted('theme-contracts/scale', scale) } }
 export function visualConfig(files) {
   return { files, plugins: { 'jsx-a11y': visualA11yPlugin, 'theme-contracts': plugin }, rules: { ...jsxA11y.flatConfigs.recommended.rules,
-    'theme-contracts/z-index': 'error', 'theme-contracts/motion': 'error', 'theme-contracts/roles': 'error', 'theme-contracts/shadows': ['error', {
+    'theme-contracts/z-index': 'error', 'theme-contracts/motion': 'error', 'theme-contracts/roles': 'error', 'theme-contracts/scale': 'error', 'theme-contracts/shadows': ['error', {
       allowedClasses: ['shadow-none', 'shadow-xs', 'shadow-minimal', 'shadow-tinted', 'shadow-thin', 'shadow-middle', 'shadow-strong', 'shadow-panel-focused', 'shadow-modal-small', 'shadow-bottom-border', 'shadow-bottom-border-thin'], allowInlineNone: true,
     }] } }
 }

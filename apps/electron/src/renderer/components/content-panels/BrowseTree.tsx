@@ -33,14 +33,14 @@ const TREE_ICON_CLASS = 'h-3.5 w-3.5 text-muted-foreground'
 
 function TreeSpinner() {
   return (
-    <div className="flex items-center gap-2 px-4 py-2 text-[12px] text-muted-foreground">
+    <div className="flex items-center gap-2 px-4 py-2 text-label text-muted-foreground">
       <Loader2 className="h-3.5 w-3.5 animate-spin" />
     </div>
   )
 }
 
 function TreeMessage({ children }: { children: React.ReactNode }) {
-  return <div className="px-4 py-2 text-[12px] text-muted-foreground">{children}</div>
+  return <div className="px-4 py-2 text-label text-muted-foreground">{children}</div>
 }
 
 export interface BrowseTreeProps {

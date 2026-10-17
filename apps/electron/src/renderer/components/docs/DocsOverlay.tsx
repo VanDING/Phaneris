@@ -160,7 +160,7 @@ export function DocsOverlay() {
                   {/* A single-page section whose name matches its page needs no
                       group label — "Skills" over "Skills" is noise. */}
                   {!(docsSection.pages.length === 1 && docsSection.pages[0]!.title === docsSection.title) && (
-                    <div className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wide text-foreground/40">
+                    <div className="px-2 pb-1 text-micro font-semibold uppercase tracking-wide text-foreground/40">
                       {docsSection.title}
                     </div>
                   )}
@@ -190,7 +190,7 @@ export function DocsOverlay() {
           </div>
           <div className="rounded-card bg-background px-4 py-8 shadow-strong sm:px-10">
             {section && page && (
-              <div className="flex items-center gap-1.5 pb-2 text-[11px] text-foreground/40">
+              <div className="flex items-center gap-1.5 pb-2 text-meta text-foreground/40">
                 <BookOpen className="h-3 w-3" />
                 <span>{section.title}</span>
               </div>
@@ -235,7 +235,7 @@ function NavButton({
       )}
     >
       <span className="block truncate">{label}</span>
-      {hint && <span className="block truncate text-[10px] text-foreground/40">{hint}</span>}
+      {hint && <span className="block truncate text-micro text-foreground/40">{hint}</span>}
     </button>
   )
 }

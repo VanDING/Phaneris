@@ -412,8 +412,6 @@ export function useOnboarding({
   const handleSubmitCredential = useCallback(async (data: ApiKeySubmitData) => {
     setState(s => ({ ...s, credentialStatus: 'validating', errorMessage: undefined }))
 
-    const isPiApiKeyFlow = state.apiSetupMethod === 'pi_api_key'
-
     try {
       // Bedrock (Pi+amazon-bedrock) — skip API key validation and connection test
       if (data.bedrockAuthMethod) {
@@ -461,24 +459,13 @@ export function useOnboarding({
       // - Local/loopback custom endpoints may be keyless (e.g. Ollama)
       // - Non-local endpoints require an API key
       const isLoopbackCustomEndpoint = isLoopbackEndpoint(data.baseUrl)
-      if (isPiApiKeyFlow) {
-        if (!data.apiKey.trim() && !isLoopbackCustomEndpoint) {
-          setState(s => ({
-            ...s,
-            credentialStatus: 'error',
-            errorMessage: 'Please enter a valid API key',
-          }))
-          return
-        }
-      } else {
-        if (!data.apiKey.trim() && !isLoopbackCustomEndpoint) {
-          setState(s => ({
-            ...s,
-            credentialStatus: 'error',
-            errorMessage: 'Please enter a valid API key',
-          }))
-          return
-        }
+      if (!data.apiKey.trim() && !isLoopbackCustomEndpoint) {
+        setState(s => ({
+          ...s,
+          credentialStatus: 'error',
+          errorMessage: 'Please enter a valid API key',
+        }))
+        return
       }
 
       // Validate connection by spawning a lightweight subprocess test.
@@ -535,7 +522,7 @@ export function useOnboarding({
         errorMessage: error instanceof Error ? error.message : 'Validation failed',
       }))
     }
-  }, [handleSaveConfig, state.apiSetupMethod])
+  }, [handleSaveConfig])
 
   // Save config, validate the connection, and update state accordingly.
   // Shared by all OAuth flows after tokens are captured.

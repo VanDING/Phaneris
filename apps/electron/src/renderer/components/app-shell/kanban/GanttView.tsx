@@ -1021,7 +1021,7 @@ export function GanttView() {
               <PopoverContent align="start" className="w-80 p-0">
                 <div className="border-b border-border/60 px-3 py-2">
                   <div className="text-xs font-semibold">{t('gantt.unscheduledTitle')}</div>
-                  <p className="pt-1 text-[11px] leading-snug text-text-secondary">
+                  <p className="pt-1 text-meta leading-snug text-text-secondary">
                     {t('gantt.unscheduledHint')}
                   </p>
                 </div>
@@ -1042,7 +1042,7 @@ export function GanttView() {
                         <span className="min-w-0 flex-1 truncate font-medium">
                           {item.title?.trim() || t('chat.titlePlaceholder')}
                         </span>
-                        <span className="flex-none text-[10px] text-text-secondary">
+                        <span className="flex-none text-micro text-text-secondary">
                           {statusLabelById.get(item.statusId) ?? item.statusId}
                         </span>
                       </button>
@@ -1089,7 +1089,7 @@ export function GanttView() {
               initialProjectId: projectIds.length === 1 ? projectIds[0] : undefined,
             })}
             disabled={!activeWorkspaceId}
-            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-[12.5px] font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
+            className="craft-control inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface-raised px-2.5 text-label font-semibold text-foreground transition-colors hover:bg-foreground/[0.03] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
             <span className="@max-[1100px]/panel:hidden">{t('kanban.newTask')}</span>

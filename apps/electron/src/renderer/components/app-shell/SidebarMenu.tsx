@@ -5,8 +5,8 @@
  * - LeftSidebar (context menu via right-click on nav items)
  * - AppShell (context menu for New Chat button)
  *
- * Uses MenuComponents context to render with either DropdownMenu or ContextMenu
- * primitives, allowing the same component to work in both scenarios.
+ * Entries are described as data and rendered through the shared MenuEntries
+ * adapter, which works with either DropdownMenu or ContextMenu primitives.
  *
  * Provides actions based on the sidebar item type:
  * - "Configure Statuses" (for allSessions/status/flagged items) - triggers EditPopover callback
@@ -15,7 +15,6 @@
  * - "Open in New Window" (for newSession only) - uses deep link
  */
 
-import * as React from 'react'
 import { useTranslation } from "react-i18next"
 import {
   AppWindow,
@@ -25,7 +24,8 @@ import {
   Trash2,
   ExternalLink,
 } from 'lucide-react'
-import { useMenuComponents } from '@/components/ui/menu-context'
+import { MenuEntries } from '@/components/ui/menu-entries'
+import type { MenuEntry } from '@phaneris/ui'
 import { getDocSlug, type DocFeature } from '@phaneris/shared/docs/doc-links'
 import { openDocs } from '@/atoms/docs'
 
@@ -72,7 +72,7 @@ export interface SidebarMenuProps {
  */
 export function SidebarMenu({
   type,
-  statusId,
+  statusId: _statusId,
   labelId,
   onConfigureStatuses,
   onMarkAllRead,
@@ -89,103 +89,61 @@ export function SidebarMenu({
   onDeleteView,
 }: SidebarMenuProps) {
   const { t } = useTranslation()
-
-  // Get menu components from context (works with both DropdownMenu and ContextMenu)
-  const { MenuItem, Separator } = useMenuComponents()
+  const entries: MenuEntry[] = []
 
   // New Session: only shows "Open in New Window"
   if (type === 'newSession') {
     return (
-      <MenuItem onClick={() => window.electronAPI.openUrl('phaneris://action/new-session?window=focused')}>
-        <AppWindow className="h-3.5 w-3.5" />
-        <span className="flex-1">{t("sidebarMenu.openInNewWindow")}</span>
-      </MenuItem>
+      <MenuEntries entries={[{
+        label: t("sidebarMenu.openInNewWindow"),
+        icon: <AppWindow className="h-3.5 w-3.5" />,
+        onSelect: () => window.electronAPI.openUrl('phaneris://action/new-session?window=focused'),
+      }]} />
     )
   }
 
   // All Sessions / Status / Flagged: show "Configure Statuses" (+ "Mark All Read" for allSessions)
   if ((type === 'allSessions' || type === 'status' || type === 'flagged') && onConfigureStatuses) {
-    return (
-      <>
-        {type === 'allSessions' && onMarkAllRead && (
-          <>
-            <MenuItem onClick={onMarkAllRead}>
-              <CheckCheck className="h-3.5 w-3.5" />
-              <span className="flex-1">{t("sidebarMenu.markAllRead")}</span>
-            </MenuItem>
-            <Separator />
-          </>
-        )}
-        <MenuItem onClick={onConfigureStatuses}>
-          <Settings2 className="h-3.5 w-3.5" />
-          <span className="flex-1">{t("sidebarMenu.configureStatuses")}</span>
-        </MenuItem>
-      </>
-    )
+    if (type === 'allSessions' && onMarkAllRead) {
+      entries.push(
+        { label: t("sidebarMenu.markAllRead"), icon: <CheckCheck className="h-3.5 w-3.5" />, onSelect: onMarkAllRead },
+        { kind: 'separator' },
+      )
+    }
+    entries.push({ label: t("sidebarMenu.configureStatuses"), icon: <Settings2 className="h-3.5 w-3.5" />, onSelect: onConfigureStatuses })
+    return <MenuEntries entries={entries} />
   }
 
-  // Labels: show context-appropriate actions
-  // - Header ("Labels" parent): Configure Labels + Add New Label
-  // - Individual label items: Add New Label (as child) + Delete Label
+  // Labels: header gets Configure + Add; an individual label adds Delete.
   if (type === 'labels') {
-    return (
-      <>
-        {onAddLabel && (
-          <MenuItem onClick={() => onAddLabel(labelId)}>
-            <Plus className="h-3.5 w-3.5" />
-            <span className="flex-1">{t("sidebarMenu.addNewLabel")}</span>
-          </MenuItem>
-        )}
-        {onConfigureLabels && (
-          <MenuItem onClick={() => onConfigureLabels(labelId)}>
-            <Settings2 className="h-3.5 w-3.5" />
-            <span className="flex-1">{t("sidebarMenu.editLabels")}</span>
-          </MenuItem>
-        )}
-        {labelId && onDeleteLabel && (
-          <>
-            <Separator />
-            <MenuItem onClick={() => onDeleteLabel(labelId)}>
-              <Trash2 className="h-3.5 w-3.5" />
-              <span className="flex-1">{t("sidebarMenu.deleteLabel")}</span>
-            </MenuItem>
-          </>
-        )}
-      </>
-    )
+    if (onAddLabel) entries.push({ label: t("sidebarMenu.addNewLabel"), icon: <Plus className="h-3.5 w-3.5" />, onSelect: () => onAddLabel(labelId) })
+    if (onConfigureLabels) entries.push({ label: t("sidebarMenu.editLabels"), icon: <Settings2 className="h-3.5 w-3.5" />, onSelect: () => onConfigureLabels(labelId) })
+    if (labelId && onDeleteLabel) {
+      entries.push(
+        { kind: 'separator' },
+        { label: t("sidebarMenu.deleteLabel"), icon: <Trash2 className="h-3.5 w-3.5" />, onSelect: () => onDeleteLabel(labelId) },
+      )
+    }
+    return <MenuEntries entries={entries} />
   }
 
-  // Views: show "Edit Views" and optionally "Delete View"
+  // Views: "Edit Views" and optionally "Delete View"
   if (type === 'views') {
-    return (
-      <>
-        {onConfigureViews && (
-          <MenuItem onClick={onConfigureViews}>
-            <Settings2 className="h-3.5 w-3.5" />
-            <span className="flex-1">{t("sidebarMenu.editViews")}</span>
-          </MenuItem>
-        )}
-        {viewId && onDeleteView && (
-          <>
-            <Separator />
-            <MenuItem onClick={() => onDeleteView(viewId)}>
-              <Trash2 className="h-3.5 w-3.5" />
-              <span className="flex-1">{t("sidebarMenu.deleteView")}</span>
-            </MenuItem>
-          </>
-        )}
-      </>
-    )
+    if (onConfigureViews) entries.push({ label: t("sidebarMenu.editViews"), icon: <Settings2 className="h-3.5 w-3.5" />, onSelect: onConfigureViews })
+    if (viewId && onDeleteView) {
+      entries.push(
+        { kind: 'separator' },
+        { label: t("sidebarMenu.deleteView"), icon: <Trash2 className="h-3.5 w-3.5" />, onSelect: () => onDeleteView(viewId) },
+      )
+    }
+    return <MenuEntries entries={entries} />
   }
 
-  // Sources: show "Add Source" and "Learn More"
+  // Sources: "Add Source" and "Learn More"
   if (type === 'sources') {
-    // Determine which docs page to open based on source type filter
     const docFeature: DocFeature = sourceType
       ? `sources-${sourceType}` as DocFeature
       : 'sources'
-
-    // Display label varies by source type
     const learnMoreLabel = sourceType === 'api'
       ? t('sidebarMenu.learnMoreApis')
       : sourceType === 'mcp'
@@ -193,67 +151,35 @@ export function SidebarMenu({
         : sourceType === 'local'
           ? t('sidebarMenu.learnMoreLocalFolders')
           : t('sidebarMenu.learnMoreSources')
-
-    return (
-      <>
-        {onAddSource && (
-          <MenuItem onClick={onAddSource}>
-            <Plus className="h-3.5 w-3.5" />
-            <span className="flex-1">{t("sidebarMenu.addSource")}</span>
-          </MenuItem>
-        )}
-        <Separator />
-        <MenuItem onClick={() => openDocs(getDocSlug(docFeature))}>
-          <ExternalLink className="h-3.5 w-3.5" />
-          <span className="flex-1">{learnMoreLabel}</span>
-        </MenuItem>
-      </>
+    if (onAddSource) entries.push({ label: t("sidebarMenu.addSource"), icon: <Plus className="h-3.5 w-3.5" />, onSelect: onAddSource })
+    entries.push(
+      { kind: 'separator' },
+      { label: learnMoreLabel, icon: <ExternalLink className="h-3.5 w-3.5" />, onSelect: () => openDocs(getDocSlug(docFeature)) },
     )
+    return <MenuEntries entries={entries} />
   }
 
-  // Skills: show "Add Skill"
+  // Skills: "Add Skill"
   if (type === 'skills' && onAddSkill) {
-    return (
-      <MenuItem onClick={onAddSkill}>
-        <Plus className="h-3.5 w-3.5" />
-        <span className="flex-1">{t("sidebarMenu.addSkill")}</span>
-      </MenuItem>
-    )
+    return <MenuEntries entries={[{ label: t("sidebarMenu.addSkill"), icon: <Plus className="h-3.5 w-3.5" />, onSelect: onAddSkill }]} />
   }
 
-  // Projects: show "Add Project"
+  // Projects: "Add Project"
   if (type === 'projects') {
-    return (
-      <>
-        {onAddProject && (
-          <MenuItem onClick={onAddProject}>
-            <Plus className="h-3.5 w-3.5" />
-            <span className="flex-1">{t("sidebarMenu.addProject")}</span>
-          </MenuItem>
-        )}
-      </>
-    )
+    if (onAddProject) entries.push({ label: t("sidebarMenu.addProject"), icon: <Plus className="h-3.5 w-3.5" />, onSelect: onAddProject })
+    return <MenuEntries entries={entries} />
   }
 
-  // Automations: show "Add Automation" and "Learn More"
+  // Automations: "Add Automation" and "Learn More"
   if (type === 'automations') {
-    return (
-      <>
-        {onAddAutomation && (
-          <MenuItem onClick={onAddAutomation}>
-            <Plus className="h-3.5 w-3.5" />
-            <span className="flex-1">{t("sidebarMenu.addAutomation")}</span>
-          </MenuItem>
-        )}
-        <Separator />
-        <MenuItem onClick={() => openDocs(getDocSlug('automations'))}>
-          <ExternalLink className="h-3.5 w-3.5" />
-          <span className="flex-1">{t("sidebarMenu.learnMoreAutomations")}</span>
-        </MenuItem>
-      </>
+    if (onAddAutomation) entries.push({ label: t("sidebarMenu.addAutomation"), icon: <Plus className="h-3.5 w-3.5" />, onSelect: onAddAutomation })
+    entries.push(
+      { kind: 'separator' },
+      { label: t("sidebarMenu.learnMoreAutomations"), icon: <ExternalLink className="h-3.5 w-3.5" />, onSelect: () => openDocs(getDocSlug('automations')) },
     )
+    return <MenuEntries entries={entries} />
   }
 
-  // Fallback: return null if no handler provided (shouldn't happen)
+  // No handler provided (shouldn't happen)
   return null
 }

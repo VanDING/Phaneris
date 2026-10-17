@@ -1,0 +1,5 @@
+Coolicons by Kryston Schwarze
+https://github.com/krystonschwarze/coolicons
+Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+Original icon paths preserved; display size and theme color are set for this demo.

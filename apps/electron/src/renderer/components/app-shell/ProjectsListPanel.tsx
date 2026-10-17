@@ -74,7 +74,7 @@ export function ProjectsListPanel({
             <button
               type="button"
               onClick={onAddProject}
-              className="inline-flex items-center gap-1 h-7 px-3 text-xs font-medium rounded-[8px] bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors"
+              className="inline-flex items-center gap-1 h-7 px-3 text-xs font-medium rounded-shape-lg bg-background shadow-minimal hover:bg-foreground/[0.03] transition-colors"
             >
               <Plus className="h-3.5 w-3.5" />
               {t('projectsList.addProject')}

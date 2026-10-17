@@ -52,7 +52,7 @@ function SectionStats({ changes }: { changes: import('@phaneris/ui').FileChange[
   }
   if (additions === 0 && deletions === 0) return null
   return (
-    <span className="shrink-0 text-[11px] font-medium tabular-nums">
+    <span className="shrink-0 text-meta font-medium tabular-nums">
       <span className="text-emerald-600 dark:text-emerald-400">+{additions}</span>
       <span className="mx-0.5 text-muted-foreground/40">/</span>
       <span className="text-rose-600 dark:text-rose-400">-{deletions}</span>
@@ -162,7 +162,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
         title={styleHint}
         onClick={() => setViewerSettings({ diffStyle: style, disableBackground: viewerSettings.disableBackground })}
         className={cn(
-          'relative isolate h-7 rounded-md px-2 text-[12px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+          'relative isolate h-7 rounded-md px-2 text-label font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
           viewerSettings.diffStyle === style
             ? 'text-foreground'
             : 'text-muted-foreground hover:text-foreground',
@@ -190,7 +190,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
           </div>
         </LayoutGroup>
         {styleHint && (
-          <span className="hidden max-w-40 truncate text-[10px] text-muted-foreground/70 @min-[520px]/files:block" title={styleHint}>
+          <span className="hidden max-w-40 truncate text-micro text-muted-foreground/70 @min-[520px]/files:block" title={styleHint}>
             {styleHint}
           </span>
         )}
@@ -215,7 +215,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
       {changes.length > 0 && (
         <div className="flex h-10 shrink-0 items-center gap-2 border-b border-border/50 bg-background/55 px-2.5 backdrop-blur-sm">
           <div
-            className="flex min-w-0 items-center gap-2 text-[11px] font-medium tabular-nums text-muted-foreground @max-[420px]/panel:hidden"
+            className="flex min-w-0 items-center gap-2 text-meta font-medium tabular-nums text-muted-foreground @max-[420px]/panel:hidden"
             aria-label={`${t('contentPanel.files.view.changed')}: ${sections.length}`}
           >
             <span className="inline-flex items-center gap-1">
@@ -252,7 +252,7 @@ export function ChangedFilesView({ sessionId, changes }: { sessionId: string; ch
                     type="button"
                     onClick={() => setSelectedKey(isOpen ? null : key)}
                     className={cn(
-                      'flex w-full items-center gap-2 px-3 py-2.5 text-left text-[13px] outline-none transition-colors hover:bg-foreground/[0.03] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
+                      'flex w-full items-center gap-2 px-3 py-2.5 text-left text-body outline-none transition-colors hover:bg-foreground/[0.03] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
                       isOpen && 'bg-foreground/[0.025]',
                     )}
                   >

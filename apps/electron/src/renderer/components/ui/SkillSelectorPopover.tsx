@@ -57,7 +57,7 @@ export function SkillSelectorPopover({
       renderItem={(skill, state) => (
         <div
           className={cn(
-            'flex cursor-pointer select-none items-center gap-3 rounded-[6px] px-3 py-2 text-[13px]',
+            'flex cursor-pointer select-none items-center gap-3 rounded-shape-md px-3 py-2 text-body',
             state.highlighted && 'bg-foreground/5',
             state.selected && 'bg-foreground/3',
           )}

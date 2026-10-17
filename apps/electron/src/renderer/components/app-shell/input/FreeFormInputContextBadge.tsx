@@ -74,12 +74,12 @@ export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, Fre
         data-tutorial={dataTutorial}
         className={cn(
           // Base styles - shrink + min-w-0 allows badge to compress in tight layouts
-          "input-toolbar-btn inline-flex items-center gap-1.5 h-7 rounded-[6px] text-[13px] text-foreground transition-colors select-none shrink min-w-0",
+          "input-toolbar-btn inline-flex items-center gap-1.5 h-7 rounded-shape-md text-body text-foreground transition-colors select-none shrink min-w-0",
           "disabled:opacity-50 disabled:pointer-events-none",
           // Padding: more padding when showing label
           showLabel ? "px-2" : "px-1.5",
-          // Collapsed with selection: visible background + thin 1px border + margin
-          !isExpanded && hasSelection && "bg-background border border-foreground/5 mx-0.5",
+          // Collapsed with selection: filled chip (single-border rule: no inner closed border)
+          !isExpanded && hasSelection && "bg-foreground/[0.06] mx-0.5",
           // Hover state (when not already showing background from selection)
           !(!isExpanded && hasSelection) && "hover:bg-foreground/5",
           // Open state (dropdown shown)
@@ -96,12 +96,12 @@ export const FreeFormInputContextBadge = React.forwardRef<HTMLButtonElement, Fre
         {showLabel && (
           isExpanded ? (
             // Expanded: simple truncate, placeholder (no selection) gets 60% opacity
-            <span className={cn("truncate max-w-[120px] min-w-0 shrink", !hasSelection && "opacity-50")}>
+            <span className={cn("composer-badge-label truncate max-w-[120px] min-w-0 shrink", !hasSelection && "opacity-50")}>
               {label}
             </span>
           ) : (
             // Collapsed with selection: fading text with max width
-            <FadingText className="max-w-[140px] min-w-0 shrink" fadeWidth={20}>
+            <FadingText className="composer-badge-label max-w-[140px] min-w-0 shrink" fadeWidth={20}>
               {label}
             </FadingText>
           )

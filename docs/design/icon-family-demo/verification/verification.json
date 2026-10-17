@@ -1,0 +1,41 @@
+{
+  "url": "file:///E:/Phaneris/docs/design/icon-family-demo/index.html",
+  "generatedAt": "2026-10-15T06:51:25.526Z",
+  "shots": [
+    "tab-overview",
+    "tab-gallery",
+    "tab-workspace",
+    "tab-files",
+    "tab-thinking",
+    "tab-plan",
+    "detail-family-cards",
+    "detail-matrix",
+    "detail-verify",
+    "detail-app-frame",
+    "detail-workbench-a",
+    "detail-workbench-c",
+    "detail-file-current",
+    "detail-file-vscode",
+    "detail-file-material",
+    "detail-spinner-compare",
+    "detail-spinner-context",
+    "detail-gallery",
+    "detail-gallery-b",
+    "dark-overview",
+    "dark-app-frame",
+    "dark-file-vscode",
+    "dark-spinner-compare",
+    "mobile-workspace",
+    "mobile-files"
+  ],
+  "summary": {
+    "tabs": 6,
+    "matrixRows": 92,
+    "galleryTiles": 60,
+    "fileRows": 61,
+    "typeRows": 70,
+    "missingIcons": 0,
+    "animatedIcons": 803
+  },
+  "problems": []
+}

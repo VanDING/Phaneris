@@ -52,7 +52,7 @@ export function DiffViewerControls({
   return (
     <div className={cn('flex items-center gap-1.5', className)}>
       {/* Stats display: -X +Y */}
-      <div className="flex items-center gap-2 mr-0.5 text-[13px] font-medium font-mono">
+      <div className="flex items-center gap-2 mr-0.5 text-body font-medium font-mono">
         <span className="text-destructive">-{deletions}</span>
         <span className="text-success">+{additions}</span>
       </div>
@@ -61,7 +61,7 @@ export function DiffViewerControls({
       <button
         type="button"
         onClick={() => onDiffStyleChange(diffStyle === 'unified' ? 'split' : 'unified')}
-        className="cursor-pointer p-1.5 rounded-[6px] bg-background shadow-minimal opacity-70 hover:opacity-100 transition-opacity"
+        className="cursor-pointer p-1.5 rounded-shape-md bg-background shadow-minimal opacity-70 hover:opacity-100 transition-opacity"
         style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
         title={diffStyle === 'unified' ? t('diff.switchToSplit') : t('diff.switchToUnified')}
         aria-label={diffStyle === 'unified' ? t('diff.switchToSplit') : t('diff.switchToUnified')}
@@ -75,7 +75,7 @@ export function DiffViewerControls({
         type="button"
         onClick={() => onBackgroundChange(!disableBackground)}
         className={cn(
-          'cursor-pointer p-1.5 rounded-[6px] bg-background shadow-minimal transition-opacity',
+          'cursor-pointer p-1.5 rounded-shape-md bg-background shadow-minimal transition-opacity',
           disableBackground ? 'opacity-40 hover:opacity-70' : 'opacity-70 hover:opacity-100'
         )}
         style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}

@@ -57,7 +57,7 @@ export function CompactAcceptPlanDrawer({
           type="button"
           aria-label={effectiveAcceptLabel}
           className={cn(
-            'motion-interactive group/accept h-[28px] pl-2.5 pr-2 text-xs font-medium rounded-[6px] flex items-center gap-1.5 transition-[color,background-color,box-shadow,opacity,transform]',
+            'motion-interactive group/accept h-control-sm pl-2.5 pr-2 text-xs font-medium rounded-shape-md flex items-center gap-1.5 transition-[color,background-color,box-shadow,opacity,transform]',
             'bg-success/5 text-success hover:bg-success/10 shadow-tinted',
             'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             className,

@@ -1,0 +1,3 @@
+bar-chart-alt    delete-alt       edit-alt         eye-off          filter-alt
+link-alt         message-alt      notification-off reorder-alt      sunrise-alt
+volume-off

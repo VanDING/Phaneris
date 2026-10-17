@@ -81,7 +81,7 @@ export interface EntityListProps<T> {
 function SectionHeader({ label }: { label: string }) {
   return (
     <div className="px-4 py-2">
-      <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+      <span className="text-meta font-medium text-muted-foreground uppercase tracking-wider">
         {label}
       </span>
     </div>
@@ -111,14 +111,14 @@ function CollapsibleGroupHeader({
           onClick={onToggle}
           className="w-full py-2 px-4 flex items-center gap-1.5 cursor-pointer group/header relative"
         >
-          <div className="absolute inset-y-0.5 left-2 right-2 rounded-[6px] group-hover/header:bg-foreground/2 transition-colors pointer-events-none" />
+          <div className="absolute inset-y-0.5 left-2 right-2 rounded-shape-md group-hover/header:bg-foreground/2 transition-colors pointer-events-none" />
           <ChevronRight
             className={cn(
               "h-3 w-3 text-muted-foreground/60 transition-transform relative",
               !isCollapsed && "rotate-90"
             )}
           />
-          <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground relative">
+          <span className="text-meta font-medium uppercase tracking-wider text-muted-foreground relative">
             {label}{isCollapsed && <> · <span className="text-muted-foreground/50">{itemCount}</span></>}
           </span>
         </button>

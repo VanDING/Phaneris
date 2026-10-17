@@ -1,3 +1,25 @@
+export interface ImeKeyState {
+  isComposing?: boolean
+  keyCode?: number
+  timeStamp?: number
+}
+
+/**
+ * True when an Enter press belongs to IME composition and must not submit.
+ *
+ * WebKit keeps a stale composition flag for a few hundred milliseconds after
+ * `compositionend`; the timestamp latch prevents a confirming Enter from
+ * sending the message right after the candidate window closes.
+ */
+export function isImeSubmitBlocked(event: ImeKeyState, lastCompositionEndAt: number): boolean {
+  if (event.isComposing || event.keyCode === 229) return true
+  const webKit = typeof navigator !== 'undefined'
+    && /AppleWebKit/.test(navigator.userAgent)
+    && !/Chrome|Chromium|Edg/.test(navigator.userAgent)
+  if (!webKit || !event.timeStamp) return false
+  return Math.abs(event.timeStamp - lastCompositionEndAt) < 500
+}
+
 export interface ScopedInputEventTarget {
   sessionId?: string | null
   isFocusedPanel: boolean

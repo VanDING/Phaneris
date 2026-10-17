@@ -142,7 +142,7 @@ export function WorkItemListView() {
 
       <div className="min-h-0 flex-1 overflow-auto">
         <div className="min-w-0">
-          <div className="grid grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/60 bg-foreground/[0.015] px-3 py-2 text-[11px] font-medium text-text-secondary">
+          <div className="grid grid-cols-[32px_minmax(0,1fr)_100px] @min-[760px]/panel:grid-cols-[40px_minmax(220px,2fr)_minmax(120px,1fr)_130px_120px_100px] items-center border-b border-border/60 bg-foreground/[0.015] px-3 py-2 text-meta font-medium text-text-secondary">
             <button className="craft-control" data-craft-focus="true"
               type="button"
               onClick={() => setSelectedIds(allVisibleSelected ? [] : visibleItems.map((item) => item.id))}
@@ -189,11 +189,11 @@ export function WorkItemListView() {
                 </button>
                 <span className="min-w-0 pr-3">
                   <span className="block truncate font-medium text-foreground">{item.title}</span>
-                  <span className="mt-0.5 flex items-center gap-1 truncate text-[11px] text-text-secondary">
+                  <span className="mt-0.5 flex items-center gap-1 truncate text-meta text-text-secondary">
                     {item.sessionIds.length > 0 && <Link2 className="h-3 w-3" />}
                     {item.description || t('kanban.workItemNoDescription')}
                   </span>
-                  <span className="mt-1 block truncate text-[11px] text-text-secondary @min-[760px]/panel:hidden">
+                  <span className="mt-1 block truncate text-meta text-text-secondary @min-[760px]/panel:hidden">
                     {[project?.name, item.dueAt?.slice(0, 10), item.progress === undefined ? undefined : `${item.progress}%`].filter(Boolean).join(' · ')}
                   </span>
                 </span>

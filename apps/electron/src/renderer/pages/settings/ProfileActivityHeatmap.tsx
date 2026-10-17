@@ -44,7 +44,7 @@ export function ProfileActivityHeatmap({ calendar, locale }: { calendar: Profile
                         event.currentTarget.parentElement?.querySelector<HTMLButtonElement>(`[data-activity-day="${next.key}"]`)?.focus()
                       }
                     }}
-                    className={`craft-control aspect-square w-full rounded-[3px] ${LEVELS[day.level]} transition-[transform,box-shadow] duration-150 hover:z-component-chrome hover:scale-125 focus-visible:z-component-chrome focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent motion-reduce:transition-none motion-reduce:hover:scale-100 ${day.key === today || day.key === selectedKey ? 'ring-1 ring-accent ring-offset-1 ring-offset-background' : ''}`}
+                    className={`craft-control aspect-square w-full rounded-shape-sm ${LEVELS[day.level]} transition-[transform,box-shadow] duration-150 hover:z-component-chrome hover:scale-125 focus-visible:z-component-chrome focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent motion-reduce:transition-none motion-reduce:hover:scale-100 ${day.key === today || day.key === selectedKey ? 'ring-1 ring-accent ring-offset-1 ring-offset-background' : ''}`}
                   />
                 </TooltipTrigger>
                 <TooltipContent>{dayLabel(day)}</TooltipContent>

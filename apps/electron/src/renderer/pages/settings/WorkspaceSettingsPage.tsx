@@ -401,7 +401,7 @@ export default function WorkspaceSettingsPage() {
                     )}
                   >
                     {isUploadingIcon ? (
-                      <Spinner className="text-text-secondary text-[8px]" />
+                      <Spinner className="text-text-secondary text-micro" />
                     ) : wsIconUrl ? (
                       <img src={wsIconUrl} alt="" className="w-full h-full object-cover" />
                     ) : (

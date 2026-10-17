@@ -297,9 +297,7 @@ export function MainContentPanel({
     // No source selected - empty state
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
-        <div className="flex items-center justify-center h-full text-muted-foreground">
-          <p className="text-sm">{t("sourcesList.noSourcesConfigured")}</p>
-        </div>
+        <PanelEmptyState title={t("sourcesList.noSourcesConfigured")} />
       </Panel>
     )
   }
@@ -332,9 +330,7 @@ export function MainContentPanel({
     // No skill selected - empty state
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
-        <div className="flex items-center justify-center h-full text-muted-foreground">
-          <p className="text-sm">{t("skillsList.noSkillsConfigured")}</p>
-        </div>
+        <PanelEmptyState title={t("skillsList.noSkillsConfigured")} />
       </Panel>
     )
   }
@@ -400,9 +396,7 @@ export function MainContentPanel({
     }
     return wrapWithStoplight(
       <Panel variant="grow" className={className}>
-        <div className="flex items-center justify-center h-full text-muted-foreground">
-          <p className="text-sm">{t("automations.noAutomationsConfigured")}</p>
-        </div>
+        <PanelEmptyState title={t("automations.noAutomationsConfigured")} />
       </Panel>
     )
   }

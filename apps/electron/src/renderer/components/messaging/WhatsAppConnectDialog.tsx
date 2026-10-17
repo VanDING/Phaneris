@@ -108,7 +108,7 @@ export function WhatsAppConnectDialog({ open, onOpenChange, onConnected }: Whats
 
         <div className="flex flex-col gap-4 py-2">
           {phase.kind === 'starting' && (
-            <StatusRow icon={<Spinner className="text-[16px]" />}>
+            <StatusRow icon={<Spinner className="text-title" />}>
               {t('dialog.whatsapp.starting')}
             </StatusRow>
           )}

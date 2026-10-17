@@ -197,7 +197,7 @@ export function HTMLPreviewOverlay({
             // (opacity) and the shared enter rhythm, and collapses under reduced
             // motion like every other shared rule.
             className={cn(
-              "motion-reveal bg-white rounded-[12px] overflow-hidden shadow-minimal mx-auto",
+              "motion-reveal bg-white rounded-shape-xl overflow-hidden shadow-minimal mx-auto",
               measured ? "opacity-100" : "opacity-0",
             )}
             style={{

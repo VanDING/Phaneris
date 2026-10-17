@@ -174,7 +174,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
               {plugin.skills.length === 0 ? (
                 <p className="px-1 text-sm text-muted-foreground">{t('pluginsList.noContributedSkills')}</p>
               ) : (
-                <div className="rounded-[8px] border border-border/50 divide-y divide-border/30 overflow-hidden">
+                <div className="rounded-shape-lg border border-border/50 divide-y divide-border/30 overflow-hidden">
                   {plugin.skills.map((skill) => (
                     <button
                       key={skill.slug}
@@ -197,7 +197,7 @@ export default function PluginInfoPage({ pluginName, workspaceId }: PluginInfoPa
               {plugin.sources.length === 0 ? (
                 <p className="px-1 text-sm text-muted-foreground">{t('pluginsList.noContributedSources')}</p>
               ) : (
-                <div className="rounded-[8px] border border-border/50 divide-y divide-border/30 overflow-hidden">
+                <div className="rounded-shape-lg border border-border/50 divide-y divide-border/30 overflow-hidden">
                   {plugin.sources.map((source) => (
                     <button
                       key={source.slug}

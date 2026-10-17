@@ -1,0 +1,5860 @@
+{
+  "date": "2026-10-15",
+  "lucideInstalledVersion": "1.51.0",
+  "declaredLucideRange": "^1.51.0",
+  "method": "Static named import declarations in the four frontend roots. Type-only imports, playground, __tests__, fixtures and *.test/spec.* are excluded from production. Import totals count file/specifiers, not JSX nodes or rendered instances. Lucide aliases are deduplicated by installed component identity.",
+  "summary": {
+    "files": 237,
+    "imports": 877,
+    "exportedNames": 208,
+    "distinctComponents": 197,
+    "playgroundFiles": 24,
+    "byScope": {
+      "desktop": {
+        "files": 186,
+        "imports": 727,
+        "exportedNames": 185
+      },
+      "shared": {
+        "files": 48,
+        "imports": 143,
+        "exportedNames": 74
+      },
+      "viewer": {
+        "files": 3,
+        "imports": 7,
+        "exportedNames": 7
+      },
+      "webui": {
+        "files": 0,
+        "imports": 0,
+        "exportedNames": 0
+      }
+    }
+  },
+  "aliasGroups": [
+    [
+      "AlertCircle",
+      "CircleAlert"
+    ],
+    [
+      "AlertTriangle",
+      "TriangleAlert"
+    ],
+    [
+      "Check",
+      "CheckIcon"
+    ],
+    [
+      "CheckCircle2",
+      "CircleCheck"
+    ],
+    [
+      "ChevronDown",
+      "ChevronDownIcon"
+    ],
+    [
+      "ChevronLeft",
+      "ChevronLeftIcon"
+    ],
+    [
+      "ChevronRight",
+      "ChevronRightIcon"
+    ],
+    [
+      "Circle",
+      "CircleIcon"
+    ],
+    [
+      "Folder",
+      "FolderIcon"
+    ],
+    [
+      "SquareTerminal",
+      "TerminalSquare"
+    ],
+    [
+      "X",
+      "XIcon"
+    ]
+  ],
+  "exportedNames": [
+    "Activity",
+    "AlertCircle",
+    "AlertTriangle",
+    "AppWindow",
+    "Archive",
+    "ArchiveRestore",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+    "ArrowUpDown",
+    "ArrowUpRight",
+    "Atom",
+    "Ban",
+    "Bold",
+    "BookOpen",
+    "Bot",
+    "Braces",
+    "Bug",
+    "Building2",
+    "Calendar",
+    "CalendarDays",
+    "CalendarOff",
+    "Camera",
+    "Check",
+    "CheckCheck",
+    "CheckCircle",
+    "CheckCircle2",
+    "CheckIcon",
+    "CheckSquare",
+    "ChevronDown",
+    "ChevronDownIcon",
+    "ChevronLeft",
+    "ChevronLeftIcon",
+    "ChevronRight",
+    "ChevronRightIcon",
+    "ChevronUp",
+    "ChevronsUp",
+    "ChevronsUpDown",
+    "Circle",
+    "CircleAlert",
+    "CircleCheck",
+    "CircleIcon",
+    "CircleSlash",
+    "ClipboardPaste",
+    "Clock",
+    "Clock3",
+    "Cloud",
+    "CloudOff",
+    "CloudUpload",
+    "Code",
+    "Coins",
+    "Columns2",
+    "Columns3",
+    "Copy",
+    "CornerDownRight",
+    "Cpu",
+    "CreditCard",
+    "DatabaseZap",
+    "Diamond",
+    "Download",
+    "ExternalLink",
+    "Eye",
+    "EyeOff",
+    "File",
+    "FileArchive",
+    "FileAudio",
+    "FileCode",
+    "FileDiff",
+    "FileImage",
+    "FileJson",
+    "FilePenLine",
+    "FilePlus",
+    "FileQuestion",
+    "FileText",
+    "FileVideo",
+    "Files",
+    "Filter",
+    "Flag",
+    "FlagOff",
+    "Focus",
+    "Folder",
+    "FolderIcon",
+    "FolderKanban",
+    "FolderOpen",
+    "FolderPlus",
+    "FolderSearch",
+    "FolderSymlinkIcon",
+    "FolderTree",
+    "GanttChartSquare",
+    "GitBranch",
+    "GitCompareArrows",
+    "GitGraph",
+    "Globe",
+    "Globe2",
+    "GripHorizontal",
+    "GripVertical",
+    "Group",
+    "HardDrive",
+    "Hash",
+    "HelpCircle",
+    "Image",
+    "Inbox",
+    "Info",
+    "Italic",
+    "Key",
+    "KeyRound",
+    "Keyboard",
+    "Laptop",
+    "Layers",
+    "Link",
+    "Link2",
+    "Link2Off",
+    "List",
+    "ListChecks",
+    "ListFilter",
+    "ListTodo",
+    "Loader2",
+    "LocateFixed",
+    "Lock",
+    "LockKeyhole",
+    "LockOpen",
+    "LogOut",
+    "Mail",
+    "MailOpen",
+    "MapPin",
+    "Maximize2",
+    "MessageCircleDashed",
+    "MessageCircleQuestion",
+    "MessageSquare",
+    "MessageSquareMore",
+    "MessagesSquare",
+    "Minimize2",
+    "Minus",
+    "Monitor",
+    "Moon",
+    "MoreHorizontal",
+    "MousePointerClick",
+    "Network",
+    "Package",
+    "PackageOpen",
+    "Palette",
+    "PanelLeft",
+    "PanelRight",
+    "PanelRightOpen",
+    "PanelTop",
+    "PanelsTopLeft",
+    "Paperclip",
+    "PauseCircle",
+    "PenLine",
+    "Pencil",
+    "PencilLine",
+    "Pin",
+    "PinOff",
+    "Play",
+    "Plug",
+    "Plus",
+    "Power",
+    "PowerOff",
+    "Radio",
+    "Redo2",
+    "RefreshCcw",
+    "RefreshCw",
+    "RotateCcw",
+    "RotateCw",
+    "Save",
+    "Scissors",
+    "Search",
+    "Send",
+    "Server",
+    "Settings",
+    "Settings2",
+    "Shapes",
+    "Shield",
+    "ShieldAlert",
+    "ShieldCheck",
+    "Sigma",
+    "Sparkles",
+    "Square",
+    "SquarePen",
+    "SquareTerminal",
+    "Star",
+    "Strikethrough",
+    "Sun",
+    "Table2",
+    "Tag",
+    "Terminal",
+    "TerminalSquare",
+    "TextSelect",
+    "ToggleRight",
+    "Trash2",
+    "TriangleAlert",
+    "Type",
+    "Undo2",
+    "Upload",
+    "User",
+    "UserCircle",
+    "UserRound",
+    "Users",
+    "Variable",
+    "Webhook",
+    "Workflow",
+    "Wrench",
+    "X",
+    "XCircle",
+    "XIcon",
+    "Zap",
+    "ZoomIn",
+    "ZoomOut"
+  ],
+  "inlineSvgFiles": [
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/CompactPermissionModeSelector.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SessionItem.tsx",
+      "declarations": 2
+    },
+    {
+      "file": "apps/electron/src/renderer/components/icons/McpIcon.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/icons/PanelLeftRounded.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/icons/PhanerisSymbol.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/icons/SquarePenRounded.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/icons/TodoStateIcons.tsx",
+      "declarations": 7
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/inline-color-picker-row.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/label-icon.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/mention-menu.tsx",
+      "declarations": 4
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/rich-text-input.tsx",
+      "declarations": 5
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/slash-command-menu.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "apps/electron/src/renderer/lib/icon-cache.ts",
+      "declarations": 2
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/ChatPage.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/chat/AcceptPlanDropdown.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/chat/CompactAcceptPlanDrawer.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/chat/SessionViewer.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/chat/UserMessageBubble.tsx",
+      "declarations": 3
+    },
+    {
+      "file": "packages/ui/src/components/code-viewer/DiffIcons.tsx",
+      "declarations": 3
+    },
+    {
+      "file": "packages/ui/src/components/icons/Folder.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/icons/Home.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/icons/Inbox.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/markdown/CodeBlock.tsx",
+      "declarations": 2
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownDatatableBlock.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryMapView.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryPerformance.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryToolbar.tsx",
+      "declarations": 1
+    },
+    {
+      "file": "packages/ui/src/components/ui/LoadingIndicator.tsx",
+      "declarations": 1
+    }
+  ],
+  "entries": [
+    {
+      "file": "apps/electron/src/renderer/App.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FileText",
+          "local": "FileText"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/browser-toolbar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "EyeOff",
+          "local": "EyeOff"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/apisetup/ApiKeyInput.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "EyeOff",
+          "local": "EyeOff"
+        },
+        {
+          "name": "Loader2",
+          "local": "Loader2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-menu/DesktopAppMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "HelpCircle",
+          "local": "HelpCircle"
+        },
+        {
+          "name": "Keyboard",
+          "local": "Keyboard"
+        },
+        {
+          "name": "LogOut",
+          "local": "LogOut"
+        },
+        {
+          "name": "Settings",
+          "local": "Settings"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-menu/menu-icons.ts",
+      "production": true,
+      "icons": [
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "Bug",
+          "local": "Bug"
+        },
+        {
+          "name": "Building2",
+          "local": "Building2"
+        },
+        {
+          "name": "ClipboardPaste",
+          "local": "ClipboardPaste"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Download",
+          "local": "Download"
+        },
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "Focus",
+          "local": "Focus"
+        },
+        {
+          "name": "HelpCircle",
+          "local": "HelpCircle"
+        },
+        {
+          "name": "Keyboard",
+          "local": "Keyboard"
+        },
+        {
+          "name": "LogOut",
+          "local": "LogOut"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Minimize2",
+          "local": "Minimize2"
+        },
+        {
+          "name": "Palette",
+          "local": "Palette"
+        },
+        {
+          "name": "PanelLeft",
+          "local": "PanelLeft"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        },
+        {
+          "name": "Redo2",
+          "local": "Redo2"
+        },
+        {
+          "name": "RotateCcw",
+          "local": "RotateCcw"
+        },
+        {
+          "name": "Scissors",
+          "local": "Scissors"
+        },
+        {
+          "name": "Server",
+          "local": "Server"
+        },
+        {
+          "name": "Settings",
+          "local": "Settings"
+        },
+        {
+          "name": "ShieldCheck",
+          "local": "ShieldCheck"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        },
+        {
+          "name": "SquarePen",
+          "local": "SquarePen"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "TextSelect",
+          "local": "TextSelect"
+        },
+        {
+          "name": "ToggleRight",
+          "local": "ToggleRight"
+        },
+        {
+          "name": "Undo2",
+          "local": "Undo2"
+        },
+        {
+          "name": "UserCircle",
+          "local": "UserCircle"
+        },
+        {
+          "name": "ZoomIn",
+          "local": "ZoomIn"
+        },
+        {
+          "name": "ZoomOut",
+          "local": "ZoomOut"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-menu/MobileMenuItem.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-menu/MobileMenuPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ActiveOptionBadges.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Info",
+          "local": "Info"
+        },
+        {
+          "name": "Shapes",
+          "local": "Shapes"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/AppShell.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Archive",
+          "local": "Archive"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "RotateCw",
+          "local": "RotateCw"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "ListFilter",
+          "local": "ListFilter"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        },
+        {
+          "name": "Zap",
+          "local": "Zap"
+        },
+        {
+          "name": "Inbox",
+          "local": "Inbox"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "Calendar",
+          "local": "Calendar"
+        },
+        {
+          "name": "Layers",
+          "local": "Layers"
+        },
+        {
+          "name": "ListTodo",
+          "local": "ListTodo"
+        },
+        {
+          "name": "Clock",
+          "local": "Clock"
+        },
+        {
+          "name": "Radio",
+          "local": "Radio"
+        },
+        {
+          "name": "Bot",
+          "local": "Bot"
+        },
+        {
+          "name": "Info",
+          "local": "Info"
+        },
+        {
+          "name": "MailOpen",
+          "local": "MailOpen"
+        },
+        {
+          "name": "FolderKanban",
+          "local": "FolderKanban"
+        },
+        {
+          "name": "PanelTop",
+          "local": "PanelTop"
+        },
+        {
+          "name": "Shapes",
+          "local": "Shapes"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/AttachmentPreview.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "Image",
+          "local": "ImageIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/BackgroundFinishedChip.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/BatchSessionMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Archive",
+          "local": "Archive"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "FlagOff",
+          "local": "FlagOff"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ChatDisplay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "ChevronUp",
+          "local": "ChevronUp"
+        },
+        {
+          "name": "CircleAlert",
+          "local": "CircleAlert"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "Info",
+          "local": "Info"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/CompactSessionListFilter.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Calendar",
+          "local": "Calendar"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "Inbox",
+          "local": "Inbox"
+        },
+        {
+          "name": "Layers",
+          "local": "Layers"
+        },
+        {
+          "name": "ListFilter",
+          "local": "ListFilter"
+        },
+        {
+          "name": "MailOpen",
+          "local": "MailOpen"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/CompactSessionMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Archive",
+          "local": "Archive"
+        },
+        {
+          "name": "ArchiveRestore",
+          "local": "ArchiveRestore"
+        },
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "Columns2",
+          "local": "Columns2"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "CloudUpload",
+          "local": "CloudUpload"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "FlagOff",
+          "local": "FlagOff"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "Link2Off",
+          "local": "Link2Off"
+        },
+        {
+          "name": "MailOpen",
+          "local": "MailOpen"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "Layers",
+          "local": "Layers"
+        },
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/CompactWorkspaceSwitcher.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "FolderPlus",
+          "local": "FolderPlus"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Cloud",
+          "local": "Cloud"
+        },
+        {
+          "name": "CloudOff",
+          "local": "CloudOff"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ContextWorkbenchTabs.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Link2",
+          "local": "Link2"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        },
+        {
+          "name": "Minimize2",
+          "local": "Minimize2"
+        },
+        {
+          "name": "PackageOpen",
+          "local": "PackageOpen"
+        },
+        {
+          "name": "Pin",
+          "local": "Pin"
+        },
+        {
+          "name": "PinOff",
+          "local": "PinOff"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/FabNewChat.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/CompactModelSelector.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Image",
+          "local": "ImageIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/CompactPermissionModeSelector.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/FreeFormInput.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Paperclip",
+          "local": "Paperclip"
+        },
+        {
+          "name": "ArrowUp",
+          "local": "ArrowUp"
+        },
+        {
+          "name": "Square",
+          "local": "Square"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronUp",
+          "local": "ChevronUp"
+        },
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        },
+        {
+          "name": "Image",
+          "local": "ImageIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/FreeFormInputContextBadge.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/ImageSupportWarningBanner.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/InputErrorBoundary.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/structured/AdminApprovalRequest.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ShieldAlert",
+          "local": "ShieldAlert"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/structured/CredentialRequest.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Key",
+          "local": "Key"
+        },
+        {
+          "name": "User",
+          "local": "User"
+        },
+        {
+          "name": "Lock",
+          "local": "Lock"
+        },
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "EyeOff",
+          "local": "EyeOff"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/structured/PermissionRequest.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ShieldAlert",
+          "local": "ShieldAlert"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/structured/QuestionPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MessageCircleQuestion",
+          "local": "MessageCircleQuestion"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/ToolbarStatusSlot.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Globe",
+          "local": "Globe"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/input/WorkingDirectorySelector.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/CalendarUntimedRail.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/CalendarView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CalendarOff",
+          "local": "CalendarOff"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/GanttView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CalendarDays",
+          "local": "CalendarDays"
+        },
+        {
+          "name": "CalendarOff",
+          "local": "CalendarOff"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Diamond",
+          "local": "Diamond"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoard.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/KanbanBoardContainer.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/KanbanColumn.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/NewTaskComposer.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/SubtaskRow.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "Circle",
+          "local": "Circle"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskChatPreview.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowUp",
+          "local": "ArrowUp"
+        },
+        {
+          "name": "Workflow",
+          "local": "Workflow"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskEditor.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        },
+        {
+          "name": "CircleSlash",
+          "local": "CircleSlash"
+        },
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        },
+        {
+          "name": "Zap",
+          "local": "Zap"
+        },
+        {
+          "name": "Folder",
+          "local": "Folder"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/TaskTile.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Clock",
+          "local": "Clock"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        },
+        {
+          "name": "Play",
+          "local": "Play"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/kanban/WorkItemListView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckSquare",
+          "local": "CheckSquare"
+        },
+        {
+          "name": "Link2",
+          "local": "Link2"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        },
+        {
+          "name": "Square",
+          "local": "Square"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/LeftSidebar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/MainContentPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MessagesSquare",
+          "local": "MessagesSquare"
+        },
+        {
+          "name": "Shapes",
+          "local": "Shapes"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/MultiSelectPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Archive",
+          "local": "Archive"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/PanelHeader.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/PluginMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/PluginsListPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Shapes",
+          "local": "Shapes"
+        },
+        {
+          "name": "TriangleAlert",
+          "local": "TriangleAlert"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ProjectMultiSelectFilter.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "FolderKanban",
+          "local": "FolderKanban"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/ProjectsListPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FolderKanban",
+          "local": "FolderKanban"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/RecoveryReconciliationDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SendResourceToWorkspaceDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Cloud",
+          "local": "Cloud"
+        },
+        {
+          "name": "CloudOff",
+          "local": "CloudOff"
+        },
+        {
+          "name": "Monitor",
+          "local": "Monitor"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SendToWorkspaceDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Cloud",
+          "local": "Cloud"
+        },
+        {
+          "name": "CloudOff",
+          "local": "CloudOff"
+        },
+        {
+          "name": "Laptop",
+          "local": "Laptop"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SessionItem.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "ShieldAlert",
+          "local": "ShieldAlert"
+        },
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SessionList.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Inbox",
+          "local": "Inbox"
+        },
+        {
+          "name": "Archive",
+          "local": "Archive"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SessionMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Archive",
+          "local": "Archive"
+        },
+        {
+          "name": "ArchiveRestore",
+          "local": "ArchiveRestore"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "FlagOff",
+          "local": "FlagOff"
+        },
+        {
+          "name": "MailOpen",
+          "local": "MailOpen"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "Columns2",
+          "local": "Columns2"
+        },
+        {
+          "name": "CloudUpload",
+          "local": "CloudUpload"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        },
+        {
+          "name": "FolderKanban",
+          "local": "FolderKanban"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Layers",
+          "local": "Layers"
+        },
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SessionMenuParts.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Link2Off",
+          "local": "Link2Off"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SessionSearchHeader.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Search",
+          "local": "Search"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SidebarMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "CheckCheck",
+          "local": "CheckCheck"
+        },
+        {
+          "name": "Settings2",
+          "local": "Settings2"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SidebarProfile.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowUpRight",
+          "local": "ArrowUpRight"
+        },
+        {
+          "name": "Clock3",
+          "local": "Clock3"
+        },
+        {
+          "name": "MapPin",
+          "local": "MapPin"
+        },
+        {
+          "name": "Settings",
+          "local": "Settings"
+        },
+        {
+          "name": "UserRound",
+          "local": "UserRound"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SkillMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SkillsListPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Zap",
+          "local": "Zap"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SourceMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SourcesListPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SurfaceErrorBoundary.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SurfaceLauncherButtons.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Columns3",
+          "local": "Columns3"
+        },
+        {
+          "name": "CalendarDays",
+          "local": "CalendarDays"
+        },
+        {
+          "name": "GanttChartSquare",
+          "local": "GanttChartSquare"
+        },
+        {
+          "name": "FolderTree",
+          "local": "FolderTree"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "Activity",
+          "local": "Activity"
+        },
+        {
+          "name": "SquareTerminal",
+          "local": "SquareTerminal"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/SurfaceSlot.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/TaskActionMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Square",
+          "local": "Square"
+        },
+        {
+          "name": "ArrowUpRight",
+          "local": "ArrowUpRight"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        },
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/TopBar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "HelpCircle",
+          "local": "HelpCircle"
+        },
+        {
+          "name": "List",
+          "local": "List"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Settings",
+          "local": "Settings"
+        },
+        {
+          "name": "Webhook",
+          "local": "Webhook"
+        },
+        {
+          "name": "Zap",
+          "local": "Zap"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/app-shell/WorkspaceSwitcher.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "FolderPlus",
+          "local": "FolderPlus"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Cloud",
+          "local": "Cloud"
+        },
+        {
+          "name": "CloudOff",
+          "local": "CloudOff"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/artifacts/ArtifactCard.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "Archive",
+          "local": "Archive"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "FileArchive",
+          "local": "FileArchive"
+        },
+        {
+          "name": "FileAudio",
+          "local": "FileAudio"
+        },
+        {
+          "name": "FileImage",
+          "local": "FileImage"
+        },
+        {
+          "name": "FileText",
+          "local": "FileText"
+        },
+        {
+          "name": "FileVideo",
+          "local": "FileVideo"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        },
+        {
+          "name": "RotateCcw",
+          "local": "RotateCcw"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/ActionTypeIcon.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Webhook",
+          "local": "Webhook"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationAvatar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Clock",
+          "local": "Clock"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "Shield",
+          "local": "Shield"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "ListChecks",
+          "local": "ListChecks"
+        },
+        {
+          "name": "Zap",
+          "local": "Zap"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Webhook",
+          "local": "Webhook"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationCard.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationEventTimeline.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        },
+        {
+          "name": "ShieldAlert",
+          "local": "ShieldAlert"
+        },
+        {
+          "name": "CircleSlash",
+          "local": "CircleSlash"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationInfoPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "PauseCircle",
+          "local": "PauseCircle"
+        },
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        },
+        {
+          "name": "Hash",
+          "local": "Hash"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "FileCode",
+          "local": "FileCode"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Play",
+          "local": "Play"
+        },
+        {
+          "name": "Power",
+          "local": "Power"
+        },
+        {
+          "name": "PowerOff",
+          "local": "PowerOff"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationsListPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Webhook",
+          "local": "Webhook"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/AutomationTestPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        },
+        {
+          "name": "Loader2",
+          "local": "Loader2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/BatchAutomationMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Power",
+          "local": "Power"
+        },
+        {
+          "name": "PowerOff",
+          "local": "PowerOff"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/automations/CronBuilder.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Clock",
+          "local": "Clock"
+        },
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/browser/BrowserTabBadge.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/browser/BrowserTabStrip.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "Monitor",
+          "local": "Monitor"
+        },
+        {
+          "name": "PanelRightOpen",
+          "local": "PanelRightOpen"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/chat/AuthRequestCard.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Key",
+          "local": "Key"
+        },
+        {
+          "name": "User",
+          "local": "User"
+        },
+        {
+          "name": "Lock",
+          "local": "Lock"
+        },
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "EyeOff",
+          "local": "EyeOff"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/ArtifactsPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "FilePenLine",
+          "local": "FilePenLine"
+        },
+        {
+          "name": "Package",
+          "local": "Package"
+        },
+        {
+          "name": "RotateCcw",
+          "local": "RotateCcw"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/ArtifactWorkbench.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "FilePenLine",
+          "local": "FilePenLine"
+        },
+        {
+          "name": "RotateCcw",
+          "local": "RotateCcw"
+        },
+        {
+          "name": "Save",
+          "local": "Save"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/BrowseTree.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Loader2",
+          "local": "Loader2"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Paperclip",
+          "local": "Paperclip"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/ChangedFilesView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "FilePlus",
+          "local": "FilePlus"
+        },
+        {
+          "name": "Files",
+          "local": "Files"
+        },
+        {
+          "name": "PencilLine",
+          "local": "PencilLine"
+        },
+        {
+          "name": "GitCompareArrows",
+          "local": "GitCompareArrows"
+        },
+        {
+          "name": "ChevronsUp",
+          "local": "ChevronsUp"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/FilePreviewContent.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "FileQuestion",
+          "local": "FileQuestion"
+        },
+        {
+          "name": "RotateCcw",
+          "local": "RotateCcw"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/FilesPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FolderTree",
+          "local": "FolderTree"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/MarkdownPopoutOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/session-decisions/decision-view.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowRight",
+          "local": "ArrowRight"
+        },
+        {
+          "name": "Ban",
+          "local": "Ban"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Clock3",
+          "local": "Clock3"
+        },
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        },
+        {
+          "name": "Info",
+          "local": "Info"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionBoard.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionDetail.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/session-decisions/DecisionSummary.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowRight",
+          "local": "ArrowRight"
+        },
+        {
+          "name": "Ban",
+          "local": "Ban"
+        },
+        {
+          "name": "Clock3",
+          "local": "Clock3"
+        },
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/content-panels/TrajectoryPanel.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Activity",
+          "local": "Activity"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/docs/DocsOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "BookOpen",
+          "local": "BookOpen"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/files/FileViewer.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FileText",
+          "local": "FileText"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/icons/ConnectionIcon.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/icons/SettingsIcons.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Building2",
+          "local": "Building2"
+        },
+        {
+          "name": "Keyboard",
+          "local": "Keyboard"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Palette",
+          "local": "Palette"
+        },
+        {
+          "name": "Server",
+          "local": "Server"
+        },
+        {
+          "name": "ShieldCheck",
+          "local": "ShieldCheck"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        },
+        {
+          "name": "Tag",
+          "local": "Tag"
+        },
+        {
+          "name": "ToggleRight",
+          "local": "ToggleRight"
+        },
+        {
+          "name": "UserCircle",
+          "local": "UserCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/info/AutoRulesDataTable.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/info/Info_Markdown.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/info/Info_Page.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/info/LabelsDataTable.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/info/PermissionsDataTable.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/access/AccessModeBanner.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ShieldAlert",
+          "local": "ShieldAlert"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/access/BindingAllowListPopover.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Lock",
+          "local": "Lock"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "ShieldCheck",
+          "local": "ShieldCheck"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/access/OwnersListEditor.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/access/PendingSendersList.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Clock",
+          "local": "Clock"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/access/TelegramAccessSection.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "Users",
+          "local": "Users"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/LarkConnectDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/MessagingSessionMenuItem.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/PairingCodeDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/TelegramConnectDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/TelegramSupergroupPairingDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/WeChatConnectDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/messaging/WhatsAppConnectDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/onboarding/APISetupStep.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "CreditCard",
+          "local": "CreditCard"
+        },
+        {
+          "name": "Key",
+          "local": "Key"
+        },
+        {
+          "name": "Cpu",
+          "local": "Cpu"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "Variable",
+          "local": "Variable"
+        },
+        {
+          "name": "Atom",
+          "local": "Atom"
+        },
+        {
+          "name": "Network",
+          "local": "Network"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/onboarding/CredentialsStep.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/onboarding/GitBashWarning.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Download",
+          "local": "Download"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/onboarding/ProviderSelectStep.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Key",
+          "local": "Key"
+        },
+        {
+          "name": "Monitor",
+          "local": "Monitor"
+        },
+        {
+          "name": "Network",
+          "local": "Network"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/onboarding/ReauthScreen.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/grant-visuals.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Globe2",
+          "local": "Globe2"
+        },
+        {
+          "name": "ShieldAlert",
+          "local": "ShieldAlert"
+        },
+        {
+          "name": "TerminalSquare",
+          "local": "TerminalSquare"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/page-visuals.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Activity",
+          "local": "Activity"
+        },
+        {
+          "name": "FileText",
+          "local": "FileText"
+        },
+        {
+          "name": "MousePointerClick",
+          "local": "MousePointerClick"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageGrantRequestDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "KeyRound",
+          "local": "KeyRound"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PagesHome.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "PanelsTopLeft",
+          "local": "PanelsTopLeft"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageSourceAuthBanner.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "KeyRound",
+          "local": "KeyRound"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageTile.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Globe2",
+          "local": "Globe2"
+        },
+        {
+          "name": "Lock",
+          "local": "Lock"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/PageView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "ArrowLeft",
+          "local": "ArrowLeft"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "FolderKanban",
+          "local": "FolderKanban"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "Globe2",
+          "local": "Globe2"
+        },
+        {
+          "name": "KeyRound",
+          "local": "KeyRound"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/pages/SharePageDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Globe2",
+          "local": "Globe2"
+        },
+        {
+          "name": "Lock",
+          "local": "Lock"
+        },
+        {
+          "name": "ShieldAlert",
+          "local": "ShieldAlert"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/projects/ProjectSelectMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/projects/WorkItemFilterControls.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Filter",
+          "local": "Filter"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ResetConfirmationDialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ServerDirectoryBrowser.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FolderIcon",
+          "local": "FolderIcon"
+        },
+        {
+          "name": "FolderSymlinkIcon",
+          "local": "FolderSymlinkIcon"
+        },
+        {
+          "name": "ChevronRightIcon",
+          "local": "ChevronRightIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/settings/SearchableModelInput.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/settings/SettingsDisclosure.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/settings/SettingsInput.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "EyeOff",
+          "local": "EyeOff"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/settings/SettingsMenuSelect.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/settings/SettingsToggle.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Info",
+          "local": "Info"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/calendar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDownIcon",
+          "local": "ChevronDownIcon"
+        },
+        {
+          "name": "ChevronLeftIcon",
+          "local": "ChevronLeftIcon"
+        },
+        {
+          "name": "ChevronRightIcon",
+          "local": "ChevronRightIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/color-picker.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/command.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/CompactSourceSelector.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/CompactWorkingDirectorySelector.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/context-menu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckIcon",
+          "local": "CheckIcon"
+        },
+        {
+          "name": "ChevronRightIcon",
+          "local": "ChevronRightIcon"
+        },
+        {
+          "name": "CircleIcon",
+          "local": "CircleIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/date-field.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CalendarDays",
+          "local": "CalendarDays"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/dialog.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "XIcon",
+          "local": "XIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/dropdown-menu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckIcon",
+          "local": "CheckIcon"
+        },
+        {
+          "name": "ChevronRightIcon",
+          "local": "ChevronRightIcon"
+        },
+        {
+          "name": "CircleIcon",
+          "local": "CircleIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/EditPopover.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "GripHorizontal",
+          "local": "GripHorizontal"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/entity-list.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/entity-row.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/HeaderMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/label-icon.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Hash",
+          "local": "Hash"
+        },
+        {
+          "name": "CalendarDays",
+          "local": "CalendarDays"
+        },
+        {
+          "name": "Type",
+          "local": "Type"
+        },
+        {
+          "name": "Link",
+          "local": "Link"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/label-menu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/label-value-popover.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "CalendarDays",
+          "local": "CalendarDays"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/mention-badge.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/metadata-badge.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/plugin-avatar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Shapes",
+          "local": "Shapes"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/resizable.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "GripVertical",
+          "local": "GripVertical"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/select.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronUp",
+          "local": "ChevronUp"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/session-status-menu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Archive",
+          "local": "Archive"
+        },
+        {
+          "name": "ArchiveRestore",
+          "local": "ArchiveRestore"
+        },
+        {
+          "name": "Ban",
+          "local": "Ban"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/skill-avatar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Zap",
+          "local": "Zap"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/SkillSelectorPopover.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/slash-command-menu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Minimize2",
+          "local": "Minimize2"
+        },
+        {
+          "name": "Shapes",
+          "local": "Shapes"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/source-avatar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "HardDrive",
+          "local": "HardDrive"
+        },
+        {
+          "name": "Mail",
+          "local": "Mail"
+        },
+        {
+          "name": "Plug",
+          "local": "Plug"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/SourceSelectorPopover.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/ui/status-icon.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Circle",
+          "local": "Circle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_Choice.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FolderPlus",
+          "local": "FolderPlus"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "Cloud",
+          "local": "Cloud"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_ConnectRemote.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowLeft",
+          "local": "ArrowLeft"
+        },
+        {
+          "name": "CheckCircle",
+          "local": "CheckCircle"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_CreateNew.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowLeft",
+          "local": "ArrowLeft"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/workspace/AddWorkspaceStep_OpenFolder.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowLeft",
+          "local": "ArrowLeft"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/workspace/WorkspaceCreationScreen.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/components/workspace/WorkspacePicker.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/lib/session-file-tree.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "File",
+          "local": "File"
+        },
+        {
+          "name": "Folder",
+          "local": "Folder"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "FileText",
+          "local": "FileText"
+        },
+        {
+          "name": "Image",
+          "local": "Image"
+        },
+        {
+          "name": "FileCode",
+          "local": "FileCode"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/ChatPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Link2Off",
+          "local": "Link2Off"
+        },
+        {
+          "name": "Info",
+          "local": "Info"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/ProjectInfoPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FolderKanban",
+          "local": "FolderKanban"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "Upload",
+          "local": "Upload"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/AiSettingsPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "Star",
+          "local": "Star"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "RefreshCcw",
+          "local": "RefreshCcw"
+        },
+        {
+          "name": "Settings2",
+          "local": "Settings2"
+        },
+        {
+          "name": "MessageSquareMore",
+          "local": "MessageSquareMore"
+        },
+        {
+          "name": "Zap",
+          "local": "Zap"
+        },
+        {
+          "name": "Clock",
+          "local": "Clock"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/AppearanceSettingsPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Monitor",
+          "local": "Monitor"
+        },
+        {
+          "name": "Sun",
+          "local": "Sun"
+        },
+        {
+          "name": "Moon",
+          "local": "Moon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/LabelsSettingsPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Loader2",
+          "local": "Loader2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/MessagingSettingsPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowUpRight",
+          "local": "ArrowUpRight"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Hash",
+          "local": "Hash"
+        },
+        {
+          "name": "LockOpen",
+          "local": "LockOpen"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "MessagesSquare",
+          "local": "MessagesSquare"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "PowerOff",
+          "local": "PowerOff"
+        },
+        {
+          "name": "RefreshCcw",
+          "local": "RefreshCcw"
+        },
+        {
+          "name": "Settings2",
+          "local": "Settings2"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/PermissionsSettingsPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Loader2",
+          "local": "Loader2"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/PreferencesPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Camera",
+          "local": "Camera"
+        },
+        {
+          "name": "LockKeyhole",
+          "local": "LockKeyhole"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/ServerSettingsPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Eye",
+          "local": "Eye"
+        },
+        {
+          "name": "EyeOff",
+          "local": "EyeOff"
+        },
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "RotateCw",
+          "local": "RotateCw"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/settings/SettingsNavigator.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "AppWindow",
+          "local": "AppWindow"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/SkillInfoPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "Minus",
+          "local": "Minus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/pages/SourceInfoPage.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/demos/kanban/mock-kanban-data.ts",
+      "production": false,
+      "icons": [
+        {
+          "name": "Circle",
+          "local": "Circle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/demos/messaging/AllowListPreview.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Hash",
+          "local": "Hash"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "MessagesSquare",
+          "local": "MessagesSquare"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "Users",
+          "local": "Users"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/demos/messaging/MessagingTelegramReworkedPreview.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "ArrowUpRight",
+          "local": "ArrowUpRight"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Hash",
+          "local": "Hash"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "MessagesSquare",
+          "local": "MessagesSquare"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/demos/mobile-webui/mock-mobile-data.ts",
+      "production": false,
+      "icons": [
+        {
+          "name": "Circle",
+          "local": "Circle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/demos/NavigationRefinementPreview.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Database",
+          "local": "Database"
+        },
+        {
+          "name": "Folder",
+          "local": "Folder"
+        },
+        {
+          "name": "MessagesSquare",
+          "local": "MessagesSquare"
+        },
+        {
+          "name": "PanelLeft",
+          "local": "PanelLeft"
+        },
+        {
+          "name": "Tags",
+          "local": "Tags"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/MotionToggle.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Accessibility",
+          "local": "Accessibility"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        },
+        {
+          "name": "Monitor",
+          "local": "Monitor"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/PlaygroundApp.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "PanelRight",
+          "local": "PanelRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/chat.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "ArrowUp",
+          "local": "ArrowUp"
+        },
+        {
+          "name": "Paperclip",
+          "local": "Paperclip"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Circle",
+          "local": "Circle"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/container-transitions.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        },
+        {
+          "name": "GripHorizontal",
+          "local": "GripHorizontal"
+        },
+        {
+          "name": "MessageCircleMore",
+          "local": "MessageCircleMore"
+        },
+        {
+          "name": "RefreshCcw",
+          "local": "RefreshCcw"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/control-system.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Settings",
+          "local": "Settings"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/edit-popover.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "GripHorizontal",
+          "local": "GripHorizontal"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/entity-lists.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Circle",
+          "local": "Circle"
+        },
+        {
+          "name": "Flag",
+          "local": "Flag"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "HardDrive",
+          "local": "HardDrive"
+        },
+        {
+          "name": "Zap",
+          "local": "Zap"
+        },
+        {
+          "name": "DatabaseZap",
+          "local": "DatabaseZap"
+        },
+        {
+          "name": "Plug",
+          "local": "Plug"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/image-support.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Image",
+          "local": "ImageIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/kanban.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "LayoutGrid",
+          "local": "LayoutGrid"
+        },
+        {
+          "name": "List",
+          "local": "List"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/messages.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/planner.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "CalendarDays",
+          "local": "CalendarDays"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "Circle",
+          "local": "Circle"
+        },
+        {
+          "name": "Clock3",
+          "local": "Clock3"
+        },
+        {
+          "name": "CloudAlert",
+          "local": "CloudAlert"
+        },
+        {
+          "name": "CloudCheck",
+          "local": "CloudCheck"
+        },
+        {
+          "name": "CloudOff",
+          "local": "CloudOff"
+        },
+        {
+          "name": "CloudUpload",
+          "local": "CloudUpload"
+        },
+        {
+          "name": "History",
+          "local": "History"
+        },
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "Link2",
+          "local": "Link2"
+        },
+        {
+          "name": "ListTodo",
+          "local": "ListTodo"
+        },
+        {
+          "name": "User",
+          "local": "User"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/project-colors.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Circle",
+          "local": "Circle"
+        },
+        {
+          "name": "FolderKanban",
+          "local": "FolderKanban"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/session-list.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Circle",
+          "local": "Circle"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/slash-command.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "SquareSlash",
+          "local": "SquareSlash"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/task-editor.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "Trash2",
+          "local": "Trash2"
+        },
+        {
+          "name": "GripVertical",
+          "local": "GripVertical"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Hash",
+          "local": "Hash"
+        },
+        {
+          "name": "Clock3",
+          "local": "Clock3"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/transport-banner.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "HelpCircle",
+          "local": "HelpCircle"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/registry/turn-card-modes.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Play",
+          "local": "Play"
+        },
+        {
+          "name": "RotateCcw",
+          "local": "RotateCcw"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/Sidebar.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        }
+      ]
+    },
+    {
+      "file": "apps/electron/src/renderer/playground/ThemeToggle.tsx",
+      "production": false,
+      "icons": [
+        {
+          "name": "Moon",
+          "local": "Moon"
+        },
+        {
+          "name": "Sun",
+          "local": "Sun"
+        },
+        {
+          "name": "Monitor",
+          "local": "Monitor"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/annotations/AnnotationIslandMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CornerDownRight",
+          "local": "CornerDownRight"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/AcceptPlanDropdown.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/attachment-helpers.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "File",
+          "local": "File"
+        },
+        {
+          "name": "Image",
+          "local": "ImageIcon"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/CompactAcceptPlanDrawer.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/InlineExecution.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/TurnCard.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "CheckCircle2",
+          "local": "CheckCircle2"
+        },
+        {
+          "name": "XCircle",
+          "local": "XCircle"
+        },
+        {
+          "name": "Circle",
+          "local": "Circle"
+        },
+        {
+          "name": "MessageCircleDashed",
+          "local": "MessageCircleDashed"
+        },
+        {
+          "name": "FileText",
+          "local": "FileText"
+        },
+        {
+          "name": "ArrowUpRight",
+          "local": "ArrowUpRight"
+        },
+        {
+          "name": "Ban",
+          "local": "Ban"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        },
+        {
+          "name": "CircleCheck",
+          "local": "CircleCheck"
+        },
+        {
+          "name": "ListTodo",
+          "local": "ListTodo"
+        },
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        },
+        {
+          "name": "FilePenLine",
+          "local": "FilePenLine"
+        },
+        {
+          "name": "GitBranch",
+          "local": "GitBranch"
+        },
+        {
+          "name": "CircleAlert",
+          "local": "CircleAlert"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/TurnCardActionsMenu.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MoreHorizontal",
+          "local": "MoreHorizontal"
+        },
+        {
+          "name": "FileDiff",
+          "local": "FileDiff"
+        },
+        {
+          "name": "ArrowUpRight",
+          "local": "ArrowUpRight"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/chat/UserMessageBubble.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Clock",
+          "local": "Clock"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/CollapsibleSection.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownDatatableBlock.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ArrowUpDown",
+          "local": "ArrowUpDown"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Group",
+          "local": "Group"
+        },
+        {
+          "name": "ListFilter",
+          "local": "ListFilter"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownDocBlock.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FileText",
+          "local": "FileText"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownHtmlBlock.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownImageBlock.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownJsonBlock.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownMermaidBlock.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownPdfBlock.impl.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FileText",
+          "local": "FileText"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/MarkdownSpreadsheetBlock.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/RichBlockShell.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Pencil",
+          "local": "Pencil"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/TableExportDropdown.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Download",
+          "local": "Download"
+        },
+        {
+          "name": "FileText",
+          "local": "FileText"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/TiptapBubbleMenus.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Bold",
+          "local": "Bold"
+        },
+        {
+          "name": "Italic",
+          "local": "Italic"
+        },
+        {
+          "name": "Strikethrough",
+          "local": "Strikethrough"
+        },
+        {
+          "name": "Code",
+          "local": "Code"
+        },
+        {
+          "name": "Sigma",
+          "local": "Sigma"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/markdown/TiptapCodeBlockView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/ActivityCardsOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Layers",
+          "local": "Layers"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/CodePreviewOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "BookOpen",
+          "local": "BookOpen"
+        },
+        {
+          "name": "PenLine",
+          "local": "PenLine"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/CopyButton.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/DataTableOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Table2",
+          "local": "Table2"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/DocumentFormattedMarkdownOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ListTodo",
+          "local": "ListTodo"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/FullscreenOverlayBaseHeader.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "ExternalLink",
+          "local": "ExternalLink"
+        },
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/GenericOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FileCode",
+          "local": "FileCode"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/HTMLPreviewOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Globe",
+          "local": "Globe"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/ImagePreviewOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Image",
+          "local": "Image"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/ItemNavigator.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/JSONPreviewOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Braces",
+          "local": "Braces"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/MermaidPreviewOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "GitGraph",
+          "local": "GitGraph"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/MultiDiffPreviewOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "PencilLine",
+          "local": "PencilLine"
+        },
+        {
+          "name": "FilePlus",
+          "local": "FilePlus"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/PDFPreviewOverlay.impl.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FileText",
+          "local": "FileText"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/TerminalPreviewOverlay.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Terminal",
+          "local": "Terminal"
+        },
+        {
+          "name": "Search",
+          "local": "Search"
+        },
+        {
+          "name": "FolderSearch",
+          "local": "FolderSearch"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/overlay/ZoomControls.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Check",
+          "local": "Check"
+        },
+        {
+          "name": "Minus",
+          "local": "Minus"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "RotateCcw",
+          "local": "RotateCcw"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/terminal/TerminalOutput.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Terminal",
+          "local": "Terminal"
+        },
+        {
+          "name": "Copy",
+          "local": "Copy"
+        },
+        {
+          "name": "Check",
+          "local": "Check"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/RecordInspector.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FolderOpen",
+          "local": "FolderOpen"
+        },
+        {
+          "name": "GitCompareArrows",
+          "local": "GitCompareArrows"
+        },
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryContextView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "ChevronsUpDown",
+          "local": "ChevronsUpDown"
+        },
+        {
+          "name": "FileText",
+          "local": "FileText"
+        },
+        {
+          "name": "MessagesSquare",
+          "local": "MessagesSquare"
+        },
+        {
+          "name": "Paperclip",
+          "local": "Paperclip"
+        },
+        {
+          "name": "Sparkles",
+          "local": "Sparkles"
+        },
+        {
+          "name": "TerminalSquare",
+          "local": "TerminalSquare"
+        },
+        {
+          "name": "UserRound",
+          "local": "UserRound"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryMapView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "LocateFixed",
+          "local": "LocateFixed"
+        },
+        {
+          "name": "Maximize2",
+          "local": "Maximize2"
+        },
+        {
+          "name": "Minus",
+          "local": "Minus"
+        },
+        {
+          "name": "Plus",
+          "local": "Plus"
+        },
+        {
+          "name": "PanelRight",
+          "local": "PanelRight"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryOverview.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Activity",
+          "local": "Activity"
+        },
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        },
+        {
+          "name": "Braces",
+          "local": "Braces"
+        },
+        {
+          "name": "Clock3",
+          "local": "Clock3"
+        },
+        {
+          "name": "Coins",
+          "local": "Coins"
+        },
+        {
+          "name": "Wrench",
+          "local": "Wrench"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryTable.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "MessageSquare",
+          "local": "MessageSquare"
+        },
+        {
+          "name": "RefreshCw",
+          "local": "RefreshCw"
+        },
+        {
+          "name": "Settings",
+          "local": "Settings"
+        },
+        {
+          "name": "User",
+          "local": "User"
+        },
+        {
+          "name": "Wrench",
+          "local": "Wrench"
+        },
+        {
+          "name": "FileText",
+          "local": "FileText"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/trajectory/TrajectoryToolbar.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Search",
+          "local": "Search"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/ui/BrowserControls.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronLeft",
+          "local": "ChevronLeft"
+        },
+        {
+          "name": "ChevronRight",
+          "local": "ChevronRight"
+        },
+        {
+          "name": "RotateCw",
+          "local": "RotateCw"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        },
+        {
+          "name": "Globe",
+          "local": "Globe"
+        },
+        {
+          "name": "AlertTriangle",
+          "local": "AlertTriangle"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/ui/IslandFollowUpContentView.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronDown",
+          "local": "ChevronDown"
+        },
+        {
+          "name": "Send",
+          "local": "Send"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/ui/PreviewHeader.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "packages/ui/src/components/ui/StyledDropdown.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "ChevronRightIcon",
+          "local": "ChevronRightIcon"
+        }
+      ]
+    },
+    {
+      "file": "apps/viewer/src/App.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "FileText",
+          "local": "FileText"
+        }
+      ]
+    },
+    {
+      "file": "apps/viewer/src/components/Header.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Sun",
+          "local": "Sun"
+        },
+        {
+          "name": "Moon",
+          "local": "Moon"
+        },
+        {
+          "name": "X",
+          "local": "X"
+        }
+      ]
+    },
+    {
+      "file": "apps/viewer/src/components/SessionUpload.tsx",
+      "production": true,
+      "icons": [
+        {
+          "name": "Upload",
+          "local": "Upload"
+        },
+        {
+          "name": "FileJson",
+          "local": "FileJson"
+        },
+        {
+          "name": "AlertCircle",
+          "local": "AlertCircle"
+        }
+      ]
+    }
+  ],
+  "remix": {
+    "version": "4.9.1",
+    "source": "https://cdn.jsdelivr.net/npm/remixicon@4.9.1/fonts/remixicon.symbol.svg",
+    "sha256": "405df873841c8dc3505212125c687dae50c04fa2e321ada1c4804d2f0a31a857",
+    "includedGlyphs": 91,
+    "recipes": 63
+  }
+}

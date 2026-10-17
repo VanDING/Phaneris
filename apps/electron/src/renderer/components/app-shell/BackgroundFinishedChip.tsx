@@ -129,7 +129,7 @@ export function BackgroundFinishedChip({ sessionId }: BackgroundFinishedChipProp
             title={`${entry.title} — ${t('chat.backgroundSessionFinished')}`}
             aria-label={`${entry.title} — ${t('chat.backgroundSessionFinished')}`}
             className={cn(
-              'flex items-center gap-1.5 h-[26px] pl-2 pr-2.5 rounded-full',
+              'flex items-center gap-1.5 h-control-sm pl-2 pr-2.5 rounded-full',
               'motion-interactive text-xs font-medium select-none outline-none transition-[color,background-color,box-shadow,transform] active:scale-[var(--motion-scale-pressed)]',
               'text-purple-700 dark:text-purple-200',
               'bg-purple-500/12 hover:bg-purple-500/20',

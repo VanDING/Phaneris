@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "checks": [
+    "All SVG references resolve; visible icons have geometry; Seti font loaded",
+    "All 10 launchers appear in exact source order",
+    "Candidate a renders all primary and context features",
+    "Candidate b renders all primary and context features",
+    "Candidate c renders all primary and context features",
+    "Three complete family/styles cover 72 semantic roles with native grids and paths",
+    "Workbench open, focused, background, closed and reuse behavior",
+    "Browser presence and modifier behavior; help has seven working entries",
+    "Workbench per-tab pinning, expand/restore and close while expanded",
+    "Toolbar review includes all 10 actions and four state examples",
+    "Seti rules cover names, extensions, languages and unknown/Bun fallbacks",
+    "File theme can be toggled independently of all UI families",
+    "Workbench file filter preserves focus and root-level typed results",
+    "Dark UI, sizes and keyboard tabs",
+    "All sections fit 1536px; mobile retains all launchers",
+    "All sections fit 1024px; mobile retains all launchers",
+    "All sections fit 760px; mobile retains all launchers",
+    "All sections fit 390px; mobile retains all launchers"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "browser": "155.0.4283.45",
+  "screenshots": [
+    "a-workspace-dark.png",
+    "a-workspace.png",
+    "b-workspace-dark.png",
+    "b-workspace.png",
+    "c-workspace-dark.png",
+    "c-workspace.png",
+    "colored-files-dark.png",
+    "colored-files-light.png",
+    "help-menu.png",
+    "main-icon-choices.png",
+    "mobile-colored-files.png",
+    "mobile-workspace.png",
+    "monochrome-files.png",
+    "toolbar-all-features.png"
+  ]
+}

@@ -171,7 +171,7 @@ export function TopBar({
           <Tooltip>
             <TooltipTrigger asChild>
               <TopBarButton onClick={onToggleSidebar} aria-label={t("menu.toggleSidebar")}>
-                <PanelLeftRounded className="h-[18px] w-[18px] text-foreground/70" />
+                <PanelLeftRounded className="h-control-2xs w-[18px] text-foreground/70" />
               </TopBarButton>
             </TooltipTrigger>
             <TooltipContent side="bottom">{t("menu.toggleSidebar")}</TooltipContent>
@@ -185,7 +185,7 @@ export function TopBar({
                   aria-label={t(isNavigatorVisible ? 'contentPanel.hideNavigator' : 'contentPanel.showNavigator')}
                   aria-expanded={isNavigatorVisible}
                 >
-                  <List className="h-[18px] w-[18px] text-foreground/70" strokeWidth={1.5} />
+                  <List className="h-control-2xs w-[18px] text-foreground/70" strokeWidth={1.5} />
                 </TopBarButton>
               </TooltipTrigger>
               <TooltipContent side="bottom">{t(isNavigatorVisible ? 'contentPanel.hideNavigator' : 'contentPanel.showNavigator')}</TooltipContent>
@@ -217,7 +217,7 @@ export function TopBar({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <TopBarButton onClick={onBack} disabled={!canGoBack} aria-label={t("common.back")}>
-                    <ChevronLeft className="h-[18px] w-[18px] text-foreground/70" strokeWidth={1.5} />
+                    <ChevronLeft className="h-control-2xs w-[18px] text-foreground/70" strokeWidth={1.5} />
                   </TopBarButton>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">{t("common.back")} {goBackHotkey}</TooltipContent>
@@ -226,7 +226,7 @@ export function TopBar({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <TopBarButton onClick={onForward} disabled={!canGoForward} aria-label={t("common.forward")}>
-                    <ChevronRight className="h-[18px] w-[18px] text-foreground/70" strokeWidth={1.5} />
+                    <ChevronRight className="h-control-2xs w-[18px] text-foreground/70" strokeWidth={1.5} />
                   </TopBarButton>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">{t("common.forward")} {goForwardHotkey}</TooltipContent>
@@ -276,7 +276,7 @@ export function TopBar({
         {/* Help button */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <TopBarButton aria-label={t("menu.helpAndDocs")} className="h-[26px] w-[26px] rounded-lg">
+            <TopBarButton aria-label={t("menu.helpAndDocs")} className="h-control-sm w-[26px] rounded-lg">
               <HelpCircle className="h-4 w-4 text-foreground/50" strokeWidth={1.5} />
             </TopBarButton>
           </DropdownMenuTrigger>

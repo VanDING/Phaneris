@@ -224,7 +224,7 @@ function FilterModeBadge({ mode }: { mode: FilterMode }) {
   return (
     <span
       className={cn(
-        "flex items-center justify-center h-5 w-5 rounded-[4px] -mr-1",
+        "flex items-center justify-center h-5 w-5 rounded-shape-sm -mr-1",
         mode === 'include'
           ? "bg-background text-foreground shadow-minimal"
           : "bg-destructive/10 text-destructive shadow-tinted",
@@ -3044,7 +3044,7 @@ function AppShellContent({
                       <DropdownMenuTrigger asChild>
                         <HeaderIconButton
                           icon={<ListFilter className="h-4 w-4" />}
-                          className={(listFilter.size > 0 || labelFilter.size > 0 || projectFilter.size > 0) ? "bg-accent/5 text-accent rounded-[8px] shadow-tinted" : "rounded-[8px]"}
+                          className={(listFilter.size > 0 || labelFilter.size > 0 || projectFilter.size > 0) ? "bg-accent/5 text-accent rounded-shape-lg shadow-tinted" : "rounded-shape-lg"}
                           style={(listFilter.size > 0 || labelFilter.size > 0 || projectFilter.size > 0) ? { '--shadow-color': 'var(--accent)' } as React.CSSProperties : undefined}
                         />
                       </DropdownMenuTrigger>
@@ -3090,7 +3090,7 @@ function AppShellContent({
                         {/* Search input — typing switches from hierarchical submenus to a flat filtered list.
                             stopPropagation prevents Radix from intercepting keys. Arrow/Enter handled for navigation. */}
                         <div className="px-1 pb-3 border-b border-foreground/5">
-                          <div className="bg-background rounded-[6px] shadow-minimal px-2 py-1.5">
+                          <div className="bg-background rounded-shape-md shadow-minimal px-2 py-1.5">
                             <input
                               ref={filterDropdownInputRef}
                               type="text"
@@ -3530,7 +3530,7 @@ function AppShellContent({
                                 {/* Matched statuses */}
                                 {filterDropdownResults.states.length > 0 && (
                                   <>
-                                    <div className="px-3 pt-1.5 pb-1 text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+                                    <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-muted-foreground/60 uppercase tracking-wider">
                                       Statuses
                                     </div>
                                     {filterDropdownResults.states.map((state, index) => {
@@ -3593,7 +3593,7 @@ function AppShellContent({
                                             }}
                                             className={cn(
                                               // SVG sizing matches StyledDropdownMenuSubTrigger so icons render at the same size
-                                              "flex cursor-pointer select-none items-center gap-2 rounded-[4px] mx-1 px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
+                                              "flex cursor-pointer select-none items-center gap-2 rounded-shape-sm mx-1 px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
                                               isHighlighted && "bg-foreground/5",
                                               isPinned && "opacity-50 pointer-events-none",
                                             )}
@@ -3618,7 +3618,7 @@ function AppShellContent({
                                 {/* Matched labels — flat list with parent breadcrumbs */}
                                 {filterDropdownResults.labels.length > 0 && (
                                   <>
-                                    <div className="px-3 pt-1.5 pb-1 text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+                                    <div className="px-3 pt-1.5 pb-1 text-meta font-medium text-muted-foreground/60 uppercase tracking-wider">
                                       Labels
                                     </div>
                                     {filterDropdownResults.labels.map((item, index) => {
@@ -3683,7 +3683,7 @@ function AppShellContent({
                                             }}
                                             className={cn(
                                               // SVG sizing matches StyledDropdownMenuSubTrigger so icons render at the same size
-                                              "flex cursor-pointer select-none items-center gap-2 rounded-[4px] mx-1 px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
+                                              "flex cursor-pointer select-none items-center gap-2 rounded-shape-sm mx-1 px-2 py-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
                                               isHighlighted && "bg-foreground/5",
                                               isPinned && "opacity-50 pointer-events-none",
                                             )}

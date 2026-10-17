@@ -42,7 +42,7 @@ export const NewSessionLanding = React.memo(function NewSessionLanding() {
             // The app sets a negative base letter-spacing (-0.006em, tuned for
             // Latin UI text). The slogan is set at display size and is Chinese in
             // the zh-Hans locale, where the marks need room rather than tightening.
-            'text-[17px] font-normal leading-normal tracking-[0.02em] text-muted-foreground',
+            'text-title font-normal leading-normal tracking-[0.02em] text-muted-foreground',
           )}
         >
           {t('newSession.slogan')}

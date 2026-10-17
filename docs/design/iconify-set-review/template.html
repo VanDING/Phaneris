@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
+  <title>Phaneris · Iconify 整套图标候选</title><link rel="icon" href="@@BRAND@@" type="image/svg+xml">
+  <style>/* INLINE_STYLES */</style>
+</head>
+<body>
+<!-- THIRD_PARTY_NOTICES -->
+<!-- INLINE_SYMBOLS -->
+<div class="wrap">
+  <header class="masthead"><div class="brand"><img src="@@BRAND@@" alt="Phaneris"><span>Phaneris</span><span class="pill">Iconify 整套选型</span></div><div class="masthead-right"><span class="muted">仅演示 · 尚未实施</span><button class="quiet-button" id="theme-toggle">切换深色</button></div></header>
+  <section class="intro"><div><h1>三套体系，看整套表现。</h1><p>Solar Linear、Fluent Regular、IconPark Outline。每套统一覆盖 72 个图标用途，保留原生路径、线宽和网格。</p></div><span class="pill">同一界面 · 同一尺寸 · 独立彩色文件主题</span></section>
+  <div class="variant-bar" role="group" aria-label="界面图标候选">
+    <button class="variant" data-variant="a" aria-pressed="true"><div><span class="variant-title">A · Solar Linear</span><p>柔和细线 · 舒展曲线</p></div><span class="variant-icons"></span></button>
+    <button class="variant" data-variant="b" aria-pressed="false"><div><span class="variant-title">B · Fluent Regular</span><p>原生桌面感 · 克制紧凑</p></div><span class="variant-icons"></span></button>
+    <button class="variant" data-variant="c" aria-pressed="false"><div><span class="variant-title">C · IconPark Outline</span><p>饱满轮廓 · 识别鲜明</p></div><span class="variant-icons"></span></button>
+  </div>
+  <div class="workspace-toolbar"><div class="tabs" role="tablist" aria-label="选型演示内容">
+    <button class="section-tab" role="tab" id="tab-workspace" aria-controls="panel-workspace" aria-selected="true" data-panel="workspace">整套与工作台</button>
+    <button class="section-tab" role="tab" id="tab-choices" aria-controls="panel-choices" aria-selected="false" tabindex="-1" data-panel="choices">主要图标对照</button>
+    <button class="section-tab" role="tab" id="tab-toolbar" aria-controls="panel-toolbar" aria-selected="false" tabindex="-1" data-panel="toolbar">右上角全功能</button>
+    <button class="section-tab" role="tab" id="tab-files" aria-controls="panel-files" aria-selected="false" tabindex="-1" data-panel="files">彩色文件</button>
+    <button class="section-tab" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false" tabindex="-1" data-panel="plan">范围与取舍</button>
+  </div><div class="preview-options"><label class="file-toggle"><input type="checkbox" id="file-color" checked> 彩色文件</label><label class="size-control">界面尺寸 <select id="icon-size"><option value="14">14 px</option><option value="16">16 px</option><option value="18" selected>18 px</option><option value="20">20 px</option><option value="24">24 px</option></select></label></div></div>
+  <main>
+    <section class="content-panel" id="panel-workspace" role="tabpanel" aria-labelledby="tab-workspace">
+      <h2 class="sr-only">整套导航与完整工作台演示</h2>
+      <div id="family-sheet" class="family-sheet" aria-label="三套主要导航并排对照"></div>
+      <div class="workbench-caption"><p id="candidate-note"></p><span>右上角固定 14 px；可点击全部十个入口。</span></div>
+      <div class="app full-app" id="mock-app"></div>
+      <div class="below-app"><p id="demo-status" role="status" aria-live="polite"></p><span class="muted">示例数据 · 所有操作均为界面模拟</span></div>
+      <div class="retained"><div><h3>业务状态保持原形</h3><p>六种任务状态、Phaneris 与服务商标识继续保留。</p></div><div class="status-strip" id="state-strip"></div></div>
+    </section>
+    <section class="content-panel" id="panel-choices" role="tabpanel" aria-labelledby="tab-choices" hidden>
+      <div class="section-heading"><div><h2>主要导航，放到一起比较</h2><p>当前图标作为基准；三套候选各用同一体系的原生图形。重点看气泡、灯泡、插件、文件夹和滑杆放在一起是否协调。</p></div></div>
+      <div class="table-wrap"><table class="choice-table"><thead><tr><th>用途</th><th>当前基准</th><th>A · Solar</th><th>B · Fluent</th><th>C · IconPark</th><th>语义取舍</th></tr></thead><tbody id="choice-body"></tbody></table></div>
+      <p class="matrix-intro">同一图标集仍有多种风格。本轮分别锁定 Solar Linear、Fluent 24 Regular 与 IconPark Outline；不在一套候选内切换实心、双色或其他字重。</p>
+      <details class="all-mapping"><summary>其余 63 个用途与完整图标名</summary><div class="matrix-toolbar"><input id="icon-search" class="search-field" type="search" placeholder="搜索用途或图标名" aria-label="搜索图标"><select id="group-filter" class="filter-select" aria-label="按区域筛选"><option value="all">全部区域</option><option>操作</option><option>对话</option><option>文件与工具</option><option>设置</option><option>状态</option><option>右上角</option></select></div><div class="table-wrap"><table class="matrix"><thead><tr><th>用途</th><th>当前</th><th>A · Solar</th><th>B · Fluent</th><th>C · IconPark</th></tr></thead><tbody id="mapping-body"></tbody></table></div></details>
+    </section>
+    <section class="content-panel" id="panel-toolbar" role="tabpanel" aria-labelledby="tab-toolbar" hidden>
+      <div class="section-heading"><div><h2>右上角十个入口，完整比较</h2><p>新建、对话、看板、日历、甘特图、文件、运行轨迹、终端、浏览器、帮助。点击表格中的演示按钮进入对应工作台场景。</p></div></div>
+      <div class="table-wrap"><table class="toolbar-table"><thead><tr><th>入口</th><th>当前</th><th>A · Solar</th><th>B · Fluent</th><th>C · IconPark</th><th>场景与行为</th></tr></thead><tbody id="toolbar-body"></tbody></table></div>
+      <div class="toolbar-states"><h3>四种入口状态</h3><div id="toolbar-states"></div><p>文件、运行轨迹和终端包含未打开、已打开、当前聚焦、收起后保留；浏览器有独立存在状态，帮助包含七个文档入口。</p></div>
+      <p class="matrix-intro">三套候选通过前景、背景和圆点区分状态，不修改原生描边。原库的状态加粗机制需要在正式迁移时重审。</p>
+      <p class="matrix-intro">工作台还包含固定／取消固定、放大／还原、收起、关闭。Solar 与 IconPark 的取消固定复用固定图形，以激活底色及按钮名称区分；甘特图分别借用水平条形与时间轴。Fluent 有专用甘特图与 Pin Off，终端则暂用 Code Block。</p>
+    </section>
+    <section class="content-panel" id="panel-files" role="tabpanel" aria-labelledby="tab-files" hidden>
+      <div class="section-heading"><div><h2>文件使用独立彩色主题</h2><p>延续截图中的识别方式：Markdown 绿色 M、JSON 橙色花括号、Git 橙红、Docker 蓝色。目录和未知类型保持中性。</p></div><button class="quiet-button" data-toggle-files>切换彩色／单色</button></div>
+      <div class="file-comparison"><div class="file-reference"><div class="file-reference-title">Phaneris 文件树 <span id="file-mode-label"></span></div><label class="file-filter"><span id="file-search-icon"></span><input id="file-search" type="search" placeholder="筛选文件…" aria-label="筛选文件"></label><div id="file-demo-list"></div></div><div class="file-explanation"><h3>文件类型和界面操作，各自保持一致</h3><p>文件类型以 Seti 为基础；Markdown 使用独立的公开 Markdown 标记。切换 A／B／C 只改变目录箭头、通用文件和操作按钮，已识别的类型标记保持一致。</p><div id="file-inspector" class="file-inspector"></div><h3>已覆盖的规则</h3><ul><li>文件名优先，再按最长扩展名与语言识别；包括 Git、Docker、ESLint、TypeScript、React、图片、PDF、Word、Excel。</li><li>浅色和深色分别配色，文件名文字保持正常前景色。</li><li>这版 Seti 没有 Bun 专用字形：<code>bun.lock</code> 用锁文件回退，<code>bunfig.toml</code> 用配置回退。</li><li>同一解析器可覆盖文件面板、附件、产物卡片、预览标题和搜索结果；本轮仅演示。</li></ul><p class="muted">这里演示接近截图的类型识别方式，并未读取或复制 Codex 的内部文件主题。</p></div></div>
+    </section>
+    <section class="content-panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
+      <div class="section-heading"><div><h2>以完整体系选型，再确定语义细节</h2><p>Iconify 是多个作者图标集的目录。统一性来自选定同一套、同一风格与同一尺寸母版，而不是来自 Iconify 这个入口。</p></div></div>
+      <div class="table-wrap"><table class="plan-table"><thead><tr><th>候选</th><th>主要特征</th><th>重点判断</th><th>来源与许可</th></tr></thead><tbody>
+        <tr><td>A · Solar Linear</td><td>舒展曲线、圆角外框，24 网格、原生 1.5 描边</td><td>整体最轻；14 px 顶栏是否过细。插件用圆框插头；甘特图与取消固定需要语义折中。</td><td>480 Design · <a href="https://icon-sets.iconify.design/solar/">图标集</a><br><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>，采用时保留署名</td></tr>
+        <tr><td>B · Fluent Regular</td><td>微软桌面图形，统一选择 24 Regular；原生填充路径构成轮廓</td><td>气泡与文件夹更紧凑；专用甘特图、取消固定覆盖更完整。终端用 Code Block，属于近似映射。</td><td>Microsoft · <a href="https://github.com/microsoft/fluentui-system-icons">官方仓库</a><br>MIT</td></tr>
+        <tr><td>C · IconPark Outline</td><td>48 网格、4 描边，缩到 24 px 相当于 2 px；圆端点明显</td><td>小尺寸更醒目；较厚的轮廓和部分内部细节是否显重。甘特图借用 Timeline。</td><td>ByteDance · <a href="https://github.com/bytedance/IconPark">官方仓库</a><br>Apache 2.0；仓库已于 2025-12-08 归档</td></tr>
+      </tbody></table></div>
+      <div class="scope-grid"><div><h3>替换范围沿用源码盘点</h3><p>237 个生产导入文件、877 次命名导入、197 个去除别名后的 Lucide 组件。本轮覆盖其中 72 个高频图标用途，演示不等于已完成全部组件映射。</p><p>桌面 renderer、共享 UI、查看器与复用 renderer 的 WebUI 都在迁移范围。品牌标识、用户图标和六种业务状态单独保留。</p><h3>确认后的实施顺序</h3><ol><li>固定所选整套与主要语义，补齐剩余组件映射。</li><li>建立公共语义图标入口，解耦 LucideIcon 类型。</li><li>按区域迁移导航、顶栏、工作台、设置与共享组件。</li><li>单独接入文件类型解析器和深浅色主题。</li><li>检查真实 14／16／18／20 px 与所有状态。</li></ol></div><div><h3>需要一起看的取舍</h3><p>Solar、Fluent 的灯泡偏向能力与想法，IconPark 的光芒则更抽象；循环图形强调重复运行，不能单独说明所有事件触发方式。文件变更也有近似：Solar 用 File Pen，Fluent 用分栏文档，IconPark 用 File Conversion，尚不能直接定为最终映射。</p><p>完整图标集仍可能缺少业务专用图形。优先保留这次演示的同套约束，正式映射时逐项解决，不能把覆盖数量当成语义质量。</p><h3>本轮交付边界</h3><p>仅新增独立 HTML、映射清单和选型说明。没有修改应用源码、依赖或图标入口；三套图形及文件字体均内嵌，可离线打开。</p></div></div>
+    </section>
+  </main>
+  <footer class="footnote"><p>图标数据来自 <a href="https://icon-sets.iconify.design/">Iconify</a>。Solar © 480 Design，<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>；Fluent © Microsoft，MIT；IconPark © ByteDance，Apache 2.0。保留原生图形，仅缩放与按主题着色。文件主题：Seti，独立 Markdown 标记：Phosphor。</p><span id="review-status" class="review-status"></span></footer>
+</div>
+<script>/* INLINE_DATA */
+/* INLINE_APP */</script>
+</body></html>

@@ -27,8 +27,21 @@
   .craft-focus:focus-visible,
   [data-craft-focus]:focus-visible,
   .craft-icon-button:focus-visible {
-    outline: 2px solid var(--craft-focus-color, var(--accent));
-    outline-offset: 2px;
+    outline: none;
+    box-shadow:
+      inset 0 0 0 1px var(--background),
+      0 0 0 1.5px var(--accent),
+      0 0 6px 1px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  @media (forced-colors: active) {
+    .craft-control:focus-visible,
+    .craft-focus:focus-visible,
+    [data-craft-focus]:focus-visible,
+    .craft-icon-button:focus-visible {
+      outline: 2px solid Highlight;
+      box-shadow: none;
+    }
   }
 
   .craft-icon-button {
@@ -109,10 +122,13 @@
     overflow-wrap: anywhere;
   }
   .craft-toast { border-radius: var(--theme-radius, 0.5rem); box-shadow: var(--shadow-modal-small); }
-  .craft-composer:has([contenteditable="true"]:focus-visible) {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-    border-radius: calc(var(--theme-radius, 0.5rem) * 2);
+  /* A standalone composer (not wrapped by InputContainer) owns its focus ring;
+     the wrapped composer gets the same ring from .theme-composer-surface. */
+  .composer-standalone:focus-within {
+    box-shadow:
+      inset 0 0 0 var(--edge-hairline) var(--ring),
+      0 0 0 1.5px var(--ring),
+      0 0 6px 1px color-mix(in srgb, var(--accent) 25%, transparent);
   }
   .craft-row-focus:focus-visible { outline-offset: -2px; }
   .craft-row-actions { transition: opacity var(--motion-duration-fast) var(--motion-ease-enter); }

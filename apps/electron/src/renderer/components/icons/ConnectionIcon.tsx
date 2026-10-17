@@ -104,14 +104,14 @@ export function ConnectionIcon({ connection, size = 16, className = '', showTool
 
   const iconElement = (
     <div
-      className={`flex flex-shrink-0 overflow-hidden rounded-[3px] font-semibold ${className}`}
+      className={`flex flex-shrink-0 overflow-hidden rounded-shape-sm font-semibold ${className}`}
       style={{ width: size, height: size }}
     >
       <CrossfadeAvatar
         src={resolvedIcon}
         alt=""
         fallback={fallbackGlyph}
-        className="h-full w-full rounded-[3px]"
+        className="h-full w-full rounded-shape-sm"
         fallbackClassName={fallbackToneClass}
         imageClassName={`object-contain${isMonochromeProviderIcon(resolvedIcon) ? ' provider-icon-monochrome' : ''}`}
       />
@@ -128,7 +128,7 @@ export function ConnectionIcon({ connection, size = 16, className = '', showTool
       <TooltipContent side="bottom" sideOffset={4}>
         <div className="text-center">
           <div>{connection.name}</div>
-          {connection.defaultModel && <div className="text-[10px] opacity-60">{getModelDisplayName(connection.defaultModel)}</div>}
+          {connection.defaultModel && <div className="text-micro opacity-60">{getModelDisplayName(connection.defaultModel)}</div>}
         </div>
       </TooltipContent>
     </Tooltip>

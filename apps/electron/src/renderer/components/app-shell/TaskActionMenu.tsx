@@ -3,11 +3,8 @@ import { useTranslation } from "react-i18next"
 import { useSetAtom } from 'jotai'
 import { ChevronDown, Square, ArrowUpRight, CheckCircle2, XCircle, AlertTriangle, X } from 'lucide-react'
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  StyledDropdownMenuContent,
-  StyledDropdownMenuItem,
-  StyledDropdownMenuSeparator,
+  Menu,
+  type MenuEntry,
 } from '@/components/ui/styled-dropdown'
 import { Spinner } from '@phaneris/ui'
 import { cn } from '@/lib/utils'
@@ -178,13 +175,28 @@ export function TaskActionMenu({ task, sessionId, onKillTask, onInsertMessage, o
       ? t('chat.taskStaleHint')
       : t("chat.clickForTaskActions")
 
+  const items: MenuEntry[] = [
+    { label: t('chat.viewOutput'), icon: <ArrowUpRight />, onSelect: handleViewOutput },
+    { label: t('common.dismiss'), icon: <X />, onSelect: handleDismiss },
+    ...(task.type === 'shell'
+      ? [
+          { kind: 'separator' } satisfies MenuEntry,
+          { label: t('chat.stopTask'), icon: <Square />, onSelect: handleStopTask } satisfies MenuEntry,
+        ]
+      : []),
+  ]
+
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>
+    <Menu
+      open={open}
+      onOpenChange={setOpen}
+      align="start"
+      items={items}
+      trigger={
         <button
           type="button"
           className={cn(
-            "h-[30px] pl-2.5 pr-2 text-xs font-medium rounded-[8px]",
+            "h-control-md pl-2.5 pr-2 text-xs font-medium rounded-shape-lg",
             "flex items-center gap-1.5 shrink-0 select-none",
             "motion-interactive transition-[color,background-color,border-color,box-shadow,opacity,transform] shadow-minimal cursor-pointer",
             statusTint,
@@ -243,31 +255,7 @@ export function TaskActionMenu({ task, sessionId, onKillTask, onInsertMessage, o
           {/* Dropdown indicator */}
           <ChevronDown className="h-3.5 w-3.5 opacity-60 ml-auto" />
         </button>
-      </DropdownMenuTrigger>
-      <StyledDropdownMenuContent align="start" sideOffset={4}>
-        {/* View Output - Primary action */}
-        <StyledDropdownMenuItem onClick={handleViewOutput}>
-          <ArrowUpRight />
-          {t('chat.viewOutput')}
-        </StyledDropdownMenuItem>
-
-        {/* Dismiss - remove the chip (renderer-only; does not kill the task) */}
-        <StyledDropdownMenuItem onClick={handleDismiss}>
-          <X />
-          {t('common.dismiss')}
-        </StyledDropdownMenuItem>
-
-        {/* Stop Task - Only show for shell tasks (inserts kill command into input) */}
-        {task.type === 'shell' && (
-          <>
-            <StyledDropdownMenuSeparator />
-            <StyledDropdownMenuItem onClick={handleStopTask}>
-              <Square />
-              {t('chat.stopTask')}
-            </StyledDropdownMenuItem>
-          </>
-        )}
-      </StyledDropdownMenuContent>
-    </DropdownMenu>
+      }
+    />
   )
 }

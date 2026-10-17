@@ -22,7 +22,8 @@ import {
   AppWindow,
   Send,
 } from 'lucide-react'
-import { useMenuComponents } from '@/components/ui/menu-context'
+import { MenuEntries } from '@/components/ui/menu-entries'
+import type { MenuEntry } from '@phaneris/ui'
 import { getFileManagerName } from '@/lib/platform'
 
 export interface SourceMenuProps {
@@ -52,38 +53,15 @@ export function SourceMenu({
 }: SourceMenuProps) {
   const { t } = useTranslation()
 
-  // Get menu components from context (works with both DropdownMenu and ContextMenu)
-  const { MenuItem, Separator } = useMenuComponents()
+  const entries: MenuEntry[] = [
+    { label: t("sidebarMenu.openInNewWindow"), icon: <AppWindow className="h-3.5 w-3.5" />, onSelect: onOpenInNewWindow },
+    { label: t("sessionMenu.showInFileManager", { fileManager: getFileManagerName() }), icon: <FolderOpen className="h-3.5 w-3.5" />, onSelect: onShowInFinder },
+    ...(onSendToWorkspace
+      ? [{ label: t("sessionMenu.sendToWorkspace"), icon: <Send className="h-3.5 w-3.5" />, onSelect: onSendToWorkspace } satisfies MenuEntry]
+      : []),
+    { kind: 'separator' },
+    { label: t("sidebarMenu.deleteSource"), icon: <Trash2 className="h-3.5 w-3.5" />, variant: 'destructive', onSelect: onDelete },
+  ]
 
-  return (
-    <>
-      {/* Open in New Window */}
-      <MenuItem onClick={onOpenInNewWindow}>
-        <AppWindow className="h-3.5 w-3.5" />
-        <span className="flex-1">{t("sidebarMenu.openInNewWindow")}</span>
-      </MenuItem>
-
-      {/* Show in file manager */}
-      <MenuItem onClick={onShowInFinder}>
-        <FolderOpen className="h-3.5 w-3.5" />
-        <span className="flex-1">{t("sessionMenu.showInFileManager", { fileManager: getFileManagerName() })}</span>
-      </MenuItem>
-
-      {/* Send to another workspace */}
-      {onSendToWorkspace && (
-        <MenuItem onClick={onSendToWorkspace}>
-          <Send className="h-3.5 w-3.5" />
-          <span className="flex-1">{t("sessionMenu.sendToWorkspace")}</span>
-        </MenuItem>
-      )}
-
-      <Separator />
-
-      {/* Delete */}
-      <MenuItem onClick={onDelete} variant="destructive">
-        <Trash2 className="h-3.5 w-3.5" />
-        <span className="flex-1">{t("sidebarMenu.deleteSource")}</span>
-      </MenuItem>
-    </>
-  )
+  return <MenuEntries entries={entries} />
 }

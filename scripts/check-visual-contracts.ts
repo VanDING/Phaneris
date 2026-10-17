@@ -46,7 +46,29 @@ for (const value of current) {
 }
 if (inventory) {
   writeFileSync(join(root, '.cache/visual-inventory.json'), JSON.stringify({ findings: [...grouped.values()], failures }, null, 2) + '\n')
-  console.log(`Visual inventory: ${grouped.size} findings. Review .cache/visual-inventory.json; no allowances are created.`)
+  const syncLedger = process.argv.includes('--register') || process.argv.includes('--prune')
+  if (syncLedger) {
+    const live = new Map(grouped)
+    const kept = ledger.entries.filter(entry => live.has(entry.fingerprint))
+    const known = new Set(kept.map(entry => entry.fingerprint))
+    const additions = process.argv.includes('--register')
+      ? [...live.values()].filter(finding => !known.has(finding.fingerprint)).map(finding => ({
+          file: finding.file,
+          rule: finding.rule,
+          message: finding.message,
+          fingerprint: finding.fingerprint,
+          count: finding.count,
+          owner: finding.rule.startsWith('theme-contracts/') ? 'Electron / feature owner' : 'Electron / a11y owner',
+          reason: finding.rule === 'theme-contracts/roles'
+            ? 'Existing component geometry or native target whose role is established by its wrapper; preserve behavior until the owning surface migrates.'
+            : 'Existing interaction markup; some controls delegate semantics to Radix, keyboard focus scopes or composite rows. Preserve the exact node until its keyboard/assistive-technology behavior is verified.',
+          exit: 'When this node is maintained, replace it with a declared semantic/component role or document its content/third-party ownership; pass its theme, keyboard and reflow acceptance, then retire this fingerprint.',
+        }))
+      : []
+    writeFileSync(ledgerPath, JSON.stringify({ ...ledger, entries: [...kept, ...additions] }, null, 2) + '\n')
+    console.log(`Ledger synced: ${ledger.entries.length - kept.length} stale retired, ${additions.length} reviewed additions, ${kept.length + additions.length} entries.`)
+  }
+  console.log(`Visual inventory: ${grouped.size} findings. Review .cache/visual-inventory.json.`)
 } else {
   if (!cssOnly) for (const allowance of ledger.entries) {
     assert(allowance.owner && allowance.reason && allowance.exit && allowance.count > 0, `Incomplete visual allowance: ${allowance.file}`)

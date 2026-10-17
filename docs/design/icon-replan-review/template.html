@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
+  <title>Phaneris · 图标重新选型</title><link rel="icon" href="@@BRAND@@" type="image/svg+xml">
+  <style>/* INLINE_STYLES */</style>
+</head>
+<body>
+<!-- INLINE_SYMBOLS -->
+<div class="wrap">
+  <header class="masthead"><div class="brand"><img src="@@BRAND@@" alt="Phaneris"><span>Phaneris</span><span class="pill">图标重新选型</span></div><div class="masthead-right"><span class="muted">仅演示 · 尚未实施</span><button class="quiet-button" id="theme-toggle">切换深色</button></div></header>
+  <section class="intro"><div><h1>保留轻盈，重新取舍造型。</h1><p>P1 柔化、Lucide 局部替换、Remix 重新选型。补齐右上角十个入口，文件类型图标单独使用彩色主题。</p></div><span class="pill">界面图标与文件类型图标可独立选择</span></section>
+  <div class="variant-bar" role="group" aria-label="界面图标候选">
+    <button class="variant" data-variant="current" aria-pressed="false"><div><span class="variant-title">当前 · 基准</span><p>Lucide 与现有圆角按钮</p></div><span class="variant-icons"></span></button>
+    <button class="variant" data-variant="a" aria-pressed="true"><div><span class="variant-title">P1 · 柔和轻线</span><p>Phosphor Light · 重新选型</p></div><span class="variant-icons"></span></button>
+    <button class="variant" data-variant="b" aria-pressed="false"><div><span class="variant-title">L1 · Lucide 精选</span><p>保留现有体系 · 局部替换</p></div><span class="variant-icons"></span></button>
+    <button class="variant" data-variant="c" aria-pressed="false"><div><span class="variant-title">R1 · Remix 线性</span><p>重新选择 · 不用面性导航</p></div><span class="variant-icons"></span></button>
+  </div>
+  <div class="workspace-toolbar"><div class="tabs" role="tablist" aria-label="选型演示内容">
+    <button class="section-tab" role="tab" id="tab-workspace" aria-controls="panel-workspace" aria-selected="true" data-panel="workspace">工作台</button>
+    <button class="section-tab" role="tab" id="tab-choices" aria-controls="panel-choices" aria-selected="false" tabindex="-1" data-panel="choices">主要图标取舍</button>
+    <button class="section-tab" role="tab" id="tab-toolbar" aria-controls="panel-toolbar" aria-selected="false" tabindex="-1" data-panel="toolbar">右上角全功能</button>
+    <button class="section-tab" role="tab" id="tab-files" aria-controls="panel-files" aria-selected="false" tabindex="-1" data-panel="files">彩色文件</button>
+    <button class="section-tab" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false" tabindex="-1" data-panel="plan">重新规划</button>
+  </div><div class="preview-options"><label class="file-toggle"><input type="checkbox" id="file-color" checked> 彩色文件</label><label class="size-control">界面尺寸 <select id="icon-size"><option value="14">14 px</option><option value="16">16 px</option><option value="18" selected>18 px</option><option value="20">20 px</option><option value="24">24 px</option></select></label></div></div>
+  <main>
+    <section class="content-panel" id="panel-workspace" role="tabpanel" aria-labelledby="tab-workspace">
+      <h2 class="sr-only">完整工作台演示</h2>
+      <div class="workbench-caption"><p id="candidate-note"></p><span>右上角图标按现有 14 px 展示；可点击全部入口。</span></div>
+      <div class="app full-app" id="mock-app"></div>
+      <div class="below-app"><p id="demo-status" role="status" aria-live="polite"></p><span class="muted">示例数据 · 浏览器与终端均为界面模拟</span></div>
+      <div class="retained"><div><h3>业务状态保持原形</h3><p>只取舍界面图形，六种任务状态和品牌标识保留。</p></div><div class="status-strip" id="state-strip"></div></div>
+    </section>
+    <section class="content-panel" id="panel-choices" role="tabpanel" aria-labelledby="tab-choices" hidden>
+      <div class="section-heading"><div><h2>主要图标逐项取舍</h2><p>保留 P1 的 Light 字重，优先替换外轮廓尖锐或内部折线偏多的造型。</p></div></div>
+      <div class="table-wrap"><table class="choice-table"><thead><tr><th>用途</th><th>原 P1</th><th>P1 · 柔和轻线</th><th>L1 · Lucide 精选</th><th>R1 · Remix 线性</th><th>取舍</th></tr></thead><tbody id="choice-body"></tbody></table></div>
+      <p class="matrix-intro">方向箭头、标签切角和文件夹折角承担识别含义，会保留必要的几何特征；这里通过重新选图降低锐感，不通过模糊或强加圆角修改原始路径。</p>
+      <details class="all-mapping"><summary>其余功能图标对照</summary><div class="matrix-toolbar"><input id="icon-search" class="search-field" type="search" placeholder="搜索用途或图标名" aria-label="搜索图标"><select id="group-filter" class="filter-select" aria-label="按区域筛选"><option value="all">全部区域</option><option>操作</option><option>对话</option><option>文件与工具</option><option>设置</option><option>状态</option></select></div><div class="table-wrap"><table class="matrix"><thead><tr><th>用途</th><th>当前</th><th>P1</th><th>L1</th><th>R1</th></tr></thead><tbody id="mapping-body"></tbody></table></div></details>
+    </section>
+    <section class="content-panel" id="panel-toolbar" role="tabpanel" aria-labelledby="tab-toolbar" hidden>
+      <div class="section-heading"><div><h2>右上角十个入口，全部纳入</h2><p>顺序依据当前 TopBar 与 SurfaceLauncherButtons。点击任意一项，可在工作台观察对应场景。</p></div></div>
+      <div class="table-wrap"><table class="toolbar-table"><thead><tr><th>入口</th><th>当前</th><th>P1 · Light</th><th>L1 · Lucide</th><th>R1 · Remix</th><th>场景与行为</th></tr></thead><tbody id="toolbar-body"></tbody></table></div>
+      <div class="toolbar-states"><h3>状态也要对照</h3><div id="toolbar-states"></div><p>文件、运行轨迹、终端在工作台收起后保留后台圆点；重新点击会激活已有标签。浏览器使用独立的存在状态；帮助菜单包含七个文档入口。</p></div>
+      <p class="matrix-intro">当前源码中，顶栏不同状态还会使用不同描边粗细。L1 保留这种机制；P1 与 R1 使用原生图形，通过前景、背景与圆点区分状态。</p>
+      <p class="matrix-intro">工作台右上角也已补充固定／取消固定、放大／还原、收起与关闭。可在工作台直接操作。</p>
+    </section>
+    <section class="content-panel" id="panel-files" role="tabpanel" aria-labelledby="tab-files" hidden>
+      <div class="section-heading"><div><h2>彩色只用于识别文件类型</h2><p>参考截图，以 Seti 为基础；Markdown 使用绿色 M 标记，未知类型使用中性文件页。所有资产来自公开图标。</p></div><button class="quiet-button" data-toggle-files>切换彩色／单色</button></div>
+      <div class="file-comparison"><div class="file-reference"><div class="file-reference-title">Phaneris 文件树 <span id="file-mode-label"></span></div><label class="file-filter"><span id="file-search-icon"></span><input id="file-search" type="search" placeholder="筛选文件…" aria-label="筛选文件"></label><div id="file-demo-list"></div></div><div class="file-explanation"><h3>文件名优先，扩展名兜底</h3><p>Markdown、JSON、TypeScript、React、图片、PDF、Word、Excel，以及 Git、Docker、ESLint 配置分别识别。目录和未知类型保持中性；文件状态颜色不混入类型图标。</p><div id="file-inspector" class="file-inspector"></div><h3>本轮的边界</h3><ul><li>UI 图标选 P1／L1／R1，都可以搭配这套文件主题。</li><li>文件夹、打开／关闭箭头、复制与下载等操作按钮继续使用所选 UI 图标。</li><li>浅色与深色分别配色，文件名文字保持正常前景色。</li><li>这版 Seti 没有 Bun 专用字形：<code>bun.lock</code> 用锁文件回退，<code>bunfig.toml</code> 用配置回退，不伪造 Bun 标志。</li></ul><p class="muted">范围还包括文件面板、附件、产物卡片、预览标题和文件搜索结果；类型图标应由同一个解析器输出。</p></div></div>
+    </section>
+    <section class="content-panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
+      <div class="section-heading"><div><h2>新的规划：两项决定，三条 UI 路线</h2><p>先选界面图标路线，再独立决定是否使用彩色文件主题；两项均可在本页组合比较。</p></div></div>
+      <div class="table-wrap"><table class="plan-table"><thead><tr><th>路线</th><th>保留</th><th>本轮变化</th><th>实施影响</th></tr></thead><tbody><tr><td>P1 · 柔和轻线</td><td>Phosphor Light 的轻盈感</td><td>圆气泡、灯泡、滑杆、循环弧线等；保留必要的语义角度</td><td>仍是完整换库，需要覆盖共享 UI 与所有端</td></tr><tr><td>L1 · Lucide 精选</td><td>现有库、描边机制与大多数图标</td><td>只换主要导航及少量功能图形，保留现有圆角新建与侧栏按钮</td><td>改动范围最小，主题描边与接口可继续使用</td></tr><tr><td>R1 · Remix 线性</td><td>统一线性操作、现有配色与状态机制</td><td>重新选圆气泡、灯泡、拼图和循环；不采用面性导航</td><td>完整换库；原始路径重量仍需按尺寸校准</td></tr><tr><td>彩色文件主题</td><td>目录、未知类型、操作按钮保持中性</td><td>Seti 类型字形、文件名优先规则、深浅色配置</td><td>独立公共解析器，扩展到附件、文件卡片和预览</td></tr></tbody></table></div>
+      <div class="scope-grid"><div><h3>确认后才进入实施</h3><ol><li>冻结主要导航、顶栏与文件类型规则。</li><li>建立语义图标入口与公共文件类型解析器。</li><li>L1 按选定项替换；P1／R1 按区域迁移，并解耦 LucideIcon 类型。</li><li>统一桌面、WebUI、查看器和共享 UI。</li><li>验证真实 14／16／18／20 px、深浅色、工具栏全部状态与文件回退规则。</li></ol></div><div><h3>继续保留</h3><p>Phaneris 标识、MCP、服务商与消息平台标志、用户自定义图标、六种任务状态及加载动画的业务含义。</p><h3 style="margin-top:19px">取舍提醒</h3><p>灯泡强调能力与想法，弱化原闪电的速度含义；循环弧线可能使自动化偏向“重复运行”，并不覆盖所有事件触发语义。图形变柔和与语义清楚需要一起判断。</p><p style="margin-top:12px">原始范围盘点为 237 个生产导入文件、197 个去除别名后的 Lucide 组件。L1 实施不需要替换全部组件；P1／R1 也不包含品牌和用户资产。</p></div></div>
+      <p class="matrix-intro">官方来源：<a href="https://github.com/phosphor-icons/core">Phosphor</a>、<a href="https://lucide.dev/">Lucide</a>、<a href="https://github.com/Remix-Design/RemixIcon">Remix Icon</a>、<a href="https://github.com/jesseweed/seti-ui">Seti</a>。本页离线可用，没有改动应用源码与依赖。</p>
+    </section>
+  </main>
+  <footer class="footnote"><p>本轮仅重新规划与演示。顶部入口、文件识别与状态交互均为模拟；所有图形和文件字体已内嵌。</p><span id="review-status" class="review-status"></span></footer>
+</div>
+<script>/* INLINE_DATA */
+/* INLINE_APP */</script>
+</body></html>

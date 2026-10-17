@@ -111,7 +111,7 @@
  * hashed name, which is precisely the patchwork this migration set out to remove.
  */
 .phaneris-calendar [role='grid'] [role='columnheader'] {
-  font-size: 11px;
+  font-size: var(--type-meta-size);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -139,7 +139,7 @@
 
 /* The day number: the first aria-hidden node inside the cell's header block. */
 .phaneris-calendar [role='grid'] [role='gridcell'] [aria-hidden='true']:not([data-calendar-entry] *) {
-  font-size: 12px;
+  font-size: var(--type-label-size);
   font-weight: 600;
   color: color-mix(in oklab, var(--foreground) 85%, transparent);
 }
@@ -155,7 +155,7 @@
   justify-content: center;
   width: 22px;
   height: 22px;
-  border-radius: 9999px;
+  border-radius: var(--shape-round);
   background: var(--accent);
   color: var(--accent-foreground);
 }
@@ -167,7 +167,7 @@
   padding: 0 0.375rem;
   border-radius: 0.375rem;
   border: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
-  font-size: 12.5px;
+  font-size: var(--type-label-size);
   line-height: 1.45;
   color: var(--foreground);
   transition: border-color 120ms ease, background-color 120ms ease;
@@ -200,7 +200,7 @@
   align-items: center;
   padding: 0 0.375rem;
   border-radius: 0.375rem;
-  font-size: 11.5px;
+  font-size: var(--type-meta-size);
   font-weight: 600;
   color: color-mix(in oklab, var(--foreground) 55%, transparent);
 }
@@ -223,7 +223,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: var(--type-micro-size);
   font-weight: 600;
   color: color-mix(in oklab, var(--foreground) 35%, transparent);
   background: color-mix(in oklab, var(--foreground) 3%, transparent);
@@ -276,13 +276,13 @@
 
 /* Day/week views: the hour gutter and the now-line. */
 .phaneris-calendar [role='rowheader'] {
-  font-size: 10.5px;
+  font-size: var(--type-meta-size);
   font-variant-numeric: tabular-nums;
   color: color-mix(in oklab, var(--foreground) 45%, transparent);
 }
 
 .phaneris-calendar [data-calendar-entry] .pg-calendar-event {
-  font-size: 11.5px;
+  font-size: var(--type-meta-size);
 }
 
 /* --------------------------------------------------- two-line day headers --- */
@@ -302,7 +302,7 @@
 
 .phaneris-calendar [role='grid'] [role='columnheader'] {
   height: var(--pg-head-h);
-  font-size: 12.5px;
+  font-size: var(--type-label-size);
   font-weight: 650;
   letter-spacing: 0;
   text-transform: none;
@@ -321,12 +321,12 @@
 }
 
 .pg-cal-head__weekday {
-  font-size: 12.5px;
+  font-size: var(--type-label-size);
   font-weight: 650;
 }
 
 .pg-cal-head__date {
-  font-size: 11.5px;
+  font-size: var(--type-meta-size);
   font-weight: 500;
   color: color-mix(in oklab, var(--foreground) 55%, transparent);
   font-variant-numeric: tabular-nums;
@@ -342,7 +342,7 @@
 
 /* The month grid has no date line of its own, so its single line stays quiet. */
 .pg-cal-head--month .pg-cal-head__weekday {
-  font-size: 11.5px;
+  font-size: var(--type-meta-size);
   font-weight: 600;
   color: color-mix(in oklab, var(--foreground) 55%, transparent);
 }
@@ -362,7 +362,7 @@
   position: absolute;
   z-index: var(--z-component-sticky);
   pointer-events: none;
-  border-radius: 4px;
+  border-radius: var(--shape-sm);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
 }
@@ -388,7 +388,7 @@
   min-height: 0;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--shape-xl);
   background: var(--card);
   transition: border-color 120ms ease, background-color 120ms ease;
 }
@@ -409,12 +409,12 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--type-label-size);
   font-weight: 650;
 }
 
 .pg-rail__count {
-  font-size: 10.5px;
+  font-size: var(--type-meta-size);
   font-weight: 500;
   color: color-mix(in oklab, var(--foreground) 45%, transparent);
   text-align: right;
@@ -422,7 +422,7 @@
 
 .pg-rail__hint {
   margin: 2px 0 0;
-  font-size: 10.5px;
+  font-size: var(--type-meta-size);
   line-height: 1.35;
   color: color-mix(in oklab, var(--foreground) 35%, transparent);
 }
@@ -441,9 +441,9 @@
   width: 100%;
   height: 30px;
   border: 1px dashed var(--border);
-  border-radius: 8px;
+  border-radius: var(--shape-lg);
   background: transparent;
-  font-size: 11.5px;
+  font-size: var(--type-meta-size);
   font-weight: 600;
   color: color-mix(in oklab, var(--foreground) 55%, transparent);
   cursor: pointer;
@@ -471,9 +471,9 @@
   height: 30px;
   padding: 0 8px;
   border: 1px solid var(--border);
-  border-radius: 7px;
+  border-radius: var(--shape-lg);
   background: var(--background);
-  font-size: 12px;
+  font-size: var(--type-label-size);
   color: var(--foreground);
   outline: none;
 }
@@ -487,9 +487,9 @@
   height: 30px;
   padding: 0 9px;
   border: 1px solid var(--border);
-  border-radius: 7px;
+  border-radius: var(--shape-lg);
   background: var(--background);
-  font-size: 11.5px;
+  font-size: var(--type-meta-size);
   font-weight: 600;
   color: color-mix(in oklab, var(--foreground) 55%, transparent);
   cursor: pointer;
@@ -516,7 +516,7 @@
 .pg-rail__empty {
   padding: 12px;
   text-align: center;
-  font-size: 11px;
+  font-size: var(--type-meta-size);
   color: color-mix(in oklab, var(--foreground) 35%, transparent);
 }
 
@@ -535,7 +535,7 @@
   justify-content: space-between;
   padding: 2px;
   background: var(--card);
-  font-size: 10.5px;
+  font-size: var(--type-meta-size);
   font-weight: 650;
   color: color-mix(in oklab, var(--foreground) 55%, transparent);
 }
@@ -551,8 +551,7 @@
   gap: 1px;
   padding: 3px 7px;
   border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
-  border-left: 3px solid color-mix(in oklab, var(--foreground) 25%, transparent);
-  border-radius: 6px;
+  border-radius: var(--shape-md);
   background: color-mix(in oklab, var(--foreground) 4%, transparent);
   cursor: grab;
   user-select: none;
@@ -572,7 +571,7 @@
 }
 
 .pg-rail__chip-title {
-  font-size: 12px;
+  font-size: var(--type-label-size);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -580,7 +579,7 @@
 }
 
 .pg-rail__chip-meta {
-  font-size: 10px;
+  font-size: var(--type-micro-size);
   color: color-mix(in oklab, var(--foreground) 45%, transparent);
   font-variant-numeric: tabular-nums;
 }
@@ -590,7 +589,7 @@
   padding: 8px 12px;
   border-top: 1px solid color-mix(in oklab, var(--border) 45%, transparent);
   text-align: center;
-  font-size: 10.5px;
+  font-size: var(--type-meta-size);
   color: color-mix(in oklab, var(--foreground) 35%, transparent);
 }
 
@@ -603,9 +602,9 @@
   white-space: nowrap;
   padding: 3px 8px;
   border: 1px solid var(--accent);
-  border-radius: 6px;
+  border-radius: var(--shape-md);
   background: var(--card);
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.16);
-  font-size: 11.5px;
+  font-size: var(--type-meta-size);
   pointer-events: none;
 }

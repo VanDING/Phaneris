@@ -727,7 +727,7 @@ function Row({
       type="button"
       onClick={onTap}
       className={cn(
-        'flex items-center gap-3 w-full px-3 py-3 rounded-[10px] text-left transition-colors',
+        'flex items-center gap-3 w-full px-3 py-3 rounded-shape-xl text-left transition-colors',
         'hover:bg-foreground/5 active:bg-foreground/10',
         destructive && 'text-destructive hover:bg-destructive/10 active:bg-destructive/15',
       )}
@@ -749,7 +749,7 @@ function Separator() {
 
 function CountBadge({ count }: { count: number }) {
   return (
-    <span className="text-[11px] tabular-nums text-foreground/50">
+    <span className="text-meta tabular-nums text-foreground/50">
       {count}
     </span>
   )

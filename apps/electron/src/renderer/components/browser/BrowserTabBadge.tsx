@@ -47,8 +47,8 @@ export const BrowserTabBadge = forwardRef<HTMLButtonElement, BrowserTabBadgeProp
       ref={ref}
       type="button"
       className={`
-        group flex items-center gap-1 h-[26px] pl-2.5 pr-1.5 rounded-lg cursor-pointer select-none titlebar-no-drag
-        text-[11px] leading-tight transition-colors max-w-[160px] shadow-minimal
+        group flex items-center gap-1 h-control-sm pl-2.5 pr-1.5 rounded-lg cursor-pointer select-none titlebar-no-drag
+        text-meta leading-tight transition-colors max-w-[160px] shadow-minimal
         bg-background
         ${foregroundClass}
         ${instance.agentControlActive && !hasLoadError ? 'border border-accent' : ''}
@@ -67,10 +67,10 @@ export const BrowserTabBadge = forwardRef<HTMLButtonElement, BrowserTabBadgeProp
         {hasLoadError ? (
           <AlertTriangle className="h-3 w-3" />
         ) : instance.isLoading ? (
-          <Spinner className="text-[9px] leading-none" />
+          <Spinner className="text-micro leading-none" />
         ) : instance.favicon && !faviconFailed ? (
           isDarkThemeColor ? (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[4px] bg-white/90 p-[1px] leading-none">
+            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-shape-sm bg-white/90 p-[1px] leading-none">
               <img
                 src={instance.favicon}
                 alt=""

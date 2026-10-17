@@ -180,6 +180,20 @@ export const StyledDropdownMenuSeparator = React.forwardRef<
 ))
 StyledDropdownMenuSeparator.displayName = 'StyledDropdownMenuSeparator'
 
+// ── Label ────────────────────────────────────────────────────────────────────
+
+export const StyledDropdownMenuLabel = React.forwardRef<
+  React.ComponentRef<typeof DropdownMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Label
+    ref={ref}
+    className={cn('px-2 py-1.5 text-micro font-medium text-text-tertiary', className)}
+    {...props}
+  />
+))
+StyledDropdownMenuLabel.displayName = 'StyledDropdownMenuLabel'
+
 // ── Sub-menu trigger ─────────────────────────────────────────────────────────
 
 export const StyledDropdownMenuSubTrigger = React.forwardRef<

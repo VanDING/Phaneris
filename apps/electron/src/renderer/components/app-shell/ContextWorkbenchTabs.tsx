@@ -150,7 +150,7 @@ export function ContextWorkbenchTabs({ state }: ContextWorkbenchTabsProps) {
 
       {activeSessionName && activeItem?.kind !== 'artifact' && activeItem?.kind !== 'terminal' && (
         <span
-          className="@max-[700px]/panel:hidden flex min-w-0 max-w-44 shrink items-center gap-1 rounded-full border border-border/50 bg-foreground/[0.025] px-2 py-0.5 text-[11px] text-muted-foreground"
+          className="@max-[700px]/panel:hidden flex min-w-0 max-w-44 shrink items-center gap-1 rounded-full border border-border/50 bg-foreground/[0.025] px-2 py-0.5 text-meta text-muted-foreground"
           title={activeSessionName}
         >
           <Link2 className="h-3 w-3 shrink-0" />

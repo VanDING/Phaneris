@@ -9,6 +9,7 @@ import {
 } from '@/atoms/workbench'
 import { useResizeGradient } from '@/hooks/useResizeGradient'
 import {
+  PANEL_SASH_DEAD_ZONE,
   PANEL_SASH_FLEX_MARGIN,
   PANEL_SASH_HALF_HIT_WIDTH,
   PANEL_SASH_LINE_WIDTH,
@@ -46,6 +47,7 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
     startXRef.current = event.clientX
     startWidthRef.current = primaryWidth
     onDraggingChange?.(true)
+    document.body.dataset.paneDragging = 'true'
 
     const flush = () => {
       resizeRafRef.current = 0
@@ -54,8 +56,16 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
       if (next !== null) setWidth(next)
     }
 
+    let armed = false
     const handleMouseMove = (moveEvent: MouseEvent) => {
-      pendingWidthRef.current = startWidthRef.current + (moveEvent.clientX - startXRef.current)
+      const delta = moveEvent.clientX - startXRef.current
+      // The first 4px of travel are a dead zone: a click that drifts must not
+      // resize the panel. Once armed, subtract the threshold so the panel does
+      // not jump ahead of the pointer.
+      if (!armed && Math.abs(delta) < PANEL_SASH_DEAD_ZONE) return
+      armed = true
+      const adjusted = Math.abs(delta) - PANEL_SASH_DEAD_ZONE
+      pendingWidthRef.current = startWidthRef.current + Math.sign(delta) * Math.max(0, adjusted)
       if (!resizeRafRef.current) resizeRafRef.current = requestAnimationFrame(flush)
     }
 
@@ -67,6 +77,7 @@ export function WorkbenchResizeSash({ primaryWidth, onDraggingChange }: Workbenc
       document.removeEventListener('mouseup', endDrag)
       document.body.style.userSelect = ''
       document.body.style.cursor = ''
+      delete document.body.dataset.paneDragging
       onDraggingChange?.(false)
     }
     endDragRef.current = endDrag

@@ -223,12 +223,12 @@ export function MarkdownImageBlock({ code, className, onCreateRegionAnnotation: 
 
   return (
     <ImageBlockErrorBoundary fallback={fallback}>
-      <div className={cn('relative group rounded-[8px] overflow-visible', className)}>
+      <div className={cn('relative group rounded-shape-lg overflow-visible', className)}>
         <div className="relative h-[320px] overflow-visible flex items-center justify-center p-3">
           <button
             onClick={() => setIsFullscreen(true)}
             className={cn(
-              'craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute right-2 top-2 z-component-chrome p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] select-none',
+              'craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute right-2 top-2 z-component-chrome p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] select-none',
               'bg-background/90 shadow-minimal',
               'text-muted-foreground/60 hover:text-foreground',
               'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:opacity-100',
@@ -259,11 +259,11 @@ export function MarkdownImageBlock({ code, className, onCreateRegionAnnotation: 
           )}
 
           {loading && (!activeDataUrl || (hasMultiple && stackItems.length === 0)) && (
-            <div className="py-8 text-center text-muted-foreground text-[13px]">{t('common.loading')}</div>
+            <div className="py-8 text-center text-muted-foreground text-body">{t('common.loading')}</div>
           )}
 
           {!loading && error && (!activeDataUrl || (hasMultiple && stackItems.length === 0)) && (
-            <div className="py-6 text-center text-destructive/70 text-[13px]">{error}</div>
+            <div className="py-6 text-center text-destructive/70 text-body">{error}</div>
           )}
 
         </div>

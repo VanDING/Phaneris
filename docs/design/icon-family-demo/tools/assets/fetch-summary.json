@@ -1,0 +1,50 @@
+{
+  "file-icons": {
+    "error": "429 https://api.iconify.design/collection?prefix=file-icons"
+  },
+  "seti": {
+    "error": "429 https://api.iconify.design/collection?prefix=seti"
+  },
+  "catppuccin-icons": {
+    "error": "429 https://api.iconify.design/collection?prefix=catppuccin-icons"
+  },
+  "devicon": {
+    "error": "429 https://api.iconify.design/collection?prefix=devicon"
+  },
+  "line-md": {
+    "prefix": "line-md",
+    "requested": 1218,
+    "received": 1218,
+    "bytes": 1437861
+  },
+  "ci": {
+    "prefix": "ci",
+    "requested": 442,
+    "received": 442,
+    "bytes": 171177
+  },
+  "mi": {
+    "prefix": "mi",
+    "requested": 180,
+    "received": 180,
+    "bytes": 58853
+  },
+  "svg-spinners": {
+    "prefix": "svg-spinners",
+    "requested": 46,
+    "received": 46,
+    "bytes": 56111
+  },
+  "vscode-icons": {
+    "prefix": "vscode-icons",
+    "requested": 1693,
+    "received": 1693,
+    "bytes": 3810983
+  },
+  "material-icon-theme": {
+    "prefix": "material-icon-theme",
+    "requested": 906,
+    "received": 906,
+    "bytes": 690153
+  }
+}

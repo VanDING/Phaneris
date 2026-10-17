@@ -1,0 +1,2 @@
+bell-off            cloud-off           filter-off          link-horizontal-off volume-off
+wifi-off

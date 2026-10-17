@@ -113,7 +113,7 @@ export function DecisionTag({ status, className }: { status: DecisionStatus; cla
     <span
       data-decision-status={status}
       className={cn(
-        'inline-flex h-[18px] flex-none items-center gap-1 rounded-[4px] border border-transparent px-[5px] text-[10px] font-semibold leading-4 tracking-[0.035em] whitespace-nowrap select-none',
+        'inline-flex h-control-2xs flex-none items-center gap-1 rounded-shape-sm border border-transparent px-[5px] text-micro font-semibold leading-4 tracking-[0.035em] whitespace-nowrap select-none',
         TAG_TONE_CLASS[STATUS_TONE[status]],
         className,
       )}
@@ -170,8 +170,8 @@ export function DecisionStatusRow({ meta, action }: {
   return (
     <div className="flex min-w-0 items-center gap-2 border-b border-border/50 pb-3">
       <span aria-hidden className="size-2 flex-none rounded-full bg-success" />
-      <span className="text-[13px] font-semibold">{t('trajectory.decisions.title')}</span>
-      <span className="ml-auto hidden min-w-0 truncate text-[11px] tabular-nums text-text-secondary @min-[640px]/trajectory:block">{meta}</span>
+      <span className="text-body font-semibold">{t('trajectory.decisions.title')}</span>
+      <span className="ml-auto hidden min-w-0 truncate text-meta tabular-nums text-text-secondary @min-[640px]/trajectory:block">{meta}</span>
       {action && <span className="hidden h-4 w-px flex-none bg-border @min-[640px]/trajectory:block" />}
       {action}
     </div>
@@ -204,7 +204,7 @@ export function DecisionTiles({ totals }: { totals: SessionDecisionTotals }) {
         ? (
           <span
             title={t('trajectory.decisions.unknownCostNote', { count: totals.unknownCostRequests })}
-            className="inline-flex h-[18px] flex-none items-center rounded-[4px] bg-[color:var(--info)]/[0.16] px-[5px] text-[10px] font-semibold tracking-[0.035em] text-[color:var(--info-text)]"
+            className="inline-flex h-control-2xs flex-none items-center rounded-shape-sm bg-[color:var(--info)]/[0.16] px-[5px] text-micro font-semibold tracking-[0.035em] text-[color:var(--info-text)]"
           >
             {t('trajectory.decisions.unknownCost', { count: totals.unknownCostRequests })}
           </span>
@@ -216,11 +216,11 @@ export function DecisionTiles({ totals }: { totals: SessionDecisionTotals }) {
     <dl className="grid grid-cols-2 gap-2 @min-[760px]/trajectory:grid-cols-4">
       {cells.map(cell => (
         <div key={cell.key} className="min-w-0 rounded-lg bg-foreground/[0.025] px-3 py-2.5">
-          <dt className="flex items-center gap-1.5 text-[11px] font-medium text-text-secondary">
+          <dt className="flex items-center gap-1.5 text-meta font-medium text-text-secondary">
             {cell.icon}{t(`trajectory.decisions.${cell.key}`)}
           </dt>
           <dd className="mt-1 flex flex-wrap items-baseline gap-1.5">
-            <span className="text-[16px] font-semibold tabular-nums">{cell.value}</span>
+            <span className="text-title font-semibold tabular-nums">{cell.value}</span>
             {cell.note ?? null}
           </dd>
         </div>
@@ -253,7 +253,7 @@ export function DecisionToolbar({ query, onChange, count, total, turns }: {
           aria-pressed={!query.status}
           onClick={() => onChange({ status: undefined })}
           className={cn(
-            'craft-control inline-flex h-6 flex-none items-center gap-1 rounded-lg px-1.5 text-[11px] leading-4 transition-colors',
+            'craft-control inline-flex h-6 flex-none items-center gap-1 rounded-lg px-1.5 text-meta leading-4 transition-colors',
             !query.status ? 'bg-foreground/10 text-foreground' : 'text-text-secondary hover:bg-foreground/10 hover:text-foreground',
           )}
         >
@@ -266,7 +266,7 @@ export function DecisionToolbar({ query, onChange, count, total, turns }: {
             aria-pressed={query.status === status}
             onClick={() => onChange({ status: query.status === status ? undefined : status })}
             className={cn(
-              'craft-control inline-flex h-6 flex-none items-center gap-1 rounded-lg px-1.5 text-[11px] leading-4 transition-colors',
+              'craft-control inline-flex h-6 flex-none items-center gap-1 rounded-lg px-1.5 text-meta leading-4 transition-colors',
               query.status === status ? 'bg-foreground/10 text-foreground' : 'text-text-secondary hover:bg-foreground/10 hover:text-foreground',
             )}
           >
@@ -282,7 +282,7 @@ export function DecisionToolbar({ query, onChange, count, total, turns }: {
               aria-label={t('trajectory.decisions.turn')}
               value={query.turnId ?? ''}
               onChange={event => onChange({ turnId: event.target.value || undefined })}
-              className="craft-field-input h-6 max-w-[140px] appearance-none rounded-lg bg-transparent px-1.5 pr-4 text-[11px] text-text-secondary hover:bg-foreground/10 hover:text-foreground focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent"
+              className="craft-field-input h-6 max-w-[140px] appearance-none rounded-lg bg-transparent px-1.5 pr-4 text-meta text-text-secondary hover:bg-foreground/10 hover:text-foreground focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent"
             >
               <option value="">{t('trajectory.decisions.allTurns')}</option>
               {turns.map(turn => <option key={turn} value={turn}>{turn}</option>)}
@@ -291,7 +291,7 @@ export function DecisionToolbar({ query, onChange, count, total, turns }: {
           </span>
         </>
       )}
-      <span className="ml-auto flex-none px-1 text-[11px] tabular-nums text-text-secondary">
+      <span className="ml-auto flex-none px-1 text-meta tabular-nums text-text-secondary">
         {t('trajectory.decisions.recordCount', { shown: count.toLocaleString(), total: total.toLocaleString() })}
       </span>
     </div>
@@ -311,11 +311,11 @@ export function DecisionKv({ rows }: { rows: ReadonlyArray<DecisionKvRow | null>
   const visible = rows.filter((row): row is DecisionKvRow => !!row)
   if (visible.length === 0) return null
   return (
-    <dl className="grid gap-y-2 border-y border-border/50 py-3 text-[12px]">
+    <dl className="grid gap-y-2 border-y border-border/50 py-3 text-label">
       {visible.map(([label, value, mono]) => (
         <div key={label} className="flex min-w-0 items-center gap-3">
           <dt className="flex-none text-text-secondary">{label}</dt>
-          <dd className={cn('ml-auto min-w-0 truncate text-right font-medium', mono && 'font-mono text-[11px]')}>{value}</dd>
+          <dd className={cn('ml-auto min-w-0 truncate text-right font-medium', mono && 'font-mono text-meta')}>{value}</dd>
         </div>
       ))}
     </dl>
@@ -331,7 +331,7 @@ export function DecisionNotice({ tone = 'neutral', icon, children }: {
 }) {
   return (
     <div className={cn(
-      'flex items-start gap-2 rounded-lg px-2.5 py-2 text-[11.5px] leading-5',
+      'flex items-start gap-2 rounded-lg px-2.5 py-2 text-meta leading-5',
       tone === 'info' ? 'bg-[color:var(--info)]/[0.12] text-[color:var(--info-text)]' : 'bg-foreground/[0.025] text-text-secondary',
     )}>
       <span className="mt-0.5 flex-none">{icon ?? <Info className="size-3.5" />}</span>
@@ -346,8 +346,8 @@ export function DecisionEmpty({ title, hint, action }: { title: string; hint?: s
       <span aria-hidden className="grid size-9 place-items-center rounded-xl bg-foreground/5 text-text-secondary">
         <Search className="size-4" />
       </span>
-      <p className="text-[12px] font-semibold">{title}</p>
-      {hint && <p className="max-w-[42ch] text-[11.5px] leading-6 text-text-secondary">{hint}</p>}
+      <p className="text-label font-semibold">{title}</p>
+      {hint && <p className="max-w-[42ch] text-meta leading-6 text-text-secondary">{hint}</p>}
       {action}
     </div>
   )
@@ -384,7 +384,7 @@ export function DecisionClearFilters({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="craft-control inline-flex h-6 items-center gap-1 rounded-lg bg-foreground/5 px-2 text-[11.5px] text-foreground transition-colors hover:bg-foreground/10"
+      className="craft-control inline-flex h-6 items-center gap-1 rounded-lg bg-foreground/5 px-2 text-meta text-foreground transition-colors hover:bg-foreground/10"
     >
       <X className="size-3" />{t('trajectory.decisions.clearFilters')}
     </button>

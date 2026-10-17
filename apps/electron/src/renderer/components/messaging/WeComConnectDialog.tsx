@@ -81,7 +81,7 @@ export function WeComConnectDialog({ open, onOpenChange, reconfigure = false }: 
             {t('common.cancel')}
           </Button>
           <Button variant="outline" size="sm" onClick={handleSave} disabled={!ready || saving}>
-            {saving && <Spinner className="mr-1 text-[14px]" />}
+            {saving && <Spinner className="mr-1 text-reading" />}
             {t('settings.messaging.wecom.save')}
           </Button>
         </DialogFooter>

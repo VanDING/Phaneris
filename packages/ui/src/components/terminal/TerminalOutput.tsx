@@ -121,7 +121,7 @@ export function TerminalOutput({
             <span>{t('terminal.output')}</span>
             {exitCode !== undefined && (
               <span
-                className="px-1.5 py-0.5 rounded text-[10px]"
+                className="px-1.5 py-0.5 rounded text-micro"
                 style={{
                   backgroundColor: `color-mix(in srgb, var(--${exitCode === 0 ? 'success' : 'destructive'}) 12%, transparent)`,
                   color: `var(--${exitCode === 0 ? 'success' : 'destructive'}-text)`,

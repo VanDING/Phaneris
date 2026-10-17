@@ -47,7 +47,7 @@ export function AttachmentPreview({ attachments, onRemove, disabled, loadingCoun
 
 function LoadingBubble() {
   return (
-    <div className="h-16 w-16 rounded-[8px] bg-background shadow-minimal flex items-center justify-center shrink-0">
+    <div className="h-16 w-16 rounded-shape-lg bg-background shadow-minimal flex items-center justify-center shrink-0">
       <Spinner className="text-muted-foreground" />
     </div>
   )
@@ -92,7 +92,7 @@ function AttachmentBubble({ attachment, onRemove, disabled }: AttachmentBubblePr
 
       {isImage ? (
         /* IMAGE: Square thumbnail only */
-        <div className="h-16 w-16 rounded-[8px] overflow-hidden bg-background shadow-minimal">
+        <div className="h-16 w-16 rounded-shape-lg overflow-hidden bg-background shadow-minimal">
           {imageSrc ? (
             <img src={imageSrc} alt={attachment.name} className="h-full w-full object-cover" />
           ) : (
@@ -103,9 +103,9 @@ function AttachmentBubble({ attachment, onRemove, disabled }: AttachmentBubblePr
         </div>
       ) : (
         /* DOCUMENT: Bubble with thumbnail/icon + 2-line text */
-        <div className="h-16 flex items-center gap-2.5 rounded-[8px] bg-foreground/5 pl-1.5 pr-3">
+        <div className="h-16 flex items-center gap-2.5 rounded-shape-lg bg-foreground/5 pl-1.5 pr-3">
           {/* A4-like preview */}
-          <div className="h-12 w-9 rounded-[6px] overflow-hidden bg-background shadow-minimal flex items-center justify-center shrink-0">
+          <div className="h-12 w-9 rounded-shape-md overflow-hidden bg-background shadow-minimal flex items-center justify-center shrink-0">
             {hasThumbnail ? (
               <img
                 src={`data:image/png;base64,${attachment.thumbnailBase64}`}
@@ -121,7 +121,7 @@ function AttachmentBubble({ attachment, onRemove, disabled }: AttachmentBubblePr
             <span className="text-xs font-medium line-clamp-2 break-all" title={attachment.name}>
               {attachment.name}
             </span>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-micro text-muted-foreground">
               {getFileTypeLabel(attachment.type, attachment.mimeType, attachment.name)}
             </span>
           </div>

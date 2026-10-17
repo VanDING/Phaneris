@@ -1137,10 +1137,7 @@ export function getToolDefsAsJsonSchema(opts?: {
 
   return defs.map(def => {
     // Zod v4 has native .toJSONSchema() — zod-to-json-schema is incompatible with v4.
-    const raw = (def.inputSchema as ZodObject<z.ZodRawShape>)?.toJSONSchema?.() ?? {};
-    const jsonSchema: Record<string, unknown> = typeof raw === 'object' && raw !== null
-      ? { ...raw as Record<string, unknown> }
-      : {};
+    const jsonSchema: Record<string, unknown> = { ...def.inputSchema.toJSONSchema() };
     delete jsonSchema.$schema;
     delete jsonSchema.additionalProperties;
     return {

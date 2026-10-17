@@ -127,7 +127,7 @@ export function SidebarProfile({ isCollapsed = false, open, onOpenChange, onOpen
                 onClick={() => { onOpenChange(false); onOpenSettings() }}
                 className="sidebar-settings-trigger craft-icon-button craft-row-focus flex shrink-0 items-center justify-center rounded-control text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
               >
-                <Settings aria-hidden="true" className="size-[18px]" strokeWidth={1.5} />
+                <Settings aria-hidden="true" className="size-control-2xs" strokeWidth={1.5} />
               </button>
             </TooltipTrigger>
             <TooltipContent side="top">{t('sidebar.settings')}</TooltipContent>

@@ -33,8 +33,8 @@ export function EntityListBadge({ children, variant = 'text', colorClass, style,
       className={cn(
         "shrink-0 rounded",
         variant === 'icon'
-          ? "h-[18px] w-[18px] flex items-center justify-center"
-          : "h-[18px] px-1.5 text-[10px] font-medium flex items-center whitespace-nowrap",
+          ? "h-control-2xs w-[18px] flex items-center justify-center"
+          : "h-control-2xs px-1.5 text-micro font-medium flex items-center whitespace-nowrap",
         colorClass,
         className,
       )}

@@ -1,0 +1,2052 @@
+{
+  "criticalAggregate": {
+    "expectedWorkflows": 44,
+    "completedWorkflows": [
+      "upstream-015-core",
+      "upstream-015-orchestration",
+      "upstream-015-browser",
+      "upstream-015-renderer",
+      "task-permission",
+      "plugin-consistency",
+      "workspace-recovery",
+      "runtime-reliability",
+      "task-file-scope",
+      "gantt-reschedule",
+      "planning-collection",
+      "planning-performance",
+      "docs-locale",
+      "markdown-file-links",
+      "verification-output",
+      "governance-gates",
+      "governance-closeout",
+      "runtime-boundary-gate",
+      "durable-runtime-boundary",
+      "durable-runtime-crash",
+      "plugin-transaction",
+      "session-branch",
+      "webui-auth-lifecycle",
+      "process-lifecycle",
+      "config-domains",
+      "rpc-contracts",
+      "governance-boundaries",
+      "import-graph",
+      "cycle-gate",
+      "pi-control",
+      "durable-runtime-pi",
+      "session-owners",
+      "client-platform"
+    ],
+    "completedAfterSupplemental": [
+      "client-platform",
+      "config-domains",
+      "cycle-gate",
+      "docs-locale",
+      "durable-runtime-boundary",
+      "durable-runtime-crash",
+      "durable-runtime-pi",
+      "gantt-reschedule",
+      "governance-boundaries",
+      "governance-closeout",
+      "governance-gates",
+      "import-graph",
+      "markdown-file-links",
+      "pi-control",
+      "planning-collection",
+      "planning-performance",
+      "plugin-consistency",
+      "plugin-transaction",
+      "process-lifecycle",
+      "rpc-contracts",
+      "runtime-boundary-gate",
+      "runtime-reliability",
+      "session-branch",
+      "session-owners",
+      "task-file-scope",
+      "task-permission",
+      "upstream-015-browser",
+      "upstream-015-core",
+      "upstream-015-orchestration",
+      "upstream-015-renderer",
+      "verification-output",
+      "webui-auth-lifecycle",
+      "workspace-recovery",
+      "distribution-inputs",
+      "identity-gate",
+      "theme-governance"
+    ],
+    "failedWorkflow": "markdown-popout",
+    "pendingWorkflows": [
+      "theme-foundation",
+      "theme-contract",
+      "theme-roles",
+      "theme-domains",
+      "theme-browser-host",
+      "theme-login",
+      "theme-design"
+    ],
+    "failure": "connect: WebSocket error: write ECONNRESET\nCall log:\n\u001b[2m  - <ws connecting> ws://[::1]:62680/9b96af611e36ca81b9079db44d13c6a1\u001b[22m\n\u001b[2m  - <ws error> ws://[::1]:62680/9b96af611e36ca81b9079db44d13c6a1 error write ECONNRESET\u001b[22m\n\u001b[2m  - <ws connect error> ws://[::1]:62680/9b96af611e36ca81b9079db44d13c6a1 write ECONNRESET\u001b[22m\n\u001b[2m  - <ws disconnected> ws://[::1]:62680/9b96af611e36ca81b9079db44d13c6a1 code=1006 reason=\u001b[22m\n",
+    "initializerAttempt": {
+      "configurationReverted": true,
+      "interruptedBeforeAssertions": true,
+      "elapsedSeconds": 370.231
+    },
+    "testGroups": {
+      "expected": 6,
+      "result": {
+        "command": "Existing criticalTestGroups registry (all six groups)",
+        "exitCode": 0,
+        "seconds": 22.232
+      },
+      "pass": 243,
+      "fail": 0
+    }
+  },
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "sourceHead": "062bd1f25ee565e6cc9fffe8b7376177b5c96351",
+  "environment": {
+    "bun": "1.4.2",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "scope": {
+    "trackedCodeFiles": 2414,
+    "astFiles": 2392,
+    "productionCatchSignals": {
+      "rethrow": 1,
+      "empty": 237,
+      "fallback": 284,
+      "handled": 1042
+    },
+    "initialStatus": "M docs/verification/results/packaged-client-smoke-win.json\n M docs/verification/results/packaged-client-verification-win.json\n?? docs/design/icon-family-demo/\n?? docs/design/icon-replan-review/\n?? docs/design/iconify-requested-review/\n?? docs/design/iconify-set-review/\n?? docs/design/lucide-icon-revision/\n?? docs/design/phosphor-icon-review/\n?? docs/design/remix-icon-review/"
+  },
+  "metrics": {
+    "before": {
+      "production": {
+        "files": 1528,
+        "lines": 340852
+      },
+      "test": {
+        "files": 612,
+        "lines": 100232
+      },
+      "tooling": {
+        "files": 274,
+        "lines": 39631
+      }
+    },
+    "after": {
+      "production": {
+        "files": 1528,
+        "lines": 340820
+      },
+      "test": {
+        "files": 608,
+        "lines": 99541
+      },
+      "tooling": {
+        "files": 274,
+        "lines": 39631
+      }
+    },
+    "staticTests": {
+      "before": 5651,
+      "after": 5612,
+      "removed": 39,
+      "moved": 28
+    },
+    "removed": [
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 186,
+        "title": "parseArgs: run with --source accumulates sources"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 198,
+        "title": "parseArgs: --output-format stream-json"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 207,
+        "title": "parseArgs: --no-cleanup flag"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 216,
+        "title": "creates session with correct workspace and options"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 256,
+        "title": "streams text events from session"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 291,
+        "title": "session delete is called in lifecycle"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 309,
+        "title": "spawnServer mock returns expected url and token"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 318,
+        "title": "parseArgs: --workspace-dir sets workspaceDir"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 328,
+        "title": "parseArgs: workspaceDir defaults to undefined"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 333,
+        "title": "workspace:create returns ID used directly (no workspaces:get needed)"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 366,
+        "title": "LLM bootstrap calls save, setup, and setDefault when no connections exist"
+      },
+      {
+        "path": "apps/cli/src/run.isolated.ts",
+        "line": 405,
+        "title": "LLM bootstrap is skipped when connections already exist"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 26,
+        "title": "accepts ModelDefinition[] with a matching default"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 147,
+        "title": "rejects pi custom endpoint without provider preset"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 158,
+        "title": "accepts pi custom endpoint when provider preset is set"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 241,
+        "title": "masks long keys keeping the provider prefix and the last four characters"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 245,
+        "title": "masks short keys completely"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 249,
+        "title": "recognizes masked values and nothing else"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 269,
+        "title": "uses a typed key as-is and never consults the store"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 276,
+        "title": "resolves the masked placeholder to the stored key of the edited connection"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 283,
+        "title": "asks for the key when the placeholder arrives without a connection slug"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 289,
+        "title": "asks for the key when nothing is stored for the slug"
+      },
+      {
+        "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "line": 295,
+        "title": "requires a key for remote endpoints and allows none for loopback"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 219,
+        "title": "resolves simple skill mention with display name"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 224,
+        "title": "resolves skill with workspace ID"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 229,
+        "title": "falls back to slug when not in map"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 234,
+        "title": "preserves sentence structure"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 239,
+        "title": "resolves multiple skill mentions"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 244,
+        "title": "leaves text without mentions unchanged"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 255,
+        "title": "resolves source mention to semantic marker"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 260,
+        "title": "preserves sentence structure"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 265,
+        "title": "resolves multiple source mentions"
+      },
+      {
+        "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+        "line": 270,
+        "title": "leaves text without mentions unchanged"
+      },
+      {
+        "path": "packages/shared/src/config/__tests__/watcher-duplicate-guard.test.ts",
+        "line": 18,
+        "title": "should expose an active watchers registry"
+      },
+      {
+        "path": "packages/shared/src/config/__tests__/watcher-duplicate-guard.test.ts",
+        "line": 23,
+        "title": "registry should be empty when no watchers are running"
+      },
+      {
+        "path": "packages/ui/eslint-rules/__tests__/no-hardcoded-z-index.test.ts",
+        "line": 21,
+        "title": "flags hardcoded default in destructured props"
+      },
+      {
+        "path": "packages/ui/eslint-rules/__tests__/no-hardcoded-z-index.test.ts",
+        "line": 27,
+        "title": "flags hardcoded default in object destructuring"
+      },
+      {
+        "path": "packages/ui/eslint-rules/__tests__/no-hardcoded-z-index.test.ts",
+        "line": 32,
+        "title": "allows token-based zIndex default values"
+      },
+      {
+        "path": "packages/ui/eslint-rules/__tests__/no-hardcoded-z-index.test.ts",
+        "line": 37,
+        "title": "continues to flag hardcoded style zIndex literals"
+      }
+    ],
+    "moved": [
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "accepts a string list with a matching default",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "regression: Pi ModelDefinition[] with valid default is accepted",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "rejects when default model is not in the list",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "auto-selects first model when default is undefined",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "auto-selects first ModelDefinition.id when default is undefined",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "returns valid for empty model list",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "creates anthropic-api with the native Pi transport",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "honours a resolved custom-endpoint transport override",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "creates claude-max with oauth",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "creates pi-api-key with pi provider",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "handles numeric suffix slugs (anthropic-api-2) by deriving from base template",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "handles numeric suffix slugs (pi-api-key-3)",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "throws for unknown slug",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "always sets createdAt",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "sets piAuthProvider for chatgpt-plus",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "sets piAuthProvider for github-copilot",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps ECONNREFUSED to friendly message",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps ENOTFOUND to friendly message",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps fetch failed to friendly message",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps 401 to invalid API key",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps unauthorized to invalid API key",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps 404+model to model message",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps 404 without model to endpoint message",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps 429 to rate limit",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps 403 to permission error",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "maps provider mismatch API key errors to actionable guidance",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "passes through unknown errors truncated to 300 chars",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      },
+      {
+        "from": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+        "title": "passes through short unknown errors as-is",
+        "to": "packages/server-core/src/domain/connection-setup-logic.test.ts"
+      }
+    ],
+    "baselineTests": {
+      "pass": 6301,
+      "fail": 0,
+      "skip": 7,
+      "groups": 65
+    }
+  },
+  "structuralCounts": {
+    "files": [
+      {
+        "path": "apps/electron/src/renderer/hooks/useOnboarding.ts",
+        "before": {
+          "if": 38,
+          "catch": 9,
+          "conditionalExpression": 10,
+          "optionalAccess": 20,
+          "nullishFallback": 10
+        },
+        "after": {
+          "if": 36,
+          "catch": 9,
+          "conditionalExpression": 10,
+          "optionalAccess": 20,
+          "nullishFallback": 10
+        }
+      },
+      {
+        "path": "packages/messaging-gateway/src/registry.ts",
+        "before": {
+          "if": 105,
+          "catch": 17,
+          "conditionalExpression": 27,
+          "optionalAccess": 41,
+          "nullishFallback": 52
+        },
+        "after": {
+          "if": 105,
+          "catch": 16,
+          "conditionalExpression": 27,
+          "optionalAccess": 41,
+          "nullishFallback": 52
+        }
+      },
+      {
+        "path": "packages/server-core/src/domain/connection-setup-logic.ts",
+        "before": {
+          "if": 22,
+          "catch": 1,
+          "conditionalExpression": 11,
+          "optionalAccess": 6,
+          "nullishFallback": 5
+        },
+        "after": {
+          "if": 22,
+          "catch": 1,
+          "conditionalExpression": 10,
+          "optionalAccess": 6,
+          "nullishFallback": 5
+        }
+      },
+      {
+        "path": "packages/session-tools-core/src/tool-defs.ts",
+        "before": {
+          "if": 2,
+          "catch": 0,
+          "conditionalExpression": 1,
+          "optionalAccess": 9,
+          "nullishFallback": 5
+        },
+        "after": {
+          "if": 2,
+          "catch": 0,
+          "conditionalExpression": 0,
+          "optionalAccess": 7,
+          "nullishFallback": 4
+        }
+      },
+      {
+        "path": "packages/shared/src/automations/validation.ts",
+        "before": {
+          "if": 49,
+          "catch": 9,
+          "conditionalExpression": 14,
+          "optionalAccess": 3,
+          "nullishFallback": 7
+        },
+        "after": {
+          "if": 46,
+          "catch": 8,
+          "conditionalExpression": 14,
+          "optionalAccess": 2,
+          "nullishFallback": 6
+        }
+      },
+      {
+        "path": "packages/shared/src/config/watcher.ts",
+        "before": {
+          "if": 92,
+          "catch": 14,
+          "conditionalExpression": 4,
+          "optionalAccess": 40,
+          "nullishFallback": 0
+        },
+        "after": {
+          "if": 92,
+          "catch": 14,
+          "conditionalExpression": 4,
+          "optionalAccess": 40,
+          "nullishFallback": 0
+        }
+      },
+      {
+        "path": "packages/shared/src/tasks/validate.ts",
+        "before": {
+          "if": 29,
+          "catch": 0,
+          "conditionalExpression": 4,
+          "optionalAccess": 2,
+          "nullishFallback": 9
+        },
+        "after": {
+          "if": 29,
+          "catch": 0,
+          "conditionalExpression": 4,
+          "optionalAccess": 2,
+          "nullishFallback": 6
+        }
+      }
+    ],
+    "before": {
+      "if": 337,
+      "catch": 50,
+      "conditionalExpression": 71,
+      "optionalAccess": 121,
+      "nullishFallback": 88
+    },
+    "after": {
+      "if": 332,
+      "catch": 48,
+      "conditionalExpression": 69,
+      "optionalAccess": 118,
+      "nullishFallback": 83
+    }
+  },
+  "contracts": {
+    "equal": true,
+    "baselineSha256": "eaec53fc0712b69627ad2c60daa9453d029bd43f5c9fa48c2535ae9ddfd59a64",
+    "afterSha256": "eaec53fc0712b69627ad2c60daa9453d029bd43f5c9fa48c2535ae9ddfd59a64",
+    "sections": {
+      "schemas": {
+        "cases": 8,
+        "beforeSha256": "a32e231d05e1c9b6a1149e4c0912c5db6355e00c7bb5e71042b0c7d3b646e2c0",
+        "afterSha256": "a32e231d05e1c9b6a1149e4c0912c5db6355e00c7bb5e71042b0c7d3b646e2c0"
+      },
+      "automationContent": {
+        "cases": 22,
+        "beforeSha256": "15995a5598d6fc4c29445c820bb50bae7e49ce36899a09fb8798fb579d32aec7",
+        "afterSha256": "15995a5598d6fc4c29445c820bb50bae7e49ce36899a09fb8798fb579d32aec7"
+      },
+      "automationDisk": {
+        "cases": 23,
+        "beforeSha256": "9d74aaaa6158979d988ef019d7c0e6c76f438b6bb0f5375d4a275a169dfe35ef",
+        "afterSha256": "9d74aaaa6158979d988ef019d7c0e6c76f438b6bb0f5375d4a275a169dfe35ef"
+      },
+      "tasks": {
+        "cases": 10,
+        "beforeSha256": "d9e4b45d01fda3fe033feef70eacd24e21e032840c4ff33627877066eb698301",
+        "afterSha256": "d9e4b45d01fda3fe033feef70eacd24e21e032840c4ff33627877066eb698301"
+      },
+      "models": {
+        "cases": 20,
+        "beforeSha256": "1e323ecd801ff1bca1a18eea544e2084c8484fa8b51ff41c08aa51bcb4ac0a57",
+        "afterSha256": "1e323ecd801ff1bca1a18eea544e2084c8484fa8b51ff41c08aa51bcb4ac0a57"
+      }
+    }
+  },
+  "tests": {
+    "before": {
+      "pass": 6301,
+      "fail": 0,
+      "skip": 7,
+      "skippedBehaviors": [
+        "(skip) script-executor > path containment > blocks symlinks pointing outside the workspace",
+        "(skip) pages/storage > deletePageWithUnpublish local-delete failure > surfaces a contextual error when the local folder cannot be removed, then succeeds once it can",
+        "(skip) E2E: OAuth Metadata Discovery > GitHub MCP (api.githubcopilot.com) > discovers OAuth metadata",
+        "(skip) E2E: OAuth Metadata Discovery > Linear MCP (mcp.linear.app) > discovers OAuth metadata",
+        "(skip) E2E: OAuth Metadata Discovery > Ahrefs MCP (api.ahrefs.com/mcp/mcp) > discovers OAuth metadata",
+        "(skip) git developer context > defangs a crafted file name so it cannot close the context block",
+        "(skip) getProjectContextFilesPrompt > defangs a crafted directory name and escapes the attribute on a real tree"
+      ],
+      "conditionalSkip": [
+        "  (skipped: openssl not available)"
+      ]
+    },
+    "after": {
+      "pass": 6262,
+      "fail": 0,
+      "skip": 7,
+      "skippedBehaviors": [
+        "(skip) script-executor > path containment > blocks symlinks pointing outside the workspace",
+        "(skip) pages/storage > deletePageWithUnpublish local-delete failure > surfaces a contextual error when the local folder cannot be removed, then succeeds once it can",
+        "(skip) E2E: OAuth Metadata Discovery > GitHub MCP (api.githubcopilot.com) > discovers OAuth metadata",
+        "(skip) E2E: OAuth Metadata Discovery > Linear MCP (mcp.linear.app) > discovers OAuth metadata",
+        "(skip) E2E: OAuth Metadata Discovery > Ahrefs MCP (api.ahrefs.com/mcp/mcp) > discovers OAuth metadata",
+        "(skip) git developer context > defangs a crafted file name so it cannot close the context block",
+        "(skip) getProjectContextFilesPrompt > defangs a crafted directory name and escapes the attribute on a real tree"
+      ],
+      "conditionalSkip": [
+        "  (skipped: openssl not available)"
+      ]
+    }
+  },
+  "commands": [
+    {
+      "command": "bun run test",
+      "exitCode": 0,
+      "seconds": 300.083,
+      "phase": "baseline-test",
+      "log": ".cache/defensive-cleanup-2026-10-17/baseline-test.log",
+      "logSha256": "fbc34addbc0e2df7afedd21ef9ef0f91535d8f2af45529ca9aed9ee46d599283"
+    },
+    {
+      "command": "bun run typecheck:all",
+      "exitCode": 0,
+      "seconds": 31.176,
+      "phase": "baseline-typecheck",
+      "log": ".cache/defensive-cleanup-2026-10-17/baseline-typecheck.log",
+      "logSha256": "2de31d29ddf49cd205aa0f2c8bca09f3bfa33a45091dd2b8fa8e32dc26934308"
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "seconds": 101.784,
+      "phase": "baseline-lint",
+      "log": ".cache/defensive-cleanup-2026-10-17/baseline-lint.log",
+      "logSha256": "ea1964dca6e399ee68f489bafac4751229c6db6ae32fb939dba6f2754f23d1d7"
+    },
+    {
+      "command": "bun run build:smoke",
+      "exitCode": 1,
+      "seconds": 120.841,
+      "phase": "baseline-build",
+      "log": ".cache/defensive-cleanup-2026-10-17/baseline-build.log",
+      "logSha256": "e3fc6fef12d9088cf58a2e877d63df03219d8276bbdb25df996fbd1ba33e7372"
+    },
+    {
+      "command": "bun run test",
+      "exitCode": 0,
+      "seconds": 247.231,
+      "phase": "final-test",
+      "log": ".cache/defensive-cleanup-2026-10-17/final-test.log",
+      "logSha256": "401165f36d776816a3c88a685bdda3f30d7e688feb58afc15302f330d0ae6fab"
+    },
+    {
+      "command": "bun run validate:ci",
+      "exitCode": 0,
+      "seconds": 257.717,
+      "phase": "final-ci",
+      "log": ".cache/defensive-cleanup-2026-10-17/final-ci.log",
+      "logSha256": "b2abfb11ed430eeb1045f904da95e1ae5bbf796723b252a0effe79e7a69228d2"
+    },
+    {
+      "command": "bun run test:critical",
+      "exitCode": 1,
+      "seconds": 1221.112,
+      "phase": "final-critical",
+      "log": ".cache/defensive-cleanup-2026-10-17/final-critical.log",
+      "logSha256": "7e32dee178de58e1a5477aea30711e33c96072a3ec08763c54e9f03df19fdb21"
+    },
+    {
+      "command": "bun run build:smoke",
+      "exitCode": 1,
+      "seconds": 215.913,
+      "phase": "final-build",
+      "log": ".cache/defensive-cleanup-2026-10-17/final-build.log",
+      "logSha256": "d487fbe90058d8133b9dd89ea3dfc574fbe4c48368dc7fae94f33aaf9404a820"
+    },
+    {
+      "command": "bun run test:markdown-popout (cold isolated cache)",
+      "exitCode": 1,
+      "seconds": 370.231,
+      "phase": "scoped-markdown-popout",
+      "log": ".cache/defensive-cleanup-2026-10-17/scoped-markdown-popout.log",
+      "logSha256": "2a57ec0ec090a4def03a62bf3058f94fe51564d1fb04938b9e59a5298a01108c"
+    },
+    {
+      "command": "Existing criticalTestGroups registry (all six groups)",
+      "exitCode": 0,
+      "seconds": 22.232,
+      "phase": "critical-test-groups",
+      "log": ".cache/defensive-cleanup-2026-10-17/critical-test-groups.log",
+      "logSha256": "bb6a80dcbb48352d99d7b9b56bca6376292e89758346142a662349a30e931225"
+    },
+    {
+      "command": "theme-governance workflow",
+      "exitCode": 0,
+      "seconds": 8.198,
+      "phase": "theme-governance",
+      "log": ".cache/defensive-cleanup-2026-10-17/theme-governance.log",
+      "logSha256": "4917b4478db76dde9c765f79e1a6c23f4505a133fc4980f063025f2103fe748b"
+    },
+    {
+      "command": "distribution-inputs workflow",
+      "exitCode": 0,
+      "seconds": 7.858,
+      "phase": "distribution-inputs",
+      "log": ".cache/defensive-cleanup-2026-10-17/distribution-inputs.log",
+      "logSha256": "4917b4478db76dde9c765f79e1a6c23f4505a133fc4980f063025f2103fe748b"
+    },
+    {
+      "command": "identity-gate workflow",
+      "exitCode": 0,
+      "seconds": 2.44,
+      "phase": "identity-gate",
+      "log": ".cache/defensive-cleanup-2026-10-17/identity-gate.log",
+      "logSha256": "4917b4478db76dde9c765f79e1a6c23f4505a133fc4980f063025f2103fe748b"
+    }
+  ],
+  "workflows": [
+    {
+      "workflow": "client-platform",
+      "exitCode": 0,
+      "passed": 25,
+      "sceneIds": [
+        "business renderer is absent while adapter configuration is delayed",
+        "authenticated transport is ready before business renderer mounts",
+        "production RPC facade reads persisted fixture sessions",
+        "session switching preserves separate persisted input drafts",
+        "session row keyboard activation preserves draft ownership",
+        "language change retains current input draft",
+        "manual reconnect publishes reconnecting before old socket close",
+        "workspace switching and reconnect keep the accepted client binding",
+        "returning to a workspace restores its session draft",
+        "rapid workspace switching flushes pending composer and persistence timers",
+        "unsupported native file capability fails explicitly",
+        "reconnect retains production session domain state",
+        "offline workspace switch reports failure and preserves binding and draft",
+        "real browser offline edits persist after reconnection without an unhandled rejection",
+        "web permission waits before real file effect",
+        "web permission approval completes real Pi write",
+        "web preview reads the actual written file",
+        "web answer links open Unicode spaced files through all six path forms",
+        "web real SubmitPlan card accepts and continues once",
+        "web actual response cancellation returns the session to idle",
+        "web reconnect preserves and persists the latest queued draft",
+        "web reconnect and history merge preserve single user and plan facts",
+        "web file double-click previews and native reveal controls are absent",
+        "1280px renderer with reduced motion",
+        "420px renderer with reduced motion"
+      ],
+      "untested": [
+        "live external provider and OAuth"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/client-platform/manifest.json",
+      "manifestSha256": "93d0be9670e80a8e7677881450ca6ef8ad47b161e97eb30beb0b92161ab779ff",
+      "startedAt": "2026-10-17T01:47:21.236Z",
+      "finishedAt": "2026-10-17T01:48:14.145Z"
+    },
+    {
+      "workflow": "config-domains",
+      "exitCode": 0,
+      "passed": 22,
+      "sceneIds": [
+        "first:corrupt-preserved",
+        "first:migration-idempotent",
+        "first:concurrent-in-process-settings",
+        "first:windows-draft",
+        "first:without-bundled-assets",
+        "first:compatibility-owner-identity",
+        "first:connection-refresh",
+        "first:credential-failure-preserves-cache-and-vault",
+        "first:workspace-credential-failure-preserves-config-and-cache",
+        "first:logout-config-owner-preserves-workspace-data",
+        "second:corrupt-preserved",
+        "second:migration-idempotent",
+        "second:concurrent-in-process-settings",
+        "second:windows-draft",
+        "second:without-bundled-assets",
+        "second:compatibility-owner-identity",
+        "second:connection-refresh",
+        "second:credential-failure-preserves-cache-and-vault",
+        "second:workspace-credential-failure-preserves-config-and-cache",
+        "second:logout-config-owner-preserves-workspace-data",
+        "browser-pure-schema",
+        "isolated-config-dirs"
+      ],
+      "untested": [
+        "cross-process concurrent writes (unchanged synchronous writer contract)",
+        "live provider credential refresh",
+        "native Windows filesystem"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/config-domains/manifest.json",
+      "manifestSha256": "9a6a802ec9aa43d9aa9145c0d6c850403c8383ffc7d286725c959561ef4133a4",
+      "startedAt": "2026-10-17T01:47:04.872Z",
+      "finishedAt": "2026-10-17T01:47:06.877Z"
+    },
+    {
+      "workflow": "cycle-gate",
+      "exitCode": 0,
+      "passed": 6,
+      "sceneIds": [
+        "acyclic",
+        "new-runtime-cycle",
+        "reasoned-exact-cycle",
+        "missing-reason",
+        "cycle-expansion",
+        "stale-exception"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/cycle-gate/manifest.json",
+      "manifestSha256": "1245c084fcc8006d0515e838e1ba7b10ab87826412eb18ea59e602dc4831c154",
+      "startedAt": "2026-10-17T01:47:12.462Z",
+      "finishedAt": "2026-10-17T01:47:13.758Z"
+    },
+    {
+      "workflow": "docs-locale",
+      "exitCode": 0,
+      "passed": 52,
+      "sceneIds": [
+        "zh-page:getting-started/introduction",
+        "zh-page:getting-started/installation",
+        "zh-page:core-concepts/conversations",
+        "zh-page:core-concepts/projects",
+        "zh-page:core-concepts/working-directory",
+        "zh-page:core-concepts/permissions",
+        "zh-page:core-concepts/interactions",
+        "zh-page:sources/overview",
+        "zh-page:sources/mcp-servers",
+        "zh-page:sources/apis",
+        "zh-page:sources/local-filesystems",
+        "zh-page:skills/overview",
+        "zh-page:plugins/overview",
+        "zh-page:statuses/overview",
+        "zh-page:statuses/customizing",
+        "zh-page:labels/overview",
+        "zh-page:labels/auto-rules",
+        "zh-page:automations/overview",
+        "zh-page:messaging/overview",
+        "zh-page:messaging/telegram",
+        "zh-page:messaging/whatsapp",
+        "zh-page:messaging/lark",
+        "zh-page:messaging/wechat-wecom",
+        "zh-page:browser/overview",
+        "zh-page:browser/examples",
+        "zh-page:browser/api-discovery",
+        "zh-page:customisation/themes",
+        "zh-page:customisation/colors",
+        "zh-page:customisation/icons",
+        "zh-page:go-further/workspaces",
+        "zh-page:go-further/pages",
+        "zh-page:go-further/kanban",
+        "zh-page:go-further/tasks",
+        "zh-page:go-further/rich-output",
+        "zh-page:go-further/document-tools",
+        "zh-page:go-further/connect-to-anything",
+        "zh-page:go-further/deep-links",
+        "zh-page:go-further/performance",
+        "zh-page:server/remote-server",
+        "zh-page:reference/config-file",
+        "zh-page:reference/preferences",
+        "zh-page:reference/llm-connections",
+        "zh-page:reference/custom-endpoint",
+        "zh-page:reference/credentials",
+        "zh-page:reference/network-proxy",
+        "zh-page:reference/environment-variables",
+        "zh-page:reference/cli-reference",
+        "chinese-search-and-navigation",
+        "internal-deep-link-retains-locale",
+        "english-switch-preserves-slug",
+        "narrow-keyboard-navigation",
+        "escape-closes-reader"
+      ],
+      "untested": [
+        "Browser reader and compiled content; external support sites and other locales were not added."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/docs-locale/manifest.json",
+      "manifestSha256": "a100afcceebd2877fdde36b01681a825b8ac4b96085df6b1544679ed56df8a77",
+      "startedAt": "2026-10-17T01:41:05.254Z",
+      "finishedAt": "2026-10-17T01:42:49.544Z"
+    },
+    {
+      "workflow": "durable-runtime-boundary",
+      "exitCode": 0,
+      "passed": 15,
+      "sceneIds": [
+        "F06",
+        "F07",
+        "F13",
+        "F04/F10",
+        "F07/required-commit",
+        "F10/notification",
+        "F15/F18",
+        "F06/Host",
+        "F08/F09",
+        "F11",
+        "F12",
+        "F05/F18",
+        "F03/F16/F19",
+        "F21",
+        "F19"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/durable-runtime-boundary/manifest.json",
+      "manifestSha256": "3abbe298521f6ef7acf03830c9bb8e7f808d5290b09d0ee8862620ca43f4f2b1",
+      "startedAt": "2026-10-17T01:45:53.761Z",
+      "finishedAt": "2026-10-17T01:45:55.625Z"
+    },
+    {
+      "workflow": "durable-runtime-crash",
+      "exitCode": 0,
+      "passed": 8,
+      "sceneIds": [
+        "tool-t1-failure",
+        "tool-after-t1",
+        "tool-after-effect",
+        "tool-after-t2",
+        "model-t1-failure",
+        "model-after-t1",
+        "model-after-effect",
+        "model-after-t2"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/durable-runtime-crash/manifest.json",
+      "manifestSha256": "27c9e3e1ccbb1dd9fcc8f26124730ac3e6333b1d8070e3a4e85ef3fab33b7966",
+      "startedAt": "2026-10-17T01:45:55.789Z",
+      "finishedAt": "2026-10-17T01:45:59.024Z"
+    },
+    {
+      "workflow": "durable-runtime-pi",
+      "exitCode": 0,
+      "passed": 6,
+      "sceneIds": [
+        "independent execution",
+        "real read effect T1/T2",
+        "usage",
+        "two terminal turns",
+        "first-turn tool parity",
+        "canonical tool context"
+      ],
+      "untested": [
+        "live provider APIs",
+        "native Windows/Linux execution",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/durable-runtime-pi/manifest.json",
+      "manifestSha256": "4a66b9080cf8a5d0269d1a21b29494b89cab1dba3d2cbc84bba4fc22c97d4390",
+      "startedAt": "2026-10-17T01:47:15.941Z",
+      "finishedAt": "2026-10-17T01:47:18.081Z"
+    },
+    {
+      "workflow": "gantt-reschedule",
+      "exitCode": 0,
+      "passed": 14,
+      "sceneIds": [
+        "keyboard-opens-date-controls",
+        "inclusive-end-saved-through-real-session-planning",
+        "keyboard-cancel-does-not-write",
+        "pointer-drag-commits-once",
+        "resize-preserves-start-and-inclusive-end",
+        "escape-cancels-pointer-reschedule",
+        "pointer-cancellation-does-not-write",
+        "save-failure-rolls-back-and-reports",
+        "broadcast-and-remount-preserve-inflight-reschedule",
+        "summaries-and-milestones-are-readonly",
+        "dst-clock-seconds-and-untouched-end-preserved",
+        "single-day-inclusive-range-preserved",
+        "filtered-out-children-do-not-make-summary-editable",
+        "nonexistent-dst-clock-refused-without-write"
+      ],
+      "untested": [
+        "Browser over real Gantt and real WorkItem handler/SessionManager; loopback bridge replaces transport only. Physical touch and signed builds are separate."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/gantt-reschedule/manifest.json",
+      "manifestSha256": "80e778c0716aa8ff968e96953d5c2fca4a2d028ca9202e23c1e3da7c1615ed68",
+      "startedAt": "2026-10-17T01:39:19.477Z",
+      "finishedAt": "2026-10-17T01:39:38.746Z"
+    },
+    {
+      "workflow": "governance-boundaries",
+      "exitCode": 0,
+      "passed": 17,
+      "sceneIds": [
+        "valid-boundaries",
+        "pure-io",
+        "protocol-relative",
+        "protocol-barrel",
+        "domain-compatibility-loop",
+        "second-writer",
+        "outside-unlink",
+        "aliased-unlink",
+        "joined-root-unlink",
+        "path-function-unlink",
+        "agent-assembly-transitive-manager",
+        "source-resources-transitive-manager",
+        "product-repository-transitive-manager",
+        "agent-product-context-transitive-manager",
+        "agent-product-callbacks-transitive-manager",
+        "boundary-any",
+        "root-borrow"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/governance-boundaries/manifest.json",
+      "manifestSha256": "c45cc92daf7c0fc0154e5ed4ebee1bb2c2f92d004fb2bf2f2e852795bd964415",
+      "startedAt": "2026-10-17T01:47:09.021Z",
+      "finishedAt": "2026-10-17T01:47:11.337Z"
+    },
+    {
+      "workflow": "governance-closeout",
+      "exitCode": 0,
+      "passed": 22,
+      "sceneIds": [
+        "disabled-job",
+        "ignored-job-errors",
+        "missing-pr-trigger",
+        "disabled-step",
+        "ignored-step-errors",
+        "missing-evidence",
+        "missing-runtime-supply",
+        "missing-critical-workflow",
+        "missing-critical-group",
+        "strict-final-tree",
+        "rpc-census-gate",
+        "nonempty-handler-census",
+        "all-central-contracts-have-handlers",
+        "apps/electron:debugger",
+        "apps/electron:unsafe-finally",
+        "packages/ui:debugger",
+        "packages/ui:unsafe-finally",
+        "no-baseline-initialization",
+        "cold-runtime-missing-stamp",
+        "cold-runtime-provision",
+        "cold-runtime-pinned",
+        "cold-runtime-executable-version"
+      ],
+      "untested": [
+        "GitHub Actions remote execution"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/governance-closeout/manifest.json",
+      "manifestSha256": "a8d060d4238759b14bea8a96e3e306e3742282a60789801fbba995c46f6900d0",
+      "startedAt": "2026-10-17T01:45:28.731Z",
+      "finishedAt": "2026-10-17T01:45:52.457Z"
+    },
+    {
+      "workflow": "governance-gates",
+      "exitCode": 0,
+      "passed": 10,
+      "sceneIds": [
+        "V08-uv",
+        "V08-upload",
+        "CI-pipeline-exit",
+        "CI-powershell-exit",
+        "V09-coverage",
+        "V09-warning",
+        "G04-unwired-boundary",
+        "G08-advisory-identity",
+        "G08-no-production-container",
+        "G07-no-browser-runtime"
+      ],
+      "untested": [
+        "GitHub Actions remote execution"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/governance-gates/manifest.json",
+      "manifestSha256": "0024914af637061330e133a308a9dcb4cbbd4a138a9f8efe4367f7ec9fc8c307",
+      "startedAt": "2026-10-17T01:44:58.836Z",
+      "finishedAt": "2026-10-17T01:45:28.353Z"
+    },
+    {
+      "workflow": "import-graph",
+      "exitCode": 0,
+      "passed": 7,
+      "sceneIds": [
+        "type-import",
+        "type-specifier",
+        "type-export",
+        "type-export-specifier",
+        "mixed-specifier",
+        "side-effect",
+        "dynamic-value"
+      ],
+      "untested": [],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/import-graph/manifest.json",
+      "manifestSha256": "cb1323bdfa2283c09f9ac6307baac44163dbb932b5d6866c50f719fc66e7e154",
+      "startedAt": "2026-10-17T01:47:11.530Z",
+      "finishedAt": "2026-10-17T01:47:12.265Z"
+    },
+    {
+      "workflow": "markdown-file-links",
+      "exitCode": 0,
+      "passed": 18,
+      "sceneIds": [
+        "windows-backslash",
+        "windows-dot-directory",
+        "windows-punctuation-directory",
+        "windows-reference",
+        "windows-encoded-backslash",
+        "windows-forward-slash",
+        "windows-unicode-space",
+        "file-url",
+        "literal-percent",
+        "relative-unicode",
+        "source-location",
+        "unix-root",
+        "raw-html-file",
+        "keyboard",
+        "middle-click",
+        "web-links-preserved",
+        "dangerous-html-and-spoofed-target-sanitized",
+        "safe-html-formatting-preserved"
+      ],
+      "untested": [
+        "Callback routing uses the actual shared Markdown component. Native production workflow separately verifies real file loading."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/markdown-file-links/manifest.json",
+      "manifestSha256": "3d4c118054a1d886f1004fab7575678dd42e67754d4d61224e1cf63d42961c14",
+      "startedAt": "2026-10-17T01:42:50.844Z",
+      "finishedAt": "2026-10-17T01:44:38.040Z"
+    },
+    {
+      "workflow": "markdown-popout",
+      "exitCode": 1,
+      "passed": 0,
+      "sceneIds": [],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/markdown-popout/manifest.json",
+      "manifestSha256": "9c4ccca06c2af7b22bd9e07008ce59a8d792517776f93f23ba49df636486be87",
+      "startedAt": "2026-10-17T01:48:14.986Z",
+      "finishedAt": "2026-10-17T01:54:45.010Z"
+    },
+    {
+      "workflow": "pi-control",
+      "exitCode": 0,
+      "passed": 9,
+      "sceneIds": [
+        "batched-init-before-dependent-commands",
+        "concurrent-ready-single-session",
+        "active-model-registry-refresh",
+        "late-response-does-not-create-session",
+        "abort-and-steer-control",
+        "reinitialize-ready",
+        "batched-init-and-real-prompt",
+        "abort-during-real-stream",
+        "parent-pipe-close-shutdown"
+      ],
+      "untested": [
+        "live OAuth refresh and MCP providers",
+        "native Windows/Linux"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/pi-control/manifest.json",
+      "manifestSha256": "c186fd201f2dc182287e889a7dcf4dda78623fad7c0d945361e5cd6ac46c5d34",
+      "startedAt": "2026-10-17T01:47:14.025Z",
+      "finishedAt": "2026-10-17T01:47:15.803Z"
+    },
+    {
+      "workflow": "planning-collection",
+      "exitCode": 0,
+      "passed": 17,
+      "sceneIds": [
+        "strict-mode-two-hooks-one-read-and-subscription",
+        "late-read-keeps-successful-write-and-unmodified-rows",
+        "late-read-preserves-create-and-delete-tombstone",
+        "ten-invalidations-one-follow-up-no-overlapping-reads",
+        "late-old-workspace-read-cannot-pollute-new-scope",
+        "late-old-workspace-write-cannot-pollute-new-scope",
+        "read-failure-retains-items-and-explicit-retry-recovers",
+        "calendar-rejected-write-throws-and-keeps-snapshot",
+        "invalid-calendar-range-rejected-before-writing",
+        "calendar-create-retains-local-times-inclusive-end-note-project",
+        "calendar-update-all-day-and-clears-omitted-optional-fields",
+        "clear-schedule-keeps-work-item-and-session-identity",
+        "connection-transition-revalidates-once",
+        "last-unsubscribe-releases-both-listeners-and-stops-reads",
+        "remount-revalidates-retained-cache-once",
+        "initial-read-merges-successful-write-with-all-other-rows",
+        "null-workspace-has-no-stale-projection"
+      ],
+      "untested": [
+        "Deterministic browser hook race harness uses an explicit in-memory API; real host, transport, and performance are covered separately by planning-performance."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/planning-collection/manifest.json",
+      "manifestSha256": "b3cc558aae9f7d3ba797599eb9a06e3fb11811676d44fd22b959b80e0dbd948c",
+      "startedAt": "2026-10-17T01:39:39.442Z",
+      "finishedAt": "2026-10-17T01:39:44.312Z"
+    },
+    {
+      "workflow": "planning-performance",
+      "exitCode": 0,
+      "passed": 20,
+      "sceneIds": [
+        "calendar-three-samples-one-shared-projection",
+        "single-write-three-samples-one-broadcast-owner",
+        "single-invalidation-three-samples-one-read",
+        "all-warm-planning-samples-within-existing-budget",
+        "hidden-archived-draft-excluded-unscheduled-retained",
+        "two-real-clients-converge-from-native-session-edit",
+        "ten-writes-and-two-workspaces-coalesce-without-losing-notifications",
+        "native-archive-and-unarchive-converge-in-both-windows",
+        "external-session-header-edit-invalidates-both-projections",
+        "in-flight-invalidations-collapse-to-one-follow-up",
+        "rejected-read-keeps-last-snapshot-and-recovers-on-invalidation",
+        "real-calendar-drag-rejection-shows-error-and-keeps-persisted-dates",
+        "reconnect-revalidates-shared-projection-once",
+        "no-read-after-last-consumer-unsubscribes",
+        "remount-revalidates-inactive-cache",
+        "legacy-calendar-create-update-notifies-modern-shared-projection",
+        "legacy-calendar-delete-clears-dates-and-retains-backing-session",
+        "native-session-delete-invalidates-planning-projection",
+        "planning-input-two-frames-within-existing-budget",
+        "sampled-renderer-and-host-memory-within-existing-budgets"
+      ],
+      "untested": [
+        "Local Windows production WebUI and real WebSocket/SessionManager; native Electron and other operating systems require their own runs.",
+        "Physical presentation and peak memory are not measured; frame and sampled memory proxies retain existing budgets."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/planning-performance/manifest.json",
+      "manifestSha256": "14958eac42cd0d553dc015e42d36d255abdd0fa51401c4a7896d1b3aafc18b68",
+      "startedAt": "2026-10-17T01:39:45.219Z",
+      "finishedAt": "2026-10-17T01:41:03.288Z"
+    },
+    {
+      "workflow": "plugin-consistency",
+      "exitCode": 0,
+      "passed": 17,
+      "sceneIds": [
+        "native-roster-same-bytes",
+        "invalid-source-before-resource-write",
+        "header-is-not-bearer-auth",
+        "duplicate-source-rejected",
+        "extension-without-configuration-visible",
+        "native-source-readiness-is-not-live-connectivity",
+        "stdio-readiness-requires-an-executable-file",
+        "windows-opaque-arguments",
+        "watcher-healthy-content-refresh",
+        "install-confirmation-package",
+        "install-confirmation-target",
+        "install-confirmation-workspace",
+        "install-confirmation-reuse",
+        "install-confirmation-expiry",
+        "install-confirmation-competing",
+        "install-and-uninstall-one-use-plan",
+        "uninstall-stale-target-kept"
+      ],
+      "untested": [
+        "No real provider or credentials; live connection/authentication remains session-owned. Existing transaction/crash workflows cover rollback separately."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/plugin-consistency/manifest.json",
+      "manifestSha256": "58589663d89afb88cbe109bac998bd456f54a1bec7e09aaf911cf81ed0e0540d",
+      "startedAt": "2026-10-17T01:39:08.755Z",
+      "finishedAt": "2026-10-17T01:39:11.301Z"
+    },
+    {
+      "workflow": "plugin-transaction",
+      "exitCode": 0,
+      "passed": 13,
+      "sceneIds": [
+        "skill-copy",
+        "skill-rename",
+        "source-backup-copy",
+        "package-backup-copy",
+        "package-rename",
+        "backup-cleanup",
+        "credentials-before-rollback",
+        "missing-backup",
+        "index-write",
+        "index-invalidate",
+        "audit-write",
+        "credential-cleanup",
+        "success"
+      ],
+      "untested": [
+        "SIGKILL/power loss during installation",
+        "concurrent installation of the same plugin",
+        "Windows/Linux native filesystem"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/plugin-transaction/manifest.json",
+      "manifestSha256": "04ad693c1c5833812bf10653f176f855d1111cec7d75f518466f33ab5fded16d",
+      "startedAt": "2026-10-17T01:45:59.195Z",
+      "finishedAt": "2026-10-17T01:46:13.456Z"
+    },
+    {
+      "workflow": "process-lifecycle",
+      "exitCode": 0,
+      "passed": 12,
+      "sceneIds": [
+        "L01-server-unhandled",
+        "L01-server-uncaught",
+        "L01-server-hang-cleanup",
+        "L01-server-throw-cleanup",
+        "L01-normal-signal-shutdown",
+        "L02-electron-port-hang",
+        "L02-electron-port-throw",
+        "L02-electron-port-normal",
+        "L06-runtime-admission-quiesce",
+        "L07-bootstrap-stop-owner",
+        "L04-pi-unhandled",
+        "L04-pi-uncaught"
+      ],
+      "untested": [
+        "native Electron UI/exit integration",
+        "Windows/Linux native execution",
+        "live provider APIs"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/process-lifecycle/manifest.json",
+      "manifestSha256": "1eb0648a9848724a6d40bf6811defc7a46d303a0aeb97ad4c86a1d679f670a54",
+      "startedAt": "2026-10-17T01:46:34.730Z",
+      "finishedAt": "2026-10-17T01:47:04.731Z"
+    },
+    {
+      "workflow": "rpc-contracts",
+      "exitCode": 0,
+      "passed": 7,
+      "sceneIds": [
+        "invalid-message-before-effect",
+        "invalid-attachments-before-effect",
+        "workspace-ownership",
+        "old-optional-args-and-unknown-fields",
+        "binary-codec-compatibility",
+        "timeout-does-not-retry-or-cancel-effect",
+        "late-response-does-not-poison-next-request"
+      ],
+      "untested": [
+        "native preload IPC",
+        "live remote TLS"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/rpc-contracts/manifest.json",
+      "manifestSha256": "f7941a0df9c4b91f5c5588ae5c2ff9cb6ef2dee9fb7cef23f39e4db8138521ee",
+      "startedAt": "2026-10-17T01:47:07.949Z",
+      "finishedAt": "2026-10-17T01:47:08.823Z"
+    },
+    {
+      "workflow": "runtime-boundary-gate",
+      "exitCode": 0,
+      "passed": 10,
+      "sceneIds": [
+        "no-private-object-export",
+        "public-api-only",
+        "runtime-no-product-import",
+        "runtime-no-product-object",
+        "explicit-public-exports",
+        "no-second-run-state",
+        "host-owns-state",
+        "host-owns-queue",
+        "host-owns-execution",
+        "runtime-transitive-product-dependency"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/runtime-boundary-gate/manifest.json",
+      "manifestSha256": "29d4b6b9ffcecb0647dc30877e48918ba80a87bf3ac0818eac8d5b906f0922df",
+      "startedAt": "2026-10-17T01:45:52.824Z",
+      "finishedAt": "2026-10-17T01:45:53.591Z"
+    },
+    {
+      "workflow": "runtime-reliability",
+      "exitCode": 0,
+      "passed": 10,
+      "sceneIds": [
+        "persisted-repeated-action",
+        "persisted-repeated-error",
+        "polling-separated",
+        "unsettled-age",
+        "terminal-count",
+        "unknown-cost-and-acceptance",
+        "order-and-duplicate-invariant",
+        "observer-failure-isolated",
+        "fresh-process-deterministic-rebuild",
+        "retained-facts-beyond-first-page"
+      ],
+      "untested": [
+        "Signals establish repetition only; they do not infer user progress or trigger intervention. SDK retry/compaction observations are classified separately when recorded."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/runtime-reliability/manifest.json",
+      "manifestSha256": "d8ae4b47f67fb00851c1509b09c7e383f1f6c61507bc5e43d9f973b051033760",
+      "startedAt": "2026-10-17T01:39:14.155Z",
+      "finishedAt": "2026-10-17T01:39:16.410Z"
+    },
+    {
+      "workflow": "session-branch",
+      "exitCode": 0,
+      "passed": 4,
+      "sceneIds": [
+        "missing-parent-sdk",
+        "preflight-rollback",
+        "successful-preflight",
+        "successful-branch-delete"
+      ],
+      "untested": [
+        "live Pi SDK branch initialization",
+        "native Windows/Linux filesystem"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/session-branch/manifest.json",
+      "manifestSha256": "743f7067fb74a715ee5f12a1129910fef7f0804ce19fb4800f19d5cfc57a5115",
+      "startedAt": "2026-10-17T01:46:13.662Z",
+      "finishedAt": "2026-10-17T01:46:15.571Z"
+    },
+    {
+      "workflow": "session-owners",
+      "exitCode": 0,
+      "passed": 8,
+      "sceneIds": [
+        "finite product callbacks preserve branch and transfer state without Manager",
+        "session snapshot filters fork-only metadata without mutable execution state",
+        "lazy snapshot reads latest product state",
+        "concurrent flush serializes real JSONL",
+        "flushAll barrier persists accepted product changes",
+        "source pool is ready before independent SDK assembly",
+        "resource release is idempotent and closes actual HTTP listener",
+        "local source resource owner needs no HTTP server"
+      ],
+      "untested": [
+        "live external MCP services",
+        "native Windows filesystem semantics"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/session-owners/manifest.json",
+      "manifestSha256": "f79b715558bbd5d4c10aaa3c81b6201837c76425f54bfecf878f56004802f662",
+      "startedAt": "2026-10-17T01:47:19.953Z",
+      "finishedAt": "2026-10-17T01:47:20.665Z"
+    },
+    {
+      "workflow": "task-file-scope",
+      "exitCode": 0,
+      "passed": 11,
+      "sceneIds": [
+        "undeclared-serializes",
+        "same-path-serializes",
+        "ancestor-path-serializes",
+        "read-write-serializes",
+        "case-alias-serializes",
+        "junction-alias-serializes",
+        "readers-parallel",
+        "disjoint-writes-parallel",
+        "cross-run-failed-releases",
+        "cross-run-cancelled-releases",
+        "restart-cannot-change-declarations"
+      ],
+      "untested": [
+        "Scope declarations coordinate TaskRunner nodes; they are not an OS sandbox and cannot constrain an agent that violates its declaration."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/task-file-scope/manifest.json",
+      "manifestSha256": "8720add204f10ea390464a8240a1f7483889b48f2d84a2a185302c0520facf78",
+      "startedAt": "2026-10-17T01:39:16.821Z",
+      "finishedAt": "2026-10-17T01:39:18.433Z"
+    },
+    {
+      "workflow": "task-permission",
+      "exitCode": 0,
+      "passed": 9,
+      "sceneIds": [
+        "R01-omitted-refuses-before-dispatch",
+        "R01-partial-refuses-entire-task",
+        "R01-explicit-safe",
+        "R01-explicit-ask",
+        "R01-explicit-guarded",
+        "R01-explicit-allow-all",
+        "R01-node-overrides-default",
+        "R01-every-node-can-declare-without-default",
+        "R01-legacy-resume-refuses-without-rewrite"
+      ],
+      "untested": [
+        "Actual provider/native policy checks are covered by the separate managed Pi capability workflows",
+        "Signing, physical devices and other operating systems"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/task-permission/manifest.json",
+      "manifestSha256": "60f21f6a3b445d8c1b44c15b21a42ae597dd16cc072239dd0ac8f220d2d051b8",
+      "startedAt": "2026-10-17T01:39:07.160Z",
+      "finishedAt": "2026-10-17T01:39:08.256Z"
+    },
+    {
+      "workflow": "upstream-015-browser",
+      "exitCode": 0,
+      "passed": 11,
+      "sceneIds": [
+        "U15-21-hidden-trusted-click-and-react-controlled-fill",
+        "U15-21-native-and-custom-select-update-state",
+        "U15-24-password-fill-type-paste-no-output-or-snapshot-leak",
+        "U15-21-all-input-completes-without-focusing-window",
+        "U15-25-apostrophe-command-parser",
+        "U15-23-normal-page-and-open-menu-not-challenges",
+        "U15-23-strong-challenge-confirmed-after-second-look",
+        "U15-22-hidden-screenshot-current-pixels-and-window-restoration",
+        "U15-22-recovery-preserves-pre-existing-topmost-state",
+        "U15-24-durable-tool-and-model-facts-hide-text-before-write",
+        "U15-24-sdk-journal-hides-text-with-exact-live-input-and-hash"
+      ],
+      "untested": [
+        "Live CAPTCHA/OAuth accounts",
+        "Other operating systems",
+        "Signed release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/upstream-015-browser/manifest.json",
+      "manifestSha256": "90458a45f69139a562ab309a38f374b7ed45ba39da1e8b222a63ea322eeb5dd5",
+      "startedAt": "2026-10-17T01:37:59.063Z",
+      "finishedAt": "2026-10-17T01:38:19.889Z"
+    },
+    {
+      "workflow": "upstream-015-core",
+      "exitCode": 0,
+      "passed": 11,
+      "sceneIds": [
+        "U15-02-http-header-map",
+        "U15-01-refresh-workspace-isolation-and-deduplication",
+        "U15-05-explicit-utility-and-provider-tier",
+        "U15-04-label-contract-and-legacy-canonicalization",
+        "U15-06-pi-resource-settings-isolation",
+        "U15-08-project-memory-tool-concurrent-append",
+        "U15-09-project-memory-retains-old-and-new",
+        "U15-10-13-http-mcp-resources-prompts-without-tools",
+        "U15-20-real-shell-guide-read-success-only",
+        "U15-07-headless-checkout-path-isolation",
+        "U15-26-timezone-and-source-error-status"
+      ],
+      "untested": [
+        "Live OAuth/provider APIs",
+        "Native browser and frontend behaviours are verified in separate workflows",
+        "Signed release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/upstream-015-core/manifest.json",
+      "manifestSha256": "16dc4efb9bd2501e09f25c76f16e6958cd3b343c7733cdb375d416ef021d9407",
+      "startedAt": "2026-10-17T01:37:54.568Z",
+      "finishedAt": "2026-10-17T01:37:57.222Z"
+    },
+    {
+      "workflow": "upstream-015-orchestration",
+      "exitCode": 0,
+      "passed": 5,
+      "sceneIds": [
+        "U15-14-oauth-one-preparation-and-workspace-isolation",
+        "U15-16-empty-turn-does-not-reuse-history",
+        "U15-18-interrupted-step-retains-explicit-recovery",
+        "U15-17-dependency-replies-and-explicit-reference-once",
+        "U15-19-active-generation-and-idle-timeout"
+      ],
+      "untested": [
+        "Live OAuth accounts",
+        "Native browser",
+        "Provider-backed Task reasoning",
+        "Signed release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/upstream-015-orchestration/manifest.json",
+      "manifestSha256": "fce98bc909e4d0dd89433d96748ce0e7ab6467d05b10d9094eaab1ca7a8789ff",
+      "startedAt": "2026-10-17T01:37:57.374Z",
+      "finishedAt": "2026-10-17T01:37:58.905Z"
+    },
+    {
+      "workflow": "upstream-015-renderer",
+      "exitCode": 0,
+      "passed": 6,
+      "sceneIds": [
+        "U15-03-real-credential-cancel-never-submits-valid-form",
+        "U15-03-single-file-preflight-retains-draft",
+        "U15-03-total-preflight-keeps-text-and-all-attachments",
+        "U15-03-serialized-text-plus-base64-cannot-exceed-message",
+        "U15-03-valid-message-still-submits-and-clears-draft",
+        "U15-27-real-production-components-have-no-page-errors"
+      ],
+      "untested": [
+        "Native IME/touch",
+        "Live provider or OAuth accounts"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/upstream-015-renderer/manifest.json",
+      "manifestSha256": "949fc0f7caf0fa23f6f6abaf4c295d0f1f44e7df9f9cbe41a96b3e4909bbd366",
+      "startedAt": "2026-10-17T01:38:20.947Z",
+      "finishedAt": "2026-10-17T01:39:05.777Z"
+    },
+    {
+      "workflow": "verification-output",
+      "exitCode": 0,
+      "passed": 7,
+      "sceneIds": [
+        "V01",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06",
+        "V07"
+      ],
+      "untested": [
+        "GitHub Actions remote execution",
+        "native Windows/Linux execution"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/verification-output/manifest.json",
+      "manifestSha256": "2f4fc0e8ed7f63c97bc3a8f4a1f6d04e4ccb0b0c210bd203a6ee1c7c4991eaf2",
+      "startedAt": "2026-10-17T01:44:38.565Z",
+      "finishedAt": "2026-10-17T01:44:58.640Z"
+    },
+    {
+      "workflow": "webui-auth-lifecycle",
+      "exitCode": 0,
+      "passed": 14,
+      "sceneIds": [
+        "A01-logout-kill-restart",
+        "A12-canonical-token-replay",
+        "A02-shared-process-revocation",
+        "A03-config-directory-isolation",
+        "A04-legacy-cookie-without-jti",
+        "A07-cookie-origin-and-bearer",
+        "A08-explicit-origin-trusted-proxy",
+        "A13-ephemeral-ws-address",
+        "A14-existing-socket-revocation",
+        "A09-actual-proxy-failure-budgets",
+        "A10-chunked-request-ceiling",
+        "A05-storage-failure-no-false-logout",
+        "A06-corrupt-store-startup-fails",
+        "A11-server-cli-token-private"
+      ],
+      "untested": [
+        "native Windows/Linux",
+        "real remote TLS proxy",
+        "signed installer",
+        "native browser cookie/SameSite policy"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/webui-auth-lifecycle/manifest.json",
+      "manifestSha256": "bea89c2253955e6db24dc1289b8e1d3b488dfc626831f8ea447d8fe4ad851480",
+      "startedAt": "2026-10-17T01:46:15.921Z",
+      "finishedAt": "2026-10-17T01:46:34.420Z"
+    },
+    {
+      "workflow": "workspace-recovery",
+      "exitCode": 0,
+      "passed": 10,
+      "sceneIds": [
+        "session-and-owned-paths-restored",
+        "attachment-bytes-preserved",
+        "artifact-revisions-checkout-accept-only-restored-copy",
+        "restored-runtime-start-parks-unknown-effect-without-replay",
+        "existing-target-refused",
+        "refuse-checksum",
+        "refuse-path-escape",
+        "refuse-duplicate",
+        "process-termination-before-swap-preserves-target",
+        "original-workspace-unchanged"
+      ],
+      "untested": [
+        "External content roots and global credential/config stores are outside a workspace backup. Historical Runtime payload paths remain historical facts. Native UI acceptance is a separate production-build workflow."
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/final-critical/workspace-recovery/manifest.json",
+      "manifestSha256": "2c5fe8918a3f2e9665ebe9b6e392ff06708d9c259ace92c6711c09434106435f",
+      "startedAt": "2026-10-17T01:39:11.660Z",
+      "finishedAt": "2026-10-17T01:39:13.808Z"
+    },
+    {
+      "workflow": "distribution-inputs",
+      "exitCode": 0,
+      "passed": 12,
+      "sceneIds": [
+        "complete",
+        "missing-native-toolchain",
+        "wrapped-server-entrypoint",
+        "floating-bun",
+        "missing-patch-copy",
+        "missing-patch-file",
+        "missing-pi-command",
+        "missing-workspace-manifest",
+        "disabled-production-mode",
+        "missing-pi-staging",
+        "floating-standalone-bun",
+        "desktop-worker-fork"
+      ],
+      "untested": [],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/supplemental/distribution-inputs/manifest.json",
+      "manifestSha256": "8cd5118fd5c02ccd35c1127e05f83cc7752054c4af6e0d79d623a3d7578bc8e1",
+      "startedAt": "2026-10-17T02:01:55.717Z",
+      "finishedAt": "2026-10-17T02:02:03.018Z"
+    },
+    {
+      "workflow": "identity-gate",
+      "exitCode": 0,
+      "passed": 6,
+      "sceneIds": [
+        "reasoned-exact-compatibility",
+        "new-token-in-approved-file",
+        "changed-compatibility-line",
+        "new-maintainer-document",
+        "stale-allowance",
+        "generated-identity-drift"
+      ],
+      "untested": [
+        "Windows/Linux native execution",
+        "live provider APIs",
+        "signed installer/release"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/supplemental/identity-gate/manifest.json",
+      "manifestSha256": "ab16f54bd3813b859e34e7fe100cf3f3a791997d5cfa42c46344b449a7d7c2d6",
+      "startedAt": "2026-10-17T02:01:55.721Z",
+      "finishedAt": "2026-10-17T02:01:57.694Z"
+    },
+    {
+      "workflow": "theme-governance",
+      "exitCode": 0,
+      "passed": 49,
+      "sceneIds": [
+        "TC16-apps/electron-jsx",
+        "TC16-apps/electron-cn",
+        "TC16-apps/electron-cva",
+        "TC16-apps/electron-template",
+        "TC16-apps/electron-a11y",
+        "TC16-apps/electron-shadow",
+        "TC16-apps/electron-motion",
+        "TC16-apps/electron-literal",
+        "TC16-apps/electron-role",
+        "TC16-apps/electron-reveal",
+        "TC16-apps/electron-semantic-positive",
+        "TC16-packages/ui-jsx",
+        "TC16-packages/ui-cn",
+        "TC16-packages/ui-cva",
+        "TC16-packages/ui-template",
+        "TC16-packages/ui-a11y",
+        "TC16-packages/ui-shadow",
+        "TC16-packages/ui-motion",
+        "TC16-packages/ui-literal",
+        "TC16-packages/ui-role",
+        "TC16-packages/ui-reveal",
+        "TC16-packages/ui-semantic-positive",
+        "TC16-apps/webui-jsx",
+        "TC16-apps/webui-cn",
+        "TC16-apps/webui-cva",
+        "TC16-apps/webui-template",
+        "TC16-apps/webui-a11y",
+        "TC16-apps/webui-shadow",
+        "TC16-apps/webui-motion",
+        "TC16-apps/webui-literal",
+        "TC16-apps/webui-role",
+        "TC16-apps/webui-reveal",
+        "TC16-apps/webui-semantic-positive",
+        "TC16-apps/viewer-jsx",
+        "TC16-apps/viewer-cn",
+        "TC16-apps/viewer-cva",
+        "TC16-apps/viewer-template",
+        "TC16-apps/viewer-a11y",
+        "TC16-apps/viewer-shadow",
+        "TC16-apps/viewer-motion",
+        "TC16-apps/viewer-literal",
+        "TC16-apps/viewer-role",
+        "TC16-apps/viewer-reveal",
+        "TC16-apps/viewer-semantic-positive",
+        "TC15-css-semantic",
+        "TC15-css-literal",
+        "TC15-css-comment",
+        "TC17-motion-parity",
+        "TC17-motion-drift"
+      ],
+      "untested": [
+        "Runtime interactions are verified in theme browser workflows"
+      ],
+      "manifest": ".cache/defensive-cleanup-2026-10-17/supplemental/theme-governance/manifest.json",
+      "manifestSha256": "3be715212499a30993bee21f8100266996c9e9234fc15c8b597726603eb0b402",
+      "startedAt": "2026-10-17T02:01:56.021Z",
+      "finishedAt": "2026-10-17T02:02:03.386Z"
+    }
+  ],
+  "userModifications": {
+    "files": 242,
+    "allPreserved": true,
+    "manifest": ".cache/defensive-cleanup-2026-10-17/user-modifications-preserved.json",
+    "manifestSha256": "6dd578f31235182ea8b31cab2ad93a55fee3f5ea75c268dd33a4077deb2fa1c8"
+  },
+  "limits": [
+    "Seven pre-existing explicit Bun skips and the existing openssl TLS verification conditional skip remain unchanged.",
+    "Windows build:smoke rejects server distribution assembly; five frontend/main/preload bundles pass separately.",
+    "No live model/IM provider, signing, installer or other-platform claim.",
+    "Full raw workflow artifacts remain in the ignored local cache; archived summary is not itself a VerificationRun directory."
+  ],
+  "finalChangedCode": [
+    {
+      "path": "apps/cli/src/run.isolated.ts",
+      "kind": "test",
+      "baselineSha256": "66d92bebdd77b15199a9fb76aded83863e79d3cea98a6acdf9ea832a4f3975da",
+      "currentSha256": null
+    },
+    {
+      "path": "apps/electron/eslint-rules/__tests__/no-hardcoded-z-index.test.ts",
+      "kind": "test",
+      "baselineSha256": "25b4004857ed03b4cd25801f8edc0776e3ef63b69f47fcb27d35e169b7eb934c",
+      "currentSha256": "bfb1c2b7a38bc87eac122f53c411a0966310f142d525b4ff464eeeb198b2c10c"
+    },
+    {
+      "path": "apps/electron/src/main/__tests__/connection-setup-logic.test.ts",
+      "kind": "test",
+      "baselineSha256": "b9b788333ad1b54e8968958d6a129f55348b54f0a537ebc9b8765191d0775771",
+      "currentSha256": null
+    },
+    {
+      "path": "apps/electron/src/renderer/hooks/useOnboarding.ts",
+      "kind": "production",
+      "baselineSha256": "50fc0a2f48e10f9627ada167ee71a4f133af12062fe313c074ceca1da81aba17",
+      "currentSha256": "539287190a0ebfb2fe671473daf34aeddd9d46f91a68a05b5133a689722bf49c"
+    },
+    {
+      "path": "apps/electron/src/renderer/lib/__tests__/mentions.test.ts",
+      "kind": "test",
+      "baselineSha256": "85359f5691a7e7974e966589f75bc61fc3bb87bd768e74d083684950c071170f",
+      "currentSha256": "343b01f612eee6d54bfdaa6e9cfe66299df389808841622aab2a906976fa7b67"
+    },
+    {
+      "path": "packages/messaging-gateway/src/registry.ts",
+      "kind": "production",
+      "baselineSha256": "ca8a5078e696e1babe8f9960c164e45bfdcc318d13325043c3d26ab295d2865d",
+      "currentSha256": "6ac5ff769b9b455ae441dd3bcc1ffbd9a22dc1e28099fe06c8f968b95d94c775"
+    },
+    {
+      "path": "packages/server-core/src/domain/connection-setup-logic.test.ts",
+      "kind": "test",
+      "baselineSha256": "5e166f40c1e110547f94af548c809f0e539e238b010d42fb12488c0263e07d58",
+      "currentSha256": "e3eccab8e15bfa4a218ab97d3c038c2e10d516fd3a8c800079111e88c6cd6b00"
+    },
+    {
+      "path": "packages/server-core/src/domain/connection-setup-logic.ts",
+      "kind": "production",
+      "baselineSha256": "068a16a9626d25343f8a2a3aecab5175a3dd2b25254b3533bdfa9daeb26cdf94",
+      "currentSha256": "7baccf4ff3271286341b6affd534369fa8817fd16baa5ad74679e3fa8dfd1e8f"
+    },
+    {
+      "path": "packages/session-tools-core/src/tool-defs.ts",
+      "kind": "production",
+      "baselineSha256": "f80df6f4f148b4572dd6167c6c478cb4035a1ed3dc28734cdd9232bc9e31a020",
+      "currentSha256": "ad706ff5fcb3e92e5cd3e61c77d380d3055a51098f411d004fd6ab27b5677db3"
+    },
+    {
+      "path": "packages/shared/src/automations/validation.ts",
+      "kind": "production",
+      "baselineSha256": "76222ffff6f1f1126c3e9dc87803899fdda836855d34d7b51576a8a4bdb17ea3",
+      "currentSha256": "375be22120ed5e66e3377145140f7b59ba21db3f5053aab81c11b944fdb4839c"
+    },
+    {
+      "path": "packages/shared/src/config/__tests__/watcher-duplicate-guard.test.ts",
+      "kind": "test",
+      "baselineSha256": "06988200fc781110634baceb6fe95e1f3a0bda521723765a2b0808856e835388",
+      "currentSha256": null
+    },
+    {
+      "path": "packages/shared/src/config/watcher.ts",
+      "kind": "production",
+      "baselineSha256": "354ce72a9c224eb2448e6c475176649f532a20d4a51948880acfb3989b751429",
+      "currentSha256": "09364b91f95af3b1ef63c492b2c63f2300004ed11c9650933f4b2ed95ad1acd9"
+    },
+    {
+      "path": "packages/shared/src/tasks/validate.ts",
+      "kind": "production",
+      "baselineSha256": "ed56724b357633d0c3be003e71c0dafd74d910a6c7cbbada09d7f5b1f12bc26b",
+      "currentSha256": "407fa078d95ccd368f7f86f40f997236346596288bb36a032a9d37030e290aa7"
+    },
+    {
+      "path": "packages/ui/eslint-rules/__tests__/no-hardcoded-z-index.test.ts",
+      "kind": "test",
+      "baselineSha256": "160eb8cbb4eda58de6062373259c88e0ab2c5b14adc882774dc81d2e1e237c15",
+      "currentSha256": null
+    }
+  ],
+  "productionUnchangedSinceCriticalStarted": true,
+  "frontendBuilds": {
+    "baseline": [
+      {
+        "command": "electron:build:main",
+        "log": ".cache/defensive-cleanup-2026-10-17/baseline-build/electron-build-main.log",
+        "sha256": "7652aa6187c93ae306bd1df68668b41d1a4d0e0f9fe9cb1cb6da1bd163e8941c",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "electron:build:preload",
+        "log": ".cache/defensive-cleanup-2026-10-17/baseline-build/electron-build-preload.log",
+        "sha256": "541b947af3011c07d1fa64013f06c62cef34811731e2e4e2e1d7739d09fbcd76",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "electron:build:renderer",
+        "log": ".cache/defensive-cleanup-2026-10-17/baseline-build/electron-build-renderer.log",
+        "sha256": "2d0096887d0de948497093fa6aff7b28374a821d6082b1acacf530ccb3d328a3",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "webui:build",
+        "log": ".cache/defensive-cleanup-2026-10-17/baseline-build/webui-build.log",
+        "sha256": "d9dce1c1e469a2f98b7dfd391e30302177537007f5fb1000f79e1f7011ff3bc5",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "viewer:build",
+        "log": ".cache/defensive-cleanup-2026-10-17/baseline-build/viewer-build.log",
+        "sha256": "df3c097f65304bd5ee4e4d9d2d49eb0d8058f2d2d091ccb2c06b238347679e33",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      }
+    ],
+    "final": [
+      {
+        "command": "electron:build:main",
+        "log": ".cache/defensive-cleanup-2026-10-17/final-build/electron-build-main.log",
+        "sha256": "5a0f168defc0acb40067b24ba59e4210a90ac39bf71ac1fd4b1f663e98f623ba",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "electron:build:preload",
+        "log": ".cache/defensive-cleanup-2026-10-17/final-build/electron-build-preload.log",
+        "sha256": "f50382dbcd4d731c34e2428bff1aae4db31fe2956ca6ff373eadd11929010fe4",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "electron:build:renderer",
+        "log": ".cache/defensive-cleanup-2026-10-17/final-build/electron-build-renderer.log",
+        "sha256": "6a414b3c941b91aadf8d1f3448d4896a36a07f0cbeaeb8663997aee8e5f516e6",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "webui:build",
+        "log": ".cache/defensive-cleanup-2026-10-17/final-build/webui-build.log",
+        "sha256": "25f0523e594bfce88dcdb8ec6b9cd29831f68f0d425352d4920302813c88b11f",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      },
+      {
+        "command": "viewer:build",
+        "log": ".cache/defensive-cleanup-2026-10-17/final-build/viewer-build.log",
+        "sha256": "229c54490e8712313b411b949638c7cdc8407d746938b53440f8a858ee2b2de3",
+        "passed": true,
+        "evidence": "Sequential build-smoke runner reached server assembly after all five bundlers completed without error."
+      }
+    ]
+  },
+  "coreSummary": {
+    "passedWorkflows": 36,
+    "passedScenes": 500,
+    "failedWorkflows": [
+      "markdown-popout"
+    ]
+  }
+}

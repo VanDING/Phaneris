@@ -84,7 +84,7 @@ import { hasOpenOverlay } from '@/lib/overlay-detection'
 import { ToolbarStatusSlot } from './ToolbarStatusSlot'
 import { buildPlanApprovalMessage } from '../plan-approval-message'
 import { createPendingPlanDispatcher } from './pending-plan-dispatch'
-import { shouldHandleScopedInputEvent, shouldRecallPromptOnArrowUp } from './input-event-guards'
+import { isImeSubmitBlocked, shouldHandleScopedInputEvent, shouldRecallPromptOnArrowUp } from './input-event-guards'
 import { clearPendingFocusForSession, consumePendingFocusForSession } from './focus-input-events'
 import {
   getRecentWorkingDirs,
@@ -608,6 +608,8 @@ export function FreeFormInput({
 
   // Merge refs for RichTextInput
   const internalInputRef = React.useRef<RichTextInputHandle>(null)
+  // WebKit leaves a stale composition flag briefly after compositionend.
+  const lastCompositionEndAt = React.useRef(0)
   const richInputRef = externalInputRef || internalInputRef
 
   // Track last caret position for focus restoration (e.g., after permission mode popover closes)
@@ -1313,6 +1315,11 @@ export function FreeFormInput({
       return
     }
 
+    const imeBlocked = isImeSubmitBlocked(
+      { isComposing: e.nativeEvent.isComposing, keyCode: e.nativeEvent.keyCode, timeStamp: e.nativeEvent.timeStamp },
+      lastCompositionEndAt.current,
+    )
+
     // Don't submit when mention menu is open AND has visible content
     if (inlineMention.isOpen) {
       // Only intercept navigation/selection keys if menu actually shows items or is loading
@@ -1384,18 +1391,18 @@ export function FreeFormInput({
     // - 'cmd-enter': ⌘/Ctrl+Enter sends (Enter for newline)
     if (sendMessageKey === 'enter') {
       // Enter sends, Shift+Enter adds newline
-      if (e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.nativeEvent.isComposing) {
+      if (e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey && !imeBlocked) {
         e.preventDefault()
         submitMessage()
       }
       // Also allow Cmd/Ctrl+Enter to send (power user shortcut)
-      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.nativeEvent.isComposing) {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !imeBlocked) {
         e.preventDefault()
         submitMessage()
       }
     } else {
       // cmd-enter mode: ⌘/Ctrl+Enter sends, plain Enter adds newline
-      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.nativeEvent.isComposing) {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !imeBlocked) {
         e.preventDefault()
         submitMessage()
       }
@@ -1587,15 +1594,15 @@ export function FreeFormInput({
       : null
 
   return (
-    <form className="craft-composer" onSubmit={handleSubmit}>
+    <form className="craft-composer" onSubmit={handleSubmit} onCompositionEnd={() => { lastCompositionEndAt.current = performance.now() }}>
       <div
         ref={containerRef}
         className={cn(
           'motion-content overflow-hidden transition-[background-color,box-shadow,border-color]',
           // Container styling - only when not wrapped by InputContainer
-          !unstyled && 'rounded-[16px] shadow-middle',
+          !unstyled && 'rounded-composer shadow-middle composer-standalone',
           !unstyled && 'bg-background',
-          isDraggingOver && 'ring-2 ring-foreground ring-offset-2 ring-offset-background bg-foreground/5'
+          isDraggingOver && 'composer-drag-glow'
         )}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
@@ -1715,7 +1722,7 @@ export function FreeFormInput({
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -4, scale: 0.98 }}
                           transition={{ duration: MOTION_DURATION.standard, ease: MOTION_EASE.move }}
-                          className="inline-flex max-w-full items-center gap-1.5 overflow-hidden rounded-[6px] bg-foreground/2 pl-1.5 pr-2 py-1 text-[13px] text-foreground/80 select-none transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                          className="inline-flex max-w-full items-center gap-1.5 overflow-hidden rounded-shape-md bg-foreground/2 pl-1.5 pr-2 py-1 text-body text-foreground/80 select-none transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                           onClick={(event) => {
                             const rect = event.currentTarget.getBoundingClientRect()
                             onFollowUpClick?.(item, {
@@ -1729,7 +1736,7 @@ export function FreeFormInput({
                               <span
                                 role="button"
                                 tabIndex={0}
-                                className="inline-flex h-4 min-w-4 cursor-pointer items-center justify-center rounded-[4px] bg-background px-0.5 text-[10px] font-medium text-foreground shadow-minimal focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                className="inline-flex h-4 min-w-4 cursor-pointer items-center justify-center rounded-shape-sm bg-background px-0.5 text-micro font-medium text-foreground shadow-minimal focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                                 onMouseDown={(event) => {
                                   event.preventDefault()
                                   event.stopPropagation()
@@ -1823,7 +1830,7 @@ export function FreeFormInput({
               anchored to the right (craft-agents-oss#798). overflow-hidden is safe — Radix Drawer /
               dropdowns inside render via portals, so they aren't clipped. */}
           {compactMode && (
-          <div className="flex items-center gap-1 min-w-0 shrink overflow-hidden">
+          <div className="composer-toolbar flex items-center gap-1 min-w-0 shrink overflow-hidden">
           {onPermissionModeChange && (
             <CompactPermissionModeSelector
               permissionMode={permissionMode}
@@ -1858,7 +1865,7 @@ export function FreeFormInput({
             disabled={disabled}
           />
           {onSourcesChange && (
-            <div className="relative shrink min-w-0">
+            <div className="composer-source-badge relative shrink min-w-0">
               <FreeFormInputContextBadge
                 buttonRef={sourceButtonRef}
                 icon={
@@ -1875,7 +1882,7 @@ export function FreeFormInput({
                             {displaySources.map((source, index) => (
                               <div
                                 key={source.config.slug}
-                                className={cn("relative h-5 w-5 rounded-[4px] bg-background shadow-minimal flex items-center justify-center", index > 0 && "-ml-1")}
+                                className={cn("relative h-5 w-5 rounded-shape-sm bg-background shadow-minimal flex items-center justify-center", index > 0 && "-ml-1")}
                                 style={{ zIndex: index + 1 }}
                               >
                                 <SourceAvatar source={source} size="xs" />
@@ -1883,7 +1890,7 @@ export function FreeFormInput({
                             ))}
                             {remainingCount > 0 && (
                               <div
-                                className="-ml-1 h-5 w-5 rounded-[4px] bg-background shadow-minimal flex items-center justify-center text-[8px] font-medium text-muted-foreground"
+                                className="-ml-1 h-5 w-5 rounded-shape-sm bg-background shadow-minimal flex items-center justify-center text-micro font-medium text-muted-foreground"
                                 style={{ zIndex: displaySources.length + 1 }}
                               >
                                 +{remainingCount}
@@ -1942,7 +1949,7 @@ export function FreeFormInput({
 
           {/* Desktop: full badges row with labels and working directory */}
           {!compactMode && (
-          <div className="flex items-center gap-1 min-w-32 shrink overflow-hidden">
+          <div className="composer-toolbar flex items-center gap-1 min-w-32 shrink overflow-hidden">
           {/* 1. Attach Files Badge */}
           <FreeFormInputContextBadge
             icon={<Paperclip className="h-4 w-4" />}
@@ -1960,7 +1967,7 @@ export function FreeFormInput({
 
           {/* 2. Source Selector Badge - only show if onSourcesChange is provided */}
           {onSourcesChange && (
-            <div className="relative shrink min-w-0 overflow-hidden">
+            <div className="composer-source-badge relative shrink min-w-0 overflow-hidden">
               <FreeFormInputContextBadge
                 buttonRef={sourceButtonRef}
                 icon={
@@ -1977,7 +1984,7 @@ export function FreeFormInput({
                             {displaySources.map((source, index) => (
                               <div
                                 key={source.config.slug}
-                                className={cn("relative h-5 w-5 rounded-[4px] bg-background shadow-minimal flex items-center justify-center", index > 0 && "-ml-1")}
+                                className={cn("relative h-5 w-5 rounded-shape-sm bg-background shadow-minimal flex items-center justify-center", index > 0 && "-ml-1")}
                                 style={{ zIndex: index + 1 }}
                               >
                                 <SourceAvatar source={source} size="xs" />
@@ -1985,7 +1992,7 @@ export function FreeFormInput({
                             ))}
                             {remainingCount > 0 && (
                               <div
-                                className="-ml-1 h-5 w-5 rounded-[4px] bg-background shadow-minimal flex items-center justify-center text-[8px] font-medium text-muted-foreground"
+                                className="-ml-1 h-5 w-5 rounded-shape-sm bg-background shadow-minimal flex items-center justify-center text-micro font-medium text-muted-foreground"
                                 style={{ zIndex: displaySources.length + 1 }}
                               >
                                 +{remainingCount}
@@ -2057,7 +2064,7 @@ export function FreeFormInput({
               onClick={onRequestExpand}
               onMouseEnter={onRequestExpand}
               aria-label={t('chat.tapToType')}
-              className="craft-focus flex-1 h-7 mx-1 flex items-center justify-center text-foreground/30 hover:text-foreground/60 transition-colors cursor-pointer rounded-[6px] hover:bg-foreground/5 focus-visible:ring-1 focus-visible:ring-ring"
+              className="craft-focus flex-1 h-7 mx-1 flex items-center justify-center text-foreground/30 hover:text-foreground/60 transition-colors cursor-pointer rounded-shape-md hover:bg-foreground/5 focus-visible:ring-1 focus-visible:ring-ring"
             >
               <ChevronUp className="h-4 w-4" />
             </button>
@@ -2077,7 +2084,7 @@ export function FreeFormInput({
                     type="button"
                     disabled={isProcessing}
                     className={cn(
-                      "craft-focus input-toolbar-btn inline-flex items-center h-7 px-1.5 gap-0.5 text-[13px] shrink-0 rounded-[6px] hover:bg-foreground/5 transition-colors select-none",
+                      "craft-focus input-toolbar-btn inline-flex items-center h-7 px-1.5 gap-0.5 text-body shrink-0 rounded-shape-md hover:bg-foreground/5 transition-colors select-none",
                       modelDropdownOpen && "bg-foreground/5",
                       connectionUnavailable && "text-destructive",
                       isProcessing && "pointer-events-none opacity-50",
@@ -2406,7 +2413,7 @@ export function FreeFormInput({
                   <div className="px-2 py-1.5 select-none">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{t('chat.context')}</span>
-                      <span className="flex items-center gap-1.5">
+                      <span className="flex items-center gap-1.5 tabular-nums">
                         {contextStatus?.isCompacting && (
                           <Spinner className="h-3 w-3" />
                         )}

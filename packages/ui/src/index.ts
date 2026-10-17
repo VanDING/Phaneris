@@ -157,6 +157,18 @@ export {
   type ImageCardStackItem,
 } from './components/markdown'
 
+// State surfaces
+export {
+  StateSurface,
+  EmptyState,
+  ErrorState,
+  ErrorBanner,
+  type StateSurfaceProps,
+  type StateVariant,
+  type ErrorBannerProps,
+  type BannerTone,
+} from './components/state/StateSurface'
+
 // UI primitives
 export {
   Spinner,
@@ -174,8 +186,17 @@ export {
   StyledDropdownMenuContent,
   StyledDropdownMenuItem,
   StyledDropdownMenuSeparator,
+  StyledDropdownMenuLabel,
   StyledDropdownMenuSubTrigger,
   StyledDropdownMenuSubContent,
+  Menu,
+  renderMenuEntries,
+  type MenuProps,
+  type MenuEntry,
+  type MenuItemEntry,
+  type MenuSeparatorEntry,
+  type MenuLabelEntry,
+  type MenuSubmenuEntry,
   BrowserShader,
   InlineExpand,
   BrowserControls,

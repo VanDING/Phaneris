@@ -152,7 +152,7 @@ const itemVariants: Variants = {
  * sidebar keyboard navigation. This component just renders the items.
  *
  * Styling matches agent items in the sidebar for consistency:
- * - py-[7px] px-2 text-[13px] rounded-md
+ * - 7px vertical padding, 13px body tier, control radius
  * - Icon: 16px with the same foreground contrast as session menus
  *
  * Link variants:

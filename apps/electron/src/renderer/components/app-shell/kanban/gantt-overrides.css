@@ -103,8 +103,8 @@
   --wx-gantt-marker-font: 500 12px var(--font-sans, ui-sans-serif, system-ui, sans-serif);
 
   /* -- shape: 50px pills read as a toy; the app's radius is ~8px ------------- */
-  --wx-gantt-bar-border-radius: 6px;
-  --wx-gantt-baseline-border-radius: 4px;
+  --wx-gantt-bar-border-radius: var(--shape-md);
+  --wx-gantt-baseline-border-radius: var(--shape-sm);
   --wx-gantt-bar-shadow: none;
 
   /* -- task bars: the app's brand accent, flat, no candy border -------------- */
@@ -123,7 +123,7 @@
 
   /* -- milestones: accent, not neon magenta ---------------------------------- */
   --wx-gantt-milestone-color: var(--accent);
-  --wx-gantt-milestone-border-radius: 3px;
+  --wx-gantt-milestone-border-radius: var(--shape-sm);
 
   /* -- progress: quieter than the stock marker ------------------------------- */
   --wx-gantt-progress-border-color: color-mix(in oklab, var(--foreground) 22%, transparent);
@@ -187,7 +187,7 @@
  *   - state is carried by the leading marker, subtle chips and progress fill.
  * ------------------------------------------------------------------------ */
 .phaneris-gantt .wx-bar {
-  border-radius: 6px;
+  border-radius: var(--shape-md);
   overflow: hidden;
   box-shadow: none;
 }
@@ -263,7 +263,7 @@
   justify-content: space-between;
   padding: 0 8px 0 12px;
   color: var(--muted-foreground);
-  font-size: 12px;
+  font-size: var(--type-label-size);
   font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-weight: 600;
   letter-spacing: 0;
@@ -277,7 +277,7 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: var(--shape-md);
   color: var(--muted-foreground);
   transition: background-color 120ms ease, color 120ms ease;
 }
@@ -295,7 +295,7 @@
   align-items: center;
   gap: 7px;
   padding-right: 12px;
-  border-radius: 5px;
+  border-radius: var(--shape-sm);
   transition: background-color 120ms ease;
 }
 
@@ -311,7 +311,7 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: var(--shape-sm);
   color: color-mix(in oklab, var(--foreground) 58%, transparent);
 }
 
@@ -351,7 +351,7 @@
   gap: 6px;
   overflow: hidden;
   color: var(--foreground);
-  font-size: 12px;
+  font-size: var(--type-label-size);
   font-weight: 500;
   line-height: 1.25;
   text-overflow: ellipsis;
@@ -377,10 +377,10 @@
   align-items: center;
   justify-content: center;
   padding: 0 5px;
-  border-radius: 5px;
+  border-radius: var(--shape-sm);
   background: color-mix(in oklab, var(--foreground) 7%, transparent);
   color: var(--muted-foreground);
-  font-size: 10px;
+  font-size: var(--type-micro-size);
   font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -393,7 +393,7 @@
   gap: 4px;
   overflow: hidden;
   color: var(--muted-foreground);
-  font-size: 11px;
+  font-size: var(--type-meta-size);
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -408,7 +408,7 @@
   align-items: center;
   padding: 0 5px;
   border: 1px solid color-mix(in oklab, var(--border) 82%, transparent);
-  border-radius: 4px;
+  border-radius: var(--shape-sm);
 }
 
 .phaneris-gantt .pg-task-meta__date {
@@ -564,7 +564,7 @@
   align-items: center;
   transform: translateY(-50%);
   padding: 0 4px;
-  border-radius: 4px;
+  border-radius: var(--shape-sm);
   background: var(--background);
   color: var(--foreground);
   font: 600 10.5px/1 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
@@ -581,7 +581,7 @@
     justify-content: center;
     padding-inline: 0;
     background: transparent;
-    font-size: 10px;
+    font-size: var(--type-micro-size);
   }
 
   .pg-bar--summary .pg-bar-label {
@@ -624,7 +624,7 @@
   height: 13px;
   transform: translate(-50%, -50%) rotate(45deg);
   background: var(--pg-color, var(--accent));
-  border-radius: 2px;
+  border-radius: var(--shape-xs);
   box-shadow: 0 0 0 2px var(--background);
 }
 

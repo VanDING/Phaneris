@@ -65,7 +65,7 @@ export function TaskChatPreview({
           </div>
 
           {/* Task-mode orchestrator tag */}
-          <div className="flex items-center gap-2 text-[11px] text-text-secondary">
+          <div className="flex items-center gap-2 text-meta text-text-secondary">
             <Workflow className="h-3.5 w-3.5 shrink-0" strokeWidth={1.5} />
             <span className="font-medium">Task mode · orchestrator</span>
             <ModelChip model={model} />
@@ -77,7 +77,7 @@ export function TaskChatPreview({
           {/* Spawned subtasks panel */}
           {subtasks.length > 0 && (
             <div className="rounded-lg border border-border/60 bg-surface-raised p-3">
-              <div className="mb-1 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
+              <div className="mb-1 text-meta font-medium uppercase tracking-wider text-text-secondary">
                 Spawned subtasks
               </div>
               <div className="divide-y divide-border/40">

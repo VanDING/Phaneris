@@ -202,7 +202,7 @@ export function CompactModelSelector({
             ? t('common.unavailable')
             : `${t('common.model')}: ${currentModelDisplayName}`}
           className={cn(
-            'h-7 pl-2 pr-2 text-xs font-medium rounded-[6px] flex items-center gap-1.5 shadow-tinted outline-none select-none min-w-[64px] shrink',
+            'h-7 pl-2 pr-2 text-xs font-medium rounded-shape-md flex items-center gap-1.5 shadow-tinted outline-none select-none min-w-[64px] shrink',
             connectionUnavailable
               ? 'bg-destructive/10 text-destructive'
               : 'bg-foreground/5 text-foreground/70',
@@ -220,7 +220,7 @@ export function CompactModelSelector({
               {showConnectionIcon && effectiveConnectionDetails && (
                 <ConnectionIcon connection={effectiveConnectionDetails} size={14} />
               )}
-              <span className="truncate min-w-0">{currentModelDisplayName}</span>
+              <span className="composer-model-label truncate min-w-0">{currentModelDisplayName}</span>
             </>
           )}
           {pickerMode !== 'locked-single' && (
@@ -466,7 +466,7 @@ export function CompactModelSelector({
               </div>
               <div className="flex items-center justify-between px-3 py-2 text-xs text-foreground/60 select-none">
                 <span>{t('chat.context')}</span>
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 tabular-nums">
                   {contextStatus?.isCompacting && <Spinner className="h-3 w-3" />}
                   {contextUsageLabel}
                   {contextUsageWindow != null && (

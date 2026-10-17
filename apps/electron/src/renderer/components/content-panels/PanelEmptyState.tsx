@@ -10,6 +10,7 @@
 import type { ReactNode } from 'react'
 import { motion, useReducedMotionConfig } from 'motion/react'
 import { motionTween } from '@phaneris/ui/motion'
+import { EmptyState } from '@phaneris/ui'
 
 interface PanelEmptyStateProps {
   /** Primary message (usually an i18n key result) */
@@ -25,20 +26,12 @@ export function PanelEmptyState({ title, hint, icon }: PanelEmptyStateProps) {
 
   return (
     <motion.div
-      className="flex h-full flex-col items-center justify-center px-7 py-10 text-center"
+      className="flex h-full flex-col items-center justify-center"
       initial={reduceMotion ? false : { opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={motionTween(reduceMotion, 'standard', 'enter')}
     >
-      {icon && (
-        <div className="relative mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-foreground/[0.035] text-muted-foreground">
-          <span className="relative">{icon}</span>
-        </div>
-      )}
-      <p className="text-[13px] font-medium text-foreground/80">{title}</p>
-      {hint && (
-        <p className="mt-1.5 max-w-[34ch] text-xs leading-relaxed text-muted-foreground">{hint}</p>
-      )}
+      <EmptyState title={title} description={hint} icon={icon} className="h-full" />
     </motion.div>
   )
 }

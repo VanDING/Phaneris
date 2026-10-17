@@ -193,6 +193,7 @@ export default [
     files: ['src/renderer/playground/**/*.{ts,tsx}'],
     rules: {
       'craft-styles/no-transition-all': 'off',
+      'theme-contracts/scale': 'off',
     },
   },
 

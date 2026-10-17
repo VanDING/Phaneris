@@ -107,7 +107,7 @@ function AuthCardActions({ primary, secondary, hint }: AuthCardActionsProps) {
         data-tutorial={primary.dataTutorial}
       >
         {primary.loading ? (
-          <Spinner className="text-[10px]" />
+          <Spinner className="text-micro" />
         ) : PrimaryIcon ? (
           <PrimaryIcon className="h-3.5 w-3.5" />
         ) : null}
@@ -129,7 +129,7 @@ function AuthCardActions({ primary, secondary, hint }: AuthCardActionsProps) {
       {hint && (
         <>
           <div className="flex-1" />
-          <span className="text-[10px] text-muted-foreground">{hint}</span>
+          <span className="text-micro text-muted-foreground">{hint}</span>
         </>
       )}
     </div>
@@ -345,7 +345,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
 
     return (
       <div
-        className={cn('rounded-[8px] overflow-hidden w-fit select-none', variantTextClass)}
+        className={cn('rounded-shape-lg overflow-hidden w-fit select-none', variantTextClass)}
         style={{
           backgroundColor: variantBg,
           ...(shadowColor ? { '--shadow-color': shadowColor } as React.CSSProperties : {})
@@ -401,7 +401,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
     if (isOAuth && isSubmitting) {
       return (
         <div className="flex gap-3">
-          <Spinner className="text-[10px] shrink-0 mt-1" />
+          <Spinner className="text-micro shrink-0 mt-1" />
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium leading-5">
               {`${authSourceName} Authenticating...`}
@@ -571,7 +571,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
 
         {/* Hint */}
         {authHint && (
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-meta text-muted-foreground">
             {authHint}
           </p>
         )}
@@ -640,7 +640,7 @@ export function AuthRequestCard({ message, onRespondToCredential, sessionId, isI
 
   return (
     <div
-      className={cn('rounded-[8px] overflow-hidden', variantTextClass)}
+      className={cn('rounded-shape-lg overflow-hidden', variantTextClass)}
       style={{
         backgroundColor: variantBg,
         ...(shadowColor ? { '--shadow-color': shadowColor } as React.CSSProperties : {})

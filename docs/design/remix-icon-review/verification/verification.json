@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "checks": [
+    "SVG references resolve and all symbols have painted geometry",
+    "Candidate current: all scenes and navigation",
+    "Candidate a: all scenes and navigation",
+    "Candidate b: all scenes and navigation",
+    "Candidate c: all scenes and navigation",
+    "B navigation uses line normally and fill when selected",
+    "Theme toggles in both directions",
+    "Size selector changes rendered size without missing icons",
+    "Matrix contains 63 mappings, supports search/filter and empty state",
+    "Scope report and keyboard tab navigation",
+    "No page overflow at 1536px",
+    "No page overflow at 1024px",
+    "No page overflow at 760px",
+    "No page overflow at 390px",
+    "No runtime errors and no external requests"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "viewports": [
+    1536,
+    1024,
+    760,
+    390
+  ],
+  "artifacts": [
+    "a-light.png",
+    "b-dark.png",
+    "b-light.png",
+    "b-mobile.png",
+    "c-light.png",
+    "current-light.png",
+    "navigation-matrix.png"
+  ],
+  "browser": "155.0.4283.45",
+  "channel": "msedge"
+}

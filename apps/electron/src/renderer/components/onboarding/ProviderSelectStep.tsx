@@ -25,10 +25,10 @@ interface ProviderOption {
 }
 
 const PROVIDER_ICONS: Record<ProviderChoice, React.ReactNode> = {
-  claude: <img src={claudeIcon} alt="" className="size-6 rounded-[4px]" />,
-  chatgpt: <img src={openaiIcon} alt="" className="size-6 rounded-[4px]" />,
-  copilot: <img src={copilotIcon} alt="" className="size-6 rounded-[4px]" />,
-  xai: <img src={xaiIcon} alt="" className="size-6 rounded-[4px]" />,
+  claude: <img src={claudeIcon} alt="" className="size-6 rounded-shape-sm" />,
+  chatgpt: <img src={openaiIcon} alt="" className="size-6 rounded-shape-sm" />,
+  copilot: <img src={copilotIcon} alt="" className="size-6 rounded-shape-sm" />,
+  xai: <img src={xaiIcon} alt="" className="size-6 rounded-shape-sm" />,
   openrouter: <img src={openrouterIcon} alt="" className="size-6" />,
   kimi: <img src={kimiIcon} alt="" className="size-6" />,
   radius: <Network className="size-6" />,

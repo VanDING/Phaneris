@@ -1,0 +1,72 @@
+{
+  "line-md": {
+    "name": "Material Line Icons",
+    "total": 1218,
+    "author": "Vjacheslav Trushkin",
+    "authorUrl": "https://github.com/cyberalien/line-md",
+    "license": "MIT",
+    "licenseSpdx": "MIT",
+    "licenseUrl": "https://github.com/cyberalien/line-md/blob/main/license.txt",
+    "category": "Material"
+  },
+  "ci": {
+    "name": "coolicons",
+    "total": 442,
+    "author": "Kryston Schwarze",
+    "authorUrl": "https://github.com/krystonschwarze/coolicons",
+    "license": "CC BY 4.0",
+    "licenseSpdx": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "category": "UI 24px"
+  },
+  "mi": {
+    "name": "Mono Icons",
+    "total": 180,
+    "author": "Mono",
+    "authorUrl": "https://github.com/mono-company/mono-icons",
+    "license": "MIT",
+    "licenseSpdx": "MIT",
+    "licenseUrl": "https://github.com/mono-company/mono-icons/blob/master/LICENSE.md",
+    "category": "UI 24px"
+  },
+  "svg-spinners": {
+    "name": "SVG Spinners",
+    "total": 46,
+    "author": "Utkarsh Verma",
+    "authorUrl": "https://github.com/n3r4zzurr0/svg-spinners",
+    "license": "MIT",
+    "licenseSpdx": "MIT",
+    "licenseUrl": "https://github.com/n3r4zzurr0/svg-spinners/blob/main/LICENSE",
+    "category": "UI 24px"
+  },
+  "vscode-icons": {
+    "name": "VSCode Icons",
+    "total": 1693,
+    "author": "Roberto Huertas",
+    "authorUrl": "https://github.com/vscode-icons/vscode-icons",
+    "license": "MIT",
+    "licenseSpdx": "MIT",
+    "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+    "category": "Programming"
+  },
+  "material-icon-theme": {
+    "name": "Material Icon Theme",
+    "total": 906,
+    "author": "Material Extensions",
+    "authorUrl": "https://github.com/material-extensions/vscode-material-icon-theme",
+    "license": "MIT",
+    "licenseSpdx": "MIT",
+    "licenseUrl": "https://github.com/material-extensions/vscode-material-icon-theme/blob/main/LICENSE",
+    "category": "Programming"
+  },
+  "lucide": {
+    "name": "Lucide",
+    "total": 1890,
+    "author": "Lucide Contributors",
+    "authorUrl": "https://github.com/lucide-icons/lucide",
+    "license": "ISC",
+    "licenseSpdx": "ISC",
+    "licenseUrl": "https://github.com/lucide-icons/lucide/blob/main/LICENSE",
+    "category": "UI 24px"
+  }
+}

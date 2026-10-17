@@ -25,13 +25,13 @@ export function ModelChip({ model, short = false, className }: ModelChipProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium',
+        'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-meta font-medium',
         'bg-foreground/[0.04] text-text-secondary ring-1 ring-foreground/[0.06]',
         className
       )}
     >
       {iconUrl ? (
-        <img src={iconUrl} alt="" className={cn('h-3 w-3 shrink-0 rounded-[2px]', isMonochromeProviderIcon(iconUrl) && 'provider-icon-monochrome')} aria-hidden />
+        <img src={iconUrl} alt="" className={cn('h-3 w-3 shrink-0 rounded-shape-xs', isMonochromeProviderIcon(iconUrl) && 'provider-icon-monochrome')} aria-hidden />
       ) : (
         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" aria-hidden />
       )}

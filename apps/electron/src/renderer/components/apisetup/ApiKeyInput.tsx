@@ -471,7 +471,7 @@ export function ApiKeyInput({
             <DropdownMenuTrigger
               data-testid="api-key-preset-trigger"
               disabled={isDisabled}
-              className="flex h-6 items-center gap-1 rounded-[6px] bg-background shadow-minimal pl-2.5 pr-2 text-[12px] font-medium text-foreground/50 hover:bg-foreground/5 hover:text-foreground focus:outline-none"
+              className="flex h-6 items-center gap-1 rounded-shape-md bg-background shadow-minimal pl-2.5 pr-2 text-label font-medium text-foreground/50 hover:bg-foreground/5 hover:text-foreground focus:outline-none"
             >
               {presets.find(p => p.key === activePreset)?.label}
               <ChevronDown className="size-2.5 opacity-50" />
@@ -529,7 +529,7 @@ export function ApiKeyInput({
                 disabled={isDisabled}
                 onClick={() => setCustomApi(value)}
                 className={cn(
-                  "flex-1 py-1.5 text-[12px] font-medium transition-colors",
+                  "flex-1 py-1.5 text-label font-medium transition-colors",
                   customApi === value
                     ? "bg-background text-foreground shadow-minimal"
                     : "text-foreground/50 hover:text-foreground/70"
@@ -568,7 +568,7 @@ export function ApiKeyInput({
                   disabled={isDisabled}
                   onClick={() => setBedrockAuthMethod(value)}
                   className={cn(
-                    "flex-1 py-1.5 text-[12px] font-medium transition-colors",
+                    "flex-1 py-1.5 text-label font-medium transition-colors",
                     bedrockAuthMethod === value
                       ? "bg-background text-foreground shadow-minimal"
                       : "text-foreground/50 hover:text-foreground/70"
@@ -755,7 +755,7 @@ export function ApiKeyInput({
                     onClick={() => { setOpenTier(null); setTierFilter('') }}
                   />
                   <div
-                    className="fixed z-floating-menu min-w-[200px] overflow-hidden rounded-[8px] bg-background text-foreground shadow-modal-small"
+                    className="fixed z-floating-menu min-w-[200px] overflow-hidden rounded-shape-lg bg-background text-foreground shadow-modal-small"
                     style={{
                       top: tierDropdownPosition.top,
                       left: tierDropdownPosition.left,
@@ -785,7 +785,7 @@ export function ApiKeyInput({
                               setOpenTier(null)
                               setTierFilter('')
                             }}
-                            className="flex cursor-pointer select-none items-center justify-between gap-3 rounded-[6px] px-3 py-2 text-[13px] outline-none data-[selected=true]:bg-foreground/5"
+                            className="flex cursor-pointer select-none items-center justify-between gap-3 rounded-shape-md px-3 py-2 text-body outline-none data-[selected=true]:bg-foreground/5"
                           >
                             <span>Automatic</span>
                             <Check className={cn("size-3 shrink-0", !selectedUtilityModel ? "opacity-100" : "opacity-0")} />
@@ -804,14 +804,14 @@ export function ApiKeyInput({
                                 setTierFilter('')
                               }}
                               className={cn(
-                                "flex cursor-pointer select-none items-center justify-between gap-3 rounded-[6px] px-3 py-2 text-[13px]",
+                                "flex cursor-pointer select-none items-center justify-between gap-3 rounded-shape-md px-3 py-2 text-body",
                                 "outline-none data-[selected=true]:bg-foreground/5"
                               )}
                             >
                               <div className="flex items-center gap-2 min-w-0">
                                 <span className="truncate">{model.name}</span>
                                 {model.reasoning && (
-                                  <span className="text-[10px] text-foreground/30 shrink-0">reasoning</span>
+                                  <span className="text-micro text-foreground/30 shrink-0">reasoning</span>
                                 )}
                               </div>
                               <Check className={cn(

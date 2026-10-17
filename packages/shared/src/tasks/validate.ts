@@ -231,7 +231,7 @@ function findCycle(nodes: TaskNode[], deps: Map<string, Set<string>>): string[] 
   function dfs(id: string): string[] | null {
     color.set(id, GRAY);
     stack.push(id);
-    for (const dep of deps.get(id) ?? []) {
+    for (const dep of deps.get(id)!) {
       const c = color.get(dep);
       if (c === GRAY) {
         const start = stack.indexOf(dep);
@@ -263,7 +263,7 @@ function graphMetrics(nodes: TaskNode[], deps: Map<string, Set<string>>): { dept
     const cached = level.get(id);
     if (cached !== undefined) return cached;
     let max = 0;
-    for (const dep of deps.get(id) ?? []) max = Math.max(max, levelOf(dep) + 1);
+    for (const dep of deps.get(id)!) max = Math.max(max, levelOf(dep) + 1);
     level.set(id, max);
     return max;
   }
@@ -272,7 +272,7 @@ function graphMetrics(nodes: TaskNode[], deps: Map<string, Set<string>>): { dept
   let depth = 0;
   const perLevel = new Map<number, number>();
   for (const n of nodes) {
-    const l = level.get(n.id) ?? 0;
+    const l = level.get(n.id)!;
     depth = Math.max(depth, l);
     perLevel.set(l, (perLevel.get(l) ?? 0) + 1);
   }

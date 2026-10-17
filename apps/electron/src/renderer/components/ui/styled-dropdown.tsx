@@ -9,9 +9,11 @@ export {
   DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuShortcut,
+  Menu,
   StyledDropdownMenuContent,
   StyledDropdownMenuItem,
   StyledDropdownMenuSeparator,
   StyledDropdownMenuSubTrigger,
   StyledDropdownMenuSubContent,
+  type MenuEntry,
 } from '@phaneris/ui'

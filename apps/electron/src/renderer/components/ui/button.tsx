@@ -21,6 +21,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-9 px-4 py-2",
+        xs: "h-control-xs rounded-shape-sm px-2 text-meta",
+        compact: "h-control-sm rounded-shape-sm px-2.5 text-label",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "craft-icon-button size-9",

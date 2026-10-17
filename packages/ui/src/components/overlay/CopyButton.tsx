@@ -26,12 +26,18 @@ export function CopyButton({ content, title, className }: CopyButtonProps) {
   const { t } = useTranslation()
   const resolvedTitle = title ?? t('common.copy')
   const [copied, setCopied] = useState(false)
+  const resetTimer = React.useRef<number | null>(null)
+
+  React.useEffect(() => () => {
+    clearTimeout(resetTimer.current ?? undefined)
+  }, [])
 
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(content)
+      clearTimeout(resetTimer.current ?? undefined)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      resetTimer.current = window.setTimeout(() => setCopied(false), 2500)
     } catch (err) {
       console.error('Failed to copy:', err)
     }
@@ -41,7 +47,7 @@ export function CopyButton({ content, title, className }: CopyButtonProps) {
     <button
       onClick={handleCopy}
       className={cn(
-        'flex items-center justify-center w-7 h-7 rounded-[6px] transition-colors shrink-0 select-none',
+        'flex items-center justify-center w-7 h-7 rounded-shape-md transition-colors shrink-0 select-none',
         copied
           ? 'text-success'
           : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5',
@@ -50,7 +56,7 @@ export function CopyButton({ content, title, className }: CopyButtonProps) {
       )}
       title={copied ? t('common.copied') : resolvedTitle}
     >
-      {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+      {copied ? <Check className="w-3.5 h-3.5 animate-check-decay" /> : <Copy className="w-3.5 h-3.5" />}
     </button>
   )
 }

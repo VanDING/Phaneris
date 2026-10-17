@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react"
+import { resolveRovingIndex } from '@phaneris/ui/roving-focus'
 
 interface UseRovingTabIndexOptions<T> {
   /** List of items to navigate */
@@ -133,67 +134,21 @@ export function useRovingTabIndex<T>({
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (!enabled || items.length === 0) return
 
-    const isVertical = orientation === 'vertical' || orientation === 'both'
-    const isHorizontal = orientation === 'horizontal' || orientation === 'both'
     const isShiftKey = e.shiftKey
 
     let nextIndex = activeIndex
     let handled = false
     let isExtendSelection = false
 
+    // Arrows, Home/End and PageUp/PageDown share the roving-focus protocol.
+    const resolved = resolveRovingIndex(e.key, activeIndex, items.length, { orientation, loop: wrap })
+    if (resolved !== null) {
+      nextIndex = resolved
+      handled = true
+      isExtendSelection = isShiftKey && !!onExtendSelection
+    }
+
     switch (e.key) {
-      case 'ArrowDown':
-        if (isVertical) {
-          nextIndex = wrap
-            ? (activeIndex + 1) % items.length
-            : Math.min(activeIndex + 1, items.length - 1)
-          handled = true
-          isExtendSelection = isShiftKey && !!onExtendSelection
-        }
-        break
-
-      case 'ArrowUp':
-        if (isVertical) {
-          nextIndex = wrap
-            ? (activeIndex - 1 + items.length) % items.length
-            : Math.max(activeIndex - 1, 0)
-          handled = true
-          isExtendSelection = isShiftKey && !!onExtendSelection
-        }
-        break
-
-      case 'ArrowRight':
-        if (isHorizontal) {
-          nextIndex = wrap
-            ? (activeIndex + 1) % items.length
-            : Math.min(activeIndex + 1, items.length - 1)
-          handled = true
-          isExtendSelection = isShiftKey && !!onExtendSelection
-        }
-        break
-
-      case 'ArrowLeft':
-        if (isHorizontal) {
-          nextIndex = wrap
-            ? (activeIndex - 1 + items.length) % items.length
-            : Math.max(activeIndex - 1, 0)
-          handled = true
-          isExtendSelection = isShiftKey && !!onExtendSelection
-        }
-        break
-
-      case 'Home':
-        nextIndex = 0
-        handled = true
-        isExtendSelection = isShiftKey && !!onExtendSelection
-        break
-
-      case 'End':
-        nextIndex = items.length - 1
-        handled = true
-        isExtendSelection = isShiftKey && !!onExtendSelection
-        break
-
       case 'Enter':
       case ' ':
         e.preventDefault()

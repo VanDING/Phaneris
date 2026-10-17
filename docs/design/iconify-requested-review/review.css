@@ -1,0 +1,14 @@
+.variant-bar{grid-template-columns:repeat(3,minmax(0,1fr))}
+.variant{min-width:0}.variant p{white-space:normal}
+.family-sheet{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:8px 0 24px}
+.family-row{display:grid;grid-template-columns:180px minmax(0,1fr) 88px;gap:20px;align-items:center;padding:18px 0}
+.family-row+.family-row{border-top:1px solid var(--line)}
+.family-name{font-size:13px;font-weight:600}.family-name>small{display:block;font-size:11px;font-weight:400;color:var(--muted);margin-top:5px}
+.family-samples{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:10px}
+.family-item{display:flex;align-items:center;flex-direction:column;gap:9px;min-width:0}.family-item>.icon{width:26px;height:26px;flex:none}.family-item>small{font-size:10px;white-space:nowrap;color:var(--muted)}
+.family-open{font-size:11px;padding:7px 9px;justify-self:end}.family-open[aria-pressed=true]{color:var(--accent);background:var(--side)}
+.family-open>div{display:contents}.family-open>.variant-icons{display:none}
+.choice-table th:first-child{width:8%}.choice-table th:last-child{width:27%}.choice-table th:not(:first-child):not(:last-child){width:16.25%}
+code{overflow-wrap:anywhere}.footnote p{max-width:125ch;line-height:1.9}.scope-grid p{margin-bottom:16px}.scope-grid h3:not(:first-child){margin-top:22px}
+@media(max-width:1040px){.family-row{grid-template-columns:140px minmax(0,1fr);gap:16px}.family-open{display:none}.family-samples{gap:7px}.family-item>.icon{width:24px;height:24px}}
+@media(max-width:760px){.variant-bar{grid-template-columns:1fr}.variant{min-height:72px;border-right:0;border-bottom:1px solid var(--line)}.variant:last-child{border-bottom:0}.family-row{display:flex;align-items:stretch;flex-direction:column;gap:16px;padding:17px 0}.family-name{display:flex;justify-content:space-between;gap:12px}.family-name>small{margin-top:0}.family-samples{grid-template-columns:repeat(5,minmax(0,1fr));gap:18px 8px}.family-item>.icon{width:24px;height:24px}.family-item>small{font-size:10px}.family-sheet{margin-bottom:20px}.intro p{max-width:55ch}.footnote{align-items:start;flex-direction:column}}

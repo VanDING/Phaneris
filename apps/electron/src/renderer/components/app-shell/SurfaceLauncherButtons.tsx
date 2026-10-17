@@ -140,7 +140,7 @@ export function SurfaceLauncherButtons({
                 <TopBarButton
                   aria-label={t('session.newSessionInPanel')}
                   onClick={onNewSession}
-                  className="h-[22px] w-[22px] rounded-md text-foreground/35"
+                  className="h-control-xs w-[22px] rounded-md text-foreground/35"
                 >
                   <SquarePenRounded className="h-3.5 w-3.5" strokeWidth={2} />
                 </TopBarButton>
@@ -168,7 +168,7 @@ export function SurfaceLauncherButtons({
                     }
                   }}
                   className={cn(
-                    'h-[22px] w-[22px] rounded-md',
+                    'h-control-xs w-[22px] rounded-md',
                     browserPresent ? 'text-foreground/60' : 'text-foreground/35',
                   )}
                 >
@@ -191,7 +191,7 @@ export function SurfaceLauncherButtons({
                 isActive={state === 'focused'}
                 onClick={() => handleClick(kind)}
                 className={cn(
-                  'h-[22px] w-[22px] rounded-md',
+                  'h-control-xs w-[22px] rounded-md',
                   state === 'focused' && 'text-foreground',
                   state === 'open' && 'text-foreground/60',
                   (state === 'closed' || state === 'background') && 'text-foreground/35',

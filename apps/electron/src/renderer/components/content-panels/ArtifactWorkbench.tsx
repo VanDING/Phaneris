@@ -172,15 +172,15 @@ export function ArtifactWorkbench({ artifactId }: { artifactId: string }) {
     <div className="flex h-full min-h-0 flex-col" data-testid="artifact-workbench">
       <PanelHeader title={artifact.title} centerTitleInPanel />
       <div className="flex flex-wrap items-center gap-2 border-b border-border/60 px-3 py-2">
-        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
+        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-meta font-semibold text-primary">
           {t(`artifact.status.${artifact.status}`)}
         </span>
-        <span className="min-w-0 flex-1 truncate text-[11px] text-muted-foreground" title={artifact.sourcePath}>
+        <span className="min-w-0 flex-1 truncate text-meta text-muted-foreground" title={artifact.sourcePath}>
           {artifact.sourcePath}
         </span>
         {artifact.provenance?.model && (
           <span
-            className="max-w-48 truncate rounded-full bg-foreground/5 px-2 py-0.5 text-[10px] text-muted-foreground"
+            className="max-w-48 truncate rounded-full bg-foreground/5 px-2 py-0.5 text-micro text-muted-foreground"
             title={artifact.provenance.prompt}
             data-testid="artifact-provenance"
           >

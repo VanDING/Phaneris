@@ -1,7 +1,14 @@
+/** Bottom tolerance for re-pinning after the user returns to the end. */
+export const CHAT_STICK_THRESHOLD_PX = 20
+
+/** A user gesture owns the viewport for this long; streamed output must not
+ *  steal it. The reference implementation uses 150ms; this latch is stricter. */
+export const USER_SCROLL_COOLDOWN_MS = 250
+
 export interface ScrollFollowing { current: boolean }
 
 export function isChatAtBottom(viewport: Pick<HTMLElement, 'scrollTop' | 'scrollHeight' | 'clientHeight'>): boolean {
-  return viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop <= 20
+  return viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop <= CHAT_STICK_THRESHOLD_PX
 }
 
 /** A nested response/code pane owns the gesture while it can still scroll. */
@@ -34,7 +41,7 @@ export function observeChatScrollAnchor(
 
   const noteIntent = (delta: number, target: EventTarget | null) => {
     if (!delta || nestedScrollerConsumes(target, viewport, delta)) return
-    userScrollUntil = performance.now() + 250
+    userScrollUntil = performance.now() + USER_SCROLL_COOLDOWN_MS
     userDirection = delta
     if (delta < 0) {
       following.current = false
@@ -59,7 +66,7 @@ export function observeChatScrollAnchor(
   const onPointerDown = (event: PointerEvent) => {
     if (event.target === viewport) {
       draggingScrollbar = true
-      userScrollUntil = performance.now() + 250
+      userScrollUntil = performance.now() + USER_SCROLL_COOLDOWN_MS
     }
   }
   const onPointerUp = () => { draggingScrollbar = false }
@@ -67,7 +74,7 @@ export function observeChatScrollAnchor(
     if (draggingScrollbar || performance.now() < userScrollUntil) {
       following.current = !draggingScrollbar && userDirection < 0 ? false : isChatAtBottom(viewport)
       // Keep momentum scrolling associated with the user's gesture.
-      userScrollUntil = performance.now() + 250
+      userScrollUntil = performance.now() + USER_SCROLL_COOLDOWN_MS
     }
   }
   const observer = new ResizeObserver(() => {

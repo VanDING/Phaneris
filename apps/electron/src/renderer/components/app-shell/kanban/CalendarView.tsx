@@ -544,7 +544,7 @@ export function CalendarView() {
               <PopoverContent align="start" className="w-80 p-0">
                 <div className="border-b border-border/60 px-3 py-2">
                   <div className="text-xs font-semibold">{t('schedule.untimedTitle')}</div>
-                  <p className="pt-1 text-[11px] leading-snug text-text-secondary">{t('schedule.untimedHint')}</p>
+                  <p className="pt-1 text-meta leading-snug text-text-secondary">{t('schedule.untimedHint')}</p>
                 </div>
                 <ScrollArea className="max-h-80">
                   <UntimedEntryList
@@ -821,7 +821,7 @@ export function CalendarView() {
                   aria-hidden="true"
                 />
                 {info.timeText && (
-                  <span className="flex-none text-[10px] font-semibold tabular-nums opacity-75">{info.timeText}</span>
+                  <span className="flex-none text-micro font-semibold tabular-nums opacity-75">{info.timeText}</span>
                 )}
                 <span className="min-w-0 flex-1 truncate font-medium">{info.event.title}</span>
               </span>

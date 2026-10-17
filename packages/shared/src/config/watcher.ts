@@ -75,11 +75,6 @@ import { isBuiltinThemeId, isValidUserThemeId } from './theme.ts';
  */
 const activeWatchers = new Map<string, string>(); // workspaceDir → creator workspaceId
 
-/** Exported for testing only */
-export function _getActiveWatchers(): ReadonlyMap<string, string> {
-  return activeWatchers;
-}
-
 // ============================================================
 // Constants
 // ============================================================

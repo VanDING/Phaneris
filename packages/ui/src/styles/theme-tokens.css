@@ -37,12 +37,13 @@
 :root {
   --navigator: var(--background);
   --radius: var(--theme-radius);
+  --edge-hairline: var(--theme-border-width);
   --ring-width: 1px;
   --ring-offset: 0px;
   --spacing: 0.25rem;
   --md-bullets: var(--foreground-50);
   --md-counters: var(--foreground-50);
-  --shadow-minimal-flat: 0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent);
+  --shadow-minimal-flat: 0 0 0 var(--edge-hairline) color-mix(in srgb, var(--foreground) 6%, transparent);
   --shadow-border-opacity: 0.08;
   --shadow-blur-opacity: 0.06;
   --user-message-bubble-dimmed: #F7F7F7;
@@ -106,22 +107,23 @@
   --theme-shadow-color: #18181B;
   --theme-shadow-strength: 0.1;
   --theme-backdrop-blur: 0px;
-  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent);
-  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
-  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
-  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
+  --shadow-minimal: 0 0 0 var(--edge-hairline) var(--border), 0 1px 2px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent), 0 3px 6px color-mix(in srgb, var(--theme-shadow-color) 6%, transparent);
+  --shadow-middle: 0 0 0 var(--edge-hairline) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
+  --shadow-strong: 0 0 0 var(--edge-hairline) var(--border), 0 12px 32px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
+  --shadow-modal-small: 0 0 0 var(--edge-hairline) var(--border), 0 18px 48px color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);
   --theme-mode: solid;
 }
 
 .dark {
   --navigator: var(--background);
   --radius: var(--theme-radius);
+  --edge-hairline: var(--theme-border-width);
   --ring-width: 1px;
   --ring-offset: 0px;
   --spacing: 0.25rem;
   --md-bullets: var(--foreground-50);
   --md-counters: var(--foreground-50);
-  --shadow-minimal-flat: 0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent);
+  --shadow-minimal-flat: 0 0 0 var(--edge-hairline) color-mix(in srgb, var(--foreground) 6%, transparent);
   --shadow-border-opacity: 0.15;
   --shadow-blur-opacity: 0.12;
   --user-message-bubble-dimmed: #252525;
@@ -150,11 +152,11 @@
   --info: #E3B674;
   --success: #83CBA7;
   --destructive: #F18C98;
-  --background-elevated: #242832;
+  --background-elevated: #22262E;
   --foreground-dimmed: #AAB1C1;
-  --secondary: #282D38;
+  --secondary: #2A2F38;
   --secondary-foreground: #E0E4EE;
-  --muted: #222630;
+  --muted: #20242B;
   --muted-foreground: #AAB1C1;
   --card: #1C1F26;
   --card-foreground: #EEF0F6;
@@ -162,10 +164,10 @@
   --border: #343946;
   --ring: oklch(0.626 0.221 291.7);
   --user-message-bubble: #2B2B2B;
-  --paper: #1D2028;
-  --input: #20232C;
-  --popover: #262A34;
-  --popover-solid: #262A34;
+  --paper: #1C1F26;
+  --input: #191C21;
+  --popover: #262A32;
+  --popover-solid: #262A32;
   --theme-radius: 6px;
   --theme-panel-radius: 6px;
   --theme-border-width: 1px;
@@ -185,9 +187,9 @@
   --theme-shadow-color: #08090C;
   --theme-shadow-strength: 0.22;
   --theme-backdrop-blur: 0px;
-  --shadow-minimal: 0 0 0 var(--theme-border-width) var(--border);
-  --shadow-middle: 0 0 0 var(--theme-border-width) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent);
-  --shadow-strong: 0 0 0 var(--theme-border-width) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
-  --shadow-modal-small: 0 0 0 var(--theme-border-width) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
+  --shadow-minimal: 0 0 0 var(--edge-hairline) var(--border);
+  --shadow-middle: 0 0 0 var(--edge-hairline) var(--border), 0 4px 12px color-mix(in srgb, var(--theme-shadow-color) 12%, transparent);
+  --shadow-strong: 0 0 0 var(--edge-hairline) var(--border), 0 16px 48px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
+  --shadow-modal-small: 0 0 0 var(--edge-hairline) var(--border), 0 8px 24px color-mix(in srgb, var(--theme-shadow-color) 22%, transparent);
   --theme-mode: solid;
 }

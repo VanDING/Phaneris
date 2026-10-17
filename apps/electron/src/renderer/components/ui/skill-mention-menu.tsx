@@ -27,9 +27,9 @@ export interface InlineSkillMentionProps {
 // Shared Styles (matching slash-command-menu)
 // ============================================================================
 
-const MENU_CONTAINER_STYLE = 'min-w-[240px] overflow-hidden rounded-[8px] bg-background text-foreground shadow-modal-small'
+const MENU_CONTAINER_STYLE = 'min-w-[240px] overflow-hidden rounded-shape-lg bg-background text-foreground shadow-modal-small'
 const MENU_LIST_STYLE = 'max-h-[240px] overflow-y-auto p-1'
-const MENU_ITEM_STYLE = 'flex cursor-pointer select-none items-center gap-3 rounded-[6px] px-3 py-2 text-[13px]'
+const MENU_ITEM_STYLE = 'flex cursor-pointer select-none items-center gap-3 rounded-shape-md px-3 py-2 text-body'
 const MENU_ITEM_SELECTED = 'bg-foreground/5'
 
 // ============================================================================
@@ -152,7 +152,7 @@ export function InlineSkillMention({
               <div className="flex-1 min-w-0">
                 <div className="font-medium truncate">{skill.metadata.name}</div>
                 {skill.metadata.description && (
-                  <div className="text-[11px] text-foreground/50 truncate">
+                  <div className="text-meta text-foreground/50 truncate">
                     {skill.metadata.description}
                   </div>
                 )}

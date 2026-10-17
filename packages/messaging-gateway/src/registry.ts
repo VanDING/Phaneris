@@ -807,14 +807,8 @@ export class MessagingGatewayRegistry implements IMessagingGatewayRegistry {
       lastError: undefined,
     })
 
-    try {
-      await this.tryConnectWeCom(workspaceId, state)
-      await state.gateway.start()
-    } catch (error) {
-      // Keep credentials/configured state so the user can see the actionable
-      // connection error and retry without losing the values from storage.
-      throw error
-    }
+    await this.tryConnectWeCom(workspaceId, state)
+    await state.gateway.start()
   }
 
   async disconnectPlatform(workspaceId: string, platform: string): Promise<void> {

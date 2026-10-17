@@ -1,4 +1,8 @@
 /** Product roles are independent from the 39 optional theme-authoring fields. */
+import { CONTROL_HEIGHT_TIERS, FONT_SIZE_TIERS, RADIUS_TIERS } from './scale-contract'
+
+const rem = (px: number) => `${(px / 15).toFixed(6).replace(/0+$/, '').replace(/\.$/, '')}rem`
+
 export const VISUAL_ROLE_TOKENS = {
   '--surface-canvas': 'var(--background)', '--surface-navigator': 'var(--navigator)',
   '--surface-paper': 'var(--paper)', '--surface-raised': 'var(--card)',
@@ -11,6 +15,13 @@ export const VISUAL_ROLE_TOKENS = {
   '--shape-window': 'var(--theme-panel-radius)', '--shape-panel': 'var(--theme-panel-radius)',
   '--shape-inner': 'var(--theme-panel-radius)', '--shape-card': 'calc(var(--theme-radius) * 1.333333)',
   '--shape-control': 'calc(var(--theme-radius) * .75)', '--shape-chip': 'var(--theme-radius)', '--shape-round': '9999px',
+  // Contract tiers (fixed geometry). Role shapes above stay theme-derived.
+  ...Object.fromEntries(Object.entries(RADIUS_TIERS).map(([tier, px]) => [`--shape-${tier}`, `${px}px`])),
+  '--shape-bubble': '16px', '--shape-composer': 'calc(var(--theme-radius) * 1.5)',
+  // Control heights are physical object geometry; the tier table is the contract.
+  ...Object.fromEntries(Object.entries(CONTROL_HEIGHT_TIERS).map(([tier, px]) => [`--control-height-${tier}`, `${px}px`])),
+  // Semantic type scale. Values are rem so the user font-size setting scales them.
+  ...Object.fromEntries(Object.entries(FONT_SIZE_TIERS).map(([tier, px]) => [`--type-${tier}-size`, rem(px)])),
   '--ui-scale': '1', '--reading-scale': '1',
   '--ui-caption-size': '.75rem', '--ui-label-size': '.866667rem', '--ui-body-size': '.875rem',
   '--ui-title-size': '1rem', '--ui-heading-size': '1.2rem', '--ui-line-height': '1.5',

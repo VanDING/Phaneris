@@ -299,7 +299,7 @@ function PluginBadge({
   const { t } = useTranslation()
   return (
     <div
-      className="h-[30px] pl-3 pr-2 text-xs font-medium rounded-[8px] flex items-center shadow-minimal outline-none select-none shrink-0 bg-[color-mix(in_srgb,var(--background)_97%,var(--foreground))]"
+      className="h-control-md pl-3 pr-2 text-xs font-medium rounded-shape-lg flex items-center shadow-minimal outline-none select-none shrink-0 bg-[color-mix(in_srgb,var(--background)_97%,var(--foreground))]"
       title={t('chat.activePlugin', { name: pluginName })}
     >
       <Shapes className="shrink-0 h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
@@ -400,7 +400,7 @@ function LabelBadge({
 /**
  * Renders the current workflow state as a badge in the dynamic stacking container.
  * Click opens a SessionStatusMenu popover for changing the state.
- * Styled consistently with label badges (h-[30px], rounded-[8px], color-mix tinting).
+ * Styled consistently with label badges (30px height, 8px radius, color-mix tinting).
  */
 function StateBadge({
   state,
@@ -484,7 +484,7 @@ function FilesPopoverButton({ sessionId, sessionFolderPath }: { sessionId?: stri
         <button
           type="button"
           className={cn(
-            "h-[30px] pl-[12px] pr-[14px] text-xs font-medium rounded-[8px] flex items-center gap-1.5 shrink-0",
+            "h-control-md pl-[12px] pr-[14px] text-xs font-medium rounded-shape-lg flex items-center gap-1.5 shrink-0",
             "outline-none select-none transition-colors shadow-minimal",
             "hover:bg-foreground/5 data-[state=open]:bg-foreground/5",
             "bg-[color-mix(in_srgb,var(--background)_97%,var(--foreground)_3%)]",
@@ -564,7 +564,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
           type="button"
           data-tutorial="permission-mode-dropdown"
           className={cn(
-            "h-[30px] pl-2.5 pr-2 text-xs font-medium rounded-[8px] flex items-center gap-1.5 shadow-tinted outline-none select-none",
+            "h-control-md pl-2.5 pr-2 text-xs font-medium rounded-shape-lg flex items-center gap-1.5 shadow-tinted outline-none select-none",
             currentStyle.className
           )}
           style={{ '--shadow-color': currentStyle.shadowVar } as React.CSSProperties}
@@ -575,7 +575,7 @@ function PermissionModeDropdown({ permissionMode, onPermissionModeChange, sessio
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto p-0 rounded-[8px] bg-background text-foreground shadow-modal-small"
+        className="w-auto p-0 rounded-shape-lg bg-background text-foreground shadow-modal-small"
         side="top"
         align="start"
         sideOffset={4}

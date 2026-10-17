@@ -202,7 +202,7 @@ function computeEditWriteDiffStats(
 /** Shared size configuration for activity UI - exported for reuse in inline execution */
 export const SIZE_CONFIG = {
   /** Base font size class for all text */
-  fontSize: 'text-[13px]',
+  fontSize: 'text-body',
   /** Icon size class (width and height) */
   iconSize: 'w-3 h-3',
   /** Agent activity indicator box */
@@ -826,7 +826,7 @@ export function ActivityStatusIcon({
       const isLikelyEmoji = customIcon.length <= 8 && !/^(https?:\/\/|data:)/.test(customIcon)
       if (isLikelyEmoji) {
         return (
-          <span className={cn(SIZE_CONFIG.iconSize, "shrink-0 flex items-center justify-center text-[10px] leading-none")}>
+          <span className={cn(SIZE_CONFIG.iconSize, "shrink-0 flex items-center justify-center text-micro leading-none")}>
             {customIcon}
           </span>
         )
@@ -989,7 +989,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
                 }
               }}
               className={cn(
-                "p-0.5 rounded-[3px] opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0",
+                "p-0.5 rounded-shape-sm opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0",
                 "hover:bg-muted/80 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               )}
             >
@@ -1089,7 +1089,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span
-                    className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--destructive)_4%,var(--background))] shadow-tinted rounded-[4px] text-[10px] text-destructive font-medium cursor-default shrink-0"
+                    className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--destructive)_4%,var(--background))] shadow-tinted rounded-shape-sm text-micro text-destructive font-medium cursor-default shrink-0"
                     style={{ '--shadow-color': 'var(--destructive)' } as React.CSSProperties}
                   >
                     {i18n.t('common.error')}
@@ -1102,7 +1102,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
             )}
             {/* Model badge for LLM Query */}
             {activity.toolName === 'mcp__session__call_llm' && activity.toolInput?.model && (
-              <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-[4px] text-[10px] text-foreground/60 shrink-0">
+              <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-micro text-foreground/60 shrink-0">
                 {String(activity.toolInput.model)}
               </span>
             )}
@@ -1136,16 +1136,16 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
         )}
         {/* Diff stats and filename badges - after tool name */}
         {!isMcpOrApiTool && !isBackgrounded && diffStats && (
-          <span className="flex items-center gap-1.5 text-[10px] shrink-0">
+          <span className="flex items-center gap-1.5 text-micro shrink-0">
             {diffStats.deletions > 0 && (
               <span
-                className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--destructive)_5%,var(--background))] shadow-tinted rounded-[4px] text-destructive"
+                className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--destructive)_5%,var(--background))] shadow-tinted rounded-shape-sm text-destructive"
                 style={{ '--shadow-color': 'var(--destructive)' } as React.CSSProperties}
               >{diffStats.deletions}</span>
             )}
             {diffStats.additions > 0 && (
               <span
-                className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--success)_5%,var(--background))] shadow-tinted rounded-[4px] text-success"
+                className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--success)_5%,var(--background))] shadow-tinted rounded-shape-sm text-success"
                 style={{ '--shadow-color': 'var(--success)' } as React.CSSProperties}
               >{diffStats.additions}</span>
             )}
@@ -1154,7 +1154,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
               // Craft canonical format: file_path
               if (typeof activity.toolInput?.file_path === 'string') {
                 return (
-                  <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-[4px] text-[11px] text-foreground/70">
+                  <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-foreground/70">
                     {normalizePath(activity.toolInput.file_path).split('/').pop()}
                   </span>
                 )
@@ -1164,7 +1164,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
                 const firstChange = activity.toolInput.changes[0] as { path?: string } | undefined
                 if (firstChange?.path) {
                   return (
-                    <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-[4px] text-[11px] text-foreground/70">
+                    <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-foreground/70">
                       {normalizePath(firstChange.path).split('/').pop()}
                     </span>
                   )
@@ -1176,8 +1176,8 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
         )}
         {/* Filename badge for Read tool (no diff stats) */}
         {!isMcpOrApiTool && !isBackgrounded && !diffStats && activity.toolName === 'Read' && typeof activity.toolInput?.file_path === 'string' && (
-          <span className="flex items-center gap-1.5 text-[10px] shrink-0">
-            <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-[4px] text-[11px] text-foreground/70">
+          <span className="flex items-center gap-1.5 text-micro shrink-0">
+            <span className="px-1.5 py-0.5 bg-background shadow-minimal rounded-shape-sm text-meta text-foreground/70">
               {normalizePath(activity.toolInput.file_path).split('/').pop()}
             </span>
           </span>
@@ -1187,7 +1187,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
           <Tooltip>
             <TooltipTrigger asChild>
               <span
-                className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--destructive)_4%,var(--background))] shadow-tinted rounded-[4px] text-[10px] text-destructive font-medium cursor-default shrink-0"
+                className="px-1.5 py-0.5 bg-[color-mix(in_oklab,var(--destructive)_4%,var(--background))] shadow-tinted rounded-shape-sm text-micro text-destructive font-medium cursor-default shrink-0"
                 style={{ '--shadow-color': 'var(--destructive)' } as React.CSSProperties}
               >
                 Error
@@ -1202,7 +1202,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
           <Tooltip>
             <TooltipTrigger asChild>
               <span
-                className="px-1.5 py-0.5 bg-warning/10 shadow-tinted rounded-[4px] text-[10px] text-warning font-medium cursor-default shrink-0"
+                className="px-1.5 py-0.5 bg-warning/10 shadow-tinted rounded-shape-sm text-micro text-warning font-medium cursor-default shrink-0"
                 style={{ '--shadow-color': 'var(--warning)' } as React.CSSProperties}
               >
                 {i18n.t('turnCard.recoveryRequired')}
@@ -1255,7 +1255,7 @@ function ActivityRow({ activity, onOpenDetails, isLastChild, sessionFolderPath, 
               }
             }}
             className={cn(
-              "p-0.5 rounded-[3px] opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0",
+              "p-0.5 rounded-shape-sm opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0",
               "hover:bg-muted/80 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             )}
           >
@@ -1346,7 +1346,7 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
         <ActivityStatusIcon status={group.parent.status} toolName={group.parent.toolName} />
 
         {/* Subagent type badge */}
-        <span className="shrink-0 px-1.5 py-0.5 rounded-[4px] bg-background shadow-minimal text-[10px] font-medium">
+        <span className="shrink-0 px-1.5 py-0.5 rounded-shape-sm bg-background shadow-minimal text-micro font-medium">
           {subagentType || 'Task'}
         </span>
 
@@ -1395,7 +1395,7 @@ function ActivityGroupRow({ group, expandedGroups: externalExpandedGroups, onExp
               }
             }}
             className={cn(
-              "p-0.5 rounded-[3px] opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0",
+              "p-0.5 rounded-shape-sm opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0",
               "hover:bg-muted/80 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             )}
           >
@@ -1510,7 +1510,7 @@ function BranchDropdown({ onBranch }: BranchDropdownProps) {
           aria-label={t('chat.branchOptions')}
           title={t('chat.branch')}
           className={cn(
-            "p-1 rounded-[4px] transition-colors select-none",
+            "p-1 rounded-shape-sm transition-colors select-none",
             "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
             "data-[state=open]:text-foreground data-[state=open]:bg-foreground/5",
             "focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -1523,7 +1523,7 @@ function BranchDropdown({ onBranch }: BranchDropdownProps) {
       <StyledDropdownMenuContent align="end" minWidth="min-w-64" sideOffset={6}>
         <StyledDropdownMenuItem onClick={handleBranchClick} className="items-start py-2">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[13px] leading-tight">{t('chat.branchFromThisMessage')}</span>
+            <span className="text-body leading-tight">{t('chat.branchFromThisMessage')}</span>
             <span className="max-w-[220px] whitespace-normal text-xs leading-tight text-muted-foreground">
               {t('chat.branchFromThisMessageDescription')}
             </span>
@@ -2510,13 +2510,13 @@ export function ResponseCard({
 
     return (
       <>
-        <div className="bg-background shadow-minimal rounded-[8px] overflow-hidden relative group">
+        <div className="bg-background shadow-minimal rounded-shape-lg overflow-hidden relative group">
           {/* Fullscreen button - desktop only; compact mode keeps message chrome minimal */}
           {!compactMode && (
           <button
             onClick={() => setIsFullscreen(true)}
             className={cn(
-              "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-2 right-2 p-1 rounded-[6px] transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
+              "craft-icon-button craft-row-actions inline-flex items-center justify-center motion-interactive absolute top-2 right-2 p-1 rounded-shape-md transition-[color,background-color,box-shadow,opacity,transform] z-component-chrome select-none",
               "opacity-0 group-hover:opacity-100",
               "bg-background shadow-minimal",
               "text-muted-foreground/50 hover:text-foreground",
@@ -2686,7 +2686,7 @@ export function ResponseCard({
   // Streaming response - show throttled content with spinner
   return (
     <>
-      <div className="bg-background shadow-minimal rounded-[8px] overflow-hidden group">
+      <div className="bg-background shadow-minimal rounded-shape-lg overflow-hidden group">
         {/* Content area - uses displayedText (throttled) for performance */}
         {/* Subtle fade at top and bottom edges (dark mode only) */}
         <div
@@ -3112,7 +3112,7 @@ export const TurnCard = React.memo(function TurnCard({
           <button
             onClick={toggleExpanded}
             className={cn(
-              "flex items-center gap-2 w-full pl-2.5 pr-1.5 py-1.5 rounded-[8px] text-left",
+              "flex items-center gap-2 w-full pl-2.5 pr-1.5 py-1.5 rounded-shape-lg text-left",
               SIZE_CONFIG.fontSize,
               "text-muted-foreground",
               "hover:bg-muted/50 transition-colors",
@@ -3130,7 +3130,7 @@ export const TurnCard = React.memo(function TurnCard({
             </motion.div>
 
             {/* Step count badge */}
-            <span className="-ml-0.5 shrink-0 px-1.5 py-0.5 rounded-[4px] bg-background shadow-minimal text-[10px] font-medium tabular-nums">
+            <span className="-ml-0.5 shrink-0 px-1.5 py-0.5 rounded-shape-sm bg-background shadow-minimal text-micro font-medium tabular-nums">
               {activities.length}
             </span>
 

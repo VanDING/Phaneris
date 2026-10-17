@@ -1,0 +1,4532 @@
+{
+  "date": "2026-10-15",
+  "mode": "Standalone demonstration only",
+  "scope": {
+    "files": 237,
+    "imports": 877,
+    "exportedNames": 208,
+    "distinctComponents": 197,
+    "playgroundFiles": 24,
+    "byScope": {
+      "desktop": {
+        "files": 186,
+        "imports": 727
+      },
+      "shared": {
+        "files": 48,
+        "imports": 143
+      },
+      "viewer": {
+        "files": 3,
+        "imports": 7
+      },
+      "webui": {
+        "files": 0,
+        "imports": 0
+      }
+    }
+  },
+  "candidates": {
+    "a": {
+      "title": "A · Solar Linear",
+      "short": "柔和、舒展的细线",
+      "prefix": "solar",
+      "suffix": "-linear",
+      "note": "Solar Linear：圆润外框与舒展曲线，保留原生 1.5 描边。界面中的 72 个图标用途统一使用 Linear；小尺寸顶栏请重点看清晰度。",
+      "url": "https://icon-sets.iconify.design/solar/"
+    },
+    "b": {
+      "title": "B · Fluent Regular",
+      "short": "克制的桌面原生感",
+      "prefix": "fluent",
+      "suffix": "-24-regular",
+      "note": "Fluent UI System Icons：全部选择 24 Regular，同一设计体系、同一尺寸母版。轮廓柔和且较紧凑，保留微软原始路径。",
+      "url": "https://icon-sets.iconify.design/fluent/"
+    },
+    "c": {
+      "title": "C · IconPark Outline",
+      "short": "更饱满、更鲜明的轮廓",
+      "prefix": "icon-park-outline",
+      "suffix": "",
+      "note": "IconPark Outline：统一使用线性轮廓，保留原生 48 网格与 4 描边，缩到 24 px 相当于 2 px。圆端点更明显，小尺寸视觉重量也更高。",
+      "url": "https://icon-sets.iconify.design/icon-park-outline/"
+    }
+  },
+  "mapping": {
+    "sessions": {
+      "key": "sessions",
+      "label": "所有对话",
+      "group": "导航",
+      "current": "Inbox",
+      "note": "统一用对话气泡，导航与顶栏「对话」使用同一个字形。",
+      "ids": {
+        "current": "lc-Inbox",
+        "a": "solar-chat-round-linear",
+        "b": "fluent-chat-24-regular",
+        "c": "icon-park-outline-message"
+      },
+      "names": {
+        "current": "Inbox",
+        "a": "chat-round-linear",
+        "b": "chat-24-regular",
+        "c": "message"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "labels": {
+      "key": "labels",
+      "label": "标签",
+      "group": "导航",
+      "current": "Tag",
+      "note": "保留标签语义与必要切角；主要比较切角、孔位和轮廓重量。",
+      "ids": {
+        "current": "lc-Tag",
+        "a": "solar-tag-linear",
+        "b": "fluent-tag-24-regular",
+        "c": "icon-park-outline-tag-one"
+      },
+      "names": {
+        "current": "Tag",
+        "a": "tag-linear",
+        "b": "tag-24-regular",
+        "c": "tag-one"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "sources": {
+      "key": "sources",
+      "label": "数据源",
+      "group": "导航",
+      "current": "DatabaseZap",
+      "note": "采用纯数据库轮廓，去掉当前 DatabaseZap 的闪电。",
+      "ids": {
+        "current": "lc-DatabaseZap",
+        "a": "solar-database-linear",
+        "b": "fluent-database-24-regular",
+        "c": "icon-park-outline-data"
+      },
+      "names": {
+        "current": "DatabaseZap",
+        "a": "database-linear",
+        "b": "database-24-regular",
+        "c": "data"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "skills": {
+      "key": "skills",
+      "label": "技能",
+      "group": "导航",
+      "current": "Zap",
+      "note": "Solar、Fluent 用灯泡；IconPark 用灵感光芒。都减少闪电锐角，光芒的语义更依赖文字。",
+      "ids": {
+        "current": "lc-Zap",
+        "a": "solar-lightbulb-minimalistic-linear",
+        "b": "fluent-lightbulb-24-regular",
+        "c": "icon-park-outline-light"
+      },
+      "names": {
+        "current": "Zap",
+        "a": "lightbulb-minimalistic-linear",
+        "b": "lightbulb-24-regular",
+        "c": "light"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "plugins": {
+      "key": "plugins",
+      "label": "插件",
+      "group": "导航",
+      "current": "Shapes",
+      "note": "Solar 用圆框插头；Fluent 与 IconPark 用拼图，均取自各自整套。",
+      "ids": {
+        "current": "lc-Shapes",
+        "a": "solar-plug-circle-linear",
+        "b": "fluent-puzzle-piece-24-regular",
+        "c": "icon-park-outline-puzzle"
+      },
+      "names": {
+        "current": "Shapes",
+        "a": "plug-circle-linear",
+        "b": "puzzle-piece-24-regular",
+        "c": "puzzle"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "projects": {
+      "key": "projects",
+      "label": "项目",
+      "group": "导航",
+      "current": "FolderKanban",
+      "note": "以简洁文件夹代表项目；文件树入口另用层级或目录图形。",
+      "ids": {
+        "current": "lc-FolderKanban",
+        "a": "solar-folder-linear",
+        "b": "fluent-folder-24-regular",
+        "c": "icon-park-outline-folder-close"
+      },
+      "names": {
+        "current": "FolderKanban",
+        "a": "folder-linear",
+        "b": "folder-24-regular",
+        "c": "folder-close"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "pages": {
+      "key": "pages",
+      "label": "页面",
+      "group": "导航",
+      "current": "PanelTop",
+      "note": "三套均使用窗口轮廓，与浏览器入口的地球作区分。",
+      "ids": {
+        "current": "lc-PanelTop",
+        "a": "solar-panel-top-linear",
+        "b": "fluent-window-24-regular",
+        "c": "icon-park-outline-browser"
+      },
+      "names": {
+        "current": "PanelTop",
+        "a": "panel-top-linear",
+        "b": "window-24-regular",
+        "c": "browser"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "automations": {
+      "key": "automations",
+      "label": "自动化",
+      "group": "导航",
+      "current": "ListTodo",
+      "note": "使用循环表达自动运行；这是语义调整，事件触发仍需文字说明。",
+      "ids": {
+        "current": "lc-ListTodo",
+        "a": "solar-repeat-linear",
+        "b": "fluent-arrow-repeat-all-24-regular",
+        "c": "icon-park-outline-cycle"
+      },
+      "names": {
+        "current": "ListTodo",
+        "a": "repeat-linear",
+        "b": "arrow-repeat-all-24-regular",
+        "c": "cycle"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "settings": {
+      "key": "settings",
+      "label": "设置",
+      "group": "导航",
+      "current": "Settings",
+      "note": "统一选择滑杆，避开齿轮尖齿，同时保留各套原生风格。",
+      "ids": {
+        "current": "lc-Settings",
+        "a": "solar-tuning-2-linear",
+        "b": "fluent-options-24-regular",
+        "c": "icon-park-outline-setting-config"
+      },
+      "names": {
+        "current": "Settings",
+        "a": "tuning-2-linear",
+        "b": "options-24-regular",
+        "c": "setting-config"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "new": {
+      "key": "new",
+      "label": "新建对话",
+      "group": "操作",
+      "current": "SquarePenRounded",
+      "ids": {
+        "current": "lc-SquarePenRounded",
+        "a": "solar-pen-new-square-linear",
+        "b": "fluent-compose-24-regular",
+        "c": "icon-park-outline-writing-fluently"
+      },
+      "names": {
+        "current": "SquarePenRounded",
+        "a": "pen-new-square-linear",
+        "b": "compose-24-regular",
+        "c": "writing-fluently"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "sidebar": {
+      "key": "sidebar",
+      "label": "侧栏",
+      "group": "操作",
+      "current": "PanelLeftRounded",
+      "ids": {
+        "current": "lc-PanelLeftRounded",
+        "a": "solar-panel-left-linear",
+        "b": "fluent-panel-left-24-regular",
+        "c": "icon-park-outline-layout-two"
+      },
+      "names": {
+        "current": "PanelLeftRounded",
+        "a": "panel-left-linear",
+        "b": "panel-left-24-regular",
+        "c": "layout-two"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "search": {
+      "key": "search",
+      "label": "搜索",
+      "group": "操作",
+      "current": "Search",
+      "ids": {
+        "current": "lc-Search",
+        "a": "solar-rounded-magnifier-linear",
+        "b": "fluent-search-24-regular",
+        "c": "icon-park-outline-search"
+      },
+      "names": {
+        "current": "Search",
+        "a": "rounded-magnifier-linear",
+        "b": "search-24-regular",
+        "c": "search"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "filter": {
+      "key": "filter",
+      "label": "筛选",
+      "group": "操作",
+      "current": "ListFilter",
+      "ids": {
+        "current": "lc-ListFilter",
+        "a": "solar-filter-linear",
+        "b": "fluent-filter-24-regular",
+        "c": "icon-park-outline-filter"
+      },
+      "names": {
+        "current": "ListFilter",
+        "a": "filter-linear",
+        "b": "filter-24-regular",
+        "c": "filter"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "more": {
+      "key": "more",
+      "label": "更多",
+      "group": "操作",
+      "current": "MoreHorizontal",
+      "ids": {
+        "current": "lc-MoreHorizontal",
+        "a": "solar-menu-dots-linear",
+        "b": "fluent-more-horizontal-24-regular",
+        "c": "icon-park-outline-more"
+      },
+      "names": {
+        "current": "MoreHorizontal",
+        "a": "menu-dots-linear",
+        "b": "more-horizontal-24-regular",
+        "c": "more"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "add": {
+      "key": "add",
+      "label": "添加",
+      "group": "操作",
+      "current": "Plus",
+      "ids": {
+        "current": "lc-Plus",
+        "a": "solar-add-linear",
+        "b": "fluent-add-24-regular",
+        "c": "icon-park-outline-add"
+      },
+      "names": {
+        "current": "Plus",
+        "a": "add-linear",
+        "b": "add-24-regular",
+        "c": "add"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "close": {
+      "key": "close",
+      "label": "关闭",
+      "group": "操作",
+      "current": "X",
+      "ids": {
+        "current": "lc-X",
+        "a": "solar-close-linear",
+        "b": "fluent-dismiss-24-regular",
+        "c": "icon-park-outline-close-small"
+      },
+      "names": {
+        "current": "X",
+        "a": "close-linear",
+        "b": "dismiss-24-regular",
+        "c": "close-small"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "left": {
+      "key": "left",
+      "label": "后退",
+      "group": "操作",
+      "current": "ChevronLeft",
+      "ids": {
+        "current": "lc-ChevronLeft",
+        "a": "solar-alt-arrow-left-linear",
+        "b": "fluent-chevron-left-24-regular",
+        "c": "icon-park-outline-left"
+      },
+      "names": {
+        "current": "ChevronLeft",
+        "a": "alt-arrow-left-linear",
+        "b": "chevron-left-24-regular",
+        "c": "left"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "right": {
+      "key": "right",
+      "label": "展开",
+      "group": "操作",
+      "current": "ChevronRight",
+      "ids": {
+        "current": "lc-ChevronRight",
+        "a": "solar-alt-arrow-right-linear",
+        "b": "fluent-chevron-right-24-regular",
+        "c": "icon-park-outline-right"
+      },
+      "names": {
+        "current": "ChevronRight",
+        "a": "alt-arrow-right-linear",
+        "b": "chevron-right-24-regular",
+        "c": "right"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "down": {
+      "key": "down",
+      "label": "下拉",
+      "group": "操作",
+      "current": "ChevronDown",
+      "ids": {
+        "current": "lc-ChevronDown",
+        "a": "solar-alt-arrow-down-linear",
+        "b": "fluent-chevron-down-24-regular",
+        "c": "icon-park-outline-down"
+      },
+      "names": {
+        "current": "ChevronDown",
+        "a": "alt-arrow-down-linear",
+        "b": "chevron-down-24-regular",
+        "c": "down"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "copy": {
+      "key": "copy",
+      "label": "复制",
+      "group": "操作",
+      "current": "Copy",
+      "ids": {
+        "current": "lc-Copy",
+        "a": "solar-copy-linear",
+        "b": "fluent-copy-24-regular",
+        "c": "icon-park-outline-copy"
+      },
+      "names": {
+        "current": "Copy",
+        "a": "copy-linear",
+        "b": "copy-24-regular",
+        "c": "copy"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "edit": {
+      "key": "edit",
+      "label": "编辑",
+      "group": "操作",
+      "current": "Pencil",
+      "ids": {
+        "current": "lc-Pencil",
+        "a": "solar-pen-linear",
+        "b": "fluent-edit-24-regular",
+        "c": "icon-park-outline-edit"
+      },
+      "names": {
+        "current": "Pencil",
+        "a": "pen-linear",
+        "b": "edit-24-regular",
+        "c": "edit"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "delete": {
+      "key": "delete",
+      "label": "删除",
+      "group": "操作",
+      "current": "Trash2",
+      "ids": {
+        "current": "lc-Trash2",
+        "a": "solar-trash-bin-minimalistic-linear",
+        "b": "fluent-delete-24-regular",
+        "c": "icon-park-outline-delete"
+      },
+      "names": {
+        "current": "Trash2",
+        "a": "trash-bin-minimalistic-linear",
+        "b": "delete-24-regular",
+        "c": "delete"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "external": {
+      "key": "external",
+      "label": "外部打开",
+      "group": "操作",
+      "current": "ExternalLink",
+      "ids": {
+        "current": "lc-ExternalLink",
+        "a": "solar-square-arrow-right-up-linear",
+        "b": "fluent-open-24-regular",
+        "c": "icon-park-outline-share"
+      },
+      "names": {
+        "current": "ExternalLink",
+        "a": "square-arrow-right-up-linear",
+        "b": "open-24-regular",
+        "c": "share"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "download": {
+      "key": "download",
+      "label": "下载",
+      "group": "操作",
+      "current": "Download",
+      "ids": {
+        "current": "lc-Download",
+        "a": "solar-download-minimalistic-linear",
+        "b": "fluent-arrow-download-24-regular",
+        "c": "icon-park-outline-download"
+      },
+      "names": {
+        "current": "Download",
+        "a": "download-minimalistic-linear",
+        "b": "arrow-download-24-regular",
+        "c": "download"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "refresh": {
+      "key": "refresh",
+      "label": "刷新",
+      "group": "操作",
+      "current": "RefreshCw",
+      "ids": {
+        "current": "lc-RefreshCw",
+        "a": "solar-refresh-linear",
+        "b": "fluent-arrow-clockwise-24-regular",
+        "c": "icon-park-outline-refresh"
+      },
+      "names": {
+        "current": "RefreshCw",
+        "a": "refresh-linear",
+        "b": "arrow-clockwise-24-regular",
+        "c": "refresh"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "pin": {
+      "key": "pin",
+      "label": "固定",
+      "group": "操作",
+      "current": "Pin",
+      "ids": {
+        "current": "lc-Pin",
+        "a": "solar-pin-linear",
+        "b": "fluent-pin-24-regular",
+        "c": "icon-park-outline-pushpin"
+      },
+      "names": {
+        "current": "Pin",
+        "a": "pin-linear",
+        "b": "pin-24-regular",
+        "c": "pushpin"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "archive": {
+      "key": "archive",
+      "label": "归档",
+      "group": "操作",
+      "current": "Archive",
+      "ids": {
+        "current": "lc-Archive",
+        "a": "solar-archive-linear",
+        "b": "fluent-archive-24-regular",
+        "c": "icon-park-outline-inbox"
+      },
+      "names": {
+        "current": "Archive",
+        "a": "archive-linear",
+        "b": "archive-24-regular",
+        "c": "inbox"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "attach": {
+      "key": "attach",
+      "label": "附件",
+      "group": "对话",
+      "current": "Paperclip",
+      "ids": {
+        "current": "lc-Paperclip",
+        "a": "solar-paperclip-rounded-linear",
+        "b": "fluent-attach-24-regular",
+        "c": "icon-park-outline-paperclip"
+      },
+      "names": {
+        "current": "Paperclip",
+        "a": "paperclip-rounded-linear",
+        "b": "attach-24-regular",
+        "c": "paperclip"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "send": {
+      "key": "send",
+      "label": "发送",
+      "group": "对话",
+      "current": "ArrowUp",
+      "ids": {
+        "current": "lc-ArrowUp",
+        "a": "solar-arrow-up-linear",
+        "b": "fluent-arrow-up-24-regular",
+        "c": "icon-park-outline-arrow-up"
+      },
+      "names": {
+        "current": "ArrowUp",
+        "a": "arrow-up-linear",
+        "b": "arrow-up-24-regular",
+        "c": "arrow-up"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "message": {
+      "key": "message",
+      "label": "消息",
+      "group": "对话",
+      "current": "MessageSquare",
+      "ids": {
+        "current": "lc-MessageSquare",
+        "a": "solar-chat-round-dots-linear",
+        "b": "fluent-comment-24-regular",
+        "c": "icon-park-outline-comment"
+      },
+      "names": {
+        "current": "MessageSquare",
+        "a": "chat-round-dots-linear",
+        "b": "comment-24-regular",
+        "c": "comment"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "ai": {
+      "key": "ai",
+      "label": "AI 设置",
+      "group": "设置",
+      "current": "Sparkles",
+      "ids": {
+        "current": "lc-Sparkles",
+        "a": "solar-stars-minimalistic-linear",
+        "b": "fluent-sparkle-24-regular",
+        "c": "icon-park-outline-magic"
+      },
+      "names": {
+        "current": "Sparkles",
+        "a": "stars-minimalistic-linear",
+        "b": "sparkle-24-regular",
+        "c": "magic"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "bot": {
+      "key": "bot",
+      "label": "智能体",
+      "group": "对话",
+      "current": "Bot",
+      "ids": {
+        "current": "lc-Bot",
+        "a": "solar-bot-linear",
+        "b": "fluent-bot-24-regular",
+        "c": "icon-park-outline-robot"
+      },
+      "names": {
+        "current": "Bot",
+        "a": "bot-linear",
+        "b": "bot-24-regular",
+        "c": "robot"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "terminal": {
+      "key": "terminal",
+      "label": "终端",
+      "group": "文件与工具",
+      "current": "TerminalSquare",
+      "ids": {
+        "current": "lc-TerminalSquare",
+        "a": "solar-file-terminal-linear",
+        "b": "fluent-code-block-24-regular",
+        "c": "icon-park-outline-terminal"
+      },
+      "names": {
+        "current": "TerminalSquare",
+        "a": "file-terminal-linear",
+        "b": "code-block-24-regular",
+        "c": "terminal"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "code": {
+      "key": "code",
+      "label": "代码",
+      "group": "文件与工具",
+      "current": "Code",
+      "ids": {
+        "current": "lc-Code",
+        "a": "solar-code-linear",
+        "b": "fluent-code-24-regular",
+        "c": "icon-park-outline-code"
+      },
+      "names": {
+        "current": "Code",
+        "a": "code-linear",
+        "b": "code-24-regular",
+        "c": "code"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "file": {
+      "key": "file",
+      "label": "文件",
+      "group": "文件与工具",
+      "current": "File",
+      "ids": {
+        "current": "lc-File",
+        "a": "solar-file-linear",
+        "b": "fluent-document-24-regular",
+        "c": "icon-park-outline-file-text"
+      },
+      "names": {
+        "current": "File",
+        "a": "file-linear",
+        "b": "document-24-regular",
+        "c": "file-text"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "document": {
+      "key": "document",
+      "label": "文档",
+      "group": "文件与工具",
+      "current": "FileText",
+      "ids": {
+        "current": "lc-FileText",
+        "a": "solar-document-text-linear",
+        "b": "fluent-document-text-24-regular",
+        "c": "icon-park-outline-file-text-one"
+      },
+      "names": {
+        "current": "FileText",
+        "a": "document-text-linear",
+        "b": "document-text-24-regular",
+        "c": "file-text-one"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "folder": {
+      "key": "folder",
+      "label": "文件夹",
+      "group": "文件与工具",
+      "current": "FolderOpen",
+      "ids": {
+        "current": "lc-FolderOpen",
+        "a": "solar-folder-open-linear",
+        "b": "fluent-folder-open-24-regular",
+        "c": "icon-park-outline-folder-open"
+      },
+      "names": {
+        "current": "FolderOpen",
+        "a": "folder-open-linear",
+        "b": "folder-open-24-regular",
+        "c": "folder-open"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "image": {
+      "key": "image",
+      "label": "图片",
+      "group": "文件与工具",
+      "current": "Image",
+      "ids": {
+        "current": "lc-Image",
+        "a": "solar-gallery-linear",
+        "b": "fluent-image-24-regular",
+        "c": "icon-park-outline-pic"
+      },
+      "names": {
+        "current": "Image",
+        "a": "gallery-linear",
+        "b": "image-24-regular",
+        "c": "pic"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "table": {
+      "key": "table",
+      "label": "表格",
+      "group": "文件与工具",
+      "current": "Table2",
+      "ids": {
+        "current": "lc-Table2",
+        "a": "solar-table-linear",
+        "b": "fluent-table-24-regular",
+        "c": "icon-park-outline-table"
+      },
+      "names": {
+        "current": "Table2",
+        "a": "table-linear",
+        "b": "table-24-regular",
+        "c": "table"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "json": {
+      "key": "json",
+      "label": "结构数据",
+      "group": "文件与工具",
+      "current": "Braces",
+      "ids": {
+        "current": "lc-Braces",
+        "a": "solar-brackets-linear",
+        "b": "fluent-braces-24-regular",
+        "c": "icon-park-outline-code-brackets"
+      },
+      "names": {
+        "current": "Braces",
+        "a": "brackets-linear",
+        "b": "braces-24-regular",
+        "c": "code-brackets"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "branch": {
+      "key": "branch",
+      "label": "分支",
+      "group": "文件与工具",
+      "current": "GitBranch",
+      "ids": {
+        "current": "lc-GitBranch",
+        "a": "solar-git-branch-linear",
+        "b": "fluent-branch-24-regular",
+        "c": "icon-park-outline-branch"
+      },
+      "names": {
+        "current": "GitBranch",
+        "a": "git-branch-linear",
+        "b": "branch-24-regular",
+        "c": "branch"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "diff": {
+      "key": "diff",
+      "label": "文件变更",
+      "group": "文件与工具",
+      "current": "FileDiff",
+      "ids": {
+        "current": "lc-FileDiff",
+        "a": "solar-file-pen-linear",
+        "b": "fluent-document-landscape-split-24-regular",
+        "c": "icon-park-outline-file-conversion"
+      },
+      "names": {
+        "current": "FileDiff",
+        "a": "file-pen-linear",
+        "b": "document-landscape-split-24-regular",
+        "c": "file-conversion"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "globe": {
+      "key": "globe",
+      "label": "浏览器",
+      "group": "文件与工具",
+      "current": "Globe",
+      "ids": {
+        "current": "lc-Globe",
+        "a": "solar-global-linear",
+        "b": "fluent-globe-24-regular",
+        "c": "icon-park-outline-earth"
+      },
+      "names": {
+        "current": "Globe",
+        "a": "global-linear",
+        "b": "globe-24-regular",
+        "c": "earth"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "maximize": {
+      "key": "maximize",
+      "label": "放大",
+      "group": "操作",
+      "current": "Maximize2",
+      "ids": {
+        "current": "lc-Maximize2",
+        "a": "solar-maximize-linear",
+        "b": "fluent-arrow-maximize-24-regular",
+        "c": "icon-park-outline-full-screen"
+      },
+      "names": {
+        "current": "Maximize2",
+        "a": "maximize-linear",
+        "b": "arrow-maximize-24-regular",
+        "c": "full-screen"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "appearance": {
+      "key": "appearance",
+      "label": "外观",
+      "group": "设置",
+      "current": "Palette",
+      "ids": {
+        "current": "lc-Palette",
+        "a": "solar-palette-round-linear",
+        "b": "fluent-color-24-regular",
+        "c": "icon-park-outline-color-card"
+      },
+      "names": {
+        "current": "Palette",
+        "a": "palette-round-linear",
+        "b": "color-24-regular",
+        "c": "color-card"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "input": {
+      "key": "input",
+      "label": "输入",
+      "group": "设置",
+      "current": "Keyboard",
+      "ids": {
+        "current": "lc-Keyboard",
+        "a": "solar-keyboard-linear",
+        "b": "fluent-keyboard-24-regular",
+        "c": "icon-park-outline-keyboard"
+      },
+      "names": {
+        "current": "Keyboard",
+        "a": "keyboard-linear",
+        "b": "keyboard-24-regular",
+        "c": "keyboard"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "workspace": {
+      "key": "workspace",
+      "label": "工作区",
+      "group": "设置",
+      "current": "Building2",
+      "ids": {
+        "current": "lc-Building2",
+        "a": "solar-buildings-2-linear",
+        "b": "fluent-building-multiple-24-regular",
+        "c": "icon-park-outline-building-two"
+      },
+      "names": {
+        "current": "Building2",
+        "a": "buildings-2-linear",
+        "b": "building-multiple-24-regular",
+        "c": "building-two"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "permissions": {
+      "key": "permissions",
+      "label": "权限",
+      "group": "设置",
+      "current": "ShieldCheck",
+      "ids": {
+        "current": "lc-ShieldCheck",
+        "a": "solar-shield-check-linear",
+        "b": "fluent-shield-checkmark-24-regular",
+        "c": "icon-park-outline-permissions"
+      },
+      "names": {
+        "current": "ShieldCheck",
+        "a": "shield-check-linear",
+        "b": "shield-checkmark-24-regular",
+        "c": "permissions"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "server": {
+      "key": "server",
+      "label": "服务器",
+      "group": "设置",
+      "current": "Server",
+      "ids": {
+        "current": "lc-Server",
+        "a": "solar-server-linear",
+        "b": "fluent-server-24-regular",
+        "c": "icon-park-outline-server"
+      },
+      "names": {
+        "current": "Server",
+        "a": "server-linear",
+        "b": "server-24-regular",
+        "c": "server"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "account": {
+      "key": "account",
+      "label": "个人偏好",
+      "group": "设置",
+      "current": "UserCircle",
+      "ids": {
+        "current": "lc-UserCircle",
+        "a": "solar-user-circle-linear",
+        "b": "fluent-person-circle-24-regular",
+        "c": "icon-park-outline-user"
+      },
+      "names": {
+        "current": "UserCircle",
+        "a": "user-circle-linear",
+        "b": "person-circle-24-regular",
+        "c": "user"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "general": {
+      "key": "general",
+      "label": "通用",
+      "group": "设置",
+      "current": "ToggleRight",
+      "ids": {
+        "current": "lc-ToggleRight",
+        "a": "solar-settings-minimalistic-linear",
+        "b": "fluent-toggle-right-24-regular",
+        "c": "icon-park-outline-switch"
+      },
+      "names": {
+        "current": "ToggleRight",
+        "a": "settings-minimalistic-linear",
+        "b": "toggle-right-24-regular",
+        "c": "switch"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "key": {
+      "key": "key",
+      "label": "凭证",
+      "group": "设置",
+      "current": "Key",
+      "ids": {
+        "current": "lc-Key",
+        "a": "solar-key-minimalistic-linear",
+        "b": "fluent-key-24-regular",
+        "c": "icon-park-outline-key"
+      },
+      "names": {
+        "current": "Key",
+        "a": "key-minimalistic-linear",
+        "b": "key-24-regular",
+        "c": "key"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "eye": {
+      "key": "eye",
+      "label": "显示",
+      "group": "设置",
+      "current": "Eye",
+      "ids": {
+        "current": "lc-Eye",
+        "a": "solar-eye-linear",
+        "b": "fluent-eye-24-regular",
+        "c": "icon-park-outline-preview-open"
+      },
+      "names": {
+        "current": "Eye",
+        "a": "eye-linear",
+        "b": "eye-24-regular",
+        "c": "preview-open"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "sun": {
+      "key": "sun",
+      "label": "浅色",
+      "group": "设置",
+      "current": "Sun",
+      "ids": {
+        "current": "lc-Sun",
+        "a": "solar-sun-linear",
+        "b": "fluent-weather-sunny-24-regular",
+        "c": "icon-park-outline-sun-one"
+      },
+      "names": {
+        "current": "Sun",
+        "a": "sun-linear",
+        "b": "weather-sunny-24-regular",
+        "c": "sun-one"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "moon": {
+      "key": "moon",
+      "label": "深色",
+      "group": "设置",
+      "current": "Moon",
+      "ids": {
+        "current": "lc-Moon",
+        "a": "solar-moon-linear",
+        "b": "fluent-weather-moon-24-regular",
+        "c": "icon-park-outline-moon"
+      },
+      "names": {
+        "current": "Moon",
+        "a": "moon-linear",
+        "b": "weather-moon-24-regular",
+        "c": "moon"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "monitor": {
+      "key": "monitor",
+      "label": "跟随系统",
+      "group": "设置",
+      "current": "Monitor",
+      "ids": {
+        "current": "lc-Monitor",
+        "a": "solar-monitor-linear",
+        "b": "fluent-desktop-24-regular",
+        "c": "icon-park-outline-monitor"
+      },
+      "names": {
+        "current": "Monitor",
+        "a": "monitor-linear",
+        "b": "desktop-24-regular",
+        "c": "monitor"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "clock": {
+      "key": "clock",
+      "label": "定时任务",
+      "group": "状态",
+      "current": "Clock",
+      "ids": {
+        "current": "lc-Clock",
+        "a": "solar-clock-circle-linear",
+        "b": "fluent-clock-24-regular",
+        "c": "icon-park-outline-time"
+      },
+      "names": {
+        "current": "Clock",
+        "a": "clock-circle-linear",
+        "b": "clock-24-regular",
+        "c": "time"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "success": {
+      "key": "success",
+      "label": "成功",
+      "group": "状态",
+      "current": "CheckCircle2",
+      "ids": {
+        "current": "lc-CheckCircle2",
+        "a": "solar-check-circle-linear",
+        "b": "fluent-checkmark-circle-24-regular",
+        "c": "icon-park-outline-check-one"
+      },
+      "names": {
+        "current": "CheckCircle2",
+        "a": "check-circle-linear",
+        "b": "checkmark-circle-24-regular",
+        "c": "check-one"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "warning": {
+      "key": "warning",
+      "label": "警告",
+      "group": "状态",
+      "current": "AlertTriangle",
+      "ids": {
+        "current": "lc-AlertTriangle",
+        "a": "solar-danger-triangle-linear",
+        "b": "fluent-warning-24-regular",
+        "c": "icon-park-outline-attention"
+      },
+      "names": {
+        "current": "AlertTriangle",
+        "a": "danger-triangle-linear",
+        "b": "warning-24-regular",
+        "c": "attention"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "error": {
+      "key": "error",
+      "label": "失败",
+      "group": "状态",
+      "current": "XCircle",
+      "ids": {
+        "current": "lc-XCircle",
+        "a": "solar-close-circle-linear",
+        "b": "fluent-dismiss-circle-24-regular",
+        "c": "icon-park-outline-close-one"
+      },
+      "names": {
+        "current": "XCircle",
+        "a": "close-circle-linear",
+        "b": "dismiss-circle-24-regular",
+        "c": "close-one"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "info": {
+      "key": "info",
+      "label": "信息",
+      "group": "状态",
+      "current": "Info",
+      "ids": {
+        "current": "lc-Info",
+        "a": "solar-info-circle-linear",
+        "b": "fluent-info-24-regular",
+        "c": "icon-park-outline-info"
+      },
+      "names": {
+        "current": "Info",
+        "a": "info-circle-linear",
+        "b": "info-24-regular",
+        "c": "info"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "check": {
+      "key": "check",
+      "label": "完成勾选",
+      "group": "状态",
+      "current": "Check",
+      "ids": {
+        "current": "lc-Check",
+        "a": "solar-check-linear",
+        "b": "fluent-checkmark-24-regular",
+        "c": "icon-park-outline-check"
+      },
+      "names": {
+        "current": "Check",
+        "a": "check-linear",
+        "b": "checkmark-24-regular",
+        "c": "check"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "loading": {
+      "key": "loading",
+      "label": "载入中",
+      "group": "状态",
+      "current": "Loader2",
+      "ids": {
+        "current": "lc-Loader2",
+        "a": "solar-loader-linear",
+        "b": "fluent-arrow-clockwise-dashes-24-regular",
+        "c": "icon-park-outline-loading"
+      },
+      "names": {
+        "current": "Loader2",
+        "a": "loader-linear",
+        "b": "arrow-clockwise-dashes-24-regular",
+        "c": "loading"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "switchSessions": {
+      "key": "switchSessions",
+      "label": "对话",
+      "group": "右上角",
+      "current": "MessageSquare",
+      "ids": {
+        "current": "lc-MessageSquare",
+        "a": "solar-chat-round-linear",
+        "b": "fluent-chat-24-regular",
+        "c": "icon-park-outline-message"
+      },
+      "names": {
+        "current": "MessageSquare",
+        "a": "chat-round-linear",
+        "b": "chat-24-regular",
+        "c": "message"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "kanban": {
+      "key": "kanban",
+      "label": "看板",
+      "group": "右上角",
+      "current": "Columns3",
+      "ids": {
+        "current": "lc-Columns3",
+        "a": "solar-kanban-linear",
+        "b": "fluent-board-split-24-regular",
+        "c": "icon-park-outline-view-grid-card"
+      },
+      "names": {
+        "current": "Columns3",
+        "a": "kanban-linear",
+        "b": "board-split-24-regular",
+        "c": "view-grid-card"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "calendar": {
+      "key": "calendar",
+      "label": "日历",
+      "group": "右上角",
+      "current": "CalendarDays",
+      "ids": {
+        "current": "lc-CalendarDays",
+        "a": "solar-calendar-date-linear",
+        "b": "fluent-calendar-month-24-regular",
+        "c": "icon-park-outline-calendar"
+      },
+      "names": {
+        "current": "CalendarDays",
+        "a": "calendar-date-linear",
+        "b": "calendar-month-24-regular",
+        "c": "calendar"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "gantt": {
+      "key": "gantt",
+      "label": "甘特图",
+      "group": "右上角",
+      "current": "GanttChartSquare",
+      "ids": {
+        "current": "lc-GanttChartSquare",
+        "a": "solar-align-left-linear",
+        "b": "fluent-gantt-chart-24-regular",
+        "c": "icon-park-outline-timeline"
+      },
+      "names": {
+        "current": "GanttChartSquare",
+        "a": "align-left-linear",
+        "b": "gantt-chart-24-regular",
+        "c": "timeline"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "filesPanel": {
+      "key": "filesPanel",
+      "label": "文件",
+      "group": "右上角",
+      "current": "FolderTree",
+      "ids": {
+        "current": "lc-FolderTree",
+        "a": "solar-folder-tree-linear",
+        "b": "fluent-text-bullet-list-tree-24-regular",
+        "c": "icon-park-outline-tree-list"
+      },
+      "names": {
+        "current": "FolderTree",
+        "a": "folder-tree-linear",
+        "b": "text-bullet-list-tree-24-regular",
+        "c": "tree-list"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "trajectory": {
+      "key": "trajectory",
+      "label": "运行轨迹",
+      "group": "右上角",
+      "current": "Activity",
+      "ids": {
+        "current": "lc-Activity",
+        "a": "solar-graph-new-linear",
+        "b": "fluent-pulse-24-regular",
+        "c": "icon-park-outline-chart-line"
+      },
+      "names": {
+        "current": "Activity",
+        "a": "graph-new-linear",
+        "b": "pulse-24-regular",
+        "c": "chart-line"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "help": {
+      "key": "help",
+      "label": "帮助",
+      "group": "右上角",
+      "current": "HelpCircle",
+      "ids": {
+        "current": "lc-HelpCircle",
+        "a": "solar-question-circle-linear",
+        "b": "fluent-question-circle-24-regular",
+        "c": "icon-park-outline-help"
+      },
+      "names": {
+        "current": "HelpCircle",
+        "a": "question-circle-linear",
+        "b": "question-circle-24-regular",
+        "c": "help"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "unpin": {
+      "key": "unpin",
+      "label": "取消固定",
+      "group": "操作",
+      "current": "PinOff",
+      "ids": {
+        "current": "lc-PinOff",
+        "a": "solar-pin-linear",
+        "b": "fluent-pin-off-24-regular",
+        "c": "icon-park-outline-pushpin"
+      },
+      "names": {
+        "current": "PinOff",
+        "a": "pin-linear",
+        "b": "pin-off-24-regular",
+        "c": "pushpin"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    },
+    "restore": {
+      "key": "restore",
+      "label": "还原面板",
+      "group": "操作",
+      "current": "Minimize2",
+      "ids": {
+        "current": "lc-Minimize2",
+        "a": "solar-minimize-linear",
+        "b": "fluent-arrow-minimize-24-regular",
+        "c": "icon-park-outline-off-screen"
+      },
+      "names": {
+        "current": "Minimize2",
+        "a": "minimize-linear",
+        "b": "arrow-minimize-24-regular",
+        "c": "off-screen"
+      },
+      "boxes": {
+        "current": [
+          24,
+          24
+        ],
+        "a": [
+          24,
+          24
+        ],
+        "b": [
+          24,
+          24
+        ],
+        "c": [
+          48,
+          48
+        ]
+      }
+    }
+  },
+  "toolbar": [
+    {
+      "key": "new",
+      "label": "新建对话",
+      "action": "newSession"
+    },
+    {
+      "key": "switchSessions",
+      "label": "对话",
+      "action": "sessions"
+    },
+    {
+      "key": "kanban",
+      "label": "看板",
+      "action": "kanban"
+    },
+    {
+      "key": "calendar",
+      "label": "日历",
+      "action": "calendar"
+    },
+    {
+      "key": "gantt",
+      "label": "甘特图",
+      "action": "gantt"
+    },
+    {
+      "key": "filesPanel",
+      "label": "文件",
+      "action": "files"
+    },
+    {
+      "key": "trajectory",
+      "label": "运行轨迹",
+      "action": "trajectory"
+    },
+    {
+      "key": "terminal",
+      "label": "终端",
+      "action": "terminal"
+    },
+    {
+      "key": "globe",
+      "label": "浏览器",
+      "action": "browser"
+    },
+    {
+      "key": "help",
+      "label": "帮助",
+      "action": "help"
+    }
+  ],
+  "sources": {
+    "solar": {
+      "prefix": "solar",
+      "version": "1.2.13",
+      "url": "https://cdn.jsdelivr.net/npm/@iconify-json/solar@1.2.13/icons.json",
+      "info": {
+        "name": "Solar",
+        "total": 8706,
+        "author": {
+          "name": "480 Design",
+          "url": "https://www.figma.com/community/file/1166831539721848736"
+        },
+        "license": {
+          "title": "CC BY 4.0",
+          "spdx": "CC-BY-4.0",
+          "url": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "samples": [
+          "magnifier-zoom-out-broken",
+          "armchair-2-bold-duotone",
+          "traffic-economy-line-duotone",
+          "user-rounded-bold-duotone",
+          "soundwave-linear",
+          "hamburger-menu-broken"
+        ],
+        "height": 24,
+        "category": "UI 24px",
+        "tags": [
+          "Precise Shapes",
+          "Has Padding",
+          "Uses Stroke"
+        ],
+        "palette": false
+      },
+      "packageSha256": "2eb44cfa214f8f0cba47cd1d994cb8342b04a12a2b25262feed63efef49b0ca8"
+    },
+    "fluent": {
+      "prefix": "fluent",
+      "version": "1.2.60",
+      "url": "https://cdn.jsdelivr.net/npm/@iconify-json/fluent@1.2.60/icons.json",
+      "info": {
+        "name": "Fluent UI System Icons",
+        "total": 19900,
+        "version": "1.1.344",
+        "author": {
+          "name": "Microsoft Corporation",
+          "url": "https://github.com/microsoft/fluentui-system-icons"
+        },
+        "license": {
+          "title": "MIT",
+          "spdx": "MIT",
+          "url": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE"
+        },
+        "samples": [
+          "zoom-out-24-filled",
+          "drink-coffee-24-regular",
+          "photo-filter-24-regular",
+          "checkmark-24-filled",
+          "oval-24-filled",
+          "cloud-24-filled"
+        ],
+        "category": "UI Other / Mixed Grid",
+        "tags": [
+          "Precise Shapes",
+          "Has Padding"
+        ],
+        "palette": false
+      },
+      "packageSha256": "ed583be86e15810d0678cf6e192cec0182299a02c77c662fea47fc650cc620ae"
+    },
+    "icon-park-outline": {
+      "prefix": "icon-park-outline",
+      "version": "1.2.4",
+      "url": "https://cdn.jsdelivr.net/npm/@iconify-json/icon-park-outline@1.2.4/icons.json",
+      "info": {
+        "name": "IconPark Outline",
+        "total": 2658,
+        "version": "1.4.2",
+        "author": {
+          "name": "ByteDance",
+          "url": "https://github.com/bytedance/IconPark"
+        },
+        "license": {
+          "title": "Apache 2.0",
+          "spdx": "Apache-2.0",
+          "url": "https://github.com/bytedance/IconPark/blob/master/LICENSE"
+        },
+        "samples": [
+          "add-one",
+          "english-mustache",
+          "basketball-clothes",
+          "sort",
+          "lightning",
+          "pinwheel"
+        ],
+        "height": 24,
+        "category": "UI 24px",
+        "tags": [
+          "Precise Shapes",
+          "Has Padding",
+          "Uses Stroke"
+        ],
+        "palette": false
+      },
+      "packageSha256": "873be980481f0ea595bc56d158d6b6f0adc6444c67f9b0a7b00a97e23a797638"
+    }
+  },
+  "included": [
+    {
+      "id": "solar-chat-round-linear",
+      "prefix": "solar",
+      "name": "chat-round-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "a5b7e7c18f850c13e5486929cb09f63270aa5aef139a568211ac36887a1b0bf1"
+    },
+    {
+      "id": "fluent-chat-24-regular",
+      "prefix": "fluent",
+      "name": "chat-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "0d0e73ed5670cc4f34b9389ca93c9fef0affbcb45fc1d7c4f03771094e24eb9f"
+    },
+    {
+      "id": "icon-park-outline-message",
+      "prefix": "icon-park-outline",
+      "name": "message",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "f50c92d5a2610750f038a712c9e01058b97e2888c6c31cb56e3f9ec00ad3300b"
+    },
+    {
+      "id": "solar-tag-linear",
+      "prefix": "solar",
+      "name": "tag-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "90a0140542c288636b607cad9ed24dc2f13004b2d4656c1185148a0cb8200ff3"
+    },
+    {
+      "id": "fluent-tag-24-regular",
+      "prefix": "fluent",
+      "name": "tag-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "6819d434c2c14e5313a8c26606dc6298b8916820b8287ac62ccd723650968cdc"
+    },
+    {
+      "id": "icon-park-outline-tag-one",
+      "prefix": "icon-park-outline",
+      "name": "tag-one",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "a83d2cc27de68581c3fccfdb74cf45ef031ecd95fca1c3b9327c8a0dcdf16928"
+    },
+    {
+      "id": "solar-database-linear",
+      "prefix": "solar",
+      "name": "database-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "23e0fa47f36307c2c4d4ff2d464466761476e2182dabc0561e987d24bf210976"
+    },
+    {
+      "id": "fluent-database-24-regular",
+      "prefix": "fluent",
+      "name": "database-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "845da6f8f93f396c9a88d53e007e310ccb405e12ceb6b4d1cb1bf481e3477be4"
+    },
+    {
+      "id": "icon-park-outline-data",
+      "prefix": "icon-park-outline",
+      "name": "data",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "c1b2028b2b18094dd9ac235b703f761948ca25a0b30d7de3c77671cc4f7fd665"
+    },
+    {
+      "id": "solar-lightbulb-minimalistic-linear",
+      "prefix": "solar",
+      "name": "lightbulb-minimalistic-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "ba077bc465da8b6373a03729b12cdcccc9f51c0b54e3881392f49ec17fc5ad9f"
+    },
+    {
+      "id": "fluent-lightbulb-24-regular",
+      "prefix": "fluent",
+      "name": "lightbulb-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "8bc0a07d1675120071c94bc280353268733ee2c42d52e7ac3c477f83eb4e98c3"
+    },
+    {
+      "id": "icon-park-outline-light",
+      "prefix": "icon-park-outline",
+      "name": "light",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "68371741ac3348675e5bc9c824566148fed314fa2bcf2c097234ccc2e77908ab"
+    },
+    {
+      "id": "solar-plug-circle-linear",
+      "prefix": "solar",
+      "name": "plug-circle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "59cc2a8b1aa0b36d43b274c47d3b37e2aa25855179b648ca42776e8cac1938a4"
+    },
+    {
+      "id": "fluent-puzzle-piece-24-regular",
+      "prefix": "fluent",
+      "name": "puzzle-piece-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "89b139a9b096307a4c5a48fe12f9c0a4ff9a334f80341d1ff2c4d10b86f42384"
+    },
+    {
+      "id": "icon-park-outline-puzzle",
+      "prefix": "icon-park-outline",
+      "name": "puzzle",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "fd69da635eca9dad5f64bc2516bfc4ffdcba2328135441aa1e5a30299bf7904e"
+    },
+    {
+      "id": "solar-folder-linear",
+      "prefix": "solar",
+      "name": "folder-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "7373c6caecb3c0926ea37aa89f90041ee2288d2e67ffed819a3a5620666ceecc"
+    },
+    {
+      "id": "fluent-folder-24-regular",
+      "prefix": "fluent",
+      "name": "folder-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "baf166090cc589260d8f287a1c748ea17520d69c5958e4bd266bef0d66288dc0"
+    },
+    {
+      "id": "icon-park-outline-folder-close",
+      "prefix": "icon-park-outline",
+      "name": "folder-close",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "46bedd0073eeb5f358530ce27e701cca93eea127ed87b7c05079786e2a8b349e"
+    },
+    {
+      "id": "solar-panel-top-linear",
+      "prefix": "solar",
+      "name": "panel-top-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "7919f85c44a42f2061520e9e71e107b211346f6f8852ed2f281c5654e42a2f8e"
+    },
+    {
+      "id": "fluent-window-24-regular",
+      "prefix": "fluent",
+      "name": "window-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "37c11cc9b2246b6ef6e146f6b6fe55501ed70f33ba9b9b56b28068cc4af6adf9"
+    },
+    {
+      "id": "icon-park-outline-browser",
+      "prefix": "icon-park-outline",
+      "name": "browser",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "3bf53a1063d007f77cc3d71ba53940804835683d80559105c455aab415a62e28"
+    },
+    {
+      "id": "solar-repeat-linear",
+      "prefix": "solar",
+      "name": "repeat-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "5cecd3cfb5853cd244de79abe8dd96a350d26bb85a0d11a10e9f5cbd6d1f991f"
+    },
+    {
+      "id": "fluent-arrow-repeat-all-24-regular",
+      "prefix": "fluent",
+      "name": "arrow-repeat-all-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "e15f073da193f6e5f2a20e310104f97433c1222c1f8f8fc8542ba2e6e4368b5c"
+    },
+    {
+      "id": "icon-park-outline-cycle",
+      "prefix": "icon-park-outline",
+      "name": "cycle",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "4af9a49de894d9b0afbd830268cd639b4ae2a19d56612b252a004db9670d6f50"
+    },
+    {
+      "id": "solar-tuning-2-linear",
+      "prefix": "solar",
+      "name": "tuning-2-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "c488ff8e7bd967d36c0c797f535df2f943d8a20b9640cd6db65103d16fd684d8"
+    },
+    {
+      "id": "fluent-options-24-regular",
+      "prefix": "fluent",
+      "name": "options-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b9fc6bb9c43a89ec51b9235667dca6738a48e79d2c46b972e271e250d3d92dd5"
+    },
+    {
+      "id": "icon-park-outline-setting-config",
+      "prefix": "icon-park-outline",
+      "name": "setting-config",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "5154a45b2a64dfa4fcf07aa6afe122cb2cdc891e65042e5a2788d7e12585baee"
+    },
+    {
+      "id": "solar-pen-new-square-linear",
+      "prefix": "solar",
+      "name": "pen-new-square-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "47138c2d2874dea286b679d51e877429d43794e26b9a9e8796c88286959c3185"
+    },
+    {
+      "id": "fluent-compose-24-regular",
+      "prefix": "fluent",
+      "name": "compose-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "4803008ce29f66bb503f5d4b50ad5b32d683b7ec727f30ce8f3c9978c8133dc7"
+    },
+    {
+      "id": "icon-park-outline-writing-fluently",
+      "prefix": "icon-park-outline",
+      "name": "writing-fluently",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "61b06c4de17b54dda8305b443abff7131b1b8f225e2400dc994b8ca366841329"
+    },
+    {
+      "id": "solar-panel-left-linear",
+      "prefix": "solar",
+      "name": "panel-left-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "a073ab64e15cf18c7d2e96c91c5e6b088db401c96b4872480505c84f36278cee"
+    },
+    {
+      "id": "fluent-panel-left-24-regular",
+      "prefix": "fluent",
+      "name": "panel-left-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "66aac90bccb4eb7379b45211818d33bb8236acd6a4dac86bf7370253e2ae90b2"
+    },
+    {
+      "id": "icon-park-outline-layout-two",
+      "prefix": "icon-park-outline",
+      "name": "layout-two",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "7bfe91ba0cb493f348b25b2bcdf1a5dee8119397f0a99269eebe5e8a4b30d651"
+    },
+    {
+      "id": "solar-rounded-magnifier-linear",
+      "prefix": "solar",
+      "name": "rounded-magnifier-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "52b32c6648d1a1fffdde165a0ec702a28fa3035c7ada4fc879e10a7be5021004"
+    },
+    {
+      "id": "fluent-search-24-regular",
+      "prefix": "fluent",
+      "name": "search-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "790e669f7ca56dda52bb4befb3f8b7cb27c18efe6413c0059faf8c5aa13c1fa3"
+    },
+    {
+      "id": "icon-park-outline-search",
+      "prefix": "icon-park-outline",
+      "name": "search",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "be9238c0bb2751e39112c13d0d9172d901c9e84c81ea4cdc7cb6d1c738905175"
+    },
+    {
+      "id": "solar-filter-linear",
+      "prefix": "solar",
+      "name": "filter-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "cbe709abc3df8e4073e51bdfba4b740bfa5acc2805414ff2ed1c7532744d8688"
+    },
+    {
+      "id": "fluent-filter-24-regular",
+      "prefix": "fluent",
+      "name": "filter-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "d21de05292640a83df7b598b570514d6e3600e50529e69ff3fb596c3d5c067e8"
+    },
+    {
+      "id": "icon-park-outline-filter",
+      "prefix": "icon-park-outline",
+      "name": "filter",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "7edd15bc835152b513b2f9c915e6f8f9343f2ad30c90eaf340a55b1b7a3a35fc"
+    },
+    {
+      "id": "solar-menu-dots-linear",
+      "prefix": "solar",
+      "name": "menu-dots-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "859da129f9b34d69b32b5d28c5aa601431d5d8cf02228eded9840ffcdd5ec87e"
+    },
+    {
+      "id": "fluent-more-horizontal-24-regular",
+      "prefix": "fluent",
+      "name": "more-horizontal-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "71e18ed4d741f02ee09bb2838194881178a49ac757c81d3c668b591c11ad7e67"
+    },
+    {
+      "id": "icon-park-outline-more",
+      "prefix": "icon-park-outline",
+      "name": "more",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "278153fd2df69f1a9f49bb6a09fd5751cbef7b54e09cb8c6064df7af232273a2"
+    },
+    {
+      "id": "solar-add-linear",
+      "prefix": "solar",
+      "name": "add-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1d6353e00429cd97ff4d484c87f23366fdbf74d0a9f18ce5c1de9f1c0c18a780"
+    },
+    {
+      "id": "fluent-add-24-regular",
+      "prefix": "fluent",
+      "name": "add-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "5747da9d0113902f29d8c84625f6622b3fc848ebe4d052f824c5ad668cef31bd"
+    },
+    {
+      "id": "icon-park-outline-add",
+      "prefix": "icon-park-outline",
+      "name": "add",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "6f55375ddc0bf31d27783dbada5e9e5575401305fe862824821ac3ee7adef14c"
+    },
+    {
+      "id": "solar-close-linear",
+      "prefix": "solar",
+      "name": "close-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b61056f361a6dc93d5c157f8570adebbab7a442ddcaf35faccd20219408fdecb"
+    },
+    {
+      "id": "fluent-dismiss-24-regular",
+      "prefix": "fluent",
+      "name": "dismiss-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "83343bbc5f517dcd1e0c9b51ef25aa550bfda3c5f75a8f6ced2b68cb0fb0fe27"
+    },
+    {
+      "id": "icon-park-outline-close-small",
+      "prefix": "icon-park-outline",
+      "name": "close-small",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "ad4d7b437e06527cec72bbb9b0171da99452a151cf54a8eae1e56341f5ba3a18"
+    },
+    {
+      "id": "solar-alt-arrow-left-linear",
+      "prefix": "solar",
+      "name": "alt-arrow-left-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "6af10eb6b39f27afba29815df12f8e6d38f7b974e249c2836675c1027fcfe788"
+    },
+    {
+      "id": "fluent-chevron-left-24-regular",
+      "prefix": "fluent",
+      "name": "chevron-left-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "f88b4d065eb3588180da619feea9f0f860fc9c41bd1389393133e03691ebdf32"
+    },
+    {
+      "id": "icon-park-outline-left",
+      "prefix": "icon-park-outline",
+      "name": "left",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "75b6e076561b1c799e1c4306cad624c73f7af009dad38be2e55566a47a456bf2"
+    },
+    {
+      "id": "solar-alt-arrow-right-linear",
+      "prefix": "solar",
+      "name": "alt-arrow-right-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "52d32f0bead26859f16ba75d5d964260a37e770969ff651b758c5666a943c38b"
+    },
+    {
+      "id": "fluent-chevron-right-24-regular",
+      "prefix": "fluent",
+      "name": "chevron-right-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "2561273bee911dc5dba3e94e2c91d64eb12b925264ff72a3daaa8e2480a2fbed"
+    },
+    {
+      "id": "icon-park-outline-right",
+      "prefix": "icon-park-outline",
+      "name": "right",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "3ec56f671e9a3df7ae6be2e6d934685bfb8a48b52ae7f65bdf163d64700753e8"
+    },
+    {
+      "id": "solar-alt-arrow-down-linear",
+      "prefix": "solar",
+      "name": "alt-arrow-down-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1719cacfc93d0732e47189431f77ce4a1d13688f55abe8622d0c13f7011a5faf"
+    },
+    {
+      "id": "fluent-chevron-down-24-regular",
+      "prefix": "fluent",
+      "name": "chevron-down-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "9c92b9444139a3dc1588d112b63af082f5e97a22cdbee43f30c441c780c5c3e6"
+    },
+    {
+      "id": "icon-park-outline-down",
+      "prefix": "icon-park-outline",
+      "name": "down",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "5bf84f05b0fbb1ed90855edaeeabea9e0633228fc6d8ce76cdf68e3113edcbd2"
+    },
+    {
+      "id": "solar-copy-linear",
+      "prefix": "solar",
+      "name": "copy-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1129630d8d15d1010e47c12e18303725fb370dbcc8ab321fabd49d4a30e19475"
+    },
+    {
+      "id": "fluent-copy-24-regular",
+      "prefix": "fluent",
+      "name": "copy-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "90b1d507b39393db54e0121a717826e1db2e9c707990e3c1511ae0f812673260"
+    },
+    {
+      "id": "icon-park-outline-copy",
+      "prefix": "icon-park-outline",
+      "name": "copy",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "d0e52f0c9fa848574035b5c4213f7fb5c82f4bb2a7c89f326280303b501ab4f7"
+    },
+    {
+      "id": "solar-pen-linear",
+      "prefix": "solar",
+      "name": "pen-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "198d47c4179bb2177553cf8e064e00da76bef0e94363dc0f95d9a9ff8366d5a1"
+    },
+    {
+      "id": "fluent-edit-24-regular",
+      "prefix": "fluent",
+      "name": "edit-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "86856e589d6bb4ecc3ab0c7f5ae7e79e04d55b3f451e229a81f67333a3bd6685"
+    },
+    {
+      "id": "icon-park-outline-edit",
+      "prefix": "icon-park-outline",
+      "name": "edit",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "6c368a1a1289e4de9836ef0ad45fbe52ae0043c8041c310a03ed70a4c5b35ca0"
+    },
+    {
+      "id": "solar-trash-bin-minimalistic-linear",
+      "prefix": "solar",
+      "name": "trash-bin-minimalistic-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "f3129c6e54387aa10e070bcf22a7b9461ead1c1551a465bbbaa57757c622328c"
+    },
+    {
+      "id": "fluent-delete-24-regular",
+      "prefix": "fluent",
+      "name": "delete-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "34f1fa4cd033e0bc2d168b339ebbcaa03887e2635f8db86fa77a597ca406debe"
+    },
+    {
+      "id": "icon-park-outline-delete",
+      "prefix": "icon-park-outline",
+      "name": "delete",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "e458e1e009b4534bbf6dc29b03879985c540ff9418913dc84bce92466795a9e9"
+    },
+    {
+      "id": "solar-square-arrow-right-up-linear",
+      "prefix": "solar",
+      "name": "square-arrow-right-up-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "0de8b325849422f48f7d35e6d999c7d295b1b064240b13187380b5ab41cc0f2b"
+    },
+    {
+      "id": "fluent-open-24-regular",
+      "prefix": "fluent",
+      "name": "open-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "7a76db9984f45a191b8b66c387ef54b233f7184232c546fa86cbeea0fac51aa0"
+    },
+    {
+      "id": "icon-park-outline-share",
+      "prefix": "icon-park-outline",
+      "name": "share",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "8548a221c92c6a3c4581f7144dd5f256ec9ebbb0a749a52d88649c97d482b08d"
+    },
+    {
+      "id": "solar-download-minimalistic-linear",
+      "prefix": "solar",
+      "name": "download-minimalistic-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "d877b75028b7d7ad66c7b990ccd5a64d1b58a58cf3343a8b03f34515d6654204"
+    },
+    {
+      "id": "fluent-arrow-download-24-regular",
+      "prefix": "fluent",
+      "name": "arrow-download-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "ae9268ee3f15f43bb3ec892d7aa63ac61ac17c4e052fc85852620fec72943af3"
+    },
+    {
+      "id": "icon-park-outline-download",
+      "prefix": "icon-park-outline",
+      "name": "download",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "0fec92e5815a668e3255e8a7888d8f8fe0f1d07ca2c3735a8b66d3fbd9b4bf2a"
+    },
+    {
+      "id": "solar-refresh-linear",
+      "prefix": "solar",
+      "name": "refresh-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "e058702f8482a6f8dd3defb091411f15d45bdba2689020ea4e8b019c67519f59"
+    },
+    {
+      "id": "fluent-arrow-clockwise-24-regular",
+      "prefix": "fluent",
+      "name": "arrow-clockwise-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "59d112f40b40703ed24ef73b87e09e3aef5a53611fd32d60e1d4e33dce2f8e40"
+    },
+    {
+      "id": "icon-park-outline-refresh",
+      "prefix": "icon-park-outline",
+      "name": "refresh",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "ebe0d4af8618a0254e3499ca5f9e9ca2af2b8811792776b3344cd26f3e0954a9"
+    },
+    {
+      "id": "solar-pin-linear",
+      "prefix": "solar",
+      "name": "pin-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "966584e797b87e5e186c5dd20d19eae62900d01ba9594a3bbb641c2193d33992"
+    },
+    {
+      "id": "fluent-pin-24-regular",
+      "prefix": "fluent",
+      "name": "pin-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "d84c0f29a1ee34b19b605a68ba8829c0a674c4589f021d4b1dd65e154792f8be"
+    },
+    {
+      "id": "icon-park-outline-pushpin",
+      "prefix": "icon-park-outline",
+      "name": "pushpin",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "b80a1429544f092c9b5f6217f20280b0f13e06965e51bddaca12141f316bf96f"
+    },
+    {
+      "id": "solar-archive-linear",
+      "prefix": "solar",
+      "name": "archive-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "bfdef27da5fdfdfb3871c641cc1fdd632cab38c8fd0c080e7f5f1ee2a2a78f66"
+    },
+    {
+      "id": "fluent-archive-24-regular",
+      "prefix": "fluent",
+      "name": "archive-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "32db60c537808d47aa8409be7c07014ccc22f3a6c5c85e3e87171fde836b4bfe"
+    },
+    {
+      "id": "icon-park-outline-inbox",
+      "prefix": "icon-park-outline",
+      "name": "inbox",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "f5ee4f7877d285695f057de0eb63f5349dfcc432e032213d2912726d9b160bc4"
+    },
+    {
+      "id": "solar-paperclip-rounded-linear",
+      "prefix": "solar",
+      "name": "paperclip-rounded-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "43931b273c11fbed9e13cd129cff39e03f8a45546d70dca9c3d30f5d4feb562a"
+    },
+    {
+      "id": "fluent-attach-24-regular",
+      "prefix": "fluent",
+      "name": "attach-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "ee67611863424e879e2cffedf9f8f945fe564830a106ee2916249655405059bd"
+    },
+    {
+      "id": "icon-park-outline-paperclip",
+      "prefix": "icon-park-outline",
+      "name": "paperclip",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "6cb74df29dabf8e7c51583ba65e69e26feecbc1e6328ce45c9e5bc02d06bc003"
+    },
+    {
+      "id": "solar-arrow-up-linear",
+      "prefix": "solar",
+      "name": "arrow-up-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "3e32bf71acde6459fe737ae9a183c32c7d4e5754b70e2a19d896326cf92a4416"
+    },
+    {
+      "id": "fluent-arrow-up-24-regular",
+      "prefix": "fluent",
+      "name": "arrow-up-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "90fc53792847daf8144cca61b0c6b2b851606c2037ed800c2685fb89379aa0a8"
+    },
+    {
+      "id": "icon-park-outline-arrow-up",
+      "prefix": "icon-park-outline",
+      "name": "arrow-up",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "efcf05d5a6a3ae367cc911f6ea0fa398f2ccbb73a07b5c8062371724858e5f75"
+    },
+    {
+      "id": "solar-chat-round-dots-linear",
+      "prefix": "solar",
+      "name": "chat-round-dots-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "e54d1bf8b4d4252439b57085b72446bce312e59382f4f6effdbb58757fc4f4f8"
+    },
+    {
+      "id": "fluent-comment-24-regular",
+      "prefix": "fluent",
+      "name": "comment-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "462ea2286535011eb8b8f93548746def194c9caeca841e1f5095facda10dec54"
+    },
+    {
+      "id": "icon-park-outline-comment",
+      "prefix": "icon-park-outline",
+      "name": "comment",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "0665944e4f75673329b1d0beb117a5844513f4aab671e2610a3206805caadafe"
+    },
+    {
+      "id": "solar-stars-minimalistic-linear",
+      "prefix": "solar",
+      "name": "stars-minimalistic-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "8edf4cab8f3a2d1ec347347c8e81b7385cb6fc7a023b9aac45da0ab7901358c5"
+    },
+    {
+      "id": "fluent-sparkle-24-regular",
+      "prefix": "fluent",
+      "name": "sparkle-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "a4ea84dd8f158efbca877d43a33e46adb98cc56e5abfb98b63e7f33937abae21"
+    },
+    {
+      "id": "icon-park-outline-magic",
+      "prefix": "icon-park-outline",
+      "name": "magic",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "ef958936b23ab491fdc906b1dfdf771babc0cd5c4e2487fb882c9a33c1d5565c"
+    },
+    {
+      "id": "solar-bot-linear",
+      "prefix": "solar",
+      "name": "bot-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b35db7d7b941ea8259199a5bf62278db95f5d68a4fd2099f1212d6624877c348"
+    },
+    {
+      "id": "fluent-bot-24-regular",
+      "prefix": "fluent",
+      "name": "bot-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b4b9623fee70cea39a00fe347b803223b4ff1e08dc82e789dd8e3d61e2a802ab"
+    },
+    {
+      "id": "icon-park-outline-robot",
+      "prefix": "icon-park-outline",
+      "name": "robot",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "686bea0a082bff4fba4bd2d224a424822eb8222e2e6af7cc1a170b102daa4618"
+    },
+    {
+      "id": "solar-file-terminal-linear",
+      "prefix": "solar",
+      "name": "file-terminal-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "02ab3dcccc372b139b119c6631c0169818c342b87ccbad0b633bd46612b989bb"
+    },
+    {
+      "id": "fluent-code-block-24-regular",
+      "prefix": "fluent",
+      "name": "code-block-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "9c1037cbe4fb1685a383509b52a2848fffac314ca5e0fdc19f7107f37864bec3"
+    },
+    {
+      "id": "icon-park-outline-terminal",
+      "prefix": "icon-park-outline",
+      "name": "terminal",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "3bdbf39d3f6a6dda29d9c03cd8be6af8a7820199d7ed93c7cb4967587d9bb1c5"
+    },
+    {
+      "id": "solar-code-linear",
+      "prefix": "solar",
+      "name": "code-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "c3dff0a353c35c23319c742f47dd0addc6c1030beb3d6efc93043b1ea3f920b7"
+    },
+    {
+      "id": "fluent-code-24-regular",
+      "prefix": "fluent",
+      "name": "code-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "ef6bfea0315dc3d47d5545c9902e98c4f40ecd83302f71eb905f36c1715343ef"
+    },
+    {
+      "id": "icon-park-outline-code",
+      "prefix": "icon-park-outline",
+      "name": "code",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "7d8dbfad14a7218e49f8060b3d2199419652d3ed42f864ea32c2cfc6ee1cc0a1"
+    },
+    {
+      "id": "solar-file-linear",
+      "prefix": "solar",
+      "name": "file-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "265e16e165344eda3b544084184a850e0f99befc2cdb6705b12b43d9485d3c63"
+    },
+    {
+      "id": "fluent-document-24-regular",
+      "prefix": "fluent",
+      "name": "document-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "67d400bd59985e8c67c3b3b996e0fe433e2c422efdb039900c14492d9130f498"
+    },
+    {
+      "id": "icon-park-outline-file-text",
+      "prefix": "icon-park-outline",
+      "name": "file-text",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "2a52c6e839961e8b748a276d474f308d17dd963aa701458fe49249bd4ed196da"
+    },
+    {
+      "id": "solar-document-text-linear",
+      "prefix": "solar",
+      "name": "document-text-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "3339eccad2255a374233a8d4bcddca448aa551964167702ff18943b80c9537d2"
+    },
+    {
+      "id": "fluent-document-text-24-regular",
+      "prefix": "fluent",
+      "name": "document-text-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "2b9153e2a51fd8145a4adc6f74b149172244b983941141489971e13b12902d21"
+    },
+    {
+      "id": "icon-park-outline-file-text-one",
+      "prefix": "icon-park-outline",
+      "name": "file-text-one",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "93e3af3610dc51df3a30b6959e57ee68c15032cb0a1270bffe894426a90176f3"
+    },
+    {
+      "id": "solar-folder-open-linear",
+      "prefix": "solar",
+      "name": "folder-open-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "89fc49191e94104dc46ffb365b151ca75a9240eae7992d8b583935f133c29905"
+    },
+    {
+      "id": "fluent-folder-open-24-regular",
+      "prefix": "fluent",
+      "name": "folder-open-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1d613d332a092ca70b03aabd19d507ba907ff0bff7e4c8e9890125c71c37cf91"
+    },
+    {
+      "id": "icon-park-outline-folder-open",
+      "prefix": "icon-park-outline",
+      "name": "folder-open",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "9a8bf6ef476b18f50f25edb270e9d222e918df6bd9481d2eb998d787e48f6e59"
+    },
+    {
+      "id": "solar-gallery-linear",
+      "prefix": "solar",
+      "name": "gallery-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "f5cb431020bcf9b23d51265e93170d2d527c62ad55ebd77da3390d595753a382"
+    },
+    {
+      "id": "fluent-image-24-regular",
+      "prefix": "fluent",
+      "name": "image-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "2c24ef7673ea4dcda97ec3f405ad7c1d554d290e5a5f4314cc342b5b1cad7739"
+    },
+    {
+      "id": "icon-park-outline-pic",
+      "prefix": "icon-park-outline",
+      "name": "pic",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "ed5d8b7fd94bc03ea021aecf2eede1a76832d9dd41483e9f1f52d29a2350366a"
+    },
+    {
+      "id": "solar-table-linear",
+      "prefix": "solar",
+      "name": "table-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1b1f858a1b1dd6fab9f2e0bf8be0052716f7861ce3a8842ec549a1ff9aea7512"
+    },
+    {
+      "id": "fluent-table-24-regular",
+      "prefix": "fluent",
+      "name": "table-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "888c8ea52c2f5ec5fc2e30f1381a75e54d3544c348129ab4ff3085b103b1ce02"
+    },
+    {
+      "id": "icon-park-outline-table",
+      "prefix": "icon-park-outline",
+      "name": "table",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "9a55ec1801713382719272909396b46a9692e977b12595b12cd78b701378ef65"
+    },
+    {
+      "id": "solar-brackets-linear",
+      "prefix": "solar",
+      "name": "brackets-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "d0e8707d04d28071f28caa9335e7d90386c58f2934eeedb01b90f7df9e11bbd3"
+    },
+    {
+      "id": "fluent-braces-24-regular",
+      "prefix": "fluent",
+      "name": "braces-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "808fc3664c212b2af319d93ba1cd48765d4791b73599c96da47155305aebce82"
+    },
+    {
+      "id": "icon-park-outline-code-brackets",
+      "prefix": "icon-park-outline",
+      "name": "code-brackets",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "a254b2345b05121c6cc1d0f16bd79b222ca57c1901c99ac76aee692e86377d87"
+    },
+    {
+      "id": "solar-git-branch-linear",
+      "prefix": "solar",
+      "name": "git-branch-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "c2079ed806de77b7daf4cb33def65045c688de851b6be26fe122489f2440fb8f"
+    },
+    {
+      "id": "fluent-branch-24-regular",
+      "prefix": "fluent",
+      "name": "branch-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1ab2f861be061459caf4a07adb8dfc09f5688c09515b17ddf262ed26ca2459f7"
+    },
+    {
+      "id": "icon-park-outline-branch",
+      "prefix": "icon-park-outline",
+      "name": "branch",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "ca8aacf663e42e3f13ee9d09e791d519d6ce4bedb0b1af4af3ded1a0dca9b620"
+    },
+    {
+      "id": "solar-file-pen-linear",
+      "prefix": "solar",
+      "name": "file-pen-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1c052936d37edf10fb8944804c3a6629f47c36cb930dddfc957e5d9bcc124044"
+    },
+    {
+      "id": "fluent-document-landscape-split-24-regular",
+      "prefix": "fluent",
+      "name": "document-landscape-split-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "8df937ab03ff46ea40e130ac1a6f59b3da42d8bdb60b47942d3c8f8913bdf077"
+    },
+    {
+      "id": "icon-park-outline-file-conversion",
+      "prefix": "icon-park-outline",
+      "name": "file-conversion",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "52de3c1c1e202719a6d6d4855be32130db8797185366d87dd57a6ad859158d05"
+    },
+    {
+      "id": "solar-global-linear",
+      "prefix": "solar",
+      "name": "global-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "900ff7ea8317856ff0f1b54434c45caeddbfcab51ebeddb381088be636f20971"
+    },
+    {
+      "id": "fluent-globe-24-regular",
+      "prefix": "fluent",
+      "name": "globe-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1bc1710b9cf57be879f58edc744c9108fce76ee62a794617b48276d4f432d72f"
+    },
+    {
+      "id": "icon-park-outline-earth",
+      "prefix": "icon-park-outline",
+      "name": "earth",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "c96a424d2b4972ef38f4cf6fc083cede58d160ada6414a0aabc0d9f103a2deeb"
+    },
+    {
+      "id": "solar-maximize-linear",
+      "prefix": "solar",
+      "name": "maximize-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "32e919c0931f4391a5fb7644ec9611247e2e6869b1317d5d7cba4f8cb1f99f7f"
+    },
+    {
+      "id": "fluent-arrow-maximize-24-regular",
+      "prefix": "fluent",
+      "name": "arrow-maximize-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "32f8d5b91aec41674333ff5e5e4ae90238f7b202515a7f5a92c794bf7f28bb4a"
+    },
+    {
+      "id": "icon-park-outline-full-screen",
+      "prefix": "icon-park-outline",
+      "name": "full-screen",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "d71645fdfd74bd57c9b1903e0b6054c26d0a100173ce0f49aad1bff18eb82fb3"
+    },
+    {
+      "id": "solar-palette-round-linear",
+      "prefix": "solar",
+      "name": "palette-round-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "eadfd5e2ff3bf1cdf8968b06f3a82d7bc64cf2ce2aed544c1b3de2526f7931b3"
+    },
+    {
+      "id": "fluent-color-24-regular",
+      "prefix": "fluent",
+      "name": "color-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "cf0eddff0ff4f28d2993fec5d470cc7921097994eeac7fbe299df257bdb0f2ed"
+    },
+    {
+      "id": "icon-park-outline-color-card",
+      "prefix": "icon-park-outline",
+      "name": "color-card",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "525ad2bc51027940d3c7e9ee336b23e761b99cbe366fef3d662c0df985056ac4"
+    },
+    {
+      "id": "solar-keyboard-linear",
+      "prefix": "solar",
+      "name": "keyboard-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "78146124923bb2d50bed6ef186b87a688b188f9bd2a766b9493cb74d11b46112"
+    },
+    {
+      "id": "fluent-keyboard-24-regular",
+      "prefix": "fluent",
+      "name": "keyboard-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "bf68412fb081aeafc02b554cbc97e960185bc4906c8d1a0bab17f573ee53a811"
+    },
+    {
+      "id": "icon-park-outline-keyboard",
+      "prefix": "icon-park-outline",
+      "name": "keyboard",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "379cb236a9258d07b499de4b02940f90690501d5468f2c273e06a6b7ff2bdd10"
+    },
+    {
+      "id": "solar-buildings-2-linear",
+      "prefix": "solar",
+      "name": "buildings-2-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "8acc1c28f218acccb61047a4b307f9329375883a2376379dbf801901b8b3f3d0"
+    },
+    {
+      "id": "fluent-building-multiple-24-regular",
+      "prefix": "fluent",
+      "name": "building-multiple-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "3b0dbeccbb678a8364c555c8caaeceace6595b4f2b3d7f3f7287f3f9c46ba456"
+    },
+    {
+      "id": "icon-park-outline-building-two",
+      "prefix": "icon-park-outline",
+      "name": "building-two",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "d0f2ba7c80f37f95f0a9f9e388ac77af48414b4567849b92d8d457e0d0f82ec2"
+    },
+    {
+      "id": "solar-shield-check-linear",
+      "prefix": "solar",
+      "name": "shield-check-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "d1ee44d8e8611bd189d26404fb7fe70e5c83faa92fc0f51f2d3e146a258e9e8e"
+    },
+    {
+      "id": "fluent-shield-checkmark-24-regular",
+      "prefix": "fluent",
+      "name": "shield-checkmark-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "c3ad857512248d99afb3ee2c54538b53b74f7871bb2d6611bdc28024fe75fd91"
+    },
+    {
+      "id": "icon-park-outline-permissions",
+      "prefix": "icon-park-outline",
+      "name": "permissions",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "5a18544db7bfbac64245191f0aeb84ac22966cc020c84cf66346a6beef9d04d9"
+    },
+    {
+      "id": "solar-server-linear",
+      "prefix": "solar",
+      "name": "server-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "3b454816926247223d7dc5fef547cbe2cd3c05a88408b9f44a3a119d6a72ca2d"
+    },
+    {
+      "id": "fluent-server-24-regular",
+      "prefix": "fluent",
+      "name": "server-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b3f60c08b4de56a2acaf19da91cb5175bc0678bf2f7cc42d475d3cf103eac5c1"
+    },
+    {
+      "id": "icon-park-outline-server",
+      "prefix": "icon-park-outline",
+      "name": "server",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "71986aec4fa243cc286804dea56abff57bbec4c4738fbd802a5b73f551dad48b"
+    },
+    {
+      "id": "solar-user-circle-linear",
+      "prefix": "solar",
+      "name": "user-circle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "f0ec7702eae0e9400e2f295b6186bbe70ea594081ab5e61d7f959185b71f78f1"
+    },
+    {
+      "id": "fluent-person-circle-24-regular",
+      "prefix": "fluent",
+      "name": "person-circle-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "2b737d488743a071b2d0fc780035f5139d64deab9dc18808a688a5eeb5e6061e"
+    },
+    {
+      "id": "icon-park-outline-user",
+      "prefix": "icon-park-outline",
+      "name": "user",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "b62d9f0480b3e8df8d8cedb97c114fa4bf60afc06fa901d54538d9e0c0be13f3"
+    },
+    {
+      "id": "solar-settings-minimalistic-linear",
+      "prefix": "solar",
+      "name": "settings-minimalistic-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "8d259215dfcb791ff7daec5d88f422c9ac02997253f45132b66227f6726b0d1a"
+    },
+    {
+      "id": "fluent-toggle-right-24-regular",
+      "prefix": "fluent",
+      "name": "toggle-right-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "ec0b740a539725e63470a82dbf612f2efd86988bdb3ae251b7d6a4708bdde412"
+    },
+    {
+      "id": "icon-park-outline-switch",
+      "prefix": "icon-park-outline",
+      "name": "switch",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "868d595bd786e19d9ff0fb4c95cdbb67c76e7edfc95982cab530e2f6f5cae6fd"
+    },
+    {
+      "id": "solar-key-minimalistic-linear",
+      "prefix": "solar",
+      "name": "key-minimalistic-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "2bf6a03f53dc18c48bc3a336f36f40afedb0e008c4ef2a6b80473903b58f036a"
+    },
+    {
+      "id": "fluent-key-24-regular",
+      "prefix": "fluent",
+      "name": "key-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "24bc21380f8f359ebbe47a8c5597b615a78b6d3cfbf351d04348f2a30df65a27"
+    },
+    {
+      "id": "icon-park-outline-key",
+      "prefix": "icon-park-outline",
+      "name": "key",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "69c9fc9402c4476023fb389b662bfeeb6f07438847c887aae323d622067c4f1d"
+    },
+    {
+      "id": "solar-eye-linear",
+      "prefix": "solar",
+      "name": "eye-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1ea56c47a6c6290d36be9148466cc20f3a2e4d0aaa7cc59a99aaaa3ef2125df3"
+    },
+    {
+      "id": "fluent-eye-24-regular",
+      "prefix": "fluent",
+      "name": "eye-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "120b15e02caaddb683a13ac471e6763ed994d84c7acfab0eafd4c20b34561afb"
+    },
+    {
+      "id": "icon-park-outline-preview-open",
+      "prefix": "icon-park-outline",
+      "name": "preview-open",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "953da858e1e1c0024a0c9500fb9520309aaffcee698e72a992f6bde2c49fb506"
+    },
+    {
+      "id": "solar-sun-linear",
+      "prefix": "solar",
+      "name": "sun-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "2becdb4c54d8ce214f310784125d3236e92a75175582ba17eeae4606a877cda7"
+    },
+    {
+      "id": "fluent-weather-sunny-24-regular",
+      "prefix": "fluent",
+      "name": "weather-sunny-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "47626521d0cfa1db0d4d4b28481efe0cbfd053d13e12d41a221a1727ac1ff5ee"
+    },
+    {
+      "id": "icon-park-outline-sun-one",
+      "prefix": "icon-park-outline",
+      "name": "sun-one",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "c4bcda98bd406be9ac971d4e43e6850fca7b885496beb7c04854b6b7f2dee9e9"
+    },
+    {
+      "id": "solar-moon-linear",
+      "prefix": "solar",
+      "name": "moon-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "fe06aa8af81f9e2731c7f56e274fcad4858ad557ad344bc2e971e52d3543684d"
+    },
+    {
+      "id": "fluent-weather-moon-24-regular",
+      "prefix": "fluent",
+      "name": "weather-moon-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "99b1389e1f19f6b59e94c4837cece772dd54fe9d064450c27cba42db331e2b64"
+    },
+    {
+      "id": "icon-park-outline-moon",
+      "prefix": "icon-park-outline",
+      "name": "moon",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "12f4f25da6108786c1ee9e7b82effb3e51e50d069d0770e376edcfbb8f74c0b6"
+    },
+    {
+      "id": "solar-monitor-linear",
+      "prefix": "solar",
+      "name": "monitor-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "8248169e27f578ac84058f8175e5fb71310f41afd0e7ac3c1746d4a434dbb540"
+    },
+    {
+      "id": "fluent-desktop-24-regular",
+      "prefix": "fluent",
+      "name": "desktop-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "4055ea96df7e6fe87217a97f020951c22a4c4fbea235c68f4af9e7b572cf0596"
+    },
+    {
+      "id": "icon-park-outline-monitor",
+      "prefix": "icon-park-outline",
+      "name": "monitor",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "307f3ab3fc669c13be74660223cc13d3d62a9f333090eaf7b4528299c2807e08"
+    },
+    {
+      "id": "solar-clock-circle-linear",
+      "prefix": "solar",
+      "name": "clock-circle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "f23ab95be6870537fdf6019faee1755269af2389c6ea15db40543517be8fd445"
+    },
+    {
+      "id": "fluent-clock-24-regular",
+      "prefix": "fluent",
+      "name": "clock-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "584e5d7c74e6b556a1736bfa23566bf0bed153ce4df0fe37d75ccebbfd9822ee"
+    },
+    {
+      "id": "icon-park-outline-time",
+      "prefix": "icon-park-outline",
+      "name": "time",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "2aa791e2f1b4720586fcf4f3927feeed3ca812c68e55e90772e44a60399e2939"
+    },
+    {
+      "id": "solar-check-circle-linear",
+      "prefix": "solar",
+      "name": "check-circle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "a6fdb22438d207bfdebc4cddaa0f1043d44b724ca71e63e3a2446e1732e50407"
+    },
+    {
+      "id": "fluent-checkmark-circle-24-regular",
+      "prefix": "fluent",
+      "name": "checkmark-circle-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "4f18a283bbe8ae9bf25e47997db3fb1387e45a1c7a59b2ea9c32f9e67067dc27"
+    },
+    {
+      "id": "icon-park-outline-check-one",
+      "prefix": "icon-park-outline",
+      "name": "check-one",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "0cc067b961d81b07a2a6d0d1aa204bf12da03ccbf6ac4758a54f9197cc2f3c8b"
+    },
+    {
+      "id": "solar-danger-triangle-linear",
+      "prefix": "solar",
+      "name": "danger-triangle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b4a499d5748a4d07c05b190be24c0cc81b4ae5ae963cdeff857516eb981ad7d7"
+    },
+    {
+      "id": "fluent-warning-24-regular",
+      "prefix": "fluent",
+      "name": "warning-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "6548e067a8dfa4f9bf7ab9291f60e598138a88b3fa86732669c57186636af201"
+    },
+    {
+      "id": "icon-park-outline-attention",
+      "prefix": "icon-park-outline",
+      "name": "attention",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "1a48105afc0f5094d5723269d3a0fb47d0ede58b8d89b97782355d75c3239d09"
+    },
+    {
+      "id": "solar-close-circle-linear",
+      "prefix": "solar",
+      "name": "close-circle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b09ebf5d0fa913e1739c387c657fbc837775835c9a25e3a307793e6381e145e5"
+    },
+    {
+      "id": "fluent-dismiss-circle-24-regular",
+      "prefix": "fluent",
+      "name": "dismiss-circle-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "92d72a7012c52193e3ad62267c61185406524967e4779c7e81cc39ed6feccc1f"
+    },
+    {
+      "id": "icon-park-outline-close-one",
+      "prefix": "icon-park-outline",
+      "name": "close-one",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "3d6ef6566dd95081543494da23627b04f849268dc3c3a190e633b648955acf53"
+    },
+    {
+      "id": "solar-info-circle-linear",
+      "prefix": "solar",
+      "name": "info-circle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "850896d1407be6c45d8fc39eb7b80ecd41ea149771f03bf6ee552519b3613e3a"
+    },
+    {
+      "id": "fluent-info-24-regular",
+      "prefix": "fluent",
+      "name": "info-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1067b99e9521a070abc7b265c80f526d0e15db492a08c7e7eb414ce79b9dcf40"
+    },
+    {
+      "id": "icon-park-outline-info",
+      "prefix": "icon-park-outline",
+      "name": "info",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "051ee9a084d135f124a13238fcb9649a94c7ecbaeebe1a6388e51ce14096bcf8"
+    },
+    {
+      "id": "solar-check-linear",
+      "prefix": "solar",
+      "name": "check-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "35541285532b2acc43f178292fed97e7e1624c2cd080856e8c24040a5f5b7616"
+    },
+    {
+      "id": "fluent-checkmark-24-regular",
+      "prefix": "fluent",
+      "name": "checkmark-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "a329145f233019b78e8436952f6783293e98e92b6acb4973655822e94bf9c62c"
+    },
+    {
+      "id": "icon-park-outline-check",
+      "prefix": "icon-park-outline",
+      "name": "check",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "80351efbeb3bb7676f360141a44e9280c5bd9f7b6702f76c1d8d6c4a3ddbea74"
+    },
+    {
+      "id": "solar-loader-linear",
+      "prefix": "solar",
+      "name": "loader-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "f6e80fb01e83e79c8db081f98a999178f6a8f1a94e941f3ca570993a8922e840"
+    },
+    {
+      "id": "fluent-arrow-clockwise-dashes-24-regular",
+      "prefix": "fluent",
+      "name": "arrow-clockwise-dashes-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "49c91b56f908c71150dd8d36e42238d279872f90b6595251e6fbedbf4b86ffbe"
+    },
+    {
+      "id": "icon-park-outline-loading",
+      "prefix": "icon-park-outline",
+      "name": "loading",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "cc6dd13e712484a8cf1909604974c18cc1da721ef0f322bc3e5a12e4e0547227"
+    },
+    {
+      "id": "solar-kanban-linear",
+      "prefix": "solar",
+      "name": "kanban-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "bc2efb7ed9e6f789e503811e2b2e1ed20fc4826ae5b493f922a103adec2b6f0b"
+    },
+    {
+      "id": "fluent-board-split-24-regular",
+      "prefix": "fluent",
+      "name": "board-split-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "101810e6516f8d5fdcb0d9e92820418171a5af312a7794457f1493d00db71f4a"
+    },
+    {
+      "id": "icon-park-outline-view-grid-card",
+      "prefix": "icon-park-outline",
+      "name": "view-grid-card",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "3bbb3c5b91c38aecdf2aa0d1411b899018c66d1a9836856dfaa2d062cce7b775"
+    },
+    {
+      "id": "solar-calendar-date-linear",
+      "prefix": "solar",
+      "name": "calendar-date-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "ca84938c465596370ac71271ec2a3fef8358e57610375e0661035cbb00446d52"
+    },
+    {
+      "id": "fluent-calendar-month-24-regular",
+      "prefix": "fluent",
+      "name": "calendar-month-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "468078a1ed0669ba1758329d63a7034d0726a63eb304abc51d08c05cc11e9277"
+    },
+    {
+      "id": "icon-park-outline-calendar",
+      "prefix": "icon-park-outline",
+      "name": "calendar",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "48697f954bb9680703a0e9f5737f9f551d92365c4b14c22bc141156008e1e060"
+    },
+    {
+      "id": "solar-align-left-linear",
+      "prefix": "solar",
+      "name": "align-left-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "12a7f62d44623084bd612585f6e2ea7454679bd60442c0d1c8cac8e034a668ec"
+    },
+    {
+      "id": "fluent-gantt-chart-24-regular",
+      "prefix": "fluent",
+      "name": "gantt-chart-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "b4714acc1ac8cd65a5d61b4b83b95521215bdd2f67267a5dd0779e01663ab21e"
+    },
+    {
+      "id": "icon-park-outline-timeline",
+      "prefix": "icon-park-outline",
+      "name": "timeline",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "a01a7120bedce0f43c22d10536c073e90a63cc29d226d205101a5a2c672ca4fe"
+    },
+    {
+      "id": "solar-folder-tree-linear",
+      "prefix": "solar",
+      "name": "folder-tree-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "1fbdd1a1ee1187c6483e7b53e07377a7014007e06db7aa882d433c9405984e9b"
+    },
+    {
+      "id": "fluent-text-bullet-list-tree-24-regular",
+      "prefix": "fluent",
+      "name": "text-bullet-list-tree-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "51cd016f39f2b60d916b854ce4bc840141ee7f2b703383c999b41da303c11fc4"
+    },
+    {
+      "id": "icon-park-outline-tree-list",
+      "prefix": "icon-park-outline",
+      "name": "tree-list",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "6f984880aa7a9fbf8ff342c1006e7afe74aecf176baee1105925452a19d64232"
+    },
+    {
+      "id": "solar-graph-new-linear",
+      "prefix": "solar",
+      "name": "graph-new-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "fbfd79ea99243e80f33ff309b33b4fa1dab89161d4223ef69d6cedf89b54ab30"
+    },
+    {
+      "id": "fluent-pulse-24-regular",
+      "prefix": "fluent",
+      "name": "pulse-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "9b0a86350fb4870787e56f89ac3728d471065551c4f2a1a86ff9a47c4ec1af5b"
+    },
+    {
+      "id": "icon-park-outline-chart-line",
+      "prefix": "icon-park-outline",
+      "name": "chart-line",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "500af33a695e7cedc7ed3b091eaa067b17e59856f22cd1ffb635afe02f7e3aec"
+    },
+    {
+      "id": "solar-question-circle-linear",
+      "prefix": "solar",
+      "name": "question-circle-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "e24596c7c67e0c653cce64c0593934dca9ef0e4d238e5072cd80ae6e6b506fcb"
+    },
+    {
+      "id": "fluent-question-circle-24-regular",
+      "prefix": "fluent",
+      "name": "question-circle-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "42a9a9f7f91dcaa6da3f50a25f64a7f2581599383d7d331c6ad536b3871fad93"
+    },
+    {
+      "id": "icon-park-outline-help",
+      "prefix": "icon-park-outline",
+      "name": "help",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "66132d0dd5980ed1f9a3e7942310bc52e92dfda4e3a57dc4cf278c956a58518f"
+    },
+    {
+      "id": "fluent-pin-off-24-regular",
+      "prefix": "fluent",
+      "name": "pin-off-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "589a06f59b8d1886163ab47bf2fdb76298ffac56704b2384c39b9c80ebd88361"
+    },
+    {
+      "id": "solar-minimize-linear",
+      "prefix": "solar",
+      "name": "minimize-linear",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "5f8d80df2d96bce9518b27f508e90d78f0625de95b35dacc933f151add39db29"
+    },
+    {
+      "id": "fluent-arrow-minimize-24-regular",
+      "prefix": "fluent",
+      "name": "arrow-minimize-24-regular",
+      "width": 24,
+      "height": 24,
+      "bodySha256": "9a49e47d08b0a9e9b3d00b01bc53e71e7ecfdc66aa595cbd93b0feda83a14ee1"
+    },
+    {
+      "id": "icon-park-outline-off-screen",
+      "prefix": "icon-park-outline",
+      "name": "off-screen",
+      "width": 48,
+      "height": 48,
+      "bodySha256": "a208cd52150eece4106b158b09795982710670b7423830d85852569da54d896a"
+    }
+  ],
+  "exceptions": [
+    "Phaneris and provider/brand marks",
+    "Six existing business status icons",
+    "Independent Seti file theme and Markdown mark"
+  ],
+  "maintenance": {
+    "iconPark": "Author repository archived on 2025-12-08; https://github.com/bytedance/IconPark"
+  },
+  "semanticCaveats": {
+    "solar": [
+      "Gantt uses align-left horizontal bars as an approximation",
+      "Pin/unpin share pin; active state and action label disambiguate",
+      "File changes uses file-pen rather than a dedicated diff glyph"
+    ],
+    "fluent": [
+      "Terminal uses code-block as a code-window approximation",
+      "Loading uses arrow-clockwise-dashes without animation in this sample",
+      "File changes uses document-landscape-split as a comparison approximation"
+    ],
+    "iconPark": [
+      "Gantt uses timeline rather than duration bars",
+      "Pin/unpin share pushpin; active state and action label disambiguate",
+      "File changes uses file-conversion as a provisional approximation"
+    ]
+  }
+}

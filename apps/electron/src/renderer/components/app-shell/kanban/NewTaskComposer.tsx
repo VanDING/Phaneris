@@ -44,7 +44,7 @@ export function NewTaskComposer({ onCreate, className }: NewTaskComposerProps) {
         onClick={() => setComposing(true)}
         className={cn(
           'craft-control flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/70 py-2',
-          'text-[11px] font-medium text-text-secondary transition-colors',
+          'text-meta font-medium text-text-secondary transition-colors',
           'hover:border-border hover:text-text-secondary',
           className
         )}

@@ -48,7 +48,7 @@ export function EntityListLabelBadge({ label, rawValue, sessionLabels, onLabelsC
         role="button"
         tabIndex={0}
         title={displayValue ? `${label.name} · ${displayValue}` : label.name}
-        className="shrink-0 h-[18px] max-w-[120px] px-1.5 text-[10px] font-medium rounded flex items-center whitespace-nowrap gap-0.5 cursor-pointer overflow-hidden"
+        className="shrink-0 h-control-2xs max-w-[120px] px-1.5 text-micro font-medium rounded flex items-center whitespace-nowrap gap-0.5 cursor-pointer overflow-hidden"
         onMouseDown={(e) => { e.stopPropagation(); e.preventDefault() }}
         style={color ? {
           backgroundColor: `color-mix(in srgb, ${color} 6%, transparent)`,

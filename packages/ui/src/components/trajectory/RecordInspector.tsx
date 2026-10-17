@@ -51,7 +51,7 @@ interface TabItem {
 
 function EmptyHint({ label }: { label: string }) {
   return (
-    <div className="px-3 py-6 text-center text-[12px] text-text-secondary">
+    <div className="px-3 py-6 text-center text-label text-text-secondary">
       {label}
     </div>
   )
@@ -60,10 +60,10 @@ function EmptyHint({ label }: { label: string }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="px-3 py-2">
-      <h4 className="mb-1 text-[11px] font-medium text-text-secondary">
+      <h4 className="mb-1 text-meta font-medium text-text-secondary">
         {title}
       </h4>
-      <div className="text-[12px] leading-5">{children}</div>
+      <div className="text-label leading-5">{children}</div>
     </section>
   )
 }
@@ -87,15 +87,15 @@ function SourceBlocksView({ blocks }: { blocks: readonly TrajectorySourceBlock[]
     <div className="space-y-2">
       {blocks.map((block, i) => (
         <div key={i} className="rounded border border-border/60 bg-foreground/[0.02] px-2 py-1.5">
-          <div className="text-[11px] uppercase tracking-wide text-text-secondary">{block.type}</div>
+          <div className="text-meta uppercase tracking-wide text-text-secondary">{block.type}</div>
           {block.imageSrc !== undefined ? (
             <img src={block.imageSrc} alt={block.imageAlt ?? 'image'} className="mt-1 max-h-40 rounded" />
           ) : null}
           {block.content !== undefined && block.content !== '' ? (
-            <div className="mt-1 max-h-40 overflow-auto whitespace-pre-wrap text-[12px]">{block.content}</div>
+            <div className="mt-1 max-h-40 overflow-auto whitespace-pre-wrap text-label">{block.content}</div>
           ) : null}
           {block.callId !== undefined ? (
-            <div className="mt-1 text-[11px] text-text-secondary">{block.toolName ?? 'call'} {block.callId}</div>
+            <div className="mt-1 text-meta text-text-secondary">{block.toolName ?? 'call'} {block.callId}</div>
           ) : null}
         </div>
       ))}
@@ -254,8 +254,8 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
       />
       <div className="flex min-h-12 items-center justify-between border-b border-border/50 bg-foreground/[0.018] px-3 py-2">
         <div className="min-w-0">
-          <div className="truncate text-[12px] font-semibold">#{cell.index} {cell.kind}</div>
-          <div className="truncate text-[11px] text-text-secondary">{cell.text}</div>
+          <div className="truncate text-label font-semibold">#{cell.index} {cell.kind}</div>
+          <div className="truncate text-meta text-text-secondary">{cell.text}</div>
         </div>
         <div className="ml-2 flex shrink-0 items-center gap-0.5">
           {onOpenChat && sourceMessageId && (
@@ -288,7 +288,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
             role="tab"
             aria-selected={tab === id}
             className={cn(
-              'craft-control relative isolate shrink-0 rounded-md px-2 py-1 text-[11px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+              'craft-control relative isolate shrink-0 rounded-md px-2 py-1 text-meta outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
               tab === id ? 'text-foreground' : 'text-text-secondary hover:bg-accent/40',
             )}
             onClick={() => setTab(id)}
@@ -349,22 +349,22 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
         ) : null}
         {tab === 'input' && (
           cell.inputDetail
-            ? <Section title="Payload"><pre className="whitespace-pre-wrap text-[11px]">{cell.inputDetail}</pre></Section>
+            ? <Section title="Payload"><pre className="whitespace-pre-wrap text-meta">{cell.inputDetail}</pre></Section>
             : <EmptyHint label="No payload." />
         )}
         {tab === 'output' && (
           cell.outputDetail
-            ? <Section title="Result"><pre className="whitespace-pre-wrap text-[11px]">{cell.outputDetail}</pre></Section>
+            ? <Section title="Result"><pre className="whitespace-pre-wrap text-meta">{cell.outputDetail}</pre></Section>
             : <EmptyHint label="No result." />
         )}
         {tab === 'schema' && (
           cell.schemaDetail
-            ? <Section title="Schema"><pre className="whitespace-pre-wrap text-[11px]">{cell.schemaDetail}</pre></Section>
+            ? <Section title="Schema"><pre className="whitespace-pre-wrap text-meta">{cell.schemaDetail}</pre></Section>
             : <EmptyHint label="No schema captured." />
         )}
         {tab === 'system-prompt' && (
           cell.inputDetail
-            ? <Section title="System prompt"><pre className="whitespace-pre-wrap text-[11px]">{cell.inputDetail}</pre></Section>
+            ? <Section title="System prompt"><pre className="whitespace-pre-wrap text-meta">{cell.inputDetail}</pre></Section>
             : <EmptyHint label="No prompt snapshot." />
         )}
         {tab === 'source' && (
@@ -374,7 +374,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
         )}
         {tab === 'raw' && (
           cell.sourceMessage !== undefined
-            ? <Section title="Raw"><pre className="whitespace-pre-wrap text-[11px]">{JSON.stringify(cell.sourceMessage, null, 2)}</pre></Section>
+            ? <Section title="Raw"><pre className="whitespace-pre-wrap text-meta">{JSON.stringify(cell.sourceMessage, null, 2)}</pre></Section>
             : <EmptyHint label="No raw message." />
         )}
         {tab === 'rendered' && (
@@ -386,7 +386,7 @@ export function RecordInspector({ cell, previousPrompt, sessionTotal, onOpenChat
           <Section title="Prompt diff">
             {previousPrompt !== undefined && cell.inputDetail !== undefined
               ? (
-                <pre className="whitespace-pre-wrap text-[11px]">
+                <pre className="whitespace-pre-wrap text-meta">
                   {previousPrompt === cell.inputDetail
                     ? 'Prompt unchanged'
                     : `— previous (${previousPrompt.length} chars)\n${previousPrompt}\n\n+ current (${cell.inputDetail.length} chars)\n${cell.inputDetail}`}

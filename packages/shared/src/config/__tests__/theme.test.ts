@@ -76,7 +76,7 @@ describe('themeToCSS', () => {
   test('raised depth combines a hard border ring with zero-blur offset shadows', () => {
     const css = themeToCSS({ depth: 'raised', borderWidth: '2px', shadowColor: '#111111' });
     expect(css).toContain(
-      '--shadow-minimal: 0 0 0 var(--theme-border-width) var(--border), 3px 3px 0 color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);'
+      '--shadow-minimal: 0 0 0 var(--edge-hairline) var(--border), 3px 3px 0 color-mix(in srgb, var(--theme-shadow-color) 10%, transparent);'
     );
   });
 
