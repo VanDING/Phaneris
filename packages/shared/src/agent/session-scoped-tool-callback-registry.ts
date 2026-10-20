@@ -73,7 +73,7 @@ export interface SessionScopedToolCallbacks {
   /** Resolve a status display name to its ID. */
   resolveStatusFn?: (status: string) => import('@phaneris/session-tools-core').ResolvedStatusResult;
   /** Send a message to another session (inter-session messaging). Resolves with delivery status. */
-  sendAgentMessageFn?: (sessionId: string, message: string, attachments?: Array<{ path: string; name?: string }>) => Promise<import('@phaneris/session-tools-core').SendAgentMessageResult>;
+  sendAgentMessageFn?: (sessionId: string, message: string, attachments?: Array<{ path: string; name?: string }>, deliveryId?: string) => Promise<import('@phaneris/session-tools-core').SendAgentMessageResult>;
   /**
    * Activate a source in the running session (source_test auto-enable flow).
    * Wired by SessionManager to the per-session onSourceActivationRequest callback

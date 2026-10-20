@@ -43,7 +43,7 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
       return kernel.acceptRun(...args)
     }), recordUserInputAdmission: admission(bind('recordUserInputAdmission')),
     commitAdditionalUserMessage: bind('commitAdditionalUserMessage'), commitAssistantMessage: bind('commitAssistantMessage'),
-    completeRun: bind('completeRun'),
+    completeRun: bind('completeRun'), recoverInterruptedModel: bind('recoverInterruptedModel'),
   })
   const effects = Object.freeze({
     trackAuxiliary, retainAuxiliary,
@@ -57,6 +57,7 @@ export function createDurableRuntime(options: { shutdownDeadlineMs?: number } = 
   })
   const queries = Object.freeze({
     getCanonicalSessionProjection: bind('getCanonicalSessionProjection'), getCanonicalModelContext: bind('getCanonicalModelContext'),
+    inputAdmission: bind('getInputAdmission'),
     events: guarded((workspace: string, options: { sessionId?: string; operationId?: string; afterSeq?: number; limit?: number } = {}) =>
       options.limit !== undefined ? kernel.storeFor(workspace).listEvents(options) : kernel.storeFor(workspace).listAllEvents(options)),
     operations: guarded((workspace: string, sessionId?: string) => kernel.storeFor(workspace).listOperations(sessionId)),

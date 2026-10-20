@@ -15,6 +15,7 @@
 
 import { spawn, type ChildProcess } from 'node:child_process';
 import type { PiInputReception, PiProxyToolResult } from './backend/pi/protocol.ts';
+import { writePiExitDiagnostic } from './backend/pi/exit-diagnostics.ts';
 import { evaluateToolCallRules } from './core/tool-call-rules.ts';
 import { createInterface, type Interface as ReadlineInterface } from 'node:readline';
 import type { AgentEvent } from '@phaneris/core/types';
@@ -63,6 +64,14 @@ class SourceActivationSettlementError extends Error {
     super(i18n.t('errors.sourceActivationStopFailed'));
     this.name = 'SourceActivationSettlementError';
   }
+}
+
+interface HostToolExecutionRequest {
+  requestId: string;
+  toolCallId?: string;
+  toolName: string;
+  args: Record<string, unknown>;
+  durableTool?: DurableToolExecutionIdentity;
 }
 
 // System prompt for Phaneris context
@@ -339,6 +348,9 @@ export class PiAgent extends BaseAgent {
   private stderrBuffer: string[] = [];
   private stderrBufferBytes = 0;
   private static readonly STDERR_BUFFER_MAX_BYTES = 8 * 1024;
+  private lastModelRequest: Record<string, unknown> | null = null;
+  private readonly knownHostToolOutcomes = new Map<string, { request: HostToolExecutionRequest; result: PiProxyToolResult }>();
+  private readonly expectedSubprocessExits = new WeakSet<ChildProcess>();
 
   private recordStderr(chunk: string): void {
     if (!chunk) return;
@@ -652,6 +664,14 @@ export class PiAgent extends BaseAgent {
 
     this.subprocess = child;
     this.syncedProxyToolsSignature = null;
+    this.stderrBuffer = [];
+    this.stderrBufferBytes = 0;
+    this.lastModelRequest = null;
+    const startedAt = Date.now();
+    let childStderr = '';
+    let unexpectedExit: Record<string, unknown> | undefined;
+    const diagnosticSecrets = piAuth?.credential ? Object.values(piAuth.credential).filter((value): value is string => typeof value === 'string') : [];
+    if (legacyApiKey) diagnosticSecrets.push(legacyApiKey);
 
     // Set up readline for JSONL parsing from stdout
     this.readline = createInterface({
@@ -668,7 +688,8 @@ export class PiAgent extends BaseAgent {
     // Keep the PHANERIS_DEBUG-gated log for interactive dev work.
     child.stderr?.on('data', (data: Buffer) => {
       const text = data.toString();
-      this.recordStderr(text);
+      childStderr = (childStderr + text).slice(-PiAgent.STDERR_BUFFER_MAX_BYTES);
+      if (this.subprocess === child) this.recordStderr(text);
       const trimmed = text.trim();
       if (trimmed) {
         this.debug(`[subprocess stderr] ${trimmed}`);
@@ -677,7 +698,18 @@ export class PiAgent extends BaseAgent {
 
     // Handle subprocess exit
     child.on('exit', (code, signal) => {
-      if (this.subprocess === child) this.handleSubprocessExit(code, signal);
+      if (this.subprocess !== child) return;
+      if (!this.expectedSubprocessExits.has(child)) unexpectedExit = { pid: child.pid, code, signal, startedAt, exitedAt: Date.now(),
+        sessionId, processing: this._isProcessing, executable: nodePath, server: piServerPath,
+        hostVersions: process.versions, hostMemory: process.memoryUsage(),
+        lastModelRequest: this.lastModelRequest, pendingToolRequests: [...this.pendingHostToolRequests.keys()] };
+      this.handleSubprocessExit(code, signal);
+    });
+    // 'close' follows stdio drainage; an exit listener alone can miss the crash tail.
+    child.on('close', () => {
+      if (!unexpectedExit || !sessionDir) return;
+      try { writePiExitDiagnostic(sessionDir, unexpectedExit, childStderr, diagnosticSecrets); }
+      catch (error) { this.debug(`Pi exit diagnostic could not be saved: ${String(error)}`); }
     });
 
     // Shutdown can close stdin between writable checking and the queued write.
@@ -1173,6 +1205,7 @@ export class PiAgent extends BaseAgent {
         break;
       case 'tool_execute_cancel':
         this.pendingHostToolRequests.get(msg.requestId as string)?.abort();
+        void this.commitKnownHostToolOutcome(msg.requestId as string);
         break;
 
       case 'tool_execute_request':
@@ -1725,13 +1758,7 @@ export class PiAgent extends BaseAgent {
    * The subprocess expects responses in the format:
    *   { content: string; isError: boolean }
    */
-  private async handleToolExecuteRequest(request: {
-    requestId: string;
-    toolCallId?: string;
-    toolName: string;
-    args: Record<string, unknown>;
-    durableTool?: DurableToolExecutionIdentity;
-  }): Promise<void> {
+  private async handleToolExecuteRequest(request: HostToolExecutionRequest): Promise<void> {
     // Prerequisite check: block source tools until guide.md is read
     const prereqResult = this.prerequisiteManager.checkPrerequisites(request.toolName);
     if (!prereqResult.allowed) {
@@ -1750,9 +1777,13 @@ export class PiAgent extends BaseAgent {
     const isQuestion = request.toolName === 'ask_user' || request.toolName === 'mcp__session__ask_user';
     try {
       const result = await this.routeToolCall(request.toolName, request.args, request.durableTool, intent, abort.signal);
+      if (!result.isError && request.durableTool && request.toolCallId) this.knownHostToolOutcomes.set(request.requestId, { request, result });
       // Stop resolves an open question as a dismissal. Deliver that pure result
       // so the live child can drain its wait; cancelled external effects stay unknown.
-      if (epoch !== this.subprocessEpoch || (abort.signal.aborted && !isQuestion)) return;
+      if (epoch !== this.subprocessEpoch || (abort.signal.aborted && !isQuestion)) {
+        await this.commitKnownHostToolOutcome(request.requestId);
+        return;
+      }
       this.send({
         type: 'tool_execute_response',
         requestId: request.requestId,
@@ -1771,6 +1802,28 @@ export class PiAgent extends BaseAgent {
     } finally {
       this.pendingHostToolRequests.delete(request.requestId);
     }
+  }
+
+  /** Cancellation stops waiting; it does not discard an observed successful effect. */
+  private async commitKnownHostToolOutcome(requestId: string): Promise<void> {
+    const known = this.knownHostToolOutcomes.get(requestId);
+    if (!known) return;
+    this.knownHostToolOutcomes.delete(requestId);
+    const { request, result } = known;
+    const identity = request.durableTool;
+    if (!identity || !request.toolCallId || !this.config.session?.id) return;
+    try {
+      if (!this.config.durableToolBoundary) throw new Error('Runtime Host did not provide a durable tool boundary');
+      await this.config.durableToolBoundary.commitOutcome({
+        sessionId: this.config.session.id, runOperationId: identity.runOperationId,
+        operationId: identity.operationId, canonicalArgsHash: identity.canonicalArgsHash,
+        providerToolCallId: request.toolCallId, toolName: request.toolName,
+        toolBatchId: identity.toolBatchId, toolBatchOrdinal: identity.toolBatchOrdinal,
+        result: { content: result.contentBlocks ?? [{ type: 'text', text: result.content }],
+          ...(result.structuredContent !== undefined ? { structuredContent: result.structuredContent } : {}) },
+        isError: false,
+      });
+    } catch (error) { this.debug(`Known late tool outcome could not be committed: ${String(error)}`); }
   }
 
   private async handleDurableToolPrepareRequest(
@@ -1824,6 +1877,9 @@ export class PiAgent extends BaseAgent {
     }
     try {
       const committed = await boundary.commitOutcome(request);
+      for (const [id, known] of this.knownHostToolOutcomes) {
+        if (known.request.durableTool?.operationId === request.operationId) this.knownHostToolOutcomes.delete(id);
+      }
       this.send({
         type: 'durable_tool_outcome_response',
         requestId: request.requestId,
@@ -1843,6 +1899,8 @@ export class PiAgent extends BaseAgent {
   private async handleDurableModelPrepareRequest(
     request: DurableModelPrepareRequest & { requestId: string },
   ): Promise<void> {
+    this.lastModelRequest = { runOperationId: request.runOperationId, providerRequestId: request.providerRequestId,
+      provider: request.provider, model: request.model, purpose: request.purpose, preparedAt: Date.now() };
     const boundary = this.config.durableModelBoundary;
     if (!boundary) {
       this.send({ type: 'durable_model_prepare_response', requestId: request.requestId, ok: false, reason: 'Runtime Host did not provide a durable model boundary' });
@@ -1896,7 +1954,7 @@ export class PiAgent extends BaseAgent {
       : toolName;
 
     if (SESSION_TOOL_NAMES.has(strippedName)) {
-      return this.executeSessionTool(strippedName, args, signal);
+      return this.executeSessionTool(strippedName, args, signal, durableTool);
     }
 
     // MCP source tools — route through centralized pool
@@ -1950,6 +2008,7 @@ export class PiAgent extends BaseAgent {
     toolName: string,
     args: Record<string, unknown>,
     signal?: AbortSignal,
+    durableTool?: DurableToolExecutionIdentity,
   ): Promise<{ content: string; isError: boolean }> {
     try {
       // call_llm uses the shared pre-execution pipeline from BaseAgent
@@ -2047,6 +2106,7 @@ export class PiAgent extends BaseAgent {
 
       const ctx = Object.create(this.getSessionToolContext()) as SessionToolContext;
       ctx.signal = signal;
+      ctx.toolExecutionId = durableTool?.operationId;
       const result: SessionToolResult = await def.handler(ctx, args);
 
       // Convert ToolResult to subprocess response format
@@ -3248,6 +3308,7 @@ export class PiAgent extends BaseAgent {
     }
 
     const pid = child.pid;
+    this.expectedSubprocessExits.add(child);
     const waitForExit = new Promise<{ code: number | null; signal: string | null }>((resolve) => {
       if (child.exitCode !== null || child.signalCode) {
         resolve({ code: child.exitCode, signal: child.signalCode });
@@ -3337,6 +3398,7 @@ export class PiAgent extends BaseAgent {
     }
 
     if (this.subprocess) {
+      this.expectedSubprocessExits.add(this.subprocess);
       // Try graceful shutdown first
       try {
         this.send({ type: 'shutdown' });
@@ -3616,6 +3678,7 @@ export class PiAgent extends BaseAgent {
     for (const request of this.pendingHostToolRequests.values()) request.abort();
     this.pendingLargeResultFilters.clear();
     this.pendingHostToolRequests.clear();
+    for (const id of this.knownHostToolOutcomes.keys()) void this.commitKnownHostToolOutcome(id);
   }
 
   private async handleLargeResultFilterRequest(msg: PiLargeResultFilterRequest): Promise<void> {

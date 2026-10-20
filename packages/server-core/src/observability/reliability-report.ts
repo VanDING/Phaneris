@@ -69,7 +69,7 @@ export function buildReliabilityReport(input: { sessionId: string; events: Runti
       }
     } else if (event.type === 'tool_recovery_decided' || event.type === 'model_recovery_decided') {
       report.observations.recoveries++
-      if (event.type === 'model_recovery_decided' && ['provider_not_billed', 'billed_response_unavailable', 'manual_abandon'].includes(String(p.verdict))) {
+      if (event.type === 'model_recovery_decided' && ['provider_not_billed', 'billed_response_unavailable', 'manual_abandon', 'interrupted_response_unavailable'].includes(String(p.verdict))) {
         // The recovery decision is committed on the parent run. Its event ID
         // retains the child effect identity; do not confuse an explicit decision
         // with the indeterminate observation recorded during recovery.

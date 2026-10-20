@@ -166,6 +166,8 @@ export interface ValidatorInterface {
 export interface SessionToolContext {
   /** Scoped to one tool call; never shared between concurrent executions. */
   signal?: AbortSignal;
+  /** Stable host-owned tool identity, used to deduplicate durable deliveries. */
+  toolExecutionId?: string;
   // ============================================================
   // Session Info
   // ============================================================
@@ -434,7 +436,7 @@ export interface SessionToolContext {
    * a truthful ack (delivered immediately vs. queued behind a busy turn) instead
    * of an unconditional "message sent".
    */
-  sendAgentMessage?(sessionId: string, message: string, attachments?: Array<{ path: string; name?: string }>): Promise<SendAgentMessageResult>;
+  sendAgentMessage?(sessionId: string, message: string, attachments?: Array<{ path: string; name?: string }>, deliveryId?: string): Promise<SendAgentMessageResult>;
 
   /**
    * Activate a source in the running session: add to enabledSourceSlugs,
@@ -915,7 +917,7 @@ export interface ListSessionsResult {
  */
 export interface SendAgentMessageResult {
   /**
-   * - `delivered`: the target was idle, so it will start processing the message now.
+   * - `delivered`: durably accepted for independent processing, including a confirmed steer.
    * - `queued`: the target was mid-turn; the message is enqueued and will be
    *   processed after the current turn finishes.
    */

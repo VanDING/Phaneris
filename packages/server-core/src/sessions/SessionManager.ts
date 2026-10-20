@@ -47,6 +47,7 @@ import { sessionRuntimeView, DISCONNECTED_RUNTIME_VIEW, type SessionRuntimeView,
 import type { SessionCompletionEvent } from '../domain/session-completion'
 export type { SessionCompletionEvent } from '../domain/session-completion'
 import { createTaskNodeReconciliationAdapter } from '../tasks/runtime-reconciliation'
+import { createMessageDeliveryReconciliationAdapter } from '../runtime-adapters/message-delivery-reconciliation'
 import { reportLegacyProjectionParity } from '../runtime-adapters/projection-audit'
 import { projectCanonicalSessionMessages, projectDurableUsage } from '../runtime-adapters/session-projection'
 import { i18n } from '@phaneris/shared/i18n'
@@ -1378,6 +1379,13 @@ export class SessionManager implements ISessionManager {
         return messageId ? { id: messageId, role: 'user' } : undefined
       },
     ), managed.workspace.rootPath)
+    const messageDelivery = createMessageDeliveryReconciliationAdapter((targetSessionId, messageId) => {
+      const target = this.sessions.get(targetSessionId)
+      return target ? this.durableRuntime.queries.inputAdmission(target.workspace.rootPath, targetSessionId, messageId) : undefined
+    })
+    for (const toolName of ['mcp__session__send_agent_message', 'send_agent_message']) {
+      this.durableRuntime.evidence.registerReconciliationAdapter(toolName, messageDelivery, managed.workspace.rootPath)
+    }
     this.execution.subscribe(managed.id, { settled: event => this.notifyRuntimeCompletion(event) })
     this.execution.subscribe(managed.id, {
       state: processing => processing ? sessionRuntimeHooks.onSessionStarted() : sessionRuntimeHooks.onSessionStopped(),
@@ -5598,7 +5606,7 @@ initialSources: {
 
           return { resolved: null, available }
         },
-        sendAgentMessageFn: async (sessionId: string, message: string, attachments?: Array<{ path: string; name?: string }>) => {
+        sendAgentMessageFn: async (sessionId: string, message: string, attachments?: Array<{ path: string; name?: string }>, deliveryId?: string) => {
           // Build FileAttachment[] from paths (same pattern as spawn_session)
           let fileAttachments: FileAttachment[] | undefined
           if (attachments?.length) {
@@ -5620,18 +5628,7 @@ initialSources: {
             if (builtAttachments.length > 0) fileAttachments = builtAttachments
           }
 
-          // Capture the target's busy state BEFORE delivery so the sender gets a
-          // truthful ack. A busy (mid-turn) target queues the message and replays
-          // it after the current turn (midStream defaults to 'steer' for all
-          // provider types; a per-connection 'queue' override is honored); an idle
-          // target starts processing immediately. sendMessage throws for an
-          // unknown session — that rejection propagates to the handler's catch.
-          const targetBusy = this.sessions.get(sessionId)?.runtime.isProcessing === true
-          await this.sendMessage(sessionId, message, fileAttachments)
-          return {
-            delivery: targetBusy ? ('queued' as const) : ('delivered' as const),
-            targetBusy,
-          }
+          return this.deliverMessage(sessionId, message, fileAttachments, deliveryId)
         },
         activateSourceInSessionFn: async (sourceSlug: string) => {
           const cb = backend?.onSourceActivationRequest
@@ -6972,6 +6969,19 @@ initialSources: {
     sessionLog.info(`Deleted session ${sessionId}`)
   }
 
+  /** Return after durable input admission; target execution proceeds independently. */
+  async deliverMessage(sessionId: string, message: string, attachments?: FileAttachment[], deliveryId?: string): Promise<{
+    messageId: string; delivery: 'delivered' | 'queued'; targetBusy: boolean
+  }> {
+    const admitted = await this.execution.admission(sessionId, () => this.admitSessionInput(
+      sessionId, message, attachments, undefined, undefined, undefined, undefined, undefined, undefined,
+      deliveryId ? `agent-message:${deliveryId}` : undefined,
+    ))
+    if (admitted?.finished) void admitted.finished.catch(error => sessionLog.error('Delivered session input failed during execution:', error))
+    if (!admitted?.receipt) throw new Error('Session input was not admitted')
+    return admitted.receipt
+  }
+
   async sendMessage(
     sessionId: string, message: string, attachments?: FileAttachment[], storedAttachments?: StoredAttachment[],
     options?: SendMessageOptions, existingMessageId?: string, _isAuthRetry?: boolean,
@@ -7006,7 +7016,8 @@ initialSources: {
      * directly (tests, intra-server flows) to leave the existing pin in place.
      */
     rpcContext?: { callerClientId?: string },
-  ): Promise<{ finished: Promise<void> } | void> {
+    admissionMessageId?: string,
+  ): Promise<{ finished?: Promise<void>; receipt?: { messageId: string; delivery: 'delivered' | 'queued'; targetBusy: boolean } } | void> {
     const managed = this.sessions.get(sessionId)
     if (!managed) {
       throw new Error(`Session ${sessionId} not found`)
@@ -7018,7 +7029,7 @@ initialSources: {
       // thread they can see, so the optimistic bubble must not stay pending. This
       // echo is renderer-only — the parent's transcript stays frozen at the
       // handoff point, because the message now belongs to the successor.
-      return this.sendMessage(
+      return this.execution.admission(successorId, () => this.admitSessionInput(
         successorId,
         message, attachments, storedAttachments, options, undefined, _isAuthRetry,
         (messageId) => {
@@ -7039,7 +7050,8 @@ initialSources: {
           onAck?.(messageId)
         },
         rpcContext,
-      )
+        admissionMessageId,
+      ))
     }
     this.setLastMessageClientId(sessionId, rpcContext?.callerClientId)
 
@@ -7067,10 +7079,39 @@ initialSources: {
     // Ensure messages are loaded before we try to add new ones
     await this.ensureMessagesLoaded(managed)
 
+    if (admissionMessageId) {
+      const previous = this.durableRuntime.queries.inputAdmission(managed.workspace.rootPath, sessionId, admissionMessageId)
+      if (previous) {
+        if (previous.content !== message) throw new Error('Delivery identity was reused with different message content')
+        const original = managed.messages.find(input => input.id === admissionMessageId)
+        if (!original) throw new Error('Admitted delivery requires input recovery before its receipt can be returned')
+        this.persistSession(managed)
+        await this.flushSession(managed.id)
+        const queued = original.isQueued === true
+        const starting = managed.runtime.isProcessing && managed.lastSentMessageIds?.includes(admissionMessageId)
+        if (previous.deliveryObserved || queued || starting) {
+          return { receipt: { messageId: admissionMessageId, delivery: queued ? 'queued' : 'delivered', targetBusy: managed.runtime.isProcessing } }
+        }
+        // A prior flush failed before dispatch. Reuse that input rather than
+        // acknowledge work which was never started or create a duplicate.
+        existingMessageId = admissionMessageId
+      }
+    }
+
     // A real late T2 can restore the durable checkpoint after a stop parked the
     // foreground slot. Refresh from committed facts before consulting its cache.
     // completeRun still refuses any unsettled model request or tool effect.
     this.execution.refreshRecovery(sessionId)
+    if (this.execution.view(sessionId).blocked) {
+      const pending = this.durableRuntime.queries.unsettledTools(managed.workspace.rootPath, undefined, sessionId)
+      for (const tool of pending) {
+        const dispatch = tool.dispatch
+        if (!dispatch || !['mcp__session__send_agent_message', 'send_agent_message'].includes(dispatch.toolName ?? '')) continue
+        try {
+          await this.queryAndReconcileTool(sessionId, dispatch.operationId, { type: 'system', id: 'runtime-message-delivery-recovery' })
+        } catch (error) { sessionLog.info(`Message delivery still requires reconciliation: ${String(error)}`) }
+      }
+    }
     if (this.execution.view(sessionId).blocked) throw new Error('This session requires Runtime reconciliation before accepting another turn')
 
     // Claim only after admission succeeds, so a rejected attempt cannot consume
@@ -7111,8 +7152,8 @@ initialSources: {
       const attemptedSteer = !semanticDelivery && canSteerTextPayload(attachments, storedAttachments, options)
         && shouldAttemptMidStreamSteer(behavior, agent)
       // Create user message for UI
-      const userMessage: Message = {
-        id: generateMessageId(),
+      const userMessage: Message = existingMessageId ? managed.messages.find(input => input.id === existingMessageId)! : {
+        id: admissionMessageId ?? generateMessageId(),
         role: 'user',
         content: message,
         timestamp: this.monotonic(),
@@ -7123,11 +7164,12 @@ initialSources: {
         // transcript bubble (e.g. background-task-completion nudge).
         ...(options?.hidden ? { hidden: true } : {}),
       }
-      managed.messages.push(userMessage)
-
-      this.durableRuntime.commands.recordUserInputAdmission({ workspaceRootPath: managed.workspace.rootPath,
-        sessionId, messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
-        attachments: storedAttachments, options })
+      if (!existingMessageId) {
+        managed.messages.push(userMessage)
+        this.durableRuntime.commands.recordUserInputAdmission({ workspaceRootPath: managed.workspace.rootPath,
+          sessionId, messageId: userMessage.id, content: userMessage.content, createdAt: userMessage.timestamp,
+          attachments: storedAttachments, options })
+      }
 
       // Admit the original input before either delivery path can reach the model.
       let steered = false
@@ -7189,7 +7231,7 @@ initialSources: {
       await this.flushSession(managed.id)
       onAck?.(userMessage.id)
       if (delivery.shouldQueue && !deliveryUnknown && !managed.runtime.isProcessing) void this.processNextQueuedMessage(sessionId)
-      return
+      return { receipt: { messageId: userMessage.id, delivery: delivery.shouldQueue ? 'queued' : 'delivered', targetBusy: true } }
     }
 
     // Add user message with stored attachments for persistence
@@ -7204,7 +7246,7 @@ initialSources: {
     } else {
       // Create new message
       userMessage = {
-        id: generateMessageId(),
+        id: admissionMessageId ?? generateMessageId(),
         role: 'user',
         content: message,
         timestamp: this.monotonic(),
@@ -7301,7 +7343,8 @@ initialSources: {
     }
 
     return { finished: this.runSessionTurn(managed, message, attachments, storedAttachments, options,
-      userMessage, existingMessageId, _isAuthRetry, !!activationRetry) }
+      userMessage, existingMessageId, _isAuthRetry, !!activationRetry),
+      receipt: { messageId: userMessage.id, delivery: 'delivered', targetBusy: false } }
   }
 
   private async runSessionTurn(managed: ManagedSession, message: string, attachments: FileAttachment[] | undefined,

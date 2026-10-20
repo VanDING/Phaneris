@@ -52,6 +52,7 @@ interface Slot {
 interface Commands {
   acceptRun(input: AcceptDurableRunInput): unknown
   completeRun(workspace: string, operationId: string, reason: DurableRunStopReason): DurableRunSettlement
+  recoverInterruptedModel?(workspace: string, operationId: string): boolean
   commitAdditionalUserMessage(input: { workspaceRootPath: string; sessionId: string; turnId: string; operationId: string; messageId: string; content: string; createdAt: number }): unknown
 }
 interface Queries {
@@ -363,6 +364,9 @@ export class RuntimeHost {
     if (s.activeRun && active?.phase === 'checkpoint') {
       const result = this.commands.completeRun(s.scope.workspaceRootPath, s.activeRun, 'interrupted')
       if (result.kind === 'terminal') { s.activeRun = undefined; s.blocked = false; s.settledResult = undefined }
+    } else if (s.activeRun && active?.phase === 'recovery_parked'
+      && this.commands.recoverInterruptedModel?.(s.scope.workspaceRootPath, s.activeRun)) {
+      s.activeRun = undefined; s.blocked = false; s.settledResult = undefined
     } else if (s.activeRun && !active) { s.activeRun = undefined; s.blocked = false; s.settledResult = undefined }
   }
   hasActiveExecutions(workspace?: string): boolean {

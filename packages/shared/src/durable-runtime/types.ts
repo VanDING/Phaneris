@@ -320,6 +320,7 @@ export type ModelReconciliationDecision =
   | 'provider_not_billed'
   | 'billed_response_unavailable'
   | 'manual_abandon'
+  | 'interrupted_response_unavailable'
 
 export interface ModelReconciliationRequest {
   sessionId: string

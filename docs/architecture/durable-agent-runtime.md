@@ -99,6 +99,12 @@ A recovery verdict is itself a semantic event. Recovery must fail closed: `indet
 `reconcile_required`, and `corruption` are never converted into an automatic retry by absence of a
 result alone.
 
+When a stopped foreground run contains only an interrupted model attempt and no unsettled tool
+effects, a subsequent input may commit `interrupted_response_unavailable` under the original model
+identity and terminalize the old run as interrupted. This decision abandons the unavailable response;
+it never replays the provider request, invents a response/usage row, or asserts that billing was zero.
+Unknown provider cost remains visible. An unknown tool effect still requires verified reconciliation.
+
 ## Projection rules
 
 - Model context selects committed, non-partial, model-visible semantic events.
@@ -123,7 +129,8 @@ During the compatibility window:
 - Divergence is logged read-only. The runtime never repairs canonical facts from a cache.
 - Rollback may disable new-run routing, but must preserve `runtime.db`; deleting it is not rollback.
 - A parked operation can leave `recovery_parked` only through a durable reconciliation decision
-  using the same operation identity and verified external evidence.
+  using the same operation identity. Tool effects require verified external evidence; model-only
+  interruption may use the explicit response-abandonment policy above without resolving billing.
 
 ## Required invariants
 

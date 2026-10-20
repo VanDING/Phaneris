@@ -203,6 +203,10 @@ packages/server-core/src/sessions/         Session 产品逻辑与兼容入口
 
 同时保留不同调用方的等待语义：当前 `sendMessage()` 的 Promise 覆盖主执行流程，TaskRunner 等内部调用方会等待它；新的输入 admission 回执不能直接作为这个 Promise 的返回时机。Runtime 提供按 input/run 身份等待结束的接口，兼容 Facade 负责原有等待与 ACK 映射。排队输入可以先取得 input 引用、稍后关联 run；该等待句柄不写入持久化数据。取消命令已接收也不代表 effect 已被撤销或运行已成功收尾。
 
+跨会话 `send_agent_message` 使用独立的 `deliverMessage()` admission 回执：SQLite 输入事实与兼容 JSONL flush 成功后返回，目标整轮执行独立继续。消息以发送工具的 durable operation ID 去重；调用方取消或 Pi 子进程退出后，主进程观察到的成功工具结果仍按原 run/tool 身份补交 T2。仅模型请求中断、且没有未知工具效果的停放运行，可在下一次输入时记录 `interrupted_response_unavailable` 后终结；保留未知计费，不重放旧请求。
+
+发送结果丢失后，Session adapter 可以查询目标 Runtime 中 `agent-message:<toolOperationId>` 的精确接收事实，提交 verified reconciliation。相同正文、相近时间或旧会话缓存都不能替代这一关联；没有精确回执的历史发送仍需核对。
+
 上图表示职责与因果关系；B0 还须记录当前 backend 初始化、acceptRun、辅助决策与 ACK 的具体顺序。结构迁移保持该顺序，不能借新的宿主提前 acceptRun 或提前通知结束而不记录行为变化。
 
 每个 session 的前台交付决策由 Host 串行化，但不能持有串行锁等待整轮 `chat()` 完成，否则 stop、steer 和权限响应会被堵住。只序列化短状态迁移；模型、工具和策略等待在外执行，回到状态机时核对身份与 generation。沿用单 Host/SQLite CAS，不引入分布式 lease。

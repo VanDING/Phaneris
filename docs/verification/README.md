@@ -12,6 +12,8 @@
 
 2026-10-16 数据源激活续接竞态已修复：[根因、修改与验证记录](source-activation-settlement-fix-2026-10-16.md)及[先行失败矩阵](source-activation-settlement-failure-matrix-2026-10-16.md)。12 个真实 Pi/SQLite/数据源端到端场景通过，覆盖迟到结算恢复、未知副作用保护及可见失败。
 
+2026-10-19 Pi 中断与跨会话投递修复：[实现与验证记录](pi-interruption-recovery-implementation.md)及[先行失败矩阵](pi-interruption-recovery-failure-matrix.md)。21 项专项验收通过，覆盖持久化接收回执、迟到 T2、精确回执核对、仅模型中断续用及退出诊断；安装部署和原始原生退出触发因素仍保留为未验证范围。
+
 ## 档案裁剪
 
 2026-10-13 对所有 `results/` 归档做了一次体积裁剪：删除 trace.zip、录屏（webm）、截图（png）、运行数据库（db/sqlite）与 gz，并删除依赖这些图片的 5 个 HTML 画廊。`docs/assets/**` 是根 README 的主视觉素材，不在此列。裁剪后 `docs/` 由约 297 MB 降到约 73 MB。

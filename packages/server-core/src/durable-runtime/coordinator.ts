@@ -238,6 +238,23 @@ export class DurableRuntimeCoordinator {
     this.reconciliationAdapters.set(workspaceRootPath ? `${resolve(workspaceRootPath)}:${toolName}` : toolName, adapter)
   }
 
+  /** A new input may abandon a stopped model attempt, never an unknown tool effect. */
+  recoverInterruptedModel(workspaceRootPath: string, operationId: string): boolean {
+    const store = this.storeFor(workspaceRootPath)
+    const state = store.getOperation(operationId)
+    const current = (state?.data as { currentModel?: { operationId?: string } } | undefined)?.currentModel
+    if (!state || state.kind !== 'agent_turn' || state.phase !== 'recovery_parked' || !current?.operationId
+      || store.listUnsettledToolOperations(operationId).length > 0) return false
+    this.reconcileModel(workspaceRootPath, {
+      sessionId: state.sessionId, modelOperationId: current.operationId,
+      decision: 'interrupted_response_unavailable',
+      reason: 'The stopped model attempt has no available response and no unsettled tool effects; a new input may proceed without replaying it. Provider billing remains unknown.',
+      actor: { type: 'system', id: 'runtime-input-recovery' },
+      evidence: [{ source: 'other', observedAt: Date.now(), summary: 'Runtime foreground has stopped; the ledger has no unsettled tool operations for this run.' }],
+    })
+    return this.completeRun(workspaceRootPath, operationId, 'interrupted').kind === 'terminal'
+  }
+
   reconcileModel(
     workspaceRootPath: string,
     request: ModelReconciliationRequest,
@@ -596,6 +613,13 @@ export class DurableRuntimeCoordinator {
       payload: { messageId: input.messageId, content: input.content,
         attachments: input.attachments ?? [], options: input.options ?? {}, deliveryTrackingVersion: 1 }, createdAt: input.createdAt,
     }])[0]!
+  }
+
+  getInputAdmission(workspaceRootPath: string, sessionId: string, messageId: string): { messageId: string; content: string; deliveryObserved: boolean } | undefined {
+    const store = this.storeFor(workspaceRootPath)
+    const event = store.getEvent(`input:${messageId}:admitted`)
+    if (event?.type !== 'user_input_admitted' || event.sessionId !== sessionId) return undefined
+    return { ...(event.payload as { messageId: string; content: string }), deliveryObserved: store.hasInputDelivery(sessionId, messageId) }
   }
 
   /** Additional original inputs in a merged/steered turn share its exclusion boundary. */

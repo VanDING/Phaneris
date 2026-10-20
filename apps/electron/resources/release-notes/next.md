@@ -19,6 +19,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
+- **Pi interruption recovery** — Return cross-session delivery receipts after the message is durably accepted, without waiting for the receiving agent to finish. Preserve known tool results after cancellation, allow a new turn after a model-only interruption while retaining unknown billing, and save credential-redacted diagnostics for unexpected Pi exits.
 - **Model and workspace settings** — Saving a provider connection no longer reverts a model field you did not edit: the default model, the utility model and the stored model list are each kept or updated on their own, and switching provider never carries the previous provider's models along. Workspace chat starters are cleared the moment you switch workspaces, so a slow response for the workspace you left can no longer appear over the one you are in.
 - **Workspace and source lifecycle** — Keep Pages, projects and automations on the current workspace when older requests finish late. Share concurrent Page initialization and MCP connections, close connections that are still starting during disconnect, and reuse the first MCP tool catalog response during connection setup.
 - **Source activation** — Wait for the current request to settle before automatically continuing with newly activated tools. Recover from late settlement without restarting the app, and show an error if automatic continuation fails.

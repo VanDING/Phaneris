@@ -41,11 +41,11 @@ export async function handleSendAgentMessage(
       args.message,
     ].join('\n');
 
-    const result = await ctx.sendAgentMessage(args.sessionId, wrappedMessage, args.attachments);
+    const result = await ctx.sendAgentMessage(args.sessionId, wrappedMessage, args.attachments, ctx.toolExecutionId);
 
-    // Report the real delivery status instead of an unconditional "sent". A busy
-    // target queues the message behind its current turn; an idle target starts
-    // now. This is what lets the sender avoid guessing (e.g. never invent "the
+    // Report the admission status. A target may queue behind its current turn
+    // or accept a steer; an idle target starts independently. This lets the
+    // sender avoid guessing (e.g. never invent "the
     // app restarted") — for actual task status, call list_background_tasks.
     if (result.delivery === 'queued') {
       return successResponse(

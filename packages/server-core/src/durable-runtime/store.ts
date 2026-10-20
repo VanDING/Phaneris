@@ -567,6 +567,13 @@ export class DurableRuntimeStore {
     return row ? this.decodeEvent(row) : undefined
   }
 
+  hasInputDelivery(sessionId: string, messageId: string): boolean {
+    return !!this.db.prepare(`SELECT 1 FROM runtime_events WHERE session_id = ? AND (
+      (event_type = 'user_message_committed' AND json_extract(payload_json, '$.messageId') = ?)
+      OR (event_type = 'sdk_observation' AND json_extract(payload_json, '$.event') = 'input_delivery_attempted'
+        AND json_extract(payload_json, '$.data.inputId') = ?)) LIMIT 1`).get(sessionId, messageId, messageId)
+  }
+
   getLatestEventSeq(sessionId?: string): number {
     const row = this.db.prepare(`SELECT MAX(seq) AS seq FROM runtime_events ${sessionId ? 'WHERE session_id = ?' : ''}`).get(...(sessionId ? [sessionId] : [])) as { seq: number | null }
     return row.seq ?? 0
