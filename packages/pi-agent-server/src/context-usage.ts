@@ -10,7 +10,7 @@
 import type { AgentSession } from '@earendil-works/pi-coding-agent';
 import type { PiContextUsagePayload } from '@phaneris/shared/agent/backend/pi/protocol';
 
-type ContextSession = Pick<AgentSession, 'getContextUsage' | 'settingsManager'>;
+type ContextSession = Pick<AgentSession, 'getContextUsage' | 'settingsManager' | 'model'>;
 
 /** Capture SDK-owned values synchronously at a boundary, never billable lastUsage. */
 export function readContextUsage(session: ContextSession): PiContextUsagePayload {
@@ -21,7 +21,11 @@ export function readContextUsage(session: ContextSession): PiContextUsagePayload
     contextUsage = session.getContextUsage();
   } catch { /* fail soft: no invented count */ }
   try {
-    const { enabled, reserveTokens } = session.settingsManager.getCompactionSettings();
+    // Resolve through the session's *current* model: the SDK checks
+    // `compaction.modelOverrides["<provider>/<id>"]` before the ordinary
+    // setting, so reading without the model reported the wrong reserve after a
+    // model switch and the context bar kept the previous model's numbers.
+    const { enabled, reserveTokens } = session.settingsManager.getCompactionSettings(session.model);
     compactionSettings = { enabled, reserveTokens };
   } catch { /* fail soft: no guessed SDK reserve */ }
   return {

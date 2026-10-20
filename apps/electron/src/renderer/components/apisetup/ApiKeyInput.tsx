@@ -114,7 +114,10 @@ const ANTHROPIC_PRESETS: Preset[] = [
   { key: 'huggingface', label: 'Hugging Face', url: 'https://router.huggingface.co/v1', placeholder: 'hf_...' },
   { key: 'minimax', label: 'Minimax Global', url: 'https://api.minimax.io/anthropic', placeholder: 'Paste your key here...' },
   { key: 'minimax-cn', label: 'Minimax CN', url: 'https://api.minimaxi.com/anthropic', placeholder: 'Paste your key here...' },
-  { key: 'kimi-coding', label: 'Kimi (Coding)', url: 'https://api.kimi.com/coding', placeholder: 'sk-kimi-...' },
+  // Kimi Coding's native provider speaks Chat Completions at /coding/v1 (the Pi
+  // SDK catalog owns that URL); the preset must show the same endpoint the SDK
+  // will actually call.
+  { key: 'kimi-coding', label: 'Kimi (Coding)', url: 'https://api.kimi.com/coding/v1', placeholder: 'sk-kimi-...' },
   { key: 'vercel-ai-gateway', label: 'Vercel AI Gateway', url: 'https://ai-gateway.vercel.sh', placeholder: 'Paste your key here...' },
   { key: 'nvidia', label: 'NVIDIA NIM', url: 'https://integrate.api.nvidia.com/v1', placeholder: 'nvapi-...' },
   { key: 'together', label: 'Together AI', url: 'https://api.together.xyz/v1', placeholder: 'Paste your key here...' },
@@ -125,8 +128,12 @@ const ANTHROPIC_PRESETS: Preset[] = [
   { key: 'cloudflare-ai-gateway', label: 'Cloudflare AI Gateway', url: 'https://gateway.ai.cloudflare.com/v1', placeholder: 'Paste your key here...' },
   { key: 'ant-ling', label: 'Ant Ling', url: '', placeholder: 'Paste your key here...' },
   { key: 'zai-coding-cn', label: 'z.ai Coding CN', url: 'https://api.z.ai/cn/api/coding/paas/v4', placeholder: 'Paste your key here...' },
-  { key: 'opencode', label: 'OpenCode', url: 'https://opencode.ai/zen/v1', placeholder: 'sk-...' },
-  { key: 'opencode-go', label: 'OpenCode Zen Go', url: 'https://opencode.ai/zen/go/v1', placeholder: 'sk-...' },
+  // OpenCode's catalog serves each protocol family from its own base URL
+  // (anthropic-messages, google-generative-ai, openai-completions,
+  // openai-responses), so a single preset URL cannot describe it. The Pi SDK
+  // catalog owns the endpoint and the protocol per model.
+  { key: 'opencode', label: 'OpenCode', url: '', placeholder: 'sk-...' },
+  { key: 'opencode-go', label: 'OpenCode Zen Go', url: '', placeholder: 'sk-...' },
   { key: 'xiaomi', label: 'Xiaomi LLM', url: '', placeholder: 'Paste your key here...' },
   { key: 'manifest', label: 'Manifest', url: 'https://app.manifest.build/v1', placeholder: 'mnfst_...' },
   { key: 'custom', label: 'Custom', url: '', placeholder: 'Paste your key here...' },
@@ -137,7 +144,7 @@ const ANTHROPIC_PRESETS: Preset[] = [
  * OpenAI-compatible protocol. They behave like 'custom' on submit (customEndpoint
  * gets pinned to openai-completions) but stay branded in the dropdown.
  */
-const OPENAI_COMPAT_CUSTOM_URL_PRESETS: ReadonlySet<string> = new Set(['manifest', 'opencode', 'opencode-go'])
+const OPENAI_COMPAT_CUSTOM_URL_PRESETS: ReadonlySet<string> = new Set(['manifest'])
 
 // OpenAI provider presets - for Codex backend
 // Only direct OpenAI is supported; 3PP providers (OpenRouter, Vercel, Ollama) should be
@@ -244,6 +251,14 @@ export function ApiKeyInput({
   const [tierDropdownPosition, setTierDropdownPosition] = useState<{ top: number; left: number; width: number } | null>(null)
   const tierFilterInputRef = useRef<HTMLInputElement>(null)
   const hydratedTierProviderRef = useRef<string | null>(null)
+  // What the form was hydrated with, and which provider it belongs to: a submit
+  // may only keep the stored catalog when the user is still on that provider.
+  const hydratedRef = useRef<{ provider: string | null; defaultModel: string }>({ provider: null, defaultModel: '' })
+  // Per-field edit intent. One "default model unchanged" boolean used to decide
+  // the fate of every field, so editing only the utility model silently reverted
+  // it and switching providers could resubmit the previous provider's list.
+  const defaultEditedRef = useRef(false)
+  const utilityEditedRef = useRef(false)
 
   const isDisabled = disabled || status === 'validating'
 
@@ -277,9 +292,13 @@ export function ApiKeyInput({
         const savedDefault = provider === initialPreset
           ? initialValues?.connectionDefaultModel ?? initialValues?.models?.[0]
           : undefined
-        setSelectedDefaultModel(resolveDefaultCatalogModel(result.models, savedDefault))
+        const hydratedDefault = resolveDefaultCatalogModel(result.models, savedDefault)
+        setSelectedDefaultModel(hydratedDefault)
         const savedUtility = provider === initialPreset ? initialValues?.utilityModel : undefined
         setSelectedUtilityModel(savedUtility && result.models.some(model => model.id === savedUtility) ? savedUtility : '')
+        hydratedRef.current = { provider, defaultModel: hydratedDefault }
+        defaultEditedRef.current = false
+        utilityEditedRef.current = false
         hydratedTierProviderRef.current = provider
       }
     } catch (err) {
@@ -354,13 +373,31 @@ export function ApiKeyInput({
         setModelError('Please select a default model.')
         return
       }
+      // The catalog is a snapshot, not an authority, and each field is judged on
+      // its own edit intent: a field the user did not touch keeps the stored
+      // value, a field they did touch submits what they chose (including an
+      // explicit "Automatic" clear for the utility model). Switching providers
+      // invalidates the stored values entirely — they belong to the provider the
+      // form was hydrated FROM (`initialPreset`), not to whichever provider's
+      // catalog happened to load last (hydration moves that pointer).
+      const storedProvider = initialValues?.activePreset
+      const sameProvider = Boolean(initialValues) && activePreset === storedProvider
+      const keepDefault = sameProvider && !defaultEditedRef.current
+      const keepUtility = sameProvider && !utilityEditedRef.current
+      const keepModels = sameProvider && !defaultEditedRef.current && Boolean(initialValues?.models?.length)
       onSubmit({
         apiKey: apiKey.trim(),
         baseUrl: baseUrl.trim() || undefined,
         brandId: activePreset,
-        connectionDefaultModel: selectedDefaultModel,
-        utilityModel: selectedUtilityModel || null,
-        models: piModels.map(model => model.id),
+        connectionDefaultModel: keepDefault
+          ? (initialValues?.connectionDefaultModel ?? selectedDefaultModel)
+          : selectedDefaultModel,
+        utilityModel: keepUtility
+          ? (initialValues?.utilityModel ?? null)
+          : (selectedUtilityModel || null),
+        models: keepModels
+          ? initialValues!.models!
+          : piModels.map(model => model.id),
         piAuthProvider: effectivePiAuthProvider,
         modelSelectionMode: 'automaticallySyncedFromProvider',
       })
@@ -709,7 +746,7 @@ export function ApiKeyInput({
                     )}
                   >
                     <span className="truncate text-foreground">
-                      {piModels.find(m => m.id === selectedDefaultModel)?.name ?? 'Select model...'}
+                      {piModels.find(m => m.id === selectedDefaultModel)?.name ?? (selectedDefaultModel || 'Select model...')}
                     </span>
                     <ChevronDown className="size-3 opacity-50 shrink-0" />
                   </button>
@@ -782,6 +819,7 @@ export function ApiKeyInput({
                             value="automatic"
                             onSelect={() => {
                               setSelectedUtilityModel('')
+                              utilityEditedRef.current = true
                               setOpenTier(null)
                               setTierFilter('')
                             }}
@@ -798,8 +836,13 @@ export function ApiKeyInput({
                               key={model.id}
                               value={model.id}
                               onSelect={() => {
-                                if (openTier === 'utility') setSelectedUtilityModel(model.id)
-                                else setSelectedDefaultModel(model.id)
+                                if (openTier === 'utility') {
+                                  setSelectedUtilityModel(model.id)
+                                  utilityEditedRef.current = true
+                                } else {
+                                  setSelectedDefaultModel(model.id)
+                                  defaultEditedRef.current = true
+                                }
                                 setOpenTier(null)
                                 setTierFilter('')
                               }}

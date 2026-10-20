@@ -1,0 +1,22 @@
+diff --git a/index.js b/index.js
+index 56c2602..f7a3368 100644
+--- a/index.js
++++ b/index.js
+@@ -395,6 +395,17 @@ module.exports = class CachePolicy {
+     evaluateRequest(req) {
+         this._assertRequestHasHeaders(req);
+ 
++        // Phaneris hardening beyond upstream 4.3.0: a policy that is not
++        // storable at all (private / no-store / no-cache / Set-Cookie /
++        // Authorization-only, or rehydrated from a persisted object) reports
++        // maxAge() === 0. Without this guard "max-stale" and
++        // "stale-while-revalidate" on the incoming request would still revive
++        // it, which is exactly the cross-user disclosure class this guard
++        // blocks. Positive-lifetime public responses keep normal behavior.
++        if (this.maxAge() <= 0) {
++            return this._evaluateRequestMissResult(req);
++        }
++
+         // In all circumstances, a cache MUST NOT ignore the must-revalidate directive
+         if (this._rescc['must-revalidate']) {
+             return this._evaluateRequestMissResult(req);

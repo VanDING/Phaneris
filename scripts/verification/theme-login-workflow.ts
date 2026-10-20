@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { createServer } from 'vite'
 import { verificationWorkflow } from './verification-artifacts'
-import { launchWorkflowBrowser } from './workflow-browser'
+import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
 await verificationWorkflow('theme-login', async run => {
   const root = resolve(import.meta.dir, '../..'), source = 'apps/webui/src/login.html'
   run.json('source-hashes.json', { [source]: createHash('sha256').update(readFileSync(join(root, source))).digest('hex') })
@@ -22,7 +22,7 @@ await verificationWorkflow('theme-login', async run => {
   try {
     for (const mode of ['light', 'dark'] as const) {
       await page.emulateMedia({ colorScheme: mode })
-      await page.goto(`${base}/apps/webui/src/login.html`, { waitUntil: 'networkidle', timeout: 120_000 })
+      await gotoWithRetry(page, `${base}/apps/webui/src/login.html`)
       await check(`TC14-login-${mode}`, async () => {
         assert.equal(await page.evaluate(() => document.documentElement.dataset.themeHostPolicy), 'unauth-default-system')
         assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), mode === 'dark')

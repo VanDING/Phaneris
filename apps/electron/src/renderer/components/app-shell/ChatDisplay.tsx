@@ -63,6 +63,8 @@ import {
 } from "@phaneris/ui"
 import { MemoizedAuthRequestCard } from "@/components/chat/AuthRequestCard"
 import { NewSessionLanding } from "@/components/chat/NewSessionLanding"
+import { ChatStarters } from "@/components/chat/ChatStarters"
+import { resolveChatStarterAction } from "@/lib/chat-starter-action"
 import { ChatInputZone } from "./input/ChatInputZone"
 import type { StructuredInputState, StructuredResponse, PermissionResponse, AdminApprovalResponse, QuestionResponse } from "./input"
 import type { RichTextInputHandle } from "@/components/ui/rich-text-input"
@@ -188,11 +190,14 @@ interface ChatDisplayProps {
   // Source selection
   /** Available sources (enabled only) */
   sources?: LoadedSource[]
-  /** Callback when source selection changes */
-  onSourcesChange?: (slugs: string[]) => void
+  /** Callback when source selection changes. Awaitable so a caller can wait for
+   * the server to apply the selection before acting on it (chat starters). */
+  onSourcesChange?: (slugs: string[]) => void | Promise<void>
   // Skill selection (for @mentions)
   /** Available skills for @mention autocomplete */
   skills?: LoadedSkill[]
+  /** Workspace-level prompt chips shown on the new-chat screen (max 3) */
+  chatStarters?: Array<{ label: string; prompt: string }>
   // Plugin bundles (for the `/` menu roster)
   /** Installed plugin bundles for this workspace */
   plugins?: import('../../../shared/types').PluginSummary[]
@@ -477,6 +482,8 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
   onSourcesChange,
   // Skills (for @mentions)
   skills,
+  // Workspace prompt chips on the new-chat screen
+  chatStarters,
   // Plugins (for the `/` menu roster)
   plugins,
   activePlugin,
@@ -1537,6 +1544,96 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
     && !messagesLoadError
     && session.messages.length === 0
 
+  /**
+   * A starter behaves exactly like the same text typed into the composer: its
+   * `[source:slug]` / `[skill:slug]` mentions are resolved against what this
+   * workspace actually has, mentioned sources are enabled through the same
+   * callback the @-mention flow uses, and mentioned skills ride along on the send
+   * so the server can pre-enable their required sources. Unknown mentions are
+   * ignored by `parseMentions`, so a stale starter cannot enable a deleted source.
+   */
+  // Deliberately not a useCallback: the send path (handleSubmit) closes over a
+  // dozen live values and is not memoized, so memoizing this wrapper would only
+  // add a dependency warning without stabilising anything.
+  //
+  // A starter click is an enable-then-send transaction, so it needs the state of
+  // the moment it finishes, not of the moment it started: the refs below are
+  // updated on every render and decide whether the click is still valid.
+  const liveSessionRef = React.useRef(session)
+  liveSessionRef.current = session
+  const liveWorkspaceRef = React.useRef(workspaceId)
+  liveWorkspaceRef.current = workspaceId
+  const liveSendableRef = React.useRef(false)
+  liveSendableRef.current = !(isInputDisabled || disableSend || connectionUnavailable)
+  const mountedRef = React.useRef(true)
+  React.useEffect(() => () => { mountedRef.current = false }, [])
+  /** One enable-then-send at a time: a double click must not send twice. */
+  const starterRunRef = React.useRef<string | null>(null)
+
+  const handleRunChatStarter = async (starter: { label: string; prompt: string }) => {
+    if (!session) return
+    if (isInputDisabled || disableSend || connectionUnavailable) {
+      toast.error(t('toast.cannotSendRightNow'), {
+        description: 'Sending is currently disabled for this session.',
+      })
+      return
+    }
+    if (starterRunRef.current !== null) return
+    const runSessionId = session.id
+    const runWorkspaceId = workspaceId ?? session.workspaceId
+    const action = resolveChatStarterAction({
+      prompt: starter.prompt,
+      availableSources: (sources ?? []).map(source => source.config.slug),
+      availableSkills: (skills ?? []).map(skill => skill.slug),
+      enabledSources: session.enabledSourceSlugs ?? [],
+    })
+    starterRunRef.current = runSessionId
+    try {
+      if (action.enableSources.length > 0 && onSourcesChange) {
+        // Wait for the server to apply the selection: a starter enables its source
+        // and sends in the same click, and the send path reads the session's
+        // enabled sources when the turn starts. Awaited, the empty-list case is a
+        // no-op round trip and the mentioned case is ordered by construction.
+        try {
+          await onSourcesChange([...(session.enabledSourceSlugs ?? []), ...action.enableSources])
+        } catch (error) {
+          // The message must not go out when the source it depends on was not
+          // enabled: report it and stop, rather than sending a prompt whose
+          // context is missing.
+          toast.error(t('toast.failedToEnableSource'), {
+            description: t('toast.failedToEnableSourceDescription', { error: error instanceof Error ? error.message : String(error) }),
+          })
+          return
+        }
+        // The click is only still valid for the session, workspace and sendable
+        // state it started with.
+        if (!mountedRef.current) return
+        if (liveSessionRef.current?.id !== runSessionId) return
+        if ((liveWorkspaceRef.current ?? liveSessionRef.current?.workspaceId) !== runWorkspaceId) return
+        if (!liveSendableRef.current) return
+      }
+      handleSubmit(action.prompt, undefined, action.skillSlugs.length > 0 ? action.skillSlugs : undefined)
+    } finally {
+      starterRunRef.current = null
+    }
+  }
+
+  /**
+   * The composer's source toggles are fire-and-forget; now that the shell no
+   * longer swallows the command's rejection, report it instead of letting it
+   * surface as an unhandled rejection.
+   */
+  const handleComposerSourcesChange = React.useCallback((slugs: string[]) => {
+    const pending = onSourcesChange?.(slugs)
+    if (pending && typeof (pending as Promise<void>).then === 'function') {
+      void (pending as Promise<void>).catch(error => {
+        toast.error(t('toast.failedToEnableSource'), {
+          description: t('toast.failedToEnableSourceDescription', { error: error instanceof Error ? error.message : String(error) }),
+        })
+      })
+    }
+  }, [onSourcesChange, t])
+
   return (
     <div ref={zoneRef} className="flex h-full flex-col min-w-0" data-focus-zone="chat">
       {session ? (
@@ -2011,6 +2108,15 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
           </div>
 
           {/* === INPUT CONTAINER: FreeForm or Structured Input === */}
+          {/* Workspace prompt chips: only while the session is still empty, since a
+              starter sends one message and then stops being relevant. */}
+          {showNewSessionLanding && (chatStarters?.length ?? 0) > 0 && (
+            <ChatStarters
+              starters={chatStarters ?? []}
+              disabled={isInputDisabled || disableSend || connectionUnavailable}
+              onSelect={handleRunChatStarter}
+            />
+          )}
           <ChatInputZone
             compactMode={compactMode}
             permissionMode={permissionMode}
@@ -2051,7 +2157,7 @@ export const ChatDisplay = React.forwardRef<ChatDisplayHandle, ChatDisplayProps>
               onAttachmentsChange,
               sources,
               enabledSourceSlugs: session.enabledSourceSlugs,
-              onSourcesChange,
+              onSourcesChange: handleComposerSourcesChange,
               skills,
               plugins,
               activePlugin,

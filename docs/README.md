@@ -22,6 +22,14 @@ Documents are filed by **kind and lifecycle**. The [implementation value registe
 
 本轮维护：[2026-10-16 全量依赖升级评估](dependencies/dependency-audit-2026-10-16.md)；[CI 修复失败矩阵](verification/ci-repair-failure-matrix-2026-10-16.md)；[CI 修复验证记录](verification/ci-repair-2026-10-16.md)。
 
+升级规划：[2026-10-18 上游 0.15.3 与依赖升级执行规划](dependencies/upgrade-plan-2026-10-18.md) — Codex 已完成评估与目标冻结，交 DSH 执行；实施状态以独立验收记录为准。
+
+升级执行：[失败矩阵](verification/upgrade-2026-10-18-failure-matrix.md)与[实施记录](verification/upgrade-2026-10-18-implementation.md)（DSH，2026-10-18；机器结果 [upgrade-2026-10-18.json](verification/results/upgrade-2026-10-18.json)）— 明确列出已完成、技术阻断与未验证项，diff 保留待复核。
+
+升级复核：[2026-10-19 首轮复核](verification/upgrade-2026-10-19-review.md) — 尚未验收通过；已确认 HEIC 与自定义模型兼容问题，记录四项偏离裁定和 DSH 续做要求。
+
+升级续审：[2026-10-19 第二轮复核](verification/upgrade-2026-10-19-review-2.md) — 尚未验收通过；复现 HEIC 打包解析与 Chat Starters 失败路径，要求修正模型保存、验收计数并定位 critical 挂起。
+
 | Document | Status | Purpose |
 | --- | --- | --- |
 | [Project README](../README.md) / [中文](../README.zh-CN.md) | Current | Product introduction, capabilities, screenshots, setup, and positioning. |

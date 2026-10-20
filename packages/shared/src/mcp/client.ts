@@ -164,7 +164,13 @@ export class CraftMcpClient {
         try {
           if (this.client.getServerCapabilities()?.tools) this.initialTools = (await this.client.listTools()).tools;
         } catch (error) {
-          throw new Error(`MCP connection failed health check: ${error instanceof Error ? error.message : String(error)}`);
+          // Keep the transport's HTTP status on the wrapped error: a 401 during
+          // the health check must still classify as "needs auth" even when the
+          // response body carries no recognizable text.
+          const status = (error as { code?: unknown } | null)?.code;
+          const wrapped = new Error(`MCP connection failed health check: ${error instanceof Error ? error.message : String(error)}`);
+          if (typeof status === 'number') (wrapped as { code?: number }).code = status;
+          throw wrapped;
         }
         if (generation !== this.generation) throw new Error('MCP connection cancelled');
         this.connected = true;

@@ -124,13 +124,38 @@ export interface McpValidationConfig {
 }
 
 /**
+ * HTTP status carried by the MCP transport's own error, when it has one.
+ *
+ * The Streamable HTTP client reports `Streamable HTTP error: Error POSTing to
+ * endpoint: <body>` and keeps the status only on its error object, so a 401 with
+ * an empty or JSON body never mentions "401" in the text. The status is the
+ * trusted signal; the message stays as a fallback for transports that do not
+ * carry one.
+ */
+function transportHttpStatus(err: unknown): number | undefined {
+  if (!err || typeof err !== 'object') return undefined;
+  const candidate = (err as { code?: unknown; status?: unknown; statusCode?: unknown });
+  for (const value of [candidate.status, candidate.statusCode, candidate.code]) {
+    if (typeof value === 'number' && Number.isInteger(value) && value >= 100 && value <= 599) return value;
+    if (typeof value === 'string' && /^\d{3}$/.test(value)) return Number(value);
+  }
+  return undefined;
+}
+
+/**
  * Map a low-level connection error to a user-actionable result.
  * Heuristic — keep simple, the underlying message is preserved as the source of truth.
  */
 function classifyConnectionError(err: unknown): McpValidationResult {
   const message = err instanceof Error ? err.message : String(err);
   let errorType: McpValidationResult['errorType'] = 'failed';
-  if (/\b401\b|\b403\b|unauthorized|forbidden|authentication/i.test(message)) {
+  // Only the two authentication statuses mean "sign in": every other transport
+  // failure (500, network reset, timeout, abort) stays a plain failure, so an
+  // outage is never presented as a missing credential.
+  const status = transportHttpStatus(err);
+  if (status === 401 || status === 403) {
+    errorType = 'needs-auth';
+  } else if (/\b401\b|\b403\b|unauthorized|forbidden|authentication/i.test(message)) {
     errorType = 'needs-auth';
   }
   return {

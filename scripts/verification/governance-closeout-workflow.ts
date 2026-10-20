@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 /** F01-F05: execute real gates against CI/registry copies and actual ESLint configurations. */
 import assert from 'node:assert/strict'
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { ESLint } from 'eslint'
 import { criticalTestGroups, criticalWorkflows } from '../critical-scenarios'
@@ -11,11 +11,17 @@ import { verificationWorkflow } from './verification-artifacts'
 await verificationWorkflow('governance-closeout', async run => {
   const root = resolve(import.meta.dir, '../..')
   const records: { id: string; passed: boolean; detail?: string }[] = []
-  async function command(id: string, entry: string, args: string[], expected = 1) {
-    const child = Bun.spawn([process.execPath, entry, ...args], { cwd: root, stdout: 'pipe', stderr: 'pipe' })
-    const [stdout, stderr, code] = await Promise.all([new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited])
-    writeFileSync(join(run.directory, `${id}.log`), stdout + stderr)
-    records.push({ id, passed: code === expected, detail: `exit=${code}; expected=${expected}` })
+  async function command(id: string, entry: string, args: string[], expected = 1, attempts = 1) {
+    let last: { stdout: string; stderr: string; code: number | null } = { stdout: '', stderr: '', code: null }
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      const child = Bun.spawn([process.execPath, entry, ...args], { cwd: root, stdout: 'pipe', stderr: 'pipe' })
+      const [stdout, stderr, code] = await Promise.all([new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited])
+      last = { stdout, stderr, code }
+      if (code === expected) break
+    }
+    writeFileSync(join(run.directory, `${id}.log`), last.stdout + last.stderr)
+    records.push({ id, passed: last.code === expected, detail: `exit=${last.code}; expected=${expected}${attempts > 1 ? `; attempts=${attempts}` : ''}` })
+    return last
   }
   const workflow = readFileSync(join(root, '.github/workflows/validate.yml'), 'utf8')
   for (const [id, text] of [
@@ -65,11 +71,22 @@ await verificationWorkflow('governance-closeout', async run => {
     copyFileSync(join(root, file), join(clean, file))
   }
   await command('cold-runtime-missing-stamp', 'scripts/check-python-runtime-pin.ts', [`--repository=${clean}`])
-  await command('cold-runtime-provision', 'scripts/provision-validation-runtime.ts', [`--repository=${clean}`], 0)
-  await command('cold-runtime-pinned', 'scripts/check-python-runtime-pin.ts', [`--repository=${clean}`], 0)
+  // The provision step downloads the pinned uv from GitHub, so a transient
+  // network failure is retried — but never waived: the record still fails if the
+  // binary never appears, and the failure text is kept for the parent summary.
+  await command('cold-runtime-provision', 'scripts/provision-validation-runtime.ts', [`--repository=${clean}`], 0, 2)
   const binary = join(clean, 'apps/electron/resources/bin', `${process.platform}-${process.arch}`, process.platform === 'win32' ? 'uv.exe' : 'uv')
-  const version = Bun.spawnSync([binary, '--version'], { stdout: 'pipe', stderr: 'pipe' })
-  records.push({ id: 'cold-runtime-executable-version', passed: version.exitCode === 0 && version.stdout.toString().trim().split(/\s+/).slice(0, 2).join(' ') === `uv ${UV_VERSION}`, detail: version.stdout.toString().trim() })
+  if (!existsSync(binary)) {
+    // Report the provisioning failure instead of crashing on a missing file: the
+    // gate must stay red with a readable reason, not with an ENOENT stack.
+    const provisionLog = readFileSync(join(run.directory, 'cold-runtime-provision.log'), 'utf8')
+    records.push({ id: 'cold-runtime-pinned', passed: false, detail: 'not run: the clean tree has no uv binary' })
+    records.push({ id: 'cold-runtime-executable-version', passed: false, detail: `not run: provisioning produced no binary; tail=${provisionLog.trim().split('\n').slice(-2).join(' | ')}` })
+  } else {
+    await command('cold-runtime-pinned', 'scripts/check-python-runtime-pin.ts', [`--repository=${clean}`], 0)
+    const version = Bun.spawnSync([binary, '--version'], { stdout: 'pipe', stderr: 'pipe' })
+    records.push({ id: 'cold-runtime-executable-version', passed: version.exitCode === 0 && version.stdout.toString().trim().split(/\s+/).slice(0, 2).join(' ') === `uv ${UV_VERSION}`, detail: version.stdout.toString().trim() })
+  }
   run.json('governance-closeout.json', { records })
   assert.deepEqual(records.filter(record => !record.passed), [], 'Closeout gates failed; see governance-closeout.json')
   run.complete(records.map(record => record.id), ['GitHub Actions remote execution'])

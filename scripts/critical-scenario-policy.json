@@ -458,6 +458,195 @@
       "required": [
         "identity-gate.json"
       ]
+    },
+    {
+      "id": "upgrade-0153-fixtures",
+      "entry": "scripts/verification/upgrade-0153-fixtures.ts",
+      "minimum": 0,
+      "required": []
+    },
+    {
+      "id": "upgrade-0153-heic",
+      "entry": "scripts/verification/upgrade-0153-heic-workflow.ts",
+      "minimum": 5,
+      "required": [
+        "heic.json",
+        "transcode.json",
+        "python-tool.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-heic-store",
+      "entry": "scripts/verification/upgrade-0153-heic-store-workflow.ts",
+      "minimum": 6,
+      "required": [
+        "heic-store.json",
+        "store-heic.json",
+        "variants.json",
+        "hygiene.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-chat-starters",
+      "entry": "scripts/verification/upgrade-0153-chat-starters-workflow.ts",
+      "minimum": 4,
+      "required": [
+        "chat-starters.json",
+        "settings-read.json",
+        "summary.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-endpoints",
+      "entry": "scripts/verification/upgrade-0153-endpoints-workflow.ts",
+      "minimum": 3,
+      "required": [
+        "endpoints.json",
+        "summary.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-b1",
+      "entry": "scripts/verification/upgrade-0153-b1-workflow.ts",
+      "minimum": 5,
+      "required": [
+        "endpoints.json",
+        "pi-session.json",
+        "b1.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-pi-runtime",
+      "entry": "scripts/verification/upgrade-0153-pi-runtime-workflow.ts",
+      "minimum": 7,
+      "required": [
+        "pi-model-switch.json",
+        "pi-malformed-tools.json",
+        "pi-abort.json",
+        "pi-retry.json",
+        "pi-output-caps.json",
+        "summary.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-mcp",
+      "entry": "scripts/verification/upgrade-0153-mcp-workflow.ts",
+      "minimum": 3,
+      "required": [
+        "mcp-stdio.json",
+        "mcp-http.json",
+        "mcp-oauth.json",
+        "summary.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-usage-ledger",
+      "entry": "scripts/verification/upgrade-0153-usage-ledger-workflow.ts",
+      "minimum": 4,
+      "required": [
+        "usage-success.json",
+        "usage-retry.json",
+        "usage-replay.json",
+        "summary.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-pdf-fixtures",
+      "entry": "scripts/verification/upgrade-0153-pdf-fixtures.ts",
+      "minimum": 0,
+      "required": []
+    },
+    {
+      "id": "upgrade-0153-pdf",
+      "entry": "scripts/verification/upgrade-0153-pdf-workflow.ts",
+      "minimum": 5,
+      "required": [
+        "normal.json",
+        "encrypted.json",
+        "forms.json",
+        "damaged.json",
+        "cyclic.json",
+        "summary.json"
+      ]
+    },
+    {
+      "id": "upgrade-0153-chat-starters-browser",
+      "entry": "scripts/verification/upgrade-0153-chat-starters-browser-workflow.ts",
+      "minimum": 9,
+      "required": [
+        "boot.json",
+        "chat-starters-browser.json",
+        "chips.png",
+        "settings-zh.png"
+      ]
+    },
+    {
+      "id": "upgrade-0153-chat-starters-landing",
+      "entry": "scripts/verification/upgrade-0153-chat-starters-landing-workflow.ts",
+      "minimum": 11,
+      "required": [
+        "boot.json",
+        "chat-starters-landing.json",
+        "landing.png",
+        "landing-source-failure.png"
+      ]
+    },
+    {
+      "id": "upgrade-0153-workspace-isolation",
+      "entry": "scripts/verification/upgrade-0153-workspace-isolation-workflow.ts",
+      "minimum": 5,
+      "required": [
+        "boot.json",
+        "workspace-isolation.json",
+        "workspace-isolation.png"
+      ]
+    },
+    {
+      "id": "upgrade-0153-model-form",
+      "entry": "scripts/verification/upgrade-0153-model-form-workflow.ts",
+      "minimum": 5,
+      "required": [
+        "model-form.json",
+        "model-form-opencode.png"
+      ]
+    },
+    {
+      "id": "upgrade-0153-session-info-scroll",
+      "entry": "scripts/verification/upgrade-0153-session-info-workflow.ts",
+      "minimum": 4,
+      "required": [
+        "session-info-scroll.json",
+        "drawer-layout.json",
+        "drawer-wheel.json",
+        "popover-long-light.png",
+        "drawer-long-390-scrolled.png"
+      ]
+    },
+    {
+      "id": "upgrade-0153-calendar-drag",
+      "entry": "scripts/verification/upgrade-0153-calendar-drag-workflow.ts",
+      "minimum": 4,
+      "required": [
+        "calendar-drag.json",
+        "cal-01-drag.json",
+        "cal-02-resize.json",
+        "cal-03-contract.json",
+        "cal-04-language.json",
+        "calendar-after-drag.png",
+        "calendar-zh.png"
+      ]
+    },
+    {
+      "id": "upgrade-0153-editor",
+      "entry": "scripts/verification/upgrade-0153-editor-workflow.ts",
+      "minimum": 3,
+      "required": [
+        "editor.json",
+        "boot.json",
+        "editor-ime.png",
+        "editor-roundtrip.png",
+        "editor-zh.png"
+      ]
     }
   ],
   "groups": [

@@ -7,6 +7,7 @@
  */
 
 import { join } from 'path'
+import { ensureDecodableImage } from '../services/heic'
 import type { PlatformServices, Logger } from './platform'
 import { resolveInheritedAppEnv, sourceCheckoutRoot } from './inherited-app-env'
 
@@ -65,12 +66,14 @@ export function createHeadlessPlatform(options?: { appVersion?: string }): Platf
     imageProcessor: {
       async getMetadata(buffer) {
         const sharp = (await import('sharp')).default
-        const m = await sharp(buffer).metadata().catch(() => null)
+        const decodable = await ensureDecodableImage(buffer)
+        const m = await sharp(decodable).metadata().catch(() => null)
         return (m?.width && m?.height) ? { width: m.width, height: m.height } : null
       },
       async process(input, opts = {}) {
         const sharp = (await import('sharp')).default
-        let pipeline = sharp(input)
+        const decodable = await ensureDecodableImage(input)
+        let pipeline = sharp(decodable)
         if (opts.resize) {
           pipeline = pipeline.resize(opts.resize.width, opts.resize.height, {
             fit: opts.fit ?? 'inside',

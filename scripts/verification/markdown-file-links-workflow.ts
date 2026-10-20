@@ -1,37 +1,23 @@
 import assert from 'node:assert/strict'
-import { writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
-import { createServer, type PluginOption, type UserConfig } from 'vite'
-import rendererConfig from '../../apps/electron/vite.config'
+import { join } from 'node:path'
 import { verificationWorkflow } from './verification-artifacts'
+import { buildFixturePage } from './fixture-bundle'
 import { launchWorkflowBrowser } from './workflow-browser'
-import { warmThemePage } from './fixtures/warm-theme-page'
-
-async function fixturePlugins(plugins: PluginOption[]): Promise<PluginOption[]> {
-  const result: PluginOption[] = []
-  for (const value of plugins) {
-    const plugin = await value
-    if (Array.isArray(plugin)) result.push(...await fixturePlugins(plugin))
-    else if (!plugin || plugin.name !== '@rolldown/plugin-babel') result.push(plugin)
-  }
-  return result
-}
 
 await verificationWorkflow('markdown-file-links', async run => {
-  const root = resolve(import.meta.dir, '../..'), prefix = '/' + run.directory.slice(root.length + 1).replaceAll('\\', '/')
-  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/markdown-file-links.tsx"></script></body></html>')
-  const config = rendererConfig as UserConfig
-  const vite = await createServer({ ...config, configFile: false, root, plugins: await fixturePlugins(config.plugins ?? []), cacheDir: join(root, '.cache/vite-markdown-file-links'), server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/.cache/**'] } }, optimizeDeps: { ...config.optimizeDeps, entries: [join(root, 'scripts/verification/fixtures/markdown-file-links.tsx')] } }); await vite.listen()
+  // Browser first, then a one-shot build served as plain files: a Vite dev server
+  // in this process makes Chromium's launch and the page's module graph stall
+  // (see the failure matrix entry for the browser harness).
   const launched = await launchWorkflowBrowser(), context = await launched.browser.newContext(), page = await context.newPage()
+  const fixture = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/markdown-file-links.tsx' })
   const checks: string[] = [], errors: string[] = [], details: unknown[] = []
   page.on('pageerror', error => errors.push(error.message))
   let tracing = false
   try {
-    const url = `http://127.0.0.1:${(vite.httpServer!.address() as { port: number }).port}${prefix}/index.html`
-    run.json('preparation.json', await warmThemePage(context, url, 'main a'))
+    const url = fixture.url
     await context.tracing.start({ screenshots: true, snapshots: true }); tracing = true
-    await page.goto(url, { waitUntil: 'networkidle', timeout: 120_000 })
-    await page.waitForFunction(() => window.fileLinkFixture?.ready)
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120_000 })
+    await page.waitForFunction(() => window.fileLinkFixture?.ready, undefined, { timeout: 60_000 })
     const cases = [
       ['windows-backslash', '[open](E:\\Phaneris\\docs\\report.md)', 'E:\\Phaneris\\docs\\report.md'],
       ['windows-dot-directory', '[open](<E:\\Phaneris\\.cache\\report.md>)', 'E:\\Phaneris\\.cache\\report.md'],
@@ -71,5 +57,5 @@ await verificationWorkflow('markdown-file-links', async run => {
     await page.evaluate(() => window.fileLinkFixture.setContent('<details><summary>More</summary><p class="retained">Safe content</p></details>'))
     await page.locator('summary').click(); await page.getByText('Safe content', { exact: true }).waitFor(); checks.push('safe-html-formatting-preserved')
     assert.deepEqual(errors, []); run.json('markdown-file-links.json', { checks, details }); await page.screenshot({ path: join(run.directory, 'file-links.png') }); run.complete(checks, ['Callback routing uses the actual shared Markdown component. Native production workflow separately verifies real file loading.'])
-  } finally { run.json('browser-state.json', { checks, details, errors, body: await page.locator('body').innerText() }); if (tracing) await context.tracing.stop({ path: join(run.directory, 'trace.zip') }); await context.close(); await launched.close(); await vite.close() }
+  } finally { run.json('browser-state.json', { checks, details, errors, body: await page.locator('body').innerText() }); if (tracing) await context.tracing.stop({ path: join(run.directory, 'trace.zip') }); await context.close(); await launched.close(); await fixture.close() }
 })

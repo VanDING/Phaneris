@@ -82,6 +82,8 @@ export interface AppShellContextType {
   onJumpToTaskSessions?: (sessionId: string, scope: { labelId: string; projectId?: string }) => void
   /** Enabled permission modes for Shift+Tab cycling */
   enabledModes?: PermissionMode[]
+  /** Workspace prompt chips shown on the new-chat screen (max 3, server-validated) */
+  chatStarters?: Array<{ label: string; prompt: string }>
   /** Dynamic todo states from workspace config (provided by AppShell, defaults to empty) */
   sessionStatuses?: SessionStatusConfig[]
 

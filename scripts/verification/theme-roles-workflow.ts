@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
 import { createServer } from 'vite'
 import { verificationWorkflow } from './verification-artifacts'
-import { launchWorkflowBrowser } from './workflow-browser'
+import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
 import { warmThemePage } from './fixtures/warm-theme-page'
 
 await verificationWorkflow('theme-roles', async run => {
@@ -45,7 +45,7 @@ await verificationWorkflow('theme-roles', async run => {
   try {
     run.json('preparation.json', await warmThemePage(context, `${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/electron.css`)}`, '[data-roles-ready]'))
     for (const host of ['electron', 'viewer', 'webui']) {
-      await page.goto(`${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/${host}.css`)}`, { waitUntil: 'networkidle', timeout: 120_000 })
+      await gotoWithRetry(page, `${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/${host}.css`)}`)
       await page.locator('[data-roles-ready]').waitFor(); assert(await page.evaluate(() => matchMedia('(pointer: coarse)').matches))
       for (const size of [15, 18]) for (const density of ['compact', 'comfortable', 'cozy']) for (const mode of ['light', 'dark'] as const) {
         await choose(`scale-${size}-${density}`, mode, `${size}px`, density)

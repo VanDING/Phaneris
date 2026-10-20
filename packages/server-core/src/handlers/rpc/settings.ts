@@ -141,6 +141,8 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
       localMcpEnabled: config?.localMcpServers?.enabled ?? true,
       defaultLlmConnection: config?.defaults?.defaultLlmConnection,
       enabledSourceSlugs: config?.defaults?.enabledSourceSlugs ?? [],
+      // Top-level, not under defaults. An invalid stored value reads as "none".
+      chatStarters: (await import('@phaneris/shared/workspaces')).readChatStarters(config?.chatStarters),
     }
   })
 
@@ -152,9 +154,18 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
       : value
 
     // Validate key is a known workspace setting
-    const validKeys = ['name', 'model', 'enabledSourceSlugs', 'permissionMode', 'cyclablePermissionModes', 'thinkingLevel', 'workingDirectory', 'localMcpEnabled', 'defaultLlmConnection']
+    const validKeys = ['name', 'model', 'enabledSourceSlugs', 'permissionMode', 'cyclablePermissionModes', 'thinkingLevel', 'workingDirectory', 'localMcpEnabled', 'defaultLlmConnection', 'chatStarters']
     if (!validKeys.includes(key)) {
       throw new Error(`Invalid workspace setting key: ${key}. Valid keys: ${validKeys.join(', ')}`)
+    }
+
+    // Chat starters are validated here, at the RPC boundary: the UI is not the
+    // only caller, and "at most 3, non-empty, bounded" has to hold for anything
+    // that reaches config.json. A rejected payload throws and writes nothing.
+    let normalizedStarters: unknown
+    if (key === 'chatStarters') {
+      const { normalizeChatStarters } = await import('@phaneris/shared/workspaces')
+      normalizedStarters = normalizeChatStarters(value) ?? []
     }
 
     // Validate defaultLlmConnection exists before saving
@@ -185,6 +196,11 @@ export function registerSettingsHandlers(server: RpcServer, deps: HandlerDeps): 
       // Store in localMcpServers.enabled (top-level, not in defaults)
       config.localMcpServers = config.localMcpServers || { enabled: true }
       config.localMcpServers.enabled = Boolean(normalizedValue)
+    } else if (key === 'chatStarters') {
+      // Top-level field, not in defaults. An empty list clears it.
+      const starters = normalizedStarters as Array<{ label: string; prompt: string }>
+      if (starters.length > 0) config.chatStarters = starters
+      else delete config.chatStarters
     } else {
       // Update the setting in defaults
       config.defaults = config.defaults || {}

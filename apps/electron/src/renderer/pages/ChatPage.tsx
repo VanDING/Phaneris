@@ -68,6 +68,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
     labels,
     onSessionLabelsChange,
     enabledModes,
+    chatStarters,
     sessionStatuses,
     onSessionSourcesChange,
     onRenameSession,
@@ -698,6 +699,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
                 onAttachmentsChange={handleAttachmentsChange}
                 sources={enabledSources}
                 skills={skills}
+                chatStarters={chatStarters}
                 plugins={plugins}
                 sessionStatuses={sessionStatuses}
                 onSessionStatusChange={handleSessionStatusChange}
@@ -779,6 +781,7 @@ const ChatPage = React.memo(function ChatPage({ sessionId }: ChatPageProps) {
             onAttachmentsChange={handleAttachmentsChange}
             sources={enabledSources}
             skills={skills}
+            chatStarters={chatStarters}
             plugins={plugins}
             activePlugin={session?.activePlugin}
             onActivePluginChange={(name) => onActivePluginChange?.(sessionId, name)}

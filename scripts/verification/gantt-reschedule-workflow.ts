@@ -4,7 +4,7 @@ import { join, resolve } from 'node:path'
 import { createServer, type UserConfig, type PluginOption } from 'vite'
 import rendererConfig from '../../apps/electron/vite.config'
 import { verificationWorkflow } from './verification-artifacts'
-import { launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
+import { gotoWithRetry, launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
 import { warmThemePage } from './fixtures/warm-theme-page'
 
 async function fixturePlugins(plugins: PluginOption[]): Promise<PluginOption[]> {
@@ -83,7 +83,7 @@ await verificationWorkflow('gantt-reschedule', async run => {
     const url = `http://127.0.0.1:${(vite.httpServer!.address() as any).port}${prefix}/index.html?api=${encodeURIComponent(host.url.origin)}`
     run.json('preparation.json', await warmThemePage(context, url, '.wx-bar'))
     await context.tracing.start({ screenshots: true, snapshots: true }); tracing = true
-    await page.goto(url, { waitUntil: 'networkidle', timeout: 120_000 })
+    await gotoWithRetry(page, url)
     await page.locator('.wx-bar').filter({ hasText: 'Editable leaf' }).first().waitFor({ timeout: 120_000 })
     await page.getByRole('radio', { name: 'Month', exact: true }).click()
     const edit = page.getByRole('button', { name: 'Reschedule Editable leaf', exact: true })

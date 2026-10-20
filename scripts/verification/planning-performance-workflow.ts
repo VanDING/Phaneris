@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { verificationWorkflow } from './verification-artifacts'
-import { launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
+import { gotoWithRetry, launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
 import { startProcess, testSecret } from './fixtures/governance-process-support'
 
 interface Metrics {
@@ -53,7 +53,7 @@ await verificationWorkflow('planning-performance', async run => {
     await context.addInitScript(() => localStorage.setItem('i18nextLng', 'en'))
     assert((await context.request.post(base + '/api/auth', { data: { password: testSecret } })).ok())
     await context.tracing.start({ screenshots: true, snapshots: true }); tracing = true
-    await page.goto(base, { waitUntil: 'networkidle', timeout: 120_000 })
+    await gotoWithRetry(page, base)
     await waitForBrowserCondition(page, async () => Boolean(window.electronAPI) && (await window.electronAPI.getTransportConnectionState()).status === 'connected')
     await page.getByTestId('app-splash').waitFor({ state: 'hidden', timeout: 60_000 })
     // The transport connects before NavigationProvider mounts during startup.
@@ -92,7 +92,7 @@ await verificationWorkflow('planning-performance', async run => {
     await secondaryContext.tracing.start({ screenshots: true, snapshots: true })
     const second = await secondaryContext.newPage(); second.on('pageerror', error => errors.push(error.message))
     await second.clock.setSystemTime(new Date('2026-10-14T04:00:00Z'))
-    await second.goto(base, { waitUntil: 'networkidle', timeout: 120_000 }); await waitForBrowserCondition(second, async () => Boolean(window.electronAPI) && (await window.electronAPI.getTransportConnectionState()).status === 'connected')
+    await second.goto(base); await waitForBrowserCondition(second, async () => Boolean(window.electronAPI) && (await window.electronAPI.getTransportConnectionState()).status === 'connected')
     await second.getByText('Projects', { exact: true }).first().click({ timeout: 60_000 })
     await navigate(second, 'calendar'); await second.locator('[data-calendar-entry="planning-00000"]').first().waitFor(); await quiet(); await control('reset')
     await control('rename', { patch: { name: 'C02 cross-window verified' } }); await quiet()

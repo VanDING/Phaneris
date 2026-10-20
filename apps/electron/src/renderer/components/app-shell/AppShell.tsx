@@ -129,6 +129,7 @@ import { resolveEntityColor } from "@phaneris/shared/colors"
 import * as storage from "@/lib/local-storage"
 import { toast } from "sonner"
 import { navigate, routes } from "@/lib/navigate"
+import { useWorkspaceChatStarters } from '@/hooks/useWorkspaceChatStarters'
 import { buildNavigatorRootRoute, hasNavigator } from "@/lib/nav-helpers"
 import {
   useNavigation,
@@ -1038,21 +1039,17 @@ function AppShellContent({
   // Enabled permission modes for Shift+Tab cycling (min 2 modes)
   const [enabledModes, setEnabledModes] = React.useState<PermissionMode[]>(['safe', 'ask', 'allow-all'])
 
-  // Load workspace settings (for localMcpEnabled and cyclablePermissionModes) on workspace change
-  React.useEffect(() => {
-    if (!activeWorkspaceId) return
-    window.electronAPI.getWorkspaceSettings(activeWorkspaceId).then((settings) => {
-      if (settings) {
-        setLocalMcpEnabled(settings.localMcpEnabled ?? true)
-        // Load cyclablePermissionModes from workspace settings
-        if (settings.cyclablePermissionModes && settings.cyclablePermissionModes.length >= 2) {
-          setEnabledModes(settings.cyclablePermissionModes)
-        }
-      }
-    }).catch((err) => {
-      console.error('[Chat] Failed to load workspace settings:', err)
-    })
-  }, [activeWorkspaceId])
+  // Workspace prompt chips for the new-chat screen (max 3, validated server-side).
+  // The loader owns the workspace-isolation rules; see the hook for why they are
+  // not inline here.
+  const chatStarters = useWorkspaceChatStarters(activeWorkspaceId, React.useCallback((settings) => {
+    setLocalMcpEnabled(settings.localMcpEnabled ?? true)
+    // Load cyclablePermissionModes from workspace settings
+    if (settings.cyclablePermissionModes && settings.cyclablePermissionModes.length >= 2) {
+      setEnabledModes(settings.cyclablePermissionModes)
+    }
+  }, []))
+
 
   // Guarded permission mode is offered while the decision layer and its `guardedMode` feature
   // are on, on the server this workspace talks to. Refreshed on workspace switch and when the AI
@@ -1155,12 +1152,10 @@ function AppShellContent({
 
   // Handle session source selection changes
   const handleSessionSourcesChange = React.useCallback(async (sessionId: string, sourceSlugs: string[]) => {
-    try {
-      await window.electronAPI.sessionCommand(sessionId, { type: 'setSources', sourceSlugs })
-      // Session will emit a 'sources_changed' event that updates the session state
-    } catch (err) {
-      console.error('[Chat] Failed to set session sources:', err)
-    }
+    // No try/catch here: the caller decides what a failed enable means. A chat
+    // starter must not send its message when the source it mentions could not be
+    // enabled, and swallowing the rejection here made that impossible to detect.
+    await window.electronAPI.sessionCommand(sessionId, { type: 'setSources', sourceSlugs })
   }, [])
 
   // Handle plugin activation from the `/` menu (D12 — single slot, silent replace).
@@ -1883,6 +1878,7 @@ function AppShellContent({
     labels: displayLabelConfigs,
     onSessionLabelsChange: handleSessionLabelsChange,
     enabledModes,
+    chatStarters,
     sessionStatuses: effectiveSessionStatuses,
     onSessionSourcesChange: handleSessionSourcesChange,
     onJumpToTaskSessions: handleJumpToTaskSessions,
@@ -1900,7 +1896,7 @@ function AppShellContent({
     automationTestResults,
     getAutomationHistory,
     onReplayAutomation: handleReplayAutomation,
-  }), [contextValue, handleDeleteSession, sources, skills, plugins, handleSessionActivePluginChange, activeSessionWorkingDirectory, displayLabelConfigs, handleSessionLabelsChange, enabledModes, effectiveSessionStatuses, handleSessionSourcesChange, handleJumpToTaskSessions, isAutoCompact, searchActive, searchQuery, handleChatMatchInfoChange, handleTestAutomation, handleToggleAutomation, handleDuplicateAutomation, handleDeleteAutomation, automationTestResults, getAutomationHistory, handleReplayAutomation])
+  }), [contextValue, handleDeleteSession, sources, skills, plugins, handleSessionActivePluginChange, activeSessionWorkingDirectory, displayLabelConfigs, handleSessionLabelsChange, enabledModes, effectiveSessionStatuses, handleSessionSourcesChange, handleJumpToTaskSessions, isAutoCompact, searchActive, searchQuery, handleChatMatchInfoChange, handleTestAutomation, handleToggleAutomation, handleDuplicateAutomation, handleDeleteAutomation, automationTestResults, getAutomationHistory, handleReplayAutomation, chatStarters])
 
   // Persist expanded folders to localStorage (workspace-scoped)
   React.useEffect(() => {

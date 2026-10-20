@@ -1,0 +1,232 @@
+{
+  "date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "baseCommit": "82714e2ae3b76643ae16ef1d3a6abfe66e8bf574",
+  "status": "planned-not-implemented",
+  "npm": {
+    "@earendil-works/pi-ai": {
+      "version": "1.3.0",
+      "batch": "B1",
+      "reason": "会话工具恢复、模型思考隔离、工具参数验证及取消修复；四包一致精确固定"
+    },
+    "@earendil-works/pi-agent-core": {
+      "version": "1.3.0",
+      "batch": "B1",
+      "reason": "会话工具恢复、模型思考隔离、工具参数验证及取消修复；四包一致精确固定"
+    },
+    "@earendil-works/pi-codemode": {
+      "version": "1.3.0",
+      "batch": "B1",
+      "reason": "会话工具恢复、模型思考隔离、工具参数验证及取消修复；四包一致精确固定"
+    },
+    "@earendil-works/pi-coding-agent": {
+      "version": "1.3.0",
+      "batch": "B1",
+      "reason": "会话工具恢复、模型思考隔离、工具参数验证及取消修复；四包一致精确固定"
+    },
+    "http-cache-semantics": {
+      "version": "4.3.0",
+      "batch": "B1",
+      "reason": "正式版本替代本地共享缓存安全补丁；通过原有缓存场景后停用旧补丁注册"
+    },
+    "@modelcontextprotocol/sdk": {
+      "version": "1.32.1",
+      "batch": "B1",
+      "reason": "MCP 同系列补丁；结合已有 resources/prompts/OAuth 流程验证"
+    },
+    "zod": {
+      "version": "4.6.7",
+      "batch": "B1",
+      "reason": "当前主系列兼容补丁；验证配置与 MCP schema"
+    },
+    "undici": {
+      "version": "8.12.2",
+      "batch": "B1",
+      "reason": "直接网络客户端兼容维护；保留 Pi 精确固定的 8.10.2 副本"
+    },
+    "electron": {
+      "version": "44.9.0",
+      "batch": "B2",
+      "reason": "44 系列 Chromium/Node 维护及新窗口 session/webPreferences、证书并发修复"
+    },
+    "@types/bun": {
+      "version": "1.4.3",
+      "batch": "B2",
+      "reason": "与运行时 Bun 1.4.3 对齐"
+    },
+    "@types/node": {
+      "version": "24.19.2",
+      "batch": "B2",
+      "reason": "维持 Node 24 类型系列"
+    },
+    "@tiptap/extension-file-handler": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/extension-image": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/extension-mathematics": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/extension-placeholder": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/extension-task-item": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/extension-task-list": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/extension-text-style": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/markdown": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/react": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/starter-kit": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/suggestion": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/core": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@tiptap/pm": {
+      "version": "3.32.0",
+      "batch": "B3",
+      "reason": "整组更新；Markdown 转义、列表转换、React 状态选择器修复"
+    },
+    "@fullcalendar/react": {
+      "version": "7.1.3",
+      "batch": "B3",
+      "reason": "修复受控范围导致的重复更新及拖拽问题；core/headless 随同固定 7.1.3"
+    },
+    "temporal-polyfill": {
+      "version": "1.0.6",
+      "batch": "B3",
+      "reason": "日历同批兼容补丁；验证时区与全天事件"
+    },
+    "marked": {
+      "version": "18.1.1",
+      "batch": "B3",
+      "reason": "当前主版本内容解析维护；用 Markdown 往返和不可信内容验证"
+    },
+    "i18next": {
+      "version": "26.4.7",
+      "batch": "B3",
+      "reason": "采用已评估的 26.4 维护版本，不追本日新 26.5 系列"
+    },
+    "react-i18next": {
+      "version": "17.0.20",
+      "batch": "B3",
+      "reason": "与 i18next 成对维护，不追本日新 17.1 系列"
+    },
+    "vite": {
+      "version": "8.3.4",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    },
+    "@vitejs/plugin-react": {
+      "version": "6.1.2",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    },
+    "@babel/core": {
+      "version": "8.0.7",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    },
+    "@babel/eslint-parser": {
+      "version": "8.0.7",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    },
+    "@babel/preset-typescript": {
+      "version": "8.0.7",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    },
+    "eslint": {
+      "version": "10.13.0",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    },
+    "@sentry/vite-plugin": {
+      "version": "5.4.1",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    },
+    "playwright": {
+      "version": "1.64.1",
+      "batch": "B2",
+      "reason": "当前系列构建/验证维护；不改变现有门禁、遥测行为或基线"
+    }
+  },
+  "python": {
+    "pypdf": {
+      "version": "6.21.1",
+      "batch": "B1"
+    },
+    "pypdfium2": {
+      "version": "5.14.0",
+      "batch": "B1"
+    },
+    "pillow-heif": {
+      "version": "1.8.1",
+      "batch": "B4",
+      "new": true
+    }
+  },
+  "addedNpm": {
+    "heic-convert": {
+      "version": "2.1.0",
+      "batch": "B4"
+    },
+    "@types/heic-convert": {
+      "version": "2.1.1",
+      "batch": "B4",
+      "developmentOnly": true
+    }
+  },
+  "runtimes": {
+    "bun": "1.4.3",
+    "uv": "0.13.1",
+    "validationNode": "24.22.0",
+    "productPython": "3.12.15"
+  },
+  "rules": [
+    "Targets are frozen; no unrestricted bun update",
+    "Preserve exact internal Pi pins and parent constraints",
+    "Do not downgrade or force deduplicate SDK-owned transitive versions",
+    "Keep Pillow 12.3.0; do not adopt new major 13.0.0",
+    "No upstream merge, push, release, installer execution, or global runtime replacement"
+  ]
+}

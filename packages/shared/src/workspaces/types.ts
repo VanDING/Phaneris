@@ -12,6 +12,7 @@
  */
 
 import type { PermissionMode } from '../agent/mode-manager.ts';
+import type { ChatStarter } from './chat-starters.ts';
 import type { ThinkingLevel } from '../agent/thinking-levels.ts';
 
 /**
@@ -56,6 +57,12 @@ export interface WorkspaceConfig {
    * Resolution order: ENV (PHANERIS_LOCAL_MCP_ENABLED) > workspace config > default (true)
    */
   localMcpServers?: LocalMcpConfig;
+
+  /**
+   * User-defined prompt chips shown on the new-chat screen for this workspace.
+   * Capped at MAX_CHAT_STARTERS; validated on write by normalizeChatStarters.
+   */
+  chatStarters?: ChatStarter[];
 
   createdAt: number;
   updatedAt: number;

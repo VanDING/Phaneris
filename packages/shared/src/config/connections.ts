@@ -14,6 +14,8 @@ import { loadStoredConfig, saveConfig } from './repository.ts';
 
 import { ensureDefaultLlmConnection, modelSetEquals } from './connection-normalize.ts';
 
+import { normalizeRetiredNativeEndpoint } from './legacy-endpoints.ts';
+
 import { getWorkspaces } from './workspace-selection.ts';
 
 import { loadConfigDefaults } from './defaults.ts';
@@ -30,7 +32,9 @@ export function getLlmConnections(): LlmConnection[] {
   if (!config) return [];
 
   // Return empty array if not migrated yet - caller should call migration on startup
-  return config.llmConnections || [];
+  // Retired built-in endpoints are normalized for this read only; the stored
+  // config keeps the user's bytes (see legacy-endpoints.ts).
+  return (config.llmConnections || []).map(normalizeRetiredNativeEndpoint);
 }
 
 /**

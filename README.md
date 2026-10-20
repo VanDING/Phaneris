@@ -12,7 +12,7 @@ Run capable AI agents across your files, tools, services, and documents — with
 
 [![Version](https://img.shields.io/badge/version-0.3.1-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.3.1.md)
 [![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.1.0-5b7cfa?style=flat-square)](docs/guides/pi-kernel.md)
-[![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
+[![Bun](https://img.shields.io/badge/Bun-1.4.3-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![中文](https://img.shields.io/badge/README-中文-2f855a?style=flat-square)](README.zh-CN.md)
 
@@ -108,8 +108,8 @@ The connection layer supports major hosted providers, OAuth-backed products, clo
 | Layer | Baseline |
 | --- | --- |
 | Agent kernel | Pi SDK `1.1.0` |
-| Desktop | Electron `44.5.1`, React `19.3` |
-| Runtime and tooling | Bun `1.4.2`, TypeScript `7`, Vite `8.3` |
+| Desktop | Electron `44.9.0`, React `19.3` |
+| Runtime and tooling | Bun `1.4.3`, TypeScript `7`, Vite `8.3` |
 | Integrations | MCP SDK `1.32`, native REST/local/browser tools |
 | Storage | Local session data plus workspace-local SQLite/WAL durable runtime |
 
@@ -117,7 +117,7 @@ The connection layer supports major hosted providers, OAuth-backed products, clo
 
 ### Requirements
 
-- [Bun](https://bun.sh/) at the version pinned by `package.json` (`1.4.2`)
+- [Bun](https://bun.sh/) at the version pinned by `package.json` (`1.4.3`)
 - Credentials for at least one supported model provider
 - macOS, Windows, or Linux
 

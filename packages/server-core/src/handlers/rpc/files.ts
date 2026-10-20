@@ -10,7 +10,7 @@ import { readFileAttachment, validateImageForClaudeAPI, IMAGE_LIMITS } from '@ph
 import { getSessionAttachmentsPath, validateSessionId } from '@phaneris/shared/sessions'
 import { getWorkspaceByNameOrId } from '@phaneris/shared/config/workspace-selection';
 import { getAllSessionDrafts } from '@phaneris/shared/config/drafts';
-import { resizeImageForAPI, inspectImageBuffer } from '@phaneris/server-core/services'
+import { resizeImageForAPI, inspectImageBuffer, decodeHeicToJpeg, needsHeicTranscode } from '@phaneris/server-core/services'
 import { sanitizeFilename, validateFilePath, getWorkspaceAllowedDirs } from '@phaneris/server-core/handlers'
 import type { RpcServer } from '@phaneris/server-core/transport'
 import type { HandlerDeps } from '../handler-deps'
@@ -306,13 +306,17 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
       // Generate unique ID for this attachment
       const id = randomUUID()
       const safeName = sanitizeFilename(attachment.name)
-      const storedFileName = `${id}_${safeName}`
-      const storedPath = join(attachmentsDir, storedFileName)
+      let storedFileName = `${id}_${safeName}`
+      let storedPath = join(attachmentsDir, storedFileName)
 
       // Track if image was resized (for return value)
       let wasResized = false
       let finalSize = attachment.size
       let resizedBase64: string | undefined
+      // HEIC/HEIF is transcoded (and oversized images re-encoded) below; the name
+      // and MIME follow the artifact that is actually written.
+      let finalMimeType = attachment.mimeType
+      let finalName = attachment.name
 
       // 1. Save the file (with image validation and resizing)
       if (attachment.base64) {
@@ -325,6 +329,24 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
 
         // For images: validate and resize if needed for Claude API compatibility
         if (attachment.type === 'image') {
+          // `decoded`, `finalMimeType` and the stored extension describe one and
+          // the same artifact and are updated together by every encoder below.
+          // Tracking only the HEIC transcode is what let a transcoded JPEG be
+          // re-encoded to PNG (the resize below used the *original* MIME) while
+          // still being reported and named as JPEG.
+          let reencoded = false
+          // HEIC/HEIF (iOS photos and screenshots) cannot be decoded by Chromium,
+          // the model APIs, or the thumbnailer — transcode to JPEG up front so
+          // every downstream step (inspect, validate, resize, thumbnail, upload)
+          // sees plain JPEG. AVIF is excluded by the detector and left as-is.
+          if (needsHeicTranscode(decoded, attachment.mimeType)) {
+            decoded = await decodeHeicToJpeg(decoded)
+            finalMimeType = 'image/jpeg'
+            finalSize = decoded.length
+            reencoded = true
+            deps.platform.logger.info(`HEIC/HEIF attachment transcoded to JPEG: ${attachment.name}`)
+          }
+
           const imageInspection = await inspectImageBuffer(decoded, deps.platform.imageProcessor)
           const imageSize = imageInspection.status === 'ok'
             ? { width: imageInspection.width, height: imageInspection.height }
@@ -369,7 +391,9 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
 
           // If resize is needed (either recommended or required), do it now
           if (shouldResize) {
-            const isPhoto = attachment.mimeType === 'image/jpeg'
+            // Decide the encoder from the bytes we actually hold, not from the
+            // MIME the client announced.
+            const isPhoto = finalMimeType === 'image/jpeg'
 
             if (targetSize) {
               // Dimension-exceeded: resize to specific target dimensions
@@ -381,11 +405,14 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
                   quality: isPhoto ? IMAGE_LIMITS.JPEG_QUALITY_HIGH : undefined,
                 })
                 wasResized = true
+                reencoded = true
+                finalMimeType = isPhoto ? 'image/jpeg' : 'image/png'
                 finalSize = decoded.length
 
                 // Re-validate final size after resize
                 if (decoded.length > IMAGE_LIMITS.MAX_SIZE) {
                   decoded = await deps.platform.imageProcessor.process(decoded, { format: 'jpeg', quality: IMAGE_LIMITS.JPEG_QUALITY_FALLBACK })
+                  finalMimeType = 'image/jpeg'
                   finalSize = decoded.length
                   if (decoded.length > IMAGE_LIMITS.MAX_SIZE) {
                     throw new Error(`Image still too large after resize (${(decoded.length / 1024 / 1024).toFixed(1)}MB). Please use a smaller image.`)
@@ -404,13 +431,28 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
               }
               decoded = result.buffer
               wasResized = true
+              reencoded = true
+              // The helper reports the format it actually encoded.
+              finalMimeType = result.format === 'jpeg' ? 'image/jpeg' : 'image/png'
               finalSize = decoded.length
             }
 
             deps.platform.logger.info(`Image resized: ${attachment.size} -> ${finalSize} bytes (${Math.round((1 - finalSize / attachment.size) * 100)}% reduction)`)
+          }
 
-            // Store resized base64 to return to renderer
-            // This is used when sending to Claude API instead of original large base64
+          if (reencoded) {
+            // Name and store the artifact the encoder produced. A `.heic` (or
+            // `.webp`) path holding PNG bytes makes re-reads and the agent's Read
+            // tool disagree with the file on disk.
+            const extension = finalMimeType === 'image/jpeg' ? '.jpg' : finalMimeType === 'image/png' ? '.png' : null
+            if (extension) {
+              const baseName = safeName.replace(/\.[^.]*$/, '') || safeName
+              storedFileName = `${id}_${baseName}${extension}`
+              storedPath = join(attachmentsDir, storedFileName)
+              finalName = `${baseName}${extension}`
+            }
+            // The renderer and the model request both use this, so it must be the
+            // bytes that were just written — not the upload they started from.
             resizedBase64 = decoded.toString('base64')
           }
         }
@@ -476,8 +518,11 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
       return {
         id,
         type: attachment.type,
-        name: attachment.name,
-        mimeType: attachment.mimeType,
+        // Reports the artifact that was stored when the server re-encoded it
+        // (HEIC/HEIF -> JPEG, or a resize that changed the format); `mimeType`,
+        // `size`, `storedPath` and `resizedBase64` all describe those bytes.
+        name: finalName,
+        mimeType: finalMimeType,
         size: finalSize, // Use final size (may differ if resized)
         originalSize: wasResized ? attachment.size : undefined, // Track original if resized
         storedPath,
@@ -485,7 +530,7 @@ export function registerFilesHandlers(server: RpcServer, deps: HandlerDeps): voi
         thumbnailBase64,
         markdownPath,
         wasResized,
-        resizedBase64, // Only set when wasResized=true, used for Claude API
+        resizedBase64, // Set when resized or format-normalized (HEIC->JPEG), used for the model request
       }
     } catch (error) {
       // Clean up any files we've written before the error

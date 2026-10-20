@@ -67,7 +67,11 @@ export function SessionInfoPopover({
           <DrawerHeader className="border-b border-border/50 px-4 py-3 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-left">
             <DrawerTitle className="text-sm font-medium">{t('chat.sessionInfo')}</DrawerTitle>
           </DrawerHeader>
-          <div className="flex-1 min-h-0 overflow-hidden">
+          {/* A grid row with a zero minimum gives the content a definite height
+              inside this max-height-capped drawer. As a plain `flex-1` item the
+              height stays indefinite, the content's `h-full` resolves against
+              nothing, and a long file list is clipped instead of scrolled. */}
+          <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden">
             <SessionInfoPopoverContent sessionId={sessionId} sessionFolderPath={sessionFolderPath} />
           </div>
         </DrawerContent>

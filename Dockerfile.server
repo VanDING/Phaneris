@@ -23,7 +23,7 @@
 #     phaneris-server
 # =============================================================================
 
-FROM oven/bun:1.4.2-slim
+FROM oven/bun:1.4.3-slim
 
 LABEL org.opencontainers.image.source="https://github.com/VanDING/Phaneris"
 LABEL org.opencontainers.image.description="Phaneris Server — headless AI workflow server"

@@ -276,7 +276,12 @@ async function main(): Promise<void> {
       outfile: "apps/electron/dist/main.cjs",
       // unzipper loads this optional peer only from Open.s3_v3(). Local archive
       // extraction never uses it; keep the inactive adapter out of our bundle.
-      external: ["electron", "@aws-sdk/client-s3"],
+      // heic-convert carries libheif-js (~1.2 MB of wasm-backed decoder) and is
+      // only ever reached through a dynamic import when a HEIC/HEIF attachment
+      // actually arrives. Inlining it would put a decoder nobody has loaded yet
+      // into every app start and blow the main.cjs regression budget, so it is
+      // required from node_modules at runtime (declared in apps/electron).
+      external: ["electron", "@aws-sdk/client-s3", "heic-convert"],
       // Replace grammY's bundled polyfills (node-fetch@2 + abort-controller@3)
       // with native Node globals. esbuild otherwise renames the polyfill's
       // `class AbortSignal` to `_AbortSignal` to dodge collision with the

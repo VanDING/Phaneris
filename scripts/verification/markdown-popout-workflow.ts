@@ -2,23 +2,22 @@
 import assert from 'node:assert/strict'
 import { writeFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import { createServer } from 'vite'
 import { verificationWorkflow } from './verification-artifacts'
+import { buildFixturePage } from './fixture-bundle'
 import { launchWorkflowBrowser } from './workflow-browser'
-import { warmThemePage } from './fixtures/warm-theme-page'
 
 await verificationWorkflow('markdown-popout', async run => {
   const root = resolve(import.meta.dir, '../..')
-  writeFileSync(join(run.directory, 'index.html'), '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"></head><body><div id="root"></div><script type="module" src="/scripts/verification/fixtures/markdown-popout.tsx"></script></body></html>')
-  const server = await createServer({ configFile: resolve(root, 'apps/electron/vite.config.ts'), root,
-    server: { host: '127.0.0.1', port: 0, open: false, watch: { ignored: ['**/runtimes/**', `${run.directory}/**`] } } })
-  await server.listen()
-  const port = (server.httpServer!.address() as { port: number }).port
-  const base = `http://127.0.0.1:${port}/${relative(root, run.directory).replaceAll('\\', '/')}/index.html`
+  // Launch the browser BEFORE any dev-server work: with Vite building in this
+  // process, Chromium's own startup degraded from ~0.2 s to 50-200 s and every
+  // later CDP call timed out (see the failure matrix entry for the browser
+  // harness). `buildFixturePage` builds the page in a Node child and serves it as
+  // plain files, so nothing about Vite shares this event loop.
   const launched = await launchWorkflowBrowser()
   const context = await launched.browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await context.newPage()
-  run.json('preparation.json', await warmThemePage(context, base, '[data-testid="open-message"]'))
+  const fixture = await buildFixturePage({ runDirectory: run.directory, entry: 'scripts/verification/fixtures/markdown-popout.tsx' })
+  const base = fixture.url
   const errors: string[] = [], consoleErrors: string[] = []
   const checks: { id: string; passed: boolean; error?: string }[] = [], geometry: unknown[] = []
   page.on('pageerror', error => errors.push(error.message))
@@ -30,8 +29,10 @@ await verificationWorkflow('markdown-popout', async run => {
   }
   async function load(width = 1440, mode: 'light' | 'dark' = 'light') {
     await page.setViewportSize({ width, height: 900 })
-    await page.goto(base, { waitUntil: 'networkidle' })
-    await page.waitForFunction(() => window.popoutFixture?.ready)
+    // The page is a static build now, so a load either works or reports a real
+    // error; readiness is still the fixture's own flag.
+    await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 60_000 })
+    await page.waitForFunction(() => window.popoutFixture?.ready, undefined, { timeout: 60_000 })
     await page.evaluate(() => document.fonts.ready)
     await page.evaluate(mode => window.popoutFixture.setMode(mode), mode)
     await page.waitForFunction(mode => document.documentElement.classList.contains(mode), mode)
@@ -157,7 +158,7 @@ await verificationWorkflow('markdown-popout', async run => {
     run.json('markdown-popout.json', { checks, geometry, errors, consoleErrors, browser: launched.browser.version(),
       viewportModes: 'actual fullscreen at 1440/1100/390; current modalBreakpoint=99999' })
     await page.context().tracing.stop({ path: join(run.directory, 'trace.zip') })
-    await launched.close(); await server.close()
+    await launched.close(); await fixture.close()
     console.log(JSON.stringify({ output: run.directory, passed: checks.filter(check => check.passed).length, total: checks.length }))
   }
 })

@@ -7,7 +7,7 @@ import { createServer } from 'vite'
 import { BUILTIN_THEMES } from '../../packages/shared/src/config/theme'
 import { PresetThemeSchema } from '../../packages/shared/src/config/schemas'
 import { verificationWorkflow } from './verification-artifacts'
-import { launchWorkflowBrowser } from './workflow-browser'
+import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
 import { warmThemePage } from './fixtures/warm-theme-page'
 import { verifyFrontendP2 } from './frontend-p2-checks'
 
@@ -58,7 +58,7 @@ await verificationWorkflow('theme-contract', async run => {
   try {
     run.json('preparation.json', await warmThemePage(context, `${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/electron.css`)}`, '[data-contract-ready]'))
     for (const host of Object.keys(hosts)) {
-      await page.goto(`${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/${host}.css`)}`, { waitUntil: 'networkidle', timeout: 120_000 })
+      await gotoWithRetry(page, `${base}${prefix}/index.html?css=${encodeURIComponent(`${prefix}/${host}.css`)}`)
       await page.locator('[data-contract-ready]').waitFor()
       for (const id of Object.keys(BUILTIN_THEMES)) for (const mode of ['light', 'dark'] as const) {
         await choose(id, mode)
@@ -126,7 +126,7 @@ await verificationWorkflow('theme-contract', async run => {
       await page.keyboard.press('Escape'); await overlay.waitFor({ state: 'detached' })
     })
     await check('TC08-standalone', async () => {
-      await page.goto(`${base}${prefix}/index.html?standalone=true&css=${encodeURIComponent(`${prefix}/ui.css`)}`, { waitUntil: 'networkidle' })
+      await gotoWithRetry(page, `${base}${prefix}/index.html?standalone=true&css=${encodeURIComponent(`${prefix}/ui.css`)}`, { waitUntil: 'networkidle' })
       await page.locator('pre.shiki.github-light').waitFor({ timeout: 60_000 }); await page.evaluate(() => window.themeContract.toggleDOM())
       await page.locator('pre.shiki.github-dark').waitFor({ timeout: 20_000 })
     })
@@ -134,7 +134,7 @@ await verificationWorkflow('theme-contract', async run => {
       await page.route('**/s/api/theme-contract', route => route.fulfill({ json: { id: 'theme-contract', name: '主题与代码', workspaceId: 'fixture', createdAt: 0, lastUsedAt: 0,
         messages: [{ id: 'user', type: 'user', content: 'Show code', timestamp: 1 },
           { id: 'assistant-code', type: 'assistant', content: '```typescript\nconst answer = 42;\nconsole.log(answer)\n```', timestamp: 2, isIntermediate: false }] } }))
-      await page.goto(`${base}${prefix}/index.html?viewer=true&css=${encodeURIComponent(`${prefix}/viewer.css`)}`, { waitUntil: 'networkidle', timeout: 120_000 })
+      await gotoWithRetry(page, `${base}${prefix}/index.html?viewer=true&css=${encodeURIComponent(`${prefix}/viewer.css`)}`)
       await page.locator('pre.shiki.github-light').waitFor({ timeout: 60_000 }); await page.screenshot({ path: join(run.directory, 'viewer-code-light.png') })
       await page.getByRole('button', { name: 'Switch to dark mode' }).click()
       await page.locator('pre.shiki.github-dark').waitFor({ timeout: 20_000 }); await page.screenshot({ path: join(run.directory, 'viewer-code-dark.png') })
@@ -145,7 +145,7 @@ await verificationWorkflow('theme-contract', async run => {
       assert(await page.evaluate(() => document.documentElement.classList.contains('dark')), 'An explicit Viewer choice survives an OS theme change')
       // The isolated server serves the fixture entry, while Viewer changes its
       // history to /s/theme-contract. Reopen the entry with the same origin/storage.
-      await page.goto(`${base}${prefix}/index.html?viewer=true&css=${encodeURIComponent(`${prefix}/viewer.css`)}`, { waitUntil: 'networkidle' })
+      await gotoWithRetry(page, `${base}${prefix}/index.html?viewer=true&css=${encodeURIComponent(`${prefix}/viewer.css`)}`, { waitUntil: 'networkidle' })
       await page.locator('pre.shiki.github-dark').waitFor({ timeout: 20_000 })
     })
     await check('TC18-page-errors', () => assert.deepEqual(errors, []))

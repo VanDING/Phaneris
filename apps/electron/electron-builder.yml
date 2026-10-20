@@ -9,7 +9,7 @@ extends: ./identity.generated.yml
 # literal rather than the `electron` range in package.json, so it must be bumped
 # by hand whenever that dependency moves — scripts/check-electron-pin.ts fails
 # otherwise, because a stale pin silently ships the previous runtime.
-electronVersion: "44.5.1"
+electronVersion: "44.9.0"
 
 # Native addons ship as prebuilt N-API binaries via extraResources — node-pty's
 # prebuilds/<platform>-<arch>/*.node below, whose node-gyp build/** output is
@@ -131,6 +131,22 @@ extraResources:
   # ripgrep (used by search service)
   - from: node_modules/@vscode/ripgrep
     to: app/node_modules/@vscode/ripgrep
+  # HEIC/HEIF decoder. The main bundle keeps `heic-convert` external so its
+  # libheif-js payload is not parsed on every app start, and node_modules are
+  # excluded from `files` (asar off), so the module tree has to be staged
+  # explicitly for the runtime `require('heic-convert')` to resolve. Without
+  # this, HEIC attachments decode in a dev checkout and fail in the installer.
+  # `from` is repo-root-relative because bun hoists these to the root.
+  - from: ../../node_modules/heic-convert
+    to: app/node_modules/heic-convert
+  - from: ../../node_modules/heic-decode
+    to: app/node_modules/heic-decode
+  - from: ../../node_modules/libheif-js
+    to: app/node_modules/libheif-js
+  - from: ../../node_modules/jpeg-js
+    to: app/node_modules/jpeg-js
+  - from: ../../node_modules/pngjs
+    to: app/node_modules/pngjs
   # ripgrep platform package: @vscode/ripgrep >= 1.15 resolves the binary via
   # its optionalDependency @vscode/ripgrep-<platform>-<arch> (lib/index.js), so
   # the platform package must ship next to it.

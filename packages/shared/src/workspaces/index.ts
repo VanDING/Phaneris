@@ -12,6 +12,17 @@ export type {
   WorkspaceSummary,
 } from './types.ts';
 
+// Chat starters (workspace-level prompt chips) — type, limits and validation
+export type { ChatStarter } from './chat-starters.ts';
+export {
+  MAX_CHAT_STARTERS,
+  MAX_CHAT_STARTER_LABEL_LENGTH,
+  MAX_CHAT_STARTER_PROMPT_LENGTH,
+  ChatStarterValidationError,
+  normalizeChatStarters,
+  readChatStarters,
+} from './chat-starters.ts';
+
 // Storage functions
 export {
   // Path utilities

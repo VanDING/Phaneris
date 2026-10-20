@@ -45,9 +45,12 @@ Run 观测的当前记录：[首轮实施与口径](run-observability-implementa
 
 ## 产品验证入口
 
+本轮上游 0.15.3 与依赖升级的当前审查状态见[第二轮复核](upgrade-2026-10-19-review-2.md)：尚未验收通过，以下历史通过记录不能替代最终工作树验收。
+
 | 范围 | 入口 | 用途 |
 | --- | --- | --- |
 | Craft 0.15 非 UI 吸收 | `bun run test:upstream-015` · [事先失败矩阵](upstream-0.15-non-ui-failure-matrix-2026-10-15.md) · [实施与验收](upstream-0.15-non-ui-implementation-2026-10-15.md) | 33 项流程，覆盖项目记忆/MCP、凭据/OAuth、Task、隐藏浏览器与持久化隐私、附件与取消；静态门禁和构建通过，保留旧测试失败限制。 |
+| 上游 0.15.3 与依赖升级 | [失败矩阵](upgrade-2026-10-18-failure-matrix.md) · [实施记录](upgrade-2026-10-18-implementation.md) · [首轮复核](upgrade-2026-10-19-review.md) · [第二轮复核](upgrade-2026-10-19-review-2.md) · [机器结果](results/upgrade-2026-10-18.json) | 依赖整体升级与本轮修订的定向验收：HEIC 转码/尺寸预检、端点归一化与用户模型、Chat Starters、Pi 运行时（切模型/畸形工具/取消/重试/逐模型上限）、MCP stdio+HTTP+OAuth、用量账本请求级对账、随包 PDF 工具、编辑器 IME/Markdown 往返、会话信息长列表滚动、日历拖拽。工作流经 `scripts/critical-scenarios.ts` 登记；四项产品缺陷（工具名回退、MCP 401 分类、失败重试零计费行、pypdf 噪声日志）已记录未修改；`koffi`/`sharp` 正式打包暂存仍未验证。 |
 | 日历 / 工作项共享投影 | `bun run test:planning-collection` · `bun run test:planning-performance` · [失败矩阵](c02-planning-performance-failure-matrix-2026-10-14.md) | React 竞态、跨工作区、重连、退订与日历语义；生产 WebUI + 真实 WS 的重复读取/广播计数及现行预算。 |
 | 主题治理 W1 | `bun run test:theme-foundation` · [事先失败矩阵](theme-foundation-failure-matrix-2026-10-12.md) · [首批前后证据](results/theme-foundation-w1-2026-10-12/README.md) · [当前验收](results/theme-governance-w2-w5-2026-10-12/README.md) | 首批101场景保持冻结；当前扩展为115/115，覆盖真实 WebUI/WS/watcher 与图片故障恢复。 |
 | 对话 / 行为预览卡片 | `bun run test:markdown-popout` · [失败矩阵](markdown-popout-card-failure-matrix-2026-10-12.md) · [前后证据](results/markdown-popout-card-2026-10-12/README.md) | 恢复卡片和Markdown源码路径；18个浏览器场景通过，接入critical registry；正式包未验收。 |

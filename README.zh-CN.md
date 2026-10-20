@@ -12,7 +12,7 @@
 
 [![版本](https://img.shields.io/badge/版本-0.3.1-6d5bd0?style=flat-square)](apps/electron/resources/release-notes/0.3.1.md)
 [![Pi SDK](https://img.shields.io/badge/Pi%20SDK-1.1.0-5b7cfa?style=flat-square)](docs/guides/pi-kernel.md)
-[![Bun](https://img.shields.io/badge/Bun-1.4.2-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
+[![Bun](https://img.shields.io/badge/Bun-1.4.3-f9f1e1?style=flat-square&logo=bun&logoColor=000)](https://bun.sh/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-2f80ed?style=flat-square)](LICENSE)
 [![English](https://img.shields.io/badge/README-English-2f855a?style=flat-square)](README.md)
 
@@ -108,8 +108,8 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
 | 层级 | 基线 |
 | --- | --- |
 | Agent 内核 | Pi SDK `1.1.0` |
-| 桌面端 | Electron `44.5.1`、React `19.3` |
-| 运行时与工具链 | Bun `1.4.2`、TypeScript `7`、Vite `8.3` |
+| 桌面端 | Electron `44.9.0`、React `19.3` |
+| 运行时与工具链 | Bun `1.4.3`、TypeScript `7`、Vite `8.3` |
 | 集成协议 | MCP SDK `1.32`、原生 REST/本地文件/浏览器工具 |
 | 存储 | 本地会话数据 + 工作空间级 SQLite/WAL Durable Runtime |
 
@@ -117,7 +117,7 @@ Electron Desktop  ·  Web UI  ·  phaneris CLI
 
 ### 环境要求
 
-- [Bun](https://bun.sh/)：与 `package.json` 固定的版本一致（`1.4.2`）
+- [Bun](https://bun.sh/)：与 `package.json` 固定的版本一致（`1.4.3`）
 - 至少一个受支持模型 provider 的凭据
 - macOS、Windows 或 Linux
 

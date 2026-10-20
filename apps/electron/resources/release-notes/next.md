@@ -5,6 +5,8 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 ## Features
 
 - **Project memory and MCP content** — Add an append-only project memory tool and source resource/template/prompt tools. Resource-only MCP servers connect without requiring a tools capability, and binary content is saved with the session.
+- **Chat starters** — Workspaces can define up to three prompt chips shown on the new chat screen. A starter sends its prompt verbatim, enables the sources it mentions (waiting until they are enabled before the message goes out), and invokes the skills it mentions; unknown mentions are ignored. Invalid starters (too many, blank, over-long) are rejected when saved rather than rendered.
+- **HEIC/HEIF photos** — Photos and screenshots from iOS attach and preview correctly. HEIC/HEIF is transcoded to JPEG once, in a worker that is terminated if it exceeds its deadline, and the stored bytes, MIME type, extension and size always describe the same artifact. AVIF is detected explicitly and never converted.
 
 ## Improvements
 
@@ -17,6 +19,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 
 ## Bug Fixes
 
+- **Model and workspace settings** — Saving a provider connection no longer reverts a model field you did not edit: the default model, the utility model and the stored model list are each kept or updated on their own, and switching provider never carries the previous provider's models along. Workspace chat starters are cleared the moment you switch workspaces, so a slow response for the workspace you left can no longer appear over the one you are in.
 - **Workspace and source lifecycle** — Keep Pages, projects and automations on the current workspace when older requests finish late. Share concurrent Page initialization and MCP connections, close connections that are still starting during disconnect, and reuse the first MCP tool catalog response during connection setup.
 - **Source activation** — Wait for the current request to settle before automatically continuing with newly activated tools. Recover from late settlement without restarting the app, and show an error if automatic continuation fails.
 - **Windows reopening** — Preserve launch requests received while the previous instance is shutting down, recover a running instance with no window, and apply bounded cleanup with persistent lifecycle diagnostics to ordinary quits.
@@ -24,5 +27,7 @@ This file accumulates release notes for the next unreleased version. PRs that ad
 - **Source authentication** — Scope credential refresh to each workspace and source; validate HTTP credential headers and reuse refreshable tokens before requesting another sign-in.
 - **Browser reliability and privacy** — Make hidden browser input and screenshots reliable, confirm security challenges before requesting user assistance, and hide browser text-entry arguments before persistent history is written.
 - **Input and workspace correctness** — Keep drafts when attachments exceed the existing transport limit, prevent Cancel from submitting credential forms, and correct automation timezones, workspace deep links, source failure status, and inherited runtime paths.
+- **Provider endpoints and user models** — Point Kimi Coding at its current `/coding/v1` endpoint and route OpenCode through its native provider catalog, so each protocol family uses its own base URL. Connections saved against a retired default keep their protocol, their own model IDs and their per-model settings; only the dead URL is rewritten, and nothing is written back to your configuration.
+- **Attachments and verification** — Report the stored artifact's real format for re-encoded images, fall back to the PNG thumbnail when a format cannot render inline, and stop browser-driven verification from stalling on an IPv6-only test listener.
 
 ## Breaking Changes

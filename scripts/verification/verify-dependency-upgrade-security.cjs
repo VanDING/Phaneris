@@ -20,6 +20,12 @@ const scenarios = [
   { name: 'proxy-revalidate', response: { 'cache-control': 'max-age=3600, proxy-revalidate' }, cached: false },
   { name: 'zero-age-with-stale-while-revalidate', response: { 'cache-control': 'no-cache, stale-while-revalidate=3600' }, cached: false },
   { name: 'vary-star', response: { vary: '*', 'cache-control': 'max-age=3600' }, cached: false },
+  // GHSA-ch52-4w7c-c8xp itself: 4.2.0 only rejected an exactly-`*` Vary header,
+  // so a multi-field `Vary: *, ...` was compared field-by-field and the `*`
+  // was skipped, letting the entry be served to a different user. 4.3.0
+  // rejects the `*` field wherever it appears; this scenario is the regression
+  // guard for the official fix and is expected to hit on 4.2.0.
+  { name: 'vary-multi-star', response: { vary: '*, accept-encoding', 'cache-control': 'max-age=3600' }, cached: false },
   { name: 'must-revalidate', response: { 'cache-control': 'max-age=1, must-revalidate', age: '10' }, cached: false },
   { name: 'public-fresh-control', response: { 'cache-control': 'public, max-age=3600' }, cached: true },
   { name: 'public-stale-control', response: { 'cache-control': 'public, max-age=1', age: '10' }, cached: true },

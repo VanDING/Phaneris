@@ -202,20 +202,28 @@ export function CalendarView() {
   // `handleDateChange` to a state update), so the title and the active segment
   // follow navigation performed by the calendar itself — including a drag that
   // scrolls into a new month.
+  //
+  // Read the live period during render: the controller instance is stable across
+  // navigation, so neither it nor the state copy below changes identity when the
+  // user pages to another month, and an effect keyed on them would keep the
+  // previous title (and the remembered cursor) frozen until the view mode
+  // changed. The state copy is the first paint; `liveTitle` is the truth.
+  const liveTitle = controller.view?.title || title
+  const liveCursorDate = controller.getDate()
+  const liveCursor = liveCursorDate ? planDayKeyFromDate(liveCursorDate) : undefined
   React.useEffect(() => {
     const view = controller.view
     if (!view) return
-    setTitle(view.title)
+    if (view.title !== title) setTitle(view.title)
     const nextMode = MODE_FOR_VIEW[view.type]
     if (nextMode) setMode(nextMode)
     // Persist what the user is looking at, so remounting restores it.
-    const active = controller.getDate()
     storage.set(
       KEYS.calendarViewState,
-      { mode: nextMode ?? mode, cursor: active ? planDayKeyFromDate(active) : undefined },
+      { mode: nextMode ?? mode, cursor: liveCursor },
       viewScope,
     )
-  }, [controller, events, title, mode, viewScope])
+  }, [controller, events, title, liveTitle, liveCursor, mode, viewScope])
 
   // -------------------------------------------------------------------------
   // The untimed rail: drop targets, preview, and the two gestures' write paths
@@ -577,7 +585,7 @@ export function CalendarView() {
           >
             ‹
           </button>
-          <span className="text-sm font-semibold" data-calendar-title>{title}</span>
+          <span className="text-sm font-semibold" data-calendar-title>{liveTitle}</span>
           <button
             type="button"
             onClick={() => controller.next()}

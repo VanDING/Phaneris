@@ -39,6 +39,8 @@ import {
   SettingsToggle,
   SettingsMenuSelectRow,
 } from '@/components/settings'
+import { ChatStartersSection } from './ChatStartersSection'
+import { announceWorkspaceSettingsChanged } from '@/lib/workspace-settings-events'
 
 export const meta: DetailsPageMeta = {
   navigator: 'settings',
@@ -433,6 +435,22 @@ export default function WorkspaceSettingsPage() {
             </SettingsSection>
 
             <WorkspaceConversationSettings key={activeWorkspaceId} workspaceId={activeWorkspaceId} />
+
+            {/* Chat starters — new-chat prompt chips (max 3) */}
+            <SettingsSection
+              title={t('settings.workspace.chatStartersTitle')}
+              description={t('settings.workspace.chatStartersDesc')}
+            >
+              <SettingsCard>
+                <div className="px-4 py-3">
+                  <ChatStartersSection
+                    key={`starters-${activeWorkspaceId}`}
+                    workspaceId={activeWorkspaceId}
+                    onSaved={() => announceWorkspaceSettingsChanged(activeWorkspaceId)}
+                  />
+                </div>
+              </SettingsCard>
+            </SettingsSection>
 
             {/* Permissions */}
             <SettingsSection title={t("settings.workspace.permissionsSection")}>

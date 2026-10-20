@@ -62,10 +62,19 @@ interface AttachmentBubbleProps {
 function AttachmentBubble({ attachment, onRemove, disabled }: AttachmentBubbleProps) {
   const isImage = attachment.type === 'image'
   const hasThumbnail = !!attachment.thumbnailBase64
-  const hasImageBase64 = isImage && attachment.base64
+  // Image MIME types Chromium can decode in an <img>. HEIC/HEIF/TIFF are absent:
+  // the server transcodes HEIC to JPEG before this point, but a stale draft or a
+  // viewer-supplied attachment can still carry the original MIME, and an inline
+  // data URL for those renders as a broken image.
+  const canInlineImage = !!(
+    isImage
+    && attachment.base64
+    && /^image\/(png|jpeg|jpg|gif|webp|svg\+xml|bmp|x-icon|avif)$/i.test(attachment.mimeType)
+  )
 
-  // For images, use full base64; for docs, use Quick Look thumbnail
-  const imageSrc = hasImageBase64
+  // For images, use full base64 when Chromium can render it; otherwise fall back
+  // to the PNG thumbnail, and to the file-type icon when neither exists.
+  const imageSrc = canInlineImage
     ? `data:${attachment.mimeType};base64,${attachment.base64}`
     : hasThumbnail
       ? `data:image/png;base64,${attachment.thumbnailBase64}`

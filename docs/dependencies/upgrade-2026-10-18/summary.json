@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-18",
+  "baseCommit": "82714e2ae3b76643ae16ef1d3a6abfe66e8bf574",
+  "manifests": 14,
+  "controlledPackages": 179,
+  "registryNameProbes": 1468,
+  "lockInstances": 1833,
+  "pythonScripts": 8,
+  "pythonDirect": 12,
+  "approvedExistingNpm": 37,
+  "newNpm": 2,
+  "pythonUpgrades": 2,
+  "newPython": 1,
+  "controlledNewerStable": 74,
+  "knownAudit": {
+    "critical": 1,
+    "high": 1,
+    "moderate": 2,
+    "low": 1
+  },
+  "limitations": [
+    "Version assessment, not upgrade verification",
+    "Full JS registry metadata refreshed; Python direct metadata refreshed, not a new cross-platform transitive resolution",
+    "Registry names for Git libsignal and CDN xlsx are not applicable upgrade sources",
+    "GitHub release API returned 403; official release webpages used for priority release notes",
+    "Container and non-Windows execution pending; prior 2026-10-17 container evidence is historical"
+  ]
+}

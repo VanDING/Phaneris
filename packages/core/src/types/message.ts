@@ -251,7 +251,10 @@ export interface AnnotationV1 {
 export interface StoredAttachment {
   id: string;                    // Unique identifier
   type: AttachmentType;
-  name: string;                  // Original filename
+  // Display name of the stored artifact. Equals the upload's filename unless the
+  // server re-encoded the image (HEIC/HEIF -> JPEG, or a resize that changed the
+  // format), in which case it carries the extension the stored bytes have.
+  name: string;
   mimeType: string;
   size: number;                  // Final size (after any resize)
   originalSize?: number;         // Original size before resize (if applicable)

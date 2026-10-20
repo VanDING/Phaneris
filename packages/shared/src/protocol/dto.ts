@@ -884,6 +884,8 @@ export interface WorkspaceSettings {
   localMcpEnabled?: boolean
   defaultLlmConnection?: string
   enabledSourceSlugs?: string[]
+  /** Workspace-level prompt chips (max 3); validated by the settings RPC. */
+  chatStarters?: Array<{ label: string; prompt: string }>
 }
 
 // ---------------------------------------------------------------------------

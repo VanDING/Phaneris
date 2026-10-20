@@ -6,7 +6,7 @@ import { join, relative, resolve } from 'node:path'
 import { createServer } from 'vite'
 import { BUILTIN_THEMES } from '../../packages/shared/src/config/theme'
 import { verificationWorkflow } from './verification-artifacts'
-import { launchWorkflowBrowser } from './workflow-browser'
+import { gotoWithRetry, launchWorkflowBrowser } from './workflow-browser'
 import { warmThemePage } from './fixtures/warm-theme-page'
 await verificationWorkflow('theme-design', async run => {
   const root = resolve(import.meta.dir, '../..'), fixture = join(root, 'scripts/verification/fixtures/theme-roles.tsx')
@@ -22,7 +22,7 @@ await verificationWorkflow('theme-design', async run => {
   page.on('pageerror', error => errors.push(error.message)); await context.tracing.start({ screenshots: true, snapshots: true })
   const scenes = [{ theme: 'default', mode: 'light' as const }, { theme: 'default', mode: 'dark' as const }, { theme: 'ink', mode: 'light' as const }]
   const open = async (compact = false, collapsed = false) => {
-    await page.goto(`${base}${prefix}/fixture.html?css=${encodeURIComponent(`${prefix}/host.css`)}&compact=${compact}&collapsed=${collapsed}`, { waitUntil: 'networkidle', timeout: 120_000 })
+    await gotoWithRetry(page, `${base}${prefix}/fixture.html?css=${encodeURIComponent(`${prefix}/host.css`)}&compact=${compact}&collapsed=${collapsed}`)
     await page.locator('[data-roles-ready]').waitFor()
   }
   async function scene(id: string, group: string, theme: string, mode: 'light' | 'dark', row = 28, width = 840, material = 'current', fontSize = '15px') {

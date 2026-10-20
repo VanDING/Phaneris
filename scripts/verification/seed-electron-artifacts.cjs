@@ -37,7 +37,7 @@ function arg(name, fallback) {
   return hit ? hit.slice(name.length + 3) : fallback
 }
 
-const VERSION = arg('version', process.env.PHANERIS_ELECTRON_VERSION || '44.5.1')
+const VERSION = arg('version', process.env.PHANERIS_ELECTRON_VERSION || '44.9.0')
 const PLATFORM = arg('platform', 'win32')
 const ARCH = arg('arch', 'x64')
 const MIRROR = arg('mirror', process.env.PHANERIS_ELECTRON_MIRROR || 'https://registry.npmmirror.com/-/binary/electron/')

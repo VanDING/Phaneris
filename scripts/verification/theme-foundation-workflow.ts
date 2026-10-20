@@ -6,7 +6,7 @@ import { join, relative, resolve } from 'node:path'
 import type { Page } from 'playwright'
 import { createServer } from 'vite'
 import { verificationWorkflow } from './verification-artifacts'
-import { launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
+import { gotoWithRetry, launchWorkflowBrowser, waitForBrowserCondition } from './workflow-browser'
 import { startProcess, testSecret, type RunningProcess } from './fixtures/governance-process-support'
 import { RPC_CHANNELS } from '../../packages/shared/src/protocol/channels'
 
@@ -31,13 +31,48 @@ await verificationWorkflow('theme-foundation', async run => {
     try { await fn(); checks.push({ id, passed: true }) }
     catch (error) { checks.push({ id, passed: false, error: error instanceof Error ? error.message : String(error) }) }
   }
+  // The production-web phase used to hang with no evidence on disk, which made a
+  // 40-minute stall indistinguishable from slow work. Every step now records a
+  // stage line immediately (so a stall names itself), and each has a deadline
+  // (so the workflow fails instead of waiting forever).
+  const startedAt = Date.now()
+  const stages: { stage: string; at: string; elapsedMs: number; detail?: unknown }[] = []
+  const stageFile = join(run.directory, 'production-web-stages.json')
+  function stage(name: string, detail?: unknown) {
+    const record = { stage: name, at: new Date().toISOString(), elapsedMs: Date.now() - startedAt, detail }
+    stages.push(record)
+    writeFileSync(stageFile, JSON.stringify({ stages, pageErrors, checks: checks.length }, null, 2) + '\n')
+    console.log(JSON.stringify({ phase: name, elapsedMs: record.elapsedMs, ...(detail === undefined ? {} : { detail }) }))
+  }
+  async function bounded<T>(name: string, ms: number, work: Promise<T> | (() => Promise<T>)): Promise<T> {
+    let timer: ReturnType<typeof setTimeout> | undefined
+    try {
+      const pending = typeof work === 'function' ? work() : work
+      return await Promise.race([
+        pending,
+        new Promise<never>((_resolve, reject) => {
+          timer = setTimeout(() => {
+            stage(`${name}:timeout`, { ms })
+            reject(new Error(`stage "${name}" exceeded its ${ms}ms deadline`))
+          }, ms)
+        }),
+      ])
+    } finally { clearTimeout(timer) }
+  }
   async function settle(target: Page) {
-    await target.evaluate(async () => {
-      await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
-      await Promise.all(document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity)
-        .map(animation => animation.finished.catch(() => {})))
-      await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
-    })
+    // Bounded: `animation.finished` never resolves for an animation whose
+    // timeline is stalled, and an unbounded settle is indistinguishable from a
+    // hung page. Waiting a fixed handful of frames afterwards is enough for the
+    // paint the assertions look at.
+    await Promise.race([
+      target.evaluate(async () => {
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+        await Promise.all(document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity)
+          .map(animation => animation.finished.catch(() => {})))
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+      }).catch(() => {}),
+      Bun.sleep(5_000).then(() => { stage('settle:deadline', { note: 'animations did not all finish within 5s' }) }),
+    ])
   }
   async function focus(page: Page, selector: string) {
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
@@ -79,8 +114,12 @@ await verificationWorkflow('theme-foundation', async run => {
   try {
     for (const host of ['electron', 'ui', 'viewer', 'webui']) {
       const css = `/${relative(root, run.directory).replaceAll('\\', '/')}/${host}.css`
-      await page.goto(`${base}?host=${host}&css=${encodeURIComponent(css)}`, { waitUntil: 'networkidle', timeout: 120_000 })
-      await page.locator('[data-foundation-ready]').waitFor()
+      // `domcontentloaded` + the fixture's own ready marker, not `networkidle`:
+      // the dev server's dependency optimizer keeps a connection open while it
+      // re-bundles, and `networkidle` then never settles even though the page is
+      // up. The marker below is the page's real readiness signal.
+      await gotoWithRetry(page, `${base}?host=${host}&css=${encodeURIComponent(css)}`, { waitUntil: 'domcontentloaded' })
+      await page.locator('[data-foundation-ready]').waitFor({ timeout: 60_000 })
       await page.evaluate(() => document.fonts.ready)
       for (const mode of ['light', 'dark'] as const) {
         await page.evaluate(mode => window.themeFoundation.apply(mode), mode)
@@ -219,25 +258,36 @@ await verificationWorkflow('theme-foundation', async run => {
     mkdirSync(config); mkdirSync(workspace)
     writeFileSync(join(config, 'config.json'), JSON.stringify({ workspaces: [{ id: 'theme-fixture', name: 'Theme workspace', rootPath: workspace, createdAt: 1 }],
       activeWorkspaceId: 'theme-fixture', setupDeferred: true, themeMode: 'light', colorTheme: 'geek', themeFont: 'inter' }))
+    stage('production-build:start', { command: 'webui:build' })
     const build = Bun.spawn([process.execPath, 'run', 'webui:build'], { cwd: root, stdout: 'pipe', stderr: 'pipe' })
     const [out, err, code] = await Promise.all([new Response(build.stdout).text(), new Response(build.stderr).text(), build.exited])
     writeFileSync(join(run.directory, 'production-web-build.log'), out + err); assert.equal(code, 0, err.slice(-2000))
+    stage('production-build:done', { exitCode: code, bytes: out.length + err.length })
     const dist = join(root, 'apps/webui/dist')
     run.json('build-hashes.json', readdirSync(dist, { recursive: true, withFileTypes: true }).filter(entry => entry.isFile() && !entry.name.endsWith('.map'))
       .map(entry => { const file = join(entry.parentPath, entry.name); return { path: relative(dist, file).replaceAll('\\', '/'), sha256: sha256(file) } }))
-    console.log(JSON.stringify({ phase: 'production-web-built', executed: checks.length }))
-    child = await startProcess({ config, webui: dist, ready: false })
+    stage('production-web-built', { executed: checks.length, dist })
+    child = await bounded('spawn', 30_000, startProcess({ config, webui: dist, ready: false }))
+    stage('spawn:done', { pid: child.process.pid })
     const deadline = Date.now() + 90_000
     while (!child.url) {
       assert(child.process.exitCode === null, child.stderr().slice(-3000))
       assert(Date.now() < deadline, `Server readiness timeout: ${child.stderr().slice(-3000)}`)
       await Bun.sleep(100)
     }
+    stage('ready', { url: child.url })
     const webBase = child.url.replace(/^ws/, 'http')
-    const webContexts = await Promise.all([launched.browser.newContext({ viewport: { width: 1280, height: 820 }, reducedMotion: 'reduce' }),
-      launched.browser.newContext({ viewport: { width: 1280, height: 820 }, reducedMotion: 'reduce' })])
-    for (const context of webContexts) assert((await context.request.post(new URL('/api/auth', webBase).href, { data: { password: testSecret } })).ok())
-    const [first, second] = await Promise.all(webContexts.map(context => context.newPage()))
+    const webContexts = await bounded('contexts', 60_000, Promise.all([
+      launched.browser.newContext({ viewport: { width: 1280, height: 820 }, reducedMotion: 'reduce' }),
+      launched.browser.newContext({ viewport: { width: 1280, height: 820 }, reducedMotion: 'reduce' })]))
+    stage('contexts:done')
+    for (const context of webContexts) {
+      const auth = await bounded('auth', 30_000, context.request.post(new URL('/api/auth', webBase).href, { data: { password: testSecret } }))
+      assert(auth.ok(), `authentication failed with ${auth.status()}`)
+    }
+    stage('auth:done')
+    const [first, second] = await bounded('pages', 60_000, Promise.all(webContexts.map(context => context.newPage())))
+    stage('pages:done')
     for (const [index, target] of [first, second].entries()) {
       target.on('pageerror', error => pageErrors.push(error.message))
       target.on('websocket', socket => {
@@ -250,7 +300,15 @@ await verificationWorkflow('theme-foundation', async run => {
       })
     }
     await webContexts[0].tracing.start({ screenshots: true, snapshots: true })
-    async function ready(target: Page) { await target.waitForFunction(() => !!window.electronAPI && document.documentElement.dataset.clientPlatform === 'web', null, { timeout: 60_000 }) }
+    async function ready(target: Page) {
+      const name = target === first ? 'page-ready:first' : 'page-ready:second'
+      stage(`${name}:start`)
+      await target.waitForFunction(() => !!window.electronAPI && document.documentElement.dataset.clientPlatform === 'web', null, { timeout: 60_000 })
+      // A ready DOM is not enough: the theme resolver must also have settled, or
+      // every later assertion races the first paint.
+      await target.waitForFunction(() => document.documentElement.dataset.themeStatus === 'ready', null, { timeout: 60_000 })
+      stage(`${name}:done`)
+    }
     async function applied(target: Page, id: string, mode: string, font: string) {
       await target.waitForFunction(({ id, mode, font }) => (document.documentElement.dataset.theme ?? 'default') === id
         && document.documentElement.dataset.themeStatus === 'ready' && document.documentElement.classList.contains(mode)
@@ -269,10 +327,15 @@ await verificationWorkflow('theme-foundation', async run => {
     })
     await ready(first)
     await check('TF02-cold-start', async () => {
+      stage('TF02:applied:start')
       await applied(first, 'geek', 'dark', 'inter')
+      stage('TF02:applied:done')
       await first.getByText('Theme workspace', { exact: true }).first().waitFor({ timeout: 60_000 })
+      stage('TF02:workspace-text:done')
       await first.locator('.z-splash').waitFor({ state: 'detached' }); await settle(first)
+      stage('TF02:settled')
       await first.screenshot({ path: join(run.directory, 'web-cold.png') })
+      stage('TF02:screenshot:done')
     })
     await second.addInitScript(() => localStorage.setItem('craft-theme', JSON.stringify({ version: 3, mode: 'light', colorTheme: 'ink', font: 'system' })))
     await second.goto(webBase, { waitUntil: 'domcontentloaded' }); await ready(second)
@@ -391,10 +454,14 @@ await verificationWorkflow('theme-foundation', async run => {
     ])
     assert(checks.every(check => check.passed), JSON.stringify(checks.filter(check => !check.passed)))
   } finally {
+    stage('cleanup:start')
     run.json('theme-foundation.json', { checks, samples, pageErrors, transport, browser: launched.browser.version(),
       boundary: 'Four real CSS entries + production controls/resolver; real authenticated WebUI bundle/server with isolated config. CSS wrappers only register fixture class sources before Tailwind compiles.' })
     await context.tracing.stop({ path: join(run.directory, 'controls-trace.zip') })
-    await launched.close(); await server.close(); await child?.stop()
+    await launched.close(); await server.close()
+    // A stuck child must not hold the workflow open: stop it with a deadline.
+    if (child) await Promise.race([child.stop().catch(() => {}), Bun.sleep(15_000)])
     if (child) run.json('server-output.json', { stdout: child.stdout(), stderr: child.stderr() })
+    stage('cleanup:done', { checks: checks.length })
   }
 })

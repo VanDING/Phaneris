@@ -1,0 +1,13 @@
+name,current,latest,target,decision,source,checkedAt
+"diff-match-patch","20241021","20241021","20241021","keep","https://pypi.org/pypi/diff-match-patch/json","2026-10-18T11:26:52.190Z"
+"python-docx","1.2.0","1.2.0","1.2.0","keep","https://pypi.org/pypi/python-docx/json","2026-10-18T11:26:52.197Z"
+"markitdown","0.1.8","0.1.8","0.1.8","keep","https://pypi.org/pypi/markitdown/json","2026-10-18T11:26:52.218Z"
+"click","8.5.0","8.5.0","8.5.0","keep","https://pypi.org/pypi/click/json","2026-10-18T11:26:52.418Z"
+"python-dateutil","2.9.0.post0","2.9.0.post0","2.9.0.post0","keep","https://pypi.org/pypi/python-dateutil/json","2026-10-18T11:26:52.479Z"
+"icalendar","7.3.0","7.3.0","7.3.0","keep","https://pypi.org/pypi/icalendar/json","2026-10-18T11:26:52.661Z"
+"pypdf","6.19.0","6.21.1","6.21.1","execute","https://pypi.org/pypi/pypdf/json","2026-10-18T11:26:52.791Z"
+"img2pdf","0.6.3","0.6.3","0.6.3","keep","https://pypi.org/pypi/img2pdf/json","2026-10-18T11:26:52.818Z"
+"python-pptx","1.0.2","1.0.2","1.0.2","keep","https://pypi.org/pypi/python-pptx/json","2026-10-18T11:26:52.966Z"
+"openpyxl","3.1.5","3.1.5","3.1.5","keep","https://pypi.org/pypi/openpyxl/json","2026-10-18T11:26:53.095Z"
+"pypdfium2","5.13.0","5.14.0","5.14.0","execute","https://pypi.org/pypi/pypdfium2/json","2026-10-18T11:26:53.263Z"
+"pillow","12.3.0","13.0.0","12.3.0","defer-major","https://pypi.org/pypi/pillow/json","2026-10-18T11:26:53.601Z"
