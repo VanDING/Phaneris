@@ -30,7 +30,7 @@ import { Spinner, FullscreenOverlayBase, Tooltip, TooltipTrigger, TooltipContent
 import { useSetAtom } from 'jotai'
 import { fullscreenOverlayOpenAtom } from '@/atoms/overlay'
 import type { LlmConnectionWithStatus, ThinkingLevel, WorkspaceSettings } from '../../../shared/types'
-import type { DecisionLayerStatus, DecisionLayerSettingsPatch, DecisionProviderId, DecisionServerProbe, DecisionTestResult } from '../../../shared/types'
+import type { DecisionTestResult } from '../../../shared/types'
 import { DEFAULT_THINKING_LEVEL, THINKING_LEVELS } from '@phaneris/shared/agent/thinking-levels'
 import { type ContextPolicy } from '@phaneris/shared/agent/context-policy'
 import type { DetailsPageMeta } from '@/lib/navigation-registry'
@@ -60,6 +60,7 @@ import {
 import { useOnboarding } from '@/hooks/useOnboarding'
 import { RtkUpdateDialog } from '@/components/RtkUpdateDialog'
 import { useRtkSettings } from './useRtkSettings'
+import { useDecisionLayerSettings } from './useDecisionLayerSettings'
 import { OnboardingWizard, type ApiSetupMethod } from '@/components/onboarding'
 import { RenameDialog } from '@/components/ui/rename-dialog'
 import { useAppShellContext } from '@/context/AppShellContext'
@@ -313,7 +314,6 @@ export default function AiSettingsPage() {
   const { t, i18n } = useTranslation()
   const { llmConnections, refreshLlmConnections, activeWorkspaceId, workspaces } = useAppShellContext()
 
-  const [decisionConfigurationOpen, setDecisionConfigurationOpen] = useState(() => sessionStorage.getItem(AI_SETTINGS_FOCUS_KEY) === 'decisions')
   const [imageStatus, setImageStatus] = useState<ImageGenerationStatus | null>(null)
   const [imageConfigurationOpen, setImageConfigurationOpen] = useState(false)
   const [savingImages, setSavingImages] = useState(false)
@@ -379,22 +379,35 @@ export default function AiSettingsPage() {
     handleGetRtk,
   } = useRtkSettings(activeWorkspaceId)
 
-  // Decision model (Jev / TypeSafe System One) — opt-in decision layer.
-  // The card is always shown; everything behind it stays off until the user enables it.
-  const [decisionLoadError, setDecisionLoadError] = useState<string | null>(null)
-  const [savingDecisions, setSavingDecisions] = useState(false)
-  const [decisionStatus, setDecisionStatus] = useState<DecisionLayerStatus | null>(null)
-  const [decisionKeyDraft, setDecisionKeyDraft] = useState('')
-  const [decisionModelDraft, setDecisionModelDraft] = useState('')
-  const [decisionBaseUrlDraft, setDecisionBaseUrlDraft] = useState('')
-  const [decisionTesting, setDecisionTesting] = useState(false)
-  const [decisionTestResult, setDecisionTestResult] = useState<DecisionTestResult | null>(null)
-  // Local servers (Laya, custom): GET /health so the card can say whether the server is up.
-  const [decisionProbe, setDecisionProbe] = useState<DecisionServerProbe | null>(null)
-  const [decisionProbing, setDecisionProbing] = useState(false)
-  // Drafts are seeded from stored settings once (and after a provider switch),
-  // never on background refreshes, so in-progress typing is not clobbered.
-  const decisionDraftsSeededRef = useRef(false)
+  // Decision layer: state, effects and handlers live in useDecisionLayerSettings.
+  // The derived view data below (feature groups, key-source options, probe and
+  // test descriptions) stays here because it projects `decisionStatus`.
+  const {
+    decisionConfigurationOpen,
+    setDecisionConfigurationOpen,
+    decisionLoadError,
+    savingDecisions,
+    decisionStatus,
+    decisionKeyDraft,
+    setDecisionKeyDraft,
+    decisionModelDraft,
+    setDecisionModelDraft,
+    decisionBaseUrlDraft,
+    setDecisionBaseUrlDraft,
+    decisionTesting,
+    decisionTestResult,
+    decisionProbe,
+    decisionProbing,
+    refreshDecisionStatus,
+    updateDecisionSettings,
+    probeDecisionServer,
+    clearDecisionProbe,
+    handleDecisionKeySourceChange,
+    commitDecisionField,
+    handleSaveDecisionKey,
+    handleRemoveDecisionKey,
+    handleTestDecision,
+  } = useDecisionLayerSettings(llmConnections)
 
   // Validation state per connection
   const [validationStates, setValidationStates] = useState<Record<string, {
@@ -779,66 +792,7 @@ export default function AiSettingsPage() {
     finally { setSavingImages(false) }
   }, [])
 
-  useEffect(() => {
-    const focus = () => {
-      if (sessionStorage.getItem(AI_SETTINGS_FOCUS_KEY) !== 'decisions') return
-      setDecisionConfigurationOpen(true)
-      if (decisionStatus || decisionLoadError) {
-        sessionStorage.removeItem(AI_SETTINGS_FOCUS_KEY)
-        requestAnimationFrame(() => document.querySelector('[data-decision-settings]')?.scrollIntoView({ block: 'start' }))
-      }
-    }
-    focus(); window.addEventListener(AI_SETTINGS_FOCUS_EVENT, focus)
-    return () => window.removeEventListener(AI_SETTINGS_FOCUS_EVENT, focus)
-  }, [decisionStatus, decisionLoadError])
 
-  // ---- Decision model (Jev) ----
-  const refreshDecisionStatus = useCallback(async (seedDrafts: boolean) => {
-    if (typeof window.electronAPI?.getDecisionLayerStatus !== 'function') return
-    try {
-      const status = await window.electronAPI.getDecisionLayerStatus()
-      setDecisionStatus(status)
-      setDecisionLoadError(null)
-      setGuardedAvailable(status.guardedMode?.available === true)
-      if (seedDrafts) {
-        setDecisionModelDraft(status.settings.model ?? '')
-        setDecisionBaseUrlDraft(status.settings.baseUrl ?? '')
-        decisionDraftsSeededRef.current = true
-      }
-    } catch (error) {
-      setGuardedAvailable(false)
-      setDecisionLoadError(error instanceof Error ? error.message : String(error))
-      setDecisionStatus(previous => previous ? { ...previous, guardedMode: { available: false, reason: 'unavailable' } } : previous)
-      console.error('Failed to load decision model settings:', error)
-    }
-  }, [setGuardedAvailable])
-
-  // Reusable connections come from the LLM connection list, so refresh with it
-  // (background model fetches re-emit that list; only the first load seeds drafts).
-  useEffect(() => {
-    void refreshDecisionStatus(!decisionDraftsSeededRef.current)
-  }, [refreshDecisionStatus, llmConnections])
-
-  const updateDecisionSettings = useCallback(async (patch: DecisionLayerSettingsPatch) => {
-    setSavingDecisions(true)
-    try {
-      const next = await window.electronAPI.setDecisionLayerSettings(patch)
-      setDecisionStatus(prev => (prev ? { ...prev, settings: next } : prev))
-      setDecisionTestResult(null)
-      await refreshDecisionStatus(false)
-      // Mode pickers offer Guarded mode only while it is on: let them refresh.
-      window.dispatchEvent(new Event(DECISION_SETTINGS_CHANGED_EVENT))
-      // A provider/connection switch drops the model + base URL overrides server-side
-      // (they belonged to the previous provider) — mirror that in the inputs.
-      if ('provider' in patch || 'connectionSlug' in patch) {
-        setDecisionModelDraft(next.model ?? '')
-        setDecisionBaseUrlDraft(next.baseUrl ?? '')
-      }
-    } catch (error) {
-      console.error('Failed to update decision model settings:', error)
-      toast.error(t("settings.ai.decisions.saveFailed"))
-    } finally { setSavingDecisions(false) }
-  }, [t, refreshDecisionStatus])
 
   const decisionPreset = useMemo(
     () => decisionStatus?.presets.find(p => p.id === decisionStatus.settings.provider),
@@ -902,24 +856,12 @@ export default function AiSettingsPage() {
   const decisionUsesLocalProvider = !!decisionPreset?.local && !decisionUsesConnection
   const decisionUsesCustomProvider = decisionStatus?.settings.provider === 'custom' && !decisionUsesConnection
 
-  const probeDecisionServer = useCallback(async (baseUrl?: string) => {
-    if (typeof window.electronAPI?.probeDecisionServer !== 'function') return
-    setDecisionProbing(true)
-    try {
-      setDecisionProbe(await window.electronAPI.probeDecisionServer(baseUrl ? { baseUrl } : undefined))
-    } catch (error) {
-      console.error('Failed to probe decision server:', error)
-      setDecisionProbe(null)
-    } finally {
-      setDecisionProbing(false)
-    }
-  }, [])
 
   // Probe whenever a local provider is selected or its base URL changes on disk.
   useEffect(() => {
-    if (!decisionUsesLocalProvider) { setDecisionProbe(null); return }
+    if (!decisionUsesLocalProvider) { clearDecisionProbe(); return }
     void probeDecisionServer()
-  }, [decisionUsesLocalProvider, decisionStatus?.settings.provider, decisionStatus?.settings.baseUrl, probeDecisionServer])
+  }, [decisionUsesLocalProvider, decisionStatus?.settings.provider, decisionStatus?.settings.baseUrl, probeDecisionServer, clearDecisionProbe])
 
   const decisionProbeDescription = decisionProbing || (decisionUsesLocalProvider && !decisionProbe)
     ? t("common.checking")
@@ -929,65 +871,6 @@ export default function AiSettingsPage() {
         ? t("settings.ai.decisions.localServerReachable", { url: decisionProbe.baseUrl })
         : t("settings.ai.decisions.localServerUnreachable", { url: decisionProbe?.baseUrl ?? '' })
 
-  const handleDecisionKeySourceChange = useCallback((value: string) => {
-    setDecisionKeyDraft('')
-    if (value.startsWith('connection:')) {
-      const slug = value.slice('connection:'.length)
-      const provider = decisionStatus?.reusableConnections.find(c => c.slug === slug)?.provider
-      void updateDecisionSettings({ connectionSlug: slug, ...(provider ? { provider } : {}) })
-    } else if (value.startsWith('provider:')) {
-      void updateDecisionSettings({ connectionSlug: null, provider: value.slice('provider:'.length) as DecisionProviderId })
-    }
-  }, [decisionStatus, updateDecisionSettings])
-
-  const commitDecisionField = useCallback((field: 'model' | 'baseUrl', value: string) => {
-    const current = decisionStatus?.settings[field] ?? ''
-    if (value.trim() === current) return
-    void updateDecisionSettings({ [field]: value.trim() || null })
-  }, [decisionStatus, updateDecisionSettings])
-
-  const handleSaveDecisionKey = useCallback(async () => {
-    if (!decisionStatus || !decisionKeyDraft.trim()) return
-    try {
-      await window.electronAPI.setDecisionApiKey(decisionStatus.settings.provider, decisionKeyDraft.trim())
-      setDecisionKeyDraft('')
-      toast.success(t("settings.ai.decisions.keySaved"))
-      await refreshDecisionStatus(false)
-      window.dispatchEvent(new Event(DECISION_SETTINGS_CHANGED_EVENT))
-    } catch (error) {
-      console.error('Failed to save decision model key:', error)
-      toast.error(t("settings.ai.decisions.saveFailed"))
-    }
-  }, [decisionStatus, decisionKeyDraft, refreshDecisionStatus, t])
-
-  const handleRemoveDecisionKey = useCallback(async () => {
-    if (!decisionStatus) return
-    try {
-      await window.electronAPI.deleteDecisionApiKey(decisionStatus.settings.provider)
-      toast.success(t("settings.ai.decisions.keyRemoved"))
-      await refreshDecisionStatus(false)
-      window.dispatchEvent(new Event(DECISION_SETTINGS_CHANGED_EVENT))
-    } catch (error) {
-      console.error('Failed to remove decision model key:', error)
-      toast.error(t("settings.ai.decisions.saveFailed"))
-    }
-  }, [decisionStatus, refreshDecisionStatus, t])
-
-  const handleTestDecision = useCallback(async () => {
-    setDecisionTesting(true)
-    setDecisionTestResult(null)
-    try {
-      const result = await window.electronAPI.testDecisionConnection({
-        settings: { model: decisionModelDraft.trim() || null, baseUrl: decisionBaseUrlDraft.trim() || null },
-        apiKey: decisionKeyDraft.trim() || undefined,
-      })
-      setDecisionTestResult(result)
-    } catch (error) {
-      setDecisionTestResult({ ok: false, failure: { kind: 'unavailable', message: error instanceof Error ? error.message : String(error) } })
-    } finally {
-      setDecisionTesting(false)
-    }
-  }, [decisionModelDraft, decisionBaseUrlDraft, decisionKeyDraft])
 
   const decisionTestDescription = decisionTestResult
     ? decisionTestResult.ok
@@ -1166,7 +1049,7 @@ export default function AiSettingsPage() {
                   <div data-ai-advanced="decisions" data-decision-settings>
                     <SettingsDisclosure title={t("settings.ai.decisions.title")} summary={decisionSummary} open={decisionConfigurationOpen} onOpenChange={setDecisionConfigurationOpen}>
                       {decisionLoadError ? <div role="alert" className="craft-settings-padding flex flex-wrap items-center justify-between gap-3 text-body text-destructive-text">
-                        <span>{decisionLoadError}</span><Button variant="outline" size="sm" onClick={() => void refreshDecisionStatus(!decisionDraftsSeededRef.current)}>{t("common.retry")}</Button>
+                        <span>{decisionLoadError}</span><Button variant="outline" size="sm" onClick={() => void refreshDecisionStatus(true)}>{t("common.retry")}</Button>
                       </div> : decisionStatus ? <>
                     <SettingsToggle
                       label={t("settings.ai.decisions.enable")}
