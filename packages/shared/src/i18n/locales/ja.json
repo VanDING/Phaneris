@@ -705,6 +705,7 @@
   "kanban.scheduleFilter": "Schedule",
   "kanban.scheduledOnly": "Scheduled only",
   "kanban.showDone": "完了を表示",
+  "kanban.showMoreTasks": "さらに {{count}} 件表示",
   "kanban.subtasks": "サブタスク",
   "kanban.unscheduledOnly": "Unscheduled only",
   "kanban.viewFilters": "View filters",

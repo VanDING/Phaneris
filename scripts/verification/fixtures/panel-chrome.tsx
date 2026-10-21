@@ -102,6 +102,17 @@ const contextValue = {
 // collapse threshold, and an empty column that must offer an exit.
 const doneColumn = KANBAN_COLUMNS.find(column => column.id === 'done')!
 const todoColumn = KANBAN_COLUMNS.find(column => column.id === 'todo')!
+// Past the render cap: the board shows a slice plus a way to the rest.
+const longTasks = Array.from({ length: 70 }, (_, index) => ({
+  id: `long-${index}`,
+  title: `Task ${index + 1}`,
+  column: 'todo',
+  statusId: 'done',
+  order: index,
+  createdAt: index,
+  updatedAt: index,
+  subtasks: [],
+})) as unknown as KanbanTask[]
 const doneTasks = Array.from({ length: 30 }, (_, index) => ({
   id: `done-${index}`,
   title: `Finished task ${index}`,
@@ -161,6 +172,21 @@ const recordMove = (taskId: string, columnId: string) => {
           column paints it (solid fill + computed onAccent). The workflow reads
           the painted pair back and checks WCAG contrast: a user-chosen colour
           must not be able to produce an unreadable column header. */}
+      {/* A column past the render cap: the board must show a slice and a way to
+          the rest, not mount every tile. */}
+      <div data-long-column className="p-3" style={{ width: 320, height: 360 }}>
+        <KanbanColumn
+          column={todoColumn}
+          color={neutralColor}
+          tasks={longTasks}
+          projectsById={new Map()}
+          statusesById={statusesById}
+          statuses={statuses}
+          treatment="stripe"
+          expandedTaskIds={new Set()}
+          onCreateTask={() => {}}
+        />
+      </div>
       <div data-color-swatches className="flex flex-wrap gap-2 px-3 pb-3">
         {PROJECT_COLOR_PALETTE.map(color => {
           const resolved = makeColumnColor(color)

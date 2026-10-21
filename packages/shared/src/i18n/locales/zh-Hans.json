@@ -705,6 +705,7 @@
   "kanban.scheduleFilter": "计划时间",
   "kanban.scheduledOnly": "仅已排期",
   "kanban.showDone": "显示已完成",
+  "kanban.showMoreTasks": "再显示 {{count}} 项",
   "kanban.subtasks": "子任务",
   "kanban.unscheduledOnly": "仅未排期",
   "kanban.viewFilters": "视图筛选",

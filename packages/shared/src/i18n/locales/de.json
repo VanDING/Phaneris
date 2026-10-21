@@ -705,6 +705,7 @@
   "kanban.scheduleFilter": "Schedule",
   "kanban.scheduledOnly": "Scheduled only",
   "kanban.showDone": "Erledigte anzeigen",
+  "kanban.showMoreTasks": "{{count}} weitere anzeigen",
   "kanban.subtasks": "Unteraufgaben",
   "kanban.unscheduledOnly": "Unscheduled only",
   "kanban.viewFilters": "View filters",

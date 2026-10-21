@@ -355,6 +355,21 @@ await verificationWorkflow('panel-chrome', async run => {
       assert.equal(probe.shuffle[2], 5, 'the shuffled copy keeps the length')
       assert.equal(probe.cmdKey, true, 'the modifier key label is non-empty')
     })
+    await check('pc15-a-long-column-renders-a-slice', async () => {
+      // 70 tasks in one column: the board must mount at most the cap, keep the
+      // real count visible in the header, and offer a way to the rest.
+      const before = await page.evaluate(() => ({
+        tiles: document.querySelectorAll('[data-long-column] [data-task-tile]').length,
+        toggle: document.querySelector('[data-long-column] button[class*="craft-segment"]')?.textContent?.trim() ?? null,
+      }))
+      assert.equal(before.tiles, 60, `a 70-task column must render the 60-tile slice, rendered ${before.tiles}`)
+      assert(before.toggle !== null, 'the slice must offer a way to the remaining tasks')
+      assert(before.toggle!.includes('10'), `the toggle states how many are held back, got "${before.toggle}"`)
+      await page.locator('[data-long-column] button[class*="craft-segment"]').click()
+      await page.waitForFunction(() => document.querySelectorAll('[data-long-column] [data-task-tile]').length > 60, undefined, { timeout: 5_000 })
+      const after = await page.evaluate(() => document.querySelectorAll('[data-long-column] [data-task-tile]').length)
+      assert.equal(after, 70, `expanding must render every task, rendered ${after}`)
+    })
     await page.screenshot({ path: join(run.directory, 'files-panel-chrome-light.png') })
     await page.evaluate(() => document.documentElement.classList.add('dark'))
     await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))

@@ -60,6 +60,8 @@ interface KanbanColumnProps {
   onMoveTask?: (taskId: string, columnId: string) => void
 }
 
+const TASK_RENDER_LIMIT = 60
+
 export function KanbanColumn({
   column,
   color,
@@ -114,7 +116,14 @@ export function KanbanColumn({
   // the count so nothing is hidden without a number.
   const isArchiveColumn = column.id === 'done'
   const [collapsed, setCollapsed] = React.useState(isArchiveColumn && tasks.length > 20)
+  // A column that holds hundreds of cards renders hundreds of tiles, and every
+  // one mounts a menu tree. Cap the initial render; the count is never hidden.
+  const [showAllTasks, setShowAllTasks] = React.useState(false)
   const showCollapsed = collapsed && tasks.length > 0
+  // 60 tiles is a couple of screenfuls: past that the column renders a slice and
+  // says how many it is holding back. The count lives in the header either way.
+  const renderedTasks = showAllTasks ? tasks : tasks.slice(0, TASK_RENDER_LIMIT)
+  const hiddenTaskCount = tasks.length - renderedTasks.length
 
   return (
     <div className="flex min-w-[260px] flex-1 flex-col">
@@ -165,7 +174,7 @@ export function KanbanColumn({
           </div>
         )}
 
-        {!showCollapsed && tasks.map(task => (
+        {!showCollapsed && renderedTasks.map(task => (
           <DraggableTile key={task.id} taskId={task.id}>
             <TaskTile
               task={task}
@@ -188,6 +197,16 @@ export function KanbanColumn({
             />
           </DraggableTile>
         ))}
+
+        {!showCollapsed && hiddenTaskCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowAllTasks(true)}
+            className="craft-segment craft-touch-target craft-focus w-full shrink-0 justify-center text-meta text-text-secondary hover:text-foreground"
+          >
+            {t('kanban.showMoreTasks', { count: hiddenTaskCount })}
+          </button>
+        )}
       </div>
     </div>
   )

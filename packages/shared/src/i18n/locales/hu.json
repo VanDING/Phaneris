@@ -705,6 +705,7 @@
   "kanban.scheduleFilter": "Schedule",
   "kanban.scheduledOnly": "Scheduled only",
   "kanban.showDone": "Kész feladatok megjelenítése",
+  "kanban.showMoreTasks": "További {{count}} megjelenítése",
   "kanban.subtasks": "Részfeladatok",
   "kanban.unscheduledOnly": "Unscheduled only",
   "kanban.viewFilters": "View filters",
