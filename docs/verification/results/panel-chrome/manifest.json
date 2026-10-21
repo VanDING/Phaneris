@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "workflow": "panel-chrome",
-  "startedAt": "2026-10-21T08:59:28.311Z",
-  "finishedAt": "2026-10-21T09:00:19.258Z",
+  "startedAt": "2026-10-21T09:08:12.868Z",
+  "finishedAt": "2026-10-21T09:09:08.643Z",
   "command": [
     "C:\\Users\\dotty\\.bun\\bin\\bun.exe",
     "E:\\Phaneris\\scripts\\verification\\panel-chrome-workflow.ts",
@@ -10,7 +10,7 @@
     "--replace"
   ],
   "source": {
-    "headSha": "b5c5a8dcd3f59d267b6a89d90b913858ba70b2ee",
+    "headSha": "c5764da432af06c68bc85a4e2021738db28dbd32",
     "dirtyPaths": [],
     "lockfileSha256": "3028077c5f935148338eccf9792b53d8f076a0cedd4d1c5255d4c12e19ae2c9d",
     "changedFiles": [],
@@ -47,18 +47,18 @@
   "artifacts": [
     {
       "path": "card-density.json",
-      "sha256": "af726702e49a59198b899c12fce24465e7f4f899d4b3063844f7f8a01b37c2a7",
+      "sha256": "041bb234c4ee61de12e33f5fb68de3833ae25c2b90735b6cc7911b32419a93be",
       "bytes": 146
     },
     {
       "path": "files-panel-chrome-dark.png",
-      "sha256": "8a866c7826fc37ef87920ac60a792860c8be7582c323a68fd00b5ffef8420b5d",
-      "bytes": 28502
+      "sha256": "e4ef0250c5aa33437def31f9445106403a720af6669899a0b61c9025d089d4c4",
+      "bytes": 27491
     },
     {
       "path": "files-panel-chrome-light.png",
-      "sha256": "32585cf1c21f2d7b222767b04a746dae4c9ea70b56b40f6f42792239620eda2a",
-      "bytes": 30461
+      "sha256": "1a0d2e35984f61650a8839b64f7e178e2799762fdc770f4a2f263cf8f01e73bd",
+      "bytes": 30448
     },
     {
       "path": "host.css",
@@ -72,7 +72,7 @@
     },
     {
       "path": "panel-chrome.json",
-      "sha256": "3bcbf5cdcfaa93867a890cfbf6ceef3f2d40621573719d44646a399b9806a0c5",
+      "sha256": "ac5984a7b4b4cfd33677d1764f74358054f97230febb89c63b766fb590c975d3",
       "bytes": 341
     }
   ],
